@@ -120,7 +120,7 @@ namespace OOX
 			if(m_oLocation.IsInit())
 			{
 				ptr->hyperlink.hlstmfHasLocationStr = true;
-				ptr->hyperlink.location = m_oLocation.get();
+				ptr->hyperlink.location = m_oRef.get();
 			}
 			if(m_oLink.IsInit())
 			{
