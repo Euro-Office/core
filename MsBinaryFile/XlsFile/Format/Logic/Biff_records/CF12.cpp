@@ -684,6 +684,40 @@ void CF12::writeFields(CFRecord& record)
 						if(dxfObj.m_oFont->m_oColor.IsInit() && dxfObj.m_oFont->m_oColor->m_oIndexed.IsInit())
 							dxf.dxfn->dxffntd.icvFore = dxfObj.m_oFont->m_oColor->m_oIndexed->GetValue();
 					}
+					if(dxfObj.m_oBorder.IsInit())
+					{
+						dxf.dxfn->ibitAtrBdr = true;
+						if(dxfObj.m_oBorder->m_oBottom.IsInit())
+						{
+							dxf.dxfn->glBottomNinch = false;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oBottom.GetPointer(), dxf.dxfn->dxfbdr.dgBottom, dxf.dxfn->dxfbdr.icvBottom);
+						}
+						if(dxfObj.m_oBorder->m_oTop.IsInit())
+						{
+							dxf.dxfn->glTopNinch = false;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oTop.GetPointer(), dxf.dxfn->dxfbdr.dgTop, dxf.dxfn->dxfbdr.icvTop);
+						}
+						if(dxfObj.m_oBorder->m_oStart.IsInit())
+						{
+							dxf.dxfn->glLeftNinch  = false;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oStart.GetPointer(), dxf.dxfn->dxfbdr.dgLeft, dxf.dxfn->dxfbdr.icvLeft);
+						}
+						if(dxfObj.m_oBorder->m_oEnd.IsInit())
+						{
+							dxf.dxfn->glRightNinch  = false;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oEnd.GetPointer(), dxf.dxfn->dxfbdr.dgRight, dxf.dxfn->dxfbdr.icvRight);
+						}
+						if(dxfObj.m_oBorder->m_oDiagonal.IsInit())
+						{
+							dxf.dxfn->glDiagDownNinch  = false;
+							dxf.dxfn->glDiagUpNinch = false;
+							if(dxfObj.m_oBorder->m_oDiagonalDown.IsInit() && dxfObj.m_oBorder->m_oDiagonalDown->GetValue())
+								dxf.dxfn->dxfbdr.bitDiagDown = true;
+							if(dxfObj.m_oBorder->m_oDiagonalUp.IsInit() && dxfObj.m_oBorder->m_oDiagonalUp->GetValue())
+								dxf.dxfn->dxfbdr.bitDiagUp = true;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oDiagonal.GetPointer(), dxf.dxfn->dxfbdr.dgDiag, dxf.dxfn->dxfbdr.icvDiag);
+						}
+					}
 				}
 			}
 		}
