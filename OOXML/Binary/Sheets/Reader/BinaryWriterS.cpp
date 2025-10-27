@@ -4674,11 +4674,11 @@ void BinaryWorksheetTableWriter::WriteWorksheet(OOX::Spreadsheet::CSheet* pSheet
 	
 	WriteControls(oWorksheet, currentVmlDrawing.GetPointer());
 
-	smart_ptr<OOX::IFileContainer> oldRels;
+	OOX::IFileContainer* oldRels = NULL;
 	if (currentDrawing.IsInit())
 	{
-		oldRels = m_pOfficeDrawingConverter->GetRels();
-		m_pOfficeDrawingConverter->SetRels(currentDrawing.smart_dynamic_cast<OOX::IFileContainer>());
+		oldRels = m_pOfficeDrawingConverter->GetRelsPtr();
+		m_pOfficeDrawingConverter->SetRelsPtr(currentDrawing.GetPointer());
 	}
 	if (currentDrawing.IsInit() || currentVmlDrawing.IsInit())
 	{
@@ -4686,9 +4686,9 @@ void BinaryWorksheetTableWriter::WriteWorksheet(OOX::Spreadsheet::CSheet* pSheet
 			WriteDrawings(oWorksheet, currentDrawing.GetPointer(), currentVmlDrawing.GetPointer());
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
-	if (oldRels.IsInit())
+	if (oldRels)
 	{
-		m_pOfficeDrawingConverter->SetRels(oldRels);
+		m_pOfficeDrawingConverter->SetRelsPtr(oldRels);
 	}
 
 	if (oWorksheet.m_oLegacyDrawingHF.IsInit())
@@ -6390,12 +6390,12 @@ void BinaryWorksheetTableWriter::WriteControls(const OOX::Spreadsheet::CWorkshee
 				nCurPos3 = m_oBcw.WriteItemStart(c_oSerControlTypes::Shape);
 
 				std::wstring* pMainProps = NULL;
-				smart_ptr<OOX::IFileContainer> oldRels = m_pOfficeDrawingConverter->GetRels();
-				m_pOfficeDrawingConverter->SetRels(pVmlDrawing);
+				OOX::IFileContainer* oldRels = m_pOfficeDrawingConverter->GetRelsPtr();
+				m_pOfficeDrawingConverter->SetRelsPtr(pVmlDrawing);
 
 				m_pOfficeDrawingConverter->AddObject(L"<pict>" + pFind->second.sXml + L"</pict>", &pMainProps);
 
-				m_pOfficeDrawingConverter->SetRels(oldRels);
+				m_pOfficeDrawingConverter->SetRelsPtr(oldRels);
 				m_oBcw.WriteItemEnd(nCurPos3);
 			}
 		m_oBcw.WriteItemEnd(nCurPos2);
@@ -6844,23 +6844,23 @@ void BinaryWorksheetTableWriter::WriteDrawing(const OOX::Spreadsheet::CWorksheet
 			}
 			sVmlXml += L"</v:object>";
 
-            smart_ptr<OOX::IFileContainer> oldRels = m_pOfficeDrawingConverter->GetRels();
-			m_pOfficeDrawingConverter->SetRels(pVmlDrawing);
+            OOX::IFileContainer* oldRels = m_pOfficeDrawingConverter->GetRelsPtr();
+			m_pOfficeDrawingConverter->SetRelsPtr(pVmlDrawing);
 
 			std::wstring* bstrOutputXml = NULL;
 			
 			m_oBcw.m_oStream.WriteBYTE(c_oSer_DrawingType::pptxDrawing);			
 			int nCurPos = m_oBcw.WriteItemWithLengthStart();			
 				m_pOfficeDrawingConverter->AddObject(sVmlXml, &bstrOutputXml);			
-				m_pOfficeDrawingConverter->SetRels(oldRels);
+				m_pOfficeDrawingConverter->SetRelsPtr(oldRels);
 			m_oBcw.WriteItemWithLengthEnd(nCurPos);					
 			RELEASEOBJECT(bstrOutputXml);
 		}
 	}
 	else if (pCellAnchor->m_oElement.IsInit())
 	{
-		smart_ptr<OOX::IFileContainer> oldRels = m_oBcw.m_oStream.GetRels();
-		m_oBcw.m_oStream.SetRels(pDrawing);
+		OOX::IFileContainer* oldRels = m_oBcw.m_oStream.GetRelsPtr();
+		m_oBcw.m_oStream.SetRelsPtr(pDrawing);
 
 		m_oBcw.m_oStream.WriteBYTE(c_oSer_DrawingType::pptxDrawing);
 		int nCurPos = m_oBcw.WriteItemWithLengthStart();
@@ -6878,7 +6878,7 @@ void BinaryWorksheetTableWriter::WriteDrawing(const OOX::Spreadsheet::CWorksheet
 
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 
-		m_oBcw.m_oStream.SetRels(oldRels);
+		m_oBcw.m_oStream.SetRelsPtr(oldRels);
 	}
 }
 void BinaryWorksheetTableWriter::WriteLegacyDrawingHF(const OOX::Spreadsheet::CWorksheet& oWorksheet)
@@ -6999,13 +6999,13 @@ void BinaryWorksheetTableWriter::WriteLegacyDrawingHF(const OOX::Spreadsheet::CW
 		if (oFileV.IsInit() && OOX::FileTypes::VmlDrawing == oFileV->type())
 		{
 			OOX::CVmlDrawing* pVmlDrawing = (OOX::CVmlDrawing*)oFileV.GetPointer();
-			smart_ptr<OOX::IFileContainer> oldRels = m_pOfficeDrawingConverter->GetRels();
-			m_pOfficeDrawingConverter->SetRels(pVmlDrawing);
+			OOX::IFileContainer* oldRels = m_pOfficeDrawingConverter->GetRelsPtr();
+			m_pOfficeDrawingConverter->SetRelsPtr(pVmlDrawing);
 			m_pOfficeDrawingConverter->Clear();
 			nCurPos = m_oBcw.WriteItemStart(c_oSer_LegacyDrawingHF::Drawings);
 			WriteLegacyDrawingHFDrawings(pVmlDrawing);
 			m_oBcw.WriteItemWithLengthEnd(nCurPos);
-			m_pOfficeDrawingConverter->SetRels(oldRels);
+			m_pOfficeDrawingConverter->SetRelsPtr(oldRels);
 		}
 	}
 }
