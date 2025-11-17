@@ -1142,7 +1142,7 @@ HRESULT CGraphicsRenderer::AddPath(const Aggplus::CGraphicsPath& path)
 	if (path.GetPointCount() == 0)
 		return S_FALSE;
 
-	size_t length = path.GetPointCount();
+	size_t length = path.GetPointCount() + path.GetCloseCount();
 	std::vector<Aggplus::PointD> points = path.GetPoints(0, length);
 
 	for (size_t i = 0; i < length; i++)
@@ -1156,8 +1156,10 @@ HRESULT CGraphicsRenderer::AddPath(const Aggplus::CGraphicsPath& path)
 		}
 		else if (path.IsMovePoint(i))
 			PathCommandMoveTo(points[i].X, points[i].Y);
-		else
+		else if (path.IsLinePoint(i))
 			PathCommandLineTo(points[i].X, points[i].Y);
+		else
+			PathCommandClose();
 	}
 
 	return S_OK;
