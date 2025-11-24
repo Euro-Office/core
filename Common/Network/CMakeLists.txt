@@ -1,0 +1,125 @@
+cmake_minimum_required(VERSION 3.10)
+
+set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
+set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
+
+
+project(kernel_network)
+
+set(CORE_ROOT_DIR "../..")
+set(SOCKETIO_SOURCES_LINK "${CORE_ROOT_DIR}/Common/3dParty/socketio/socket.io-client-cpp")
+set(SOCKETIO_PATCHES_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio/patches/proper_patches")
+
+
+
+
+message( "Fetch and build OpenSSL" )
+set(OPENSSL_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl/openssl_build_linux_64")
+get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-build.sh
+                WORKING_DIRECTORY ${OPENSSL_INSTALL_DIR_ABS}/..)
+
+
+
+message( "Fetch and patch Socket-IO" )
+set(SOCKETIO_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio/socket.io-client-cpp")
+get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-fetch.sh
+    WORKING_DIRECTORY ${SOCKETIO_INSTALL_DIR_ABS}/..)
+
+
+
+set(CORE_ROOT_DIR "../..")
+set(SOCKET_IO_SRC_DIR "${CORE_ROOT_DIR}/src")
+
+add_library(kernel_network SHARED
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.cpp
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.h
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_packet.cpp
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_packet.h
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_client.cpp
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_client.h
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_message.h
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_socket.cpp
+    ${SOCKETIO_INSTALL_DIR}/src_no_tls/sio_socket.h
+    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_client_impl.cpp
+    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_client_impl.h
+    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_packet.cpp
+    ${SOCKETIO_INSTALL_DIR}/src/internal/sio_packet.h
+    ${SOCKETIO_INSTALL_DIR}/src/sio_client.cpp
+    ${SOCKETIO_INSTALL_DIR}/src/sio_client.h
+    ${SOCKETIO_INSTALL_DIR}/src/sio_message.h
+    ${SOCKETIO_INSTALL_DIR}/src/sio_socket.cpp
+    ${SOCKETIO_INSTALL_DIR}/src/sio_socket.h
+
+    WebSocket/src/managerWebSocket.cpp
+    WebSocket/src/socketio/socketio_internal.cpp
+
+    WebSocket/include/websocket.h
+	WebSocket/src/websocketbase.h
+    WebSocket/src/socketio/socketio_internal.h
+    WebSocket/src/socketio/socketio_internal_private.h
+    WebSocket/src/socketio/socketio_internal_private_no_tls.h
+
+    # filetransporter.pri
+    
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/manager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/FileTransporter.h
+	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/manager.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_private.h
+	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/transport_external.h
+	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.h
+
+)
+
+target_compile_definitions(kernel_network PRIVATE
+   BOOST_DATE_TIME_NO_LIB
+   BOOST_REGEX_NO_LIB
+   ASIO_STANDALONE
+   _WEBSOCKETPP_CPP11_STL_
+   _WEBSOCKETPP_CPP11_FUNCTIONAL_
+   _WEBSOCKETPP_CPP11_TYPE_TRAITS_
+   _WEBSOCKETPP_CPP11_CHRONO_
+   SIO_TLS=1
+   SIO_TLS_NO=0
+   USE_IOWEBSOCKET
+)
+
+if(UNIX)
+    target_compile_definitions(kernel_network PRIVATE
+        USE_EXTERNAL_TRANSPORT
+    )
+endif()
+
+target_include_directories(kernel_network PRIVATE
+    ${OPENSSL_INSTALL_DIR}/include
+    ${SOCKETIO_INSTALL_DIR}/lib/websocketpp
+    ${SOCKETIO_INSTALL_DIR}/lib/rapidjson/include
+    ${SOCKETIO_INSTALL_DIR}/lib/asio/asio/include
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
+)
+
+target_link_libraries(kernel_network PRIVATE
+    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
+    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+)
+
+target_link_libraries(kernel_network PUBLIC
+    pthread
+)
+
+if(WIN_32)
+    target_link_libraries(kernel_network PUBLIC
+        Advapi32
+        urlmon
+        Rpcrt4
+        Shell32
+    )
+endif()
+
+# Needs socketio
