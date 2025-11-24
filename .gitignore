@@ -25,6 +25,8 @@ Thumbs.db
 **/*.build/
 *.dat
 *.txt
+# Keep CMakeLists.txt
+!CMakeLists.txt
 *.log
 
 *.ipch
