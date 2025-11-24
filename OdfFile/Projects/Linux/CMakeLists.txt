@@ -24,7 +24,9 @@ message( "Fetch and build icu" )
 set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_MAJOR_VER "74")
 set(PLATFORM_PREFIX "linux_x64")
+set(ICU_INSTALL_DIR "${ICU_ROOT_DIR}/install_${PLATFORM_PREFIX}")
 get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
+get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-build.sh
                 WORKING_DIRECTORY ${ICU_ROOT_DIR_ABS})
 
@@ -836,6 +838,7 @@ target_compile_definitions(OdfFormatLib PRIVATE
 
 target_include_directories(OdfFormatLib PRIVATE
 	${ODF_FILE_ROOT_DIR}/Common
+    ${ICU_INSTALL_DIR}/include
 )
 
 target_precompile_headers(OdfFormatLib PRIVATE
@@ -845,6 +848,6 @@ target_precompile_headers(OdfFormatLib PRIVATE
 target_link_libraries(OdfFormatLib PUBLIC
     kernel
     UnicodeConverter
-    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicudata.so.${ICU_MAJOR_VER}
+    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
+    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
