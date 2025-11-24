@@ -10,11 +10,6 @@ set(ODF_FILE_ROOT_DIR "../..")
 set(SM_CUSTOM_SHAPE_2_OOXML_DIR "../../Reader/Converter/SMCustomShape2OOXML")
 set(STAR_MATH_2_OOXML_DIR "../../Reader/Converter/StarMath2OOXML")
 
-set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
-set(ICU_MAJOR_VER "74")
-set(PLATFORM_PREFIX "linux_64")
-get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
-
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
@@ -22,6 +17,18 @@ endif()
 if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
+
+
+
+message( "Fetch and build icu" )
+set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
+set(ICU_MAJOR_VER "74")
+set(PLATFORM_PREFIX "linux_x64")
+get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-build.sh
+                WORKING_DIRECTORY ${ICU_ROOT_DIR_ABS})
+
+
 
 # Note:
 # It may be smarter to use the few source files from core_release{}.
@@ -838,6 +845,6 @@ target_precompile_headers(OdfFormatLib PRIVATE
 target_link_libraries(OdfFormatLib PUBLIC
     kernel
     UnicodeConverter
-    ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicudata.so.${ICU_MAJOR_VER}
+    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicuuc.so.${ICU_MAJOR_VER}
+    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicudata.so.${ICU_MAJOR_VER}
 )

@@ -7,30 +7,28 @@ set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
 project(kernel_network)
 
 set(CORE_ROOT_DIR "../..")
-set(SOCKETIO_SOURCES_LINK "${CORE_ROOT_DIR}/Common/3dParty/socketio/socket.io-client-cpp")
-set(SOCKETIO_PATCHES_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio/patches/proper_patches")
-
-
+set(SOCKET_IO_SRC_DIR "${CORE_ROOT_DIR}/src")
 
 
 message( "Fetch and build OpenSSL" )
-set(OPENSSL_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl/openssl_build_linux_64")
+set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
+set(OPENSSL_INSTALL_DIR "${OPENSSL_3RDPARTY_DIR}/openssl_build_linux_64")
+get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-build.sh
-                WORKING_DIRECTORY ${OPENSSL_INSTALL_DIR_ABS}/..)
+                WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS})
 
 
 
 message( "Fetch and patch Socket-IO" )
-set(SOCKETIO_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio/socket.io-client-cpp")
+set(SOCKETIO_3DPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio")
+set(SOCKETIO_INSTALL_DIR "${SOCKETIO_3DPARTY_DIR}/socket.io-client-cpp")
+get_filename_component(SOCKETIO_3DPARTY_DIR_ABS "${SOCKETIO_3DPARTY_DIR}" ABSOLUTE)
 get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${SOCKETIO_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${SOCKETIO_3DPARTY_DIR_ABS})
 
 
-
-set(CORE_ROOT_DIR "../..")
-set(SOCKET_IO_SRC_DIR "${CORE_ROOT_DIR}/src")
 
 add_library(kernel_network SHARED
     ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.cpp

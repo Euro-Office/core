@@ -28,38 +28,46 @@ endif()
 
 
 message( "Fetch and patch Katana parser" )
-set(KATANA_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/html/katana-parser")
+set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
+get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${KATANA_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
 
 
 
 
 message( "Fetch and patch Harfbuzz" )
-set(HARFBUZZ_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/harfbuzz/harfbuzz")
+set(HARFBUZZ_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/harfbuzz")
+set(HARFBUZZ_INSTALL_DIR "${HARFBUZZ_3RDPARTY_DIR}/harfbuzz")
+get_filename_component(HARFBUZZ_3RDPARTY_DIR_ABS "${HARFBUZZ_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HARFBUZZ_INSTALL_DIR_ABS "${HARFBUZZ_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${HARFBUZZ_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${HARFBUZZ_3RDPARTY_DIR_ABS})
 
 
 
 
 message( "Fetch Brotli" )
-set(BROTLI_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/brotli/brotli")
+set(BROTLI_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/brotli")
+set(BROTLI_INSTALL_DIR "${BROTLI_3RDPARTY_DIR}/brotli")
+get_filename_component(BROTLI_3RDPARTY_DIR_ABS "${BROTLI_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(BROTLI_INSTALL_DIR_ABS "${BROTLI_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${BROTLI_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${BROTLI_3RDPARTY_DIR_ABS})
 
 
 
 
 # Where is this used?
 message( "Fetch Hyphen" )
-set(HYPHEN_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen/hyphen")
+set(HYPHEN_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen")
+set(HYPHEN_INSTALL_DIR "${HYPHEN_3RDPARTY_DIR}/hyphen")
+get_filename_component(HYPHEN_3RDPARTY_DIR_ABS "${HYPHEN_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${HYPHEN_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${HYPHEN_3RDPARTY_DIR_ABS})
 
 
 
