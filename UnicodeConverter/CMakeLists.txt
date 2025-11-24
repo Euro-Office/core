@@ -4,12 +4,19 @@ set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
 set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
 set(CORE_ROOT_DIR "..")
 
+project(UnicodeConverter)
+
+
+
+message( "Fetch and build icu" )
 set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_MAJOR_VER "74")
-set(PLATFORM_PREFIX "linux_64")
+set(PLATFORM_PREFIX "linux_x64")
 get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-build.sh
+                WORKING_DIRECTORY ${ICU_ROOT_DIR_ABS})
 
-project(UnicodeConverter)
+
 
 add_library(UnicodeConverter SHARED
     UnicodeConverter.cpp
@@ -26,8 +33,8 @@ target_include_directories(UnicodeConverter PUBLIC
 )
 
 target_link_libraries(UnicodeConverter PUBLIC
-    ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicudata.so.${ICU_MAJOR_VER}
+    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicuuc.so.${ICU_MAJOR_VER}
+    ${ICU_ROOT_DIR_ABS}/install_${PLATFORM_PREFIX}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
 
 # TODO consider this

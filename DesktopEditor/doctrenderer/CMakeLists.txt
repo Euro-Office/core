@@ -5,11 +5,6 @@ set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
 
 set(CORE_ROOT_DIR "../..")
 
-set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
-set(ICU_MAJOR_VER "74")
-set(PLATFORM_PREFIX "linux_64")
-get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
-
 project(doctrenderer)
 
 # As far as I can tell, this should be set to 1 when building on mac.
@@ -68,11 +63,13 @@ endif()
 
 
 message( "Fetch and build OpenSSL" )
-set(OPENSSL_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl/openssl_build_linux_64")
+set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
+set(OPENSSL_INSTALL_DIR "${OPENSSL_3RDPARTY_DIR}/openssl_build_linux_64")
+get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
 
 execute_process(COMMAND ./nc-build.sh
-                WORKING_DIRECTORY ${OPENSSL_INSTALL_DIR_ABS}/..)
+                WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS})
 
 
 
@@ -239,7 +236,7 @@ target_include_directories(doctrenderer PRIVATE
     ${OPENSSL_INSTALL_DIR}/include
     ${V8_REPO_ROOT}
     ${V8_REPO_ROOT}/include
-    ${ICU_ROOT_DIR}/${PLATFORM_PREFIX}/build/include
+    # ${ICU_ROOT_DIR}/${PLATFORM_PREFIX}/build/include
 )
 
 if(V8_USE_INSPECTOR)
@@ -293,7 +290,6 @@ endif()
 target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
     ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
-    # ${V8_LIB_OUTPUT_DIR}/libv8_monolith.a
 )
 
 target_link_libraries(doctrenderer PUBLIC
@@ -303,11 +299,6 @@ target_link_libraries(doctrenderer PUBLIC
     graphics
     pthread
     ${V8_LIB_OUTPUT_DIR}/libv8_monolith.a
-    # dl # v8
-    # m # v8
-    # rt # v8
-    # ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicuuc.so.${ICU_MAJOR_VER} # v8
-    # ${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build/libicudata.so.${ICU_MAJOR_VER} # v8
 )
 
 if(DRAWINGFILE_SUPPORT)

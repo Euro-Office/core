@@ -30,18 +30,22 @@ endif()
 
 
 message( "Fetch and patch Gumbo parser" )
-set(GUMBO_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/html/gumbo-parser")
+set(GUMBO_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(GUMBO_INSTALL_DIR "${GUMBO_3RDPARTY_DIR}/gumbo-parser")
+get_filename_component(GUMBO_3RDPARTY_DIR_ABS "${GUMBO_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${GUMBO_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${GUMBO_3RDPARTY_DIR_ABS})
 
 
 
 message( "Fetch md" )
-set(MD_INSTALL_DIR "${CORE_ROOT_DIR}/Common/3dParty/md/md4c")
+set(MD_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/md")
+set(MD_INSTALL_DIR "${MD_3RDPARTY_DIR}/md4c")
+get_filename_component(MD_3RDPARTY_DIR_ABS "${MD_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(MD_INSTALL_DIR_ABS "${MD_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${MD_INSTALL_DIR_ABS}/..)
+    WORKING_DIRECTORY ${MD_3RDPARTY_DIR_ABS})
 
 
 
