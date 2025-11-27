@@ -28,6 +28,15 @@ endif()
 
 
 
+message( "Fetch and patch Katana parser" )
+set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
+get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-fetch.sh
+    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
+
+
 
 message( "Fetch and patch Gumbo parser" )
 set(GUMBO_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
@@ -55,6 +64,22 @@ add_library(HtmlFile2 SHARED
     htmlfile2.h
     src/StringFinder.h
     src/Languages.h
+
+    # katana.pri
+    ${KATANA_INSTALL_DIR}/src/foundation.c
+    ${KATANA_INSTALL_DIR}/src/katana.lex.c
+    ${KATANA_INSTALL_DIR}/src/katana.tab.c
+    ${KATANA_INSTALL_DIR}/src/parser.c
+    ${KATANA_INSTALL_DIR}/src/selector.c
+    ${KATANA_INSTALL_DIR}/src/tokenizer.c
+
+    ${KATANA_INSTALL_DIR}/src/foundation.h
+    ${KATANA_INSTALL_DIR}/src/katana.h
+    ${KATANA_INSTALL_DIR}/src/katana.lex.h
+    ${KATANA_INSTALL_DIR}/src/katana.tab.h
+    ${KATANA_INSTALL_DIR}/src/parser.h
+    ${KATANA_INSTALL_DIR}/src/selector.h
+    ${KATANA_INSTALL_DIR}/src/tokenizer.h
 
     # gumbo.pri
     ${GUMBO_INSTALL_DIR}/src/attribute.c
