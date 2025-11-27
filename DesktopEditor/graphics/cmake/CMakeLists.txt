@@ -10,7 +10,6 @@ set(GRAPHICS_ROOT_DIR "..")
 set(DESKTOP_EDITOR_ROOT_DIR "../..")
 set(OFFICE_UTILS_ROOT_DIR "../../../OfficeUtils")
 set(METAFILE_SOURCER_DIR "${DESKTOP_EDITOR_ROOT_DIR}/raster/Metafile")
-set(HTML_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty/html")
 
 set(FREETYPE_VERSION_TO_USE "2.10.4")
 set(FREETYPE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/freetype-${FREETYPE_VERSION_TO_USE}")
@@ -23,18 +22,6 @@ endif()
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
-
-
-
-
-message( "Fetch and patch Katana parser" )
-set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
-get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
-
 
 
 
@@ -57,17 +44,6 @@ get_filename_component(BROTLI_INSTALL_DIR_ABS "${BROTLI_INSTALL_DIR}" ABSOLUTE)
 execute_process(COMMAND ./nc-fetch.sh
     WORKING_DIRECTORY ${BROTLI_3RDPARTY_DIR_ABS})
 
-
-
-
-# Where is this used?
-message( "Fetch Hyphen" )
-set(HYPHEN_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen")
-set(HYPHEN_INSTALL_DIR "${HYPHEN_3RDPARTY_DIR}/hyphen")
-get_filename_component(HYPHEN_3RDPARTY_DIR_ABS "${HYPHEN_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${HYPHEN_3RDPARTY_DIR_ABS})
 
 
 
@@ -99,6 +75,7 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_markers_term.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_smooth_poly1.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/src/agg_vcgen_stroke.cpp
+
     ${GRAPHICS_ROOT_DIR}/AlphaMask.cpp
     ${GRAPHICS_ROOT_DIR}/ArrowHead.cpp
     ${GRAPHICS_ROOT_DIR}/BooleanOperations.cpp
@@ -120,6 +97,7 @@ add_library(graphics SHARED
     ${GRAPHICS_ROOT_DIR}/pro/pro_Image.cpp
 
     ${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/include/test_grads/custom_gradients.h
+
     ${GRAPHICS_ROOT_DIR}/AlphaMask_p.h
     ${GRAPHICS_ROOT_DIR}/AlphaMask.h
     ${GRAPHICS_ROOT_DIR}/ArrowHead.h
@@ -555,40 +533,6 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CObjectBase.h
         ${METAFILE_SOURCER_DIR}/svg/SvgUtils.h
     # }
-
-    # CssCalculator.pri
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator_Private.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CElement.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CNode.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/ConstValues.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/StaticFunctions.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/StyleProperties.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CUnitMeasureConverter.cpp
-
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator_Private.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CElement.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CNode.h
-    ${HTML_3RDPARTY_ROOT}/css/src/ConstValues.h
-    ${HTML_3RDPARTY_ROOT}/css/src/StaticFunctions.h
-    ${HTML_3RDPARTY_ROOT}/css/src/StyleProperties.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CUnitMeasureConverter.h
-
-    # katana.pri
-    ${KATANA_INSTALL_DIR}/src/foundation.c
-    ${KATANA_INSTALL_DIR}/src/katana.lex.c
-    ${KATANA_INSTALL_DIR}/src/katana.tab.c
-    ${KATANA_INSTALL_DIR}/src/parser.c
-    ${KATANA_INSTALL_DIR}/src/selector.c
-    ${KATANA_INSTALL_DIR}/src/tokenizer.c
-
-    ${KATANA_INSTALL_DIR}/src/foundation.h
-    ${KATANA_INSTALL_DIR}/src/katana.h
-    ${KATANA_INSTALL_DIR}/src/katana.lex.h
-    ${KATANA_INSTALL_DIR}/src/katana.tab.h
-    ${KATANA_INSTALL_DIR}/src/parser.h
-    ${KATANA_INSTALL_DIR}/src/selector.h
-    ${KATANA_INSTALL_DIR}/src/tokenizer.h
-
 
     # freetype.pri
     # !config_zlip_image {
@@ -1027,7 +971,6 @@ target_include_directories(graphics PRIVATE
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/png
     ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11 # !config_zlip_image
     ${OFFICE_UTILS_ROOT_DIR}/src # !config_zlip_image
-    ${HTML_3RDPARTY_ROOT}/css # CssCalculator.pri
 
     # freetype.pri
     ${FREETYPE_SOURCES_DIR}/include
