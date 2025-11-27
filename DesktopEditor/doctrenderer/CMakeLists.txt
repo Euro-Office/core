@@ -67,7 +67,6 @@ set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
 set(OPENSSL_INSTALL_DIR "${OPENSSL_3RDPARTY_DIR}/openssl_build_linux_64")
 get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-
 execute_process(COMMAND ./nc-build.sh
                 WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS})
 
