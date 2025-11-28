@@ -47,6 +47,17 @@ execute_process(COMMAND ./nc-fetch.sh
 
 
 
+message( "Fetch Hyphen" )
+set(HYPHEN_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen")
+set(HYPHEN_INSTALL_DIR "${HYPHEN_3RDPARTY_DIR}/hyphen")
+get_filename_component(HYPHEN_3RDPARTY_DIR_ABS "${HYPHEN_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-fetch.sh
+    WORKING_DIRECTORY ${HYPHEN_3RDPARTY_DIR_ABS})
+
+
+
+
 add_library(graphics SHARED
     ${METAFILE_SOURCER_DIR}/MetaFile.h
     ${METAFILE_SOURCER_DIR}/Common/MetaFile.h
