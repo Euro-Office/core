@@ -1245,6 +1245,7 @@ void CPdfEditor::Close()
 	}
 	if (m_nMode == Mode::Split)
 	{
+		m_pWriter->EditClose();
 		m_pWriter->SaveToFile(m_wsDstFile);
 		return;
 	}
@@ -1511,6 +1512,7 @@ void CPdfEditor::Close()
 			pEncryptDict->UpdateKey(nCryptAlgorithm);
 		}
 
+		m_pWriter->EditClose();
 		m_pWriter->SaveToFile(m_wsDstFile);
 		return;
 	}
