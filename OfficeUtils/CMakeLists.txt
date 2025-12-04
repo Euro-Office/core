@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(OfficeUtils)
 
-set(OFFICE_UTILS_SOURCES_DIR "src")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(OFFICE_UTILS_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/src")
 
 add_library(OfficeUtils STATIC
     ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtils.cpp
@@ -59,6 +60,8 @@ target_include_directories(OfficeUtils PRIVATE
     ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11
     ${OFFICE_UTILS_SOURCES_DIR}
 )
+
+set_property(TARGET OfficeUtils PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 if (WIN32)
     target_compile_options(OfficeUtils PRIVATE -include io.h)

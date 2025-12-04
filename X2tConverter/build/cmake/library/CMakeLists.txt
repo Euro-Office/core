@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(x2tlib)
 
-set(CORE_ROOT_DIR "../../../../..")
-set(X2T_ROOT_DIR "../../../..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
-file(READ "${CORE_ROOT_DIR}/Common/version.txt" VERSION_TXT_CONTENT)
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 
 if(NOT TARGET CryptoPPLib)
     add_subdirectory(${CORE_ROOT_DIR}/Common/3dParty/cryptopp/project CryptoPPLib)
@@ -118,7 +116,21 @@ if(NOT TARGET HWPFile)
     add_subdirectory(${CORE_ROOT_DIR}/HwpFile HWPFile)
 endif()
 
-add_library(x2tlib STATIC
+
+
+message( "Fetch and build icu" )
+set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
+set(ICU_MAJOR_VER "74")
+set(PLATFORM_PREFIX "linux_x64")
+set(ICU_INSTALL_DIR "${ICU_ROOT_DIR}/install_${PLATFORM_PREFIX}")
+get_filename_component(ICU_ROOT_DIR_ABS "${ICU_ROOT_DIR}" ABSOLUTE)
+get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-build.sh
+                WORKING_DIRECTORY ${ICU_ROOT_DIR_ABS})
+
+
+
+add_library(x2tlib SHARED
     ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
 	${X2T_ROOT_DIR}/src/cextracttools.cpp
 	${X2T_ROOT_DIR}/src/ASCConverters.cpp
@@ -146,11 +158,10 @@ add_library(x2tlib STATIC
     ${X2T_ROOT_DIR}/src/lib/xlsx.h
 )
 
+set_default_options(x2tlib)
+
 target_compile_definitions(x2tlib PRIVATE
-    UNICODE
-	_UNICODE
     FILTER_FLATE_DECODE_ENABLED
-    DONT_WRITE_EMBEDDED_FONTS
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
     PDFFILE_USE_DYNAMIC_LIBRARY
     XPS_USE_DYNAMIC_LIBRARY
@@ -162,7 +173,6 @@ target_compile_definitions(x2tlib PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY
     GRAPHICS_USE_DYNAMIC_LIBRARY
     BUILD_X2T_AS_LIBRARY_DYLIB
-    INTVER=${VERSION_TXT_CONTENT}
 )
 
 target_include_directories(x2tlib PRIVATE
@@ -171,6 +181,13 @@ target_include_directories(x2tlib PRIVATE
     ${CORE_ROOT_DIR}/OOXML/Binary/Document
     ${CORE_ROOT_DIR}/OOXML/Binary/Presentation
     ${CORE_ROOT_DIR}/OfficeUtils/src
+    ${ICU_INSTALL_DIR}/include
+)
+
+# Re-enable exporting symbols
+target_compile_options(x2tlib PRIVATE
+    -fvisibility=default
+    -fvisibility-inlines-hidden
 )
 
 # static libs
@@ -207,10 +224,8 @@ target_link_libraries(x2tlib PUBLIC
     DocxRenderer
     IWorkFile
     HWPFile
+    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
+    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
 
-# TODO
-# set_target_properties(MyApp PROPERTIES
-#     BUILD_RPATH "/path/to/libs"
-#     INSTALL_RPATH "/path/to/libs"
-# )
+set_property(TARGET x2tlib PROPERTY POSITION_INDEPENDENT_CODE ON)

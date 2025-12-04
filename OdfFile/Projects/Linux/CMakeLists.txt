@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(OdfFormatLib)
 
-set(CORE_ROOT_DIR "../../..")
-set(ODF_FILE_ROOT_DIR "../..")
-set(SM_CUSTOM_SHAPE_2_OOXML_DIR "../../Reader/Converter/SMCustomShape2OOXML")
-set(STAR_MATH_2_OOXML_DIR "../../Reader/Converter/StarMath2OOXML")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(ODF_FILE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(SM_CUSTOM_SHAPE_2_OOXML_DIR "${ODF_FILE_ROOT_DIR}/Reader/Converter/SMCustomShape2OOXML")
+set(STAR_MATH_2_OOXML_DIR "${ODF_FILE_ROOT_DIR}/Reader/Converter/StarMath2OOXML")
 
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
@@ -830,11 +830,7 @@ add_library(OdfFormatLib STATIC
     ${STAR_MATH_2_OOXML_DIR}/typeselements.h
 )
 
-target_compile_definitions(OdfFormatLib PRIVATE
-    UNICODE
-	_UNICODE
-	DONT_WRITE_EMBEDDED_FONTS
-)
+set_default_options(OdfFormatLib)
 
 target_include_directories(OdfFormatLib PRIVATE
 	${ODF_FILE_ROOT_DIR}/Common
@@ -846,8 +842,10 @@ target_precompile_headers(OdfFormatLib PRIVATE
 )
 
 target_link_libraries(OdfFormatLib PUBLIC
-    kernel
     UnicodeConverter
+    kernel
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
+
+set_property(TARGET OdfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(DocxRenderer)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 if(NOT DEFINED DISABLE_FULL_DOCUMENT_CREATION)
     set(DISABLE_FULL_DOCUMENT_CREATION 0)
@@ -66,6 +65,8 @@ add_library(DocxRenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/VectorGraphics.h
 )
 
+set_default_options(DocxRenderer)
+
 if( NOT DISABLE_FULL_DOCUMENT_CREATION )
     target_sources(DocxRenderer PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/resources/resources.cpp
@@ -83,8 +84,8 @@ if(DISABLE_FULL_DOCUMENT_CREATION)
 endif()
 
 target_link_libraries(DocxRenderer PUBLIC
-    kernel
     UnicodeConverter
+    kernel
     graphics
 )
 

@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(BinDocument)
 
-set(CORE_ROOT_DIR "../../../..")
-set(OOXML_ROOT_DIR "../../..")
-set(BIN_SOURCES_DIR "../../../Binary")
-set(MS_BINARY_FILE_ROOT "../../../../MsBinaryFile")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(OOXML_ROOT_DIR "${CORE_ROOT_DIR}/OOXML")
+set(BIN_SOURCES_DIR "${OOXML_ROOT_DIR}/Binary")
+set(MS_BINARY_FILE_ROOT "${CORE_ROOT_DIR}/MsBinaryFile")
 
 add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Document/DocWrapper/DocxSerializer.cpp
@@ -107,12 +107,11 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/CellFormatController/CurrencyReader.h
 )
 
+set_default_options(BinDocument)
+
 target_compile_definitions(BinDocument PRIVATE
-    UNICODE
-	_UNICODE
 	SOLUTION_ASCOFFICEDOCXFILE2
 	#DISABLE_FILE_DOWNLOADER
-	DONT_WRITE_EMBEDDED_FONTS
 	AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
 )
 
@@ -126,25 +125,4 @@ target_include_directories(BinDocument PRIVATE
     ${OOXML_ROOT_DIR}/XlsbFormat
 )
 
-target_compile_options(BinDocument PRIVATE
-    -Wno-register
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -O2
-    -fPIC
-    -D_REENTRANT
-    -DINTVER=2.5.565.0
-    -DWIN_INTVER=2,5,565,0
-    -DCOPYRIGHT_YEAR=2025
-    -DQT_VERSION_6
-    -DLINUX
-    -D_LINUX
-    -DCRYPTOPP_DISABLE_ASM
-    -DUNICODE
-    -D_UNICODE
-    -DDONT_WRITE_EMBEDDED_FONTS
-    -DQT_NO_DEBUG
-)
+set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)

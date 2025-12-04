@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 project(UnicodeConverter)
 
@@ -25,6 +25,8 @@ add_library(UnicodeConverter SHARED
     UnicodeConverter.h
 )
 
+set_default_options(UnicodeConverter)
+
 target_compile_definitions(UnicodeConverter PRIVATE
     UNICODECONVERTER_USE_DYNAMIC_LIBRARY
 )
@@ -38,8 +40,3 @@ target_link_libraries(UnicodeConverter PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
-
-# TODO consider this
-# set_target_properties(UnicodeConverter PROPERTIES
-#     INSTALL_RPATH "${ICU_ROOT_DIR_ABS}/${PLATFORM_PREFIX}/build"
-# )

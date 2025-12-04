@@ -1,13 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(DocFormatLib)
 
-set(DOC_FILE_SOURCES_DIR "../../../../DocFile")
-set(COMMON_BASE_SOURCES_DIR "../../../../Common/Base")
-set(_3RDPARTY_POLE_SOURCES_DIR "../../../../../Common/3dParty/pole")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(DOC_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/DocFile")
+set(COMMON_BASE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common/Base")
+set(_3RDPARTY_POLE_SOURCES_DIR "${CORE_ROOT_DIR}/Common/3dParty/pole")
 
 add_library(DocFormatLib STATIC
     ${COMMON_BASE_SOURCES_DIR}/FormatUtils.cpp
@@ -276,31 +277,12 @@ add_library(DocFormatLib STATIC
     ${DOC_FILE_SOURCES_DIR}/OfficeDrawing/UnknownRecord.h
 )
 
+set_default_options(DocFormatLib)
+
 target_include_directories(DocFormatLib PRIVATE
     ${DOC_FILE_SOURCES_DIR}
     ${COMMON_BASE_SOURCES_DIR}
     ${_3RDPARTY_POLE_SOURCES_DIR}
 )
 
-target_compile_options(DocFormatLib PRIVATE
-    -Wno-register
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -O2
-    -fPIC
-    -D_REENTRANT
-    -DINTVER=2.5.565.0
-    -DWIN_INTVER=2,5,565,0
-    -DCOPYRIGHT_YEAR=2025
-    -DQT_VERSION_6
-    -DLINUX
-    -D_LINUX
-    -DCRYPTOPP_DISABLE_ASM
-    -DUNICODE
-    -D_UNICODE
-    -DDONT_WRITE_EMBEDDED_FONTS
-    -DQT_NO_DEBUG
-)
+set_property(TARGET DocFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

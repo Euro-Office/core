@@ -1,15 +1,16 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(libxml)
+
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 if(NOT DEFINED ONLY_LIBXML)
     set(ONLY_LIBXML 0)
 endif()
-set(XML_ROOT_DIR "../..")
-set(LIBXML2_SOURCES_DIR "../../libxml2")
+set(XML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(LIBXML2_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/../../libxml2")
 
 add_library(libxml STATIC
     ${LIBXML2_SOURCES_DIR}/buf.c
@@ -58,6 +59,8 @@ add_library(libxml STATIC
     ${LIBXML2_SOURCES_DIR}/parser.c
 )
 
+set_default_options(libxml)
+
 if(NOT ONLY_LIBXML)
     message("Including XML writer!")
     target_sources(libxml PRIVATE
@@ -94,6 +97,4 @@ target_include_directories(libxml PRIVATE
     ${LIBXML2_SOURCES_DIR}/include/libxml
 )
 
-target_compile_options(libxml PRIVATE
-    -fPIC
-)
+set_property(TARGET libxml PROPERTY POSITION_INDEPENDENT_CODE ON)

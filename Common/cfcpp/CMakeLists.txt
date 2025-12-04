@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(CompoundFileLib)
+
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 add_library(CompoundFileLib STATIC
     RBTree/rbtree.cpp
@@ -46,3 +47,7 @@ add_library(CompoundFileLib STATIC
     streamview.h
     svector.h
 )
+
+set_default_options(CompoundFileLib)
+
+set_property(TARGET CompoundFileLib PROPERTY POSITION_INDEPENDENT_CODE ON)

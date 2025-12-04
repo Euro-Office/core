@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(TxtXmlFormatLib)
 
-set(TXT_XML_FORMAT_SOURCES_DIR "../../Source")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(TXT_XML_FORMAT_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/../../Source")
 
 add_library(TxtXmlFormatLib STATIC
 	${TXT_XML_FORMAT_SOURCES_DIR}/ConvertDocx2Txt.cpp
@@ -25,13 +26,6 @@ add_library(TxtXmlFormatLib STATIC
     ${TXT_XML_FORMAT_SOURCES_DIR}/TxtXmlFile.h
 )
 
-target_compile_definitions(TxtXmlFormatLib PRIVATE
-    UNICODE
-	_UNICODE
-	DONT_WRITE_EMBEDDED_FONTS
-)
+set_default_options(TxtXmlFormatLib)
 
-target_include_directories(TxtXmlFormatLib PRIVATE
-	${CORE_ROOT_DIR}/MsBinaryFile/XlsFile/Format
-	${OOXML_ROOT_DIR}/XlsbFormat
-)
+set_property(TARGET TxtXmlFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

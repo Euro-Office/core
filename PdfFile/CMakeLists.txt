@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(PdfFile)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 set(OPENJPEG_ROOT_DIR "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg")
 set(OPENJPEG_VERSION "2.4.0")
@@ -428,6 +427,8 @@ add_library(PdfFile SHARED
     ${OPENJPEG_ROOT_DIR}/opj_bgraframe.h
 )
 
+set_default_options(PdfFile)
+
 target_compile_definitions(PdfFile PRIVATE
     _hypot=hypot
     PDFFILE_USE_DYNAMIC_LIBRARY
@@ -472,6 +473,10 @@ target_include_directories(PdfFile PRIVATE
     ${BROTLI_IN_TREE_LOCATION}/c/include
 )
 
+target_compile_options(PdfFile PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:-include limits>
+)
+
 if(UNIX AND NOT APPLE)
     target_compile_options(PdfFile PRIVATE
         $<$<COMPILE_LANGUAGE:CXX>:-Wno-narrowing>
@@ -498,10 +503,10 @@ target_link_libraries(PdfFile PUBLIC
 
 # dynamic libs
 target_link_libraries(PdfFile PUBLIC
-    kernel
-    kernel_network
-    UnicodeConverter
     graphics
+    kernel
+    UnicodeConverter
+    kernel_network
 
     # gdi32 # Windows
     # advapi32 # Windows

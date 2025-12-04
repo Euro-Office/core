@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(HWPFile)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 if(NOT TARGET CryptoPPLib)
     add_subdirectory(${CORE_ROOT_DIR}/Common/3dParty/cryptopp/project CryptoPPLib)
@@ -191,6 +190,8 @@ add_library(HWPFile SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/HWPFile.h
 )
 
+set_default_options(HWPFile)
+
 target_include_directories(HWPFile PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
@@ -203,4 +204,11 @@ target_compile_definitions(HWPFile PRIVATE
 # static libs
 target_link_libraries(HWPFile PUBLIC
     CryptoPPLib
+)
+
+# shared libs
+target_link_libraries(HWPFile PUBLIC
+    kernel
+    UnicodeConverter
+    graphics
 )

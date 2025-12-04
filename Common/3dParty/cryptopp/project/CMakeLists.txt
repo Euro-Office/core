@@ -1,16 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(CryptoPPLib)
 
-set(CORE_ROOT_DIR "../../../..")
-set(CRYPTOPP_SOURCES_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
-if(NOT TARGET libxml)
-    add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/xml/build/cmake libxml)
-endif()
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(CRYPTOPP_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 add_library(CryptoPPLib STATIC
     # List cryptlib.cpp first, then cpu.cpp, then integer.cpp to tame C++ static initialization problems.
@@ -394,21 +390,17 @@ add_library(CryptoPPLib STATIC
     ${CORE_ROOT_DIR}/OfficeCryptReader/source/CryptTransform.h
 )
 
+set_default_options(CryptoPPLib)
+
 set_property(TARGET CryptoPPLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 target_compile_definitions(CryptoPPLib PRIVATE
     CRYPTOPPLIB_LIBRARY
-    UNICODE
-	_UNICODE
-    CRYPTOPP_DISABLE_ASM
     DISABLE_TYPE_MISMATCH
 )
 
-target_compile_options(CryptoPPLib PRIVATE
-    -UNDEBUG # this is only for linux :shrug
-)
-
-# static libs
-target_link_libraries(CryptoPPLib PUBLIC
-    libxml
-)
+if(LINUX)
+    target_compile_options(CryptoPPLib PRIVATE
+        -UNDEBUG
+    )
+endif()
