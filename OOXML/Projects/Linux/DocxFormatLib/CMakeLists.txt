@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(DocxFormatLib)
 
-set(CORE_ROOT_DIR "../../../..")
-set(DOCX_FORMAT_SOURCES_ROOT "../../../DocxFormat")
-set(OOXML_ROOT_DIR "../../..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+set(DOCX_FORMAT_SOURCES_ROOT "${OOXML_ROOT_DIR}/DocxFormat")
 
 add_library(DocxFormatLib STATIC
     ${CORE_ROOT_DIR}/Common/3dParty/pole/pole.cpp
@@ -376,11 +376,7 @@ add_library(DocxFormatLib STATIC
     docx_format.h
 )
 
-target_compile_definitions(DocxFormatLib PRIVATE
-    UNICODE
-	_UNICODE
-	DONT_WRITE_EMBEDDED_FONTS
-)
+set_default_options(DocxFormatLib)
 
 target_precompile_headers(DocxFormatLib PRIVATE
     precompiled.h
@@ -391,3 +387,12 @@ if(LINUX)
         -include cfloat
     )
 endif()
+
+# Re-enable exporting symbols
+target_compile_options(DocxFormatLib PRIVATE
+    -fvisibility=default
+    -fvisibility-inlines-hidden
+)
+
+
+set_property(TARGET DocxFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

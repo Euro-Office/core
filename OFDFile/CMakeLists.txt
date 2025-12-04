@@ -1,11 +1,22 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(OFDFile)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+if(NOT TARGET kernel)
+    add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
+endif()
+
+if(NOT TARGET UnicodeConverter)
+    add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
+endif()
+
+if(NOT TARGET graphics)
+    add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
+endif()
 
 if(NOT TARGET PdfFile)
     add_subdirectory(${CORE_ROOT_DIR}/PdfFile PdfFile)
@@ -72,6 +83,8 @@ add_library(OFDFile SHARED
     src/Utils/XmlReader.h
 )
 
+set_default_options(OFDFile)
+
 target_include_directories(OFDFile PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CORE_ROOT_DIR}/DesktopEditor/freetype-2.10.4/include
@@ -84,9 +97,9 @@ target_compile_definitions(OFDFile PRIVATE
 
 # dynamic libs
 target_link_libraries(OFDFile PUBLIC
+    graphics
     kernel
     UnicodeConverter
-    graphics
     PdfFile
 
     # gdi32 # Windows

@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(IWorkFile)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
 set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(DESKTOP_EDITOR_ROOT "${CORE_ROOT_DIR}/DesktopEditor")
 set(COMMON_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty")
@@ -525,8 +525,9 @@ add_library(IWorkFile SHARED
     ${ETONYEK_LIB_ROOT}/src/lib/contexts/PAG1TextStorageElement.h
     ${ETONYEK_LIB_ROOT}/src/lib/libetonyek_utils.h
     ${ETONYEK_LIB_ROOT}/src/lib/libetonyek_xml.h
-
 )
+
+set_default_options(IWorkFile)
 
 if(WIN32)
     target_sources(IWorkFile PRIVATE
@@ -561,23 +562,18 @@ if(APPLE)
     )
 endif()
 
-if(UNIX)
-    target_compile_options(IWorkFile PRIVATE
-        $<$<COMPILE_LANGUAGE:CXX>:-Wall>
-        $<$<COMPILE_LANGUAGE:CXX>:-Wno-ignored-qualifiers>
-        $<$<COMPILE_LANGUAGE:CXX>:-Wno-implicit-function-declaration>
-
-        $<$<COMPILE_LANGUAGE:C>:-Wall>
-        $<$<COMPILE_LANGUAGE:C>:-Wno-ignored-qualifiers>
-        $<$<COMPILE_LANGUAGE:C>:-Wno-implicit-function-declaration>
-    )
-endif()
-
 target_compile_definitions(IWorkFile PRIVATE
+    IWORK_USE_DYNAMIC_LIBRARY
     BUILD_ZLIB_AS_SOURCES # OfficeUtils.pri
 )
 
 # static libs
-target_link_libraries(IWorkFile PRIVATE
+target_link_libraries(IWorkFile PUBLIC
     libxml
+)
+
+# shared libs
+target_link_libraries(IWorkFile PUBLIC
+    kernel
+    UnicodeConverter
 )

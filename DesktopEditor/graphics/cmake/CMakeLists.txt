@@ -1,14 +1,14 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(graphics)
 
-set(CORE_ROOT_DIR "../../..")
-set(GRAPHICS_ROOT_DIR "..")
-set(DESKTOP_EDITOR_ROOT_DIR "../..")
-set(OFFICE_UTILS_ROOT_DIR "../../../OfficeUtils")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(GRAPHICS_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+set(DESKTOP_EDITOR_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(METAFILE_SOURCER_DIR "${DESKTOP_EDITOR_ROOT_DIR}/raster/Metafile")
 
 set(FREETYPE_VERSION_TO_USE "2.10.4")
@@ -934,6 +934,8 @@ add_library(graphics SHARED
     # ${BROTLI_INSTALL_DIR}/c/dec/static_init.c
 )
 
+set_default_options(graphics)
+
 if (WIN32)
     target_sources(graphics PRIVATE ${FREETYPE_SOURCES_DIR}/src/base/ftsystem.c) # freetype.pri
 else()
@@ -941,9 +943,6 @@ else()
 endif()
 
 target_compile_definitions(graphics PRIVATE
-    HAVE_UNISTD_H # linux
-    _LINUX # linux
-
     DISABLE_IMAGE_EXCEPTIONS
     EXCLUDE_JPG_SUPPORT
 	MNG_SUPPORT_DISPLAY
@@ -952,7 +951,6 @@ target_compile_definitions(graphics PRIVATE
 	MNG_ACCESS_CHUNKS
 	MNG_STORE_CHUNKS
 	MNG_ERROR_TELLTALE
-    HAVE_UNISTD_H HAVE_FCNTL_H # linux or mac
     # JAS_WIN_MSVC_BUILD NOMINMAX # win
 
     # metafile.pri
@@ -974,6 +972,13 @@ target_compile_definitions(graphics PRIVATE
     # brotli.pri
     FT_CONFIG_OPTION_USE_BROTLI
 )
+
+if(LINUX)
+    target_compile_definitions(graphics PRIVATE
+        HAVE_UNISTD_H
+        HAVE_UNISTD_H HAVE_FCNTL_H # linux or mac
+    )
+endif()
 
 target_include_directories(graphics PRIVATE
 	${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/include
@@ -1001,12 +1006,21 @@ target_include_directories(graphics PRIVATE
 
 target_compile_options(graphics PRIVATE
     -Wno-narrowing
-    -Wno-incompatible-function-pointer-types # linux, clang or android
-    -Wno-incompatible-pointer-types # linux
-
     -UUNICODE
     -U_UNICODE
-    -UHAVE_IO_H # linux
+)
+
+if(LINUX)
+    target_compile_options(graphics PRIVATE
+        -fpermissive
+        -UHAVE_IO_H
+    )
+endif()
+
+# Re-enable exporting symbols
+target_compile_options(graphics PRIVATE
+    -fvisibility=default
+    -fvisibility-inlines-hidden
 )
 
 # dynamic libs

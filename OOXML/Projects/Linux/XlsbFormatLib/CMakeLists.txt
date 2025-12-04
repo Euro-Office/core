@@ -1,11 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(XlsbFormatLib)
 
-set(XLSB_FORMAT_DIR "../../../XlsbFormat")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+set(XLSB_FORMAT_DIR "${OOXML_ROOT_DIR}/XlsbFormat")
 
 add_library(XlsbFormatLib STATIC
     ${XLSB_FORMAT_DIR}/Biff12_unions/COMMENTS_bu.cpp
@@ -2147,16 +2149,10 @@ add_library(XlsbFormatLib STATIC
     ${XLSB_FORMAT_DIR}/Biff12_unions/MDXSET.h
 )
 
-target_compile_definitions(XlsbFormatLib PRIVATE
-    UNICODE
-	_UNICODE
-	DONT_WRITE_EMBEDDED_FONTS
-)
-
-target_include_directories(XlsbFormatLib PRIVATE
-
-)
+set_default_options(XlsbFormatLib)
 
 target_precompile_headers(XlsbFormatLib PRIVATE
     precompiled.h
 )
+
+set_property(TARGET XlsbFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

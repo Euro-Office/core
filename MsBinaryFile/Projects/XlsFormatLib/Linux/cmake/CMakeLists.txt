@@ -1,13 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(XlsFormatLib)
 
-set(CORE_ROOT_DIR "../../../../..")
-set(XLS_FILE_SOURCES_DIR "../../../../XlsFile")
-set(COMMON_SOURCES_DIR "../../../../Common")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../../..")
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(XLS_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/XlsFile")
+set(COMMON_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common")
 
 add_library(XlsFormatLib STATIC
     ${XLS_FILE_SOURCES_DIR}/Format/Auxiliary/HelpFunc.cpp
@@ -115,6 +114,8 @@ target_precompile_headers(XlsFormatLib PRIVATE
     ../precompiled.h
 )
 
+set_default_options(XlsFormatLib)
+
 target_include_directories(XlsFormatLib PRIVATE
     ${XLS_FILE_SOURCES_DIR}/Format
     ${XLS_FILE_SOURCES_DIR}/Format/Logic
@@ -122,28 +123,4 @@ target_include_directories(XlsFormatLib PRIVATE
     ${CORE_ROOT_DIR}/OOXML/XlsbFormat
 )
 
-target_compile_definitions(XlsFormatLib PRIVATE
-    UNICODE
-    _UNICODE
-    DONT_WRITE_EMBEDDED_FONTS
-)
-
-target_compile_options(XlsFormatLib PRIVATE
-    -Wno-register
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -O2
-    -fPIC
-    -D_REENTRANT
-    -DINTVER=2.5.565.0
-    -DWIN_INTVER=2,5,565,0
-    -DCOPYRIGHT_YEAR=2025
-    -DQT_VERSION_6
-    -DLINUX
-    -D_LINUX
-    -DCRYPTOPP_DISABLE_ASM
-    -DQT_NO_DEBUG
-)
+set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

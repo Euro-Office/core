@@ -1,12 +1,20 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(EpubFile)
 
-set(CORE_ROOT_DIR "../..")
-set(EPUB_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(EPUB_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+if(NOT TARGET kernel)
+    add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
+endif()
+
+if(NOT TARGET graphics)
+    add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
+endif()
 
 if(NOT TARGET HtmlFile2)
     add_subdirectory(${CORE_ROOT_DIR}/HtmlFile2 HtmlFile2)
@@ -26,6 +34,8 @@ add_library(EpubFile SHARED
     ${EPUB_ROOT_DIR}/src/CBookInfo.h
     ${EPUB_ROOT_DIR}/src/EpubFile_global.h
 )
+
+set_default_options(EpubFile)
 
 target_compile_definitions(EpubFile PRIVATE
     EPUBFILE_USE_DYNAMIC_LIBRARY

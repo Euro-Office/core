@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(PPTXFormatLib)
 
-set(CORE_ROOT_DIR "../../../..")
-set(OOXML_ROOT_DIR "../../..")
-set(PPTX_FORMAT_DIR "../../../PPTXFormat")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+set(PPTX_FORMAT_DIR "${OOXML_ROOT_DIR}/PPTXFormat")
 
 add_library(PPTXFormatLib STATIC
 	${PPTX_FORMAT_DIR}/Comments.cpp
@@ -1266,11 +1266,10 @@ add_library(PPTXFormatLib STATIC
     pptx_format.h
 )
 
+set_default_options(PPTXFormatLib)
+
 target_compile_definitions(PPTXFormatLib PRIVATE
-    UNICODE
-	_UNICODE
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
-	DONT_WRITE_EMBEDDED_FONTS
 )
 
 target_include_directories(PPTXFormatLib PRIVATE
@@ -1286,3 +1285,5 @@ target_include_directories(PPTXFormatLib PRIVATE
 # target_precompile_headers(PPTXFormatLib PRIVATE
 #     precompiled.h
 # )
+
+set_property(TARGET PPTXFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

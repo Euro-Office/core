@@ -1,14 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(Fb2File)
 
-set(CORE_ROOT_DIR "..")
-set(HTML_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
-file(READ "${CORE_ROOT_DIR}/Common/version.txt" VERSION_TXT_CONTENT)
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(HTML_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty/html")
 
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
@@ -74,14 +72,19 @@ add_library(Fb2File SHARED
     ${HTML_3RDPARTY_ROOT}/htmltoxhtml.h
 )
 
+set_default_options(Fb2File)
+
 target_compile_definitions(Fb2File PRIVATE
     FB2FILE_USE_DYNAMIC_LIBRARY
-    INTVER=${VERSION_TXT_CONTENT}
 )
 
 target_include_directories(Fb2File PRIVATE
     ${HTML_3RDPARTY_ROOT}
     ${GUMBO_INSTALL_DIR_ABS}/src
+)
+
+target_compile_options(Fb2File PRIVATE
+    $<$<COMPILE_LANGUAGE:C>:-std=c99>
 )
 
 # dynamic libs

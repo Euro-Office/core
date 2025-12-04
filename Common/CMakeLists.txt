@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(kernel)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
@@ -76,16 +75,19 @@ add_library(kernel SHARED
     ${CORE_ROOT_DIR}/DesktopEditor/common/ProcessEnv.cpp
 )
 
+set_default_options(kernel)
+
 target_compile_definitions(kernel PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
     BUILD_ZLIB_AS_SOURCES
 )
 
-# target_include_directories(kernel PRIVATE
-# )
+target_compile_options(kernel PRIVATE
+    -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
+)
 
 # static libs
-target_link_libraries(kernel PRIVATE
+target_link_libraries(kernel PUBLIC
     libxml
     OfficeUtils
 )
@@ -94,13 +96,3 @@ target_link_libraries(kernel PRIVATE
 target_link_libraries(kernel PUBLIC
     UnicodeConverter
 )
-
-target_compile_options(kernel PRIVATE
-    -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
-)
-
-# TODO
-# set_target_properties(kernel PROPERTIES
-#     BUILD_RPATH "/path/to/libs"
-#     INSTALL_RPATH "/path/to/libs"
-# )

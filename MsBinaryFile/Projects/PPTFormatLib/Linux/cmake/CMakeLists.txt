@@ -1,11 +1,11 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(PptFormatLib)
 
-set(PPT_FILE_SOURCES_DIR "../../../../PptFile")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../../..")
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(PPT_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/PptFile")
 
 add_library(PptFormatLib STATIC
     ${PPT_FILE_SOURCES_DIR}/Enums/RecordType.cpp
@@ -487,29 +487,15 @@ add_library(PptFormatLib STATIC
     ${PPT_FILE_SOURCES_DIR}/Structures/_includer.h
 )
 
+set_default_options(PptFormatLib)
+
 target_include_directories(PptFormatLib PRIVATE
     ${PPT_FILE_SOURCES_DIR}
 )
 
-target_compile_options(PptFormatLib PRIVATE
-    -Wno-register
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -O2
-    -fPIC
-    -D_REENTRANT
-    -DINTVER=2.5.565.0
-    -DWIN_INTVER=2,5,565,0
-    -DCOPYRIGHT_YEAR=2025
-    -DQT_VERSION_6
-    -DLINUX
-    -D_LINUX
-    -DCRYPTOPP_DISABLE_ASM
-    -DUNICODE
-    -D_UNICODE
-    -DDONT_WRITE_EMBEDDED_FONTS
-    -DQT_NO_DEBUG
+target_compile_definitions(PptFormatLib PRIVATE
+    _PRESENTATION_WRITER_
+    _SVG_CONVERT_TO_IMAGE_
 )
+
+set_property(TARGET PptFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

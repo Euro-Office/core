@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
-set(CORE_ROOT_DIR "../..")
-
 project(doctrenderer)
+
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 # As far as I can tell, this should be set to 1 when building on mac.
 if(NOT DEFINED USE_JAVASCRIPT_CORE)
@@ -20,7 +19,6 @@ if(NOT DEFINED V8_USE_INSPECTOR)
     set(V8_USE_INSPECTOR 1)
 endif()
 
-set(CORE_ROOT_DIR "../..")
 set(DESKTOP_EDITOR_ROOT "..")
 set(COMMON_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty")
 
@@ -145,6 +143,8 @@ add_library(doctrenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/json/json_values.h
     ${CMAKE_CURRENT_SOURCE_DIR}/json/serialization.h
 )
+
+set_default_options(doctrenderer)
 
 if(USE_JAVASCRIPT_CORE)
     target_sources(doctrenderer PRIVATE
@@ -292,12 +292,11 @@ target_link_libraries(doctrenderer PRIVATE
 )
 
 target_link_libraries(doctrenderer PUBLIC
-    kernel
-    kernel_network
-    UnicodeConverter
-    graphics
-    pthread
     ${V8_LIB_OUTPUT_DIR}/libv8_monolith.a
+    graphics
+    kernel
+    UnicodeConverter
+    kernel_network
 )
 
 if(DRAWINGFILE_SUPPORT)
@@ -308,3 +307,7 @@ if(DRAWINGFILE_SUPPORT)
         DocxRenderer
     )
 endif()
+
+target_link_libraries(doctrenderer PUBLIC
+    pthread
+)

@@ -1,13 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
-
 project(kernel_network)
 
-set(CORE_ROOT_DIR "../..")
-set(SOCKET_IO_SRC_DIR "${CORE_ROOT_DIR}/src")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+if(NOT TARGET kernel)
+    add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
+endif()
+
 
 
 message( "Fetch and build OpenSSL" )
@@ -71,20 +73,22 @@ add_library(kernel_network SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_private.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/transport_external.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.h
-
 )
 
+set_default_options(kernel_network)
+
 target_compile_definitions(kernel_network PRIVATE
-   BOOST_DATE_TIME_NO_LIB
-   BOOST_REGEX_NO_LIB
-   ASIO_STANDALONE
-   _WEBSOCKETPP_CPP11_STL_
-   _WEBSOCKETPP_CPP11_FUNCTIONAL_
-   _WEBSOCKETPP_CPP11_TYPE_TRAITS_
-   _WEBSOCKETPP_CPP11_CHRONO_
-   SIO_TLS=1
-   SIO_TLS_NO=0
-   USE_IOWEBSOCKET
+    KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
+    BOOST_DATE_TIME_NO_LIB
+    BOOST_REGEX_NO_LIB
+    ASIO_STANDALONE
+    _WEBSOCKETPP_CPP11_STL_
+    _WEBSOCKETPP_CPP11_FUNCTIONAL_
+    _WEBSOCKETPP_CPP11_TYPE_TRAITS_
+    _WEBSOCKETPP_CPP11_CHRONO_
+    SIO_TLS=1
+    SIO_TLS_NO=0
+    USE_IOWEBSOCKET
 )
 
 if(UNIX)
@@ -108,6 +112,7 @@ target_link_libraries(kernel_network PRIVATE
 )
 
 target_link_libraries(kernel_network PUBLIC
+    kernel
     pthread
 )
 
@@ -119,5 +124,3 @@ if(WIN_32)
         Shell32
     )
 endif()
-
-# Needs socketio

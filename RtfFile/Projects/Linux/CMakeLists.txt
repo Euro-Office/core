@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(RtfFormatLib)
 
-set(CORE_ROOT_DIR "../../..")
-set(RTF_FILE_ROOT "../..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+set(RTF_FILE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 
 add_library(RtfFormatLib STATIC
@@ -175,13 +175,14 @@ add_library(RtfFormatLib STATIC
     ${RTF_FILE_ROOT}/OOXml/Writer/OOXWriter.h
 )
 
+set_default_options(RtfFormatLib)
+
 target_compile_definitions(RtfFormatLib PRIVATE
-    UNICODE
-	_UNICODE
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
-	DONT_WRITE_EMBEDDED_FONTS
 )
 
 target_include_directories(RtfFormatLib PRIVATE
 	${CORE_ROOT_DIR}/OdfFile/include
 )
+
+set_property(TARGET RtfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

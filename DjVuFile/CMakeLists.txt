@@ -1,11 +1,24 @@
 cmake_minimum_required(VERSION 3.10)
 
-set(CMAKE_CXX_COMPILER "/usr/bin/g++" CACHE STRING "C++ compiler" FORCE)
-set(CMAKE_C_COMPILER "/usr/bin/gcc" CACHE STRING "C compiler" FORCE)
-
 project(DjVuFile)
 
-set(CORE_ROOT_DIR "..")
+set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
+# set(CORE_ROOT_DIR "..")
+
+include(${CORE_ROOT_DIR}/common.cmake)
+
+if(NOT TARGET kernel)
+    add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
+endif()
+
+if(NOT TARGET graphics)
+    add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
+    
+endif()
+
+if(NOT TARGET UnicodeConverter)
+    add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
+endif()
 
 if(NOT TARGET PdfFile)
     add_subdirectory(${CORE_ROOT_DIR}/PdfFile PdfFile)
@@ -124,9 +137,15 @@ add_library(DjVuFile SHARED
     libdjvu/ZPCodec.h
 )
 
+set_default_options(DjVuFile)
+
 target_compile_options(DjVuFile PRIVATE
     -UUNICODE
     -U_UNICODE
+)
+
+target_compile_definitions(DjVuFile PRIVATE
+    DJVU_USE_DYNAMIC_LIBRARY
 )
 
 if( NOT WIN32 )
@@ -154,9 +173,9 @@ target_include_directories(DjVuFile PRIVATE
 
 # dynamic libs
 target_link_libraries(DjVuFile PUBLIC
+    graphics
     kernel
     UnicodeConverter
-    graphics
     PdfFile
 
     # gdi32 # Windows
