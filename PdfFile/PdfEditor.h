@@ -108,6 +108,8 @@ public:
 	void AfterSplitPages();
 	bool MergePages(const std::wstring& wsPath);
 
+	bool PrintPages(const std::vector<bool>& arrPages, int nFlag);
+
 private:
 	void GetPageTree(XRef* xref, Object* pPagesRefObj, PdfWriter::CPageTree* pPageParent = NULL);
 	bool SplitPages(const int* arrPageIndex, unsigned int unLength, PDFDoc* _pDoc, int nStartRefID);
