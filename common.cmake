@@ -6,6 +6,12 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Do NOT auto-add absolute link directories to RPATH
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
+
+# Use INSTALL_RPATH even for build-tree binaries
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+
 # Enable color diagnostics but only in interactive terminals
 if(CMAKE_GENERATOR MATCHES "Ninja|Unix Makefiles")
     if(DEFINED ENV{TERM})
