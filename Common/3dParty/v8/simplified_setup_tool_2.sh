@@ -41,6 +41,11 @@ cd ../.. # should be in v8
 
 git apply ../buildgn.patch
 
+if [ -f /.dockerenv ]
+then
+    export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+fi
+
 gn gen out.gn/linux_64 --args='v8_static_library=true is_component_build=false v8_monolithic=true v8_use_external_startup_data=false treat_warnings_as_errors=false use_gold=false target_cpu="x64" v8_target_cpu="x64" is_debug=false use_sysroot=false use_custom_libcxx=false'
 # gn gen out.gn/linux_64 --args-file=../linux_64_args.gn
 # gn gen out.gn/linux_64 --args='cflags_c=["-include","stdint.h"] cflags_cc=["-include","cstdint"] is_clang=false is_component_build=false is_debug=false target_cpu="x64" treat_warnings_as_errors=false use_custom_libcxx=false use_glib=true use_sysroot=false v8_monolithic=true v8_static_library=true v8_target_cpu="x64" v8_use_external_startup_data=false use_gold=false'
