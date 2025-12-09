@@ -1146,17 +1146,17 @@ int main(int argc, char* argv[])
 			std::cout << "Redact false" << std::endl;
 	}
 
-	int i = nTestPage;
-	//for (int i = 0; i < nPagesCount; ++i)
+	// RASTER
+	if (false)
 	{
-		// RASTER
-		if (true)
+		int i = nTestPage;
+		//for (int i = 0; i < nPagesCount; ++i)
 		{
 			nWidth  = READ_INT(pInfo + i * 16 + 12);
 			nHeight = READ_INT(pInfo + i * 16 + 16);
 
-			//nWidth  *= 3;
-			//nHeight *= 3;
+			//nWidth  *= 2;
+			//nHeight *= 2;
 
 			BYTE* res = NULL;
 			res = GetPixmap(pGrFile, i, nWidth, nHeight, 0xFFFFFF);
@@ -2205,11 +2205,14 @@ int main(int argc, char* argv[])
 	}
 
 	// SCAN PAGE
-	if (false)
+	if (true)
 	{
-		BYTE* pScan = ScanPage(pGrFile, nTestPage, 1);
+		BYTE* pScan = ScanPage(pGrFile, nTestPage, 2);
 		if (pScan)
 			free(pScan);
+
+		ReadInteractiveFormsFonts(pGrFile, 1);
+		ReadInteractiveFormsFonts(pGrFile, 2);
 	}
 
 	Close(pGrFile);

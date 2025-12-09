@@ -138,6 +138,7 @@ public:
 	bool CheckPerm(int nPerm);
 	int GetRotate(int nPageIndex);
 	int GetMaxRefID();
+	void SetPageFonts(int nPageIndex);
 	BYTE* GetWidgets();
 	BYTE* GetAnnotEmbeddedFonts();
 	BYTE* GetAnnotStandardFonts();

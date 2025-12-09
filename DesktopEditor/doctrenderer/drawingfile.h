@@ -490,6 +490,9 @@ public:
 				return NULL;
 		}
 
+		if (m_nType == 0)
+			((CPdfFile*)m_pFile)->SetPageFonts(nPageIndex);
+
 		BYTE* res = oRes.GetBuffer();
 		oRes.ClearWithoutAttack();
 		return res;
