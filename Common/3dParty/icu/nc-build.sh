@@ -18,11 +18,13 @@ then
     cd build_linux_x64
     $invoke_dir/icu/source/configure \
     --prefix=$invoke_dir/install_linux_x64 \
+    --enable-rpath \
     CC=gcc \
     CXX=g++ \
     AR=ar \
     RANLIB=ranlib \
-    CXXFLAGS="-static-libstdc++ -static-libgcc"
+    CXXFLAGS="-static-libstdc++ -static-libgcc" \
+    LDFLAGS='-Wl,-rpath,$$ORIGIN'
 
     make -j10 && make install
     cd ..

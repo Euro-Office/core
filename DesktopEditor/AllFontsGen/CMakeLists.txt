@@ -32,6 +32,8 @@ add_executable(allfontsgen
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
+set_default_options(allfontsgen)
+
 target_include_directories(allfontsgen PRIVATE
     ${ICU_INSTALL_DIR}/include
 )

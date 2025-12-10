@@ -56,6 +56,8 @@ add_executable(allthemesgen
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
 
+set_default_options(allthemesgen)
+
 target_include_directories(allthemesgen PRIVATE
     ${ICU_INSTALL_DIR}/include
 )
