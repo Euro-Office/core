@@ -10,6 +10,7 @@ set(GRAPHICS_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 set(DESKTOP_EDITOR_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(METAFILE_SOURCER_DIR "${DESKTOP_EDITOR_ROOT_DIR}/raster/Metafile")
+set(CSS_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/html/css")
 
 set(FREETYPE_VERSION_TO_USE "2.10.4")
 set(FREETYPE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/freetype-${FREETYPE_VERSION_TO_USE}")
@@ -22,6 +23,17 @@ endif()
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
+
+
+
+message( "Fetch and patch Katana parser" )
+set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
+get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-fetch.sh
+    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
+
 
 
 
@@ -544,6 +556,42 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CObjectBase.h
         ${METAFILE_SOURCER_DIR}/svg/SvgUtils.h
     # }
+
+    # CssCalculator.pri
+    # css_calculator_without_xhtml {
+        ${CSS_ROOT_DIR}/src/CCssCalculator_Private.cpp
+		${CSS_ROOT_DIR}/src/CElement.cpp
+		${CSS_ROOT_DIR}/src/CNode.cpp
+		${CSS_ROOT_DIR}/src/ConstValues.cpp
+		${CSS_ROOT_DIR}/src/StaticFunctions.cpp
+		${CSS_ROOT_DIR}/src/StyleProperties.cpp
+		${CSS_ROOT_DIR}/src/CUnitMeasureConverter.cpp    
+
+        ${CSS_ROOT_DIR}/src/CCssCalculator_Private.h
+		${CSS_ROOT_DIR}/src/CElement.h
+		${CSS_ROOT_DIR}/src/CNode.h
+		${CSS_ROOT_DIR}/src/ConstValues.h
+		${CSS_ROOT_DIR}/src/StaticFunctions.h
+		${CSS_ROOT_DIR}/src/StyleProperties.h
+		${CSS_ROOT_DIR}/src/CUnitMeasureConverter.h
+    # }
+
+    # katana.pri
+    ${KATANA_INSTALL_DIR}/src/foundation.c
+    ${KATANA_INSTALL_DIR}/src/katana.lex.c
+    ${KATANA_INSTALL_DIR}/src/katana.tab.c
+    ${KATANA_INSTALL_DIR}/src/parser.c
+    ${KATANA_INSTALL_DIR}/src/selector.c
+    ${KATANA_INSTALL_DIR}/src/tokenizer.c
+
+    ${KATANA_INSTALL_DIR}/src/foundation.h
+    ${KATANA_INSTALL_DIR}/src/katana.h
+    ${KATANA_INSTALL_DIR}/src/katana.lex.h
+    ${KATANA_INSTALL_DIR}/src/katana.tab.h
+    ${KATANA_INSTALL_DIR}/src/parser.h
+    ${KATANA_INSTALL_DIR}/src/selector.h
+    ${KATANA_INSTALL_DIR}/src/tokenizer.h
+
 
     # freetype.pri
     # !config_zlip_image {

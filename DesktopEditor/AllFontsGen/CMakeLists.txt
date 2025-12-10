@@ -18,10 +18,6 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-if(NOT TARGET HtmlFile2)
-    add_subdirectory(${CORE_ROOT_DIR}/HtmlFile2 HtmlFile2)
-endif()
-
 message( "Fetch and build icu" )
 set(ICU_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_MAJOR_VER "74")
@@ -50,7 +46,6 @@ target_link_libraries(allfontsgen PUBLIC
     UnicodeConverter
     kernel
     graphics
-    HtmlFile2
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )

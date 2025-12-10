@@ -169,12 +169,6 @@ target_compile_definitions(HtmlFile2 PRIVATE
     MD4C_USE_UTF8
 )
 
-# Re-enable exporting symbols
-target_compile_options(HtmlFile2 PRIVATE
-    -fvisibility=default
-    -fvisibility-inlines-hidden
-)
-
 # dynamic libs
 target_link_libraries(HtmlFile2 PUBLIC
     kernel
