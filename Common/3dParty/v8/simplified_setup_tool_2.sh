@@ -41,7 +41,8 @@ cd ../.. # should be in v8
 
 git apply ../buildgn.patch
 
-if [ -f /.dockerenv ]
+: "${PLEASE_PRELOAD_LIBSTDCPP:=false}"
+if [ -f /.dockerenv ] || [ "$PLEASE_PRELOAD_LIBSTDCPP" = "true" ]
 then
     export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
 fi
