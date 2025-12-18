@@ -466,6 +466,7 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretatorSvg.cpp
         ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretatorRender.cpp
         # ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretator.cpp
+        ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/cwmfinterpretator.cpp
         ${METAFILE_SOURCER_DIR}/Wmf/WmfParser/CWmfParser.cpp
         ${METAFILE_SOURCER_DIR}/Wmf/WmfParser/CWmfParserBase.cpp
 
@@ -489,6 +490,7 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/Wmf/WmfPlayer.h
         ${METAFILE_SOURCER_DIR}/Wmf/WmfTypes.h
         # ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretator.h
+        ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/cwmfinterpretator.h
         ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretatorBase.h
         ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CInterpretatorSvgBase.h
         ${METAFILE_SOURCER_DIR}/Wmf/WmfInterpretator/CWmfInterpretatorSvg.h
@@ -510,6 +512,7 @@ add_library(graphics SHARED
     # !metafile_disable_svg {
         ${METAFILE_SOURCER_DIR}/svg/CSvgFile.cpp
         ${METAFILE_SOURCER_DIR}/svg/CSvgParser.cpp
+        ${METAFILE_SOURCER_DIR}/svg/SvgReader.cpp
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CContainer.cpp
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CGradient.cpp
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CClipPath.cpp
@@ -554,6 +557,7 @@ add_library(graphics SHARED
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CFont.h
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CStyle.h
         ${METAFILE_SOURCER_DIR}/svg/SvgObjects/CObjectBase.h
+        ${METAFILE_SOURCER_DIR}/svg/SvgReader.h
         ${METAFILE_SOURCER_DIR}/svg/SvgUtils.h
     # }
 
