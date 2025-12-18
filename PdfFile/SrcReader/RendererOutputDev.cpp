@@ -1743,6 +1743,7 @@ namespace PdfReader
 		m_pRenderer->put_BrushTextureImage(oImage);
 		m_pRenderer->put_BrushTextureMode(c_BrushTextureModeTile);
 		m_pRenderer->put_BrushTextureAlpha(alpha);
+		m_pRenderer->put_BrushTransform({ pMatrix[0], pMatrix[1], pMatrix[2], pMatrix[3], pMatrix[4], pMatrix[5] });
 		m_pRenderer->BeginCommand(c_nImageType);
 
 		m_pRenderer->DrawPath(c_nWindingFillMode);
