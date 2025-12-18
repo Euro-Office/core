@@ -10,6 +10,7 @@ then
 
     git clone --depth 1 --branch release-$icu_major-$icu_minor https://github.com/unicode-org/icu.git icu2
     cp -r icu2/icu4c ./icu
+    cp icu2/LICENSE ./
     rm -rf icu2
 
     echo "Building icu"
