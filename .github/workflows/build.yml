@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: [ubuntu-latest, self-hosted]
+    env:
+      PLEASE_PRELOAD_LIBSTDCPP: true
+
     
     steps:
     - name: Checkout repository
