@@ -323,7 +323,6 @@ core_linux {
 		QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN\'"
 		QMAKE_LFLAGS += "-Wl,-rpath,\'\$$ORIGIN/system\'"
 		QMAKE_LFLAGS += -Wl,--disable-new-dtags
-		QMAKE_LFLAGS_RELEASE += -Wl,-s
 
 		!disable_rpath_addon {
 			RUN_PATH_ADDON = $$(RUN_PATH_ADDON)
