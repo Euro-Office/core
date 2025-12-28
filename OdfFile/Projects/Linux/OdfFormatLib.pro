@@ -32,8 +32,6 @@ precompile_header {
     HEADERS += precompiled.h
 }
 
-ADD_DEPENDENCY(StarMathConverter)
-
 core_release {
 SOURCES += \
 	odf_converter.cpp \
