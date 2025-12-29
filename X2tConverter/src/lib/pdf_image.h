@@ -383,6 +383,9 @@ namespace NExtractTools
 
 	std::vector<bool> getPrintPages(const std::string &sPages, int nPagesCount)
 	{
+		if (sPages.empty())
+			return std::vector<bool>(nPagesCount, true);
+
 		const char *buffer = sPages.c_str();
 
 		size_t nCur = 0;
@@ -875,7 +878,7 @@ namespace NExtractTools
 				if (!sPages.empty() || nType != -1)
 				{
 					std::wstring sCurrentTmp = L"";
-					sCurrentTmp =NSFile::CFileBinary::CreateTempFileWithUniqueName(convertParams.m_sTempDir, L"PDF_");
+					sCurrentTmp = NSFile::CFileBinary::CreateTempFileWithUniqueName(convertParams.m_sTempDir, L"PDF_");
 					if (NSFile::CFileBinary::Exists(sCurrentTmp))
 						NSFile::CFileBinary::Remove(sCurrentTmp);
 
@@ -886,7 +889,7 @@ namespace NExtractTools
 					if (oPdfPages.LoadFromFile(sFrom.c_str(), L"", sPassword, sPassword))
 					{
 						int nPagesCount = oPdfPages.GetPagesCount();
-						std::vector<bool> arPages = getPrintPages(convertParams.m_sPrintPages, nPagesCount);
+						std::vector<bool> arPages = getPrintPages(sPages, nPagesCount);
 
 						oPdfPages.PrintPages(arPages, nType);
 
