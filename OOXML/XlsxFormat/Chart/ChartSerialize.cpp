@@ -39,6 +39,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Series.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DataFormat.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BRAI.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SerToCrt.h"
 
 namespace OOX
 {
@@ -6499,7 +6500,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
 		}
-		XLS::BaseObjectPtr CT_BarSer::GetXLSFormat() const
+		XLS::BaseObjectPtr CT_BarSer::GetXLSFormat(const _UINT32 chartIndex) const
 		{
 			auto seriesFormat = new XLS::SERIESFORMAT;
 			{
@@ -6551,6 +6552,9 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					SeriesStyle->m_AreaFormat = m_spPr->Fill.toXLS();
 			}
 			seriesFormat->m_Series = XLS::BaseObjectPtr(series);
+			auto ser2Crt = new XLS::SerToCrt;
+			ser2Crt->id = chartIndex;
+			seriesFormat->m_SerToCrt = XLS::BaseObjectPtr(ser2Crt);
 
 			return XLS::BaseObjectPtr(seriesFormat);
 		}

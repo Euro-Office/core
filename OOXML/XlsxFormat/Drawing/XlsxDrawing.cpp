@@ -318,7 +318,7 @@ namespace OOX
 										{
 											if(ser != nullptr)
 											{
-												ChartFormatsPtr->m_arSERIESFORMAT.push_back(ser->GetXLSFormat());
+												ChartFormatsPtr->m_arSERIESFORMAT.push_back(ser->GetXLSFormat(chartIndex));
 											}
 										}
 									}
