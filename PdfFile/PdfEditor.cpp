@@ -2956,11 +2956,14 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 				bRotate = true;
 				pageObj.dictGetValNF(nIndex, &oTemp);
 			}
-			else if (nFlag != 3 && strcmp("Contents", chKey) == 0)
+			else if (strcmp("Contents", chKey) == 0)
 			{
-				pageObj.dictGetValNF(nIndex, &oTemp);
-				PdfWriter::CObjectBase* pBase = DictToCDictObject2(&oTemp, pDoc, xref, &m_mObjManager, nStartRefID, 0, false);
-				pPage->Add(chKey, pBase);
+				if (nFlag != 3)
+				{
+					pageObj.dictGetValNF(nIndex, &oTemp);
+					PdfWriter::CObjectBase* pBase = DictToCDictObject2(&oTemp, pDoc, xref, &m_mObjManager, nStartRefID, 0, false);
+					pPage->Add(chKey, pBase);
+				}
 				continue;
 			}
 			else if (strcmp("Annots", chKey) == 0)
@@ -3007,12 +3010,6 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 		}
 		pPage->Fix();
 		pDoc->FixEditPage(pPage);
-
-		if (nFlag == 0)
-		{
-			pageObj.free();
-			continue;
-		}
 
 		double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
 		double dInvMatrix[6] = { 1, 0, 0, 1, 0, 0 };
@@ -3078,28 +3075,33 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 			}
 
 			char* sType = oType.getName();
-			if ((nFlag == 1 && (strcmp(sType, "StrikeOut") || strcmp(sType, "FreeText") || strcmp(sType, "Underline") || strcmp(sType, "Square") || strcmp(sType, "Circle") || strcmp(sType, "Polygon")
-			|| strcmp(sType, "PolyLine") || strcmp(sType, "Highlight") || strcmp(sType, "Line") || strcmp(sType, "Squiggly") || strcmp(sType, "Text") || strcmp(sType, "Caret") || strcmp(sType, "Ink")
-			|| strcmp(sType, "FileAttachment") || strcmp(sType, "Sound") || strcmp(sType, "Redact"))) || (nFlag == 2 && strcmp(sType, "Stamp")) || (nFlag == 3 && strcmp(sType, "Widget")))
+			if (((nFlag == 0 || nFlag == 3) && strcmp(sType, "Widget")) || (nFlag == 2 && strcmp(sType, "Stamp") && strcmp(sType, "Widget")))
 			{
 				oType.free(); oAnnot.free();
 				continue;
 			}
 			oType.free();
 
-			PdfWriter::CXObject* pForm = pDoc->CreateForm();
-			pPage->GrSave();
-			pPage->ExecuteXObject(pForm);
-			pPage->GrRestore();
-
 			// TODO Нужно ли генерировать внешний вид тем у кого его нет
 			Object oAP, oAPN;
 			if (!oAnnot.dictLookup("AP", &oAP)->isDict() || !oAP.dictLookup("N", &oAPN)->isStream())
 			{
-				oAnnot.free(); oAP.free(); oAPN.free();
-				continue;
+				oAP.free();
+				Object oTemp;
+				if (!oAPN.isDict() || !oAnnot.dictLookup("AS", &oObj)->isName() || !oAPN.dictLookup(oObj.getName(), &oTemp)->isStream())
+				{
+					oAnnot.free(); oTemp.free(); oAPN.free(); oObj.free();
+					continue;
+				}
+				oAPN.free();
+				oAPN = oTemp;
 			}
 			oAP.free();
+
+			PdfWriter::CXObject* pForm = pDoc->CreateForm();
+			pPage->GrSave();
+			pPage->ExecuteXObject(pForm);
+			pPage->GrRestore();
 
 			Object oTemp;
 			double m[6] = { 1, 0, 0, 1, 0, 0 }, bbox[4] = { 0, 0, 0, 0 }, rect[4] = { 0, 0, 0, 0 };
@@ -3123,7 +3125,7 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 			for (int nIndex = 0; nIndex < pODict->getLength(); ++nIndex)
 			{
 				char* chKey = pODict->getKey(nIndex);
-				if (strcmp("Length", chKey) == 0)
+				if (strcmp("Length", chKey) == 0 || strcmp("Filter", chKey) == 0)
 				{
 					oTemp.free();
 					continue;
@@ -3215,7 +3217,7 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 			pForm->Add("Matrix", PdfWriter::CArrayObject::CreateMatrix(m));
 
 			PdfWriter::CStream* pStream = pForm->GetStream();
-			Stream* pOStream = oAPN.getStream()->getUndecodedStream();
+			Stream* pOStream = oAPN.getStream();
 			pOStream->reset();
 			int nChar = pOStream->getChar();
 			while (nChar != EOF)
@@ -3577,7 +3579,7 @@ bool CPdfEditor::EditAnnot(int _nPageIndex, int nID)
 			PdfWriter::CStream* pStream = new PdfWriter::CMemoryStream(nLength);
 			pAPN->SetStream(pStream);
 			pAPN->Add("Length", nLength);
-			Stream* pOStream = oAPN.getStream()->getUndecodedStream();
+			Stream* pOStream = oAPN.getStream();
 			pOStream->reset();
 			for (int nI = 0; nI < nLength; ++nI)
 				pStream->WriteChar(pOStream->getChar());
