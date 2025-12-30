@@ -36,8 +36,11 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/ChartSheetSubstream.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJECTS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CHARTFOMATS.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXISPARENT.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Chart.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxisParent.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Pos.h"
 #include "../../PPTXFormat/Logic/Shape.h"
 #include "../Chart/Chart.h"
 
@@ -320,6 +323,15 @@ namespace OOX
 											{
 												ChartFormatsPtr->m_arSERIESFORMAT.push_back(ser->GetXLSFormat(chartIndex));
 											}
+										}
+										if(ChartFormatsPtr->m_arAXISPARENT.size() < 2)
+										{
+											auto AxisParentUnion = new XLS::AXISPARENT;
+											auto axisparent = new XLS::AxisParent;
+											AxisParentUnion->m_AxisParent = XLS::BaseObjectPtr(axisparent);
+											ChartFormatsPtr->m_arAXISPARENT.push_back(XLS::BaseObjectPtr(AxisParentUnion));
+											auto pos = new XLS::Pos;
+											AxisParentUnion->m_Pos = XLS::BaseObjectPtr(pos);
 										}
 									}
 								}
