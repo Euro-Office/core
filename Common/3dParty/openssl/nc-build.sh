@@ -1,21 +1,53 @@
 #!/bin/bash
 
-install_dir=$PWD/openssl_build_linux_64
+work_dir="$1"
+install_dir="$2"
+
+abort_op()
+{
+    rm -rf "$work_dir"
+    rm -rf "$install_dir"
+    echo "OpenSSL aborted: $1" >&2
+    exit 1
+}
+
+if [ $# -lt 2 ]
+then
+    echo "Needs 2 arguments: work_dir_path install_dir_path" >&2
+    exit 1
+fi
+
+if [ -d $install_dir ]
+then
+    echo "Skipping OpenSSL (done already)."
+    exit 0
+fi
+
+if [ ! -d "$work_dir" ]
+then
+    mkdir -p "$work_dir"
+fi
+
 if [ ! -d $install_dir ]
 then
-    echo "Fetching openssl"
-    git clone --depth=1 --branch OpenSSL_1_1_1f https://github.com/openssl/openssl.git
-    
-    echo "Building openssl"
-    mkdir openssl_build_linux_64
-
-    cd openssl
-    ./config enable-md2 no-shared no-asm --prefix=$install_dir --openssldir=$install_dir
-    make -j10
-    make install
-
-    cd ..
-    echo "Openssl ready!"
-else
-    echo "Skipping OpenSSL build (done already)."
+    mkdir -p "$install_dir"
 fi
+
+echo "Fetching OpenSSL repo into: [$work_dir]"
+git clone --depth=1 --branch OpenSSL_1_1_1f https://github.com/openssl/openssl.git "$work_dir" \
+    || abort_op "Git clone failed!"
+
+    
+echo "Building OpenSSL"
+cd "$work_dir"
+./config enable-md2 no-shared no-asm --prefix=$install_dir --openssldir=$install_dir \
+    || abort_op "Configuration failed!"
+
+make -j10 || abort_op "Build failed!"
+
+echo "Installing OpenSSL to: [$install_dir]"
+make install || abort_op "Install failed!"
+
+echo "OpenSSL ready!"
+
+exit 0

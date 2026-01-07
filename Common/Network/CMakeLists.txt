@@ -14,10 +14,10 @@ endif()
 
 message( "Fetch and build OpenSSL" )
 set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${OPENSSL_3RDPARTY_DIR}/openssl_build_linux_64")
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
 get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-build.sh
+execute_process(COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
                 WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS})
 
 

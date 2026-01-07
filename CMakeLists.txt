@@ -7,6 +7,7 @@ add_compile_options(-march=native)
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 set(EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place output files (absolute path recommended)")
+set(EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}/third_party" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
 
 add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
 add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/AllFontsGen" allfontsgen )
