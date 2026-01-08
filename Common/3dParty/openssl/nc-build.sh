@@ -21,23 +21,20 @@ if [ -d $install_dir ]
 then
     echo "Skipping OpenSSL (done already)."
     exit 0
+else
+    mkdir -p "$install_dir" || abort_op "Failed to create install dir: [$install_dir]"
 fi
 
-if [ ! -d "$work_dir" ]
+if [ -d "$work_dir" ]
 then
-    mkdir -p "$work_dir"
+    rm -rf $work_dir
 fi
-
-if [ ! -d $install_dir ]
-then
-    mkdir -p "$install_dir"
-fi
+mkdir -p "$work_dir" || abort_op "Failed to create work dir: [$work_dir]"
 
 echo "Fetching OpenSSL repo into: [$work_dir]"
 git clone --depth=1 --branch OpenSSL_1_1_1f https://github.com/openssl/openssl.git "$work_dir" \
     || abort_op "Git clone failed!"
 
-    
 echo "Building OpenSSL"
 cd "$work_dir"
 ./config enable-md2 no-shared no-asm --prefix=$install_dir --openssldir=$install_dir \

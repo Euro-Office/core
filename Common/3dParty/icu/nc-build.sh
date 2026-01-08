@@ -1,36 +1,64 @@
 #!/bin/bash
 
-invoke_dir=$PWD
-install_dir=$PWD/install_linux_x64
-if [ ! -d $install_dir ]
+work_dir="$1"
+install_dir="$2"
+icu_major=$3
+icu_minor=$4
+platform_prefix=$5
+
+abort_op()
+{
+    rm -rf "$work_dir"
+    rm -rf "$install_dir"
+    echo "ICU aborted: $1" >&2
+    exit 1
+}
+
+if [ $# -lt 4 ]
 then
-    echo "Fetching icu"
-    icu_major="74"
-    icu_minor="2"
+    echo "Needs 4 arguments: work_dir_path install_dir_path major_ver minor_ver" >&2
+    exit 1
+fi
 
-    git clone --depth 1 --branch release-$icu_major-$icu_minor https://github.com/unicode-org/icu.git icu2
-    cp -r icu2/icu4c ./icu
-    cp icu2/LICENSE ./
-    rm -rf icu2
-
-    echo "Building icu"
-    mkdir build_linux_x64
-    mkdir install_linux_x64
-    cd build_linux_x64
-    $invoke_dir/icu/source/configure \
-    --prefix=$invoke_dir/install_linux_x64 \
-    --enable-rpath \
-    CC=gcc \
-    CXX=g++ \
-    AR=ar \
-    RANLIB=ranlib \
-    CXXFLAGS="-static-libstdc++ -static-libgcc" \
-    LDFLAGS='-Wl,-rpath,$$ORIGIN'
-
-    make -j10 && make install
-    cd ..
-    
-    echo "icu ready!"
+if [ -d $install_dir ]
+then
+    echo "Skipping ICU (done already)."
+    exit 0
 else
-    echo "Skipping icu (done already)."
-fi   
+    mkdir -p "$install_dir" || abort_op "Failed to create install dir: [$install_dir]"
+fi
+
+if [ -d "$work_dir" ]
+then
+    rm -rf $work_dir
+fi
+mkdir -p "$work_dir" || abort_op "Failed to create work dir: [$work_dir]"
+
+echo "Fetching ICU into: [$work_dir]"
+git clone --depth 1 --branch release-$icu_major-$icu_minor https://github.com/unicode-org/icu.git "$work_dir/icu2" \
+    || abort_op "Git clone failed!"
+
+cd "$work_dir"
+cp -r icu2/icu4c ./icu
+cp icu2/LICENSE ./
+rm -rf icu2
+
+echo "Building icu"
+mkdir build_linux_x64 || abort_op "Failed to create build dir"
+cd build_linux_x64
+$work_dir/icu/source/configure \
+--prefix="$install_dir" \
+--enable-rpath \
+CC=gcc \
+CXX=g++ \
+AR=ar \
+RANLIB=ranlib \
+CXXFLAGS="-static-libstdc++ -static-libgcc" \
+LDFLAGS='-Wl,-rpath,$$ORIGIN' \
+|| abort_op "Configure failed"
+
+make -j10 && make install || abort_op "Build failed"
+
+echo "ICU ready!"
+
+exit 0

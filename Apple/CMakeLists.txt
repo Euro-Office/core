@@ -27,18 +27,20 @@ endif()
 
 
 message( "Fetch, patch Apple related 3rd-party repos" )
-set(APPLE_3RDPARTY_ROOT "${COMMON_3RDPARTY_ROOT}/apple")
-get_filename_component(APPLE_3RDPARTY_ROOT_ABS "${APPLE_3RDPARTY_ROOT}" ABSOLUTE)
+set(APPLE_3RDPARTY_DIR "${COMMON_3RDPARTY_ROOT}/apple")
+set(APPLE_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/apple")
+get_filename_component(APPLE_3RDPARTY_DIR_ABS "${APPLE_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(APPLE_INSTALL_DIR_ABS "${APPLE_INSTALL_DIR}" ABSOLUTE)
 execute_process(
     COMMAND_ECHO STDOUT
-    COMMAND ./fetch.sh
-    WORKING_DIRECTORY ${APPLE_3RDPARTY_ROOT_ABS}
+    COMMAND ./fetch.sh "${APPLE_INSTALL_DIR}"
+    WORKING_DIRECTORY ${APPLE_3RDPARTY_DIR_ABS}
 )
-set(REVENGE_LIB_ROOT "${APPLE_3RDPARTY_ROOT}/librevenge")
-set(ODF_LIB_ROOT "${APPLE_3RDPARTY_ROOT}/libodfgen")
-set(ETONYEK_LIB_ROOT "${APPLE_3RDPARTY_ROOT}/libetonyek")
-set(MDDS_LIB_ROOT "${APPLE_3RDPARTY_ROOT}/mdds")
-set(GLM_LIB_ROOT "${APPLE_3RDPARTY_ROOT}/glm")
+set(REVENGE_LIB_ROOT "${APPLE_INSTALL_DIR}/librevenge")
+set(ODF_LIB_ROOT "${APPLE_INSTALL_DIR}/libodfgen")
+set(ETONYEK_LIB_ROOT "${APPLE_INSTALL_DIR}/libetonyek")
+set(MDDS_LIB_ROOT "${APPLE_INSTALL_DIR}/mdds")
+set(GLM_LIB_ROOT "${APPLE_INSTALL_DIR}/glm")
 
 
 
@@ -545,8 +547,8 @@ target_include_directories(IWorkFile PRIVATE
     ${DESKTOP_EDITOR_ROOT}/xml/libxml2/include
 
     # apple.pri
-    ${APPLE_3RDPARTY_ROOT}
-    ${APPLE_3RDPARTY_ROOT}/headers
+    ${APPLE_INSTALL_DIR}
+    ${APPLE_3RDPARTY_DIR}/headers
     ${REVENGE_LIB_ROOT}/inc
     ${ODF_LIB_ROOT}/inc
     ${ETONYEK_LIB_ROOT}/inc

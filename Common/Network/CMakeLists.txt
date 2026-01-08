@@ -24,10 +24,10 @@ execute_process(COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "$
 
 message( "Fetch and patch Socket-IO" )
 set(SOCKETIO_3DPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio")
-set(SOCKETIO_INSTALL_DIR "${SOCKETIO_3DPARTY_DIR}/socket.io-client-cpp")
+set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socket.io-client-cpp")
 get_filename_component(SOCKETIO_3DPARTY_DIR_ABS "${SOCKETIO_3DPARTY_DIR}" ABSOLUTE)
 get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
+execute_process(COMMAND ./nc-fetch.sh "${SOCKETIO_INSTALL_DIR}"
     WORKING_DIRECTORY ${SOCKETIO_3DPARTY_DIR_ABS})
 
 
