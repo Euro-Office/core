@@ -6,7 +6,7 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(HTML_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
 
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
@@ -26,32 +26,22 @@ endif()
 
 
 
-message( "Fetch and patch Katana parser" )
-set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
-get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
+message( "Fetch and patch Katana and Gumbo" )
+set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
+set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
+get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
-
-
-
-message( "Fetch and patch Gumbo parser" )
-set(GUMBO_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(GUMBO_INSTALL_DIR "${GUMBO_3RDPARTY_DIR}/gumbo-parser")
-get_filename_component(GUMBO_3RDPARTY_DIR_ABS "${GUMBO_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${GUMBO_3RDPARTY_DIR_ABS})
-
-
+execute_process(COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
+    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR})
 
 message( "Fetch md" )
 set(MD_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/md")
-set(MD_INSTALL_DIR "${MD_3RDPARTY_DIR}/md4c")
+set(MD_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/md4c")
 get_filename_component(MD_3RDPARTY_DIR_ABS "${MD_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(MD_INSTALL_DIR_ABS "${MD_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
+execute_process(COMMAND ./nc-fetch.sh "${MD_INSTALL_DIR}"
     WORKING_DIRECTORY ${MD_3RDPARTY_DIR_ABS})
 
 
@@ -112,39 +102,39 @@ add_library(HtmlFile2 SHARED
     ${GUMBO_INSTALL_DIR}/src/vector.h
 
     # CssCalculator.pri
-    ${HTML_3RDPARTY_ROOT}/css/src/CCompiledStyle.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator_Private.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CElement.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CNode.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/ConstValues.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/CUnitMeasureConverter.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/StaticFunctions.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/StyleProperties.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/xhtml/CDocumentStyle.cpp
-    ${HTML_3RDPARTY_ROOT}/css/src/xhtml/CXmlElement.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CCompiledStyle.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CCssCalculator_Private.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CCssCalculator.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CElement.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CNode.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/ConstValues.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/CUnitMeasureConverter.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/StaticFunctions.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/StyleProperties.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/xhtml/CDocumentStyle.cpp
+    ${HTML_3RDPARTY_DIR}/css/src/xhtml/CXmlElement.cpp
 
-    ${HTML_3RDPARTY_ROOT}/css/src/CCompiledStyle.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator_Private.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CCssCalculator.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CElement.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CNode.h
-    ${HTML_3RDPARTY_ROOT}/css/src/ConstValues.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CssCalculator_global.h
-    ${HTML_3RDPARTY_ROOT}/css/src/CUnitMeasureConverter.h
-    ${HTML_3RDPARTY_ROOT}/css/src/StaticFunctions.h
-    ${HTML_3RDPARTY_ROOT}/css/src/StyleProperties.h
-    ${HTML_3RDPARTY_ROOT}/css/src/xhtml/CDocumentStyle.h
-    ${HTML_3RDPARTY_ROOT}/css/src/xhtml/CXmlElement.h
+    ${HTML_3RDPARTY_DIR}/css/src/CCompiledStyle.h
+    ${HTML_3RDPARTY_DIR}/css/src/CCssCalculator_Private.h
+    ${HTML_3RDPARTY_DIR}/css/src/CCssCalculator.h
+    ${HTML_3RDPARTY_DIR}/css/src/CElement.h
+    ${HTML_3RDPARTY_DIR}/css/src/CNode.h
+    ${HTML_3RDPARTY_DIR}/css/src/ConstValues.h
+    ${HTML_3RDPARTY_DIR}/css/src/CssCalculator_global.h
+    ${HTML_3RDPARTY_DIR}/css/src/CUnitMeasureConverter.h
+    ${HTML_3RDPARTY_DIR}/css/src/StaticFunctions.h
+    ${HTML_3RDPARTY_DIR}/css/src/StyleProperties.h
+    ${HTML_3RDPARTY_DIR}/css/src/xhtml/CDocumentStyle.h
+    ${HTML_3RDPARTY_DIR}/css/src/xhtml/CXmlElement.h
 
 
     # md2html.pri
-    ${MD_INSTALL_DIR}/../md2html.h
+    ${MD_3RDPARTY_DIR}/md2html.h
     ${MD_INSTALL_DIR}/src/entity.h
     ${MD_INSTALL_DIR}/src/md4c-html.h
     ${MD_INSTALL_DIR}/src/md4c.h
 
-    ${MD_INSTALL_DIR}/../md2html.cpp
+    ${MD_3RDPARTY_DIR}/md2html.cpp
     ${MD_INSTALL_DIR}/src/entity.c
     ${MD_INSTALL_DIR}/src/md4c-html.c
     ${MD_INSTALL_DIR}/src/md4c.c
@@ -153,8 +143,8 @@ add_library(HtmlFile2 SHARED
 set_default_options(HtmlFile2)
 
 target_include_directories(HtmlFile2 PRIVATE
-    ${HTML_3RDPARTY_ROOT}
-    ${HTML_3RDPARTY_ROOT}/css # CssCalculator.pri
+    ${HTML_3RDPARTY_DIR}
+    ${HTML_3RDPARTY_DIR}/css # CssCalculator.pri
     ${GUMBO_INSTALL_DIR_ABS}/src
 )
 
