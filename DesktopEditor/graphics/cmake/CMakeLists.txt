@@ -26,23 +26,25 @@ endif()
 
 
 
-message( "Fetch and patch Katana parser" )
-set(KATANA_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(KATANA_INSTALL_DIR "${KATANA_3RDPARTY_DIR}/katana-parser")
-get_filename_component(KATANA_3RDPARTY_DIR_ABS "${KATANA_3RDPARTY_DIR}" ABSOLUTE)
+message( "Fetch and patch Katana and Gumbo" )
+set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
+set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
+get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${KATANA_3RDPARTY_DIR_ABS})
+get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
+execute_process(COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
+    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR})
 
 
 
 
 message( "Fetch and patch Harfbuzz" )
 set(HARFBUZZ_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/harfbuzz")
-set(HARFBUZZ_INSTALL_DIR "${HARFBUZZ_3RDPARTY_DIR}/harfbuzz")
+set(HARFBUZZ_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz")
 get_filename_component(HARFBUZZ_3RDPARTY_DIR_ABS "${HARFBUZZ_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HARFBUZZ_INSTALL_DIR_ABS "${HARFBUZZ_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
+execute_process(COMMAND ./nc-fetch.sh "${HARFBUZZ_INSTALL_DIR}"
     WORKING_DIRECTORY ${HARFBUZZ_3RDPARTY_DIR_ABS})
 
 
@@ -50,10 +52,10 @@ execute_process(COMMAND ./nc-fetch.sh
 
 message( "Fetch Brotli" )
 set(BROTLI_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/brotli")
-set(BROTLI_INSTALL_DIR "${BROTLI_3RDPARTY_DIR}/brotli")
+set(BROTLI_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli")
 get_filename_component(BROTLI_3RDPARTY_DIR_ABS "${BROTLI_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(BROTLI_INSTALL_DIR_ABS "${BROTLI_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
+execute_process(COMMAND ./nc-fetch.sh "${BROTLI_INSTALL_DIR}"
     WORKING_DIRECTORY ${BROTLI_3RDPARTY_DIR_ABS})
 
 
@@ -61,10 +63,10 @@ execute_process(COMMAND ./nc-fetch.sh
 
 message( "Fetch Hyphen" )
 set(HYPHEN_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen")
-set(HYPHEN_INSTALL_DIR "${HYPHEN_3RDPARTY_DIR}/hyphen")
+set(HYPHEN_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen")
 get_filename_component(HYPHEN_3RDPARTY_DIR_ABS "${HYPHEN_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
+execute_process(COMMAND ./nc-fetch.sh "${HYPHEN_INSTALL_DIR}"
     WORKING_DIRECTORY ${HYPHEN_3RDPARTY_DIR_ABS})
 
 
