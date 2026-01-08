@@ -6,8 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(HTML_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty/html")
-
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
@@ -22,13 +20,15 @@ endif()
 
 
 
-message( "Fetch and patch Gumbo parser" )
-set(GUMBO_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(GUMBO_INSTALL_DIR "${GUMBO_3RDPARTY_DIR}/gumbo-parser")
-get_filename_component(GUMBO_3RDPARTY_DIR_ABS "${GUMBO_3RDPARTY_DIR}" ABSOLUTE)
+message( "Fetch and patch Katana and Gumbo" )
+set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
+set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
+set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
+get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh
-    WORKING_DIRECTORY ${GUMBO_3RDPARTY_DIR_ABS})
+execute_process(COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
+    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR})
 
 
 
@@ -69,7 +69,7 @@ add_library(Fb2File SHARED
     ${GUMBO_INSTALL_DIR}/src/util.h
     ${GUMBO_INSTALL_DIR}/src/vector.h
 
-    ${HTML_3RDPARTY_ROOT}/htmltoxhtml.h
+    ${HTML_3RDPARTY_DIR}/htmltoxhtml.h
 )
 
 set_default_options(Fb2File)
@@ -79,7 +79,7 @@ target_compile_definitions(Fb2File PRIVATE
 )
 
 target_include_directories(Fb2File PRIVATE
-    ${HTML_3RDPARTY_ROOT}
+    ${HTML_3RDPARTY_DIR}
     ${GUMBO_INSTALL_DIR_ABS}/src
 )
 
