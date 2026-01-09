@@ -76,6 +76,14 @@ ninja -C out.gn/linux_64 || abort_op "Ninja build failed"
 
 cp "$work_dir/v8/out.gn/linux_64/obj/libv8_monolith.a" "$install_dir/libv8_monolith.a" \
     || abort_op "Install failed (libv8_monolith.a)"
-cp -r "$work_dir/v8" "$install_dir/v8" || abort_op "Install failed (v8)"
+mkdir -p "$install_dir/v8/include" || abort_op "Failed to create directory: [$install_dir/v8/include]"
+mkdir -p "$install_dir/v8/src/base" || abort_op "Failed to create directory: [$install_dir/v8/src/base]"
+cp -r "$work_dir/v8/include" "$install_dir/v8/" || abort_op "Install failed (v8/include)"
+
+additional_base_headers_to_install="base-export.h compiler-specific.h sys-info.h"
+for f in $additional_base_headers_to_install
+do
+    cp "$work_dir/v8/src/base/$f" "$install_dir/v8/src/base/$f" || abort_op "Failed to install ($f)"
+done
 
 echo "v8 ready!"
