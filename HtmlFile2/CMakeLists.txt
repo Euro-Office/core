@@ -33,16 +33,22 @@ set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
 get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR})
+execute_process(
+    COMMAND_ECHO STDOUT
+    COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
+    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR}
+)
 
 message( "Fetch md" )
 set(MD_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/md")
 set(MD_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/md4c")
 get_filename_component(MD_3RDPARTY_DIR_ABS "${MD_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(MD_INSTALL_DIR_ABS "${MD_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-fetch.sh "${MD_INSTALL_DIR}"
-    WORKING_DIRECTORY ${MD_3RDPARTY_DIR_ABS})
+execute_process(
+    COMMAND_ECHO STDOUT
+    COMMAND ./nc-fetch.sh "${MD_INSTALL_DIR}"
+    WORKING_DIRECTORY ${MD_3RDPARTY_DIR_ABS}
+)
 
 
 

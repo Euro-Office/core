@@ -62,24 +62,30 @@ endif()
 
 message( "Fetch and build OpenSSL" )
 set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${OPENSSL_3RDPARTY_DIR}/openssl_build_linux_64")
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
 get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(COMMAND ./nc-build.sh
-                WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS})
+execute_process(
+    COMMAND_ECHO STDOUT
+    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
+    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
+)
 
 
 
 
 
 message( "Fetch, patch and build v8" )
-set(V8_REPO_ROOT "${COMMON_3RDPARTY_ROOT}/v8/v8")
-get_filename_component(V8_IN_TREE_LOCATION "${COMMON_3RDPARTY_ROOT}/v8" ABSOLUTE)
-set(V8_LIB_OUTPUT_DIR "${V8_IN_TREE_LOCATION}/v8/out.gn/linux_64/obj")
+set(V8_3RDPARTY_DIR "${COMMON_3RDPARTY_ROOT}/v8")
+set(V8_WORK_DIR "${EO_CORE_3RD_PARTY_WORK_DIR}/v8")
+set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
+get_filename_component(V8_3RDPARTY_DIR_ABS "${V8_3RDPARTY_DIR}" ABSOLUTE)
+get_filename_component(V8_WORK_DIR_ABS "${V8_WORK_DIR}" ABSOLUTE)
+get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
 execute_process(
     COMMAND_ECHO STDOUT
-    COMMAND ./simplified_setup_tool_2.sh
-    WORKING_DIRECTORY ${V8_IN_TREE_LOCATION}
+    COMMAND ./nc-build.sh "${V8_WORK_DIR}" "${V8_INSTALL_DIR}"
+    WORKING_DIRECTORY ${V8_3RDPARTY_DIR}
 )
 
 
@@ -233,9 +239,8 @@ target_include_directories(doctrenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/addon
     ${CMAKE_CURRENT_SOURCE_DIR}/js_internal # js_base_embed.pri
     ${OPENSSL_INSTALL_DIR}/include
-    ${V8_REPO_ROOT}
-    ${V8_REPO_ROOT}/include
-    # ${ICU_ROOT_DIR}/${PLATFORM_PREFIX}/build/include
+    ${V8_INSTALL_DIR_ABS}/v8
+    ${V8_INSTALL_DIR_ABS}/v8/include
 )
 
 if(V8_USE_INSPECTOR)
@@ -292,7 +297,7 @@ target_link_libraries(doctrenderer PRIVATE
 )
 
 target_link_libraries(doctrenderer PUBLIC
-    ${V8_LIB_OUTPUT_DIR}/libv8_monolith.a
+    ${V8_INSTALL_DIR_ABS}/libv8_monolith.a
     graphics
     kernel
     UnicodeConverter

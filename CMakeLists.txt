@@ -55,6 +55,6 @@ endforeach()
 
 add_custom_command(TARGET copy_artifacts POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-    COMMAND /bin/sh -c "cp -P \"${CMAKE_CURRENT_LIST_DIR}/Common/3dParty/icu/install_linux_x64/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+    COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
     COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
 )
