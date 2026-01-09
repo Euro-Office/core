@@ -36,9 +36,9 @@
 #include <map>
 #include <sstream>
 
-#include "../../Common/3dParty/hyphen/hyphen/hnjalloc.h"
-#include "../../Common/3dParty/hyphen/hyphen/hnjalloc.c"
-#include "../../Common/3dParty/hyphen/hyphen/hyphen.c"
+#include "hyphen/hnjalloc.h"
+#include "hyphen/hnjalloc.c"
+#include "hyphen/hyphen.c"
 
 #ifndef HYPHEN_ENGINE_DISABLE_FILESYSTEM
 #include "../common/Directory.h"

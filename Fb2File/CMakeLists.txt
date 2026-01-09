@@ -82,6 +82,7 @@ target_compile_definitions(Fb2File PRIVATE
 )
 
 target_include_directories(Fb2File PRIVATE
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${HTML_3RDPARTY_DIR}
     ${GUMBO_INSTALL_DIR_ABS}/src
 )

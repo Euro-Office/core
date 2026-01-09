@@ -149,6 +149,7 @@ add_library(HtmlFile2 SHARED
 set_default_options(HtmlFile2)
 
 target_include_directories(HtmlFile2 PRIVATE
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${HTML_3RDPARTY_DIR}
     ${HTML_3RDPARTY_DIR}/css # CssCalculator.pri
     ${GUMBO_INSTALL_DIR_ABS}/src

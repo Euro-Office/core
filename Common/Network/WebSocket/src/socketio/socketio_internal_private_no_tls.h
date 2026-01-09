@@ -37,8 +37,8 @@
 #pragma once
 #include "socketio_internal.h"
 #include <iostream>
-#include "../../../../3dParty/socketio/socket.io-client-cpp/src_no_tls/internal/sio_packet.h"
-#include "../../../../3dParty/socketio/socket.io-client-cpp/src_no_tls/sio_client.h"
+#include "socket.io-client-cpp/src_no_tls/internal/sio_packet.h"
+#include "socket.io-client-cpp/src_no_tls/sio_client.h"
 #include <memory>
 #include "../../../../../DesktopEditor/graphics/BaseThread.h"
 

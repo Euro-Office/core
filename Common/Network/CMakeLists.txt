@@ -105,6 +105,7 @@ endif()
 
 target_include_directories(kernel_network PRIVATE
     ${OPENSSL_INSTALL_DIR}/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${SOCKETIO_INSTALL_DIR}/lib/websocketpp
     ${SOCKETIO_INSTALL_DIR}/lib/rapidjson/include
     ${SOCKETIO_INSTALL_DIR}/lib/asio/asio/include
