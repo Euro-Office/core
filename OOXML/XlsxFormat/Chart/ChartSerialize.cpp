@@ -36,10 +36,14 @@
 
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SERIESFORMAT.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SS.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/IVAXIS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Series.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DataFormat.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BRAI.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SerToCrt.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Axis.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/CatSerRange.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxcExt.h"
 
 namespace OOX
 {
@@ -2926,6 +2930,32 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(L"</");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
+		}
+		XLS::BaseObjectPtr CT_CatAx::toXLS()
+		{
+			auto ivAxis = new XLS::IVAXIS;
+			auto axis = new XLS::Axis;
+			axis->wType = 0;
+			ivAxis->m_Axis = XLS::BaseObjectPtr(axis);
+			auto catSerRange = new XLS::CatSerRange;
+			catSerRange->catCross = 1;
+			catSerRange->catLabel = 1;
+			catSerRange->catMark = 1;
+			catSerRange->fBetween = true;
+			ivAxis->m_CatSerRange = XLS::BaseObjectPtr(catSerRange);
+
+			auto axcExt = new XLS::AxcExt;
+			axcExt->fAutoBase = true;
+			axcExt->fAutoCross = true;
+			axcExt->fAutoDate = true;
+			axcExt->fAutoMajor = true;
+			axcExt->fAutoMax = true;
+			axcExt->fAutoMin = true;
+			axcExt->fAutoMinor = true;
+			axcExt->fDateAxis = true;
+			ivAxis->m_AxcExt = XLS::BaseObjectPtr(axcExt);
+
+			return XLS::BaseObjectPtr(ivAxis);
 		}
 		EElementType CT_CatAx::getType() { return et_ct_catax; }
 		CT_DispUnitsLbl::CT_DispUnitsLbl()

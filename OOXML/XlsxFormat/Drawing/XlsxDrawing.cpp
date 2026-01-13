@@ -37,6 +37,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJECTS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CHARTFOMATS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXISPARENT.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXES.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Chart.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxisParent.h"
@@ -332,13 +333,25 @@ namespace OOX
 											ChartFormatsPtr->m_arAXISPARENT.push_back(XLS::BaseObjectPtr(AxisParentUnion));
 											auto pos = new XLS::Pos;
 											AxisParentUnion->m_Pos = XLS::BaseObjectPtr(pos);
+											auto axes = new XLS::AXES;
+											AxisParentUnion->m_AXES = XLS::BaseObjectPtr(axes);
+											if(barChart->m_axId.size() > 0)
+											{
+												auto vaxId = barChart->m_axId.at(0);
+												if(!ChartFile->m_oChartSpace.m_chart->m_plotArea->m_Items1.empty())
+												{
+													auto ivAx = static_cast<CT_CatAx*>(ChartFile->m_oChartSpace.m_chart->m_plotArea->m_Items1.at(0));
+													if(ivAx->m_axId.IsInit() && ivAx->m_axId.get() == vaxId)
+													{
+														axes->m_arAxes.push_back(ivAx->toXLS());
+													}
+												}
+											}
 										}
 									}
 								}
 							}
 						}
-
-						//todo chart processing
 					}
 				}
 			}
