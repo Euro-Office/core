@@ -1164,6 +1164,7 @@ namespace NSDocxRenderer
 		{
 			origin_lefts.push_back(curr_origin_left);
 			curr_origin_left += dWidth / oText.length();
+			curr_origin_left -= oFont.CharSpace;
 		}
 
 		// if new text is close to current cont
