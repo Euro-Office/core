@@ -1284,6 +1284,13 @@ namespace NExtractTools
 					((CPdfFile*)pReader)->SetCMapFolder(*params.m_sCmapDir);
 				}
 
+				if ((AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_PDF == nFormatFrom ||
+					 AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_PDFA == nFormatFrom)
+					&& params.m_sCmapDir)
+				{
+					((CPdfFile*)pReader)->SetCMapFolder(*params.m_sCmapDir);
+				}
+
 				// pdf -> txt via TxtRenderer
 				if (nFormatTo == AVS_OFFICESTUDIO_FILE_DOCUMENT_TXT && nFormatFrom == AVS_OFFICESTUDIO_FILE_CROSSPLATFORM_PDF)
 				{
