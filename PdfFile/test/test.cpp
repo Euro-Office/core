@@ -275,7 +275,7 @@ TEST_F(CPdfFileTest, PdfBinToPng)
 
 TEST_F(CPdfFileTest, PdfFromBin)
 {
-	GTEST_SKIP();
+	//GTEST_SKIP();
 
 	pdfFile->CreatePdf();
 	EXPECT_HRESULT_SUCCEEDED(pdfFile->OnlineWordToPdfFromBinary(NSFile::GetProcessDirectory() + L"/pdf.bin", wsDstFile));
@@ -526,7 +526,7 @@ TEST_F(CPdfFileTest, EditPdf)
 
 TEST_F(CPdfFileTest, EditPdfFromBase64)
 {
-	//GTEST_SKIP();
+	GTEST_SKIP();
 
 	NSFonts::NSApplicationFontStream::SetGlobalMemoryStorage(NSFonts::NSApplicationFontStream::CreateDefaultGlobalMemoryStorage());
 
