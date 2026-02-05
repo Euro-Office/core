@@ -4,6 +4,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place output files (absolute path recommended)")
+set(EO_CORE_TOOLS_DIR  "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place tools output files (absolute path recommended)")
+
 set(EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}/third_party" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
 set(EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}/workdir" CACHE PATH "3rd party work dir for clone and build.")
 set(EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}/install" CACHE PATH "3rd party install dir.")
@@ -115,5 +118,24 @@ function(set_default_options target)
 
     target_link_options(${target} PRIVATE
         ${COMMON_LINK_OPTIONS}
+    )
+endfunction()
+
+
+function(copy_artifacts_to_folder artifacts dest_dir)
+    foreach(artifact ${artifacts})
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
+            COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${artifact}> "${dest_dir}/"
+            COMMENT "Copying ${artifact} to ${dest_dir}"
+        )
+    endforeach()
+endfunction()
+
+function(copy_icu_libs artifact)
+    add_custom_command(TARGET ${artifact} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
 endfunction()

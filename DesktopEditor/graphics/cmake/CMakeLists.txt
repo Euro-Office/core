@@ -1103,3 +1103,5 @@ if(WIN32)
         User32
     )
 endif()
+
+copy_artifacts_to_folder("graphics" "${EO_CORE_OUTPUT_DIR}")

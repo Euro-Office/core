@@ -131,3 +131,5 @@ if(WIN_32)
         Shell32
     )
 endif()
+
+copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")

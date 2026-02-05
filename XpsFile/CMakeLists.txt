@@ -65,3 +65,5 @@ target_link_libraries(XpsFile PUBLIC
     # shell32 # Windows
     # Ole32 # Windows
 )
+
+copy_artifacts_to_folder("XpsFile" "${EO_CORE_OUTPUT_DIR}")

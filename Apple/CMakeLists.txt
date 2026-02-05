@@ -579,3 +579,5 @@ target_link_libraries(IWorkFile PUBLIC
     kernel
     UnicodeConverter
 )
+
+copy_artifacts_to_folder("IWorkFile" "${EO_CORE_OUTPUT_DIR}")

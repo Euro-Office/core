@@ -54,3 +54,6 @@ target_link_libraries(allfontsgen PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
+
+copy_artifacts_to_folder("allfontsgen" "${EO_CORE_TOOLS_DIR}")
+copy_icu_libs(allfontsgen)

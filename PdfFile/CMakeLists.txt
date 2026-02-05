@@ -514,3 +514,5 @@ target_link_libraries(PdfFile PUBLIC
     # shell32 # Windows
     # Ole32 # Windows
 )
+
+copy_artifacts_to_folder("PdfFile" "${EO_CORE_OUTPUT_DIR}")

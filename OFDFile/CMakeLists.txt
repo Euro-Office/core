@@ -108,3 +108,5 @@ target_link_libraries(OFDFile PUBLIC
     # shell32 # Windows
     # Ole32 # Windows
 )
+
+copy_artifacts_to_folder("OFDFile" "${EO_CORE_OUTPUT_DIR}")

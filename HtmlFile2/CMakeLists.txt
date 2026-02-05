@@ -173,3 +173,5 @@ target_link_libraries(HtmlFile2 PUBLIC
     graphics
     kernel_network
 )
+
+copy_artifacts_to_folder("HtmlFile2" "${EO_CORE_OUTPUT_DIR}")

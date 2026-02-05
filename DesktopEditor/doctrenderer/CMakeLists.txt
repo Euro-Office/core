@@ -316,3 +316,5 @@ endif()
 target_link_libraries(doctrenderer PUBLIC
     pthread
 )
+
+copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")

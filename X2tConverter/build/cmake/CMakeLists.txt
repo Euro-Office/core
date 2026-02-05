@@ -21,4 +21,4 @@ target_link_libraries(x2t PRIVATE
     x2tlib
 )
 
-
+copy_artifacts_to_folder("x2t" "${EO_CORE_OUTPUT_DIR}")

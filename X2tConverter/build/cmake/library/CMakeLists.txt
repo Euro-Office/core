@@ -232,3 +232,6 @@ target_link_libraries(x2tlib PUBLIC
 )
 
 set_property(TARGET x2tlib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+copy_artifacts_to_folder("x2tlib" "${EO_CORE_OUTPUT_DIR}")
+copy_icu_libs(x2tlib)

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(allfontsgen)
+project(allthemesgen)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
@@ -42,7 +42,7 @@ if(NOT TARGET DocxRenderer)
     add_subdirectory(${CORE_ROOT_DIR}/DocxRenderer DocxRenderer)
 endif()
 
-message( "Fetch and build icu (allfontsgen)" )
+message( "Fetch and build icu (allthemesgen)" )
 set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
 set(ICU_MAJOR_VER "74")
@@ -83,3 +83,6 @@ target_link_libraries(allthemesgen PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
+
+copy_artifacts_to_folder("allthemesgen" "${EO_CORE_TOOLS_DIR}")
+copy_icu_libs(allthemesgen)

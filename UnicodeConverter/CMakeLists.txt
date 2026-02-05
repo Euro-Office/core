@@ -8,7 +8,7 @@ project(UnicodeConverter)
 
 
 
-message( "Fetch and build icu (UnocodeConverter)" )
+message( "Fetch and build icu (UnicodeConverter)" )
 set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
 set(ICU_MAJOR_VER "74")
@@ -43,3 +43,6 @@ target_link_libraries(UnicodeConverter PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
+
+copy_artifacts_to_folder("UnicodeConverter" "${EO_CORE_OUTPUT_DIR}")
+copy_icu_libs(UnicodeConverter)

@@ -97,3 +97,5 @@ target_link_libraries(Fb2File PUBLIC
     UnicodeConverter
     graphics
 )
+
+copy_artifacts_to_folder("Fb2File" "${EO_CORE_OUTPUT_DIR}")

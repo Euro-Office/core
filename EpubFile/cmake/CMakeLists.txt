@@ -51,3 +51,5 @@ target_link_libraries(EpubFile PUBLIC
     graphics
     HtmlFile2
 )
+
+copy_artifacts_to_folder("EpubFile" "${EO_CORE_OUTPUT_DIR}")

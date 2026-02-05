@@ -54,3 +54,6 @@ target_link_libraries(pluginsmanager PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )
+
+copy_artifacts_to_folder("pluginsmanager" "${EO_CORE_TOOLS_DIR}")
+copy_icu_libs(pluginsmanager)

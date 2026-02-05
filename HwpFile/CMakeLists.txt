@@ -212,3 +212,5 @@ target_link_libraries(HWPFile PUBLIC
     UnicodeConverter
     graphics
 )
+
+copy_artifacts_to_folder("HWPFile" "${EO_CORE_OUTPUT_DIR}")

@@ -75,3 +75,6 @@ target_link_libraries(docbuilder PUBLIC
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
     dl
 )
+
+copy_artifacts_to_folder("docbuilder" "${EO_CORE_OUTPUT_DIR}")
+copy_icu_libs(docbuilder)

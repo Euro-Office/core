@@ -96,3 +96,5 @@ target_link_libraries(kernel PUBLIC
 target_link_libraries(kernel PUBLIC
     UnicodeConverter
 )
+
+copy_artifacts_to_folder("kernel" "${EO_CORE_OUTPUT_DIR}")
