@@ -33,8 +33,15 @@ fi
 mkdir -p "$work_dir" || abort_op "Failed to create work dir: [$work_dir]"
 
 echo "Fetching OpenSSL repo into: [$work_dir]"
-git clone --depth=1 --branch OpenSSL_1_1_1f https://github.com/openssl/openssl.git "$work_dir" \
+git clone --depth 1 --branch openssl-3.6.1 https://github.com/openssl/openssl.git "$work_dir" \
     || abort_op "Git clone failed!"
+cd "$work_dir"
+
+# git clone https://github.com/openssl/openssl.git "$work_dir" \
+#     || abort_op "Git clone failed!"
+# cd "$work_dir"
+# git fetch --tags
+# git switch --detach openssl-3.6.1
 
 echo "Building OpenSSL"
 cd "$work_dir"
