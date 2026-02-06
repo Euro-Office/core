@@ -531,6 +531,10 @@ namespace PdfWriter
 		{
 			m_pPrev  = pPrev;
 		}
+		CXref*       GetPrev()
+		{
+			return m_pPrev;
+		}
 		void         SetPrevAddr(unsigned int unAddr)
 		{
 			m_unAddr = unAddr;
