@@ -139,3 +139,20 @@ function(copy_icu_libs artifact)
         COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
 endfunction()
+
+include(FetchContent)
+FetchContent_Declare(
+    doctest
+    GIT_REPOSITORY https://github.com/doctest/doctest.git
+    GIT_TAG v2.4.11
+)
+FetchContent_MakeAvailable(doctest)
+
+enable_testing()
+
+set_property(GLOBAL PROPERTY TEST_TARGETS "")
+
+# Helper function to add test targets
+function(register_test_target tgt)
+    set_property(GLOBAL APPEND PROPERTY TEST_TARGETS ${tgt})
+endfunction()

@@ -30,27 +30,33 @@
  *
  */
 
+#define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
+#include <doctest/doctest.h>
+
+#include <string>
+  
 #include "./../common/common_openssl.h"
 
-int main(int argc, char *argv[])
+TEST_SUITE( "OpenSSL" )
 {
-    argc;
-    argv;
-    if (true)
+    TEST_CASE( "SHA-256" )
     {
         std::string sTestHashString = "knoejnrgijwenrgiojwnergjiwnerigjnwerojgnweorigjn";
         unsigned int data_len = 0;
         unsigned char* data = NSOpenSSL::GetHash((unsigned char*)sTestHashString.c_str(), (unsigned int)sTestHashString.length(), OPENSSL_HASH_ALG_SHA256, data_len);
         std::string sResult = NSOpenSSL::Serialize(data, data_len, OPENSSL_SERIALIZE_TYPE_HEX);
+
         NSOpenSSL::openssl_free(data);
+
+        const std::string sExpectedResult = "913DD5544D5C726A40D551ACE85B29ABBBD4E2ADF2F4DA5BD07CEC07680CF5CD";
+        CHECK( sResult == sExpectedResult );
     }
 
-    if (true)
+    TEST_CASE( "RSA" )
     {
         unsigned char* publicKey = NULL;
         unsigned char* privateKey = NULL;
         bool bRes = NSOpenSSL::RSA_GenerateKeys(publicKey, privateKey);
-        bRes;
 
         std::string sPublic((char*)publicKey);
         std::string sPrivate((char*)privateKey);
@@ -58,37 +64,35 @@ int main(int argc, char *argv[])
         NSOpenSSL::openssl_free(publicKey);
         NSOpenSSL::openssl_free(privateKey);
 
-        std::string sMessage = "Hello world";
+        const std::string sMessage = "Hello world";
 
         unsigned char* message_crypt = NULL;
         unsigned int message_crypt_len = 0;
-        bool bEncrypt = NSOpenSSL::RSA_EncryptPublic((unsigned char*)sPublic.c_str(), (unsigned char*)sMessage.c_str(), (unsigned int)sMessage.length(), message_crypt, message_crypt_len);
-        bEncrypt;
+        bool bEncrypt = NSOpenSSL::RSA_EncryptPublic((unsigned char*)sPublic.c_str(), (const unsigned char*)sMessage.c_str(), (unsigned int)sMessage.length(), message_crypt, message_crypt_len);
 
         unsigned char* message_decrypt = NULL;
         unsigned int message_decrypt_len = 0;
 
         bool bDecrypt = NSOpenSSL::RSA_DecryptPrivate((unsigned char*)sPrivate.c_str(), message_crypt, message_crypt_len, message_decrypt, message_decrypt_len);
-        bDecrypt;
 
         std::string sMessageOut((char*)message_decrypt, message_decrypt_len);
 
         NSOpenSSL::openssl_free(message_crypt);
         NSOpenSSL::openssl_free(message_decrypt);
+
+        CHECK( sMessageOut == sMessage );
     }
 
-    if (true)
+    TEST_CASE( "AES" )
     {
-        std::string password = "{PASSWORD}";
-        std::string message = "{MESSAGE}";
+        const std::string password = "{PASSWORD}";
+        const std::string message = "{MESSAGE}";
         std::string message_crypted = "";
         std::string message_decrypted = "";
 
         NSOpenSSL::AES_Encrypt_desktop(password, message, message_crypted);
         NSOpenSSL::AES_Decrypt_desktop(password, message_crypted, message_decrypted);
 
-        message;
+        CHECK( message_decrypted == message );
     }
-
-    return 0;
 }

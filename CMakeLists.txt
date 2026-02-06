@@ -4,6 +4,9 @@ project(core)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+add_custom_target(tests)
+get_property(all_tests GLOBAL PROPERTY TEST_TARGETS)
+
 include(${CORE_ROOT_DIR}/common.cmake)
 
 # platform-specific compile flags
@@ -27,4 +30,10 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/app_builder" docbuilder )
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
 
+endif()
+
+add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/openssl/test" )
+
+if(all_tests)
+    add_dependencies(tests ${all_tests})
 endif()
