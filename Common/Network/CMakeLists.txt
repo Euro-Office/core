@@ -114,8 +114,8 @@ target_include_directories(kernel_network PRIVATE
 )
 
 target_link_libraries(kernel_network PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+    ${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a
+    ${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a
 )
 
 target_link_libraries(kernel_network PUBLIC
