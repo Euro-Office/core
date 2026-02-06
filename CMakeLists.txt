@@ -6,6 +6,9 @@ add_compile_options(-march=native)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+add_custom_target(tests)
+get_property(all_tests GLOBAL PROPERTY TEST_TARGETS)
+
 include(${CORE_ROOT_DIR}/common.cmake)
 
 add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
@@ -59,3 +62,10 @@ add_custom_command(TARGET copy_artifacts POST_BUILD
     COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
 )
 ]]
+
+
+add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/openssl/test" )
+
+if(all_tests)
+    add_dependencies(tests ${all_tests})
+endif()
