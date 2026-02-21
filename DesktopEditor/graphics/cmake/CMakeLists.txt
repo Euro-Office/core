@@ -1043,6 +1043,7 @@ if(LINUX)
     target_compile_definitions(graphics PRIVATE
         HAVE_UNISTD_H
         HAVE_UNISTD_H HAVE_FCNTL_H # linux or mac
+        _LINUX
     )
 endif()
 
