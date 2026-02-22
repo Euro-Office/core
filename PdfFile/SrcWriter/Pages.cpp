@@ -1820,7 +1820,7 @@ namespace PdfWriter
 			return false;
 
 		m_vWords.push_back(pText);
-		double dShift = (pLastText->m_dCurX - dX) * 1000 / dSize;
+		double dShift = (pLastText->m_dCurX - dX) * 1000 / (dSize ? dSize : 1);
 		m_vShifts.push_back(dShift);
 		return true;
 	}
