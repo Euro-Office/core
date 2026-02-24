@@ -10,6 +10,7 @@ jobs:
       PLEASE_PRELOAD_LIBSTDCPP: true
       CC: clang-13
       CXX: clang++-13
+      CONAN_WORKSPACE_ENABLE: will_break_next
 
     steps:
     - name: Checkout repository
@@ -31,8 +32,6 @@ jobs:
                 ninja-build \
                 pkg-config \
                 libglib2.0-dev \
-                python3 \
-                python-is-python3 \
                 lsb-release \
                 libboost-all-dev
     
@@ -74,6 +73,21 @@ jobs:
         clang --version  | head -n1 | grep -qE 'clang version 13' || { echo "clang is not 13"; exit 1; }
 
         echo "clang and clang-13 are both v13"
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install Conan
+      run: |
+        python -m pip install --upgrade pip
+        pip install conan
+        conan profile detect --force
+
+    - name: Build Conan dependencies
+      run: conan create . --build=missing
+
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
         cmake -GNinja -S . -B build
