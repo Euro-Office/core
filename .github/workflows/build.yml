@@ -89,7 +89,7 @@ jobs:
       run: ls -R
 
     - name: Build Conan dependencies
-      run: conan create . --build=missing
+      run: conan install . --build=missing
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
