@@ -85,6 +85,9 @@ jobs:
         pip install conan
         conan profile detect --force
 
+    - name: Check directory structure
+      run: ls -R
+
     - name: Build Conan dependencies
       run: conan create . --build=missing
 
