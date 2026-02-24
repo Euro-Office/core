@@ -85,15 +85,12 @@ jobs:
         pip install conan
         conan profile detect --force
 
-    - name: Check directory structure
-      run: ls -R
-
     - name: Build Conan dependencies
       run: conan install . --build=missing
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
-        cmake -GNinja -S . -B build
+        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=build/Release/generators/conan_toolchain.cmake -DCMAKE_BUILD_TYPE=Release
 
     - name: Build core (x2t, docbuilder, etc.)
       run: |
