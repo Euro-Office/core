@@ -6,6 +6,9 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+find_package(boost_eo REQUIRED CONFIG)
+
+
 set(CRYPTOPP_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 add_library(CryptoPPLib STATIC
@@ -398,6 +401,8 @@ target_compile_definitions(CryptoPPLib PRIVATE
     CRYPTOPPLIB_LIBRARY
     DISABLE_TYPE_MISMATCH
 )
+
+target_link_libraries(CryptoPPLib PRIVATE boost_eo::boost_eo)
 
 if(LINUX)
     target_compile_options(CryptoPPLib PRIVATE

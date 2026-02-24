@@ -6,6 +6,9 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+find_package(boost_eo REQUIRED CONFIG)
+
+
 # As far as I can tell, this should be set to 1 when building on mac.
 if(NOT DEFINED USE_JAVASCRIPT_CORE)
     set(USE_JAVASCRIPT_CORE 0)
@@ -298,6 +301,8 @@ if(APPLE)
         $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
     )
 endif()
+
+target_link_libraries(doctrenderer PRIVATE boost_eo::boost_eo)
 
 target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
