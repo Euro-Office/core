@@ -1,3 +1,0 @@
-version: "2"
-packages:
-  - { path: "Common/3dParty/boost" }

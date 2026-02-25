@@ -1,0 +1,19 @@
+{
+  "name": "euro-office",
+  "version": "1.0.0",
+  "dependencies": [
+    "hunspell",
+
+    {
+    "name": "boost",
+    "default-features": false
+    },
+    "boost-system",
+    "boost-filesystem",
+    "boost-regex",
+    "boost-date-time"
+  ],
+  "overrides": [
+    { "name": "hunspell", "version": "1.7.2" }
+  ]
+}

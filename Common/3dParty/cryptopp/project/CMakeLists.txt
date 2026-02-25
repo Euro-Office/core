@@ -6,8 +6,7 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-find_package(boost_eo REQUIRED CONFIG)
-
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
 
 set(CRYPTOPP_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
@@ -402,7 +401,12 @@ target_compile_definitions(CryptoPPLib PRIVATE
     DISABLE_TYPE_MISMATCH
 )
 
-target_link_libraries(CryptoPPLib PRIVATE boost_eo::boost_eo)
+target_link_libraries(CryptoPPLib PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
+)
 
 if(LINUX)
     target_compile_options(CryptoPPLib PRIVATE
