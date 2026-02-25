@@ -37,12 +37,6 @@ git clone --depth 1 --branch openssl-3.6.1 https://github.com/openssl/openssl.gi
     || abort_op "Git clone failed!"
 cd "$work_dir"
 
-# git clone https://github.com/openssl/openssl.git "$work_dir" \
-#     || abort_op "Git clone failed!"
-# cd "$work_dir"
-# git fetch --tags
-# git switch --detach openssl-3.6.1
-
 echo "Building OpenSSL"
 cd "$work_dir"
 ./config enable-md2 no-shared no-asm --prefix=$install_dir --openssldir=$install_dir \
