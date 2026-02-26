@@ -39,7 +39,7 @@ cd "$work_dir"
 
 echo "Building OpenSSL"
 cd "$work_dir"
-./config enable-md2 no-shared no-asm --prefix=$install_dir --openssldir=$install_dir \
+./config enable-md2 no-shared no-asm no-afalgeng --prefix=$install_dir --openssldir=$install_dir \
     || abort_op "Configuration failed!"
 
 make -j10 || abort_op "Build failed!"
