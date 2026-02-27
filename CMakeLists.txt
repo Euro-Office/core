@@ -30,10 +30,11 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/app_builder" docbuilder )
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
 
+    add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/openssl/test" )
+
+    if(all_tests)
+        add_dependencies(tests ${all_tests})
+    endif()
+
 endif()
 
-add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/openssl/test" )
-
-if(all_tests)
-    add_dependencies(tests ${all_tests})
-endif()
