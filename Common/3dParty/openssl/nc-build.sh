@@ -2,8 +2,11 @@
 
 work_dir="$1"
 install_dir="$2"
-keep_work=${3:-0}
+keep_work=${3:-""}
 
+script_dir="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+patches_dir="$script_dir/../../../DesktopEditor/graphics/pro/js/wasm/patches"
+# DesktopEditor/graphics/pro/js/wasm/patches/fix-wasm-openssl.patch 
 abort_op()
 {
     rm -rf "$work_dir"
@@ -35,7 +38,10 @@ mkdir -p "$work_dir" || abort_op "Failed to create work dir: [$work_dir]"
 echo "Fetching OpenSSL repo into: [$work_dir]"
 git clone --depth 1 --branch openssl-3.6.1 https://github.com/openssl/openssl.git "$work_dir" \
     || abort_op "Git clone failed!"
+
+echo "Patching OpenSSL"
 cd "$work_dir"
+git apply "$patches_dir/fix-wasm-openssl.patch" || abort_op "Failed to apply fix-wasm-openssl.patch"
 
 echo "Building OpenSSL"
 cd "$work_dir"
@@ -47,9 +53,12 @@ make -j10 || abort_op "Build failed!"
 echo "Installing OpenSSL to: [$install_dir]"
 make install || abort_op "Install failed!"
 
-if [ "$keep_work" -eq 0 ]; then
-    echo "OpenSSL ready! (work dir will be removed)"
+echo "OpenSSL ready!"
+
+if [ "$keep_work" == "dont_keep_workdir" ]; then
+    echo "Work dir will be removed."
     rm -rf "$work_dir"
 fi
 
 exit 0
+
