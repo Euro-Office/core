@@ -4,14 +4,14 @@
   "dependencies": [
     "hunspell",
 
-    {
-    "name": "boost",
-    "default-features": false
-    },
     "boost-system",
     "boost-filesystem",
     "boost-regex",
-    "boost-date-time"
+    "boost-date-time",
+    "boost-beast",
+    "boost-format",
+    
+    "cef"
   ],
   "overrides": [
     { "name": "hunspell", "version": "1.7.2" }
