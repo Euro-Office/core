@@ -116,7 +116,7 @@ cmake -GNinja -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build . --target libcef_dll_wrapper
 
 cd ~/code/chromium_git/chromium/src/cef/binary_distrib
-ln -s /root/code/chromium_git/chromium/src/cef/binary_distrib/cef_binary_*_linux64 \
-      /root/code/chromium_git/chromium/src/cef/binary_distrib/latest
+
+tar -cjf /cef_binary.tar.bz2 cef_binary_*_linux64
 
 exit 0

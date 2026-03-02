@@ -1,4 +1,4 @@
-FROM ubuntu:xenial-20180417
+FROM ubuntu:xenial-20180417 AS vlc-builder
 
 RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y wget
@@ -95,8 +95,15 @@ ENV PATH=/opt/protobuf/bin:$PATH
 
 RUN rm -rf /build/
 
+RUN git clone https://code.videolan.org/videolan/vlc.git --depth 1 --branch 3.0.18 "/vlc" \
+    || abort_op "Failed to clone depot_tools repo"
+
+COPY change-rpaths.sh /vlc/change-rpaths.sh
+
+RUN sed -i 's|http://git.videolan.org/git/ffmpeg.git|https://github.com/FFmpeg/FFmpeg.git|' /vlc/contrib/src/ffmpeg/rules.mak
+
 # build libvlc
-CMD cd /vlc && \
+RUN cd /vlc && \
     (patch -p1 --forward src/modules/bank.c ignore-cache-time.patch || :) && \
     ./bootstrap && \
     cd contrib && \
@@ -128,3 +135,8 @@ CMD cd /vlc && \
 # generate plugins.dat
     echo "GENERATING plugins.dat..." && \
     lib/vlc/vlc-cache-gen lib/vlc/plugins
+
+RUN tar -cjf /libvlc_binary.tar.bz2 /vlc/build/linux_64
+
+FROM scratch AS artifacts
+COPY --from=vlc-builder /libvlc_binary.tar.bz2 /

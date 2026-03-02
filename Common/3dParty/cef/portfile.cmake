@@ -5,12 +5,21 @@ set(CEF_HASH "NOTFOUND")
 message(STATUS "CEF Version: ${VERSION}")
 message(STATUS "Target Triplet: ${TARGET_TRIPLET}")
 
-if(VERSION STREQUAL "5414")
-    if(TARGET_TRIPLET STREQUAL "x64-linux")
-        set(CEF_HASH "1db09ba082a6ee199318589c1b77c945fd3f045dc4806ff3f8450fd0bd3bbafd9e435c1aefb56d90232da8d038460fe4b5e388ac3bba2fe8dac346f5d48b3890")
-    #elseif(TARGET_TRIPLET STREQUAL "x64-windows")
-    #    set(CEF_HASH "PASTE_HASH_FOR_127_WIN_HERE")
-    endif()
+# 1. Read the hashes file from the LOCAL repository
+file(READ "${CMAKE_CURRENT_LIST_DIR}/hashes.txt" HASH_DATA)
+
+# 2. Extract the specific line for this version+triplet
+string(REGEX MATCH "(${VERSION}\\|${TARGET_TRIPLET}\\|[A-Za-z0-9]+)" MATCHED_LINE "${HASH_DATA}")
+
+# --- NEW ROBUST LOGIC ---
+if(MATCHED_LINE)
+    # Split the matched line by the pipe '|' character
+    string(REPLACE "|" ";" LINE_ITEMS "${MATCHED_LINE}")
+    
+    # LINE_ITEMS is now a CMake list: VERSION;TRIPLET;HASH
+    list(GET LINE_ITEMS 2 CEF_SHA512)
+else()
+    message(FATAL_ERROR "No hash line found for ${VERSION}|${TARGET_TRIPLET} in hashes.txt")
 endif()
 
 # 2. Construct the URL using built-in vcpkg variables
@@ -21,7 +30,7 @@ set(CEF_URL "https://cloud.nextcloud.com/public.php/dav/files/${CLOUD_TOKEN}/CEF
 vcpkg_download_distfile(ARCHIVE
     URLS "${CEF_URL}"
     FILENAME "cef_binary.tar.bz2"
-    SHA512 "${CEF_HASH}"
+    SHA512 "${CEF_SHA512}"
 )
 
 # 4. Extract

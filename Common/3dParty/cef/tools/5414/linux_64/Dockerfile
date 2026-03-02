@@ -37,4 +37,4 @@ FROM ubuntu:18.04 AS cef-builder
     RUN /nc-build.sh
 
 FROM scratch AS artifacts
-COPY --from=cef-builder /root/code/chromium_git/chromium/src/cef/binary_distrib/ /output
+COPY --from=cef-builder /cef_binary.tar.bz2 /
