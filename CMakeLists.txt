@@ -9,7 +9,6 @@ get_property(all_tests GLOBAL PROPERTY TEST_TARGETS)
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-# platform-specific compile flags
 if(EMSCRIPTEN)
 
     add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/js" zlib )
@@ -37,4 +36,3 @@ else()
     endif()
 
 endif()
-
