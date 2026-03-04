@@ -1,6 +1,12 @@
-FROM registry.videolan.org/vlc-debian-win64-3.0:20211008140026
+FROM registry.videolan.org/vlc-debian-win64-3.0:20211008140026 AS vlc-builder
 
-CMD cd /vlc && \
+COPY --from=build-base /vlc /vlc
+
+USER root
+RUN chown -R videolan:videolan /vlc
+USER videolan
+
+RUN cd /vlc && ls -la && id &&\
     (patch -p1 --forward src/modules/bank.c ignore-cache-time.patch || :) && \
     (patch -p1 --forward extras/package/win32/build.sh build-win.patch || :) && \
     mkdir -p build && \
@@ -10,3 +16,8 @@ CMD cd /vlc && \
     ../extras/package/win32/build.sh -a x86_64 -z && \
     cd win64 && \
     make package-win-strip
+
+RUN tar -cjf /libvlc_binary.tar.bz2 /vlc/build/windows_64
+
+FROM scratch AS artifacts
+COPY --from=vlc-builder /libvlc_binary.tar.bz2 /

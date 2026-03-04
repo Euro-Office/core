@@ -95,12 +95,8 @@ ENV PATH=/opt/protobuf/bin:$PATH
 
 RUN rm -rf /build/
 
-RUN git clone https://code.videolan.org/videolan/vlc.git --depth 1 --branch 3.0.18 "/vlc" \
-    || abort_op "Failed to clone depot_tools repo"
-
 COPY change-rpaths.sh /vlc/change-rpaths.sh
-
-RUN sed -i 's|http://git.videolan.org/git/ffmpeg.git|https://github.com/FFmpeg/FFmpeg.git|' /vlc/contrib/src/ffmpeg/rules.mak
+COPY --from=build-base /vlc /vlc
 
 # build libvlc
 RUN cd /vlc && \

@@ -7,19 +7,17 @@ NEXTCLOUD_PASS=
 
 NEXTCLOUD_REMOTE="https://cloud.nextcloud.com/remote.php/dav/files" # Name of configured rclone remote
 BASE_REMOTE_PATH="3DPARTY_DEPS"
-THDPARTY_DIR="./Commmon/3dParty"
+THDPARTY_DIR="./Common/3dParty"
 LOCAL_BUILD_DIR="./build_output"
 TRIPLETS=(
     "x64-linux" # Assuming you build for this triplet
-    "arm-linux"
     "arm64-linux"
 
-    "x64-windows"
-    "arm-windows"
-    "arm64-windows"
+    #"x64-windows"
+    #"arm64-windows"
 
-    "x64-osx"
-    "arm64-osx"
+    #"x64-osx"
+    #"arm64-osx"
 )
 
 mkdir -p "$LOCAL_BUILD_DIR"
@@ -32,18 +30,27 @@ DEPS=(
 
 # --- Main Loop ---
 for dep_info in "${DEPS[@]}"; do
-    for triplet in "${TRIPLETS[@]}"; do
-        IFS="|" read -r NAME VERSION <<< "$dep_info"
 
-        DEP_DIR="${THDPARTY_DIR}/${NAME}"
-        DOCKER_PATH="tools/${triplet}"
+    IFS="|" read -r NAME VERSION <<< "$dep_info"
+
+    DEP_DIR="${THDPARTY_DIR}/${NAME}"
+    BASE_DIR="tools/${VERSION}"
+
+    if [ -e "${DEP_DIR}/${BASE_DIR}/Dockerfile" ]; then
+        docker build -t build-base:latest ${DEP_DIR}/${BASE_DIR}
+    fi
+
+    for triplet in "${TRIPLETS[@]}"; do
+
+        DOCKER_PATH="${BASE_DIR}/${triplet}"
+
 
         if [ ! -d "${DEP_DIR}/${DOCKER_PATH}" ]; then
             continue
         fi
-        
-        echo ">>> Building $NAME version $VERSION..."
-        
+
+        echo ">>> Building $NAME version $VERSION for $triplet..."
+
         # 1. Docker Build and Output to host
         # --output type=local,dest=... requires Docker BuildKit
         FILENAME="${NAME}-${VERSION}-${triplet}_binary.tar.bz2"
