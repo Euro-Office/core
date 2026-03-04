@@ -43,7 +43,9 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/bit_reader.c
     ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/decode.c
     ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/huffman.c
+    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/prefix.c
     ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/state.c
+    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/static_init.c
 
     ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
     ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
