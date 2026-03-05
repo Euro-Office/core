@@ -68,4 +68,5 @@ register_test_target(openssl_tests)
 include(${doctest_SOURCE_DIR}/scripts/cmake/doctest.cmake)
 doctest_discover_tests(openssl_test
      TEST_PREFIX "openssl."
+     DISCOVERY_MODE PRE_TEST
 )
