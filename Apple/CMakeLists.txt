@@ -6,6 +6,8 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(DESKTOP_EDITOR_ROOT "${CORE_ROOT_DIR}/DesktopEditor")
 set(COMMON_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty")
@@ -572,6 +574,10 @@ target_compile_definitions(IWorkFile PRIVATE
 # static libs
 target_link_libraries(IWorkFile PUBLIC
     libxml
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
 )
 
 # shared libs

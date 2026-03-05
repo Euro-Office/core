@@ -24,6 +24,7 @@
  */
 
 #include "CFRecord.h"
+#include <cstdint>
 #include "CFStream.h"
 
 

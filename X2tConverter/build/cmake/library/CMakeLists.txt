@@ -8,6 +8,8 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 if(NOT TARGET CryptoPPLib)
     add_subdirectory(${CORE_ROOT_DIR}/Common/3dParty/cryptopp/project CryptoPPLib)
 endif()
@@ -235,6 +237,10 @@ target_link_libraries(x2tlib PUBLIC
     HWPFile
     StarMathConverter
     ooxmlsignature
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
     ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
     ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
 )

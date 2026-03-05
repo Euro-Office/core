@@ -24,7 +24,7 @@ endif()
 
 # 2. Construct the URL using built-in vcpkg variables
 set(CLOUD_TOKEN "n9KYBcFYyLLCgEw")
-set(CEF_URL "https://cloud.nextcloud.com/public.php/dav/files/${CLOUD_TOKEN}/CEF/${VERSION}/${TARGET_TRIPLET}/cef_binary.tar.bz2")
+set(CEF_URL "https://cloud.nextcloud.com/public.php/dav/files/${CLOUD_TOKEN}/cef/${VERSION}/${TARGET_TRIPLET}/cef_binary.tar.bz2")
 
 # 3. Download
 vcpkg_download_distfile(ARCHIVE

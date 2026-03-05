@@ -8,8 +8,14 @@
     {
       "kind": "git",
       "repository": "https://github.com/microsoft/vcpkg",
-      "baseline": "44d94c2edbd44f0c01d66c2ad95eb6982a9a61bc",
+      "baseline": "5568f110b509a9fd90711978a7cb76bae75bb092",
       "packages": [ "boost", "boost-*" ]
+    },
+    {
+      "kind": "git",
+      "repository": "https://github.com/microsoft/vcpkg",
+      "baseline": "53bef8994c541b6561884a8395ea35715ece75db",
+      "packages": [ "qt5-*", "harfbuzz" ]
     }
   ],
   "overlay-ports": [

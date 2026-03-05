@@ -6,6 +6,8 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+find_package(Boost REQUIRED)
+
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
@@ -87,6 +89,7 @@ target_include_directories(Fb2File PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${HTML_3RDPARTY_DIR}
     ${GUMBO_INSTALL_DIR_ABS}/src
+    ${Boost_INCLUDE_DIRS} 
 )
 
 target_compile_options(Fb2File PRIVATE
