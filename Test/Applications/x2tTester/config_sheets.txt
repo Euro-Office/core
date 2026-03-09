@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<settings>./</settings>
+	<inputDirectory>input_sheets</inputDirectory>
+	<outputDirectory>out_sheets</outputDirectory>
+	<x2tPath>../../../x2t/</x2tPath>
+	<output>xlsx ods</output>
+	<cores>2</cores>
+</settings>

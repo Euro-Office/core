@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<settings>./</settings>
+	<inputDirectory>input_slides</inputDirectory>
+	<outputDirectory>out_slides</outputDirectory>
+	<x2tPath>../../../x2t/</x2tPath>
+	<output>pptx odp</output>
+	<cores>2</cores>
+</settings>
