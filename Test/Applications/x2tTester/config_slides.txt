@@ -3,7 +3,7 @@
 	<settings>./</settings>
 	<inputDirectory>input_slides</inputDirectory>
 	<outputDirectory>out_slides</outputDirectory>
-	<x2tPath>../../../x2t/</x2tPath>
+	<x2tPath>../../../build/package/</x2tPath>
 	<output>pptx odp</output>
 	<cores>2</cores>
 </settings>

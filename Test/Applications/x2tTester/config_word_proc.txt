@@ -3,7 +3,7 @@
 	<settings>./</settings>
 	<inputDirectory>input_word_proc</inputDirectory>
 	<outputDirectory>out_word_proc</outputDirectory>
-	<x2tPath>../../../x2t/</x2tPath>
-	<output>docx odt rtf txt</output>
+	<x2tPath>../../../build/package/</x2tPath>
+	<output>docx odt rtf</output>
 	<cores>2</cores>
 </settings>

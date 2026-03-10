@@ -35,7 +35,7 @@ target_link_libraries(x2ttester PUBLIC
 	UnicodeConverter)
 set_default_options(x2ttester)
 
-
+copy_artifacts_to_folder("x2ttester" "${EO_CORE_TOOLS_DIR}")
 
 # Modify rpath so test binary can run properly
 

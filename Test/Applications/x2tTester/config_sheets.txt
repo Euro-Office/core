@@ -3,7 +3,7 @@
 	<settings>./</settings>
 	<inputDirectory>input_sheets</inputDirectory>
 	<outputDirectory>out_sheets</outputDirectory>
-	<x2tPath>../../../x2t/</x2tPath>
+	<x2tPath>../../../build/package/</x2tPath>
 	<output>xlsx ods</output>
 	<cores>2</cores>
 </settings>

@@ -1,5 +1,9 @@
 #!/bin/bash
 
+workDir="$1"
+exeDir="$2"
+exitCode=0
+
 docZipFormats=( docx odt )
 docBinFormats=( rtf )
 docFormats=(${docZipFormats[@]} ${docBinFormats[@]})
@@ -13,9 +17,11 @@ sheetsZipFormats=( ods xlsx )
 sheetsFormats=${sheetsZipFormats} 
 sheetsFiles=( spread_basic )
 
+cd $workDir
+
 function convertAndDiff() {
 
-	./x2ttester ./config_$conversionType.txt > /dev/null
+	$exeDir/x2ttester ./config_$conversionType.txt > /dev/null
 	cd out_$conversionType
 
 	for file in "${files[@]}"
@@ -30,6 +36,10 @@ function convertAndDiff() {
 			done
 		cd ..
 		diff -r $file.$inFormat ../out_${conversionType}_snap/$file.$inFormat/
+		if [ "$?" != 0 ]
+		then 
+			exitCode=1
+		fi
 		done
 	done
 
@@ -58,3 +68,5 @@ files=(${sheetsFiles[@]})
 conversionType=sheets
 
 convertAndDiff
+
+exit "$exitCode"
