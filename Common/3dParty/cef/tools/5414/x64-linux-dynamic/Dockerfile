@@ -32,7 +32,7 @@ FROM ubuntu:18.04 AS cef-builder
         libkrb5-dev \
         libpci-dev
 
-    COPY ./nc-build /nc-build.sh
+    COPY ./nc-build.sh /nc-build.sh
 
     RUN /nc-build.sh
 

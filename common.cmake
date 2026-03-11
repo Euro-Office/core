@@ -64,7 +64,7 @@ set(COMMON_CXX_FLAGS
     -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2
+    #-O2 # Remove for debugging
 )
 
 set(COMMON_C_FLAGS
@@ -78,7 +78,7 @@ set(COMMON_C_FLAGS
     -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2
+    #-O2 #Remove for debugging
 )
 
 

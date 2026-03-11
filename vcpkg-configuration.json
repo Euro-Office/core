@@ -15,10 +15,11 @@
       "kind": "git",
       "repository": "https://github.com/microsoft/vcpkg",
       "baseline": "53bef8994c541b6561884a8395ea35715ece75db",
-      "packages": [ "qt5-*", "harfbuzz" ]
+      "packages": [ "harfbuzz" ]
     }
   ],
   "overlay-ports": [
-    "./Common/3dParty/cef"
+    "./Common/3dParty/cef",
+    "./Common/3dParty/qt"
   ]
 }
