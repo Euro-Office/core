@@ -24,8 +24,8 @@ FROM ubuntu:18.04 AS qt-builder
         libfreetype6-dev \
         libfontconfig1-dev \
         libharfbuzz-dev \
-        libxkbcommon-dev \
-        libxkbcommon-x11-dev \
+        #libxkbcommon-dev \
+        #libxkbcommon-x11-dev \
         libxcb-xinput-dev \
         libsm-dev \
         libatspi2.0-dev \
@@ -33,7 +33,8 @@ FROM ubuntu:18.04 AS qt-builder
         libxi-dev \
         libasound2-dev \
         libpulse-dev \
-        libssl-dev \
+        #libssl-dev \
+        libssl1.0-dev \
         libcups2-dev \
         libgtk-3-dev \
         libxcomposite-dev \
@@ -85,7 +86,7 @@ FROM ubuntu:18.04 AS qt-builder
         -system-harfbuzz \
         -alsa \
         -pulseaudio \
-        -openssl \
+        -openssl-linked \
         -cups \
         -gtk
         # ---------------------------------------

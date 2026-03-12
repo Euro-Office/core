@@ -34,7 +34,7 @@ FROM ubuntu:18.04 AS cef-builder
 
     COPY ./nc-build.sh /nc-build.sh
 
-    RUN /nc-build.sh
+    #RUN /nc-build.sh
 
 FROM scratch AS artifacts
 COPY --from=cef-builder /cef_binary.tar.bz2 /

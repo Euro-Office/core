@@ -19,7 +19,7 @@ update-locale LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 #export GN_DEFINES="is_official_build=true use_sysroot=false use_allocator=none symbol_level=1 is_cfi=false use_thin_lto=false use_vaapi=false"
-export GN_DEFINES="is_official_build=true use_sysroot=true use_allocator=\"partition\" symbol_level=0 is_cfi=false use_thin_lto=true use_vaapi=false use_gtk=true use_dbus=true concurrent_links=2"
+export GN_DEFINES="is_official_build=true use_sysroot=true symbol_level=0 is_cfi=false use_thin_lto=true use_vaapi=false use_gtk=true use_dbus=true use_partition_alloc_as_malloc=false"
 export CEF_ARCHIVE_FORMAT=tar.bz2
 
 # --- HELPER FUNCTION: Retry Logic ---
