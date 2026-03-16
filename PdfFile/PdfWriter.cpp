@@ -2321,7 +2321,42 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 		}
 		else if (oInfo.IsFileAttachment())
 		{
+			CAnnotFieldInfo::CFileAttachmentAnnotPr* pPr = oInfo.GetFileAttachmentAnnotPr();
+			PdfWriter::CFileAttachmentAnnotation* pFileAttachmentAnnot = (PdfWriter::CFileAttachmentAnnotation*)pAnnot;
 
+			if (nFlags & (1 << 15))
+				pFileAttachmentAnnot->SetName(pPr->GetName());
+			if (nFlags & (1 << 16))
+				pFileAttachmentAnnot->SetFS(pPr->GetFS());
+			if (nFlags & (1 << 17))
+				pFileAttachmentAnnot->SetF(pPr->GetF());
+			if (nFlags & (1 << 18))
+				pFileAttachmentAnnot->SetUF(pPr->GetUF());
+			if (nFlags & (1 << 19))
+				pFileAttachmentAnnot->SetDOS(pPr->GetDOS());
+			if (nFlags & (1 << 20))
+				pFileAttachmentAnnot->SetMac(pPr->GetMac());
+			if (nFlags & (1 << 21))
+				pFileAttachmentAnnot->SetUnix(pPr->GetUnix());
+			if (nFlags & (1 << 22))
+				pFileAttachmentAnnot->SetID(pPr->GetID());
+			pFileAttachmentAnnot->SetV(nFlags & (1 << 23));
+			if (nFlags & (1 << 24))
+			{
+				int nFileFlag = pPr->GetFileFlag();
+				if (nFileFlag & (1 << 0))
+					pFileAttachmentAnnot->SetFileF(pPr->GetFileF());
+				if (nFileFlag & (1 << 1))
+					pFileAttachmentAnnot->SetFileUF(pPr->GetFileUF());
+				if (nFileFlag & (1 << 2))
+					pFileAttachmentAnnot->SetFileDOS(pPr->GetFileDOS());
+				if (nFileFlag & (1 << 3))
+					pFileAttachmentAnnot->SetFileMac(pPr->GetFileMac());
+				if (nFileFlag & (1 << 4))
+					pFileAttachmentAnnot->SetFileUnix(pPr->GetFileUnix());
+			}
+			if (nFlags & (1 << 26))
+				pFileAttachmentAnnot->SetDesc(pPr->GetDesc());
 		}
 	}
 	else if (oInfo.IsPopup())

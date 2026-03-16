@@ -451,7 +451,32 @@ namespace PdfWriter
 	};
 	class CFileAttachmentAnnotation : public CMarkupAnnotation
 	{
+	private:
+		void CheckFS();
+		CDictObject* m_pFS;
 
+	public:
+		CFileAttachmentAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotFileAttachment;
+		}
+
+		void SetV(bool bV);
+		void SetName(const std::wstring& wsName);
+		void SetFS(const std::wstring& wsFS);
+		void SetF(const std::wstring& wsF);
+		void SetUF(const std::wstring& wsUF);
+		void SetDOS(const std::wstring& wsDOS);
+		void SetMac(const std::wstring& wsMac);
+		void SetUnix(const std::wstring& wsUnix);
+		void SetDesc(const std::wstring& wsDesc);
+		void SetFileF(const std::wstring& wsFileF);
+		void SetFileUF(const std::wstring& wsFileUF);
+		void SetFileDOS(const std::wstring& wsFileDOS);
+		void SetFileMac(const std::wstring& wsFileMac);
+		void SetFileUnix(const std::wstring& wsFileUnix);
+		void SetID(const std::pair<std::wstring, std::wstring>& wsID);
 	};
 	class CWidgetAnnotation : public CAnnotation
 	{

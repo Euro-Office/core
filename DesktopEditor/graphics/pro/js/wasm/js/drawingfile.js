@@ -936,7 +936,7 @@ function readAnnotType(reader, rec, readDoubleFunc, readDouble2Func, readStringF
 			rec["ID"].push(readStringFunc.call(reader));
 			rec["ID"].push(readStringFunc.call(reader));
 		}
-		rec["V"] = flags & (1 << 23);
+		rec["V"] = flags & (1 << 23) ? true : false;
 		if (flags & (1 << 24))
 		{
 			if (isRead)
