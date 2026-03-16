@@ -958,7 +958,7 @@ void ReadInteractiveFormsFonts(CDrawingFile* pGrFile, int nType)
 			if (pFont)
 				free(pFont);
 
-			if (true)
+			if (false)
 				continue;
 
 			pFont = GetGIDByUnicode(pGrFile, (char*)sFontName.c_str());
@@ -1353,9 +1353,9 @@ int main(int argc, char* argv[])
 				std::cout << "  Unicode " << nPathLength;
 				nPathLength = READ_INT(pGlyphs + i);
 				i += 4;
-				std::cout << " width " << (double)nPathLength / 10000.0;
+				std::cout << "\twidth " << (double)nPathLength / 10000.0;
 				if (nCharX)
-					std::cout << " charX " << (double)nCharX / 10000.0;
+					std::cout << "\tcharX " << (double)nCharX / 10000.0;
 				std::cout << std::endl;
 			}
 		}
@@ -2252,7 +2252,7 @@ int main(int argc, char* argv[])
 	}
 
 	// SCAN PAGE Fonts
-	if (false)
+	if (true)
 	{
 		SetScanPageFonts(pGrFile, nTestPage);
 

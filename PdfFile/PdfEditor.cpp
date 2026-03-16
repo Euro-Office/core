@@ -58,6 +58,7 @@
 #include "SrcWriter/GState.h"
 #include "SrcWriter/RedactOutputDev.h"
 #include "SrcWriter/Image.h"
+#include "SrcWriter/Font14.h"
 
 #define AddToObject(oVal)\
 {\
@@ -4488,26 +4489,36 @@ void CPdfEditor::ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pRe
 						Ref nFontRef = oFontRef.getRef();
 						if (pFontList->GetFont(&nFontRef, &pFontEntry))
 						{
-							std::map<unsigned int, unsigned int> mCodeToWidth, mCodeToUnicode, mCodeToGID;
-							PdfReader::CollectFontWidths(gfxFont, oFont.getDict(), mCodeToWidth);
-							for (int nIndex = 0; nIndex < pFontEntry.unLenUnicode; ++nIndex)
+							PdfWriter::CDocument* pDoc = m_pWriter->GetDocument();
+							PdfWriter::CFontEmbedded* pFont = pDoc->FindFontEmbedded(wsFileName, 0);
+							if (pFont)
 							{
-								if (pFontEntry.pCodeToUnicode[nIndex])
-									mCodeToUnicode[nIndex] = pFontEntry.pCodeToUnicode[nIndex];
+								pFont->UpdateKey(sFontKey);
 							}
-							for (int nIndex = 0; nIndex < pFontEntry.unLenGID; ++nIndex)
+							else
 							{
-								if (pFontEntry.pCodeToGID[nIndex])
-									mCodeToGID[nIndex] = pFontEntry.pCodeToGID[nIndex];
+								std::map<unsigned int, unsigned int> mCodeToWidth, mCodeToUnicode, mCodeToGID;
+								int nDW = PdfReader::CollectFontWidths(gfxFont, oFont.getDict(), mCodeToWidth);
+								for (int nIndex = 0; nIndex < pFontEntry.unLenUnicode; ++nIndex)
+								{
+									if (pFontEntry.pCodeToUnicode[nIndex])
+										mCodeToUnicode[nIndex] = pFontEntry.pCodeToUnicode[nIndex];
+								}
+								for (int nIndex = 0; nIndex < pFontEntry.unLenGID; ++nIndex)
+								{
+									if (pFontEntry.pCodeToGID[nIndex])
+										mCodeToGID[nIndex] = pFontEntry.pCodeToGID[nIndex];
+								}
+								m_pWriter->AddFont(L"Embedded: " + wsFontName, false, false, wsFileName, 0);
+								PdfWriter::CObjectBase* pObj =  m_mObjManager.GetObj(nFontRef.num + nStartRefID);
+								if (!pObj)
+								{
+									pObj = new PdfWriter::CObjectBase();
+									pObj->SetRef(nFontRef.num, nFontRef.gen);
+								}
+								pFont = pDoc->CreateFontEmbedded(wsFileName, 0, sFontKey, static_cast<PdfWriter::EFontType>(gfxFont->getType()), pObj, mCodeToWidth, mCodeToUnicode, mCodeToGID);
+								pFont->SetDW(nDW);
 							}
-							m_pWriter->AddFont(L"Embedded: " + wsFontName, false, false, wsFileName, 0);
-							PdfWriter::CObjectBase* pObj =  m_mObjManager.GetObj(nFontRef.num + nStartRefID);
-							if (!pObj)
-							{
-								pObj = new PdfWriter::CObjectBase();
-								pObj->SetRef(nFontRef.num, nFontRef.gen);
-							}
-							m_pWriter->GetDocument()->CreateFontEmbedded(wsFileName, 0, sFontKey, static_cast<PdfWriter::EFontType>(gfxFont->getType()), pObj, mCodeToWidth, mCodeToUnicode, mCodeToGID);
 						}
 					}
 				}

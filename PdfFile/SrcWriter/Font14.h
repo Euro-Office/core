@@ -75,8 +75,10 @@ namespace PdfWriter
 		CObjectBase* GetObj2();
 		const char* GetFontKey() const { return m_sFontKey.c_str(); }
 		void UpdateKey(const std::string& sFontKey) { m_sFontKey = sFontKey; }
+		void SetDW(unsigned int unDW) { m_unDW = unDW; }
 
 	private:
+		unsigned int m_unDW;
 		std::string m_sFontKey;
 		EFontType m_eFontType;
 		CObjectBase* m_pObj;
