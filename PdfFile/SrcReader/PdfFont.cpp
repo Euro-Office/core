@@ -953,8 +953,9 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 
 	return mRes;
 }
-void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
+int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
 {
+	int nDefaultWidth = 1000;
 	// Пытаемся получить ширины из словаря Widths
 	Object oWidths;
 	if (pFontDict->lookup("Widths", &oWidths)->isArray())
@@ -988,7 +989,6 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 		{
 			// Получаем DW (default width)
 			Object oDW;
-			int nDefaultWidth = 1000;
 			if (oCIDFont.dictLookup("DW", &oDW)->isInt())
 				nDefaultWidth = oDW.getInt();
 			oDW.free();
@@ -1063,6 +1063,8 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 		oCIDFont.free();
 	}
 	oDescendantFonts.free();
+
+	return nDefaultWidth;
 }
 void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 {

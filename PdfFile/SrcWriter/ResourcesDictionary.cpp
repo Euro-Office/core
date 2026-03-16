@@ -104,7 +104,16 @@ namespace PdfWriter
 			}
 		}
 
-		const char *sKey = m_pFonts->GetKey(pEmbedded ? pEmbedded->GetObj2() : pFont);
+		const char *sKey = NULL;
+		if (pEmbedded)
+		{
+			CObjectBase* pObj1 = pEmbedded->GetObj2();
+			CObjectBase* pObj2 = m_pFonts->Get(pEmbedded->GetFontKey());
+			if (pObj1 && pObj2 && pObj1->GetType() == object_type_UNKNOWN && pObj1->GetObjId() == pObj2->GetObjId())
+				sKey = pEmbedded->GetFontKey();
+		}
+		if (!sKey)
+			sKey = m_pFonts->GetKey(pEmbedded ? pEmbedded->GetObj2() : pFont);
 		if (!sKey)
 		{
 			// если фонт не зарегистрирован в ресурсах, тогда регистрируем его
