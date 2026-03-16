@@ -141,3 +141,11 @@ function(copy_icu_libs artifact)
         COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
 endfunction()
+
+function(copy_boost_libs artifact)
+    add_custom_command(TARGET ${artifact} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+        COMMAND /bin/sh -c "cp -P --update=none \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMENT "Copying Boost libs to ${EO_CORE_OUTPUT_DIR}"
+    )
+endfunction()

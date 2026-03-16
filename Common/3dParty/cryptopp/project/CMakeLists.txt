@@ -414,3 +414,5 @@ if(LINUX)
         -UNDEBUG
     )
 endif()
+
+copy_boost_libs(CryptoPPLib)

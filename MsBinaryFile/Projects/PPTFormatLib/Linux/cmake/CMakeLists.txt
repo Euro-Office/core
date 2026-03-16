@@ -509,3 +509,5 @@ target_compile_definitions(PptFormatLib PRIVATE
 )
 
 set_property(TARGET PptFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+copy_boost_libs(PptFormatLib)

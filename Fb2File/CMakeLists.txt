@@ -105,3 +105,5 @@ target_link_libraries(Fb2File PUBLIC
 )
 
 copy_artifacts_to_folder("Fb2File" "${EO_CORE_OUTPUT_DIR}")
+
+copy_boost_libs(Fb2File)

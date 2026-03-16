@@ -336,3 +336,5 @@ target_link_libraries(doctrenderer PUBLIC
 )
 
 copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")
+
+copy_boost_libs(doctrenderer)

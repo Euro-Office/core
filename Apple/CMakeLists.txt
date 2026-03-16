@@ -588,3 +588,5 @@ target_link_libraries(IWorkFile PUBLIC
 )
 
 copy_artifacts_to_folder("IWorkFile" "${EO_CORE_OUTPUT_DIR}")
+
+copy_boost_libs(IWorkFile)

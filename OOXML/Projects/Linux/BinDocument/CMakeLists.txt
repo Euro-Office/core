@@ -136,3 +136,5 @@ target_link_libraries(BinDocument PRIVATE
 )
 
 set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+copy_boost_libs(BinDocument)

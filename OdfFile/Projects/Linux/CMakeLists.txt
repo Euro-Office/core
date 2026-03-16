@@ -490,3 +490,5 @@ target_link_libraries(OdfFormatLib PUBLIC
 )
 
 set_property(TARGET OdfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+copy_boost_libs(OdfFormatLib)

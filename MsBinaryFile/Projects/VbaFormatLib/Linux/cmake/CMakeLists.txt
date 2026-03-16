@@ -38,3 +38,5 @@ target_include_directories(VbaFormatLib PRIVATE
 )
 
 set_property(TARGET VbaFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+copy_boost_libs(VbaFormatLib)
