@@ -789,35 +789,38 @@ void odf_document::Impl::parse_styles(office_element *element)
 		if(document)
 		{
 			office_master_styles * master_style = dynamic_cast<office_master_styles *>( document->office_master_styles_.get() );
-			if (!master_style)
-				break;
-			unsigned int elements_master_page = master_style->style_master_page_.size();
-			if(master_style->style_master_page_.size() > 1)
+			// if (!master_style)
+			// 	break;
+			if(master_style)
 			{
-				for (size_t i = 1; i < master_style->style_master_page_.size(); i++)
+				unsigned int elements_master_page = master_style->style_master_page_.size();
+				if(master_style->style_master_page_.size() > 1)
 				{
-					
-					office_element_ptr & elm = master_style->style_master_page_[i];
-			
-					style_master_page * master_page = dynamic_cast<style_master_page *>(elm.get());
-					if (!master_page)
-						continue;
-					
-					 std::wstring ws_style_name = master_page->attlist_.style_name_.get_value_or(L"");
-					
-					for(unsigned int t = 0; t < i;t++)
+					for (size_t i = 1; i < master_style->style_master_page_.size(); i++)
 					{
-						office_element_ptr& elm_prev = master_style->style_master_page_[t];
-						style_master_page* master_page_prev = dynamic_cast<style_master_page*>(elm_prev.get());
-						if(!master_page_prev)
+
+						office_element_ptr & elm = master_style->style_master_page_[i];
+
+						style_master_page * master_page = dynamic_cast<style_master_page *>(elm.get());
+						if (!master_page)
 							continue;
-						if(ws_style_name == master_page_prev->attlist_.style_name_.get_value_or(L""))
+
+						 std::wstring ws_style_name = master_page->attlist_.style_name_.get_value_or(L"");
+
+						for(unsigned int t = 0; t < i;t++)
 						{
-							master_page->attlist_.style_name_ = ws_style_name + L"_" + std::to_wstring(elements_master_page++);
-							context_->styleContainer().set_new_name_master_page(L"",master_page->attlist_.style_name_.get_value_or(L""));
-							break;
+							office_element_ptr& elm_prev = master_style->style_master_page_[t];
+							style_master_page* master_page_prev = dynamic_cast<style_master_page*>(elm_prev.get());
+							if(!master_page_prev)
+								continue;
+							if(ws_style_name == master_page_prev->attlist_.style_name_.get_value_or(L""))
+							{
+								master_page->attlist_.style_name_ = ws_style_name + L"_" + std::to_wstring(elements_master_page++);
+								context_->styleContainer().set_new_name_master_page(L"",master_page->attlist_.style_name_.get_value_or(L""));
+								break;
+							}
+
 						}
-						
 					}
 				}
 			}
