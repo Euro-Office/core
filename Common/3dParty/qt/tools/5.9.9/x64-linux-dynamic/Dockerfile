@@ -34,7 +34,7 @@ FROM ubuntu:18.04 AS qt-builder
         libasound2-dev \
         libpulse-dev \
         #libssl-dev \
-        libssl1.0-dev \
+        #libssl1.0-dev \
         libcups2-dev \
         libgtk-3-dev \
         libxcomposite-dev \
@@ -86,7 +86,7 @@ FROM ubuntu:18.04 AS qt-builder
         -system-harfbuzz \
         -alsa \
         -pulseaudio \
-        -openssl-linked \
+        #-openssl-linked \
         -cups \
         -gtk
         # ---------------------------------------

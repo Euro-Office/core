@@ -9,6 +9,9 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 set(PPTX_FORMAT_DIR "${OOXML_ROOT_DIR}/PPTXFormat")
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 add_library(PPTXFormatLib STATIC
 	${PPTX_FORMAT_DIR}/Comments.cpp
 	${PPTX_FORMAT_DIR}/FileContainer.cpp
@@ -1279,6 +1282,13 @@ target_include_directories(PPTXFormatLib PRIVATE
 	# ${OOXML_ROOT_DIR}/Common/ASCDocxFormat/Source/Utility
 	# ${OOXML_ROOT_DIR}/Common/ASCDocxFormat/Source/XML
 	${OOXML_ROOT_DIR}/XlsbFormat
+)
+
+target_link_libraries(PPTXFormatLib PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
 )
 
 # Note: this precompiled header is commented-out in the .pro file as well for some reason.

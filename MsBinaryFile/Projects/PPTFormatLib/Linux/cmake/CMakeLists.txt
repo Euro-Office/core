@@ -7,6 +7,9 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 set(PPT_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/PptFile")
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 add_library(PptFormatLib STATIC
     ${PPT_FILE_SOURCES_DIR}/Enums/RecordType.cpp
 	${PPT_FILE_SOURCES_DIR}/Reader/ReadStructures.cpp
@@ -488,6 +491,13 @@ add_library(PptFormatLib STATIC
 )
 
 set_default_options(PptFormatLib)
+
+target_link_libraries(PptFormatLib PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
+)
 
 target_include_directories(PptFormatLib PRIVATE
     ${PPT_FILE_SOURCES_DIR}

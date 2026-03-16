@@ -10,6 +10,9 @@ set(DOC_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/DocFile")
 set(COMMON_BASE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common/Base")
 set(_3RDPARTY_POLE_SOURCES_DIR "${CORE_ROOT_DIR}/Common/3dParty/pole")
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 add_library(DocFormatLib STATIC
     ${COMMON_BASE_SOURCES_DIR}/FormatUtils.cpp
     ${COMMON_BASE_SOURCES_DIR}/XmlTools.cpp
@@ -279,10 +282,18 @@ add_library(DocFormatLib STATIC
 
 set_default_options(DocFormatLib)
 
+target_link_libraries(DocFormatLib INTERFACE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
+)
+
 target_include_directories(DocFormatLib PRIVATE
     ${DOC_FILE_SOURCES_DIR}
     ${COMMON_BASE_SOURCES_DIR}
     ${_3RDPARTY_POLE_SOURCES_DIR}
+    ${Boost_INCLUDE_DIRS}
 )
 
 set_property(TARGET DocFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

@@ -1,3 +1,4 @@
+var _scriptSrc = document.currentScript && document.currentScript.src;
 
 Module['instantiateWasm'] = function(imports, successCallback) {
     // 1. Replicate the original OnlyOffice "IsLocal" detection
@@ -11,13 +12,21 @@ Module['instantiateWasm'] = function(imports, successCallback) {
         return false;
     }
 
-    // 2. Determine Path and Strategy
-    var wasmFileName = wasmBinaryFile.substr(8);
-    var isLocal = internal_isLocal();
+    var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm').substr(7);
 
-    if (isLocal) {
+    console.log("Loading WASM from:", wasmAbsPath);
+
+    if (!wasmAbsPath) {
+        console.error("Could not determine wasm absolute path; falling back to Emscripten default.");
+        return false;
+    }
+
+
+
+    console.log("RESULT OF LOCAL TEST:" + internal_isLocal())
+    if (internal_isLocal()) {
         // Use the custom desktop protocol path
-        var wasmPath = "ascdesktop://fonts/" + wasmFileName;
+        var wasmPath = "ascdesktop://fonts/" + wasmAbsPath;
 
         var xhr = new XMLHttpRequest();
         xhr.open('GET', wasmPath, true);
@@ -30,14 +39,33 @@ Module['instantiateWasm'] = function(imports, successCallback) {
             xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
 
         xhr.onload = function() {
-            // Check status 200 OR 0 (standard for local protocols)
-            if (xhr.status == 200 || (xhr.status == 0 && xhr.response.byteLength > 0)) {
-                WebAssembly.instantiate(xhr.response, imports).then(function(result) {
-                    successCallback(result.instance, result.module);
-                }).catch(function(e) {
-                    console.error("WASM Instantiation failed:", e);
-                });
+            console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
+            
+            if (xhr.status === 200 || (xhr.status === 0 && xhr.response && xhr.response.byteLength > 0)) {
+                console.log("Calling WebAssembly.instantiate...");
+                WebAssembly.instantiate(xhr.response, imports)
+                    .then(function(result) {
+                        console.log("WASM instantiated successfully, calling successCallback");
+                        successCallback(result.instance, result.module);
+                    })
+                    .catch(function(e) {
+                        console.error("WASM instantiation failed:", e);
+                    });
+            } else {
+                console.error("XHR status check failed — status:", xhr.status, "response:", xhr.response);
             }
+        };
+
+        xhr.onerror = function() {
+            console.error("XHR onerror fired for:", wasmPath);
+        };
+
+        xhr.ontimeout = function() {
+            console.error("XHR timed out for:", wasmPath);
+        };
+
+        xhr.onreadystatechange = function() {
+            console.log("XHR readyState:", xhr.readyState, "status:", xhr.status);
         };
         xhr.send(null);
         return {}; // Tell Emscripten instantiation is happening asynchronously

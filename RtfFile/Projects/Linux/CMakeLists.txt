@@ -9,6 +9,9 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(RTF_FILE_ROOT "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 add_library(RtfFormatLib STATIC
     ${RTF_FILE_ROOT}/Format/ConvertationManager.cpp
     ${RTF_FILE_ROOT}/Format/DestinationCommand.cpp
@@ -183,6 +186,13 @@ target_compile_definitions(RtfFormatLib PRIVATE
 
 target_include_directories(RtfFormatLib PRIVATE
 	${CORE_ROOT_DIR}/OdfFile/include
+)
+
+target_link_libraries(RtfFormatLib PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
 )
 
 set_property(TARGET RtfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

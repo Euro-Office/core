@@ -9,6 +9,10 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 set(XLSB_FORMAT_DIR "${OOXML_ROOT_DIR}/XlsbFormat")
 
+
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 add_library(XlsbFormatLib STATIC
     ${XLSB_FORMAT_DIR}/Biff12_unions/COMMENTS_bu.cpp
     ${XLSB_FORMAT_DIR}/Xlsb.cpp
@@ -2153,6 +2157,13 @@ set_default_options(XlsbFormatLib)
 
 target_precompile_headers(XlsbFormatLib PRIVATE
     precompiled.h
+)
+
+target_link_libraries(XlsbFormatLib PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
 )
 
 set_property(TARGET XlsbFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)

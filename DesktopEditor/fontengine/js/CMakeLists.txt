@@ -492,7 +492,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 -sLEGACY_VM_SUPPORT=1
 "SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/engine/module_pre.js"
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
 "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/engine/module_post.js"
 )
 
