@@ -54,6 +54,7 @@ public:
 	void writeFields(CFRecord& record);
 
 	void prepareChart(unsigned int count);
+	void AddPict(const std::wstring& pictPath);
 
 	ODRAW::OfficeArtDggContainer rgChildRec;
 	unsigned int drawingCount = 0;

@@ -42,6 +42,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AI.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CRT.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/PAGESETUP.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/MSODRAWINGGROUP.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Chart.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxisParent.h"
@@ -465,14 +466,18 @@ namespace OOX
 
 
 			XLS::MsoDrawingGroup* drawingGroupPtr;
+
 			if(workbook->m_arMSODRAWINGGROUP.empty())
 			{
 				drawingGroupPtr = new XLS::MsoDrawingGroup;
-				workbook->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupPtr));
+				auto drawingGroupUnion = new XLS::MSODRAWINGGROUP(false);
+				drawingGroupUnion->m_MsoDrawingGroup = XLS::BaseObjectPtr(drawingGroupPtr);
+				workbook->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupUnion));
 			}
 			else
 			{
-				drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(workbook->m_arMSODRAWINGGROUP.back().get());
+				auto drawingGroupUnion = static_cast<XLS::MSODRAWINGGROUP*>(workbook->m_arMSODRAWINGGROUP.back().get());
+				drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
 			}
 
 			if(worksheet->m_OBJECTS == nullptr)
@@ -484,6 +489,7 @@ namespace OOX
 				wsObjects = static_cast<XLS::OBJECTS*>(worksheet->m_OBJECTS.get());
 			for(auto anchor : m_arrItems)
 			{
+
 				auto drawing = new XLS::MsoDrawing(false);
 				auto drawingPtr = XLS::MsoDrawingPtr(drawing);
 				{
@@ -501,6 +507,15 @@ namespace OOX
 				objPair.second.push_back(XLS::BaseObjectPtr(objPt));
 				wsObjects->m_arrObject.push_back(objPair);
 				drawingGroupPtr->drawingCount++;
+				{
+
+					auto anchorElem = anchor->m_oElement->GetElem();
+					auto picElem =  static_cast<PPTX::Logic::Pic*>(anchorElem.GetPointer());
+					auto picRid =  picElem->blipFill.blip->embed->get();
+					auto castedPic = Get<OOX::Media>(picRid);
+					auto pictName = castedPic->filename().GetPath();
+					drawingGroupPtr->AddPict(pictName);
+				}
 			}
 			//todo pic conversion
 		}

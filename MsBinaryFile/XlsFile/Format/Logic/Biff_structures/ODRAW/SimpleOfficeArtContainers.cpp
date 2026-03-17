@@ -150,6 +150,8 @@ void OfficeArtDggContainer::save(XLS::CFRecord& record)
 	auto recLen = rh_own.recLen;
 	record << recLen;
 	record.skipNunBytes(rh_own.recLen);
+	if(m_OfficeArtBStoreContainer != nullptr)
+		m_OfficeArtBStoreContainer->save(record);
 }
 
 void OfficeArtSpgrContainer::loadFields(XLS::CFRecord& record)

@@ -33,6 +33,7 @@
 #include "MsoDrawingGroup.h"
 #include "../Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
 #include "../Biff_structures/ODRAW/OfficeArtFDGGBlock.h"
+#include "../Biff_structures/ODRAW/OfficeArtBStoreContainer.h"
 
 namespace XLS
 {
@@ -86,6 +87,17 @@ void MsoDrawingGroup::prepareChart(unsigned int count)
 		idcl.dgid = i;
 		fdggblock->Rgidcl.push_back(idcl);
 	}
+}
+
+void MsoDrawingGroup::AddPict(const std::wstring& picPath)
+{
+	auto bstore = new ODRAW::OfficeArtBStoreContainer;
+	auto fileBlock = new ODRAW::OfficeArtBStoreContainerFileBlock;
+	bstore->rgfb.push_back(fileBlock);
+	rgChildRec.m_OfficeArtBStoreContainer = ODRAW::OfficeArtRecordPtr(bstore);
+	DWORD fileSize = 0;
+	auto result = NSFile::CFileBinary::ReadAllBytes(picPath, (BYTE**)&fileBlock->pict_data, fileSize);
+	fileBlock->pict_size = fileSize;
 }
 
 } // namespace XLS

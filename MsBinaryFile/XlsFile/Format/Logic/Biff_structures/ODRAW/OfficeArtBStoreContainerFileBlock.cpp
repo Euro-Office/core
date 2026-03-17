@@ -268,5 +268,21 @@ void OfficeArtBStoreContainerFileBlock::load(XLS::CFRecord& record)
 	}
 }
 
+void OfficeArtBStoreContainerFileBlock::save(XLS::CFRecord& record)
+{
+	OfficeArtRecordHeader rc_header;
+
+	rc_header.recVer = 0;
+	rc_header.recInstance = 0x46A;
+	rc_header.recType =  0xF01D;
+	rc_header.recLen = pict_size + 17;
+	record << rc_header;
+	record.reserveNunBytes(16);
+	BYTE tag = 0xFF;
+	record << tag;
+
+	//record.appendRawDataToStatic((BYTE*)pict_data, pict_size);
+}
+
 
 } // namespace XLS

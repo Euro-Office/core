@@ -80,6 +80,16 @@ void OfficeArtBStoreContainer::loadFields(XLS::CFRecord& record)
 	}
 }
 
+void OfficeArtBStoreContainer::save(XLS::CFRecord& record)
+{
+	rh_own.recVer = 0xF;
+	rh_own.recInstance = rgfb.size();
+	rh_own.recType =  0xF001;
+	record << rh_own;
+	//for(auto i : rgfb)
+		//i->save(record);
+}
+
 const unsigned short OfficeArtBStoreContainer::GetInstanceToStore()
 {
 	return rgfb.size();

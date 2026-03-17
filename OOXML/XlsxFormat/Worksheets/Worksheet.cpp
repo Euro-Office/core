@@ -62,6 +62,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJECTS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/FEAT11.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJ.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/MSODRAWINGGROUP.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/GlobalsSubstream.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/CondFmt12.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
@@ -435,7 +436,28 @@ namespace OOX
 				worksheetPtr->m_CELLTABLE = m_oSheetData->toXLS();
 			if(m_oDataConsolidate.IsInit())
 				worksheetPtr->m_DCON = m_oDataConsolidate->toXLS();
+			if(m_pComments != nullptr)
+			{
+				if(worksheetPtr->m_OBJECTS == nullptr)
+					worksheetPtr->m_OBJECTS = XLS::BaseObjectPtr(new XLS::OBJECTS(false));
+				worksheetPtr->m_arNote = m_pComments->toXLS(worksheetPtr->m_OBJECTS);
+				auto workbookStream = static_cast<XLS::GlobalsSubstream*>(globalsPtr.get());
+				XLS::MsoDrawingGroup* drawingGroupPtr;
 
+				if(workbookStream->m_arMSODRAWINGGROUP.empty())
+				{
+					drawingGroupPtr = new XLS::MsoDrawingGroup;
+					auto drawingGroupUnion = new XLS::MSODRAWINGGROUP(false);
+					drawingGroupUnion->m_MsoDrawingGroup = XLS::BaseObjectPtr(drawingGroupPtr);
+					workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupUnion));
+				}
+				else
+				{
+					auto drawingGroupUnion = static_cast<XLS::MSODRAWINGGROUP*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
+					drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
+				}
+				drawingGroupPtr->drawingCount++;
+			}
 			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
 			{
 
@@ -458,11 +480,15 @@ namespace OOX
 						if(workbookStream->m_arMSODRAWINGGROUP.empty())
 						{
 							drawingGroupPtr = new XLS::MsoDrawingGroup;
-							workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupPtr));
+							auto drawingGroupUnion = new XLS::MSODRAWINGGROUP(false);
+							drawingGroupUnion->m_MsoDrawingGroup = XLS::BaseObjectPtr(drawingGroupPtr);
+							workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupUnion));
+
 						}
 						else
 						{
-							drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
+							auto drawingGroupUnion = static_cast<XLS::MSODRAWINGGROUP*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
+							drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
 						}
 					}
 					std::vector<XLS::BaseObjectPtr> charts;
@@ -478,7 +504,7 @@ namespace OOX
 							{
 								auto left = 0, leftOff = 0, right = 0, righOff = 0, top = 0, topOff = 0, bot = 0, botOff = 0;
 								anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
-								if(anchor != *drawingPtr->m_arrItems.begin())
+								if(!Objects->m_arrObject.empty())
 									drawingObj->rgChildRec.first = false;
 								drawingObj->prepareChart(shapeCount, left, right, top, bot, leftOff, righOff, topOff, botOff);
 							}
@@ -516,25 +542,7 @@ namespace OOX
 					//pic conversion
 				}
 			}
-			if(m_pComments != nullptr)
-			{
-				if(worksheetPtr->m_OBJECTS == nullptr)
-					worksheetPtr->m_OBJECTS = XLS::BaseObjectPtr(new XLS::OBJECTS(false));
-				worksheetPtr->m_arNote = m_pComments->toXLS(worksheetPtr->m_OBJECTS);
-				auto workbookStream = static_cast<XLS::GlobalsSubstream*>(globalsPtr.get());
-				XLS::MsoDrawingGroup* drawingGroupPtr;
 
-				if(workbookStream->m_arMSODRAWINGGROUP.empty())
-				{
-					drawingGroupPtr = new XLS::MsoDrawingGroup;
-					workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupPtr));
-				}
-				else
-				{
-					drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
-				}
-				drawingGroupPtr->drawingCount++;
-			}//will be later
 			if(m_oTableParts.IsInit())
 			{
 				auto feat11 = new XLS::FEAT11;
