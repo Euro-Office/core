@@ -2730,6 +2730,20 @@ namespace NSDocxRenderer
 		pShape->m_dImageTop = imageVector.GetTop();
 		pShape->m_dImageLeft = imageVector.GetLeft();
 		pShape->m_dImageRight = imageVector.GetRight();
+
+		// for reflection along the x-axis
+		if (fabs(fabs(pShape->m_dRotation) - 180.0) < 0.01 && m_oTransform.sx() > 0.0)
+		{
+			std::swap(pShape->m_dImageBot, pShape->m_dImageTop);
+			pShape->m_dRotation = 0.0;
+		}
+
+		// for reflection along the y-axis
+		if (fabs(fabs(pShape->m_dRotation) - 180.0) < 0.01 && m_oTransform.sy() > 0.0)
+		{
+			std::swap(pShape->m_dImageLeft, pShape->m_dImageRight);
+			pShape->m_dRotation = 0.0;
+		}
 	}
 
 	void CPage::DrawGradient(shape_ptr_t pShape)
