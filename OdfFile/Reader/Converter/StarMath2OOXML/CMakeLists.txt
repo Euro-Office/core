@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(StarMathConverter VERSION 0.0.0.1)
+project(StarMathConverter VERSION 1)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../..")
 
@@ -51,7 +51,6 @@ target_sources(StarMathConverter PRIVATE
 # Assumes 'kernel' is another CMake target defined elsewhere in your project.
 target_link_libraries(StarMathConverter PRIVATE kernel)
 
-
 # core_windows { ... }
 if(WIN32)
     target_compile_definitions(StarMathConverter PRIVATE SUPPORT_MS_CRYPTO)
@@ -67,3 +66,4 @@ if(WIN32)
     )
 endif()
 
+copy_artifacts_to_folder("StarMathConverter" "${EO_CORE_TOOLS_DIR}")
