@@ -15,6 +15,7 @@
   "overlay-ports": [
     "./Common/3dParty/cef",
     "./Common/3dParty/qt",
-    "./Common/3dParty/boost"
+    "./Common/3dParty/boost",
+    "./Common/3dParty/v8"
   ]
 }

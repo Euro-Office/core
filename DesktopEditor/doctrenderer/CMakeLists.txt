@@ -79,12 +79,7 @@ execute_process(
 
 
 message( "Fetch, patch and build v8" )
-set(V8_3RDPARTY_DIR "${COMMON_3RDPARTY_ROOT}/v8")
-set(V8_WORK_DIR "${EO_CORE_3RD_PARTY_WORK_DIR}/v8")
-set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
-get_filename_component(V8_3RDPARTY_DIR_ABS "${V8_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(V8_WORK_DIR_ABS "${V8_WORK_DIR}" ABSOLUTE)
-get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
+set(V8_INSTALL_DIR_ABS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/v8/v8")
 
 # Set TARGETARCH based on detected architecture (x64 or arm64)
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
@@ -93,11 +88,6 @@ else()
     set(TARGETARCH x64)
 endif()
 
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND /bin/sh -c "export TARGETARCH=${TARGETARCH} && ./nc-build.sh \"${V8_WORK_DIR}\" \"${V8_INSTALL_DIR}\""
-    WORKING_DIRECTORY ${V8_3RDPARTY_DIR}
-)
 
 
 
