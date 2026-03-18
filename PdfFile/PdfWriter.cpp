@@ -2734,6 +2734,12 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 			pLinkAnnot->SetH(pPr->GetH());
 		if (nFlags & (1 << 3))
 			pLinkAnnot->SetQuadPoints(pPr->GetQuadPoints());
+		if (nFlags & (1 << 4))
+		{
+			double dRD1, dRD2, dRD3, dRD4;
+			pPr->GetRD(dRD1, dRD2, dRD3, dRD4);
+			pLinkAnnot->SetRD(dRD1, dRD2, dRD3, dRD4);
+		}
 
 		if (bRender)
 		{

@@ -836,6 +836,10 @@ namespace PdfWriter
 		}
 		Add("H", sValue.c_str());
 	}
+	void CLinkAnnotation::SetRD(const double& dRD1, const double& dRD2, const double& dRD3, const double& dRD4)
+	{
+		AddRD(this, dRD1, dRD2, dRD3, dRD4);
+	}
 	void CLinkAnnotation::SetQuadPoints(const std::vector<double>& arrQuadPoints)
 	{
 		CArrayObject* pArray = new CArrayObject();

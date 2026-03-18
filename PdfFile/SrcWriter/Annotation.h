@@ -235,6 +235,7 @@ namespace PdfWriter
 		}
 
 		void SetH(BYTE nH);
+		void SetRD(const double& dRD1, const double& dRD2, const double& dRD3, const double& dRD4);
 		void SetQuadPoints(const std::vector<double>& arrQuadPoints);
 		void SetA(CAction* pAction);
 		void SetPA(CAction* pAction);

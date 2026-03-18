@@ -864,6 +864,7 @@ CAnnotFieldInfo::CLinkAnnotPr::~CLinkAnnotPr()
 }
 BYTE CAnnotFieldInfo::CLinkAnnotPr::GetH() const { return m_nH; }
 int CAnnotFieldInfo::CLinkAnnotPr::GetFlags() const { return m_nFlags; }
+void CAnnotFieldInfo::CLinkAnnotPr::GetRD(double& dRD1, double& dRD2, double& dRD3, double& dRD4) { dRD1 = m_dRD[0]; dRD2 = m_dRD[1]; dRD3 = m_dRD[2]; dRD4 = m_dRD[3]; }
 const std::vector<double>& CAnnotFieldInfo::CLinkAnnotPr::GetQuadPoints() { return m_arrQuadPoints; }
 CAnnotFieldInfo::CActionFieldPr* CAnnotFieldInfo::CLinkAnnotPr::GetA() { return m_pAction; }
 CAnnotFieldInfo::CActionFieldPr* CAnnotFieldInfo::CLinkAnnotPr::GetPA() { return m_pPA; }
@@ -888,6 +889,13 @@ void CAnnotFieldInfo::CLinkAnnotPr::Read(NSOnlineOfficeBinToPdf::CBufferReader* 
 		m_arrQuadPoints.reserve(n);
 		for (int i = 0; i < n; ++i)
 			m_arrQuadPoints.push_back(pReader->ReadDouble());
+	}
+	if (m_nFlags & (1 << 4))
+	{
+		m_dRD[0] = pReader->ReadDouble();
+		m_dRD[1] = pReader->ReadDouble();
+		m_dRD[2] = pReader->ReadDouble();
+		m_dRD[3] = pReader->ReadDouble();
 	}
 }
 

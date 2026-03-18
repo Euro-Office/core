@@ -1085,8 +1085,15 @@ function readAnnotType(reader, rec, readDoubleFunc, readDouble2Func, readStringF
 			for (let i = 0; i < n; ++i)
 				rec["QuadPoints"].push(readDoubleFunc.call(reader));
 		}
+		// Rect and RD differenses
+		if (flags & (1 << 4))
+		{
+			rec["RD"] = [];
+			for (let i = 0; i < 4; ++i)
+				rec["RD"].push(readDoubleFunc.call(reader));
+		}
 	}
-	// Link
+	// Screen
 	else if (rec["type"] == 20)
 	{
 		flags = reader.readInt();

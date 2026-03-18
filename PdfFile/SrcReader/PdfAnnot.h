@@ -351,6 +351,7 @@ public:
 
 private:
 	BYTE m_nH; // Режим выделения - H
+	double m_pRD[4]{}; // Различия Rect и фактического размера
 	std::vector<double> m_arrQuadPoints; // Координаты - QuadPoints
 	CAction* m_pAction; // Действие - A&Dest
 	CAction* m_pPA; // URI действие - PA

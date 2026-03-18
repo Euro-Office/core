@@ -489,6 +489,7 @@ public:
 
 		BYTE GetH()    const;
 		int GetFlags() const;
+		void GetRD(double& dRD1, double& dRD2, double& dRD3, double& dRD4);
 		const std::vector<double>& GetQuadPoints();
 		CActionFieldPr* GetA();
 		CActionFieldPr* GetPA();
@@ -498,6 +499,7 @@ public:
 	private:
 		BYTE m_nH;
 		int m_nFlags;
+		double m_dRD[4]{};
 		std::vector<double> m_arrQuadPoints;
 		CActionFieldPr* m_pAction;
 		CActionFieldPr* m_pPA;

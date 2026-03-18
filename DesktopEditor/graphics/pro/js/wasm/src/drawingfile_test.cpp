@@ -2228,6 +2228,17 @@ int main(int argc, char* argv[])
 						}
 						std::cout << ", ";
 					}
+					if (nFlags & (1 << 4))
+					{
+						std::cout << "RD";
+						for (int j = 0; j < 4; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << " " << (double)nPathLength / 100.0;
+						}
+						std::cout << ", ";
+					}
 				}
 				else if (sType == "Screen")
 				{

@@ -1247,6 +1247,17 @@ CAnnotLink::CAnnotLink(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nS
 	}
 	oObj.free();
 
+	// 4 - Различия Rect и фактического размера - RD
+	if (oAnnot.dictLookup("RD", &oObj)->isArray() && oObj.arrayGetLength() == 4)
+	{
+		m_unFlags |= (1 << 4);
+		m_pRD[0] = ArrGetNum(&oObj, 0);
+		m_pRD[3] = ArrGetNum(&oObj, 1);
+		m_pRD[2] = ArrGetNum(&oObj, 2);
+		m_pRD[1] = ArrGetNum(&oObj, 3);
+	}
+	oObj.free();
+
 	oAnnot.free();
 }
 CAnnotLink::~CAnnotLink()
@@ -4059,6 +4070,11 @@ void CAnnotLink::ToWASM(NSWasm::CData& oRes)
 		oRes.AddInt((unsigned int)m_arrQuadPoints.size());
 		for (int i = 0; i < m_arrQuadPoints.size(); ++i)
 			oRes.AddDouble(m_arrQuadPoints[i]);
+	}
+	if (m_unFlags & (1 << 4))
+	{
+		for (int i = 0; i < 4; ++i)
+			oRes.AddDouble(m_pRD[i]);
 	}
 }
 void CAnnotScreen::ToWASM(NSWasm::CData& oRes)
