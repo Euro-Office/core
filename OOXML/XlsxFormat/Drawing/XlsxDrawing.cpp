@@ -496,7 +496,7 @@ namespace OOX
 					auto shapeCount = drawingGroupPtr->drawingCount+1;
 					auto left = 0, leftOff = 0, right = 0, righOff = 0, top = 0, topOff = 0, bot = 0, botOff = 0;
 					anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
-					drawing->prepareChart(shapeCount,left,right,top,bot);
+					drawing->prepareDrawing(1, shapeCount, top, left, bot, right);
 				}
 				std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;
 				auto objPt = new XLS::Obj(drawingPtr);

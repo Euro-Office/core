@@ -137,137 +137,39 @@ const bool MsoDrawing::isEndingRecord(CFRecord& record)
 	return ODRAW::OfficeArtDgContainer::CheckIfContainerSizeOK(record);
 }
 
-void MsoDrawing::prepareComment(const unsigned int CommentId, const unsigned int row, const unsigned int col)
+void MsoDrawing::prepareDrawing(const unsigned int DrawingType, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
+		const unsigned int row2, const unsigned int col2)
 {
 	if(rgChildRec.first)
 	{
+		auto fdgPtr = new ODRAW::OfficeArtFDG;
+		fdgPtr->rh_own.recInstance = DrawingtId;
+		fdgPtr->spidCur = DrawingtId;
+		rgChildRec.m_OfficeArtFDG = ODRAW::OfficeArtRecordPtr(fdgPtr);
+
 		auto spgrContainer = new ODRAW::OfficeArtSpgrContainer(ODRAW::OfficeArtRecord::CA_Sheet);
 		rgChildRec.m_OfficeArtSpgrContainer = ODRAW::OfficeArtRecordPtr(spgrContainer);
-		auto ShapeGroup = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Sheet);
-		auto groupFsp = new ODRAW::OfficeArtFSP;
-		ShapeGroup->m_OfficeArtFSP = ODRAW::OfficeArtRecordPtr(groupFsp);
-		groupFsp->shape_id = 0;
-		groupFsp->fGroup = true;
-		groupFsp->fPatriarch = true;
-		groupFsp->spid = CommentId;
-
-		auto groupFSPGR = new ODRAW::OfficeArtFSPGR;
-		ShapeGroup->m_OfficeArtFSPGR = ODRAW::OfficeArtRecordPtr(groupFSPGR);
-
-		auto fdgPtr = new ODRAW::OfficeArtFDG;
-		fdgPtr->rh_own.recInstance = CommentId;
-		rgChildRec.m_OfficeArtFDG = ODRAW::OfficeArtRecordPtr(fdgPtr);
-
-		spgrContainer->m_OfficeArtSpgrContainerFileBlock.push_back(ODRAW::OfficeArtContainerPtr(ShapeGroup));
-	}
-
-	auto TextboxContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Sheet);
-	TextboxContainer->extraSize += 8;
-
-	if(rgChildRec.first)
-	{
-		auto spgrContainer = static_cast<ODRAW::OfficeArtSpgrContainer*>(rgChildRec.m_OfficeArtSpgrContainer.get());
-		spgrContainer->m_OfficeArtSpgrContainerFileBlock.push_back(ODRAW::OfficeArtContainerPtr(TextboxContainer));
-	}
-	else
-		rgChildRec.m_OfficeArtSpContainer.push_back(ODRAW::OfficeArtContainerPtr(TextboxContainer));
-
-	auto fsprPtr = new ODRAW::OfficeArtFSP;
-	TextboxContainer->m_OfficeArtFSP = ODRAW::OfficeArtRecordPtr(fsprPtr);
-	fsprPtr->shape_id = 0xCA;
-	fsprPtr->spid = CommentId+1;
-	fsprPtr->fHaveAnchor = true;
-	fsprPtr->fHaveSpt = true;
-
-	auto clientAnchor = new ODRAW::OfficeArtClientAnchorSheet;
-	clientAnchor->colL = col+1;
-	clientAnchor->colR = col+3;
-	clientAnchor->rwT = row;
-	clientAnchor->rwB = row+4;
-
-	{
-		auto commentOptions = new ODRAW::OfficeArtFOPT;
-		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x0080;
-			txId->op = CommentId;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
-		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x008B;
-			txId->op = 2;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
-		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x00BF;
-			txId->op = 0x00080008;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
-		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x0158;
-			txId->op = 0x0000;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
 
 		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x0181;
-			txId->op = 0x08000050;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
-		{
-			auto txId = new ODRAW::OfficeArtFOPTE;
-			txId->opid = 0x03BF;
-			txId->op = 0x00020002;
-			commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
-		}
-
-		commentOptions->fopt.options_count += 6;
-		TextboxContainer->m_oOfficeArtFOPT = ODRAW::OfficeArtRecordPtr(commentOptions);
-	}
-
-	TextboxContainer->m_OfficeArtAnchor = ODRAW::OfficeArtRecordPtr(clientAnchor);
-	auto clientData = new ODRAW::OfficeArtClientData;
-	TextboxContainer->m_oOfficeArtClientData = ODRAW::OfficeArtRecordPtr(clientData);
-}
-
-void MsoDrawing::prepareChart(const unsigned int chartId, const unsigned int x1, const unsigned int x2,
-		const unsigned int y1, const unsigned int y2, const unsigned int x1Offset, const unsigned int x2Offset,
-		const unsigned int y1Offset,const unsigned int y2Offset)
-{
-	if(rgChildRec.first)
-	{
-		auto fdgPtr = new ODRAW::OfficeArtFDG;
-		fdgPtr->rh_own.recInstance = chartId;
-		fdgPtr->spidCur = chartId;
-		rgChildRec.m_OfficeArtFDG = ODRAW::OfficeArtRecordPtr(fdgPtr);
-
-		auto spgrContainer = new ODRAW::OfficeArtSpgrContainer(ODRAW::OfficeArtRecord::CA_Chart);
-		rgChildRec.m_OfficeArtSpgrContainer = ODRAW::OfficeArtRecordPtr(spgrContainer);
-
-		{
-			auto SpContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Chart);
+			auto SpContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Sheet);
 			spgrContainer->m_OfficeArtSpgrContainerFileBlock.push_back(ODRAW::OfficeArtContainerPtr(SpContainer));
 			auto groupFSPGR = new ODRAW::OfficeArtFSPGR;
-			groupFSPGR->xLeft = x1;
-			groupFSPGR->xRight = x2;
-			groupFSPGR->yTop = y1;
-			groupFSPGR->yBottom = y2;
+			groupFSPGR->xLeft = col1;
+			groupFSPGR->xRight = col2;
+			groupFSPGR->yTop = row1;
+			groupFSPGR->yBottom = row2;
 			SpContainer->m_OfficeArtFSPGR = ODRAW::OfficeArtRecordPtr(groupFSPGR);
 
 			auto fsprPtr = new ODRAW::OfficeArtFSP;
 			SpContainer->m_OfficeArtFSP = ODRAW::OfficeArtRecordPtr(fsprPtr);
 			fsprPtr->shape_id = 0;
-			fsprPtr->spid = chartId-1;
+			fsprPtr->spid = DrawingtId;
 			fsprPtr->fGroup = true;
 			fsprPtr->fPatriarch = true;
 		}
 	}
 	{
-		auto SpContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Chart);
+		auto SpContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Sheet);
 		if(rgChildRec.first && rgChildRec.m_OfficeArtSpgrContainer != nullptr)
 		{
 			auto spgrContainer = static_cast<ODRAW::OfficeArtSpgrContainer*>(rgChildRec.m_OfficeArtSpgrContainer.get());
@@ -278,21 +180,62 @@ void MsoDrawing::prepareChart(const unsigned int chartId, const unsigned int x1,
 
 		auto fsprPtr = new ODRAW::OfficeArtFSP;
 		SpContainer->m_OfficeArtFSP = ODRAW::OfficeArtRecordPtr(fsprPtr);
-		fsprPtr->shape_id = 1;
-		fsprPtr->spid = chartId;
+		fsprPtr->shape_id = DrawingType;
+		fsprPtr->spid = DrawingtId+1;
 		fsprPtr->fHaveMaster = true;
 		auto clientAnchor = new ODRAW::OfficeArtClientAnchorSheet;
-		clientAnchor->colL = x1;
-		clientAnchor->dxL = x1Offset;
-		clientAnchor->colR = x2;
-		clientAnchor->dxR = x2Offset;
-		clientAnchor->rwT = y1;
-		clientAnchor->dyT = y1Offset;
-		clientAnchor->rwB = y2;
-		clientAnchor->dyB = y2Offset;
+		clientAnchor->colL = col1;
+		clientAnchor->colR = col2;
+		clientAnchor->rwT = row1;
+		clientAnchor->rwB = row2;
 		SpContainer->m_OfficeArtAnchor = ODRAW::OfficeArtRecordPtr(clientAnchor);
 		auto clientData = new ODRAW::OfficeArtClientData;
 		SpContainer->m_oOfficeArtClientData = ODRAW::OfficeArtRecordPtr(clientData);
+		if(DrawingType == 0xCA)
+		{
+			auto commentOptions = new ODRAW::OfficeArtFOPT;
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x0080;
+				txId->op = DrawingtId;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x008B;
+				txId->op = 2;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x00BF;
+				txId->op = 0x00080008;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x0158;
+				txId->op = 0x0000;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x0181;
+				txId->op = 0x08000050;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+			{
+				auto txId = new ODRAW::OfficeArtFOPTE;
+				txId->opid = 0x03BF;
+				txId->op = 0x00020002;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(txId));
+			}
+
+			commentOptions->fopt.options_count += 6;
+			SpContainer->m_oOfficeArtFOPT = ODRAW::OfficeArtRecordPtr(commentOptions);
+			SpContainer->extraSize += 8;
+		}
 	}
 }
 
