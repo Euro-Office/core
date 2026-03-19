@@ -27,10 +27,11 @@
 #include "OptionalContent.h"
 #include "Annot.h"
 #include "Lexer.h"
-#include "XFAScanner.h"
+#include "../../SrcReader/PdfXFAScanner.h"
 #include "UTF8.h"
 #include "PDF417Barcode.h"
 #include "AcroForm.h"
+#include "GlobalParams.h"
 
 //------------------------------------------------------------------------
 
@@ -343,13 +344,16 @@ AcroForm *AcroForm::load(PDFDoc *docA, Catalog *catalog, Object *acroFormObjA) {
   AcroFormField *field;
   Object xfaObj, fieldsObj, annotsObj, annotRef, annotObj, obj1, obj2;
   int pageNum, i, j;
+  GString* sXFA = NULL;
 
   // this is the normal case: acroFormObj is a dictionary, as expected
   if (acroFormObjA->isDict()) {
     acroForm = new AcroForm(docA, acroFormObjA);
 
-    if (!acroFormObjA->dictLookup("XFA", &xfaObj)->isNull()) {
-      acroForm->xfaScanner = XFAScanner::load(&xfaObj);
+	if (!acroFormObjA->dictLookup("XFA", &xfaObj)->isNull()) {
+	  sXFA = XFAScanner::readXFAStreams(&xfaObj);
+	  XFAScanner::load(sXFA);
+	  acroForm->xfaScanner = NULL;
       if (!catalog->getNeedsRendering()) {
 	acroForm->isStaticXFA = gTrue;
       }
@@ -719,7 +723,7 @@ AcroFormField *AcroFormField::load(AcroForm *acroFormA, Object *fieldRefA) {
 	i0 = i1;
       }
     }
-    xfaFieldA = acroFormA->xfaScanner->findField(xfaName);
+	xfaFieldA = NULL; // acroFormA->xfaScanner->findField(xfaName);
     delete xfaName;
   }
 
@@ -743,9 +747,10 @@ AcroFormField *AcroFormField::load(AcroForm *acroFormA, Object *fieldRefA) {
       typeA = acroFormFieldCheckbox;
     }
   } else if (!typeStr->cmp("Tx")) {
-    if (xfaFieldA && xfaFieldA->getBarcodeInfo()) {
-      typeA = acroFormFieldBarcode;
-    } else if (flagsA & acroFormFlagFileSelect) {
+   // if (xfaFieldA && xfaFieldA->getBarcodeInfo()) {
+   //   typeA = acroFormFieldBarcode;
+   //  } else
+  if (flagsA & acroFormFlagFileSelect) {
       typeA = acroFormFieldFileSelect;
     } else if (flagsA & acroFormFlagMultiline) {
       typeA = acroFormFieldMultilineText;
@@ -860,9 +865,9 @@ Unicode *AcroFormField::getValue(int *length) {
   // from the XFA field (NB: an XFA field with no value overrides the
   // AcroForm value)
   if (xfaField) {
-    if (xfaField->getValue()) {
-      u = utf8ToUnicode(xfaField->getValue(), length);
-    }
+	// if (xfaField->getValue()) {
+	//   u = utf8ToUnicode(xfaField->getValue(), length);
+	// }
 
   // no XFA form - take the AcroForm value
   } else {
@@ -1220,8 +1225,8 @@ void AcroFormField::drawAnnot(int pageNum, Gfx *gfx, GBool printing,
   render = gFalse;
   if (acroForm->needAppearances) {
     render = gTrue;
-  } else if (xfaField && xfaField->getValue()) {
-    render = gTrue;
+  // } else if (xfaField && xfaField->getValue()) {
+  //   render = gTrue;
   } else {
     if (!annotObj->dictLookup("AP", &obj1)->isDict()) {
       render = gTrue;
@@ -1620,6 +1625,7 @@ void AcroFormField::drawNewAppearance(Gfx *gfx, Dict *annot,
     if (caption) {
       delete caption;
     }
+  /*
   } else if (ftObj.isName("Tx")) {
     XFAFieldBarcodeInfo *barcodeInfo = xfaField ? xfaField->getBarcodeInfo()
                                                 : (XFAFieldBarcodeInfo *)NULL;
@@ -1816,6 +1822,7 @@ void AcroFormField::drawNewAppearance(Gfx *gfx, Dict *annot,
       }
       obj1.free();
     }
+	*/
   } else if (ftObj.isName("Sig")) {
     //~ check to see if background is already drawn
     gfxStateDict.initDict(acroForm->doc->getXRef());
@@ -2801,6 +2808,7 @@ void AcroFormField::drawBarcode(GString *value, GString *da,
 				double xMax, double yMax,
 				XFAFieldBarcodeInfo *barcodeInfo,
 				GString *appearBuf) {
+	/*
   //--- handle rotation
   double w, h;
   appearBuf->append("q\n");
@@ -2990,6 +2998,7 @@ void AcroFormField::drawBarcode(GString *value, GString *da,
 
  err:
   delete value2;
+  */
 }
 
 GList *AcroFormField::tokenize(GString *s) {
