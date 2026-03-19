@@ -153,7 +153,7 @@ void OfficeArtDggContainer::save(XLS::CFRecord& record)
 	auto recLen = rh_own.recLen;
 	if(m_OfficeArtBStoreContainer != nullptr)
 	{
-		recLen+=8;//container Header
+		//recLen+=8;//container Header
 		auto bstore = static_cast<ODRAW::OfficeArtBStoreContainer*>(m_OfficeArtBStoreContainer.get());
 		recLen+= bstore->rh_own.recLen;
 	}

@@ -87,8 +87,10 @@ void OfficeArtBStoreContainer::save(XLS::CFRecord& record)
 	rh_own.recType =  0xF001;
 	for(auto i : rgfb)
 	{
-		//rh_own.recLen += 25; //blipHeader
-		rh_own.recLen += 44; //blipHeader
+		rh_own.recLen += 44; //OfficeArtFBSE
+		if(!i->nameData.empty())
+			rh_own.recLen += i->nameData.size()+1;
+		rh_own.recLen += 25; //blipHeader
 		rh_own.recLen += i->pict_size;
 	}
 	record << rh_own;
