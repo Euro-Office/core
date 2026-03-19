@@ -268,10 +268,61 @@ void OfficeArtBStoreContainerFileBlock::load(XLS::CFRecord& record)
 	}
 }
 
+
+const void WriteMD4Digest(std::wstring UidStr, XLS::CFRecord& record)
+{
+	if(UidStr.size() < 16 )
+		UidStr = L"0000000000000000";
+	for(int i = 0; i < 16; i++)
+	{
+		unsigned char hex_data = UidStr.at(i);
+		record << hex_data;
+	}
+}
+
 void OfficeArtBStoreContainerFileBlock::save(XLS::CFRecord& record)
 {
-	OfficeArtRecordHeader rc_header;
+	//fbse
+	{
+		OfficeArtRecordHeader FbseHeader;
+		FbseHeader.recVer = 2;
+		FbseHeader.recInstance = 5;
+		FbseHeader.recType =  0xF007;
+		FbseHeader.recLen = pict_size + 36  + 25;
+		if(!nameData.empty())
+			FbseHeader.recLen += nameData.size()+1;
+		record << FbseHeader;
+		BYTE btOs = FbseHeader.recInstance;
+		record << btOs << btOs;
+		WriteMD4Digest(rgbUid1, record);
+		unsigned short tag = 0xFF;
+		record << tag;
+		unsigned int Size = pict_size + 17 + 8;
+		record << Size;
+		unsigned int Cref = 1;
+		record << Cref;
+		unsigned int foDelay = 0;
+		record << foDelay;
+		record.reserveNunBytes(1);
+		BYTE cbName = 0;
+		if(!nameData.empty())
+			cbName = nameData.size()+1;
+		record << cbName;
 
+		record.reserveNunBytes(2);
+		if(cbName)
+		{
+			for(auto i : nameData)
+			{
+				record << i;
+			}
+			BYTE terminal = L'\0';
+			record  << terminal;
+		}
+	}
+
+
+	OfficeArtRecordHeader rc_header;
 	rc_header.recVer = 0;
 	rc_header.recInstance = 0x46A;
 	rc_header.recType =  0xF01D;

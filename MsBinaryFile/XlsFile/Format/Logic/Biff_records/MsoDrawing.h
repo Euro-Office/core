@@ -60,16 +60,21 @@ public:
 	virtual const	bool isStartingRecord	(CFRecord& record);
 	virtual const	bool isEndingRecord		(CFRecord& record);
 	virtual			void useContinueRecords	(CFRecord& record);
-
-	void prepareDrawing(const unsigned int DrawingType, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
-		const unsigned int row2, const unsigned int col2);
-
 //-----------------------------
 	ODRAW::OfficeArtDgContainer rgChildRec;
 
 	bool isReading;
-
+	enum DrawingType
+	{
+		chart,
+		comment,
+		pic
+	};
+	DrawingType xlsDrawingType;
+	void prepareDrawing(const DrawingType DrawingType, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
+		const unsigned int row2, const unsigned int col2);
 };
+
 
 typedef boost::shared_ptr<MsoDrawing> MsoDrawingPtr;
 

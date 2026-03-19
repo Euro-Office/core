@@ -137,7 +137,7 @@ const bool MsoDrawing::isEndingRecord(CFRecord& record)
 	return ODRAW::OfficeArtDgContainer::CheckIfContainerSizeOK(record);
 }
 
-void MsoDrawing::prepareDrawing(const unsigned int DrawingType, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
+void MsoDrawing::prepareDrawing(const DrawingType Type, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
 		const unsigned int row2, const unsigned int col2)
 {
 	if(rgChildRec.first)
@@ -180,7 +180,10 @@ void MsoDrawing::prepareDrawing(const unsigned int DrawingType, const unsigned i
 
 		auto fsprPtr = new ODRAW::OfficeArtFSP;
 		SpContainer->m_OfficeArtFSP = ODRAW::OfficeArtRecordPtr(fsprPtr);
-		fsprPtr->shape_id = DrawingType;
+		if(Type == DrawingType::comment)
+			fsprPtr->shape_id = 0xCA;
+		else
+			fsprPtr->shape_id = 1;
 		fsprPtr->spid = DrawingtId+1;
 		fsprPtr->fHaveMaster = true;
 		auto clientAnchor = new ODRAW::OfficeArtClientAnchorSheet;
@@ -191,7 +194,7 @@ void MsoDrawing::prepareDrawing(const unsigned int DrawingType, const unsigned i
 		SpContainer->m_OfficeArtAnchor = ODRAW::OfficeArtRecordPtr(clientAnchor);
 		auto clientData = new ODRAW::OfficeArtClientData;
 		SpContainer->m_oOfficeArtClientData = ODRAW::OfficeArtRecordPtr(clientData);
-		if(DrawingType == 0xCA)
+		if(Type == DrawingType::comment)
 		{
 			auto commentOptions = new ODRAW::OfficeArtFOPT;
 			{
@@ -235,6 +238,20 @@ void MsoDrawing::prepareDrawing(const unsigned int DrawingType, const unsigned i
 			commentOptions->fopt.options_count += 6;
 			SpContainer->m_oOfficeArtFOPT = ODRAW::OfficeArtRecordPtr(commentOptions);
 			SpContainer->extraSize += 8;
+		}
+		else if(Type == DrawingType::pic)
+		{
+			auto commentOptions = new ODRAW::OfficeArtFOPT;
+			{
+				auto PicOp = new ODRAW::OfficeArtFOPTE;//pib
+				PicOp->opid = 0x0104;
+				PicOp->fComplex = false;
+				PicOp->fBid = true;
+				PicOp->op = 1;
+				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(PicOp));
+			}
+			SpContainer->m_oOfficeArtFOPT = ODRAW::OfficeArtRecordPtr(commentOptions);
+			commentOptions->fopt.options_count += 1;
 		}
 	}
 }

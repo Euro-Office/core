@@ -506,7 +506,7 @@ namespace OOX
 								anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
 								if(!Objects->m_arrObject.empty())
 									drawingObj->rgChildRec.first = false;
-								drawingObj->prepareDrawing(1, shapeCount, top, left, bot, right);
+								drawingObj->prepareDrawing(XLS::MsoDrawing::DrawingType::chart, shapeCount, top, left, bot, right);
 							}
 
 							std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;

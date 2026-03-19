@@ -292,7 +292,7 @@ namespace OOX
 					drawingPtr->rgChildRec.first = false;
 					objPair.first = XLS::MsoDrawingPtr(drawingPtr);
 				}
-				drawingPtr->prepareDrawing(0xCA, id, ptr->note_sh.row, ptr->note_sh.col+1, ptr->note_sh.row+4, ptr->note_sh.col+3);
+				drawingPtr->prepareDrawing(XLS::MsoDrawing::DrawingType::comment, id, ptr->note_sh.row, ptr->note_sh.col+1, ptr->note_sh.row+4, ptr->note_sh.col+3);
 				objectsPtr->m_arrObject.push_back(objPair);
 			}
 
