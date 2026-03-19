@@ -24,6 +24,9 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 
 
 message( "Fetch and patch Katana and Gumbo" )
@@ -1094,6 +1097,10 @@ target_compile_options(graphics PRIVATE
 
 # dynamic libs
 target_link_libraries(graphics PUBLIC
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time    
     kernel
     UnicodeConverter
 )

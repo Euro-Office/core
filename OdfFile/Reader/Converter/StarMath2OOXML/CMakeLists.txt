@@ -20,6 +20,9 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
+set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
+find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
+
 
 # Set target version
 set_target_properties(StarMathConverter PROPERTIES
@@ -49,7 +52,13 @@ target_sources(StarMathConverter PRIVATE
 # ADD_DEPENDENCY(kernel)
 # Replaces your custom kernel dependency. 
 # Assumes 'kernel' is another CMake target defined elsewhere in your project.
-target_link_libraries(StarMathConverter PRIVATE kernel)
+target_link_libraries(StarMathConverter PRIVATE 
+    Boost::system
+    Boost::filesystem
+    Boost::regex
+    Boost::date_time
+    kernel
+)
 
 # core_windows { ... }
 if(WIN32)
