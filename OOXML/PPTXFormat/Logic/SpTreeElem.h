@@ -96,7 +96,7 @@ namespace PPTX
 			smart_ptr<WrapperWritingElement> GetElemAlternative();
 
 			virtual void SetParentPointer(const WrapperWritingElement* pParent);
-			std::wstring GetSlicerRequires();
+			std::wstring GetRequires();
 
 			nullable<OOX::Logic::CBinData> m_binaryData;
 			std::wstring m_sRequires;//from mc:Choice
