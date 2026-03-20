@@ -138,7 +138,7 @@ const bool MsoDrawing::isEndingRecord(CFRecord& record)
 }
 
 void MsoDrawing::prepareDrawing(const DrawingType Type, const unsigned int DrawingtId, const unsigned int row1, const unsigned int col1,
-		const unsigned int row2, const unsigned int col2)
+		const unsigned int row2, const unsigned int col2, const unsigned int param)
 {
 	if(rgChildRec.first)
 	{
@@ -247,7 +247,7 @@ void MsoDrawing::prepareDrawing(const DrawingType Type, const unsigned int Drawi
 				PicOp->opid = 0x0104;
 				PicOp->fComplex = false;
 				PicOp->fBid = true;
-				PicOp->op = 1;
+				PicOp->op = param;
 				commentOptions->fopt.Text_props.push_back(ODRAW::OfficeArtFOPTEPtr(PicOp));
 			}
 			SpContainer->m_oOfficeArtFOPT = ODRAW::OfficeArtRecordPtr(commentOptions);

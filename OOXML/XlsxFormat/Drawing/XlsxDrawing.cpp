@@ -492,11 +492,23 @@ namespace OOX
 
 				auto drawing = new XLS::MsoDrawing(false);
 				auto drawingPtr = XLS::MsoDrawingPtr(drawing);
+				if(!wsObjects->m_arrObject.empty())
+					drawing->rgChildRec.first = false;
+				else
+					wsObjects->m_MsoDrawing = drawingPtr;
 				{
+
+					auto anchorElem = anchor->m_oElement->GetElem();
+					auto picElem =  static_cast<PPTX::Logic::Pic*>(anchorElem.GetPointer());
+					auto picRid =  picElem->blipFill.blip->embed->get();
+					auto castedPic = Get<OOX::Media>(picRid);
+					auto pictName = castedPic->filename().GetPath();
+					auto PicNumber = drawingGroupPtr->AddPict(pictName);
+
 					auto shapeCount = drawingGroupPtr->drawingCount+1;
 					auto left = 0, leftOff = 0, right = 0, righOff = 0, top = 0, topOff = 0, bot = 0, botOff = 0;
 					anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
-					drawing->prepareDrawing(XLS::MsoDrawing::DrawingType::pic, shapeCount, top, left, bot, right);
+					drawing->prepareDrawing(XLS::MsoDrawing::DrawingType::pic, shapeCount, top, left, bot, right, PicNumber);
 				}
 				std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;
 				auto objPt = new XLS::Obj(drawingPtr);
@@ -507,15 +519,6 @@ namespace OOX
 				objPair.second.push_back(XLS::BaseObjectPtr(objPt));
 				wsObjects->m_arrObject.push_back(objPair);
 				drawingGroupPtr->drawingCount++;
-				{
-
-					auto anchorElem = anchor->m_oElement->GetElem();
-					auto picElem =  static_cast<PPTX::Logic::Pic*>(anchorElem.GetPointer());
-					auto picRid =  picElem->blipFill.blip->embed->get();
-					auto castedPic = Get<OOX::Media>(picRid);
-					auto pictName = castedPic->filename().GetPath();
-					drawingGroupPtr->AddPict(pictName);
-				}
 			}
 			//todo pic conversion
 		}
