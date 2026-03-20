@@ -6,6 +6,8 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+find_package(Boost REQUIRED COMPONENTS regex)
+
 set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 add_subdirectory(library)
@@ -19,6 +21,7 @@ set_default_options(x2t)
 # dynamic libs
 target_link_libraries(x2t PRIVATE
     x2tlib
+    Boost::regex
 )
 
 copy_artifacts_to_folder("x2t" "${EO_CORE_OUTPUT_DIR}")

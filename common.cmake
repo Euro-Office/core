@@ -1,5 +1,10 @@
 include_guard(GLOBAL)
 
+# CMake 3.25+ sets LINUX automatically; older versions (Ubuntu 22.04 ships 3.22) do not.
+if(CMAKE_SYSTEM_NAME STREQUAL "Linux" AND NOT DEFINED LINUX)
+    set(LINUX TRUE)
+endif()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -82,6 +87,13 @@ set(COMMON_C_FLAGS
 
 set(COMMON_LINK_OPTIONS
     "-Wl,--disable-new-dtags"
+    # Statically bundle the C++ runtime and GCC support library into each
+    # binary/shared-library so the GLIBCXX version on the target system is
+    # irrelevant.  Note: glibc itself cannot be statically linked into .so
+    # files, so the build image must still target a suitably old glibc
+    # (see Dockerfile core stage).
+    -static-libstdc++
+    -static-libgcc
 )
 
 
