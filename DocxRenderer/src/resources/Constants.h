@@ -64,6 +64,7 @@ const double c_dSTANDART_FIRSTLINE_INDENT_MM = 12.5;
 const uint32_t c_SPACE_SYM = 0x20;
 
 const UINT   c_iStartingIdForImages = 6;
+const UINT   c_iStartingIdForLinks = 6;
 constexpr size_t c_nAntiZero = ~0;
 const UINT   c_iStandartRelativeHeight = 0x0400;
 

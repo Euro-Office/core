@@ -901,15 +901,29 @@ namespace NSDocxRenderer
 		        <Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/>\
 		        <Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme.xml\"/>");
 
+		UINT nLastImageId = 0;
 		for (const auto& pImage : m_oImageManager.m_mapImageData)
 		{
 			auto pInfo = pImage.second;
+			nLastImageId = pInfo->m_nId;
 
 			oWriter.WriteString(L"<Relationship Id=\"rId");
-			oWriter.AddInt(c_iStartingIdForImages + pInfo->m_nId);
+			oWriter.AddInt(c_iStartingIdForImages + nLastImageId);
 			oWriter.WriteString(L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/");
 			oWriter.WriteString(pInfo->m_strFileName);
 			oWriter.WriteString(L"\"/>");
+		}
+
+		UINT nLastLinkId = nLastImageId;
+		for (const auto& oLink : m_oCurrentPage.GetLinks())
+		{
+			nLastLinkId += oLink.m_nId + 1;
+
+			oWriter.WriteString(L"<Relationship Id=\"rId");
+			oWriter.AddUInt(c_iStartingIdForLinks + nLastLinkId);
+			oWriter.WriteString(L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://onlyoffice.com");
+			oWriter.WriteString(oLink.m_wsUri);
+			oWriter.WriteString(L"\" TargetMode=\"External\"/>");
 		}
 
 		oWriter.WriteString(L"</Relationships>");

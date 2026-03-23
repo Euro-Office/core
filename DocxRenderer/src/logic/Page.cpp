@@ -480,6 +480,18 @@ namespace NSDocxRenderer
 
 		return writer;
 	}
+	void CPage::AddLink(const std::wstring& wsUri)
+	{
+		CLink oLink;
+
+		UINT nId = m_arLinks.size();
+		oLink.AddLink(nId, wsUri);
+		m_arLinks.push_back(oLink);
+	}
+	std::list<CLink> CPage::GetLinks() const
+	{
+		return m_arLinks;
+	}
 	void CPage::AddCompleteXml(const std::wstring& oXml)
 	{
 		m_arCompleteObjectsXml.push_back(oXml);

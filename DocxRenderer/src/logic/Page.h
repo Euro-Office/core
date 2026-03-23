@@ -3,6 +3,7 @@
 #include "elements/Paragraph.h"
 #include "elements/Table.h"
 #include "elements/Shape.h"
+#include "elements/Link.h"
 #include "managers/ImageManager.h"
 #include "managers/FontStyleManager.h"
 #include "managers/ParagraphStyleManager.h"
@@ -87,6 +88,9 @@ namespace NSDocxRenderer
 		std::vector<std::wstring> GetXmlShapes();
 		std::vector<std::wstring> GetXmlShapesPptx();
 		NSWasm::CData GetShapesBin();
+
+		void AddLink(const std::wstring& wsUri);
+		std::list<CLink> GetLinks() const;
 
 		void AddCompleteXml(const std::wstring& oXml);
 		void AddCompleteBinBase64(const std::string& oBase64);
@@ -234,6 +238,8 @@ namespace NSDocxRenderer
 		// save the luminosity shapes for later filling
 		std::vector<shape_ptr_t> m_arLuminosityShapes;
 		std::vector<shape_ptr_t> m_arOneColorGradientShape;
+
+		std::list<CLink>	m_arLinks;
 
 		long m_lLastType = 0;
 
