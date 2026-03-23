@@ -55,12 +55,15 @@ public:
 	static const XLS::ElementType type = XLS::typeOfficeArtDgContainer;
 
 	void loadFields(XLS::CFRecord& record);
+	void save(XLS::CFRecord& record);
 	
 	OfficeArtRecordPtr					m_OfficeArtFDG;
 	OfficeArtRecordPtr					m_OfficeArtFRITContainer;
 	OfficeArtRecordPtr					m_OfficeArtSpgrContainer;
 	std::vector<OfficeArtRecordPtr>		m_OfficeArtSpContainer; 
 	OfficeArtRecordPtr					m_OfficeArtSpgrContainerFileBlock;
+	bool								first = true;
+	unsigned int totalSize = 0;
 };
 
 typedef boost::shared_ptr<OfficeArtDgContainer> OfficeArtDgContainerPtr;

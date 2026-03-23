@@ -227,7 +227,10 @@ void odf_table_context::end_table()
 			style_table_properties * table_props = style_->content_.add_get_style_table_properties();
 			if (table_props)
 			{
-				table_props->content_.style_width_ = length(length(impl_->current_table().table_width,length::pt).get_value_unit(length::cm),length::cm);
+				if( !table_props->content_.style_width_ )
+				{
+					table_props->content_.style_width_ = length(length(impl_->current_table().table_width,length::pt).get_value_unit(length::cm),length::cm);
+				}
 			}
 		}
 	}
@@ -527,8 +530,10 @@ void odf_table_context::change_current_column_width(double width)
 	else
 	{
 		double old_width = column_properties->attlist_.style_column_width_->get_value_unit(length::pt);
-		if (old_width < width/* && width < impl_->odf_context_->page_layout_context()->current_page_width_*/ && old_width < 9)
+		if (old_width < width/* && width < impl_->odf_context_->page_layout_context()->current_page_width_*/ && old_width < 5) // check bug 51597
+		{
 			column_properties->attlist_.style_column_width_ = length_;
+		}
 	}
 }
 

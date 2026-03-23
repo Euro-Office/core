@@ -37,6 +37,7 @@
 
 namespace SimpleTypes
 {
+	class CGuid;
 	namespace Spreadsheet
 	{
 		class CTableType;
@@ -114,6 +115,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_TableStyleInfo;
@@ -173,6 +175,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BiffStructurePtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_TableColumn;
@@ -195,7 +198,7 @@ namespace OOX
 			nullable<SimpleTypes::Spreadsheet::CTotalsRowFunction> m_oTotalsRowFunction;
 			nullable_string m_oTotalsRowLabel;
 			nullable_string m_oUniqueName;
-			nullable_string m_oUid;
+			nullable<SimpleTypes::CGuid> m_oUid;
 
 			nullable_string m_oTotalsRowFormula;
 			nullable_string m_oCalculatedColumnFormula;
@@ -264,6 +267,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_Table;

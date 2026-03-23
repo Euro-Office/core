@@ -304,6 +304,7 @@ namespace PdfWriter
 		CStringObject();
 		virtual ~CStringObject();
 		void Set(const char* sValue, bool isUTF16, bool isDictValue, int nMax = LIMIT_MAX_STRING_LEN);
+		void Add(const char* sValue);
 		const BYTE*  GetString() const
 		{
 			return (const BYTE*)m_pValue;
@@ -346,6 +347,7 @@ namespace PdfWriter
 		CBinaryObject(BYTE* pValue, unsigned int unLen, bool bCopy = true);
 		~CBinaryObject();
 		void Set(BYTE* pValue, unsigned int unLen, bool bCopy = true);
+		void Add(BYTE* pValue, unsigned int unLen);
 		BYTE*        GetValue() const
 		{
 			return m_pValue;
@@ -389,8 +391,10 @@ namespace PdfWriter
 				((CProxyObject*)pOut)->m_pObject->SetRef(m_pObject->GetObjId(), m_pObject->GetGenNo());
 				return pOut;
 			}
-			CProxyObject* pRes = new CProxyObject(new CObjectBase(), true);
-			pRes->Get()->SetRef(m_pObject->GetObjId(), m_pObject->GetGenNo());
+			bool bObj = m_pObject && m_pObject->IsIndirect();
+			CProxyObject* pRes = new CProxyObject(bObj ? m_pObject : new CObjectBase(), !bObj);
+			if (m_pObject)
+				pRes->Get()->SetRef(m_pObject->GetObjId(), m_pObject->GetGenNo());
 			return pRes;
 		}
 		EObjectType GetType() const
@@ -432,6 +436,7 @@ namespace PdfWriter
 		}
 		static CArrayObject* CreateBox(const TBox& oBox);
 		static CArrayObject* CreateBox(double dL, double dB, double dR, double dT);
+		static CArrayObject* CreateMatrix(double* m);
 		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const;
 		void FromXml(const std::wstring& sXml);
 
@@ -490,6 +495,7 @@ namespace PdfWriter
 		unsigned int GetSize() { return m_mList.size(); }
 		std::map<std::string, CObjectBase*> GetDict() { return m_mList; }
 		void FromXml(const std::wstring& sXml);
+		void ClearStream();
 
 	protected:
 		std::map<std::string, CObjectBase*> m_mList;
@@ -518,12 +524,17 @@ namespace PdfWriter
 		TXrefEntry*  GetEntry(unsigned int unIndex) const;
 		TXrefEntry*  GetEntryByObjectId(unsigned int unObjectId) const;
 		CXref*       GetXrefByObjectId(unsigned int unObjectId);
-		void         Add(CObjectBase* pObject, unsigned int unObjectGen = 0);
+		void         Add(CObjectBase* pObject);
+		void         Add(CObjectBase* pObject, unsigned int unObjectGen);
 		void         Remove(CObjectBase* pObject);
 		void         WriteToStream(CStream* pStream, CEncrypt* pEncrypt, bool bStream = false);
 		void         SetPrev(CXref* pPrev)
 		{
 			m_pPrev  = pPrev;
+		}
+		CXref*       GetPrev()
+		{
+			return m_pPrev;
 		}
 		void         SetPrevAddr(unsigned int unAddr)
 		{

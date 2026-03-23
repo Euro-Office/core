@@ -18,8 +18,8 @@ namespace MetaFile
 
 	void CEmfInterpretatorRender::ChangeConditional()
 	{
-			if (NULL != m_pMetaFileRenderer)
-				m_pMetaFileRenderer->ChangeConditional();
+		if (NULL != m_pMetaFileRenderer)
+			m_pMetaFileRenderer->ChangeConditional();
 	}
 
 	void CEmfInterpretatorRender::Begin()
@@ -41,10 +41,10 @@ namespace MetaFile
 	}
 
 	void CEmfInterpretatorRender::DrawString(std::wstring &wsText, unsigned int unCharsCount, double dX, double dY, double *pDx,
-	                                         int iGraphicsMode, double dXScale, double dYScale)
+	                                         int iGraphicsMode, double dXScale, double dYScale, bool bUseGID)
 	{
 		if (NULL != m_pMetaFileRenderer)
-			m_pMetaFileRenderer->DrawString(wsText, unCharsCount, dX, dY, pDx, iGraphicsMode, dXScale, dYScale);
+			m_pMetaFileRenderer->DrawString(wsText, unCharsCount, dX, dY, pDx, iGraphicsMode, dXScale, dYScale, bUseGID);
 	}
 
 	void CEmfInterpretatorRender::DrawDriverString(const std::wstring& wsString, const std::vector<TPointD>& arPoints)
@@ -143,7 +143,7 @@ namespace MetaFile
 			m_pMetaFileRenderer->UpdateDC();
 	}
 
-	void CEmfInterpretatorRender::SetTransform(double &dM11, double &dM12, double &dM21, double &dM22, double &dX, double &dY)
+	void CEmfInterpretatorRender::SetTransform(const double& dM11, const double& dM12, const double& dM21, const double& dM22, const double& dX, const double& dY)
 	{
 		if (NULL != m_pMetaFileRenderer)
 			m_pMetaFileRenderer->SetTransform(dM11, dM12, dM21, dM22, dX, dY);

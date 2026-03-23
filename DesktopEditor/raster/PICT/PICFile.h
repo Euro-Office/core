@@ -32,7 +32,7 @@
 #ifndef PICFILE_H
 #define PICFILE_H
 
-#include "../pro/Graphics.h"
+#include "../../graphics/pro/Graphics.h"
 
 enum PixelTrait
 {
@@ -139,7 +139,7 @@ struct Image
 			delete[] m_pColormap;
 
 		if (m_pPixelData)
-			delete[] m_pPixelData;
+			free(m_pPixelData);
 	}
 
 	Image& operator=(const Image& other)
@@ -157,11 +157,55 @@ struct Image
 		if (other.m_pColormap)
 		{
 			m_pColormap = new PixelInfo[m_nColors + 1];
-			memcpy(m_pColormap, other.m_pColormap, m_nColors + 1);
+			memcpy(m_pColormap, other.m_pColormap, (m_nColors + 1) * sizeof(PixelInfo));
 		}
 
-		memcpy(m_pChannelMap, other.m_pChannelMap, 65);
+		memcpy(m_pChannelMap, other.m_pChannelMap, 65 * sizeof(PixelChannelMap));
 		return *this;
+	}
+
+	void Realloc(const size_t& w, const size_t& h, const bool& isCopy = true)
+	{
+		size_t oldSize = 4 * m_nWidth * m_nHeight;
+		size_t newSize = 4 * w * h;
+
+		m_nWidth = w;
+		m_nHeight = h;
+
+		if (0 == newSize)
+		{
+			if (m_pPixelData)
+				free(m_pPixelData);
+			m_pPixelData = nullptr;
+			return;
+		}
+
+		if (oldSize == newSize)
+			return;
+
+		BYTE* oldPixels = m_pPixelData;
+		if (oldSize > newSize || !m_pPixelData)
+		{
+			m_pPixelData = (BYTE*)malloc(newSize);
+			if (isCopy && oldPixels)
+				memcpy(m_pPixelData, oldPixels, newSize);
+
+			if (oldPixels)
+				free(oldPixels);
+		}
+		else
+		{
+			m_pPixelData = (BYTE*)realloc(oldPixels, newSize);
+			if (NULL == m_pPixelData)
+			{
+				m_pPixelData = (BYTE*)malloc(newSize);
+				if (isCopy && oldPixels)
+					memcpy(m_pPixelData, oldPixels, oldSize);
+
+				if (oldPixels)
+					free(oldPixels);
+			}
+		}
 	}
 };
 
@@ -190,6 +234,8 @@ private:
 	void SetImageAlpha(Image* img, const BYTE alpha);
 	BYTE* DecodeImage(const Image& img, size_t bytesPerLine, size_t bitsPerPixel, size_t* extent);
 	const BYTE* UnpackScanline(const BYTE* pixels, const size_t& bitsPerPixel, BYTE* scanline, size_t* bytesPerLine);
+	BYTE* GetPixels(const Image& image, const long long& x, const long long& y, const size_t& width, const size_t& height) const;
+	void CompositeImage(const Image& composite,const long long& xOffset, const long long& yOffset);
 
 	void ReadPolygon();
 	Aggplus::Rect ContractRect(const Aggplus::Rect& rect, bool isFrame);
@@ -201,6 +247,7 @@ private:
 	void DrawArc();
 	void ReadAndDrawText(int x, int y);
 
+	void InitializeFonts();
 	void InitializeRenderer();
 
 private:
@@ -211,16 +258,16 @@ private:
 	CBgraFrame m_oFrame{};
 	BYTE* m_pFrameData{nullptr};
 
-	size_t m_nPenHeight{0};
-	size_t m_nPenWidth{0};
+	size_t m_nPenHeight{1};
+	size_t m_nPenWidth{1};
 
 	int m_nFontStyle{0};
 	int m_nFontSize{0};
 
 	std::wstring m_wsFontName{};
 
-	Aggplus::Point m_oPenPoint{};
-	Aggplus::Point m_oTextPoint{};
+	Aggplus::Point m_oPenPoint{0, 0};
+	Aggplus::Point m_oTextPoint{0, 0};
 
 	Aggplus::Rect m_oLastRect{};
 	Aggplus::Rect m_oLastRoundRect{};
@@ -229,6 +276,7 @@ private:
 	std::vector<Aggplus::Point> m_arLastPolygon{};
 
 	NSGraphics::IGraphicsRenderer* m_pRenderer{nullptr};
+	NSFonts::IApplicationFonts* m_pAppFonts{nullptr};
 	NSFonts::IFontManager* m_pFontManager{nullptr};
 };
 

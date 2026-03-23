@@ -72,7 +72,7 @@ namespace Spreadsheet
 		writer.StartNode(sName);
 		writer.StartAttributes();
 		WritingNullable(m_oColId, writer.WriteAttribute(L"colId", *m_oColId););
-		WritingNullable(m_oId, writer.WriteAttributeEncodeXml(L"id", *m_oId););
+		WritingNullable(m_oId, writer.WriteAttributeEncodeXml(L"id", m_oId->ToString()););
 		writer.EndAttributes();
 		WritingNullable(m_oDxf, m_oDxf->toXMLWithNS(writer, L"", L"dxf", L"x:"););
 //		WritingNullable(m_oRichSortCondition, m_oRichSortCondition->toXML(writer, L"richSortCondition"););
@@ -83,7 +83,10 @@ namespace Spreadsheet
 	{
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 		pWriter->WriteUInt2(0, m_oColId);
-		pWriter->WriteString2(1, m_oId);
+		if (m_oId.IsInit())
+		{
+			pWriter->WriteString1(1, m_oId->ToString());
+		}
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
 		if (m_oDxf.is_init())
@@ -92,7 +95,8 @@ namespace Spreadsheet
 			BinXlsxRW::BinaryStyleTableWriter oBinaryStyleTableWriter(*pWriter, &pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts);
 			DocWrapper::FontProcessor oFontProcessor;
 			OOX::Spreadsheet::CIndexedColors* pIndexedColors = NULL;
-			CXlsx* xlsx = dynamic_cast<CXlsx*>(pWriter->m_pMainDocument);
+			
+			CXlsx* xlsx = dynamic_cast<CXlsx*>(m_pMainDocument);			
 			if (xlsx && xlsx->m_pStyles && xlsx->m_pStyles->m_oColors.IsInit() && xlsx->m_pStyles->m_oColors->m_oIndexedColors.IsInit())
 			{
 				pIndexedColors = xlsx->m_pStyles->m_oColors->m_oIndexedColors.GetPointer();
@@ -185,7 +189,7 @@ namespace Spreadsheet
 			const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
 			if (strcmp("sortRule", sName) == 0)
 			{
-				CSortRule* pSortRule = new CSortRule();
+				CSortRule* pSortRule = new CSortRule(m_pMainDocument);
 				*pSortRule = oReader;
 				m_arrItems.push_back(pSortRule);
 			}
@@ -256,7 +260,7 @@ namespace Spreadsheet
 				for (ULONG i = 0; i < _c; ++i)
 				{
 					pReader->Skip(1); // type
-					m_arrItems.push_back(new CSortRule());
+					m_arrItems.push_back(new CSortRule(m_pMainDocument));
 					m_arrItems.back()->fromPPTY(pReader);
 				}
 				break;
@@ -332,7 +336,8 @@ namespace Spreadsheet
 			BinXlsxRW::BinaryStyleTableWriter oBinaryStyleTableWriter(*pWriter, &pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts);
 			DocWrapper::FontProcessor oFontProcessor;
 			OOX::Spreadsheet::CIndexedColors* pIndexedColors = NULL;
-			CXlsx* xlsx = dynamic_cast<CXlsx*>(pWriter->m_pMainDocument);
+			
+			CXlsx* xlsx = dynamic_cast<CXlsx*>(m_pMainDocument);
 			if (xlsx && xlsx->m_pStyles && xlsx->m_pStyles->m_oColors.IsInit() && xlsx->m_pStyles->m_oColors->m_oIndexedColors.IsInit())
 			{
 				pIndexedColors = xlsx->m_pStyles->m_oColors->m_oIndexedColors.GetPointer();
@@ -422,10 +427,10 @@ namespace Spreadsheet
 	void CNsvFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
 		WritingElement_ReadAttributes_StartChar_No_NS(oReader)
-				WritingElement_ReadAttributes_Read_ifChar( oReader, "filterId", m_oFilterId)
-				WritingElement_ReadAttributes_Read_else_ifChar( oReader, "ref", m_oRef)
-				WritingElement_ReadAttributes_Read_else_ifChar( oReader, "tableId", m_oTableId)
-				WritingElement_ReadAttributes_EndChar_No_NS( oReader )
+			WritingElement_ReadAttributes_Read_ifChar( oReader, "filterId", m_oFilterId)
+			WritingElement_ReadAttributes_Read_else_ifChar( oReader, "ref", m_oRef)
+			WritingElement_ReadAttributes_Read_else_ifChar( oReader, "tableId", m_oTableId)
+		WritingElement_ReadAttributes_EndChar_No_NS( oReader )
 	}
 	void CNsvFilter::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -438,12 +443,15 @@ namespace Spreadsheet
 			const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
 			if (strcmp("columnFilter", sName) == 0)
 			{
-				CColumnFilter* pColumnFilter = new CColumnFilter();
+				CColumnFilter* pColumnFilter = new CColumnFilter(m_pMainDocument);
 				*pColumnFilter = oReader;
 				m_arrItems.push_back(pColumnFilter);
 			}
 			else if (strcmp("sortRules", sName) == 0)
-				m_oSortRules = oReader;
+			{
+				m_oSortRules = new CSortRules(m_pMainDocument);
+				m_oSortRules->fromXML(oReader);
+			}
 			else if (strcmp("extLst", sName) == 0)
 				m_oExtLst = oReader;
 		}
@@ -452,7 +460,7 @@ namespace Spreadsheet
 	{
 		writer.StartNode(sName);
 		writer.StartAttributes();
-		WritingNullable(m_oFilterId, writer.WriteAttributeEncodeXml(L"filterId", *m_oFilterId););
+		WritingNullable(m_oFilterId, writer.WriteAttributeEncodeXml(L"filterId", m_oFilterId->ToString()););
 		WritingNullable(m_oRef, writer.WriteAttributeEncodeXml(L"ref", *m_oRef););
 		WritingNullable(m_oTableId, writer.WriteAttribute(L"tableId", *m_oTableId););
 		writer.EndAttributes();
@@ -467,7 +475,10 @@ namespace Spreadsheet
 	void CNsvFilter::toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const
 	{
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
-		pWriter->WriteString2(0, m_oFilterId);
+		if (m_oFilterId.IsInit())
+		{
+			pWriter->WriteString1(0, m_oFilterId->ToString());
+		}
 		pWriter->WriteString2(1, m_oRef);
 		pWriter->WriteUInt2(2, m_oTableId);
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
@@ -516,7 +527,7 @@ namespace Spreadsheet
 				for (ULONG i = 0; i < _c; ++i)
 				{
 					pReader->Skip(1); // type
-					m_arrItems.push_back(new CColumnFilter());
+					m_arrItems.push_back(new CColumnFilter(m_pMainDocument));
 					m_arrItems.back()->fromPPTY(pReader);
 				}
 				break;
@@ -545,9 +556,9 @@ namespace Spreadsheet
 	void CNamedSheetView::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
 		WritingElement_ReadAttributes_StartChar_No_NS(oReader)
-				WritingElement_ReadAttributes_Read_ifChar( oReader, "name", m_oName)
-				WritingElement_ReadAttributes_Read_else_ifChar( oReader, "id", m_oId)
-				WritingElement_ReadAttributes_EndChar_No_NS( oReader )
+			WritingElement_ReadAttributes_Read_ifChar( oReader, "name", m_oName)
+			WritingElement_ReadAttributes_Read_else_ifChar( oReader, "id", m_oId)
+		WritingElement_ReadAttributes_EndChar_No_NS( oReader )
 	}
 	void CNamedSheetView::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -560,7 +571,7 @@ namespace Spreadsheet
 			const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
 			if (strcmp("nsvFilter", sName) == 0)
 			{
-				CNsvFilter* pNsvFilter = new CNsvFilter();
+				CNsvFilter* pNsvFilter = new CNsvFilter(m_pMainDocument);
 				*pNsvFilter = oReader;
 				m_arrItems.push_back(pNsvFilter);
 			}
@@ -573,7 +584,7 @@ namespace Spreadsheet
 		writer.StartNode(sName);
 		writer.StartAttributes();
 		WritingNullable(m_oName, writer.WriteAttributeEncodeXml(L"name", *m_oName););
-		WritingNullable(m_oId, writer.WriteAttributeEncodeXml(L"id", *m_oId););
+		WritingNullable(m_oId, writer.WriteAttributeEncodeXml(L"id", m_oId->ToString()););
 		writer.EndAttributes();
 		for(size_t i = 0; i < m_arrItems.size(); ++i)
 		{
@@ -586,7 +597,10 @@ namespace Spreadsheet
 	{
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 		pWriter->WriteString2(0, m_oName);
-		pWriter->WriteString2(1, m_oId);
+		if (m_oId.IsInit())
+		{
+			pWriter->WriteString1(1, m_oId->ToString());
+		}
 		pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
 		pWriter->WriteRecordArrayOfPointers(0, 0, m_arrItems);
@@ -627,7 +641,7 @@ namespace Spreadsheet
 				for (ULONG i = 0; i < _c; ++i)
 				{
 					pReader->Skip(1); // type
-					m_arrItems.push_back(new CNsvFilter());
+					m_arrItems.push_back(new CNsvFilter(m_pMainDocument));
 					m_arrItems.back()->fromPPTY(pReader);
 				}
 				break;
@@ -663,7 +677,7 @@ namespace Spreadsheet
 			const char* sName = XmlUtils::GetNameNoNS(oReader.GetNameChar());
 			if (strcmp("namedSheetView", sName) == 0)
 			{
-				CNamedSheetView* pNamedSheetView = new CNamedSheetView();
+				CNamedSheetView* pNamedSheetView = new CNamedSheetView(m_pMainDocument);
 				*pNamedSheetView = oReader;
 				m_arrItems.push_back(pNamedSheetView);
 			}
@@ -715,7 +729,7 @@ namespace Spreadsheet
 				for (ULONG i = 0; i < _c; ++i)
 				{
 					pReader->Skip(1); // type
-					m_arrItems.push_back(new CNamedSheetView());
+					m_arrItems.push_back(new CNamedSheetView(m_pMainDocument));
 					m_arrItems.back()->fromPPTY(pReader);
 				}
 				break;
@@ -780,7 +794,8 @@ namespace Spreadsheet
 		if ( !oReader.ReadNextNode() )
 			return;
 
-		m_oNamedSheetViews = oReader;
+		m_oNamedSheetViews = new CNamedSheetViews(OOX::IFileContainer::m_pMainDocument);
+		m_oNamedSheetViews->fromXML(oReader);
 	}
 	void CNamedSheetViewFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{

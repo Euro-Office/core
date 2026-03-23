@@ -34,12 +34,14 @@
 #include "../WritingElement.h"
 #include "../../Base/Nullable.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/CellRef.h"
+#include "../../Common/SimpleTypes_Shared.h"
 
 namespace SimpleTypes
 {
 	class COnOff;
 	class CDecimalNumber;
 	class CUnsignedDecimalNumber;
+	class CGuid;
 
 	namespace Spreadsheet
 	{
@@ -108,6 +110,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin(const bool isIcon = false);
+			XLS::BiffStructurePtr toXLS(const bool isIcon = false);
             void toBin(XLS::StreamCacheWriterPtr& writer, const bool isIcon = false);
             XLS::BaseObjectPtr toBin14(const bool isIcon = false);
 
@@ -171,6 +174,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BiffStructurePtr toXLS();
             void toBin(XLS::StreamCacheWriterPtr& writer);
 			XLS::BaseObjectPtr toBin14();
 
@@ -207,6 +211,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BiffStructurePtr toXLS();
             void toBin(XLS::StreamCacheWriterPtr& writer);
 			XLS::BaseObjectPtr toBin14();
 
@@ -263,6 +268,7 @@ namespace OOX
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
             void toBin(XLS::StreamCacheWriterPtr& writer);
+			XLS::BiffStructurePtr toXLS();
             XLS::BaseObjectPtr toBin14();
 
 			virtual EElementType getType () const;
@@ -311,6 +317,7 @@ namespace OOX
 			XLS::BaseObjectPtr toBin(const  XLS::CellRef &cellRef);
             void toBin(XLS::StreamCacheWriterPtr& writer, const  XLS::CellRef &cellRef);
             XLS::BaseObjectPtr toBin14(const  XLS::CellRef &cellRef);
+			XLS::BaseObjectPtr toXLS(const  XLS::CellRef &cellRef);
 
 			virtual EElementType getType () const;
 			bool isValid () const;
@@ -338,13 +345,13 @@ namespace OOX
 			nullable<SimpleTypes::CUnsignedDecimalNumber>		m_oRank;
 			nullable<SimpleTypes::CDecimalNumber>				m_oStdDev;
 			nullable<SimpleTypes::COnOff>						m_oStopIfTrue;
-			nullable<std::wstring>								m_oId;
+			nullable<SimpleTypes::CGuid>						m_oId;
 			nullable<std::wstring>								m_oText;
 			nullable<SimpleTypes::Spreadsheet::ST_TimePeriod>	m_oTimePeriod;
 			nullable<SimpleTypes::Spreadsheet::ST_CfType>		m_oType;
 
 			nullable<OOX::Drawing::COfficeArtExtensionList>		m_oExtLst;
-			nullable_string										m_oExtId;
+			nullable<SimpleTypes::CGuid>						m_oExtId;
 
 			nullable<CIconSet>					m_oIconSet;
 			nullable<CColorScale>				m_oColorScale;
@@ -375,7 +382,7 @@ namespace OOX
 			XLS::BaseObjectPtr toBin();
             void toBin(XLS::StreamCacheWriterPtr& writer);
 			XLS::BaseObjectPtr toBin14();
-
+			void toXLS(XLS::BaseObjectPtr fmtsPtr);
 
 			virtual EElementType getType () const;
 			bool IsUsage();

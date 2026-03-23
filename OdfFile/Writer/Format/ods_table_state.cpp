@@ -155,11 +155,11 @@ namespace utils//////////////////////////////////////////// ОБЩАЯ хрен�
 		{
 			nDate = boost::lexical_cast<__int64>(oox_date_time);
 		}
-
+		bool bPT = (nDate < 1);
 		std::wstring sDate, sTime;
 		if (dTime > 0)
 		{
-			sTime = convert_time(dTime, false);
+			sTime = convert_time(dTime, bPT);
 		}
 		if (nDate > 0)
 		{
@@ -177,7 +177,14 @@ namespace utils//////////////////////////////////////////// ОБЩАЯ хрен�
 		}
 		else
 		{
-			odf_date_time = sDate + (sTime.empty() ? L"" : L"T" + sTime);
+			if (bPT)
+			{
+				odf_date_time = L"PT" + sTime;
+			}
+			else
+			{
+				odf_date_time = sDate + (sTime.empty() ? L"" : L"T" + sTime);
+			}
 		}
 		return res;
 	}
@@ -337,7 +344,7 @@ void ods_table_state::set_table_tab_color(_CP_OPT(color) & _color)
 	style_table_properties *table_properties = office_table_style_->content_.add_get_style_table_properties();
 	if (table_properties == NULL)return;
 
-	table_properties->content_.tableooo_tab_color_ = _color;
+	table_properties->content_.table_tab_color_ = _color;
 }
 void ods_table_state::set_table_style(office_element_ptr & elm)
 {	
@@ -808,11 +815,11 @@ void ods_table_state::add_hyperlink(const std::wstring & ref, _INT32 col, _INT32
 
 	hyperlinks_.push_back(state);
 }
-void ods_table_state::start_comment(_INT32 col, _INT32 row, std::wstring & author)
+void ods_table_state::start_comment(_INT32 col, _INT32 row, std::wstring & author, std::wstring& date_time)
 {
 	ods_comment_state state;
 
-	state.row = row;  state.col = col; state.author = author;	
+	state.row = row;  state.col = col; state.author = author; state.date_time = date_time;
 	create_element(L"office", L"annotation", state.elm, context_);
 
 	office_annotation * annotation = dynamic_cast<office_annotation*>(state.elm.get());
@@ -874,14 +881,26 @@ void ods_table_state::end_comment(odf_text_context *text_context)
 			comments_.back().elm->add_child_element(text_context->text_elements_list_[i].elm);
 		}
 	}
-	if (comments_.back().author.length() > 0 && comments_.back().elm)
+	if (comments_.back().elm)
 	{
 		office_element_ptr dc_elm;
-		create_element(L"dc", L"creator", dc_elm, context_);
-		if (dc_elm)
+		if (false == comments_.back().author.empty())
 		{
-			dc_elm->add_text(comments_.back().author);
-			comments_.back().elm->add_child_element(dc_elm);
+			create_element(L"dc", L"creator", dc_elm, context_);
+			if (dc_elm)
+			{
+				dc_elm->add_text(comments_.back().author);
+				comments_.back().elm->add_child_element(dc_elm);
+			}
+		}
+		if (false == comments_.back().date_time.empty())
+		{
+			create_element(L"dc", L"date", dc_elm, context_);
+			if (dc_elm)
+			{
+				dc_elm->add_text(comments_.back().date_time);
+				comments_.back().elm->add_child_element(dc_elm);
+			}
 		}
 	}
 }

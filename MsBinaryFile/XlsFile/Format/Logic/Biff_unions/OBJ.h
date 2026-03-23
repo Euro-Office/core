@@ -51,8 +51,10 @@ public:
 	BaseObjectPtr clone();
 
 	virtual const bool loadContent(BinProcessor& proc);
+	virtual const bool saveContent(BinProcessor& proc);
 
 	BaseObjectPtr m_Obj;
+	std::vector<BaseObjectPtr> m_arrChart;
 
 	static const ElementType	type = typeOBJ;
 	

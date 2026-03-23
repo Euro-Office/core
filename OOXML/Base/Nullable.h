@@ -217,7 +217,6 @@ namespace NSCommon
 				this->m_pPointer = new Type( cwsValue );
 			return *this;
 		}
-
 		nullable<Type>& operator=(const nullable<Type> &oOther)
 		{
 			RELEASEOBJECT(this->m_pPointer);
@@ -765,7 +764,7 @@ namespace NSCommon
 	protected:
 		bool set(const std::wstring& value)
 		{
-			if ((L"true" == value) || (L"1" == value))
+			if ((L"true" == value) || (L"1" == value) || (L"t" == value))
 				return true;
 			return false;
 		}

@@ -33,11 +33,7 @@
 #define _PDF_WRITER_SRC_REDACT_OUTPUTDEV_H
 
 #include "../PdfWriter.h"
-//#include "../../DesktopEditor/graphics/IRenderer.h"
-//#include "../../DesktopEditor/graphics/pro/Fonts.h"
-//#include "../../DesktopEditor/graphics/AlphaMask.h"
-//#include "../../DesktopEditor/graphics/TemporaryCS.h"
-//#include "../../DesktopEditor/graphics/structures.h"
+#include "../PdfEditor.h"
 
 #include "../SrcReader/GfxClip.h"
 
@@ -51,7 +47,7 @@ namespace PdfWriter
 	class RedactOutputDev : public OutputDev
 	{
 	public:
-		RedactOutputDev(CPdfWriter* pRenderer);
+		RedactOutputDev(CPdfWriter* pRenderer, CObjectsManager* pObjMng, int nStartRefID);
 		virtual ~RedactOutputDev();
 
 		void SetRedact(const std::vector<double>& arrQuadPoints);
@@ -95,36 +91,36 @@ namespace PdfWriter
 		virtual void restoreState(GfxState *pGState) override;
 		//----- update graphics state
 		virtual void updateAll(GfxState *pGState) override;
-		virtual void updateCTM(GfxState *pGState, double dMatrix11, double dMatrix12, double dMatrix21, double dMatrix22, double dMatrix31, double dMatrix32) override;
+		// updateCTM -> UpdateTransform
 		virtual void updateLineDash(GfxState *pGState) override;
 		virtual void updateFlatness(GfxState *pGState) override;
 		virtual void updateLineJoin(GfxState *pGState) override;
 		virtual void updateLineCap(GfxState *pGState) override;
 		virtual void updateMiterLimit(GfxState *pGState) override;
 		virtual void updateLineWidth(GfxState *pGState) override;
-		// updateStrokeAdjust -> setExtGState
-		virtual void updateFillColorSpace(GfxState *pGState) override;
-		virtual void updateStrokeColorSpace(GfxState *pGState) override;
+		// updateStrokeAdjust    -> setExtGState
+		// updateFillColorSpace
+		// updateStrokeColorSpace
 		virtual void updateFillColor(GfxState *pGState) override;
 		virtual void updateStrokeColor(GfxState *pGState) override;
-		// updateBlendMode -> setExtGState
-		// updateFillOpacity -> setExtGState
-		// updateStrokeOpacity -> setExtGState
-		// updateFillOverprint -> setExtGState
+		// updateBlendMode       -> setExtGState
+		// updateFillOpacity     -> setExtGState
+		// updateStrokeOpacity   -> setExtGState
+		// updateFillOverprint   -> setExtGState
 		// updateStrokeOverprint -> setExtGState
-		// updateOverprintMode -> setExtGState
+		// updateOverprintMode   -> setExtGState
 		virtual void updateRenderingIntent(GfxState *pGState) override;
-		// updateTransfer -> setExtGState
+		// updateTransfer        -> setExtGState
 		//----- update text state
 		virtual void updateFont(GfxState *pGState) override;
-		virtual void updateTextMat(GfxState *pGState) override;
+		// updateTextMat -> drawChar
 		virtual void updateCharSpace(GfxState *pGState) override;
 		virtual void updateRender(GfxState *pGState) override;
 		virtual void updateRise(GfxState *pGState) override;
 		virtual void updateWordSpace(GfxState *pGState) override;
 		virtual void updateHorizScaling(GfxState *pGState) override;
-		virtual void updateTextPos(GfxState *pGState) override;
-		virtual void updateTextShift(GfxState *pGState, double shift) override;
+		// updateTextPos   -> drawChar
+		// updateTextShift -> drawChar
 		// saveTextPos
 		// restoreTextPos
 		//----- path painting
@@ -132,27 +128,26 @@ namespace PdfWriter
 		virtual void fill(GfxState *pGState) override;
 		virtual void eoFill(GfxState *pGState) override;
 		virtual void tilingPatternFill(GfxState *pGState, Gfx *gfx, Object *pStream, int nPaintType, int nTilingType, Dict *pResourcesDict, double *pMatrix, double *pBBox, int nX0, int nY0, int nX1, int nY1, double dXStep, double dYStep) override;
-		virtual GBool shadedFill(GfxState* pGState, GfxShading* shading) override;
 		//----- path clipping
 		virtual void clip(GfxState *pGState) override;
 		virtual void eoClip(GfxState *pGState) override;
 		virtual void clipToStrokePath(GfxState *pGState) override;
 		//----- text drawing
 		virtual void beginStringOp(GfxState *pGState) override;
-		virtual void endStringOp(GfxState *pGState) override;
-		virtual void beginString(GfxState *pGState, GString *s) override;
-		virtual void endString(GfxState *pGState) override;
+		// endStringOp
+		// beginString
+		// endString
 		virtual void drawChar(GfxState *pGState, double dX, double dY, double dDx, double dDy, double dOriginX, double dOriginY, CharCode nCode, int nBytesCount, Unicode *pUnicode, int nUnicodeLen) override;
 		// drawString
-		virtual GBool beginType3Char(GfxState *pGState, double x, double y, double dx, double dy, CharCode code, Unicode *u, int uLen) override;
-		virtual void endType3Char(GfxState *pGState) override;
-		virtual void endTextObject(GfxState *pGState) override;
-		virtual void beginActualText(GfxState *state, Unicode *u, int uLen) override;
-		virtual void endActualText(GfxState *state) override;
+		// beginType3Char
+		// endType3Char
+		// endTextObject
+		// beginActualText
+		// endActualText
 		//----- additional
-		virtual GBool beginMarkedContent(GfxState *pGState, GString *s) override;
-		virtual GBool beginMCOShapes(GfxState *pGState, GString *s, Object *ref) override;
-		virtual void endMarkedContent(GfxState *pGState) override;
+		// beginMarkedContent
+		// beginMCOShapes
+		// endMarkedContent
 		virtual GBool useNameOp() override;
 		virtual void setExtGState(const char* name) override;
 		virtual void setFillColorSpace(const char* name) override;
@@ -163,25 +158,25 @@ namespace PdfWriter
 		virtual void setStrokeColorN(Object* args, int numArgs) override;
 		virtual void setShading(GfxState *state, const char* name) override;
 		//----- image drawing
-		virtual void drawImageMask(GfxState *pGState, Object *pRef, Stream *pStream, int nWidth, int nHeight, GBool bInvert, GBool bInlineImage, GBool interpolate) override;
-		virtual void setSoftMaskFromImageMask(GfxState *pGState, Object *pRef, Stream *pStream, int nWidth, int nHeight, GBool bInvert, GBool bInlineImage, GBool interpolate) override;
-		virtual void drawImage(GfxState *pGState, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap, int *pMaskColors, GBool bInlineImg, GBool interpolate) override;
-		virtual void drawMaskedImage(GfxState *pGState, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap,
+		virtual void drawImageMask(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GBool bInvert, GBool bInlineImage, GBool interpolate) override;
+		// setSoftMaskFromImageMask -> drawImageMask
+		virtual void drawImage(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap, int *pMaskColors, GBool bInlineImg, GBool interpolate) override;
+		virtual void drawMaskedImage(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap,
 									 Object* pMaskRef, Stream *pMaskStream, int nMaskWidth, int nMaskHeight, GBool bMaskInvert, GBool interpolate) override;
-		virtual void drawSoftMaskedImage(GfxState *pGState, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap,
+		virtual void drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap,
 										 Object *maskRef, Stream *pMaskStream, int nMaskWidth, int nMaskHeight, GfxImageColorMap *pMaskColorMap, double *pMatte, GBool interpolate) override;
 		//----- Type 3 font operators
 		virtual void type3D0(GfxState *pGState, double wx, double wy) override;
 		virtual void type3D1(GfxState *pGState, double wx, double wy, double llx, double lly, double urx, double ury) override;
 		//----- form XObjects
-		virtual void drawForm(GfxState *pGState, Ref id, const char *name = NULL) override;
-		virtual void drawImage(GfxState *pGState, Ref id, const char* name = NULL) override;
+		virtual void drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char *name = NULL) override;
+		virtual void drawImage(GfxState *pGState, Gfx *gfx, Ref id, const char* name = NULL) override;
 		//----- transparency groups and soft masks
-		virtual void beginTransparencyGroup(GfxState *pGState, double *pBBox, GfxColorSpace *pBlendingColorSpace, GBool bIsolated, GBool bKnockout, GBool bForSoftMask) override;
-		virtual void endTransparencyGroup(GfxState *pGState) override;
-		virtual void paintTransparencyGroup(GfxState *pGState, double *pBBox) override;
-		virtual void setSoftMask(GfxState *pGState, double *pBBox, GBool bAlpha, Function *pTransferFunc, GfxColor *pBackdropColor) override;
-		virtual void clearSoftMask(GfxState *pGState) override;
+		// beginTransparencyGroup -> drawForm
+		// endTransparencyGroup   -> drawForm
+		// paintTransparencyGroup -> drawForm
+		// setSoftMask            -> drawForm
+		// clearSoftMask          -> drawForm
 
 	private:
 		struct GfxRedactState
@@ -197,22 +192,29 @@ namespace PdfWriter
 		};
 
 		void DoPathRedact(GfxState* pGState, GfxPath* pPath, double* pCTM, bool bStroke = false, bool bEoFill = false);
-		void DrawPathRedact(Aggplus::CGraphicsPath* oPath, bool bStroke, const std::vector<CSegment>& arrForStroke = {});
+		void DrawPathRedact(Aggplus::CGraphicsPath* oPath, bool bStroke, double& dXEnd, double& dYEnd, const std::vector<CSegment>& arrForStroke = {});
 		void DoPath(GfxState* pGState, GfxPath* pPath, double* pCTM);
 		void DoTransform(double* pMatrix, double* pdShiftX, double* pdShiftY, bool bActual = false);
 		void DrawPath(const LONG& lType);
 		void UpdateTransform();
 		void AddClip(GfxState* pGState, GfxRedactState* pState, int nIndex);
 		void DoStateOp();
+		void DrawXObject(const char* name);
+		CObjectBase* CreateImage(Gfx *gfx, int nWidth, int nHeight, unsigned int nFilter, int nBPC, const char* sCS);
+		CResourcesDict* GetResources(Gfx *gfx, CDictObject* pNewForm = NULL);
 
 		XRef* m_pXref;
 		std::vector<double> m_arrQuadPoints;
 		Aggplus::CGraphicsPath m_oPathRedact;
+		CResourcesDict* m_pResources;
 
 		CPdfWriter* m_pRenderer;
+		CObjectsManager* m_mObjManager;
+		int m_nStartRefID;
 		CDocument*  m_pDoc;
 		CPage*      m_pPage;
 		double      m_arrMatrix[6];
+		std::string m_sImageName;
 
 		bool m_bUpdateAll;
 		std::deque<GfxRedactState> m_sStates;

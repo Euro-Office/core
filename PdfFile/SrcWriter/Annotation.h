@@ -194,6 +194,7 @@ namespace PdfWriter
 		void SetOMetadata(const std::wstring& wsOMetadata);
 		void SetC(const std::vector<double>& arrC);
 
+		void RemoveAP();
 		void APFromFakePage();
 		virtual CAnnotAppearanceObject* StartAP(int nRotate);
 		TRect& GetRect() { return m_oRect; }
@@ -224,6 +225,40 @@ namespace PdfWriter
 
 		void SetParentID(CAnnotation* pAnnot);
 	};
+	class CLinkAnnotation : public CAnnotation
+	{
+	public:
+		CLinkAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotLink;
+		}
+
+		void SetH(BYTE nH);
+		void SetRD(const double& dRD1, const double& dRD2, const double& dRD3, const double& dRD4);
+		void SetQuadPoints(const std::vector<double>& arrQuadPoints);
+		void SetA(CAction* pAction);
+		void SetPA(CAction* pAction);
+	};
+	class CScreenAnnotation : public CAnnotation
+	{
+	private:
+		CDictObject* m_pMK;
+
+		void CheckMK();
+	public:
+		CScreenAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotScreen;
+		}
+
+		void SetR(const int& nR);
+		void SetT(const std::wstring& wsT);
+		void SetBC(const std::vector<double>& arrBC);
+		void SetBG(const std::vector<double>& arrBG);
+		void AddAction(CAction* pAction);
+	};
 	class CMarkupAnnotation : public CAnnotation
 	{
 	protected:
@@ -242,20 +277,9 @@ namespace PdfWriter
 		void SetCD(const std::wstring& wsCD);
 		void SetSubj(const std::wstring& wsSubj);
 
-		void RemoveAP();
+
 		void SetIRTID(CAnnotation* pAnnot);
 		CPopupAnnotation* CreatePopup();
-	};
-	class CLinkAnnotation : public CAnnotation
-	{
-	public:
-		CLinkAnnotation(CXref* pXref, CDestination* pDestination);
-		EAnnotType GetAnnotationType() const override
-		{
-			return AnnotLink;
-		}
-		void SetBorderStyle  (float fWidth, unsigned short nDashOn, unsigned short nDashOff);
-		void SetHighlightMode(EAnnotHighlightMode eMode);
 	};
 	class CTextAnnotation : public CMarkupAnnotation
 	{
@@ -274,15 +298,6 @@ namespace PdfWriter
 		void SetStateModel(BYTE nStateModel);
 
 		void SetAP();
-	};
-	class CUriLinkAnnotation : public CAnnotation
-	{
-	public:
-		CUriLinkAnnotation(CXref* pXref, const char* sUri);
-		EAnnotType GetAnnotationType() const override
-		{
-			return AnnotLink;
-		}
 	};
 	class CInkAnnotation : public CMarkupAnnotation
 	{
@@ -432,7 +447,37 @@ namespace PdfWriter
 		void SetQ(BYTE nQ);
 		void SetOverlayText(const std::wstring& wsOverlayText);
 		void SetIC(const std::vector<double>& arrIC);
+		void SetOC(const std::vector<double>& arrOC);
 		void SetQuadPoints(const std::vector<double>& arrQuadPoints);
+	};
+	class CFileAttachmentAnnotation : public CMarkupAnnotation
+	{
+	private:
+		void CheckFS();
+		CDictObject* m_pFS;
+
+	public:
+		CFileAttachmentAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotFileAttachment;
+		}
+
+		void SetV(bool bV);
+		void SetName(const std::wstring& wsName);
+		void SetFS(const std::wstring& wsFS);
+		void SetF(const std::wstring& wsF);
+		void SetUF(const std::wstring& wsUF);
+		void SetDOS(const std::wstring& wsDOS);
+		void SetMac(const std::wstring& wsMac);
+		void SetUnix(const std::wstring& wsUnix);
+		void SetDesc(const std::wstring& wsDesc);
+		void SetFileF(const std::wstring& wsFileF);
+		void SetFileUF(const std::wstring& wsFileUF);
+		void SetFileDOS(const std::wstring& wsFileDOS);
+		void SetFileMac(const std::wstring& wsFileMac);
+		void SetFileUnix(const std::wstring& wsFileUnix);
+		void SetID(const std::pair<std::wstring, std::wstring>& wsID);
 	};
 	class CWidgetAnnotation : public CAnnotation
 	{
@@ -480,7 +525,7 @@ namespace PdfWriter
 		void SetMEOptions(const int& nMEOptions);
 		void SetTU(const std::wstring& wsTU);
 		void SetDS(const std::wstring& wsDS);
-		void SetDV(const std::wstring& wsDV);
+		virtual void SetDV(const std::wstring& wsDV);
 		void SetT (const std::wstring& wsT);
 		void SetBC(const std::vector<double>& arrBC);
 		void SetBG(const std::vector<double>& arrBG);
@@ -559,6 +604,8 @@ namespace PdfWriter
 		CCheckBoxWidget(CXref* pXref, EWidgetType nSubtype = WidgetCheckbox);
 
 		void SetV(const std::wstring& wsV);
+		virtual void SetDV(const std::wstring& wsDV) override;
+		void SetOpt(const std::vector< std::pair<std::wstring, std::wstring> >& arrOpt);
 		void SetStyle(BYTE nStyle);
 		ECheckBoxStyle GetStyle() { return m_nStyle; }
 		void SetAP_N_Yes(const std::wstring& wsAP_N_Yes);
@@ -622,6 +669,27 @@ namespace PdfWriter
 	{
 	public:
 		CSignatureWidget(CXref* pXref);
+	};
+
+	class CDestLinkAnnotation : public CAnnotation
+	{
+	public:
+		CDestLinkAnnotation(CXref* pXref, CDestination* pDestination);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotLink;
+		}
+		void SetBorderStyle  (float fWidth, unsigned short nDashOn, unsigned short nDashOff);
+		void SetHighlightMode(EAnnotHighlightMode eMode);
+	};
+	class CUriLinkAnnotation : public CAnnotation
+	{
+	public:
+		CUriLinkAnnotation(CXref* pXref, const char* sUri);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotLink;
+		}
 	};
 }
 #endif // _PDF_WRITER_SRC_ANNOTATION_H

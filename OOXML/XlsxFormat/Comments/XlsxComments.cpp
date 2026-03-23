@@ -52,6 +52,16 @@
 #include "../../Binary/XlsbFormat/FileTypes_SpreadsheetBin.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Binary/CFStreamCacheWriter.h"
 
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJECTS.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJ.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/TEXTOBJECT.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Note.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Obj.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/TxO.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/XLUnicodeRichExtendedString.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
+
 namespace OOX
 {
 	namespace Spreadsheet
@@ -253,6 +263,94 @@ namespace OOX
 
 			return objectPtr;
 		}
+		XLS::BaseObjectPtr CComment::toXLS(XLS::BaseObjectPtr objectsPointer, unsigned int id, const std::wstring &author)
+		{
+			auto ptr = new XLS::Note;
+			ptr->note_sh.stAuthor = author;
+			if(m_oRef.IsInit())
+			{
+				XLS::Ref8 ref;
+				ref = m_oRef->GetValue();
+				ptr->note_sh.col = ref.columnFirst;
+				ptr->note_sh.row = ref.rowFirst;
+
+			}
+
+			ptr->note_sh.idObj = id;
+
+			auto objectsPtr = static_cast<XLS::OBJECTS*>(objectsPointer.get());
+			{
+				std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;
+				auto drawingPtr = new XLS::MsoDrawing(false);
+				if(objectsPtr->m_MsoDrawing == nullptr)
+				{
+					objectsPtr->m_MsoDrawing = XLS::MsoDrawingPtr(drawingPtr);
+					objPair.first = objectsPtr->m_MsoDrawing;
+				}
+				else
+				{
+					drawingPtr->rgChildRec.first = false;
+					objPair.first = XLS::MsoDrawingPtr(drawingPtr);
+				}
+				drawingPtr->prepareComment(id, ptr->note_sh.row, ptr->note_sh.col);
+
+				objectsPtr->m_arrObject.push_back(objPair);
+			}
+
+			{
+				auto objUnion = new XLS::OBJ(boost::dynamic_pointer_cast<XLS::MsoDrawing>(objectsPtr->m_arrObject.back().first));
+				//object writing
+				auto objPtr = new XLS::Obj(objUnion->mso_drawing_);
+				objUnion->m_Obj = XLS::BaseObjectPtr(objPtr);
+
+				objPtr->cmo.ot = 0x19;
+				objPtr->cmo.id = id;
+				if(m_oUid.IsInit())
+				{
+					objPtr->nts.guid = m_oUid->ToString();
+				}
+
+				objectsPtr->m_arrObject.back().second.push_back(XLS::BaseObjectPtr(objUnion));
+
+				//txo writing
+				auto txDrawingObj = new XLS::MsoDrawing(false);
+				txDrawingObj->rgChildRec.first = false;
+				auto textboxPtr = new ODRAW::OfficeArtClientTextbox;
+				txDrawingObj->rgChildRec.m_OfficeArtSpContainer.push_back(ODRAW::OfficeArtRecordPtr(textboxPtr));
+				std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> ObjPair;
+
+				ObjPair.first = XLS::BaseObjectPtr(txDrawingObj);
+				objectsPtr->m_arrObject.push_back(ObjPair);
+
+				auto textUnion = new XLS::TEXTOBJECT(objUnion->mso_drawing_);
+				objectsPtr->m_arrObject.back().second.push_back(XLS::BaseObjectPtr(textUnion));
+				auto textPtr = new XLS::TxO(objUnion->mso_drawing_);
+				textUnion->m_TxO = XLS::BaseObjectPtr(textPtr);
+				if(m_oText.IsInit())
+				{
+					auto extendedText  = m_oText->toXLS();
+					auto castedText = static_cast<XLS::XLUnicodeRichExtendedString*>(extendedText.get());
+					textPtr->rawText = castedText->str_;
+					textPtr->TxOruns.lastRun.cchText = castedText->str_.size();
+					{
+						XLS::RunPtr TextRun(new XLS::Run);
+						TextRun->formatRun.ich = 0;
+						TextRun->formatRun.ifnt.setValue(0);
+						textPtr->TxOruns.rgTxoRuns.push_back(TextRun);
+					}
+					for(auto i : castedText->rgRun)
+					{
+						XLS::RunPtr TextRun(new XLS::Run);
+						TextRun->formatRun.ich = i.ich;
+						TextRun->formatRun.ifnt = i.ifnt;
+						textPtr->TxOruns.rgTxoRuns.push_back(TextRun);
+					}
+
+				}
+
+			}
+			return  XLS::BaseObjectPtr(ptr);
+		}
 		EElementType CComment::getType () const
 		{
 			return et_x_Comment;
@@ -412,6 +510,24 @@ namespace OOX
 				ptr->m_COMMENTLIST = m_oCommentList->toBin();
 
 			return XLS::BaseObjectPtr{commentsStream};
+		}
+		std::vector<XLS::BaseObjectPtr> CComments::toXLS(XLS::BaseObjectPtr objectsPointer) const
+		{
+			std::vector<XLS::BaseObjectPtr> objectVector;
+			auto objectsPtr = static_cast<XLS::OBJECTS*>(objectsPointer.get());
+			if(m_oCommentList.IsInit())
+			{
+				unsigned int id = objectsPtr->m_arrObject.size();
+				for(auto i : m_oCommentList->m_arrItems)
+				{
+					std::wstring authorName = L"none";
+					if(i->m_oAuthorId.IsInit() && m_oAuthors.IsInit() && m_oAuthors->m_arrItems.size() > i->m_oAuthorId->GetValue())
+						authorName = m_oAuthors->m_arrItems.at(i->m_oAuthorId->GetValue());
+					objectVector.push_back(i->toXLS(objectsPointer, id, authorName));
+					id++;
+				}
+			}
+			return objectVector;
 		}
 		void CComments::read(const CPath& oPath)
 		{

@@ -91,7 +91,9 @@ namespace NSBinPptxRW
 			SlideNotesRels	= 45,
 			NotesRels		= 46,
 			NotesMastersRels= 47,
-			CustomProperties= 48
+			CustomProperties= 48,
+			HandoutMastersRels = 49
+
 		};
 	}
 }
@@ -146,6 +148,7 @@ namespace NSBinPptxRW
 #define GEOMETRY_TYPE_NONE				0
 #define GEOMETRY_TYPE_PRST				1
 #define GEOMETRY_TYPE_CUSTOM			2
+#define GEOMETRY_TYPE_HORIZONTALRULE	3
 
 #define GEOMETRY_TYPE_AH_NONE			0
 #define GEOMETRY_TYPE_AH_POLAR			1

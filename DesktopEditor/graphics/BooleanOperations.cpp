@@ -85,6 +85,13 @@ bool Segment::IsEmpty() const noexcept
 	return Id == 0 && Index == -1 && P.IsZero() && HI.IsZero() && HO.IsZero();
 }
 
+bool Segment::Equals(const Segment& other) const noexcept
+{
+	return isZero(P.X - other.P.X) && isZero(P.Y - other.P.Y) &&
+		   isZero(HI.X - other.HI.X) && isZero(HI.Y - other.HI.Y) &&
+		   isZero(HO.X - other.HO.X) && isZero(HO.Y - other.HO.Y);
+}
+
 bool Segment::operator==(const Segment& other) const noexcept
 {
 	return (Index == other.Index) && (Id == other.Id);
@@ -690,6 +697,12 @@ bool Curve::IsStraight() const noexcept
 	return !Segment2.IsCurve;
 }
 
+bool Curve::Equals(const Curve& other) const noexcept
+{
+	return Segment1.Equals(other.Segment1) &&
+		   Segment2.Equals(other.Segment2);
+}
+
 bool Curve::operator==(const Curve& other) const noexcept
 {
 	return Segment1 == other.Segment1 &&
@@ -737,11 +750,13 @@ CBooleanOperations::CBooleanOperations(const CGraphicsPath& path1,
 									   const CGraphicsPath& path2,
 									   BooleanOpType op,
 									   long fillType,
-									   bool isLuminosity) :
+									   bool isLuminosity,
+									   bool isSelf) :
 	Op(op),
 	Close1(path1.Is_poly_closed()),
 	Close2(path2.Is_poly_closed()),
 	IsLuminosity(isLuminosity),
+	IsSelf(isSelf),
 	FillType(fillType),
 	Path1(path1),
 	Path2(path2)
@@ -768,16 +783,25 @@ bool CBooleanOperations::IsSelfInters(const CGraphicsPath& p)
 
 	GetIntersection();
 
-	return !Locations.empty();
+	if (Locations.empty())
+		return false;
+	else
+	{
+		for (const auto& l : Locations)
+		{
+			if (!isZero(l->Time) && !isZero(l->Time - 1.0) && l->C.Segment2.Index != l->Inters->C.Segment1.Index)
+				return true;
+		}
+	}
+	return false;
 }
 
 void CBooleanOperations::TraceBoolean()
 {
 	bool reverse = false;
-	bool self = Path1 == Path2;
 	if (((Op == Subtraction || Op == Exclusion) ^
 		 Path1.IsClockwise() ^
-		 Path2.IsClockwise()) && !self)
+		 Path2.IsClockwise()) && !IsSelf)
 		reverse = true;
 
 	PreparePath(Path1, 1, Segments1, Curves1);
@@ -788,7 +812,7 @@ void CBooleanOperations::TraceBoolean()
 
 	GetIntersection();
 
-	if (self)
+	if (IsSelf)
 	{
 		if (Op == Subtraction)
 			return;
@@ -813,8 +837,13 @@ void CBooleanOperations::TraceBoolean()
 		CreateNewPath(adj_matr);
 		return;
 	}
+	else if (Path1 == Path2)
+	{
+		Result = std::move(Path1);
+		return;
+	}
 
-	if (!Locations.empty())
+	if (!Locations.empty() && !IsOnlyEnds())
 	{
 		int length = static_cast<int>(Locations.size());
 		for (int i = 0; i < length; i++)
@@ -1188,7 +1217,10 @@ void CBooleanOperations::TracePaths()
 				Segment tmp = GetNextSegment(prev.Inters->S);
 				if (tmp.IsEmpty()) break;
 				if (tmp.IsValid(Op))
+				{
 					s = tmp;
+					valid = true;
+				}
 			}
 
 			if (!valid && prev.Inters)
@@ -1419,7 +1451,7 @@ void CBooleanOperations::CreateNewPath(const std::vector<std::vector<int>>& adjM
 			break;
 
 		auto add_seg = [&](int x, int prev_x) {
-			for (size_t j = adjMatr[x].size() - 1; j >= 0; j--)
+			for (int j = adjMatr[x].size() - 1; j >= 0; j--)
 			{
 				int ver = adjMatr[x][j];
 				if (seg_visited[ver] || ver == prev_x)
@@ -1514,7 +1546,7 @@ void CBooleanOperations::CreateNewPath(const std::vector<std::vector<int>>& adjM
 						return j;
 					}
 				}
-				x = x + 1;
+				x = (x >= Curves1.size() - 1) ? 0 : x + 1;
 				prev_x = -1;
 				if (Curves1[x].Segment2.IsCurve)
 					Result.CurveTo(Curves1[x].Segment2.HI.X + Curves1[x].Segment2.P.X, Curves1[x].Segment2.HI.Y + Curves1[x].Segment2.P.Y,
@@ -1826,7 +1858,7 @@ void CBooleanOperations::GetCurveIntersection(const Curve& curve1, const Curve& 
 				AddCurveIntersection(flip ? curve2 : curve1, flip ? curve1 : curve2,
 									 flip ? curve2 : curve1, flip ? curve1 : curve2, flip);
 
-			if (Locations.size() == before && (!straight || Locations.empty()))
+			if (Locations.size() == before && (!straight /*|| Locations.empty()*/))
 			{
 				double t = curve2.GetTimeOf(curve1.Segment1.P);
 				if (t != -1.0)
@@ -2039,17 +2071,27 @@ bool CBooleanOperations::IsInside(const Segment& segment) const
 
 void CBooleanOperations::SetWinding()
 {
-	if (Locations.empty() || (Locations.size() == 2 && Locations[0]->Ends))
+	if (Locations.empty() || (Locations.size() == 2 && Locations[0]->Ends) || IsOnlyEnds())
 	{
-		Segment s1, s2;
+		Segment s1 = Segments1[0], s2 = Segments2[0];
 
 		for (const auto& s : Segments1)
-			if (!s.Inters)
+		{
+			bool skip = false;
+			for (const auto& ss : Segments2)
+				skip = skip || !s.Equals(ss);
+			if (!s.Inters && !skip)
 				s1 = s;
+		}
 
 		for (const auto& s : Segments2)
-			if (!s.Inters)
+		{
+			bool skip = false;
+			for (const auto& ss : Segments1)
+				skip = skip || !s.Equals(ss);
+			if (!s.Inters && !skip)
 				s2 = s;
+		}
 
 		bool winding = IsInside(s1);
 
@@ -2266,8 +2308,8 @@ bool CBooleanOperations::IsOneCurvePath(int pathIndex) const noexcept
 void CBooleanOperations::AddLocation(Curve curve1, Curve curve2, double t1,
 									 double t2, bool overlap, bool filter, bool ends)
 {
-	bool	excludeStart = !overlap &&	GetPreviousCurve(curve1) == curve2,
-			excludeEnd = !overlap && curve1 != curve2 && GetNextCurve(curve1) == curve2;
+	bool	excludeStart = !overlap &&	GetPreviousCurve(curve1).Equals(curve2),
+			excludeEnd = !overlap && curve1 != curve2 && GetNextCurve(curve1).Equals(curve2);
 	double	tMin = CURVETIME_EPSILON,
 			tMax = 1 - tMin;
 
@@ -2326,6 +2368,18 @@ bool CBooleanOperations::CheckLocation(std::shared_ptr<Location> loc, bool start
 	return false;
 }
 
+bool CBooleanOperations::IsOnlyEnds() const noexcept
+{
+	bool onlyEnds1 = true;
+	bool onlyEnds2 = true;
+	for (const auto& l : Locations)
+	{
+		onlyEnds1 = onlyEnds1 && l->Ends;
+		onlyEnds2 = onlyEnds2 && l->Inters->Ends;
+	}
+	return onlyEnds1 || onlyEnds2;
+}
+
 CGraphicsPath CalcBooleanOperation(const CGraphicsPath& path1,
 								   const CGraphicsPath& path2,
 								   BooleanOpType op,
@@ -2335,17 +2389,19 @@ CGraphicsPath CalcBooleanOperation(const CGraphicsPath& path1,
 	std::vector<CGraphicsPath>	paths1 = path1.GetSubPaths(),
 								paths2 = path2.GetSubPaths(),
 								paths;
-
+	int skip_end1 = -1;
 	for (size_t i = 0; i < paths2.size(); i++)
 	{
+		int  skip_end2 = -1;
 		CBooleanOperations o;
-		if (o.IsSelfInters(paths2[i]))
+		if (i > skip_end2 && o.IsSelfInters(paths2[i]))
 		{
-			CBooleanOperations operation(paths2[i], paths2[i], Intersection, fillType, isLuminosity);
+			CBooleanOperations operation(paths2[i], paths2[i], Intersection, fillType, isLuminosity, true);
 			CGraphicsPath p = std::move(operation.GetResult());
 
 			std::vector<CGraphicsPath> tmp_paths = p.GetSubPaths();
 			paths2[i] = tmp_paths[0];
+			skip_end2 = i + tmp_paths.size() - 1;
 			for (size_t k = 1; k < tmp_paths.size(); k++)
 				paths2.insert(paths2.begin() + i + k, tmp_paths[k]);
 		}
@@ -2353,18 +2409,19 @@ CGraphicsPath CalcBooleanOperation(const CGraphicsPath& path1,
 		for (size_t j = 0; j < paths1.size(); j++)
 		{
 			CBooleanOperations o2;
-			if (o2.IsSelfInters(paths1[j]))
+			if (j > skip_end1 && o2.IsSelfInters(paths1[j]))
 			{
-				CBooleanOperations operation(paths1[j], paths1[j], Intersection, fillType, isLuminosity);
+				CBooleanOperations operation(paths1[j], paths1[j], Intersection, fillType, isLuminosity, true);
 				CGraphicsPath p = std::move(operation.GetResult());
 
 				std::vector<CGraphicsPath> tmp_paths = p.GetSubPaths();
 				paths1[j] = tmp_paths[0];
+				skip_end1 = j + tmp_paths.size() - 1;
 				for (size_t k = 1; k < tmp_paths.size(); k++)
 					paths1.insert(paths1.begin() + i + k, tmp_paths[k]);
 			}
 
-			CBooleanOperations operation(paths1[j], paths2[i], op, fillType, isLuminosity);
+			CBooleanOperations operation(paths1[j], paths2[i], op, fillType, isLuminosity, false);
 			paths.push_back(operation.GetResult());
 		}
 
@@ -2378,17 +2435,17 @@ CGraphicsPath CalcBooleanOperation(const CGraphicsPath& path1,
 	return op == Subtraction ? CGraphicsPath(paths1) : CGraphicsPath(paths);
 }
 
-//For unit-tests
-bool CGraphicsPath::operator==(const CGraphicsPath& other) noexcept
+// For Unit-tests
+bool CGraphicsPath::Equals(const CGraphicsPath& other) noexcept
 {
 	unsigned pointsCount = GetPointCount(),
-			 otherPointsCount = other.GetPointCount();
+		otherPointsCount = other.GetPointCount();
 
 	if (pointsCount != otherPointsCount)
 		return false;
 
 	std::vector<PointD> points = GetPoints(0, pointsCount),
-						otherPoints = other.GetPoints(0, otherPointsCount);
+		otherPoints = other.GetPoints(0, otherPointsCount);
 
 	for (unsigned i = 0; i < pointsCount; i++)
 		if (getDistance(points[i], otherPoints[i]) > POINT_EPSILON)

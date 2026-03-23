@@ -356,9 +356,6 @@ namespace SimpleTypes
 	public:
 		CDateTime();
 
-		std::wstring GetValue() const;
-		void    SetValue(const std::wstring &sValue);
-
 		std::wstring FromString(const std::wstring &sValue);
 		std::wstring ToString  () const;
 
@@ -832,7 +829,8 @@ namespace SimpleTypes
 	{
 		complexFormTypeCustom    = 0,
 		complexFormTypeTelephone = 1,
-		complexFormTypeEmail     = 2
+		complexFormTypeEmail     = 2,
+		complexFormTypeLabeledCheckBox = 3
 	};	
 
 	DEFINE_SIMPLE_TYPE_START(CComplexFormType, EComplexFormType, complexFormTypeCustom)

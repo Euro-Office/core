@@ -438,7 +438,18 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 	chart_context.set_title		(title_, sub_title_);
 	chart_context.set_wall		(wall_);
 	chart_context.set_floor		(floor_);
-	chart_context.set_legend	(legend_);
+
+	_CP_OPT(double) rel_x, rel_y, rel_width, rel_height;
+
+	if( width_pt_ > 0 && height_pt_ > 0 )
+	{
+		if( legend_.x ) rel_x = *legend_.x / width_pt_;
+		if( legend_.y ) rel_y = *legend_.y / height_pt_;
+		if( legend_.width ) rel_width = *legend_.width / width_pt_;
+		if( legend_.height ) rel_height = *legend_.height / height_pt_;
+	}
+
+	chart_context.set_legend	( legend_, rel_x, rel_y, rel_width, rel_height );
 	chart_context.set_data_table(data_table_);
 
 	chart_context.set_plot_area_properties (plot_area_.properties_, plot_area_.fill_);
@@ -617,7 +628,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		if	(a.dimension_ == L"y" && y_enabled)continue;
 		if	(a.dimension_ == L"z" && z_enabled)continue;
 
-		if	(a.dimension_ == L"x")//могут быть типы 1, 2, 3, 4
+		if	(a.dimension_ == L"x")
 		{			
 			if (last_set_class == chart_class::scatter ||
 				last_set_class == chart_class::bubble) a.type_ = 2;
@@ -637,9 +648,6 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 			a.type_ = 2;
 			if (last_set_class == chart_class::bar)
 			{
-				//вот нахрена свойства относящиеся к серии и самому чарту воткнули в оси ???? (ооо писали идиеты???)
-				//или это банальная ошибка которую так никогда и не исправили???
-				//overlap & gap-width
 				oox::oox_chart_ptr current = chart_context.get_current_chart();
 				current->set_graphic_properties(a.graphic_properties_);
 			}
@@ -653,7 +661,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 			z_enabled = true;
 		}
 
-		chart_context.add_axis(a.type_, a);
+		chart_context.add_axis(a);
 	}
 
 	if (bIs3D.get_value_or(false))
@@ -663,7 +671,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 			chart::axis a;
 			a.type_ = 0;	// blank
 
-			chart_context.add_axis(a.type_, a);
+			chart_context.add_axis(a);
 		}
 		chart_context.set_3D_chart (true);
 	}
@@ -991,6 +999,17 @@ void process_build_object::visit(chart_legend& val)
 		//if ( pos == L"center")		object_odf_context_.legend_.align = L"l"; 
 		//if ( pos == L"end")			object_odf_context_.legend_.align = L"t"; 
 	}
+	if (val.attlist_.common_draw_position_attlist_.svg_x_)
+		    object_odf_context_.legend_.x = val.attlist_.common_draw_position_attlist_.svg_x_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_position_attlist_.svg_y_)
+		object_odf_context_.legend_.y = val.attlist_.common_draw_position_attlist_.svg_y_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_size_attlist_.svg_width_)
+		object_odf_context_.legend_.width = val.attlist_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_size_attlist_.svg_height_)
+		object_odf_context_.legend_.height = val.attlist_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt);
 	
 	ApplyChartProperties	(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""),	object_odf_context_.legend_.properties_);
 	ApplyGraphicProperties	(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""),	object_odf_context_.legend_.graphic_properties_, object_odf_context_.legend_.fill_);
@@ -1020,6 +1039,15 @@ void process_build_object::visit(chart_axis& val)
     object_odf_context_.start_axis(val.attlist_.chart_dimension_.get_value_or(L""),
 							val.attlist_.chart_name_.get_value_or(L""),
 							val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""));
+
+	if (val.attlist_.axis_type_)
+	{
+		if (val.attlist_.axis_type_->get_type() == odf_types::chart_axis_type::date)
+			object_odf_context_.axises_.back().type_ = 4;
+		else if (val.attlist_.axis_type_->get_type() == odf_types::chart_axis_type::text)
+			object_odf_context_.axises_.back().type_ = 1;
+
+	}
 
     ACCEPT_ALL_CONTENT(val.content_);
 
@@ -1124,11 +1152,11 @@ void process_build_object::visit(chart_mean_value & val)
 }
 void process_build_object::visit(chart_date_scale & val)
 {
-	object_odf_context_.axises_.back().type_ = 4;
+	//...
 }
 void process_build_object::visit(chartooo_date_scale & val)
 {
-	object_odf_context_.axises_.back().type_ = 4;
+	//...
 }
 void process_build_object::visit(chart_error_indicator & val)
 {

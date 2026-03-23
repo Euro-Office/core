@@ -37,6 +37,7 @@
 
 namespace SimpleTypes
 {
+	class CGuid;
 	namespace Spreadsheet
 	{
 		class CSortMethod;
@@ -68,7 +69,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSortRule)
-			CSortRule(){}
+			CSortRule(OOX::Document* pMain = NULL) : WritingElement(pMain) {}
 			virtual ~CSortRule(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -82,10 +83,8 @@ namespace OOX
 			{
 				return et_x_SortRule;
 			}
-			//Attributes
 			nullable_uint m_oColId;
-			nullable_string m_oId;
-			//Members
+			nullable<SimpleTypes::CGuid> m_oId;
 			nullable<CDxf> m_oDxf;
 //			nullable<CRichSortCondition> m_oRichSortCondition;
 			nullable<CSortCondition> m_oSortCondition;
@@ -94,7 +93,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSortRules)
-			CSortRules(){}
+			CSortRules(OOX::Document* pMain = NULL) : WritingElementWithChilds<CSortRule>(pMain) {}
 			virtual ~CSortRules(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -108,17 +107,17 @@ namespace OOX
 			{
 				return et_x_SortRules;
 			}
-			//Attributes
+
 			nullable<SimpleTypes::Spreadsheet::CSortMethod> m_oSortMethod;//none
 			nullable_bool m_oCaseSensitive;//False
-			//Members
+
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_oExtLst;
 		};
 		class CColumnFilter : public WritingElementWithChilds<CFilterColumn>
 		{
 		public:
 			WritingElement_AdditionMethods(CColumnFilter)
-			CColumnFilter(){}
+			CColumnFilter(OOX::Document* pMain = NULL) : WritingElementWithChilds<CFilterColumn>(pMain) {}
 			virtual ~CColumnFilter(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -143,7 +142,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNsvFilter)
-			CNsvFilter(){}
+			CNsvFilter(OOX::Document* pMain = NULL) : WritingElementWithChilds<CColumnFilter>(pMain) {}
 			virtual ~CNsvFilter(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -157,11 +156,10 @@ namespace OOX
 			{
 				return et_x_NsvFilter;
 			}
-			//Attributes
-			nullable_string m_oFilterId;
+			nullable<SimpleTypes::CGuid> m_oFilterId;
 			nullable_string m_oRef;
 			nullable_uint m_oTableId;
-			//Members
+
 			nullable<CSortRules> m_oSortRules;
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_oExtLst;
 		};
@@ -169,7 +167,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CNamedSheetView)
-			CNamedSheetView(){}
+			CNamedSheetView(OOX::Document* pMain = NULL) : WritingElementWithChilds<CNsvFilter>(pMain) {}
 			virtual ~CNamedSheetView(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}
@@ -183,17 +181,16 @@ namespace OOX
 			{
 				return et_x_NamedSheetView;
 			}
-			//Attributes
 			nullable_string m_oName;
-			nullable_string m_oId;
-			//Members
+			nullable<SimpleTypes::CGuid> m_oId;
+
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_oExtLst;
 		};
 		class CNamedSheetViews : public WritingElementWithChilds<CNamedSheetView>
 		{
 		public:
 			WritingElement_AdditionMethods(CNamedSheetViews)
-			CNamedSheetViews(){}
+			CNamedSheetViews(OOX::Document* pMain = NULL) : WritingElementWithChilds<CNamedSheetView>(pMain) {}
 			virtual ~CNamedSheetViews(){}
 			virtual void fromXML(XmlUtils::CXmlNode& node){}
 			virtual std::wstring toXML() const{return L"";}

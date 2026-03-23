@@ -102,6 +102,17 @@ namespace OOX
 		class CMdxSet;
 		class CMetadataStrings;
 		class CMetadataStringIndex;
+
+		class CRichValueData;
+		class CRichValue;
+		class CRichValueFallback;
+		class CRichValueStructures;
+		class CRichValueStructure;
+		class CRichValueTypesInfo;
+		class CRichValueTypeReservedKey;
+		class CRichValueType;
+		class CRichValueTypeReservedKey;
+		class CRichValueTypeKeyFlags;
 	}
 }
 
@@ -265,6 +276,16 @@ namespace BinXlsxRW
 		void WriteMdxKPI(OOX::Spreadsheet::CMdxKPI* pMdxKPI);
 		void WriteMdxMemeberProp(OOX::Spreadsheet::CMdxMemeberProp* pMdxMemeberProp);
 		void WriteMetadataStringIndex(OOX::Spreadsheet::CMetadataStringIndex* pStringIndex);
+
+		void WriteRichValueData(OOX::Spreadsheet::CRichValueData* pData);
+		void WriteRichValue(OOX::Spreadsheet::CRichValue* pData);
+		void WriteRichValueFallback(OOX::Spreadsheet::CRichValueFallback* pData);
+		void WriteRichValueStructures(OOX::Spreadsheet::CRichValueStructures* pStructures);
+		void WriteRichValueStructure(OOX::Spreadsheet::CRichValueStructure* pStructure);
+		void WriteRichValueTypes(OOX::Spreadsheet::CRichValueTypesInfo* pTypesInfo);
+		void WriteRichValueType(OOX::Spreadsheet::CRichValueType* pTypeInfo);
+		void WriteRichValueTypeKeyFlags(OOX::Spreadsheet::CRichValueTypeKeyFlags* pKeyFlags);
+		void WriteRichValueTypeReservedKey(OOX::Spreadsheet::CRichValueTypeReservedKey* pReservedKey);
 	};
 	class BinaryPersonTableWriter
 	{
@@ -348,11 +369,11 @@ namespace BinXlsxRW
 		void WritemRowColBreaks(const OOX::Spreadsheet::CRowColBreaks& oRowColBreaks);		
 		void WritemBreak(const OOX::Spreadsheet::CBreak& oBreak);
 		void WriteConditionalFormattings(std::vector<OOX::Spreadsheet::CConditionalFormatting*>& arrConditionalFormatting,
-			std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
+			std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
 		void WriteConditionalFormatting(const OOX::Spreadsheet::CConditionalFormatting& oConditionalFormatting,
-			std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
+			std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
 		void WriteConditionalFormattingRule(const OOX::Spreadsheet::CConditionalFormattingRule& oConditionalFormattingRule,
-			std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
+			std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt);
 		void WriteColorScale(const OOX::Spreadsheet::CColorScale& oColorScale);
 		void WriteDataBar(const OOX::Spreadsheet::CDataBar& oDataBar);
 		void WriteIconSet(const OOX::Spreadsheet::CIconSet& oIconSet);

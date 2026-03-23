@@ -164,9 +164,10 @@ namespace Oox2Odf
         virtual std::wstring						find_link_by_id (const std::wstring & sId, int t, bool & bExternal);
 		virtual NSCommon::smart_ptr<OOX::File>		find_file_by_id (const std::wstring & sId);
 
-		void			convert		(OOX::WritingElement *oox_unknown);		
-		std::wstring	dump_text	(OOX::WritingElement *oox_unknown);
-    private:
+		void convert(OOX::WritingElement *oox_unknown);		
+		void convert(OOX::Logic::CSdtContent* oox_sdt);
+		std::wstring dump_text(OOX::WritingElement *oox_unknown);
+	private:
 		bool current_bidi_set = false;
 		struct _section
 		{
@@ -195,14 +196,13 @@ namespace Oox2Odf
 		void convert_comment		(int oox_comm_id);
         void convert_hdr_ftr		(std::wstring sId);
 
-		void convert(OOX::Logic::CSdtContent			*oox_sdt);
 		void convert(OOX::Logic::CBackground			*oox_background, int type);
 		void convert(OOX::Logic::CBgPict				*oox_background, int type);
 		void convert(OOX::Logic::CSdt					*oox_sdt);
 		void convert(OOX::Logic::CSectionProperty		*oox_section_pr, bool bSection, const std::wstring & master_name = L"", bool bAlways = false);
 		void convert(OOX::Logic::CParagraph				*oox_paragraph);
 		void convert(OOX::Logic::CRun					*oox_run);
-		void convert(OOX::Logic::CParagraphProperty		*oox_para_prop,	odf_writer::paragraph_format_properties	*paragraph_properties, odf_writer::text_format_properties* text_properties);
+		void convert(OOX::Logic::CParagraphProperty		*oox_para_prop,	odf_writer::paragraph_format_properties	*paragraph_properties, odf_writer::text_format_properties* text_properties, bool is_default_style_par_props);
 		void convert(ComplexTypes::Word::CFramePr		*oox_frame_pr,	odf_writer::paragraph_format_properties	*paragraph_properties);
 		void convert(OOX::Logic::CRunProperty			*oox_run_prop,	odf_writer::text_format_properties		*text_properties, bool is_para_props = false);
 		void convert(OOX::Logic::CFldSimple				*oox_fld);

@@ -82,6 +82,12 @@ namespace chart {
     {
 		std::wstring position;
 		std::wstring align;
+
+		// значения в pt
+		_CP_OPT(double) x;
+		_CP_OPT(double) y;
+		_CP_OPT(double) width;
+		_CP_OPT(double) height;
 	};
 	struct plot_area : public simple
     {
@@ -102,7 +108,7 @@ namespace chart {
 			graphic_format_properties_ptr graphic_properties_;
 		};
 		bool bCategories_ = false;
-		
+
 		title title_;
         
 		std::wstring		dimension_;

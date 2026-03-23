@@ -179,6 +179,22 @@ namespace PdfWriter
 		m_bUTF16     = isUTF16;
 		m_bDictValue = isDictValue;
 	}
+	void CStringObject::Add(const char* sValue)
+	{
+		if (!sValue || !*sValue)
+			return;
+
+		unsigned int unAppendLen = StrLen(sValue, LIMIT_MAX_STRING_LEN);
+		BYTE* pNewValue = new BYTE[m_unLen + unAppendLen + 1];
+		if (m_unLen > 0)
+			StrCpy((char*)pNewValue, (char*)m_pValue, (char*)(pNewValue + m_unLen));
+		StrCpy((char*)(pNewValue + m_unLen), (char*)sValue, (char*)(pNewValue + m_unLen + unAppendLen));
+
+		if (m_pValue)
+			delete[] m_pValue;
+		m_pValue = pNewValue;
+		m_unLen += unAppendLen;
+	}
 	//----------------------------------------------------------------------------------------
 	// CBinaryObject
 	//----------------------------------------------------------------------------------------
@@ -214,6 +230,32 @@ namespace PdfWriter
 		}
 		else
 			m_pValue = pValue;
+	}
+	void CBinaryObject::Add(BYTE* pValue, unsigned int unLen)
+	{
+		if (!pValue || !unLen)
+			return;
+		unLen = std::min((unsigned int)LIMIT_MAX_STRING_LEN, unLen);
+		if (!m_pValue || m_unLen == 0)
+		{
+			Set(pValue, unLen, true);
+			return;
+		}
+
+		if (m_unLen + unLen > (unsigned int)LIMIT_MAX_STRING_LEN)
+		{
+			unLen = (unsigned int)LIMIT_MAX_STRING_LEN - m_unLen;
+			if (unLen == 0)
+				return;
+		}
+
+		BYTE* pNewValue = new BYTE[m_unLen + unLen];
+		MemCpy(pNewValue, m_pValue, m_unLen);
+		MemCpy(pNewValue + m_unLen, pValue, unLen);
+		if (m_pValue)
+			delete[] m_pValue;
+		m_pValue = pNewValue;
+		m_unLen += unLen;
 	}
 	//----------------------------------------------------------------------------------------
 	// CProxyObject
@@ -424,6 +466,21 @@ namespace PdfWriter
 		pArray->Add(dB);
 		pArray->Add(dR);
 		pArray->Add(dT);
+
+		return pArray;
+	}
+	CArrayObject* CArrayObject::CreateMatrix(double* m)
+	{
+		CArrayObject* pArray = new CArrayObject();
+		if (!pArray)
+			return NULL;
+
+		pArray->Add(m[0]);
+		pArray->Add(m[1]);
+		pArray->Add(m[2]);
+		pArray->Add(m[3]);
+		pArray->Add(m[4]);
+		pArray->Add(m[5]);
 
 		return pArray;
 	}
@@ -746,6 +803,13 @@ namespace PdfWriter
 		while (oCoreReader.ReadNextSiblingNode(nDeath))
 			ReadDict(oCoreReader, this);
 	}
+	void CDictObject::ClearStream()
+	{
+		m_unFilter    = STREAM_FILTER_NONE;
+		m_unPredictor = STREAM_PREDICTOR_NONE;
+		if (m_pStream)
+			m_pStream->Clear();
+	}
 	//----------------------------------------------------------------------------------------
 	// CXref
 	//----------------------------------------------------------------------------------------
@@ -827,10 +891,7 @@ namespace PdfWriter
 
 		while (pXref)
 		{
-			if (pXref->m_arrEntries.size() + pXref->m_unStartOffset <= nObjectId)
-				return NULL;
-
-			if (pXref->m_unStartOffset <= nObjectId)
+			if (pXref->m_unStartOffset <= nObjectId && pXref->m_arrEntries.size() + pXref->m_unStartOffset > nObjectId)
 			{
 				for (unsigned int unIndex = 0, nCount = pXref->m_arrEntries.size(); unIndex < nCount; unIndex++)
 				{
@@ -858,6 +919,37 @@ namespace PdfWriter
 		}
 
 		return NULL;
+	}
+	void CXref::Add(CObjectBase* pObject)
+	{
+		if (!pObject)
+			return;
+
+		if (pObject->IsDirect() || pObject->IsIndirect())
+			return;
+
+		if (m_arrEntries.size() >= LIMIT_MAX_XREF_ELEMENT)
+		{
+			RELEASE_OBJECT(pObject);
+			return;
+		}
+
+		// В случае ошибки r объектe нужно применить dispose
+		TXrefEntry* pEntry = new TXrefEntry;
+		if (NULL == pEntry)
+		{
+			RELEASE_OBJECT(pObject);
+			return;
+		}
+
+		m_arrEntries.push_back(pEntry);
+
+		pEntry->nEntryType   = IN_USE_ENTRY;
+		pEntry->unByteOffset = 0;
+		pEntry->unGenNo      = 0;
+		pEntry->pObject      = pObject;
+		pObject->SetIndirect();
+		pObject->SetXrefEntry(pEntry);
 	}
 	void CXref::Add(CObjectBase* pObject, unsigned int unObjectGen)
 	{
@@ -887,7 +979,7 @@ namespace PdfWriter
 		pEntry->unByteOffset = 0;
 		pEntry->unGenNo      = unObjectGen;
 		pEntry->pObject      = pObject;
-		pObject->SetRef(0, pEntry->unGenNo);
+		pObject->SetRef(m_unStartOffset + m_arrEntries.size() - 1, pEntry->unGenNo);
 		pObject->SetIndirect();
 		pObject->SetXrefEntry(pEntry);
 	}

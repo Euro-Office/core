@@ -1,4 +1,4 @@
-/*
+﻿/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -31,6 +31,8 @@
  */
 
 #include "Ln.h"
+#include "Colors/SchemeClr.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/LineFormat.h"
 
 namespace PPTX
 {
@@ -41,8 +43,6 @@ namespace PPTX
 		}
 		void Ln::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			//m_eDashType   = OOX::Drawing::linedashtypeUnknown;
-
 			m_name = oReader.GetName();
 
 			ReadAttributes( oReader );
@@ -68,7 +68,8 @@ namespace PPTX
 				else if (	L"gradFill"	== sName ||
 							L"noFill"	== sName ||
 							L"pattFill"	== sName ||
-							L"solidFill"	== sName )
+							L"solidFill"== sName ||
+							L"blipFill" == sName)
 				{
 					Fill.fromXML(oReader);
 				}
@@ -315,6 +316,74 @@ namespace PPTX
 			}
 
 			pReader->Seek(_end_rec);
+		}
+		XLS::BaseObjectPtr Ln::toXLS()
+		{
+			auto ptr = new XLS::LineFormat;
+			if(w.IsInit())
+			{
+				switch(w.get())
+				{
+					case 3175:		ptr->we = 0xFFFF;	break; //Hairline
+					case 12700:		ptr->we = 0;	break; //single
+					case 25400:		ptr->we = 1;	break; //double
+					case 38100:		ptr->we = 2;	break; //triple
+				}
+			}
+			if(Fill.is_init())
+			{
+				if(Fill.m_type == UniFill::Type::noFill)
+					ptr->lns = 5;
+				else if(prstDash.IsInit() && prstDash->val.IsInit())
+				{
+					if(Fill.m_type == UniFill::Type::solidFill)
+					{
+						auto solid = dynamic_cast<PPTX::Logic::SolidFill*>(Fill.Fill.GetPointer());
+						if(solid->Color.Color.IsInit() && solid->Color.is<PPTX::Logic::SchemeClr>())
+						{
+							auto scheme = static_cast<PPTX::Logic::SchemeClr*>( solid->Color.Color.GetPointer());
+							if(scheme->val.get() == L"tx1")
+							{
+								ptr->icv = 12;
+							}
+							else if(scheme->val.get() == L"bg1")
+							{
+								ptr->icv= 0x4E;
+								ptr->rgb.blue = 0xff;
+								ptr->rgb.red = 0xff;
+								ptr->rgb.green = 0xff;
+							}
+							else if(scheme->val.get() == L"accent1")
+							{
+								ptr->icv = 0x30;
+								ptr->rgb.blue = 0xC4;
+								ptr->rgb.red = 0x44;
+								ptr->rgb.green = 0x72;
+							}
+							else if(scheme->val.get() == L"accent2")
+							{
+								ptr->icv = 0x35;
+								ptr->rgb.red = 0xed;
+								ptr->rgb.green = 0x7d;
+								ptr->rgb.blue = 0x31;
+							}
+						}
+					}
+					if(prstDash->val->get() == L"dash")
+						ptr->lns = 1;
+					else if(prstDash->val->get() == L"dot")
+						ptr->lns = 2;
+					else if(prstDash->val->get() == L"dashDot")
+						ptr->lns = 3;
+					else if(prstDash->val->get() == L"sysDashDotDot")
+						ptr->lns = 4;
+					else
+						ptr->lns = 0;
+				}
+				else
+					ptr->lns = 0;
+			}
+			return XLS::BaseObjectPtr(ptr);
 		}
 		void Ln::Merge(nullable<Ln>& line)const
 		{

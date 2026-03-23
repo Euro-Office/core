@@ -52,6 +52,7 @@ public:
 	CObjectsManager() : m_pDoc(NULL) {}
 
 	void AddObj(int nID, PdfWriter::CObjectBase* pObj);
+	void RemoveObj(int nID);
 	PdfWriter::CObjectBase* GetObj(int nID);
 	bool IncRefCount(int nID);
 	bool DecRefCount(int nID);
@@ -78,10 +79,9 @@ public:
 		WriteNew
 	};
 
-	CPdfEditor(const std::wstring& _wsSrcFile, const std::wstring& _wsPassword, const std::wstring& _wsDstFile, CPdfReader* _pReader, CPdfWriter* _pWriter, Mode nMode = Mode::Unknown);
+	CPdfEditor(const std::wstring& _wsSrcFile, const wchar_t* _wsPassword, const std::wstring& _wsDstFile, CPdfReader* _pReader, CPdfWriter* _pWriter, Mode nMode = Mode::Unknown);
 
 	void SetMode(Mode nMode);
-	bool IncrementalUpdates();
 
 	int  GetError();
 	void Close();
@@ -105,11 +105,17 @@ public:
 
 	bool SplitPages(const int* arrPageIndex, unsigned int unLength);
 	void AfterSplitPages();
-	bool MergePages(const std::wstring& wsPath, const std::wstring& wsPrefixForm);
+	bool MergePages(const std::wstring& wsPath);
+
+	bool PrintPages(const std::vector<bool>& arrPages, int nFlag);
 
 private:
+	bool IncrementalUpdates();
+	void NewFrom();
 	void GetPageTree(XRef* xref, Object* pPagesRefObj, PdfWriter::CPageTree* pPageParent = NULL);
 	bool SplitPages(const int* arrPageIndex, unsigned int unLength, PDFDoc* _pDoc, int nStartRefID);
+	bool ChangeFullNameParent(int nParent, const std::string& sPrefixForm, std::vector<int>& arrRename);
+	void ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pResources, int nDepth, std::vector<int>& arrUniqueResources, PdfReader::CPdfFontList* pFontList, int nStartRefID);
 
 	struct CRedactData
 	{
@@ -122,7 +128,7 @@ private:
 
 	std::wstring m_wsSrcFile;
 	std::wstring m_wsDstFile;
-	std::wstring m_wsPassword;
+	const wchar_t* m_wsPassword;
 	std::vector<CRedactData> m_arrRedact;
 	std::map<std::wstring, std::wstring> m_mFonts;
 	CObjectsManager m_mObjManager;

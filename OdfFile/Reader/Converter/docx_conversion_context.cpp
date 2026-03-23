@@ -155,7 +155,8 @@ docx_conversion_context::docx_conversion_context(odf_reader::odf_document * _odf
 	process_headers_footers_	(false),
 	current_process_comment_	(false),
 	odf_document_				(_odf_document),
-	math_context_				(_odf_document->odf_context().fontContainer(), false)
+	math_context_				(_odf_document->odf_context().fontContainer(), false),
+	num_format_context_			(_odf_document->odf_context(), true)
 {
 	mediaitems_ = boost::make_shared<mediaitems>(odf_document_->get_folder());
 	chart_drawing_handle_ =  boost::make_shared<xlsx_drawing_context_handle>(mediaitems_);
@@ -174,6 +175,26 @@ void docx_conversion_context::set_implicit_end( bool _flag ) // fix bug with con
 bool docx_conversion_context::get_implicit_end() const // fix bug with convert from docx to odt. Bug with break columns
 {
     return flag_implicit_end;
+}
+
+void docx_conversion_context::set_inside_frame( bool flag )
+{
+	inside_frame = flag;
+}
+
+bool docx_conversion_context::get_inside_frame() const
+{
+	return inside_frame;
+}
+
+void docx_conversion_context::set_scale( const int _scale )
+{
+	scale_for_framePr = _scale;
+}
+
+int docx_conversion_context::get_scale() const
+{
+	return scale_for_framePr;
 }
 
 void docx_conversion_context::set_output_document(package::docx_document * document)
@@ -1398,6 +1419,9 @@ void docx_conversion_context::process_styles()
         _Wostream << L"</w:docDefaults>";
 
 		std::wstring default_style;
+		std::wstring curr_name_of_normal_style;
+
+		bool haveNormalStyle = false;
 
 		for (size_t i = 0; i < arStyles.size(); i++)
 		{
@@ -1408,8 +1432,12 @@ void docx_conversion_context::process_styles()
                 const std::wstring id = styles_map_.get(arStyles[i]->name(), arStyles[i]->type());
 				bool bDefault = (arStyles[i]->style_class() == L"default");
 				bool bDisplayed = (arStyles[i]->type() == odf_types::style_family::Paragraph);
-                
+
 				_Wostream << L"<w:style w:styleId=\"" << id << L"\" w:type=\"" << StyleTypeOdf2Docx(arStyles[i]->type()) << L"\""; 
+
+				status_para[id] = false;
+
+				set_temp_style_name(id);
 
 				if (bDefault)  // style
 				{
@@ -1427,6 +1455,12 @@ void docx_conversion_context::process_styles()
 				_Wostream << L">";
                 
 				const std::wstring displayName = StyleDisplayName(arStyles[i]->name(), arStyles[i]->display_name(), arStyles[i]->type(), bDisplayed);
+
+				if( displayName == L"Normal" )
+				{
+					haveNormalStyle = true;
+					curr_name_of_normal_style = id;
+				}
 
 				_Wostream << L"<w:name w:val=\"" << XmlUtils::EncodeXmlString(displayName) << L"\"/>";
 
@@ -1455,6 +1489,13 @@ void docx_conversion_context::process_styles()
 				    const std::wstring nextId = styles_map_.get(next->name(), next->type());
 				    _Wostream << L"<w:next w:val=\"" << nextId << "\"/>";
 				}
+				else
+				{
+					if( !arStyles[i]->is_default() && haveNormalStyle)
+					{
+						_Wostream << L"<w:next w:val=\"" << curr_name_of_normal_style << "\"/>";
+					}
+				}
                 //else if (arStyles[i]->is_default())
                 //{
                 //    // self
@@ -1464,10 +1505,9 @@ void docx_conversion_context::process_styles()
                 if (odf_reader::style_content * content = arStyles[i]->content())
                 {
 					get_tabs_context().clear();
-					calc_tab_stops(arStyles[i].get(), get_tabs_context());
-					
+					calc_tab_stops(arStyles[i].get(), get_tabs_context());					
 					get_styles_context().start_process_style(arStyles[i].get());
-                    content->docx_convert(*this, true);
+					content->docx_convert(*this, true);
                     get_styles_context().end_process_style();
                 }
 
@@ -1796,6 +1836,14 @@ int docx_conversion_context::get_page_break_before()
 {
     return page_break_before_;
 }
+void docx_conversion_context::set_temp_style_name( const std::wstring& _name )
+{
+	temp_name = _name;
+}
+std::wstring docx_conversion_context::get_temp_style_name() const
+{
+	return temp_name;
+}
 void docx_conversion_context::add_page_properties(const std::wstring & StyleName)
 {
 	section_context::_section & s = section_context_.get_last();
@@ -2036,7 +2084,7 @@ int docx_conversion_context::process_paragraph_style(_CP_OPT(std::wstring) style
         else
         {
             const std::wstring id = styles_map_.get( styleInst->name(), styleInst->type() );
-            output_stream() << L"<w:pPr>";
+			output_stream() << L"<w:pPr>";
 
 			output_stream() << L"<w:pStyle w:val=\"" << id << L"\" />";
 
@@ -2204,7 +2252,6 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 						get_section_context().dump_.clear();
 					}
 				}
-
 				output_stream() << L"<w:pStyle w:val=\"" << id << L"\" />";
 
 				if (!get_text_tracked_context().dumpPPr_.empty())
@@ -2216,7 +2263,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 				serialize_list_properties(output_stream());
 				
 				//if ((Attr->outline_level_) && (*Attr->outline_level_ > 0))
-				if (outline_level)
+				if ( outline_level && status_para[id] == false )
 				{
 					odf_reader::list_style_container & list_styles = root()->odf_context().listStyleContainer();
 					
@@ -2224,7 +2271,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 					{
 						output_stream() << L"<w:numPr>";
 						output_stream() << L"<w:ilvl w:val=\"" << *outline_level - 1  << L"\"/>";
-						output_stream() << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>";
+						output_stream() << L"<w:numId w:val=\"" << list_styles.id_outline() << L"\"/>"; // check bug 51965
 						output_stream() << L"</w:numPr>";
 					}
 					output_stream() << L"<w:outlineLvl w:val=\"" << *outline_level << L"\"/>";
@@ -2269,7 +2316,7 @@ void docx_conversion_context::process_page_break_after(const odf_reader::style_i
             if (inst->content() && inst->content()->get_style_paragraph_properties())
             {
                 _CP_OPT(odf_types::fo_break) fo_break_val = inst->content()->get_style_paragraph_properties()->content_.fo_break_after_;
-                if (fo_break_val)
+				if (fo_break_val)
                 {
 					set_page_break_after(fo_break_val->get_type());
 					break;
@@ -2760,6 +2807,46 @@ void docx_conversion_context::add_jsaProject(const std::string &content)
 	
 	output_document_->get_word_files().add_jsaProject(content);
 	output_document_->get_content_types_file().add_or_find_default(L"bin");
+}
+
+const std::wstring docx_conversion_context::get_current_fontName()
+{
+	auto textProps = current_text_properties();
+	if( textProps )
+	{
+		if( textProps->content_.fo_font_family_ )
+		{
+			return *textProps->content_.fo_font_family_;
+		}
+		else if( textProps->content_.style_font_name_ )
+		{
+			return *textProps->content_.style_font_name_;
+		}
+	}
+
+	return L"";
+}
+
+const double docx_conversion_context::get_current_fontSize_from_default_style()
+{
+	auto defaultStyle = root()->odf_context().styleContainer().style_default_by_type(odf_types::style_family::Paragraph);
+
+	if( defaultStyle )
+	{
+		const auto content = defaultStyle->content();
+
+		if( content )
+		{
+			const auto textProps = content->get_style_text_properties();
+
+			if( textProps && textProps->content_.fo_font_size_ )
+			{
+				return textProps->content_.fo_font_size_->get_length().get_value_unit(odf_types::length::pt);
+			}
+		}
+	}
+
+	return 0.0;
 }
 
 }

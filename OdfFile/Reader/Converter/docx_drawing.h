@@ -44,10 +44,11 @@ namespace oox {
 class _docx_drawing : public _oox_drawing
 { 
 public:
-	_docx_drawing() : _oox_drawing(), parallel(0), isInline(false), inFrame(false), number_wrapped_paragraphs(0), posOffsetV(0), posOffsetH(0)
+	_docx_drawing() : _oox_drawing(), parallel(0), isInline(false), m_isChar(false), inFrame(false), number_wrapped_paragraphs(0), posOffsetV(0), posOffsetH(0)
 	{
 	}
 	bool isInline;
+	bool m_isChar;
 	bool inFrame;
     
 	unsigned int parallel;
@@ -59,11 +60,14 @@ public:
     _CP_OPT(odf_types::vertical_rel)	styleVerticalRel;
 
 	_CP_OPT(odf_types::style_wrap)		styleWrap;
+	_CP_OPT(bool)						styleWrapContour;
 
 	int number_wrapped_paragraphs;
 
     std::wstring relativeHeight;
     std::wstring behindDoc;
+
+	std::wstring hyperlinkRId;
 
 	int posOffsetV;
 	int posOffsetH;
@@ -76,7 +80,8 @@ public:
 	std::wstring content_group_;
 
 	void serialize_text	(std::wostream & strm);
-    void serialize		(std::wostream & strm/*, bool insideOtherDrawing*/);    
+	void serialize		(std::wostream & strm/*, bool insideOtherDrawing*/, oox::docx_conversion_context & Context);
+	void serialize		(std::wostream & strm/*, bool insideOtherDrawing*/);
 };
 }
 }

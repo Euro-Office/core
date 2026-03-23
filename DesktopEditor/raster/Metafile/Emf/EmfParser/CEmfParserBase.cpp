@@ -411,7 +411,7 @@ namespace MetaFile
 	}
 
 	void CEmfParserBase::DrawText(std::wstring &wsString, unsigned int unCharsCount, int _nX, int _nY,
-								  int *pnDx, int iGraphicsMode, TScale oScale)
+	                              int *pnDx, int iGraphicsMode, TScale oScale, bool bUseGID)
 	{
 		int nX = _nX;
 		int nY = _nY;
@@ -448,7 +448,7 @@ namespace MetaFile
 				}
 			}
 
-			m_pInterpretator->DrawString(wsString, unCharsCount, dX, dY, pdDx, iGraphicsMode, oScale.X, oScale.Y);
+			m_pInterpretator->DrawString(wsString, unCharsCount, dX, dY, pdDx, iGraphicsMode, oScale.X, oScale.Y, bUseGID);
 
 			if (pdDx)
 				delete[] pdDx;
@@ -480,7 +480,7 @@ namespace MetaFile
 			}
 		}
 
-		DrawText(wsText, oText.unChars, oText.oReference.X, oText.oReference.Y, pDx, iGraphicsMode, oScale);
+		DrawText(wsText, oText.unChars, oText.oReference.X, oText.oReference.Y, pDx, iGraphicsMode, oScale, oText.unOptions & 0x00000010);
 
 		if (pDx)
 			delete[] pDx;
@@ -550,7 +550,7 @@ namespace MetaFile
 		}
 
 		if (unLen)
-			DrawText(wsText, unLen, oText.oReference.X, oText.oReference.Y, pDx, iGraphicsMode, oScale);
+			DrawText(wsText, unLen, oText.oReference.X, oText.oReference.Y, pDx, iGraphicsMode, oScale, oText.unOptions & 0x00000010);
 
 		if (pDx)
 			delete[] pDx;
@@ -1264,7 +1264,11 @@ namespace MetaFile
 		
 		if (NULL != m_pPath)
 		{
-			m_pDC->GetClip()->SetPath(*m_pPath, unRegionMode, m_pDC->GetFinalTransform(GM_ADVANCED));
+			TEmfXForm oTransform{m_pDC->GetFinalTransform(GM_ADVANCED)};
+			oTransform.Dx -= GetDCBounds().Left;
+			oTransform.Dy -= GetDCBounds().Top;
+
+			m_pDC->GetClip()->SetPath(*m_pPath, unRegionMode, oTransform);
 			RELEASEOBJECT(m_pPath);
 			UpdateOutputDC();
 		}

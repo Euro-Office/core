@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../../../../raster/BgraFrame.h"
-#include "../../../../raster/ImageFileFormatChecker.h"
+#include "../../../../../raster/BgraFrame.h"
+#include "../../../../../raster/ImageFileFormatChecker.h"
 #include "../../../../../common/File.h"
 #include "../../../../../common/StringBuilder.h"
 #include "drawingfile.cpp"
@@ -704,6 +704,23 @@ void ReadInteractiveForms(BYTE* pWidgets, int& i)
 			i += 1;
 			std::cout << "Style " << arrStyle[nPathLength] << ", ";
 
+			if (nFlags & (1 << 10))
+			{
+				int nOptLength = READ_INT(pWidgets + i);
+				i += 4;
+				for (int j = 0; j < nOptLength; ++j)
+				{
+					nPathLength = READ_INT(pWidgets + i);
+					i += 4;
+					std::cout << std::to_string(j) << " Opt1 " << std::string((char*)(pWidgets + i), nPathLength) << ", ";
+					i += nPathLength;
+
+					nPathLength = READ_INT(pWidgets + i);
+					i += 4;
+					std::cout << std::to_string(j) << " Opt2 " << std::string((char*)(pWidgets + i), nPathLength) << ", ";
+					i += nPathLength;
+				}
+			}
 			if (nFlags & (1 << 14))
 			{
 				nPathLength = READ_INT(pWidgets + i);
@@ -940,6 +957,36 @@ void ReadInteractiveFormsFonts(CDrawingFile* pGrFile, int nType)
 
 			if (pFont)
 				free(pFont);
+
+			if (true)
+				continue;
+
+			pFont = GetGIDByUnicode(pGrFile, (char*)sFontName.c_str());
+			nLength2 = READ_INT(pFont);
+			i2 = 4;
+			nLength2 -= 4;
+
+			while (i2 < nLength2)
+			{
+				int nFontLength = READ_INT(pFont + i2);
+				i2 += 4;
+
+				std::cout << std::endl << "GIDtoUnicode" << std::endl;
+
+				for (int j = 0; j < nFontLength; ++j)
+				{
+					unsigned int code = READ_INT(pFont + i2);
+					i2 += 4;
+					unsigned int unicode = READ_INT(pFont + i2);
+					i2 += 4;
+					std::cout << "gid\t" << code << "\tunicode\t" << unicode << std::endl;
+				}
+
+				std::cout << std::endl;
+			}
+
+			if (pFont)
+				free(pFont);
 		}
 		std::cout << std::endl;
 	}
@@ -976,6 +1023,8 @@ bool GetFromBase64(const std::wstring& sPath, BYTE** pBuffer, int* nBufferLen)
 		if (!NSBase64::Base64Decode((const char*)pFileContent, dwFileSize, *pBuffer, nBufferLen))
 			return false;
 	}
+	else
+		return false;
 	oFile.CloseFile();
 	return true;
 }
@@ -1023,7 +1072,7 @@ int main(int argc, char* argv[])
 	if (!NSFile::CFileBinary::ReadAllBytes(sFilePath, &pFileData, nFileDataLen))
 		return 1;
 
-	CDrawingFile* pGrFile = Open(pFileData, (LONG)nFileDataLen, "");
+	CDrawingFile* pGrFile = Open(pFileData, (LONG)nFileDataLen, NULL);
 	int nError = GetErrorCode(pGrFile);
 
 	if (nError != 0)
@@ -1031,7 +1080,7 @@ int main(int argc, char* argv[])
 		Close(pGrFile);
 		if (nError == 4)
 		{
-			std::string sPassword = "123456";
+			std::string sPassword = "";
 			pGrFile = Open(pFileData, nFileDataLen, sPassword.c_str());
 		}
 		else
@@ -1049,7 +1098,7 @@ int main(int argc, char* argv[])
 		int nBufferLen = NULL;
 		BYTE* pBuffer = NULL;
 
-		if (GetFromBase64(NSFile::GetProcessDirectory() + L"/split1.txt", &pBuffer, &nBufferLen))
+		if (true && GetFromBase64(NSFile::GetProcessDirectory() + L"/split.txt", &pBuffer, &nBufferLen))
 		{
 			std::vector<int> arrPages = { 0 };
 			BYTE* pSplitPages = SplitPages(pGrFile, arrPages.data(), arrPages.size(), pBuffer, nBufferLen);
@@ -1058,40 +1107,28 @@ int main(int argc, char* argv[])
 			if (nLength > 4)
 			{
 				NSFile::CFileBinary oFile;
-				if (oFile.CreateFileW(NSFile::GetProcessDirectory() + L"/split1.pdf"))
+				if (oFile.CreateFileW(NSFile::GetProcessDirectory() + L"/split.pdf"))
 					oFile.WriteFile(pSplitPages + 4, nLength - 4);
 				oFile.CloseFile();
-
-				BYTE* pMallocData = (BYTE*)malloc(nLength - 4);
-				memcpy(pMallocData, pSplitPages + 4, nLength - 4);
-
-				MergePages(pGrFile, pMallocData, nLength - 4, 0, "merge1");
 			}
 			RELEASEARRAYOBJECTS(pSplitPages);
 		}
 		RELEASEARRAYOBJECTS(pBuffer);
 
-		if (GetFromBase64(NSFile::GetProcessDirectory() + L"/split2.txt", &pBuffer, &nBufferLen))
+		if (true)
 		{
-			std::vector<int> arrPages = { 0 };
-			BYTE* pSplitPages = SplitPages(pGrFile, arrPages.data(), arrPages.size(), pBuffer, nBufferLen);
-			int nLength = READ_INT(pSplitPages);
-
-			if (nLength > 4)
+			NSFile::CFileBinary oFile;
+			if (oFile.OpenFile(NSFile::GetProcessDirectory() + L"/split.pdf"))
 			{
-				NSFile::CFileBinary oFile;
-				if (oFile.CreateFileW(NSFile::GetProcessDirectory() + L"/split2.pdf"))
-					oFile.WriteFile(pSplitPages + 4, nLength - 4);
-				oFile.CloseFile();
+				DWORD dwFileSize = oFile.GetFileSize();
+				BYTE* pFileContent = (BYTE*)malloc(dwFileSize);
 
-				BYTE* pMallocData = (BYTE*)malloc(nLength - 4);
-				memcpy(pMallocData, pSplitPages + 4, nLength - 4);
-
-				MergePages(pGrFile, pMallocData, nLength - 4, 0, "merge2");
+				DWORD dwReaded;
+				if (oFile.ReadFile(pFileContent, dwFileSize, dwReaded))
+					MergePages(pGrFile, pFileContent, dwReaded, 0, "merge1");
 			}
-			RELEASEARRAYOBJECTS(pSplitPages);
+			oFile.CloseFile();
 		}
-		RELEASEARRAYOBJECTS(pBuffer);
 	}
 
 	// INFO
@@ -1135,26 +1172,38 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	BYTE* pColor = new BYTE[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	// REDACT
-	if (true)
+	// OWNER PASSWORD
+	if (false)
 	{
-		int pRect[4] = { 307499, 217499, 1799999, 1124999 };
+		std::string sPassword = "";
+		std::cout << "CheckPerm 4 Edit "  << CheckPerm(pGrFile, 4) << std::endl;
+		std::cout << "CheckPerm 4 Print " << CheckPerm(pGrFile, 3) << std::endl;
+
+		std::cout << "CheckOwnerPassword " << CheckOwnerPassword(pGrFile, sPassword.c_str()) << std::endl;
+		std::cout << "CheckPerm 4 Edit "  << CheckPerm(pGrFile, 4) << std::endl;
+		std::cout << "CheckPerm 4 Print " << CheckPerm(pGrFile, 3) << std::endl;
+	}
+
+	// REDACT
+	if (false)
+	{
+		BYTE* pColor = new BYTE[12] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		int pRect[8] = { 307499, 217499, 307499, 1124999, 1799999, 1124999, 1799999, 217499 };
 		if (!RedactPage(pGrFile, nTestPage, pRect, 1, pColor, 12))
 			std::cout << "Redact false" << std::endl;
 	}
 
-	int i = nTestPage;
-	//for (int i = 0; i < nPagesCount; ++i)
+	// RASTER
+	if (false)
 	{
-		// RASTER
-		if (true)
+		int i = nTestPage;
+		//for (int i = 0; i < nPagesCount; ++i)
 		{
 			nWidth  = READ_INT(pInfo + i * 16 + 12);
 			nHeight = READ_INT(pInfo + i * 16 + 16);
 
-			//nWidth  *= 3;
-			//nHeight *= 3;
+			//nWidth  *= 2;
+			//nHeight *= 2;
 
 			BYTE* res = NULL;
 			res = GetPixmap(pGrFile, i, nWidth, nHeight, 0xFFFFFF);
@@ -1174,7 +1223,7 @@ int main(int argc, char* argv[])
 	free(pInfo);
 
 	// LINKS
-	if (true && nPagesCount > 0)
+	if (false && nPagesCount > 0)
 	{
 		BYTE* pLinks = GetLinks(pGrFile, nTestPage);
 		nLength = READ_INT(pLinks);
@@ -1210,7 +1259,7 @@ int main(int argc, char* argv[])
 	}
 
 	// STRUCTURE
-	if (true)
+	if (false)
 	{
 		BYTE* pStructure = GetStructure(pGrFile);
 		nLength = READ_INT(pStructure);
@@ -1523,6 +1572,8 @@ int main(int argc, char* argv[])
 								std::cout << "; font-actual:" << std::string((char*)(pAnnots + i), nPathLength) << "; ";
 								i += nPathLength;
 							}
+							if (nFontFlag & (1 << 7))
+								std::cout << "; dir:rtl; ";
 
 							nPathLength = READ_INT(pAnnots + i);
 							i += 4;
@@ -2140,6 +2191,117 @@ int main(int argc, char* argv[])
 						std::cout << nPathLength << ", ";
 					}
 				}
+				else if (sType == "Link")
+				{
+					nFlags = READ_INT(pAnnots + i);
+					i += 4;
+					if (nFlags & (1 << 0))
+					{
+						std::cout << std::endl << "A ";
+						ReadAction(pAnnots, i);
+						std::cout << std::endl;
+					}
+					if (nFlags & (1 << 1))
+					{
+						std::cout << std::endl << "PA ";
+						ReadAction(pAnnots, i);
+						std::cout << std::endl;
+					}
+					if (nFlags & (1 << 2))
+					{
+						std::string arrHighlighting[] = {"none", "invert", "push", "outline"};
+						nPathLength = READ_BYTE(pAnnots + i);
+						i += 1;
+						std::cout << "Highlight " << arrHighlighting[nPathLength] << ", ";
+					}
+					if (nFlags & (1 << 3))
+					{
+						std::cout << "QuadPoints";
+						int nQuadPointsLength = READ_INT(pAnnots + i);
+						i += 4;
+
+						for (int j = 0; j < nQuadPointsLength; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << " " << (double)nPathLength / 100.0;
+						}
+						std::cout << ", ";
+					}
+					if (nFlags & (1 << 4))
+					{
+						std::cout << "RD";
+						for (int j = 0; j < 4; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << " " << (double)nPathLength / 100.0;
+						}
+						std::cout << ", ";
+					}
+				}
+				else if (sType == "Screen")
+				{
+					nFlags = READ_INT(pAnnots + i);
+					i += 4;
+					if (nFlags & (1 << 0))
+					{
+						nPathLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "T " << std::string((char*)(pAnnots + i), nPathLength) << ", ";
+						i += nPathLength;
+					}
+					if (nFlags & (1 << 1))
+					{
+						int nBCLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "BC ";
+
+						for (int j = 0; j < nBCLength; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << (double)nPathLength / 10000.0 << " ";
+						}
+						std::cout << ", ";
+					}
+					if (nFlags & (1 << 2))
+					{
+						nPathLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "R " << nPathLength << ", ";
+					}
+					if (nFlags & (1 << 3))
+					{
+						int nBCLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "BG ";
+
+						for (int j = 0; j < nBCLength; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << (double)nPathLength / 10000.0 << " ";
+						}
+						std::cout << ", ";
+					}
+					if (nFlags & (1 << 4))
+					{
+						int nActLength = READ_INT(pAnnots + i);
+						i += 4;
+						for (int j = 0; j < nActLength; ++j)
+						{
+							std::cout << std::endl;
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << std::to_string(j) << " Action " << std::string((char*)(pAnnots + i), nPathLength) << ", ";
+							i += nPathLength;
+
+							ReadAction(pAnnots, i);
+						}
+						std::cout << std::endl;
+					}
+				}
 
 				std::cout << std::endl << "]" << std::endl;
 			}
@@ -2162,12 +2324,13 @@ int main(int argc, char* argv[])
 			free(pAnnotAP);
 	}
 
-	// SCAN PAGE
+	// SCAN PAGE Fonts
 	if (false)
 	{
-		BYTE* pScan = ScanPage(pGrFile, nTestPage, 1);
-		if (pScan)
-			free(pScan);
+		SetScanPageFonts(pGrFile, nTestPage);
+
+		ReadInteractiveFormsFonts(pGrFile, 1);
+		ReadInteractiveFormsFonts(pGrFile, 2);
 	}
 
 	Close(pGrFile);

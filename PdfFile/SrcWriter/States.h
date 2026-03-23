@@ -45,6 +45,9 @@ namespace PdfWriter
 {
     class CPage;
     class CFontDict;
+	class CShading;
+	class CExtGrState;
+	class CDestination;
 }
 
 class CPdfWriter;
@@ -1057,6 +1060,29 @@ public:
         lCount  = m_lShadingPointsCount;
     }
 
+	inline void GetBrushScale(bool& isScale, double& scaleX, double& scaleY) const
+	{
+		isScale = m_bIsScale;
+		scaleX = m_dScaleX;
+		scaleY = m_dScaleY;
+	}
+	inline void SetBrushScale(bool isScale, const double& scaleX, const double& scaleY)
+	{
+		m_bIsScale = isScale;
+		m_dScaleX = scaleX;
+		m_dScaleY = scaleY;
+	}
+	inline void GetBrushOffset(double& offsetX, double& offsetY) const
+	{
+		offsetX = m_dOffsetX;
+		offsetY = m_dOffsetY;
+	}
+	inline void SetBrushOffset(const double& offsetX, const double& offsetY)
+	{
+		m_dOffsetX = offsetX;
+		m_dOffsetY = offsetY;
+	}
+
 	inline double* GetDColor2(int& nSize)
 	{
 		nSize = m_nColor2Size;
@@ -1088,6 +1114,12 @@ private:
     double*      m_pShadingPoints;
     LONG         m_lShadingPointsCount;
     double       m_pShadingPattern[6]; // У линейного градиента x0, y0, x1, y1 (2 не используются), у радиального x0, y0, r0, x1, y1, r1
+
+	bool         m_bIsScale;
+	double       m_dScaleX;
+	double       m_dScaleY;
+	double       m_dOffsetX;
+	double       m_dOffsetY;
 
 	double m_dColor2[4];
 	int m_nColor2Size;
@@ -1343,7 +1375,7 @@ private:
         virtual void UpdateBounds(double& dL, double& dT, double& dR, double& dB) = 0;
         virtual void GetLastPoint(double& dX, double& dY) = 0;
         virtual EPathCommandType GetType() = 0;
-		virtual void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath) = 0;
+		virtual void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath) = 0;
     };
     class CPathMoveTo : public CPathCommandBase
     {
@@ -1364,7 +1396,7 @@ private:
         {
             return rendererpathcommand_MoveTo;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
 
     public:
 
@@ -1390,7 +1422,7 @@ private:
         {
             return rendererpathcommand_LineTo;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
 
     public:
 
@@ -1420,7 +1452,7 @@ private:
         {
             return rendererpathcommand_CurveTo;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
 
     public:
 
@@ -1455,7 +1487,7 @@ private:
         {
             return rendererpathcommand_ArcTo;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
 
     public:
 
@@ -1484,7 +1516,7 @@ private:
         {
             return rendererpathcommand_Close;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
     };
     class CPathText : public CPathCommandBase
     {
@@ -1514,7 +1546,7 @@ private:
         {
             return rendererpathcommand_Text;
         }
-		void ToCGraphicsPath(const CTransform& oTransform, Aggplus::CGraphicsPath& oPath);
+		void ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath);
 
     public:
 
@@ -1590,8 +1622,9 @@ public:
     void Draw(PdfWriter::CPage* pPage, bool bStroke, bool bFill, bool bEoFill);
     void Clip(PdfWriter::CPage* pPage, bool bEvenOdd = false);
     void GetBounds(double& dL, double& dT, double& dR, double& dB);
-	void Redact(const CTransform& oTransform, const std::vector<double>& arrRedact, bool bStroke, bool bEoFill);
-	void DrawPathRedact(PdfWriter::CMatrix oMatrix, Aggplus::CGraphicsPath* oPath, bool bStroke, const std::vector<PdfWriter::CSegment>& arrForStroke = {});
+	void Redact(PdfWriter::CMatrix* oMatrix, const std::vector<double>& arrRedact, PdfWriter::CPage* pPage, bool bStroke, bool bFill, bool bEoFill,
+				PdfWriter::CShading* pShading, PdfWriter::CExtGrState* pShadingExtGrState);
+	bool DrawPathRedact(PdfWriter::CMatrix* oMatrix, Aggplus::CGraphicsPath* oPath, bool bStroke, const std::vector<PdfWriter::CSegment>& arrForStroke = {});
 
 private:
 
@@ -1633,6 +1666,7 @@ struct TDestinationInfo
 {
     TDestinationInfo(PdfWriter::CPage* page, const double& x, const double& y, const double& w, const double& h, const double& dx, const double& dy, const unsigned int& undpage)
     {
+		pDest      = NULL;
         pPage      = page;
         dX         = x;
         dY         = y;
@@ -1642,7 +1676,14 @@ struct TDestinationInfo
         dDestY     = dy;
         unDestPage = undpage;
     }
+	TDestinationInfo(PdfWriter::CDestination* dest, const unsigned int& undpage)
+	{
+		pDest      = dest;
+		pPage      = NULL;
+		unDestPage = undpage;
+	}
 
+	PdfWriter::CDestination* pDest;
     PdfWriter::CPage* pPage;
     double       dX;
     double       dY;
