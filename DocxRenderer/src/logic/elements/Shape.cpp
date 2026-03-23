@@ -637,7 +637,14 @@ namespace NSDocxRenderer
 			break;
 		}
 		oWriter.AddUInt(m_nShapeId);
-		oWriter.WriteString(L"\"/>");
+		oWriter.WriteString(L"\">");
+		if (m_bIsHyperlink)
+		{
+			oWriter.WriteString(L"<a:hlinkClick xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" r:id=\"rId");
+			oWriter.AddUInt(m_nRid);
+			oWriter.WriteString(L"\"/>");
+		}
+		oWriter.WriteString(L"</wp:docPr>");
 		oWriter.WriteString(L"<wp:cNvGraphicFramePr/>");
 		BuildSpecificProperties(oWriter);
 		oWriter.WriteString(L"</wp:anchor>");

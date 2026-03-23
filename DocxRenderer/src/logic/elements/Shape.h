@@ -46,11 +46,13 @@ namespace NSDocxRenderer
 		std::wstring m_strDstMedia    {};
 
 		double m_dRotation {0.0};
+		int m_nRid {0};
 
 		bool m_bIsNoFill    {true};
 		bool m_bIsNoStroke  {true};
 		bool m_bIsBehindDoc {true};
 		bool m_bIsUseInTable{false};
+		bool m_bIsHyperlink {false};
 
 		std::shared_ptr<CImageInfo> m_pImageInfo{nullptr};
 		double m_dImageTop{};
