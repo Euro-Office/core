@@ -30,6 +30,7 @@ LIBS += \
 HEADERS += \
 	src/logic/elements/BaseItem.h \
 	src/logic/elements/ContText.h \
+	src/logic/elements/Link.h \
 	src/logic/elements/Paragraph.h \
 	src/logic/elements/Shape.h \
 	src/logic/elements/Table.h \
@@ -55,6 +56,7 @@ HEADERS += \
 SOURCES += \
 	src/logic/elements/BaseItem.cpp \
 	src/logic/elements/ContText.cpp \
+	src/logic/elements/Link.cpp \
 	src/logic/elements/Paragraph.cpp \
 	src/logic/elements/Shape.cpp \
 	src/logic/elements/Table.cpp \
