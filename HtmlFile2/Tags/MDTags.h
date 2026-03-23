@@ -3,6 +3,7 @@
 
 #include "HTMLTags.h"
 #include "../Writers/MDWriter.h"
+#include "../Table.h"
 
 namespace HTML
 {
@@ -106,35 +107,6 @@ public:
 };
 
 template<>
-class CTable<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CTable(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CTableRow<CMDWriter> : public CTag<CMDWriter>
-{
-	UINT m_unLastRowType;
-public:
-	CTableRow(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CTableCell<CMDWriter> : public CTag<CMDWriter>
-{
-	UINT m_unNeedEmptyCells;
-public:
-	CTableCell(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
 class CList<CMDWriter> : public CTag<CMDWriter>
 {
 public:
@@ -159,6 +131,31 @@ public:
 	CCode(CMDWriter* pWriter);
 	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
 	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+};
+
+struct TElementInfo
+{
+	size_t unRows;
+	size_t unColumns;
+};
+
+class CMarkdownTable : public CTableElement
+{
+public:
+	CMarkdownTable(TExternalTableData* pExternalData);
+	virtual ~CMarkdownTable();
+
+	bool PreParse(XmlUtils::CXmlLiteReader& oReader) override;
+	void Normalize() override;
+	bool Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode& oTableNode) override;
+private:
+	bool ParseCaption(XmlUtils::CXmlLiteReader& oReader, XmlString*& pCaption) override;
+	bool ParseColgroup(XmlUtils::CXmlLiteReader& oReader, std::vector<CTableColgroup*>& arColgroups) override;
+
+	bool ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, const Table& oMatrix, CMDWriter* pWriter);
+
+	static Table Flatten(Table&& srcTable);
+	static TElementInfo ComputeInfo(const ITableElementCell* pCell);
 };
 }
 

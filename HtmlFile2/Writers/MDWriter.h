@@ -65,6 +65,8 @@ public:
 
 	XmlString* GetCurrentDocument() const override;
 
+	EWriterType GetType() const override;
+
 	bool SupportNestedTables() const override;
 
 	void WriteBreakLine(bool bNeedChecked = true);

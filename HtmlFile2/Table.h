@@ -2,9 +2,13 @@
 #define TABLE_H
 
 #include "../DesktopEditor/common/StringBuilder.h"
-#include "../Common/3dParty/html/css/src/StyleProperties.h"
-#include "../Common/3dParty/html/css/src/CNode.h"
+#include "../DesktopEditor/xml/include/xmlutils.h"
 
+#include "../Common/3dParty/html/css/src/CCssCalculator.h"
+#include "Writers/IWriter.h"
+#include "src/StringFinder.h"
+
+#include <stack>
 #include <vector>
 
 namespace HTML
@@ -12,244 +16,260 @@ namespace HTML
 #define MAXCOLUMNSINTABLE 63
 #define MAXROWSINTABLE    32767
 
-enum class ERowParseMode
+struct TCurentTablePosition
 {
-	Header,
-	Body,
-	Foother
+	size_t m_unRowIndex{0};
+	size_t m_unColumnIndex{0};
+
+	size_t m_unStartRowIndex{0};
+	size_t m_unStartColumnIndex{0};
 };
 
-enum class ERowPosition
+
+enum class ETableElement
 {
-	First,
-	Middle,
-	Last
+	FillingCell,
+	Cell,
+	FlatTable,
+	Table
 };
 
-struct TTableRowStyle
-{
-	UINT m_unMaxIndex;
-	UINT m_unMaxHeight;
-	bool m_bIsHeader;
-
-	TTableRowStyle();
-
-	bool Empty() const;
-};
-
-struct TTableCellStyle
-{
-	NSCSS::NSProperties::CDigit  m_oWidth;
-	NSCSS::NSProperties::CDigit  m_oHeight;
-	NSCSS::NSProperties::CBorder m_oBorder;
-	NSCSS::NSProperties::CIndent m_oPadding;
-	NSCSS::NSProperties::CColor  m_oBackground;
-
-	std::wstring m_wsHAlign;
-	std::wstring m_wsVAlign;
-
-	TTableCellStyle();
-
-	bool Empty();
-	void Copy(const TTableCellStyle* pTableCellStyle);
-
-	TTableCellStyle& operator+=(const TTableCellStyle* pCellStyle);
-};
-
-class CStorageTable;
-
-class CStorageTableCell
+class ITableElementCell
 {
 public:
-	CStorageTableCell();
-	CStorageTableCell(UINT unColspan, UINT unRowspan, bool bIsMerged, bool bIsEmpty);
-	CStorageTableCell(CStorageTableCell& oCell);
+	ITableElementCell() = default;
+	virtual ~ITableElementCell() = default;
 
-	bool Empty() const;
-	bool Merged() const;
-
-	CStorageTableCell* Copy();
-
-	static CStorageTableCell* CreateEmpty(UINT unColspan = 1, bool m_bIsMerged = false, const TTableCellStyle* pStyle = NULL);
-	static CStorageTableCell* CreateEmpty(const TTableCellStyle* pStyle);
-
-	void SetColspan(UINT unColspan, UINT unCurrentIndex);
-	UINT GetColspan() const;
-
-	void SetRowspan(UINT unRowspan);
-	UINT GetRowspan() const;
-
-	NSStringUtils::CStringBuilder* GetData();
-
-	const TTableCellStyle* GetStyles() const;
-	TTableCellStyle* GetStyles();
-
-	void SetWidth(const NSCSS::NSProperties::CDigit& oWidth);
-	void SetHeight(const NSCSS::NSProperties::CDigit& oHeight);
-
-	UINT GetWidth() const;
-	UINT GetHeight() const;
-
-	void SetBorder(const NSCSS::NSProperties::CBorder& oBorder);
-
-	void ClearTopBorder();
-	void ClearLeftBorder();
-	void ClearBottomBorder();
-	void ClearRightBorder();
-
-	void SetPadding(const NSCSS::NSProperties::CIndent& oPadding);
-	void SetHAlign(const std::wstring& wsAlign);
-	void SetVAlign(const std::wstring& wsAlign);
-	void SetBackground(const NSCSS::NSProperties::CColor& oColor);
-private:
-	UINT m_unColspan;
-	UINT m_unRowSpan;
-
-	bool m_bIsMerged;
-	bool m_bIsEmpty;
-
-	TTableCellStyle m_oStyles;
-	NSStringUtils::CStringBuilder m_oData;
+	virtual ETableElement GetType() const = 0;
 };
 
-class CStorageTableRow
+class CTableElementCell : public ITableElementCell
+{
+	ETableElement m_eType;
+public:
+	CTableElementCell(bool bIsFilling = false);
+	virtual ~CTableElementCell();
+
+	ETableElement GetType() const override;
+
+	void IsFlatTable();
+};
+
+class ITag;
+class IWriter;
+
+struct TExternalTableData
+{
+	typedef std::function<bool(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)> FuncReadStream;
+	typedef std::function<void(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)> FuncGetSubClass;
+
+	FuncReadStream  ReadStream;
+	FuncGetSubClass GetSubClass;
+
+	IWriter* m_pWriter{nullptr};
+
+	bool IsValid() const;
+};
+
+typedef std::vector<ITableElementCell*> Row;
+typedef std::vector<Row> Table;
+
+class IWriter;
+
+class CTableMatrix
 {
 public:
-	CStorageTableRow();
-	~CStorageTableRow();
-
-	void AddCell(CStorageTableCell* pCell);
-	void InsertCell(CStorageTableCell *pCell, int nPosition);
-
-	UINT GetIndex() const;
-	UINT GetCount() const;
-
-	CStorageTableCell* operator[](UINT unIndex);
+	CTableMatrix();
+	virtual ~CTableMatrix();
 
 	bool Empty() const;
-	const TTableRowStyle& GetStyles() const;
-	const std::vector<CStorageTableCell*>& GetCells() const;
-private:
-	TTableRowStyle m_oStyles;
-	std::vector<CStorageTableCell*> m_arCells;
+
+	bool SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell);
+
+	bool IsFillingCell(size_t unRowIndex, size_t unColumnIndex) const;
+	bool IsNotNullCell(size_t unRowIndex, size_t unColumnIndex) const;
+
+	size_t GetRowSize() const;
+	size_t GetColumnSize() const;
+
+	const Table& GetMatrixCells() const;
+	Table& GetMatrixCells();
+	const ITableElementCell* GetCell(size_t unRowIndex, size_t unColumnIndex) const;
+protected:
+	Table m_arCells;
 };
 
 class CTableCol
 {
 public:
-	CTableCol(UINT unSpan);
-	CTableCol(const NSCSS::CNode& oTableColNode);
+	CTableCol(NSCSS::CNode& oTableColNode);
+	~CTableCol();
 
 	UINT GetSpan() const;
-	TTableCellStyle* GetStyle();
-	const TTableCellStyle* GetStyle() const;
+	const NSCSS::CCompiledStyle* GetStyle() const;
 private:
 	UINT m_unSpan;
-	TTableCellStyle m_oStyle;
+	NSCSS::CCompiledStyle* m_pStyle;
 };
 
 class CTableColgroup
 {
 public:
-	CTableColgroup(NSCSS::CNode& oTableColgroupNode);
+	CTableColgroup(const NSCSS::CNode& oTableColgroupNode);
 	~CTableColgroup();
 
 	bool Empty() const;
 
 	void AddCol(CTableCol* pCol);
 
+	UINT GetTotalSpans() const;
 	const std::vector<CTableCol*>& GetCols() const;
+	const NSCSS::CCompiledStyle* GetColStyle(size_t unIndex) const;
 private:
 	std::vector<CTableCol*> m_arCols;
 	UINT                    m_unWidth;
+	UINT                    m_unTotalSpans;
 };
 
-//Необходимые стили таблицы
-struct TTableStyles
+class CTableElement : public ITableElementCell
 {
-	NSCSS::NSProperties::CIndent m_oPadding;
-	NSCSS::NSProperties::CIndent m_oMargin;
-	NSCSS::NSProperties::CBorder m_oBorder;
-	NSCSS::NSProperties::CDigit  m_oWidth;
-
-	int  m_nCellSpacing;
-
-	std::wstring m_wsAlign;
-
-	enum ETableRules
-	{
-		All,
-		Groups,
-		Cols,
-		None,
-		Rows
-	} m_enRules;
-
-	TTableStyles();
-
-	bool Empty() const;
-};
-
-class CStorageTable
-{
+protected:
+	CTableElement(TExternalTableData *pExternalData);
 public:
-	CStorageTable();
-	~CStorageTable();
+	virtual ~CTableElement();
 
-	CStorageTableRow* operator[](UINT unIndex);
+	ETableElement GetType() const override;
 
 	bool Empty() const;
-	bool HaveCaption();
-	bool HaveColgroups() const;
-	bool HaveHeader() const;
-	UINT GetRowCount() const;
-	const TTableStyles& GetTableStyles() const;
-	const TTableCellStyle* GetColStyle(UINT unColumnNumber) const;
+	bool HaveCaption() const;
 
-	void AddRows(std::vector<CStorageTableRow*>& m_arRows, ERowParseMode eParseMode = ERowParseMode::Body);
-	void AddRow(CStorageTableRow* pRow, ERowParseMode eParseMode = ERowParseMode::Body);
+	virtual bool PreParse(XmlUtils::CXmlLiteReader& oReader) = 0;
+	virtual void Normalize() = 0;
+	virtual bool Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode& oTableNode) = 0;
+protected:
+	CTableMatrix m_oHeader;
+	CTableMatrix m_oBody;
+	CTableMatrix m_oFoother;
 
-	NSStringUtils::CStringBuilder* GetCaptionData();
-
-	void SetPadding(const NSCSS::NSProperties::CIndent& oPadding);
-	const NSCSS::NSProperties::CIndent& GetPadding() const;
-
-	void SetMargin(const NSCSS::NSProperties::CIndent& oMargin);
-	void SetBorder(const NSCSS::NSProperties::CBorder& oBorder);
-
-	void SetWidth(const NSCSS::NSProperties::CDigit& oWidth);
-	void SetCellSpacing(int nCellSpacing);
-	void SetAlign(const std::wstring& wsValue);
-	void SetRules(const std::wstring& wsValue);
-
-	void AddColgroup(CTableColgroup* pElement);
-
-	void RecalculateMaxColumns();
-	void Shorten();
-	void CompleteTable();
-
-	//TODO:: переделать на const std::vector<const T*> Get...() const;
-	const std::vector<std::vector<CStorageTableRow*>>& GetHeaders()   const;
-	const std::vector<CStorageTableRow*>&              GetFoothers()  const;
-	const std::vector<CStorageTableRow*>&              GetRows()      const;
-	const std::vector<CTableColgroup*>          GetColgroups() const;
-
-	UINT GetMaxColumns() const;
-private:
-	std::vector<std::vector<CStorageTableRow*>> m_arHeaders;
-	std::vector<CStorageTableRow*>              m_arFoother;
-	std::vector<CStorageTableRow*>              m_arRows;
-
-	std::vector<UINT> m_arMinColspan;
-
-	NSStringUtils::CStringBuilder m_oCaption;
+	XmlString *m_pCaption;
 
 	std::vector<CTableColgroup*> m_arColgroups;
 
-	TTableStyles m_oStyles;
+	TExternalTableData *m_pExternalData;
 
-	UINT m_unMaxColumns;
+	const NSCSS::CCompiledStyle* GetColStyle(size_t unColIndex) const;
+
+	virtual bool ParseCaption(XmlUtils::CXmlLiteReader& oReader, XmlString*& pCaption) = 0;
+	virtual bool ParseColgroup(XmlUtils::CXmlLiteReader& oReader, std::vector<CTableColgroup*>& arColgroups) = 0;
+	template<typename T>
+	inline bool ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTable);
+	template<typename T>
+	inline bool ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex, size_t& unMaxColumns);
 };
+
+template<typename T>
+inline bool CTableElement::ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTable)
+{
+	const int nDeath{oReader.GetDepth()};
+	std::wstring wsName;
+
+	while(oReader.ReadNextSiblingNode(nDeath))
+	{
+		wsName = oReader.GetName();
+
+		size_t unRowIndex{0}, unColumnIndex{0}, unMaxColumnIndex{0};
+
+		if(L"thead" == wsName)
+			ParseMatrix<T>(oReader, &pTable->m_oHeader, unRowIndex, unColumnIndex, unMaxColumnIndex);
+		if(L"tbody" == wsName)
+			ParseMatrix<T>(oReader, &pTable->m_oBody, unRowIndex, unColumnIndex, unMaxColumnIndex);
+		else if(L"tfoot" == wsName)
+			ParseMatrix<T>(oReader, &pTable->m_oFoother, unRowIndex, unColumnIndex, unMaxColumnIndex);
+		else if (L"caption" == wsName)
+			ParseCaption(oReader, pTable->m_pCaption);
+		else if (L"colgroup" == wsName)
+			ParseColgroup(oReader, pTable->m_arColgroups);
+	}
+
+	return true;
+}
+
+template<typename T>
+inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex, size_t& unMaxColumns)
+{
+	const std::wstring wsElementName{oReader.GetName()};
+
+	if (L"table" == wsElementName)
+	{
+		T* pNewTable{new T(m_pExternalData)};
+
+		if (nullptr == pNewTable)
+			return false;
+
+		pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, pNewTable);
+
+		ParseTable<T>(oReader, pNewTable);
+	}
+	else if (L"tr" == wsElementName)
+	{
+		const int nDepth{oReader.GetDepth()};
+		++unRowIndex;
+		unColumnIndex = 0;
+
+		while (oReader.ReadNextSiblingNode(nDepth))
+		{
+			if (L"td" != oReader.GetName() && L"th" != oReader.GetName())
+				continue;
+
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+		}
+	}
+	else if (L"td" == wsElementName || L"th" == wsElementName)
+	{
+		++unColumnIndex;
+
+		while (pMatrix->IsFillingCell(unRowIndex - 1, unColumnIndex - 1))
+			++unColumnIndex;
+
+		unMaxColumns = (std::max)(unMaxColumns, unColumnIndex);
+
+		if (!pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, new CTableElementCell()))
+			return false;
+
+		if (oReader.MoveToFirstAttribute())
+		{
+			do
+			{
+				if (L"rowspan" == oReader.GetName())
+				{
+					const int nRowSpan{NSStringFinder::ToInt(oReader.GetText(), 1)};
+
+					for (int nRow = 1; nRow < nRowSpan; ++nRow)
+						pMatrix->SetCell(unRowIndex + nRow - 1, unColumnIndex - 1, new CTableElementCell(true));
+				}
+				else if (L"colspan" == oReader.GetName())
+					unColumnIndex += NSStringFinder::ToInt(oReader.GetText(), 1) - 1;
+			}while (oReader.MoveToNextAttribute());
+			oReader.MoveToElement();
+		}
+
+		const int nDepth{oReader.GetDepth()};
+		while (oReader.ReadNextSiblingNode(nDepth))
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+	}
+	else if (oReader.IsEmptyNode())
+		return false;
+	else
+	{
+		const int nDepth{oReader.GetDepth()};
+		while (oReader.ReadNextSiblingNode(nDepth))
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+	}
+
+	return true;
+}
+
+bool MoveToNextTableCell(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, std::stack<int>& arDepths, TExternalTableData::FuncGetSubClass& GetSubClass);
 }
 
 #endif // TABLE_H

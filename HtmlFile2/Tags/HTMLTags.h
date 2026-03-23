@@ -6,6 +6,13 @@
 
 namespace HTML
 {
+// TODO:: думаю лучше перейти на интерфейсы к каждой ноде
+// ISVGTag -> CMarkdownSVGTag
+//         -> COOXMLSVGTag
+// Либо
+// template<class T> CSVGTag -> template<> class CSVGTag<CMDWriter>
+//                           -> template<> class CSVGTag<COOXMLWriter>
+
 class ITag
 {
 public:
@@ -80,9 +87,6 @@ CREATE_TAG(CHorizontalRule);
 CREATE_TAG(CList);
 CREATE_TAG(CListElement);
 CREATE_TAG(CCaption);
-CREATE_TAG(CTable);
-CREATE_TAG(CTableRow);
-CREATE_TAG(CTableCell);
 CREATE_TAG(CCode);
 CREATE_TAG(CHTML);
 

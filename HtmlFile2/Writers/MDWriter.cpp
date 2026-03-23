@@ -277,6 +277,11 @@ XmlString* CMDWriter::GetCurrentDocument() const
 	return m_arStates.top().m_pCurrentDocument;
 }
 
+EWriterType CMDWriter::GetType() const
+{
+	return EWriterType::Markdown;
+}
+
 bool CMDWriter::SupportNestedTables() const
 {
 	return false;

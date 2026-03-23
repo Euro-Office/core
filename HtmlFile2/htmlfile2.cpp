@@ -71,7 +71,7 @@ const std::map<std::wstring, HtmlTag> m_HTML_TAGS
 	ADD_TAG(L"acronym", ACRONYM),
 	ADD_TAG(L"address", ADDRESS),
 	ADD_TAG(L"applet", APPLET),
-	 ADD_TAG(L"area", AREA),
+	ADD_TAG(L"area", AREA),
 	ADD_TAG(L"article", ARTICLE),
 	ADD_TAG(L"aside", ASIDE),
 	ADD_TAG(L"audio", AUDIO),

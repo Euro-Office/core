@@ -6,6 +6,12 @@
 
 namespace HTML
 {
+enum class EWriterType
+{
+	OOXML,
+	Markdown
+};
+
 class IWriter
 {
 public:
@@ -28,6 +34,8 @@ public:
 	virtual void RevertDataOutput() = 0; // Возвращаем место вывода к исходному
 
 	virtual XmlString* GetCurrentDocument() const = 0;
+
+	virtual EWriterType GetType() const = 0;
 
 	//TODO:: перенести разруливание вложенных таблиц в конвертацию после изменения принципа работы с таблицами
 	virtual bool SupportNestedTables() const = 0;
