@@ -597,8 +597,9 @@ std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CP
 	}
 	else
 	{
+		double dStretch = 1.0;
 		std::wstring wsFBN = wsFontBaseName;
-		NSFonts::CFontInfo* pFontInfo = RendererOutputDev::GetFontByParams(xref, pFontManager, gfxFont, wsFBN);
+		NSFonts::CFontInfo* pFontInfo = RendererOutputDev::GetFontByParams(xref, pFontManager, gfxFont, wsFBN, dStretch);
 		if (pFontInfo && !pFontInfo->m_wsFontPath.empty())
 		{
 			EraseSubsetTag(wsFontBaseName);
@@ -1064,7 +1065,7 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 	}
 	oDescendantFonts.free();
 }
-void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
+double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 {
 	EraseSubsetTag(sName);
 
@@ -1072,16 +1073,18 @@ void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 	CheckFontNameStyle(sName, L"semibold");
 	CheckFontNameStyle(sName, L"regular");
 
-	CheckFontNameStyle(sName, L"ultraexpanded");
-	CheckFontNameStyle(sName, L"extraexpanded");
-	CheckFontNameStyle(sName, L"semiexpanded");
-	CheckFontNameStyle(sName, L"expanded");
+	double dStretch = 1.0;
 
-	CheckFontNameStyle(sName, L"ultracondensed");
-	CheckFontNameStyle(sName, L"extracondensed");
-	CheckFontNameStyle(sName, L"semicondensed");
-	CheckFontNameStyle(sName, L"condensedlight");
-	CheckFontNameStyle(sName, L"condensed");
+	if (CheckFontNameStyle(sName, L"ultraexpanded")) dStretch = 2.0;
+	if (CheckFontNameStyle(sName, L"extraexpanded")) dStretch = 1.5;
+	if (CheckFontNameStyle(sName, L"semiexpanded"))  dStretch = 1.125;
+	if (CheckFontNameStyle(sName, L"expanded"))      dStretch = 1.25;
+
+	if (CheckFontNameStyle(sName, L"ultracondensed")) dStretch = 0.5;
+	if (CheckFontNameStyle(sName, L"extracondensed")) dStretch = 0.625;
+	if (CheckFontNameStyle(sName, L"semicondensed"))  dStretch = 0.875;
+	if (CheckFontNameStyle(sName, L"condensedlight")) dStretch = 0.75;
+	if (CheckFontNameStyle(sName, L"condensed"))      dStretch = 0.75;
 	//CheckFontNameStyle(sName, L"light");
 
 	if (CheckFontNameStyle(sName, L"bold_italic"))  { bBold = true; bItalic = true; }
@@ -1097,6 +1100,8 @@ void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 	//if (CheckFontNameStyle(sName, L"bolditalicmt")) { bBold = true; bItalic = true; }
 	//if (CheckFontNameStyle(sName, L"bolditalic")) { bBold = true; bItalic = true; }
 	//if (CheckFontNameStyle(sName, L"boldoblique")) { bBold = true; bItalic = true; }
+
+	return dStretch;
 }
 bool EraseSubsetTag(std::wstring& sFontName)
 {

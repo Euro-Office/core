@@ -65,7 +65,7 @@ std::vector<CAnnotFontInfo> GetAnnotFontInfos(PDFDoc* pdfDoc, NSFonts::IFontMana
 std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CAnnotMarkup::CFontData*>& arrRC);
 bool FindFonts(Object* oStream, int nDepth, Object* oResFonts);
 void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
-void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
+double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
 bool EraseSubsetTag(std::wstring& sFontName);
 }
 

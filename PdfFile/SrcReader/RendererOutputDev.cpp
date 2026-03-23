@@ -77,12 +77,12 @@
 
 namespace PdfReader
 {
-	void CheckFontNamePDF(std::wstring& sName, NSFonts::CFontSelectFormat* format)
+	double CheckFontNamePDF(std::wstring& sName, NSFonts::CFontSelectFormat* format)
 	{
 		bool bBold   = false;
 		bool bItalic = false;
 
-		CheckFontStylePDF(sName, bBold, bItalic);
+		double dStretch = CheckFontStylePDF(sName, bBold, bItalic);
 
 		if (format)
 		{
@@ -91,6 +91,20 @@ namespace PdfReader
 			if (bItalic)
 				format->bItalic = new INT(1);
 		}
+
+		return dStretch;
+	}
+	USHORT StretchToWidthClass(double fStretch)
+	{
+		if (fStretch <= 0.50)  return 1; // Ultra-condensed
+		if (fStretch <= 0.625) return 2; // Extra-condensed
+		if (fStretch <= 0.75)  return 3; // Condensed
+		if (fStretch <= 0.875) return 4; // Semi-condensed
+		if (fStretch <= 1.0)   return 5; // Normal
+		if (fStretch <= 1.125) return 6; // Semi-expanded
+		if (fStretch <= 1.25)  return 7; // Expanded
+		if (fStretch <= 1.50)  return 8; // Extra-expanded
+		return 9;                        // Ultra-expanded
 	}
 
 	void Transform(double* pMatrix, double dUserX, double dUserY, double* pdDeviceX, double* pdDeviceY)
@@ -738,7 +752,7 @@ namespace PdfReader
 	{
 
 	}
-	NSFonts::CFontInfo* RendererOutputDev::GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName)
+	NSFonts::CFontInfo* RendererOutputDev::GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName, double& dStretch)
 	{
 		NSFonts::CFontInfo* pFontInfo = NULL;
 		if (!pFontManager)
@@ -751,7 +765,9 @@ namespace PdfReader
 		oRefObject.free();
 
 		NSFonts::CFontSelectFormat oFontSelect;
-		CheckFontNamePDF(wsFontBaseName, &oFontSelect);
+		dStretch = CheckFontNamePDF(wsFontBaseName, &oFontSelect);
+		if (std::abs(dStretch - 1.0f) > 1e-5f)
+			oFontSelect.usWidth = new USHORT(StretchToWidthClass(dStretch));
 		if (oFontObject.isDict())
 		{
 			Dict* pFontDict = oFontObject.getDict();
@@ -825,7 +841,7 @@ namespace PdfReader
 				oDictItem.free();
 
 				oFontDescriptor.dictLookup("StemV", &oDictItem);
-				if (oDictItem.isNum())
+				if (oDictItem.isNum() && !oFontSelect.usWidth)
 				{
 					double dStemV = oDictItem.getNum();
 					if (dStemV > 50.5)
@@ -884,6 +900,7 @@ namespace PdfReader
 				wsFontBaseName = L"Helvetica";
 			const BYTE* pData14 = NULL;
 			unsigned int nSize14 = 0;
+			double dStretch = 1.0;
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 			CMemoryFontStream oMemoryFontStream;
 #endif
@@ -1194,7 +1211,7 @@ namespace PdfReader
 			else if (!pFont->locateFont(pXref, false) ||
 					 (wsFileName = NSStrings::GetStringFromUTF32(pFont->locateFont(pXref, false)->path)).length() == 0)
 			{
-				NSFonts::CFontInfo* pFontInfo = GetFontByParams(pXref, pFontManager, pFont, wsFontBaseName);
+				NSFonts::CFontInfo* pFontInfo = GetFontByParams(pXref, pFontManager, pFont, wsFontBaseName, dStretch);
 
 				if (pFontInfo && L"" != pFontInfo->m_wsFontPath)
 				{
@@ -1593,6 +1610,7 @@ namespace PdfReader
 			pEntry->unLenGID       = (unsigned int)nLen;
 			pEntry->unLenUnicode   = (unsigned int)nToUnicodeLen;
 			pEntry->bAvailable     = true;
+			pEntry->dStretch       = dStretch;
 			pEntry->bFontSubstitution = bFontSubstitution;
 			pEntry->bIsIdentity = pFont->isCIDFont() == gTrue ? ((GfxCIDFont*)pFont)->usesIdentityEncoding() || ((GfxCIDFont*)pFont)->usesIdentityCIDToGID() || ((GfxCIDFont*)pFont)->ctuUsesCharCodeToUnicode() || pFont->getType() == fontCIDType0C : false;
 		}
@@ -2491,6 +2509,12 @@ namespace PdfReader
 				if (nRenderMode == 1 || nRenderMode == 2 || nRenderMode == 5 || nRenderMode == 6)
 					m_pRenderer->put_PenSize(PDFCoordsToMM(pGState->getLineWidth() * dNorma));
 			}
+		}
+
+		if (oEntry.dStretch != 1.0 && oEntry.bFontSubstitution)
+		{
+			arrMatrix[0] *= oEntry.dStretch;
+			arrMatrix[1] *= oEntry.dStretch;
 		}
 
 		double dShiftX = 0, dShiftY = 0;

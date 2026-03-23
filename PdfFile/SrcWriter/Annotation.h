@@ -235,9 +235,29 @@ namespace PdfWriter
 		}
 
 		void SetH(BYTE nH);
+		void SetRD(const double& dRD1, const double& dRD2, const double& dRD3, const double& dRD4);
 		void SetQuadPoints(const std::vector<double>& arrQuadPoints);
 		void SetA(CAction* pAction);
 		void SetPA(CAction* pAction);
+	};
+	class CScreenAnnotation : public CAnnotation
+	{
+	private:
+		CDictObject* m_pMK;
+
+		void CheckMK();
+	public:
+		CScreenAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotScreen;
+		}
+
+		void SetR(const int& nR);
+		void SetT(const std::wstring& wsT);
+		void SetBC(const std::vector<double>& arrBC);
+		void SetBG(const std::vector<double>& arrBG);
+		void AddAction(CAction* pAction);
 	};
 	class CMarkupAnnotation : public CAnnotation
 	{
@@ -429,6 +449,35 @@ namespace PdfWriter
 		void SetIC(const std::vector<double>& arrIC);
 		void SetOC(const std::vector<double>& arrOC);
 		void SetQuadPoints(const std::vector<double>& arrQuadPoints);
+	};
+	class CFileAttachmentAnnotation : public CMarkupAnnotation
+	{
+	private:
+		void CheckFS();
+		CDictObject* m_pFS;
+
+	public:
+		CFileAttachmentAnnotation(CXref* pXref);
+		EAnnotType GetAnnotationType() const override
+		{
+			return AnnotFileAttachment;
+		}
+
+		void SetV(bool bV);
+		void SetName(const std::wstring& wsName);
+		void SetFS(const std::wstring& wsFS);
+		void SetF(const std::wstring& wsF);
+		void SetUF(const std::wstring& wsUF);
+		void SetDOS(const std::wstring& wsDOS);
+		void SetMac(const std::wstring& wsMac);
+		void SetUnix(const std::wstring& wsUnix);
+		void SetDesc(const std::wstring& wsDesc);
+		void SetFileF(const std::wstring& wsFileF);
+		void SetFileUF(const std::wstring& wsFileUF);
+		void SetFileDOS(const std::wstring& wsFileDOS);
+		void SetFileMac(const std::wstring& wsFileMac);
+		void SetFileUnix(const std::wstring& wsFileUnix);
+		void SetID(const std::pair<std::wstring, std::wstring>& wsID);
 	};
 	class CWidgetAnnotation : public CAnnotation
 	{

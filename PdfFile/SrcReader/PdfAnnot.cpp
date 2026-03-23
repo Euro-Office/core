@@ -1247,12 +1247,121 @@ CAnnotLink::CAnnotLink(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nS
 	}
 	oObj.free();
 
+	// 4 - Различия Rect и фактического размера - RD
+	if (oAnnot.dictLookup("RD", &oObj)->isArray() && oObj.arrayGetLength() == 4)
+	{
+		m_unFlags |= (1 << 4);
+		m_pRD[0] = ArrGetNum(&oObj, 0);
+		m_pRD[3] = ArrGetNum(&oObj, 1);
+		m_pRD[2] = ArrGetNum(&oObj, 2);
+		m_pRD[1] = ArrGetNum(&oObj, 3);
+	}
+	oObj.free();
+
 	oAnnot.free();
 }
 CAnnotLink::~CAnnotLink()
 {
 	RELEASEOBJECT(m_pAction);
 	RELEASEOBJECT(m_pPA);
+}
+
+//------------------------------------------------------------------------
+// Screen
+//------------------------------------------------------------------------
+
+CAnnotScreen::CAnnotScreen(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefID) : CAnnot(pdfDoc, oAnnotRef, nPageIndex, nStartRefID)
+{
+	Object oAnnot, oObj, oObj2;
+	XRef* pXref = pdfDoc->getXRef();
+	oAnnotRef->fetch(pXref, &oAnnot);
+
+	// 0 - Title - T
+	m_sT = DictLookupString(&oAnnot, "T", 0);
+
+	Object oMK;
+	if (oAnnot.dictLookup("MK", &oMK)->isDict())
+	{
+		// 1 - Цвет границ - BC. Даже если граница не задана BS/Border, то при наличии BC предоставляется граница по-умолчанию (сплошная, толщиной 1)
+		if (oMK.dictLookup("BC", &oObj)->isArray())
+		{
+			m_unFlags |= (1 << 1);
+			int nBCLength = oObj.arrayGetLength();
+			for (int j = 0; j < nBCLength; ++j)
+			{
+				Object oBCj;
+				m_arrBC.push_back(oObj.arrayGet(j, &oBCj)->isNum() ? oBCj.getNum() : 0.0);
+				oBCj.free();
+			}
+		}
+		oObj.free();
+
+		// 2 - Поворот аннотации относительно страницы - R
+		if (oMK.dictLookup("R", &oObj)->isInt())
+		{
+			m_unFlags |= (1 << 2);
+			m_unR = oObj.getInt();
+		}
+		oObj.free();
+
+		// 3 - Цвет фона - BG
+		if (oMK.dictLookup("BG", &oObj)->isArray())
+		{
+			m_unFlags |= (1 << 3);
+			int nBGLength = oObj.arrayGetLength();
+			for (int j = 0; j < nBGLength; ++j)
+			{
+				Object oBGj;
+				m_arrBG.push_back(oObj.arrayGet(j, &oBGj)->isNum() ? oBGj.getNum() : 0.0);
+				oBGj.free();
+			}
+		}
+		oObj.free();
+	}
+	oMK.free();
+
+	// 4 - Action - A
+	Object oAction;
+	if (oAnnot.dictLookup("A", &oAction)->isDict())
+	{
+		std::string sAA = "A";
+		CAction* pA = getAction(pdfDoc, &oAction);
+		if (pA)
+		{
+			pA->sType = sAA;
+			m_arrAction.push_back(pA);
+			m_unFlags |= (1 << 4);
+		}
+	}
+	oAction.free();
+
+	// 4 - Actions - AA
+	Object oAA;
+	if (oAnnot.dictLookup("AA", &oAA)->isDict())
+	{
+		for (int j = 0; j < oAA.dictGetLength(); ++j)
+		{
+			if (oAA.dictGetVal(j, &oAction)->isDict())
+			{
+				std::string sAA(oAA.dictGetKey(j));
+				CAction* pA = getAction(pdfDoc, &oAction);
+				if (pA)
+				{
+					pA->sType = sAA;
+					m_arrAction.push_back(pA);
+					m_unFlags |= (1 << 4);
+				}
+			}
+			oAction.free();
+		}
+	}
+	oAA.free();
+
+	oAnnot.free();
+}
+CAnnotScreen::~CAnnotScreen()
+{
+
 }
 
 //------------------------------------------------------------------------
@@ -3961,6 +4070,44 @@ void CAnnotLink::ToWASM(NSWasm::CData& oRes)
 		oRes.AddInt((unsigned int)m_arrQuadPoints.size());
 		for (int i = 0; i < m_arrQuadPoints.size(); ++i)
 			oRes.AddDouble(m_arrQuadPoints[i]);
+	}
+	if (m_unFlags & (1 << 4))
+	{
+		for (int i = 0; i < 4; ++i)
+			oRes.AddDouble(m_pRD[i]);
+	}
+}
+void CAnnotScreen::ToWASM(NSWasm::CData& oRes)
+{
+	oRes.WriteBYTE(20); // Screen
+
+	CAnnot::ToWASM(oRes);
+
+	oRes.AddInt(m_unFlags);
+	if (m_unFlags & (1 << 0))
+		oRes.WriteString(m_sT);
+	if (m_unFlags & (1 << 1))
+	{
+		oRes.AddInt(m_arrBC.size());
+		for (int i = 0; i < m_arrBC.size(); ++i)
+			oRes.WriteDouble(m_arrBC[i]);
+	}
+	if (m_unFlags & (1 << 2))
+		oRes.AddInt(m_unR);
+	if (m_unFlags & (1 << 3))
+	{
+		oRes.AddInt(m_arrBG.size());
+		for (int i = 0; i < m_arrBG.size(); ++i)
+			oRes.WriteDouble(m_arrBG[i]);
+	}
+	if (m_unFlags & (1 << 4))
+	{
+		oRes.AddInt(m_arrAction.size());
+		for (int i = 0; i < m_arrAction.size(); ++i)
+		{
+			oRes.WriteString(m_arrAction[i]->sType);
+			m_arrAction[i]->ToWASM(oRes);
+		}
 	}
 }
 void CAnnotPopup::ToWASM(NSWasm::CData& oRes)

@@ -2319,6 +2319,45 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 				pRedactAnnot->SetDA(pFontTT, dFontSize, pPr->GetFontColor());
 			}
 		}
+		else if (oInfo.IsFileAttachment())
+		{
+			CAnnotFieldInfo::CFileAttachmentAnnotPr* pPr = oInfo.GetFileAttachmentAnnotPr();
+			PdfWriter::CFileAttachmentAnnotation* pFileAttachmentAnnot = (PdfWriter::CFileAttachmentAnnotation*)pAnnot;
+
+			if (nFlags & (1 << 15))
+				pFileAttachmentAnnot->SetName(pPr->GetName());
+			if (nFlags & (1 << 16))
+				pFileAttachmentAnnot->SetFS(pPr->GetFS());
+			if (nFlags & (1 << 17))
+				pFileAttachmentAnnot->SetF(pPr->GetF());
+			if (nFlags & (1 << 18))
+				pFileAttachmentAnnot->SetUF(pPr->GetUF());
+			if (nFlags & (1 << 19))
+				pFileAttachmentAnnot->SetDOS(pPr->GetDOS());
+			if (nFlags & (1 << 20))
+				pFileAttachmentAnnot->SetMac(pPr->GetMac());
+			if (nFlags & (1 << 21))
+				pFileAttachmentAnnot->SetUnix(pPr->GetUnix());
+			if (nFlags & (1 << 22))
+				pFileAttachmentAnnot->SetID(pPr->GetID());
+			pFileAttachmentAnnot->SetV(nFlags & (1 << 23));
+			if (nFlags & (1 << 24))
+			{
+				int nFileFlag = pPr->GetFileFlag();
+				if (nFileFlag & (1 << 0))
+					pFileAttachmentAnnot->SetFileF(pPr->GetFileF());
+				if (nFileFlag & (1 << 1))
+					pFileAttachmentAnnot->SetFileUF(pPr->GetFileUF());
+				if (nFileFlag & (1 << 2))
+					pFileAttachmentAnnot->SetFileDOS(pPr->GetFileDOS());
+				if (nFileFlag & (1 << 3))
+					pFileAttachmentAnnot->SetFileMac(pPr->GetFileMac());
+				if (nFileFlag & (1 << 4))
+					pFileAttachmentAnnot->SetFileUnix(pPr->GetFileUnix());
+			}
+			if (nFlags & (1 << 26))
+				pFileAttachmentAnnot->SetDesc(pPr->GetDesc());
+		}
 	}
 	else if (oInfo.IsPopup())
 	{
@@ -2695,6 +2734,12 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 			pLinkAnnot->SetH(pPr->GetH());
 		if (nFlags & (1 << 3))
 			pLinkAnnot->SetQuadPoints(pPr->GetQuadPoints());
+		if (nFlags & (1 << 4))
+		{
+			double dRD1, dRD2, dRD3, dRD4;
+			pPr->GetRD(dRD1, dRD2, dRD3, dRD4);
+			pLinkAnnot->SetRD(dRD1, dRD2, dRD3, dRD4);
+		}
 
 		if (bRender)
 		{
@@ -2702,6 +2747,34 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 			LONG nLen = 0;
 			BYTE* pRender = oInfo.GetRender(nLen);
 			DrawAP(pAnnot, pRender, nLen);
+		}
+	}
+	else if (oInfo.IsScreen())
+	{
+		CAnnotFieldInfo::CScreenAnnotPr* pPr = oInfo.GetScreenAnnotPr();
+		PdfWriter::CScreenAnnotation* pScreenAnnot = (PdfWriter::CScreenAnnotation*)pAnnot;
+
+		int nR = 0;
+		nFlags = pPr->GetFlags();
+		if (nFlags & (1 << 0))
+			pScreenAnnot->SetT(pPr->GetT());
+		if (nFlags & (1 << 1))
+			pScreenAnnot->SetBC(pPr->GetBC());
+		if (nFlags & (1 << 2))
+		{
+			nR = pPr->GetR();
+			pScreenAnnot->SetR(nR);
+		}
+		if (nFlags & (1 << 3))
+			pScreenAnnot->SetBG(pPr->GetBG());
+		if (nFlags & (1 << 4))
+		{
+			const std::vector<CAnnotFieldInfo::CActionFieldPr*> arrActions = pPr->GetActions();
+			for (CAnnotFieldInfo::CActionFieldPr* pAction : arrActions)
+			{
+				PdfWriter::CAction* pA = GetAction(pAction);
+				pScreenAnnot->AddAction(pA);
+			}
 		}
 	}
 
