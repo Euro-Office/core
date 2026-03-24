@@ -56,6 +56,7 @@
 #include "lib/xpdf/TextOutputDev.h"
 #include "lib/xpdf/AcroForm.h"
 #include "lib/xpdf/SecurityHandler.h"
+#include "lib/xpdf/XFAScanner.h"
 #include "lib/goo/GList.h"
 
 NSFonts::IFontManager* InitFontManager(NSFonts::IApplicationFonts* pAppFonts)
@@ -652,6 +653,20 @@ bool CPdfReader::CheckPerm(int nPerm)
 
 	return ownerPasswordOk || (permFlags & (1 << --nPerm));
 }
+bool CPdfReader::isXFA()
+{
+	PDFDoc* pDoc = m_vPDFContext.front()->m_pDocument;
+	AcroForm* pAcroForms = pDoc->getCatalog()->getForm();
+	if (!pAcroForms)
+		return false;
+
+	Object* oAcroForm = pAcroForms->getAcroFormObj();
+	Object oXFA;
+
+	bool bRes = !oAcroForm->dictLookup("XFA", &oXFA)->isNull();
+	oXFA.free();
+	return bRes;
+}
 void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool* pbBreak)
 {
 	PDFDoc* pDoc = NULL;
@@ -1072,6 +1087,40 @@ void getBookmarks(PDFDoc* pdfDoc, OutlineItem* pOutlineItem, NSWasm::CData& out,
 			getBookmarks(pdfDoc, pOutlineItemKid, out, level + 1, nStartPage);
 	}
 	pOutlineItem->close();
+}
+BYTE* CPdfReader::GetXFA()
+{
+	PDFDoc* pDoc = m_vPDFContext.front()->m_pDocument;
+	XRef* xref = pDoc->getXRef();
+	AcroForm* pAcroForms = pDoc->getCatalog()->getForm();
+	if (!pAcroForms)
+		return NULL;
+
+	Object* oAcroForm = pAcroForms->getAcroFormObj();
+	Object oXFA, oCatDict, oNR;
+
+	NSWasm::CData oRes;
+	oRes.SkipLen();
+
+	bool bNR = false;
+	if (xref->getCatalog(&oCatDict)->isDict() && oCatDict.dictLookup("NeedsRendering", &oNR)->isBool())
+		bNR = !!oNR.getBool();
+	oRes.WriteBool(bNR);
+	oCatDict.free(); oNR.free();
+
+	if (!oAcroForm->dictLookup("XFA", &oXFA)->isNull())
+	{
+		GString* sXFA = XFAScanner::readXFAStreams(&oXFA);
+		oRes.WriteString((BYTE*)sXFA->getCString(), sXFA->getLength());
+	}
+	else
+		oRes.AddInt(0);
+	oXFA.free();
+
+	oRes.WriteLen();
+	BYTE* bRes = oRes.GetBuffer();
+	oRes.ClearWithoutAttack();
+	return bRes;
 }
 BYTE* CPdfReader::GetStructure()
 {

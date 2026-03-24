@@ -97,6 +97,7 @@ public:
 	bool UndoRedact();
 	bool CheckOwnerPassword(const wchar_t* sPassword);
 	bool CheckPerm(int nPerm);
+	bool isXFA();
 	void GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, double* pdDpiX, double* pdDpiY);
 	void DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak);
 	std::wstring GetInfo();
@@ -115,6 +116,7 @@ public:
 	int GetPageIndex(int nPageIndex, PDFDoc** pDoc = NULL, PdfReader::CPdfFontList** pFontList = NULL, int* nStartRefID = NULL);
 
 	void SetFonts(int nPageIndex);
+	BYTE* GetXFA();
 	BYTE* GetStructure();
 	BYTE* GetLinks(int nPageIndex);
 	BYTE* GetWidgets();

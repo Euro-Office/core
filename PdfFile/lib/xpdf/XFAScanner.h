@@ -125,6 +125,7 @@ class XFAScanner {
 public:
 
   static XFAScanner *load(Object *xfaObj);
+  static GString *readXFAStreams(Object *xfaObj);
 
   virtual ~XFAScanner();
 
@@ -135,7 +136,6 @@ public:
 private:
 
   XFAScanner();
-  static GString *readXFAStreams(Object *xfaObj);
   GHash *scanFormValues(ZxElement *xmlRoot);
   void scanFormNode(ZxElement *elem, GString *fullName,
 		    GHash *formValues);

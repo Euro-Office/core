@@ -210,6 +210,14 @@ WASM_EXPORT int CheckPerm(CDrawingFile* pFile, int nPermFlag)
 {
 	return pFile->CheckPerm(nPermFlag) ? 1 : 0;
 }
+WASM_EXPORT int IsXFA(CDrawingFile* pFile)
+{
+	return pFile->isXFA() ? 1 : 0;
+}
+WASM_EXPORT BYTE* GetXFA(CDrawingFile* pFile)
+{
+	return pFile->getXFA();
+}
 
 WASM_EXPORT void* GetImageBase64(CDrawingFile* pFile, int rId)
 {

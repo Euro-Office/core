@@ -263,6 +263,15 @@ JSSmart<CJSValue> CDrawingFileEmbed::CheckPerm(JSSmart<CJSValue> nPerm)
 	return CJSContext::createBool(m_pFile->CheckPerm(nPerm->toInt32()));
 }
 
+JSSmart<CJSValue> CDrawingFileEmbed::IsXFA()
+{
+	return CJSContext::createBool(m_pFile->isXFA());
+}
+JSSmart<CJSValue> CDrawingFileEmbed::GetXFA()
+{
+	return WasmMemoryToJS(m_pFile->getXFA());
+}
+
 bool EmbedDrawingFile(JSSmart<NSJSBase::CJSContext>& context, IOfficeDrawingFile* pFile)
 {
 	CJSContext::Embed<CDrawingFileEmbed>(false);

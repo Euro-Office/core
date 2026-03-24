@@ -62,6 +62,9 @@ public:
 	JSSmart<CJSValue> CheckOwnerPassword(JSSmart<CJSValue> sPassword);
 	JSSmart<CJSValue> CheckPerm(JSSmart<CJSValue> nPerm);
 
+	JSSmart<CJSValue> IsXFA();
+	JSSmart<CJSValue> GetXFA();
+
 	DECLARE_EMBED_METHODS
 };
 

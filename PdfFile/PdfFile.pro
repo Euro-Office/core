@@ -45,10 +45,7 @@ SOURCES += $$files(lib/*.c, true)
 SOURCES += $$files(lib/*.cpp, true)
 SOURCES += $$files(lib/*.cc, true)
 
-HEADERS -= $$PDF_ROOT_DIR/lib/xpdf/XFAScanner.h
-
 SOURCES -= \
-	lib/xpdf/XFAScanner.cc \
     lib/xpdf/HTMLGen.cc \
     lib/xpdf/pdftohtml.cc \
     lib/xpdf/pdftopng.cc \
@@ -65,7 +62,6 @@ SOURCES += \
     SrcReader/Adaptors.cpp \
     SrcReader/PdfAnnot.cpp \
 	SrcReader/PdfFont.cpp \
-	SrcReader/PdfXFAScanner.cpp \
     SrcReader/GfxClip.cpp
 
 HEADERS += \
@@ -74,7 +70,6 @@ HEADERS += \
     SrcReader/MemoryUtils.h \
     SrcReader/PdfAnnot.h \
 	SrcReader/PdfFont.h \
-	SrcReader/PdfXFAScanner.h \
     SrcReader/GfxClip.h
 
 # Base fonts

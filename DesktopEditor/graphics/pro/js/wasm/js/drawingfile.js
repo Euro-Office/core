@@ -177,6 +177,30 @@ CFile.prototype["UndoRedact"] = function()
 	return this._UndoRedact();
 };
 
+// XFA
+CFile.prototype["isXFA"] = function()
+{
+	if (!this.nativeFile)
+		return false;
+	return this._isXFA();
+};
+CFile.prototype["getXFA"] = function()
+{
+	if (!this.nativeFile)
+		return {};
+
+	let ptr = this._getXFA();
+	let reader = ptr.getReader();
+	if (!reader) return {};
+
+	let res = {};
+	res["dynamic"] = reader.readByte() ? true : false;
+	res["xfa"] = reader.readString();
+
+	ptr.free();
+	return res;
+};
+
 // INFO DOCUMENT
 CFile.prototype.getInfo = function()
 {

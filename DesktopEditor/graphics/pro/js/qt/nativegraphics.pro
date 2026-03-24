@@ -622,10 +622,7 @@ HEADERS += $$files($$PDF_ROOT_DIR/lib/*.h, true)
 SOURCES += $$files($$PDF_ROOT_DIR/lib/*.c, true)
 SOURCES += $$files($$PDF_ROOT_DIR/lib/*.cc, true)
 
-HEADERS -= $$PDF_ROOT_DIR/lib/xpdf/XFAScanner.h
-
 SOURCES -= \
-	$$PDF_ROOT_DIR/lib/xpdf/XFAScanner.cc \
 	$$PDF_ROOT_DIR/lib/xpdf/HTMLGen.cc \
 	$$PDF_ROOT_DIR/lib/xpdf/pdftohtml.cc \
 	$$PDF_ROOT_DIR/lib/xpdf/pdftopng.cc \
@@ -643,7 +640,6 @@ SOURCES += \
 	$$PDF_ROOT_DIR/SrcReader/GfxClip.cpp \
 	$$PDF_ROOT_DIR/SrcReader/PdfAnnot.cpp \
 	$$PDF_ROOT_DIR/SrcReader/PdfFont.cpp \
-	$$PDF_ROOT_DIR/SrcReader/PdfXFAScanner.cpp \
 	$$PDF_ROOT_DIR/Resources/BaseFonts.cpp \
 	$$PDF_ROOT_DIR/Resources/CMapMemory/cmap_memory.cpp
 
@@ -670,7 +666,6 @@ HEADERS +=\
 	$$PDF_ROOT_DIR/SrcReader/GfxClip.h \
 	$$PDF_ROOT_DIR/SrcReader/FontsWasm.h \
 	$$PDF_ROOT_DIR/SrcReader/PdfFont.h \
-	$$PDF_ROOT_DIR/SrcReader/PdfXFAScanner.h \
 	$$PDF_ROOT_DIR/SrcReader/PdfAnnot.h
 
 DEFINES += CRYPTOPP_DISABLE_ASM

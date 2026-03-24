@@ -39,6 +39,8 @@ namespace NSDrawingFileEmbed
 	FUNCTION_WRAPPER_V8_0(_UndoRedact, UndoRedact)
 	FUNCTION_WRAPPER_V8_1(_CheckOwnerPassword, CheckOwnerPassword)
 	FUNCTION_WRAPPER_V8_1(_CheckPerm, CheckPerm)
+	FUNCTION_WRAPPER_V8_0(_IsXFA, IsXFA)
+	FUNCTION_WRAPPER_V8_0(_GetXFA, GetXFA)
 
 	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
@@ -77,6 +79,8 @@ namespace NSDrawingFileEmbed
 		NSV8Objects::Template_Set(result, "UndoRedact",	_UndoRedact);
 		NSV8Objects::Template_Set(result, "CheckOwnerPassword",	_CheckOwnerPassword);
 		NSV8Objects::Template_Set(result, "CheckPerm",	_CheckPerm);
+		NSV8Objects::Template_Set(result, "IsXFA",	_IsXFA);
+		NSV8Objects::Template_Set(result, "GetXFA",	_GetXFA);
 
 		return handle_scope.Escape(result);
 	}

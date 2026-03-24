@@ -145,9 +145,11 @@ public:
 	bool UndoRedact();
 	bool CheckOwnerPassword(const wchar_t* sPassword);
 	bool CheckPerm(int nPerm);
+	bool IsXFA();
 	int GetRotate(int nPageIndex);
 	int GetMaxRefID();
 	void SetPageFonts(int nPageIndex);
+	BYTE* GetXFA();
 	BYTE* GetWidgets();
 	BYTE* GetAnnotEmbeddedFonts();
 	BYTE* GetAnnotStandardFonts();

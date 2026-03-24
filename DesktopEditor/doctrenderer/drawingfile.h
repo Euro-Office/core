@@ -617,6 +617,19 @@ public:
 		return ((CPdfFile*)m_pFile)->GetEmbeddedFontPath(sName);
 	}
 
+	bool isXFA()
+	{
+		if (0 != m_nType)
+			return false;
+		return ((CPdfFile*)m_pFile)->IsXFA();
+	}
+	BYTE* getXFA()
+	{
+		if (0 != m_nType)
+			return NULL;
+		return ((CPdfFile*)m_pFile)->GetXFA();
+	}
+
 private:
 	int GetPagesCount()
 	{

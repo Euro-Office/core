@@ -1194,7 +1194,7 @@ int main(int argc, char* argv[])
 	}
 
 	// RASTER
-	if (false)
+	if (true)
 	{
 		int i = nTestPage;
 		//for (int i = 0; i < nPagesCount; ++i)
@@ -2331,6 +2331,29 @@ int main(int argc, char* argv[])
 
 		ReadInteractiveFormsFonts(pGrFile, 1);
 		ReadInteractiveFormsFonts(pGrFile, 2);
+	}
+
+	// XFA
+	if (true && IsXFA(pGrFile))
+	{
+		BYTE* pXFA = GetXFA(pGrFile);
+		nLength = READ_INT(pXFA);
+		int i = 4;
+		nLength -= 4;
+
+		BYTE bD = READ_BYTE(pXFA + i);
+		i += 1;
+		std::cout << " XFA: Dynamic " << (bool)bD << std::endl;
+
+		int nPathLength = READ_INT(pXFA + i);
+		i += 4;
+		NSFile::CFileBinary oFile;
+		if (oFile.CreateFileW(NSFile::GetProcessDirectory() + L"/XFA.xml"))
+			oFile.WriteFile(pXFA + i, nPathLength);
+		oFile.CloseFile();
+		i += nPathLength;
+
+		std::cout << std::endl;
 	}
 
 	Close(pGrFile);

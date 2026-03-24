@@ -60,6 +60,8 @@
 		"_UndoRedact",
 		"_CheckOwnerPassword",
 		"_CheckPerm",
+		"_IsXFA",
+		"_GetXFA",
 		"_GetImageBase64",
 		"_GetImageBase64Len",
 		"_GetImageBase64Ptr",

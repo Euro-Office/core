@@ -36,6 +36,8 @@
 -(JSValue*) UndoRedact;
 -(JSValue*) CheckOwnerPassword : (JSValue*)sPassword;
 -(JSValue*) CheckPerm : (JSValue*)nPerm;
+-(JSValue*) IsXFA;
+-(JSValue*) GetXFA;
 @end
 
 @interface CJSCDrawingFileEmbed : NSObject<IJSCDrawingFileEmbed, JSEmbedObjectProtocol>
@@ -79,6 +81,8 @@ FUNCTION_WRAPPER_JS_3(RedactPage, RedactPage)
 FUNCTION_WRAPPER_JS_0(UndoRedact, UndoRedact)
 FUNCTION_WRAPPER_JS_1(CheckOwnerPassword, CheckOwnerPassword)
 FUNCTION_WRAPPER_JS_1(CheckPerm, CheckPerm)
+FUNCTION_WRAPPER_JS_0(IsXFA, IsXFA)
+FUNCTION_WRAPPER_JS_0(GetXFA, GetXFA)
 @end
 
 class CDrawingFileEmbedAdapter : public CJSEmbedObjectAdapterJSC

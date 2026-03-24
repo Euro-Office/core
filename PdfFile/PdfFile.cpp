@@ -453,6 +453,12 @@ bool CPdfFile::CheckPerm(int nPerm)
 		return false;
 	return m_pInternal->pReader->CheckPerm(nPerm);
 }
+bool CPdfFile::IsXFA()
+{
+	if (!m_pInternal->pReader)
+		return false;
+	return m_pInternal->pReader->isXFA();
+}
 int CPdfFile::GetRotate(int nPageIndex)
 {
 	if (!m_pInternal->pReader)
@@ -498,6 +504,12 @@ BYTE* CPdfFile::GetLinks(int nPageIndex)
 	if (!m_pInternal->pReader)
 		return NULL;
 	return m_pInternal->pReader->GetLinks(nPageIndex);
+}
+BYTE* CPdfFile::GetXFA()
+{
+	if (!m_pInternal->pReader)
+		return NULL;
+	return m_pInternal->pReader->GetXFA();
 }
 BYTE* CPdfFile::GetWidgets()
 {

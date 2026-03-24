@@ -184,6 +184,17 @@ CFile.prototype._getInteractiveFormsFonts = function(type)
 	return g_module_pointer;
 };
 
+// XFA
+CFile.prototype._isXFA = function()
+{
+	return g_native_drawing_file["IsXFA"]();
+};
+CFile.prototype._getXFA = function()
+{
+	g_module_pointer.ptr = g_native_drawing_file["GetXFA"]();
+	return g_module_pointer;
+};
+
 // INFO DOCUMENT
 CFile.prototype._getInfo = function()
 {
