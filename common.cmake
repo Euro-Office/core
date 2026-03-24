@@ -31,18 +31,39 @@ endif()
 set(COMMON_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 file(READ "${COMMON_CMAKE_DIR}/Common/version.txt" VERSION_TXT_CONTENT)
 
-set(COMMON_DEFINES
-    _LINUX
-    _REENTRANT
-    CRYPTOPP_DISABLE_ASM
-    INTVER=${VERSION_TXT_CONTENT}
-    LINUX
+if( LLVM_MINGW_CROSS )
 
-    # Not sure about these:
-    _UNICODE
-    DONT_WRITE_EMBEDDED_FONTS
-    UNICODE
-)
+    set(COMMON_DEFINES
+        WIN64
+        _WIN64
+        NOMINMAX
+        WINDOWS_IGNORE_PACKING_MISMATCH
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+
+        # Not sure about these:
+        _UNICODE
+        DONT_WRITE_EMBEDDED_FONTS
+        UNICODE
+    )
+
+else()
+
+    set(COMMON_DEFINES
+        _LINUX
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+        LINUX
+
+        # Not sure about these:
+        _UNICODE
+        DONT_WRITE_EMBEDDED_FONTS
+        UNICODE
+    )
+
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     list(APPEND COMMON_DEFINES
@@ -80,9 +101,11 @@ set(COMMON_C_FLAGS
 )
 
 
-set(COMMON_LINK_OPTIONS
-    "-Wl,--disable-new-dtags"
-)
+if( NOT LLVM_MINGW_CROSS )
+    set(COMMON_LINK_OPTIONS
+        "-Wl,--disable-new-dtags"
+    )
+endif()
 
 
 function(set_default_options target)
@@ -90,16 +113,18 @@ function(set_default_options target)
         message(FATAL_ERROR "set_default_options(): Target '${target}' does not exist yet.")
     endif()
 
-    # Base RPATHs
-    set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
-    set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+    if( NOT LLVM_MINGW_CROSS )
+        # Base RPATHs
+        set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
+        set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
 
-    # Optional: additional runtime paths from env variable RUN_PATH_ADDON
-    if(DEFINED ENV{RUN_PATH_ADDON})
-        set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
-        string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
+        # Optional: additional runtime paths from env variable RUN_PATH_ADDON
+        if(DEFINED ENV{RUN_PATH_ADDON})
+            set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
+            string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
 
-        set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+            set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+        endif()
     endif()
 
     # C++ flags
@@ -133,9 +158,17 @@ function(copy_artifacts_to_folder artifacts dest_dir)
 endfunction()
 
 function(copy_icu_libs artifact)
-    add_custom_command(TARGET ${artifact} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
-    )
+    if( LLVM_MINGW_CROSS )
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu_win/bin\"/*.dll \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    else()
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    endif()
 endfunction()

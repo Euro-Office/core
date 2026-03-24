@@ -4,7 +4,10 @@ work_dir="$1"
 install_dir="$2"
 icu_major=$3
 icu_minor=$4
-fetch_only=${5:-0}
+operation_mode=$5 # fetch-only | full
+target_plaform=$6 # linux | windows-crosscompile
+
+mingw_llvm_path="/home/tbari/Junkyard/icu_cross/llvm-mingw-20260311-msvcrt-ubuntu-22.04-x86_64/bin"
 
 abort_op()
 {
@@ -14,9 +17,62 @@ abort_op()
     exit 1
 }
 
-if [ $# -lt 4 ]
+configure_linux() # args: build_dir, install_dir
+{
+    build_dir="$1"
+    linux_install_dir="$2"
+
+    mkdir -p "$build_dir" || abort_op "Failed to create build dir"
+    mkdir -p "$linux_install_dir" || abort_op "Failed to create install dir"
+    cd "$build_dir"
+
+    $work_dir/icu/source/configure \
+    --prefix="$linux_install_dir" \
+    --enable-rpath \
+    CC=gcc \
+    CXX=g++ \
+    AR=ar \
+    RANLIB=ranlib \
+    CXXFLAGS="-static-libstdc++ -static-libgcc" \
+    LDFLAGS='-Wl,-rpath,$$ORIGIN' \
+    || abort_op "Configure failed"    
+}
+
+configure_windows_crosscompile() # args: build_dir, native_build_dir install_dir
+{
+    build_dir="$1"
+    native_build_dir="$2"
+    win_install_dir="$3"
+
+    if [ ! -d "$native_build_dir" ]
+    then
+        abort_op "The provided native build dir doesn't exist: $native_build_dir"
+    fi
+
+    mkdir -p "$build_dir" || abort_op "Failed to create build dir"
+    mkdir -p "$win_install_dir" || abort_op "Failed to create install dir"
+    cd "$build_dir"
+
+    $work_dir/icu/source/configure \
+    --host=x86_64-w64-mingw32 \
+    --with-cross-build="$native_build_dir" \
+    --prefix="$win_install_dir" \
+    --enable-shared \
+    --disable-static \
+    CC=$mingw_llvm_path/x86_64-w64-mingw32-gcc \
+    CXX=$mingw_llvm_path/x86_64-w64-mingw32-g++ \
+    AR=$mingw_llvm_path/x86_64-w64-mingw32-ar \
+    RANLIB=$mingw_llvm_path/x86_64-w64-mingw32-ranlib \
+    CXXFLAGS="-static-libstdc++ -static-libgcc" \
+    || abort_op "Configure failed"    
+}
+
+
+if [ $# -lt 6 ]
 then
-    echo "Needs 4 arguments: work_dir_path install_dir_path major_ver minor_ver" >&2
+    echo "Needs 6 arguments: work_dir_path install_dir_path major_ver minor_ver operation_mode target_platform" >&2
+    echo " operation_mode  : fetch_only | full" >&2
+    echo " target_platform : linux | windows-crosscompile" >&2
     exit 1
 fi
 
@@ -43,25 +99,40 @@ cp -r icu2/icu4c ./icu
 cp icu2/LICENSE ./
 rm -rf icu2
 
-echo "Building icu"
-mkdir build_linux_x64 || abort_op "Failed to create build dir"
-cd build_linux_x64
-$work_dir/icu/source/configure \
---prefix="$install_dir" \
---enable-rpath \
-CC=gcc \
-CXX=g++ \
-AR=ar \
-RANLIB=ranlib \
-CXXFLAGS="-static-libstdc++ -static-libgcc" \
-LDFLAGS='-Wl,-rpath,$$ORIGIN' \
-|| abort_op "Configure failed"
-
-if [ "$fetch_only" -eq 0 ]; then
-    make -j10 && make install || abort_op "Build failed"
-
-    echo "ICU ready! (work dir will be removed)"
-    rm -rf "$work_dir"
+echo "OPERATION: $operation_mode"
+if [ "$operation_mode" == "fetch-only" ] || [ "$operation_mode" == "fetch_only" ]
+then
+    echo "ICU ready! (fetch only)"
+    exit 0
 fi
+
+if [ "$target_plaform" == "linux" ]
+then
+    echo "Configuring icu (linux x86_64)"
+
+    configure_linux "$work_dir/build_linux_x86_64" "$install_dir"
+    make -j$(nproc) && make install || abort_op "Build failed"
+
+elif [ "$target_plaform" == "windows-crosscompile" ]
+then
+    echo "Configuring icu (linux x86_64) for crosscompilation (windows x86_64)"
+
+    # Need to build the linux native version for ICU's build tools to be present
+    configure_linux "$work_dir/build_linux_x86_64" "$work_dir/install_linux_x86_64"
+    cd "$work_dir/build_linux_x86_64"
+    # make -j$(nproc) && make install || abort_op "Host build failed"
+    make -j$(nproc) || abort_op "Host build failed"
+
+    configure_windows_crosscompile "$work_dir/build_win_x86_64" "$work_dir/build_linux_x86_64" "$install_dir"
+    cd "$work_dir/build_win_x86_64"
+    make -j$(nproc) && make install || abort_op "Cross-build failed"
+
+else
+    abort_op "ICU failed: no valid platform specified!"
+
+fi
+
+echo "ICU ready! (work dir will be removed)"
+rm -rf "$work_dir"
 
 exit 0
