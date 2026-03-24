@@ -6473,14 +6473,15 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			ptr->m_ChartType = XLS::BaseObjectPtr(chartType);
 
 			auto chart3Dpart = new XLS::Chart3d;
-			chart3Dpart->anRot = 20;
-			chart3Dpart->anElev = 15;
-			chart3Dpart->pcDist = 30;
-			chart3Dpart->pcHeight3D = 63;
-			chart3Dpart->pcDepth = 100;
-			chart3Dpart->pcGap = 150;
+			chart3Dpart->anRot = 0;
+			chart3Dpart->anElev = 0x5A;
+			chart3Dpart->pcDist = 0;
+			chart3Dpart->pcHeight3D = 0x2B;
+			chart3Dpart->pcDepth = 0x64;
+			chart3Dpart->pcGap = 0x96;
+			chart3Dpart->fPerspective = true;
+			chart3Dpart->f3DScaling = true;
 			chart3Dpart->fNotPieChart = true;
-			chart3Dpart->fCluster = true;
 			ptr->m_Chart3d = XLS::BaseObjectPtr(chart3Dpart);
 
 			return XLS::BaseObjectPtr(ptr);
