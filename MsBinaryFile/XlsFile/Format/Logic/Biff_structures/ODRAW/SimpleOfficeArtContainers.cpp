@@ -31,6 +31,7 @@
  */
 
 #include "SimpleOfficeArtContainers.h"
+#include "OfficeArtBStoreContainer.h"
 
 namespace ODRAW
 {
@@ -144,10 +145,18 @@ void OfficeArtDggContainer::save(XLS::CFRecord& record)
 
 	if(m_OfficeArtFDGGBlock != nullptr)
 		m_OfficeArtFDGGBlock->save(record);
+	if(m_OfficeArtBStoreContainer != nullptr)
+		m_OfficeArtBStoreContainer->save(record);
 	//calculating size
 	rh_own.recLen = record.getRdPtr() - sizePos;
 	record.RollRdPtrBack(rh_own.recLen + 4);
 	auto recLen = rh_own.recLen;
+	if(m_OfficeArtBStoreContainer != nullptr)
+	{
+		//recLen+=8;//container Header
+		auto bstore = static_cast<ODRAW::OfficeArtBStoreContainer*>(m_OfficeArtBStoreContainer.get());
+		recLen+= bstore->rh_own.recLen;
+	}
 	record << recLen;
 	record.skipNunBytes(rh_own.recLen);
 }

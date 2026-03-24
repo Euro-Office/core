@@ -2022,7 +2022,7 @@ namespace PdfWriter
 
 		}
 
-		if (!m_pAppearance)
+		if (!m_pAppearance && !bNoAP)
 		{
 			m_pAppearance = new CAnnotAppearance(m_pXref, this);
 			CObjectBase* pAP = Get("AP");
@@ -2055,6 +2055,8 @@ namespace PdfWriter
 
 		if (bNoAP)
 		{
+			RemoveAP();
+
 			if (pForm)
 			{
 				CheckMK();

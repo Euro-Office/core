@@ -33,6 +33,7 @@
 #include "MsoDrawingGroup.h"
 #include "../Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
 #include "../Biff_structures/ODRAW/OfficeArtFDGGBlock.h"
+#include "../Biff_structures/ODRAW/OfficeArtBStoreContainer.h"
 
 namespace XLS
 {
@@ -86,6 +87,36 @@ void MsoDrawingGroup::prepareChart(unsigned int count)
 		idcl.dgid = i;
 		fdggblock->Rgidcl.push_back(idcl);
 	}
+}
+
+int MsoDrawingGroup::AddPict(const std::wstring& picPath)
+{
+	int pictNum = -1;
+	ODRAW::OfficeArtBStoreContainer *bstore;
+	if(rgChildRec.m_OfficeArtBStoreContainer == nullptr)
+	{
+		bstore = new ODRAW::OfficeArtBStoreContainer;
+		rgChildRec.m_OfficeArtBStoreContainer = ODRAW::OfficeArtRecordPtr(bstore);
+	}
+	else
+		bstore = static_cast<ODRAW::OfficeArtBStoreContainer*>(rgChildRec.m_OfficeArtBStoreContainer.get());
+	if(!drawingNames.IsInit())
+		drawingNames.Init();
+	if(drawingNames->find(picPath) == drawingNames->end())
+	{
+		auto fileBlock = new ODRAW::OfficeArtBStoreContainerFileBlock;
+		bstore->rgfb.push_back(fileBlock);
+
+		pictNum = bstore->rgfb.size();
+		drawingNames->emplace(picPath, pictNum);
+
+		DWORD fileSize = 0;
+		auto result = NSFile::CFileBinary::ReadAllBytes(picPath, (BYTE**)&fileBlock->pict_data, fileSize);
+		fileBlock->pict_size = fileSize;
+	}
+	else
+		pictNum = drawingNames->find(picPath)->second;
+	return  pictNum;
 }
 
 } // namespace XLS

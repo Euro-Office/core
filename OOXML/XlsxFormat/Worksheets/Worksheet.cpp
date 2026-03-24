@@ -54,18 +54,16 @@
 #include "../../Binary/XlsbFormat/FileTypes_SpreadsheetBin.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Binary/CFStreamCacheWriter.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/WorksheetSubstream.h"
-#include "../../../MsBinaryFile/XlsFile/Format/Logic/ChartSheetSubstream.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/PAGESETUP.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SORTANDFILTER.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CONDFMTS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CONDFMT12.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJECTS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/FEAT11.h"
-#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/OBJ.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/MSODRAWINGGROUP.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/GlobalsSubstream.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/CondFmt12.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawing.h"
-#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Obj.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/MsoDrawingGroup.h"
 
 #include "../../../OdfFile/Common/logging.h"
@@ -435,77 +433,6 @@ namespace OOX
 				worksheetPtr->m_CELLTABLE = m_oSheetData->toXLS();
 			if(m_oDataConsolidate.IsInit())
 				worksheetPtr->m_DCON = m_oDataConsolidate->toXLS();
-
-			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
-			{
-
-				RId drawingId = m_oDrawing->m_oId->GetValue();
-				auto castedDrawing = Get<OOX::File>(drawingId);
-				auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
-				if(drawingPtr->IsChart())
-				{
-					XLS::MsoDrawingGroup* drawingGroupPtr;
-					auto Objects = new XLS::OBJECTS(false);
-					auto objectsPtr =  XLS::BaseObjectPtr(Objects);
-					{
-						auto workbookStream = static_cast<XLS::GlobalsSubstream*>(globalsPtr.get());
-						if(workbookStream->m_arMSODRAWINGGROUP.empty())
-						{
-							drawingGroupPtr = new XLS::MsoDrawingGroup;
-							workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupPtr));
-						}
-						else
-						{
-							drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
-						}
-					}
-					std::vector<XLS::BaseObjectPtr> charts;
-					drawingPtr->toXLSChart(charts);
-					auto chartIndex = 0;
-
-					auto shapeCount = drawingGroupPtr->drawingCount+1;
-					if(!charts.empty())
-					{
-						for(auto anchor : drawingPtr->m_arrItems)
-						{
-							auto drawingObj = new XLS::MsoDrawing(false);
-							{
-								auto left = 0, leftOff = 0, right = 0, righOff = 0, top = 0, topOff = 0, bot = 0, botOff = 0;
-								anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
-								if(anchor != *drawingPtr->m_arrItems.begin())
-									drawingObj->rgChildRec.first = false;
-								drawingObj->prepareChart(shapeCount, left, right, top, bot, leftOff, righOff, topOff, botOff);
-							}
-
-							std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;
-							{
-								auto drawingObjPtr = XLS::MsoDrawingPtr(drawingObj);
-								objPair.first = drawingObjPtr;
-
-								if(drawingObj->rgChildRec.first)
-									Objects->m_MsoDrawing = drawingObjPtr;
-							}
-							auto objPt = new XLS::Obj(Objects->m_MsoDrawing);
-							objPt->cmo.ot = 5;
-							objPt->cmo.fPrint = true;
-							objPt->cmo.fRecalcObj = true;
-							objPt->cmo.id = drawingGroupPtr->drawingCount;
-
-							auto objUnion = new XLS::OBJ(Objects->m_MsoDrawing);
-							objUnion->m_Obj = XLS::BaseObjectPtr(objPt);
-
-							if(charts.size() > chartIndex)
-								objUnion->m_arrChart.push_back(charts.at(chartIndex));
-							objPair.second.push_back(XLS::BaseObjectPtr(objUnion));
-							Objects->m_arrObject.push_back(objPair);
-							chartIndex++;
-							drawingGroupPtr->drawingCount++;
-							shapeCount += 1;
-						}
-						worksheetPtr->m_OBJECTS = objectsPtr;
-					}
-				}
-			}
 			if(m_pComments != nullptr)
 			{
 				if(worksheetPtr->m_OBJECTS == nullptr)
@@ -517,14 +444,26 @@ namespace OOX
 				if(workbookStream->m_arMSODRAWINGGROUP.empty())
 				{
 					drawingGroupPtr = new XLS::MsoDrawingGroup;
-					workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupPtr));
+					auto drawingGroupUnion = new XLS::MSODRAWINGGROUP(false);
+					drawingGroupUnion->m_MsoDrawingGroup = XLS::BaseObjectPtr(drawingGroupPtr);
+					workbookStream->m_arMSODRAWINGGROUP.push_back(XLS::BaseObjectPtr(drawingGroupUnion));
 				}
 				else
 				{
-					drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
+					auto drawingGroupUnion = static_cast<XLS::MSODRAWINGGROUP*>(workbookStream->m_arMSODRAWINGGROUP.back().get());
+					drawingGroupPtr = static_cast<XLS::MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
 				}
 				drawingGroupPtr->drawingCount++;
-			}//will be later
+			}
+			if(m_oDrawing.IsInit() && m_oDrawing->m_oId.IsInit())
+			{
+
+				RId drawingId = m_oDrawing->m_oId->GetValue();
+				auto castedDrawing = Get<OOX::File>(drawingId);
+				auto drawingPtr = static_cast<OOX::Spreadsheet::CDrawing*>(castedDrawing.GetPointer());
+				drawingPtr->toXls(globalsPtr, sheetPtr);
+			}
+
 			if(m_oTableParts.IsInit())
 			{
 				auto feat11 = new XLS::FEAT11;

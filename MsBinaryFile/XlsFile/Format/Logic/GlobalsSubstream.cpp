@@ -733,9 +733,10 @@ const bool GlobalsSubstream::saveContent(BinProcessor& proc)
 			proc.mandatory(*i);
 	for(auto i : m_arMSODRAWINGGROUP)
 	{
-		auto drawingGroup = static_cast<MsoDrawingGroup*>(i.get());
+		auto drawingGroupUnion = static_cast<MSODRAWINGGROUP*>(i.get());
+		auto drawingGroup = static_cast<MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
 		drawingGroup->prepareChart(drawingGroup->drawingCount);
-		proc.mandatory(*drawingGroup);
+		proc.mandatory(*drawingGroupUnion);
 	}
 	if(m_SHAREDSTRINGS != nullptr)
 		proc.mandatory(*m_SHAREDSTRINGS);

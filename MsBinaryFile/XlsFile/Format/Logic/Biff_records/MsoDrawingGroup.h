@@ -33,6 +33,7 @@
 
 #include "BiffRecordContinued.h"
 #include "../Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
+#include "../../../../../OOXML/Base/Nullable.h"
 
 namespace XLS
 {
@@ -54,9 +55,11 @@ public:
 	void writeFields(CFRecord& record);
 
 	void prepareChart(unsigned int count);
+	int AddPict(const std::wstring& pictPath);
 
 	ODRAW::OfficeArtDggContainer rgChildRec;
 	unsigned int drawingCount = 0;
+	nullable<std::map<std::wstring, unsigned int>> drawingNames;
 
 
 };
