@@ -195,7 +195,7 @@ namespace PdfWriter
 		void SetC(const std::vector<double>& arrC);
 
 		void RemoveAP();
-		void APFromFakePage();
+		void APFromFakePage(CAnnotAppearanceObject* pN);
 		virtual CAnnotAppearanceObject* StartAP(int nRotate);
 		TRect& GetRect() { return m_oRect; }
 		void SetXref(CXref* pXref) { m_pXref = pXref; }

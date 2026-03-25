@@ -2281,6 +2281,17 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 				pArray->Add(dRD3 + oCropBox.fLeft);
 				pArray->Add(oCropBox.fTop - dRD2);
 				pStampAnnot->SetAPStream(pAP);
+
+				PdfWriter::CAnnotAppearance* pmAP = dynamic_cast<PdfWriter::CAnnotAppearance*>(pAnnot->Get("AP"));
+				if (pmAP)
+				{
+					PdfWriter::CAnnotAppearanceObject* pAP2 = pmAP->GetNormal();
+					if (pAP2 != pAP)
+					{
+						pAP2->Add("BBox", pArray->Copy());
+						pStampAnnot->SetAPStream(pAP2);
+					}
+				}
 			}
 
 			pStampAnnot->SetRotate(nRotate);
@@ -4390,7 +4401,7 @@ PdfWriter::CAnnotAppearanceObject* CPdfWriter::DrawAP(PdfWriter::CAnnotation* pA
 	NSOnlineOfficeBinToPdf::ConvertBufferToRenderer(pRender, nLenRender, pCorrector);
 	RELEASEOBJECT(pCorrector);
 
-	pAnnot->APFromFakePage();
+	pAnnot->APFromFakePage(pAP);
 
 	m_pPage = pCurPage;
 	m_pDocument->SetCurPage(pCurPage);

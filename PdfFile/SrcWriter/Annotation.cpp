@@ -349,7 +349,7 @@ namespace PdfWriter
 		pNormal->Add("Resources", pResources);
 		return pNormal;
 	}
-	void CAnnotation::APFromFakePage()
+	void CAnnotation::APFromFakePage(CAnnotAppearanceObject* pN)
 	{
 		if (!m_pAppearance)
 			return;
@@ -357,6 +357,12 @@ namespace PdfWriter
 
 		pNormal->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
 		pNormal->AddMatrix(1, 0, 0, 1, -GetRect().fLeft, -GetRect().fBottom);
+
+		if (pN != pNormal)
+		{
+			pN->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
+			pN->AddMatrix(1, 0, 0, 1, 0, 0);
+		}
 	}
 	void CAnnotation::RemoveAP()
 	{
@@ -1301,6 +1307,18 @@ namespace PdfWriter
 				CStream* pStream = pNormal->GetStream();
 				pStream->WriteEscapeName(sExtGrStateName);
 				pStream->WriteStr(" gs\012");
+
+				CResourcesDict* pResources2 = new CResourcesDict(m_pXref, false, false);
+				pNormal = new CAnnotAppearanceObject(m_pXref, this, pResources2);
+				const char* sForm = pResources->GetXObjectName(pNormal);
+
+				CDictObject* pTransparencyGroup = new CDictObject();
+				pTransparencyGroup->Add("Type", "Group");
+				pTransparencyGroup->Add("S", "Transparency");
+				pNormal->Add("Group", pTransparencyGroup);
+
+				pStream->WriteEscapeName(sForm);
+				pStream->WriteStr(" Do\012");
 			}
 		}
 
