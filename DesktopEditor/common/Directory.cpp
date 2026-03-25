@@ -34,7 +34,7 @@
 #include "windows.h"
 #include "windef.h"
 #include <shlobj.h>
-#include <Rpc.h>
+#include <rpc.h>
 #elif __linux__
 #include <sys/types.h>
 #include <sys/stat.h>

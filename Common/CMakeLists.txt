@@ -83,8 +83,22 @@ target_compile_definitions(kernel PRIVATE
 )
 
 target_compile_options(kernel PRIVATE
-    -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
+    -include${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
 )
+
+if( LLVM_MINGW_CROSS )
+    target_compile_definitions(kernel PRIVATE
+        FORCE_POSIX_IN_FILE_CPP
+    )
+
+    target_compile_options(kernel PRIVATE
+        "-include${MINGW_PATH}/x86_64-w64-mingw32/include/share.h"
+    )
+
+    target_link_libraries(kernel PUBLIC
+        rpcrt4
+    )
+endif()
 
 # static libs
 target_link_libraries(kernel PUBLIC

@@ -1605,7 +1605,7 @@ namespace NSFile
 
 		std::wstring wsTemp, wsFileName;
 		FILE *pTempFile = NULL;
-#if defined(_WIN32) || defined (_WIN64)
+#if !defined(FORCE_POSIX_IN_FILE_CPP) && (defined(_WIN32) || defined (_WIN64))
 		wchar_t *wsTempDir = NULL;
 		size_t sz = 0;
 		if ( (0 == _wdupenv_s(&wsTempDir, &sz, L"TEMP")) && (wsFolder == NULL))
@@ -1629,7 +1629,7 @@ namespace NSFile
 		{
 			wsTemp = L"";
 		}
-#if defined(_WIN32) || defined (_WIN64)
+#if !defined(FORCE_POSIX_IN_FILE_CPP) && (defined(_WIN32) || defined (_WIN64))
 		if (wsTempDir)
 			free(wsTempDir);
 #endif

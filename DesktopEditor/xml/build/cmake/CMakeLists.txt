@@ -88,6 +88,7 @@ target_compile_definitions(libxml PUBLIC
     IN_LIBXML
     LIBXML_STATIC
     XML_ERROR_DISABLE_MODE # only release
+    KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
 )
 
 target_include_directories(libxml PRIVATE

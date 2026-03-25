@@ -34,7 +34,7 @@
 #include <stdlib.h>
 
 #ifdef _WIN32
-#include "ShlObj.h"
+#include "shlobj.h"
 #ifdef CreateDirectory
 #undef CreateDirectory
 #endif
