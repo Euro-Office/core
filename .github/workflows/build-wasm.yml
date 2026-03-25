@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: euro-office/sdkjs
-          ref: fork
+          ref: main
           path: sdkjs/
           token: ${{ secrets.EURO_OFFICE_MIRROR_TOKEN }}
 
