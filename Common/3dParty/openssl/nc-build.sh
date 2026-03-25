@@ -28,11 +28,11 @@ configure_windows_crosscompile()
 {
     echo "Configuring OpenSSL (windows-crosscompile)"
 
-    export CC=gcc
-    export AR=ar
-    export RANLIB=ranlib
-    export WINDRES=windres  # for resource compilation
-    export CROSS_COMPILE="$mingw_llvm_bin_path/x86_64-w64-mingw32-"   # optional, helps OpenSSL detect tools
+    unset CROSS_COMPILE
+    export CC="$mingw_llvm_bin_path/x86_64-w64-mingw32-gcc"
+    export AR="$mingw_llvm_bin_path/x86_64-w64-mingw32-ar"
+    export RANLIB="$mingw_llvm_bin_path/x86_64-w64-mingw32-ranlib"
+    export WINDRES="$mingw_llvm_bin_path/x86_64-w64-mingw32-windres"
 
     if [ ! -e $CROSS_COMPILE$CC ]
     then
