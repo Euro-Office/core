@@ -92,9 +92,22 @@ target_compile_definitions(libxml PUBLIC
 
 target_include_directories(libxml PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../qt
     ${LIBXML2_SOURCES_DIR}/include
     ${LIBXML2_SOURCES_DIR}/include/libxml
 )
+
+if( LLVM_MINGW_CROSS )
+
+target_include_directories(libxml PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../vs2013
+)
+
+else()
+
+target_include_directories(libxml PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/../qt
+)
+
+endif()
 
 set_property(TARGET libxml PROPERTY POSITION_INDEPENDENT_CODE ON)
