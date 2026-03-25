@@ -31,21 +31,38 @@
  */
 
 #include "File.h"
+#include "../../DesktopEditor/common/File.h"
 
 namespace OOX
 {
+	#define _SIZE_FOR_DELAYED_READ_ 10000000
+
 	File::File()
 	{
 		m_bDoNotAddRels = false;
+		m_pMainDocument = NULL;
+		m_bNeedToDelayedRead = false;
 	}
 	File::File(OOX::Document *pMain) : m_pMainDocument(pMain)
 	{
 		m_bDoNotAddRels = false;
+		m_bNeedToDelayedRead = false;
 	}
 	File::~File()
 	{
 	}
-
+	void File::TestDelayedRead(const std::wstring & file_path)
+	{
+		NSFile::CFileBinary fileTest;
+		if (fileTest.OpenFile(file_path) != false)
+		{
+			if (_SIZE_FOR_DELAYED_READ_ < fileTest.GetFileSize())
+			{
+				m_bNeedToDelayedRead = true;
+			}
+			fileTest.CloseFile();
+		}
+	}
 	FileGlobalEnumerated::FileGlobalEnumerated(OOX::Document* pMain) : File(pMain)
 	{
 		m_nGlobalNumber = 0;

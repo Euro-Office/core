@@ -1485,10 +1485,10 @@ namespace NSBinPptxRW
 		CBinaryFileWriter::WriteReserved(lCount);
 	}
 
-	CXlsbBinaryWriter::CXlsbBinaryWriter(size_t bufferSize) : CStreamBinaryWriter(bufferSize)
+	CXlsyBinaryWriter::CXlsyBinaryWriter(size_t bufferSize) : CStreamBinaryWriter(bufferSize)
 	{
 	}
-	void CXlsbBinaryWriter::XlsbStartRecord(_INT16 lType, _INT32 nLen)
+	void CXlsyBinaryWriter::XlsbStartRecord(_INT16 lType, _INT32 nLen)
 	{
 		//Type
 		if (lType < 0x80)
@@ -1516,7 +1516,7 @@ namespace NSBinPptxRW
 			}
 		}
 	}
-	void CXlsbBinaryWriter::XlsbEndRecord()
+	void CXlsyBinaryWriter::XlsbEndRecord()
 	{
 	}
 

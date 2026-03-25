@@ -71,7 +71,7 @@ protected:
 class CFStreamCacheWriter : public StreamCacheWriter
 {
 public:
-        CFStreamCacheWriter(CFStreamPtr stream, const GlobalWorkbookInfoPtr global_info);
+	CFStreamCacheWriter(CFStreamPtr stream, const GlobalWorkbookInfoPtr global_info);
 	~CFStreamCacheWriter();
 
 	// Return the next new CFRecord
@@ -92,13 +92,13 @@ private:
 class BinaryStreamCacheWriter : public StreamCacheWriter
 {
 public:
-        BinaryStreamCacheWriter(boost::shared_ptr<NSBinPptxRW::CXlsbBinaryWriter> binaryStream, const GlobalWorkbookInfoPtr global_info);
+        BinaryStreamCacheWriter(boost::shared_ptr<NSBinPptxRW::CXlsyBinaryWriter> binaryStream, const GlobalWorkbookInfoPtr global_info);
         ~BinaryStreamCacheWriter();
 		const size_t GetRecordPosition()override{return 0;}
 private:
 	const size_t writeToStream(const size_t num_of_records_min_necessary) override;
 
-	boost::shared_ptr<NSBinPptxRW::CXlsbBinaryWriter> binaryStream_;
+	boost::shared_ptr<NSBinPptxRW::CXlsyBinaryWriter> binaryStream_;
 };
 
 } // namespace XLS

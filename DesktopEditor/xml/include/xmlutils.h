@@ -116,6 +116,7 @@ namespace XmlUtils
 		void GetTextWithHHHH(bool bPreserve, wchar_t*& sBuffer, long& nSize, long& nLen);
 		std::wstring GetTextWithHHHH(bool bPreserve);
 
+		std::string	GetOuterXmlA();
 		std::wstring	GetOuterXml();
 		std::wstring	GetInnerXml();
 

@@ -90,7 +90,7 @@ public:
 	void resetPointerToBegin();
 
 	//save record to stream
-	void save(NSBinPptxRW::CXlsbBinaryWriter& writer);
+	void save(NSBinPptxRW::CXlsyBinaryWriter& writer);
 	void save(CFStreamPtr& writer);
 
 	template<class T>

@@ -6874,7 +6874,10 @@ int BinaryWorksheetsTableReader::ReadPos(BYTE type, long length, void* poResult)
 int BinaryWorksheetsTableReader::ReadSheetData(BYTE type, long length, void* poResult)
 {
 	int res = c_oSerConstants::ReadOk;
-    if (c_oSerWorksheetsTypes::XlsbPos == type)
+	if (c_oSerWorksheetsTypes::XlsyDelayedId == type)
+	{
+	}
+	else if (c_oSerWorksheetsTypes::XlsyBinaryPos == type)
 	{
 		int nOldPos = m_oBufferedStream.GetPos();
 		m_oBufferedStream.Seek(m_oBufferedStream.GetULong());

@@ -93,7 +93,7 @@ const size_t CFStreamCacheWriter::writeToStream(const size_t num_of_records_min_
 }
 
 //---------------------------------------------------------------------------------------------------------
-BinaryStreamCacheWriter::BinaryStreamCacheWriter(boost::shared_ptr<NSBinPptxRW::CXlsbBinaryWriter> binaryStream, GlobalWorkbookInfoPtr global_info)
+BinaryStreamCacheWriter::BinaryStreamCacheWriter(boost::shared_ptr<NSBinPptxRW::CXlsyBinaryWriter> binaryStream, GlobalWorkbookInfoPtr global_info)
 	: StreamCacheWriter(global_info), binaryStream_(binaryStream)
 {
 

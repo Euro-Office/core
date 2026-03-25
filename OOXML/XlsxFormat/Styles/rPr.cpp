@@ -1333,7 +1333,7 @@ namespace OOX
 
 			//oStream.Seek(nEnd);
 		}
-		void CRPr::toXLSB (NSBinPptxRW::CXlsbBinaryWriter& oStream) const
+		void CRPr::toXLSB (NSBinPptxRW::CXlsyBinaryWriter& oStream) const
 		{
 			//oStream.XlsbStartRecord();
 

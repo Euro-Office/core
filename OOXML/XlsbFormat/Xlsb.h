@@ -91,7 +91,7 @@ namespace OOX
             void init();
             XLS::GlobalWorkbookInfoPtr xls_global_info;
             boost::shared_ptr<NSBinPptxRW::CBinaryFileReader> m_binaryReader;
-			boost::shared_ptr<NSBinPptxRW::CXlsbBinaryWriter> m_binaryWriter;
+			boost::shared_ptr<NSBinPptxRW::CXlsyBinaryWriter> m_binaryWriter;
 
             unsigned short workbook_code_page;
             std::wstring m_sPath;

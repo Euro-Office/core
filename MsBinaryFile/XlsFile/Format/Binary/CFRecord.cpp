@@ -483,7 +483,7 @@ void CFRecord::resetPointerToBegin()
 	rdPtr = 0;
 }
 
-void CFRecord::save(NSBinPptxRW::CXlsbBinaryWriter& writer)
+void CFRecord::save(NSBinPptxRW::CXlsyBinaryWriter& writer)
 {
 	writer.XlsbStartRecord(type_id_, rdPtr);
 	writer.WriteBYTEArray((BYTE*)&intData[0], rdPtr);

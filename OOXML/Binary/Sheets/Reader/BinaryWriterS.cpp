@@ -5950,9 +5950,15 @@ void BinaryWorksheetTableWriter::WriteMergeCells(const OOX::Spreadsheet::CMergeC
 void BinaryWorksheetTableWriter::WriteSheetData(const OOX::Spreadsheet::CSheetData& oSheetData)
 {
 	int nCurPos;
-	if(oSheetData.m_oXlsbPos.IsInit())
+	if (oSheetData.m_nDelayedStep.IsInit())
 	{
-		nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::XlsbPos);
+		nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::XlsyDelayedId);
+		m_oBcw.m_oStream.WriteULONG(*oSheetData.m_nDelayedId);
+		m_oBcw.WriteItemEnd(nCurPos);
+	}
+	else if(oSheetData.m_oXlsbPos.IsInit())
+	{
+		nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::XlsyBinaryPos);
 		m_oBcw.m_oStream.WriteLONG(oSheetData.m_oXlsbPos->GetValue());
 		m_oBcw.WriteItemEnd(nCurPos);
 	}
@@ -9123,7 +9129,9 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
                     pXlsx = new OOX::Spreadsheet::CXlsx();
 				pXlsx->m_bNeedCalcChain = false;
 
-				NSBinPptxRW::CXlsbBinaryWriter oXlsbWriter;
+				pXlsx->m_bNeedToDelayedRead = true;
+
+				NSBinPptxRW::CXlsyBinaryWriter oXlsbWriter;
 				oXlsbWriter.CreateFileW(sFileDst);
 				//write dummy header and main table
 				oXlsbWriter.WriteStringUtf8(WriteFileHeader(0, g_nFormatVersionNoBase64));
@@ -9139,12 +9147,12 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 				
 				if (fileType == 1)
 				{
-                    pXlsx->m_pXlsbWriter = &oXlsbWriter; // todooo xlsb -> xlst without xlsx write folder
+                    pXlsx->m_pXlsyBinWriter = &oXlsbWriter; // todooo xlsb -> xlst without xlsx write folder
 				}
 				//parse
 				pXlsx->Read(OOX::CPath(sInputDir));
 
-				pXlsx->m_pXlsbWriter = NULL;
+				pXlsx->m_pXlsyBinWriter = NULL;
 				oXlsbWriter.CloseFile();
 				m_nLastFilePosOffset = oXlsbWriter.GetPositionAbsolute() - nDataStartPos;
 			}
@@ -9229,6 +9237,59 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 			//write other records
 			oFile.WriteFile(pbBinBuffer + nMidPoint, nBinBufferLen - nMidPoint);
 			oFile.CloseFile();
+
+			if (pXlsx)
+			{
+				for (const auto& delayed : pXlsx->m_mapXlsyDelayed)
+				{
+					XmlUtils::CXmlLiteReader oSubReader;
+
+					oSubReader.FromStringA(delayed.second.second);
+					oSubReader.ReadNextNode();//root
+					oSubReader.ReadNextNode();
+
+					OOX::Spreadsheet::CSheetData* sheetData = dynamic_cast<OOX::Spreadsheet::CSheetData*>(delayed.second.first);
+					if (sheetData)
+					{
+						if (fileType == 1)
+						{
+							NSBinPptxRW::CXlsyBinaryWriter oXlsbWriter1;
+							oXlsbWriter1.CreateFileW(sFileDst + std::to_wstring(delayed.first));
+							pXlsx->m_pXlsyBinWriter = &oXlsbWriter1; // todooo xlsb -> xlst without xlsx write folder
+
+							sheetData->fromXML(oSubReader);
+							pXlsx->m_pXlsyBinWriter = NULL;
+
+							oXlsbWriter1.CloseFile();
+						}
+						else
+						{
+							sheetData->fromXML(oSubReader);
+
+							NSBinPptxRW::CDrawingConverter oOfficeDrawingConverter;
+							NSBinPptxRW::CBinaryFileWriter& oBufferedStream = *oOfficeDrawingConverter.m_pBinaryWriter;
+
+							RELEASEOBJECT(m_oBcw);
+							m_oBcw = new BinaryCommonWriter(oBufferedStream);
+
+							BinaryWorksheetTableWriter oBinaryWorksheetTableWriter(m_oBcw->m_oStream, pEmbeddedFontsManager, NULL, pXlsx->GetTheme(), m_oFontProcessor, &oOfficeDrawingConverter);
+
+							oBinaryWorksheetTableWriter.WriteSheetData(*sheetData);
+
+							BYTE* pbBinBuffer = oBufferedStream.GetBuffer();
+							int nBinBufferLen = oBufferedStream.GetPosition();
+
+							oFile.CreateFileW(sFileDst + std::to_wstring(delayed.first));
+							oFile.WriteFile(pbBinBuffer, nBinBufferLen);
+							oFile.CloseFile();
+						}
+					}
+					else
+					{
+
+					}
+				}
+			}
 		}
 		else
 		{

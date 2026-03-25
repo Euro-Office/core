@@ -554,7 +554,7 @@ namespace PPTX
 			//----------------------------
 							BinXlsxRW::BinaryFileWriter xlsxBinaryWriter(oFontProcessor);
 							OOX::Spreadsheet::CXlsx *pXlsxEmbedded = NULL;
-							NSBinPptxRW::CXlsbBinaryWriter oXlsbWriter;
+							NSBinPptxRW::CXlsyBinaryWriter oXlsbWriter;
 
 							if (office_checker.nFileType == AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSB)
 								pXlsxEmbedded = new OOX::Spreadsheet::CXlsb();
@@ -566,7 +566,7 @@ namespace PPTX
 							oXlsbWriter.WriteReserved(xlsxBinaryWriter.GetMainTableSize());
 							unsigned int nXlsbWriterStartPos = oXlsbWriter.GetPositionAbsolute();
 
-							pXlsxEmbedded->m_pXlsbWriter = &oXlsbWriter;
+							pXlsxEmbedded->m_pXlsyBinWriter = &oXlsbWriter;
 							pXlsxEmbedded->m_bNeedCalcChain = false;
 
 							pXlsxEmbedded->Read(oox_unpacked);
@@ -591,7 +591,7 @@ namespace PPTX
 							xlsxBinaryWriter.WriteContent(pXlsxEmbedded, NULL, &oDrawingConverter);
 							xlsxBinaryWriter.WriteMainTableEnd();
 
-							pXlsxEmbedded->m_pXlsbWriter = NULL;
+							pXlsxEmbedded->m_pXlsyBinWriter = NULL;
 
 							delete pXlsxEmbedded;
 							//------------------------------

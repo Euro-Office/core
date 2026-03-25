@@ -37,7 +37,7 @@
 namespace NSBinPptxRW
 {
 	class CBinaryFileReader;
-	class CXlsbBinaryWriter;
+	class CXlsyBinaryWriter;
 }
 
 namespace OOX
@@ -67,7 +67,7 @@ namespace OOX
 			XLS::BiffStructurePtr toXLS() const;
 
 			void fromXLSBExt (NSBinPptxRW::CBinaryFileReader& oStream);
-			void toXLSBExt (NSBinPptxRW::CXlsbBinaryWriter& oStream);
+			void toXLSBExt (NSBinPptxRW::CXlsyBinaryWriter& oStream);
 			_UINT32 getXLSBSize() const;
 			virtual EElementType getType () const;
 

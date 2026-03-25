@@ -206,8 +206,11 @@ namespace XmlUtils
 	std::wstring CXmlLiteReader::GetTextWithHHHH(bool bPreserve)
 	{
 		return m_pInternal->GetTextWithHHHH(bPreserve);
-	}
-
+    }
+    std::string CXmlLiteReader::GetOuterXmlA()
+    {
+        return m_pInternal->GetOuterXmlA();
+    }
 	std::wstring CXmlLiteReader::GetOuterXml()
 	{
 		return m_pInternal->GetOuterXml();

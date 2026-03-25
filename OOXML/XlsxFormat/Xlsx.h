@@ -54,7 +54,6 @@ namespace OOX
 		class CXlsx : public OOX::Document, public OOX::IFileContainer 
 		{
 		public:
-
 			CXlsx();
 			CXlsx(const CPath& oFilePath);
 			virtual ~CXlsx();
@@ -92,7 +91,6 @@ namespace OOX
 			OOX::JsaProject*								m_pJsaProject;
             
 			WorkbookComments*								m_pWorkbookComments;
-			NSBinPptxRW::CXlsbBinaryWriter*					m_pXlsbWriter;
 			int												m_nLastReadRow;
 			int												m_nLastReadCol;
 			bool											m_bNeedCalcChain;// disable because it is useless but reading takes considerable time
@@ -108,8 +106,10 @@ namespace OOX
 			bool bDeleteVbaProject;
 			bool bDeleteJsaProject;
 
+			bool m_bNeedToDelayedRead = false;
+			NSBinPptxRW::CXlsyBinaryWriter* m_pXlsyBinWriter = NULL;
+			std::map<unsigned int, std::pair<OOX::WritingElement*, std::string>> m_mapXlsyDelayed;
 		private:
-
 			void PrepareWorksheet(CWorksheet* pWorksheet);
             void init();
 

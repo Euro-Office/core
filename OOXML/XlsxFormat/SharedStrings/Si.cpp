@@ -348,7 +348,7 @@ namespace OOX
 				}
 			}
 		}
-		void CSi::toXLSBExt (NSBinPptxRW::CXlsbBinaryWriter& oStream)
+		void CSi::toXLSBExt (NSBinPptxRW::CXlsyBinaryWriter& oStream)
 		{
 			//it's not by XLSB format
 			oStream.WriteULONG(m_arrItems.size());

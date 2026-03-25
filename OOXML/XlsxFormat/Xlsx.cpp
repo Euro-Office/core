@@ -93,6 +93,7 @@ OOX::Spreadsheet::CXlsx::~CXlsx()
     }
 	m_arWorksheets.clear();
 	m_mapWorksheets.clear();
+	m_mapXlsyDelayed.clear();
 }	
 void OOX::Spreadsheet::CXlsx::init()
 {
@@ -108,7 +109,7 @@ void OOX::Spreadsheet::CXlsx::init()
     m_pVbaProject		= NULL;
     m_pJsaProject		= NULL;
     m_pWorkbookComments = NULL;
-    m_pXlsbWriter       = NULL;
+    m_pXlsyBinWriter       = NULL;
     m_nLastReadRow      = 0;
     m_nLastReadCol      = -1;
     m_bNeedCalcChain    = true;

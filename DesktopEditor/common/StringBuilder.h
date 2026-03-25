@@ -63,6 +63,7 @@ namespace NSStringUtils
 
 		void AddCharNoSafe(const char& _c);
 		void AddCharSafe(const char& _c);
+        void AddChar2Safe(const char& _c1, const char& _c2);
 
 		size_t GetCurSize();
 		void SetCurSize(size_t lCurSize);

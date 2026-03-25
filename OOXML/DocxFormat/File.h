@@ -47,17 +47,22 @@ namespace OOX
 		File(OOX::Document *pMain);
 		virtual ~File();
 
-		virtual void read(const CPath& filename)                                                        = 0;
+		virtual void read(const CPath& filename) = 0;
 		virtual void write(const CPath& filename, const CPath& directory, CContentTypes& content) const = 0;
 
 		virtual const OOX::FileType type()				const	= 0;
 		virtual const CPath			DefaultDirectory()	const	= 0;
 		virtual const CPath			DefaultFileName()	const	= 0;
 		
-		std::wstring	m_sOutputFilename;
-		bool			m_bDoNotAddRels;
+		std::wstring m_sOutputFilename;
+		bool m_bDoNotAddRels;
 		
-		OOX::Document *m_pMainDocument;
+		OOX::Document *m_pMainDocument = NULL;
+//---------------------------------------------------------------------------------
+		bool m_bNeedToDelayedRead = false;
+		void TestDelayedRead(const std::wstring& file_path);
+
+		nullable_uint m_nDelayedPosition;
 	};
 
 	class FileGlobalEnumerated : public File

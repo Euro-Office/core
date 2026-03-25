@@ -40,7 +40,7 @@
 namespace NSBinPptxRW
 {
 	class CBinaryFileReader;
-	class CXlsbBinaryWriter;
+	class CXlsyBinaryWriter;
 }
 namespace NSFile
 {
@@ -63,8 +63,8 @@ namespace OOX
 			void Clean();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			_UINT32 getXLSBSize();
-			_UINT16 toXLSB(NSBinPptxRW::CXlsbBinaryWriter& oStream, bool bIsBlankFormula);
-			void toXLSBExt(NSBinPptxRW::CXlsbBinaryWriter& oStream);
+			_UINT16 toXLSB(NSBinPptxRW::CXlsyBinaryWriter& oStream, bool bIsBlankFormula);
+			void toXLSBExt(NSBinPptxRW::CXlsyBinaryWriter& oStream);
 
 			bool m_bIsInit;
 			CStringXLSB m_oFormula;
@@ -90,7 +90,7 @@ namespace OOX
 			CCellXLSB();
 			void Clean();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
-			void toXLSB(NSBinPptxRW::CXlsbBinaryWriter& oStream);
+			void toXLSB(NSBinPptxRW::CXlsyBinaryWriter& oStream);
 
 			_UINT32 m_nCol;
 			_UINT32 m_nStyle;
@@ -112,8 +112,8 @@ namespace OOX
 		public:
 			CRowXLSB();
 			void Clean();
-			void fromXMLToXLSB(XmlUtils::CXmlLiteReader& oReader, NSBinPptxRW::CXlsbBinaryWriter& oStream, CCellXLSB& oCell);
-			void toXLSB(NSBinPptxRW::CXlsbBinaryWriter& oStream);
+			void fromXMLToXLSB(XmlUtils::CXmlLiteReader& oReader, NSBinPptxRW::CXlsyBinaryWriter& oStream, CCellXLSB& oCell);
+			void toXLSB(NSBinPptxRW::CXlsyBinaryWriter& oStream);
 		public:
 			_UINT32 m_nR;
 			_UINT32 m_nS;
@@ -304,9 +304,9 @@ namespace OOX
 			void toXMLStart(NSStringUtils::CStringBuilder& writer) const;
 			void toXMLEnd(NSStringUtils::CStringBuilder& writer) const;
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
-			void fromXMLToXLSB(XmlUtils::CXmlLiteReader& oReader, NSBinPptxRW::CXlsbBinaryWriter& oStream, CCellXLSB& oCell);
+			void fromXMLToXLSB(XmlUtils::CXmlLiteReader& oReader, NSBinPptxRW::CXlsyBinaryWriter& oStream, CCellXLSB& oCell);
 			void fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16 nType);
-			void toXLSB (NSBinPptxRW::CXlsbBinaryWriter& oStream) const;
+			void toXLSB (NSBinPptxRW::CXlsyBinaryWriter& oStream) const;
 
             void fromBin(XLS::BaseObjectPtr& obj);
             void fromBin(XLS::StreamCacheReaderPtr& reader);
@@ -348,7 +348,7 @@ namespace OOX
 		{
 		public:
 			WritingElement_AdditionMethods(CSheetData)
-            //WritingElement_XlsbConstructors(CSheetData)
+
 			CSheetData(OOX::Document *pMain = NULL);
 			virtual ~CSheetData();
 
@@ -377,6 +377,9 @@ namespace OOX
 			void StyleFromMapStyleMerges2003(std::map<int, unsigned int> &mapStyleMerges);
 			void AfterRead();
             void ClearSharedFmlaRefs();
+
+			nullable_int m_nDelayedStep;
+			nullable_uint m_nDelayedId;
 
 		private:
 			void fromXLSBToXmlCell (CCell& pCell, CSVWriter* pCSVWriter, NSFile::CStreamWriter& oStreamWriter);

@@ -460,10 +460,10 @@ namespace NSBinPptxRW
 		void WriteReserved(size_t lCount);
 	};
 
-	class CXlsbBinaryWriter : public CStreamBinaryWriter
+	class CXlsyBinaryWriter : public CStreamBinaryWriter
 	{
 	public:
-		CXlsbBinaryWriter(size_t bufferSize = 16777216);
+		CXlsyBinaryWriter(size_t bufferSize = 16777216);
 
 		void XlsbStartRecord(_INT16 lType, _INT32 nLen);
 		void XlsbEndRecord();

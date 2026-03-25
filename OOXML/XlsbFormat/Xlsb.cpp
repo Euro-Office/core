@@ -69,7 +69,7 @@ void OOX::Spreadsheet::CXlsb::init()
 	xls_global_info = boost::shared_ptr<XLS::GlobalWorkbookInfo>(new XLS::GlobalWorkbookInfo(workbook_code_page, nullptr));
 	xls_global_info->Version = 0x0800;
     m_binaryReader = boost::shared_ptr<NSBinPptxRW::CBinaryFileReader>(new NSBinPptxRW::CBinaryFileReader);
-	m_binaryWriter = boost::shared_ptr<NSBinPptxRW::CXlsbBinaryWriter>(new NSBinPptxRW::CXlsbBinaryWriter);
+	m_binaryWriter = boost::shared_ptr<NSBinPptxRW::CXlsyBinaryWriter>(new NSBinPptxRW::CXlsyBinaryWriter);
 	m_bWriteToXlsx = false;
 }
 bool OOX::Spreadsheet::CXlsb::ReadBin(const CPath& oFilePath, XLS::BaseObject* objStream)

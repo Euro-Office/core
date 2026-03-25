@@ -619,7 +619,9 @@ namespace OOX
 			m_oReadPath = oPath;
 			IFileContainer::Read( oRootPath, oPath );
 
-            if( m_oReadPath.GetExtention() == _T(".bin"))
+			OOX::File::TestDelayedRead(oPath.GetPath());
+
+			if( m_oReadPath.GetExtention() == L".bin")
             {
                 readBin(m_oReadPath);
 			}
@@ -691,7 +693,33 @@ namespace OOX
 				else if (L"sheetData" == sName || L"Table" == sName) // 2002 XML Format
 				{
 					m_oSheetData = new CSheetData(OOX::WritingElement::m_pMainDocument);
-					m_oSheetData->fromXML(oReader);
+
+					CXlsx* xlsx = dynamic_cast<CXlsx*>(OOX::WritingElement::m_pMainDocument);
+					if (m_bNeedToDelayedRead && xlsx && xlsx->m_bNeedToDelayedRead)
+					{
+						m_oSheetData->m_nDelayedStep = 1;
+						m_oSheetData->m_nDelayedId = xlsx->m_mapXlsyDelayed.size() + 1;
+						
+						std::string sBegin("<root \
+xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" mc:Ignorable=\"x14ac xr xr2 xr3\" xmlns:x14ac=\"http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac\" xmlns:xr=\"http://schemas.microsoft.com/office/spreadsheetml/2014/revision\" xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\" xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\">");
+						std::string sEnd("</root>");	
+						
+						_CP_LOG << L"\t\tstart outer xml"<< std::endl;
+						std::string delayed = sBegin + oReader.GetOuterXmlA() + sEnd;
+						_CP_LOG << L"\t\tend outer xml" << std::endl;
+
+						xlsx->m_mapXlsyDelayed.insert(std::make_pair(*m_oSheetData->m_nDelayedId, std::make_pair(dynamic_cast<OOX::WritingElement*>(m_oSheetData.GetPointer()), delayed)));
+			
+						XmlUtils::CXmlLiteReader oSubReader;
+
+						oSubReader.FromStringA(delayed);
+						oSubReader.ReadNextNode();//root
+						oSubReader.ReadNextNode();//sheetData / Table
+						
+						m_oSheetData->fromXML(oSubReader);
+					}
+					else
+						m_oSheetData->fromXML(oReader);
 				}
 				else if (L"WorksheetOptions" == sName) // 2002 XML Format
 				{

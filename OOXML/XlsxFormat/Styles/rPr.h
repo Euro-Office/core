@@ -38,7 +38,7 @@
 namespace NSBinPptxRW
 {
 	class CBinaryFileReader;
-	class CXlsbBinaryWriter;
+	class CXlsyBinaryWriter;
 }
 
 namespace SimpleTypes
@@ -308,7 +308,7 @@ namespace OOX
             void fromFont(CFont* font);
             CFont* toFont();
 			void fromXLSB (NSBinPptxRW::CBinaryFileReader& oStream, _UINT16 nType);
-			void toXLSB (NSBinPptxRW::CXlsbBinaryWriter& oStream) const;
+			void toXLSB (NSBinPptxRW::CXlsyBinaryWriter& oStream) const;
 			_UINT32 getXLSBSize() const;
 
 			virtual EElementType getType () const;

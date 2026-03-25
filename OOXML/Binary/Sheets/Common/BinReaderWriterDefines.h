@@ -474,7 +474,7 @@ namespace BinXlsxRW
 		DataValidations = 32,
 		QueryTable = 33,
 		Controls = 34,
-		XlsbPos = 35,
+		XlsyBinaryPos = 35,
 		SortState = 36,
 		Slicers = 37,
 		SlicersExt = 38,
@@ -490,7 +490,8 @@ namespace BinXlsxRW
 		TimelinesList = 48,
 		Timelines = 49,
 		Timeline = 50,
-		TableSingleCells = 51
+		TableSingleCells = 51,
+		XlsyDelayedId = 52
 	};}
 	namespace c_oSerWorksheetProtection {enum c_oSerWorksheetPropTypes
 	{

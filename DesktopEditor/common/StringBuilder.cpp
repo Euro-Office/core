@@ -140,8 +140,14 @@ namespace NSStringUtils
 		AddSize(1);
 		*m_pDataCur++ = _c;
 		++m_lSizeCur;
-	}
-
+    }
+    void CStringBuilderA::AddChar2Safe(const char& _c1, const char& _c2)
+    {
+        AddSize(2);
+        *m_pDataCur++ = _c1;
+        *m_pDataCur++ = _c2;
+        m_lSizeCur += 2;
+    }
 	size_t CStringBuilderA::GetCurSize()
 	{
 		return m_lSizeCur;

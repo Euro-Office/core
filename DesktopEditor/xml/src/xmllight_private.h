@@ -635,6 +635,10 @@ namespace XmlUtils
             GetTextWithHHHH(bPreserve, pUnicodes, nSize, nLen);
             return std::wstring(pUnicodes, nLen);
         }
+        inline std::string GetOuterXmlA()
+        {
+            return GetXmlA(false);
+        }
         inline std::wstring GetOuterXml()
         {
             return GetXml(false);
@@ -700,6 +704,64 @@ namespace XmlUtils
         }
 
     private:
+        inline std::string GetXmlA(bool bInner)
+        {
+            if (!IsValid())
+                return "";
+
+            NSStringUtils::CStringBuilderA oResult;
+            if (false == bInner)
+                WriteElement(oResult);
+
+            int nDepth = GetDepth();
+            if (0 == xmlTextReaderIsEmptyElement(reader))
+            {
+                XmlNodeType eNodeType = XmlNodeType_None;
+
+                int nCurDepth = -1;
+                while (true)
+                {
+                    if (1 != xmlTextReaderRead(reader))
+                        break;
+
+                    int nTempType = xmlTextReaderNodeType(reader);
+                    if (-1 == nTempType)
+                        break;
+                    eNodeType = (XmlNodeType)nTempType;
+
+                    nCurDepth = GetDepth();
+                    if (eNodeType == XmlNodeType_Text ||
+                        eNodeType == XmlNodeType_Whitespace ||
+                        eNodeType == XmlNodeType_SIGNIFICANT_WHITESPACE ||
+                        eNodeType == XmlNodeType_CDATA)
+                    {
+                        oResult.WriteString(GetTextA().c_str());
+                    }
+                    else if (eNodeType == XmlNodeType_Element)
+                    {
+                        WriteElement(oResult);
+                    }
+                    else if (eNodeType == XmlNodeType_EndElement)
+                    {
+                        if (false == bInner || nCurDepth != nDepth)
+                        {
+                            oResult.AddChar2Safe(char('<'), char('/'));
+                            oResult.WriteString(GetNameA().c_str());
+                            oResult.AddCharSafe(char('>'));
+                        }
+                    }
+
+                    nCurDepth = GetDepth();
+                    if (nCurDepth < nDepth)
+                        break;
+
+                    if (XmlNodeType_EndElement == eNodeType && nCurDepth == nDepth)
+                        break;
+                }
+            }
+
+            return oResult.GetData();
+        }
         inline std::wstring GetXml(bool bInner)
         {
             if (!IsValid())
@@ -780,6 +842,33 @@ namespace XmlUtils
                 oResult.AddChar2Safe(wchar_t('/'), wchar_t('>'));
             else
                 oResult.AddCharSafe(wchar_t('>'));
+        }
+        void WriteElement(NSStringUtils::CStringBuilderA& oResult)
+        {
+            oResult.AddCharSafe((char)'<');
+            oResult.WriteString(GetNameA().c_str());
+            if (GetAttributesCount() > 0)
+            {
+                MoveToFirstAttribute();
+                std::wstring sName = GetName();
+                while (!sName.empty())
+                {
+                    oResult.AddCharSafe(char(' '));
+                    oResult.WriteString(GetNameA().c_str());
+                    oResult.AddChar2Safe(char('='), char('\"'));
+                    oResult.WriteString(GetTextA().c_str());
+                    oResult.AddCharSafe(char('\"'));
+
+                    if (!MoveToNextAttribute())
+                        break;
+                    sName = GetName();
+                }
+                MoveToElement();
+            }
+            if (IsEmptyNode())
+                oResult.AddChar2Safe(char('/'), char('>'));
+            else
+                oResult.AddCharSafe(char('>'));
         }
     };
 }
