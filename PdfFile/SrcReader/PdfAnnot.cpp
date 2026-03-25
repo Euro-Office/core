@@ -3584,7 +3584,18 @@ void CAnnotAP::Draw(PDFDoc* pdfDoc, Object* oAP, int nRasterH, int nBackgroundCo
 			if (annot)
 			{
 				annot->generateAnnotAppearance();
+				if (m_bIsStamp)
+				{
+					double dCA = 1;
+					Object oCA;
+					if (oAnnot.dictLookup("CA", &oCA)->isNum())
+						dCA = oCA.getNum();
+					oCA.free();
+					m_gfx->setIgnoreStampOpacity(dCA);
+				}
 				annot->draw(m_gfx, gFalse);
+				if (m_bIsStamp)
+					m_gfx->setIgnoreStampOpacity(1);
 			}
 			RELEASEOBJECT(annot);
 

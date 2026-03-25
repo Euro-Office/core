@@ -550,6 +550,7 @@ Gfx::Gfx(PDFDoc *docA, OutputDev *outA, int pageNum, Dict *resDict,
   contentStreamStack = new GList();
   abortCheckCbk = abortCheckCbkA;
   abortCheckCbkData = abortCheckCbkDataA;
+  dIgnoreStampOpacity = 1;
 
   // set crop box
   if (cropBox) {
@@ -594,6 +595,7 @@ Gfx::Gfx(PDFDoc *docA, OutputDev *outA, Dict *resDict,
   contentStreamStack = new GList();
   abortCheckCbk = abortCheckCbkA;
   abortCheckCbkData = abortCheckCbkDataA;
+  dIgnoreStampOpacity = 1;
 
   // set crop box
   if (cropBox) {
@@ -1004,6 +1006,20 @@ void Gfx::opSetExtGState(Object args[], int numArgs) {
     printf("  gfx state dict: ");
     obj1.print();
     printf("\n");
+  }
+
+  if (dIgnoreStampOpacity != 1)
+  {
+	  if (obj1.dictLookup("ca", &obj2)->isNum() && fabs(obj2.getNum() - dIgnoreStampOpacity) < 0.001)
+	  {
+		  obj2.free();
+		  if (obj1.dictLookup("CA", &obj2)->isNum() && fabs(obj2.getNum() - dIgnoreStampOpacity) < 0.001)
+		  {
+			  obj2.free(); obj1.free();
+			  dIgnoreStampOpacity = 1;
+			  return;
+		  }
+	  }
   }
 
   if (out->useNameOp())
