@@ -24,6 +24,7 @@ if( LLVM_MINGW_CROSS )
             ${ICU_MINOR_VER}
             full
             windows-crosscompile
+            "${MINGW_PATH}/bin"
         WORKING_DIRECTORY ${ICU_3RDPARTY_DIR_ABS}
     )
 

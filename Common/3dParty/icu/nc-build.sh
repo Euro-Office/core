@@ -6,8 +6,7 @@ icu_major=$3
 icu_minor=$4
 operation_mode=$5 # fetch-only | full
 target_plaform=$6 # linux | windows-crosscompile
-
-mingw_llvm_path="/home/tbari/Junkyard/icu_cross/llvm-mingw-20260311-msvcrt-ubuntu-22.04-x86_64/bin"
+mingw_llvm_bin_path=${7:-""}
 
 abort_op()
 {
@@ -49,6 +48,11 @@ configure_windows_crosscompile() # args: build_dir, native_build_dir install_dir
         abort_op "The provided native build dir doesn't exist: $native_build_dir"
     fi
 
+    if [ ! -e $mingw_llvm_bin_path/x86_64-w64-mingw32-gcc ]
+    then
+        abort_op "Configuration failed: cross-compiler gcc not exectuable: $mingw_llvm_bin_path/x86_64-w64-mingw32-gcc"
+    fi
+
     mkdir -p "$build_dir" || abort_op "Failed to create build dir"
     mkdir -p "$win_install_dir" || abort_op "Failed to create install dir"
     cd "$build_dir"
@@ -59,10 +63,10 @@ configure_windows_crosscompile() # args: build_dir, native_build_dir install_dir
     --prefix="$win_install_dir" \
     --enable-shared \
     --disable-static \
-    CC=$mingw_llvm_path/x86_64-w64-mingw32-gcc \
-    CXX=$mingw_llvm_path/x86_64-w64-mingw32-g++ \
-    AR=$mingw_llvm_path/x86_64-w64-mingw32-ar \
-    RANLIB=$mingw_llvm_path/x86_64-w64-mingw32-ranlib \
+    CC=$mingw_llvm_bin_path/x86_64-w64-mingw32-gcc \
+    CXX=$mingw_llvm_bin_path/x86_64-w64-mingw32-g++ \
+    AR=$mingw_llvm_bin_path/x86_64-w64-mingw32-ar \
+    RANLIB=$mingw_llvm_bin_path/x86_64-w64-mingw32-ranlib \
     CXXFLAGS="-static-libstdc++ -static-libgcc" \
     || abort_op "Configure failed"    
 }
@@ -70,9 +74,10 @@ configure_windows_crosscompile() # args: build_dir, native_build_dir install_dir
 
 if [ $# -lt 6 ]
 then
-    echo "Needs 6 arguments: work_dir_path install_dir_path major_ver minor_ver operation_mode target_platform" >&2
-    echo " operation_mode  : fetch_only | full" >&2
-    echo " target_platform : linux | windows-crosscompile" >&2
+    echo "Needs 6 arguments: work_dir_path install_dir_path major_ver minor_ver operation_mode target_platform [mingw_llvm_bin_path]" >&2
+    echo "  operation_mode  : fetch_only | full" >&2
+    echo "  target_platform : linux | windows-crosscompile" >&2
+    echo "  mingw_llvm_bin_path : LLVM MinGW cross-compiler's bin path" >&2
     exit 1
 fi
 
