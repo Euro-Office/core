@@ -605,6 +605,12 @@ BYTE* CPdfFile::GetAPAnnots(int nRasterW, int nRasterH, int nBackgroundColor, in
 		return NULL;
 	return m_pInternal->pReader->GetAPAnnots(nRasterW, nRasterH, nBackgroundColor, nPageIndex, nAnnot, sView);
 }
+std::vector<CPdfLink*> CPdfFile::GetPdfLinks(int nPageIndex)
+{
+	if (!m_pInternal->pReader)
+		return std::vector<CPdfLink*>();
+	return m_pInternal->pReader->GetPdfLinks(nPageIndex);
+}
 
 // ------------------------------------------------------------------------
 

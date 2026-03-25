@@ -56,6 +56,20 @@ struct COfficeDrawingPageParams
 	}
 };
 
+struct CPdfLink
+{
+	~CPdfLink() { RELEASEOBJECT(pNext); }
+
+	double pRect[4];
+	BYTE nType;
+	BYTE nKind;
+	unsigned int unPage;
+	unsigned int unKindFlag;
+	double pData[4];
+	std::string sData;
+	CPdfLink* pNext = NULL;
+};
+
 class GRAPHICS_DECL IOfficeDrawingFile
 {
 public:
@@ -103,6 +117,8 @@ public:
     virtual std::wstring GetInfo() = 0;
     virtual unsigned char* GetStructure() = 0;
     virtual unsigned char* GetLinks(int nPageIndex) = 0;
+
+	virtual std::vector<CPdfLink*> GetPdfLinks(int nPageIndex);
 };
 
 #endif // _OFFICE_DRAWING_FILE_H

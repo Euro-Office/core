@@ -534,6 +534,75 @@ CAnnot::CBorderType* getBorder(Object* oBorder, bool bBSorBorder)
 }
 
 //------------------------------------------------------------------------
+// Action
+//------------------------------------------------------------------------
+
+void CActionGoTo::GetPdfLink(CPdfLink* pLink)
+{
+	pLink->nType = 1;
+	pLink->unPage = unPage;
+	pLink->nKind = nKind;
+	switch (nKind)
+	{
+	case destXYZ:
+	case destFitH:
+	case destFitBH:
+	case destFitV:
+	case destFitBV:
+	{
+		pLink->unKindFlag = unKindFlag;
+		if (unKindFlag & (1 << 0))
+			pLink->pData[0] = pRect[0];
+		if (unKindFlag & (1 << 1))
+			pLink->pData[1] = pRect[1];
+		if (unKindFlag & (1 << 2))
+			pLink->pData[2] = pRect[2];
+		break;
+	}
+	case destFitR:
+	{
+		pLink->pData[0] = pRect[0];
+		pLink->pData[1] = pRect[1];
+		pLink->pData[2] = pRect[2];
+		pLink->pData[3] = pRect[3];
+		break;
+	}
+	case destFit:
+	case destFitB:
+	default:
+		break;
+	}
+
+	if (pNext)
+	{
+		pLink->pNext = new CPdfLink();
+		GetPdfLink(pLink->pNext);
+	}
+}
+void CActionURI::GetPdfLink(CPdfLink* pLink)
+{
+	pLink->nType = 6;
+	pLink->sData = sURI;
+
+	if (pNext)
+	{
+		pLink->pNext = new CPdfLink();
+		GetPdfLink(pLink->pNext);
+	}
+}
+void CActionNamed::GetPdfLink(CPdfLink* pLink)
+{
+	pLink->nType = 10;
+	pLink->sData = sNamed;
+
+	if (pNext)
+	{
+		pLink->pNext = new CPdfLink();
+		GetPdfLink(pLink->pNext);
+	}
+}
+
+//------------------------------------------------------------------------
 // Widget
 //------------------------------------------------------------------------
 
@@ -1264,6 +1333,17 @@ CAnnotLink::~CAnnotLink()
 {
 	RELEASEOBJECT(m_pAction);
 	RELEASEOBJECT(m_pPA);
+}
+CPdfLink* CAnnotLink::GetPdfLink()
+{
+	CPdfLink* pRes = new CPdfLink();
+	pRes->pRect[0] = m_pRect[0];
+	pRes->pRect[1] = m_pRect[1];
+	pRes->pRect[2] = m_pRect[2];
+	pRes->pRect[3] = m_pRect[3];
+	if (m_pAction)
+		m_pAction->GetPdfLink(pRes);
+	return pRes;
 }
 
 //------------------------------------------------------------------------

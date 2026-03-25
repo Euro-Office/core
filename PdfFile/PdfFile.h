@@ -136,6 +136,7 @@ public:
 	virtual std::wstring GetInfo();
 	virtual BYTE* GetStructure();
 	virtual BYTE* GetLinks(int nPageIndex);
+	std::vector<CPdfLink*> GetPdfLinks(int nPageIndex) override;
 
 	bool ValidMetaData();
 	// Захватывает полученную память malloc data

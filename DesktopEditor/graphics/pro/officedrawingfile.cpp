@@ -141,3 +141,8 @@ void IOfficeDrawingFile::ConvertToRaster(int nPageIndex, const std::wstring& pat
     pFrame->SaveFile(path, nImageType);
     RELEASEOBJECT(pFrame);
 }
+
+std::vector<CPdfLink*> IOfficeDrawingFile::GetPdfLinks(int nPageIndex)
+{
+	return std::vector<CPdfLink*>();
+}

@@ -126,6 +126,7 @@ public:
 	BYTE* GetButtonIcon(int nBackgroundColor, int nPageIndex, bool bBase64 = false, int nBWidget = -1, const char* sIView = NULL);
 	BYTE* StreamToCData(BYTE* pSteam, int nLength);
 	const std::map<std::wstring, std::wstring>& GetFonts() { return m_mFonts; }
+	std::vector<CPdfLink*> GetPdfLinks(int nPageIndex);
 
 private:
 	void Clear();

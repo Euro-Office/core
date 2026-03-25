@@ -41,6 +41,7 @@
 #include "../../DesktopEditor/graphics/pro/Fonts.h"
 #include "../../DesktopEditor/graphics/pro/Graphics.h"
 #include "../../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
+#include "../../DesktopEditor/graphics/pro/officedrawingfile.h"
 
 #include "RendererOutputDev.h"
 
@@ -57,6 +58,7 @@ public:
 	virtual ~CAction() { RELEASEOBJECT(pNext); }
 
 	virtual void ToWASM(NSWasm::CData& oRes);
+	virtual void GetPdfLink(CPdfLink* pLink);
 
 	std::string sType;
 	CAction* pNext;
@@ -70,18 +72,21 @@ struct CActionGoTo       final : public CAction
 	double pRect[4];
 	BYTE nKind;
 
+	virtual void GetPdfLink(CPdfLink* pLink) override;
 	void ToWASM(NSWasm::CData& oRes) override;
 };
 struct CActionURI        final : public CAction
 {
 	std::string sURI;
 
+	virtual void GetPdfLink(CPdfLink* pLink) override;
 	void ToWASM(NSWasm::CData& oRes) override;
 };
 struct CActionNamed      final : public CAction
 {
 	std::string sNamed;
 
+	virtual void GetPdfLink(CPdfLink* pLink) override;
 	void ToWASM(NSWasm::CData& oRes) override;
 };
 struct CActionJavaScript final : public CAction
@@ -346,6 +351,8 @@ class CAnnotLink final : public CAnnot
 public:
 	CAnnotLink(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, int nStartRefID);
 	virtual ~CAnnotLink();
+
+	CPdfLink* GetPdfLink();
 
 	void ToWASM(NSWasm::CData& oRes) override;
 

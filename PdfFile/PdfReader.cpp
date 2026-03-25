@@ -1124,7 +1124,6 @@ BYTE* CPdfReader::GetStructure()
 }
 BYTE* CPdfReader::GetLinks(int _nPageIndex)
 {
-	// TODO Links должны стать частью Annots
 	PDFDoc* pDoc = NULL;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc || !pDoc->getCatalog())
@@ -1256,6 +1255,64 @@ BYTE* CPdfReader::GetLinks(int _nPageIndex)
 	RELEASEOBJECT(pTextOut);
 
 	return oLinks.Serialize();
+}
+std::vector<CPdfLink*> CPdfReader::GetPdfLinks(int _nPageIndex)
+{
+	std::vector<CPdfLink*> oRes;
+	if (m_vPDFContext.empty())
+		return oRes;
+
+	PDFDoc* pDoc = NULL;
+	PdfReader::CPdfFontList* pFontList = NULL;
+	int nStartRefID = 0;
+	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc, &pFontList, &nStartRefID);
+	if (nPageIndex < 0 || !pDoc || !pFontList || !pDoc->getCatalog())
+		return oRes;
+
+	Page* pPage = pDoc->getCatalog()->getPage(nPageIndex);
+	if (!pPage)
+		return oRes;
+
+	Object oAnnots;
+	if (!pPage->getAnnots(&oAnnots)->isArray())
+	{
+		oAnnots.free();
+		return oRes;
+	}
+
+	for (int i = 0, nNum = oAnnots.arrayGetLength(); i < nNum; ++i)
+	{
+		Object oAnnot;
+		if (!oAnnots.arrayGet(i, &oAnnot)->isDict())
+		{
+			oAnnot.free();
+			continue;
+		}
+
+		Object oSubtype;
+		std::string sType;
+		if (oAnnot.dictLookup("Subtype", &oSubtype)->isName())
+			sType = oSubtype.getName();
+		oSubtype.free(); oAnnot.free();
+
+		Object oAnnotRef;
+		PdfReader::CAnnotLink* pAnnot = NULL;
+		oAnnots.arrayGetNF(i, &oAnnotRef);
+
+		if (sType == "Link")
+			pAnnot = new PdfReader::CAnnotLink(pDoc, &oAnnotRef, nPageIndex, nStartRefID);
+
+		CPdfLink* pLink = NULL;
+		if (pAnnot)
+			pLink = pAnnot->GetPdfLink();
+
+		if (pLink)
+			oRes.push_back(pLink);
+		RELEASEOBJECT(pAnnot);
+	}
+
+	oAnnots.free();
+	return oRes;
 }
 BYTE* CPdfReader::GetWidgets()
 {

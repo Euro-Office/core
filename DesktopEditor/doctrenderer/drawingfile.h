@@ -505,7 +505,13 @@ public:
 		}
 
 		if (m_nType == 0)
+		{
+			std::vector<CPdfLink*> arrLinks = ((CPdfFile*)m_pFile)->GetPdfLinks(nPageIndex);
+			// TODO Usage
+			for (int i = 0; i < arrLinks.size(); ++i)
+				RELEASEOBJECT(arrLinks[i]);
 			((CPdfFile*)m_pFile)->SetPageFonts(nPageIndex);
+		}
 
 		BYTE* res = oRes.GetBuffer();
 		oRes.ClearWithoutAttack();
