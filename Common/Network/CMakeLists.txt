@@ -10,19 +10,41 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
-
-
 message( "Fetch and build OpenSSL" )
 set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
 get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
 
+if( LLVM_MINGW_CROSS )
+
+    set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_win_64")
+    
+    get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+    execute_process(
+        COMMAND_ECHO STDOUT
+        COMMAND ./nc-build.sh
+            "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl"
+            "${OPENSSL_INSTALL_DIR}"
+            windows-crosscompile
+            dont-keep-workdir
+            "${MINGW_PATH}/bin"
+        WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
+    )
+
+else()
+
+    set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
+    get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+    execute_process(
+        COMMAND_ECHO STDOUT
+        COMMAND ./nc-build.sh
+            "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl"
+            "${OPENSSL_INSTALL_DIR}"
+            linux
+            dont-keep-workdir
+        WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
+    )
+
+endif()
 
 
 message( "Fetch and patch Socket-IO" )
@@ -72,7 +94,6 @@ add_library(kernel_network SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/manager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
 
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/FileTransporter.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/manager.h
@@ -80,6 +101,16 @@ add_library(kernel_network SHARED
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/transport_external.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.h
 )
+
+if( LLVM_MINGW_CROSS )
+    target_sources(kernel_network PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_win.cpp
+    )
+else()
+    target_sources(kernel_network PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
+    )
+endif()
 
 set_default_options(kernel_network)
 
@@ -123,13 +154,23 @@ target_link_libraries(kernel_network PUBLIC
     pthread
 )
 
-if(WIN_32)
+if( LLVM_MINGW_CROSS )
     target_link_libraries(kernel_network PUBLIC
-        Advapi32
+        advapi32
         urlmon
-        Rpcrt4
-        Shell32
+        rpcrt4
+        shell32
+        ws2_32
+        crypt32
     )
 endif()
+
+add_custom_command(TARGET kernel_network POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! $<TARGET_FILE:kernel_network> is ready!  🎉"
+    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+)
 
 copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")
