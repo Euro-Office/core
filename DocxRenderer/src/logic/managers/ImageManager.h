@@ -19,6 +19,9 @@ namespace NSDocxRenderer
 		~CImageManager() = default;
 		void Clear();
 
+		void UpdateId(int idInc);
+		int GetId() const;
+
 		std::shared_ptr<CImageInfo> WriteImage(Aggplus::CImage* pImage, double& x, double& y, double& width, double& height);
 		std::shared_ptr<CImageInfo> WriteImage(const std::wstring& strFile);
 		std::shared_ptr<CImageInfo> GenerateImageID(Aggplus::CImage* pImage);

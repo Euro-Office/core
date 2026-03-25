@@ -136,6 +136,16 @@ namespace NSDocxRenderer
 		m_mapImageData.clear();
 	}
 
+	void CImageManager::UpdateId(int idInc)
+	{
+		m_lNextIDImage += idInc;
+	}
+
+	int CImageManager::GetId() const
+	{
+		return m_lNextIDImage;
+	}
+
 	std::shared_ptr<CImageInfo> CImageManager::WriteImage(Aggplus::CImage* pImage, double& x, double& y, double& width, double& height)
 	{
 		if (height < 0)

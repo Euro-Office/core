@@ -44,6 +44,7 @@ namespace NSDocxRenderer
 
 		NSStringUtils::CStringBuilder m_oPageBuilder;
 		std::list<std::string> m_arXmlString;
+		std::list<CLink> m_arLinks;
 
 	public:
 		CDocument(IRenderer* pRenderer, NSFonts::IApplicationFonts* pFonts);
@@ -177,6 +178,8 @@ namespace NSDocxRenderer
 		HRESULT ResetTransform(void);
 		HRESULT get_ClipMode(LONG* plMode);
 		HRESULT put_ClipMode(LONG lMode);
+
+		HRESULT AddLink(const LONG& lType, const double& x1, const double y1, const double& x2, const double& y2, const std::wstring& wsData);
 
 	protected:
 		void ApplyTransform(double d1, double d2, double d3, double d4, double d5, double d6);

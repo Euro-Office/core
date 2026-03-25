@@ -744,6 +744,18 @@ namespace NSDocxRenderer
 		m_oCurrentPage.m_lClipMode = lMode;
 		return S_OK;
 	}
+	HRESULT CDocument::AddLink(const LONG& lType, const double& x1, const double y1, const double& x2, const double& y2, const std::wstring& wsData)
+	{
+		CLink oLink;
+
+		UINT nId = m_oImageManager.GetId() + m_arLinks.size();
+		oLink.AddLink(nId, lType, wsData);
+		oLink.AddBBox(x1, y1, x2, y2);
+		m_arLinks.push_back(oLink);
+		m_oCurrentPage.AddLink(oLink);
+
+		return S_OK;
+	}
 
 	void CDocument::ApplyTransform(double d1, double d2, double d3, double d4, double d5, double d6)
 	{
@@ -901,29 +913,26 @@ namespace NSDocxRenderer
 		        <Relationship Id=\"rId4\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Target=\"fontTable.xml\"/>\
 		        <Relationship Id=\"rId5\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Target=\"theme/theme.xml\"/>");
 
-		UINT nLastImageId = 0;
 		for (const auto& pImage : m_oImageManager.m_mapImageData)
 		{
 			auto pInfo = pImage.second;
-			nLastImageId = pInfo->m_nId;
 
 			oWriter.WriteString(L"<Relationship Id=\"rId");
-			oWriter.AddInt(c_iStartingIdForImages + nLastImageId);
+			oWriter.AddInt(c_iStartingIdForImages + pInfo->m_nId);
 			oWriter.WriteString(L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Target=\"media/");
 			oWriter.WriteString(pInfo->m_strFileName);
 			oWriter.WriteString(L"\"/>");
 		}
 
-		UINT nLastLinkId = nLastImageId;
-		for (const auto& oLink : m_oCurrentPage.GetLinks())
+		for (const auto& pLink : m_arLinks)
 		{
-			nLastLinkId += oLink.m_nId + 1;
-
 			oWriter.WriteString(L"<Relationship Id=\"rId");
-			oWriter.AddUInt(c_iStartingIdForLinks + nLastLinkId);
-			oWriter.WriteString(L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"https://onlyoffice.com");
-			oWriter.WriteString(oLink.m_wsUri);
-			oWriter.WriteString(L"\" TargetMode=\"External\"/>");
+			oWriter.AddUInt(c_iStartingIdForLinks + pLink.m_nId);
+			oWriter.WriteString(L"\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink\" Target=\"");
+			oWriter.WriteString(pLink.m_wsData);
+			oWriter.WriteString(L"\" TargetMode=\"");
+			oWriter.WriteString(pLink.m_eType == eLinkType::ltUri ? L"External" : L"Internal");
+			oWriter.WriteString(L"\"/>");
 		}
 
 		oWriter.WriteString(L"</Relationships>");

@@ -58,7 +58,7 @@ public:
 	virtual ~CAction() { RELEASEOBJECT(pNext); }
 
 	virtual void ToWASM(NSWasm::CData& oRes);
-	virtual void GetPdfLink(CPdfLink* pLink);
+	virtual void GetPdfLink(CPdfLink* pLink) {};
 
 	std::string sType;
 	CAction* pNext;

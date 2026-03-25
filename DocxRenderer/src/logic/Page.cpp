@@ -273,6 +273,18 @@ namespace NSDocxRenderer
 		        shape->m_oBrush.Color1 == c_iWhiteColor && !info)
 			return;
 
+		for (const auto& link : m_arLinks)
+		{
+			if (fabs(shape->m_dTop - link.m_dTop) <=  c_dSHAPE_X_OFFSET_MM &&
+				fabs(shape->m_dLeft - link.m_dLeft) <=  c_dSHAPE_X_OFFSET_MM &&
+				fabs(shape->m_dBot - link.m_dBottom) <=  c_dSHAPE_X_OFFSET_MM &&
+				fabs(shape->m_dRight - link.m_dRight) <=  c_dSHAPE_X_OFFSET_MM)
+			{
+				shape->m_bIsHyperlink = true;
+				shape->m_nRid = c_iStartingIdForLinks + link.m_nId;
+			}
+		}
+
 		if (!skip_shape)
 		{
 			shape->m_nOrder = ++m_nCurrentOrder;
@@ -480,18 +492,6 @@ namespace NSDocxRenderer
 
 		return writer;
 	}
-	void CPage::AddLink(const std::wstring& wsUri)
-	{
-		CLink oLink;
-
-		UINT nId = m_arLinks.size();
-		oLink.AddLink(nId, wsUri);
-		m_arLinks.push_back(oLink);
-	}
-	std::list<CLink> CPage::GetLinks() const
-	{
-		return m_arLinks;
-	}
 	void CPage::AddCompleteXml(const std::wstring& oXml)
 	{
 		m_arCompleteObjectsXml.push_back(oXml);
@@ -499,6 +499,10 @@ namespace NSDocxRenderer
 	void CPage::AddCompleteBinBase64(const std::string& oBase64)
 	{
 		m_arCompleteObjectsBinBase64.push_back(oBase64);
+	}
+	void CPage::AddLink(const CLink& oLink)
+	{
+		m_arLinks.push_back(oLink);
 	}
 	void CPage::ReorderShapesForPptx()
 	{

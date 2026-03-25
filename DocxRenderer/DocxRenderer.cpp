@@ -204,6 +204,30 @@ void CDocxRenderer::DrawPage(IOfficeDrawingFile* pFile, size_t nPage)
 	put_Width(dWidth);
 	put_Height(dHeight);
 
+	if (pFile->GetType() == OfficeDrawingFileType::odftPDF)
+	{
+		std::vector<CPdfLink*> arrLinks = pFile->GetPdfLinks(nPage);
+		for (int i = 0; i < arrLinks.size(); ++i)
+		{
+			LONG lType = arrLinks[i]->nType;
+			double x1, y1, x2, y2;
+			x1 = arrLinks[i]->pRect[0] / c_dMMToPix;
+			y1 = arrLinks[i]->pRect[1] / c_dMMToPix;
+			x2 = arrLinks[i]->pRect[2] / c_dMMToPix;
+			y2 = arrLinks[i]->pRect[3] / c_dMMToPix;
+
+			std::wstring wsData;
+			if (lType == 1)
+				wsData = L""; // TODO: GoTo bookmarks or anchors
+			if (lType == 6 || lType == 9)
+				wsData = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)arrLinks[i]->sData.c_str(), arrLinks[i]->sData.size());
+
+			m_pInternal->m_oDocument.AddLink(lType, x1, y1, x2, y2, wsData);
+			RELEASEOBJECT(arrLinks[i]);
+		}
+		m_pInternal->m_oDocument.m_oImageManager.UpdateId(arrLinks.size());
+	}
+
 	pFile->DrawPageOnRenderer(this, nPage, nullptr);
 
 	m_pInternal->m_oDocument.m_bIsDisablePageCommand = false;

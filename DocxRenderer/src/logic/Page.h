@@ -89,11 +89,10 @@ namespace NSDocxRenderer
 		std::vector<std::wstring> GetXmlShapesPptx();
 		NSWasm::CData GetShapesBin();
 
-		void AddLink(const std::wstring& wsUri);
-		std::list<CLink> GetLinks() const;
-
 		void AddCompleteXml(const std::wstring& oXml);
 		void AddCompleteBinBase64(const std::string& oBase64);
+
+		void AddLink(const CLink& pLink);
 
 	private:
 		using shape_ptr_t = std::shared_ptr<CShape>;
@@ -239,7 +238,7 @@ namespace NSDocxRenderer
 		std::vector<shape_ptr_t> m_arLuminosityShapes;
 		std::vector<shape_ptr_t> m_arOneColorGradientShape;
 
-		std::list<CLink>	m_arLinks;
+		std::list<CLink> m_arLinks;
 
 		long m_lLastType = 0;
 
