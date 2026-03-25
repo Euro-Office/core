@@ -104,4 +104,4 @@ if(SUPPORT_OFORM)
     target_sources(ooxmlsignature PRIVATE src/Certificate_oform.h)
 endif()
 
-copy_artifacts_to_folder("ooxmlsignature" "${EO_CORE_TOOLS_DIR}")
+copy_artifacts_to_folder("ooxmlsignature" "${EO_CORE_OUTPUT_DIR}")

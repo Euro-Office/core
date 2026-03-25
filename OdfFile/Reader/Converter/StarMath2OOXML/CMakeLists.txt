@@ -66,4 +66,4 @@ if(WIN32)
     )
 endif()
 
-copy_artifacts_to_folder("StarMathConverter" "${EO_CORE_TOOLS_DIR}")
+copy_artifacts_to_folder("StarMathConverter" "${EO_CORE_OUTPUT_DIR}")
