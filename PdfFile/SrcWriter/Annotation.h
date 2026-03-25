@@ -426,6 +426,8 @@ namespace PdfWriter
 			return AnnotStamp;
 		}
 
+		virtual CAnnotAppearanceObject* StartAP(int nRotate) override;
+
 		void SetRotate(double nRotate);
 		void SetName(const std::wstring& wsName);
 		void SetAPStream(CDictObject* pStream, bool bCopy = false);
