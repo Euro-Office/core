@@ -1,0 +1,13 @@
+diff --git a/crypto/threads_win.c b/crypto/threads_win.c
+index ba25d271..cf74746a 100644
+--- a/crypto/threads_win.c
++++ b/crypto/threads_win.c
+@@ -155,7 +155,7 @@ int CRYPTO_THREAD_compare_id(CRYPTO_THREAD_ID a, CRYPTO_THREAD_ID b)
+ 
+ int CRYPTO_atomic_add(int *val, int amount, int *ret, CRYPTO_RWLOCK *lock)
+ {
+-    *ret = InterlockedExchangeAdd(val, amount) + amount;
++    *ret = InterlockedExchangeAdd((volatile long *)val, amount) + amount;
+     return 1;
+ }
+ 
