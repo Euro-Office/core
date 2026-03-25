@@ -1283,6 +1283,29 @@ namespace PdfWriter
 	CStampAnnotation::CStampAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotStamp), m_pAPStream(NULL)
 	{
 	}
+	CAnnotAppearanceObject* CStampAnnotation::StartAP(int nRotate)
+	{
+		CAnnotAppearanceObject* pNormal = CAnnotation::StartAP(nRotate);
+		CResourcesDict* pResources = dynamic_cast<CResourcesDict*>(pNormal->Get("Resources"));
+
+		double dAlpha = 1;
+		CRealObject* pCA = dynamic_cast<CRealObject*>(Get("CA"));
+		if (pCA)
+			dAlpha = pCA->Get();
+		if (dAlpha != 1)
+		{
+			CExtGrState* pExtGrState = m_pDocument->GetExtGState(dAlpha, dAlpha);
+			const char* sExtGrStateName = pResources->GetExtGrStateName(pExtGrState);
+			if (sExtGrStateName)
+			{
+				CStream* pStream = pNormal->GetStream();
+				pStream->WriteEscapeName(sExtGrStateName);
+				pStream->WriteStr(" gs\012");
+			}
+		}
+
+		return pNormal;
+	}
 	void CStampAnnotation::SetRotate(double nRotate)
 	{
 		Add("Rotate", nRotate);
