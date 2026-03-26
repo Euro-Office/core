@@ -197,7 +197,7 @@ namespace PPTX
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 				pWriter->WriteBool2(0, noshade);
 				pWriter->WriteString2(1, align);
-				pWriter->WriteDoubleReal2(1, pct);
+				pWriter->WriteDoubleReal2(2, pct);
 				pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 			pWriter->EndRecord();
 		}
