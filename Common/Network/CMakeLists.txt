@@ -165,12 +165,6 @@ if( LLVM_MINGW_CROSS )
     )
 endif()
 
-add_custom_command(TARGET kernel_network POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:kernel_network>] is ready!  🎉"
-    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-)
-
 copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(kernel_network)

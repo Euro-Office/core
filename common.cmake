@@ -173,3 +173,13 @@ function(copy_icu_libs artifact)
         )
     endif()
 endfunction()
+
+function(declare_victory build_target)
+    add_custom_command(TARGET ${build_target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo ""
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:${build_target}>] is ready!  🎉"
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo ""
+    )
+endfunction()

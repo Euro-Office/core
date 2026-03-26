@@ -58,10 +58,4 @@ endif()
 
 set_property(TARGET CompoundFileLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-add_custom_command(TARGET CompoundFileLib POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:CompoundFileLib>] is ready!  🎉"
-    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo ""
-)
+declare_victory(CompoundFileLib)
