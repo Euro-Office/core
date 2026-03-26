@@ -42,7 +42,7 @@
 #define __T(x)      L##x
 
 #if defined(_WIN32) || defined (_WIN64)
-#include <TCHAR.H>
+#include <tchar.h>
 // windows-stype separator for paths i.e. 'c:\home\documents\file.ext'
 
 #ifndef FILE_SEPARATOR
