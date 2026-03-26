@@ -285,4 +285,10 @@ target_include_directories(DocFormatLib PRIVATE
     ${_3RDPARTY_POLE_SOURCES_DIR}
 )
 
+if(LLVM_MINGW_CROSS)
+    target_compile_definitions(DocFormatLib PRIVATE __int64=long\ long)
+endif()
+
 set_property(TARGET DocFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(DocFormatLib)
