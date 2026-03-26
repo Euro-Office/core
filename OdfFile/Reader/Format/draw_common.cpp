@@ -766,7 +766,7 @@ void draw_a::docx_convert(oox::docx_conversion_context & Context)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-void parse_string_to_points(std::wstring str, std::vector<length> & Points)
+void parse_string_to_points(std::wstring str, std::vector<odf_types::length> & Points)
 {
 	std::vector<std::wstring> Points_s;
 

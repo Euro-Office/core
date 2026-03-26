@@ -30,7 +30,7 @@
  *
  */
 
-#include "draw_shapes.h"
+#include "draw_common.h"
 #include "../../DataTypes/custom_shape_types_convert.h"
 
 #include <ostream>
@@ -95,7 +95,32 @@ void draw_shape::add_attributes( const xml::attributes_wc_ptr & Attributes )
 	draw_shape_attlist_.add_attributes(Attributes);
 
 }
+void draw_shape::afterReadContent()
+{
+	if ((!common_draw_attlists_.position_.svg_x_ || !common_draw_attlists_.position_.svg_y_) && common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_transform_)
+	{
+		std::wstring transformStr = common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_transform_.get();
 
+		size_t res = 0;
+		if ((res = transformStr.find(L"translate")) != std::wstring::npos)	//перемещение
+		{
+			transformStr = transformStr.substr(res + 10);
+			res = transformStr.find(L")");
+			if (res != std::wstring::npos)
+				transformStr = transformStr.substr(0, res);
+
+			std::vector<length> Points;
+			parse_string_to_points(transformStr, Points);
+
+			if (Points.size() > 0)
+			{
+				common_draw_attlists_.position_.svg_x_ = Points[0];
+				if (Points.size() > 1)
+					common_draw_attlists_.position_.svg_y_ = Points[1];
+			}
+		}
+	}
+}
 void draw_rect_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"draw:filter-name", draw_filter_name_);
@@ -182,35 +207,38 @@ void draw_line::add_attributes( const xml::attributes_wc_ptr & Attributes )
 	sub_type_ = 5;
 	lined_shape_ = true;
 }
-void draw_line::reset_svg_attributes()
+void draw_line::afterReadContent()
 {
 	double x1 = draw_line_attlist_.svg_x1_.get_value_or(length(0)).get_value_unit(length::pt);
 	double y1 = draw_line_attlist_.svg_y1_.get_value_or(length(0)).get_value_unit(length::pt);
 	double x2 = draw_line_attlist_.svg_x2_.get_value_or(length(0)).get_value_unit(length::pt);
 	double y2 = draw_line_attlist_.svg_y2_.get_value_or(length(0)).get_value_unit(length::pt);
-	
+
 	if (x1 - x2 > 0.5)
 	{
-		common_draw_attlists_.position_.svg_x_	 = draw_line_attlist_.svg_x2_;
-		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ = length(x1-x2, length::pt);
-		
-		additional_.push_back(_property(L"flipH",true));
-	}else
+		common_draw_attlists_.position_.svg_x_ = draw_line_attlist_.svg_x2_;
+		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ = length(x1 - x2, length::pt);
+
+		additional_.push_back(_property(L"flipH", true));
+	}
+	else
 	{
-		common_draw_attlists_.position_.svg_x_	 = draw_line_attlist_.svg_x1_;
-		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ = length(x2-x1, length::pt);
+		common_draw_attlists_.position_.svg_x_ = draw_line_attlist_.svg_x1_;
+		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ = length(x2 - x1, length::pt);
 	}
 	if (y1 - y2 > 0.5)
 	{
-		common_draw_attlists_.position_.svg_y_	 = draw_line_attlist_.svg_y2_;
-		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_ = length(y1-y2, length::pt);
+		common_draw_attlists_.position_.svg_y_ = draw_line_attlist_.svg_y2_;
+		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_ = length(y1 - y2, length::pt);
 
-		additional_.push_back(_property(L"flipV",true));
-	}else
-	{
-		common_draw_attlists_.position_.svg_y_	 = draw_line_attlist_.svg_y1_;
-		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_ = length(y2-y1, length::pt);
+		additional_.push_back(_property(L"flipV", true));
 	}
+	else
+	{
+		common_draw_attlists_.position_.svg_y_ = draw_line_attlist_.svg_y1_;
+		common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_ = length(y2 - y1, length::pt);
+	}
+	draw_shape::afterReadContent();
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// draw-custom_shape_attlist
@@ -230,6 +258,7 @@ void draw_custom_shape::add_attributes( const xml::attributes_wc_ptr & Attribute
 	
 	sub_type_ = 7;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /// draw-path-attlist
 void draw_path_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )

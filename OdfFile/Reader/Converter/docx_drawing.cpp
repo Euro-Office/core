@@ -217,7 +217,6 @@ void _docx_drawing::serialize_text(std::wostream & strm)
 			}
 		}
 	}	
-
 	serialize_bodyPr(strm, L"wps");
 }
 

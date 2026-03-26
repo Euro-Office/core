@@ -623,7 +623,7 @@ void odf_document::Impl::parse_settings(office_element *element)
 
 						for (auto info_elm = conf_item_set->content_.begin(); info_elm != conf_item_set->content_.end(); ++info_elm)
 						{
-							settings_config_item *info = dynamic_cast<settings_config_item *>(info_elm->get());
+							settings_config_item* info = dynamic_cast<settings_config_item*>(info_elm->get());
 							if (info)
 							{
 								context_->Settings().add(L"modify:" + info->config_name_, info->content_);
@@ -644,7 +644,43 @@ void odf_document::Impl::parse_settings(office_element *element)
 						}
 					}
 				}
-
+				else
+				{
+					settings_config_item* info = dynamic_cast<settings_config_item*>(conf->get());
+					if (info)
+					{
+						if (info->config_name_ == L"AlignTabStopPosition")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().AlignTabStopPosition = val.get();
+						}
+						else if (info->config_name_ == L"TabsRelativeToIndent")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().TabsRelativeToIndent = val.get();
+						}
+						else if (info->config_name_ == L"TabAtLeftIndentForParagraphsInList")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().TabAtLeftIndentForParagraphsInList = val.get();
+						}
+						else if (info->config_name_ == L"TabOverflow")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().TabOverflow = val.get();
+						}
+						else if (info->config_name_ == L"TabOverMargin")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().TabOverMargin = val.get();
+						}
+						else if (info->config_name_ == L"TabOverSpacing")
+						{
+							odf_types::Bool val(info->content_);
+							context_->Settings().TabOverSpacing = val.get();
+						}
+					}
+				}
 			}
 		}
 		else if (item_set->config_name_ == L"ooo:view-settings")
@@ -951,7 +987,7 @@ void odf_document::Impl::parse_styles(office_element *element)
 
 					if (para_props && para_props->content_.style_tab_stop_distance_)
 					{
-						context_->Settings().set_tab_distance(para_props->content_.style_tab_stop_distance_->get_value_unit(odf_types::length::pt));
+						context_->Settings().DefaultTabDistancePt = para_props->content_.style_tab_stop_distance_->get_value_unit(odf_types::length::pt);
 					}
 				}
 

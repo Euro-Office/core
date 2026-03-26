@@ -1055,30 +1055,56 @@ void odf_drawing_context::end_shape()
 			line->draw_line_attlist_.svg_y2_ = line->draw_line_attlist_.svg_y1_.get() + impl_->current_drawing_state_.svg_height_.get();
 		
 		_CP_OPT(double) rotate = impl_->current_drawing_state_.rotateAngle_;
-		if (impl_->current_drawing_state_.in_group_ && impl_->current_group_)
-		{			
-			if (impl_->current_group_->rotate)
-				rotate = (rotate ? *rotate : 0) + *impl_->current_group_->rotate;
-		}
 
-		if (rotate)
+		if (rotate && line->draw_line_attlist_.svg_x1_ && line->draw_line_attlist_.svg_y1_ && line->draw_line_attlist_.svg_x2_ && line->draw_line_attlist_.svg_y2_)
 		{
-			double angle = *rotate;//impl_->current_drawing_state_.rotateAngle_ ? *impl_->current_drawing_state_.rotateAngle_ : 0;
+			double angle = *rotate;
 
-            if (line->draw_line_attlist_.svg_x1_)
-                line->draw_line_attlist_.svg_x1_ = *line->draw_line_attlist_.svg_x1_ / 2 - (*line->draw_line_attlist_.svg_x1_ / 2 * cos(-angle) - *line->draw_line_attlist_.svg_y1_ / 2 * sin(-angle) );
-            if (line->draw_line_attlist_.svg_y1_)
-                line->draw_line_attlist_.svg_y1_ = *line->draw_line_attlist_.svg_y1_ / 2 - (*line->draw_line_attlist_.svg_x1_ / 2 * sin(-angle) + *line->draw_line_attlist_.svg_y1_ / 2 * cos(-angle) );
+			odf_types::length xc = *line->draw_line_attlist_.svg_x2_ / 2 + *line->draw_line_attlist_.svg_x1_ / 2;
+			odf_types::length yc = *line->draw_line_attlist_.svg_y2_ / 2 + *line->draw_line_attlist_.svg_y1_ / 2;
 
-            if (line->draw_line_attlist_.svg_x2_)
-                line->draw_line_attlist_.svg_x2_ = *line->draw_line_attlist_.svg_x2_ / 2 - (*line->draw_line_attlist_.svg_x2_ / 2 * cos(-angle) - *line->draw_line_attlist_.svg_y2_ / 2 * sin(-angle) );
-            if (line->draw_line_attlist_.svg_y2_)
-                line->draw_line_attlist_.svg_y2_ = *line->draw_line_attlist_.svg_y2_ / 2 - (*line->draw_line_attlist_.svg_x2_ / 2 * sin(-angle) + *line->draw_line_attlist_.svg_y2_ / 2 * cos(-angle) );
+			odf_types::length new_x1_ = (*line->draw_line_attlist_.svg_x1_ - xc) * cos(-angle) +(*line->draw_line_attlist_.svg_y1_ - yc) * sin(-angle) + xc;
+			odf_types::length new_y1_ = (*line->draw_line_attlist_.svg_x1_ - xc) * sin(-angle) + (*line->draw_line_attlist_.svg_y1_ - yc) * cos(-angle) + yc;
+
+			odf_types::length new_x2_ = (*line->draw_line_attlist_.svg_x2_ - xc) * cos(-angle) + (*line->draw_line_attlist_.svg_y2_ - yc) * sin(-angle) + xc;
+			odf_types::length new_y2_ = (*line->draw_line_attlist_.svg_x2_ - xc) * sin(-angle) + (*line->draw_line_attlist_.svg_y2_ - yc) * cos(-angle) + yc;
+
+			line->draw_line_attlist_.svg_x1_ = new_x1_;
+			line->draw_line_attlist_.svg_x2_ = new_x2_;
+			line->draw_line_attlist_.svg_y1_ = new_y1_;
+			line->draw_line_attlist_.svg_y2_ = new_y2_;
 
 			line->common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_transform_= L"";
 
 			impl_->current_drawing_state_.rotateAngle_ = boost::none;
 		}
+		else if (impl_->current_group_ && impl_->current_group_->rotate && impl_->current_drawing_state_.in_group_)
+		{
+			rotate = *impl_->current_group_->rotate;
+			if (rotate && line->draw_line_attlist_.svg_x1_ && line->draw_line_attlist_.svg_y1_ && line->draw_line_attlist_.svg_x2_ && line->draw_line_attlist_.svg_y2_)
+			{
+				double angle = *rotate;
+
+				odf_types::length xc = odf_types::length(odf_types::length (impl_->current_group_->shift_x + impl_->current_group_->x + impl_->current_group_->cx / 2., odf_types::length::pt).get_value_unit(odf_types::length::cm), odf_types::length::cm);
+				odf_types::length yc = odf_types::length(odf_types::length(impl_->current_group_->shift_y + impl_->current_group_->y + impl_->current_group_->cy / 2., odf_types::length::pt).get_value_unit(odf_types::length::cm), odf_types::length::cm);
+
+				odf_types::length new_x1_ = (*line->draw_line_attlist_.svg_x1_ - xc) * cos(-angle) + (*line->draw_line_attlist_.svg_y1_ - yc) * sin(-angle) + xc;
+				odf_types::length new_y1_ = (*line->draw_line_attlist_.svg_x1_ - xc) * sin(-angle) + (*line->draw_line_attlist_.svg_y1_ - yc) * cos(-angle) + yc;
+
+				odf_types::length new_x2_ = (*line->draw_line_attlist_.svg_x2_ - xc) * cos(-angle) + (*line->draw_line_attlist_.svg_y2_ - yc) * sin(-angle) + xc;
+				odf_types::length new_y2_ = (*line->draw_line_attlist_.svg_x2_ - xc) * sin(-angle) + (*line->draw_line_attlist_.svg_y2_ - yc) * cos(-angle) + yc;
+
+				line->draw_line_attlist_.svg_x1_ = new_x1_;
+				line->draw_line_attlist_.svg_x2_ = new_x2_;
+				line->draw_line_attlist_.svg_y1_ = new_y1_;
+				line->draw_line_attlist_.svg_y2_ = new_y2_;
+
+				line->common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_transform_ = L"";
+
+				impl_->current_drawing_state_.rotateAngle_ = boost::none;
+			}
+		}
+
 		impl_->current_drawing_state_.svg_height_ = boost::none;
 		impl_->current_drawing_state_.svg_width_ = boost::none;
 		

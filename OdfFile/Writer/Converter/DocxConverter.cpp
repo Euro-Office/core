@@ -3732,16 +3732,23 @@ void DocxConverter::convert_settings()
 	{
 		_CP_OPT(odf_types::length) length;
 		convert(settings->m_oDefaultTabStop->m_oVal.GetPointer(), length);
-		
+
 		odf_writer::odf_style_state_ptr state;
 		if (odt_context->styles_context()->find_odf_default_style_state(odf_types::style_family::Paragraph, state) && state)
 		{
-			odf_writer::paragraph_format_properties *props = state->get_paragraph_properties();
+			odf_writer::paragraph_format_properties* props = state->get_paragraph_properties();
 			if (props)
 				props->style_tab_stop_distance_ = length;
 		}
 
 	}
+	odt_context->settings_context()->add_config_content_item(L"AlignTabStopPosition", L"boolean", L"true");
+	odt_context->settings_context()->add_config_content_item(L"TabsRelativeToIndent", L"boolean", L"false");
+	odt_context->settings_context()->add_config_content_item(L"TabAtLeftIndentForParagraphsInList", L"boolean", L"true");
+	odt_context->settings_context()->add_config_content_item(L"TabOverflow", L"boolean", L"true");
+	odt_context->settings_context()->add_config_content_item(L"TabOverMargin", L"boolean", L"true");
+	odt_context->settings_context()->add_config_content_item(L"TabOverSpacing", L"boolean", L"true");
+
 //nullable<ComplexTypes::Word::CLanguage>                       m_oThemeFontLang;
 //nullable<OOX::Settings::CEdnDocProps>                         m_oEndnotePr;
 //nullable<OOX::Settings::CCaptions>                            m_oCaptions;

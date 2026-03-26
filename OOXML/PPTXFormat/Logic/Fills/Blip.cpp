@@ -346,6 +346,10 @@ namespace PPTX
 			else
 			{
 				std::wstring imagePath = this->GetFullPicName(pRels);
+				if (0 == imagePath.find(_T("file:///")))
+				{
+					XmlUtils::replace_all(imagePath, L"file:///", L"");
+				}
 				oId = pWriter->m_pCommon->m_pMediaManager->WriteImage(imagePath, dW, dH, additionalPath, additionalType);
 			}
 

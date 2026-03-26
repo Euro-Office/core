@@ -372,13 +372,16 @@ void docx_serialize_label_alignment_props(std::wostream & strm, style_list_level
 				}
 			}
 		}
-		int w_hanging = (int)( 0.5 - 20.0 * labelAlignment->fo_text_indent_.get_value_or( length(0, length::pt) ).get_value_unit(length::pt) );
-		int w_left = (int)( 0.5 + 20.0 * labelAlignment->fo_margin_left_.get_value_or( length(0, length::pt) ).get_value_unit(length::pt) );
+		int hanging = (int)( 0.5 - 20.0 * labelAlignment->fo_text_indent_.get_value_or( length(0, length::pt) ).get_value_unit(length::pt) );
+		int left = (int)( 0.5 + 20.0 * labelAlignment->fo_margin_left_.get_value_or( length(0, length::pt) ).get_value_unit(length::pt) );
 
 		CP_XML_NODE(L"w:ind")
 		{
-			CP_XML_ATTR(L"w:left" , w_left);
-			CP_XML_ATTR(L"w:hanging" , w_hanging);
+			CP_XML_ATTR(L"w:left" , left);
+			if (hanging >= 0)
+				CP_XML_ATTR(L"w:hanging" , hanging);
+			else 
+				CP_XML_ATTR(L"w:firstLine", -hanging);
 		}
 	}
 }
@@ -559,7 +562,10 @@ void text_list_level_style_number::docx_convert(oox::docx_conversion_context & C
 								hanging = minLabelWidthTwip;
 							}
 
-							CP_XML_ATTR(L"w:hanging",((int)( hanging  + 0.5)));
+							if (hanging >= 0)
+								CP_XML_ATTR(L"w:hanging", ((int)(hanging + 0.5)));
+							else
+								CP_XML_ATTR(L"w:firstLine", -((int)(hanging + 0.5)));
 						}
 					}
 				}
@@ -768,7 +774,10 @@ void text_list_level_style_bullet::docx_convert(oox::docx_conversion_context & C
 							{
 								hanging = minLabelWidthTwip;
 							}
-							CP_XML_ATTR(L"w:hanging" ,((int)( hanging  + 0.5)));
+							if (hanging >= 0)
+								CP_XML_ATTR(L"w:hanging", ((int)(hanging + 0.5)));
+							else
+								CP_XML_ATTR(L"w:firstLine", -((int)(hanging + 0.5)));
 						}
 					}
 				}		    
@@ -902,7 +911,10 @@ void text_list_level_style_image::docx_convert(oox::docx_conversion_context & Co
 							{
 								hanging = minLabelWidthTwip;
 							}
-							CP_XML_ATTR(L"w:hanging" ,((int)( hanging  + 0.5)));
+							if (hanging >= 0)
+								CP_XML_ATTR(L"w:hanging", ((int)(hanging + 0.5)));
+							else
+								CP_XML_ATTR(L"w:firstLine", -((int)(hanging + 0.5)));
 						}
 					}
 				}		    
@@ -1153,7 +1165,10 @@ void text_outline_level_style::docx_convert(oox::docx_conversion_context & Conte
 								hanging = minLabelWidthTwip;
 							}
 
-							CP_XML_ATTR(L"w:hanging",((int)( hanging  + 0.5)));
+							if (hanging > 0)
+								CP_XML_ATTR(L"w:hanging", ((int)(hanging + 0.5)));
+							else
+								CP_XML_ATTR(L"w:firstLine", -((int)(hanging + 0.5)));
 						}
 					}
 				}

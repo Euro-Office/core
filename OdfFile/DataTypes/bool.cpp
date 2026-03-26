@@ -44,6 +44,15 @@ std::wostream & operator << (std::wostream & _Wostream, const Bool & _Val)
 	_Wostream << _Val.string();
     return _Wostream;
 }
+Bool::Bool(const std::wstring& Str)
+{
+	std::wstring tmp = XmlUtils::GetLower(Str);
+
+	if (tmp == L"0" || tmp == L"false") bool_ = false;
+	else bool_ = true;
+
+	bool_str_ = bool_ ? L"true" : L"false";
+}
 Bool Bool::parse(const std::wstring & Str)
 {
     std::wstring tmp = XmlUtils::GetLower(Str);

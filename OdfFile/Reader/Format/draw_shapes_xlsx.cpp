@@ -195,8 +195,6 @@ void draw_line::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	Context.get_drawing_context().start_shape(5);
 	
-	reset_svg_attributes();
-	
 	common_xlsx_convert(Context);
 
 	Context.get_drawing_context().end_shape();

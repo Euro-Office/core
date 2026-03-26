@@ -73,7 +73,9 @@ public:
 	virtual void xlsx_convert(oox::xlsx_conversion_context & Context) {}
 	virtual void pptx_convert(oox::pptx_conversion_context & Context) {}
 	
-	void common_xlsx_convert(oox::xlsx_conversion_context & Context); 
+	virtual void afterReadContent();
+
+	void common_xlsx_convert(oox::xlsx_conversion_context & Context);
 	void common_docx_convert(oox::docx_conversion_context & Context) ;
 	void common_pptx_convert(oox::pptx_conversion_context & Context) ;
 	
@@ -215,9 +217,9 @@ public:
 	virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
     virtual void pptx_convert(oox::pptx_conversion_context & Context);
 
-    draw_line_attlist draw_line_attlist_;
-private:
-	void reset_svg_attributes();
+	virtual void afterReadContent();
+	
+	draw_line_attlist draw_line_attlist_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(draw_line);
@@ -365,7 +367,7 @@ public:
 	virtual void docx_convert(oox::docx_conversion_context & Context);
     virtual void pptx_convert(oox::pptx_conversion_context & Context);
 
-    draw_custom_shape_attlist draw_custom_shape_attlist_;
+	draw_custom_shape_attlist draw_custom_shape_attlist_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(draw_custom_shape);

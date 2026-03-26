@@ -448,29 +448,35 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 					}
 				}
 			}
-#endif
+#endif 
 			std::wstring w_left, w_right, w_hanging;
 
 			w_left = docx_process_margin(fo_margin_left_, 20.0);
 			w_right = docx_process_margin(fo_margin_right_, 20.0);
-			w_hanging = docx_process_margin(fo_text_indent_, -20.0);
 
-			if (w_left.empty()) w_left = L"0";
-			if (w_right.empty()) w_right = L"0";
-			if (w_hanging.empty()) w_hanging = L"0";
-
-		   CP_XML_NODE(L"w:ind")
-		   {
-
-			    CP_XML_ATTR(L"w:start", w_left);
-				CP_XML_ATTR(L"w:end", w_right);
-
-				if (Context.get_drop_cap_context().state() != 1 )//состояние сразу после добавления буквицы - не нужны ни отступы, ни висячие
+			CP_XML_NODE(L"w:ind")
+			{
+				if (false == w_left.empty())
 				{
-					if (!w_hanging.empty())
-						CP_XML_ATTR(L"w:hanging", w_hanging);
+					CP_XML_ATTR(L"w:left", w_left);
 				}
-		    }
+				if (false == w_right.empty())
+				{
+					CP_XML_ATTR(L"w:right", w_right);
+				}
+
+				if (Context.get_drop_cap_context().state() != 1)//состояние сразу после добавления буквицы - не нужны ни отступы, ни висячие
+				{
+					if (fo_text_indent_ && fo_text_indent_->get_type() == length_or_percent::Length)
+					{
+						int valIndent = (int)(0.5 + (-20) * fo_text_indent_->get_length().get_value_unit(length::pt));
+						if (valIndent >= 0)
+							CP_XML_ATTR(L"w:hanging", valIndent);
+						else
+							CP_XML_ATTR(L"w:firstLine", -valIndent);
+					}
+				}
+			}
 		}
 
 		if (style_vertical_align_ && Context.get_drop_cap_context().state() != 2)

@@ -216,7 +216,7 @@ public:
     static const ElementType type		= typeDrawG;
     CPDOCCORE_DEFINE_VISITABLE();
 
-	draw_g() : object_index(-1), position_child_x1(0x7fffffff), position_child_y1(0x7fffffff), position_child_x2(0x7fffffff), position_child_y2(0x7fffffff) {}
+	draw_g() : object_index(-1) {}
 
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
 
@@ -224,16 +224,12 @@ public:
     virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
     virtual void pptx_convert(oox::pptx_conversion_context & Context);
 
-	odf_types::union_common_draw_attlists	common_draw_attlists_;  
-    draw_g_attlist							draw_g_attlist_;
+    virtual void afterReadContent();
+    
+    odf_types::union_common_draw_attlists common_draw_attlists_;
+    draw_g_attlist draw_g_attlist_;
 
-    office_element_ptr_array				content_;
-
-	int position_child_x1;
-	int position_child_y1;
-
-	int position_child_x2;
-	int position_child_y2;
+    office_element_ptr_array content_;
 
 	int object_index ;
 

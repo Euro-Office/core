@@ -200,8 +200,6 @@ void draw_line::docx_convert(oox::docx_conversion_context & Context)
 {
 	//if (Context.get_drawing_context().get_current_level() >0 )return;
 
-	reset_svg_attributes();	
-	
 	common_docx_convert(Context);
 	//...
 

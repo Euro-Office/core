@@ -71,7 +71,7 @@ std::wostream & operator<< (std::wostream & _Wostream, const length::unit _Unit)
     }
     return _Wostream;
 }
-
+//todooo проверять типы
 std::wostream & operator<< (std::wostream & _Wostream, const length & _Length)
 {
     _Wostream  << std::setprecision(4) << _Length.get_value() << _Length.get_unit();
@@ -102,6 +102,10 @@ bool operator== (length & _Length1, length & _Length2)
 {
 	if (_Length1.get_value() == _Length2.get_value())return true;
 	else return false;
+}
+bool operator< (const length& _Length1, const length& _Length2)
+{
+    return (_Length1.get_value() < _Length2.get_value());
 }
 bool operator== (const length & _Length1, const length & _Length2)
 {

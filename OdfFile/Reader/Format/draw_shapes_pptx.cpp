@@ -223,8 +223,6 @@ void draw_line::pptx_convert(oox::pptx_conversion_context & Context)
 {
 	Context.get_slide_context().start_shape(sub_type_);
 	
-	reset_svg_attributes();
-	
 	common_pptx_convert(Context);
 
 	Context.get_slide_context().end_shape();

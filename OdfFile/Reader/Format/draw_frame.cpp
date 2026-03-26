@@ -159,83 +159,123 @@ void draw_g::add_attributes( const xml::attributes_wc_ptr & Attributes )
     
 	draw_g_attlist_.add_attributes(Attributes);
 }
+void draw_g::afterReadContent()
+{
+	double x1 = 0x7fffffff;
+	double y1 = 0x7fffffff;
+
+	double x2 = 0;
+	double y2 = 0;
+
+	for (const auto& elm : content_)
+	{
+		draw_g* group = dynamic_cast<draw_g*>(elm.get());
+		draw_frame* frame = dynamic_cast<draw_frame*>(elm.get());
+		draw_shape* shape = dynamic_cast<draw_shape*>(elm.get());
+		
+		if (group)
+		{
+			double x = group->common_draw_attlists_.position_.svg_x_ ? group->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) : 0;
+			double y = group->common_draw_attlists_.position_.svg_y_ ? group->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) : 0;
+
+			if (group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ &&
+				group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_)
+			{
+				if (x2 < x + group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt))
+					x2 = x + group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt);
+
+				if (y2 < y + group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt))
+					y2 = y + group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt);
+
+				if (x1 > x) x1 = x;
+				if (y1 > y) y1 = y;
+			}
+
+		}
+		else if (frame)
+		{
+			double x = frame->common_draw_attlists_.position_.svg_x_ ? frame->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) : 0;
+			double y = frame->common_draw_attlists_.position_.svg_y_ ? frame->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) : 0;
+
+			if (frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ &&
+				frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_)
+			{
+				if (x2 < x + frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt))
+					x2 = x + frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt);
+
+				if (y2 < y + frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt))
+					y2 = y + frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt);
+
+				if (x1 > x) x1 = x;
+				if (y1 > y) y1 = y;
+			}
+
+		}
+		else if (shape)
+		{
+			double x = shape->common_draw_attlists_.position_.svg_x_ ? shape->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) : 0;
+			double y = shape->common_draw_attlists_.position_.svg_y_ ? shape->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) : 0;
+			
+			if (shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ &&
+				shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_)
+			{
+				if (x2 < x + shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt))
+					x2 = x + shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt);
+
+				if (y2 < y + shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt))
+					y2 = y + shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt);
+
+				if (x1 > x) x1 = x;
+				if (y1 > y) y1 = y;
+			}
+		}
+	}
+
+	if (x1 > 0x7fffffff - 1 || y1 > 0x7fffffff - 1)
+		return;
+
+	common_draw_attlists_.position_.svg_x_ = odf_types::length(x1, odf_types::length::pt);
+	common_draw_attlists_.position_.svg_y_ = odf_types::length(y1, odf_types::length::pt);
+
+	common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ = odf_types::length(x2 - x1, odf_types::length::pt);
+	common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_ = odf_types::length(y2 - y1, odf_types::length::pt);
+
+	for (const auto& elm : content_)
+	{
+		draw_g* group = dynamic_cast<draw_g*>(elm.get());
+		draw_frame* frame = dynamic_cast<draw_frame*>(elm.get());
+		draw_shape* shape = dynamic_cast<draw_shape*>(elm.get());
+
+		if (group)
+		{
+			double x = group->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) - x1;
+			double y = group->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) - y1;
+
+			group->common_draw_attlists_.position_.svg_x_ = odf_types::length(x, odf_types::length::pt);
+			group->common_draw_attlists_.position_.svg_y_ = odf_types::length(y, odf_types::length::pt);
+		}
+		else if (frame)
+		{
+			double x = frame->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) - x1;
+			double y = frame->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) - y1;
+
+			frame->common_draw_attlists_.position_.svg_x_ = odf_types::length(x, odf_types::length::pt);
+			frame->common_draw_attlists_.position_.svg_y_ = odf_types::length(y, odf_types::length::pt);
+		}
+		else if (shape)
+		{
+			double x = shape->common_draw_attlists_.position_.svg_x_->get_value_unit(odf_types::length::pt) - x1;
+			double y = shape->common_draw_attlists_.position_.svg_y_->get_value_unit(odf_types::length::pt) - y1;
+			
+			shape->common_draw_attlists_.position_.svg_x_ = odf_types::length(x, odf_types::length::pt);
+			shape->common_draw_attlists_.position_.svg_y_ = odf_types::length(y, odf_types::length::pt);
+		}
+	}
+}
+
 void draw_g::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);
-
-	if (content_.empty()) return;
-
-	draw_g		*group = dynamic_cast<draw_g*>		(content_.back().get());
-	draw_frame	*frame = dynamic_cast<draw_frame*>	(content_.back().get());
-	draw_shape	*shape = dynamic_cast<draw_shape*>	(content_.back().get());
-
-	if (group)
-	{		
-		int x = 0, y = 0, cx = 0, cy = 0;
-		if (group->common_draw_attlists_.position_.svg_x_ && group->common_draw_attlists_.position_.svg_y_)
-		{
-			x = get_value_emu(group->common_draw_attlists_.position_.svg_x_);
-			y = get_value_emu(group->common_draw_attlists_.position_.svg_y_);
-		}
-		else
-		{
-			x = group->position_child_x1;
-			y = group->position_child_y1;
-		}
-
-		if (group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_ && 
-			group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_)
-		{
-			cx = get_value_emu(group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_);
-			cy = get_value_emu(group->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_);
-		}
-		else
-		{
-			cx = group->position_child_x2 - group->position_child_x1;
-			cy = group->position_child_y2 - group->position_child_y1;
-		}
-		
-		if (position_child_x1 > x || position_child_x1 == 0x7fffffff) position_child_x1 = x;
-		if (position_child_y1 > y || position_child_y1 == 0x7fffffff) position_child_y1 = y;
-		
-		if (position_child_x2 < x + cx || position_child_x2 == 0x7fffffff) position_child_x2 = x + cx;
-		if (position_child_y2 < y + cy || position_child_y2 == 0x7fffffff) position_child_y2 = y + cy;
-	}
-	else if (frame)
-	{
-		int x = 0, y = 0, cx = 0, cy = 0;
-		x = get_value_emu(frame->common_draw_attlists_.position_.svg_x_);
-		y = get_value_emu(frame->common_draw_attlists_.position_.svg_y_);
-
-		cx = get_value_emu(frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_);
-		cy = get_value_emu(frame->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_);
-
-		if (position_child_x1 > x || position_child_x1 == 0x7fffffff) position_child_x1 = x;
-		if (position_child_y1 > y || position_child_y1 == 0x7fffffff) position_child_y1 = y;
-		
-		if (position_child_x2 < x + cx || position_child_x2 == 0x7fffffff) position_child_x2 = x + cx;
-		if (position_child_y2 < y + cy || position_child_y2 == 0x7fffffff) position_child_y2 = y + cy;
-
-		if (frame->is_object_)
-		{
-			object_index = content_.size() - 1;
-		}
-	}
-	else if (shape)
-	{
-		int x = 0, y = 0, cx = 0, cy = 0;
-		x = get_value_emu(shape->common_draw_attlists_.position_.svg_x_);
-		y = get_value_emu(shape->common_draw_attlists_.position_.svg_y_);
-
-		cx = get_value_emu(shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_width_);
-		cy = get_value_emu(shape->common_draw_attlists_.rel_size_.common_draw_size_attlist_.svg_height_);
-
-		if (position_child_x1 > x || position_child_x1 == 0x7fffffff) position_child_x1 = x;
-		if (position_child_y1 > y || position_child_y1 == 0x7fffffff) position_child_y1 = y;
-		
-		if (position_child_x2 < x + cx || position_child_x2 == 0x7fffffff) position_child_x2 = x + cx;
-		if (position_child_y2 < y + cy || position_child_y2 == 0x7fffffff) position_child_y2 = y + cy;
-	}
 }
 
 std::wostream & draw_g::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const

@@ -71,6 +71,8 @@ int GetMargin(const graphic_format_properties_ptr & graphicProperties, BorderSid
 void Compute_GraphicFill(const odf_types::common_draw_fill_attlist & props, 
 						 const office_element_ptr & style_image, odf_document *document, oox::_oox_fill & fill, bool txbx = false, bool reset_fill = true);
 
+void parse_string_to_points(std::wstring str, std::vector<odf_types::length>& Points);
+
 typedef double double_4[4];
 bool parse_clipping(std::wstring strClipping, int width, int height, double_4 & clip_rect);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -44,12 +44,12 @@ public:
 	Bool() {bool_ = false;};
     
     Bool(bool Val) : bool_(Val) { bool_str_ = bool_ ? L"true" : L"false"; };
-    
+	Bool(const std::wstring& sVal);
+
     const bool & get() const 
     { 
         return bool_; 
-    };
-	
+    }	
 	void operator=( bool b ) {bool_ = b; bool_str_ = bool_ ? L"true" : L"false"; }
 	
 	const std::wstring &string() const 
@@ -57,7 +57,6 @@ public:
 		return bool_str_ ;
 	}
 	static Bool parse(const std::wstring & Str);
-
 
 private:
     bool bool_;

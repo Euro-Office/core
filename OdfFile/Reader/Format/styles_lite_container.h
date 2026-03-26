@@ -93,12 +93,12 @@ public:
 	settings_container();
 	~settings_container();
 
-	_CP_OPT(std::wstring) find_by_name				(const std::wstring & name);
-    _CP_OPT(std::wstring) find_view_by_name			(const std::wstring & name, int index = -1); //"-1" - common
-    
+	_CP_OPT(std::wstring) find_by_name(const std::wstring& name);
+	_CP_OPT(std::wstring) find_view_by_name(const std::wstring& name, int index = -1); //"-1" - common
+
 	std::pair<std::wstring, std::wstring> get_table_view (int index_view, const std::wstring & table_name, int index);
 
-	int	get_views_count		();
+	int	get_views_count();
 	int get_table_view_count(int ind, std::wstring name);
 
 	void add (const std::wstring & name, const std::wstring & value);
@@ -111,8 +111,14 @@ public:
 	
 	void add_view (const std::wstring & name, const std::wstring & value);
 
-	void set_tab_distance(double pt);
-	_CP_OPT(double) get_tab_distance();
+	_CP_OPT(double) DefaultTabDistancePt;
+
+	bool AlignTabStopPosition = true;
+	bool TabAtLeftIndentForParagraphsInList = false; //!
+	bool TabOverflow = true;
+	bool TabOverMargin = false; //!
+	bool TabOverSpacing = false;//!
+	bool TabsRelativeToIndent = true; //!
 
 private:
     class Impl;

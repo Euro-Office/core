@@ -1063,16 +1063,6 @@ void common_draw_docx_convert(oox::docx_conversion_context & Context, union_comm
 		//	drawing->cy = std::min(142875,max_height);
 		//}
 	}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-	if (drawing->inGroup && drawing->type != oox::typeGroupShape)
-	{
-        _INT32 x_group_offset, y_group_offset;
-		Context.get_drawing_context().get_position_group(x_group_offset, y_group_offset);
-
-		drawing->x -= x_group_offset;
-		drawing->y -= y_group_offset;
-	}
-
 }
 void draw_shape::docx_convert(oox::docx_conversion_context & Context)
 {
@@ -1533,15 +1523,9 @@ void draw_g::docx_convert(oox::docx_conversion_context & Context)
 	
 	Context.reset_context_state();
 		
-	if (position_child_x1 != 0x7fffffff && position_child_y1 != 0x7fffffff )
-	{
-		Context.get_drawing_context().set_position_child_group	(position_child_x1, position_child_y1);
+	Context.get_drawing_context().set_position_group(drawing.x, drawing.y);
+	Context.get_drawing_context().set_size_group(drawing.cx, drawing.cy);
 
-		if (position_child_x2 != 0x7fffffff && position_child_y2 != 0x7fffffff )
-		{
-			Context.get_drawing_context().set_size_child_group	(position_child_x2 - position_child_x1, position_child_y2 - position_child_y1);
-		}
-	}
 
 	for (size_t i = 0; i < content_.size(); i++)
     {
@@ -1553,9 +1537,6 @@ void draw_g::docx_convert(oox::docx_conversion_context & Context)
 	Context.back_context_state();
 
 //--------------------------------------------------
-	Context.get_drawing_context().get_size_group	(drawing.cx	, drawing.cy);
-	Context.get_drawing_context().get_position_group(drawing.x	, drawing.y);
-
 	Context.get_drawing_context().stop_group();    	
 	
 	if (drawing.inGroup)
