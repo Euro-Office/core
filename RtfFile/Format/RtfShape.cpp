@@ -240,6 +240,10 @@ void RtfShape::SetDefault()
 	DEFAULT_PROPERTY( m_nLineEndArrowLength )
 	DEFAULT_PROPERTY( m_nLineWidth )
 	DEFAULT_PROPERTY( m_nLineDashing )
+    DEFAULT_PROPERTY( m_nHrAlign )
+    DEFAULT_PROPERTY( m_nHrPct )
+    DEFAULT_PROPERTY( m_nHrHeight )
+    DEFAULT_PROPERTY( m_nHrWeight )
 
 	DEFAULT_PROPERTY( m_nGtextSize )
 	DEFAULT_PROPERTY( m_bGtext )
@@ -258,6 +262,9 @@ void RtfShape::SetDefault()
 	m_bInGroup		= false;
 	m_bIsGroup		= false;
 	m_bIsOle		= false;
+    m_bHr           = false;
+    m_bHrNoShade    = false;
+    m_bHrStd        = false;
 	
 	m_oCharProperty.SetDefault();
 }
@@ -344,13 +351,30 @@ std::wstring RtfShape::RenderToRtf(RenderParameter oRenderParameter)
 				sResult += L"}";
 			}
 		}
+        else if (m_bHr)
+        {
+            sResult+=L"{\\pict";
+            sResult+=L"{\\*\\picprop";
+            RENDER_RTF_INT( m_nID, sResult, L"shplid" );
+            if (m_nBottom != PROP_DEF)
+            {
+                sResult += L"{\\sp{\\sn dxHeightHR}{\\sv " + std::to_wstring(m_nBottom) + L"}}";
+            }
+            if (m_nRight != PROP_DEF)
+            {
+                sResult += L"{\\sp{\\sn dxWidthHR}{\\sv " + std::to_wstring(m_nRight) + L"}}";
+            }
+            sResult +=  RenderToRtfShapeProperty( oRenderParameter );
+            sResult += L"}";
+            sResult += L"}";
+        }
 		else
 		{
 			if (m_bBackground)
 				sResult += L"{\\*\\background";
 
-			sResult += L"{\\shp";
-			sResult += L"{\\*\\shpinst";
+            sResult += L"{\\shp";
+            sResult += L"{\\*\\shpinst";
 			
 			if (!m_bInGroup)
 			{
@@ -692,6 +716,12 @@ std::wstring RtfShape::RenderToRtfShapeProperty(RenderParameter oRenderParameter
     RENDER_RTF_SHAPE_PROP(L"lineEndArrowLength",    sResult,    m_nLineEndArrowLength );
     RENDER_RTF_SHAPE_PROP(L"lineWidth",             sResult,   	m_nLineWidth );
     RENDER_RTF_SHAPE_PROP(L"lineDashing",           sResult,   	m_nLineDashing );
+    RENDER_RTF_SHAPE_PROP(L"alignHR",               sResult,    m_nHrAlign);
+
+    if (m_bHr)
+        sResult += L"{\\sp{\\sn fHorizRule}{\\sv 1}}";
+    if (m_bHrStd)
+        sResult += L"{\\sp{\\sn fStandardHR}{\\sv 1}}";
 
 //pWrapPolygonVertices	Points of the text wrap polygon.
 	if ( !m_aWrapPoints.empty())
@@ -1256,6 +1286,29 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 	else
 	{
 	}
+    if (m_bHr)
+    {
+        sShapeStart += L" o:hr=\"t\"";
+
+        if (m_bHrStd)
+            sShapeStart += L" o:hrstd=\"t\"";
+
+        if (m_nHrAlign != PROP_DEF)
+        {
+            switch (m_nHrAlign)
+            {
+            case 0: sShapeStart += L" o:hralign=\"left\""; break;
+            case 1: sShapeStart += L" o:hralign=\"center\""; break;
+            case 2: sShapeStart += L" o:hralign=\"right\""; break;
+            }
+        }
+
+        if (m_bHrNoShade)
+            sShapeStart += L" o:hrnoshade=\"t\"";
+
+        if (m_nHrPct != PROP_DEF && m_nHrPct > 0)
+            sShapeStart += L" o:hrpct=\"" + std::to_wstring(m_nHrPct) + L"\"";
+    }
 
 	if (oRenderParameter.nType !=  RENDER_TO_OOX_PARAM_SHAPE_CHILD)
 	{

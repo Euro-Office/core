@@ -3105,6 +3105,14 @@ void RtfShapeReader::ShapePropertyReader::ShapePropertyValueReader::PopState( Rt
 	else if (L"borderLeftColor"		== m_sPropName) m_oShape.m_nBorderLeftColor = nValue;
 	else if (L"borderBottomColor"	== m_sPropName) m_oShape.m_nBorderBottomColor = nValue;
 	else if (L"borderRightColor"	== m_sPropName) m_oShape.m_nBorderRightColor= nValue;
+
+    else if (L"fHorizRule"          == m_sPropName) m_oShape.m_bHr = (nValue == 1);
+    else if (L"fStandardHR"         == m_sPropName) m_oShape.m_bHrStd = (nValue == 1);
+    else if (L"alignHR"             == m_sPropName) m_oShape.m_nHrAlign = nValue;  // 0-left,1-center,2-right
+    else if (L"dxHeightHR"          == m_sPropName) m_oShape.m_oPicture->m_nHeight = nValue;
+    else if (L"dxWidthHR"           == m_sPropName) m_oShape.m_oPicture->m_nWidth = nValue;
+    else if (L"pctHR"               == m_sPropName) m_oShape.m_nHrPct = nValue;
+    else if (L"fNoShadeHR"          == m_sPropName) m_oShape.m_bHrNoShade = (nValue == 1);
 	
 	else if ( L"cxstyle"				== m_sPropName ) m_oShape.m_nConnectorStyle			= nValue;
 	else if ( L"cxk"					== m_sPropName ) m_oShape.m_nConnectionType			= nValue;

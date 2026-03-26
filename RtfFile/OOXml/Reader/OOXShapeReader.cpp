@@ -1828,6 +1828,20 @@ bool OOXShapeReader::ParseVml(ReaderParameter oParam, RtfShapePtr& pOutput, bool
 		default: break;
 		}
 	}
+    if (m_vmlElement->m_oHr.IsInit())
+        pOutput->m_bHr = m_vmlElement->m_oHr.get();
+    if (m_vmlElement->m_oHrStd.IsInit())
+        pOutput->m_bHrStd = m_vmlElement->m_oHrStd.get();
+    if (m_vmlElement->m_oHrAlign.IsInit())
+    {
+        SimpleTypes::EHrAlign eVal = m_vmlElement->m_oHrAlign->GetValue();
+        switch (eVal)
+        {
+        case SimpleTypes::hralignLeft:   pOutput->m_nHrAlign = 0; break;
+        case SimpleTypes::hralignCenter: pOutput->m_nHrAlign = 1; break;
+        case SimpleTypes::hralignRight:  pOutput->m_nHrAlign = 2; break;
+        }
+    }
 	
 	bool res = ParseVmlChild(oParam, pOutput);
 	
