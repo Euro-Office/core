@@ -100,8 +100,45 @@ const std::vector<std::string> TxtFile::readUtf8Lines(int IdxEncoding)
         {
             unicode_content = conv.toUnicode(file_data.get(), read_size, 65001);
         }
+#if !defined(_WIN32) && !defined(_WIN64)
+        std::wstring regular_text;
+        std::string utf8_result;
 
+        for (size_t i = 0; i < unicode_content.size(); i++)
+        {
+            unsigned int cp = static_cast<unsigned int>(unicode_content[i]);
+
+            if (cp > 0xFFFF)
+            {
+
+                if (!regular_text.empty())
+                {
+                    utf8_result += conv.fromUnicode(regular_text, "UTF-8");
+                    regular_text.clear();
+                }
+
+
+                utf8_result += static_cast<char>(0xF0 | ((cp >> 18) & 0x07));
+                utf8_result += static_cast<char>(0x80 | ((cp >> 12) & 0x3F));
+                utf8_result += static_cast<char>(0x80 | ((cp >> 6) & 0x3F));
+                utf8_result += static_cast<char>(0x80 | (cp & 0x3F));
+            }
+            else
+            {
+                regular_text += unicode_content[i];
+            }
+        }
+
+
+        if (!regular_text.empty())
+        {
+            utf8_result += conv.fromUnicode(regular_text, "UTF-8");
+        }
+
+        utf8_content = utf8_result;
+#else
         utf8_content = conv.fromUnicode(unicode_content, "UTF-8");
+#endif
     }
     size_t lineCount = 0;
     if (!utf8_content.empty())
