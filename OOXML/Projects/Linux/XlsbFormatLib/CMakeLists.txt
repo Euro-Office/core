@@ -2156,3 +2156,5 @@ target_precompile_headers(XlsbFormatLib PRIVATE
 )
 
 set_property(TARGET XlsbFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(XlsbFormatLib)
