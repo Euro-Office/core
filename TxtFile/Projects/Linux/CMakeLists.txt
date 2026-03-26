@@ -29,3 +29,5 @@ add_library(TxtXmlFormatLib STATIC
 set_default_options(TxtXmlFormatLib)
 
 set_property(TARGET TxtXmlFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(TxtXmlFormatLib)
