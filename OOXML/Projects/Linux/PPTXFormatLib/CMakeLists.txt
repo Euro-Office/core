@@ -1286,4 +1286,14 @@ target_include_directories(PPTXFormatLib PRIVATE
 #     precompiled.h
 # )
 
+if(LLVM_MINGW_CROSS)
+    target_compile_definitions(PPTXFormatLib PRIVATE
+        __int64=long\ long
+        __int32=int
+        __int16=short
+    )
+endif()
+
 set_property(TARGET PPTXFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(PPTXFormatLib)
