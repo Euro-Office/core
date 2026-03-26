@@ -388,6 +388,12 @@ if(LINUX)
     )
 endif()
 
+if(LLVM_MINGW_CROSS)
+    target_compile_options(DocxFormatLib PRIVATE
+        -include float.h
+    )
+endif()
+
 # Re-enable exporting symbols
 target_compile_options(DocxFormatLib PRIVATE
     -fvisibility=default
@@ -396,3 +402,5 @@ target_compile_options(DocxFormatLib PRIVATE
 
 
 set_property(TARGET DocxFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(DocxFormatLib)
