@@ -168,7 +168,7 @@ endif()
 add_custom_command(TARGET kernel_network POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! $<TARGET_FILE:kernel_network> is ready!  🎉"
+    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:kernel_network>] is ready!  🎉"
     COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
     COMMAND ${CMAKE_COMMAND} -E echo ""
 )

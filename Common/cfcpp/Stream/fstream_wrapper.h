@@ -43,7 +43,7 @@ public:
     FStreamWrapper(std::string filename, std::ios_base::openmode openmode) :
         std::fstream(filename, openmode) {}
 	
-#if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && ( defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64) )
 	FStreamWrapper(std::wstring filename, std::ios_base::openmode openmode) :
 		std::fstream(filename, openmode) {}
 #endif

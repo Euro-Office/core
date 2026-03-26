@@ -40,7 +40,7 @@ using namespace CFCPP;
 
 CFCPP::Stream CFCPP::OpenFileStream(const std::wstring & filename, bool bRewrite, bool trunc)
 {
-#if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && (defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64))
 	CFCPP::Stream st;
 
 	// it's not good, but otherwise file doesn't create or if use ios::app, then the seek for writing will be blocked

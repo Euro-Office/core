@@ -408,7 +408,7 @@ endif()
 add_custom_command(TARGET CryptoPPLib POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E echo ""
     COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
-    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! $<TARGET_FILE:CryptoPPLib> is ready!  🎉"
+    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:CryptoPPLib>] is ready!  🎉"
     COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
     COMMAND ${CMAKE_COMMAND} -E echo ""
 )

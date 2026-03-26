@@ -50,4 +50,18 @@ add_library(CompoundFileLib STATIC
 
 set_default_options(CompoundFileLib)
 
+if( LLVM_MINGW_CROSS )
+    target_compile_options(CompoundFileLib PRIVATE
+        -include ${CMAKE_FIND_ROOT_PATH}/include/windows.h
+    )
+endif()
+
 set_property(TARGET CompoundFileLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+add_custom_command(TARGET CompoundFileLib POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+    COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:CompoundFileLib>] is ready!  🎉"
+    COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+)

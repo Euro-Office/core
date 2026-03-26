@@ -46,6 +46,7 @@ if( LLVM_MINGW_CROSS )
         _UNICODE
         DONT_WRITE_EMBEDDED_FONTS
         UNICODE
+        LLVM_MINGW_CROSS
     )
 
 else()
