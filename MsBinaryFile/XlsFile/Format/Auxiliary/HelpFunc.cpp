@@ -41,7 +41,7 @@
 #include <boost/algorithm/string.hpp>
 
 #if defined(_WIN32) || defined(__WIN64)
-	#include "Windows.h"
+	#include "windows.h"
 #else
     //#include "iconv.h"  .. to UnicodeConverter
 #endif

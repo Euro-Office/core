@@ -38,8 +38,8 @@
 #include "../../Common/Utils/simple_xml_writer.h"
 
 #if defined(_WIN32) || defined(_WIN64)
-#include <Ole2.h>
-#include <ObjIdl.h>
+#include <ole2.h>
+#include <objidl.h>
 #pragma comment(lib, "Ole32.lib")
 #endif
 

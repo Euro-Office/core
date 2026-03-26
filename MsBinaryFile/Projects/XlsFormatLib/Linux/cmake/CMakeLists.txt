@@ -124,3 +124,5 @@ target_include_directories(XlsFormatLib PRIVATE
 )
 
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(XlsFormatLib)
