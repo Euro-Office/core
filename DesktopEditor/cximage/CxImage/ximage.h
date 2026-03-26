@@ -58,6 +58,10 @@
   #include <arpa/inet.h>
 #endif
 
+#ifdef LLVM_MINGW_CROSS
+  #include <windows.h>
+#endif
+
 /////////////////////////////////////////////////////////////////////////////
 #include "xfile.h"
 #include "xiofile.h"
@@ -529,7 +533,7 @@ public:
 	// file operations
 #if CXIMAGE_SUPPORT_DECODE
 /** \addtogroup Decode */ //@{
-#if defined(_WIN32) || defined (_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && ( defined(_WIN32) || defined (_WIN64) )
 	//bool Load(LPCWSTR filename, uint32_t imagetype=0);
 	bool LoadResource(HRSRC hRes, uint32_t imagetype, HMODULE hModule=NULL);
 #endif

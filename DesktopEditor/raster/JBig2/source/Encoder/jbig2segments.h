@@ -5,7 +5,7 @@
 #define THIRD_PARTY_JBIG2ENC_JBIG2SEGMENTS_H__
 
 #include <vector>
-#ifdef _MSC_VER
+#if defined( _MSC_VER ) || defined( LLVM_MINGW_CROSS )
 #include <winsock2.h>
 #else
 #include <netinet/in.h>

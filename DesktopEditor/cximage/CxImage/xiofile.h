@@ -36,7 +36,7 @@ public:
 #ifdef CXIMAGE_DONT_USE_LOAD_SAVE
     return false;
 #else
-#if defined(_WIN32) || defined (_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && ( defined(_WIN32) || defined (_WIN64) )
 		if (m_fp) return false;	// Can't re-open without closing first
 
 		m_fp = _tfopen(filename, mode);

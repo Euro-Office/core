@@ -629,7 +629,7 @@ bool CxImage::Load(const TCHAR * filename, uint32_t imagetype)
 #endif // #ifdef CXIMAGE_DONT_USE_LOAD_SAVE
 }
 ////////////////////////////////////////////////////////////////////////////////
-#if defined(_WIN32) || defined (_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && ( defined(_WIN32) || defined (_WIN64) )
 //bool CxImage::Load(LPCWSTR filename, uint32_t imagetype)
 //{
 //	/*FILE* hFile;	//file handle to read the image

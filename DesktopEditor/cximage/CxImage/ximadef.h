@@ -106,7 +106,7 @@ typedef struct tagcomplex {
 
 #endif
 
-#if defined(WIN32) || defined(_WIN32_WCE)
+#if !defined(LLVM_MINGW_CROSS) && ( defined(WIN32) || defined(_WIN32_WCE) )
  #include "stdint.h"
 #endif
 

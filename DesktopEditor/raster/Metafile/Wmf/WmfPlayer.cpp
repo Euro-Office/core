@@ -32,6 +32,10 @@
 #include "WmfPlayer.h"
 #include "WmfFile.h"
 
+#ifdef LLVM_MINGW_CROSS
+#   include <windows.h>
+#endif
+
 #include "WmfParser/CWmfParserBase.h"
 
 namespace MetaFile

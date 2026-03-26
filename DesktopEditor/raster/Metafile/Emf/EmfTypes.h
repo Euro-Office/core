@@ -35,7 +35,7 @@
 #include "../../../common/Types.h"
 #include "../Common/MetaFileTypes.h"
 
-#if !defined(_WIN32) && !defined(_WIN64)
+#if defined(LLVM_MINGW_CROSS) || ( !defined(_WIN32) && !defined(_WIN64) )
 //from wingdi.h
 
 #define PT_CLOSEFIGURE      0x01

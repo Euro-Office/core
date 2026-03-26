@@ -5127,6 +5127,9 @@
   {
     FT_Module*           cur;
     FT_Module*           limit;
+#ifdef interface
+#   undef interface
+#endif
     FT_Module_Interface  interface;
 
     FT_Service_Properties  service;
