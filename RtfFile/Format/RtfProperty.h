@@ -36,7 +36,7 @@
 
 #include "../../OOXML/Common/SimpleTypes_Drawing.h"
 
-#if defined (_WIN32) || defined (_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && ( defined (_WIN32) || defined (_WIN64) )
     #define MERGE_PROPERTY(propName, propObj)\
         if ( PROP_DEF != ##propObj##.##propName## )	propName = ##propObj##.##propName##;
 

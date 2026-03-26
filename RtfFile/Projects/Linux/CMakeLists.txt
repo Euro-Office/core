@@ -186,3 +186,5 @@ target_include_directories(RtfFormatLib PRIVATE
 )
 
 set_property(TARGET RtfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(RtfFormatLib)
