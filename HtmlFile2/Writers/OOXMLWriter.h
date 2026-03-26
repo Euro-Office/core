@@ -150,7 +150,7 @@ public:
 
 	void SetCurrentDocument(XmlString* pNewDocument);
 
-	void Break(const std::vector<NSCSS::CNode>& arSelectors);
+	void Break(const NSCSS::CNode& oTagNode);
 
 	void SetHyperlinkData(const std::wstring& wsRef, const std::wstring& wsTooltip, bool bIsCross, const std::wstring& wsFootnote, bool bIsFootnote);
 	void ClearHyperlinkData();
@@ -201,8 +201,6 @@ public:
 	XmlString* GetCurrentDocument() const override;
 
 	EWriterType GetType() const override;
-
-	bool SupportNestedTables() const override;
 
 	const NSCSS::NSProperties::CPage* GetPageData() const;
 	NSFonts::IApplicationFonts* GetFonts();

@@ -30,7 +30,7 @@ class CHTMLReader
 
 	IWriter *m_pWriter;
 
-	std::unordered_map<UINT, std::shared_ptr<ITag>> m_mTags;
+	THTMLTags m_oTags;
 public:
 	CHTMLReader();
 	~CHTMLReader();
@@ -53,8 +53,8 @@ public:
 	NSCSS::CCssCalculator* GetCSSCalculator();
 private:
 	void Clear();
-	void InitOOXMLTags(THTMLParameters* pParametrs = nullptr);
-	void InitMDTags(TMarkdownParameters* pParametrs = nullptr);
+	bool InitOOXMLTags(THTMLParameters* pParametrs = nullptr);
+	bool InitMDTags(TMarkdownParameters* pParametrs = nullptr);
 
 	bool IsHTML(XmlUtils::CXmlLiteReader& oReader);
 
@@ -77,10 +77,6 @@ private:
 	bool ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
 	bool ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
-
-	bool ReadSVG(XmlUtils::CXmlLiteReader& oReader, const std::vector<NSCSS::CNode>& arSelectors);
-	bool ReadEmptyTag(UINT unTag, const std::vector<NSCSS::CNode>& arSelectors);
-	bool ReadDefaultTag(XmlUtils::CXmlLiteReader& oReader, UINT unTag, std::vector<NSCSS::CNode>& arSelectors);
 
 	bool ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 };

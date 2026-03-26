@@ -557,12 +557,12 @@ void COOXMLWriter::SetCurrentDocument(XmlString* pNewDocument)
 	m_arStates.top().m_bRemoveCurrentDocument = false;
 }
 
-void COOXMLWriter::Break(const std::vector<NSCSS::CNode>& arSelectors)
+void COOXMLWriter::Break(const NSCSS::CNode& oTagNode)
 {
 	if (m_arStates.top().m_bInP)
 	{
 		OpenR();
-		if(arSelectors.back().m_pCompiledStyle->m_oText.GetAlign() == L"both")
+		if(oTagNode.m_pCompiledStyle->m_oText.GetAlign() == L"both")
 			m_arStates.top().m_pCurrentDocument->WriteString(L"<w:tab/>");
 		m_arStates.top().m_pCurrentDocument->WriteString(L"<w:br/>");
 		CloseR();
@@ -1264,11 +1264,6 @@ XmlString* COOXMLWriter::GetCurrentDocument() const
 EWriterType COOXMLWriter::GetType() const
 {
 	return EWriterType::OOXML;
-}
-
-bool COOXMLWriter::SupportNestedTables() const
-{
-	return true;
 }
 
 const NSCSS::NSProperties::CPage* COOXMLWriter::GetPageData() const

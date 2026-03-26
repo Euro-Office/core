@@ -67,8 +67,6 @@ public:
 
 	EWriterType GetType() const override;
 
-	bool SupportNestedTables() const override;
-
 	void WriteBreakLine(bool bNeedChecked = true);
 
 	void EnteredBold();

@@ -8,130 +8,63 @@
 namespace HTML
 {
 template<>
-class CAnchor<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CAnchor(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
+template<>
+void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode);
 
 template<>
-class CBold<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CBold(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CBoldTag<CMDWriter>::Open();
+template<>
+void CBoldTag<CMDWriter>::Close();
 
 template<>
-class CBreak<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CBreak(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
 
 template<>
-class CItalic<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CItalic(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CItalicTag<CMDWriter>::Open();
+template<>
+void CItalicTag<CMDWriter>::Close();
 
 template<>
-class CStrike<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CStrike(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CStrikeTag<CMDWriter>::Open();
+template<>
+void CStrikeTag<CMDWriter>::Close();
 
 template<>
-class CQuotation<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CQuotation(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CPreformattedTag<CMDWriter>::Open();
+template<>
+void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors);
 
 template<>
-class CPreformatted<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CPreformatted(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CHeaderTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
 
 template<>
-class CHeader<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CHeader(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
+template<>
+bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG);
 
 template<>
-class CImage<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CImage(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
+template<>
+void CBlockquoteTag<CMDWriter>::Close();
 
 template<>
-class CHorizontalRule<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CHorizontalRule(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
+template<>
+void CListTag<CMDWriter>::Close();
 
 template<>
-class CBlockquote<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CBlockquote(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors);
 
 template<>
-class CList<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CList(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CListElementTag<CMDWriter>::Open();
+template<>
+void CListElementTag<CMDWriter>::Close();
 
 template<>
-class CListElement<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CListElement(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
+bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
 template<>
-class CCode<CMDWriter> : public CTag<CMDWriter>
-{
-public:
-	CCode(CMDWriter* pWriter);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+void CCodeTag<CMDWriter>::Close();
 
 struct TElementInfo
 {

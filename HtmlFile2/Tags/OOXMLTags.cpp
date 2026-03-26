@@ -23,7 +23,7 @@ inline bool ElementInTable(const std::vector<NSCSS::CNode>& arSelectors);
 
 inline bool NotValidExtension(const std::wstring& sExtention);
 inline bool IsSVG(const std::wstring& wsExtention);
-bool ReadSVG(const std::wstring& wsSvg, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, const std::wstring& wsImagePath);
+bool ReadSVGData(const std::wstring& wsSvg, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, const std::wstring& wsImagePath);
 bool ReadBase64(const std::wstring& wsSrc, const std::wstring& wsImagePath, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsExtention);
 bool GetStatusUsingExternalLocalFiles();
 bool CanUseThisPath(const std::wstring& wsPath, const std::wstring& wsSrcPath, const std::wstring& wsCorePath, bool bIsAllowExternalLocalFiles);
@@ -33,13 +33,10 @@ bool UpdateImageData(const std::wstring& wsImagePath, TImageData& oImageData);
 
 const static double HTML_FONTS[7] = {7.5, 10, 12, 13.5, 18, 24, 36};
 
-CAnchor<COOXMLWriter>::CAnchor(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CAnchor<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CAnchorTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if(!Valid())
 		return false;
 
 	std::wstring wsRef, wsAlt, wsName;
@@ -83,21 +80,19 @@ bool CAnchor<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, c
 	return true;
 }
 
-void CAnchor<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+template<>
+void CAnchorTag<COOXMLWriter>::Close(const NSCSS::CNode& oTagNode)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return;
 
 	m_pWriter->ClearHyperlinkData();
 }
 
-CAbbr<COOXMLWriter>::CAbbr(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CAbbr<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CAbbrTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if(!Valid())
 		return false;
 
 	std::wstring wsTitle;
@@ -117,38 +112,33 @@ bool CAbbr<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, con
 	return true;
 }
 
-void CAbbr<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+template<>
+void CAbbrTag<COOXMLWriter>::Close()
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return;
 
 	m_pWriter->GetCurrentDocument()->WriteString(L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>");
 }
 
-CBreak<COOXMLWriter>::CBreak(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CBreak<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CBreakTag<COOXMLWriter>::Read(const NSCSS::CNode& oTagNode)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
-	m_pWriter->Break(arSelectors);
+	m_pWriter->Break(oTagNode);
 
 	return true;
 }
 
-void CBreak<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+CDivisionTag<COOXMLWriter>::CDivisionTag(COOXMLWriter* pWriter)
+	: INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter)
 {}
 
-CDivision<COOXMLWriter>::CDivision(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CDivision<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CDivisionTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	m_pWriter->UpdatePageStyle(arSelectors);
@@ -177,14 +167,14 @@ bool CDivision<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors,
 		}
 	}
 
-	m_arFootnoteIDs.push(unMsoFootnote);
+	// m_arFootnoteIDs.push(unMsoFootnote);
 
 	return true;
 }
 
-void CDivision<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CDivisionTag<COOXMLWriter>::Close()
 {
-	if (!ValidWriter() || m_arFootnoteIDs.empty())
+	if (!Valid() || m_arFootnoteIDs.empty())
 		return;
 
 	if (m_arFootnoteIDs.top() >= 2)
@@ -197,33 +187,33 @@ void CDivision<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors
 	m_arFootnoteIDs.pop();
 }
 
-CImage<COOXMLWriter>::CImage(COOXMLWriter* pWriter)
-	: CTag(pWriter)
+CImageTag<COOXMLWriter>::CImageTag(COOXMLWriter* pWriter)
+	: INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter)
 {}
 
-bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
-	if (L"svg" == arSelectors.back().m_wsName)
-	{
-		if (oExtraData.empty() || typeid(const std::wstring&) != oExtraData.type())
-			return false;
+	// if (L"svg" == arSelectors.back().m_wsName)
+	// {
+	// 	if (oExtraData.empty() || typeid(const std::wstring&) != oExtraData.type())
+	// 		return false;
 
-		const std::wstring wsImagePath{m_pWriter->GetMediaDir() + L'i' + std::to_wstring(m_arrImages.size()) + L".png"};
+	// 	const std::wstring wsImagePath{m_pWriter->GetMediaDir() + L'i' + std::to_wstring(m_arrImages.size()) + L".png"};
 
-		if (!ReadSVG(boost::any_cast<const std::wstring&>(oExtraData), m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsImagePath))
-			return false;
+	// 	if (!ReadSVG(boost::any_cast<const std::wstring&>(oExtraData), m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsImagePath))
+	// 		return false;
 
-		TImageData oNewImageData;
-		if (!UpdateImageData(wsImagePath, oNewImageData))
-			return false;
+	// 	TImageData oNewImageData;
+	// 	if (!UpdateImageData(wsImagePath, oNewImageData))
+	// 		return false;
 
-		m_pWriter->WritePPr(arSelectors);
-		m_pWriter->WriteImage(oNewImageData, std::to_wstring(m_arrImages.size()));
-		return true;
-	}
+	// 	m_pWriter->WritePPr(arSelectors);
+	// 	m_pWriter->WriteImage(oNewImageData, std::to_wstring(m_arrImages.size()));
+	// 	return true;
+	// }
 
 	const std::wstring wsAlt{arSelectors.back().GetAttributeValue(L"alt")};
 	std::wstring wsSrc{arSelectors.back().GetAttributeValue(L"src")};
@@ -340,7 +330,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 			std::wstring wsFileData;
 
 			if (!NSFile::CFileBinary::ReadAllTextUtf8(wsDst, wsFileData) ||
-			    !ReadSVG(wsFileData, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsImagePath))
+			    !ReadSVGData(wsFileData, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsImagePath))
 				bRes = false;
 
 			NSFile::CFileBinary::Remove(wsDst);
@@ -423,27 +413,42 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 	return true;
 }
 
-void CImage<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{}
-
-CFont<COOXMLWriter>::CFont(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CFont<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CImageTag<COOXMLWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG)
 {
-	if (!ValidWriter())
+	if (!Valid())
+		return false;
+
+	const std::wstring wsImagePath{m_pWriter->GetMediaDir() + L'i' + std::to_wstring(m_arrImages.size()) + L".png"};
+
+	if (!ReadSVGData(wsSVG, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsImagePath))
+		return false;
+
+	TImageData oNewImageData;
+	if (!UpdateImageData(wsImagePath, oNewImageData))
+		return false;
+
+	m_pWriter->WritePPr(arSelectors);
+	m_pWriter->WriteImage(oNewImageData, std::to_wstring(m_arrImages.size()));
+	return true;
+
+	return true;
+}
+
+template<>
+bool CFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode, size_t unLevel)
+{
+	if (!Valid())
 		return false;
 
 	std::wstring wsValue;
 
-	if (arSelectors.back().GetAttributeValue(L"color", wsValue))
-		arSelectors.back().m_pCompiledStyle->m_oText.SetColor(wsValue, arSelectors.size());
+	if (oTagNode.GetAttributeValue(L"color", wsValue))
+		oTagNode.m_pCompiledStyle->m_oText.SetColor(wsValue, unLevel);
 
-	if (arSelectors.back().GetAttributeValue(L"face", wsValue))
-		arSelectors.back().m_pCompiledStyle->m_oFont.SetFamily(wsValue, arSelectors.size());
+	if (oTagNode.GetAttributeValue(L"face", wsValue))
+		oTagNode.m_pCompiledStyle->m_oFont.SetFamily(wsValue, unLevel);
 
-	if (arSelectors.back().GetAttributeValue(L"size", wsValue))
+	if (oTagNode.GetAttributeValue(L"size", wsValue))
 	{
 		int nSize = 3;
 		if(!wsValue.empty())
@@ -459,22 +464,16 @@ bool CFont<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, con
 		if (nSize < 1 || nSize > 7)
 			nSize = 3;
 
-		arSelectors.back().m_pCompiledStyle->m_oFont.SetSize(HTML_FONTS[nSize - 1], NSCSS::UnitMeasure::Point,  arSelectors.size());
+		oTagNode.m_pCompiledStyle->m_oFont.SetSize(HTML_FONTS[nSize - 1], NSCSS::UnitMeasure::Point,  unLevel);
 	}
 
 	return true;
 }
 
-void CFont<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{}
-
-CInput<COOXMLWriter>::CInput(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CInput<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CInputTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	std::wstring wsValue{arSelectors.back().GetAttributeValue(L"value")};
@@ -501,24 +500,18 @@ bool CInput<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 	return true;
 }
 
-void CInput<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{}
-
-CBaseFont<COOXMLWriter>::CBaseFont(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CBaseFont<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CBaseFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	std::wstring wsFontStyles, wsValue;
 
-	if (arSelectors.back().GetAttributeValue(L"face", wsValue))
+	if (oTagNode.GetAttributeValue(L"face", wsValue))
 		wsFontStyles += L"font-family:" + wsValue + L';';
 
-	if (arSelectors.back().GetAttributeValue(L"size", wsValue))
+	if (oTagNode.GetAttributeValue(L"size", wsValue))
 	{
 		wsFontStyles += L"font-size:";
 
@@ -535,7 +528,7 @@ bool CBaseFont<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors,
 		}
 	}
 
-	if (arSelectors.back().GetAttributeValue(L"color", wsValue))
+	if (oTagNode.GetAttributeValue(L"color", wsValue))
 		wsFontStyles += L"text-color:" + wsValue + L';';
 
 	if (wsFontStyles.empty())
@@ -546,16 +539,13 @@ bool CBaseFont<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors,
 	return true;
 }
 
-void CBaseFont<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+CBlockquoteTag<COOXMLWriter>::CBlockquoteTag(COOXMLWriter* pWriter)
+	: INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter)
 {}
 
-CBlockquote<COOXMLWriter>::CBlockquote(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CBlockquote<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CBlockquoteTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	//TODO:: когда Blockquote в Blockquote, то к первому нужно добавлять <w:divsChild>
@@ -624,21 +614,21 @@ bool CBlockquote<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelector
 	return true;
 }
 
-void CBlockquote<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CBlockquoteTag<COOXMLWriter>::Close()
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return;
 
 	m_pWriter->RollBackDivId();
 }
 
-CHorizontalRule<COOXMLWriter>::CHorizontalRule(COOXMLWriter* pWriter)
-	: CTag(pWriter), m_unShapeId(1)
+CHorizontalRuleTag<COOXMLWriter>::CHorizontalRuleTag(COOXMLWriter* pWriter)
+	: INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter), m_unShapeId(1)
 {}
 
-bool CHorizontalRule<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+bool CHorizontalRuleTag<COOXMLWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	for (const NSCSS::CNode& item : arSelectors)
@@ -730,26 +720,23 @@ bool CHorizontalRule<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSele
 	++m_unShapeId;
 
 	return true;
+
+	return true;
 }
 
-void CHorizontalRule<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{}
 
-CList<COOXMLWriter>::CList(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CList<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
 	m_pWriter->CloseP();
 
 	//Нумерованный список
-	if (L"ol" == arSelectors.back().m_wsName)
+	if (L"ol" == oTagNode.m_wsName)
 	{
-		const int nStart{NSStringFinder::ToInt(arSelectors.back().GetAttributeValue(L"start"), 1)};
+		const int nStart{NSStringFinder::ToInt(oTagNode.GetAttributeValue(L"start"), 1)};
 
 		XmlString& oNumberXml{m_pWriter->GetNumberingXml()};
 
@@ -782,26 +769,25 @@ bool CList<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, con
 	return true;
 }
 
-void CList<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+template<>
+void CListTag<COOXMLWriter>::Close()
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return;
 
 	m_pWriter->CloseP();
 }
 
-CListElement<COOXMLWriter>::CListElement(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CListElement<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CListElementTag<COOXMLWriter>::Open()
 {
-	return ValidWriter();
+	return Valid();
 }
 
-void CListElement<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+template<>
+void CListElementTag<COOXMLWriter>::Close()
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return;
 
 	m_pWriter->CloseP();
@@ -825,7 +811,7 @@ inline bool IsSVG(const std::wstring& wsExtention)
 	return L"svg" == wsExtention || L"svg+xml" == wsExtention;
 }
 
-bool ReadSVG(const std::wstring& wsSvg, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, const std::wstring& wsImagePath)
+bool ReadSVGData(const std::wstring& wsSvg, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, const std::wstring& wsImagePath)
 {
 	MetaFile::IMetaFile* pSvgReader = MetaFile::Create(pFonts);
 	if (!pSvgReader->LoadFromString(wsSvg))
@@ -948,7 +934,7 @@ bool ReadBase64(const std::wstring& wsSrc, const std::wstring& wsImagePath, NSFo
 		if (IsSVG(wsExtention))
 		{
 			std::wstring wsSvg(pImageData, pImageData + nDecodeLen);
-			bRes = ReadSVG(wsSvg, pFonts, wsTempDir, wsImagePath);
+			bRes = ReadSVGData(wsSvg, pFonts, wsTempDir, wsImagePath);
 			wsExtention = L"png";
 		}
 		else
@@ -1057,28 +1043,6 @@ bool UpdateImageData(const std::wstring& wsImagePath, TImageData& oImageData)
 	return true;
 }
 
-CCaption<COOXMLWriter>::CCaption(COOXMLWriter* pWriter)
-	: CTag(pWriter)
-{}
-
-bool CCaption<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
-{
-	if (!ValidWriter())
-		return false;
-
-	m_pWriter->WritePPr(arSelectors);
-
-	return true;
-}
-
-void CCaption<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{
-	if (!ValidWriter())
-		return;
-
-	m_pWriter->CloseP();
-}
-
 std::wstring CreateBorders(const NSCSS::NSProperties::CBorder& oBorder, const NSCSS::NSProperties::CIndent* pPadding = NULL, bool bAddIntermediateLines = false, ETableRules enTableRule = ETableRules::None)
 {
 	std::wstring wsTable;
@@ -1171,38 +1135,33 @@ std::wstring CalculateSidesToClean(UINT unColumnNumber, const std::vector<CTable
 	return std::wstring();
 }
 
-CHTML<COOXMLWriter>::CHTML(COOXMLWriter* pInterpretator)
-	: CTag(pInterpretator)
-{}
 
-bool CHTML<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData)
+template<>
+bool CHTMLTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode)
 {
-	if (!ValidWriter())
+	if (!Valid())
 		return false;
 
-	if (!arSelectors.back().m_mAttributes.empty())
+	if (oTagNode.m_mAttributes.empty())
+		return true;
+
+	std::wstring wsBackground;
+	if (oTagNode.GetAttributeValue(L"bgcolor", wsBackground))
 	{
-		std::wstring wsBackground;
-		if (arSelectors.back().GetAttributeValue(L"bgcolor", wsBackground))
+		NSCSS::NSProperties::CColor oColor;
+		oColor.SetValue(wsBackground);
+
+		if (!oColor.Empty() && !oColor.None())
 		{
-			NSCSS::NSProperties::CColor oColor;
-			oColor.SetValue(wsBackground);
+			const std::wstring wsHEXColor{oColor.ToHEX()};
 
-			if (!oColor.Empty() && !oColor.None())
-			{
-				const std::wstring wsHEXColor{oColor.ToHEX()};
-
-				if (!wsHEXColor.empty())
-					m_pWriter->GetCurrentDocument()->WriteString(L"<w:background w:color=\"" + wsHEXColor + L"\"/>");
-			}
+			if (!wsHEXColor.empty())
+				m_pWriter->GetCurrentDocument()->WriteString(L"<w:background w:color=\"" + wsHEXColor + L"\"/>");
 		}
 	}
 
 	return true;
 }
-
-void CHTML<COOXMLWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
-{}
 
 COOXMLTable::COOXMLTable(TExternalTableData* pExternalData)
 	: CTableElement(pExternalData)

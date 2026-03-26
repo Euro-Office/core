@@ -282,11 +282,6 @@ EWriterType CMDWriter::GetType() const
 	return EWriterType::Markdown;
 }
 
-bool CMDWriter::SupportNestedTables() const
-{
-	return false;
-}
-
 void CMDWriter::WriteBreakLine(bool bNeedChecked)
 {
 	if (bNeedChecked && !m_arStates.top().m_bNeedBreakLine)

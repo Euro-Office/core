@@ -8,133 +8,77 @@
 namespace HTML
 {
 template<>
-class CAnchor<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CAnchor(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CAnchorTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
+template<>
+void CAnchorTag<COOXMLWriter>::Close(const NSCSS::CNode& oTagNode);
 
 template<>
-class CAbbr<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CAbbr(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CAbbrTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
+template<>
+void CAbbrTag<COOXMLWriter>::Close();
 
 template<>
-class CBreak<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CBreak(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
+bool CBreakTag<COOXMLWriter>::Read(const NSCSS::CNode& oTagNode);
 
 template<>
-class CDivision<COOXMLWriter> : public CTag<COOXMLWriter>
+bool CFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode, size_t unLevel);
+
+template<>
+bool CInputTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
+
+template<>
+bool CBaseFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode);
+
+template<>
+bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode);
+template<>
+void CListTag<COOXMLWriter>::Close();
+
+template<>
+bool CListElementTag<COOXMLWriter>::Open();
+template<>
+void CListElementTag<COOXMLWriter>::Close();
+
+template<>
+bool CHTMLTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode);
+
+#define CLASS_TAG_LIGHT(class_name)\
+template<>\
+class C ## class_name ## Tag<COOXMLWriter> : public INTERFACE_TAGS::I ## class_name ## Tag, public INTERFACE_TAGS::ITag<COOXMLWriter>
+
+CLASS_TAG_LIGHT(Division)
 {
 	std::stack<UINT> m_arFootnoteIDs;
 public:
-	CDivision(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+	CDivisionTag(COOXMLWriter* pWriter);
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close() override;
 };
 
-template<>
-class CImage<COOXMLWriter> : public CTag<COOXMLWriter>
+CLASS_TAG_LIGHT(Image)
 {
 	std::vector<std::wstring> m_arrImages;
 public:
-	CImage(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+	CImageTag(COOXMLWriter* pWriter);
+	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
+	bool ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG) override;
 };
 
-template<>
-class CFont<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CFont(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CInput<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CInput(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CBaseFont<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CBaseFont(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CBlockquote<COOXMLWriter> : public CTag<COOXMLWriter>
+CLASS_TAG_LIGHT(Blockquote)
 {
 	std::map<std::wstring, UINT>  m_mDivs;
 public:
-	CBlockquote(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+	CBlockquoteTag(COOXMLWriter* pWriter);
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close() override;
 };
 
-template<>
-class CHorizontalRule<COOXMLWriter> : public CTag<COOXMLWriter>
+CLASS_TAG_LIGHT(HorizontalRule)
 {
 	UINT m_unShapeId;
 public:
-	CHorizontalRule(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CList<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CList(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CListElement<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CListElement(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CCaption<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CCaption(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-template<>
-class CHTML<COOXMLWriter> : public CTag<COOXMLWriter>
-{
-public:
-	CHTML(COOXMLWriter* pInterpretator);
-	virtual bool Open(const std::vector<NSCSS::CNode>& arSelectors, const boost::any& oExtraData = boost::any()) override;
-	virtual void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+	CHorizontalRuleTag(COOXMLWriter* pWriter);
+	bool Write(const std::vector<NSCSS::CNode>& arSelectors) override;
 };
 
 enum class ETableRules

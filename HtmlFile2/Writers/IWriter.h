@@ -36,9 +36,6 @@ public:
 	virtual XmlString* GetCurrentDocument() const = 0;
 
 	virtual EWriterType GetType() const = 0;
-
-	//TODO:: перенести разруливание вложенных таблиц в конвертацию после изменения принципа работы с таблицами
-	virtual bool SupportNestedTables() const = 0;
 };
 }
 
