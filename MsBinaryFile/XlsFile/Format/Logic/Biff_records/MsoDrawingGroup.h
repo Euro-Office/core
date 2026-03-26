@@ -34,6 +34,7 @@
 #include "BiffRecordContinued.h"
 #include "../Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
 #include "../../../../../OOXML/Base/Nullable.h"
+#include "../../../../../OOXML/SystemUtility/SystemUtility.h"
 
 namespace XLS
 {
@@ -55,7 +56,7 @@ public:
 	void writeFields(CFRecord& record);
 
 	void prepareChart(unsigned int count);
-	int AddPict(const std::wstring& pictPath);
+	int AddPict(OOX::CPath& pictPath);
 
 	ODRAW::OfficeArtDggContainer rgChildRec;
 	unsigned int drawingCount = 0;
