@@ -126,3 +126,5 @@ target_include_directories(BinDocument PRIVATE
 )
 
 set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory(BinDocument)
