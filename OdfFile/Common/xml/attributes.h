@@ -248,7 +248,7 @@ namespace cpdoccore
 		return (!!tmp);
 	}
 
-#if defined(_WIN32) || defined(_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && (defined(_WIN32) || defined(_WIN64))
     #define CP_APPLY_ATTR(NAME, VAL, ...) _cp_apply_attribute(Attributes, (NAME), (VAL), __VA_ARGS__)
 #else
     #define CP_APPLY_ATTR(NAME, VAL, ...) _cp_apply_attribute(Attributes, (NAME), (VAL), ##__VA_ARGS__)

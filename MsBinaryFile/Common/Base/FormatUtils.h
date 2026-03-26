@@ -69,7 +69,7 @@ namespace DocFileFormat
     typedef unsigned short  Bool16;
     typedef unsigned int    Bool32;
 
-#if !defined(_WIN32) && !defined(_WIN64)
+#if defined(LLVM_MINGW_CROSS) || ( !defined(_WIN32) && !defined(_WIN64) )
     struct POINT
     {
         int32_t x;

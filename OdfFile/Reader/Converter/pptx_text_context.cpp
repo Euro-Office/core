@@ -548,8 +548,8 @@ std::wstring pptx_text_context::Impl::dump_paragraph(/*bool last*/)
 	return paragraph_.str();
 }
 
-#if defined (_WIN32) || defined (_WIN64)
-    #include <Objbase.h>
+#if !defined(LLVM_MINGW_CROSS) && ( defined (_WIN32) || defined (_WIN64) )
+    #include <objbase.h>
 #endif
 
 void pptx_text_context::Impl::dump_field()
@@ -564,7 +564,7 @@ void pptx_text_context::Impl::dump_field()
 			std::wstring string_id;
 			std::wstring string_type;
 
-#if defined (_WIN32) || defined (_WIN64)
+#if !defined(LLVM_MINGW_CROSS) && (defined (_WIN32) || defined (_WIN64))
             GUID new_id;
 			CoCreateGuid(&new_id);
 			wchar_t str[100]={};
@@ -577,7 +577,7 @@ void pptx_text_context::Impl::dump_field()
 				{
 					string_type = L"slidenum";
 
-#if !defined (_WIN32) &&  !defined (_WIN64)
+#if defined(LLVM_MINGW_CROSS) || (!defined (_WIN32) &&  !defined (_WIN64))
                     string_id =  L"{5CC2A059-B141-45A7-B910-B096D6D06820}";
 #endif
 				//	content = L"‹#›";
@@ -587,7 +587,7 @@ void pptx_text_context::Impl::dump_field()
 				{
 					string_type = L"datetime1";
 
-#if !defined (_WIN32) &&  !defined (_WIN64)
+#if defined(LLVM_MINGW_CROSS) || (!defined (_WIN32) &&  !defined (_WIN64))
                     string_id = L"{1D1B89AE-8D35-4BB5-B492-6D9BE4F23A39}";
 #endif
                     if (content.length()<1)content = XmlUtils::EncodeXmlString(L"01.01.2000");
@@ -597,7 +597,7 @@ void pptx_text_context::Impl::dump_field()
 				{
 					string_type = L"datetime11";
 
-#if !defined (_WIN32) &&  !defined (_WIN64)
+#if defined(LLVM_MINGW_CROSS) || (!defined (_WIN32) &&  !defined (_WIN64))
                     string_id = L"{03DA74A9-E3F2-4F30-AAF9-CC1A83980D5E}";
 #endif
                     if (content.length()<1)content = XmlUtils::EncodeXmlString(L"00:00:00");
@@ -607,7 +607,7 @@ void pptx_text_context::Impl::dump_field()
 				{
 					string_type =  L"datetime1";
 
-#if !defined (_WIN32) &&  !defined (_WIN64)
+#if defined(LLVM_MINGW_CROSS) || (!defined (_WIN32) &&  !defined (_WIN64))
                     string_id = L"{A9EA0FE8-FEF9-4B2F-BC9D-19DDCDB4AB9B}";
 #endif
                  }break;
