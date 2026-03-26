@@ -217,9 +217,9 @@ void CDocxRenderer::DrawPage(IOfficeDrawingFile* pFile, size_t nPage)
 			y2 = arrLinks[i]->pRect[3] / c_dMMToPix;
 
 			std::wstring wsData;
-			if (lType == 1)
-				wsData = L""; // TODO: GoTo bookmarks or anchors
-			if (lType == 6 || lType == 9)
+			if (lType == 1 || lType == 9)
+				continue; // TODO: GoTo bookmarks or anchors
+			if (lType == 6)
 				wsData = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)arrLinks[i]->sData.c_str(), arrLinks[i]->sData.size());
 
 			m_pInternal->m_oDocument.AddLink(lType, x1, y1, x2, y2, wsData);
