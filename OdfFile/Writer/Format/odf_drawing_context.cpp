@@ -1265,6 +1265,11 @@ bool odf_drawing_context::isCustomClosed()
 	return impl_->current_drawing_state_.path_closed_;
 }
 
+bool odf_drawing_context::isNonPrimitive()
+{
+	return (impl_->current_drawing_state_.oox_shape_->odf_type_name == L"non-primitive" || impl_->current_drawing_state_.oox_shape_->odf_type_name == L"ooxml-non-primitive");
+}
+
 bool odf_drawing_context::isLineShape()
 {
 	if (impl_->current_level_.empty()) return false;

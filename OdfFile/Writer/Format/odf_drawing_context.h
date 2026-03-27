@@ -194,6 +194,7 @@ public:
 
 	bool isLineShape();
 	bool isCustomClosed();
+	bool isNonPrimitive();
 
 	void corrected_line_fill();
 

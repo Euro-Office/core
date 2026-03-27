@@ -1020,7 +1020,7 @@ void OoxConverter::convert(PPTX::Logic::SpPr *oox_spPr, PPTX::Logic::ShapeStyle*
 
 	bool bLine = odf_context()->drawing_context()->isLineShape();
 
-	if (custGeom && !custGeom->cxnLst.empty() && !odf_context()->drawing_context()->isCustomClosed())
+	if (custGeom && !custGeom->cxnLst.empty() && !odf_context()->drawing_context()->isCustomClosed() && !odf_context()->drawing_context()->isNonPrimitive())
 		bLine = true;
 
 	odf_context()->drawing_context()->start_area_properties();
