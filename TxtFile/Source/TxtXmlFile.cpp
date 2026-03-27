@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -91,7 +86,6 @@ static void ParseTxtOptions(const std::wstring & sXmlOptions, int &encoding, int
 	}
 }
 
-
 _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const std::wstring & sDstPath, const std::wstring & sXMLOptions)
 {
 	Writers::FileWriter *pDocxWriter =  new Writers::FileWriter(sDstPath, L"", true, 1, NULL, L"");
@@ -122,7 +116,6 @@ _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const s
 
 	return 0;
 }
-
 
 _UINT32 CTxtXmlFile::txt_SaveToFile(const std::wstring & sDstFileName, const std::wstring & sSrcPath, const std::wstring & sXMLOptions)
 {
@@ -162,7 +155,6 @@ _UINT32 CTxtXmlFile::txt_SaveToFile(const std::wstring & sDstFileName, const std
 
 	return result ? 0 : AVS_FILEUTILS_ERROR_CONVERT;
 }
-
 
 void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::FileWriter * pDocxWriter)
 {

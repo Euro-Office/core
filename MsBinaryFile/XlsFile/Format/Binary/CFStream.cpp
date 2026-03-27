@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -50,13 +45,11 @@ CFStream::CFStream(POLE::Stream* stream)
 	stream_ = stream;
 }
 
-
 CFStream::~CFStream()
 {
 	if (stream_) delete stream_;
 	stream_ = NULL;
 }
-
 
 // Read 'size' unsigned chars from the stream
 void CFStream::read(void* buf, const size_t size)
@@ -114,8 +107,6 @@ void CFStream::copy( std::wstring streamNameCreate, POLE::Storage * storageOut)
 	delete streamNew;
 }
 
-
-
 // Write 'size' unsigned chars to the stream
 void CFStream::write(const void* buf, const size_t size)
 {
@@ -140,13 +131,11 @@ void CFStream::write(const void* buf, const size_t size)
 	// Tipa successful
 }
 
-
 // If the current pointer is exactly at the end of the stream.
 const bool CFStream::isEOF() const
 {
 	return getStreamPointer() == getStreamSize();
 }
-
 
 // Stream pointer
 const unsigned long CFStream::getStreamPointer() const
@@ -155,7 +144,6 @@ const unsigned long CFStream::getStreamPointer() const
 	return (unsigned long)pos;
 }
 
-
 void CFStream::seekFromCurForward(const size_t offset)
 {
 	POLE::uint64 pos = offset + stream_->tell();
@@ -163,14 +151,12 @@ void CFStream::seekFromCurForward(const size_t offset)
 	stream_->seek(pos);
 }
 
-
 void CFStream::seekFromBegin(const unsigned long offset)
 {
 	POLE::uint64 pos = offset;
 
 	stream_->seek(pos);
 }
-
 
 void CFStream::seekToEnd()
 {
@@ -183,7 +169,6 @@ const unsigned long CFStream::getStreamSize() const
 	return (unsigned long)stream_->size();
 }
 
-
 void CFStream::writeAndApplyDelayedItems(void* buf, const size_t size, const ReceiverItems& receiver_items_from_record, const SourceItems& source_items_from_record)
 {
 	appendDelayedItems(receiver_items_from_record, source_items_from_record);
@@ -193,7 +178,6 @@ void CFStream::writeAndApplyDelayedItems(void* buf, const size_t size, const Rec
 		applyDelayedItems();
 	}
 }
-
 
 // The file pointer of the start of the record will be appended to all receiver items 'data_place' fields 
 // Then all items will be appended to the common queue
@@ -217,7 +201,6 @@ void CFStream::appendDelayedItems(const ReceiverItems& receiver_items_from_recor
 		source_items.push_back(copy_item);
 	}
 }
-
 
 // Try to apply
 void CFStream::applyDelayedItems()
@@ -247,7 +230,6 @@ void CFStream::applyDelayedItems()
 	}
 	seekToEnd();
 }
-
 
 } // namespace XLS
 

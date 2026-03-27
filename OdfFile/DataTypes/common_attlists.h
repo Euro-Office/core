@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -366,7 +361,6 @@ public:
     _CP_OPT(std::wstring) style_num_suffix_;
 };
 
-
 // common-text-align
 class common_text_align
 {
@@ -424,7 +418,6 @@ public:
 	//text:animation-repeat
 };
 
-
 // common-draw-rel-size-attlist
 class common_draw_rel_size_attlist
 {
@@ -432,7 +425,6 @@ public:
     void add_attributes( const xml::attributes_wc_ptr & Attributes );
     void apply_from(const common_draw_rel_size_attlist & Other);
 	void serialize(CP_ATTR_NODE);
-
 
     common_draw_size_attlist	common_draw_size_attlist_;
     _CP_OPT(percent_or_scale)	style_rel_width_;
@@ -489,7 +481,6 @@ public:
     _CP_OPT(length)			svg_x_;
 
 };
-
 
 class common_shape_table_attlist
 {

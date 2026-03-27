@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -32,7 +27,6 @@
 #pragma once
 
 #include <string>
-
 
 namespace PPT {
 
@@ -226,7 +220,6 @@ enum RecordType : unsigned short
     RT_RoundTripSlideSyncInfo12             = 0x3714,
     RT_RoundTripSlideSyncInfoAtom12,
 
-
     RTE_DGG_CONTAINER =         0xF000,
     RTE_BSTORE_CONTAINER =      0xF001,
     RTE_DG_CONTAINER =          0xF002,
@@ -253,7 +246,6 @@ enum RecordType : unsigned short
     RTE_CALLOUTRULE =           0xF017,
     RTE_BLIP_START =            0xF018,
 
-
     RTE_BLIP_EMF =              0xF01A,
     RTE_BLIP_WMF =              0xF01B,
     RTE_BLIP_PICT =             0xF01C,
@@ -261,11 +253,9 @@ enum RecordType : unsigned short
     RTE_BLIP_PNG =              0xF01E,
     RTE_BLIP_DIB =              0xF01F,
 
-
     RTE_BLIP_END =              0xF117,
     RTE_REGROUPITEMS =          0xF118,
     RTE_SELECTION =             0xF119,
-
 
     RTE_COLORMRU =              0xF11A,
     RTE_DELETEDPSPL =           0xF11D,
@@ -275,9 +265,6 @@ enum RecordType : unsigned short
     RTE_SECONDARY_OPT =         0xF121,
     RTE_TETRIARY_OPT =          0xF122,
     RTE_BLIP_TIFF =             0xF029,
-
-
-
 
     RT_TimeConditionContainer               = 0xF125,
     RT_TimeNode                             = 0xF127,
@@ -312,7 +299,6 @@ enum RecordType : unsigned short
     RT_TimeExtTimeNodeContainer,
     RT_TimeSubEffectContainer
 };
-
 
 //std::string GetRecordName(RecordType dwType);
 }

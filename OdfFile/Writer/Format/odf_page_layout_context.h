@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -111,7 +106,6 @@ public:
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
 
-
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 
 	office_element_ptr	root_header_footer_; //для топовых элементов в style:footer
@@ -119,7 +113,6 @@ public:
 	double				current_page_width_;
 	bool				even_and_left_headers_;
 private:
-
 
 	style_page_layout_properties	*get_properties();
 	style_header_footer_properties	*get_header_properties();
@@ -133,7 +126,6 @@ private:
  	std::vector<odf_master_state> master_state_list_;
 	
 };
-
 
 }
 }

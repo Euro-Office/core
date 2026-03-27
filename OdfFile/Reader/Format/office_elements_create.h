@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -130,7 +125,6 @@ public:
 template<class T> int RegisterElement<T>::class_registered_		= 0; //with namespace
 template<class T> int RegisterElement<T>::class_registered_1_	= 0; //without namespace
 
-
 //  Создать элемент и в случае успеха прочитать его содержимое из SAX, поместить в shared_ptr
 bool create_element_and_read(xml::sax * Reader,
                              const std::wstring & Ns,
@@ -146,7 +140,6 @@ bool create_element_and_read(xml::sax * Reader,
                              office_element_ptr_array & _Elements,
                              document_context * Context,
                              bool isRoot = false);
-
 
 #define CP_CREATE_ELEMENT_SIMPLE(ELEMENT)		create_element_and_read(Reader, Ns, Name, (ELEMENT),	Context)
 #define CP_CREATE_ELEMENT(ELEMENT)				create_element_and_read(Reader, Ns, Name, (ELEMENT),	getContext())
@@ -166,7 +159,6 @@ void not_applicable_element(const std::wstring & Current, const std::wstring & N
 
 #define CP_NOT_APPLICABLE_ELM_SIMPLE(A) \
     not_applicable_element(A, Reader, Ns, Name)
-
 
 }
 }

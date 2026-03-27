@@ -12,24 +12,18 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
 
 #include "styles.h"
 #include <xml/xmlchar.h>
@@ -271,7 +265,6 @@ void style_content::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * default_style::ns = L"style";
 const wchar_t * default_style::name = L"default-style";
-
 
 void default_style::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
@@ -761,7 +754,6 @@ void style_master_page_attlist::serialize(CP_ATTR_NODE)
 	CP_XML_ATTR_OPT_ENCODE_STRING(L"draw:style-name", draw_style_name_);
 	CP_XML_ATTR_OPT_ENCODE_STRING(L"style:next-style-name",	style_next_style_name_);
 }
-
 
 const wchar_t * office_master_styles::ns = L"office";
 const wchar_t * office_master_styles::name = L"master-styles";
@@ -1256,8 +1248,6 @@ void style_footnote_sep::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 
 /// style:master-page
 //////////////////////////////////////////////////////////////////////////////////////////////////

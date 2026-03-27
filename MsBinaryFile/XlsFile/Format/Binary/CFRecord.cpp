@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -32,7 +27,6 @@
 
 #include "CFRecord.h"
 #include "CFStream.h"
-
 
 namespace XLS
 {
@@ -247,7 +241,6 @@ const unsigned int CFRecord::getStreamPointer() const
 	return file_ptr;
 }
 
-
 const char* CFRecord::getData() const
 {
 	if(data_)
@@ -259,7 +252,6 @@ const char* CFRecord::getData() const
 		return intData;
 	}
 }
-
 
 const size_t CFRecord::getDataSize() const
 {
@@ -280,12 +272,10 @@ const size_t CFRecord::getMaxRecordSize() const
 	return MAX_RECORD_SIZE;
 }
 
-
 void CFRecord::appendRawData(CFRecordPtr where_from)
 {
 	appendRawData(where_from->getData(), where_from->getDataSize());
 }
-
 
 void CFRecord::appendRawData(const char* raw_data, const size_t size)
 {
@@ -386,12 +376,10 @@ void CFRecord::insertDataFromRecordToBeginning(CFRecordPtr where_from)
 	delete[] data_new;
 }
 
-
 const size_t CFRecord::getRdPtr() const
 {
 	return rdPtr;
 }
-
 
 const bool CFRecord::isEOF() const
 {
@@ -401,7 +389,6 @@ const bool CFRecord::isEOF() const
 	}
 	return rdPtr >= size_;
 }
-
 
 // Checks whether the specified number of unsigned chars present in the non-read part of the buffer
 // Doesn't generate an exception
@@ -416,7 +403,6 @@ const bool CFRecord::checkFitWriteSafe(const size_t size) const
 		return (rdPtr + size <= MAX_RECORD_SIZE_XLSB);
     return (rdPtr + size <= MAX_RECORD_SIZE);
 }
-
 
 // Checks whether the specified number of unsigned chars present in the non-read part of the buffer
 // Generates an exception
@@ -467,7 +453,6 @@ void CFRecord::reserveNunBytes(const size_t n)
 
 }
 
-
 void CFRecord::RollRdPtrBack(const size_t n)
 {
 	//ASSERT(data_); // This throws if we use RollRdPtrBack while storing data
@@ -506,7 +491,6 @@ CFRecord& CFRecord::operator << (bool& val)
 	throw;// EXCEPT::LE::WrongAPIUsage("This function may only be called by mistake.", __FUNCTION__);
 }
 
-
 #if !defined(_WIN32) && !defined(_WIN64)
 CFRecord& operator>>(CFRecord & record, std::string & str)
 {
@@ -537,5 +521,4 @@ CFRecord& operator>>(CFRecord & record, std::wstring & str)
 }
 #endif
 } // namespace XLS
-
 

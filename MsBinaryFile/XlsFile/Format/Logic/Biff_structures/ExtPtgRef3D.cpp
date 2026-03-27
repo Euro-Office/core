@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -35,18 +30,15 @@
 namespace XLS
 {
 
-
 ExtPtgRef3D::ExtPtgRef3D(const CellRef& cell_base_ref_init)
 :	cell_base_ref(cell_base_ref_init)
 {
 }
 
-
 BiffStructurePtr ExtPtgRef3D::clone()
 {
 	return BiffStructurePtr(new ExtPtgRef3D(*this));
 }
-
 
 void ExtPtgRef3D::load(CFRecord& record)
 {
@@ -54,7 +46,6 @@ void ExtPtgRef3D::load(CFRecord& record)
 
 	record >> iTabs >> loc;
 }
-
 
 void ExtPtgRef3D::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref )
 {
@@ -82,9 +73,6 @@ void ExtPtgRef3D::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool
 	ptg_stack.push(strRange + cell_ref);
 
 }
-
-
-
 
 } // namespace XLS
 

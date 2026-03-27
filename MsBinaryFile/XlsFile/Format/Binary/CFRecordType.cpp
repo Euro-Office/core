@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -440,26 +435,21 @@ CFRecordType::CFRecordType()
 	}
 }
 
-
 CFRecordType& CFRecordType::getInst()
 {
 	static CFRecordType inst;
 	return inst;
 }
 
-
 const CFRecordType::TypeId CFRecordType::getIdByString(const TypeString& str)
 {
 	return getInst().all_types_string[str];
 }
 
-
-
 const CFRecordType::TypeString& CFRecordType::getStringById(const TypeId id)
 {
 	return getInst().all_types_id[id];
 }
-
 
 // Whether the specified type is one of Continue records
 const bool CFRecordType::isContinue(const TypeId type)
@@ -467,7 +457,6 @@ const bool CFRecordType::isContinue(const TypeId type)
 	return rt_Continue == type || rt_ContinueBigName == type || rt_ContinueFrt == type || 
 		rt_ContinueFrt11 == type || rt_ContinueFrt12 == type;
 }
-
 
 } // namespace XLS
 

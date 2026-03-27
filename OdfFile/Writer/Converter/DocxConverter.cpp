@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -2046,7 +2041,6 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 
 		odt_context->page_layout_context()->set_page_border(top, left, bottom, right);
 
-
 		if (oox_section_pr->m_oPgBorders->m_oOffsetFrom.IsInit() &&
 			(oox_section_pr->m_oPgBorders->m_oOffsetFrom->GetValue() == SimpleTypes::pageborderoffsetPage))
 		{
@@ -2082,7 +2076,6 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 			if (oox_section_pr->m_oPgBorders->m_oRight->m_oSpace.IsInit())
 				odt_context->page_layout_context()->set_page_border_padding(4, oox_section_pr->m_oPgBorders->m_oRight->m_oSpace->ToPoints());
 		}
-
 
 		bool shadow = false;
 		if (oox_section_pr->m_oPgBorders->m_oBottom.IsInit() && oox_section_pr->m_oPgBorders->m_oBottom->m_oShadow.IsInit() && oox_section_pr->m_oPgBorders->m_oBottom->m_oShadow->ToBool()) shadow = true;
@@ -4000,7 +3993,6 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 
 }
 
-
 void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::CNumLvl *oox_num_lvl_over, int lvl)
 {
 	if (oox_num_lvl == NULL) return;
@@ -4696,7 +4688,6 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 	if (oox_table->m_oTableProperties)
 		id_change_properties = convert(oox_table->m_oTableProperties->m_oTblPrChange.GetPointer());
 
-
 	if (oox_table->m_oTableProperties && (oox_table->m_oTableProperties->m_oTblStyle.IsInit() && oox_table->m_oTableProperties->m_oTblStyle->m_sVal.IsInit()))
 	{//настройка предустановленного стиля
 		std::wstring base_style_name = *oox_table->m_oTableProperties->m_oTblStyle->m_sVal;
@@ -4759,7 +4750,6 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 				//	if (!x) x = oox_table->m_oTableProperties->m_oTblpPr->m_oLeftFromText->ToPoints();
 				//	else x = -*x + oox_table->m_oTableProperties->m_oTblpPr->m_oLeftFromText->ToPoints();
 				//}
-
 
 				odt_context->drawing_context()->set_drawings_rect(x, y, width, height);	
 				

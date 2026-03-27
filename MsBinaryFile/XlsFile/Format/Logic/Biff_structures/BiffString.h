@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -47,13 +42,11 @@ typedef enum
     aw_NAME_WIDE = 6,
 } AW_DETERMINATION;
 
-
 typedef enum
 {
 	cch_READ_FROM_RECORD = 0,
 	cch_PASSED_AS_AN_ARGUMENT = 1,
 } CCH_SOURCE;
-
 
 class BiffString : public BiffStructure
 {
@@ -100,7 +93,6 @@ protected:
     size_t struct_size  = 0;
 	_CP_OPT(size_t) cch_;
 };
-
 
 template<class cchType, AW_DETERMINATION det_id, CCH_SOURCE cch_where>
 class XLUnicodeString_T : public BiffString
@@ -247,7 +239,6 @@ public:
                     break;
         }
 
-
         struct_size += (cch << (is_wide ? 1 : 0));
 
         save(record, cch, is_wide);
@@ -287,7 +278,6 @@ private:
 	_CP_OPT(bool) is_wide_rec;
 };
 
-
 typedef XLUnicodeString_T<unsigned short,	aw_READ_FROM_RECORD,					cch_READ_FROM_RECORD>		XLUnicodeString;
 typedef XLUnicodeString_T<unsigned char,	aw_READ_FROM_RECORD,					cch_READ_FROM_RECORD>		ShortXLUnicodeString;
 typedef XLUnicodeString_T<unsigned short,	aw_WIDE,								cch_READ_FROM_RECORD>		LPWideString;
@@ -297,7 +287,6 @@ typedef XLUnicodeString_T<unsigned short,	aw_READ_FROM_RECORD_IF_CCH_NOT_ZERO,	c
 typedef XLUnicodeString_T<unsigned short,	aw_ANSI,								cch_READ_FROM_RECORD>		LPAnsiString;
 typedef XLUnicodeString_T<unsigned char,	aw_ANSI,								cch_READ_FROM_RECORD>		ShortXLAnsiString;
 typedef XLUnicodeString_T<unsigned short,	aw_ANSI,								cch_PASSED_AS_AN_ARGUMENT>	LPAnsiStringNoCch;
-
 
 template<class cchType, AW_DETERMINATION det_id, CCH_SOURCE cch_where>
 CFRecord& operator >> (CFRecord& record, XLUnicodeString_T<cchType, det_id, cch_where>& val)
@@ -335,7 +324,6 @@ public:
 };
 
 } // namespace XLS
-
 
 namespace OSHARED
 {

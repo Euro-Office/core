@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -37,7 +32,6 @@
 #include "TimingExeption.h"
 #include "TimingUtils.h"
 
-
 namespace PPT {
 namespace Converter {
 
@@ -49,7 +43,6 @@ void Timing_2010::Convert(PPTX::Logic::Timing &timing, CExMedia *pExMedia, CRels
 {
     m_pExMedia = pExMedia;
     m_pRels = pRels;
-
 
     auto* pTagExtAnim = slideAnim.pAnim_2010;
     if (pTagExtAnim == nullptr || pTagExtAnim->m_haveExtTime == false)
@@ -69,7 +62,6 @@ void Timing_2010::ConvertBldLst(PPTX::Logic::Timing &timimg, CRecordBuildListCon
         return;
     if (!timimg.bldLst.IsInit())
         timimg.bldLst = new PPTX::Logic::BldLst;
-
 
     for (IRecord* pDBC : pBLC->m_arRecords)
     {
@@ -1147,7 +1139,6 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
     if (oTimeNodeAtom.m_fRestartProperty)
         oCTn.restart = PPTX::Limit::TLRestart(oTimeNodeAtom.m_dwRestart) ;
 
-
     // Write fill
     if (oTimeNodeAtom.m_fFillProperty)
         oCTn.fill = PPTX::Limit::TLNodeFillType(oTimeNodeAtom.m_dwFill);
@@ -1181,7 +1172,6 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
             FillCond(oldCond, cond);
             oCTn.stCondLst->list.push_back(cond);
         }
-
 
         // Write endCondLst
         if (pETNC->m_arrRgEndTimeCondition.empty() == false)
@@ -1366,7 +1356,6 @@ void Timing_2010::FillAnimMotion(
 
     //    oAnim.ptsTypes
 
-
     oAnim.pathEditMode = new PPTX::Limit::TLPathEditMode;
     oAnim.pathEditMode->set(oAtom.m_bEditRotationPropertyUsed ? L"fixed" : L"relative");
 }
@@ -1425,8 +1414,6 @@ void Timing_2010::FillAnimScale(
         oAnim.zoomContents = oAtom.m_fZoomContents;
 }
 
-
-
 void Timing_2010::FillVideo(
         CRecordExtTimeNodeContainer* pETNC,
         PPTX::Logic::Video& oVideo)
@@ -1454,7 +1441,6 @@ void Timing_2010::FillVideo(
 
         }
     }
-
 
     oVideo.cMediaNode.tgtEl.spTgt = new PPTX::Logic::SpTgt();
     oVideo.cMediaNode.tgtEl.spTgt->spid = std::to_wstring(video.m_nObjectIdRef);

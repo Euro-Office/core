@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -33,7 +28,6 @@
 #include <algorithm>
 
 using namespace std;
-
 
 ucs2_conversion::result
 ucs2_conversion::do_in(mbstate_t&,
@@ -59,7 +53,6 @@ ucs2_conversion::do_in(mbstate_t&,
 	return ok;
 }
 
-
 ucs2_conversion::result
 ucs2_conversion::do_out(mbstate_t&,
 						const wchar_t* from, const wchar_t* from_end, const wchar_t*& from_next,
@@ -79,8 +72,6 @@ ucs2_conversion::do_out(mbstate_t&,
 	}
 	return ok;
 }
-
-
 
 ube_conversion::result
 ube_conversion::do_in(mbstate_t&,
@@ -126,7 +117,6 @@ ube_conversion::do_out(mbstate_t&,
 	return ok;
 }
 
-
 utf8_conversion::result
 utf8_conversion::do_in(mbstate_t&,
 					   const char*  from, const char* from_end, const char*& from_next,
@@ -158,7 +148,6 @@ utf8_conversion::do_in(mbstate_t&,
 	}
 	return ok;
 }
-
 
 // TODO можно оптимизировать, считая что в utf8 максимальное значение байт на символ 4. 
 // И после заменив деление и умножение на сдвиги
@@ -203,13 +192,11 @@ utf8_conversion::do_out(mbstate_t&,
 	return ok;
 }
 
-
 const unsigned char 
 utf8_conversion::take_6_bits(const int unsigned value, const size_t right_position) const
 {
 	return (value >> right_position) & 63;
 }
-
 
 const size_t 
 utf8_conversion::most_signifant_bit_position(const unsigned int value) const

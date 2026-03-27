@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -31,7 +26,6 @@
  */
 #pragma once
 #include "../../../DesktopEditor/common/Types.h"
-
 
 namespace PPT
 {
@@ -42,7 +36,6 @@ enum AnimAfterEffectEnum : BYTE
     AI_Hide,
     AI_HideImmediately
 };
-
 
 enum AnimBuildTypeEnum : BYTE
 {
@@ -60,14 +53,12 @@ enum AnimBuildTypeEnum : BYTE
     BT_FollowMaster = 0xFE
 };
 
-
 enum BuildTypeEnum
 {
     TL_BuildParagraph,
     TL_BuildChart,
     TL_BuildDiagram
 };
-
 
 enum ChartBuildEnum
 {
@@ -78,7 +69,6 @@ enum ChartBuildEnum
     TLCB_ByElementInCategory,
     TLCB_Custom
 };
-
 
 enum ColorModeEnum : BYTE
 {
@@ -97,7 +87,6 @@ enum ConditionEnum
     TL_CT_Previous,
     TL_CT_EndSync
 };
-
 
 enum DiagramBuildEnum
 {
@@ -119,7 +108,6 @@ enum DiagramBuildEnum
     TLDB_AllAtOnce,
     TLDB_Custom
 };
-
 
 enum DiffTypeEnum
 {
@@ -143,13 +131,11 @@ enum DiffTypeEnum
     Diff_InteractiveInfoDiff
 };
 
-
 enum ElementTypeEnum
 {
     TL_ET_ShapeType = 1,
     TL_ET_SoundType
 };
-
 
 enum ExColorFollowEnum
 {
@@ -157,7 +143,6 @@ enum ExColorFollowEnum
     ExColor_FollowScheme,
     ExColor_FollowTextAndBackground
 };
-
 
 enum ExOleObjSubTypeEnum
 {
@@ -181,14 +166,12 @@ enum ExOleObjSubTypeEnum
     ExOleSub_PPTODF
 };
 
-
 enum ExOleObjTypeEnum
 {
     ExOle_Embedded,
     ExOle_Link,
     ExOle_Control
 };
-
 
 enum InteractiveInfoActionEnum
 {
@@ -202,7 +185,6 @@ enum InteractiveInfoActionEnum
     II_CustomShowAction
 };
 
-
 enum InteractiveInfoJumpEnum
 {
     II_NoJump,
@@ -213,7 +195,6 @@ enum InteractiveInfoJumpEnum
     II_LastSlideViewed,
     II_EndShow
 };
-
 
 enum LinkToEnum
 {
@@ -229,14 +210,12 @@ enum LinkToEnum
     LT_Nil                  = 0xFF
 };
 
-
 enum NormalViewSetBarStates
 {
     BS_Minimized,
     BS_Restored,
     BS_Maximized
 };
-
 
 enum OLEVerbEnum
 {
@@ -245,7 +224,6 @@ enum OLEVerbEnum
     OV_Tertiary
 };
 
-
 enum ParaBuildEnum
 {
     TLPB_AllAtOnce,
@@ -253,7 +231,6 @@ enum ParaBuildEnum
     TLPB_CustomBuild,
     TLPB_AsAWhole
 };
-
 
 enum PhotoAlbumFrameShapeEnum
 {
@@ -266,7 +243,6 @@ enum PhotoAlbumFrameShapeEnum
     PA_Plaque
 };
 
-
 enum PhotoAlbumLayoutEnum
 {
     PA_FitToSlide,
@@ -277,7 +253,6 @@ enum PhotoAlbumLayoutEnum
     PA_TwoPicturesAndTitle,
     PA_FourPicturesAndTitle
 };
-
 
 enum PlaceholderEnum : BYTE
 {
@@ -311,14 +286,12 @@ enum PlaceholderEnum : BYTE
     PT_Body_Empty =  0xFF
 };
 
-
 enum PlaceholderSize
 {
     PS_Full,
     PS_Half,
     PS_Quarter
 };
-
 
 enum PrintWhatEnum
 {
@@ -333,7 +306,6 @@ enum PrintWhatEnum
     PW_Handouts9,
     PW_Handouts1
 };
-
 
 enum SlideLayoutType
 {
@@ -353,7 +325,6 @@ enum SlideLayoutType
     SL_VerticalTwoRows
 };
 
-
 enum SlideSizeEnum
 {
     SS_Screen,
@@ -365,7 +336,6 @@ enum SlideSizeEnum
     SS_Custom
 };
 
-
 enum TextAlignmentEnum
 {
     Tx_ALIGNLeft,
@@ -376,7 +346,6 @@ enum TextAlignmentEnum
     Tx_ALIGNThaiDistributed,
     Tx_ALIGNJustifyLow
 };
-
 
 enum TextAutoNumberSchemeEnum : USHORT
 {
@@ -423,7 +392,6 @@ enum TextAutoNumberSchemeEnum : USHORT
     ANM_HindiAlpha1Period
 };
 
-
 enum TextBuildSubEffectEnum
 {
     TXB_BuildByNone,
@@ -431,13 +399,11 @@ enum TextBuildSubEffectEnum
     TXB_BuildByCharacter
 };
 
-
 enum TextDirectionEnum
 {
     LeftToRight,
     RightToLeft
 };
-
 
 enum TextFontAlignmentEnum
 {
@@ -447,7 +413,6 @@ enum TextFontAlignmentEnum
     Tx_ALIGNFONTUpholdFixed
 };
 
-
 enum TextTabTypeEnum
 {
     Tx_TABLeft,
@@ -455,7 +420,6 @@ enum TextTabTypeEnum
     Tx_TABRight,
     Tx_TABDecimal
 };
-
 
 enum TextTypeEnum : unsigned
 {
@@ -471,14 +435,12 @@ enum TextTypeEnum : unsigned
     NoPresent           = 0xFF
 };
 
-
 enum TimeAnimateBehaviorValueTypeEnum
 {
     TL_TABVT_String,
     TL_TABVT_Number,
     TL_TABVT_Color
 };
-
 
 enum TimeCommandBehaviorTypeEnum
 {
@@ -487,7 +449,6 @@ enum TimeCommandBehaviorTypeEnum
     TL_TCBT_OleVerb
 };
 
-
 enum TimeNodeTypeEnum
 {
     TL_TNT_Parallel,
@@ -495,7 +456,6 @@ enum TimeNodeTypeEnum
     TL_TNT_Behavior = 0x3,
     TL_TNT_Media
 };
-
 
 enum TimePropertyID4TimeBehavior
 {
@@ -510,7 +470,6 @@ enum TimePropertyID4TimeBehavior
     TL_TBPID_PathEditRotationY,
     TL_TBPID_PointsTypes
 };
-
 
 enum TimePropertyID4TimeNode
 {
@@ -533,7 +492,6 @@ enum TimePropertyID4TimeNode
     TL_TPID_ZoomToFullScreen    = 0x1A
 };
 
-
 enum TimeVariantTypeEnum
 {
     TL_TVT_Bool,
@@ -541,7 +499,6 @@ enum TimeVariantTypeEnum
     TL_TVT_Float,
     TL_TVT_String
 };
-
 
 enum TimeVisualElementEnum
 {
@@ -555,7 +512,6 @@ enum TimeVisualElementEnum
     TL_TVET_AllTextRange    = 0x8
 };
 
-
 enum TriggerObjectEnum
 {
     TL_TOT_None,
@@ -563,7 +519,6 @@ enum TriggerObjectEnum
     TL_TOT_TimeNode,
     TL_TOT_RuntimeNodeRef
 };
-
 
 enum ViewTypeEnum
 {
@@ -587,7 +542,6 @@ enum ViewTypeEnum
     V_PodiumNotesView
 };
 
-
 enum WebFrameColorsEnum
 {
     MSOWOPTBrowserColors,
@@ -596,7 +550,6 @@ enum WebFrameColorsEnum
     MSOWOPTWhiteTextOnBlack,
     MSOWOPTBlackTextOnWhite
 };
-
 
 enum WebOutputEnum
 {

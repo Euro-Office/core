@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -1393,7 +1388,6 @@ void CPictFile::DrawPolygon(bool isFrame)
 	bary[0] /= double(points_count);
 	bary[1] /= double(points_count);
 
-
 	std::vector<Aggplus::PointF> B2Dpoly;
 	B2Dpoly.resize(points_count);
 	for (int i = 0; i < points_count; i++)
@@ -1410,7 +1404,6 @@ void CPictFile::DrawPolygon(bool isFrame)
 
 	for (int i = 1; i < points_count; i++)
 		m_pRenderer->PathCommandLineTo(B2Dpoly[i].X, B2Dpoly[i].Y);
-
 
 	if (!isFrame)
 		m_pRenderer->Fill();
@@ -1584,7 +1577,6 @@ void CPictFile::DrawRoundRect(bool isFrame)
 		m_pRenderer->PathCommandLineTo(points[i].X, points[i].Y);
 	}
 
-
 	if (!isFrame)
 		m_pRenderer->Fill();
 
@@ -1736,7 +1728,6 @@ void CPictFile::InitializeRenderer()
 	m_pRenderer->SetSwapRGB(false);
 	m_pRenderer->put_PenColor(0x000000);
 }
-
 
 BYTE* CPictFile::GetPixels(const Image& image, const long long& x, const long long& y, const size_t& width, const size_t& height) const
 {

@@ -12,17 +12,12 @@
 * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
 * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
 *
-* You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
-* street, Riga, Latvia, EU, LV-1050.
-*
+* *
 * The  interactive user interfaces in modified source and object code versions
 * of the Program must display Appropriate Legal Notices, as required under
 * Section 5 of the GNU AGPL version 3.
 *
-* Pursuant to Section 7(b) of the License you must retain the original Product
-* logo when distributing the program. Pursuant to Section 7(e) we decline to
-* grant you any rights under trademark law for use of our trademarks.
-*
+* *
 * All the Product's GUI elements, including illustrations and icon sets, as
 * well as technical writing content are licensed under the terms of the
 * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -401,7 +396,6 @@ namespace Oox2Odf
 		convert(oox_arg_pr->m_oArgSz.GetPointer());		
 	}
 
-
 	void OoxConverter::convert(OOX::Logic::CArgSz *oox_arg_sz)
 	{
 		if (!oox_arg_sz) return;
@@ -475,7 +469,6 @@ namespace Oox2Odf
 	{
 		returnValues values;
 		if (!oox_border_box_pr) return values;
-
 
 		values.colorFlag = convert(oox_border_box_pr->m_oCtrlPr.GetPointer()).colorFlag;
 		convert(oox_border_box_pr->m_oHideBot.GetPointer());
@@ -612,7 +605,6 @@ namespace Oox2Odf
 
 		if (!oox_del_pr) return values;
 
-
 		values.begEndChrs.first = convert(oox_del_pr->m_oBegChr.GetPointer());
 		values.colorFlag = convert(oox_del_pr->m_oCtrlPr.GetPointer()).colorFlag;
 		convert(oox_del_pr->m_oGrow.GetPointer());
@@ -719,7 +711,6 @@ namespace Oox2Odf
 	void OoxConverter::convert(OOX::Logic::CFraction *oox_fraction)
 	{
 		if (!oox_fraction) return;		
-
 
 		returnValues val = convert(oox_fraction->m_oFPr.GetPointer());
 
@@ -1091,7 +1082,6 @@ namespace Oox2Odf
 			convert(oox_lim_upp->m_oLim.GetPointer());
 		}
 
-
 		CLOSE_MATH_TAG;
 		lvl_up_counter_decreace(1);
 		endOfMrow();
@@ -1368,7 +1358,6 @@ namespace Oox2Odf
 				}
 			odf_context()->settings_context()->end_view();
 		}
-
 
 		if (oox_r_pr->m_oColor.IsInit() && oox_r_pr->m_oColor->m_oVal->ToString() != L"auto")
 		{
@@ -1890,7 +1879,6 @@ std::wstring str1, str2;
 	{
 		returnValues values;
 		if (!oox_ssub_sup_pr) return values;
-
 
 		convert(oox_ssub_sup_pr->m_oAlnScr.GetPointer());
 		values.colorFlag = convert(oox_ssub_sup_pr->m_oCtrlPr.GetPointer()).colorFlag;

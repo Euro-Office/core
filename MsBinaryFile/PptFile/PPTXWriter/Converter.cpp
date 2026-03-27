@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -95,7 +90,6 @@ namespace PPT
         <cp:revision>1</cp:revision>\
         </cp:coreProperties>";
     }
-
 
     CPPTXWriter::CPPTXWriter(const std::wstring& destPath) : m_strDestPath(destPath)
     {
@@ -211,7 +205,6 @@ namespace PPT
         m_oManager.Clear();
     }
 
-
     void CPPTXWriter::WriteContentTypes()
     {
         std::wstring strContentTypes = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\
@@ -264,7 +257,6 @@ namespace PPT
             strContentTypes += L"<Override PartName=\"/ppt/slideMasters/slideMaster" + std::to_wstring(nIndexTheme) + \
                 L".xml\" ContentType=\"application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml\"/>";
 
-
             for (size_t nL = 0; nL < m_pDocument->m_arThemes[nT]->m_arLayouts.size(); nL++, nIndexLayout++)
             {
                 strContentTypes += L"<Override PartName=\"/ppt/slideLayouts/slideLayout" + std::to_wstring(nIndexLayout) +
@@ -303,7 +295,6 @@ namespace PPT
         oFile.WriteStringUTF8(strContentTypes);
         oFile.CloseFile();
     }
-
 
     void CPPTXWriter::WriteApp(NSFile::CFileBinary& oFile)
     {
@@ -683,7 +674,6 @@ namespace PPT
             }
         }
 
-
         return arrRTTheme.size() && arrRTLayouts.size();
     }
 
@@ -925,7 +915,6 @@ namespace PPT
             }
             CStylesWriter styleWriter;
             styleWriter.m_pTheme = pTheme;
-
 
             // inserted roundtrip master
             // add media here rId
@@ -1382,7 +1371,6 @@ namespace PPT
     {
         CTableElement* pTableElement = dynamic_cast<CTableElement*>(pElement.get());
 
-
         PPTX::Logic::GraphicFrame gf;
         TableWriter table(pTableElement, &oRels);
         if (pTableElement->m_xmlRawData.empty())
@@ -1399,7 +1387,6 @@ namespace PPT
     void CPPTXWriter::WriteElement(CStringWriter& oWriter, CRelsGenerator& oRels, CElementPtr pElement, CLayout* pLayout)
     {
         if (!pElement) return;
-
 
         CTableElement* pTableElement = dynamic_cast<CTableElement*>(pElement.get());
         if (pTableElement)
@@ -1608,11 +1595,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         // TODO write new method and class for timing
         WriteTiming(oWriter, oRels, nIndexSlide);
 
-
         oWriter.WriteString(std::wstring(L"</p:sld>"));
-
-
-
 
         oRels.CloseRels();
 
@@ -1902,7 +1885,6 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
 
         nStartLayout += nCountLayouts;
     }
-
 
     void CPPTXWriter::WriteTiming(CStringWriter& oWriter, CRelsGenerator& oRels, int nIndexSlide)
     {

@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -444,8 +439,6 @@ template<typename T> void BinaryCommonWriter::WriteTrackRevision(const T& elem)
 		WriteItemWithLengthEnd(nCurPos);
 	}
 }
-
-
 
 BinaryHeaderFooterTableWriter::BinaryHeaderFooterTableWriter(ParamsWriter& oParamsWriter, OOX::IFileContainer* oDocumentRels, std::map<int, bool>* mapIgnoreComments):
 																m_oBcw(oParamsWriter), 
@@ -946,7 +939,6 @@ void Binary_rPrWriter::Write_rPrChange(const OOX::Logic::CRPrChange& rPrChange)
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 }
-
 
 Binary_pPrWriter::Binary_pPrWriter(ParamsWriter& oParamsWriter, BinaryHeaderFooterTableWriter* oBinaryHeaderFooterTableWriter):
 		m_oParamsWriter(oParamsWriter),
@@ -2453,7 +2445,6 @@ void Binary_tblPrWriter::WriteRowHeight(const ComplexTypes::Word::CHeight& rowHe
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Byte);
 		m_oBcw.m_oStream.WriteBYTE(eHRule);
 
-
 		//Value
 		m_oBcw.m_oStream.WriteBYTE(c_oSerProp_rowPrType::Height_ValueTwips);
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Long);
@@ -2722,7 +2713,6 @@ void Binary_tblPrWriter::WriteTrPrChange(const OOX::Logic::CTrPrChange& trPrChan
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 }
-
 
 BinaryStyleTableWriter::BinaryStyleTableWriter(ParamsWriter& oParamsWriter):
   m_oBcw(oParamsWriter),bpPrs(oParamsWriter, NULL),brPrs(oParamsWriter),btblPrs(oParamsWriter)
@@ -3008,7 +2998,6 @@ void BinaryStyleTableWriter::WriteTblStyleProperties(const OOX::Logic::CTableSty
 		}
 	}
 }
-
 
 BinaryNumberingTableWriter::BinaryNumberingTableWriter(ParamsWriter& oParamsWriter):
   m_oBcw(oParamsWriter),bpPrs(oParamsWriter, NULL),brPrs(oParamsWriter)
@@ -3349,7 +3338,6 @@ void BinaryNumberingTableWriter::WriteLevelText(const std::wstring& text)
 		}
 	}
 }
-
 
 BinaryOtherTableWriter::BinaryOtherTableWriter(ParamsWriter& oParamsWriter, PPTX::Theme* pTheme) : m_oParamsWriter(oParamsWriter), m_oBcw(oParamsWriter), m_pTheme(pTheme)
 {
@@ -3741,7 +3729,6 @@ void BinaryDocumentTableWriter::WriteBackground (OOX::WritingElement* pElement)
 void BinaryDocumentTableWriter::WriteAltChunk(OOX::Media& oAltChunkFile, OOX::CStyles* styles)
 {
 	if (false == oAltChunkFile.IsExist()) return;
-
 
 	std::wstring file_name_inp = oAltChunkFile.filename().GetPath();
 	
@@ -8620,7 +8607,6 @@ void BinaryDocumentTableWriter::WriteSdtTextFormPrComb(const ComplexTypes::Word:
 		m_oBcw.WriteItemEnd(nCurPos);
 	}
 }
-
 
 BinaryCommentsTableWriter::BinaryCommentsTableWriter(ParamsWriter& oParamsWriter) : 
 	m_oBcw(oParamsWriter), m_oParamsWriter(oParamsWriter), m_pOfficeDrawingConverter(oParamsWriter.m_pOfficeDrawingConverter)

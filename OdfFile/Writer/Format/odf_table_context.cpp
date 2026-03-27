@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -46,7 +41,6 @@
 #include "style_text_properties.h"
 
 //#include "style_paragraph_properties.h"
-
 
 namespace cpdoccore 
 {
@@ -273,7 +267,6 @@ void odf_table_context::start_row(office_element_ptr &elm, bool styled)
 	if (false == default_cell_props.empty())
 		row->attlist_.table_default_cell_style_name_ = default_cell_props;
 
-
 	impl_->current_table().rows.push_back(state);
 
 	impl_->current_table().current_column = 0;
@@ -295,7 +288,6 @@ void odf_table_context::end_row()
 	//}
 	impl_->current_table().current_column = 0;
 }
-
 
 bool odf_table_context::empty()
 {

@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -42,7 +37,6 @@
 #include "office_elements_create.h"
 
 #include "../../DataTypes/common_attlists.h"
-
 
 namespace cpdoccore { 
 namespace odf_writer { 
@@ -97,7 +91,6 @@ public:
 	void serialize(CP_ATTR_NODE);
 };
 
-
 /// text-list-level-style-attr
 class text_list_level_style_attr
 {
@@ -107,8 +100,6 @@ public:
     unsigned int text_level_;
 	void serialize(CP_ATTR_NODE);
 };
-
-
 
 /// \class  style_list_level_properties
 ///         style:list-level-properties (style-list-level-properties)
@@ -138,7 +129,6 @@ public:
     odf_types::common_vertical_pos_attlist common_vertical_pos_attlist_;
 
     office_element_ptr			style_list_level_label_alignment_;
-
 
 };
 

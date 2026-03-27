@@ -12,24 +12,18 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
 
 #include "odf_style_context.h"
 #include "ods_conversion_context.h"
@@ -50,7 +44,6 @@ namespace cpdoccore {
 namespace odf_writer {
 
 static int style_family_counts_[1024]={};//согласно количеству разных стилей
-
 
 void calc_paragraph_properties_content(std::vector<paragraph_format_properties*> & parProps, paragraph_format_properties * result)
 {
@@ -87,7 +80,6 @@ void odf_style_context::set_odf_context(odf_conversion_context * Context)
 	table_styles_context_.set_odf_context(Context);
 	lists_styles_context_.set_odf_context(Context);
 }
-
 
 odf_style_state_ptr odf_style_context::last_state(style_family::type family)
 {
@@ -397,7 +389,6 @@ std::wstring odf_style_context::get_name_family(style_family::type family)
 	return L"UnknownStyle";
 }
 
-
 std::wstring odf_style_context::find_free_name(style_family::type  family)
 {
 	std::wstring name = get_name_family(family);
@@ -471,7 +462,6 @@ void odf_style_context::calc_paragraph_properties(std::wstring style_name, style
     }   
 	calc_paragraph_properties_content(parProps, result);
 }
-
 
 }
 }

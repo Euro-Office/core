@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -55,7 +50,6 @@ namespace cpdoccore {
 namespace odf_reader {
 
 static formulasconvert::odf2oox_converter formulas_converter;
-
 
 int table_table_cell_content::xlsx_convert(oox::xlsx_conversion_context & Context, text_format_properties_ptr text_properties, bool need_cache)
 {
@@ -220,7 +214,6 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 						CP_XML_ATTR(L"customFormat", 1);
 						CP_XML_ATTR(L"s", Default_Cell_style_in_row_ );
 					}
-
 
                     CP_XML_STREAM();
 
@@ -504,7 +497,6 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
     const unsigned int columnsRepeated		= attlist_.table_number_columns_repeated_;
     const std::wstring styleName			= attlist_.table_style_name_.get_value_or(L"");
     const std::wstring defaultCellStyleName = attlist_.table_default_cell_style_name_.get_value_or(L"");
-
 
     int cMin = 0, cMax = 0;
     Context.start_table_column(columnsRepeated, defaultCellStyleName, cMin, cMax, bHeader);
@@ -1020,7 +1012,6 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		{
 			sharedStringId = content_.xlsx_convert(Context, textFormatProperties, need_cache_convert);
 		}
-
 
 		if (xlsx_value_type == oox::XlsxCellType::str || xlsx_value_type == oox::XlsxCellType::inlineStr)
 		{

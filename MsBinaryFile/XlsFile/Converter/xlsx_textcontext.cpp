@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -73,7 +68,6 @@ public:
 	void			start_drawing_content();
 	std::wstring	end_drawing_content(); 
 
-
 	void ApplyTextProperties();
 
 	void set_local_styles_container();//это если стили объектов содержатся в другом документе
@@ -108,8 +102,6 @@ private:
     std::wstring span_style_name_;
 
 };
-
-
 
 xlsx_text_context::Impl::Impl(): paragraphs_cout_(0),
 				in_comment(false),in_draw(false),in_paragraph(false),in_span(false),in_cell_content(false)
@@ -374,7 +366,6 @@ int xlsx_text_context::Impl::end_cell_content(bool need_cache)
 xlsx_text_context::xlsx_text_context(): impl_(new xlsx_text_context::Impl())
 {}
 
-
 xlsx_text_context::~xlsx_text_context()
 {
 }
@@ -387,7 +378,6 @@ void xlsx_text_context::set_cell_text_properties()
 {
 	return impl_->set_cell_text_properties();
 }
-
 
 void xlsx_text_context::add_text(const std::wstring & text)
 {

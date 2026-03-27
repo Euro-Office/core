@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -479,7 +474,6 @@ int Binary_HdrFtrTableReader::ReadHdrFtrItemContent(BYTE type, long length, void
 	Binary_DocumentTableReader* pBinary_DocumentTableReader = static_cast<Binary_DocumentTableReader*>(poResult);
 	return pBinary_DocumentTableReader->ReadDocumentContent(type, length, NULL);
 }
-
 
 Binary_rPrReader::Binary_rPrReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter)
 	: Binary_CommonReader(poBufferedStream), oBinary_CommonReader2(poBufferedStream), m_oFileWriter(oFileWriter)
@@ -2154,7 +2148,6 @@ int Binary_pPrReader::ReadPageBorder(BYTE type, long length, void* poResult)
 	return res;
 }
 
-
 Binary_tblPrReader::Binary_tblPrReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter):Binary_CommonReader(poBufferedStream),oBinary_CommonReader2(poBufferedStream),oBinary_pPrReader(poBufferedStream, oFileWriter)
 {
 }
@@ -3306,7 +3299,6 @@ int Binary_NumberingTableReader::ReadLevelTextItem(BYTE type, long length, void*
 	return res;
 }
 
-
 BinaryStyleTableReader::BinaryStyleTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter) 
 	:
 	Binary_CommonReader(poBufferedStream),
@@ -3620,7 +3612,6 @@ int BinaryStyleTableReader::ReadTblStyleProperty(BYTE type, long length, void* p
 	return res;
 }	
 
-
 Binary_OtherTableReader::Binary_OtherTableReader(std::wstring sFileInDir, NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter) 
 	: m_sFileInDir(sFileInDir), Binary_CommonReader(poBufferedStream), m_oFileWriter(oFileWriter)
 {
@@ -3899,7 +3890,6 @@ int Binary_CommentsTableReader::ReadReplies(BYTE type, long length, void* poResu
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
-
 
 Binary_SettingsTableReader::Binary_SettingsTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter, OOX::CSettingsCustom* pSettingsCustom)
 	:
@@ -4824,7 +4814,6 @@ int Binary_SettingsTableReader::ReadClrSchemeMapping(BYTE type, long length, voi
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 };
-
 
 Binary_DocumentTableReader::Binary_DocumentTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter, Writers::ContentWriter& oDocumentWriter, bool bOFormRead)
         : Binary_CommonReader(poBufferedStream)
@@ -10286,7 +10275,6 @@ int Binary_NotesTableReader::ReadNoteContent(BYTE type, long length, void* poRes
 	Binary_DocumentTableReader* pBinary_DocumentTableReader = static_cast<Binary_DocumentTableReader*>(poResult);
 	return pBinary_DocumentTableReader->ReadDocumentContent(type, length, NULL);
 };
-
 
 BinaryFileReader::BinaryFileReader(std::wstring& sFileInDir, NSBinPptxRW::CBinaryFileReader& oBufferedStream, Writers::FileWriter& oFileWriter, bool bMacro, bool bOForm)
 	: 

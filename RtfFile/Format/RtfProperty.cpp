@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -1561,7 +1556,6 @@ std::wstring RtfCharProperty::RenderToRtf(RenderParameter oRenderParameter)
 	if( m_poShading.IsValid() == true )
 		sResult +=  m_poShading.RenderToRtf( oRenderParameter );
 
-
 	if ( m_nDeleted != PROP_DEF)
 	{
 		sResult += L"\\deleted";
@@ -2152,7 +2146,6 @@ std::wstring RtfListLevelProperty::RenderToRtf(RenderParameter oRenderParameter)
 		sResult += L"\\jclisttab";
 		sResult +=  m_oTabs.m_aTabs[i].RenderToRtf( oRenderParameter );
 	}
-
 
 	sResult += L"}";
 	return sResult;
@@ -3555,7 +3548,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_INT	( m_nOutlinelevel	, sResult, L"outlinelevel" );
 	RENDER_RTF_BOOL	( m_bPageBB			, sResult, L"pagebb" );
 
-
 	switch(m_eAlign)
 	{
 		case  pa_qc:	sResult += L"\\qc";		break;  
@@ -3677,7 +3669,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	if( true == m_oTabs.IsValid() )
 		sResult +=  m_oTabs.RenderToRtf( oRenderParameter );
 
-
 	//RENDER_RTF_INT( m_nTableStyle, sResult, L"yts" );
 	//RENDER_RTF_BOOL( m_bStyleFirstRow, sResult, L"tscfirstrow" );
 	//RENDER_RTF_BOOL( m_bStyleLastRow, sResult, L"tsclastrow" );
@@ -3691,7 +3682,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	//RENDER_RTF_BOOL( m_bStyleNECell, sResult, L"tscnecell" );
 	//RENDER_RTF_BOOL( m_bStyleSWCell, sResult, L"tscswcell" );
 	//RENDER_RTF_BOOL( m_bStyleSECell, sResult, L"tscsecell" );
-
 
 	//дописываем текст списка (для старых reader например  wordPad)
 	if( PROP_DEF != m_nListId && PROP_DEF != m_nListLevel )
@@ -4898,7 +4888,6 @@ std::wstring RtfTableProperty::RenderToOOX(RenderParameter oRenderParameter)
 
 	if( m_oShading.IsValid() == true )
 		sResult += m_oShading.RenderToOOX(oRenderParameter);
-
 
 	//if( RENDER_TO_OOX_PARAM_STYLES == oRenderParameter.nType )
 	//{

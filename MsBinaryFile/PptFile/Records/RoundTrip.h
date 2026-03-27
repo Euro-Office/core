@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -32,14 +27,12 @@
 #pragma once
 #include "../Reader/Records.h"
 
-
 namespace PPT
 {
 class CUnknownRoundTrip : public CUnknownRecord
 {
 public:
     std::pair<boost::shared_array<unsigned char>, _INT32> data;
-
 
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
     void ReadFromStream(SRecordHeader & oHeader, const XLS::CFStreamPtr &pStream) override;
@@ -49,7 +42,6 @@ class CUnknownRoundTripID : public CUnknownRecord
 {
 public:
     UINT m_dwID = -1;
-
 
     virtual std::wstring getStrID()const;
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
@@ -62,7 +54,6 @@ class RoundTripOArtTextStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripNotesMasterTextStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripCustomTableStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripAnimationAtom12Atom : public CUnknownRoundTrip {};
-
 
 // .xml
 class RoundTripColorMapping12Atom : public CUnknownRecord
@@ -98,7 +89,6 @@ class RoundTripHFPlaceholder12Atom : public CUnknownRoundTripID
 public:
     PlaceholderEnum m_nPlacementID = PT_None;
 
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -110,7 +100,6 @@ public:
     bool m_fIncludeHeader;
     bool m_fIncludeSlideNumber;
 
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -118,7 +107,6 @@ class RoundTripDocFlags12Atom : public CUnknownRecord
 {
 public:
     bool m_fCompressPicturesOnSave;
-
 
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 
@@ -130,7 +118,6 @@ public:
     UINT m_shapeCheckSum;
     UINT m_textCheckSum;
 
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -138,7 +125,6 @@ class RoundTripNewPlaceholderId12Atom : public CUnknownRecord
 {
 public:
     PlaceholderEnum m_newPlaceholderId = PT_None;
-
 
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
@@ -148,7 +134,6 @@ class RoundTripAnimationHashAtom12Atom : public CUnknownRecord
 public:
     UINT m_animationChecksum = -1;
 
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -157,7 +142,6 @@ class RoundTripSlideSyncInfoAtom12 : public CUnknownRecord
 public:
     UINT m_dateTimeModified;
     UINT m_dateTimeInserted;
-
 
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };

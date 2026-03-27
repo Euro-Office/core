@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -87,13 +82,11 @@ PtgParam::PtgParam(const std::wstring unparsed_line)
 	clear_line_ = unparsed_line.substr(excl_place + 1, unparsed_line.length() - excl_place - 1);
 }
 
-
 PtgParam::PtgParam(const ParamType type, const std::wstring clear_line)
 :	type_(type),
 	clear_line_(clear_line)
 {
 }
-
 
 const PtgParam::ParamType PtgParam::str2type(const std::wstring str) const
 {
@@ -111,7 +104,6 @@ const PtgParam::ParamType PtgParam::str2type(const std::wstring str) const
 	}
 	return ptNONE;
 }
-
 
 const std::wstring PtgParam::type2str(const PtgParam::ParamType type) const
 {
@@ -131,48 +123,40 @@ const std::wstring PtgParam::type2str(const PtgParam::ParamType type) const
 	}
 }
 
-
 const PtgParam::ParamType PtgParam::getType() const
 {
 	return type_;
 }
-
 
 const std::wstring PtgParam::getClearLine() const
 {
 	return clear_line_;
 }
 
-
 const int PtgParam::getFirstParam() const
 {
 	return params[0];
 }
-
 
 const int PtgParam::getSecondParam() const
 {
 	return params[1];
 }
 
-
 const int PtgParam::getParam(const size_t pos) const
 {
 	return params[pos];
 }
-
 
 const int PtgParam::getParamsNum() const
 {
 	return params.size();
 }
 
-
 void PtgParam::addParam(const int param)
 {
 	params.push_back(param);
 }
-
 
 const std::wstring PtgParam::toString() const
 {
@@ -190,8 +174,6 @@ const std::wstring PtgParam::toString() const
 	result += L'!';
 	return result;
 }
-
-
 
 } // namespace XLS
 

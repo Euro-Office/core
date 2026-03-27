@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -292,7 +287,6 @@ namespace NSStructures
 			return *this;
 		}
 
-
 		/**
 		 * Костыль от ошибок линковки. Чтобы время не терять пока что.
 		*/
@@ -313,8 +307,6 @@ namespace NSStructures
 			return Point(a.x - b.x, a.y - b.y);
 		}
 	};
-
-
 
 	/**
 	 *  Тут хранится информация спецефичная для рендера ПДФ.
@@ -356,7 +348,6 @@ namespace NSStructures
 		// Линейный градиент задается в pdf 2 точками
 		bool set_two_points;
 		Point point1, point2;
-
 
 		// triangle shading
 		std::vector<Point> triangle;
@@ -558,7 +549,6 @@ namespace NSStructures
 		ShadingInfo shading;
 	};
 
-
 	/**
 	 * Создает объект класса GradientInfo по заданным параметрам.
 	 *
@@ -593,7 +583,6 @@ namespace NSStructures
 			ginfo.shading.point1 = p1;
 			ginfo.shading.point2 = p2;
 
-
 			return ginfo;
 		}
 		static GradientInfo get_radial(const Point &c0, const Point &c1, float r0, float r1,
@@ -611,7 +600,6 @@ namespace NSStructures
 			ginfo.r0 = r0;
 			ginfo.r1 = r1;
 			return ginfo;
-
 
 		}
 		static GradientInfo get_triangle(const std::vector<Point> &points,

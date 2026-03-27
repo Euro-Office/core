@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -192,7 +187,6 @@ void common_horizontal_margin_attlist::apply_from(const common_horizontal_margin
     apply_length_or_percent(fo_margin_right_, Other.fo_margin_right_);        
 }
 
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 void common_vertical_margin_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
@@ -216,7 +210,6 @@ void common_vertical_margin_attlist::apply_from(const common_vertical_margin_att
     apply_length_or_percent(fo_margin_top_, Other.fo_margin_top_);
     apply_length_or_percent(fo_margin_bottom_, Other.fo_margin_bottom_);        
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void common_margin_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )

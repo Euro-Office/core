@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -40,20 +35,16 @@ PtgStr::PtgStr(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
 
-
 PtgStr::PtgStr(const std::wstring & str)
 :	string_(str),
 	OperandPtg(fixed_id)
 {
 }
 
-
 BiffStructurePtr PtgStr::clone()
 {
 	return BiffStructurePtr(new PtgStr(*this));
 }
-
-
 
 void PtgStr::loadFields(CFRecord& record)
 {
@@ -75,7 +66,6 @@ void PtgStr::loadFields(CFRecord& record)
             string_.push_back(value);
         }
     }
-
 
 	int pos1 = string_.find(L"\"");
 	int pos2 = string_.rfind(L"\"");
@@ -120,7 +110,6 @@ void PtgStr::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
 {
 	ptg_stack.push(string_);
 }
-
 
 } // namespace XLS
 

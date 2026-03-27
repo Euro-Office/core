@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -134,7 +129,6 @@ std::wstring process_margin(const _CP_OPT(length_or_percent) & margin, double Mu
 }
 
 }
-
 
 style_text_properties * style_content::get_style_text_properties() const
 {
@@ -734,7 +728,6 @@ void draw_styles::add_child_element( xml::sax * Reader, const std::wstring & Ns,
         CP_NOT_APPLICABLE_ELM_SIMPLE(L"draw_styles");
     }
 }
-
 
 // office:automatic-styles
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1739,7 +1732,6 @@ void style_page_layout_properties::pptx_serialize(std::wostream & strm, oox::ppt
     }
 }
 
-
 // style-master-page-attlist
 ////////////////////////////////////////////////////////////////////////////////////////////////// 
 void style_master_page_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
@@ -1906,7 +1898,6 @@ xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \
 xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" \
 xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" \
 mc:Ignorable=\"w14 wp14\">";
-
 
 const wchar_t * ftrHeader = L"<w:ftr \
 xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \
@@ -2290,7 +2281,6 @@ void loext_opacity_stop::add_attributes(const xml::attributes_wc_ptr& Attributes
 	
 	//CP_APPLY_ATTR(L"loext:stop-opacity", stop_opacity_); //?? 
 }
-
 
 }
 }

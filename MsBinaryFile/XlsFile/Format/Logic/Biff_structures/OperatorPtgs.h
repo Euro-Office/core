@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -48,7 +43,6 @@ public:
 
 typedef boost::shared_ptr<OperatorPtg> OperatorPtgPtr;
 
-
 template<class T, unsigned short fixedPtgId, int priority>
 class BOperatorPtg_T: public OperatorPtg
 {
@@ -72,7 +66,6 @@ public:
 	virtual const int getOperatorPriority() const {return priority;};
 };
 
-
 template<class T, unsigned short fixedType, int priority>
 class UOperatorPtg_T: public OperatorPtg
 {
@@ -90,7 +83,6 @@ public:
 	virtual const int getOperatorPriority() const {return priority;};
 };
 
-
 class PtgAdd : public BOperatorPtg_T<PtgAdd, 0x03, 25>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgAdd)
@@ -103,7 +95,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgSub : public BOperatorPtg_T<PtgSub, 0x04, 25>
 {
@@ -118,7 +109,6 @@ public:
 	}
 };
 
-
 class PtgMul : public BOperatorPtg_T<PtgMul, 0x05, 20>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgMul)
@@ -131,7 +121,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgDiv : public BOperatorPtg_T<PtgDiv, 0x06, 20>
 {
@@ -146,7 +135,6 @@ public:
 	}
 };
 
-
 class PtgPower : public BOperatorPtg_T<PtgPower, 0x07, 15>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgPower)
@@ -159,7 +147,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgEq : public BOperatorPtg_T<PtgEq, 0x0B, 35>
 {
@@ -174,7 +161,6 @@ public:
 	}
 };
 
-
 class PtgNe : public BOperatorPtg_T<PtgNe, 0x0E, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgNe)
@@ -187,7 +173,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgGt : public BOperatorPtg_T<PtgGt, 0x0D, 35>
 {
@@ -202,7 +187,6 @@ public:
 	}
 };
 
-
 class PtgGe : public BOperatorPtg_T<PtgGe, 0x0C, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgGe)
@@ -215,7 +199,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgLt : public BOperatorPtg_T<PtgLt, 0x09, 35>
 {
@@ -230,7 +213,6 @@ public:
 	}
 };
 
-
 class PtgLe : public BOperatorPtg_T<PtgLe, 0x0A, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgLe)
@@ -243,7 +225,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgConcat : public BOperatorPtg_T<PtgConcat, 0x08, 30>
 {
@@ -258,7 +239,6 @@ public:
 	}
 };
 
-
 class PtgIsect : public BOperatorPtg_T<PtgIsect, 0x0F, 5>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgIsect)
@@ -271,7 +251,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgRange : public BOperatorPtg_T<PtgRange, 0x11, 4>
 {
@@ -286,7 +265,6 @@ public:
 	}
 };
 
-
 class PtgUnion : public BOperatorPtg_T<PtgUnion, 0x10, 6>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgUnion)
@@ -299,7 +277,6 @@ public:
 		return symbols;
 	}
 };
-
 
 class PtgUminus : public UOperatorPtg_T<PtgUminus, 0x13, 10>
 {
@@ -315,7 +292,6 @@ public:
 	virtual const bool isRightAssociative() const {return true;};
 };
 
-
 class PtgUplus : public UOperatorPtg_T<PtgUplus, 0x12, 10>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgUplus)
@@ -329,7 +305,6 @@ public:
 	}
 	virtual const bool isRightAssociative() const {return true;};
 };
-
 
 class PtgPercent : public UOperatorPtg_T<PtgPercent, 0x14, 11>
 {
@@ -348,7 +323,6 @@ public:
 	};
 	virtual const bool isPercent() const {return true;};
 };
-
 
 } // namespace XLS
 

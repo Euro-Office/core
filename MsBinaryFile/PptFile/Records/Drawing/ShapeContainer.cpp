@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -561,7 +556,6 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
             if (pElement->m_oBrush.Type == c_BrushTypeNotSet)
                 pElement->m_oBrush.Type = c_BrushTypeSolid;
         }
-
 
         break;
     }
@@ -1521,7 +1515,6 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     }
 }
 
-
 CRecordShapeContainer::CRecordShapeContainer()
 {
     bGroupShape = false;
@@ -1896,7 +1889,6 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         pElement->m_arrActions.push_back(interactiveInfo);
     }
 
-
     //--------- наличие текста --------------------------------------------------------------------------
     CShapeElement* pShapeElem = dynamic_cast<CShapeElement*>(pElement.get());
 
@@ -1987,7 +1979,6 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         {
             pShapeElem->m_pShape->m_oText.m_oRuler = oArrayTextRuler[0]->m_oTextRuler;
         }
-
 
         std::vector<CRecordOfficeArtClientTextbox*> oArrayTextBox;
         std::vector<CRecordMouseInteractiveInfoContainer*> oArrayInteractiveCont;
@@ -2200,7 +2191,6 @@ void CRecordShapeContainer::ApplyThemeStyle(CElementPtr pElem, CTheme* pTheme, C
         return;
 
     CTextAttributesEx* pText = &(pShape->m_pShape->m_oText);
-
 
     if (master_levels)
     {
@@ -2655,7 +2645,6 @@ void CRecordShapeContainer::ApplyHyperlink(CShapeElement* pShape, CColor& oColor
     auto& oTextAttributes = pShape->m_pShape->m_oText;
     const auto& originalText = oTextAttributes.m_originalText;
 
-
     // lenght these ones shoud be equal
     const auto& arrRanges	= pShape->m_oTextActions.m_arRanges;
     const auto arrSplitedInteractive = splitInteractive(pShape->m_textHyperlinks);
@@ -2781,8 +2770,6 @@ bool CRecordShapeContainer::isRealHyperlink(const std::vector<CInteractiveInfo> 
 
     return isReal;
 }
-
-
 
 std::vector<std::vector<CInteractiveInfo> > CRecordShapeContainer::splitInteractive(const std::vector<CInteractiveInfo> &arrInteractive)
 {

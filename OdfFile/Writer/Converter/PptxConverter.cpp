@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -281,8 +276,6 @@ void PptxConverter::convert_styles()
 
 	odp_context->page_layout_context()->create_layer_sets();
 }
-
-
 
 void PptxConverter::convert_settings()
 {
@@ -1322,7 +1315,6 @@ void PptxConverter::fill_in_deferred_hyperlinks()
 	}
 }
 
-
 void PptxConverter::convert_masters_and_layouts()
 {
 	for (size_t iMaster = 0; iMaster < presentation->sldMasterIdLst.size(); ++iMaster)
@@ -1479,7 +1471,6 @@ void PptxConverter::convert_slides()
 
 		if (!bShow)
 			odp_context->hide_slide();
-
 
 		odp_context->end_slide();
 	}
@@ -2161,7 +2152,6 @@ void PptxConverter::convert(PPTX::Logic::CTn *oox_time_common)
 	}
 }
 
-
 void PptxConverter::convert(PPTX::Logic::Cond* oox_condition)
 {
 	if (!oox_condition)
@@ -2525,7 +2515,6 @@ void PptxConverter::convert(PPTX::Logic::TcBdr *oox_table_borders)
 	convert(oox_table_borders, odf_para_props);
 }
 
-
 void PptxConverter::convert(PPTX::Logic::TcBdr *oox_table_borders, odf_writer::paragraph_format_properties *odf_para_props)
 {
 	if (!oox_table_borders) return;
@@ -2798,7 +2787,6 @@ void PptxConverter::convert_slide(PPTX::Logic::CSld *oox_slide, PPTX::Logic::TxS
 			if (pNvPr->ph->idx.IsInit())
 				odf_context()->drawing_context()->set_placeholder_id(pNvPr->ph->idx.get());
 
-
 			PPTX::Logic::TextListStyle * listMasterStyle = NULL;
 			
 			if (txStyles)
@@ -2881,7 +2869,6 @@ void PptxConverter::convert_slide(PPTX::Logic::CSld *oox_slide, PPTX::Logic::TxS
 
 			bConvert = true;
 		}
-
 
 		if (!bConvert)
 		{

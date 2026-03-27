@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -35,7 +30,6 @@
 #include "../../DataTypes/borderstyle.h"
 
 #include <xml/simple_xml_writer.h>
-
 
 namespace cpdoccore { 
 
@@ -123,7 +117,6 @@ void table_format_properties::apply_from(const table_format_properties & Other)
 const wchar_t * style_table_properties::ns = L"style";
 const wchar_t * style_table_properties::name = L"table-properties";
 
-
 void style_table_properties::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     content_.create_child_element(Ns, Name, getContext());
@@ -141,7 +134,6 @@ void style_table_properties::apply_from(const style_table_properties * Other)
 
 	content_.apply_from(Other->content_);
 }
-
 
 // style-table-column-properties-attlist
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +281,6 @@ void style_table_row_properties_attlist::serialize(std::wostream & _Wostream ,co
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_table_row_properties::ns = L"style";
 const wchar_t * style_table_row_properties::name = L"table-row-properties";
-
 
 void style_table_row_properties::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {

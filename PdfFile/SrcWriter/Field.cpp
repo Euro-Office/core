@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -767,8 +762,6 @@ namespace PdfWriter
 				std::to_string(vNormalColors[vNormalColors.size() - 1].g) + ", " +
 				std::to_string(vNormalColors[vNormalColors.size() - 1].b) + "];\n}";
 
-
-
 		std::string sText = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(vPlaceHolders[vPlaceHolders.size() - 1]);
 		const TRgb& oColor = vPlaceHolderColors[vPlaceHolderColors.size() - 1];
 		std::string sBlur = "\nif (event.target.value == \"\")\n{\n	event.target.textColor =[\"RGB\", " +
@@ -1268,7 +1261,6 @@ namespace PdfWriter
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
 			sExtGrStateName = pFieldsResources->GetExtGrStateName(pExtGrState);
 		}
-
 
 		pAppearance->GetYesN()->DrawSimpleText(wsYesValue, pYesCodes, unYesCount, pYesFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop));
 		pAppearance->GetOffN()->DrawSimpleText(wsOffValue, pOffCodes, unOffCount, pOffFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop));

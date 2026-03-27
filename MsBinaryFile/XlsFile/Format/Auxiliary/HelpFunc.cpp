@@ -12,17 +12,12 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
- *
+ *  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
- *
+ *  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
@@ -72,7 +67,6 @@ const int normalizeColumn(const int column, const bool xlsb)
    
 }
 
-
 const std::wstring column2str(const int column, const bool col_rel, const bool xlsb)
 {
 	int column_value = normalizeColumn(column, xlsb);
@@ -88,7 +82,6 @@ const std::wstring column2str(const int column, const bool col_rel, const bool x
 
 	return (col_rel ? L"" : L"$") + ret_val;
 }
-
 
 const int normalizeRow(const int row, const bool xlsb)
 {
@@ -113,19 +106,16 @@ const int normalizeRow(const int row, const bool xlsb)
 	return norm_row;
 }
 
-
 const std::wstring row2str(const int row, const bool row_rel, const bool xlsb)
 {
 	int row_value = normalizeRow(row, xlsb);
 	return  (row_rel ? L"" : L"$") + STR::int2wstr(row_value + 1, 10);
 }
 
-
 const std::wstring loc2str(const int row, const bool row_rel, const int column, const bool col_rel, const bool xlsb)
 {
 	return column2str(column, col_rel, xlsb) + row2str(row, row_rel, xlsb);
 }
-
 
 const int str2column(std::wstring::const_iterator& str_begin, std::wstring::const_iterator& str_end)
 {
@@ -150,7 +140,6 @@ const int str2column(std::wstring::const_iterator& str_begin, std::wstring::cons
 	return column;
 }
 
-
 const int str2row(std::wstring::const_iterator& str_begin, std::wstring::const_iterator& str_end)
 {
 	int row = 0;
@@ -170,7 +159,6 @@ const int str2row(std::wstring::const_iterator& str_begin, std::wstring::const_i
 	}
 	return row;
 }
-
 
 const bool str2rel(std::wstring::const_iterator& str_begin, std::wstring::const_iterator& str_end)
 {
@@ -198,9 +186,6 @@ void str2loc(const std::wstring& str, int& row, bool& row_rel, int& column, bool
     str2loc(str_begin, str_end, row, row_rel, column, col_rel);
 }
 
-
-
-
 void str2refs(const std::wstring& str, std::vector<XLS::CellRangeRef>& vec)
 {
 	std::wstring str_left(str);
@@ -218,9 +203,7 @@ void str2refs(const std::wstring& str, std::vector<XLS::CellRangeRef>& vec)
 	while(str_left.length());
 }
 
-
 } //namespace AUX
-
 
 namespace STR
 {;
@@ -236,7 +219,6 @@ const std::string int2str(const int val, const int radix)
     return num_buf;
 }
 
-
 const std::wstring int2wstr(const int val, const int radix)
 {
 #if defined(_WIN32) || defined(_WIN64)
@@ -251,12 +233,10 @@ const std::wstring int2wstr(const int val, const int radix)
 #endif
 }
 
-
 const std::wstring double2str(const double val)
 {
 	return boost::lexical_cast<std::wstring>(val);// std::to_wstring(val); - округление (
 }
-
 
 const std::string bin2str(const char* buf, const size_t nbuf)
 {
@@ -273,7 +253,6 @@ const std::string bin2str(const char* buf, const size_t nbuf)
 	return &code_string[0];
 }
 
-
 const std::wstring  guid2bstr(_GUID_ & guid)
 {
 	std::wstring  guid_ret=L"{";
@@ -287,7 +266,6 @@ const std::wstring  guid2bstr(_GUID_ & guid)
 				int2hex_wstr((guid.getData4())[6], 1) + int2hex_wstr((guid.getData4())[7], 1);
 	return guid_ret + L"}";
 }
-
 
 const std::string guid2str(_GUID_ & guid)
 {
@@ -336,11 +314,9 @@ const bool bstr2guid(const std::wstring & guid_str, _GUID_& guid)
 	return false;
 }
 
-
 const std::wstring int2hex_wstr(const int val, const size_t size_of)
 {
     if(size_of > 4) return L"";
-
 
 #if defined(_WIN32) || defined(_WIN64)
     static wchar_t num_buf[10]={};
@@ -356,7 +332,6 @@ const std::wstring int2hex_wstr(const int val, const size_t size_of)
 #endif
 }
 
-
 const std::wstring wchar_t2hex_str(const wchar_t val)
 {
 	static const wchar_t hex[17] = L"0123456789ABCDEF";
@@ -369,7 +344,6 @@ const std::wstring wchar_t2hex_str(const wchar_t val)
 
 	return code_string;
 }
-
 
 const std::wstring escape_ST_Xstring(const std::wstring& wstr)
 {
@@ -395,7 +369,6 @@ const std::wstring escape_ST_Xstring(const std::wstring& wstr)
 	}
 	return ret_val;
 }
-
 
 const std::wstring unescape_ST_Xstring(const std::wstring& wstr)
 {
@@ -430,7 +403,6 @@ const std::wstring unescape_ST_Xstring(const std::wstring& wstr)
 	return ret_val;
 }
 
-
 const std::wstring toARGB(const _UINT32 rgba)
 {
 	return toARGB(static_cast<unsigned char>(rgba & 0xff), static_cast<unsigned char>((rgba >> 8) & 0xff),
@@ -450,12 +422,10 @@ const std::wstring toARGB(const unsigned char red, const unsigned char green, co
 	return int2hex_wstr(alpha, sizeof(alpha)) + toRGB(red, green, blue);
 }
 
-
 const std::wstring toRGB(const unsigned char red, const unsigned char green, const unsigned char blue)
 {
 	return int2hex_wstr(red, sizeof(red)) + int2hex_wstr(green,sizeof(green)) + int2hex_wstr(blue,sizeof(blue));
 }
-
 
 const bool fromARGB(const std::wstring& argb, unsigned char& red, unsigned char& green, unsigned char& blue, unsigned char& alpha)
 {
@@ -623,10 +593,8 @@ std::string toStdString(std::wstring wide_string, const _UINT32 code_page)
 
 } // namespace STR
 
-
 namespace XMLSTUFF
 {;
-
 
 const std::wstring tab2sheet_name(const short tabid, std::vector<std::wstring>& sheets_names)
 {
