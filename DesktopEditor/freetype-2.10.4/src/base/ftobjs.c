@@ -799,7 +799,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_Error )
   FT_Load_Glyph( FT_Face   face,
                  FT_UInt   glyph_index,
                  FT_Int32  load_flags )
@@ -1496,7 +1496,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_Error )
   FT_New_Memory_Face( FT_Library      library,
                       const FT_Byte*  file_base,
                       FT_Long         file_size,
@@ -2786,7 +2786,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_Error )
   FT_Done_Face( FT_Face  face )
   {
     FT_Error     error;
@@ -3567,7 +3567,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_Error )
   FT_Set_Charmap( FT_Face     face,
                   FT_CharMap  charmap )
   {
@@ -3734,7 +3734,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_UInt )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode )
   {
@@ -4179,7 +4179,7 @@
 
   /* documentation is in tttables.h */
 
-  FT_EXPORT_DEF( void* )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
                      FT_Sfnt_Tag  tag )
   {
@@ -5507,7 +5507,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT_DEF( FT_Error )
   FT_Get_SubGlyph_Info( FT_GlyphSlot  glyph,
                         FT_UInt       sub_index,
                         FT_Int       *p_index,

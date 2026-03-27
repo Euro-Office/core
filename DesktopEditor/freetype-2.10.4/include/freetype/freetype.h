@@ -25,6 +25,11 @@
 #include <freetype/fttypes.h>
 #include <freetype/fterrors.h>
 
+#ifdef LLVM_MINGW_CROSS
+#   ifndef LLVM_MINGW_CROSS_EXPORT
+#       define LLVM_MINGW_CROSS_EXPORT __declspec(dllexport)
+#   endif
+#endif
 
 FT_BEGIN_HEADER
 
@@ -2453,7 +2458,7 @@ FT_BEGIN_HEADER
    *   See the discussion of reference counters in the description of
    *   @FT_Reference_Face.
    */
-  FT_EXPORT( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT( FT_Error )
   FT_Done_Face( FT_Face  face );
 
 
@@ -2789,7 +2794,7 @@ FT_BEGIN_HEADER
    *   at EM size, then scale it manually and fill it as a graphics
    *   operation.
    */
-  FT_EXPORT( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT( FT_Error )
   FT_Load_Glyph( FT_Face   face,
                  FT_UInt   glyph_index,
                  FT_Int32  load_flags );
@@ -3710,7 +3715,7 @@ FT_BEGIN_HEADER
    *   created at index~0 and whatever was there will be moved to the last
    *   index -- Type~42 fonts are considered invalid under this condition.
    */
-  FT_EXPORT( FT_UInt )
+  LLVM_MINGW_CROSS_EXPORT FT_EXPORT( FT_UInt )
   FT_Get_Char_Index( FT_Face   face,
                      FT_ULong  charcode );
 

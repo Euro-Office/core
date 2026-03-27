@@ -1009,6 +1009,7 @@ else()
 endif()
 
 target_compile_definitions(graphics PRIVATE
+    GRAPHICS_USE_DYNAMIC_LIBRARY_BUILDING
     DISABLE_IMAGE_EXCEPTIONS
     EXCLUDE_JPG_SUPPORT
 	MNG_SUPPORT_DISPLAY
@@ -1043,6 +1044,14 @@ if(LINUX)
     target_compile_definitions(graphics PRIVATE
         HAVE_UNISTD_H
         HAVE_UNISTD_H HAVE_FCNTL_H # linux or mac
+    )
+endif()
+
+if(LLVM_MINGW_CROSS)
+    target_compile_definitions(graphics PRIVATE
+        __int64=long\ long
+        __int32=int
+        __int16=short
     )
 endif()
 
@@ -1098,11 +1107,14 @@ target_link_libraries(graphics PUBLIC
 )
 
 if(WIN32)
-    target_link_libraries(doctrenderer PUBLIC
-        Advapi32
-        Shell32
-        User32
+    target_link_libraries(graphics PUBLIC
+        advapi32
+        shell32
+        user32
+        ws2_32
     )
 endif()
 
 copy_artifacts_to_folder("graphics" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(graphics)

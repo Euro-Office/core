@@ -254,6 +254,11 @@ FT_BEGIN_HEADER
   /* See `freetype/config/compiler_macros.h` for the `FT_EXPORT` definition */
 #define FT_EXPORT_DEF( x )  FT_FUNCTION_DEFINITION( x )
 
+  /* Hacky definition for LLVM MinGW cross-compilation */
+#ifdef LLVM_MINGW_CROSS
+#   define LLVM_MINGW_CROSS_EXPORT __declspec(dllexport)
+#endif
+
   /* The following macros are needed to compile the library with a   */
   /* C++ compiler and with 16bit compilers.                          */
   /*                                                                 */

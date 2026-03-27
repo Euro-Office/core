@@ -260,7 +260,7 @@
 
   /* documentation is in freetype.h */
 
-  FT_EXPORT_DEF( FT_Error )
+  LLVM_MINGW_CROSS_EXPORT-mumu FT_EXPORT_DEF( FT_Error )
   FT_Done_FreeType( FT_Library  library )
   {
     if ( library )

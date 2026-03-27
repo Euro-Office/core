@@ -54,16 +54,22 @@ target_compile_definitions(XpsFile PRIVATE
 
 # dynamic libs
 target_link_libraries(XpsFile PUBLIC
+    PdfFile
     graphics
     kernel
     UnicodeConverter
-    PdfFile
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
+if(LLVM_MINGW_CROSS)
+    target_link_libraries(XpsFile PUBLIC
+        gdi32
+        advapi32
+        user32
+        shell32
+        ole32
+    )
+endif()
+
 copy_artifacts_to_folder("XpsFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(XpsFile)
