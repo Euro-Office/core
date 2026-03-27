@@ -203,3 +203,5 @@ target_link_libraries(HtmlFile2 PUBLIC
 )
 
 copy_artifacts_to_folder("HtmlFile2" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(HtmlFile2)
