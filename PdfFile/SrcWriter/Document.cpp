@@ -180,7 +180,7 @@ namespace PdfWriter
 	}
     void CDocument::Close()
 	{
-		// Все объекты удаляются внутри CXref
+		// All objects are deleted inside CXref
 		RELEASEOBJECT(m_pXref);
 
 		m_pLastXref         = NULL;

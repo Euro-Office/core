@@ -509,12 +509,6 @@ target_link_libraries(PdfFile PUBLIC
     kernel
     UnicodeConverter
     kernel_network
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
 if(LLVM_MINGW_CROSS)
