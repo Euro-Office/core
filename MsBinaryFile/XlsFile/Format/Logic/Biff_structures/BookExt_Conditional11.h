@@ -45,8 +45,6 @@ public:
 	BiffStructurePtr clone();
 
 	static const ElementType	type = typeBookExt_Conditional11;
-	
-	
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
 

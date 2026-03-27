@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CalcIter record in BIFF8
 class CalcIter: public BiffRecord
 {

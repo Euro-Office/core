@@ -212,8 +212,6 @@ void CRecordsContainer::ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pS
         StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
     }
 }
-
-
 #define RECORDNAME_BY_TYPE(RECORD_TYPE, RECORD_NAME)						\
     case RECORD_TYPE: { name = RECORD_NAME; break;}			\
 
@@ -491,8 +489,6 @@ std::string GetRecordName(PPT::RecordType dwType)
     }
     return name;
 }
-
-
 IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
 {
     IRecord* pRecord = NULL;

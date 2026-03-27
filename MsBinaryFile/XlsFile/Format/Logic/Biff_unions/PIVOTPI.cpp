@@ -40,13 +40,9 @@ namespace XLS
 PIVOTPI::PIVOTPI()
 {
 }
-
-
 PIVOTPI::~PIVOTPI()
 {
 }
-
-
 BaseObjectPtr PIVOTPI::clone()
 {
 	return BaseObjectPtr(new PIVOTPI(*this));

@@ -318,8 +318,6 @@ namespace NSNetwork
 			oFileData.CloseFile();
 
 			std::string sUploadUrlA = U_TO_UTF8(sUploadUrl);
-
-
 			if (0 != nReturnCode && NSFile::CFileBinary::Exists(L"/usr/bin/curl"))
 			{
 				pid_t pid = fork(); // create child process

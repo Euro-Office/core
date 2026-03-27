@@ -94,8 +94,6 @@ namespace XLSB
         }
 		else
 			m_bBrtFRTEnd = false;
-
-
         return m_BrtFRTBegin && m_bBrtBeginStyleSheetExt14 && m_bBrtEndStyleSheetExt14 && m_bBrtFRTEnd;
     }
 

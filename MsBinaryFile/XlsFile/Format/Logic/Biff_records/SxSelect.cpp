@@ -39,19 +39,13 @@ SxSelect::SxSelect()
 {
 	cClick = 0;
 }
-
-
 SxSelect::~SxSelect()
 {
 }
-
-
 BaseObjectPtr SxSelect::clone()
 {
 	return BaseObjectPtr(new SxSelect(*this));
 }
-
-
 void SxSelect::readFields(CFRecord& record)
 {
 	short reserved1, flags;

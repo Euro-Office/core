@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../../../../Common/3dParty/pole/pole.h"
-
-
 #include "CFRecordType.h"
 #include "BinSmartPointers.h"
 

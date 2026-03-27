@@ -404,7 +404,5 @@ namespace OOX
 
 		std::vector<BYTE> pData = m_oDocSuppData->m_oBinData->GetBytes();
 		//COfficeUtils oCOfficeUtils(NULL);
-	
-
 	}
 }

@@ -47,8 +47,6 @@ public:
 
 	std::vector<CTextPFRunRecord> m_arrPFs;
 	std::vector<CTextCFRunRecord> m_arrCFs;
-	
-
     CRecordStyleTextPropAtom();
     ~CRecordStyleTextPropAtom();
 

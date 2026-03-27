@@ -35,8 +35,6 @@
 #include  "../BiffStructure.h"
 #include "../../Biff_records/BiffRecord.h"
 #include "XLWideString.h"
-
-
 namespace XLSB
 {
     class RelID : public XLS::BiffStructure

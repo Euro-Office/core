@@ -356,8 +356,6 @@ namespace OOX
 				}
 				return getCellAddress(row, col, bAbsoluteRow, bAbsoluteCol);
 			}
-
-
 			std::wstring convert(const std::wstring& expr)
 			{
 				//boost::wregex findRef(L"(\R(\\d+)\C(\\d+))"); //easy
@@ -729,8 +727,6 @@ namespace OOX
 
 			oStream.XlsbStartRecord(nType, nLen);
 			oStream.WriteULONG(m_nCol & 0x3FFF);
-
-
 			oStream.WriteULONG(nFlags2);
 			//todo RkNumber
 			switch(nType)
@@ -2181,8 +2177,6 @@ namespace OOX
 				m_oValue.Init();
 				m_oValue->m_sText = std::to_wstring(oStream.GetULong());
 			}
-
-
             if (XLSB::rt_FmlaString <= nType && nType <= XLSB::rt_FmlaError)
 			{
 				m_oFormula.Init();
@@ -2383,8 +2377,6 @@ namespace OOX
 								oCell = &pCellRk->cell;
 								pSource = pCellRk;
 							}
-							
-							
 							
 						}
 						else if(isReal)
@@ -2759,8 +2751,6 @@ namespace OOX
 						auto cellFmla = dynamic_cast<XLSB::FmlaBase*>(pSource);
 						cellFmla->formula.rgce.addPtg(PtgPtr{rowPos});
 						cellFmla->formula.rgcb.addPtg(PtgPtr{colPos});
-
-						
 					}
 					else if(m_oFormula->m_oT.get() == SimpleTypes::Spreadsheet::cellformulatypeArray)
 					{
@@ -3457,8 +3447,6 @@ namespace OOX
                         pFMLACELL = static_cast<XLSB::FMLACELL*>(pSHRFMLACELL->_fmlacell.get());
                     break;
                 }
-
-
                 if(pDATACELL != nullptr || pTABLECELL != nullptr || pFMLACELL != nullptr)
                 {
                     BiffRecord* pSource = nullptr;
@@ -4652,8 +4640,6 @@ namespace OOX
                     if(ptrRowHdr->ixfe_val)
                         m_oThickTop                 = ptrRowHdr->fExAsc;
                 }
-
-
                 if(static_cast<XLSB::ACCELLTABLE*>(ptr->m_ACCELLTABLE.get()) != nullptr && static_cast<XLSB::ACCELLTABLE*>(ptr->m_ACCELLTABLE.get())->m_BrtRwDescent != nullptr)
                 {
                     auto ptrRwDescent = static_cast<XLSB::RwDescent*>(static_cast<XLSB::ACCELLTABLE*>(ptr->m_ACCELLTABLE.get())->m_BrtRwDescent.get());

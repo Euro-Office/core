@@ -38,8 +38,6 @@ namespace OSHARED
 SharedProperty::SharedProperty()
 {
 }
-
-
 SharedProperty::SharedProperty(XLS::CFRecord& record)
 {
     load(record);
@@ -49,13 +47,9 @@ XLS::BiffStructurePtr SharedProperty::clone()
 {
     return XLS::BiffStructurePtr(new SharedProperty(*this));
 }
-
-
 void SharedProperty::load(XLS::CFRecord& record)
 {
 	record >> keyIndex >> valueIndex;
 }
-
-
 } // namespace OSHARED
 

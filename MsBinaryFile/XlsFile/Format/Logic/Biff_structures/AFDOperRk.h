@@ -44,8 +44,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-	
-
 	static const ElementType	type = typeAFDOperRk;
 
     _UINT32	rk = 0;

@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "office_presentation.h"
 #include "draw_page.h"
 
@@ -180,8 +178,6 @@ void office_presentation::pptx_convert(oox::pptx_conversion_context & Context)
 		sequences_->pptx_convert(Context);
 
 	collect_page_names(Context);
-
-	
 	std::vector<std::pair<std::wstring,std::wstring>>* vec_name_master_page = &(Context.root()->odf_context().styleContainer().get_vec_new_name());
 	unsigned int pos_in_vec = 0;
 	if(!vec_name_master_page->empty())

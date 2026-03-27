@@ -40,19 +40,13 @@ namespace XLSB
     BookProtectionIso::BookProtectionIso()
     {
     }
-
-
     BookProtectionIso::~BookProtectionIso()
     {
     }
-
-
     BaseObjectPtr BookProtectionIso::clone()
     {
         return BaseObjectPtr(new BookProtectionIso(*this));
     }
-
-
     void BookProtectionIso::readFields(XLS::CFRecord& record)
     {
         record >> dwBookSpinCount;

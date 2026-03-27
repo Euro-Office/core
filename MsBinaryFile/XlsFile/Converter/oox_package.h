@@ -90,8 +90,6 @@ protected:
 private:
     std::wstring filename_;
 };
-
-
 class simple_element;
 typedef boost::shared_ptr<simple_element> simple_element_ptr;
 class simple_element : public element

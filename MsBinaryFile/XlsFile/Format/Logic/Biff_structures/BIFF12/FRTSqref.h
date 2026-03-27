@@ -35,8 +35,6 @@
 #include  "../BiffStructure.h"
 #include "../../Biff_records/BiffRecord.h"
 #include "UncheckedSqRfX.h"
-
-
 namespace XLSB
 {
     class FRTSqref : public XLS::BiffStructure

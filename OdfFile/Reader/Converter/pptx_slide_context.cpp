@@ -276,8 +276,6 @@ void pptx_slide_context::set_transitionSpeed(std::wstring val)
 	if (val == L"medium")	impl_->transition_.Speed = L"med";
 	else					impl_->transition_.Speed = val;//fast / slow
 }
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 void pptx_slide_context::default_set()
 {

@@ -184,8 +184,6 @@ namespace OOX
 		const FileType SvgBlip			(L"media", L"image",
 												L"",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image", L"image", true, true);
-		
-
 		const FileType DiagramData		(L"diagrams", L"data.xml",
 												L"application/vnd.openxmlformats-officedocument.drawingml.diagramData+xml",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/diagramData", 
@@ -302,8 +300,6 @@ namespace OOX
 											(L"embeddings", L"Microsoft_Office_Excel_Chart.xlsx",
 												L"",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/oleObject");
-
-
 		const FileType MicrosoftOfficeWordDocument
 											(L"embeddings", L"Microsoft_Office_Word_Document.docx",
 												L"",
@@ -317,8 +313,6 @@ namespace OOX
 											(L"embeddings", L"Microsoft_Office_Word_Macro-Enabled_Document.docm",
 												L"",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/package");
-
-
 		const FileType MicrosoftOfficePowerPointPresentation(L"embeddings", L"Microsoft_Office_PowerPoint_Presentation.pptx",
 												L"",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/package");
@@ -332,8 +326,6 @@ namespace OOX
 											(L"embeddings", L"Microsoft_Office_PowerPoint_Macro-Enabled_Presentation.pptm",
 												L"",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/package");
-		
-
 		const FileType MicrosoftOfficePowerPointSlide
 											(L"embeddings", L"Microsoft_Office_PowerPoint_Slide.sldx",
 												L"",

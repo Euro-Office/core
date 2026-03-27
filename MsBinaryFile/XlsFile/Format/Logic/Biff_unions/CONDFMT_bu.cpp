@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 CONDFMT::CONDFMT()
 {
 }
-
-
 CONDFMT::~CONDFMT()
 {
 }
-
-
 BaseObjectPtr CONDFMT::clone()
 {
 	return BaseObjectPtr(new CONDFMT(*this));
 }
-
-
 // CONDFMT = CondFmt 1*3CF
 const bool CONDFMT::loadContent(BinProcessor& proc)
 {

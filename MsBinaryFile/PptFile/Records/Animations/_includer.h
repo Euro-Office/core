@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "AnimationInfoAtom.h"
 #include "AnimationInfoContainer.h"
 #include "BuildAtom.h"

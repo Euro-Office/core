@@ -34,8 +34,6 @@
 #include "CFRecord.h"
 #include "CFStream.h"
 #include "../Logic/Biff_records/BOF.h"
-
-
 namespace XLS
 {
 
@@ -117,6 +115,4 @@ const size_t BinaryStreamCacheWriter::writeToStream(const size_t num_of_records_
 
 	return records_cache.size();
 }
-
-
 } // namespace XLS

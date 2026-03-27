@@ -38,19 +38,13 @@ namespace XLS
 IFmtRecord::IFmtRecord()
 {
 }
-
-
 IFmtRecord::~IFmtRecord()
 {
 }
-
-
 BaseObjectPtr IFmtRecord::clone()
 {
 	return BaseObjectPtr(new IFmtRecord(*this));
 }
-
-
 void IFmtRecord::readFields(CFRecord& record)
 {
 	GlobalWorkbookInfoPtr global_info = record.getGlobalWorkbookInfo();

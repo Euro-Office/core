@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 DOCROUTE::DOCROUTE()
 {
 }
-
-
 DOCROUTE::~DOCROUTE()
 {
 }
-
-
 BaseObjectPtr DOCROUTE::clone()
 {
 	return BaseObjectPtr(new DOCROUTE(*this));
 }
-
-
 // DOCROUTE = DocRoute 1*65535RecipName
 const bool DOCROUTE::loadContent(BinProcessor& proc)
 {

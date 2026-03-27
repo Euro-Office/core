@@ -202,7 +202,5 @@ clockvalue clockvalue::parse(const std::wstring & Str)
 	}
 }
 
-
-
 } }
 

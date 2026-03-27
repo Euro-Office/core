@@ -35,24 +35,16 @@
 
 namespace XLS
 {
-
-
 BUNDLESHEET::BUNDLESHEET()
 {
 }
-
-
 BUNDLESHEET::~BUNDLESHEET()
 {
 }
-
-
 BaseObjectPtr BUNDLESHEET::clone()
 {
 	return BaseObjectPtr(new BUNDLESHEET(*this));
 }
-
-
 // BUNDLESHEET = BoundSheet8
 const bool BUNDLESHEET::loadContent(BinProcessor& proc)
 {

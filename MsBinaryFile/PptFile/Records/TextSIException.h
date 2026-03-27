@@ -41,12 +41,8 @@ struct SSmartTags
     ~SSmartTags(){}
     _UINT32                 m_count;
     std::vector<_UINT32>    m_rgSmartTagIndex;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
-
-
 struct STextSIException
 {
     STextSIException();
@@ -69,8 +65,6 @@ struct STextSIException
     nullable_bool   m_grammarError;
 
 //    nullable<SSmartTags>      m_smartTags;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

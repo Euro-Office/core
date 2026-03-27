@@ -53,8 +53,6 @@ public:
 					std::wstring const & rid,
 					std::wstring const & target,
 					external_items::Type type);
-
-
 private:
     class Impl;
     _CP_PTR(Impl) impl_;

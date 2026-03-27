@@ -43,8 +43,6 @@ struct drawing_object_description;
 class mediaitems;
 class pptx_drawings;
 struct _oox_fill;
-
-
 class pptx_slide_context
 {
 public:
@@ -163,8 +161,6 @@ private:
 	
     class Impl;
     _CP_PTR(Impl) impl_;
-
-
 //contentPart (Content Part) §19.3.1.14
 //cxnSp (Connection Shape) §19.3.1.19
 //extLst (Extension List with Modification Flag) §19.3.1.20
@@ -175,7 +171,5 @@ private:
 //pic (Picture) §19.3.1.37
 //sp (Shape) §19.3.1.43
 };
-
-
 }
 }

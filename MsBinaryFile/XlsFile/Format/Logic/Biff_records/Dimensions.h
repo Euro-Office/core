@@ -59,8 +59,6 @@ public:
 	_UINT32		rwMac = 0x00010000;
     _UINT16		colMic = 0;
 	_UINT16		colMac = 0x0100;
-	
-
 };
 
 } // namespace XLS

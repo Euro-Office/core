@@ -48,8 +48,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     unsigned short offset = 0;
 };
 

@@ -65,8 +65,6 @@ __interface IFontConverter : IDispatch
 
 };
 
-
-
 // CFontConverter
 
 [
@@ -85,8 +83,6 @@ public:
 	CFontConverter()
 	{
 	}
-
-
 
 	DECLARE_PROTECT_FINAL_CONSTRUCT()
 

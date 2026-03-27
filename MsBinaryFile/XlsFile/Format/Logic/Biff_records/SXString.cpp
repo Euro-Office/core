@@ -47,8 +47,6 @@ BaseObjectPtr SXString::clone()
 {
 	return BaseObjectPtr(new SXString(*this));
 }
-
-
 void SXString::readFields(CFRecord& record)
 {
 	record >> cch;

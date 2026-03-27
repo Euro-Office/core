@@ -33,16 +33,12 @@
 
 #include "../../Reader/Records.h"
 #include "TimeVariant.h"
-
-
 namespace PPT
 {
 class CRecordTimeStringListContainer : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     std::vector <CRecordTimeVariantString>	m_arrRgChildRec;
 };
 

@@ -66,8 +66,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 void draw_g::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	common_draw_shape_with_text_and_styles_attlist common_draw_attlist_ = common_draw_attlists_.shape_with_text_and_styles_;

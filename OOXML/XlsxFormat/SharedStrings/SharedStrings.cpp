@@ -42,8 +42,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/WorkbookStreamObject.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SST.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SHAREDSTRINGS.h"
-
-
 #include "../../Binary/XlsbFormat/FileTypes_SpreadsheetBin.h"
 
 namespace OOX

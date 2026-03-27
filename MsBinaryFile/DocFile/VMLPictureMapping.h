@@ -45,8 +45,6 @@
 namespace DocFileFormat
 {
 	class OleObject;
-
-
 	class VMLPictureMapping: public PropertiesMapping, public IMapping
 	{
 	public:

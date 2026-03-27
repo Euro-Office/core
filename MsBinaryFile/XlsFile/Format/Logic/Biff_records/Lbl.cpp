@@ -42,18 +42,12 @@ const wchar_t* const AutoFilterDefineNames[] =
     L"_ФильтрБазыДанных"		// Russian
 
 };
-
-
 Lbl::Lbl() : rgce(false), fGrp(0)
 {
 }
-
-
 Lbl::~Lbl()
 {
 }
-
-
 BaseObjectPtr Lbl::clone()
 {
 	return BaseObjectPtr(new Lbl(*this));
@@ -258,8 +252,6 @@ void Lbl::writeFields(CFRecord& record)
 
 		record << chKey << itab;
 		record << name;
-
-
        /* std::vector<std::wstring>inputs {
                 L"1E+10+3+5",
                 L"3 * 4 + 5",
@@ -312,7 +304,5 @@ void Lbl::writeFields(CFRecord& record)
 		}
 	}
 }
-
-
 } // namespace XLS
 

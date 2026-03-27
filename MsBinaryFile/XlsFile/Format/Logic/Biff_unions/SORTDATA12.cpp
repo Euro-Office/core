@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SORTDATA12::SORTDATA12()
 {
 }
-
-
 SORTDATA12::~SORTDATA12()
 {
 }
-
-
 BaseObjectPtr SORTDATA12::clone()
 {
 	return BaseObjectPtr(new SORTDATA12(*this));
 }
-
-
 // SORTDATA12 = SortData *ContinueFrt12
 const bool SORTDATA12::loadContent(BinProcessor& proc)
 {

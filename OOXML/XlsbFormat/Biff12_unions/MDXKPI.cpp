@@ -34,8 +34,6 @@
 
 #include "../Biff12_records/BeginMdxKpi.h"
 #include "../Biff12_records/EndMdxKpi.h"
-
-
 using namespace XLS;
 
 namespace XLSB

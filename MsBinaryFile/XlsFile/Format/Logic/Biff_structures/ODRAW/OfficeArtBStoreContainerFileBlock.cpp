@@ -36,8 +36,6 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr OfficeArtBStoreContainerFileBlock::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtBStoreContainerFileBlock(*this));
@@ -241,8 +239,6 @@ void OfficeArtBStoreContainerFileBlock::load(XLS::CFRecord& record)
 				record.RollRdPtrBack(rc_header.size());
 				return;
 		}
-
-		
 		if (!isCompressed)
 		{
 			record.skipNunBytes(skipLen);
@@ -267,6 +263,4 @@ void OfficeArtBStoreContainerFileBlock::load(XLS::CFRecord& record)
 		fileOut.close();*/
 	}
 }
-
-
 } // namespace XLS

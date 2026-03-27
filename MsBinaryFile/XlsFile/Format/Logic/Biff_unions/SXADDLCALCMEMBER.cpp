@@ -35,24 +35,16 @@
 
 namespace XLS
 {
-
-
 SXADDLCALCMEMBER::SXADDLCALCMEMBER()
 {
 }
-
-
 SXADDLCALCMEMBER::~SXADDLCALCMEMBER()
 {
 }
-
-
 BaseObjectPtr SXADDLCALCMEMBER::clone()
 {
 	return BaseObjectPtr(new SXADDLCALCMEMBER(*this));
 }
-
-
 // SXADDLCALCMEMBER = (SXAddl_SXCView_SXDCalcMember [SXAddl_SXCView_SXDCalcMemString *Continue_SxaddlSxString])
 const bool SXADDLCALCMEMBER::loadContent(BinProcessor& proc)
 {

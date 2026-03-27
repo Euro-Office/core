@@ -39,13 +39,9 @@ SXEx::SXEx()
 {
 	cWrapPage = 0;
 }
-
-
 SXEx::~SXEx()
 {
 }
-
-
 BaseObjectPtr SXEx::clone()
 {
 	return BaseObjectPtr(new SXEx(*this));

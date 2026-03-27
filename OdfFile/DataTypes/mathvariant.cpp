@@ -59,8 +59,6 @@ bool operator == (math_variant & _b1, math_variant & _b2)
 
     return false;
 }
-
-
 math_variant::math_variant(const math_variant & Value)
 {
     style_  = Value.style_;
@@ -169,9 +167,5 @@ math_variant math_variant::parse( const std::wstring & Value)
     return math_variant(Value);
 
 }
-
-
-
-
 }
 }

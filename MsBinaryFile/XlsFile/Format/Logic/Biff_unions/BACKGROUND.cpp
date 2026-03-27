@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 BACKGROUND::BACKGROUND()
 {
 }
-
-
 BACKGROUND::~BACKGROUND()
 {
 }
-
-
 BaseObjectPtr BACKGROUND::clone()
 {
 	return BaseObjectPtr(new BACKGROUND(*this));
 }
-
-
 // BACKGROUND = BkHim *Continue
 const bool BACKGROUND::loadContent(BinProcessor& proc)
 {

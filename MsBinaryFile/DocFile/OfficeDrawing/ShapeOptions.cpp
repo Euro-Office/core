@@ -49,8 +49,6 @@ namespace DocFileFormat
 		{
 			ODRAW::OfficeArtFOPTEPtr fopte = ODRAW::OfficeArtFOPTE::load_and_create(Reader);
 			if (!fopte)continue;
-
-
 			Options.push_back(fopte);
 		}
 		// complex load

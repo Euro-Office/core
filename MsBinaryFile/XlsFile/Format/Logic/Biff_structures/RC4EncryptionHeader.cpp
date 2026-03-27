@@ -34,14 +34,10 @@
 
 namespace CRYPTO
 {
-
-
 XLS::BiffStructurePtr RC4EncryptionHeader::clone()
 {
 	return XLS::BiffStructurePtr(new RC4EncryptionHeader(*this));
 }
-
-
 void RC4EncryptionHeader::load(XLS::CFRecord& record)
 {
 	record >> EncryptionVersionInfo;
@@ -76,8 +72,6 @@ void RC4EncryptionHeader::load(XLS::CFRecord& record)
 		_UINT32 ProviderType;	record >> ProviderType;
 		_UINT32 Reserved1;		record >> Reserved1;
 		_UINT32 Reserved2;		record >> Reserved2;
-
-
 		std::wstring providerName;
 		record >> providerName;
 
@@ -157,7 +151,5 @@ void RC4EncryptionHeader::load(XLS::CFRecord& record)
 		}
 	}
 }
-
-
 } // namespace CRYPTO
 

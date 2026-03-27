@@ -34,8 +34,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../XlsxFormat/WritingElement.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtEndListParts record in BIFF12

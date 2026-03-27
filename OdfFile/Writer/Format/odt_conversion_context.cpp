@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include <boost/regex.hpp>
 #include <boost/algorithm/string.hpp>
 
@@ -1829,8 +1827,6 @@ void odt_conversion_context::start_table_cell(int col, bool covered, bool styled
 		create_element(L"table", L"covered-table-cell",elm,this);
 	else
 		create_element(L"table", L"table-cell",elm,this);
-
-
 	table_context()->start_cell(elm, styled);
 	text_context()->start_element(elm);
 }
@@ -1867,8 +1863,6 @@ void odt_conversion_context::end_table()
 	table_context()->end_table();
 	text_context()->end_element();
 }
-
-
 bool odt_conversion_context::start_header(int type)
 {
     if (page_layout_context()->add_header(type) == false)   return false;
@@ -1911,8 +1905,6 @@ void odt_conversion_context::add_empty_footer(int type)
 	}
 	end_header_footer();
 }
-
-
 void odt_conversion_context::set_background(_CP_OPT(color) & color, int type)
 {
 	if (!color) return;
@@ -1934,7 +1926,5 @@ bool odt_conversion_context::start_footer(int type)
 
 	return true;
 }
-
-
 }
 }

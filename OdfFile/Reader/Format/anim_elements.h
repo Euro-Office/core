@@ -52,8 +52,6 @@ public:
 
 	odf_types::common_anim_smil_attlist		common_attlist_;
 	odf_types::anim_par_attlist				par_attlist_;
-
-  	
 	office_element_ptr_array				anim_par_array_; 
 	office_element_ptr_array				anim_seq_array_;
 	office_element_ptr_array				content_;
@@ -86,8 +84,6 @@ public:
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
 	virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(anim_seq);
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,8 +110,6 @@ private:
 
 	std::wstring	convert_filter();
 	void			convert_slide_transition_filter(oox::pptx_conversion_context& Context);
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(anim_transitionFilter);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -135,8 +129,6 @@ public:
 private:
 	virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(anim_audio);
 //anim:command

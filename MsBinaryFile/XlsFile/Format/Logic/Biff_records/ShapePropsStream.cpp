@@ -38,13 +38,9 @@ namespace XLS
 ShapePropsStream::ShapePropsStream()
 {
 }
-
-
 ShapePropsStream::~ShapePropsStream()
 {
 }
-
-
 BaseObjectPtr ShapePropsStream::clone()
 {
 	return BaseObjectPtr(new ShapePropsStream(*this));

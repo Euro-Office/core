@@ -102,7 +102,5 @@ bool OOXColorSchemeReader::Parse( ReaderParameter oParam )
 	//	oNewColor.m_eTheme = RtfColor::ctextone;
 	//else if( L"a:tx2" == sNodeName )
 	//	oNewColor.m_eTheme = RtfColor::ctexttwo;
-
-
 	return true;
 }

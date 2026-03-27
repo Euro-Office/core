@@ -95,8 +95,6 @@ private:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(note_body);
-
-
 }
 }
 }

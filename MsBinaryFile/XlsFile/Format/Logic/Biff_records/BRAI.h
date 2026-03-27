@@ -38,8 +38,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BRAI record in BIFF8
 class BRAI: public BiffRecord
 {

@@ -49,8 +49,6 @@ public:
 	static const XLS::ElementType	type = XLS::typePropertyBag;
 
 	virtual void load(XLS::CFRecord& record);
-
-
 	unsigned short id;
     std::vector<SharedProperty> properties;
 };

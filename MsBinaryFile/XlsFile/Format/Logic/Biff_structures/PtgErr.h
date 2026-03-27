@@ -46,12 +46,8 @@ public:
 	PtgErr();
 	PtgErr(const std::wstring  str);
 	BiffStructurePtr clone();
-
-	
 	virtual void loadFields(CFRecord& record);
     void writeFields(CFRecord& record) override;
-	
-
 	virtual void assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref = false);
 
 	static const unsigned short fixed_id = 0x1C;

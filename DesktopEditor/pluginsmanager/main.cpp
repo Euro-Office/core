@@ -56,8 +56,6 @@
 #include <unistd.h>
 #include <stdio.h>
 #endif
-
-
 // Misc
 std::wstring CorrectDir(const std::wstring& sDir)
 {

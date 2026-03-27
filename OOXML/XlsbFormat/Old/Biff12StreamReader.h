@@ -32,8 +32,6 @@
 
 #ifndef BIFF12STREAMREADER_H
 #define BIFF12STREAMREADER_H
-
-
 #include "Workbook.h"
 #include "Worksheet.h"
 #include "SharedStrings.h"

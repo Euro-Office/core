@@ -31,16 +31,12 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTextMasterStyleAtom : public CUnknownRecord, public PPT::CTextStyles
 {
 public:
 	LONG m_nTextType;
-	
-
     CRecordTextMasterStyleAtom();
     ~CRecordTextMasterStyleAtom();
 

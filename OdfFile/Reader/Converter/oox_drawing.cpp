@@ -185,8 +185,6 @@ static const std::wstring _ooxShapeType[]=
 	L"ellipse",	//sphere
 	L""
 };
-
-
 namespace oox {
 
 static const std::wstring _ooxDashStyle[]=
@@ -784,8 +782,6 @@ void _oox_drawing::serialize_shape(std::wostream & strm)
 	} 
 	
 	if (bWordArt) sub_type = 1;
-
-
 	CP_XML_WRITER(strm)
     {
 		if (connector_prst.empty()) 
@@ -979,8 +975,6 @@ void oox_serialize_action(std::wostream & strm, _action_desc const & val)
 		}
 	}
 }
-
-
 
 }
 }

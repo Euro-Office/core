@@ -57,6 +57,4 @@ public:
 
 };
 
-
-
 } // namespace XLS

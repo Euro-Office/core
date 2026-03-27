@@ -177,8 +177,6 @@ void math_mfrac::oox_convert(oox::math_context & Context)
 
 			Context.end_level();
 		Context.output_stream() << L"</m:num>";
-	
-
 		Context.output_stream() << L"<m:den>";
 			
 			Context.start_level();

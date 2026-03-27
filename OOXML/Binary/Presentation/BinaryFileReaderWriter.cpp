@@ -1279,8 +1279,6 @@ namespace NSBinPptxRW
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.WriteEmbeddedFonts(this);
 		EndRecord();
 	}
-
-
     bool CBinaryFileWriter::GetSafearray(BYTE **ppArray, size_t& szCount)
     {
         if (NULL == ppArray)
@@ -1519,8 +1517,6 @@ namespace NSBinPptxRW
 	void CXlsbBinaryWriter::XlsbEndRecord()
 	{
 	}
-
-
 	CRelsGenerator::CRelsGenerator(CImageManager2* pManager) : m_lNextRelsID(1), m_mapRelsImages()
 	{
 		m_pManager = pManager;

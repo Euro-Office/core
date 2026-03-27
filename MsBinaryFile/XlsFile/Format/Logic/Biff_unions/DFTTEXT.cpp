@@ -41,24 +41,16 @@
 
 namespace XLS
 {
-
-
 DFTTEXT::DFTTEXT()
 {
 }
-
-
 DFTTEXT::~DFTTEXT()
 {
 }
-
-
 BaseObjectPtr DFTTEXT::clone()
 {
 	return BaseObjectPtr(new DFTTEXT(*this));
 }
-
-
 // DFTTEXT = [DataLabExt StartObject] DefaultText ATTACHEDLABEL [EndObject]
 const bool DFTTEXT::loadContent(BinProcessor& proc)
 {

@@ -60,8 +60,6 @@ private:
 	std::wostream & operator << (std::wostream & _Wostream, const marker_style & _Val);
 
 } 
-
-
 APPLY_PARSE_XML_ATTRIBUTES(odf_types::marker_style);
 
 }

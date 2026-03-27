@@ -57,13 +57,9 @@ void PtgMemErr::writeFields(CFRecord& record)
 	record.reserveNunBytes(3); // unused
 	record << cce;
 }
-
-
 void PtgMemErr::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	//ptg_stack.push("#CACHE(" + STR::int2str(getOffsetInRecord() + getSizeOfStruct() + cce, 10) + ")!" + err.toString());
 }
-
-
 } // namespace XLS
 

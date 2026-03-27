@@ -40,8 +40,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 void graphic_format_properties::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
 	common_draw_fill_attlist_.add_attributes(Attributes);
@@ -259,13 +257,9 @@ void graphic_format_properties::apply_from(const graphic_format_properties *Othe
     common_padding_attlist_.apply_from			(Other->common_padding_attlist_);
     common_shadow_attlist_.apply_from			(Other->common_shadow_attlist_);
     common_background_color_attlist_.apply_from	(Other->common_background_color_attlist_);
-     
-
     _CP_APPLY_PROP(style_background_image_,	Other->style_background_image_);
 	_CP_APPLY_PROP(style_columns_, Other->style_columns_);
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_graphic_properties::ns = L"style";
 const wchar_t * style_graphic_properties::name = L"graphic-properties";

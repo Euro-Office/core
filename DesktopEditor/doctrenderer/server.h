@@ -93,6 +93,4 @@ public:
 		return (findDir != m_arMapTmpFiles.end()) ? true : false;
 	}
 };
-
-
 #endif // SERVER_SETTINGS_H

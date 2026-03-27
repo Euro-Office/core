@@ -39,13 +39,9 @@ namespace XLS
 TableStyle::TableStyle()
 {
 }
-
-
 TableStyle::~TableStyle()
 {
 }
-
-
 BaseObjectPtr TableStyle::clone()
 {
 	return BaseObjectPtr(new TableStyle(*this));

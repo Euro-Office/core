@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include <vector>
 #include <xml/simple_xml_writer.h>
 
@@ -248,8 +246,6 @@ void oox_chart_context::set_cache_only	(bool val)
 		plot_area_.charts_[i]->set_cache_only(val);
 	}
 }
-
-
 
 }
 }

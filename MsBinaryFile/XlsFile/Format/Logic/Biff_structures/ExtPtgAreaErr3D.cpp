@@ -34,28 +34,18 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ExtPtgAreaErr3D::clone()
 {
 	return BiffStructurePtr(new ExtPtgAreaErr3D(*this));
 }
-
-
 void ExtPtgAreaErr3D::load(CFRecord& record)
 {
 	record >> iTabs;
 	record.skipNunBytes(8); // unused
 }
-
-
 void ExtPtgAreaErr3D::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	ptg_stack.push(L"#REF!");
 }
-
-
-
-
 } // namespace XLS
 

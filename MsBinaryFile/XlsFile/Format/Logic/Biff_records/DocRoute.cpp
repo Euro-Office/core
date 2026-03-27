@@ -38,13 +38,9 @@ namespace XLS
 DocRoute::DocRoute()
 {
 }
-
-
 DocRoute::~DocRoute()
 {
 }
-
-
 BaseObjectPtr DocRoute::clone()
 {
 	return BaseObjectPtr(new DocRoute(*this));

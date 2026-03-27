@@ -35,8 +35,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/XLWideString.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/CellRangeRef.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtBeginSortCond14 record in BIFF12

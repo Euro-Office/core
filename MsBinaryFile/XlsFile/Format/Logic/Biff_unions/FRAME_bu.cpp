@@ -45,24 +45,16 @@
 
 namespace XLS
 {
-
-
 FRAME::FRAME()
 {
 }
-
-
 FRAME::~FRAME()
 {
 }
-
-
 BaseObjectPtr FRAME::clone()
 {
 	return BaseObjectPtr(new FRAME(*this));
 }
-
-
 // FRAME = Frame Begin LineFormat AreaFormat [GELFRAME] [SHAPEPROPS] End
 const bool FRAME::loadContent(BinProcessor& proc)
 {

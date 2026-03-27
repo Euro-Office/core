@@ -76,8 +76,6 @@ public:
 
     friend class odf_document;
 };
-
-
 //  office_document 
 class office_document : public office_document_base
 {
@@ -161,8 +159,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(office_document_settings);
-
-
 // manifest:manifest
 class manifest_manifest : public office_document_base
 {

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ShtProps record in BIFF8
 class ShtProps: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ShtProps();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 	

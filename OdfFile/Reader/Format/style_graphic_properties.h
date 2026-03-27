@@ -52,8 +52,6 @@
 #include "../../DataTypes/verticalalign.h"
 #include "../../DataTypes/gradientstyle.h"
 #include "../../DataTypes/wrapoption.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
 
@@ -173,8 +171,6 @@ public:
 private:
     virtual void add_attributes		( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
- 
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(loext_graphic_properties);
 

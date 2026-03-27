@@ -47,8 +47,6 @@ BaseObjectPtr ContinueFrt11::clone()
 {
 	return BaseObjectPtr(new ContinueFrt11(*this));
 }
-
-
 void ContinueFrt11::readFields(CFRecord& record)
 {
 	record >> frtHeaderOld;

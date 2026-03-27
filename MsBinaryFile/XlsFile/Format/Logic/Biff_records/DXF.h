@@ -42,8 +42,6 @@ namespace XmlUtils
 
 namespace XLS
 {
-
-
 // Logical representation of DXF record in BIFF8 and BIFF12
 class DXF: public BiffRecord
 {

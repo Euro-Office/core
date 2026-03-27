@@ -34,20 +34,14 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtFDGGBlock::OfficeArtFDGGBlock()
 :	OfficeArtRecord(0, FDGGBlock)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtFDGGBlock::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtFDGGBlock(*this));
 }
-
-
 void OfficeArtFDGGBlock::loadFields(XLS::CFRecord& record)
 {
 	_UINT32 cidcl;

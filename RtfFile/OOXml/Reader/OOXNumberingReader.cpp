@@ -80,7 +80,5 @@ bool OOXNumberingReader::Parse( ReaderParameter oParam )
 		OOXNumberingMapReader oParagraph(m_ooxNumbering->m_arrNum[i]);
 		oParagraph.Parse( oParam );
 	}
-
-
 	return true;
 }

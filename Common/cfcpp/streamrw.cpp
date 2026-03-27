@@ -30,8 +30,6 @@
  *
  */
 #include "streamrw.h"
-
-
 using namespace CFCPP;
 
 StreamRW::StreamRW(CFCPP::Stream stream)

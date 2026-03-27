@@ -38,19 +38,13 @@ namespace XLS
 IMDATA::IMDATA()
 {
 }
-
-
 IMDATA::~IMDATA()
 {
 }
-
-
 BaseObjectPtr IMDATA::clone()
 {
 	return BaseObjectPtr(new IMDATA(*this));
 }
-
-
 void IMDATA::readFields(CFRecord& record)
 {
 	record >> cf;

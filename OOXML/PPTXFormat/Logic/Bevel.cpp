@@ -95,8 +95,6 @@ namespace PPTX
 			}
 			else
 				sNodeNamespace = _T("a:");
-
-
 			pWriter->StartNode(sNodeNamespace + m_name);
 
 			pWriter->StartAttributes();

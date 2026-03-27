@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr List12BlockLevel::clone()
 {
 	return BiffStructurePtr(new List12BlockLevel(*this));
@@ -53,8 +51,6 @@ List12BlockLevel::List12BlockLevel()
 	cbdxfHeaderBorder	= 0xffffffff;
 	cbdxfAggBorder		= 0xffffffff;
 }
-
-
 List12BlockLevel::~List12BlockLevel()
 {
 }
@@ -152,7 +148,5 @@ void List12BlockLevel::save(CFRecord& record)
 	if(istnAgg != -1)
 		record << stAgg;
 }
-
-
 } // namespace XLS
 

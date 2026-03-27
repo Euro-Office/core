@@ -36,20 +36,14 @@
 
 namespace XLS
 {
-
-
 PtgArea::PtgArea(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgArea::PtgArea(const std::wstring& word, const PtgDataType data_type)
 :	OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5)),
     area(word), areaXlsb(word)
 {
 }
-
-
 BiffStructurePtr PtgArea::clone()
 {
 	return BiffStructurePtr(new PtgArea(*this));
@@ -121,8 +115,6 @@ void PtgArea::writeFields(CFRecord& record)
 	}
 
 }
-
-
 void PtgArea::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
     RgceArea range;

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 RTD::RTD()
 {
 }
-
-
 RTD::~RTD()
 {
 }
-
-
 BaseObjectPtr RTD::clone()
 {
 	return BaseObjectPtr(new RTD(*this));
 }
-
-
 // RTD = RealTimeData *ContinueFrt
 const bool RTD::loadContent(BinProcessor& proc)
 {

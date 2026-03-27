@@ -30,19 +30,13 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTimeModifierAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     unsigned long m_nType;		//	0x00000000  Repeat count.
     //	0x00000001  Repeat duration.
     //	0x00000002  Speed.

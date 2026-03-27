@@ -36,8 +36,6 @@
 
 #include <xml/xmlchar.h>
 #include <xml/attributes.h>
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -192,8 +190,6 @@ void math_maligngroup::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 //----------------------------------------------------------------------------------------------------
 const wchar_t * math_malignmark::ns		= L"math";
 const wchar_t * math_malignmark::name	= L"malignmarke";

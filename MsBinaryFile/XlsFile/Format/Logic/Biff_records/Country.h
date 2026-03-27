@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Country record in BIFF8
 class Country: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Country();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

@@ -41,8 +41,6 @@ class CRecordKinsokuContainer : public CUnknownRecord
 {
 public:
     _UINT32 m_nLevel = 0;
-
-
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
 
 public:

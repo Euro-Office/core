@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CRTMLFRT union of records 
 class CRTMLFRT: public CompositeObject
 {

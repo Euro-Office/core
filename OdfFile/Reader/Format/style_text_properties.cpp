@@ -152,8 +152,6 @@ void text_format_properties::add_attributes( const xml::attributes_wc_ptr & Attr
     CP_APPLY_ATTR(L"text:condition",					text_condition_);
 }
 
-
-
 int text_format_properties::process_font_size(const _CP_OPT(font_size) & FontSize, const style_instance * currnetStyle, bool Complex, double Mul)
 {
     if (FontSize)
@@ -1581,8 +1579,6 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
         _rPr << L"<w:effect w:val=\"" << w_val << "\" />";
     }
 }
-
-
 void text_format_properties::oox_serialize(std::wostream & strm, bool graphic, fonts_container & fonts, bool default_)
 {
 	if (graphic)
@@ -1597,8 +1593,6 @@ void text_format_properties::oox_serialize(std::wostream & strm, bool graphic, f
 		docx_serialize(strm, fonts);
 	}
 }
-
-
 void apply_font_size(optional<font_size>::Type & A, const optional<font_size>::Type & B)
 {
     if (B && 
@@ -1610,8 +1604,6 @@ void apply_font_size(optional<font_size>::Type & A, const optional<font_size>::T
     else
         _CP_APPLY_PROP(A, B);
 }
-
-
 
 void text_format_properties::apply_from(const text_format_properties & Other)
 {

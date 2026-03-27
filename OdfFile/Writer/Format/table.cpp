@@ -208,8 +208,6 @@ void table_table::create_child_element(const std::wstring & Ns, const std::wstri
 	 else
         CP_NOT_APPLICABLE_ELM();
 }
-
-
 void table_table::add_child_element( const office_element_ptr & child_element)
 {
 	if (!child_element) return;
@@ -520,8 +518,6 @@ void table_table_column_group::serialize(std::wostream & _Wostream)
 table_columns_and_groups::table_columns_and_groups()
 {
 }
-
-
 void table_columns_and_groups::create_child_element(const std::wstring & Ns, const std::wstring & Name, odf_conversion_context * Context)
 {
     if (CP_CHECK_NAME(L"table", L"table-column-group"))
@@ -894,8 +890,6 @@ void table_rows_and_groups::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * table_table_row_group::ns = L"table";
 const wchar_t * table_table_row_group::name = L"table-row-group";
-
-
 void table_table_row_group::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     table_rows_and_groups_.create_child_element(Ns, Name, getContext());
@@ -918,8 +912,6 @@ void table_table_row_group::add_child_element( const office_element_ptr & child_
 	}	
  }
 ///////////
-
-
 // table:shapes
 // table-shapes
 //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -51,8 +51,6 @@
 	@file
 */
 #include <locale>
-
-
 /**	Conversion facet that allows to use Unicode files in UCS-2 encoding */
 class ucs2_conversion : public std::codecvt<wchar_t, char, std::mbstate_t>
 {
@@ -68,8 +66,6 @@ protected:
 	bool do_always_noconv() const throw() { return false; }
 	int  do_encoding() const throw() { return 2; }
 };
-
-
 class ube_conversion : public std::codecvt<wchar_t, char, std::mbstate_t>
 {
 protected:
@@ -84,8 +80,6 @@ protected:
 	bool do_always_noconv() const throw() { return false; }
 	int  do_encoding() const throw() { return 2; }
 };
-
-
 /**	Conversion facet that allows to read Unicode files in UTF-8 encoding */
 class utf8_conversion : public std::codecvt<wchar_t, char, std::mbstate_t>
 {

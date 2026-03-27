@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PLV record in BIFF8
 class PLV: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~PLV();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

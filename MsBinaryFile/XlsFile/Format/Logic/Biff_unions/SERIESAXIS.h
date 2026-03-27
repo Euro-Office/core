@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SERIESAXIS union of records 
 class SERIESAXIS: public CompositeObject
 {

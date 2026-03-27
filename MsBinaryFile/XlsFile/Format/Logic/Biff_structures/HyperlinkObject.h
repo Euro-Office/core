@@ -46,8 +46,6 @@
 
 namespace OSHARED
 {
-
-
 class HyperlinkObject : public XLS::BiffStructure
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(HyperlinkObject)

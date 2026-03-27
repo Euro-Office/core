@@ -815,8 +815,6 @@ namespace XLSB {
             return "/oleObjects";
         }
     };
-
-
     class TablePartsRecord : public CBiff12RecordBase
     {
         void Read(LPBYTE p, DWORD recid, DWORD reclen)

@@ -38,8 +38,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XFPropGradient::clone()
 {
 	return BiffStructurePtr(new XFPropGradient(*this));
@@ -152,6 +150,4 @@ int XFPropGradient::deserialize(XmlUtils::CXmlLiteReader& oReader)
 	}
 	return 0;
 }
-
-
 } // namespace XLS

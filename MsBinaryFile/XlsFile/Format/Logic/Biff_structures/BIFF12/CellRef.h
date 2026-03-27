@@ -33,8 +33,6 @@
 #pragma once
 
 #include  "../CellRef.h"
-
-
 namespace XLSB
 {
     DEFINE_NAME_CLASS(RgceLoc)

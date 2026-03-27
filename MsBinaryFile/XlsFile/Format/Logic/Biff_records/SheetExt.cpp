@@ -40,13 +40,9 @@ SheetExt::SheetExt()
 {
 	icvPlain = 0;
 }
-
-
 SheetExt::~SheetExt()
 {
 }
-
-
 BaseObjectPtr SheetExt::clone()
 {
 	return BaseObjectPtr(new SheetExt(*this));

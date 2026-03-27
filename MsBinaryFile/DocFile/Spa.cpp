@@ -34,8 +34,6 @@
 
 namespace DocFileFormat
 {
-
-
 	Spa::Spa() : spid(0), fHdr(0), bx(MARGIN), by(MARGIN), wr(0), wrk(0), 
 			xaLeft(0), yaTop(0), xaRight(0), yaBottom(0), 				
 			fRcaSimple(0), fBelowText(0), fAnchorLock(0), cTxbx(0)
@@ -147,7 +145,5 @@ namespace DocFileFormat
 
 		return static_cast<ByteStructure*>(pSpa);
 	}
-
-
 
 }

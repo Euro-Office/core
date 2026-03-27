@@ -37,13 +37,9 @@
 
 namespace XLS
 {
-
-
 SXADDLSXMG::SXADDLSXMG()
 {
 }
-
-
 SXADDLSXMG::~SXADDLSXMG()
 {
 }
@@ -52,8 +48,6 @@ BaseObjectPtr SXADDLSXMG::clone()
 {
 	return BaseObjectPtr(new SXADDLSXMG(*this));
 }
-
-
 // SXADDLSXMG = SXAddl_SXCSXMg_SXDId *Continue_SxaddlSxString 
 //              [SXAddl_SXCSXMg_SXDUserCaption *Continue_SxaddlSxString] *UNKNOWNFRT SXAddl_SXCSXMg_SXDEnd
 const bool SXADDLSXMG::loadContent(BinProcessor& proc)

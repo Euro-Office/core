@@ -52,8 +52,6 @@ public:
 	
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
-
-
 	int m_runCount;
 	std::vector<RunPtr> rgTxoRuns;
 	TxOLastRun lastRun;

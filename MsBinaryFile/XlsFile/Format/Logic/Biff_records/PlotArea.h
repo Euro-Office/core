@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PlotArea record in BIFF8
 class PlotArea: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~PlotArea();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typePlotArea;

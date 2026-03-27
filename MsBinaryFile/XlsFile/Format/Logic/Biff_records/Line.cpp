@@ -38,13 +38,9 @@ namespace XLS
 Line::Line()
 {
 }
-
-
 Line::~Line()
 {
 }
-
-
 BaseObjectPtr Line::clone()
 {
 	return BaseObjectPtr(new Line(*this));

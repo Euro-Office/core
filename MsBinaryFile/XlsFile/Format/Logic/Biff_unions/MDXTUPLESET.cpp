@@ -38,24 +38,16 @@
 
 namespace XLS
 {
-
-
 MDXTUPLESET::MDXTUPLESET()
 {
 }
-
-
 MDXTUPLESET::~MDXTUPLESET()
 {
 }
-
-
 BaseObjectPtr MDXTUPLESET::clone()
 {
 	return BaseObjectPtr(new MDXTUPLESET(*this));
 }
-
-
 // MDXTUPLESET = (MDXTuple / MDXSet) *ContinueFrt12
 const bool MDXTUPLESET::loadContent(BinProcessor& proc)
 {

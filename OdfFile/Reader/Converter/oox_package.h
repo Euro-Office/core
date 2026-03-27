@@ -61,8 +61,6 @@ typedef shared_ptr<element>::Type element_ptr;
 typedef std::vector<element_ptr> element_ptr_array;
 
 class document;
-
-
 //------------------------------------------------------------------------
 class element
 {

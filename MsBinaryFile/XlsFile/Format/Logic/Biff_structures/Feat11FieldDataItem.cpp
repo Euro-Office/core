@@ -188,8 +188,6 @@ void Feat11FieldDataItem::save(CFRecord& record)
 		record << dskHdrCache;
 	}
 }
-
-
 //---------------------------------------------------------------------------------------------------------
 BiffStructurePtr Feat11RgSharepointIdDel::clone()
 {

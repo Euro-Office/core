@@ -38,13 +38,9 @@ namespace XLS
 MDB::MDB()
 {
 }
-
-
 MDB::~MDB()
 {
 }
-
-
 BaseObjectPtr MDB::clone()
 {
 	return BaseObjectPtr(new MDB(*this));

@@ -66,7 +66,5 @@ namespace XLSB
         value = fCollapsed;
         record << value;
 	}
-
-
 } // namespace XLSB
 

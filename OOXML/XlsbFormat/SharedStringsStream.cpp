@@ -46,8 +46,6 @@ SharedStringsStream::SharedStringsStream()
 SharedStringsStream::~SharedStringsStream()
 {
 }
-
-
 BaseObjectPtr SharedStringsStream::clone()
 {
         return BaseObjectPtr(new SharedStringsStream(*this));

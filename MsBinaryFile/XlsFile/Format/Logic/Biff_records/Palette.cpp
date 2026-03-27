@@ -39,21 +39,15 @@ Palette::Palette()
 :	ccv(56)
 {
 }
-
-
 Palette::Palette(const unsigned short ccv_init)
 :	ccv(ccv_init)
 {
 
 }
-
-
 BaseObjectPtr Palette::clone()
 {
 	return BaseObjectPtr(new Palette(*this));
 }
-
-
 const std::wstring standart_color[8] = {
 										L"00000000",
 										L"00FFFFFF",
@@ -63,8 +57,6 @@ const std::wstring standart_color[8] = {
 										L"00FFFF00",
 										L"00FF00FF",
 										L"0000FFFF"};
-
-
 void Palette::readFields(CFRecord& record)
 {
 	GlobalWorkbookInfoPtr global_info = record.getGlobalWorkbookInfo();
@@ -95,8 +87,6 @@ void Palette::writeFields(CFRecord& record)
         if(i != nullptr)
 			i->save(record);
 }
-
-
 
 int Palette::serialize(std::wostream & stream)
 {

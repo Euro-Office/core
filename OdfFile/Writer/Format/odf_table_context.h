@@ -119,8 +119,6 @@ public:
 		void set_column_width(double width);
 		void set_column_optimal(bool val);
 
-
-
 private:
 
     class Impl;

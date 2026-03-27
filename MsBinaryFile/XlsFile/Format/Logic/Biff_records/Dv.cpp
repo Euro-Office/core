@@ -36,8 +36,6 @@
 #include <boost/algorithm/string.hpp>
 
 #include "../Biff_structures/BIFF12/DValStrings.h"
-
-
 namespace XLS
 {
 static std::wstring replace_zero (const std::wstring &str, const std::wstring &delimetr)

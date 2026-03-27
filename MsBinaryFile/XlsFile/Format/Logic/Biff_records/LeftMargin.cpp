@@ -39,19 +39,13 @@ LeftMargin::LeftMargin()
 {
 	num.data.value = 0.7;
 }
-
-
 LeftMargin::~LeftMargin()
 {
 }
-
-
 BaseObjectPtr LeftMargin::clone()
 {
 	return BaseObjectPtr(new LeftMargin(*this));
 }
-
-
 void LeftMargin::readFields(CFRecord& record)
 {
 	record >> num;

@@ -38,13 +38,9 @@ namespace XLS
 DSF::DSF()
 {
 }
-
-
 DSF::~DSF()
 {
 }
-
-
 BaseObjectPtr DSF::clone()
 {
 	return BaseObjectPtr(new DSF(*this));

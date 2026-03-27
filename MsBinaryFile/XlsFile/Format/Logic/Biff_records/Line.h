@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Line record in BIFF8
 class Line: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Line();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

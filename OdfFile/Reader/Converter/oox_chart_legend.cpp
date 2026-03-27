@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include <boost/functional.hpp>
 #include <xml/simple_xml_writer.h>
 

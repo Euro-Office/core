@@ -39,8 +39,6 @@ namespace XLS
 Feat::Feat()
 {
 }
-
-
 Feat::~Feat()
 {
 }

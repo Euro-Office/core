@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 
-
-
 namespace PPT
 {
 
@@ -48,8 +46,6 @@ struct DateTimeStruct : public IStruct
     WORD m_wMinute;
     WORD m_wSecond;
     WORD m_wMilliseconds;
-
-
     DateTimeStruct();
     void ReadFromStream(POLE::Stream *pStream) override;
 };

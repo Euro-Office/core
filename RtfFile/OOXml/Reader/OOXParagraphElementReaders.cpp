@@ -98,8 +98,6 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 			NSCommon::smart_ptr<PPTX::Logic::RunBase> run = m_drawingParagraph->RunElems[i].GetElem();
 			Parse3(oParam , oOutputParagraph, oConditionalTableStyle, poStyle, dynamic_cast<OOX::WritingElement*>(run.operator ->()));
 		}
-		
-
 		return true;		
 	}	
 	if (m_ooxParagraph == NULL) return false;
@@ -619,8 +617,6 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
     }
 	return true;
 }
-
-
 OOXRunReader::OOXRunReader(OOX::Logic::CRun *ooxRun)
 {
     m_drawingRun	= NULL;
@@ -979,8 +975,6 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 			{
 				res = Parse(oParam, oOutputParagraph, poStyle, oNewProperty, ooxAlt->m_arrFallbackItems[i]);
 			}			
-
-
 		}break;
 		case OOX::et_w_sym:
 		{
@@ -1093,8 +1087,6 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 	}
 	return true;
 }
-
-
 OOXpPrReader::OOXpPrReader(OOX::Logic::CParagraphProperty *ooxParaProps)
 {
 	m_bDefStyle			= true;
@@ -1547,8 +1539,6 @@ bool OOXpPrReader::ParseDrawing( ReaderParameter oParam, RtfParagraphProperty& o
 
 	return true;
 }
-
-
 OOXrPrReader::OOXrPrReader(OOX::Logic::CRunProperty *ooxRunProps)
 {
 	m_bDefStyle			= true;
@@ -1841,8 +1831,6 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 bool OOXrPrReader::ParseDrawing(ReaderParameter oParam, RtfCharProperty& oOutputProperty)
 {
 	if (m_drawingRunProps == NULL) return false;
-
-
 	if (m_drawingRunProps->b.IsInit())
 		oOutputProperty.m_bBold = m_drawingRunProps->b.get() ? 1 : 0;
 
@@ -2051,8 +2039,6 @@ bool OOXpPrFrameReader::Parse( ReaderParameter oParam ,RtfFrame& oOutputProperty
 
 	return true;
 }
-
-
 OOXSectionPropertyReader::OOXSectionPropertyReader(OOX::Logic::CSectionProperty *ooxSectionProperty)
 {
 	m_ooxSectionProperty = ooxSectionProperty;

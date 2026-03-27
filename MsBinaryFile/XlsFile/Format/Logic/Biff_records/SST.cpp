@@ -40,13 +40,9 @@ SST::SST(const unsigned short code_page)
 :	code_page_(code_page)
 {
 }
-
-
 SST::~SST()
 {
 }
-
-
 BaseObjectPtr SST::clone()
 {
 	return BaseObjectPtr(new SST(*this));

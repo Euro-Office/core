@@ -40,19 +40,13 @@ namespace XLSB
     FnGroup::FnGroup()
     {
     }
-
-
     FnGroup::~FnGroup()
     {
     }
-
-
     BaseObjectPtr FnGroup::clone()
     {
         return BaseObjectPtr(new FnGroup(*this));
     }
-
-
     void FnGroup::readFields(XLS::CFRecord& record)
     {
         record >> stGroup;

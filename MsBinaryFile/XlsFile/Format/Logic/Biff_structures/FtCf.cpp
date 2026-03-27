@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FtCf::clone()
 {
 	return BiffStructurePtr(new FtCf(*this));
@@ -62,7 +60,5 @@ void FtCf::save(CFRecord& record)
 	unsigned short ft =  0x0007, cb = 0x0002;
 	record << ft <<cb << cf;
 }
-
-
 } // namespace XLS
 

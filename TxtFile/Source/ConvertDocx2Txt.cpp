@@ -89,8 +89,6 @@ namespace Docx2Txt
 		
 		std::vector<int> levelPrev;
 		int listNumPrev;
-
-
 		size_t NoteCount;
 		std::map<std::wstring, std::vector<std::wstring>> Notes;
 
@@ -144,16 +142,12 @@ namespace Docx2Txt
 	{
 		return converter_->writeAnsi(path);
 	}
-
-
 	const std::wstring Converter_Impl::m_letters = _T("abcdefghijklmnopqrstuvwxyz");
 
 	Converter_Impl::Converter_Impl()
 		:  Lists(NULL), NoteCount(0), listNumPrev(1)
 	{
 	}
-
-
 	Converter_Impl::~Converter_Impl()
 	{
 	}
@@ -201,8 +195,6 @@ namespace Docx2Txt
 			}
 		}
 	}
-
-
 	bool Converter_Impl::writeUtf8(const std::wstring& path) const
 	{
 		return m_outputFile.writeUtf8(path);

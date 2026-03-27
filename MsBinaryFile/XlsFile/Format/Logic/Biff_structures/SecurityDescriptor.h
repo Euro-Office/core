@@ -32,8 +32,6 @@
 #pragma once
 
 #include "BiffStructure.h"
-
-
 #if !defined(_WIN32) && !defined(_WIN64)
 
     typedef struct _ACL {

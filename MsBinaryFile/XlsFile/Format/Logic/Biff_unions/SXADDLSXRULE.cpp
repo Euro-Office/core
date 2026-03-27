@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLSXRULE::SXADDLSXRULE()
 {
 }
-
-
 SXADDLSXRULE::~SXADDLSXRULE()
 {
 }
-
-
 BaseObjectPtr SXADDLSXRULE::clone()
 {
 	return BaseObjectPtr(new SXADDLSXRULE(*this));
 }
-
-
 // SXADDLSXRULE = SXAddl_SXCSXrule_SXDId SXAddl_SXCSXrule_SXDSXrule *SXADDLSXFILT SXAddl_SXCSXrule_SXDEnd
 const bool SXADDLSXRULE::loadContent(BinProcessor& proc)
 {

@@ -206,8 +206,6 @@ namespace DocFileFormat
                     m_pXmlWriter->WriteNodeBegin( L"w:num", TRUE );
                     m_pXmlWriter->WriteAttribute( L"w:numId", FormatUtils::SizeTToWideString(rglst->listNumbering[i]->id));
                     m_pXmlWriter->WriteNodeEnd( L"", TRUE, FALSE );
-
-
                     m_pXmlWriter->WriteNodeBegin( L"w:abstractNumId", TRUE );
                     m_pXmlWriter->WriteAttribute( L"w:val", FormatUtils::SizeTToWideString( rglst->listNumbering[i]->id ));
                     m_pXmlWriter->WriteNodeEnd( L"", TRUE );
@@ -344,8 +342,6 @@ namespace DocFileFormat
 
 		return false;
 	}
-
-
 	std::wstring NumberingMapping::GetNumberFormatWideString(int nfc, int nWordVersion)
 	{
 		if (nWordVersion > 0 && nfc > 5)

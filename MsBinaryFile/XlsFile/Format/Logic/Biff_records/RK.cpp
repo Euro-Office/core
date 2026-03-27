@@ -37,13 +37,9 @@ namespace XLS
 RK::RK()
 {
 }
-
-
 RK::~RK()
 {
 }
-
-
 BaseObjectPtr RK::clone()
 {
 	return BaseObjectPtr(new RK(*this));

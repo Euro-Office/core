@@ -56,8 +56,6 @@ DateTime::DateTime()
 	m_nSecond      = oLocal.tm_sec;
 	m_nMillisecond = 0;
 }
-
-
 DateTime::DateTime(const std::wstring &sValue, const std::wstring &sPattern)
 	:
 	  m_nYear         ( ParseValue( sValue, sPattern, L"%YYYY" )),
@@ -69,8 +67,6 @@ DateTime::DateTime(const std::wstring &sValue, const std::wstring &sPattern)
 	  m_nMillisecond	( ParseValue( sValue, sPattern, L"%ms" ))
 {
 }
-
-
 const std::wstring  DateTime::ToString  (const std::wstring &sPattern) const
 {
 	std::wstring sResult = sPattern, sTemp;
@@ -85,14 +81,10 @@ const std::wstring  DateTime::ToString  (const std::wstring &sPattern) const
 
 	return sResult;
 }
-
-
 const DateTime DateTime::Parse     (const std::wstring &sValue, const std::wstring &sPattern)
 {
 	return DateTime( sValue, sPattern );
 }
-
-
 const int      DateTime::ParseValue(const std::wstring &sValue, const std::wstring &sPattern, const std::wstring &sElement)
 {
 	const std::wstring::size_type nPos = sPattern.find( sElement );

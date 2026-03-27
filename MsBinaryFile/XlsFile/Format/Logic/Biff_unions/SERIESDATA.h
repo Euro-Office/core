@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SERIESDATA union of records 
 class SERIESDATA: public CompositeObject
 {

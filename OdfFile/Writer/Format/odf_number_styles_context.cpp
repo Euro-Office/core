@@ -45,8 +45,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_writer {
-
-
 struct def_language_code
 {
 	std::wstring country;
@@ -265,8 +263,6 @@ void odf_number_styles_context::create(int oox_num_fmt, std::wstring formatCode)
 
 	detect_format(number_format_array_.back());
 }
-
-
 void odf_number_styles_context::create_default(int oox_num_fmt, std::wstring formatCode)
 {
 	number_format_state state;

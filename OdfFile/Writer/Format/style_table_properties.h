@@ -164,8 +164,6 @@ public:
 
     static const ElementType type = typeStyleTableRowProperties;
 
-    
-
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);	
 	virtual void serialize(std::wostream & strm);
 
@@ -230,8 +228,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleTableCellProperties;
-
-    
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 

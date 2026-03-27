@@ -41,8 +41,6 @@ namespace XLS
 	class GlobalWorkbookInfo;
 	typedef boost::shared_ptr<GlobalWorkbookInfo> GlobalWorkbookInfoPtr;
 }
-
-
 namespace ODRAW
 {
 
@@ -99,8 +97,6 @@ public:
 		SplitMenuColorContainer	= 0xF11E,
 		SecondaryFOPT			= 0xF121,
 		TertiaryFOPT			= 0xF122, 
-
-
 	};
 	
 	enum OfficeArtClientAnchorType
@@ -114,6 +110,4 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtRecord> OfficeArtRecordPtr;
-
-
 } // namespace ODRAW

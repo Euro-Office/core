@@ -47,8 +47,6 @@ void CRecordTimeAnimateBehaviorContainer::ReadFromStream(SRecordHeader &oHeader,
         m_oAnimateValueList.ReadFromStream ( ReadHeader, pStream );
     else
         StreamUtils::StreamSkipBack(8, pStream);
-
-
     if ( m_oAnimateBehaviorAtom.m_bByPropertyUsed )
     {
         if ( ReadHeader.ReadFromStream(pStream) )

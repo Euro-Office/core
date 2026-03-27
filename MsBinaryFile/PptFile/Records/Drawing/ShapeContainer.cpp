@@ -561,8 +561,6 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
             if (pElement->m_oBrush.Type == c_BrushTypeNotSet)
                 pElement->m_oBrush.Type = c_BrushTypeSolid;
         }
-
-
         break;
     }
     case ODRAW::geometryBooleanProperties:
@@ -1520,8 +1518,6 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     }break;
     }
 }
-
-
 CRecordShapeContainer::CRecordShapeContainer()
 {
     bGroupShape = false;
@@ -1895,8 +1891,6 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
         pElement->m_arrActions.push_back(interactiveInfo);
     }
-
-
     //--------- наличие текста --------------------------------------------------------------------------
     CShapeElement* pShapeElem = dynamic_cast<CShapeElement*>(pElement.get());
 
@@ -1987,8 +1981,6 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         {
             pShapeElem->m_pShape->m_oText.m_oRuler = oArrayTextRuler[0]->m_oTextRuler;
         }
-
-
         std::vector<CRecordOfficeArtClientTextbox*> oArrayTextBox;
         std::vector<CRecordMouseInteractiveInfoContainer*> oArrayInteractiveCont;
         std::vector<CRecordTextInteractiveInfoAtom*> oArrayTextInteractive;
@@ -2200,8 +2192,6 @@ void CRecordShapeContainer::ApplyThemeStyle(CElementPtr pElem, CTheme* pTheme, C
         return;
 
     CTextAttributesEx* pText = &(pShape->m_pShape->m_oText);
-
-
     if (master_levels)
     {
         for (size_t i = 0; i < pText->m_arParagraphs.size(); i++)
@@ -2654,8 +2644,6 @@ void CRecordShapeContainer::ApplyHyperlink(CShapeElement* pShape, CColor& oColor
 {
     auto& oTextAttributes = pShape->m_pShape->m_oText;
     const auto& originalText = oTextAttributes.m_originalText;
-
-
     // lenght these ones shoud be equal
     const auto& arrRanges	= pShape->m_oTextActions.m_arRanges;
     const auto arrSplitedInteractive = splitInteractive(pShape->m_textHyperlinks);
@@ -2781,8 +2769,6 @@ bool CRecordShapeContainer::isRealHyperlink(const std::vector<CInteractiveInfo> 
 
     return isReal;
 }
-
-
 
 std::vector<std::vector<CInteractiveInfo> > CRecordShapeContainer::splitInteractive(const std::vector<CInteractiveInfo> &arrInteractive)
 {

@@ -48,8 +48,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     unsigned char istyBuiltIn = 0;
     unsigned char iLevel = 0xFF;
 };

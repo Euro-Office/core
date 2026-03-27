@@ -39,8 +39,6 @@ class CRecordKinsokuLeadingAtom : public CUnknownRecord
 {
 public:
     std::wstring m_arKinsokuLeading;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

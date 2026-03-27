@@ -311,8 +311,6 @@ private:
     Matrix *m_pMatrix;
     int m_nTextsCount;
     int m_nSize;
-
-
     static wchar_t* AllocWString(const std::wstring& wsString)
     {
         int nLen = wsString.length();
@@ -396,6 +394,4 @@ private:
     std::vector<int> m_vPathsClipFlag;
     bool m_bChanged;
 };
-
-
 #endif //CORE_GRCLIP_H

@@ -69,12 +69,8 @@ void STextSIException::ReadFromStream(POLE::Stream *pStream)
     m_spell     = 0x1 & flags;
     m_lang      = 0x2 & flags;
     m_altLang   = 0x4 & flags;
-
-
     m_fPp10ext  = 0x20 & flags;
     m_fBidi     = 0x40 & flags;
-
-
     m_smartTag  = 0x200 & flags;
 
     if (m_spell)

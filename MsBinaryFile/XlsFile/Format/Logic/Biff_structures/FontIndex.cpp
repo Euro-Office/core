@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FontIndex::clone()
 {
 	return BiffStructurePtr(new FontIndex(*this));
 }
-
-
 const unsigned short FontIndex::getValue() const
 {	
 	unsigned short index = static_cast<unsigned short>(val.get_value_or(0));
@@ -54,7 +50,5 @@ void	FontIndex::setValue(unsigned short val_)
 	else val = val_;
 
 }
-
-
 } // namespace XLS
 

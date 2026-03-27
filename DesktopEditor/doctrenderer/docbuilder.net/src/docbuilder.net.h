@@ -12,16 +12,11 @@
  * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
  * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
  *
  * The  interactive user interfaces in modified source and object code versions
  * of the Program must display Appropriate Legal Notices, as required under
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
  *
  * All the Product's GUI elements, including illustrations and icon sets, as
  * well as technical writing content are licensed under the terms of the
@@ -95,12 +90,8 @@ namespace docbuilder_net
 
 		/// <returns> True if this object is a typed array. </returns>
 		bool IsTypedArray();
-
-
 		/// <returns> The length if this object is an array/typed array. Otherwise, returns 0. </returns>
 		unsigned int GetLength();
-
-
 		/// <summary> Converts this object to a boolean value. </summary>
 		bool ToBool();
 
@@ -112,8 +103,6 @@ namespace docbuilder_net
 
 		/// <summary> Converts this object to a string. </summary>
 		String^ ToString() override;
-
-		
 		/// <summary> Returns a property of this object. </summary>
 		/// <param name="name"> The name of the CDocBuilderValue object property. </param>
 		CDocBuilderValue^ GetProperty(String^ name);
@@ -125,8 +114,6 @@ namespace docbuilder_net
 		/// <summary> Returns an array value by its index. </summary>
 		/// <param name="index"> The index of the array value. </param>
 		CDocBuilderValue^ Get(int index);
-
-		
 		/// <summary> Sets a property to this object. </summary>
 		/// <param name="name"> The name of the CDocBuilderValue object property. </param>
 		/// <param name="value"> The value of the CDocBuilderValue object property. </param>
@@ -141,8 +128,6 @@ namespace docbuilder_net
 		/// <param name="index"> The index of the array value. </param>
 		/// <param name="value"> The array value to be set. </param>
 		void Set(int index, CDocBuilderValue^ value);
-
-
 		/// <summary> Returns/Sets an array value by its index. </summary>
 		/// <param name="index"> The index of the array value. </param>
 		/// <param name="value"> The array value to be set. </param>
@@ -281,8 +266,6 @@ namespace docbuilder_net
 		/// </summary>
 		/// <param name="folder"> The path to the folder where the temporary files will be saved. </param>
 		void SetTmpFolder(String^ folder);
-
-
 		/// <summary>
 		/// Saves the file after all the changes are made. The type of the file which will be saved needs to be set.
 		/// </summary>
@@ -317,8 +300,6 @@ namespace docbuilder_net
 		/// </param>
 		/// <returns> Process x2t return code. </returns>
 		bool SaveFile(int type, String^ path, String^ params);
-		
-
 		/// <summary>
 		/// Closes the file to stop working with it. You can use a single ONLYOFFICE Document Builder instance
 		/// to work with all your files, but you need to close the previous file before you can
@@ -362,8 +343,6 @@ namespace docbuilder_net
 		/// <param name="retValue"> The command return value. </param>
 		/// <returns> True if the operation is successful. </returns>
 		bool ExecuteCommand(String^ command, [Runtime::InteropServices::Out] CDocBuilderValue^% retValue);
-
-
 		/// <summary>
 		/// Runs the ONLYOFFICE Document Builder executable. If you do not want to write a .Net application,
 		/// you can simply use the docbuilder.exe executable file and run it with the.docbuilder file as an argument,
@@ -426,8 +405,6 @@ namespace docbuilder_net
 		/// <param name="param"> The parameter name, the value is always --argument. </param>
 		/// <param name="value"> The parameter value which will be used in the document. </param>
 		void SetProperty(String^ param, String^ value);
-
-
 		/// <summary>
 		/// Writes data to the log file. It is used for logs in JS code.
 		/// <param name="path"> The path to the file where all the logs will be written. </param>

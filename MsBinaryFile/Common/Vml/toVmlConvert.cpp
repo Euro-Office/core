@@ -227,5 +227,3 @@ HRESULT COOXToVMLGeometry:: ResultPath(std::wstring* bstrVal)
 	*bstrVal = m_oWriter.GetData();
 	return S_OK;
 }
-
-

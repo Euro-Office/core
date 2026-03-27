@@ -44,11 +44,7 @@ class PtgElfLel: public OperandPtg
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgElfLel)
 public:
 	BiffStructurePtr clone();
-
-	
 	virtual void loadFields(CFRecord& record);
-	
-
 	virtual void assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref = false);
 
 private:

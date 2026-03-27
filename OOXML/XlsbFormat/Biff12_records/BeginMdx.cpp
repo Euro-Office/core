@@ -59,7 +59,5 @@ namespace XLSB
 	{
 		record << istrConnName << tfnSrc;
 	}
-
-
 } // namespace XLSB
 

@@ -36,8 +36,6 @@
 #include "odfattributes.h"
 #include "length.h"
 #include "percent.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class font_size

@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "ruby.h"
 
 #include "paragraph_elements.h"
@@ -39,8 +37,6 @@
 namespace cpdoccore {
 namespace odf_reader {
 namespace text {
-
-
 
 // text:ruby-base
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,8 +90,6 @@ void ruby_text::add_text(const std::wstring & Text)
     office_element_ptr elm = text::create(Text) ;
     content_.push_back( elm );
 }
-
-
 
 }
 }

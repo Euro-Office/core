@@ -50,8 +50,6 @@ public:
 	
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
-
-
 public:	
 	_UINT16 cchText = 0;
 };

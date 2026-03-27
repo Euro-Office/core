@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CFDatabar::clone()
 {
 	return BiffStructurePtr(new CFDatabar(*this));

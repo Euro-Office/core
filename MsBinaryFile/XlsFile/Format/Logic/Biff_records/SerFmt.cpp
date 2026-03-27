@@ -38,19 +38,13 @@ namespace XLS
 SerFmt::SerFmt()
 {
 }
-
-
 SerFmt::~SerFmt()
 {
 }
-
-
 BaseObjectPtr SerFmt::clone()
 {
 	return BaseObjectPtr(new SerFmt(*this));
 }
-
-
 void SerFmt::readFields(CFRecord& record)
 {
 	unsigned short flags;

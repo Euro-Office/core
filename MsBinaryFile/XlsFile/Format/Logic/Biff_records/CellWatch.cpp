@@ -38,13 +38,9 @@ namespace XLS
 CellWatch::CellWatch()
 {
 }
-
-
 CellWatch::~CellWatch()
 {
 }
-
-
 BaseObjectPtr CellWatch::clone()
 {
 	return BaseObjectPtr(new CellWatch(*this));

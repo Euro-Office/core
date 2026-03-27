@@ -1049,8 +1049,6 @@ void OOXShapeReader::Parse(ReaderParameter oParam, RtfShapePtr& pOutput, PPTX::L
 	//nullable<SimpleTypes::CPenAlignment<>>            m_oAlgn;
 	//nullable<SimpleTypes::CLineCap<>>                 m_oCap;
 	//nullable<SimpleTypes::CCompoundLine<>>            m_oCmpd;
-
-
 	//ELineJoinType                                     m_eJoinType;   // Тип соединения линий
 	//nullable<OOX::Drawing::CLineJoinBevel>            m_oBevel;
 	//nullable<OOX::Drawing::CLineJoinMiterProperties>  m_oMiter;
@@ -2212,8 +2210,6 @@ void OOXShapeReader::ConvertOle2ToOle1(POLE::Storage *storage, RtfOlePtr object)
 		delete []ole1Writer.NativeData;
 	}
 }
-
-
 OOXShapeGroupReader::OOXShapeGroupReader(OOX::Vml::CGroup *vmlGroup)
 {
 	m_vmlGroup = vmlGroup;
@@ -2404,8 +2400,6 @@ bool OOXShapeGroupReader::Parse( ReaderParameter oParam , RtfShapePtr& pOutput)
 	}
 	return true;
 }
-
-
 OOXBackgroundReader::OOXBackgroundReader(OOX::Logic::CBackground *oox_background)
 {
 	m_ooxBackground = oox_background;

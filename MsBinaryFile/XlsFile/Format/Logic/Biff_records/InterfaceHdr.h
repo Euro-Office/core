@@ -48,8 +48,6 @@ public:
 	~InterfaceHdr();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 //-----------------------------

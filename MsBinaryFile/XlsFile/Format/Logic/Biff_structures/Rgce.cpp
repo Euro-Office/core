@@ -120,38 +120,26 @@ void Rgce::save(CFRecord& record)
 	for (auto& item : sequence)
 		item->save(record);
 }
-
-
 const size_t Rgce::getCCE() const
 {
 	return cce.get_value_or(0);
 }
-
-
 void Rgce::setCCE(const size_t cce_val)
 {
 	cce = cce_val;
 }
-
-
 const PtgVector& Rgce::getPtgs() const
 {
 	return sequence;
 }
-
-
 void Rgce::addPtg(const PtgPtr ptg)
 {
 	sequence.push_back(ptg);
 }
-
-
 const bool Rgce::isEmpty() const
 {
 	return sequence.empty();
 }
-
-
 const CellRef& Rgce::getLocation() const
 {
 	return cell_base_ref;

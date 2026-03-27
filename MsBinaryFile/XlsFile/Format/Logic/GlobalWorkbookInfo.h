@@ -70,8 +70,6 @@ static const std::wstring DefaultPalette[] = {
 	L"003366FF",	L"0033CCCC",	L"0099CC00",	L"00FFCC00",	L"00FF9900",	L"00FF6600",	L"00666699",	L"00969696",	
 	L"00003366",	L"00339966",	L"00003300",	L"00333300",	L"00993300",	L"00993366",	L"00333399",	L"00333333"
 };
-
-
 struct _sx_name
 {
 	BaseObjectPtr				name;
@@ -138,8 +136,6 @@ public:
 	std::vector<_sx_name>					arPivotSxNames;
 	std::vector<std::wstring>				arPivotCacheSxNames;
 	std::map<std::wstring, BaseObjectPtr>	mapPivotTableViews;
-
-
 	std::unordered_map<std::wstring, std::wstring>		mapPivotCacheExternal;
 
 	std::map<std::wstring, std::vector<std::wstring>>	mapDefineNames;
@@ -233,6 +229,4 @@ public:
 };
 
 typedef boost::shared_ptr<GlobalWorkbookInfo> GlobalWorkbookInfoPtr;
-
-
 } // namespace XLS

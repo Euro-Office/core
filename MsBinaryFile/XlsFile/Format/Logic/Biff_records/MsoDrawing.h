@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MsoDrawing record in BIFF8
 class MsoDrawing: public BiffRecordSplit
 {

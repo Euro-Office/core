@@ -39,19 +39,13 @@ namespace XLS
 Compat12::Compat12()
 {
 }
-
-
 Compat12::~Compat12()
 {
 }
-
-
 BaseObjectPtr Compat12::clone()
 {
 	return BaseObjectPtr(new Compat12(*this));
 }
-
-
 void Compat12::readFields(CFRecord& record)
 {
 	FrtHeader frtHeader(rt_Compat12);

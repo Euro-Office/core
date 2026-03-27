@@ -37,27 +37,19 @@
 #include "Blank.h"
 #include "Label.h"
 #include "../../../../../OOXML/Base/Unit.h"
-
-
 namespace XLS
 {
 
 SIIndex::SIIndex()
 {
 }
-
-
 SIIndex::~SIIndex()
 {
 }
-
-
 BaseObjectPtr SIIndex::clone()
 {
 	return BaseObjectPtr(new SIIndex(*this));
 }
-
-
 void SIIndex::readFields(CFRecord& record)
 {
 	record >> numIndex;

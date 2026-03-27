@@ -582,8 +582,6 @@ namespace OOX
 				if (m_arrTblStylePr[nIndex])
 					sResult += m_arrTblStylePr[nIndex]->toXML();
 			}
-
-
 			sResult += L"</w:style>";
 
 			return sResult;

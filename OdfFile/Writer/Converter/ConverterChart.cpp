@@ -853,8 +853,6 @@ void OoxConverter::convert(OOX::Spreadsheet::CT_ScatterChart *chart)
 
 		if (chart->m_scatterStyle.IsInit())
 			odf_context()->chart_context()->set_chart_scatter_type(chart->m_scatterStyle->GetValue());	
-	
-
 	odf_context()->chart_context()->start_group_series();
 		for (size_t i = 0; i < chart->m_ser.size(); i++)
 		{
@@ -1478,6 +1476,4 @@ void OoxConverter::convert(OOX::Spreadsheet::ChartEx::CChartSpace *oox_chart)
 	}
 	odf_context()->chart_context()->end_plot_area();
 }
-
-
 }

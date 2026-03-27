@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 MDXSTR::MDXSTR()
 {
 }
-
-
 MDXSTR::~MDXSTR()
 {
 }
-
-
 BaseObjectPtr MDXSTR::clone()
 {
 	return BaseObjectPtr(new MDXSTR(*this));
 }
-
-
 // MDXSTR = MDXStr *ContinueFrt12
 const bool MDXSTR::loadContent(BinProcessor& proc)
 {

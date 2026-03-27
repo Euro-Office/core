@@ -293,7 +293,5 @@ public:
 	virtual void serialize(std::wostream & _Wostream);
 };
 CP_REGISTER_OFFICE_ELEMENT2(meta_user_defined);
-
-
 }
 }

@@ -38,13 +38,9 @@ namespace XLS
 Backup::Backup()
 {
 }
-
-
 Backup::~Backup()
 {
 }
-
-
 BaseObjectPtr Backup::clone()
 {
 	return BaseObjectPtr(new Backup(*this));

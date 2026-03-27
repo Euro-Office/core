@@ -38,13 +38,9 @@ namespace XLS
 HLink::HLink()
 {
 }
-
-
 HLink::~HLink()
 {
 }
-
-
 BaseObjectPtr HLink::clone()
 {
 	return BaseObjectPtr(new HLink(*this));

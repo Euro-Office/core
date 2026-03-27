@@ -165,8 +165,6 @@ namespace NSFonts
 			pBuffer += nLen;
 		}
 	}
-
-
 	// new version
 	int GetUtf8BufferLen(const std::wstring& value)
 	{
@@ -433,8 +431,6 @@ namespace NSCharsets
 	{
 		// Данная функция возвращает параметры, которые нужно посылать на вход
 		// функции AVSFontManager::IsUnicodeRangeAvailable
-
-
 		// Соответствие Charset -> Codepage: http://support.microsoft.com/kb/165478
 		// http://msdn.microsoft.com/en-us/library/cc194829.aspx
 

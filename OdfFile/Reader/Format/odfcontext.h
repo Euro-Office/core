@@ -282,8 +282,6 @@ private:
 
 	odf_reader::text_linenumbering_configuration *linenumberingcConfiguration = NULL;
 };
-
-
 class font_instance;
 typedef boost::shared_ptr<font_instance> font_instance_ptr;
 
@@ -426,7 +424,5 @@ private:
 	settings_container		settings_container_;
 	doc_props_container		doc_props_container_;
 };
-
-
 }
 }

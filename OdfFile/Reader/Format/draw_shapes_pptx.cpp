@@ -61,8 +61,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 void draw_shape::common_pptx_convert(oox::pptx_conversion_context & Context)
 {
 	common_shape_draw_attlist	&common_draw_attlist_		= common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_;
@@ -229,8 +227,6 @@ void draw_line::pptx_convert(oox::pptx_conversion_context & Context)
 
 	Context.get_slide_context().end_shape();
 }
-
-
 void draw_path::pptx_convert(oox::pptx_conversion_context & Context)
 {
 	reset_svg_path();
@@ -359,8 +355,6 @@ void draw_connector::pptx_convert(oox::pptx_conversion_context & Context)
 		Context.get_slide_context().set_connector_start_glue_point(pptx_convert_glue_point(draw_connector_attlist_.draw_start_glue_point_.value()));
 	if (draw_connector_attlist_.draw_end_glue_point_)
 		Context.get_slide_context().set_connector_end_glue_point(pptx_convert_glue_point(draw_connector_attlist_.draw_end_glue_point_.value()));
-
-
 	int connector_size = 5;
 	if (draw_connector_attlist_.svg_d_)
 	{
@@ -389,8 +383,6 @@ void draw_connector::pptx_convert(oox::pptx_conversion_context & Context)
 		pptx_prst = L"straightConnector1";
 
 	Context.get_slide_context().set_connector_draw_type(pptx_prst);
-		
-
 //перебъем заливку .. 
 	oox::_oox_fill fill;
 	fill.type = 0;

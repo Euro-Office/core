@@ -32,8 +32,6 @@
 #pragma once
 
 #include "ExMediaAtom.h"
-
-
 namespace PPT
 {
 class CRecordWAVAudioEmbeddedContainer : public CRecordsContainer
@@ -43,8 +41,6 @@ public:
 	
     _UINT32				m_nSoundID = 0;
     LONG				m_nDuration = 0;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

@@ -58,8 +58,6 @@ public:
 
 			res = true;
 		}
-
-	
 		if (proc.optional<StyleExt>())
 		{
 			m_StyleEx = elements_.back();
@@ -79,8 +77,6 @@ BaseObjectPtr STYLES::clone()
 {
 	return BaseObjectPtr(new STYLES(*this));
 }
-
-
 // STYLES = 1*(Style [StyleExt]) 
 const bool STYLES::loadContent(BinProcessor& proc)
 {

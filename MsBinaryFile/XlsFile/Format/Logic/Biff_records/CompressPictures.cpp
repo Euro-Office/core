@@ -39,13 +39,9 @@ namespace XLS
 CompressPictures::CompressPictures()
 {
 }
-
-
 CompressPictures::~CompressPictures()
 {
 }
-
-
 BaseObjectPtr CompressPictures::clone()
 {
 	return BaseObjectPtr(new CompressPictures(*this));

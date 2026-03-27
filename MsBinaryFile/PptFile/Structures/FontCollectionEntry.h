@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 #include <string>
-
-
 namespace PPT
 {
 struct FontCollectionEntry : public IStruct

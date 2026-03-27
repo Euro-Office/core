@@ -53,5 +53,3 @@ struct xlsx_protection
 };
 
 }
-
-

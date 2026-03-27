@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgElfRadicalLel::clone()
 {
 	return BiffStructurePtr(new PtgElfRadicalLel(*this));
@@ -47,13 +45,9 @@ void PtgElfRadicalLel::loadFields(CFRecord& record)
 	record >> ilel >> flags;
 	fQuoted = GETBIT(flags, 0);
 }
-
-
 void PtgElfRadicalLel::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	// The significant tag follows (PtgArea or PtgAreaErr)
 }
-
-
 } // namespace XLS
 

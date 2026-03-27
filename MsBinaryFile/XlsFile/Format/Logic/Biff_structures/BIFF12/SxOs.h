@@ -35,8 +35,6 @@
 #include  "../BiffStructure.h"
 #include  "../../Biff_records/BiffRecord.h"
 #include  "../BiffString.h"
-
-
 namespace XLSB
 {
     class SxOs : public XLS::BiffStructure

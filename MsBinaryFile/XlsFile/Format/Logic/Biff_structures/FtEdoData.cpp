@@ -65,7 +65,5 @@ void FtEdoData::save(CFRecord& record)
 	}
 	record << ivtEdit << fMultiLine << fVScroll << id;
 }
-
-
 } // namespace XLS
 

@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 
-
-
 namespace PPT
 {
 struct RectStruct : public IStruct
@@ -43,8 +41,6 @@ struct RectStruct : public IStruct
     _INT32 m_nLeft;
     _INT32 m_nRight;
     _INT32 m_nBottom;
-
-
     void ReadFromStream(POLE::Stream *pStream) override;
 };
 }

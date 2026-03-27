@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "ParagraphPropertiesMapping.h"
 
 namespace DocFileFormat
@@ -418,8 +416,6 @@ namespace DocFileFormat
 
 					appendShading( _pPr, desc );
 				}break;
-				
-
 		//numbering
 				case sprmOldPAnld:
 				{
@@ -469,8 +465,6 @@ namespace DocFileFormat
 					}
 				}
 				break;
-
-
 				case sprmOldPChgTabs:	//tabs
 				case sprmPChgTabsPapx:
 				case sprmPChgTabs:

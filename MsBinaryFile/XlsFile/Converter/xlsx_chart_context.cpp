@@ -88,8 +88,6 @@ public:
 			}
 		}
     }
-
-
     void add_rels(
         bool isInternal,
         std::wstring const & rid,
@@ -155,7 +153,5 @@ void oox_chart_context::write_to(std::wostream & strm)
 oox_chart_context::~oox_chart_context()
 {
 }
-
-
 }
 

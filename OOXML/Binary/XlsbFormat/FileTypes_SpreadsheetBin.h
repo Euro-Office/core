@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../../DocxFormat/FileType.h"
-
-
 namespace OOX
 {
 	namespace SpreadsheetBin

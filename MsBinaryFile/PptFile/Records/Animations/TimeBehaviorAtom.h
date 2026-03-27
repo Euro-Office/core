@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 
@@ -41,8 +39,6 @@ class CRecordTimeBehaviorAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream );
-
-
     bool	m_bAdditivePropertyUsed;
     bool	m_bAttributeNamesPropertyUsed;
 

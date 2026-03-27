@@ -87,7 +87,5 @@ bool odf_document::get_error()
 {
 	return impl_->get_error();
 }
-
-
 }
 }

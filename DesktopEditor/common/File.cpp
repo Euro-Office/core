@@ -1754,8 +1754,6 @@ namespace NSFile
 		}
 		else
 			result = false;
-
-
 #else // linux or macOS
 		struct stat attr;
 		result = (0 == stat(U_TO_UTF8(sFilename).c_str(), &attr));
@@ -1826,8 +1824,6 @@ namespace NSFile
 
 			CloseHandle(hFile);
 		}
-
-
 #else // linux or macOS
 		struct stat attr;
 		std::string sFilenameA = U_TO_UTF8(sFilename);

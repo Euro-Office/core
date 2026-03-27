@@ -38,19 +38,13 @@ namespace XLS
 CondFmt12::CondFmt12()
 {
 }
-
-
 CondFmt12::~CondFmt12()
 {
 }
-
-
 BaseObjectPtr CondFmt12::clone()
 {
 	return BaseObjectPtr(new CondFmt12(*this));
 }
-
-
 void CondFmt12::readFields(CFRecord& record)
 {
 	record >> frtRefHeaderU;
@@ -69,7 +63,5 @@ const CellRef CondFmt12::getLocation() const
 {
 	return mainCF.getLocation();
 }
-
-
 } // namespace XLS
 

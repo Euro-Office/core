@@ -39,8 +39,6 @@ BaseObjectPtr SxIvd::clone()
 {
 	return BaseObjectPtr(new SxIvd(*this));
 }
-
-
 void SxIvd::readFields(CFRecord& record)
 {
 	int rgSize = record.getDataSize() / 2;

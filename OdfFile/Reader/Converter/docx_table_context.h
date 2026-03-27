@@ -219,7 +219,5 @@ private:
     docx_conversion_context & context_;
     std::vector<docx_table_state> table_states_;
 };
-
-
 }
 }

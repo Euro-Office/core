@@ -75,8 +75,6 @@ public:
     virtual void setSize(_INT64 value) = 0;
     virtual _INT32 getStateBits() const = 0;
     virtual void setStateBits(_INT32 value) = 0;
-
-
     virtual _UINT64 getCreationDate() const = 0;
     virtual void setCreationDate(const _UINT64& value) = 0;
     virtual _UINT64 getModifyDate() const = 0;

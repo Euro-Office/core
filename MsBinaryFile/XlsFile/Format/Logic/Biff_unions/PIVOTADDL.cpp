@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 PIVOTADDL::PIVOTADDL() : current( &content), m_SXADDLCONDFMTS(NULL, -1), m_SXADDLSXFILTERS12(NULL, -1)
 {
 	_sxAddl elm(NULL, 0);
@@ -52,8 +50,6 @@ BaseObjectPtr PIVOTADDL::clone()
 {
 	return BaseObjectPtr(new PIVOTADDL(*this));
 }
-
-
 /*
 PIVOTADDL = SXAddl_SXCView_SXDId *Continue_SxaddlSxString 
 			[SXAddl_SXCView_SXDVer10Info] 

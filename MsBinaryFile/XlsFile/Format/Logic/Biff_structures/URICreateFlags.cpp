@@ -34,25 +34,17 @@
 
 namespace OSHARED
 {
-
-
 URICreateFlags::URICreateFlags()
 {
 }
-
-
 URICreateFlags::URICreateFlags(XLS::CFRecord& record)
 {
 	load(record);
 }
-
-
 XLS::BiffStructurePtr URICreateFlags::clone()
 {
 	return XLS::BiffStructurePtr(new URICreateFlags(*this));
 }
-
-
 void URICreateFlags::load(XLS::CFRecord& record)
 {
 	unsigned int flags;
@@ -75,7 +67,5 @@ void URICreateFlags::load(XLS::CFRecord& record)
 	createNoIESettings = GETBIT(flags, 14);
 	createNoEncodeForbiddenCharacters = GETBIT(flags, 15);
 }
-
-
 } // namespace OSHARED
 

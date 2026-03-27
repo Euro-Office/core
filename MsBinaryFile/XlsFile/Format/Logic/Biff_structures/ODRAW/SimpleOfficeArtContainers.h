@@ -179,6 +179,4 @@ typedef boost::shared_ptr<OfficeArtSpgrContainer> OfficeArtSpgrContainerPtr;
 typedef boost::shared_ptr<OfficeArtSpContainer> OfficeArtSpContainerPtr;
 typedef boost::shared_ptr<OfficeArtClientData> OfficeArtClientDataPtr;
 typedef boost::shared_ptr<OfficeArtClientTextbox> OfficeArtClientTextboxPtr;
-
-
 } // namespace XLS

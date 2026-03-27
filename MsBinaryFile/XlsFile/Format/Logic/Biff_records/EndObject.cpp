@@ -39,13 +39,9 @@ namespace XLS
 EndObject::EndObject()
 {
 }
-
-
 EndObject::~EndObject()
 {
 }
-
-
 BaseObjectPtr EndObject::clone()
 {
 	return BaseObjectPtr(new EndObject(*this));

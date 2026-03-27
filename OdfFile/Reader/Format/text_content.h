@@ -67,8 +67,6 @@ public:
     _CP_OPT(std::wstring)		xml_id_;
 
 };
-
-
 }
 }
 }

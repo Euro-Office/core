@@ -38,19 +38,13 @@ namespace XLS
 AutoFilterInfo::AutoFilterInfo()
 {
 }
-
-
 AutoFilterInfo::~AutoFilterInfo()
 {
 }
-
-
 BaseObjectPtr AutoFilterInfo::clone()
 {
 	return BaseObjectPtr(new AutoFilterInfo(*this));
 }
-
-
 void AutoFilterInfo::readFields(CFRecord& record)
 {
 	record >> cEntries;

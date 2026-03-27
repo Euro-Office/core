@@ -72,5 +72,3 @@ private:
 	class Impl;
 	boost::shared_ptr<Impl> impl_;
 };
-
-

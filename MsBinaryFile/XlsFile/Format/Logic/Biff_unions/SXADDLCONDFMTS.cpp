@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLCONDFMTS::SXADDLCONDFMTS()
 {
 }
-
-
 SXADDLCONDFMTS::~SXADDLCONDFMTS()
 {
 }
-
-
 BaseObjectPtr SXADDLCONDFMTS::clone()
 {
 	return BaseObjectPtr(new SXADDLCONDFMTS(*this));
 }
-
-
 // SXADDLCONDFMTS = SXAddl_SXCSXCondFmts_SXDId *SXADDLCONDFMT SXAddl_SXCSXCondFmts_SXDEnd
 const bool SXADDLCONDFMTS::loadContent(BinProcessor& proc)
 {	

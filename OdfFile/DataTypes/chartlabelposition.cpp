@@ -80,6 +80,4 @@ chart_label_position chart_label_position::parse(const std::wstring & Str)
     }
 }
 
-
-
 } }

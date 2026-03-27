@@ -35,12 +35,8 @@
 #include "defines.h"
 #include "resource.h"
 #include "docbuilder.h"
-
-
 // The module attribute causes DllMain, DllRegisterServer and DllUnregisterServer to be automatically implemented for you
 [ module(dll, uuid = "{7368AB25-7082-4815-8AE5-A30C2ABDD2A0}", 
 		 name = "onlyofficedocbuilder", 
 		 helpstring = "onlyofficedocbuilder 1.0 Type Library",
 		 resource_name = "IDR_ONLYOFFICEDOCBUILDER") ];
-
-		 

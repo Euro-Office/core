@@ -95,8 +95,6 @@ public:
 	mutable std::wstring to_string_cache;
 
 };
-
-
 DEFINE_NAME_CLASS(Ref)
 DEFINE_NAME_CLASS(Ref8)
 DEFINE_NAME_CLASS(Ref8U)
@@ -242,8 +240,6 @@ public:
 	}
 
 };
-
-
 typedef CellRangeRef_T<Ref_name, unsigned short, unsigned char, rel_Absent> Ref;
 typedef CellRangeRef_T<Ref8_name, unsigned short, unsigned short, rel_Absent> Ref8;
 typedef CellRangeRef_T<Ref8U_name, unsigned short, unsigned short, rel_Absent> Ref8U;
@@ -254,7 +250,5 @@ typedef CellRangeRef_T<RFX_name, _INT32, _INT32, rel_Absent> RFX;
 
 typedef CellRangeRef_T<RgceArea_name, unsigned short, unsigned short, rel_Present> RgceArea;
 typedef CellRangeRef_T<RgceAreaRel_name, short, short, rel_Present> RgceAreaRel;
-
-
 } // namespace XLS
 

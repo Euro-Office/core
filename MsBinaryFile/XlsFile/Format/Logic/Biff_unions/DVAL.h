@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DVAL union of records 
 class DVAL: public CompositeObject
 {

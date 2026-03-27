@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of RecipName record in BIFF8
 class RecipName: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~RecipName();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeRecipName;

@@ -1074,8 +1074,6 @@ namespace MathEquation
 				break;
 		}
 		m_aNArrayCutStack.push(lCount);
-
-
 		WriteItemEnd(nCurPos1);
 	}
 	void BinaryEquationWriter::EndIntegral  ()
@@ -1128,8 +1126,6 @@ namespace MathEquation
 			//+ctrlprp
 			WriteItemEnd(nCurPos1);
 		}
-
-
 		int nCurPos2 = WriteItemStart(BinDocxRW::c_oSer_OMathContentType::Element);
 		m_aLimitStack.push(nCurPos2);
 		int nCurPos3 = WriteItemStart(BinDocxRW::c_oSer_OMathContentType::GroupChr);
@@ -1537,8 +1533,6 @@ namespace MathEquation
 			bEqArrayStart = true;
 			nElemPos = pWriter->WriteItemStart(BinDocxRW::c_oSer_OMathContentType::EqArr);
 			m_aBaseStack.push(nElemPos);
-
-
 			nElemPos = pWriter->WriteItemStart(BinDocxRW::c_oSer_OMathContentType::EqArrPr);
 
 			pWriter->WriteItemVal(BinDocxRW::c_oSer_OMathBottomNodesType::McJc, nHAlignPile);
@@ -1548,8 +1542,6 @@ namespace MathEquation
             pWriter->m_pStream->WriteBYTE(BinDocxRW::c_oSerPropLenType::Long);
 			pWriter->m_aRowsPosCounter.push( pWriter->WriteItemWithLengthStart());
 			pWriter->WriteItemEnd(nCurPos1);
-
-
 
 			pWriter->WriteItemEnd(nElemPos);
 
@@ -1572,8 +1564,6 @@ namespace MathEquation
 			bEqArrayStart = true;
 			nElemPos = pWriter->WriteItemStart(BinDocxRW::c_oSer_OMathContentType::EqArr);
 			m_aBaseStack.push(nElemPos);
-
-
 			nElemPos = pWriter->WriteItemStart(BinDocxRW::c_oSer_OMathContentType::EqArrPr);
 
 			pWriter->WriteItemVal(BinDocxRW::c_oSer_OMathBottomNodesType::McJc, nHAlignPile);
@@ -1583,8 +1573,6 @@ namespace MathEquation
             pWriter->m_pStream->WriteBYTE(BinDocxRW::c_oSerPropLenType::Long);
 			pWriter->m_aRowsPosCounter.push(pWriter->WriteItemWithLengthStart());
 			pWriter->WriteItemEnd(nCurPos1);
-
-
 
 			pWriter->WriteItemEnd(nElemPos);
 

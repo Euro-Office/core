@@ -32,8 +32,6 @@
 #pragma once
 
 #include "IStruct.h"
-
-
 namespace PPT
 {
 struct SmallRectStruct : public IStruct
@@ -42,8 +40,6 @@ struct SmallRectStruct : public IStruct
     _INT16 m_nLeft;
     _INT16 m_nRight;
     _INT16 m_nBottom;
-
-
     void ReadFromStream(POLE::Stream *pStream) override;
 };
 }

@@ -65,8 +65,6 @@ WorkBookStream::WorkBookStream()
 WorkBookStream::~WorkBookStream()
 {
 }
-
-
 BaseObjectPtr WorkBookStream::clone()
 {
 	return BaseObjectPtr(new WorkBookStream(*this));

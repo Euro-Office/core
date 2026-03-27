@@ -331,8 +331,6 @@ namespace PPT
         HRESULT put_EdgeAlpha (LONG val);
         HRESULT get_EdgeDist (double* val);
         HRESULT put_EdgeDist (double val);
-
-
         HRESULT SetFont(std::wstring bsXML);
         HRESULT SetPen(std::wstring bsXML);
         HRESULT SetBrush(std::wstring bsXML);
@@ -371,8 +369,6 @@ namespace PPT
 
 			m_oInstalledFont = m_oFont;
 		}
-
-
 	public:
 
 		Aggplus::CGraphicsPathSimpleConverter*		m_pSimpleGraphicsConverter;		// конвертер сложных гафических путей в простые

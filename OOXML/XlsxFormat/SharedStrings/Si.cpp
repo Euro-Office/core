@@ -141,8 +141,6 @@ namespace OOX
 			ptr->fRichStr = false;
 			for(auto i = 0; i < m_arrItems.size(); i++)
 			{
-				
-				
 				if(m_arrItems[i]->getType() == OOX::et_x_t)
 				{
 					auto text = static_cast<CText*>(m_arrItems[i]);

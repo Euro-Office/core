@@ -40,8 +40,6 @@
 
 #include "office_elements.h"
 #include "office_elements_create.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
 
@@ -85,8 +83,6 @@ void style_properties::add_child_element( xml::sax * Reader, const std::wstring 
 		CP_CREATE_ELEMENT(text_list_style_);
 	}
 }
-
-
 }
 }
 

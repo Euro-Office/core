@@ -48,12 +48,8 @@ public:
 	bool m_bIsNoFontSubstitution;
 
     BYTE m_lfPitchAndFamily;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
-
-
 class CRecordFontEmbedDataBlob : public CUnknownRecord
 {
 public:

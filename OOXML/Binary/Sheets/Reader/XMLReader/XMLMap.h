@@ -64,8 +64,6 @@ struct XmlNode
     /// @brief все ноды предки
     std::set<std::shared_ptr<XmlNode>> parents;
 };
-
-
 /// @brief класс осуществляющий считывание xml файла и построение его табличной структуры для дальнейшей конвертации
 class XMLMap
 {

@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 #include "../Biff12_structures/FRTBlank.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/XLWideString.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtList14 record in BIFF12

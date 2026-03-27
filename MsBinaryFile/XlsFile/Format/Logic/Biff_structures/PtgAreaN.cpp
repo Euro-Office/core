@@ -60,14 +60,10 @@ void PtgAreaN::set_base_ref(const CellRef& cell_base_ref_new)
 	area -= cell_base_ref;
     areaXlsb -= cell_base_ref;
 }
-
-
 BiffStructurePtr PtgAreaN::clone()
 {
 	return BiffStructurePtr(new PtgAreaN(*this));
 }
-
-
 void PtgAreaN::loadFields(CFRecord& record)
 {
     global_info = record.getGlobalWorkbookInfo();
@@ -130,8 +126,6 @@ void PtgAreaN::writeFields(CFRecord& record)
 	}
 
 }
-
-
 void PtgAreaN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
     if (global_info->Version < 0x0800)
@@ -144,7 +138,5 @@ void PtgAreaN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool fu
         ptg_stack.push((areaXlsb + cell_base_ref).toString(true, true));
     }
 }
-
-
 } // namespace XLS
 

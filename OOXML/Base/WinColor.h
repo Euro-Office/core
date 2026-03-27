@@ -126,8 +126,6 @@
 #ifndef COLOR_INACTIVECAPTION
 #define COLOR_INACTIVECAPTION        3
 #endif
-
-
 #ifndef COLOR_INACTIVECAPTIONTEXT
 #define COLOR_INACTIVECAPTIONTEXT    19
 #endif
@@ -159,8 +157,6 @@
 #ifndef COLOR_MENUBAR
 #define COLOR_MENUBAR           30
 #endif
-
-
 #ifndef COLOR_MENUTEXT
 #define COLOR_MENUTEXT          7
 #endif

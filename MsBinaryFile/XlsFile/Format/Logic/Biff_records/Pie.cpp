@@ -38,13 +38,9 @@ namespace XLS
 Pie::Pie()
 {
 }
-
-
 Pie::~Pie()
 {
 }
-
-
 BaseObjectPtr Pie::clone()
 {
 	return BaseObjectPtr(new Pie(*this));

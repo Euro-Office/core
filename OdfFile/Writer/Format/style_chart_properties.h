@@ -52,8 +52,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 class chart_format_properties
 {
 public:

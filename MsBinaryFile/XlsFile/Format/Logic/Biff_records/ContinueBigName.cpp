@@ -38,13 +38,9 @@ namespace XLS
 ContinueBigName::ContinueBigName()
 {
 }
-
-
 ContinueBigName::~ContinueBigName()
 {
 }
-
-
 BaseObjectPtr ContinueBigName::clone()
 {
 	return BaseObjectPtr(new ContinueBigName(*this));

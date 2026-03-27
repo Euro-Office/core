@@ -33,8 +33,6 @@
 #include "header_footer.h"
 #include <xml/attributes.h>
 
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;

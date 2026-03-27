@@ -38,13 +38,9 @@ namespace XLS
 SxIsxoper::SxIsxoper()
 {
 }
-
-
 SxIsxoper::~SxIsxoper()
 {
 }
-
-
 BaseObjectPtr SxIsxoper::clone()
 {
 	return BaseObjectPtr(new SxIsxoper(*this));

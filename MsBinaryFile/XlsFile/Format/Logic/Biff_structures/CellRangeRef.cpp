@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 CellRangeRef::CellRangeRef()
 :	rowFirst(0),
 	rowLast(0),
@@ -48,14 +46,10 @@ CellRangeRef::CellRangeRef()
 	columnLastRelative(true)
 {
 }
-
-
 CellRangeRef::CellRangeRef(const std::wstring& str_ref)
 {
 	fromString(str_ref);
 }
-
-
 CellRangeRef::CellRangeRef(const CellRef& cell_ref, const SourceType type)
 {
 	switch(type)
@@ -96,8 +90,6 @@ CellRangeRef::CellRangeRef(const CellRef& cell_ref, const SourceType type)
 	}
 
 }
-
-
 CellRangeRef::CellRangeRef(const CellRef& cell_ref1, const CellRef& cell_ref2)
 :	rowFirst(cell_ref1.getRow()),
 	rowLast(cell_ref2.getRow()),
@@ -109,8 +101,6 @@ CellRangeRef::CellRangeRef(const CellRef& cell_ref1, const CellRef& cell_ref2)
 	columnLastRelative(cell_ref2.getColumnRelative())
 {
 }
-
-
 BiffStructurePtr CellRangeRef::clone()
 {
 	return BiffStructurePtr(new CellRangeRef(*this));
@@ -171,8 +161,6 @@ const std::wstring CellRangeRef::toString(const bool useShortForm, const bool xl
 	}
 	return to_string_cache;
 }
-
-
 void CellRangeRef::fromString(const std::wstring& str)
 {
 	std::wstring::const_iterator str_begin = str.begin();
@@ -212,20 +200,14 @@ void CellRangeRef::fromString(const std::wstring& str)
 	to_string_cache.clear();
 }
 
-
-
 CellRangeRef::operator std::wstring  () const
 {
 	return toString().c_str();
 }
-
-
 const CellRef CellRangeRef::getTopLeftCell() const
 {
 	return CellRef(rowFirst, columnFirst, rowFirstRelative, columnFirstRelative);
 }
-
-
 void CellRangeRef::operator+=(const CellRef& appended_ref)
 {
 	rowFirst	+= rowFirstRelative ? appended_ref.getRow() : 0;
@@ -234,8 +216,6 @@ void CellRangeRef::operator+=(const CellRef& appended_ref)
 	columnLast	+= columnLastRelative ? appended_ref.getColumn() : 0;
 	to_string_cache.clear();
 }
-
-
 void CellRangeRef::operator-=(const CellRef& subtracted_ref)
 {
 	rowFirst	-= rowFirstRelative ? subtracted_ref.getRow() : 0;
@@ -244,15 +224,11 @@ void CellRangeRef::operator-=(const CellRef& subtracted_ref)
 	columnLast	-= columnLastRelative ? subtracted_ref.getColumn() : 0;
 	to_string_cache.clear();
 }
-
-
 void CellRangeRef::setColumnRelativity(const bool is_relative)
 {
 	rowFirstRelative = rowLastRelative = is_relative;
 	to_string_cache.clear();
 }
-
-
 void CellRangeRef::setRowRelativity(const bool is_relative)
 {
 	columnFirstRelative = columnLastRelative = is_relative;

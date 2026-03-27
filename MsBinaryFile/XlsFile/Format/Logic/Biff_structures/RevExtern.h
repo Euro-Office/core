@@ -47,8 +47,6 @@ public:
 	RevExtern();
 	RevExtern(CFRecord& record);
 	BiffStructurePtr clone();
-
-	
 	void load(CFRecord& record) override; // No type info
 	void save(CFRecord& record) override;
  // No type info

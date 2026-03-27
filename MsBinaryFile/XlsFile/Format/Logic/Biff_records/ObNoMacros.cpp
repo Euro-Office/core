@@ -38,13 +38,9 @@ namespace XLS
 ObNoMacros::ObNoMacros()
 {
 }
-
-
 ObNoMacros::~ObNoMacros()
 {
 }
-
-
 BaseObjectPtr ObNoMacros::clone()
 {
 	return BaseObjectPtr(new ObNoMacros(*this));

@@ -47,8 +47,6 @@ BaseObjectPtr CRN::clone()
 {
 	return BaseObjectPtr(new CRN(*this));
 }
-
-
 void CRN::readFields(CFRecord& record)
 {
 	record >> colLast >> colFirst >> row;

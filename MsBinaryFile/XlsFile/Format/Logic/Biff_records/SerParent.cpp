@@ -41,13 +41,9 @@ namespace XLS
 SerParent::SerParent()
 {
 }
-
-
 SerParent::~SerParent()
 {
 }
-
-
 BaseObjectPtr SerParent::clone()
 {
 	return BaseObjectPtr(new SerParent(*this));
@@ -100,7 +96,5 @@ void SerParent::recalc(size_t current_index, std::vector<BaseObjectPtr> & arSERI
 
 	}
 }
-
-
 } // namespace XLS
 

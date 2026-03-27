@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SORT::SORT()
 {
 }
-
-
 SORT::~SORT()
 {
 }
-
-
 BaseObjectPtr SORT::clone()
 {
 	return BaseObjectPtr(new SORT(*this));
 }
-
-
 // SORT = RRSort *Continue
 const bool SORT::loadContent(BinProcessor& proc)
 {

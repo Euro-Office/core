@@ -95,8 +95,6 @@ namespace odf_writer
 
 		inline element::~element()
 		{}
-
-	
 		class simple_element : public element
 		{
 		public:

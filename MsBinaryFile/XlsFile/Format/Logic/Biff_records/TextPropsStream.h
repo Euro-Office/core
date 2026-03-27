@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of TextPropsStream record in BIFF8
 class TextPropsStream: public BiffRecord
 {

@@ -41,8 +41,6 @@ void CRecordTimeCommandBehaviorAtom::ReadFromStream(SRecordHeader &oHeader, POLE
 
     m_fTypePropertyUsed     =	( 0x01 == ( 0x01 & (flags) ) );
     m_fCommandPropertyUsed  =	( 0x02 == ( 0x02 & (flags) ) );
-
-
     m_eCommandBehaviorType  = (TimeCommandBehaviorTypeEnum)
                                 StreamUtils::ReadLONG(pStream);
 }

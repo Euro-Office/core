@@ -35,8 +35,6 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr OfficeArtMetafileHeader::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtMetafileHeader(*this));
@@ -50,9 +48,5 @@ void OfficeArtMetafileHeader::load(XLS::CFRecord& record)
 	
 	record >> cbSave >> compression >> filter;
 }
-
-
-
-
 
 } // namespace XLS

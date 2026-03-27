@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 //#include <iosfwd>
 #include <string>
 #include "odfattributes.h"

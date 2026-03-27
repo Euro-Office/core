@@ -38,13 +38,9 @@ namespace XLS
 LRng::LRng()
 {
 }
-
-
 LRng::~LRng()
 {
 }
-
-
 BaseObjectPtr LRng::clone()
 {
 	return BaseObjectPtr(new LRng(*this));

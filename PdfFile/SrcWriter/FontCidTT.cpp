@@ -57,8 +57,6 @@ namespace PdfWriter
 		// Проверяем установлен ли 31 бит
 		if (!(pOs2->ulCodePageRange1 & 0x80000000) && !(pOs2->ulCodePageRange1 == 0 && pOs2->ulCodePageRange2 == 0))
 			return -1;
-
-
 		for (int nIndex = 0; nIndex < pFace->num_charmaps; nIndex++)
 		{
 			// Symbol

@@ -699,8 +699,6 @@ namespace SimpleTypes
 	{
 		m_sValue = sValue;
 	}
-
-
 	std::wstring CCalloutDrop::FromString(const std::wstring &sValue)
 	{
 		m_sValue = sValue;
@@ -1342,8 +1340,6 @@ namespace SimpleTypes
 	}
 
 } // SimpleTypes
-
-
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -2291,8 +2287,6 @@ namespace SimpleTypes
 
 				nStartPos = nEndPos + 1;
 			}
-
-
 			return 0;
 		}
 
@@ -3551,8 +3545,6 @@ namespace SimpleTypes
 
 				nStartPos = nEndPos + 1;
 			}
-
-
 			return 0;
 		}
 

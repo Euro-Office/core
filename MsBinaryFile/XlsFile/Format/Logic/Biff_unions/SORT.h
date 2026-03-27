@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SORT union of records 
 class SORT: public CompositeObject
 {

@@ -46,8 +46,6 @@ QueryTableStream::QueryTableStream()
 QueryTableStream::~QueryTableStream()
 {
 }
-
-
 BaseObjectPtr QueryTableStream::clone()
 {
         return BaseObjectPtr(new QueryTableStream(*this));

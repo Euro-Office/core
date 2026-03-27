@@ -36,13 +36,9 @@
 
 namespace XLS
 {
-
-
 SXADDLCACHEFIELD::SXADDLCACHEFIELD()
 {
 }
-
-
 SXADDLCACHEFIELD::~SXADDLCACHEFIELD()
 {
 }
@@ -50,8 +46,6 @@ BaseObjectPtr SXADDLCACHEFIELD::clone()
 {
 	return BaseObjectPtr(new SXADDLCACHEFIELD(*this));
 }
-
-
 // SXADDLCACHEFIELD = SXAddl_SXCCacheField_SXDId *Continue_SxaddlSxString 
 //                    [SXAddl_SXCCacheField_SXDCaption *Continue_SxaddlSxString] 
 //                    [SXAddl_SXCCacheField_SXDProperty [SXAddl_SXCCacheField_SXDPropName *Continue_SxaddlSxString]] 

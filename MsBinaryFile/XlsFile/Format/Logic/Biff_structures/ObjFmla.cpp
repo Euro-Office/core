@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 ObjFmla::ObjFmla(const bool is_part_of_FtPictFmla) : is_part_of_FtPictFmla_(is_part_of_FtPictFmla), bFmlaExist(false), bInfoExist(false)
 {
 }
@@ -87,7 +85,5 @@ void ObjFmla::save(CFRecord& record)
 	record.skipNunBytes(cbFmla);
 
 }
-
-
 } // namespace XLS
 

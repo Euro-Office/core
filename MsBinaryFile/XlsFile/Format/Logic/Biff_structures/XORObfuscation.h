@@ -45,8 +45,6 @@ public:
 	BiffStructurePtr clone();
 
 	virtual void load(CFRecord& record);
-
-
 	static const ElementType	type = typeXORObfuscation;
 
 	unsigned short key;

@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 PtgExtraCol::PtgExtraCol()
 {
 }
-
-
 PtgExtraCol::PtgExtraCol(CFRecord& record)
 {
     load(record);
 }
-
-
 BiffStructurePtr PtgExtraCol::clone()
 {
     return BiffStructurePtr(new PtgExtraCol(*this));
 }
-
-
 void PtgExtraCol::load(CFRecord& record)
 {
     record >> col;
@@ -62,12 +54,8 @@ void PtgExtraCol::save(CFRecord& record)
 {
 	record << col;
 }
-
-
 const std::wstring PtgExtraCol::toString() const
 {
     return std::to_wstring(col);
 }
-
-
 } // namespace XLS

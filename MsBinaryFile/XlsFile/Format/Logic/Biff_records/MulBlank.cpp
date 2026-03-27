@@ -51,8 +51,6 @@ std::wstring getColAddress(int col)
         return std::wstring(1, (wchar_t)(L'A' + col));
 }
 
-
-
 std::wstring getRowAddress(int row)
 {
     return std::to_wstring(row + 1);
@@ -150,16 +148,10 @@ int MulBlank::serialize(std::wostream & stream)
 	return 0;
 }
 
-
-
 BiffStructurePtr IXFCellMulBlankSpecial::clone()
 {
 	return BiffStructurePtr(new IXFCellMulBlankSpecial(*this));
 }
-
-
-
-
 void IXFCellMulBlankSpecial::load(CFRecord& record, const size_t num_cells)
 {
 	size_t sz = (record.getDataSize() - record.getRdPtr()-2)/2;
@@ -188,8 +180,6 @@ void IXFCellMulBlankSpecial::load(CFRecord& record, const size_t num_cells)
 		common_ixfe = 0; // just to avoid warnings
 	}
 }
-
-
 
 } // namespace XLS
 

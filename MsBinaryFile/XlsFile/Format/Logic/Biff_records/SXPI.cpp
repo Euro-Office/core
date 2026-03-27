@@ -38,13 +38,9 @@ namespace XLS
 SXPI::SXPI()
 {
 }
-
-
 SXPI::~SXPI()
 {
 }
-
-
 BaseObjectPtr SXPI::clone()
 {
 	return BaseObjectPtr(new SXPI(*this));

@@ -62,8 +62,6 @@ bool read_doc_element::read_sax( xml::sax * Reader )
 	{
 		return false;
 	}
-
-
     while (true)
 	{
 		nodeType = Reader->next(currentDepth);

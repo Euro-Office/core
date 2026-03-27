@@ -38,24 +38,16 @@
 
 namespace XLS
 {
-
-
 SXADDLFIELD12::SXADDLFIELD12()
 {
 }
-
-
 SXADDLFIELD12::~SXADDLFIELD12()
 {
 }
-
-
 BaseObjectPtr SXADDLFIELD12::clone()
 {
 	return BaseObjectPtr(new SXADDLFIELD12(*this));
 }
-
-
 /*
 SXADDLFIELD12 = SXAddl_SXCField12_SXDId *Continue_SxaddlSxString SXAddl_SXCField12_SXDVer12Info 
 				SXAddl_SXCField12_SXDVerUpdInv [SXAddl_SXCField12_SXDMemberCaption *Continue_SxaddlSxString] 

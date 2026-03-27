@@ -122,8 +122,6 @@ void xlsx_serialize(std::wostream & _Wostream, const xlsx_border & border)
                 CP_XML_ATTR(L"diagonalDown", border.diagonalDown.get());
             if (border.outline && border.outline.get() == false)
                 CP_XML_ATTR(L"outline", border.outline.get());
-
-
             xlsx_serialize(CP_XML_STREAM(), border.left, L"left");
             xlsx_serialize(CP_XML_STREAM(), border.right, L"right");
             xlsx_serialize(CP_XML_STREAM(), border.top, L"top");

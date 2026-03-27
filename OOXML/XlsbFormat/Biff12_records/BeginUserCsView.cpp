@@ -74,8 +74,6 @@ namespace XLSB
 		SETBIT(flags, 2, fZoomToFit)
 
 		record << guid_ << iTabId << dwScale << flags;
-
-
 	}
 
 } // namespace XLSB

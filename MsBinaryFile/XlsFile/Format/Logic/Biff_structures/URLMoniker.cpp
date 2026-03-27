@@ -35,25 +35,17 @@
 
 namespace OSHARED
 {
-
-
 URLMoniker::URLMoniker()
 {
 }
-
-
 URLMoniker::URLMoniker(XLS::CFRecord& record)
 {
 	load(record);
 }
-
-
 XLS::BiffStructurePtr URLMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new URLMoniker(*this));
 }
-
-
 void URLMoniker::load(XLS::CFRecord& record)
 {
 	_UINT32 length;

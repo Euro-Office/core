@@ -31,8 +31,6 @@
  */
 #include "sectorcollection.h"
 #include "cfexception.h"
-
-
 using namespace CFCPP;
 
 SectorCollection::SectorCollection()

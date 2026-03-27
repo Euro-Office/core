@@ -38,13 +38,9 @@ namespace XLS
 RRTabId::RRTabId()
 {
 }
-
-
 RRTabId::~RRTabId()
 {
 }
-
-
 BaseObjectPtr RRTabId::clone()
 {
 	return BaseObjectPtr(new RRTabId(*this));

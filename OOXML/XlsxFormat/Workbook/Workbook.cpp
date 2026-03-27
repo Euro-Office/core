@@ -431,8 +431,6 @@ namespace OOX
 				if(!sups.empty())
 					ptr->m_arSUP.insert(ptr->m_arSUP.end(), sups.begin(), sups.end());
 			}
-
-
 			/* 
             if (m_oAppName.IsInit())
 			{
@@ -809,8 +807,6 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		XLS::BaseObjectPtr CWorkbook::WriteXtiRefs() const
 		{
 			auto ptr(new XLSB::EXTERNALS);
-
-
 			auto externSheet(new XLSB::ExternSheet);
 			ptr->m_BrtExternSheet = XLS::BaseObjectPtr{externSheet};
 

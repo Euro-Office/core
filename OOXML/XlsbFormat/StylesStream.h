@@ -37,8 +37,6 @@
 #include "../XlsxFormat/WritingElement.h"
 #include <string>
 #include "../../MsBinaryFile/XlsFile/Format/Logic/CompositeObject.h"
-
-
 namespace XLSB
 {
 

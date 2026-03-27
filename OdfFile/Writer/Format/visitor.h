@@ -58,8 +58,6 @@ public:
     virtual void visit(const visitable_element2& val);
     и т.д.
     (в случае неконстатности - убираем const)
-
-
 class table_round : public base_visitor, 
     public const_visitor<office_body>,
     public const_visitor<office_spreadsheet>,
@@ -122,8 +120,6 @@ namespace cpdoccore {
     public:
         virtual void visit(T const& t) = 0;
     };
-
-
     class base_visitable
     {
     public:
@@ -157,8 +153,6 @@ namespace cpdoccore {
             }
         }
     };
-
-
 #define CPDOCCORE_DEFINE_VISITABLE() \
     virtual void accept(base_visitor& guest)\
     {\

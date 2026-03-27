@@ -111,8 +111,6 @@ namespace oox
 
         std::wstring	name;
         int				sub_type; //odf
-
-
         _INT32			x, y;
         _INT32			cx, cy;
 

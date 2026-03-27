@@ -40,13 +40,9 @@ BookExt::BookExt() : cb(22)
 {
 	mdFactoidDisplay = 0;
 }
-
-
 BookExt::~BookExt()
 {
 }
-
-
 BaseObjectPtr BookExt::clone()
 {
 	return BaseObjectPtr(new BookExt(*this));
@@ -75,8 +71,6 @@ void BookExt::readFields(CFRecord& record)
             fOpenedViaSafeLoad		= GETBIT(flags, 9);
         }
         else return;
-
-
         if(cb > 20)
         {
             record >> grbit1;

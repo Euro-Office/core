@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr Feat11FdaAutoFilter::clone()
 {
 	return BiffStructurePtr(new Feat11FdaAutoFilter(*this));

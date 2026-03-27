@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BaseObjectPtr LPr::clone()
 {
 	return BaseObjectPtr(new LPr(*this));

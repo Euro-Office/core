@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "BuildListSubContainer.h"
 #include "ParaBuildLevel.h"
 #include "ParaBuildAtom.h"

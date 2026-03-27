@@ -50,8 +50,6 @@ public:
 
 	virtual void load(XLS::CFRecord& record);
 	virtual void save(XLS::CFRecord& record);
-
-
 	static const XLS::ElementType	type = XLS::typeOfficeArtRGFOPTE;
 
 	void SetOptionsCount(const unsigned short count);
@@ -73,6 +71,4 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtRGFOPTE> OfficeArtRGFOPTEPtr;
-
-
 } // namespace XLS

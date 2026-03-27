@@ -38,13 +38,9 @@ namespace XLS
 SupBook::SupBook() : bOleLink(false), bSimple(false), bPath(false)
 {
 }
-
-
 SupBook::~SupBook()
 {
 }
-
-
 BaseObjectPtr SupBook::clone()
 {
 	return BaseObjectPtr(new SupBook(*this));
@@ -84,8 +80,6 @@ void SupBook::readFields(CFRecord& record)
 
 //path-string = 1 * path-character 
 //path-character = %x0020-%x0021 / %x0023-%x0029 / %x002B-%x002E / %x0030-%x0039 / %x003B / %x003D / %x0040-%x005B / %x005D-%x007B / %x007D-%xFFFF
-
-
 	bool bFilePathType = false;
 	if (!origin.empty())
 	{
@@ -200,7 +194,5 @@ void SupBook::writeFields(CFRecord& record)
         record << temp;
     }
 }
-
-
 } // namespace XLS
 

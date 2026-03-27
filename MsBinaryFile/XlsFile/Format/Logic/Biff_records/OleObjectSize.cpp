@@ -38,13 +38,9 @@ namespace XLS
 OleObjectSize::OleObjectSize()
 {
 }
-
-
 OleObjectSize::~OleObjectSize()
 {
 }
-
-
 BaseObjectPtr OleObjectSize::clone()
 {
 	return BaseObjectPtr(new OleObjectSize(*this));

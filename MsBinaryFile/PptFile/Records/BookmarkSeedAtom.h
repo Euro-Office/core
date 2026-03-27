@@ -38,8 +38,6 @@ class CRecordBookmarkSeedAtom : public CUnknownRecord
 {
 public:
     INT m_nBookmarkID = -1;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream);
 };
 }

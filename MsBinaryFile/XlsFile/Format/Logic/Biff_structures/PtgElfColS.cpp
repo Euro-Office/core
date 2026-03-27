@@ -35,20 +35,14 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgElfColS::clone()
 {
 	return BiffStructurePtr(new PtgElfColS(*this));
 }
-
-
 void PtgElfColS::loadFields(CFRecord& record)
 {
 	record.skipNunBytes(4); // unused
 }
-
-
 void PtgElfColS::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	PtgExtraElfPtr range;

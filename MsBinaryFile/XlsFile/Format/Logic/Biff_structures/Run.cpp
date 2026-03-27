@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr Run::clone()
 {
 	return BiffStructurePtr(new Run(*this));

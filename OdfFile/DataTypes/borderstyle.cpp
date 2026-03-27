@@ -183,7 +183,5 @@ const color& border_style::get_color() const
 {
     return color_;
 }
-
-
 }
 }

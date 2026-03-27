@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of LRng record in BIFF8
 class LRng: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~LRng();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

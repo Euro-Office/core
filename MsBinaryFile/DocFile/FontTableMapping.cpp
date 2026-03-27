@@ -38,14 +38,10 @@ namespace DocFileFormat
 	{
 		_ctx = ctx;
 	}
-
-
 	FontTableMapping::~FontTableMapping()
 	{
 		RELEASEOBJECT (m_pXmlWriter);
 	}
-
-
 	void FontTableMapping::Apply( IVisitable* visited )
 	{
 		StringTable<FontFamilyName>* table = static_cast<StringTable<FontFamilyName>*>( visited );

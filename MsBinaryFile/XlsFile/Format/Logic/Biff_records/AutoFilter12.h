@@ -34,8 +34,6 @@
 #include "BiffRecordContinued.h"
 
 #include "../Biff_structures/FrtRefHeader.h"
-
-
 namespace XLS
 {
 

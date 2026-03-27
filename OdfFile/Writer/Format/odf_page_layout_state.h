@@ -48,8 +48,6 @@ class odf_page_layout_context;
 
 class style_page_layout_properties;
 class style_header_footer_properties;
-
-
 struct 	odf_element_state
 {
 	odf_element_state() {}

@@ -75,8 +75,6 @@ namespace PdfWriter
 			pMarkInfo->Add("Marked", true);
 			Add("MarkInfo", pMarkInfo);
 			Add("StructTreeRoot", new CStructureTreeRoot(pXref));
-
-
 			CArrayObject* pArray = new CArrayObject();
 			Add("OutputIntents", pArray);
 

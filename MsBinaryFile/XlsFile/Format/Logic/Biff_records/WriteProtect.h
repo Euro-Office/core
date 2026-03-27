@@ -37,8 +37,6 @@ namespace XLS
 {
 
 class StreamCacheReader;
-
-
 // Logical representation of WriteProtect record in BIFF8
 class WriteProtect: public BiffRecord
 {

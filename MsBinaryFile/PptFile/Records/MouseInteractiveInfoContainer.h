@@ -41,8 +41,6 @@ public:
     CRecordInteractiveInfoAtom  interactiveInfoAtom;
     nullable<CRecordCString>    macroNameAtom;
     bool                        isOver = false; // click = 0, over = 1
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

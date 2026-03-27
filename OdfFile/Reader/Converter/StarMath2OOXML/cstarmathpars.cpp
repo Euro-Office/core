@@ -5223,5 +5223,3 @@ namespace StarMath
 		return tSize;
 	}
 }
-
-

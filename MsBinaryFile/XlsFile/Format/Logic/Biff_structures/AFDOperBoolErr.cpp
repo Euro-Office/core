@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AFDOperBoolErr::clone()
 {
 	return BiffStructurePtr(new AFDOperBoolErr(*this));
@@ -54,7 +52,5 @@ void AFDOperBoolErr::save(CFRecord& record)
     record << bes;
     record.reserveNunBytes(6);
 }
-
-
 } // namespace XLS
 

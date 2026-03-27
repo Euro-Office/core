@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AFDOperRk::clone()
 {
 	return BiffStructurePtr(new AFDOperRk(*this));
@@ -55,7 +53,5 @@ void AFDOperRk::save(CFRecord& record)
     record << rk;
     record.reserveNunBytes(4);
 }
-
-
 } // namespace XLS
 

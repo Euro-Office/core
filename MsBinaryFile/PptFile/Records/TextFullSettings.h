@@ -39,8 +39,6 @@
 #include "TextInteractiveInfoAtom.h"
 
 #include "../Drawing/Interactive.h"
-
-
 namespace PPT
 {
 class CTextFullSettings

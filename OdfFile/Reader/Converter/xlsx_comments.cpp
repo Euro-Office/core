@@ -151,6 +151,4 @@ xlsx_comments_ptr xlsx_comments::create()
 
 }
 }
-
-
        

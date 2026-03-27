@@ -30,8 +30,6 @@
  *
  */
 #include "ClassesAtom.h"
-
-
 using namespace PPT;
 
 CUserEdit::CUserEdit()

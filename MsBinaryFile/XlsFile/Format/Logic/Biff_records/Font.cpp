@@ -340,8 +340,6 @@ namespace XLS
 		}
 		return 0;
 	}
-
-
 	int Font::serialize_properties(std::wostream & stream, bool isRPr)
 	{
 		CP_XML_WRITER(stream)

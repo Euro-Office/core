@@ -38,8 +38,6 @@
 
 namespace cpdoccore {
 namespace oox {
-
-
 void oox_layout::oox_serialize(std::wostream & _Wostream)
 {
     CP_XML_WRITER(_Wostream)

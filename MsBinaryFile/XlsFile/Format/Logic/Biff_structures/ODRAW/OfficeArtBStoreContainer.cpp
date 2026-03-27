@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtBStoreContainer::OfficeArtBStoreContainer()
 :	OfficeArtRecord(0, BStoreContainer)
 {	
 }
-
-
 XLS::BiffStructurePtr OfficeArtBStoreContainer::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtBStoreContainer(*this));

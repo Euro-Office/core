@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ISSTInf::clone()
 {
 	return BiffStructurePtr(new ISSTInf(*this));
 }
-
-
 void ISSTInf::load(CFRecord& record)
 {
 	record >> ib >> cbOffset;
@@ -53,7 +49,5 @@ void ISSTInf::save(CFRecord& record)
     record << ib << cbOffset;
     record.reserveNunBytes(2);
 }
-
-
 } // namespace XLS
 

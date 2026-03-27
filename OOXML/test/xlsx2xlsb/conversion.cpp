@@ -65,8 +65,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"simple1.xlsx", L"result.xlsb", L"simple1.xlsb");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -84,8 +82,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"simple2.xlsx", L"result.xlsb", L"simple2.xlsb");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -103,8 +99,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"fmla.xlsx", L"result.xlsb", L"fmla.xlsb");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -136,8 +130,6 @@ _UINT32 readBinaryFiles(const std::wstring &filePath, const std::wstring &exampl
 
     return 0;
 }
-
-
 TEST_F(XlsbSimpleTests1, ContentTypesTest)
 {
     auto tempDir = XlsbSimpleTests1::tempDir;
@@ -380,8 +372,6 @@ TEST_F(XlsbSimpleTests2, ChartSheetTest)
     ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
     ASSERT_EQ(fileContent, exampleContent);
 }
-
-
 TEST_F(XlsbFmlaTests, ContentTypesTest)
 {
     auto tempDir = XlsbFmlaTests::tempDir;
@@ -470,6 +460,4 @@ TEST_F(XlsbFmlaTests, WorksheetsTest3)
     ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
     ASSERT_EQ(fileContent, exampleContent);
 }
-
-
 }

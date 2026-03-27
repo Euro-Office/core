@@ -254,7 +254,5 @@ private:
 	virtual void add_text(const std::wstring & Text);
 };
 CP_REGISTER_OFFICE_ELEMENT2(meta_user_defined);
-
-
 }
 }

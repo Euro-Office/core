@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of WOpt record in BIFF8 and BrtWebOpt record in BIFF12
 class WOpt: public BiffRecord
 {

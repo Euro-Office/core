@@ -38,8 +38,6 @@ namespace XLS
 SxName::SxName()
 {
 }
-
-
 SxName::~SxName()
 {
 }

@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Lel record in BIFF8
 class Lel: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~Lel();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 //-----------------------------

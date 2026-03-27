@@ -568,7 +568,5 @@ namespace OOX
 
 			nullable<CWindows> Windows;
 		};
-
-
 	} //Draw
 } // namespace OOX

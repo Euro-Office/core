@@ -38,13 +38,9 @@ namespace XLS
 CondFmt::CondFmt()
 {
 }
-
-
 CondFmt::~CondFmt()
 {
 }
-
-
 BaseObjectPtr CondFmt::clone()
 {
 	return BaseObjectPtr(new CondFmt(*this));
@@ -82,7 +78,5 @@ const CellRef CondFmt::getLocation() const
 	//else 
 		return sqref.getLocationFirstCell();
 }
-
-
 } // namespace XLS
 

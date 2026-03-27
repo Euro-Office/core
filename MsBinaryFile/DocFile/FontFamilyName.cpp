@@ -101,8 +101,6 @@ namespace DocFileFormat
 	//read the next \0 terminated string
 		long strStart	= reader->GetPosition();
 		long strEnd		= searchTerminationZero( reader );	
-
-
 		unsigned char *bytes = reader->ReadBytes( (int)( strEnd - strStart ), true );
 
 		if (reader->nWordVersion > 0)

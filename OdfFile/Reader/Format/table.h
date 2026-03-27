@@ -213,8 +213,6 @@ public:
     void docx_convert(oox::docx_conversion_context & Context);
     void xlsx_convert(oox::xlsx_conversion_context & Context);
     void pptx_convert(oox::pptx_conversion_context & Context);
-
-
 //    office_element_ptr			table_table_column_group_;
 //    table_columns_no_group		table_columns_no_group_;
 	office_element_ptr_array		content_;
@@ -446,8 +444,6 @@ private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
     virtual void add_text(const std::wstring & Text);
-
-
 public:
 	bool last_cell_;
 	bool empty();

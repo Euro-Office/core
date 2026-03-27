@@ -286,8 +286,6 @@ private:
 		}
 		connections_ += strm.str();
 	}
-
-
 };
 
 xlsx_pivots_context::xlsx_pivots_context() : impl_(new xlsx_pivots_context::Impl())
@@ -599,8 +597,6 @@ void xlsx_pivots_context::Impl::sort_fields()
 
 	if (!data_col_repeate && (bAddRepeateCol || (count_items_col == 0 && current_.bAxisCol)) && (current_.grand_total == 1 || current_.grand_total == 2 || current_.data_fields.size() > 1 ))/* && bShowEmptyCol*/ ///* || (bEmptyColCache && current_.grand_total < 0)*/?? Financial Execution (template).ods
 		current_.col_fields.push_back(-2);	
-	
-
 }
 void xlsx_pivots_context::Impl::serialize_view(std::wostream & strm)
 {
@@ -1601,7 +1597,5 @@ void xlsx_pivots_context::add_connections(std::wstring connections)
 xlsx_pivots_context::~xlsx_pivots_context()
 {
 }
-
-
 }
 }

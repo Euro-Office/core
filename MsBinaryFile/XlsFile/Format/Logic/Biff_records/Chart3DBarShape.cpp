@@ -38,13 +38,9 @@ namespace XLS
 Chart3DBarShape::Chart3DBarShape()
 {
 }
-
-
 Chart3DBarShape::~Chart3DBarShape()
 {
 }
-
-
 BaseObjectPtr Chart3DBarShape::clone()
 {
 	return BaseObjectPtr(new Chart3DBarShape(*this));
@@ -88,7 +84,5 @@ int Chart3DBarShape::serialize(std::wostream & _stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

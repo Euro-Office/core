@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 #include "../Biff12_structures/Blxf.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtBorder record in BIFF12

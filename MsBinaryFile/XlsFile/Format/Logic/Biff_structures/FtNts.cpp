@@ -72,7 +72,5 @@ void FtNts::save(CFRecord& record)
 	record << guid_num << fSharedNote;
 	record.reserveNunBytes(4);
 }
-
-
 } // namespace XLS
 

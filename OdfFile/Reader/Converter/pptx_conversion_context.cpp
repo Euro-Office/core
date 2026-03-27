@@ -171,8 +171,6 @@ namespace cpdoccore {
 				if (!master_notes_ && master->presentation_notes_)
 					master_notes_ = master->presentation_notes_;
 			}
-
-
 			end_master();
 		}
 

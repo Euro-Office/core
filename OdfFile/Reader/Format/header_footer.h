@@ -80,8 +80,6 @@ public:
     
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_header_footer_properties);
-
-
 class common_style_header_footer_attlist
 {
 public:

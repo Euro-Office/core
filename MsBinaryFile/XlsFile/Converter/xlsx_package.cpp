@@ -900,7 +900,5 @@ void xl_comments::write(const std::wstring & RootPath)
 		package::simple_element(comments_[i].filename, comments_[i].content).write(RootPath);        
 	}
 }
-
-
 }
 }

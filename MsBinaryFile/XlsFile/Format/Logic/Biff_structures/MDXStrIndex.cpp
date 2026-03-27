@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr MDXStrIndex::clone()
 {
 	return BiffStructurePtr(new MDXStrIndex(*this));

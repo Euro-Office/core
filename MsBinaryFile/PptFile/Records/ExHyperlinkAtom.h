@@ -32,8 +32,6 @@
 #pragma once
 #include "../Reader/Records.h"
 #include "CString.h"
-
-
 namespace PPT
 {
 class CRecordExHyperlinkAtom : public CUnknownRecord
@@ -41,8 +39,6 @@ class CRecordExHyperlinkAtom : public CUnknownRecord
 
 public:
     UINT m_nHyperlinkID = 0;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -53,8 +49,6 @@ public:
     nullable<CRecordCString> m_friendlyNameAtom;
     nullable<CRecordCString> m_targetAtom;
     nullable<CRecordCString> m_locationAtom;
-
-
     bool hasCString()const;
 
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;

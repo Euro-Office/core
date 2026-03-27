@@ -114,7 +114,5 @@ private:
 
 	int rId_;
 };
-
-
 }
 }

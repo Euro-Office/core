@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 RevName::RevName()
 {
 }
-
-
 RevName::RevName(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevName::clone()
 {
 	return BiffStructurePtr(new RevName(*this));
 }
-
-
 void RevName::load(CFRecord& record)
 {
 	unsigned char book_type = *record.getCurData<unsigned char>();
@@ -89,7 +81,5 @@ void RevName::save(CFRecord& record)
 		record << name;
 	}
 }
-
-
 } // namespace XLS
 

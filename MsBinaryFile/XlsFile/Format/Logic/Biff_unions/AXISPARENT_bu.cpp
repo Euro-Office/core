@@ -38,28 +38,18 @@
 #include "../Biff_records/Begin.h"
 #include "../Biff_records/Pos.h"
 #include "../Biff_records/End.h"
-
-
 namespace XLS
 {
-
-
 AXISPARENT::AXISPARENT()
 {
 }
-
-
 AXISPARENT::~AXISPARENT()
 {
 }
-
-
 BaseObjectPtr AXISPARENT::clone()
 {
 	return BaseObjectPtr(new AXISPARENT(*this));
 }
-
-
 // AXISPARENT = AxisParent Begin Pos [AXES] 1*4CRT End
 const bool AXISPARENT::loadContent(BinProcessor& proc)
 {
@@ -134,7 +124,5 @@ void AXISPARENT::concatinate_second (BaseObjectPtr & addit)
 	}
 
 }
-
-
 } // namespace XLS
 

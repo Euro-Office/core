@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr GradStop::clone()
 {
 	return BiffStructurePtr(new GradStop(*this));

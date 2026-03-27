@@ -381,8 +381,6 @@ namespace OOX
             void toBin(XLS::StreamCacheWriterPtr& writer);
 			XLS::BaseObjectPtr toBin14();
 			void toXLS(XLS::BaseObjectPtr fmtsPtr);
-
-
 			virtual EElementType getType () const;
 			bool IsUsage();
 

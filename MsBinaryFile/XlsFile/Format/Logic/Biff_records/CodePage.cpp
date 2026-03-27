@@ -38,13 +38,9 @@ namespace XLS
 CodePage::CodePage()
 {
 }
-
-
 CodePage::~CodePage()
 {
 }
-
-
 BaseObjectPtr CodePage::clone()
 {
 	return BaseObjectPtr(new CodePage(*this));

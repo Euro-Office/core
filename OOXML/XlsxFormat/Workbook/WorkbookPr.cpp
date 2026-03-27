@@ -224,8 +224,6 @@ namespace OOX
 			m_oShowObjects                  = ptr->mdDspObj == 2?false:true;
 			m_oShowPivotChartFilter         = ptr->fShowPivotChartFilter;
 			m_oUpdateLinks                  = (SimpleTypes::Spreadsheet::EUpdateLinksType)ptr->grbitUpdateLinks;
-
-
 		}
 		CWorkbookProtection::CWorkbookProtection()
 		{

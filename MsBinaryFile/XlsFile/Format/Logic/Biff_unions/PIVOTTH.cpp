@@ -37,24 +37,16 @@
 
 namespace XLS
 {
-
-
 PIVOTTH::PIVOTTH()
 {
 }
-
-
 PIVOTTH::~PIVOTTH()
 {
 }
-
-
 BaseObjectPtr PIVOTTH::clone()
 {
 	return BaseObjectPtr(new PIVOTTH(*this));
 }
-
-
 // PIVOTTH = SXTH *ContinueFrt
 const bool PIVOTTH::loadContent(BinProcessor& proc)
 {

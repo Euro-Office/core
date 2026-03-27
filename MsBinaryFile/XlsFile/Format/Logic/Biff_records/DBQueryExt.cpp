@@ -41,13 +41,9 @@ namespace XLS
 DBQueryExt::DBQueryExt()
 {
 }
-
-
 DBQueryExt::~DBQueryExt()
 {
 }
-
-
 BaseObjectPtr DBQueryExt::clone()
 {
 	return BaseObjectPtr(new DBQueryExt(*this));

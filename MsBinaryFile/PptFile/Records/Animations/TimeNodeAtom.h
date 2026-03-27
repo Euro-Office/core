@@ -30,20 +30,14 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimeNodeAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     _UINT32				m_dwRestart;
     TimeNodeTypeEnum	m_dwType;
     _UINT32				m_dwFill;

@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/CodeName.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtWbProp record in BIFF12

@@ -79,7 +79,5 @@ private:
 
 	std::list<table_state_ptr>	tables_state_;
 };
-
-
 }
 

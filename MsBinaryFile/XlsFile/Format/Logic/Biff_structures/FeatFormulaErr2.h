@@ -50,8 +50,6 @@ public:
 	static const ElementType	type = typeFeatFormulaErr2;
 
 	virtual void load(CFRecord& record);
-
-
 	FFErrorCheck grffecIgnore;
 };
 

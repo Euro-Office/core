@@ -33,8 +33,6 @@
 #include <algorithm>
 
 using namespace std;
-
-
 ucs2_conversion::result
 ucs2_conversion::do_in(mbstate_t&,
 					   const char*  from, const char* from_end, const char*& from_next,
@@ -58,8 +56,6 @@ ucs2_conversion::do_in(mbstate_t&,
 		return partial;
 	return ok;
 }
-
-
 ucs2_conversion::result
 ucs2_conversion::do_out(mbstate_t&,
 						const wchar_t* from, const wchar_t* from_end, const wchar_t*& from_next,
@@ -79,8 +75,6 @@ ucs2_conversion::do_out(mbstate_t&,
 	}
 	return ok;
 }
-
-
 
 ube_conversion::result
 ube_conversion::do_in(mbstate_t&,
@@ -125,8 +119,6 @@ ube_conversion::do_out(mbstate_t&,
 	}
 	return ok;
 }
-
-
 utf8_conversion::result
 utf8_conversion::do_in(mbstate_t&,
 					   const char*  from, const char* from_end, const char*& from_next,
@@ -158,8 +150,6 @@ utf8_conversion::do_in(mbstate_t&,
 	}
 	return ok;
 }
-
-
 // TODO можно оптимизировать, считая что в utf8 максимальное значение байт на символ 4. 
 // И после заменив деление и умножение на сдвиги
 utf8_conversion::result
@@ -202,15 +192,11 @@ utf8_conversion::do_out(mbstate_t&,
 	}
 	return ok;
 }
-
-
 const unsigned char 
 utf8_conversion::take_6_bits(const int unsigned value, const size_t right_position) const
 {
 	return (value >> right_position) & 63;
 }
-
-
 const size_t 
 utf8_conversion::most_signifant_bit_position(const unsigned int value) const
 {

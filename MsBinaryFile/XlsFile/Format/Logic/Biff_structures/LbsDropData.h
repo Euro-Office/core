@@ -49,8 +49,6 @@ public:
 
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
-
-
 	unsigned char wStyle = 0;
 	bool fFiltered = false;
 

@@ -34,20 +34,14 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr MSOCR::clone()
 {
 	return XLS::BiffStructurePtr(new MSOCR(*this));
 }
-
-
 void MSOCR::load(XLS::CFRecord& record)
 {
 	unsigned char flags;
 	record >> red >> green >> blue >> flags;
 	fSchemeIndex = GETBIT(flags, 3);
 }
-
-
 } // namespace XLS

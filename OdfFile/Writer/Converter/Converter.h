@@ -447,8 +447,6 @@ namespace PPTX
 
 using namespace cpdoccore;
 
-
-
 namespace Oox2Odf
 {
 	struct returnValues

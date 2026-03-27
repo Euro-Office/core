@@ -48,7 +48,5 @@ void TxtWf::save(CFRecord& record)
 {
 	record 	<< fieldType << fieldStart;
 }
-
-
 } // namespace XLS
 

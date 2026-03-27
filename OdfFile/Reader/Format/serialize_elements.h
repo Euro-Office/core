@@ -53,7 +53,5 @@ inline std::wostream & serialize_elements_text(std::wostream & _Wostream, const 
 }
 
 #define CP_SERIALIZE_TEXT(ELEMENT, bXmlEncode) serialize_elements_text(_Wostream, (ELEMENT), bXmlEncode)
-
-
 }
 }

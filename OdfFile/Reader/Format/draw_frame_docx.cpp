@@ -68,8 +68,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 namespace {
 bool IsExistProperty(std::vector<_property> Heap,const std::wstring Name)
 {
@@ -103,8 +101,6 @@ _CP_OPT(length) GetOnlyLength(const _CP_OPT(length_or_percent) & Value)
     else
         return _CP_OPT(length)();
 }
-
-
 
 length ComputeContextWidth(const style_page_layout_properties			* pagePropertiesNode,
                            const style_page_layout_properties_attlist	& pageProperties,
@@ -629,12 +625,8 @@ int ComputeMarginY(const style_page_layout_properties_attlist		& pageProperties,
 
     const _CP_OPT(length) frameWidth = attlists_.rel_size_.common_draw_size_attlist_.svg_width_;
     const _CP_OPT(length) frameHeight = attlists_.rel_size_.common_draw_size_attlist_.svg_height_;
-
-    
     const _CP_OPT(length) fromTop = (styleVerticallPos && styleVerticallPos->get_type() == vertical_pos::FromTop) ?
         attlists_.position_.svg_y_ : length(0, length::pt);
-
-
     _CP_OPT(length) svgY;
 
     if (styleVerticallPos && 
@@ -1439,8 +1431,6 @@ void draw_text_box::docx_convert(oox::docx_conversion_context & Context)
 			auto_fit_shape = true;
 		}
 	}
-
-
 	if ((draw_text_box_attlist_.fo_max_height_) && (draw_text_box_attlist_.fo_max_height_->get_type()==length_or_percent::Length))
 	{
 		size_t max_y = get_value_emu(draw_text_box_attlist_.fo_max_height_->get_length());

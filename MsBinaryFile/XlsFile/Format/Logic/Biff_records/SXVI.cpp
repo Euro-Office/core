@@ -38,13 +38,9 @@ namespace XLS
 SXVI::SXVI()
 {
 }
-
-
 SXVI::~SXVI()
 {
 }
-
-
 BaseObjectPtr SXVI::clone()
 {
 	return BaseObjectPtr(new SXVI(*this));

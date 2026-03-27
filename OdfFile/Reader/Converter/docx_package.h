@@ -46,8 +46,6 @@ class docx_conversion_context;
 class mediaitems;
 class headers_footers;
 class comments_context;
-
-
 namespace package {
 
 class element;

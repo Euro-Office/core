@@ -38,8 +38,6 @@ class CRecordNamedShowSlidesAtom : public CUnknownRecord
 {
 public:
 	std::vector<UINT> m_arRgSlideIdRef;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

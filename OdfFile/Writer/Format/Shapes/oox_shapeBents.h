@@ -90,6 +90,4 @@ public:
 		handles.push_back(h1);
 	}
 };
-
-
 }

@@ -38,8 +38,6 @@ namespace XLS
 ScenarioProtect::ScenarioProtect()
 {
 }
-
-
 ScenarioProtect::~ScenarioProtect()
 {
 }

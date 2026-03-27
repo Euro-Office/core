@@ -401,13 +401,9 @@ namespace ASC
             // Calculate the sine and cosine of the angle once
             float cosTheta = (float)cos(angle);
             float sinTheta = (float)sin(angle);
-            
-            
             NewPosition. _array[0]  = (cosTheta + (1 - cosTheta) * vx * vx)            * _array[0];
             NewPosition. _array[0] += ((1 - cosTheta) * vx * vy - vz * sinTheta)    * _array[1];
             NewPosition. _array[0] += ((1 - cosTheta) * vx * vz + vy * sinTheta)    * _array[2];
-            
-            
             NewPosition._array[1]  = ((1 - cosTheta) * vx * vy + vz * sinTheta)    * _array[0];
             NewPosition._array[1] += (cosTheta + (1 - cosTheta) * vy * vy)        * _array[1];
             NewPosition._array[1] += ((1 - cosTheta) * vy * vz - vx * sinTheta)    * _array[2];
@@ -881,8 +877,6 @@ namespace ASC
         _31(a20), _32(a21), _33(a22), _34(a23),
         _41(a30), _42(a31), _43(a32), _44(a33)
         {}
-        
-        
         void get_value( T * mp ) const {
             int c = 0;
             for(int j=0; j < 4; j++)
@@ -939,8 +933,6 @@ namespace ASC
         void set_scale( const vec3<T> & s ) {
             for (int i = 0; i < 3; i++) element(i,i) = s[i];
         }
-        
-        
         void set_translate( const vec3<T> & t ) {
             for (int i = 0; i < 3; i++) element(i,3) = t[i];
         }
@@ -1039,8 +1031,6 @@ namespace ASC
             }
             return *this;
         }
-        
-        
         friend bool operator == ( const matrix4 & lhs, const matrix4 & rhs ) {
             bool r = true;
             for (int i = 0; i < 16; i++)
@@ -1065,8 +1055,6 @@ namespace ASC
             T _array[16];     // array access
         };
     };
-    
-    
     //////////////////////////////////////////////////////////////////////
     //
     //  Friend functions
@@ -1167,8 +1155,6 @@ namespace ASC
         
         return minv;
     }
-    
-    
     //
     // transpose
     //
@@ -1531,6 +1517,4 @@ namespace ASC
         return y;
     }
 };
-
-
 #endif /* defined(_MATH_UTILS_) */

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 PIVOTSELECT::PIVOTSELECT()
 {
 }
-
-
 PIVOTSELECT::~PIVOTSELECT()
 {
 }
-
-
 BaseObjectPtr PIVOTSELECT::clone()
 {
 	return BaseObjectPtr(new PIVOTSELECT(*this));
 }
-
-
 // PIVOTSELECT = SxSelect PIVOTRULE
 const bool PIVOTSELECT::loadContent(BinProcessor& proc)
 {

@@ -36,8 +36,6 @@ using namespace XLS;
 
 namespace XLSB
 {
-
-
 BiffStructurePtr CmdType::clone()
 {
     return BiffStructurePtr(new CmdType(*this));

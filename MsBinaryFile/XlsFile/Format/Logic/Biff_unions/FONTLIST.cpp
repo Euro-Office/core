@@ -39,18 +39,12 @@
 
 namespace XLS
 {
-
-
 FONTLIST::FONTLIST()
 {
 }
-
-
 FONTLIST::~FONTLIST()
 {
 }
-
-
 class Parenthesis_FONTLIST_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_FONTLIST_1)
@@ -71,14 +65,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr FONTLIST::clone()
 {
 	return BaseObjectPtr(new FONTLIST(*this));
 }
-
-
 // FONTLIST = FrtFontList StartObject *(Font [Fbi]) EndObject
 const bool FONTLIST::loadContent(BinProcessor& proc)
 {

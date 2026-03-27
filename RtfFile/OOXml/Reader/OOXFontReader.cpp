@@ -134,8 +134,6 @@ bool OOXFontReader2::Parse( ReaderParameter oParam, int& nFont)
 		sFont = sEastAsia;
 	else if( !sEastAsiaTheme.empty() && !GetThemeFont(sEastAsiaTheme, *oParam.oReader).empty() )
 		sFont = GetThemeFont(sEastAsiaTheme, *oParam.oReader);
-
-
 	if( !sFont.empty() )
 	{
 		RtfFont oCurFont;
@@ -193,8 +191,6 @@ bool OOXFontReader3::Parse( ReaderParameter oParam, int& nFont)
 	if( !sAscii.empty() )		sFont = sAscii;
 	else if( !sCs.empty() )			sFont = sCs;
 	else if( !sEastAsia.empty() )	sFont = sEastAsia;
-
-
 	if( !sFont.empty() )
 	{
 		RtfFont oCurFont;

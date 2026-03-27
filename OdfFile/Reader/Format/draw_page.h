@@ -35,12 +35,8 @@
 #include "office_elements_create.h"
 
 #include "../../DataTypes/presentationclass.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 class draw_page_attr
 {
 public:
@@ -106,8 +102,6 @@ private:
 	virtual void add_text(const std::wstring & Text);
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
 	virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name){}
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(presentation_footer_decl);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,8 +128,6 @@ private:
 	virtual void add_text(const std::wstring & Text);
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
 	virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name){}
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(presentation_date_time_decl);
 

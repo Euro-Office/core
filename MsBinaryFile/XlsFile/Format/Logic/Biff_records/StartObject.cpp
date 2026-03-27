@@ -39,13 +39,9 @@ namespace XLS
 StartObject::StartObject()
 {
 }
-
-
 StartObject::~StartObject()
 {
 }
-
-
 BaseObjectPtr StartObject::clone()
 {
 	return BaseObjectPtr(new StartObject(*this));

@@ -54,7 +54,5 @@ namespace XLSB
 	{
 		record << FRTheader;
 	}
-
-
 } // namespace XLSB
 

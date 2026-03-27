@@ -48,8 +48,6 @@ namespace DocFileFormat
 		m_nTBIndex	=	nTBIndex;
 		SetInset(-1,-1,-1,-1);
 	}
-
-
 	TextboxMapping::TextboxMapping (ConversionContext* ctx, XMLTools::CStringXmlWriter* writer, IMapping* caller) : DocumentMapping( ctx, writer, caller ), m_nTBIndex(0)
 	{
 		TextboxCount++;

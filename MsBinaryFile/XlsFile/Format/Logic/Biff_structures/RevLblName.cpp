@@ -36,19 +36,13 @@
 
 namespace XLS
 {
-
-
 RevLblName::RevLblName()
 {
 }
-
-
 RevLblName::RevLblName(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevLblName::clone()
 {
 	return BiffStructurePtr(new RevLblName(*this));
@@ -154,13 +148,9 @@ void RevLblName::save(CFRecord& record)
 
 	}
 }
-
-
 const std::wstring RevLblName::toString() const
 {
 	return st;
 }
-
-
 } // namespace XLS
 

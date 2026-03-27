@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 
-
-
 namespace PPT
 {
 struct TmsfTimeStruct : public IStruct
@@ -43,8 +41,6 @@ struct TmsfTimeStruct : public IStruct
     BYTE m_nMinute;
     BYTE m_nSecond;
     BYTE m_nFrame;
-
-
     void ReadFromStream(POLE::Stream *pStream) override;
 };
 }

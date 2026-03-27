@@ -36,14 +36,10 @@ using namespace XLS;
 
 namespace XLSB
 {
-
-
 BiffStructurePtr PhRun::clone()
 {
     return BiffStructurePtr(new PhRun(*this));
 }
-
-
 void PhRun::load(XLS::CFRecord& record)
 {
     _UINT16 flags;

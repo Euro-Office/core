@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr DXFNum::clone()
 {
 	return BiffStructurePtr(new DXFNum(*this));
@@ -91,8 +89,6 @@ int DXFNum::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 
 } // namespace XLS
 

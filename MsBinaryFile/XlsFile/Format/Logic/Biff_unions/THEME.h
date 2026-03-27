@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of THEME union of records 
 class THEME: public CompositeObject
 {

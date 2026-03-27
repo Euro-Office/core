@@ -53,8 +53,6 @@ XLSXTableController::XLSXTableController(OOX::Spreadsheet::CXlsx &book, _INT32 l
 
     formates_ = std::make_shared<CellFormatController>(book_->m_pStyles, lcid);
 }
-
-
 void XLSXTableController::FormBook()
 {
     /// @todo сделать так чтобы блок выполнялся только один раз

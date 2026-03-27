@@ -155,8 +155,6 @@ namespace BinXlsxRW
 
 	const BYTE c_oserct_layoutmodeVAL = 0;
 
-
-
 	const BYTE c_oserct_dtableSHOWHORZBORDER = 0;
 	const BYTE c_oserct_dtableSHOWVERTBORDER = 1;
 	const BYTE c_oserct_dtableSHOWOUTLINE = 2;
@@ -7487,8 +7485,6 @@ namespace BinXlsxRW
 			m_oBcw.m_oStream.StartRecord(0);
 			m_oBcw.m_oStream.WriteRecord2(1, pVal->m_oElement->GetElem());
 			m_oBcw.m_oStream.EndRecord();
-
-
 			m_oBcw.WriteItemWithLengthEnd(nCurPos);
 		}
 	}

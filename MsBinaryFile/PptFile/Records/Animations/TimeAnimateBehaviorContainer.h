@@ -30,16 +30,12 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeVariant.h"
 #include "TimeAnimateBehaviorAtom.h"
 #include "TimeStringListContainer.h"
 #include "TimeAnimationValueListContainer.h"
 #include "TimeBehaviorContainer.h"
-
-
 namespace PPT
 {
 class CRecordTimeAnimateBehaviorContainer : public CUnknownRecord

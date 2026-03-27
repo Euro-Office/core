@@ -90,6 +90,4 @@ std::wstring marker_style::parse(const std::wstring & Str)
 }
 
 //stealth (Stealth Arrow) Stealth arrow head ----??????
-
-
 } }

@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "BinaryCodec_RCF.h"
 
 namespace CRYPT
@@ -154,8 +152,6 @@ bool BinaryCodec_RCF::decode( unsigned char* pnDestData, const unsigned char* pn
 {
 	return CipherARCFOUR::rtl_Cipher_E_None == mhCipher.Decode(pnSrcData, static_cast<size_t>(nBytes), pnDestData, static_cast<size_t>(nBytes));
 }
-
-
 bool BinaryCodec_RCF::skip( size_t nBytes )
 {
 	// decode dummy data in memory to update internal state of RC4 cipher
@@ -170,8 +166,4 @@ bool BinaryCodec_RCF::skip( size_t nBytes )
 	}
 	return bResult;
 }
-
-
 };
-
-

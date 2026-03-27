@@ -38,13 +38,9 @@ namespace XLS
 SeriesList::SeriesList()
 {
 }
-
-
 SeriesList::~SeriesList()
 {
 }
-
-
 BaseObjectPtr SeriesList::clone()
 {
 	return BaseObjectPtr(new SeriesList(*this));
@@ -64,8 +60,6 @@ BiffStructurePtr RGISeriesListSpecial::clone()
 {
 	return BiffStructurePtr(new RGISeriesListSpecial(*this));
 }
-
-
 
 void RGISeriesListSpecial::load(CFRecord& record)
 {

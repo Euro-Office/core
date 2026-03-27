@@ -2957,8 +2957,6 @@ void CConditionalFormattingRule::WriteAttributes(XLS::CFRecordPtr& record, const
         dxfId = m_oDxfId->GetValue();
     if(!m_oType.IsInit())
         m_oType = SimpleTypes::Spreadsheet::ECfType::expression;
-
-
     if (m_oType == SimpleTypes::Spreadsheet::ECfType::cellIs)
     {
         if(m_oOperator.IsInit())

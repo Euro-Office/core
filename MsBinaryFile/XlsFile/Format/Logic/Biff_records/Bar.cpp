@@ -39,19 +39,13 @@ namespace XLS
 Bar::Bar()
 {
 }
-
-
 Bar::~Bar()
 {
 }
-
-
 BaseObjectPtr Bar::clone()
 {
 	return BaseObjectPtr(new Bar(*this));
 }
-
-
 void Bar::readFields(CFRecord& record)
 {
 	unsigned short flags;

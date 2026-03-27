@@ -124,7 +124,5 @@ void settings_config_item_map_entry::add_child_element( xml::sax * Reader, const
 {
     CP_CREATE_ELEMENT(content_);
 }
-
-
 }
 }

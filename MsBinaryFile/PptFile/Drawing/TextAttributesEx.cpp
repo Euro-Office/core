@@ -272,8 +272,6 @@ void CTextAttributesEx::RecalcParagraphsPPT()
                         if (m_oStyles.m_pLevels[lLevel]->m_oPFRun.bulletSize.is_init())
                             bulletSize = m_oStyles.m_pLevels[lLevel]->m_oPFRun.bulletSize;
                     }
-
-
                     if (m_oStyles.m_pLevels[lLevel]->m_oPFRun.leftMargin.is_init())
                         margin = m_oStyles.m_pLevels[lLevel]->m_oPFRun.leftMargin;
 
@@ -315,8 +313,6 @@ void CTextAttributesEx::RecalcParagraphsPPT()
 
                 if (!m_arParagraphs[nIndexP].m_oPFRun.spaceBefore.is_init())
                     m_arParagraphs[nIndexP].m_oPFRun.spaceBefore = spaceBefore;
-
-
 
                 if (m_arParagraphs[nIndexP].m_oPFRun.bulletFontRef.is_init())
                 {

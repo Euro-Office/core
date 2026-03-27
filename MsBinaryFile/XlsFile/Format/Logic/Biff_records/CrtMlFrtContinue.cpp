@@ -38,13 +38,9 @@ namespace XLS
 CrtMlFrtContinue::CrtMlFrtContinue()
 {
 }
-
-
 CrtMlFrtContinue::~CrtMlFrtContinue()
 {
 }
-
-
 BaseObjectPtr CrtMlFrtContinue::clone()
 {
 	return BaseObjectPtr(new CrtMlFrtContinue(*this));

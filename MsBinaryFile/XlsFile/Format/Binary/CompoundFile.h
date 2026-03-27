@@ -39,8 +39,6 @@
 
 namespace XLS
 {
-
-
 class CompoundFile
 {
 public:
@@ -72,13 +70,9 @@ private:
 	
 	POLE::Stream* openStream		(const std::wstring & stream_name); // Opens a stream in the storage (shall be called not more than once per stream)
 	POLE::Stream* createStream		(const std::wstring & stream_name); // Creates a new stream in the storage
-
-
 	std::map<std::wstring, CFStreamPtr>	streams;
 	ReadWriteMode						rwMode;
 };
 typedef boost::shared_ptr<CompoundFile> CompoundFilePtr;
-
-
 } // namespace XLS
 

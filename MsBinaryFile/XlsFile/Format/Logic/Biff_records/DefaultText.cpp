@@ -38,13 +38,9 @@ namespace XLS
 DefaultText::DefaultText()
 {
 }
-
-
 DefaultText::~DefaultText()
 {
 }
-
-
 BaseObjectPtr DefaultText::clone()
 {
 	return BaseObjectPtr(new DefaultText(*this));

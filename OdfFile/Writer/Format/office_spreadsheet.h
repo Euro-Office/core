@@ -77,8 +77,6 @@ public:
 	// table:consolidation
 	// table:dde-links
 	// table:label-ranges
-	
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(office_spreadsheet);
 

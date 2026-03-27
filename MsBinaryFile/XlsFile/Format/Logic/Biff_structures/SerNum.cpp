@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 SerNum::SerNum()
 {
     fixed_type = typeSerNum;
 }
-
-
 SerNum::SerNum(const std::wstring& word)
 {
 #if defined(_WIN32) || defined (_WIN64)
@@ -51,14 +47,10 @@ SerNum::SerNum(const std::wstring& word)
     xnum = wcstod(word.c_str(), &pEnd);
 #endif
 }
-
-
 BiffStructurePtr SerNum::clone()
 {
 	return BiffStructurePtr(new SerNum(*this));
 }
-
-
 void SerNum::load(CFRecord& record)
 {
 	record >> xnum;
@@ -92,6 +84,4 @@ const std::wstring SerNum::toString() const
 		tempNum = L"#NUM!";
 	return tempNum;
 }
-
-
 } // namespace XLS

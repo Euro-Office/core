@@ -100,8 +100,6 @@ namespace XLS
 			iOutLevel = GETBITS(flags, 8, 10);
 			fCollapsed = GETBIT(flags, 12);
 		}
-
-																	   
 	}
 
 	void ColInfo::writeFields(CFRecord& record)

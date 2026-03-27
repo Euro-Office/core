@@ -64,7 +64,5 @@ office_element* document_context::get_last_paragraph()
 
 	return last_paragraph;
 }
-
-
 }
 }

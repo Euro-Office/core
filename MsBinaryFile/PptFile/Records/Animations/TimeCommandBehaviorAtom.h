@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimeCommandBehaviorAtom : public CUnknownRecord

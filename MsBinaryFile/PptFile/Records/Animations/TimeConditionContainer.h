@@ -34,16 +34,12 @@
 #include "../../Reader/Records.h"
 #include "TimeConditionAtom.h"
 #include "ClientVisualElementContainer.h"
-
-
 namespace PPT
 {
 class CRecordTimeConditionContainer : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     CRecordTimeConditionAtom				m_oTimeConditionAtom;
     CRecordClientVisualElementContainer     m_oVisualElement;
 };

@@ -418,6 +418,4 @@ std::wstring OleObject::getOleEntryName( const CharacterPropertyExceptions* chpx
 
 	return ret;
 }
-
-
 }

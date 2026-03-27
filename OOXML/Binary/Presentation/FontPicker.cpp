@@ -90,8 +90,6 @@ namespace NSFontCutter
 		if(NULL != pFontInfo)
 		{
 			sRes = std::wstring(pFontInfo->m_wsFontName.c_str());
-
-
 			if (m_bIsEmbeddedFonts)
 				m_oEmbeddedFonts.CheckFont(sRes, m_pFontManager);
 

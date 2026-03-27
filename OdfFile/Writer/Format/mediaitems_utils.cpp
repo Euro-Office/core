@@ -77,8 +77,6 @@ std::wstring create_file_name(const std::wstring & uri, _mediaitems::Type type, 
 	
 	return get_default_file_name(type) + std::to_wstring(Num) + sExt;
 }
-
-
 }
 
 }

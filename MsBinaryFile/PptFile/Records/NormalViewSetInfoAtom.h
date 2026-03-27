@@ -45,8 +45,6 @@ public:
 
 	BOOL1 m_fPreferSingleSet;
 	BYTE m_nFlags;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

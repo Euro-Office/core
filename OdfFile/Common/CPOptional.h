@@ -42,7 +42,5 @@ struct optional
     typedef T Base;
     typedef boost::optional<T> Type;
 };
-
-
 #define _CP_OPT(V) optional<V>::Type
 

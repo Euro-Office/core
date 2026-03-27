@@ -32,8 +32,6 @@
 #pragma once
 #include "../Reader/Records.h"
 #include "../Enums/enums.h"
-
-
 namespace PPT
 {
 class CRecordOutlineTextPropsHeaderExAtom : public CUnknownRecord

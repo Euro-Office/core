@@ -38,13 +38,9 @@ namespace XLS
 EntExU2::EntExU2()
 {
 }
-
-
 EntExU2::~EntExU2()
 {
 }
-
-
 BaseObjectPtr EntExU2::clone()
 {
 	return BaseObjectPtr(new EntExU2(*this));

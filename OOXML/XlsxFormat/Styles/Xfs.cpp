@@ -491,8 +491,6 @@ namespace OOX
 			}
 			if(m_oProtection.IsInit())
 				m_oProtection->toXLS(objectPtr);
-
-
 			if(m_oApplyAlignment.IsInit())
 				ptr->fAtrAlc = m_oApplyAlignment->GetValue();
 

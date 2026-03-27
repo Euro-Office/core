@@ -56,13 +56,9 @@ AutoFilter::AutoFilter()
 	size = 0xffffffff;
 	bExist = false;
 }
-
-
 AutoFilter::~AutoFilter()
 {
 }
-
-
 BaseObjectPtr AutoFilter::clone()
 {
 	return BaseObjectPtr(new AutoFilter(*this));
@@ -71,8 +67,6 @@ BaseObjectPtr AutoFilter::clone()
 void AutoFilter::readFields(CFRecord& record)
 {
 	size_t pos_record = record.getRdPtr();
-
-
 	if (size == 0xffffffff)
 		size = record.getDataSize() - pos_record;
 	else if(record.getDataSize() < pos_record + size)

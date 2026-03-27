@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgMemNoMemN::clone()
 {
 	return BiffStructurePtr(new PtgMemNoMemN(*this));
 }
-
-
 void PtgMemNoMemN::load(CFRecord& record)
 {
 	unsigned char rec_type;
@@ -49,14 +45,8 @@ void PtgMemNoMemN::load(CFRecord& record)
 	type1 = GETBITS(rec_type, 5, 6);
 	record >> cce;
 }
-
-
 void PtgMemNoMemN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 }
-
-
-
-
 } // namespace XLS
 

@@ -381,8 +381,6 @@ namespace OOX
 				std::wstring srcMedia = pReader->m_strFolder + FILE_SEPARATOR_STR + L"media" + FILE_SEPARATOR_STR;
 				int idImage = pReader->m_nCountImage++;
 				std::wstring image_filename_dst = L"image" + std::to_wstring(idImage) + CPath(image_filename).GetExtention();
-
-
 				NSFile::CFileBinary::Copy(srcMedia + image_filename, pReader->m_pRels->m_pManager->GetDstMedia() + FILE_SEPARATOR_STR + image_filename_dst);
 
 				Image* pImage = new Image(NULL, false);

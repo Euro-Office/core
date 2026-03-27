@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DefColWidth record in BIFF8
 class DefColWidth: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~DefColWidth();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 PIVOTFRT::PIVOTFRT()
 {
 }
-
-
 PIVOTFRT::~PIVOTFRT()
 {
 }
-
-
 BaseObjectPtr PIVOTFRT::clone()
 {
 	return BaseObjectPtr(new PIVOTFRT(*this));
 }
-
-
 // PIVOTFRT = PIVOTFRT9 [PIVOTADDL]
 const bool PIVOTFRT::loadContent(BinProcessor& proc)
 {

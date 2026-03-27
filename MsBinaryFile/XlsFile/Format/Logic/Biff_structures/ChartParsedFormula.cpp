@@ -42,8 +42,6 @@ ChartParsedFormula::ChartParsedFormula()
 :	ParsedFormula(CellRef())
 {
 }
-
-
 BiffStructurePtr ChartParsedFormula::clone()
 {
 	return BiffStructurePtr(new ChartParsedFormula(*this));
@@ -121,8 +119,6 @@ bool ChartParsedFormula::inRange(const CellRef & ref)
 
 	return false;
 }
-
-
 
 } // namespace XLS
 

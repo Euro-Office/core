@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 HLINK::HLINK()
 {
 }
-
-
 HLINK::~HLINK()
 {
 }
-
-
 BaseObjectPtr HLINK::clone()
 {
 	return BaseObjectPtr(new HLINK(*this));
 }
-
-
 // HLINK = HLink [HLinkTooltip]
 const bool HLINK::loadContent(BinProcessor& proc)
 {

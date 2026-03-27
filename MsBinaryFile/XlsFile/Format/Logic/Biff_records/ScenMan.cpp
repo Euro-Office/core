@@ -38,19 +38,13 @@ namespace XLS
 ScenMan::ScenMan()
 {
 }
-
-
 ScenMan::~ScenMan()
 {
 }
-
-
 BaseObjectPtr ScenMan::clone()
 {
 	return BaseObjectPtr(new ScenMan(*this));
 }
-
-
 void ScenMan::readFields(CFRecord& record)
 {
 #pragma message("####################### ScenMan record is not implemented")

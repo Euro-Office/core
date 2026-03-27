@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DBCell record in BIFF8
 class DBCell: public BiffRecord
 {

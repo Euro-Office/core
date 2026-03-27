@@ -38,13 +38,9 @@ namespace XLS
 SXPIEx::SXPIEx()
 {
 }
-
-
 SXPIEx::~SXPIEx()
 {
 }
-
-
 BaseObjectPtr SXPIEx::clone()
 {
 	return BaseObjectPtr(new SXPIEx(*this));

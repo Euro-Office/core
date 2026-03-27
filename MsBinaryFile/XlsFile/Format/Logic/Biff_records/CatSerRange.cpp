@@ -38,13 +38,9 @@ namespace XLS
 CatSerRange::CatSerRange()
 {
 }
-
-
 CatSerRange::~CatSerRange()
 {
 }
-
-
 BaseObjectPtr CatSerRange::clone()
 {
 	return BaseObjectPtr(new CatSerRange(*this));

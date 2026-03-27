@@ -38,13 +38,9 @@ namespace XLS
 MDXTuple::MDXTuple()
 {
 }
-
-
 MDXTuple::~MDXTuple()
 {
 }
-
-
 BaseObjectPtr MDXTuple::clone()
 {
 	return BaseObjectPtr(new MDXTuple(*this));

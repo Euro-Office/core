@@ -31,8 +31,6 @@
  */
 #include "sector.h"
 #include "Stream/stream_utils.h"
-
-
 using namespace CFCPP;
 
 _INT32 Sector::MINISECTOR_SIZE = 64;
@@ -49,8 +47,6 @@ Sector::Sector(_INT32 size, const std::vector<BYTE>& data) :
 Sector::Sector(_INT32 size) :
     size(size)
 {}
-
-
 bool Sector::IsStreamed()
 {
     if (stream == nullptr || size == MINISECTOR_SIZE)

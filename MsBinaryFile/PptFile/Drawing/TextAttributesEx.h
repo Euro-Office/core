@@ -55,8 +55,6 @@ public:
 
     int		m_lPlaceholderType;
     int		m_lPlaceholderID;
-
-
     // граница
     Aggplus::RECT m_oBounds;
 
@@ -69,11 +67,7 @@ public:
     bool	m_bAutoFit;
 
     int 	m_nTextFlow;
-
-
     int		m_lWrapMode; // 0 - square, default; 1 - none wrap
-
-
     // для ппт. чтобы не менять счас ничего
     CTextRuler				m_oRuler;
 

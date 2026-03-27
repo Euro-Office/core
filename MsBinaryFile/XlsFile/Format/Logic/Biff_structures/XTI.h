@@ -55,6 +55,4 @@ public:
 };
 
 typedef boost::shared_ptr<XTI> XTIPtr;
-
-
 } // namespace XLS

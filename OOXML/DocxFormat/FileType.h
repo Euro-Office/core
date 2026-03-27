@@ -42,8 +42,6 @@ namespace OOX
 							const std::wstring& overrideType, 
 							const std::wstring& relationType,
 							const std::wstring& enumerateType = L"", bool bEnumerated = false, bool bEnumeratedGlobal = false );
-
-
 		FileType(const std::wstring& defaultDirectory, const std::wstring& defaultFileName,
 							const std::wstring& overrideType, 
 							const std::wstring& relationType,

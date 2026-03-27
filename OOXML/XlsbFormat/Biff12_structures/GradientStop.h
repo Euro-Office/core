@@ -36,8 +36,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/Color.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/Xnum.h"
-
-
 namespace XLSB
 {
     class GradientStop : public XLS::BiffStructure
@@ -57,6 +55,4 @@ namespace XLSB
         Color       brtColor;
 		XLS::Xnum   xnumPosition;
     };
-
-
 }   // namespace XLSB

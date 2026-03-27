@@ -203,5 +203,3 @@ namespace PPTX
 	} // namespace Logic
 } // namespace PPTX
 
-
-

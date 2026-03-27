@@ -95,8 +95,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawChart;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -148,8 +146,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawG;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -175,8 +171,6 @@ public:
 
 	void serialize(CP_ATTR_NODE);   
 };
-
-
 class draw_text_box : public office_element_impl<draw_text_box>
 {
 public:
@@ -184,8 +178,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawTextBox;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -205,8 +197,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawObject;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -226,8 +216,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawObjectOle;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -247,8 +235,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawPlugin;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 

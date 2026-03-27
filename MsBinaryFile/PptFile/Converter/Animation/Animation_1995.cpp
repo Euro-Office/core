@@ -193,8 +193,6 @@ void Animation_1995::FillCTnAnimation(PPTX::Logic::CTn &oCTN, PPT::Intermediate:
     }
 }
 
-
-
 void Animation_1995::FillCBhvrForAnim (PPTX::Logic::Anim& oAnim, PPT::Intermediate::SOldAnimation* pOldAnim, int dur, std::wstring attrname)
 {
     FillCBhvr(oAnim.cBhvr, dur, pOldAnim->shapeId, attrname, -1);

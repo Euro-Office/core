@@ -38,13 +38,9 @@ namespace XLS
 BkHim::BkHim()
 {
 }
-
-
 BkHim::~BkHim()
 {
 }
-
-
 BaseObjectPtr BkHim::clone()
 {
 	return BaseObjectPtr(new BkHim(*this));

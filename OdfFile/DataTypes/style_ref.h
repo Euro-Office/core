@@ -62,8 +62,6 @@ public:
     { 
         return style_name_;
     }
-
-    
 private:
     std::wstring style_name_;
 

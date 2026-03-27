@@ -40,8 +40,6 @@
 
 #include "../IFileContainer.h"
 #include "../../XlsxFormat/FileTypes_Spreadsheet.h"
-
-
 namespace OOX
 {
 	JsaProject::JsaProject( OOX::Document *pMain ) : Media(pMain)

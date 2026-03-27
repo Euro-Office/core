@@ -67,8 +67,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 class text_format_properties 
 {
 public:

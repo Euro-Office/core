@@ -38,13 +38,9 @@ namespace XLS
 UsesELFs::UsesELFs()
 {
 }
-
-
 UsesELFs::~UsesELFs()
 {
 }
-
-
 BaseObjectPtr UsesELFs::clone()
 {
 	return BaseObjectPtr(new UsesELFs(*this));

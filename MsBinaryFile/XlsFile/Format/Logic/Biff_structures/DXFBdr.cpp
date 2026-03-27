@@ -184,7 +184,5 @@ int DXFBdr::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

@@ -57,8 +57,6 @@ std::wstring hyperlinks::add(const std::wstring & href, _rels_type_place type_pl
 
 	return id;
 }
-
-
 void hyperlinks::dump_rels(rels & Rels, _rels_type_place type_place)
 {
     size_t i = 0;

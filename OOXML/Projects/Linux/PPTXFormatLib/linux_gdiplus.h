@@ -234,6 +234,4 @@ public:
     REAL Width;
     REAL Height;
 };
-
-
 }

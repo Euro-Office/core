@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 SecurityDescriptor::SecurityDescriptor()
 {
 }
-
-
 SecurityDescriptor::SecurityDescriptor(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr SecurityDescriptor::clone()
 {
 	return BiffStructurePtr(new SecurityDescriptor(*this));
 }
-
-
 void SecurityDescriptor::load(CFRecord& record)
 {
 	record.loadAnyData(sd);
@@ -62,7 +54,5 @@ void SecurityDescriptor::save(CFRecord& record)
 {
 	record.storeAnyData(sd);
 }
-
-
 } // namespace XLS
 

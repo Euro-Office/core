@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 THEME::THEME()
 {
 }
-
-
 THEME::~THEME()
 {
 }
-
-
 BaseObjectPtr THEME::clone()
 {
 	return BaseObjectPtr(new THEME(*this));
 }
-
-
 // THEME = Theme *ContinueFrt12
 const bool THEME::loadContent(BinProcessor& proc)
 {

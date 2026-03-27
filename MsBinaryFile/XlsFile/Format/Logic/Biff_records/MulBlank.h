@@ -61,8 +61,6 @@ public:
 	~MulBlank();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 	
@@ -78,8 +76,6 @@ public:
 	IXFCellMulBlankSpecial	rgixfe;
 	Col						colLast;
 };
-
-
 
 } // namespace XLS
 

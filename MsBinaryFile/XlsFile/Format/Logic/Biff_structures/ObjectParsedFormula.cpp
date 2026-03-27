@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 ObjectParsedFormula::ObjectParsedFormula() : ParsedFormula(CellRef())
 {
 }
@@ -50,8 +48,6 @@ BiffStructurePtr ObjectParsedFormula::clone()
 {
 	return BiffStructurePtr(new ObjectParsedFormula(*this));
 }
-
-
 void ObjectParsedFormula::load(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)

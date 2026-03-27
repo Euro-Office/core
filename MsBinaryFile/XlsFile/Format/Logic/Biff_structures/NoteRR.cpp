@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 NoteRR::NoteRR()
 {
 }
-
-
 NoteRR::NoteRR(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr NoteRR::clone()
 {
 	return BiffStructurePtr(new NoteRR(*this));
 }
-
-
 void NoteRR::load(CFRecord& record)
 {
 	record >> rrd;
@@ -70,7 +62,5 @@ void NoteRR::load(CFRecord& record)
 	
 	record.skipNunBytes(2); // unused
 }
-
-
 } // namespace XLS
 

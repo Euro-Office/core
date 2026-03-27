@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FtPioGrbit::clone()
 {
 	return BiffStructurePtr(new FtPioGrbit(*this));

@@ -59,7 +59,5 @@ void ObjLinkFmla::save(CFRecord& record)
 	record << ft;
 	fmla.save(record);
 }
-
-
 } // namespace XLS
 

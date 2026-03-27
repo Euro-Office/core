@@ -77,5 +77,3 @@ namespace cpdoccore { namespace odf_types {
 
 } // namespace odf_types
 } // namesapce cpdoccore
-
-

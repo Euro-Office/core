@@ -34,8 +34,6 @@
 
 #include <xml/xmlchar.h>
 #include <xml/attributes.h>
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -71,8 +69,6 @@ void math_mstack::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 
 //----------------------------------------------------------------------------------------------------
 const wchar_t * math_msrow::ns	= L"math";
@@ -164,8 +160,6 @@ void math_msgroup::serialize(std::wostream & _Wostream)
 	}
 }
 
-
-
 //---------------------------------------------------------------
 const wchar_t * math_mlongdiv::ns	= L"math";
 const wchar_t * math_mlongdiv::name	= L"mlongdiv";
@@ -225,8 +219,6 @@ void math_mscarry::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 //---------------------------------------------------------------
 const wchar_t * math_mscarries::ns		= L"math";
 const wchar_t * math_mscarries::name	= L"mscarries";

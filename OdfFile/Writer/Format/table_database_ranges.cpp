@@ -93,8 +93,6 @@ void table_database_ranges::serialize(std::wostream & _Wostream)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * table_database_range::ns = L"table";
 const wchar_t * table_database_range::name = L"database-range";
-
-
 void table_database_range::serialize(std::wostream & _Wostream)
 {
     CP_XML_WRITER(_Wostream)

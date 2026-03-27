@@ -43,23 +43,15 @@
 #include "../Biff_records/ValueRange.h"
 #include "../Biff_records/Axis.h"
 
-
-
 namespace XLS
 {
-
-
 AXES::AXES()
 {
 	bAxisCategories = false;
 }
-
-
 AXES::~AXES()
 {
 }
-
-
 //  (DVAXIS DVAXIS)
 class Parenthesis_AXES_3: public ABNFParenthesis
 {
@@ -80,8 +72,6 @@ public:
 		return true;
 	};
 };
-
-
 
 // (IVAXIS DVAXIS [SERIESAXIS])
 class Parenthesis_AXES_2: public ABNFParenthesis
@@ -106,8 +96,6 @@ public:
 	};
 };
 
-
-
 //  [IVAXIS DVAXIS [SERIESAXIS] / DVAXIS DVAXIS]
 // this is equal to [(IVAXIS DVAXIS [SERIESAXIS]) / (DVAXIS DVAXIS)]
 class Parenthesis_AXES_1: public ABNFParenthesis
@@ -126,14 +114,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr AXES::clone()
 {
 	return BaseObjectPtr(new AXES(*this));
 }
-
-
 // AXES = [IVAXIS DVAXIS [SERIESAXIS] / DVAXIS DVAXIS] *3ATTACHEDLABEL [PlotArea FRAME]
 const bool AXES::loadContent(BinProcessor& proc)
 {

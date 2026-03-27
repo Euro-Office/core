@@ -38,8 +38,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_writer {
-    
-
 ///////////////////////////////////////
 void text_list_style_attr::serialize(CP_ATTR_NODE)
 {
@@ -79,8 +77,6 @@ void text_list_level_style_image_attr::serialize(CP_ATTR_NODE)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_style::ns = L"text";
 const wchar_t * text_list_style::name = L"list-style";
-
-
 void text_list_style::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
     if (L"text" == Ns && L"list-level-style-number" == Name)
@@ -119,8 +115,6 @@ void text_list_style::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_level_style_number::ns = L"text";
 const wchar_t * text_list_level_style_number::name = L"list-level-style-number";
-
-
 void text_list_level_style_number::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     if	(L"style" == Ns && L"list-level-properties" == Name)
@@ -241,8 +235,6 @@ void style_list_level_label_alignment::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_level_style_bullet::ns = L"text";
 const wchar_t * text_list_level_style_bullet::name = L"list-level-style-bullet";
-
-
 void text_list_level_style_bullet::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
     if (L"style" == Ns && L"list-level-properties" == Name)
@@ -285,8 +277,6 @@ void text_list_level_style_bullet::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_level_style_image::ns = L"text";
 const wchar_t * text_list_level_style_image::name = L"list-level-style-image";
-
-
 void text_list_level_style_image::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
     if (L"style" == Ns && L"list-level-properties" == Name)

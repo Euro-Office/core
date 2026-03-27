@@ -56,13 +56,9 @@ Window2::Window2(bool isChart)
 
     _isChart = isChart;
 }
-
-
 Window2::~Window2()
 {
 }
-
-
 BaseObjectPtr Window2::clone()
 {
 	return BaseObjectPtr(new Window2(*this));
@@ -254,7 +250,5 @@ void Window2::writeFields(CFRecord& record)
 
 	}
 }
-
-
 } // namespace XLS
 

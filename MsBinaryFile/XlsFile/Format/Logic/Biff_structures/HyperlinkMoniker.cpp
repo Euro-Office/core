@@ -46,8 +46,6 @@ namespace OSHARED
 	static _GUID_ CompositeMoniker_CLSID(0x00000309, 0x0000, 0x0000, Moniker_data_tmp);
 	static _GUID_ AntiMoniker_CLSID(0x00000305, 0x0000, 0x0000, Moniker_data_tmp);
 	static _GUID_ ItemMoniker_CLSID(0x00000304, 0x0000, 0x0000, Moniker_data_tmp);
-
-
 XLS::BiffStructurePtr HyperlinkMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new HyperlinkMoniker(*this));

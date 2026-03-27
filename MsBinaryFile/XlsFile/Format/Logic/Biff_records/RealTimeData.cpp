@@ -38,19 +38,13 @@ namespace XLS
 RealTimeData::RealTimeData()
 {
 }
-
-
 RealTimeData::~RealTimeData()
 {
 }
-
-
 BaseObjectPtr RealTimeData::clone()
 {
 	return BaseObjectPtr(new RealTimeData(*this));
 }
-
-
 void RealTimeData::readFields(CFRecord& record)
 {
 #pragma message("####################### RealTimeData record is not implemented")

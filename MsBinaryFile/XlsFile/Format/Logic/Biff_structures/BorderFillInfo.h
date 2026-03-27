@@ -155,7 +155,5 @@ struct FontInfo
 
 	int serialize(std::wostream & stream);
 };
-
-
 } // namespace XLS
 

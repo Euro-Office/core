@@ -32,16 +32,12 @@
 #pragma once
 
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordGroupShape : public CUnknownRecord
 {
 public:
 	RECT m_oBounds;
-
-	
     CRecordGroupShape();
     ~CRecordGroupShape();
 

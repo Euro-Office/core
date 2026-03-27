@@ -98,8 +98,6 @@ static std::wstring get_mime_type(const std::wstring & extension)
 	else if (L"vsd" == extension)	return  L"application/vnd.visio";
 	else if (L"vsdx" == extension)	return  L"application/vnd.ms-visio.drawing";
 	else							return	L"application/octet-stream";
-
-
 	return L"";
 }
 
@@ -197,8 +195,6 @@ void content_types_file::set_media(mediaitems_ptr & _Mediaitems)
 	}
 }
 
-
-
 void content_types_file::set_media(mediaitems & _Mediaitems)
 {
 	std::vector<mediaitems::item> & items_ = _Mediaitems.items();
@@ -217,8 +213,6 @@ void content_types_file::set_media(mediaitems & _Mediaitems)
 		}
 	}
 }
-
-
 /////////////////////////////////////////////////////////////////////////
 
 simple_element::simple_element(const std::wstring & FileName, const std::wstring & Content) : file_name_(FileName), bXml(true)

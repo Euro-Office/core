@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PrintSize record in BIFF8
 class PrintSize: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~PrintSize();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

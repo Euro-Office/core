@@ -2136,8 +2136,6 @@ void BinarySharedStringTableWriter::WriteRPr(const OOX::Spreadsheet::CRPr& rPr, 
 		m_oBcw.m_oStream.WriteBYTE(rPr.m_oVertAlign->m_oVerticalAlign->GetValue());
 	}
 }
-
-
 BinaryWorkbookTableWriter::BinaryWorkbookTableWriter(NSBinPptxRW::CBinaryFileWriter &oCBufferedStream, OOX::Document *pDocument) 
 : m_oBcw(oCBufferedStream), m_pXlsx(NULL), m_pXlsxFlat(NULL)
 {
@@ -6154,8 +6152,6 @@ void BinaryWorksheetTableWriter::WriteCell(const OOX::Spreadsheet::CCell& oCell)
 				//Lighting Load Calculation.xls
 			}
 		}
-	
-
 		nCurPos = m_oBcw.WriteItemStart(c_oSerCellTypes::Value);
 		m_oBcw.m_oStream.WriteDoubleReal(dValue);
 		m_oBcw.WriteItemEnd(nCurPos);

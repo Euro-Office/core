@@ -92,8 +92,6 @@ private:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(table_named_range);
-
-
 //  table:named-expression
 class table_named_expression : public office_element_impl<table_named_expression>
 {

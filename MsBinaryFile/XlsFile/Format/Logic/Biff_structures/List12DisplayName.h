@@ -33,8 +33,6 @@
 
 #include "../Biff_records/BiffRecord.h"
 #include "BiffString.h"
-
-
 namespace XLS
 {
 
@@ -51,8 +49,6 @@ public:
 	
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
-
-
 	XLUnicodeString stListName;
 	XLUnicodeString stListComment;
 };

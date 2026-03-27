@@ -35,21 +35,15 @@
 
 namespace XLS
 {
-
-
 FrtRefHeaderNoGrbit::FrtRefHeaderNoGrbit(const CFRecordType::TypeId type)
 :	rt(type)
 {
 }
-
-
 FrtRefHeaderNoGrbit::FrtRefHeaderNoGrbit(const CFRecordType::TypeId type, const Ref8U& ref8_init)
 :	rt(type),
 	ref8(ref8_init)
 {
 }
-
-
 BiffStructurePtr FrtRefHeaderNoGrbit::clone()
 {
 	return BiffStructurePtr(new FrtRefHeaderNoGrbit(*this));

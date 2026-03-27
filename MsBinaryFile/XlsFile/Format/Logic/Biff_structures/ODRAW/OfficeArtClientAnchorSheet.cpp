@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtClientAnchorSheet::OfficeArtClientAnchorSheet() :	OfficeArtRecord(0x00, ClientAnchor)
 {
 	_x = _y = _cx = _cy = 0;
 }
-
-
 XLS::BiffStructurePtr OfficeArtClientAnchorSheet::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtClientAnchorSheet(*this));
@@ -196,21 +192,13 @@ void OfficeArtClientAnchorSheet::calculate_1()
 			_cy += 256 * kfRow * sheet_info.defaultRowHeight;	
 	}
 	_cy += _dyB - _y;
-
-
 }
 
-
-
 //-------------------------------------------------------------------------------------
-
-
 OfficeArtChildAnchor::OfficeArtChildAnchor() :	OfficeArtRecord(0x00, ChildAnchor)
 {
 	_x = _y = _cx = _cy = 0;
 }
-
-
 XLS::BiffStructurePtr OfficeArtChildAnchor::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtChildAnchor(*this));
@@ -228,10 +216,6 @@ void OfficeArtChildAnchor::loadFields(XLS::CFRecord& record)
 	
 	_y	= (std::min)(dyT, dyB) ;	
 	_cy = (std::max)(dyT, dyB) - _y;	
-
-
 }
 
 } // namespace XLS
-
-

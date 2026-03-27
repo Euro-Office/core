@@ -43,8 +43,6 @@
 namespace cpdoccore { 
 namespace oox {
 namespace package {
-
-
 xlsx_content_types_file::xlsx_content_types_file()
 {
     content()->add_default(L"rels",  L"application/vnd.openxmlformats-package.relationships+xml");
@@ -630,8 +628,6 @@ void xl_comments::write(const std::wstring & RootPath)
 		package::simple_element(comments_[i].filename, comments_[i].content).write(RootPath);        
 	}
 }
-
-
 }
 }
 }

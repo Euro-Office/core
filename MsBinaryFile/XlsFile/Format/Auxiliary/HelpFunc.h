@@ -53,8 +53,6 @@ namespace AUX
     void				str2loc			(std::wstring::const_iterator& str_begin, std::wstring::const_iterator& str_end, int& row, bool& row_rel, int& column, bool& col_rel);
 	void				str2refs		(const std::wstring& str, std::vector<XLS::CellRangeRef>& vec);
 };
-
-
 namespace STR
 {
 	const std::string	int2str		(const int val, const int radix = 10);

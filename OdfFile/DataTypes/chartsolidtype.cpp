@@ -66,6 +66,4 @@ chart_solid_type chart_solid_type::parse(const std::wstring & Str)
     }
 }
 
-
-
 } }

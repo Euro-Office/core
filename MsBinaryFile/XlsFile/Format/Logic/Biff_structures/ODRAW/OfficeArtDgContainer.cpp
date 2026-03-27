@@ -38,14 +38,10 @@ namespace ODRAW
 OfficeArtDgContainer::OfficeArtDgContainer(const OfficeArtClientAnchorType anchor_type) : OfficeArtContainer(0x0F, DgContainer, anchor_type)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtDgContainer::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtDgContainer(*this));
 }
-
-
 const bool OfficeArtDgContainer::CheckIfContainerStartFound(XLS::CFRecord& record)
 {
 	OfficeArtRecordHeader rh;
@@ -54,8 +50,6 @@ const bool OfficeArtDgContainer::CheckIfContainerStartFound(XLS::CFRecord& recor
 
 	return 0xF002 == rh.recType;
 }
-
-
 const bool OfficeArtDgContainer::CheckIfContainerSizeOK(XLS::CFRecord& record)
 {
 	OfficeArtRecordHeader rh;
@@ -141,8 +135,6 @@ void OfficeArtDgContainer::loadFields(XLS::CFRecord& record)
 				break;
 		}
 	}
-
-
 }
 
 void OfficeArtDgContainer::save(XLS::CFRecord& record)

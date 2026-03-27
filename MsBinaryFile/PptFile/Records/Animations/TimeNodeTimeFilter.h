@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeVariant.h"
 namespace PPT

@@ -37,8 +37,6 @@ namespace XLS
 MulRk::MulRk()
 {
 }
-
-
 MulRk::~MulRk()
 {
 }

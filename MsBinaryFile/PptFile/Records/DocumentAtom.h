@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordDocumentAtom : public CUnknownRecord
@@ -56,8 +54,6 @@ public:
 	BOOL1 m_bRightToLeft;
 
 	BOOL1 m_bShowComments;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

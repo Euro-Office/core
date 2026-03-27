@@ -146,7 +146,5 @@ private:
 	std::multimap<std::wstring, int>		xlsx_data_ranges_map_;		
 
 };
-
-
 }
 }

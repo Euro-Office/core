@@ -38,13 +38,9 @@ namespace XLS
 HCenter::HCenter()
 {
 }
-
-
 HCenter::~HCenter()
 {
 }
-
-
 BaseObjectPtr HCenter::clone()
 {
 	return BaseObjectPtr(new HCenter(*this));

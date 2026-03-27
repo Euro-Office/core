@@ -39,13 +39,9 @@ namespace XLS
 DataLabExt::DataLabExt()
 {
 }
-
-
 DataLabExt::~DataLabExt()
 {
 }
-
-
 BaseObjectPtr DataLabExt::clone()
 {
 	return BaseObjectPtr(new DataLabExt(*this));

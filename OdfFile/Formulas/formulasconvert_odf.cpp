@@ -226,8 +226,6 @@ namespace formulasconvert {
 			}
 			return result;
 		}
-
-
 	};
 	bool			odf2oox_converter::Impl::convert_with_TableName = true;
 	std::wstring	odf2oox_converter::Impl::table_name_			= L"";
@@ -302,8 +300,6 @@ namespace formulasconvert {
 		}
 		return false;
 	}
-
-	
 	//std::wstring odf2oox_converter::Impl::replace_cell_range_formater(boost::wsmatch const & what)
 	//{
 	//	const size_t sz = what.size();
@@ -454,8 +450,6 @@ namespace formulasconvert {
 			return ref1 + (ref2.empty() ? L"" : (L":" + ref2));
 		}
 	}
-
-
 	// заменяем формат адресации ячеек
 	// [.A1] -> A1
 	// [.A1:.B5] -> A1:B5
@@ -633,8 +627,6 @@ namespace formulasconvert {
             if (workstr.substr(0, (std::min)((size_t)3, sz_workstr)) == L"of:")//sample_02neu_crashes.ods
 				workstr =  workstr.substr(3);
 		}
-
-
 	//-----------------------------------------------------------
 		replace_tmp_back(workstr);
 

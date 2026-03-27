@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PrintRowCol record in BIFF8
 class PrintRowCol: public BiffRecord
 {
@@ -47,14 +45,10 @@ public:
 	~PrintRowCol();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 
 	static const ElementType	type = typePrintRowCol;
-
-
 //-----------------------------
     Boolean<unsigned short> printRwCol = false;
 

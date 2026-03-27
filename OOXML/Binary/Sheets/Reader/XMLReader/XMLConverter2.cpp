@@ -190,8 +190,6 @@ void XMLConverter::readAttributes()
 
     reader_->MoveToElement();
 }
-
-
 void XMLConverter::closeNode()
 {
     if(prevType_ == XmlUtils::XmlNodeType::XmlNodeType_Element)

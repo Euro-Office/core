@@ -165,8 +165,6 @@ namespace oox {
 
 					int v1, v2, v3;
 				};
-
-
 				_CP_OPT(std::wstring)							PresentationNodeType;
 				_CP_OPT(std::wstring)							Direction;
 				_CP_OPT(std::wstring)							Restart;
@@ -403,8 +401,6 @@ namespace oox {
 		void start_anim_audio();
 			void add_anim_audio(const std::wstring& rId, const std::wstring& name);
 		void end_anim_audio();
-
-		
 		
 		void serialize(std::wostream & strm);
 		void clear();

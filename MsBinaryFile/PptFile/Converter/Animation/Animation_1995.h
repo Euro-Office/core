@@ -35,8 +35,6 @@
 #include "../../../../OOXML/PPTXFormat/Logic/Timing/ChildTnLst.h"
 #include "../../../../OOXML/PPTXFormat/Logic/Timing/Anim.h"
 #include "../../../../OOXML/PPTXFormat/Logic/Timing/AnimEffect.h"
-
-
 namespace PPT {
 	namespace Converter {
 		class Animation_1995

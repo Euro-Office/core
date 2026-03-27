@@ -39,19 +39,13 @@ namespace XLS
 Legend::Legend()
 {
 }
-
-
 Legend::~Legend()
 {
 }
-
-
 BaseObjectPtr Legend::clone()
 {
 	return BaseObjectPtr(new Legend(*this));
 }
-
-
 void Legend::readFields(CFRecord& record)
 {
 	unsigned short flags;

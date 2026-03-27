@@ -39,24 +39,16 @@
 
 namespace XLS
 {
-
-
 WINDOW::WINDOW()
 {
 }
-
-
 WINDOW::~WINDOW()
 {
 }
-
-
 BaseObjectPtr WINDOW::clone()
 {
 	return BaseObjectPtr(new WINDOW(*this));
 }
-
-
 // WINDOW = Window2 [PLV] [Scl] [Pane] *Selection
 const bool WINDOW::loadContent(BinProcessor& proc)
 {

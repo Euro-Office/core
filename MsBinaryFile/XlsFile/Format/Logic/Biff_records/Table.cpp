@@ -38,13 +38,9 @@ namespace XLS
 Table::Table()
 {
 }
-
-
 Table::~Table()
 {
 }
-
-
 BaseObjectPtr Table::clone()
 {
 	return BaseObjectPtr(new Table(*this));

@@ -292,8 +292,6 @@ LocalInfo getLocalInfo(const _INT32 lcid)
         return InfoMap.at(-1);
     return InfoMap.at(lcid);
 }
-
-
 //LocalInfo methods
 
 //todo сборка кода формата из сокращенного формата и разделителя

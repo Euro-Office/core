@@ -156,8 +156,6 @@ public:
     CFRecord& operator >> (short& val)			{ loadAnyData(val);	return *this; }
     CFRecord& operator >> (char& val)			{ loadAnyData(val);	return *this; }
 	CFRecord& operator >> (bool& val);
-
-
 	CFRecord& operator << (unsigned char& val)  { storeAnyData(val);	return *this; }
 	CFRecord& operator << (unsigned short& val) { storeAnyData(val);	return *this; }
 	CFRecord& operator << (unsigned int& val)	{ storeAnyData(val);	return *this; }
@@ -208,8 +206,6 @@ CFRecord& operator<<(CFRecord& record, std::vector<T>& vec)
     return record;
 }
 
-
-
 #if defined(_WIN32) || defined(_WIN64)
 
     template<class T>
@@ -230,8 +226,6 @@ CFRecord& operator<<(CFRecord& record, std::vector<T>& vec)
     CFRecord& operator>>(CFRecord & record, std::string & str);
     CFRecord& operator>>(CFRecord & record, std::wstring & str);
 #endif
-
-
 template<class T>
 CFRecord& operator>>(CFRecord & record, _CP_OPT(T)& val)
 {
@@ -242,8 +236,6 @@ CFRecord& operator>>(CFRecord & record, _CP_OPT(T)& val)
 	}
 	return record; 
 }
-
-
 // moved out of the class to be higher in priority than the universal operator
 template<class T>
 CFRecord& operator<<(CFRecord & record,	_CP_OPT(T)& val)

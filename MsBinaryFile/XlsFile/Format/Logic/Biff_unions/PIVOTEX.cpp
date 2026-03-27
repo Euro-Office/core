@@ -38,18 +38,12 @@
 
 namespace XLS
 {
-
-
 PIVOTEX::PIVOTEX()
 {
 }
-
-
 PIVOTEX::~PIVOTEX()
 {
 }
-
-
 BaseObjectPtr PIVOTEX::clone()
 {
 	return BaseObjectPtr(new PIVOTEX(*this));

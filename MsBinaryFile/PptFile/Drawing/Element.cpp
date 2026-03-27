@@ -30,8 +30,6 @@
  *
  */
 #include "Element.h"
-
-
 PPT::CElement::CElement()
 {
     m_bIsBackground				= false;

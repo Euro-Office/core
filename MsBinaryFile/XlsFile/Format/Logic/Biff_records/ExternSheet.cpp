@@ -40,19 +40,13 @@ namespace XLS
 ExternSheet::ExternSheet()
 {
 }
-
-
 ExternSheet::~ExternSheet()
 {
 }
-
-
 BaseObjectPtr ExternSheet::clone()
 {
 	return BaseObjectPtr(new ExternSheet(*this));
 }
-
-
 void ExternSheet::readFields(CFRecord& record)
 {
 	if (record.getGlobalWorkbookInfo()->Version < 0x0600)

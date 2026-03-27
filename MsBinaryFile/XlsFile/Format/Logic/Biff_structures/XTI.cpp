@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XTI::clone()
 {
 	return BiffStructurePtr(new XTI(*this));

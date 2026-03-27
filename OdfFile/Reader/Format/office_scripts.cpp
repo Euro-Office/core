@@ -55,8 +55,6 @@ void office_scripts::add_child_element( xml::sax * Reader, const std::wstring & 
     else
         CP_NOT_APPLICABLE_ELM();
 }
-
-
 // office:script
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * office_script::ns = L"office";

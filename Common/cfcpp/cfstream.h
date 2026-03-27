@@ -34,8 +34,6 @@
 #include "Stream/stream.h"
 #include "cfitem.h"
 #include <vector>
-
-
 namespace CFCPP
 {
 class CFStream : public CFItem

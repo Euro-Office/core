@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtColorMRUContainer::OfficeArtColorMRUContainer()
 :	OfficeArtRecord(0, ColorMRUContainer)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtColorMRUContainer::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtColorMRUContainer(*this));

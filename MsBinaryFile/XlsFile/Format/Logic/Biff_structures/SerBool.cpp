@@ -34,26 +34,18 @@
 
 namespace XLS
 {
-
-
 SerBool::SerBool()
 {
     fixed_type = typeSerBool;
 }
-
-
 SerBool::SerBool(const std::wstring& word)
 {
 	f = word == L"TRUE" ? 1 : 0;
 }
-
-
 BiffStructurePtr SerBool::clone()
 {
 	return BiffStructurePtr(new SerBool(*this));
 }
-
-
 void SerBool::load(CFRecord& record)
 {
 	record >> f;
@@ -76,6 +68,4 @@ const std::wstring SerBool::toString() const
 {
 	return f ? L"TRUE" : L"FALSE";
 }
-
-
 } // namespace XLS

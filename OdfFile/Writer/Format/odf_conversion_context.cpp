@@ -512,8 +512,6 @@ void odf_conversion_context::process_styles(_object & object, bool isRoot)
 		create_element(L"office", L"master-styles", object.styles, this, true);
 		page_layout_context()->process_master_styles(object.styles.back());	
 	}
-
-
 	create_element(L"office", L"automatic-styles", object.content_styles, this, true);
 	object.style_context->process_automatic_styles(object.content_styles.back());
 }

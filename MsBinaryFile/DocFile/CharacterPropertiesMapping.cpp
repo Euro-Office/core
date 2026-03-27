@@ -122,8 +122,6 @@ namespace DocFileFormat
 
                 for (size_t i = 0; i < fontLower.length(); ++i)
                     fontLower[i] = towlower(fontLower[i]);
-
-
                 if (fontLower == L"symbol" ||
                     fontLower.find(L"wingdings") != std::wstring::npos ||
                     fontLower == L"webdings" ||
@@ -134,8 +132,6 @@ namespace DocFileFormat
                 {
                     return true;
                 }
-
-
                 if (fontLower.find(L"times") != std::wstring::npos ||
                     fontLower.find(L"arial") != std::wstring::npos ||
                     fontLower.find(L"courier") != std::wstring::npos ||

@@ -38,8 +38,6 @@ namespace XLS
 NameFnGrp12::NameFnGrp12()
 {
 }
-
-
 NameFnGrp12::~NameFnGrp12()
 {
 }

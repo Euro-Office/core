@@ -34,8 +34,6 @@
 
 namespace OSHARED
 {
-
-
 FixedPoint::FixedPoint()
 {
 	Integral	= 0;

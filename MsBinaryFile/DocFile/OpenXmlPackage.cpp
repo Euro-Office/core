@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "OpenXmlPackage.h"
 #include "Converter.h"
 
@@ -49,8 +47,6 @@
 #include "../../DesktopEditor/common/Directory.h"
 
 #include "../Common/Base/XmlTools.h"
-
-
 namespace DocFileFormat
 {
     OpenXmlPackage::OpenXmlPackage(const WordDocument* _docFile) :  m_strOutputPath(L""), relID(1), _imageCounter(0), _headerCounter(0), _footerCounter(0),
@@ -67,8 +63,6 @@ namespace DocFileFormat
         MainRelationshipsFile.Relationships.push_back( Relationship( std::wstring( L"rId2"), OpenXmlRelationshipTypes::CoreProperties, L"docProps/core.xml") );
         MainRelationshipsFile.Relationships.push_back( Relationship( std::wstring( L"rId3"), OpenXmlRelationshipTypes::ExtendedProperties, L"docProps/app.xml") );
 	}
-
-
 	void OpenXmlPackage::WritePackage()
 	{
         NSDirectory::CreateDirectory(m_strOutputPath + FILE_SEPARATOR_STR +  L"_rels" );
@@ -115,8 +109,6 @@ namespace DocFileFormat
 			}
 		}
 	}
-
-
 	void OpenXmlPackage::SaveToFile( const std::wstring& outputDir, const std::wstring& fileName, const void* buf, unsigned int size )
 	{
 		if ( buf != NULL )

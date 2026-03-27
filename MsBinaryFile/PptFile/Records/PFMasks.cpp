@@ -37,8 +37,6 @@ static inline bool getBit(_UINT32 data, _UINT32 mask)
 {
     return mask == (mask & data);
 }
-
-
 void PFMasks::ReadFromStream(POLE::Stream *pStream)
 {
     _UINT32 data = StreamUtils::ReadDWORD(pStream);

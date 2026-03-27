@@ -344,8 +344,6 @@ int FDB::serialize(std::wostream & strm, bool bSql, bool bDBB)
 							CP_XML_ATTR(L"containsInteger",	1);
 						}
 					}
-
-
 					if (fdb->fnumMinMaxValid)
 					{
 						//if (fdb->fDateInField)

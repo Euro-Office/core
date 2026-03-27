@@ -33,8 +33,6 @@
 
 #include <xml/xmlelement.h>
 #include <xml/nodetype.h>
-
-
 #include "office_elements.h"
 #include "office_elements_create.h"
 #include "anim_elements.h"
@@ -80,8 +78,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStylePresentationSound;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
@@ -136,8 +132,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleDrawingPageProperties;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}

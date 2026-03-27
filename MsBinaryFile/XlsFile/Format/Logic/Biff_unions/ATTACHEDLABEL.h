@@ -68,8 +68,6 @@ public:
 
 	short	m_iLinkObject;
 	bool	m_bUsed;
-
-
 };
 
 } // namespace XLS

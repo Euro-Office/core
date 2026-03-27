@@ -30,13 +30,9 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeAnimateColor.h"
 #include "TimeAnimateColorBy.h"
-
-
 namespace PPT
 {
 

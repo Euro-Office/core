@@ -767,8 +767,6 @@ namespace PdfWriter
 				std::to_string(vNormalColors[vNormalColors.size() - 1].g) + ", " +
 				std::to_string(vNormalColors[vNormalColors.size() - 1].b) + "];\n}";
 
-
-
 		std::string sText = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(vPlaceHolders[vPlaceHolders.size() - 1]);
 		const TRgb& oColor = vPlaceHolderColors[vPlaceHolderColors.size() - 1];
 		std::string sBlur = "\nif (event.target.value == \"\")\n{\n	event.target.textColor =[\"RGB\", " +
@@ -1129,8 +1127,6 @@ namespace PdfWriter
 			return;
 
 		bool bCanEdit = GetFieldFlag() & (1 << 18);
-
-		
 		std::string sText = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(wsText);
 		std::string sFocus, sBlur;
 
@@ -1268,8 +1264,6 @@ namespace PdfWriter
 			CExtGrState* pExtGrState = m_pDocument->GetFillAlpha(dAlpha);
 			sExtGrStateName = pFieldsResources->GetExtGrStateName(pExtGrState);
 		}
-
-
 		pAppearance->GetYesN()->DrawSimpleText(wsYesValue, pYesCodes, unYesCount, pYesFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop));
 		pAppearance->GetOffN()->DrawSimpleText(wsOffValue, pOffCodes, unOffCount, pOffFont, dFontSize, dX, dY, oColor.r, oColor.g, oColor.b, sExtGrStateName, fabs(m_oRect.fRight - m_oRect.fLeft), fabs(m_oRect.fBottom - m_oRect.fTop));
 

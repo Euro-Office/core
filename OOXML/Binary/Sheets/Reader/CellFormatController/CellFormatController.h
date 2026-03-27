@@ -37,8 +37,6 @@
 #include "../../../../XlsxFormat/Styles/Styles.h"
 #include "DateReader.h"
 #include "DigitReader.h"
-
-
 /// @brief класс определяющий и корректирующий тип данных, помещаемых в ячейки таблицы
 class CellFormatController
 {
@@ -52,8 +50,6 @@ public:
     /// @param pCell указатель на ячейку
     /// @param value вставляемые в ячейку данные в строковом типе
     int ProcessCellType(OOX::Spreadsheet::CCell *pCell, const std::wstring &value, bool bIsWrap = false);
-
-
 	/// @brief указатель на лист документа
 	OOX::Spreadsheet::CWorksheet *m_pWorksheet = nullptr;
 

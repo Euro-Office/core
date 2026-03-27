@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CatLab record in BIFF8
 class CatLab: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CatLab();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

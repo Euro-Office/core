@@ -38,19 +38,13 @@ namespace XLS
 RadarArea::RadarArea()
 {
 }
-
-
 RadarArea::~RadarArea()
 {
 }
-
-
 BaseObjectPtr RadarArea::clone()
 {
 	return BaseObjectPtr(new RadarArea(*this));
 }
-
-
 void RadarArea::readFields(CFRecord& record)
 {
 	unsigned short flags;

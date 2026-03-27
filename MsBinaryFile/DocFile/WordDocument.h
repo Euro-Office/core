@@ -253,8 +253,6 @@ namespace DocFileFormat
 		Plex<FieldCharacter>* AnnotationsFieldsPlex;
 		Plex<AnnotationReferenceDescriptor>* AnnotationsReferencePlex;
 		Plex<EmptyStructure>* AutoTextPlex;
-
-
 		AnnotationReferenceExDescriptors* AnnotationsReferencesEx;
 //------------------------------------------------------------------------------
 		void CorrectColor(ODRAW::OfficeArtCOLORREF& color, int base_color, int type = 1); //fill, back, shadow, text, border

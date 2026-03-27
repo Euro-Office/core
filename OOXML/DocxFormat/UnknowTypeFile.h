@@ -33,8 +33,6 @@
 
 #include "File.h"
 #include "FileTypes.h"
-
-
 namespace OOX
 {
 	class UnknowTypeFile : public File

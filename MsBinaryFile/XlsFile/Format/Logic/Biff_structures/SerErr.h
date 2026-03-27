@@ -52,6 +52,4 @@ public:
 private:
     BErr err;
 };
-
-
 } // namespace XLS

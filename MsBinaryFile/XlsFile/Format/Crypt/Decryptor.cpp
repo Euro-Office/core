@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "Decryptor.h"
 #include "RC4Crypt.h"
 #include "XORCrypt.h"
@@ -101,8 +99,4 @@ namespace CRYPT
 	{
 		crypt->Init(val);
 	}
-
-
 };
-
-

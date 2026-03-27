@@ -65,8 +65,6 @@ public:
 		return (count == 3);
 	};
 };
-
-
 SXRANGE::SXRANGE()
 {
 }
@@ -168,8 +166,6 @@ int SXRANGE::serialize(std::wostream & strm)
 			}
 		}
 	}
-
-	
 	return 0;
 }
 } // namespace XLS

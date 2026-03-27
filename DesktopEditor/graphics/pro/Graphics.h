@@ -94,8 +94,6 @@ namespace NSGraphics
 	public:
 		virtual void CreateFromBgraFrame(CBgraFrame* pFrame) = 0;
 		virtual void SetCoordTransformOffset(double dOffsetX, double dOffsetY) = 0;
-
-
 		virtual void SavePen(NSStructures::CPen& oPen) = 0;
 		virtual void RestorePen(const NSStructures::CPen& oPen) = 0;
 
@@ -139,7 +137,5 @@ namespace NSGraphics
 											 unsigned char r1, unsigned char g1, unsigned char b1, unsigned char a1,
 											 unsigned char r2, unsigned char g2, unsigned char b2, unsigned char a2);
 }
-
-
 
 #endif // _GRAPHICS_EXPORTS_GRAPHICS_H_

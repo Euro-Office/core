@@ -35,8 +35,6 @@
 #include <vector>
 #include <mutex>
 #include "Stream/stream.h"
-
-
 namespace CFCPP
 {
 

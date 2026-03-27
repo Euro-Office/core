@@ -44,19 +44,13 @@ CF::CF(const CellRef& cell_base_ref)
 	dxfId_ = 0;
 	ipriority_ = 0;
 }
-
-
 CF::~CF()
 {
 }
-
-
 BaseObjectPtr CF::clone()
 {
 	return BaseObjectPtr(new CF(*this));
 }
-
-
 
 void CF::readFields(CFRecord& record)
 {
@@ -171,7 +165,5 @@ int CF::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

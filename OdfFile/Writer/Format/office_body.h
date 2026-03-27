@@ -52,8 +52,6 @@ public:
 
     static const ElementType type		= typeOfficeBody;
 
-    
-
     office_element * content() { return content_.get(); }
 
 public:

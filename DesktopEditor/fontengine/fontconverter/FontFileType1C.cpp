@@ -549,8 +549,6 @@ namespace NSFontConverter
 			arrCmapTable[nIndex * 2 + 1] = nIndex;
 		}
 		*/
-
-
 		// Head Table
 		TCharBuffer oHeadTable;
 		oHeadTable.Write( "\x00\x01\x00\x00", 4 ); // Version number
@@ -590,8 +588,6 @@ namespace NSFontConverter
 		oHheaTable.Write( "\x00\x00", 2 ); // -reserved-
 		oHheaTable.Write( "\x00\x00", 2 ); // metricDataFormat
 		oHheaTable.Write16( pFace->num_glyphs + 1 ); // Number of HMetrics
-
-
 		// Hmtx Table
 		TCharBuffer oHmtxTable;
 		oHmtxTable.Write( "\x00\x00\x00\x00", 4 ); // .notdef

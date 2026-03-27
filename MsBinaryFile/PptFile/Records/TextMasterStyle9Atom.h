@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "TextMasterStyle9Level.h"
-
-
 namespace PPT
 {
 class CRecordTextMasterStyle9Atom : public CUnknownRecord
@@ -45,8 +43,6 @@ public:
     nullable<STextMasterStyle9Level> m_lstLvl3;
     nullable<STextMasterStyle9Level> m_lstLvl4;
     nullable<STextMasterStyle9Level> m_lstLvl5;
-
-
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
 }

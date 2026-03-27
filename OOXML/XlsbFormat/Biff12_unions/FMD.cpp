@@ -37,8 +37,6 @@
 
 #include "../Biff12_records/BeginFmd.h"
 #include "../Biff12_records/EndFmd.h"
-
-
 using namespace XLS;
 
 namespace XLSB
@@ -67,10 +65,6 @@ namespace XLSB
         }
 		else
 			m_BrtBeginFmd = false;
-
-       
-
-
         if (proc.optional<DYNAMICARRAYMETADATA>())
         {
             m_DYNAMICARRAYMETADATA = elements_.back();

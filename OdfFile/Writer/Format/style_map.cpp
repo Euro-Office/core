@@ -34,8 +34,6 @@
 
 #include <xml/xmlchar.h>
 #include <xml/attributes.h>
-
-
 namespace cpdoccore { 
 
 namespace odf_writer {

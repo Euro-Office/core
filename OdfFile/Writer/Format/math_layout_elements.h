@@ -53,10 +53,6 @@ namespace cpdoccore {
 			static const ElementType type = typeMRow;
 
 			math_mrow();
-
-            
-        
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);
@@ -75,10 +71,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMFrac;
-
-            
-        
-
             _CP_OPT(Bool)				bevelled;
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -101,10 +93,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMSqrt;
-
-            
-        
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);
@@ -122,10 +110,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMRoot;
-
-            
-        
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);
@@ -143,10 +127,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMStyle;
-
-            
-        
-
 			_CP_OPT(color)				color_;
 
 		private:
@@ -172,8 +152,6 @@ namespace cpdoccore {
 		
 			static const ElementType type = typeMEnClose;
 
-            
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);
@@ -191,10 +169,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMFenced;
-
-            
-        
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);
@@ -212,10 +186,6 @@ namespace cpdoccore {
 			static const wchar_t * name;
 		
 			static const ElementType type = typeMPadded;
-
-            
-        
-
 		private:
 			virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 			virtual void add_child_element(const office_element_ptr & child_element);

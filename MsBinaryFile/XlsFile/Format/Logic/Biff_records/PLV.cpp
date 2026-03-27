@@ -39,13 +39,9 @@ namespace XLS
 PLV::PLV()
 {
 }
-
-
 PLV::~PLV()
 {
 }
-
-
 BaseObjectPtr PLV::clone()
 {
 	return BaseObjectPtr(new PLV(*this));

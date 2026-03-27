@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "OfficeArtContainer.h"
 #include "OfficeArtDgContainer.h"
 #include "OfficeArtFDG.h"
@@ -51,8 +49,6 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtContainer::OfficeArtContainer(const unsigned char recVer, const unsigned short recType, const OfficeArtClientAnchorType anchor_type)
 :	OfficeArtRecord(recVer, recType), anchor_type_(anchor_type)
 {
@@ -226,8 +222,6 @@ void OfficeArtContainer::loadFields(XLS::CFRecord& record)
 			}
 		}
 	}
-
-
 }
 
 } // namespace ODRAW

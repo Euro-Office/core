@@ -38,13 +38,9 @@ namespace XLS
 DBCell::DBCell()
 {
 }
-
-
 DBCell::~DBCell()
 {
 }
-
-
 BaseObjectPtr DBCell::clone()
 {
 	return BaseObjectPtr(new DBCell(*this));

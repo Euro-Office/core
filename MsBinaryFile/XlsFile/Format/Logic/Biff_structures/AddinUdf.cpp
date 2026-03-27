@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AddinUdf::clone()
 {
 	return BiffStructurePtr(new AddinUdf(*this));

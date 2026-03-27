@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MTRSettings record in BIFF8
 class MTRSettings: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~MTRSettings();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 //-----------------------------

@@ -36,8 +36,6 @@
 
 #include "../Biff12_structures/BookProtectionFlags.h"
 #include "../Biff12_structures/IsoPasswordData.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtBookProtectionIso record in BIFF12

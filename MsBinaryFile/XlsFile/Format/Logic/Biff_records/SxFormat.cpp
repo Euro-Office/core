@@ -38,19 +38,13 @@ namespace XLS
 SxFormat::SxFormat()
 {
 }
-
-
 SxFormat::~SxFormat()
 {
 }
-
-
 BaseObjectPtr SxFormat::clone()
 {
 	return BaseObjectPtr(new SxFormat(*this));
 }
-
-
 void SxFormat::readFields(CFRecord& record)
 {
 	unsigned short	flags;

@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 
@@ -52,8 +48,6 @@ public:
 public:
     TimeVariantTypeEnum		m_Type;
 };
-
-
 class CRecordTimeVariantBool : public CRecordTimeVariant
 {
 public:
@@ -101,8 +95,6 @@ public:
 public:
     std::wstring            m_Value;
 };
-
-
 
 class CRecordTimeDisplayType : public CRecordTimeVariantInt
 {
@@ -188,8 +180,6 @@ class CRecordTimeZoomToFullScreen : public CRecordTimeVariantBool
 {
 
 };
-
-
 class CRecordTimeRuntimeContext : public CRecordTimeVariantString
 {
 

@@ -39,12 +39,8 @@
 
 #include "../../../../../OOXML/Base/Unit.h"
 #include "../../../../../DesktopEditor/xml/include/xmlutils.h"
-
-
 namespace XLS
 {
-
-
 BiffStructurePtr XFProp::clone()
 {
 	return BiffStructurePtr(new XFProp(*this));
@@ -906,6 +902,4 @@ int XFProp::deserialize(std::wstring& nodeName, std::wstring& attrName, XmlUtils
 
 	return 0;
 }
-
-
 } // namespace XLS

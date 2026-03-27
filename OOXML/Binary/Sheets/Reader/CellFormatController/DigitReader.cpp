@@ -45,8 +45,6 @@ bool DigitReader::ReadDigit(const std::wstring &value, std::wstring &digit, std:
     size_t length = value.length();
     wchar_t *pEndPtr;
 	double dValue = wcstod(value.c_str(), &pEndPtr);
-
-
     if ((std::isnan(dValue) || std::isinf(dValue)))
     {
 		return false;

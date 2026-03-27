@@ -123,8 +123,6 @@ public:
             }
         }
     }
-
-
 private:
     std::vector<record> records_;
     formulasconvert::odf2oox_converter converter_;

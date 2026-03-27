@@ -47,8 +47,6 @@ BaseObjectPtr Frame::clone()
 {
 	return BaseObjectPtr(new Frame(*this));
 }
-
-
 void Frame::readFields(CFRecord& record)
 {
 	unsigned short flags;

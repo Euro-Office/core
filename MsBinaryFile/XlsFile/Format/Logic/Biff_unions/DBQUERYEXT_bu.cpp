@@ -67,14 +67,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr DBQUERYEXT::clone()
 {
 	return BaseObjectPtr(new DBQUERYEXT(*this));
 }
-
-
 // DBQUERYEXT = DBQueryExt [ExtString] *4[OleDbConn *ExtString] [TxtQry *ExtString]
 const bool DBQUERYEXT::loadContent(BinProcessor& proc)
 {

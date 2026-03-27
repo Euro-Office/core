@@ -63,8 +63,6 @@ public:
     bool	fSyncVert = false;
     bool	fAltExprEval = false;
     bool	fAltFormulaEntry = false;
-
-
 };
 
 } // namespace XLS

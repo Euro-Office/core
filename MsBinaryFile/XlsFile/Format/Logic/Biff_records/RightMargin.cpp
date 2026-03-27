@@ -39,13 +39,9 @@ RightMargin::RightMargin()
 {
 	num.data.value = 0.7;
 }
-
-
 RightMargin::~RightMargin()
 {
 }
-
-
 BaseObjectPtr RightMargin::clone()
 {
 	return BaseObjectPtr(new RightMargin(*this));

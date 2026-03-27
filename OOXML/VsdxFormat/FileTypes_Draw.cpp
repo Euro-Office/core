@@ -64,13 +64,9 @@ namespace OOX
 			const FileType Pages			(L"pages", L"pages.xml",
 												L"application/vnd.ms-visio.pages+xml",
 												L"http://schemas.microsoft.com/visio/2010/relationships/pages");
-
-
 			const FileType Masters			(L"masters", L"masters.xml",
 												L"application/vnd.ms-visio.masters+xml",
 												L"http://schemas.microsoft.com/visio/2010/relationships/masters");
-
-
 			const FileType Recordsets		(L"data", L"recordsets.xml",
 												L"application/vnd.ms-visio.recordsets+xml",
 												L"http://schemas.microsoft.com/visio/2010/relationships/recordsets");

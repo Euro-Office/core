@@ -452,8 +452,6 @@ void oox2odf_converter::Impl::replace_named_ref(std::wstring & expr)
 	mapReplacements.pop_back();
 }
 
-
-
 // TODO
 // заменить запятые на точки с запятой во всех вхождениях кроме находящихся в кавычках --*и в фигурных скобках*--
 // TODO: проверить как сохраняются кавычки в строке
@@ -467,8 +465,6 @@ void oox2odf_converter::Impl::replace_semicolons(std::wstring& expr)
         boost::match_default | boost::format_all);
      expr = res;
 }
-
-
 //void oox2odf_converter::Impl::split_(std::wstring& expr)
 //{
 //     const std::wstring res = boost::regex_split(
@@ -810,7 +806,5 @@ int oox2odf_converter::get_count_value_points(std::wstring expr)
 	}
 	return count;
 }
-
-
 }
 }

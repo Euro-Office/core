@@ -44,7 +44,5 @@ class CFRecord;
 typedef boost::shared_ptr<CFRecord> CFRecordPtr;
 
 typedef std::list<CFRecordPtr> CFRecordPtrList;
-
-
 } // namespace XLS
 

@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtClientAnchorHF::OfficeArtClientAnchorHF()
 :	OfficeArtRecord(0x00, ClientAnchor)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtClientAnchorHF::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtClientAnchorHF(*this));
@@ -51,6 +47,4 @@ void OfficeArtClientAnchorHF::loadFields(XLS::CFRecord& record)
 {
 	record >> _cx >> _cy;
 }
-
-
 } // namespace XLS

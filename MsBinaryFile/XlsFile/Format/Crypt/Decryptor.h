@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "Crypt.h"
 #include "../../../../OfficeCryptReader/source/CryptTransform.h"
 

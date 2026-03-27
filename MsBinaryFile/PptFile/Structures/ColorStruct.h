@@ -32,8 +32,6 @@
 #pragma once
 
 #include "IStruct.h"
-
-
 namespace PPT
 {
 struct ColorStruct : public IStruct
@@ -41,8 +39,6 @@ struct ColorStruct : public IStruct
     BYTE m_red;
     BYTE m_green;
     BYTE m_blue;
-
-
     ColorStruct();
     void clear();
 

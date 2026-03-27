@@ -99,8 +99,6 @@ private:
 	
 };
 CP_REGISTER_OFFICE_ELEMENT2(office_change_info)
-
-
 }
 }
 

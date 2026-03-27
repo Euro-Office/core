@@ -72,14 +72,10 @@
 #include "../Biff_records/EndObject.h"
 namespace XLS
 {
-
-
 CRT::CRT()
 {
 	m_indAXISPARENT = 0; 
 }
-
-
 CRT::~CRT()
 {
 }
@@ -105,8 +101,6 @@ public:
 	};
 };
 
-
-
 //  (Bar / Line / (BopPop [BopPopCustom]) / Pie / Area / Scatter / Radar / RadarArea / Surf)
 class Parenthesis_CRT_1: public ABNFParenthesis
 {
@@ -131,8 +125,6 @@ public:
 	};
 };
 
-
-
 //  (CrtLine LineFormat)
 class Parenthesis_CRT_2: public ABNFParenthesis
 {
@@ -154,14 +146,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr CRT::clone()
 {
 	return BaseObjectPtr(new CRT(*this));
 }
-
-
 /*
 CRT = ChartFormat Begin 
 	(Bar / Line / (BopPop [BopPopCustom]) / Pie / Area / Scatter / Radar / RadarArea / Surf)

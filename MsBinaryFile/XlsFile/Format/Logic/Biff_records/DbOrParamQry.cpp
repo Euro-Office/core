@@ -45,8 +45,6 @@ DbOrParamQry::DbOrParamQry(int typeRecord_)
 DbOrParamQry::~DbOrParamQry()
 {
 }
-
-
 BaseObjectPtr DbOrParamQry::clone()
 {
 	return BaseObjectPtr(new DbOrParamQry(*this));

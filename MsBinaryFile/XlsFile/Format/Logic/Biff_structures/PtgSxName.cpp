@@ -40,12 +40,8 @@
 #include "../Biff_records/SxName.h"
 #include "../Biff_records/SXPair.h"
 #include "../../../../../OOXML/XlsbFormat/Biff12_records/BeginPName.h"
-
-
 namespace XLS
 {
-
-
 BiffStructurePtr PtgSxName::clone()
 {
 	return BiffStructurePtr(new PtgSxName(*this));
@@ -151,7 +147,5 @@ void PtgSxName::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool f
 	}
 	
 }
-
-
 } // namespace XLS
 

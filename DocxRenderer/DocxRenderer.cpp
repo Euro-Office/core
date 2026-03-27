@@ -315,8 +315,6 @@ HRESULT CDocxRenderer::AdvancedCommand(IAdvancedCommand* command)
 	}
 	return S_FALSE;
 }
-
-
 HRESULT CDocxRenderer::get_Type(LONG* lType)
 {
 	*lType = c_nDocxWriter;

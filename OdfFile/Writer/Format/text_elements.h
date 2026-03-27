@@ -67,8 +67,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextH;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -119,8 +117,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextList;
-    
-
 public:
 
     text_list(){};
@@ -175,8 +171,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextSection;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -210,8 +204,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextSectionSource;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -229,8 +221,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTableOfContent;
-    
-	
     
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -253,8 +243,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextIndexBody;
-    
-    
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -273,8 +261,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextIndexTitle;
-    
-  	
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -557,8 +543,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type		= typeTextBibliographySource;
-    
-    
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element		( const office_element_ptr & child_element);
 
@@ -711,8 +695,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextIndexEntryBibliography;
-    
-    
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 
@@ -936,8 +918,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type		= typeTextAlphabeticalIndexSource;
-    
-    
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element		( const office_element_ptr & child_element);
 
@@ -988,8 +968,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTableIndexSource;
-    
-    
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element		( const office_element_ptr & child_element);
 

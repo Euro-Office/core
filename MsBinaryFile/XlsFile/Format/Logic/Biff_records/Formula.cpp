@@ -39,13 +39,9 @@ Formula::Formula()
 :	formula(false)
 {
 }
-
-
 Formula::~Formula()
 {
 }
-
-
 BaseObjectPtr Formula::clone()
 {
 	return BaseObjectPtr(new Formula(*this));

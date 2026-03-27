@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DSF record in BIFF8
 class DSF: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~DSF();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

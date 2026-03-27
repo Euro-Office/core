@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Sort record in BIFF8
 class Sort: public BiffRecord
 {

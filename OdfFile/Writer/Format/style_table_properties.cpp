@@ -35,8 +35,6 @@
 #include "../../DataTypes/borderstyle.h"
 
 #include <xml/simple_xml_writer.h>
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -122,8 +120,6 @@ void table_format_properties::apply_from(const table_format_properties & Other)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_table_properties::ns = L"style";
 const wchar_t * style_table_properties::name = L"table-properties";
-
-
 void style_table_properties::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     content_.create_child_element(Ns, Name, getContext());
@@ -141,8 +137,6 @@ void style_table_properties::apply_from(const style_table_properties * Other)
 
 	content_.apply_from(Other->content_);
 }
-
-
 // style-table-column-properties-attlist
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void style_table_column_properties_attlist::serialize(std::wostream & _Wostream,const wchar_t * ns, const wchar_t * name )
@@ -289,8 +283,6 @@ void style_table_row_properties_attlist::serialize(std::wostream & _Wostream ,co
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_table_row_properties::ns = L"style";
 const wchar_t * style_table_row_properties::name = L"table-row-properties";
-
-
 void style_table_row_properties::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
     if (L"style" == Ns && L"background-image" == Name)

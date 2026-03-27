@@ -38,13 +38,9 @@ namespace XLS
 Begin::Begin()
 {
 }
-
-
 Begin::~Begin()
 {
 }
-
-
 BaseObjectPtr Begin::clone()
 {
 	return BaseObjectPtr(new Begin(*this));

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of RadarArea record in BIFF8
 class RadarArea: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~RadarArea();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

@@ -91,8 +91,6 @@ public:
 	bool					sp_enabled;
 
 	MsoDrawingPtr			mso_drawing_;
-
-
 //---------------------------------------------
 	bool					preserve_enabled;
 	short					macrosSize;

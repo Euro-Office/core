@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 EnhancedProtection::EnhancedProtection()
 {
 }
-
-
 EnhancedProtection::EnhancedProtection(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr EnhancedProtection::clone()
 {
 	return BiffStructurePtr(new EnhancedProtection(*this));

@@ -66,8 +66,6 @@ PivotTableStream::PivotTableStream()
 PivotTableStream::~PivotTableStream()
 {
 }
-
-
 BaseObjectPtr PivotTableStream::clone()
 {
         return BaseObjectPtr(new PivotTableStream(*this));
@@ -100,8 +98,6 @@ const bool PivotTableStream::loadContent(BinProcessor& proc)
                         elements_.pop_back();
                     }
                 }break;
-
-
                 case rt_BeginSXLocation:
                 {
                     if (proc.optional<SXLOCATION>())

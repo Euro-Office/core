@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 RevExtern::RevExtern()
 {
 }
-
-
 RevExtern::RevExtern(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevExtern::clone()
 {
 	return BiffStructurePtr(new RevExtern(*this));
@@ -70,7 +64,5 @@ void RevExtern::save(CFRecord& record)
 {	
 	record << book << itabFirst << itabLast;
 }
-
-
 } // namespace XLS
 

@@ -34,8 +34,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../XlsxFormat/WritingElement.h"
 #include "../Biff12_structures/SlicerCachePivotTable.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtSlicerCachePivotTables record in BIFF12

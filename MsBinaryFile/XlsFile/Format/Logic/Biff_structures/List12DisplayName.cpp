@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr List12DisplayName::clone()
 {
 	return BiffStructurePtr(new List12DisplayName(*this));
@@ -44,8 +42,6 @@ BiffStructurePtr List12DisplayName::clone()
 List12DisplayName::List12DisplayName()
 {		
 }
-
-
 List12DisplayName::~List12DisplayName()
 {
 }
@@ -61,7 +57,5 @@ void List12DisplayName::save(CFRecord& record)
 	record << stListName;
 	record << stListComment;
 }
-
-
 } // namespace XLS
 

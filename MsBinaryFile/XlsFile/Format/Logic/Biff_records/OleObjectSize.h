@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of OleObjectSize record in BIFF8
 class OleObjectSize: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~OleObjectSize();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeOleObjectSize;

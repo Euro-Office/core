@@ -100,28 +100,18 @@
 
 #include "../../Converter/XlsConverter.h"
 #include "../../Converter/xlsx_conversion_context.h"
-
-
 namespace XLS
 {;
-
-
 ChartSheetSubstream::ChartSheetSubstream(const size_t ws_index) : CommonSubstream(ws_index)
 {
 }
-
-
 ChartSheetSubstream::~ChartSheetSubstream()
 {
 }
-
-
 BaseObjectPtr ChartSheetSubstream::clone()
 {
 	return BaseObjectPtr(new ChartSheetSubstream(*this));
 }
-
-
 /*
 CHARTSHEET = BOF CHARTSHEETCONTENT
 

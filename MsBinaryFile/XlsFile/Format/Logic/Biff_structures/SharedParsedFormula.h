@@ -48,8 +48,6 @@ public:
 	
 	void load(CFRecord& record) override;
 	void save(CFRecord& record) override;
-
-
 	bool is_part_of_a_revision_;
 };
 

@@ -128,8 +128,6 @@ unsigned int saxXmlLiteReader::attrCount()
 
     return xml_->GetAttributesCount();
 }
-
-
 unsigned int saxXmlLiteReader::depth()
 {
  	if (xml_.IsInit() == false) return 0;
@@ -220,8 +218,6 @@ NodeType saxXmlLiteReader::next(int Depth)
 	}
 	else 
 		return typeNone;
-
-	
 }
 
 sax_ptr create_sax_xmllite(const wchar_t * FileName)

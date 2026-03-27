@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr HideObjEnum::clone()
 {
 	return BiffStructurePtr(new HideObjEnum(*this));

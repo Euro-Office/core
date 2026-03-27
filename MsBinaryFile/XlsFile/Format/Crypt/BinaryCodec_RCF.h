@@ -145,6 +145,4 @@ private:
 	DigestMD5           mhDigest;
 	unsigned char		mpnDigestValue[DigestMD5::RTL_DIGEST_LENGTH_MD5];
 };
-
-
 } // namespace CRYPT

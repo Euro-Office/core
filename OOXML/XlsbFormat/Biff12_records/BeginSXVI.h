@@ -66,8 +66,6 @@ namespace XLSB
             bool            fOlapFilterSelected;
             _INT32          iCache;
             XLWideString    displayName;
-
-
     };
 
 } // namespace XLSB

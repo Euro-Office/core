@@ -87,8 +87,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextS;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -110,8 +108,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTab;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -135,8 +131,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextLineBreak;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -397,8 +391,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextNoteBody;
-    
-	
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -411,8 +403,6 @@ public:
 	office_element_ptr_array    content_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(text_note_body);
-
-
 // text:note
 //---------------------------------------------------------------------------------------------------
 class text_note : public office_element_impl<text_note>
@@ -422,8 +412,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextNote;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -451,8 +439,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextRuby;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -487,8 +473,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTitle;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -511,8 +495,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextPlaceholder;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -533,8 +515,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextPageNumber;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -561,8 +541,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextPageCount;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -584,8 +562,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextDate;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -610,8 +586,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTime;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -636,8 +610,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextFileName;
-    
-   
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element		( const office_element_ptr & child_element);
 
@@ -686,8 +658,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTextInput;
-    
- 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -708,8 +678,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextSheetName;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -729,8 +697,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationFooter;
-    
-    
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -747,8 +713,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationDateTime;
-    
-    
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -765,8 +729,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTocMarkStart;    
-	
-
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 
@@ -786,8 +748,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTocMarkEnd;    
-	
-
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 
@@ -806,8 +766,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextTocMark;    
-	
-
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 
@@ -827,8 +785,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextAlphabeticalIndexMarkStart;    
-	
-
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 
@@ -853,8 +809,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextAlphabeticalIndexMarkEnd;    
-	
-
 	virtual void create_child_element	(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element		( const office_element_ptr & child_element){}
 

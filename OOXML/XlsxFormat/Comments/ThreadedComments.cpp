@@ -424,8 +424,6 @@ namespace OOX
 					WritingElement_ReadAttributes_Read_else_if	( oReader, L"id",		id )
 					WritingElement_ReadAttributes_Read_else_if	( oReader, L"parentId",	parentId )
 					WritingElement_ReadAttributes_Read_else_if	( oReader, L"done",		done )
-
-
 				WritingElement_ReadAttributes_End( oReader )
 
 				//todo IsZero() is added to fix comments with zero ids(5.4.0)(bug 42947). Remove after few releases

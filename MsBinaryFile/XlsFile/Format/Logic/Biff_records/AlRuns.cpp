@@ -38,19 +38,13 @@ namespace XLS
 AlRuns::AlRuns()
 {
 }
-
-
 AlRuns::~AlRuns()
 {
 }
-
-
 BaseObjectPtr AlRuns::clone()
 {
 	return BaseObjectPtr(new AlRuns(*this));
 }
-
-
 void AlRuns::readFields(CFRecord& record)
 {
 	unsigned short cRuns;

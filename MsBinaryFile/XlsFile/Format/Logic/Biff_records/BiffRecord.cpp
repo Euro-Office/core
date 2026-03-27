@@ -41,13 +41,9 @@ namespace XLS
 BiffRecord::BiffRecord()
 {
 }
-
-
 BiffRecord::~BiffRecord()
 {
 }
-
-
 const bool BiffRecord::read(StreamCacheReaderPtr reader, BaseObject* parent, const bool is_mandatory)
 {
 	parent_ = parent;		
@@ -77,8 +73,6 @@ const bool BiffRecord::read(StreamCacheReaderPtr reader, BaseObject* parent, con
 		{
 			Log::warning(STR::int2str(record->getDataSize() - record->getRdPtr(), 10) + " unsigned chars were not processed while reading from " + record->getTypeString());
 		}
-
-
 		parent->add_child(this->clone());
 	}
 
@@ -108,13 +102,9 @@ const bool BiffRecord::write(StreamCacheWriterPtr writer, BaseObject* parent)
 void BiffRecord::readFollowingContinue(StreamCacheReaderPtr reader)
 {
 }
-
-
 const bool BiffRecord::storeRecordAndDecideProceeding(CFRecordPtr record)
 {
 	return true;
 }
-
-
 } // namespace XLS
 

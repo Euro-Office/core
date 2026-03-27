@@ -100,8 +100,6 @@ namespace cpdoccore {
 		_CP_OPT(std::wstring)		text_;
 		static const xml::NodeType xml_type = xml::typeElement;
 		static const ElementType type = typeMN;
-
-	
 	private:
 		virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 		virtual void add_child_element(const office_element_ptr & child_element);
@@ -126,8 +124,6 @@ namespace cpdoccore {
 		static const xml::NodeType xml_type = xml::typeElement;
 		static const ElementType type = typeMText;
 		_CP_OPT(std::wstring)		text_;
-
-
 	private:
 		virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 		virtual void add_child_element(const office_element_ptr & child_element);
@@ -151,8 +147,6 @@ namespace cpdoccore {
 		static const wchar_t * name;
 		static const xml::NodeType xml_type = xml::typeElement;
 		static const ElementType type = typeMSpace;
-
-
 	private:
 		virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 		virtual void add_child_element(const office_element_ptr & child_element);
@@ -175,8 +169,6 @@ namespace cpdoccore {
 		static const wchar_t * name;
 		static const xml::NodeType xml_type = xml::typeElement;
 		static const ElementType type = typeMS;
-
-
 	private:
 		virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 		virtual void add_child_element(const office_element_ptr & child_element);
@@ -199,8 +191,6 @@ namespace cpdoccore {
 		static const wchar_t * name;
 		static const xml::NodeType xml_type = xml::typeElement;
 		static const ElementType type = typeMGlyph;
-
-
 	private:
 		virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 		virtual void add_child_element(const office_element_ptr & child_element);

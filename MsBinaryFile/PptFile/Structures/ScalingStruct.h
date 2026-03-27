@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 #include "RatioStruct.h"
-
-
 namespace PPT
 {
 struct ScalingStruct : public IStruct

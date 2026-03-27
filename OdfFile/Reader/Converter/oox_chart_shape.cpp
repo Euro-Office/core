@@ -38,8 +38,6 @@
 #include "../Format/odfcontext.h"
 #include "../Format/style_text_properties.h"
 #include "../Format/style_graphic_properties.h"
-
-
 namespace cpdoccore {
 namespace oox {
 
@@ -87,7 +85,5 @@ void oox_serialize_default_text(std::wostream & _Wostream, odf_reader::text_form
 		}
 	}
 }
-
-
 }
 }

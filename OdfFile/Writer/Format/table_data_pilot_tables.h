@@ -58,8 +58,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotTables;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -78,8 +76,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotTable;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -110,8 +106,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotField;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -141,8 +135,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotGrandTotal;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -162,8 +154,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotFieldReference;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -185,8 +175,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDatabaseSourceTable;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -206,8 +194,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDatabaseSourceQuery;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -227,8 +213,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDatabaseSourceSql;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -249,8 +233,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableSourceCellRange;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -269,8 +251,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableSourceCellRanges;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -289,8 +269,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableSourceService;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -313,8 +291,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotLevel;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -339,8 +315,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotGroups;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -366,8 +340,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotGroup;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -387,8 +359,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotMembers;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -407,8 +377,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotMember;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -428,8 +396,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotGroupMember;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -447,8 +413,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotSubtotals;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -467,8 +431,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataPilotSubtotal;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -487,8 +449,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataLayoutInfo;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -507,8 +467,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataSortInfo;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -528,8 +486,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableDataDisplayInfo;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 

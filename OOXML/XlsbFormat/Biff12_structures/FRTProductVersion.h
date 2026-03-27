@@ -34,8 +34,6 @@
 
 #include  "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BiffStructure.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
-
-
 namespace XLSB
 {
     class FRTProductVersion : public XLS::BiffStructure

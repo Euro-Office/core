@@ -79,8 +79,6 @@ private:
 
 };
 	std::wostream & operator << (std::wostream & _Wostream, const presentation_class & _Val);
-
-
 }
 	APPLY_PARSE_XML_ATTRIBUTES(odf_types::presentation_class);
 }

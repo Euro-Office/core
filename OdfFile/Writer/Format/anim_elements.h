@@ -51,8 +51,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeAnimPar;
-    
-
 	odf_types::common_anim_smil_attlist		attlist_;
 	odf_types::anim_par_attlist				par_attlist_;
   	office_element_ptr_array				anim_par_;
@@ -94,8 +92,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeAnimTransitionFilter;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
 
@@ -113,8 +109,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeAnimAudio;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
 

@@ -59,7 +59,5 @@ namespace XLSB
 	{
 		record << FRTheader << irv;
 	}
-
-
 } // namespace XLSB
 

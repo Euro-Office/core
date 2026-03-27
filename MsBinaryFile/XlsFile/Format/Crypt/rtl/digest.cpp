@@ -40,8 +40,6 @@
 	 *((c)++) = (unsigned char)(((l) >>  8L) & 0xff), \
 	 *((c)++) = (unsigned char)(((l) >> 16L) & 0xff), \
 	 *((c)++) = (unsigned char)(((l) >> 24L) & 0xff))
-
-
 #define F(x,y,z) ((((y) ^ (z)) & (x)) ^ (z))
 #define G(x,y,z) ((((x) ^ (y)) & (z)) ^ (y))
 #define H(x,y,z) ((x) ^ (y) ^ (z))
@@ -66,14 +64,10 @@
 	a += ((k) + (t) + I((b), (c), (d))); \
 	a  = RTL_DIGEST_ROTL(a, s); \
 	a += b; }
-
-
 DigestMD5::DigestMD5()
 {
 	InitContext();
 }
-
-
 void DigestMD5::InitContext()
 {
 	memset(&m_context, 0, sizeof (DigestContextMD5));
@@ -216,8 +210,6 @@ void DigestMD5::EndContext()
 
 	UpdateContext();
 }
-
-
 DigestMD5::rtlDigestError DigestMD5::Update(const void *pData, const unsigned int nDatLen)
 {
 	if (nDatLen == 0)
@@ -287,8 +279,6 @@ DigestMD5::rtlDigestError DigestMD5::Get(unsigned char *pBuffer, const unsigned 
 
 	return rtl_Digest_E_None;
 }
-
-
 DigestMD5::rtlDigestError DigestMD5::Raw(unsigned char *pBuffer, const unsigned int nBufLen)
 {
 	unsigned char *p = pBuffer;
@@ -309,7 +299,3 @@ DigestMD5::rtlDigestError DigestMD5::Raw(unsigned char *pBuffer, const unsigned 
 
 	return rtl_Digest_E_None;
 }
-
-
-
-

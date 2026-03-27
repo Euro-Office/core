@@ -52,27 +52,19 @@
 
 namespace XLS
 {
-
-
 ATTACHEDLABEL::ATTACHEDLABEL()
 {
 	m_iLinkObject	= -1;
 	m_bUsed			=  false;
 
 }
-
-
 ATTACHEDLABEL::~ATTACHEDLABEL()
 {
 }
-
-
 BaseObjectPtr ATTACHEDLABEL::clone()
 {
 	return BaseObjectPtr(new ATTACHEDLABEL(*this));
 }
-
-
 /*
 ATTACHEDLABEL = Text Begin Pos [FontX] [AlRuns] AI [FRAME] [ObjectLink] [DataLabExtContents] 
 				[CrtLayout12] [TEXTPROPS] [CRTMLFRT] End

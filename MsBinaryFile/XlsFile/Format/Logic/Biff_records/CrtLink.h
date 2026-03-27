@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CrtLink record in BIFF8
 class CrtLink: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CrtLink();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

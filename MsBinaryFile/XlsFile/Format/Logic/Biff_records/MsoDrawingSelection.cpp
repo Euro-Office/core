@@ -38,13 +38,9 @@ namespace XLS
 MsoDrawingSelection::MsoDrawingSelection()
 {
 }
-
-
 MsoDrawingSelection::~MsoDrawingSelection()
 {
 }
-
-
 BaseObjectPtr MsoDrawingSelection::clone()
 {
 	return BaseObjectPtr(new MsoDrawingSelection(*this));

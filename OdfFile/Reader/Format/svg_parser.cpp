@@ -709,8 +709,6 @@ namespace svg_path
 		}
 		return true;
     }
-
-
 	bool parseVml(std::vector<_polyline> & Polyline, const std::wstring & VmlPath)
 	{
         Polyline.clear();
@@ -1191,8 +1189,6 @@ namespace svg_path
 						if(!importStringAndSpaces(wsAngleEndX,nPos,rSvgDStatement,nLen)) return false;
 						if(!importStringAndSpaces(wsAngleEndY,nPos,rSvgDStatement,nLen)) return false;
 					}
-
-
 					std::wstring wsKoefHeight{L"af" + std::to_wstring(iCountFormul++)},
 								wsKoefWidth{L"af" + std::to_wstring(iCountFormul++)},
 								wsHeight{L"af" + std::to_wstring(iCountFormul++)},
@@ -1213,8 +1209,6 @@ namespace svg_path
 								wsStAngle{L"af" + std::to_wstring(iCountFormul++)},
 								wsSwAngleNegative{L"af" + std::to_wstring(iCountFormul++)},
 								wsSwAngle{L"af" + std::to_wstring(iCountFormul++)};
-
-
 					{/*...*/}
 
 					/* implemented without taking into account the left offset*/
@@ -1228,8 +1222,6 @@ namespace svg_path
 					// }
 					wsNewFormula += L"<a:gd name=\""+ wsHeight + L"\" fmla=\"*/ vc " + wsH + L" h\"/>";
 					wsNewFormula += L"<a:gd name=\""+ wsWidth + L"\" fmla=\"*/ wd2 " + wsW + L" w\"/>";
-
-
 					wsNewFormula += L"<a:gd name=\""+ wsNewFirstAngleX + L"\" fmla=\"*/ "+ wsAngleStartX +L" " + wsKoefWidth + L" 1\"/>";
 					wsNewFormula += L"<a:gd name=\""+ wsNewFirstAngleY + L"\" fmla=\"*/ "+ wsAngleStartY +L" " + wsKoefHeight + L" 1\"/>";
 					wsNewFormula += L"<a:gd name=\""+ wsDifferenceX_FirstAngle + L"\" fmla=\"+- 0 " + wsNewFirstAngleX + L" wd2\"/>";
@@ -1281,7 +1273,5 @@ namespace svg_path
 
         return true;
     }
-
-
 }
 

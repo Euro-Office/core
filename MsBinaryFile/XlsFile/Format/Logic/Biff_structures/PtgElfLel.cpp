@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgElfLel::clone()
 {
 	return BiffStructurePtr(new PtgElfLel(*this));
@@ -47,13 +45,9 @@ void PtgElfLel::loadFields(CFRecord& record)
 	record >> ilel >> flags;
 	fQuoted = GETBIT(flags, 0);
 }
-
-
 void PtgElfLel::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	ptg_stack.push(L"#NAME?"); // The best decision I think
 }
-
-
 } // namespace XLS
 

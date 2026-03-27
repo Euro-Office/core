@@ -39,13 +39,9 @@ TopMargin::TopMargin()
 {
 	num.data.value = 0.75;
 }
-
-
 TopMargin::~TopMargin()
 {
 }
-
-
 BaseObjectPtr TopMargin::clone()
 {
 	return BaseObjectPtr(new TopMargin(*this));

@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ExternDdeLinkNoOper::clone()
 {
 	return BiffStructurePtr(new ExternDdeLinkNoOper(*this));
 }
-
-
 void ExternDdeLinkNoOper::load(CFRecord& record)
 {
 	record.skipNunBytes(4); // reserved
@@ -53,7 +49,5 @@ void ExternDdeLinkNoOper::save(CFRecord& record)
     record.reserveNunBytes(4); // reserved
     record << linkName;
 }
-
-
 } // namespace XLS
 

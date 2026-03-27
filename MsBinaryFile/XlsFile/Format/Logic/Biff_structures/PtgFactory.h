@@ -48,7 +48,5 @@ public:
 private:
 	static PtgPtr createPtg(const unsigned short type, const CellRef& cell_base_ref);
 };
-
-
 } // namespace XLS
 

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 CRTMLFRT::CRTMLFRT()
 {
 }
-
-
 CRTMLFRT::~CRTMLFRT()
 {
 }
-
-
 BaseObjectPtr CRTMLFRT::clone()
 {
 	return BaseObjectPtr(new CRTMLFRT(*this));
 }
-
-
 // CRTMLFRT = CrtMlFrt *CrtMlFrtContinue
 const bool CRTMLFRT::loadContent(BinProcessor& proc)
 {

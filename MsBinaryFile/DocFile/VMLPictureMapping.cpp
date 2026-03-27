@@ -47,8 +47,6 @@
 #include "../../OOXML/DocxFormat/Logic/Paragraph.h"
 
 using namespace DocFileFormat;
-
-
 namespace DocFileFormat
 {
 	struct __BITMAPINFOHEADER
@@ -302,8 +300,6 @@ namespace DocFileFormat
 		m_pXmlWriter->WriteNodeBegin(L"v:shape", true);
 
 		//m_shapeId = GetShapeID(pShape); - todooo одинаковые картинки (одинаковый spid) - Anexo№3.doc
-
-
 		if (m_shapeId.empty())
 		{
 			m_context->_doc->GetOfficeArt()->m_uLastShapeId++;

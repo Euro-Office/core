@@ -45,8 +45,6 @@ namespace cpdoccore {
 
 namespace odf_reader {
 
-
-
 // style:tab-stop
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_tab_stop::ns = L"style";
@@ -244,8 +242,6 @@ bool paragraph_format_properties::add_child_element( xml::sax * Reader, const st
     }
     return false;
 }
-
-
 // style:paragraph-properties
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_paragraph_properties::ns = L"style";
@@ -269,8 +265,6 @@ void style_paragraph_properties::add_child_element( xml::sax * Reader, const std
 
 void style_paragraph_properties::add_text(const std::wstring & Text)
 {}
-
-
 void paragraph_format_properties::apply_from(const paragraph_format_properties & Other)
 {
 	_CP_APPLY_PROP(outline_level_, Other.outline_level_);
@@ -342,7 +336,5 @@ void paragraph_format_properties::apply_from(const paragraph_format_properties &
     _CP_APPLY_PROP(style_background_transparency_, Other.style_join_border_);
     _CP_APPLY_PROP(style_join_border_, Other.style_join_border_);
 }
-
-
 }
 }

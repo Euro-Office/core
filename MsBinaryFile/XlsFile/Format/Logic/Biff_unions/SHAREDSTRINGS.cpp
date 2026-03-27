@@ -36,26 +36,18 @@
 
 namespace XLS
 {
-
-
 SHAREDSTRINGS::SHAREDSTRINGS(const unsigned short code_page)
 : code_page_(code_page)
 {
 	size_ = 0 ;
 }
-
-
 SHAREDSTRINGS::~SHAREDSTRINGS()
 {
 }
-
-
 BaseObjectPtr SHAREDSTRINGS::clone()
 {
 	return BaseObjectPtr(new SHAREDSTRINGS(*this));
 }
-
-
 // SHAREDSTRINGS = SST *Continue
 const bool SHAREDSTRINGS::loadContent(BinProcessor& proc)
 {
@@ -113,7 +105,5 @@ int SHAREDSTRINGS::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

@@ -40,19 +40,13 @@
 
 namespace XLS
 {
-
-
 PtgExtraArray::PtgExtraArray()
 {
 }
-
-
 PtgExtraArray::PtgExtraArray(const std::wstring& word)
 {
 	fromString(word);
 }
-
-
 BiffStructurePtr PtgExtraArray::clone()
 {
 	return BiffStructurePtr(new PtgExtraArray(*this));
@@ -172,8 +166,6 @@ const std::wstring PtgExtraArray::toString() const
 	ret_val += tempVal;
 	return ret_val;
 }
-
-
 void PtgExtraArray::fromString(const std::wstring& str)
 {
 	if(str.length() <= 2)
@@ -222,7 +214,5 @@ void PtgExtraArray::fromString(const std::wstring& str)
 	}
 
 }
-
-
 } // namespace XLS
 

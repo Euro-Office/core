@@ -415,7 +415,5 @@ private:
     xl_files				xl_files_;
 	xl_customXml_files		customXml_files_;
 };
-
-
 }
 }

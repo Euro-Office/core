@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 RevItab::RevItab()
 {
 }
-
-
 RevItab::RevItab(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevItab::clone()
 {
 	return BiffStructurePtr(new RevItab(*this));
@@ -78,7 +72,5 @@ void RevItab::save(CFRecord& record)
 		break;
 	}
 }
-
-
 } // namespace XLS
 

@@ -76,8 +76,6 @@ namespace Txt2Docx
             pText->m_sText  = sText;
             pText->m_oSpace = new SimpleTypes::CXmlSpace();
             pText->m_oSpace->SetValue( SimpleTypes::xmlspacePreserve );
-
-
             ((OOX::Logic::CRun*)pR)->m_arrItems.push_back( pT );
 
             pPara->m_arrItems.push_back( pR );
@@ -153,8 +151,6 @@ namespace Txt2Docx
 	{
 		return converter_->m_inputFile.read(path);
 	}
-
-
     void Converter::write(NSStringUtils::CStringBuilderA &stringWriter)
     {
         const char* fontName = "Courier New";
@@ -205,8 +201,6 @@ namespace Txt2Docx
             stringWriter.WriteString("</w:p>");
         }
     }
-
-
 
 	Converter_Impl::Converter_Impl(int encoding) : m_outputFile(NULL)
 	{

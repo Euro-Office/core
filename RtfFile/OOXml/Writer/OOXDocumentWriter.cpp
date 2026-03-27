@@ -206,8 +206,6 @@ std::wstring OOXDocumentWriter::CreateXmlEnd( )
 	oNewParam.nType		= RENDER_TO_OOX_PARAM_APP;
 	oNewParam.poWriter	= m_oWriter.m_poDocPropsApp;
 	m_oDocument.m_oInformation.RenderToOOX(oNewParam);
-
-
 	//пишем финальные свойства секции
 	oNewParam.poDocument = &m_oDocument;
 	oNewParam.poWriter = &m_oWriter;
@@ -379,8 +377,6 @@ bool OOXDocumentWriter::SaveByItem()
 					nFind		= sXml.rfind(L"</w:pPr>", pos);
 					pos = nFindPict - 1;
 				}while(std::wstring::npos != nFind && std::wstring::npos != nFindPict && nFind > nFindPict);
-
-
 				if( std::wstring::npos != nFind )
 				{
 					sXml.insert( nFind, sectPr );

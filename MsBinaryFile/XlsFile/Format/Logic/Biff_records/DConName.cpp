@@ -38,8 +38,6 @@ namespace XLS
 DConName::DConName()
 {
 }
-
-
 DConName::~DConName()
 {
 }

@@ -56,8 +56,6 @@
 #include "../../DataTypes/markerstyle.h"
 #include "../../DataTypes/verticalalign.h"
 #include "../../DataTypes/gradientstyle.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer {
 
@@ -149,8 +147,6 @@ public:
 	style_columns_ptr						style_columns_;
 };
 typedef boost::shared_ptr<graphic_format_properties> graphic_format_properties_ptr;
-
-
 class style_graphic_properties : public office_element_impl<style_graphic_properties>
 {
 public:
@@ -158,8 +154,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleGraphicPropertis;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
@@ -178,8 +172,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleGraphicPropertis;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}

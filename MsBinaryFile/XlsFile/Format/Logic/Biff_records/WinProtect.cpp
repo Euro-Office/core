@@ -38,13 +38,9 @@ namespace XLS
 WinProtect::WinProtect()
 {
 }
-
-
 WinProtect::~WinProtect()
 {
 }
-
-
 BaseObjectPtr WinProtect::clone()
 {
 	return BaseObjectPtr(new WinProtect(*this));

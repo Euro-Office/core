@@ -63,8 +63,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"simple1.xlsb", L"result.xlsx", L"simple1.xlsx");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -82,8 +80,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"simple2.xlsb", L"result.xlsx", L"simple2.xlsx");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -102,8 +98,6 @@ public:
         tempDir = GetWorkDir();
         processTestFile(tempDir, L"fmla.xlsb", L"result.xlsx", L"fmla.xlsx");
     }
-
-
     static void TearDownTestCase() 
     {
         RemoveWorkDir(tempDir);
@@ -135,8 +129,6 @@ _UINT32 readFiles(const std::wstring &filePath, const std::wstring &examplePath,
 
     return 0;
 }
-
-
 
 TEST_F(SimpleTests1, ContentTypesTest)
 {

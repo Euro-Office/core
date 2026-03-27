@@ -50,8 +50,6 @@ public:
     /// @param result результат в формате excel
     /// @param return true в случае успешной конвертации, иначе false
     bool GetDigitalDate(const std::wstring &date, double &result, bool &Hasdate, bool &Hastime);
-
-
     /// @brief парсинг стандартизированной даты
     /// @param date дата в строковом формате
     /// @param result в формате tm

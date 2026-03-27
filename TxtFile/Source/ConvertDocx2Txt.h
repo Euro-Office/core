@@ -56,6 +56,4 @@ namespace Docx2Txt
 		Converter_Impl * converter_;
 
 	};
-
-	
 } // namespace Docx2Txt

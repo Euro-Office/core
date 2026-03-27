@@ -33,8 +33,6 @@
 #include "idirectoryentry.h"
 #include "compoundfile_impl.h"
 #include <cstring>
-
-
 using namespace CFCPP;
 
 _INT32 CFItem::CompareTo(const CFItem &other) const
@@ -141,15 +139,11 @@ std::shared_ptr<IDirectoryEntry> CFItem::getDirEntry() const
 {
     return dirEntry.lock();
 }
-
-
 void CFItem::CheckDisposed() const
 {
     if (compoundFile != nullptr && compoundFile->IsClosed())
         throw CFDisposedException("Owner Compound file has been closed and owned items have been invalidated");
 }
-
-
 DataTime::DataTime(_UINT64 time)
 {
     memcpy(data, reinterpret_cast<char*>(&time), 8);

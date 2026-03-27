@@ -51,14 +51,10 @@ public:
 
 	virtual void load(XLS::CFRecord& record);
 	virtual void save(XLS::CFRecord& record);
-
-
 public:
 	unsigned short fridNew;
 	unsigned short fridOld;
 };
 
 typedef boost::shared_ptr<OfficeArtFRIT> OfficeArtFRITPtr;
-
-
 } // namespace XLS

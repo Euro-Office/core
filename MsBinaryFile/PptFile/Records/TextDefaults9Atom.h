@@ -32,8 +32,6 @@
 #pragma once
 #include "TextCFException9.h"
 #include "TextPFException9.h"
-
-
 namespace PPT
 {
 
@@ -42,8 +40,6 @@ class CRecordTextDefaults9Atom : public CUnknownRecord
 public:
     STextCFException9 m_cf9;
     STextPFException9 m_pf9;
-
-
     virtual void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
 }

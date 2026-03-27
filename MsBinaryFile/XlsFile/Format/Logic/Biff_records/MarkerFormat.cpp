@@ -56,19 +56,13 @@ namespace XLS
 MarkerFormat::MarkerFormat()
 {
 }
-
-
 MarkerFormat::~MarkerFormat()
 {
 }
-
-
 BaseObjectPtr MarkerFormat::clone()
 {
 	return BaseObjectPtr(new MarkerFormat(*this));
 }
-
-
 void MarkerFormat::readFields(CFRecord& record)
 {
 	global_info = record.getGlobalWorkbookInfo();

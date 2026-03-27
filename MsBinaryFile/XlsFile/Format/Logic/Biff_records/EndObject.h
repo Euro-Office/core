@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of EndObject record in BIFF8
 class EndObject: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~EndObject();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

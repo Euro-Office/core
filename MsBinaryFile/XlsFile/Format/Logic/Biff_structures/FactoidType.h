@@ -50,8 +50,6 @@ public:
 
 	virtual void load(XLS::CFRecord& record);
 	virtual void save(XLS::CFRecord& record);
-
-
 	_UINT32	 id = 0;
 	PBString rgbUri;
 	PBString rgbTag;

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Axis record in BIFF8
 class Axis: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Axis();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

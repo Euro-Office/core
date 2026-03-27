@@ -83,8 +83,6 @@ public:
 
     static const ElementType type = typeStyleTabStop;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
 
@@ -113,8 +111,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleTabStops;
-
-    
     
     size_t size() const { return style_tab_stops_.size(); }
 
@@ -127,8 +123,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_tab_stops)
-
-
 class style_drop_cap : public office_element_impl<style_drop_cap>
 {
 public:
@@ -136,8 +130,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleDropCap;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
@@ -161,8 +153,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleBackgroundImage;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child){}
@@ -245,8 +235,6 @@ public:
     _CP_OPT(odf_types::length)				fo_padding_right_; 
     _CP_OPT(odf_types::background_color)	fo_background_color_;
     _CP_OPT(odf_types::keep_together)		fo_keep_with_next_;
-
-
 	odf_types::common_border_attlist		common_border_attlist_;
     _CP_OPT(odf_types::Bool)				text_number_lines_;
     _CP_OPT(unsigned int)					text_line_number_;

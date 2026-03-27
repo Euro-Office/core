@@ -187,8 +187,6 @@ public:
 
 	unsigned int						columns_spanned_num_;
     std::vector<oox::xlsx_row_spanned>	rows_spanned_;
-   
-
 ///////////////////////////////////////////
 
 };
@@ -333,8 +331,6 @@ private:
 
 	oox::num_format_context num_format_context_;
 };
-
-
 
 }
 }

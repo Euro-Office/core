@@ -34,19 +34,13 @@
 
 namespace OSHARED
 {
-
-
 CompositeMoniker::CompositeMoniker()
 {
 }
-
-
 CompositeMoniker::CompositeMoniker(XLS::CFRecord& record)
 {
 	load(record);
 }
-
-
 XLS::BiffStructurePtr CompositeMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new CompositeMoniker(*this));
@@ -72,7 +66,5 @@ void CompositeMoniker::save(XLS::CFRecord& record)
     for(auto i : monikerArray)
         record << i;
 }
-
-
 } // namespace OSHARED
 

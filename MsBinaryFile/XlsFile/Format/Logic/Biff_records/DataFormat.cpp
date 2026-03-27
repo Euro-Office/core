@@ -38,13 +38,9 @@ namespace XLS
 DataFormat::DataFormat()
 {
 }
-
-
 DataFormat::~DataFormat()
 {
 }
-
-
 BaseObjectPtr DataFormat::clone()
 {
 	return BaseObjectPtr(new DataFormat(*this));

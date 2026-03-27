@@ -64,8 +64,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxisLine.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/LineFormat.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Tick.h"
-
-
 namespace OOX
 {
 namespace Spreadsheet 
@@ -3368,8 +3366,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					}
 				}
 			}
-
-
 			return XLS::BaseObjectPtr(dvAxis);
 		}
 		EElementType CT_ValAx::getType() { return et_ct_valax; }

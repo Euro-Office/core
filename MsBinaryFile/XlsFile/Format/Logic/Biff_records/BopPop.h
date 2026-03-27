@@ -65,8 +65,6 @@ public:
     Xnum			numSplitValue;
 	
     bool			fHasShadow = false;
-
-
 	BaseObjectPtr	m_Custom;
 };
 

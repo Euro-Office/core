@@ -1051,8 +1051,6 @@ void table_of_content::pptx_convert(oox::pptx_conversion_context & Context)
     if (index_body_)
         index_body_->pptx_convert(Context);
 }
-
-
 std::wostream & table_of_content::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     CP_SERIALIZE_TEXT(index_body_, bXmlEncode);
@@ -1324,8 +1322,6 @@ void illustration_index::add_child_element( xml::sax * Reader, const std::wstrin
 //----------------------------------------------------------------------------------------
 const wchar_t * illustration_index_source::ns = L"text";
 const wchar_t * illustration_index_source::name = L"illustration-index-source";
-
-
 void illustration_index_source::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
 	CP_APPLY_ATTR(L"text:caption-sequence-name",	caption_sequence_name_);

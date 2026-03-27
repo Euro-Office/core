@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/FRTBlank.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtCFRuleExt record in BIFF12

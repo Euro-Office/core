@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SUB union of records 
 class SUB: public CompositeObject
 {

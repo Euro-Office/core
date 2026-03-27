@@ -184,8 +184,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(number_time_style);
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 class number_element : public office_element
 {
@@ -437,8 +435,6 @@ private:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(number_quarter);
-
-
 //  number:day
 class number_day : public number_element
 {
@@ -681,8 +677,6 @@ private:
 	virtual void add_child_element(xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name) {}
 	virtual void add_text(const std::wstring & Text) {}
 	virtual void add_space(const std::wstring & Text) {}
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(number_boolean);
 }

@@ -37,8 +37,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 void relationship::serialize(std::wostream & _Wostream)
 {
     CP_XML_WRITER(_Wostream)

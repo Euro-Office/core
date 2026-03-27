@@ -38,8 +38,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BoolErr record in BIFF8
 class BoolErr: public BiffRecord
 {
@@ -50,8 +48,6 @@ public:
 	~BoolErr();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

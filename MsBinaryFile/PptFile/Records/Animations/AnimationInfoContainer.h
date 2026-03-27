@@ -30,13 +30,9 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "AnimationInfoAtom.h"
 #include "../SoundContainer.h"
-
-
 namespace PPT
 {
 class CRecordAnimationInfoContainer: public CUnknownRecord

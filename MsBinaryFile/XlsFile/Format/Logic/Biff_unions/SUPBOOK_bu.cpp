@@ -70,14 +70,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr SUPBOOK::clone()
 {
 	return BaseObjectPtr(new SUPBOOK(*this));
 }
-
-
 // SUPBOOK = SupBook [*ExternName *(XCT *CRN)] [ExternSheet] *Continue
 const bool SUPBOOK::loadContent(BinProcessor& proc)
 {

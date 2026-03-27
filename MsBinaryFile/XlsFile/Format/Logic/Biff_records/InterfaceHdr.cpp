@@ -34,18 +34,12 @@
 
 namespace XLS
 {
-
-
 InterfaceHdr::InterfaceHdr()
 {
 }
-
-
 InterfaceHdr::~InterfaceHdr()
 {
 }
-
-
 BaseObjectPtr InterfaceHdr::clone()
 {
 	return BaseObjectPtr(new InterfaceHdr(*this));

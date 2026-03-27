@@ -81,6 +81,4 @@ namespace cpdoccore { namespace odf_types {
 			return style_cell_protect(none);
 		}
 	}
-
-
 } }

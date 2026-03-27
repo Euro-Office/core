@@ -38,13 +38,9 @@ namespace XLS
 Scatter::Scatter()
 {
 }
-
-
 Scatter::~Scatter()
 {
 }
-
-
 BaseObjectPtr Scatter::clone()
 {
 	return BaseObjectPtr(new Scatter(*this));

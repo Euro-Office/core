@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Fbi record in BIFF8
 class Fbi: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~Fbi();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 
@@ -61,8 +57,6 @@ public:
     _UINT16 twpHeightBasis = 0;
     _UINT16 scab = 0;
 	FontIndex ifnt;
-
-
 };
 
 } // namespace XLS

@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XFExtGradient::clone()
 {
 	return BiffStructurePtr(new XFExtGradient(*this));

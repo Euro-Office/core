@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 MDTINFO::MDTINFO()
 {
 }
-
-
 MDTINFO::~MDTINFO()
 {
 }
-
-
 BaseObjectPtr MDTINFO::clone()
 {
 	return BaseObjectPtr(new MDTINFO(*this));
 }
-
-
 // MDTINFO = MDTInfo *ContinueFrt12
 const bool MDTINFO::loadContent(BinProcessor& proc)
 {

@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../../../DesktopEditor/common/Types.h"
-
-
 namespace PPT
 {
 enum AnimAfterEffectEnum : BYTE
@@ -42,8 +40,6 @@ enum AnimAfterEffectEnum : BYTE
     AI_Hide,
     AI_HideImmediately
 };
-
-
 enum AnimBuildTypeEnum : BYTE
 {
     BT_NoBuild,
@@ -59,16 +55,12 @@ enum AnimBuildTypeEnum : BYTE
     BT_GraphByElementInCategory,
     BT_FollowMaster = 0xFE
 };
-
-
 enum BuildTypeEnum
 {
     TL_BuildParagraph,
     TL_BuildChart,
     TL_BuildDiagram
 };
-
-
 enum ChartBuildEnum
 {
     TLCB_AsOneObject,
@@ -78,8 +70,6 @@ enum ChartBuildEnum
     TLCB_ByElementInCategory,
     TLCB_Custom
 };
-
-
 enum ColorModeEnum : BYTE
 {
     CM_BlackAndWhite,
@@ -97,8 +87,6 @@ enum ConditionEnum
     TL_CT_Previous,
     TL_CT_EndSync
 };
-
-
 enum DiagramBuildEnum
 {
     TLDB_AsOneObject,
@@ -119,8 +107,6 @@ enum DiagramBuildEnum
     TLDB_AllAtOnce,
     TLDB_Custom
 };
-
-
 enum DiffTypeEnum
 {
     Diff_DocDiff,
@@ -142,23 +128,17 @@ enum DiffTypeEnum
     Diff_TableDiff,
     Diff_InteractiveInfoDiff
 };
-
-
 enum ElementTypeEnum
 {
     TL_ET_ShapeType = 1,
     TL_ET_SoundType
 };
-
-
 enum ExColorFollowEnum
 {
     ExColor_FollowNone,
     ExColor_FollowScheme,
     ExColor_FollowTextAndBackground
 };
-
-
 enum ExOleObjSubTypeEnum
 {
     ExOleSub_Default,
@@ -180,16 +160,12 @@ enum ExOleObjSubTypeEnum
     ExOleSub_ExcelODF,
     ExOleSub_PPTODF
 };
-
-
 enum ExOleObjTypeEnum
 {
     ExOle_Embedded,
     ExOle_Link,
     ExOle_Control
 };
-
-
 enum InteractiveInfoActionEnum
 {
     II_NoAction,
@@ -201,8 +177,6 @@ enum InteractiveInfoActionEnum
     II_MediaAction,
     II_CustomShowAction
 };
-
-
 enum InteractiveInfoJumpEnum
 {
     II_NoJump,
@@ -213,8 +187,6 @@ enum InteractiveInfoJumpEnum
     II_LastSlideViewed,
     II_EndShow
 };
-
-
 enum LinkToEnum
 {
     LT_NextSlide,
@@ -228,24 +200,18 @@ enum LinkToEnum
     LT_OtherFile,
     LT_Nil                  = 0xFF
 };
-
-
 enum NormalViewSetBarStates
 {
     BS_Minimized,
     BS_Restored,
     BS_Maximized
 };
-
-
 enum OLEVerbEnum
 {
     OV_Primary,
     OV_Secondary,
     OV_Tertiary
 };
-
-
 enum ParaBuildEnum
 {
     TLPB_AllAtOnce,
@@ -253,8 +219,6 @@ enum ParaBuildEnum
     TLPB_CustomBuild,
     TLPB_AsAWhole
 };
-
-
 enum PhotoAlbumFrameShapeEnum
 {
     PA_Rectangle,
@@ -265,8 +229,6 @@ enum PhotoAlbumFrameShapeEnum
     PA_Cross,
     PA_Plaque
 };
-
-
 enum PhotoAlbumLayoutEnum
 {
     PA_FitToSlide,
@@ -277,8 +239,6 @@ enum PhotoAlbumLayoutEnum
     PA_TwoPicturesAndTitle,
     PA_FourPicturesAndTitle
 };
-
-
 enum PlaceholderEnum : BYTE
 {
     PT_None,
@@ -310,16 +270,12 @@ enum PlaceholderEnum : BYTE
     PT_Picture,
     PT_Body_Empty =  0xFF
 };
-
-
 enum PlaceholderSize
 {
     PS_Full,
     PS_Half,
     PS_Quarter
 };
-
-
 enum PrintWhatEnum
 {
     PW_Slides,
@@ -333,8 +289,6 @@ enum PrintWhatEnum
     PW_Handouts9,
     PW_Handouts1
 };
-
-
 enum SlideLayoutType
 {
     SL_TitleSlide,
@@ -352,8 +306,6 @@ enum SlideLayoutType
     SL_VerticalTitleBody,
     SL_VerticalTwoRows
 };
-
-
 enum SlideSizeEnum
 {
     SS_Screen,
@@ -364,8 +316,6 @@ enum SlideSizeEnum
     SS_Banner,
     SS_Custom
 };
-
-
 enum TextAlignmentEnum
 {
     Tx_ALIGNLeft,
@@ -376,8 +326,6 @@ enum TextAlignmentEnum
     Tx_ALIGNThaiDistributed,
     Tx_ALIGNJustifyLow
 };
-
-
 enum TextAutoNumberSchemeEnum : USHORT
 {
     ANM_AlphaLcPeriod,
@@ -422,23 +370,17 @@ enum TextAutoNumberSchemeEnum : USHORT
     ANM_HindiNumParenRight,
     ANM_HindiAlpha1Period
 };
-
-
 enum TextBuildSubEffectEnum
 {
     TXB_BuildByNone,
     TXB_BuildByWord,
     TXB_BuildByCharacter
 };
-
-
 enum TextDirectionEnum
 {
     LeftToRight,
     RightToLeft
 };
-
-
 enum TextFontAlignmentEnum
 {
     Tx_ALIGNFONTRoman,
@@ -446,8 +388,6 @@ enum TextFontAlignmentEnum
     Tx_ALIGNFONTCenter,
     Tx_ALIGNFONTUpholdFixed
 };
-
-
 enum TextTabTypeEnum
 {
     Tx_TABLeft,
@@ -455,8 +395,6 @@ enum TextTabTypeEnum
     Tx_TABRight,
     Tx_TABDecimal
 };
-
-
 enum TextTypeEnum : unsigned
 {
     Tx_TYPE_TITLE,
@@ -470,24 +408,18 @@ enum TextTypeEnum : unsigned
 
     NoPresent           = 0xFF
 };
-
-
 enum TimeAnimateBehaviorValueTypeEnum
 {
     TL_TABVT_String,
     TL_TABVT_Number,
     TL_TABVT_Color
 };
-
-
 enum TimeCommandBehaviorTypeEnum
 {
     TL_TCBT_Eventv,
     TL_TCBT_Call,
     TL_TCBT_OleVerb
 };
-
-
 enum TimeNodeTypeEnum
 {
     TL_TNT_Parallel,
@@ -495,8 +427,6 @@ enum TimeNodeTypeEnum
     TL_TNT_Behavior = 0x3,
     TL_TNT_Media
 };
-
-
 enum TimePropertyID4TimeBehavior
 {
     TL_TBPID_UnknownPropertyList    = 0x1,
@@ -510,8 +440,6 @@ enum TimePropertyID4TimeBehavior
     TL_TBPID_PathEditRotationY,
     TL_TBPID_PointsTypes
 };
-
-
 enum TimePropertyID4TimeNode
 {
     TL_TPID_Display             = 0x02,
@@ -532,8 +460,6 @@ enum TimePropertyID4TimeNode
     TL_TPID_MediaMute,
     TL_TPID_ZoomToFullScreen    = 0x1A
 };
-
-
 enum TimeVariantTypeEnum
 {
     TL_TVT_Bool,
@@ -541,8 +467,6 @@ enum TimeVariantTypeEnum
     TL_TVT_Float,
     TL_TVT_String
 };
-
-
 enum TimeVisualElementEnum
 {
     TL_TVET_Shape,
@@ -554,8 +478,6 @@ enum TimeVisualElementEnum
     TL_TVET_ShapeOnly,
     TL_TVET_AllTextRange    = 0x8
 };
-
-
 enum TriggerObjectEnum
 {
     TL_TOT_None,
@@ -563,8 +485,6 @@ enum TriggerObjectEnum
     TL_TOT_TimeNode,
     TL_TOT_RuntimeNodeRef
 };
-
-
 enum ViewTypeEnum
 {
     V_Slide,
@@ -586,8 +506,6 @@ enum ViewTypeEnum
     V_PodiumSlideView,
     V_PodiumNotesView
 };
-
-
 enum WebFrameColorsEnum
 {
     MSOWOPTBrowserColors,
@@ -596,8 +514,6 @@ enum WebFrameColorsEnum
     MSOWOPTWhiteTextOnBlack,
     MSOWOPTBlackTextOnWhite
 };
-
-
 enum WebOutputEnum
 {
     HTML_EXPORTVersion3 = 0x1,

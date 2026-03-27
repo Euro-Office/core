@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "XORCrypt.h"
 
 #include <boost/scoped_array.hpp>
@@ -110,8 +108,6 @@ unsigned short lclGetHash( const unsigned char* pnPassData, size_t nBufferSize )
     return nHash;
 }
 
-
-
 XORCrypt::XORCrypt(int type, unsigned short key, unsigned short hash, std::wstring password) :
     m_nOffset(0),
     m_nKey(0),
@@ -162,8 +158,6 @@ XORCrypt::XORCrypt(int type, unsigned short key, unsigned short hash, std::wstri
 
     m_VerifyPassword = (key == m_nKey) && (hash == m_nHash);
 }
-
-
 bool XORCrypt::IsVerify()
 {
 	return m_VerifyPassword;
@@ -252,5 +246,3 @@ void XORCrypt::Skip( size_t size )
 }
 
 };
-
-

@@ -38,13 +38,9 @@ namespace XLS
 RichTextStream::RichTextStream()
 {
 }
-
-
 RichTextStream::~RichTextStream()
 {
 }
-
-
 BaseObjectPtr RichTextStream::clone()
 {
 	return BaseObjectPtr(new RichTextStream(*this));

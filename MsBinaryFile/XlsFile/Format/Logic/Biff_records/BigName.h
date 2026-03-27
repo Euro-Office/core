@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BigName record in BIFF8
 class BigName: public BiffRecordContinued
 {
@@ -47,13 +45,9 @@ public:
 	~BigName();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeBigName;
-
-
 };
 
 } // namespace XLS

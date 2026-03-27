@@ -864,8 +864,6 @@ XLS::BaseObjectPtr CSlicerStyle::toBin()
 	{
 		ptr->m_arBrtSlicerStyleElement.push_back(i.toBin());
 	}
-
-
 	return objectPtr;
 }
 void CSlicerStyle::ReadAttributes(XLS::BaseObjectPtr &obj)

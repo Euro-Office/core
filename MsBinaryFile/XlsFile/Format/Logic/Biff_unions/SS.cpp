@@ -78,8 +78,6 @@ namespace XLS
 		L"CCFFFF", 	L"660066", 	L"FF8080", 	L"0066CC", 	L"CCCCFF"
 	};
 
-
-
 SS::SS()
 {
 	m_is3D		= false;
@@ -87,19 +85,13 @@ SS::SS()
 	m_isAutoFill = true;
 	m_isAutoLine = true;
 }
-
-
 SS::~SS()
 {
 }
-
-
 BaseObjectPtr SS::clone()
 {
 	return BaseObjectPtr(new SS(*this));
 }
-
-
 /*
 SS = DataFormat Begin [Chart3DBarShape] [LineFormat AreaFormat PieFormat] [SerFmt] [GELFRAME] 
 		[MarkerFormat] [AttachedLabel] *2SHAPEPROPS [CRTMLFRT] End

@@ -588,8 +588,6 @@ bool BinDocxRW::CDocxSerializer::getXmlContentElem(OOX::EElementType eType, NSBi
 		oBinary_DocumentTableReader.ReadMathArgOut(nLength);
         oTempContentWriter.m_oContent.WriteString(std::wstring(_T("</m:oMath>")));
 	}
-
-
 	sOutputXml = oTempContentWriter.m_oContent.GetData();
 	return true;
 }

@@ -35,8 +35,6 @@
 #include  "../BiffStructure.h"
 #include "../../Biff_records/BiffRecord.h"
 #include "FRTParsedFormula.h"
-
-
 namespace XLSB
 {
     class FRTFormula : public XLS::BiffStructure

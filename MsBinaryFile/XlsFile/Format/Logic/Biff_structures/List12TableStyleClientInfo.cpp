@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr List12TableStyleClientInfo::clone()
 {
 	return BiffStructurePtr(new List12TableStyleClientInfo(*this));
@@ -44,13 +42,9 @@ BiffStructurePtr List12TableStyleClientInfo::clone()
 List12TableStyleClientInfo::List12TableStyleClientInfo()
 {		
 }
-
-
 List12TableStyleClientInfo::~List12TableStyleClientInfo()
 {
 }
-
-
 void List12TableStyleClientInfo::load(CFRecord& record)
 {	
 	unsigned short flags;
@@ -75,7 +69,5 @@ void List12TableStyleClientInfo::save(CFRecord& record)
 	SETBIT(flags, 6, fDefaultStyle)
 	record << flags << stListStyleName;
 }
-
-
 } // namespace XLS
 

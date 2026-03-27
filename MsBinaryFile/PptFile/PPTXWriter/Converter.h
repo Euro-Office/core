@@ -34,14 +34,10 @@
 #include "ImageManager.h"
 #include "../Records/RoundTrip.h"
 #include <unordered_set>
-
-
 class CStylesWriter;
 class CPPTUserInfo;
 class CStringWriter;
 class CSlideShowInfo;
-
-
 namespace PPT
 {
 	class CDocument;

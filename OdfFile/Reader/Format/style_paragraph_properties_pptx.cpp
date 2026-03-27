@@ -45,8 +45,6 @@ namespace cpdoccore {
 
 namespace odf_reader {
 
-
-
 namespace {
 
 std::wstring process_border(border_style	& borderStyle,
@@ -269,8 +267,6 @@ void paragraph_format_properties::xlsx_convert(std::wostream & strm, bool in_dra
 		}
 	}
 }
-
-
 void paragraph_format_properties::pptx_convert(oox::pptx_conversion_context & Context)
 {
 	std::wstringstream & _pPr = Context.get_text_context().get_styles_context().paragraph_attr();
@@ -686,7 +682,5 @@ void style_paragraph_properties::pptx_convert(oox::pptx_conversion_context & Con
 {
     content_.pptx_convert(Context);
 }
-
-
 }
 }

@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Common/Base/FormatUtils.h"
-
-
 namespace DocFileFormat
 {
 	class PieceDescriptor

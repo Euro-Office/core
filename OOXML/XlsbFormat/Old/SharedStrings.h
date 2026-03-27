@@ -118,8 +118,6 @@ namespace XLSB {
             return rt_END_SST;
         }
     };
-
-
     static Registrar<SIRecord> oSIRecord(BIFF12_SI);
     static Registrar<SSTRecord> oSSTRecord(BIFF12_SST);
     static Registrar<SSTEndRecord> oSSTEndRecord(BIFF12_SST_END);

@@ -31,12 +31,8 @@
  */
 #include "abstract_xml.h"
 #include "paragraph_elements.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 // abstract-xml
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * abstract_xml::ns = L"";

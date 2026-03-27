@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FORMATTING union of records 
 class FORMATTING: public CompositeObject
 {

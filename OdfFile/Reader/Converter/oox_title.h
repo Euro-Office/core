@@ -36,8 +36,6 @@
 #include <CPScopedPtr.h>
 
 #include "oox_layout.h"
-
-            
 namespace cpdoccore {
 namespace oox {
 

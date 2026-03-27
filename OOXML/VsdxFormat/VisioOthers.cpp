@@ -521,8 +521,6 @@ namespace Draw
 		pWriter->WriteRecord2(0, ValidationProperties);
 		pWriter->WriteRecord2(1, RuleSets);
 		pWriter->WriteRecord2(2, Issues);
-
-
 	}
 //-----------------------------------------------------------------------------------------------------------------------------
 	EElementType CIssue::getType() const

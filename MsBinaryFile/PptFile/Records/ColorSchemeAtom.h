@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordColorSchemeAtom : public CUnknownRecord
@@ -47,8 +45,6 @@ public:
     ODRAW::SColorAtom m_oAccentColor;
     ODRAW::SColorAtom m_oAccentAndHyperlinkColor;
     ODRAW::SColorAtom m_oAccentAndFollowingHyperlinkColor;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream);
 
     void ToArray(std::vector<ODRAW::SColorAtom>* pArray);

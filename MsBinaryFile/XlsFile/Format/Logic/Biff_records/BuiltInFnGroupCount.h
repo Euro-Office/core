@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BuiltInFnGroupCount record in BIFF8
 class BuiltInFnGroupCount: public BiffRecord
 {
@@ -47,14 +45,10 @@ public:
 	~BuiltInFnGroupCount();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 
 	static const ElementType	type = typeBuiltInFnGroupCount;
-
-
 //-----------------------------
     _UINT16 count = 0;
 };

@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordSSlideLayoutAtom : public CUnknownRecord
@@ -41,8 +39,6 @@ class CRecordSSlideLayoutAtom : public CUnknownRecord
 public:
 	INT m_nGeom;
 	BYTE m_pPlaceHolderID[8];
-	
-
     CRecordSSlideLayoutAtom();
     ~CRecordSSlideLayoutAtom();
 

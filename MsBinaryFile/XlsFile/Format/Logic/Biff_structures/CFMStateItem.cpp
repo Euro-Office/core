@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CFMStateItem::clone()
 {
 	return BiffStructurePtr(new CFMStateItem(*this));

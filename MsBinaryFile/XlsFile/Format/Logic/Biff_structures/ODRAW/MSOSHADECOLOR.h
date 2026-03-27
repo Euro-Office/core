@@ -39,8 +39,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -67,6 +65,4 @@ public:
 };
 
 typedef boost::shared_ptr<MSOSHADECOLOR> MSOSHADECOLORPtr;
-
-
 } // namespace XLS

@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordVisualSoundAtom : public CUnknownRecord
@@ -43,8 +39,6 @@ class CRecordVisualSoundAtom : public CUnknownRecord
 public:
     // Привязка звука через этот объект к ID объекту
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     TimeVisualElementEnum	m_eType;
     ElementTypeEnum			m_eRefType;
     _UINT32					m_nSoundIdRef;

@@ -32,8 +32,6 @@
 #include "CryptSession10Container.h"
 
 using namespace PPT;
-
-
 CRecordEncryptedSummary::CRecordEncryptedSummary(){}
 
 CRecordEncryptedSummary::~CRecordEncryptedSummary(){}

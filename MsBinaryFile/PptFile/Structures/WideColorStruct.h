@@ -33,8 +33,6 @@
 
 #include "IStruct.h"
 
-
-
 namespace PPT
 {
 struct WideColorStruct : IStruct
@@ -42,8 +40,6 @@ struct WideColorStruct : IStruct
     USHORT m_nRed;
     USHORT m_nGreen;
     USHORT m_nBlue;
-
-
     void ReadFromStream(POLE::Stream *pStream) override;
 };
 }

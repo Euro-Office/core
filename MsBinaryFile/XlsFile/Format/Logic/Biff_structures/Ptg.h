@@ -50,8 +50,6 @@ typedef std::stack<PtgPtr> PtgStack;
 typedef std::vector<PtgPtr>::const_iterator PtgVectorIterator;
 
 typedef std::queue<PtgPtr> PtgQueue;
-
-
 class Ptg : public BiffStructure // still abstract
 {
 public:
@@ -82,7 +80,5 @@ protected:
 	void addFuncWrapper(AssemblerStack& ptg_stack, const std::wstring& func_name);
 
 };
-
-
 } // namespace XLS
 

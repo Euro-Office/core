@@ -38,8 +38,6 @@ BiffStructurePtr ConnGrbitDbtAdo::clone()
 {
 	return BiffStructurePtr(new ConnGrbitDbtAdo(*this));
 }
-
-
 void ConnGrbitDbtAdo::load(CFRecord& record)
 {
 	unsigned short flags;

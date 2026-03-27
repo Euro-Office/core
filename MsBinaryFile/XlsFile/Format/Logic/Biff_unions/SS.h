@@ -48,8 +48,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SS union of records 
 class SS: public CompositeObject
 {

@@ -59,7 +59,5 @@ namespace XLSB
 	{
 		record << cMdtinfo;
 	}
-
-
 } // namespace XLSB
 

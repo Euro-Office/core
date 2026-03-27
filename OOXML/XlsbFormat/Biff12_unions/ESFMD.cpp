@@ -36,8 +36,6 @@
 #include "../Biff12_records/BeginEsfmd.h"
 #include "../Biff12_records/EndEsfmd.h"
 #include "../Biff12_unions/FRT.h"
-
-
 using namespace XLS;
 
 namespace XLSB

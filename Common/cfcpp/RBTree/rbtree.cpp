@@ -31,8 +31,6 @@
  */
 #include "rbtree.h"
 #include "rbtreeexception.h"
-
-
 using namespace RedBlackTree;
 
 RBTree::RBTree(PIRBNode root) :

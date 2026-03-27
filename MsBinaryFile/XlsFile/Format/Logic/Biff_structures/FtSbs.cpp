@@ -78,7 +78,5 @@ void FtSbs::save(CFRecord& record)
 	SETBIT(flags, 3, fNo3d)
 	record << iVal << iMin << iMax << dInc << dPage << fHoriz << dxScroll << flags;
 }
-
-
 } // namespace XLS
 

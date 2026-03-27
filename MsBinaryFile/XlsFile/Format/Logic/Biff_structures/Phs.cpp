@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr Phs::clone()
 {
 	return BiffStructurePtr(new Phs(*this));
@@ -52,6 +50,4 @@ void Phs::save(CFRecord& record)
     record << ifnt;
     record.storeAnyData(data);
 }
-
-
 } // namespace XLS

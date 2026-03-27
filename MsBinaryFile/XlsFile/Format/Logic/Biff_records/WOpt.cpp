@@ -38,13 +38,9 @@ namespace XLS
 WOpt::WOpt()
 {
 }
-
-
 WOpt::~WOpt()
 {
 }
-
-
 BaseObjectPtr WOpt::clone()
 {
 	return BaseObjectPtr(new WOpt(*this));

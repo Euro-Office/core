@@ -30,20 +30,14 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimeConditionAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream );
-
-
     TriggerObjectEnum	m_TriggerObject;
     _UINT32				m_nTriggerEvent;
     _UINT32				m_nID;

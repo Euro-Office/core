@@ -53,8 +53,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeChart;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -95,8 +93,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartChart;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -126,8 +122,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartTitle;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -146,8 +140,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartSubtitle;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -167,8 +159,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartFooter;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -205,8 +195,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartLegend;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -216,8 +204,6 @@ public:
 
 };
 CP_REGISTER_OFFICE_ELEMENT2(chart_legend);
-
-
 class chart_plot_area_attlist
 {
 public:
@@ -241,8 +227,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartPlotArea;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -271,8 +255,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartWall;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -282,8 +264,6 @@ public:
 
 };
 CP_REGISTER_OFFICE_ELEMENT2(chart_wall);
-
-
 ///  chart:floor
 class chart_floor : public office_element_impl<chart_floor>
 {
@@ -292,8 +272,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartFloor;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -323,8 +301,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartAxis;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -354,8 +330,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartGrid;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -374,8 +348,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartCategories;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -407,8 +379,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartSeries;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -427,8 +397,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartDomain;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -456,8 +424,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartDataPoint;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -476,8 +442,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartMeanValue;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -495,8 +459,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartErrorIndicator;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -513,8 +475,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartEquation;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}//???
 	virtual void add_child_element( const office_element_ptr & child_element){}//???
 
@@ -524,8 +484,6 @@ public:
 	_CP_OPT(odf_types::Bool)	display_r_square_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(chart_equation);
-
-
 class chart_regression_curve : public office_element_impl<chart_regression_curve>
 {
 public:
@@ -533,8 +491,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartRegressionCurve;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -554,8 +510,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartStockGainMarker;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -575,8 +529,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartStockLossMarker;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -596,8 +548,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeChartStockRangeLine;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 

@@ -49,8 +49,6 @@ public:
 	BiffStructurePtr clone();
 
 	virtual void load(CFRecord& record);
-
-
 	static const ElementType	type = typeFeatProtection;
 
 	bool fSD;

@@ -63,8 +63,6 @@ void PictFmlaKey::load(CFRecord& record)
 	fmlaLinkedCell.load(record);
 	fmlaListFillRange.load(record);
 }
-
-
 void PictFmlaKey::save(CFRecord& record)
 {
 	cbKey = keyBuf.size();
@@ -80,7 +78,5 @@ void PictFmlaKey::save(CFRecord& record)
 	fmlaLinkedCell.save(record);
 	fmlaListFillRange.save(record);
 }
-
-
 } // namespace XLS
 

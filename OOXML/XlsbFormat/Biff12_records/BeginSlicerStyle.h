@@ -36,8 +36,6 @@
 #include "../Biff12_structures/FRTBlank.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/XLWideString.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtBeginSlicerStyle record in BIFF12

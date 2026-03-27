@@ -67,8 +67,6 @@ HRESULT convert_single(std::wstring srcFileName)
 	
 	std::wstring outputDir		= NSDirectory::GetFolderPath(dstFileName);
 	std::wstring dstTempPath	= NSDirectory::CreateDirectoryWithUniqueName(outputDir);
-
-
 	RtfConvertationManager rtfConvert;
 	
 	rtfConvert.m_nUserLCID = 1049;
@@ -97,8 +95,6 @@ HRESULT convert_single(std::wstring srcFileName)
 
 	return 0;
 }
-
-
 HRESULT convert_directory(std::wstring pathName)
 {
 	HRESULT hr = S_OK;

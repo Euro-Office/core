@@ -423,8 +423,6 @@ namespace OOX
 			{
 				i->toBin(obj);
 			}
-
-
 		}
 		EElementType CGradientFill::getType () const
 		{

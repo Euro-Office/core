@@ -88,8 +88,6 @@ private:
 	type type_;
 };
 std::wostream& operator << (std::wostream& _Wostream, const smil_attribute_name& _Val);
-
-
 } // namespace odf_types
 	APPLY_PARSE_XML_ATTRIBUTES(odf_types::smil_attribute_name);
 } // namespace cpdoccore

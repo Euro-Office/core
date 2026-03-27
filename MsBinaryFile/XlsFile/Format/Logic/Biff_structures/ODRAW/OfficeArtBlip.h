@@ -38,8 +38,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -87,6 +85,4 @@ private:
 	std::wstring	rgbUid2;
 	bool			result;
 };
-
-
 } // namespace ODRAW

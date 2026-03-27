@@ -43,8 +43,6 @@
 
 #include "style_paragraph_properties.h"
 #include "style_text_properties.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -73,8 +71,6 @@ void paragraph_attrs::serialize(CP_ATTR_NODE)
 		CP_XML_ATTR(L"text:class-names",	text_class_names_all);
 }
 //////////////////////////////////////////////
-
-
 text_h::text_h() : text_outline_level_(1), text_restart_numbering_(false), text_is_list_header_(false)
 {}
 
@@ -147,8 +143,6 @@ void text_p::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 // text:list
 //--------------------------------------------------------------------------------------------------------
 const wchar_t * text_list::ns = L"text";

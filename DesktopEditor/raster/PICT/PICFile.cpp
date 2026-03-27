@@ -1392,8 +1392,6 @@ void CPictFile::DrawPolygon(bool isFrame)
 	}
 	bary[0] /= double(points_count);
 	bary[1] /= double(points_count);
-
-
 	std::vector<Aggplus::PointF> B2Dpoly;
 	B2Dpoly.resize(points_count);
 	for (int i = 0; i < points_count; i++)
@@ -1410,8 +1408,6 @@ void CPictFile::DrawPolygon(bool isFrame)
 
 	for (int i = 1; i < points_count; i++)
 		m_pRenderer->PathCommandLineTo(B2Dpoly[i].X, B2Dpoly[i].Y);
-
-
 	if (!isFrame)
 		m_pRenderer->Fill();
 
@@ -1583,8 +1579,6 @@ void CPictFile::DrawRoundRect(bool isFrame)
 		}
 		m_pRenderer->PathCommandLineTo(points[i].X, points[i].Y);
 	}
-
-
 	if (!isFrame)
 		m_pRenderer->Fill();
 
@@ -1736,8 +1730,6 @@ void CPictFile::InitializeRenderer()
 	m_pRenderer->SetSwapRGB(false);
 	m_pRenderer->put_PenColor(0x000000);
 }
-
-
 BYTE* CPictFile::GetPixels(const Image& image, const long long& x, const long long& y, const size_t& width, const size_t& height) const
 {
 	BYTE* pixels = image.m_pPixelData + 4 * (y * image.m_nWidth + x);

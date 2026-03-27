@@ -51,8 +51,6 @@ const bool SyntaxPtg::is_operators(std::wstring::const_iterator first, std::wstr
 	static boost::wregex reg_operators(L"^ *[-+*/^&%<=>:]");
 	return boost::regex_search(first, last, reg_operators);
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgAdd(std::wstring::const_iterator& first, std::wstring::const_iterator last, const bool operand_expected)
 {
@@ -68,8 +66,6 @@ const bool SyntaxPtg::extract_PtgAdd(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgUplus(std::wstring::const_iterator& first, std::wstring::const_iterator last, const bool operand_expected)
 {
@@ -85,8 +81,6 @@ const bool SyntaxPtg::extract_PtgUplus(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgSub(std::wstring::const_iterator& first, std::wstring::const_iterator last, const bool operand_expected)
 {
@@ -102,8 +96,6 @@ const bool SyntaxPtg::extract_PtgSub(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgUminus(std::wstring::const_iterator& first, std::wstring::const_iterator last, const bool operand_expected)
 {
@@ -119,8 +111,6 @@ const bool SyntaxPtg::extract_PtgUminus(std::wstring::const_iterator& first, std
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgPercent(std::wstring::const_iterator& first, std::wstring::const_iterator last, const bool operand_expected)
 {
@@ -137,8 +127,6 @@ const bool SyntaxPtg::extract_PtgPercent(std::wstring::const_iterator& first, st
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgMul(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -151,8 +139,6 @@ const bool SyntaxPtg::extract_PtgMul(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgDiv(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -165,8 +151,6 @@ const bool SyntaxPtg::extract_PtgDiv(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgPower(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -179,8 +163,6 @@ const bool SyntaxPtg::extract_PtgPower(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgEq(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -193,8 +175,6 @@ const bool SyntaxPtg::extract_PtgEq(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgNe(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -207,8 +187,6 @@ const bool SyntaxPtg::extract_PtgNe(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgLe(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -221,8 +199,6 @@ const bool SyntaxPtg::extract_PtgLe(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgLt(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -235,8 +211,6 @@ const bool SyntaxPtg::extract_PtgLt(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgGe(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -249,8 +223,6 @@ const bool SyntaxPtg::extract_PtgGe(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgGt(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -263,8 +235,6 @@ const bool SyntaxPtg::extract_PtgGt(std::wstring::const_iterator& first, std::ws
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgConcat(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -277,8 +247,6 @@ const bool SyntaxPtg::extract_PtgConcat(std::wstring::const_iterator& first, std
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgUnion(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -291,8 +259,6 @@ const bool SyntaxPtg::extract_PtgUnion(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::is_PtgIsect(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -302,8 +268,6 @@ const bool SyntaxPtg::is_PtgIsect(std::wstring::const_iterator& first, std::wstr
     return !boost::regex_search(first, last, reg_before_comma) && !boost::regex_search(first, last, reg_before_space) &&
 			boost::regex_search(first, last, reg_isect);
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgIsect(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -314,8 +278,6 @@ const bool SyntaxPtg::extract_PtgIsect(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgRange(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -328,8 +290,6 @@ const bool SyntaxPtg::extract_PtgRange(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_comma(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -355,8 +315,6 @@ const bool SyntaxPtg::extract_semicolon(std::wstring::const_iterator& first, std
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgInt(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -378,8 +336,6 @@ const bool SyntaxPtg::extract_PtgInt(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgNum(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -393,8 +349,6 @@ const bool SyntaxPtg::extract_PtgNum(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgBool(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -408,8 +362,6 @@ const bool SyntaxPtg::extract_PtgBool(std::wstring::const_iterator& first, std::
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgStr(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -424,8 +376,6 @@ const bool SyntaxPtg::extract_PtgStr(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgName(std::wstring::const_iterator& first, std::wstring::const_iterator last, unsigned int& out_num)
 {
@@ -661,8 +611,6 @@ const bool SyntaxPtg::extract_PtgRefErr(std::wstring::const_iterator& first, std
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgErr(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -676,8 +624,6 @@ const bool SyntaxPtg::extract_PtgErr(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgArea(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -695,8 +641,6 @@ const bool SyntaxPtg::extract_PtgArea(std::wstring::const_iterator& first, std::
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgRef(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -710,8 +654,6 @@ const bool SyntaxPtg::extract_PtgRef(std::wstring::const_iterator& first, std::w
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_3D_part(std::wstring::const_iterator& first, std::wstring::const_iterator last, unsigned short& ixti)
 {
@@ -750,8 +692,6 @@ const bool SyntaxPtg::extract_3D_part(std::wstring::const_iterator& first, std::
     }
     return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_UndefinedName(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -765,8 +705,6 @@ const bool SyntaxPtg::extract_UndefinedName(std::wstring::const_iterator& first,
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgArray(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {
@@ -780,8 +718,6 @@ const bool SyntaxPtg::extract_PtgArray(std::wstring::const_iterator& first, std:
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_LeftParenthesis(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -794,8 +730,6 @@ const bool SyntaxPtg::extract_LeftParenthesis(std::wstring::const_iterator& firs
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_RightParenthesis(std::wstring::const_iterator& first, std::wstring::const_iterator last)
 {
@@ -808,8 +742,6 @@ const bool SyntaxPtg::extract_RightParenthesis(std::wstring::const_iterator& fir
 	}
 	return false;
 }
-
-
 // static
 const bool SyntaxPtg::extract_PtgFunc(std::wstring::const_iterator& first, std::wstring::const_iterator last, std::wstring& out_str)
 {

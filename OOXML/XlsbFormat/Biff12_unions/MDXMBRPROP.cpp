@@ -34,8 +34,6 @@
 
 #include "../Biff12_records/BeginMdxMbrProp.h"
 #include "../Biff12_records/EndMdxMbrProp.h"
-
-
 using namespace XLS;
 
 namespace XLSB

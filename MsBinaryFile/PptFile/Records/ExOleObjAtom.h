@@ -42,8 +42,6 @@ public:
 	UINT m_nExObjID;
 	UINT m_nSubType;
 	UINT m_nPersistID;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 

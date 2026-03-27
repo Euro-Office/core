@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "VMLShapeMapping.h"
 #include "TextboxMapping.h"
 
@@ -2361,8 +2359,6 @@ namespace DocFileFormat
 		}
 		else 
 			WritePrimitiveProps(primitive, (index==0?true:false));
-
-		
 		if (primitive->type == 0x0000) 
 		{
 			index++;

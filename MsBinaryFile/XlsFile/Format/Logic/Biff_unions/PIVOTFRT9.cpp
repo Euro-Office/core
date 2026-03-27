@@ -39,18 +39,12 @@
 
 namespace XLS
 {
-
-
 PIVOTFRT9::PIVOTFRT9()
 {
 }
-
-
 PIVOTFRT9::~PIVOTFRT9()
 {
 }
-
-
 BaseObjectPtr PIVOTFRT9::clone()
 {
 	return BaseObjectPtr(new PIVOTFRT9(*this));

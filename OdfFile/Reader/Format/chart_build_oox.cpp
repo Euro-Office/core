@@ -156,8 +156,6 @@ void object_odf_context::add_grid(std::wstring const & className, std::wstring c
 		gr.type_= (className == L"major" ? axis::grid::major : axis::grid::minor); // default: major
 		gr.style_name_ = styleName;         
 		axises_.back().grids_.push_back(gr);
-
-
     }
     else
     {
@@ -188,8 +186,6 @@ void object_odf_context::add_point(unsigned int rep)
         _CP_LOG << "[warning] unexpected chart:data-point" << std::endl;
     }        
 }
-
-
 void object_odf_context::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	if (object_type_ == 1) 

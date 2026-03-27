@@ -38,8 +38,6 @@ namespace XLS
 SXDBEx::SXDBEx()
 {
 }
-
-
 SXDBEx::~SXDBEx()
 {
 }

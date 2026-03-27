@@ -48,8 +48,6 @@ BaseObjectPtr Note::clone()
 	return BaseObjectPtr(new Note(*this));
 }
 
-
-
 void Note::readFields(CFRecord& record)
 {
 // 	is_contained_in_Workbook_ = XMLSTUFF::isChildOf(parent_, "WorkbookStreamObject", true);

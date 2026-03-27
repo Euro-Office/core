@@ -79,13 +79,9 @@ private:
 private:
     std::wstring script_language_;
     office_element_ptr_array content_;
-
-    
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(office_script);
-
-
 
 }
 }

@@ -43,13 +43,9 @@
 #include "../Biff_records/DConRef.h"
 namespace XLS
 {
-
-
 SXTBL::SXTBL()
 {
 }
-
-
 SXTBL::~SXTBL()
 {
 }
@@ -74,14 +70,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr SXTBL::clone()
 {
 	return BaseObjectPtr(new SXTBL(*this));
 }
-
-
 // SXTBL = SXTbl *DREF *SxTbpg *(SXTBRGIITM *SXString)
 const bool SXTBL::loadContent(BinProcessor& proc)
 {

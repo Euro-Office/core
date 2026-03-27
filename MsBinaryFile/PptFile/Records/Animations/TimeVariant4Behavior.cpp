@@ -37,8 +37,6 @@ using namespace PPT;
 #define CREATE_BY_Instanse(RECORD_Instanse, CLASS_RECORD_NAME)					\
     case RECORD_Instanse: { pRecord = new CLASS_RECORD_NAME(); break; }         \
 //-------------------------------------------------------------------------------
-
-
 IRecord *FactoryTimeVariant4Behavior::createByInstanse(unsigned short recInstance)
 {
     IRecord* pRecord = nullptr;

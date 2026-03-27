@@ -35,8 +35,6 @@
 #include "../Biff_structures/BiffString.h"
 #include "../Biff_structures/NameParsedFormula.h"
 #include "../Biff_structures/BIFF12/XLWideString.h"
-
-
 namespace XLS
 {
 

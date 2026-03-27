@@ -140,7 +140,5 @@ int xlsx_pivots_context::get_view_count()
 xlsx_pivots_context::~xlsx_pivots_context()
 {
 }
-
-
 }
 

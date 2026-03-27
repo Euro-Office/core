@@ -39,13 +39,9 @@ namespace XLS
 HFPicture::HFPicture()
 {
 }
-
-
 HFPicture::~HFPicture()
 {
 }
-
-
 BaseObjectPtr HFPicture::clone()
 {
 	return BaseObjectPtr(new HFPicture(*this));

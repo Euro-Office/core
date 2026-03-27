@@ -31,8 +31,6 @@
  */
 #ifndef DOCX_FORMAT_H
 #define DOCX_FORMAT_H
-
-
 class DocxFormatLib
 {
 

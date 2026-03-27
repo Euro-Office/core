@@ -36,8 +36,6 @@
 #include <boost/scoped_ptr.hpp>
 
 #include "../../Common/Utils/OptPtr.h"
-
-
 namespace oox {
 	
 class xlsx_conversion_context;
@@ -77,8 +75,6 @@ public:
 private:
     class Impl;
     boost::scoped_ptr<Impl> impl_;
-
-   
 };
 
 }

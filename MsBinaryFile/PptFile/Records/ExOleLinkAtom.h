@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordExOleLinkAtom : public CUnknownRecord
@@ -41,8 +39,6 @@ class CRecordExOleLinkAtom : public CUnknownRecord
 public:
 	UINT m_nSlideID;
 	UINT m_nOleUpdateMode;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

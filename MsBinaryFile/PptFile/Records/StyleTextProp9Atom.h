@@ -42,12 +42,8 @@ struct SStyleTextProp9
     STextPFException9 m_pf9;
     STextCFException9 m_cf9;
     STextSIException  m_si;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
-
-
 class CRecordStyleTextProp9Atom : public CUnknownRecord
 {
 public:

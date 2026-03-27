@@ -132,8 +132,6 @@ public:
 private:
     pptx_comments_ptr pptx_comments_;
 };
-
-
 pptx_comments_context::pptx_comments_context(pptx_comments_context_handle & h)
  : impl_(new pptx_comments_context::Impl(h))
 {    

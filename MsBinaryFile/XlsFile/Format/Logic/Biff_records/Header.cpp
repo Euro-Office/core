@@ -39,13 +39,9 @@ Header::Header()
 {
     ast = L"";
 }
-
-
 Header::~Header()
 {
 }
-
-
 BaseObjectPtr Header::clone()
 {
 	return BaseObjectPtr(new Header(*this));

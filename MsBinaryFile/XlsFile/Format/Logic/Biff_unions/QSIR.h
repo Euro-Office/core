@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of QSIR union of records 
 class QSIR: public CompositeObject
 {

@@ -38,14 +38,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XFPropGradientStop::clone()
 {
 	return BiffStructurePtr(new XFPropGradientStop(*this));
 }
-
-
 void XFPropGradientStop::load(CFRecord& record)
 {
 	record.skipNunBytes(2); // unused
@@ -81,8 +77,6 @@ void XFPropGradientStop::save(CFRecord& record)
 	}
 	record << color;
 }
-
-
 int XFPropGradientStop::serialize(std::wostream & stream)
 {
 	CP_XML_WRITER(stream)    
@@ -123,6 +117,4 @@ int XFPropGradientStop::deserialize(XmlUtils::CXmlLiteReader& oReader)
 
 	return 0;
 }
-
-
 } // namespace XLS

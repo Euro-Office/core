@@ -38,13 +38,9 @@ namespace XLS
 Sort::Sort()
 {
 }
-
-
 Sort::~Sort()
 {
 }
-
-
 BaseObjectPtr Sort::clone()
 {
 	return BaseObjectPtr(new Sort(*this));

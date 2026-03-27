@@ -40,19 +40,13 @@ namespace XLS
 HLinkTooltip::HLinkTooltip()
 {
 }
-
-
 HLinkTooltip::~HLinkTooltip()
 {
 }
-
-
 BaseObjectPtr HLinkTooltip::clone()
 {
 	return BaseObjectPtr(new HLinkTooltip(*this));
 }
-
-
 void HLinkTooltip::readFields(CFRecord& record)
 {
 	FrtRefHeaderNoGrbit frtRefHeaderNoGrbit(rt_HLinkTooltip);

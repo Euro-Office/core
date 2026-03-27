@@ -144,7 +144,5 @@ void DVParsedFormula::save(CFRecord& record)
 	}
 }
 
-
-
 } // namespace XLS
 

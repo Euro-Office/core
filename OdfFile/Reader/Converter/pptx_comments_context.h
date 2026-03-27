@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include <string>
 #include <boost/noncopyable.hpp>
 
@@ -43,8 +41,6 @@ class pptx_table_metrics;
 
 class pptx_comments;
 typedef _CP_PTR(pptx_comments) pptx_comments_ptr;
-
-
 
 class pptx_comments_context_handle
 {

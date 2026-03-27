@@ -38,13 +38,9 @@ namespace XLS
 MDXSet::MDXSet()
 {
 }
-
-
 MDXSet::~MDXSet()
 {
 }
-
-
 BaseObjectPtr MDXSet::clone()
 {
 	return BaseObjectPtr(new MDXSet(*this));

@@ -44,8 +44,6 @@
 #include "../../DataTypes/fontpitch.h"
 
 #include "../../DataTypes/common_attlists.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
 
@@ -280,5 +278,3 @@ CP_REGISTER_OFFICE_ELEMENT2(office_font_face_decls);
 
 }
 }
-
-

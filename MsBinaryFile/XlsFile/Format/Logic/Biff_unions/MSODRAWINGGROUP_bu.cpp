@@ -36,25 +36,17 @@
 
 namespace XLS
 {
-
-
 MSODRAWINGGROUP::MSODRAWINGGROUP(const bool is_inside_chart_sheet)
 :	is_inside_chart_sheet_(is_inside_chart_sheet)
 {
 }
-
-
 MSODRAWINGGROUP::~MSODRAWINGGROUP()
 {
 }
-
-
 BaseObjectPtr MSODRAWINGGROUP::clone()
 {
 	return BaseObjectPtr(new MSODRAWINGGROUP(*this));
 }
-
-
 // MSODRAWINGGROUP = MsoDrawingGroup *Continue
 const bool MSODRAWINGGROUP::loadContent(BinProcessor& proc)
 {

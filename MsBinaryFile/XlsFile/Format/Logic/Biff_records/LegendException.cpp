@@ -38,13 +38,9 @@ namespace XLS
 LegendException::LegendException()
 {
 }
-
-
 LegendException::~LegendException()
 {
 }
-
-
 BaseObjectPtr LegendException::clone()
 {
 	return BaseObjectPtr(new LegendException(*this));

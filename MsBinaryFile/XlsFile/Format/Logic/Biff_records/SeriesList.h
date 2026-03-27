@@ -45,17 +45,11 @@ public:
 	virtual void load(CFRecord& record);
 
 	virtual void save(CFRecord& record);
-
-
 	static const ElementType	type = typeRGISeriesListSpecial;
 
 	//-----------------------------
 	std::vector<unsigned short> series;
 };
-
-
-
-
 // Logical representation of SeriesList record in BIFF8
 class SeriesList: public BiffRecord
 {
@@ -66,8 +60,6 @@ public:
 	~SeriesList();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

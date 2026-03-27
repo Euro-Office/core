@@ -251,15 +251,11 @@ namespace OOX
 			}
 			file.CloseFile();
 		}
-
-
 		if (false == m_sFileContent.empty())
 		{
 			// элементы вида <br> без </br>
 			// test_vml4.xlsx
 			XmlUtils::replace_all(m_sFileContent, L"<br>", L"");
-
-
 			// элементы вида <![if ...]>, <![endif]>
 			// Zigmunds.pptx
 			while(true)

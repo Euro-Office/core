@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include <iosfwd>
 
 #include "office_elements.h"
@@ -230,8 +228,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(chart_legend);
-
-
 class chart_plot_area_attlist
 {
 public:
@@ -297,8 +293,6 @@ public:
 
 };
 CP_REGISTER_OFFICE_ELEMENT2(chart_wall);
-
-
 //  chart:floor
 class chart_floor : public office_element_impl<chart_floor>
 {
@@ -526,8 +520,6 @@ public:
     static const xml::NodeType xml_type = xml::typeElement;
     static const ElementType type = typeChartErrorIndicator;
     CPDOCCORE_DEFINE_VISITABLE();
-
-
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
@@ -548,8 +540,6 @@ public:
     static const xml::NodeType xml_type = xml::typeElement;
     static const ElementType type = typeChartEquation;
     CPDOCCORE_DEFINE_VISITABLE();
-
-
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
@@ -562,8 +552,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(chart_equation);
-
-
 class chart_regression_curve : public office_element_impl<chart_regression_curve>
 {
 public:
@@ -572,8 +560,6 @@ public:
     static const xml::NodeType xml_type = xml::typeElement;
     static const ElementType type = typeChartRegressionCurve;
     CPDOCCORE_DEFINE_VISITABLE();
-
-
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
@@ -584,8 +570,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(chart_regression_curve);
-
-
 //  chart:stock-gain-marker
 class chart_stock_gain_marker : public office_element_impl<chart_stock_gain_marker>
 {
@@ -595,8 +579,6 @@ public:
     static const xml::NodeType xml_type = xml::typeElement;
     static const ElementType type = typeChartStockGainMarker;
     CPDOCCORE_DEFINE_VISITABLE();
-
-
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
@@ -618,8 +600,6 @@ public:
     static const xml::NodeType xml_type = xml::typeElement;
     static const ElementType type = typeChartStockLossMarker;
     CPDOCCORE_DEFINE_VISITABLE();
-
-
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)

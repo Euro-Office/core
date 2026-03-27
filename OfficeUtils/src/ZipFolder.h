@@ -80,8 +80,6 @@ public:
 		friend class CFolderSystem;
 		friend class CZipFolderMemory;
 	};
-
-
 public:
 	virtual ~IFolder() {}
 

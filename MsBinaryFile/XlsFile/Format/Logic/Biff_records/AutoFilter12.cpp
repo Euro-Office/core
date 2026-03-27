@@ -45,19 +45,13 @@ namespace XLS
 AutoFilter12::AutoFilter12()
 {
 }
-
-
 AutoFilter12::~AutoFilter12()
 {
 }
-
-
 BaseObjectPtr AutoFilter12::clone()
 {
 	return BaseObjectPtr(new AutoFilter12(*this));
 }
-
-
 void AutoFilter12::readFields(CFRecord& record)
 {
 	_UINT16 flags;

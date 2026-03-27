@@ -38,13 +38,9 @@ namespace XLS
 ValueRange::ValueRange()
 {
 }
-
-
 ValueRange::~ValueRange()
 {
 }
-
-
 BaseObjectPtr ValueRange::clone()
 {
 	return BaseObjectPtr(new ValueRange(*this));

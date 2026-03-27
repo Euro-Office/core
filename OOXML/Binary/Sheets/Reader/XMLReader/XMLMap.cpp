@@ -117,8 +117,6 @@ std::wstring XMLMap::getNodeName(const std::wstring &name, std::set<std::wstring
     names.insert(resultName);
     return resultName;
 }
-
-
 std::shared_ptr<XmlNode> XMLMap::searchSameNode(const std::wstring &name)
 {
     _UINT32 nodeCount = 0;
@@ -132,8 +130,6 @@ std::shared_ptr<XmlNode> XMLMap::searchSameNode(const std::wstring &name)
     }
     return nullptr;
 }
-
-
 void XMLMap::openNode()
 {
     auto nodeName = reader_->GetName();

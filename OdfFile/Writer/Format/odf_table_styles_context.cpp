@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "logging.h"
 
 #include "odf_table_styles_context.h"
@@ -585,7 +583,5 @@ void odf_table_styles_context::get_paragraph_properties (int col, int row, parag
 	}
 
 }
-
-
 }
 }

@@ -43,10 +43,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMStack;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -67,8 +63,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMSRow;
-
-    
 
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -91,8 +85,6 @@ public:
 
     static const ElementType type = typeMSLine;
 
-	
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -113,8 +105,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMSLongDiv;
-
-    
 
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -137,8 +127,6 @@ public:
 
     static const ElementType type = typeMSCarries;
 
-    
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -158,8 +146,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMSGroup;
-
-    
 
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -181,8 +167,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMSCarry;
-
-    
 
 private:
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);

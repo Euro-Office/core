@@ -194,7 +194,5 @@ void PtgArea3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool f
 	}
 
 }
-
-
 } // namespace XLS
 

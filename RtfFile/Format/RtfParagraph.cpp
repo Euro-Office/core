@@ -95,8 +95,6 @@ std::wstring RtfParagraph::RenderToRtf(RenderParameter oRenderParameter)
 		}
 		
 		sResult += m_oProperty.m_oCharProperty.RenderToRtf( oRenderParameter );
-
-
 		//if( RENDER_TO_RTF_PARAM_NO_PAR != oRenderParameter.nValue )
 		//	sResult += T("\\par";
 	}
@@ -237,5 +235,3 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 	}
 	return sResult;
 }
-
-

@@ -38,8 +38,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -60,6 +58,4 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtSplitMenuColorContainer> OfficeArtSplitMenuColorContainerPtr;
-
-
 } // namespace XLS

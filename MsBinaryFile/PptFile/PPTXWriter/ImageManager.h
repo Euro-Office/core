@@ -38,8 +38,6 @@
 #include <boost/algorithm/string.hpp>
 #include "../Drawing/Attributes.h"
 #include "../../../DesktopEditor/common/File.h"
-
-
 class CMediaManager
 {
 private:

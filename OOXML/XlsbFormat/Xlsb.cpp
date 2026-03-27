@@ -316,8 +316,6 @@ void OOX::Spreadsheet::CXlsb::ReadSheetData()
         reader->SetRecordPosition(dataPosition);
 
         //proc.mandatory(*cell_table_temlate.get());
-
-
         //auto base = boost::static_pointer_cast<BaseObject>(cell_table_temlate);
         worksheet->m_oSheetData->fromBin(reader);
         delete[] m_pStream;
@@ -513,10 +511,4 @@ void OOX::Spreadsheet::CXlsb::LinkTables()
         }
     }
 }
-
-
-
-
-
-
 

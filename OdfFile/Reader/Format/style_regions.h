@@ -84,8 +84,6 @@ public:
 	virtual void xlsx_serialize(std::wostream & strm, oox::xlsx_conversion_context & Context);
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_region_right);
-
-
 //  style:region-center
 class style_region_center : public style_region_impl
 {

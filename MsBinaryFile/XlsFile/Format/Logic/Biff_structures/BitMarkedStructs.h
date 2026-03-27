@@ -121,8 +121,6 @@ private:
 		return val.full;
 	}
 };
-
-
 struct BErr
 {
     unsigned char err = 0;
@@ -195,8 +193,6 @@ struct BErr
         return L""; // TODO: need fixed
 	}
 };
-
-
 struct XColorType
 {
 	_UINT32 type;
@@ -209,8 +205,6 @@ struct XColorType
 		XCLRNINCHED = 0x00000004 //Color not set
 	};
 };
-
-
 struct RevisionType
 {
 	_UINT16 type;
@@ -237,8 +231,6 @@ struct RevisionType
 	};
 };
 
-
-
 struct Ts
 {
 private:
@@ -253,8 +245,6 @@ private:
 	unsigned char unused3_1;
 	unsigned short unused3_2;
 };
-
-
 struct DXFNumIFmt
 {
 private:
@@ -275,22 +265,16 @@ struct FFErrorCheck
 	unsigned int ffecDataValidation : 1;
 	unsigned int reserved : 24;
 };
-
-
 struct ExtSheetPair
 {
 	short itabFirst;
 	short itabLast;
 };
-
-
 struct CondDataValue
 {
 	_UINT32 condDataValue;
 	_UINT32 reserved;
 };
-
-
 struct KPISets
 {
 	_UINT32 set;
@@ -343,8 +327,6 @@ struct KPISets14 // in biff12
         KPI5BOXES_14 = 0x00000013 // Kpi5 Boxes set
     };
 };
-
-
 struct CFFlag
 {
 	KPISets iIconSet;
@@ -366,8 +348,6 @@ private:
 	unsigned char reserved2 : 6;
 	unsigned char reserved;
 };
-
-
 struct CFrtId
 {
 	unsigned short rtFirst;
@@ -377,5 +357,3 @@ struct CFrtId
 } // namespace XLS
 
 #pragma pack()
-
-

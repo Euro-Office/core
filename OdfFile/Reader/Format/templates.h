@@ -39,8 +39,6 @@
 
 #include "styles_list.h"
 #include "style_map.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader { 
 

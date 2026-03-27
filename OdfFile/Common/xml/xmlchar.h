@@ -72,8 +72,6 @@ public:
 
 };
 
-
-
 template <>
 class xml_char<wchar_t>
 {
@@ -91,8 +89,6 @@ public:
     static const wchar_t * trueVal;
     static const wchar_t * falseVal;
 };
-
-
 
 typedef xml_char<char> xml_char_c;
 typedef xml_char<wchar_t> xml_char_wc;

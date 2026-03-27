@@ -39,8 +39,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ExternName record in BIFF8
 class ExternName: public BiffRecord
 {

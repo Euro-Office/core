@@ -35,8 +35,6 @@
 #include <ios>
 #include "../../../OOXML/Base/Types_32.h"
 #include "../../../DesktopEditor/common/Types.h"
-
-
 namespace CFCPP
 {
     class IStream

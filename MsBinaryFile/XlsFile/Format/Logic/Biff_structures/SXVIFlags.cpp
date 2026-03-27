@@ -40,8 +40,6 @@ BiffStructurePtr SXVIFlags::clone()
 {
 	return BiffStructurePtr(new SXVIFlags(*this));
 }
-
-
 void SXVIFlags::load(CFRecord& record)
 {
 	unsigned short flags;

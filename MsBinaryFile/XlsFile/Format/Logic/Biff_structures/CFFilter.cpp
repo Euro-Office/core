@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CFFilter::clone()
 {
 	return BiffStructurePtr(new CFFilter(*this));

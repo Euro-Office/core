@@ -39,7 +39,5 @@ namespace common {
 
 template <class T, class StringT>
 typename optional<T>::Type read_string( const StringT & Value );
-
-
 }
 }

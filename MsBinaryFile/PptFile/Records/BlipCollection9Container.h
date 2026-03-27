@@ -40,8 +40,6 @@ class CRecordBlipCollection9Container : public CUnknownRecord
 {
 public:
     std::vector<std::shared_ptr<CRecordBlipEntityAtom> > m_rgBlipEntityAtom;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream);
 };
 }

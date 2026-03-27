@@ -39,14 +39,10 @@ namespace XLS
 OBJ::~OBJ()
 {
 }
-
-
 BaseObjectPtr OBJ::clone()
 {
 	return BaseObjectPtr(new OBJ(*this));
 }
-
-
 // OBJ = Obj *Continue
 const bool OBJ::loadContent(BinProcessor& proc)
 {

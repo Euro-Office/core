@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordNotesAtom : public CUnknownRecord
@@ -43,8 +41,6 @@ public:
 	bool m_bMasterObjects;
 	bool m_bMasterScheme;
     bool m_bMasterBackground;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

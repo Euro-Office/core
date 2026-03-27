@@ -41,8 +41,6 @@ namespace odf_writer {
 
 const wchar_t * office_scripts::ns		= L"office";
 const wchar_t * office_scripts::name	= L"scripts";
-
-
 void office_scripts::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);
@@ -69,8 +67,6 @@ void office_scripts::serialize(std::wostream & _Wostream)
 //-------------------------------------------------------------------------------------------
 const wchar_t * office_script::ns	= L"office";
 const wchar_t * office_script::name = L"script";
-
-
 void office_script::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     CP_CREATE_ELEMENT(content_);

@@ -53,8 +53,6 @@ class odp_conversion_context;
 class odf_text_context;
 
 class style;
-
-
 struct anim_state
 {
 	anim_state() : empty(true),  attlist(NULL), id(-1) {}
@@ -73,8 +71,6 @@ struct anim_state
 
 	bool empty;
 };
-
-
 class odp_page_state
 {
 public:
@@ -178,8 +174,6 @@ public:
 		void set_anim_transform_by(const std::wstring& val);
 		
 		void set_anim_audio_xlink(const std::wstring& val);
-
-
 	void end_timing();
 
 	void start_transition();
@@ -203,8 +197,6 @@ private:
 	friend class odp_slide_context;
 
 };
-
-
 }
 }
 

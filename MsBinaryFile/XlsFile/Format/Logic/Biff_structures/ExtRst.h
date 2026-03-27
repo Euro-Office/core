@@ -53,8 +53,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	const size_t getSize() const;
 
     unsigned short cb = 0;

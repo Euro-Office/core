@@ -499,8 +499,6 @@ namespace DocFileFormat
 		WORD lidThemeFE;
 		WORD lidThemeCS;
 	};
-
-
 	class FileInformationBlock
 	{
 	public:

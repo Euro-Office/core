@@ -126,8 +126,6 @@ private:
     xlsx_comments_ptr	xlsx_comments_;
 	int					count_comments_;
 };
-
-
 xlsx_comments_context::xlsx_comments_context(xlsx_comments_context_handle & h)
  : impl_(new xlsx_comments_context::Impl(h))
 {    

@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Text record in BIFF8
 class Text: public BiffRecord
 {

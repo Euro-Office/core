@@ -38,13 +38,9 @@ namespace XLS
 BookBool::BookBool()
 {
 }
-
-
 BookBool::~BookBool()
 {
 }
-
-
 BaseObjectPtr BookBool::clone()
 {
 	return BaseObjectPtr(new BookBool(*this));

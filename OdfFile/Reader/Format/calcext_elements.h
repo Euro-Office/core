@@ -46,8 +46,6 @@
 
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 class calcext_data_bar_attr
 {
 public:
@@ -149,8 +147,6 @@ public:
 
 };
 CP_REGISTER_OFFICE_ELEMENT2(calcext_color_scale_entry);
-
-
 class calcext_formatting_entry : public office_element_impl<calcext_formatting_entry>
 {
 public:

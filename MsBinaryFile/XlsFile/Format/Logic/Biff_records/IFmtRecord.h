@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of IFmtRecord record in BIFF8
 class IFmtRecord: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~IFmtRecord();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

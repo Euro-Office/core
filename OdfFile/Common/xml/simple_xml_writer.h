@@ -111,8 +111,6 @@ namespace writer
         std::basic_ostream<T>& os_;      // output stream
         bool need_header_;               // have we written an XML header yet?
         std::stack<element<T>*> elements_;  // stack of open element tags
-        
-
         // write XML header, if necessary
         writer& header() 
         {
@@ -328,6 +326,4 @@ typedef xml::writer::element<wchar_t> xml_element;
 #define CP_XML_NODE_SIMPLE() std::wstring NS_NAME = std::wstring(ns) + std::wstring(L":") + std::wstring(name); CP_XML_NODE(NS_NAME)
 
 #define CP_XML_NODE_SIMPLE_NONS() CP_XML_NODE(std::wstring(name))
-
-
 }

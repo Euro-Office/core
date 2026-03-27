@@ -50,8 +50,6 @@ namespace BinXlsxRW
 		JSON	= 3,
 		XLSB	= 4
 	};} 
-
-
 	namespace c_oSerConstants{enum c_oSerConstants
 	{
 		ErrorFormat =  -2,

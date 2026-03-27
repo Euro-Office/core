@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of OBJ union of records 
 class OBJ: public CompositeObject
 {

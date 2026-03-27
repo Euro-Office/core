@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Chart record in BIFF8
 class Chart: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~Chart();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

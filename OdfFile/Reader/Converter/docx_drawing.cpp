@@ -39,8 +39,6 @@
 namespace cpdoccore {
 
 namespace oox {
-
-
 namespace {
 
 }
@@ -1093,8 +1091,6 @@ void _docx_drawing::serialize(std::wostream & strm/*, bool insideOtherDrawing*/)
 	}
 
 }
-
-
 
 }
 }

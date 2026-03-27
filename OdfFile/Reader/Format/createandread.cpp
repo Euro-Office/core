@@ -38,8 +38,6 @@
 namespace cpdoccore { 
 namespace odf_reader {
 
-
-
 bool create_element_and_read(xml::sax * Reader,
                              const std::wstring & Ns,
                              const std::wstring & Name,

@@ -30,21 +30,15 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeRotationBehaviorAtom.h"
 #include "TimeBehaviorContainer.h"
-
-
 namespace PPT
 {
 class CRecordTimeRotationBehaviorContainer  : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream );
-
-
     CRecordTimeRotationBehaviorAtom         m_oRotationBehaviorAtom;
     CRecordTimeBehaviorContainer			m_oBehavior;
 };

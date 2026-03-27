@@ -60,8 +60,6 @@ ChartSheetStream::ChartSheetStream()
 ChartSheetStream::~ChartSheetStream()
 {
 }
-
-
 BaseObjectPtr ChartSheetStream::clone()
 {
         return BaseObjectPtr(new ChartSheetStream(*this));

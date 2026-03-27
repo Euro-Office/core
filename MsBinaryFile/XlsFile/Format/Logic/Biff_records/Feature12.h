@@ -33,8 +33,6 @@
 
 #include "BiffRecordContinued.h"
 #include "Feature11.h"
-
-
 namespace XLS
 {
 

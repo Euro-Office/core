@@ -39,8 +39,6 @@ BiffStructurePtr DXFProt::clone()
 {
 	return BiffStructurePtr(new DXFProt(*this));
 }
-
-
 void DXFProt::load(CFRecord& record)
 {
 	unsigned short flags;
@@ -74,7 +72,5 @@ int DXFProt::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

@@ -276,8 +276,6 @@ void table_database_source_query::add_attributes( const xml::attributes_wc_ptr &
 	CP_APPLY_ATTR(L"table:database-name"	, table_database_name_);
 	CP_APPLY_ATTR(L"table:query-name"		, table_query_name_);	
 }
-
-
 void table_database_source_query::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	if (table_database_name_)
@@ -401,8 +399,6 @@ void table_data_pilot_level::xlsx_convert(oox::xlsx_conversion_context & Context
 
 	if (subtotals_)
 		subtotals_->xlsx_convert(Context);
-
-
 	table_data_pilot_sort_info *sort = dynamic_cast<table_data_pilot_sort_info*>(sort_info_.get());
 	if (sort)
 	{
@@ -441,8 +437,6 @@ void table_data_pilot_groups::xlsx_convert(oox::xlsx_conversion_context & Contex
 
 	if (table_source_field_name_)
 		Context.get_pivots_context().set_field_groups_source(*table_source_field_name_);
-
-
 	for (size_t i = 0; i < content_.size(); i++)
     {
 		content_[i]->xlsx_convert(Context);

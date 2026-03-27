@@ -59,8 +59,6 @@ std::wstring RtfTableCell::RenderToRtf(RenderParameter oRenderParameter)
 
 			result += m_aArray[i]->RenderToRtf( oNewParameter );
 		}
-
-
 	}
 	if( RENDER_TO_RTF_PARAM_NESTED != oRenderParameter.nType )
 		result += L"\\cell";

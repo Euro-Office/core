@@ -38,13 +38,9 @@ namespace XLS
 RefreshAll::RefreshAll()
 {
 }
-
-
 RefreshAll::~RefreshAll()
 {
 }
-
-
 BaseObjectPtr RefreshAll::clone()
 {
 	return BaseObjectPtr(new RefreshAll(*this));

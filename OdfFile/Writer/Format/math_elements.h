@@ -41,8 +41,6 @@
 
 #include "../../DataTypes/mathvariant.h"
 #include "../../DataTypes/common_attlists.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer {
 
@@ -53,16 +51,10 @@ public:
     static const wchar_t * name;
    
 	static const ElementType type = typeMathElement;
-
-	
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name) {}
 	virtual void add_child_element(const office_element_ptr & child_element) {}
 
 	virtual void serialize(std::wostream & _Wostream) {}
-
-
-	
-
 
     friend class odf_document;
 };
@@ -98,8 +90,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMathSemantics;	
-
-    
 
  private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -146,8 +136,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMathAnnotationXml;
-
-    
 
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);

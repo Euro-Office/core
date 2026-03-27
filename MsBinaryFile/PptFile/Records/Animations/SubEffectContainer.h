@@ -40,8 +40,6 @@
 #include "TimeConditionContainer.h"
 #include "TimeCommandBehaviorContainer.h"
 #include "TimeModifierAtom.h"
-
-
 namespace PPT
 {
 struct CRecordSubEffectContainer : public CUnknownRecord

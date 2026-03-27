@@ -108,6 +108,4 @@ namespace OOX
 		void ParsingOleData();
 		void ParsingSuppData();
 	};
-
-
 }

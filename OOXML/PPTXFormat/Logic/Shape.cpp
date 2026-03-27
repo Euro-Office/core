@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "Shape.h"
 #include "../SlideLayout.h"
 #include "../SlideMaster.h"

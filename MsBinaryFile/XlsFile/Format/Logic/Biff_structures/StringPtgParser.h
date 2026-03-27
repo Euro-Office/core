@@ -50,7 +50,5 @@ private:
 	PtgStack ptg_stack;
 
 };
-
-
 } // namespace XLS
 

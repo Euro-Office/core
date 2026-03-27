@@ -365,8 +365,6 @@ public:
     _CP_OPT(std::wstring) style_num_prefix_;
     _CP_OPT(std::wstring) style_num_suffix_;
 };
-
-
 // common-text-align
 class common_text_align
 {
@@ -423,8 +421,6 @@ public:
 	//text:animation-stop-inside
 	//text:animation-repeat
 };
-
-
 // common-draw-rel-size-attlist
 class common_draw_rel_size_attlist
 {
@@ -432,8 +428,6 @@ public:
     void add_attributes( const xml::attributes_wc_ptr & Attributes );
     void apply_from(const common_draw_rel_size_attlist & Other);
 	void serialize(CP_ATTR_NODE);
-
-
     common_draw_size_attlist	common_draw_size_attlist_;
     _CP_OPT(percent_or_scale)	style_rel_width_;
     _CP_OPT(percent_or_scale)	style_rel_height_;
@@ -489,8 +483,6 @@ public:
     _CP_OPT(length)			svg_x_;
 
 };
-
-
 class common_shape_table_attlist
 {
 public:

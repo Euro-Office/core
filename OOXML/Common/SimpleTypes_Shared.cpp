@@ -217,8 +217,6 @@ namespace SimpleTypes
 			return false;
 
 		m_oGUID.d = (unsigned char)unTemp;
-
-
 		sMidValue = sValue.substr( 22, 2 );
 		if ( !HexToInt( sMidValue, unTemp ) )
 			return false;
@@ -394,8 +392,6 @@ namespace SimpleTypes
 	//	{
 	//		m_sValue = sValue;
 	//	}
-
-
 	//       std::wstring FromString(const std::wstring &sValue)
 	//	{
 	//		m_sValue = sValue;
@@ -415,8 +411,6 @@ namespace SimpleTypes
 
 	//       std::wstring m_sValue;
 	//};
-
-
 	//--------------------------------------------------------------------------------
 	// OnOff 22.9.2.7 (Part 1)
 	//--------------------------------------------------------------------------------
@@ -616,8 +610,6 @@ namespace SimpleTypes
 	{
 		m_sValue = sValue;
 	}
-
-
 	std::wstring CPanose::FromString(const std::wstring &sValue)
 	{
 		if ( 20 > sValue.length() )

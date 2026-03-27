@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Uncalced record in BIFF8
 class Uncalced: public BiffRecord
 {
@@ -52,8 +50,6 @@ public:
     void writeFields(CFRecord& record);
 
 	static const ElementType	type = typeUncalced;
-
-
 };
 
 } // namespace XLS

@@ -40,24 +40,16 @@
 
 namespace XLS
 {
-
-
 PROTECTION::PROTECTION()
 {
 }
-
-
 PROTECTION::~PROTECTION()
 {
 }
-
-
 BaseObjectPtr PROTECTION::clone()
 {
 	return BaseObjectPtr(new PROTECTION(*this));
 }
-
-
 // PROTECTION = WinProtect Protect Password Prot4Rev Prot4RevPass
 const bool PROTECTION::loadContent(BinProcessor& proc)
 {
@@ -142,7 +134,5 @@ int PROTECTION::serialize (std::wostream & _stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

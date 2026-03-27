@@ -43,8 +43,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = type_AbstractXml;
-    
-
 public:
     abstract_xml() {}
 

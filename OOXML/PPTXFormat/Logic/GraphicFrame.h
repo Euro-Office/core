@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "./../WrapperWritingElement.h"
 #include "NvGraphicFramePr.h"
 #include "Xfrm.h"

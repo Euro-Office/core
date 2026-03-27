@@ -35,8 +35,6 @@
 #include <list>
 #include "svector.h"
 #include "event.h"
-
-
 namespace CFCPP
 {
 using Ver3SizeLimitReached = std::function<void()>;

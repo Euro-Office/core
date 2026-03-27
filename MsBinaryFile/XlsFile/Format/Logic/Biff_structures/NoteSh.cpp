@@ -128,7 +128,5 @@ void NoteSh::calculate()
 			y_ += 256 * kfRow * sheet_info.defaultRowHeight;	
 	}
 }
-
-
 } // namespace XLS
 

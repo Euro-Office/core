@@ -51,13 +51,9 @@
 
 namespace XLS
 {
-
-
 FEAT11::FEAT11()
 {
 }
-
-
 FEAT11::~FEAT11()
 {
 }
@@ -92,14 +88,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr FEAT11::clone()
 {
 	return BaseObjectPtr(new FEAT11(*this));
 }
-
-
 /*
 FEAT11 = FeatHdr11 *((Feature11 / Feature12) *ContinueFrt11 *List12 [AutoFilter12 *ContinueFrt12] *List12 [SORTDATA12])
 */

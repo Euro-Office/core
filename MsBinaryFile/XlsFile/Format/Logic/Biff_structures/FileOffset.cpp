@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FileOffset::clone()
 {
 	return BiffStructurePtr(new FileOffset(*this));
 }
-
-
 void FileOffset::load(CFRecord& record)
 {
 	record >> offset;
@@ -51,7 +47,5 @@ void FileOffset::save(CFRecord& record)
 {
     record << offset;
 }
-
-
 } // namespace XLS
 

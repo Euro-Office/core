@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr TxOLastRun::clone()
 {
 	return BiffStructurePtr(new TxOLastRun(*this));
@@ -48,8 +46,6 @@ TxOLastRun::TxOLastRun()
 TxOLastRun::~TxOLastRun()
 {
 }
-
-
 void TxOLastRun::load(CFRecord& record)
 {
 	record >> cchText;
@@ -62,7 +58,5 @@ void TxOLastRun::save(CFRecord& record)
 	record << cchText;
 	record.reserveNunBytes(6);
 }
-
-
 } // namespace XLS
 

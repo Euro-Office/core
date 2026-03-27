@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FontX record in BIFF8
 class FontX: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~FontX();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

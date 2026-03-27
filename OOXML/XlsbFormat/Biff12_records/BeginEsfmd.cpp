@@ -59,7 +59,5 @@ namespace XLSB
 	{
 		record << cFmd << stName;
 	}
-
-
 } // namespace XLSB
 

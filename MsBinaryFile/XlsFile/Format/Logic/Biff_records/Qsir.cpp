@@ -39,13 +39,9 @@ Qsir::Qsir()
 {
 	wVerBeforeRefreshAlert = 0;
 }
-
-
 Qsir::~Qsir()
 {
 }
-
-
 BaseObjectPtr Qsir::clone()
 {
 	return BaseObjectPtr(new Qsir(*this));

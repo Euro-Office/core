@@ -501,8 +501,6 @@ namespace SimpleTypes
 
 		std::wstring GetValue() const;
 		void    SetValue(std::wstring &sValue);
-
-
 		std::wstring FromString(const std::wstring &sValue);
 		std::wstring ToString  () const;
 
@@ -748,8 +746,6 @@ namespace SimpleTypes
 	DEFINE_SIMPLE_TYPE(CScreenSize, EScreenSize, screensize640x480)
 
 } // SimpleTypes
-
-
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -1366,8 +1362,6 @@ namespace SimpleTypes
 		cssvtextspacingmodeTightening = 0,
 		cssvtextspacingmodeTracking   = 1
 	};
-
-
 	union UCssValue
 	{
 		ECssFlip			eFlip;
@@ -1405,8 +1399,6 @@ namespace SimpleTypes
 
 		CCssProperty(std::wstring sBuffer);
 		~CCssProperty();
-
-
 		const UCssValue &get_Value() const;
 
 		const ECssPropertyType &get_Type() const;

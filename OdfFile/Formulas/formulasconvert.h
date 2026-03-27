@@ -38,8 +38,6 @@
 namespace cpdoccore {
 
 namespace formulasconvert {
-
-
 // Работа с форумулами OpenOffice, преобразование.
 // Примеры см. в тесте ut_formulasconvert.cpp
 class odf2oox_converter

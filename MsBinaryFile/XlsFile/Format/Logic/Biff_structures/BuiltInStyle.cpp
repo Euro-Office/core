@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr BuiltInStyle::clone()
 {
 	return BiffStructurePtr(new BuiltInStyle(*this));
@@ -50,6 +48,4 @@ void BuiltInStyle::save(CFRecord& record)
 {
     record << istyBuiltIn << iLevel;
 }
-
-
 } // namespace XLS

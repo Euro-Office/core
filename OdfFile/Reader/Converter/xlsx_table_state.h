@@ -289,8 +289,6 @@ private:
     xlsx_hyperlinks						xlsx_hyperlinks_;
 
 };
-
-
 }
 }
 

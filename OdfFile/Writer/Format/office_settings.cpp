@@ -128,8 +128,6 @@ void settings_config_item::add_child_element( const office_element_ptr & child_e
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * settings_config_item_map_indexed::ns = L"config";
 const wchar_t * settings_config_item_map_indexed::name = L"config-item-map-indexed";
-
-
 void settings_config_item_map_indexed::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     CP_CREATE_ELEMENT(content_);

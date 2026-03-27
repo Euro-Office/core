@@ -38,13 +38,9 @@ namespace XLS
 BigName::BigName()
 {
 }
-
-
 BigName::~BigName()
 {
 }
-
-
 BaseObjectPtr BigName::clone()
 {
 	return BaseObjectPtr(new BigName(*this));

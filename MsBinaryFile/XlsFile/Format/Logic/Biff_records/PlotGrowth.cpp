@@ -40,19 +40,13 @@ PlotGrowth::PlotGrowth()
 	dxPlotGrowth = 1;
 	dyPlotGrowth = 1;
 }
-
-
 PlotGrowth::~PlotGrowth()
 {
 }
-
-
 BaseObjectPtr PlotGrowth::clone()
 {
 	return BaseObjectPtr(new PlotGrowth(*this));
 }
-
-
 void PlotGrowth::readFields(CFRecord& record)
 {
 	record >> dxPlotGrowth >> dyPlotGrowth;

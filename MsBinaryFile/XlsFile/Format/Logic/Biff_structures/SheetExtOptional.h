@@ -51,8 +51,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     unsigned char	icvPlain12 = 0;
     bool			fCondFmtCalc = false;
     bool			fNotPublished = false;

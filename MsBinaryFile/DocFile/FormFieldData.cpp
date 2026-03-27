@@ -229,6 +229,4 @@ FormFieldData::FormFieldData( int type, const CharacterPropertyExceptions* chpx,
 		reader.Seek(pos + (lcb - cbHeader), 0);
 	}
 }
-
-
 }

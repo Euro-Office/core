@@ -49,8 +49,6 @@ CRecordExtTimeNodeContainer::CRecordExtTimeNodeContainer():
     m_pTimeSequenceDataAtom(nullptr),
 
     m_pTimeEndSyncTimeCondition(nullptr),
-
-
     m_haveTimePropertyList(false),
     m_haveAnimateBehavior(false),
     m_haveColorBehavior(false),
@@ -282,12 +280,8 @@ void CRecordExtTimeNodeContainer::ReadFromStream(SRecordHeader &oHeader, POLE::S
                 m_haveTimeEndSyncTime = true;
                 m_pTimeEndSyncTimeCondition = pTimeCondition;
             }
-
-
             break; // A lot of records. Look at instance
         }
-
-
         case RT_TimeModifier:
         {
 
@@ -317,8 +311,6 @@ void CRecordExtTimeNodeContainer::ReadFromStream(SRecordHeader &oHeader, POLE::S
 
             break;
         }
-
-
         default:
             break;
 //                throw ;

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLSXFILTERS12::SXADDLSXFILTERS12()
 {
 }
-
-
 SXADDLSXFILTERS12::~SXADDLSXFILTERS12()
 {
 }
-
-
 BaseObjectPtr SXADDLSXFILTERS12::clone()
 {
 	return BaseObjectPtr(new SXADDLSXFILTERS12(*this));
 }
-
-
 // SXADDLSXFILTERS12 = SXAddl_SXCSXFilters12_SXDId *SXADDLSXFILTER12 SXAddl_SXCSXFilters12_SXDEnd
 const bool SXADDLSXFILTERS12::loadContent(BinProcessor& proc)
 {

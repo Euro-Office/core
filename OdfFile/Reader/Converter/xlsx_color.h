@@ -56,7 +56,5 @@ struct xlsx_color
 
     friend std::size_t hash_value(xlsx_color const & val);
 };
-
-
 }
 }

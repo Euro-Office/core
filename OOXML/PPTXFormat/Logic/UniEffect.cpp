@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "UniEffect.h"
 #include "Effects/OuterShdw.h"		//1
 #include "Effects/Glow.h"			//2

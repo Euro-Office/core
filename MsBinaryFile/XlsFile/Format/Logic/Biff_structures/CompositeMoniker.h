@@ -49,8 +49,6 @@ public:
 	
 	virtual void load(XLS::CFRecord& record);
     virtual void save(XLS::CFRecord& record);
-
-
 	std::vector<HyperlinkMoniker> monikerArray;
 };
 

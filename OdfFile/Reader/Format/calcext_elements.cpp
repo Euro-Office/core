@@ -50,8 +50,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 void calcext_data_bar_attr::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
 	CP_APPLY_ATTR(L"calcext:axis-color",		axis_color_);
@@ -408,8 +406,6 @@ void calcext_sparkline_group::serialize(std::wostream& strm)
 			CP_XML_ATTR_OPT(L"rightToLeft", attr_.right_to_left_);
 			CP_XML_ATTR_OPT(L"manualMax", attr_.manual_max_);
 			CP_XML_ATTR_OPT(L"manualMin", attr_.manual_min_);
-
-
 			if (attr_.color_series_)
 			{
 				CP_XML_NODE(L"x14:colorSeries")

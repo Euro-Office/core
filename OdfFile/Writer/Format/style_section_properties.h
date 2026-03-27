@@ -53,8 +53,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleColumns;
-    
-
     virtual void create_child_element(  const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child);
 
@@ -79,8 +77,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleColumn;
-    
-
     virtual void create_child_element(  const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child){}
 	virtual void serialize(std::wostream & strm);
@@ -104,8 +100,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleColumnSep;
-    
-
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child){}
 	
@@ -129,8 +123,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleSectionProperties;
-    
-
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
 

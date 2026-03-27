@@ -38,19 +38,13 @@ namespace XLS
 Chart3d::Chart3d()
 {
 }
-
-
 Chart3d::~Chart3d()
 {
 }
-
-
 BaseObjectPtr Chart3d::clone()
 {
 	return BaseObjectPtr(new Chart3d(*this));
 }
-
-
 void Chart3d::readFields(CFRecord& record)
 {
 	unsigned short flags;

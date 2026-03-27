@@ -53,10 +53,6 @@ namespace oox {
     private:
         class Impl;
         _CP_SCOPED_PTR(Impl) impl_;
-
-
     };
-
-
 }
 }

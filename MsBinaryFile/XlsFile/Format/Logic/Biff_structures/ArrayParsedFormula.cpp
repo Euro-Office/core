@@ -52,8 +52,6 @@ BiffStructurePtr ArrayParsedFormula::clone()
 {
 	return BiffStructurePtr(new ArrayParsedFormula(*this));
 }
-
-
 void ArrayParsedFormula::load(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)

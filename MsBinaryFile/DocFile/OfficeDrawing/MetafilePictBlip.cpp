@@ -280,8 +280,6 @@ namespace DocFileFormat
 	unsigned long MetafilePictBlip::Decompress( unsigned char **buffer )
 	{
 		unsigned long uncomprLen = 0;
-
-
 		if ( m_fCompression == BlipCompressionDeflate )
 		{
 			uncomprLen = m_cb;

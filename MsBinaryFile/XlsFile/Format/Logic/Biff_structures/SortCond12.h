@@ -51,8 +51,6 @@ public:
 
 	virtual void load(CFRecord& record);
 	virtual void save(CFRecord& record);
-
-
 	bool					fSortDes = false;
 	unsigned short			sortOn = 0;
     RFX						rfx;

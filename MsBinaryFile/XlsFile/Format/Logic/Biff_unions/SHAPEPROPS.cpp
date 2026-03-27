@@ -42,19 +42,13 @@ namespace XLS
 SHAPEPROPS::SHAPEPROPS()
 {
 }
-
-
 SHAPEPROPS::~SHAPEPROPS()
 {
 }
-
-
 BaseObjectPtr SHAPEPROPS::clone()
 {
 	return BaseObjectPtr(new SHAPEPROPS(*this));
 }
-
-
 // SHAPEPROPS = ShapePropsStream *ContinueFrt12
 const bool SHAPEPROPS::loadContent(BinProcessor& proc)
 {

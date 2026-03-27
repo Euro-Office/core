@@ -43,8 +43,6 @@ namespace NSFontConverter
 #define PFB_ASCII    1
 #define PFB_BINARY   2
 #define PFB_DONE     3
-
-
 #define IS_PS_NEWLINE( ch ) \
 (   (ch) == '\r' ||         \
 	(ch) == '\n' )
@@ -91,8 +89,6 @@ namespace NSFontConverter
 		{
 			unsigned int  val = p[r];
 			unsigned int  b   = ( val ^ ( s >> 8 ) );
-
-
 			s         = ( (val + s)*52845U + 22719 ) & 0xFFFFU;
 			buffer[r] = (unsigned char) b;
 		}
@@ -109,8 +105,6 @@ namespace NSFontConverter
 		unsigned int  r   = 0;
 		unsigned int  w   = 0;
 		unsigned int  pad = 0x01;
-
-
 		n *= 2;
 
 		p  = *cursor;
@@ -121,8 +115,6 @@ namespace NSFontConverter
 		for ( ; r < n; r++ )
 		{
 			FT_UInt  c = p[r];
-
-
 			if ( IS_PS_SPACE( c ) )
 				continue;
 

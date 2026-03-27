@@ -41,13 +41,9 @@
 
 namespace XLS
 {
-
-
 METADATA::METADATA()
 {
 }
-
-
 METADATA::~METADATA()
 {
 }
@@ -81,8 +77,6 @@ BaseObjectPtr METADATA::clone()
 {
 	return BaseObjectPtr(new METADATA(*this));
 }
-
-
 // METADATA = *MDTINFO *MDXSTR *(MDXTUPLESET / MDXProp / MDXKPI) *MDBLOCK
 const bool METADATA::loadContent(BinProcessor& proc)
 {

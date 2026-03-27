@@ -504,8 +504,6 @@ void odf_drawing_context::end_group()
 
 	end_element();
 }
-
-
 void odf_drawing_context::clear()
 {
 	impl_->root_element_ = office_element_ptr();
@@ -961,8 +959,6 @@ bool odf_drawing_context::change_text_box_2_wordart()
 		if (sz == 2)	impl_->root_element_ = draw_elm;
 
 		set_anchor_drawing(impl_->current_graphic_properties);
-
-		
 		return true;
 	}
 	draw_rect* s = dynamic_cast<draw_rect*>(impl_->current_drawing_state_.elements_.back().elm.get());
@@ -3263,8 +3259,6 @@ void odf_drawing_context::set_text_box_min_size(double w_pt, double h_pt)
 	{
 		if (h_pt >0) draw->attlist_.fo_min_height_= length(length(h_pt,length::pt).get_value_unit(length::cm), length::cm);
 		if (w_pt >0) draw->attlist_.fo_min_width_= length(length(w_pt,length::pt).get_value_unit(length::cm), length::cm);
-
-
 	}
 }
 void odf_drawing_context::set_text_box_tableframe(bool val)

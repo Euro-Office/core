@@ -34,8 +34,6 @@
 
 namespace OSHARED
 {
-
-
 XLS::BiffStructurePtr PropertyBagStore::clone()
 {
 	return XLS::BiffStructurePtr(new PropertyBagStore(*this));
@@ -77,7 +75,5 @@ void PropertyBagStore::save(XLS::CFRecord& record)
 	for(auto i : stringTable)
 		record << i;
 }
-
-
 } // namespace OSHARED
 

@@ -59,8 +59,6 @@ BaseObjectPtr SXFORMULA::clone()
 {
 	return BaseObjectPtr(new SXFORMULA(*this));
 }
-
-
 // SXFORMULA = SXFMLA PIVOTRULE SXFormula
 const bool SXFORMULA::loadContent(BinProcessor& proc)
 {

@@ -39,13 +39,9 @@ BottomMargin::BottomMargin()
 {
 	num.data.value = 0.75;
 }
-
-
 BottomMargin::~BottomMargin()
 {
 }
-
-
 BaseObjectPtr BottomMargin::clone()
 {
 	return BaseObjectPtr(new BottomMargin(*this));

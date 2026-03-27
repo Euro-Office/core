@@ -34,13 +34,9 @@
 
 namespace XLS
 {
-
-
 DXFId::DXFId()
 {
 }
-
-
 DXFId::DXFId(CFRecord& record)
 {
 	load(record);
@@ -49,8 +45,6 @@ DXFId::DXFId(CFRecord& record)
 DXFId::~DXFId()
 {
 }
-
-
 BiffStructurePtr DXFId::clone()
 {
 	return BiffStructurePtr(new DXFId(*this));
@@ -60,7 +54,5 @@ void DXFId::load(CFRecord& record)
 {
 	record >> index;
 }
-
-
 } // namespace XLS
 

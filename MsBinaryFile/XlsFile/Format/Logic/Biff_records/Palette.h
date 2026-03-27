@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Palette record in BIFF8
 class Palette: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	Palette(const unsigned short ccv_init);
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

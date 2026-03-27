@@ -44,8 +44,6 @@
 #include "../../../DesktopEditor/common/Directory.h"
 
 namespace oox {
-
-
 external_items::item::item(	std::wstring const & _uri, Type _type, bool _mediaInternal, int _id, std::wstring const & _rId  )
                        : uri(_uri), type(_type), mediaInternal(_mediaInternal), id(_id), rId(_rId)
 {    

@@ -58,8 +58,6 @@ private:
 	std::map<TypeString, TypeId> all_types_string;
 };
 
-
-
 typedef enum CF_RECORD_TYPE
 {
 	rt_NONE						= 0x0000,
@@ -453,5 +451,3 @@ typedef enum CF_RECORD_TYPE
 } RecordType;
 
 } // namespace XLS
-
-

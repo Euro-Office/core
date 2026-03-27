@@ -58,6 +58,4 @@ void OfficeArtFDG::save(XLS::CFRecord& record)
 	record << rh_own;
 	record << csp << spidCur;
 }
-
-
 } // namespace XLS

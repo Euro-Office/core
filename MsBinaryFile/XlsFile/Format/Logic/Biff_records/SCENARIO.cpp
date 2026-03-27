@@ -38,13 +38,9 @@ namespace XLS
 SCENARIO::SCENARIO()
 {
 }
-
-
 SCENARIO::~SCENARIO()
 {
 }
-
-
 BaseObjectPtr SCENARIO::clone()
 {
 	return BaseObjectPtr(new SCENARIO(*this));

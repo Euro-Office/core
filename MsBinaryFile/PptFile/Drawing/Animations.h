@@ -211,8 +211,6 @@ namespace PPT
 
         //            return Xml;
         //        }
-
-
         inline std::wstring ToStr()
         {
             return L"";
@@ -247,8 +245,6 @@ namespace PPT
 
             m_nSchemeColor = 0;
             m_nColorTo = 0;
-
-
             m_dTimeAccel = 0.0;
             m_dTimeDecel = 0.0;
 
@@ -321,8 +317,6 @@ namespace PPT
         ~CAnimationInfo()
         {
         }
-
-
         //        std::wstring ToXml(const double& dStartTime, const double& dEndTime, bool bIgnore = false)
         //        {
         //            std::wstring baseXML;

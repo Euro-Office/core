@@ -142,8 +142,6 @@ namespace NSFontConverter
             nLSB          = nL;
         }
     };
-
-
     struct Type1Glyph
     {
         std::wstring    sGlyph;    // Type1 имя глифа
@@ -172,8 +170,6 @@ namespace NSFontConverter
 
         return pGlyf1->nUnicode - pGlyf2->nUnicode;
     }
-
-
     //------------------------------------------------------------------------
     // CFontFileType1
     //------------------------------------------------------------------------
@@ -223,8 +219,6 @@ namespace NSFontConverter
 
             sString = sString + nStart;
             nLen    = nEnd - nStart;
-
-
             int nCount = 0;
             const int c_nNumLimit = 32;
             unsigned char sBuffer[c_nNumLimit];

@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 PtgRefErr::PtgRefErr(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgRefErr::PtgRefErr(const PtgDataType data_type)
 :	OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5))
 {
 }
-
-
 BiffStructurePtr PtgRefErr::clone()
 {
 	return BiffStructurePtr(new PtgRefErr(*this));
 }
-
-
 void PtgRefErr::loadFields(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)
@@ -68,13 +60,9 @@ void PtgRefErr::writeFields(CFRecord& record)
 	else
 		record.reserveNunBytes(6); // unused
 }
-
-
 void PtgRefErr::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	ptg_stack.push(L"#REF!");
 }
-
-
 } // namespace XLS
 

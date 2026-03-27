@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PieFormat record in BIFF8
 class PieFormat: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~PieFormat();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typePieFormat;

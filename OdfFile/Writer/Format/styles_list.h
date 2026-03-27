@@ -42,8 +42,6 @@
 #include "office_elements_create.h"
 
 #include "../../DataTypes/common_attlists.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer { 
 
@@ -67,8 +65,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListStyle;
-    
-
 	virtual void create_child_element(  const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
 	virtual void serialize(std::wostream & strm);
@@ -96,8 +92,6 @@ public:
 
 	void serialize(CP_ATTR_NODE);
 };
-
-
 /// text-list-level-style-attr
 class text_list_level_style_attr
 {
@@ -108,8 +102,6 @@ public:
 	void serialize(CP_ATTR_NODE);
 };
 
-
-
 /// \class  style_list_level_properties
 ///         style:list-level-properties (style-list-level-properties)
 class style_list_level_properties : public office_element_impl<style_list_level_properties>
@@ -119,8 +111,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleListLevelProperties;
-    
-
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
 	virtual void serialize(std::wostream & strm);
@@ -138,8 +128,6 @@ public:
     odf_types::common_vertical_pos_attlist common_vertical_pos_attlist_;
 
     office_element_ptr			style_list_level_label_alignment_;
-
-
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_list_level_properties);
@@ -153,8 +141,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleListLevelLabelAlignment;
-    
-
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
 	virtual void serialize(std::wostream & strm);
@@ -166,8 +152,6 @@ public:
    
 	_CP_OPT(odf_types::length) fo_margin_left_;
     _CP_OPT(odf_types::length) fo_margin_right_;
-	
-
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_list_level_label_alignment);
@@ -181,8 +165,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListLevelStyleNumber;
-    
-
   
 	office_element_ptr style_list_level_properties_;
 
@@ -222,8 +204,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListLevelStyleBullet;
-    
-
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);   
 	virtual void add_child_element( const office_element_ptr & child);
 
@@ -256,8 +236,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListLevelStyleImage;
-    
-
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);   
 	virtual void add_child_element( const office_element_ptr & child);
 
@@ -278,8 +256,6 @@ public:
 	static const wchar_t * name;
 
 	static const ElementType type = typeTextOutlineStyle;
-	
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child);
 
@@ -298,8 +274,6 @@ public:
 	static const wchar_t * name;
 
 	static const ElementType type = typeTextOutlineLevelStyle;
-	
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child);
 

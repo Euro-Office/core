@@ -42,18 +42,12 @@
 
 namespace XLS
 {
-
-
 CONDFMTS::CONDFMTS()
 {
 }
-
-
 CONDFMTS::~CONDFMTS()
 {
 }
-
-
 class Parenthesis_CONDFMTS_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_CONDFMTS_1)
@@ -92,14 +86,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr CONDFMTS::clone()
 {
 	return BaseObjectPtr(new CONDFMTS(*this));
 }
-
-
 // CONDFMTS = *(CONDFMT / CONDFMT12) *(CFEx [CF12])
 const bool CONDFMTS::loadContent(BinProcessor& proc)
 {
@@ -194,8 +184,6 @@ const bool CONDFMTS::loadContent(BinProcessor& proc)
 			}
 		}
 	}
-
-
 	return res;
 }
 

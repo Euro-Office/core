@@ -2269,8 +2269,6 @@ namespace SimpleTypes
 			}break;
 			}
 		}
-		
-
 		ESeriesLayout CSeriesLayout::FromString(const std::wstring &sValue)
 		{
 			if      ( L"boxWhisker" ==  sValue ) this->m_eValue = typeSeriesLayoutBoxWhisker;

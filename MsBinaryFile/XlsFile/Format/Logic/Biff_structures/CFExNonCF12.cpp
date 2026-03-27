@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CFExNonCF12::clone()
 {
 	return BiffStructurePtr(new CFExNonCF12(*this));

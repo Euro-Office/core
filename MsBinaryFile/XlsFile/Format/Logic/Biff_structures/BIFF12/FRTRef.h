@@ -35,8 +35,6 @@
 #include "../BiffStructure.h"
 #include "../../Biff_records/BiffRecord.h"
 #include "CellRangeRef.h"
-
-
 namespace XLSB
 {
     class FRTRef : public XLS::BiffStructure

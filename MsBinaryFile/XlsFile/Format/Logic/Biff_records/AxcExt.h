@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AxcExt record in BIFF8
 class AxcExt: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~AxcExt();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

@@ -36,8 +36,6 @@
 
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 class office_annotation_attr
 {
 public:
@@ -124,8 +122,6 @@ private:
 
     office_element_ptr dc_date_;
     office_element_ptr dc_creator_;
-
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(officeooo_annotation);
 }

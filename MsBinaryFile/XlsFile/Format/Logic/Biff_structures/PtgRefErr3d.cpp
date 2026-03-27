@@ -35,20 +35,14 @@
 
 namespace XLS
 {
-
-
 PtgRefErr3d::PtgRefErr3d(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgRefErr3d::PtgRefErr3d(const unsigned short ixti_init, const PtgDataType data_type)
 :	OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5)),
 	ixti(ixti_init)
 {
 }
-
-
 BiffStructurePtr PtgRefErr3d::clone()
 {
 	return BiffStructurePtr(new PtgRefErr3d(*this));
@@ -77,8 +71,6 @@ void PtgRefErr3d::writeFields(CFRecord& record)
 	else
 		record.reserveNunBytes(6); // unused
 }
-
-
 void PtgRefErr3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	RevExternPtr tab_ids;
@@ -100,7 +92,5 @@ void PtgRefErr3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool
 		ptg_stack.push(link + L"#REF!"); // full_ref ???
 	}
 }
-
-
 } // namespace XLS
 

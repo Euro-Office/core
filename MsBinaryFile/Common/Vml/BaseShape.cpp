@@ -140,8 +140,6 @@ bool CBaseShape::SetProperties(CBaseShape* Shape)
 	m_arHandles.clear();
 	for(size_t i = 0; i < Shape->m_arHandles.size(); i++)
 		m_arHandles.push_back(Shape->m_arHandles[i]);
-
-
 	m_strRect = Shape->m_strRect;
 	m_strTransformXml = Shape->m_strTransformXml;
 	return true;

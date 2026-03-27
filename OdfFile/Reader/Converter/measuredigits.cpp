@@ -119,8 +119,6 @@ std::pair<double, double> GetMaxDigitSizePixelsImpl(const std::wstring & fontNam
         return std::pair<double, double>(7., 8.);
     }
 }
-
-
 std::pair<double, double> GetMaxDigitSizePixels(const std::wstring & fontName, double fontSize, double dpi, long fontStyle, NSFonts::IApplicationFonts *appFonts)
 {
     _CP_LOG << "[info] : GetMaxDigitSizePixels (" << fontName << L" " << std::to_wstring(fontSize) << L"pt style " << std::to_wstring(fontStyle) << L") ...";

@@ -1363,8 +1363,6 @@ public:
 
 	Xnum numTopN;
 };
-
-
 class SXEZDoper : public BiffStructure
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(SXEZDoper)
@@ -1416,5 +1414,3 @@ public:
 	_UINT32 ivmb;
 };
 } // namespace XLS
-
-

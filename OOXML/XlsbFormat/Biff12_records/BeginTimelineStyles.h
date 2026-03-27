@@ -35,8 +35,6 @@
 #include "../Biff12_structures/FRTBlank.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/XLWideString.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtBeginTimelineStyles record in BIFF12

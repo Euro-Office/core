@@ -78,8 +78,6 @@ void Feat11WSSListInfo::load(CFRecord& record)
 
 	record >> strFormula;
 	record >> reserved;
-
-
 	fPercent		= GETBIT(flags1, 0);
 	fDecSet			= GETBIT(flags1, 1);
 	fDateOnly		= GETBIT(flags1, 2);
@@ -128,7 +126,5 @@ void Feat11WSSListInfo::save(CFRecord& record)
 		record << strFormula;
 	record.reserveNunBytes(4);
 }
-
-
 } // namespace XLS
 

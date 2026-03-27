@@ -38,18 +38,12 @@
 
 namespace XLS
 {
-
-
 PIVOTFORMAT::PIVOTFORMAT()
 {
 }
-
-
 PIVOTFORMAT::~PIVOTFORMAT()
 {
 }
-
-
 BaseObjectPtr PIVOTFORMAT::clone()
 {
 	return BaseObjectPtr(new PIVOTFORMAT(*this));

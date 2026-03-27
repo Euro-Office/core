@@ -32,8 +32,6 @@
 #include "header.h"
 #include "cfexception.h"
 #include "streamrw.h"
-
-
 using namespace CFCPP;
 
 Header::Header() :
@@ -58,8 +56,6 @@ Header::Header(_UINT16 version)
 
     default:
         throw CFException("Invalid Compound File Format version");
-
-
     }
 
     for (_INT32 i = 0; i < 109; i++)

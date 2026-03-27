@@ -55,8 +55,6 @@
 #include "../../Records/Animations/DiagramBuildContainer.h"
 
 #include "intermediate_anim.h" // it using
-
-
 namespace PPT {
 	namespace Converter {
 		class Animation_2010;
@@ -77,8 +75,6 @@ namespace PPT {
 				oneAnim = 5,
 				animEffectDescription = 6
 			};
-
-
 		private:
 			void ConvertBldLst(PPTX::Logic::Timing& timimg, CRecordBuildListContainer *pBLC);
 			void InsertBuildNode(PPTX::Logic::BldLst &bldLst, PPTX::Logic::BuildNodeBase &bnb);
@@ -131,8 +127,6 @@ namespace PPT {
 			void FillEmptyTargetCond(PPTX::Logic::Cond &cond);
 			void FillCTnProps(CRecordTimePropertyList4TimeNodeContainer *pProp, PPTX::Logic::CTn &oCTn);
 			void FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logic::CTn &oCTn);
-
-
 			void FillAnimClr(
 				CRecordTimeColorBehaviorContainer *pColor,
 				CRecordTimePropertyList4TimeNodeContainer *pProp,

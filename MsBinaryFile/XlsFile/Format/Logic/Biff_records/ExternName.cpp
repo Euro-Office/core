@@ -39,13 +39,9 @@ ExternName::ExternName(const unsigned short supporting_link_type, bool bOle)
 :	supbook_cch(supporting_link_type), cf(-1), bOleVirtualPath(bOle)
 {
 }
-
-
 ExternName::~ExternName()
 {
 }
-
-
 BaseObjectPtr ExternName::clone()
 {
 	return BaseObjectPtr(new ExternName(*this));
@@ -91,8 +87,6 @@ void ExternName::readFields(CFRecord& record)
 		}
 	}
 	body->load(record);
-
-
 //cache
 	switch(cf)
 	{

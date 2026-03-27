@@ -34,8 +34,6 @@
 #include "XlsConverter.h"
 
 #include "../../../Common/OfficeFileErrorDescription.h"
-
-
 _UINT32 ConvertXls2Xlsx(const std::wstring & srcFile, const std::wstring & dstPath, const std::wstring & password, const std::wstring & fontsPath, const std::wstring & tempPath, const int lcid_user, bool &bMacros)
 {
 	XlsConverter converter(srcFile, dstPath, password, fontsPath, tempPath, lcid_user, bMacros);

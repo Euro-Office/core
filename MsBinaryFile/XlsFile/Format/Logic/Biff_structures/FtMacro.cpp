@@ -43,8 +43,6 @@ BiffStructurePtr FtMacro::clone()
 {
 	return BiffStructurePtr(new FtMacro(*this));
 }
-
-
 void FtMacro::load(CFRecord& record)
 {
 	short ft;

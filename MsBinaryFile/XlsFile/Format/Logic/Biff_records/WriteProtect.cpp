@@ -34,18 +34,12 @@
 
 namespace XLS
 {
-
-
 WriteProtect::WriteProtect()
 {
 }
-
-
 WriteProtect::~WriteProtect()
 {
 }
-
-
 BaseObjectPtr WriteProtect::clone()
 {
 	return BaseObjectPtr(new WriteProtect(*this));
@@ -55,6 +49,4 @@ void WriteProtect::readFields(CFRecord& record)
 {
 	// No data in this record
 }
-
-
 } // namespace XLS

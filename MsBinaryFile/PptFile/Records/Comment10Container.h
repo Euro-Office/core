@@ -34,8 +34,6 @@
 #include "../Reader/Records.h"
 #include "../Structures/DateTimeStruct.h"
 #include "../Structures/PointStruct.h"
-
-
 namespace PPT
 {
 class CRecordComment10AuthorAtom : public CUnknownRecord
@@ -75,8 +73,6 @@ public:
     DateTimeStruct  m_oDatetime;
     PointStruct     m_oAnchor;
 };
-
-
 class CRecordComment10Container : public CUnknownRecord
 {
 public:

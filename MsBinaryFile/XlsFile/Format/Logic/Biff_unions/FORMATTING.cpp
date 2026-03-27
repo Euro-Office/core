@@ -49,24 +49,16 @@
 #include "../Biff_records/StyleExt.h"
 namespace XLS
 {
-
-
 FORMATTING::FORMATTING()
 {
 }
-
-
 FORMATTING::~FORMATTING()
 {
 }
-
-
 BaseObjectPtr FORMATTING::clone()
 {
 	return BaseObjectPtr(new FORMATTING(*this));
 }
-
-
 //FORMATTING = 1*510Font 8*218Format XFS *DXF STYLES [TABLESTYLES] [Palette] [ClrtClient]
 const bool FORMATTING::loadContent(BinProcessor& proc)
 {
@@ -156,8 +148,6 @@ const bool FORMATTING::loadContent(BinProcessor& proc)
 }
 const bool FORMATTING::saveContent(BinProcessor& proc)
 {
-
-
 	proc.mandatory<Font>();
 	proc.mandatory<Font>();
 	proc.mandatory<Font>();
@@ -306,7 +296,5 @@ int FORMATTING::serialize(std::wostream & stream)
 
 	return 0;
 }
-
-
 } // namespace XLS
 

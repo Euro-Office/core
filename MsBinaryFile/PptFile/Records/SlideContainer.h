@@ -35,8 +35,6 @@
 #include "VBAInfoAtom.h"
 
 #include "../Records/SSSlideInfoAtom.h"
-
-
 namespace PPT
 {
 class CRecordSlide : public CRecordsContainer

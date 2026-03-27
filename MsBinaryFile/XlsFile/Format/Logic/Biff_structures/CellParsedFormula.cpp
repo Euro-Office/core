@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 CellParsedFormula::CellParsedFormula(const bool is_part_of_a_revision)
 :	is_part_of_a_revision_(is_part_of_a_revision),
 	ParsedFormula(CellRef())
@@ -131,8 +129,6 @@ void CellParsedFormula::save(CFRecord& record)
 		saving(rgce);
 		saving(rgcb);
 	}
-
-	
 }
 
 } // namespace XLS

@@ -34,26 +34,18 @@
 
 namespace XLS
 {
-
-
 PtgFuncVar::PtgFuncVar(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgFuncVar::PtgFuncVar(const unsigned short func_index, const unsigned char data_type)
 : OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5)),
 	tab(func_index)
 {
 }
-
-
 BiffStructurePtr PtgFuncVar::clone()
 {
 	return BiffStructurePtr(new PtgFuncVar(*this));
 }
-
-
 void PtgFuncVar::loadFields(CFRecord& record)
 {
 	global_info_ = record.getGlobalWorkbookInfo();
@@ -72,8 +64,6 @@ void PtgFuncVar::writeFields(CFRecord& record)
 	record << cparams;
 	record.storeAnyData(tab);
 }
-
-
 void PtgFuncVar::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	std::wstring arguments;
@@ -117,8 +107,6 @@ void PtgFuncVar::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool 
 	}
 	ptg_stack.push(func_name + L'(' + arguments + L')');
 }
-
-
 // static
 PtgPtr PtgFuncVar::create(const std::wstring& word, const unsigned char data_type)
 {
@@ -133,8 +121,6 @@ PtgPtr PtgFuncVar::create(const std::wstring& word, const unsigned char data_typ
 	}
 	return PtgPtr();
 }
-
-
 void PtgFuncVar::setParamsNum(const unsigned char num)
 {
 	cparams = num;
@@ -158,8 +144,6 @@ const unsigned short PtgFuncVar::getFuncIndex() const
 {
     return tab.getIndex();
 }
-
-
 const std::wstring PtgFuncVar::getFutureFuncName() const
 {
 	if(futureFuncName.has_value())

@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BoundSheet8 record in BIFF8
 class BoundSheet8: public BiffRecord
 {

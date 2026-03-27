@@ -217,8 +217,6 @@ void OfficeArtBlip::loadFields(XLS::CFRecord& record)
 			record.RollRdPtrBack(rc_header.size());
 			return;
 	}
-
-	
 	if (!isCompressed)
 	{
 		pict_size = record.getDataSize() - record.getRdPtr();

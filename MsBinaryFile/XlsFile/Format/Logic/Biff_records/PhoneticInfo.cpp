@@ -38,13 +38,9 @@ namespace XLS
 PhoneticInfo::PhoneticInfo()
 {
 }
-
-
 PhoneticInfo::~PhoneticInfo()
 {
 }
-
-
 BaseObjectPtr PhoneticInfo::clone()
 {
 	return BaseObjectPtr(new PhoneticInfo(*this));

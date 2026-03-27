@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr MDir::clone()
 {
 	return BiffStructurePtr(new MDir(*this));
@@ -52,6 +50,4 @@ void MDir::save(CFRecord& record)
 	_UINT32 mdd4b = mdd;
 	record << mdd4b;
 }
-
-
 } // namespace XLS

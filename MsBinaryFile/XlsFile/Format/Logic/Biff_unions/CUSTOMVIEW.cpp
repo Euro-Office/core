@@ -52,24 +52,16 @@
 
 namespace XLS
 {
-
-
 CUSTOMVIEW::CUSTOMVIEW()
 {
 }
-
-
 CUSTOMVIEW::~CUSTOMVIEW()
 {
 }
-
-
 BaseObjectPtr CUSTOMVIEW::clone()
 {
 	return BaseObjectPtr(new CUSTOMVIEW(*this));
 }
-
-
 /*
 CUSTOMVIEW = UserSViewBegin *Selection [HorizontalPageBreaks] [VerticalPageBreaks] [Header] 
 			[Footer] [HCenter] [VCenter] [LeftMargin] [RightMargin] [TopMargin] [BottomMargin] [Pls] [Setup] 

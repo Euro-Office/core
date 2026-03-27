@@ -2045,8 +2045,6 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 		convert(oox_section_pr->m_oPgBorders->m_oTop.GetPointer(), top);
 
 		odt_context->page_layout_context()->set_page_border(top, left, bottom, right);
-
-
 		if (oox_section_pr->m_oPgBorders->m_oOffsetFrom.IsInit() &&
 			(oox_section_pr->m_oPgBorders->m_oOffsetFrom->GetValue() == SimpleTypes::pageborderoffsetPage))
 		{
@@ -2082,8 +2080,6 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 			if (oox_section_pr->m_oPgBorders->m_oRight->m_oSpace.IsInit())
 				odt_context->page_layout_context()->set_page_border_padding(4, oox_section_pr->m_oPgBorders->m_oRight->m_oSpace->ToPoints());
 		}
-
-
 		bool shadow = false;
 		if (oox_section_pr->m_oPgBorders->m_oBottom.IsInit() && oox_section_pr->m_oPgBorders->m_oBottom->m_oShadow.IsInit() && oox_section_pr->m_oPgBorders->m_oBottom->m_oShadow->ToBool()) shadow = true;
 		if (oox_section_pr->m_oPgBorders->m_oTop.IsInit() && oox_section_pr->m_oPgBorders->m_oTop->m_oShadow.IsInit() && oox_section_pr->m_oPgBorders->m_oTop->m_oShadow->ToBool()) shadow = true;
@@ -2889,8 +2885,6 @@ void DocxConverter::convert(OOX::Logic::CRunProperty *oox_run_pr, odf_writer::te
 		
 		if (color) text_properties->style_text_underline_color_ = color;
 		else text_properties->style_text_underline_color_ = odf_types::underline_color(odf_types::underline_color::FontColor);
-		
-		
 		if (oox_run_pr->m_oU->m_oVal.IsInit())
 		{
 			SimpleTypes::EUnderline 	type = oox_run_pr->m_oU->m_oVal->GetValue();
@@ -3999,8 +3993,6 @@ void DocxConverter::convert(OOX::CDocDefaults *def_style, OOX::CStyles *styles)
 	//if (graphic_properties)graphic_properties->content_.common_background_color_attlist_.fo_background_color_ = odf_types::background_color(odf_types::background_color::Transparent);
 
 }
-
-
 void DocxConverter::convert(OOX::Numbering::CLvl *oox_num_lvl, OOX::Numbering::CNumLvl *oox_num_lvl_over, int lvl)
 {
 	if (oox_num_lvl == NULL) return;
@@ -4695,8 +4687,6 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 	
 	if (oox_table->m_oTableProperties)
 		id_change_properties = convert(oox_table->m_oTableProperties->m_oTblPrChange.GetPointer());
-
-
 	if (oox_table->m_oTableProperties && (oox_table->m_oTableProperties->m_oTblStyle.IsInit() && oox_table->m_oTableProperties->m_oTblStyle->m_sVal.IsInit()))
 	{//настройка предустановленного стиля
 		std::wstring base_style_name = *oox_table->m_oTableProperties->m_oTblStyle->m_sVal;
@@ -4759,8 +4749,6 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 				//	if (!x) x = oox_table->m_oTableProperties->m_oTblpPr->m_oLeftFromText->ToPoints();
 				//	else x = -*x + oox_table->m_oTableProperties->m_oTblpPr->m_oLeftFromText->ToPoints();
 				//}
-
-
 				odt_context->drawing_context()->set_drawings_rect(x, y, width, height);	
 				
 				odt_context->drawing_context()->set_anchor(in_frame_anchor); 
@@ -4825,8 +4813,6 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 		
 		if (oox_table->m_oTableProperties->m_oTblLook.IsInit() && oox_table->m_oTableProperties->m_oTblLook->m_oVal.IsInit())
 			odt_context->styles_context()->table_styles().set_flags(oox_table->m_oTableProperties->m_oTblLook->m_oVal->GetValue());
-
-		
 		border_inside_h = odt_context->styles_context()->table_styles().get_table_insideH();
 		border_inside_v = odt_context->styles_context()->table_styles().get_table_insideV();
 	}
@@ -5385,8 +5371,6 @@ bool DocxConverter::convert(OOX::Logic::CTableCellProperties *oox_table_cell_pr,
 		//кастомная ширина ячейки :( //2222010_53102Reader final.docx - все равно кривоватенько
 		odt_context->table_context()->change_current_column_width(oox_table_cell_pr->m_oTcW->m_oW->GetValue()/ 20.);//dxa type
 	}
-	
-	
 	//nullable<OOX::Logic::CHeaders                                > m_oHeaders;
     //nullable<ComplexTypes::Word::COnOff2 > m_oHideMark;
 	return true;

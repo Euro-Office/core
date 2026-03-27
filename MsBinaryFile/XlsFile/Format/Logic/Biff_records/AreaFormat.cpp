@@ -41,13 +41,9 @@ AreaFormat::AreaFormat()
 	rgbFore.green = 0xFF;
 	rgbFore.blue = 0xFF;
 }
-
-
 AreaFormat::~AreaFormat()
 {
 }
-
-
 BaseObjectPtr AreaFormat::clone()
 {
 	return BaseObjectPtr(new AreaFormat(*this));

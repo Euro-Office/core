@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Prot4RevPass record in BIFF8
 class Prot4RevPass: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Prot4RevPass();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

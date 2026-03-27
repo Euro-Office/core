@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PhRuns::clone()
 {
 	return BiffStructurePtr(new PhRuns(*this));
 }
-
-
 void PhRuns::load(CFRecord& record)
 {
 	record >> ichFirst >> ichMom >> cchMom;

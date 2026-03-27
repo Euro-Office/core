@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Tick record in BIFF8
 class Tick: public BiffRecord
 {

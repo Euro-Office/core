@@ -38,13 +38,9 @@ namespace XLS
 SXDBB::SXDBB()
 {
 }
-
-
 SXDBB::~SXDBB()
 {
 }
-
-
 BaseObjectPtr SXDBB::clone()
 {
 	return BaseObjectPtr(new SXDBB(*this));

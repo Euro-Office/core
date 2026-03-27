@@ -38,13 +38,9 @@ namespace XLS
 PlotArea::PlotArea()
 {
 }
-
-
 PlotArea::~PlotArea()
 {
 }
-
-
 BaseObjectPtr PlotArea::clone()
 {
 	return BaseObjectPtr(new PlotArea(*this));

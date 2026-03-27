@@ -121,8 +121,6 @@ std::wstring ReadUnicodeLP(POLE::Stream *pStream)
 	}
 	else
 		res = std::wstring((wchar_t*)Data, length);
-
-
 	return res;
 
 }
@@ -677,8 +675,6 @@ bool ReadExtensibleEncryptionInfo(unsigned char* data, int size, _ecmaCryptData 
 {
 	return false;
 }
-
-
 //--------------------------------------------------------------
 bool ECMACryptFile::EncryptOfficeFile(const std::wstring &file_name_inp, const std::wstring &file_name_out, const std::wstring &password, const std::wstring &documentID)
 {

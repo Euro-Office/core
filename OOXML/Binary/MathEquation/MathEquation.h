@@ -39,8 +39,6 @@
 #include "OutputDev.h"
 
 using namespace POLE;
-
-
 namespace MathEquation
 {
 	class CEquationReader

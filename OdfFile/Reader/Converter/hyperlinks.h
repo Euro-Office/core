@@ -54,8 +54,6 @@ public:
 	_ref  last();
     
 	void dump_rels(rels & Rels, _rels_type_place type_place);
-
-
 private:
     
 	std::vector<_ref> hrefs_;

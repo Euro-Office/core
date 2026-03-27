@@ -282,8 +282,6 @@ void PptxConverter::convert_styles()
 	odp_context->page_layout_context()->create_layer_sets();
 }
 
-
-
 void PptxConverter::convert_settings()
 {
 	OoxConverter::convert(presentation->m_pJsaProject.operator ->());
@@ -1321,8 +1319,6 @@ void PptxConverter::fill_in_deferred_hyperlinks()
 		}
 	}
 }
-
-
 void PptxConverter::convert_masters_and_layouts()
 {
 	for (size_t iMaster = 0; iMaster < presentation->sldMasterIdLst.size(); ++iMaster)
@@ -1479,8 +1475,6 @@ void PptxConverter::convert_slides()
 
 		if (!bShow)
 			odp_context->hide_slide();
-
-
 		odp_context->end_slide();
 	}
 
@@ -2103,8 +2097,6 @@ void PptxConverter::convert(PPTX::Logic::CTn *oox_time_common)
 	if (oox_time_common->decel.IsInit())
 		odp_context->current_slide().set_anim_decelerate(convert_acceleration(*oox_time_common->decel));
 
-	
-
 	//nullable<CondLst>			stCondLst;
 	//nullable<CondLst>			endCondLst;
 	//nullable<Cond>			endSync;
@@ -2139,8 +2131,6 @@ void PptxConverter::convert(PPTX::Logic::CTn *oox_time_common)
 				convert(&child);
 		}
 	}
-	
-
 //	if (oox_time_common->childTnLst.IsInit())
 //	{
 //		for (size_t i = 0; i < oox_time_common->childTnLst->list.size(); i++)
@@ -2160,8 +2150,6 @@ void PptxConverter::convert(PPTX::Logic::CTn *oox_time_common)
 		}
 	}
 }
-
-
 void PptxConverter::convert(PPTX::Logic::Cond* oox_condition)
 {
 	if (!oox_condition)
@@ -2187,8 +2175,6 @@ void PptxConverter::convert(PPTX::Logic::Cond* oox_condition)
 			delay = interactive_animation_element_id + L".click+" + delay;
 			interactive_animation_element_id = std::wstring();
 		}
-			
-
 		begin = delay;
 	}
 	
@@ -2400,8 +2386,6 @@ bool PptxConverter::convert(PPTX::Logic::TableCellProperties *oox_table_cell_pr,
 	}
 	
 	if (oox_table_cell_pr == NULL && is_base_styled == false && parent_cell_properties == NULL) return false;
-	
-
 	odf_writer::style_table_cell_properties *cell_properties = odp_context->styles_context()->last_state()->get_table_cell_properties();
 
 	if (cell_properties == NULL) return false;
@@ -2524,8 +2508,6 @@ void PptxConverter::convert(PPTX::Logic::TcBdr *oox_table_borders)
 
 	convert(oox_table_borders, odf_para_props);
 }
-
-
 void PptxConverter::convert(PPTX::Logic::TcBdr *oox_table_borders, odf_writer::paragraph_format_properties *odf_para_props)
 {
 	if (!oox_table_borders) return;
@@ -2797,8 +2779,6 @@ void PptxConverter::convert_slide(PPTX::Logic::CSld *oox_slide, PPTX::Logic::TxS
 			
 			if (pNvPr->ph->idx.IsInit())
 				odf_context()->drawing_context()->set_placeholder_id(pNvPr->ph->idx.get());
-
-
 			PPTX::Logic::TextListStyle * listMasterStyle = NULL;
 			
 			if (txStyles)
@@ -2881,8 +2861,6 @@ void PptxConverter::convert_slide(PPTX::Logic::CSld *oox_slide, PPTX::Logic::TxS
 
 			bConvert = true;
 		}
-
-
 		if (!bConvert)
 		{
 			OoxConverter::convert(pElem.GetPointer());

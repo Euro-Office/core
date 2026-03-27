@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BACKGROUND union of records 
 class BACKGROUND: public CompositeObject
 {

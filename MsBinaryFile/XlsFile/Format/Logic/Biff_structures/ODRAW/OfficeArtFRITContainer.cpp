@@ -34,20 +34,14 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtFRITContainer::OfficeArtFRITContainer()
 :	OfficeArtRecord(0, FRITContainer)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtFRITContainer::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtFRITContainer(*this));
 }
-
-
 void OfficeArtFRITContainer::loadFields(XLS::CFRecord& record)
 {
 	size_t frits_start = record.getRdPtr();

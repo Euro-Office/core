@@ -64,8 +64,6 @@
 
 namespace XLS
 {
-
-
 // The algorithm has been copied to EWSEditor. All code changes shall be synchronized.
 const bool StringPtgParser::parseToPtgs(const std::wstring& assembled_formula, Rgce& rgce, RgbExtra& rgb, const std::wstring & tag_name)
 {
@@ -412,8 +410,6 @@ const bool StringPtgParser::parseToPtgs(const std::wstring& assembled_formula, R
 			{
 				rgce.addPtg(found_operand = OperandPtgPtr(new PtgErr(L"#REF!")));
 			}
-
-
             else
             {
                //add error name to prevent endless formula conversion

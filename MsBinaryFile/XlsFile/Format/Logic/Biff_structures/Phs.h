@@ -49,8 +49,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     unsigned short ifnt = 0;
 	struct Phs_Data
 	{

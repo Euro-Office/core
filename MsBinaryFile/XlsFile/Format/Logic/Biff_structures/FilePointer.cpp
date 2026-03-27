@@ -39,14 +39,10 @@ FilePointer::FilePointer()
 :	offset(-1)
 {
 }
-
-
 FilePointer::FilePointer(const unsigned int ptr)
 :	offset(ptr)
 {
 }
-
-
 BiffStructurePtr FilePointer::clone()
 {
 	return BiffStructurePtr(new FilePointer(*this));

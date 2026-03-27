@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CodePage record in BIFF8
 class CodePage: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CodePage();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 //-----------------------------

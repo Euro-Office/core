@@ -39,8 +39,6 @@ class CRecordMouseTextInteractiveInfoAtom : public CUnknownRecord
 {
 public:
     ODRAW::STextRange m_oRange;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

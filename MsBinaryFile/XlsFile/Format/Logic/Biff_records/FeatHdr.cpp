@@ -40,13 +40,9 @@ FeatHdr::FeatHdr(const bool is_called_from_Globals)
 :	is_contained_in_Globals(is_called_from_Globals)
 {
 }
-
-
 FeatHdr::~FeatHdr()
 {
 }
-
-
 BaseObjectPtr FeatHdr::clone()
 {
 	return BaseObjectPtr(new FeatHdr(*this));

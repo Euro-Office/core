@@ -158,8 +158,6 @@ std::wstring XlsxConverter::find_link_by_id (const std::wstring & sId, int type,
 	}
 	return ref;
 }
-
-
 bool XlsxConverter::convertDocument()
 {
     if (!output_document)   return false;
@@ -533,8 +531,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::CWorksheet *oox_sheet)
 				
 		convert(oPivotTable.GetPointer());
 	}
-
-
 /////////////////////////////////////////////////////////////////////////
 	convert(oox_sheet->m_oSheetViews.GetPointer());
 	convert(oox_sheet->m_oPageSetup.GetPointer());
@@ -1069,8 +1065,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::CTableColumns *oox_table_part_colu
 		ods_context->add_table_part_column(name);
 	}
 }
-
-
 void XlsxConverter::convert(OOX::Spreadsheet::CCommentItem * oox_comment)
 {
 	if (!oox_comment) return;
@@ -2237,8 +2231,6 @@ void XlsxConverter::convert_styles()
 	}
 }
 
-
-
 void XlsxConverter::convert(OOX::Spreadsheet::CFont *font, odf_writer::text_format_properties *text_properties)
 {
 	if (font == NULL)return;
@@ -3113,8 +3105,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::COleObjects *oox_objects, OOX::Spr
 		ods_context->drawing_context()->clear();
 	}
 }
-
-
 void XlsxConverter::convert(OOX::Spreadsheet::CControls *oox_controls, OOX::Spreadsheet::CWorksheet *oox_sheet)
 {
 	if (!oox_controls) return;
@@ -3392,8 +3382,6 @@ void XlsxConverter::convert(OOX::Spreadsheet::CControls *oox_controls, OOX::Spre
 		}
 	}
 }
-
-
 void XlsxConverter::convert(OOX::Spreadsheet::CFromTo* oox_from_to, oox_table_position * pos)
 {
 	if (!oox_from_to || !pos)return;

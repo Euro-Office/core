@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ObjectLink record in BIFF8
 class ObjectLink: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ObjectLink();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

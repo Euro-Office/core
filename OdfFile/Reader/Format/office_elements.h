@@ -109,8 +109,6 @@ private:
     virtual xml::NodeType get_xml_type() const { return xml_type; }\
     virtual ElementType get_type() const { return type; }
 
-
-
 inline office_element::~office_element()
 {
 }
@@ -150,8 +148,6 @@ public:
     }
    
 };
-
-
 }
 }
 

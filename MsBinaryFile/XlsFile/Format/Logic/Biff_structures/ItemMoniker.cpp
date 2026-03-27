@@ -34,19 +34,13 @@
 
 namespace OSHARED
 {
-
-
 ItemMoniker::ItemMoniker()
 {
 }
-
-
 ItemMoniker::ItemMoniker(XLS::CFRecord& record)
 {
 	load(record);
 }
-
-
 XLS::BiffStructurePtr ItemMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new ItemMoniker(*this));

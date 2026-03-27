@@ -79,8 +79,4 @@ chart_class chart_class::parse(const std::wstring & Str)
         return chart_class(bar);
     }
 }
-
-
-
-
 } }

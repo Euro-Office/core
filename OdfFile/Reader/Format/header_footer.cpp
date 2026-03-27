@@ -54,8 +54,6 @@ void style_header_footer_properties_attlist::add_attributes( const xml::attribut
     common_shadow_attlist_.add_attributes(Attributes);
     CP_APPLY_ATTR(L"style:dynamic-spacing", style_dynamic_spacing_);
 }
-
-
 const wchar_t * style_header_footer_properties::ns = L"style";
 const wchar_t * style_header_footer_properties::name = L"header-footer-properties";
 

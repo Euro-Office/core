@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AxesUsed record in BIFF8
 class AxesUsed: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~AxesUsed();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

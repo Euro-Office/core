@@ -258,8 +258,6 @@ namespace odf_writer
 				{
 					std::string root = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 					file.WriteFile((BYTE*)root.c_str(), (DWORD)root.length());
-
-
 					if (add_padding)
 					{
 						CryptoPP::RandomPool prng;
@@ -610,8 +608,6 @@ namespace odf_writer
 						CP_XML_ATTR(L"xmlns:officeooo", L"http://openoffice.org/2009/office");
 						CP_XML_ATTR(L"xmlns:chartooo", L"http://openoffice.org/2010/chart");
 						CP_XML_ATTR(L"office:version", L"1.2");
-
-
 						if ((content_) && (content_->styles_.rdbuf()->in_avail() != 0))
 						{
 							content_->styles_.flush();

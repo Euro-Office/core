@@ -345,8 +345,6 @@ const std::vector<std::wstring> TxtFile::readBigEndian()
     }
     return readUnicodeFromBytes(file_data, file_size);
 }
-
-
 const std::vector<std::string> TxtFile::readUtf8()
 {
     std::vector<std::string> result;

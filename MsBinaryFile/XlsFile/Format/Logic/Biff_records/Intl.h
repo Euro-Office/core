@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Intl record in BIFF8
 class Intl: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Intl();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeIntl;

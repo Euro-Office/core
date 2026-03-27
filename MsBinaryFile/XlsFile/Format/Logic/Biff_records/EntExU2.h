@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of EntExU2 record in BIFF8
 class EntExU2: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~EntExU2();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeEntExU2;

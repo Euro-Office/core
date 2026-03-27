@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DAT union of records 
 class DAT: public CompositeObject
 {

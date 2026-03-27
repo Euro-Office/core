@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Backup record in BIFF8
 class Backup: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Backup();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

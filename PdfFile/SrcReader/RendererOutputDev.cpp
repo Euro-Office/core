@@ -2465,8 +2465,6 @@ namespace PdfReader
 			pNewTm[4] = dX;
 			pNewTm[5] = dY;
 		}
-
-
 		arrMatrix[0] =   pNewTm[0] * pCTM[0] + pNewTm[1] * pCTM[2];
 		arrMatrix[1] = -(pNewTm[0] * pCTM[1] + pNewTm[1] * pCTM[3]);
 		arrMatrix[2] =   pNewTm[2] * pCTM[0] + pNewTm[3] * pCTM[2];

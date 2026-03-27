@@ -291,8 +291,6 @@ namespace NSStructures
 			y += a.y;
 			return *this;
 		}
-
-
 		/**
 		 * Костыль от ошибок линковки. Чтобы время не терять пока что.
 		*/
@@ -313,8 +311,6 @@ namespace NSStructures
 			return Point(a.x - b.x, a.y - b.y);
 		}
 	};
-
-
 
 	/**
 	 *  Тут хранится информация спецефичная для рендера ПДФ.
@@ -356,8 +352,6 @@ namespace NSStructures
 		// Линейный градиент задается в pdf 2 точками
 		bool set_two_points;
 		Point point1, point2;
-
-
 		// triangle shading
 		std::vector<Point> triangle;
 		std::vector<agg::rgba8> triangle_colors;
@@ -557,8 +551,6 @@ namespace NSStructures
 		bool luminocity;
 		ShadingInfo shading;
 	};
-
-
 	/**
 	 * Создает объект класса GradientInfo по заданным параметрам.
 	 *
@@ -592,8 +584,6 @@ namespace NSStructures
 			ginfo.shading.set_two_points = true;
 			ginfo.shading.point1 = p1;
 			ginfo.shading.point2 = p2;
-
-
 			return ginfo;
 		}
 		static GradientInfo get_radial(const Point &c0, const Point &c1, float r0, float r1,
@@ -611,8 +601,6 @@ namespace NSStructures
 			ginfo.r0 = r0;
 			ginfo.r1 = r1;
 			return ginfo;
-
-
 		}
 		static GradientInfo get_triangle(const std::vector<Point> &points,
 										 const std::vector<agg::rgba8> &colors,

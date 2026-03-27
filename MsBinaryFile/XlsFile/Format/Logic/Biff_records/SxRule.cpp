@@ -47,8 +47,6 @@ BaseObjectPtr SxRule::clone()
 {
 	return BaseObjectPtr(new SxRule(*this));
 }
-
-
 void SxRule::readFields(CFRecord& record)
 {
 	unsigned short flags, reserved;

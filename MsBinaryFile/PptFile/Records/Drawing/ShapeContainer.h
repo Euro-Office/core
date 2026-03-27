@@ -54,8 +54,6 @@
 
 #include "../../../../DesktopEditor/raster/BgraFrame.h"
 #include "../../../../OOXML/Base/Base.h"
-
-
 #define FIXED_POINT_unsigned(val) (double)((WORD)(val >> 16) + ((WORD)(val) / 65536.0))
 
 namespace PPT

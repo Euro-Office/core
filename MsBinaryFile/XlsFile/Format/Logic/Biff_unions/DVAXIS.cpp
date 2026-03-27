@@ -47,25 +47,17 @@
 
 namespace XLS
 {
-
-
 DVAXIS::DVAXIS() :	id(0)
 {
 	m_bSecondary = false;
 }
-
-
 DVAXIS::~DVAXIS()
 {
 }
-
-
 BaseObjectPtr DVAXIS::clone()
 {
 	return BaseObjectPtr(new DVAXIS(*this));
 }
-
-
 const bool DVAXIS::loadContentRead(BinReaderProcessor& proc)
 {
 	bool ok = loadContent(proc);

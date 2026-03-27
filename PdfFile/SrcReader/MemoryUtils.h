@@ -40,8 +40,6 @@
 #define INT_MIN     (-2147483647 - 1) /* minimum (signed) int value */
 #define INT_MAX       2147483647    /* maximum (signed) int value */
 #endif
-
-
 namespace PdfReader
 {
     static inline void CheckMemory(void* memory)

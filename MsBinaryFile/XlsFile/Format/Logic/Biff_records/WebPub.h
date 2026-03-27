@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of WebPub record in BIFF8
 class WebPub: public BiffRecord
 {
@@ -51,8 +49,6 @@ public:
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeWebPub;
-
-
 };
 
 } // namespace XLS

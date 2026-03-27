@@ -36,11 +36,7 @@
 #include "../../Common/Utils/simple_xml_writer.h"
 
 #include "xlsx_package.h"
-
-
 namespace oox {
-    
-
 xlsx_conversion_context::xlsx_conversion_context( package::xlsx_document * outputDocument)	: output_document_(outputDocument),
 	next_vml_file_id_				( 1 ),
 	sheet_context_					( *this ), 
@@ -199,8 +195,6 @@ void xlsx_conversion_context::start_external()
 void xlsx_conversion_context::end_external()
 {
 }
-
-
 void xlsx_conversion_context::end_sheet()
 {
 	get_sheet_context().serialize_ole_objects	(current_sheet().ole_objects());
@@ -361,8 +355,6 @@ void xlsx_conversion_context::end_document()
 	//workbook_content << L"<calcPr iterateCount=\"100\" refMode=\"A1\" iterate=\"false\" iterateDelta=\"0.0001\" />";
 
 	output_document_->get_xl_files().set_sharedStrings( package::simple_element::create(L"sharedStrings.xml", xlsx_shared_strings_.str()) );
-
-
     std::wstringstream strm_workbook;
 
     CP_XML_WRITER(strm_workbook)

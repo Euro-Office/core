@@ -42,8 +42,6 @@
 #include "../../Common/SimpleTypes_Shared.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Binary/CFStreamCacheWriter.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/DVAL.h"
-
-
 namespace OOX
 {
 	namespace Spreadsheet

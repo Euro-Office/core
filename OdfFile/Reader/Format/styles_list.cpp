@@ -36,15 +36,11 @@
 
 #include "serialize_elements.h"
 #include "style_text_properties.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
 
 namespace odf_reader {
-    
-
 
 //  text_list_style_attr
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,8 +173,6 @@ void text_list_level_style_image_attr::add_attributes( const xml::attributes_wc_
 {
     xlink_attlist_.add_attributes(Attributes);
 }
- 
-
 // text:list-level-style-number
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_level_style_number::ns = L"text";
@@ -783,8 +777,6 @@ void text_list_level_style_bullet::docx_convert(oox::docx_conversion_context & C
 		}
 	}
 }
-
-
 void text_list_level_style_bullet::pptx_convert(oox::pptx_conversion_context & Context) 
 {    
 	if (attr_.get_text_level() - 1 > 10)
@@ -917,8 +909,6 @@ void text_list_level_style_image::docx_convert(oox::docx_conversion_context & Co
 		}
 	}
 }
-
-
 void text_list_level_style_image::pptx_convert(oox::pptx_conversion_context & Context) 
 {    
 	if (attr_.get_text_level() - 1 > 10)
@@ -1170,7 +1160,5 @@ void text_outline_level_style::docx_convert(oox::docx_conversion_context & Conte
 		}
 	}
 }
-
-
 }
 }

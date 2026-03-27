@@ -126,8 +126,6 @@ void draw_image::add_child_element( const office_element_ptr & child_element)
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * draw_chart::ns = L"draw";
 const wchar_t * draw_chart::name = L"chart";
-
-
 void draw_chart::serialize(std::wostream & _Wostream)
 {
      CP_XML_WRITER(_Wostream)
@@ -144,8 +142,6 @@ void draw_chart::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 void draw_chart::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);
@@ -287,8 +283,6 @@ void draw_text_box_attlist::serialize(CP_ATTR_NODE)
 //-----------------------------------------------------------------------
 const wchar_t * draw_text_box::ns	= L"draw";
 const wchar_t * draw_text_box::name = L"text-box";
-
-
 void draw_text_box::serialize(std::wostream & _Wostream)
 {
 	CP_XML_WRITER(_Wostream)

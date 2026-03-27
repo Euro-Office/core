@@ -36,8 +36,6 @@
 #include <boost/unordered_map.hpp>
 
 #include "office_elements_create.h"
-
-
 namespace cpdoccore {
 namespace odf_writer {
 

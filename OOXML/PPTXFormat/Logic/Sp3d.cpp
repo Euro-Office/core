@@ -144,8 +144,6 @@ namespace PPTX
 				sNodeNamespace = m_namespace + L":";
 				sNodeChildNamespace = L"a:";
 			}
-
-
 			pWriter->StartNode(sNodeNamespace + m_name);
 
 			pWriter->StartAttributes();

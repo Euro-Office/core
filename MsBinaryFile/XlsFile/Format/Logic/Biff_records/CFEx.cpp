@@ -39,13 +39,9 @@ CFEx::CFEx()
 {
 	dxfId_ = -1;
 }
-
-
 CFEx::~CFEx()
 {
 }
-
-
 BaseObjectPtr CFEx::clone()
 {
 	return BaseObjectPtr(new CFEx(*this));

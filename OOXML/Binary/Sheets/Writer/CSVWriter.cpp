@@ -408,8 +408,6 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
                 //currentTime->tm_year = date_.year() - 1900;  // Устанавливаем год
                 //currentTime->tm_mon = date_.month() - 1;     // Устанавливаем месяц (от 0 до 11)
                 //currentTime->tm_mday = date_.day();          // Устанавливаем день
-
-
                 //wss << std::put_time(currentTime, L"%x");  // Формат "%x" - формат даты для текущей локали
 
                 //date_str = wss.str();

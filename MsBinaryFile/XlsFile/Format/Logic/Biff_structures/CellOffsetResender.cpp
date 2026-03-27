@@ -35,14 +35,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CellOffsetResender::clone()
 {
 	return BiffStructurePtr(new CellOffsetResender(*this));
 }
-
-
 void CellOffsetResender::resend(CFStream& stream, const unsigned int data_place, const unsigned int data)
 {
 	unsigned int CELL_start_pos = data_place - sizeof(unsigned short)/*size_short*/ - sizeof(CFRecordType::TypeId);
@@ -67,7 +63,5 @@ void CellOffsetResender::load(CFRecord& record)
 {
 	// do nothing
 }
-
-
 } // namespace XLS
 

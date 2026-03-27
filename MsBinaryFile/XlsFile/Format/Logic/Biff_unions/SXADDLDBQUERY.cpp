@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLDBQUERY::SXADDLDBQUERY()
 {
 }
-
-
 SXADDLDBQUERY::~SXADDLDBQUERY()
 {
 }
-
-
 BaseObjectPtr SXADDLDBQUERY::clone()
 {
 	return BaseObjectPtr(new SXADDLDBQUERY(*this));
 }
-
-
 /*
 SXADDLDBQUERY = [SXAddl_SXCQuery_SXDXMLSource *Continue_SxaddlSxString] 
 				[SXAddl_SXCQuery_SXDSrcDataFile *Continue_SxaddlSxString] 

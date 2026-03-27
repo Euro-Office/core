@@ -510,8 +510,6 @@ void CSvmFile::Read_META_STRETCHTEXT()
 	}
 	DrawText(sText, sText.length(), startPoint.x + m_oCurrnetOffset.x, startPoint.y + m_oCurrnetOffset.y);
 }
-
-
 void CSvmFile::Read_META_TEXT()
 {
 	std::wstring sText;
@@ -972,8 +970,6 @@ void CSvmFile::Read_META_RASTEROP()
 	//case 2: if ( m_pOutput)	m_pOutput->StartClipPath(RGN_OR);	break;
 	//case 3: if ( m_pOutput)	m_pOutput->StartClipPath(RGN_DIFF);	break;
 	//}
-
-	
 }
 void CSvmFile::Read_META_BMP()
 {

@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AFDOper::clone()
 {
 	return BiffStructurePtr(new AFDOper(*this));
@@ -52,13 +50,9 @@ AFDOper::AFDOper(bool bAutoFilter)
 {
 	m_bAutoFilter = bAutoFilter;
 }
-
-
 AFDOper::~AFDOper()
 {
 }
-
-
 void AFDOper::load(CFRecord& record)
 {
 	record >> vt >> grbitSign;

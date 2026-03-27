@@ -47,8 +47,6 @@
 
 namespace cpdoccore {
 namespace odf_types {
-
-
 	void anim_par_attlist::add_attributes(const xml::attributes_wc_ptr& Attributes)
 	{
 		CP_APPLY_ATTR(L"presentation:preset-class", presentation_preset_class_);
@@ -228,8 +226,6 @@ namespace odf_types {
 		CP_APPLY_ATTR(L"smil:by", smil_by_);
 		CP_APPLY_ATTR(L"svg:type", svg_type_);
 	}
-
-
 	void anim_animate_transform_attlist::apply_from(const anim_animate_transform_attlist& Other)
 	{
 		_CP_APPLY_PROP2(smil_auto_reverse_);

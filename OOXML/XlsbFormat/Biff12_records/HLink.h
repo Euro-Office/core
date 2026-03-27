@@ -37,10 +37,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/CellRangeRef.h"
 
-
-
-
-
 namespace XLSB
 {
     // Logical representation of BrtHLink record in BIFF12

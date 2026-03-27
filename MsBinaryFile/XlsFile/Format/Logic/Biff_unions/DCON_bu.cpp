@@ -38,18 +38,12 @@
 
 namespace XLS
 {
-
-
 DCON::DCON()
 {
 }
-
-
 DCON::~DCON()
 {
 }
-
-
 class Parenthesis_DCON_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_DCON_1)
@@ -66,8 +60,6 @@ public:
 				proc.optional<DConRef>();
 	};
 };
-
-
 
 BaseObjectPtr DCON::clone()
 {

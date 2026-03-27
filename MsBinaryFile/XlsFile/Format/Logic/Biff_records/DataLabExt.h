@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DataLabExt record in BIFF8
 class DataLabExt: public BiffRecord
 {
@@ -47,14 +45,10 @@ public:
 	~DataLabExt();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 
 	static const ElementType	type = typeDataLabExt;
-
-
 };
 
 } // namespace XLS

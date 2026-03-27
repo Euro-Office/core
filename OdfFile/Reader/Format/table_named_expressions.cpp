@@ -38,12 +38,8 @@
 #include "serialize_elements.h"
 #include "odfcontext.h"
 #include "odf_document.h"
-
-
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 
 // table:table-source
 //////////////////////////////////////////////////////////////////////////////////////////////////

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AttachedLabel record in BIFF8
 class AttachedLabel: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~AttachedLabel();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 	

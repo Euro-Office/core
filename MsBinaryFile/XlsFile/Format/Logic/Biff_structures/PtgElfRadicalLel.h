@@ -44,11 +44,7 @@ class PtgElfRadicalLel: public OperandPtg
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgElfRadicalLel)
 public:
 	BiffStructurePtr clone();
-
-	
 	virtual void loadFields(CFRecord& record);
-	
-
 	virtual void assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref = false);
 
 private:

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SCENARIO record in BIFF8
 class SCENARIO: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~SCENARIO();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeSCENARIO;

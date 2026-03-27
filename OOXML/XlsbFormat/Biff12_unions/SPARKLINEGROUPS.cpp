@@ -97,8 +97,6 @@ namespace XLSB
         }
 		else
 			m_bBrtFRTEnd = false;
-
-
         return m_bBrtBeginSparklineGroups && !m_arSPARKLINEGROUP.empty() && m_bBrtEndSparklineGroups && m_bBrtFRTEnd;
     }
 

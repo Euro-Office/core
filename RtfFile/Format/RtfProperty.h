@@ -814,8 +814,6 @@ public:
 		tw_wraptight,
 		tw_wrapthrough
 	};
-
-
 	_INT32			m_nWidth;
 	_INT32			m_nHeight;
 	_HRef		m_eHRef;
@@ -1274,8 +1272,6 @@ public:
 	RtfTableProperty	m_oTableProp;
 	RtfRowProperty		m_oRowProp;
 	RtfCellProperty		m_oCellProp;
-
-
 	RtfTableStylePtr m_oFirstRow;
 	RtfTableStylePtr m_oLastRow;
 	RtfTableStylePtr m_oFirstCol;

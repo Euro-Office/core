@@ -64,6 +64,4 @@ chart_label_arrangement chart_label_arrangement::parse(const std::wstring & Str)
     }
 }
 
-
-
 } }

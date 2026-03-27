@@ -181,8 +181,6 @@ void number_text::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 void number_text::add_text(const std::wstring & Text)
 {
     office_element_ptr elm = text_text::create(Text) ;
@@ -209,8 +207,6 @@ void number_embedded_text::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 
 void number_embedded_text::add_text(const std::wstring & Text)
 {
@@ -291,8 +287,6 @@ void number_scientific_number::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 // number:currency-symbol
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_currency_symbol::ns = L"number";
@@ -314,8 +308,6 @@ void number_currency_symbol::serialize(std::wostream & strm)
 		}
 	}
 }                      
-
-
 void number_currency_symbol::add_text(const std::wstring & Text)
 {
     text_.push_back(Text);
@@ -479,8 +471,6 @@ void format_number_number(
     }
 }
 }
-
-
 // number:day
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_day::ns = L"number";
@@ -611,8 +601,6 @@ void number_hours::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 // number:minutes
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_minutes::ns = L"number";

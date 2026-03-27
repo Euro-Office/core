@@ -90,8 +90,6 @@ static void ParseTxtOptions(const std::wstring & sXmlOptions, int &encoding, int
 		}
 	}
 }
-
-
 _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const std::wstring & sDstPath, const std::wstring & sXMLOptions)
 {
 	Writers::FileWriter *pDocxWriter =  new Writers::FileWriter(sDstPath, L"", true, 1, NULL, L"");
@@ -122,8 +120,6 @@ _UINT32 CTxtXmlFile::txt_LoadFromFile(const std::wstring & sSrcFileName, const s
 
 	return 0;
 }
-
-
 _UINT32 CTxtXmlFile::txt_SaveToFile(const std::wstring & sDstFileName, const std::wstring & sSrcPath, const std::wstring & sXMLOptions)
 {
 	bool result = true;
@@ -162,8 +158,6 @@ _UINT32 CTxtXmlFile::txt_SaveToFile(const std::wstring & sDstFileName, const std
 
 	return result ? 0 : AVS_FILEUTILS_ERROR_CONVERT;
 }
-
-
 void CTxtXmlFile::CreateDocxEmpty(const std::wstring & _strDirectory, Writers::FileWriter * pDocxWriter)
 {
 	std::wstring strDirectory = _strDirectory;

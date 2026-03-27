@@ -34,8 +34,6 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr OfficeArtFRIT::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtFRIT(*this));
@@ -50,6 +48,4 @@ void OfficeArtFRIT::save(XLS::CFRecord& record)
 {
 	record << fridNew << fridOld;
 }
-
-
 } // namespace XLS

@@ -171,7 +171,5 @@ void ListParsedArrayFormula::save(CFRecord& record)
 {
 	ArrayParsedFormula::save(record);
 }
-
-
 } // namespace XLS
 

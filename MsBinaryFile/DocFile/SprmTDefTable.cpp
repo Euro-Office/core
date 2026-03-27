@@ -46,8 +46,6 @@ namespace DocFileFormat
 			rgdxaCenter.push_back(pos);
 			pointer += 2;
 		}
-
-
 		// rgTc80
 
 		for (int i = 0; i < numberOfColumns; ++i)

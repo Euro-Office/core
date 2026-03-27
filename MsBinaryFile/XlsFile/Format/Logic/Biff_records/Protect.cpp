@@ -38,13 +38,9 @@ namespace XLS
 Protect::Protect()
 {
 }
-
-
 Protect::~Protect()
 {
 }
-
-
 BaseObjectPtr Protect::clone()
 {
 	return BaseObjectPtr(new Protect(*this));

@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordGuideAtom : public CUnknownRecord
@@ -41,8 +39,6 @@ class CRecordGuideAtom : public CUnknownRecord
 public:
 	_UINT32 m_nType;
 	_UINT32 m_nPos;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

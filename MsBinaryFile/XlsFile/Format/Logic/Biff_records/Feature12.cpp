@@ -48,8 +48,6 @@ BaseObjectPtr Feature12::clone()
 {
 	return BaseObjectPtr(new Feature12(*this));
 }
-
-
 void Feature12::readFields(CFRecord& record)
 {
 	size_t sz = continue_records.size();

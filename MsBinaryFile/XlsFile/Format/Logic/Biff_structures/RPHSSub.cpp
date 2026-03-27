@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr RPHSSub::clone()
 {
 	return BiffStructurePtr(new RPHSSub(*this));
 }
-
-
 void RPHSSub::load(CFRecord& record)
 {
 	unsigned short cch;
@@ -67,7 +63,5 @@ const unsigned short RPHSSub::getRunsNumber() const
 {
 	return crun;
 }
-
-
 } // namespace XLS
 

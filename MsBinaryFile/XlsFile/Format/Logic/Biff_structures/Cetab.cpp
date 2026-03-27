@@ -39,14 +39,10 @@ unsigned short Cetab::getHighBit() const
 {
 	return cetab & 0x8000;
 }
-
-
 void Cetab::clrHighBit()
 {
 	cetab &= 0x7fff;
 }
-
-
 const std::wstring Cetab::getFuncName() const
 {
 	switch(cetab)

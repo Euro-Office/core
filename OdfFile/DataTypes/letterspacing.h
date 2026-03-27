@@ -36,8 +36,6 @@
 #include <string>
 #include "odfattributes.h"
 #include "length.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class letter_spacing

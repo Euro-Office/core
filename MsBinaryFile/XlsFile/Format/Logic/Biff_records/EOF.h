@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of EOF record in BIFF8
 // _T suffix is to avoid confusing EOF define equaling this to (-1)
 class EOF_T: public BiffRecord
@@ -48,8 +46,6 @@ public:
 	~EOF_T();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeEOF_T;

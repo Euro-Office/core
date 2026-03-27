@@ -49,8 +49,6 @@ namespace PPT
 //                bool            m_bAdvClick;            // Attributes for true transition
 //                int             m_nAdvTm;
                 int		m_nSpeed;
-
-
 		CTransition() : m_oAudio()
 		{
 			m_bAudioPresent		= false;

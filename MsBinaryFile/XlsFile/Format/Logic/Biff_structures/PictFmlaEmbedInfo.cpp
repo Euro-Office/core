@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PictFmlaEmbedInfo::clone()
 {
 	return BiffStructurePtr(new PictFmlaEmbedInfo(*this));
 }
-
-
 void PictFmlaEmbedInfo::load(CFRecord& record)
 {
 	record.skipNunBytes(1); // reserved
@@ -63,7 +59,5 @@ void PictFmlaEmbedInfo::save(CFRecord& record)
 	record.reserveNunBytes(1);
 	record << strClass;
 }
-
-
 } // namespace XLS
 

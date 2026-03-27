@@ -74,11 +74,7 @@ int OOXGraphicReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutput)
 			return (groupReader.Parse(oParam, pOutput) ? 1 : 0);
 		}
 	}
-
-	
 //nullable_string			spid;
 //nullable<Table>			table;
 	return 0;
 }
-
-

@@ -70,7 +70,5 @@ void DConnStringSequence::save(CFRecord& record)
 		record << val;
 	}
 }
-
-
 } // namespace XLS
 

@@ -134,8 +134,6 @@ public :
 		return false;
 	}
 
-
-
     _UINT32 Tell()
 	{
         return (_UINT32)(pCur - pBuffer);

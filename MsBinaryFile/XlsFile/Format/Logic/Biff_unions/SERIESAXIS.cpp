@@ -40,25 +40,17 @@
 
 namespace XLS
 {
-
-
 SERIESAXIS::SERIESAXIS()
 {
 	m_bSecondary = false;
 }
-
-
 SERIESAXIS::~SERIESAXIS()
 {
 }
-
-
 BaseObjectPtr SERIESAXIS::clone()
 {
 	return BaseObjectPtr(new SERIESAXIS(*this));
 }
-
-
 const bool SERIESAXIS::loadContentRead(BinReaderProcessor& proc)
 {
 	bool ok = loadContent(proc);

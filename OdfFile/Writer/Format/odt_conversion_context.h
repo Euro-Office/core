@@ -54,8 +54,6 @@ struct odt_section_state
 	bool				continuous;
 	int					count_columns;
 };
-
-
 class odt_conversion_context : public odf_conversion_context
 {
 public:
@@ -298,7 +296,5 @@ private:
 	}drop_cap_state_;
 
 };
-
-
 }
 }

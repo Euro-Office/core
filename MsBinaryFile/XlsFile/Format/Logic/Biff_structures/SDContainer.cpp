@@ -34,31 +34,21 @@
 
 namespace XLS
 {
-
-
 SDContainer::SDContainer()
 {
 }
-
-
 SDContainer::SDContainer(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr SDContainer::clone()
 {
 	return BiffStructurePtr(new SDContainer(*this));
 }
-
-
 void SDContainer::load(CFRecord& record)
 {
 	_UINT32 cbSD;
 	record >> cbSD >> sd;
 }
-
-
 } // namespace XLS
 

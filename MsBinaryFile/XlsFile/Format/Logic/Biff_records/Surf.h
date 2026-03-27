@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Surf record in BIFF8
 class Surf: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Surf();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

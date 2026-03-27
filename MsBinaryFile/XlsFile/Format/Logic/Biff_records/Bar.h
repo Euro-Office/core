@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Bar record in BIFF8
 class Bar: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Bar();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

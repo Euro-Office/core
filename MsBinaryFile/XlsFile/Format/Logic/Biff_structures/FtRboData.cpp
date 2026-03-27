@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FtRboData::clone()
 {
 	return BiffStructurePtr(new FtRboData(*this));
@@ -67,7 +65,5 @@ void FtRboData::save(CFRecord& record)
 	}
 	record << idRadNext << fFirstBtn;
 }
-
-
 } // namespace XLS
 

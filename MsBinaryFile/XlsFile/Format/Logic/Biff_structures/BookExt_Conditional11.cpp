@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr BookExt_Conditional11::clone()
 {
 	return BiffStructurePtr(new BookExt_Conditional11(*this));

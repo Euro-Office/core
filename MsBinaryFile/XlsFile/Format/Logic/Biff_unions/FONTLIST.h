@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FONTLIST union of records 
 class FONTLIST: public CompositeObject
 {

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Guts record in BIFF8
 class Guts: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Guts();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

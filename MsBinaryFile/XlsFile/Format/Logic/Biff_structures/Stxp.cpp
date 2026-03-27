@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr Stxp::clone()
 {
 	return BiffStructurePtr(new Stxp(*this));
 }
-
-
 void Stxp::load(CFRecord& record)
 {
 	record >> twpHeight >> ts >> bls >> sss >> uls >> bFamily >> bCharSet;

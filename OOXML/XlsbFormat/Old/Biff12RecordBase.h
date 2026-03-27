@@ -32,8 +32,6 @@
 
 #ifndef BIFF12RECORDBASE_H
 #define BIFF12RECORDBASE_H
-
-
 #include "../../../../DesktopEditor/common/Types.h"
 #include "../Base/Types_32.h"
 #include "../XlsxFormat/WritingElement.h"

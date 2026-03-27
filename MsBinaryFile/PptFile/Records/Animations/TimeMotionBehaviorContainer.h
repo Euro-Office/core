@@ -30,14 +30,10 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeMotionBehaviorAtom.h"
 #include "TimeVariant.h"
 #include "TimeBehaviorContainer.h"
-
-
 namespace PPT
 {
 class CRecordTimeMotionBehaviorContainer : public CUnknownRecord
@@ -46,8 +42,6 @@ public:
     ~CRecordTimeMotionBehaviorContainer();
 
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     CRecordTimeMotionBehaviorAtom		m_oMotionBehaviorAtom;
     CRecordTimeVariantString*			m_pVarPath;     // OPTIONAL
     // reserved (13 bytes): An optional TimeVariantInt record that MUST be ignored.

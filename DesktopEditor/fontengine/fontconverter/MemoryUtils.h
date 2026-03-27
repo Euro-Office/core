@@ -58,8 +58,6 @@ namespace NSFontConverter
         }
         return pResult;
     }
-
-
     // Тоже что и realloc, но с обработкой ошибок.
     // Если <pData> NULL, вызывается функция malloc вместо realloc.
     static void *MemUtilsRealloc(void *pData, int nSize)
@@ -82,8 +80,6 @@ namespace NSFontConverter
         }
         return pResult;
     }
-
-
     // Тоже самое, что и MemUtilsMalloc and MemUtilsRelloc, толькоt
     // учитывает количество элементов и размер элемента. В результате
     // выделяется память размером nObjectsCount * nObjectSize байт.

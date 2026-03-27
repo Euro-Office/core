@@ -112,7 +112,5 @@ void Feat11XMap::save(CFRecord& record)
 	for(auto i : rgXmap)
 		i.save(record);
 }
-
-
 } // namespace XLS
 

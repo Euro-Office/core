@@ -38,8 +38,6 @@ namespace XLS
 SXFDB::SXFDB()
 {
 }
-
-
 SXFDB::~SXFDB()
 {
 }

@@ -38,19 +38,13 @@ namespace XLS
 SxTbpg::SxTbpg()
 {
 }
-
-
 SxTbpg::~SxTbpg()
 {
 }
-
-
 BaseObjectPtr SxTbpg::clone()
 {
 	return BaseObjectPtr(new SxTbpg(*this));
 }
-
-
 void SxTbpg::readFields(CFRecord& record)
 {
 	int size = (record.getDataSize() - record.getRdPtr()) / 2;

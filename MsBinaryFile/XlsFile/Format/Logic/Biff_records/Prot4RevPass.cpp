@@ -39,13 +39,9 @@ namespace XLS
 Prot4RevPass::Prot4RevPass()
 {
 }
-
-
 Prot4RevPass::~Prot4RevPass()
 {
 }
-
-
 BaseObjectPtr Prot4RevPass::clone()
 {
 	return BaseObjectPtr(new Prot4RevPass(*this));

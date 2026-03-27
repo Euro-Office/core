@@ -69,8 +69,6 @@ namespace XLSB
         }
 		else
 			return false;
-
-       
         if (proc.optional<XLSB::EndRichValueBlock>())
         {
             m_EndRichValueBlock = true;
