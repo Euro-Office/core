@@ -275,10 +275,10 @@ namespace NSDocxRenderer
 
 		for (const auto& link : m_arLinks)
 		{
-			if (fabs(shape->m_dTop - link.m_dTop) <=  c_dSHAPE_X_OFFSET_MM &&
-				fabs(shape->m_dLeft - link.m_dLeft) <=  c_dSHAPE_X_OFFSET_MM &&
-				fabs(shape->m_dBot - link.m_dBottom) <=  c_dSHAPE_X_OFFSET_MM &&
-				fabs(shape->m_dRight - link.m_dRight) <=  c_dSHAPE_X_OFFSET_MM)
+			if (fabs(shape->m_dTop - link.m_dTop) <=  c_dLINK_X_OFFSET_MM &&
+				fabs(shape->m_dLeft - link.m_dLeft) <=  c_dLINK_X_OFFSET_MM &&
+				fabs(shape->m_dBot - link.m_dBottom) <=  c_dLINK_X_OFFSET_MM &&
+				fabs(shape->m_dRight - link.m_dRight) <=  c_dLINK_X_OFFSET_MM)
 			{
 				shape->m_bIsHyperlink = true;
 				shape->m_nRid = c_iStartingIdForLinks + link.m_nId;
