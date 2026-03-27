@@ -70,7 +70,6 @@
  * Changes of dirProp values are done on the fly, without writing
  * them back to the dirProps array.
  *
- *
  * This implementation contains code that allows to bypass steps of the
  * algorithm that are not needed on the specific paragraph
  * in order to speed up the most common cases considerably,
@@ -1045,9 +1044,7 @@ directionFromFlags(UBiDi *pBiDi) {
  * on the other hand, this saves another loop to reset these codes,
  * or saves making and modifying a copy of dirProps[].
  *
- *
  * Note that (Pn) and (Xn) changed significantly from version 4 of the BiDi algorithm.
- *
  *
  * Handling the stack of explicit levels (Xn):
  *

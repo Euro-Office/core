@@ -374,12 +374,10 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * The application must read in or otherwise construct an image of the data and then
  * pass the address of it to this function.
  *
- *
  * Warning:  setAppData will set a U_USING_DEFAULT_WARNING code if
  *           data with the specifed path that has already been opened, or
  *           if setAppData with the same path has already been called.
  *           Any such calls to setAppData will have no effect.
- *
  *
  * @param packageName the package name by which the application will refer
  *             to (open) this data

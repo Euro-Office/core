@@ -36,7 +36,6 @@
  *      in any direction from the Sel origin), they can also be used
  *      to auto-generate dwa code (fmorphauto.c).
  *
- *
  *      Generate a subsampled structuring element
  *            SEL     *pixGenerateSelWithRuns()
  *            SEL     *pixGenerateSelRandom()

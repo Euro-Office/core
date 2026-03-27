@@ -100,7 +100,6 @@ U_NAMESPACE_BEGIN
  * For time skeleton, the interval patterns when am/pm, or hour, or minute is
  * different are defined in resource files.
  *
- *
  * <P>
  * There are 2 dates in interval pattern. For most locales, the first date
  * in an interval pattern is the earlier date. There might be a locale in which

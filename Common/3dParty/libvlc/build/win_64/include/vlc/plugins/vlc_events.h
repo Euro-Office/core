@@ -54,7 +54,6 @@
  * - Libvlc can easily be based upon that.
  * - Existing event are clearly declared (in include/vlc_events.h)
  *
- *
  **** Example usage
  *
  * (vlc_cool_object_t doesn't need to have the VLC_COMMON_MEMBERS.)

@@ -9,7 +9,6 @@
  *  ucnv_err.c
  *  Implements error behaviour functions called by T_UConverter_{from,to}Unicode
  *
- *
 *   Change history:
 *
 *   06/29/2000  helena      Major rewrite of the callback APIs.

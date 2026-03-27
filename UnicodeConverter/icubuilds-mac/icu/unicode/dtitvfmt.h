@@ -157,7 +157,6 @@ U_NAMESPACE_BEGIN
  * </li>
  * </ol>
  *
- *
  * <P>
  * If two dates are the same, the interval pattern is the single date pattern.
  * For example, interval pattern from "Jan 10, 2007" to "Jan 10, 2007" is

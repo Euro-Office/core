@@ -59,7 +59,6 @@
  *      Removal of seeded connected components from a mask
  *               PIX      *pixRemoveSeededComponents()
  *
- *
  *           ITERATIVE RASTER-ORDER SEEDFILL
  *
  *      The basic method in the Vincent seedfill (aka reconstruction)

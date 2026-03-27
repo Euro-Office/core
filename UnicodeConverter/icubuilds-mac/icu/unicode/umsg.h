@@ -116,7 +116,6 @@
  * \endcode
  *  </pre>
  *
- *
  * Example 3:
  * <pre>
  * \code

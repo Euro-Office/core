@@ -269,7 +269,6 @@
  *           useful for state changes in simple stateful encodings,
  *           at Shift-In/Shift-Out codes
  *
- *
  *        9..15 reserved for future use
  *           current implementations will only perform a state change
  *           and ignore bits 19..0

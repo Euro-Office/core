@@ -25,7 +25,6 @@
  *        pix4.c: histograms, statistics, fg/bg estimation
  *        pix5.c: property measurements, rectangle extraction
  *
- *
  *    This file has the basic constructors, destructors and field accessors
  *
  *    Pix memory management (allows custom allocator and deallocator)
@@ -95,7 +94,6 @@
  *    Pix debug
  *          l_int32       pixPrintStreamInfo()
  *
- *
  *  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  *      Important notes on direct management of pix image data 
  *  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -115,7 +113,6 @@
  *  In pixalloc.c, we provide an example custom allocator and deallocator.
  *  To use it, you must call pmsCreate() before any pix have been allocated
  *  and pmsDestroy() at the end after all pix have been destroyed.
- *
  *
  *  Direct manipulation of the pix data field
  *  -----------------------------------------

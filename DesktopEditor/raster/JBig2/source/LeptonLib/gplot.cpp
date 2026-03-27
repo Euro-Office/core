@@ -34,7 +34,6 @@
  *          GPLOT      *gplotRead()
  *          l_int32     gplotWrite()
  *
- *
  *     Utility for programmatic plotting using gnuplot 7.3.2 or later
  *     Enabled:
  *         - output to png (color), ps (mono), x11 (color), latex (mono)

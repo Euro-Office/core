@@ -24,7 +24,6 @@
  *                  void       reduceRankBinary2Low()
  *                  l_uint8   *makeSubsampleTab2x()
  *
- *
  */
 
 #include <stdio.h>

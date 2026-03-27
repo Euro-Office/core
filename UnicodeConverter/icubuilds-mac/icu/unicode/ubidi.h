@@ -55,7 +55,6 @@
  * @author Markus W. Scherer
  * @version 1.0
  *
- *
  * <h4> Sample code for the ICU Bidi API </h4>
  *
  * <h5>Rendering a paragraph with the ICU Bidi API</h5>

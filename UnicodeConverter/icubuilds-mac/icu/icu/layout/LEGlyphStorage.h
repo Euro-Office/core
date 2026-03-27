@@ -26,7 +26,6 @@ U_NAMESPACE_BEGIN
  *
  * The storage is growable using the <code>LEInsertionList</code> class.
  *
- *
  * @see LEInsertionList.h
  *
  * @deprecated ICU 54. See {@link icu::LayoutEngine}

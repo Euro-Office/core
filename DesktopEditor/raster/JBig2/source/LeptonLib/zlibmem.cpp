@@ -21,7 +21,6 @@
  *          l_uint8   *zlibCompress()
  *          l_uint8   *zlibUncompress()
  *
- *
  *    This provides an example use of the byte buffer utility
  *    (see bbuffer.c for details of how the bbuffer works internally).
  *    We use zlib to compress and decompress a byte array from

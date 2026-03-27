@@ -93,7 +93,6 @@ class SimpleTimeZone;
  *  resource is an alternate name for the target zone.  This data
  *  is corresponding to Link data in the tz database.
  *
- *
  * 2. Rules.  These have keys corresponding to the Olson rule IDs,
  * with an underscore prepended, e.g., "_EU".  Each resource describes
  * the behavior of the given rule using an intvector, containing the

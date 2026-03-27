@@ -44,7 +44,6 @@
  * from the same sequence as a mapping in the extension file
  * because the base mapping would hide the extension mapping.
  *
- *
  * Data for conversion extensions:
  *
  * One set of data structures per conversion direction (to/from Unicode).
@@ -74,7 +73,6 @@
  * and a base table entry is a prefix of a multi-character mapping, then
  * this is an error.
  *
- *
  * Implementation note:
  *
  * Currently, the parser and several checks in the code limit the number
@@ -90,7 +88,6 @@
  * many units before the last buffer), although then results would differ
  * depending on whether partial matches exceed the limits or not,
  * which depends on the pattern of buffer sizes.
- *
  *
  * Data structure:
  *
@@ -151,7 +148,6 @@
  *   [31] number of bytes for the entire extension structure
  *   [>31] reserved; there are indexes[0] indexes
  *
- *
  * uint32_t toUTable[];
  *
  *   Array of byte/value pairs for lookups for toUnicode conversion.
@@ -204,12 +200,10 @@
  *   If the value is 0 for the initial toUTable entry, then the initial byte
  *   does not start any mapping input.
  *
- *
  * UChar toUUChars[];
  *
  *   Contains toUnicode mapping results, stored as sequences of UChars.
  *   Indexes and lengths stored in the toUTable[].
- *
  *
  * UChar fromUTableUChars[];
  * uint32_t fromUTableValues[];
@@ -262,7 +256,6 @@
  *   (reserved, set to 0) because a value of 0 is used in trie results
  *   to indicate no mapping.
  *
- *
  * uint16_t fromUStage12[];
  *
  *   Stages 1 & 2 of a trie that maps an initial code point.
@@ -270,7 +263,6 @@
  *   same array pointer can be used for both stages.
  *   If (c>>10)>=(length of stage 1) then c does not start any mapping.
  *   Same bit distribution as for regular conversion tries.
- *
  *
  * uint16_t fromUStage3[];
  * uint32_t fromUStage3b[];
@@ -299,7 +291,6 @@
  *   but this value must not occur anywhere else in fromUTableValues[]
  *   because "no mapping" is always a property of a single code point,
  *   never of multiple.
- *
  *
  * char fromUBytes[];
  *

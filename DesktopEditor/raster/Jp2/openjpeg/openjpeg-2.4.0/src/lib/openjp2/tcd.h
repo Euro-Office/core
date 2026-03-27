@@ -478,7 +478,6 @@ OPJ_BOOL opj_tcd_copy_tile_data(opj_tcd_t *p_tcd,
 /**
  * Allocates tile component data
  *
- *
  */
 OPJ_BOOL opj_alloc_tile_component_data(opj_tcd_tilecomp_t *l_tilec);
 

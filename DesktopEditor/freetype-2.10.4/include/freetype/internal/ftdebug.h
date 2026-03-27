@@ -13,7 +13,6 @@
  * this file you indicate that you have read the license and
  * understand and accept it fully.
  *
- *
  * IMPORTANT: A description of FreeType's debugging support can be
  *             found in 'docs/DEBUG.TXT'.  Read it if you need to use or
  *             understand this code.

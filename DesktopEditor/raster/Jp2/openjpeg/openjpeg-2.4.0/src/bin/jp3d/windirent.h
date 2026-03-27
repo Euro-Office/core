@@ -22,7 +22,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- *
  * May 28 1998, Toni Ronkko <tronkko@messi.uku.fi>
  *
  * $Id: uce-dirent.h,v 1.7 2002/05/13 10:48:35 tr Exp $
@@ -57,7 +56,6 @@
  *
  * Revision 1.1  1998/07/04 16:27:51  tr
  * Initial revision
- *
  *
  * MSVC 1.0 scans automatic dependencies incorrectly when your project
  * contains this very header.  The problem is that MSVC cannot handle

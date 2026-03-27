@@ -210,7 +210,6 @@ utrace_getFunctions(const void **context,
  * a displayable string, or it can interpret the format itself,
  * and do as it wishes with the trace data.
  *
- *
  * Goals for the format string
  * - basic data output
  * - easy to use for trace programmer
@@ -228,7 +227,6 @@ utrace_getFunctions(const void **context,
  * then exactly one type character.
  * Two '%' in a row represent a '%' instead of an insert.
  * The trace format strings need not have \n at the end.
- *
  *
  * Types
  * -----

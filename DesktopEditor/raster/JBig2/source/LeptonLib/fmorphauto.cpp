@@ -27,7 +27,6 @@
  *       static SARRAY      *sarrayMakeInnerLoopDWACode()
  *       static char        *makeBarrelshiftString()
  *
- *
  *    This automatically generates dwa code for erosion and dilation.
  *    Here's a road map for how it all works.
  *

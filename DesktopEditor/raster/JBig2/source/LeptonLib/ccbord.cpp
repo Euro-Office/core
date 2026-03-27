@@ -69,7 +69,6 @@
  *         l_int32      ccbaWriteSVG()
  *         char        *ccbaWriteSVGString()
  *
- *
  *     Border finding is tricky because components can have
  *     holes, which also need to be traced out.  The outer
  *     border can be connected with all the hole borders,
@@ -205,7 +204,6 @@
  *               (7) if a 1 has neighbors 1 and x (x = 2 or 3),
  *                   toggle
  *
- *
  *     To visualize how these rules work, consider the following
  *     component with border pixels labeled according to the scheme
  *     above.  We also show the values of the interior pixels
@@ -226,7 +224,6 @@
  *               1  2  b  1
  *               1  b  1
  *                  1
- *
  *
  *     Even if this works, which is unlikely, it will certainly be
  *     slow because decisions have to be made on a pixel-by-pixel

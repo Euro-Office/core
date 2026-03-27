@@ -18,11 +18,9 @@
 
 /****************************************************************************
  *
- *
  * Warning: This module might be moved to a different library in the
  *          future to avoid a tight dependency between FreeType and the
  *          OpenType specification.
- *
  *
  */
 

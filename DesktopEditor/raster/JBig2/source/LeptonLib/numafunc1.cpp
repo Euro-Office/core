@@ -77,7 +77,6 @@
  *          l_int32      numaJoin()
  *          NUMA        *numaaFlattenToNuma()
  *
- *
  *    Things to remember when using the Numa:
  *
  *    (1) The numa is a struct, not an array.  Always use accessors

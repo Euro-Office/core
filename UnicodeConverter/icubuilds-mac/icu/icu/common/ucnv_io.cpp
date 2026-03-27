@@ -118,7 +118,6 @@
  * be mentioned in other standards on different converters,
  * but only one alias per tag can be unique.
  *
- *
  *              Converter Names (Usually in TR22 form)
  *           -------------------------------------------.
  *     T    /                                          /|
@@ -135,7 +134,6 @@
  *    e |                                         | /
  *    s |                                         |/
  *      -------------------------------------------
- *
  *
  *
  * Here is what it really looks like. It's like swiss cheese.

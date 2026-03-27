@@ -29,7 +29,6 @@
  *            PIX     *pixOpenGray3()
  *            PIX     *pixCloseGray3()
  *
- *
  *      Method: Algorithm by van Herk and Gil and Werman, 1992
  *
  *      Measured speed of the vH/G-W implementation is about 1 output

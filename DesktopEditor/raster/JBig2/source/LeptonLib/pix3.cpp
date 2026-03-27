@@ -24,7 +24,6 @@
  *      (4) Sum of pixel values
  *      (5) Mirrored tiling of a smaller image
  *
- *
  *    Masked operations
  *           l_int32     pixSetMasked()
  *           l_int32     pixSetMaskedGeneral()

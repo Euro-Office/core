@@ -33,7 +33,6 @@
  *      Accessors
  *          l_int32    bbufferBytesToWrite()
  *
- *
  *    The bbuffer is an implementation of a byte queue.
  *    The bbuffer holds a byte array from which bytes are
  *    processed in a first-in/first-out fashion.  As with

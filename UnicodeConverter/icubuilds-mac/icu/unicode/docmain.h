@@ -41,7 +41,6 @@
  * first on <a href="globals.html"> File Members</a>, then use your browser
  * Find dialog to search for "ubrk_next()".</p>
  *
- *
  * <h3>API References for Previous Releases</h3>
  * <p>The API References for each release of ICU are also available as
  * a zip file from the ICU 

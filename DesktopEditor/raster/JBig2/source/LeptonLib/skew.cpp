@@ -38,7 +38,6 @@
  *      Measures of variance of row sums
  *          l_int32    pixFindNormalizedSquareSum()
  *
- *
  *      ==============================================================    
  *      Page skew detection
  *

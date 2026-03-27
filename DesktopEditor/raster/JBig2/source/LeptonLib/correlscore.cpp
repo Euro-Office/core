@@ -348,7 +348,6 @@ l_float32  score;
  *              score_threshold
  *      Return: whether the correlation score is >= score_threshold
  *
- *
  *  Note: we check first that the two pix are roughly the same size.
  *  Only if they meet that criterion do we compare the bitmaps.
  *  The centroid difference is used to align the two images to the

@@ -75,7 +75,6 @@
  * const USpoofChecker parameter are thread safe.  Those that take a non-const 
  * USpoofChecier are not thread safe.
  *
- *
  * Descriptions of the available checks.
  *
  * When testing whether pairs of identifiers are confusable, with the uspoof_areConfusable()
@@ -590,7 +589,6 @@ uspoof_setAllowedChars(USpoofChecker *sc, const USet *chars, UErrorCode *status)
  * returned set will become invalid if the spoof detector is closed,
  * or if a new set of allowed characters is specified.
  *
- *
  * @param sc       The USpoofChecker 
  * @param status   The error code, set if this function encounters a problem.
  * @return         A USet containing the characters that are permitted by
@@ -636,7 +634,6 @@ uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const icu::UnicodeSet *chars, UEr
  * Ownership of the returned set remains with the Spoof Detector.  The
  * returned set will become invalid if the spoof detector is closed,
  * or if a new set of allowed characters is specified.
- *
  *
  * @param sc       The USpoofChecker 
  * @param status   The error code, set if this function encounters a problem.
@@ -765,7 +762,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
  *   may be of mixed case.
  * If identifiers are case folded for comparison and
  * display to the user, do not select the USPOOF_ANY_CASE option.
- *
  *
  * @param sc      The USpoofChecker
  * @param id1     The first of the two identifiers to be compared for 

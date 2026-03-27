@@ -54,7 +54,6 @@
  *          static l_int32   numaEvalBestWidthAndShift()
  *          static l_int32   numaEvalSyncError()
  *
- *
  *  NOTE CAREFULLY: This is "early beta" code.  It has not been tuned
  *  to work robustly on a large database of barcode images.  I'm putting
  *  it out so that people can play with it, find out how it breaks, and

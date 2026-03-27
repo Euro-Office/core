@@ -152,7 +152,6 @@ template class U_I18N_API    EnumSet<UNumberFormatAttribute,
  *     format->parse(form->format(myNumber, str), fmtable, success);
  * }</pre>
  *
- *
  * <p><strong>Patterns</strong>
  *
  * <p>A DecimalFormat consists of a <em>pattern</em> and a set of

@@ -38,7 +38,6 @@
  *
  *          PIX             *pixSearchGrayMaze()
  *
- *
  *      Elegant method for finding largest white (or black) rectangle
  *      in an image.
  *

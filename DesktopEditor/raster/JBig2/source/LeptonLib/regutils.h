@@ -22,7 +22,6 @@
  *   Contains this regression test parameter packaging struct
  *       struct L_RegParams
  *
- *
  *   The regression test utility allows you to write regression tests
  *   that compare results with existing "golden files".
  *

@@ -46,7 +46,6 @@
  *     UText provider functions for that format, which will then allow
  *     ICU services to operate on that format.
  *
- *
  * <em>Iterating over text</em>
  *
  * Here is sample code for a forward iteration over the contents of a UText
@@ -83,7 +82,6 @@
  * All indices supplied to UText functions are pinned to the length of the
  * text.  An out-of-bounds index is not considered to be an error, but is
  * adjusted to be in the range  0 <= index <= length of input text.
- *
  *
  * When an index position is returned from a UText function, it will be
  * a native index to the underlying text.  In the case of multi-unit characters,
@@ -1019,7 +1017,6 @@ UTextNativeLength(UText *ut);
  *
  *  Chunks must begin and end on code point boundaries.  A single code point
  *  comprised of multiple storage units must never span a chunk boundary.
- *
  *
  * @param ut          the UText being accessed.
  * @param nativeIndex Requested index of the text to be accessed.

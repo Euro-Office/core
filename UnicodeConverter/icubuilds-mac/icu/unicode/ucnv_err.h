@@ -4,7 +4,6 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
  *
- *
  *   ucnv_err.h:
  */
 
@@ -36,7 +35,6 @@
  *  const void *oldContext;
  *  UConverterFromUCallback oldAction;
  *
- *
  *  if (U_SUCCESS(err))
  *  {
  *      ucnv_setFromUCallBack(myConverter,
@@ -61,7 +59,6 @@
  *  UConverter *myConverter = ucnv_open("ibm-949", &err);
  *  const void *oldContext;
  *  UConverterFromUCallback oldAction;
- *
  *
  *  if (U_SUCCESS(err))
  *  {

@@ -285,7 +285,6 @@ class NumberFormat;
  *  \endcode
  *  </pre>
  *
- *
  * <p>For messages that include plural forms, you can use a plural argument:
  * <pre>
  * \code

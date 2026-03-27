@@ -31,7 +31,6 @@
  *      Repaint all pixels through mask
  *           l_int32     pixSetMaskedCmap()
  *
- *
  *  The 'set select' functions condition the setting on a specific
  *  pixel value (i.e., index into the colormap) of the underyling
  *  Pix that is being modified.  The same conditioning is used in

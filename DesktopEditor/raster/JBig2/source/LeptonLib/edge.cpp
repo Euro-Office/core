@@ -28,7 +28,6 @@
  *          l_int32   pixGetLastOffPixelInRun()
  *          l_int32   pixGetLastOnPixelInRun()
  *
- *
  *  The Sobel edge detector uses these two simple gradient filters.
  *
  *       1    2    1             1    0   -1 
