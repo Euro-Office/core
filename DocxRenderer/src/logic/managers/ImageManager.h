@@ -33,6 +33,7 @@ namespace NSDocxRenderer
 		std::shared_ptr<CImageInfo> GenerateImageID(const std::wstring& strFileName);
 		int m_lMaxSizeImage {1200};
 		int m_lNextIDImage {0};
+		int m_lFileID {0};
 		CCalculatorCRC32 m_oCRC;
 	};
 }

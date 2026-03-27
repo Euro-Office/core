@@ -132,6 +132,7 @@ namespace NSDocxRenderer
 		m_strDstMedia	= L"";
 		m_lMaxSizeImage = 1200;
 		m_lNextIDImage	= 0;
+		m_lFileID		= 0;
 
 		m_mapImageData.clear();
 	}
@@ -186,10 +187,11 @@ namespace NSDocxRenderer
 			return find->second;
 
 		++m_lNextIDImage;
+		++m_lFileID;
 		auto pInfo = std::make_shared<CImageInfo>();
 		pInfo->m_nId = m_lNextIDImage;
 		pInfo->m_eType = GetImageType(pImage);
-		pInfo->m_strFileName = L"image" + std::to_wstring(pInfo->m_nId);
+		pInfo->m_strFileName = L"image" + std::to_wstring(m_lFileID);
 		pInfo->m_strFileName += ((pInfo->m_eType == CImageInfo::itJPG) ? L".jpg" : L".png");
 
 		UINT format = (pInfo->m_eType == CImageInfo::itJPG) ? 3 : 4;
