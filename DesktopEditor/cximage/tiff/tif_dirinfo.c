@@ -793,10 +793,14 @@ _TIFFFindFieldInfoByName(TIFF* tif, const char *field_name, TIFFDataType dt)
         key.field_type = dt;
 
         ret = (const TIFFFieldInfo **) lfind(&pkey,
-					     tif->tif_fieldinfo, 
-					     &tif->tif_nfields,
-					     sizeof(TIFFFieldInfo *),
-					     tagNameCompare);
+					    tif->tif_fieldinfo,
+#ifdef LLVM_MINGW_CROSS
+					    (unsigned int*)&tif->tif_nfields,
+#else
+                        &tif->tif_nfields,
+#endif
+					    sizeof(TIFFFieldInfo *),
+					    tagNameCompare);
 	return tif->tif_foundfield = (ret ? *ret : NULL);
 }
 
