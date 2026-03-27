@@ -517,4 +517,16 @@ target_link_libraries(PdfFile PUBLIC
     # Ole32 # Windows
 )
 
+if(LLVM_MINGW_CROSS)
+    target_link_libraries(PdfFile PUBLIC
+        gdi32
+        advapi32
+        user32
+        shell32
+        ole32
+    )
+endif()
+
 copy_artifacts_to_folder("PdfFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(PdfFile)
