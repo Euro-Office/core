@@ -14,8 +14,6 @@
  * \file 
  * \brief C++ API: Unicode Matcher
  */
-
-
 U_NAMESPACE_BEGIN
 
 class Replaceable;

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "ttdriver.c"   /* driver interface    */
@@ -25,6 +23,4 @@
 #include "ttobjs.c"     /* object manager      */
 #include "ttpload.c"    /* tables loader       */
 #include "ttsubpix.c"
-
-
 /* END */

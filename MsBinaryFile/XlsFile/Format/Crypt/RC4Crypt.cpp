@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "RC4Crypt.h"
 
 #include <boost/scoped_array.hpp>
@@ -50,8 +48,6 @@ RC4Crypt::RC4Crypt(CRYPT::_rc4CryptData & data, std::wstring password)
 
 	m_VerifyPassword = mxDecoder->verifyPassword(password);
 }
-
-
 bool RC4Crypt::IsVerify()
 {
 	return m_VerifyPassword;
@@ -112,5 +108,3 @@ void RC4Crypt::Decrypt(char* data, const size_t size, const unsigned long stream
 }
 
 };
-
-

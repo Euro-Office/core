@@ -241,8 +241,6 @@ struct UConverter {
 U_CDECL_END /* end of UConverter */
 
 #define CONVERTER_FILE_EXTENSION ".cnv"
-
-
 /**
  * Return the number of all converter names.
  * @param pErrorCode The error code

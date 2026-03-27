@@ -38,8 +38,6 @@
 #include <console.h>		/* Think declares it here */
 #endif
 #endif
-
-
 /* Create the add-on message string table. */
 
 #define JMESSAGE(code,string)	string ,
@@ -48,8 +46,6 @@ static const char * const cdjpeg_message_table[] = {
 #include "cderror.h"
   NULL
 };
-
-
 /*
  * This list defines the known output image formats
  * (not all of which need be supported by a given version).
@@ -72,8 +68,6 @@ typedef enum {
 #endif
 
 static IMAGE_FORMATS requested_fmt;
-
-
 /*
  * Argument-parsing code.
  * The switch parser is designed to be useful with DOS-style command line
@@ -81,12 +75,8 @@ static IMAGE_FORMATS requested_fmt;
  * to the left of a given file name affect processing of that file.
  * The main program in this file doesn't actually use this capability...
  */
-
-
 static const char * progname;	/* program name for error messages */
 static char * outfilename;	/* for -outfile switch */
-
-
 LOCAL(void)
 usage (void)
 /* complain about bad command line */
@@ -157,8 +147,6 @@ usage (void)
   fprintf(stderr, "  -verbose  or  -debug   Emit debug output\n");
   exit(EXIT_FAILURE);
 }
-
-
 LOCAL(int)
 parse_switches (j_decompress_ptr cinfo, int argc, char **argv,
 		int last_file_arg_seen, boolean for_real)
@@ -342,8 +330,6 @@ parse_switches (j_decompress_ptr cinfo, int argc, char **argv,
 
   return argn;			/* return index of next arg (file name) */
 }
-
-
 /*
  * Marker processor for COM and interesting APPn markers.
  * This replaces the library's built-in processor, which just skips the marker.
@@ -364,8 +350,6 @@ jpeg_getc (j_decompress_ptr cinfo)
   datasrc->bytes_in_buffer--;
   return GETJOCTET(*datasrc->next_input_byte++);
 }
-
-
 METHODDEF(boolean)
 print_text_marker (j_decompress_ptr cinfo)
 {

@@ -7,8 +7,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_SCHEMA_TYPES_H__
 #define __XML_SCHEMA_TYPES_H__
 

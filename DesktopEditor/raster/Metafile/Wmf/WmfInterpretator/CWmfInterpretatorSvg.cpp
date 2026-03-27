@@ -265,8 +265,6 @@ namespace MetaFile
 		                      L'L' + ConvertToWString(shXRadial1)+ L' ' + ConvertToWString(shYRadial1)+ L' ' +
 		                      L'A' + ConvertToWString(shRadiusX) + L' ' + ConvertToWString(shRadiusY) + L" 0, 0, 0, " + ConvertToWString(shXRadial2) + L' ' + ConvertToWString(shYRadial2) + L' ' +
 		                      L'L' + ConvertToWString(shCenterX) + L' ' + ConvertToWString(shCenterY) + L" Z";
-
-
 		NodeAttributes arAttributes = {{L"d", wsPath}};
 
 		AddStroke(arAttributes);

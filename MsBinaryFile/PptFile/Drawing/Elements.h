@@ -34,8 +34,6 @@
 #include "Theme.h"
 #include "Shapes/Shape.h"
 #include "../../Common/Vml/PPTShape/Ppt2PptxShapeConverter.h"
-
-
 namespace PPT
 {
 class CImageElement : public CElement

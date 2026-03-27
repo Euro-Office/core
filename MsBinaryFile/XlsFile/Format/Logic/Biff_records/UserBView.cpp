@@ -38,13 +38,9 @@ namespace XLS
 UserBView::UserBView()
 {
 }
-
-
 UserBView::~UserBView()
 {
 }
-
-
 BaseObjectPtr UserBView::clone()
 {
 	return BaseObjectPtr(new UserBView(*this));

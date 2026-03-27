@@ -224,8 +224,6 @@ class U_I18N_API ChineseCalendar : public Calendar {
    * @internal
    */
   virtual const char * getType() const;
-
-
  protected:
   /**
    * (Overrides Calendar) Return true if the current date for this Calendar is in
@@ -237,8 +235,6 @@ class U_I18N_API ChineseCalendar : public Calendar {
    * @internal
    */
   virtual UBool inDaylightTime(UErrorCode& status) const;
-
-
   /**
    * Returns TRUE because the Islamic Calendar does have a default century
    * @internal

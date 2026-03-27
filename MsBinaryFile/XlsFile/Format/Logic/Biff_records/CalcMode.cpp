@@ -38,13 +38,9 @@ namespace XLS
 CalcMode::CalcMode()
 {
 }
-
-
 CalcMode::~CalcMode()
 {
 }
-
-
 BaseObjectPtr CalcMode::clone()
 {
 	return BaseObjectPtr(new CalcMode(*this));

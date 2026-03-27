@@ -38,13 +38,9 @@ namespace XLS
 Surf::Surf()
 {
 }
-
-
 Surf::~Surf()
 {
 }
-
-
 BaseObjectPtr Surf::clone()
 {
 	return BaseObjectPtr(new Surf(*this));

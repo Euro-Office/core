@@ -938,8 +938,6 @@ xmlDictLookup(xmlDictPtr dict, const xmlChar *name, int len) {
     entry->next = NULL;
     entry->valid = 1;
     entry->okey = okey;
-
-
     if (insert != NULL)
 	insert->next = entry;
 

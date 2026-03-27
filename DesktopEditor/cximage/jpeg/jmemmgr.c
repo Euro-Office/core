@@ -35,8 +35,6 @@
 extern char * getenv JPP((const char * name));
 #endif
 #endif
-
-
 /*
  * Some important notes:
  *   The allocation routines provided here must never return NULL.
@@ -48,8 +46,6 @@ extern char * getenv JPP((const char * name));
  *   in machines where byte pointers have a different representation from
  *   word pointers, the resulting machine code could not be the same.
  */
-
-
 /*
  * Many machines require storage alignment: longs must start on 4-byte
  * boundaries, doubles on 8-byte boundaries, etc.  On such machines, malloc()
@@ -72,8 +68,6 @@ extern char * getenv JPP((const char * name));
 #ifndef ALIGN_TYPE		/* so can override from jconfig.h */
 #define ALIGN_TYPE  double
 #endif
-
-
 /*
  * We allocate objects from "pools", where each pool is gotten with a single
  * request to jpeg_get_small() or jpeg_get_large().  There is no per-object
@@ -107,8 +101,6 @@ typedef union large_pool_struct {
   } hdr;
   ALIGN_TYPE dummy;		/* included in union to ensure alignment */
 } large_pool_hdr;
-
-
 /*
  * Here is the full definition of a memory manager object.
  */
@@ -138,8 +130,6 @@ typedef struct {
 } my_memory_mgr;
 
 typedef my_memory_mgr * my_mem_ptr;
-
-
 /*
  * The control blocks for virtual arrays.
  * Note that these blocks are allocated in the "small" pool area.
@@ -178,8 +168,6 @@ struct jvirt_barray_control {
   jvirt_barray_ptr next;	/* link to next virtual barray control block */
   backing_store_info b_s_info;	/* System-dependent control info */
 };
-
-
 #ifdef MEM_STATS		/* optional extra stuff for statistics */
 
 LOCAL(void)
@@ -211,8 +199,6 @@ print_mem_stats (j_common_ptr cinfo, int pool_id)
 }
 
 #endif /* MEM_STATS */
-
-
 LOCAL(void)
 out_of_memory (j_common_ptr cinfo, int which)
 /* Report an out-of-memory error and stop execution */
@@ -223,8 +209,6 @@ out_of_memory (j_common_ptr cinfo, int which)
 #endif
   ERREXIT1(cinfo, JERR_OUT_OF_MEMORY, which);
 }
-
-
 /*
  * Allocation of "small" objects.
  *
@@ -251,8 +235,6 @@ static const size_t extra_pool_slop[JPOOL_NUMPOOLS] =
 };
 
 #define MIN_SLOP  50		/* greater than 0 to avoid futile looping */
-
-
 METHODDEF(void *)
 alloc_small (j_common_ptr cinfo, int pool_id, size_t sizeofobject)
 /* Allocate a "small" object */
@@ -322,8 +304,6 @@ alloc_small (j_common_ptr cinfo, int pool_id, size_t sizeofobject)
 
   return (void *) data_ptr;
 }
-
-
 /*
  * Allocation of "large" objects.
  *
@@ -376,8 +356,6 @@ alloc_large (j_common_ptr cinfo, int pool_id, size_t sizeofobject)
 
   return (void FAR *) (hdr_ptr + 1); /* point to first data byte in pool */
 }
-
-
 /*
  * Creation of 2-D sample arrays.
  * The pointers are in near heap, the samples themselves in FAR heap.
@@ -432,8 +410,6 @@ alloc_sarray (j_common_ptr cinfo, int pool_id,
 
   return result;
 }
-
-
 /*
  * Creation of 2-D coefficient-block arrays.
  * This is essentially the same as the code for sample arrays, above.
@@ -480,8 +456,6 @@ alloc_barray (j_common_ptr cinfo, int pool_id,
 
   return result;
 }
-
-
 /*
  * About virtual array management:
  *
@@ -517,8 +491,6 @@ alloc_barray (j_common_ptr cinfo, int pool_id,
  * boundaries.  The code will still work with overlapping access requests,
  * but it doesn't handle bufferload overlaps very efficiently.
  */
-
-
 METHODDEF(jvirt_sarray_ptr)
 request_virt_sarray (j_common_ptr cinfo, int pool_id, boolean pre_zero,
 		     JDIMENSION samplesperrow, JDIMENSION numrows,
@@ -547,8 +519,6 @@ request_virt_sarray (j_common_ptr cinfo, int pool_id, boolean pre_zero,
 
   return result;
 }
-
-
 METHODDEF(jvirt_barray_ptr)
 request_virt_barray (j_common_ptr cinfo, int pool_id, boolean pre_zero,
 		     JDIMENSION blocksperrow, JDIMENSION numrows,
@@ -577,8 +547,6 @@ request_virt_barray (j_common_ptr cinfo, int pool_id, boolean pre_zero,
 
   return result;
 }
-
-
 METHODDEF(void)
 realize_virt_arrays (j_common_ptr cinfo)
 /* Allocate the in-memory buffers for any unrealized virtual arrays */
@@ -684,8 +652,6 @@ realize_virt_arrays (j_common_ptr cinfo)
     }
   }
 }
-
-
 LOCAL(void)
 do_sarray_io (j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writing)
 /* Do backing store read or write of a virtual sample array */
@@ -717,8 +683,6 @@ do_sarray_io (j_common_ptr cinfo, jvirt_sarray_ptr ptr, boolean writing)
     file_offset += byte_count;
   }
 }
-
-
 LOCAL(void)
 do_barray_io (j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writing)
 /* Do backing store read or write of a virtual coefficient-block array */
@@ -750,8 +714,6 @@ do_barray_io (j_common_ptr cinfo, jvirt_barray_ptr ptr, boolean writing)
     file_offset += byte_count;
   }
 }
-
-
 METHODDEF(JSAMPARRAY)
 access_virt_sarray (j_common_ptr cinfo, jvirt_sarray_ptr ptr,
 		    JDIMENSION start_row, JDIMENSION num_rows,
@@ -835,8 +797,6 @@ access_virt_sarray (j_common_ptr cinfo, jvirt_sarray_ptr ptr,
   /* Return address of proper part of the buffer */
   return ptr->mem_buffer + (start_row - ptr->cur_start_row);
 }
-
-
 METHODDEF(JBLOCKARRAY)
 access_virt_barray (j_common_ptr cinfo, jvirt_barray_ptr ptr,
 		    JDIMENSION start_row, JDIMENSION num_rows,
@@ -920,8 +880,6 @@ access_virt_barray (j_common_ptr cinfo, jvirt_barray_ptr ptr,
   /* Return address of proper part of the buffer */
   return ptr->mem_buffer + (start_row - ptr->cur_start_row);
 }
-
-
 /*
  * Release all objects belonging to a specified pool.
  */
@@ -991,8 +949,6 @@ free_pool (j_common_ptr cinfo, int pool_id)
     shdr_ptr = next_shdr_ptr;
   }
 }
-
-
 /*
  * Close up shop entirely.
  * Note that this cannot be called unless cinfo->mem is non-NULL.
@@ -1017,8 +973,6 @@ self_destruct (j_common_ptr cinfo)
 
   jpeg_mem_term(cinfo);		/* system-dependent cleanup */
 }
-
-
 /*
  * Memory manager initialization.
  * When this is called, only the error manager pointer is valid in cinfo!

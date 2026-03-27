@@ -15,8 +15,6 @@ char *strError[]= {"Error 0","","No such file or directory","","","","","Arg lis
 	"","File exists","Cross-device link","","","","Invalid argument","","Too many open files",
 	"","","","No space left on device","","","","","Math argument","Result too large","",
 	"Resource deadlock would occur", "Unknown error under wince"};
-
-
 int errno=0;
 
 int read(int handle, char *buffer, unsigned int len)
@@ -44,8 +42,6 @@ int close(int handle)
 {
 	return ( fclose((FILE *) handle) );
 }
-
-
 char *getcwd( char *buffer, unsigned int size)
 {
     /* Windows CE don't have the concept of a current directory

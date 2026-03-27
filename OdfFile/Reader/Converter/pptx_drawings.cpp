@@ -42,8 +42,6 @@ namespace oox {
 
 class pptx_drawings::Impl
 {
-
-
 public:
     void add(_pptx_drawing const & d,
         bool isInternal,

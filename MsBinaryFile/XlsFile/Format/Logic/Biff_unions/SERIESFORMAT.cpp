@@ -84,8 +84,6 @@ public:
 		return true;
 	};
 };
-
-
 // (LegendException [Begin ATTACHEDLABEL [TEXTPROPS] End])
 class Parenthesis_SERIESFORMAT_2: public ABNFParenthesis
 {
@@ -111,14 +109,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr SERIESFORMAT::clone()
 {
 	return BaseObjectPtr(new SERIESFORMAT(*this));
 }
-
-
 /*
 SERIESFORMAT = Series Begin 4AI *SS (SerToCrt / (SerParent (SerAuxTrend / SerAuxErrBar))) 
 				*(LegendException [Begin ATTACHEDLABEL [TEXTPROPS] End]) End

@@ -104,8 +104,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 /*  This data structure is used for pixOctreeColorQuant(),
  *  a color octree that adjusts to the color distribution
  *  in the image that is being quantized.  The best settings
@@ -156,8 +154,6 @@ static const l_int32  CQ_RESERVED_COLORS = 64;  /* to allow for level 2 */
 static const l_int32  EXTRA_RESERVED_COLORS = 25;  /* to avoid running out */
 static const l_int32  TREE_GEN_WIDTH = 350;  /* big enough for good stats */
 static const l_int32  MIN_DITHER_SIZE = 250;  /* don't dither if smaller */
-
-
 /*  This data structure is used for pixOctreeQuantNumColors(),
  *  a color octree that adjusts in a simple way to the to the color
  *  distribution in the image that is being quantized.  It outputs
@@ -175,8 +171,6 @@ struct OctcubeQuantCell
     l_int32    rval, gval, bval;   /* average values                       */
 };
 typedef struct OctcubeQuantCell    OQCELL;
-
-
     /* This data structure is using for heap sorting octcubes
      * by population.  Sort order is decreasing.  */
 struct L_OctcubePop
@@ -197,8 +191,6 @@ typedef struct L_OctcubePop  L_OCTCUBE_POP;
      * generated colormap can be unstable without a tight cap.   */
 static const l_int32  FIXED_DIF_CAP = 0;
 static const l_int32  POP_DIF_CAP = 40;
-
-
     /* Static octree helper function */
 static l_int32 octreeFindColorCell(l_int32 octindex, CQCELL ***cqcaa,
                                    l_int32 *pindex, l_int32 *prval,
@@ -224,8 +216,6 @@ static l_int32 octcubeGetCount(l_int32 level, l_int32 *psize);
 static l_int32 pixDitherOctindexWithCmap(PIX *pixs, PIX *pixd, l_uint32 *rtab,
                                          l_uint32 *gtab, l_uint32 *btab,
                                          l_int32 *carray, l_int32 difcap);
-
-
 #ifndef   NO_CONSOLE_IO
 #define   DEBUG_OCTINDEX        0
 #define   DEBUG_OCTCUBE_CMAP    0
@@ -233,8 +223,6 @@ static l_int32 pixDitherOctindexWithCmap(PIX *pixs, PIX *pixd, l_uint32 *rtab,
 #define   DEBUG_FEW_COLORS      0
 #define   PRINT_OCTCUBE_STATS   0
 #endif   /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------------------*
  *                Two-pass adaptive octree color quantization              *
  *-------------------------------------------------------------------------*/
@@ -510,8 +498,6 @@ pixOctreeColorQuant(PIX     *pixs,
 
     return pixOctreeColorQuantGeneral(pixs, colors, ditherflag, 0.01, 0.01);
 }
-
-
 /*!
  *  pixOctreeColorQuantGeneral()
  *
@@ -658,8 +644,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixsub);
     return pixd;
 }
-
-
 /*!
  *  octreeGenerateAndPrune()
  *
@@ -905,8 +889,6 @@ l_int32    nt, nr, ival;
 
     return cqcaa;
 }
-
-
 /*!
  *  pixOctreeQuantizePixels()
  *
@@ -1119,8 +1101,6 @@ PIX       *pixd;
     FREE(btab);
     return pixd;
 }
-
-
 /*!
  *  octreeFindColorCell()
  *
@@ -1202,8 +1182,6 @@ CQCELL  *cqc, *cqcsub;
     return 0;
 }
 
-
-
 /*------------------------------------------------------------------*
  *                      Helper cqcell functions                     *
  *------------------------------------------------------------------*/
@@ -1238,8 +1216,6 @@ CQCELL   **cqca;   /* one array for each octree level */
 
     return cqcaa;
 }
-
-
 /*!
  *  cqcellTreeDestroy()
  *
@@ -1275,8 +1251,6 @@ CQCELL   **cqca;
 
     return;
 }
-
-
 
 /*------------------------------------------------------------------*
  *                       Helper index functions                     *
@@ -1403,8 +1377,6 @@ l_uint32  *rtab, *gtab, *btab;
 
     return 0;
 }
-
-
 /*!
  *  getOctcubeIndexFromRGB()
  *
@@ -1427,8 +1399,6 @@ getOctcubeIndexFromRGB(l_int32    rval,
     *pindex = rtab[rval] | gtab[gval] | btab[bval];
     return;
 }
-
-
 /*!
  *  getRGBFromOctcube()
  *
@@ -1498,8 +1468,6 @@ l_int32  rgbindex;
 
     return;
 }
-
-    
 /*!
  *  getOctcubeIndices()
  *
@@ -1552,8 +1520,6 @@ getOctcubeIndices(l_int32   rgbindex,
     *psindex = rgbindex >> (3 * (CQ_NLEVELS - 1 - level));
     return 0;
 }
-
-
 /*!
  *  octcubeGetCount()
  *
@@ -1579,8 +1545,6 @@ octcubeGetCount(l_int32   level,
     *psize = 1 << (3 * level);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------------*
  *      Adaptive octree quantization based on population at a fixed level    *
  *---------------------------------------------------------------------------*/
@@ -1897,8 +1861,6 @@ array_cleanup:
 
     return pixd;
 }
-
-
 /*!
  *  pixDitherOctindexWithCmap()
  *
@@ -2103,8 +2065,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------------*
  *         Adaptive octree quantization to 4 and 8 bpp with max colors       *
  *---------------------------------------------------------------------------*/
@@ -2488,8 +2448,6 @@ PIXCMAP   *cmap;
     FREE(btab);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------------------*
  *      Mixed color/gray quantization with specified number of colors      *
  *-------------------------------------------------------------------------*/
@@ -2674,8 +2632,6 @@ PIXCMAP   *cmap;
     FREE(tabval);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------------------*
  *             Fixed partition octcube quantization with 256 cells         *
  *-------------------------------------------------------------------------*/
@@ -2833,8 +2789,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *           Nearly exact quantization for images with few colors            *
  *---------------------------------------------------------------------------*/
@@ -2990,8 +2944,6 @@ array_cleanup:
     FREE(btab);
     return pixd;
 }
-
-
 /*!
  *  pixFewColorsOctcubeQuant2()
  *
@@ -3155,8 +3107,6 @@ PIXCMAP   *cmap;
     FREE(btab);
     return pixd;
 }
-
-
 /*!
  *  pixFewColorsOctcubeQuantMixed()
  *
@@ -3314,8 +3264,6 @@ PIXCMAP   *cmap, *cmapd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *           Fixed partition octcube quantization with RGB output            *
  *---------------------------------------------------------------------------*/
@@ -3380,8 +3328,6 @@ PIX       *pixd;
     FREE(btab);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *          Color quantize RGB image using existing colormap        *
  *------------------------------------------------------------------*/
@@ -3428,8 +3374,6 @@ l_int32  d;
     else
         return (PIX *)ERROR_PTR("d not 8 or 32 bpp", procName, NULL);
 }
-
-
 
 /*!
  *  pixOctcubeQuantFromCmap()
@@ -3532,8 +3476,6 @@ PIX       *pixd;
     FREE(btab);
     return pixd;
 }
-
-
 /*!
  *  pixOctcubeQuantFromCmapLUT()
  *
@@ -3622,8 +3564,6 @@ PIXCMAP   *cmapc;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                       Generation of octcube histogram                     *
  *---------------------------------------------------------------------------*/
@@ -3708,8 +3648,6 @@ NUMA       *na;
     FREE(btab);
     return na;
 }
-
-
 /*------------------------------------------------------------------*
  *              Get filled octcube table from colormap              *
  *------------------------------------------------------------------*/
@@ -3824,8 +3762,6 @@ l_int32   *rmap, *gmap, *bmap, *tab;
     FREE(bmap);
     return tab;
 }
-
-
 /*------------------------------------------------------------------*
  *               Strip out unused elements in colormap              *
  *------------------------------------------------------------------*/
@@ -3960,8 +3896,6 @@ PIXCMAP    *cmap, *cmapd;
     FREE(map2);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *      Find number of occupied octcubes at the specified level     *
  *------------------------------------------------------------------*/

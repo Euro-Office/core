@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CatSerRange record in BIFF8
 class CatSerRange: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CatSerRange();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

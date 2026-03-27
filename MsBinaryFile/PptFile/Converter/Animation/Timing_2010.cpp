@@ -36,8 +36,6 @@
 
 #include "TimingExeption.h"
 #include "TimingUtils.h"
-
-
 namespace PPT {
 namespace Converter {
 
@@ -49,8 +47,6 @@ void Timing_2010::Convert(PPTX::Logic::Timing &timing, CExMedia *pExMedia, CRels
 {
     m_pExMedia = pExMedia;
     m_pRels = pRels;
-
-
     auto* pTagExtAnim = slideAnim.pAnim_2010;
     if (pTagExtAnim == nullptr || pTagExtAnim->m_haveExtTime == false)
         return;
@@ -69,8 +65,6 @@ void Timing_2010::ConvertBldLst(PPTX::Logic::Timing &timimg, CRecordBuildListCon
         return;
     if (!timimg.bldLst.IsInit())
         timimg.bldLst = new PPTX::Logic::BldLst;
-
-
     for (IRecord* pDBC : pBLC->m_arRecords)
     {
         PPTX::Logic::BuildNodeBase oBuildNodeBase;
@@ -1146,8 +1140,6 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
     // Write restart
     if (oTimeNodeAtom.m_fRestartProperty)
         oCTn.restart = PPTX::Limit::TLRestart(oTimeNodeAtom.m_dwRestart) ;
-
-
     // Write fill
     if (oTimeNodeAtom.m_fFillProperty)
         oCTn.fill = PPTX::Limit::TLNodeFillType(oTimeNodeAtom.m_dwFill);
@@ -1181,8 +1173,6 @@ void Timing_2010::FillCTnHeadArgs(CRecordExtTimeNodeContainer *pETNC, PPTX::Logi
             FillCond(oldCond, cond);
             oCTn.stCondLst->list.push_back(cond);
         }
-
-
         // Write endCondLst
         if (pETNC->m_arrRgEndTimeCondition.empty() == false)
         {
@@ -1365,8 +1355,6 @@ void Timing_2010::FillAnimMotion(
         oAnim.path = pMotion->m_pVarPath->m_Value;
 
     //    oAnim.ptsTypes
-
-
     oAnim.pathEditMode = new PPTX::Limit::TLPathEditMode;
     oAnim.pathEditMode->set(oAtom.m_bEditRotationPropertyUsed ? L"fixed" : L"relative");
 }
@@ -1425,8 +1413,6 @@ void Timing_2010::FillAnimScale(
         oAnim.zoomContents = oAtom.m_fZoomContents;
 }
 
-
-
 void Timing_2010::FillVideo(
         CRecordExtTimeNodeContainer* pETNC,
         PPTX::Logic::Video& oVideo)
@@ -1454,8 +1440,6 @@ void Timing_2010::FillVideo(
 
         }
     }
-
-
     oVideo.cMediaNode.tgtEl.spTgt = new PPTX::Logic::SpTgt();
     oVideo.cMediaNode.tgtEl.spTgt->spid = std::to_wstring(video.m_nObjectIdRef);
 }

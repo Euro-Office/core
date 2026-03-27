@@ -40,16 +40,12 @@ struct SPUString : public UMemory {
     SPUString(UnicodeString *s);
     ~SPUString();
 };
-
-
 //  String Pool   A utility class for holding the strings that are the result of
 //                the spoof mappings.  These strings will utimately end up in the
 //                run-time String Table.
 //                This is sort of like a sorted set of strings, except that ICU's anemic
 //                built-in collections don't support those, so it is implemented with a
 //                combination of a uhash and a UVector.
-
-
 class SPUStringPool : public UMemory {
   public:
     SPUStringPool(UErrorCode &status);
@@ -59,8 +55,6 @@ class SPUStringPool : public UMemory {
     // If the input parameter string is already in the table, delete the
     //  input parameter and return the existing string.
     SPUString *addString(UnicodeString *src, UErrorCode &status);
-
-
     // Get the n-th string in the collection.
     SPUString *getByIndex(int32_t i);
 
@@ -73,8 +67,6 @@ class SPUStringPool : public UMemory {
     UVector     *fVec;    // Elements are SPUString *
     UHashtable  *fHash;   // Key: UnicodeString  Value: SPUString
 };
-
-
 // class ConfusabledataBuilder
 //     An instance of this class exists while the confusable data is being built from source.
 //     It encapsulates the intermediate data structures that are used for building.

@@ -505,8 +505,6 @@ void OpenTypeLayoutEngine::adjustGlyphPositions(const LEUnicode chars[], le_int3
             float yAdvance   = adjustments->getYAdvance(i);
             float xPlacement = 0;
             float yPlacement = 0;
-
-
 #if 0
             // This is where separate kerning adjustments
             // should get applied.

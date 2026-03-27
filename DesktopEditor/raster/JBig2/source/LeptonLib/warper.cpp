@@ -68,8 +68,6 @@ static l_int32 applyWarpTransform(l_float32 xmag, l_float32 ymag,
 static const l_float32  L_DEFAULT_RED_WEIGHT   = 0.0;
 static const l_float32  L_DEFAULT_GREEN_WEIGHT = 0.7;
 static const l_float32  L_DEFAULT_BLUE_WEIGHT  = 0.3;
-
-
 /*----------------------------------------------------------------------*
  *                High-level example captcha interface                  *
  *----------------------------------------------------------------------*/
@@ -124,8 +122,6 @@ PIX       *pixg, *pixgb, *pixw, *pixd;
     pixDestroy(&pixw);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Random sinusoidal warping                        *
  *----------------------------------------------------------------------*/
@@ -213,8 +209,6 @@ PIX        *pixd;
     FREE(randa);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                         Static helper functions                      *
  *----------------------------------------------------------------------*/
@@ -234,8 +228,6 @@ l_float64  *randa;
         randa[i] = 0.5 * (1.0 + (l_float64)rand() / (l_float64)RAND_MAX);
     return randa;
 }
-
-
 /*!
  *  applyWarpTransform()
  *
@@ -274,8 +266,6 @@ l_float64  twopi, x, y, anglex, angley;
     *py = (l_float32)y;
     return 0;
 }
-
-
 #if  USE_SIN_TABLE
 /*----------------------------------------------------------------------*
  *                       Version using a LUT for sin                    *
@@ -364,8 +354,6 @@ PIX        *pixd;
     FREE(randa);
     return pixd;
 }
-
-
 /*!
  *  applyWarpTransformLUT()
  *
@@ -411,8 +399,6 @@ l_float64  twopi, x, y, anglex, angley, sanglex, sangley;
     *py = (l_float32)y;
     return 0;
 }
-
-
 static l_int32
 makeSinLUT(l_int32  npts,
            NUMA   **pna)
@@ -443,8 +429,6 @@ NUMA      *na;
 
     return 0;
 }
-
-
 static l_float32
 getSinFromLUT(l_float32  *tab,
               l_int32     npts,
@@ -470,8 +454,6 @@ l_float32  twopi, invtwopi, findex, diff;
     return (1.0 - diff) * tab[index] + diff * tab[index + 1];
 }
 #endif  /* USE_SIN_TABLE */
-
-
 
 /*---------------------------------------------------------------------------*
  *                          Stereoscopic warping                             *
@@ -677,8 +659,6 @@ PIX       *pixd;
     pixDestroy(&pixb);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *              Linear and quadratic horizontal stretching              *
  *----------------------------------------------------------------------*/
@@ -743,8 +723,6 @@ l_int32  d;
     else
         return pixStretchHorizontalLI(pixs, dir, type, hmax, incolor);
 }
-
-
 /*!
  *  pixStretchHorizontalSampled()
  *
@@ -840,8 +818,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixStretchHorizontalLI()
  *
@@ -960,8 +936,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Quadratic vertical shear                       *
  *----------------------------------------------------------------------*/
@@ -1029,8 +1003,6 @@ l_int32    w, h, d;
     else  /* operation == L_INTERPOLATED */
         return pixQuadraticVShearLI(pixs, dir, vmaxt, vmaxb, incolor);
 }
-
-
 /*!
  *  pixQuadraticVShearSampled()
  *
@@ -1134,8 +1106,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixQuadraticVShearLI()
  *
@@ -1268,8 +1238,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pix);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Stereo from a pair of images                     *
  *----------------------------------------------------------------------*/

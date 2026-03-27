@@ -847,8 +847,6 @@ xmlParserValidityWarning(void *ctx, const char *msg, ...)
 	xmlParserPrintFileContext(input);
     }
 }
-
-
 /************************************************************************
  *									*
  *			Extended Error Handling				*

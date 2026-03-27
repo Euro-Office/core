@@ -246,8 +246,6 @@ typedef enum UDateDirection {
      */
     UDAT_DIRECTION_COUNT
 } UDateDirection;
-
-
 U_NAMESPACE_BEGIN
 
 class RelativeDateTimeCacheData;

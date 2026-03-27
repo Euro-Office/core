@@ -747,10 +747,6 @@ jp2_boxinfo_t *jp2_boxinfolookup(int type)
 	return &jp2_boxinfo_unk;
 }
 
-
-
-
-
 static void jp2_cmap_destroy(jp2_box_t *box)
 {
 	jp2_cmap_t *cmap = &box->data.cmap;

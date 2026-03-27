@@ -1080,8 +1080,6 @@ Transliterator::createFromRules(const UnicodeString& ID,
         }
         else
             t = createInstance(*((UnicodeString*)parser.idBlockVector.elementAt(0)), UTRANS_FORWARD, parseError, status);
-
-
         if (t != NULL) {
             t->setID(ID);
         }

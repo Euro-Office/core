@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 COLUMNS::COLUMNS()
 {
 }
-
-
 COLUMNS::~COLUMNS()
 {
 }
-
-
 BaseObjectPtr COLUMNS::clone()
 {
 	return BaseObjectPtr(new COLUMNS(*this));
 }
-
-
 // COLUMNS = DefColWidth *255ColInfo
 const bool COLUMNS::loadContent(BinProcessor& proc)
 {
@@ -150,7 +142,5 @@ int COLUMNS::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

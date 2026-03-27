@@ -23,8 +23,6 @@ U_NAMESPACE_BEGIN
  * \file
  * \brief C++ API: Date/Time Pattern Generator
  */
-
-
 class Hashtable;
 class FormatParser;
 class DateTimeMatcher;
@@ -314,8 +312,6 @@ public:
 	 * <p>
      */
      UnicodeString getBestPattern(const UnicodeString& skeleton, UErrorCode& status);
-
-
     /**
      * Return the best pattern matching the input skeleton. It is guaranteed to
      * have all of the fields in the skeleton.
@@ -338,8 +334,6 @@ public:
      UnicodeString getBestPattern(const UnicodeString& skeleton,
                                   UDateTimePatternMatchOptions options,
                                   UErrorCode& status);
-
-
     /**
      * Adjusts the field types (width and subtype) of a pattern to match what is
      * in a skeleton. That is, if you supply a pattern like "d-M H:m", and a

@@ -96,8 +96,6 @@ namespace DocFileFormat
 			RELEASEOBJECT(ptr);
 		}
 	};
-
-
 	typedef std::pair <int, int> Int_Pair;
 
 #define ENCODING_UTF16			1200
@@ -174,8 +172,6 @@ namespace DocFileFormat
 					}
 				}
 			}
-		
-
 			return buffer;
 		}
 

@@ -64,8 +64,6 @@
 // ----------------------------------------------------------------------------
 // types
 // ----------------------------------------------------------------------------
-
-
 //-----------------------------------------------------------------------------
 // wxJPEG2000Handler
 //-----------------------------------------------------------------------------
@@ -629,8 +627,6 @@ jpeg2000_file_parse(wxInputStream& stream, unsigned long int filepoint,
         {
             box_length = LBox;
         }
-
-
         /* go deep in the box */
         jpeg2000_box_handler_function((jpeg2000boxtype) box_type,
                                       stream, (LBox == 1) ? (filepoint + 16) : (filepoint + 8),
@@ -1049,8 +1045,6 @@ bool wxJPEG2000Handler::LoadFile(wxImage *image, wxInputStream& stream,
                 }
             }
         }
-
-
     }
 
     wxMutexGuiEnter();

@@ -49,8 +49,6 @@ struct L_Sudoku
     l_int32        failure;     /* set to 1 if no solution is possible    */
 };
 typedef struct L_Sudoku  L_SUDOKU;
-
-
     /* For printing out array data */
 enum {
     L_SUDOKU_INIT = 0,
@@ -58,5 +56,3 @@ enum {
 };
 
 #endif /* SUDOKU_H_INCLUDED */
-
-

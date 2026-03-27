@@ -17,8 +17,6 @@
 
 #ifndef __FT_HEADER_H__
 #define __FT_HEADER_H__
-
-
   /*@***********************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -35,8 +33,6 @@
 #else
 #define FT_BEGIN_HEADER  /* nothing */
 #endif
-
-
   /*@***********************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -53,8 +49,6 @@
 #else
 #define FT_END_HEADER  /* nothing */
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Aliases for the FreeType 2 public and configuration files.            */
@@ -92,8 +86,6 @@
   /*    way FreeType~2 is installed on a given system.                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* configuration files */
 
   /*************************************************************************
@@ -109,8 +101,6 @@
 #ifndef FT_CONFIG_CONFIG_H
 #define FT_CONFIG_CONFIG_H  <config/ftconfig.h>
 #endif
-
-
   /*************************************************************************
    *
    * @macro:
@@ -124,8 +114,6 @@
 #ifndef FT_CONFIG_STANDARD_LIBRARY_H
 #define FT_CONFIG_STANDARD_LIBRARY_H  <config/ftstdlib.h>
 #endif
-
-
   /*************************************************************************
    *
    * @macro:
@@ -139,8 +127,6 @@
 #ifndef FT_CONFIG_OPTIONS_H
 #define FT_CONFIG_OPTIONS_H  <config/ftoption.h>
 #endif
-
-
   /*************************************************************************
    *
    * @macro:
@@ -171,8 +157,6 @@
    *
    */
 #define FT_FREETYPE_H  <freetype.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -186,8 +170,6 @@
    *
    */
 #define FT_ERRORS_H  <fterrors.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -199,8 +181,6 @@
    *
    */
 #define FT_MODULE_ERRORS_H  <ftmoderr.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -215,8 +195,6 @@
    *
    */
 #define FT_SYSTEM_H  <ftsystem.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -231,8 +209,6 @@
    *
    */
 #define FT_IMAGE_H  <ftimage.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -246,8 +222,6 @@
    *
    */
 #define FT_TYPES_H  <fttypes.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -261,8 +235,6 @@
    *
    */
 #define FT_LIST_H  <ftlist.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -274,8 +246,6 @@
    *
    */
 #define FT_OUTLINE_H  <ftoutln.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -287,8 +257,6 @@
    *
    */
 #define FT_SIZES_H  <ftsizes.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -300,8 +268,6 @@
    *
    */
 #define FT_MODULE_H  <ftmodapi.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -313,8 +279,6 @@
    *
    */
 #define FT_RENDER_H  <ftrender.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -326,8 +290,6 @@
    *
    */
 #define FT_AUTOHINTER_H  <ftautoh.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -339,8 +301,6 @@
    *
    */
 #define FT_CFF_DRIVER_H  <ftcffdrv.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -352,8 +312,6 @@
    *
    */
 #define FT_TRUETYPE_DRIVER_H  <ftttdrv.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -365,8 +323,6 @@
    *
    */
 #define FT_TYPE1_TABLES_H  <t1tables.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -380,8 +336,6 @@
    *
    */
 #define FT_TRUETYPE_IDS_H  <ttnameid.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -393,8 +347,6 @@
    *
    */
 #define FT_TRUETYPE_TABLES_H  <tttables.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -407,8 +359,6 @@
    *
    */
 #define FT_TRUETYPE_TAGS_H  <tttags.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -421,8 +371,6 @@
    *
    */
 #define FT_BDF_H  <ftbdf.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -435,8 +383,6 @@
    *
    */
 #define FT_CID_H  <ftcid.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -448,8 +394,6 @@
    *
    */
 #define FT_GZIP_H  <ftgzip.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -461,8 +405,6 @@
    *
    */
 #define FT_LZW_H  <ftlzw.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -474,8 +416,6 @@
    *
    */
 #define FT_BZIP2_H  <ftbzip2.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -487,8 +427,6 @@
    *
    */
 #define FT_WINFONTS_H   <ftwinfnt.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -500,8 +438,6 @@
    *
    */
 #define FT_GLYPH_H  <ftglyph.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -513,8 +449,6 @@
    *
    */
 #define FT_BITMAP_H  <ftbitmap.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -526,8 +460,6 @@
    *
    */
 #define FT_BBOX_H  <ftbbox.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -539,8 +471,6 @@
    *
    */
 #define FT_CACHE_H  <ftcache.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -559,8 +489,6 @@
    *
    */
 #define FT_CACHE_IMAGE_H  FT_CACHE_H
-
-
   /*************************************************************************
    *
    * @macro:
@@ -580,8 +508,6 @@
    *
    */
 #define FT_CACHE_SMALL_BITMAPS_H  FT_CACHE_H
-
-
   /*************************************************************************
    *
    * @macro:
@@ -596,8 +522,6 @@
    *
    */
 #define FT_CACHE_CHARMAP_H  FT_CACHE_H
-
-
   /*************************************************************************
    *
    * @macro:
@@ -613,8 +537,6 @@
    *
    */
 #define FT_MAC_H  <ftmac.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -626,8 +548,6 @@
    *
    */
 #define FT_MULTIPLE_MASTERS_H  <ftmm.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -640,8 +560,6 @@
    *
    */
 #define FT_SFNT_NAMES_H  <ftsnames.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -654,8 +572,6 @@
    *
    */
 #define FT_OPENTYPE_VALIDATE_H  <ftotval.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -668,8 +584,6 @@
    *
    */
 #define FT_GX_VALIDATE_H  <ftgxval.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -681,8 +595,6 @@
    *
    */
 #define FT_PFR_H  <ftpfr.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -693,8 +605,6 @@
    *   FreeType~2 API which provides functions to stroke outline paths.
    */
 #define FT_STROKER_H  <ftstroke.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -705,8 +615,6 @@
    *   FreeType~2 API which performs artificial obliquing and emboldening.
    */
 #define FT_SYNTHESIS_H  <ftsynth.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -718,8 +626,6 @@
    *   X.Org X11 servers.
    */
 #define FT_XFREE86_H  <ftxf86.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -731,8 +637,6 @@
    *   cosines and arc tangents).
    */
 #define FT_TRIGONOMETRY_H  <fttrigon.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -743,8 +647,6 @@
    *   FreeType~2 API which performs color filtering for subpixel rendering.
    */
 #define FT_LCD_FILTER_H  <ftlcdfil.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -755,8 +657,6 @@
    *   FreeType~2 API which performs color filtering for subpixel rendering.
    */
 #define FT_UNPATENTED_HINTING_H  <ttunpat.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -767,8 +667,6 @@
    *   FreeType~2 API which performs color filtering for subpixel rendering.
    */
 #define FT_INCREMENTAL_H  <ftincrem.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -779,8 +677,6 @@
    *   FreeType~2 API which returns entries from the TrueType GASP table.
    */
 #define FT_GASP_H  <ftgasp.h>
-
-
   /*************************************************************************
    *
    * @macro:
@@ -791,13 +687,9 @@
    *   FreeType~2 API which returns individual and ranged glyph advances.
    */
 #define FT_ADVANCES_H  <ftadvanc.h>
-
-
   /* */
 
 #define FT_ERROR_DEFINITIONS_H  <fterrdef.h>
-
-
   /* The internals of the cache sub-system are no longer exposed.  We */
   /* default to FT_CACHE_H at the moment just in case, but we know of */
   /* no rogue client that uses them.                                  */
@@ -809,13 +701,9 @@
 #define FT_CACHE_INTERNAL_GLYPH_H    <ftcache.h>
 #define FT_CACHE_INTERNAL_IMAGE_H    <ftcache.h>
 #define FT_CACHE_INTERNAL_SBITS_H    <ftcache.h>
-
-
 #define FT_INCREMENTAL_H          <ftincrem.h>
 
 #define FT_TRUETYPE_UNPATENTED_H  <ttunpat.h>
-
-
   /*
    * Include internal headers definitions from <internal/...>
    * only when building the library.
@@ -824,9 +712,5 @@
 #define  FT_INTERNAL_INTERNAL_H  <internal/internal.h>
 #include FT_INTERNAL_INTERNAL_H
 #endif /* FT2_BUILD_LIBRARY */
-
-
 #endif /* __FT2_BUILD_H__ */
-
-
 /* END */

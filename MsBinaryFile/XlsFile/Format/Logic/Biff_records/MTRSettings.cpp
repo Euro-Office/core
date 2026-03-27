@@ -38,13 +38,9 @@ namespace XLS
 MTRSettings::MTRSettings()
 {
 }
-
-
 MTRSettings::~MTRSettings()
 {
 }
-
-
 BaseObjectPtr MTRSettings::clone()
 {
 	return BaseObjectPtr(new MTRSettings(*this));

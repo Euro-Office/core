@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of StartObject record in BIFF8
 class StartObject: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~StartObject();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 
@@ -59,8 +55,6 @@ public:
 	_UINT16 iObjectContext = 0;
 	_UINT16 iObjectInstance1 = 0;
 	_UINT16 iObjectInstance2 = 0;
-
-
 };
 
 } // namespace XLS

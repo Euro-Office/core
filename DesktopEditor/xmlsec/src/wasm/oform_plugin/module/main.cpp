@@ -313,8 +313,6 @@ int main()
 	}
 
 	// ---------------------------------------------
-
-
 	std::string publicKey;
 	std::string privateKey;
 

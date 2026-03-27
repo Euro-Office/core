@@ -34,8 +34,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * abstract_xml::ns = L"";
 const wchar_t * abstract_xml::name = L"abstract-xml";
@@ -43,7 +41,5 @@ const wchar_t * abstract_xml::name = L"abstract-xml";
 void abstract_xml::serialize(std::wostream & strm)
 {
 }
-
-
 }
 }

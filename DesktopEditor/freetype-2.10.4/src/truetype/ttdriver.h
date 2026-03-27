@@ -14,15 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTDRIVER_H_
 #define TTDRIVER_H_
-
-
 #include <freetype/internal/ftdrv.h>
-
-
 FT_BEGIN_HEADER
 
   FT_DECLARE_DRIVER( tt_driver_class )
@@ -30,6 +24,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* TTDRIVER_H_ */
-
-
 /* END */

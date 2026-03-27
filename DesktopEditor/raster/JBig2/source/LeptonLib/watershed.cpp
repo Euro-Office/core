@@ -124,8 +124,6 @@ struct L_WSPixel
     l_int32    index;  /* label for set to which pixel belongs */
 };
 typedef struct L_WSPixel  L_WSPIXEL;
-
-
     /* Static functions for obtaining bitmap of watersheds  */
 static void wshedSaveBasin(L_WSHED *wshed, l_int32 index, l_int32 level);
 
@@ -158,8 +156,6 @@ static void debugPrintLUT(l_int32 *lut, l_int32 size, l_int32 debug);
 
 static void debugWshedMerge(L_WSHED *wshed, char *descr, l_int32 x,
                             l_int32 y, l_int32 label, l_int32 index);
-
-
 /*-----------------------------------------------------------------------*
  *                        Top-level watershed                            *
  *-----------------------------------------------------------------------*/
@@ -223,8 +219,6 @@ L_WSHED  *wshed;
     wshed->debug = debugflag;
     return wshed;
 }
-
-
 /*!
  *  wshedDestroy()
  *
@@ -272,8 +266,6 @@ L_WSHED  *wshed;
     *pwshed = NULL;
     return;
 }
-
-
 /*!
  *  wshedApply()
  *
@@ -522,8 +514,6 @@ PTA      *ptas, *ptao;
     lstackDestroy(&rstack, TRUE);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                               Helpers                                 *
  *-----------------------------------------------------------------------*/
@@ -563,8 +553,6 @@ PIX  *pix;
     }
     return;
 }
-
-
 /*!
  *  identifyWatershedBasin()
  *
@@ -672,8 +660,6 @@ L_QUEUE  *lq;
     lqueueDestroy(&lq, 1);
     return 0;
 }
-
-
 /*!
  *  mergeLookup()
  *
@@ -741,8 +727,6 @@ NUMA    **links;
 
     return 0;
 }
-
-
 /*!
  *  wshedGetHeight()
  *
@@ -784,8 +768,6 @@ l_int32  minval;
     *pheight = val - minval;
     return 0;
 }
-
-
 /*
  *  pushNewPixel()
  *
@@ -834,8 +816,6 @@ L_NEWPIXEL  *np;
     lqueueAdd(lq, np);
     return;
 }
-
-
 /*
  *  popNewPixel()
  *
@@ -869,8 +849,6 @@ L_NEWPIXEL  *np;
     lstackAdd(lq->stack, np);  /* save for re-use */
     return;
 }
-
-
 /*
  *  pushWSPixel()
  *
@@ -919,8 +897,6 @@ L_WSPIXEL  *wsp;
     lheapAdd(lh, wsp);
     return;
 }
-
-
 /*
  *  popWSPixel()
  *
@@ -970,8 +946,6 @@ L_WSPIXEL  *wsp;
     lstackAdd(stack, wsp);  /* save for re-use */
     return;
 }
-
-
 static void
 debugPrintLUT(l_int32  *lut,
               l_int32   size,
@@ -986,8 +960,6 @@ l_int32  i;
     fprintf(stderr, "\n");
     return;
 }
-
-
 static void
 debugWshedMerge(L_WSHED *wshed,
                 char    *descr,
@@ -1003,8 +975,6 @@ debugWshedMerge(L_WSHED *wshed,
     fprintf(stderr, "   clabel = %d, cindex = %d\n", label, index);
     return;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                                 Output                                *
  *-----------------------------------------------------------------------*/
@@ -1032,8 +1002,6 @@ wshedBasins(L_WSHED  *wshed,
         *pnalevels = numaClone(wshed->nalevels);
     return 0;
 }
-
-
 /*!
  *  wshedRenderFill()
  *
@@ -1068,8 +1036,6 @@ PIXA    *pixa;
     numaDestroy(&na);
     return pixd;
 }
-
-
 /*!
  *  wshedRenderColors()
  *

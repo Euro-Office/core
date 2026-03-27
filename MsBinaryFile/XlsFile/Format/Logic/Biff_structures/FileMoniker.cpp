@@ -34,19 +34,13 @@
 
 namespace OSHARED
 {
-
-
 FileMoniker::FileMoniker()
 {
 }
-
-
 FileMoniker::FileMoniker(XLS::CFRecord& record)
 {
 	load(record);
 }
-
-
 XLS::BiffStructurePtr FileMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new FileMoniker(*this));
@@ -89,8 +83,6 @@ void FileMoniker::save(XLS::CFRecord& record)
     }
     else
         record.reserveNunBytes(4);
-
-
 
 }
 

@@ -46,8 +46,6 @@ BiffStructurePtr PtgList::clone()
 {
         return BiffStructurePtr(new PtgList(*this));
 }
-
-
 void PtgList::loadFields(CFRecord& record)
 {	
     //record.skipNunBytes(1); // eptg Reserved

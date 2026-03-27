@@ -68,8 +68,6 @@ public:
 
     void FromAtom(CRecordCurrentUserAtom* pAtom);
 };
-
-
 ///----------- constants----------
 const int MST_FLAG_OBJECTS = 0x01;
 const int MST_FLAG_SCHEME = 0x02;

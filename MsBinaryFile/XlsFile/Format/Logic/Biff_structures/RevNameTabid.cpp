@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 RevNameTabid::RevNameTabid()
 {
 }
-
-
 RevNameTabid::RevNameTabid(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevNameTabid::clone()
 {
 	return BiffStructurePtr(new RevNameTabid(*this));
@@ -61,8 +55,6 @@ void RevNameTabid::save(CFRecord& record)
 {
 	record << tabid << name;
 }
-
-
 
 const std::wstring RevNameTabid::toString() const
 {

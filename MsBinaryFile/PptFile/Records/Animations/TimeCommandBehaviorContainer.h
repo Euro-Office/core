@@ -30,21 +30,15 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeCommandBehaviorAtom.h"
 #include "TimeBehaviorContainer.h"
-
-
 namespace PPT
 {
 class CRecordTimeCommandBehaviorContainer : public CUnknownRecord
 {
 public:
     void ReadFromStream(SRecordHeader &thisHeader, POLE::Stream *pStream) override;
-
-
     CRecordTimeCommandBehaviorAtom  m_oCommandBehaviorAtom;
     CRecordTimeVariantString        m_oVarCommand;
     CRecordTimeBehaviorContainer    m_oBevavior;

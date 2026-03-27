@@ -31,8 +31,6 @@
  */
 
 #include "Ptg.h"
-
-
 namespace XLS
 {
 
@@ -105,8 +103,6 @@ void Ptg::save(CFRecord& record)
 	writeFields(record);
 	size_of_struct = record.getRdPtr() - offset_in_record.get_value_or(0);
 }
-
-
 
 } // namespace XLS
 

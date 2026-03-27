@@ -34,8 +34,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 #define __gpc_h
 
 #include <stdio.h>
-
-
 /*
 ===========================================================================
                                Constants
@@ -47,8 +45,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 #define GPC_EPSILON (DBL_EPSILON)
 
 #define GPC_VERSION "2.32"
-
-
 /*
 ===========================================================================
                            Public Data Types
@@ -87,8 +83,6 @@ typedef struct                      /* Tristrip set structure            */
   int                 num_strips;   /* Number of tristrips               */
   gpc_vertex_list    *strip;        /* Tristrip array pointer            */
 } gpc_tristrip;
-
-
 /*
 ===========================================================================
                        Public Function Prototypes

@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTADVANC_H__
 #define __FTADVANC_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -28,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -49,8 +41,6 @@ FT_BEGIN_HEADER
    *   This section contains functions to quickly extract advance values
    *   without handling glyph outlines, if possible.
    */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Const>                                                               */
@@ -73,8 +63,6 @@ FT_BEGIN_HEADER
   /*    comparison.                                                        */
   /*                                                                       */
 #define FT_ADVANCE_FLAG_FAST_ONLY  0x20000000UL
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -118,8 +106,6 @@ FT_BEGIN_HEADER
                   FT_UInt    gindex,
                   FT_Int32   load_flags,
                   FT_Fixed  *padvance );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -172,11 +158,7 @@ FT_BEGIN_HEADER
                    FT_Fixed  *padvances );
 
 /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTADVANC_H__ */
-
-
 /* END */

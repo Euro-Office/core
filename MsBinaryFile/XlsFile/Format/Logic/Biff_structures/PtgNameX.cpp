@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 PtgNameX::PtgNameX(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
@@ -53,8 +51,6 @@ PtgNameX::PtgNameX(const std::wstring& word, const PtgDataType data_type)
 {
 	fromString(word);
 }
-
-
 BiffStructurePtr PtgNameX::clone()
 {
 	return BiffStructurePtr(new PtgNameX(*this));
@@ -99,8 +95,6 @@ void PtgNameX::writeFields(CFRecord& record)
 
 	global_info = record.getGlobalWorkbookInfo();
 }
-
-
 void PtgNameX::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	RevNamePtr tab_id;
@@ -169,13 +163,9 @@ void PtgNameX::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool fu
 		ptg_stack.push(link);		
 	}
 }
-
-
 void PtgNameX::fromString(const std::wstring& word)
 {
  	std::wstring  query = L"root/WorkbookStreamObject/GlobalsSubstream/SUPBOOK";
 }
-
-
 } // namespace XLS
 

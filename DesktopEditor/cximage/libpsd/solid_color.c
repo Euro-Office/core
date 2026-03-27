@@ -28,8 +28,6 @@
 #include "psd_stream.h"
 #include "psd_descriptor.h"
 #include "psd_color.h"
-
-
 // Solid color sheet setting (Photoshop 6.0)
 psd_status psd_get_layer_solid_color(psd_context * context, psd_layer_record * layer)
 {

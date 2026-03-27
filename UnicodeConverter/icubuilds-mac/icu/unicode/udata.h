@@ -172,8 +172,6 @@ typedef UBool U_CALLCONV
 UDataMemoryIsAcceptable(void *context,
                         const char *type, const char *name,
                         const UDataInfo *pInfo);
-
-
 /**
  * Convenience function.
  * This function works the same as <code>udata_openChoice</code>
@@ -359,8 +357,6 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo);
  */
 U_STABLE void U_EXPORT2
 udata_setCommonData(const void *data, UErrorCode *err);
-
-
 /**
  * This function bypasses the normal ICU data loading process for application-specific
  * data and allows you to force the it to come out of a user-specified
@@ -374,12 +370,10 @@ udata_setCommonData(const void *data, UErrorCode *err);
  * The application must read in or otherwise construct an image of the data and then
  * pass the address of it to this function.
  *
- *
  * Warning:  setAppData will set a U_USING_DEFAULT_WARNING code if
  *           data with the specifed path that has already been opened, or
  *           if setAppData with the same path has already been called.
  *           Any such calls to setAppData will have no effect.
- *
  *
  * @param packageName the package name by which the application will refer
  *             to (open) this data

@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "odf_style_context.h"
 #include "ods_conversion_context.h"
 //#include "odf_text_context.h" ??????
@@ -50,8 +48,6 @@ namespace cpdoccore {
 namespace odf_writer {
 
 static int style_family_counts_[1024]={};//согласно количеству разных стилей
-
-
 void calc_paragraph_properties_content(std::vector<paragraph_format_properties*> & parProps, paragraph_format_properties * result)
 {
 	if (result == NULL)return;
@@ -87,8 +83,6 @@ void odf_style_context::set_odf_context(odf_conversion_context * Context)
 	table_styles_context_.set_odf_context(Context);
 	lists_styles_context_.set_odf_context(Context);
 }
-
-
 odf_style_state_ptr odf_style_context::last_state(style_family::type family)
 {
 	for (int i = (int)style_state_list_.size() - 1; i >= 0; i--)
@@ -396,8 +390,6 @@ std::wstring odf_style_context::get_name_family(style_family::type family)
 	}
 	return L"UnknownStyle";
 }
-
-
 std::wstring odf_style_context::find_free_name(style_family::type  family)
 {
 	std::wstring name = get_name_family(family);
@@ -471,7 +463,5 @@ void odf_style_context::calc_paragraph_properties(std::wstring style_name, style
     }   
 	calc_paragraph_properties_content(parProps, result);
 }
-
-
 }
 }

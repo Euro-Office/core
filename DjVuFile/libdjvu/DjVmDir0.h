@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GString.h"
 
 #ifdef HAVE_NAMESPACES
@@ -87,8 +85,6 @@ class ByteStream;
     This is {\bf not} a navigation directory, which lists all the pages
     in a multipage document. The navigation directory is supported by class
     \Ref{DjVuNavDir}. This is the directory of a DjVm archive.
-    
-
     @memo Directory of DjVu all-in-one-file DjVu documents.
     @author Andrei Erofeev <eaf@geocities.com>
     @version #$Id: DjVmDir0.h,v 1.9 2007/03/25 20:48:29 leonb Exp $# */
@@ -208,8 +204,6 @@ DjVmDir0::DjVmDir0(const DjVmDir0 & d) :
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

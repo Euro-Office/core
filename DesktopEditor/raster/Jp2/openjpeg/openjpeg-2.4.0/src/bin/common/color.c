@@ -479,8 +479,6 @@ void color_apply_icc_profile(opj_image_t *image)
     in_space = cmsGetPCS(in_prof);
     out_space = cmsGetColorSpace(in_prof);
     intent = cmsGetHeaderRenderingIntent(in_prof);
-
-
     max_w = image->comps[0].w;
     max_h = image->comps[0].h;
     prec = (int)image->comps[0].prec;

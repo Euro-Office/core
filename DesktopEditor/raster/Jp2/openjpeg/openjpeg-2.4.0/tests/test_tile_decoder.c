@@ -52,8 +52,6 @@
 
 #include "openjpeg.h"
 #include "format_defs.h"
-
-
 /* -------------------------------------------------------------------------- */
 /* Declarations                                                               */ 
 int get_file_format(const char *filename);
@@ -132,8 +130,6 @@ static int infile_format(const char *fname)
 
         return magic_format;
 }
-
-
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -225,8 +221,6 @@ int main (int argc, char *argv[])
 
         /* to decode only a part of the image data */
         /*opj_restrict_decoding(&l_param,0,0,1000,1000);*/
-
-
         switch(l_param.decod_format) {
                 case J2K_CFMT:	/* JPEG-2000 codestream */
                         {
@@ -282,8 +276,6 @@ int main (int argc, char *argv[])
                 opj_image_destroy(l_image);
                 return EXIT_FAILURE;
         }
-
-
         while (l_go_on)
         {
                 if (! opj_read_tile_header( l_codec,

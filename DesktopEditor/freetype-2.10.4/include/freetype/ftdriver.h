@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTDRIVER_H_
 #define FTDRIVER_H_
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -59,8 +53,6 @@ FT_BEGIN_HEADER
    *   the @properties section.
    *
    */
-
-
   /**************************************************************************
    *
    * @section:
@@ -142,8 +134,6 @@ FT_BEGIN_HEADER
    *   minimize distortion.
    *
    */
-
-
   /**************************************************************************
    *
    * @section:
@@ -165,8 +155,6 @@ FT_BEGIN_HEADER
    *   The PCF driver's module name is 'pcf'.
    *
    */
-
-
   /**************************************************************************
    *
    * @section:
@@ -196,8 +184,6 @@ FT_BEGIN_HEADER
    *   engine.
    *
    */
-
-
   /**************************************************************************
    *
    * @section:
@@ -298,8 +284,6 @@ FT_BEGIN_HEADER
    *   Any issues on widths would still apply, though.
    *
    */
-
-
   /**************************************************************************
    *
    * @section:
@@ -318,8 +302,6 @@ FT_BEGIN_HEADER
    *   macros and structures.
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -346,8 +328,6 @@ FT_BEGIN_HEADER
   /* these constants (introduced in 2.4.12) are deprecated */
 #define FT_CFF_HINTING_FREETYPE  FT_HINTING_FREETYPE
 #define FT_CFF_HINTING_ADOBE     FT_HINTING_ADOBE
-
-
   /**************************************************************************
    *
    * @property:
@@ -396,8 +376,6 @@ FT_BEGIN_HEADER
    *   2.9 (for 'type1' and 't1cid' modules)
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -464,8 +442,6 @@ FT_BEGIN_HEADER
    *   2.9 (for 'type1' and 't1cid' modules)
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -535,8 +511,6 @@ FT_BEGIN_HEADER
    *   2.9 (for 'type1' and 't1cid' modules)
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -568,8 +542,6 @@ FT_BEGIN_HEADER
    *   2.9 (for 'type1' and 't1cid' modules)
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -612,8 +584,6 @@ FT_BEGIN_HEADER
    * @since:
    *   2.8
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -743,8 +713,6 @@ FT_BEGIN_HEADER
 #define TT_INTERPRETER_VERSION_35  35
 #define TT_INTERPRETER_VERSION_38  38
 #define TT_INTERPRETER_VERSION_40  40
-
-
   /**************************************************************************
    *
    * @property:
@@ -800,8 +768,6 @@ FT_BEGIN_HEADER
    * @since:
    *   2.5
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -858,8 +824,6 @@ FT_BEGIN_HEADER
    *   2.4.11
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -986,8 +950,6 @@ FT_BEGIN_HEADER
 #define FT_AUTOHINTER_SCRIPT_LATIN  1
 #define FT_AUTOHINTER_SCRIPT_CJK    2
 #define FT_AUTOHINTER_SCRIPT_INDIC  3
-
-
   /**************************************************************************
    *
    * @struct:
@@ -1008,8 +970,6 @@ FT_BEGIN_HEADER
     FT_UShort*  map;
 
   } FT_Prop_GlyphToScriptMap;
-
-
   /**************************************************************************
    *
    * @property:
@@ -1050,8 +1010,6 @@ FT_BEGIN_HEADER
    *   2.4.11
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -1099,8 +1057,6 @@ FT_BEGIN_HEADER
    *   2.5.3
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -1141,8 +1097,6 @@ FT_BEGIN_HEADER
    *   2.4.11
    *
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -1158,8 +1112,6 @@ FT_BEGIN_HEADER
     FT_UInt  limit;
 
   } FT_Prop_IncreaseXHeight;
-
-
   /**************************************************************************
    *
    * @property:
@@ -1213,15 +1165,7 @@ FT_BEGIN_HEADER
    *   2.6
    *
    */
-
-
  /* */
-
-
 FT_END_HEADER
-
-
 #endif /* FTDRIVER_H_ */
-
-
 /* END */

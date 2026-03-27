@@ -46,12 +46,8 @@ public:
 	bool m_bHasSlideNumber;
 	bool m_bHasHeader;
     bool m_bHasFooter;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
-
-
 class CRecordRoundTripHeaderFooterDefaults12Atom : public CUnknownRecord
 {
 public:
@@ -61,8 +57,6 @@ public:
 	bool m_bIncludeFooter;
 	bool m_bIncludeHeader;
 	bool m_bIncludeSlideNumber;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -70,8 +64,6 @@ class CRecordMetaCharacterAtom : public CUnknownRecord
 {
 public:
     _UINT32 m_nPosition = -1;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -83,8 +75,6 @@ class CRecordRTFDateTimeMetaAtom : public CRecordGenericDateMetaAtom
 {
 public:
 	std::string m_strFormat;
-	
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream);
 };
 
@@ -92,12 +82,8 @@ class CRecordDateTimeMetaAtom : public CRecordGenericDateMetaAtom
 {
 public:
 	_UINT32 m_FormatID;
-
-	
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
-
-
 class CRecordFooterMetaAtom : public CRecordMetaCharacterAtom
 {
 };
@@ -116,8 +102,6 @@ public:
 	vector_string m_HeadersFootersString[3]; //0-dates, 1 - headers, 2 - footers
 
     CRecordHeadersFootersAtom *m_oHeadersFootersAtom = nullptr;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

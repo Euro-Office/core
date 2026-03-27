@@ -34,18 +34,10 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CF2ARRST_H__
 #define __CF2ARRST_H__
-
-
 #include "cf2error.h"
-
-
 FT_BEGIN_HEADER
-
-
   /* need to define the struct here (not opaque) so it can be allocated by */
   /* clients                                                               */
   typedef struct  CF2_ArrStackRec_
@@ -62,8 +54,6 @@ FT_BEGIN_HEADER
     void*  ptr;             /* ptr to data                   */
 
   } CF2_ArrStackRec, *CF2_ArrStack;
-
-
   FT_LOCAL( void )
   cf2_arrstack_init( CF2_ArrStack  arrstack,
                      FT_Memory     memory,
@@ -89,12 +79,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   cf2_arrstack_push( CF2_ArrStack  arrstack,
                      const void*   ptr );
-
-
 FT_END_HEADER
-
-
 #endif /* __CF2ARRST_H__ */
-
-
 /* END */

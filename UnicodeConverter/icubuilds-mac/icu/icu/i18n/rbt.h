@@ -366,8 +366,6 @@ private:
     RuleBasedTransliterator(const UnicodeString& id,
                             const TransliterationRuleData* theData,
                             UnicodeFilter* adoptedFilter = 0);
-
-
     friend class Transliterator; // to access following ct
 
     /**
@@ -464,8 +462,6 @@ private:
                     UParseError& parseError,
                     UErrorCode& status);
 };
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_TRANSLITERATION */

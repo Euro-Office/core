@@ -221,15 +221,11 @@ fi
 # ignore ctest exit code & parse this ourselves
 set +x
 
-
-
 if [ "${OPJ_CI_CHECK_STYLE:-}" == "1" ]; then
     export OPJSTYLE=${PWD}/scripts/opjstyle
     export PATH=${HOME}/.local/bin:${PATH}
     scripts/verify-indentation.sh
 fi
-
-
 # Deployment if needed
 #---------------------
 if [ "${TRAVIS_TAG:-}" != "" ]; then

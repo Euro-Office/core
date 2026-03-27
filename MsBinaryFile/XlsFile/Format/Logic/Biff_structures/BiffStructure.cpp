@@ -45,6 +45,4 @@ namespace XLS
 		val.save(record);
 		return record;
 	}
-
-
 }// namespace XLS

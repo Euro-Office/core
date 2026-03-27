@@ -52,8 +52,6 @@
 #define PNG_MAGIC "\x89PNG\x0d\x0a\x1a\x0a"
 #define MAGIC_SIZE 8
 /* PNG allows bits per sample: 1, 2, 4, 8, 16 */
-
-
 static void convert_16u32s_C1R(const OPJ_BYTE* pSrc, OPJ_INT32* pDst,
                                OPJ_SIZE_T length)
 {
@@ -186,8 +184,6 @@ opj_image_t *pngtoimage(const char *read_idf, opj_cparameters_t * params)
         fprintf(stderr, "pngtoimage: bit depth %d is not supported\n", bit_depth);
         goto fin;
     }
-
-
     rows = (OPJ_BYTE**)calloc(height + 1, sizeof(OPJ_BYTE*));
     if (rows == NULL) {
         fprintf(stderr, "pngtoimage: memory out\n");
@@ -267,8 +263,6 @@ fin:
     return image;
 
 }/* pngtoimage() */
-
-
 static void convert_32s16u_C1R(const OPJ_INT32* pSrc, OPJ_BYTE* pDst,
                                OPJ_SIZE_T length)
 {

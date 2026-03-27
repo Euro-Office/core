@@ -15,8 +15,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -32,19 +30,13 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* Main reason for not lifting the functions in this module to a  */
   /* 'standard' API is that the used parameters for emboldening and */
   /* slanting are not configurable.  Consider the functions as a    */
   /* code resource that should be copied into the application and   */
   /* adapted to the particular needs.                               */
-
-
 #ifndef FTSYNTH_H_
 #define FTSYNTH_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -52,8 +44,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /* Embolden a glyph by a 'reasonable' value (which is highly a matter of */
@@ -73,11 +63,7 @@ FT_BEGIN_HEADER
   FT_GlyphSlot_Oblique( FT_GlyphSlot  slot );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTSYNTH_H_ */
-
-
 /* END */

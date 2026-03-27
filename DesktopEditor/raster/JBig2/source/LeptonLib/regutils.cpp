@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  regutils.c
  *
@@ -32,14 +30,10 @@
 
 #include <string.h>
 #include "allheaders.h"
-
-
 extern l_int32 NumImageFileFormatExtensions;
 extern const char *ImageFileFormatExtensions[];
 
 static char *getRootNameFromArgv0(const char *argv0);
-
-
 /*--------------------------------------------------------------------*
  *                      Regression test utilities                     *
  *--------------------------------------------------------------------*/
@@ -132,8 +126,6 @@ L_REGPARAMS  *rp;
 
     return 0;
 }
-
-
 /*!
  *  regTestCleanup()
  *
@@ -199,8 +191,6 @@ l_int32  nbytes;
     if (rp) FREE(rp);
     return 0;
 }
-
-
 /*!
  *  regTestComparePix()
  *
@@ -257,8 +247,6 @@ l_int32  same;
     }
     return 0;
 }
-
-
 /*!
  *  regTestCompareSimilarPix()
  *
@@ -337,8 +325,6 @@ l_int32  w, h, factor, similar;
     }
     return 0;
 }
-
-
 /*!
  *  regTestCheckFile()
  *
@@ -411,8 +397,6 @@ l_int32  ret, same;
 
     return 0;
 }
-
-
 /*!
  *  regTestCompareFiles()
  *
@@ -502,8 +486,6 @@ SARRAY  *sa;
 
     return 0;
 }
-
-
 /*!
  *  regTestWritePixAndCheck()
  *
@@ -559,8 +541,6 @@ char     namebuf[256];
     return 0;
 }
 
-
-
 /*!
  *  getRootNameFromArgv0()
  *
@@ -598,5 +578,3 @@ char    *root;
     root[len - suffix_len] = '\0';
     return root;
 }
-
-

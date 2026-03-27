@@ -1554,8 +1554,6 @@ namespace MetaFile
 
 		int unExplicitRecordSize = 32 + 4 * unNumberOfPolygons + 4 * unCountPoints;
 		int unType               = EMR_POLYPOLYGON16;
-
-
 		unFileSize += unExplicitRecordSize;
 		++unNumberRecords;
 
@@ -1589,8 +1587,6 @@ namespace MetaFile
 
 		int unExplicitRecordSize = 32 + 4 * unNumberOfPolygons + 8 * unCountPoints;
 		int unType               = EMR_POLYPOLYLINE;
-
-
 		unFileSize += unExplicitRecordSize;
 		++unNumberRecords;
 
@@ -1624,8 +1620,6 @@ namespace MetaFile
 
 		int unExplicitRecordSize = 32 + 4 * unNumberOfPolygons + 4 * unCountPoints;
 		int unType               = EMR_POLYPOLYLINE16;
-
-
 		unFileSize += unExplicitRecordSize;
 		++unNumberRecords;
 
@@ -1968,5 +1962,3 @@ namespace MetaFile
 		m_pOutStream->WriteFile((BYTE*)arValue, sizeof (arValue));
 	}
 }
-
-

@@ -32,8 +32,6 @@
 #include "RegGroupItems.h"
 
 using namespace PPT;
-
-
 CRecordRegGroupItems::CRecordRegGroupItems()
 {
 }

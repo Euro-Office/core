@@ -5,8 +5,6 @@
  *
  * daniel@veillard.com
  */
-
-
 #define IN_LIBXML
 #include "libxml.h"
 #ifdef LIBXML_HTML_ENABLED
@@ -291,8 +289,6 @@ create:
             xmlSetProp(meta, BAD_CAST"content", BAD_CAST newcontent);
         }
     }
-
-
     return(0);
 }
 
@@ -309,8 +305,6 @@ static const char* htmlBooleanAttrs[] = {
   "multiple", "nohref", "noresize", "noshade", "nowrap", "readonly",
   "selected", NULL
 };
-
-
 /**
  * htmlIsBooleanAttr:
  * @name:  the name of the attribute to check
@@ -630,8 +624,6 @@ void
 htmlDocDumpMemory(xmlDocPtr cur, xmlChar**mem, int *size) {
 	htmlDocDumpMemoryFormat(cur, mem, size, 1);
 }
-
-
 /************************************************************************
  *									*
  *		Dumping HTML tree content to an I/O output buffer	*
@@ -789,8 +781,6 @@ htmlAttrListDumpOutput(xmlOutputBufferPtr buf, xmlDocPtr doc, xmlAttrPtr cur, co
 	cur = cur->next;
     }
 }
-
-
 
 /**
  * htmlNodeListDumpOutput:

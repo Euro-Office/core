@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GSmartPointer.h"
 #include "GContainer.h"
 #include "GString.h"
@@ -78,8 +76,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 /** @name GMapAreas.h
 
     Files #"GMapAreas.h"# and #"GMapAreas.cpp"# implement base objects
@@ -101,8 +97,6 @@ namespace DJVU {
     @version
     #$Id: GMapAreas.h,v 1.9 2007/03/25 20:48:31 leonb Exp $# */
 //@{
-
-
 // ---------- GMAPAREA ---------
 
 /** This is the base object for all map areas. It defines some standard
@@ -171,8 +165,6 @@ public:
    static const char TEXTCLR_TAG [];
    static const char PUSHPIN_TAG [];
 //>
-
-
    enum BorderType { NO_BORDER=0, XOR_BORDER=1, SOLID_BORDER=2,
 		     SHADOW_IN_BORDER=3, SHADOW_OUT_BORDER=4,
 		     SHADOW_EIN_BORDER=5, SHADOW_EOUT_BORDER=6 };
@@ -596,8 +588,6 @@ inline char const * const
 GMapOval::get_shape_name(void) const { return OVAL_TAG; }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

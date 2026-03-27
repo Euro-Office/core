@@ -33,8 +33,6 @@
 
 #include "../Reader/Records.h"
 #include "TextSIException.h"
-
-
 namespace PPT
 {
 struct SStyleTextProp11 : public STextSIException

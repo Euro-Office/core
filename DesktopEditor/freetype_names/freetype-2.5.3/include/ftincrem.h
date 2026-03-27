@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTINCREM_H__
 #define __FTINCREM_H__
 
@@ -27,8 +25,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /***************************************************************************
@@ -57,8 +53,6 @@ FT_BEGIN_HEADER
    *   @FT_Incremental_InterfaceRec for an example.
    *
    */
-
-
   /***************************************************************************
    *
    * @type:
@@ -82,8 +76,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct FT_IncrementalRec_*  FT_Incremental;
-
-
   /***************************************************************************
    *
    * @struct:
@@ -120,8 +112,6 @@ FT_BEGIN_HEADER
     FT_Long  advance_v;     /* since 2.3.12 */
 
   } FT_Incremental_MetricsRec;
-
-
   /***************************************************************************
    *
    * @struct:
@@ -132,8 +122,6 @@ FT_BEGIN_HEADER
    *
    */
    typedef struct FT_Incremental_MetricsRec_*  FT_Incremental_Metrics;
-
-
   /***************************************************************************
    *
    * @type:
@@ -179,8 +167,6 @@ FT_BEGIN_HEADER
   (*FT_Incremental_GetGlyphDataFunc)( FT_Incremental  incremental,
                                       FT_UInt         glyph_index,
                                       FT_Data*        adata );
-
-
   /***************************************************************************
    *
    * @type:
@@ -203,8 +189,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_Incremental_FreeGlyphDataFunc)( FT_Incremental  incremental,
                                        FT_Data*        data );
-
-
   /***************************************************************************
    *
    * @type:
@@ -243,8 +227,6 @@ FT_BEGIN_HEADER
                         FT_UInt                     glyph_index,
                         FT_Bool                     vertical,
                         FT_Incremental_MetricsRec  *ametrics );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -273,8 +255,6 @@ FT_BEGIN_HEADER
     FT_Incremental_GetGlyphMetricsFunc  get_glyph_metrics;
 
   } FT_Incremental_FuncsRec;
-
-
   /***************************************************************************
    *
    * @struct:
@@ -317,8 +297,6 @@ FT_BEGIN_HEADER
     FT_Incremental                  object;
 
   } FT_Incremental_InterfaceRec;
-
-
   /***************************************************************************
    *
    * @type:
@@ -329,8 +307,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef FT_Incremental_InterfaceRec*   FT_Incremental_Interface;
-
-
   /***************************************************************************
    *
    * @constant:
@@ -348,6 +324,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTINCREM_H__ */
-
-
 /* END */

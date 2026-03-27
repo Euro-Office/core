@@ -39,8 +39,6 @@ namespace XLS
 BiffRecordContinued::BiffRecordContinued()
 {
 }
-
-
 BiffRecordContinued::~BiffRecordContinued()
 {
 	for (ContinuesMap::const_iterator it = continue_records.begin(),
@@ -53,8 +51,6 @@ BiffRecordContinued::~BiffRecordContinued()
 		}
 	}
 }
-
-
 
 // Read all the Continue records that follow the record
 void BiffRecordContinued::readFollowingContinue(StreamCacheReaderPtr reader)
@@ -74,7 +70,5 @@ void BiffRecordContinued::readFollowingContinue(StreamCacheReaderPtr reader)
 		continue_records[type].push_back(record);
 	}
 }
-
-
 } // namespace XLS
 

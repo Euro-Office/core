@@ -631,8 +631,6 @@ NFSubstitution::doSubstitution(double number, UnicodeString& toInsertInto, int32
         }
     }
 }
-
-
     //-----------------------------------------------------------------------
     // parsing
     //-----------------------------------------------------------------------
@@ -795,8 +793,6 @@ UBool MultiplierSubstitution::operator==(const NFSubstitution& rhs) const
     return NFSubstitution::operator==(rhs) &&
         divisor == ((const MultiplierSubstitution*)&rhs)->divisor;
 }
-
-
 //===================================================================
 // ModulusSubstitution
 //===================================================================
@@ -848,8 +844,6 @@ UBool ModulusSubstitution::operator==(const NFSubstitution& rhs) const
 //-----------------------------------------------------------------------
 // formatting
 //-----------------------------------------------------------------------
-
-
 /**
  * If this is a &gt;&gt;&gt; substitution, use ruleToUse to fill in
  * the substitution.  Otherwise, just use the superclass function.
@@ -971,13 +965,9 @@ ModulusSubstitution::toString(UnicodeString& text) const
 //===================================================================
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IntegralPartSubstitution)
-
-
 //===================================================================
 // FractionalPartSubstitution
 //===================================================================
-
-
     /**
      * Constructs a FractionalPartSubstitution.  This object keeps a flag
      * telling whether it should format by digits or not.  In addition,
@@ -1181,8 +1171,6 @@ FractionalPartSubstitution::operator==(const NFSubstitution& rhs) const
 }
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(FractionalPartSubstitution)
-
-
 //===================================================================
 // AbsoluteValueSubstitution
 //===================================================================

@@ -14,15 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1DRIVER_H_
 #define T1DRIVER_H_
-
-
 #include <freetype/internal/ftdrv.h>
-
-
 FT_BEGIN_HEADER
 
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  t1_driver_class;
@@ -30,6 +24,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* T1DRIVER_H_ */
-
-
 /* END */

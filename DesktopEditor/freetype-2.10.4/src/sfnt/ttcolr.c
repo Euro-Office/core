@@ -16,8 +16,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * `COLR' table specification:
@@ -25,25 +23,17 @@
    *   https://www.microsoft.com/typography/otspec/colr.htm
    *
    */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 #include <freetype/ftcolor.h>
-
-
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 
 #include "ttcolr.h"
-
-
   /* NOTE: These are the table sizes calculated through the specs. */
 #define BASE_GLYPH_SIZE            6U
 #define LAYER_SIZE                 4U
 #define COLR_HEADER_SIZE          14U
-
-
   typedef struct BaseGlyphRecord_
   {
     FT_UShort  gid;
@@ -51,8 +41,6 @@
     FT_UShort  num_layers;
 
   } BaseGlyphRecord;
-
-
   typedef struct Colr_
   {
     FT_UShort  version;
@@ -67,8 +55,6 @@
     FT_ULong  table_size;
 
   } Colr;
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -77,8 +63,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttcolr
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_colr( TT_Face    face,
                      FT_Stream  stream )
@@ -93,8 +77,6 @@
 
     FT_ULong  base_glyph_offset, layer_offset;
     FT_ULong  table_size;
-
-
     /* `COLR' always needs `CPAL' */
     if ( !face->cpal )
       return FT_THROW( Invalid_File_Format );
@@ -153,8 +135,6 @@
 
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_free_colr( TT_Face  face )
   {
@@ -162,16 +142,12 @@
     FT_Memory  memory = face->root.memory;
 
     Colr*  colr = (Colr*)face->colr;
-
-
     if ( colr )
     {
       FT_FRAME_RELEASE( colr->table );
       FT_FREE( colr );
     }
   }
-
-
   static FT_Bool
   find_base_glyph_record( FT_Byte*          base_glyph_begin,
                           FT_Int            num_base_glyph,
@@ -180,16 +156,12 @@
   {
     FT_Int  min = 0;
     FT_Int  max = num_base_glyph - 1;
-
-
     while ( min <= max )
     {
       FT_Int    mid = min + ( max - min ) / 2;
       FT_Byte*  p   = base_glyph_begin + mid * BASE_GLYPH_SIZE;
 
       FT_UShort  gid = FT_NEXT_USHORT( p );
-
-
       if ( gid < glyph_id )
         min = mid + 1;
       else if (gid > glyph_id )
@@ -206,8 +178,6 @@
 
     return 0;
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   tt_face_get_colr_layer( TT_Face            face,
                           FT_UInt            base_glyph,
@@ -217,16 +187,12 @@
   {
     Colr*            colr = (Colr*)face->colr;
     BaseGlyphRecord  glyph_record;
-
-
     if ( !colr )
       return 0;
 
     if ( !iterator->p )
     {
       FT_ULong  offset;
-
-
       /* first call to function */
       iterator->layer = 0;
 
@@ -263,8 +229,6 @@
 
     return 1;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_colr_blend_layer( TT_Face       face,
                             FT_UInt       color_index,
@@ -279,8 +243,6 @@
     FT_ULong  size;
     FT_Byte*  src;
     FT_Byte*  dst;
-
-
     if ( !dstSlot->bitmap.buffer )
     {
       /* Initialize destination of color bitmap */
@@ -306,8 +268,6 @@
     {
       /* Resize destination if needed such that new component fits. */
       FT_Int  x_min, x_max, y_min, y_max;
-
-
       x_min = FT_MIN( dstSlot->bitmap_left, srcSlot->bitmap_left );
       x_max = FT_MAX( dstSlot->bitmap_left + (FT_Int)dstSlot->bitmap.width,
                       srcSlot->bitmap_left + (FT_Int)srcSlot->bitmap.width );
@@ -330,8 +290,6 @@
         FT_Byte*  buf = NULL;
         FT_Byte*  p;
         FT_Byte*  q;
-
-
         size  = rows * pitch;
         if ( FT_ALLOC( buf, size ) )
           return error;
@@ -425,8 +383,6 @@
         int  bg = dst[4 * x + 1];
         int  br = dst[4 * x + 2];
         int  ba = dst[4 * x + 3];
-
-
         dst[4 * x + 0] = (FT_Byte)( bb * ba2 / 255 + fb );
         dst[4 * x + 1] = (FT_Byte)( bg * ba2 / 255 + fg );
         dst[4 * x + 2] = (FT_Byte)( br * ba2 / 255 + fr );

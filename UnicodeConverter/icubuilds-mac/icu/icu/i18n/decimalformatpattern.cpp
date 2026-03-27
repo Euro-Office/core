@@ -14,8 +14,6 @@
 #include "unicode/format.h"
 #include "unicode/utf16.h"
 #include "decimalformatpatternimpl.h" 
-
-
 #ifdef FMT_DEBUG
 #define debug(x) printf("%s:%d: %s\n", __FILE__,__LINE__, x);
 #else
@@ -27,8 +25,6 @@ U_NAMESPACE_BEGIN
 // TODO: Travis Keep: Copied from numfmt.cpp
 static int32_t kDoubleIntegerDigits  = 309;
 static int32_t kDoubleFractionDigits = 340;
-
-
 // TODO: Travis Keep: Copied from numfmt.cpp
 static int32_t gDefaultMaxIntegerDigits = 2000000000;
 
@@ -85,8 +81,6 @@ DecimalFormatPattern::DecimalFormatPattern()
           fPosSuffixPattern(),
           fPadPosition(DecimalFormatPattern::kPadBeforePrefix) {
 }
-
-
 DecimalFormatPatternParser::DecimalFormatPatternParser() :
     fZeroDigit(kPatternZeroDigit),
     fSigDigit(kPatternSignificantDigit),

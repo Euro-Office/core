@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ScenMan record in BIFF8
 class ScenMan: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ScenMan();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeScenMan;

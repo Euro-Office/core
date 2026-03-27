@@ -38,19 +38,13 @@ namespace XLS
 End::End()
 {
 }
-
-
 End::~End()
 {
 }
-
-
 BaseObjectPtr End::clone()
 {
 	return BaseObjectPtr(new End(*this));
 }
-
-
 void End::readFields(CFRecord& record)
 {
 	// no data

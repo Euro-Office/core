@@ -50,8 +50,6 @@
 // Константа для максимального числа загружаемых байт
 #define DOWNLOAD_FILE_SIZE				32768
 #define MAX_SINGLE_DOWNLOAD_FILE_SIZE 524288
-
-
 // Константа для получения размера файла
 #define CONTENT_RANGE		L"bytes 0-0/"
 // Константа для колличества символов у CONTENT_RANGE

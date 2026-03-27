@@ -32,8 +32,6 @@ UBool
 FieldPositionHandler::isRecording(void) const {
   return FALSE;
 }
-
-
 // utility subclass FieldPositionOnlyHandler
 
 FieldPositionOnlyHandler::FieldPositionOnlyHandler(FieldPosition& _pos)
@@ -63,8 +61,6 @@ UBool
 FieldPositionOnlyHandler::isRecording(void) const {
   return pos.getField() != FieldPosition::DONT_CARE;
 }
-
-
 // utility subclass FieldPositionIteratorHandler
 
 FieldPositionIteratorHandler::FieldPositionIteratorHandler(FieldPositionIterator* posIter,

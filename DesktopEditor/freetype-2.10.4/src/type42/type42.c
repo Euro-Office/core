@@ -14,13 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "t42drivr.c"
 #include "t42objs.c"
 #include "t42parse.c"
-
-
 /* END */

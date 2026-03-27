@@ -23,8 +23,6 @@
 
 #include <string.h>
 #include "agg_trans_affine.h"
-
-
 namespace agg
 {
 
@@ -34,8 +32,6 @@ namespace agg
         aspect_ratio_meet,
         aspect_ratio_slice
     };
-
-
     //----------------------------------------------------------trans_viewport
     class trans_viewport
     {
@@ -235,8 +231,6 @@ namespace agg
         double         m_ky;
     };
 
-
-
     //-----------------------------------------------------------------------
     inline void trans_viewport::update()
     {
@@ -295,9 +289,5 @@ namespace agg
         m_ky  = (device_y2 - device_y1) / (world_y2 - world_y1);
         m_is_valid = true;
     }
-
-
 }
-
-
 #endif

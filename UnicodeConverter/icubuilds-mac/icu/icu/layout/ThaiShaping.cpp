@@ -38,8 +38,6 @@ enum {
     
     return charClass;
 }
-
-
 LEUnicode ThaiShaping::leftAboveVowel(LEUnicode vowel, le_uint8 glyphSet)
 {
     static const LEUnicode leftAboveVowels[][7] = {

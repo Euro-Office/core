@@ -30,8 +30,6 @@ if res != expect:
     print("Error: didn't get the expected output")
     print("got '%s'" % (res))
     print("expected '%s'" % (expect))
-    
-
 #
 # cleanup
 #

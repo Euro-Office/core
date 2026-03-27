@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 PHONETICINFO::PHONETICINFO()
 {
 }
-
-
 PHONETICINFO::~PHONETICINFO()
 {
 }
-
-
 BaseObjectPtr PHONETICINFO::clone()
 {
 	return BaseObjectPtr(new PHONETICINFO(*this));
 }
-
-
 // PHONETICINFO = PhoneticInfo *Continue
 const bool PHONETICINFO::loadContent(BinProcessor& proc)
 {

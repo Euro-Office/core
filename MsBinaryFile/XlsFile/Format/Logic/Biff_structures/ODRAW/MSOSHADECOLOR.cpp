@@ -67,6 +67,4 @@ void MSOSHADECOLOR::load(XLS::CFRecord& record)
 
 	dPosition = position.Integral + position.Fractional / 65536.;
 }
-
-
 } // namespace XLS

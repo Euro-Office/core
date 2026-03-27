@@ -24,11 +24,7 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvmorx.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvmorx
-
-
   FT_LOCAL_DEF( void )
   gxv_morx_subtable_type4_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -51,6 +45,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

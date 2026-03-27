@@ -8299,10 +8299,6 @@ void DCR_CLASS dcr_write_ppm_tiff (DCRAW* p, FILE *ofp)
 }
 
 ///////////////////////////////////////////////////////////////////////////////
-
-
-
-
 static int dcr_sfile_read(dcr_stream_obj *obj, void *buf, int size, int cnt)
 {
 	return fread(buf, size, cnt, (FILE *)obj);
@@ -8347,11 +8343,7 @@ static int   dcr_sfile_scanf(dcr_stream_obj *obj,const char *format, void* outpu
 {
 	return fscanf((FILE *)obj, format, output);
 }
-
-
 ///////////////////////////////////////////////////////////////////////////////
-
-
 void DCR_CLASS dcr_init_dcraw(DCRAW* p)
 {
 	memset(p,0,sizeof(DCRAW));

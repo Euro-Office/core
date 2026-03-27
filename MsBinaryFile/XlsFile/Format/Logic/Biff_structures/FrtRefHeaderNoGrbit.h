@@ -53,8 +53,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	CFRecordType::TypeId rt;
 	Ref8U ref8;
 };

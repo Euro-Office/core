@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr SqRef::clone()
 {
 	return BiffStructurePtr(new SqRef(*this));
 }
-
-
 void SqRef::load(CFRecord& record)
 {
 	unsigned short cref;
@@ -53,7 +49,5 @@ void SqRef::load(CFRecord& record)
 		rgrefs.push_back(refu);
 	}
 }
-
-
 } // namespace XLS
 

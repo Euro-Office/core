@@ -33,8 +33,6 @@ typedef struct ULocaleBundle {
     UNumberFormat   *fNumberFormat[ULOCALEBUNDLE_NUMBERFORMAT_COUNT];
     UBool           isInvariantLocale;
 } ULocaleBundle;
-
-
 /**
  * Initialize a ULocaleBundle, initializing all formatters to 0.
  * @param result A ULocaleBundle to initialize.

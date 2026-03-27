@@ -315,8 +315,6 @@ def handle_testCase(node):
 	    handle_valid(valid, schema)
         for invalid in invalids:
 	    handle_invalid(invalid, schema)
-
-
 #
 # handle a testSuite element
 #
@@ -354,8 +352,6 @@ def handle_testSuite(node, level = 0):
         handle_testCase(test)
     for test in node.xpathEval('testSuite'):
         handle_testSuite(test, level + 1)
-	        
-
     if level >= 1 and sections != []:
         msg = ""
         for section in sections:
@@ -403,8 +399,6 @@ if quiet == 0 or nb_schemas_failed != 0:
 if quiet == 0 or nb_instances_failed != 0:
     print "found %d test instances: %d success %d failures" % (
       nb_instances_tests, nb_instances_success, nb_instances_failed)
-
-
 testsuite.freeDoc()
 
 # Memory debug specific

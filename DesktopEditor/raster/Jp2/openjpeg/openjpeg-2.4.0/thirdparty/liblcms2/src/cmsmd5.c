@@ -22,8 +22,6 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 //---------------------------------------------------------------------------------
-
-
 #include "lcms2_internal.h"
 
 #ifdef CMS_USE_BIG_ENDIAN
@@ -44,8 +42,6 @@ void byteReverse(cmsUInt8Number * buf, cmsUInt32Number longs)
 #else
 #define byteReverse(buf, len)
 #endif
-
-
 typedef struct {
 
     cmsUInt32Number buf[4];
@@ -62,8 +58,6 @@ typedef struct {
 
 #define STEP(f, w, x, y, z, data, s) \
     ( w += f(x, y, z) + data,  w = w<<s | w>>(32-s),  w += x )
-
-
 static
 void MD5_Transform(cmsUInt32Number buf[4], cmsUInt32Number in[16])
 
@@ -148,8 +142,6 @@ void MD5_Transform(cmsUInt32Number buf[4], cmsUInt32Number in[16])
     buf[2] += c;
     buf[3] += d;
 }
-
-
 // Create a MD5 object
 static
 cmsHANDLE  MD5alloc(cmsContext ContextID)
@@ -169,8 +161,6 @@ cmsHANDLE  MD5alloc(cmsContext ContextID)
 
     return (cmsHANDLE) ctx;
 }
-
-
 static
 void MD5add(cmsHANDLE Handle, cmsUInt8Number* buf, cmsUInt32Number len)
 {
@@ -251,8 +241,6 @@ void MD5finish(cmsProfileID* ProfileID,  cmsHANDLE Handle)
 
     _cmsFree(ctx ->ContextID, ctx);
 }
-
-
 
 // Assuming io points to an ICC profile, compute and store MD5 checksum
 // In the header, rendering intentent, attributes and ID should be set to zero

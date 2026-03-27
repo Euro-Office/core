@@ -198,8 +198,6 @@ void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &st
         }
         return;
     }
-
-
     list = new UnicodeString[source.length()];
     if (list == 0) {
         status = U_MEMORY_ALLOCATION_ERROR;
@@ -223,8 +221,6 @@ void CanonicalIterator::setSource(const UnicodeString &newSource, UErrorCode &st
         }
     }
     source.extract(start, i-start, list[list_length++]); // add last one
-
-
     // allocate the arrays, and find the strings that are CE to each segment
     pieces = (UnicodeString **)uprv_malloc(list_length * sizeof(UnicodeString *));
     pieces_length = list_length;
@@ -422,8 +418,6 @@ UnicodeString* CanonicalIterator::getEquivalents(const UnicodeString &segment, i
         finalResult[result_len++] = *((UnicodeString *)(ne->value.pointer));
         ne = result.nextElement(el);
     }
-
-
     return finalResult;
 }
 

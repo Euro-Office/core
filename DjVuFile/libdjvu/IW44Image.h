@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name IW44Image.h
 
     Files #"IW44Image.h"# and #"IW44Image.cpp"# implement the DjVu IW44 wavelet
@@ -164,12 +162,8 @@
     @version
     #$Id: IW44Image.h,v 1.13 2007/05/19 03:07:34 leonb Exp $# */
 //@{
-
-
 #include "GSmartPointer.h"
 #include "ZPCodec.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -182,8 +176,6 @@ class IFFByteStream;
 class ByteStream;
 class GBitmap;
 class GPixmap;
-
-
 
 /** IW44 encoding parameters.  
     This data structure gathers the quality specification parameters needed
@@ -212,8 +204,6 @@ struct DJVUAPI IWEncoderParms
   /** Constructor. Initializes the structure with the default values. */
   IWEncoderParms(void);
 };
-
-
 
 /** IW44 encoded gray-level and color images.  This class acts as a base for
     images represented as a collection of IW44 wavelet coefficients.  The
@@ -461,8 +451,6 @@ public:
 private:
   Codec *ycodec;
 };
-
-
 /*x IW44 encoded color image. This class provided functions for managing a
     color image represented as a collection of IW44 wavelet coefficients.  The
     coefficients are stored in a memory efficient data structure.  Member
@@ -578,8 +566,6 @@ public:
 //---------------------------------------------------------------
 // *** Class IW44Image::Block [declaration]
 // Represents a block of 32x32 coefficients after zigzagging and scaling
-
-
 class IW44Image::Block // DJVU_CLASS
 {
 public:
@@ -638,8 +624,6 @@ public:
 // ENCODING/DECODING WAVELET COEFFICIENTS 
 //    USING HIERARCHICAL SET DIFFERENCE
 //////////////////////////////////////////////////////
-
-
 //-----------------------------------------------
 // Class IW44Image::Codec [declaration+implementation]
 // Maintains information shared while encoding or decoding
@@ -688,8 +672,6 @@ public:
 //////////////////////////////////////////////////////
 // DEFINITION OF CHUNK HEADERS
 //////////////////////////////////////////////////////
-
-
 struct IW44Image::PrimaryHeader {
   unsigned char serial;
   unsigned char slices;
@@ -751,8 +733,6 @@ IW44Image::Block::set(int n, int val, IW44Image::Map *map)
 #endif /* IW44IMAGE_IMPLIMENTATION */
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

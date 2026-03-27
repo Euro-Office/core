@@ -10,8 +10,6 @@
  * JPEG software for special applications or support machine-dependent
  * optimizations.  Most users will not need to touch this file.
  */
-
-
 /*
  * Define BITS_IN_JSAMPLE as either
  *   8   for 8-bit sample values (the usual setting)
@@ -22,8 +20,6 @@
  */
 
 #define BITS_IN_JSAMPLE  8	/* use 8 or 12 */
-
-
 /*
  * Maximum number of components (color channels) allowed in JPEG image.
  * To meet the letter of the JPEG spec, set this to 255.  However, darn
@@ -34,8 +30,6 @@
  */
 
 #define MAX_COMPONENTS  10	/* maximum number of image components */
-
-
 /*
  * Basic data types.
  * You may need to change these if you have a machine with unusual data
@@ -75,8 +69,6 @@ typedef char JSAMPLE;
 #define CENTERJSAMPLE	128
 
 #endif /* BITS_IN_JSAMPLE == 8 */
-
-
 #if BITS_IN_JSAMPLE == 12
 /* JSAMPLE should be the smallest type that will hold the values 0..4095.
  * On nearly all machines "short" will do nicely.
@@ -89,8 +81,6 @@ typedef short JSAMPLE;
 #define CENTERJSAMPLE	2048
 
 #endif /* BITS_IN_JSAMPLE == 12 */
-
-
 /* Representation of a DCT frequency coefficient.
  * This should be a signed value of at least 16 bits; "short" is usually OK.
  * Again, we allocate large arrays of these, but you can change to int
@@ -98,8 +88,6 @@ typedef short JSAMPLE;
  */
 
 typedef short JCOEF;
-
-
 /* Compressed datastreams are represented as arrays of JOCTET.
  * These must be EXACTLY 8 bits wide, at least once they are written to
  * external storage.  Note that when using the stdio data source/destination
@@ -121,8 +109,6 @@ typedef char JOCTET;
 #endif /* CHAR_IS_UNSIGNED */
 
 #endif /* HAVE_UNSIGNED_CHAR */
-
-
 /* These typedefs are used for various table entries and so forth.
  * They must be at least as wide as specified; but making them too big
  * won't cost a huge amount of memory, so we don't provide special
@@ -178,8 +164,6 @@ typedef long INT32;
 typedef unsigned int JDIMENSION;
 
 #define JPEG_MAX_DIMENSION  65500L  /* a tad under 64K to prevent overflows */
-
-
 /* These macros are used in all function definitions and extern declarations.
  * You could modify them if you need to change function linkage conventions;
  * in particular, you'll need to do that to make the library a Windows DLL.
@@ -195,8 +179,6 @@ typedef unsigned int JDIMENSION;
 #define GLOBAL(type)		type
 /* a reference to a GLOBAL function: */
 #define EXTERN(type)		extern type
-
-
 /* This macro is used to declare a "method", that is, a function pointer.
  * We want to supply prototype parameters if the compiler can cope.
  * Note that the arglist parameter must be parenthesized!
@@ -208,8 +190,6 @@ typedef unsigned int JDIMENSION;
 #else
 #define JMETHOD(type,methodname,arglist)  type (*methodname) ()
 #endif
-
-
 /* Here is the pseudo-keyword for declaring pointers that must be "far"
  * on 80x86 machines.  Most of the specialized coding for 80x86 is handled
  * by just saying "FAR *" where such a pointer is needed.  In a few places
@@ -223,8 +203,6 @@ typedef unsigned int JDIMENSION;
 #define FAR
 #endif
 #endif
-
-
 /*
  * On a few systems, type boolean and/or its values FALSE, TRUE may appear
  * in standard header files.  Or you may have conflicts with application-
@@ -241,8 +219,6 @@ typedef int boolean;
 #ifndef TRUE
 #define TRUE	1
 #endif
-
-
 /*
  * The remaining options affect code selection within the JPEG library,
  * but they don't need to be visible to most applications using the library.
@@ -255,8 +231,6 @@ typedef int boolean;
 #endif
 
 #ifdef JPEG_INTERNAL_OPTIONS
-
-
 /*
  * These defines indicate whether to include various optional functions.
  * Undefining some of these symbols will produce a smaller but less capable
@@ -302,8 +276,6 @@ typedef int boolean;
 #define QUANT_2PASS_SUPPORTED	    /* 2-pass color quantization? */
 
 /* more capability options later, no doubt */
-
-
 /*
  * Ordering of RGB data in scanlines passed to or from the application.
  * If your application wants to deal with data in the order B,G,R, just
@@ -323,11 +295,7 @@ typedef int boolean;
 #define RGB_GREEN	1	/* Offset of Green */
 #define RGB_BLUE	2	/* Offset of Blue */
 #define RGB_PIXELSIZE	3	/* JSAMPLEs per RGB scanline element */
-
-
 /* Definitions for speed-related optimizations. */
-
-
 /* If your compiler supports inline functions, define INLINE
  * as the inline keyword; otherwise define it as empty.
  */
@@ -340,8 +308,6 @@ typedef int boolean;
 #define INLINE			/* default is to define it as empty */
 #endif
 #endif
-
-
 /* On some machines (notably 68000 series) "int" is 32 bits, but multiplying
  * two 16-bit shorts is faster than multiplying two ints.  Define MULTIPLIER
  * as short on such a machine.  MULTIPLIER must be at least 16 bits wide.
@@ -350,8 +316,6 @@ typedef int boolean;
 #ifndef MULTIPLIER
 #define MULTIPLIER  int		/* type for fastest integer multiply */
 #endif
-
-
 /* FAST_FLOAT should be either float or double, whichever is done faster
  * by your compiler.  (Note that this type is only used in the floating point
  * DCT routines, so it only matters if you've defined DCT_FLOAT_SUPPORTED.)

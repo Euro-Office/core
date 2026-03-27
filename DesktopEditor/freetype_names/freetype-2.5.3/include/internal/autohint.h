@@ -14,20 +14,14 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The auto-hinter is used to load and automatically hint glyphs if a    */
   /* format-specific hinter isn't available.                               */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __AUTOHINT_H__
 #define __AUTOHINT_H__
-
-
   /*************************************************************************/
   /*                                                                       */
   /* A small technical note regarding automatic hinting in order to        */
@@ -68,18 +62,10 @@
   /* decoded on the fly.                                                   */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -106,8 +92,6 @@ FT_BEGIN_HEADER
                                   FT_Face        face,
                                   void**         global_hints,
                                   long*          global_len );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -126,8 +110,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_AutoHinter_GlobalDoneFunc)( FT_AutoHinter  hinter,
                                    void*          global );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -146,8 +128,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_AutoHinter_GlobalResetFunc)( FT_AutoHinter  hinter,
                                     FT_Face        face );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -177,8 +157,6 @@ FT_BEGIN_HEADER
                                   FT_Size        size,
                                   FT_UInt        glyph_index,
                                   FT_Int32       load_flags );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -195,8 +173,6 @@ FT_BEGIN_HEADER
     FT_AutoHinter_GlyphLoadFunc    load_glyph;
 
   } FT_AutoHinter_InterfaceRec, *FT_AutoHinter_Interface;
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define FT_DEFINE_AUTOHINTER_INTERFACE(       \
@@ -239,6 +215,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AUTOHINT_H__ */
-
-
 /* END */

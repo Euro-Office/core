@@ -516,8 +516,6 @@ bool CxImageJPG::Encode(CxFile * hFile)
 	/* Step 7: release JPEG compression object */
 	/* This is an important step since it will release a good deal of memory. */
 	jpeg_destroy_compress(&cinfo);
-
-
 #if CXIMAGEJPG_SUPPORT_EXIF
 	if (m_exif && m_exif->m_exifinfo->IsExif){
 		// discard useless sections (if any) read from original image
@@ -530,8 +528,6 @@ bool CxImageJPG::Encode(CxFile * hFile)
 		m_exif->EncodeExif(hFile);
 	}
 #endif
-
-
 	/* And we're done! */
 	return true;
 }

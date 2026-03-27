@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "pngshim.c"
@@ -34,6 +32,4 @@
 #include "ttpost.c"
 #include "ttsbit.c"
 #include "woff2tags.c"
-
-
 /* END */

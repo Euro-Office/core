@@ -38,13 +38,9 @@ namespace XLS
 QsiSXTag::QsiSXTag()
 {
 }
-
-
 QsiSXTag::~QsiSXTag()
 {
 }
-
-
 BaseObjectPtr QsiSXTag::clone()
 {
 	return BaseObjectPtr(new QsiSXTag(*this));

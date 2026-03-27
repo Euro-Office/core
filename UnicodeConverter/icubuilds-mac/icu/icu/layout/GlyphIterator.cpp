@@ -452,8 +452,6 @@ le_bool GlyphIterator::findFeatureTag()
 
     return FALSE;
 }
-
-
 le_bool GlyphIterator::nextInternal(le_uint32 delta)
 {
     le_int32 newPosition = position;

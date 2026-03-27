@@ -50,8 +50,6 @@
      * semi-perimeter (w + h) about 5000 or less, the O(n) binsort
      * is faster than the O(nlogn) shellsort.  */
 static const l_int32   MIN_COMPS_FOR_BIN_SORT = 500;
-
-
 /*---------------------------------------------------------------------*
  *      Boxa/Box transform (shift, scale) and orthogonal rotation      *
  *---------------------------------------------------------------------*/
@@ -94,8 +92,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxTransform()
  * 
@@ -123,8 +119,6 @@ boxTransform(BOX       *box,
                      (l_int32)(L_MAX(1.0, scalex * box->w + 0.5)),
                      (l_int32)(L_MAX(1.0, scaley * box->h + 0.5)));
 }
-
-
 /*!
  *  boxaTransformOrdered()
  * 
@@ -190,8 +184,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxTransformOrdered()
  * 
@@ -406,8 +398,6 @@ BOX       *boxd;
 
     return boxd;
 }
-
-
 /*!
  *  boxaRotateOrth()
  * 
@@ -452,8 +442,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxRotateOrth()
  * 
@@ -494,8 +482,6 @@ l_int32  bx, by, bw, bh, xdist, ydist;
     else  /*  rotation == 3, 270 deg cw */
         return boxCreate(by, xdist, bh, bw);
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Boxa sort                              *
  *---------------------------------------------------------------------*/
@@ -603,8 +589,6 @@ NUMA      *na, *naindex;
     numaDestroy(&na);
     return boxad;
 }
-
-
 /*!
  *  boxaBinSort()
  * 
@@ -687,8 +671,6 @@ NUMA    *na, *naindex;
     numaDestroy(&na);
     return boxad;
 }
-
-
 /*!
  *  boxaSortByIndex()
  * 
@@ -721,8 +703,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxaSort2d()
  * 
@@ -891,8 +871,6 @@ NUMAA   *naa, *naad;
 
     return baad;
 }
-
-
 /*!
  *  boxaSort2dByIndex()
  * 
@@ -940,8 +918,6 @@ NUMA    *na;
 
     return baa;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Boxa statistics                          *
  *---------------------------------------------------------------------*/
@@ -1002,8 +978,6 @@ BOX       *box;
     numaDestroy(&nah);
     return box;
 }
-
-
 /*!
  *  boxaGetMedian()
  *
@@ -1026,8 +1000,6 @@ boxaGetMedian(BOXA  *boxa)
 
     return boxaGetRankSize(boxa, 0.5);
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Other Boxaa functions                        *
  *---------------------------------------------------------------------*/
@@ -1088,8 +1060,6 @@ BOXA    *boxa;
 
     return 0;
 }
-
-
 /*!
  *  boxaaFlattenToBoxa()
  *
@@ -1142,8 +1112,6 @@ NUMA    *naindex;
 
     return boxa;
 }
-
-
 /*!
  *  boxaaAlignBox()
  * 
@@ -1207,5 +1175,3 @@ BOXA    *boxa;
         *pindex = n;
     return 0;
 }
-
-

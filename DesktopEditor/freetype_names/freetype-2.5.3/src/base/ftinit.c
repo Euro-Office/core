@@ -35,16 +35,12 @@
   /*  able to provide their own `ftsystem.c'.                              */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_MODULE_H
 #include "basepic.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -53,11 +49,7 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_init
-
-
 #ifndef FT_CONFIG_OPTION_PIC
-
-
 #undef  FT_USE_MODULE
 #ifdef __cplusplus
 #define FT_USE_MODULE( type, x )  extern "C" const type  x;
@@ -76,11 +68,7 @@
 #include FT_CONFIG_MODULES_H
     0
   };
-
-
 #else /* FT_CONFIG_OPTION_PIC */
-
-
 #ifdef __cplusplus
 #define FT_EXTERNC  extern "C"
 #else
@@ -117,8 +105,6 @@
     FT_Destroy_Class_ ## x( library, classes[i] ); \
   }                                                \
   i++;
-
-
   FT_BASE_DEF( void )
   ft_destroy_default_module_classes( FT_Library  library )
   {
@@ -126,8 +112,6 @@
     FT_Memory          memory;
     FT_UInt            i;
     BasePIC*           pic_container = (BasePIC*)library->pic_container.base;
-
-
     if ( !pic_container->default_module_classes )
       return;
 
@@ -140,8 +124,6 @@
     FT_FREE( classes );
     pic_container->default_module_classes = 0;
   }
-
-
   /* initialize all module classes and the pointer table */
 #undef  FT_USE_MODULE
 #define FT_USE_MODULE( type, x )                     \
@@ -149,8 +131,6 @@
   if ( error )                                       \
     goto Exit;                                       \
   classes[i++] = clazz;
-
-
   FT_BASE_DEF( FT_Error )
   ft_create_default_module_classes( FT_Library  library )
   {
@@ -160,8 +140,6 @@
     FT_Module_Class*   clazz;
     FT_UInt            i;
     BasePIC*           pic_container = (BasePIC*)library->pic_container.base;
-
-
     memory = library->memory;
 
     pic_container->default_module_classes = 0;
@@ -187,11 +165,7 @@
 
     return error;
   }
-
-
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( void )
@@ -199,8 +173,6 @@
   {
     FT_Error                       error;
     const FT_Module_Class* const*  cur;
-
-
     /* FT_DEFAULT_MODULES_GET dereferences `library' in PIC mode */
 #ifdef FT_CONFIG_OPTION_PIC
     if ( !library )
@@ -224,8 +196,6 @@
       cur++;
     }
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -233,8 +203,6 @@
   {
     FT_Error   error;
     FT_Memory  memory;
-
-
     /* First of all, allocate a new system object -- this function is part */
     /* of the system-specific component, i.e. `ftsystem.c'.                */
 
@@ -256,8 +224,6 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -266,8 +232,6 @@
     if ( library )
     {
       FT_Memory  memory = library->memory;
-
-
       /* Discard the library object */
       FT_Done_Library( library );
 
@@ -277,6 +241,4 @@
 
     return FT_Err_Ok;
   }
-
-
 /* END */

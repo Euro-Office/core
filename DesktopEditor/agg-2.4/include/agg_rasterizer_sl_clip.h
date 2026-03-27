@@ -98,10 +98,6 @@ namespace agg
         static double downscale(int v)  { return v / double(poly_subpixel_scale); }
     };
 
-
-
-
-
     //------------------------------------------------------rasterizer_sl_clip
     template<class Conv> class rasterizer_sl_clip
     {
@@ -196,8 +192,6 @@ namespace agg
                          Conv::xi(tx2), Conv::yi(ty2)); 
             }
         }
-
-
     public:
         //--------------------------------------------------------------------
         template<class Rasterizer>
@@ -294,8 +288,6 @@ namespace agg
             m_x1 = x2;
             m_y1 = y2;
         }
-
-
     private:
         rect_type        m_clip_box;
         coord_type       m_x1;
@@ -303,10 +295,6 @@ namespace agg
         unsigned         m_f1;
         bool             m_clipping;
     };
-
-
-
-
     //---------------------------------------------------rasterizer_sl_no_clip
     class rasterizer_sl_no_clip
     {
@@ -331,8 +319,6 @@ namespace agg
     private:
         int m_x1, m_y1;
     };
-
-
     //                                         -----rasterizer_sl_clip_int
     //                                         -----rasterizer_sl_clip_int_sat
     //                                         -----rasterizer_sl_clip_int_3x
@@ -344,8 +330,6 @@ namespace agg
     typedef rasterizer_sl_clip<ras_conv_int_3x>  rasterizer_sl_clip_int_3x;
     typedef rasterizer_sl_clip<ras_conv_dbl>     rasterizer_sl_clip_dbl;
     typedef rasterizer_sl_clip<ras_conv_dbl_3x>  rasterizer_sl_clip_dbl_3x;
-
-
 }
 
 #endif

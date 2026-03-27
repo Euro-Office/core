@@ -14,36 +14,22 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTBDF_H_
 #define TTBDF_H_
-
-
 #include "ttload.h"
 #include <freetype/ftbdf.h>
-
-
 FT_BEGIN_HEADER
-
-
 #ifdef TT_CONFIG_OPTION_BDF
 
   FT_LOCAL( void )
   tt_face_free_bdf_props( TT_Face  face );
-
-
   FT_LOCAL( FT_Error )
   tt_face_find_bdf_prop( TT_Face           face,
                          const char*       property_name,
                          BDF_PropertyRec  *aprop );
 
 #endif /* TT_CONFIG_OPTION_BDF */
-
-
 FT_END_HEADER
 
 #endif /* TTBDF_H_ */
-
-
 /* END */

@@ -453,8 +453,6 @@ const std::wstring & odf_document::Impl::get_folder() const
 	if (!base_folder_.empty())	return base_folder_; 
 	else return tmp_folder_;
 }
-
-
 void odf_document::Impl::parse_fonts(office_element *element)
 {
     do 
@@ -1324,8 +1322,6 @@ odf_read_context & odf_document::Impl::odf_context()
 { 
     return *context_.get(); 
 }
-
-
 const office_element * odf_document::Impl::get_content() const
 {
     return content_xml_->get_content();

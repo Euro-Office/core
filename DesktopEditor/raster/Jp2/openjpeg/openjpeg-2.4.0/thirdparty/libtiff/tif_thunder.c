@@ -79,8 +79,6 @@ ThunderSetupDecode(TIFF* tif)
                              (int) tif->tif_dir.td_bitspersample );
                 return 0;
         }
-        
-
 	return (1);
 }
 

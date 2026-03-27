@@ -70,8 +70,6 @@
 
 #define IW44IMAGE_IMPLIMENTATION /* */
 
-
-
 #include "IW44Image.h"
 #include "ZPCodec.h"
 #include "GBitmap.h"
@@ -93,8 +91,6 @@
 #include <math.h>
 
 #ifndef NEED_DECODER_ONLY
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -106,8 +102,6 @@ namespace DJVU {
 #define IWCODEC_MAJOR     1
 #define IWCODEC_MINOR     2
 #define DECIBEL_PRUNE   5.0
-
-
 //////////////////////////////////////////////////////
 // WAVELET DECOMPOSITION CONSTANTS
 //////////////////////////////////////////////////////
@@ -115,8 +109,6 @@ namespace DJVU {
 // Parameters for IW44 wavelet.
 // - iw_norm: norm of all wavelets (for db estimation)
 // - iw_shift: scale applied before decomposition
-
-
 static const float iw_norm[16] = {
   2.627989e+03F,
   1.832893e+02F, 1.832959e+02F, 5.114690e+01F,
@@ -138,8 +130,6 @@ bandbuckets[] =
   { 4, 4 }, { 8, 4 }, { 12,4 }, 
   { 16,16 }, { 32,16 }, { 48,16 }, 
 };
-
-
 /** IW44 encoded gray-level image.  This class provided functions for managing
     a gray level image represented as a collection of IW44 wavelet
     coefficients.  The coefficients are stored in a memory efficient data
@@ -289,13 +279,9 @@ class IW44Image::Transform::Encode : IW44Image::Transform
   static void RGB_to_Cr(const GPixel *p, int w, int h, int rowsize, 
                         signed char *out, int outrowsize);
 };
-
-
 //////////////////////////////////////////////////////
 // MMX IMPLEMENTATION HELPERS
 //////////////////////////////////////////////////////
-
-
 // Note:
 // MMX implementation for vertical transforms only.
 // Speedup is basically related to faster memory transfer
@@ -307,8 +293,6 @@ static const short w9[]  = {9,9,9,9};
 static const short w1[]  = {1,1,1,1};
 static const int   d8[]  = {8,8};
 static const int   d16[] = {16,16};
-
-
 static inline void
 mmx_fv_1 ( short* &q, short* e, int s, int s3 )
 {
@@ -579,13 +563,9 @@ filter_fh(short *p, int w, int h, int rowsize, int scale)
       p += rowsize;
     }
 }
-
-
 //////////////////////////////////////////////////////
 // WAVELET TRANSFORM 
 //////////////////////////////////////////////////////
-
-
 //----------------------------------------------------
 // Function for applying bidimensional IW44 between 
 // scale intervals begin(inclusive) and end(exclusive)
@@ -627,8 +607,6 @@ rgb_to_ycc[3][3] =
 { { 0.304348F,  0.608696F,  0.086956F },      
   { 0.463768F, -0.405797F, -0.057971F },
   {-0.173913F, -0.347826F,  0.521739F } };
-
-
 /* Extracts Y */
 void 
 IW44Image::Transform::Encode::RGB_to_Y(const GPixel *p, int w, int h, int rowsize, 
@@ -709,8 +687,6 @@ IW44Image::Transform::Encode::RGB_to_Cr(const GPixel *p, int w, int h, int rowsi
         }
     }
 }
-
-
 //////////////////////////////////////////////////////
 // MASKING DECOMPOSITION
 //////////////////////////////////////////////////////
@@ -719,8 +695,6 @@ IW44Image::Transform::Encode::RGB_to_Cr(const GPixel *p, int w, int h, int rowsi
 // Function for applying bidimensional IW44 between 
 // scale intervals begin(inclusive) and end(exclusive)
 // with a MASK bitmap
-
-
 static void
 interpolate_mask(short *data16, int w, int h, int rowsize,
                  const signed char *mask8, int mskrowsize)
@@ -819,8 +793,6 @@ interpolate_mask(short *data16, int w, int h, int rowsize,
       scale = scale+scale;
     }
 }
-
-
 static void
 forward_mask(short *data16, int w, int h, int rowsize, int begin, int end,
              const signed char *mask8, int mskrowsize )
@@ -1345,15 +1317,9 @@ IW44Image::Codec::Encode::estimate_decibel(float frac)
   float decibel = (float)(10.0 * log ( factor * factor / mse ) / 2.302585125);
   return decibel;
 }
-
-
-
-
 //////////////////////////////////////////////////////
 // IW44IMAGE ENCODING ROUTINES
 //////////////////////////////////////////////////////
-
-
 void 
 IW44Image::PrimaryHeader::encode(GP<ByteStream> gbs)
 {
@@ -1378,8 +1344,6 @@ IW44Image::TertiaryHeader::encode(GP<ByteStream> gbs)
   gbs->write8(crcbdelay);
 }
 
-
-
 GP<IW44Image>
 IW44Image::create_encode(const ImageType itype)
 {
@@ -1402,8 +1366,6 @@ IW44Image::create_encode(const GBitmap &bm, const GP<GBitmap> mask)
   bit->init(bm, mask);
   return retval;
 }
-
-
 IWBitmap::Encode::Encode(void)
 : IWBitmap(), ycodec_enc(0)
 {}
@@ -1786,8 +1748,6 @@ IW44Image::Codec::Encode::code_slice(ZPCodec &zp)
     }
   return finish_code_slice(zp);
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

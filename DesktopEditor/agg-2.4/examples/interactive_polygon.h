@@ -55,10 +55,6 @@ namespace agg
         bool     m_roundoff;
         bool     m_close;
     };
-
-
-
-
     class interactive_polygon
     {
     public:
@@ -84,13 +80,9 @@ namespace agg
         bool on_mouse_button_down(double x, double y);
         bool on_mouse_move(double x, double y);
         bool on_mouse_button_up(double x, double y);
-
-
     private:
         bool check_edge(unsigned i, double x, double y) const;
         bool point_in_polygon(double x, double y) const;
-
-
         pod_array<double> m_polygon;
         unsigned          m_num_points;
         int               m_node;
@@ -103,8 +95,6 @@ namespace agg
         double   m_dx;
         double   m_dy;
     };
-
-
 }
 
 #endif

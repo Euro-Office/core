@@ -24,8 +24,6 @@
 extern void * malloc JPP((size_t size));
 extern void free JPP((void *ptr));
 #endif
-
-
 /* Expanded data destination object for stdio output */
 
 typedef struct {
@@ -38,8 +36,6 @@ typedef struct {
 typedef my_destination_mgr * my_dest_ptr;
 
 #define OUTPUT_BUF_SIZE  4096	/* choose an efficiently fwrite'able size */
-
-
 /* Expanded data destination object for memory output */
 
 typedef struct {
@@ -53,8 +49,6 @@ typedef struct {
 } my_mem_destination_mgr;
 
 typedef my_mem_destination_mgr * my_mem_dest_ptr;
-
-
 /*
  * Initialize destination --- called by jpeg_start_compress
  * before any data is actually written.
@@ -79,8 +73,6 @@ init_mem_destination (j_compress_ptr cinfo)
 {
   /* no work necessary here */
 }
-
-
 /*
  * Empty the output buffer --- called whenever buffer fills up.
  *
@@ -148,8 +140,6 @@ empty_mem_output_buffer (j_compress_ptr cinfo)
 
   return TRUE;
 }
-
-
 /*
  * Terminate destination --- called by jpeg_finish_compress
  * after all data has been written.  Usually needs to flush buffer.
@@ -184,8 +174,6 @@ term_mem_destination (j_compress_ptr cinfo)
   *dest->outbuffer = dest->buffer;
   *dest->outsize = dest->bufsize - dest->pub.free_in_buffer;
 }
-
-
 /*
  * Prepare for output to a stdio stream.
  * The caller must have already opened the stream, and is responsible
@@ -215,8 +203,6 @@ jpeg_stdio_dest (j_compress_ptr cinfo, FILE * outfile)
   dest->pub.term_destination = term_destination;
   dest->outfile = outfile;
 }
-
-
 /*
  * Prepare for output to a memory buffer.
  * The caller may supply an own initial buffer with appropriate size.

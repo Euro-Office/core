@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SeriesText record in BIFF8
 class SeriesText: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~SeriesText();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

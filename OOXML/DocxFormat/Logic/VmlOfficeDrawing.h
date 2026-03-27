@@ -59,8 +59,6 @@ namespace OOX
 
 			virtual std::wstring      toXML() const;
 			virtual EElementType getType() const;
-
-
 		private:
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 

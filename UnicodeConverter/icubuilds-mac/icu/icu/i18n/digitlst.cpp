@@ -52,13 +52,9 @@
  * Note that it is the platform invariant digit, and is not Unicode.
  */
 #define kZero '0'
-
-
 /* Only for 32 bit numbers. Ignore the negative sign. */
 //static const char LONG_MIN_REP[] = "2147483648";
 //static const char I64_MIN_REP[] = "9223372036854775808";
-
-
 U_NAMESPACE_BEGIN
 
 // -------------------------------------
@@ -91,8 +87,6 @@ DigitList::DigitList(const DigitList &other)
     fDecNumber = fStorage.getAlias();
     *this = other;
 }
-
-
 // -------------------------------------
 // assignment operator
 
@@ -170,16 +164,12 @@ int32_t DigitList::compare(const DigitList &other) {
         return 1;
     }
 }
-
-
 // -------------------------------------
 //  Reduce - remove trailing zero digits.
 void
 DigitList::reduce() {
     uprv_decNumberReduce(fDecNumber, fDecNumber, &fContext);
 }
-
-
 // -------------------------------------
 //  trim - remove trailing fraction zero digits.
 void
@@ -197,8 +187,6 @@ DigitList::clear()
     uprv_decContextSetRounding(&fContext, DEC_ROUND_HALF_EVEN);
     internalSetDouble(0.0);
 }
-
-
 /**
  * Formats a int64_t number into a base 10 string representation, and NULL terminates it.
  * @param number The number to format
@@ -237,8 +225,6 @@ formatBase10(int64_t number, char *outputStr) {
 
     return length;
 }
-
-
 // -------------------------------------
 //
 //  setRoundingMode()
@@ -271,8 +257,6 @@ DigitList::setRoundingMode(DecimalFormat::ERoundingMode m) {
     uprv_decContextSetRounding(&fContext, r);
   
 }
-
-
 // -------------------------------------
 
 void  
@@ -530,8 +514,6 @@ int32_t DigitList::getLong() /*const*/
     }
     return result;
 }
-
-
 /**
  *  convert this number to an int64_t.   Truncate if there is a fractional part.
  *  Return zero if the number cannot be represented.
@@ -586,8 +568,6 @@ int64_t DigitList::getInt64() /*const*/ {
         
     return svalue;
 }
-
-
 /**
  *  Return a string form of this number.
  *     Format is as defined by the decNumber library, for interchange of
@@ -657,8 +637,6 @@ DigitList::fitsIntoLong(UBool ignoreNegativeZero) /*const*/
     return true;
 }
 
-
-
 /**
  * Return true if the number represented by this object can fit into
  * a long.
@@ -703,8 +681,6 @@ DigitList::fitsIntoInt64(UBool ignoreNegativeZero) /*const*/
     }
     return true;
 }
-
-
 // -------------------------------------
 
 void
@@ -738,8 +714,6 @@ DigitList::setInteger(int64_t source)
   fDecNumber=NULL;
   internalSetInt64(source);
 }
-
-
 // -------------------------------------
 /**
  * Set the DigitList from a decimal number string.
@@ -939,8 +913,6 @@ DigitList::round(int32_t maximumDigits)
     reduce(); 
     internalClear();
 }
-
-
 void
 DigitList::roundFixedPoint(int32_t maximumFractionDigits) {
     reduce();        // Remove trailing zeros. 
@@ -963,8 +935,6 @@ void
 DigitList::toIntegralValue() {
     uprv_decNumberToIntegralValue(fDecNumber, fDecNumber, &fContext);
 }
-
-
 // -------------------------------------
 UBool
 DigitList::isZero() const

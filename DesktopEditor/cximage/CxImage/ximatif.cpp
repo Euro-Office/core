@@ -13,8 +13,6 @@
 #ifndef max
 #define max(a,b) (((a)>(b))?(a):(b))
 #endif
-
-
 #if CXIMAGE_SUPPORT_TIF
 
 #define FIX_16BPP_DARKIMG // + VK: if uncomment, dark 16bpp images are fixed

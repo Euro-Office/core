@@ -353,8 +353,6 @@ static void dwt_interleave_z(int *a, int *b, int dn, int sn, int xy, int cas)
         ai += xy;
     }
 }
-
-
 /* <summary>                            */
 /* Forward 5-3 or 9-7 wavelet transform in 1-D. */
 /* </summary>                           */
@@ -521,8 +519,6 @@ static void dwt_decode_97(int *a, int dn, int sn, int cas)
         }
     }
 }
-
-
 /* <summary>                */
 /* Get norm of arbitrary wavelet transform. */
 /* </summary>               */
@@ -892,8 +888,6 @@ void dwt_encode(opj_tcd_tilecomp_t * tilec, int dwtid[3])
 
     /*fprintf(stdout,"[INFO] Ops: %d \n",ops);*/
 }
-
-
 /* <summary>                            */
 /* Inverse 5-3 wavelet transform in 3-D. */
 /* </summary>                           */
@@ -1042,8 +1036,6 @@ void dwt_decode(opj_tcd_tilecomp_t * tilec, int stops[3], int dwtid[3])
     }
 
 }
-
-
 /* <summary>                          */
 /* Get gain of wavelet transform. */
 /* </summary>                         */
@@ -1153,6 +1145,4 @@ void dwt_calc_explicit_stepsizes(opj_tccp_t * tccp, int prec)
                             &tccp->stepsizes[bandno]);
     }
 }
-
-
 

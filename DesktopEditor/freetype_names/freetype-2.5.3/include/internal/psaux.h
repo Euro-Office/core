@@ -15,21 +15,13 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSAUX_H__
 #define __PSAUX_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -37,12 +29,8 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   typedef struct PS_TableRec_*              PS_Table;
   typedef const struct PS_Table_FuncsRec_*  PS_Table_Funcs;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -80,8 +68,6 @@ FT_BEGIN_HEADER
     (*release)( PS_Table  table );
 
   } PS_Table_FuncsRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -133,8 +119,6 @@ FT_BEGIN_HEADER
     PS_Table_FuncsRec  funcs;
 
   } PS_TableRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -148,8 +132,6 @@ FT_BEGIN_HEADER
   typedef struct T1_TokenRec_*   T1_Token;
 
   typedef struct T1_FieldRec_*   T1_Field;
-
-
   /* simple enumeration type used to identify token types */
   typedef enum  T1_TokenType_
   {
@@ -163,8 +145,6 @@ FT_BEGIN_HEADER
     T1_TOKEN_TYPE_MAX
 
   } T1_TokenType;
-
-
   /* a simple structure used to identify tokens */
   typedef struct  T1_TokenRec_
   {
@@ -173,8 +153,6 @@ FT_BEGIN_HEADER
     T1_TokenType  type;    /* type of token                            */
 
   } T1_TokenRec;
-
-
   /* enumeration type used to identify object fields */
   typedef enum  T1_FieldType_
   {
@@ -195,8 +173,6 @@ FT_BEGIN_HEADER
     T1_FIELD_TYPE_MAX
 
   } T1_FieldType;
-
-
   typedef enum  T1_FieldLocation_
   {
     T1_FIELD_LOCATION_CID_INFO,
@@ -213,13 +189,9 @@ FT_BEGIN_HEADER
     T1_FIELD_LOCATION_MAX
 
   } T1_FieldLocation;
-
-
   typedef void
   (*T1_Field_ParseFunc)( FT_Face     face,
                          FT_Pointer  parser );
-
-
   /* structure type used to model object fields */
   typedef struct  T1_FieldRec_
   {
@@ -242,8 +214,6 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_DICT_FONTDICT ( 1 << 0 ) /* also FontInfo and FDArray */
 #define T1_FIELD_DICT_PRIVATE  ( 1 << 1 )
-
-
 
 #define T1_NEW_SIMPLE_FIELD( _ident, _type, _fname, _dict ) \
           {                                                 \
@@ -284,8 +254,6 @@ FT_BEGIN_HEADER
             _max, 0,                                              \
             _dict                                                 \
           },
-
-
 #define T1_FIELD_BOOL( _ident, _fname, _dict )                             \
           T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BOOL, _fname, _dict )
 
@@ -307,8 +275,6 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_BBOX( _ident, _fname, _dict )                             \
           T1_NEW_SIMPLE_FIELD( _ident, T1_FIELD_TYPE_BBOX, _fname, _dict )
-
-
 #define T1_FIELD_NUM_TABLE( _ident, _fname, _fmax, _dict )         \
           T1_NEW_TABLE_FIELD( _ident, T1_FIELD_TYPE_INTEGER_ARRAY, \
                               _fname, _fmax, _dict )
@@ -327,8 +293,6 @@ FT_BEGIN_HEADER
 
 #define T1_FIELD_CALLBACK( _ident, _name, _dict )       \
           T1_NEW_CALLBACK_FIELD( _ident, _name, _dict )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -402,8 +366,6 @@ FT_BEGIN_HEADER
                          FT_ULong*       pflags );
 
   } PS_Parser_FuncsRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -436,8 +398,6 @@ FT_BEGIN_HEADER
     PS_Parser_FuncsRec  funcs;
 
   } PS_ParserRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -445,11 +405,7 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   typedef struct T1_BuilderRec_*  T1_Builder;
-
-
   typedef FT_Error
   (*T1_Builder_Check_Points_Func)( T1_Builder  builder,
                                    FT_Int      count );
@@ -475,8 +431,6 @@ FT_BEGIN_HEADER
 
   typedef void
   (*T1_Builder_Close_Contour_Func)( T1_Builder  builder );
-
-
   typedef const struct T1_Builder_FuncsRec_*  T1_Builder_Funcs;
 
   typedef struct  T1_Builder_FuncsRec_
@@ -499,8 +453,6 @@ FT_BEGIN_HEADER
     T1_Builder_Close_Contour_Func  close_contour;
 
   } T1_Builder_FuncsRec;
-
-
   /* an enumeration type to handle charstring parsing states */
   typedef enum  T1_ParseState_
   {
@@ -510,8 +462,6 @@ FT_BEGIN_HEADER
     T1_Parse_Have_Path
 
   } T1_ParseState;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Structure>                                                           */
@@ -588,8 +538,6 @@ FT_BEGIN_HEADER
     T1_Builder_FuncsRec  funcs;
 
   } T1_BuilderRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -606,8 +554,6 @@ FT_BEGIN_HEADER
   /* calls during glyph loading.                                           */
   /*                                                                       */
 #define T1_MAX_SUBRS_CALLS  8
-
-
   /*************************************************************************/
   /*                                                                       */
   /* T1_MAX_CHARSTRING_OPERANDS is the charstring stack's capacity.  A     */
@@ -616,8 +562,6 @@ FT_BEGIN_HEADER
 #define T1_MAX_CHARSTRINGS_OPERANDS  32
 
 #endif /* 0 */
-
-
   typedef struct  T1_Decoder_ZoneRec_
   {
     FT_Byte*  cursor;
@@ -625,17 +569,11 @@ FT_BEGIN_HEADER
     FT_Byte*  limit;
 
   } T1_Decoder_ZoneRec, *T1_Decoder_Zone;
-
-
   typedef struct T1_DecoderRec_*              T1_Decoder;
   typedef const struct T1_Decoder_FuncsRec_*  T1_Decoder_Funcs;
-
-
   typedef FT_Error
   (*T1_Decoder_Callback)( T1_Decoder  decoder,
                           FT_UInt     glyph_index );
-
-
   typedef struct  T1_Decoder_FuncsRec_
   {
     FT_Error
@@ -658,8 +596,6 @@ FT_BEGIN_HEADER
                           FT_UInt     len );
 
   } T1_Decoder_FuncsRec;
-
-
   typedef struct  T1_DecoderRec_
   {
     T1_BuilderRec        builder;
@@ -699,8 +635,6 @@ FT_BEGIN_HEADER
     FT_Bool              seac;
 
   } T1_DecoderRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -726,11 +660,7 @@ FT_BEGIN_HEADER
     (*parse)( AFM_Parser  parser );
 
   } AFM_Parser_FuncsRec;
-
-
   typedef struct AFM_StreamRec_*  AFM_Stream;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -765,8 +695,6 @@ FT_BEGIN_HEADER
     void*         user_data;
 
   } AFM_ParserRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -785,8 +713,6 @@ FT_BEGIN_HEADER
     FT_CMap_Class  unicode;
 
   } T1_CMap_ClassesRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -817,8 +743,6 @@ FT_BEGIN_HEADER
 
   /* backwards-compatible type definition */
   typedef PSAux_ServiceRec   PSAux_Interface;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -867,11 +791,7 @@ FT_BEGIN_HEADER
       ( (cur) + sizeof( (token) ) < (limit)          &&                 \
         IS_PS_DELIM( (cur)[sizeof ( (token) ) - 1] ) ) )             && \
     ft_strncmp( (char*)(cur), (token), sizeof ( (token) ) - 1 ) == 0 )
-
-
 FT_END_HEADER
 
 #endif /* __PSAUX_H__ */
-
-
 /* END */

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the Autofitter error enumeration
@@ -37,6 +35,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* AFERRORS_H_ */
-
-
 /* END */

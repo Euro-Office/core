@@ -34,18 +34,12 @@
 
 namespace XLS
 {
-
-
 LongRGBA::LongRGBA() : is_alpha(true)
 {
 }
-
-
 LongRGBA::LongRGBA(const bool alpha_present) : is_alpha(alpha_present)
 {
 }
-
-
 LongRGB::LongRGB() : LongRGBA(false)
 {
 }
@@ -54,8 +48,6 @@ BiffStructurePtr LongRGBA::clone()
 {
 	return BiffStructurePtr(new LongRGBA(*this));
 }
-
-
 BiffStructurePtr LongRGB::clone()
 {
 	return BiffStructurePtr(new LongRGB(*this));

@@ -93,8 +93,6 @@ PIX       *pix;
     if (Y) free(Y);
     return pix;
 }
-
-
 /*!
  *  readHeaderWebP()
  *
@@ -125,8 +123,6 @@ FILE    *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                             Writing WebP                             *
  *---------------------------------------------------------------------*/
@@ -165,8 +161,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreampWebP()
  *
@@ -251,8 +245,6 @@ PIX       *pix = NULL;
 
     return 0;
 }
-
-
 /*!
  *  pixWriteWebPwithTargetPSNR()
  *

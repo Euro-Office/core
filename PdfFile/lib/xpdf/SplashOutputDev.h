@@ -50,8 +50,6 @@ public:
 		  GBool reverseVideoA, SplashColorPtr paperColorA,
 		  GBool bitmapTopDownA = gTrue,
 		  GBool allowAntialiasA = gTrue);
-
-
   // Destructor.
   virtual ~SplashOutputDev();
 
@@ -72,8 +70,6 @@ public:
   // Does this device use beginType3Char/endType3Char?  Otherwise,
   // text in Type 3 fonts will be drawn with drawChar/drawString.
   virtual GBool interpretType3Chars() { return gTrue; }
-
-
 
   //----- initialization and control
 
@@ -230,8 +226,6 @@ public:
     { skipHorizText = skipHorizTextA; skipRotatedText = skipRotatedTextA; }
 
   int getNestCount() { return nestCount; }
-
-
   // Get the screen parameters.
   SplashScreenParams *getScreenParams() { return &screenParams; }
 

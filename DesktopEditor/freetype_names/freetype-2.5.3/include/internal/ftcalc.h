@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTCALC_H__
 #define __FTCALC_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-
 FT_BEGIN_HEADER
-
-
 #if 0
 
   /*************************************************************************/
@@ -50,15 +42,11 @@ FT_BEGIN_HEADER
   FT_SqrtFixed( FT_Int32  x );
 
 #endif /* 0 */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FT_MulDiv() and FT_MulFix() are declared in freetype.h.               */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -86,8 +74,6 @@ FT_BEGIN_HEADER
   FT_MulDiv_No_Round( FT_Long  a,
                       FT_Long  b,
                       FT_Long  c );
-
-
   /*
    *  A variant of FT_Matrix_Multiply which scales its result afterwards.
    *  The idea is that both `a' and `b' are scaled by factors of 10 so that
@@ -100,8 +86,6 @@ FT_BEGIN_HEADER
   FT_Matrix_Multiply_Scaled( const FT_Matrix*  a,
                              FT_Matrix        *b,
                              FT_Long           scaling );
-
-
   /*
    *  A variant of FT_Vector_Transform.  See comments for
    *  FT_Matrix_Multiply_Scaled.
@@ -110,8 +94,6 @@ FT_BEGIN_HEADER
   FT_Vector_Transform_Scaled( FT_Vector*        vector,
                               const FT_Matrix*  matrix,
                               FT_Long           scaling );
-
-
   /*
    *  Return -1, 0, or +1, depending on the orientation of a given corner.
    *  We use the Cartesian coordinate system, with positive vertical values
@@ -134,15 +116,11 @@ FT_BEGIN_HEADER
                      FT_Pos  in_y,
                      FT_Pos  out_x,
                      FT_Pos  out_y );
-
-
   /*
    *  Return the most significant bit index.
    */
   FT_BASE( FT_Int )
   FT_MSB( FT_UInt32  z );
-
-
   /*
    *  Return sqrt(x*x+y*y), which is the same as `FT_Vector_Length' but uses
    *  two fixed-point arguments instead.
@@ -150,8 +128,6 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Fixed )
   FT_Hypot( FT_Fixed  x,
             FT_Fixed  y );
-
-
 #define INT_TO_F26DOT6( x )    ( (FT_Long)(x) << 6  )
 #define INT_TO_F2DOT14( x )    ( (FT_Long)(x) << 14 )
 #define INT_TO_FIXED( x )      ( (FT_Long)(x) << 16 )
@@ -161,11 +137,7 @@ FT_BEGIN_HEADER
 
 #define ROUND_F26DOT6( x )     ( x >= 0 ? (    ( (x) + 32 ) & -64 )     \
                                         : ( -( ( 32 - (x) ) & -64 ) ) )
-
-
 FT_END_HEADER
 
 #endif /* __FTCALC_H__ */
-
-
 /* END */

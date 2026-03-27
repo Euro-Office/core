@@ -7,8 +7,6 @@
 //  This file contains declarations for several classes from the
 //    Rule Based Break Iterator rule builder.
 //
-
-
 #ifndef RBBIRB_H
 #define RBBIRB_H
 
@@ -22,8 +20,6 @@
 #include "unicode/symtable.h"// For UnicodeSet parsing, is the interface that
                           //    looks up references to $variables within a set.
 
-
-
 U_NAMESPACE_BEGIN
 
 class               RBBIRuleScanner;
@@ -31,8 +27,6 @@ struct              RBBIRuleTableEl;
 class               RBBISetBuilder;
 class               RBBINode;
 class               RBBITableBuilder;
-
-
 
 //--------------------------------------------------------------------------------
 //
@@ -51,8 +45,6 @@ private:
     RBBISymbolTableEntry(const RBBISymbolTableEntry &other); // forbid copying of this class
     RBBISymbolTableEntry &operator=(const RBBISymbolTableEntry &other); // forbid copying of this class
 };
-
-
 class RBBISymbolTable : public UMemory, public SymbolTable {
 private:
     const UnicodeString      &fRules;
@@ -92,8 +84,6 @@ private:
     RBBISymbolTable(const RBBISymbolTable &other); // forbid copying of this class
     RBBISymbolTable &operator=(const RBBISymbolTable &other); // forbid copying of this class
 };
-
-
 //--------------------------------------------------------------------------------
 //
 //  class RBBIRuleBuilder       The top-level class handling RBBI rule compiling.
@@ -162,10 +152,6 @@ private:
     RBBIRuleBuilder(const RBBIRuleBuilder &other); // forbid copying of this class
     RBBIRuleBuilder &operator=(const RBBIRuleBuilder &other); // forbid copying of this class
 };
-
-
-
-
 //----------------------------------------------------------------------------
 //
 //   RBBISetTableEl   is an entry in the hash table of UnicodeSets that have
@@ -185,8 +171,6 @@ struct RBBISetTableEl {
     UnicodeString *key;
     RBBINode      *val;
 };
-
-
 //----------------------------------------------------------------------------
 //
 //   RBBIDebugPrintf    Printf equivalent, for debugging output.
@@ -206,6 +190,4 @@ struct RBBISetTableEl {
 
 U_NAMESPACE_END
 #endif
-
-
 

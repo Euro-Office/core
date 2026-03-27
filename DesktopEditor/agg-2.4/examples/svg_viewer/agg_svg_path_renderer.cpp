@@ -38,8 +38,6 @@ namespace svg
     {
         m_curved_trans_contour.auto_detect_orientation(false);
     }
-
-
     //------------------------------------------------------------------------
     void path_renderer::remove_all()
     {

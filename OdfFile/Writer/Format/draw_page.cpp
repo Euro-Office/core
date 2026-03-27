@@ -42,8 +42,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_writer {
-
-
 void draw_page_attr::serialize(CP_ATTR_NODE)
 {
     CP_XML_ATTR_OPT(L"draw:id", draw_id_);
@@ -112,8 +110,6 @@ void draw_page::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * presentation_footer_decl::ns = L"presentation";
 const wchar_t * presentation_footer_decl::name = L"footer-decl";

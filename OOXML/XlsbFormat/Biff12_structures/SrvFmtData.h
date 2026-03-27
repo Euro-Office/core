@@ -33,8 +33,6 @@
 #pragma once
 
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/XLWideString.h"
-
-
 namespace XLSB
 {
     enum class SrvFmtNumber: _UINT32 {GENERAL = 0x00000000, PERCENT = 0x0000000E, DATE = 0x00000013};

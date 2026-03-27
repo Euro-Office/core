@@ -47,8 +47,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 void draw_page_attr::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     CP_APPLY_ATTR(L"draw:id",			draw_id_);

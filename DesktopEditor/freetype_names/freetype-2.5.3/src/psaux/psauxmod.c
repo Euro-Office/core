@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include "psauxmod.h"
 #include "psobjs.h"
@@ -25,8 +23,6 @@
 #ifndef T1_CONFIG_OPTION_NO_AFM
 #include "afmparse.h"
 #endif
-
-
   FT_CALLBACK_TABLE_DEF
   const PS_Table_FuncsRec  ps_table_funcs =
   {
@@ -35,8 +31,6 @@
     ps_table_add,
     ps_table_release
   };
-
-
   FT_CALLBACK_TABLE_DEF
   const PS_Parser_FuncsRec  ps_parser_funcs =
   {
@@ -54,8 +48,6 @@
     ps_parser_load_field,
     ps_parser_load_field_table
   };
-
-
   FT_CALLBACK_TABLE_DEF
   const T1_Builder_FuncsRec  t1_builder_funcs =
   {
@@ -68,8 +60,6 @@
     t1_builder_start_point,
     t1_builder_close_contour
   };
-
-
   FT_CALLBACK_TABLE_DEF
   const T1_Decoder_FuncsRec  t1_decoder_funcs =
   {
@@ -77,8 +67,6 @@
     t1_decoder_done,
     t1_decoder_parse_charstrings
   };
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
   FT_CALLBACK_TABLE_DEF
   const AFM_Parser_FuncsRec  afm_parser_funcs =
@@ -88,8 +76,6 @@
     afm_parser_parse
   };
 #endif
-
-
   FT_CALLBACK_TABLE_DEF
   const T1_CMap_ClassesRec  t1_cmap_classes =
   {
@@ -98,8 +84,6 @@
     &t1_cmap_custom_class_rec,
     &t1_cmap_unicode_class_rec
   };
-
-
   static
   const PSAux_Interface  psaux_interface =
   {
@@ -117,8 +101,6 @@
     0,
 #endif
   };
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Module_Class  psaux_module_class =
   {
@@ -134,6 +116,4 @@
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  0
   };
-
-
 /* END */

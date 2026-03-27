@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  * writefile.c
  *
@@ -117,8 +115,6 @@ static const struct ExtensionMap extension_map[] =
                               { ".jp2",  IFF_JP2       },
                               { ".ps",   IFF_PS        },
                               { ".webp", IFF_WEBP      } };
-
-
 /*---------------------------------------------------------------------*
  *           Top-level procedures for writing images to file           *
  *---------------------------------------------------------------------*/
@@ -159,8 +155,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*!
  *  pixWrite()
  *
@@ -252,8 +246,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  pixWriteStream()
  *
@@ -332,8 +324,6 @@ pixWriteStream(FILE    *fp,
 
     return 0;
 }
-
-
 /*!
  *  pixWriteImpliedFormat()
  *
@@ -394,8 +384,6 @@ l_int32  format;
 
     return 0;
 }
-
-
 /*!
  *  pixWriteTempfile()
  *
@@ -440,8 +428,6 @@ l_int32  ret;
 
     return ret;
 }
-
-
 /*---------------------------------------------------------------------*
  *          Selection of output format if default is requested         *
  *---------------------------------------------------------------------*/
@@ -478,8 +464,6 @@ l_int32  d, format;
 
     return format;
 }
-
-
 /*!
  *  getImpliedFileFormat()
  *
@@ -511,8 +495,6 @@ l_int32  format = IFF_UNKNOWN;
     FREE(extension);
     return format;
 }
-
-
 /*!
  *  getFormatExtension()
  *
@@ -533,8 +515,6 @@ getFormatExtension(l_int32  format)
 
     return ImageFileFormatExtensions[format];
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Write to memory                          *
  *---------------------------------------------------------------------*/
@@ -625,8 +605,6 @@ l_int32  ret;
 
     return ret;
 }
-
-
 /*---------------------------------------------------------------------*
  *                       Image display for debugging                   *
  *---------------------------------------------------------------------*/
@@ -662,8 +640,6 @@ pixDisplay(PIX     *pixs,
 {
     return pixDisplayWithTitle(pixs, x, y, NULL, 1);
 }
-
-
 /*!
  *  pixDisplayWithTitle()
  *
@@ -806,8 +782,6 @@ char            pathname[_MAX_PATH];
     FREE(tempname);
     return 0;
 }
-
-
 /*!
  *  pixDisplayMultiple()
  *
@@ -853,8 +827,6 @@ char    *dir, *tail;
 #endif
     return 0;
 }
-
-
 /*!
  *  pixDisplayWrite()
  *
@@ -875,8 +847,6 @@ pixDisplayWrite(PIX     *pixs,
 {
     return pixDisplayWriteFormat(pixs, reduction, IFF_JFIF_JPEG);
 }
-
-
 /*!
  *  pixDisplayWriteFormat()
  *
@@ -973,8 +943,6 @@ static l_int32  index = 0;  /* caution: not .so or thread safe */
 
     return 0;
 }
-
-
 /*!
  *  pixSaveTiled()
  *
@@ -997,8 +965,6 @@ pixSaveTiled(PIX     *pixs,
         /* Save without an outline */
     return pixSaveTiledOutline(pixs, pixa, reduction, newrow, space, 0, dp);
 }
-
-
 /*!
  *  pixSaveTiledOutline()
  *
@@ -1125,8 +1091,6 @@ PIX            *pix, *pixt1, *pixt2, *pixt3;
 
     return 0;
 }
-
-
 /*!
  *  pixSaveTiledWithText()
  *
@@ -1202,8 +1166,6 @@ PIX  *pixt1, *pixt2, *pixt3, *pixt4;
     pixDestroy(&pixt4);
     return 0;
 }
-
-
 void
 chooseDisplayProg(l_int32  selection)
 {

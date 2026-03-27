@@ -23,12 +23,8 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvopbd
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -53,11 +47,7 @@
     FT_UShort  valueOffset_min;
 
   } GXV_opbd_DataRec, *GXV_opbd_Data;
-
-
 #define GXV_OPBD_DATA( FIELD )  GXV_TABLE_DATA( opbd, FIELD )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -76,8 +66,6 @@
     FT_Bytes   limit = gxvalid->root->limit;
     FT_Short   delta_value;
     int        i;
-
-
     if ( value_p->u < GXV_OPBD_DATA( valueOffset_min ) )
       GXV_OPBD_DATA( valueOffset_min ) = value_p->u;
 
@@ -97,8 +85,6 @@
         continue;
     }
   }
-
-
   /*
     opbd ---------------------+
                               |
@@ -148,8 +134,6 @@
 
     return value;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -171,8 +155,6 @@
     FT_Bytes          limit = 0;
 
     FT_ULong  version;
-
-
     gxvalid->root       = ftvalid;
     gxvalid->table_data = opbd;
     gxvalid->face       = face;
@@ -180,13 +162,9 @@
     FT_TRACE3(( "validating `opbd' table\n" ));
     GXV_INIT;
     GXV_OPBD_DATA( valueOffset_min ) = 0xFFFFU;
-
-
     GXV_LIMIT_CHECK( 4 + 2 );
     version                 = FT_NEXT_ULONG( p );
     GXV_OPBD_DATA( format ) = FT_NEXT_USHORT( p );
-
-
     /* only 0x00010000 is defined (1996) */
     GXV_TRACE(( "(version=0x%08x)\n", version ));
     if ( 0x00010000UL != version )
@@ -213,6 +191,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

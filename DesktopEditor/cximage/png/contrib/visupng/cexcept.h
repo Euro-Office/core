@@ -27,8 +27,6 @@ includes this header file and then invokes the define_exception_type
 macro (see below).  The .c files should then include that header file.
 
 The interface consists of one type, one well-known name, and six macros.
-
-
 define_exception_type(type_name);
 
     This macro is used like an external declaration.  It specifies
@@ -48,8 +46,6 @@ define_exception_type(type_name);
     Because throwing an exception causes the object to be copied (not
     just once, but twice), programmers may wish to consider size when
     choosing the exception type.
-
-
 struct exception_context;
 
     This type may be used after the define_exception_type() macro has
@@ -62,8 +58,6 @@ struct exception_context;
     this structure in any way it pleases--automatic, static, or dynamic.
     The application programmer should pretend not to know the structure
     members, which are subject to change.
-
-
 struct exception_context *the_exception_context;
 
     The Try/Catch and Throw statements (described below) implicitly
@@ -97,8 +91,6 @@ struct exception_context *the_exception_context;
     Try/Catch/Throw macros, so it shouldn't be expensive or have side
     effects.  The expansion must be a drop-in replacement for an
     identifier, so it's safest to put parentheses around it.
-
-
 void init_exception_context(struct exception_context *ec);
 
     For context structures allocated statically (by an external
@@ -110,8 +102,6 @@ void init_exception_context(struct exception_context *ec);
     allocated context, or using this macro twice on the same context),
     but a context must not be re-initialized after it has been used by a
     Try/Catch statement.
-
-
 Try statement
 Catch (expression) statement
 
@@ -158,8 +148,6 @@ Catch (expression) statement
     caught.  Therefore, variables modified inside the Try block whose
     values are needed later outside the Try block must either use static
     storage or be declared with the "volatile" type qualifier.
-
-
 Throw expression;
 
     A Throw statement is very much like a return statement, except that
@@ -171,26 +159,18 @@ Throw expression;
 
     Slight limitation:  If the expression is a comma-expression, it must
     be enclosed in parentheses.
-
-
 Try statement
 Catch_anonymous statement
 
     When the value of the exception is not needed, a Try/Catch statement
     can use Catch_anonymous instead of Catch (expression).
-
-
 Everything below this point is for the benefit of the compiler.  The
 application programmer should pretend not to know any of it, because it
 is subject to change.
 
 ===*/
-
-
 #ifndef CEXCEPT_H
 #define CEXCEPT_H
-
-
 #include <setjmp.h>
 
 #define define_exception_type(etype) \
@@ -243,6 +223,4 @@ struct exception_context { \
 #define Throw \
   for (;; longjmp(*the_exception_context->penv, 1)) \
     the_exception_context->v.etmp =
-
-
 #endif /* CEXCEPT_H */

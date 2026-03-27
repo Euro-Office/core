@@ -67,8 +67,6 @@
 #ifdef HAVE_ZLIB_H
 #include <zlib.h>
 #endif
-
-
 #ifdef VMS
 #include <stropts>
 #define XML_SOCKLEN_T unsigned int
@@ -531,8 +529,6 @@ xmlNanoHTTPRecv(xmlNanoHTTPCtxtPtr ctxt)
     fd_set rfd;
     struct timeval tv;
 #endif
-
-
     while (ctxt->state & XML_NANO_HTTP_READ) {
         if (ctxt->in == NULL) {
             ctxt->in = (char *) xmlMallocAtomic(65000 * sizeof(char));
@@ -679,8 +675,6 @@ xmlNanoHTTPReadLine(xmlNanoHTTPCtxtPtr ctxt) {
     buf[4095] = 0;
     return(xmlMemStrdup(buf));
 }
-
-
 /**
  * xmlNanoHTTPScanAnswer:
  * @ctxt:  an HTTP context
@@ -1208,8 +1202,6 @@ xmlNanoHTTPConnectHost(const char *host, int port)
 #endif
     return INVALID_SOCKET;
 }
-
-
 /**
  * xmlNanoHTTPOpen:
  * @URL:  The URL to load

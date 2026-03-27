@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordExMediaAtom : public CUnknownRecord
@@ -44,8 +42,6 @@ public:
     bool m_bLoop = false;
     bool m_bRewind = false;
     bool m_bNarration = false;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream);
 };
 }

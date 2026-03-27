@@ -61,8 +61,6 @@ static void rasteropGeneralLow(l_uint32 *datad, l_int32 dwpl, l_int32 dx,
                                l_int32 dy, l_int32 dw, l_int32 dh,
                                l_int32 op, l_uint32 *datas, l_int32 swpl,
                                l_int32 sx, l_int32 sy);
-
-
 static const l_uint32 lmask32[] = {0x0,
     0x80000000, 0xc0000000, 0xe0000000, 0xf0000000,
     0xf8000000, 0xfc000000, 0xfe000000, 0xff000000,
@@ -82,8 +80,6 @@ static const l_uint32 rmask32[] = {0x0,
     0x001fffff, 0x003fffff, 0x007fffff, 0x00ffffff,
     0x01ffffff, 0x03ffffff, 0x07ffffff, 0x0fffffff,
     0x1fffffff, 0x3fffffff, 0x7fffffff, 0xffffffff};
-
-
 /*--------------------------------------------------------------------*
  *                     Low-level dest-only rasterops                  *
  *--------------------------------------------------------------------*/
@@ -163,8 +159,6 @@ l_int32  dhangw, dhangh;
     return;
 }
 
-
-
 /*--------------------------------------------------------------------*
  *           Static low-level uni rasterop with word alignment        *
  *--------------------------------------------------------------------*/
@@ -210,8 +204,6 @@ l_int32    i, j;
     if (lwbits)
         lwmask = lmask32[lwbits];
     pfword = datad + dwpl * dy + (dx >> 5);
-    
-
     /*--------------------------------------------------------*
      *            Now we're ready to do the ops               *
      *--------------------------------------------------------*/
@@ -252,8 +244,6 @@ l_int32    i, j;
 
     return;
 }
-
-
 /*--------------------------------------------------------------------*
  *        Static low-level uni rasterop without word alignment        *
  *--------------------------------------------------------------------*/
@@ -291,8 +281,6 @@ l_uint32   dlwmask;    /* mask for last partial dest word */
 l_int32    dlwbits;    /* last word dest bits in ovrhang */
 l_uint32  *pdlwpart;   /* ptr to last partial dest word */
 l_int32    i, j;
-
-
     /*--------------------------------------------------------*
      *                Preliminary calculations                *
      *--------------------------------------------------------*/
@@ -346,8 +334,6 @@ l_int32    i, j;
         else
             pdlwpart = datad + dwpl * dy + (dx >> 5) + dnfullw;
     }
-
-
     /*--------------------------------------------------------*
      *            Now we're ready to do the ops               *
      *--------------------------------------------------------*/
@@ -438,8 +424,6 @@ l_int32    i, j;
     return;
 }
 
-
-
 /*--------------------------------------------------------------------*
  *                   Low-level src and dest rasterops                 *
  *--------------------------------------------------------------------*/
@@ -499,8 +483,6 @@ l_int32  dhangw, shangw, dhangh, shangh;
         spixw *= depth;
         sx *= depth;
     }
-
-
    /* -------------------------------------------------------*
     *      clip to max rectangle within both src and dest
     * -------------------------------------------------------*/
@@ -559,8 +541,6 @@ l_int32  dhangw, shangw, dhangh, shangh;
 
     return;
 }
-
-
 /*--------------------------------------------------------------------*
  *        Static low-level rasterop with vertical word alignment      *
  *--------------------------------------------------------------------*/
@@ -608,8 +588,6 @@ l_int32    lwbits;     /* number of ovrhang bits in last partial word */
 l_uint32   lwmask;     /* mask for last partial word */
 l_uint32  *lines, *lined;
 l_int32    i, j;
-
-
     /*--------------------------------------------------------*
      *                Preliminary calculations                *
      *--------------------------------------------------------*/
@@ -789,8 +767,6 @@ l_int32    i, j;
     return;
 }
 
-
-
 /*--------------------------------------------------------------------*
  *        Static low-level rasterop with vertical word alignment      *
  *--------------------------------------------------------------------*/
@@ -843,8 +819,6 @@ l_int32    dlwbits;    /* last word dest bits in ovrhang */
 l_uint32  *pdlwpart;   /* ptr to last partial dest word */
 l_uint32  *pslwpart;   /* ptr to last partial src word */
 l_int32    i, j;
-
-
     /*--------------------------------------------------------*
      *                Preliminary calculations                *
      *--------------------------------------------------------*/
@@ -907,8 +881,6 @@ l_int32    i, j;
             pslwpart = datas + swpl * sy + (sx >> 5) + dnfullw;
         }
     }
-
-
     /*--------------------------------------------------------*
      *            Now we're ready to do the ops               *
      *--------------------------------------------------------*/
@@ -1289,8 +1261,6 @@ l_int32    i, j;
 
     return;
 }
-
-
 /*--------------------------------------------------------------------*
  *     Static low-level rasterop without vertical word alignment      *
  *--------------------------------------------------------------------*/
@@ -1384,8 +1354,6 @@ l_int32    sfwshiftdir; /* either SHIFT_LEFT or SHIFT_RIGHT                  */
 l_int32    sfwaddb;     /* boolean: do we need an additional sfw right shift? */
 l_int32    slwaddb;     /* boolean: do we need an additional slw right shift? */
 l_int32    i, j;
-
-
     /*--------------------------------------------------------*
      *                Preliminary calculations                *
      *--------------------------------------------------------*/
@@ -1482,8 +1450,6 @@ l_int32    i, j;
         else
             slwaddb = 1;   /* must rshift in next src word by srightshift */
     }
-
-
     /*--------------------------------------------------------*
      *            Now we're ready to do the ops               *
      *--------------------------------------------------------*/

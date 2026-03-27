@@ -28,8 +28,6 @@
 *   08/10/01    grhoten     Change the static Locales to accessor functions
 ******************************************************************************
 */
-
-
 #include "unicode/locid.h"
 #include "unicode/uloc.h"
 #include "putilimp.h"
@@ -80,8 +78,6 @@ typedef enum ELocalePos {
     eCANADA,
     eCANADA_FRENCH,
     eROOT,
-
-
     //eDEFAULT,
     eMAX_LOCALES
 } ELocalePos;
@@ -117,8 +113,6 @@ static UBool U_CALLCONV locale_cleanup(void)
     gDefaultLocale = NULL;
     return TRUE;
 }
-
-
 static void U_CALLCONV locale_init(UErrorCode &status) {
     U_NAMESPACE_USE
 
@@ -228,8 +222,6 @@ locale_get_default(void)
     U_NAMESPACE_USE
     return Locale::getDefault().getName();
 }
-
-
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Locale)
@@ -269,8 +261,6 @@ Locale::Locale(Locale::ELocaleType)
 {
     setToBogus();
 }
-
-
 Locale::Locale( const   char * newLanguage,
                 const   char * newCountry,
                 const   char * newVariant,
@@ -344,8 +334,6 @@ Locale::Locale( const   char * newLanguage,
             ksize = (int32_t)uprv_strlen(newKeywords);
             size += ksize + 1;
         }
-
-
         //  NOW we have the full locale string..
 
         /*if the whole string is longer than our internal limit, we need
@@ -638,8 +626,6 @@ Locale::initBaseName(UErrorCode &status) {
         baseName = fullName;
     }
 }
-
-
 int32_t
 Locale::hashCode() const
 {
@@ -676,8 +662,6 @@ Locale::getDefault()
     UErrorCode status = U_ZERO_ERROR;
     return *locale_set_default_internal(NULL, status);
 }
-
-
 
 void U_EXPORT2
 Locale::setDefault( const   Locale&     newLocale,
@@ -719,8 +703,6 @@ Locale::getISO3Language() const
 {
     return uloc_getISO3Language(fullName);
 }
-
-
 const char *
 Locale::getISO3Country() const
 {
@@ -815,8 +797,6 @@ Locale::getTraditionalChinese(void)
 {
     return getLocale(eTAIWAN);
 }
-
-
 const Locale & U_EXPORT2
 Locale::getFrance(void)
 {

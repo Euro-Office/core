@@ -39,8 +39,6 @@
 namespace cpdoccore {
 namespace oox {
 
-
-
 }
 }
 

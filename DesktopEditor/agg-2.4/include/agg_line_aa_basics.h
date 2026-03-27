@@ -146,16 +146,12 @@ namespace agg
         static const int8u s_diagonal_quadrant[8];
     };
 
-
-
     // See Implementation agg_line_aa_basics.cpp 
 
     //----------------------------------------------------------------bisectrix
     void bisectrix(const line_parameters& l1, 
                    const line_parameters& l2, 
                    int* x, int* y);
-
-
     //-------------------------------------------fix_degenerate_bisectrix_start
     void inline fix_degenerate_bisectrix_start(const line_parameters& lp, 
                                                int* x, int* y)
@@ -168,8 +164,6 @@ namespace agg
             *y = lp.y1 - (lp.x2 - lp.x1);
         }
     }
-
-
     //---------------------------------------------fix_degenerate_bisectrix_end
     void inline fix_degenerate_bisectrix_end(const line_parameters& lp, 
                                              int* x, int* y)
@@ -182,8 +176,6 @@ namespace agg
             *y = lp.y2 - (lp.x2 - lp.x1);
         }
     }
-
-
 }
 
 #endif

@@ -46,8 +46,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------*
  *                Composable coordinate transforms             *
  *-------------------------------------------------------------*/
@@ -89,8 +87,6 @@ l_float32  *mat;
     mat[5] = transy;
     return mat;
 }
-
-
 /*!
  *  createMatrix2dScale()
  *
@@ -128,8 +124,6 @@ l_float32  *mat;
     mat[8] = 1;
     return mat;
 }
-
-
 /*!
  *  createMatrix2dRotate()
  *
@@ -187,8 +181,6 @@ l_float32  *mat;
     return mat;
 }
 
-
-
 /*-------------------------------------------------------------*
  *            Special coordinate transforms on pta             *
  *-------------------------------------------------------------*/
@@ -227,8 +219,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  ptaScale()
  *
@@ -264,8 +254,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  ptaRotate()
  *
@@ -307,8 +295,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*-------------------------------------------------------------*
  *            Special coordinate transforms on boxa            *
  *-------------------------------------------------------------*/
@@ -343,8 +329,6 @@ BOXA  *boxad;
     ptaDestroy(&ptad);
     return boxad;
 }
-
-
 /*!
  *  boxaScale()
  *
@@ -376,8 +360,6 @@ BOXA  *boxad;
     ptaDestroy(&ptad);
     return boxad;
 }
-
-
 /*!
  *  boxaRotate()
  *
@@ -410,8 +392,6 @@ BOXA  *boxad;
     ptaDestroy(&ptad);
     return boxad;
 }
-
-
 /*-------------------------------------------------------------*
  *            General affine coordinate transform              *
  *-------------------------------------------------------------*/
@@ -449,8 +429,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  boxaAffineTransform()
  *
@@ -479,8 +457,6 @@ BOXA  *boxad;
     ptaDestroy(&ptad);
     return boxad;
 }
-
-
 /*-------------------------------------------------------------*
  *                      Matrix operations                      *
  *-------------------------------------------------------------*/
@@ -518,8 +494,6 @@ l_int32  i, j;
     }
     return 0;
 }
-
-
 /*!
  *  l_productMat2()
  *
@@ -556,8 +530,6 @@ l_int32  i, j, k, index;
     }
     return 0;
 }
-
-
 /*!
  *  l_productMat3()
  *
@@ -595,8 +567,6 @@ l_float32  *matt;
     FREE(matt);
     return 0;
 }
-
-
 /*!
  *  l_productMat4()
  *
@@ -636,5 +606,3 @@ l_float32  *matt;
     FREE(matt);
     return 0;
 }
-
-

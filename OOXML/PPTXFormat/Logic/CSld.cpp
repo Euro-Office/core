@@ -68,8 +68,6 @@ namespace PPTX
 					}
 				}
 			}
-			
-
 			FillParentPointersForChilds();
 		}
 		std::wstring CSld::toXML() const

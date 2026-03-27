@@ -266,8 +266,6 @@ ucol_getBound(const uint8_t       *source,
         && noOfLevels > 0) {
             *status = U_SORT_KEY_TOO_SHORT_WARNING;
     }
-
-
     // READ ME: this code assumes that the values for boundType
     // enum will not changes. They are set so that the enum value
     // corresponds to the number of extra bytes each bound type
@@ -429,8 +427,6 @@ ucol_strcollIter( const UCollator    *coll,
     UTRACE_EXIT_VALUE_STATUS(result, *status);
     return result;
 }
-
-
 /*                                                                      */
 /* ucol_strcoll     Main public API string comparison function          */
 /*                                                                      */
@@ -482,8 +478,6 @@ ucol_strcollUTF8(
     UTRACE_EXIT_VALUE_STATUS(returnVal, *status);
     return returnVal;
 }
-
-
 /* convenience function for comparing strings */
 U_CAPI UBool U_EXPORT2
 ucol_greater(    const    UCollator        *coll,

@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  textops.c
  *
@@ -51,8 +49,6 @@
 
 static l_int32 stringAllWhitespace(char *textstr, l_int32 *pval);
 static l_int32 stringLeadingWhitespace(char *textstr, l_int32 *pval);
-
-
 /*---------------------------------------------------------------------*
  *                                 Font layout                         *
  *---------------------------------------------------------------------*/
@@ -204,8 +200,6 @@ SARRAY   *salines;
     sarrayDestroy(&salines);
     return pixd;
 }
-
-
 /*!
  *  pixSetTextblock()
  *
@@ -312,8 +306,6 @@ PIXCMAP  *cmap;
     sarrayDestroy(&salines);
     return 0;
 }
-
-
 /*!
  *  pixSetTextline()
  *
@@ -400,8 +392,6 @@ PIXCMAP  *cmap;
         *poverflow = (x > pixGetWidth(pixs) - 1) ? 1 : 0;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                   Text size estimation and partitioning             *
  *---------------------------------------------------------------------*/
@@ -481,8 +471,6 @@ SARRAY  *sa, *sawords;
     numaDestroy(&na);
     return sa;
 }
-
-
 /*!
  *  bmfGetWordWidths()
  *
@@ -522,8 +510,6 @@ NUMA    *na;
 
     return na;
 }
-
-
 /*!
  *  bmfGetStringWidth()
  *
@@ -563,8 +549,6 @@ l_int32  i, w, width, nchar;
     *pw = w;
     return 0;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                             Text splitting                          *
@@ -618,8 +602,6 @@ SARRAY  *salines, *satemp, *saout;
 
     return saout;
 }
-
-
 /*!
  *  stringAllWhitespace()
  *
@@ -650,8 +632,6 @@ l_int32  len, i;
     }
     return 0;
 }
-
-
 /*!
  *  stringLeadingWhitespace()
  *
@@ -676,5 +656,3 @@ stringLeadingWhitespace(char     *textstr,
 
     return 0;
 }
-
-

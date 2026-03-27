@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 FeatSmartTag::FeatSmartTag()
 {
 }
-
-
 FeatSmartTag::FeatSmartTag(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr FeatSmartTag::clone()
 {
 	return BiffStructurePtr(new FeatSmartTag(*this));
@@ -63,7 +57,5 @@ void FeatSmartTag::load(CFRecord& record)
 		rgFactoid.push_back(data);
 	}
 }
-
-
 } // namespace XLS
 

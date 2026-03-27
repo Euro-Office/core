@@ -54,8 +54,6 @@ MetadataStream::MetadataStream()
 MetadataStream::~MetadataStream()
 {
 }
-
-
 BaseObjectPtr MetadataStream::clone()
 {
     return BaseObjectPtr(new MetadataStream(*this));

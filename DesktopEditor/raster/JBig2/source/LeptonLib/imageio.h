@@ -51,8 +51,6 @@ enum {
     IFF_DEFAULT        = 16,
     IFF_SPIX           = 17
 };
-
-
 /* ------------------ Format header ids --------------- */
 enum {
     BMP_ID             = 0x4d42,
@@ -64,7 +62,5 @@ enum {
 enum {
     L_HINT_GRAY = 1,  /* only want grayscale information */
 };
-
-
 #endif  /* LEPTONICA_IMAGEIO_H */
 

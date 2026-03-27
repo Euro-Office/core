@@ -224,8 +224,6 @@ static const uByte DECSTICKYTAB[10]={1,1,2,3,4,6,6,7,8,9}; /* used if sticky */
 /* ------------------------------------------------------------------ */
 static const uInt DECPOWERS[10]={1, 10, 100, 1000, 10000, 100000, 1000000,
                           10000000, 100000000, 1000000000};
-
-
 /* Granularity-dependent code */
 #if DECDPUN<=4
   #define eInt  Int           /* extended integer  */
@@ -3313,8 +3311,6 @@ U_CAPI decNumber * U_EXPORT2 uprv_decNumberXor(decNumber *res, const decNumber *
   res->bits=0;                          /* sign=0  */
   return res;  /* [no status to set]  */
   } /* decNumberXor  */
-
-
 /* ================================================================== */
 /* Utility routines                                                   */
 /* ================================================================== */
@@ -5161,8 +5157,6 @@ static decNumber * decMultiplyOp(decNumber *res, const decNumber *lhs,
     if (lhs->exponent<0 && rhs->exponent<0 && exponent>0)
       exponent=-2*DECNUMMAXE;                /* force underflow  */
     res->exponent=exponent;                  /* OK to overwrite now  */
-
-
     /* Set the coefficient.  If any rounding, residue records  */
     decSetCoeff(res, set, acc, res->digits, &residue, status);
     decFinish(res, set, &residue, status);   /* final cleanup  */
@@ -7355,8 +7349,6 @@ static void decFinalize(decNumber *dn, decContext *set, Int *residue,
 
   /* Check for overflow [redundant in the 'rare' case] or clamp  */
   if (dn->exponent<=set->emax-set->digits+1) return;   /* neither needed  */
-
-
   /* here when might have an overflow or clamp to do  */
   if (dn->exponent>set->emax-dn->digits+1) {           /* too big  */
     decSetOverflow(dn, set, status);

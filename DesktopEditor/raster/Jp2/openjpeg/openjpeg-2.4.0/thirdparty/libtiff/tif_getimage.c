@@ -1765,8 +1765,6 @@ static void putcontig8bitYCbCrGenericTile(
         int     y_remainder = yy - y_line_group * v_group;
 
         pp_line = pp + v_line_group * 
-
-        
         for( xx = 0; xx < w; xx++ )
         {
             Cb = pp
@@ -2759,16 +2757,12 @@ BuildMapBitdepth16To8(TIFFRGBAImage* img)
 		*m++=(n+128)/257;
 	return(1);
 }
-
-
 /*
  * Read a whole strip off data from the file, and convert to RGBA form.
  * If this is the last strip, then it will only contain the portion of
  * the strip that is actually within the image space.  The result is
  * organized in bottom to top form.
  */
-
-
 int
 TIFFReadRGBAStrip(TIFF* tif, uint32 row, uint32 * raster )
 

@@ -21,8 +21,6 @@ import sys
 #  ...
 
 RE_VERSION_INFO = re.compile(r"^version_info='(\d+):(\d+):(\d+)'")
-
-
 def parse_configure_raw(header):
     major = None
     minor = None
@@ -43,8 +41,6 @@ def parse_configure_raw(header):
     ), "This input file is missing a version_info definition!"
 
     return (major, minor, patch)
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -99,7 +95,5 @@ def main():
         print("%s.%s.%s" % version)
 
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

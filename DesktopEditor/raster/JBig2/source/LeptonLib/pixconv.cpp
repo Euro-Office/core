@@ -126,14 +126,10 @@
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 #ifndef  NO_CONSOLE_IO
 #define DEBUG_CONVERT_TO_COLORMAP  0
 #define DEBUG_UNROLLING 0
 #endif   /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *     Conversion from 8 bpp grayscale to 1, 2 4 and 8 bpp     *
  *-------------------------------------------------------------*/
@@ -208,8 +204,6 @@ PIXCMAP   *cmap;
         return (PIX *)ERROR_PTR("pixd not made", procName, NULL);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *               Conversion from colormapped pix               *
  *-------------------------------------------------------------*/
@@ -486,8 +480,6 @@ PIX       *pixd;
     FREE(bmap);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *              Add colormap losslessly (8 to 8)               *
  *-------------------------------------------------------------*/
@@ -516,8 +508,6 @@ PIXCMAP  *cmap;
     pixSetColormap(pixs, cmap);
     return 0;
 }
-
-
 /*!
  *  pixAddMinimalGrayColormap8()
  *
@@ -602,8 +592,6 @@ PIXCMAP   *cmap;
     FREE(revmap);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *            Conversion from RGB color to grayscale           *
  *-------------------------------------------------------------*/
@@ -621,8 +609,6 @@ pixConvertRGBToLuminance(PIX *pixs)
 {
   return pixConvertRGBToGray(pixs, 0.0, 0.0, 0.0);
 }
-
-
 /*!
  *  pixConvertRGBToGray()
  *
@@ -693,8 +679,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvertRGBToGrayFast()
  *
@@ -743,8 +727,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvertRGBToGrayMinMax()
  *
@@ -805,8 +787,6 @@ PIX       *pixd;
     return pixd;
 }
 
-
-
 /*---------------------------------------------------------------------------*
  *                  Conversion from grayscale to colormap                    *
  *---------------------------------------------------------------------------*/
@@ -860,8 +840,6 @@ PIXCMAP   *cmap;
     pixSetColormap(pixd, cmap);
     return pixd;
 }
-        
-
 /*!
  *  pixConvertGrayToColormap8()
  *
@@ -957,8 +935,6 @@ PIXCMAP   *cmap;
     numaDestroy(&na);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                Colorizing conversion from grayscale to color              *
  *---------------------------------------------------------------------------*/
@@ -1028,8 +1004,6 @@ PIXCMAP   *cmap;
     FREE(tab);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                    Conversion from RGB color to colormap                  *
  *---------------------------------------------------------------------------*/
@@ -1103,8 +1077,6 @@ PIX     *pixd;
     numaDestroy(&na);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *        Quantization for relatively small number of colors in source       *
  *---------------------------------------------------------------------------*/
@@ -1217,8 +1189,6 @@ PIX     *pixg, *pixd;
         return 0;
 }
 
-
-
 /*---------------------------------------------------------------------------*
  *                    Conversion from 16 bpp to 8 bpp                        *
  *---------------------------------------------------------------------------*/
@@ -1280,8 +1250,6 @@ PIX       *pixd;
 
     return pixd;
 }
-    
-
 
 /*---------------------------------------------------------------------------*
  *                Conversion from grayscale to false color
@@ -1375,8 +1343,6 @@ PIXCMAP   *cmap;
     FREE(curve);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *         Unpacking conversion from 1 bpp to 2, 4, 8, 16 and 32 bpp         *
  *---------------------------------------------------------------------------*/
@@ -1445,8 +1411,6 @@ PIX  *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvert1To16()
  *
@@ -1519,8 +1483,6 @@ l_uint32  *tab, *datas, *datad, *lines, *lined;
     FREE(tab);
     return pixd;
 }
- 
-
 /*!
  *  pixConvert1To32()
  *
@@ -1582,8 +1544,6 @@ l_uint32  *datas, *datad, *lines, *lined;
 
     return pixd;
 }
- 
-
 /*---------------------------------------------------------------------------*
  *                    Conversion from 1 bpp to 2 bpp                         *
  *---------------------------------------------------------------------------*/
@@ -1618,8 +1578,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvert1To2()
  *
@@ -1700,8 +1658,6 @@ l_uint32  *datas, *datad, *lines, *lined;
     FREE(tab);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                    Conversion from 1 bpp to 4 bpp                         *
  *---------------------------------------------------------------------------*/
@@ -1736,8 +1692,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvert1To4()
  *
@@ -1817,8 +1771,6 @@ l_uint32  *tab, *datas, *datad, *lines, *lined;
     FREE(tab);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *               Conversion from 1, 2 and 4 bpp to 8 bpp                     *
  *---------------------------------------------------------------------------*/
@@ -1905,8 +1857,6 @@ l_uint32  *tab, *datas, *datad, *lines, *lined;
     FREE(tab);
     return pixd;
 }
- 
-
 /*!
  *  pixConvert2To8()
  *
@@ -2026,8 +1976,6 @@ PIXCMAP   *cmaps, *cmapd;
     FREE(tab);
     return pixd;
 }
- 
-
 /*!
  *  pixConvert4To8()
  *
@@ -2119,8 +2067,6 @@ PIXCMAP   *cmaps, *cmapd;
     return pixd;
 }
 
-
-
 /*---------------------------------------------------------------------------*
  *               Unpacking conversion from 8 bpp to 16 bpp                   *
  *---------------------------------------------------------------------------*/
@@ -2183,8 +2129,6 @@ PIX       *pixt, *pixd;
     return pixd;
 }
 
-
-
 /*---------------------------------------------------------------------------*
  *                     Top-level conversion to 1 bpp                         *
  *---------------------------------------------------------------------------*/
@@ -2242,8 +2186,6 @@ PIXCMAP  *cmap;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*!
  *  pixConvertTo1BySampling()
  *
@@ -2278,8 +2220,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                     Top-level conversion to 8 bpp                         *
  *---------------------------------------------------------------------------*/
@@ -2362,8 +2302,6 @@ PIXCMAP  *cmap;
         return pixd;
     }
 }
-
-
 /*!
  *  pixConvertTo8BySampling()
  *
@@ -2398,8 +2336,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                    Top-level conversion to 16 bpp                         *
  *---------------------------------------------------------------------------*/
@@ -2432,8 +2368,6 @@ l_int32  d;
     else
         return (PIX *)ERROR_PTR("src depth not 1 or 8 bpp", procName, NULL);
 }
-
-
 
 /*---------------------------------------------------------------------------*
  *                    Top-level conversion to 32 bpp                         *
@@ -2503,8 +2437,6 @@ PIX     *pixt, *pixd;
         return (PIX *)ERROR_PTR("depth not 1, 2, 4, 8, 16, 32 bpp",
                                 procName, NULL);
 }
-
-
 /*!
  *  pixConvertTo32BySampling()
  *
@@ -2537,8 +2469,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixConvert8To32()
  *
@@ -2595,8 +2525,6 @@ PIX       *pixd;
     FREE(tab);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *           Top-level conversion to 8 or 32 bpp, without colormap           *
  *---------------------------------------------------------------------------*/
@@ -2653,8 +2581,6 @@ PIX     *pixd;
 
     return pixd;
 }
- 
-
 /*---------------------------------------------------------------------------*
  *                 Conversion between 24 bpp and 32 bpp rgb                  *
  *---------------------------------------------------------------------------*/
@@ -2710,8 +2636,6 @@ PIX       *pixd;
     pixCopyInputFormat(pixd, pixs);
     return pixd;
 }
-
-
 /*!
  *  pixConvert32To24()
  *
@@ -2764,8 +2688,6 @@ PIX       *pixd;
     pixCopyInputFormat(pixd, pixs);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                  Lossless depth conversion (unpacking)                    *
  *---------------------------------------------------------------------------*/
@@ -2851,8 +2773,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                     Conversion for printing in PostScript                 *
  *---------------------------------------------------------------------------*/
@@ -2916,8 +2836,6 @@ PIXCMAP  *cmap;
 
    return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *                  Colorspace conversion between RGB and HSB                *
  *---------------------------------------------------------------------------*/
@@ -2999,8 +2917,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixConvertHSVToRGB()
  *
@@ -3065,8 +2981,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  convertRGBToHSV()
  *
@@ -3135,8 +3049,6 @@ l_float32  h;
 
     return 0;
 }
-
-
 /*!
  *  convertHSVToRGB()
  *
@@ -3220,8 +3132,6 @@ l_float32 h, f, s;
   
     return 0;
 }
-
-
 /*!
  *  pixConvertRGBToHue()
  *
@@ -3295,8 +3205,6 @@ PIX       *pixt, *pixd;
     return pixd;
 }
 
-
-
 /*!
  *  pixConvertRGBToSaturation()
  *
@@ -3358,8 +3266,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixConvertRGBToValue()
  *
@@ -3413,8 +3319,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 
 /*---------------------------------------------------------------------------*
  *                      Scaling conversion to subpixel RGB                   *
@@ -3485,8 +3389,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixConvertGrayToSubpixelRGB()
  *
@@ -3591,8 +3493,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixConvertColorToSubpixelRGB()
  *

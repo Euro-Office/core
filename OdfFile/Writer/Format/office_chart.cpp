@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "office_chart.h"
 
 #include <xml/xmlchar.h>
@@ -84,8 +82,6 @@ void chart_chart_attlist::serialize(CP_ATTR_NODE)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * chart_chart::ns = L"chart";
 const wchar_t * chart_chart::name = L"chart";
-
-
 void chart_chart::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);
@@ -122,8 +118,6 @@ void chart_title_attlist::serialize(CP_ATTR_NODE)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * chart_title::ns = L"chart";
 const wchar_t * chart_title::name = L"title";
-
-
 void chart_title::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     if CP_CHECK_NAME(L"text", L"p")

@@ -60,8 +60,6 @@ namespace agg
             return path_cmd_stop;
         }
     };
-
-
     //---------------------------------------------------path_storage_integer
     template<class T, unsigned CoordShift=6> class path_storage_integer
     {
@@ -192,10 +190,6 @@ namespace agg
         unsigned                            m_vertex_idx;
         bool                                m_closed;
     };
-
-
-
-
     //-----------------------------------------serialized_integer_path_adaptor
     template<class T, unsigned CoordShift=6> class serialized_integer_path_adaptor
     {
@@ -236,8 +230,6 @@ namespace agg
             m_scale    = scale;
             m_vertices = 0;
         }
-
-
         //--------------------------------------------------------------------
         void rewind(unsigned) 
         { 
@@ -289,7 +281,5 @@ namespace agg
     };
 
 }
-
-
 #endif
 

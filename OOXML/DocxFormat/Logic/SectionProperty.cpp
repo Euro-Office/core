@@ -965,8 +965,6 @@ namespace ComplexTypes
 
 	} // Word
 } // ComplexTypes
-
-
 namespace OOX
 {
 	namespace Logic

@@ -31,8 +31,6 @@
  */
 #ifndef PPTX_FORMAT_H
 #define PPTX_FORMAT_H
-
-
 class PPTXFormatLib
 {
 

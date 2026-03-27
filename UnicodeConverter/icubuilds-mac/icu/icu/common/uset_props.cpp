@@ -65,8 +65,6 @@ uset_openPatternOptions(const UChar* pattern, int32_t patternLength,
     }
     return (USet*) set;
 }
-
-
 U_CAPI int32_t U_EXPORT2 
 uset_applyPattern(USet *set,
                   const UChar *pattern, int32_t patternLength,

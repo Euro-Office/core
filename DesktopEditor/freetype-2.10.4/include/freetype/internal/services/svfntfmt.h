@@ -14,17 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVFNTFMT_H_
 #define SVFNTFMT_H_
 
 #include <freetype/internal/ftserv.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * A trivial service used to return the name of a face's font driver,
    * according to the XFree86 nomenclature.  Note that the service data is a
@@ -44,12 +38,6 @@ FT_BEGIN_HEADER
 #define FT_FONT_FORMAT_WINFNT    "Windows FNT"
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVFNTFMT_H_ */
-
-
 /* END */

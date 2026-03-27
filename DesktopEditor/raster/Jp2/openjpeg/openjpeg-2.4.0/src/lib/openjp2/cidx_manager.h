@@ -32,14 +32,10 @@
 /*! \file
  *  \brief Modification of jpip.h from 2KAN indexer
  */
-
-
 #ifndef  CIDX_MANAGER_H_
 # define CIDX_MANAGER_H_
 
 #include "openjpeg.h"
-
-
 /*
  * Write Codestream index box (superbox)
  *

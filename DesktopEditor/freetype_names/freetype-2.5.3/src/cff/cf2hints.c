@@ -34,8 +34,6 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 #include FT_INTERNAL_DEBUG_H
 
@@ -43,8 +41,6 @@
 #include "cf2font.h"
 #include "cf2hints.h"
 #include "cf2intrp.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -53,16 +49,12 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cf2hints
-
-
   typedef struct  CF2_HintMoveRec_
   {
     size_t     j;          /* index of upper hint map edge   */
     CF2_Fixed  moveUp;     /* adjustment to optimum position */
 
   } CF2_HintMoveRec, *CF2_HintMove;
-
-
   /* Compute angular momentum for winding order detection.  It is called */
   /* for all lines and curves, but not necessarily in element order.     */
   static CF2_Int
@@ -77,8 +69,6 @@
     return ( x1 >> 16 ) * ( ( y2 - y1 ) >> 16 ) -
            ( y1 >> 16 ) * ( ( x2 - x1 ) >> 16 );
   }
-
-
   /*
    * Construct from a StemHint; this is used as a parameter to
    * `cf2_blues_capture'.
@@ -97,8 +87,6 @@
   {
     CF2_Fixed               width;
     const CF2_StemHintRec*  stemHint;
-
-
     FT_ZERO( hint );
 
     stemHint = (const CF2_StemHintRec*)cf2_arrstack_getPointer(
@@ -204,75 +192,55 @@
     else
       hint->dsCoord = FT_MulFix( hint->csCoord, scale );
   }
-
-
   /* initialize an invalid hint map element */
   static void
   cf2_hint_initZero( CF2_Hint  hint )
   {
     FT_ZERO( hint );
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isValid( const CF2_Hint  hint )
   {
     return (FT_Bool)( hint->flags != 0 );
   }
-
-
   static FT_Bool
   cf2_hint_isPair( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags                      &
                         ( CF2_PairBottom | CF2_PairTop ) ) != 0 );
   }
-
-
   static FT_Bool
   cf2_hint_isPairTop( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags & CF2_PairTop ) != 0 );
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isTop( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags                    &
                         ( CF2_PairTop | CF2_GhostTop ) ) != 0 );
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   cf2_hint_isBottom( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags                          &
                         ( CF2_PairBottom | CF2_GhostBottom ) ) != 0 );
   }
-
-
   static FT_Bool
   cf2_hint_isLocked( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags & CF2_Locked ) != 0 );
   }
-
-
   static FT_Bool
   cf2_hint_isSynthetic( const CF2_Hint  hint )
   {
     return (FT_Bool)( ( hint->flags & CF2_Synthetic ) != 0 );
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_hint_lock( CF2_Hint  hint )
   {
     hint->flags |= CF2_Locked;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_hintmap_init( CF2_HintMap   hintmap,
                     CF2_Font      font,
@@ -290,15 +258,11 @@
     /* will clear in `cf2_hintmap_adjustHints' */
     hintmap->hintMoves      = hintMoves;
   }
-
-
   static FT_Bool
   cf2_hintmap_isValid( const CF2_HintMap  hintmap )
   {
     return hintmap->isValid;
   }
-
-
   /* transform character space coordinate to device space using hint map */
   static CF2_Fixed
   cf2_hintmap_map( CF2_HintMap  hintmap,
@@ -316,8 +280,6 @@
     {
       /* start linear search from last hit */
       CF2_UInt  i = hintmap->lastIndex;
-
-
       /* search up */
       while ( i < hintmap->count - 1                  &&
               csCoord >= hintmap->edge[i + 1].csCoord )
@@ -348,8 +310,6 @@
       }
     }
   }
-
-
   /*
    * This hinting policy moves a hint pair in device space so that one of
    * its two edges is on a device pixel boundary (its fractional part is
@@ -368,8 +328,6 @@
   cf2_hintmap_adjustHints( CF2_HintMap  hintmap )
   {
     size_t  i, j;
-
-
     cf2_arrstack_clear( hintmap->hintMoves );      /* working storage */
 
     /*
@@ -383,8 +341,6 @@
     for ( i = 0; i < hintmap->count; i++ )
     {
       FT_Bool  isPair = cf2_hint_isPair( &hintmap->edge[i] );
-
-
       /* index of upper edge (same value for ghost hint) */
       j = isPair ? i + 1 : i;
 
@@ -421,8 +377,6 @@
         CF2_Fixed  downMinCounter = CF2_MIN_COUNTER;
         CF2_Fixed  upMinCounter   = CF2_MIN_COUNTER;
         FT_Bool    saveEdge       = FALSE;
-
-
         /* minimum counter constraint doesn't apply when adjacent edges */
         /* are synthetic                                                */
         /* TODO: doesn't seem a big effect; for now, reduce the code    */
@@ -483,8 +437,6 @@
              !cf2_hint_isLocked( &hintmap->edge[j + 1] ) )
         {
           CF2_HintMoveRec  savedMove;
-
-
           savedMove.j      = j;
           /* desired adjustment in second pass */
           savedMove.moveUp = moveUp - move;
@@ -532,8 +484,6 @@
     {
       CF2_HintMove  hintMove = (CF2_HintMove)
                       cf2_arrstack_getPointer( hintmap->hintMoves, i - 1 );
-
-
       j = hintMove->j;
 
       /* this was tested before the push, above */
@@ -554,8 +504,6 @@
       }
     }
   }
-
-
   /* insert hint edges into map, sorted by csCoord */
   static void
   cf2_hintmap_insertHint( CF2_HintMap  hintmap,
@@ -568,8 +516,6 @@
     FT_Bool   isPair         = TRUE;
     CF2_Hint  firstHintEdge  = bottomHintEdge;
     CF2_Hint  secondHintEdge = topHintEdge;
-
-
     /* one or none of the input params may be invalid when dealing with */
     /* edge hints; at least one edge must be valid                      */
     FT_ASSERT( cf2_hint_isValid( bottomHintEdge ) ||
@@ -644,8 +590,6 @@
                                  ( secondHintEdge->csCoord -
                                    firstHintEdge->csCoord ) / 2,
                                  hintmap->scale );
-
-
         firstHintEdge->dsCoord  = midpoint - halfWidth;
         secondHintEdge->dsCoord = midpoint + halfWidth;
       }
@@ -703,8 +647,6 @@
       CF2_Int  iDst = isPair ? hintmap->count + 1 : hintmap->count;
 
       CF2_Int  count = hintmap->count - indexInsert;
-
-
       if ( iDst >= CF2_MAX_HINT_EDGES )
       {
         FT_TRACE4(( "cf2_hintmap_insertHint: too many hintmaps\n" ));
@@ -728,8 +670,6 @@
 
     return;
   }
-
-
   /*
    * Build a map from hints and mask.
    *
@@ -759,8 +699,6 @@
 
     size_t   bitCount, i;
     FT_Byte  maskByte;
-
-
     /* check whether initial map is constructed */
     if ( !initialMap && !cf2_hintmap_isValid( hintmap->initialHintMap ) )
     {
@@ -801,8 +739,6 @@
     if ( font->blues.doEmBoxHints )
     {
       CF2_HintRec  dummy;
-
-
       cf2_hint_initZero( &dummy );   /* invalid hint map element */
 
       /* ghost bottom */
@@ -823,8 +759,6 @@
       {
         /* expand StemHint into two `CF2_Hint' elements */
         CF2_HintRec  bottomHintEdge, topHintEdge;
-
-
         cf2_hint_init( &bottomHintEdge,
                        hStemHintArray,
                        i,
@@ -899,8 +833,6 @@
         /* construct a locked edge hint at 0               */
 
         CF2_HintRec  edge, invalid;
-
-
         cf2_hint_initZero( &edge );
 
         edge.flags = CF2_GhostBottom |
@@ -923,8 +855,6 @@
         if ( maskByte & *maskPtr )
         {
           CF2_HintRec  bottomHintEdge, topHintEdge;
-
-
           cf2_hint_init( &bottomHintEdge,
                          hStemHintArray,
                          i,
@@ -979,8 +909,6 @@
           CF2_StemHint  stemhint = (CF2_StemHint)
                           cf2_arrstack_getPointer( hStemHintArray,
                                                    hintmap->edge[i].index );
-
-
           if ( cf2_hint_isTop( &hintmap->edge[i] ) )
             stemhint->maxDS = hintmap->edge[i].dsCoord;
           else
@@ -997,8 +925,6 @@
     /* remember this mask has been used */
     cf2_hintmask_setNew( hintMask, FALSE );
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_glyphpath_init( CF2_GlyphPath         glyphpath,
                       CF2_Font              font,
@@ -1068,15 +994,11 @@
     glyphpath->pathIsClosing = FALSE;
     glyphpath->elemIsQueued  = FALSE;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_glyphpath_finalize( CF2_GlyphPath  glyphpath )
   {
     cf2_arrstack_finalize( &glyphpath->hintMoves );
   }
-
-
   /*
    * Hint point in y-direction and apply outerTransform.
    * Input `current' hint map (which is actually delayed by one element).
@@ -1091,8 +1013,6 @@
                            CF2_Fixed      y )
   {
     FT_Vector  pt;   /* hinted point in upright DS */
-
-
     pt.x = FT_MulFix( glyphpath->scaleX, x ) +
              FT_MulFix( glyphpath->scaleC, y );
     pt.y = cf2_hintmap_map( hintmap, y );
@@ -1104,8 +1024,6 @@
                FT_MulFix( glyphpath->font->outerTransform.d, pt.y ) +
                glyphpath->fractionalTranslation.y;
   }
-
-
   /*
    * From two line segments, (u1,u2) and (v1,v2), compute a point of
    * intersection on the corresponding lines.
@@ -1150,8 +1068,6 @@
 
     FT_Vector  u, v, w;      /* scaled vectors */
     CF2_Fixed  denominator, s;
-
-
     u.x = CF2_CS_SCALE( u2->x - u1->x );
     u.y = CF2_CS_SCALE( u2->y - u1->y );
     v.x = CF2_CS_SCALE( v2->x - v1->x );
@@ -1201,8 +1117,6 @@
 
     return TRUE;
   }
-
-
   /*
    * Push the cached element (glyphpath->prevElem*) to the outline
    * consumer.  When a darkening offset is used, the end point of the
@@ -1240,8 +1154,6 @@
 
     FT_Vector  intersection    = { 0, 0 };
     FT_Bool    useIntersection = FALSE;
-
-
     FT_ASSERT( glyphpath->prevElemOp == CF2_PathOpLineTo ||
                glyphpath->prevElemOp == CF2_PathOpCubeTo );
 
@@ -1386,8 +1298,6 @@
       *nextP0 = intersection;
     }
   }
-
-
   /* push a MoveTo element based on current point and offset of current */
   /* element                                                            */
   static void
@@ -1395,8 +1305,6 @@
                           FT_Vector      start )
   {
     CF2_CallbackParamsRec  params;
-
-
     params.op  = CF2_PathOpMoveTo;
     params.pt0 = glyphpath->currentDS;
 
@@ -1423,8 +1331,6 @@
     glyphpath->currentDS    = params.pt1;
     glyphpath->offsetStart0 = start;
   }
-
-
   /*
    * All coordinates are in character space.
    * On input, (x1, y1) and (x2, y2) give line segment.
@@ -1446,8 +1352,6 @@
   {
     CF2_Fixed  dx = x2 - x1;
     CF2_Fixed  dy = y2 - y1;
-
-
     /* note: negative offsets don't work here; negate deltas to change */
     /* quadrants, below                                                */
     if ( glyphpath->font->reverseWinding )
@@ -1573,8 +1477,6 @@
       }
     }
   }
-
-
   /*
    * The functions cf2_glyphpath_{moveTo,lineTo,curveTo,closeOpenPath} are
    * called by the interpreter with Character Space (CS) coordinates.  Each
@@ -1613,8 +1515,6 @@
     /* save a copy of current HintMap to use when drawing initial point */
     glyphpath->firstHintMap = glyphpath->hintMap;     /* structure copy */
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_glyphpath_lineTo( CF2_GlyphPath  glyphpath,
                         CF2_Fixed      x,
@@ -1718,8 +1618,6 @@
     glyphpath->currentCS.x = x;     /* pre-offset current point */
     glyphpath->currentCS.y = y;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_glyphpath_curveTo( CF2_GlyphPath  glyphpath,
                          CF2_Fixed      x1,
@@ -1731,8 +1629,6 @@
   {
     CF2_Fixed  xOffset1, yOffset1, xOffset3, yOffset3;
     FT_Vector  P0, P1, P2, P3;
-
-
     /* TODO: ignore zero length portions of curve?? */
     cf2_glyphpath_computeOffset( glyphpath,
                                  glyphpath->currentCS.x,
@@ -1806,8 +1702,6 @@
     glyphpath->currentCS.x = x3;       /* pre-offset current point */
     glyphpath->currentCS.y = y3;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_glyphpath_closeOpenPath( CF2_GlyphPath  glyphpath )
   {
@@ -1839,6 +1733,4 @@
       glyphpath->elemIsQueued  = FALSE;
     }
   }
-
-
 /* END */

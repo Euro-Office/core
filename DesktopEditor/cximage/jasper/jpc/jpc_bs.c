@@ -262,8 +262,6 @@ int jpc_bitstream_fillbuf(jpc_bitstream_t *bitstream)
 	bitstream->buf_ |= c & ((1 << (bitstream->cnt_ + 1)) - 1);
 	return (bitstream->buf_ >> bitstream->cnt_) & 1;
 }
-
-
 /******************************************************************************\
 * Code related to flushing.
 \******************************************************************************/

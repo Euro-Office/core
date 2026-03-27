@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   pixacc.c
  *
@@ -52,8 +50,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*---------------------------------------------------------------------*
  *                     Pixacc creation, destruction                    *
  *---------------------------------------------------------------------*/
@@ -97,8 +93,6 @@ PIXACC  *pixacc;
 
     return pixacc;
 }
-
-
 /*!
  *  pixaccCreateWithPix()
  *
@@ -127,8 +121,6 @@ PIXACC  *pixacc;
     pixaccAdd(pixacc, pix);
     return pixacc;
 }
-
-
 /*!
  *  pixaccDestroy()
  *
@@ -158,8 +150,6 @@ PIXACC  *pixacc;
     *ppixacc = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Pixacc finalization                      *
  *---------------------------------------------------------------------*/
@@ -182,8 +172,6 @@ pixaccFinal(PIXACC  *pixacc,
     return pixFinalAccumulate(pixaccGetPix(pixacc), pixaccGetOffset(pixacc),
                               outdepth);
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Pixacc accessors                         *
  *---------------------------------------------------------------------*/
@@ -202,8 +190,6 @@ pixaccGetPix(PIXACC  *pixacc)
         return (PIX *)ERROR_PTR("pixacc not defined", procName, NULL);
     return pixacc->pix;
 }
-
-
 /*!
  *  pixaccGetOffset()
  *
@@ -219,8 +205,6 @@ pixaccGetOffset(PIXACC  *pixacc)
         return ERROR_INT("pixacc not defined", procName, -1);
     return pixacc->offset;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Pixacc accumulators                        *
  *---------------------------------------------------------------------*/
@@ -244,8 +228,6 @@ pixaccAdd(PIXACC  *pixacc,
     pixAccumulate(pixaccGetPix(pixacc), pix, L_ARITH_ADD);
     return 0;
 }
-
-
 /*!
  *  pixaccSubtract()
  *
@@ -266,8 +248,6 @@ pixaccSubtract(PIXACC  *pixacc,
     pixAccumulate(pixaccGetPix(pixacc), pix, L_ARITH_SUBTRACT);
     return 0;
 }
-
-
 /*!
  *  pixaccMultConst()
  *
@@ -287,8 +267,6 @@ pixaccMultConst(PIXACC    *pixacc,
                            pixaccGetOffset(pixacc));
     return 0;
 }
-
-
 /*!
  *  pixaccMultConstAccumulate()
  *
@@ -331,5 +309,3 @@ PIXACC  *pacct;
     pixDestroy(&pixt);
     return 0;
 }
-
-

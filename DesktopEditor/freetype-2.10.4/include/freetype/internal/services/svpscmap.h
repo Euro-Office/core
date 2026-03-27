@@ -14,20 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVPSCMAP_H_
 #define SVPSCMAP_H_
 
 #include <freetype/internal/ftobjs.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_POSTSCRIPT_CMAPS  "postscript-cmaps"
-
-
   /*
    * Adobe glyph name to unicode value.
    */
@@ -45,8 +37,6 @@ FT_BEGIN_HEADER
    */
   typedef const char*
   (*PS_Adobe_Std_StringsFunc)( FT_UInt  string_index );
-
-
   /*
    * Simple unicode -> glyph index charmap built from font glyph names table.
    */
@@ -56,8 +46,6 @@ FT_BEGIN_HEADER
     FT_UInt    glyph_index;
 
   } PS_UniMap;
-
-
   typedef struct PS_UnicodesRec_*  PS_Unicodes;
 
   typedef struct  PS_UnicodesRec_
@@ -67,8 +55,6 @@ FT_BEGIN_HEADER
     PS_UniMap*  maps;
 
   } PS_UnicodesRec;
-
-
   /*
    * A function which returns a glyph name for a given index.  Returns
    * `NULL` if invalid index.
@@ -100,8 +86,6 @@ FT_BEGIN_HEADER
   typedef FT_UInt32
   (*PS_Unicodes_CharNextFunc)( PS_Unicodes  unicodes,
                                FT_UInt32   *unicode );
-
-
   FT_DEFINE_SERVICE( PsCMaps )
   {
     PS_Unicode_ValueFunc       unicode_value;
@@ -115,8 +99,6 @@ FT_BEGIN_HEADER
     const unsigned short*      adobe_std_encoding;
     const unsigned short*      adobe_expert_encoding;
   };
-
-
 #define FT_DEFINE_SERVICE_PSCMAPSREC( class_,                               \
                                       unicode_value_,                       \
                                       unicodes_init_,                       \
@@ -134,12 +116,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVPSCMAP_H_ */
-
-
 /* END */

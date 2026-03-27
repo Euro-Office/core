@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTVALID_H_
 #define FTVALID_H_
 
@@ -25,8 +23,6 @@
 #include "compiler-macros.h"
 
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -41,8 +37,6 @@ FT_BEGIN_HEADER
 
   /* handle to a validation object */
   typedef struct FT_ValidatorRec_ volatile*  FT_Validator;
-
-
   /**************************************************************************
    *
    * There are three distinct validation levels defined here:
@@ -75,8 +69,6 @@ FT_BEGIN_HEADER
     FT_VALIDATE_PARANOID
 
   } FT_ValidationLevel;
-
-
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
   /* We disable the warning `structure was padded due to   */
   /* __declspec(align())' in order to compile cleanly with */
@@ -102,8 +94,6 @@ FT_BEGIN_HEADER
 #endif
 
 #define FT_VALIDATOR( x )  ( (FT_Validator)( x ) )
-
-
   FT_BASE( void )
   ft_validator_init( FT_Validator        valid,
                      const FT_Byte*      base,
@@ -122,8 +112,6 @@ FT_BEGIN_HEADER
   FT_BASE( void )
   ft_validator_error( FT_Validator  valid,
                       FT_Error      error );
-
-
   /* Calls ft_validate_error.  Assumes that the `valid' local variable */
   /* holds a pointer to the current validator object.                  */
   /*                                                                   */
@@ -150,11 +138,7 @@ FT_BEGIN_HEADER
   /* called when an invalid field value is detected */
 #define FT_INVALID_DATA \
           FT_INVALID( Invalid_Table )
-
-
 FT_END_HEADER
 
 #endif /* FTVALID_H_ */
-
-
 /* END */

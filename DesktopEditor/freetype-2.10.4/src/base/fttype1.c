@@ -14,14 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/services/svpsinfo.h>
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -30,8 +26,6 @@
   {
     FT_Error           error;
     FT_Service_PsInfo  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -47,8 +41,6 @@
 
     return error;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Int )
@@ -56,8 +48,6 @@
   {
     FT_Int             result = 0;
     FT_Service_PsInfo  service;
-
-
     if ( face )
     {
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
@@ -68,8 +58,6 @@
 
     return result;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -78,8 +66,6 @@
   {
     FT_Error           error;
     FT_Service_PsInfo  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -95,8 +81,6 @@
 
     return error;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -108,8 +92,6 @@
   {
     FT_Int             result  = 0;
     FT_Service_PsInfo  service = NULL;
-
-
     if ( face )
     {
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
@@ -121,6 +103,4 @@
 
     return result;
   }
-
-
 /* END */

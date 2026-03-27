@@ -28,8 +28,6 @@
 #include "psd_system.h"
 #include "psd_color.h"
 #include "psd_math.h"
-
-
 psd_argb_color psd_argb_to_color(psd_color_component alpha, psd_color_component red, 
 	psd_color_component green, psd_color_component blue)
 {

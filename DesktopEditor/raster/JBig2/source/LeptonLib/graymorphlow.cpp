@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  graymorphlow.c
  *
@@ -82,8 +80,6 @@
 #include <stdio.h>
 
 #include "allheaders.h"
-
-
 
 /*-----------------------------------------------------------------*
  *              Low-level gray morphological operations            *
@@ -201,8 +197,6 @@ l_uint32  *lines, *lined;
             
     return;
 }
-
-
 /*!
  *  erodeGrayLow()
  *
@@ -317,5 +311,3 @@ l_uint32  *lines, *lined;
             
     return;
 }
-
-

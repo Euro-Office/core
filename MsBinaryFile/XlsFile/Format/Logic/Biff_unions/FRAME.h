@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FRAME union of records 
 class FRAME: public CompositeObject
 {

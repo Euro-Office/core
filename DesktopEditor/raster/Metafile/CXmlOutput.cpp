@@ -1117,8 +1117,6 @@ namespace MetaFile
 		*this >> oTRGBA.b;
 		*this >> oTRGBA.a;
 	}
-
-
 	void CXmlOutput::operator>>(CEmfLogBrushEx &oCEmfLogBrushEx)
 	{
 		if (!m_pXmlLiteReader->ReadNextNode())
@@ -1262,8 +1260,6 @@ namespace MetaFile
 		const std::wstring wsValue = m_pXmlLiteReader->GetText2();
 		dValue = (wsValue.empty()) ? 0.0 : GetInteger(wsValue);
 	}
-
-
 	void CXmlOutput::operator>>(unsigned int &unValue)
 	{
 		if (!m_pXmlLiteReader->ReadNextNode())

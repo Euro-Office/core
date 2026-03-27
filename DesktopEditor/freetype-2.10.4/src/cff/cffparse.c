@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "cffparse.h"
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftdebug.h>
@@ -25,8 +23,6 @@
 
 #include "cfferrs.h"
 #include "cffload.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -35,8 +31,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  cffparse
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
@@ -48,8 +42,6 @@
   {
     FT_Memory  memory = library->memory;    /* for FT_NEW_ARRAY */
     FT_Error   error;                       /* for FT_NEW_ARRAY */
-
-
     FT_ZERO( parser );
 
 #if 0
@@ -74,8 +66,6 @@
   Exit:
     return error;
   }
-
-
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
   static void
   finalize_t2_strings( FT_Memory  memory,
@@ -83,22 +73,16 @@
                        void*      user )
   {
     CFF_T2_String  t2 = (CFF_T2_String)data;
-
-
     FT_UNUSED( user );
 
     memory->free( memory, t2->start );
     memory->free( memory, data );
   }
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
-
-
   FT_LOCAL_DEF( void )
   cff_parser_done( CFF_Parser  parser )
   {
     FT_Memory  memory = parser->library->memory;    /* for FT_FREE */
-
-
     FT_FREE( parser->stack );
 
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
@@ -108,8 +92,6 @@
                       NULL );
 #endif
   }
-
-
   /* Assuming `first >= last'. */
 
   static FT_Error
@@ -129,8 +111,6 @@
 #else /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
     FT_ListNode  node;
-
-
     if ( first >= parser->start &&
          last  <  parser->limit )
       return FT_Err_Ok;
@@ -140,8 +120,6 @@
     while ( node )
     {
       CFF_T2_String  t2 = (CFF_T2_String)node->data;
-
-
       if ( first >= t2->start &&
            last  <  t2->limit )
         return FT_Err_Ok;
@@ -153,8 +131,6 @@
 
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
   }
-
-
   /* read an integer */
   static FT_Long
   cff_parse_integer( CFF_Parser  parser,
@@ -163,8 +139,6 @@
     FT_Byte*  p   = start;
     FT_Int    v   = *p++;
     FT_Long   val = 0;
-
-
     if ( v == 28 )
     {
       if ( cff_parser_within_limits( parser, p, p + 1 ) )
@@ -209,8 +183,6 @@
     FT_TRACE4(( "!!!END OF DATA:!!!" ));
     goto Exit;
   }
-
-
   static const FT_Long power_tens[] =
   {
     1L,
@@ -240,8 +212,6 @@
     FT_LONG_MAX / 100000000L,
     FT_LONG_MAX / 1000000000L,
   };
-
-
   /* read a real */
   static FT_Fixed
   cff_parse_real( CFF_Parser  parser,
@@ -256,8 +226,6 @@
     FT_Long   result, number, exponent;
     FT_Int    sign = 0, exponent_sign = 0, have_overflow = 0;
     FT_Long   exponent_add, integer_length, fraction_length;
-
-
     if ( scaling )
       *scaling = 0;
 
@@ -411,8 +379,6 @@
           if ( exponent > 0 )
           {
             FT_Long  new_fraction_length, shift;
-
-
             /* Make `scaling' as small as possible. */
             new_fraction_length = FT_MIN( exponent, 5 );
             shift               = new_fraction_length - fraction_length;
@@ -515,8 +481,6 @@
     FT_TRACE4(( "!!!END OF DATA:!!!" ));
     goto Exit;
   }
-
-
   /* read a number, either integer or real */
   FT_LOCAL_DEF( FT_Long )
   cff_parse_num( CFF_Parser  parser,
@@ -553,8 +517,6 @@
     else
       return cff_parse_integer( parser, *d );
   }
-
-
   /* read a floating point number, either integer or real */
   static FT_Fixed
   do_fixed( CFF_Parser  parser,
@@ -566,8 +528,6 @@
     else
     {
       FT_Long  val = cff_parse_integer( parser, *d );
-
-
       if ( scaling )
       {
         if ( FT_ABS( val ) > power_ten_limits[scaling] )
@@ -597,8 +557,6 @@
       return val;
     }
   }
-
-
   /* read a floating point number, either integer or real */
   static FT_Fixed
   cff_parse_fixed( CFF_Parser  parser,
@@ -606,8 +564,6 @@
   {
     return do_fixed( parser, d, 0 );
   }
-
-
   /* read a floating point number, either integer or real, */
   /* but return `10^scaling' times the number read in      */
   static FT_Fixed
@@ -617,8 +573,6 @@
   {
     return do_fixed( parser, d, scaling );
   }
-
-
   /* read a floating point number, either integer or real,     */
   /* and return it as precise as possible -- `scaling' returns */
   /* the scaling factor (as a power of 10)                     */
@@ -635,8 +589,6 @@
     {
       FT_Long  number;
       FT_Int   integer_length;
-
-
       number = cff_parse_integer( parser, d[0] );
 
       if ( number > 0x7FFFL )
@@ -663,8 +615,6 @@
       }
     }
   }
-
-
   static FT_Error
   cff_parse_font_matrix( CFF_Parser  parser )
   {
@@ -673,8 +623,6 @@
     FT_Vector*       offset = &dict->font_offset;
     FT_ULong*        upm    = &dict->units_per_em;
     FT_Byte**        data   = parser->stack;
-
-
     if ( parser->top >= parser->stack + 6 )
     {
       FT_Fixed  values[6];
@@ -682,8 +630,6 @@
 
       FT_Long  min_scaling, max_scaling;
       int      i;
-
-
       dict->has_font_matrix = TRUE;
 
       /* We expect a well-formed font matrix, this is, the matrix elements */
@@ -723,8 +669,6 @@
       {
         FT_Fixed  value = values[i];
         FT_Long   divisor, half_divisor;
-
-
         if ( !value )
           continue;
 
@@ -789,8 +733,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   cff_parse_font_bbox( CFF_Parser  parser )
   {
@@ -798,8 +740,6 @@
     FT_BBox*         bbox = &dict->font_bbox;
     FT_Byte**        data = parser->stack;
     FT_Error         error;
-
-
     error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 4 )
@@ -819,23 +759,17 @@
 
     return error;
   }
-
-
   static FT_Error
   cff_parse_private_dict( CFF_Parser  parser )
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**        data = parser->stack;
     FT_Error         error;
-
-
     error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 2 )
     {
       FT_Long  tmp;
-
-
       tmp = cff_parse_num( parser, data++ );
       if ( tmp < 0 )
       {
@@ -863,8 +797,6 @@
   Fail:
     return error;
   }
-
-
   /* The `MultipleMaster' operator comes before any  */
   /* top DICT operators that contain T2 charstrings. */
 
@@ -873,8 +805,6 @@
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Error         error;
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
     /* beautify tracing message */
     if ( ft_trace_levels[FT_TRACE_COMP( FT_COMPONENT )] < 4 )
@@ -891,8 +821,6 @@
     if ( parser->top >= parser->stack + 5 )
     {
       FT_Long  num_designs = cff_parse_num( parser, parser->stack );
-
-
       if ( num_designs > 16 || num_designs < 2 )
       {
         FT_ERROR(( "cff_parse_multiple_master:"
@@ -913,16 +841,12 @@
 
     return error;
   }
-
-
   static FT_Error
   cff_parse_cid_ros( CFF_Parser  parser )
   {
     CFF_FontRecDict  dict = (CFF_FontRecDict)parser->object;
     FT_Byte**        data = parser->stack;
     FT_Error         error;
-
-
     error = FT_ERR( Stack_Underflow );
 
     if ( parser->top >= parser->stack + 3 )
@@ -945,8 +869,6 @@
 
     return error;
   }
-
-
   static FT_Error
   cff_parse_vsindex( CFF_Parser  parser )
   {
@@ -955,8 +877,6 @@
     FT_Byte**    data = parser->stack;
     CFF_Blend    blend;
     FT_Error     error;
-
-
     if ( !priv || !priv->subfont )
     {
       error = FT_THROW( Invalid_File_Format );
@@ -981,8 +901,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   cff_parse_blend( CFF_Parser  parser )
   {
@@ -992,8 +910,6 @@
     CFF_Blend    blend;
     FT_UInt      numBlends;
     FT_Error     error;
-
-
     if ( !priv || !priv->subfont )
     {
       error = FT_THROW( Invalid_File_Format );
@@ -1035,8 +951,6 @@
   Exit:
     return error;
   }
-
-
   /* maxstack operator increases parser and operand stacks for CFF2 */
   static FT_Error
   cff_parse_maxstack( CFF_Parser  parser )
@@ -1045,8 +959,6 @@
     CFF_FontRecDict  dict  = (CFF_FontRecDict)parser->object;
     FT_Byte**        data  = parser->stack;
     FT_Error         error = FT_Err_Ok;
-
-
     if ( !dict )
     {
       error = FT_THROW( Invalid_File_Format );
@@ -1064,8 +976,6 @@
   Exit:
     return error;
   }
-
-
 #define CFF_FIELD_NUM( code, name, id )             \
           CFF_FIELD( code, name, id, cff_kind_num )
 #define CFF_FIELD_FIXED( code, name, id )             \
@@ -1076,15 +986,9 @@
           CFF_FIELD( code, name, id, cff_kind_string )
 #define CFF_FIELD_BOOL( code, name, id )             \
           CFF_FIELD( code, name, id, cff_kind_bool )
-
-
 #undef  CFF_FIELD
 #undef  CFF_FIELD_DELTA
-
-
 #ifndef FT_DEBUG_LEVEL_TRACE
-
-
 #define CFF_FIELD_CALLBACK( code, name, id ) \
           {                                  \
             cff_kind_callback,               \
@@ -1130,11 +1034,7 @@
 
     { 0, 0, 0, 0, 0, 0, 0 }
   };
-
-
 #else /* FT_DEBUG_LEVEL_TRACE */
-
-
 
 #define CFF_FIELD_CALLBACK( code, name, id ) \
           {                                  \
@@ -1185,11 +1085,7 @@
 
     { 0, 0, 0, 0, 0, 0, 0, 0 }
   };
-
-
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_parser_run( CFF_Parser  parser,
                   FT_Byte*    start,
@@ -1213,8 +1109,6 @@
     while ( p < limit )
     {
       FT_UInt  v = *p;
-
-
       /* Opcode 31 is legacy MM T2 operator, not a number.      */
       /* Opcode 255 is reserved and should not appear in fonts; */
       /* it is used internally for CFF2 blends.                 */
@@ -1268,8 +1162,6 @@
         CFF_T2_String  t2;
         FT_Fixed       t2_size;
         FT_Byte*       q;
-
-
         charstring_base = ++p;
 
         /* search `endchar' operator */
@@ -1341,8 +1233,6 @@
         {
           FT_ULong  num;
           FT_Bool   neg;
-
-
           if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
             goto Stack_Overflow;
 
@@ -1422,8 +1312,6 @@
         FT_UInt                   code;
         FT_UInt                   num_args;
         const CFF_Field_Handler*  field;
-
-
         if ( (FT_UInt)( parser->top - parser->stack ) >= parser->stackSize )
           goto Stack_Overflow;
 
@@ -1449,8 +1337,6 @@
             /* we found our field's handler; read it */
             FT_Long   val;
             FT_Byte*  q = (FT_Byte*)parser->object + field->offset;
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
             FT_TRACE4(( "  %s", field->id ));
 #endif
@@ -1529,8 +1415,6 @@
                                       field->count_offset;
 
                 FT_Byte**  data = parser->stack;
-
-
                 if ( num_args > field->array_max )
                   num_args = field->array_max;
 
@@ -1614,6 +1498,4 @@
     error = FT_THROW( Invalid_Argument );
     goto Exit;
   }
-
-
 /* END */

@@ -507,8 +507,6 @@ namespace Jpeg2000
 		//			{
 		//				pParameters->nComponentsCount = XmlUtils::GetInteger(oCurNode.GetAttribute(_T("value"), _T("3")));
 		//			}
-
-
 		//			// Format
 		//			if (oSaveNode.GetNode(_T("Format"), oCurNode))
 		//			{
@@ -729,8 +727,6 @@ namespace Jpeg2000
 
 		//	}
 		//}
-
-
 		// Проверим кооректность введенных параметров
 
 		// Параметры nDistoAlloc, nFixedQuality, nFixedAlloc нельзя использовать вместе

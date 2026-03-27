@@ -77,8 +77,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 GP<DjVmNav::DjVuBookMark>
 DjVmNav::DjVuBookMark::create(void)
 {
@@ -250,8 +248,6 @@ DjVmNav::getBookMark(GP<DjVuBookMark> &gpBookMark, int iPos)
     gpBookMark = 0;
   return (gpBookMark?true:false);
 }
-
-
 // A text dump of this object
 void 
 DjVmNav::dump(const GP<ByteStream> &gstr)
@@ -330,8 +326,6 @@ DjVmNav::get_tree(int index, int* count_array, int count_array_size)
     }
   return 0;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

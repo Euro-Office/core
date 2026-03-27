@@ -14,20 +14,14 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /*  This file implements functions relative to list processing.  Its     */
   /*  data structures are defined in `freetype.h'.                         */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTLIST_H__
 #define __FTLIST_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -36,11 +30,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -73,8 +63,6 @@ FT_BEGIN_HEADER
   /*    FT_List_Destructor                                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -93,8 +81,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_ListNode )
   FT_List_Find( FT_List  list,
                 void*    data );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -110,8 +96,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_List_Add( FT_List      list,
                FT_ListNode  node );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -127,8 +111,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_List_Insert( FT_List      list,
                   FT_ListNode  node );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -147,8 +129,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_List_Remove( FT_List      list,
                   FT_ListNode  node );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -165,8 +145,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_List_Up( FT_List      list,
               FT_ListNode  node );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -185,8 +163,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*FT_List_Iterator)( FT_ListNode  node,
                        void*        user );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -210,8 +186,6 @@ FT_BEGIN_HEADER
   FT_List_Iterate( FT_List           list,
                    FT_List_Iterator  iterator,
                    void*             user );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -234,8 +208,6 @@ FT_BEGIN_HEADER
   (*FT_List_Destructor)( FT_Memory  memory,
                          void*      data,
                          void*      user );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -264,14 +236,8 @@ FT_BEGIN_HEADER
                     FT_List_Destructor  destroy,
                     FT_Memory           memory,
                     void*               user );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTLIST_H__ */
-
-
 /* END */

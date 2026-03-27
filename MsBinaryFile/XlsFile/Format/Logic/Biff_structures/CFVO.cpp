@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CFVO::clone()
 {
 	return BiffStructurePtr(new CFVO(*this));
 }
-
-
 void CFVO::load(CFRecord& record)
 {
 	record >> cfvoType;
@@ -66,7 +62,5 @@ void CFVO::save(CFRecord& record)
         record << numValue;
     }
 }
-
-
 } // namespace XLS
 

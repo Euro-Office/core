@@ -36,8 +36,6 @@
 #include "../Biff_structures/ODRAW/SimpleOfficeArtContainers.h"
 #include "../Biff_structures/ODRAW/OfficeArtClientAnchorSheet.h"
 #include "../Biff_structures/ODRAW/OfficeArtFOPT.h"
-
-
 #include "../../../Converter/XlsConverter.h"
 
 #define OBJ_Group			0x0000
@@ -65,13 +63,9 @@
 
 namespace XLS
 {
-
-
 Obj::~Obj()
 {
 }
-
-
 BaseObjectPtr Obj::clone()
 {
 	return BaseObjectPtr(new Obj(*this));

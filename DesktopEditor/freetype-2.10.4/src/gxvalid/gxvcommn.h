@@ -23,8 +23,6 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
   /*
    * keywords in variable naming
    * ---------------------------
@@ -37,20 +35,12 @@
    *
    *  _MIN, _MAX: Should be added to the tail of macros, as INT_MIN, etc.
    */
-
-
 #ifndef GXVCOMMN_H_
 #define GXVCOMMN_H_
-
-
 #include "gxvalid.h"
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftsnames.h>
-
-
 FT_BEGIN_HEADER
-
-
   /* some variables are not evaluated or only used in trace */
 
 #ifdef  FT_DEBUG_LEVEL_TRACE
@@ -73,16 +63,12 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   typedef struct GXV_ValidatorRec_*  GXV_Validator;
-
-
 #define DUMMY_LIMIT 0
 
   typedef void
   (*GXV_Validate_Func)( FT_Bytes       table,
                         FT_Bytes       limit,
                         GXV_Validator  gxvalid );
-
-
   /* ====================== LookupTable Validator ======================== */
 
   typedef union  GXV_LookupValueDesc_
@@ -100,8 +86,6 @@ FT_BEGIN_HEADER
     GXV_LOOKUPVALUE_SIGNED
 
   } GXV_LookupValue_SignSpec;
-
-
   typedef void
   (*GXV_Lookup_Value_Validate_Func)( FT_UShort            glyph,
                                      GXV_LookupValueCPtr  value_p,
@@ -112,8 +96,6 @@ FT_BEGIN_HEADER
                                    GXV_LookupValueCPtr  base_value_p,
                                    FT_Bytes             lookuptbl_limit,
                                    GXV_Validator        gxvalid );
-
-
   /* ====================== StateTable Validator ========================= */
 
   typedef enum  GXV_GlyphOffset_Format_
@@ -127,15 +109,11 @@ FT_BEGIN_HEADER
     GXV_GLYPHOFFSET_LONG
 
   } GXV_GlyphOffset_Format;
-
-
 #define GXV_GLYPHOFFSET_FMT( table )           \
         ( gxvalid->table.entry_glyphoffset_fmt )
 
 #define GXV_GLYPHOFFSET_SIZE( table )              \
         ( gxvalid->table.entry_glyphoffset_fmt / 2 )
-
-
   /* ----------------------- 16bit StateTable ---------------------------- */
 
   typedef union  GXV_StateTable_GlyphOffsetDesc_
@@ -185,8 +163,6 @@ FT_BEGIN_HEADER
     GXV_StateTable_OptData_Load_Func    optdata_load_func;
 
   } GXV_StateTable_ValidatorRec, *GXV_StateTable_ValidatorRecData;
-
-
   /* ---------------------- 32bit XStateTable ---------------------------- */
 
   typedef GXV_StateTable_GlyphOffsetDesc  GXV_XStateTable_GlyphOffsetDesc;
@@ -211,11 +187,7 @@ FT_BEGIN_HEADER
      FT_Bytes                        xstatetable_table,
      FT_Bytes                        xstatetable_limit,
      GXV_Validator                   gxvalid );
-
-
   typedef GXV_StateTable_OptData_Load_Func  GXV_XStateTable_OptData_Load_Func;
-
-
   typedef struct  GXV_XStateTable_ValidatorRec_
   {
     int                                  entry_glyphoffset_fmt;
@@ -229,8 +201,6 @@ FT_BEGIN_HEADER
     FT_UShort                            maxClassID;
 
   } GXV_XStateTable_ValidatorRec, *GXV_XStateTable_ValidatorRecData;
-
-
   /* ===================================================================== */
 
   typedef struct  GXV_ValidatorRec_
@@ -259,8 +229,6 @@ FT_BEGIN_HEADER
 #endif
 
   } GXV_ValidatorRec;
-
-
 #define GXV_TABLE_DATA( tag, field )                           \
         ( ( (GXV_ ## tag ## _Data)gxvalid->table_data )->field )
 
@@ -273,8 +241,6 @@ FT_BEGIN_HEADER
             if ( p + _count > ( limit? limit : gxvalid->root->limit ) ) \
               FT_INVALID_TOO_SHORT;                                   \
           FT_END_STMNT
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #define GXV_INIT  gxvalid->debug_indent = 0
@@ -303,8 +269,6 @@ FT_BEGIN_HEADER
 #define GXV_TRACE( s )          do { } while ( 0 )
 
 #endif  /* !FT_DEBUG_LEVEL_TRACE */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -320,8 +284,6 @@ FT_BEGIN_HEADER
                 FT_INVALID_OFFSET;        \
             }                             \
           FT_END_STMNT
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -357,8 +319,6 @@ FT_BEGIN_HEADER
 
 #define GXV_TRACE_HEXDUMP_SFNTNAME( n )               \
           GXV_TRACE_HEXDUMP( n.string, n.string_len )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -378,8 +338,6 @@ FT_BEGIN_HEADER
   gxv_LookupTable_validate( FT_Bytes       table,
                             FT_Bytes       limit,
                             GXV_Validator  gxvalid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -391,8 +349,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Int )
   gxv_glyphid_validate( FT_UShort      gid,
                         GXV_Validator  gxvalid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -405,8 +361,6 @@ FT_BEGIN_HEADER
   gxv_ctlPoint_validate( FT_UShort      gid,
                          FT_UShort      ctl_point,
                          GXV_Validator  gxvalid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -420,8 +374,6 @@ FT_BEGIN_HEADER
                          FT_UShort      min_index,
                          FT_UShort      max_index,
                          GXV_Validator  gxvalid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -459,8 +411,6 @@ FT_BEGIN_HEADER
   gxv_XStateTable_validate( FT_Bytes       table,
                             FT_Bytes       limit,
                             GXV_Validator  gxvalid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -498,8 +448,6 @@ FT_BEGIN_HEADER
                                   FT_UInt        nmemb,
                                   FT_ULong       limit,
                                   GXV_Validator  gxvalid);
-
-
 #define GXV_SUBTABLE_OFFSET_CHECK( _offset )          \
           FT_BEGIN_STMNT                              \
             if ( (_offset) > gxvalid->subtable_length ) \
@@ -521,8 +469,6 @@ FT_BEGIN_HEADER
 
 #define GXV_XSTATETABLE_HEADER_SIZE  ( 4 + 4 + 4 + 4 )
 #define GXV_XSTATEHEADER_SIZE        GXV_XSTATETABLE_HEADER_SIZE
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -545,8 +491,6 @@ FT_BEGIN_HEADER
     GXV_odtect_Data  range;
 
   } GXV_odtect_RangeRec, *GXV_odtect_Range;
-
-
   FT_LOCAL( void )
   gxv_odtect_add_range( FT_Bytes          start,
                         FT_ULong          length,
@@ -556,8 +500,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   gxv_odtect_validate( GXV_odtect_Range  odtect,
                        GXV_Validator     gxvalid );
-
-
 #define GXV_ODTECT( n, odtect )                              \
           GXV_odtect_DataRec   odtect ## _range[n];          \
           GXV_odtect_RangeRec  odtect ## _rec = { 0, NULL }; \
@@ -569,13 +511,9 @@ FT_BEGIN_HEADER
             odtect ## _rec.range   = odtect ## _range; \
             odtect                 = & odtect ## _rec; \
           FT_END_STMNT
-
-
  /* */
 
 FT_END_HEADER
 
 #endif /* GXVCOMMN_H_ */
-
-
 /* END */

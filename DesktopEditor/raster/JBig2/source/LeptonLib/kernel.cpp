@@ -13,8 +13,6 @@
  -  or altered from any source or modified source distribution.
  *====================================================================*/
 
-
-
 /*
  *  kernel.c
  *
@@ -71,8 +69,6 @@
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------------*
  *                           Create / Destroy                             *
  *------------------------------------------------------------------------*/
@@ -104,8 +100,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*!
  *  kernelDestroy()
  *
@@ -135,8 +129,6 @@ L_KERNEL  *kel;
     *pkel = NULL;
     return;
 }
-
-
 /*!
  *  kernelCopy()
  *
@@ -165,8 +157,6 @@ L_KERNEL  *keld;
 
     return keld;
 }
-
-
 /*----------------------------------------------------------------------*
  *                               Accessors                              *
  *----------------------------------------------------------------------*/
@@ -200,8 +190,6 @@ kernelGetElement(L_KERNEL   *kel,
     *pval = kel->data[row][col];
     return 0;
 }
-
-
 /*!
  *  kernelSetElement()
  *
@@ -229,8 +217,6 @@ kernelSetElement(L_KERNEL  *kel,
     kel->data[row][col] = val;
     return 0;
 }
-
-
 /*!
  *  kernelGetParameters()
  *
@@ -259,8 +245,6 @@ kernelGetParameters(L_KERNEL  *kel,
     if (pcx) *pcx = kel->cx; 
     return 0;
 }
-
-
 /*!
  *  kernelSetOrigin()
  *
@@ -281,8 +265,6 @@ kernelSetOrigin(L_KERNEL  *kel,
     kel->cx = cx;
     return 0;
 }
-
-
 /*!
  *  kernelGetSum()
  *
@@ -312,8 +294,6 @@ l_int32    sx, sy, i, j;
     }
     return 0;
 }
-
-
 /*!
  *  kernelGetMinMax()
  *
@@ -358,8 +338,6 @@ l_float32  val, minval, maxval;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                          Normalize/Invert                            *
  *----------------------------------------------------------------------*/
@@ -408,8 +386,6 @@ L_KERNEL  *keld;
 
     return keld;
 }
-
-
 /*!
  *  kernelInvert()
  *
@@ -443,8 +419,6 @@ L_KERNEL  *keld;
 
     return keld;
 }
-
-
 /*----------------------------------------------------------------------*
  *                            Helper function                           *
  *----------------------------------------------------------------------*/
@@ -479,8 +453,6 @@ l_float32  **array;
 
     return array;
 }
-
-
 /*----------------------------------------------------------------------*
  *                            Kernel serialized I/O                     *
  *----------------------------------------------------------------------*/
@@ -509,8 +481,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*!
  *  kernelReadStream()
  *
@@ -551,8 +521,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*!
  *  kernelWrite()
  *
@@ -580,8 +548,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  kernelWriteStream()
  *
@@ -614,8 +580,6 @@ l_int32  sx, sy, cx, cy, i, j;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                 Making a kernel from a compiled string               *
  *----------------------------------------------------------------------*/
@@ -684,8 +648,6 @@ NUMA      *na;
     numaDestroy(&na);
     return kel;
 }
-
-
 /*----------------------------------------------------------------------*
  *                Making a kernel from a simple file format             *
  *----------------------------------------------------------------------*/
@@ -792,8 +754,6 @@ L_KERNEL  *kel;
     numaDestroy(&na);
     return kel;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Making a kernel from a Pix                     *
  *----------------------------------------------------------------------*/
@@ -837,8 +797,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Display a kernel in a pix                        *
  *----------------------------------------------------------------------*/
@@ -933,8 +891,6 @@ PIX       *pixd, *pixt0, *pixt1;
     pixDestroy(&pixt1);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------------*
  *                     Parse string to extract numbers                    *
  *------------------------------------------------------------------------*/
@@ -976,8 +932,6 @@ NUMA      *na;
     FREE(newstr);
     return na;
 }
-
-
 /*------------------------------------------------------------------------*
  *                        Simple parametric kernels                       *
  *------------------------------------------------------------------------*/
@@ -1021,8 +975,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*!
  *  makeGaussianKernel()
  *
@@ -1068,8 +1020,6 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-
 /*!
  *  makeGaussianKernelSep()
  *
@@ -1109,8 +1059,6 @@ makeGaussianKernelSep(l_int32    halfheight,
     *pkely = makeGaussianKernel(halfheight, 0, stdev, 1.0);
     return 0;
 }
-
-
 /*!
  *  makeDoGKernel()
  *
@@ -1168,5 +1116,3 @@ L_KERNEL  *kel;
 
     return kel;
 }
-
-

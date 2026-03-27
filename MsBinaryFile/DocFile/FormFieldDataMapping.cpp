@@ -115,8 +115,6 @@ namespace DocFileFormat
 				else if (ffData->FFData.iType == 2)
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:ddList");
-
-
 					m_pXmlWriter->WriteNodeEnd(L"w:ddList");
 				}
 				else

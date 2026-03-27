@@ -41,8 +41,6 @@
 #include "../Records/Drawing/BlipStoreContainer.h"
 #include "../Records/Drawing/GroupShapeContainer.h"
 #include "SlideInfo.h"
-
-
 namespace PPT
 {
 class CPPTDocumentInfo;

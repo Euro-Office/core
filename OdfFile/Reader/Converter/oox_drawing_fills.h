@@ -122,8 +122,6 @@ namespace oox {
 		int		style;
 		double	rect[4];
 		double	angle;
-
-
 		std::vector<_color_position> colors;
 	};
 //////////////////////////////////////////////////////////////////////////////

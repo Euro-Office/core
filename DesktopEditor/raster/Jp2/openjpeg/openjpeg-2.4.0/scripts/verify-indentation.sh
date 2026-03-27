@@ -17,8 +17,6 @@ set -e
 
 ASTYLEDIFF=/tmp/astyle.diff
 >$ASTYLEDIFF
-
-
 if [[ ! -z  $TRAVIS_PULL_REQUEST_BRANCH  ]]; then
   # if on a PR, just analyse the changed files
   echo "TRAVIS PR BRANCH: $TRAVIS_PULL_REQUEST_BRANCH"

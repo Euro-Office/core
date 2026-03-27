@@ -202,8 +202,6 @@ typedef struct opj_tccp {
 }
 opj_tccp_t;
 
-
-
 /**
  * FIXME DOC
  */
@@ -298,8 +296,6 @@ typedef struct opj_tcp {
     OPJ_UINT32 m_nb_mcc_records;
     /** the max number of mct records. */
     OPJ_UINT32 m_nb_max_mcc_records;
-
-
     /***** FLAGS *******/
     /** If cod == 1 --> there was a COD marker for the present tile */
     OPJ_BITFIELD cod : 1;
@@ -308,10 +304,6 @@ typedef struct opj_tcp {
     /** indicates if a POC marker has been used O:NO, 1:YES */
     OPJ_BITFIELD POC : 1;
 } opj_tcp_t;
-
-
-
-
 typedef struct opj_encoding_param {
     /** Maximum rate for each component. If == 0, component size limitation is not considered */
     OPJ_UINT32 m_max_comp_size;
@@ -339,8 +331,6 @@ typedef struct opj_decoding_param {
     OPJ_UINT32 m_layer;
 }
 opj_decoding_param_t;
-
-
 /**
  * Coding parameters
  */
@@ -397,8 +387,6 @@ typedef struct opj_cp {
         opj_encoding_param_t m_enc;
     }
     m_specific_param;
-
-
     /* UniPG>> */
 #ifdef USE_JPWL
     /** enables writing of EPC in MH, thus activating JPWL */
@@ -452,8 +440,6 @@ typedef struct opj_cp {
     OPJ_BITFIELD allow_different_bit_depth_sign : 1;
     /* <<UniPG */
 } opj_cp_t;
-
-
 typedef struct opj_j2k_dec {
     /** locate in which part of the codestream the decoder is (main header, tile header, end) */
     OPJ_UINT32 m_state;
@@ -542,8 +528,6 @@ typedef struct opj_j2k_enc {
 
 } opj_j2k_enc_t;
 
-
-
 struct opj_tcd;
 /**
 JPEG-2000 codestream reader/writer
@@ -596,10 +580,6 @@ typedef struct opj_j2k {
     unsigned int dump_state;
 }
 opj_j2k_t;
-
-
-
-
 /** @name Exported functions */
 /*@{*/
 /* ----------------------------------------------------------------------- */
@@ -620,8 +600,6 @@ OPJ_BOOL opj_j2k_set_threads(opj_j2k_t *j2k, OPJ_UINT32 num_threads);
  * @return Returns a handle to a J2K compressor if successful, returns NULL otherwise
 */
 opj_j2k_t* opj_j2k_create_compress(void);
-
-
 OPJ_BOOL opj_j2k_setup_encoder(opj_j2k_t *p_j2k,
                                opj_cparameters_t *parameters,
                                opj_image_t *image,
@@ -659,8 +637,6 @@ OPJ_BOOL opj_j2k_read_header(opj_stream_private_t *p_stream,
                              opj_j2k_t* p_j2k,
                              opj_image_t** p_image,
                              opj_event_mgr_t* p_manager);
-
-
 /**
  * Destroys a jpeg2000 codec.
  *
@@ -716,8 +692,6 @@ OPJ_BOOL opj_j2k_read_tile_header(opj_j2k_t * p_j2k,
                                   OPJ_BOOL * p_go_on,
                                   opj_stream_private_t *p_stream,
                                   opj_event_mgr_t * p_manager);
-
-
 /** Sets the indices of the components to decode.
  *
  * @param p_j2k         the jpeg2000 codec.
@@ -758,8 +732,6 @@ OPJ_BOOL opj_j2k_set_decode_area(opj_j2k_t *p_j2k,
  * @return a handle to a J2K decompressor if successful, NULL otherwise.
  */
 opj_j2k_t* opj_j2k_create_decompress(void);
-
-
 /**
  * Dump some elements from the J2K decompression structure .
  *
@@ -769,8 +741,6 @@ opj_j2k_t* opj_j2k_create_decompress(void);
  *
 */
 void j2k_dump(opj_j2k_t* p_j2k, OPJ_INT32 flag, FILE* out_stream);
-
-
 
 /**
  * Dump an image header structure.
@@ -822,8 +792,6 @@ OPJ_BOOL opj_j2k_decode(opj_j2k_t *j2k,
                         opj_stream_private_t *p_stream,
                         opj_image_t *p_image,
                         opj_event_mgr_t *p_manager);
-
-
 OPJ_BOOL opj_j2k_get_tile(opj_j2k_t *p_j2k,
                           opj_stream_private_t *p_stream,
                           opj_image_t* p_image,
@@ -895,6 +863,4 @@ OPJ_BOOL opj_j2k_end_compress(opj_j2k_t *p_j2k,
                               opj_event_mgr_t * p_manager);
 
 OPJ_BOOL opj_j2k_setup_mct_encoding(opj_tcp_t * p_tcp, opj_image_t * p_image);
-
-
 #endif /* OPJ_J2K_H */

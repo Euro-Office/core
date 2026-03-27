@@ -14,21 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVPSINFO_H_
 #define SVPSINFO_H_
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/t1types.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_POSTSCRIPT_INFO  "postscript-info"
-
-
   typedef FT_Error
   (*PS_GetFontInfoFunc)( FT_Face          face,
                          PS_FontInfoRec*  afont_info );
@@ -50,8 +42,6 @@ FT_BEGIN_HEADER
                           FT_UInt       idx,
                           void         *value,
                           FT_Long       value_len );
-
-
   FT_DEFINE_SERVICE( PsInfo )
   {
     PS_GetFontInfoFunc     ps_get_font_info;
@@ -60,8 +50,6 @@ FT_BEGIN_HEADER
     PS_GetFontPrivateFunc  ps_get_font_private;
     PS_GetFontValueFunc    ps_get_font_value;
   };
-
-
 #define FT_DEFINE_SERVICE_PSINFOREC( class_,                     \
                                      get_font_info_,             \
                                      ps_get_font_extra_,         \
@@ -75,12 +63,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVPSINFO_H_ */
-
-
 /* END */

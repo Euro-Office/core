@@ -22,12 +22,8 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmort.h"
 #include "gxvfeat.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmort
-
-
   static void
   gxv_mort_feature_validate( GXV_mort_feature  f,
                              GXV_Validator     valid )
@@ -59,8 +53,6 @@
     else
     {
       FT_Byte  nSettings_max;
-
-
       /* nSettings in gxvfeat.c is halved for exclusive on/off settings */
       nSettings_max = gxv_feat_registry[f->featureType].nSettings;
       if ( gxv_feat_registry[f->featureType].exclusive )
@@ -79,8 +71,6 @@
 
     /* TODO: enableFlags must be unique value in specified chain?  */
   }
-
-
   /*
    * nFeatureFlags is typed to FT_ULong to accept that in
    * mort (typed FT_UShort) and morx (typed FT_ULong).
@@ -95,8 +85,6 @@
     FT_ULong  i;
 
     GXV_mort_featureRec  f = GXV_MORT_FEATURE_OFF;
-
-
     GXV_NAME_ENTER( "mort feature list" );
     for ( i = 0; i < nFeatureFlags; i++ )
     {
@@ -115,8 +103,6 @@
     valid->subtable_length = p - table;
     GXV_EXIT;
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_mort_coverage_validate( FT_UShort      coverage,
                               GXV_Validator  valid )
@@ -144,8 +130,6 @@
       GXV_TRACE(( " coverage has non-zero bits in reserved area\n" ));
 #endif
   }
-
-
   static void
   gxv_mort_subtables_validate( FT_Bytes       table,
                                FT_Bytes       limit,
@@ -166,8 +150,6 @@
     };
 
     FT_UShort  i;
-
-
     GXV_NAME_ENTER( "subtables in a chain" );
 
     for ( i = 0; i < nSubtables; i++ )
@@ -181,8 +163,6 @@
 #endif
       FT_UInt    type;
       FT_UInt    rest;
-
-
       GXV_LIMIT_CHECK( 2 + 2 + 4 );
       length          = FT_NEXT_USHORT( p );
       coverage        = FT_NEXT_USHORT( p );
@@ -217,8 +197,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_mort_chain_validate( FT_Bytes       table,
                            FT_Bytes       limit,
@@ -231,8 +209,6 @@
     FT_ULong   chainLength;
     FT_UShort  nFeatureFlags;
     FT_UShort  nSubtables;
-
-
     GXV_NAME_ENTER( "mort chain header" );
 
     GXV_LIMIT_CHECK( 4 + 4 + 2 + 2 );
@@ -254,8 +230,6 @@
     /* TODO: validate defaultFlags */
     GXV_EXIT;
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_mort_validate( FT_Bytes      table,
                      FT_Face       face,
@@ -268,8 +242,6 @@
     FT_ULong          version;
     FT_ULong          nChains;
     FT_ULong          i;
-
-
     valid->root = ftvalid;
     valid->face = face;
     limit       = valid->root->limit;
@@ -294,6 +266,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

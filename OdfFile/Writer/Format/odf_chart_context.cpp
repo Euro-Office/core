@@ -870,8 +870,6 @@ void odf_chart_context::end_group_series()
 		}
 		if (axis_name.length() > 0)break;
 	}
-
-
 	for (size_t i = 0; i < impl_->group_series_.size() && axis_name.length() > 0; i++)
 	{
 		chart_series *series= dynamic_cast<chart_series*>(impl_->group_series_[i].get());
@@ -1674,8 +1672,6 @@ void odf_chart_context::end_chart()
 	
 	end_element();
 ///////////////////
-
-
 	size_t cat = 0;
 	for (size_t i = 0; i < impl_->axis_.size() && false == impl_->categories_.empty(); i++)
 	{
@@ -2033,8 +2029,6 @@ void odf_chart_context::Impl::create_local_table()
 			if (std::wstring::npos != r)
 				refs[1] = refs[1].substr(r + 1, refs[1].size() - r);
 			utils::parsing_ref( refs[1], col2, row2);
-
-			
 			if (col2 < min_col)	min_col = col2;
 			if (row2 < min_row)	min_row = row2;
 		}
@@ -2104,8 +2098,6 @@ void odf_chart_context::Impl::create_local_table()
 		}
 	}
 	std::sort(cells_cash.begin(), cells_cash.end(), sort_cells);
-
-
 /////////////////////////
 	//create tables
 
@@ -2138,8 +2130,6 @@ void odf_chart_context::Impl::create_local_table()
 		office_element_ptr cols_elm;
 		create_element(L"table", L"table-columns", cols_elm, odf_context_);
 		table_elm->add_child_element(cols_elm);
-
-
 		for (int i=0; i < max_columns - (col_header ? 1 : 0); i++)
 			cols_elm->add_child_element(col_elm);
 

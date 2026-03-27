@@ -47,8 +47,6 @@ static const UChar gDefFallbackPattern[]        = {0x7B, 0x31, 0x7D, 0x20, 0x28,
 
 static const double kDstCheckRange      = (double)184*U_MILLIS_PER_DAY;
 
-
-
 U_CDECL_BEGIN
 
 typedef struct PartialLocationKey {
@@ -319,8 +317,6 @@ private:
 
     TimeZoneNames::MatchInfoCollection* findTimeZoneNames(const UnicodeString& text, int32_t start, uint32_t types, UErrorCode& status) const;
 };
-
-
 // ---------------------------------------------------
 // TZGNCore - core implmentation of TimeZoneGenericNames
 //
@@ -457,8 +453,6 @@ TZGNCore::cleanup() {
     uhash_close(fLocationNamesMap);
     uhash_close(fPartialLocationNamesMap);
 }
-
-
 UnicodeString&
 TZGNCore::getDisplayName(const TimeZone& tz, UTimeZoneGenericNameType type, UDate date, UnicodeString& name) const {
     name.setToBogus();

@@ -39,8 +39,6 @@
 
 namespace cpdoccore { 
 namespace oox {
-
-
 docx_table_state::docx_table_state(docx_conversion_context & Context, const std::wstring & StyleName) : 
 	context_(Context),
     table_style_(StyleName),

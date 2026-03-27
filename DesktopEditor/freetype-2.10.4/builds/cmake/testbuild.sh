@@ -28,8 +28,6 @@
 # - The variable BUILD_SHARED_LIBS will be forwarded to the CMake project
 #   that builds the library.
 #
-
-
 # prepare temporary dir
 
 cd `dirname $0`/../..
@@ -37,8 +35,6 @@ ftdir=`pwd`
 tmpdir=/tmp/freetype-cmake-testbuild
 rm -rf $tmpdir
 mkdir -p $tmpdir
-
-
 # build and install freetype
 
 if test -n "$BUILD_SHARED_LIBS"; then
@@ -68,8 +64,6 @@ build_opts="-DWITH_ZLIB=0 \
                --config Release \
                --target install \
                --clean-first)
-
-
 # create test project CMakeLists.txt
 
 cat >$tmpdir/CMakeLists.txt << END
@@ -84,8 +78,6 @@ target_link_libraries(freetype-cmake-test freetype)
 enable_testing()
 add_test(freetype-cmake-test freetype-cmake-test)
 END
-
-
 # create test project main.c
 
 cat >$tmpdir/main.c << END
@@ -94,11 +86,7 @@ cat >$tmpdir/main.c << END
 
 #include <ft2build.h>
 #include <freetype/freetype.h>
-
-
 FT_Library library;
-
-
 int main(int argc,
          char*argv[])
 {
@@ -126,8 +114,6 @@ int main(int argc,
   return EXIT_SUCCESS;
 }
 END
-
-
 # build and test
 
 mkdir -p $tmpdir/tb

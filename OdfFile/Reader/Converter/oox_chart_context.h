@@ -47,8 +47,6 @@ namespace oox {
 
 class oox_chart_context;
 typedef _CP_PTR(oox_chart_context) oox_chart_context_ptr;
-
-
 class oox_chart_context
 {
 public:

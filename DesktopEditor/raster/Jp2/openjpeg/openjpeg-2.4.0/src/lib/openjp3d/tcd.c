@@ -124,8 +124,6 @@ static void tilec_dump(FILE *fd, opj_tcd_tilecomp_t *tilec)
             fprintf(fd, "Slice %d\n", i++);
         }
         fprintf(fd, " %d", a[k]);
-
-
     }
     fprintf(fd, "     }\n");
     /*i=0;
@@ -203,8 +201,6 @@ void tcd_malloc_encode(opj_tcd_t *tcd, opj_volume_t * volume, opj_cp_t * cp,
     tcd->tcd_volume->tiles = (opj_tcd_tile_t *) opj_malloc(sizeof(opj_tcd_tile_t));
     tcd->tile = tcd->tcd_volume->tiles;
     tile = tcd->tile;
-
-
     /* p61 ISO/IEC IS15444-1 : 2002 */
     /* curtileno --> raster scanned index of tiles */
     /* p,q,r --> matricial index of tiles */
@@ -275,8 +271,6 @@ void tcd_malloc_encode(opj_tcd_t *tcd, opj_volume_t * volume, opj_cp_t * cp,
             res_max = (tilec->numresolution[i] > res_max) ? tilec->numresolution[i] :
                       res_max;
         }
-
-
         tilec->resolutions = (opj_tcd_resolution_t *) opj_malloc(res_max * sizeof(
                                  opj_tcd_resolution_t));
         for (resno = 0; resno < res_max; resno++) {
@@ -796,8 +790,6 @@ void tcd_init_encode(opj_tcd_t *tcd, opj_volume_t * volume, opj_cp_t * cp,
     } /* compno */
     /*tcd_dump(stdout, tcd, tcd->tcd_volume);*/
 }
-
-
 void tcd_free_encode(opj_tcd_t *tcd)
 {
     int tileno, compno, resno, bandno, precno;
@@ -1208,8 +1200,6 @@ void tcd_free_decode(opj_tcd_t *tcd)
     }
 }
 
-
-
 /* ----------------------------------------------------------------------- */
 void tcd_makelayer_fixed(opj_tcd_t *tcd, int layno, int final)
 {
@@ -1614,8 +1604,6 @@ int tcd_encode_tile(opj_tcd_t *tcd, int tileno, unsigned char *dest, int len,
         int tl = tilec->z1 - tilec->z0;
         int l = int_ceildiv(volume->z1 - volume->z0, volume->comps[compno].dz);
 
-
-
         /* extract tile data from volume.comps[0].data to tile.comps[0].data */
         /*fprintf(stdout,"[INFO] Extract tile data\n");*/
         if (tcd->cp->transform_format == TRF_3D_RLS ||
@@ -1731,8 +1719,6 @@ int tcd_encode_tile(opj_tcd_t *tcd, int tileno, unsigned char *dest, int len,
         l = golomb_encode(gr, tileno, tile, dest, len, volume_info);
         golomb_destroy(gr);*/
     }
-
-
     /*---------------CLEAN-------------------*/
     fprintf(stdout, "[INFO] Tcd_encode_tile: %d bytes coded\n", l);
     encoding_time = opj_clock() - encoding_time;
@@ -1751,8 +1737,6 @@ int tcd_encode_tile(opj_tcd_t *tcd, int tileno, unsigned char *dest, int len,
 
     return l;
 }
-
-
 bool tcd_decode_tile(opj_tcd_t *tcd, unsigned char *src, int len, int tileno)
 {
     int l, i;

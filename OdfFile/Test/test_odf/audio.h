@@ -68,8 +68,6 @@ public:
 	const cpdoccore::oox::pptx_animation_context::Impl::_animation_element_array&		GetActionArray(const cpdoccore::oox::pptx_animation_context::Impl::_par_animation_ptr& par);
 	const cpdoccore::oox::pptx_animation_context::Impl::_par_animation_ptr				GetInnermostPar(const cpdoccore::oox::pptx_animation_context::Impl::_par_animation_ptr& par);
 	const cpdoccore::oox::pptx_animation_context::Impl::_animation_element_array&		GetAnimationActionsByIndex(size_t index);
-
-
 public:
 	const cpdoccore::oox::pptx_animation_context* mAnimationContext;
 };

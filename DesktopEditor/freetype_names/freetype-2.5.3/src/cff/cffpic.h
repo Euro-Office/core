@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFFPIC_H__
 #define __CFFPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define CFF_SERVICE_PS_INFO_GET          cff_service_ps_info
@@ -47,8 +41,6 @@ FT_BEGIN_HEADER
 #include FT_SERVICE_TT_CMAP_H
 #include FT_SERVICE_CID_H
 #include FT_SERVICE_PROPERTIES_H
-
-
   typedef struct  CffModulePIC_
   {
     FT_ServiceDescRec*        cff_services;
@@ -63,8 +55,6 @@ FT_BEGIN_HEADER
     FT_CMap_ClassRec          cff_cmap_unicode_class_rec;
 
   } CffModulePIC;
-
-
 #define GET_PIC( lib )                                    \
           ( (CffModulePIC*)( (lib)->pic_container.cff ) )
 
@@ -103,6 +93,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __CFFPIC_H__ */
-
-
 /* END */

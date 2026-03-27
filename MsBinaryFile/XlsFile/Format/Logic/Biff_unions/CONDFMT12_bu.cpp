@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 CONDFMT12::CONDFMT12()
 {
 }
-
-
 CONDFMT12::~CONDFMT12()
 {
 }
-
-
 BaseObjectPtr CONDFMT12::clone()
 {
 	return BaseObjectPtr(new CONDFMT12(*this));
 }
-
-
 // CONDFMT12 = CondFmt12 1*CF12
 const bool CONDFMT12::loadContent(BinProcessor& proc)
 {

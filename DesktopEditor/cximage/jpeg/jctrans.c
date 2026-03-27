@@ -14,15 +14,11 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Forward declarations */
 LOCAL(void) transencode_master_selection
 	JPP((j_compress_ptr cinfo, jvirt_barray_ptr * coef_arrays));
 LOCAL(void) transencode_coef_controller
 	JPP((j_compress_ptr cinfo, jvirt_barray_ptr * coef_arrays));
-
-
 /*
  * Compression initialization for writing raw-coefficient data.
  * Before calling this, all parameters and a data destination must be set up.
@@ -51,8 +47,6 @@ jpeg_write_coefficients (j_compress_ptr cinfo, jvirt_barray_ptr * coef_arrays)
   cinfo->next_scanline = 0;	/* so jpeg_write_marker works */
   cinfo->global_state = CSTATE_WRCOEFS;
 }
-
-
 /*
  * Initialize the compression object with default parameters,
  * then copy from the source object all parameters needed for lossless
@@ -152,8 +146,6 @@ jpeg_copy_critical_parameters (j_decompress_ptr srcinfo,
     dstinfo->Y_density = srcinfo->Y_density;
   }
 }
-
-
 /*
  * Master selection of compression modules for transcoding.
  * This substitutes for jcinit.c's initialization of the full compressor.
@@ -187,8 +179,6 @@ transencode_master_selection (j_compress_ptr cinfo,
    */
   (*cinfo->marker->write_file_header) (cinfo);
 }
-
-
 /*
  * The rest of this file is a special implementation of the coefficient
  * buffer controller.  This is similar to jccoefct.c, but it handles only
@@ -215,8 +205,6 @@ typedef struct {
 } my_coef_controller;
 
 typedef my_coef_controller * my_coef_ptr;
-
-
 LOCAL(void)
 start_iMCU_row (j_compress_ptr cinfo)
 /* Reset within-iMCU-row counters for a new row */
@@ -239,8 +227,6 @@ start_iMCU_row (j_compress_ptr cinfo)
   coef->mcu_ctr = 0;
   coef->MCU_vert_offset = 0;
 }
-
-
 /*
  * Initialize for a processing pass.
  */
@@ -256,8 +242,6 @@ start_pass_coef (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
   coef->iMCU_row_num = 0;
   start_iMCU_row(cinfo);
 }
-
-
 /*
  * Process some data.
  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
@@ -343,8 +327,6 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   start_iMCU_row(cinfo);
   return TRUE;
 }
-
-
 /*
  * Initialize coefficient buffer controller.
  *

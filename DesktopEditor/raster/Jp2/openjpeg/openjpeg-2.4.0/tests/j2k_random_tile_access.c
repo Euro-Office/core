@@ -85,8 +85,6 @@ static void info_callback(const char *msg, void *client_data) {
 	(void)client_data;
 	fprintf(stdout, "[INFO] %s", msg);
 }
-
-
 /* -------------------------------------------------------------------------- */
 #define JP2_RFC3745_MAGIC "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a"
 #define JP2_MAGIC "\x0d\x0a\x87\x0a"
@@ -111,8 +109,6 @@ static int infile_format(const char *fname)
 	fclose(reader);
 	if (l_nb_read != 12)
 		return -1;
-
-
 
 	ext_format = get_file_format(fname);
 
@@ -172,8 +168,6 @@ int main(int argc, char **argv)
 	opj_set_default_decoder_parameters(&parameters);
 
 	strncpy(parameters.infile, argv[1], OPJ_PATH_LEN - 1);
-
-
 	/* decode the JPEG2000 stream */
 	/* -------------------------- */
 	parameters.decod_format = infile_format(parameters.infile);
@@ -286,7 +280,3 @@ int main(int argc, char **argv)
 	return EXIT_SUCCESS;
 }
 /*end main*/
-
-
-
-

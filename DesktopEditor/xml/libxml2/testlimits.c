@@ -306,8 +306,6 @@ crazyClose(void * context) {
     if (context == NULL) return(-1);
     return(0);
 }
-
-
 /**
  * crazyRead:
  * @context: the read context
@@ -827,8 +825,6 @@ getParameterEntityCallback(void *ctx ATTRIBUTE_UNUSED,
     callbacks++;
     return (NULL);
 }
-
-
 /**
  * entityDeclCallback:
  * @ctxt:  An XML parser context
@@ -1157,8 +1153,6 @@ fatalErrorCallback(void *ctx ATTRIBUTE_UNUSED,
 {
     return;
 }
-
-
 /*
  * SAX2 specific callbacks
  */
@@ -1466,8 +1460,6 @@ launchTests(testDescPtr tst, unsigned int test) {
     }
     return(err);
 }
-
-
 static int
 runtest(unsigned int i) {
     int ret = 0, res;
@@ -1598,8 +1590,6 @@ runcrazy(void) {
     }
     return(ret);
 }
-
-
 int
 main(int argc ATTRIBUTE_UNUSED, char **argv ATTRIBUTE_UNUSED) {
     int i, a, ret = 0;

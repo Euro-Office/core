@@ -184,8 +184,6 @@ namespace agg
         color_lut_type      m_color_lut;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S>
     void gradient_lut<T,S>::remove_all()
@@ -237,8 +235,4 @@ namespace agg
         }
     }
 }
-
-
-
-
 #endif

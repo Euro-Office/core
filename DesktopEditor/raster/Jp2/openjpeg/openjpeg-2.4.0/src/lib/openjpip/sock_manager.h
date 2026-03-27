@@ -57,8 +57,6 @@ SOCKET open_listeningsocket(uint16_t port);
  * @return                 connected socket (-1 if error occurs)
  */
 SOCKET accept_socket(SOCKET listening_socket);
-
-
 /**
  * receive a string line (ending with '\n') from client
  *

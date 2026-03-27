@@ -39,8 +39,6 @@
 
 namespace XLS
 {
-
-
 ExtNameParsedFormula::ExtNameParsedFormula() :	ParsedFormula(CellRef())
 {
 }
@@ -154,7 +152,5 @@ void ExtNameParsedFormula::save(CFRecord& record)
 		//saving(rgcb);
 	}
 }
-
-
 } // namespace XLS
 

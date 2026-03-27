@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Chart3d record in BIFF8
 class Chart3d: public BiffRecord
 {

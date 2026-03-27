@@ -13,22 +13,14 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __T42TYPES_H__
 #define __T42TYPES_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_TYPE1_TYPES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct  T42_FaceRec_
   {
     FT_FaceRec      root;
@@ -46,11 +38,7 @@ FT_BEGIN_HEADER
     PS_UnicodesRec  unicode_map;
 
   } T42_FaceRec, *T42_Face;
-
-
 FT_END_HEADER
 
 #endif /* __T42TYPES_H__ */
-
-
 /* END */

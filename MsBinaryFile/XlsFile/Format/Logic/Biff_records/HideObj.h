@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of HideObj record in BIFF8
 class HideObj: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~HideObj();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

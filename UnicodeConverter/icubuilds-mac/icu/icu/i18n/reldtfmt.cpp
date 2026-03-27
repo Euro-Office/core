@@ -24,8 +24,6 @@
 #include "uresimp.h"
 
 U_NAMESPACE_BEGIN
-
-
 /**
  * An array of URelativeString structs is used to store the resource data loaded out of the bundle.
  */
@@ -36,8 +34,6 @@ struct URelativeString {
 };
 
 static const char DT_DateTimePatternsTag[]="DateTimePatterns";
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(RelativeDateFormat)
 
 RelativeDateFormat::RelativeDateFormat(const RelativeDateFormat& other) :
@@ -130,8 +126,6 @@ RelativeDateFormat::~RelativeDateFormat() {
     delete fCapitalizationBrkIter;
 #endif
 }
-
-
 Format* RelativeDateFormat::clone(void) const {
     return new RelativeDateFormat(*this);
 }
@@ -220,8 +214,6 @@ UnicodeString& RelativeDateFormat::format(  Calendar& cal,
     return appendTo;
 }
 
-
-
 UnicodeString&
 RelativeDateFormat::format(const Formattable& obj, 
                          UnicodeString& appendTo, 
@@ -234,8 +226,6 @@ RelativeDateFormat::format(const Formattable& obj,
     // have to redefine it here)
     return DateFormat::format(obj, appendTo, pos, status);
 }
-
-
 void RelativeDateFormat::parse( const UnicodeString& text,
                     Calendar& cal,
                     ParsePosition& pos) const {
@@ -348,8 +338,6 @@ RelativeDateFormat::parse(const UnicodeString& text, UErrorCode& status) const
     // counterpart on DateFormat
     return DateFormat::parse(text, status);
 }
-
-
 const UChar *RelativeDateFormat::getStringForDay(int32_t day, int32_t &len, UErrorCode &status) const {
     if(U_FAILURE(status)) {
         return NULL;

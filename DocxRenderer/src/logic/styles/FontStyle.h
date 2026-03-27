@@ -26,13 +26,9 @@ namespace NSDocxRenderer
 		double dFontSize {0};
 		bool bItalic {false};
 		bool bBold {false};
-
-
 	private:
 		const std::wstring m_wsIdStart = L"fontstyle";
 		double dAvgSpaceWidth {0};
 		size_t m_nN {0};
 	};
 }
-
-

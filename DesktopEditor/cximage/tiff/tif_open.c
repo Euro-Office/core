@@ -325,8 +325,6 @@ TIFFClientOpen(
 		if (tif->tif_flags & TIFF_SWAB)
 			TIFFSwabShort(&tif->tif_header.tiff_version);
 		tif->tif_header.tiff_diroff = 0;	/* filled in later */
-
-
                 /*
                  * The doc for "fopen" for some STD_C_LIBs says that if you 
                  * open a file for modify ("+"), then you must fseek (or 

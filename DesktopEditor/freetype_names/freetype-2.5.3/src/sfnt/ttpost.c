@@ -23,8 +23,6 @@
   /* them.                                                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -32,8 +30,6 @@
 #include "ttpost.h"
 
 #include "sferrors.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -42,22 +38,14 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttpost
-
-
   /* If this configuration macro is defined, we rely on the `PSNames' */
   /* module to grab the glyph names.                                  */
 
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
-
-
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 
 #define MAC_NAME( x )  ( (FT_String*)psnames->macintosh_name( x ) )
-
-
 #else /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
-
    /* Otherwise, we ignore the `PSNames' module, and provide our own  */
    /* table of Mac names.  Thus, it is possible to build a version of */
    /* FreeType without the Type 1 driver & PSNames module.            */
@@ -147,11 +135,7 @@
     "Idot", "Scedilla", "scedilla", "Cacute", "cacute",
     "Ccaron", "ccaron", "dmacron",
   };
-
-
 #endif /* FT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
-
   static FT_Error
   load_format_20( TT_Face    face,
                   FT_Stream  stream,
@@ -165,8 +149,6 @@
 
     FT_UShort*  glyph_indices = 0;
     FT_Char**   name_strings  = 0;
-
-
     if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
 
@@ -185,8 +167,6 @@
     /* load the indices */
     {
       FT_Int  n;
-
-
       if ( FT_NEW_ARRAY ( glyph_indices, num_glyphs ) ||
            FT_FRAME_ENTER( num_glyphs * 2L )          )
         goto Fail;
@@ -200,15 +180,11 @@
     /* compute number of names stored in table */
     {
       FT_Int  n;
-
-
       num_names = 0;
 
       for ( n = 0; n < num_glyphs; n++ )
       {
         FT_Int  idx;
-
-
         idx = glyph_indices[n];
         if ( idx >= 258 )
         {
@@ -222,16 +198,12 @@
     /* now load the name strings */
     {
       FT_UShort  n;
-
-
       if ( FT_NEW_ARRAY( name_strings, num_names ) )
         goto Fail;
 
       for ( n = 0; n < num_names; n++ )
       {
         FT_UInt  len;
-
-
         if ( FT_STREAM_POS() >= post_limit )
           break;
         else
@@ -277,8 +249,6 @@
     /* all right, set table fields and exit successfully */
     {
       TT_Post_20  table = &face->postscript_names.names.format_20;
-
-
       table->num_glyphs    = (FT_UShort)num_glyphs;
       table->num_names     = (FT_UShort)num_names;
       table->glyph_indices = glyph_indices;
@@ -289,8 +259,6 @@
   Fail1:
     {
       FT_UShort  n;
-
-
       for ( n = 0; n < num_names; n++ )
         FT_FREE( name_strings[n] );
     }
@@ -302,8 +270,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   load_format_25( TT_Face    face,
                   FT_Stream  stream,
@@ -316,8 +282,6 @@
     FT_Char*   offset_table = 0;
 
     FT_UNUSED( post_limit );
-
-
     /* UNDOCUMENTED!  This value appears only in the Apple TT specs. */
     if ( FT_READ_USHORT( num_glyphs ) )
       goto Exit;
@@ -336,13 +300,9 @@
     /* now check the offset table */
     {
       FT_Int  n;
-
-
       for ( n = 0; n < num_glyphs; n++ )
       {
         FT_Long  idx = (FT_Long)n + offset_table[n];
-
-
         if ( idx < 0 || idx > num_glyphs )
         {
           error = FT_THROW( Invalid_File_Format );
@@ -354,8 +314,6 @@
     /* OK, set table fields and exit successfully */
     {
       TT_Post_25  table = &face->postscript_names.names.format_25;
-
-
       table->num_glyphs = (FT_UShort)num_glyphs;
       table->offsets    = offset_table;
     }
@@ -368,8 +326,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   load_post_names( TT_Face  face )
   {
@@ -378,8 +334,6 @@
     FT_Fixed   format;
     FT_ULong   post_len;
     FT_Long    post_limit;
-
-
     /* get a stream for the face's resource */
     stream = face->root.stream;
 
@@ -409,16 +363,12 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_free_ps_names( TT_Face  face )
   {
     FT_Memory      memory = face->root.memory;
     TT_Post_Names  names  = &face->postscript_names;
     FT_Fixed       format;
-
-
     if ( names->loaded )
     {
       format = face->postscript.FormatType;
@@ -427,8 +377,6 @@
       {
         TT_Post_20  table = &names->names.format_20;
         FT_UShort   n;
-
-
         FT_FREE( table->glyph_indices );
         table->num_glyphs = 0;
 
@@ -441,16 +389,12 @@
       else if ( format == 0x00028000L )
       {
         TT_Post_25  table = &names->names.format_25;
-
-
         FT_FREE( table->offsets );
         table->num_glyphs = 0;
       }
     }
     names->loaded = 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -485,8 +429,6 @@
 #ifdef FT_CONFIG_OPTION_POSTSCRIPT_NAMES
     FT_Service_PsCMaps  psnames;
 #endif
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -514,8 +456,6 @@
     else if ( format == 0x00020000L )
     {
       TT_Post_20  table = &names->names.format_20;
-
-
       if ( !names->loaded )
       {
         error = load_post_names( face );
@@ -526,8 +466,6 @@
       if ( idx < (FT_UInt)table->num_glyphs )
       {
         FT_UShort  name_index = table->glyph_indices[idx];
-
-
         if ( name_index < 258 )
           *PSname = MAC_NAME( name_index );
         else
@@ -537,8 +475,6 @@
     else if ( format == 0x00028000L )
     {
       TT_Post_25  table = &names->names.format_25;
-
-
       if ( !names->loaded )
       {
         error = load_post_names( face );
@@ -558,6 +494,4 @@
   End:
     return FT_Err_Ok;
   }
-
-
 /* END */

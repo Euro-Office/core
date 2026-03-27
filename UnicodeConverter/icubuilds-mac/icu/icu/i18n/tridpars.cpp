@@ -92,8 +92,6 @@ Transliterator* TransliteratorIDParser::SingleID::createInstance() {
     }
     return t;
 }
-
-
 /**
  * Parse a single ID, that is, an ID of the general form
  * "[f1] s1-t1/v1 ([f2] s2-t3/v2)", with the parenthesized element

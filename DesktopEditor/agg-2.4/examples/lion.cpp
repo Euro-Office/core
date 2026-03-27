@@ -54,8 +54,6 @@ void parse_lion()
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
 
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_alpha_slider;
@@ -111,8 +109,6 @@ public:
         // Render the control
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_alpha_slider);
     }
-
-
     void transform(double width, double height, double x, double y)
     {
         x -= width / 2;
@@ -120,8 +116,6 @@ public:
         g_angle = atan2(y, x);
         g_scale = sqrt(y * y + x * x) / 100.0;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -139,20 +133,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -164,9 +150,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /***************************************************************************
    *
    * The functions defined here are called from the Type 1, CID and CFF
@@ -26,19 +24,11 @@
    * grid.
    *
    */
-
-
 #ifndef PSHREC_H_
 #define PSHREC_H_
-
-
 #include <freetype/internal/pshints.h>
 #include "pshglob.h"
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -57,13 +47,9 @@ FT_BEGIN_HEADER
     PS_HINT_TYPE_2 = 2
 
   } PS_Hint_Type;
-
-
   /* hint flags */
 #define PS_HINT_FLAG_GHOST   1U
 #define PS_HINT_FLAG_BOTTOM  2U
-
-
   /* hint descriptor */
   typedef struct  PS_HintRec_
   {
@@ -72,13 +58,9 @@ FT_BEGIN_HEADER
     FT_UInt  flags;
 
   } PS_HintRec;
-
-
 #define ps_hint_is_active( x )  ( (x)->flags & PS_HINT_FLAG_ACTIVE )
 #define ps_hint_is_ghost( x )   ( (x)->flags & PS_HINT_FLAG_GHOST  )
 #define ps_hint_is_bottom( x )  ( (x)->flags & PS_HINT_FLAG_BOTTOM )
-
-
   /* hints table descriptor */
   typedef struct  PS_Hint_TableRec_
   {
@@ -87,8 +69,6 @@ FT_BEGIN_HEADER
     PS_Hint  hints;
 
   } PS_Hint_TableRec, *PS_Hint_Table;
-
-
   /* hint and counter mask descriptor */
   typedef struct  PS_MaskRec_
   {
@@ -98,8 +78,6 @@ FT_BEGIN_HEADER
     FT_UInt   end_point;
 
   } PS_MaskRec, *PS_Mask;
-
-
   /* masks and counters table descriptor */
   typedef struct  PS_Mask_TableRec_
   {
@@ -108,8 +86,6 @@ FT_BEGIN_HEADER
     PS_Mask  masks;
 
   } PS_Mask_TableRec, *PS_Mask_Table;
-
-
  /* dimension-specific hints descriptor */
   typedef struct  PS_DimensionRec_
   {
@@ -118,8 +94,6 @@ FT_BEGIN_HEADER
     PS_Mask_TableRec  counters;
 
   } PS_DimensionRec, *PS_Dimension;
-
-
   /* glyph hints descriptor                                */
   /* dimension 0 => X coordinates + vertical hints/stems   */
   /* dimension 1 => Y coordinates + horizontal hints/stems */
@@ -151,8 +125,6 @@ FT_BEGIN_HEADER
   /* initialize Type2 hints recorder interface */
   FT_LOCAL( void )
   t2_hints_funcs_init( T2_Hints_FuncsRec*  funcs );
-
-
 #ifdef DEBUG_HINTER
   extern PS_Hints  ps_debug_hints;
   extern  int      ps_debug_no_horz_hints;
@@ -160,12 +132,6 @@ FT_BEGIN_HEADER
 #endif
 
  /* */
-
-
 FT_END_HEADER
-
-
 #endif /* PSHREC_H_ */
-
-
 /* END */

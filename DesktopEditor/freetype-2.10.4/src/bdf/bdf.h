@@ -20,12 +20,8 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
-
 #ifndef BDF_H_
 #define BDF_H_
-
-
 /*
  * Based on bdf.h,v 1.16 2000/03/16 20:08:51 mleisher
  */
@@ -33,11 +29,7 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/fthash.h>
-
-
 FT_BEGIN_HEADER
-
-
 /* Imported from bdfP.h */
 
 #define _bdf_glyph_modified( map, e )                     \
@@ -48,15 +40,11 @@ FT_BEGIN_HEADER
           ( (map)[(e) >> 5] &= ~( 1UL << ( (e) & 31 ) ) )
 
 /* end of bdfP.h */
-
-
   /**************************************************************************
    *
    * BDF font options macros and types.
    *
    */
-
-
 #define BDF_CORRECT_METRICS  0x01 /* Correct invalid metrics when loading. */
 #define BDF_KEEP_COMMENTS    0x02 /* Preserve the font comments.           */
 #define BDF_KEEP_UNENCODED   0x04 /* Keep the unencoded glyphs.            */
@@ -72,8 +60,6 @@ FT_BEGIN_HEADER
                                     BDF_KEEP_COMMENTS   | \
                                     BDF_KEEP_UNENCODED  | \
                                     BDF_PROPORTIONAL    )
-
-
   typedef struct  bdf_options_t_
   {
     int            correct_metrics;
@@ -82,28 +68,20 @@ FT_BEGIN_HEADER
     int            font_spacing;
 
   } bdf_options_t;
-
-
   /* Callback function type for unknown configuration options. */
   typedef int
   (*bdf_options_callback_t)( bdf_options_t*  opts,
                              char**          params,
                              unsigned long   nparams,
                              void*           client_data );
-
-
   /**************************************************************************
    *
    * BDF font property macros and types.
    *
    */
-
-
 #define BDF_ATOM      1
 #define BDF_INTEGER   2
 #define BDF_CARDINAL  3
-
-
   /* This structure represents a particular property of a font. */
   /* There are a set of defaults and each font has their own.   */
   typedef struct  bdf_property_t_
@@ -120,15 +98,11 @@ FT_BEGIN_HEADER
     } value;             /* Value of the property.  */
 
   } bdf_property_t;
-
-
   /**************************************************************************
    *
    * BDF font metric and glyph types.
    *
    */
-
-
   typedef struct  bdf_bbx_t_
   {
     unsigned short  width;
@@ -141,8 +115,6 @@ FT_BEGIN_HEADER
     short           descent;
 
   } bdf_bbx_t;
-
-
   typedef struct  bdf_glyph_t_
   {
     char*           name;        /* Glyph name.                          */
@@ -155,8 +127,6 @@ FT_BEGIN_HEADER
     unsigned short  bytes;       /* Number of bytes used for the bitmap. */
 
   } bdf_glyph_t;
-
-
   typedef struct  bdf_font_t_
   {
     char*            name;           /* Name of the font.                   */
@@ -201,15 +171,11 @@ FT_BEGIN_HEADER
     FT_HashRec       proptbl;
 
   } bdf_font_t;
-
-
   /**************************************************************************
    *
    * Types for load/save callbacks.
    *
    */
-
-
   /* Error codes. */
 #define BDF_MISSING_START       -1
 #define BDF_MISSING_FONTNAME    -2
@@ -222,8 +188,6 @@ FT_BEGIN_HEADER
 #define BDF_OUT_OF_MEMORY      -20
 
 #define BDF_INVALID_LINE      -100
-
-
   /**************************************************************************
    *
    * BDF font API.
@@ -246,12 +210,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( bdf_property_t * )
   bdf_get_font_property( bdf_font_t*  font,
                          const char*  name );
-
-
 FT_END_HEADER
-
-
 #endif /* BDF_H_ */
-
-
 /* END */

@@ -85,8 +85,6 @@ public:
 	virtual void save(CFRecord& record);
 
 	std::vector<Feat11XMapEntry> rgXmap;
-
-
 };
 
 } // namespace XLS

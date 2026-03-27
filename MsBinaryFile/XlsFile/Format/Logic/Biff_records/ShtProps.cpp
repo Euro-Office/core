@@ -38,8 +38,6 @@ namespace XLS
 ShtProps::ShtProps()
 {
 }
-
-
 ShtProps::~ShtProps()
 {
 }
@@ -48,8 +46,6 @@ BaseObjectPtr ShtProps::clone()
 {
 	return BaseObjectPtr(new ShtProps(*this));
 }
-
-
 void ShtProps::readFields(CFRecord& record)
 {
 	unsigned short flags;

@@ -84,7 +84,5 @@ void DConnConnectionOleDb::save(CFRecord& record)
 	for(auto i : rgConn)
 		record << i;
 }
-
-
 } // namespace XLS
 

@@ -49,7 +49,5 @@ void DropDownObjId::save(CFRecord& record)
 {
     record << id;
 }
-
-
 } // namespace XLS
 

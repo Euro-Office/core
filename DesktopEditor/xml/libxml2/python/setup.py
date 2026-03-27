@@ -159,8 +159,6 @@ if with_xslt == 1:
     if xslt_includes == "":
         print("failed to find headers for libxslt: update includes_dir")
         with_xslt = 0
-
-
 descr = "libxml2 package"
 modules = [ 'libxml2', 'drv_libxml2' ]
 if WITHDLLS:
@@ -191,8 +189,6 @@ if with_xslt == 1:
     libs.insert(0, libraryPrefix + 'xslt')
     includes.append(xslt_includes)
     modules.append('libxslt')
-
-
 extens=[Extension('libxml2mod', c_files, include_dirs=includes,
                   library_dirs=libdirs,
                   libraries=libs, define_macros=macros)]

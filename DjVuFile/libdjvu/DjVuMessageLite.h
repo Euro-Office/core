@@ -69,8 +69,6 @@
 // All these I18N XML messages are Lizardtech innovations.
 // For DjvuLibre, I changed the path extraction logic
 // and added support for non I18N messages. 
-
-
 #include "GString.h"
 
 #ifdef HAVE_NAMESPACES
@@ -217,8 +215,6 @@ protected:
   /*  Static storage of the ByteStream list. */
   static GPList<ByteStream> &getByteStream(void);
 };
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

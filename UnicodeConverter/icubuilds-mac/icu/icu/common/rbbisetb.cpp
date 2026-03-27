@@ -41,8 +41,6 @@
 
 #include "rbbisetb.h"
 #include "rbbinode.h"
-
-
 //------------------------------------------------------------------------
 //
 //   getFoldedRBBIValue        Call-back function used during building of Trie table.
@@ -73,11 +71,7 @@ getFoldedRBBIValue(UNewTrie *trie, UChar32 start, int32_t offset) {
     }
     return 0;
 }
-
-
 U_CDECL_END
-
-
 
 U_NAMESPACE_BEGIN
 
@@ -96,8 +90,6 @@ RBBISetBuilder::RBBISetBuilder(RBBIRuleBuilder *rb)
     fGroupCount     = 0;
     fSawBOF         = FALSE;
 }
-
-
 //------------------------------------------------------------------------
 //
 //   Destructor
@@ -116,10 +108,6 @@ RBBISetBuilder::~RBBISetBuilder()
 
     utrie_close(fTrie);
 }
-
-
-
-
 //------------------------------------------------------------------------
 //
 //   build          Build the list of non-overlapping character ranges
@@ -276,8 +264,6 @@ void RBBISetBuilder::build() {
             fSawBOF = TRUE;
         }
     }
-
-
     if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "rgroup")) {printRangeGroups();}
     if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "esets")) {printSets();}
 
@@ -291,14 +277,10 @@ void RBBISetBuilder::build() {
                       0,       //  Initial value for all code points
                       0,       //  Lead surrogate unit value
                       TRUE);   //  Keep Latin 1 in separately
-
-
     for (rlRange = fRangeList; rlRange!=0; rlRange=rlRange->fNext) {
         utrie_setRange32(fTrie, rlRange->fStartChar, rlRange->fEndChar+1, rlRange->fNum, TRUE);
     }
 }
-
-
 
 //-----------------------------------------------------------------------------------
 //
@@ -315,8 +297,6 @@ int32_t RBBISetBuilder::getTrieSize() /*const*/ {
     // RBBIDebugPrintf("Trie table size is %d\n", trieSize);
     return fTrieSize;
 }
-
-
 //-----------------------------------------------------------------------------------
 //
 //  serializeTrie()   Put the serialized trie at the specified address.
@@ -383,8 +363,6 @@ void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
         orNode->fParent = usetNode;
     }
 }
-
-
 //------------------------------------------------------------------------
 //
 //   getNumCharCategories
@@ -393,8 +371,6 @@ void  RBBISetBuilder::addValToSet(RBBINode *usetNode, uint32_t val) {
 int32_t  RBBISetBuilder::getNumCharCategories() const {
     return fGroupCount + 3;
 }
-
-
 //------------------------------------------------------------------------
 //
 //   sawBOF
@@ -403,8 +379,6 @@ int32_t  RBBISetBuilder::getNumCharCategories() const {
 UBool  RBBISetBuilder::sawBOF() const {
     return fSawBOF;
 }
-
-
 //------------------------------------------------------------------------
 //
 //   getFirstChar      Given a runtime RBBI character category, find
@@ -422,8 +396,6 @@ UChar32  RBBISetBuilder::getFirstChar(int32_t category) const {
     }
     return retVal;
 }
-
-
 
 //------------------------------------------------------------------------
 //
@@ -456,8 +428,6 @@ void RBBISetBuilder::printRanges() {
     }
 }
 #endif
-
-
 //------------------------------------------------------------------------
 //
 //   printRangeGroups     A debugging function.
@@ -508,8 +478,6 @@ void RBBISetBuilder::printRangeGroups() {
     RBBIDebugPrintf("\n");
 }
 #endif
-
-
 //------------------------------------------------------------------------
 //
 //   printSets          A debugging function.
@@ -553,8 +521,6 @@ void RBBISetBuilder::printSets() {
 }
 #endif
 
-
-
 //-------------------------------------------------------------------------------------
 //
 //  RangeDescriptor copy constructor
@@ -586,8 +552,6 @@ RangeDescriptor::RangeDescriptor(const RangeDescriptor &other, UErrorCode &statu
         this->fIncludesSets->addElement(other.fIncludesSets->elementAt(i), status);
     }
 }
-
-
 //-------------------------------------------------------------------------------------
 //
 //  RangeDesriptor default constructor
@@ -613,8 +577,6 @@ RangeDescriptor::RangeDescriptor(UErrorCode &status) {
     }
 
 }
-
-
 //-------------------------------------------------------------------------------------
 //
 //  RangeDesriptor Destructor
@@ -648,8 +610,6 @@ void RangeDescriptor::split(UChar32 where, UErrorCode &status) {
     nr->fNext      = this->fNext;
     this->fNext    = nr;
 }
-
-
 //-------------------------------------------------------------------------------------
 //
 //   RangeDescriptor::setDictionaryFlag
@@ -687,8 +647,6 @@ void RangeDescriptor::setDictionaryFlag() {
         }
     }
 }
-
-
 
 U_NAMESPACE_END
 

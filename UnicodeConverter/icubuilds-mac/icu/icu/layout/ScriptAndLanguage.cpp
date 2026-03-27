@@ -65,8 +65,6 @@ LEReferenceTo<ScriptTable> ScriptListTable::findScript(const LETableReference &b
 
     le_uint16 limit = ((SWAPW(scriptRecordArray[0].offset) - sizeof(ScriptListTable)) / sizeof(scriptRecordArray)) + ANY_NUMBER;
     Offset scriptTableOffset = 0;
-    
-
     if (count > limit) {
         // the scriptCount value is bogus; do a linear search
         // because limit may still be too large.

@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name DjVmDir.h
     Files #"DjVmDir.h"# and #"DjVmDir.cpp"# implement class \Ref{DjVmDir} for
     representing the directory of a DjVu multipage document.
@@ -115,8 +113,6 @@
     @version
     #$Id: DjVmDir.h,v 1.14 2007/07/29 16:23:51 leonb Exp $# */
 //@{
-
-
 
 #include "GString.h"
 #include "GThreads.h"
@@ -425,11 +421,7 @@ DjVmDir::File::set_title(const GUTF8String &xtitle) { title=xtitle; }
     @memo Description of the format of the DIRM chunk.  */
 //@}
 
-
-
 // -------------- IMPLEMENTATION
-
-
 inline bool
 DjVmDir::is_bundled(void) const
 {
@@ -443,8 +435,6 @@ DjVmDir::is_indirect(void) const
   return ( files_list.size() && files_list[files_list] != 0 &&
            files_list[files_list]->offset==0 );
 }
-
-
 
 // ----- THE END
 

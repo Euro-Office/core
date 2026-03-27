@@ -15,8 +15,6 @@
  * This is an internal header for the Character Set Detection code. The
  * name is probably too generic...
  */
-
-
 #include "unicode/uobject.h"
 
 #if !UCONFIG_NO_CONVERSION

@@ -81,8 +81,6 @@ namespace DJVU {
 
 class ByteStream;
 class GPixmap;
-
-
 /** @name JPEGDecoder.h
     Files #"JPEGDecoder.h"# and #"JPEGDecoder.cpp"# implement an
     interface to the decoding subset of the IJG JPEG library.
@@ -143,8 +141,6 @@ public:
 //>
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

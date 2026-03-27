@@ -39,13 +39,9 @@ namespace XLS
 CrtLayout12::CrtLayout12()
 {
 }
-
-
 CrtLayout12::~CrtLayout12()
 {
 }
-
-
 BaseObjectPtr CrtLayout12::clone()
 {
 	return BaseObjectPtr(new CrtLayout12(*this));
@@ -141,7 +137,5 @@ int CrtLayout12::serialize (std::wostream & _stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

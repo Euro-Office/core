@@ -51,8 +51,6 @@ public:
 	static const ElementType	type = typeFeatSmartTag;
 
 	virtual void load(CFRecord& record);
-
-
 	_UINT32						hashValue;
 	std::vector<FactoidData>	rgFactoid;
 };

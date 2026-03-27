@@ -30,11 +30,7 @@
 #include "uassert.h"
 #include "cpputils.h"
 #include "cstring.h"
-
-
 U_NAMESPACE_USE
-
-
 U_CAPI UNumberFormat* U_EXPORT2
 unum_open(  UNumberFormatStyle    style,  
             const    UChar*    pattern,
@@ -244,8 +240,6 @@ unum_formatDouble(    const    UNumberFormat*  fmt,
   
   return res.extract(result, resultLength, *status);
 }
-
-
 U_CAPI int32_t U_EXPORT2 
 unum_formatDecimal(const    UNumberFormat*  fmt,
             const char *    number,
@@ -286,10 +280,6 @@ unum_formatDecimal(const    UNumberFormat*  fmt,
     }
     return resultStr.extract(result, resultLength, *status);
 }
-
-
-
-
 U_CAPI int32_t U_EXPORT2 
 unum_formatDoubleCurrency(const UNumberFormat* fmt,
                           double number,

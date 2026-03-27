@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftoutln.h>
@@ -23,8 +21,6 @@
 #include "ftgrays.h"
 
 #include "ftsmerrs.h"
-
-
   /* sets render-specific mode */
   static FT_Error
   ft_smooth_set_mode( FT_Renderer  render,
@@ -45,8 +41,6 @@
                        const FT_Vector*  delta )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     if ( slot->format != render->glyph_format )
     {
       error = FT_THROW( Invalid_Argument );
@@ -62,8 +56,6 @@
   Exit:
     return error;
   }
-
-
   /* return the glyph's control box */
   static void
   ft_smooth_get_cbox( FT_Renderer   render,
@@ -90,8 +82,6 @@
   ft_smooth_init( FT_Renderer  render )
   {
     FT_Vector*  sub = render->root.library->lcd_geometry;
-
-
     /* set up default subpixel geometry for striped RGB panels. */
     sub[0].x = -21;
     sub[0].y = 0;
@@ -104,8 +94,6 @@
 
     return 0;
   }
-
-
   /* This function writes every third byte in direct rendering mode */
   static void
   ft_smooth_lcd_spans( int             y,
@@ -116,14 +104,10 @@
     unsigned char*  dst_line = target->origin - y * target->pitch;
     unsigned char*  dst;
     unsigned short  w;
-
-
     for ( ; count--; spans++ )
       for ( dst = dst_line + spans->x * 3, w = spans->len; w--; dst += 3 )
         *dst = spans->coverage;
   }
-
-
   static FT_Error
   ft_smooth_raster_lcd( FT_Renderer  render,
                         FT_Outline*  outline,
@@ -135,8 +119,6 @@
 
     FT_Raster_Params   params;
     TOrigin            target;
-
-
     /* Render 3 separate coverage bitmaps, shifting the outline.  */
     /* Set up direct rendering to record them on each third byte. */
     params.source     = outline;
@@ -189,8 +171,6 @@
 
     return error;
   }
-
-
   static FT_Error
   ft_smooth_raster_lcdv( FT_Renderer  render,
                          FT_Outline*  outline,
@@ -202,8 +182,6 @@
     FT_Pos       x, y;
 
     FT_Raster_Params  params;
-
-
     params.target = bitmap;
     params.source = outline;
     params.flags  = FT_RASTER_FLAG_AA;
@@ -265,8 +243,6 @@
 
     return 0;
   }
-
-
   static FT_Error
   ft_smooth_raster_lcd( FT_Renderer  render,
                         FT_Outline*  outline,
@@ -278,8 +254,6 @@
     FT_Vector*  vec;
 
     FT_Raster_Params  params;
-
-
     params.target = bitmap;
     params.source = outline;
     params.flags  = FT_RASTER_FLAG_AA;
@@ -297,8 +271,6 @@
 
     return error;
   }
-
-
   static FT_Error
   ft_smooth_raster_lcdv( FT_Renderer  render,
                          FT_Outline*  outline,
@@ -310,8 +282,6 @@
     FT_Vector*  vec;
 
     FT_Raster_Params  params;
-
-
     params.target = bitmap;
     params.source = outline;
     params.flags  = FT_RASTER_FLAG_AA;
@@ -345,8 +315,6 @@
     unsigned char*  dst = target->origin - ( y / SCALE ) * target->pitch;
     unsigned short  x;
     unsigned int    cover, sum;
-
-
     /* When accumulating the oversampled spans we need to assure that  */
     /* fully covered pixels are equal to 255 and do not overflow.      */
     /* It is important that the SCALE is a power of 2, each subpixel   */
@@ -362,8 +330,6 @@
       }
     }
   }
-
-
   static FT_Error
   ft_smooth_raster_overlap( FT_Renderer  render,
                             FT_Outline*  outline,
@@ -376,8 +342,6 @@
 
     FT_Raster_Params   params;
     TOrigin            target;
-
-
     /* Reject outlines that are too wide for 16-bit FT_Span.       */
     /* Other limits are applied upstream with the same error code. */
     if ( bitmap->width * SCALE > 0x7FFF )
@@ -436,8 +400,6 @@
     FT_Memory    memory  = render->root.memory;
     FT_Pos       x_shift = 0;
     FT_Pos       y_shift = 0;
-
-
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
     {
@@ -502,8 +464,6 @@
       else
       {
         FT_Raster_Params  params;
-
-
         params.target = bitmap;
         params.source = outline;
         params.flags  = FT_RASTER_FLAG_AA;
@@ -524,8 +484,6 @@
       {
         FT_Byte*                 lcd_weights;
         FT_Bitmap_LcdFilterFunc  lcd_filter_func;
-
-
         /* Per-face LCD filtering takes priority if set up. */
         if ( slot->face && slot->face->internal->lcd_filter_func )
         {
@@ -563,8 +521,6 @@
 
     return error;
   }
-
-
   FT_DEFINE_RENDERER(
     ft_smooth_renderer_class,
 
@@ -590,6 +546,4 @@
 
     (FT_Raster_Funcs*)&ft_grays_raster               /* raster_class    */
   )
-
-
 /* END */

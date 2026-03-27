@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <libxml/xmlmemory.h>
 #include <libxml/parser.h>
-
-
 xmlDocPtr
 parseDoc(char *docname, char *uri) {
 

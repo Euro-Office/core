@@ -66,8 +66,6 @@
    *   basic_types
    *
    */
-
-
   /**************************************************************************
    *
    * @type:
@@ -77,8 +75,6 @@
    *   A typedef for a 16bit signed integer type.
    */
   typedef signed short  FT_Int16;
-
-
   /**************************************************************************
    *
    * @type:
@@ -90,8 +86,6 @@
   typedef unsigned short  FT_UInt16;
 
   /* */
-
-
   /* this #if 0 ... #endif clause is for documentation purposes */
 #if 0
 
@@ -105,8 +99,6 @@
    *   configuration.
    */
   typedef signed XXX  FT_Int32;
-
-
   /**************************************************************************
    *
    * @type:
@@ -116,8 +108,6 @@
    *   configuration.
    */
   typedef unsigned XXX  FT_UInt32;
-
-
   /**************************************************************************
    *
    * @type:
@@ -128,8 +118,6 @@
    *   otherwise, it gets emulated with a structure (if necessary).
    */
   typedef signed XXX  FT_Int64;
-
-
   /**************************************************************************
    *
    * @type:
@@ -158,8 +146,6 @@
 #else
 #error "no 32bit type found -- please check your configuration files"
 #endif
-
-
   /* look up an integer type that is at least 32~bits */
 #if FT_SIZEOF_INT >= ( 32 / FT_CHAR_BIT )
 
@@ -172,8 +158,6 @@
   typedef unsigned long  FT_UFast;
 
 #endif
-
-
   /* determine whether we have a 64-bit `int` type for platforms without */
   /* Autoconf                                                            */
 #if FT_SIZEOF_LONG == ( 64 / FT_CHAR_BIT )
@@ -240,6 +224,4 @@
   typedef FT_INT64   FT_Int64;
   typedef FT_UINT64  FT_UInt64;
 #endif
-
-
 #endif  /* FREETYPE_CONFIG_INTEGER_TYPES_H_ */

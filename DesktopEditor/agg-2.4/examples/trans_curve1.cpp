@@ -25,10 +25,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
-
-
 static char text[] = 
 "Anti-Grain Geometry is designed as a set of loosely coupled "
 "algorithms and class templates united with a common idea, "
@@ -36,10 +32,6 @@ static char text[] =
 "the template based design allows you to replace any part of "
 "the library without the necessity to modify a single byte in "
 "the existing code. ";
-
-
-
-
 class the_application : public agg::platform_support
 {
 public:
@@ -84,8 +76,6 @@ public:
         m_num_points.label("Number of intermediate Points = %.3f");
         add_ctrl(m_num_points);
     }
-
-
     virtual void on_init()
     {
         m_poly.xn(0) = 50;
@@ -101,10 +91,6 @@ public:
         m_poly.xn(5) = 550;
         m_poly.yn(5) = 550;
     }
-
-
-
-
     virtual void on_draw()
     {
         pixfmt pixf(rbuf_window());
@@ -176,8 +162,6 @@ public:
 
         }
 
-
-
         typedef agg::conv_stroke<conv_bspline_type> conv_stroke_type;
         conv_stroke_type stroke(bspline);
 
@@ -202,8 +186,6 @@ public:
 
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -214,8 +196,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -230,8 +210,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_poly.on_mouse_button_up(x, y))
@@ -239,13 +217,9 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
     }
-
-
     virtual void on_ctrl_change()
     {
         if(m_animate.status() != m_prev_animate)
@@ -268,8 +242,6 @@ public:
             m_prev_animate = m_animate.status();
         }
     }
-
-
     void move_point(double& x, double& y, double& dx, double& dy)
     {
         if(x < 0.0)      { x = 0.0;      dx = -dx; }
@@ -280,8 +252,6 @@ public:
         y += dy;
     }
 
-
-
     virtual void on_idle()
     {
         int i;
@@ -291,15 +261,7 @@ public:
         }
         force_redraw();
     }
-
-
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     HDC dc = ::GetDC(0);
@@ -313,13 +275,3 @@ int agg_main(int argc, char* argv[])
     ::ReleaseDC(0, dc);
     return 1;
 }
-
-
-
-
-
-
-
-
-
-

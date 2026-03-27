@@ -23,10 +23,6 @@
 #include <string.h>
 #include "agg_basics.h"
 #include "agg_rendering_buffer.h"
-
-
-
-
 namespace agg
 {
 
@@ -51,8 +47,6 @@ namespace agg
             }
         }
     }
-
-
     //---------------------------------------------------------color_conv_row
     template<class CopyRow> 
     void color_conv_row(int8u* dst, 
@@ -62,8 +56,6 @@ namespace agg
     {
         copy_row_functor(dst, src, width);
     }
-
-
     //---------------------------------------------------------color_conv_same
     template<int BPP> class color_conv_same
     {
@@ -75,10 +67,6 @@ namespace agg
             memmove(dst, src, width*BPP);
         }
     };
-
-
 }
-
-
 
 #endif

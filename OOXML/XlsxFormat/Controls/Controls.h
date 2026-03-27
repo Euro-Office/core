@@ -35,8 +35,6 @@
 #include "../../DocxFormat/IFileContainer.h"
 
 #include "../Drawing/FromTo.h"
-
-
 namespace SimpleTypes
 {
 	class CColorType;

@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTextHeaderAtom : public CUnknownRecord

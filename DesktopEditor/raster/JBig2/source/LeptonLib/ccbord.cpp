@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  ccbord.c
  *
@@ -68,7 +66,6 @@
  *     SVG output
  *         l_int32      ccbaWriteSVG()
  *         char        *ccbaWriteSVGString()
- *
  *
  *     Border finding is tricky because components can have
  *     holes, which also need to be traced out.  The outer
@@ -205,7 +202,6 @@
  *               (7) if a 1 has neighbors 1 and x (x = 2 or 3),
  *                   toggle
  *
- *
  *     To visualize how these rules work, consider the following
  *     component with border pixels labeled according to the scheme
  *     above.  We also show the values of the interior pixels
@@ -226,7 +222,6 @@
  *               1  2  b  1
  *               1  b  1
  *                  1
- *
  *
  *     Even if this works, which is unlikely, it will certainly be
  *     slow because decisions have to be made on a pixel-by-pixel
@@ -260,13 +255,9 @@ static const l_int32  NMAX_HOLES = 150;
 static const l_int32   xpostab[] = {-1, -1, 0, 1, 1, 1, 0, -1};
 static const l_int32   ypostab[] = {0, -1, -1, -1, 0, 1, 1, 1};
 static const l_int32   qpostab[] = {6, 6, 0, 0, 2, 2, 4, 4};
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_PRINT   0
 #endif   /* NO CONSOLE_IO */
-
-
 /*---------------------------------------------------------------------*
  *                   ccba and ccb creation and destruction             *
  *---------------------------------------------------------------------*/
@@ -303,8 +294,6 @@ CCBORDA  *ccba;
 
     return ccba;
 }
-
-
 /*!
  *  ccbaDestroy()
  *
@@ -335,8 +324,6 @@ CCBORDA  *ccba;
     *pccba = NULL;
     return;
 }
-
-
 /*!
  *  ccbCreate()
  * 
@@ -375,8 +362,6 @@ PTAA    *local;
 
     return ccb;
 }
-
-
 /*!
  *  ccbDestroy()
  *
@@ -421,8 +406,6 @@ CCBORD  *ccb;
     }
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            ccba addition                            *
  *---------------------------------------------------------------------*/
@@ -453,8 +436,6 @@ l_int32  n;
     ccba->n++;
     return 0;
 }
-
-
 /*!
  *  ccbaExtendArray()
  *
@@ -478,8 +459,6 @@ ccbaExtendArray(CCBORDA  *ccba)
     return 0;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                            ccba accessors                           *
  *---------------------------------------------------------------------*/
@@ -500,8 +479,6 @@ ccbaGetCount(CCBORDA  *ccba)
 
     return ccba->n;
 }
-
-
 /*!
  *  ccbaGetCcb()
  *
@@ -525,8 +502,6 @@ CCBORD  *ccb;
     ccb->refcount++;
     return ccb;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                   Top-level border-finding routines                 *
@@ -579,8 +554,6 @@ PIXA     *pixa;
     pixaDestroy(&pixa);
     return ccba;
 }
-
-
 /*!
  *  pixGetCCBorders()
  *
@@ -704,8 +677,6 @@ PIXA     *pixa;
         
     return ccb;
 }
-
-
 /*!
  *  pixGetOuterBordersPtaa()
  *
@@ -753,8 +724,6 @@ PTAA    *ptaa;
     boxaDestroy(&boxa);
     return ptaa;
 }
-
-
 /*!
  *  pixGetOuterBorderPta()
  *
@@ -819,8 +788,6 @@ PTA     *ptaloc, *ptad;
     ccbDestroy(&ccb);
     return ptad;
 }
-
-
 /*---------------------------------------------------------------------*
  *                   Lower-level border-finding routines               *
  *---------------------------------------------------------------------*/
@@ -910,8 +877,6 @@ PIX       *pixb;  /* with 1 pixel border */
     pixDestroy(&pixb);
     return 0;
 }
-
-
 /*!
  *  pixGetHoleBorder()
  *
@@ -992,8 +957,6 @@ PTA       *pta;
     
     return 0;
 }
-
-
 /*!
  *  findNextBorderPixel()
  *
@@ -1042,8 +1005,6 @@ l_uint32  *line;
 
     return 1;
 }
-        
-
 /*!
  *  locateOutsideSeedPixel()
  *
@@ -1092,8 +1053,6 @@ l_int32  dx, dy;
 
     return;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                            Border conversions                       *
@@ -1155,8 +1114,6 @@ PTA     *ptal, *ptag;
 
     return 0;
 }
-
-
 /*!
  *  ccbaGenerateStepChains()
  *
@@ -1233,8 +1190,6 @@ PTAA    *ptaal;  /* local chain code */
 
     return 0;
 }
-
-
 /*!
  *  ccbaStepChainsToPixCoords()
  *
@@ -1330,8 +1285,6 @@ PTA     *ptas, *ptan;
 
     return 0;
 }
-
-
 /*!
  *  ccbaGenerateSPGlobalLocs()
  *
@@ -1427,8 +1380,6 @@ PTA     *ptal, *ptag;
 
     return 0;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                       Conversion to single path                     *
@@ -1603,8 +1554,6 @@ PTAA     *ptaap;  /* ptaa for all paths between borders */
 
     return 0;
 }
-
-
 /*!
  *  getCutPathForHole()
  *
@@ -1758,8 +1707,6 @@ PTA      *ptac;
     return ptac;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                            Border rendering                         *
  *---------------------------------------------------------------------*/
@@ -1812,8 +1759,6 @@ PTA     *pta;
     
     return pixd;
 }
-
-
 /*!
  *  ccbaDisplaySPBorder()
  *
@@ -1857,8 +1802,6 @@ PTA     *ptag;
     
     return pixd;
 }
-
-
 /*!
  *  ccbaDisplayImage1()
  *
@@ -2010,8 +1953,6 @@ PTA     *pta;
     return pixd;
 }
 
-
-
 /*!
  *  ccbaDisplayImage2()
  *
@@ -2113,8 +2054,6 @@ PTA     *pta;
 
     return pixd;
 }
-        
-
 
 /*---------------------------------------------------------------------*
  *                            Serialize for I/O                        *
@@ -2149,8 +2088,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 
 /*!
  *  ccbaWriteStream()
@@ -2267,8 +2204,6 @@ PTA      *pta;
 
 #endif  /* !HAVE_LIBZ */
 }
-
-
 /*!
  *  ccbaRead()
  *
@@ -2295,8 +2230,6 @@ CCBORDA  *ccba;
         return (CCBORDA *)ERROR_PTR("ccba not returned", procName, NULL);
     return ccba;
 }
-
-
 /*!
  *  ccbaReadStream()
  *
@@ -2428,8 +2361,6 @@ NUMAA    *step;
 
 #endif  /* !HAVE_LIBZ */
 }
-
-
 /*---------------------------------------------------------------------*
  *                                SVG Output                           *
  *---------------------------------------------------------------------*/
@@ -2461,8 +2392,6 @@ char  *svgstr;
 
     return 0;
 }
-
-
 /*!
  *  ccbaWriteSVGString()
  *

@@ -34,8 +34,6 @@
 #include "paragraph_elements.h"
 
 #include <xml/xmlchar.h>
-
-
 namespace cpdoccore { 
 namespace odf_reader {
 namespace text {

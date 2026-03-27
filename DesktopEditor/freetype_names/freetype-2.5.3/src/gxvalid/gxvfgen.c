@@ -40,8 +40,6 @@
 /* Information-technology Promotion Agency, Japan.                         */
 /*                                                                         */
 /***************************************************************************/
-
-
 /***************************************************************************/
 /*                                                                         */
 /* This file is compiled as a stand-alone executable.                      */
@@ -67,12 +65,8 @@
   /*******************************************************************/
   /* WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING */
   /*******************************************************************/
-
-
 #include <stdio.h>
 #include <string.h>
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -91,11 +85,7 @@
     char*        setting_name[FEATREG_MAX_SETTING];
 
   } GX_Feature_RegistryRec;
-
-
 #define EMPTYFEAT {0, 0, {NULL}}
-
-
   static GX_Feature_RegistryRec featreg_table[] = {
     {                                       /* 0 */
       "All Typographic Features",
@@ -429,8 +419,6 @@
       }
     }
   };
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -443,8 +431,6 @@
   main( void )
   {
     int  i;
-
-
     printf( "  {\n" );
     printf( "   /* Generated from %s */\n", __FILE__ );
 
@@ -454,8 +440,6 @@
     {
       const char*  feat_name;
       int          nSettings;
-
-
       feat_name = featreg_table[i].feat_name;
       for ( nSettings = 0;
             featreg_table[i].setting_name[nSettings];
@@ -477,6 +461,4 @@
 
     return 0;
   }
-
-
 /* END */

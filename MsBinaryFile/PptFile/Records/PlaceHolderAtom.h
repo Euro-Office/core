@@ -40,8 +40,6 @@ public:
 	int	 m_nPosition;
     BYTE m_nPlacementID;
 	BYTE m_nSize;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

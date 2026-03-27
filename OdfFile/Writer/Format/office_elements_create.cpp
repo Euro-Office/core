@@ -69,8 +69,6 @@ office_element_ptr office_element_creator::create(const std::wstring & ns, const
     }
 }
 
-
-
 office_element_creator * office_element_creator::get() 
 {
     if (!instance_)
@@ -158,8 +156,6 @@ bool create_element(const std::wstring & Ns,
     }
     return false;
 }
-
-
 }
 }
 

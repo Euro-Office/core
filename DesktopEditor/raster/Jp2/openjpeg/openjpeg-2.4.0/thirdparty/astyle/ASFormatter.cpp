@@ -1892,8 +1892,6 @@ void ASFormatter::setBreakClosingHeaderBracketsMode(bool state)
 {
 	setBreakClosingHeaderBracesMode(state);
 }
-
-
 /**
  * set the brace formatting mode.
  * options:

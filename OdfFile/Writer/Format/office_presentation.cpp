@@ -47,8 +47,6 @@ namespace odf_writer {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * office_presentation::ns = L"office";
 const wchar_t * office_presentation::name = L"presentation";
-
-
 void office_presentation::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
 	if	CP_CHECK_NAME(L"draw", L"page") 

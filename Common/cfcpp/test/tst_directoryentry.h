@@ -2,8 +2,6 @@
 
 #include "global.h"
 #include "directoryentry.h"
-
-
 struct DirEntryTest : testing::Test
 {
     wstring filename;
@@ -24,8 +22,6 @@ struct DirEntryTest : testing::Test
         return de;
     }
 };
-
-
 void test_dirEntry_read(const DirectoryEntry& de)
 {
     EXPECT_EQ(de.GetEntryName(), L"Root Entry");

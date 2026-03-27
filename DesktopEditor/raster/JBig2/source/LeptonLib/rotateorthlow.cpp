@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  rotateorthlow.c
  *
@@ -36,8 +34,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 
 /*------------------------------------------------------------------*
  *                           90 degree rotation                     *
@@ -247,8 +243,6 @@ l_uint32  *lines, *lined;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *                           Left/right flip                        *
  *------------------------------------------------------------------*/
@@ -386,8 +380,6 @@ l_uint32  *line;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *                            Top/bottom flip                       *
  *------------------------------------------------------------------*/
@@ -421,8 +413,6 @@ l_uint32  *linet, *lineb;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *                          Byte reverse tables                     *
  *------------------------------------------------------------------*/
@@ -456,8 +446,6 @@ l_uint8  *tab;
 
     return tab;
 }
-
-
 /*!
  *  makeReverseByteTab2()
  *
@@ -483,8 +471,6 @@ l_uint8  *tab;
                  ((0x03 & i) << 6);
     return tab;
 }
-
-
 /*!
  *  makeReverseByteTab4()
  *

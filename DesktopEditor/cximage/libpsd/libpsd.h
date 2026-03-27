@@ -27,13 +27,9 @@
 #define __LIB_PSD_H__
 
 #include "psd_types.h"
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 // global status
 typedef enum {
 	psd_status_done								= 0,
@@ -316,8 +312,6 @@ typedef struct _psd_stream
 	psd_int						file_length;
 	psd_int						current_pos;
 } psd_stream;
-
-
 /*********************************************************************************/
 /*********************************************************************************/
 // image resources section
@@ -465,8 +459,6 @@ typedef struct _psd_print_flags_info {
 	psd_int						value;			// bleed width value
 	psd_short					scale;			// bleed width scale
 } psd_print_flags_info;
-
-
 // (Photoshop 6.0) URL List
 typedef struct _psd_url_list_item
 {
@@ -481,8 +473,6 @@ typedef struct _psd_url_list
 	psd_int						number_of_urls;	// count of URLs
 	psd_url_list_item *			items;
 } psd_url_list;
-
-
 // Color samplers resource format
 typedef struct _psd_color_samplers_resource
 {
@@ -496,8 +486,6 @@ typedef struct _psd_color_samplers
 	psd_int						number_of_color_samplers;	// Number of color samplers to follow.
 	psd_color_samplers_resource *resource;
 } psd_color_samplers;
-
-
 // Path resource format
 typedef struct _psd_bezier_point
 {
@@ -528,13 +516,9 @@ typedef struct _psd_path
 	psd_float					resolution;
 	psd_bool					initial_fill;
 } psd_path;
-
-
 // end of image resources section
 /*********************************************************************************/
 /*********************************************************************************/
-
-
 /*********************************************************************************/
 /*********************************************************************************/
 // layer and mask information section
@@ -653,8 +637,6 @@ typedef struct _psd_global_layer_mask
 // end of layer and mask information section
 /*********************************************************************************/
 /*********************************************************************************/
-
-
 /*********************************************************************************/
 /*********************************************************************************/
 // additional layer information
@@ -680,8 +662,6 @@ typedef struct _psd_layer_levels
 	psd_layer_level_record *	extra_record;		// Additianol level records according to count
 	psd_uchar					lookup_table[3][256];
 } psd_layer_levels;
-
-
 // CURVES
 // The following is the data for each curve specified by count above
 typedef struct _psd_layer_curves_data
@@ -699,8 +679,6 @@ typedef struct _psd_layer_curves
 	psd_layer_curves_data * 	curve;
 	psd_uchar					lookup_table[3][256];
 } psd_layer_curves;
-
-
 // BRIGHTNESS AND CONTRAST
 typedef struct _psd_layer_brightness_contrast
 {
@@ -710,8 +688,6 @@ typedef struct _psd_layer_brightness_contrast
 	psd_char					Lab_color;
 	psd_uchar					lookup_table[256];
 } psd_layer_brightness_contrast;
-
-
 // COLOR BALANCE
 typedef struct _psd_layer_color_balance
 {
@@ -721,8 +697,6 @@ typedef struct _psd_layer_color_balance
 	psd_bool					preserve_luminosity;
 	psd_uchar 					lookup_table[3][256];
 } psd_layer_color_balance;
-
-
 // HUE/SATURATION
 // Hue/Saturation settings files are loaded and saved in Photoshop＊s Hue/Saturation dialog
 typedef struct _psd_layer_hue_saturation
@@ -738,8 +712,6 @@ typedef struct _psd_layer_hue_saturation
 	psd_short					setting_values[6][3];	// For Lab, the first four of the six values are applied to image pixels in the four Lab color quadrants, yellow, green, blue, and magenta. The other two values are ignored ( = 0). The values appear in the user interface from 每90 to 90.
 	psd_uchar					lookup_table[6][360];
 } psd_layer_hue_saturation;
-
-
 // SELECTIVE  COLOR
 // Selective Color settings files are loaded and saved in Photoshop＊s Selective Color dialog.
 typedef struct _psd_layer_selective_color
@@ -750,27 +722,19 @@ typedef struct _psd_layer_selective_color
 	psd_short					yellow_correction[10];	// Amount of yellow correction. Short integer from 每100...100.
 	psd_short					black_correction[10]; 	// Amount of black correction. Short integer from 每100...100.
 } psd_layer_selective_color;
-
-
 // THRESHOLD
 typedef struct _psd_layer_threshold
 {
 	psd_ushort					level;					// (1...255)
 } psd_layer_threshold;
-
-
 // INVERT
 // no parameter
-
-
 // POSTERIZE
 typedef struct _psd_layer_posterize
 {
 	psd_ushort					levels;					// (2...255)
 	psd_uchar					lookup_table[256];
 } psd_layer_posterize;
-
-
 // CHANNEL MIXER
 typedef struct _psd_layer_channel_mixer
 {
@@ -781,8 +745,6 @@ typedef struct _psd_layer_channel_mixer
 	psd_short					black[4];
 	psd_short					constant[4];
 } psd_layer_channel_mixer;
-
-
 // GRADIENT MAP
 // Each color stop
 typedef struct _psd_gradient_color_stop
@@ -824,8 +786,6 @@ typedef struct _psd_layer_gradient_map
 	psd_argb_color				max_color;
 	psd_argb_color				lookup_table[256];
 } psd_layer_gradient_map;
-
-
 // PHOTO FILTER
 typedef struct _psd_layer_photo_filter
 {
@@ -835,8 +795,6 @@ typedef struct _psd_layer_photo_filter
 	psd_int						density;		// (1...100)
 	psd_bool					preserve_luminosity;
 } psd_layer_photo_filter;
-
-
 // EFFECTS
 
 typedef struct _psd_gradient_color
@@ -1115,16 +1073,12 @@ typedef struct _psd_layer_effects
 	psd_int								width[psd_layer_effects_image_count];
 	psd_int								height[psd_layer_effects_image_count];
 } psd_layer_effects;
-
-
 // SOLID COLOR
 typedef struct _psd_layer_solid_color
 {
 	psd_uint					id;
 	psd_argb_color				fill_color;
 } psd_layer_solid_color;
-
-
 // GRADIENT FILL
 typedef struct _psd_layer_gradient_fill
 {
@@ -1137,8 +1091,6 @@ typedef struct _psd_layer_gradient_fill
 	psd_bool					align_with_layer;
 	psd_gradient_color			gradient_color;
 } psd_layer_gradient_fill;
-
-
 // PATTERN FILL
 typedef struct _psd_layer_pattern_fill
 {
@@ -1146,8 +1098,6 @@ typedef struct _psd_layer_pattern_fill
 	psd_pattern_info			pattern_info;
 	psd_int						scale;
 } psd_layer_pattern_fill;
-
-
 // TYPE TOOL INFO (PHOTOSHOP 5.0 AND 5.5 ONLY)
 typedef struct _psd_layer_type_face
 {
@@ -1202,8 +1152,6 @@ typedef struct _psd_layer_type_tool
 	psd_argb_color				color;
 	psd_bool					anti_alias;				// Anti alias on/off
 } psd_layer_type_tool;
-
-
 // end of additional layer information
 /*********************************************************************************/
 /*********************************************************************************/
@@ -1347,8 +1295,6 @@ typedef struct _psd_context
 	psd_int						per_channel_length;
 	psd_int						max_channel_length;
 } psd_context;
-
-
 psd_status psd_image_load(psd_context ** dst_context, psd_char * file_name);
 psd_status psd_image_load_header(psd_context ** dst_context, psd_char * file_name);
 psd_status psd_image_load_layer(psd_context ** dst_context, psd_char * file_name);
@@ -1361,8 +1307,6 @@ psd_status psd_layer_effects_update(psd_layer_record * layer, psd_layer_effects_
 psd_status psd_image_blend(psd_context * context, psd_int left, psd_int top, psd_int width, psd_int height);
 
 psd_static psd_status psd_main_loop(psd_context * context);
-
-
 #ifdef __cplusplus
 }
 #endif

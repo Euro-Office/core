@@ -101,8 +101,6 @@ UEnumNext(UEnumeration* en,
 typedef void U_CALLCONV 
 UEnumReset(UEnumeration* en, 
             UErrorCode* status);
-
-
 struct UEnumeration {
     /* baseContext. For the base class only. Don't touch! */
     void *baseContext;

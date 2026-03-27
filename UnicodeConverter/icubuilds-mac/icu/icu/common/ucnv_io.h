@@ -4,7 +4,6 @@
  *   Corporation and others.  All Rights Reserved.
  **********************************************************************
  *
- *
  *  ucnv_io.h:
  *  defines  variables and functions pertaining to converter name resolution
  *  aspect of the conversion code

@@ -36,8 +36,6 @@ typedef enum {
     XML_SAVE_AS_HTML    = 1<<6, /* force HTML serialization on XML doc */
     XML_SAVE_WSNONSIG   = 1<<7  /* format with non-significant whitespace */
 } xmlSaveOption;
-
-
 typedef struct _xmlSaveCtxt xmlSaveCtxt;
 typedef xmlSaveCtxt *xmlSaveCtxtPtr;
 
@@ -84,5 +82,3 @@ XMLPUBFUN int XMLCALL
 #endif
 #endif /* LIBXML_OUTPUT_ENABLED */
 #endif /* __XML_XMLSAVE_H__ */
-
-

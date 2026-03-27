@@ -153,5 +153,3 @@ namespace agg
 }
 
 #endif
-
-

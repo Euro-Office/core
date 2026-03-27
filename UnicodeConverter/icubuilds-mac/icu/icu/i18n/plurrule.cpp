@@ -33,8 +33,6 @@
 #include "unifiedcache.h"
 #include "digitinterval.h" 
 #include "visibledigits.h"
-
-
 #if !UCONFIG_NO_FORMATTING
 
 U_NAMESPACE_BEGIN
@@ -113,8 +111,6 @@ StringEnumeration* PluralRules::getAvailableLocales(UErrorCode &status) {
     }
     return result;
 }
-
-
 PluralRules* U_EXPORT2
 PluralRules::createRules(const UnicodeString& description, UErrorCode& status) {
     if (U_FAILURE(status)) {
@@ -133,8 +129,6 @@ PluralRules::createRules(const UnicodeString& description, UErrorCode& status) {
     }
     return newRules;
 }
-
-
 PluralRules* U_EXPORT2
 PluralRules::createDefaultRules(UErrorCode& status) {
     return createRules(UnicodeString(TRUE, PLURAL_DEFAULT_RULE, -1), status);
@@ -264,8 +258,6 @@ PluralRules::select(const VisibleDigitsWithExponent &number) const {
     return select(FixedDecimal(number.getMantissa()));
 }
 
-
-
 StringEnumeration*
 PluralRules::getKeywords(UErrorCode& status) const {
     if (U_FAILURE(status))  return NULL;
@@ -290,8 +282,6 @@ PluralRules::getAllKeywordValues(const UnicodeString & /* keyword */, double * /
     error = U_UNSUPPORTED_ERROR;
     return 0;
 }
-
-    
 static double scaleForInt(double d) {
     double scale = 1.0;
     while (d != floor(d)) {
@@ -368,8 +358,6 @@ getSamplesFromString(const UnicodeString &samples, double *dest,
     }
     return sampleCount;
 }
-
-
 int32_t
 PluralRules::getSamples(const UnicodeString &keyword, double *dest,
                         int32_t destCapacity, UErrorCode& status) {
@@ -383,8 +371,6 @@ PluralRules::getSamples(const UnicodeString &keyword, double *dest,
     }
     return numSamples;
 }
-    
-
 RuleChain *PluralRules::rulesForKeyword(const UnicodeString &keyword) const {
     RuleChain *rc;
     for (rc = mRules; rc != NULL; rc = rc->fNext) {
@@ -394,8 +380,6 @@ RuleChain *PluralRules::rulesForKeyword(const UnicodeString &keyword) const {
     }
     return rc;
 }
-
-
 UBool
 PluralRules::isKeyword(const UnicodeString& keyword) const {
     if (0 == keyword.compare(PLURAL_KEYWORD_OTHER, 5)) {
@@ -444,8 +428,6 @@ PluralRules::operator==(const PluralRules& other) const  {
 
     return TRUE;
 }
-
-
 void
 PluralRuleParser::parse(const UnicodeString& ruleData, PluralRules *prules, UErrorCode &status)
 {
@@ -707,8 +689,6 @@ PluralRules::getRuleFromResource(const Locale& locale, UPluralType type, UErrorC
     }
     return result;
 }
-
-
 UnicodeString
 PluralRules::getRules() const {
     UnicodeString rules;
@@ -717,8 +697,6 @@ PluralRules::getRules() const {
     }
     return rules;
 }
-
-
 AndConstraint::AndConstraint() {
     op = AndConstraint::NONE;
     opNum=-1;
@@ -729,8 +707,6 @@ AndConstraint::AndConstraint() {
     digitsType = none;
     next=NULL;
 }
-
-
 AndConstraint::AndConstraint(const AndConstraint& other) {
     this->op = other.op;
     this->opNum=other.opNum;
@@ -758,8 +734,6 @@ AndConstraint::~AndConstraint() {
         delete next;
     }
 }
-
-
 UBool
 AndConstraint::isFulfilled(const FixedDecimal &number) {
     UBool result = TRUE;
@@ -798,8 +772,6 @@ AndConstraint::isFulfilled(const FixedDecimal &number) {
     }
     return result;
 }
-
-
 AndConstraint*
 AndConstraint::add()
 {
@@ -867,8 +839,6 @@ OrConstraint::isFulfilled(const FixedDecimal &number) {
 
     return result;
 }
-
-
 RuleChain::RuleChain(): fKeyword(), fNext(NULL), ruleHeader(NULL), fDecimalSamples(), fIntegerSamples(), 
                         fDecimalSamplesUnbounded(FALSE), fIntegerSamplesUnbounded(FALSE) {
 }
@@ -889,8 +859,6 @@ RuleChain::~RuleChain() {
     delete fNext;
     delete ruleHeader;
 }
-
-
 UnicodeString
 RuleChain::select(const FixedDecimal &number) const {
     if (!number.isNanOrInfinity) {
@@ -1010,8 +978,6 @@ RuleChain::dumpRules(UnicodeString& result) {
         fNext->dumpRules(result);
     }
 }
-
-
 UErrorCode
 RuleChain::getKeywords(int32_t capacityOfKeywords, UnicodeString* keywords, int32_t& arraySize) const {
     if ( arraySize < capacityOfKeywords-1 ) {
@@ -1042,8 +1008,6 @@ RuleChain::isKeyword(const UnicodeString& keywordParam) const {
         return FALSE;
     }
 }
-
-
 PluralRuleParser::PluralRuleParser() : 
         ruleIndex(0), token(), type(none), prevType(none), 
         curAndConstraint(NULL), currentChain(NULL), rangeLowIdx(-1), rangeHiIdx(-1)  
@@ -1052,8 +1016,6 @@ PluralRuleParser::PluralRuleParser() :
 
 PluralRuleParser::~PluralRuleParser() {
 }
-
-
 int32_t
 PluralRuleParser::getNumberValue(const UnicodeString& token) {
     int32_t i;
@@ -1064,8 +1026,6 @@ PluralRuleParser::getNumberValue(const UnicodeString& token) {
 
     return((int32_t)atoi(digits));
 }
-
-
 void
 PluralRuleParser::checkSyntax(UErrorCode &status)
 {
@@ -1166,8 +1126,6 @@ PluralRuleParser::checkSyntax(UErrorCode &status)
         break;
     }
 }
-
-
 /*
  *  Scan the next token from the input rules.
  *     rules and returned token type are in the parser state variables.
@@ -1294,8 +1252,6 @@ PluralRuleParser::charType(UChar ch) {
         return none;
     }
 }
-
-
 //  Set token type for reserved words in the Plural Rule syntax.
 
 tokenType 
@@ -1336,8 +1292,6 @@ PluralRuleParser::getKeyType(const UnicodeString &token, tokenType keyType)
     }
     return keyType;
 }
-
-
 PluralKeywordEnumeration::PluralKeywordEnumeration(RuleChain *header, UErrorCode& status)
         : pos(0), fKeywordNames(status) {
     if (U_FAILURE(status)) {
@@ -1421,8 +1375,6 @@ FixedDecimal::FixedDecimal(double n) {
 FixedDecimal::FixedDecimal() {
     init(0, 0, 0);
 }
-
-
 // Create a FixedDecimal from a UnicodeString containing a number.
 //    Inefficient, but only used for samples, so simplicity trumps efficiency.
 
@@ -1444,8 +1396,6 @@ FixedDecimal::FixedDecimal(const UnicodeString &num, UErrorCode &status) {
         init(n, v, getFractionalDigits(n, v));
     }
 }
-
-
 FixedDecimal::FixedDecimal(const FixedDecimal &other) {
     source = other.source;
     visibleDecimalDigitCount = other.visibleDecimalDigitCount;
@@ -1456,14 +1406,10 @@ FixedDecimal::FixedDecimal(const FixedDecimal &other) {
     isNegative = other.isNegative;
     isNanOrInfinity = other.isNanOrInfinity;
 }
-
-
 void FixedDecimal::init(double n) {
     int32_t numFractionDigits = decimals(n);
     init(n, numFractionDigits, getFractionalDigits(n, numFractionDigits));
 }
-
-
 void FixedDecimal::init(double n, int32_t v, int64_t f) {
     isNegative = n < 0.0;
     source = fabs(n);
@@ -1490,8 +1436,6 @@ void FixedDecimal::init(double n, int32_t v, int64_t f) {
         decimalDigitsWithoutTrailingZeros = fdwtz;
     }
 }
-
-
 //  Fast path only exact initialization. Return true if successful.
 //     Note: Do not multiply by 10 each time through loop, rounding cruft can build
 //           up that makes the check for an integer result fail.
@@ -1513,8 +1457,6 @@ UBool FixedDecimal::quickInit(double n) {
     }
     return success;
 }
-
-
 
 int32_t FixedDecimal::decimals(double n) {
     // Count the number of decimal digits in the fraction part of the number, excluding trailing zeros.
@@ -1542,8 +1484,6 @@ int32_t FixedDecimal::decimals(double n) {
     numFractionDigits -= exponent;   // Fraction part of fixed point representation.
     return numFractionDigits;
 }
-
-
 // Get the fraction digits of a double, represented as an integer.
 //    v is the number of visible fraction digits in the displayed form of the number.
 //       Example: n = 1001.234, v = 6, result = 234000
@@ -1570,8 +1510,6 @@ int64_t FixedDecimal::getFractionalDigits(double n, int32_t v) {
           }
       }
 }
-
-
 void FixedDecimal::adjustForMinFractionDigits(int32_t minFractionDigits) {
     int32_t numTrailingFractionZeros = minFractionDigits - visibleDecimalDigitCount;
     if (numTrailingFractionZeros > 0) {
@@ -1586,8 +1524,6 @@ void FixedDecimal::adjustForMinFractionDigits(int32_t minFractionDigits) {
         visibleDecimalDigitCount += numTrailingFractionZeros;
     }
 }
-        
-
 double FixedDecimal::get(tokenType operand) const {
     switch(operand) {
         case tVariableN: return source;
@@ -1604,8 +1540,6 @@ double FixedDecimal::get(tokenType operand) const {
 int32_t FixedDecimal::getVisibleFractionDigitCount() const {
     return visibleDecimalDigitCount;
 }
-
-
 
 PluralAvailableLocalesEnumeration::PluralAvailableLocalesEnumeration(UErrorCode &status) {
     fLocales = NULL;
@@ -1647,8 +1581,6 @@ const char *PluralAvailableLocalesEnumeration::next(int32_t *resultLength, UErro
     }
     return result;
 }
-
-
 void PluralAvailableLocalesEnumeration::reset(UErrorCode &status) {
     if (U_FAILURE(status)) {
        return;
@@ -1672,8 +1604,6 @@ int32_t PluralAvailableLocalesEnumeration::count(UErrorCode &status) const {
 }
 
 U_NAMESPACE_END
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

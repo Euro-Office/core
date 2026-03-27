@@ -17,8 +17,6 @@
 #include "unicode/translit.h"
 
 #include "unicode/localpointer.h"
-
-
 U_NAMESPACE_BEGIN
 
 class UVector32;

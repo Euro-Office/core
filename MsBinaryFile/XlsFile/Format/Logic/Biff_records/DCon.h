@@ -45,8 +45,6 @@ public:
 	~DCon();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 
@@ -56,8 +54,6 @@ public:
     unsigned short fLeftCat = 0;
     unsigned short fTopCat = 0;
     unsigned short fLinkConsole = 0;
-
-
 };
 
 } // namespace XLS

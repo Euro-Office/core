@@ -65,8 +65,6 @@ extern void * malloc ();
 #ifndef MAX_COM_LENGTH
 #define MAX_COM_LENGTH 65000L	/* must be <= 65533 in any case */
 #endif
-
-
 /*
  * These macros are used to read the input file and write the output file.
  * To reuse this code in another application, you might need to change these.
@@ -81,12 +79,8 @@ static FILE * outfile;		/* output JPEG file */
 
 /* Emit an output byte */
 #define PUTBYTE(x)  putc((x), outfile)
-
-
 /* Error exit handler */
 #define ERREXIT(msg)  (fprintf(stderr, "%s\n", msg), exit(EXIT_FAILURE))
-
-
 /* Read one byte, testing for EOF */
 static int
 read_1_byte (void)
@@ -114,8 +108,6 @@ read_2_bytes (void)
     ERREXIT("Premature EOF in JPEG file");
   return (((unsigned int) c1) << 8) + ((unsigned int) c2);
 }
-
-
 /* Routines to write data to output file */
 
 static void
@@ -146,8 +138,6 @@ copy_rest_of_file (void)
   while ((c = NEXTBYTE()) != EOF)
     PUTBYTE(c);
 }
-
-
 /*
  * JPEG markers consist of one or more 0xFF bytes, followed by a marker
  * code byte (which is not an FF).  Here are the marker codes of interest
@@ -171,8 +161,6 @@ copy_rest_of_file (void)
 #define M_EOI   0xD9		/* End Of Image (end of datastream) */
 #define M_SOS   0xDA		/* Start Of Scan (begins compressed data) */
 #define M_COM   0xFE		/* COMment */
-
-
 /*
  * Find the next JPEG marker and return its marker code.
  * We expect at least one FF byte, possibly more if the compressor used FFs
@@ -208,8 +196,6 @@ next_marker (void)
 
   return c;
 }
-
-
 /*
  * Read the initial marker, which should be SOI.
  * For a JFIF file, the first two bytes of the file should be literally
@@ -229,8 +215,6 @@ first_marker (void)
     ERREXIT("Not a JPEG file");
   return c2;
 }
-
-
 /*
  * Most types of marker are followed by a variable-length parameter segment.
  * This routine skips over the parameters for any marker we don't otherwise
@@ -278,8 +262,6 @@ skip_variable (void)
     length--;
   }
 }
-
-
 /*
  * Parse the marker stream until SOFn or EOI is seen;
  * copy data to output, but discard COM markers unless keep_COM is true.
@@ -340,13 +322,9 @@ scan_JPEG_header (int keep_COM)
     }
   } /* end loop */
 }
-
-
 /* Command line parsing code */
 
 static const char * progname;	/* program name for error messages */
-
-
 static void
 usage (void)
 /* complain about bad command line */
@@ -378,8 +356,6 @@ usage (void)
 
   exit(EXIT_FAILURE);
 }
-
-
 static int
 keymatch (char * arg, const char * keyword, int minchars)
 /* Case-insensitive matching of (possibly abbreviated) keyword switches. */

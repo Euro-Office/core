@@ -152,7 +152,6 @@ template class U_I18N_API    EnumSet<UNumberFormatAttribute,
  *     format->parse(form->format(myNumber, str), fmtable, success);
  * }</pre>
  *
- *
  * <p><strong>Patterns</strong>
  *
  * <p>A DecimalFormat consists of a <em>pattern</em> and a set of
@@ -780,8 +779,6 @@ public:
 #endif
 
 #endif  /* U_HIDE_INTERNAL_API */
-
-
     /**
      * Set an integer attribute on this DecimalFormat.
      * May return U_UNSUPPORTED_ERROR if this instance does not support
@@ -807,8 +804,6 @@ public:
      */
     virtual int32_t getAttribute( UNumberFormatAttribute attr,
                                   UErrorCode &status) const;
-
-    
     /**
      * Set whether or not grouping will be used in this format.
      * @param newValue    True, grouping will be used in this format.
@@ -921,8 +916,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UBool operator==(const Format& other) const;
-
-
     using NumberFormat::format;
 
     /**
@@ -939,8 +932,6 @@ public:
     virtual UnicodeString& format(double number,
                                   UnicodeString& appendTo,
                                   FieldPosition& pos) const;
-
-
     /**
      * Format a double or long number using base-10 representation.
      *
@@ -1094,8 +1085,6 @@ public:
                                   UnicodeString& appendTo,
                                   FieldPositionIterator* posIter,
                                   UErrorCode& status) const;
-
-
     /**
      * Format a decimal number.
      * The number is a DigitList wrapper onto a floating point decimal number.
@@ -1241,8 +1230,6 @@ public:
      * @stable ICU 2.0
      */
     virtual void setDecimalFormatSymbols(const DecimalFormatSymbols& symbols);
-
-
     /**
      * Returns the currency plural format information,
      * which is generally not changed by the programmer or user.
@@ -1266,8 +1253,6 @@ public:
      * @stable ICU 4.2
      */
     virtual void setCurrencyPluralInfo(const CurrencyPluralInfo& info);
-
-
     /**
      * Get the positive prefix.
      *
@@ -1724,8 +1709,6 @@ public:
      * @stable ICU 54
      */
     virtual void setDecimalPatternMatchRequired(UBool newValue);
-
-
     /**
      * Synthesizes a pattern string that represents the current state
      * of this Format object.
@@ -1838,8 +1821,6 @@ public:
      */
     virtual void applyLocalizedPattern(const UnicodeString& pattern,
                                        UErrorCode& status);
-
-
     /**
      * Sets the maximum number of digits allowed in the integer portion of a
      * number. This override limits the integer digit count to 309.
@@ -1981,8 +1962,6 @@ public:
      * @stable ICU 54
      */
     UCurrencyUsage getCurrencyUsage() const;
-
-
 #ifndef U_HIDE_DEPRECATED_API
     /**
      * The resource tags we use to retrieve decimal format data from
@@ -2210,19 +2189,13 @@ private:
     /**
      * Constants.
      */
-
-
     EnumSet<UNumberFormatAttribute,
             UNUM_MAX_NONBOOLEAN_ATTRIBUTE+1,
             UNUM_LIMIT_BOOLEAN_ATTRIBUTE>
                             fBoolFlags;
-
-
     // style is only valid when decimal formatter is constructed by
     // DecimalFormat(pattern, decimalFormatSymbol, style)
     int fStyle;
-
-
     // Affix pattern set for currency.
     // It is a set of AffixPatternsForCurrency,
     // each element of the set saves the negative prefix pattern,

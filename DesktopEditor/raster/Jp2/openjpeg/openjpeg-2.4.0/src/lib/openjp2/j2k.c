@@ -302,8 +302,6 @@ static OPJ_UINT32 opj_j2k_get_SQcd_SQcc_size(opj_j2k_t *p_j2k,
  */
 static OPJ_BOOL opj_j2k_compare_SQcd_SQcc(opj_j2k_t *p_j2k,
         OPJ_UINT32 p_tile_no, OPJ_UINT32 p_first_comp_no, OPJ_UINT32 p_second_comp_no);
-
-
 /**
  * Writes a SQcd or SQcc element, i.e. the quantization values of a band in the QCD or QCC.
  *
@@ -814,8 +812,6 @@ static OPJ_BOOL opj_j2k_read_ppt(opj_j2k_t *p_j2k,
  */
 static OPJ_BOOL opj_j2k_merge_ppt(opj_tcp_t *p_tcp,
                                   opj_event_mgr_t * p_manager);
-
-
 /**
  * Writes the TLM marker (Tile Length Marker)
  *
@@ -1170,8 +1166,6 @@ static OPJ_BOOL opj_j2k_read_cbd(opj_j2k_t *p_j2k,
                                  OPJ_BYTE * p_header_data,
                                  OPJ_UINT32 p_header_size,
                                  opj_event_mgr_t * p_manager);
-
-
 /**
  * Writes COC marker for each component.
  *
@@ -2818,8 +2812,6 @@ static OPJ_BOOL opj_j2k_compare_coc(opj_j2k_t *p_j2k,
     if (l_tcp->tccps[p_first_comp_no].csty != l_tcp->tccps[p_second_comp_no].csty) {
         return OPJ_FALSE;
     }
-
-
     return opj_j2k_compare_SPCod_SPCoc(p_j2k, p_j2k->m_current_tile_number,
                                        p_first_comp_no, p_second_comp_no);
 }
@@ -6253,8 +6245,6 @@ static OPJ_BOOL opj_j2k_write_mco(opj_j2k_t *p_j2k,
         p_j2k->m_specific_param.m_encoder.m_header_tile_data_size = l_mco_size;
     }
     l_current_data = p_j2k->m_specific_param.m_encoder.m_header_tile_data;
-
-
     opj_write_bytes(l_current_data, J2K_MS_MCO, 2);                 /* MCO */
     l_current_data += 2;
 
@@ -6637,8 +6627,6 @@ opj_j2k_t* opj_j2k_create_compress(void)
     if (!l_j2k) {
         return NULL;
     }
-
-
     l_j2k->m_is_decoder = 0;
     l_j2k->m_cp.m_is_decoder = 0;
 
@@ -7489,8 +7477,6 @@ static OPJ_BOOL opj_j2k_is_imf_compliant(opj_cparameters_t *parameters,
 
     return ret;
 }
-
-
 OPJ_BOOL opj_j2k_setup_encoder(opj_j2k_t *p_j2k,
                                opj_cparameters_t *parameters,
                                opj_image_t *image,
@@ -8122,8 +8108,6 @@ OPJ_BOOL opj_j2k_setup_encoder(opj_j2k_t *p_j2k,
                         assert(res_spec > 0); /* issue 189 */
                         size_prcw = parameters->prcw_init[res_spec - 1] >> (p - (res_spec - 1));
                         size_prch = parameters->prch_init[res_spec - 1] >> (p - (res_spec - 1));
-
-
                         if (size_prcw < 1) {
                             tccp->prcw[it_res] = 1;
                         } else {
@@ -9852,15 +9836,11 @@ static OPJ_BOOL opj_j2k_update_image_data(opj_tcd_t * p_tcd,
 
         l_width_src = (OPJ_UINT32)(res_x1 - res_x0);
         l_height_src = (OPJ_UINT32)(res_y1 - res_y0);
-
-
         /* Current tile component size*/
         /*if (i == 0) {
         fprintf(stdout, "SRC: l_res_x0=%d, l_res_x1=%d, l_res_y0=%d, l_res_y1=%d\n",
                         res_x0, res_x1, res_y0, res_y1);
         }*/
-
-
         /* Border of the current output component*/
         l_x0_dest = opj_uint_ceildivpow2(l_img_comp_dest->x0, l_img_comp_dest->factor);
         l_y0_dest = opj_uint_ceildivpow2(l_img_comp_dest->y0, l_img_comp_dest->factor);
@@ -9999,8 +9979,6 @@ static OPJ_BOOL opj_j2k_update_image_data(opj_tcd_t * p_tcd,
                 l_src_ptr += src_data_stride;
             }
         }
-
-
     }
 
     return OPJ_TRUE;
@@ -10116,8 +10094,6 @@ OPJ_BOOL opj_j2k_set_decoded_components(opj_j2k_t *p_j2k,
 
     return OPJ_TRUE;
 }
-
-
 OPJ_BOOL opj_j2k_set_decode_area(opj_j2k_t *p_j2k,
                                  opj_image_t* p_image,
                                  OPJ_INT32 p_start_x, OPJ_INT32 p_start_y,
@@ -10770,8 +10746,6 @@ static OPJ_BOOL opj_j2k_compare_SQcd_SQcc(opj_j2k_t *p_j2k,
     }
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_j2k_write_SQcd_SQcc(opj_j2k_t *p_j2k,
                                         OPJ_UINT32 p_tile_no,
                                         OPJ_UINT32 p_comp_no,
@@ -11169,8 +11143,6 @@ static void opj_j2k_dump_MH_index(opj_j2k_t* p_j2k, FILE* out_stream)
     fprintf(out_stream, "}\n");
 
 }
-
-
 static void opj_j2k_dump_MH_info(opj_j2k_t* p_j2k, FILE* out_stream)
 {
 
@@ -11489,8 +11461,6 @@ static OPJ_BOOL opj_j2k_are_all_used_components_decoded(opj_j2k_t *p_j2k,
 
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_j2k_decode_tiles(opj_j2k_t *p_j2k,
                                      opj_stream_private_t *p_stream,
                                      opj_event_mgr_t * p_manager)

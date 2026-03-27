@@ -361,12 +361,8 @@ GregorianCalendar::setGregorianChange(UDate date, UErrorCode& status)
     fCutoverJulianDay = cutoverDay;
     delete cal;
 }
-
-
 void GregorianCalendar::handleComputeFields(int32_t julianDay, UErrorCode& status) {
     int32_t eyear, month, dayOfMonth, dayOfYear, unusedRemainder;
-
-
     if(U_FAILURE(status)) { 
         return; 
     }
@@ -375,8 +371,6 @@ void GregorianCalendar::handleComputeFields(int32_t julianDay, UErrorCode& statu
     fprintf(stderr, "%s:%d: jd%d- (greg's %d)- [cut=%d]\n", 
         __FILE__, __LINE__, julianDay, getGregorianDayOfYear(), fCutoverJulianDay);
 #endif
-
-
     if (julianDay >= fCutoverJulianDay) {
         month = getGregorianMonth();
         dayOfMonth = getGregorianDayOfMonth();
@@ -444,8 +438,6 @@ void GregorianCalendar::handleComputeFields(int32_t julianDay, UErrorCode& statu
     internalSet(UCAL_ERA, era);
     internalSet(UCAL_YEAR, eyear);
 }
-
-
 // -------------------------------------
 
 UDate
@@ -480,8 +472,6 @@ int32_t GregorianCalendar::handleComputeJulianDay(UCalendarDateFields bestField)
             fInvertGregorian = TRUE;  // So that the Julian Jan 1 will be used in handleComputeMonthStart
             return Calendar::handleComputeJulianDay(bestField);
         }
-
-
         // The following check handles portions of the cutover year BEFORE the
         // cutover itself happens.
         //if ((fIsGregorian==TRUE) != (jd >= fCutoverJulianDay)) {  /*  cutoverJulianDay)) { */
@@ -587,8 +577,6 @@ int32_t GregorianCalendar::handleGetMonthLength(int32_t extendedYear, int32_t mo
 int32_t GregorianCalendar::handleGetYearLength(int32_t eyear) const {
     return isLeapYear(eyear) ? 366 : 365;
 }
-
-
 int32_t
 GregorianCalendar::monthLength(int32_t month) const
 {
@@ -638,8 +626,6 @@ GregorianCalendar::pinDayOfMonth()
 }
 
 // -------------------------------------
-
-
 UBool
 GregorianCalendar::validateFields() const
 {
@@ -701,8 +687,6 @@ GregorianCalendar::getEpochDay(UErrorCode& status)
 }
 
 // -------------------------------------
-
-
 // -------------------------------------
 
 /**
@@ -1039,8 +1023,6 @@ GregorianCalendar::roll(UCalendarDateFields field, int32_t amount, UErrorCode& s
 }
 
 // -------------------------------------
-
-
 /**
 * Return the minimum value that this field could have, given the current date.
 * For the Gregorian calendar, this is the same as getMinimum() and getGreatestMinimum().
@@ -1069,8 +1051,6 @@ int32_t GregorianCalendar::getActualMinimum(UCalendarDateFields field, UErrorCod
 {
     return getMinimum(field);
 }
-
-
 // ------------------------------------
 
 /**
@@ -1171,8 +1151,6 @@ int32_t GregorianCalendar::getActualMaximum(UCalendarDateFields field, UErrorCod
         return Calendar::getActualMaximum(field,status);
     }
 }
-
-
 int32_t GregorianCalendar::handleGetExtendedYear() {
     // the year to return
     int32_t year = kEpochYear;
@@ -1230,8 +1208,6 @@ int32_t GregorianCalendar::handleGetExtendedYearFromWeekFields(int32_t yearWoy, 
     }
     return Calendar::handleGetExtendedYearFromWeekFields(yearWoy, woy);
 }
-
-
 // -------------------------------------
 
 UBool
@@ -1272,8 +1248,6 @@ GregorianCalendar::getType() const {
 static UDate           gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t         gSystemDefaultCenturyStartYear   = -1;
 static icu::UInitOnce  gSystemDefaultCenturyInit        = U_INITONCE_INITIALIZER;
-
-
 UBool GregorianCalendar::haveDefaultCentury() const
 {
     return TRUE;

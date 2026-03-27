@@ -97,8 +97,6 @@ percent_rel percent_rel::parse(const std::wstring & Str)
     strm >> per_;
     return per_;
 }
-
-
 }
 }
 

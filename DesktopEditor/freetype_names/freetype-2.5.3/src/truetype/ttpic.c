@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "ttpic.h"
 #include "tterrors.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ttdriver.c */
@@ -38,20 +34,14 @@
   void
   FT_Init_Class_tt_service_truetype_glyf(
     FT_Service_TTGlyfRec*  sv_ttglyf );
-
-
   void
   tt_driver_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->truetype )
     {
       TTModulePIC*  container = (TTModulePIC*)pic_container->truetype;
-
-
       if ( container->tt_services )
         FT_Destroy_Class_tt_services( library, container->tt_services );
       container->tt_services = NULL;
@@ -59,8 +49,6 @@
       pic_container->truetype = NULL;
     }
   }
-
-
   FT_Error
   tt_driver_class_pic_init( FT_Library  library )
   {
@@ -68,8 +56,6 @@
     FT_Error           error         = FT_Err_Ok;
     TTModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
@@ -96,6 +82,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

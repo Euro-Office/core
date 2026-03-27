@@ -13,8 +13,6 @@
 *   created on: 2002jan31
 *   created by: Markus W. Scherer
 */
-
-
 /* This ICU code derived from: */
 /*
 punycode.c 0.4.0 (2001-Nov-17-Sat)
@@ -54,8 +52,6 @@ Disclaimer and license
 #include "cmemory.h"
 #include "punycode.h"
 #include "uassert.h"
-
-
 /* Punycode ----------------------------------------------------------------- */
 
 /* Punycode parameters for Bootstring */

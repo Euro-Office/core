@@ -41,8 +41,6 @@ namespace agg
     {
         calc_rbox();
     }
-
-
     //------------------------------------------------------------------------
     void rbox_ctrl_impl::calc_rbox()
     {
@@ -51,8 +49,6 @@ namespace agg
         m_xs2 = m_x2 - m_border_width;
         m_ys2 = m_y2 - m_border_width;
     }
-
-
     //------------------------------------------------------------------------
     void rbox_ctrl_impl::add_item(const char* text)
     {
@@ -63,8 +59,6 @@ namespace agg
             m_num_items++;
         }
     }
-
-
     //------------------------------------------------------------------------
     void rbox_ctrl_impl::border_width(double t, double extra)
     { 
@@ -72,16 +66,12 @@ namespace agg
         m_border_extra = extra;
         calc_rbox(); 
     }
-
-
     //------------------------------------------------------------------------
     void rbox_ctrl_impl::text_size(double h, double w) 
     { 
         m_text_width = w; 
         m_text_height = h; 
     }
-
-
 
     //------------------------------------------------------------------------
     void rbox_ctrl_impl::rewind(unsigned idx)
@@ -144,8 +134,6 @@ namespace agg
             m_ellipse_poly.width(m_text_thickness);
             m_ellipse_poly.rewind(0);
             break;
-
-
         case 4:                 // Active Item
             if(m_cur_item >= 0)
             {
@@ -159,8 +147,6 @@ namespace agg
 
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned rbox_ctrl_impl::vertex(double* x, double* y)
     {
@@ -224,8 +210,6 @@ namespace agg
                 }
             }
             break;
-
-
         case 4:
             if(m_cur_item >= 0)
             {
@@ -249,16 +233,12 @@ namespace agg
 
         return cmd;
     }
-
-
     //------------------------------------------------------------------------
     bool rbox_ctrl_impl::in_rect(double x, double y) const
     {
         inverse_transform_xy(&x, &y);
         return x >= m_x1 && x <= m_x2 && y >= m_y1 && y <= m_y2;
     }
-
-
 
     //------------------------------------------------------------------------
     bool rbox_ctrl_impl::on_mouse_button_down(double x, double y)
@@ -277,8 +257,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool rbox_ctrl_impl::on_mouse_move(double, double, bool)
     {
@@ -318,8 +296,4 @@ namespace agg
         }
         return false;
     }
-
-
 }
-
-

@@ -33,8 +33,6 @@
 
 #include <vector>
 #include "ShapeContainer.h"
-
-
 namespace PPT
 {
 class CRecordGroupShapeContainer : public CRecordsContainer

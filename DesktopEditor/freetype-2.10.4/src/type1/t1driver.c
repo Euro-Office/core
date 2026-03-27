@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "t1driver.h"
 #include "t1gload.h"
 #include "t1load.h"
@@ -40,8 +38,6 @@
 #include <freetype/internal/services/svpsinfo.h>
 #include <freetype/internal/services/svprop.h>
 #include <freetype/internal/services/svkern.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -66,35 +62,25 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_UInt
   t1_get_name_index( T1_Face           face,
                      const FT_String*  glyph_name )
   {
     FT_Int  i;
-
-
     for ( i = 0; i < face->type1.num_glyphs; i++ )
     {
       FT_String*  gname = face->type1.glyph_names[i];
-
-
       if ( !ft_strcmp( glyph_name, gname ) )
         return (FT_UInt)i;
     }
 
     return 0;
   }
-
-
   static const FT_Service_GlyphDictRec  t1_service_glyph_dict =
   {
     (FT_GlyphDict_GetNameFunc)  t1_get_glyph_name,    /* get_name   */
     (FT_GlyphDict_NameIndexFunc)t1_get_name_index     /* name_index */
   };
-
-
   /*
    * POSTSCRIPT NAME SERVICE
    *
@@ -105,14 +91,10 @@
   {
     return (const char*) face->type1.font_name;
   }
-
-
   static const FT_Service_PsFontNameRec  t1_service_ps_name =
   {
     (FT_PsName_GetFunc)t1_get_ps_name     /* get_ps_font_name */
   };
-
-
   /*
    * MULTIPLE MASTERS SERVICE
    *
@@ -136,8 +118,6 @@
     (FT_Done_Blend_Func)         T1_Done_Blend           /* done_blend          */
   };
 #endif
-
-
   /*
    * POSTSCRIPT INFO SERVICE
    *
@@ -151,8 +131,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   t1_ps_get_font_extra( FT_Face           face,
                         PS_FontExtraRec*  afont_extra )
@@ -161,8 +139,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Int
   t1_ps_has_glyph_names( FT_Face  face )
   {
@@ -170,8 +146,6 @@
 
     return 1;
   }
-
-
   static FT_Error
   t1_ps_get_font_private( FT_Face         face,
                           PS_PrivateRec*  afont_private )
@@ -180,8 +154,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Long
   t1_ps_get_font_value( FT_Face       face,
                         PS_Dict_Keys  key,
@@ -194,8 +166,6 @@
 
     T1_Face  t1face = (T1_Face)face;
     T1_Font  type1  = &t1face->type1;
-
-
     switch ( key )
     {
     case PS_DICT_FONT_TYPE:
@@ -209,8 +179,6 @@
                    sizeof ( type1->font_matrix.xx ) )
       {
         FT_Fixed  val = 0;
-
-
         retval = sizeof ( val );
         if ( value && value_len >= retval )
         {
@@ -239,8 +207,6 @@
                    sizeof ( type1->font_bbox.xMin ) )
       {
         FT_Fixed  val = 0;
-
-
         retval = sizeof ( val );
         if ( value && value_len >= retval )
         {
@@ -345,15 +311,11 @@
     case PS_DICT_SUBR:
       {
         FT_Bool  ok = 0;
-
-
         if ( type1->subrs_hash )
         {
           /* convert subr index to array index */
           size_t*  val = ft_hash_num_lookup( (FT_Int)idx,
                                              type1->subrs_hash );
-
-
           if ( val )
           {
             idx = *val;
@@ -617,8 +579,6 @@
 
     return retval == 0 ? -1 : (FT_Long)retval;
   }
-
-
   static const FT_Service_PsInfoRec  t1_service_ps_info =
   {
     (PS_GetFontInfoFunc)   t1_ps_get_font_info,    /* ps_get_font_info    */
@@ -627,16 +587,12 @@
     (PS_GetFontPrivateFunc)t1_ps_get_font_private, /* ps_get_font_private */
     (PS_GetFontValueFunc)  t1_ps_get_font_value,   /* ps_get_font_value   */
   };
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
   static const FT_Service_KerningRec  t1_service_kerning =
   {
     T1_Get_Track_Kerning,       /* get_track */
   };
 #endif
-
-
   /*
    * PROPERTY SERVICE
    *
@@ -647,8 +603,6 @@
 
     (FT_Properties_SetFunc)ps_property_set,      /* set_property */
     (FT_Properties_GetFunc)ps_property_get )     /* get_property */
-
-
   /*
    * SERVICE LIST
    *
@@ -671,8 +625,6 @@
 #endif
     { NULL, NULL }
   };
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   Get_Interface( FT_Module         module,
                  const FT_String*  t1_interface )
@@ -681,8 +633,6 @@
 
     return ft_service_list_lookup( t1_services, t1_interface );
   }
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
 
   /**************************************************************************
@@ -728,8 +678,6 @@
                FT_Vector*  kerning )
   {
     T1_Face  face = (T1_Face)t1face;
-
-
     kerning->x = 0;
     kerning->y = 0;
 
@@ -741,11 +689,7 @@
 
     return FT_Err_Ok;
   }
-
-
 #endif /* T1_CONFIG_OPTION_NO_AFM */
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  t1_driver_class =
   {
@@ -792,6 +736,4 @@
     T1_Size_Request,            /* FT_Size_RequestFunc  request_size */
     NULL                        /* FT_Size_SelectFunc   select_size  */
   };
-
-
 /* END */

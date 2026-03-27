@@ -30,8 +30,6 @@
  *
  */
 #include "ExtXmlUtils.h"
-
-
 std::vector<std::wstring> XmlUtils::FindAttrValues(const std::wstring &xml, std::wstring attrName)
 {
     attrName += L"=\"";

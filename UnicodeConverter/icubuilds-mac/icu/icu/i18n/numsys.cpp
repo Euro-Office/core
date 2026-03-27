@@ -43,8 +43,6 @@ static const char gDesc[] = "desc";
 static const char gRadix[] = "radix";
 static const char gAlgorithmic[] = "algorithmic";
 static const char gLatn[] = "latn";
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(NumberingSystem)
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(NumsysNameEnumeration)
 
@@ -100,8 +98,6 @@ NumberingSystem::createInstance(int32_t radix_in, UBool isAlgorithmic_in, const 
     return ns;
     
 }
-
-
 NumberingSystem* U_EXPORT2
 NumberingSystem::createInstance(const Locale & inLocale, UErrorCode& status) {
 

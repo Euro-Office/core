@@ -29,8 +29,6 @@ int main()
 
 		{
 			CJSContextScope oScope(pContext2);
-
-
 			JSSmart<CJSValue> pRet = pContext2->runScript(readFileContent("../example/code.js"));
 
 			std::cout << "RESULT: ";
@@ -54,8 +52,6 @@ int main()
 			std::cout << "ERROR!" << std::endl;
 		}
 	}
-
-
 	{
 		CJSContextScope oScope(pContext1);
 

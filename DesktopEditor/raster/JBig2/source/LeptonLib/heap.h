@@ -68,6 +68,4 @@ struct L_Heap
     l_int32      direction;   /* L_SORT_INCREASING or L_SORT_DECREASING      */
 };
 typedef struct L_Heap  L_HEAP;
-
-
 #endif  /* LEPTONICA_HEAP_H */

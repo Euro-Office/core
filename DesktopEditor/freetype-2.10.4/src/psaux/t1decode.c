@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/pshints.h>
@@ -38,8 +36,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  t1decode
-
-
   typedef enum  T1_Operator_
   {
     op_none = 0,
@@ -73,8 +69,6 @@
     op_max    /* never remove this one */
 
   } T1_Operator;
-
-
   static
   const FT_Int  t1_args_count[op_max] =
   {
@@ -106,8 +100,6 @@
     2, /* setcurrentpoint */
     2  /* opcode 15 (undocumented and obsolete) */
   };
-
-
   /**************************************************************************
    *
    * @Function:
@@ -135,8 +127,6 @@
     FT_UInt             n;
     const FT_String*    glyph_name;
     FT_Service_PsCMaps  psnames = decoder->psnames;
-
-
     /* check range of standard char code */
     if ( charcode < 0 || charcode > 255 )
       return -1;
@@ -147,8 +137,6 @@
     for ( n = 0; n < decoder->num_glyphs; n++ )
     {
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
-
-
       if ( name                               &&
            name[0] == glyph_name[0]           &&
            ft_strcmp( name, glyph_name ) == 0 )
@@ -157,8 +145,6 @@
 
     return -1;
   }
-
-
 #ifdef T1_CONFIG_OPTION_OLD_ENGINE
 
   /**************************************************************************
@@ -188,8 +174,6 @@
     FT_UInt             n;
     const FT_String*    glyph_name;
     FT_Service_PsCMaps  psnames = decoder->psnames;
-
-
     /* check range of standard char code */
     if ( charcode < 0 || charcode > 255 )
       return -1;
@@ -200,8 +184,6 @@
     for ( n = 0; n < decoder->num_glyphs; n++ )
     {
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
-
-
       if ( name                               &&
            name[0] == glyph_name[0]           &&
            ft_strcmp( name, glyph_name ) == 0 )
@@ -210,8 +192,6 @@
 
     return -1;
   }
-
-
   /* parse a single Type 1 glyph */
   FT_LOCAL_DEF( FT_Error )
   t1_decoder_parse_glyph( T1_Decoder  decoder,
@@ -219,8 +199,6 @@
   {
     return decoder->parse_callback( decoder, glyph );
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -270,8 +248,6 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     T1_Face      face  = (T1_Face)decoder->builder.face;
 #endif
-
-
     if ( decoder->seac )
     {
       FT_ERROR(( "t1operator_seac: invalid nested seac\n" ));
@@ -329,8 +305,6 @@
       FT_GlyphSlot    glyph  = (FT_GlyphSlot)decoder->builder.glyph;
       FT_GlyphLoader  loader = glyph->internal->loader;
       FT_SubGlyph     subg;
-
-
       /* reallocate subglyph array if necessary */
       error = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
       if ( error )
@@ -416,8 +390,6 @@
   Exit:
     return error;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -460,8 +432,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_Bool          bol = TRUE;
 #endif
-
-
     /* compute random seed from stack address of parameter */
     seed = (FT_Fixed)( ( (FT_Offset)(char*)&seed            ^
                          (FT_Offset)(char*)&decoder         ^
@@ -509,8 +479,6 @@
       FT_Long*     top   = decoder->top;
       T1_Operator  op    = op_none;
       FT_Int32     value = 0;
-
-
       FT_ASSERT( known_othersubr_result_cnt == 0   ||
                  unknown_othersubr_result_cnt == 0 );
 
@@ -754,8 +722,6 @@
       {
         FT_Int  subr_no;
         FT_Int  arg_cnt;
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
         FT_TRACE4(( " callothersubr\n" ));
         bol = TRUE;
@@ -840,8 +806,6 @@
         case 2:                     /* add flex vectors */
           {
             FT_Int  idx;
-
-
             if ( arg_cnt != 0 )
               goto Unexpected_OtherSubr;
 
@@ -900,8 +864,6 @@
             FT_UInt   num_points, nn, mm;
             FT_Long*  delta;
             FT_Long*  values;
-
-
             if ( !blend )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"
@@ -938,8 +900,6 @@
             for ( nn = 0; nn < num_points; nn++ )
             {
               FT_Long  tmp = values[0];
-
-
               for ( mm = 1; mm < blend->num_designs; mm++ )
                 tmp = ADD_LONG( tmp,
                                 FT_MulFix( *delta++,
@@ -959,8 +919,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 1 || !blend )
               goto Unexpected_OtherSubr;
 
@@ -1027,8 +985,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 2 || !blend )
               goto Unexpected_OtherSubr;
 
@@ -1048,8 +1004,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 1 || !blend )
               goto Unexpected_OtherSubr;
 
@@ -1094,8 +1048,6 @@
 
           {
             FT_Fixed  Rand;
-
-
             Rand = seed;
             if ( Rand >= 0x8000L )
               Rand++;
@@ -1134,8 +1086,6 @@
       else  /* general operator */
       {
         FT_Int  num_args = t1_args_count[op];
-
-
         FT_ASSERT( num_args >= 0 );
 
         if ( top - decoder->stack < num_args )
@@ -1204,8 +1154,6 @@
           if ( decoder->len_buildchar > 0 )
           {
             FT_UInt  i;
-
-
             FT_TRACE4(( "BuildCharArray = [ " ));
 
             for ( i = 0; i < decoder->len_buildchar; i++ )
@@ -1437,8 +1385,6 @@
         case op_callsubr:
           {
             FT_Int  idx;
-
-
             FT_TRACE4(( " callsubr" ));
 
             idx = Fix2Int( top[0] );
@@ -1447,8 +1393,6 @@
             {
               size_t*  val = ft_hash_num_lookup( idx,
                                                  decoder->subrs_hash );
-
-
               if ( val )
                 idx = *val;
               else
@@ -1582,8 +1526,6 @@
           if ( hinter )
           {
             FT_Pos  dx = orig_x;
-
-
             top[0] = ADD_LONG( top[0], dx );
             top[2] = ADD_LONG( top[2], dx );
             top[4] = ADD_LONG( top[4], dx );
@@ -1661,11 +1603,7 @@
   Stack_Underflow:
     return FT_THROW( Stack_Underflow );
   }
-
-
 #else /* !T1_CONFIG_OPTION_OLD_ENGINE */
-
-
   /**************************************************************************
    *
    * @Function:
@@ -1701,8 +1639,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_Bool          bol = TRUE;
 #endif
-
-
     /* First of all, initialize the decoder */
     decoder->top  = decoder->stack;
     decoder->zone = decoder->zones;
@@ -1722,8 +1658,6 @@
       FT_Long*     top   = decoder->top;
       T1_Operator  op    = op_none;
       FT_Int32     value = 0;
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
       if ( bol )
       {
@@ -1894,8 +1828,6 @@
       else  /* general operator */
       {
         FT_Int  num_args = t1_args_count[op];
-
-
         FT_ASSERT( num_args >= 0 );
 
         if ( top - decoder->stack < num_args )
@@ -1976,8 +1908,6 @@
         case op_callsubr:
           {
             FT_Int  idx;
-
-
             FT_TRACE4(( " callsubr" ));
 
             idx = Fix2Int( top[0] );
@@ -1986,8 +1916,6 @@
             {
               size_t*  val = ft_hash_num_lookup( idx,
                                                  decoder->subrs_hash );
-
-
               if ( val )
                 idx = *val;
               else
@@ -2084,8 +2012,6 @@
   }
 
 #endif /* !T1_CONFIG_OPTION_OLD_ENGINE */
-
-
   /* initialize T1 decoder */
   FT_LOCAL_DEF( FT_Error )
   t1_decoder_init( T1_Decoder           decoder,
@@ -2103,8 +2029,6 @@
     /* retrieve `psnames' interface from list of current modules */
     {
       FT_Service_PsCMaps  psnames;
-
-
       FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
       if ( !psnames )
       {
@@ -2132,15 +2056,11 @@
 
     return FT_Err_Ok;
   }
-
-
   /* finalize T1 decoder */
   FT_LOCAL_DEF( void )
   t1_decoder_done( T1_Decoder  decoder )
   {
     FT_Memory  memory = decoder->builder.memory;
-
-
     t1_builder_done( &decoder->builder );
 
     if ( decoder->cf2_instance.finalizer )
@@ -2149,6 +2069,4 @@
       FT_FREE( decoder->cf2_instance.data );
     }
   }
-
-
 /* END */

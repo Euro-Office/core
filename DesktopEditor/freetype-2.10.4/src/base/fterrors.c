@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/fterrors.h>
-
-
   /* documentation is in fterrors.h */
 
   FT_EXPORT_DEF( const char* )

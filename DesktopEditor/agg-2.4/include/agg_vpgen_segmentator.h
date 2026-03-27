@@ -53,8 +53,6 @@ namespace agg
         unsigned m_cmd;
     };
 
-
-
 }
 
 #endif

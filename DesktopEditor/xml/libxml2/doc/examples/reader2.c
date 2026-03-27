@@ -59,8 +59,6 @@ static void
 streamFile(const char *filename) {
     xmlTextReaderPtr reader;
     int ret;
-
-
     /*
      * Pass some special parsing options to activate DTD attribute defaulting,
      * entities substitution and DTD validation

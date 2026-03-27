@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ControlInfo::clone()
 {
 	return BiffStructurePtr(new ControlInfo(*this));
@@ -67,7 +65,5 @@ void ControlInfo::save(CFRecord& record)
 	record << flags << accel1;
 	record.reserveNunBytes(2);
 }
-
-
 } // namespace XLS
 

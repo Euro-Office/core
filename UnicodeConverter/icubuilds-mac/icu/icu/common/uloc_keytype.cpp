@@ -81,8 +81,6 @@ uloc_deleteTypeEntry(void* obj) {
 }
 
 U_CDECL_END
-
-
 static void U_CALLCONV
 initFromResourceBundle(UErrorCode& sts) {
     U_NAMESPACE_USE
@@ -516,8 +514,6 @@ ulocimp_toBcpType(const char* key, const char* type, UBool* isKnownKey, UBool* i
     }
     return NULL;
 }
-
-
 U_CFUNC const char*
 ulocimp_toLegacyType(const char* key, const char* type, UBool* isKnownKey, UBool* isSpecialType) {
     if (isKnownKey != NULL) {

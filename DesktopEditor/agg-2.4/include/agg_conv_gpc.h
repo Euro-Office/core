@@ -43,8 +43,6 @@ namespace agg
         gpc_a_minus_b,
         gpc_b_minus_a
     };
-
-
     //================================================================conv_gpc
     template<class VSA, class VSB> class conv_gpc
     {
@@ -64,8 +62,6 @@ namespace agg
 
         typedef pod_bvector<gpc_vertex, 8>          vertex_array_type;
         typedef pod_bvector<contour_header_type, 6> contour_header_array_type;
-
-
     public:
         typedef VSA source_a_type;
         typedef VSB source_b_type;
@@ -113,8 +109,6 @@ namespace agg
         void start_extracting();
         bool next_contour();
         bool next_vertex(double* x, double* y);
-
-
         //--------------------------------------------------------------------
         template<class VS> void add(VS& src, gpc_polygon& p)
         {
@@ -163,8 +157,6 @@ namespace agg
             }
             make_polygon(p);
         }
-
-
     private:
         //--------------------------------------------------------------------
         source_a_type*             m_src_a;
@@ -180,10 +172,6 @@ namespace agg
         gpc_polygon                m_result;
     };
 
-
-
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::free_polygon(gpc_polygon& p)
@@ -197,8 +185,6 @@ namespace agg
         pod_allocator<gpc_vertex_list>::deallocate(p.contour, p.num_contours);
         memset(&p, 0, sizeof(gpc_polygon));
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::free_result()
@@ -209,8 +195,6 @@ namespace agg
         }
         memset(&m_result, 0, sizeof(m_result));
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::free_gpc_data()
@@ -219,8 +203,6 @@ namespace agg
         free_polygon(m_poly_b);
         free_result();
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::start_contour()
@@ -230,8 +212,6 @@ namespace agg
         m_contour_accumulator.add(h);
         m_vertex_accumulator.remove_all();
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     inline void conv_gpc<VSA, VSB>::add_vertex(double x, double y)
@@ -241,8 +221,6 @@ namespace agg
         v.y = y;
         m_vertex_accumulator.add(v);
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::end_contour(unsigned orientation)
@@ -277,8 +255,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::make_polygon(gpc_polygon& p)
@@ -302,8 +278,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::start_extracting()
@@ -312,8 +286,6 @@ namespace agg
         m_contour = -1;
         m_vertex = -1;
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     bool conv_gpc<VSA, VSB>::next_contour()
@@ -325,8 +297,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     inline bool conv_gpc<VSA, VSB>::next_vertex(double* x, double* y)
@@ -341,8 +311,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     void conv_gpc<VSA, VSB>::rewind(unsigned path_id)
@@ -391,8 +359,6 @@ namespace agg
         }
         start_extracting();
     }
-
-
     //------------------------------------------------------------------------
     template<class VSA, class VSB> 
     unsigned conv_gpc<VSA, VSB>::vertex(double* x, double* y)
@@ -424,9 +390,5 @@ namespace agg
         }
         return path_cmd_stop;
     }
-
-   
 }
-
-
 #endif

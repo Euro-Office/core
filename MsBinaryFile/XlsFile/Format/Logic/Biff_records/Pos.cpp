@@ -43,13 +43,9 @@ Pos::Pos()
 	m_iLinkObject	= -1;
 	m_iLayoutTarget	= 0; //not set, 1 - outer, 2 -inner
 }
-
-
 Pos::~Pos()
 {
 }
-
-
 BaseObjectPtr Pos::clone()
 {
 	return BaseObjectPtr(new Pos(*this));

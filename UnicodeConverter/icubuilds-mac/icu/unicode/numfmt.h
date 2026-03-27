@@ -20,8 +20,6 @@
 
 #ifndef NUMFMT_H
 #define NUMFMT_H
-
-
 #include "unicode/utypes.h"
 
 /**
@@ -233,8 +231,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UBool operator==(const Format& other) const;
-
-
     using Format::format;
 
     /**

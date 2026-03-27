@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -28,8 +26,6 @@
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 
 #include "ciderrs.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -38,8 +34,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cidobjs
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                            SLOT  FUNCTIONS                            */
@@ -51,30 +45,22 @@
   {
     slot->internal->glyph_hints = 0;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_slot_init( FT_GlyphSlot  slot )
   {
     CID_Face          face;
     PSHinter_Service  pshinter;
-
-
     face     = (CID_Face)slot->face;
     pshinter = (PSHinter_Service)face->pshinter;
 
     if ( pshinter )
     {
       FT_Module  module;
-
-
       module = FT_Get_Module( slot->face->driver->root.library,
                               "pshinter" );
       if ( module )
       {
         T1_Hints_Funcs  funcs;
-
-
         funcs = pshinter->get_t1_funcs( module );
         slot->internal->glyph_hints = (void*)funcs;
       }
@@ -82,42 +68,30 @@
 
     return 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                           SIZE  FUNCTIONS                             */
   /*                                                                       */
   /*************************************************************************/
-
-
   static PSH_Globals_Funcs
   cid_size_get_globals_funcs( CID_Size  size )
   {
     CID_Face          face     = (CID_Face)size->root.face;
     PSHinter_Service  pshinter = (PSHinter_Service)face->pshinter;
     FT_Module         module;
-
-
     module = FT_Get_Module( size->root.face->driver->root.library,
                             "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
            : 0;
   }
-
-
   FT_LOCAL_DEF( void )
   cid_size_done( FT_Size  cidsize )         /* CID_Size */
   {
     CID_Size  size = (CID_Size)cidsize;
-
-
     if ( cidsize->internal )
     {
       PSH_Globals_Funcs  funcs;
-
-
       funcs = cid_size_get_globals_funcs( size );
       if ( funcs )
         funcs->destroy( (PSH_Globals)cidsize->internal );
@@ -125,24 +99,18 @@
       cidsize->internal = 0;
     }
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_size_init( FT_Size  cidsize )     /* CID_Size */
   {
     CID_Size           size  = (CID_Size)cidsize;
     FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = cid_size_get_globals_funcs( size );
-
-
     if ( funcs )
     {
       PSH_Globals   globals;
       CID_Face      face = (CID_Face)cidsize->face;
       CID_FaceDict  dict = face->cid.font_dicts + face->root.face_index;
       PS_Private    priv = &dict->private_dict;
-
-
       error = funcs->create( cidsize->face->memory, priv, &globals );
       if ( !error )
         cidsize->internal = (FT_Size_Internal)(void*)globals;
@@ -150,15 +118,11 @@
 
     return error;
   }
-
-
   FT_LOCAL( FT_Error )
   cid_size_request( FT_Size          size,
                     FT_Size_Request  req )
   {
     PSH_Globals_Funcs  funcs;
-
-
     FT_Request_Metrics( size->face, req );
 
     funcs = cid_size_get_globals_funcs( (CID_Size)size );
@@ -171,8 +135,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                           FACE  FUNCTIONS                             */
@@ -197,8 +159,6 @@
     FT_Memory     memory;
     CID_FaceInfo  cid;
     PS_FontInfo   info;
-
-
     if ( !face )
       return;
 
@@ -210,13 +170,9 @@
     if ( face->subrs )
     {
       FT_Int  n;
-
-
       for ( n = 0; n < cid->num_dicts; n++ )
       {
         CID_Subrs  subr = face->subrs + n;
-
-
         if ( subr->code )
         {
           FT_FREE( subr->code[0] );
@@ -249,8 +205,6 @@
     FT_FREE( face->binary_data );
     FT_FREE( face->cid_stream );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -289,8 +243,6 @@
     FT_UNUSED( num_params );
     FT_UNUSED( params );
     FT_UNUSED( stream );
-
-
     cidface->num_faces = 1;
 
     psaux = (PSAux_Service)face->psaux;
@@ -349,8 +301,6 @@
     {
       CID_FaceInfo  cid  = &face->cid;
       PS_FontInfo   info = &cid->font_info;
-
-
       cidface->num_glyphs   = cid->cid_count;
       cidface->num_charmaps = 0;
 
@@ -374,8 +324,6 @@
       {
         char*  full   = info->full_name;
         char*  family = cidface->family_name;
-
-
         if ( full )
         {
           while ( *full )
@@ -446,8 +394,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -469,8 +415,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -487,6 +431,4 @@
   {
     FT_UNUSED( driver );
   }
-
-
 /* END */

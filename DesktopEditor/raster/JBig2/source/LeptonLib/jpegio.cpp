@@ -110,8 +110,6 @@ static l_int32   var_JPEG_NO_CHROMA_SAMPLING = 0;
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_INFO      0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*---------------------------------------------------------------------*
  *                              Reading Jpeg                           *
  *---------------------------------------------------------------------*/
@@ -169,8 +167,6 @@ PIX   *pix;
         return (PIX *)ERROR_PTR("image not returned", procName, NULL);
     return pix;
 }
-
-
 /*!
  *  pixReadStreamJpeg()
  *
@@ -375,8 +371,6 @@ l_uint8                       *comment = NULL;
 
     return pix;
 }
-
-
 /*---------------------------------------------------------------------*
  *                             Writing Jpeg                            *
  *---------------------------------------------------------------------*/
@@ -415,8 +409,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreamJpeg()
  *
@@ -621,8 +613,6 @@ const char                  *text;
     jpeg_destroy_compress(&cinfo);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                     Setting special write flag                      *
  *---------------------------------------------------------------------*/
@@ -638,8 +628,6 @@ l_jpegSetNoChromaSampling(l_int32  flag)
 {
     var_JPEG_NO_CHROMA_SAMPLING = flag;
 }
-
-
 /*---------------------------------------------------------------------*
  *                Extraction of jpeg header information                *
  *---------------------------------------------------------------------*/
@@ -702,8 +690,6 @@ FILE     *fpin;
 
     return 0;
 }
-
-
 /*!
  *  extractJpegDataFromArray()
  *
@@ -766,8 +752,6 @@ l_int32   imeta, msize, bps, w, h, spp;
 
     return 0;
 }
-
-
 /*
  *  locateJpegImageParameters()
  *  
@@ -874,8 +858,6 @@ l_int32  index, skiplength;
 
     return 1;  /* not found */
 }
-
-
 /*
  *  getNextJpegMarker()
  *
@@ -933,16 +915,12 @@ l_int32  index;
     else
         return 0;
 }
-
-
 static l_int32
 getTwoByteParameter(l_uint8  *array,
                     l_int32   index)
 {
     return (l_int32)((array[index]) << 8) + (l_int32)(array[index + 1]);
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                         Read/write to memory                        *
@@ -993,8 +971,6 @@ PIX      *pix;
     fclose(fp);
     return pix;
 }
-
-
 /*!
  *  pixWriteMemJpeg()
  *
@@ -1049,8 +1025,6 @@ pixReadMemJpeg(const l_uint8  *cdata,
         "jpeg read from memory not implemented on this platform",
         "pixReadMemJpeg", NULL);
 }
-
-
 l_int32
 pixWriteMemJpeg(l_uint8  **pdata,
                 size_t    *psize,
@@ -1064,8 +1038,6 @@ pixWriteMemJpeg(l_uint8  **pdata,
 }
 
 #endif  /* HAVE_FMEMOPEN */
-
-
 /*---------------------------------------------------------------------*
  *                           Static helpers                            *
  *---------------------------------------------------------------------*/
@@ -1097,8 +1069,6 @@ struct jpeg_source_mgr *datasrc;
     datasrc->bytes_in_buffer--;
     return GETJOCTET(*datasrc->next_input_byte++);
 }
-
-
     /* This function is required for reading jpeg comments, and
      * was contributed by Antony Dovgal.  Why 'boolean'?  See
      * note above the declaration. */

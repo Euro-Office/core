@@ -122,8 +122,6 @@ public:
     UnicodeString getBaseSkeleton();
     virtual ~PtnSkeleton();
 };
-
-
 class PtnElem : public UMemory {
 public:
     UnicodeString basePattern;

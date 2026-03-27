@@ -52,8 +52,6 @@ public:
 
 };
 
-
-
 // Logical representation of BopPopCustom record in BIFF8
 class BopPopCustom: public BiffRecord
 {
@@ -64,8 +62,6 @@ public:
 	~BopPopCustom();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

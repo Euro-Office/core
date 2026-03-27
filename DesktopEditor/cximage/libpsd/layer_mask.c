@@ -27,8 +27,6 @@
 #include "psd_system.h"
 #include "psd_stream.h"
 #include "psd_color.h"
-
-
 extern psd_status psd_get_layer_levels(psd_context * context, psd_layer_record * layer, psd_int data_length);
 extern void psd_layer_levels_free(psd_uint info_data);
 extern psd_status psd_get_layer_curves(psd_context * context, psd_layer_record * layer, psd_int data_length);
@@ -59,8 +57,6 @@ extern void psd_layer_effects_free(psd_uint layer_info);
 extern void psd_pattern_free(psd_context * context);
 
 psd_static void psd_layer_free(psd_layer_record * layer);
-
-
 // Layer name source setting (Photoshop 6.0)
 psd_static psd_status psd_get_layer_name_id(psd_context * context, psd_layer_record * layer)
 {

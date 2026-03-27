@@ -245,8 +245,6 @@ void opj_t1_decode_cblks(opj_tcd_t* tcd,
                          opj_mutex_t* p_manager_mutex,
                          OPJ_BOOL check_pterm);
 
-
-
 /**
  * Creates a new Tier 1 handle
  * and initializes the look-up tables of the Tier-1 coder/decoder

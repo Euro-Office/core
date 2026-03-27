@@ -47,8 +47,6 @@ namespace cpdoccore {
 namespace odf_writer {
 
 using xml::xml_char_wc;
-
-
 const wchar_t * draw_base::ns = L"draw";
 const wchar_t * draw_base::name = L"base";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////

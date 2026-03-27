@@ -38,13 +38,9 @@ namespace XLS
 Intl::Intl()
 {
 }
-
-
 Intl::~Intl()
 {
 }
-
-
 BaseObjectPtr Intl::clone()
 {
 	return BaseObjectPtr(new Intl(*this));

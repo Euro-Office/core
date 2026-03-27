@@ -46,8 +46,6 @@
 #include "MainDocumentMapping.h"
 #include "WordprocessingDocument.h"
 #include "ConversionContext.h"
-
-
 namespace DocFileFormat
 {
 	Converter::Converter() : m_nUserLCID(-1)

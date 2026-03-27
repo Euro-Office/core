@@ -121,8 +121,6 @@ class U_COMMON_API UStringSet : public UVector {
 UStringSet::~UStringSet() {}
 
 /* ----------------------------------------------------------- */
-
-
 /* Filtered Break constants */
 static const int32_t kPARTIAL = (1<<0); //< partial - need to run through forward trie
 static const int32_t kMATCH   = (1<<1); //< exact match - skip this one.
@@ -235,8 +233,6 @@ SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(const S
   : BreakIterator(other), fData(other.fData->incr()), fDelegate(other.fDelegate->clone())
 {
 }
-
-
 SimpleFilteredSentenceBreakIterator::SimpleFilteredSentenceBreakIterator(BreakIterator *adopt, UCharsTrie *forwards, UCharsTrie *backwards, UErrorCode &status) :
   BreakIterator(adopt->getLocale(ULOC_VALID_LOCALE,status),adopt->getLocale(ULOC_ACTUAL_LOCALE,status)),
   fData(new SimpleFilteredSentenceBreakData(forwards, backwards)),
@@ -392,8 +388,6 @@ SimpleFilteredSentenceBreakIterator::internalPrev(int32_t n) {
   }
   return n;
 }
-
-
 int32_t
 SimpleFilteredSentenceBreakIterator::next() {
   return internalNext(fDelegate->next());
@@ -446,8 +440,6 @@ SimpleFilteredSentenceBreakIterator::last(void) {
   // Don't suppress a break opportunity at the end of text.
   return fDelegate->last();
 }
-
-
 /**
  * Concrete implementation of builder class.
  */
@@ -642,8 +634,6 @@ SimpleFilteredBreakIteratorBuilder::build(BreakIterator* adoptBreakIterator, UEr
 
   return new SimpleFilteredSentenceBreakIterator(adopt.orphan(), forwardsPartialTrie.orphan(), backwardsTrie.orphan(), status);
 }
-
-
 // ----------- Base class implementation
 
 FilteredBreakIteratorBuilder::FilteredBreakIteratorBuilder() {

@@ -36,8 +36,6 @@
 #endif /* _WIN32 */
 
 #include "opj_includes.h"
-
-
 /* ---------------------------------------------------------------------- */
 /* Functions to set the message handlers */
 
@@ -382,8 +380,6 @@ void OPJ_CALLCONV opj_set_default_decoder_parameters(opj_dparameters_t
         /* <<UniPG */
     }
 }
-
-
 OPJ_BOOL OPJ_CALLCONV opj_codec_set_threads(opj_codec_t *p_codec,
         int num_threads)
 {
@@ -437,8 +433,6 @@ OPJ_BOOL OPJ_CALLCONV opj_read_header(opj_stream_t *p_stream,
 
     return OPJ_FALSE;
 }
-
-
 OPJ_BOOL OPJ_CALLCONV opj_set_decoded_components(opj_codec_t *p_codec,
         OPJ_UINT32 numcomps,
         const OPJ_UINT32* comps_indices,
@@ -1086,8 +1080,6 @@ opj_stream_t* OPJ_CALLCONV opj_stream_create_file_stream(
 
     return l_stream;
 }
-
-
 void* OPJ_CALLCONV opj_image_data_alloc(OPJ_SIZE_T size)
 {
     void* ret = opj_aligned_malloc(size);

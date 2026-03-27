@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordDrawingRecord : public CUnknownRecord
@@ -42,8 +40,6 @@ public:
     UINT m_nCountShapes;
     /// The last MSOSPID given to an SP in this DG
     UINT m_nPidCur;
-
-	
     CRecordDrawingRecord();
     ~CRecordDrawingRecord();
 

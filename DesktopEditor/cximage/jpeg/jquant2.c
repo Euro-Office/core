@@ -22,8 +22,6 @@
 #include "jpeglib.h"
 
 #ifdef QUANT_2PASS_SUPPORTED
-
-
 /*
  * This module implements the well-known Heckbert paradigm for color
  * quantization.  Most of the ideas used here can be traced back to
@@ -96,8 +94,6 @@
 #if RGB_BLUE == 2
 #define C2_SCALE B_SCALE
 #endif
-
-
 /*
  * First we have the histogram data structure and routines for creating it.
  *
@@ -142,8 +138,6 @@
 #define C0_SHIFT  (BITS_IN_JSAMPLE-HIST_C0_BITS)
 #define C1_SHIFT  (BITS_IN_JSAMPLE-HIST_C1_BITS)
 #define C2_SHIFT  (BITS_IN_JSAMPLE-HIST_C2_BITS)
-
-
 typedef UINT16 histcell;	/* histogram cell; prefer an unsigned type */
 
 typedef histcell FAR * histptr;	/* for pointers to histogram cells */
@@ -151,8 +145,6 @@ typedef histcell FAR * histptr;	/* for pointers to histogram cells */
 typedef histcell hist1d[HIST_C2_ELEMS]; /* typedefs for the array */
 typedef hist1d FAR * hist2d;	/* type for the 2nd-level pointers */
 typedef hist2d * hist3d;	/* type for top-level pointer */
-
-
 /* Declarations for Floyd-Steinberg dithering.
  *
  * Errors are accumulated into the array fserrors[], at a resolution of
@@ -186,8 +178,6 @@ typedef INT32 LOCFSERROR;	/* be sure calculation temps are big enough */
 #endif
 
 typedef FSERROR FAR *FSERRPTR;	/* pointer to error array (in FAR storage!) */
-
-
 /* Private subobject */
 
 typedef struct {
@@ -209,8 +199,6 @@ typedef struct {
 } my_cquantizer;
 
 typedef my_cquantizer * my_cquantize_ptr;
-
-
 /*
  * Prescan some rows of pixels.
  * In this module the prescan simply updates the histogram, which has been
@@ -246,8 +234,6 @@ prescan_quantize (j_decompress_ptr cinfo, JSAMPARRAY input_buf,
     }
   }
 }
-
-
 /*
  * Next we have the really interesting routines: selection of a colormap
  * given the completed histogram.
@@ -267,8 +253,6 @@ typedef struct {
 } __jpg_box;
 
 typedef __jpg_box * boxptr;
-
-
 LOCAL(boxptr)
 find_biggest_color_pop (boxptr boxlist, int numboxes)
 /* Find the splittable box with the largest color population */
@@ -287,8 +271,6 @@ find_biggest_color_pop (boxptr boxlist, int numboxes)
   }
   return which;
 }
-
-
 LOCAL(boxptr)
 find_biggest_volume (boxptr boxlist, int numboxes)
 /* Find the splittable box with the largest (scaled) volume */
@@ -307,8 +289,6 @@ find_biggest_volume (boxptr boxlist, int numboxes)
   }
   return which;
 }
-
-
 LOCAL(void)
 update_box (j_decompress_ptr cinfo, boxptr boxp)
 /* Shrink the min/max bounds of a box to enclose only nonzero elements, */
@@ -418,8 +398,6 @@ update_box (j_decompress_ptr cinfo, boxptr boxp)
     }
   boxp->colorcount = ccount;
 }
-
-
 LOCAL(int)
 median_cut (j_decompress_ptr cinfo, boxptr boxlist, int numboxes,
 	    int desired_colors)
@@ -493,8 +471,6 @@ median_cut (j_decompress_ptr cinfo, boxptr boxlist, int numboxes,
   }
   return numboxes;
 }
-
-
 LOCAL(void)
 compute_color (j_decompress_ptr cinfo, boxptr boxp, int icolor)
 /* Compute representative color for a box, put it in colormap[icolor] */
@@ -533,8 +509,6 @@ compute_color (j_decompress_ptr cinfo, boxptr boxp, int icolor)
   cinfo->colormap[1][icolor] = (JSAMPLE) ((c1total + (total>>1)) / total);
   cinfo->colormap[2][icolor] = (JSAMPLE) ((c2total + (total>>1)) / total);
 }
-
-
 LOCAL(void)
 select_colors (j_decompress_ptr cinfo, int desired_colors)
 /* Master routine for color selection */
@@ -564,8 +538,6 @@ select_colors (j_decompress_ptr cinfo, int desired_colors)
   cinfo->actual_number_of_colors = numboxes;
   TRACEMS1(cinfo, 1, JTRC_QUANT_SELECTED, numboxes);
 }
-
-
 /*
  * These routines are concerned with the time-critical task of mapping input
  * colors to the nearest color in the selected colormap.
@@ -618,8 +590,6 @@ select_colors (j_decompress_ptr cinfo, int desired_colors)
  * refined method might be faster than the present code --- but then again,
  * it might not be any faster, and it's certainly more complicated.
  */
-
-
 /* log2(histogram cells in update box) for each axis; this can be adjusted */
 #define BOX_C0_LOG  (HIST_C0_BITS-3)
 #define BOX_C1_LOG  (HIST_C1_BITS-3)
@@ -632,8 +602,6 @@ select_colors (j_decompress_ptr cinfo, int desired_colors)
 #define BOX_C0_SHIFT  (C0_SHIFT + BOX_C0_LOG)
 #define BOX_C1_SHIFT  (C1_SHIFT + BOX_C1_LOG)
 #define BOX_C2_SHIFT  (C2_SHIFT + BOX_C2_LOG)
-
-
 /*
  * The next three routines implement inverse colormap filling.  They could
  * all be folded into one big routine, but splitting them up this way saves
@@ -769,8 +737,6 @@ find_nearby_colors (j_decompress_ptr cinfo, int minc0, int minc1, int minc2,
   }
   return ncolors;
 }
-
-
 LOCAL(void)
 find_best_colors (j_decompress_ptr cinfo, int minc0, int minc1, int minc2,
 		  int numcolors, JSAMPLE colorlist[], JSAMPLE bestcolor[])
@@ -849,8 +815,6 @@ find_best_colors (j_decompress_ptr cinfo, int minc0, int minc1, int minc2,
     }
   }
 }
-
-
 LOCAL(void)
 fill_inverse_cmap (j_decompress_ptr cinfo, int c0, int c1, int c2)
 /* Fill the inverse-colormap entries in the update box that contains */
@@ -905,8 +869,6 @@ fill_inverse_cmap (j_decompress_ptr cinfo, int c0, int c1, int c2)
     }
   }
 }
-
-
 /*
  * Map some rows of pixels to the output colormapped representation.
  */
@@ -943,8 +905,6 @@ pass2_no_dither (j_decompress_ptr cinfo,
     }
   }
 }
-
-
 METHODDEF(void)
 pass2_fs_dither (j_decompress_ptr cinfo,
 		 JSAMPARRAY input_buf, JSAMPARRAY output_buf, int num_rows)
@@ -1085,8 +1045,6 @@ pass2_fs_dither (j_decompress_ptr cinfo,
     errorptr[2] = (FSERROR) bpreverr2;
   }
 }
-
-
 /*
  * Initialize the error-limiting transfer function (lookup table).
  * The raw F-S error computation can potentially compute error values of up to
@@ -1133,8 +1091,6 @@ init_error_limit (j_decompress_ptr cinfo)
   }
 #undef STEPSIZE
 }
-
-
 /*
  * Finish up at the end of each pass.
  */
@@ -1150,15 +1106,11 @@ finish_pass1 (j_decompress_ptr cinfo)
   /* Force next pass to zero the color index table */
   cquantize->needs_zeroed = TRUE;
 }
-
-
 METHODDEF(void)
 finish_pass2 (j_decompress_ptr cinfo)
 {
   /* no work */
 }
-
-
 /*
  * Initialize for each processing pass.
  */
@@ -1220,8 +1172,6 @@ start_pass_2_quant (j_decompress_ptr cinfo, boolean is_pre_scan)
     cquantize->needs_zeroed = FALSE;
   }
 }
-
-
 /*
  * Switch to a new external colormap between output passes.
  */
@@ -1234,8 +1184,6 @@ new_color_map_2_quant (j_decompress_ptr cinfo)
   /* Reset the inverse color map */
   cquantize->needs_zeroed = TRUE;
 }
-
-
 /*
  * Module initialization routine for 2-pass color quantization.
  */

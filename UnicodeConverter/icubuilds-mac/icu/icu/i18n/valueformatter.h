@@ -13,8 +13,6 @@
 #include "unicode/uobject.h"
 #include "unicode/utypes.h"
 
-
-
 U_NAMESPACE_BEGIN
 
 class UnicodeString;
@@ -29,8 +27,6 @@ class ScientificPrecision;
 class SciFormatterOptions;
 class FixedDecimal;
 class VisibleDigitsWithExponent;
-
-
 /**
  * A closure around rounding and formatting a value. As these instances are
  * designed to be short lived (they only exist while formatting a value), they
@@ -90,8 +86,6 @@ public:
         const VisibleDigitsWithExponent &positiveValue,
         FieldPositionHandler &handler,
         UnicodeString &appendTo) const;
-
-
     /**
      * formats positiveValue and appends to appendTo. Returns appendTo.
      * value must be positive. Calling formatInt32 to format a value when

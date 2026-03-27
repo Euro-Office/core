@@ -30,8 +30,6 @@
 #include "psd_stream.h"
 #include "psd_color.h"
 #include "psd_math.h"
-
-
 typedef psd_double psd_matrix[4][4];
 
 static psd_matrix psd_basis_matrix =
@@ -46,8 +44,6 @@ static psd_matrix psd_basis_matrix =
 #define PSD_CURVES_SUBDIVIDE  512
 
 psd_static void psd_stream_get_object_list(psd_context * context);
-
-
 psd_static void psd_stream_get_unicode_name(psd_context * context)
 {
 	psd_int length;

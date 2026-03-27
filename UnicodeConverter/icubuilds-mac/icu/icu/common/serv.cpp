@@ -285,8 +285,6 @@ public:
         // cache.setKeyDeleter(uprv_deleteUObject);
     }
 };
-
-
 /*
 ******************************************************************
 */
@@ -678,8 +676,6 @@ ICUService::getVisibleIDMap(UErrorCode& status) const {
 
     return idCache;
 }
-
-
 UnicodeString& 
 ICUService::getDisplayName(const UnicodeString& id, UnicodeString& result) const 
 {
@@ -725,8 +721,6 @@ ICUService::getDisplayNames(UVector& result, UErrorCode& status) const
 {
     return getDisplayNames(result, Locale::getDefault(), NULL, status);
 }
-
-
 UVector& 
 ICUService::getDisplayNames(UVector& result, const Locale& locale, UErrorCode& status) const 
 {

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 DVAL::DVAL()
 {
 }
-
-
 DVAL::~DVAL()
 {
 }
-
-
 BaseObjectPtr DVAL::clone()
 {
 	return BaseObjectPtr(new DVAL(*this));
 }
-
-
 // DVAL = DVal *65534Dv
 const bool DVAL::loadContent(BinProcessor& proc)
 {

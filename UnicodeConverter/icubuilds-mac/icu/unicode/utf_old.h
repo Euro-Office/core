@@ -925,64 +925,46 @@ typedef int32_t UTextOffset;
 
 /** @deprecated ICU 2.4. Use U16_GET instead, see utf_old.h. */
 #define UTF_GET_CHAR_SAFE(s, start, i, length, c, strict) UTF16_GET_CHAR_SAFE(s, start, i, length, c, strict)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_NEXT_UNSAFE, see utf_old.h. */
 #define UTF_NEXT_CHAR_UNSAFE(s, i, c)                UTF16_NEXT_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_NEXT instead, see utf_old.h. */
 #define UTF_NEXT_CHAR_SAFE(s, i, length, c, strict)  UTF16_NEXT_CHAR_SAFE(s, i, length, c, strict)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_APPEND_UNSAFE, see utf_old.h. */
 #define UTF_APPEND_CHAR_UNSAFE(s, i, c)              UTF16_APPEND_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_APPEND instead, see utf_old.h. */
 #define UTF_APPEND_CHAR_SAFE(s, i, length, c)        UTF16_APPEND_CHAR_SAFE(s, i, length, c)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1_UNSAFE, see utf_old.h. */
 #define UTF_FWD_1_UNSAFE(s, i)                       UTF16_FWD_1_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_1, see utf_old.h. */
 #define UTF_FWD_1_SAFE(s, i, length)                 UTF16_FWD_1_SAFE(s, i, length)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N_UNSAFE, see utf_old.h. */
 #define UTF_FWD_N_UNSAFE(s, i, n)                    UTF16_FWD_N_UNSAFE(s, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_FWD_N, see utf_old.h. */
 #define UTF_FWD_N_SAFE(s, i, length, n)              UTF16_FWD_N_SAFE(s, i, length, n)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START_UNSAFE, see utf_old.h. */
 #define UTF_SET_CHAR_START_UNSAFE(s, i)              UTF16_SET_CHAR_START_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_START, see utf_old.h. */
 #define UTF_SET_CHAR_START_SAFE(s, start, i)         UTF16_SET_CHAR_START_SAFE(s, start, i)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_PREV_UNSAFE, see utf_old.h. */
 #define UTF_PREV_CHAR_UNSAFE(s, i, c)                UTF16_PREV_CHAR_UNSAFE(s, i, c)
 
 /** @deprecated ICU 2.4. Use U16_PREV instead, see utf_old.h. */
 #define UTF_PREV_CHAR_SAFE(s, start, i, c, strict)   UTF16_PREV_CHAR_SAFE(s, start, i, c, strict)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1_UNSAFE, see utf_old.h. */
 #define UTF_BACK_1_UNSAFE(s, i)                      UTF16_BACK_1_UNSAFE(s, i)
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_1, see utf_old.h. */
 #define UTF_BACK_1_SAFE(s, start, i)                 UTF16_BACK_1_SAFE(s, start, i)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N_UNSAFE, see utf_old.h. */
 #define UTF_BACK_N_UNSAFE(s, i, n)                   UTF16_BACK_N_UNSAFE(s, i, n)
 
 /** @deprecated ICU 2.4. Renamed to U16_BACK_N, see utf_old.h. */
 #define UTF_BACK_N_SAFE(s, start, i, n)              UTF16_BACK_N_SAFE(s, start, i, n)
-
-
 /** @deprecated ICU 2.4. Renamed to U16_SET_CP_LIMIT_UNSAFE, see utf_old.h. */
 #define UTF_SET_CHAR_LIMIT_UNSAFE(s, i)              UTF16_SET_CHAR_LIMIT_UNSAFE(s, i)
 

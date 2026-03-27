@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTPARAMS_H_
 #define FTPARAMS_H_
 
@@ -26,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -48,8 +42,6 @@ FT_BEGIN_HEADER
    *   different behaviour of various components of FreeType.
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -67,13 +59,9 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY \
           FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
-
-
   /* this constant is deprecated */
 #define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY \
           FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_FAMILY
-
-
   /**************************************************************************
    *
    * @enum:
@@ -91,13 +79,9 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY \
           FT_MAKE_TAG( 'i', 'g', 'p', 's' )
-
-
   /* this constant is deprecated */
 #define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY \
           FT_PARAM_TAG_IGNORE_TYPOGRAPHIC_SUBFAMILY
-
-
   /**************************************************************************
    *
    * @enum:
@@ -110,8 +94,6 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_INCREMENTAL \
           FT_MAKE_TAG( 'i', 'n', 'c', 'r' )
-
-
   /**************************************************************************
    *
    * @enum:
@@ -130,8 +112,6 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_LCD_FILTER_WEIGHTS \
           FT_MAKE_TAG( 'l', 'c', 'd', 'f' )
-
-
   /**************************************************************************
    *
    * @enum:
@@ -148,8 +128,6 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_RANDOM_SEED \
           FT_MAKE_TAG( 's', 'e', 'e', 'd' )
-
-
   /**************************************************************************
    *
    * @enum:
@@ -172,8 +150,6 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_STEM_DARKENING \
           FT_MAKE_TAG( 'd', 'a', 'r', 'k' )
-
-
   /**************************************************************************
    *
    * @enum:
@@ -189,15 +165,7 @@ FT_BEGIN_HEADER
    */
 #define FT_PARAM_TAG_UNPATENTED_HINTING \
           FT_MAKE_TAG( 'u', 'n', 'p', 'a' )
-
-
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* FTPARAMS_H_ */
-
-
 /* END */

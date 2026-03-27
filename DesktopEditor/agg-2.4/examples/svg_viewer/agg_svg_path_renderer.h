@@ -53,10 +53,6 @@ namespace svg
         VertexSource* m_source;
         unsigned m_count;
     };
-
-
-
-
     //============================================================================
     // Basic path attributes
     struct path_attributes
@@ -121,8 +117,6 @@ namespace svg
         {
         }
     };
-
-
     //============================================================================
     // Path container and renderer. 
     class path_renderer
@@ -174,11 +168,7 @@ namespace svg
 //        {
 //            m_storage.add_path(vs, path_id, solid_path);
 //        }
-
-
         unsigned vertex_count() const { return m_curved_count.count(); }
-        
-
         // Call these functions on <g> tag (start_element, end_element respectively)
         void push_attr();
         void pop_attr();

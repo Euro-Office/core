@@ -42,8 +42,6 @@ def my_input_cb(URI):
     if path not in pystrings:
         return None
     return str_io(pystrings[path])
-
-
 def run_test(desc, docpath, catalog, exp_status="verified", exp_err=[], test_callback=None,
         root_name="root", root_content="replacement text"):
     opts = libxml2.XML_PARSE_DTDLOAD | libxml2.XML_PARSE_NONET | libxml2.XML_PARSE_COMPACT
@@ -82,8 +80,6 @@ def run_test(desc, docpath, catalog, exp_status="verified", exp_err=[], test_cal
         print("Actual errors:")
         for s,m in actual_err: print("  [%2d] '%s'" % (s,m))
         sys.exit(1)
-
-
 # Check that we cannot read custom schema without custom callback
 run_test(desc="Loading entity without custom callback",
         docpath=startURL, catalog=None,

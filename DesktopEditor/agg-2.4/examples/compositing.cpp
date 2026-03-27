@@ -13,8 +13,6 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
 
 typedef agg::rgba8 color;
@@ -100,10 +98,6 @@ namespace agg
     };
 
 }
-
-
-
-
 agg::trans_affine gradient_affine(double x1, double y1, double x2, double y2, 
                                   double gradient_d2 = 100.0)
 {
@@ -117,8 +111,6 @@ agg::trans_affine gradient_affine(double x1, double y1, double x2, double y2,
     mtx.invert();
     return mtx;
 }
-
-
 
 template<class RenBase> 
 void circle(RenBase& rbase, color c1, color c2, 
@@ -159,8 +151,6 @@ void circle(RenBase& rbase, color c1, color c2,
     agg::render_scanlines_aa(ras, sl, rbase, span_allocator, span_gradient);
 }
 
-
-
 template<class RenBase> 
 void src_shape(RenBase& rbase, color c1, color c2, 
                double x1, double y1, double x2, double y2)
@@ -193,12 +183,6 @@ void src_shape(RenBase& rbase, color c1, color c2,
     ras.add_path(shape);
     agg::render_scanlines_aa(ras, sl, rbase, span_allocator, span_gradient);
 }
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -261,8 +245,6 @@ public:
     virtual void on_init()
     {
     }
-
-
     void render_scene(rbuf_type& rbuf, prim_pixfmt_type& pixf)
     {
         typedef agg::comp_op_adaptor_rgba<color, order> blender_type;
@@ -309,8 +291,6 @@ public:
 */
         }
     }
-
-
     virtual void on_draw()
     {
         prim_pixfmt_type pixf(rbuf_window());
@@ -340,8 +320,6 @@ public:
 
         pixfmt_pre pixf_pre(rbuf_window());
         ren_base_pre rb_pre(pixf_pre);
-
-
         start_timer();
         render_scene(rbuf_img(0), pixf2);
         double tm = elapsed_time();
@@ -366,14 +344,10 @@ public:
         ras.add_path(pt);
         ren.color(agg::rgba(0,0,0));
         agg::render_scanlines(ras, sl, ren);
-
-
         agg::render_ctrl_rs(ras, sl, ren, m_alpha_src);
         agg::render_ctrl_rs(ras, sl, ren, m_alpha_dst);
         agg::render_ctrl_rs(ras, sl, ren, m_comp_op);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
     }
@@ -386,8 +360,6 @@ public:
     {
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     force_comp_op_link();
@@ -412,13 +384,9 @@ int agg_main(int argc, char* argv[])
         app.message(buf);
         return 1;
     }
-
-
     if(app.init(600, 400, agg::window_resize))
     {
         return app.run();
     }
     return 1;
 }
-
-

@@ -31,8 +31,6 @@
  */
 #include "Unit.h"
 #include <cwchar>
-
-
 double Cm_To_Mm     (const double &dValue)
 {
 	return dValue * 10;
@@ -244,8 +242,6 @@ double Dx_To_Pt     (const double &dValue)
 {
 	return dValue / 20;
 }
-
-
 double Dx_To_Px     (const double &dValue)
 {
 	return dValue * 4 / 3 / 20;

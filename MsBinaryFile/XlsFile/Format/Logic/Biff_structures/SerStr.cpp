@@ -36,20 +36,14 @@
 
 namespace XLS
 {
-
-
 SerStr::SerStr()
 {
     fixed_type = typeSerStr;
 }
-
-
 SerStr::SerStr(const std::wstring& word)
 :	string_(std::wstring (word.c_str()))
 {
 }
-
-
 BiffStructurePtr SerStr::clone()
 {
 	return BiffStructurePtr(new SerStr(*this));
@@ -100,6 +94,4 @@ const std::wstring SerStr::toString() const
 		tempVal.resize(255);
 	return L"\"" + boost::algorithm::replace_all_copy(tempVal, L"\"", L"\"\"") + L"\"";
 }
-
-
 } // namespace XLS

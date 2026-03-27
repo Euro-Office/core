@@ -95,8 +95,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*----------------------------------------------------------------------*
  *                           Rank order filter                          *
  *----------------------------------------------------------------------*/
@@ -147,8 +145,6 @@ l_int32  d;
     else  /* d == 32 */
         return pixRankFilterRGB(pixs, wf, hf, rank);
 }
-
-
 /*!
  *  pixRankFilterRGB()
  *
@@ -206,8 +202,6 @@ PIX  *pixr, *pixg, *pixb, *pixrf, *pixgf, *pixbf, *pixd;
     pixDestroy(&pixbf);
     return pixd;
 }
-
-
 /*!
  *  pixRankFilterGray()
  *
@@ -412,8 +406,6 @@ PIX       *pixt, *pixd;
     FREE(histo16);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                             Median filter                            *
  *----------------------------------------------------------------------*/
@@ -435,5 +427,3 @@ pixMedianFilter(PIX     *pixs,
         return (PIX *)ERROR_PTR("pixs not defined", procName, NULL);
     return pixRankFilter(pixs, wf, hf, 0.5);
 }
-
-

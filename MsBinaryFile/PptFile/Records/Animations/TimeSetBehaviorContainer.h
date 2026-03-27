@@ -30,14 +30,10 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeSetBehaviorAtom.h"
 #include "TimeBehaviorContainer.h"
 #include "TimeVariant.h"
-
-
 namespace PPT
 {
 class CRecordTimeSetBehaviorContainer : public CUnknownRecord

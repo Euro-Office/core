@@ -274,8 +274,6 @@ private:
     UVector& operator=(const UVector&);
 
 };
-
-
 /**
  * <p>Ultralightweight C++ implementation of a <tt>void*</tt> stack
  * that is (mostly) compatible with java.util.Stack.  As in java, this
@@ -344,8 +342,6 @@ private:
     // Disallow
     UStack& operator=(const UStack&);
 };
-
-
 // UVector inlines
 
 inline int32_t UVector::size(void) const {

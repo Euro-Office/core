@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 CompoundFile::~CompoundFile()
 {
 	streams.clear();
@@ -89,8 +87,6 @@ bool CompoundFile::Open(const std::wstring & file_path, const ReadWriteMode mode
 	if (storage_ == NULL) return false;
 	return true;
 }
-
-
 CompoundFile::CompoundFile(const std::wstring & file_path, const ReadWriteMode mode)
 {
 	storage_ = NULL;
@@ -225,14 +221,10 @@ CFStreamPtr CompoundFile::createNamedStream(const std::wstring& name)
 	}
 	return streams[name];
 }
-
-
 void CompoundFile::closeNamedStream(const std::wstring& name)
 {
 	streams[name].reset();
 }
-
-
 // Opens a stream in the storage (shall be called not more than once per stream)
 POLE::Stream* CompoundFile::openStream(const std::wstring & stream_name)
 {
@@ -247,8 +239,6 @@ POLE::Stream* CompoundFile::openStream(const std::wstring & stream_name)
 		return pStream;
 	else return NULL;
 }
-
-
 // Creates a new stream in the storage
 POLE::Stream* CompoundFile::createStream(const std::wstring & stream_name)
 {
@@ -261,8 +251,4 @@ POLE::Stream* CompoundFile::createStream(const std::wstring & stream_name)
 	}
 	return pStream;
 }
-
-
 } // namespace XLS
-
-

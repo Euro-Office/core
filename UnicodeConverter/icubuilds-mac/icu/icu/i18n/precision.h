@@ -25,8 +25,6 @@ U_NAMESPACE_BEGIN
 
 class VisibleDigits;
 class VisibleDigitsWithExponent;
-
-
 /**
  * A precision manager for values to be formatted as fixed point.
  * Handles rounding of number to prepare it for formatting.
@@ -313,8 +311,6 @@ private:
     int32_t getMultiplier() const;
 
 };
-
-
 
 U_NAMESPACE_END
 #endif // #if !UCONFIG_NO_FORMATTING

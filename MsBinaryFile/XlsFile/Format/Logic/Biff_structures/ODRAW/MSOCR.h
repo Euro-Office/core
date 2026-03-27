@@ -58,6 +58,4 @@ public:
 };
 
 typedef boost::shared_ptr<MSOCR> MSOCRPtr;
-
-
 } // namespace XLS

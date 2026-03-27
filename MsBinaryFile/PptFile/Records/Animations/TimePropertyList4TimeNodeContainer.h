@@ -30,13 +30,9 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeVariant.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimePropertyList4TimeNodeContainer : public CUnknownRecord

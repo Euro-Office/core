@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This is the 'entry point' for FreeType header file inclusions, to be
@@ -29,14 +27,10 @@
    * ```
    *
    */
-
-
 #ifndef FT2BUILD_H_
 #define FT2BUILD_H_
 
 #include <freetype/config/ftheader.h>
 
 #endif /* FT2BUILD_H_ */
-
-
 /* END */

@@ -46,8 +46,6 @@ PivotCacheRecordsStream::PivotCacheRecordsStream()
 PivotCacheRecordsStream::~PivotCacheRecordsStream()
 {
 }
-
-
 BaseObjectPtr PivotCacheRecordsStream::clone()
 {
         return BaseObjectPtr(new PivotCacheRecordsStream(*this));

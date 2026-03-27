@@ -32,8 +32,6 @@ namespace agg
 	 * У шейдеров параметризация опциональная, поэтому для них отдельно есть способ с параметризацией и без нее
 	 *
 	 * */
-
-
 	/**
 	 * Абстрактный класс для параметризации.
 	 *
@@ -146,8 +144,6 @@ namespace agg
 
 			if (abs(a) < FLT_EPSILON)
 				x1 = -c / b;
-
-
 			if (0 <= x1 && x1 <= 1)
 			{
 				return ginfo.shading.function.get_x_min() +
@@ -165,8 +161,6 @@ namespace agg
 			{
 				return ginfo.shading.function.get_x_min();
 			}
-
-
 			if (ginfo.continue_shading_f &&
 				(1 <= x1 && x1 <= 1 + extend_front_coef ||
 				1 <= x2 && x2 <= 1 + extend_front_coef))
@@ -251,8 +245,6 @@ namespace agg
 		float cx, cy, factor;
 		float inverseFactor;
 		float invXsize, invYsize;
-
-
 	};
 
 	/**
@@ -436,8 +428,6 @@ namespace agg
 
 			return precalc[i.first][i.second];
 		}
-
-
 		// Через полинамы такого вида определяется нужная нам поверхность.
 		static float berstein_polynomial(float t, int i)
 		{
@@ -502,16 +492,12 @@ namespace agg
 
 			return {x_index, y_index};
 		}
-
-
 		NSStructures::GradientInfo ginfo;
 		std::vector<std::vector<float>> precalc;
 		const size_t tensor_size;
 		float xmin, xmax, ymin, ymax;
 		size_t RES;
 	};
-
-
 	/**
 	 * Основной класс отвечающий за градиенты.
 	 */
@@ -782,8 +768,6 @@ namespace agg
 		{
 			return fabs(2 * asinf(sinf(x * pi)) * M_1_PI);
 		}
-
-
 		// Нужно для безопасного сложения цветов.
 		int limit8bit(int a)
 		{
@@ -793,8 +777,6 @@ namespace agg
 				return 0xFF;
 			return a;
 		}
-
-
 		// Умножение цвета на число (теплейт поэтому не перегрузка *)
 		ColorT mul(ColorT c1, float t)
 		{
@@ -823,8 +805,6 @@ namespace agg
 			ColorT c3 = mul(m_oGradientInfo.shading.triangle_colors[2], fabs(w[2]));
 			return sum(c1, sum(c2, c3));
 		}
-
-
 		/**
 		 * Здесь все относящееся к кривой поверхности, будет дублирование кода, зато потом в теории будет проще работать.
 		 * И логика чуть менее запутанная.

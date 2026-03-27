@@ -117,8 +117,6 @@ class TransliteratorAlias : public UMemory {
     TransliteratorAlias(const TransliteratorAlias &other); // forbid copying of this class
     TransliteratorAlias &operator=(const TransliteratorAlias &other); // forbid copying of this class
 };
-
-
 /**
  * A registry of system transliterators.  This is the data structure
  * that implements the mapping between transliterator IDs and the data

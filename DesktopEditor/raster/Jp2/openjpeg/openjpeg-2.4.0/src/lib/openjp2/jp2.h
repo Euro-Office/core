@@ -211,8 +211,6 @@ typedef struct opj_jp2_header_handler {
                        opj_event_mgr_t * p_manager);
 }
 opj_jp2_header_handler_t;
-
-
 typedef struct opj_jp2_img_header_writer_handler {
     /* action to perform */
     OPJ_BYTE*   (*handler)(opj_jp2_t *jp2, OPJ_UINT32 * p_data_size);
@@ -282,8 +280,6 @@ Encode an image into a JPEG-2000 file stream
 OPJ_BOOL opj_jp2_encode(opj_jp2_t *jp2,
                         opj_stream_private_t *stream,
                         opj_event_mgr_t * p_manager);
-
-
 /**
  * Starts a compression scheme, i.e. validates the codec parameters, writes the header.
  *
@@ -298,8 +294,6 @@ OPJ_BOOL opj_jp2_start_compress(opj_jp2_t *jp2,
                                 opj_stream_private_t *stream,
                                 opj_image_t * p_image,
                                 opj_event_mgr_t * p_manager);
-
-
 /**
  * Ends the compression procedures and possibiliy add data to be read after the
  * codestream.
@@ -421,8 +415,6 @@ Destroy a JP2 decompressor handle
 @param jp2 JP2 decompressor handle to destroy
 */
 void opj_jp2_destroy(opj_jp2_t *jp2);
-
-
 /**
  * Sets the given area to be decoded. This function should be called right after opj_read_header and before any tile header reading.
  *
@@ -450,8 +442,6 @@ OPJ_BOOL opj_jp2_get_tile(opj_jp2_t *p_jp2,
                           opj_image_t* p_image,
                           opj_event_mgr_t * p_manager,
                           OPJ_UINT32 tile_index);
-
-
 /**
  *
  */
@@ -472,8 +462,6 @@ OPJ_BOOL opj_jp2_encoder_set_extra_options(
     opj_jp2_t *p_jp2,
     const char* const* p_options,
     opj_event_mgr_t * p_manager);
-
-
 /* TODO MSD: clean these 3 functions */
 /**
  * Dump some elements from the JP2 decompression structure .
@@ -502,8 +490,6 @@ opj_codestream_info_v2_t* jp2_get_cstr_info(opj_jp2_t* p_jp2);
  *@return  the codestream index extract from the jpg2000 codec
  */
 opj_codestream_index_t* jp2_get_cstr_index(opj_jp2_t* p_jp2);
-
-
 /*@}*/
 
 /*@}*/

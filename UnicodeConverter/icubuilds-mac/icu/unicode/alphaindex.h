@@ -61,8 +61,6 @@ typedef enum UAlphabeticIndexLabelType {
      */
     U_ALPHAINDEX_OVERFLOW  = 3
 } UAlphabeticIndexLabelType;
-
-
 struct UHashtable;
 U_CDECL_END
 
@@ -371,8 +369,6 @@ public:
      * @stable ICU 4.8
      */
     virtual const RuleBasedCollator &getCollator() const;
-
-
    /**
      * Get the default label used for abbreviated buckets <i>between</i> other index characters.
      * For example, consider the labels when Latin and Greek are used:
@@ -395,8 +391,6 @@ public:
      * @stable ICU 4.8
      */
     virtual AlphabeticIndex &setInflowLabel(const UnicodeString &inflowLabel, UErrorCode &status);
-
-
    /**
      * Get the special label used for items that sort after the last normal label,
      * and that would not otherwise have an appropriate label.
@@ -405,8 +399,6 @@ public:
      * @stable ICU 4.8
      */
     virtual const UnicodeString &getOverflowLabel() const;
-
-
    /**
      * Set the label used for items that sort after the last normal label,
      * and that would not otherwise have an appropriate label.
@@ -437,8 +429,6 @@ public:
      * @stable ICU 4.8
      */
     virtual AlphabeticIndex &setUnderflowLabel(const UnicodeString &underflowLabel, UErrorCode &status);
-
-
     /**
      * Get the limit on the number of labels permitted in the index.
      * The number does not include over, under and inflow labels.
@@ -461,8 +451,6 @@ public:
      * @stable ICU 4.8
      */
     virtual AlphabeticIndex &setMaxLabelCount(int32_t maxLabelCount, UErrorCode &status);
-
-
     /**
      * Add a record to the index.  Each record will be associated with an index Bucket
      *  based on the record's name.  The list of records for each bucket will be sorted
@@ -490,8 +478,6 @@ public:
      * @stable ICU 4.8
      */
     virtual AlphabeticIndex &clearRecords(UErrorCode &status);
-
-
     /**  Get the number of labels in this index.
      *      Note: may trigger lazy index construction.
      *
@@ -501,8 +487,6 @@ public:
      * @stable ICU 4.8
      */
     virtual int32_t  getBucketCount(UErrorCode &status);
-
-
     /**  Get the total number of Records in this index, that is, the number
      *   of <name, data> pairs added.
      *
@@ -512,8 +496,6 @@ public:
      * @stable ICU 4.8
      */
     virtual int32_t  getRecordCount(UErrorCode &status);
-
-
 
     /**
      *   Given the name of a record, return the zero-based index of the Bucket
@@ -528,8 +510,6 @@ public:
      *
      */
     virtual int32_t  getBucketIndex(const UnicodeString &itemName, UErrorCode &status);
-
-
     /**
      *   Get the zero based index of the current Bucket from an iteration
      *   over the Buckets of this index.  Return -1 if no iteration is in process.
@@ -537,8 +517,6 @@ public:
      *   @stable ICU 4.8
      */
     virtual int32_t  getBucketIndex() const;
-
-
     /**
      *   Advance the iteration over the Buckets of this index.  Return FALSE if
      *   there are no more Buckets.
@@ -580,8 +558,6 @@ public:
       *  @stable ICU 4.8
       */
     virtual int32_t getBucketRecordCount() const;
-
-
     /**
      *  Reset the Bucket iteration for this index.  The next call to nextBucket()
      *  will restart the iteration at the first label.
@@ -614,8 +590,6 @@ public:
      *  @stable ICU 4.8
      */
     virtual const UnicodeString &getRecordName() const;
-
-
     /**
      * Return the data pointer of the Record currently being iterated over.
      * Return NULL if the current iteration position before the first item in this Bucket,
@@ -625,8 +599,6 @@ public:
      *  @stable ICU 4.8
      */
     virtual const void *getRecordData() const;
-
-
     /**
      * Reset the Record iterator position to before the first Record in the current Bucket.
      *

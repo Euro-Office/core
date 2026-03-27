@@ -15,12 +15,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __TTTABLES_H__
 #define __TTTABLES_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -29,8 +25,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /*************************************************************************/
@@ -49,8 +43,6 @@ FT_BEGIN_HEADER
   /*    as well as some routines used to access and process them.          */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -87,8 +79,6 @@ FT_BEGIN_HEADER
     FT_Short   Glyph_Data_Format;
 
   } TT_Header;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -206,8 +196,6 @@ FT_BEGIN_HEADER
     void*      short_metrics;
 
   } TT_HoriHeader;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -332,8 +320,6 @@ FT_BEGIN_HEADER
     void*      short_metrics;
 
   } TT_VertHeader;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -402,8 +388,6 @@ FT_BEGIN_HEADER
     FT_UShort  usUpperOpticalPointSize;       /* in twips (1/20th points) */
 
   } TT_OS2;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -431,8 +415,6 @@ FT_BEGIN_HEADER
     /* load them by default.  See the ttpost.c file.  */
 
   } TT_Postscript;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -461,8 +443,6 @@ FT_BEGIN_HEADER
     FT_Byte    Reserved;
 
   } TT_PCLT;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -548,8 +528,6 @@ FT_BEGIN_HEADER
     FT_UShort  maxComponentDepth;
 
   } TT_MaxProfile;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -574,8 +552,6 @@ FT_BEGIN_HEADER
   } FT_Sfnt_Tag;
 
   /* */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -617,8 +593,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
                      FT_Sfnt_Tag  tag );
-
-
  /**************************************************************************
   *
   * @function:
@@ -689,8 +663,6 @@ FT_BEGIN_HEADER
                       FT_Long    offset,
                       FT_Byte*   buffer,
                       FT_ULong*  length );
-
-
  /**************************************************************************
   *
   * @function:
@@ -731,8 +703,6 @@ FT_BEGIN_HEADER
                       FT_UInt    table_index,
                       FT_ULong  *tag,
                       FT_ULong  *length );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -755,8 +725,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_ULong )
   FT_Get_CMap_Language_ID( FT_CharMap  charmap );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -777,11 +745,7 @@ FT_BEGIN_HEADER
   FT_Get_CMap_Format( FT_CharMap  charmap );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __TTTABLES_H__ */
-
-
 /* END */

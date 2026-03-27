@@ -199,8 +199,6 @@ void MorphSubtableHeader2::process(const LEReferenceTo<MorphSubtableHeader2> &ba
     case mstNonContextualGlyphSubstitution:
         processor = NonContextualGlyphSubstitutionProcessor2::createInstance(base, success);
         break;
-
-    
     case mstContextualGlyphInsertion:
         processor = new ContextualGlyphInsertionProcessor2(base, success);
         break;

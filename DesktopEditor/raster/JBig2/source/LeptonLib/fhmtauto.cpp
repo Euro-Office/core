@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  fhmtauto.c
  *      
@@ -175,8 +173,6 @@ static char wplstrm[][10] = {"- wpls", "- wpls2", "- wpls3", "- wpls4",
                              "- wpls21", "- wpls22", "- wpls23", "- wpls24",
                              "- wpls25", "- wpls26", "- wpls27", "- wpls28",
                              "- wpls29", "- wpls30", "- wpls31"};
-
-
 /*!
  *  fhmtautogen()
  *
@@ -207,8 +203,6 @@ l_int32  ret1, ret2;
         return ERROR_INT("code generation problem", procName, 1);
     return 0;
 }
-
-
 /*!
  *  fhmtautogen1()
  *
@@ -390,8 +384,6 @@ SARRAY  *sa1, *sa2, *sa3;
     FREE(filestr);
     return 0;
 }
-
-
 /*!
  *  fhmtautogen2()
  *
@@ -592,8 +584,6 @@ SEL     *sel;
     return 0;
 }
 
-
-
 /*--------------------------------------------------------------------------*
  *                            Helper code for sel                           *
  *--------------------------------------------------------------------------*/
@@ -655,8 +645,6 @@ SARRAY  *sa;
 
     return sa;
 }
-
-
 /*!
  *  sarrayMakeInnerLoopDWACode()
  */
@@ -709,8 +697,6 @@ SARRAY  *sa;
 
     return sa;
 }
-
-
 /*!
  *  makeBarrelshiftString()
  */

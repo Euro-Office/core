@@ -32,8 +32,6 @@
 
 #include "HyperLink.h"
 #include "../FileTypes.h"
-
-
 namespace OOX
 {
 	HyperLink::HyperLink(OOX::Document* pMain) : External(pMain)

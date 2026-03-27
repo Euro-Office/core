@@ -209,8 +209,6 @@ AlphabeticIndex::AlphabeticIndex(const Locale &locale, UErrorCode &status)
           buckets_(NULL) {
     init(&locale, status);
 }
-
-
 AlphabeticIndex::AlphabeticIndex(RuleBasedCollator *collator, UErrorCode &status)
         : inputList_(NULL),
           labelsIterIndex_(-1), itemsIterIndex_(0), currentBucket_(NULL),
@@ -221,8 +219,6 @@ AlphabeticIndex::AlphabeticIndex(RuleBasedCollator *collator, UErrorCode &status
     init(NULL, status);
 }
 
-
-
 AlphabeticIndex::~AlphabeticIndex() {
     delete collator_;
     delete collatorPrimaryOnly_;
@@ -231,8 +227,6 @@ AlphabeticIndex::~AlphabeticIndex() {
     delete inputList_;
     delete initialLabels_;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::addLabels(const UnicodeSet &additions, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -241,15 +235,11 @@ AlphabeticIndex &AlphabeticIndex::addLabels(const UnicodeSet &additions, UErrorC
     clearBuckets();
     return *this;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::addLabels(const Locale &locale, UErrorCode &status) {
     addIndexExemplars(locale, status);
     clearBuckets();
     return *this;
 }
-
-
 AlphabeticIndex::ImmutableIndex *AlphabeticIndex::buildImmutableIndex(UErrorCode &errorCode) {
     if (U_FAILURE(errorCode)) { return NULL; }
     // In C++, the ImmutableIndex must own its copy of the BucketList,
@@ -282,8 +272,6 @@ int32_t AlphabeticIndex::getBucketCount(UErrorCode &status) {
     }
     return buckets_->getBucketCount();
 }
-
-
 int32_t AlphabeticIndex::getRecordCount(UErrorCode &status) {
     if (U_FAILURE(status) || inputList_ == NULL) {
         return 0;
@@ -699,8 +687,6 @@ void AlphabeticIndex::internalResetBucketIterator() {
     labelsIterIndex_ = -1;
     currentBucket_ = NULL;
 }
-
-
 void AlphabeticIndex::addIndexExemplars(const Locale &locale, UErrorCode &status) {
     LocalULocaleDataPointer uld(ulocdata_open(locale.getName(), &status));
     if (U_FAILURE(status)) {
@@ -778,8 +764,6 @@ UBool AlphabeticIndex::addChineseIndexCharacters(UErrorCode &errorCode) {
     }
     return TRUE;
 }
-
-
 /*
  * Return the string with interspersed CGJs. Input must have more than 2 codepoints.
  */
@@ -801,23 +785,15 @@ UnicodeString AlphabeticIndex::separated(const UnicodeString &item) {
     }
     return result;
 }
-
-
 UBool AlphabeticIndex::operator==(const AlphabeticIndex& /* other */) const {
     return FALSE;
 }
-
-
 UBool AlphabeticIndex::operator!=(const AlphabeticIndex& /* other */) const {
     return FALSE;
 }
-
-
 const RuleBasedCollator &AlphabeticIndex::getCollator() const {
     return *collator_;
 }
-
-
 const UnicodeString &AlphabeticIndex::getInflowLabel() const {
     return inflowLabel_;
 }
@@ -825,39 +801,27 @@ const UnicodeString &AlphabeticIndex::getInflowLabel() const {
 const UnicodeString &AlphabeticIndex::getOverflowLabel() const {
     return overflowLabel_;
 }
-
-
 const UnicodeString &AlphabeticIndex::getUnderflowLabel() const {
     return underflowLabel_;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::setInflowLabel(const UnicodeString &label, UErrorCode &/*status*/) {
     inflowLabel_ = label;
     clearBuckets();
     return *this;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::setOverflowLabel(const UnicodeString &label, UErrorCode &/*status*/) {
     overflowLabel_ = label;
     clearBuckets();
     return *this;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::setUnderflowLabel(const UnicodeString &label, UErrorCode &/*status*/) {
     underflowLabel_ = label;
     clearBuckets();
     return *this;
 }
-
-
 int32_t AlphabeticIndex::getMaxLabelCount() const {
     return maxLabelCount_;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::setMaxLabelCount(int32_t maxLabelCount, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -870,8 +834,6 @@ AlphabeticIndex &AlphabeticIndex::setMaxLabelCount(int32_t maxLabelCount, UError
     clearBuckets();
     return *this;
 }
-
-
 //
 //  init() - Common code for constructors.
 //
@@ -943,8 +905,6 @@ void AlphabeticIndex::init(const Locale *locale, UErrorCode &status) {
         addIndexExemplars(*locale, status);
     }
 }
-
-
 //
 //  Comparison function for UVector<UnicodeString *> sorting with a collator.
 //
@@ -1023,8 +983,6 @@ UVector *AlphabeticIndex::firstStringsInScript(UErrorCode &status) {
     }
     return dest.orphan();
 }
-
-
 namespace {
 
 /**
@@ -1063,8 +1021,6 @@ AlphabeticIndex::Record::Record(const UnicodeString &name, const void *data)
 
 AlphabeticIndex::Record::~Record() {
 }
-
-
 AlphabeticIndex & AlphabeticIndex::addRecord(const UnicodeString &name, const void *data, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -1090,8 +1046,6 @@ AlphabeticIndex & AlphabeticIndex::addRecord(const UnicodeString &name, const vo
     //             "   sortingName = \"" << r->sortingName_.toUTF8String(ss2) << "\"" << std::endl;
     return *this;
 }
-
-
 AlphabeticIndex &AlphabeticIndex::clearRecords(UErrorCode &status) {
     if (U_SUCCESS(status) && inputList_ != NULL && !inputList_->isEmpty()) {
         inputList_->removeAllElements();
@@ -1107,13 +1061,9 @@ int32_t AlphabeticIndex::getBucketIndex(const UnicodeString &name, UErrorCode &s
     }
     return buckets_->getBucketIndex(name, *collatorPrimaryOnly_, status);
 }
-
-
 int32_t AlphabeticIndex::getBucketIndex() const {
     return labelsIterIndex_;
 }
-
-
 UBool AlphabeticIndex::nextBucket(UErrorCode &status) {
     if (U_FAILURE(status)) {
         return FALSE;
@@ -1143,8 +1093,6 @@ const UnicodeString &AlphabeticIndex::getBucketLabel() const {
         return emptyString_;
     }
 }
-
-
 UAlphabeticIndexLabelType AlphabeticIndex::getBucketLabelType() const {
     if (currentBucket_ != NULL) {
         return currentBucket_->labelType_;
@@ -1152,8 +1100,6 @@ UAlphabeticIndexLabelType AlphabeticIndex::getBucketLabelType() const {
         return U_ALPHAINDEX_NORMAL;
     }
 }
-
-
 int32_t AlphabeticIndex::getBucketRecordCount() const {
     if (currentBucket_ != NULL && currentBucket_->records_ != NULL) {
         return currentBucket_->records_->size();
@@ -1161,8 +1107,6 @@ int32_t AlphabeticIndex::getBucketRecordCount() const {
         return 0;
     }
 }
-
-
 AlphabeticIndex &AlphabeticIndex::resetBucketIterator(UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -1170,8 +1114,6 @@ AlphabeticIndex &AlphabeticIndex::resetBucketIterator(UErrorCode &status) {
     internalResetBucketIterator();
     return *this;
 }
-
-
 UBool AlphabeticIndex::nextRecord(UErrorCode &status) {
     if (U_FAILURE(status)) {
         return FALSE;
@@ -1196,8 +1138,6 @@ UBool AlphabeticIndex::nextRecord(UErrorCode &status) {
     }
     return TRUE;
 }
-
-
 const UnicodeString &AlphabeticIndex::getRecordName() const {
     const UnicodeString *retStr = &emptyString_;
     if (currentBucket_ != NULL && currentBucket_->records_ != NULL &&
@@ -1219,14 +1159,10 @@ const void *AlphabeticIndex::getRecordData() const {
     }
     return retPtr;
 }
-
-
 AlphabeticIndex & AlphabeticIndex::resetRecordIterator() {
     itemsIterIndex_ = -1;
     return *this;
 }
-
-
 
 AlphabeticIndex::Bucket::Bucket(const UnicodeString &label,
                                 const UnicodeString &lowerBoundary,
@@ -1235,8 +1171,6 @@ AlphabeticIndex::Bucket::Bucket(const UnicodeString &label,
           displayBucket_(NULL), displayIndex_(-1),
           records_(NULL) {
 }
-
-
 AlphabeticIndex::Bucket::~Bucket() {
     delete records_;
 }

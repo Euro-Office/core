@@ -66,8 +66,6 @@
 #include "DjVmDir0.h"
 #include "ByteStream.h"
 #include "debug.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -161,8 +159,6 @@ DjVmDir0::add_file(
    num2file.resize(num2file.size());
    num2file[num2file.size()-1]=file;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

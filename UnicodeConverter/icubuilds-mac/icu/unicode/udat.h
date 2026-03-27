@@ -175,8 +175,6 @@ typedef enum UDateFormatStyle {
     UDAT_MEDIUM_RELATIVE = UDAT_MEDIUM | UDAT_RELATIVE,
     
     UDAT_SHORT_RELATIVE = UDAT_SHORT | UDAT_RELATIVE,
-    
-    
     /** No style */
     UDAT_NONE = -1,
 
@@ -782,8 +780,6 @@ typedef enum UDateFormatField {
     UDAT_FIELD_COUNT = 36
 
 } UDateFormatField;
-
-
 #ifndef U_HIDE_INTERNAL_API
 /**
  * Is a pattern character defined for UDAT_TIME_SEPARATOR_FIELD?
@@ -792,8 +788,6 @@ typedef enum UDateFormatField {
  */
 #define UDAT_HAS_PATTERN_CHAR_FOR_TIME_SEPARATOR 0
 #endif /* U_HIDE_INTERNAL_API */
-
-
 /**
  * Maps from a UDateFormatField to the corresponding UCalendarDateFields.
  * Note: since the mapping is many-to-one, there is no inverse mapping.
@@ -804,8 +798,6 @@ typedef enum UDateFormatField {
  */
 U_STABLE UCalendarDateFields U_EXPORT2
 udat_toCalendarDateField(UDateFormatField field);
-
-
 /**
  * Open a new UDateFormat for formatting and parsing dates and times.
  * A UDateFormat may be used to format dates in calls to {@link #udat_format },
@@ -843,8 +835,6 @@ udat_open(UDateFormatStyle  timeStyle,
           const UChar       *pattern,
           int32_t           patternLength,
           UErrorCode        *status);
-
-
 /**
 * Close a UDateFormat.
 * Once closed, a UDateFormat may no longer be used.
@@ -853,8 +843,6 @@ udat_open(UDateFormatStyle  timeStyle,
 */
 U_STABLE void U_EXPORT2 
 udat_close(UDateFormat* format);
-
-
 /**
  * DateFormat boolean attributes
  * 
@@ -918,8 +906,6 @@ udat_getBooleanAttribute(const UDateFormat* fmt, UDateFormatBooleanAttribute att
  */
 U_STABLE void U_EXPORT2
 udat_setBooleanAttribute(UDateFormat *fmt, UDateFormatBooleanAttribute attr, UBool newValue, UErrorCode* status);
-
-
 
 #if U_SHOW_CPLUSPLUS_API
 
@@ -1639,8 +1625,6 @@ udat_registerOpener(UDateFormatOpener opener, UErrorCode *status);
 U_INTERNAL UDateFormatOpener U_EXPORT2
 udat_unregisterOpener(UDateFormatOpener opener, UErrorCode *status);
 #endif  /* U_HIDE_INTERNAL_API */
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 #endif

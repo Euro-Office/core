@@ -15,14 +15,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 #include FT_CONFIG_STANDARD_LIBRARY_H
-
-
 #if defined( TT_CONFIG_OPTION_EMBEDDED_BITMAPS ) && \
     defined( FT_CONFIG_OPTION_USE_PNG )
 
@@ -32,8 +28,6 @@
 #include "pngshim.h"
 
 #include "sferrors.h"
-
-
   /* This code is freely based on cairo-png.c.  There's so many ways */
   /* to call libpng, and the way cairo does it is defacto standard.  */
 
@@ -42,12 +36,8 @@
                   unsigned int  color )
   {
     unsigned int  temp = alpha * color + 0x80;
-
-
     return ( temp + ( temp >> 8 ) ) >> 8;
   }
-
-
   /* Premultiplies data and converts RGBA bytes => BGRA. */
   static void
   premultiply_data( png_structp    png,
@@ -85,8 +75,6 @@
 #endif
 
     typedef unsigned short  v82 __attribute__(( vector_size( 16 ) ));
-
-
     if ( row_info->rowbytes > 15 )
     {
       /* process blocks of 16 bytes in one rush, which gives a nice speed-up */
@@ -106,8 +94,6 @@
         v82  ma = { 1, 1, 3, 3, 5, 5, 7, 7 };
         v82  o1 = { 0, 0xFF, 0, 0xFF, 0, 0xFF, 0, 0xFF };
         v82  m0 = { 1, 0, 3, 2, 5, 4, 7, 6 };
-
-
         ft_memcpy( &s, base, 16 );            /* RGBA RGBA RGBA RGBA */
         s0 = s & n0xFF;                       /*  R B  R B  R B  R B */
         s1 = s >> n8;                         /*  G A  G A  G A  G A */
@@ -136,8 +122,6 @@
     {
       unsigned char*  base  = &data[i];
       unsigned int    alpha = base[3];
-
-
       if ( alpha == 0 )
         base[0] = base[1] = base[2] = base[3] = 0;
 
@@ -146,8 +130,6 @@
         unsigned int  red   = base[0];
         unsigned int  green = base[1];
         unsigned int  blue  = base[2];
-
-
         if ( alpha != 0xFF )
         {
           red   = multiply_alpha( alpha, red   );
@@ -162,8 +144,6 @@
       }
     }
   }
-
-
   /* Converts RGBx bytes to BGRA. */
   static void
   convert_bytes_to_data( png_structp    png,
@@ -173,24 +153,18 @@
     unsigned int  i;
 
     FT_UNUSED( png );
-
-
     for ( i = 0; i < row_info->rowbytes; i += 4 )
     {
       unsigned char*  base  = &data[i];
       unsigned int    red   = base[0];
       unsigned int    green = base[1];
       unsigned int    blue  = base[2];
-
-
       base[0] = (unsigned char)blue;
       base[1] = (unsigned char)green;
       base[2] = (unsigned char)red;
       base[3] = 0xFF;
     }
   }
-
-
   /* Use error callback to avoid png writing to stderr. */
   static void
   error_callback( png_structp      png,
@@ -199,16 +173,12 @@
     FT_Error*  error = (FT_Error*)png_get_error_ptr( png );
 
     FT_UNUSED( error_msg );
-
-
     *error = FT_THROW( Out_Of_Memory );
 #ifdef PNG_SETJMP_SUPPORTED
     ft_longjmp( png_jmpbuf( png ), 1 );
 #endif
     /* if we get here, then we have no choice but to abort ... */
   }
-
-
   /* Use warning callback to avoid png writing to stderr. */
   static void
   warning_callback( png_structp      png,
@@ -219,8 +189,6 @@
 
     /* Just ignore warnings. */
   }
-
-
   static void
   read_data_from_FT_Stream( png_structp  png,
                             png_bytep    data,
@@ -229,13 +197,9 @@
     FT_Error   error;
     png_voidp  p      = png_get_io_ptr( png );
     FT_Stream  stream = (FT_Stream)p;
-
-
     if ( FT_FRAME_ENTER( length ) )
     {
       FT_Error*  e = (FT_Error*)png_get_error_ptr( png );
-
-
       *e = FT_THROW( Invalid_Stream_Read );
       png_error( png, NULL );
 
@@ -246,8 +210,6 @@
 
     FT_FRAME_EXIT();
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   Load_SBit_Png( FT_GlyphSlot     slot,
                  FT_Int           x_offset,
@@ -271,8 +233,6 @@
     int         bitdepth, color_type, interlace;
     FT_Int      i;
     png_byte*  *rows = NULL; /* pacify compiler */
-
-
     if ( x_offset < 0 ||
          y_offset < 0 )
     {
@@ -420,8 +380,6 @@
     {
       /* this doesn't overflow: 0x7FFF * 0x7FFF * 4 < 2^32 */
       FT_ULong  size = map->rows * (FT_ULong)map->pitch;
-
-
       error = ft_glyphslot_alloc_bitmap( slot, size );
       if ( error )
         goto DestroyExit;
@@ -456,6 +414,4 @@
   typedef int  _pngshim_dummy;
 
 #endif /* !(TT_CONFIG_OPTION_EMBEDDED_BITMAPS && FT_CONFIG_OPTION_USE_PNG) */
-
-
 /* END */

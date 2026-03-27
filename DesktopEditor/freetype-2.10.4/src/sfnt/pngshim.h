@@ -15,15 +15,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PNGSHIM_H_
 #define PNGSHIM_H_
-
-
 #include "ttload.h"
-
-
 FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_USE_PNG
@@ -45,6 +39,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* PNGSHIM_H_ */
-
-
 /* END */

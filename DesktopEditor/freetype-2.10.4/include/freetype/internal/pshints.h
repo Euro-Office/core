@@ -16,19 +16,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PSHINTS_H_
 #define PSHINTS_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -53,8 +45,6 @@ FT_BEGIN_HEADER
 
   typedef void
   (*PSH_Globals_DestroyFunc)( PSH_Globals  globals );
-
-
   typedef struct  PSH_Globals_FuncsRec_
   {
     PSH_Globals_NewFunc       create;
@@ -62,8 +52,6 @@ FT_BEGIN_HEADER
     PSH_Globals_DestroyFunc   destroy;
 
   } PSH_Globals_FuncsRec, *PSH_Globals_Funcs;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -101,8 +89,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct T1_HintsRec_*  T1_Hints;
-
-
   /**************************************************************************
    *
    * @type:
@@ -114,8 +100,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef const struct T1_Hints_FuncsRec_*  T1_Hints_Funcs;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -136,8 +120,6 @@ FT_BEGIN_HEADER
    */
   typedef void
   (*T1_Hints_OpenFunc)( T1_Hints  hints );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -178,8 +160,6 @@ FT_BEGIN_HEADER
   (*T1_Hints_SetStemFunc)( T1_Hints   hints,
                            FT_UInt    dimension,
                            FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -212,8 +192,6 @@ FT_BEGIN_HEADER
   (*T1_Hints_SetStem3Func)( T1_Hints   hints,
                             FT_UInt    dimension,
                             FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -235,8 +213,6 @@ FT_BEGIN_HEADER
   typedef void
   (*T1_Hints_ResetFunc)( T1_Hints  hints,
                          FT_UInt   end_point );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -264,8 +240,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*T1_Hints_CloseFunc)( T1_Hints  hints,
                          FT_UInt   end_point );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -305,8 +279,6 @@ FT_BEGIN_HEADER
                          FT_Outline*     outline,
                          PSH_Globals     globals,
                          FT_Render_Mode  hint_mode );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -349,8 +321,6 @@ FT_BEGIN_HEADER
     T1_Hints_ApplyFunc     apply;
 
   } T1_Hints_FuncsRec;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -388,8 +358,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct T2_HintsRec_*  T2_Hints;
-
-
   /**************************************************************************
    *
    * @type:
@@ -401,8 +369,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef const struct T2_Hints_FuncsRec_*  T2_Hints_Funcs;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -423,8 +389,6 @@ FT_BEGIN_HEADER
    */
   typedef void
   (*T2_Hints_OpenFunc)( T2_Hints  hints );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -466,8 +430,6 @@ FT_BEGIN_HEADER
                          FT_UInt    dimension,
                          FT_Int     count,
                          FT_Fixed*  coordinates );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -508,8 +470,6 @@ FT_BEGIN_HEADER
                         FT_UInt         end_point,
                         FT_UInt         bit_count,
                         const FT_Byte*  bytes );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -549,8 +509,6 @@ FT_BEGIN_HEADER
   (*T2_Hints_CounterFunc)( T2_Hints        hints,
                            FT_UInt         bit_count,
                            const FT_Byte*  bytes );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -578,8 +536,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*T2_Hints_CloseFunc)( T2_Hints  hints,
                          FT_UInt   end_point );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -618,8 +574,6 @@ FT_BEGIN_HEADER
                          FT_Outline*     outline,
                          PSH_Globals     globals,
                          FT_Render_Mode  hint_mode );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -662,11 +616,7 @@ FT_BEGIN_HEADER
     T2_Hints_ApplyFunc    apply;
 
   } T2_Hints_FuncsRec;
-
-
   /* */
-
-
   typedef struct  PSHinter_Interface_
   {
     PSH_Globals_Funcs  (*get_globals_funcs)( FT_Module  module );
@@ -676,8 +626,6 @@ FT_BEGIN_HEADER
   } PSHinter_Interface;
 
   typedef PSHinter_Interface*  PSHinter_Service;
-
-
 #define FT_DEFINE_PSHINTER_INTERFACE(        \
           class_,                            \
           get_globals_funcs_,                \
@@ -689,11 +637,7 @@ FT_BEGIN_HEADER
     get_t1_funcs_,                           \
     get_t2_funcs_                            \
   };
-
-
 FT_END_HEADER
 
 #endif /* PSHINTS_H_ */
-
-
 /* END */

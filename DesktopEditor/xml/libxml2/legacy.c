@@ -956,8 +956,6 @@ getParameterEntity(void *ctx, const xmlChar * name)
     DEPRECATED("getParameterEntity")
         return (xmlSAX2GetParameterEntity(ctx, name));
 }
-
-
 /**
  * entityDecl:
  * @ctx: the user data (XML parser context)

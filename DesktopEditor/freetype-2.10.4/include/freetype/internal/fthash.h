@@ -37,26 +37,16 @@
    * taken from Mark Leisher's xmbdfed package
    *
    */
-
-
 #ifndef FTHASH_H_
 #define FTHASH_H_
-
-
 #include <freetype/freetype.h>
-
-
 FT_BEGIN_HEADER
-
-
   typedef union  FT_Hashkey_
   {
     FT_Int       num;
     const char*  str;
 
   } FT_Hashkey;
-
-
   typedef struct  FT_HashnodeRec_
   {
     FT_Hashkey  key;
@@ -65,16 +55,12 @@ FT_BEGIN_HEADER
   } FT_HashnodeRec;
 
   typedef struct FT_HashnodeRec_  *FT_Hashnode;
-
-
   typedef FT_ULong
   (*FT_Hash_LookupFunc)( FT_Hashkey*  key );
 
   typedef FT_Bool
   (*FT_Hash_CompareFunc)( FT_Hashkey*  a,
                           FT_Hashkey*  b );
-
-
   typedef struct  FT_HashRec_
   {
     FT_UInt  limit;
@@ -89,8 +75,6 @@ FT_BEGIN_HEADER
   } FT_HashRec;
 
   typedef struct FT_HashRec_  *FT_Hash;
-
-
   FT_Error
   ft_hash_str_init( FT_Hash    hash,
                     FT_Memory  memory );
@@ -124,12 +108,6 @@ FT_BEGIN_HEADER
   size_t*
   ft_hash_num_lookup( FT_Int   num,
                       FT_Hash  hash );
-
-
 FT_END_HEADER
-
-
 #endif /* FTHASH_H_ */
-
-
 /* END */

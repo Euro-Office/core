@@ -52,31 +52,23 @@ typedef struct placeholder_param {
 #endif /*AAA*/
     struct placeholder_param *next; /**< pointer to the next placeholder*/
 } placeholder_param_t;
-
-
 /** placeholder box list parameters*/
 typedef struct placeholderlist_param {
     placeholder_param_t *first; /**< first placeholder pointer of the list*/
     placeholder_param_t *last;  /**< last  placeholder pointer of the list*/
 } placeholderlist_param_t;
-
-
 /**
  * generate a placeholder list
  *
  * @return pointer to the generated placeholder list
  */
 placeholderlist_param_t * gene_placeholderlist(void);
-
-
 /**
  * delete placeholder list
  *
  * @param[in,out] list address of the placeholder list pointer
  */
 void delete_placeholderlist(placeholderlist_param_t **list);
-
-
 /**
  * generate a placeholder of a box
  *
@@ -85,8 +77,6 @@ void delete_placeholderlist(placeholderlist_param_t **list);
  * @return           pointer to the generated placeholder
  */
 placeholder_param_t * gene_placeholder(box_param_t *box, Byte8_t origID);
-
-
 /**
  * delete a placeholder
  *
@@ -96,16 +86,12 @@ void delete_placeholder(placeholder_param_t **placeholder);
 
 void insert_placeholder_into_list(placeholder_param_t *phld,
                                   placeholderlist_param_t *phldlist);
-
-
 /**
  * print placeholder parameters
  *
  * @param[in] phld placeholder pointer
  */
 void print_placeholder(placeholder_param_t *phld);
-
-
 /**
  * print all placeholder parameters
  *

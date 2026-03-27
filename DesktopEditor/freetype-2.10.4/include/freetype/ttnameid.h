@@ -14,32 +14,20 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTNAMEID_H_
 #define TTNAMEID_H_
-
-
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
    *   truetype_tables
    */
-
-
   /**************************************************************************
    *
    * Possible values for the 'platform' identifier code in the name records
    * of an SFNT 'name' table.
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -89,8 +77,6 @@ FT_BEGIN_HEADER
 #define TT_PLATFORM_MICROSOFT      3
 #define TT_PLATFORM_CUSTOM         4
 #define TT_PLATFORM_ADOBE          7 /* artificial */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -132,8 +118,6 @@ FT_BEGIN_HEADER
 #define TT_APPLE_ID_UNICODE_32        4 /* 2.0 or later, full repertoire */
 #define TT_APPLE_ID_VARIANT_SELECTOR  5 /* variation selector data       */
 #define TT_APPLE_ID_FULL_UNICODE      6 /* used with type 13 cmaps       */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -178,8 +162,6 @@ FT_BEGIN_HEADER
 #define TT_MAC_ID_VIETNAMESE           30
 #define TT_MAC_ID_SINDHI               31
 #define TT_MAC_ID_UNINTERP             32
-
-
   /**************************************************************************
    *
    * @enum:
@@ -203,8 +185,6 @@ FT_BEGIN_HEADER
 #define TT_ISO_ID_7BIT_ASCII  0
 #define TT_ISO_ID_10646       1
 #define TT_ISO_ID_8859_1      2
-
-
   /**************************************************************************
    *
    * @enum:
@@ -255,8 +235,6 @@ FT_BEGIN_HEADER
 
   /* this value is deprecated */
 #define TT_MS_ID_GB2312  TT_MS_ID_PRC
-
-
   /**************************************************************************
    *
    * @enum:
@@ -281,8 +259,6 @@ FT_BEGIN_HEADER
 #define TT_ADOBE_ID_EXPERT    1
 #define TT_ADOBE_ID_CUSTOM    2
 #define TT_ADOBE_ID_LATIN_1   3
-
-
   /**************************************************************************
    *
    * @enum:
@@ -421,8 +397,6 @@ FT_BEGIN_HEADER
 #define TT_MAC_LANGID_GREEK_POLYTONIC             148
 #define TT_MAC_LANGID_GREELANDIC                  149
 #define TT_MAC_LANGID_AZERBAIJANI_ROMAN_SCRIPT    150
-
-
   /**************************************************************************
    *
    * @enum:
@@ -654,8 +628,6 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_DARI_AFGHANISTAN                  0x048C
 
   /* */
-
-
   /* legacy macro definitions not present in OpenType 1.8.1 */
 #define TT_MS_LANGID_ARABIC_GENERAL                    0x0001
 #define TT_MS_LANGID_CATALAN_SPAIN \
@@ -777,8 +749,6 @@ FT_BEGIN_HEADER
 #define TT_MS_LANGID_PAPIAMENTU_NETHERLANDS_ANTILLES   0x0479
 #define TT_MS_LANGID_UIGHUR_CHINA \
           TT_MS_LANGID_UIGHUR_PRC
-
-
   /**************************************************************************
    *
    * @enum:
@@ -831,8 +801,6 @@ FT_BEGIN_HEADER
   /* these two values are deprecated */
 #define TT_NAME_ID_PREFERRED_FAMILY     TT_NAME_ID_TYPOGRAPHIC_FAMILY
 #define TT_NAME_ID_PREFERRED_SUBFAMILY  TT_NAME_ID_TYPOGRAPHIC_SUBFAMILY
-
-
   /**************************************************************************
    *
    * @enum:
@@ -1225,11 +1193,7 @@ FT_BEGIN_HEADER
           TT_UCR_COMBINING_DIACRITICAL_MARKS
 #define TT_UCR_COMBINING_DIACRITICS_SYMB          \
           TT_UCR_COMBINING_DIACRITICAL_MARKS_SYMB
-
-
 FT_END_HEADER
 
 #endif /* TTNAMEID_H_ */
-
-
 /* END */

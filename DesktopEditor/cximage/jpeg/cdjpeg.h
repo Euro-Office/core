@@ -15,8 +15,6 @@
 #include "jpeglib.h"
 #include "jerror.h"		/* get library error codes too */
 #include "cderror.h"		/* get application-specific error codes */
-
-
 /*
  * Object interface for cjpeg's source file decoding modules
  */
@@ -36,8 +34,6 @@ struct cjpeg_source_struct {
   JSAMPARRAY buffer;
   JDIMENSION buffer_height;
 };
-
-
 /*
  * Object interface for djpeg's output file encoding modules
  */
@@ -68,8 +64,6 @@ struct djpeg_dest_struct {
   JSAMPARRAY buffer;
   JDIMENSION buffer_height;
 };
-
-
 /*
  * cjpeg/djpeg may need to perform extra passes to convert to or from
  * the source/destination file format.  The JPEG library does not know
@@ -87,8 +81,6 @@ struct cdjpeg_progress_mgr {
 };
 
 typedef struct cdjpeg_progress_mgr * cd_progress_ptr;
-
-
 /* Short forms of external names for systems with brain-damaged linkers. */
 
 #ifdef NEED_SHORT_EXTERNAL_NAMES

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MSODRAWINGGROUP union of records 
 class MSODRAWINGGROUP: public CompositeObject
 {

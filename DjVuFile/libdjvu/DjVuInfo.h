@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name DjVuInfo.h
     Each instance of class #DjVuInfo# represents the information
     contained in the information chunk of a DjVu file.  This #"INFO"#
@@ -77,8 +75,6 @@
     @version
     #$Id: DjVuInfo.h,v 1.17 2008/01/27 11:36:27 leonb Exp $# */
 //@{
-
-
 
 #include "GSmartPointer.h"
 #include "GRect.h"
@@ -115,8 +111,6 @@ class ByteStream;
     number, the decoder will just throw a \Ref{GException}.  */
 #define DJVUVERSION_TOO_NEW      50
 //@}
-
-
 class GUTF8String;
 
 /** Information component.
@@ -179,8 +173,6 @@ public:
      /// Obtain the flags for the default specifications.
   void writeParam(ByteStream &out_str) const;
 };
-
-
 //@}
 
 // ----- THE END

@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of WriteAccess record in BIFF8
 class WriteAccess: public BiffRecord
 {

@@ -134,8 +134,6 @@ std::wstring process_margin(const _CP_OPT(length_or_percent) & margin, double Mu
 }
 
 }
-
-
 style_text_properties * style_content::get_style_text_properties() const
 {
 	return dynamic_cast<style_text_properties*>(style_text_properties_.get());
@@ -585,8 +583,6 @@ void draw_opacity::add_attributes( const xml::attributes_wc_ptr & Attributes )
 
 	CP_APPLY_ATTR(L"draw:start",	draw_start_);
 	CP_APPLY_ATTR(L"draw:end",		draw_end_);
-
-	
 	CP_APPLY_ATTR(L"draw:border",	draw_border_);
 	CP_APPLY_ATTR(L"draw:angle",	draw_angle_);
 	CP_APPLY_ATTR(L"draw:style",	draw_style_); 
@@ -734,8 +730,6 @@ void draw_styles::add_child_element( xml::sax * Reader, const std::wstring & Ns,
         CP_NOT_APPLICABLE_ELM_SIMPLE(L"draw_styles");
     }
 }
-
-
 // office:automatic-styles
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * office_automatic_styles::ns = L"office";
@@ -1738,8 +1732,6 @@ void style_page_layout_properties::pptx_serialize(std::wostream & strm, oox::ppt
         strm << L"/>";
     }
 }
-
-
 // style-master-page-attlist
 ////////////////////////////////////////////////////////////////////////////////////////////////// 
 void style_master_page_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
@@ -1906,8 +1898,6 @@ xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" \
 xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" \
 xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\" \
 mc:Ignorable=\"w14 wp14\">";
-
-
 const wchar_t * ftrHeader = L"<w:ftr \
 xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \
 xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \
@@ -2290,7 +2280,5 @@ void loext_opacity_stop::add_attributes(const xml::attributes_wc_ptr& Attributes
 	
 	//CP_APPLY_ATTR(L"loext:stop-opacity", stop_opacity_); //?? 
 }
-
-
 }
 }

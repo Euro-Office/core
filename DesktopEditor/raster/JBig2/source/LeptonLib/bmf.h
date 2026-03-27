@@ -28,8 +28,6 @@ enum {
     SPLIT_ON_BLANK_LINE    = 2,    /* newline with optional white space   */
     SPLIT_ON_BOTH          = 3     /* leading white space or newline      */
 };
-
-
 struct L_Bmf
 {
     struct Pixa  *pixa;        /* pixa of bitmaps for 93 characters        */

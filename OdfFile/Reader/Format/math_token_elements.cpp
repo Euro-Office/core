@@ -189,8 +189,6 @@ void math_mn::add_text(const std::wstring & Text)
 {
     text_ = Text;
 }
-
-
 void math_mn::oox_convert(oox::math_context & Context)
 {
 	if (!text_) return;
@@ -230,8 +228,6 @@ void math_ms::add_text(const std::wstring & Text)
 {
     text_ = Text;
 }
-
-
 void math_ms::oox_convert(oox::math_context & Context)
 {
 
@@ -254,8 +250,6 @@ void math_mspace::add_text(const std::wstring & Text)
 {
     text_ = Text;
 }
-
-
 void math_mspace::oox_convert(oox::math_context & Context)
 {
 
@@ -279,8 +273,6 @@ void math_mtext::add_text(const std::wstring & Text)
 {
     text_ = Text;
 }
-
-
 void math_mtext::oox_convert(oox::math_context & Context)
 {
 	if (text_)
@@ -309,8 +301,6 @@ void math_mglyph::add_text(const std::wstring & Text)
 {
     text_ = Text;
 }
-
-
 void math_mglyph::oox_convert(oox::math_context & Context)
 {
 

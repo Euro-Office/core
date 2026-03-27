@@ -50,8 +50,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeEventListeners;
-    
-   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -86,8 +84,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationEventListener;
-    
-    
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -99,8 +95,6 @@ public:
    
 };
 CP_REGISTER_OFFICE_ELEMENT2(presentation_event_listener);
-
-
 //  script:event-listeners_
 class script_event_listener : public office_element_impl<presentation_event_listener>
 {
@@ -109,8 +103,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeScriptEventListener;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -119,7 +111,5 @@ public:
     office_element_ptr_array content_;    
 };
 CP_REGISTER_OFFICE_ELEMENT2(script_event_listener);
-
-
 }
 }

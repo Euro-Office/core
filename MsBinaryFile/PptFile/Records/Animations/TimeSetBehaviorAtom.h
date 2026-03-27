@@ -30,20 +30,14 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimeSetBehaviorAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     bool								m_bToPropertyUsed;
     bool								m_bValueTypePropertyUsed;
 

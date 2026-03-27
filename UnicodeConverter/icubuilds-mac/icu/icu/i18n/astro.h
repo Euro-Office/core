@@ -336,8 +336,6 @@ public:
    * @internal
    */
   void setTime(UDate aTime);
-
-
   /**
    * Set the current date and time of this <code>CalendarAstronomer</code> object.  All
    * astronomical calculations are performed based on this time setting.

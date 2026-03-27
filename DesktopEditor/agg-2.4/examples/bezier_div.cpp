@@ -20,13 +20,9 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
 
 typedef agg::pixfmt_bgr24 pixfmt;
-
-
 void bezier4_point(double x1, double y1, double x2, double y2,
                    double x3, double y3, double x4, double y4,
                    double mu,
@@ -41,10 +37,6 @@ void bezier4_point(double x1, double y1, double x2, double y2,
    *x = mum13*x1 + 3*mu*mum1*mum1*x2 + 3*mu*mu*mum1*x3 + mu3*x4;
    *y = mum13*y1 + 3*mu*mum1*mum1*y2 + 3*mu*mu*mum1*y3 + mu3*y4;
 }
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::rgba8 m_ctrl_color;
@@ -68,8 +60,6 @@ public:
     typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_scanline;
     typedef agg::rasterizer_scanline_aa<> rasterizer_scanline;
     typedef agg::scanline_u8 scanline;
-
-
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
         m_ctrl_color(agg::rgba(0, 0.3, 0.5, 0.8)),
@@ -188,8 +178,6 @@ public:
         add_ctrl(m_line_cap);
         m_line_cap.no_transform();
     }
-
-
     template<class Curve> double measure_time(Curve& curve)
     {
         start_timer();
@@ -205,8 +193,6 @@ public:
         }
         return elapsed_time() * 10;
     }
-
-
     template<class Path> 
     bool find_point(const Path& path, double dist, unsigned* i, unsigned* j)
     {
@@ -278,8 +264,6 @@ public:
                                                  reference_points[i].x,   reference_points[i].y);
         }
         reference_points[reference_points.size() - 1].dist = reference_dist;
-
-
         unsigned idx1 = 0;
         unsigned idx2 = 1;
         double max_error = 0;
@@ -306,13 +290,9 @@ public:
             if(da >= agg::pi) da = 2*agg::pi - da;
             if(da > aerr) aerr = da;
         }
-
-
         *max_angle_error = aerr * 180.0 / agg::pi;
         return max_error * scale;
     }
-
-
 
     virtual void on_draw()
     {
@@ -366,8 +346,6 @@ public:
 //path.line_to(m_curve1.x2(), m_curve1.y2());
 //path.line_to(m_curve1.x3(), m_curve1.y3());
 //path.line_to(m_curve1.x4(), m_curve1.y4());
-
-
         agg::conv_stroke<agg::path_storage> stroke(path);
         stroke.width(m_width.value());
         stroke.line_join(agg::line_join_e(m_line_join.cur_item()));
@@ -421,8 +399,6 @@ public:
         //        agg::render_scanlines(ras, sl, ren);
         //    }
         //}
-
-
         // Check a circle with huge radius (10,000,000) and high approximation accuracy
         //---------------
         //double circle_pnt_count = 0;
@@ -431,8 +407,6 @@ public:
         //crv.approximation_scale(10.0);
         //crv.rewind(0);
         //while(crv.vertex(&x, &y)) ++circle_pnt_count;
-
-
         char buf[512]; 
         agg::gsv_text t;
         t.size(8.0);
@@ -477,8 +451,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_line_join);
         agg::render_ctrl(ras, sl, ren_base, m_line_cap);
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -548,8 +520,6 @@ public:
         }
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -560,8 +530,4 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
 

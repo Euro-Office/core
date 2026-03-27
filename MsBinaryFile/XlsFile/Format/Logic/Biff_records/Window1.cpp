@@ -38,19 +38,13 @@ namespace XLS
 Window1::Window1()
 {
 }
-
-
 Window1::~Window1()
 {
 }
-
-
 BaseObjectPtr Window1::clone()
 {
 	return BaseObjectPtr(new Window1(*this));
 }
-
-
 void Window1::readFields(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)
@@ -162,7 +156,5 @@ int Window1::serialize(std::wostream & stream)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

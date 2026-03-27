@@ -14,20 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SFNT_H_
 #define SFNT_H_
-
-
 #include <freetype/internal/ftdrv.h>
 #include <freetype/internal/tttypes.h>
 #include <freetype/internal/wofftypes.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @functype:
@@ -74,8 +66,6 @@ FT_BEGIN_HEADER
                         FT_Int         face_index,
                         FT_Int         num_params,
                         FT_Parameter*  params );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -116,8 +106,6 @@ FT_BEGIN_HEADER
                         FT_Int         face_index,
                         FT_Int         num_params,
                         FT_Parameter*  params );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -135,8 +123,6 @@ FT_BEGIN_HEADER
    */
   typedef void
   (*TT_Done_Face_Func)( TT_Face  face );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -182,8 +168,6 @@ FT_BEGIN_HEADER
                        FT_Long    offset,
                        FT_Byte   *buffer,
                        FT_ULong*  length );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -224,8 +208,6 @@ FT_BEGIN_HEADER
                               TT_SBit_Range   *arange,
                               TT_SBit_Strike  *astrike,
                               FT_ULong        *aglyph_offset );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -260,8 +242,6 @@ FT_BEGIN_HEADER
   (*TT_Load_SBit_Metrics_Func)( FT_Stream        stream,
                                 TT_SBit_Range    range,
                                 TT_SBit_Metrics  metrics );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -309,8 +289,6 @@ FT_BEGIN_HEADER
                               FT_Stream            stream,
                               FT_Bitmap           *amap,
                               TT_SBit_MetricsRec  *ametrics );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -338,8 +316,6 @@ FT_BEGIN_HEADER
   (*TT_Set_SBit_Strike_Func)( TT_Face          face,
                               FT_Size_Request  req,
                               FT_ULong*        astrike_index );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -367,8 +343,6 @@ FT_BEGIN_HEADER
   (*TT_Load_Strike_Metrics_Func)( TT_Face           face,
                                   FT_ULong          strike_index,
                                   FT_Size_Metrics*  metrics );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -394,8 +368,6 @@ FT_BEGIN_HEADER
   (*TT_Get_PS_Name_Func)( TT_Face      face,
                           FT_UInt      idx,
                           FT_String**  PSname );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -422,8 +394,6 @@ FT_BEGIN_HEADER
   (*TT_Load_Metrics_Func)( TT_Face    face,
                            FT_Stream  stream,
                            FT_Bool    vertical );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -455,8 +425,6 @@ FT_BEGIN_HEADER
                           FT_UInt     gindex,
                           FT_Short*   abearing,
                           FT_UShort*  aadvance );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -478,8 +446,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*TT_Set_Palette_Func)( TT_Face  face,
                           FT_UInt  idx );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -522,8 +488,6 @@ FT_BEGIN_HEADER
                              FT_UInt           *aglyph_index,
                              FT_UInt           *acolor_index,
                              FT_LayerIterator*  iterator );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -560,8 +524,6 @@ FT_BEGIN_HEADER
                          FT_UInt       color_index,
                          FT_GlyphSlot  base_glyph,
                          FT_GlyphSlot  new_glyph );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -589,8 +551,6 @@ FT_BEGIN_HEADER
   (*TT_Get_Name_Func)( TT_Face      face,
                        FT_UShort    nameid,
                        FT_String**  name );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -624,8 +584,6 @@ FT_BEGIN_HEADER
                           FT_UShort  nameid,
                           FT_Int    *win,
                           FT_Int    *apple );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -651,8 +609,6 @@ FT_BEGIN_HEADER
   typedef FT_Error
   (*TT_Load_Table_Func)( TT_Face    face,
                          FT_Stream  stream );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -667,8 +623,6 @@ FT_BEGIN_HEADER
    */
   typedef void
   (*TT_Free_Table_Func)( TT_Face  face );
-
-
   /*
    * @functype:
    *    TT_Face_GetKerningFunc
@@ -693,8 +647,6 @@ FT_BEGIN_HEADER
   (*TT_Face_GetKerningFunc)( TT_Face  face,
                              FT_UInt  left_glyph,
                              FT_UInt  right_glyph );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -778,12 +730,8 @@ FT_BEGIN_HEADER
     TT_Get_Name_ID_Func          get_name_id;
 
   } SFNT_Interface;
-
-
   /* transitional */
   typedef SFNT_Interface*   SFNT_Service;
-
-
 #define FT_DEFINE_SFNT_INTERFACE(        \
           class_,                        \
           goto_table_,                   \
@@ -865,11 +813,7 @@ FT_BEGIN_HEADER
     get_name_,                           \
     get_name_id_                         \
   };
-
-
 FT_END_HEADER
 
 #endif /* SFNT_H_ */
-
-
 /* END */

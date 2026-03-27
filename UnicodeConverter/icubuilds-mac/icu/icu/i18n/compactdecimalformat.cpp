@@ -59,8 +59,6 @@ enum FallbackFlags {
   NOT_ROOT = 2
   // Next one will be 4 then 6 etc.
 };
-
-
 // CDFUnit represents a prefix-suffix pair for a particular variant
 // and log10 value.
 struct CDFUnit : public UMemory {
@@ -217,8 +215,6 @@ CompactDecimalFormat::operator=(const CompactDecimalFormat& rhs) {
 CompactDecimalFormat::~CompactDecimalFormat() {
   delete _pluralRules;
 }
-
-
 Format*
 CompactDecimalFormat::clone(void) const {
   return new CompactDecimalFormat(*this);
@@ -703,8 +699,6 @@ static UBool isRoot(const UResourceBundle* rb, UErrorCode& status) {
   }
   return uprv_strcmp(actualLocale, gRoot) == 0;
 }
-
-
 // initCDFLocaleStyleData loads formatting data for a particular style.
 // decimalFormatBundle is the "decimalFormat" resource bundle in CLDR.
 // Loaded data stored in result.

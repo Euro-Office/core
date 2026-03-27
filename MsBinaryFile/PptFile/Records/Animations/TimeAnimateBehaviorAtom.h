@@ -33,8 +33,6 @@
 
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordTimeAnimateBehaviorAtom : public CUnknownRecord

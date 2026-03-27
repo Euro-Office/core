@@ -177,8 +177,6 @@ static const uint32_t invariantChars[4]={
 #else
 #   error U_CHARSET_FAMILY is not valid
 #endif
-
-
 U_CAPI void U_EXPORT2
 u_charsToUChars(const char *cs, UChar *us, int32_t length) {
     UChar u;

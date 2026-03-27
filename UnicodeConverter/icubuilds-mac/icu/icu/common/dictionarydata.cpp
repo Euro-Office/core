@@ -150,8 +150,6 @@ int32_t BytesDictionaryMatcher::matches(UText *text, int32_t maxLength, int32_t 
     }
     return wordCount;
 }
-
-
 U_NAMESPACE_END
 
 U_NAMESPACE_USE

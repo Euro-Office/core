@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVuInfo.h"
 #include "DjVuPalette.h"
 #include "DjVuPort.h"
@@ -92,8 +90,6 @@ class IW44Image;
 class IFFByteStream;
 class GPixmap;
 class DjVuNavDir;
-
-
 /** @name DjVuFile.h
     Files #"DjVuFile.h"# and #"DjVuFile.cpp"# contain implementation of the
     \Ref{DjVuFile} class, which takes the leading role in decoding of
@@ -844,8 +840,6 @@ DjVuFile::set_recover_errors
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

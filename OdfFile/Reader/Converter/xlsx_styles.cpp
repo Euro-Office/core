@@ -97,8 +97,6 @@ private:
         cellXfs_.insert(xf);
     } 
 };
-
-
 xlsx_style_manager::Impl::Impl(xlsx_conversion_context *context_) : next_index_(0), context(context_), 
 	fonts_(context_->root()->odf_context().fontContainer()), dxfs_(context_->root()->odf_context().fontContainer())
 {

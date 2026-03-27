@@ -58,8 +58,6 @@ typedef int16_t    code_int;
 #define MAXCODE(n_bits) (((code_int) 1 << (n_bits)) - 1)
 #define HashTabOf(i)    htab[i]
 #define CodeTabOf(i)    codetab[i]
-
-
 class CImageIterator;
 class DLL_EXP CxImageGIF: public CxImage
 {

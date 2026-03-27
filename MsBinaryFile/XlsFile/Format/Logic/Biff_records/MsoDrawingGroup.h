@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MsoDrawingGroup record in BIFF8
 class MsoDrawingGroup: public BiffRecordContinued
 {
@@ -48,13 +46,9 @@ public:
 	~MsoDrawingGroup();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	ODRAW::OfficeArtDggContainer rgChildRec;
-
-
 };
 
 } // namespace XLS

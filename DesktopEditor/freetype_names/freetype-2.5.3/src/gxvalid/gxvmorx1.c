@@ -23,11 +23,7 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmorx.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmorx
-
-
   typedef struct  GXV_morx_subtable_type1_StateOptRec_
   {
     FT_ULong   substitutionTable;
@@ -46,12 +40,8 @@
 
   }  GXV_morx_subtable_type1_StateOptRec,
     *GXV_morx_subtable_type1_StateOptRecData;
-
-
 #define GXV_MORX_SUBTABLE_TYPE1_HEADER_SIZE \
           ( GXV_STATETABLE_HEADER_SIZE + 2 )
-
-
   static void
   gxv_morx_subtable_type1_substitutionTable_load( FT_Bytes       table,
                                                   FT_Bytes       limit,
@@ -61,13 +51,9 @@
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
       (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
-
-
     GXV_LIMIT_CHECK( 2 );
     optdata->substitutionTable = FT_NEXT_USHORT( p );
   }
-
-
   static void
   gxv_morx_subtable_type1_subtable_setup( FT_ULong       table_size,
                                           FT_ULong       classTable,
@@ -84,8 +70,6 @@
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
       (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
-
-
     o[0] = classTable;
     o[1] = stateArray;
     o[2] = entryTable;
@@ -97,8 +81,6 @@
 
     gxv_set_length_by_ulong_offset( o, l, buff, 4, table_size, valid );
   }
-
-
   static void
   gxv_morx_subtable_type1_entry_validate(
     FT_UShort                       state,
@@ -122,8 +104,6 @@
     FT_UNUSED( state );
     FT_UNUSED( table );
     FT_UNUSED( limit );
-
-
 #ifdef GXV_LOAD_TRACE_VARS
     setMark      = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1 );
@@ -154,8 +134,6 @@
       optdata->substitutionTable_num_lookupTables =
         (FT_Short)( currentIndex + 1 );
   }
-
-
   static void
   gxv_morx_subtable_type1_LookupValue_validate( FT_UShort            glyph,
                                                 GXV_LookupValueCPtr  value_p,
@@ -168,8 +146,6 @@
     if ( value_p->u > valid->face->num_glyphs )
       FT_INVALID_GLYPH_ID;
   }
-
-
   static GXV_LookupValueDesc
   gxv_morx_subtable_type1_LookupFmt4_transit(
     FT_UShort            relative_gindex,
@@ -194,8 +170,6 @@
 
     return value;
   }
-
-
   /*
    * TODO: length should be limit?
    **/
@@ -209,8 +183,6 @@
 
     GXV_morx_subtable_type1_StateOptRecData  optdata =
       (GXV_morx_subtable_type1_StateOptRecData)valid->xstatetable.optdata;
-
-
     /* TODO: calculate offset/length for each lookupTables */
     valid->lookupval_sign   = GXV_LOOKUPVALUE_UNSIGNED;
     valid->lookupval_func   = gxv_morx_subtable_type1_LookupValue_validate;
@@ -219,8 +191,6 @@
     for ( i = 0; i < optdata->substitutionTable_num_lookupTables; i++ )
     {
       FT_ULong  offset;
-
-
       GXV_LIMIT_CHECK( 4 );
       offset = FT_NEXT_ULONG( p );
 
@@ -229,8 +199,6 @@
 
     /* TODO: overlapping of lookupTables in substitutionTable */
   }
-
-
   /*
    * subtable for Contextual glyph substitution is a modified StateTable.
    * In addition to classTable, stateArray, entryTable, the field
@@ -244,8 +212,6 @@
     FT_Bytes  p = table;
 
     GXV_morx_subtable_type1_StateOptRec  st_rec;
-
-
     GXV_NAME_ENTER( "morx chain subtable type1 (Contextual Glyph Subst)" );
 
     GXV_LIMIT_CHECK( GXV_MORX_SUBTABLE_TYPE1_HEADER_SIZE );
@@ -272,6 +238,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

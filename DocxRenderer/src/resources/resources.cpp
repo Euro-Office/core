@@ -45,8 +45,6 @@ bool CreateTemplate(const std::wstring& strDirectory)
 
 	std::string str_resource_app_replace_a = "<Application>" + U_TO_UTF8(str_resource_app_replace) + "</Application>";
 	NSStringUtils::string_replaceA(str_resource_app, "<Application>ONLYOFFICE</Application>", str_resource_app_replace_a);
-
-
 	NSDirectory::CreateDirectory(strDirectory + L"/_rels");
 	WriteXmlUTF8(strDirectory + L"/_rels/.rels", str_resource_rels);
 

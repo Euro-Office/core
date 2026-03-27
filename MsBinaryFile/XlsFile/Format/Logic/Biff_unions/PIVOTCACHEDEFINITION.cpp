@@ -46,24 +46,16 @@
 
 namespace XLS
 {
-
-
 PIVOTCACHEDEFINITION::PIVOTCACHEDEFINITION()
 {
 }
-
-
 PIVOTCACHEDEFINITION::~PIVOTCACHEDEFINITION()
 {
 }
-
-
 BaseObjectPtr PIVOTCACHEDEFINITION::clone()
 {
 	return BaseObjectPtr(new PIVOTCACHEDEFINITION(*this));
 }
-
-
 // PIVOTCACHEDEFINITION = SXStreamID SXVS [SXSRC] [SXADDLCACHE]
 const bool PIVOTCACHEDEFINITION::loadContent(BinProcessor& proc)
 {
@@ -218,8 +210,6 @@ int PIVOTCACHEDEFINITION::serialize_definitions(std::wostream & strm)
 	}
 	return 0;
 }
-
-
 int PIVOTCACHEDEFINITION::serialize_records(std::wostream & strm)
 {
 	SXStreamID* streamId = dynamic_cast<SXStreamID*>(m_SXStreamID.get());
@@ -264,7 +254,5 @@ int PIVOTCACHEDEFINITION::serialize_records(std::wostream & strm)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

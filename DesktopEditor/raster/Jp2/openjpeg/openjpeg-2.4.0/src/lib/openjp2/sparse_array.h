@@ -108,8 +108,6 @@ OPJ_BOOL opj_sparse_array_int32_read(const opj_sparse_array_int32_t* sa,
                                      OPJ_UINT32 dest_col_stride,
                                      OPJ_UINT32 dest_line_stride,
                                      OPJ_BOOL forgiving);
-
-
 /** Write the content of a rectangular region into the sparse array from a
  * user buffer.
  *

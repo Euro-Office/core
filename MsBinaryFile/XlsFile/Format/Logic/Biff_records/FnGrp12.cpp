@@ -38,13 +38,9 @@ namespace XLS
 FnGrp12::FnGrp12()
 {
 }
-
-
 FnGrp12::~FnGrp12()
 {
 }
-
-
 BaseObjectPtr FnGrp12::clone()
 {
 	return BaseObjectPtr(new FnGrp12(*this));

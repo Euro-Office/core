@@ -39,8 +39,6 @@ UVector64::UVector64(int32_t initialCapacity, UErrorCode &status) :
     _init(initialCapacity, status);
 }
 
-
-
 void UVector64::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
     if (initialCapacity < 1) {
@@ -76,8 +74,6 @@ void UVector64::assign(const UVector64& other, UErrorCode &ec) {
         }
     }
 }
-
-
 UBool UVector64::operator==(const UVector64& other) {
     int32_t i;
     if (count != other.count) return FALSE;
@@ -88,8 +84,6 @@ UBool UVector64::operator==(const UVector64& other) {
     }
     return TRUE;
 }
-
-
 void UVector64::setElementAt(int64_t elem, int32_t index) {
     if (0 <= index && index < count) {
         elements[index] = elem;

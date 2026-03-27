@@ -38,8 +38,6 @@ namespace XLS
 SXTH::SXTH()
 {
 }
-
-
 SXTH::~SXTH()
 {
 }
@@ -48,8 +46,6 @@ BaseObjectPtr SXTH::clone()
 {
 	return BaseObjectPtr(new SXTH(*this));
 }
-
-
 void SXTH::readFields(CFRecord& record)
 {
 	_UINT32 flags1;

@@ -20,8 +20,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef TARGA_SUPPORTED
-
-
 /* Macros to deal with unsigned chars as efficiently as compiler allows */
 
 #ifdef HAVE_UNSIGNED_CHAR
@@ -36,11 +34,7 @@ typedef char U_CHAR;
 #define UCH(x)	((int) (x) & 0xFF)
 #endif
 #endif /* HAVE_UNSIGNED_CHAR */
-
-
 #define	ReadOK(file,buffer,len)	(JFREAD(file,buffer,len) == ((size_t) (len)))
-
-
 /* Private version of data source object */
 
 typedef struct _tga_source_struct * tga_source_ptr;
@@ -71,8 +65,6 @@ typedef struct _tga_source_struct {
   JMETHOD(JDIMENSION, get_pixel_rows, (j_compress_ptr cinfo,
 				       cjpeg_source_ptr sinfo));
 } tga_source_struct;
-
-
 /* For expanding 5-bit pixel values to 8-bit with best rounding */
 
 static const UINT8 c5to8bits[32] = {
@@ -81,8 +73,6 @@ static const UINT8 c5to8bits[32] = {
   132, 140, 148, 156, 165, 173, 181, 189,
   197, 206, 214, 222, 230, 239, 247, 255
 };
-
-
 
 LOCAL(int)
 read_byte (tga_source_ptr sinfo)
@@ -95,8 +85,6 @@ read_byte (tga_source_ptr sinfo)
     ERREXIT(sinfo->cinfo, JERR_INPUT_EOF);
   return c;
 }
-
-
 LOCAL(void)
 read_colormap (tga_source_ptr sinfo, int cmaplen, int mapentrysize)
 /* Read the colormap from a Targa file */
@@ -113,8 +101,6 @@ read_colormap (tga_source_ptr sinfo, int cmaplen, int mapentrysize)
     sinfo->colormap[0][i] = (JSAMPLE) read_byte(sinfo);
   }
 }
-
-
 /*
  * read_pixel methods: get a single pixel from Targa file into tga_pixel[]
  */
@@ -130,8 +116,6 @@ read_non_rle_pixel (tga_source_ptr sinfo)
     sinfo->tga_pixel[i] = (U_CHAR) getc(infile);
   }
 }
-
-
 METHODDEF(void)
 read_rle_pixel (tga_source_ptr sinfo)
 /* Read one Targa pixel from the input file, expanding RLE data as needed */
@@ -161,15 +145,11 @@ read_rle_pixel (tga_source_ptr sinfo)
     sinfo->tga_pixel[i] = (U_CHAR) getc(infile);
   }
 }
-
-
 /*
  * Read one row of pixels.
  *
  * We provide several different versions depending on input file format.
  */
-
-
 METHODDEF(JDIMENSION)
 get_8bit_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading 8-bit grayscale pixels */
@@ -261,8 +241,6 @@ get_24bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
  */
 
 #define get_32bit_row  get_24bit_row
-
-
 /*
  * This method is for re-reading the input data in standard top-down
  * row order.  The entire image has already been read into whole_image
@@ -288,8 +266,6 @@ get_memory_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   source->current_row++;
   return 1;
 }
-
-
 /*
  * This method loads the image into whole_image during the first call on
  * get_pixel_rows.  The get_pixel_rows pointer is then adjusted to call
@@ -323,8 +299,6 @@ preload_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   /* And read the first row */
   return get_memory_row(cinfo, sinfo);
 }
-
-
 /*
  * Read the file header; return image size and component count.
  */
@@ -463,8 +437,6 @@ start_input_tga (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   cinfo->image_width = width;
   cinfo->image_height = height;
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -474,8 +446,6 @@ finish_input_tga (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 {
   /* no work */
 }
-
-
 /*
  * The module selection routine for Targa format input.
  */

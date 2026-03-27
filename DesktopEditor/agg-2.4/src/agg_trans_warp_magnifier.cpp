@@ -65,6 +65,4 @@ namespace agg
         //t.radius(m_radius * m_magn);
         //t.transform(x, y);
     }
-
-
 }

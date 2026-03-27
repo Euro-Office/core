@@ -79,8 +79,6 @@ public:
      * @internal ICU 3.8
      */
     virtual UBool operator==(const Format& other) const;
-
-
     using DateFormat::format;
 
     /**
@@ -121,8 +119,6 @@ public:
                                   UnicodeString& appendTo,
                                   FieldPosition& pos,
                                   UErrorCode& status) const;
-
-
     /**
      * Parse a date/time string beginning at the given parse position. For
      * example, a time text "07/10/96 4:5 PM, PDT" will be parsed into a Date
@@ -167,8 +163,6 @@ public:
      */
     UDate parse( const UnicodeString& text,
                  ParsePosition& pos) const;
-
-
     /**
      * Parse a date/time string. For example, a time text "07/10/96 4:5 PM, PDT"
      * will be parsed into a UDate that is equivalent to Date(837039928046).
@@ -326,8 +320,6 @@ public:
      */
     virtual UClassID getDynamicClassID(void) const;
 };
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

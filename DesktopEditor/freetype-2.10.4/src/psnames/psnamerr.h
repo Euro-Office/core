@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the PS names module error enumeration
@@ -37,6 +35,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* PSNAMERR_H_ */
-
-
 /* END */

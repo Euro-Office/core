@@ -34,20 +34,14 @@
 
 namespace XLS
 {
-
-
 SerErr::SerErr()
 {
     fixed_type= typeSerErr;
 }
-
-
 SerErr::SerErr(const std::wstring& word)
 :	err(word.c_str())
 {
 }
-
-
 BiffStructurePtr SerErr::clone()
 {
 	return BiffStructurePtr(new SerErr(*this));
@@ -83,6 +77,4 @@ const std::wstring SerErr::toString() const
 {
 	return err.toString();
 }
-
-
 } // namespace XLS

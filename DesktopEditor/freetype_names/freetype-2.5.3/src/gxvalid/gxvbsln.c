@@ -22,12 +22,8 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvbsln
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -48,19 +42,13 @@
 
 #define GXV_BSLN_VALUE_COUNT  32
 #define GXV_BSLN_VALUE_EMPTY  0xFFFFU
-
-
   typedef struct  GXV_bsln_DataRec_
   {
     FT_Bytes   ctlPoints_p;
     FT_UShort  defaultBaseline;
 
   } GXV_bsln_DataRec, *GXV_bsln_Data;
-
-
 #define GXV_BSLN_DATA( field )  GXV_TABLE_DATA( bsln, field )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -78,8 +66,6 @@
     FT_UShort*  ctlPoints;
 
     FT_UNUSED( glyph );
-
-
     GXV_NAME_ENTER( "lookup value" );
 
     if ( v >= GXV_BSLN_VALUE_COUNT )
@@ -91,8 +77,6 @@
 
     GXV_EXIT;
   }
-
-
   /*
     +===============+ --------+
     | lookup header |         |
@@ -143,16 +127,12 @@
 
     return value;
   }
-
-
   static void
   gxv_bsln_parts_fmt0_validate( FT_Bytes       tables,
                                 FT_Bytes       limit,
                                 GXV_Validator  valid )
   {
     FT_Bytes  p = tables;
-
-
     GXV_NAME_ENTER( "parts format 0" );
 
     /* deltas */
@@ -162,16 +142,12 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_bsln_parts_fmt1_validate( FT_Bytes       tables,
                                 FT_Bytes       limit,
                                 GXV_Validator  valid )
   {
     FT_Bytes  p = tables;
-
-
     GXV_NAME_ENTER( "parts format 1" );
 
     /* deltas */
@@ -187,8 +163,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_bsln_parts_fmt2_validate( FT_Bytes       tables,
                                 FT_Bytes       limit,
@@ -201,8 +175,6 @@
     FT_Int     i;
 
     FT_UShort  defaultBaseline = GXV_BSLN_DATA( defaultBaseline );
-
-
     GXV_NAME_ENTER( "parts format 2" );
 
     GXV_LIMIT_CHECK( 2 + ( 2 * GXV_BSLN_VALUE_COUNT ) );
@@ -231,16 +203,12 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_bsln_parts_fmt3_validate( FT_Bytes       tables,
                                 FT_Bytes       limit,
                                 GXV_Validator  valid)
   {
     FT_Bytes  p = tables;
-
-
     GXV_NAME_ENTER( "parts format 3" );
 
     /* stdGlyph + ctlPoints */
@@ -256,8 +224,6 @@
 
     GXV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -291,16 +257,12 @@
       gxv_bsln_parts_fmt2_validate,
       gxv_bsln_parts_fmt3_validate,
     };
-
-
     valid->root       = ftvalid;
     valid->table_data = bsln;
     valid->face       = face;
 
     FT_TRACE3(( "validating `bsln' table\n" ));
     GXV_INIT;
-
-
     GXV_LIMIT_CHECK( 4 + 2 + 2 );
     version         = FT_NEXT_ULONG( p );
     format          = FT_NEXT_USHORT( p );
@@ -324,10 +286,6 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* arch-tag: ebe81143-fdaa-4c68-a4d1-b57227daa3bc
    (do not change this comment) */
-
-
 /* END */

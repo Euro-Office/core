@@ -23,8 +23,6 @@ namespace Jpeg2000
 
 		return nValue;
 	}
-
-
 	static void         JPT_ReInitMessageHeader(JPTMessageHeader *pHeader)
 	{
 		pHeader->nId            = 0;

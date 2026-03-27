@@ -37,8 +37,6 @@ namespace agg
     {
         calc_box();
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::calc_box()
     {
@@ -47,8 +45,6 @@ namespace agg
         m_xs2 = m_x2 - m_border_thickness;
         m_ys2 = m_y2 - m_border_thickness;
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::border_thickness(double t, double extra)
     { 
@@ -56,8 +52,6 @@ namespace agg
         m_border_extra = extra;
         calc_box(); 
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::resize(double x1, double y1, double x2, double y2)
     {
@@ -70,8 +64,6 @@ namespace agg
                             (y2 - y1) / 2 : 
                             (x2 - x1) / 2;
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::value1(double value) 
     { 
@@ -80,8 +72,6 @@ namespace agg
         if(m_value2 - value < m_min_d) value = m_value2 - m_min_d;
         m_value1 = value; 
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::value2(double value) 
     { 
@@ -90,8 +80,6 @@ namespace agg
         if(m_value1 + value < m_min_d) value = m_value1 + m_min_d;
         m_value2 = value; 
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::move(double d)
     {
@@ -108,8 +96,6 @@ namespace agg
             m_value2 = 1.0;
         }
     }
-
-
     //------------------------------------------------------------------------
     void scale_ctrl_impl::rewind(unsigned idx)
     {
@@ -218,8 +204,6 @@ namespace agg
             break;
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned scale_ctrl_impl::vertex(double* x, double* y)
     {
@@ -261,16 +245,12 @@ namespace agg
         return cmd;
     }
 
-
-
     //------------------------------------------------------------------------
     bool scale_ctrl_impl::in_rect(double x, double y) const
     {
         inverse_transform_xy(&x, &y);
         return x >= m_x1 && x <= m_x2 && y >= m_y1 && y <= m_y2;
     }
-
-
     //------------------------------------------------------------------------
     bool scale_ctrl_impl::on_mouse_button_down(double x, double y)
     {
@@ -348,8 +328,6 @@ namespace agg
 
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool scale_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
@@ -419,16 +397,12 @@ namespace agg
 
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool scale_ctrl_impl::on_mouse_button_up(double, double)
     {
         m_move_what = move_nothing;
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool scale_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {

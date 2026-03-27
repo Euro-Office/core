@@ -21,8 +21,6 @@ namespace Jpeg2000
 		unsigned char *pEnd;    // Указатель на конец потока
 		unsigned char *pCurPos; // Указатель не текущую позицию в потоке
 	} ByteIO;
-
-
 	class CReader
 	{
 	public:

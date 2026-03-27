@@ -149,8 +149,6 @@ class FixedDecimal;
  * maintain backward compatibility, to make the code efficient, and to
  * abstract away the complex interraction among legacy attributs.
  */
-
-
 class DecimalFormatImpl : public UObject {
 public:
 
@@ -342,8 +340,6 @@ initVisibleDigitsWithExponent(
 void updatePrecision();
 void updateGrouping();
 void updateCurrency(UErrorCode &status);
-
-
 private:
 // Disallow copy and assign
 DecimalFormatImpl(const DecimalFormatImpl &other);
@@ -539,8 +535,6 @@ UBool isParseFastpath() const;
 friend class DecimalFormat;
 
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif // DECIMFMTIMPL_H

@@ -170,8 +170,6 @@ public:
 		oInfo.right		= m_dTextMarginRight;
 		oInfo.bottom	= m_dTextMarginBottom;
 	}
-
-
 	void ToRenderer(IRenderer* pRenderer, CGeomShapeInfo& oGeomInfo, double dStartTime, double dEndTime)
 	{
 		if (m_pShape == NULL) 
@@ -192,8 +190,6 @@ public:
 			m_pShape->ToRenderer(pRenderer, oGeomInfo, dStartTime, dEndTime, pen, brush);
 		}
 	}
-
-
 	virtual bool LoadFromXML(const std::wstring& xml)
 	{
 		XmlUtils::CXmlNode oNodePict;
@@ -259,8 +255,6 @@ public:
 			return m_pShape->SetToDublicate(Shape->m_pShape.get());
 		return true;
 	}
-
-
 	void SetPen(XmlUtils::CXmlNode& oNodePict)
 	{
 		XmlUtils::CXmlNode oNodeTemplate;

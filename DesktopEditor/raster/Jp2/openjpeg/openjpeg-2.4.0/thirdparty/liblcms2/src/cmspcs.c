@@ -28,8 +28,6 @@
 
 //      inter PCS conversions XYZ <-> CIE L* a* b*
 /*
-
-
        CIE 15:2004 CIELab is defined as:
 
        L* = 116*f(Y/Yn) - 16                     0 <= L* <= 100
@@ -40,14 +38,10 @@
 
               f(t) = t^(1/3)                     1 >= t >  (24/116)^3
                      (841/108)*t + (16/116)      0 <= t <= (24/116)^3
-
-
        Reverse transform is:
 
        X = Xn*[a* / 500 + (L* + 16) / 116] ^ 3   if (X/Xn) > (24/116)
          = Xn*(a* / 500 + L* / 116) / 7.787      if (X/Xn) <= (24/116)
-
-
 
        PCS in Lab2 is encoded as:
 
@@ -63,8 +57,6 @@
                      a*     t + 128  range is  -128.0  +127.9961
                      b*
 
-
-
 Interchange Space   Component     Actual Range        Encoded Range
 CIE XYZ             X             0 -> 1.99997        0x0000 -> 0xffff
 CIE XYZ             Y             0 -> 1.99997        0x0000 -> 0xffff
@@ -76,8 +68,6 @@ Version 2,3
 CIELAB (16 bit)     L*            0 -> 100.0          0x0000 -> 0xff00
 CIELAB (16 bit)     a*            -128.0 -> +127.996  0x0000 -> 0x8000 -> 0xffff
 CIELAB (16 bit)     b*            -128.0 -> +127.996  0x0000 -> 0x8000 -> 0xffff
-
-
 Version 4
 ---------
 
@@ -137,8 +127,6 @@ cmsFloat64Number f_1(cmsFloat64Number t)
 
     return t * t * t;
 }
-
-
 // Standard XYZ to Lab. it can handle negative XZY numbers in some cases
 void CMSEXPORT cmsXYZ2Lab(const cmsCIEXYZ* WhitePoint, cmsCIELab* Lab, const cmsCIEXYZ* xyz)
 {
@@ -155,8 +143,6 @@ void CMSEXPORT cmsXYZ2Lab(const cmsCIEXYZ* WhitePoint, cmsCIELab* Lab, const cms
     Lab->a = 500.0*(fx - fy);
     Lab->b = 200.0*(fy - fz);
 }
-
-
 // Standard XYZ to Lab. It can return negative XYZ in some cases
 void CMSEXPORT cmsLab2XYZ(const cmsCIEXYZ* WhitePoint, cmsCIEXYZ* xyz,  const cmsCIELab* Lab)
 {
@@ -199,8 +185,6 @@ cmsUInt16Number ab2Fix2(cmsFloat64Number ab)
 {
     return _cmsQuickSaturateWord((ab + 128.0) * 256.0);
 }
-
-
 static
 cmsFloat64Number L2float4(cmsUInt16Number v)
 {
@@ -213,16 +197,12 @@ cmsFloat64Number ab2float4(cmsUInt16Number v)
 {
     return ((cmsFloat64Number) v / 257.0) - 128.0;
 }
-
-
 void CMSEXPORT cmsLabEncoded2FloatV2(cmsCIELab* Lab, const cmsUInt16Number wLab[3])
 {
         Lab->L = L2float2(wLab[0]);
         Lab->a = ab2float2(wLab[1]);
         Lab->b = ab2float2(wLab[2]);
 }
-
-
 void CMSEXPORT cmsLabEncoded2Float(cmsCIELab* Lab, const cmsUInt16Number wLab[3])
 {
         Lab->L = L2float4(wLab[0]);
@@ -240,8 +220,6 @@ cmsFloat64Number Clamp_L_doubleV2(cmsFloat64Number L)
 
     return L;
 }
-
-
 static
 cmsFloat64Number Clamp_ab_doubleV2(cmsFloat64Number ab)
 {
@@ -263,8 +241,6 @@ void CMSEXPORT cmsFloat2LabEncodedV2(cmsUInt16Number wLab[3], const cmsCIELab* f
     wLab[1] = ab2Fix2(Lab.a);
     wLab[2] = ab2Fix2(Lab.b);
 }
-
-
 static
 cmsFloat64Number Clamp_L_doubleV4(cmsFloat64Number L)
 {
@@ -314,8 +290,6 @@ cmsFloat64Number RADIANS(cmsFloat64Number deg)
 {
     return (deg * M_PI) / 180.;
 }
-
-
 // Auxiliary: atan2 but operating in degrees and returning 0 if a==b==0
 static
 cmsFloat64Number atan2deg(cmsFloat64Number a, cmsFloat64Number b)
@@ -337,8 +311,6 @@ cmsFloat64Number atan2deg(cmsFloat64Number a, cmsFloat64Number b)
 
     return h;
 }
-
-
 // Auxiliary: Square
 static
 cmsFloat64Number Sqr(cmsFloat64Number v)
@@ -352,8 +324,6 @@ void CMSEXPORT cmsLab2LCh(cmsCIELCh* LCh, const cmsCIELab* Lab)
     LCh -> C = pow(Sqr(Lab ->a) + Sqr(Lab ->b), 0.5);
     LCh -> h = atan2deg(Lab ->b, Lab ->a);
 }
-
-
 // To cylindrical coordinates. No check is performed, then negative values are allowed
 void CMSEXPORT cmsLCh2Lab(cmsCIELab* Lab, const cmsCIELCh* LCh)
 {
@@ -404,14 +374,10 @@ void CMSEXPORT cmsFloat2XYZEncoded(cmsUInt16Number XYZ[3], const cmsCIEXYZ* fXYZ
 
     if (xyz.Z < 0)
         xyz.Z = 0;
-
-
     XYZ[0] = XYZ2Fix(xyz.X);
     XYZ[1] = XYZ2Fix(xyz.Y);
     XYZ[2] = XYZ2Fix(xyz.Z);
 }
-
-
 //  To convert from Fixed 1.15 point to cmsFloat64Number
 static
 cmsFloat64Number XYZ2float(cmsUInt16Number v)
@@ -424,16 +390,12 @@ cmsFloat64Number XYZ2float(cmsUInt16Number v)
     // From fixed 15.16 to cmsFloat64Number
     return _cms15Fixed16toDouble(fix32);
 }
-
-
 void CMSEXPORT cmsXYZEncoded2Float(cmsCIEXYZ* fXYZ, const cmsUInt16Number XYZ[3])
 {
     fXYZ -> X = XYZ2float(XYZ[0]);
     fXYZ -> Y = XYZ2float(XYZ[1]);
     fXYZ -> Z = XYZ2float(XYZ[2]);
 }
-
-
 // Returns dE on two Lab values
 cmsFloat64Number CMSEXPORT cmsDeltaE(const cmsCIELab* Lab1, const cmsCIELab* Lab2)
 {
@@ -445,8 +407,6 @@ cmsFloat64Number CMSEXPORT cmsDeltaE(const cmsCIELab* Lab1, const cmsCIELab* Lab
 
     return pow(Sqr(dL) + Sqr(da) + Sqr(db), 0.5);
 }
-
-
 // Return the CIE94 Delta E
 cmsFloat64Number CMSEXPORT cmsCIE94DeltaE(const cmsCIELab* Lab1, const cmsCIELab* Lab2)
 {
@@ -475,8 +435,6 @@ cmsFloat64Number CMSEXPORT cmsCIE94DeltaE(const cmsCIELab* Lab1, const cmsCIELab
 
     return sqrt(Sqr(dL)  + Sqr(dC) / Sqr(sc) + Sqr(dh) / Sqr(sh));
 }
-
-
 // Auxiliary
 static
 cmsFloat64Number ComputeLBFD(const cmsCIELab* Lab)
@@ -491,16 +449,12 @@ cmsFloat64Number ComputeLBFD(const cmsCIELab* Lab)
   return (54.6 * (M_LOG10E * (log(yt + 1.5))) - 9.6);
 }
 
-
-
 // bfd - gets BFD(1:1) difference between Lab1, Lab2
 cmsFloat64Number CMSEXPORT cmsBFDdeltaE(const cmsCIELab* Lab1, const cmsCIELab* Lab2)
 {
     cmsFloat64Number lbfd1,lbfd2,AveC,Aveh,dE,deltaL,
         deltaC,deltah,dc,t,g,dh,rh,rc,rt,bfd;
     cmsCIELCh LCh1, LCh2;
-
-
     lbfd1 = ComputeLBFD(Lab1);
     lbfd2 = ComputeLBFD(Lab2);
     deltaL = lbfd2 - lbfd1;
@@ -518,8 +472,6 @@ cmsFloat64Number CMSEXPORT cmsBFDdeltaE(const cmsCIELab* Lab1, const cmsCIELab* 
         deltah = sqrt(Sqr(dE)-Sqr(Lab2->L-Lab1->L)-Sqr(deltaC));
     else
         deltah =0;
-
-
     dc   = 0.035 * AveC / (1 + 0.00365 * AveC)+0.521;
     g    = sqrt(Sqr(Sqr(AveC))/(Sqr(Sqr(AveC))+14000));
     t    = 0.627+(0.055*cos((Aveh-254)/(180/M_PI))-
@@ -542,8 +494,6 @@ cmsFloat64Number CMSEXPORT cmsBFDdeltaE(const cmsCIELab* Lab1, const cmsCIELab* 
 
     return bfd;
 }
-
-
 //  cmc - CMC(l:c) difference between Lab1, Lab2
 cmsFloat64Number CMSEXPORT cmsCMCdeltaE(const cmsCIELab* Lab1, const cmsCIELab* Lab2, cmsFloat64Number l, cmsFloat64Number c)
 {
@@ -554,8 +504,6 @@ cmsFloat64Number CMSEXPORT cmsCMCdeltaE(const cmsCIELab* Lab1, const cmsCIELab* 
 
   cmsLab2LCh(&LCh1, Lab1);
   cmsLab2LCh(&LCh2, Lab2);
-
-
   dL = Lab2->L-Lab1->L;
   dC = LCh2.C-LCh1.C;
 
@@ -605,8 +553,6 @@ cmsFloat64Number CMSEXPORT cmsCIE2000DeltaE(const cmsCIELab* Lab1, const cmsCIEL
     cmsFloat64Number b_p = b1;
     cmsFloat64Number C_p = sqrt( Sqr(a_p) + Sqr(b_p));
     cmsFloat64Number h_p = atan2deg(b_p, a_p);
-
-
     cmsFloat64Number a_ps = (1 + G) * as;
     cmsFloat64Number b_ps = bs;
     cmsFloat64Number C_ps = sqrt(Sqr(a_ps) + Sqr(b_ps));
@@ -626,8 +572,6 @@ cmsFloat64Number CMSEXPORT cmsCIE2000DeltaE(const cmsCIELab* Lab1, const cmsCIEL
                                                     (hps_minus_hp);
     cmsFloat64Number delta_L = (Ls - L1);
     cmsFloat64Number delta_C = (C_ps - C_p );
-
-
     cmsFloat64Number delta_H =2 * sqrt(C_ps*C_p) * sin(RADIANS(delta_h) / 2);
 
     cmsFloat64Number T = 1 - 0.17 * cos(RADIANS(meanh_p-30))
@@ -679,8 +623,6 @@ int _cmsReasonableGridpointsByColorspace(cmsColorSpaceSignature Colorspace, cmsU
 
         return 49;      // 49 for RGB and others
     }
-
-
     // LowResPrecal is lower resolution
     if (dwFlags & cmsFLAGS_LOWRESPRECALC) {
 
@@ -702,8 +644,6 @@ int _cmsReasonableGridpointsByColorspace(cmsColorSpaceSignature Colorspace, cmsU
 
     return 33;                  // 33 for RGB
 }
-
-
 cmsBool  _cmsEndPointsBySpace(cmsColorSpaceSignature Space,
                              cmsUInt16Number **White,
                              cmsUInt16Number **Black,
@@ -755,8 +695,6 @@ cmsBool  _cmsEndPointsBySpace(cmsColorSpaceSignature Space,
   return FALSE;
 }
 
-
-
 // Several utilities -------------------------------------------------------
 
 // Translate from our colorspace to ICC representation
@@ -805,8 +743,6 @@ cmsColorSpaceSignature CMSEXPORT _cmsICCcolorSpace(int OurNotation)
        default:  return (cmsColorSpaceSignature) (-1);
        }
 }
-
-
 int CMSEXPORT _cmsLCMScolorSpace(cmsColorSpaceSignature ProfileSpace)
 {
     switch (ProfileSpace) {
@@ -872,8 +808,6 @@ int CMSEXPORT _cmsLCMScolorSpace(cmsColorSpaceSignature ProfileSpace)
     default:  return (cmsColorSpaceSignature) (-1);
     }
 }
-
-
 cmsUInt32Number CMSEXPORT cmsChannelsOf(cmsColorSpaceSignature ColorSpace)
 {
     switch (ColorSpace) {

@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "GraphicFrame.h"
 #include "SpTree.h"
 #include "../Slide.h"
@@ -737,8 +735,6 @@ namespace PPTX
 			if(parentIs<Logic::SpTree>())
 				parentAs<Logic::SpTree>().NormalizeRect(pRect);
 		}
-
-  		
 		std::wstring GraphicFrame::toXML2() const
 		{
  			std::wstring sXml;
@@ -1033,8 +1029,6 @@ xmlns:xdr=\"http://schemas.openxmlformats.org/drawingml/2006/spreadsheetDrawing\
 <Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">\
 <Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing\" Target=\"../drawings/drawing1.xml\"/>\
 </Relationships>";
-
-
 			NSFile::CFileBinary::SaveToFile(sChartSheetsPath + FILE_SEPARATOR_STR + L"sheet1.xml", sChartSheet);
 			NSFile::CFileBinary::SaveToFile(sChartSheetsPath + FILE_SEPARATOR_STR + L"_rels" + FILE_SEPARATOR_STR + L"sheet1.xml.rels", sChartSheetRels);
 //-----------------

@@ -242,8 +242,6 @@ passes, so as to restore the bytes temporarily overwritten.
 */
 void opj_mqc_raw_init_dec(opj_mqc_t *mqc, OPJ_BYTE *bp, OPJ_UINT32 len,
                           OPJ_UINT32 extra_writable_bytes);
-
-
 /**
 Terminate RAW/MQC decoding
 

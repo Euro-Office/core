@@ -34,8 +34,6 @@
 #include "../Biff12_records/BeginEsmdb.h"
 #include "../Biff12_records/Mdb.h"
 #include "../Biff12_records/EndEsmdb.h"
-
-
 using namespace XLS;
 
 namespace XLSB

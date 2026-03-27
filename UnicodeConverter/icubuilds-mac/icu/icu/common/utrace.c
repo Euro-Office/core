@@ -15,8 +15,6 @@
 #include "cstring.h"
 #include "uassert.h"
 #include "ucln_cmn.h"
-
-
 static UTraceEntry     *pTraceEntryFunc = NULL;
 static UTraceExit      *pTraceExitFunc  = NULL;
 static UTraceData      *pTraceDataFunc  = NULL;
@@ -31,8 +29,6 @@ utrace_entry(int32_t fnNumber) {
         (*pTraceEntryFunc)(gTraceContext, fnNumber);
     }
 }
-
-
 static const char gExitFmt[]             = "Returns.";
 static const char gExitFmtValue[]        = "Returns %d.";
 static const char gExitFmtStatus[]       = "Returns.  Status = %d.";
@@ -72,8 +68,6 @@ utrace_exit(int32_t fnNumber, int32_t returnType, ...) {
     }
 }
  
-
- 
 U_CAPI void U_EXPORT2 
 utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
     if (pTraceDataFunc != NULL) {
@@ -83,8 +77,6 @@ utrace_data(int32_t fnNumber, int32_t level, const char *fmt, ...) {
            va_end(args);
     }
 }
-
-
 static void outputChar(char c, char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
     int32_t i;
     /* Check whether a start of line indenting is needed.  Three cases:
@@ -161,8 +153,6 @@ static void outputString(const char *s, char *outBuf, int32_t *outIx, int32_t ca
         outputChar(c, outBuf, outIx, capacity, indent);
     } while (c != 0);
 }
-        
-
 
 static void outputUString(const UChar *s, int32_t len, 
                           char *outBuf, int32_t *outIx, int32_t capacity, int32_t indent) {
@@ -343,8 +333,6 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                             longArg = *ptrPtr==NULL? 0: 1;   /* for test for null term. array. */
                             ptrPtr++;
                             break;
-
-                            
                         }
                         if (charsToOutput > 0) {
                             outputHexBytes(longArg, charsToOutput, outBuf, &outIx, capacity);
@@ -360,8 +348,6 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
                 outputChar(']', outBuf, &outIx, capacity, indent);
             }
             break;
-
-
         default:
             /* %. in format string, where . is some character not in the set
              *    of recognized format chars.  Just output it as if % wasn't there.
@@ -373,10 +359,6 @@ utrace_vformat(char *outBuf, int32_t capacity, int32_t indent, const char *fmt, 
     outputChar(0, outBuf, &outIx, capacity, indent);  /* Make sure that output is null terminated  */
     return outIx + 1;     /* outIx + 1 because outIx does not increment when outputing final null. */
 }
-
-
-
-
 U_CAPI int32_t U_EXPORT2
 utrace_format(char *outBuf, int32_t capacity,
                 int32_t indent, const char *fmt,  ...) {
@@ -387,8 +369,6 @@ utrace_format(char *outBuf, int32_t capacity,
     va_end(args);
     return retVal;
 }
-
-
 U_CAPI void U_EXPORT2
 utrace_setFunctions(const void *context,
                     UTraceEntry *e, UTraceExit *x, UTraceData *d) {
@@ -397,8 +377,6 @@ utrace_setFunctions(const void *context,
     pTraceDataFunc  = d;
     gTraceContext   = context;
 }
-
-
 U_CAPI void U_EXPORT2
 utrace_getFunctions(const void **context,
                     UTraceEntry **e, UTraceExit **x, UTraceData **d) {
@@ -423,8 +401,6 @@ U_CAPI int32_t U_EXPORT2
 utrace_getLevel() {
     return utrace_level;
 }
-
-
 U_CFUNC UBool 
 utrace_cleanup() {
     pTraceEntryFunc = NULL;
@@ -434,16 +410,12 @@ utrace_cleanup() {
     gTraceContext   = NULL;
     return TRUE;
 }
-
-
 static const char * const
 trFnName[] = {
     "u_init",
     "u_cleanup",
     NULL
 };
-
-
 static const char * const
 trConvNames[] = {
     "ucnv_open",
@@ -456,8 +428,6 @@ trConvNames[] = {
     "ucnv_unload",
     NULL
 };
-
-    
 static const char * const
 trCollNames[] = {
     "ucol_open",
@@ -471,8 +441,6 @@ trCollNames[] = {
     "ucol_strcollUTF8",
     NULL
 };
-
-                
 U_CAPI const char * U_EXPORT2
 utrace_functionName(int32_t fnNumber) {
     if(UTRACE_FUNCTION_START <= fnNumber && fnNumber < UTRACE_FUNCTION_LIMIT) {

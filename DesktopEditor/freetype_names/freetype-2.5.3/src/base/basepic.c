@@ -14,14 +14,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "basepic.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftglyph.c */
@@ -44,15 +40,11 @@
 
   void
   ft_destroy_default_module_classes( FT_Library  library );
-
-
   void
   ft_base_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->base )
     {
       /* destroy default module classes            */
@@ -63,8 +55,6 @@
       pic_container->base = NULL;
     }
   }
-
-
   FT_Error
   ft_base_pic_init( FT_Library  library )
   {
@@ -72,8 +62,6 @@
     FT_Error           error         = FT_Err_Ok;
     BasePIC*           container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
@@ -103,6 +91,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

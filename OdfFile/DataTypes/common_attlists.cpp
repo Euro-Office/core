@@ -191,8 +191,6 @@ void common_horizontal_margin_attlist::apply_from(const common_horizontal_margin
     apply_length_or_percent(fo_margin_left_, Other.fo_margin_left_);
     apply_length_or_percent(fo_margin_right_, Other.fo_margin_right_);        
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 void common_vertical_margin_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
@@ -216,8 +214,6 @@ void common_vertical_margin_attlist::apply_from(const common_vertical_margin_att
     apply_length_or_percent(fo_margin_top_, Other.fo_margin_top_);
     apply_length_or_percent(fo_margin_bottom_, Other.fo_margin_bottom_);        
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void common_margin_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {

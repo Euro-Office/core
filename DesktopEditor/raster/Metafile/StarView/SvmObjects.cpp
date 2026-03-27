@@ -399,8 +399,6 @@ CDataStream& operator>>(CDataStream &stream, TSvmPolygon &p)
 	return stream;
 }
 #define METAFILE_RGBA(r, g, b, a) ((unsigned int)( ( (unsigned char)(r) )| ( ( (unsigned char)(g) ) << 8 ) | ( ( (unsigned char)(b) ) << 16 ) | ( (unsigned char)(a) << 24 ) ) )
-
-
 CDataStream& operator>>(CDataStream &stream, TSvmColor &c)
 {
     stream >> c.b;
@@ -591,8 +589,6 @@ CDataStream& operator>>(CDataStream &stream, TSvmBitmap &b)
 	}
 	else
 		bTopDown = false;
-
-   
     // #144105# protect a little against damaged files
     if( b.nSizeImage > ( 16 * static_cast< unsigned int >( b.nWidth * b.nHeight ) ) )
         b.nSizeImage = 0;

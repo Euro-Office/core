@@ -1,12 +1,8 @@
 ﻿#include "agg_svg_transformer.h"
-
-
 namespace agg
 {
 namespace svg
 {
-
-
     //-------------------------------------------------------------------------
     void viewbox_to_viewport(agg::trans_viewport& tr,
                              double x, double y, double w, double h,
@@ -35,8 +31,6 @@ namespace svg
             case usc_xMaxYMax: tr.preserve_aspect_ratio(1.0, 1.0, ar); break;
         }
     }
-
-
 
     //-------------------------------------------------------------
     void transformer::update()

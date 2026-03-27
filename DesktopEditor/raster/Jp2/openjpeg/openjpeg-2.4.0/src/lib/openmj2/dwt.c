@@ -236,8 +236,6 @@ static void dwt_interleave_v(dwt_t* v, int *a, int x)
         ai += x;
     }
 }
-
-
 /* <summary>                            */
 /* Forward 5-3 wavelet transform in 1-D. */
 /* </summary>                           */
@@ -432,8 +430,6 @@ void dwt_encode(opj_tcd_tilecomp_t * tilec)
         opj_free(bj);
     }
 }
-
-
 /* <summary>                            */
 /* Inverse 5-3 wavelet transform in 2-D. */
 /* </summary>                           */
@@ -441,8 +437,6 @@ void dwt_decode(opj_tcd_tilecomp_t* tilec, int numres)
 {
     dwt_decode_tile(tilec, numres, &dwt_decode_1);
 }
-
-
 /* <summary>                          */
 /* Get gain of 5-3 wavelet transform. */
 /* </summary>                         */
@@ -525,8 +519,6 @@ void dwt_encode_real(opj_tcd_tilecomp_t * tilec)
         opj_free(bj);
     }
 }
-
-
 /* <summary>                          */
 /* Get gain of 9-7 wavelet transform. */
 /* </summary>                         */
@@ -567,8 +559,6 @@ void dwt_calc_explicit_stepsizes(opj_tccp_t * tccp, int prec)
                             &tccp->stepsizes[bandno]);
     }
 }
-
-
 /* <summary>                             */
 /* Determine maximum computed resolution level for inverse wavelet transform */
 /* </summary>                            */
@@ -587,8 +577,6 @@ static int dwt_decode_max_resolution(opj_tcd_resolution_t* restrict r, int i)
     }
     return mr ;
 }
-
-
 /* <summary>                            */
 /* Inverse wavelet transform in 2-D.     */
 /* </summary>                           */

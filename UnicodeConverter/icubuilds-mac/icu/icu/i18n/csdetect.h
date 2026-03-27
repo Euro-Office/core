@@ -52,8 +52,6 @@ public:
 //    const char *getCharsetName(int32_t index, UErrorCode& status) const;
 
     static int32_t getDetectableCount();
-
-
     static UEnumeration * getAllDetectableCharsets(UErrorCode &status);
     UEnumeration * getDetectableCharsets(UErrorCode &status) const;
     void setDetectableCharset(const char *encoding, UBool enabled, UErrorCode &status);

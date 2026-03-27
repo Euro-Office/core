@@ -144,7 +144,5 @@ private:
 	bool in_header_row_ = false;
 	bool in_rows_ = false;
 };
-
-
 }
 }

@@ -27,8 +27,6 @@
  *  Contains definitions for:
  *      Numa interpolation flags
  */
-
-
 /*------------------------------------------------------------------------* 
  *                             Array Structs                              *
  *------------------------------------------------------------------------*/
@@ -46,8 +44,6 @@ struct Numa
     l_float32       *array;     /* number array                        */
 };
 typedef struct Numa  NUMA;
-
-
     /* Array of number arrays */
 struct Numaa
 {
@@ -56,8 +52,6 @@ struct Numaa
     struct Numa    **numa;      /* array of Numa                        */
 };
 typedef struct Numaa  NUMAA;
-
-
 
     /* Sparse 2-dimensional array of number arrays */
 struct Numa2d
@@ -68,8 +62,6 @@ struct Numa2d
     struct Numa   ***numa;       /* 2D array of Numa                        */
 };
 typedef struct Numa2d  NUMA2D;
-
-
     /* A hash table of Numas */
 struct NumaHash
 {
@@ -78,8 +70,6 @@ struct NumaHash
     struct Numa    **numa;
 };
 typedef struct NumaHash NUMAHASH;
-
-
 #define  SARRAY_VERSION_NUMBER     1
 
     /* String array: an array of C strings */
@@ -91,8 +81,6 @@ struct Sarray
     char           **array;     /* string array                        */
 };
 typedef struct Sarray SARRAY;
-
-
 /*------------------------------------------------------------------------* 
  *                              Array flags                               *
  *------------------------------------------------------------------------*/
@@ -108,6 +96,4 @@ enum {
     L_EXTENDED_BORDER = 1,      /* extended with same value           */
     L_MIRRORED_BORDER = 2       /* mirrored                           */
 };
-
-
 #endif  /* LEPTONICA_ARRAY_H */

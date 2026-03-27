@@ -119,8 +119,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
     /* Default input parameters for pixBackgroundNormSimple()
      * Note:
      *    (1) mincount must never exceed the tile area (width * height)
@@ -142,8 +140,6 @@ static l_int32 *iaaGetLinearTRC(l_int32 **iaa, l_int32 diff);
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_GLOBAL    0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 
 /*------------------------------------------------------------------*
  *                Adaptive background normalization                 *
@@ -173,8 +169,6 @@ pixBackgroundNormSimple(PIX  *pixs,
                              DEFAULT_BG_VAL, DEFAULT_X_SMOOTH_SIZE,
                              DEFAULT_Y_SMOOTH_SIZE);
 }
-
-
 /*!
  *  pixBackgroundNorm()
  *
@@ -321,8 +315,6 @@ PIX     *pixmr, *pixmg, *pixmb, *pixmri, *pixmgi, *pixmbi;
         ERROR_PTR("pixd not made", procName, NULL);
     return pixd;
 }
-
-
 /*!
  *  pixBackgroundNormMorph()
  *
@@ -437,8 +429,6 @@ PIX       *pixmr, *pixmg, *pixmb, *pixmri, *pixmgi, *pixmbi;
         ERROR_PTR("pixd not made", procName, NULL);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------------------*
  *      Arrays of inverted background values for normalization             *
  *-------------------------------------------------------------------------*
@@ -517,8 +507,6 @@ PIX     *pixm;
     pixDestroy(&pixm);
     return 0;
 }
-
-
 /*!
  *  pixBackgroundNormRGBArrays()
  *
@@ -604,8 +592,6 @@ PIX     *pixmr, *pixmg, *pixmb;
     pixDestroy(&pixmb);
     return 0;
 }
-
-
 /*!
  *  pixBackgroundNormGrayArrayMorph()
  *
@@ -664,8 +650,6 @@ PIX     *pixm;
     pixDestroy(&pixm);
     return 0;
 }
-
-
 /*!
  *  pixBackgroundNormRGBArraysMorph()
  *
@@ -738,8 +722,6 @@ PIX     *pixmr, *pixmg, *pixmb;
     pixDestroy(&pixmb);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                 Measurement of local background                  *
  *------------------------------------------------------------------*/
@@ -815,8 +797,6 @@ PIX       *pixd, *piximi, *pixb, *pixf, *pixims;
     pixb = pixThresholdToBinary(pixs, thresh);
     pixf = pixMorphSequence(pixb, "d7.1 + d1.7", 0);
     pixDestroy(&pixb);
-
-
     /* ------------- Set up the output map pixd --------------- */
         /* Generate pixd, which is reduced by the factors (sx, sy). */
     w = pixGetWidth(pixs);
@@ -914,8 +894,6 @@ PIX       *pixd, *piximi, *pixb, *pixf, *pixims;
     *ppixd = pixd;
     return 0;
 }
-
-
 /*!
  *  pixGetBackgroundRGBMap()
  *
@@ -1104,8 +1082,6 @@ PIX       *pixmr, *pixmg, *pixmb;
     *ppixmb = pixmb;
     return 0;
 }
-
-
 /*!
  *  pixGetBackgroundGrayMapMorph()
  *
@@ -1192,8 +1168,6 @@ PIX       *pixm, *pixt1, *pixt2, *pixt3, *pixims;
     *ppixm = pixm;
     return 0;
 }
-
-
 /*!
  *  pixGetBackgroundRGBMapMorph()
  *
@@ -1318,8 +1292,6 @@ PIX       *pixm, *pixmr, *pixmg, *pixmb, *pixt1, *pixt2, *pixt3, *pixims;
     *ppixmb = pixmb;
     return 0;
 }
-
-
 /*!
  *  pixFillMapHoles()
  *
@@ -1451,8 +1423,6 @@ PIX      *pixt;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*!
  *  pixExtendByReplication()
  *
@@ -1504,8 +1474,6 @@ PIX      *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixSmoothConnectedRegions()
  *
@@ -1570,8 +1538,6 @@ PIXA      *pixa;
     pixaDestroy(&pixa);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                 Measurement of local foreground                  *
  *------------------------------------------------------------------*/
@@ -1702,8 +1668,6 @@ PIX     *pixd, *piximi, *pixim2, *pixims, *pixs2, *pixb, *pixt1, *pixt2, *pixt3;
     return 0;
 }
 #endif   /* Not working properly: do not use */
-
-
 /*------------------------------------------------------------------*
  *                  Generate inverted background map                *
  *------------------------------------------------------------------*/
@@ -1769,8 +1733,6 @@ PIX       *pixsm, *pixd;
     pixDestroy(&pixsm);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                    Apply background map to image                 *
  *------------------------------------------------------------------*/
@@ -1835,8 +1797,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixApplyInvBackgroundRGBMap()
  *
@@ -1914,8 +1874,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                         Apply variable map                       *
  *------------------------------------------------------------------*/
@@ -2018,8 +1976,6 @@ PIX       *pixd;
     if (lut) FREE(lut);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                  Non-adaptive (global) mapping                   *
  *------------------------------------------------------------------*/
@@ -2128,8 +2084,6 @@ PIXCMAP   *cmap;
     FREE(barray);
     return pixd;
 }
-
-
 /*!
  *  pixGlobalNormNoSatRGB()
  *
@@ -2215,8 +2169,6 @@ l_float32  rfract, gfract, bfract, maxfract;
     pixd = pixGlobalNormRGB(pixd, pixs, rval, gval, bval, mapval);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *              Adaptive threshold spread normalization             *
  *------------------------------------------------------------------*/
@@ -2331,8 +2283,6 @@ PIX     *pixe, *pixet, *pixsd, *pixg1, *pixg2, *pixth;
     pixDestroy(&pixg2);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *      Adaptive background normalization (flexible adaptaption)    *
  *------------------------------------------------------------------*/
@@ -2414,8 +2364,6 @@ PIX       *pixt, *pixsd, *pixmin, *pixbg, *pixbgi, *pixd;
     pixDestroy(&pixbgi);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                    Adaptive contrast normalization               *
  *------------------------------------------------------------------*/
@@ -2495,8 +2443,6 @@ PIX  *pixmin, *pixmax;
     pixDestroy(&pixmax);
     return pixd;
 }
-
-
 /*!
  *  pixMinMaxTiles()
  *
@@ -2580,8 +2526,6 @@ PIX     *pixmin1, *pixmax1, *pixmin2, *pixmax2;
 
     return 0;
 }
-
-
 /*!
  *  pixSetLowContrast()
  *
@@ -2658,8 +2602,6 @@ l_uint32  *data1, *data2, *line1, *line2;
 
     return 0;
 }
-
-
 /*!
  *  pixLinearTRCTiled()
  *
@@ -2750,8 +2692,6 @@ l_uint32  *data, *datamin, *datamax, *line, *tline, *linemin, *linemax;
     FREE(iaa);
     return pixd;
 }
-
-
 /*!
  *  iaaGetLinearTRC()
  *
@@ -2794,5 +2734,3 @@ l_float32  factor;
 
     return ia;
 }
-
-

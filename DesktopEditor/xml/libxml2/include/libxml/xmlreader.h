@@ -307,8 +307,6 @@ XMLPUBFUN const xmlChar * XMLCALL
 		    xmlTextReaderConstXmlVersion(xmlTextReaderPtr reader);
 XMLPUBFUN int XMLCALL
 		    xmlTextReaderStandalone     (xmlTextReaderPtr reader);
-
-
 /*
  * Index lookup
  */

@@ -26,8 +26,6 @@ namespace agg
     inline bool cmp_dist_start(int d) { return d > 0;  }
     inline bool cmp_dist_end(int d)   { return d <= 0; }
 
-
-
     //-----------------------------------------------------------line_aa_vertex
     // Vertex (x, y) with the distance to the next one. The last vertex has 
     // the distance between the last and the first points
@@ -53,8 +51,6 @@ namespace agg
                    (line_subpixel_scale + line_subpixel_scale / 2);
         }
     };
-
-
     //----------------------------------------------------------outline_aa_join_e
     enum outline_aa_join_e
     {
@@ -176,8 +172,6 @@ namespace agg
             }
             render(false);
         }
-
-
         //------------------------------------------------------------------------
         template<class VertexSource, class ColorStorage, class PathId>
         void render_all_paths(VertexSource& vs, 
@@ -191,8 +185,6 @@ namespace agg
                 add_path(vs, path_id[i]);
             }
         }
-
-
         //------------------------------------------------------------------------
         template<class Ctrl> void render_ctrl(Ctrl& c)
         {
@@ -216,14 +208,6 @@ namespace agg
         int                 m_start_x;
         int                 m_start_y;
     };
-
-
-
-
-
-
-
-
     //----------------------------------------------------------------------------
     template<class Renderer, class Coord> 
     void rasterizer_outline_aa<Renderer, Coord>::draw(draw_vars& dv, 
@@ -306,10 +290,6 @@ namespace agg
             }
         }
     }
-
-
-
-
     //----------------------------------------------------------------------------
     template<class Renderer, class Coord> 
     void rasterizer_outline_aa<Renderer, Coord>::render(bool close_polygon)
@@ -590,10 +570,6 @@ namespace agg
         }
         m_src_vertices.remove_all();
     }
-
-
 }
-
-
 #endif
 

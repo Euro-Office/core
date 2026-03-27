@@ -85,8 +85,6 @@ public:
 	virtual void SetDefaultRtf() {}
 	virtual void SetDefaultOOX() {}
 };
-
-
 template<class T>
 class ItemContainer
 {

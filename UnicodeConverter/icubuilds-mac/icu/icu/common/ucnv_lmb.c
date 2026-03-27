@@ -64,8 +64,6 @@
   -Minimal memory footprint
   -Maximal speed of conversion into the existing national character sets
   -No need to track a changing state as you interpret a string.
-
-
   All of the national character sets LMBCS was trying to encode are 'ANSI'
   based, in that the bytes from 0x20 - 0x7F are almost exactly the 
   same common Latin unaccented characters and symbols in all character sets. 
@@ -217,11 +215,7 @@ file.
 optimization group as part of the name of the converter (LMBCS-1, LMBCS-2, 
 etc.). Using plain 'LMBCS' as the name of the converter will give you 
 LMBCS-1.
-
-
 *** Implementation strategy ***
-
-
 Because of the extensive use of other character sets, the LMBCS converter
 keeps a mapping between optimization groups and IBM character sets, so that
 ICU converters can be created and used as needed. */
@@ -257,12 +251,8 @@ static const char * const OptGroupByteToCPName[ULMBCS_GRP_LAST + 1] = {
    /* The rest are null, including the 0x0014 Unicode compatibility region
    and 0x0019, the 1-2-3 system range control char */      
 };
-
-
 /* That's approximately all the data that's needed for translating 
   LMBCS to Unicode. 
-
-
 However, to translate Unicode to LMBCS, we need some more support.
 
 That's because there are often more than one possible mappings from a Unicode
@@ -289,11 +279,7 @@ ambiguous mappings: */
                   (((agroup) == ULMBCS_AMBIGUOUS_MBCS) && \
                   (xgroup) >= ULMBCS_DOUBLEOPTGROUP_START)) || \
                   ((agroup) == ULMBCS_AMBIGUOUS_ALL)
-
-
 /* The table & some code to use it: */
-
-
 static const struct _UniLMBCSGrpMap  
 {
    const UChar uniStartRange;
@@ -530,8 +516,6 @@ static const struct _LocaleLMBCSGrpMap
     {"zh", ULMBCS_GRP_CN},
     {NULL, ULMBCS_GRP_L1}
 };
-
-
 static ulmbcs_byte_t 
 FindLMBCSLocale(const char *LocaleID)
 {
@@ -557,8 +541,6 @@ FindLMBCSLocale(const char *LocaleID)
    }
    return ULMBCS_GRP_L1;
 }
-
-
 /* 
   Before we get to the main body of code, here's how we hook up to the rest 
   of ICU. ICU converters are required to define a structure that includes 
@@ -617,8 +599,6 @@ and set up another macro to stamp out the 12 open functions:*/
 static void \
    _LMBCSOpen##n(UConverter* _this, UConverterLoadArgs* pArgs, UErrorCode* err) \
 { _LMBCSOpenWorker(_this, pArgs, err, n); }
-
-
 
 /* Here's the open worker & the common close function */
 static void 
@@ -786,8 +766,6 @@ LMBCSConversionWorker (
   /* don't emit control chars */
    if ( bytesConverted == 1 && firstByte < 0x20 )
       return 0;
-
-
    /* then move over the converted data */
    switch(bytesConverted)
    {
@@ -806,8 +784,6 @@ LMBCSConversionWorker (
 
    return (pLMBCS - pStartLMBCS);
 }
-
-
 /* This is a much simpler version of above, when we 
 know we are writing LMBCS using the Unicode group
 */
@@ -832,8 +808,6 @@ LMBCSConvertUni(ulmbcs_byte_t * pLMBCS, UChar uniChar)
    }
    return ULMBCS_UNICODE_SIZE;
 }
-
-
 
 /* The main Unicode to LMBCS conversion function */
 static void 
@@ -907,8 +881,6 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
          *pLMBCS++ = (ulmbcs_byte_t ) uniChar;
          bytes_written = 1;
       }
-
-
       if (!bytes_written) 
       {
          /* Check by UNICODE range (Strategy 2) */
@@ -1067,11 +1039,7 @@ _LMBCSFromUnicode(UConverterFromUnicodeArgs*     args,
       extraInfo->localeConverterIndex = OldConverterIndex;
    }     
 }
-
-
 /* Now, the Unicode from LMBCS section */
-
-
 /* A function to call when we are looking at the Unicode group byte in LMBCS */
 static UChar
 GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode byte stream */
@@ -1086,8 +1054,6 @@ GetUniFromLMBCSUni(char const ** ppLMBCSin)  /* Called with LMBCS-style Unicode 
    }
    return (UChar)((HighCh << 8) | LowCh);
 }
-
-
 
 /* CHECK_SOURCE_LIMIT: Helper macro to verify that there are at least'index' 
    bytes left in source up to  sourceLimit.Errors appropriately if not.
@@ -1240,8 +1206,6 @@ _LMBCSGetNextUCharWorker(UConverterToUnicodeArgs*   args,
     }
     return uniChar;
 }
-
-
 /* The exported function that converts lmbcs to one or more
    UChars - currently UTF-16
 */
@@ -1270,8 +1234,6 @@ _LMBCSToUnicodeWithOffsets(UConverterToUnicodeArgs*    args,
         size_t size_new_maybe_1 = sizeof(LMBCS) - size_old;
         size_t size_new_maybe_2 = args->sourceLimit - args->source;
         size_t size_new = (size_new_maybe_1 < size_new_maybe_2) ? size_new_maybe_1 : size_new_maybe_2;
-         
-      
         uprv_memcpy(LMBCS, args->converter->toUBytes, size_old);
         uprv_memcpy(LMBCS + size_old, args->source, size_new);
         saveSourceLimit = args->sourceLimit;
@@ -1354,8 +1316,6 @@ DEFINE_LMBCS_OPEN(16)
 DEFINE_LMBCS_OPEN(17)
 DEFINE_LMBCS_OPEN(18)
 DEFINE_LMBCS_OPEN(19)
-
-
 DECLARE_LMBCS_DATA(1)
 DECLARE_LMBCS_DATA(2)
 DECLARE_LMBCS_DATA(3)

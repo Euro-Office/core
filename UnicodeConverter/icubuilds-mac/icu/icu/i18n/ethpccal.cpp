@@ -176,15 +176,11 @@ EthiopicCalendar::defaultCenturyStartYear() const
     }
     return gSystemDefaultCenturyStartYear;
 }
-
-
 int32_t
 EthiopicCalendar::getJDEpochOffset() const
 {
     return JD_EPOCH_OFFSET_AMETE_MIHRET;
 }
-
-
 #if 0
 // We do not want to introduce this API in ICU4C.
 // It was accidentally introduced in ICU4J as a public API.

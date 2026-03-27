@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  graymorph.c
  *
@@ -28,7 +26,6 @@
  *            PIX     *pixDilateGray3()
  *            PIX     *pixOpenGray3()
  *            PIX     *pixCloseGray3()
- *
  *
  *      Method: Algorithm by van Herk and Gil and Werman, 1992
  *
@@ -52,8 +49,6 @@ static PIX *pixErodeGray3h(PIX *pixs);
 static PIX *pixErodeGray3v(PIX *pixs);
 static PIX *pixDilateGray3h(PIX *pixs);
 static PIX *pixDilateGray3v(PIX *pixs);
-
-
 /*-----------------------------------------------------------------*
  *              Top-level gray morphological operations            *
  *-----------------------------------------------------------------*/
@@ -164,8 +159,6 @@ PIX       *pixb, *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixDilateGray()
  *
@@ -273,8 +266,6 @@ PIX       *pixb, *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixOpenGray()
  *
@@ -399,8 +390,6 @@ PIX       *pixb, *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixCloseGray()
  *
@@ -525,8 +514,6 @@ PIX       *pixb, *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *           Special operations for 1x3, 3x1 and 3x3 Sels          *
  *-----------------------------------------------------------------*/
@@ -586,8 +573,6 @@ PIX  *pixt, *pixb, *pixbd, *pixd;
     pixDestroy(&pixbd);
     return pixd;
 }
-
-
 /*!
  *  pixErodeGray3h()
  *
@@ -649,8 +634,6 @@ PIX       *pixd;
     }
     return pixd;
 }
-
-
 /*!
  *  pixErodeGray3v()
  *
@@ -714,8 +697,6 @@ PIX       *pixd;
     }
     return pixd;
 }
-
-
 /*!
  *  pixDilateGray3()
  *
@@ -767,8 +748,6 @@ PIX  *pixt, *pixb, *pixbd, *pixd;
     pixDestroy(&pixbd);
     return pixd;
 }
-
-
 /*!
  *  pixDilateGray3h()
  *
@@ -830,8 +809,6 @@ PIX       *pixd;
     }
     return pixd;
 }
-
-
 /*!
  *  pixDilateGray3v()
  *
@@ -892,8 +869,6 @@ PIX       *pixd;
     }
     return pixd;
 }
-
-
 /*!
  *  pixOpenGray3()
  *
@@ -960,8 +935,6 @@ PIX  *pixt, *pixb, *pixbd, *pixd;
     pixDestroy(&pixbd);
     return pixd;
 }
-
-
 /*!
  *  pixCloseGray3()
  *
@@ -1026,5 +999,3 @@ PIX  *pixt, *pixb, *pixbd, *pixd;
     pixDestroy(&pixbd);
     return pixd;
 }
-
-

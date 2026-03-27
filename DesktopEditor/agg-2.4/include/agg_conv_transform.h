@@ -61,8 +61,6 @@ namespace agg
         VertexSource*      m_source;
         const Transformer* m_trans;
     };
-
-
 }
 
 #endif

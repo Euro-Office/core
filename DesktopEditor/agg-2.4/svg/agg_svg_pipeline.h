@@ -9,8 +9,6 @@
 #include "agg_conv_transform.h"
 #include "agg_conv_stroke.h"
 #include "agg_conv_contour.h"
-
-
 namespace agg
 {
 namespace svg
@@ -159,8 +157,6 @@ namespace svg
                 ren.stroke(attr);
             }
         }
-
-
     private:
         //-----------------------------------------------------------------------
         transformer                   m_identity_transformer;
@@ -172,16 +168,12 @@ namespace svg
 		conv_curve_trans_contour      m_conv_curve_trans_contour;
         double                        m_approximation_scale;
     };
-
-
     //---------------------------------------------------------------------------
     class object_bbox
     {
     public:
         //-----------------------------------------------------------------------
         typedef agg::conv_curve<conv_polymorphic_base> conv_curve;
-
-
         //-----------------------------------------------------------------------
         object_bbox() : 
             m_fake_source(),
@@ -247,5 +239,3 @@ namespace svg
 }
 
 #endif
-
-

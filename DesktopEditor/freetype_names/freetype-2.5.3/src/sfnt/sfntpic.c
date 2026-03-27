@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "sfntpic.h"
 #include "sferrors.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from sfdriver.c */
@@ -52,8 +48,6 @@
   void
   FT_Init_Class_sfnt_service_sfnt_table(
     FT_Service_SFNT_TableRec*  clazz );
-
-
   /* forward declaration of PIC init functions from ttcmap.c */
   FT_Error
   FT_Create_Class_tt_cmap_classes( FT_Library       library,
@@ -61,20 +55,14 @@
   void
   FT_Destroy_Class_tt_cmap_classes( FT_Library      library,
                                     TT_CMap_Class*  clazz );
-
-
   void
   sfnt_module_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->sfnt )
     {
       sfntModulePIC*  container = (sfntModulePIC*)pic_container->sfnt;
-
-
       if ( container->sfnt_services )
         FT_Destroy_Class_sfnt_services( library,
                                         container->sfnt_services );
@@ -89,8 +77,6 @@
       pic_container->sfnt = NULL;
     }
   }
-
-
   FT_Error
   sfnt_module_class_pic_init( FT_Library  library )
   {
@@ -98,8 +84,6 @@
     FT_Error           error         = FT_Err_Ok;
     sfntModulePIC*     container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
@@ -138,6 +122,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

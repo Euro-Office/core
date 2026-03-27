@@ -29,15 +29,11 @@
 #include "rbbinode.h"
 
 #include "uassert.h"
-
-
 U_NAMESPACE_BEGIN
 
 #ifdef RBBI_DEBUG
 static int  gLastSerial = 0;
 #endif
-
-
 //-------------------------------------------------------------------------
 //
 //    Constructor.   Just set the fields to reasonable default values.
@@ -69,8 +65,6 @@ RBBINode::RBBINode(NodeType t) : UMemory() {
     else if (t==opLParen) {fPrecedence = precLParen;}
 
 }
-
-
 RBBINode::RBBINode(const RBBINode &other) : UMemory(other) {
 #ifdef RBBI_DEBUG
     fSerialNum   = ++gLastSerial;
@@ -91,8 +85,6 @@ RBBINode::RBBINode(const RBBINode &other) : UMemory(other) {
     fLastPosSet  = new UVector(status);
     fFollowPos   = new UVector(status);
 }
-
-
 //-------------------------------------------------------------------------
 //
 //    Destructor.   Deletes both this node AND any child nodes,
@@ -120,15 +112,11 @@ RBBINode::~RBBINode() {
         delete        fRightChild;
         fRightChild = NULL;
     }
-
-
     delete fFirstPosSet;
     delete fLastPosSet;
     delete fFollowPos;
 
 }
-
-
 //-------------------------------------------------------------------------
 //
 //    cloneTree     Make a copy of the subtree rooted at this node.
@@ -163,8 +151,6 @@ RBBINode *RBBINode::cloneTree() {
     }
     return n;
 }
-
-
 
 //-------------------------------------------------------------------------
 //
@@ -201,8 +187,6 @@ RBBINode *RBBINode::flattenVariables() {
     }
     return this;
 }
-
-
 //-------------------------------------------------------------------------
 //
 //  flattenSets    Walk the parse tree, replacing any nodes of type setRef
@@ -241,8 +225,6 @@ void RBBINode::flattenSets() {
     }
 }
 
-
-
 //-------------------------------------------------------------------------
 //
 //   findNodes()     Locate all the nodes of the specified type, starting
@@ -264,8 +246,6 @@ void   RBBINode::findNodes(UVector *dest, RBBINode::NodeType kind, UErrorCode &s
         fRightChild->findNodes(dest, kind, status);
     }
 }
-
-
 //-------------------------------------------------------------------------
 //
 //    print.         Print out a single node, for debugging.
@@ -305,8 +285,6 @@ void RBBINode::printNode() {
     RBBIDebugPrintf("\n");
 }
 #endif
-
-
 #ifdef RBBI_DEBUG
 U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
 {
@@ -320,8 +298,6 @@ U_CFUNC void RBBI_DEBUG_printUnicodeString(const UnicodeString &s, int minWidth)
     }
 }
 #endif
-
-
 //-------------------------------------------------------------------------
 //
 //    print.         Print out the tree of nodes rooted at "this"
@@ -350,8 +326,6 @@ void RBBINode::printTree(UBool printHeading) {
     }
 }
 #endif
-
-
 
 U_NAMESPACE_END
 

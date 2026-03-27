@@ -170,8 +170,6 @@ private:
 UnicodeString &appendPadding(int32_t paddingCount, UnicodeString &appendTo) const;
 
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif  // __DIGITAFFIXANDPADDING_H__

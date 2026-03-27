@@ -22,8 +22,6 @@
 #ifndef U_IO_IMPLEMENTATION
 #error U_IO_IMPLEMENTATION not set - must be set for all ICU source files in io/ - see http://userguide.icu-project.org/howtouseicu
 #endif
-
-
 /**  Auto-client */
 #define UCLN_TYPE UCLN_IO
 #include "ucln_imp.h"

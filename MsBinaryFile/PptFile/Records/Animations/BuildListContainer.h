@@ -30,13 +30,9 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "ParaBuildContainer.h"
 #include "BuildListSubContainer.h"
-
-
 namespace PPT
 {
 class CRecordBuildListContainer : public CRecordsContainer

@@ -782,11 +782,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ----------------------------------------------------- */
-
-
         case 'r': {         /* rates rates/distorsion */
             char *s = opj_optarg;
             parameters->tcp_numlayers = 0;
@@ -806,8 +802,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'F': {         /* Raw image format parameters */
             char signo;
             char *s = opj_optarg;
@@ -1104,8 +1098,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ------------------------------------------------------ */
 
         case 'I': {         /* reversible or not */
@@ -1225,8 +1217,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_hprot_TPH_tileno[tilespec] = lasttileno = tile;
                             parameters->jpwl_hprot_TPH[tilespec++] = hprot;
                         }
-
-
                     } else if (!strcmp(token, "h")) {
                         /* Main header, unspecified */
                         parameters->jpwl_hprot_MH = hprot;
@@ -1333,8 +1323,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_pprot_packno[packspec] = 0;
                             parameters->jpwl_pprot[packspec++] = pprot;
                         }
-
-
                     } else if (!strcmp(token, "p")) {
                         /* all default */
                         parameters->jpwl_pprot_tileno[0] = 0;
@@ -1407,8 +1395,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search addressing size */
                 if (*token == 'a') {
-
-
                     addr = 0; /* predefined: auto */
 
                     if (sscanf(token, "a=%d", &addr) == 1) {
@@ -1432,8 +1418,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search sensitivity size */
                 if (*token == 'z') {
-
-
                     size = 1; /* predefined: 1 byte */
 
                     if (sscanf(token, "z=%d", &size) == 1) {
@@ -1457,8 +1441,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search range method */
                 if (*token == 'g') {
-
-
                     range = 0; /* predefined: 0 (packet) */
 
                     if (sscanf(token, "g=%d", &range) == 1) {
@@ -1483,8 +1465,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                 /* next token or bust */
                 token = strtok(NULL, ",");
             };
-
-
             /* some info */
             fprintf(stdout, "Info: JPWL capabilities enabled\n");
             parameters->jpwl_epc_on = OPJ_TRUE;
@@ -1500,8 +1480,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         }
         break;
         /* ------------------------------------------------------ */
-
-
         default:
             fprintf(stderr, "ERROR -> Command line not valid\n");
             return 1;

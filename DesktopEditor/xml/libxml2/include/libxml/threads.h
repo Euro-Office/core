@@ -79,6 +79,4 @@ int XMLCALL xmlDllMain(void *hinstDLL, unsigned long fdwReason, void *lpvReserve
 #ifdef __cplusplus
 }
 #endif
-
-
 #endif /* __XML_THREADS_H__ */

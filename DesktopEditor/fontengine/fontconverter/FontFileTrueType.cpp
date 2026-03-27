@@ -1437,8 +1437,6 @@ namespace NSFontConverter
 		free( pLocaTable );
 	}
 
-
-
 	void CFontFileTrueType::ConvertEncoding   (char **ppEncoding, FontFileOutputFunc pOutputFunc, void *pOutputStream)
 	{
 		// конвертация кодировки в тип Type42

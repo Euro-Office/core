@@ -55,8 +55,6 @@ typedef struct  {
     cmsContext ContextID;
 
 } cmsCIECAM02;
-
-
 static
 cmsFloat64Number compute_n(cmsCIECAM02* pMod)
 {
@@ -97,8 +95,6 @@ cmsFloat64Number computeD(cmsCIECAM02* pMod)
 
     return D;
 }
-
-
 static
 CAM02COLOR XYZtoCAT02(CAM02COLOR clr)
 {
@@ -122,8 +118,6 @@ CAM02COLOR ChromaticAdaptation(CAM02COLOR clr, cmsCIECAM02* pMod)
 
     return clr;
 }
-
-
 static
 CAM02COLOR CAT02toHPE(CAM02COLOR clr)
 {
@@ -238,8 +232,6 @@ CAM02COLOR ComputeCorrelates(CAM02COLOR clr, cmsCIECAM02* pMod)
 
     return clr;
 }
-
-
 static
 CAM02COLOR InverseCorrelates(CAM02COLOR clr, cmsCIECAM02* pMod)
 {
@@ -331,8 +323,6 @@ CAM02COLOR HPEtoCAT02(CAM02COLOR clr)
     clr.RGBc[2] = (clr.RGBp[0] * M[6]) + (clr.RGBp[1] * M[7]) + (clr.RGBp[2] * M[8]);
     return clr;
 }
-
-
 static
 CAM02COLOR InverseChromaticAdaptation(CAM02COLOR clr,  cmsCIECAM02* pMod)
 {
@@ -343,8 +333,6 @@ CAM02COLOR InverseChromaticAdaptation(CAM02COLOR clr,  cmsCIECAM02* pMod)
     }
     return clr;
 }
-
-
 static
 CAM02COLOR CAT02toXYZ(CAM02COLOR clr)
 {
@@ -354,8 +342,6 @@ CAM02COLOR CAT02toXYZ(CAM02COLOR clr)
 
     return clr;
 }
-
-
 cmsHANDLE  CMSEXPORT cmsCIECAM02Init(cmsContext ContextID, const cmsViewingConditions* pVC)
 {
     cmsCIECAM02* lpMod;
@@ -378,8 +364,6 @@ cmsHANDLE  CMSEXPORT cmsCIECAM02Init(cmsContext ContextID, const cmsViewingCondi
     lpMod -> surround = pVC ->surround;
 
     switch (lpMod -> surround) {
-
-
     case CUTSHEET_SURROUND:
         lpMod->F = 0.8;
         lpMod->c = 0.41;
@@ -431,8 +415,6 @@ void CMSEXPORT cmsCIECAM02Done(cmsHANDLE hModel)
 
     if (lpMod) _cmsFree(lpMod ->ContextID, lpMod);
 }
-
-
 void CMSEXPORT cmsCIECAM02Forward(cmsHANDLE hModel, const cmsCIEXYZ* pIn, cmsJCh* pOut)
 {
     CAM02COLOR clr;

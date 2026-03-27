@@ -47,8 +47,6 @@ namespace agg
             m_clip_box.y2 = y2;
             m_clip_box.normalize();
         }
-
-
         double x1() const { return m_clip_box.x1; }
         double y1() const { return m_clip_box.y1; }
         double x2() const { return m_clip_box.x2; }
@@ -78,6 +76,4 @@ namespace agg
     };
 
 }
-
-
 #endif

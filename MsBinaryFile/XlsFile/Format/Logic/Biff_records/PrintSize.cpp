@@ -38,13 +38,9 @@ namespace XLS
 PrintSize::PrintSize()
 {
 }
-
-
 PrintSize::~PrintSize()
 {
 }
-
-
 BaseObjectPtr PrintSize::clone()
 {
 	return BaseObjectPtr(new PrintSize(*this));

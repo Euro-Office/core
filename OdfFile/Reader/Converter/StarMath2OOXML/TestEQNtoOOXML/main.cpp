@@ -1,7 +1,5 @@
 #include "../conversionmathformula.h"
 #include "gtest/gtest.h"
-
-
 TEST(SMConvectorTest,IndexUpperLower)
 {
 	std::wstring wsString = L"2^{ 1} _{ 3}";

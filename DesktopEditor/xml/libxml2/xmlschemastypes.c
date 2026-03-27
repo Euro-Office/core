@@ -393,8 +393,6 @@ xmlSchemaInitTypes(void)
     if (xmlSchemaTypesInitialized != 0)
         return;
     xmlSchemaTypesBank = xmlHashCreate(40);
-
-
     /*
     * 3.4.7 Built-in Complex Type Definition
     */
@@ -1710,8 +1708,6 @@ xmlSchemaValidateDates (xmlSchemaValType type,
 	while IS_WSP_BLANK_CH(*cur) cur++;
     if ((ret != 0) || (*cur != 0) || (!(VALID_DATETIME((&(dt->value.date))))))
 	goto error;
-
-
     dt->type = XML_SCHEMAS_DATETIME;
 
 done:
@@ -4495,8 +4491,6 @@ xmlSchemaCompareReplaceCollapseStrings(const xmlChar *x,
     }
     return(0);
 }
-
-
 /**
  * xmlSchemaCompareReplacedStrings:
  * @x:  a first string value

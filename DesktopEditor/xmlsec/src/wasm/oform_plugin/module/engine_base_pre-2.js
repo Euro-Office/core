@@ -195,5 +195,3 @@
 	};
 
 	window.cryptoJS = new CryptoJS();
-
-

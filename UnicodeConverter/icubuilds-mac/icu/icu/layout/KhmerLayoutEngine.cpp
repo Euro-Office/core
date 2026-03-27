@@ -6,8 +6,6 @@
  * by Jens Herden and Javier Sola for Khmer language 
  *
  */
-
-
 #include "OpenTypeLayoutEngine.h"
 #include "KhmerLayoutEngine.h"
 #include "LEGlyphStorage.h"

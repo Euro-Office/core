@@ -43,8 +43,6 @@
 #include <dirent.h>
 #endif /* _WIN32 */
 
-
-
 void dump_volume(FILE *fd, opj_volume_t * vol)
 {
     int compno;
@@ -96,15 +94,11 @@ static int int_ceildiv(int a, int b)
 {
     return (a + b - 1) / b;
 }
-
-
 /* -->> -->> -->> -->>
 
 PGX IMAGE FORMAT
 
 <<-- <<-- <<-- <<-- */
-
-
 unsigned char readuchar(FILE * f)
 {
     unsigned char c1;
@@ -402,8 +396,6 @@ opj_volume_t* pgxtovolume(char *relpath, opj_cparameters_t *parameters)
     /*dump_volume(stdout, volume);*/
     return volume;
 }
-
-
 int volumetopgx(opj_volume_t * volume, char *outfile)
 {
     int w, wr, wrr, h, hr, hrr, l, lr, lrr;

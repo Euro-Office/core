@@ -211,8 +211,6 @@ int jpwl_epbs_add(opj_j2k_t *j2k, jpwl_marker_t *jwmarker, int *jwmarker_num,
 
     return epbs_len;
 }
-
-
 jpwl_epb_ms_t *jpwl_epb_create(opj_j2k_t *j2k, opj_bool latest, opj_bool packed,
                                int tileno, int idx, int hprot,
                                unsigned long int pre_len, unsigned long int post_len)
@@ -354,8 +352,6 @@ void jpwl_epb_write(opj_j2k_t *j2k, jpwl_epb_ms_t *epb, unsigned char *buf)
     j2k_add_marker(j2k->cstr_info, J2K_MS_EPB, -1, epb->Lepb + 2);
 
 }
-
-
 jpwl_epc_ms_t *jpwl_epc_create(opj_j2k_t *j2k, opj_bool esd_on, opj_bool red_on,
                                opj_bool epb_on, opj_bool info_on)
 {
@@ -582,8 +578,6 @@ opj_bool jpwl_epb_fill(opj_j2k_t *j2k, jpwl_epb_ms_t *epb, unsigned char *buf,
 
     return OPJ_TRUE;
 }
-
-
 opj_bool jpwl_correct(opj_j2k_t *j2k)
 {
 
@@ -784,8 +778,6 @@ opj_bool jpwl_correct(opj_j2k_t *j2k)
         cio_skip(cio, skips);
 
     }
-
-
 }
 
 opj_bool jpwl_epb_correct(opj_j2k_t *j2k, unsigned char *buffer, int type,
@@ -917,8 +909,6 @@ opj_bool jpwl_epb_correct(opj_j2k_t *j2k, unsigned char *buffer, int type,
             return OPJ_FALSE;*/
             errflag = OPJ_TRUE;
         }
-
-
         /* advance parity buffer */
         if ((status >= 0) && (status <= tt))
             /* copy back corrected parity only if all is OK */
@@ -998,8 +988,6 @@ opj_bool jpwl_epb_correct(opj_j2k_t *j2k, unsigned char *buffer, int type,
                       (Depb & 0x3F), /* EPB index value */
                       LDPepb, /*length of the data protected by the EPB */
                       str1); /* protection method */
-
-
     /* well, we need to investigate how long is the connected length of packed EPBs */
     myconn = Lepb + 2;
     if ((Depb & 0x40) == 0) /* not latest in header */
@@ -1187,8 +1175,6 @@ opj_bool jpwl_epb_correct(opj_j2k_t *j2k, unsigned char *buffer, int type,
                 return OPJ_FALSE;*/
                 errflag = OPJ_TRUE;
             }
-
-
             /* advance parity buffer */
             if ((status >= 0) && (status <= tt))
                 /* copy back corrected data only if all is OK */
@@ -1607,8 +1593,6 @@ opj_bool jpwl_esd_fill(opj_j2k_t *j2k, jpwl_esd_ms_t *esd, unsigned char *buf)
             /* do nothing */
             break;
         }
-
-
         /* let's fill the value field */
         switch (esd->senst) {
 

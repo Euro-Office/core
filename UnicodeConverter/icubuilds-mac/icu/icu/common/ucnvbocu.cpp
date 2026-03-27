@@ -384,8 +384,6 @@ packDiff(int32_t diff) {
     }
     return result;
 }
-
-
 static void
 _Bocu1FromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                              UErrorCode *pErrorCode) {

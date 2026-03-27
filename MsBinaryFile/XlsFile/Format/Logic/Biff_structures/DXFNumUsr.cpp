@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 DXFNumUsr::DXFNumUsr()
 {
 }
-
-
 BiffStructurePtr DXFNumUsr::clone()
 {
 	return BiffStructurePtr(new DXFNumUsr(*this));
 }
-
-
 void DXFNumUsr::load(CFRecord& record)
 {
 	record >> cb;
@@ -65,7 +59,5 @@ void DXFNumUsr::save(CFRecord& record)
     record << cb;
     record.skipNunBytes(cb - 2);
 }
-
-
 } // namespace XLS
 

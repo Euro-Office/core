@@ -14,15 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/ftsynth.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftoutln.h>
 #include <freetype/ftbitmap.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -31,8 +27,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  synth
-
-
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -48,8 +42,6 @@
   {
     FT_Matrix    transform;
     FT_Outline*  outline;
-
-
     if ( !slot )
       return;
 
@@ -72,8 +64,6 @@
 
     FT_Outline_Transform( outline, &transform );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -81,8 +71,6 @@
   /****                                                                 ****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* documentation is in ftsynth.h */
 
   FT_EXPORT_DEF( void )
@@ -92,8 +80,6 @@
     FT_Face     face;
     FT_Error    error;
     FT_Pos      xstr, ystr;
-
-
     if ( !slot )
       return;
 
@@ -157,6 +143,4 @@
     if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
       slot->bitmap_top += (FT_Int)( ystr >> 6 );
   }
-
-
 /* END */

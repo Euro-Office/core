@@ -34,27 +34,19 @@
 
 namespace XLS
 {
-
-
 FeatProtection::FeatProtection()
 :	sdContainer_set(false)
 {
 }
-
-
 FeatProtection::FeatProtection(CFRecord& record)
 :	sdContainer_set(false)
 {
 	load(record);
 }
-
-
 BiffStructurePtr FeatProtection::clone()
 {
 	return BiffStructurePtr(new FeatProtection(*this));
 }
-
-
 void FeatProtection::load(CFRecord& record)
 {
 	_UINT32 flags;
@@ -67,7 +59,5 @@ void FeatProtection::load(CFRecord& record)
 		sdContainer_set = true;
 	}
 }
-
-
 } // namespace XLS
 

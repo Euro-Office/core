@@ -77,8 +77,6 @@ png_create_read_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
 
    return png_ptr;
 }
-
-
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 /* Read the information before the actual image data.  This has been
  * changed in v0.90 to allow reading a file that already has the magic
@@ -1024,8 +1022,6 @@ png_set_read_status_fn(png_structrp png_ptr, png_read_status_ptr read_row_fn)
 
    png_ptr->read_row_fn = read_row_fn;
 }
-
-
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI

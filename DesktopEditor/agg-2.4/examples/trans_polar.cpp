@@ -10,15 +10,9 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 namespace agg
 {
-
-
     template<class ColorT, class Ctrl, class Pipeline> class transformed_control
     {
     public:
@@ -36,10 +30,6 @@ namespace agg
         Ctrl&     m_ctrl;
         Pipeline& m_pipeline;
     };
-
-
-
-    
     class trans_polar
     {
     public:
@@ -76,29 +66,7 @@ namespace agg
         double m_translation_y;
         double m_spiral;
     };
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -129,18 +97,12 @@ public:
         m_slider_base_y.range(50.0, 200.0);
         m_slider_base_y.value(120.0);
     }
-
-
     virtual ~the_application()
     {
     }
-
-
     virtual void on_init()
     {
     }
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<agg::pixfmt_bgr24> ren_base;
@@ -158,8 +120,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_slider1);
         agg::render_ctrl(ras, sl, rb, m_slider_spiral);
         agg::render_ctrl(ras, sl, rb, m_slider_base_y);
- 
-
         typedef agg::conv_segmentator<agg::slider_ctrl<agg::rgba8> > conv_segmentator_type;
         typedef agg::conv_transform<conv_segmentator_type, agg::trans_polar> conv_transform_type;
 
@@ -176,15 +136,9 @@ public:
         agg::transformed_control<agg::rgba8, 
                                  agg::slider_ctrl<agg::rgba8>, 
                                  conv_transform_type>  ctrl(m_slider1, pipeline);
-
-
         agg::render_ctrl(ras, sl, rb, ctrl);
     }
-
-
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);

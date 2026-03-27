@@ -30,8 +30,6 @@
  */
 
 #include "opj_includes.h"
-
-
 /*
  * Write CPTR Codestream finder box
  *
@@ -42,10 +40,6 @@
 
 void opj_write_cptr(int coff, int clen, opj_stream_private_t *cio,
                     opj_event_mgr_t * p_manager);
-
-
-
-
 
 int opj_write_cidx(int offset, opj_stream_private_t *cio,
                    opj_codestream_info_t cstr_info, int j2klen,
@@ -69,8 +63,6 @@ int opj_write_cidx(int offset, opj_stream_private_t *cio,
         if (i) {
             opj_stream_seek(cio, lenp, p_manager);
         }
-
-
         lenp = opj_stream_tell(cio);
 
         opj_stream_skip(cio, 4, p_manager); /* L [at the end] */
@@ -123,16 +115,12 @@ int opj_write_cidx(int offset, opj_stream_private_t *cio,
     return (int)len;
 }
 
-
-
 void opj_write_cptr(int coff, int clen, opj_stream_private_t *cio,
                     opj_event_mgr_t * p_manager)
 {
     OPJ_BYTE l_data_header [3 * 8];
     OPJ_UINT32 len;
     OPJ_OFF_T lenp;
-
-
     lenp = opj_stream_tell(cio);
     opj_stream_skip(cio, 4, p_manager);                /* L [at the end]     */
     opj_write_bytes(l_data_header, JPIP_CPTR, 4);    /* T                  */
@@ -151,8 +139,6 @@ void opj_write_cptr(int coff, int clen, opj_stream_private_t *cio,
     opj_stream_seek(cio, lenp + len, p_manager);
 
 }
-
-
 
 void opj_write_manf(int second,
                     int v,
@@ -187,8 +173,6 @@ void opj_write_manf(int second,
     opj_stream_write_data(cio, l_data_header, 4, p_manager);
     opj_stream_seek(cio, lenp + len, p_manager);
 }
-
-
 int opj_write_mainmhix(int coff, opj_codestream_info_t cstr_info,
                        opj_stream_private_t *cio,
                        opj_event_mgr_t * p_manager)

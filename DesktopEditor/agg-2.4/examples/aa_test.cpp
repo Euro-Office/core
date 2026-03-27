@@ -15,11 +15,7 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = false };
-
-
 
 typedef agg::gamma_lut<agg::int8u, agg::int8u, 8, 8>        gamma_lut_type;
 typedef agg::pixfmt_bgr24_gamma<gamma_lut_type>             pixfmt_type;
@@ -35,10 +31,6 @@ inline double frand(double x)
 { 
     return ((((rand() << 15) | rand()) & 0x3FFFFFFF) % 1000000) * x / 1000000.0;
 }
- 
- 
-
-
 class simple_vertex_source
 {
 public:
@@ -46,14 +38,10 @@ public:
     { 
         m_cmd[0] = agg::path_cmd_stop;
     }
-
-
     simple_vertex_source(double x1, double y1, double x2, double y2)
     {
         init(x1, y1, x2, y2);
     }
-
-
     simple_vertex_source(double x1, double y1, 
                          double x2, double y2,
                          double x3, double y3)
@@ -74,8 +62,6 @@ public:
         m_cmd[2] = agg::path_cmd_stop;
     }
 
-
-
     void init(double x1, double y1, 
               double x2, double y2,
               double x3, double y3)
@@ -95,8 +81,6 @@ public:
         m_cmd[3] = agg::path_cmd_end_poly | agg::path_flags_close;
         m_cmd[4] = agg::path_cmd_stop;
     }
-
-
     void rewind(unsigned)
     {
         m_count = 0;
@@ -116,10 +100,6 @@ private:
     double   m_y[8];
     unsigned m_cmd[8];
 };
-
-
-
-
 
 template<class Ras, class Ren, class Scanline> class dashed_line
 {
@@ -164,8 +144,6 @@ private:
     agg::conv_stroke<agg::conv_dash<simple_vertex_source> > m_dash_stroke;
 };
 
-
-
 // Calculate the affine transformation matrix for the linear gradient 
 // from (x1, y1) to (x2, y2). gradient_d2 is the "base" to scale the
 // gradient. Here d1 must be 0.0, and d2 must equal gradient_d2.
@@ -182,8 +160,6 @@ void calc_linear_gradient_transform(double x1, double y1, double x2, double y2,
     mtx *= agg::trans_affine_translation(x1 + 0.5, y1 + 0.5);
     mtx.invert();
 }
-
-
 // A simple function to form the gradient color array 
 // consisting of 3 colors, "begin", "middle", "end"
 //---------------------------------------------------
@@ -198,12 +174,6 @@ void fill_color_array(ColorArrayT& array,
         array[i] = begin.gradient(end, i / 255.0);
     }
 }
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
     gamma_lut_type              m_gamma;
@@ -220,18 +190,12 @@ public:
         m_slider_gamma.value(1.6);
         m_slider_gamma.label("Gamma=%4.3f");
     }
-
-
     virtual ~the_application()
     {
     }
-
-
     virtual void on_init()
     {
     }
-
-
     virtual void on_draw()
     {
         pixfmt_type pixf(rbuf_window(), m_gamma);
@@ -241,8 +205,6 @@ public:
         rasterizer_type ras;
 
         ren_base.clear(agg::rgba(0,0,0));
-
-
         // gamma correction
         //ras.gamma(agg::gamma_power());
         m_gamma.gamma(m_slider_gamma.value());
@@ -266,8 +228,6 @@ public:
                       cx, cy, 
                       1.0, (i < 90) ? i : 0.0);
         }
-
-
         typedef agg::gradient_x gradient_func_type;
         typedef agg::span_interpolator_linear<> interpolator_type;
         typedef agg::span_allocator<color_type> span_allocator_type;
@@ -315,8 +275,6 @@ public:
             ras.reset();
             ras.add_path(ell);
             agg::render_scanlines(ras, sl, ren_sl);
-            
-
             // fractional point sizes 0..2
             //----------------
             ell.init(18 + i * 4 + 0.5, 33 + 0.5, 
@@ -325,8 +283,6 @@ public:
             ras.reset();
             ras.add_path(ell);
             agg::render_scanlines(ras, sl, ren_sl);
-
-
             // fractional point positioning
             //---------------
             ell.init(18 + i * 4 + (i-1) / 10.0 + 0.5, 
@@ -335,8 +291,6 @@ public:
             ras.reset();
             ras.add_path(ell);
             agg::render_scanlines(ras, sl, ren_sl);
-
-
             // integral line widths 1..20
             //----------------
             fill_color_array(gradient_colors, 
@@ -349,8 +303,6 @@ public:
             y2 = 100.5;
             calc_linear_gradient_transform(x1, y1, x2, y2, gradient_mtx);
             dash_gradient.draw(x1, y1, x2, y2, i, 0);
-
-
             fill_color_array(gradient_colors, 
                              agg::rgba(1,0,0), 
                              agg::rgba(0,0,1));
@@ -363,8 +315,6 @@ public:
             y2 = 107;
             calc_linear_gradient_transform(x1, y1, x2, y2, gradient_mtx);
             dash_gradient.draw(x1, y1, x2, y2, 1.0, 0);
-
-
             // fractional line lengths V (red/blue)
             //---------------
             x1 = 18 + i * 4;
@@ -385,8 +335,6 @@ public:
             y2 = 120 + (i - 1) * 3.1;
             calc_linear_gradient_transform(x1, y1, x2, y2, gradient_mtx);
             dash_gradient.draw(x1, y1, x2, y2, 1.0, 0);
-
-
             // fractional line width 2..0 (green)
             fill_color_array(gradient_colors, 
                              agg::rgba(0,1,0), 
@@ -408,8 +356,6 @@ public:
             y2 = 119 + i * 3;
             calc_linear_gradient_transform(x1, y1, x2, y2, gradient_mtx);
             dash_gradient.draw(x1, y1, x2, y2, 2.0 - (i - 1) / 10.0, 3.0);
-
-
             ren_sl.color(agg::rgba(1,1,1));
             if(i <= 10)
             {
@@ -430,8 +376,6 @@ public:
                       18.5 + i * 4 + (i - 1) / 10.0, 186,
                       1.0, 0);
         }
-
-
         // Triangles
         //---------------
         for (i = 1; i <= 13; i++) 
@@ -450,14 +394,10 @@ public:
             ras.line_to_d(width() - 20,  height() - 20 - i * (i + 2));
             agg::render_scanlines(ras, sl, ren_gradient);
         }
-
-
         // Reset AA Gamma and render the controls
         ras.gamma(agg::gamma_power(1.0));
         agg::render_ctrl(ras, sl, ren_base, m_slider_gamma);
     }
-
-
 
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -535,8 +475,6 @@ public:
         }
         double t2 = elapsed_time();
 
-
-
         typedef agg::span_gouraud_rgba<color_type> gouraud_span_gen_type;
         typedef agg::renderer_scanline_aa<renderer_base_type, 
                                           span_allocator_type,
@@ -544,8 +482,6 @@ public:
         
         gouraud_span_gen_type span_gouraud;
         renderer_gouraud_type ren_gouraud(ren_base, span_allocator, span_gouraud);
-
-
         start_timer();
         for(i = 0; i < 2000; i++)
         {
@@ -571,10 +507,6 @@ public:
         message(buf);
         update_window();
     }
-
-
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
     }
@@ -583,8 +515,6 @@ public:
     {
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -596,5 +526,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

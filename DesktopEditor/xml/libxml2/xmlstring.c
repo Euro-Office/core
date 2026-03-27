@@ -600,8 +600,6 @@ xmlStrVPrintf(xmlChar *buf, int len, const char *msg, va_list ap) {
  * I hope we won't use values > 0xFFFF anytime soon !                   *
  *                                                                      *
  ************************************************************************/
-
-
 /**
  * xmlUTF8Size:
  * @utf: pointer to the UTF8 character
@@ -850,8 +848,6 @@ xmlUTF8Strsize(const xmlChar *utf, int len) {
     }
     return (ptr - utf);
 }
-
-
 /**
  * xmlUTF8Strndup:
  * @utf:  the input UTF8 *

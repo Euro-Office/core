@@ -85,8 +85,6 @@
 
 #include <string.h>
 #include "allheaders.h"
-
-
 /*--------------------------------------------------------------------*
  *                     FPix Create/copy/destroy                       *
  *--------------------------------------------------------------------*/
@@ -128,8 +126,6 @@ FPIX       *fpixd;
 
     return fpixd;
 }
-
-
 /*!
  *  fpixCreateTemplate()
  *
@@ -157,8 +153,6 @@ FPIX    *fpixd;
     fpixCopyResolution(fpixd, fpixs);
     return fpixd;
 }
-
-
 /*!
  *  fpixClone()
  *
@@ -179,8 +173,6 @@ fpixClone(FPIX  *fpix)
 
     return fpix;
 }
-
-
 /*!
  *  fpixCopy()
  *
@@ -247,8 +239,6 @@ l_float32  *datas, *datad;
     memcpy((char*)datad, (char*)datas, bytes);
     return fpixd;
 }
-
-
 /*!
  *  fpixResizeImageData()
  *
@@ -290,8 +280,6 @@ l_float32  *data;
     fpixSetData(fpixd, data);
     return 0;
 }
-
-
 /*!
  *  fpixDestroy()
  *
@@ -329,8 +317,6 @@ FPIX       *fpix;
     *pfpix = NULL;
     return;
 }
-
-
 /*--------------------------------------------------------------------*
  *                          FPix  Accessors                           *
  *--------------------------------------------------------------------*/
@@ -354,8 +340,6 @@ fpixGetDimensions(FPIX     *fpix,
     if (ph) *ph = fpix->h;
     return 0;
 }
-
-
 /*!
  *  fpixSetDimensions()
  *
@@ -376,8 +360,6 @@ fpixSetDimensions(FPIX     *fpix,
     fpix->h = h;
     return 0;
 }
-
-
 l_int32
 fpixGetWpl(FPIX  *fpix)
 {
@@ -387,8 +369,6 @@ fpixGetWpl(FPIX  *fpix)
         return ERROR_INT("fpix not defined", procName, 1);
     return fpix->wpl;
 }
-
-
 l_int32
 fpixSetWpl(FPIX    *fpix,
            l_int32  wpl)
@@ -401,8 +381,6 @@ fpixSetWpl(FPIX    *fpix,
     fpix->wpl = wpl;
     return 0;
 }
-
-
 l_int32
 fpixGetRefcount(FPIX  *fpix)
 {
@@ -412,8 +390,6 @@ fpixGetRefcount(FPIX  *fpix)
         return ERROR_INT("fpix not defined", procName, UNDEF);
     return fpix->refcount;
 }
-
-
 l_int32
 fpixChangeRefcount(FPIX    *fpix,
                    l_int32  delta)
@@ -426,8 +402,6 @@ fpixChangeRefcount(FPIX    *fpix,
     fpix->refcount += delta;
     return 0;
 }
-
-
 l_int32
 fpixGetResolution(FPIX     *fpix,
                   l_int32  *pxres,
@@ -441,8 +415,6 @@ fpixGetResolution(FPIX     *fpix,
     if (pyres) *pyres = fpix->yres;
     return 0;
 }
-
-
 l_int32
 fpixSetResolution(FPIX    *fpix,
                   l_int32  xres,
@@ -457,8 +429,6 @@ fpixSetResolution(FPIX    *fpix,
     fpix->yres = yres;
     return 0;
 }
-
-
 l_int32
 fpixCopyResolution(FPIX  *fpixd,
                    FPIX  *fpixs)
@@ -473,8 +443,6 @@ l_int32  xres, yres;
     fpixSetResolution(fpixd, xres, yres);
     return 0;
 }
-
-
 l_float32 *
 fpixGetData(FPIX  *fpix)
 {
@@ -484,8 +452,6 @@ fpixGetData(FPIX  *fpix)
         return (l_float32 *)ERROR_PTR("fpix not defined", procName, NULL);
     return fpix->data;
 }
-
-
 l_int32
 fpixSetData(FPIX       *fpix,
             l_float32  *data)
@@ -498,8 +464,6 @@ fpixSetData(FPIX       *fpix,
     fpix->data = data;
     return 0;
 }
-
-
 /*!
  *  fpixGetPixel()
  *
@@ -533,8 +497,6 @@ l_int32  w, h;
     *pval = *(fpix->data + y * w + x);
     return 0;
 }
-
-
 /*!
  *  fpixSetPixel()
  *
@@ -565,8 +527,6 @@ l_int32  w, h;
     *(fpix->data + y * w + x) = val;
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                     DPix Create/copy/destroy                       *
  *--------------------------------------------------------------------*/
@@ -608,8 +568,6 @@ DPIX       *dpix;
 
     return dpix;
 }
-
-
 /*!
  *  dpixCreateTemplate()
  *
@@ -637,8 +595,6 @@ DPIX    *dpixd;
     dpixCopyResolution(dpixd, dpixs);
     return dpixd;
 }
-
-
 /*!
  *  dpixClone()
  *
@@ -659,8 +615,6 @@ dpixClone(DPIX  *dpix)
 
     return dpix;
 }
-
-
 /*!
  *  dpixCopy()
  *
@@ -727,8 +681,6 @@ l_float64  *datas, *datad;
     memcpy((char*)datad, (char*)datas, bytes);
     return dpixd;
 }
-
-
 /*!
  *  dpixResizeImageData()
  *
@@ -764,8 +716,6 @@ l_float64  *data;
     dpixSetData(dpixd, data);
     return 0;
 }
-
-
 /*!
  *  dpixDestroy()
  *
@@ -803,8 +753,6 @@ DPIX       *dpix;
     *pdpix = NULL;
     return;
 }
-
-
 /*--------------------------------------------------------------------*
  *                          DPix  Accessors                           *
  *--------------------------------------------------------------------*/
@@ -828,8 +776,6 @@ dpixGetDimensions(DPIX     *dpix,
     if (ph) *ph = dpix->h;
     return 0;
 }
-
-
 /*!
  *  dpixSetDimensions()
  *
@@ -850,8 +796,6 @@ dpixSetDimensions(DPIX     *dpix,
     dpix->h = h;
     return 0;
 }
-
-
 l_int32
 dpixGetWpl(DPIX  *dpix)
 {
@@ -861,8 +805,6 @@ dpixGetWpl(DPIX  *dpix)
         return ERROR_INT("dpix not defined", procName, 1);
     return dpix->wpl;
 }
-
-
 l_int32
 dpixSetWpl(DPIX    *dpix,
            l_int32  wpl)
@@ -875,8 +817,6 @@ dpixSetWpl(DPIX    *dpix,
     dpix->wpl = wpl;
     return 0;
 }
-
-
 l_int32
 dpixGetRefcount(DPIX  *dpix)
 {
@@ -886,8 +826,6 @@ dpixGetRefcount(DPIX  *dpix)
         return ERROR_INT("dpix not defined", procName, UNDEF);
     return dpix->refcount;
 }
-
-
 l_int32
 dpixChangeRefcount(DPIX    *dpix,
                    l_int32  delta)
@@ -900,8 +838,6 @@ dpixChangeRefcount(DPIX    *dpix,
     dpix->refcount += delta;
     return 0;
 }
-
-
 l_int32
 dpixGetResolution(DPIX     *dpix,
                   l_int32  *pxres,
@@ -915,8 +851,6 @@ dpixGetResolution(DPIX     *dpix,
     if (pyres) *pyres = dpix->yres;
     return 0;
 }
-
-
 l_int32
 dpixSetResolution(DPIX    *dpix,
                   l_int32  xres,
@@ -931,8 +865,6 @@ dpixSetResolution(DPIX    *dpix,
     dpix->yres = yres;
     return 0;
 }
-
-
 l_int32
 dpixCopyResolution(DPIX  *dpixd,
                    DPIX  *dpixs)
@@ -947,8 +879,6 @@ l_int32  xres, yres;
     dpixSetResolution(dpixd, xres, yres);
     return 0;
 }
-
-
 l_float64 *
 dpixGetData(DPIX  *dpix)
 {
@@ -958,8 +888,6 @@ dpixGetData(DPIX  *dpix)
         return (l_float64 *)ERROR_PTR("dpix not defined", procName, NULL);
     return dpix->data;
 }
-
-
 l_int32
 dpixSetData(DPIX       *dpix,
             l_float64  *data)
@@ -972,8 +900,6 @@ dpixSetData(DPIX       *dpix,
     dpix->data = data;
     return 0;
 }
-
-
 /*!
  *  dpixGetPixel()
  *
@@ -1007,8 +933,6 @@ l_int32  w, h;
     *pval = *(dpix->data + y * w + x);
     return 0;
 }
-
-
 /*!
  *  dpixSetPixel()
  *
@@ -1039,8 +963,6 @@ l_int32  w, h;
     *(dpix->data + y * w + x) = val;
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                       FPix serialized I/O                          *
  *--------------------------------------------------------------------*/
@@ -1071,8 +993,6 @@ FPIX  *fpix;
     fclose(fp);
     return fpix;
 }
-
-
 /*!
  *  fpixReadStream()
  *
@@ -1108,8 +1028,6 @@ FPIX       *fpix;
     fpixEndianByteSwap(fpix, fpix);
     return fpix;
 }
-
-
 /*!
  *  fpixWrite()
  *
@@ -1138,8 +1056,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  fpixWriteStream()
  *
@@ -1175,8 +1091,6 @@ FPIX       *fpixt;
     fpixDestroy(&fpixt);
     return 0;
 }
-
-
 /*!
  *  fpixEndianByteSwap()
  *
@@ -1235,8 +1149,6 @@ fpixEndianByteSwap(FPIX  *fpixd,
 
 #endif   /* L_BIG_ENDIAN */
 }
-
-
 /*--------------------------------------------------------------------*
  *                       DPix serialized I/O                          *
  *--------------------------------------------------------------------*/
@@ -1267,8 +1179,6 @@ DPIX  *dpix;
     fclose(fp);
     return dpix;
 }
-
-
 /*!
  *  dpixReadStream()
  *
@@ -1304,8 +1214,6 @@ DPIX       *dpix;
     dpixEndianByteSwap(dpix, dpix);
     return dpix;
 }
-
-
 /*!
  *  dpixWrite()
  *
@@ -1334,8 +1242,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  dpixWriteStream()
  *
@@ -1371,8 +1277,6 @@ DPIX       *dpixt;
     dpixDestroy(&dpixt);
     return 0;
 }
-
-
 /*!
  *  dpixEndianByteSwap()
  *
@@ -1431,8 +1335,6 @@ dpixEndianByteSwap(DPIX  *dpixd,
 
 #endif   /* L_BIG_ENDIAN */
 }
-
-
 /*--------------------------------------------------------------------*
  *                 Print FPix (subsampled, for debugging)             *
  *--------------------------------------------------------------------*/

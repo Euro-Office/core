@@ -66,8 +66,6 @@
 // -- Implements class PIXMAP
 // Author: Leon Bottou 07/1997
 
-
-
 #include "GPixmap.h"
 
 #include "GString.h"
@@ -81,8 +79,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -90,13 +86,9 @@ namespace DJVU {
 #endif
 #endif
 
-
-
 //////////////////////////////////////////////////
 // ------- predefined colors
 //////////////////////////////////////////////////
-
-
 const GPixel GPixel::WHITE = { 255, 255, 255 };
 const GPixel GPixel::BLACK = {   0,   0,   0 };
 //< Changed for MacDjView project
@@ -113,13 +105,9 @@ const GPixel GPixel::RED   = {   0,   0, 255 };
 //< Changed for MacDjView project
 #endif
 //>
-
-
 //////////////////////////////////////////////////
 // ----- utilities
 //////////////////////////////////////////////////
-
-
 static const GPixel *
 new_gray_ramp(int grays,GPixel *ramp)
 {
@@ -135,22 +123,16 @@ new_gray_ramp(int grays,GPixel *ramp)
     }
   return ramp;
 }
-
-
 static inline int
 mini(int x, int y) 
 { 
   return (x < y ? x : y);
 }
-
-
 static inline int
 maxi(int x, int y) 
 { 
   return (x > y ? x : y);
 }
-
-
 static inline void 
 euclidian_ratio(int a, int b, int &q, int &r)
 {
@@ -162,8 +144,6 @@ euclidian_ratio(int a, int b, int &q, int &r)
     r += b;
   }
 }
-
-
 //////////////////////////////////////////////////
 // global lock used by some rare operations
 //////////////////////////////////////////////////
@@ -172,13 +152,9 @@ static GMonitor &pixmap_monitor() {
   static GMonitor xpixmap_monitor;
   return xpixmap_monitor;
 }
-
-
 //////////////////////////////////////////////////
 // constructors and destructors
 //////////////////////////////////////////////////
-
-
 GPixmap::~GPixmap()
 {
   delete [] pixels_data;
@@ -286,13 +262,9 @@ GPixmap::GPixmap(const GPixmap &ref, const GRect &rect)
   G_ENDCATCH;
 }
 
-
-
 //////////////////////////////////////////////////
 // Initialization
 //////////////////////////////////////////////////
-
-
 void 
 GPixmap::init(int arows, int acolumns, const GPixel *filler)
 {
@@ -311,8 +283,6 @@ GPixmap::init(int arows, int acolumns, const GPixel *filler)
     }
   }
 }
-
-
 void 
 GPixmap::init(const GBitmap &ref, const GPixel *userramp)
 {
@@ -342,8 +312,6 @@ GPixmap::init(const GBitmap &ref, const GPixel *userramp)
 //      delete [] (GPixel*)ramp;
   }
 }
-
-
 void 
 GPixmap::init(const GBitmap &ref, const GRect &rect, const GPixel *userramp)
 {
@@ -378,8 +346,6 @@ GPixmap::init(const GBitmap &ref, const GRect &rect, const GPixel *userramp)
 //      delete [] (GPixel*) ramp;
   }
 }
-
-
 void 
 GPixmap::init(const GPixmap &ref)
 {
@@ -395,8 +361,6 @@ GPixmap::init(const GPixmap &ref)
     }
   }
 }
-
-
 void 
 GPixmap::init(const GPixmap &ref, const GRect &rect)
 {
@@ -417,8 +381,6 @@ GPixmap::init(const GPixmap &ref, const GRect &rect)
     }
   }
 }
-
-
 void 
 GPixmap::donate_data(GPixel *data, int w, int h)
 {
@@ -428,8 +390,6 @@ GPixmap::donate_data(GPixel *data, int w, int h)
   nrowsize = w;
   pixels_data=pixels=data;
 }
-
-
 GPixel *
 GPixmap::take_data(size_t &offset)
 {
@@ -439,13 +399,9 @@ GPixmap::take_data(size_t &offset)
   return ret;
 }
 
-
-
 //////////////////////////////////////////////////
 // Save and load ppm files
 //////////////////////////////////////////////////
-
-
 static unsigned int 
 read_integer(char &c, ByteStream &bs)
 {
@@ -470,8 +426,6 @@ read_integer(char &c, ByteStream &bs)
     }
   return x;
 }
-
-
 void 
 GPixmap::init(ByteStream &bs)
 {
@@ -598,8 +552,6 @@ GPixmap::init(ByteStream &bs)
         }
     }
 }
-
-
 void 
 GPixmap::save_ppm(ByteStream &bs, int raw) const
 {
@@ -640,15 +592,9 @@ GPixmap::save_ppm(ByteStream &bs, int raw) const
         }
     }
 }
-
-
-
-
 //////////////////////////////////////////////////
 // Color correction
 //////////////////////////////////////////////////
-
-
 static void
 color_correction_table(double gamma, unsigned char gtable[256] )
 {
@@ -724,8 +670,6 @@ GPixmap::color_correct(double gamma_correction)
     }
   }
 }
-
-
 void 
 GPixmap::color_correct(double gamma_correction, GPixel *pix, int npixels)
 {
@@ -745,13 +689,9 @@ GPixmap::color_correct(double gamma_correction, GPixel *pix, int npixels)
     }
 }
 
-
-
 //////////////////////////////////////////////////
 // Dithering
 //////////////////////////////////////////////////
-
-
 void
 GPixmap::ordered_666_dither(int xmin, int ymin)
 {
@@ -858,13 +798,9 @@ GPixmap::ordered_32k_dither(int xmin, int ymin)
     }
   }
 }
-
-
 //////////////////////////////////////////////////
 // Upsample Downsample
 //////////////////////////////////////////////////
-
-
 void  
 GPixmap::downsample(const GPixmap *src, int factor, const GRect *pdr)
 {
@@ -896,8 +832,6 @@ GPixmap::downsample(const GPixmap *src, int factor, const GRect *pdr)
   // determine starting and ending points in source rectangle
   int sy = rect.ymin * factor;
   int sxz = rect.xmin * factor;
-
-
   // loop over source rows
   const GPixel *sptr = (*src)[sy];
   GPixel *dptr = (*this)[0];
@@ -998,8 +932,6 @@ GPixmap::upsample(const GPixmap *src, int factor, const GRect *pdr)
     }
   }
 }
-
-
 static inline void
 downsample_4x4_to_3x3 (const GPixel *s, int sadd, GPixel *d, int dadd)
 {
@@ -1037,8 +969,6 @@ downsample_4x4_to_3x3 (const GPixel *s, int sadd, GPixel *d, int dadd)
   d[2].g = ( 11*y[3].g + 2*(y[2].g + x[3].g ) + x[2].g  + 8) >> 4;
   d[2].r = ( 11*y[3].r + 2*(y[2].r + x[3].r ) + x[2].r  + 8) >> 4;
 }
-
-
 static inline void
 upsample_2x2_to_3x3 (const GPixel *s, int sadd, GPixel *d, int dadd)
 {
@@ -1066,8 +996,6 @@ upsample_2x2_to_3x3 (const GPixel *s, int sadd, GPixel *d, int dadd)
   d[1].r = (y[0].r + y[1].r + 1) >> 1;
   d[2] = y[1];
 }
-
-
 static inline void
 copy_to_partial(int w, int h,
                 const GPixel *s, int sadd,
@@ -1093,8 +1021,6 @@ copy_to_partial(int w, int h,
       d += dadd;
     }
 }
-
-
 static inline void
 copy_line(const GPixel *s, int smin, int smax,
           GPixel *d, int dmin, int dmax)
@@ -1116,8 +1042,6 @@ copy_line(const GPixel *s, int smin, int smax,
     x++; 
   }
 }
-
-
 static inline void
 copy_from_partial(int w, int h,
                   const GPixel *s, int sadd, int xmin, int xmax, int ymin, int ymax,
@@ -1146,10 +1070,6 @@ copy_from_partial(int w, int h,
       d += dadd;
     }
 }
-
-
-
-
 
 void  
 GPixmap::downsample43(const GPixmap *src, const GRect *pdr)
@@ -1239,8 +1159,6 @@ GPixmap::downsample43(const GPixmap *src, const GRect *pdr)
     sptr += s4add;
   }
 }
-
-
 void  
 GPixmap::upsample23(const GPixmap *src, const GRect *pdr)
 {
@@ -1329,13 +1247,9 @@ GPixmap::upsample23(const GPixmap *src, const GRect *pdr)
     sptr += s2add;
   }
 }
-
-
 //////////////////////////////////////////////////
 // Blitting and attenuating
 //////////////////////////////////////////////////
-
-
 static unsigned char clip[512];
 static bool clipok = false;
 
@@ -1346,8 +1260,6 @@ compute_clip()
   for (unsigned int i=0; i<sizeof(clip); i++)
     clip[i] = (i<256 ? i : 255);
 }
-
-
 void 
 GPixmap::attenuate(const GBitmap *bm, int xpos, int ypos)
 {
@@ -1396,8 +1308,6 @@ GPixmap::attenuate(const GBitmap *bm, int xpos, int ypos)
       src += bm->rowsize();
     }
 }
-
-
 void 
 GPixmap::blit(const GBitmap *bm, int xpos, int ypos, const GPixel *color)
 {
@@ -1452,8 +1362,6 @@ GPixmap::blit(const GBitmap *bm, int xpos, int ypos, const GPixel *color)
       src += bm->rowsize();
     }
 }
-
-
 void 
 GPixmap::blit(const GBitmap *bm, int xpos, int ypos, const GPixmap *color)
 {
@@ -1510,8 +1418,6 @@ GPixmap::blit(const GBitmap *bm, int xpos, int ypos, const GPixmap *color)
     }
 }
 
-
-
 void 
 GPixmap::blend(const GBitmap *bm, int xpos, int ypos, const GPixmap *color)
 {
@@ -1567,10 +1473,6 @@ GPixmap::blend(const GBitmap *bm, int xpos, int ypos, const GPixmap *color)
       src2 += color->rowsize();
     }
 }
-
-
-
-
 void 
 GPixmap::stencil(const GBitmap *bm, 
                 const GPixmap *pm, int pms, const GRect *pmr, 
@@ -1722,8 +1624,6 @@ GP<GPixmap> GPixmap::rotate(int count)
   }
   return newpixmap;
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

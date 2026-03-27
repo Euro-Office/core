@@ -38,19 +38,13 @@ namespace XLS
 ChartFormat::ChartFormat()
 {
 }
-
-
 ChartFormat::~ChartFormat()
 {
 }
-
-
 BaseObjectPtr ChartFormat::clone()
 {
 	return BaseObjectPtr(new ChartFormat(*this));
 }
-
-
 void ChartFormat::readFields(CFRecord& record)
 {
 	record.skipNunBytes(16); // reserved

@@ -58,6 +58,4 @@ struct L_Queue
 
 };
 typedef struct L_Queue L_QUEUE;
-
-
 #endif  /* LEPTONICA_QUEUE_H */

@@ -101,16 +101,12 @@
 #endif 
 #endif
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 GBaseString::~GBaseString() {}
 GNativeString::~GNativeString() {}
 GUTF8String::~GUTF8String() {}
@@ -143,8 +139,6 @@ mbrlen(const char *s, size_t n, mbstate_t *)
   return mblen(s,n);
 }
 #endif // !HAS_MBSTATE || HAS_WCHAR
-
-
 GP<GStringRep>
 GStringRep::upcase(void) const
 { return tocase(giswupper,gtowupper); }
@@ -1483,8 +1477,6 @@ GStringRep::toEscaped( const bool tosevenbit ) const
 //  DEBUG_MSG( "Escaped string is '" << ret << "'\n" );
   return retval;
 }
-
-
 static const GMap<GUTF8String,GUTF8String> &
 BasicMap( void )
 {
@@ -2430,8 +2422,6 @@ GStringRep::getUCS4(unsigned long &w, const int from) const
   } 
   return retval;
 }
-
-
 unsigned long
 GStringRep::UTF8::getValidUCS4(const char *&source) const
 {
@@ -2537,8 +2527,6 @@ GStringRep::UTF16toUCS4(
   }
   return retval;
 }
-
-
 //bcr
 
 GUTF8String&
@@ -2742,8 +2730,6 @@ GNativeString::setat(const int n, const char ch)
 }
 
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

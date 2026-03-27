@@ -1069,8 +1069,6 @@ std::wstring anim_transitionFilter::convert_filter()
 		}
 		filter += L"(" + pptx_subtype.value() + L")";
 	}
-		
-
 	return filter;
 }
 
@@ -1790,8 +1788,6 @@ void anim_animate_transform::pptx_convert(oox::pptx_conversion_context& Context)
 
 	if (animate_transform_attlist_.smil_auto_reverse_)
 		autoRev = animate_transform_attlist_.smil_auto_reverse_.value().get();
-		
-
 	if (animate_transform_attlist_.svg_type_)
 	{
 		oox::pptx_animation_context& animationContext = Context.get_slide_context().get_animation_context();

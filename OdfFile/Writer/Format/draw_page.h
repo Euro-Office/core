@@ -40,12 +40,8 @@
 #include "office_elements_create.h"
 
 #include "../../DataTypes/presentationclass.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 class draw_page_attr
 {
 public:
@@ -70,8 +66,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDrawPage;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -93,8 +87,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationFooterDecl;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
     virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -114,8 +106,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationDateTimeDecl;
-    
-
 	_CP_OPT(std::wstring)	presentation_name_;
 	_CP_OPT(std::wstring)	presentation_source_;
 	_CP_OPT(std::wstring)	style_data_style_name_;
@@ -136,8 +126,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typePresentationNotes;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 

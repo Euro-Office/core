@@ -67,8 +67,6 @@ public:
   int page;
   double x0, y0, x1, y1;	// user coords
 };
-
-
 //------------------------------------------------------------------------
 // DisplayState
 //------------------------------------------------------------------------
@@ -166,8 +164,6 @@ private:
 
   GList *selectRects;		// selection rectangles [SelectRect]
 				//   (NULL if there is no selection)
-
-
 };
 
 #endif

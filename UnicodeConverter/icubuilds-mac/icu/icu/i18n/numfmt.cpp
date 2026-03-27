@@ -431,8 +431,6 @@ NumberFormat::format(int64_t number,
     }
 }
 
-
-
 // -------------------------------------
 // Decimal Number format() default implementation 
 // Subclasses do not normally override this function, but rather the DigitList
@@ -535,8 +533,6 @@ UnicodeString& NumberFormat::format(const DigitList &number,
     format(dnum, appendTo, posIter, status);
     return appendTo;
 }
-
-
 
 UnicodeString&
 NumberFormat::format(const DigitList &number,
@@ -1062,8 +1058,6 @@ NumberFormat::createInstance(const Locale& loc, UNumberFormatStyle kind, UErrorC
     }
     return result;
 }
-    
-
 // -------------------------------------
 // Checks if the thousand/10 thousand grouping is used in the
 // NumberFormat instance.
@@ -1204,8 +1198,6 @@ void NumberFormat::getEffectiveCurrency(UChar* result, UErrorCode& ec) const {
 }
 
 //----------------------------------------------------------------------
-
-
 void NumberFormat::setContext(UDisplayContext value, UErrorCode& status)
 {
     if (U_FAILURE(status))
@@ -1216,8 +1208,6 @@ void NumberFormat::setContext(UDisplayContext value, UErrorCode& status)
         status = U_ILLEGAL_ARGUMENT_ERROR;
    }
 }
-
-
 UDisplayContext NumberFormat::getContext(UDisplayContextType type, UErrorCode& status) const
 {
     if (U_FAILURE(status))
@@ -1228,8 +1218,6 @@ UDisplayContext NumberFormat::getContext(UDisplayContextType type, UErrorCode& s
     }
     return fCapitalizationContext;
 }
-
-
 // -------------------------------------
 // Creates the NumberFormat instance of the specified style (number, currency,
 // or percent) for the desired locale.
@@ -1429,8 +1417,6 @@ NumberFormat::makeInstance(const Locale& desiredLocale,
             pattern.setTo(currPattern, u_strlen(currPattern));
         }
     }
-
-
     NumberFormat *f;
     if (ns->isAlgorithmic()) {
         UnicodeString nsDesc;

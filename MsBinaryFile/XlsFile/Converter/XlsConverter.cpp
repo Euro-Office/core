@@ -972,8 +972,6 @@ void XlsConverter::convert(XLS::MSODRAWINGGROUP * mso_drawing)
 
 	//files 
 	convert (dynamic_cast<ODRAW::OfficeArtBStoreContainer*>(mso_group->rgChildRec.m_OfficeArtBStoreContainer.get()));
-
-		
 }
 
 std::wstring XlsConverter::WriteMediaFile(char *data, int size, std::wstring type_ext, int id)

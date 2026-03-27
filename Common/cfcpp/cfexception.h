@@ -58,8 +58,6 @@ protected:
     std::string errorMessage;
     std::wstring werrorMessage;
 };
-
-
 class CFFileFormatException : public CFException
 {
 public:
@@ -118,6 +116,4 @@ public:
     {}
     virtual ~CFItemNotFound() throw () {}
 };
-
-
 }

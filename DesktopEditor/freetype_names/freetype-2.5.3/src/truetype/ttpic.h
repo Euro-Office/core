@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __TTPIC_H__
 #define __TTPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #ifndef FT_CONFIG_OPTION_PIC
@@ -35,8 +31,6 @@ FT_BEGIN_HEADER
 #include FT_SERVICE_MULTIPLE_MASTERS_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
 #include FT_SERVICE_PROPERTIES_H
-
-
   typedef struct  TTModulePIC_
   {
     FT_ServiceDescRec*          tt_services;
@@ -47,8 +41,6 @@ FT_BEGIN_HEADER
     FT_Service_PropertiesRec    tt_service_properties;
 
   } TTModulePIC;
-
-
 #define GET_PIC( lib )                                      \
           ( (TTModulePIC*)((lib)->pic_container.truetype) )
 #define TT_SERVICES_GET                       \
@@ -59,8 +51,6 @@ FT_BEGIN_HEADER
           ( GET_PIC( library )->tt_service_truetype_glyf )
 #define TT_SERVICE_PROPERTIES_GET                       \
           ( GET_PIC( library )->tt_service_properties )
-
-
   /* see ttpic.c for the implementation */
   void
   tt_driver_class_pic_free( FT_Library  library );
@@ -71,11 +61,7 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_PIC */
 
  /* */
-
-
 FT_END_HEADER
 
 #endif /* __TTPIC_H__ */
-
-
 /* END */

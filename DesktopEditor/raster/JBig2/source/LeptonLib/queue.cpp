@@ -56,8 +56,6 @@
 
 static const l_int32  MIN_BUFFER_SIZE = 20;             /* n'importe quoi */
 static const l_int32  INITIAL_BUFFER_ARRAYSIZE = 1024;  /* n'importe quoi */
-
-
 /*--------------------------------------------------------------------------*
  *                         L_Queue create/destroy                           *
  *--------------------------------------------------------------------------*/
@@ -88,8 +86,6 @@ L_QUEUE  *lq;
     lq->nhead = lq->nelem = 0;
     return lq;
 }
-
-
 /*!
  *  lqueueDestroy()
  *
@@ -143,8 +139,6 @@ L_QUEUE  *lq;
 
     return;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                                  Accessors                               *
  *--------------------------------------------------------------------------*/
@@ -191,8 +185,6 @@ lqueueAdd(L_QUEUE  *lq,
 
     return 0;
 }
-
-
 /*!
  *  lqueueExtendArray()
  *
@@ -215,8 +207,6 @@ lqueueExtendArray(L_QUEUE  *lq)
     lq->nalloc = 2 * lq->nalloc;
     return 0;
 }
-
-
 /*!
  *  lqueueRemove()
  *
@@ -249,8 +239,6 @@ void  *item;
     lq->nelem--;
     return item;
 }
-       
-
 /*!
  *  lqueueGetCount()
  *
@@ -267,8 +255,6 @@ lqueueGetCount(L_QUEUE  *lq)
 
     return lq->nelem;
 }
-        
-
 /*---------------------------------------------------------------------*
  *                            Debug output                             *
  *---------------------------------------------------------------------*/

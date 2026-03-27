@@ -2811,8 +2811,6 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			ptr->irstName = m_oName.get();
 		else
 			ptr->fDisplayName = false;
-
-
 		if (m_oNonAutoSortDefault.IsInit())
 			ptr->fNotAutoSortDft = m_oNonAutoSortDefault.get();
 		else 
@@ -7837,8 +7835,6 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
             auto record = writer->getNextRecord(XLSB::rt_EndPivotCacheRecords);
             writer->storeNextRecord(record);
         }
-
-
     }
 	void CPivotCacheRecords::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{

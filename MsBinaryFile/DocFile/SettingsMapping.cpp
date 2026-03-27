@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "SettingsMapping.h"
 #include "../../OfficeCryptReader/source/CryptTransform.h"
 
@@ -271,8 +269,6 @@ namespace DocFileFormat
 		{
 			m_oXmlWriter.WriteString( footnotePr.GetXMLString() );
 		}
-
-
 		writeCompatibilitySettings( dop );
 
 		writeRsidList();

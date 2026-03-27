@@ -73,8 +73,6 @@
 
 #include "styles_list.h"
 #include "style_map.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer { 
 
@@ -148,8 +146,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleDefaultStyle;
-    
-
 	default_style() : content_(getContext()) {}
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
@@ -163,8 +159,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(default_style)
-
-
 //----------------------------------------------------------------------------------------------------
 class draw_gradient : public office_element_impl<draw_gradient>
 {
@@ -269,8 +263,6 @@ public:
 
     static const ElementType type		= typeStyleDrawLayer;
 
-    
-
  	_CP_OPT(std::wstring)			draw_name_;
 	
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
@@ -286,8 +278,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type		= typeStyleDrawLayerSet;
-
-    
 
     office_element_ptr_array	content_;
 	
@@ -462,8 +452,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeMasterStyles;
-    
-
     virtual void create_child_element(  const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
 
@@ -489,8 +477,6 @@ public:
 	_CP_OPT(std::wstring)	draw_style_name_;
     _CP_OPT(std::wstring)	style_next_style_name_;
 };
-
-
 //----------------------------------------------------------------------------------------------------
 class style_master_page;
 typedef boost::shared_ptr<style_master_page> style_master_page_ptr;
@@ -624,8 +610,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleHeaderFirst;
-    
-
 	virtual void serialize(std::wostream & strm);
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
@@ -999,8 +983,6 @@ public:
     office_element_ptr_array content_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_region_right);
-
-
 //  style:region-center
 class style_region_center : public office_element_impl<style_region_center>
 {

@@ -644,8 +644,6 @@ _INT32 ods_table_state::current_column() const
 {
     return current_table_column_;
 }
-
-
 _INT32 ods_table_state::current_row() const
 {
     return current_table_row_;
@@ -1101,8 +1099,6 @@ std::wstring ods_table_state::replace_cell_row(boost::wsmatch const & what)
 		utils::parsing_ref(ref_formula, col_formula, row_formula);col_formula--;//инче отсчет с 1
 	
 		ref_formula = utils::getColAddress(col_formula) + std::to_wstring(row_formula + current_table_row_ - tmp_row_);
-
-
 		return ref_formula;
 	}
     else if (what[2].matched)
@@ -1301,8 +1297,6 @@ void ods_table_state::convert_position(oox_table_position & oox_pos, double & x,
 
 	y = sz_row + oox_pos.row_off;
 }
-
-
 void ods_table_state::set_cell_text(odf_text_context* text_context, bool cash_value)
 {
 	if (text_context == NULL)return;

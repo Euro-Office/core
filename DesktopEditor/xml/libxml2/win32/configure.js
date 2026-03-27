@@ -435,8 +435,6 @@ function genReadme(bname, ver, file)
 	f.WriteLine("                              Igor Zlatkovic (igor@zlatkovic.com)");
 	f.Close();
 }
-
-
 /*
  * main(),
  * Execution begins here.
@@ -565,8 +563,6 @@ for (i = 0; (i < WScript.Arguments.length) && (error == 0); i++) {
 		error = 1;
 	}
 }
-
-
 // If we fail here, it is because the user supplied an unrecognised argument.
 if (error != 0) {
 	usage();
@@ -645,8 +641,6 @@ if (f) {
 }
 fso.CopyFile(confighsrc, configh, true);
 WScript.Echo("Created config.h.");
-
-
 // Display the final configuration. 
 var txtOut = "\nXML processor configuration\n";
 txtOut += "---------------------------\n";

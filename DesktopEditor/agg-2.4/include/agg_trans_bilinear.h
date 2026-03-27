@@ -38,8 +38,6 @@ namespace agg
         {
             quad_to_quad(src, dst);
         }
-
-
         //--------------------------------------------------------------------
         // Direct transformations 
         trans_bilinear(double x1, double y1, double x2, double y2, 
@@ -47,8 +45,6 @@ namespace agg
         {
             rect_to_quad(x1, y1, x2, y2, quad);
         }
-
-
         //--------------------------------------------------------------------
         // Reverse transformations 
         trans_bilinear(const double* quad, 
@@ -56,8 +52,6 @@ namespace agg
         {
             quad_to_rect(quad, x1, y1, x2, y2);
         }
-
-
         //--------------------------------------------------------------------
         // Set the transformations using two arbitrary quadrangles.
         void quad_to_quad(const double* src, const double* dst)
@@ -80,8 +74,6 @@ namespace agg
             }
             m_valid = simul_eq<4, 2>::solve(left, right, m_mtx);
         }
-
-
         //--------------------------------------------------------------------
         // Set the direct transformations, i.e., rectangle -> quadrangle
         void rect_to_quad(double x1, double y1, double x2, double y2, 
@@ -94,8 +86,6 @@ namespace agg
             src[5] = src[7] = y2;
             quad_to_quad(src, quad);
         }
-
-
         //--------------------------------------------------------------------
         // Set the reverse transformations, i.e., quadrangle -> rectangle
         void quad_to_rect(const double* quad, 
@@ -123,8 +113,6 @@ namespace agg
             *x = m_mtx[0][0] + m_mtx[1][0] * xy + m_mtx[2][0] * tx + m_mtx[3][0] * ty;
             *y = m_mtx[0][1] + m_mtx[1][1] * xy + m_mtx[2][1] * tx + m_mtx[3][1] * ty;
         }
-
-
         //--------------------------------------------------------------------
         class iterator_x
         {

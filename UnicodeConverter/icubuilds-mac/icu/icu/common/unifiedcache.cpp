@@ -24,8 +24,6 @@ static const int32_t MAX_EVICT_ITERATIONS = 10;
 
 static int32_t DEFAULT_MAX_UNUSED = 1000;
 static int32_t DEFAULT_PERCENTAGE_OF_IN_USE = 100;
-
-
 U_CDECL_BEGIN
 static UBool U_CALLCONV unifiedcache_cleanup() {
     gCacheInitOnce.reset();
@@ -40,8 +38,6 @@ static UBool U_CALLCONV unifiedcache_cleanup() {
     return TRUE;
 }
 U_CDECL_END
-
-
 U_NAMESPACE_BEGIN
 
 U_CAPI int32_t U_EXPORT2
@@ -290,8 +286,6 @@ void UnifiedCache::_runEvictionSlice() const {
         }
     }
 }
-
-
 // Places a new value and creationStatus in the cache for the given key.
 // On entry, gCacheMutex must be held. key must not exist in the cache. 
 // On exit, value and creation status placed under key. Soft reference added
@@ -489,8 +483,6 @@ UnifiedCache::clearPtr(const SharedObject *&ptr) {
         ptr = NULL;
     }
 }
-
-
 // Fetch value and error code from a particular hash entry.
 // On entry, gCacheMutex must be held. value must be either NULL or must be
 // included in the ref count of the object to which it points.

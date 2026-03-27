@@ -16,8 +16,6 @@
 
 #define I_DOCBUILDER_HEADER \
 [object, uuid("0C07B7E7-86A4-42E1-8E42-2FA961992E0F"), dual, pointer_default(unique)] 
-
-
 #define C_DOCBUILDER_VALUE_HEADER \
 [coclass, uuid("85C41585-25D7-40F1-9CC6-FA17052650F4"), threading(apartment), vi_progid("ONLYOFFICE.BuilderValue"), progid("ONLYOFFICE.BuilderValue.1"), version(1.0)]
 

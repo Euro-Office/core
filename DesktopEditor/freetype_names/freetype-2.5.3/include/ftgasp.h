@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef _FT_GASP_H_
 #define _FT_GASP_H_
 
@@ -27,8 +25,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
   /***************************************************************************
    *
    * @section:
@@ -94,8 +90,6 @@
 #define FT_GASP_DO_GRAY              0x02
 #define FT_GASP_SYMMETRIC_SMOOTHING  0x08
 #define FT_GASP_SYMMETRIC_GRIDFIT    0x10
-
-
   /*************************************************************************
    *
    * @func:
@@ -123,6 +117,4 @@
 /* */
 
 #endif /* _FT_GASP_H_ */
-
-
 /* END */

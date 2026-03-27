@@ -39,13 +39,9 @@ namespace XLS
 Sync::Sync()
 {
 }
-
-
 Sync::~Sync()
 {
 }
-
-
 BaseObjectPtr Sync::clone()
 {
 	return BaseObjectPtr(new Sync(*this));

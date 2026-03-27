@@ -90,8 +90,6 @@ struct _xmlXIncludeCtxt {
 
 static int
 xmlXIncludeDoProcess(xmlXIncludeCtxtPtr ctxt, xmlDocPtr doc, xmlNodePtr tree);
-
-
 /************************************************************************
  *									*
  *			XInclude error handler				*
@@ -497,8 +495,6 @@ xmlXIncludeAddNode(xmlXIncludeCtxtPtr ctxt, xmlNodePtr cur) {
     xmlChar *URI;
     int xml = 1, i; /* default Issue 64 */
     int local = 0;
-
-
     if (ctxt == NULL)
 	return(-1);
     if (cur == NULL)
@@ -2266,8 +2262,6 @@ xmlXIncludeIncludeNode(xmlXIncludeCtxtPtr ctxt, int nr) {
 	    xmlAddPrevSibling(end, cur);
 	}
     }
-
-
     return(0);
 }
 

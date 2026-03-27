@@ -50,8 +50,6 @@ struct opj_cp;
  */
 opj_image_t* opj_image_create0(void);
 
-
-
 /**
  * Updates the components characteristics of the image from the coding parameters.
  *

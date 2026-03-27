@@ -117,8 +117,6 @@ void _cmsAllocCurvesPluginChunk(struct _cmsContext_struct* ctx,
         ctx ->chunks[CurvesPlugin] = _cmsSubAllocDup(ctx ->MemPool, &CurvesPluginChunk, sizeof(_cmsCurvesPluginChunkType));
     }
 }
-
-
 // The linked list head
 _cmsCurvesPluginChunkType _cmsCurvesPluginChunk = { NULL };
 
@@ -157,8 +155,6 @@ cmsBool _cmsRegisterParametricCurvesPlugin(cmsContext ContextID, cmsPluginBase* 
     // All is ok
     return TRUE;
 }
-
-
 // Search in type list, return position or -1 if not found
 static
 int IsInSet(int Type, _cmsParametricCurvesCollection* c)
@@ -170,8 +166,6 @@ int IsInSet(int Type, _cmsParametricCurvesCollection* c)
 
     return -1;
 }
-
-
 // Search for the collection which contains a specific type
 static
 _cmsParametricCurvesCollection *GetParametricCurveByType(cmsContext ContextID, int Type, int* index)
@@ -286,8 +280,6 @@ cmsToneCurve* AllocateToneCurveStruct(cmsContext ContextID, cmsInt32Number nEntr
                 p ->Segments[i].SampledPoints = (cmsFloat32Number*) _cmsDupMem(ContextID, Segments[i].SampledPoints, sizeof(cmsFloat32Number) * Segments[i].nGridPoints);
             else
                 p ->Segments[i].SampledPoints = NULL;
-
-
             c = GetParametricCurveByType(ContextID, Segments[i].Type, NULL);
             if (c != NULL)
                     p ->Evals[i] = c ->Evaluator;
@@ -305,8 +297,6 @@ Error:
     _cmsFree(ContextID, p);
     return NULL;
 }
-
-
 // Parametric Fn using floating point
 static
 cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Number Params[], cmsFloat64Number R)
@@ -371,8 +361,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
          if (Val < 0)
               Val = 0;
          break;
-
-
     // IEC 61966-3
     // Y = (aX + b)^Gamma | X <= -b/a
     // Y = c              | else
@@ -393,8 +381,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
         else
             Val = Params[3];
         break;
-
-
     // Type 3 reversed
     // X=((Y-c)^1/g - b)/a      | (Y>=c)
     // X=-b/a                   | (Y<c)
@@ -412,8 +398,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
             Val = -Params[2] / Params[1];
         }
         break;
-
-
     // IEC 61966-2.1 (sRGB)
     // Y = (aX + b)^Gamma | X >= d
     // Y = cX             | X < d
@@ -449,8 +433,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
             Val = R / Params[3];
         }
         break;
-
-
     // Y = (aX + b)^Gamma + e | X >= d
     // Y = cX + f             | X < d
     case 5:
@@ -466,8 +448,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
         else
             Val = R*Params[3] + Params[6];
         break;
-
-
     // Reversed type 5
     // X=((Y-e)1/g-b)/a   | Y >=(ad+b)^g+e), cd+f
     // X=(Y-f)/c          | else
@@ -486,8 +466,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
             Val = (R - Params[6]) / Params[3];
         }
         break;
-
-
     // Types 6,7,8 comes from segmented curves as described in ICCSpecRevision_02_11_06_Float.pdf
     // Type 6 is basically identical to type 5 without d
 
@@ -509,8 +487,6 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
         else
         Val = (pow(e, 1.0/Params[0]) - Params[2]) / Params[1];
         break;
-
-
     // Y = a * log (b * X^Gamma + c) + d
     case 7:
 
@@ -527,14 +503,10 @@ cmsFloat64Number DefaultEvalParametricFn(cmsInt32Number Type, const cmsFloat64Nu
     case -7:
        Val = pow((pow(10.0, (R-Params[4]) / Params[1]) - Params[3]) / Params[2], 1.0 / Params[0]);
        break;
-
-
    //Y = a * b^(c*X+d) + e
    case 8:
        Val = (Params[0] * pow(Params[1], Params[2] * R + Params[3]) + Params[4]);
        break;
-
-
    // Y = (log((y-e) / a) / log(b) - d ) / c
    // a=0, b=1, c=2, d=3, e=4,
    case -8:
@@ -612,8 +584,6 @@ const cmsUInt16Number* CMSEXPORT cmsGetToneCurveEstimatedTable(const cmsToneCurv
     _cmsAssert(t != NULL);
     return t ->Table16;
 }
-
-
 // Create an empty gamma curve, by using tables. This specifies only the limited-precision part, and leaves the
 // floating point description empty.
 cmsToneCurve* CMSEXPORT cmsBuildTabulatedToneCurve16(cmsContext ContextID, cmsInt32Number nEntries, const cmsUInt16Number Values[])
@@ -627,8 +597,6 @@ int EntriesByGamma(cmsFloat64Number Gamma)
     if (fabs(Gamma - 1.0) < 0.001) return 2;
     return 4096;
 }
-
-
 // Create a segmented gamma, fill the table
 cmsToneCurve* CMSEXPORT cmsBuildSegmentedToneCurve(cmsContext ContextID,
                                                    cmsInt32Number nSegments, const cmsCurveSegment Segments[])
@@ -699,8 +667,6 @@ cmsToneCurve* CMSEXPORT cmsBuildTabulatedToneCurveFloat(cmsContext ContextID, cm
     Seg[2].Params[2] = 0;
     Seg[2].Params[3] = values[nEntries-1];
     Seg[2].Params[4] = 0;
-    
-
     return cmsBuildSegmentedToneCurve(ContextID, 3, Seg);
 }
 
@@ -735,15 +701,11 @@ cmsToneCurve* CMSEXPORT cmsBuildParametricToneCurve(cmsContext ContextID, cmsInt
     return cmsBuildSegmentedToneCurve(ContextID, 1, &Seg0);
 }
 
-
-
 // Build a gamma table based on gamma constant
 cmsToneCurve* CMSEXPORT cmsBuildGamma(cmsContext ContextID, cmsFloat64Number Gamma)
 {
     return cmsBuildParametricToneCurve(ContextID, 1, &Gamma);
 }
-
-
 // Free all memory taken by the gamma curve
 void CMSEXPORT cmsFreeToneCurve(cmsToneCurve* Curve)
 {
@@ -794,8 +756,6 @@ void CMSEXPORT cmsFreeToneCurveTriple(cmsToneCurve* Curve[3])
 
     Curve[0] = Curve[1] = Curve[2] = NULL;
 }
-
-
 // Duplicate a gamma table
 cmsToneCurve* CMSEXPORT cmsDupToneCurve(const cmsToneCurve* In)
 {
@@ -818,8 +778,6 @@ cmsToneCurve* CMSEXPORT cmsJoinToneCurve(cmsContext ContextID,
     cmsFloat32Number t, x;
     cmsFloat32Number* Res = NULL;
     cmsUInt32Number i;
-
-
     _cmsAssert(X != NULL);
     _cmsAssert(Y != NULL);
 
@@ -847,8 +805,6 @@ Error:
 
     return out;
 }
-
-
 
 // Get the surrounding nodes. This is tricky on non-monotonic tables
 static
@@ -935,8 +891,6 @@ cmsToneCurve* CMSEXPORT cmsReverseToneCurveEx(cmsInt32Number nResultSamples, con
         // Find interval in which y is within.
         j = GetInterval(y, InCurve->Table16, InCurve->InterpParams);
         if (j >= 0) {
-
-
             // Get limits of interval
             x1 = InCurve ->Table16[j];
             x2 = InCurve ->Table16[j+1];
@@ -960,8 +914,6 @@ cmsToneCurve* CMSEXPORT cmsReverseToneCurveEx(cmsInt32Number nResultSamples, con
 
         out ->Table16[i] = _cmsQuickSaturateWord(a* y + b);
     }
-
-
     return out;
 }
 
@@ -988,15 +940,11 @@ cmsBool smooth2(cmsContext ContextID, cmsFloat32Number w[], cmsFloat32Number y[]
     int i, i1, i2;
     cmsFloat32Number *c, *d, *e;
     cmsBool st;
-
-
     c = (cmsFloat32Number*) _cmsCalloc(ContextID, MAX_NODES_IN_CURVE, sizeof(cmsFloat32Number));
     d = (cmsFloat32Number*) _cmsCalloc(ContextID, MAX_NODES_IN_CURVE, sizeof(cmsFloat32Number));
     e = (cmsFloat32Number*) _cmsCalloc(ContextID, MAX_NODES_IN_CURVE, sizeof(cmsFloat32Number));
 
     if (c != NULL && d != NULL && e != NULL) {
-
-
     d[1] = w[1] + lambda;
     c[1] = -2 * lambda / d[1];
     e[1] = lambda /d[1];
@@ -1171,8 +1119,6 @@ cmsBool  CMSEXPORT cmsIsToneCurveDescending(const cmsToneCurve* t)
 
     return t ->Table16[0] > t ->Table16[t ->nEntries-1];
 }
-
-
 // Another info fn: is out gamma table multisegment?
 cmsBool  CMSEXPORT cmsIsToneCurveMultisegment(const cmsToneCurve* t)
 {
@@ -1218,8 +1164,6 @@ cmsUInt16Number CMSEXPORT cmsEvalToneCurve16(const cmsToneCurve* Curve, cmsUInt1
     Curve ->InterpParams ->Interpolation.Lerp16(&v, &out, Curve ->InterpParams);
     return out;
 }
-
-
 // Least squares fitting.
 // A mathematical procedure for finding the best-fitting curve to a given set of points by
 // minimizing the sum of the squares of the offsets ("the residuals") of the points from the curve.

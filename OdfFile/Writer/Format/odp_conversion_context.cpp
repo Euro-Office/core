@@ -45,15 +45,11 @@
 #include "odf_text_context.h"
 #include "paragraph_elements.h"
 #include "odf_settings_context.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
 
 namespace odf_writer {
-
-
 odp_conversion_context::odp_conversion_context(package::odf_document * outputDocument) 
 	:	odf_conversion_context (PresentationDocument, outputDocument), root_presentation_(NULL), slide_context_(*this), rId_(1)
 {

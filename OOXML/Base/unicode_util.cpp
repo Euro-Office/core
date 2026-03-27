@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 /*
  * Copyright 2001-2004 Unicode, Inc.
  *
@@ -70,8 +68,6 @@
     See the header file "ConvertUTF.h" for complete documentation.
 
 ------------------------------------------------------------------------ */
-
-
 #include "unicode_util.h"
 #ifdef CVTUTF_DEBUG
 #include <stdio.h>

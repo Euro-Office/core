@@ -86,8 +86,6 @@ namespace agg
         status_e       m_status;
         unsigned       m_src_vertex;
     };
-
-
 }
 
 #endif

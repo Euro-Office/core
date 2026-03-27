@@ -33,8 +33,6 @@
 
 #include <fstream>
 #include "stream.h"
-
-
 namespace CFCPP
 {
 class FStreamWrapper : public IStream, public std::fstream

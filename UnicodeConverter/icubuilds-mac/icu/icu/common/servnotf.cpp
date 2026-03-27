@@ -33,8 +33,6 @@ ICUNotifier::~ICUNotifier(void) {
         listeners = NULL;
     }
 }
-
-
 void 
 ICUNotifier::addListener(const EventListener* l, UErrorCode& status) 
 {

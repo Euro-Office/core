@@ -245,8 +245,6 @@ static UResourceBundle* getZoneByName(const UResourceBundle* top, const UnicodeS
         return oldbundle;
     }
 }
-
-
 UResourceBundle* TimeZone::loadRule(const UResourceBundle* top, const UnicodeString& ruleid, UResourceBundle* oldbundle, UErrorCode& status) {
     char key[64];
     ruleid.extract(0, sizeof(key)-1, key, (int32_t)sizeof(key)-1, US_INV);
@@ -584,8 +582,6 @@ TimeZone::setDefault(const TimeZone& zone)
 }
 
 //----------------------------------------------------------------------
-
-
 static void U_CALLCONV initMap(USystemTimeZoneType type, UErrorCode& ec) {
     ucln_i18n_registerCleanup(UCLN_I18N_TIMEZONE, timeZone_cleanup);
 
@@ -661,8 +657,6 @@ static void U_CALLCONV initMap(USystemTimeZoneType type, UErrorCode& ec) {
     }
     ures_close(res);
 }
-
-
 /**
  * This is the default implementation for subclasses that do not
  * override this method.  This implementation calls through to the
@@ -1064,8 +1058,6 @@ TimeZone::findID(const UnicodeString& id) {
     ures_close(rb);
     return result;
 }
-
-
 const UChar*
 TimeZone::dereferOlsonLink(const UnicodeString& id) {
     const UChar *result = NULL;
@@ -1128,8 +1120,6 @@ TimeZone::getRegion(const UnicodeString& id, UErrorCode& status) {
 
     return result;
 }
-
-
 // ---------------------------------------
 int32_t
 TimeZone::getRegion(const UnicodeString& id, char *region, int32_t capacity, UErrorCode& status)
@@ -1163,8 +1153,6 @@ TimeZone::getRegion(const UnicodeString& id, char *region, int32_t capacity, UEr
 }
 
 // ---------------------------------------
-
-
 UnicodeString&
 TimeZone::getDisplayName(UnicodeString& result) const
 {
@@ -1481,8 +1469,6 @@ TimeZone::formatCustomID(int32_t hour, int32_t min, int32_t sec,
     }
     return id;
 }
-
-
 UBool
 TimeZone::hasSameRules(const TimeZone& other) const
 {
@@ -1687,8 +1673,6 @@ TimeZone::getIDForWindowsID(const UnicodeString& winid, const char* region, Unic
     ures_close(zones);
     return id;
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

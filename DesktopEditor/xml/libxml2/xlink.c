@@ -6,8 +6,6 @@
  *
  * daniel@veillard.com
  */
-
-
 #define IN_LIBXML
 #include "libxml.h"
 
@@ -62,8 +60,6 @@ xlinkHandlerPtr
 xlinkGetDefaultHandler(void) {
     return(xlinkDefaultHandler);
 }
-
-
 /**
  * xlinkSetDefaultHandler:
  * @handler:  the new value for the xlink handler block
@@ -103,8 +99,6 @@ xlinkSetDefaultDetect	(xlinkNodeDetectFunc func) {
  *                  The detection routines			*
  *								*
  ****************************************************************/
-
-
 /**
  * xlinkIsLink:
  * @doc:  the document containing the node

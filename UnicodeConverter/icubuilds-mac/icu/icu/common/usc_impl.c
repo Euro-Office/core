@@ -343,8 +343,6 @@ uscript_nextRun(UScriptRun *scriptRun, int32_t *pRunStart, int32_t *pRunLimit, U
             break;
         }
     }
-
-
     if (pRunStart != NULL) {
         *pRunStart = scriptRun->scriptStart;
     }

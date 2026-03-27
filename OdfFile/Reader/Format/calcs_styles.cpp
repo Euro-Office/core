@@ -226,8 +226,6 @@ void calc_tab_stops(const style_instance * styleInstance, oox::tabs_context & co
         }
 	}
 }
-
-
 //////
 
 style_table_cell_properties_attlist calc_table_cell_properties(const std::vector<const style_table_cell_properties*> & props)

@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ExtSST record in BIFF8
 class ExtSST: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~ExtSST();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

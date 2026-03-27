@@ -491,8 +491,6 @@ namespace DocFileFormat
 			ConnectorAngles.push_back(0);
 
             TextBoxRectangle	=	L"0,@12,@1,21600;@5,@17,@1,21600";
-
-
 			Handle one;
             one.position		=	L"#0,topLeft";
             one.xrange			=	L"@2,@9";

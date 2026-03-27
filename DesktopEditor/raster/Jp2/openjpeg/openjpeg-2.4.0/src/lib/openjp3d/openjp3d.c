@@ -230,5 +230,3 @@ bool OPJ_CALLCONV opj_encode(opj_cinfo_t *cinfo, opj_cio_t *cio,
 
     return false;
 }
-
-

@@ -36,7 +36,6 @@
  *      in any direction from the Sel origin), they can also be used
  *      to auto-generate dwa code (fmorphauto.c).
  *
- *
  *      Generate a subsampled structuring element
  *            SEL     *pixGenerateSelWithRuns()
  *            SEL     *pixGenerateSelRandom()
@@ -57,8 +56,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
     /* default minimum distance of a hit-miss pixel element to
      * a boundary pixel of its color. */
 static const l_int32  DEFAULT_DISTANCE_TO_BOUNDARY = 1;
@@ -67,8 +64,6 @@ static const l_int32  MAX_DISTANCE_TO_BOUNDARY = 4;
     /* default min runlength to accept a hit or miss element located
      * at its center */
 static const l_int32  DEFAULT_MIN_RUNLENGTH = 3;
-
-
     /* default scalefactor for displaying image and hit-miss sel
      * that is derived from it */
 static const l_int32  DEFAULT_SEL_SCALEFACTOR = 7;
@@ -77,8 +72,6 @@ static const l_int32  MAX_SEL_SCALEFACTOR = 31;  /* should be big enough */
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_DISPLAY_HM_SEL   0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-----------------------------------------------------------------*
  *           Generate a subsampled structuring element             *
  *-----------------------------------------------------------------*/
@@ -284,8 +277,6 @@ SEL       *seld, *sel;
     ptaDestroy(&ptam);
     return sel;
 }
-
-
 /*!
  *  pixGenerateSelRandom()
  *
@@ -427,8 +418,6 @@ SEL       *seld, *sel;
     pixDestroy(&pixbg);
     return sel;
 }
-
-
 /*!
  *  pixGenerateSelBoundary()
  *
@@ -582,8 +571,6 @@ PTA     *ptah, *ptam;
     ptaDestroy(&ptam);
     return sel;
 }
-
-
 /*-----------------------------------------------------------------*
  *              Accumulate data on runs along lines                *
  *-----------------------------------------------------------------*/
@@ -669,8 +656,6 @@ NUMA     *naruns, *nad;
     numaDestroy(&naruns);
     return nad;
 }
-
-
 /*!
  *  pixGetRunsOnLine()
  *
@@ -751,8 +736,6 @@ PTA      *pta;
     ptaDestroy(&pta);
     return numa;
 }
-
-
 /*-----------------------------------------------------------------*
  *        Subsample boundary pixels in relatively ordered way      *
  *-----------------------------------------------------------------*/
@@ -829,8 +812,6 @@ PTA     *pta;
     pixDestroy(&pixt);
     return pta;
 }
-
-
 /*!
  *  adjacentOnPixelInRaster()
  *
@@ -879,8 +860,6 @@ l_uint32  val;
     }
     return found;
 }
-
-
 
 /*-----------------------------------------------------------------*
  *          Display generated sel with originating image           *

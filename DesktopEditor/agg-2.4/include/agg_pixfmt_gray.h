@@ -46,8 +46,6 @@ namespace agg
             *p = (value_type)((((cv - calc_type(*p)) * alpha) + (calc_type(*p) << base_shift)) >> base_shift);
         }
     };
-
-
     //======================================================blender_gray_pre
     template<class ColorT> struct blender_gray_pre
     {
@@ -70,8 +68,6 @@ namespace agg
             *p = (value_type)(((*p * (color_type::base_mask - alpha)) >> base_shift) + cv);
         }
     };
-    
-
 
     //=====================================================apply_gamma_dir_gray
     template<class ColorT, class GammaLut> class apply_gamma_dir_gray
@@ -90,8 +86,6 @@ namespace agg
         const GammaLut& m_gamma;
     };
 
-
-
     //=====================================================apply_gamma_inv_gray
     template<class ColorT, class GammaLut> class apply_gamma_inv_gray
     {
@@ -108,8 +102,6 @@ namespace agg
     private:
         const GammaLut& m_gamma;
     };
-
-
 
     //=================================================pixfmt_alpha_blend_gray
     template<class Blender, class RenBuf, unsigned Step=1, unsigned Offset=0>
@@ -152,8 +144,6 @@ namespace agg
                 }
             }
         }
-
-
         static AGG_INLINE void copy_or_blend_pix(value_type* p, 
                                                  const color_type& c)
         {
@@ -169,8 +159,6 @@ namespace agg
                 }
             }
         }
-
-
     public:
         //--------------------------------------------------------------------
         explicit pixfmt_alpha_blend_gray(rbuf_type& rb) :
@@ -242,8 +230,6 @@ namespace agg
                                c, 
                                cover);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
@@ -259,8 +245,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
@@ -275,8 +259,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_hline(int x, int y,
                          unsigned len, 
@@ -309,8 +291,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_vline(int x, int y,
                          unsigned len, 
@@ -345,8 +325,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_hspan(int x, int y,
                                unsigned len, 
@@ -375,8 +353,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_vspan(int x, int y,
                                unsigned len, 
@@ -405,8 +381,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y,
                               unsigned len, 
@@ -423,8 +397,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_vspan(int x, int y,
                               unsigned len, 
@@ -439,8 +411,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_color_hspan(int x, int y,
                                unsigned len, 
@@ -490,8 +460,6 @@ namespace agg
                 }
             }
         }
-
-
 
         //--------------------------------------------------------------------
         void blend_color_vspan(int x, int y,

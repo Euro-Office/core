@@ -93,8 +93,6 @@ call_callback(void (* callback)(void *), void *cl_data)
         callback(cl_data);
    } G_CATCH_ALL {} G_ENDCATCH;
 }
-
-
 //****************************************************************************
 //****************************** OpenFiles ***********************************
 //****************************************************************************
@@ -920,8 +918,6 @@ DataPool::connect(const GURL &furl_in, int start_in, int length_in)
      G_THROW( ERR_MSG("DataPool.connected2") );
    if (start_in<0)
      G_THROW( ERR_MSG("DataPool.neg_start") );
-
-
    if (furl_in.name() == "-")
    {
       DEBUG_MSG("This is stdin => just read the data...\n");
@@ -1354,8 +1350,6 @@ DataPool::stop(bool only_blocked)
 
    if (only_blocked) stop_blocked_flag=true;
    else stop_flag=true;
-   
-
    wake_up_all_readers();
 
       // Now let all readers, which already go thru to the master DataPool,
@@ -1665,10 +1659,6 @@ DataPool::analyze_iff(void)
    }
 }
 
-
-
-
-
 //****************************************************************************
 //****************************** PoolByteStream ******************************
 //****************************************************************************
@@ -1797,15 +1787,11 @@ DataPool::close_all(void)
 {
   OpenFiles::get()->close_all();
 }
-
-
 GP<ByteStream>
 DataPool::get_stream(void)
 {
   return new PoolByteStream(this);
 }
-
-
 inline
 DataPool::Counter::operator int(void) const
 {
@@ -1827,8 +1813,6 @@ DataPool::Counter::dec(void)
    GCriticalSectionLock lk(&lock);
    counter--;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

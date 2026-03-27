@@ -110,8 +110,6 @@
 #include "allheaders.h"
 
 static const l_int32  INITIAL_PTR_ARRAYSIZE = 20;   /* n'import quoi */
-
-
 /*---------------------------------------------------------------------*
  *                  Box creation, destruction and copy                 *
  *---------------------------------------------------------------------*/
@@ -167,8 +165,6 @@ BOX  *box;
 
     return box;
 }
-
-
 /*!
  *  boxCreateValid()
  *
@@ -190,8 +186,6 @@ boxCreateValid(l_int32  x,
         return (BOX *)ERROR_PTR("w and h not both > 0", procName, NULL);
     return boxCreate(x, y, w, h);
 }
-
-
 /*!
  *  boxCopy()
  *
@@ -212,8 +206,6 @@ BOX  *boxc;
 
     return boxc;
 }
-
-
 /*!
  *  boxClone()
  *
@@ -232,8 +224,6 @@ boxClone(BOX  *box)
     boxChangeRefcount(box, 1);
     return box;
 }
-
-
 /*!
  *  boxDestroy()
  *
@@ -264,8 +254,6 @@ BOX  *box;
     *pbox = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Box accessors                          *
  *---------------------------------------------------------------------*/
@@ -297,8 +285,6 @@ boxGetGeometry(BOX      *box,
     if (ph) *ph = box->h;
     return 0;
 }
-
-
 /*!
  *  boxSetGeometry()
  *
@@ -323,8 +309,6 @@ boxSetGeometry(BOX     *box,
     if (h != -1) box->h = h;
     return 0;
 }
-
-
 l_int32
 boxGetRefcount(BOX  *box)
 {
@@ -335,8 +319,6 @@ boxGetRefcount(BOX  *box)
 
     return box->refcount;
 }
-
-
 l_int32
 boxChangeRefcount(BOX     *box,
                   l_int32  delta)
@@ -349,8 +331,6 @@ boxChangeRefcount(BOX     *box,
     box->refcount += delta;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *             Boxa creation, destruction, copy, extension             *
  *---------------------------------------------------------------------*/
@@ -381,8 +361,6 @@ BOXA  *boxa;
 
     return boxa;
 }
-
-
 /*!
  *  boxaCopy()
  *
@@ -426,8 +404,6 @@ BOXA    *boxac;
     }
     return boxac;
 }
-
-
 /*!
  *  boxaDestroy()
  *
@@ -466,8 +442,6 @@ BOXA    *boxa;
     *pboxa = NULL;
     return;
 }
-
-
 /*!
  *  boxaAddBox()
  *
@@ -510,8 +484,6 @@ BOX     *boxc;
 
     return 0;
 }
-
-
 /*!
  *  boxaExtendArray()
  *
@@ -531,8 +503,6 @@ boxaExtendArray(BOXA  *boxa)
 
     return boxaExtendArrayToSize(boxa, 2 * boxa->nalloc);
 }
-
-
 /*!
  *  boxaExtendArrayToSize()
  *
@@ -561,8 +531,6 @@ boxaExtendArrayToSize(BOXA    *boxa,
     }
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                             Boxa accessors                          *
  *---------------------------------------------------------------------*/
@@ -581,8 +549,6 @@ boxaGetCount(BOXA  *boxa)
         return ERROR_INT("boxa not defined", procName, 0);
     return boxa->n;
 }
-
-
 /*!
  *  boxaGetValidCount()
  *
@@ -607,8 +573,6 @@ l_int32  n, i, w, h, count;
     }
     return count;
 }
-
-
 /*!
  *  boxaGetBox()
  *
@@ -636,8 +600,6 @@ boxaGetBox(BOXA    *boxa,
     else
         return (BOX *)ERROR_PTR("invalid accessflag", procName, NULL);
 }
-
-
 /*!
  *  boxaGetValidBox()
  *
@@ -674,8 +636,6 @@ BOX     *box;
         boxDestroy(&box);
     return box;
 }
-
-
 /*!
  *  boxaGetBoxGeometry()
  *
@@ -711,8 +671,6 @@ BOX  *box;
     boxDestroy(&box);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Boxa array modifiers                         *
  *---------------------------------------------------------------------*/
@@ -746,8 +704,6 @@ boxaReplaceBox(BOXA    *boxa,
     boxa->box[index] = box;
     return 0;
 }
-
-
 /*!
  *  boxaInsertBox()
  *
@@ -792,8 +748,6 @@ BOX    **array;
 
     return 0;
 }
-
-
 /*!
  *  boxaRemoveBox()
  *
@@ -831,8 +785,6 @@ BOX    **array;
 
     return 0;
 }
-
-
 /*!
  *  boxaInitFull()
  *
@@ -888,8 +840,6 @@ BOX     *boxt;
     }
     return 0;
 }
-
-
 /*!
  *  boxaClear()
  *
@@ -916,8 +866,6 @@ l_int32  i, n;
     boxa->n = 0;
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                     Boxaa creation, destruction                          *
  *--------------------------------------------------------------------------*/
@@ -947,8 +895,6 @@ BOXAA  *baa;
 
     return baa;
 }
-
-
 /*!
  *  boxaaCopy()
  *
@@ -985,8 +931,6 @@ BOXAA   *baad;
 
     return baad;
 }
-
-
 /*!
  *  boxaaDestroy()
  *
@@ -1017,8 +961,6 @@ BOXAA   *baa;
 
     return;
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                              Add Boxa to Boxaa                           *
@@ -1060,8 +1002,6 @@ BOXA    *bac;
     baa->n++;
     return 0;
 }
-
-
 /*!
  *  boxaaExtendArray()
  *
@@ -1085,8 +1025,6 @@ boxaaExtendArray(BOXAA  *baa)
     baa->nalloc *= 2;
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                           Boxaa accessors                            *
  *----------------------------------------------------------------------*/
@@ -1105,8 +1043,6 @@ boxaaGetCount(BOXAA  *baa)
         return ERROR_INT("baa not defined", procName, 0);
     return baa->n;
 }
-
-
 /*!
  *  boxaaGetBoxCount()
  *
@@ -1133,8 +1069,6 @@ l_int32  n, sum, i;
 
     return sum;
 }
-
-
 /*!
  *  boxaaGetBoxa()
  *
@@ -1162,8 +1096,6 @@ l_int32  n;
 
     return boxaCopy(baa->boxa[index], accessflag);
 }
-
-
 /*!
  *  boxaaReplaceBoxa()
  *
@@ -1198,8 +1130,6 @@ l_int32  n;
     baa->boxa[index] = boxa;
     return 0;
 }
-
-
 /*!
  *  boxaaInsertBoxa()
  *
@@ -1244,8 +1174,6 @@ BOXA   **array;
 
     return 0;
 }
-
-
 /*!
  *  boxaaRemoveBoxa()
  *
@@ -1284,8 +1212,6 @@ BOXA   **array;
 
     return 0;
 }
-
-
 /*!
  *  boxaaAddBox()
  *
@@ -1321,8 +1247,6 @@ BOXA    *boxa;
     boxaDestroy(&boxa);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Boxaa serialized I/O                         *
  *---------------------------------------------------------------------*/
@@ -1353,8 +1277,6 @@ BOXAA  *baa;
     fclose(fp);
     return baa;
 }
-
-
 /*!
  *  boxaaReadStream()
  *
@@ -1424,8 +1346,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  boxaaWriteStream()
  *
@@ -1465,8 +1385,6 @@ BOXA    *boxa;
     }
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Boxa serialized I/O                         *
  *---------------------------------------------------------------------*/
@@ -1497,8 +1415,6 @@ BOXA  *boxa;
     fclose(fp);
     return boxa;
 }
-
-
 /*!
  *  boxaReadStream()
  *
@@ -1539,8 +1455,6 @@ BOXA    *boxa;
 
     return boxa;
 }
-
-
 /*!
  *  boxaWrite()
  *
@@ -1569,8 +1483,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  boxaWriteStream()
  *
@@ -1604,8 +1516,6 @@ BOX     *box;
     }
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Debug printing                           *
  *---------------------------------------------------------------------*/
@@ -1639,8 +1549,6 @@ boxPrintStreamInfo(FILE  *fp,
 
     return 0;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *    Version for reading v.2 boxaa; kept for backward compatibility   *
@@ -1677,8 +1585,6 @@ BOXAA  *baa;
     fclose(fp);
     return baa;
 }
-
-
 /*!
  *  boxaaReadStreamVersion2()
  *
@@ -1722,5 +1628,3 @@ BOXAA   *baa;
 
     return baa;
 }
-
-

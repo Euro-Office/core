@@ -38,13 +38,9 @@ namespace XLS
 Uncalced::Uncalced()
 {
 }
-
-
 Uncalced::~Uncalced()
 {
 }
-
-
 BaseObjectPtr Uncalced::clone()
 {
 	return BaseObjectPtr(new Uncalced(*this));

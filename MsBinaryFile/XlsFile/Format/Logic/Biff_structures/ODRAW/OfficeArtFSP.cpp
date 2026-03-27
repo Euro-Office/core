@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtFSP::OfficeArtFSP()
 :	OfficeArtRecord(0x02, FSP)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtFSP::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtFSP(*this));
@@ -96,6 +92,4 @@ const unsigned short OfficeArtFSP::GetInstanceToStore()
 {
 	return shape_id;
 }
-
-
 } // namespace XLS

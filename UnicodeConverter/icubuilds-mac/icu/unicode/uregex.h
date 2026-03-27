@@ -38,8 +38,6 @@ struct URegularExpression;
   * @stable ICU 3.0
   */
 typedef struct URegularExpression URegularExpression;
-
-
 /**
  * Constants for Regular Expression Match Modes.
  * @stable ICU 2.4
@@ -196,8 +194,6 @@ uregex_openC( const char           *pattern,
                     UErrorCode     *status);
 #endif
 
-
-
 /**
   *  Close the regular expression, recovering all resources (memory) it
   *   was holding.
@@ -296,8 +292,6 @@ uregex_patternUText(const URegularExpression *regexp,
 U_STABLE int32_t U_EXPORT2 
 uregex_flags(const  URegularExpression   *regexp,
                     UErrorCode           *status);
-
-
 /**
   *  Set the subject text string upon which the regular expression will look for matches.
   *  This function may be called any number of times, allowing the regular
@@ -323,8 +317,6 @@ uregex_setText(URegularExpression *regexp,
                const UChar        *text,
                int32_t             textLength,
                UErrorCode         *status);
-
-
 /**
   *  Set the subject text string upon which the regular expression will look for matches.
   *  This function may be called any number of times, allowing the regular
@@ -629,8 +621,6 @@ uregex_groupNumberFromName(URegularExpression *regexp,
                            const UChar        *groupName,
                            int32_t             nameLength,
                            UErrorCode          *status);
-
-
 /**
   * Get the group number corresponding to a named capture group.
   * The returned number can be used with any function that access
@@ -963,8 +953,6 @@ uregex_regionEnd64(const  URegularExpression   *regexp,
 U_STABLE UBool U_EXPORT2
 uregex_hasTransparentBounds(const  URegularExpression   *regexp,
                                    UErrorCode           *status);
-
-
 /**
   * Sets the transparency of region bounds for this URegularExpression.
   * Invoking this function with an argument of TRUE will set matches to use transparent bounds.
@@ -988,8 +976,6 @@ U_STABLE void U_EXPORT2
 uregex_useTransparentBounds(URegularExpression   *regexp, 
                             UBool                b,
                             UErrorCode           *status);
-
-
 /**
   * Return true if this URegularExpression is using anchoring bounds.
   * By default, anchoring region bounds are used.
@@ -1002,8 +988,6 @@ uregex_useTransparentBounds(URegularExpression   *regexp,
 U_STABLE UBool U_EXPORT2
 uregex_hasAnchoringBounds(const  URegularExpression   *regexp,
                                  UErrorCode           *status);
-
-
 /**
   * Set whether this URegularExpression is using Anchoring Bounds for its region.
   * With anchoring bounds, pattern anchors such as ^ and $ will match at the start
@@ -1050,10 +1034,6 @@ uregex_hitEnd(const  URegularExpression   *regexp,
 U_STABLE UBool U_EXPORT2   
 uregex_requireEnd(const  URegularExpression   *regexp,
                          UErrorCode           *status);
-
-
-
-
 
 /**
   *    Replaces every substring of the input that matches the pattern
@@ -1475,8 +1455,6 @@ uregex_setStackLimit(URegularExpression      *regexp,
 U_STABLE int32_t U_EXPORT2
 uregex_getStackLimit(const URegularExpression      *regexp,
                            UErrorCode              *status);
-
-
 /**
  * Function pointer for a regular expression matching callback function.
  * When set, a callback function will be called periodically during matching
@@ -1520,8 +1498,6 @@ uregex_setMatchCallback(URegularExpression      *regexp,
                         URegexMatchCallback     *callback,
                         const void              *context,
                         UErrorCode              *status);
-
-
 /**
  *  Get the callback function for this URegularExpression.
  *
@@ -1574,8 +1550,6 @@ typedef UBool U_CALLCONV URegexFindProgressCallback (
                    const void *context,
                    int64_t     matchIndex);
 U_CDECL_END
-
-
 /**
  *  Set the find progress callback function for this URegularExpression.
  *

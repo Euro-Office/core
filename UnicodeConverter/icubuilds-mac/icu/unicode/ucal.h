@@ -1329,8 +1329,6 @@ ucal_getKeywordValuesForLocale(const char* key,
                                const char* locale,
                                UBool commonlyUsed,
                                UErrorCode* status);
-
-
 /** Weekday types, as returned by ucal_getDayOfWeekType().
  * @stable ICU 4.4
  */

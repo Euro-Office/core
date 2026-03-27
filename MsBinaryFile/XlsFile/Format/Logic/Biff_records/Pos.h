@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Pos record in BIFF8
 class Pos: public BiffRecord
 {

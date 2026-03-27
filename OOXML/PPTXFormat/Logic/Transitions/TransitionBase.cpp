@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "TransitionBase.h"
 #include "EmptyTransition.h"
 #include "OrientationTransition.h"
@@ -199,8 +197,6 @@ namespace PPTX
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 
 			pWriter->WriteString1(0, m_strNodeName);
-
-
 			std::list<std::wstring>::const_iterator pos1 = m_strAttributesNames.begin();
 			while (pos1 != m_strAttributesNames.end())
 			{

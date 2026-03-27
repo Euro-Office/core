@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "afglobal.h"
@@ -23,8 +21,6 @@
 #include "hbshim.h"
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -33,8 +29,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_afharfbuzz
-
-
   /*
    * We use `sets' (in the HarfBuzz sense, which comes quite near to the
    * usual mathematical meaning) to manage both lookups and glyph indices.
@@ -53,8 +47,6 @@
    *    special coverages (like `oldstyle figures') don't get overwritten.
    *
    */
-
-
   /* load coverage tags */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description,             \
@@ -64,37 +56,25 @@
             HB_TAG( tag1, tag2, tag3, tag4 ),          \
             HB_TAG_NONE                                \
           };
-
-
 #include "afcover.h"
-
-
   /* define mapping between coverage tags and AF_Coverage */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description, \
                   tag1, tag2, tag3, tag4 ) \
           name ## _coverage,
-
-
   static const hb_tag_t*  coverages[] =
   {
 #include "afcover.h"
 
     NULL /* AF_COVERAGE_DEFAULT */
   };
-
-
   /* load HarfBuzz script tags */
 #undef  SCRIPT
 #define SCRIPT( s, S, d, h, sc1, sc2, sc3 )  h,
-
-
   static const hb_script_t  scripts[] =
   {
 #include "afscript.h"
   };
-
-
   FT_Error
   af_get_coverage( AF_FaceGlobals  globals,
                    AF_StyleClass   style_class,
@@ -118,8 +98,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     int             count;
 #endif
-
-
     if ( !globals || !style_class || !gstyles )
       return FT_THROW( Invalid_Argument );
 
@@ -252,25 +230,17 @@
       const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
       FT_Bool  found = 0;
-
-
       for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
       {
         const char*  p = &af_blue_strings[bs->string];
-
-
         while ( *p )
         {
           hb_codepoint_t  ch;
-
-
           GET_UTF8_CHAR( ch, p );
 
           for ( idx = -1; hb_set_next( gsub_lookups, &idx ); )
           {
             hb_codepoint_t  gidx = FT_Get_Char_Index( globals->face, ch );
-
-
             if ( hb_ot_layout_lookup_would_substitute( face, idx,
                                                        &gidx, 1, 1 ) )
             {
@@ -370,8 +340,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* construct HarfBuzz features */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description,                \
@@ -383,26 +351,18 @@
               1, 0, (unsigned int)-1                      \
             }                                             \
           };
-
-
 #include "afcover.h"
-
-
   /* define mapping between HarfBuzz features and AF_Coverage */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description, \
                   tag1, tag2, tag3, tag4 ) \
           name ## _feature,
-
-
   static const hb_feature_t*  features[] =
   {
 #include "afcover.h"
 
     NULL /* AF_COVERAGE_DEFAULT */
   };
-
-
   FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
                      FT_ULong         charcode,
@@ -414,8 +374,6 @@
     const hb_feature_t*  feature;
 
     FT_ULong  in_idx, out_idx;
-
-
     if ( !metrics )
       return FT_THROW( Invalid_Argument );
 
@@ -437,8 +395,6 @@
       hb_glyph_info_t*      ginfo;
       hb_glyph_position_t*  gpos;
       unsigned int          gcount;
-
-
       /* we shape at a size of units per EM; this means font units */
       hb_font_set_scale( font, upem, upem );
 
@@ -486,11 +442,7 @@
 
     return FT_Err_Ok;
   }
-
-
 #else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-
   FT_Error
   af_get_coverage( AF_FaceGlobals  globals,
                    AF_StyleClass   style_class,
@@ -502,8 +454,6 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_Error
   af_get_char_index( AF_StyleMetrics  metrics,
                      FT_ULong         charcode,
@@ -511,8 +461,6 @@
                      FT_Long         *y_offset )
   {
     FT_Face  face;
-
-
     if ( !metrics )
       return FT_THROW( Invalid_Argument );
 
@@ -523,9 +471,5 @@
 
     return FT_Err_Ok;
   }
-
-
 #endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-
 /* END */

@@ -81,5 +81,3 @@ void opj_free(void *memblock)
 {
     free(memblock);
 }
-
-

@@ -34,16 +34,12 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 #include FT_INTERNAL_DEBUG_H
 
 #include "cf2blues.h"
 #include "cf2hints.h"
 #include "cf2font.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -52,16 +48,12 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cf2blues
-
-
   /*
    * For blue values, the FreeType parser produces an array of integers,
    * while the Adobe CFF engine produces an array of fixed.
    * Define a macro to convert FreeType to fixed.
    */
 #define cf2_blueToFixed( x )  cf2_intToFixed( x )
-
-
   FT_LOCAL_DEF( void )
   cf2_blues_init( CF2_Blues  blues,
                   CF2_Font   font )
@@ -88,8 +80,6 @@
 
 #if 0
     CF2_Int  unitsPerEm = font->unitsPerEm;
-
-
     if ( unitsPerEm == 0 )
       unitsPerEm = 1000;
 #endif
@@ -286,8 +276,6 @@
       CF2_Fixed  flatFamilyEdge, diff;
       /* value for this font */
       CF2_Fixed  flatEdge = blues->zone[i].csFlatEdge;
-
-
       if ( blues->zone[i].bottomZone )
       {
         /* In a bottom zone, the top edge is the flat edge.             */
@@ -442,8 +430,6 @@
                                       blues->boost );
     }
   }
-
-
   /*
    * Check whether `stemHint' is captured by one of the blue zones.
    *
@@ -477,8 +463,6 @@
 
     FT_Bool   captured = FALSE;
     CF2_UInt  i;
-
-
     /* assert edge flags are consistent */
     FT_ASSERT( !cf2_hint_isTop( bottomHintEdge ) &&
                !cf2_hint_isBottom( topHintEdge ) );
@@ -574,6 +558,4 @@
 
     return captured;
   }
-
-
 /* END */

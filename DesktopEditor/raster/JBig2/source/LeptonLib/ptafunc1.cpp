@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   ptafunc1.c
  *
@@ -62,8 +60,6 @@
 
     /* Default spreading factor for hashing pts in a plane */
 static const l_int32  DEFAULT_SPREADING_FACTOR = 7500;
-
-
 /*---------------------------------------------------------------------*
  *                           Pta rearrangements                        *
  *---------------------------------------------------------------------*/
@@ -99,8 +95,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  ptaJoin()
  *
@@ -147,8 +141,6 @@ l_int32  ns, i, x, y;
 
     return 0;
 }
-
-
 /*!
  *  ptaReverse()
  *
@@ -185,8 +177,6 @@ PTA       *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  ptaCyclicPerm()
  *
@@ -247,8 +237,6 @@ PTA     *ptad;
 
     return ptad;
 }
-
-
 /*!
  *  ptaSort()
  *
@@ -311,8 +299,6 @@ NUMA      *na, *naindex;
     numaDestroy(&na);
     return ptad;
 }
-
-
 /*!
  *  ptaRemoveDuplicates()
  *
@@ -388,8 +374,6 @@ NUMAHASH  *nahash;
     numaHashDestroy(&nahash);
     return ptad;
 }
-
-
 /*!
  *  ptaaSortByIndex()
  *
@@ -424,8 +408,6 @@ PTAA    *ptaad;
 
     return ptaad;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                               Geometric                             *
@@ -466,8 +448,6 @@ l_int32  n, i, x, y, minx, maxx, miny, maxy;
 
     return boxCreate(minx, miny, maxx - minx + 1, maxy - miny + 1);
 }
-
-
 /*!
  *  ptaGetRange()
  *
@@ -524,8 +504,6 @@ l_float32  x, y, minx, maxx, miny, maxy;
     if (pmaxy) *pmaxy = maxy;
     return 0;
 }
-
-
 /*!
  *  ptaGetInsideBox()
  *
@@ -559,8 +537,6 @@ l_float32  x, y;
 
     return ptad;
 }
-
-
 /*!
  *  pixFindCornerPixels()
  *
@@ -654,8 +630,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaContainsPt()
  *
@@ -683,8 +657,6 @@ l_int32  i, n, ix, iy;
     }
     return 0;
 }
-
-
 /*!
  *  ptaTestIntersection()
  *
@@ -718,8 +690,6 @@ l_int32  i, j, n1, n2, x1, y1, x2, y2;
 
     return 0;
 }
-
-
 /*!
  *  ptaTransform()
  *
@@ -756,8 +726,6 @@ PTA     *ptad;
 
     return ptad;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                            Least Squares Fit                        *
@@ -857,8 +825,6 @@ l_float32  *xa, *ya;
 
     return 0;
 }
-
-
 /*!
  *  ptaGetQuadraticLSF()
  *
@@ -968,8 +934,6 @@ NUMA       *nafit;
 
     return 0;
 }
-
-
 /*!
  *  ptaGetCubicLSF()
  *
@@ -1096,8 +1060,6 @@ NUMA       *nafit;
 
     return 0;
 }
-
-
 /*!
  *  ptaGetQuarticLSF()
  *
@@ -1246,8 +1208,6 @@ NUMA       *nafit;
 
     return 0;
 }
-
-
 /*!
  *  applyLinearFit()
  *
@@ -1270,8 +1230,6 @@ applyLinearFit(l_float32   a,
     *py = a * x + b;
     return 0;
 }
-
-
 /*!
  *  applyQuadraticFit()
  *
@@ -1295,8 +1253,6 @@ applyQuadraticFit(l_float32   a,
     *py = a * x * x + b * x + c;
     return 0;
 }
-
-
 /*!
  *  applyCubicFit()
  *
@@ -1321,8 +1277,6 @@ applyCubicFit(l_float32   a,
     *py = a * x * x * x + b * x * x + c * x + d;
     return 0;
 }
-
-
 /*!
  *  applyQuarticFit()
  *
@@ -1351,8 +1305,6 @@ l_float32  x2;
     *py = a * x2 * x2 + b * x2 * x + c * x2 + d * x + e;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Interconversions with Pix                    *
  *---------------------------------------------------------------------*/
@@ -1458,8 +1410,6 @@ PIX            *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  ptaGetPixelsFromPix()
  *
@@ -1508,8 +1458,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  pixGenerateFromPta()
  *
@@ -1547,8 +1495,6 @@ PIX     *pix;
 
     return pix;
 }
-
-
 /*!
  *  ptaGetBoundaryPixels()
  *
@@ -1583,8 +1529,6 @@ PTA  *pta;
     pixDestroy(&pixt);
     return pta;
 }
-
-
 /*!
  *  ptaaGetBoundaryPixels()
  *
@@ -1666,8 +1610,6 @@ PTAA    *ptaa;
         pixaDestroy(&pixa);
     return ptaa;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Display Pta and Ptaa                       *
  *---------------------------------------------------------------------*/
@@ -1723,8 +1665,6 @@ l_uint32  rpixel, gpixel, bpixel;
 
     return pixd;
 }
-
-
 /*!
  *  pixDisplayPtaa()
  *
@@ -1785,5 +1725,3 @@ PTA       *pta;
     FREE(pixela);
     return pixd;
 }
-
-

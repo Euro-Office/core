@@ -527,8 +527,6 @@ _uhash_put(UHashtable *hash,
     emptytok.pointer = NULL; emptytok.integer = 0;
     return emptytok;
 }
-
-
 /********************************************************************
  * PUBLIC API
  ********************************************************************/
@@ -707,8 +705,6 @@ uhash_puti(UHashtable *hash,
                       HINT_KEY_POINTER,
                       status).integer;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uhash_iputi(UHashtable *hash,
            int32_t key,

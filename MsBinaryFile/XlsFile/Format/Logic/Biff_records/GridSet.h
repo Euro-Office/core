@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of GridSet record in BIFF8
 class GridSet: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~GridSet();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

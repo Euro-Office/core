@@ -14,20 +14,14 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/tttypes.h>
 #include <freetype/ftcolor.h>
-
-
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 
   static
   const FT_Palette_Data  null_palette_data = { 0, NULL, NULL, 0, NULL };
-
-
   /* documentation is in ftcolor.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -46,8 +40,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftcolor.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -59,8 +51,6 @@
 
     TT_Face       ttface;
     SFNT_Service  sfnt;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -86,8 +76,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftcolor.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -95,8 +83,6 @@
                                    FT_Color  foreground_color )
   {
     TT_Face  ttface;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -119,12 +105,8 @@
   {
     FT_UNUSED( face );
     FT_UNUSED( apalette_data );
-
-
     return FT_THROW( Unimplemented_Feature );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Palette_Select( FT_Face     face,
                      FT_UShort   palette_index,
@@ -133,24 +115,16 @@
     FT_UNUSED( face );
     FT_UNUSED( palette_index );
     FT_UNUSED( apalette );
-
-
     return FT_THROW( Unimplemented_Feature );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Palette_Set_Foreground_Color( FT_Face   face,
                                    FT_Color  foreground_color )
   {
     FT_UNUSED( face );
     FT_UNUSED( foreground_color );
-
-
     return FT_THROW( Unimplemented_Feature );
   }
 
 #endif /* !TT_CONFIG_OPTION_COLOR_LAYERS */
-
-
 /* END */

@@ -15,17 +15,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __WINFNT_H__
 #define __WINFNT_H__
-
-
 #include <ft2build.h>
 #include FT_WINFONTS_H
 #include FT_INTERNAL_DRIVER_H
-
-
 FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_PIC
@@ -39,8 +33,6 @@ FT_BEGIN_HEADER
     FT_UShort  lfanew;
 
   } WinMZ_HeaderRec;
-
-
   typedef struct  WinNE_HeaderRec_
   {
     FT_UShort  magic;
@@ -49,8 +41,6 @@ FT_BEGIN_HEADER
     FT_UShort  rname_tab_offset;
 
   } WinNE_HeaderRec;
-
-
   typedef struct  WinPE32_HeaderRec_
   {
     FT_ULong   magic;
@@ -66,8 +56,6 @@ FT_BEGIN_HEADER
     /* skipped content */
 
   } WinPE32_HeaderRec;
-
-
   typedef struct  WinPE32_SectionRec_
   {
     FT_Byte   name[8];
@@ -78,8 +66,6 @@ FT_BEGIN_HEADER
     /* skipped content */
 
   } WinPE32_SectionRec;
-
-
   typedef struct  WinPE_RsrcDirRec_
   {
     FT_ULong   characteristics;
@@ -90,16 +76,12 @@ FT_BEGIN_HEADER
     FT_UShort  number_of_id_entries;
 
   } WinPE_RsrcDirRec;
-
-
   typedef struct  WinPE_RsrcDirEntryRec_
   {
     FT_ULong  name;
     FT_ULong  offset;
 
   } WinPE_RsrcDirEntryRec;
-
-
   typedef struct  WinPE_RsrcDataEntryRec_
   {
     FT_ULong  offset_to_data;
@@ -108,8 +90,6 @@ FT_BEGIN_HEADER
     FT_ULong  reserved;
 
   } WinPE_RsrcDataEntryRec;
-
-
   typedef struct  WinNameInfoRec_
   {
     FT_UShort  offset;
@@ -120,21 +100,15 @@ FT_BEGIN_HEADER
     FT_UShort  usage;
 
   } WinNameInfoRec;
-
-
   typedef struct  WinResourceInfoRec_
   {
     FT_UShort  type_id;
     FT_UShort  count;
 
   } WinResourceInfoRec;
-
-
 #define WINFNT_MZ_MAGIC  0x5A4D
 #define WINFNT_NE_MAGIC  0x454E
 #define WINFNT_PE_MAGIC  0x4550
-
-
   typedef struct  FNT_FontRec_
   {
     FT_ULong             offset;
@@ -146,8 +120,6 @@ FT_BEGIN_HEADER
     FT_String*           family_name;
 
   } FNT_FontRec, *FNT_Font;
-
-
   typedef struct  FNT_FaceRec_
   {
     FT_FaceRec     root;
@@ -157,15 +129,7 @@ FT_BEGIN_HEADER
     FT_CharMapRec  charmap;  /* a single charmap per face */
 
   } FNT_FaceRec, *FNT_Face;
-
-
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  winfnt_driver_class;
-
-
 FT_END_HEADER
-
-
 #endif /* __WINFNT_H__ */
-
-
 /* END */

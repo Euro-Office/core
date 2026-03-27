@@ -14,14 +14,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SVPOSTNM_H__
 #define __SVPOSTNM_H__
 
 #include FT_INTERNAL_SERVICE_H
-
-
 FT_BEGIN_HEADER
 
   /*
@@ -35,18 +31,12 @@ FT_BEGIN_HEADER
    */
 
 #define FT_SERVICE_ID_POSTSCRIPT_FONT_NAME  "postscript-font-name"
-
-
   typedef const char*
   (*FT_PsName_GetFunc)( FT_Face  face );
-
-
   FT_DEFINE_SERVICE( PsFontName )
   {
     FT_PsName_GetFunc  get_ps_font_name;
   };
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define FT_DEFINE_SERVICE_PSFONTNAMEREC( class_, get_ps_font_name_ ) \
@@ -70,12 +60,6 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_PIC */
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* __SVPOSTNM_H__ */
-
-
 /* END */

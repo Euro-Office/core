@@ -35,8 +35,6 @@
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class target_frame_name
@@ -86,7 +84,5 @@ std::wostream & operator << (std::wostream & _Wostream, const target_frame_name 
 } 
 
 APPLY_PARSE_XML_ATTRIBUTES(odf_types::target_frame_name);
-
-
 }
 

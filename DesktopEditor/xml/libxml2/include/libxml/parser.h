@@ -714,8 +714,6 @@ typedef void (*endElementNsSAX2Func)   (void *ctx,
 					const xmlChar *localname,
 					const xmlChar *prefix,
 					const xmlChar *URI);
-
-
 struct _xmlSAXHandler {
     internalSubsetSAXFunc internalSubset;
     isStandaloneSAXFunc isStandalone;
@@ -787,8 +785,6 @@ struct _xmlSAXHandlerV1 {
     externalSubsetSAXFunc externalSubset;
     unsigned int initialized;
 };
-
-
 /**
  * xmlExternalEntityLoader:
  * @URL: The System ID of the resource requested
@@ -814,8 +810,6 @@ typedef xmlParserInputPtr (*xmlExternalEntityLoader) (const char *URL,
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 /*
  * Init/Cleanup
  */

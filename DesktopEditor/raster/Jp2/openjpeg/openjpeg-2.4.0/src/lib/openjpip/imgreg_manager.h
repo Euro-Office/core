@@ -40,8 +40,6 @@ typedef struct imgreg_param {
     int sx, sy;       /** region size (rsiz) */
     int level;        /** decomposition level */
 } imgreg_param_t;
-
-
 /**
  * map view-window requests to codestream image resolutions and regions
  *
@@ -59,8 +57,6 @@ imgreg_param_t map_viewin2imgreg(const int fx,    const int fy,
                                  const int XOsiz, const int YOsiz,
                                  const int Xsiz,  const int Ysiz,
                                  const int numOfreslev);
-
-
 /**
  * find deconposition level and its resolution size
  * C.4.1 Mapping view-window requests to codestream image resolution
@@ -97,6 +93,4 @@ int comp_decomplev(int fw, int fh, int Xsiz, int Ysiz);
  * @param[in] imgreg image region structure of parameters
  */
 void print_imgreg(imgreg_param_t imgreg);
-
-
 #endif      /* !IMGREG_MANAGER_H_ */

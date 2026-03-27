@@ -13,8 +13,6 @@
 *   This file contains the platform specific implementation of per-library cleanup.
 *
 */
-
-
 #ifndef __UCLN_IMP_H__
 #define __UCLN_IMP_H__
 

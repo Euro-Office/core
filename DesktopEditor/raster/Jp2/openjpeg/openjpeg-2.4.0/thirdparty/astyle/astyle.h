@@ -216,8 +216,6 @@ public:
 	string peekNextLine()
 	{ needReset = true; return sourceIterator->peekNextLine(); }
 };
-
-
 //-----------------------------------------------------------------------------
 // Class ASResource
 //-----------------------------------------------------------------------------
@@ -705,8 +703,6 @@ public:	// functions
 	void setAddOneLineBracketsMode(bool state);
 	void setRemoveBracketsMode(bool state);
 	void setBreakClosingHeaderBracketsMode(bool state);
-
-
 private:  // functions
 	ASFormatter(const ASFormatter& copy);       // not to be implemented
 	ASFormatter& operator=(ASFormatter&);       // not to be implemented

@@ -528,8 +528,6 @@ namespace OOX
 			}
             else
                 ptr.xColorType = 0;
-
-
 			if ( m_oTint.IsInit())
 			{
 				ptr.nTintAndShade = m_oTint->GetValue() * 32767.0;

@@ -34,8 +34,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/RichStr.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtSSTItem record in BIFF12

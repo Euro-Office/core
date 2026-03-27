@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the Type 42 error enumeration constants.
@@ -36,6 +34,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* T42ERROR_H_ */
-
-
 /* END */

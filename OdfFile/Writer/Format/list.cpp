@@ -40,8 +40,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 using xml::xml_char_wc;
 
 // text:number
@@ -85,8 +83,6 @@ void text_list_item::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 void text_list_item::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     if CP_CHECK_NAME(L"text", L"number")
@@ -117,8 +113,6 @@ void text_list_item::add_child_element( const office_element_ptr & child_element
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_list_header::ns = L"text";
 const wchar_t * text_list_header::name = L"list-header";
-
-
 void text_list_header::serialize(std::wostream & _Wostream) 
 {
  	CP_XML_WRITER(_Wostream)

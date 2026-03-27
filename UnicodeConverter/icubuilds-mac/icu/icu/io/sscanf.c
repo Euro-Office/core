@@ -28,8 +28,6 @@
 
 #include "cmemory.h"
 #include "cstring.h"
-
-
 U_CAPI int32_t U_EXPORT2
 u_sscanf(const UChar   *buffer,
          const char    *patternSpecification,

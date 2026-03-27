@@ -106,8 +106,6 @@
 #if (FLT_RADIX == 2) && (DBL_MAX_EXP == 1024) && (DBL_MANT_DIG == 53)
 # define USE_IEEE_754
 #endif
-
-
 /*************************************************************************
  * Constants
  */
@@ -164,8 +162,6 @@ static TRIO_CONST unsigned char ieee_754_infinity_array[] = {
 static TRIO_CONST unsigned char ieee_754_qnan_array[] = {
   0x7F, 0xF8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
-
-
 /*************************************************************************
  * Functions
  */
@@ -230,8 +226,6 @@ TRIO_ARGS1((number),
 }
 
 #endif /* USE_IEEE_754 */
-
-
 /**
    Generate negative zero.
 

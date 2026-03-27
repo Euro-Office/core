@@ -50,8 +50,6 @@ public:
 	
 	virtual void load(XLS::CFRecord& record);
     virtual void save(XLS::CFRecord& record);
-
-
 	std::string delimiterAnsi;
 	std::wstring delimiterUnicode;
 	std::string itemAnsi;

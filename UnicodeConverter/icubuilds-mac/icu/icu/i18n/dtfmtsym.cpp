@@ -267,8 +267,6 @@ DateFormatSymbols::DateFormatSymbols(UErrorCode& status)
 {
   initializeData(Locale::getDefault(), NULL, status, TRUE);
 }
-
-
 DateFormatSymbols::DateFormatSymbols(const Locale& locale,
                                      const char *type,
                                      UErrorCode& status)

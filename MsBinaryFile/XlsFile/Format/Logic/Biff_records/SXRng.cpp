@@ -38,8 +38,6 @@ namespace XLS
 SXRng::SXRng()
 {
 }
-
-
 SXRng::~SXRng()
 {
 }

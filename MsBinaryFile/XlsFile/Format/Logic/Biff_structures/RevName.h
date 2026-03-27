@@ -48,8 +48,6 @@ public:
 	RevName();
 	RevName(CFRecord& record);
 	BiffStructurePtr clone();
-
-	
 	void load(CFRecord& record) override; // No type info
 	void save(CFRecord& record) override;
  // No type info
@@ -62,7 +60,5 @@ private:
 };
 
 typedef boost::shared_ptr<RevName> RevNamePtr;
-
-
 } // namespace XLS
 

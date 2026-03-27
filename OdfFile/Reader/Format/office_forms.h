@@ -114,8 +114,6 @@ public:
 
 	odf_types::common_xlink_attlist		xlink_attlist_;
 	_CP_OPT(std::wstring)				office_target_frame_;
-
-    
 };
 CP_REGISTER_OFFICE_ELEMENT2(form_form);
 

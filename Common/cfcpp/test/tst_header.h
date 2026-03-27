@@ -3,8 +3,6 @@
 #include "global.h"
 #include "header.h"
 #include "streamrw.h"
-
-
 struct HeaderTest : testing::Test
 {
     wstring filename;
@@ -17,8 +15,6 @@ struct HeaderTest : testing::Test
     {
     }
 };
-
-
 void test_header_state(const Header& hd)
 {
     ASSERT_THAT(hd.headerSignature, ElementsAre(0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1));

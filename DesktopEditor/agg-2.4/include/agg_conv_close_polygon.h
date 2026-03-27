@@ -44,8 +44,6 @@ namespace agg
         bool          m_line_to;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class VertexSource> 
     void conv_close_polygon<VertexSource>::rewind(unsigned path_id)
@@ -54,8 +52,6 @@ namespace agg
         m_vertex = 2;
         m_line_to = false;
     }
-
-
     
     //------------------------------------------------------------------------
     template<class VertexSource> 

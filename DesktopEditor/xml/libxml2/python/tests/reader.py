@@ -240,8 +240,6 @@ if reader.Name() != "a:b":
 if reader.MoveToNextAttribute() != 0:
     print("Failed to detect last attribute")
     sys.exit(1)
-
-    
 #
 # a couple of tests for namespace nodes
 #

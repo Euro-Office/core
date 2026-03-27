@@ -32,13 +32,9 @@
 #include "psd_rect.h"
 #include "psd_blend.h"
 #include "psd_math.h"
-
-
 extern psd_bool psd_adjustment_layer_blend(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern psd_bool psd_layer_effects_blend_background(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern psd_bool psd_layer_effects_blend_foreground(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
-
-
 #ifdef PSD_SUPPORT_LAYER_BLEND
 
 psd_static psd_status psd_build_rand_data(psd_context * context)
@@ -1193,8 +1189,6 @@ void psd_layer_blend_restricted(psd_context * context, psd_layer_record * layer,
 }
 
 #endif // ifdef PSD_SUPPORT_LAYER_BLEND
-
-
 psd_status psd_image_blend(psd_context * context, psd_int left, psd_int top, psd_int width, psd_int height)
 {
 #ifdef PSD_SUPPORT_LAYER_BLEND

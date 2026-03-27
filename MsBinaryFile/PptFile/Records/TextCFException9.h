@@ -33,16 +33,12 @@
 
 #include "../Reader/Records.h"
 #include "CFMasks.h"
-
-
 namespace PPT
 {
 struct STextCFException9
 {
     SCFMasks        m_masks;
     nullable_uint   m_pp10runid;    // 4 bits
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

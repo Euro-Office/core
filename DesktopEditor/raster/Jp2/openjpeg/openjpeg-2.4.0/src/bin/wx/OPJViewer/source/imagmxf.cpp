@@ -81,19 +81,13 @@ bool BuildEssenceInfo(MXFFilePtr &File, EssenceInfoMap &EssenceLookup);
     #include "wx/bitmap.h"
     #include "wx/module.h"
 #endif
-
-
 #include "libopenjpeg/openjpeg.h"
-
-
 #include "wx/filefn.h"
 #include "wx/wfstream.h"
 
 // ----------------------------------------------------------------------------
 // types
 // ----------------------------------------------------------------------------
-
-
 //-----------------------------------------------------------------------------
 // wxMXFHandler
 //-----------------------------------------------------------------------------
@@ -175,8 +169,6 @@ void mxflib::debug(const char *Fmt, ...)
 #endif /* __WXGTK__ */
 }
 
-
-
 //------------- JPEG 2000 Data Source Manager
 
 #define J2K_CFMT 0
@@ -229,8 +221,6 @@ void mxf_info_callback(const char *msg, void *client_data) {
     wxMutexGuiLeave();
 #endif /* __WXGTK__ */
 }
-
-
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 
@@ -497,8 +487,6 @@ bool BuildEssenceInfo(MXFFilePtr &File, EssenceInfoMap &EssenceLookup)
 
 	return true;
 }
-
-
 #endif   // wxUSE_STREAMS
 
 #endif   // wxUSE_LIBOPENJPEG

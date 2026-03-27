@@ -130,8 +130,6 @@ namespace NSShapeImageGen
 			}
 			oFile.CloseFile();
 		}
-		
-
 		if (width < 0 && height < 0)
 			return GenerateImageID(strFile, L"", -1, -1, strAdditionalFile, typeAdditionalFile);
 
@@ -158,8 +156,6 @@ namespace NSShapeImageGen
 			XmlUtils::replace_all(strFileUrl, L"http:/",	L"http://");
 			XmlUtils::replace_all(strFileUrl, L"https:/",	L"https://");
 			XmlUtils::replace_all(strFileUrl, L"ftp:/",	L"ftp://");
-
-
 			CMediaInfo oInfo;
 			std::map<std::wstring, CMediaInfo>::iterator pPair = m_mapMediaFiles.find(strFileUrl);
 

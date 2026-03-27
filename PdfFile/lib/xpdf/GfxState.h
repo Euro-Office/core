@@ -143,10 +143,6 @@ struct GfxCMYK {
   GfxColorComp c, m, y, k;
 };
 
-
-
-
-
 //------------------------------------------------------------------------
 // GfxColorSpace
 //------------------------------------------------------------------------
@@ -183,8 +179,6 @@ public:
   // Construct a simple color space.  The <mode> argument can be
   // csDeviceGray, csDeviceRGB, or csDeviceCMYK.
   static GfxColorSpace *create(GfxColorSpaceMode mode);
-
-
   // Convert to gray, RGB, or CMYK.
   virtual void getGray(GfxColor *color, GfxGray *gray,
 		       GfxRenderingIntent ri) = 0;
@@ -207,8 +201,6 @@ public:
   // Returns true if painting operations in this color space never
   // mark the page (e.g., the "None" colorant).
   virtual GBool isNonMarking() { return gFalse; }
-
-
   // Return the color space's overprint mask.
   Guint getOverprintMask() { return overprintMask; }
 
@@ -388,8 +380,6 @@ public:
 
   virtual int getNComps() { return 4; }
   virtual void getDefaultColor(GfxColor *color);
-
-
 private:
 };
 
@@ -464,8 +454,6 @@ public:
 
   virtual void getDefaultRanges(double *decodeLow, double *decodeRange,
 				int maxImgPixel);
-
-
   // ICCBased-specific access.
   GfxColorSpace *getAlt() { return alt; }
   Ref getICCProfileStreamRef() { return iccProfileStream; }

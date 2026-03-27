@@ -12,8 +12,6 @@
  * Assistance for this module has been received from Namgay Thinley, Christopher Fynn and Javier Sola
  *
  */
-
-
 #include "OpenTypeLayoutEngine.h"
 #include "TibetanLayoutEngine.h"
 #include "LEGlyphStorage.h"

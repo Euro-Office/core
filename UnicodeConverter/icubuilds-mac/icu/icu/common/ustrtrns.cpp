@@ -22,8 +22,6 @@
  *
  *******************************************************************************
  */
-
-
 #include "unicode/putil.h"
 #include "unicode/ustring.h"
 #include "unicode/utf.h"
@@ -971,8 +969,6 @@ _appendUTF8(uint8_t *pDest, UChar32 c) {
     }
     return pDest;
 }
-
-   
 U_CAPI char* U_EXPORT2 
 u_strToUTF8WithSub(char *dest,
             int32_t destCapacity,

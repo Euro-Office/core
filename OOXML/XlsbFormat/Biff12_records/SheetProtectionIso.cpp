@@ -40,19 +40,13 @@ namespace XLSB
     SheetProtectionIso::SheetProtectionIso()
     {
     }
-
-
     SheetProtectionIso::~SheetProtectionIso()
     {
     }
-
-
     BaseObjectPtr SheetProtectionIso::clone()
     {
         return BaseObjectPtr(new SheetProtectionIso(*this));
     }
-
-
     void SheetProtectionIso::readFields(XLS::CFRecord& record)
     {
         record >> dwSpinCount;

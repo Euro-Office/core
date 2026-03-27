@@ -88,8 +88,6 @@ namespace PPTX
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
 			pWriter->EndRecord();
-
-
 			if (pWriter->m_pCommon->m_pNativePicker->m_bIsEmbeddedFonts)
 				pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckString(Char);
 

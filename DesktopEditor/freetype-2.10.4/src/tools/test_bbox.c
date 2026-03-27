@@ -1,7 +1,5 @@
 #include <freetype/freetype.h>
 #include <freetype/ftbbox.h>
-
-
 #include <time.h>    /* for clock() */
 
 /* SunOS 4.1.* does not define CLOCKS_PER_SEC, so include <sys/param.h> */
@@ -16,10 +14,6 @@
   {
     return clock() * 10000L / CLOCKS_PER_SEC;
   }
-
-
-
-
   /* test bbox computations */
 
 #define  XSCALE    65536
@@ -65,8 +59,6 @@
     dummy_contour_1,
     0
   };
-
-
   /* dummy outline #2 */
   static FT_Vector  dummy_vec_2[4] =
   {
@@ -85,8 +77,6 @@
     dummy_contour_1,
     0
   };
-
-
   /* dummy outline #3 with bbox of [0 100 128 128] precisely */
   static FT_Vector  dummy_vec_3[4] =
   {
@@ -105,8 +95,6 @@
     dummy_contour_1,
     0
   };
-
-
   static void
   dump_outline( FT_Outline*  outline )
   {
@@ -129,8 +117,6 @@
              XVAL( bbox.yMax ) );
   }
 
-
-
   static void
   profile_outline( FT_Outline*   outline,
                    long          repeat )
@@ -152,8 +138,6 @@
              XVAL( bbox.yMax ) );
     printf( "cbox_hex = [%08X %08X %08X %08X]\n",
              bbox.xMin, bbox.yMin, bbox.xMax, bbox.yMax );
-
-
     time0 = get_time();
     for ( count = repeat; count > 0; count-- )
       FT_Outline_Get_BBox( outline, &bbox );

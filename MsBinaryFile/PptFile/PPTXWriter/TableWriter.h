@@ -103,12 +103,8 @@ private:
 	// Common
 	CRelsGenerator* m_pRels;
 };
-
-
 typedef std::vector<TCell> ProtoTableRow;
 typedef std::vector<ProtoTableRow> MProtoTable;
-
-
 class ProtoTable
 {
 public:

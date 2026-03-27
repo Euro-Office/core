@@ -45,8 +45,6 @@ l_int32 pixWriteMemBmp(l_uint8 **pdata, size_t *psize, PIX *pix)
 {
     return ERROR_INT("function not present", "pixWriteMemBmp", 1);
 }
-
-
 /* --------------------------------------------*/
 #endif  /* !USE_BMPIO */
 /* --------------------------------------------*/

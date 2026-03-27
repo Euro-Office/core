@@ -30,14 +30,10 @@
  *      Full image rasterop with no translation
  *           l_int32    pixRasteropFullImage()
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 /*--------------------------------------------------------------------*
  *                General rasterop (basic pix interface)              *
  *--------------------------------------------------------------------*/
@@ -230,8 +226,6 @@ l_int32  dd;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                    In-place full band translation                  *
  *--------------------------------------------------------------------*/
@@ -292,8 +286,6 @@ l_int32  h, d, op;
 
     return 0;
 }
-
-
 /*!
  *  pixRasteropHip()
  *
@@ -348,8 +340,6 @@ l_int32  w, d, op;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *             Full image translation (general and in-place)          *
  *--------------------------------------------------------------------*/
@@ -393,8 +383,6 @@ pixTranslate(PIX     *pixd,
     pixRasteropIP(pixd, hshift, vshift, incolor);
     return pixd;
 }
-
-
 /*!
  *  pixRasteropIP()
  *
@@ -424,8 +412,6 @@ l_int32  w, h;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                 Full image rasterop with no shifts                 *
  *--------------------------------------------------------------------*/

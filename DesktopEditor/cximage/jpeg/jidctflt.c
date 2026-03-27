@@ -43,8 +43,6 @@
 #include "jdct.h"		/* Private declarations for DCT subsystem */
 
 #ifdef DCT_FLOAT_SUPPORTED
-
-
 /*
  * This module is specialized to the case DCTSIZE = 8.
  */
@@ -52,15 +50,11 @@
 #if DCTSIZE != 8
   Sorry, this code only copes with 8x8 DCTs. /* deliberate syntax err */
 #endif
-
-
 /* Dequantize a coefficient by multiplying it by the multiplier-table
  * entry; produce a float result.
  */
 
 #define DEQUANTIZE(coef,quantval)  (((FAST_FLOAT) (coef)) * (quantval))
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients.
  */

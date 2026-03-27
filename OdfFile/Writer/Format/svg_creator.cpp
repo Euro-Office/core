@@ -32,8 +32,6 @@
 #pragma once   
 
 #include "svg_creator.h"
-
-
 namespace cpdoccore 
 { 
 namespace svg_path
@@ -49,8 +47,6 @@ namespace svg_path
  
 		return true;
     }
-
-
 }
 }
 

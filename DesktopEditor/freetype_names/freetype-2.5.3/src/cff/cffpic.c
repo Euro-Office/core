@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "cffcmap.h"
 #include "cffpic.h"
 #include "cfferrs.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from cffdrivr.c */
@@ -56,20 +52,14 @@
   void
   FT_Destroy_Class_cff_field_handlers( FT_Library          library,
                                        CFF_Field_Handler*  clazz );
-
-
   void
   cff_driver_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->cff )
     {
       CffModulePIC*  container = (CffModulePIC*)pic_container->cff;
-
-
       if ( container->cff_services )
         FT_Destroy_Class_cff_services( library,
                                        container->cff_services );
@@ -82,8 +72,6 @@
       pic_container->cff = NULL;
     }
   }
-
-
   FT_Error
   cff_driver_class_pic_init( FT_Library  library )
   {
@@ -91,8 +79,6 @@
     FT_Error           error         = FT_Err_Ok;
     CffModulePIC*      container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC ( container, sizeof ( *container ) ) )
       return error;
@@ -133,6 +119,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

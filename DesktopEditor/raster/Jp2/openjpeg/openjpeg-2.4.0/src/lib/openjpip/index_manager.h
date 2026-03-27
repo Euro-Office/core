@@ -96,8 +96,6 @@ typedef struct index_param {
     faixbox_param_t
     **precpacket;       /**< dynamic array of precint packet information from ppix box*/
 } index_param_t;
-
-
 /**
  * parse JP2 file
  * AnnexI: Indexing JPEG2000 files for JPIP
@@ -141,8 +139,6 @@ void delete_index(index_param_t **index);
  * @param[in] COD COD marker information
  */
 void delete_COD(CODmarker_param_t COD);
-
-
 /** 1-dimensional range parameters*/
 typedef struct range_param {
     Byte4_t minvalue; /**< minimal value*/
@@ -170,8 +166,6 @@ range_param_t get_tile_Xrange(SIZmarker_param_t SIZ, Byte4_t tile_id,
  */
 range_param_t get_tile_Yrange(SIZmarker_param_t SIZ, Byte4_t tile_id,
                               int level);
-
-
 /**
  * get tile wdith at the decomposition level
  *
@@ -182,8 +176,6 @@ range_param_t get_tile_Yrange(SIZmarker_param_t SIZ, Byte4_t tile_id,
  */
 Byte4_t get_tile_XSiz(SIZmarker_param_t SIZ, Byte4_t tile_id, int level);
 Byte4_t get_tile_YSiz(SIZmarker_param_t SIZ, Byte4_t tile_id, int level);
-
-
 /**
  * answers if the target is feasible to JPT-stream
  *

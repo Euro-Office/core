@@ -56,8 +56,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeForms;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -111,8 +109,6 @@ public:
 
 	odf_types::common_xlink_attlist		xlink_attlist_;
 	_CP_OPT(std::wstring)				office_target_frame_;
-
-    
 };
 CP_REGISTER_OFFICE_ELEMENT2(form_form);
 

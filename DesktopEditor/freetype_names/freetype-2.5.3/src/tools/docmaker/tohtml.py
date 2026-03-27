@@ -6,8 +6,6 @@ from content import *
 from formatter import *
 
 import time
-
-
 # The following defines the HTML header used by all generated pages.
 html_header_1 = """\
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
@@ -78,8 +76,6 @@ html_header_5t = """\
 html_header_6 = """\
  API Reference</h1></center>
 """
-
-
 # The HTML footer used by all generated pages.
 html_footer = """\
 </body>
@@ -156,16 +152,12 @@ toc_footer_end = """\
 <td width="100%"></td>
 </tr></table>
 """
-
-
 # source language keyword coloration/styling
 keyword_prefix = '<span class="keyword">'
 keyword_suffix = '</span>'
 
 section_synopsis_header = '<h2>Synopsis</h2>'
 section_synopsis_footer = ''
-
-
 # Translate a single line of source to HTML.  This will convert
 # a "<" into "&lt.", ">" into "&gt.", etc.
 def  html_quote( line ):
@@ -173,8 +165,6 @@ def  html_quote( line ):
     result = string.replace( result, "<", "&lt;" )
     result = string.replace( result, ">", "&gt;" )
     return result
-
-
 
 class  HtmlFormatter( Formatter ):
 

@@ -67,8 +67,6 @@ typedef int8_t le_int8;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 typedef uint8_t le_uint8;
-
-
 /**
  * A type used for boolean values.
  *
@@ -127,8 +125,6 @@ typedef le_uint32 LEGlyphID;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_GLYPH_SHIFT    0
-
-
 /**
  * Used to mask off the sub-font ID part of an LEGlyphID.
  *
@@ -145,8 +141,6 @@ typedef le_uint32 LEGlyphID;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_SUB_FONT_SHIFT 16
-
-
 /**
  * Used to mask off the client-defined part of an LEGlyphID.
  *
@@ -163,8 +157,6 @@ typedef le_uint32 LEGlyphID;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_CLIENT_SHIFT   24
-
-
 /**
  * A convenience macro to get the Glyph ID part of an LEGlyphID.
  *
@@ -188,8 +180,6 @@ typedef le_uint32 LEGlyphID;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_GET_CLIENT(gid) ((gid & LE_CLIENT_MASK) >> LE_CLIENT_SHIFT)
-
-
 /**
  * A convenience macro to set the Glyph ID part of an LEGlyphID.
  *
@@ -213,8 +203,6 @@ typedef le_uint32 LEGlyphID;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_SET_CLIENT(gid, client) ((gid & ~LE_CLIENT_MASK) | ((client << LE_CLIENT_SHIFT) & LE_CLIENT_MASK))
-
-
 /**
  * Used to represent 16-bit Unicode code points.
  *
@@ -268,8 +256,6 @@ struct LEPoint
  */
 typedef struct LEPoint LEPoint;
 #endif
-
-
 #ifndef U_HIDE_INTERNAL_API
 
 /**
@@ -641,8 +627,6 @@ enum LEFeatureENUMs {
   LE_CHAR_FILTER_FEATURE_ENUM = 31, /**< Apply CharSubstitutionFilter */
   LE_FEATURE_ENUM_MAX = LE_CHAR_FILTER_FEATURE_ENUM
 };
-
-
 /** 
  * Flags for typographic features.
  * @internal
@@ -723,6 +707,4 @@ typedef enum LEErrorCode LEErrorCode;
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
  */
 #define LE_FAILURE(code) (U_FAILURE((UErrorCode)code))
-
-
 #endif

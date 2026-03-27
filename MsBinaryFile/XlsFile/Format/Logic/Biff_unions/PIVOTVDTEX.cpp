@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 PIVOTVDTEX::PIVOTVDTEX()
 {
 }
-
-
 PIVOTVDTEX::~PIVOTVDTEX()
 {
 }
-
-
 BaseObjectPtr PIVOTVDTEX::clone()
 {
 	return BaseObjectPtr(new PIVOTVDTEX(*this));
 }
-
-
 // PIVOTVDTEX = SXVDTEx *ContinueFrt
 const bool PIVOTVDTEX::loadContent(BinProcessor& proc)
 {

@@ -39,13 +39,9 @@ namespace XLS
 Password::Password()
 {
 }
-
-
 Password::~Password()
 {
 }
-
-
 BaseObjectPtr Password::clone()
 {
 	return BaseObjectPtr(new Password(*this));

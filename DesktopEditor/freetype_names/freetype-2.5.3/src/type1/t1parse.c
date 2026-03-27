@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The Type 1 parser is in charge of the following:                      */
@@ -31,8 +29,6 @@
   /* See `t1load.c' to see how data is loaded from the font file.          */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -41,8 +37,6 @@
 #include "t1parse.h"
 
 #include "t1errors.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -51,8 +45,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1parse
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -62,8 +54,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* see Adobe Technical Note 5040.Download_Fonts.pdf */
 
   static FT_Error
@@ -74,8 +64,6 @@
     FT_Error   error;
     FT_UShort  tag;
     FT_ULong   size;
-
-
     *atag  = 0;
     *asize = 0;
 
@@ -92,8 +80,6 @@
 
     return error;
   }
-
-
   static FT_Error
   check_type1_format( FT_Stream    stream,
                       const char*  header_string,
@@ -102,8 +88,6 @@
     FT_Error   error;
     FT_UShort  tag;
     FT_ULong   dummy;
-
-
     if ( FT_STREAM_SEEK( 0 ) )
       goto Exit;
 
@@ -130,8 +114,6 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   T1_New_Parser( T1_Parser      parser,
                  FT_Stream      stream,
@@ -141,8 +123,6 @@
     FT_Error   error;
     FT_UShort  tag;
     FT_ULong   size;
-
-
     psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
 
     parser->stream       = stream;
@@ -238,14 +218,10 @@
 
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   T1_Finalize_Parser( T1_Parser  parser )
   {
     FT_Memory  memory = parser->root.memory;
-
-
     /* always free the private dictionary */
     FT_FREE( parser->private_dict );
 
@@ -255,8 +231,6 @@
 
     parser->root.funcs.done( &parser->root );
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   T1_Get_Private_Dict( T1_Parser      parser,
                        PSAux_Service  psaux )
@@ -265,8 +239,6 @@
     FT_Memory  memory = parser->root.memory;
     FT_Error   error  = FT_Err_Ok;
     FT_ULong   size;
-
-
     if ( parser->in_pfb )
     {
       /* in the case of the PFB format, the private dictionary can be  */
@@ -275,8 +247,6 @@
       /* then re-read them into memory.                                */
       FT_Long    start_pos = FT_STREAM_POS();
       FT_UShort  tag;
-
-
       parser->private_len = 0;
       for (;;)
       {
@@ -337,8 +307,6 @@
       FT_Byte     c;
       FT_Pointer  pos_lf;
       FT_Bool     test_cr;
-
-
     Again:
       for (;;)
       {
@@ -460,8 +428,6 @@
       {
         /* ASCII hexadecimal encoding */
         FT_Long  len;
-
-
         parser->root.cursor = cur;
         (void)psaux->ps_parser_funcs->to_bytes( &parser->root,
                                                 parser->private_dict,
@@ -503,6 +469,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

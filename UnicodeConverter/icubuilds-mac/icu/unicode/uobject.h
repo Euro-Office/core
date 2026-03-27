@@ -297,8 +297,6 @@ protected:
     } \
     UClassID myClass::getDynamicClassID() const \
     { return myClass::getStaticClassID(); }
-
-
 /**
  * This macro adds ICU RTTI to an ICU abstract class implementation.
  * This macro should be invoked in *.cpp files.  The corresponding

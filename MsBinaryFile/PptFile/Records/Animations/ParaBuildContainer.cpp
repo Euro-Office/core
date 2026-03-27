@@ -56,8 +56,6 @@ void CRecordParaBuildContainer::ReadFromStream(SRecordHeader &header, POLE::Stre
     CRecordBuildListSubContainer::ReadFromStream(header, pStream);
 
     UINT lCurLen = buildAtom.m_oHeader.RecLen + 8 + 24; // BuildAtom - 24
-
-
     SRecordHeader paraBuildAtomHeader;
     if (paraBuildAtomHeader.ReadFromStream(pStream))
     {

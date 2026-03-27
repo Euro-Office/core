@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgMemAreaN::clone()
 {
 	return BiffStructurePtr(new PtgMemAreaN(*this));
@@ -46,8 +44,6 @@ void PtgMemAreaN::loadFields(CFRecord& record)
 {
 	record >> cce;
 }
-
-
 void PtgMemAreaN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	PtgExtraMemPtr range;
@@ -59,9 +55,5 @@ void PtgMemAreaN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool
 	//	ptg_stack.push("#CACHE(" + STR::int2str(getOffsetInRecord() + getSizeOfStruct() + cce, 10) + ")!" + range->toString());
 	extra_data.pop();
 }
-
-
-
-
 } // namespace XLS
 

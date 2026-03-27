@@ -28,8 +28,6 @@
 #include "agg_color_rgba.h"
 #include "agg_ctrl.h"
 
-
-
 namespace agg
 {
 
@@ -89,8 +87,6 @@ namespace agg
         unsigned m_vertex;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class ColorT> class rbox_ctrl : public rbox_ctrl_impl
     {
@@ -109,8 +105,6 @@ namespace agg
             m_colors[3] = &m_inactive_color;
             m_colors[4] = &m_active_color;
         }
-          
-
         void background_color(const ColorT& c) { m_background_color = c; }
         void border_color(const ColorT& c) { m_border_color = c; }
         void text_color(const ColorT& c) { m_text_color = c; }
@@ -131,11 +125,7 @@ namespace agg
         ColorT* m_colors[5];
     };
 
-
-
 }
-
-
 
 #endif
 

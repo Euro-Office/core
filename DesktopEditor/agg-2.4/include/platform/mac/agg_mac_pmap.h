@@ -20,12 +20,8 @@
 //----------------------------------------------------------------------------
 #ifndef AGG_MAC_PMAP_INCLUDED
 #define AGG_MAC_PMAP_INCLUDED
-
-
 #include <stdio.h>
 #include <Carbon.h>
-
-
 namespace agg
 {
     enum org_e
@@ -82,6 +78,4 @@ namespace agg
     };
 
 }
-
-
 #endif

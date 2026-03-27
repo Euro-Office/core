@@ -14,34 +14,24 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "ftspic.h"
 #include "ftsmerrs.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftgrays.c */
   void
   FT_Init_Class_ft_grays_raster( FT_Raster_Funcs*  funcs );
-
-
   void
   ft_smooth_renderer_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->smooth )
     {
       SmoothPIC*  container = (SmoothPIC*)pic_container->smooth;
-
-
       if ( --container->ref_count )
         return;
 
@@ -49,8 +39,6 @@
       pic_container->smooth = NULL;
     }
   }
-
-
   FT_Error
   ft_smooth_renderer_class_pic_init( FT_Library  library )
   {
@@ -58,8 +46,6 @@
     FT_Error           error         = FT_Err_Ok;
     SmoothPIC*         container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* since this function also serve smooth_lcd and smooth_lcdv renderers,
        it implements reference counting */
     if ( pic_container->smooth )
@@ -82,30 +68,22 @@
 
     return error;
   }
-
-
   /* re-route these init and free functions to the above functions */
   FT_Error
   ft_smooth_lcd_renderer_class_pic_init( FT_Library  library )
   {
     return ft_smooth_renderer_class_pic_init( library );
   }
-
-
   void
   ft_smooth_lcd_renderer_class_pic_free( FT_Library  library )
   {
     ft_smooth_renderer_class_pic_free( library );
   }
-
-
   FT_Error
   ft_smooth_lcdv_renderer_class_pic_init( FT_Library  library )
   {
     return ft_smooth_renderer_class_pic_init( library );
   }
-
-
   void
   ft_smooth_lcdv_renderer_class_pic_free( FT_Library  library )
   {
@@ -113,6 +91,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is used to define the PFR error enumeration constants.      */
@@ -36,6 +34,4 @@
 #include FT_ERRORS_H
 
 #endif /* __PFRERROR_H__ */
-
-
 /* END */

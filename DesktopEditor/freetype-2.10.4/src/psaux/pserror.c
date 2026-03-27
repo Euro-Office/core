@@ -34,12 +34,8 @@
  * and you accept them fully.
  *
  */
-
-
 #include "psft.h"
 #include "pserror.h"
-
-
   FT_LOCAL_DEF( void )
   cf2_setError( FT_Error*  error,
                 FT_Error   value )
@@ -47,6 +43,4 @@
     if ( error && !*error )
       *error = value;
   }
-
-
 /* END */

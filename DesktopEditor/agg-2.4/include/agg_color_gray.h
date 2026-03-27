@@ -108,8 +108,6 @@ namespace agg
         {
             return double(a) / double(base_mask);
         }
-
-
         //--------------------------------------------------------------------
         const self_type& premultiply()
         {
@@ -190,8 +188,6 @@ namespace agg
         //--------------------------------------------------------------------
         static self_type no_color() { return self_type(0,0); }
     };
-
-
     //-------------------------------------------------------------gray8_pre
     inline gray8 gray8_pre(unsigned v, unsigned a = gray8::base_mask)
     {
@@ -217,10 +213,6 @@ namespace agg
     {
         return gray8(c,a).premultiply();
     }
-
-
-
-
     //==================================================================gray16
     struct gray16
     {
@@ -295,8 +287,6 @@ namespace agg
         {
             return double(a) / double(base_mask);
         }
-
-
         //--------------------------------------------------------------------
         const self_type& premultiply()
         {
@@ -377,8 +367,6 @@ namespace agg
         //--------------------------------------------------------------------
         static self_type no_color() { return self_type(0,0); }
     };
-
-
     //------------------------------------------------------------gray16_pre
     inline gray16 gray16_pre(unsigned v, unsigned a = gray16::base_mask)
     {
@@ -404,11 +392,5 @@ namespace agg
     {
         return gray16(c,a).premultiply();
     }
-
-
 }
-
-
-
-
 #endif

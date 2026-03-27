@@ -230,6 +230,4 @@ namespace MetaFile
 		std::vector<CEmfInterpretatorBase*> m_arInterpretators;
 	};
 }
-
-
 #endif // CEMFINTERPRETATORARRAY_H

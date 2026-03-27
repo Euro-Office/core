@@ -38,19 +38,13 @@ namespace XLS
 DConBin::DConBin()
 {
 }
-
-
 DConBin::~DConBin()
 {
 }
-
-
 BaseObjectPtr DConBin::clone()
 {
 	return BaseObjectPtr(new DConBin(*this));
 }
-
-
 void DConBin::readFields(CFRecord& record)
 {
 	unsigned short reserved1;

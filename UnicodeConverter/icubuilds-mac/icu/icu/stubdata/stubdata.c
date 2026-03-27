@@ -20,8 +20,6 @@
 #include "unicode/utypes.h"
 #include "unicode/udata.h"
 #include "unicode/uversion.h"
-
-
 typedef struct {
     uint16_t headerSize;
     uint8_t magic1, magic2;
@@ -70,5 +68,3 @@ U_EXPORT const ICU_Data_Header U_ICUDATA_ENTRY_POINT = {
 /*        }  */
     }
 };
-
-

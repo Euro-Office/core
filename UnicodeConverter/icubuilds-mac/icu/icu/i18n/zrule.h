@@ -244,8 +244,6 @@ izrule_getNextStart(IZRule* rule, UDate base, int32_t prevRawOffset,
 U_CAPI UBool U_EXPORT2
 izrule_getPreviousStart(IZRule* rule, UDate base, int32_t prevRawOffset, 
                        int32_t prevDSTSavings, UBool inclusive, UDate& result);
-
-
 /**
  * Return the class ID for this class. This is useful only for comparing to
  * a return value from getDynamicClassID(). For example:

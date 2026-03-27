@@ -32,8 +32,6 @@ blockAliases.append("PrivateUse:PrivateUseArea,SupplementaryPrivateUseArea-A," +
 minTableSize = 8
 
 (blockfile, catfile) = string.split(sources)
-
-
 #
 # Now process the "blocks" file, reducing it to a dictionary
 # indexed by blockname, containing a tuple with the applicable
@@ -270,8 +268,6 @@ typedef struct {
     xmlUnicodeRange *table;
     int		    numentries;
 } xmlUnicodeNameTable;
-
-
 static xmlIntFunc *xmlUnicodeLookup(xmlUnicodeNameTable *tptr, const char *tname);
 
 static xmlUnicodeRange xmlUnicodeBlocks[] = {
@@ -332,8 +328,6 @@ for name in ckeys:
       pline += "{%s, %s}" % (hex(low), hex(high))
     output.write(pline + " };\nstatic xmlChRangeGroup xml%sG = {%s,%s,%s,%s};\n\n"
          % (name, numshort, numlong, sptr, lptr))
-
-
 output.write(
 """static xmlUnicodeNameTable xmlUnicodeBlockTbl = {xmlUnicodeBlocks, %s};
 static xmlUnicodeNameTable xmlUnicodeCatTbl = {xmlUnicodeCats, %s};

@@ -739,8 +739,6 @@ typedef enum UCharCategory
 #define U_GC_PI_MASK    U_MASK(U_INITIAL_PUNCTUATION)
 /** Mask constant for a UCharCategory. @stable ICU 2.1 */
 #define U_GC_PF_MASK    U_MASK(U_FINAL_PUNCTUATION)
-
-
 /** Mask constant for multiple UCharCategory bits (L Letters). @stable ICU 2.1 */
 #define U_GC_L_MASK \
             (U_GC_LU_MASK|U_GC_LL_MASK|U_GC_LT_MASK|U_GC_LM_MASK|U_GC_LO_MASK)
@@ -3441,8 +3439,6 @@ U_STABLE int32_t U_EXPORT2
 u_getFC_NFKC_Closure(UChar32 c, UChar *dest, int32_t destCapacity, UErrorCode *pErrorCode);
 
 #endif
-
-
 U_CDECL_END
 
 #endif /*_UCHAR*/

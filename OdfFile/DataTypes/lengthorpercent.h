@@ -36,8 +36,6 @@
 #include "odfattributes.h"
 #include "percent.h"
 #include "length.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class length_or_percent

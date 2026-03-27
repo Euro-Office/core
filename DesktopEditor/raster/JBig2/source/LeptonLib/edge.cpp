@@ -28,7 +28,6 @@
  *          l_int32   pixGetLastOffPixelInRun()
  *          l_int32   pixGetLastOnPixelInRun()
  *
- *
  *  The Sobel edge detector uses these two simple gradient filters.
  *
  *       1    2    1             1    0   -1 
@@ -48,8 +47,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*----------------------------------------------------------------------*
  *                    Sobel edge detecting filter                       *
  *----------------------------------------------------------------------*/
@@ -149,8 +146,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                   Two-sided edge gradient filter                     *
  *----------------------------------------------------------------------*/
@@ -250,8 +245,6 @@ PIX       *pixd;
                 
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                   Measurement of edge smoothness                     *
  *----------------------------------------------------------------------*/
@@ -354,8 +347,6 @@ NUMA    *na, *nae;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*!
  *  pixGetEdgeProfile()
  *
@@ -473,8 +464,6 @@ PIXCMAP  *cmap;
 
     return na;
 }
-
-
 /*
  *  pixGetLastOffPixelInRun()
  *
@@ -550,8 +539,6 @@ l_uint32  val;
     }
     return 0;
 }
-
-
 /*
  *  pixGetLastOnPixelInRun()
  *
@@ -622,5 +609,3 @@ l_uint32  val;
     }
     return 0;
 }
-
-

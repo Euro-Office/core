@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTextSpecInfoAtom : public CUnknownRecord
@@ -45,8 +43,6 @@ public:
 	_UINT32											m_lCount; 
 
 	std::vector<PPT::CTextSIRun>	m_arrSIs;
-
-	
     CRecordTextSpecInfoAtom();
     ~CRecordTextSpecInfoAtom();
 

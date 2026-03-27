@@ -83,8 +83,6 @@
     @version
     #$Id: GPixmap.h,v 1.10 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 #include "GSmartPointer.h"
 
 #ifdef HAVE_NAMESPACES
@@ -93,13 +91,9 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 class GBitmap;
 class GRect;
 class ByteStream;
-
-
 /** Color pixel as a RGB triple.  
     The colors are represented using three bytes named #r#, #g# and #b#.  The
     value of these bytes represent additive amounts of light.  Color white is
@@ -148,8 +142,6 @@ struct DJVUAPI GPixel
   static const GPixel RED;
   //@}
 };
-
-
 /** RGB Color images.  
     Instances of class #GPixmap# represent color images as a two dimensional
     array of pixels \Ref{GPixel}.  The bracket operator returns a pointer to
@@ -447,8 +439,6 @@ protected:
 //@}
 
 // INLINE --------------------------
-
-
 inline int 
 operator==(const GPixel & p1, const GPixel & p2)
 {
@@ -524,8 +514,6 @@ GPixmap::borrow_data(GPixel &data, int w, int h)
 //////////////////////////////////////////////////
 // Memory usage
 //////////////////////////////////////////////////
-
-
 inline unsigned int 
 GPixmap::get_memory_usage() const
 {
@@ -541,5 +529,3 @@ using namespace DJVU;
 # endif
 #endif
 #endif
-
-

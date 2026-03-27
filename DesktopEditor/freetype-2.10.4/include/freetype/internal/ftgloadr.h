@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTGLOADR_H_
 #define FTGLOADR_H_
-
-
 #include <freetype/freetype.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @struct:
@@ -44,8 +36,6 @@ FT_BEGIN_HEADER
     FT_Matrix  transform;
 
   } FT_SubGlyphRec;
-
-
   typedef struct  FT_GlyphLoadRec_
   {
     FT_Outline   outline;       /* outline                   */
@@ -55,8 +45,6 @@ FT_BEGIN_HEADER
     FT_SubGlyph  subglyphs;     /* subglyphs                 */
 
   } FT_GlyphLoadRec, *FT_GlyphLoad;
-
-
   typedef struct  FT_GlyphLoaderRec_
   {
     FT_Memory        memory;
@@ -71,8 +59,6 @@ FT_BEGIN_HEADER
     void*            other;            /* for possible future extension? */
 
   } FT_GlyphLoaderRec, *FT_GlyphLoader;
-
-
   /* create new empty glyph loader */
   FT_BASE( FT_Error )
   FT_GlyphLoader_New( FT_Memory        memory,
@@ -100,8 +86,6 @@ FT_BEGIN_HEADER
   FT_GlyphLoader_CheckPoints( FT_GlyphLoader  loader,
                               FT_UInt         n_points,
                               FT_UInt         n_contours );
-
-
 #define FT_GLYPHLOADER_CHECK_P( _loader, _count )       \
   ( (_count) == 0                                    || \
     ( (FT_UInt)(_loader)->base.outline.n_points    +    \
@@ -121,8 +105,6 @@ FT_BEGIN_HEADER
     : FT_GlyphLoader_CheckPoints( (_loader),                       \
                                   (FT_UInt)(_points),              \
                                   (FT_UInt)(_contours) ) )
-
-
   /* check that there is enough space to add `n_subs' sub-glyphs to */
   /* a glyph loader                                                 */
   FT_BASE( FT_Error )
@@ -136,11 +118,7 @@ FT_BEGIN_HEADER
   /* add the current glyph to the base glyph */
   FT_BASE( void )
   FT_GlyphLoader_Add( FT_GlyphLoader  loader );
-
-
 FT_END_HEADER
 
 #endif /* FTGLOADR_H_ */
-
-
 /* END */

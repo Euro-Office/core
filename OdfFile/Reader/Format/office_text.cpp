@@ -44,14 +44,10 @@
 namespace cpdoccore { 
 namespace odf_reader {
 
-
-
 // office:text
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * office_text::ns		= L"office";
 const wchar_t * office_text::name	= L"text";
-
-
 office_text::office_text()
 {}
 

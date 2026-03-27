@@ -38,24 +38,16 @@
 
 namespace XLS
 {
-
-
 DAT::DAT()
 {
 }
-
-
 DAT::~DAT()
 {
 }
-
-
 BaseObjectPtr DAT::clone()
 {
 	return BaseObjectPtr(new DAT(*this));
 }
-
-
 // DAT = Dat Begin LD End
 const bool DAT::loadContent(BinProcessor& proc)
 {
@@ -89,8 +81,6 @@ int DAT::serialize (std::wostream & _stream)
 	Dat * dat = dynamic_cast<Dat*>(m_Dat.get());
 
 	LD *ld = dynamic_cast<LD *>(m_LD.get());
-
-
 	return 0;
 	
 }

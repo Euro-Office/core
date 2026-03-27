@@ -14,23 +14,15 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PSCONV_H_
 #define PSCONV_H_
-
-
 #include <freetype/internal/psaux.h>
 
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Long )
   PS_Conv_Strtol( FT_Byte**  cursor,
                   FT_Byte*   limit,
                   FT_Long    base );
-
-
   FT_LOCAL( FT_Long )
   PS_Conv_ToInt( FT_Byte**  cursor,
                  FT_Byte*   limit );
@@ -60,11 +52,7 @@ FT_BEGIN_HEADER
                        FT_Byte*    buffer,
                        FT_Offset   n,
                        FT_UShort*  seed );
-
-
 FT_END_HEADER
 
 #endif /* PSCONV_H_ */
-
-
 /* END */

@@ -213,8 +213,6 @@ public:
 		      GBool onePageOnly);
   GList *findAll(Unicode *u, int len, GBool caseSensitive,
 		 GBool wholeWord, int firstPage, int lastPage);
-
-
   //----- coordinate conversion
 
   // user space: per-page, as defined by PDF file; unit = point

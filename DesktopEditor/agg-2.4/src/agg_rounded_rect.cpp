@@ -19,8 +19,6 @@
 
 #include <math.h>
 #include "agg_rounded_rect.h"
-
-
 namespace agg
 {
     //------------------------------------------------------------------------
@@ -158,7 +156,5 @@ namespace agg
         }
         return cmd;
     }
-
-
 }
 

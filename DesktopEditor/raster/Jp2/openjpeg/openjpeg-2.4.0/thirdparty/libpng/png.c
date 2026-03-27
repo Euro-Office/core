@@ -1473,8 +1473,6 @@ png_XYZ_from_xy(png_XYZ *XYZ, const png_xy *xy)
        png_reciprocal(green_inverse);
    if (blue_scale <= 0)
       return 1;
-
-
    /* And fill in the png_XYZ: */
    if (png_muldiv(&XYZ->red_X, xy->redx, PNG_FP_1, red_inverse) == 0)
       return 1;
@@ -2797,8 +2795,6 @@ PNG_FP_End:
 
    return (state & PNG_FP_SAW_DIGIT) != 0;
 }
-
-
 /* The same but for a complete string. */
 int
 png_check_fp_string(png_const_charp string, png_size_t size)

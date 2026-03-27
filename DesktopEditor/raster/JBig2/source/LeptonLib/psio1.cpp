@@ -166,8 +166,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return 0;
 }
-
-
 /*
  *  sarrayConvertFilesToPS()
  *
@@ -214,8 +212,6 @@ l_int32  i, nfiles, index, firstfile, ret, format;
 
     return 0;
 }
-
-
 /*
  *  convertFilesFittedToPS()
  *
@@ -280,8 +276,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return 0;
 }
-
-
 /*
  *  sarrayConvertFilesFittedToPS()
  *
@@ -339,8 +333,6 @@ l_int32  ret, i, w, h, nfiles, index, firstfile, format, res;
 
     return 0;
 }
-
-
 /*
  *  writeImageCompressedToPSFile()
  *
@@ -413,8 +405,6 @@ FILE        *fp;
 
     return retval;
 }
-
-
 /*-------------------------------------------------------------*
  *              Convert mixed text/image files to PS           *
  *-------------------------------------------------------------*/
@@ -528,8 +518,6 @@ SARRAY  *sapage, *samask;
     sarrayDestroy(&samask);
     return 0;
 }
-
-
 /*
  *  pixWriteSegmentedPageToPS()
  *
@@ -677,8 +665,6 @@ PIX       *pixmi, *pixmis, *pixt, *pixg, *pixsc, *pixb, *pixc;
     pixDestroy(&pixc);
     return ret;
 }
-
-
 /*
  *  pixWriteMixedToPS()
  *
@@ -767,8 +753,6 @@ l_int32      resb, resc, endpage, maskop, ret;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *            Convert any image file to PS for embedding       *
  *-------------------------------------------------------------*/
@@ -866,8 +850,6 @@ PIX        *pix, *pixs;
     pixDestroy(&pixs);
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *              Write all images in a pixa out to PS           *
  *-------------------------------------------------------------*/
@@ -956,8 +938,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 
 /* --------------------------------------------*/
 #endif  /* USE_PSIO */

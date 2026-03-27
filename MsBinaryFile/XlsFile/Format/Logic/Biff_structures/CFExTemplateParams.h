@@ -50,8 +50,6 @@ private:
 	_UINT32 reserved2_3;
 	_UINT32 reserved2_4;
 };
-
-
 struct CFExTextTemplateParams
 {
 	unsigned short ctp;
@@ -62,8 +60,6 @@ private:
 	_UINT32 reserved_3 = 0;
 	_UINT32 reserved_4 = 0;
 };
-
-
 struct CFExDateTemplateParams
 {
 	unsigned short dateOp;
@@ -74,8 +70,6 @@ private:
 	_UINT32 reserved_3 = 0;
 	_UINT32 reserved_4 = 0;
 };
-
-
 struct CFExAveragesTemplateParams
 {
 	unsigned short iParam = 0;
@@ -86,8 +80,6 @@ private:
 	_UINT32 reserved_3 = 0;
 	_UINT32 reserved_4 = 0;
 };
-
-
 struct CFExDefaultTemplateParams
 {
 private:
@@ -96,8 +88,6 @@ private:
 	_UINT32 unused3 = 0;
 	_UINT32 unused4 = 0;
 };
-
-
 class CFExTemplateParams : public BiffStructure
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(CFExTemplateParams)
@@ -108,8 +98,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	static const ElementType	type = typeCFExTemplateParams;
 
 	union

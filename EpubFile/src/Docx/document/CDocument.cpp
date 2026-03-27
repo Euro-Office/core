@@ -27,8 +27,6 @@ void CDocument::SetDefoult()
     AddArgument(L"xmlns:wne", L"http://schemas.microsoft.com/office/word/2006/wordml");
     AddArgument(L"xmlns:wps", L"http://schemas.microsoft.com/office/word/2010/wordprocessingShape");
     AddArgument(L"mc:Ignorable", L"w14 w15 w16se wp14");
-
-
     CBody *oBody = new CBody;
     oBody->SetDefoult();
     AddChildren(oBody);

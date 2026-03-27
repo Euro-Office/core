@@ -34,8 +34,6 @@
 #include "stream_utils.h"
 #include "../../../DesktopEditor/common/File.h"
 #include <algorithm>
-
-
 using namespace CFCPP;
 
 CFCPP::Stream CFCPP::OpenFileStream(const std::wstring & filename, bool bRewrite, bool trunc)

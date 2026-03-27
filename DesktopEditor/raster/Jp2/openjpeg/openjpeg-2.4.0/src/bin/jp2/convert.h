@@ -84,8 +84,6 @@ extern const convert_XXx32s_C1R convert_XXu32s_C1R_LUT[9]; /* up to 8bpp */
 typedef void (* convert_32sXXx_C1R)(const OPJ_INT32* pSrc, OPJ_BYTE* pDst,
                                     OPJ_SIZE_T length);
 extern const convert_32sXXx_C1R convert_32sXXu_C1R_LUT[9]; /* up to 8bpp */
-
-
 /* TGA conversion */
 opj_image_t* tgatoimage(const char *filename, opj_cparameters_t *parameters);
 int imagetotga(opj_image_t * image, const char *outfile);

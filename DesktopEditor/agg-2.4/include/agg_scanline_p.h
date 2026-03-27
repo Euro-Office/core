@@ -170,14 +170,6 @@ namespace agg
         pod_array<span>       m_spans;
         span*                 m_cur_span;
     };
-
-
-
-
-
-
-
-
     //==========================================================scanline32_p8
     class scanline32_p8
     {
@@ -197,8 +189,6 @@ namespace agg
             const cover_type* covers;
         };
         typedef pod_bvector<span, 4> span_array_type;
-
-
         //--------------------------------------------------------------------
         class const_iterator
         {
@@ -320,10 +310,6 @@ namespace agg
         cover_type*           m_cover_ptr;
         span_array_type       m_spans;
     };
-
-
 }
-
-
 #endif
 

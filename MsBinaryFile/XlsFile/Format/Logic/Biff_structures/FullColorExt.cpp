@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FullColorExt::clone()
 {
 	return BiffStructurePtr(new FullColorExt(*this));

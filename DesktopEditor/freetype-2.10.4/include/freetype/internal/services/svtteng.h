@@ -14,18 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVTTENG_H_
 #define SVTTENG_H_
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/ftmodapi.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * SFNT table loading service.
    */
@@ -42,12 +36,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVTTENG_H_ */
-
-
 /* END */

@@ -55,8 +55,6 @@ namespace cpdoccore {
 namespace odf_reader {
 
 static formulasconvert::odf2oox_converter formulas_converter;
-
-
 int table_table_cell_content::xlsx_convert(oox::xlsx_conversion_context & Context, text_format_properties_ptr text_properties, bool need_cache)
 {
 	if (elements_.empty()) return -1;
@@ -220,8 +218,6 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 						CP_XML_ATTR(L"customFormat", 1);
 						CP_XML_ATTR(L"s", Default_Cell_style_in_row_ );
 					}
-
-
                     CP_XML_STREAM();
 
 					for (size_t i = 0 ; i < content_.size(); i++)
@@ -504,8 +500,6 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
     const unsigned int columnsRepeated		= attlist_.table_number_columns_repeated_;
     const std::wstring styleName			= attlist_.table_style_name_.get_value_or(L"");
     const std::wstring defaultCellStyleName = attlist_.table_default_cell_style_name_.get_value_or(L"");
-
-
     int cMin = 0, cMax = 0;
     Context.start_table_column(columnsRepeated, defaultCellStyleName, cMin, cMax, bHeader);
 
@@ -723,8 +717,6 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
     
 	const common_value_and_type_attlist & attr	= attlist_.common_value_and_type_attlist_;
 	std::wstring formula = attlist_.table_formula_.get_value_or(L"");
-	  
-
 	if (attlist_.table_number_columns_repeated_ < 199 && last_cell_) last_cell_ = false;
 
 	unsigned int cell_repeated_max = Context.current_table_column() + attlist_.table_number_columns_repeated_ + 1;
@@ -1020,8 +1012,6 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		{
 			sharedStringId = content_.xlsx_convert(Context, textFormatProperties, need_cache_convert);
 		}
-
-
 		if (xlsx_value_type == oox::XlsxCellType::str || xlsx_value_type == oox::XlsxCellType::inlineStr)
 		{
 			int index = Context.get_table_context().in_database_range();

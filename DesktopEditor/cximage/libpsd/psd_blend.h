@@ -4,12 +4,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 #define PSD_BLEND_CHANNEL(b, f, a)				((((b) << 8) + ((f) - (b)) * (a)) >> 8)
 #define PSD_BLEND_ALPHA(b, f)					((b) + ((255 - (b)) * (f) >> 8))
-
-
 // psd_blend_mode_normal
 #define PSD_BLEND_NORMAL(b, f, a)							\
 do {														\
@@ -246,8 +242,6 @@ do {														\
 	f = 255 - PSD_ABS(255 - b - f);							\
 	b = PSD_BLEND_CHANNEL(b, f, a);							\
 } while(0)
-
-
 
 #ifdef __cplusplus
 }

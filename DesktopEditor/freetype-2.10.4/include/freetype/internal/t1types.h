@@ -15,22 +15,14 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1TYPES_H_
 #define T1TYPES_H_
-
-
 #include <freetype/t1tables.h>
 #include <freetype/internal/pshints.h>
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/fthash.h>
 #include <freetype/internal/services/svpscmap.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -42,8 +34,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @struct:
@@ -79,8 +69,6 @@ FT_BEGIN_HEADER
     const FT_String**  char_name;
 
   } T1_EncodingRec, *T1_Encoding;
-
-
   /* used to hold extra data of PS_FontInfoRec that
    * cannot be stored in the publicly defined structure.
    *
@@ -91,8 +79,6 @@ FT_BEGIN_HEADER
     FT_UShort  fs_type;
 
   } PS_FontExtraRec;
-
-
   typedef struct  T1_FontRec_
   {
     PS_FontInfoRec   font_info;         /* font info dictionary   */
@@ -127,16 +113,12 @@ FT_BEGIN_HEADER
     FT_Fixed         stroke_width;
 
   } T1_FontRec, *T1_Font;
-
-
   typedef struct  CID_SubrsRec_
   {
     FT_Int     num_subrs;
     FT_Byte**  code;
 
   } CID_SubrsRec, *CID_Subrs;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -180,8 +162,6 @@ FT_BEGIN_HEADER
     FT_UInt        NumKernPair;
 
   } AFM_FontInfoRec, *AFM_FontInfo;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -193,12 +173,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   typedef struct T1_FaceRec_*   T1_Face;
   typedef struct CID_FaceRec_*  CID_Face;
-
-
   typedef struct  T1_FaceRec_
   {
     FT_FaceRec      root;
@@ -227,8 +203,6 @@ FT_BEGIN_HEADER
     const void*     pshinter;
 
   } T1_FaceRec;
-
-
   typedef struct  CID_FaceRec_
   {
     FT_FaceRec       root;
@@ -249,11 +223,7 @@ FT_BEGIN_HEADER
     FT_Stream        cid_stream;
 
   } CID_FaceRec;
-
-
 FT_END_HEADER
 
 #endif /* T1TYPES_H_ */
-
-
 /* END */

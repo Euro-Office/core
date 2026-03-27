@@ -14,24 +14,16 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSCONV_H__
 #define __PSCONV_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
 
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Long )
   PS_Conv_Strtol( FT_Byte**  cursor,
                   FT_Byte*   limit,
                   FT_Long    base );
-
-
   FT_LOCAL( FT_Long )
   PS_Conv_ToInt( FT_Byte**  cursor,
                  FT_Byte*   limit );
@@ -61,11 +53,7 @@ FT_BEGIN_HEADER
                        FT_Byte*    buffer,
                        FT_Offset   n,
                        FT_UShort*  seed );
-
-
 FT_END_HEADER
 
 #endif /* __PSCONV_H__ */
-
-
 /* END */

@@ -44,8 +44,6 @@ namespace DocFileFormat
 		unsigned short iPriority = 0;
 		unsigned short fReserved = 0;
 	};
-
-
 	class StyleSheetInformation
 	{
 		friend class StyleSheet;

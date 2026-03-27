@@ -15,12 +15,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTTABLES_H_
 #define TTTABLES_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -28,8 +24,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /**************************************************************************
@@ -68,8 +62,6 @@ FT_BEGIN_HEADER
    *   FT_PARAM_TAG_UNPATENTED_HINTING
    *
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -108,8 +100,6 @@ FT_BEGIN_HEADER
     FT_Short   Glyph_Data_Format;
 
   } TT_Header;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -226,8 +216,6 @@ FT_BEGIN_HEADER
     void*      short_metrics;
 
   } TT_HoriHeader;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -344,8 +332,6 @@ FT_BEGIN_HEADER
     void*      short_metrics;
 
   } TT_VertHeader;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -428,8 +414,6 @@ FT_BEGIN_HEADER
     FT_UShort  usUpperOpticalPointSize;       /* in twips (1/20th points) */
 
   } TT_OS2;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -463,8 +447,6 @@ FT_BEGIN_HEADER
     /* load them by default.                                */
 
   } TT_Postscript;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -493,8 +475,6 @@ FT_BEGIN_HEADER
     FT_Byte    Reserved;
 
   } TT_PCLT;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -583,8 +563,6 @@ FT_BEGIN_HEADER
     FT_UShort  maxComponentDepth;
 
   } TT_MaxProfile;
-
-
   /**************************************************************************
    *
    * @enum:
@@ -640,8 +618,6 @@ FT_BEGIN_HEADER
 #define ft_sfnt_vhea  FT_SFNT_VHEA
 #define ft_sfnt_post  FT_SFNT_POST
 #define ft_sfnt_pclt  FT_SFNT_PCLT
-
-
   /**************************************************************************
    *
    * @function:
@@ -685,8 +661,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void* )
   FT_Get_Sfnt_Table( FT_Face      face,
                      FT_Sfnt_Tag  tag );
-
-
   /**************************************************************************
    *
    * @function:
@@ -757,8 +731,6 @@ FT_BEGIN_HEADER
                       FT_Long    offset,
                       FT_Byte*   buffer,
                       FT_ULong*  length );
-
-
   /**************************************************************************
    *
    * @function:
@@ -799,8 +771,6 @@ FT_BEGIN_HEADER
                       FT_UInt    table_index,
                       FT_ULong  *tag,
                       FT_ULong  *length );
-
-
   /**************************************************************************
    *
    * @function:
@@ -823,8 +793,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_ULong )
   FT_Get_CMap_Language_ID( FT_CharMap  charmap );
-
-
   /**************************************************************************
    *
    * @function:
@@ -845,11 +813,7 @@ FT_BEGIN_HEADER
   FT_Get_CMap_Format( FT_CharMap  charmap );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* TTTABLES_H_ */
-
-
 /* END */

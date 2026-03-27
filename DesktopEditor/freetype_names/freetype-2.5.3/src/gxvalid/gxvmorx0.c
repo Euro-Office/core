@@ -23,11 +23,7 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmorx.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmorx
-
-
   static void
   gxv_morx_subtable_type0_entry_validate(
     FT_UShort                        state,
@@ -61,8 +55,6 @@
     FT_UNUSED( glyphOffset_p );
     FT_UNUSED( table );
     FT_UNUSED( limit );
-
-
 #ifdef GXV_LOAD_UNUSED_VARS
     markFirst   = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance = (FT_UShort)( ( flags >> 14 ) & 1 );
@@ -80,16 +72,12 @@
       FT_INVALID_DATA;
     }
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_morx_subtable_type0_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid )
   {
     FT_Bytes  p = table;
-
-
     GXV_NAME_ENTER(
       "morx chain subtable type0 (Indic-Script Rearrangement)" );
 
@@ -106,6 +94,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

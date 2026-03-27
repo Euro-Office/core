@@ -46,15 +46,11 @@ typedef enum
     aw_NULLABLE_WIDE = 5,
     aw_NAME_WIDE = 6,
 } AW_DETERMINATION;
-
-
 typedef enum
 {
 	cch_READ_FROM_RECORD = 0,
 	cch_PASSED_AS_AN_ARGUMENT = 1,
 } CCH_SOURCE;
-
-
 class BiffString : public BiffStructure
 {
 public:
@@ -100,8 +96,6 @@ protected:
     size_t struct_size  = 0;
 	_CP_OPT(size_t) cch_;
 };
-
-
 template<class cchType, AW_DETERMINATION det_id, CCH_SOURCE cch_where>
 class XLUnicodeString_T : public BiffString
 {
@@ -183,8 +177,6 @@ public:
                 if(cch >= 255)
                     break;
 		}
-
-		
 		struct_size += (cch << (is_wide ? 1 : 0));
 
 		load(record, cch, is_wide);
@@ -246,8 +238,6 @@ public:
                 if(cch >= 255)
                     break;
         }
-
-
         struct_size += (cch << (is_wide ? 1 : 0));
 
         save(record, cch, is_wide);
@@ -286,8 +276,6 @@ private:
 private:
 	_CP_OPT(bool) is_wide_rec;
 };
-
-
 typedef XLUnicodeString_T<unsigned short,	aw_READ_FROM_RECORD,					cch_READ_FROM_RECORD>		XLUnicodeString;
 typedef XLUnicodeString_T<unsigned char,	aw_READ_FROM_RECORD,					cch_READ_FROM_RECORD>		ShortXLUnicodeString;
 typedef XLUnicodeString_T<unsigned short,	aw_WIDE,								cch_READ_FROM_RECORD>		LPWideString;
@@ -297,8 +285,6 @@ typedef XLUnicodeString_T<unsigned short,	aw_READ_FROM_RECORD_IF_CCH_NOT_ZERO,	c
 typedef XLUnicodeString_T<unsigned short,	aw_ANSI,								cch_READ_FROM_RECORD>		LPAnsiString;
 typedef XLUnicodeString_T<unsigned char,	aw_ANSI,								cch_READ_FROM_RECORD>		ShortXLAnsiString;
 typedef XLUnicodeString_T<unsigned short,	aw_ANSI,								cch_PASSED_AS_AN_ARGUMENT>	LPAnsiStringNoCch;
-
-
 template<class cchType, AW_DETERMINATION det_id, CCH_SOURCE cch_where>
 CFRecord& operator >> (CFRecord& record, XLUnicodeString_T<cchType, det_id, cch_where>& val)
 {
@@ -335,8 +321,6 @@ public:
 };
 
 } // namespace XLS
-
-
 namespace OSHARED
 {
 

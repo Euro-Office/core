@@ -576,8 +576,6 @@ uidna_toASCII(const UChar* src, int32_t srcLength,
               int32_t options,
               UParseError* parseError,
               UErrorCode* status);
-
-
 /**
  * IDNA2003: This function implements the ToUnicode operation as defined in the IDNA RFC.
  * This operation is done on <b>single labels</b> before sending it to something that expects
@@ -624,8 +622,6 @@ uidna_toUnicode(const UChar* src, int32_t srcLength,
                 int32_t options,
                 UParseError* parseError,
                 UErrorCode* status);
-
-
 /**
  * IDNA2003: Convenience function that implements the IDNToASCII operation as defined in the IDNA RFC.
  * This operation is done on complete domain names, e.g: "www.example.com". 

@@ -196,8 +196,6 @@ int main(int argc, char *argv[])
     /* is using others way of calculation */
     /* l_param.cp_disto_alloc = 1 or l_param.cp_fixed_alloc = 1 */
     /* l_param.tcp_rates[0] = ... */
-
-
     /* tile definitions parameters */
     /* position of the tile grid aligned with the image */
     l_param.cp_tx0 = 0;
@@ -226,8 +224,6 @@ int main(int argc, char *argv[])
     /* l_param.res_spec = ... */
     /* l_param.prch_init[i] = .. */
     /* l_param.prcw_init[i] = .. */
-
-
     /* do not use progression order changes */
     /*l_param.numpocs = 0;*/
     /* l_param.POC[i].... */
@@ -258,8 +254,6 @@ int main(int argc, char *argv[])
 #ifdef USING_MCT
     opj_set_MCT(&l_param, l_mct, l_offsets, NUM_COMPS);
 #endif
-
-
     /* image definition */
     l_current_param_ptr = l_params;
     for (i = 0; i < num_comps; ++i) {
@@ -381,9 +375,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-
-
-
-
-

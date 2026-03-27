@@ -167,8 +167,6 @@ XMLPUBFUN void XMLCALL
 		xmlCatalogSetDefaults	(xmlCatalogAllow allow);
 XMLPUBFUN xmlCatalogAllow XMLCALL
 		xmlCatalogGetDefaults	(void);
-
-
 /* DEPRECATED interfaces */
 XMLPUBFUN const xmlChar * XMLCALL
 		xmlCatalogGetSystem	(const xmlChar *sysID);

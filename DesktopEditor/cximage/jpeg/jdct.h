@@ -11,8 +11,6 @@
  * The individual DCT algorithms are kept in separate files to ease 
  * machine-dependent tuning (e.g., assembly coding).
  */
-
-
 /*
  * A forward DCT routine is given a pointer to an input sample array and
  * a pointer to a work area of type DCTELEM[]; the DCT is to be performed
@@ -43,8 +41,6 @@ typedef JMETHOD(void, forward_DCT_method_ptr, (DCTELEM * data,
 typedef JMETHOD(void, float_DCT_method_ptr, (FAST_FLOAT * data,
 					     JSAMPARRAY sample_data,
 					     JDIMENSION start_col));
-
-
 /*
  * An inverse DCT routine is given a pointer to the input JBLOCK and a pointer
  * to an output sample array.  The routine must dequantize the input data as
@@ -71,8 +67,6 @@ typedef INT32 IFAST_MULT_TYPE;	/* need 32 bits for scaled quantizers */
 #define IFAST_SCALE_BITS  13	/* fractional bits in scale factors */
 #endif
 typedef FAST_FLOAT FLOAT_MULT_TYPE; /* preferred floating type */
-
-
 /*
  * Each IDCT routine is responsible for range-limiting its results and
  * converting them to unsigned form (0..MAXJSAMPLE).  The raw outputs could
@@ -85,8 +79,6 @@ typedef FAST_FLOAT FLOAT_MULT_TYPE; /* preferred floating type */
 #define IDCT_range_limit(cinfo)  ((cinfo)->sample_range_limit + CENTERJSAMPLE)
 
 #define RANGE_MASK  (MAXJSAMPLE * 4 + 3) /* 2 bits wider than legal samples */
-
-
 /* Short forms of external names for systems with brain-damaged linkers. */
 
 #ifdef NEED_SHORT_EXTERNAL_NAMES
@@ -333,8 +325,6 @@ EXTERN(void) jpeg_idct_2x4
 EXTERN(void) jpeg_idct_1x2
     JPP((j_decompress_ptr cinfo, jpeg_component_info * compptr,
 	 JCOEFPTR coef_block, JSAMPARRAY output_buf, JDIMENSION output_col));
-
-
 /*
  * Macros for handling fixed-point arithmetic; these are used by many
  * but not all of the DCT/IDCT modules.

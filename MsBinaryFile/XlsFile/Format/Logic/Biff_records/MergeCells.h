@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MergeCells record in BIFF8
 class MergeCells: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~MergeCells();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

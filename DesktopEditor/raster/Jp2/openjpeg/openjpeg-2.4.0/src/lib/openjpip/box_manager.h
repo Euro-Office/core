@@ -42,15 +42,11 @@ typedef struct box_param {
     char    type[4];        /**< type of information in the DBox*/
     struct box_param *next; /**< pointer to the next box*/
 } box_param_t;
-
-
 /** Box list parameters*/
 typedef struct boxlist_param {
     box_param_t *first; /**< first box pointer of the list*/
     box_param_t *last;  /**< last  box pointer of the list*/
 } boxlist_param_t;
-
-
 /**
  * generate a box list
  *
@@ -67,8 +63,6 @@ boxlist_param_t * gene_boxlist(void);
  * @return            pointer to the generated boxlist
  */
 boxlist_param_t * get_boxstructure(int fd, OPJ_OFF_T offset, OPJ_SIZE_T length);
-
-
 /**
  * generate box from JP2 file at the given offset
  *
@@ -77,8 +71,6 @@ boxlist_param_t * get_boxstructure(int fd, OPJ_OFF_T offset, OPJ_SIZE_T length);
  * @return           pointer to the structure of generate box parameters
  */
 box_param_t * gene_boxbyOffset(int fd, OPJ_OFF_T offset);
-
-
 /**
  * generate box from code stream (JPP or JPT stream) at the given offset
  *
@@ -139,8 +131,6 @@ box_param_t * gene_childboxbyType(box_param_t *superbox, OPJ_OFF_T offset,
  * @return        DBox offset (byte position) in the file
  */
 OPJ_OFF_T get_DBoxoff(box_param_t *box);
-
-
 /**
  * get DBox length
  *
@@ -148,8 +138,6 @@ OPJ_OFF_T get_DBoxoff(box_param_t *box);
  * @return        DBox length ( content length)
  */
 OPJ_SIZE_T get_DBoxlen(box_param_t *box);
-
-
 /**
  * fetch header bytes in file stream
  *
@@ -157,8 +145,6 @@ OPJ_SIZE_T get_DBoxlen(box_param_t *box);
  * @return           pointer to the fetched bytes
  */
 Byte_t * fetch_headbytes(box_param_t *box);
-
-
 /**
  * fetch DBox (Box Contents) bytes of data in file stream
  *
@@ -204,8 +190,6 @@ Byte4_t fetch_DBox4bytebigendian(box_param_t *box, OPJ_OFF_T offset);
  * @return           fetched code
  */
 Byte8_t fetch_DBox8bytebigendian(box_param_t *box, OPJ_OFF_T offset);
-
-
 /**
  * search a box by box type
  *
@@ -221,8 +205,6 @@ box_param_t * search_box(const char type[], boxlist_param_t *boxlist);
  * @param[in] box box pointer
  */
 void print_box(box_param_t *box);
-
-
 /**
  * print all box parameters
  *
@@ -237,8 +219,6 @@ void print_allbox(boxlist_param_t *boxlist);
  * @param[in]     boxlist box list pointer
  */
 void delete_box_in_list(box_param_t **box, boxlist_param_t *boxlist);
-
-
 /**
  * delete a box in list by Type
  *
@@ -246,16 +226,12 @@ void delete_box_in_list(box_param_t **box, boxlist_param_t *boxlist);
  * @param[in]     boxlist box list pointer
  */
 void delete_box_in_list_by_type(const char type[], boxlist_param_t *boxlist);
-
-
 /**
  * delete box list
  *
  * @param[in,out] boxlist address of the box list pointer
  */
 void delete_boxlist(boxlist_param_t **boxlist);
-
-
 /**
  * insert a box into list
  *

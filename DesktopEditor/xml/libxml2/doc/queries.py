@@ -71,8 +71,6 @@ def increaseTotalCount(Value, count):
         ret = c.execute(
 	"""INSERT INTO AllQueries (Value, Count) VALUES ('%s', %d)""" %
 	                (Value, count))
-    
-
 def checkString(str):
     if string.find(str, "'") != -1 or \
        string.find(str, '"') != -1 or \
@@ -111,8 +109,6 @@ def addCounts(frmtable):
 	c.execute("""DELETE from %s""" % (frmtable))
     except:
 	pass
-
-
     
 getTopQueries()
 addCounts('Queries')

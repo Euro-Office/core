@@ -24,8 +24,6 @@ namespace agg
     {
         destroy();
     }
-
-
     //------------------------------------------------------------------------
     pixel_map::pixel_map() :
         m_pmap(0),
@@ -35,8 +33,6 @@ namespace agg
 
     {
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::destroy()
     {
@@ -48,8 +44,6 @@ namespace agg
 			m_pmap = nil;
 		}
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::create(unsigned width, 
                            unsigned height, 
@@ -75,15 +69,11 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     void pixel_map::clear(unsigned clear_val)
     {
         if(m_buf) memset(m_buf, clear_val, m_img_size);
     }
-
-
     //static
     //This function is just copied from the Win32 plattform support.
     //Is also seems to be appropriate for MacOS as well, but it is not
@@ -124,10 +114,6 @@ namespace agg
         }
         return ((n + 3) >> 2) << 2;
     }
-
-
-
-
     //------------------------------------------------------------------------
     void pixel_map::draw(WindowRef window, const Rect *device_rect, const Rect *pmap_rect) const
     {
@@ -149,8 +135,6 @@ namespace agg
 			DisposeHandle ((Handle) image_description);
 		}
 	}
-
-
     //------------------------------------------------------------------------
     void pixel_map::draw(WindowRef window, int x, int y, double scale) const
     {
@@ -162,22 +146,16 @@ namespace agg
         draw(window, &rect);
     }
 
-
-
     //------------------------------------------------------------------------
     void pixel_map::blend(WindowRef window, const Rect *device_rect, const Rect *bmp_rect) const
     {
 		draw (window, device_rect, bmp_rect);	// currently just mapped to drawing method
     }
-    
-
     //------------------------------------------------------------------------
     void pixel_map::blend(WindowRef window, int x, int y, double scale) const
     {
         draw(window, x, y, scale);	// currently just mapped to drawing method
     }
-
-
     // I let Quicktime handle image import since it supports most popular
     // image formats such as:
     // *.psd, *.bmp, *.tif, *.png, *.jpg, *.gif, *.pct, *.pcx
@@ -219,8 +197,6 @@ namespace agg
 		}
         return err == noErr;
     }
-
-
 
     //------------------------------------------------------------------------
     bool pixel_map::save_as_qt(const char *filename) const
@@ -290,9 +266,5 @@ namespace agg
         return calc_row_len(width(), GetPixDepth(pm));
     }
 
-
-
 }
-
-
 

@@ -66,8 +66,6 @@
 #  define fseek  fseeko
 #  define ftell  ftello
 #endif
-
-
 #if defined(WIN32) && !defined(Windows95) && !defined(__BORLANDC__) && \
   !(defined(_MSC_VER) && _MSC_VER < 1400) && \
   !(defined(__MINGW32__) && __MSVCRT_VERSION__ < 0x800)
@@ -88,8 +86,6 @@
 #  define OPJ_STAT_STRUCT_T struct stat
 #  define OPJ_STAT(path,stat_buff) stat(path,stat_buff)
 #endif
-
-
 /*
  ==========================================================
    OpenJPEG interface
@@ -130,8 +126,6 @@
 #ifndef OPJ_NOSANITIZE
 #define OPJ_NOSANITIZE(kind)
 #endif
-
-
 /* MSVC before 2013 and Borland C do not have lrintf */
 #if defined(_MSC_VER)
 #include <intrin.h>
@@ -260,6 +254,4 @@ typedef unsigned int OPJ_BITFIELD;
 
 /* V2 */
 #include "opj_codec.h"
-
-
 #endif /* OPJ_INCLUDES_H */

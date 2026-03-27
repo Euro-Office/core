@@ -85,8 +85,6 @@ void U_EXPORT2 UMemory::operator delete(void* p, const char* /*file*/, int /*lin
     UMemory::operator delete(p);
 }
 #endif /* U_HAVE_DEBUG_LOCATION_NEW */
-
-
 #endif
 
 UObject::~UObject() {}

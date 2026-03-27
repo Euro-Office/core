@@ -15,8 +15,6 @@
 
 #ifndef  LEPTONICA_ALLHEADERS_H
 #define  LEPTONICA_ALLHEADERS_H
-
-
 #define LIBLEPT_MAJOR_VERSION   1
 #define LIBLEPT_MINOR_VERSION   67
 
@@ -27,8 +25,4 @@
 #ifndef NO_PROTOS
 #include  "funcprotos.h"
 #endif  /* NO_PROTOS */
-
-
 #endif /* LEPTONICA_ALLHEADERS_H */
-
-

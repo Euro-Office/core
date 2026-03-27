@@ -516,6 +516,4 @@ void GlobalWorkbookInfo::CalculateAnchor(int colL, int colR, int rwT, int rwB, _
 	x = (int)(((256. * x + ((int)(128. / Digit_Width ))) / 256. ) * Digit_Width ); //in pixels
 
 }
-
-
 } // namespace XLS

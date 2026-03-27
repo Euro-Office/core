@@ -51,8 +51,6 @@ typedef struct cachelist_param {
     cache_param_t *first; /**< first cache pointer of the list*/
     cache_param_t *last;  /**< last  cache pointer of the list*/
 } cachelist_param_t;
-
-
 /**
  * generate a cache list
  *
@@ -93,8 +91,6 @@ void delete_cache(cache_param_t **cache);
  * @param[in] cachelist cache list pointer
  */
 void insert_cache_into_list(cache_param_t *cache, cachelist_param_t *cachelist);
-
-
 /**
  * search a cache by target name
  *
@@ -104,8 +100,6 @@ void insert_cache_into_list(cache_param_t *cache, cachelist_param_t *cachelist);
  */
 cache_param_t * search_cache(const char targetname[],
                              cachelist_param_t *cachelist);
-
-
 /**
  * search a cache by csn
  *
@@ -114,8 +108,6 @@ cache_param_t * search_cache(const char targetname[],
  * @return               found cache pointer
  */
 cache_param_t * search_cacheBycsn(int csn, cachelist_param_t *cachelist);
-
-
 /**
  * search a cache by cid
  *
@@ -125,8 +117,6 @@ cache_param_t * search_cacheBycsn(int csn, cachelist_param_t *cachelist);
  */
 cache_param_t * search_cacheBycid(const char cid[],
                                   cachelist_param_t *cachelist);
-
-
 /**
  * search a cache by tid
  *
@@ -144,8 +134,6 @@ cache_param_t * search_cacheBytid(const char tid[],
  * @param[in] cache cache pointer
  */
 void add_cachecid(const char *cid, cache_param_t *cache);
-
-
 /**
  * update tid of a cache
  *
@@ -153,8 +141,6 @@ void add_cachecid(const char *cid, cache_param_t *cache);
  * @param[in] cache cache pointer
  */
 void update_cachetid(const char *tid, cache_param_t *cache);
-
-
 /**
  * remove cid in cache
  *
@@ -162,8 +148,6 @@ void update_cachetid(const char *tid, cache_param_t *cache);
  * @param[in] cachelist cachelist pointer
  */
 void remove_cachecid(const char *cid, cachelist_param_t *cachelist);
-
-
 /**
  * print cache parameters
  *

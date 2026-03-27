@@ -106,8 +106,6 @@ namespace svg
         }
         else if (el.code == elem_defs)
             ++m_defs_counter;
-
-
         if (element_is_paint_server(el.code))
         {
             ++m_paint_server_counter;

@@ -27,8 +27,6 @@
 #include "psd_system.h"
 #include "psd_stream.h"
 #include "psd_descriptor.h"
-
-
 // Gradient fill setting (Photoshop 6.0)
 psd_status psd_get_layer_gradient_fill(psd_context * context, psd_layer_record * layer)
 {

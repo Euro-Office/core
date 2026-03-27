@@ -20,8 +20,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef BMP_SUPPORTED
-
-
 /*
  * To support 12-bit JPEG data, we'd have to scale output down to 8 bits.
  * This is not yet implemented.
@@ -54,14 +52,10 @@ typedef struct {
 } bmp_dest_struct;
 
 typedef bmp_dest_struct * bmp_dest_ptr;
-
-
 /* Forward declarations */
 LOCAL(void) write_colormap
 	JPP((j_decompress_ptr cinfo, bmp_dest_ptr dest,
 	     int map_colors, int map_entry_size));
-
-
 /*
  * Write some pixel data.
  * In this module rows_supplied will always be 1.
@@ -131,8 +125,6 @@ put_gray_rows (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   while (--pad >= 0)
     *outptr++ = 0;
 }
-
-
 /*
  * Startup: normally writes the file header.
  * In this module we may as well postpone everything until finish_output.
@@ -143,8 +135,6 @@ start_output_bmp (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 {
   /* no work here */
 }
-
-
 /*
  * Finish up at the end of the file.
  *
@@ -224,8 +214,6 @@ write_bmp_header (j_decompress_ptr cinfo, bmp_dest_ptr dest)
   if (cmap_entries > 0)
     write_colormap(cinfo, dest, cmap_entries, 4);
 }
-
-
 LOCAL(void)
 write_os2_header (j_decompress_ptr cinfo, bmp_dest_ptr dest)
 /* Write an OS2-style BMP file header, including colormap if needed */
@@ -281,8 +269,6 @@ write_os2_header (j_decompress_ptr cinfo, bmp_dest_ptr dest)
   if (cmap_entries > 0)
     write_colormap(cinfo, dest, cmap_entries, 3);
 }
-
-
 /*
  * Write the colormap.
  * Windows uses BGR0 map entries; OS/2 uses BGR entries.
@@ -338,8 +324,6 @@ write_colormap (j_decompress_ptr cinfo, bmp_dest_ptr dest,
       putc(0, outfile);
   }
 }
-
-
 METHODDEF(void)
 finish_output_bmp (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
 {
@@ -380,8 +364,6 @@ finish_output_bmp (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (ferror(outfile))
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * The module selection routine for BMP format output.
  */

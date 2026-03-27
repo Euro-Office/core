@@ -12,18 +12,12 @@
 #include "agg_span_interpolator_linear.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 #include "agg_pixfmt_rgb.h"
 #define pix_format agg::pix_format_bgr24
 typedef agg::pixfmt_bgr24 pixfmt;
 typedef agg::rgba8 color_type;
 typedef agg::order_bgr component_order;
-
-
 enum { flip_y = true };
-
-
 class the_application : public agg::platform_support
 {
     typedef agg::renderer_base<pixfmt> renderer_base;
@@ -49,8 +43,6 @@ class the_application : public agg::platform_support
 
     double m_mouse_x, m_mouse_y;
     double m_old_gamma;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -114,8 +106,6 @@ public:
             build_gradient_lut();
             m_old_gamma = m_gamma.value();
         }
-
-
         // Gradient center. All gradient functions assume the 
         // center being in the origin (0,0) and you can't 
         // change it. But you can apply arbitrary transformations
@@ -197,10 +187,6 @@ public:
         //------------------
         pixf.apply_gamma_inv(m_gamma_lut);
     }
-
-
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -211,8 +197,6 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -224,23 +208,7 @@ public:
         }
     }
 
-
-
-
-
-
-
 };
-
-
-
-
-
-
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -253,5 +221,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

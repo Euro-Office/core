@@ -8,8 +8,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 #if 1
 #define psd_assert(x)			assert(x)
 #else
@@ -17,8 +15,6 @@ extern "C" {
 // or
 // #define psd_assert(x)		return psd_status_unkown_error
 #endif
-
-
 void * psd_malloc(psd_int size);
 void * psd_realloc(void * block, psd_int size);
 
@@ -42,8 +38,6 @@ psd_int   psd_std_read(void *obj, void *buf, int size, int cnt);
 //psd_int   psd_std_tell(void *obj);
 //psd_int   psd_std_getc(void *obj);
 //psd_int   psd_std_scanf(void *obj,const char *format, void* output);
-
-
 #ifdef __cplusplus
 }
 #endif

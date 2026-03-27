@@ -83,8 +83,6 @@ Locale::getAvailableLocales(int32_t& count)
     count = availableLocaleListCount;
     return availableLocaleList;
 }
-
-
 U_NAMESPACE_END
 
 // C API ------------------------------------------------------------------- ***

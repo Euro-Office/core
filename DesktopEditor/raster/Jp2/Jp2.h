@@ -138,8 +138,6 @@ namespace Jpeg2000
 		pStream->Write(oBox.nLength, 4); // L
 		pStream->Seek(oBox.nInitPos + oBox.nLength);
 	}
-
-
 	static bool Jp2_ReadBPCC(Jp2Stream *pJp2, CReader *pStream)
 	{
 		PCommon pCodecInfo = pJp2->pCodecInfo;
@@ -266,8 +264,6 @@ namespace Jpeg2000
 			}
 			pStream->Skip(oBox.nInitPos + oBox.nLength - pStream->Tell());
 		}
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with BPCC Box\n");
@@ -528,8 +524,6 @@ namespace Jpeg2000
 
 		return true;
 	}
-
-
 	static bool Jp2_ReadStruct(Jp2Stream *pJp2, CReader *pStream)
 	{
 		if (!Jp2_ReadJP(pJp2, pStream))
@@ -543,8 +537,6 @@ namespace Jpeg2000
 
 		return true;
 	}
-
-
 
 	//-------------------------------------------------------------------------------------------------------------------------------
 	// Декодирование потока Jp2

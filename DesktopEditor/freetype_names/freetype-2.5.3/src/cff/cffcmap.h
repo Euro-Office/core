@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFFCMAP_H__
 #define __CFFCMAP_H__
 
 #include "cffobjs.h"
 
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -41,11 +37,7 @@ FT_BEGIN_HEADER
     FT_UShort*  gids;   /* up to 256 elements */
 
   } CFF_CMapStdRec;
-
-
   FT_DECLARE_CMAP_CLASS(cff_cmap_encoding_class_rec)
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -57,11 +49,7 @@ FT_BEGIN_HEADER
   /* unicode (synthetic) cmaps */
 
   FT_DECLARE_CMAP_CLASS(cff_cmap_unicode_class_rec)
-
-
 FT_END_HEADER
 
 #endif /* __CFFCMAP_H__ */
-
-
 /* END */

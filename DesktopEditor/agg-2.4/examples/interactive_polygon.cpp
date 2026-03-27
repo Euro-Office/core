@@ -17,8 +17,6 @@ namespace agg
     {
         m_stroke.width(1.0);
     }
-
-
     void interactive_polygon::rewind(unsigned)
     {
         m_status = 0;
@@ -45,8 +43,6 @@ namespace agg
         ++m_status;
         return m_ellipse.vertex(x, y);
     }
-
-
     bool interactive_polygon::check_edge(unsigned i, double x, double y) const
     {
        bool ret = false;
@@ -84,8 +80,6 @@ namespace agg
        }
        return ret;
     }
-
-
 
     bool interactive_polygon::on_mouse_button_down(double x, double y)
     {
@@ -132,8 +126,6 @@ namespace agg
         }
         return ret;
     }
-
-
     bool interactive_polygon::on_mouse_move(double x, double y)
     {
         bool ret = false;
@@ -189,8 +181,6 @@ namespace agg
         m_edge = -1;
         return ret;
     }
-
-
 
     //======= Crossings Multiply algorithm of InsideTest ======================== 
     //

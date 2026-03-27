@@ -13,8 +13,6 @@
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(TimeUnit)
-
-
 /*
  * There are only 7 time units.
  * So, TimeUnit could be made as singleton 
@@ -65,8 +63,6 @@ TimeUnit::createInstance(TimeUnit::UTimeUnitFields timeUnitField,
     }
     return new TimeUnit(timeUnitField);
 }
-
-
 TimeUnit::TimeUnit(TimeUnit::UTimeUnitFields timeUnitField) {
     fTimeUnitField = timeUnitField;
     switch (fTimeUnitField) {
@@ -123,8 +119,6 @@ TimeUnit::getTimeUnitField() const {
 
 TimeUnit::~TimeUnit() {
 }
-
-
 U_NAMESPACE_END
 
 #endif

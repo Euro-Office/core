@@ -64,8 +64,6 @@
         *curctx = (*curctx)->nlps; \
     } \
 }
-
-
 /**
 Decode a symbol using raw-decoder. Cfr p.506 TAUBMAN
 @param mqc MQC handle
@@ -97,8 +95,6 @@ static INLINE OPJ_UINT32 opj_mqc_raw_decode(opj_mqc_t *mqc)
 
     return d;
 }
-
-
 #define opj_mqc_bytein_macro(mqc, c, ct) \
 { \
         OPJ_UINT32 l_c;  \
@@ -258,8 +254,6 @@ Renormalize mqc->a and mqc->c while encoding, so that mqc->a stays between 0x800
         opj_mqc_codelps_macro(mqc, curctx, a, c, ct); \
     } \
 }
-
-
 #define opj_mqc_bypass_enc_macro(mqc, c, ct, d) \
 {\
     if (ct == BYPASS_CT_INIT) {\

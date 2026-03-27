@@ -100,8 +100,6 @@ const bool StreamCacheReader::SeekToEOF()
 
 	return true;
 }
-
-
 // Extract the next record from the stream leaving it in the cache for future read.
 // Always call resetPointerToBegin for the extracted CFRecord after using it
 CFRecordPtr StreamCacheReader::touchTheNextRecord()
@@ -112,8 +110,6 @@ CFRecordPtr StreamCacheReader::touchTheNextRecord()
 	}
 	return CFRecordPtr();
 }
-
-
 // Check the next record type
 const CFRecordType::TypeId StreamCacheReader::getNextRecordType()
 {
@@ -266,8 +262,6 @@ bool CFStreamCacheReader::isEOF()
 
 	return !records_cache.size() && stream_->isEOF();
 }
-
-
 //---------------------------------------------------------------------------------------------------------
 FileStreamCacheReader::FileStreamCacheReader(const std::wstring &file_name, GlobalWorkbookInfoPtr global_info)
 :	StreamCacheReader(global_info)
@@ -564,6 +558,4 @@ bool BinaryStreamCacheReader::isEOF()
 {
     return !records_cache.size() && (binaryStream_->GetPos() >= binaryStream_->GetSize());
 }
-
-
 } // namespace XLS

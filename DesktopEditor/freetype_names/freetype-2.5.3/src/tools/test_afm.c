@@ -10,8 +10,6 @@
   void dump_fontinfo( AFM_FontInfo  fi )
   {
     FT_Int  i;
-
-
     printf( "This AFM is for %sCID font.\n\n",
             ( fi->IsCIDFont ) ? "" : "non-" );
 
@@ -31,8 +29,6 @@
     for ( i = 0; i < fi->NumTrackKern; i++ )
     {
       AFM_TrackKern  tk = fi->TrackKerns + i;
-
-
       printf( "\t%2d: %5.2f %5.2f %5.2f %5.2f\n", tk->degree,
                                                   tk->min_ptsize / 65536.,
                                                   tk->min_kern / 65536.,
@@ -51,8 +47,6 @@
     for ( i = 0; i < fi->NumKernPair; i++ )
     {
       AFM_KernPair  kp = fi->KernPairs + i;
-
-
       printf( "\t%3d + %3d => (%4d, %4d)\n", kp->index1,
                                              kp->index2,
                                              kp->x,
@@ -80,8 +74,6 @@
     PSAux_Service  psaux;
     AFM_ParserRec  parser;
     FT_Error       error = FT_Err_Ok;
-
-
     psaux = (PSAux_Service)FT_Get_Module_Interface( library, "psaux" );
     if ( !psaux || !psaux->afm_parser_funcs )
       return -1;
@@ -106,8 +98,6 @@
 
     return error;
   }
-
-
   int main( int    argc,
             char** argv )
   {
@@ -115,8 +105,6 @@
     FT_StreamRec     stream;
     FT_Error         error = FT_Err_Ok;
     AFM_FontInfoRec  fi;
-
-
     if ( argc < 2 )
       return FT_ERR( Invalid_Argument );
 
@@ -136,8 +124,6 @@
     if ( !error )
     {
       FT_Memory  memory = library->memory;
-
-
       dump_fontinfo( &fi );
 
       if ( fi.KernPairs )

@@ -11,8 +11,6 @@
 #include "OpenTypeTables.h"
 #include "KhmerReordering.h"
 #include "LEGlyphStorage.h"
-
-
 U_NAMESPACE_BEGIN
 
 // Characters that get refered to by name...
@@ -27,8 +25,6 @@ enum
     C_VOWEL_E       = 0x17C1,
     C_COENG         = 0x17D2
 };
-
-
 enum
 {
     // simple classes, they are used in the statetable (in this file) to control the length of a syllable
@@ -53,8 +49,6 @@ enum
     _va = _da | KhmerClassTable::CF_SPLIT_VOWEL,
     _vr = _dr | KhmerClassTable::CF_SPLIT_VOWEL
 };
-
-
 // Character class tables 
 // _xx character does not combine into syllable, such as numbers, puntuation marks, non-Khmer signs... 
 // _sa Sign placed above the base
@@ -82,8 +76,6 @@ static const KhmerClassTable::CharClass khmerCharClasses[] =
     _vr, _dl, _dl, _dl, _vr, _vr, _sa, _sp, _sp, _cs, _cs, _sa, _rb, _sa, _sa, _sa, // 17C0 - 17CF
     _sa, _sa, _co, _sa, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _sa, _xx, _xx, // 17D0 - 17DF
 };                                                                                  
-
-
 //
 // Khmer Class Tables
 //                   
@@ -93,8 +85,6 @@ static const KhmerClassTable::CharClass khmerCharClasses[] =
 // Even if the Khmer range is bigger, all other characters are not combinable, and therefore treated
 // as _xx
 static const KhmerClassTable khmerClassTable = {0x1780, 0x17df, khmerCharClasses};
-
-
 // Below we define how a character in the input string is either in the khmerCharClasses table
 // (in which case we get its type back), a ZWJ or ZWNJ (two characters that may appear 
 // within the syllable, but are not in the table) we also get their type back, or an unknown object
@@ -122,8 +112,6 @@ const KhmerClassTable *KhmerClassTable::getKhmerClassTable()
     return &khmerClassTable;
 }
 
-
-
 class KhmerReorderingOutput : public UMemory {
 private:
     le_int32 fSyllableCount;
@@ -131,8 +119,6 @@ private:
     LEUnicode *fOutChars;
 
     LEGlyphStorage &fGlyphStorage;
-
-
 public:
     KhmerReorderingOutput(LEUnicode *outChars, LEGlyphStorage &glyphStorage)
         : fSyllableCount(0), fOutIndex(0), fOutChars(outChars), fGlyphStorage(glyphStorage)
@@ -167,8 +153,6 @@ public:
         return fOutIndex;
     }
 };
-
-
 #define blwfFeatureTag LE_BLWF_FEATURE_TAG
 #define pstfFeatureTag LE_PSTF_FEATURE_TAG
 #define presFeatureTag LE_PRES_FEATURE_TAG
@@ -204,8 +188,6 @@ public:
 #define tagPstf    (blwfFeatureMask | blwsFeatureMask | prefFeatureMask | presFeatureMask | pstfFeatureMask | pstsFeatureMask | cligFeatureMask | distFeatureMask | blwmFeatureMask)
 #define tagBlwf    (blwfFeatureMask | blwsFeatureMask | cligFeatureMask | distFeatureMask | blwmFeatureMask | mkmkFeatureMask)
 #define tagDefault (prefFeatureMask | blwfFeatureMask | presFeatureMask | blwsFeatureMask | cligFeatureMask | distFeatureMask | abvmFeatureMask | blwmFeatureMask | mkmkFeatureMask)
-
-
 
 // These are in the order in which the features need to be applied
 // for correct processing
@@ -257,8 +239,6 @@ static const le_int32 featureMapCount = LE_ARRAY_SIZE(featureMap);
 // - The consonant-shifter is considered in two possible different 
 //   locations, the one considered in Unicode 3.0 and the one considered in
 //   Unicode 4.0. (there is a backwards compatibility problem in this standard).
-
-
 // xx    independent character, such as a number, punctuation sign or non-khmer char
 //
 // c1    Khmer consonant of type 1 or an independent vowel
@@ -320,16 +300,12 @@ static const le_int8 khmerStateTable[][KhmerClassTable::CC_COUNT] =
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  1, -1}, // 20 - dependent vowel after a Robat
 
 };         
-
-
 const FeatureMap *KhmerReordering::getFeatureMap(le_int32 &count)
 {
     count = featureMapCount;
 
     return featureMap;
 }
-
-
 // Given an input string of characters and a location in which to start looking
 // calculate, using the state table, which one is the last character of the syllable
 // that starts in the starting position.
@@ -352,8 +328,6 @@ le_int32 KhmerReordering::findSyllable(const KhmerClassTable *classTable, const 
 
     return cursor;
 }
-
-
 // This is the real reordering function as applied to the Khmer language
 
 le_int32 KhmerReordering::reorder(const LEUnicode *chars, le_int32 charCount, le_int32 /*scriptCode*/,
@@ -364,8 +338,6 @@ le_int32 KhmerReordering::reorder(const LEUnicode *chars, le_int32 charCount, le
     KhmerReorderingOutput output(outChars, glyphStorage);
     KhmerClassTable::CharClass charClass;
     le_int32 i, prev = 0, coengRo;
-
-    
     // This loop only exits when we reach the end of a run, which may contain 
     // several syllables.
     while (prev < charCount) {
@@ -494,6 +466,4 @@ le_int32 KhmerReordering::reorder(const LEUnicode *chars, le_int32 charCount, le
 
     return output.getOutputIndex();
 }
-
-
 U_NAMESPACE_END

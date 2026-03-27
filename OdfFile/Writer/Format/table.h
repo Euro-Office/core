@@ -160,8 +160,6 @@ public:
 
     static const ElementType type = typeTableTableProtection;
 
-    
-
 	table_table_protection() : select_protected_cells(true), select_unprotected_cells(true) {}
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
@@ -190,8 +188,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableSource;
-
-    
 
     table_table_source_attlist table_table_source_attlist_;
     table_linked_source_attlist table_linked_source_attlist_;
@@ -288,8 +284,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableColumn;
-
-    
  
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -312,8 +306,6 @@ public:
 
     static const ElementType type = typeTableTableColumns;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -333,8 +325,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableHeaderColumns;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -391,8 +381,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableRow;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -460,8 +448,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableRows;
-
-    
   
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -486,8 +472,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableHeaderRows;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -530,8 +514,6 @@ public:
     virtual void add_child_element( const office_element_ptr & child_element);
 
     virtual void serialize(std::wostream & _Wostream);
-   
-
     table_rows table_rows_1_;
     
     bool was_header_;
@@ -578,8 +560,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTableRowGroup;
-
-    
     
     table_table_row_group() 
 	{
@@ -604,8 +584,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableTable;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -640,8 +618,6 @@ public:
 
     static const ElementType type = typeTableShapes;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -661,8 +637,6 @@ public:
 
     static const ElementType type = typeTableContentValidations;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -681,8 +655,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableContentValidation;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
@@ -708,8 +680,6 @@ public:
 
     static const ElementType type = typeTableErrorMassage;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -731,8 +701,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableHelpMassage;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);

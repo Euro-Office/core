@@ -25,8 +25,6 @@
 
 #include "libpsd.h"
 #include "psd_fixed.h"
-
-
 psd_fixed_26_6 psd_fixed_26_6_float(psd_float s)
 {
 	return (psd_fixed_26_6)(s * 64 + 0.5);

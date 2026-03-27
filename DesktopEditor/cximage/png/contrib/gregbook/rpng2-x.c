@@ -56,8 +56,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -75,8 +73,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -157,8 +153,6 @@
 /* #define DEBUG */     /* this enables the Trace() macros */
 
 #include "readpng2.h"   /* typedefs, common macros, readpng2 prototypes */
-
-
 /* could just include png.h, but this macro is the only thing we need
  * (name and typedefs changed to local versions); note that side effects
  * only happen with alpha (which could easily be avoided with
@@ -169,8 +163,6 @@
                 (ush)(bg)*(ush)(255 - (ush)(alpha)) + (ush)128);  \
     (composite) = (uch)((temp + (temp >> 8)) >> 8);               \
 }
-
-
 #define INBUFSIZE 4096   /* with pseudo-timing on (1 sec delay/block), this
                           *  block size corresponds roughly to a download
                           *  speed 10% faster than theoretical 33.6K maximum
@@ -191,8 +183,6 @@ static int  is_number (char *p);
 #endif
 static void rpng2_x_cleanup (void);
 static int  rpng2_x_msb (ulg u32val);
-
-
 static char titlebar[1024], *window_name = titlebar;
 static char *appname = LONGNAME;
 static char *icon_name = PROGNAME;
@@ -282,8 +272,6 @@ static struct background_pattern {
     {2, 10000, 256,  11,   0}   /* radial:  dipole-moire' (almost fractal) */
 };
 static int num_bgpat = sizeof(bg) / sizeof(struct background_pattern);
-
-
 /* X-specific variables */
 static char *displayname;
 static XImage *ximage;
@@ -301,10 +289,6 @@ static int have_nondefault_visual = FALSE;
 static int have_colormap = FALSE;
 static int have_window = FALSE;
 static int have_gc = FALSE;
-
-
-
-
 int main(int argc, char **argv)
 {
 #ifdef sgi
@@ -324,8 +308,6 @@ int main(int argc, char **argv)
     double default_display_exponent;    /* whole display system */
     XEvent e;
     KeySym k;
-
-
     /* First initialize a few things, just to be sure--memset takes care of
      * default background color (black), booleans (FALSE), pointers (NULL),
      * etc. */
@@ -333,8 +315,6 @@ int main(int argc, char **argv)
     displayname = (char *)NULL;
     filename = (char *)NULL;
     memset(&rpng2_info, 0, sizeof(mainprog_info));
-
-
     /* Set the default value for our display-system exponent, i.e., the
      * product of the CRT exponent and the exponent corresponding to
      * the frame-buffer's lookup table (LUT), if any.  This is not an
@@ -374,8 +354,6 @@ int main(int argc, char **argv)
 
     /* the defaults above give 1.0, 1.3, 1.5 and 2.2, respectively: */
     default_display_exponent = LUT_exponent * CRT_exponent;
-
-
     /* If the user has set the SCREEN_GAMMA environment variable as suggested
      * (somewhat imprecisely) in the libpng documentation, use that; otherwise
      * use the default value we just calculated.  Either way, the user may
@@ -385,8 +363,6 @@ int main(int argc, char **argv)
         rpng2_info.display_exponent = atof(p);
     else
         rpng2_info.display_exponent = default_display_exponent;
-
-
     /* Now parse the command line for options and the PNG filename. */
 
     while (*++argv && !error) {
@@ -463,8 +439,6 @@ int main(int argc, char **argv)
 
     if (!filename)
         ++error;
-
-
     /* print usage screen if any errors up to this point */
 
     if (error) {
@@ -550,14 +524,10 @@ int main(int argc, char **argv)
         if (error)
             fclose(infile);
     }
-
-
     if (error) {
         fprintf(stderr, PROGNAME ":  aborting.\n");
         exit(2);
     }
-
-
     /* set the title-bar string, but make sure buffer doesn't overflow */
 
     alen = strlen(appname);
@@ -566,8 +536,6 @@ int main(int argc, char **argv)
         sprintf(titlebar, "%s:  ...%s", appname, filename+(alen+flen+6-1023));
     else
         sprintf(titlebar, "%s:  %s", appname, filename);
-
-
     /* set some final rpng2_info variables before entering main data loop */
 
     if (have_bg) {
@@ -584,8 +552,6 @@ int main(int argc, char **argv)
     rpng2_info.mainprog_init = rpng2_x_init;
     rpng2_info.mainprog_display_row = rpng2_x_display_row;
     rpng2_info.mainprog_finish_display = rpng2_x_finish_display;
-
-
     /* OK, this is the fun part:  call readpng2_decode_data() at the start of
      * the loop to deal with our first buffer of data (read in above to verify
      * that the file is a PNG image), then loop through the file and continue
@@ -623,8 +589,6 @@ int main(int argc, char **argv)
 
         incount = fread(inbuf, 1, INBUFSIZE, infile);
     }
-
-
     /* clean up PNG stuff and report any decoding errors */
 
     fclose(infile);
@@ -635,8 +599,6 @@ int main(int argc, char **argv)
         fprintf(stderr, PROGNAME ":  libpng error while decoding PNG image\n");
         exit(3);
     }
-
-
 #ifdef FEATURE_LOOP
 
     if (loop && bg_image) {
@@ -750,8 +712,6 @@ int main(int argc, char **argv)
           "libpng error while decoding PNG metadata\n");
         exit(4);
     }
-
-
     /* we're done:  clean up all image and X resources and go away */
 
     Trace((stderr, "about to call rpng2_x_cleanup()\n"))
@@ -761,10 +721,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-
-
-
 
 /* this function is called by readpng2_info_callback() in readpng2.c, which
  * in turn is called by libpng after all of the pre-IDAT chunks have been
@@ -796,8 +752,6 @@ static void rpng2_x_init(void)
 
     for (i = 0;  i < rpng2_info.height;  ++i)
         rpng2_info.row_pointers[i] = rpng2_info.image_data + i*rowbytes;
-
-
     /* do the basic X initialization stuff, make the window, and fill it with
      * the user-specified, file-specified or default background color or
      * pattern */
@@ -817,10 +771,6 @@ static void rpng2_x_init(void)
 
     rpng2_info.state = kWindowInit;
 }
-
-
-
-
 
 static int rpng2_x_create_window(void)
 {
@@ -842,8 +792,6 @@ static int rpng2_x_create_window(void)
     XSizeHints *size_hints;
     XWMHints *wm_hints;
     XClassHint *class_hints;
-
-
     Trace((stderr, "beginning rpng2_x_create_window()\n"))
 
     screen = DefaultScreen(display);
@@ -1068,10 +1016,6 @@ static int rpng2_x_create_window(void)
     return 0;
 
 } /* end function rpng2_x_create_window() */
-
-
-
-
 
 static int rpng2_x_load_bg_image(void)
 {
@@ -1365,10 +1309,6 @@ static int rpng2_x_load_bg_image(void)
 
 } /* end function rpng2_x_load_bg_image() */
 
-
-
-
-
 static void rpng2_x_display_row(ulg row)
 {
     uch bg_red   = rpng2_info.bg_red;
@@ -1561,8 +1501,6 @@ static void rpng2_x_display_row(ulg row)
         /* GRR:  add 8-bit support */
 
     }
-
-
 /*---------------------------------------------------------------------------
     Display after every 16 rows or when on one of last two rows.  (Region
     may include previously displayed lines due to interlacing--i.e., not
@@ -1587,10 +1525,6 @@ static void rpng2_x_display_row(ulg row)
 
 }
 
-
-
-
-
 static void rpng2_x_finish_display(void)
 {
     Trace((stderr, "beginning rpng2_x_finish_display()\n"))
@@ -1605,10 +1539,6 @@ static void rpng2_x_finish_display(void)
     fflush(stdout);
 }
 
-
-
-
-
 static void rpng2_x_redisplay_image(ulg startcol, ulg startrow,
                                     ulg width, ulg height)
 {
@@ -1621,8 +1551,6 @@ static void rpng2_x_redisplay_image(ulg startcol, ulg startrow,
     ulg i, row, lastrow = 0;
     ulg pixel;
     int ximage_rowbytes = ximage->bytes_per_line;
-
-
     Trace((stderr, "beginning display loop (image_channels == %d)\n",
       rpng2_info.channels))
     Trace((stderr, "   (width = %ld, rowbytes = %d, ximage_rowbytes = %d)\n",
@@ -1855,10 +1783,6 @@ static void rpng2_x_redisplay_image(ulg startcol, ulg startrow,
 
 } /* end function rpng2_x_redisplay_image() */
 
-
-
-
-
 #ifdef FEATURE_LOOP
 
 static void rpng2_x_reload_bg_image(void)
@@ -1872,8 +1796,6 @@ static void rpng2_x_reload_bg_image(void)
     int invert_gradient2 = (bg[pat].type & 0x08);
     int invert_column;
     ulg i, row;
-
-
     bgscale = (pat == 0)? 8 : bgscale_default;
     yidx_max = bgscale - 1;
 
@@ -2058,10 +1980,6 @@ static void rpng2_x_reload_bg_image(void)
 
 } /* end function rpng2_x_reload_bg_image() */
 
-
-
-
-
 static int is_number(char *p)
 {
     while (*p) {
@@ -2073,10 +1991,6 @@ static int is_number(char *p)
 }
 
 #endif /* FEATURE_LOOP */
-
-
-
-
 
 static void rpng2_x_cleanup(void)
 {
@@ -2116,10 +2030,6 @@ static void rpng2_x_cleanup(void)
     if (have_nondefault_visual)
         XFree(visual_list);
 }
-
-
-
-
 
 static int rpng2_x_msb(ulg u32val)
 {

@@ -65,8 +65,6 @@
 # pragma interface
 #endif
 
-
-
 /** @name DjVuText.h
 
     Files #"DjVuText.h"# and #"DjVuText.cpp"# implement the mechanism for
@@ -74,8 +72,6 @@
 
     This file implements annotations understood by the DjVu plugins 
     and encoders.
-
-
     using: contents of #TXT*# chunks.
 
     Contents of the #FORM:TEXT# should be passed to \Ref{DjVuText::decode}()
@@ -86,8 +82,6 @@
     @version
     #$Id: DjVuText.h,v 1.12 2008/01/27 11:36:27 leonb Exp $# */
 //@{
-
-
 #include "GMapAreas.h"
 
 #ifdef HAVE_NAMESPACES
@@ -96,8 +90,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 class ByteStream;
 
 // -------- DJVUTXT --------
@@ -222,8 +214,6 @@ DjVuTXT::Zone::get_parent(void) const
 {
   return zone_parent;
 }
-
-
 class DJVUAPI DjVuText : public GPEnabled
 {
 protected:
@@ -268,8 +258,6 @@ DjVuText::get_memory_usage() const
 {
   return (txt)?(txt->get_memory_usage()):0;
 }
-
-
 // ----- THE END
 
 #ifdef HAVE_NAMESPACES
@@ -279,5 +267,3 @@ using namespace DJVU;
 # endif
 #endif
 #endif
-
-

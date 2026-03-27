@@ -274,8 +274,6 @@ typedef enum
 *            escSeqStateTable_Value_2022[offset], which is VALID_TERMINAL_2022
 *         v) Get the converter name form escSeqStateTable_Result_2022[21] which is JISX208
 */
-
-
 /*Below are the 3 arrays depicting a state transition table*/
 static const int8_t normalize_esq_chars_2022[256] = {
 /*       0      1       2       3       4      5       6        7       8       9           */
@@ -596,8 +594,6 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
             }
             myConverterData->myConverterArray[CNS_11643] =
                 ucnv_loadSharedData("cns-11643-1992", &stackPieces, &stackArgs, errorCode);
-
-
             /* set the function pointers to appropriate funtions */
             cnv->sharedData=(UConverterSharedData*)&_ISO2022CNData;
             uprv_strcpy(myConverterData->locale,"cn");
@@ -644,8 +640,6 @@ _ISO2022Open(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
-
-
 static void
 _ISO2022Close(UConverter *converter) {
     UConverterDataISO2022* myData =(UConverterDataISO2022 *) (converter->extraInfo);
@@ -722,8 +716,6 @@ _ISO2022getName(const UConverter* cnv){
     }
     return NULL;
 }
-
-
 /*************** to unicode *******************/
 /****************************************************************************
  * Recognized escape sequences are
@@ -764,8 +756,6 @@ static const int8_t nextStateToUnicodeCN[MAX_STATES_2022]= {
     ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE  ,INVALID_STATE
 };
 #endif
-
-
 static UCNV_TableStates_2022
 getKey_2022(char c,int32_t* key,int32_t* offset){
     int32_t togo;
@@ -2308,8 +2298,6 @@ endloop:
     args->target = myTarget;
     args->source = mySource;
 }
-
-
 #if !UCONFIG_ONLY_HTML_CONVERSION
 /***************************************************************
 *   Rules for ISO-2022-KR encoding
@@ -3251,8 +3239,6 @@ getTrail:
     args->source = source;
     args->target = (char*)target;
 }
-
-
 static void
 UConverter_toUnicode_ISO_2022_CN_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                                                UErrorCode* err){
@@ -3578,8 +3564,6 @@ struct cloneStruct
     UAlignedMemory deadSpace;
     UConverterDataISO2022 mydata;
 };
-
-
 static UConverter *
 _ISO_2022_SafeClone(
             const UConverter *cnv,

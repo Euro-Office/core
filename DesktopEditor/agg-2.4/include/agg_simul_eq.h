@@ -36,8 +36,6 @@ namespace agg
             *a2++ = tmp;
         }
     }
-
-
     //============================================================matrix_pivot
     template<unsigned Rows, unsigned Cols>
     struct matrix_pivot
@@ -71,8 +69,6 @@ namespace agg
             return 0;
         }
     };
-    
-
 
     //===============================================================simul_eq
     template<unsigned Size, unsigned RightCols>
@@ -122,8 +118,6 @@ namespace agg
                     }
                 }
             }
-
-
             for(k = 0; k < RightCols; k++)
             {
                 int m;
@@ -140,8 +134,6 @@ namespace agg
         }
 
     };
-
-
 }
 
 #endif

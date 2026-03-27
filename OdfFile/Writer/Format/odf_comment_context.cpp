@@ -108,8 +108,6 @@ void odf_comment_context::start_comment(office_element_ptr &elm, int oox_id)
 	if (!comm)return;
 
 	comm->attr_.name_ = impl_->comments_.back().odf_name;
-
-
 }
 void odf_comment_context::end_comment(office_element_ptr &elm, int oox_id)
 {

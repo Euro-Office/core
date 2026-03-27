@@ -8,8 +8,6 @@ import glob
 import os
 import subprocess
 import sys
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -73,7 +71,5 @@ def main():
         [sys.executable, "-m", "mkdocs", "build"], cwd=args.output_dir
     )
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

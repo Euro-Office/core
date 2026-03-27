@@ -122,8 +122,6 @@ DecimalFormatImpl::DecimalFormatImpl(
         }
     }
 }
-
-
 DecimalFormatImpl &
 DecimalFormatImpl::assign(const DecimalFormatImpl &other, UErrorCode &status) {
     if (U_FAILURE(status) || this == &other) {
@@ -909,8 +907,6 @@ static void updatePrecisionForScientificMinMax(
     int32_t minIntDigitCount = min.getIntDigitCount();
     int32_t maxFracDigitCount = max.getFracDigitCount();
     int32_t minFracDigitCount = min.getFracDigitCount();
-
-
     // Not in spec: maxIntDigitCount > 8 assume
     // maxIntDigitCount = minIntDigitCount. Current DecimalFormat API has
     // no provision for unsetting maxIntDigitCount which would be useful for
@@ -1308,8 +1304,6 @@ DecimalFormatImpl::updateAll(
             formattingFlags, updatePrecisionBasedOnCurrency, status);
     setMultiplierScale(getPatternScale());
 }
-
-
 static int32_t
 getMinimumLengthToDescribeGrouping(const DigitGrouping &grouping) {
     if (grouping.fGrouping <= 0) {
@@ -1586,8 +1580,6 @@ DecimalFormatImpl::isParseFastpath() const {
     fPositiveSuffixPattern.countChar32() == 0 &&
     fNegativeSuffixPattern.countChar32() == 0;
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

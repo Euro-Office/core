@@ -113,8 +113,6 @@ extern "C" {
 #define JAS_STREAM_BINARY	0x0008
 /* The stream should be created/truncated. */
 #define JAS_STREAM_CREATE	0x0010
-
-
 /*
  * Stream buffering flags.
  */

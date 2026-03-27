@@ -186,8 +186,6 @@ const double CalendarAstronomer::SYNODIC_MONTH  = 29.530588853;
  * @deprecated ICU 2.4. This class may be removed or modified.
  */
 #define JULIAN_EPOCH_MS  -210866760000000.0
-
-
 /**
  * Milliseconds value for 0.0 January 2000 AD.
  */
@@ -427,8 +425,6 @@ double CalendarAstronomer::lstToUT(double lst) {
 
     return base + (long)(lt * HOUR_MS);
 }
-
-
 //-------------------------------------------------------------------------
 // Coordinate transformations, all based on the current time of this object
 //-------------------------------------------------------------------------
@@ -515,8 +511,6 @@ CalendarAstronomer::Horizon& CalendarAstronomer::eclipticToHorizon(CalendarAstro
     result.set(azimuth, altitude);
     return result;
 }
-
-
 //-------------------------------------------------------------------------
 // The Sun
 //-------------------------------------------------------------------------
@@ -664,8 +658,6 @@ double CalendarAstronomer::getSunLongitude()
 CalendarAstronomer::Equatorial& CalendarAstronomer::getSunPosition(CalendarAstronomer::Equatorial& result) {
     return eclipticToEquatorial(result, getSunLongitude(), 0);
 }
-
-
 /**
  * Constant representing the vernal equinox.
  * For use with {@link #getSunTime getSunTime}.
@@ -1426,8 +1418,6 @@ double CalendarAstronomer::eclipticObliquity() {
     }
     return eclipObliquity;
 }
-
-
 //-------------------------------------------------------------------------
 // Private data
 //-------------------------------------------------------------------------
@@ -1508,8 +1498,6 @@ UnicodeString CalendarAstronomer::Horizon::toString() const
     return UnicodeString();
 #endif
 }
-
-
 //  static private String radToHms(double angle) {
 //    int hrs = (int) (angle*RAD_HOUR);
 //    int min = (int)((angle*RAD_HOUR - hrs) * 60);

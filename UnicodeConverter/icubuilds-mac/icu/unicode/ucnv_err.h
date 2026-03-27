@@ -4,7 +4,6 @@
 *   Corporation and others.  All Rights Reserved.
 **********************************************************************
  *
- *
  *   ucnv_err.h:
  */
 
@@ -36,7 +35,6 @@
  *  const void *oldContext;
  *  UConverterFromUCallback oldAction;
  *
- *
  *  if (U_SUCCESS(err))
  *  {
  *      ucnv_setFromUCallBack(myConverter,
@@ -61,7 +59,6 @@
  *  UConverter *myConverter = ucnv_open("ibm-949", &err);
  *  const void *oldContext;
  *  UConverterFromUCallback oldAction;
- *
  *
  *  if (U_SUCCESS(err))
  *  {
@@ -183,8 +180,6 @@ typedef enum {
                               @stable ICU 2.2
                            */
 } UConverterCallbackReason;
-
-
 /**
  * The structure for the fromUnicode callback function parameter.
  * @stable ICU 2.0
@@ -199,8 +194,6 @@ typedef struct {
     const char *targetLimit;    /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that recieves the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
 } UConverterFromUnicodeArgs;
-
-
 /**
  * The structure for the toUnicode callback function parameter.
  * @stable ICU 2.0
@@ -215,8 +208,6 @@ typedef struct {
     const UChar *targetLimit;   /**< Pointer to the limit (end + 1) of target buffer. @stable ICU 2.0     */
     int32_t *offsets;           /**< Pointer to the buffer that recieves the offsets. *offset = blah ; offset++;. @stable ICU 2.0  */
 } UConverterToUnicodeArgs;
-
-
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
  * This From Unicode callback STOPS at the ILLEGAL_SEQUENCE,
@@ -239,8 +230,6 @@ U_STABLE void U_EXPORT2 UCNV_FROM_U_CALLBACK_STOP (
                   UChar32 codePoint,
                   UConverterCallbackReason reason,
                   UErrorCode * err);
-
-
 
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
@@ -376,8 +365,6 @@ U_STABLE void U_EXPORT2 UCNV_FROM_U_CALLBACK_ESCAPE (
                   UChar32 codePoint,
                   UConverterCallbackReason reason,
                   UErrorCode * err);
-
-
 /**
  * DO NOT CALL THIS FUNCTION DIRECTLY!
  * This To Unicode callback skips any ILLEGAL_SEQUENCE, or

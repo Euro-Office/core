@@ -47,8 +47,6 @@
 #include "jdct.h"		/* Private declarations for DCT subsystem */
 
 #ifdef DCT_ISLOW_SUPPORTED
-
-
 /*
  * This module is specialized to the case DCTSIZE = 8.
  */
@@ -56,8 +54,6 @@
 #if DCTSIZE != 8
   Sorry, this code only copes with 8x8 DCT blocks. /* deliberate syntax err */
 #endif
-
-
 /*
  * The poop on this scaling stuff is as follows:
  *
@@ -134,8 +130,6 @@
 #define FIX_2_562915447  FIX(2.562915447)
 #define FIX_3_072711026  FIX(3.072711026)
 #endif
-
-
 /* Multiply an INT32 variable by an INT32 constant to yield an INT32 result.
  * For 8-bit samples with the recommended scaling, all the variable
  * and constant values involved are no more than 16 bits wide, so a
@@ -148,8 +142,6 @@
 #else
 #define MULTIPLY(var,const)  ((var) * (const))
 #endif
-
-
 /*
  * Perform the forward DCT on one block of samples.
  */
@@ -318,8 +310,6 @@ jpeg_fdct_islow (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
 }
 
 #ifdef DCT_SCALING_SUPPORTED
-
-
 /*
  * Perform the forward DCT on a 7x7 sample block.
  */
@@ -453,8 +443,6 @@ jpeg_fdct_7x7 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 6x6 sample block.
  */
@@ -566,8 +554,6 @@ jpeg_fdct_6x6 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 5x5 sample block.
  */
@@ -676,8 +662,6 @@ jpeg_fdct_5x5 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 4x4 sample block.
  */
@@ -769,8 +753,6 @@ jpeg_fdct_4x4 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 3x3 sample block.
  */
@@ -854,8 +836,6 @@ jpeg_fdct_3x3 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 2x2 sample block.
  */
@@ -898,8 +878,6 @@ jpeg_fdct_2x2 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
   data[DCTSIZE*0+1] = (DCTELEM) ((tmp1 + tmp3) << 4);
   data[DCTSIZE*1+1] = (DCTELEM) ((tmp1 - tmp3) << 4);
 }
-
-
 /*
  * Perform the forward DCT on a 1x1 sample block.
  */
@@ -916,8 +894,6 @@ jpeg_fdct_1x1 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
   data[0] = (DCTELEM)
     ((GETJSAMPLE(sample_data[0][start_col]) - CENTERJSAMPLE) << 6);
 }
-
-
 /*
  * Perform the forward DCT on a 9x9 sample block.
  */
@@ -1066,8 +1042,6 @@ jpeg_fdct_9x9 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 10x10 sample block.
  */
@@ -1229,8 +1203,6 @@ jpeg_fdct_10x10 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on an 11x11 sample block.
  */
@@ -1412,8 +1384,6 @@ jpeg_fdct_11x11 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 12x12 sample block.
  */
@@ -1577,8 +1547,6 @@ jpeg_fdct_12x12 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 13x13 sample block.
  */
@@ -1776,8 +1744,6 @@ jpeg_fdct_13x13 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 14x14 sample block.
  */
@@ -1976,8 +1942,6 @@ jpeg_fdct_14x14 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 15x15 sample block.
  */
@@ -2155,8 +2119,6 @@ jpeg_fdct_15x15 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 16x16 sample block.
  */
@@ -2361,8 +2323,6 @@ jpeg_fdct_16x16 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 16x8 sample block.
  *
@@ -2542,8 +2502,6 @@ jpeg_fdct_16x8 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 14x7 sample block.
  *
@@ -2706,8 +2664,6 @@ jpeg_fdct_14x7 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 12x6 sample block.
  *
@@ -2845,8 +2801,6 @@ jpeg_fdct_12x6 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 10x5 sample block.
  *
@@ -2977,8 +2931,6 @@ jpeg_fdct_10x5 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on an 8x4 sample block.
  *
@@ -3113,8 +3065,6 @@ jpeg_fdct_8x4 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 6x3 sample block.
  *
@@ -3213,8 +3163,6 @@ jpeg_fdct_6x3 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 4x2 sample block.
  *
@@ -3296,8 +3244,6 @@ jpeg_fdct_4x2 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 2x1 sample block.
  *
@@ -3329,8 +3275,6 @@ jpeg_fdct_2x1 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
   /* Odd part */
   data[1] = (DCTELEM) ((tmp0 - tmp1) << 5);
 }
-
-
 /*
  * Perform the forward DCT on an 8x16 sample block.
  *
@@ -3517,8 +3461,6 @@ jpeg_fdct_8x16 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 7x14 sample block.
  *
@@ -3698,8 +3640,6 @@ jpeg_fdct_7x14 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 6x12 sample block.
  *
@@ -3847,8 +3787,6 @@ jpeg_fdct_6x12 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 5x10 sample block.
  *
@@ -3993,8 +3931,6 @@ jpeg_fdct_5x10 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     wsptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 4x8 sample block.
  *
@@ -4129,8 +4065,6 @@ jpeg_fdct_4x8 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 3x6 sample block.
  *
@@ -4234,8 +4168,6 @@ jpeg_fdct_3x6 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 2x4 sample block.
  *
@@ -4313,8 +4245,6 @@ jpeg_fdct_2x4 (DCTELEM * data, JSAMPARRAY sample_data, JDIMENSION start_col)
     dataptr++;			/* advance pointer to next column */
   }
 }
-
-
 /*
  * Perform the forward DCT on a 1x2 sample block.
  *

@@ -71,8 +71,6 @@ typedef struct opj_tgt_tree {
     opj_tgt_node_t *nodes;
     OPJ_UINT32  nodes_size;     /* maximum size taken by nodes */
 } opj_tgt_tree_t;
-
-
 /** @name Exported functions */
 /*@{*/
 /* ----------------------------------------------------------------------- */

@@ -243,6 +243,4 @@ namespace MetaFile
 		void GetTransform(double* pdM11, double* pdM12, double* pdM21, double* pdM22, double* pdX, double* pdY) override {};
 	};
 }
-
-
 #endif // CEMFINTERPRETATOR_H

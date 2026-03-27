@@ -1123,8 +1123,6 @@ def scanXMLDateArchive(t = None, force = 0):
 	    pass
 
     return newmsg
-    
-
 #########################################################################
 #									#
 #          Main code: open the DB, the API XML and analyze it		#

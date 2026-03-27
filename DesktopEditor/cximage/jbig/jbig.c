@@ -51,8 +51,6 @@
 #include <assert.h>
 
 #include "jbig.h"
-
-
 /* optional export of arithmetic coder functions for test purposes */
 #ifdef TEST_CODEC
 #define ARITH
@@ -114,8 +112,6 @@ static const int iindex[8][3] = {
   { 0, 1, 2 },    /* SEQ + ILEAVE */
   { -1, -1, -1 }  /* SEQ + SMID + ILEAVE -> illegal combination */
 };
-
-
 /*
  * Array [language][message] with text string error messages that correspond
  * to return values from public functions in this library.
@@ -161,8 +157,6 @@ static const char *errmsg[NEMSG_LANG][NEMSG] = {
   }
 };
 
-
-
 /*
  * The following three functions are the only places in this code, were
  * C library memory management functions are called. The whole JBIG
@@ -206,8 +200,6 @@ static void *checked_malloc(size_t nmemb, size_t size)
 
   return p;
 }
-
-
 static void *checked_realloc(void *ptr, size_t nmemb, size_t size)
 {
   void *p;
@@ -232,8 +224,6 @@ static void *checked_realloc(void *ptr, size_t nmemb, size_t size)
 
   return p;
 }
-
-
 static void checked_free(void *ptr)
 {
   free(ptr);
@@ -243,8 +233,6 @@ static void checked_free(void *ptr)
 #endif
 
 }
-
-
 
 /*
  * The next functions implement the arithmedic encoder and decoder
@@ -270,8 +258,6 @@ ARITH void arith_encode_init(struct jbg_arenc_state *s, int reuse_st)
   
   return;
 }
-
-
 ARITH void arith_encode_flush(struct jbg_arenc_state *s)
 {
   unsigned long temp;
@@ -323,8 +309,6 @@ ARITH void arith_encode_flush(struct jbg_arenc_state *s)
 
   return;
 }
-
-
 ARITH_INL void arith_encode(struct jbg_arenc_state *s, int cx, int pix) 
 {
   extern short jbg_lsz[];
@@ -421,8 +405,6 @@ ARITH_INL void arith_encode(struct jbg_arenc_state *s, int cx, int pix)
  
   return;
 }
-
-
 ARITH void arith_decode_init(struct jbg_ardec_state *s, int reuse_st)
 {
   int i;
@@ -436,8 +418,6 @@ ARITH void arith_decode_init(struct jbg_ardec_state *s, int reuse_st)
   s->startup = 1;
   return;
 }
-
-
 ARITH_INL int arith_decode(struct jbg_ardec_state *s, int cx)
 {
   extern short jbg_lsz[];
@@ -530,8 +510,6 @@ ARITH_INL int arith_decode(struct jbg_ardec_state *s, int cx)
   return pix;
 }
 
-
-
 /*
  * Memory management for buffers which are used for temporarily
  * storing SDEs by the encoder.
@@ -544,8 +522,6 @@ ARITH_INL int arith_decode(struct jbg_ardec_state *s, int cx)
  * encoder keeps. Only the destructor of the encoder actually returns
  * the block via checked_free() to the stdlib memory management.
  */
-
-
 /*
  * Allocate a new buffer block and initialize it. Try to get it from
  * the free_list, and if it is empty, call checked_malloc().
@@ -570,8 +546,6 @@ static struct jbg_buf *jbg_buf_init(struct jbg_buf **free_list)
 
   return new_block;
 }
-
-
 /*
  * Return an entire free_list to the memory management of stdlib.
  * This is only done by jbg_enc_free().
@@ -588,8 +562,6 @@ static void jbg_buf_free(struct jbg_buf **free_list)
   
   return;
 }
-
-
 /*
  * Append a single byte to a single list that starts with the block
  * *(struct jbg_buf *) head. The type of *head is void here in order to
@@ -613,8 +585,6 @@ static void jbg_buf_write(int b, void *head)
 
   return;
 }
-
-
 /*
  * Remove any trailing zero bytes from the end of a linked jbg_buf list,
  * however make sure that no zero byte is removed which directly
@@ -652,8 +622,6 @@ static void jbg_buf_remove_zeros(struct jbg_buf *head)
  
   return;
 }
-
-
 /*
  * The jbg_buf list which starts with block *new_prefix is concatenated
  * with the list which starts with block **start and *start will then point
@@ -668,8 +636,6 @@ static void jbg_buf_prefix(struct jbg_buf *new_prefix, struct jbg_buf **start)
   
   return;
 }
-
-
 /*
  * Send the contents of a jbg_buf list that starts with block **head to
  * the call back function data_out and return the blocks of the jbg_buf
@@ -693,8 +659,6 @@ static void jbg_buf_output(struct jbg_buf **head,
   
   return;
 }
-
-
 /*
  * Calculate y = ceil(x/2) applied n times, which is equivalent to
  * y = ceil(x/(2^n)). This function is used to
@@ -710,8 +674,6 @@ unsigned long jbg_ceil_half(unsigned long x, int n)
   mask = (1UL << n) - 1;     /* the lowest n bits are 1 here */
   return (x >> n) + ((mask & x) != 0);
 }
-
-
 /*
  * Set L0 (the number of lines in a stripe at lowest resolution)
  * to a default value, such that there are about 35 stripes, as
@@ -725,8 +687,6 @@ static void jbg_set_default_l0(struct jbg_enc_state *s)
     --s->l0;
   if (s->l0 < 2) s->l0 = 2;
 }
-
-
 /*
  * Calculate the number of stripes, as defined in clause 6.2.3 of T.82.
  */
@@ -737,8 +697,6 @@ static unsigned long jbg_stripes(unsigned long l0, unsigned long yd,
 
   return y0 / l0 + (y0 % l0 != 0);
 }
-
-
 /*
  * Initialize the status struct for the encoder.
  */
@@ -794,8 +752,6 @@ void jbg_enc_init(struct jbg_enc_state *s, unsigned long x, unsigned long y,
 
   return;
 }
-
-
 /*
  * This function selects the number of differential layers based on
  * the maximum size requested for the lowest resolution layer. If
@@ -819,8 +775,6 @@ int jbg_enc_lrlmax(struct jbg_enc_state *s, unsigned long x,
   jbg_set_default_l0(s);
   return s->d;
 }
-
-
 /*
  * As an alternative to jbg_enc_lrlmax(), the following function allows
  * to specify the number of layers directly. The stripe height and layer
@@ -836,8 +790,6 @@ void jbg_enc_layers(struct jbg_enc_state *s, int d)
   jbg_set_default_l0(s);
   return;
 }
-
-
 /*
  * Specify the highest and lowest resolution layers which will be
  * written to the output file. Call this function not before
@@ -852,8 +804,6 @@ int jbg_enc_lrange(struct jbg_enc_state *s, int dl, int dh)
 
   return s->d;
 }
-
-
 /*
  * The following function allows to specify the bits describing the
  * options of the format as well as the maximum AT movement window and
@@ -870,8 +820,6 @@ void jbg_enc_options(struct jbg_enc_state *s, int order, int options,
 
   return;
 }
-
-
 /*
  * This function actually does all the tricky work involved in producing
  * a SDE, which is stored in the appropriate s->sde[][][] element
@@ -1249,8 +1197,6 @@ static void encode_sde(struct jbg_enc_state *s,
 	tp_lines += ltp;
 #endif
       }
-
-
       /*
        * Layout of the variables line_h1, line_h2, line_h3, which contain
        * as bits the high resolution neighbour pixels of the currently coded
@@ -1269,8 +1215,6 @@ static void encode_sde(struct jbg_enc_state *s,
        *            76543210 7654321Y 76543210 76543210     line_l2
        *            76543210 76543210 76543210 76543210     line_l1
        */
-      
-
       line_h1 = line_h2 = line_h3 = line_l1 = line_l2 = line_l3 = 0;
       if (y > 0) line_h2 = (long)*(hp - hbpl) << 8;
       if (y > 1) {
@@ -1474,8 +1418,6 @@ static void encode_sde(struct jbg_enc_state *s,
 
   return;
 }
-
-
 /*
  * Create the next lower resolution version of an image
  */
@@ -1576,8 +1518,6 @@ static void resolution_reduction(struct jbg_enc_state *s, int plane,
 
   return;
 }
-
-
 /* 
  * This function is called inside the three loops of jbg_enc_out() in
  * order to write the next SDE. It has first to generate the required
@@ -1655,8 +1595,6 @@ static void output_sde(struct jbg_enc_state *s,
   
   return;
 }
-
-
 /*
  * Convert the table which controls the deterministic prediction
  * process from the internal format into the representation required
@@ -1706,8 +1644,6 @@ void jbg_int2dppriv(unsigned char *dptable, const char *internal)
 
   return;
 }
-
-
 /*
  * Convert the table which controls the deterministic prediction
  * process from the 1728 byte long DPTABLE format into the 6912 byte long
@@ -1737,8 +1673,6 @@ void jbg_dppriv2int(char *internal, const unsigned char *dptable)
 
   return;
 }
-
-
 /*
  * Encode one full BIE and pass the generated data to the specified
  * call-back function
@@ -1919,8 +1853,6 @@ void jbg_enc_out(struct jbg_enc_state *s)
 
   return;
 }
-
-
 void jbg_enc_free(struct jbg_enc_state *s)
 {
   unsigned long stripe;
@@ -1969,8 +1901,6 @@ void jbg_enc_free(struct jbg_enc_state *s)
   
   return;
 }
-
-
 /*
  * Convert the error codes used by jbg_dec_in() into a string
  * written in the selected language and character set.
@@ -1984,8 +1914,6 @@ const char *jbg_strerror(int errnum, int language)
 
   return errmsg[language][errnum];
 }
-
-
 /*
  * The constructor for a decoder 
  */
@@ -2003,8 +1931,6 @@ void jbg_dec_init(struct jbg_dec_state *s)
 
   return;
 }
-
-
 /*
  * Specify a maximum image size for the decoder. If the JBIG file has
  * the order bit ILEAVE, but not the bit SEQ set, then the decoder
@@ -2020,8 +1946,6 @@ void jbg_dec_maxsize(struct jbg_dec_state *s, unsigned long xmax,
 
   return;
 }
-
-
 /*
  * Decode the new len PSDC bytes to which data points and add them to
  * the current stripe. Return the number of bytes which have actually
@@ -2310,8 +2234,6 @@ static size_t decode_pscd(struct jbg_dec_state *s, unsigned char *data,
 	  goto leave;
 	s->pseudo = 0;
       }
-
-
       /*
        * Layout of the variables line_h1, line_h2, line_h3, which contain
        * as bits the high resolution neighbour pixels of the currently
@@ -2330,8 +2252,6 @@ static size_t decode_pscd(struct jbg_dec_state *s, unsigned char *data,
        *                     76543210 76543210 Y6543210 76543210     line_l2
        *                     76543210 76543210 76543210 76543210     line_l1
        */
-      
-
       if (x == 0) {
 	line_h1 = line_h2 = line_h3 = line_l1 = line_l2 = line_l3 = 0;
 	if (s->i > 0 || (y > 0 && !s->reset[plane][layer - s->dl])) {
@@ -2480,8 +2400,6 @@ static size_t decode_pscd(struct jbg_dec_state *s, unsigned char *data,
 
   return se->pscd_ptr - data;
 }
-
-
 /*
  * Provide a new BIE fragment to the decoder.
  *
@@ -2822,8 +2740,6 @@ int jbg_dec_in(struct jbg_dec_state *s, unsigned char *data, size_t len,
 
   return JBG_EAGAIN;
 }
-
-
 /*
  * After jbg_dec_in() returned JBG_EOK or JBG_EOK_INTR, you can call this
  * function in order to find out the width of the image.
@@ -2841,8 +2757,6 @@ long jbg_dec_getwidth(const struct jbg_dec_state *s)
 
   return s->xd;
 }
-
-
 /*
  * After jbg_dec_in() returned JBG_EOK or JBG_EOK_INTR, you can call this
  * function in order to find out the height of the image.
@@ -2860,8 +2774,6 @@ long jbg_dec_getheight(const struct jbg_dec_state *s)
   
   return s->yd;
 }
-
-
 /*
  * After jbg_dec_in() returned JBG_EOK or JBG_EOK_INTR, you can call this
  * function in order to get a pointer to the image.
@@ -2879,8 +2791,6 @@ unsigned char *jbg_dec_getimage(const struct jbg_dec_state *s, int plane)
   
   return s->lhp[s->d & 1][plane];
 }
-
-
 /*
  * After jbg_dec_in() returned JBG_EOK or JBG_EOK_INTR, you can call
  * this function in order to find out the size in bytes of one
@@ -2901,8 +2811,6 @@ long jbg_dec_getsize(const struct jbg_dec_state *s)
   
   return jbg_ceil_half(s->xd, 3) * s->yd;
 }
-
-
 /*
  * After jbg_dec_in() returned JBG_EOK or JBG_EOK_INTR, you can call
  * this function in order to find out the size of the image that you
@@ -2924,8 +2832,6 @@ long jbg_dec_getsize_merged(const struct jbg_dec_state *s)
   
   return s->xd * s->yd * ((s->planes + 7) / 8);
 }
-
-
 /* 
  * The destructor function which releases any resources obtained by the
  * other decoder functions.
@@ -2963,8 +2869,6 @@ void jbg_dec_free(struct jbg_dec_state *s)
 
   return;
 }
-
-
 /*
  * Split bigendian integer pixel field into separate bit planes. In the
  * src array, every pixel is represented by a ((has_planes + 7) / 8) byte
@@ -3092,8 +2996,6 @@ void jbg_dec_merge_planes(const struct jbg_dec_state *s, int use_graycode,
   
   return;
 }
-
-
 /*
  * Given a pointer p to the first byte of either a marker segment or a
  * PSCD, as well as the length len of the remaining data, return
@@ -3148,8 +3050,6 @@ unsigned char *jbg_next_pscdms(unsigned char *p, size_t len)
 
   return p;
 }
-
-
 /*
  * Scan a complete BIE for a NEWLEN marker segment, then read the new
  * YD value found in it and use it to overwrite the one in the BIE

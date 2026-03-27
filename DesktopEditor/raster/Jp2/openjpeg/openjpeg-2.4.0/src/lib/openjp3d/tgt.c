@@ -65,8 +65,6 @@ void tgt_tree_dump(FILE *fd, opj_tgt_tree_t * tree)
     fprintf(fd, "}\n");
 
 }
-
-
 opj_tgt_tree_t *tgt_create(int numleafsh, int numleafsv, int numleafsz)
 {
 
@@ -151,8 +149,6 @@ opj_tgt_tree_t *tgt_create(int numleafsh, int numleafsv, int numleafsz)
         }
     }
     node->parent = 0;
-
-
     tgt_reset(tree);
 
     return tree;

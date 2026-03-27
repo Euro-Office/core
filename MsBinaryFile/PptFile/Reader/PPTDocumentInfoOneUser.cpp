@@ -656,8 +656,6 @@ void CPPTUserInfo::LoadNotes(_UINT32 dwNoteID, CSlide* pNotes)
     for (auto* pTextAttr : pRecordSlide->m_oPersist.m_arTextAttrs)
         if (pTextAttr)
             pNotesWrapper->m_arTextPlaceHolders.push_back(*pTextAttr);
-
-
     std::vector<CRecordNotesAtom*> oArrayNotesAtoms;
     pRecordSlide->GetRecordsByType(&oArrayNotesAtoms, false, true);
     if (0 == oArrayNotesAtoms.size())
@@ -2968,8 +2966,6 @@ void CPPTUserInfo::LoadAutoNumBullet(CShapeElement* pShape, int slideID)
         }
     if (!arrStyleTextProp9)
         return;
-
-
     WORD pp9rt = 0;
     for (auto& par : arrPars)
     {

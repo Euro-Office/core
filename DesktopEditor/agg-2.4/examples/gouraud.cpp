@@ -12,8 +12,6 @@
 #include "platform/agg_platform_support.h"
 
 #include "ctrl/agg_slider_ctrl.h"
-
-
 //#define AGG_GRAY8
 #define AGG_BGR24
 //#define AGG_RGB24
@@ -26,12 +24,8 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
 #include "agg_math.h"
 #include "agg_dda_line.h"
-
-
 class the_application : public agg::platform_support
 {
     double m_x[3];
@@ -43,8 +37,6 @@ class the_application : public agg::platform_support
     agg::slider_ctrl<agg::rgba> m_dilation;
     agg::slider_ctrl<agg::rgba> m_gamma;
     agg::slider_ctrl<agg::rgba> m_alpha;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -70,8 +62,6 @@ public:
         m_gamma.value(0.809);
         m_alpha.value(1.0);
     }
-
-
     template<class Scanline, class Ras> 
     void render_gouraud(Scanline& sl, Ras& ras)
     {
@@ -103,8 +93,6 @@ public:
         //span_gen.triangle(m_x[0], m_y[0], m_x[1], m_y[1], m_x[2], m_y[2], d);
         //ras.add_path(span_gen);
         //agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         // Six triangles
         double xc = (m_x[0] + m_x[1] + m_x[2]) / 3.0;
         double yc = (m_y[0] + m_y[1] + m_y[2]) / 3.0;
@@ -124,24 +112,18 @@ public:
         span_gen.triangle(m_x[0], m_y[0], m_x[1], m_y[1], xc, yc, d);
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         span_gen.colors(agg::rgba(0,   1,   0,    alpha),
                         agg::rgba(0,   0,   1,    alpha),
                         agg::rgba(brc, brc, brc,  alpha));
         span_gen.triangle(m_x[1], m_y[1], m_x[2], m_y[2], xc, yc, d);
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         span_gen.colors(agg::rgba(0,   0,   1,   alpha),
                         agg::rgba(1,   0,   0,   alpha),
                         agg::rgba(brc, brc, brc, alpha));
         span_gen.triangle(m_x[2], m_y[2], m_x[0], m_y[0], xc, yc, d);
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         brc = 1-brc;
         span_gen.colors(agg::rgba(1,   0,   0,    alpha),
                         agg::rgba(0,   1,   0,    alpha),
@@ -149,16 +131,12 @@ public:
         span_gen.triangle(m_x[0], m_y[0], m_x[1], m_y[1], x1, y1, d);
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         span_gen.colors(agg::rgba(0,   1,   0,    alpha),
                         agg::rgba(0,   0,   1,    alpha),
                         agg::rgba(brc, brc, brc,  alpha));
         span_gen.triangle(m_x[1], m_y[1], m_x[2], m_y[2], x2, y2, d);
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
-
-
         span_gen.colors(agg::rgba(0,   0,   1,    alpha),
                         agg::rgba(1,   0,   0,    alpha),
                         agg::rgba(brc, brc, brc,  alpha));
@@ -166,14 +144,6 @@ public:
         ras.add_path(span_gen);
         agg::render_scanlines_aa(ras, sl, ren_base, span_alloc, span_gen);
     }
-
-
-
-
-
-
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<pixfmt> base_ren_type;
@@ -192,8 +162,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_gamma);
         agg::render_ctrl(ras, sl, ren_base, m_alpha);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         unsigned i;
@@ -238,8 +206,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -275,8 +241,6 @@ public:
     {
         m_idx = -1;
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         double dx = 0;
@@ -294,11 +258,7 @@ public:
         m_y[1] += dy;
         force_redraw();
     }
-
-
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -310,5 +270,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

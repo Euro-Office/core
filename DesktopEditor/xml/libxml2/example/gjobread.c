@@ -174,8 +174,6 @@ typedef struct gjob {
     int nbJobs;
     jobPtr jobs[500]; /* using dynamic alloc is left as an exercise */
 } gJob, *gJobPtr;
-
-
 static gJobPtr
 parseGjobFile(char *filename) {
     xmlDocPtr doc;

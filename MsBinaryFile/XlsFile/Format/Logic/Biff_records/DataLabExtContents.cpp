@@ -41,13 +41,9 @@ DataLabExtContents::DataLabExtContents()
 {
 	is_area = false;
 }
-
-
 DataLabExtContents::~DataLabExtContents()
 {
 }
-
-
 BaseObjectPtr DataLabExtContents::clone()
 {
 	return BaseObjectPtr(new DataLabExtContents(*this));
@@ -121,8 +117,6 @@ int DataLabExtContents::serialize(std::wostream & _stream)
 				CP_XML_ATTR (L"val" , fSerName); 
 			}		
 		}
-
-
 	}
 	return 0;
 }

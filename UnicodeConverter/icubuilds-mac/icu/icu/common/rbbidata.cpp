@@ -19,8 +19,6 @@
 #include "umutex.h"
 
 #include "uassert.h"
-
-
 //-----------------------------------------------------------------------------------
 //
 //   Trie access folding function.  Copied as-is from properties code in uchar.c
@@ -128,8 +126,6 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
     if (data->fSRTableLen != 0) {
         fSafeRevTable = (RBBIStateTable *)((char *)data + fHeader->fSRTable);
     }
-
-
     utrie_unserialize(&fTrie,
                        (uint8_t *)data + fHeader->fTrie,
                        fHeader->fTrieLen,
@@ -138,8 +134,6 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
         return;
     }
     fTrie.getFoldingOffset=getFoldingOffset;
-
-
     fRuleSource   = (UChar *)((char *)data + fHeader->fRuleSource);
     fRuleString.setTo(TRUE, fRuleSource, -1);
     U_ASSERT(data->fRuleSourceLen > 0);
@@ -154,8 +148,6 @@ void RBBIDataWrapper::init(const RBBIDataHeader *data, UErrorCode &status) {
     if (debugEnv && uprv_strstr(debugEnv, "data")) {this->printData();}
 #endif
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //    Destructor.     Don't call this - use removeReference() instead.
@@ -169,8 +161,6 @@ RBBIDataWrapper::~RBBIDataWrapper() {
         uprv_free((void *)fHeader);
     }
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -199,8 +189,6 @@ int32_t  RBBIDataWrapper::hashCode() {
     return fHeader->fFTableLen;
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //    Reference Counting.   A single RBBIDataWrapper object is shared among
@@ -213,14 +201,10 @@ void RBBIDataWrapper::removeReference() {
         delete this;
     }
 }
-
-
 RBBIDataWrapper *RBBIDataWrapper::addReference() {
    umtx_atomic_inc(&fRefCount);
    return this;
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -230,8 +214,6 @@ RBBIDataWrapper *RBBIDataWrapper::addReference() {
 const UnicodeString &RBBIDataWrapper::getRuleSourceString() const {
     return fRuleString;
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //  print   -  debugging function to dump the runtime data tables.
@@ -267,8 +249,6 @@ void  RBBIDataWrapper::printTable(const char *heading, const RBBIStateTable *tab
     RBBIDebugPrintf("\n");
 }
 #endif
-
-
 #ifdef RBBI_DEBUG
 void  RBBIDataWrapper::printData() {
     RBBIDebugPrintf("RBBI Data at %p\n", (void *)fHeader);
@@ -289,8 +269,6 @@ void  RBBIDataWrapper::printData() {
     RBBIDebugPrintf("\n\n");
 }
 #endif
-
-
 U_NAMESPACE_END
 U_NAMESPACE_USE
 
@@ -337,8 +315,6 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
     //                         of the RBBI specific data.
     //
     int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, status);
-
-
     //
     // Get the RRBI Data Header, and check that it appears to be OK.
     //
@@ -376,8 +352,6 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
         return 0;
         }
-
-
     //
     // Swap the Data.  Do the data itself first, then the RBBI Data Header, because
     //                 we need to reference the header to locate the data, and an
@@ -469,6 +443,4 @@ ubrk_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outD
 
     return totalSize;
 }
-
-
 #endif /* #if !UCONFIG_NO_BREAK_ITERATION */

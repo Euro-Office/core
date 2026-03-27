@@ -320,8 +320,6 @@ ulocdata_getLocaleDisplayPattern(ULocaleData *uld,
     u_strncpy(result, pattern, resultCapacity);
     return len;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ulocdata_getLocaleSeparator(ULocaleData *uld,
                             UChar *result,

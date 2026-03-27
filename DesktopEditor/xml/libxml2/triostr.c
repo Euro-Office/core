@@ -134,8 +134,6 @@ TRIO_ARGS1((size),
 {
   return (char *)TRIO_MALLOC(size);
 }
-
-
 /**
    Destroy string.
 
@@ -151,8 +149,6 @@ TRIO_ARGS1((string),
       TRIO_FREE(string);
     }
 }
-
-
 /**
    Count the number of characters in a string.
 
@@ -166,8 +162,6 @@ TRIO_ARGS1((string),
 {
   return strlen(string);
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Append @p source at the end of @p target.
@@ -232,8 +226,6 @@ TRIO_ARGS3((target, max, source),
   return TRUE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Determine if a string contains a substring.
@@ -254,8 +246,6 @@ TRIO_ARGS2((string, substring),
   return (0 != strstr(string, substring));
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Copy @p source to @p target.
@@ -283,8 +273,6 @@ TRIO_ARGS2((target, source),
   return TRUE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Copy at most @p max characters from @p source to @p target.
 
@@ -314,8 +302,6 @@ TRIO_ARGS3((target, max, source),
   target[max - 1] = (char)0;
   return TRUE;
 }
-
-
 /*
  * TrioDuplicateMax
  */
@@ -338,8 +324,6 @@ TRIO_ARGS2((source, size),
     }
   return target;
 }
-
-
 /**
    Duplicate @p source.
 
@@ -355,8 +339,6 @@ TRIO_ARGS1((source),
 {
   return TrioDuplicateMax(source, trio_length(source));
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Duplicate at most @p max characters of @p source.
@@ -385,8 +367,6 @@ trio_duplicate_max TRIO_ARGS2((source, max),
   return TrioDuplicateMax(source, length);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Compare if two strings are equal.
 
@@ -424,8 +404,6 @@ TRIO_ARGS2((first, second),
     }
   return FALSE;
 }
-
-
 /**
    Compare if two strings are equal.
 
@@ -450,8 +428,6 @@ TRIO_ARGS2((first, second),
     }
   return FALSE;
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Compare if two strings up until the first @p max characters are equal.
@@ -480,8 +456,6 @@ TRIO_ARGS3((first, max, second),
   return FALSE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Compare if two strings are equal.
 
@@ -506,8 +480,6 @@ TRIO_ARGS2((first, second),
   return trio_equal(first, second);
 #endif
 }
-
-
 /**
    Compare if two strings up until the first @p max characters are equal.
 
@@ -550,8 +522,6 @@ TRIO_ARGS3((first, max, second),
     }
   return FALSE;
 }
-
-
 /**
    Provide a textual description of an error code (errno).
 
@@ -582,8 +552,6 @@ TRIO_ARGS1((error_number),
 
 #endif
 }
-
-
 #if !defined(TRIO_MINIMAL) && !defined(_WIN32_WCE)
 /**
    Format the date/time according to @p format.
@@ -613,8 +581,6 @@ TRIO_ARGS4((target, max, format, datetime),
   return strftime(target, max, format, datetime);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Calculate a hash value for a string.
@@ -653,8 +619,6 @@ TRIO_ARGS2((string, type),
   return value;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Find first occurrence of a character in a string.
@@ -674,8 +638,6 @@ TRIO_ARGS2((string, character),
   return strchr(string, character);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Find last occurrence of a character in a string.
@@ -695,8 +657,6 @@ TRIO_ARGS2((string, character),
   return strchr(string, character);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Convert the alphabetic letters in the string to lower-case.
@@ -714,8 +674,6 @@ TRIO_ARGS1((target),
   return trio_span_function(target, target, trio_to_lower);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Compare two strings using wildcards.
@@ -767,8 +725,6 @@ TRIO_ARGS2((string, pattern),
   return FALSE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Compare two strings using wildcards.
@@ -820,8 +776,6 @@ TRIO_ARGS2((string, pattern),
   return FALSE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Execute a function on each character in string.
@@ -852,8 +806,6 @@ TRIO_ARGS3((target, source, Function),
   return count;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Search for a substring in a string.
@@ -875,8 +827,6 @@ TRIO_ARGS2((string, substring),
   return strstr(string, substring);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Search for a substring in the first @p max characters of a string.
@@ -916,8 +866,6 @@ TRIO_ARGS3((string, max, substring),
   return result;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Tokenize string.
@@ -939,8 +887,6 @@ TRIO_ARGS2((string, delimiters),
   return strtok(string, delimiters);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Convert string to floating-point number.
 
@@ -1087,8 +1033,6 @@ TRIO_ARGS2((source, endp),
   return value;
 #endif
 }
-
-
 /**
    Convert string to floating-point number.
 
@@ -1134,8 +1078,6 @@ TRIO_ARGS2((source, endp),
 #endif
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Convert string to signed integer.
 
@@ -1155,8 +1097,6 @@ TRIO_ARGS3((string, endp, base),
 
   return strtol(string, endp, base);
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Convert one alphabetic letter to lower-case.
@@ -1205,8 +1145,6 @@ TRIO_ARGS3((string, endp, base),
   return strtoul(string, endp, base);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Convert one alphabetic letter to upper-case.
 
@@ -1249,11 +1187,7 @@ TRIO_ARGS1((target),
   return trio_span_function(target, target, trio_to_upper);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /** @} End of StaticStrings */
-
-
 /*************************************************************************
  * Dynamic String Functions
  */
@@ -1282,8 +1216,6 @@ TrioStringAlloc(TRIO_NOARGS)
     }
   return self;
 }
-
-
 /*
  * TrioStringGrow
  *
@@ -1313,8 +1245,6 @@ TRIO_ARGS2((self, delta),
     }
   return status;
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * TrioStringGrowTo
@@ -1335,8 +1265,6 @@ TRIO_ARGS2((self, length),
     : TRUE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Create a new dynamic string.
@@ -1369,8 +1297,6 @@ TRIO_ARGS1((initial_size),
   return self;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Deallocate the dynamic string and its contents.
 
@@ -1389,8 +1315,6 @@ TRIO_ARGS1((self),
       TRIO_FREE(self);
     }
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Get a pointer to the content.
@@ -1442,8 +1366,6 @@ TRIO_ARGS2((self, offset),
   return result;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /**
    Extract the content.
 
@@ -1468,8 +1390,6 @@ TRIO_ARGS1((self),
   self->length = self->allocated = 0;
   return result;
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Set the content of the dynamic string.
@@ -1496,8 +1416,6 @@ TRIO_ARGS2((self, buffer),
   self->content = trio_duplicate(buffer);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /*
  * trio_string_size
  */
@@ -1510,8 +1428,6 @@ TRIO_ARGS1((self),
 
   return self->allocated;
 }
-
-
 /*
  * trio_string_terminate
  */
@@ -1522,8 +1438,6 @@ TRIO_ARGS1((self),
 {
   trio_xstring_append_char(self, 0);
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Append the second string to the first.
@@ -1554,8 +1468,6 @@ TRIO_ARGS2((self, other),
   return FALSE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_append
@@ -1582,8 +1494,6 @@ TRIO_ARGS2((self, other),
   return FALSE;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /*
  * trio_xstring_append_char
  */
@@ -1607,8 +1517,6 @@ TRIO_ARGS2((self, character),
  error:
   return FALSE;
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /**
    Search for the first occurrence of second parameter in the first.
@@ -1629,8 +1537,6 @@ TRIO_ARGS2((self, other),
   return trio_contains(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_contains
@@ -1647,8 +1553,6 @@ TRIO_ARGS2((self, other),
   return trio_contains(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_copy
@@ -1666,8 +1570,6 @@ TRIO_ARGS2((self, other),
   return trio_string_append(self, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_copy
@@ -1685,8 +1587,6 @@ TRIO_ARGS2((self, other),
   return trio_xstring_append(self, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_duplicate
@@ -1717,8 +1617,6 @@ TRIO_ARGS1((other),
   return self;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 /*
  * trio_xstring_duplicate
  */
@@ -1747,8 +1645,6 @@ TRIO_ARGS1((other),
     }
   return self;
 }
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_equal
@@ -1765,8 +1661,6 @@ TRIO_ARGS2((self, other),
   return trio_equal(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_equal
@@ -1783,8 +1677,6 @@ TRIO_ARGS2((self, other),
   return trio_equal(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_equal_max
@@ -1802,8 +1694,6 @@ TRIO_ARGS3((self, max, other),
   return trio_equal_max(self->content, max, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_equal_max
@@ -1821,8 +1711,6 @@ TRIO_ARGS3((self, max, other),
   return trio_equal_max(self->content, max, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_equal_case
@@ -1839,8 +1727,6 @@ TRIO_ARGS2((self, other),
   return trio_equal_case(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_equal_case
@@ -1857,8 +1743,6 @@ TRIO_ARGS2((self, other),
   return trio_equal_case(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_equal_case_max
@@ -1876,8 +1760,6 @@ TRIO_ARGS3((self, max, other),
   return trio_equal_case_max(self->content, max, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_equal_case_max
@@ -1895,8 +1777,6 @@ TRIO_ARGS3((self, max, other),
   return trio_equal_case_max(self->content, max, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL) && !defined(_WIN32_WCE)
 /*
  * trio_string_format_data_max
@@ -1914,8 +1794,6 @@ TRIO_ARGS4((self, max, format, datetime),
   return trio_format_date_max(self->content, max, format, datetime);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_index
@@ -1931,8 +1809,6 @@ TRIO_ARGS2((self, character),
   return trio_index(self->content, character);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_index_last
@@ -1948,8 +1824,6 @@ TRIO_ARGS2((self, character),
   return trio_index_last(self->content, character);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_length
@@ -1968,8 +1842,6 @@ TRIO_ARGS1((self),
   return self->length;
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_lower
@@ -1984,8 +1856,6 @@ TRIO_ARGS1((self),
   return trio_lower(self->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_match
@@ -2002,8 +1872,6 @@ TRIO_ARGS2((self, other),
   return trio_match(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_match
@@ -2020,8 +1888,6 @@ TRIO_ARGS2((self, other),
   return trio_match(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_match_case
@@ -2038,8 +1904,6 @@ TRIO_ARGS2((self, other),
   return trio_match_case(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_match_case
@@ -2056,8 +1920,6 @@ TRIO_ARGS2((self, other),
   return trio_match_case(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_substring
@@ -2074,8 +1936,6 @@ TRIO_ARGS2((self, other),
   return trio_substring(self->content, other->content);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_xstring_substring
@@ -2092,8 +1952,6 @@ TRIO_ARGS2((self, other),
   return trio_substring(self->content, other);
 }
 #endif /* !defined(TRIO_MINIMAL) */
-
-
 #if !defined(TRIO_MINIMAL)
 /*
  * trio_string_upper

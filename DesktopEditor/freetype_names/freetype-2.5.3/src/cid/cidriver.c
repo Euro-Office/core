@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include "cidriver.h"
 #include "cidgload.h"
@@ -27,8 +25,6 @@
 #include FT_SERVICE_XFREE86_NAME_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
 #include FT_SERVICE_CID_H
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -37,8 +33,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ciddriver
-
-
   /*
    *  POSTSCRIPT NAME SERVICE
    *
@@ -48,21 +42,15 @@
   cid_get_postscript_name( CID_Face  face )
   {
     const char*  result = face->cid.cid_font_name;
-
-
     if ( result && result[0] == '/' )
       result++;
 
     return result;
   }
-
-
   static const FT_Service_PsFontNameRec  cid_service_ps_name =
   {
     (FT_PsName_GetFunc) cid_get_postscript_name
   };
-
-
   /*
    *  POSTSCRIPT INFO SERVICE
    *
@@ -94,8 +82,6 @@
     (PS_GetFontPrivateFunc)NULL,        /* unsupported                */
     (PS_GetFontValueFunc)  NULL         /* not implemented            */
   };
-
-
   /*
    *  CID INFO SERVICE
    *
@@ -107,8 +93,6 @@
                FT_Int       *supplement )
   {
     CID_FaceInfo  cid = &face->cid;
-
-
     if ( registry )
       *registry = cid->registry;
 
@@ -120,23 +104,17 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   cid_get_is_cid( CID_Face  face,
                   FT_Bool  *is_cid )
   {
     FT_Error  error = FT_Err_Ok;
     FT_UNUSED( face );
-
-
     if ( is_cid )
       *is_cid = 1; /* cid driver is only used for CID keyed fonts */
 
     return error;
   }
-
-
   static FT_Error
   cid_get_cid_from_glyph_index( CID_Face  face,
                                 FT_UInt   glyph_index,
@@ -144,23 +122,17 @@
   {
     FT_Error  error = FT_Err_Ok;
     FT_UNUSED( face );
-
-
     if ( cid )
       *cid = glyph_index; /* identity mapping */
 
     return error;
   }
-
-
   static const FT_Service_CIDRec  cid_service_cid_info =
   {
      (FT_CID_GetRegistryOrderingSupplementFunc)cid_get_ros,
      (FT_CID_GetIsInternallyCIDKeyedFunc)      cid_get_is_cid,
      (FT_CID_GetCIDFromGlyphIndexFunc)         cid_get_cid_from_glyph_index
   };
-
-
   /*
    *  SERVICE LIST
    *
@@ -174,8 +146,6 @@
     { FT_SERVICE_ID_CID,                  &cid_service_cid_info },
     { NULL, NULL }
   };
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   cid_get_interface( FT_Module    module,
                      const char*  cid_interface )
@@ -184,8 +154,6 @@
 
     return ft_service_list_lookup( cid_services, cid_interface );
   }
-
-
 
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  t1cid_driver_class =
@@ -231,6 +199,4 @@
     cid_size_request,
     0                       /* FT_Size_SelectFunc      */
   };
-
-
 /* END */

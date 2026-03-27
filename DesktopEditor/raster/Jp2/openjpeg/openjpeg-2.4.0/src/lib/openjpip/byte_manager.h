@@ -48,8 +48,6 @@ typedef uint64_t Byte8_t;
  * @return           pointer to the fetched data
  */
 Byte_t * fetch_bytes(int fd, OPJ_OFF_T offset, OPJ_SIZE_T size);
-
-
 /**
  * fetch a 1-byte Byte codes in file stream
  *
@@ -85,8 +83,6 @@ Byte4_t fetch_4bytebigendian(int fd, OPJ_OFF_T offset);
  * @return           fetched codes
  */
 Byte8_t fetch_8bytebigendian(int fd, OPJ_OFF_T offset);
-
-
 /**
  * convert 2-byte big endian Byte codes to number
  *

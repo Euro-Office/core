@@ -311,8 +311,6 @@ inline UChar32 UnicodeSetIterator::getCodepoint() const {
 inline UChar32 UnicodeSetIterator::getCodepointEnd() const {
     return codepointEnd;
 }
-
-
 U_NAMESPACE_END
 
 #endif

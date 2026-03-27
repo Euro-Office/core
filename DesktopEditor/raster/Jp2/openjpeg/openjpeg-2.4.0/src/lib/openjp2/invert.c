@@ -97,8 +97,6 @@ OPJ_BOOL opj_matrix_inversion_f(OPJ_FLOAT32 * pSrcMatrix,
 
     return OPJ_TRUE;
 }
-
-
 /*
 ==========================================================
    Local functions
@@ -224,8 +222,6 @@ static void opj_lupSolve(OPJ_FLOAT32 * pResult,
     OPJ_FLOAT32 * lBeginPtr = pResult + nb_compo - 1;
     OPJ_FLOAT32 * lGeneratedData;
     OPJ_UINT32 * lCurrentPermutationPtr = pPermutations;
-
-
     lIntermediatePtr = p_intermediate_data;
     lGeneratedData = p_intermediate_data + nb_compo - 1;
 
@@ -247,8 +243,6 @@ static void opj_lupSolve(OPJ_FLOAT32 * pResult,
 
     /* and we take after the last point of the destination vector */
     lDestPtr = pResult + nb_compo;
-
-
     assert(nb_compo != 0);
     for (k = (OPJ_INT32)nb_compo - 1; k != -1 ; --k) {
         sum = 0.0;
@@ -264,8 +258,6 @@ static void opj_lupSolve(OPJ_FLOAT32 * pResult,
         lLineMatrix -= lStride;
     }
 }
-
-
 static void opj_lupInvert(OPJ_FLOAT32 * pSrcMatrix,
                           OPJ_FLOAT32 * pDestMatrix,
                           OPJ_UINT32 nb_compo,

@@ -21,8 +21,6 @@
 #include "agg_dda_line.h"
 #include "agg_rendering_buffer.h"
 #include "agg_clip_liang_barsky.h"
-
-
 namespace agg
 {
     //========================================================line_image_scale
@@ -60,8 +58,6 @@ namespace agg
         double        m_height;
         double        m_scale;
     };
-
-
 
     //======================================================line_image_pattern
     template<class Filter> class line_image_pattern
@@ -196,12 +192,6 @@ namespace agg
         int                       m_half_height_hr;
         int                       m_offset_y_hr;
     };
-
-
-
-
-
-
     //=================================================line_image_pattern_pow2
     template<class Filter> class line_image_pattern_pow2 : 
     public line_image_pattern<Filter>
@@ -250,12 +240,6 @@ namespace agg
     private:
         unsigned m_mask;
     };
-    
-    
-    
-    
-    
-    
     
     //===================================================distance_interpolator4
     class distance_interpolator4
@@ -462,10 +446,6 @@ namespace agg
         int m_dist_end;
         int m_len;
     };
-
-
-
-
 
     //==================================================line_interpolator_image
     template<class Renderer> class line_interpolator_image
@@ -677,8 +657,6 @@ namespace agg
             return npix && ++m_step < m_count;
         }
 
-
-
         //---------------------------------------------------------------------
         bool step_ver()
         {
@@ -762,8 +740,6 @@ namespace agg
                                     p0);
             return npix && ++m_step < m_count;
         }
-
-
         //---------------------------------------------------------------------
         int  pattern_end() const { return m_start + m_di.len(); }
 
@@ -795,14 +771,6 @@ namespace agg
         int m_dist_pos[max_half_width + 1];
         color_type m_colors[max_half_width * 2 + 4];
     };
-
-
-
-
-
-
-
-
     //===================================================renderer_outline_image
     template<class BaseRenderer, class ImagePattern> 
     class renderer_outline_image
@@ -813,8 +781,6 @@ namespace agg
         typedef renderer_outline_image<BaseRenderer, ImagePattern> self_type;
         typedef typename base_ren_type::color_type color_type;
         typedef ImagePattern pattern_type;
-
-
         //---------------------------------------------------------------------
         renderer_outline_image(base_ren_type& ren, const pattern_type& patt) :
             m_ren(&ren),
@@ -1002,12 +968,6 @@ namespace agg
         bool                m_clipping;
     };
 
-
-
-
-
 }
-
-
 
 #endif

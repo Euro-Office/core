@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeEffectBehaviorAtom.h"
 #include "TimeVariant.h"
@@ -43,8 +41,6 @@ class CRecordTimeEffectBehaviorContainer : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     CRecordTimeEffectBehaviorAtom	m_effectBehaviorAtom;
 
     CRecordTimeVariantString		m_oVarType;

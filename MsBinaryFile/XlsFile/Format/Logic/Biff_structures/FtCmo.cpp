@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FtCmo::clone()
 {
 	return BiffStructurePtr(new FtCmo(*this));
@@ -99,7 +97,5 @@ void FtCmo::save(CFRecord& record)
 	record << flags;
 	record.reserveNunBytes(12);
 }
-
-
 } // namespace XLS
 

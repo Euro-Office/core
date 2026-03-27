@@ -49,13 +49,9 @@ MsoDrawing::MsoDrawing(const bool is_inside_chart_sheet)
 {
 	isReading = false;
 }
-
-
 MsoDrawing::~MsoDrawing()
 {
 }
-
-
 BaseObjectPtr MsoDrawing::clone()
 {
 	return BaseObjectPtr(new MsoDrawing(*this));
@@ -113,8 +109,6 @@ void MsoDrawing::writeFields(CFRecord& record)
 	rgChildRec.save(record);
 }
 
-
-
 void MsoDrawing::useContinueRecords(CFRecord& record)
 {
 	std::list<CFRecordPtr>& recs = continue_records[rt_Continue];
@@ -124,14 +118,10 @@ void MsoDrawing::useContinueRecords(CFRecord& record)
 		recs.pop_front();
 	}
 }
-
-
 const bool MsoDrawing::isStartingRecord(CFRecord& record)
 {
 	return ODRAW::OfficeArtDgContainer::CheckIfContainerStartFound(record);
 }
-
-
 const bool MsoDrawing::isEndingRecord(CFRecord& record)
 {
 	return ODRAW::OfficeArtDgContainer::CheckIfContainerSizeOK(record);
@@ -159,8 +149,6 @@ void MsoDrawing::prepareComment(const unsigned int CommentId)
 	}
 
 	auto TextboxContainer = new ODRAW::OfficeArtSpContainer(ODRAW::OfficeArtRecord::CA_Sheet);
-
-
 	auto fdgPtr = new ODRAW::OfficeArtFDG;
 	fdgPtr->rh_own.recInstance = CommentId;
 	fdgPtr->csp = 2;
@@ -174,8 +162,6 @@ void MsoDrawing::prepareComment(const unsigned int CommentId)
 	fsprPtr->spid = CommentId+1;
 	fsprPtr->fHaveAnchor = true;
 	fsprPtr->fHaveSpt = true;
-
-
 	{
 		//todo add mandatory optrions writing
 		//auto textboxOpt = new ODRAW::OfficeArtFOPT;
@@ -237,7 +223,5 @@ void MsoDrawing::prepareChart(const unsigned int chartId, const unsigned int x1,
 	}
 	fdgPtr->csp = spgrContainer->m_OfficeArtSpgrContainerFileBlock.size();
 }
-
-
 } // namespace XLS
 

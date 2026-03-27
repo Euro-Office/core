@@ -30,8 +30,6 @@ namespace agg
             m_vertices(0)
         {}
         void attach(Renderer& ren) { m_ren = &ren; }
-
-
         //--------------------------------------------------------------------
         void move_to(int x, int y)
         {
@@ -87,8 +85,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         template<class VertexSource>
         void add_path(VertexSource& vs, unsigned path_id=0)
@@ -103,8 +99,6 @@ namespace agg
                 add_vertex(x, y, cmd);
             }
         }
-
-
         //--------------------------------------------------------------------
         template<class VertexSource, class ColorStorage, class PathId>
         void render_all_paths(VertexSource& vs, 
@@ -118,8 +112,6 @@ namespace agg
                 add_path(vs, path_id[i]);
             }
         }
-
-
         //--------------------------------------------------------------------
         template<class Ctrl> void render_ctrl(Ctrl& c)
         {
@@ -130,18 +122,12 @@ namespace agg
                 add_path(c, i);
             }
         }
-
-
     private:
         Renderer* m_ren;
         int       m_start_x;
         int       m_start_y;
         unsigned  m_vertices;
     };
-
-
 }
-
-
 #endif
 

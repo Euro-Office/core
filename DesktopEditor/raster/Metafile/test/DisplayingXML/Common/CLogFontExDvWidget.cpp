@@ -167,8 +167,6 @@ void CLinkedUFISWidget::on_createValue_clicked()
         QBoxLayout *pMainLayout = (QBoxLayout*)layout();
         pMainLayout->insertWidget(pMainLayout->count() - 1, pUniversalFontIdWidget);
 }
-
-
 CUniversalFontIdWidget::CUniversalFontIdWidget(unsigned int unIndex, QWidget *pParent)
         : CSharedWidget(pParent),
           m_unIndex(unIndex)

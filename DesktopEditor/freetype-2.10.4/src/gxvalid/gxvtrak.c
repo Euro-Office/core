@@ -23,12 +23,8 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvtrak
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -77,11 +71,7 @@
     FT_UShort  trackValueOffset_max;
 
   } GXV_trak_DataRec, *GXV_trak_Data;
-
-
 #define GXV_TRAK_DATA( FIELD )  GXV_TABLE_DATA( trak, FIELD )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -102,8 +92,6 @@
     FT_UShort  nameIndex;
     FT_UShort  offset;
     FT_UShort  i, j;
-
-
     GXV_NAME_ENTER( "trackTable" );
 
     GXV_TRAK_DATA( trackValueOffset_min ) = 0xFFFFU;
@@ -138,8 +126,6 @@
     gxvalid->subtable_length = (FT_ULong)( p - table );
     GXV_EXIT;
   }
-
-
   static void
   gxv_trak_trackData_validate( FT_Bytes       table,
                                FT_Bytes       limit,
@@ -151,8 +137,6 @@
     FT_ULong   sizeTableOffset;
 
     GXV_ODTECT( 4, odtect );
-
-
     GXV_ODTECT_INIT( odtect );
     GXV_NAME_ENTER( "trackData" );
 
@@ -194,8 +178,6 @@
 
     GXV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -222,8 +204,6 @@
     FT_UShort  horizOffset;
     FT_UShort  vertOffset;
     FT_UShort  reserved;
-
-
     GXV_ODTECT( 3, odtect );
 
     GXV_ODTECT_INIT( odtect );
@@ -283,6 +263,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "LevelInfoAtom.h"
 #include "ExtTimeNodeContainer.h"

@@ -102,8 +102,6 @@ CopticCalendar::handleComputeFields(int32_t julianDay, UErrorCode &/*status*/)
 static UDate           gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t         gSystemDefaultCenturyStartYear   = -1;
 static icu::UInitOnce  gSystemDefaultCenturyInit        = U_INITONCE_INITIALIZER;
-
-
 static void U_CALLCONV initializeSystemDefaultCentury() {
     UErrorCode status = U_ZERO_ERROR;
     CopticCalendar calendar(Locale("@calendar=coptic"), status);
@@ -132,15 +130,11 @@ CopticCalendar::defaultCenturyStartYear() const
     umtx_initOnce(gSystemDefaultCenturyInit, &initializeSystemDefaultCentury);
     return gSystemDefaultCenturyStartYear;
 }
-
-
 int32_t
 CopticCalendar::getJDEpochOffset() const
 {
     return COPTIC_JD_EPOCH_OFFSET;
 }
-
-
 #if 0
 // We do not want to introduce this API in ICU4C.
 // It was accidentally introduced in ICU4J as a public API.

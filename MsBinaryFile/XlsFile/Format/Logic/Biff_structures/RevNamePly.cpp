@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 RevNamePly::RevNamePly()
 {
 }
-
-
 RevNamePly::RevNamePly(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RevNamePly::clone()
 {
 	return BiffStructurePtr(new RevNamePly(*this));
@@ -61,7 +55,5 @@ void RevNamePly::save(CFRecord& record)
 {
 	record << sheet << name;
 }
-
-
 } // namespace XLS
 

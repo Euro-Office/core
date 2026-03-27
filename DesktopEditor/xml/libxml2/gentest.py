@@ -495,8 +495,6 @@ if line == "":
 print("Scanned testapi.c: found %d parameters types and %d return types\n" % (
       len(known_param_types), len(known_return_types)))
 test.write("/* CUT HERE: everything below that line is generated */\n")
-
-
 #
 # Open the input API description
 #
@@ -959,5 +957,3 @@ for module in missing_functions.keys():
     lst.write("module %s:\n   %s\n" % (module, missing_functions[module]))
 
 lst.close()
-
-

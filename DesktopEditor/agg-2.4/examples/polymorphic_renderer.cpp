@@ -22,8 +22,6 @@ static int pix_fmt = agg::pix_format_rgb555;
 //static int pix_fmt = agg::pix_format_argb32;
 //static int pix_fmt = agg::pix_format_abgr32;
 //static int pix_fmt = agg::pix_format_bgra32;
-
-
 enum flip_y_e { flip_y = true };
 
 namespace agg
@@ -44,8 +42,6 @@ namespace agg
         virtual void prepare() = 0;
         virtual void render(const scanline_type&) = 0;
     };
-
-
 
     //========================================================================
     template<class PixFmt> class polymorphic_renderer_solid_rgba8_adaptor :
@@ -89,15 +85,7 @@ namespace agg
         renderer_base<PixFmt> m_ren_base;
         renderer_scanline_aa_solid<renderer_base<PixFmt> > m_ren;
     };
-
-
 }
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -150,8 +138,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_fmt, flip_y);
@@ -163,5 +149,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

@@ -99,8 +99,6 @@ void delete_message_in_msgqueue(message_param_t **message,
  * @param[in] msgqueue message queue pointer
  */
 void print_msgqueue(msgqueue_param_t *msgqueue);
-
-
 /**
  * enqueue main header data-bin into message queue
  *
@@ -136,8 +134,6 @@ void enqueue_tile(Byte4_t tile_id, int level, msgqueue_param_t *msgqueue);
  */
 void enqueue_precinct(int seq_id, int tile_id, int comp_id, int layers,
                       msgqueue_param_t *msgqueue);
-
-
 /**
  * enqueue Metadata-bin into message queue
  *
@@ -145,8 +141,6 @@ void enqueue_precinct(int seq_id, int tile_id, int comp_id, int layers,
  * @param[in,out] msgqueue message queue pointer
  */
 void enqueue_metadata(Byte8_t meta_id, msgqueue_param_t *msgqueue);
-
-
 /**
  * reconstruct JPT/JPP-stream from message queue
  *
@@ -154,8 +148,6 @@ void enqueue_metadata(Byte8_t meta_id, msgqueue_param_t *msgqueue);
  * @param[in] tmpfd    file discriptor to write JPT/JPP-stream
  */
 void recons_stream_from_msgqueue(msgqueue_param_t *msgqueue, int tmpfd);
-
-
 /**
  * parse JPT- JPP- stream to message queue
  *

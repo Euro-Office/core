@@ -128,7 +128,5 @@ void _mediaitems::dump_rels(rels & Rels, std::wstring local_path)
 
     }        
 }
-
-
 }
 }

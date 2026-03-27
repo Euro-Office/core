@@ -12,8 +12,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 typedef enum {			/* JPEG marker codes */
   M_SOF0  = 0xc0,
   M_SOF1  = 0xc1,
@@ -80,8 +78,6 @@ typedef enum {			/* JPEG marker codes */
   
   M_ERROR = 0x100
 } JPEG_MARKER;
-
-
 /* Private state */
 
 typedef struct {
@@ -91,8 +87,6 @@ typedef struct {
 } my_marker_writer;
 
 typedef my_marker_writer * my_marker_ptr;
-
-
 /*
  * Basic output routines.
  *
@@ -117,8 +111,6 @@ emit_byte (j_compress_ptr cinfo, int val)
       ERREXIT(cinfo, JERR_CANT_SUSPEND);
   }
 }
-
-
 LOCAL(void)
 emit_marker (j_compress_ptr cinfo, JPEG_MARKER mark)
 /* Emit a marker code */
@@ -126,8 +118,6 @@ emit_marker (j_compress_ptr cinfo, JPEG_MARKER mark)
   emit_byte(cinfo, 0xFF);
   emit_byte(cinfo, (int) mark);
 }
-
-
 LOCAL(void)
 emit_2bytes (j_compress_ptr cinfo, int value)
 /* Emit a 2-byte integer; these are always MSB first in JPEG files */
@@ -135,8 +125,6 @@ emit_2bytes (j_compress_ptr cinfo, int value)
   emit_byte(cinfo, (value >> 8) & 0xFF);
   emit_byte(cinfo, value & 0xFF);
 }
-
-
 /*
  * Routines to write specific marker types.
  */
@@ -180,8 +168,6 @@ emit_dqt (j_compress_ptr cinfo, int index)
 
   return prec;
 }
-
-
 LOCAL(void)
 emit_dht (j_compress_ptr cinfo, int index, boolean is_ac)
 /* Emit a DHT marker */
@@ -218,8 +204,6 @@ emit_dht (j_compress_ptr cinfo, int index, boolean is_ac)
     htbl->sent_table = TRUE;
   }
 }
-
-
 LOCAL(void)
 emit_dac (j_compress_ptr cinfo)
 /* Emit a DAC marker */
@@ -267,8 +251,6 @@ emit_dac (j_compress_ptr cinfo)
   }
 #endif /* C_ARITH_CODING_SUPPORTED */
 }
-
-
 LOCAL(void)
 emit_dri (j_compress_ptr cinfo)
 /* Emit a DRI marker */
@@ -279,8 +261,6 @@ emit_dri (j_compress_ptr cinfo)
 
   emit_2bytes(cinfo, (int) cinfo->restart_interval);
 }
-
-
 LOCAL(void)
 emit_sof (j_compress_ptr cinfo, JPEG_MARKER code)
 /* Emit a SOF marker */
@@ -310,8 +290,6 @@ emit_sof (j_compress_ptr cinfo, JPEG_MARKER code)
     emit_byte(cinfo, compptr->quant_tbl_no);
   }
 }
-
-
 LOCAL(void)
 emit_sos (j_compress_ptr cinfo)
 /* Emit a SOS marker */
@@ -345,8 +323,6 @@ emit_sos (j_compress_ptr cinfo)
   emit_byte(cinfo, cinfo->Se);
   emit_byte(cinfo, (cinfo->Ah << 4) + cinfo->Al);
 }
-
-
 LOCAL(void)
 emit_pseudo_sos (j_compress_ptr cinfo)
 /* Emit a pseudo SOS marker */
@@ -361,8 +337,6 @@ emit_pseudo_sos (j_compress_ptr cinfo)
   emit_byte(cinfo, cinfo->block_size * cinfo->block_size - 1); /* Se */
   emit_byte(cinfo, 0); /* Ah/Al */
 }
-
-
 LOCAL(void)
 emit_jfif_app0 (j_compress_ptr cinfo)
 /* Emit a JFIF-compliant APP0 marker */
@@ -396,8 +370,6 @@ emit_jfif_app0 (j_compress_ptr cinfo)
   emit_byte(cinfo, 0);		/* No thumbnail image */
   emit_byte(cinfo, 0);
 }
-
-
 LOCAL(void)
 emit_adobe_app14 (j_compress_ptr cinfo)
 /* Emit an Adobe APP14 marker */
@@ -442,8 +414,6 @@ emit_adobe_app14 (j_compress_ptr cinfo)
     break;
   }
 }
-
-
 /*
  * These routines allow writing an arbitrary marker with parameters.
  * The only intended use is to emit COM or APPn markers after calling
@@ -470,8 +440,6 @@ write_marker_byte (j_compress_ptr cinfo, int val)
 {
   emit_byte(cinfo, val);
 }
-
-
 /*
  * Write datastream header.
  * This consists of an SOI and optional APPn markers.
@@ -498,8 +466,6 @@ write_file_header (j_compress_ptr cinfo)
   if (cinfo->write_Adobe_marker) /* next an optional Adobe APP14 */
     emit_adobe_app14(cinfo);
 }
-
-
 /*
  * Write frame header.
  * This consists of DQT and SOFn markers, and a conditional pseudo SOS marker.
@@ -564,8 +530,6 @@ write_frame_header (j_compress_ptr cinfo)
   if (cinfo->progressive_mode && cinfo->block_size != DCTSIZE)
     emit_pseudo_sos(cinfo);
 }
-
-
 /*
  * Write scan header.
  * This consists of DHT or DAC markers, optional DRI, and SOS.
@@ -610,8 +574,6 @@ write_scan_header (j_compress_ptr cinfo)
 
   emit_sos(cinfo);
 }
-
-
 /*
  * Write datastream trailer.
  */
@@ -621,8 +583,6 @@ write_file_trailer (j_compress_ptr cinfo)
 {
   emit_marker(cinfo, M_EOI);
 }
-
-
 /*
  * Write an abbreviated table-specification datastream.
  * This consists of SOI, DQT and DHT tables, and EOI.
@@ -653,8 +613,6 @@ write_tables_only (j_compress_ptr cinfo)
 
   emit_marker(cinfo, M_EOI);
 }
-
-
 /*
  * Initialize the marker writer module.
  */

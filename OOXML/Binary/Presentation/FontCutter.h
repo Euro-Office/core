@@ -115,8 +115,6 @@ namespace NSFontCutter
 			strWrite = ",\n";
 			bool bIsFirst = true;
 			ULONG lIndexF = 0;
-
-
             USHORT* pArrayUnicodes = NULL;
             size_t pArrayUnicodesLength = 0;
             bool bRes = GenerateSafearray(&pArrayUnicodes, pArrayUnicodesLength);

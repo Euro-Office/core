@@ -60,8 +60,6 @@ public:
      * Gets the parameters needed to create a FixedDecimal.
      */
     void getFixedDecimal(double &source, int64_t &intValue, int64_t &f, int64_t &t, int32_t &v, UBool &hasIntValue) const;
-
-
 private:
     /**
      * The digits, least significant first. Both the least and most
@@ -153,8 +151,6 @@ private:
     friend class ScientificPrecision;
     friend class FixedPrecision;
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif  // __VISIBLEDIGITS_H__

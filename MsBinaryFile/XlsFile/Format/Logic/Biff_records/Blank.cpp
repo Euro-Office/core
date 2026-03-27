@@ -87,7 +87,5 @@ int Blank::serialize(std::wostream & stream)
 	return 0;
 }
 
-
-
 } // namespace XLS
 

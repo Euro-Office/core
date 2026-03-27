@@ -152,8 +152,6 @@ namespace NSGeneratePalette
             A = (A & ~15) + 15; // квантуем альфу
         }
     };
-
-
     struct SRect3D
     {
         unsigned char MaxWidth; // максимальная ширина
@@ -193,8 +191,6 @@ namespace NSGeneratePalette
             {
                 // удалять ничего не нужно, так как нет динамических данных
             }
-
-
             void Init( SColor* points, unsigned int count )
             {
                 m_arrPoints = points;
@@ -299,8 +295,6 @@ namespace NSGeneratePalette
                     Table[pPoint->Color[nColorType]] += 1;
                 }
             }
-
-
             bool CreateNew( CBounder& bound1, CBounder& bound2 ) const
             {
                 // перераспределяем точки в массиве на две части.

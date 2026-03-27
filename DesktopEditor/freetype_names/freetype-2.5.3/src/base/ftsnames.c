@@ -17,17 +17,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_SFNT_NAMES_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 #include FT_INTERNAL_STREAM_H
-
-
 #ifdef TT_CONFIG_OPTION_SFNT_NAMES
-
-
   /* documentation is in ftsnames.h */
 
   FT_EXPORT_DEF( FT_UInt )
@@ -35,8 +29,6 @@
   {
     return ( face && FT_IS_SFNT( face ) ) ? ((TT_Face)face)->num_names : 0;
   }
-
-
   /* documentation is in ftsnames.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -45,25 +37,17 @@
                     FT_SfntName  *aname )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( aname && face && FT_IS_SFNT( face ) )
     {
       TT_Face  ttface = (TT_Face)face;
-
-
       if ( idx < (FT_UInt)ttface->num_names )
       {
         TT_NameEntryRec*  entry = ttface->name_table.names + idx;
-
-
         /* load name on demand */
         if ( entry->stringLength > 0 && entry->string == NULL )
         {
           FT_Memory  memory = face->memory;
           FT_Stream  stream = face->stream;
-
-
           if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
                FT_STREAM_SEEK( entry->stringOffset )                ||
                FT_STREAM_READ( entry->string, entry->stringLength ) )
@@ -86,9 +70,5 @@
 
     return error;
   }
-
-
 #endif /* TT_CONFIG_OPTION_SFNT_NAMES */
-
-
 /* END */

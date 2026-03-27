@@ -37,8 +37,6 @@ namespace agg
         }
         set(w, s);
     }
-
-
     //---------------------------------------------------------------------
     line_profile_aa::value_type* line_profile_aa::profile(double w)
     {
@@ -50,8 +48,6 @@ namespace agg
         }
         return &m_profile[0];
     }
-
-
     //---------------------------------------------------------------------
     void line_profile_aa::set(double center_width, double smoother_width)
     {
@@ -110,7 +106,5 @@ namespace agg
             *--ch = *ch_center++;
         }
     }
-
-
 }
 

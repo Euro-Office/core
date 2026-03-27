@@ -33,8 +33,6 @@ static FILE *logfile = NULL;
 static int verbose = 0;
 
 #define NB_EXPECTED_ERRORS 15
-
-
 const char *skipped_tests[] = {
 /* http://lists.w3.org/Archives/Public/public-xml-testsuite/2008Jul/0000.html */
     "rmt-ns10-035",
@@ -562,8 +560,6 @@ main(int argc ATTRIBUTE_UNUSED, char **argv ATTRIBUTE_UNUSED) {
 
     if ((argc >= 2) && (!strcmp(argv[1], "-v")))
         verbose = 1;
-
-
     old_errors = nb_errors;
     old_tests = nb_tests;
     old_leaks = nb_leaks;

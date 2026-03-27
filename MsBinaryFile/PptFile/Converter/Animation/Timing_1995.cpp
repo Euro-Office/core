@@ -37,8 +37,6 @@
 #include "../../../../OOXML/PPTXFormat/Logic/Timing/BldOleChart.h"
 #include "../../Records/Animations/BuildListContainer.h"
 #include <algorithm>
-
-
 namespace PPT {
 namespace Converter {
 

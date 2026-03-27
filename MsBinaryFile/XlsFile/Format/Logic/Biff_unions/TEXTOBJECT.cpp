@@ -37,19 +37,13 @@
 
 namespace XLS
 {
-
-
 TEXTOBJECT::~TEXTOBJECT()
 {
 }
-
-
 BaseObjectPtr TEXTOBJECT::clone()
 {
 	return BaseObjectPtr(new TEXTOBJECT(*this));
 }
-
-
 // TEXTOBJECT = TxO *Continue
 const bool TEXTOBJECT::loadContent(BinProcessor& proc)
 {

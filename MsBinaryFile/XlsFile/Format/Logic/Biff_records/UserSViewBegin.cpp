@@ -39,8 +39,6 @@ namespace XLS
 UserSViewBegin::UserSViewBegin()
 {
 }
-
-
 UserSViewBegin::~UserSViewBegin()
 {
 }

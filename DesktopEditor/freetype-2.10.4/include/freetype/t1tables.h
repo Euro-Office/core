@@ -15,12 +15,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1TABLES_H_
 #define T1TABLES_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -28,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -69,12 +61,8 @@ FT_BEGIN_HEADER
    *   PS_Dict_Keys
    *
    */
-
-
   /* Note that we separate font data in PS_FontInfoRec and PS_PrivateRec */
   /* structures in order to support Multiple Master fonts.               */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -98,8 +86,6 @@ FT_BEGIN_HEADER
     FT_UShort   underline_thickness;
 
   } PS_FontInfoRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -109,8 +95,6 @@ FT_BEGIN_HEADER
    *   A handle to a @PS_FontInfoRec structure.
    */
   typedef struct PS_FontInfoRec_*  PS_FontInfo;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -121,8 +105,6 @@ FT_BEGIN_HEADER
    *   to maintain source compatibility between various versions of FreeType.
    */
   typedef PS_FontInfoRec  T1_FontInfo;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -172,8 +154,6 @@ FT_BEGIN_HEADER
     FT_Short   min_feature[2];
 
   } PS_PrivateRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -183,8 +163,6 @@ FT_BEGIN_HEADER
    *   A handle to a @PS_PrivateRec structure.
    */
   typedef struct PS_PrivateRec_*  PS_Private;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -195,8 +173,6 @@ FT_BEGIN_HEADER
    *  to maintain source compatibility between various versions of FreeType.
    */
   typedef PS_PrivateRec  T1_Private;
-
-
   /**************************************************************************
    *
    * @enum:
@@ -246,8 +222,6 @@ FT_BEGIN_HEADER
     T1_BLEND_MAX    /* do not remove */
 
   } T1_Blend_Flags;
-
-
   /* these constants are deprecated; use the corresponding */
   /* `T1_Blend_Flags` values instead                       */
 #define t1_blend_underline_position   T1_BLEND_UNDERLINE_POSITION
@@ -267,8 +241,6 @@ FT_BEGIN_HEADER
 #define t1_blend_max                  T1_BLEND_MAX
 
   /* */
-
-
   /* maximum number of Multiple Masters designs, as defined in the spec */
 #define T1_MAX_MM_DESIGNS     16
 
@@ -277,8 +249,6 @@ FT_BEGIN_HEADER
 
   /* maximum number of elements in a design map */
 #define T1_MAX_MM_MAP_POINTS  20
-
-
   /* this structure is used to store the BlendDesignMap entry for an axis */
   typedef struct  PS_DesignMap_
   {
@@ -290,8 +260,6 @@ FT_BEGIN_HEADER
 
   /* backward compatible definition */
   typedef PS_DesignMapRec  T1_DesignMap;
-
-
   typedef struct  PS_BlendRec_
   {
     FT_UInt          num_designs;
@@ -321,12 +289,8 @@ FT_BEGIN_HEADER
     FT_UInt          num_default_design_vector;
 
   } PS_BlendRec, *PS_Blend;
-
-
   /* backward compatible definition */
   typedef PS_BlendRec  T1_Blend;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -363,8 +327,6 @@ FT_BEGIN_HEADER
     FT_Int         sd_bytes;
 
   } CID_FaceDictRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -374,8 +336,6 @@ FT_BEGIN_HEADER
    *   A handle to a @CID_FaceDictRec structure.
    */
   typedef struct CID_FaceDictRec_*  CID_FaceDict;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -387,8 +347,6 @@ FT_BEGIN_HEADER
    *   FreeType.
    */
   typedef CID_FaceDictRec  CID_FontDict;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -425,8 +383,6 @@ FT_BEGIN_HEADER
     FT_ULong        data_offset;
 
   } CID_FaceInfoRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -436,8 +392,6 @@ FT_BEGIN_HEADER
    *   A handle to a @CID_FaceInfoRec structure.
    */
   typedef struct CID_FaceInfoRec_*  CID_FaceInfo;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -448,8 +402,6 @@ FT_BEGIN_HEADER
    *  to maintain source compatibility between various versions of FreeType.
    */
   typedef CID_FaceInfoRec  CID_Info;
-
-
   /**************************************************************************
    *
    * @function:
@@ -473,8 +425,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Int )
   FT_Has_PS_Glyph_Names( FT_Face  face );
-
-
   /**************************************************************************
    *
    * @function:
@@ -507,8 +457,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_PS_Font_Info( FT_Face      face,
                        PS_FontInfo  afont_info );
-
-
   /**************************************************************************
    *
    * @function:
@@ -540,8 +488,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_PS_Font_Private( FT_Face     face,
                           PS_Private  afont_private );
-
-
   /**************************************************************************
    *
    * @enum:
@@ -569,8 +515,6 @@ FT_BEGIN_HEADER
     T1_ENCODING_TYPE_EXPERT
 
   } T1_EncodingType;
-
-
   /**************************************************************************
    *
    * @enum:
@@ -688,8 +632,6 @@ FT_BEGIN_HEADER
     PS_DICT_MAX = PS_DICT_ITALIC_ANGLE
 
   } PS_Dict_Keys;
-
-
   /**************************************************************************
    *
    * @function:
@@ -768,6 +710,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* T1TABLES_H_ */
-
-
 /* END */

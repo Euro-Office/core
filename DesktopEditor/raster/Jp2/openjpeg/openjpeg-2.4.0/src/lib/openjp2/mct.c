@@ -344,8 +344,6 @@ OPJ_FLOAT64 opj_mct_getnorm_real(OPJ_UINT32 compno)
 {
     return opj_mct_norms_real[compno];
 }
-
-
 OPJ_BOOL opj_mct_encode_custom(
     OPJ_BYTE * pCodingdata,
     OPJ_SIZE_T n,

@@ -301,8 +301,6 @@ def handle_testCase(node):
 	    handle_valid(valid, schema)
         for invalid in invalids:
 	    handle_invalid(invalid, schema)
-
-
 #
 # handle a testSuite element
 #
@@ -341,8 +339,6 @@ def handle_testSuite(node, level = 0):
         handle_testCase(test)
     for test in node.xpathEval('testSuite'):
         handle_testSuite(test, level + 1)
-	        
-
     if verbose and level >= 1 and sections != []:
         msg = ""
         for section in sections:

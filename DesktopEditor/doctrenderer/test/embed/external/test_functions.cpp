@@ -206,8 +206,6 @@ void testEmbedMixed()
 {
 	JSSmart<CJSContext> context = new CJSContext();
 	CJSContextScope scope(context);
-
-
 	// --- test external embedding with CTestEmbed ---
 	// embed with `false` - means we are not able to create the object directly from JavaScript.
 	CJSContext::Embed<CTestEmbed>(false);
@@ -249,8 +247,6 @@ void testEmbedMixed()
 		// again, this won't be executed and nothing will be printed
 		std::cout << "FunctionGet() = " << oResTestEmbed4->toInt32() << std::endl;
 	}
-
-
 	// --- test internal embedding with CHashEmbed ---
 	CreateDefaults();
 	context->runScript(
@@ -267,8 +263,6 @@ void testEmbedMixed()
 		std::cout << std::hex << static_cast<unsigned>(hash->getData().Data[i]);
 	}
 	std::cout << std::endl;
-
-
 	// --- test internal embedding with CZipEmbed ---
 	context->runScript(
 		"var oZip = CreateEmbedObject('CZipEmbed');\n"

@@ -297,8 +297,6 @@ namespace MetaFile
 	{
 		MoveTo(oPoint.X, oPoint.Y);
 	}
-
-
 	void CEmfParserBase::MoveTo(TPointL &oPoint)
 	{
 		MoveTo(oPoint.X, oPoint.Y);

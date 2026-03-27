@@ -2242,8 +2242,6 @@ namespace PdfWriter
 					status = false;
 					break;
 				}
-
-
 				mHeaderOffset = fontOffset + 4; // skip the size of the resource
 				mTableOffset = mHeaderOffset;
 
@@ -3488,8 +3486,6 @@ namespace PdfWriter
 		CharStringOperand valueA;
 		CharStringOperand valueB;
 		CharStringOperand newOperand;
-
-
 		if (mOperandStack.size() < 2)
 			return NULL;
 
@@ -3554,8 +3550,6 @@ namespace PdfWriter
 		mOperandStack.pop_back();
 		valueA = mOperandStack.back();
 		mOperandStack.pop_back();
-
-
 		newOperand.IsInteger = true;
 		newOperand.IntegerValue = (
 		(valueB.IsInteger ? valueB.IntegerValue : valueB.RealValue) ==

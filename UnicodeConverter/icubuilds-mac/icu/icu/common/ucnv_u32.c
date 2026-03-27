@@ -986,8 +986,6 @@ static const UConverterStaticData _UTF32LEStaticData = {
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-
-
 const UConverterSharedData _UTF32LEData =
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF32LEStaticData, &_UTF32LEImpl);
 

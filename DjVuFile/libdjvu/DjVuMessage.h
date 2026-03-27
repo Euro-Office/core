@@ -55,8 +55,6 @@
 // 
 // $Id: DjVuMessage.h,v 1.11 2008/01/27 11:36:27 leonb Exp $
 // $Name:  $
-
-
 #ifndef __DJVU_MESSAGE_H__
 #define __DJVU_MESSAGE_H__
 #ifdef HAVE_CONFIG_H
@@ -70,8 +68,6 @@
 // All these I18N XML messages are Lizardtech innovations.
 // For DjvuLibre, I changed the path extraction logic
 // and added support for non I18N messages. 
-
-
 #include "DjVuMessageLite.h"
 
 #ifdef HAVE_NAMESPACES
@@ -124,8 +120,6 @@ public:
 
   static GList<GURL> GetProfilePaths(void);
 };
-
-
 
 #ifdef HAVE_NAMESPACES
 }

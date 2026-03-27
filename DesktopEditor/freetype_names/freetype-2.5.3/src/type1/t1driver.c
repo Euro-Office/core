@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include "t1driver.h"
 #include "t1gload.h"
@@ -37,8 +35,6 @@
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
 #include FT_SERVICE_KERNING_H
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -63,35 +59,25 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_UInt
   t1_get_name_index( T1_Face     face,
                      FT_String*  glyph_name )
   {
     FT_Int  i;
-
-
     for ( i = 0; i < face->type1.num_glyphs; i++ )
     {
       FT_String*  gname = face->type1.glyph_names[i];
-
-
       if ( !ft_strcmp( glyph_name, gname ) )
         return (FT_UInt)i;
     }
 
     return 0;
   }
-
-
   static const FT_Service_GlyphDictRec  t1_service_glyph_dict =
   {
     (FT_GlyphDict_GetNameFunc)  t1_get_glyph_name,
     (FT_GlyphDict_NameIndexFunc)t1_get_name_index
   };
-
-
   /*
    *  POSTSCRIPT NAME SERVICE
    *
@@ -102,14 +88,10 @@
   {
     return (const char*) face->type1.font_name;
   }
-
-
   static const FT_Service_PsFontNameRec  t1_service_ps_name =
   {
     (FT_PsName_GetFunc)t1_get_ps_name
   };
-
-
   /*
    *  MULTIPLE MASTERS SERVICE
    *
@@ -125,8 +107,6 @@
     (FT_Set_Var_Design_Func)T1_Set_Var_Design
   };
 #endif
-
-
   /*
    *  POSTSCRIPT INFO SERVICE
    *
@@ -140,8 +120,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   t1_ps_get_font_extra( FT_Face           face,
                         PS_FontExtraRec*  afont_extra )
@@ -150,8 +128,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Int
   t1_ps_has_glyph_names( FT_Face  face )
   {
@@ -159,8 +135,6 @@
 
     return 1;
   }
-
-
   static FT_Error
   t1_ps_get_font_private( FT_Face         face,
                           PS_PrivateRec*  afont_private )
@@ -169,8 +143,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Long
   t1_ps_get_font_value( FT_Face       face,
                         PS_Dict_Keys  key,
@@ -181,8 +153,6 @@
     FT_Long  retval = -1;
     T1_Face  t1face = (T1_Face)face;
     T1_Font  type1  = &t1face->type1;
-
-
     switch ( key )
     {
     case PS_DICT_FONT_TYPE:
@@ -196,8 +166,6 @@
                    sizeof ( type1->font_matrix.xx ) )
       {
         FT_Fixed  val = 0;
-
-
         retval = sizeof ( val );
         if ( value && value_len >= retval )
         {
@@ -226,8 +194,6 @@
                    sizeof ( type1->font_bbox.xMin ) )
       {
         FT_Fixed val = 0;
-
-
         retval = sizeof ( val );
         if ( value && value_len >= retval )
         {
@@ -564,8 +530,6 @@
 
     return retval;
   }
-
-
   static const FT_Service_PsInfoRec  t1_service_ps_info =
   {
     (PS_GetFontInfoFunc)   t1_ps_get_font_info,
@@ -574,16 +538,12 @@
     (PS_GetFontPrivateFunc)t1_ps_get_font_private,
     (PS_GetFontValueFunc)  t1_ps_get_font_value,
   };
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
   static const FT_Service_KerningRec  t1_service_kerning =
   {
     T1_Get_Track_Kerning,
   };
 #endif
-
-
   /*
    *  SERVICE LIST
    *
@@ -605,8 +565,6 @@
 #endif
     { NULL, NULL }
   };
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   Get_Interface( FT_Module         module,
                  const FT_String*  t1_interface )
@@ -615,8 +573,6 @@
 
     return ft_service_list_lookup( t1_services, t1_interface );
   }
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
 
   /*************************************************************************/
@@ -658,8 +614,6 @@
                FT_Vector*  kerning )
   {
     T1_Face  face = (T1_Face)t1face;
-
-
     kerning->x = 0;
     kerning->y = 0;
 
@@ -671,11 +625,7 @@
 
     return FT_Err_Ok;
   }
-
-
 #endif /* T1_CONFIG_OPTION_NO_AFM */
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  t1_driver_class =
   {
@@ -721,6 +671,4 @@
     T1_Size_Request,
     0                      /* FT_Size_SelectFunc     */
   };
-
-
 /* END */

@@ -37,8 +37,6 @@
 
 #include <xml/xmlchar.h>
 #include <xml/attributes.h>
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -84,8 +82,6 @@ void math_mrow::serialize(std::wostream & _Wostream)
 const wchar_t * math_mfrac::ns = L"math";
 const wchar_t * math_mfrac::name = L"mfrac";
 //----------------------------------------------------------------------------------------------------
-
-
 void math_mfrac::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);
@@ -112,8 +108,6 @@ void math_mfrac::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 //---------------------------------------------------------------
 const wchar_t * math_msqrt::ns = L"math";
 const wchar_t * math_msqrt::name = L"msqrt";

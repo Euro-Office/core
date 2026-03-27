@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgAttrIf::clone()
 {
 	return BiffStructurePtr(new PtgAttrIf(*this));
 }
-
-
 void PtgAttrIf::loadFields(CFRecord& record)
 {
 	record >> offset;
@@ -51,12 +47,8 @@ void PtgAttrIf::writeFields(CFRecord& record)
 {
 	record << offset;
 }
-
-
 void PtgAttrIf::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 }
-
-
 } // namespace XLS
 

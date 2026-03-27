@@ -12,14 +12,10 @@
 //          mcseemagg@yahoo.com
 //          http://www.antigrain.com
 //----------------------------------------------------------------------------
-
-
 #include <stdio.h>
 #include "agg_font_freetype.h"
 #include "agg_bitset_iterator.h"
 #include "agg_renderer_scanline.h"
-
-
 namespace agg
 {
 
@@ -104,8 +100,6 @@ namespace agg
        0xb3667a2e, 0xc4614ab8, 0x5d681b02, 0x2a6f2b94,
        0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d,
     };
-
-
     //------------------------------------------------------------------------------
 
     static unsigned calc_crc32(const unsigned char* buf, unsigned size)
@@ -139,8 +133,6 @@ namespace agg
     {
         return int(p * 64.0 + 0.5);
     }
-
-
     //------------------------------------------------------------------------
     template<class PathStorage>
     bool decompose_ft_outline(const FT_Outline& outline,
@@ -401,8 +393,6 @@ namespace agg
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     template<class Scanline, class ScanlineStorage>
     void decompose_ft_bitmap_mono(const FT_Bitmap& bitmap,
@@ -440,8 +430,6 @@ namespace agg
             }
         }
     }
-
-
 
     //------------------------------------------------------------------------
     template<class Rasterizer, class Scanline, class ScanlineStorage>
@@ -481,18 +469,6 @@ namespace agg
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     font_engine_freetype_base::~font_engine_freetype_base()
     {
@@ -507,8 +483,6 @@ namespace agg
         delete [] m_signature;
         if(m_library_initialized) FT_Done_FreeType(m_library);
     }
-
-
     //------------------------------------------------------------------------
     font_engine_freetype_base::font_engine_freetype_base(bool flag32, 
                                                          unsigned max_faces) :
@@ -556,16 +530,12 @@ namespace agg
         if(m_last_error == 0) m_library_initialized = true;
     }
 
-
-
     //------------------------------------------------------------------------
     void font_engine_freetype_base::resolution(unsigned dpi) 
     { 
         m_resolution = dpi;
         update_char_size();
     }
-
-
     //------------------------------------------------------------------------
     int font_engine_freetype_base::find_face(const char* face_name) const
     {
@@ -576,8 +546,6 @@ namespace agg
         }
         return -1;
     }
-
-
     //------------------------------------------------------------------------
     double font_engine_freetype_base::ascender() const
     {
@@ -597,8 +565,6 @@ namespace agg
         }
         return 0.0;
     }
-
-
     //------------------------------------------------------------------------
     bool font_engine_freetype_base::load_font(const char* font_name, 
                                               unsigned face_index,
@@ -664,8 +630,6 @@ namespace agg
                     m_name = 0;
                 }
             }
-
-
             if(m_last_error == 0)
             {
                 ret = true;
@@ -718,8 +682,6 @@ namespace agg
         }
         return ret;
     }
-
-
     //------------------------------------------------------------------------
     bool font_engine_freetype_base::attach(const char* file_name)
     {
@@ -868,8 +830,6 @@ namespace agg
             ++m_change_stamp;
         }
     }
-
-
     //------------------------------------------------------------------------
     void font_engine_freetype_base::update_char_size()
     {
@@ -892,10 +852,6 @@ namespace agg
             update_signature();
         }
     }
-
-
-
-
 
     //------------------------------------------------------------------------
     bool font_engine_freetype_base::prepare_glyph(unsigned glyph_code)
@@ -931,8 +887,6 @@ namespace agg
                     return true;
                 }
                 break;
-
-
             case glyph_ren_native_gray8:
                 m_last_error = FT_Render_Glyph(m_cur_face->glyph, FT_RENDER_MODE_NORMAL);
                 if(m_last_error == 0)
@@ -956,8 +910,6 @@ namespace agg
                     return true;
                 }
                 break;
-
-
             case glyph_ren_outline:
                 if(m_last_error == 0)
                 {
@@ -1042,8 +994,6 @@ namespace agg
                     return true;
                 }
                 return false;
-
-
             case glyph_ren_agg_gray8:
                 if(m_last_error == 0)
                 {
@@ -1084,10 +1034,6 @@ namespace agg
         }
         return false;
     }
-
-
-
-
     //------------------------------------------------------------------------
     void font_engine_freetype_base::write_glyph_to(int8u* data) const
     {
@@ -1112,8 +1058,6 @@ namespace agg
             }
         }
     }
-
-
 
     //------------------------------------------------------------------------
     bool font_engine_freetype_base::add_kerning(unsigned first, unsigned second,
@@ -1140,8 +1084,4 @@ namespace agg
         return false;
     }
 
-
-
 }
-
-

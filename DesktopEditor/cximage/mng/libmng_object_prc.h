@@ -508,8 +508,6 @@ mng_retcode mng_free_ani_magn     (mng_datap    pData,
 #endif
 
 #endif /* MNG_OPTIMIZE_OBJCLEANUP */
-
-
 #ifndef MNG_SKIPCHUNK_iCCP
 mng_retcode mng_free_ani_iccp     (mng_datap    pData,
                                    mng_objectp  pObject);

@@ -1084,8 +1084,6 @@ Ukrainian::Ukrainian()	// Український
 	addPair("Cannot process UTF-32 encoding", L"Не вдається обробити UTF-32 кодуванні");
 	addPair("\nArtistic Style has terminated", L"\nArtistic Style припинив");
 }
-
-
 #endif	// ASTYLE_LIB
 
 }   // end of namespace astyle

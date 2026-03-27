@@ -28,8 +28,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*!
  *  pixCorrelationScore()
  *
@@ -330,8 +328,6 @@ l_float32  score;
              score, count, area1, area2); */
     return score;
 }
-
-
 /*!
  *  pixCorrelationScoreThresholded()
  *
@@ -347,7 +343,6 @@ l_float32  score;
  *              downcount (count of 1 pixels below each row of pix1)
  *              score_threshold
  *      Return: whether the correlation score is >= score_threshold
- *
  *
  *  Note: we check first that the two pix are roughly the same size.
  *  Only if they meet that criterion do we compare the bitmaps.
@@ -663,8 +658,6 @@ l_int32    threshold;
     }
     return FALSE;
 }
-
-
 /*!
  *  pixCorrelationScoreSimple()
  *

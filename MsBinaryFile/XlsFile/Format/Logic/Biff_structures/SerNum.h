@@ -51,6 +51,4 @@ public:
 private:
     double xnum;
 };
-
-
 } // namespace XLS

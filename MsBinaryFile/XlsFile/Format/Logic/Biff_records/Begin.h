@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Begin record in BIFF8
 class Begin: public BiffRecord
 {
@@ -47,13 +45,9 @@ public:
 	~Begin();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeBegin;
-
-
 };
 
 } // namespace XLS

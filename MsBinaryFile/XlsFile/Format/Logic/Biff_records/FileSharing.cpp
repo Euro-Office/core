@@ -42,8 +42,6 @@ FileSharing::FileSharing()
 FileSharing::~FileSharing()
 {
 }
-
-
 BaseObjectPtr FileSharing::clone()
 {
 	return BaseObjectPtr(new FileSharing(*this));

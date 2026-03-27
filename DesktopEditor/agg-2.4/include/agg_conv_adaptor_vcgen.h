@@ -30,8 +30,6 @@ namespace agg
         void rewind(unsigned) {}
         unsigned vertex(double*, double*) { return path_cmd_stop; }
     };
-
-
     //------------------------------------------------------conv_adaptor_vcgen
     template<class VertexSource, 
              class Generator, 
@@ -79,10 +77,6 @@ namespace agg
         double        m_start_x;
         double        m_start_y;
     };
-
-
-
-
 
     //------------------------------------------------------------------------
     template<class VertexSource, class Generator, class Markers> 

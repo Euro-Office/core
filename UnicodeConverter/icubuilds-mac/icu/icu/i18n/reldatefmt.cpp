@@ -893,8 +893,6 @@ void RelativeDateTimeFormatter::init(
         SharedObject::copyPtr(shared, fOptBreakIterator);
     }
 }
-
-
 U_NAMESPACE_END
 
 #endif /* !UCONFIG_NO_FORMATTING */

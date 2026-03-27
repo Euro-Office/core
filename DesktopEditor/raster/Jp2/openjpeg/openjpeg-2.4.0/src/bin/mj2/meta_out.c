@@ -99,8 +99,6 @@ void xml_out_frame_uinf(FILE* xmlout,
                         opj_cp_t *cp); /* UUIDInfo 'uinf', includes UUIDList 'ulst' and URL 'url\40' */
 void xml_out_frame_unknown_type(FILE* xmlout, opj_cp_t *cp);
 #endif
-
-
 void xml_write_init(BOOL n, BOOL t, BOOL r, BOOL d)
 {
     /* Init file globals */
@@ -2552,8 +2550,6 @@ void xml_out_dump_hex_and_ascii(FILE* xmlout, char *data, int data_len,
         fprintf(xmlout,  "%s</AsHexAndASCII>\n", s);
     }
 }
-
-
 /* ------------- */
 
 void xml_out_frame_jp2h(FILE* xmlout, opj_jp2_t *jp2_struct)    /* JP2 Header */

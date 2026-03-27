@@ -90,8 +90,6 @@ class U_COMMON_API CacheKeyBase : public UObject {
    friend class UnifiedCache;
 };
 
-
-
 /**
  * Templated version of CacheKeyBase. 
  * A key of type LocaleCacheKey<T> maps to a value of type T.
@@ -324,8 +322,6 @@ class U_COMMON_API UnifiedCache : public UnifiedCacheBase {
     */
    void setEvictionPolicy(
            int32_t count, int32_t percentageOfInUseItems, UErrorCode &status);
-
-
    /**
     * Returns how many entries have been auto evicted during the lifetime
     * of this cache. This only includes auto evicted entries, not

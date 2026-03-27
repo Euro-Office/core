@@ -177,8 +177,6 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
  */
 U_CAPI UEnumeration* U_EXPORT2
 ures_getKeywordValues(const char *path, const char *keyword, UErrorCode *status);
-
-
 /**
  * Get a resource with multi-level fallback. Normally only the top level resources will
  * fallback to its parent. This performs fallback on subresources. For example, when a table
@@ -200,8 +198,6 @@ ures_getByKeyWithFallback(const UResourceBundle *resB,
                           const char* inKey, 
                           UResourceBundle *fillIn, 
                           UErrorCode *status);
-
-
 /**
  * Get a String with multi-level fallback. Normally only the top level resources will
  * fallback to its parent. This performs fallback on subresources. For example, when a table
@@ -234,8 +230,6 @@ ures_getVersionByKey(const UResourceBundle *resB,
                      const char *key,
                      UVersionInfo ver,
                      UErrorCode *status);
-
-
 /**
  * Internal function.
  * Return the version number associated with this ResourceBundle as a string.

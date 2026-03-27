@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CONDFMT12 union of records 
 class CONDFMT12: public CompositeObject
 {

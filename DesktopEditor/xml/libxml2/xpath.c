@@ -547,8 +547,6 @@ static int
 xmlXPathGetSign(double val) {
     return(trio_signbit(val));
 }
-
-
 /*
  * TODO: when compatibility allows remove all "fake node libxslt" strings
  *       the test should just be name[0] = ' '
@@ -1213,8 +1211,6 @@ struct _xmlXPathContextCache {
     int dbgCachedUsers;
     int dbgCachedXSLTTree;
     int dbgCachedUndefined;
-
-
     int dbgReusedAll;
     int dbgReusedNodeset;
     int dbgReusedString;
@@ -1378,8 +1374,6 @@ xmlXPathDebugDumpObject(FILE *output, xmlXPathObjectPtr cur, int depth) {
     for (i = 0;((i < depth) && (i < 25));i++)
         shift[2 * i] = shift[2 * i + 1] = ' ';
     shift[2 * i] = shift[2 * i + 1] = 0;
-
-
     fprintf(output, "%s", shift);
 
     if (cur == NULL) {
@@ -3062,8 +3056,6 @@ xmlXPathPopExternal (xmlXPathParserContextPtr ctxt) {
 
 #define CURRENT (*ctxt->cur)
 #define NEXT ((*ctxt->cur) ?  ctxt->cur++: ctxt->cur)
-
-
 #ifndef DBL_DIG
 #define DBL_DIG 16
 #endif
@@ -3202,8 +3194,6 @@ xmlXPathFormatNumber(double number, char buffer[], int buffersize)
 	break;
     }
 }
-
-
 /************************************************************************
  *									*
  *			Routines to handle NodeSets			*
@@ -3637,8 +3627,6 @@ xmlXPathNodeSetContains (xmlNodeSetPtr cur, xmlNodePtr val) {
 int
 xmlXPathNodeSetAddNs(xmlNodeSetPtr cur, xmlNodePtr node, xmlNsPtr ns) {
     int i;
-
-
     if ((cur == NULL) || (ns == NULL) || (node == NULL) ||
         (ns->type != XML_NAMESPACE_DECL) ||
 	(node->type != XML_ELEMENT_NODE))
@@ -3921,8 +3909,6 @@ xmlXPathNodeSetMerge(xmlNodeSetPtr val1, xmlNodeSetPtr val2) {
 
     return(val1);
 }
-
-
 /**
  * xmlXPathNodeSetMergeAndClear:
  * @set1:  the first NodeSet or NULL
@@ -5653,8 +5639,6 @@ free_obj:
     }
     return;
 }
-
-
 /************************************************************************
  *									*
  *			Type Casting Routines				*
@@ -6069,8 +6053,6 @@ xmlXPathCastToBoolean (xmlXPathObjectPtr val) {
     }
     return(ret);
 }
-
-
 /**
  * xmlXPathConvertBoolean:
  * @val:  an XPath object
@@ -6196,16 +6178,12 @@ xmlXPathFreeContext(xmlXPathContextPtr ctxt) {
 		"NULL context pointer\n");				\
 	return(-1);							\
     }									\
-
-
 #define CHECK_CONTEXT(ctxt)						\
     if ((ctxt == NULL) || (ctxt->doc == NULL) ||			\
         (ctxt->doc->children == NULL)) {				\
 	xmlXPatherror(ctxt, __FILE__, __LINE__, XPATH_INVALID_CTXT);	\
 	return(NULL);							\
     }
-
-
 /**
  * xmlXPathNewParserContext:
  * @str:  the XPath expression
@@ -6822,8 +6800,6 @@ xmlXPathEqualNodeSetFloat(xmlXPathParserContextPtr ctxt,
 
     return(ret);
 }
-
-
 /**
  * xmlXPathEqualNodeSets:
  * @arg1:  first nodeset object argument
@@ -7630,8 +7606,6 @@ typedef xmlNodePtr (*xmlXPathTraversalFunctionExt)
  */
 typedef xmlNodeSetPtr (*xmlXPathNodeSetMergeFunction)
 		    (xmlNodeSetPtr, xmlNodeSetPtr, int);
-
-
 /**
  * xmlXPathNextSelf:
  * @ctxt:  the XPath Parser context
@@ -8445,8 +8419,6 @@ xmlXPathNextAttribute(xmlXPathParserContextPtr ctxt, xmlNodePtr cur) {
  ************************************************************************/
 
 #define IS_FUNCTION			200
-
-
 /************************************************************************
  *									*
  *		Implicit tree core function library			*
@@ -8474,8 +8446,6 @@ xmlXPathRoot(xmlXPathParserContextPtr ctxt) {
  *http://www.w3.org/Style/XSL/Group/1999/07/xpath-19990705.html#corelib	*
  *									*
  ************************************************************************/
-
-
 /**
  * xmlXPathLastFunction:
  * @ctxt:  the XPath Parser context
@@ -8880,8 +8850,6 @@ xmlXPathNameFunction(xmlXPathParserContextPtr ctxt, int nargs)
     }
     xmlXPathReleaseObject(ctxt->context, cur);
 }
-
-
 /**
  * xmlXPathStringFunction:
  * @ctxt:  the XPath Parser context
@@ -9900,8 +9868,6 @@ xmlXPathParseNCName(xmlXPathParserContextPtr ctxt) {
     }
     return(xmlXPathParseNameComplex(ctxt, 0));
 }
-
-
 /**
  * xmlXPathParseQName:
  * @ctxt:  the XPath Parser context
@@ -10553,8 +10519,6 @@ xmlXPathCompFilterExpr(xmlXPathParserContextPtr ctxt) {
 	xmlXPathCompPredicate(ctxt, 1);
 	SKIP_BLANKS;
     }
-
-
 }
 
 /**
@@ -10669,8 +10633,6 @@ xmlXPathCompPathExpr(xmlXPathParserContextPtr ctxt) {
 	    xmlFree(name);
 	} else if (name != NULL) {
 	    int len =xmlStrlen(name);
-
-
 	    while (NXT(len) != 0) {
 		if (NXT(len) == '/') {
 		    /* element name */
@@ -12142,8 +12104,6 @@ xmlXPathNodeCollectAndTest(xmlXPathParserContextPtr ctxt,
     xmlXPathNodeSetMergeFunction mergeAndClear;
     xmlNodePtr oldContextNode;
     xmlXPathContextPtr xpctxt = ctxt->context;
-
-
     CHECK_TYPE0(XPATH_NODESET);
     obj = valuePop(ctxt);
     /*
@@ -12318,8 +12278,6 @@ xmlXPathNodeCollectAndTest(xmlXPathParserContextPtr ctxt,
     seq = NULL;
     contextNode = NULL;
     contextIdx = 0;
-
-
     while (((contextIdx < contextSeq->nodeNr) || (contextNode != NULL)) &&
            (ctxt->error == XPATH_EXPRESSION_OK)) {
 	xpctxt->node = contextSeq->nodeTab[contextIdx++];

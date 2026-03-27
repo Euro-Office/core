@@ -176,8 +176,6 @@ private:
 	std::vector<_use_style> current_used_;
 
 //////////////////
-
-
 };
 }
 }

@@ -153,8 +153,6 @@ GlobalsSubstream::GlobalsSubstream(const unsigned short code_page) :	code_page_(
 GlobalsSubstream::~GlobalsSubstream()
 {
 }
-
-
 BaseObjectPtr GlobalsSubstream::clone()
 {
 	return BaseObjectPtr(new GlobalsSubstream(*this));

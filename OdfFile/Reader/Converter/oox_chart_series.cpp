@@ -45,8 +45,6 @@
 #include "../Format/style_chart_properties.h"
 
 #include "../../Formulas/formulasconvert.h"
-
-
 namespace cpdoccore {
 namespace oox {
 

@@ -38,8 +38,6 @@ namespace XLS
 SXPair::SXPair()
 {
 }
-
-
 SXPair::~SXPair()
 {
 }

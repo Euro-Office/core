@@ -28,8 +28,6 @@
 #
 
 import sys
-
-
 def Usage():
     print('Usage: compare_perfs.py [-noise_threshold val_in_pct]')
     print('                        [-warning_threshold val_in_pct]')

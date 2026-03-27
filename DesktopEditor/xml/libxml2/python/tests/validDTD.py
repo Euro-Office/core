@@ -13,8 +13,6 @@ class ErrorHandler:
         if data != ARG:
             raise Exception("Error handler did not receive correct argument")
         self.errors.append(msg)
-
-
 # Memory debug specific
 libxml2.debugMemory(1)
 

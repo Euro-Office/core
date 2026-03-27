@@ -321,8 +321,6 @@ public:
      * @stable ICU 2.0
      */
     const UnicodeString* getWeekdays(int32_t& count) const;
-
-
     /**
      * Sets wide weekday strings. For example: "Sunday", "Monday", etc.
      * @param weekdays     the new weekday strings. (not adopted; caller retains ownership)

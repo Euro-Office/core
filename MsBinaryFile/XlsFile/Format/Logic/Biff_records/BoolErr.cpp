@@ -37,13 +37,9 @@ namespace XLS
 BoolErr::BoolErr()
 {
 }
-
-
 BoolErr::~BoolErr()
 {
 }
-
-
 BaseObjectPtr BoolErr::clone()
 {
 	return BaseObjectPtr(new BoolErr(*this));

@@ -116,8 +116,4 @@ namespace agg
 
 }
 
-
-
 #endif
-
-

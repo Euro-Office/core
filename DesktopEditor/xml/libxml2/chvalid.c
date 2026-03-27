@@ -152,8 +152,6 @@ static const xmlChSRange xmlIsIdeographic_srng[] = { {0x3007, 0x3007},
     {0x3021, 0x3029}, {0x4e00, 0x9fa5}};
 const xmlChRangeGroup xmlIsIdeographicGroup =
 	{3, 0, xmlIsIdeographic_srng, (xmlChLRangePtr)0};
-
-
 /**
  * xmlCharInRange:
  * @val: character to be validated
@@ -211,8 +209,6 @@ xmlCharInRange (unsigned int val, const xmlChRangeGroup *rptr) {
     }
     return 0;
 }
-
-
 /**
  * xmlIsBaseChar:
  * @ch:  character to validate
@@ -226,8 +222,6 @@ int
 xmlIsBaseChar(unsigned int ch) {
     return(xmlIsBaseCharQ(ch));
 }
-
-
 /**
  * xmlIsBlank:
  * @ch:  character to validate
@@ -241,8 +235,6 @@ int
 xmlIsBlank(unsigned int ch) {
     return(xmlIsBlankQ(ch));
 }
-
-
 /**
  * xmlIsChar:
  * @ch:  character to validate
@@ -256,8 +248,6 @@ int
 xmlIsChar(unsigned int ch) {
     return(xmlIsCharQ(ch));
 }
-
-
 /**
  * xmlIsCombining:
  * @ch:  character to validate
@@ -271,8 +261,6 @@ int
 xmlIsCombining(unsigned int ch) {
     return(xmlIsCombiningQ(ch));
 }
-
-
 /**
  * xmlIsDigit:
  * @ch:  character to validate
@@ -286,8 +274,6 @@ int
 xmlIsDigit(unsigned int ch) {
     return(xmlIsDigitQ(ch));
 }
-
-
 /**
  * xmlIsExtender:
  * @ch:  character to validate
@@ -301,8 +287,6 @@ int
 xmlIsExtender(unsigned int ch) {
     return(xmlIsExtenderQ(ch));
 }
-
-
 /**
  * xmlIsIdeographic:
  * @ch:  character to validate
@@ -316,8 +300,6 @@ int
 xmlIsIdeographic(unsigned int ch) {
     return(xmlIsIdeographicQ(ch));
 }
-
-
 /**
  * xmlIsPubidChar:
  * @ch:  character to validate

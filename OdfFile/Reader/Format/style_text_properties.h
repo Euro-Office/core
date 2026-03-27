@@ -193,8 +193,6 @@ public:
 	void pptx_convert	(oox::pptx_conversion_context & Context);
 
     text_format_properties	content_;
-
-
 private:
     virtual void add_attributes		( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element	( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);

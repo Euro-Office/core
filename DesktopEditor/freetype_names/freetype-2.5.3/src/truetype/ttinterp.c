@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 /* Greg Hitchcock from Microsoft has helped a lot in resolving unclear */
 /* issues; many thanks!                                                */
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_CALC_H
@@ -30,11 +26,7 @@
 #include "ttinterp.h"
 #include "tterrors.h"
 #include "ttsubpix.h"
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -51,8 +43,6 @@
   /* limited to a maximum number of opcodes defined below.                 */
   /*                                                                       */
 #define MAX_RUNNABLE_OPCODES  1000000L
-
-
   /*************************************************************************/
   /*                                                                       */
   /* There are two kinds of implementations:                               */
@@ -88,8 +78,6 @@
   /* - It's still open to experimentation and tuning.                      */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER     /* indirect implementation */
 
 #define CUR  (*exc)                             /* see ttobjs.h */
@@ -115,36 +103,26 @@
   /* four bytes addresses).                                         */
 
 #endif /* TT_CONFIG_OPTION_STATIC_INTERPRETER */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The instruction argument stack.                                       */
   /*                                                                       */
 #define INS_ARG  EXEC_OP_ FT_Long*  args    /* see ttobjs.h for EXEC_OP_ */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This macro is used whenever `args' is unused in a function, to avoid  */
   /* stupid warnings from pedantic compilers.                              */
   /*                                                                       */
 #define FT_UNUSED_ARG  FT_UNUSED_EXEC; FT_UNUSED( args )
-
-
 #define SUBPIXEL_HINTING                                                    \
           ( ((TT_Driver)FT_FACE_DRIVER( CUR.face ))->interpreter_version == \
             TT_INTERPRETER_VERSION_38 )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The following macros hide the use of EXEC_ARG and EXEC_ARG_ to        */
   /* increase readability of the code.                                     */
   /*                                                                       */
   /*************************************************************************/
-
-
 #define SKIP_Code() \
           SkipCode( EXEC_ARG )
 
@@ -204,8 +182,6 @@
 
 #define MOVE_Zp2_Point( a, b, c, t ) \
           Move_Zp2_Point( EXEC_ARG_ a, b, c, t )
-
-
 #define CUR_Func_project( v1, v2 )  \
           CUR.func_project( EXEC_ARG_ (v1)->x - (v2)->x, (v1)->y - (v2)->y )
 
@@ -217,15 +193,11 @@
 
 #define CUR_fast_dualproj( v ) \
           CUR.func_dualproj( EXEC_ARG_ (v)->x, (v)->y )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Instruction dispatch function, as used by the interpreter.            */
   /*                                                                       */
   typedef void  (*TInstruction_Function)( INS_ARG );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Two simple bounds-checking macros.                                    */
@@ -239,8 +211,6 @@
   /*                                                                       */
 #define TT_DivFix14( a, b ) \
           FT_DivFix( a, (b) << 2 )
-
-
 #undef  SUCCESS
 #define SUCCESS  0
 
@@ -263,8 +233,6 @@
   /*                        CODERANGE FUNCTIONS                            */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -291,8 +259,6 @@
                      FT_Long         IP )
   {
     TT_CodeRange*  coderange;
-
-
     FT_ASSERT( range >= 1 && range <= 3 );
 
     coderange = &exec->codeRangeTable[range - 1];
@@ -312,8 +278,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -348,8 +312,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -381,15 +343,11 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                   EXECUTION CONTEXT ROUTINES                          */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -413,8 +371,6 @@
   TT_Done_Context( TT_ExecContext  exec )
   {
     FT_Memory  memory = exec->memory;
-
-
     /* points zone */
     exec->maxPoints   = 0;
     exec->maxContours = 0;
@@ -439,8 +395,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -463,8 +417,6 @@
                 FT_Memory       memory )
   {
     FT_Error  error;
-
-
     FT_TRACE1(( "Init_Context: new object at 0x%08p\n", exec ));
 
     exec->memory   = memory;
@@ -495,8 +447,6 @@
 
     return error;
  }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -530,8 +480,6 @@
   {
     FT_Error  error;
     void**    pbuff = (void**)_pbuff;
-
-
     if ( *size < new_max )
     {
       if ( FT_REALLOC( *pbuff, *size * multiplier, new_max * multiplier ) )
@@ -541,8 +489,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -574,8 +520,6 @@
     FT_ULong        tmp;
     TT_MaxProfile*  maxp;
     FT_Error        error;
-
-
     exec->face = face;
     maxp       = &face->max_profile;
     exec->size = size;
@@ -648,8 +592,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -675,8 +617,6 @@
                    TT_Size         size )
   {
     FT_Int  i;
-
-
     /* XXX: Will probably disappear soon with all the code range */
     /*      management, which is now rather obsolete.            */
     /*                                                           */
@@ -691,8 +631,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -722,8 +660,6 @@
                   FT_Bool         debug )
   {
     FT_Error  error;
-
-
     if ( ( error = TT_Goto_CodeRange( exec, tt_coderange_glyph, 0 ) )
            != FT_Err_Ok )
       return error;
@@ -765,8 +701,6 @@
       return FT_Err_Ok;
 #endif
   }
-
-
   /* The default value for `scan_control' is documented as FALSE in the */
   /* TrueType specification.  This is confusing since it implies a      */
   /* Boolean value.  However, this is not the case, thus both the       */
@@ -789,22 +723,16 @@
     TRUE, 68, 0, 0, 9, 3,
     0, FALSE, 0, 1, 1, 1
   };
-
-
   /* documentation is in ttinterp.h */
 
   FT_EXPORT_DEF( TT_ExecContext )
   TT_New_Context( TT_Driver  driver )
   {
     FT_Memory  memory = driver->root.root.memory;
-
-
     if ( !driver->context )
     {
       FT_Error        error;
       TT_ExecContext  exec;
-
-
       /* allocate object */
       if ( FT_NEW( exec ) )
         goto Fail;
@@ -823,8 +751,6 @@
   Fail:
     return NULL;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Before an opcode is executed, the interpreter verifies that there are */
@@ -841,12 +767,8 @@
   /* to zero.                                                              */
   /*                                                                       */
   /*************************************************************************/
-
-
 #undef  PACK
 #define PACK( x, y )  ( ( x << 4 ) | y )
-
-
   static
   const FT_Byte  Pop_Push_Count[256] =
   {
@@ -1125,8 +1047,6 @@
     /*  MIRP[30]  */  PACK( 2, 0 ),
     /*  MIRP[31]  */  PACK( 2, 0 )
   };
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
   static
@@ -1406,8 +1326,6 @@
   };
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
-
   static
   const FT_Char  opcode_length[256] =
   {
@@ -1433,8 +1351,6 @@
   };
 
 #undef PACK
-
-
 #ifndef FT_CONFIG_OPTION_NO_ASSEMBLER
 
 #if defined( __arm__ )                                 && \
@@ -1447,8 +1363,6 @@
                    FT_Int    b )
   {
     register FT_Int32  t, t2;
-
-
 #if defined( __CC_ARM ) || defined( __ARMCC__ )
 
     __asm
@@ -1488,8 +1402,6 @@
 #endif /* __arm__ && ( __thumb2__ || !__thumb__ ) */
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
-
-
 #if defined( __GNUC__ )                              && \
     ( defined( __i386__ ) || defined( __x86_64__ ) )
 
@@ -1516,8 +1428,6 @@
     /* will actually preserve the sign bit.  The exact behaviour is    */
     /* undefined, but this is true on x86 and x86_64.                  */
     long long  tmp = ret >> 63;
-
-
     ret += 0x2000 + tmp;
 
     return (FT_Int32)( ret >> 14 );
@@ -1528,8 +1438,6 @@
 #endif
 
 #endif /* __GNUC__ && ( __i386__ || __x86_64__ ) */
-
-
 #ifndef TT_MulFix14
 
   /* Compute (a*b)/2^14 with maximum accuracy and rounding.  */
@@ -1541,8 +1449,6 @@
   {
     FT_Int32   sign;
     FT_UInt32  ah, al, mid, lo, hi;
-
-
     sign = a ^ b;
 
     if ( a < 0 )
@@ -1567,8 +1473,6 @@
   }
 
 #endif  /* !TT_MulFix14 */
-
-
 #if defined( __GNUC__ )        && \
     ( defined( __i386__ )   ||    \
       defined( __x86_64__ ) ||    \
@@ -1592,8 +1496,6 @@
 
     long long  temp1 = (long long)ax * bx;
     long long  temp2 = (long long)ay * by;
-
-
     temp1 += temp2;
     temp2  = temp1 >> 63;
     temp1 += 0x2000 + temp2;
@@ -1607,8 +1509,6 @@
 #endif
 
 #endif /* __GNUC__ && (__arm__ || __i386__ || __x86_64__) */
-
-
 #ifndef TT_DotFix14
 
   /* compute (ax*bx+ay*by)/2^14 with maximum accuracy and rounding */
@@ -1620,8 +1520,6 @@
   {
     FT_Int32   m, s, hi1, hi2, hi;
     FT_UInt32  l, lo1, lo2, lo;
-
-
     /* compute ax*bx as 64-bit value */
     l = (FT_UInt32)( ( ax & 0xFFFFU ) * bx );
     m = ( ax >> 16 ) * bx;
@@ -1653,8 +1551,6 @@
   }
 
 #endif /* TT_DotFix14 */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1692,8 +1588,6 @@
         else
         {
           FT_F26Dot6  x, y;
-
-
           x = TT_MulFix14( CUR.tt_metrics.x_ratio,
                            CUR.GS.projVector.x );
           y = TT_MulFix14( CUR.tt_metrics.y_ratio,
@@ -1704,68 +1598,50 @@
     }
     return CUR.tt_metrics.ratio;
   }
-
-
   static FT_Long
   Current_Ppem( EXEC_OP )
   {
     return FT_MulFix( CUR.tt_metrics.ppem, CURRENT_Ratio() );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Functions related to the control value table (CVT).                   */
   /*                                                                       */
   /*************************************************************************/
-
-
   FT_CALLBACK_DEF( FT_F26Dot6 )
   Read_CVT( EXEC_OP_ FT_ULong  idx )
   {
     return CUR.cvt[idx];
   }
-
-
   FT_CALLBACK_DEF( FT_F26Dot6 )
   Read_CVT_Stretched( EXEC_OP_ FT_ULong  idx )
   {
     return FT_MulFix( CUR.cvt[idx], CURRENT_Ratio() );
   }
-
-
   FT_CALLBACK_DEF( void )
   Write_CVT( EXEC_OP_ FT_ULong    idx,
                       FT_F26Dot6  value )
   {
     CUR.cvt[idx] = value;
   }
-
-
   FT_CALLBACK_DEF( void )
   Write_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
                                 FT_F26Dot6  value )
   {
     CUR.cvt[idx] = FT_DivFix( value, CURRENT_Ratio() );
   }
-
-
   FT_CALLBACK_DEF( void )
   Move_CVT( EXEC_OP_ FT_ULong    idx,
                      FT_F26Dot6  value )
   {
     CUR.cvt[idx] += value;
   }
-
-
   FT_CALLBACK_DEF( void )
   Move_CVT_Stretched( EXEC_OP_ FT_ULong    idx,
                                FT_F26Dot6  value )
   {
     CUR.cvt[idx] += FT_DivFix( value, CURRENT_Ratio() );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1789,8 +1665,6 @@
     return (FT_Short)( ( CUR.code[CUR.IP - 2] << 8 ) +
                          CUR.code[CUR.IP - 1]      );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1812,8 +1686,6 @@
                                FT_ULong  aIP )
   {
     TT_CodeRange*  range;
-
-
     if ( aRange < 1 || aRange > 3 )
     {
       CUR.error = FT_THROW( Bad_Argument );
@@ -1845,8 +1717,6 @@
 
     return SUCCESS;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1870,8 +1740,6 @@
                         FT_F26Dot6    distance )
   {
     FT_F26Dot6  v;
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
@@ -1899,8 +1767,6 @@
       zone->tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1924,8 +1790,6 @@
                              FT_F26Dot6    distance )
   {
     FT_F26Dot6  v;
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     FT_ASSERT( !CUR.face->unpatented_hinting );
 #endif
@@ -1940,8 +1804,6 @@
     if ( v != 0 )
       zone->org[point].y += FT_MulDiv( distance, v, CUR.F_dot_P );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Special versions of Direct_Move()                                     */
@@ -1950,8 +1812,6 @@
   /*   along one of the coordinate unit vectors, i.e. in 90% of the cases. */
   /*                                                                       */
   /*************************************************************************/
-
-
   static void
   Direct_Move_X( EXEC_OP_ TT_GlyphZone  zone,
                           FT_UShort     point,
@@ -1967,8 +1827,6 @@
 
     zone->tags[point]  |= FT_CURVE_TAG_TOUCH_X;
   }
-
-
   static void
   Direct_Move_Y( EXEC_OP_ TT_GlyphZone  zone,
                           FT_UShort     point,
@@ -1979,8 +1837,6 @@
     zone->cur[point].y += distance;
     zone->tags[point]  |= FT_CURVE_TAG_TOUCH_Y;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Special versions of Direct_Move_Orig()                                */
@@ -1989,8 +1845,6 @@
   /*   along one of the coordinate unit vectors, i.e. in 90% of the cases. */
   /*                                                                       */
   /*************************************************************************/
-
-
   static void
   Direct_Move_Orig_X( EXEC_OP_ TT_GlyphZone  zone,
                                FT_UShort     point,
@@ -2000,8 +1854,6 @@
 
     zone->org[point].x += distance;
   }
-
-
   static void
   Direct_Move_Orig_Y( EXEC_OP_ TT_GlyphZone  zone,
                                FT_UShort     point,
@@ -2011,8 +1863,6 @@
 
     zone->org[point].y += distance;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2042,8 +1892,6 @@
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = distance + compensation;
@@ -2058,8 +1906,6 @@
     }
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2083,8 +1929,6 @@
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = distance + compensation + 32;
@@ -2102,8 +1946,6 @@
 
     return  val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2127,8 +1969,6 @@
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = FT_PIX_FLOOR( distance + compensation ) + 32;
@@ -2144,8 +1984,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2169,8 +2007,6 @@
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = distance + compensation;
@@ -2188,8 +2024,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2213,8 +2047,6 @@
     FT_F26Dot6  val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = distance + compensation + 63;
@@ -2232,8 +2064,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2257,8 +2087,6 @@
     FT_F26Dot6 val;
 
     FT_UNUSED_EXEC;
-
-
     if ( distance >= 0 )
     {
       val = distance + compensation + 16;
@@ -2276,8 +2104,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2305,8 +2131,6 @@
                         FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
-
-
     if ( distance >= 0 )
     {
       val = ( distance - CUR.phase + CUR.threshold + compensation ) &
@@ -2326,8 +2150,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2353,8 +2175,6 @@
                            FT_F26Dot6  compensation )
   {
     FT_F26Dot6  val;
-
-
     if ( distance >= 0 )
     {
       val = ( ( distance - CUR.phase + CUR.threshold + compensation ) /
@@ -2374,8 +2194,6 @@
 
     return val;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2425,8 +2243,6 @@
       break;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2493,8 +2309,6 @@
     CUR.phase     /= 256;
     CUR.threshold /= 256;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2523,8 +2337,6 @@
                         CUR.GS.projVector.x,
                         CUR.GS.projVector.y );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2549,8 +2361,6 @@
                         CUR.GS.dualVector.x,
                         CUR.GS.dualVector.y );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2576,8 +2386,6 @@
 
     return dx;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2603,8 +2411,6 @@
 
     return dy;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2711,8 +2517,6 @@
     /* Disable cached aspect ratio */
     CUR.tt_metrics.ratio = 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -2743,8 +2547,6 @@
     FT_F26Dot6  W;
 
     FT_UNUSED_EXEC;
-
-
     if ( FT_ABS( Vx ) < 0x4000L && FT_ABS( Vy ) < 0x4000L )
     {
       if ( Vx == 0 && Vy == 0 )
@@ -2765,15 +2567,11 @@
 
     return SUCCESS;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Here we start with the implementation of the various opcodes.         */
   /*                                                                       */
   /*************************************************************************/
-
-
   static FT_Bool
   Ins_SxVTL( EXEC_OP_ FT_UShort       aIdx1,
                       FT_UShort       aIdx2,
@@ -2783,8 +2581,6 @@
     FT_Long     A, B, C;
     FT_Vector*  p1;
     FT_Vector*  p2;
-
-
     if ( BOUNDS( aIdx1, CUR.zp2.n_points ) ||
          BOUNDS( aIdx2, CUR.zp1.n_points ) )
     {
@@ -2821,8 +2617,6 @@
 
     return SUCCESS;
   }
-
-
   /* When not using the big switch statements, the interpreter uses a */
   /* call table defined later below in this source.  Each opcode must */
   /* thus have a corresponding function, even trivial ones.           */
@@ -2847,8 +2641,6 @@
                                             \
     COMPUTE_Funcs();                        \
   }
-
-
 #define DO_SPVTCA                           \
   {                                         \
     FT_Short  A, B;                         \
@@ -2867,8 +2659,6 @@
                                             \
     COMPUTE_Funcs();                        \
   }
-
-
 #define DO_SFVTCA                           \
   {                                         \
     FT_Short  A, B;                         \
@@ -2884,8 +2674,6 @@
                                             \
     COMPUTE_Funcs();                        \
   }
-
-
 #define DO_SPVTL                                      \
     if ( INS_SxVTL( (FT_UShort)args[1],               \
                     (FT_UShort)args[0],               \
@@ -2896,8 +2684,6 @@
       GUESS_VECTOR( freeVector );                     \
       COMPUTE_Funcs();                                \
     }
-
-
 #define DO_SFVTL                                      \
     if ( INS_SxVTL( (FT_UShort)args[1],               \
                     (FT_UShort)args[0],               \
@@ -2907,14 +2693,10 @@
       GUESS_VECTOR( projVector );                     \
       COMPUTE_Funcs();                                \
     }
-
-
 #define DO_SFVTPV                          \
     GUESS_VECTOR( projVector );            \
     CUR.GS.freeVector = CUR.GS.projVector; \
     COMPUTE_Funcs();
-
-
 #define DO_SPVFS                                \
   {                                             \
     FT_Short  S;                                \
@@ -2933,8 +2715,6 @@
     GUESS_VECTOR( freeVector );                 \
     COMPUTE_Funcs();                            \
   }
-
-
 #define DO_SFVFS                                \
   {                                             \
     FT_Short  S;                                \
@@ -2951,8 +2731,6 @@
     GUESS_VECTOR( projVector );                 \
     COMPUTE_Funcs();                            \
   }
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define DO_GPV                                   \
     if ( CUR.face->unpatented_hinting )          \
@@ -2970,8 +2748,6 @@
     args[0] = CUR.GS.projVector.x;               \
     args[1] = CUR.GS.projVector.y;
 #endif
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
 #define DO_GFV                                   \
     if ( CUR.face->unpatented_hinting )          \
@@ -2989,109 +2765,63 @@
     args[0] = CUR.GS.freeVector.x;               \
     args[1] = CUR.GS.freeVector.y;
 #endif
-
-
 #define DO_SRP0                      \
     CUR.GS.rp0 = (FT_UShort)args[0];
-
-
 #define DO_SRP1                      \
     CUR.GS.rp1 = (FT_UShort)args[0];
-
-
 #define DO_SRP2                      \
     CUR.GS.rp2 = (FT_UShort)args[0];
-
-
 #define DO_RTHG                                         \
     CUR.GS.round_state = TT_Round_To_Half_Grid;         \
     CUR.func_round = (TT_Round_Func)Round_To_Half_Grid;
-
-
 #define DO_RTG                                     \
     CUR.GS.round_state = TT_Round_To_Grid;         \
     CUR.func_round = (TT_Round_Func)Round_To_Grid;
-
-
 #define DO_RTDG                                           \
     CUR.GS.round_state = TT_Round_To_Double_Grid;         \
     CUR.func_round = (TT_Round_Func)Round_To_Double_Grid;
-
-
 #define DO_RUTG                                       \
     CUR.GS.round_state = TT_Round_Up_To_Grid;         \
     CUR.func_round = (TT_Round_Func)Round_Up_To_Grid;
-
-
 #define DO_RDTG                                         \
     CUR.GS.round_state = TT_Round_Down_To_Grid;         \
     CUR.func_round = (TT_Round_Func)Round_Down_To_Grid;
-
-
 #define DO_ROFF                                 \
     CUR.GS.round_state = TT_Round_Off;          \
     CUR.func_round = (TT_Round_Func)Round_None;
-
-
 #define DO_SROUND                                \
     SET_SuperRound( 0x4000, args[0] );           \
     CUR.GS.round_state = TT_Round_Super;         \
     CUR.func_round = (TT_Round_Func)Round_Super;
-
-
 #define DO_S45ROUND                                 \
     SET_SuperRound( 0x2D41, args[0] );              \
     CUR.GS.round_state = TT_Round_Super_45;         \
     CUR.func_round = (TT_Round_Func)Round_Super_45;
-
-
 #define DO_SLOOP                            \
     if ( args[0] < 0 )                      \
       CUR.error = FT_THROW( Bad_Argument ); \
     else                                    \
       CUR.GS.loop = args[0];
-
-
 #define DO_SMD                         \
     CUR.GS.minimum_distance = args[0];
-
-
 #define DO_SCVTCI                                     \
     CUR.GS.control_value_cutin = (FT_F26Dot6)args[0];
-
-
 #define DO_SSWCI                                     \
     CUR.GS.single_width_cutin = (FT_F26Dot6)args[0];
-
-
 #define DO_SSW                                                     \
     CUR.GS.single_width_value = FT_MulFix( args[0],                \
                                            CUR.tt_metrics.scale );
-
-
 #define DO_FLIPON            \
     CUR.GS.auto_flip = TRUE;
-
-
 #define DO_FLIPOFF            \
     CUR.GS.auto_flip = FALSE;
-
-
 #define DO_SDB                             \
     CUR.GS.delta_base = (FT_Short)args[0];
-
-
 #define DO_SDS                              \
     CUR.GS.delta_shift = (FT_Short)args[0];
-
-
 #define DO_MD  /* nothing */
-
-
 #define DO_MPPEM              \
     args[0] = CURRENT_Ppem();
-
-
   /* Note: The pointSize should be irrelevant in a given font program; */
   /*       we thus decide to return only the ppem.                     */
 #if 0
@@ -3105,16 +2835,10 @@
     args[0] = CURRENT_Ppem();
 
 #endif /* 0 */
-
-
 #define DO_DUP         \
     args[1] = args[0];
-
-
 #define DO_CLEAR     \
     CUR.new_top = 0;
-
-
 #define DO_SWAP        \
   {                    \
     FT_Long  L;        \
@@ -3124,12 +2848,8 @@
     args[0] = args[1]; \
     args[1] = L;       \
   }
-
-
 #define DO_DEPTH       \
     args[0] = CUR.top;
-
-
 #define DO_CINDEX                                  \
   {                                                \
     FT_Long  L;                                    \
@@ -3146,8 +2866,6 @@
     else                                           \
       args[0] = CUR.stack[CUR.args - L];           \
   }
-
-
 #define DO_JROT                                                    \
     if ( args[1] != 0 )                                            \
     {                                                              \
@@ -3160,8 +2878,6 @@
         CUR.error = FT_THROW( Bad_Argument );                      \
       CUR.step_ins = FALSE;                                        \
     }
-
-
 #define DO_JMPR                                                  \
     if ( args[0] == 0 && CUR.args == 0 )                         \
       CUR.error = FT_THROW( Bad_Argument );                      \
@@ -3171,8 +2887,6 @@
            CUR.IP > CUR.callStack[CUR.callTop - 1].Def->end ) )  \
       CUR.error = FT_THROW( Bad_Argument );                      \
     CUR.step_ins = FALSE;
-
-
 #define DO_JROF                                                    \
     if ( args[1] == 0 )                                            \
     {                                                              \
@@ -3185,83 +2899,45 @@
         CUR.error = FT_THROW( Bad_Argument );                      \
       CUR.step_ins = FALSE;                                        \
     }
-
-
 #define DO_LT                        \
     args[0] = ( args[0] < args[1] );
-
-
 #define DO_LTEQ                       \
     args[0] = ( args[0] <= args[1] );
-
-
 #define DO_GT                        \
     args[0] = ( args[0] > args[1] );
-
-
 #define DO_GTEQ                       \
     args[0] = ( args[0] >= args[1] );
-
-
 #define DO_EQ                         \
     args[0] = ( args[0] == args[1] );
-
-
 #define DO_NEQ                        \
     args[0] = ( args[0] != args[1] );
-
-
 #define DO_ODD                                                  \
     args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 64 );
-
-
 #define DO_EVEN                                                \
     args[0] = ( ( CUR_Func_round( args[0], 0 ) & 127 ) == 0 );
-
-
 #define DO_AND                        \
     args[0] = ( args[0] && args[1] );
-
-
 #define DO_OR                         \
     args[0] = ( args[0] || args[1] );
-
-
 #define DO_NOT          \
     args[0] = !args[0];
-
-
 #define DO_ADD          \
     args[0] += args[1];
-
-
 #define DO_SUB          \
     args[0] -= args[1];
-
-
 #define DO_DIV                                               \
     if ( args[1] == 0 )                                      \
       CUR.error = FT_THROW( Divide_By_Zero );                \
     else                                                     \
       args[0] = FT_MulDiv_No_Round( args[0], 64L, args[1] );
-
-
 #define DO_MUL                                    \
     args[0] = FT_MulDiv( args[0], args[1], 64L );
-
-
 #define DO_ABS                   \
     args[0] = FT_ABS( args[0] );
-
-
 #define DO_NEG          \
     args[0] = -args[0];
-
-
 #define DO_FLOOR    \
     args[0] = FT_PIX_FLOOR( args[0] );
-
-
 #define DO_CEILING                    \
     args[0] = FT_PIX_CEIL( args[0] );
 
@@ -3324,8 +3000,6 @@
    }
 
 #endif /* !TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
 #define DO_WS                           \
    {                                    \
      FT_ULong  I = (FT_ULong)args[0];   \
@@ -3341,8 +3015,6 @@
      else                               \
        CUR.storage[I] = args[1];        \
    }
-
-
 #define DO_RCVT                          \
    {                                     \
      FT_ULong  I = (FT_ULong)args[0];    \
@@ -3360,8 +3032,6 @@
      else                                \
        args[0] = CUR_Func_read_cvt( I ); \
    }
-
-
 #define DO_WCVTP                         \
    {                                     \
      FT_ULong  I = (FT_ULong)args[0];    \
@@ -3377,8 +3047,6 @@
      else                                \
        CUR_Func_write_cvt( I, args[1] ); \
    }
-
-
 #define DO_WCVTF                                                \
    {                                                            \
      FT_ULong  I = (FT_ULong)args[0];                           \
@@ -3394,44 +3062,28 @@
      else                                                       \
        CUR.cvt[I] = FT_MulFix( args[1], CUR.tt_metrics.scale ); \
    }
-
-
 #define DO_DEBUG                          \
     CUR.error = FT_THROW( Debug_OpCode );
-
-
 #define DO_ROUND                                                   \
     args[0] = CUR_Func_round(                                      \
                 args[0],                                           \
                 CUR.tt_metrics.compensations[CUR.opcode - 0x68] );
-
-
 #define DO_NROUND                                                            \
     args[0] = ROUND_None( args[0],                                           \
                           CUR.tt_metrics.compensations[CUR.opcode - 0x6C] );
-
-
 #define DO_MAX               \
     if ( args[1] > args[0] ) \
       args[0] = args[1];
-
-
 #define DO_MIN               \
     if ( args[1] < args[0] ) \
       args[0] = args[1];
-
-
 #ifndef TT_CONFIG_OPTION_INTERPRETER_SWITCH
-
-
 #undef  ARRAY_BOUND_ERROR
 #define ARRAY_BOUND_ERROR                        \
     {                                            \
       CUR.error = FT_THROW( Invalid_Reference ); \
       return;                                    \
     }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SVTCA[a]:     Set (F and P) Vectors to Coordinate Axis                */
@@ -3443,8 +3095,6 @@
   {
     DO_SVTCA
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SPVTCA[a]:    Set PVector to Coordinate Axis                          */
@@ -3456,8 +3106,6 @@
   {
     DO_SPVTCA
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SFVTCA[a]:    Set FVector to Coordinate Axis                          */
@@ -3469,8 +3117,6 @@
   {
     DO_SFVTCA
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SPVTL[a]:     Set PVector To Line                                     */
@@ -3482,8 +3128,6 @@
   {
     DO_SPVTL
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SFVTL[a]:     Set FVector To Line                                     */
@@ -3495,8 +3139,6 @@
   {
     DO_SFVTL
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SFVTPV[]:     Set FVector To PVector                                  */
@@ -3508,8 +3150,6 @@
   {
     DO_SFVTPV
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SPVFS[]:      Set PVector From Stack                                  */
@@ -3521,8 +3161,6 @@
   {
     DO_SPVFS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SFVFS[]:      Set FVector From Stack                                  */
@@ -3534,8 +3172,6 @@
   {
     DO_SFVFS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* GPV[]:        Get Projection Vector                                   */
@@ -3547,8 +3183,6 @@
   {
     DO_GPV
   }
-
-
   /*************************************************************************/
   /* GFV[]:        Get Freedom Vector                                      */
   /* Opcode range: 0x0D                                                    */
@@ -3559,8 +3193,6 @@
   {
     DO_GFV
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SRP0[]:       Set Reference Point 0                                   */
@@ -3572,8 +3204,6 @@
   {
     DO_SRP0
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SRP1[]:       Set Reference Point 1                                   */
@@ -3585,8 +3215,6 @@
   {
     DO_SRP1
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SRP2[]:       Set Reference Point 2                                   */
@@ -3598,8 +3226,6 @@
   {
     DO_SRP2
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RTHG[]:       Round To Half Grid                                      */
@@ -3611,8 +3237,6 @@
   {
     DO_RTHG
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RTG[]:        Round To Grid                                           */
@@ -3624,8 +3248,6 @@
   {
     DO_RTG
   }
-
-
   /*************************************************************************/
   /* RTDG[]:       Round To Double Grid                                    */
   /* Opcode range: 0x3D                                                    */
@@ -3636,8 +3258,6 @@
   {
     DO_RTDG
   }
-
-
   /*************************************************************************/
   /* RUTG[]:       Round Up To Grid                                        */
   /* Opcode range: 0x7C                                                    */
@@ -3648,8 +3268,6 @@
   {
     DO_RUTG
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RDTG[]:       Round Down To Grid                                      */
@@ -3661,8 +3279,6 @@
   {
     DO_RDTG
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ROFF[]:       Round OFF                                               */
@@ -3674,8 +3290,6 @@
   {
     DO_ROFF
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SROUND[]:     Super ROUND                                             */
@@ -3687,8 +3301,6 @@
   {
     DO_SROUND
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* S45ROUND[]:   Super ROUND 45 degrees                                  */
@@ -3700,8 +3312,6 @@
   {
     DO_S45ROUND
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SLOOP[]:      Set LOOP variable                                       */
@@ -3713,8 +3323,6 @@
   {
     DO_SLOOP
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SMD[]:        Set Minimum Distance                                    */
@@ -3726,8 +3334,6 @@
   {
     DO_SMD
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SCVTCI[]:     Set Control Value Table Cut In                          */
@@ -3739,8 +3345,6 @@
   {
     DO_SCVTCI
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SSWCI[]:      Set Single Width Cut In                                 */
@@ -3752,8 +3356,6 @@
   {
     DO_SSWCI
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SSW[]:        Set Single Width                                        */
@@ -3765,8 +3367,6 @@
   {
     DO_SSW
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLIPON[]:     Set auto-FLIP to ON                                     */
@@ -3778,8 +3378,6 @@
   {
     DO_FLIPON
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLIPOFF[]:    Set auto-FLIP to OFF                                    */
@@ -3791,8 +3389,6 @@
   {
     DO_FLIPOFF
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SANGW[]:      Set ANGle Weight                                        */
@@ -3804,8 +3400,6 @@
   {
     /* instruction not supported anymore */
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SDB[]:        Set Delta Base                                          */
@@ -3817,8 +3411,6 @@
   {
     DO_SDB
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SDS[]:        Set Delta Shift                                         */
@@ -3830,8 +3422,6 @@
   {
     DO_SDS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MPPEM[]:      Measure Pixel Per EM                                    */
@@ -3843,8 +3433,6 @@
   {
     DO_MPPEM
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MPS[]:        Measure Point Size                                      */
@@ -3856,8 +3444,6 @@
   {
     DO_MPS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DUP[]:        DUPlicate the top stack's element                       */
@@ -3869,8 +3455,6 @@
   {
     DO_DUP
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* POP[]:        POP the stack's top element                             */
@@ -3882,8 +3466,6 @@
   {
     /* nothing to do */
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* CLEAR[]:      CLEAR the entire stack                                  */
@@ -3895,8 +3477,6 @@
   {
     DO_CLEAR
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SWAP[]:       SWAP the stack's top two elements                       */
@@ -3908,8 +3488,6 @@
   {
     DO_SWAP
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DEPTH[]:      return the stack DEPTH                                  */
@@ -3921,8 +3499,6 @@
   {
     DO_DEPTH
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* CINDEX[]:     Copy INDEXed element                                    */
@@ -3934,8 +3510,6 @@
   {
     DO_CINDEX
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* EIF[]:        End IF                                                  */
@@ -3947,8 +3521,6 @@
   {
     /* nothing to do */
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* JROT[]:       Jump Relative On True                                   */
@@ -3960,8 +3532,6 @@
   {
     DO_JROT
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* JMPR[]:       JuMP Relative                                           */
@@ -3973,8 +3543,6 @@
   {
     DO_JMPR
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* JROF[]:       Jump Relative On False                                  */
@@ -3986,8 +3554,6 @@
   {
     DO_JROF
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* LT[]:         Less Than                                               */
@@ -3999,8 +3565,6 @@
   {
     DO_LT
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* LTEQ[]:       Less Than or EQual                                      */
@@ -4012,8 +3576,6 @@
   {
     DO_LTEQ
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* GT[]:         Greater Than                                            */
@@ -4025,8 +3587,6 @@
   {
     DO_GT
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* GTEQ[]:       Greater Than or EQual                                   */
@@ -4038,8 +3598,6 @@
   {
     DO_GTEQ
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* EQ[]:         EQual                                                   */
@@ -4051,8 +3609,6 @@
   {
     DO_EQ
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NEQ[]:        Not EQual                                               */
@@ -4064,8 +3620,6 @@
   {
     DO_NEQ
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ODD[]:        Is ODD                                                  */
@@ -4077,8 +3631,6 @@
   {
     DO_ODD
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* EVEN[]:       Is EVEN                                                 */
@@ -4090,8 +3642,6 @@
   {
     DO_EVEN
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* AND[]:        logical AND                                             */
@@ -4103,8 +3653,6 @@
   {
     DO_AND
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* OR[]:         logical OR                                              */
@@ -4116,8 +3664,6 @@
   {
     DO_OR
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NOT[]:        logical NOT                                             */
@@ -4129,8 +3675,6 @@
   {
     DO_NOT
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ADD[]:        ADD                                                     */
@@ -4142,8 +3686,6 @@
   {
     DO_ADD
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SUB[]:        SUBtract                                                */
@@ -4155,8 +3697,6 @@
   {
     DO_SUB
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DIV[]:        DIVide                                                  */
@@ -4168,8 +3708,6 @@
   {
     DO_DIV
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MUL[]:        MULtiply                                                */
@@ -4181,8 +3719,6 @@
   {
     DO_MUL
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ABS[]:        ABSolute value                                          */
@@ -4194,8 +3730,6 @@
   {
     DO_ABS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NEG[]:        NEGate                                                  */
@@ -4207,8 +3741,6 @@
   {
     DO_NEG
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLOOR[]:      FLOOR                                                   */
@@ -4220,8 +3752,6 @@
   {
     DO_FLOOR
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* CEILING[]:    CEILING                                                 */
@@ -4233,8 +3763,6 @@
   {
     DO_CEILING
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RS[]:         Read Store                                              */
@@ -4246,8 +3774,6 @@
   {
     DO_RS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* WS[]:         Write Store                                             */
@@ -4259,8 +3785,6 @@
   {
     DO_WS
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* WCVTP[]:      Write CVT in Pixel units                                */
@@ -4272,8 +3796,6 @@
   {
     DO_WCVTP
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* WCVTF[]:      Write CVT in Funits                                     */
@@ -4285,8 +3807,6 @@
   {
     DO_WCVTF
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RCVT[]:       Read CVT                                                */
@@ -4298,8 +3818,6 @@
   {
     DO_RCVT
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* AA[]:         Adjust Angle                                            */
@@ -4311,8 +3829,6 @@
   {
     /* intentionally no longer supported */
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DEBUG[]:      DEBUG.  Unsupported.                                    */
@@ -4326,8 +3842,6 @@
   {
     DO_DEBUG
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ROUND[ab]:    ROUND value                                             */
@@ -4339,8 +3853,6 @@
   {
     DO_ROUND
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NROUND[ab]:   No ROUNDing of value                                    */
@@ -4352,8 +3864,6 @@
   {
     DO_NROUND
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MAX[]:        MAXimum                                                 */
@@ -4365,8 +3875,6 @@
   {
     DO_MAX
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MIN[]:        MINimum                                                 */
@@ -4378,18 +3886,12 @@
   {
     DO_MIN
   }
-
-
 #endif  /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The following functions are called as is within the switch statement. */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MINDEX[]:     Move INDEXed element                                    */
@@ -4400,8 +3902,6 @@
   Ins_MINDEX( INS_ARG )
   {
     FT_Long  L, K;
-
-
     L = args[0];
 
     if ( L <= 0 || L > CUR.args )
@@ -4420,8 +3920,6 @@
       CUR.stack[CUR.args - 1] = K;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ROLL[]:       ROLL top three elements                                 */
@@ -4434,8 +3932,6 @@
     FT_Long  A, B, C;
 
     FT_UNUSED_EXEC;
-
-
     A = args[2];
     B = args[1];
     C = args[0];
@@ -4444,8 +3940,6 @@
     args[1] = A;
     args[0] = B;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MANAGING THE FLOW OF CONTROL                                          */
@@ -4453,8 +3947,6 @@
   /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
-
-
   static FT_Bool
   SkipCode( EXEC_OP )
   {
@@ -4480,8 +3972,6 @@
     CUR.error = FT_THROW( Code_Overflow );
     return FAILURE;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* IF[]:         IF test                                                 */
@@ -4493,8 +3983,6 @@
   {
     FT_Int   nIfs;
     FT_Bool  Out;
-
-
     if ( args[0] != 0 )
       return;
 
@@ -4523,8 +4011,6 @@
       }
     } while ( Out == 0 );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ELSE[]:       ELSE                                                    */
@@ -4537,8 +4023,6 @@
     FT_Int  nIfs;
 
     FT_UNUSED_ARG;
-
-
     nIfs = 1;
 
     do
@@ -4558,8 +4042,6 @@
       }
     } while ( nIfs != 0 );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DEFINING AND USING FUNCTIONS AND INSTRUCTIONS                         */
@@ -4567,8 +4049,6 @@
   /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FDEF[]:       Function DEFinition                                     */
@@ -4681,8 +4161,6 @@
     FT_UShort  opcode_size[9]    = { 12, 8, 8, 6, 7, 4, 5, 4, 2 };
     FT_UShort  i;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
     /* some font programs are broken enough to redefine functions! */
     /* We will then parse the current table.                       */
 
@@ -4862,8 +4340,6 @@
       }
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ENDF[]:       END Function definition                                 */
@@ -4876,8 +4352,6 @@
     TT_CallRec*  pRec;
 
     FT_UNUSED_ARG;
-
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     CUR.sph_in_func_flags = 0x0000;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
@@ -4914,8 +4388,6 @@
     /*       valid address, and it is why we do not test */
     /*       the result of Ins_Goto_CodeRange() here!    */
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* CALL[]:       CALL function                                           */
@@ -4928,8 +4400,6 @@
     FT_ULong       F;
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
-
-
     /* first of all, check the index */
 
     F = args[0];
@@ -4950,8 +4420,6 @@
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
-
-
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
 
@@ -5003,8 +4471,6 @@
   Fail:
     CUR.error = FT_THROW( Invalid_Reference );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* LOOPCALL[]:   LOOP and CALL function                                  */
@@ -5017,8 +4483,6 @@
     FT_ULong       F;
     TT_CallRec*    pCrec;
     TT_DefRecord*  def;
-
-
     /* first of all, check the index */
     F = args[1];
     if ( BOUNDSL( F, CUR.maxFunc + 1 ) )
@@ -5038,8 +4502,6 @@
     {
       /* look up the FDefs table */
       TT_DefRecord*  limit;
-
-
       def   = CUR.FDefs;
       limit = def + CUR.numFDefs;
 
@@ -5091,8 +4553,6 @@
   Fail:
     CUR.error = FT_THROW( Invalid_Reference );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* IDEF[]:       Instruction DEFinition                                  */
@@ -5104,8 +4564,6 @@
   {
     TT_DefRecord*  def;
     TT_DefRecord*  limit;
-
-
     /*  First of all, look for the same function in our table */
 
     def   = CUR.IDefs;
@@ -5157,8 +4615,6 @@
       }
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* PUSHING DATA ONTO THE INTERPRETER STACK                               */
@@ -5166,8 +4622,6 @@
   /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NPUSHB[]:     PUSH N Bytes                                            */
@@ -5178,8 +4632,6 @@
   Ins_NPUSHB( INS_ARG )
   {
     FT_UShort  L, K;
-
-
     L = (FT_UShort)CUR.code[CUR.IP + 1];
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
@@ -5193,8 +4645,6 @@
 
     CUR.new_top += L;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* NPUSHW[]:     PUSH N Words                                            */
@@ -5205,8 +4655,6 @@
   Ins_NPUSHW( INS_ARG )
   {
     FT_UShort  L, K;
-
-
     L = (FT_UShort)CUR.code[CUR.IP + 1];
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
@@ -5223,8 +4671,6 @@
     CUR.step_ins = FALSE;
     CUR.new_top += L;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* PUSHB[abc]:   PUSH Bytes                                              */
@@ -5235,8 +4681,6 @@
   Ins_PUSHB( INS_ARG )
   {
     FT_UShort  L, K;
-
-
     L = (FT_UShort)( CUR.opcode - 0xB0 + 1 );
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
@@ -5248,8 +4692,6 @@
     for ( K = 1; K <= L; K++ )
       args[K - 1] = CUR.code[CUR.IP + K];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* PUSHW[abc]:   PUSH Words                                              */
@@ -5260,8 +4702,6 @@
   Ins_PUSHW( INS_ARG )
   {
     FT_UShort  L, K;
-
-
     L = (FT_UShort)( CUR.opcode - 0xB8 + 1 );
 
     if ( BOUNDS( L, CUR.stackSize + 1 - CUR.top ) )
@@ -5277,8 +4717,6 @@
 
     CUR.step_ins = FALSE;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MANAGING THE GRAPHICS STATE                                           */
@@ -5286,8 +4724,6 @@
   /*  Instructions appear in the specs' order.                             */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* GC[a]:        Get Coordinate projected onto                           */
@@ -5302,8 +4738,6 @@
   {
     FT_ULong    L;
     FT_F26Dot6  R;
-
-
     L = (FT_ULong)args[0];
 
     if ( BOUNDSL( L, CUR.zp2.n_points ) )
@@ -5322,8 +4756,6 @@
 
     args[0] = R;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SCFS[]:       Set Coordinate From Stack                               */
@@ -5339,8 +4771,6 @@
   {
     FT_Long    K;
     FT_UShort  L;
-
-
     L = (FT_UShort)args[0];
 
     if ( BOUNDS( L, CUR.zp2.n_points ) )
@@ -5359,8 +4789,6 @@
     if ( CUR.GS.gep2 == 0 )
       CUR.zp2.org[L] = CUR.zp2.cur[L];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MD[a]:        Measure Distance                                        */
@@ -5381,8 +4809,6 @@
   {
     FT_UShort   K, L;
     FT_F26Dot6  D;
-
-
     K = (FT_UShort)args[1];
     L = (FT_UShort)args[0];
 
@@ -5405,16 +4831,12 @@
         {
           FT_Vector*  vec1 = CUR.zp0.org + L;
           FT_Vector*  vec2 = CUR.zp1.org + K;
-
-
           D = CUR_Func_dualproj( vec1, vec2 );
         }
         else
         {
           FT_Vector*  vec1 = CUR.zp0.orus + L;
           FT_Vector*  vec2 = CUR.zp1.orus + K;
-
-
           if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
           {
             /* this should be faster */
@@ -5424,8 +4846,6 @@
           else
           {
             FT_Vector  vec;
-
-
             vec.x = FT_MulFix( vec1->x - vec2->x, CUR.metrics.x_scale );
             vec.y = FT_MulFix( vec1->y - vec2->y, CUR.metrics.y_scale );
 
@@ -5444,8 +4864,6 @@
 
     args[0] = D;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SDPVTL[a]:    Set Dual PVector to Line                                */
@@ -5458,8 +4876,6 @@
     FT_Long    A, B, C;
     FT_UShort  p1, p2;            /* was FT_Int in pas type ERROR */
     FT_Int     aOpc = CUR.opcode;
-
-
     p1 = (FT_UShort)args[1];
     p2 = (FT_UShort)args[0];
 
@@ -5474,8 +4890,6 @@
     {
       FT_Vector* v1 = CUR.zp1.org + p2;
       FT_Vector* v2 = CUR.zp2.org + p1;
-
-
       A = v1->x - v2->x;
       B = v1->y - v2->y;
 
@@ -5503,8 +4917,6 @@
     {
       FT_Vector*  v1 = CUR.zp1.cur + p2;
       FT_Vector*  v2 = CUR.zp2.cur + p1;
-
-
       A = v1->x - v2->x;
       B = v1->y - v2->y;
 
@@ -5528,8 +4940,6 @@
 
     COMPUTE_Funcs();
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SZP0[]:       Set Zone Pointer 0                                      */
@@ -5557,8 +4967,6 @@
 
     CUR.GS.gep0 = (FT_UShort)args[0];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SZP1[]:       Set Zone Pointer 1                                      */
@@ -5586,8 +4994,6 @@
 
     CUR.GS.gep1 = (FT_UShort)args[0];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SZP2[]:       Set Zone Pointer 2                                      */
@@ -5615,8 +5021,6 @@
 
     CUR.GS.gep2 = (FT_UShort)args[0];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SZPS[]:       Set Zone PointerS                                       */
@@ -5649,8 +5053,6 @@
     CUR.GS.gep1 = (FT_UShort)args[0];
     CUR.GS.gep2 = (FT_UShort)args[0];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* INSTCTRL[]:   INSTruction ConTRoL                                     */
@@ -5661,8 +5063,6 @@
   Ins_INSTCTRL( INS_ARG )
   {
     FT_Long  K, L;
-
-
     K = args[1];
     L = args[0];
 
@@ -5679,8 +5079,6 @@
     CUR.GS.instruct_control = FT_BOOL(
       ( (FT_Byte)CUR.GS.instruct_control & ~(FT_Byte)K ) | (FT_Byte)L );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SCANCTRL[]:   SCAN ConTRoL                                            */
@@ -5691,8 +5089,6 @@
   Ins_SCANCTRL( INS_ARG )
   {
     FT_Int  A;
-
-
     /* Get Threshold */
     A = (FT_Int)( args[0] & 0xFF );
 
@@ -5725,8 +5121,6 @@
     if ( ( args[0] & 0x2000 ) != 0 && CUR.tt_metrics.stretched )
       CUR.GS.scan_control = FALSE;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SCANTYPE[]:   SCAN TYPE                                               */
@@ -5739,8 +5133,6 @@
     if ( args[0] >= 0 )
       CUR.GS.scan_type = (FT_Int)args[0];
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MANAGING OUTLINES                                                     */
@@ -5748,8 +5140,6 @@
   /*   Instructions appear in the specification's order.                   */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLIPPT[]:     FLIP PoinT                                              */
@@ -5762,8 +5152,6 @@
     FT_UShort  point;
 
     FT_UNUSED_ARG;
-
-
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
@@ -5795,8 +5183,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLIPRGON[]:   FLIP RanGe ON                                           */
@@ -5807,8 +5193,6 @@
   Ins_FLIPRGON( INS_ARG )
   {
     FT_UShort  I, K, L;
-
-
     K = (FT_UShort)args[1];
     L = (FT_UShort)args[0];
 
@@ -5823,8 +5207,6 @@
     for ( I = L; I <= K; I++ )
       CUR.pts.tags[I] |= FT_CURVE_TAG_ON;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* FLIPRGOFF:    FLIP RanGe OFF                                          */
@@ -5835,8 +5217,6 @@
   Ins_FLIPRGOFF( INS_ARG )
   {
     FT_UShort  I, K, L;
-
-
     K = (FT_UShort)args[1];
     L = (FT_UShort)args[0];
 
@@ -5851,8 +5231,6 @@
     for ( I = L; I <= K; I++ )
       CUR.pts.tags[I] &= ~FT_CURVE_TAG_ON;
   }
-
-
   static FT_Bool
   Compute_Point_Displacement( EXEC_OP_ FT_F26Dot6*   x,
                                        FT_F26Dot6*   y,
@@ -5862,8 +5240,6 @@
     TT_GlyphZoneRec  zp;
     FT_UShort        p;
     FT_F26Dot6       d;
-
-
     if ( CUR.opcode & 1 )
     {
       zp = CUR.zp0;
@@ -5911,8 +5287,6 @@
 
     return SUCCESS;
   }
-
-
   static void
   Move_Zp2_Point( EXEC_OP_ FT_UShort   point,
                            FT_F26Dot6  dx,
@@ -5952,8 +5326,6 @@
         CUR.zp2.tags[point] |= FT_CURVE_TAG_TOUCH_Y;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SHP[a]:       SHift Point by the last point                           */
@@ -5971,8 +5343,6 @@
     FT_UShort        point;
 
     FT_UNUSED_ARG;
-
-
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
@@ -6013,8 +5383,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SHC[a]:       SHift Contour                                           */
@@ -6034,8 +5402,6 @@
 
     FT_Short         contour, bounds;
     FT_UShort        start, limit, i;
-
-
     contour = (FT_UShort)args[0];
     bounds  = ( CUR.GS.gep2 == 0 ) ? 1 : CUR.zp2.n_contours;
 
@@ -6068,8 +5434,6 @@
         MOVE_Zp2_Point( i, dx, dy, TRUE );
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SHZ[a]:       SHift Zone                                              */
@@ -6085,8 +5449,6 @@
                      dy;
 
     FT_UShort        limit, i;
-
-
     if ( BOUNDS( args[0], 2 ) )
     {
       if ( CUR.pedantic_hinting )
@@ -6115,8 +5477,6 @@
         MOVE_Zp2_Point( i, dx, dy, FALSE );
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* SHPIX[]:      SHift points by a PIXel amount                          */
@@ -6131,8 +5491,6 @@
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_Int      B1, B2;
 #endif
-
-
     if ( CUR.top < CUR.GS.loop + 1 )
     {
       if ( CUR.pedantic_hinting )
@@ -6267,8 +5625,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MSIRP[a]:     Move Stack Indirect Relative Position                   */
@@ -6283,8 +5639,6 @@
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_F26Dot6  control_value_cutin = 0; /* pacify compiler */
-
-
     if ( SUBPIXEL_HINTING )
     {
       control_value_cutin = CUR.GS.control_value_cutin;
@@ -6336,8 +5690,6 @@
     if ( ( CUR.opcode & 1 ) != 0 )
       CUR.GS.rp0 = point;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MDAP[a]:      Move Direct Absolute Point                              */
@@ -6350,8 +5702,6 @@
     FT_UShort   point;
     FT_F26Dot6  cur_dist;
     FT_F26Dot6  distance;
-
-
     point = (FT_UShort)args[0];
 
     if ( BOUNDS( point, CUR.zp0.n_points ) )
@@ -6385,8 +5735,6 @@
     CUR.GS.rp0 = point;
     CUR.GS.rp1 = point;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MIAP[a]:      Move Indirect Absolute Point                            */
@@ -6401,8 +5749,6 @@
     FT_F26Dot6  distance;
     FT_F26Dot6  org_dist;
     FT_F26Dot6  control_value_cutin;
-
-
     control_value_cutin = CUR.GS.control_value_cutin;
     cvtEntry            = (FT_ULong)args[1];
     point               = (FT_UShort)args[0];
@@ -6495,8 +5841,6 @@
     CUR.GS.rp0 = point;
     CUR.GS.rp1 = point;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MDRP[abcde]:  Move Direct Relative Point                              */
@@ -6508,8 +5852,6 @@
   {
     FT_UShort   point;
     FT_F26Dot6  org_dist, distance, minimum_distance;
-
-
     minimum_distance = CUR.GS.minimum_distance;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
@@ -6539,16 +5881,12 @@
     {
       FT_Vector*  vec1 = &CUR.zp1.org[point];
       FT_Vector*  vec2 = &CUR.zp0.org[CUR.GS.rp0];
-
-
       org_dist = CUR_Func_dualproj( vec1, vec2 );
     }
     else
     {
       FT_Vector*  vec1 = &CUR.zp1.orus[point];
       FT_Vector*  vec2 = &CUR.zp0.orus[CUR.GS.rp0];
-
-
       if ( CUR.metrics.x_scale == CUR.metrics.y_scale )
       {
         /* this should be faster */
@@ -6558,8 +5896,6 @@
       else
       {
         FT_Vector  vec;
-
-
         vec.x = FT_MulFix( vec1->x - vec2->x, CUR.metrics.x_scale );
         vec.y = FT_MulFix( vec1->y - vec2->y, CUR.metrics.y_scale );
 
@@ -6630,8 +5966,6 @@
     if ( ( CUR.opcode & 16 ) != 0 )
       CUR.GS.rp0 = point;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MIRP[abcde]:  Move Indirect Relative Point                            */
@@ -6655,8 +5989,6 @@
     FT_Int      B2           = 0;
     FT_Bool     reverse_move = FALSE;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
     minimum_distance    = CUR.GS.minimum_distance;
     control_value_cutin = CUR.GS.control_value_cutin;
     point               = (FT_UShort)args[0];
@@ -6857,8 +6189,6 @@
 
     CUR.GS.rp2 = point;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ALIGNRP[]:    ALIGN Relative Point                                    */
@@ -6872,8 +6202,6 @@
     FT_F26Dot6  distance;
 
     FT_UNUSED_ARG;
-
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     if ( SUBPIXEL_HINTING                                         &&
          CUR.ignore_x_mode                                        &&
@@ -6922,8 +6250,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ISECT[]:      moves point to InterSECTion                             */
@@ -6946,8 +6272,6 @@
     FT_F26Dot6  val;
 
     FT_Vector   R;
-
-
     point = (FT_UShort)args[0];
 
     a0 = (FT_UShort)args[1];
@@ -7016,8 +6340,6 @@
                                CUR.zp0.cur[b1].y ) / 4;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* ALIGNPTS[]:   ALIGN PoinTS                                            */
@@ -7029,8 +6351,6 @@
   {
     FT_UShort   p1, p2;
     FT_F26Dot6  distance;
-
-
     p1 = (FT_UShort)args[0];
     p2 = (FT_UShort)args[1];
 
@@ -7048,8 +6368,6 @@
     CUR_Func_move( &CUR.zp1, p1, distance );
     CUR_Func_move( &CUR.zp0, p2, -distance );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* IP[]:         Interpolate Point                                       */
@@ -7068,8 +6386,6 @@
     FT_Int      twilight;
 
     FT_UNUSED_ARG;
-
-
     if ( CUR.top < CUR.GS.loop )
     {
       if ( CUR.pedantic_hinting )
@@ -7119,8 +6435,6 @@
       else
       {
         FT_Vector  vec;
-
-
         vec.x = FT_MulFix( CUR.zp1.orus[CUR.GS.rp2].x - orus_base->x,
                            CUR.metrics.x_scale );
         vec.y = FT_MulFix( CUR.zp1.orus[CUR.GS.rp2].y - orus_base->y,
@@ -7136,8 +6450,6 @@
     {
       FT_UInt     point = (FT_UInt)CUR.stack[--CUR.args];
       FT_F26Dot6  org_dist, cur_dist, new_dist;
-
-
       /* check point bounds */
       if ( BOUNDS( point, CUR.zp2.n_points ) )
       {
@@ -7156,8 +6468,6 @@
       else
       {
         FT_Vector  vec;
-
-
         vec.x = FT_MulFix( CUR.zp2.orus[point].x - orus_base->x,
                            CUR.metrics.x_scale );
         vec.y = FT_MulFix( CUR.zp2.orus[point].y - orus_base->y,
@@ -7203,8 +6513,6 @@
     CUR.GS.loop = 1;
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* UTP[a]:       UnTouch Point                                           */
@@ -7216,8 +6524,6 @@
   {
     FT_UShort  point;
     FT_Byte    mask;
-
-
     point = (FT_UShort)args[0];
 
     if ( BOUNDS( point, CUR.zp0.n_points ) )
@@ -7237,8 +6543,6 @@
 
     CUR.zp0.tags[point] &= mask;
   }
-
-
   /* Local variables for Ins_IUP: */
   typedef struct  IUP_WorkerRec_
   {
@@ -7248,8 +6552,6 @@
     FT_UInt     max_points;
 
   } IUP_WorkerRec, *IUP_Worker;
-
-
   static void
   _iup_worker_shift( IUP_Worker  worker,
                      FT_UInt     p1,
@@ -7258,8 +6560,6 @@
   {
     FT_UInt     i;
     FT_F26Dot6  dx;
-
-
     dx = worker->curs[p].x - worker->orgs[p].x;
     if ( dx != 0 )
     {
@@ -7270,8 +6570,6 @@
         worker->curs[i].x += dx;
     }
   }
-
-
   static void
   _iup_worker_interpolate( IUP_Worker  worker,
                            FT_UInt     p1,
@@ -7281,8 +6579,6 @@
   {
     FT_UInt     i;
     FT_F26Dot6  orus1, orus2, org1, org2, delta1, delta2;
-
-
     if ( p1 > p2 )
       return;
 
@@ -7297,8 +6593,6 @@
     {
       FT_F26Dot6  tmp_o;
       FT_UInt     tmp_r;
-
-
       tmp_o = orus1;
       orus1 = orus2;
       orus2 = tmp_o;
@@ -7319,8 +6613,6 @@
       for ( i = p1; i <= p2; i++ )
       {
         FT_F26Dot6  x = worker->orgs[i].x;
-
-
         if ( x <= org1 )
           x += delta1;
         else
@@ -7333,14 +6625,10 @@
     {
       FT_Fixed  scale       = 0;
       FT_Bool   scale_valid = 0;
-
-
       /* interpolation */
       for ( i = p1; i <= p2; i++ )
       {
         FT_F26Dot6  x = worker->orgs[i].x;
-
-
         if ( x <= org1 )
           x += delta1;
 
@@ -7363,8 +6651,6 @@
       }
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* IUP[a]:       Interpolate Untouched Points                            */
@@ -7387,8 +6673,6 @@
     FT_Short  contour;       /* current contour */
 
     FT_UNUSED_ARG;
-
-
     /* ignore empty outlines */
     if ( CUR.pts.n_contours == 0 )
       return;
@@ -7476,8 +6760,6 @@
       contour++;
     } while ( contour < CUR.pts.n_contours );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DELTAPn[]:    DELTA exceptions P1, P2, P3                             */
@@ -7493,23 +6775,17 @@
     FT_Long    B;
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
     FT_UShort  B1, B2;
-
-
     if ( SUBPIXEL_HINTING                                        &&
          CUR.ignore_x_mode                                       &&
          CUR.iup_called                                          &&
          ( CUR.sph_tweak_flags & SPH_TWEAK_NO_DELTAP_AFTER_IUP ) )
       goto Fail;
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
     {
       FT_Long  n = args[0] * 2;
-
-
       if ( CUR.args < n )
       {
         if ( CUR.pedantic_hinting )
@@ -7655,8 +6931,6 @@
   Fail:
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* DELTACn[]:    DELTA exceptions C1, C2, C3                             */
@@ -7669,15 +6943,11 @@
     FT_ULong  nump, k;
     FT_ULong  A, C;
     FT_Long   B;
-
-
 #ifdef TT_CONFIG_OPTION_UNPATENTED_HINTING
     /* Delta hinting is covered by US Patent 5159668. */
     if ( CUR.face->unpatented_hinting )
     {
       FT_Long  n = args[0] * 2;
-
-
       if ( CUR.args < n )
       {
         if ( CUR.pedantic_hinting )
@@ -7751,15 +7021,11 @@
   Fail:
     CUR.new_top = CUR.args;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* MISC. INSTRUCTIONS                                                    */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* GETINFO[]:    GET INFOrmation                                         */
@@ -7770,8 +7036,6 @@
   Ins_GETINFO( INS_ARG )
   {
     FT_Long  K;
-
-
     K = 0;
 
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
@@ -7879,8 +7143,6 @@
 
     args[0] = K;
   }
-
-
   static void
   Ins_UNKNOWN( INS_ARG )
   {
@@ -7888,15 +7150,11 @@
     TT_DefRecord*  limit = def + CUR.numIDefs;
 
     FT_UNUSED_ARG;
-
-
     for ( ; def < limit; def++ )
     {
       if ( (FT_Byte)def->opc == CUR.opcode && def->active )
       {
         TT_CallRec*  call;
-
-
         if ( CUR.callTop >= CUR.callSize )
         {
           CUR.error = FT_THROW( Stack_Overflow );
@@ -7919,11 +7177,7 @@
 
     CUR.error = FT_THROW( Invalid_Opcode );
   }
-
-
 #ifndef TT_CONFIG_OPTION_INTERPRETER_SWITCH
-
-
   static
   TInstruction_Function  Instruct_Dispatch[256] =
   {
@@ -8202,11 +7456,7 @@
     /*  MIRP[30]  */  Ins_MIRP,
     /*  MIRP[31]  */  Ins_MIRP
   };
-
-
 #endif /* !TT_CONFIG_OPTION_INTERPRETER_SWITCH */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* RUN                                                                   */
@@ -8237,8 +7487,6 @@
   /*  Instructions appear in the specification's order.                    */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* documentation is in ttinterp.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -8259,8 +7507,6 @@
     FT_UShort  opcode_pointer[1] = { 0 };
     FT_UShort  opcode_size[1]    = { 1 };
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
 #ifdef TT_CONFIG_OPTION_STATIC_RASTER
     cur = *exc;
 #endif
@@ -8379,12 +7625,8 @@
       {
         FT_Long*  args   = CUR.stack + CUR.args;
         FT_Byte   opcode = CUR.opcode;
-
-
 #undef  ARRAY_BOUND_ERROR
 #define ARRAY_BOUND_ERROR  goto Set_Invalid_Ref
-
-
         switch ( opcode )
         {
         case 0x00:  /* SVTCA y  */
@@ -8395,8 +7637,6 @@
         case 0x05:  /* SFvTCA x */
           {
             FT_Short  AA, BB;
-
-
             AA = (FT_Short)( ( opcode & 1 ) << 14 );
             BB = (FT_Short)( AA ^ 0x4000 );
 
@@ -8944,15 +8184,11 @@
           {
             TT_DefRecord*  def   = CUR.IDefs;
             TT_DefRecord*  limit = def + CUR.numIDefs;
-
-
             for ( ; def < limit; def++ )
             {
               if ( def->active && CUR.opcode == (FT_Byte)def->opc )
               {
                 TT_CallRec*  callrec;
-
-
                 if ( CUR.callTop >= CUR.callSize )
                 {
                   CUR.error = FT_THROW( Invalid_Reference );
@@ -9043,9 +8279,5 @@
 
     return CUR.error;
   }
-
-
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
 /* END */

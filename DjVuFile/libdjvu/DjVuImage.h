@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name DjVuImage.h
 
     Files #"DjVuImage.h"# and #"DjVuImage.cpp"# implement \Ref{DjVuImage}
@@ -105,8 +103,6 @@
     #$Id: DjVuImage.h,v 1.11 2007/05/19 03:07:33 leonb Exp $# */
 //@{
 
-
-
 #include "DjVuFile.h"
 #include "DjVuAnno.h"
 #include "GRect.h"
@@ -128,8 +124,6 @@ public:
   virtual void notify_relayout(void) = 0;
   virtual void notify_redisplay(void) = 0;
 };
-
-
 /** Main DjVu Image data structure.  This class defines the internal
     representation of a DjVu image.  This representation consists of a few
     pointers referencing the various components of the DjVu image.  These
@@ -378,8 +372,6 @@ public:
       function returns a null pointer if there is not enough information in
       the DjVu image to properly render the desired image. */
   GP<GPixmap>  get_fg_pixmap(const GRect &rect, const GRect &all, double gamma=0) const;
-
-
   /** set the rotation count(angle) in counter clock wise for the image
     values (0,1,2,3) correspond to (0,90,180,270) degree rotation*/
   void set_rotate(int count=0);
@@ -400,8 +392,6 @@ public:
   /** unmaps the given #x#, #y# from unrotated document co-ordinates to rotated  
       co-ordinates*/
   void unmap(int &x, int &y) const;
-
-
 
   //@}
 
@@ -428,8 +418,6 @@ private:
   GP<DjVuPalette>      get_fgbc(const GP<DjVuFile> & file) const;
   void init_rotate(const DjVuInfo &info);
 };
-
-
 inline GP<DjVuFile>
 DjVuImage::get_djvu_file(void) const
 {
@@ -437,8 +425,6 @@ DjVuImage::get_djvu_file(void) const
 }
 
 //@}
-
-
 
 // ----- THE END
 

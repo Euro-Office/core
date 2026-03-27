@@ -65,8 +65,6 @@ private:
 
 };
 std::wostream& operator << (std::wostream& _Wostream, const svg_type& _Val);
-
-
 } // namespace odf_types
 APPLY_PARSE_XML_ATTRIBUTES(odf_types::svg_type);
 } // namespace cpdoccore

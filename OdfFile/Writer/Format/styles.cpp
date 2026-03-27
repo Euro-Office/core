@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "styles.h"
 #include <xml/xmlchar.h>
 
@@ -271,8 +269,6 @@ void style_content::serialize(std::wostream & strm)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * default_style::ns = L"style";
 const wchar_t * default_style::name = L"default-style";
-
-
 void default_style::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
     content_.create_child_element(Ns, Name);
@@ -761,8 +757,6 @@ void style_master_page_attlist::serialize(CP_ATTR_NODE)
 	CP_XML_ATTR_OPT_ENCODE_STRING(L"draw:style-name", draw_style_name_);
 	CP_XML_ATTR_OPT_ENCODE_STRING(L"style:next-style-name",	style_next_style_name_);
 }
-
-
 const wchar_t * office_master_styles::ns = L"office";
 const wchar_t * office_master_styles::name = L"master-styles";
 
@@ -1256,8 +1250,6 @@ void style_footnote_sep::serialize(std::wostream & strm)
 		}
 	}
 }
-
-
 
 /// style:master-page
 //////////////////////////////////////////////////////////////////////////////////////////////////

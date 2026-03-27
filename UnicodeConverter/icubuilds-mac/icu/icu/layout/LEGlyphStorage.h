@@ -26,7 +26,6 @@ U_NAMESPACE_BEGIN
  *
  * The storage is growable using the <code>LEInsertionList</code> class.
  *
- *
  * @see LEInsertionList.h
  *
  * @deprecated ICU 54. See {@link icu::LayoutEngine}
@@ -68,8 +67,6 @@ private:
      * @internal
      */
     le_uint32 *fAuxData;
-
-
     /**
      * The insertion list, used to grow the above arrays.
      *
@@ -286,8 +283,6 @@ public:
      * @deprecated ICU 54. See {@link icu::LayoutEngine}
      */
     le_int32  getCharIndex(le_int32 glyphIndex, LEErrorCode &success) const;
-
-
     /**
      * Get the auxillary data for a particular glyph.
      *
@@ -539,8 +534,6 @@ inline LEGlyphID &LEGlyphStorage::operator[](le_int32 glyphIndex) const
 {
     return fGlyphs[glyphIndex];
 }
-
-
 U_NAMESPACE_END
 #endif
 

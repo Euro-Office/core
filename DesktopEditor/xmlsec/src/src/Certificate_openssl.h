@@ -643,8 +643,6 @@ public:
 
 		return true;
 	}
-
-
 	virtual int VerifyPKCS7(unsigned char* pPKCS7Data, unsigned int nPKCS7Size,
 							unsigned char* pData, unsigned int nSize)
 	{

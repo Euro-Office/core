@@ -38,13 +38,9 @@ namespace XLS
 MDXProp::MDXProp()
 {
 }
-
-
 MDXProp::~MDXProp()
 {
 }
-
-
 BaseObjectPtr MDXProp::clone()
 {
 	return BaseObjectPtr(new MDXProp(*this));

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ChartFormat record in BIFF8
 class ChartFormat: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ChartFormat();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

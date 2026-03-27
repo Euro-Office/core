@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 // Alpha copy ------------------------------------------------------------------------------------------------------------------
 
 // Floor to byte, taking care of saturation
@@ -38,8 +36,6 @@ cmsINLINE cmsUInt8Number _cmsQuickSaturateByte(cmsFloat64Number d)
 
        return (cmsUInt8Number) _cmsQuickFloorWord(d);
 }
-
-
 // Return the size in bytes of a given formatter
 static
 int trueBytesSize(cmsUInt32Number Format)
@@ -53,13 +49,9 @@ int trueBytesSize(cmsUInt32Number Format)
        // Otherwise, it is already correct for all formats
        return fmt_bytes;
 }
-
-
 // Several format converters
 
 typedef void(*cmsFormatterAlphaFn)(void* dst, const void* src);
-
-
 // From 8
 
 static
@@ -161,8 +153,6 @@ void fromFLTtoHLF(void* dst, const void* src)
        cmsFloat32Number n = *(cmsFloat32Number*)src;
        *(cmsUInt16Number*)dst = _cmsFloat2Half(n);
 }
-
-
 // From HALF
 
 static
@@ -225,8 +215,6 @@ void copy64(void* dst, const void* src)
 {
        memmove(dst, src, sizeof(cmsFloat64Number));
 }
-
-
 // Returns the position (x or y) of the formatter in the table of functions
 static
 int FormatterPos(cmsUInt32Number frm)
@@ -271,8 +259,6 @@ static cmsFormatterAlphaFn FormattersAlpha[5][5] = {
 
         return FormattersAlpha[in_n][out_n];
 }
-
-
 
 // This function computes the distance from each component to the next one in bytes. 
 static
@@ -329,8 +315,6 @@ void ComputeIncrementsForChunky(cmsUInt32Number Format,
               ComponentStartingOrder[i] = channels[i + nchannels];
 }
 
-
-
 //  On planar configurations, the distance is the stride added to any non-negative
 static
 void ComputeIncrementsForPlanar(cmsUInt32Number Format, 
@@ -385,8 +369,6 @@ void ComputeIncrementsForPlanar(cmsUInt32Number Format,
               ComponentStartingOrder[i] = channels[i + nchannels];
 }
 
-
-
 // Dispatcher por chunky and planar RGB
 static
 void  ComputeComponentIncrements(cmsUInt32Number Format,
@@ -403,8 +385,6 @@ void  ComputeComponentIncrements(cmsUInt32Number Format,
        }
 
 }
-
-
 
 // Handles extra channels copying alpha if requested by the flags
 void _cmsHandleExtraChannels(_cmsTRANSFORM* p, const void* in,
@@ -514,5 +494,3 @@ void _cmsHandleExtraChannels(_cmsTRANSFORM* p, const void* in,
         }
     }
 }
-
-

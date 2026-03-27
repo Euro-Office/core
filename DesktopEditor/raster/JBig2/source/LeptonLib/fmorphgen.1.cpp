@@ -144,8 +144,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixDestroy(&pixt3);
     return pixd;
 }
-
-
 /*
  *  pixFMorphopGen_1()
  *

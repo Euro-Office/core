@@ -142,8 +142,6 @@ XMLPUBFUN void XMLCALL
 XMLPUBFUN void XMLCALL
 			xmlCleanupPredefinedEntities(void);
 #endif /* LIBXML_LEGACY_ENABLED */
-
-
 #ifdef __cplusplus
 }
 #endif

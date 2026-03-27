@@ -9,8 +9,6 @@
  *   Date        Name        Description
  *   11/11/09    kirtig      Finished first cut of implementation.
  *********************************************************************/
-
-
 #ifndef SELFMTIMPL
 #define SELFMTIMPL
 

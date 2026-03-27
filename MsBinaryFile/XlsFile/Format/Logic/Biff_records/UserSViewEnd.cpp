@@ -38,13 +38,9 @@ namespace XLS
 UserSViewEnd::UserSViewEnd()
 {
 }
-
-
 UserSViewEnd::~UserSViewEnd()
 {
 }
-
-
 BaseObjectPtr UserSViewEnd::clone()
 {
 	return BaseObjectPtr(new UserSViewEnd(*this));

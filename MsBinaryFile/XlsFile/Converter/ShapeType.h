@@ -241,8 +241,6 @@ namespace oox
 		msosptHostControl					=	0x000000C9, //	This value SHOULD NOT be used.
 		msosptTextBox						=	0x000000CA //	A text box shape.
 	};
-
-
 	std::wstring static Spt2ShapeType_mini( MSOSPT type) 
 	{
 		switch(type)

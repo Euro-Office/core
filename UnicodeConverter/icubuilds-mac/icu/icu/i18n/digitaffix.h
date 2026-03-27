@@ -95,8 +95,6 @@ private:
     UnicodeString fAffix;
     UnicodeString fAnnotations;
 };
-
-
 U_NAMESPACE_END
 #endif // #if !UCONFIG_NO_FORMATTING
 #endif  // __DIGITAFFIX_H__

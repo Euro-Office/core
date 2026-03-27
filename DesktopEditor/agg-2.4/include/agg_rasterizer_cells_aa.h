@@ -33,8 +33,6 @@
 #include <math.h>
 #include "agg_math.h"
 #include "agg_array.h"
-
-
 namespace agg
 {
 
@@ -119,10 +117,6 @@ namespace agg
         int                     m_max_y;
         bool                    m_sorted;
     };
-
-
-
-
     //------------------------------------------------------------------------
     template<class Cell> 
     rasterizer_cells_aa<Cell>::~rasterizer_cells_aa()
@@ -490,8 +484,6 @@ namespace agg
         m_curr_cell_ptr = m_cells[m_curr_block++];
     }
 
-
-
     //------------------------------------------------------------------------
     template <class T> static AGG_INLINE void swap_cells(T* a, T* b)
     {
@@ -499,15 +491,11 @@ namespace agg
         *a = *b;
         *b = temp;
     }
-
-
     //------------------------------------------------------------------------
     enum
     {
         qsort_threshold = 9
     };
-
-
     //------------------------------------------------------------------------
     template<class Cell>
     void qsort_cells(Cell** start, unsigned num)
@@ -616,8 +604,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     template<class Cell> 
     void rasterizer_cells_aa<Cell>::sort_cells()
@@ -722,8 +708,6 @@ namespace agg
         m_sorted = true;
     }
 
-
-
     //------------------------------------------------------scanline_hit_test
     class scanline_hit_test
     {
@@ -747,8 +731,6 @@ namespace agg
         int  m_x;
         bool m_hit;
     };
-
-
 }
 
 #endif

@@ -39,13 +39,9 @@ SerAuxTrend::SerAuxTrend()
 :	numIntercept(0x0100)
 {
 }
-
-
 SerAuxTrend::~SerAuxTrend()
 {
 }
-
-
 BaseObjectPtr SerAuxTrend::clone()
 {
 	return BaseObjectPtr(new SerAuxTrend(*this));

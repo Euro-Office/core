@@ -76,8 +76,6 @@ enum {
 };
 
 typedef struct UStringPrepKey UStringPrepKey;
-
-
 struct UStringPrepKey{
     char* name;
     char* path;
@@ -104,8 +102,6 @@ uprv_syntaxError(const UChar* rules,
                  int32_t pos,
                  int32_t rulesLen,
                  UParseError* parseError);
-
-
 /**
  * Swap StringPrep .spp profile data. See udataswp.h.
  * @internal

@@ -39,8 +39,6 @@ Sxvd::Sxvd()
 {
 	cchName = 0;
 }
-
-
 Sxvd::~Sxvd()
 {
 }

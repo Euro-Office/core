@@ -79,8 +79,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	//std::wstring srcFileName1	= L"D:\\test\\_crypted\\test-111.docx-ms.docx";
 	//std::wstring dstFileName1	= srcFileName1 + L".oox";
 	//result = crypt_file.DecryptOfficeFile(srcFileName1, dstFileName1, password, bDataIntegrity);
-			
-
 	//result = crypt_file.EncryptOfficeFile(srcFileName, dstFileName, password, L"123456789");
 	////result = crypt_file.DecryptOfficeFile(dstFileName, dstFileName2, password, bDataIntegrity);
 	//

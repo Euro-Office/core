@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CellWatch record in BIFF8
 class CellWatch: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~CellWatch();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeCellWatch;

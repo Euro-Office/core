@@ -7,8 +7,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __DEBUG_MEMORY_ALLOC__
 #define __DEBUG_MEMORY_ALLOC__
 
@@ -165,8 +163,6 @@ XMLPUBFUN void * XMLCALL
 	xmlMallocAtomicLoc (size_t size, const char *file, int line) LIBXML_ATTR_ALLOC_SIZE(1);
 XMLPUBFUN char * XMLCALL
 	xmlMemStrdupLoc	(const char *str, const char *file, int line);
-
-
 #ifdef DEBUG_MEMORY_LOCATION
 /**
  * xmlMalloc:

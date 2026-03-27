@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 /***************************************************************************/
 /*                                                                         */
 /* NOTE: Include this file after FT_FREETYPE_H and after any               */
@@ -23,18 +21,10 @@
 /*       Handle, FSSpec, FSRef, etc.)                                      */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTMAC_H__
 #define __FTMAC_H__
-
-
 #include <ft2build.h>
-
-
 FT_BEGIN_HEADER
-
-
 /* gcc-3.4.1 and later can warn about functions tagged as deprecated */
 #ifndef FT_DEPRECATED_ATTRIBUTE
 #if defined(__GNUC__)                                               && \
@@ -44,8 +34,6 @@ FT_BEGIN_HEADER
 #define FT_DEPRECATED_ATTRIBUTE
 #endif
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -62,8 +50,6 @@ FT_BEGIN_HEADER
   /*    compiled on a Macintosh.                                           */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -102,8 +88,6 @@ FT_BEGIN_HEADER
                          FT_Long     face_index,
                          FT_Face    *aface )
                        FT_DEPRECATED_ATTRIBUTE;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -131,8 +115,6 @@ FT_BEGIN_HEADER
                             FSSpec*      pathSpec,
                             FT_Long*     face_index )
                           FT_DEPRECATED_ATTRIBUTE;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -159,8 +141,6 @@ FT_BEGIN_HEADER
                                 FSSpec*      pathSpec,
                                 FT_Long*     face_index )
                               FT_DEPRECATED_ATTRIBUTE;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -191,8 +171,6 @@ FT_BEGIN_HEADER
                                     UInt32       maxPathSize,
                                     FT_Long*     face_index )
                                   FT_DEPRECATED_ATTRIBUTE;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -226,8 +204,6 @@ FT_BEGIN_HEADER
                            FT_Long        face_index,
                            FT_Face       *aface )
                          FT_DEPRECATED_ATTRIBUTE;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -263,12 +239,6 @@ FT_BEGIN_HEADER
                         FT_DEPRECATED_ATTRIBUTE;
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* __FTMAC_H__ */
-
-
 /* END */

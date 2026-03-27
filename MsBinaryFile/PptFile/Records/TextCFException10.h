@@ -40,8 +40,6 @@ struct STextCFException10
     nullable<USHORT>    m_newEAFontRef;
     nullable<USHORT>    m_csFontRef;
     nullable<_UINT32>     m_pp11ext;
-
-
     virtual void ReadFromStream(POLE::Stream* pStream);
 };
 }

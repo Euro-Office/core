@@ -435,8 +435,6 @@ XMLPUBVAR double xmlXPathNINF;
  */
 #define xmlXPathNodeSetIsEmpty(ns)                                      \
     (((ns) == NULL) || ((ns)->nodeNr == 0) || ((ns)->nodeTab == NULL))
-
-
 XMLPUBFUN void XMLCALL
 		    xmlXPathFreeObject		(xmlXPathObjectPtr obj);
 XMLPUBFUN xmlNodeSetPtr XMLCALL

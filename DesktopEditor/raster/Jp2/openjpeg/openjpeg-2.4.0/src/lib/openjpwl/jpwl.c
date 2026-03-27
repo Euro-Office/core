@@ -978,8 +978,6 @@ void jpwl_dump_marks(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image)
     cio_seek(cio, soc_pos + new_size);
 
 }
-
-
 void j2k_read_epc(opj_j2k_t *j2k)
 {
     unsigned long int DL, Lepcp, Pcrcp, l;
@@ -1386,14 +1384,10 @@ opj_bool jpwl_check_tile(opj_j2k_t *j2k, opj_tcd_t *tcd, int tileno)
 /*@}*/
 
 #endif /* USE_JPWL */
-
-
 #ifdef USE_JPSEC
 
 /** @defgroup JPSEC JPSEC - JPEG-2000 Part 8 (JPSEC) codestream manager */
 /*@{*/
-
-
 /** @name Local static functions */
 /*@{*/
 
@@ -1448,8 +1442,6 @@ void j2k_read_insec(opj_j2k_t *j2k)
 
     cio_skip(cio, Linsec - 2);
 }
-
-
 /*@}*/
 
 /*@}*/

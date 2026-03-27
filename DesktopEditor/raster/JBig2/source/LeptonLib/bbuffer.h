@@ -41,6 +41,4 @@ struct ByteBuffer
     l_uint8     *array;        /* byte array                              */
 };
 typedef struct ByteBuffer BBUFFER;
-
-
 #endif  /* LEPTONICA_BBUFFER_H */

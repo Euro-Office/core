@@ -85,8 +85,6 @@ namespace agg
             int    m_a;
             int    m_x;
         };
-
-
     public:
         //--------------------------------------------------------------------
         span_gouraud_gray() {}
@@ -225,8 +223,6 @@ namespace agg
                 --len;
             }
         }
-
-
     private:
         bool      m_swap;
         int       m_y2;
@@ -234,8 +230,6 @@ namespace agg
         gray_calc m_c2;
         gray_calc m_c3;
     };
-
-
 }
 
 #endif

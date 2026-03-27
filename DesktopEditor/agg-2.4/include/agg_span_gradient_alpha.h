@@ -36,8 +36,6 @@ namespace agg
         {
             downscale_shift = interpolator_type::subpixel_shift - gradient_subpixel_shift
         };
-
-
         //--------------------------------------------------------------------
         span_gradient_alpha() {}
 
@@ -98,8 +96,6 @@ namespace agg
         int                m_d1;
         int                m_d2;
     };
-
-
     //=======================================================gradient_alpha_x
     template<class ColorT> struct gradient_alpha_x
     {

@@ -35,16 +35,12 @@
 #include <array>
 #include <vector>
 #include "Stream/stream.h"
-
-
 namespace CFCPP
 {
 class StreamRW
 {
 public:
     StreamRW(Stream stream);
-
-
     _INT64 Seek(_INT64 offset);
     _INT64 Tell();
 

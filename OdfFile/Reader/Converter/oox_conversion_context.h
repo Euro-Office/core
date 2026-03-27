@@ -182,8 +182,6 @@ private:
     std::wstringstream			paragraph_attr_;
     std::wstringstream			table_style_;
 };
-
-
 	
 	class math_context : boost::noncopyable
 	{

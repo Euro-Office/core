@@ -3033,11 +3033,7 @@ MNG_C_SPECIALFUNC (mng_special_phys)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3052,11 +3048,7 @@ MNG_C_SPECIALFUNC (mng_special_sbit)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3105,11 +3097,7 @@ MNG_C_SPECIALFUNC (mng_special_splt)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3151,11 +3139,7 @@ MNG_C_SPECIALFUNC (mng_special_hist)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4300,11 +4284,7 @@ MNG_C_SPECIALFUNC (mng_special_expi)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4319,11 +4299,7 @@ MNG_C_SPECIALFUNC (mng_special_fpri)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4532,11 +4508,7 @@ MNG_C_SPECIALFUNC (mng_special_phyg)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4831,11 +4803,7 @@ MNG_C_SPECIALFUNC (mng_special_drop)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4851,11 +4819,7 @@ MNG_C_SPECIALFUNC (mng_special_dbyk)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4906,11 +4870,7 @@ MNG_C_SPECIALFUNC (mng_special_ordr)
 {
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -6083,8 +6043,4 @@ MNG_C_SPECIALFUNC (mng_special_unknown)
 /* ************************************************************************** */
 /* * end of file                                                            * */
 /* ************************************************************************** */
-
-
-
-
 

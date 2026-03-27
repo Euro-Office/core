@@ -38,13 +38,9 @@ namespace XLS
 CrErr::CrErr()
 {
 }
-
-
 CrErr::~CrErr()
 {
 }
-
-
 BaseObjectPtr CrErr::clone()
 {
 	return BaseObjectPtr(new CrErr(*this));

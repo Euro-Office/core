@@ -34,12 +34,8 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../XlsxFormat/WritingElement.h"
 
-
-
 namespace XLSB
 {
-
-
     // Logical representation of BrtMdxMbrIstr record in BIFF12
     class MdxMbrIstr: public XLS::BiffRecord
     {

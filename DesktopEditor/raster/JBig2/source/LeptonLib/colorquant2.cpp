@@ -205,8 +205,6 @@ static l_int32 vboxGetVolume(L_BOX3D *vbox);
 static L_BOX3D *box3dCreate(l_int32 r1, l_int32 r2, l_int32 g1,
                             l_int32 g2, l_int32 b1, l_int32 b2);
 static L_BOX3D *box3dCopy(L_BOX3D *vbox);
-
-
     /* 5 significant bits for each component is generally satisfactory */
 static const l_int32  DEFAULT_SIG_BITS = 5;
 static const l_int32  MAX_ITERS_ALLOWED = 5000;  /* prevents infinite looping */
@@ -218,14 +216,10 @@ static const l_float32  FRACT_BY_POPULATION = 0.85;
     /* To get the max value of 'dif' in the dithering color transfer,
      * divide DIF_CAP by 8. */
 static const l_int32  DIF_CAP = 100;
-
-
 #ifndef   NO_CONSOLE_IO
 #define   DEBUG_MC_COLORS       0
 #define   DEBUG_SPLIT_AXES      0
 #endif   /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------------*
  *                                 High level                             *
  *------------------------------------------------------------------------*/
@@ -247,8 +241,6 @@ pixMedianCutQuant(PIX     *pixs,
     return pixMedianCutQuantGeneral(pixs, ditherflag,
                                     0, 256, DEFAULT_SIG_BITS, 1, 1);
 }
-
-
 /*!
  *  pixMedianCutQuantGeneral()
  *
@@ -514,8 +506,6 @@ PIXCMAP   *cmap;
     FREE(histo);
     return pixd;
 }
-
-
 /*!
  *  pixMedianCutQuantMixed()
  *
@@ -680,8 +670,6 @@ PIXCMAP   *cmap;
     FREE(lut);
     return pixd;
 }
-
-
 /*!
  *  pixFewColorsMedianCutQuantMixed()
  *
@@ -782,8 +770,6 @@ PIX     *pixg, *pixd;
                                   lightthresh, diffthresh);
 }
 
-
-
 /*------------------------------------------------------------------------*
  *                        Median cut indexed histogram                    *
  *------------------------------------------------------------------------*/
@@ -843,8 +829,6 @@ l_uint32  *data, *line;
 
     return histo;
 }
-
-
 /*------------------------------------------------------------------------*
  *                               Static helpers                           *
  *------------------------------------------------------------------------*/
@@ -901,8 +885,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  pixQuantizeWithColormap()
  *
@@ -1139,8 +1121,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  getColorIndexMedianCut()
  *
@@ -1170,8 +1150,6 @@ l_int32  rval, gval, bval;
     *pindex = (rval << (2 * sigbits)) + (gval << sigbits) + bval;
     return;
 }
-
-
 /*!
  *  pixGetColorRegion()
  *
@@ -1231,8 +1209,6 @@ l_uint32  *data, *line;
 
     return box3dCreate(rmin, rmax, gmin, gmax, bmin, bmax);
 }
-
-
 /*!
  *  medianCutApply()
  *
@@ -1400,8 +1376,6 @@ L_BOX3D  *vbox1, *vbox2;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGenerateFromMedianCuts()
  *
@@ -1447,8 +1421,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  vboxGetAverageColor()
  *
@@ -1524,8 +1496,6 @@ l_int32  i, j, k, ntot, mult, histoindex, rsum, gsum, bsum;
 
     return 0;
 }
-
-
 /*!
  *  vboxGetCount()
  *
@@ -1560,8 +1530,6 @@ l_int32  i, j, k, npix, index;
 
     return npix;
 }
-
-
 /*!
  *  vboxGetVolume()
  *
@@ -1579,8 +1547,6 @@ vboxGetVolume(L_BOX3D  *vbox)
     return ((vbox->r2 - vbox->r1 + 1) * (vbox->g2 - vbox->g1 + 1) *
             (vbox->b2 - vbox->b1 + 1));
 }
-
-
 static L_BOX3D *
 box3dCreate(l_int32  r1,
             l_int32  r2,
@@ -1600,8 +1566,6 @@ L_BOX3D  *vbox;
     vbox->b2 = b2;
     return vbox;
 }
-
-
 /*
  *  Note: don't copy the sortparam.
  */
@@ -1621,5 +1585,3 @@ L_BOX3D  *vboxc;
     vboxc->vol = vbox->vol;
     return vboxc;
 }
-    
-

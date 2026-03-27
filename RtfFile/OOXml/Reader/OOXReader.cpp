@@ -122,8 +122,6 @@ bool OOXReader::Parse()
 		OOXDocumentReader oDocReader( inputDocxFile.m_oMain.document );
 		oDocReader.Parse( oReaderParameter );
 	}
-
-
 	return true;
 }
 std::wstring OOXReader::GetFolder( std::wstring sDocPath )

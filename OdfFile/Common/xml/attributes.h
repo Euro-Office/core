@@ -112,8 +112,6 @@ namespace cpdoccore
 
 	};
 
-
-
     template <class V>
 	class attributes_get_val_impl
 	{
@@ -219,8 +217,6 @@ namespace cpdoccore
 	{
         typedef shared_ptr< attributes >::Type Type;
 	};
-
-
 
     typedef attributes attributes_wc;
 

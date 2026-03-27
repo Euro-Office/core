@@ -100,8 +100,6 @@ void OPJ_CALLCONV opj_cio_close(opj_cio_t *cio)
         opj_free(cio);
     }
 }
-
-
 /* ----------------------------------------------------------------------- */
 
 /*
@@ -209,6 +207,4 @@ void OPJ_CALLCONV cio_skip(opj_cio_t *cio, int n)
 {
     cio->bp += n;
 }
-
-
 

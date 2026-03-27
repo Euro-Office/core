@@ -630,8 +630,6 @@ public:
      * @internal
      */
     virtual int32_t handleGetExtendedYearFromWeekFields(int32_t yearWoy, int32_t woy);
-
-
     /**
      * Subclasses may override this method to compute several fields
      * specific to each calendar system.  These are:
@@ -745,8 +743,6 @@ public:
      * to handle certain calculations on and around the cutover date.
      */
     UBool fInvertGregorian;
-
-
  public: // internal implementation
 
     /**

@@ -496,8 +496,6 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 				oContent.Registration(pActiveX_bin->type().OverrideType(), oDirectory, pActiveX_bin->filename().GetFilename());
 			}
 		}
-		
-		
 		IFileContainer::Write(oPath, oDirectory, oContent);
 	}
 	//---------------------------------------------------------------------------------------------------------

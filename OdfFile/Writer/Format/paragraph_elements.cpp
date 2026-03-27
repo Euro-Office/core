@@ -732,8 +732,6 @@ void text_date::add_text(const std::wstring & Text)
     office_element_ptr elm = text_text::create(Text) ;
     text_.push_back( elm );
 }
-
-
 // text:time
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * text_time::ns = L"text";
@@ -757,8 +755,6 @@ void text_time::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 void text_time::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
     CP_CREATE_ELEMENT(text_);
@@ -796,8 +792,6 @@ void text_file_name::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 void text_file_name::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
     CP_CREATE_ELEMENT(text_);

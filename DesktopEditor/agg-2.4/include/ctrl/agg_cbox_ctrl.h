@@ -27,8 +27,6 @@
 #include "agg_color_rgba.h"
 #include "agg_ctrl.h"
 
-
-
 namespace agg
 {
 
@@ -73,8 +71,6 @@ namespace agg
         unsigned m_idx;
         unsigned m_vertex;
     };
-
-
     //----------------------------------------------------------cbox_ctrl_impl
     template<class ColorT> class cbox_ctrl : public cbox_ctrl_impl
     {
@@ -105,8 +101,6 @@ namespace agg
         ColorT m_active_color;
         ColorT* m_colors[3];
     };
-
-
 }
 
 #endif

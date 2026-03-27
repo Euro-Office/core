@@ -767,8 +767,6 @@ png_access_version_number(void)
    return((png_uint_32)PNG_LIBPNG_VER);
 }
 
-
-
 #if defined(PNG_READ_SUPPORTED) || defined(PNG_WRITE_SUPPORTED)
 /* png_convert_size: a PNGAPI but no longer in png.h, so deleted
  * at libpng 1.5.5!
@@ -1114,8 +1112,6 @@ int png_XYZ_from_xy(png_XYZ *XYZ, png_xy xy)
    blue_scale = png_reciprocal(xy.whitey) - png_reciprocal(red_inverse) -
       png_reciprocal(green_inverse);
    if (blue_scale <= 0) return 1;
-
-
    /* And fill in the png_XYZ: */
    if (!png_muldiv(&XYZ->redX, xy.redx, PNG_FP_1, red_inverse)) return 1;
    if (!png_muldiv(&XYZ->redY, xy.redy, PNG_FP_1, red_inverse)) return 1;
@@ -1469,8 +1465,6 @@ PNG_FP_End:
 
    return (state & PNG_FP_SAW_DIGIT) != 0;
 }
-
-
 /* The same but for a complete string. */
 int
 png_check_fp_string(png_const_charp string, png_size_t size)

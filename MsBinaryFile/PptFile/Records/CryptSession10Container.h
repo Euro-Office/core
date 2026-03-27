@@ -32,8 +32,6 @@
 #pragma once
 #include "../../XlsFile/Format/Crypt/Decryptor.h"
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordEncryptedSummary : public CUnknownRecord
@@ -51,8 +49,6 @@ public:
 
     virtual void ReadFromStream(SRecordHeader & oHeader, const XLS::CFStreamPtr &pStream);
 };
-
-
 class CEncryptionHeader : public CUnknownRecord
 {
 public:

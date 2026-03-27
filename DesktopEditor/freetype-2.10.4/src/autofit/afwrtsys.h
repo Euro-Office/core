@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFWRTSYS_H_
 #define AFWRTSYS_H_
 
@@ -31,12 +29,8 @@
 #endif
 
 #endif /* AFWRTSYS_H_ */
-
-
   /* The following part can be included multiple times. */
   /* Define `WRITING_SYSTEM' as needed.                 */
-
-
   /* Add new writing systems here.  The arguments are the writing system */
   /* name in lowercase and uppercase, respectively.                      */
 
@@ -47,6 +41,4 @@
 #ifdef FT_OPTION_AUTOFIT2
   WRITING_SYSTEM( latin2, LATIN2 )
 #endif
-
-
 /* END */

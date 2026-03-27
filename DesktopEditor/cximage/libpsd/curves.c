@@ -30,8 +30,6 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_math.h"
-
-
 typedef psd_double psd_matrix[4][4];
 
 static psd_matrix psd_basis_matrix =
@@ -48,8 +46,6 @@ static psd_matrix psd_basis_matrix =
 extern void psd_adjustment_blend_rgb(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect, 
 	psd_uchar * red_lookup_table, psd_uchar * green_lookup_table, psd_uchar * blue_lookup_table,
 	psd_bool preserve_luminosity);
-
-
 // Additional layer -- curves
 psd_status psd_get_layer_curves(psd_context * context, psd_layer_record * layer, psd_int data_length)
 {

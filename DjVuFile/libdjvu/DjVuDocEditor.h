@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVuDocument.h"
 #include "DjVmDoc.h"
 
@@ -132,8 +130,6 @@ public:
 
      /** Creates a DjVuDocEditor class and initializes an empty document. */
    static GP<DjVuDocEditor> create_wait(void);
-
-
       /// Destructor
    virtual ~DjVuDocEditor(void);
 
@@ -452,8 +448,6 @@ private:
 };
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

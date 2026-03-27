@@ -127,8 +127,6 @@ int opj_getopt(int nargc, char *const *nargv, const char *ostr)
     }
     return (opj_optopt);      /* dump back option letter */
 }
-
-
 int opj_getopt_long(int argc, char * const argv[], const char *optstring,
                     const opj_option_t *longopts, int totlen)
 {

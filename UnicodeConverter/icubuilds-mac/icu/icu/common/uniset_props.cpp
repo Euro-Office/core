@@ -246,16 +246,12 @@ void U_CALLCONV UnicodeSet_initInclusion(int32_t src, UErrorCode &status) {
     ucln_common_registerCleanup(UCLN_COMMON_USET, uset_cleanup);
 }
 
-
-
 const UnicodeSet* UnicodeSet::getInclusions(int32_t src, UErrorCode &status) {
     U_ASSERT(src >=0 && src<UPROPS_SRC_COUNT);
     Inclusion &i = gInclusions[src];
     umtx_initOnce(i.fInitOnce, &UnicodeSet_initInclusion, src, status);
     return i.fSet;
 }
-
-
 // Cache some sets for other services -------------------------------------- ***
 void U_CALLCONV createUni32Set(UErrorCode &errorCode) {
     U_ASSERT(uni32Singleton == NULL);
@@ -267,8 +263,6 @@ void U_CALLCONV createUni32Set(UErrorCode &errorCode) {
     }
     ucln_common_registerCleanup(UCLN_COMMON_USET, uset_cleanup);
 }
-
-
 U_CFUNC UnicodeSet *
 uniset_getUnicode32Instance(UErrorCode &errorCode) {
     umtx_initOnce(uni32InitOnce, &createUni32Set, errorCode);

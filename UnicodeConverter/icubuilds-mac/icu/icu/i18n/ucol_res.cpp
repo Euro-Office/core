@@ -514,8 +514,6 @@ ucol_open(const char *loc,
     UTRACE_EXIT_PTR_STATUS(result, *status);
     return result;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ucol_getDisplayName(    const    char        *objLoc,
                     const    char        *dispLoc,

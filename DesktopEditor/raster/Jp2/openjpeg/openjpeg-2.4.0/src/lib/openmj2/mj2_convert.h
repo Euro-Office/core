@@ -24,8 +24,6 @@
 * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 * POSSIBILITY OF SUCH DAMAGE.
 */
-
-
 #include "mj2.h"
 
 #ifndef __MJ2_CONVERT_H
@@ -42,6 +40,4 @@ OPJ_API char OPJ_CALLCONV yuvtoimage(mj2_tk_t * tk, opj_image_t * img,
                                      int frame_num, opj_cparameters_t *parameters, char* infile);
 
 OPJ_API unsigned int OPJ_CALLCONV yuv_num_frames(mj2_tk_t * tk, char *infile);
-
-
 #endif

@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "pspic.h"
 #include "psnamerr.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from psmodule.c */
@@ -36,20 +32,14 @@
   void
   FT_Init_Class_pscmaps_interface( FT_Library              library,
                                    FT_Service_PsCMapsRec*  clazz );
-
-
   void
   psnames_module_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->psnames )
     {
       PSModulePIC*  container = (PSModulePIC*)pic_container->psnames;
-
-
       if ( container->pscmaps_services )
         FT_Destroy_Class_pscmaps_services( library,
                                            container->pscmaps_services );
@@ -58,8 +48,6 @@
       pic_container->psnames = NULL;
     }
   }
-
-
   FT_Error
   psnames_module_class_pic_init( FT_Library  library )
   {
@@ -67,8 +55,6 @@
     FT_Error           error         = FT_Err_Ok;
     PSModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
@@ -89,9 +75,5 @@
       psnames_module_class_pic_free( library );
     return error;
   }
-
-
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

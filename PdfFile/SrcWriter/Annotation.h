@@ -256,8 +256,6 @@ namespace PdfWriter
 		void SetRC(const std::wstring& wsRC);
 		void SetCD(const std::wstring& wsCD);
 		void SetSubj(const std::wstring& wsSubj);
-
-
 		void SetIRTID(CAnnotation* pAnnot);
 		CPopupAnnotation* CreatePopup();
 	};

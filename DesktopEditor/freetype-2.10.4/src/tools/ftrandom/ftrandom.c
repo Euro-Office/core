@@ -27,11 +27,7 @@
 
 /* modified by Werner Lemberg <wl@gnu.org>       */
 /* This file is now part of the FreeType library */
-
-
 #define _XOPEN_SOURCE 500 /* for `kill', `strdup', `random', and `srandom' */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -51,8 +47,6 @@
 #define true     1
 #define false    0
 #define forever  for (;;)
-
-
   static int    check_outlines = false;
   static int    nohints        = false;
   static int    rasterize      = false;
@@ -99,8 +93,6 @@
   } *fontlist;
 
   static unsigned int  fcnt;
-
-
   static int
   FT_MoveTo( const FT_Vector  *to,
              void             *user )
@@ -110,8 +102,6 @@
 
     return 0;
   }
-
-
   static int
   FT_LineTo( const FT_Vector  *to,
              void             *user )
@@ -121,8 +111,6 @@
 
     return 0;
   }
-
-
   static int
   FT_ConicTo( const FT_Vector  *_cp,
               const FT_Vector  *to,
@@ -134,8 +122,6 @@
 
     return 0;
   }
-
-
   static int
   FT_CubicTo( const FT_Vector  *cp1,
               const FT_Vector  *cp2,
@@ -149,8 +135,6 @@
 
     return 0;
   }
-
-
   static FT_Outline_Funcs outlinefuncs =
   {
     FT_MoveTo,
@@ -159,15 +143,11 @@
     FT_CubicTo,
     0, 0          /* No shift, no delta */
   };
-
-
   static void
   TestFace( FT_Face  face )
   {
     unsigned int  gid;
     int           load_flags = FT_LOAD_DEFAULT;
-
-
     if ( check_outlines         &&
          FT_IS_SCALABLE( face ) )
       load_flags = FT_LOAD_NO_BITMAP;
@@ -194,15 +174,11 @@
 
     FT_Done_Face( face );
   }
-
-
   static void
   ExecuteTest( char*  testfont )
   {
     FT_Library  context;
     FT_Face     face;
-
-
     if ( FT_Init_FreeType( &context ) )
     {
       fprintf( stderr, "Can't initialize FreeType.\n" );
@@ -220,8 +196,6 @@
     else
     {
       long  i, num;
-
-
       num = face->num_faces;
       FT_Done_Face( face );
 
@@ -236,16 +210,12 @@
 
     exit( 0 );
   }
-
-
   static int
   extmatch( char*   filename,
             char**  extensions )
   {
     int    i;
     char*  pt;
-
-
     if ( !extensions )
       return true;
 
@@ -262,14 +232,10 @@
 
     return false;
   }
-
-
   static void
   figurefiletype( struct fontlist*  item )
   {
     FILE*  foo;
-
-
     item->isbinary = item->isascii = item->ishex = false;
 
     foo = fopen( item->name, "rb" );
@@ -280,8 +246,6 @@
       int  ch2 = getc( foo );
       int  ch3 = getc( foo );
       int  ch4 = getc( foo );
-
-
       fclose( foo );
 
       if ( ( ch1 == 0   && ch2 == 1   && ch3 == 0   && ch4 == 0   ) ||
@@ -342,8 +306,6 @@
       item->isbinary = true;
     }
   }
-
-
   static void
   FindFonts( char**  fontdirs,
              char**  extensions )
@@ -352,8 +314,6 @@
     unsigned int  max;
     char          buffer[1025];
     struct stat   statb;
-
-
     max  = 0;
     fcnt = 0;
 
@@ -361,8 +321,6 @@
     {
       DIR*            examples;
       struct dirent*  ent;
-
-
       examples = opendir( fontdirs[i] );
       if ( !examples )
       {
@@ -410,8 +368,6 @@
 
     fontlist[fcnt].name = NULL;
   }
-
-
   static unsigned int
   getErrorCnt( struct fontlist*  item )
   {
@@ -420,8 +376,6 @@
 
     return error_count + (unsigned int)( error_fraction * item->len );
   }
-
-
   static int
   getRandom( int  low,
              int  high )
@@ -431,8 +385,6 @@
 
     return low + ( random() % ( high + 1 - low ) );
   }
-
-
   static int
   copyfont( struct fontlist*  item,
             char*             newfont )
@@ -441,8 +393,6 @@
     FILE          *good, *newf;
     size_t        len;
     unsigned int  i, err_cnt;
-
-
     good = fopen( item->name, "r" );
     if ( !good )
     {
@@ -475,8 +425,6 @@
       else
       {
         int  hex = getRandom( 0, 15 );
-
-
         if ( hex < 10 )
           hex += '0';
         else
@@ -497,8 +445,6 @@
 
     return true;
   }
-
-
   static int  child_pid;
 
   static void
@@ -510,16 +456,12 @@
     kill( child_pid, SIGFPE );
     write( 2, "Timeout... ", 11 );
   }
-
-
   static void
   do_test( void )
   {
     int         i        = getRandom( 0, (int)( fcnt - 1 ) );
     static int  test_num = 0;
     char        buffer[1024];
-
-
     sprintf( buffer, "%s/test%d", results_dir, test_num++ );
 
     if ( copyfont ( &fontlist[i], buffer ) )
@@ -533,8 +475,6 @@
       else if ( child_pid != -1 )
       {
         int  status;
-
-
         waitpid( child_pid, &status, 0 );
         alarm( 0 );
         if ( WIFSIGNALED ( status ) )
@@ -550,16 +490,12 @@
       alarm( 0 );
     }
   }
-
-
   static void
   usage( FILE*  out,
          char*  name )
   {
     char**  d = default_dir_list;
     char**  e = default_ext_list;
-
-
     fprintf( out, "%s [options] -- Generate random erroneous fonts\n"
                   "  and attempt to parse them with FreeType.\n\n", name );
 
@@ -593,8 +529,6 @@
       fprintf( out, " %s", *d++ );
     fprintf( out, "\n" );
   }
-
-
   int
   main( int     argc,
         char**  argv )
@@ -604,8 +538,6 @@
     int     i;
     time_t  now;
     char*   testfile = NULL;
-
-
     dirs = calloc( (size_t)( argc + 1 ), sizeof ( char ** ) );
     exts = calloc( (size_t)( argc + 1 ), sizeof ( char ** ) );
 
@@ -613,8 +545,6 @@
     {
       char*  pt = argv[i];
       char*  end;
-
-
       if ( pt[0] == '-' && pt[1] == '-' )
         pt++;
 
@@ -715,6 +645,4 @@
 
     return 0;
   }
-
-
 /* EOF */

@@ -13,8 +13,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* We use a full-image coefficient buffer when doing Huffman optimization,
  * and also for writing multiple-scan JPEG files.  In all cases, the DCT
  * step is run during the first pass, and subsequent passes need only read
@@ -27,8 +25,6 @@
 #define FULL_COEF_BUFFER_SUPPORTED
 #endif
 #endif
-
-
 /* Private buffer controller object */
 
 typedef struct {
@@ -55,8 +51,6 @@ typedef struct {
 } my_coef_controller;
 
 typedef my_coef_controller * my_coef_ptr;
-
-
 /* Forward declarations */
 METHODDEF(boolean) compress_data
     JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
@@ -66,8 +60,6 @@ METHODDEF(boolean) compress_first_pass
 METHODDEF(boolean) compress_output
     JPP((j_compress_ptr cinfo, JSAMPIMAGE input_buf));
 #endif
-
-
 LOCAL(void)
 start_iMCU_row (j_compress_ptr cinfo)
 /* Reset within-iMCU-row counters for a new row */
@@ -90,8 +82,6 @@ start_iMCU_row (j_compress_ptr cinfo)
   coef->mcu_ctr = 0;
   coef->MCU_vert_offset = 0;
 }
-
-
 /*
  * Initialize for a processing pass.
  */
@@ -127,8 +117,6 @@ start_pass_coef (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
     break;
   }
 }
-
-
 /*
  * Process some data in the single-pass case.
  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
@@ -219,8 +207,6 @@ compress_data (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   start_iMCU_row(cinfo);
   return TRUE;
 }
-
-
 #ifdef FULL_COEF_BUFFER_SUPPORTED
 
 /*
@@ -329,8 +315,6 @@ compress_first_pass (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
   /* Emit data to the entropy encoder, sharing code with subsequent passes */
   return compress_output(cinfo, input_buf);
 }
-
-
 /*
  * Process some data in subsequent passes of a multi-pass case.
  * We process the equivalent of one fully interleaved MCU row ("iMCU" row)
@@ -399,8 +383,6 @@ compress_output (j_compress_ptr cinfo, JSAMPIMAGE input_buf)
 }
 
 #endif /* FULL_COEF_BUFFER_SUPPORTED */
-
-
 /*
  * Initialize coefficient buffer controller.
  */

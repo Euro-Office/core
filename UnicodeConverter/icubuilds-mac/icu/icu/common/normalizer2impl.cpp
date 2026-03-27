@@ -1858,8 +1858,6 @@ enumCIDRangeHandler(const void *context, UChar32 start, UChar32 end, uint32_t va
     return U_SUCCESS(errorCode);
 }
 
-
-
 // UInitOnce instantiation function for CanonIterData
 
 static void U_CALLCONV 

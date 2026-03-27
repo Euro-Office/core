@@ -15,8 +15,6 @@
 #ifdef HAVE_ERRNO_H
 #include <errno.h>
 #endif
-
-
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -1842,8 +1840,6 @@ xmlFreeHTTPWriteCtxt( xmlIOHTTPWriteCtxtPtr ctxt )
     return;
 }
 #endif /* LIBXML_OUTPUT_ENABLED */
-
-
 /**
  * xmlIOHTTPMatch:
  * @filename:  the URI for matching
@@ -2016,8 +2012,6 @@ xmlIOHTTPWrite( void * context, const char * buffer, int len ) {
     return ( len );
 }
 #endif /* LIBXML_OUTPUT_ENABLED */
-
-
 /**
  * xmlIOHTTPClose:
  * @context:  the I/O context
@@ -2128,8 +2122,6 @@ xmlIOHTTPCloseWrite( void * context, const char * http_mthd ) {
 		if ( tst_file != NULL ) {
 		    xmlGenericError( xmlGenericErrorContext,
 			"Reply content saved in file:  %s\n", buffer );
-
-
 		    while ( (avail = xmlNanoHTTPRead( http_ctxt,
 					buffer, sizeof( buffer ) )) > 0 ) {
 
@@ -2180,8 +2172,6 @@ static int
 xmlIOHTTPClosePut( void * ctxt ) {
     return ( xmlIOHTTPCloseWrite( ctxt, "PUT" ) );
 }
-
-
 /**
  * xmlIOHTTPClosePost
  *
@@ -2261,8 +2251,6 @@ xmlIOFTPClose (void * context) {
     return ( xmlNanoFTPClose(context) );
 }
 #endif /* LIBXML_FTP_ENABLED */
-
-
 /**
  * xmlRegisterInputCallbacks:
  * @matchFunc:  the xmlInputMatchCallback
@@ -2532,8 +2520,6 @@ xmlAllocOutputBufferInternal(xmlCharEncodingHandlerPtr encoder) {
         xmlFree(ret);
 	return(NULL);
     }
-
-
     /*
      * For conversion buffers we use the special IO handling
      */
@@ -2990,8 +2976,6 @@ xmlOutputBufferGetSize(xmlOutputBufferPtr out) {
 
     return(xmlBufUse(out->buffer));
 }
-
-
 #endif /* LIBXML_OUTPUT_ENABLED */
 
 /**

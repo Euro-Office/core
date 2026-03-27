@@ -15,13 +15,9 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "afdummy.h"
 #include "afhints.h"
 #include "aferrors.h"
-
-
   static FT_Error
   af_dummy_hints_init( AF_GlyphHints    hints,
                        AF_StyleMetrics  metrics )
@@ -35,23 +31,17 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   af_dummy_hints_apply( AF_GlyphHints  hints,
                         FT_Outline*    outline )
   {
     FT_Error  error;
-
-
     error = af_glyph_hints_reload( hints, outline );
     if ( !error )
       af_glyph_hints_save( hints, outline );
 
     return error;
   }
-
-
   AF_DEFINE_WRITING_SYSTEM_CLASS(
     af_dummy_writing_system_class,
 
@@ -66,6 +56,4 @@
     (AF_WritingSystem_InitHintsFunc)   af_dummy_hints_init,
     (AF_WritingSystem_ApplyHintsFunc)  af_dummy_hints_apply
   )
-
-
 /* END */

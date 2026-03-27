@@ -239,8 +239,6 @@ public:
 
     std::wstring ToString();
 };
-
-
 class CSpan
 {
 public:
@@ -406,8 +404,6 @@ public:
 
     CTextPFRun		m_oPFRun;
     std::vector<CSpan>	m_arSpans;
-
-
 public:
     CParagraph() ;
     CParagraph(const CParagraph& oSrc);

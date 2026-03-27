@@ -74,8 +74,6 @@
  * as part of this package, mainly because the transformation routines have to
  * be aware of the option to know how many components to work on.
  */
-
-
 /* Short forms of external names for systems with brain-damaged linkers. */
 
 #ifdef NEED_SHORT_EXTERNAL_NAMES
@@ -87,8 +85,6 @@
 #define jcopy_markers_setup		jCMrkSetup
 #define jcopy_markers_execute		jCMrkExec
 #endif /* NEED_SHORT_EXTERNAL_NAMES */
-
-
 /*
  * Codes for supported types of image transformations.
  */
@@ -151,8 +147,6 @@ typedef struct {
   int iMCU_sample_width;	/* destination iMCU size */
   int iMCU_sample_height;
 } jpeg_transform_info;
-
-
 #if TRANSFORMS_SUPPORTED
 
 /* Parse a crop specification (written in X11 geometry style) */
@@ -187,8 +181,6 @@ EXTERN(boolean) jtransform_perfect_transform
 #define jtransform_execute_transformation	jtransform_execute_transform
 
 #endif /* TRANSFORMS_SUPPORTED */
-
-
 /*
  * Support for copying optional markers from source to destination file.
  */

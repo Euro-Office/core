@@ -26,8 +26,6 @@
 
 namespace agg
 {
-
-
     //---------------------------------------------------------------gsv_text
     //
     // See Implementation agg_gsv_text.cpp 
@@ -104,10 +102,6 @@ namespace agg
         double          m_w;
         double          m_h;
     };
-
-
-
-
     //--------------------------------------------------------gsv_text_outline
     template<class Transformer = trans_affine> class gsv_text_outline
     {
@@ -145,9 +139,5 @@ namespace agg
         conv_transform<conv_stroke<gsv_text>, Transformer> m_trans;
     };
 
-
-
 }
-
-
 #endif

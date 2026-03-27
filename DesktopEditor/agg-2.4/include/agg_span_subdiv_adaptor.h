@@ -33,8 +33,6 @@ namespace agg
             subpixel_shift = SubpixelShift,
             subpixel_scale = 1 << subpixel_shift
         };
-
-
         //----------------------------------------------------------------
         span_subdiv_adaptor() :
             m_subdiv_shift(4),
@@ -58,8 +56,6 @@ namespace agg
         {
             begin(x, y, len);
         }
-
-
         //----------------------------------------------------------------
         const interpolator_type& interpolator() const { return *m_interpolator; }
         void interpolator(interpolator_type& intr) { m_interpolator = &intr; }
@@ -123,8 +119,6 @@ namespace agg
         {
             m_interpolator->local_scale(x, y);
         }
-
-
     private:
         unsigned m_subdiv_shift;
         unsigned m_subdiv_size;

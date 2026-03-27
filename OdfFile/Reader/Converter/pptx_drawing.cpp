@@ -591,7 +591,5 @@ void _pptx_drawing::serialize(std::wostream & strm)
 		pptx_serialize_media(strm, *this);
 	}
 }
-
-
 }
 }

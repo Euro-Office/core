@@ -23,14 +23,10 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svgxval.h>
-
-
   /* documentation is in ftgxval.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -41,8 +37,6 @@
   {
     FT_Service_GXvalidate  service;
     FT_Error               error;
-
-
     if ( !face )
     {
       error = FT_THROW( Invalid_Face_Handle );
@@ -68,15 +62,11 @@
   Exit:
     return error;
   }
-
-
   FT_EXPORT_DEF( void )
   FT_TrueTypeGX_Free( FT_Face   face,
                       FT_Bytes  table )
   {
     FT_Memory  memory;
-
-
     if ( !face )
       return;
 
@@ -84,8 +74,6 @@
 
     FT_FREE( table );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_ClassicKern_Validate( FT_Face    face,
                            FT_UInt    validation_flags,
@@ -93,8 +81,6 @@
   {
     FT_Service_CKERNvalidate  service;
     FT_Error                  error;
-
-
     if ( !face )
     {
       error = FT_THROW( Invalid_Face_Handle );
@@ -119,23 +105,15 @@
   Exit:
     return error;
   }
-
-
   FT_EXPORT_DEF( void )
   FT_ClassicKern_Free( FT_Face   face,
                        FT_Bytes  table )
   {
     FT_Memory  memory;
-
-
     if ( !face )
       return;
 
     memory = FT_FACE_MEMORY( face );
-
-
     FT_FREE( table );
   }
-
-
 /* END */

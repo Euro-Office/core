@@ -64,21 +64,15 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GContainer.h"
 #include "GPixmap.h"
 #include <string.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 /** @name DjVuPalette.h
     Files #"DjVuPalette.h"# and #"DjVuPalette.cpp"# implement a single class
     \Ref{DjVuPalette} which provides facilities for computing optimal color
@@ -90,8 +84,6 @@ namespace DJVU {
     @author: 
     L\'eon Bottou <leonb@research.att.com> */
 //@{
-
-
 /** Computing and coding color palettes and index arrays.
     This class provides facilities for computing optimal color palettes,
     coding color palettes, and coding sequences of color indices.
@@ -230,13 +222,9 @@ private: // dummy functions
   static void encode(ByteStream *);
   static void decode(ByteStream *);
 };
-
-
 //@}
 
 // ------------ INLINES
-
-
 inline void 
 DjVuPalette::histogram_clear()
 {
@@ -344,8 +332,6 @@ DjVuPalette::get_color(int nth, GPixel &p) const
   index_to_color(colordata[nth], p);
 }
 
-
-
 // ------------ THE END
 
 #ifdef HAVE_NAMESPACES
@@ -355,8 +341,4 @@ using namespace DJVU;
 # endif
 #endif
 #endif
-      
-      
-             
-
     

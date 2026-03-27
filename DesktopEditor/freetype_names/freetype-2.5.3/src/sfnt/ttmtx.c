@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -23,8 +21,6 @@
 #include "ttmtx.h"
 
 #include "sferrors.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -33,8 +29,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttmtx
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -62,8 +56,6 @@
     FT_ULong   tag, table_size;
     FT_ULong*  ptable_offset;
     FT_ULong*  ptable_size;
-
-
     if ( vertical )
     {
       tag           = TTAG_vmtx;
@@ -87,8 +79,6 @@
   Fail:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -140,13 +130,9 @@
         FT_FRAME_USHORT( number_Of_HMetrics ),
       FT_FRAME_END
     };
-
-
     if ( vertical )
     {
       void  *v = &face->vertical;
-
-
       error = face->goto_table( face, TTAG_vhea, stream, 0 );
       if ( error )
         goto Fail;
@@ -175,8 +161,6 @@
   Fail:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -213,13 +197,9 @@
     TT_HoriHeader*  header;
     FT_ULong        table_pos, table_size, table_end;
     FT_UShort       k;
-
-
     if ( vertical )
     {
       void*  v = &face->vertical;
-
-
       header     = (TT_HoriHeader*)v;
       table_pos  = face->vert_metrics_offset;
       table_size = face->vert_metrics_size;
@@ -277,6 +257,4 @@
 
     return FT_Err_Ok;
   }
-
-
 /* END */

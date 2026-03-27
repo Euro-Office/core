@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FrtWrapper record in BIFF8
 class FrtWrapper: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~FrtWrapper();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeFrtWrapper;

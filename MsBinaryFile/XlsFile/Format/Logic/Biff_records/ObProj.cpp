@@ -38,13 +38,9 @@ namespace XLS
 ObProj::ObProj()
 {
 }
-
-
 ObProj::~ObProj()
 {
 }
-
-
 BaseObjectPtr ObProj::clone()
 {
 	return BaseObjectPtr(new ObProj(*this));

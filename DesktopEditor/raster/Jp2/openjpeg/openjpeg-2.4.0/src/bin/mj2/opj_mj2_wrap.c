@@ -204,8 +204,6 @@ static void info_callback(const char *msg, void *client_data)
 
 /* -------------------------------------------------------------------------- */
 
-
-
 static void read_siz_marker(FILE *file, opj_image_t *image)
 {
     int len, i;
@@ -424,8 +422,6 @@ int main(int argc, char *argv[])
     parameters.frame_rate = 25; /* DEFAULT */
 
     mj2_setup_encoder(movie, &parameters);
-
-
     /* Writing JP, FTYP and MDAT boxes
     Assuming that the JP and FTYP boxes won't be longer than 300 bytes */
 

@@ -38,13 +38,9 @@ namespace XLS
 Scl::Scl()
 {
 }
-
-
 Scl::~Scl()
 {
 }
-
-
 BaseObjectPtr Scl::clone()
 {
 	return BaseObjectPtr(new Scl(*this));

@@ -53,8 +53,6 @@ namespace DocFileFormat
 	  /// A grfhic that specifies HTML incompatibilities of the level.
       unsigned char grfhic;
 	  ListLevel* lvl;
-
-
     public:
 	  ListFormatOverrideLevel();
 	  virtual ~ListFormatOverrideLevel();

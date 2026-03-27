@@ -53,8 +53,6 @@ BOF::BOF()
 	verLowestBiff	= 6;
 	verLastXLSaved	= 0;
 }
-
-
 BOF::~BOF()
 {
 }
@@ -159,8 +157,4 @@ unsigned short BOF::getSubstreamType()
 {
 	return dt;
 }
-
-
 } // namespace XLS
-
-

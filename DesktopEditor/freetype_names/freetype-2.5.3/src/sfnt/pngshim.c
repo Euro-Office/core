@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
 #include FT_TRUETYPE_TAGS_H
 #include FT_CONFIG_STANDARD_LIBRARY_H
-
-
 #ifdef FT_CONFIG_OPTION_USE_PNG
 
   /* We always include <stjmp.h>, so make libpng shut up! */
@@ -31,8 +27,6 @@
 #include "pngshim.h"
 
 #include "sferrors.h"
-
-
   /* This code is freely based on cairo-png.c.  There's so many ways */
   /* to call libpng, and the way cairo does it is defacto standard.  */
 
@@ -41,12 +35,8 @@
                   int  color )
   {
     int  temp = ( alpha * color ) + 0x80;
-
-
     return ( temp + ( temp >> 8 ) ) >> 8;
   }
-
-
   /* Premultiplies data and converts RGBA bytes => native endian. */
   static void
   premultiply_data( png_structp    png,
@@ -56,14 +46,10 @@
     unsigned int  i;
 
     FT_UNUSED( png );
-
-
     for ( i = 0; i < row_info->rowbytes; i += 4 )
     {
       unsigned char*  base  = &data[i];
       unsigned int    alpha = base[3];
-
-
       if ( alpha == 0 )
         base[0] = base[1] = base[2] = base[3] = 0;
 
@@ -72,8 +58,6 @@
         unsigned int  red   = base[0];
         unsigned int  green = base[1];
         unsigned int  blue  = base[2];
-
-
         if ( alpha != 0xFF )
         {
           red   = multiply_alpha( alpha, red   );
@@ -88,8 +72,6 @@
       }
     }
   }
-
-
   /* Converts RGBx bytes to BGRA. */
   static void
   convert_bytes_to_data( png_structp    png,
@@ -99,24 +81,18 @@
     unsigned int  i;
 
     FT_UNUSED( png );
-
-
     for ( i = 0; i < row_info->rowbytes; i += 4 )
     {
       unsigned char*  base  = &data[i];
       unsigned int    red   = base[0];
       unsigned int    green = base[1];
       unsigned int    blue  = base[2];
-
-
       base[0] = blue;
       base[1] = green;
       base[2] = red;
       base[3] = 0xFF;
     }
   }
-
-
   /* Use error callback to avoid png writing to stderr. */
   static void
   error_callback( png_structp      png,
@@ -125,16 +101,12 @@
     FT_Error*  error = (FT_Error*)png_get_error_ptr( png );
 
     FT_UNUSED( error_msg );
-
-
     *error = FT_THROW( Out_Of_Memory );
 #ifdef PNG_SETJMP_SUPPORTED
     longjmp( png_jmpbuf( png ), 1 );
 #endif
     /* if we get here, then we have no choice but to abort ... */
   }
-
-
   /* Use warning callback to avoid png writing to stderr. */
   static void
   warning_callback( png_structp      png,
@@ -145,8 +117,6 @@
 
     /* Just ignore warnings. */
   }
-
-
   static void
   read_data_from_FT_Stream( png_structp  png,
                             png_bytep    data,
@@ -155,13 +125,9 @@
     FT_Error   error;
     png_voidp  p      = png_get_io_ptr( png );
     FT_Stream  stream = (FT_Stream)p;
-
-
     if ( FT_FRAME_ENTER( length ) )
     {
       FT_Error*  e = (FT_Error*)png_get_error_ptr( png );
-
-
       *e = FT_THROW( Invalid_Stream_Read );
       png_error( png, NULL );
 
@@ -172,8 +138,6 @@
 
     FT_FRAME_EXIT();
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   Load_SBit_Png( FT_GlyphSlot     slot,
                  FT_Int           x_offset,
@@ -196,8 +160,6 @@
     int         bitdepth, color_type, interlace;
     FT_Int      i;
     png_byte*  *rows = NULL; /* pacify compiler */
-
-
     if ( x_offset < 0 ||
          y_offset < 0 )
     {
@@ -258,8 +220,6 @@
     if ( populate_map_and_metrics )
     {
       FT_Long  size;
-
-
       metrics->width  = (FT_Int)imgWidth;
       metrics->height = (FT_Int)imgHeight;
 
@@ -364,6 +324,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_USE_PNG */
-
-
 /* END */

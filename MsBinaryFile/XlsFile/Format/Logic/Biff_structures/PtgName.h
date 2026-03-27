@@ -46,8 +46,6 @@ public:
 	PtgName(const unsigned short full_ptg_id);
 	PtgName(const unsigned int index, const PtgDataType data_type_init);
 	BiffStructurePtr clone();
-
-	
 	void loadFields(CFRecord& record) override;
 
 	void writeFields(CFRecord& record) override;

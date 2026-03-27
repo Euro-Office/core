@@ -52,8 +52,6 @@ BiffStructurePtr SharedParsedFormula::clone()
 {
 	return BiffStructurePtr(new SharedParsedFormula(*this));
 }
-
-
 void SharedParsedFormula::load(CFRecord& record)
 {	
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)

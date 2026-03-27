@@ -75,8 +75,6 @@
 #define DEBUG_FTP 1
 #endif
 #endif
-
-
 #if defined(__MINGW32__) || defined(_WIN32_WCE)
 #ifndef _WINSOCKAPI_
 #define _WINSOCKAPI_
@@ -819,8 +817,6 @@ xmlNanoFTPSendPasswd(void *ctx) {
  *
  * Returns -1 in case of error, 0 otherwise
  */
-
-
 int
 xmlNanoFTPQuit(void *ctx) {
     xmlNanoFTPCtxtPtr ctxt = (xmlNanoFTPCtxtPtr) ctx;
@@ -1832,8 +1828,6 @@ xmlNanoFTPList(void *ctx, ftpListCallback callback, void *userData,
  *
  * Returns the socket for the data connection, or <0 in case of error
  */
-
-
 SOCKET
 xmlNanoFTPGetSocket(void *ctx, const char *filename) {
     xmlNanoFTPCtxtPtr ctxt = (xmlNanoFTPCtxtPtr) ctx;

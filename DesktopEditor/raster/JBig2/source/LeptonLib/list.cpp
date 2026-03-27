@@ -201,8 +201,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 /*---------------------------------------------------------------------*
  *                    Inserting and removing elements                  *
  *---------------------------------------------------------------------*/
@@ -243,8 +241,6 @@ DLLIST  *elem, *next, *head;
     *phead = NULL;
     return;
 }
-
-
 /*!
  *  listAddToHead()
  *
@@ -288,8 +284,6 @@ DLLIST  *cell, *head;
     *phead = cell;
     return 0;
 }
-
-
 /*!
  *  listAddToTail()
  *
@@ -350,8 +344,6 @@ DLLIST  *cell, *head, *tail;
 
     return 0;
 }
-
-
 /*!
  *  listInsertBefore()
  *
@@ -413,8 +405,6 @@ DLLIST  *cell, *head;
     }
     return 0;
 }
-
-
 /*!
  *  listInsertAfter()
  *
@@ -475,8 +465,6 @@ DLLIST  *cell, *head;
     }
     return 0;
 }
-
-
 /*!
  *  listRemoveElement()
  *
@@ -529,8 +517,6 @@ DLLIST  *head;
     FREE(elem);
     return data;
 }
-
-
 /*!
  *  listRemoveFromHead()
  *
@@ -567,8 +553,6 @@ void    *data;
     FREE(head);
     return data;
 }
-
-
 /*!
  *  listRemoveFromTail()
  *
@@ -621,8 +605,6 @@ void    *data;
     return data;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                         Other list operations                       *
  *---------------------------------------------------------------------*/
@@ -662,8 +644,6 @@ DLLIST  *cell;
 
     return NULL;
 }
-
-
 /*!
  *  listFindTail()
  *
@@ -687,8 +667,6 @@ DLLIST  *cell;
 
     return (DLLIST *)ERROR_PTR("tail not found !!", procName, NULL);
 }
-
-
 /*!
  *  listGetCount()
  *
@@ -712,8 +690,6 @@ DLLIST  *elem;
     
     return count;
 }
-
-
 /*!
  *  listReverse()
  *
@@ -745,8 +721,6 @@ DLLIST  *head, *rhead;
     *phead = rhead;
     return 0;
 }
-
-
 /*!
  *  listJoin()
  *
@@ -792,5 +766,3 @@ DLLIST  *head1, *head2, *tail1;
     *phead2 = NULL;
     return 0;
 }
-
-

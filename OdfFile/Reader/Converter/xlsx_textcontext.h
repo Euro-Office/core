@@ -37,8 +37,6 @@
 #include <CPOptional.h>
 
 #include <xml/attributes.h>
-
-
 namespace cpdoccore {
 namespace odf_reader
 {
@@ -95,8 +93,6 @@ public:
 private:
     class Impl;
     _CP_SCOPED_PTR(Impl) impl_;
-
-   
 };
 
 }

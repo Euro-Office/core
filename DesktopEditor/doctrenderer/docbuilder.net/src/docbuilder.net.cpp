@@ -340,8 +340,6 @@ namespace docbuilder_net
 		*(value->m_internal) = m_internal->Call(StringToStdString(name), *p1->m_internal, *p2->m_internal, *p3->m_internal, *p4->m_internal, *p5->m_internal, *p6->m_internal);
 		return value;
 	}
-
-
 	CDocBuilder::CDocBuilder()
 	{
 		m_internal = new NSDoctRenderer::CDocBuilder();
@@ -439,8 +437,6 @@ namespace docbuilder_net
 	{
 		NSDoctRenderer::CDocBuilder::Dispose();
 	}
-
-	
 	CDocBuilderContextScope::CDocBuilderContextScope()
 	{
 		m_internal = new NSDoctRenderer::CDocBuilderContextScope();
@@ -466,8 +462,6 @@ namespace docbuilder_net
 	{
 		m_internal->Close();
 	}
-
-
 	CDocBuilderContext::CDocBuilderContext()
 	{
 		m_internal = new NSDoctRenderer::CDocBuilderContext();

@@ -38,13 +38,9 @@ namespace XLS
 Index::Index()
 {
 }
-
-
 Index::~Index()
 {
 }
-
-
 BaseObjectPtr Index::clone()
 {
 	return BaseObjectPtr(new Index(*this));

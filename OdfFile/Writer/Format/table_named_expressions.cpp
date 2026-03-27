@@ -103,8 +103,6 @@ void table_named_expressions::serialize(std::wostream & _Wostream)
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * table_named_range::ns = L"table";
 const wchar_t * table_named_range::name = L"named-range";
-
-
 void table_named_range::serialize(std::wostream & _Wostream)
 {
     CP_XML_WRITER(_Wostream)

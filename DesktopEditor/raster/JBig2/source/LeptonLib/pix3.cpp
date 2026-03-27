@@ -24,7 +24,6 @@
  *      (4) Sum of pixel values
  *      (5) Mirrored tiling of a smaller image
  *
- *
  *    Masked operations
  *           l_int32     pixSetMasked()
  *           l_int32     pixSetMaskedGeneral()
@@ -77,8 +76,6 @@ static l_int32 findTilePatchCenter(PIX *pixs, BOX *box, l_int32 dir,
 #ifndef  NO_CONSOLE_IO
 #define   EQUAL_SIZE_WARNING      0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *                        Masked operations                    *
  *-------------------------------------------------------------*/
@@ -219,8 +216,6 @@ l_uint32  *datad, *datam, *lined, *linem;
 
     return 0;
 }
-
-
 /*!
  *  pixSetMaskedGeneral()
  *
@@ -295,8 +290,6 @@ PIX       *pixmu, *pixc;
     pixDestroy(&pixc);
     return 0;
 }
-
-
 /*!
  *  pixCombineMasked()
  *
@@ -402,8 +395,6 @@ PIX       *pixt;
 
     return 0;
 }
-
-
 /*!
  *  pixCombineMaskedGeneral()
  *
@@ -522,8 +513,6 @@ PIX       *pixt;
 
     return 0;
 }
-
-
 /*!
  *  pixPaintThroughMask()
  *
@@ -670,8 +659,6 @@ l_uint32  *data, *datam, *line, *linem;
 
     return 0;
 }
-    
-
 /*!
  *  pixPaintSelfThroughMask()
  *
@@ -802,8 +789,6 @@ PIXA     *pixa;
     boxaDestroy(&boxa);
     return retval;
 }
-
-
 /*!
  *  pixMakeMaskFromLUT()
  *
@@ -857,8 +842,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixSetUnderTransparency()
  *
@@ -974,8 +957,6 @@ PIXA     *pixa;
     pixDestroy(&pixalpha);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *    One and two-image boolean ops on arbitrary depth images  *
  *-------------------------------------------------------------*/
@@ -1016,8 +997,6 @@ pixInvert(PIX  *pixd,
 
     return pixd;
 }
-
-
 /*!
  *  pixOr()
  *
@@ -1078,8 +1057,6 @@ pixOr(PIX  *pixd,
 
     return pixd;
 }
-
-
 /*!
  *  pixAnd()
  *
@@ -1140,8 +1117,6 @@ pixAnd(PIX  *pixd,
 
     return pixd;
 }
-
-
 /*!
  *  pixXor()
  *
@@ -1202,8 +1177,6 @@ pixXor(PIX  *pixd,
 
     return pixd;
 }
-
-
 /*!
  *  pixSubtract()
  *
@@ -1277,8 +1250,6 @@ l_int32  w, h;
 
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                         Pixel counting                      *
  *-------------------------------------------------------------*/
@@ -1338,8 +1309,6 @@ l_uint32  *data, *line;
 
     return 0;
 }
-
-
 /*!
  *  pixCountPixels()
  *
@@ -1406,8 +1375,6 @@ l_uint32  *data;
         FREE(tab);
     return 0;
 }
-
-
 /*!
  *  pixaCountPixels()
  *
@@ -1449,8 +1416,6 @@ PIX      *pix;
     FREE(tab);
     return na;
 }
-
-
 /*!
  *  pixCountPixelsInRow()
  *
@@ -1519,8 +1484,6 @@ l_uint32  *line;
         FREE(tab);
     return 0;
 }
-
-
 /*!
  *  pixCountPixelsByRow()
  *
@@ -1559,8 +1522,6 @@ NUMA     *na;
 
     return na;
 }
-
-
 /*!
  *  pixCountPixelsByColumn()
  *
@@ -1597,8 +1558,6 @@ NUMA       *na;
 
     return na;
 }
-
-
 /*!
  *  pixSumPixelsByRow()
  *
@@ -1654,8 +1613,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*!
  *  pixSumPixelsByColumn()
  *
@@ -1707,8 +1664,6 @@ NUMA       *na;
 
     return na;
 }
-
-
 /*!
  *  pixThresholdPixelSum()
  *
@@ -1791,8 +1746,6 @@ l_uint32  *line, *data;
         FREE(tab);
     return 0;
 }
-
-
 /*!
  *  makePixelSumTab8()
  *
@@ -1829,8 +1782,6 @@ l_int32  *tab;
 
     return tab;
 }
-
-
 /*!
  *  makePixelCentroidTab8()
  *
@@ -1884,8 +1835,6 @@ l_int32  *tab;
 
     return tab;
 }
-
-
 /*-------------------------------------------------------------*
  *                       Sum of pixel values                   *
  *-------------------------------------------------------------*/
@@ -1961,8 +1910,6 @@ BOX       *boxc;
     return 0;
 }
 
-
-
 /*-------------------------------------------------------------*
  *              Mirrored tiling of a smaller image             *
  *-------------------------------------------------------------*/
@@ -2028,8 +1975,6 @@ PIX      *pixd, *pixsfx, *pixsfy, *pixsfxy, *pix;
     pixDestroy(&pixsfxy);
     return pixd;
 }
-
-
 /*!
  *  findTilePatchCenter()
  *
@@ -2157,8 +2102,6 @@ l_uint32  val, maxval;
             }
         }
     }
-
-
     pixGetPixel(pixs, *pxc, *pyc, pdist);
     return 0;
 }

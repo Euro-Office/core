@@ -728,7 +728,5 @@ namespace oox {
 	{
 		return state()->end_hyperlink(ref, href, display);
 	}
-
-
 }
 }

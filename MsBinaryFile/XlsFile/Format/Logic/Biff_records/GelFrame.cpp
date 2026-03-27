@@ -38,13 +38,9 @@ namespace XLS
 GelFrame::GelFrame()
 {
 }
-
-
 GelFrame::~GelFrame()
 {
 }
-
-
 BaseObjectPtr GelFrame::clone()
 {
 	return BaseObjectPtr(new GelFrame(*this));

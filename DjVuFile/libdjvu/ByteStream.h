@@ -96,13 +96,9 @@
 // It has been practically rewritten by Lizardtech for i18n changes.
 // Our original implementation consisted of multiple classes.
 // <http://prdownloads.sourceforge.net/djvu/DjVu2_2b-src.tgz>.
-
-
     @version
     #$Id: ByteStream.h,v 1.16 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 #include "Arrays.h"
 #include <stdio.h>
 
@@ -395,8 +391,6 @@ public:
   virtual void flush(void)
     { bs->flush(); }
 };
-
-
 //@}
 
 // ------------ THE END

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTWINFNT_H_
 #define FTWINFNT_H_
 
@@ -26,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -47,8 +41,6 @@ FT_BEGIN_HEADER
    *   functions.
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -170,8 +162,6 @@ FT_BEGIN_HEADER
 #define FT_WinFNT_ID_CP874   222
 #define FT_WinFNT_ID_CP1250  238
 #define FT_WinFNT_ID_OEM     255
-
-
   /**************************************************************************
    *
    * @struct:
@@ -220,8 +210,6 @@ FT_BEGIN_HEADER
     FT_ULong   reserved1[4];
 
   } FT_WinFNT_HeaderRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -231,8 +219,6 @@ FT_BEGIN_HEADER
    *   A handle to an @FT_WinFNT_HeaderRec structure.
    */
   typedef struct FT_WinFNT_HeaderRec_*  FT_WinFNT_Header;
-
-
   /**************************************************************************
    *
    * @function:
@@ -261,16 +247,10 @@ FT_BEGIN_HEADER
                         FT_WinFNT_HeaderRec  *aheader );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTWINFNT_H_ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

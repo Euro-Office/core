@@ -2,8 +2,6 @@
 // Copyright (c) 2017 by Jim Pattee <jimp03@email.com>.
 // This code is licensed under the MIT License.
 // License.md describes the conditions under which this software may be distributed.
-
-
 #ifndef ASLOCALIZER_H
 #define ASLOCALIZER_H
 
@@ -150,8 +148,6 @@ class Swedish : public Translation
 
 class Ukrainian : public Translation
 { public: Ukrainian(); };
-
-
 #endif	//  ASTYLE_LIB
 
 }	// namespace astyle

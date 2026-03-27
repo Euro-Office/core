@@ -211,8 +211,6 @@ bool CxImageRAW::Decode(CxFile *hFile)
 		memcpy(GetBits(dcr.height - 1 - row), ppm, min(size,GetEffWidth()));
 	}
 	free (ppm);
-
-
 	dcr_cleanup_dcraw(&dcr);
 
   } cx_catch {

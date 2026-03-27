@@ -62,8 +62,6 @@ struct PFMasks
     bool m_bulletBlip;
     bool m_bulletScheme;
     bool m_bulletHasScheme;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

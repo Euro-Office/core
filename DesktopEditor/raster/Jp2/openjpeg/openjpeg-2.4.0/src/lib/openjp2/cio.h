@@ -68,8 +68,6 @@ The functions in CIO.C have for goal to realize a byte input / output process.
 #define opj_write_float     opj_write_float_LE
 #define opj_read_float      opj_read_float_LE
 #endif
-
-
 #define OPJ_STREAM_STATUS_OUTPUT  0x1U
 #define OPJ_STREAM_STATUS_INPUT   0x2U
 #define OPJ_STREAM_STATUS_END     0x4U
@@ -205,8 +203,6 @@ void opj_write_bytes_LE(OPJ_BYTE * p_buffer, OPJ_UINT32 p_value,
  */
 void opj_read_bytes_LE(const OPJ_BYTE * p_buffer, OPJ_UINT32 * p_value,
                        OPJ_UINT32 p_nb_bytes);
-
-
 /**
  * Write some bytes to the given data buffer, this function is used in Little Endian cpus.
  * @param p_buffer      pointer the data buffer to write data to.
@@ -313,8 +309,6 @@ OPJ_OFF_T opj_stream_skip(opj_stream_private_t * p_stream, OPJ_OFF_T p_size,
  * @return      the current position o fthe stream.
  */
 OPJ_OFF_T opj_stream_tell(const opj_stream_private_t * p_stream);
-
-
 /**
  * Get the number of bytes left before the end of the stream (similar to cio_numbytesleft).
  *
@@ -406,7 +400,5 @@ OPJ_BOOL opj_stream_default_seek(OPJ_OFF_T p_nb_bytes, void * p_user_data);
 /*@}*/
 
 /*@}*/
-
-
 #endif /* OPJ_CIO_H */
 

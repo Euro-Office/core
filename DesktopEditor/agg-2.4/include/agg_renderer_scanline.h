@@ -165,18 +165,6 @@ namespace agg
         color_type m_color;
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
     //======================================================render_scanline_aa
     template<class Scanline, class BaseRenderer, 
              class SpanAllocator, class SpanGenerator> 
@@ -262,12 +250,6 @@ namespace agg
         alloc_type*    m_alloc;
         span_gen_type* m_span_gen;
     };
-
-
-
-
-
-
     //===============================================render_scanline_bin_solid
     template<class Scanline, class BaseRenderer, class ColorT> 
     void render_scanline_bin_solid(const Scanline& sl, 
@@ -364,14 +346,6 @@ namespace agg
         base_ren_type* m_ren;
         color_type m_color;
     };
-
-
-
-
-
-
-
-
     //======================================================render_scanline_bin
     template<class Scanline, class BaseRenderer, 
              class SpanAllocator, class SpanGenerator> 
@@ -453,16 +427,6 @@ namespace agg
         alloc_type*    m_alloc;
         span_gen_type* m_span_gen;
     };
-
-
-
-
-
-
-
-
-
-
     //========================================================render_scanlines
     template<class Rasterizer, class Scanline, class Renderer>
     void render_scanlines(Rasterizer& ras, Scanline& sl, Renderer& ren)
@@ -497,12 +461,6 @@ namespace agg
             render_scanlines(ras, sl, r);
         }
     }
-
-
-
-
-
-
     //=============================================render_scanlines_compound
     template<class Rasterizer, 
              class ScanlineAA, 
@@ -875,8 +833,6 @@ namespace agg
             } //while((num_styles = ras.sweep_styles()) > 0)
         } //if(ras.rewind_scanlines())
     }
-
-
 }
 
 #endif

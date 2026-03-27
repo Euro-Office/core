@@ -21,8 +21,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = false };
-
-
 struct path_attributes
 {
     unsigned   index;
@@ -42,8 +40,6 @@ struct path_attributes
     {
     }
 };
-
-
 
 static double g_poly_bulb[] = 
 {
@@ -72,16 +68,12 @@ static double g_poly_beam4[] =
 {
     5,-89,      11,-94,   13,-93,    13,-92,    12,-91
 };
-
-
 static double g_poly_fig1[] = 
 {
     1,-48,-3,-54,-7,-58,-12,-58,-17,-55,-20,-52,-21,-47,
     -20,-40,-17,-33,-11,-28,-6,-26,-2,-25,2,-26,4,-28,5,
     -33,5,-39,3,-44,12,-48,12,-50,12,-51,3,-46
 };
-
-
 static double g_poly_fig2[] = 
 {
     11,-27,6,-23,4,-22,3,-19,5,
@@ -90,8 +82,6 @@ static double g_poly_fig2[] =
     -75,20,-76,17,-76,17,-74,19,-73,22,-73,24,-71,26,-69,27,-64,28,-55,
     28,-47,28,-40,26,-38,20,-33,14,-30
 };
-
-
 static double g_poly_fig3[] = 
 {
     -6,-20,-9,-21,-15,-21,-20,-17,
@@ -100,16 +90,12 @@ static double g_poly_fig3[] =
     -11,11,-16,9,-22,8,-26,5,-28,2,-27,-2,-23,-8,-19,-11,-12,-14,-6,-15,
     -6,-18
 };
-
-
 static double g_poly_fig4[] = 
 {
     11,-6,8,-16,5,-21,-1,-23,-7,
    -22,-10,-17,-9,-10,-8,0,-8,10,-10,18,-11,22,-10,26,-7,28,-3,30,0,31,
     5,31,10,27,14,18,14,11,11,2
 };
-
-
 static double g_poly_fig5[] = 
 {
     0,22,-5,21,-8,22,-9,26,-8,49,
@@ -117,8 +103,6 @@ static double g_poly_fig5[] =
     -12,95,-10,90,-8,87,-6,86,-4,83,-3,82,-5,80,-6,79,-7,74,-6,63,-3,52,
     0,42,1,31
 };
-
-
 static double g_poly_fig6[] = 
 {
     12,31,12,24,8,21,3,21,2,24,3,
@@ -126,8 +110,6 @@ static double g_poly_fig6[] =
     84,28,87,32,86,33,81,32,80,25,79,17,79,14,79,13,76,14,72,14,64,13,55,
     12,44,12,34
 };
-
-
 
 static path_attributes g_attr[3];
 static agg::path_storage g_path;
@@ -139,8 +121,6 @@ static double g_angle = 0.0;
 
 #define AGG_POLY_SIZE(p) (sizeof(p) / (sizeof(*p) * 2))
 
-
-
 struct trans_roundoff
 {
     static void transform(double* x, double* y)
@@ -149,8 +129,6 @@ struct trans_roundoff
         *y = floor(*y + 0.5);
     }
 };
-
-
 class the_application : public agg::platform_support
 {
     double m_dx;
@@ -214,8 +192,6 @@ public:
         add_ctrl(m_angle_delta);
         m_angle_delta.value(0.01);
     }
-
-
     virtual void on_init()
     {
         m_dx = rbuf_window().width();
@@ -255,8 +231,6 @@ public:
                            rbuf_window().height(), 
                            agg::rgba8(255,255,255));
         }
-
-
         if(m_draft.status())
         {
             g_rasterizer.gamma(agg::gamma_threshold(0.4));
@@ -343,10 +317,6 @@ public:
     }
 
 };
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -358,5 +328,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

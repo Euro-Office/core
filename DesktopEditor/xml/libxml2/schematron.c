@@ -39,8 +39,6 @@
 #define SCT_OLD_NS BAD_CAST "http://www.ascc.net/xml/schematron"
 
 #define XML_SCHEMATRON_NS BAD_CAST "http://purl.oclc.org/dsdl/schematron"
-
-
 static const xmlChar *xmlSchematronNs = XML_SCHEMATRON_NS;
 static const xmlChar *xmlOldSchematronNs = SCT_OLD_NS;
 
@@ -1464,8 +1462,6 @@ xmlSchematronReportPattern(xmlSchematronValidCtxtPtr ctxt,
 	xmlSchematronReportOutput(ctxt, NULL, &msg[0]);
     }
 }
-
-
 /************************************************************************
  *									*
  *		Validation against a Schematrontron				*

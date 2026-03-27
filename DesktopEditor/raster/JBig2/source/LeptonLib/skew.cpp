@@ -38,7 +38,6 @@
  *      Measures of variance of row sums
  *          l_int32    pixFindNormalizedSquareSum()
  *
- *
  *      ==============================================================    
  *      Page skew detection
  *
@@ -112,8 +111,6 @@ static const l_int32  MIN_VALID_MAXSCORE = 10000;
      * to give nonzero confidence; multiply this constant by
      *  (height * width^2) */
 static const l_float32  MINSCORE_THRESHOLD_CONSTANT = 0.000002;
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_PRINT_SCORES     0
 #define  DEBUG_PRINT_SWEEP      0
@@ -122,8 +119,6 @@ static const l_float32  MINSCORE_THRESHOLD_CONSTANT = 0.000002;
 #define  DEBUG_THRESHOLD        0
 #define  DEBUG_PLOT_SCORES      0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 
 /*----------------------------------------------------------------*
  *                       Top-level interfaces                     *
@@ -155,8 +150,6 @@ pixDeskew(PIX     *pixs,
 
     return pixFindSkewAndDeskew(pixs, redsearch, NULL, NULL);
 }
-
-
 /*!
  *  pixFindSkewAndDeskew()
  *
@@ -213,8 +206,6 @@ PIX       *pixd;
     else
         return pixd;
 }
-
-
 /*!
  *  pixFindSkew()
  *
@@ -253,8 +244,6 @@ pixFindSkew(PIX        *pixs,
                                      DEFAULT_SWEEP_DELTA,
                                      DEFAULT_MINBS_DELTA);
 }
-
-
 /*----------------------------------------------------------------*
  *         Basic angle-finding functions with all parameters      *
  *----------------------------------------------------------------*/
@@ -386,8 +375,6 @@ cleanup:
     numaDestroy(&natheta);
     return 0;
 }
-
-
 /*!
  *  pixFindSkewSweepAndSearch()
  *
@@ -428,8 +415,6 @@ pixFindSkewSweepAndSearch(PIX        *pixs,
                                           redsweep, redsearch, 0.0, sweeprange, 
                                           sweepdelta, minbsdelta);
 }
-
-
 /*!
  *  pixFindSkewSweepAndSearchScore()
  *
@@ -484,8 +469,6 @@ pixFindSkewSweepAndSearchScore(PIX        *pixs,
                                                minbsdelta,
                                                L_SHEAR_ABOUT_CORNER);
 }
-
-
 /*!
  *  pixFindSkewSweepAndSearchScorePivot()
  *
@@ -826,8 +809,6 @@ cleanup:
     numaDestroy(&natheta);
     return ret;
 }
-
-
 /*---------------------------------------------------------------------*
  *    Search over arbitrary range of angles in orthogonal directions   *
  *---------------------------------------------------------------------*/
@@ -940,8 +921,6 @@ PIX       *pixr;
     return 0;
 }
 
-
-
 /*----------------------------------------------------------------*
  *                  Differential square sum function              *
  *----------------------------------------------------------------*/
@@ -1000,8 +979,6 @@ NUMA      *na;
     *psum = sum;
     return 0;
 }
-
-
 /*----------------------------------------------------------------*
  *                        Normalized square sum                   *
  *----------------------------------------------------------------*/
@@ -1090,5 +1067,3 @@ PIX       *pixt;
 
     return empty;
 }
-
-

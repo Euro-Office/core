@@ -14,21 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVCFFTL_H_
 #define SVCFFTL_H_
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/cfftypes.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_CFF_LOAD  "cff-load"
-
-
   typedef FT_UShort
   (*FT_Get_Standard_Encoding_Func)( FT_UInt  charcode );
 
@@ -53,8 +45,6 @@ FT_BEGIN_HEADER
                                  FT_UInt    vsindex,
                                  FT_UInt    lenNDV,
                                  FT_Fixed*  NDV );
-
-
   FT_DEFINE_SERVICE( CFFLoad )
   {
     FT_Get_Standard_Encoding_Func  get_standard_encoding;
@@ -63,8 +53,6 @@ FT_BEGIN_HEADER
     FT_Blend_Check_Vector_Func     blend_check_vector;
     FT_Blend_Build_Vector_Func     blend_build_vector;
   };
-
-
 #define FT_DEFINE_SERVICE_CFFLOADREC( class_,                  \
                                       get_standard_encoding_,  \
                                       load_private_dict_,      \
@@ -79,12 +67,6 @@ FT_BEGIN_HEADER
     blend_check_vector_,                                       \
     blend_build_vector_                                        \
   };
-
-
 FT_END_HEADER
-
-
 #endif
-
-
 /* END */

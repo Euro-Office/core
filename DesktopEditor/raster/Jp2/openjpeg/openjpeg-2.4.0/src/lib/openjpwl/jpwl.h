@@ -337,8 +337,6 @@ int jpwl_esds_add(opj_j2k_t *j2k, jpwl_marker_t *jwmarker, int *jwmarker_num,
 */
 opj_bool jpwl_update_info(opj_j2k_t *j2k, jpwl_marker_t *jwmarker,
                           int jwmarker_num);
-
-
 opj_bool jpwl_esd_fill(opj_j2k_t *j2k, jpwl_esd_ms_t *esdmark,
                        unsigned char *buf);
 

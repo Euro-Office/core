@@ -687,11 +687,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ----------------------------------------------------- */
-
-
         case 'r': {         /* rates rates/distorsion */
             char *s = opj_optarg;
             parameters->tcp_numlayers = 0;
@@ -711,8 +707,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'F': {         /* Raw image format parameters */
             OPJ_BOOL wrong = OPJ_FALSE;
             char *substr1;
@@ -1085,8 +1079,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ------------------------------------------------------ */
 
         case 'I': {         /* reversible or not */
@@ -1253,8 +1245,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         break;
 
         /* ------------------------------------------------------ */
-
-
         case 'm': {         /* mct input file */
             char *lFilename = opj_optarg;
             char *lMatrix;
@@ -1332,8 +1322,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
             free(lMatrix);
         }
         break;
-
-
             /* ------------------------------------------------------ */
 
             /* UniPG>> */
@@ -1404,8 +1392,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_hprot_TPH_tileno[tilespec] = lasttileno = tile;
                             parameters->jpwl_hprot_TPH[tilespec++] = hprot;
                         }
-
-
                     } else if (!strcmp(token, "h")) {
                         /* Main header, unspecified */
                         parameters->jpwl_hprot_MH = hprot;
@@ -1512,8 +1498,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_pprot_packno[packspec] = 0;
                             parameters->jpwl_pprot[packspec++] = pprot;
                         }
-
-
                     } else if (!strcmp(token, "p")) {
                         /* all default */
                         parameters->jpwl_pprot_tileno[0] = 0;
@@ -1586,8 +1570,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search addressing size */
                 if (*token == 'a') {
-
-
                     addr = 0; /* predefined: auto */
 
                     if (sscanf(token, "a=%d", &addr) == 1) {
@@ -1611,8 +1593,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search sensitivity size */
                 if (*token == 'z') {
-
-
                     size = 1; /* predefined: 1 byte */
 
                     if (sscanf(token, "z=%d", &size) == 1) {
@@ -1636,8 +1616,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
                 /* search range method */
                 if (*token == 'g') {
-
-
                     range = 0; /* predefined: 0 (packet) */
 
                     if (sscanf(token, "g=%d", &range) == 1) {
@@ -1662,8 +1640,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                 /* next token or bust */
                 token = strtok(NULL, ",");
             };
-
-
             /* some info */
             fprintf(stdout, "Info: JPWL capabilities enabled\n");
             parameters->jpwl_epc_on = OPJ_TRUE;
@@ -1699,8 +1675,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         break;
 
         /* ------------------------------------------------------ */
-
-
         default:
             fprintf(stderr, "[WARNING] An invalid option has been ignored\n");
             break;
@@ -1750,8 +1724,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
         fprintf(stderr, "[ERROR] options -r -q and -f cannot be used together !!\n");
         return 1;
     }               /* mod fixed_quality */
-
-
     /* if no rate entered, lossless by default */
     /* Note: post v2.2.0, this is no longer necessary, but for released */
     /* versions at the time of writing, this is needed to avoid crashes */
@@ -1846,8 +1818,6 @@ OPJ_FLOAT64 opj_clock(void)
             1e-6) ;
 #endif
 }
-
-
 /* -------------------------------------------------------------------------- */
 /**
  * OPJ_COMPRESS MAIN

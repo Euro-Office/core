@@ -629,8 +629,6 @@ alloc_downsampled_buffers(TIFF* tif, jpeg_component_info* comp_info,
 	sp->samplesperclump = samples_per_clump;
 	return (1);
 }
-
-
 /*
  * JPEG Decoding.
  */
@@ -1100,8 +1098,6 @@ JPEGDecodeRaw(TIFF* tif, tidata_t buf, tsize_t cc, tsample_t s)
 	return sp->cinfo.d.output_scanline < sp->cinfo.d.output_height
 	    || TIFFjpeg_finish_decompress(sp);
 }
-
-
 /*
  * JPEG Encoding.
  */
@@ -1883,8 +1879,6 @@ static int JPEGInitializeLibJPEG( TIFF * tif, int force_encode, int force_decode
     uint32 *byte_counts = NULL;
     int     data_is_empty = TRUE;
     int     decompress;
-
-
     if(sp->cinfo_initialized)
     {
         if( force_encode && sp->cinfo.comm.is_decompressor )

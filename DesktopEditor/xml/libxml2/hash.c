@@ -601,8 +601,6 @@ xmlHashAddEntry3(xmlHashTablePtr table, const xmlChar *name,
     entry->payload = userdata;
     entry->next = NULL;
     entry->valid = 1;
-
-
     if (insert != NULL)
 	insert->next = entry;
 
@@ -732,8 +730,6 @@ xmlHashUpdateEntry3(xmlHashTablePtr table, const xmlChar *name,
     entry->next = NULL;
     entry->valid = 1;
     table->nbElems++;
-
-
     if (insert != NULL) {
 	insert->next = entry;
     }

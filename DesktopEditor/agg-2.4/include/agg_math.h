@@ -250,8 +250,6 @@ namespace agg
     // Tables for fast sqrt
     extern int16u g_sqrt_table[1024];
     extern int8   g_elder_bit_table[256];
-
-
     //---------------------------------------------------------------fast_sqrt
     //Fast integer Sqrt - really fast: no cycles, divisions or multiplications
     #if defined(_MSC_VER)
@@ -336,10 +334,6 @@ namespace agg
     #if defined(_MSC_VER)
     #pragma warning(pop)
     #endif
-
-
-
-
     //--------------------------------------------------------------------besj
     // Function BESJ calculates Bessel function of first kind of order n
     // Arguments:
@@ -440,6 +434,4 @@ namespace agg
 #endif
 
 }
-
-
 #endif

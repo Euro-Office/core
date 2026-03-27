@@ -38,19 +38,13 @@ namespace XLS
 ExtSST::ExtSST()
 {
 }
-
-
 ExtSST::~ExtSST()
 {
 }
-
-
 BaseObjectPtr ExtSST::clone()
 {
 	return BaseObjectPtr(new ExtSST(*this));
 }
-
-
 
 void ExtSST::readFields(CFRecord& record)
 {

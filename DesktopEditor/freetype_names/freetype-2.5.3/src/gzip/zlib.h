@@ -21,8 +21,6 @@
 
   Jean-loup Gailly        Mark Adler
   jloup@gzip.org          madler@alumni.caltech.edu
-
-
   The data format used by the zlib library is described by RFCs (Request for
   Comments) 1950 to 1952 in the files ftp://ds.internic.net/rfc/rfc1950.txt
   (zlib format), rfc1951.txt (deflate format) and rfc1952.txt (gzip format).
@@ -162,8 +160,6 @@ typedef z_stream FAR *z_streamp;
 /* The deflate compression method (the only one supported in this version) */
 
 #define Z_NULL  0  /* for initializing zalloc, zfree, opaque */
-
-
                         /* basic functions */
 
 /* The application can compare zlibVersion and ZLIB_VERSION for consistency.
@@ -193,8 +189,6 @@ ZEXTERN(int)  deflateInit OF((z_streamp strm, int level));
    msg is set to null if there is no error message.  deflateInit does not
    perform any compression: this will be done by deflate().
 */
-
-
 /*
     deflate compresses as much data as possible, and stops when the input
   buffer becomes empty or the output buffer becomes full. It may introduce some
@@ -270,8 +264,6 @@ ZEXTERN(int)  deflateInit OF((z_streamp strm, int level));
   if next_in or next_out was NULL), Z_BUF_ERROR if no progress is possible
   (for example avail_in or avail_out was zero).
 */
-
-
 /*
      All dynamically allocated data structures for this stream are freed.
    This function discards any unprocessed input and does not flush any
@@ -283,8 +275,6 @@ ZEXTERN(int)  deflateInit OF((z_streamp strm, int level));
    msg may be set but then points to a static string (which must not be
    deallocated).
 */
-
-
 /*
 ZEXTERN(int)  inflateInit OF((z_streamp strm));
 
@@ -304,8 +294,6 @@ ZEXTERN(int)  inflateInit OF((z_streamp strm));
    the zlib header if present: this will be done by inflate().  (So next_in and
    avail_in may be modified, but next_out and avail_out are unchanged.)
 */
-
-
 ZEXTERN(int) inflate OF((z_streamp strm, int flush));
 /*
     inflate decompresses as much data as possible, and stops when the input
@@ -373,8 +361,6 @@ ZEXTERN(int) inflate OF((z_streamp strm, int flush));
   case, the application may then call inflateSync to look for a good
   compression block.
 */
-
-
 ZEXTERN(int)  inflateEnd OF((z_streamp strm));
 /*
      All dynamically allocated data structures for this stream are freed.
@@ -575,8 +561,6 @@ ZEXTERN(int)  inflateReset OF((z_streamp strm));
       inflateReset returns Z_OK if success, or Z_STREAM_ERROR if the source
    stream state was inconsistent (such as zalloc or state being NULL).
 */
-
-
                         /* utility functions */
 
 /*
@@ -627,8 +611,6 @@ ZEXTERN(int)  inflateReset OF((z_streamp strm));
    enough memory, Z_BUF_ERROR if there was not enough room in the output
    buffer, or Z_DATA_ERROR if the input data was corrupted.
 */
-
-
 /*
      Opens a gzip (.gz) file for reading or writing. The mode parameter
    is as in fopen ("rb" or "wb") but can also include a compression level
@@ -803,8 +785,6 @@ ZEXTERN(uLong)  adler32 OF((uLong adler, const Bytef *buf, uInt len));
      }
      if (crc != original_crc) error();
 */
-
-
                         /* various hacks, don't look :) */
 
 /* deflateInit and inflateInit are macros to allow checking the zlib version
@@ -821,8 +801,6 @@ ZEXTERN(int)  inflateInit2_ OF((z_streamp strm, int  windowBits,
                       (strategy),           ZLIB_VERSION, sizeof(z_stream))
 #define inflateInit2(strm, windowBits) \
         inflateInit2_((strm), (windowBits), ZLIB_VERSION, sizeof(z_stream))
-
-
 #ifdef __cplusplus
 }
 #endif

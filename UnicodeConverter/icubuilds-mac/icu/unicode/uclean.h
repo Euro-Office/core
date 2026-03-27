@@ -98,8 +98,6 @@ u_init(UErrorCode *status);
  */
 U_STABLE void U_EXPORT2 
 u_cleanup(void);
-
-
 /**
   *  Pointer type for a user supplied memory allocation function.
   *  @param context user supplied value, obtained from from u_setMemoryFunctions().
@@ -149,8 +147,6 @@ typedef void  U_CALLCONV UMemFreeFn (const void *context, void *mem);
 U_STABLE void U_EXPORT2 
 u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMemFreeFn *f, 
                     UErrorCode *status);
-
-
 #ifndef U_HIDE_DEPRECATED_API
 /*********************************************************************************
  *
@@ -187,8 +183,6 @@ typedef void *UMTX;
   *  @system
   */
 typedef void U_CALLCONV UMtxInitFn (const void *context, UMTX  *mutex, UErrorCode* status);
-
-
 /**
   *  Function Pointer type for a user supplied mutex functions.
   *  One of the  user-supplied functions with this signature will be called by ICU
@@ -199,8 +193,6 @@ typedef void U_CALLCONV UMtxInitFn (const void *context, UMTX  *mutex, UErrorCod
   *  @system
   */
 typedef void U_CALLCONV UMtxFn   (const void *context, UMTX  *mutex);
-
-
 /**
   *  Set the functions that ICU will use for mutex operations
   *  Use of this function is optional; by default (without this function), ICU will
@@ -221,8 +213,6 @@ typedef void U_CALLCONV UMtxFn   (const void *context, UMTX  *mutex);
 U_DEPRECATED void U_EXPORT2 
 u_setMutexFunctions(const void *context, UMtxInitFn *init, UMtxFn *destroy, UMtxFn *lock, UMtxFn *unlock,
                     UErrorCode *status);
-
-
 /**
   *  Pointer type for a user supplied atomic increment or decrement function.
   *  @param context user supplied value, obtained from from u_setAtomicIncDecFunctions().

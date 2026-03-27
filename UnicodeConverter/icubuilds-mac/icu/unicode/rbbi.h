@@ -28,8 +28,6 @@
 #include "unicode/parseerr.h"
 #include "unicode/schriter.h"
 #include "unicode/uchriter.h"
-
-
 struct UTrie;
 
 U_NAMESPACE_BEGIN
@@ -43,10 +41,6 @@ class  UStack;
 class  LanguageBreakEngine;
 class  UnhandledEngine;
 struct RBBIStateTable;
-
-
-
-
 /**
  *
  * A subclass of BreakIterator whose behavior is specified using a list of rules.
@@ -205,13 +199,9 @@ protected:
      */
     RuleBasedBreakIterator(const RBBIDataHeader* data, enum EDontAdopt dontAdopt, UErrorCode &status);
 #endif  /* U_HIDE_INTERNAL_API */
-
-
     friend class RBBIRuleBuilder;
     /** @internal */
     friend class BreakIterator;
-
-
 
 public:
 
@@ -372,8 +362,6 @@ public:
      * @stable ICU 2.0
      */
     virtual  CharacterIterator& getText(void) const;
-
-
     /**
       *  Get a UText for the text being analyzed.
       *  The returned UText is a shallow clone of the UText used internally
@@ -496,8 +484,6 @@ public:
      * @stable ICU 2.0
      */
     virtual int32_t current(void) const;
-
-
     /**
      * Return the status tag from the break rule that determined the most recently
      * returned break position.  For break rules that do not specify a
@@ -612,8 +598,6 @@ public:
     virtual BreakIterator *  createBufferClone(void *stackBuffer,
                                                int32_t &BufferSize,
                                                UErrorCode &status);
-
-
     /**
      * Return the binary form of compiled break rules,
      * which can then be used to create a new break iterator at some
@@ -659,8 +643,6 @@ public:
      * @stable ICU 49
      */
     virtual RuleBasedBreakIterator &refreshInputText(UText *input, UErrorCode &status);
-
-
 protected:
     //=======================================================================
     // implementation

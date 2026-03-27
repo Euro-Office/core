@@ -43,8 +43,6 @@ namespace agg
         m_closed = 0;
         m_status = initial;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_stroke::add_vertex(double x, double y, unsigned cmd)
     {
@@ -79,8 +77,6 @@ namespace agg
         m_src_vertex = 0;
         m_out_vertex = 0;
     }
-
-
     //------------------------------------------------------------------------
     unsigned vcgen_stroke::vertex(double* x, double* y)
     {

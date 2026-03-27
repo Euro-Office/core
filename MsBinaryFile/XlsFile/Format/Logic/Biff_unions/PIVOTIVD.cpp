@@ -40,13 +40,9 @@ namespace XLS
 PIVOTIVD::PIVOTIVD()
 {
 }
-
-
 PIVOTIVD::~PIVOTIVD()
 {
 }
-
-
 BaseObjectPtr PIVOTIVD::clone()
 {
 	return BaseObjectPtr(new PIVOTIVD(*this));

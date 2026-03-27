@@ -1257,10 +1257,6 @@ namespace Jpeg2000
 
 		Event_Message(EVT_WARNING, "Unknown marker\n");
 	}
-
-
-
-
 	//-------------------------------------------------------------------------------------------------------------------------------
 	// Таблица связывающая прочтенный маркер - состояние декодера - действие(функция) декодера при прочтении данного маркера
 	typedef struct TDecoderMSTableEntry
@@ -1714,8 +1710,6 @@ namespace Jpeg2000
 			pCodingParams->nXTsiz = pImage->nXsiz - pCodingParams->nXTOsiz;
 			pCodingParams->nYTsiz = pImage->nYsiz - pCodingParams->nYTOsiz;
 		}
-
-
 		pCodingParams->pTCP = (TileCodingParams *)Malloc(pCodingParams->nXTilesCount * pCodingParams->nYTilesCount * sizeof(TileCodingParams));
 		if (!pCodingParams->pTCP)
 		{
@@ -2230,8 +2224,6 @@ namespace Jpeg2000
 				return false;
 			}
 		}
-
-
 		return true;
 	}
 }

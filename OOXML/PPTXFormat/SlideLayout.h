@@ -79,8 +79,6 @@ namespace PPTX
 		virtual DWORD GetARGBFromMap(const std::wstring& str) const;
 		virtual DWORD GetBGRAFromMap(const std::wstring& str) const;
 		virtual DWORD GetABGRFromMap(const std::wstring& str) const;
-
-
 		virtual void toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const;
 		virtual void fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader);
 		virtual void toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const;

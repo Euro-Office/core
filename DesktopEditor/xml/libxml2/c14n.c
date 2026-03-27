@@ -93,8 +93,6 @@ static int			xmlC14NIsNodeInNodeset		(xmlNodeSetPtr nodes,
 								 xmlNodePtr node,
 								 xmlNodePtr parent);
 
-
-
 static int xmlC14NProcessNode(xmlC14NCtxPtr ctx, xmlNodePtr cur);
 static int xmlC14NProcessNodeList(xmlC14NCtxPtr ctx, xmlNodePtr cur);
 typedef enum {
@@ -219,8 +217,6 @@ xmlC14NErrRelativeNamespace(const char *ns_uri)
 		    NULL, NULL, 0, 0,
 		    "Relative namespace UR is invalid here : %s\n", ns_uri);
 }
-
-
 
 /**
  * xmlC14NErr:
@@ -479,10 +475,6 @@ xmlExcC14NVisibleNsStackFind(xmlC14NVisibleNsStackPtr cur, xmlNsPtr ns, xmlC14NC
     }
     return(has_empty_ns);
 }
-
-
-
-
 /**
  * xmlC14NIsXmlNs:
  * @ns:		the namespace to check
@@ -501,8 +493,6 @@ xmlC14NIsXmlNs(xmlNsPtr ns)
             (xmlStrEqual(ns->prefix, BAD_CAST "xml")) &&
             (xmlStrEqual(ns->href, XML_XML_NAMESPACE)));
 }
-
-
 /**
  * xmlC14NNsCompare:
  * @ns1:		the pointer to first namespace
@@ -524,8 +514,6 @@ xmlC14NNsCompare(xmlNsPtr ns1, xmlNsPtr ns2)
 
     return (xmlStrcmp(ns1->prefix, ns2->prefix));
 }
-
-
 /**
  * xmlC14NPrintNamespaces:
  * @ns:			the pointer to namespace
@@ -658,8 +646,6 @@ xmlC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
 	    xmlC14NPrintNamespaces(&ns_default, ctx);
 	}
     }
-
-
     /*
      * print out all elements from list
      */
@@ -671,8 +657,6 @@ xmlC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
     xmlListDelete(list);
     return (0);
 }
-
-
 /**
  * xmlExcC14NProcessNamespacesAxis:
  * @ctx:		the C14N context
@@ -790,8 +774,6 @@ xmlExcC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
 	    has_empty_ns = 1;
 	}
     }
-
-
     /* add attributes */
     for(attr = cur->properties; attr != NULL; attr = attr->next) {
         /*
@@ -835,8 +817,6 @@ xmlExcC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
 	}
     }
 
-
-
     /*
      * print out all elements from list
      */
@@ -848,8 +828,6 @@ xmlExcC14NProcessNamespacesAxis(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
     xmlListDelete(list);
     return (0);
 }
-
-
 /**
  * xmlC14NIsXmlAttr:
  * @attr:		the attr to check
@@ -867,8 +845,6 @@ xmlC14NIsXmlAttr(xmlAttrPtr attr)
     return ((attr->ns != NULL) &&
            (xmlC14NIsXmlNs(attr->ns) != 0));
 }
-
-
 /**
  * xmlC14NAttrsCompare:
  * @attr1:		the pointer tls o first attr
@@ -916,8 +892,6 @@ xmlC14NAttrsCompare(xmlAttrPtr attr1, xmlAttrPtr attr2)
     }
     return (ret);
 }
-
-
 /**
  * xmlC14NPrintAttrs:
  * @attr:		the pointer to attr
@@ -1433,8 +1407,6 @@ xmlC14NProcessElementNode(xmlC14NCtxPtr ctx, xmlNodePtr cur, int visible)
         xmlC14NErrInternal("checking for relative namespaces");
         return (-1);
     }
-
-
     /*
      * Save ns_rendered stack position
      */
@@ -1726,8 +1698,6 @@ xmlC14NProcessNodeList(xmlC14NCtxPtr ctx, xmlNodePtr cur)
     }
     return (ret);
 }
-
-
 /**
  * xmlC14NFreeCtx:
  * @ctx: the pointer to C14N context object
@@ -1909,8 +1879,6 @@ xmlC14NExecute(xmlDocPtr doc, xmlC14NIsVisibleCallback is_visible_callback,
         return (-1);
     }
 
-
-
     /*
      * Root Node
      * The root node is the parent of the top-level document element. The
@@ -1978,8 +1946,6 @@ xmlC14NDocSaveTo(xmlDocPtr doc, xmlNodeSetPtr nodes,
 			with_comments,
 			buf));
 }
-
-
 /**
  * xmlC14NDocDumpMemory:
  * @doc:		the XML document for canonization
@@ -2115,8 +2081,6 @@ xmlC14NDocSave(xmlDocPtr doc, xmlNodeSetPtr nodes,
     ret = xmlOutputBufferClose(buf);
     return (ret);
 }
-
-
 
 /*
  * Macro used to grow the current buffer.

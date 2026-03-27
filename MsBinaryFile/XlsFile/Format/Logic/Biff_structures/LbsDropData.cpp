@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr LbsDropData::clone()
 {
 	return BiffStructurePtr(new LbsDropData(*this));
@@ -66,7 +64,5 @@ void LbsDropData::save(CFRecord& record)
 		record.reserveNunBytes(1); // padding
 	}
 }
-
-
 } // namespace XLS
 

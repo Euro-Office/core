@@ -47,8 +47,6 @@ public:
 };
 
 typedef boost::shared_ptr<OperatorPtg> OperatorPtgPtr;
-
-
 template<class T, unsigned short fixedPtgId, int priority>
 class BOperatorPtg_T: public OperatorPtg
 {
@@ -71,8 +69,6 @@ public:
 	virtual const std::wstring& getOperatorSymbols() const {return T::getSymbols();};
 	virtual const int getOperatorPriority() const {return priority;};
 };
-
-
 template<class T, unsigned short fixedType, int priority>
 class UOperatorPtg_T: public OperatorPtg
 {
@@ -89,8 +85,6 @@ public:
 	virtual const std::wstring& getOperatorSymbols() const {return T::getSymbols();};
 	virtual const int getOperatorPriority() const {return priority;};
 };
-
-
 class PtgAdd : public BOperatorPtg_T<PtgAdd, 0x03, 25>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgAdd)
@@ -103,8 +97,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgSub : public BOperatorPtg_T<PtgSub, 0x04, 25>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgSub)
@@ -117,8 +109,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgMul : public BOperatorPtg_T<PtgMul, 0x05, 20>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgMul)
@@ -131,8 +121,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgDiv : public BOperatorPtg_T<PtgDiv, 0x06, 20>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgDiv)
@@ -145,8 +133,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgPower : public BOperatorPtg_T<PtgPower, 0x07, 15>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgPower)
@@ -159,8 +145,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgEq : public BOperatorPtg_T<PtgEq, 0x0B, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgEq)
@@ -173,8 +157,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgNe : public BOperatorPtg_T<PtgNe, 0x0E, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgNe)
@@ -187,8 +169,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgGt : public BOperatorPtg_T<PtgGt, 0x0D, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgGt)
@@ -201,8 +181,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgGe : public BOperatorPtg_T<PtgGe, 0x0C, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgGe)
@@ -215,8 +193,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgLt : public BOperatorPtg_T<PtgLt, 0x09, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgLt)
@@ -229,8 +205,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgLe : public BOperatorPtg_T<PtgLe, 0x0A, 35>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgLe)
@@ -243,8 +217,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgConcat : public BOperatorPtg_T<PtgConcat, 0x08, 30>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgConcat)
@@ -257,8 +229,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgIsect : public BOperatorPtg_T<PtgIsect, 0x0F, 5>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgIsect)
@@ -271,8 +241,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgRange : public BOperatorPtg_T<PtgRange, 0x11, 4>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgRange)
@@ -285,8 +253,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgUnion : public BOperatorPtg_T<PtgUnion, 0x10, 6>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgUnion)
@@ -299,8 +265,6 @@ public:
 		return symbols;
 	}
 };
-
-
 class PtgUminus : public UOperatorPtg_T<PtgUminus, 0x13, 10>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgUminus)
@@ -314,8 +278,6 @@ public:
 	}
 	virtual const bool isRightAssociative() const {return true;};
 };
-
-
 class PtgUplus : public UOperatorPtg_T<PtgUplus, 0x12, 10>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgUplus)
@@ -329,8 +291,6 @@ public:
 	}
 	virtual const bool isRightAssociative() const {return true;};
 };
-
-
 class PtgPercent : public UOperatorPtg_T<PtgPercent, 0x14, 11>
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PtgPercent)
@@ -348,7 +308,5 @@ public:
 	};
 	virtual const bool isPercent() const {return true;};
 };
-
-
 } // namespace XLS
 

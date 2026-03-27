@@ -258,6 +258,4 @@ public:
 private:
 	_odfCryptData	cryptData;
 };
-
-
 }

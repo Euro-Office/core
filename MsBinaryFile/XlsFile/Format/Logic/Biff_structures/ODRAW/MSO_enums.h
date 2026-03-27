@@ -39,8 +39,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -87,8 +85,6 @@ public:
 		return L"";
 	}
 };
-
-
 class MSOLINESTYLE
 {
 public:
@@ -114,7 +110,5 @@ public:
 		return L"";
 	}
 };
-
-
 
 } // namespace XLS

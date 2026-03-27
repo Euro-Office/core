@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  maze.c
  *
@@ -37,7 +35,6 @@
  *      cost function.
  *
  *          PIX             *pixSearchGrayMaze()
- *
  *
  *      Elegant method for finding largest white (or black) rectangle
  *      in an image.
@@ -72,8 +69,6 @@ struct MazeElement {
     l_int32    dir;  /* direction from parent to child */
 };
 typedef struct MazeElement  MAZEEL;
-
-
 static MAZEEL *mazeelCreate(l_int32  x, l_int32  y, l_int32  dir);
 static l_int32 localSearchForBackground(PIX  *pix, l_int32  *px,
                                         l_int32  *py, l_int32  maxrad);
@@ -82,8 +77,6 @@ static l_int32 localSearchForBackground(PIX  *pix, l_int32  *px,
 #define  DEBUG_PATH    0
 #define  DEBUG_MAZE    0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*---------------------------------------------------------------------*
  *             Binary maze generation as cellular automaton            *
  *---------------------------------------------------------------------*/
@@ -255,8 +248,6 @@ L_QUEUE   *lq;
     pixDestroy(&pixm);
     return pixd;
 }
-
-
 static MAZEEL *
 mazeelCreate(l_int32  x,
              l_int32  y,
@@ -270,8 +261,6 @@ MAZEEL *el;
     el->dir = dir;
     return el;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Binary maze search                        *
  *---------------------------------------------------------------------*/
@@ -450,8 +439,6 @@ PTA       *pta;
     composeRGBPixel(255, 0, 0, &rpixel);  /* start point */
     composeRGBPixel(0, 255, 0, &gpixel);
     composeRGBPixel(0, 0, 255, &bpixel);  /* end point */
-
-
     if (!found) {
         L_INFO(" No path found", procName);
         if (pixd) {  /* paint all visited locations */
@@ -498,8 +485,6 @@ PTA       *pta;
     FREE(linep8);
     return pta;
 }
-
-
 /*!
  *  localSearchForBackground()
  *
@@ -545,8 +530,6 @@ l_uint32  val;
     }
     return 1;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                            Gray maze search                         *
@@ -885,8 +868,6 @@ PTA      *pta;
     FREE(liner32);
     return pta;
 }
-
-
 /*---------------------------------------------------------------------*
  *                      Largest rectangle in an image                  *
  *---------------------------------------------------------------------*/
@@ -1062,5 +1043,3 @@ PIX       *pixw, *pixh;  /* keeps the width and height for the largest */
     pixDestroy(&pixh);
     return 0;
 }
-
-

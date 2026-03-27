@@ -43,8 +43,6 @@
 #include "cmemory.h"
 #include "ucln_cmn.h"
 #include "ustr_cnv.h"
-
-
 #if 0
 #include <stdio.h>
 extern void UCNV_DEBUG_LOG(char *what, char *who, void *p, int l);
@@ -93,8 +91,6 @@ converterData[UCNV_NUMBER_OF_SUPPORTED_CONVERTER_TYPES]={
 #else
     &_SCSUData,
 #endif
-
-
 #if UCONFIG_NO_LEGACY_CONVERSION || UCONFIG_ONLY_HTML_CONVERSION
     NULL,
 #else
@@ -188,8 +184,6 @@ static struct {
   { "x11compoundtext", UCNV_COMPOUND_TEXT}
 #endif
 };
-
-
 /*initializes some global variables */
 static UHashtable *SHARED_DATA_HASHTABLE = NULL;
 static UMutex cnvCacheMutex = U_MUTEX_INITIALIZER;  /* Mutex for synchronizing cnv cache access. */
@@ -959,8 +953,6 @@ ucnv_createConverterFromPackage(const char *packageName, const char *converterNa
     UTRACE_EXIT_PTR_STATUS(myUConverter, *err);
     return myUConverter;
 }
-
-
 U_CFUNC UConverter*
 ucnv_createConverterFromSharedData(UConverter *myUConverter,
                                    UConverterSharedData *mySharedConverterData,
@@ -1128,8 +1120,6 @@ static void U_CALLCONV initAvailableConvertersList(UErrorCode &errCode) {
 
     uenum_close(allConvEnum);
 }
-
-
 static UBool haveAvailableConverterList(UErrorCode *pErrorCode) {
     umtx_initOnce(gAvailableConvertersInitOnce, &initAvailableConvertersList, *pErrorCode);
     return U_SUCCESS(*pErrorCode);

@@ -126,8 +126,6 @@ namespace PPTX
 			pWriter->WriteRecord2(0, rPr);
 
 			pWriter->EndRecord();
-
-
 			if (pWriter->m_pCommon->m_pNativePicker->m_bIsEmbeddedFonts)
 				pWriter->m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckString(text);
 		}

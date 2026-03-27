@@ -130,8 +130,6 @@ class identifier:
         if self.conditionals != None:
             r = r + " " + repr(self.conditionals)
         return r
-
-
     def set_header(self, header):
         self.header = header
     def set_module(self, module):
@@ -359,8 +357,6 @@ class index:
             print("  %d %s , %d public" % (count, type, public))
         elif count != 0:
             print("  %d public %s" % (count, type))
-
-
     def analyze(self):
         self.analyze_dict("functions", self.functions)
         self.analyze_dict("variables", self.variables)
@@ -1601,8 +1597,6 @@ class CParser:
                 return
         self.parseTopComment(self.top_comment)
         return self.index
-
-
 class docBuilder:
     """A documentation builder"""
     def __init__(self, name, directories=['.'], excludes=[]):
@@ -2107,8 +2101,6 @@ class docBuilder:
         self.serialize_xrefs(output)
         output.write("</apirefs>\n")
         output.close()
-
-
 def rebuild():
     builder = None
     if glob.glob("parser.c") != [] :

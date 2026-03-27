@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 
 #include FT_LCD_FILTER_H
 #include FT_IMAGE_H
 #include FT_INTERNAL_OBJECTS_H
-
-
 #ifdef FT_CONFIG_OPTION_SUBPIXEL_RENDERING
 
 /* define USE_LEGACY to implement the legacy filter */
@@ -38,20 +34,14 @@
     FT_Byte*  weights = library->lcd_weights;
     FT_UInt   width   = (FT_UInt)bitmap->width;
     FT_UInt   height  = (FT_UInt)bitmap->rows;
-
-
     /* horizontal in-place FIR filter */
     if ( mode == FT_RENDER_MODE_LCD && width >= 4 )
     {
       FT_Byte*  line = bitmap->buffer;
-
-
       for ( ; height > 0; height--, line += bitmap->pitch )
       {
         FT_UInt  fir[5];
         FT_UInt  val1, xx;
-
-
         val1   = line[0];
         fir[0] = weights[2] * val1;
         fir[1] = weights[3] * val1;
@@ -68,8 +58,6 @@
         for ( xx = 2; xx < width; xx++ )
         {
           FT_UInt  val, pix;
-
-
           val    = line[xx];
           pix    = fir[0] + weights[0] * val;
           fir[0] = fir[1] + weights[1] * val;
@@ -84,8 +72,6 @@
 
         {
           FT_UInt  pix;
-
-
           pix          = fir[0] >> 8;
           pix         |= -( pix >> 8 );
           line[xx - 2] = (FT_Byte)pix;
@@ -102,15 +88,11 @@
     {
       FT_Byte*  column = bitmap->buffer;
       FT_Int    pitch  = bitmap->pitch;
-
-
       for ( ; width > 0; width--, column++ )
       {
         FT_Byte*  col = column;
         FT_UInt   fir[5];
         FT_UInt   val1, yy;
-
-
         val1   = col[0];
         fir[0] = weights[2] * val1;
         fir[1] = weights[3] * val1;
@@ -129,8 +111,6 @@
         for ( yy = 2; yy < height; yy++ )
         {
           FT_UInt  val, pix;
-
-
           val    = col[0];
           pix    = fir[0] + weights[0] * val;
           fir[0] = fir[1] + weights[1] * val;
@@ -146,8 +126,6 @@
 
         {
           FT_UInt  pix;
-
-
           pix             = fir[0] >> 8;
           pix            |= -( pix >> 8 );
           col[-2 * pitch] = (FT_Byte)pix;
@@ -159,8 +137,6 @@
       }
     }
   }
-
-
 #ifdef USE_LEGACY
 
   /* intra-pixel filter used by the legacy filter */
@@ -181,27 +157,19 @@
     };
 
     FT_UNUSED( library );
-
-
     /* horizontal in-place intra-pixel filter */
     if ( mode == FT_RENDER_MODE_LCD && width >= 3 )
     {
       FT_Byte*  line = bitmap->buffer;
-
-
       for ( ; height > 0; height--, line += pitch )
       {
         FT_UInt  xx;
-
-
         for ( xx = 0; xx < width; xx += 3 )
         {
           FT_UInt  r = 0;
           FT_UInt  g = 0;
           FT_UInt  b = 0;
           FT_UInt  p;
-
-
           p  = line[xx];
           r += filters[0][0] * p;
           g += filters[0][1] * p;
@@ -226,22 +194,16 @@
     else if ( mode == FT_RENDER_MODE_LCD_V && height >= 3 )
     {
       FT_Byte*  column = bitmap->buffer;
-
-
       for ( ; width > 0; width--, column++ )
       {
         FT_Byte*  col     = column;
         FT_Byte*  col_end = col + height * pitch;
-
-
         for ( ; col < col_end; col += 3 * pitch )
         {
           FT_UInt  r = 0;
           FT_UInt  g = 0;
           FT_UInt  b = 0;
           FT_UInt  p;
-
-
           p  = col[0];
           r += filters[0][0] * p;
           g += filters[0][1] * p;
@@ -266,8 +228,6 @@
   }
 
 #endif /* USE_LEGACY */
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilterWeights( FT_Library      library,
                                   unsigned char  *weights )
@@ -279,8 +239,6 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
                            FT_LcdFilter  filter )
@@ -291,8 +249,6 @@
     /* providing a cheap gamma correction                 */
     static const FT_Byte  default_filter[5] =
                             { 0x10, 0x40, 0x70, 0x40, 0x10 };
-
-
     if ( !library )
       return FT_THROW( Invalid_Argument );
 
@@ -360,8 +316,6 @@
 
     return FT_THROW( Unimplemented_Feature );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
                            FT_LcdFilter  filter )
@@ -373,6 +327,4 @@
   }
 
 #endif /* !FT_CONFIG_OPTION_SUBPIXEL_RENDERING */
-
-
 /* END */

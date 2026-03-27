@@ -37,24 +37,16 @@
 
 namespace XLS
 {
-
-
 FNGROUPS::FNGROUPS()
 {
 }
-
-
 FNGROUPS::~FNGROUPS()
 {
 }
-
-
 BaseObjectPtr FNGROUPS::clone()
 {
 	return BaseObjectPtr(new FNGROUPS(*this));
 }
-
-
 // FNGROUPS = BuiltInFnGroupCount *FnGroupName *FnGrp12
 const bool FNGROUPS::loadContent(BinProcessor& proc)
 {

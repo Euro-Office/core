@@ -86,8 +86,6 @@
 
 static const l_int32  DEFAULT_RESOLUTION = 300;   /* ppi */
 static const l_int32  MAX_PAGES_IN_TIFF_FILE = 3000;  /* should be enough */
-
-
     /* All functions with TIFF interfaces are static. */
 static PIX      *pixReadFromTiffStream(TIFF *tif);
 static l_int32   tiffGetResolution(TIFF *tif, l_uint32 *pxres, l_uint32 *pyres);
@@ -136,8 +134,6 @@ static struct tiff_transform tiff_orientation_transforms[] = {
     {0, 0, -1}
 };
 
-
-
 /*--------------------------------------------------------------*
  *                      Reading from file                       *
  *--------------------------------------------------------------*/
@@ -174,8 +170,6 @@ PIX   *pix;
 
     return pix;
 }
-
-
 /*--------------------------------------------------------------*
  *                     Reading from stream                      *
  *--------------------------------------------------------------*/
@@ -226,8 +220,6 @@ TIFF    *tif;
     TIFFCleanup(tif);
     return pix;
 }
-
-
 /*!
  *  pixReadFromTiffStream()
  *
@@ -396,8 +388,6 @@ PIXCMAP   *cmap;
 
     return pix;
 }
-
-
 /*--------------------------------------------------------------*
  *                       Writing to file                        *
  *--------------------------------------------------------------*/
@@ -425,8 +415,6 @@ pixWriteTiff(const char  *filename,
     return pixWriteTiffCustom(filename, pix, comptype, modestring,
                               NULL, NULL, NULL, NULL);
 }
-
-
 /*! 
  *  pixWriteTiffCustom()
  *
@@ -501,8 +489,6 @@ TIFF    *tif;
 
     return ret;
 }
-
-
 /*--------------------------------------------------------------*
  *                       Writing to stream                      *
  *--------------------------------------------------------------*/
@@ -560,8 +546,6 @@ TIFF  *tif;
     TIFFCleanup(tif);
     return 0;
 }
-
-
 /*!
  *  pixWriteToTiffStream()
  *
@@ -754,8 +738,6 @@ char      *text;
 
     return 0;
 }
-
-
 /*!
  *  writeCustomTiffTags()
  *
@@ -883,8 +865,6 @@ l_uint32   uval, uval2;
     }
     return 0;
 }
-    
-
 /*--------------------------------------------------------------*
  *               Reading and writing multipage tiff             *
  *--------------------------------------------------------------*/
@@ -929,8 +909,6 @@ PIXA    *pixa;
 
     return pixa;
 }
-
-
 /*
  *  writeMultipageTiff()
  *
@@ -972,8 +950,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return 0;
 }
-
-
 /*
  *  writeMultipageTiffSA()
  *
@@ -1035,8 +1011,6 @@ PIX         *pix, *pixt;
 
     return 0;
 }
-        
-
 /*--------------------------------------------------------------*
  *                    Print info to stream                      *
  *--------------------------------------------------------------*/
@@ -1068,8 +1042,6 @@ TIFF  *tif;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------*
  *                   Get count from stream                      *
  *--------------------------------------------------------------*/
@@ -1106,8 +1078,6 @@ TIFF    *tif;
     TIFFCleanup(tif);
     return 0;
 }
-
-
 /*--------------------------------------------------------------*
  *                   Get resolution from tif                    *
  *--------------------------------------------------------------*/
@@ -1159,8 +1129,6 @@ l_float32  fxres, fyres;
 
     return 1;
 }
-
-
 /*--------------------------------------------------------------*
  *              Get some tiff header information                *
  *--------------------------------------------------------------*/
@@ -1213,8 +1181,6 @@ FILE    *fp;
     fclose(fp);
     return ret;
 }
-
-
 /*!
  *  freadHeaderTiff()
  *
@@ -1280,8 +1246,6 @@ TIFF    *tif;
     TIFFCleanup(tif);
     return ret;
 }
-
-
 /*!
  *  readHeaderMemTiff()
  *
@@ -1344,8 +1308,6 @@ TIFF     *tif;
     TIFFClose(tif);
     return ret;
 }
-
-
 /*!
  *  tiffReadHeaderTiff()
  *
@@ -1406,8 +1368,6 @@ l_uint32   w, h, xres, yres;
     }
     return 0;
 }
-
-
 /*!
  *  findTiffCompression()
  *
@@ -1447,8 +1407,6 @@ TIFF     *tif;
     TIFFCleanup(tif);
     return 0;
 }
-
-
 /*!
  *  getTiffCompressedFormat()
  *
@@ -1492,8 +1450,6 @@ l_int32  comptype;
     }
     return comptype;
 }
-
-
 /*--------------------------------------------------------------*
  *                   Extraction of tiff g4 data                 *
  *--------------------------------------------------------------*/
@@ -1596,8 +1552,6 @@ TIFF     *tif;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------*
  *               Open tiff stream from file stream              *
  *--------------------------------------------------------------*/
@@ -1640,8 +1594,6 @@ l_int32  fd;
 
     return TIFFFdOpen(fd, "TIFFstream", modestring);
 }
-
-
 /*----------------------------------------------------------------------*
  *     Memory I/O: reading memory --> pix and writing pix --> memory    *
  *----------------------------------------------------------------------*/
@@ -1686,8 +1638,6 @@ struct L_Memstream
     size_t    *poutsize;  /* input param for writing; data size goes here. */
 };
 typedef struct L_Memstream  L_MEMSTREAM;
-
-
     /* These are static functions for memory I/O */
 static L_MEMSTREAM *memstreamCreateForRead(l_uint8 *indata, size_t pinsize);
 static L_MEMSTREAM *memstreamCreateForWrite(l_uint8 **poutdata,
@@ -1700,8 +1650,6 @@ static l_int32 tiffCloseCallback(thandle_t handle);
 static toff_t tiffSizeCallback(thandle_t handle);
 static l_int32 tiffMapCallback(thandle_t handle, tdata_t *data, toff_t *length);
 static void tiffUnmapCallback(thandle_t handle, tdata_t data, toff_t length);
-
-
 static L_MEMSTREAM *
 memstreamCreateForRead(l_uint8  *indata,
                        size_t    insize)
@@ -1715,8 +1663,6 @@ L_MEMSTREAM  *mstream;
     mstream->offset = 0;        /* offset always starts at 0 */
     return mstream;
 }
-
-
 static L_MEMSTREAM *
 memstreamCreateForWrite(l_uint8  **poutdata,
                         size_t    *poutsize)
@@ -1731,8 +1677,6 @@ L_MEMSTREAM  *mstream;
     mstream->hw = mstream->offset = 0;
     return mstream;
 }
-
-
 static tsize_t
 tiffReadCallback(thandle_t  handle,
                  tdata_t    data,
@@ -1747,8 +1691,6 @@ size_t        amount;
     mstream->offset += amount;
     return amount;
 }
-
-
 static tsize_t
 tiffWriteCallback(thandle_t  handle,
                   tdata_t    data,
@@ -1774,8 +1716,6 @@ size_t        newsize;
     mstream->hw = L_MAX(mstream->offset, mstream->hw);
     return length;
 }
-
-
 static toff_t
 tiffSeekCallback(thandle_t  handle,
                  toff_t     offset,
@@ -1806,8 +1746,6 @@ L_MEMSTREAM  *mstream;
 
     return mstream->offset;
 }
-
-
 static l_int32
 tiffCloseCallback(thandle_t  handle)
 {
@@ -1821,8 +1759,6 @@ L_MEMSTREAM  *mstream;
     FREE(mstream);  /* never free the buffer! */
     return 0;
 }
-
-
 static toff_t
 tiffSizeCallback(thandle_t  handle)
 {
@@ -1831,8 +1767,6 @@ L_MEMSTREAM  *mstream;
     mstream = (L_MEMSTREAM *)handle;
     return mstream->hw;
 }
-
-
 static l_int32
 tiffMapCallback(thandle_t  handle,
                 tdata_t   *data,
@@ -1845,8 +1779,6 @@ L_MEMSTREAM  *mstream;
     *length = mstream->hw;
     return 0;
 } 
-
-
 static void
 tiffUnmapCallback(thandle_t  handle,
                   tdata_t    data,
@@ -1854,8 +1786,6 @@ tiffUnmapCallback(thandle_t  handle,
 {
     return;
 } 
-
-
 /*!
  *  fopenTiffMemstream()
  *
@@ -1904,8 +1834,6 @@ L_MEMSTREAM  *mstream;
                           tiffSizeCallback, tiffMapCallback,
                           tiffUnmapCallback);
 }
-
-
 /*!
  *  pixReadMemTiff()
  *
@@ -1960,8 +1888,6 @@ TIFF     *tif;
     TIFFClose(tif);
     return pix;
 }
-
-
 /*! 
  *  pixWriteMemTiff()
  *
@@ -1986,8 +1912,6 @@ pixWriteMemTiff(l_uint8  **pdata,
     return pixWriteMemTiffCustom(pdata, psize, pix, comptype,
                                  NULL, NULL, NULL, NULL);
 }
-
-
 /*! 
  *  pixWriteMemTiffCustom()
  *

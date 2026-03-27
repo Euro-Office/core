@@ -67,12 +67,8 @@
     functions are implimented in a separate file, because only the memory
     functions should be compiled with out overloading of the memory functions.
  */
-  
-
 #ifdef NEED_DJVU_PROGRESS
 #include "DjVuGlobal.h"
-
-
 // ----------------------------------------
 
 #include "GOS.h"
@@ -96,8 +92,6 @@ public:
   Data(djvu_progress_callback *_callback):
     callback(_callback), head(0), gtask(0), lastsigdate(0) {}
 };
-
-  
 static GPMap<void *,DjVuProgressTask::Data> &
 get_map(void)
 {

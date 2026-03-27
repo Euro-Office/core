@@ -30,8 +30,6 @@
  */
 
 #include "opj_includes.h"
-
-
 struct opj_sparse_array_int32 {
     OPJ_UINT32 width;
     OPJ_UINT32 height;

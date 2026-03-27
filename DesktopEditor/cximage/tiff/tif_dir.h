@@ -141,8 +141,6 @@ typedef	struct {
 /*      FIELD_CUSTOM (see tiffio.h)     65 */
 /* end of support for well-known tags; codec-private tags follow */
 #define	FIELD_CODEC			66	/* base of codec-private tags */
-
-
 /*
  * Pseudo-tags don't normally need field bits since they
  * are not written to an output file (by definition).
@@ -165,8 +163,6 @@ typedef	struct {
     ((uint32) ((tif)->tif_header.tiff_magic == TIFF_BIGENDIAN ? \
         ((v) & (tif)->tif_typemask[type]) << (tif)->tif_typeshift[type] : \
 	(v) & (tif)->tif_typemask[type]))
-
-
 #define BITn(n)				(((unsigned long)1L)<<((n)&0x1f)) 
 #define BITFIELDn(tif, n)		((tif)->tif_dir.td_fieldsset[(n)/32]) 
 #define TIFFFieldSet(tif, field)	(BITFIELDn(tif, field) & BITn(field)) 

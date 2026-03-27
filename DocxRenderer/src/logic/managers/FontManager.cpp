@@ -5,8 +5,6 @@
 #include "../../../../DesktopEditor/common/StringExt.h"
 
 #include "../../resources/Constants.h"
-
-
 namespace NSDocxRenderer
 {
 	CUnicodeRange::CUnicodeRange(const int& _start, const int& _end,

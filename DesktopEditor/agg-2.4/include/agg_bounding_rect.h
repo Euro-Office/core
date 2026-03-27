@@ -68,8 +68,6 @@ namespace agg
         }
         return *x1 <= *x2 && *y1 <= *y2;
     }
-
-
     //-----------------------------------------------------bounding_rect_single
     template<class VertexSource, class CoordT> 
     bool bounding_rect_single(VertexSource& vs, unsigned path_id,
@@ -109,8 +107,6 @@ namespace agg
         }
         return *x1 <= *x2 && *y1 <= *y2;
     }
-
-
 }
 
 #endif

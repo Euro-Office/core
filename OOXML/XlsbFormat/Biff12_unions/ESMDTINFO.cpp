@@ -52,8 +52,6 @@ namespace XLSB
     {
         return BaseObjectPtr(new ESMDTINFO(*this));
     }
-
-
     const bool ESMDTINFO::loadContent(BinProcessor& proc)
     {
         if (proc.optional<BeginEsmdtinfo>())

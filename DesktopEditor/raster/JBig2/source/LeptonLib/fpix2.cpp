@@ -147,8 +147,6 @@ FPIX       *fpixd;
     pixDestroy(&pixt);
     return fpixd;
 }
-
-
 /*!
  *  fpixConvertToPix()
  *
@@ -265,8 +263,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  fpixDisplayMaxDynamicRange()
  *
@@ -322,8 +318,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *                     FPix  <-->  DPix conversions                   *
  *--------------------------------------------------------------------*/
@@ -366,8 +360,6 @@ DPIX       *dpix;
 
     return dpix;
 }
-
-
 /*!
  *  dpixConvertToFPix()
  *
@@ -407,8 +399,6 @@ FPIX       *fpix;
 
     return fpix;
 }
-
-
 
 /*--------------------------------------------------------------------*
  *                           Min/max value                            *
@@ -464,8 +454,6 @@ l_float32   minval;
     if (pyminloc) *pyminloc = yminloc;
     return 0;
 }
-
-
 /*!
  *  fpixGetMax()
  *
@@ -517,8 +505,6 @@ l_float32   maxval;
     if (pymaxloc) *pymaxloc = ymaxloc;
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                          Border functions                          *
  *--------------------------------------------------------------------*/
@@ -559,8 +545,6 @@ FPIX    *fpixd;
     fpixRasterop(fpixd, left, top, ws, hs, fpixs, 0, 0);
     return fpixd;
 }
-
-
 /*!
  *  fpixRemoveBorder()
  *
@@ -597,8 +581,6 @@ FPIX    *fpixd;
     fpixRasterop(fpixd, 0, 0, wd, hd, fpixs, left, top);
     return fpixd;
 }
-
-
 
 /*!
  *  fpixAddMirroredBorder()
@@ -642,8 +624,6 @@ FPIX    *fpixd;
 
     return fpixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *                          Simple rasterop                           *
  *--------------------------------------------------------------------*/
@@ -758,8 +738,6 @@ l_float32  *datas, *datad, *lines, *lined;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                       Special integer scaling                      *
  *--------------------------------------------------------------------*/
@@ -851,8 +829,6 @@ FPIX       *fpixd;
     FREE(fract);
     return fpixd;
 }
-
-
 /*!
  *  dpixScaleByInteger()
  *
@@ -941,8 +917,6 @@ DPIX       *dpixd;
     FREE(fract);
     return dpixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *                        Arithmetic operations                       *
  *--------------------------------------------------------------------*/
@@ -1029,8 +1003,6 @@ l_float32  *datas, *datad, *lines, *lined;
 
     return fpixd;
 }
-
-
 /*!
  *  fpixAddMultConstant()
  *

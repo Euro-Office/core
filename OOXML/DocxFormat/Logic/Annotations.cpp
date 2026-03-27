@@ -47,8 +47,6 @@
 // TO DO: Нехватающие классы:
 //        <w:customXml>
 //        <w:subDoc>
-
-
 namespace OOX
 {
 	namespace Logic

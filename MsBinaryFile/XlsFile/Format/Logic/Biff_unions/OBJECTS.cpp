@@ -44,19 +44,13 @@
 
 namespace XLS
 {
-
-
 OBJECTS::OBJECTS(const bool is_inside_chart_sheet)
 :	is_inside_chart_sheet_(is_inside_chart_sheet)
 {
 }
-
-
 OBJECTS::~OBJECTS()
 {
 }
-
-
 class Parenthesis_OBJECTS_2: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_OBJECTS_2)
@@ -90,8 +84,6 @@ public:
 	
 	MsoDrawingPtr mso_drawing_;
 };
-
-
 class Parenthesis_OBJECTS_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_OBJECTS_1)
@@ -110,8 +102,6 @@ public:
 	{
 		return false;
 	}
-
-
 	const bool loadContentRead(BinReaderProcessor& proc)
 	{
 		bool res = proc.optional(*mso_drawing_);
@@ -126,20 +116,14 @@ public:
 	MsoDrawingPtr mso_drawing_;
 };
 
-
-
 BaseObjectPtr OBJECTS::clone()
 {
 	return BaseObjectPtr(new OBJECTS(*this));
 }
-
-
 const bool OBJECTS::loadContent(BinProcessor& proc)
 {
 	return false;
 }
-
-
 // OBJECTS = *(MSODRAWING *(TEXTOBJECT / OBJ / CHART)) [MsoDrawingSelection]
 const bool OBJECTS::loadContentRead(BinReaderProcessor& proc)
 {
@@ -187,8 +171,6 @@ const bool OBJECTS::saveContent(BinProcessor& proc)
 	}
 	return true;
 }
-
-
 
 } // namespace XLS
 

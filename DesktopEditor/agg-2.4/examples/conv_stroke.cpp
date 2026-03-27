@@ -17,11 +17,7 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 
 class the_application : public agg::platform_support
 {
@@ -34,8 +30,6 @@ class the_application : public agg::platform_support
     agg::rbox_ctrl<agg::rgba8> m_cap;
     agg::slider_ctrl<agg::rgba8> m_width;
     agg::slider_ctrl<agg::rgba8> m_miter_limit;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -117,8 +111,6 @@ public:
         if(m_join.cur_item() == 2) join = agg::round_join;
         if(m_join.cur_item() == 3) join = agg::bevel_join;
 
-
-
         // (1)
         agg::conv_stroke<agg::path_storage> stroke(path);
         stroke.line_join(join);
@@ -128,16 +120,12 @@ public:
         ras.add_path(stroke);
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0.8, 0.7, 0.6));
         // (1)
-
-
         // (2)
         agg::conv_stroke<agg::path_storage> poly1(path);
         poly1.width(1.5);
         ras.add_path(poly1);
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0,0,0));
         // (2)
-
-
 
         // (3)
         agg::conv_dash<agg::conv_stroke<agg::path_storage> > poly2_dash(stroke);
@@ -151,22 +139,16 @@ public:
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0,0,0.3));
         // (3)
 
-
-
         // (4)
         ras.add_path(path);
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0.0, 0.0, 0.0, 0.2));
         // (4)
-
-
 
         agg::render_ctrl(ras, sl, renb, m_join);
         agg::render_ctrl(ras, sl, renb, m_cap);
         agg::render_ctrl(ras, sl, renb, m_width);
         agg::render_ctrl(ras, sl, renb, m_miter_limit);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -197,8 +179,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -234,8 +214,6 @@ public:
     {
         m_idx = -1;
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         double dx = 0;
@@ -256,8 +234,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -269,5 +245,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

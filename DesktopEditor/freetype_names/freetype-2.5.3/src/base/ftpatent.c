@@ -22,8 +22,6 @@
 #include FT_INTERNAL_STREAM_H
 #include FT_SERVICE_SFNT_H
 #include FT_SERVICE_TRUETYPE_GLYF_H
-
-
   static FT_Bool
   _tt_check_patents_in_range( FT_Stream  stream,
                               FT_ULong   size )
@@ -31,8 +29,6 @@
     FT_Bool   result = FALSE;
     FT_Error  error;
     FT_Bytes  p, end;
-
-
     if ( FT_FRAME_ENTER( size ) )
       return 0;
 
@@ -107,8 +103,6 @@
     FT_FRAME_EXIT();
     return result;
   }
-
-
   static FT_Bool
   _tt_check_patents_in_table( FT_Face   face,
                               FT_ULong  tag )
@@ -117,16 +111,12 @@
     FT_Error               error  = FT_Err_Ok;
     FT_Service_SFNT_Table  service;
     FT_Bool                result = FALSE;
-
-
     FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
 
     if ( service )
     {
       FT_UInt   i = 0;
       FT_ULong  tag_i = 0, offset_i = 0, length_i = 0;
-
-
       for ( i = 0; !error && tag_i != tag ; i++ )
         error = service->table_info( face, i,
                                      &tag_i, &offset_i, &length_i );
@@ -141,8 +131,6 @@
   Exit:
     return result;
   }
-
-
   static FT_Bool
   _tt_face_check_patents( FT_Face  face )
   {
@@ -152,8 +140,6 @@
     FT_Bool    result;
 
     FT_Service_TTGlyf  service;
-
-
     result = _tt_check_patents_in_table( face, TTAG_fpgm );
     if ( result )
       goto Exit;
@@ -170,8 +156,6 @@
     {
       FT_ULong  offset, num_ins, size;
       FT_Int    num_contours;
-
-
       offset = service->get_location( face, gindex, &size );
       if ( size == 0 )
         continue;
@@ -188,8 +172,6 @@
       else  /* compound glyph */
       {
         FT_Bool  has_instr = 0;
-
-
         if ( FT_STREAM_SKIP( 8 ) )
           continue;
 
@@ -197,8 +179,6 @@
         for (;;)
         {
           FT_UInt  flags, toskip;
-
-
           if( FT_READ_USHORT( flags ) )
             break;
 
@@ -242,23 +222,17 @@
   Exit:
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Bool )
   FT_Face_CheckTrueTypePatents( FT_Face  face )
   {
     FT_Bool  result = FALSE;
-
-
     if ( face && FT_IS_SFNT( face ) )
       result = _tt_face_check_patents( face );
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Bool )
@@ -266,8 +240,6 @@
                                 FT_Bool  value )
   {
     FT_Bool  result = FALSE;
-
-
 #if defined( TT_CONFIG_OPTION_UNPATENTED_HINTING ) && \
     !defined( TT_CONFIG_OPTION_BYTECODE_INTERPRETER )
     if ( face && FT_IS_SFNT( face ) )

@@ -19,8 +19,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Private buffer controller object */
 
 typedef struct {
@@ -40,8 +38,6 @@ typedef struct {
 } my_post_controller;
 
 typedef my_post_controller * my_post_ptr;
-
-
 /* Forward declarations */
 METHODDEF(void) post_process_1pass
 	JPP((j_decompress_ptr cinfo,
@@ -63,8 +59,6 @@ METHODDEF(void) post_process_2pass
 	     JSAMPARRAY output_buf, JDIMENSION *out_row_ctr,
 	     JDIMENSION out_rows_avail));
 #endif
-
-
 /*
  * Initialize for a processing pass.
  */
@@ -115,8 +109,6 @@ start_pass_dpost (j_decompress_ptr cinfo, J_BUF_MODE pass_mode)
   }
   post->starting_row = post->next_row = 0;
 }
-
-
 /*
  * Process some data in the one-pass (strip buffer) case.
  * This is used for color precision reduction as well as one-pass quantization.
@@ -146,8 +138,6 @@ post_process_1pass (j_decompress_ptr cinfo,
 		post->buffer, output_buf + *out_row_ctr, (int) num_rows);
   *out_row_ctr += num_rows;
 }
-
-
 #ifdef QUANT_2PASS_SUPPORTED
 
 /*
@@ -192,8 +182,6 @@ post_process_prepass (j_decompress_ptr cinfo,
     post->next_row = 0;
   }
 }
-
-
 /*
  * Process some data in the second pass of 2-pass quantization.
  */
@@ -240,8 +228,6 @@ post_process_2pass (j_decompress_ptr cinfo,
 }
 
 #endif /* QUANT_2PASS_SUPPORTED */
-
-
 /*
  * Initialize postprocessing controller.
  */

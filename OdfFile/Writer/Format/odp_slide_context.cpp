@@ -38,8 +38,6 @@
 #include "style_paragraph_properties.h"
 
 #include <iostream>
-
-
 namespace cpdoccore {
 
 	using namespace odf_types;
@@ -285,7 +283,5 @@ void odp_slide_context::end_table()
 	
 	state().drawing_context()->end_frame();	
 }
-
-
 }
 }

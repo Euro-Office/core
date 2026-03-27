@@ -30,11 +30,7 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTimeScaleBehaviorAtom : public CUnknownRecord

@@ -5,8 +5,6 @@
 *   Corporation and others.  All Rights Reserved.
 *
 ******************************************************************************/
-
-
 /*----------------------------------------------------------------------------------
  *
  *  UDataMemory     A class-like struct that serves as a handle to a piece of memory
@@ -27,8 +25,6 @@ U_CFUNC void UDataMemory_init(UDataMemory *This) {
     uprv_memset(This, 0, sizeof(UDataMemory));
     This->length=-1;
 }
-
-
 U_CFUNC void UDatamemory_assign(UDataMemory *dest, UDataMemory *source) {
     /* UDataMemory Assignment.  Destination UDataMemory must be initialized first.  */
     UBool mallocedFlag = dest->heapAllocated;
@@ -51,8 +47,6 @@ U_CFUNC UDataMemory *UDataMemory_createNewInstance(UErrorCode *pErr) {
     }
     return This;
 }
-
-
 U_CFUNC const DataHeader *
 UDataMemory_normalizeDataPointer(const void *p) {
     /* allow the data to be optionally prepended with an alignment-forcing double value */
@@ -79,13 +73,9 @@ UDataMemory_normalizeDataPointer(const void *p) {
 #endif
     }
 }
-
-
 U_CFUNC void UDataMemory_setData (UDataMemory *This, const void *dataAddr) {
     This->pHeader = UDataMemory_normalizeDataPointer(dataAddr);
 }
-
-
 U_CAPI void U_EXPORT2
 udata_close(UDataMemory *pData) {
     if(pData!=NULL) {

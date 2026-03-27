@@ -382,8 +382,6 @@ void chart_error_indicator::add_attributes( const xml::attributes_wc_ptr & Attri
 {
     common_attlist_.add_attributes(Attributes);
 }
-
-
 // chart:regression-curve
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * chart_regression_curve::ns = L"chart";

@@ -17,12 +17,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FT_SFNT_NAMES_H__
 #define __FT_SFNT_NAMES_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -31,11 +27,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -58,8 +50,6 @@ FT_BEGIN_HEADER
   /*    Note that this has nothing to do with glyph names!                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -106,8 +96,6 @@ FT_BEGIN_HEADER
     FT_UInt    string_len;  /* in bytes */
 
   } FT_SfntName;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -124,8 +112,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_UInt )
   FT_Get_Sfnt_Name_Count( FT_Face  face );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -158,8 +144,6 @@ FT_BEGIN_HEADER
   FT_Get_Sfnt_Name( FT_Face       face,
                     FT_UInt       idx,
                     FT_SfntName  *aname );
-
-
   /***************************************************************************
    *
    * @constant:
@@ -173,8 +157,6 @@ FT_BEGIN_HEADER
    *
    */
 #define FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY  FT_MAKE_TAG( 'i', 'g', 'p', 'f' )
-
-
   /***************************************************************************
    *
    * @constant:
@@ -190,11 +172,7 @@ FT_BEGIN_HEADER
 #define FT_PARAM_TAG_IGNORE_PREFERRED_SUBFAMILY  FT_MAKE_TAG( 'i', 'g', 'p', 's' )
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FT_SFNT_NAMES_H__ */
-
-
 /* END */

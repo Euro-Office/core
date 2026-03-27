@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTMODAPI_H__
 #define __FTMODAPI_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -28,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -76,8 +68,6 @@ FT_BEGIN_HEADER
   /*    Note that the FreeType Cache sub-system is not a FreeType module.  */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* module bit flags */
 #define FT_MODULE_FONT_DRIVER         1  /* this module is a font driver  */
 #define FT_MODULE_RENDERER            2  /* this module is a renderer     */
@@ -90,8 +80,6 @@ FT_BEGIN_HEADER
                                               /* support vector outlines  */
 #define FT_MODULE_DRIVER_HAS_HINTER   0x400   /* the driver provides its  */
                                               /* own hinter               */
-
-
   /* deprecated values */
 #define ft_module_font_driver         FT_MODULE_FONT_DRIVER
 #define ft_module_renderer            FT_MODULE_RENDERER
@@ -101,11 +89,7 @@ FT_BEGIN_HEADER
 #define ft_module_driver_scalable     FT_MODULE_DRIVER_SCALABLE
 #define ft_module_driver_no_outlines  FT_MODULE_DRIVER_NO_OUTLINES
 #define ft_module_driver_has_hinter   FT_MODULE_DRIVER_HAS_HINTER
-
-
   typedef FT_Pointer  FT_Module_Interface;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -119,8 +103,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef FT_Error
   (*FT_Module_Constructor)( FT_Module  module );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -134,8 +116,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   typedef void
   (*FT_Module_Destructor)( FT_Module  module );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -152,8 +132,6 @@ FT_BEGIN_HEADER
   typedef FT_Module_Interface
   (*FT_Module_Requester)( FT_Module    module,
                           const char*  name );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -198,8 +176,6 @@ FT_BEGIN_HEADER
     FT_Module_Requester    get_interface;
 
   } FT_Module_Class;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -224,8 +200,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Add_Module( FT_Library              library,
                  const FT_Module_Class*  clazz );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -249,8 +223,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Module )
   FT_Get_Module( FT_Library   library,
                  const char*  module_name );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -274,8 +246,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Remove_Module( FT_Library  library,
                     FT_Module   module );
-
-
   /**********************************************************************
    *
    * @function:
@@ -341,8 +311,6 @@ FT_BEGIN_HEADER
                    const FT_String*  module_name,
                    const FT_String*  property_name,
                    const void*       value );
-
-
   /**********************************************************************
    *
    * @function:
@@ -405,8 +373,6 @@ FT_BEGIN_HEADER
                    const FT_String*  module_name,
                    const FT_String*  property_name,
                    void*             value );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -432,8 +398,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Reference_Library( FT_Library  library );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -467,8 +431,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_New_Library( FT_Memory    memory,
                   FT_Library  *alibrary );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -495,8 +457,6 @@ FT_BEGIN_HEADER
 
   typedef void
   (*FT_DebugHook_Func)( void*  arg );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -528,8 +488,6 @@ FT_BEGIN_HEADER
   FT_Set_Debug_Hook( FT_Library         library,
                      FT_UInt            hook_index,
                      FT_DebugHook_Func  debug_hook );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -545,8 +503,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( void )
   FT_Add_Default_Modules( FT_Library  library );
-
-
 
   /**************************************************************************
    *
@@ -564,8 +520,6 @@ FT_BEGIN_HEADER
    *   bytecode support compiled in this version of the library.
    *
    */
-
-
   /**************************************************************************
    *
    *  @enum:
@@ -604,8 +558,6 @@ FT_BEGIN_HEADER
     FT_TRUETYPE_ENGINE_TYPE_PATENTED
 
   } FT_TrueTypeEngineType;
-
-
   /**************************************************************************
    *
    *  @func:
@@ -628,14 +580,8 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_TrueTypeEngineType )
   FT_Get_TrueType_Engine_Type( FT_Library  library );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTMODAPI_H__ */
-
-
 /* END */

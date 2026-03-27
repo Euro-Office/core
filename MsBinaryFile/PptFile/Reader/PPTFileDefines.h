@@ -202,8 +202,6 @@ typedef unsigned char BOOL1;
 
 //// Records ~12050 seem to be related to Document Encryption
 #define		RECORD_TYPE_DOCUMENT_ENCRYPTION_ATOM			0x2F14
-
-
 //records greater then 0xF000 belong to with Microsoft Office Drawing format also known as Escher
 #define		RECORD_TYPE_ESCHER_DGG_CONTAINER							0xF000
 #define		RECORD_TYPE_ESCHER_DGG										0xF006

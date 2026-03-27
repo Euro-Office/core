@@ -45,8 +45,6 @@
  *      else
  *          SET_DATA_BIT(pdata, n);
  */
-
-
     /* Use the inline accessors (except with _MSC_VER), because they
      * are faster.  */
 #define  USE_INLINE_ACCESSORS    1
@@ -72,8 +70,6 @@
      *_TEMP_WORD_PTR_ &= ~(0x80000000 >> ((n) & 31)); \
      *_TEMP_WORD_PTR_ |= ((val) << (31 - ((n) & 31))); \
     })
-
-
     /*--------------------------------------------------*
      *                     2 bit access                 *
      *--------------------------------------------------*/
@@ -89,8 +85,6 @@
 
 #define  CLEAR_DATA_DIBIT(pdata, n) \
     (*((l_uint32 *)(pdata) + ((n) >> 4)) &= ~(0xc0000000 >> (2 * ((n) & 15))))
-
-
     /*--------------------------------------------------*
      *                     4 bit access                 *
      *--------------------------------------------------*/
@@ -106,8 +100,6 @@
 
 #define  CLEAR_DATA_QBIT(pdata, n) \
     (*((l_uint32 *)(pdata) + ((n) >> 3)) &= ~(0xf0000000 >> (4 * ((n) & 7))))
-
-
     /*--------------------------------------------------*
      *                     8 bit access                 *
      *--------------------------------------------------*/
@@ -126,8 +118,6 @@
 #define  SET_DATA_BYTE(pdata, n, val) \
              (*(l_uint8 *)((l_uintptr_t)((l_uint8 *)(pdata) + (n)) ^ 3) = (val))
 #endif  /* L_BIG_ENDIAN */
-
-
     /*--------------------------------------------------*
      *                    16 bit access                 *
      *--------------------------------------------------*/
@@ -146,8 +136,6 @@
 #define  SET_DATA_TWO_BYTES(pdata, n, val) \
              (*(l_uint16 *)((l_uintptr_t)((l_uint16 *)(pdata) + (n)) ^ 2) = (val))
 #endif  /* L_BIG_ENDIAN */
-
-
     /*--------------------------------------------------*
      *                    32 bit access                 *
      *--------------------------------------------------*/
@@ -156,12 +144,8 @@
 
 #define  SET_DATA_FOUR_BYTES(pdata, n, val) \
              (*((l_uint32 *)(pdata) + (n)) = (val))
-
-
 #endif  /* ! _MSC_VER */
 #endif  /* USE_INLINE_ACCESSORS */
-
-
 
     /*--------------------------------------------------*
      *  Slower, using function calls for all accessors  *
@@ -189,6 +173,4 @@
 #define  GET_DATA_FOUR_BYTES(pdata, n)         l_getDataFourBytes(pdata, n)
 #define  SET_DATA_FOUR_BYTES(pdata, n, val)    l_setDataFourBytes(pdata, n, val)
 #endif  /* !USE_INLINE_ACCESSORS || _MSC_VER */
-
-
 #endif /* LEPTONICA_ARRAY_ACCESS_H */

@@ -2864,8 +2864,6 @@ set_modifier_for_read(png_modifier *pm, png_infopp ppi, png_uint_32 id,
 
    return set_store_for_read(&pm->this, ppi, id, name);
 }
-
-
 /******************************** MODIFICATIONS *******************************/
 /* Standard modifications to add chunks.  These do not require the _SUPPORTED
  * macros because the chunks can be there regardless of whether this specific
@@ -4395,8 +4393,6 @@ perform_formatting_test(png_store *ps)
 
       if (pp == NULL)
          Throw ps;
-
-
       /* Arbitrary settings: */
       pt.year = 2079;
       pt.month = 8;
@@ -5391,8 +5387,6 @@ perform_standard_test(png_modifier *pm)
    if (!test_standard(pm, 6, 3, READ_BDHI))
       return;
 }
-
-
 /********************************** SIZE TESTS ********************************/
 static int
 test_size(png_modifier* const pm, png_byte const colour_type,
@@ -5535,8 +5529,6 @@ perform_size_test(png_modifier *pm)
    if (!test_size(pm, 6, 3, READ_BDHI))
       return;
 }
-
-
 /******************************* TRANSFORM TESTS ******************************/
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
 /* A set of tests to validate libpng image transforms.  The possibilities here
@@ -8351,8 +8343,6 @@ IT(packswap);
 #define PT ITSTRUCT(packswap)
 
 #endif /* PNG_READ_PACKSWAP_SUPPORTED */
-
-
 /* png_set_invert_mono */
 #ifdef PNG_READ_INVERT_MONO_SUPPORTED
 /* Invert the gray channel
@@ -8507,8 +8497,6 @@ image_transform_png_set_@_add(image_transform *this,
 
 IT(@);
 #endif
-
-
 /* This may just be 'end' if all the transforms are disabled! */
 static image_transform *const image_transform_first = &PT;
 
@@ -10450,8 +10438,6 @@ static void gamma_composition_test(png_modifier *pm,
       file_gamma, screen_gamma, 0/*sBIT*/, 0, name, use_input_precision,
       0/*strip 16*/, expand_16, do_background, &background, bg);
 }
-
-
 static void
 perform_gamma_composition_tests(png_modifier *pm, int do_background,
    int expand_16)

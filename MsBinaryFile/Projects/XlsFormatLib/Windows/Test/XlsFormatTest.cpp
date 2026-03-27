@@ -88,8 +88,6 @@ HRESULT convert_single(std::wstring srcFileName)
 	}
 	
 	NSDirectory::DeleteDirectory(dstTempPath);
-
-
 	return hr;
 }
 

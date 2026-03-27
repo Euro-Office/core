@@ -26,8 +26,6 @@
 #include "ustr_cnv.h"
 
 #if !UCONFIG_NO_CONVERSION
-
-
 #define DIGIT_0     0x0030
 #define DIGIT_9     0x0039
 #define LOWERCASE_A 0x0061
@@ -139,8 +137,6 @@ ufmt_uto64(const UChar     *buffer,
     const UChar     *limit;
     int32_t         count;
     int64_t        result;
-    
-    
     /* intialize parameters */
     limit     = buffer + *len;
     count     = 0;
@@ -242,8 +238,6 @@ ufmt_defaultCPToUnicode(const char *s, int32_t sSize,
         alias = target;
         ucnv_toUnicode(defConverter, &alias, alias + tSize, &s, s + sSize - 1, 
             NULL, TRUE, &status);
-        
-        
         /* add the null terminator */
         *alias = 0x0000;
     }
@@ -252,6 +246,4 @@ ufmt_defaultCPToUnicode(const char *s, int32_t sSize,
     
     return target;
 }
-
-
 #endif

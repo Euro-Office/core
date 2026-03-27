@@ -14,15 +14,9 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFRANGES_H__
 #define __AFRANGES_H__
-
-
 #include "aftypes.h"
-
-
 FT_BEGIN_HEADER
 
 #undef  SCRIPT
@@ -36,6 +30,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AFRANGES_H__ */
-
-
 /* END */

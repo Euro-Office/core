@@ -1388,8 +1388,6 @@ int tcd_encode_tile(opj_tcd_t *tcd, int tileno, unsigned char *dest, int len,
     t2_destroy(t2);
 
     /*---------------CLEAN-------------------*/
-
-
     if (tcd->cur_tp_num == tcd->cur_totnum_tp - 1) {
         tcd->encoding_time = opj_clock() - tcd->encoding_time;
         opj_event_msg(tcd->cinfo, EVT_INFO, "- tile encoded in %f s\n",
@@ -1646,8 +1644,6 @@ void tcd_free_decode_tile(opj_tcd_t *tcd, int tileno)
                         if (prec->incltree != NULL) {
                             tgt_destroy(prec->incltree);
                         }
-
-
                     }
                     opj_free(band->precincts);
                 }
@@ -1658,6 +1654,4 @@ void tcd_free_decode_tile(opj_tcd_t *tcd, int tileno)
         tile->comps = NULL;
     }
 }
-
-
 

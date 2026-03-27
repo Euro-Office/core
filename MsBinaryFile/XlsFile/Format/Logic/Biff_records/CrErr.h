@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CrErr record in BIFF8
 class CrErr: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CrErr();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeCrErr;

@@ -50,8 +50,6 @@ namespace NSDocxRenderer
 				Close();
 		}
 	}
-
-
 	CVectorGraphics::~CVectorGraphics()
 	{
 		m_arData.clear();

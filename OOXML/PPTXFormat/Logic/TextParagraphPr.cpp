@@ -166,8 +166,6 @@ namespace PPTX
 						XmlMacroLoadArray(oNode, _T("a:tab"), tabLst, Tab);
 				}
 			}
-
-
 			buColor.ReadBulletColorFrom(node);
 			buSize.ReadBulletSizeFrom(node);
 			buTypeface.ReadBulletTypefaceFrom(node);

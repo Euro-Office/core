@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTPSPROP_H_
 #define FTPSPROP_H_
-
-
 #include <freetype/freetype.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_BASE_CALLBACK( FT_Error )
   ps_property_set( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
@@ -36,12 +28,6 @@ FT_BEGIN_HEADER
   ps_property_get( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
                    void*        value );
-
-
 FT_END_HEADER
-
-
 #endif /* FTPSPROP_H_ */
-
-
 /* END */

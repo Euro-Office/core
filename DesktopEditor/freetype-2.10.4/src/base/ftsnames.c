@@ -17,18 +17,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 
 #include <freetype/ftsnames.h>
 #include <freetype/internal/tttypes.h>
 #include <freetype/internal/ftstream.h>
-
-
 #ifdef TT_CONFIG_OPTION_SFNT_NAMES
-
-
   /* documentation is in ftsnames.h */
 
   FT_EXPORT_DEF( FT_UInt )
@@ -36,8 +30,6 @@
   {
     return ( face && FT_IS_SFNT( face ) ) ? ((TT_Face)face)->num_names : 0;
   }
-
-
   /* documentation is in ftsnames.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -46,25 +38,17 @@
                     FT_SfntName  *aname )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( aname && face && FT_IS_SFNT( face ) )
     {
       TT_Face  ttface = (TT_Face)face;
-
-
       if ( idx < (FT_UInt)ttface->num_names )
       {
         TT_Name  entry = ttface->name_table.names + idx;
-
-
         /* load name on demand */
         if ( entry->stringLength > 0 && !entry->string )
         {
           FT_Memory  memory = face->memory;
           FT_Stream  stream = face->stream;
-
-
           if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
                FT_STREAM_SEEK( entry->stringOffset )                ||
                FT_STREAM_READ( entry->string, entry->stringLength ) )
@@ -87,8 +71,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftsnames.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -97,13 +79,9 @@
                        FT_SfntLangTag  *alangTag )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( alangTag && face && FT_IS_SFNT( face ) )
     {
       TT_Face  ttface = (TT_Face)face;
-
-
       if ( ttface->name_table.format != 1 )
         return FT_THROW( Invalid_Table );
 
@@ -112,15 +90,11 @@
       {
         TT_LangTag  entry = ttface->name_table.langTags +
                             ( langID - 0x8000U );
-
-
         /* load name on demand */
         if ( entry->stringLength > 0 && !entry->string )
         {
           FT_Memory  memory = face->memory;
           FT_Stream  stream = face->stream;
-
-
           if ( FT_NEW_ARRAY  ( entry->string, entry->stringLength ) ||
                FT_STREAM_SEEK( entry->stringOffset )                ||
                FT_STREAM_READ( entry->string, entry->stringLength ) )
@@ -139,11 +113,7 @@
 
     return error;
   }
-
-
 #else /* !TT_CONFIG_OPTION_SFNT_NAMES */
-
-
   FT_EXPORT_DEF( FT_UInt )
   FT_Get_Sfnt_Name_Count( FT_Face  face )
   {
@@ -151,8 +121,6 @@
 
     return 0;
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Get_Sfnt_Name( FT_Face       face,
                     FT_UInt       idx,
@@ -164,8 +132,6 @@
 
     return FT_THROW( Unimplemented_Feature );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Get_Sfnt_LangTag( FT_Face          face,
                        FT_UInt          langID,
@@ -177,9 +143,5 @@
 
     return FT_THROW( Unimplemented_Feature );
   }
-
-
 #endif /* !TT_CONFIG_OPTION_SFNT_NAMES */
-
-
 /* END */

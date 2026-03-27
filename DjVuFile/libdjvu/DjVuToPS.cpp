@@ -84,16 +84,12 @@
 #include <grp.h>
 #include <unistd.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 static const size_t ps_string_size=15000;
 
 // ***************************************************************************
@@ -255,8 +251,6 @@ set_bookletfold(int fold, int xfold)
   if (xfold >= 0)
     bookletxfold = xfold;
 }
-
-
 // ***************************************************************************
 // ******************************* DjVuToPS **********************************
 // ***************************************************************************
@@ -1246,8 +1240,6 @@ print_fg(ByteStream &str,
     print_fg_2layer(str, dimg, prn_rect, blit_list);        
   write(str, "/LocalDjVuFont undefinefont grestore\n");
 }
-
-
 void 
 DjVuToPS::
 print_bg(ByteStream &str, 
@@ -2058,17 +2050,9 @@ print_image(ByteStream &str,
   if (prn_progress_cb)
     prn_progress_cb(1, prn_progress_cl_data);
 }
-
-
-
-
 // ***********************************************************************
 // ******* PUBLIC FUNCTION FOR PRINTING A SINGLE PAGE ********************
 // ***********************************************************************
-
-
-
-
 void
 DjVuToPS::
 print(ByteStream &str, 
@@ -2110,15 +2094,9 @@ print(ByteStream &str,
   write(str,"showpage\n");
   store_doc_trailer(str);
 }
-
-
-
-
 // ***********************************************************************
 // *************************** DOCUMENT LEVEL ****************************
 // ***********************************************************************
-
-
 void
 DjVuToPS::
 parse_range(GP<DjVuDocument> doc, 
@@ -2388,8 +2366,6 @@ process_single_page(ByteStream &str,
   if (!magic)
     write(str,"showpage\n");
 }
-
-
 struct pdata {
   int page1, page2;
   int smax, spos;
@@ -2479,13 +2455,9 @@ booklet_order(GList<int>& pages, int smax)
         }
     }
 }
-
-
 // ***********************************************************************
 // ******* PUBLIC FUNCTIONS FOR PRINTING MULTIPLE PAGES ******************
 // ***********************************************************************
-
-
 
 void
 DjVuToPS::
@@ -2563,8 +2535,6 @@ print(ByteStream &str,
       store_doc_trailer(str);
     }
 }
-
-
 void
 DjVuToPS::
 print(ByteStream &str, GP<DjVuDocument> doc)
@@ -2572,8 +2542,6 @@ print(ByteStream &str, GP<DjVuDocument> doc)
   GUTF8String dummy;
   print(str,doc,dummy);
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

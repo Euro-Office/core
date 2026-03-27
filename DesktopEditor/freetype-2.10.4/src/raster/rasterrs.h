@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the monochrome renderer error enumeration
@@ -37,6 +35,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* RASTERRS_H_ */
-
-
 /* END */

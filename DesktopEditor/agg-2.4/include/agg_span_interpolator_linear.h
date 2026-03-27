@@ -99,12 +99,6 @@ namespace agg
         dda2_line_interpolator m_li_x;
         dda2_line_interpolator m_li_y;
     };
-
-
-
-
-
-
     //=====================================span_interpolator_linear_subdiv
     template<class Transformer = trans_affine, unsigned SubpixelShift = 8> 
     class span_interpolator_linear_subdiv
@@ -117,8 +111,6 @@ namespace agg
             subpixel_shift = SubpixelShift,
             subpixel_scale = 1 << subpixel_shift
         };
-
-
         //----------------------------------------------------------------
         span_interpolator_linear_subdiv() :
             m_subdiv_shift(4),
@@ -221,12 +213,6 @@ namespace agg
         unsigned m_pos;
         unsigned m_len;
     };
-
-
 }
 
-
-
 #endif
-
-

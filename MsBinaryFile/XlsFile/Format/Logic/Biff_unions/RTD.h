@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of RTD union of records 
 class RTD: public CompositeObject
 {

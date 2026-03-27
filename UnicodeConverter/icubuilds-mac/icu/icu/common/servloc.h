@@ -335,8 +335,6 @@ class U_COMMON_API SimpleLocaleKeyFactory : public LocaleKeyFactory {
      * Return true if this id is equal to the locale name.
      */
     //virtual UBool isSupportedID(const UnicodeString& id, UErrorCode& status) const;
-
-
 public:
     /**
      * UObject boilerplate.
@@ -406,8 +404,6 @@ public:
      */
     static UClassID U_EXPORT2 getStaticClassID();
     virtual UClassID getDynamicClassID() const;
-
-
 #ifdef SERVICE_DEBUG
  public:
     virtual UnicodeString& debug(UnicodeString& result) const;
@@ -501,8 +497,6 @@ class U_COMMON_API ICULocaleService : public ICUService
    * a SimpleLocaleKeyFactory, and registers the factory.
    */
   virtual URegistryKey registerInstance(UObject* objToAdopt, const Locale& locale, int32_t kind, int32_t coverage, UErrorCode& status);
-
-
   /**
    * (Stop compiler from complaining about hidden overrides.)
    * Since both UnicodeString and Locale have constructors that take const char*, adding a public

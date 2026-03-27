@@ -117,11 +117,7 @@ static const UChar *ures_a_getNextString(UResourceBundleAIterator *aiter, int32_
     return ret;
 #endif
 }
-
-
 #endif
-
-
 U_NAMESPACE_BEGIN
 
 // *****************************************************************************
@@ -341,8 +337,6 @@ DateTimePatternGenerator::operator=(const DateTimePatternGenerator& other) {
     copyHashtable(other.fAvailableFormatKeyHash, status);
     return *this;
 }
-
-
 UBool
 DateTimePatternGenerator::operator==(const DateTimePatternGenerator& other) const {
     if (this == &other) {
@@ -734,8 +728,6 @@ DateTimePatternGenerator::initHashtable(UErrorCode& err) {
         return;
     }
 }
-
-
 void
 DateTimePatternGenerator::setAppendItemFormat(UDateTimePatternField field, const UnicodeString& value) {
     appendItemFormats[field] = value;
@@ -992,8 +984,6 @@ DateTimePatternGenerator::addPatternWithSkeleton(
 
     return UDATPG_NO_CONFLICT;
 }
-
-
 UDateTimePatternField
 DateTimePatternGenerator::getAppendFormatNumber(const char* field) const {
     for (int32_t i=0; i<UDATPG_FIELD_COUNT; ++i ) {
@@ -1306,8 +1296,6 @@ DateTimePatternGenerator::isCanonicalItem(const UnicodeString& item) const {
     }
     return FALSE;
 }
-
-
 DateTimePatternGenerator*
 DateTimePatternGenerator::clone() const {
     return new DateTimePatternGenerator(*this);
@@ -1470,8 +1458,6 @@ PatternMap::getPatternFromBasePattern(UnicodeString& basePattern, UBool& skeleto
 
    return NULL;
 }  // PatternMap::getFromBasePattern
-
-
 // Find the pattern from the given skeleton.
 // At least when this is called from getBestRaw & addPattern (in which case specifiedSkeletonPtr is non-NULL),
 // the comparison should be based on skeleton.original (which is unique and tied to the distance measurement in bestRaw)
@@ -1608,8 +1594,6 @@ DateTimeMatcher::~DateTimeMatcher() {}
 DateTimeMatcher::DateTimeMatcher(const DateTimeMatcher& other) {
     copyFrom(other.skeleton);
 }
-
-
 void
 DateTimeMatcher::set(const UnicodeString& pattern, FormatParser* fp) {
     PtnSkeleton localSkeleton;
@@ -1758,12 +1742,8 @@ FormatParser::FormatParser () {
     status = START;
     itemNumber=0;
 }
-
-
 FormatParser::~FormatParser () {
 }
-
-
 // Find the next token with the starting position and length
 // Note: the startPos may
 FormatParser::TokenStatus
@@ -1912,8 +1892,6 @@ PatternMapIterator::PatternMapIterator() {
     patternMap=NULL;
     matcher= new DateTimeMatcher();
 }
-
-
 PatternMapIterator::~PatternMapIterator() {
     delete matcher;
 }
@@ -2002,8 +1980,6 @@ PatternMapIterator::next() {
 
 PtnSkeleton::PtnSkeleton() {
 }
-
-
 PtnSkeleton::PtnSkeleton(const PtnSkeleton& other) {
     for (int32_t i=0; i<UDATPG_FIELD_COUNT; ++i) {
         this->type[i]=other.type[i];
@@ -2217,8 +2193,6 @@ DTRedundantEnumeration::~DTRedundantEnumeration() {
 }
 
 U_NAMESPACE_END
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

@@ -23,8 +23,6 @@
 U_NAMESPACE_BEGIN
 
 class  UnicodeSet;
-
-
 class SimpleDateFormatStaticSets : public UMemory
 {
 public:
@@ -41,8 +39,6 @@ private:
     UnicodeSet *fTimeIgnorables;
     UnicodeSet *fOtherIgnorables;
 };
-
-
 U_NAMESPACE_END
 
 #endif   // #if !UCONFIG_NO_FORMATTING

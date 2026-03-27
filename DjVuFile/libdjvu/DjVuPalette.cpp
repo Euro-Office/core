@@ -69,16 +69,12 @@
 #include "DjVuPalette.h"
 #include <stdlib.h>
 #include <math.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 #define CUBEBITS  4
 #define CUBESIDE  (1<<CUBEBITS)
 #define CUBESIZE  (CUBESIDE*CUBESIDE*CUBESIDE)
@@ -89,8 +85,6 @@ namespace DJVU {
 #define SMUL (RMUL+GMUL+BMUL)
 
 #define MAXPALETTESIZE 65535 // Limit for a 16 bit unsigned read.
-
-
 inline unsigned char 
 umax(unsigned char a, unsigned char b) 
 { return (a>b) ? a : b; }
@@ -105,11 +99,7 @@ fmin(float a, float b)
 { return (a>b) ? b : a; }
 #endif
 
-
-
 // ------- DJVUPALETTE
-
-
 DjVuPalette::DjVuPalette()
   : mask(0), hist(0), pmap(0)
 {
@@ -141,8 +131,6 @@ DjVuPalette::DjVuPalette(const DjVuPalette &ref)
   this->operator=(ref);
 }
 
-
-
 // -------- HISTOGRAM ALLOCATION
 
 void
@@ -167,11 +155,7 @@ DjVuPalette::allocate_hist()
       delete old;
     }
 }
-
-
 // -------- PALETTE COMPUTATION
-
-
 #ifndef NEED_DECODER_ONLY
 
 struct PData
@@ -358,8 +342,6 @@ DjVuPalette::compute_palette(int maxcolors, int minboxsize)
   return color_to_index_slow(dcolor.p);
 }
 
-
-
 int 
 DjVuPalette::compute_pixmap_palette(const GPixmap &pm, int ncolors, int minboxsize)
 {
@@ -376,16 +358,8 @@ DjVuPalette::compute_pixmap_palette(const GPixmap &pm, int ncolors, int minboxsi
   // Compute palette
   return compute_palette(ncolors, minboxsize);
 }
-
-
 #endif
-
-
-
-
 // -------- QUANTIZATION
-
-
 void
 DjVuPalette::allocate_pmap()
 {
@@ -426,8 +400,6 @@ DjVuPalette::color_to_index_slow(const unsigned char *bgr)
   // Return
   return found;
 }
-
-
 #ifndef NEED_DECODER_ONLY
 
 void 
@@ -481,8 +453,6 @@ DjVuPalette::color_correct(double corr)
 }
 
 #endif
-
-
 // -------- ENCODE AND DECODE
 
 #define DJVUPALETTEVERSION 0
@@ -603,10 +573,6 @@ DjVuPalette::decode(GP<ByteStream> gbs)
       }
     }
 }
-
-
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

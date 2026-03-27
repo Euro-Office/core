@@ -13,11 +13,7 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 
 class the_application : public agg::platform_support
 {
@@ -100,8 +96,6 @@ public:
         m_path.close_polygon(flag);
     }
 
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<agg::pixfmt_bgr24> ren_base;
@@ -116,8 +110,6 @@ public:
         agg::trans_affine mtx;
         mtx *= agg::trans_affine_scaling(4.0);
         mtx *= agg::trans_affine_translation(150, 100);
-
-
         agg::conv_transform<agg::path_storage> trans(m_path, mtx);
         agg::conv_curve<agg::conv_transform<agg::path_storage> > curve(trans);
 
@@ -144,8 +136,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -157,5 +147,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

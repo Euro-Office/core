@@ -23,8 +23,6 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-
   /*
    *  This is a complete re-implementation of the LZW file reader,
    *  since the old one was incredibly badly written, using
@@ -44,8 +42,6 @@
 #define LZW_BIT_MASK      0x1f
 #define LZW_BLOCK_MASK    0x80
 #define LZW_MASK( n )     ( ( 1U << (n) ) - 1U )
-
-
   typedef enum  FT_LzwPhase_
   {
     FT_LZW_PHASE_START = 0,
@@ -54,8 +50,6 @@
     FT_LZW_PHASE_EOF
 
   } FT_LzwPhase;
-
-
   /*
    *  state of LZW decompressor
    *
@@ -144,20 +138,14 @@
     FT_Memory    memory;
 
   } FT_LzwStateRec, *FT_LzwState;
-
-
   FT_LOCAL( void )
   ft_lzwstate_init( FT_LzwState  state,
                     FT_Stream    source );
 
   FT_LOCAL( void )
   ft_lzwstate_done( FT_LzwState  state );
-
-
   FT_LOCAL( void )
   ft_lzwstate_reset( FT_LzwState  state );
-
-
   FT_LOCAL( FT_ULong )
   ft_lzwstate_io( FT_LzwState  state,
                   FT_Byte*     buffer,
@@ -166,6 +154,4 @@
 /* */
 
 #endif /* __FT_ZOPEN_H__ */
-
-
 /* END */

@@ -316,8 +316,6 @@ public:
      */
     static const SharedPluralRules* U_EXPORT2 createSharedInstance(
             const Locale& locale, UPluralType type, UErrorCode& status);
-
-
 #endif  /* U_HIDE_INTERNAL_API */
 
     /**
@@ -435,8 +433,6 @@ public:
      * @stable ICU 4.0
      */
     UBool isKeyword(const UnicodeString& keyword) const;
-
-
     /**
      * Returns keyword for default plural form.
      *
@@ -472,8 +468,6 @@ public:
      * @stable ICU 4.0
      */
     UBool operator!=(const PluralRules& other) const  {return !operator==(other);}
-
-
     /**
      * ICU "poor man's RTTI", returns a UClassID for this class.
      *
@@ -488,8 +482,6 @@ public:
      * @stable ICU 4.0
      */
     virtual UClassID getDynamicClassID() const;
-
-
 private:
     RuleChain  *mRules;
 

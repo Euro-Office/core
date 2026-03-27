@@ -69,8 +69,6 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 
 			int nID = -1;
 			std::wstring wsBaseLoc;
-
-
 			while (oLiteReader.ReadNextSiblingNode(nPagesDepth))
 			{
 				if (L"ofd:Page" != oLiteReader.GetName() || 2 > oLiteReader.GetAttributesCount() || !oLiteReader.MoveToFirstAttribute())

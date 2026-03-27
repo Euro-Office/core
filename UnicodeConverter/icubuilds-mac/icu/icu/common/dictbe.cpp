@@ -149,8 +149,6 @@ public:
     // Get length in code points of the marked word.
     int32_t   markedCPLength() { return cpLengths[mark]; };
 };
-
-
 int32_t PossibleWord::candidates( UText *text, DictionaryMatcher *dict, int32_t rangeEnd ) {
     // TODO: If getIndex is too slow, use offset < 0 and add discardAll()
     int32_t start = (int32_t)utext_getNativeIndex(text);
@@ -175,8 +173,6 @@ PossibleWord::acceptMarked( UText *text ) {
     utext_setNativeIndex(text, offset + cuLengths[mark]);
     return cuLengths[mark];
 }
-
-
 UBool
 PossibleWord::backUp( UText *text ) {
     if (current > 0) {
@@ -253,8 +249,6 @@ ThaiBreakEngine::divideUpDictionaryRange( UText *text,
         return 0;       // Not enough characters for two words
     }
     utext_setNativeIndex(text, rangeStart);
-
-
     uint32_t wordsFound = 0;
     int32_t cpWordLength = 0;    // Word Length in Code Points.
     int32_t cuWordLength = 0;    // Word length in code units (UText native indexing)
@@ -1112,16 +1106,12 @@ static inline bool isKatakana(uint16_t value) {
     return (value >= 0x30A1u && value <= 0x30FEu && value != 0x30FBu) ||
             (value >= 0xFF66u && value <= 0xFF9fu);
 }
-
-
 // Function for accessing internal utext flags.
 //   Replicates an internal UText function.
 
 static inline int32_t utext_i32_flag(int32_t bitIndex) {
     return (int32_t)1 << bitIndex;
 }
-
-       
 /*
  * @param text A UText representing the text
  * @param rangeStart The start of the range of dictionary characters
@@ -1146,8 +1136,6 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
     LocalPointer<UVector32>     inputMap;
 
     UErrorCode     status      = U_ZERO_ERROR;
-
-
     // if UText has the input string as one contiguous UTF-16 chunk
     if ((inText->providerProperties & utext_i32_flag(UTEXT_PROVIDER_STABLE_CHUNKS)) &&
          inText->chunkNativeStart <= rangeStart &&
@@ -1183,8 +1171,6 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
         }
         inputMap->addElement(limit, status);
     }
-
-
     if (!nfkcNorm2->isNormalized(inString, status)) {
         UnicodeString normalizedInput;
         //  normalizedMap[normalizedInput position] ==  original UText position.
@@ -1269,8 +1255,6 @@ CjkBreakEngine::divideUpDictionaryRange( UText *inText,
     for(int32_t i = 1; i <= numCodePts; i++) {
         bestSnlp.addElement(kuint32max, status);
     }
-
-
     // prev[i] is the index of the last CJK code point in the previous word in 
     // the best segmentation of the first i characters.
     UVector32 prev(numCodePts + 1, status);

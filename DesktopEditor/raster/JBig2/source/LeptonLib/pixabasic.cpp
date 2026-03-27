@@ -93,8 +93,6 @@
 #include "allheaders.h"
 
 static const l_int32  INITIAL_PTR_ARRAYSIZE = 20;   /* n'import quoi */
-
-
 /*---------------------------------------------------------------------*
  *                    Pixa creation, destruction, copy                 *
  *---------------------------------------------------------------------*/
@@ -127,8 +125,6 @@ PIXA  *pixa;
 
     return pixa;
 }
-
-
 /*!
  *  pixaCreateFromPix()
  *
@@ -180,8 +176,6 @@ PIXA    *pixa;
     pixDestroy(&pixt);
     return pixa;
 }
-
-
 /*!
  *  pixaCreateFromBoxa()
  *
@@ -248,8 +242,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-    
-
 /*!
  *  pixaSplitPix()
  *
@@ -319,8 +311,6 @@ PIXA    *pixa;
 
     return pixa;
 }
-
-
 /*!
  *  pixaDestroy()
  *
@@ -360,8 +350,6 @@ PIXA    *pixa;
     *ppixa = NULL;
     return;
 }
-
-
 /*!
  *  pixaCopy()
  *
@@ -415,8 +403,6 @@ PIXA    *pixac;
     return pixac;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                              Pixa addition                          *
  *---------------------------------------------------------------------*/
@@ -462,8 +448,6 @@ PIX     *pixc;
 
     return 0;
 }
-
-
 /*!
  *  pixaExtendArray()
  *
@@ -483,8 +467,6 @@ pixaExtendArray(PIXA  *pixa)
 
     return pixaExtendArrayToSize(pixa, 2 * pixa->nalloc);
 }
-
-
 /*!
  *  pixaExtendArrayToSize()
  *
@@ -513,8 +495,6 @@ pixaExtendArrayToSize(PIXA    *pixa,
     }
     return boxaExtendArrayToSize(pixa->boxa, size);
 }
-
-
 /*!
  *  pixaAddBox()
  *
@@ -541,8 +521,6 @@ pixaAddBox(PIXA    *pixa,
     return 0;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                             Pixa accessors                          *
  *---------------------------------------------------------------------*/
@@ -562,8 +540,6 @@ pixaGetCount(PIXA  *pixa)
 
     return pixa->n;
 }
-
-
 /*!
  *  pixaChangeRefcount()
  *
@@ -582,8 +558,6 @@ pixaChangeRefcount(PIXA    *pixa,
     pixa->refcount += delta;
     return 0;
 }
-
-
 /*!
  *  pixaGetPix()
  *
@@ -611,8 +585,6 @@ pixaGetPix(PIXA    *pixa,
     else
         return (PIX *)ERROR_PTR("invalid accesstype", procName, NULL);
 }
-
-
 /*!
  *  pixaGetPixDimensions()
  *
@@ -643,8 +615,6 @@ PIX  *pix;
     pixDestroy(&pix);
     return 0;
 }
-
-
 /*!
  *  pixaGetBoxa()
  *
@@ -668,8 +638,6 @@ pixaGetBoxa(PIXA    *pixa,
 
     return boxaCopy(pixa->boxa, accesstype);
 }
-
-
 /*!
  *  pixaGetBoxaCount()
  *
@@ -686,8 +654,6 @@ pixaGetBoxaCount(PIXA  *pixa)
     
     return boxaGetCount(pixa->boxa);
 }
-
-
 /*!
  *  pixaGetBox()
  *
@@ -734,8 +700,6 @@ BOX  *box;
     else
         return NULL;
 }
-
-
 /*!
  *  pixaGetBoxGeometry()
  *
@@ -767,8 +731,6 @@ BOX  *box;
     boxDestroy(&box);
     return 0;
 }
-
-
 /*!
  *  pixaGetPixArray()
  *
@@ -791,8 +753,6 @@ pixaGetPixArray(PIXA  *pixa)
 
     return pixa->pix;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                       Pixa array modifiers                          *
@@ -839,8 +799,6 @@ BOXA  *boxa;
 
     return 0;
 }
-
-
 /*!
  *  pixaInsertPix()
  *
@@ -891,8 +849,6 @@ l_int32  i, n;
 
     return 0;
 }
-
-
 /*!
  *  pixaRemovePix()
  *
@@ -938,8 +894,6 @@ PIX    **array;
 
     return 0;
 }
-
-
 /*!
  *  pixaInitFull()
  *
@@ -999,8 +953,6 @@ PIX     *pixt;
 
     return 0;
 }
-
-
 /*!
  *  pixaClear()
  *
@@ -1029,8 +981,6 @@ l_int32  i, n;
     boxaClear(pixa->boxa);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Pixa combination                          *
  *---------------------------------------------------------------------*/
@@ -1092,8 +1042,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                    Pixaa creation and destruction                   *
  *---------------------------------------------------------------------*/
@@ -1138,8 +1086,6 @@ PIXAA  *pixaa;
 
     return pixaa;
 }
-
-
 /*!
  *  pixaaCreateFromPixa()
  *
@@ -1213,8 +1159,6 @@ PIXAA   *pixaa;
 
     return pixaa;
 }
-
-
 /*!
  *  pixaaDestroy()
  *
@@ -1247,8 +1191,6 @@ PIXAA   *pixaa;
 
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                             Pixaa addition                          *
  *---------------------------------------------------------------------*/
@@ -1298,8 +1240,6 @@ PIXA    *pixac;
 
     return 0;
 }
-
-
 /*!
  *  pixaaExtendArray()
  *
@@ -1322,8 +1262,6 @@ pixaaExtendArray(PIXAA  *pixaa)
     pixaa->nalloc = 2 * pixaa->nalloc;
     return 0;
 }
-
-
 /*!
  *  pixaaAddBox()
  *
@@ -1354,8 +1292,6 @@ pixaaAddBox(PIXAA   *pixaa,
     return 0;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                            Pixaa accessors                          *
  *---------------------------------------------------------------------*/
@@ -1375,8 +1311,6 @@ pixaaGetCount(PIXAA  *pixaa)
 
     return pixaa->n;
 }
-
-
 /*!
  *  pixaaGetPixa()
  *
@@ -1416,8 +1350,6 @@ PIXA  *pixa;
         return (PIXA *)ERROR_PTR("no pixa[index]", procName, NULL);
     return pixaCopy(pixa, accesstype);
 }
-
-
 /*!
  *  pixaaGetBoxa()
  *
@@ -1442,8 +1374,6 @@ pixaaGetBoxa(PIXAA   *pixaa,
 
     return boxaCopy(pixaa->boxa, accesstype);
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Pixa serialized I/O                        *
  *---------------------------------------------------------------------*/
@@ -1477,8 +1407,6 @@ PIXA  *pixa;
     fclose(fp);
     return pixa;
 }
-
-
 /*!
  *  pixaReadStream()
  *
@@ -1532,8 +1460,6 @@ PIXA    *pixa;
 
 #endif  /* !HAVE_LIBPNG */
 }
-
-
 /*!
  *  pixaWrite()
  *
@@ -1565,8 +1491,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  pixaWriteStream()
  *
@@ -1608,8 +1532,6 @@ PIX     *pix;
 
 #endif  /* !HAVE_LIBPNG */
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Pixaa serialized I/O                        *
  *---------------------------------------------------------------------*/
@@ -1643,8 +1565,6 @@ PIXAA  *pixaa;
     fclose(fp);
     return pixaa;
 }
-
-
 /*!
  *  pixaaReadStream()
  *
@@ -1691,8 +1611,6 @@ PIXAA   *pixaa;
 
     return pixaa;
 }
-
-
 /*!
  *  pixaaWrite()
  *
@@ -1724,8 +1642,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  pixaaWriteStream()
  *
@@ -1760,5 +1676,3 @@ PIXA    *pixa;
     }
     return 0;
 }
-
-

@@ -63,8 +63,6 @@ typedef struct UGenderInfo UGenderInfo;
  */
 U_STABLE const UGenderInfo* U_EXPORT2
 ugender_getInstance(const char *locale, UErrorCode *status);
-
-
 /**
  * Given a list, returns the gender of the list as a whole.
  * @param genderInfo pointer that ugender_getInstance returns.

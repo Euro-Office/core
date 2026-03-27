@@ -358,8 +358,6 @@ CHWPRecordBorderFill::CHWPRecordBorderFill(CHWPDocInfo& oDocInfo, int nTagNum, i
 	m_bCounterSlash = CHECK_FLAG(shTypeBits, 0x800);
 	m_bCounterBackSlash = CHECK_FLAG(shTypeBits, 0x1000);
 	m_bBreakCellSeparateLine = CHECK_FLAG(shTypeBits, 0x2000);
-
-
 	#define READ_SIDE(side) \
 	oBuffer.ReadByte(chLineStyleNum); \
 	side.m_eStyle = GetLineStyle2(chLineStyleNum); \
@@ -491,6 +489,4 @@ const CFill* CHWPRecordBorderFill::GetFill() const
 {
 	return m_pFill;
 }
-
-
 }

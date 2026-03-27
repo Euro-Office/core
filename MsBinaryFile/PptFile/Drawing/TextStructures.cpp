@@ -30,8 +30,6 @@
  *
  */
 #include "TextStructures.h"
-
-
 #define DEFAULT_BEFORE(EXIST_PARAM, PARAM)  \
 if (!EXIST_PARAM && oSrc.##EXIST_PARAM)     \
 {										    \
@@ -521,8 +519,6 @@ void PPT::CTextSIRun::ApplyBefore(const CTextSIRun& oSrc)
         bPp10ext = true;
         pp10runid = oSrc.pp10runid;
     }
-
-
     if (!bGramma)
     {
         bGramma = oSrc.bGramma;

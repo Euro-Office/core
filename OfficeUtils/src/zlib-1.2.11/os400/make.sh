@@ -4,8 +4,6 @@
 #
 #
 #       This is a shell script since make is not a standard component of OS/400.
-
-
 ################################################################################
 #
 #                       Tunable configuration parameters.
@@ -25,8 +23,6 @@ TGTRLS='V6R1M0'                 # Target OS release
 
 export TARGETLIB STATBNDDIR DYNBNDDIR SRVPGM IFSDIR
 export TGTCCSID DEBUG OPTIMIZE OUTPUT TGTRLS
-
-
 ################################################################################
 #
 #                       OS/400 specific definitions.
@@ -34,8 +30,6 @@ export TGTCCSID DEBUG OPTIMIZE OUTPUT TGTRLS
 ################################################################################
 
 LIBIFSNAME="/QSYS.LIB/${TARGETLIB}.LIB"
-
-
 ################################################################################
 #
 #                               Procedures.
@@ -57,8 +51,6 @@ action_needed()
         [ "${1}" -ot "${2}" ] && return 0
         return 1
 }
-
-
 #       make_module module_name source_name [additional_definitions]
 #
 #       Compile source name into module if needed.
@@ -97,8 +89,6 @@ make_module()
     system "${CMD}"
     LINK=YES
 }
-
-
 #       Determine DB2 object name from IFS name.
 
 db2_name()
@@ -109,8 +99,6 @@ db2_name()
         sed -e 's/\..*//'                                               \
             -e 's/^\(.\).*\(.........\)$/\1\2/'
 }
-
-
 #       Force enumeration types to be the same size as integers.
 
 copy_hfile()
@@ -122,8 +110,6 @@ copy_hfile()
 #pragma enum(pop)\
 '
 }
-
-
 ################################################################################
 #
 #                             Script initialization.
@@ -149,8 +135,6 @@ done
 TOPDIR=`dirname "${SCRIPTDIR}"`
 export SCRIPTDIR TOPDIR
 cd "${TOPDIR}"
-
-
 #  Extract the version from the master compilation XML file.
 
 VERSION=`sed -e '/^<package /!d'                                        \
@@ -159,16 +143,12 @@ VERSION=`sed -e '/^<package /!d'                                        \
 export VERSION
 
 ################################################################################
-
-
 #       Create the OS/400 library if it does not exist.
 
 if action_needed "${LIBIFSNAME}"
 then    CMD="CRTLIB LIB(${TARGETLIB}) TEXT('ZLIB: Data compression API')"
         system "${CMD}"
 fi
-
-
 #       Create the DOCS source file if it does not exist.
 
 if action_needed "${LIBIFSNAME}/DOCS.FILE"
@@ -189,8 +169,6 @@ do      MEMBER="${LIBIFSNAME}/DOCS.FILE/`db2_name \"${TEXT}\"`.MBR"
                 system "${CMD}"
         fi
 done
-
-
 #       Create the OS/400 source program file for the C header files.
 
 SRCPF="${LIBIFSNAME}/H.FILE"
@@ -200,8 +178,6 @@ then    CMD="CRTSRCPF FILE(${TARGETLIB}/H) RCDLEN(112)"
         CMD="${CMD} CCSID(${TGTCCSID}) TEXT('ZLIB: C/C++ header files')"
         system "${CMD}"
 fi
-
-
 #       Create the IFS directory for the C header files.
 
 if action_needed "${IFSDIR}/include"
@@ -232,11 +208,7 @@ do      DEST="${SRCPF}/`db2_name \"${HFILE}\"`.MBR"
                 ln -s "${DEST}" "${IFSFILE}"
         fi
 done
-
-
 #       Install the ILE/RPG header file.
-
-
 HFILE="${SCRIPTDIR}/zlib.inc"
 DEST="${SRCPF}/ZLIB.INC.MBR"
 
@@ -253,8 +225,6 @@ if action_needed "${IFSFILE}" "${DEST}"
 then    rm -f "${IFSFILE}"
         ln -s "${DEST}" "${IFSFILE}"
 fi
-
-
 #      Create and compile the identification source file.
 
 echo '#pragma comment(user, "ZLIB version '"${VERSION}"'")' > os400.c
@@ -264,8 +234,6 @@ echo '#pragma comment(copyright, "Copyright (C) 1995-2017 Jean-Loup Gailly, Mark
 make_module     OS400           os400.c
 LINK=                           # No need to rebuild service program yet.
 MODULES=
-
-
 #       Get source list.
 
 CSOURCES=`sed -e '/<source name="/!d'                                   \
@@ -277,8 +245,6 @@ for SRC in ${CSOURCES}
 do      MODULE=`db2_name "${SRC}"`
         make_module "${MODULE}" "${SRC}"
 done
-
-
 #       If needed, (re)create the static binding directory.
 
 if action_needed "${LIBIFSNAME}/${STATBNDDIR}.BNDDIR"
@@ -297,8 +263,6 @@ then    rm -rf "${LIBIFSNAME}/${STATBNDDIR}.BNDDIR"
                 system "${CMD}"
         done
 fi
-
-
 #       The exportation file for service program creation must be in a DB2
 #               source file, so make sure it exists.
 
@@ -307,8 +271,6 @@ then    CMD="CRTSRCPF FILE(${TARGETLIB}/TOOLS) RCDLEN(112)"
         CMD="${CMD} CCSID(${TGTCCSID}) TEXT('ZLIB: build tools')"
         system "${CMD}"
 fi
-
-
 DEST="${LIBIFSNAME}/TOOLS.FILE/BNDSRC.MBR"
 
 if action_needed "${SCRIPTDIR}/bndsrc" "${DEST}"
@@ -318,8 +280,6 @@ then    CMD="CPY OBJ('${SCRIPTDIR}/bndsrc') TOOBJ('${DEST}')"
         # touch -r "${SCRIPTDIR}/bndsrc" "${DEST}"
         LINK=YES
 fi
-
-
 #       Build the service program if needed.
 
 if action_needed "${LIBIFSNAME}/${SRVPGM}.SRVPGM"
@@ -347,8 +307,6 @@ then    CMD="CRTSRVPGM SRVPGM(${TARGETLIB}/${SRVPGM})"
         CMD="${CMD} OBJTYPE(*SRVPGM) NEWOBJ(${BACKUP})"
         system "${CMD}"
 fi
-
-
 #       If needed, (re)create the dynamic binding directory.
 
 if action_needed "${LIBIFSNAME}/${DYNBNDDIR}.BNDDIR"

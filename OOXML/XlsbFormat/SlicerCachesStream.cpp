@@ -45,8 +45,6 @@ SlicerCachesStream::SlicerCachesStream()
 SlicerCachesStream::~SlicerCachesStream()
 {
 }
-
-
 BaseObjectPtr SlicerCachesStream::clone()
 {
         return BaseObjectPtr(new SlicerCachesStream(*this));

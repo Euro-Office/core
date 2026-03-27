@@ -68,8 +68,6 @@ namespace agg
             return (ex - x) | (ey - y) | (left - c.left) | (right - c.right);
         }
     };
-
-
     //===========================================================layer_order_e
     enum layer_order_e
     {
@@ -77,8 +75,6 @@ namespace agg
         layer_direct,   //------layer_direct
         layer_inverse   //------layer_inverse
     };
-
-
     //==================================================rasterizer_compound_aa
     template<class Clip=rasterizer_sl_clip_int> class rasterizer_compound_aa
     {
@@ -163,8 +159,6 @@ namespace agg
                 add_vertex(x, y, cmd);
             }
         }
-
-        
         //--------------------------------------------------------------------
         int min_x()     const { return m_outline.min_x(); }
         int min_y()     const { return m_outline.min_y(); }
@@ -296,16 +290,6 @@ namespace agg
         int        m_sl_start;
         unsigned   m_sl_len;
     };
-
-
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     template<class Clip> 
     void rasterizer_compound_aa<Clip>::reset() 
@@ -691,8 +675,6 @@ namespace agg
     }
 
 }
-
-
 
 #endif
 

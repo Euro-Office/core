@@ -56,8 +56,6 @@ namespace XLS
 		bDeleteZero(false)
 	{
 	}
-
-
 	BiffString::~BiffString() 
 	{
 	}
@@ -238,8 +236,6 @@ namespace XLS
 		}
 		return *cch_;
 	}
-
-
 	void BiffString::setSize(const size_t size)
 	{
 		cch_ = size;

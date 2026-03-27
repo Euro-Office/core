@@ -41,6 +41,4 @@
 #include "gxvprop.c"
 #include "gxvlcar.c"
 #include "gxvmod.c"
-
-
 /* END */

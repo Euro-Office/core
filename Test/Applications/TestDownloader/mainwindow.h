@@ -5,13 +5,9 @@
 #include <QDir>
 #include <QDebug>
 #include "../../../../core/Common/Network/FileTransporter/include/FileTransporter.h"
-
-
 //#define URL L"http://nct.onlyoffice.com/sh/XHh"
 typedef std::wstring WString;
 typedef NSNetwork::NSFileTransport::CFileDownloader Downloader;
-
-
 QT_BEGIN_NAMESPACE
     namespace Ui {class MainWindow;}
 QT_END_NAMESPACE

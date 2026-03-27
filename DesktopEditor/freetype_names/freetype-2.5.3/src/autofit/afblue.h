@@ -17,15 +17,9 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFBLUE_H__
 #define __AFBLUE_H__
-
-
 FT_BEGIN_HEADER
-
-
   /* an auxiliary macro to decode a UTF-8 character -- since we only use */
   /* hard-coded, self-converted data, no error checking is performed     */
 #define GET_UTF8_CHAR( ch, p )                    \
@@ -54,8 +48,6 @@ FT_BEGIN_HEADER
             for ( ; len > 0; len-- )              \
               ch = ( ch << 6 ) | ( *p++ & 0x3F ); \
           }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -65,8 +57,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* At the bottommost level, we define strings for finding blue zones. */
-
-
 #define AF_BLUE_STRING_MAX_LEN  25
 
   /* The AF_Blue_String enumeration values are offsets into the */
@@ -111,17 +101,11 @@ FT_BEGIN_HEADER
 #else
     af_blue_1_2 = af_blue_1_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
-
-
     AF_BLUE_STRING_MAX   /* do not remove */
 
   } AF_Blue_String;
-
-
   FT_LOCAL_ARRAY( char )
   af_blue_strings[];
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -131,8 +115,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* The next level is to group blue strings into style-specific sets. */
-
-
   /* Properties are specific to a writing system.  We assume that a given  */
   /* blue string can't be used in more than a single writing system, which */
   /* is a safe bet.                                                        */
@@ -144,8 +126,6 @@ FT_BEGIN_HEADER
 #define AF_BLUE_PROPERTY_CJK_TOP    ( 1 << 1 )
 #define AF_BLUE_PROPERTY_CJK_FILL   ( 1 << 2 )
 #define AF_BLUE_PROPERTY_CJK_RIGHT  AF_BLUE_PROPERTY_CJK_TOP
-
-
 #define AF_BLUE_STRINGSET_MAX_LEN  9
 
   /* The AF_Blue_Stringset enumeration values are offsets into the */
@@ -170,30 +150,20 @@ FT_BEGIN_HEADER
 #else
     af_blue_2_2 = af_blue_2_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
-
-
     AF_BLUE_STRINGSET_MAX   /* do not remove */
 
   } AF_Blue_Stringset;
-
-
   typedef struct  AF_Blue_StringRec_
   {
     AF_Blue_String  string;
     FT_UShort       properties;
 
   } AF_Blue_StringRec;
-
-
   FT_LOCAL_ARRAY( AF_Blue_StringRec )
   af_blue_stringsets[];
 
 /* */
 
 FT_END_HEADER
-
-
 #endif /* __AFBLUE_H__ */
-
-
 /* END */

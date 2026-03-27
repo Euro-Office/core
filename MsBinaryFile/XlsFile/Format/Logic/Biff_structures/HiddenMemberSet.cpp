@@ -40,8 +40,6 @@ BiffStructurePtr HiddenMemberSet::clone()
 {
 	return BiffStructurePtr(new HiddenMemberSet(*this));
 }
-
-
 void HiddenMemberSet::load(CFRecord& record)
 {
 	record >> cMemberName;

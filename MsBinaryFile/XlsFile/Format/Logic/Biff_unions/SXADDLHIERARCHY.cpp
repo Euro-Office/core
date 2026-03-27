@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLHIERARCHY::SXADDLHIERARCHY()
 {
 }
-
-
 SXADDLHIERARCHY::~SXADDLHIERARCHY()
 {
 }
-
-
 BaseObjectPtr SXADDLHIERARCHY::clone()
 {
 	return BaseObjectPtr(new SXADDLHIERARCHY(*this));
 }
-
-
 /*
 SXADDLHIERARCHY = SXAddl_SXCHierarchy_SXDId *Continue_SxaddlSxString *SXAddl_SXCHierarchy_SXDProperty 
 				*SXADDLGRPLEVEL [SXAddl_SXCHierarchy_SXDVerUpdInv] *SXAddl_SXCHierarchy_SXDFilterMember 

@@ -77,7 +77,6 @@
  *          l_int32      numaJoin()
  *          NUMA        *numaaFlattenToNuma()
  *
- *
  *    Things to remember when using the Numa:
  *
  *    (1) The numa is a struct, not an array.  Always use accessors
@@ -99,8 +98,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*----------------------------------------------------------------------*
  *                Arithmetic and logical ops on Numas                   *
  *----------------------------------------------------------------------*/
@@ -177,8 +174,6 @@ l_float32  val1, val2;
 
     return nad;
 }
-
-
 /*!
  *  numaLogicalOp()
  *
@@ -251,8 +246,6 @@ l_int32  i, n, val1, val2, val;
 
     return nad;
 }
-
-
 /*!
  *  numaInvert()
  *
@@ -294,8 +287,6 @@ l_int32  i, n, val;
 
     return nad;
 }
-
-
 /*----------------------------------------------------------------------*
  *                         Simple extractions                           *
  *----------------------------------------------------------------------*/
@@ -339,8 +330,6 @@ l_float32  val, minval;
     if (piminloc) *piminloc = iminloc;
     return 0;
 }
-
-
 /*!
  *  numaGetMax()
  *
@@ -381,8 +370,6 @@ l_float32  val, maxval;
     if (pimaxloc) *pimaxloc = imaxloc;
     return 0;
 }
-
-
 /*!
  *  numaGetSum()
  *
@@ -413,8 +400,6 @@ l_float32  val, sum;
     *psum = sum;
     return 0;
 }
-
-
 /*!
  *  numaGetPartialSums()
  *
@@ -449,8 +434,6 @@ NUMA      *nasum;
     }
     return nasum;
 }
-
-
 /*!
  *  numaGetSumOnInterval()
  *
@@ -490,8 +473,6 @@ l_float32  val, sum;
     *psum = sum;
     return 0;
 }
-
-
 /*!
  *  numaHasOnlyIntegers()
  *
@@ -536,8 +517,6 @@ l_float32  val;
 
     return 0;
 }
-
-
 /*!
  *  numaSubsample()
  *
@@ -570,8 +549,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaMakeSequence()
  *
@@ -601,8 +578,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*!
  *  numaMakeConstant()
  *
@@ -617,8 +592,6 @@ numaMakeConstant(l_float32  val,
 {
     return numaMakeSequence(val, 0.0, size);
 }
-
-
 /*!
  *  numaAddBorder()
  *
@@ -659,8 +632,6 @@ NUMA       *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaAddSpecifiedBorder()
  *
@@ -711,8 +682,6 @@ NUMA       *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaRemoveBorder()
  *
@@ -752,8 +721,6 @@ NUMA       *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaGetNonzeroRange()
  *
@@ -802,8 +769,6 @@ l_float32  val;
     *plast = i;
     return 0;
 }
-
-
 /*!
  *  numaGetCountRelativeToZero()
  *
@@ -841,8 +806,6 @@ l_float32  val;
     *pcount = count;
     return 0;
 }
-
-
 /*!
  *  numaClipToInterval()
  *
@@ -885,8 +848,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaMakeThresholdIndicator()
  *
@@ -942,8 +903,6 @@ NUMA      *nai;
 
     return nai;
 }
-
-
 /*!
  *  numaUniformSampling()
  *
@@ -1005,8 +964,6 @@ NUMA       *nad;
     }
     return nad;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Signal feature extraction                      *
  *----------------------------------------------------------------------*/
@@ -1074,8 +1031,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaThresholdEdges()
  *
@@ -1213,8 +1168,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaGetSpanValues()
  *
@@ -1247,8 +1200,6 @@ l_int32  n, nspans;
     if (pend) numaGetIValue(na, 2 * span + 2, pend);
     return 0;
 }
-
-
 /*!
  *  numaGetEdgeValues()
  *
@@ -1285,8 +1236,6 @@ l_int32  n, nedges;
     if (psign) numaGetIValue(na, 3 * edge + 3, psign);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                             Interpolation                            *
  *----------------------------------------------------------------------*/
@@ -1387,8 +1336,6 @@ l_float32  *fa;
              fy3 * (xval - x1) * (xval - x2);
     return 0;
 }
-
-
 /*!
  *  numaInterpolateArbxVal()
  *
@@ -1493,8 +1440,6 @@ l_float32  *fax, *fay;
              fay[i3] * (xval - fax[i1]) * (xval - fax[i2]) / d3;
     return 0;
 }
-
-
 /*!
  *  numaInterpolateEqxInterval()
  *
@@ -1579,8 +1524,6 @@ NUMA       *nax, *nay;
 
     return 0;
 }
-
-
 /*!
  *  numaInterpolateArbxInterval()
  *
@@ -1730,8 +1673,6 @@ NUMA       *nasx, *nasy, *nadx, *nady;
     numaDestroy(&nasy);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Functions requiring interpolation                *
  *----------------------------------------------------------------------*/
@@ -1849,8 +1790,6 @@ l_float32  x1, x2, x3, y1, y2, y3, c1, c2, c3, a, b, xmax, ymax;
 
     return 0;
 }
-
-
 /*!
  *  numaDifferentiateInterval()
  *
@@ -1931,8 +1870,6 @@ NUMA       *nady, *naiy;
     numaDestroy(&naiy);
     return 0;
 }
-
-
 /*!
  *  numaIntegrateInterval()
  *
@@ -2004,8 +1941,6 @@ NUMA       *naiy;
     numaDestroy(&naiy);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                                Sorting                               *
  *----------------------------------------------------------------------*/
@@ -2063,8 +1998,6 @@ l_float32  *array;
 
     return naout;
 }
-
-
 /*!
  *  numaGetSortIndex()
  *
@@ -2126,8 +2059,6 @@ NUMA       *naisort;
     FREE(iarray);
     return naisort;
 }
-
-
 /*!
  *  numaSortByIndex()
  *
@@ -2160,8 +2091,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaIsSorted()
  *
@@ -2205,8 +2134,6 @@ l_float32  preval, val;
     *psorted = TRUE;
     return 0;
 }
-
-
 /*!
  *  numaSortPair()
  *
@@ -2258,8 +2185,6 @@ NUMA    *naindex;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                          Random permutation                          *
  *----------------------------------------------------------------------*/
@@ -2306,8 +2231,6 @@ NUMA     *na;
     FREE(array);
     return na;
 }
-
-
 /*!
  *  numaRandomPermutation()
  *
@@ -2337,8 +2260,6 @@ NUMA      *naindex, *nad;
     numaDestroy(&naindex);
     return nad;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Functions requiring sorting                      *
  *----------------------------------------------------------------------*/
@@ -2384,8 +2305,6 @@ NUMA    *nasort;
     numaDestroy(&nasort);
     return 0;
 }
-
-
 /*!
  *  numaGetMedian()
  *
@@ -2411,8 +2330,6 @@ numaGetMedian(NUMA       *na,
 
     return numaGetRankValue(na, 0.5, pval);
 }
-
-
 /*!
  *  numaGetMode()
  *
@@ -2487,8 +2404,6 @@ NUMA       *nasort;
     numaDestroy(&nasort);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                          Numa combination                            *
  *----------------------------------------------------------------------*/
@@ -2540,8 +2455,6 @@ l_float32  val;
 
     return 0;
 }
-
-
 /*!
  *  numaaFlattenToNuma()
  *

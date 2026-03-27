@@ -86,10 +86,6 @@ namespace agg
         double        m_y2;
         double        m_cur_x;
     };
-
-
-
-
 }
 
 #endif

@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   pixtiling.c
  *
@@ -76,8 +74,6 @@
 #include <stdio.h>
 #include <stdlib.h> 
 #include "allheaders.h"
-
-
 /*!
  *  pixTilingCreate()
  *
@@ -153,8 +149,6 @@ PIXTILING  *pt;
     pt->strip = TRUE;
     return pt;
 }
-        
-
 /*!
  *  pixTilingDestroy()
  *
@@ -181,8 +175,6 @@ PIXTILING  *pt;
     *ppt = NULL;
     return;
 }
-
-
 /*!
  *  pixTilingGetCount()
  *
@@ -204,8 +196,6 @@ pixTilingGetCount(PIXTILING  *pt,
     if (pny) *pny = pt->ny;
     return 0;
 }
-
-
 /*!
  *  pixTilingGetSize()
  *
@@ -227,8 +217,6 @@ pixTilingGetSize(PIXTILING  *pt,
     if (ph) *ph = pt->h;
     return 0;
 }
-
-
 /*!
  *  pixTilingGetTile()
  *
@@ -330,8 +318,6 @@ PIX     *pixs, *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixTilingNoStripOnPaint()
  *
@@ -355,8 +341,6 @@ pixTilingNoStripOnPaint(PIXTILING  *pt)
     pt->strip = FALSE;
     return 0;
 }
-
-
 /*!
  *  pixTilingPaintTile()
  *
@@ -400,5 +384,3 @@ l_int32  w, h;
 
     return 0;
 }
-
-

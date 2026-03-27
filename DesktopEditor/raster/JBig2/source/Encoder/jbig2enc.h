@@ -33,8 +33,6 @@
 // It uses the (Apache-ish licensed) Leptonica library:
 //   http://www.leptonica.com/
 // -----------------------------------------------------------------------------
-
-
 //#pragma comment ( lib, "Ws2_32.lib" )
 #include "../LeptonLib/additionaltypes.h"
 
@@ -108,8 +106,6 @@ uint8_t *jbig2_produce_page(struct jbig2ctx *ctx, int page_no, int xres,
 
 // WARNING: returns a malloced buffer which the caller must free
 // -----------------------------------------------------------------------------
-
-
 // -----------------------------------------------------------------------------
 // Single page compression
 // -----------------------------------------------------------------------------

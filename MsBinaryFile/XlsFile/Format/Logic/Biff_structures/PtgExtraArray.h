@@ -47,8 +47,6 @@ public:
 	PtgExtraArray();
 	PtgExtraArray(const std::wstring& word);
 	BiffStructurePtr clone();
-
-	
 	void load(CFRecord& record) override; // No type info
 	void save(CFRecord& record) override;
  // No type info

@@ -111,8 +111,6 @@ namespace DJVU {
 #endif
 #endif
 
-
-
 /** Base class for reference counted objects.  
     This is the base class for all reference counted objects.
     Any instance of a subclass of #GPEnabled# can be used with 
@@ -140,8 +138,6 @@ protected:
   /// The reference counter
   volatile int count;
 };
-
-
 
 /** Base class for all smart-pointers.
     This class implements common mechanisms for all
@@ -184,8 +180,6 @@ protected:
   /** Actual pointer */
   GPEnabled *ptr;
 };
-
-
 /** Reference counting pointer.
     Class #GP<TYPE># represents a smart-pointer to an object of type #TYPE#.
     Type #TYPE# must be a subclass of #GPEnabled#.  This class overloads the
@@ -408,10 +402,6 @@ GPBase::operator==(const GPBase & g2) const
 {
   return ptr == g2.ptr;
 }
-
-
-
-
 // INLINE FOR GP<TYPE>
 
 template <class TYPE> inline
@@ -518,8 +508,6 @@ public:
   inline void set(const char c) {GPBufferBase::set(sizeof(TYPE),c);}
   inline operator int(void) const {return GPBufferBase::operator int();}
 };
-
-
 
 #ifdef HAVE_NAMESPACES
 }

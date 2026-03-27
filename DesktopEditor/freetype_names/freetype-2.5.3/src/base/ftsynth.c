@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_SYNTHESIS_H
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_OUTLINE_H
 #include FT_BITMAP_H
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -32,8 +28,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_synth
-
-
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -49,8 +43,6 @@
   {
     FT_Matrix    transform;
     FT_Outline*  outline = &slot->outline;
-
-
     /* only oblique outline glyphs */
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE )
       return;
@@ -68,8 +60,6 @@
 
     FT_Outline_Transform( outline, &transform );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /****                                                                 ****/
@@ -77,8 +67,6 @@
   /****                                                                 ****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* documentation is in ftsynth.h */
 
   FT_EXPORT_DEF( void )
@@ -88,8 +76,6 @@
     FT_Face     face    = slot->face;
     FT_Error    error;
     FT_Pos      xstr, ystr;
-
-
     if ( slot->format != FT_GLYPH_FORMAT_OUTLINE &&
          slot->format != FT_GLYPH_FORMAT_BITMAP  )
       return;
@@ -149,6 +135,4 @@
     if ( slot->format == FT_GLYPH_FORMAT_BITMAP )
       slot->bitmap_top += (FT_Int)( ystr >> 6 );
   }
-
-
 /* END */

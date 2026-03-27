@@ -125,16 +125,12 @@
  *  of the blender to be admixed with the blendee.  The standard function
  *  does full mixing.
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
 
 static l_int32 blendComponents(l_int32 a, l_int32 b, l_float32 fract);
 static l_int32 blendHardLightComponents(l_int32 a, l_int32 b, l_float32 fract);
-
-
 
 /*-------------------------------------------------------------*
  *                         Pixel blending                      *
@@ -212,8 +208,6 @@ PIX       *pixc, *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixBlendMask()
  *
@@ -275,8 +269,6 @@ PIX       *pixc, *pixt1, *pixt2;
                   procName);
         type = L_BLEND_WITH_INVERSE;
     }
-
-
         /* If pixd != NULL, we know that it is equal to pixs1 and
          * that pixs1 does not have a colormap, so that an in-place operation
          * can be done.  Otherwise, remove colormap from pixs1 if
@@ -411,8 +403,6 @@ PIX       *pixc, *pixt1, *pixt2;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixBlendGray()
  *
@@ -618,8 +608,6 @@ PIX       *pixc, *pixt1, *pixt2;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixBlendColor()
  *
@@ -733,8 +721,6 @@ PIX       *pixc, *pixt1, *pixt2;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*
  *  pixBlendColorByChannel()
  *
@@ -839,8 +825,6 @@ PIX       *pixc, *pixt1, *pixt2;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 static l_int32
 blendComponents(l_int32    a,
                 l_int32    b,
@@ -852,8 +836,6 @@ blendComponents(l_int32    a,
         return ((a > b) ? a : b);
     return (l_int32)((1. - fract) * a + fract * b);
 }
-
-
 /*!
  *  pixBlendGrayAdapt()
  *
@@ -1056,8 +1038,6 @@ PIX       *pixc, *pixt1, *pixt2;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixFadeWithGray()
  *
@@ -1154,8 +1134,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*
  *  pixBlendHardLight()
  *
@@ -1306,8 +1284,6 @@ PIX       *pixc, *pixt;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*
  *  blendHardLightComponents()
  *      Input:  a (8 bpp blendee component)
@@ -1327,8 +1303,6 @@ static l_int32 blendHardLightComponents(l_int32    a,
         return  0xff - (((0xff - b) * (0xff - a)) >> 7);
     }
 }
-
-
 /*-------------------------------------------------------------*
  *               Blending two colormapped images               *
  *-------------------------------------------------------------*/
@@ -1455,8 +1429,6 @@ PIXCMAP   *cmaps, *cmapb, *cmapsc;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                  Blending two images using a third                  *
  *---------------------------------------------------------------------*/
@@ -1631,8 +1603,6 @@ PIX       *pixr1, *pixr2, *pix1, *pix2, *pixalpha, *pixd;
     pixDestroy(&pix2);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Coloring "gray" pixels                       *
  *---------------------------------------------------------------------*/
@@ -1772,8 +1742,6 @@ PIXCMAP   *cmap;
     return 0;
 }
 
-
-
 /*------------------------------------------------------------------*
  *            Adjusting one or more colors to a target color        *
  *------------------------------------------------------------------*/
@@ -1861,8 +1829,6 @@ l_uint32  *line, *data;
 
     return pixd;
 }
-
-
 /*!
  *  pixSnapColorCmap()
  *
@@ -1966,8 +1932,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *           Mapping colors based on a source/target pair           *
  *------------------------------------------------------------------*/
@@ -2063,8 +2027,6 @@ l_uint32  *line, *data;
     FREE(btab);
     return pixd;
 }
-
-
 /*!
  *  pixelLinearMapToTargetColor()
  *
@@ -2129,8 +2091,6 @@ l_int32    srmap, sgmap, sbmap, drmap, dgmap, dbmap;
     composeRGBPixel(drval, dgval, dbval, pdcolor);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *          Fractional shift of RGB towards black or white          *
  *------------------------------------------------------------------*/
@@ -2176,6 +2136,4 @@ l_int32    nrval, ngval, nbval;
     composeRGBPixel(nrval, ngval, nbval, ppixel);
     return 0;
 }
-
-
 

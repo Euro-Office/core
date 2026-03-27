@@ -14,16 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFLOADER_H_
 #define AFLOADER_H_
 
 #include "afhints.h"
 #include "afmodule.h"
 #include "afglobal.h"
-
-
 FT_BEGIN_HEADER
 
   /*
@@ -51,23 +47,15 @@ FT_BEGIN_HEADER
     /* we don't handle vertical phantom points */
 
   } AF_LoaderRec, *AF_Loader;
-
-
   FT_LOCAL( void )
   af_loader_init( AF_Loader      loader,
                   AF_GlyphHints  hints );
-
-
   FT_LOCAL( FT_Error )
   af_loader_reset( AF_Loader  loader,
                    AF_Module  module,
                    FT_Face    face );
-
-
   FT_LOCAL( void )
   af_loader_done( AF_Loader  loader );
-
-
   FT_LOCAL( FT_Error )
   af_loader_load_glyph( AF_Loader  loader,
                         AF_Module  module,
@@ -81,11 +69,7 @@ FT_BEGIN_HEADER
                                FT_Pos     standard_width );
 
 /* */
-
-
 FT_END_HEADER
 
 #endif /* AFLOADER_H_ */
-
-
 /* END */

@@ -23,12 +23,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-
 #ifndef PCFUTIL_H_
 #define PCFUTIL_H_
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/internal/compiler-macros.h>
@@ -50,6 +46,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* PCFUTIL_H_ */
-
-
 /* END */

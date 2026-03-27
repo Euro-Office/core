@@ -121,8 +121,6 @@ public:
         }
     }
 
-
-
  private:
     std::vector<record> records_;
 

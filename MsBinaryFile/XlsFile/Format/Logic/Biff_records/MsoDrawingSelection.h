@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MsoDrawingSelection record in BIFF8
 class MsoDrawingSelection: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~MsoDrawingSelection();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 };

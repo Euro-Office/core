@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  sudoku.c
  *
@@ -126,8 +124,6 @@
  */
 
 #include "allheaders.h"
-
-
 static l_int32 sudokuValidState(l_int32  *state);
 static l_int32 sudokuNewGuess(L_SUDOKU  *sud);
 static l_int32 sudokuTestState(l_int32  *state, l_int32  index);
@@ -145,8 +141,6 @@ static const char valid_solution[] = "3 8 7 2 6 4 1 9 5 "
                                      "9 7 2 1 8 5 3 6 4 "
                                      "4 3 1 6 7 9 5 2 8 "
                                      "6 5 8 4 2 3 9 7 1 ";
-
-
 /*---------------------------------------------------------------------*
  *               Read input data from file or string                   *
  *---------------------------------------------------------------------*/
@@ -226,8 +220,6 @@ SARRAY   *saline, *sa1, *sa2;
 
     return array;
 }
-
-
 /*!
  *  sudokuReadString()
  *
@@ -258,8 +250,6 @@ l_int32  *array;
 
     return array;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Create/destroy sudoku                        *
  *---------------------------------------------------------------------*/
@@ -307,8 +297,6 @@ L_SUDOKU  *sud;
     sud->finished = FALSE;
     return sud;
 }
-
-
 /*!
  *  sudokuDestroy()
  *
@@ -337,8 +325,6 @@ L_SUDOKU  *sud;
     *psud = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Solve the puzzle                          *
  *---------------------------------------------------------------------*/
@@ -375,8 +361,6 @@ sudokuSolve(L_SUDOKU  *sud)
     fprintf(stderr, "Solved after %d guesses\n", sud->nguess);
     return 1;
 }
-
-
 /*!
  *  sudokuValidState()
  *
@@ -405,8 +389,6 @@ l_int32  i;
 
     return 1;
 }
-
-
 /*!
  *  sudokuNewGuess()
  *
@@ -457,8 +439,6 @@ l_int32  *locs, *state;
 
     return 0;
 }
-
-
 /*!
  *  sudokuTestState()
  *
@@ -516,8 +496,6 @@ l_int32  blockrow, blockcol, blockstart, rowindex, locindex;
 
     return 1;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Test for uniqueness                         *
  *---------------------------------------------------------------------*/
@@ -577,8 +555,6 @@ L_SUDOKU  *sud, *sud1, *sud2, *sud3;
     FREE(array3);
     return 0;
 }
-
-
 /*!
  *  sudokuCompareState()
  *
@@ -628,8 +604,6 @@ l_int32  *array;
     FREE(array);
     return 0;
 }
-
-
 /*!
  *  sudokuRotateArray()
  *
@@ -679,8 +653,6 @@ l_int32  *rarray;
 
     return rarray;
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Generation                             *
  *---------------------------------------------------------------------*/
@@ -808,8 +780,6 @@ L_SUDOKU  *sud, *testsud;
 
     return sud;
 }
-
-
 /*---------------------------------------------------------------------*
  *                               Output                                *
  *---------------------------------------------------------------------*/

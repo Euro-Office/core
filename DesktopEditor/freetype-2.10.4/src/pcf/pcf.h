@@ -23,16 +23,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-
 #ifndef PCF_H_
 #define PCF_H_
-
-
 #include <freetype/internal/ftdrv.h>
 #include <freetype/internal/ftstream.h>
-
-
 FT_BEGIN_HEADER
 
   typedef struct  PCF_TableRec_
@@ -43,8 +37,6 @@ FT_BEGIN_HEADER
     FT_ULong  offset;
 
   } PCF_TableRec, *PCF_Table;
-
-
   typedef struct  PCF_TocRec_
   {
     FT_ULong   version;
@@ -52,8 +44,6 @@ FT_BEGIN_HEADER
     PCF_Table  tables;
 
   } PCF_TocRec, *PCF_Toc;
-
-
   typedef struct  PCF_ParsePropertyRec_
   {
     FT_Long  name;
@@ -61,8 +51,6 @@ FT_BEGIN_HEADER
     FT_Long  value;
 
   } PCF_ParsePropertyRec, *PCF_ParseProperty;
-
-
   typedef struct  PCF_PropertyRec_
   {
     FT_String*  name;
@@ -77,8 +65,6 @@ FT_BEGIN_HEADER
     } value;
 
   } PCF_PropertyRec, *PCF_Property;
-
-
   typedef struct  PCF_Compressed_MetricRec_
   {
     FT_Byte  leftSideBearing;
@@ -88,8 +74,6 @@ FT_BEGIN_HEADER
     FT_Byte  descent;
 
   } PCF_Compressed_MetricRec, *PCF_Compressed_Metric;
-
-
   typedef struct  PCF_MetricRec_
   {
     FT_Short  leftSideBearing;
@@ -102,8 +86,6 @@ FT_BEGIN_HEADER
     FT_ULong  bits;  /* offset into the PCF_BITMAPS table */
 
   } PCF_MetricRec, *PCF_Metric;
-
-
   typedef struct  PCF_EncRec_
   {
     FT_UShort   firstCol;
@@ -115,8 +97,6 @@ FT_BEGIN_HEADER
     FT_UShort*  offset;
 
   } PCF_EncRec, *PCF_Enc;
-
-
   typedef struct  PCF_AccelRec_
   {
     FT_Byte        noOverlap;
@@ -135,8 +115,6 @@ FT_BEGIN_HEADER
     PCF_MetricRec  ink_maxbounds;
 
   } PCF_AccelRec, *PCF_Accel;
-
-
   /*
    * This file uses X11 terminology for PCF data; an `encoding' in X11 speak
    * is the same as a `character code' in FreeType speak.
@@ -165,8 +143,6 @@ FT_BEGIN_HEADER
     FT_ULong      bitmapsFormat;
 
   } PCF_FaceRec, *PCF_Face;
-
-
   typedef struct  PCF_DriverRec_
   {
     FT_DriverRec  root;
@@ -174,8 +150,6 @@ FT_BEGIN_HEADER
     FT_Bool  no_long_family_names;
 
   } PCF_DriverRec, *PCF_Driver;
-
-
   /* macros for pcf font format */
 
 #define LSBFirst  0
@@ -246,6 +220,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* PCF_H_ */
-
-
 /* END */

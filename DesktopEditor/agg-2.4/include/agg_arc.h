@@ -66,9 +66,5 @@ namespace agg
         bool     m_initialized;
         unsigned m_path_cmd;
     };
-
-
 }
-
-
 #endif

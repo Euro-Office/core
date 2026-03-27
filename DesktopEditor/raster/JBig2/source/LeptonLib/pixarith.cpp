@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  pixarith.c
  *
@@ -66,15 +64,11 @@
  *      A simpler interface to the arithmetic operations is
  *      provided in pixacc.c.
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------*
  *          One-image grayscale arithmetic operations          *
  *-------------------------------------------------------------*/
@@ -113,8 +107,6 @@ l_uint32  *data;
 
     return 0;
 }
-
-
 /*!
  *  pixMultConstantGray()
  *
@@ -150,8 +142,6 @@ l_uint32  *data;
 
     return 0;
 }
-
-            
 /*-------------------------------------------------------------*
  *             Two-image grayscale arithmetic ops              *
  *-------------------------------------------------------------*/
@@ -223,8 +213,6 @@ l_uint32  *datas, *datad;
 
     return pixd;
 }
-
-
 /*!
  *  pixSubtractGray()
  *
@@ -293,8 +281,6 @@ l_uint32  *datas, *datad;
 
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                Grayscale threshold operation                *
  *-------------------------------------------------------------*/
@@ -353,8 +339,6 @@ l_uint32  *datad;
     return pixd;
 }
 
-
-
 /*-------------------------------------------------------------*
  *            Image accumulator arithmetic operations          *
  *-------------------------------------------------------------*/
@@ -395,8 +379,6 @@ PIX  *pixd;
     pixSetAllArbitrary(pixd, offset);
     return pixd;
 }
-
-
 /*!
  *  pixFinalAccumulate()
  *
@@ -443,8 +425,6 @@ PIX       *pixd;
     finalAccumulateLow(datad, w, h, depth, wpld, datas, wpls, offset);
     return pixd;
 }
-
-
 /*!
  *  pixFinalAccumulateThreshold()
  *
@@ -487,8 +467,6 @@ PIX       *pixd;
     finalAccumulateThreshLow(datad, w, h, wpld, datas, wpls, offset, threshold);
     return pixd;
 }
-
-
 /*!
  *  pixAccumulate() 
  *
@@ -536,8 +514,6 @@ l_uint32  *datas, *datad;
     accumulateLow(datad, w, h, wpld, datas, d, wpls, op);
     return 0;
 }
-
-
 /*!
  *  pixMultConstAccumulate() 
  *
@@ -575,8 +551,6 @@ l_uint32  *data;
     multConstAccumulateLow(data, w, h, wpl, factor, offset);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                      Absolute value of difference                     *
  *-----------------------------------------------------------------------*/
@@ -632,8 +606,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *             Two-image min and max operations (8 and 16 bpp)           *
  *-----------------------------------------------------------------------*/
@@ -732,8 +704,6 @@ l_uint32  *datas, *datad, *lines, *lined;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *            Scale for maximum dynamic range in 8 bpp image             *
  *-----------------------------------------------------------------------*/
@@ -918,8 +888,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                            Log base2 lookup                           *
  *-----------------------------------------------------------------------*/
@@ -947,8 +915,6 @@ l_float32  *tab;
 
     return tab;
 }
-
-
 /*
  * getLogBase2()
  *

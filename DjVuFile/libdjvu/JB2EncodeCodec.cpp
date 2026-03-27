@@ -72,8 +72,6 @@
 #include "JB2Image.h"
 #include "GBitmap.h"
 #include <string.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -87,8 +85,6 @@ namespace DJVU {
 
 // This class is accessed via the encode
 // functions of class JB2Image
-
-
 //**** Class JB2Codec
 // This class implements the JB2 coder.
 // Contains all contextual information for encoding a JB2Image.
@@ -129,8 +125,6 @@ protected:
 private:
   GP<ZPCodec> gzp;
 };
-
-
 ////////////////////////////////////////
 //// CLASS JB2DICT: IMPLEMENTATION
 ////////////////////////////////////////
@@ -553,8 +547,6 @@ JB2Dict::JB2Codec::Encode::encode_libonly_shape(
 	}
     }
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

@@ -54,8 +54,6 @@ BaseObjectPtr PROTECTION_COMMON::clone()
 {
 	return BaseObjectPtr(new PROTECTION_COMMON(*this));
 }
-
-
 // PROTECTION_COMMON = [Protect] [ScenarioProtect] [ObjProtect] [Password]
 const bool PROTECTION_COMMON::loadContent(BinProcessor& proc)
 {

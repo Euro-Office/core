@@ -15,8 +15,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
-
-
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -52,8 +50,6 @@ static int noout = 0;
 #ifdef HAVE_MMAP
 static int memory = 0;
 #endif
-
-
 int main(int argc, char **argv) {
     int i;
     int files = 0;

@@ -73,8 +73,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 /** @name MMX.h
     Files #"MMX.h"# and #"MMX.cpp"# implement basic routines for
     supporting the MMX instructions on x86.  Future instruction sets
@@ -111,8 +109,6 @@ namespace DJVU {
     @author: 
     L\'eon Bottou <leonb@research.att.com> -- initial implementation */
 //@{
-
-
 /** MMX Control. 
     Class #MMXControl# encapsulates a few static functions for 
     globally enabling or disabling MMX support. */
@@ -139,10 +135,6 @@ class MMXControl
 };
 
 //@}
-
-
-
-
 // ----------------------------------------
 // GCC MMX MACROS
 
@@ -161,8 +153,6 @@ class MMXControl
   __asm__ volatile( #op " %%" #src ",%0" : : "m" (*(addr)) : "memory") 
 #define MMX 1
 #endif
-
-
 // ----------------------------------------
 // MSVC MMX MACROS
 

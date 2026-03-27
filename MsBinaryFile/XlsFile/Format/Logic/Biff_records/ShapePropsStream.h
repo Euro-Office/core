@@ -47,8 +47,6 @@ public:
 	~ShapePropsStream();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 	
@@ -60,8 +58,6 @@ public:
 	_UINT32			dwChecksum = 0;
 
 	std::string		xml_;
-
-
 };
 
 } // namespace XLS

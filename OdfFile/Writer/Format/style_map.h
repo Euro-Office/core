@@ -40,8 +40,6 @@
 
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 /// \brief  style:map
 class style_map : public office_element_impl<style_map>
 {
@@ -50,8 +48,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleMap;
-    
-
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void serialize(std::wostream & strm){}
 

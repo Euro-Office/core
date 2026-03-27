@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 Feat11Fmla::Feat11Fmla() : bFmlaExist(false)
 {
 }
@@ -71,7 +69,5 @@ void Feat11Fmla::save(CFRecord& record)
 	record << cbFmla;
 	record.skipNunBytes(cbFmla);
 }
-
-
 } // namespace XLS
 

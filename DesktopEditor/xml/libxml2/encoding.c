@@ -370,8 +370,6 @@ UTF8ToUTF8(unsigned char* out, int *outlen,
     *inlenb = len;
     return(*outlen);
 }
-
-
 #ifdef LIBXML_OUTPUT_ENABLED
 /**
  * UTF8Toisolat1:
@@ -1182,8 +1180,6 @@ xmlParseCharEncoding(const char* name)
     if (!strcmp(upper, "ISO-10646-UCS-4")) return(XML_CHAR_ENCODING_UCS4LE);
     if (!strcmp(upper, "UCS-4")) return(XML_CHAR_ENCODING_UCS4LE);
     if (!strcmp(upper, "UCS4")) return(XML_CHAR_ENCODING_UCS4LE);
-
-
     if (!strcmp(upper,  "ISO-8859-1")) return(XML_CHAR_ENCODING_8859_1);
     if (!strcmp(upper,  "ISO-LATIN-1")) return(XML_CHAR_ENCODING_8859_1);
     if (!strcmp(upper,  "ISO LATIN 1")) return(XML_CHAR_ENCODING_8859_1);
@@ -1281,8 +1277,6 @@ xmlGetCharEncodingName(xmlCharEncoding enc) {
  *			Char encoding handlers				*
  *									*
  ************************************************************************/
-
-
 /* the size should be growable, but it's not a big deal ... */
 #define MAX_ENCODING_HANDLERS 50
 static xmlCharEncodingHandlerPtr *handlers = NULL;
@@ -1591,8 +1585,6 @@ xmlGetCharEncodingHandler(xmlCharEncoding enc) {
 	    handler = xmlFindCharEncodingHandler("ISO-8859-9");
 	    if (handler != NULL) return(handler);
 	    break;
-
-
         case XML_CHAR_ENCODING_2022_JP:
             handler = xmlFindCharEncodingHandler("ISO-2022-JP");
             if (handler != NULL) return(handler);
@@ -3197,8 +3189,6 @@ ISO8859xToUTF8(unsigned char* out, int *outlen,
     *inlen = in - instart;
     return (*outlen);
 }
-
-
 /************************************************************************
  * Lookup tables for ISO-8859-2..ISO-8859-16 transcoding                *
  ************************************************************************/
@@ -3928,8 +3918,6 @@ static unsigned char const xmltranscodetable_ISO8859_16 [48 + 9 * 64] = {
     "\xe0\xe1\xe2\x00\xe4\x00\xe6\xe7\xe8\xe9\xea\xeb\xec\xed\xee\xef"
     "\x00\x00\xf2\xf3\xf4\x00\xf6\x00\x00\xf9\xfa\xfb\xfc\x00\x00\xff"
 };
-
-
 /*
  * auto-generated functions for ISO-8859-2 .. ISO-8859-16
  */

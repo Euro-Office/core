@@ -38,13 +38,9 @@ namespace XLS
 Guts::Guts()
 {
 }
-
-
 Guts::~Guts()
 {
 }
-
-
 BaseObjectPtr Guts::clone()
 {
 	return BaseObjectPtr(new Guts(*this));

@@ -123,8 +123,6 @@ def runTest(test, basedir):
         print "Failed to parse %s" % (URI)
 	res = -1
 
-    
-
     test_nr = test_nr + 1
     if type == 'success':
 	if res > 0:
@@ -167,8 +165,6 @@ def runTest(test, basedir):
 	log.write("   -----------\n%s\n   -----------\n" % (diff));
 
     return 0
-	    
-
 def runTestCases(case):
     creator = case.prop('creator')
     if creator != None:

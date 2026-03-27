@@ -38,8 +38,6 @@ namespace XLS
 SxErr::SxErr()
 {
 }
-
-
 SxErr::~SxErr()
 {
 }

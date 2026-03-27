@@ -34,15 +34,11 @@
 #include "byte_manager.h"
 #include "box_manager.h"
 #include "boxheader_manager.h"
-
-
 /** manifest box parameters*/
 /** I.3.2.3 Manifest box*/
 typedef struct manfbox_param {
     boxheader_param_t *first; /**< top of the box header list*/
 } manfbox_param_t;
-
-
 /**
  * generate manifest box
  *
@@ -50,24 +46,18 @@ typedef struct manfbox_param {
  * @return        generated manfbox
  */
 manfbox_param_t * gene_manfbox(box_param_t *box);
-
-
 /**
  * delete manifest box
  *
  * @param[in,out] manf addressof the manfbox pointer
  */
 void delete_manfbox(manfbox_param_t **manf);
-
-
 /**
  * print manf box parameters
  *
  * @param[in] manf manf box pointer
  */
 void print_manfbox(manfbox_param_t *manf);
-
-
 /**
  * search a boxheader by box type from manifest box
  *
@@ -76,6 +66,4 @@ void print_manfbox(manfbox_param_t *manf);
  * @return             found box pointer
  */
 boxheader_param_t * search_boxheader(const char type[], manfbox_param_t *manf);
-
-
 #endif      /* !MANFBOX_MANAGER_H_ */

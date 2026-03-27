@@ -23,8 +23,6 @@
    * necessary.
    *
    */
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/internal/ftdebug.h>
@@ -32,8 +30,6 @@
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
 #include <freetype/fttypes.h>
-
-
   /**************************************************************************
    *
    *                      MEMORY MANAGEMENT INTERFACE
@@ -47,8 +43,6 @@
    * routines like ft_mem_alloc() or ft_mem_realloc().
    *
    */
-
-
   /**************************************************************************
    *
    * @Function:
@@ -75,8 +69,6 @@
 
     return ft_smalloc( (size_t)size );
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -112,8 +104,6 @@
 
     return ft_srealloc( block, (size_t)new_size );
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -137,8 +127,6 @@
 
     ft_sfree( block );
   }
-
-
   /**************************************************************************
    *
    *                    RESOURCE MANAGEMENT INTERFACE
@@ -159,8 +147,6 @@
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
 #define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
-
-
   /**************************************************************************
    *
    * @Function:
@@ -182,8 +168,6 @@
     stream->size               = 0;
     stream->base               = NULL;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -217,8 +201,6 @@
                      unsigned long   count )
   {
     FT_FILE*  file;
-
-
     if ( !count && offset > stream->size )
       return 1;
 
@@ -229,8 +211,6 @@
 
     return (unsigned long)ft_fread( buffer, 1, count, file );
   }
-
-
   /* documentation is in ftstream.h */
 
   FT_BASE_DEF( FT_Error )
@@ -238,8 +218,6 @@
                   const char*  filepathname )
   {
     FT_FILE*  file;
-
-
     if ( !stream )
       return FT_THROW( Invalid_Stream_Handle );
 
@@ -292,16 +270,12 @@
   ft_mem_debug_done( FT_Memory  memory );
 
 #endif
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Memory )
   FT_New_Memory( void )
   {
     FT_Memory  memory;
-
-
     memory = (FT_Memory)ft_smalloc( sizeof ( *memory ) );
     if ( memory )
     {
@@ -316,8 +290,6 @@
 
     return memory;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )
@@ -328,6 +300,4 @@
 #endif
     ft_sfree( memory );
   }
-
-
 /* END */

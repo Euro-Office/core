@@ -19,8 +19,6 @@
 #include "jinclude.h"
 #include "jpeglib.h"
 #include "jerror.h"
-
-
 /* Expanded data source object for stdio input */
 
 typedef struct {
@@ -34,8 +32,6 @@ typedef struct {
 typedef my_source_mgr * my_src_ptr;
 
 #define INPUT_BUF_SIZE  4096	/* choose an efficiently fread'able size */
-
-
 /*
  * Initialize source --- called by jpeg_read_header
  * before any data is actually read.
@@ -58,8 +54,6 @@ init_mem_source (j_decompress_ptr cinfo)
 {
   /* no work necessary here */
 }
-
-
 /*
  * Fill the input buffer --- called whenever buffer is emptied.
  *
@@ -137,8 +131,6 @@ fill_mem_input_buffer (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 /*
  * Skip data --- used to skip over a potentially large amount of
  * uninteresting data (such as an APPn marker).
@@ -172,8 +164,6 @@ skip_input_data (j_decompress_ptr cinfo, long num_bytes)
     src->bytes_in_buffer -= (size_t) num_bytes;
   }
 }
-
-
 /*
  * An additional method that can be provided by data source modules is the
  * resync_to_restart method for error recovery in the presence of RST markers.
@@ -181,8 +171,6 @@ skip_input_data (j_decompress_ptr cinfo, long num_bytes)
  * provided by the JPEG library.  That method assumes that no backtracking
  * is possible.
  */
-
-
 /*
  * Terminate source --- called by jpeg_finish_decompress
  * after all data has been read.  Often a no-op.
@@ -197,8 +185,6 @@ term_source (j_decompress_ptr cinfo)
 {
   /* no work necessary here */
 }
-
-
 /*
  * Prepare for input from a stdio stream.
  * The caller must have already opened the stream, and is responsible
@@ -237,8 +223,6 @@ jpeg_stdio_src (j_decompress_ptr cinfo, FILE * infile)
   src->pub.bytes_in_buffer = 0; /* forces fill_input_buffer on first read */
   src->pub.next_input_byte = NULL; /* until buffer loaded */
 }
-
-
 /*
  * Prepare for input from a supplied memory buffer.
  * The buffer must contain the whole JPEG data.

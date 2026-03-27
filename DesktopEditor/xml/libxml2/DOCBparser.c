@@ -214,8 +214,6 @@ docbParseDoc(xmlChar * cur ATTRIBUTE_UNUSED,
 
     return (xmlParseDoc(cur));
 }
-
-
 /**
  * docbCreateFileParserCtxt:
  * @filename:  the filename

@@ -44,8 +44,6 @@
  * @return              number of maximum tile parts per tile
  */
 int get_num_max_tile_parts(opj_codestream_info_t cstr_info);
-
-
 /*
  * Write faix box of tpix
  *

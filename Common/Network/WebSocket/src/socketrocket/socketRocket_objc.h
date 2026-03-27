@@ -35,8 +35,6 @@
 
 #import <SocketRocket/SRWebSocket.h>
 #include "../../include/websocket.h"
-
-
 @interface SocketRocketObjC: NSObject<SRWebSocketDelegate>
 {
     NSNetwork::NSWebSocket::IListener* m_listener;
@@ -44,8 +42,6 @@
 }
 
 @property (strong, nonatomic) SRWebSocket *socket;
-
-
 - (void) open;
 - (void) send: (NSString *)name;
 - (void) close;
@@ -53,6 +49,4 @@
 - (void) setUrl: (NSString *)url;
 
 @end
-
-
 #endif /* _SOCKET_ROCKET_OBJC_H_ */

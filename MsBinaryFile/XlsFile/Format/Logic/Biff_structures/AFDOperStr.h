@@ -33,8 +33,6 @@
 
 #include "../Biff_records/BiffRecord.h"
 #include "BiffString.h"
-
-
 namespace XLS
 {
 

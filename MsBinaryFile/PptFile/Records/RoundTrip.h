@@ -31,16 +31,12 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CUnknownRoundTrip : public CUnknownRecord
 {
 public:
     std::pair<boost::shared_array<unsigned char>, _INT32> data;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
     void ReadFromStream(SRecordHeader & oHeader, const XLS::CFStreamPtr &pStream) override;
 };
@@ -49,8 +45,6 @@ class CUnknownRoundTripID : public CUnknownRecord
 {
 public:
     UINT m_dwID = -1;
-
-
     virtual std::wstring getStrID()const;
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
@@ -62,8 +56,6 @@ class RoundTripOArtTextStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripNotesMasterTextStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripCustomTableStyles12Atom : public CUnknownRoundTrip {};
 class RoundTripAnimationAtom12Atom : public CUnknownRoundTrip {};
-
-
 // .xml
 class RoundTripColorMapping12Atom : public CUnknownRecord
 {
@@ -97,8 +89,6 @@ class RoundTripHFPlaceholder12Atom : public CUnknownRoundTripID
 {
 public:
     PlaceholderEnum m_nPlacementID = PT_None;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -109,8 +99,6 @@ public:
     bool m_fIncludeFooter;
     bool m_fIncludeHeader;
     bool m_fIncludeSlideNumber;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -118,8 +106,6 @@ class RoundTripDocFlags12Atom : public CUnknownRecord
 {
 public:
     bool m_fCompressPicturesOnSave;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 
 };
@@ -129,8 +115,6 @@ class RoundTripShapeCheckSumForCL12Atom : public CUnknownRecord
 public:
     UINT m_shapeCheckSum;
     UINT m_textCheckSum;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -138,8 +122,6 @@ class RoundTripNewPlaceholderId12Atom : public CUnknownRecord
 {
 public:
     PlaceholderEnum m_newPlaceholderId = PT_None;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -147,8 +129,6 @@ class RoundTripAnimationHashAtom12Atom : public CUnknownRecord
 {
 public:
     UINT m_animationChecksum = -1;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 
@@ -157,8 +137,6 @@ class RoundTripSlideSyncInfoAtom12 : public CUnknownRecord
 public:
     UINT m_dateTimeModified;
     UINT m_dateTimeInserted;
-
-
     void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 

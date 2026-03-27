@@ -79,16 +79,12 @@
 #include "BSByteStream.h"
 #include "debug.h"
 #include <stdarg.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 
 //// DJVUIMAGE: CONSTRUCTION
 
@@ -103,10 +99,6 @@ DjVuImage::connect(const GP<DjVuFile> & xfile)
    file=xfile;
    DjVuPort::get_portcaster()->add_route(file, this);
 }
-
-
-
-
 //// DJVUIMAGE: DATA COLLECTORS
 
 GP<DjVuInfo>
@@ -407,8 +399,6 @@ DjVuImage::get_mimetype() const
 {
    return file ? file->mimetype : GUTF8String();
 }
-
-
 //// DJVUIMAGE: UTILITIES
 
 GUTF8String
@@ -435,8 +425,6 @@ DjVuImage::get_long_description() const
 {
   return file?(file->description):GUTF8String();
 }
-
-
 void
 DjVuImage::notify_chunk_done(const DjVuPort *, const GUTF8String & name)
 {
@@ -455,12 +443,6 @@ DjVuImage::notify_chunk_done(const DjVuPort *, const GUTF8String & name)
             !name.cmp("PMxx", 2)  )
      DjVuPort::get_portcaster()->notify_redisplay(this);
 }
-
-
-
-
-
-
 //// DJVUIMAGE: OLD-STYLE DECODING
 
 DjVuInterface::~DjVuInterface() 
@@ -542,8 +524,6 @@ DjVuImage::decode(ByteStream & str, DjVuInterface *notifier)
     G_THROW( ERR_MSG("DjVuImage.mult_error") );
   DEBUG_MSG("decode DONE\n");
 }
-
-
 //// DJVUIMAGE: CHECKING
 
 static int
@@ -554,8 +534,6 @@ compute_red(int w, int h, int rw, int rh)
       return red;
   return 16;
 }
-
-
 int 
 DjVuImage::is_legal_bilevel() const
 {
@@ -657,8 +635,6 @@ DjVuImage::is_legal_compound() const
   // Unrecognized
   return 0;
 }
-
-
 //// DJVUIMAGE: LOW LEVEL RENDERING
 
 GP<GBitmap>
@@ -688,8 +664,6 @@ DjVuImage::get_bg_pixmap(const GRect &rect,
   GP<DjVuInfo> info = get_info();
   int width = get_real_width();
   int height = get_real_height();
-
-
   if (width<=0 || height<=0 || !info) return 0;
   // Compute gamma_correction
   double gamma_correction = 1.0;
@@ -817,8 +791,6 @@ DjVuImage::get_bg_pixmap(const GRect &rect,
   return 0;
 }
 
-
-
 int  
 DjVuImage::stencil(GPixmap *pm, const GRect &rect,
 		   int subsample, double gamma) const
@@ -831,8 +803,6 @@ DjVuImage::stencil(GPixmap *pm, const GRect &rect,
   GP<DjVuInfo> info = get_info();
   int width = get_real_width();
   int height = get_real_height();
-
-
   if (width<=0 || height<=0 || !info) return 0;
   GP<JB2Image> fgjb = get_fgjb();
   GP<GPixmap> fgpm = get_fgpm();
@@ -881,8 +851,6 @@ DjVuImage::stencil(GPixmap *pm, const GRect &rect,
             }
         }
     }
-
-
   // TWO LAYER MODEL
   if (bm && fgbc)
     {
@@ -954,8 +922,6 @@ DjVuImage::stencil(GPixmap *pm, const GRect &rect,
         }
       return 1;
     }
-
-
   // THREE LAYER MODEL
   if (bm && fgpm)
     {
@@ -1045,8 +1011,6 @@ DjVuImage::stencil(GPixmap *pm, const GRect &rect,
   // FAILURE
   return 0;
 }
-
-
 GP<GPixmap>
 DjVuImage::get_fg_pixmap(const GRect &rect, 
                          int subsample, double gamma) const
@@ -1064,8 +1028,6 @@ DjVuImage::get_fg_pixmap(const GRect &rect,
   }
   return pm;
 }
-
-
 GP<GPixmap>
 DjVuImage::get_pixmap(const GRect &rect, int subsample, double gamma) const
 {
@@ -1078,8 +1040,6 @@ DjVuImage::get_pixmap(const GRect &rect, int subsample, double gamma) const
   // Return
   return pm;
 }
-
-
 //// DJVUIMAGE: RENDERING (ARBITRARY SCALE)
 
 typedef GP<GBitmap>(DjVuImage::*BImager)(const GRect &, int, int) const;
@@ -1294,8 +1254,6 @@ DjVuImage::get_decoded_anno()
     else
       return NULL;
 }
-
-
 void
 DjVuImage::map(GRect &rect) const
 {
@@ -1494,8 +1452,6 @@ DjVuImage::get_XML(void) const
 {
   return get_XML(GURL());
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

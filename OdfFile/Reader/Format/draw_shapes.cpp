@@ -130,8 +130,6 @@ void draw_ellipse_attlist::add_attributes( const xml::attributes_wc_ptr & Attrib
 //-------------------------------------------------------------------------------------------
 const wchar_t * draw_ellipse::ns = L"draw";
 const wchar_t * draw_ellipse::name = L"ellipse";
-
-
 void draw_ellipse::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
     draw_ellipse_attlist_.add_attributes(Attributes);
@@ -487,8 +485,6 @@ int draw_enhanced_geometry::parsing(_CP_OPT(std::wstring) val)
 	res = boost::lexical_cast<int>(val.get());
 	return res;
 }
-
-
 /// draw-enhanced_geometry_attlist
 void draw_enhanced_geometry_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
@@ -711,8 +707,6 @@ bool convert_equation(std::wstring formula, std::wstring &result)
 		}
 		else pos++;
 	}
-
-	
 	if (operators.empty() && function.empty())
 	{
 		result = L"val";
@@ -1061,8 +1055,6 @@ bool draw_enhanced_geometry::oox_convert(std::vector<odf_reader::_property>& pro
 
 	return set_shape;
 }
-
-
 //-------------------------------------------------------------------------------------------
 /// draw-caption-attlist
 //-------------------------------------------------------------------------------------------

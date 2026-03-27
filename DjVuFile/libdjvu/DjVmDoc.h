@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVmDir.h"
 
 #ifdef HAVE_NAMESPACES
@@ -261,11 +259,7 @@ DjVmDoc::get_djvm_dir(void)
 {
    return dir;
 }
-
-
 //@}
-
-
 
 #ifdef HAVE_NAMESPACES
 }

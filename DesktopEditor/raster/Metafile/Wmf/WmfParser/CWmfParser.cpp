@@ -258,8 +258,6 @@ namespace MetaFile
 				RegisterPoint(oBitmap.shXDest, oBitmap.shYDest);
 				RegisterPoint(oBitmap.shXDest + oBitmap.shWidth, oBitmap.shYDest + oBitmap.shHeight);
 			}
-
-
 			int nRemainingBytes = GetRecordRemainingBytesCount();
 			if (nRemainingBytes < 0)
 				return SetError();

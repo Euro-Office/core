@@ -26,8 +26,6 @@ namespace agg
     {
         double operator()(double x) const { return x; }
     };
-
-
     //==============================================================gamma_power
     class gamma_power
     {
@@ -46,8 +44,6 @@ namespace agg
     private:
         double m_gamma;
     };
-
-
     //==========================================================gamma_threshold
     class gamma_threshold
     {
@@ -66,8 +62,6 @@ namespace agg
     private:
         double m_threshold;
     };
-
-
     //============================================================gamma_linear
     class gamma_linear
     {
@@ -92,8 +86,6 @@ namespace agg
         double m_start;
         double m_end;
     };
-
-
     //==========================================================gamma_multiply
     class gamma_multiply
     {
@@ -118,6 +110,4 @@ namespace agg
 }
 
 #endif
-
-
 

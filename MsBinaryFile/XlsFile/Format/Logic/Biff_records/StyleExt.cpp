@@ -39,8 +39,6 @@ StyleExt::StyleExt()
 {
     stName = L"";
 }
-
-
 StyleExt::~StyleExt()
 {
 }
@@ -49,8 +47,6 @@ BaseObjectPtr StyleExt::clone()
 {
 	return BaseObjectPtr(new StyleExt(*this));
 }
-
-
 void StyleExt::readFields(CFRecord& record)
 {
 	unsigned char flags;

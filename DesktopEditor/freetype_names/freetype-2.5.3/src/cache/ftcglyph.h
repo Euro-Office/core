@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*
    *
    *  FTC_GCache is an _abstract_ cache object optimized to store glyph
@@ -87,8 +85,6 @@
    *    If it returns NULL, you should create a new node, then call
    *    ftc_cache_add as usual.
    */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Important: The functions defined in this file are only used to        */
@@ -96,8 +92,6 @@
   /*            provide additional logic to implement a complete cache.    */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -111,19 +105,11 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
 #ifndef __FTCGLYPH_H__
 #define __FTCGLYPH_H__
-
-
 #include <ft2build.h>
 #include "ftcmanag.h"
-
-
 FT_BEGIN_HEADER
-
-
  /*
   *  We can group glyphs into `families'.  Each family correspond to a
   *  given face ID, character size, transform, etc.
@@ -143,8 +129,6 @@ FT_BEGIN_HEADER
 
 #define  FTC_FAMILY(x)    ( (FTC_Family)(x) )
 #define  FTC_FAMILY_P(x)  ( (FTC_Family*)(x) )
-
-
   typedef struct  FTC_GNodeRec_
   {
     FTC_NodeRec      node;
@@ -155,8 +139,6 @@ FT_BEGIN_HEADER
 
 #define FTC_GNODE( x )    ( (FTC_GNode)(x) )
 #define FTC_GNODE_P( x )  ( (FTC_GNode*)(x) )
-
-
   typedef struct  FTC_GQueryRec_
   {
     FT_UInt      gindex;
@@ -165,8 +147,6 @@ FT_BEGIN_HEADER
   } FTC_GQueryRec, *FTC_GQuery;
 
 #define FTC_GQUERY( x )  ( (FTC_GQuery)(x) )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* These functions are exported so that they can be called from          */
@@ -203,8 +183,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   FTC_GNode_Done( FTC_GNode  node,
                   FTC_Cache  cache );
-
-
   FT_LOCAL( void )
   FTC_Family_Init( FTC_Family  family,
                    FTC_Cache   cache );
@@ -217,22 +195,16 @@ FT_BEGIN_HEADER
   } FTC_GCacheRec, *FTC_GCache;
 
 #define FTC_GCACHE( x )  ((FTC_GCache)(x))
-
-
 #if 0
   /* can be used as @FTC_Cache_InitFunc */
   FT_LOCAL( FT_Error )
   FTC_GCache_Init( FTC_GCache  cache );
 #endif
-
-
 #if 0
   /* can be used as @FTC_Cache_DoneFunc */
   FT_LOCAL( void )
   FTC_GCache_Done( FTC_GCache  cache );
 #endif
-
-
   /* the glyph cache class adds fields for the family implementation */
   typedef struct  FTC_GCacheClassRec_
   {
@@ -249,8 +221,6 @@ FT_BEGIN_HEADER
           FTC_GCACHE_CLASS( FTC_CACHE(x)->org_class )
 #define FTC_CACHE__FAMILY_CLASS( x ) \
           ( (FTC_MruListClass)FTC_CACHE__GCACHE_CLASS( x )->family_class )
-
-
   /* convenience function; use it instead of FTC_Manager_Register_Cache */
   FT_LOCAL( FT_Error )
   FTC_GCache_New( FTC_Manager       manager,
@@ -265,16 +235,10 @@ FT_BEGIN_HEADER
                      FTC_GQuery   query,
                      FTC_Node    *anode );
 #endif
-
-
   /* */
-
-
 #define FTC_FAMILY_FREE( family, cache )                      \
           FTC_MruList_Remove( &FTC_GCACHE((cache))->families, \
                               (FTC_MruNode)(family) )
-
-
 #ifdef FTC_INLINE
 
 #define FTC_GCACHE_LOOKUP_CMP( cache, famcmp, nodecmp, hash,                \
@@ -318,12 +282,6 @@ FT_BEGIN_HEADER
    FT_END_STMNT
 
 #endif /* !FTC_INLINE */
-
-
 FT_END_HEADER
-
-
 #endif /* __FTCGLYPH_H__ */
-
-
 /* END */

@@ -38,19 +38,13 @@ namespace XLS
 FilterMode::FilterMode()
 {
 }
-
-
 FilterMode::~FilterMode()
 {
 }
-
-
 BaseObjectPtr FilterMode::clone()
 {
 	return BaseObjectPtr(new FilterMode(*this));
 }
-
-
 void FilterMode::readFields(CFRecord& record)
 {
 	// No data

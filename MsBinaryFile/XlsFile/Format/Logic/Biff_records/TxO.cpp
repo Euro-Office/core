@@ -38,22 +38,16 @@
 
 #include "../../../Converter/XlsConverter.h"
 #include "../../../Converter/xlsx_conversion_context.h"
-
-
 namespace XLS
 {
 
 TxO::~TxO()
 {
 }
-
-
 BaseObjectPtr TxO::clone()
 {
 	return BaseObjectPtr(new TxO(*this));
 }
-
-
 void TxO::readFields(CFRecord& record)
 {
 	global_info = record.getGlobalWorkbookInfo();
@@ -213,8 +207,6 @@ void TxO::writeFields(CFRecord& record)
 		ifntEmpty.value() = 0;
 	record << cchText << cbRuns << ifntEmpty;
 	fmla.save(record);
-
-
 }
 
 int TxO::serialize_vml (std::wostream & _stream)

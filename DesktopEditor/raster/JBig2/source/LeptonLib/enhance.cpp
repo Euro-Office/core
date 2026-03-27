@@ -92,8 +92,6 @@
  *      Unsharp masking is never in-place, and returns a clone if no
  *      operation is to be performed.
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -105,8 +103,6 @@ static const l_float32  ENHANCE_SCALE_FACTOR = 5.;
 
     /* Default number of pixels sampled to determine histogram */
 static const l_int32  DEFAULT_HISTO_SAMPLES = 100000;
-
-
 /*-------------------------------------------------------------*
  *         Gamma TRC (tone reproduction curve) mapping         *
  *-------------------------------------------------------------*/
@@ -196,8 +192,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixGammaTRCMasked()
  *
@@ -260,8 +254,6 @@ NUMA    *nag;
 
     return pixd;
 }
-
-
 /*!
  *  pixGammaTRCWithAlpha()
  *
@@ -316,8 +308,6 @@ PIX   *pixalpha;
     pixDestroy(&pixalpha);
     return pixd;
 }
-
-
 /*!
  *  numaGammaTRC()
  *
@@ -371,8 +361,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*-------------------------------------------------------------*
  *                      Contrast enhancement                   *
  *-------------------------------------------------------------*/
@@ -446,8 +434,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixContrastTRCMasked()
  *
@@ -504,8 +490,6 @@ NUMA    *nac;
 
     return pixd;
 }
-
-
 /*!
  *  numaContrastTRC()
  *
@@ -551,8 +535,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*-------------------------------------------------------------*
  *                     Histogram equalization                  *
  *-------------------------------------------------------------*/
@@ -655,8 +637,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  numaEqualizeTRC()
  *
@@ -714,8 +694,6 @@ NUMA      *nah, *nasum, *nad;
     numaDestroy(&nasum);
     return nad;
 }
-
-
 /*-------------------------------------------------------------*
  *                       Generic TRC mapping                   *
  *-------------------------------------------------------------*/
@@ -841,8 +819,6 @@ l_uint32  *data, *datam, *line, *linem;
     return 0;
 }
 
-
-
 /*-----------------------------------------------------------------------*
  *                             Unsharp masking                           *
  *-----------------------------------------------------------------------*/
@@ -909,8 +885,6 @@ PIX     *pixt, *pixd, *pixr, *pixrs, *pixg, *pixgs, *pixb, *pixbs;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixUnsharpMaskingGray()
  *
@@ -984,8 +958,6 @@ PIXACC  *pixacc;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixUnsharpMaskingFast()
  *
@@ -1073,8 +1045,6 @@ PIX     *pixt, *pixd, *pixr, *pixrs, *pixg, *pixgs, *pixb, *pixbs;
     return pixd;
 }
 
-
-
 /*!
  *  pixUnsharpMaskingGrayFast()
  *
@@ -1120,8 +1090,6 @@ PIX  *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixUnsharpMaskingGray1D()
  *
@@ -1257,8 +1225,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixUnsharpMaskingGray2D()
  *
@@ -1384,8 +1350,6 @@ FPIX       *fpix;
     return pixd;
 }
 
-
-
 /*-----------------------------------------------------------------------*
  *                    Hue and saturation modification                    *
  *-----------------------------------------------------------------------*/
@@ -1456,8 +1420,6 @@ l_uint32  *data, *line;
 
     return pixd;
 }
-
-
 /*!
  *  pixModifySaturation()
  *
@@ -1519,8 +1481,6 @@ l_uint32  *data, *line;
 
     return pixd;
 }
-
-
 /*!
  *  pixMeasureSaturation()
  *
@@ -1567,8 +1527,6 @@ l_uint32  *data, *line;
         *psat = (l_float32)sum / (l_float32)count;
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *            General multiplicative constant color transform            *
  *-----------------------------------------------------------------------*/
@@ -1653,8 +1611,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*
  *  pixMultMatrixColor()
  *
@@ -1758,8 +1714,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                    Half-edge by bandpass                    *
  *-------------------------------------------------------------*/

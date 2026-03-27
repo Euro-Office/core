@@ -33,8 +33,6 @@
 #include "region_impl.h"
 
 #if !UCONFIG_NO_FORMATTING
-
-
 U_CDECL_BEGIN
 
 static void U_CALLCONV
@@ -117,8 +115,6 @@ void Region::loadRegionData(UErrorCode &status) {
     df->setParseIntegerOnly(TRUE);
     uhash_setValueDeleter(newRegionIDMap.getAlias(), deleteRegion);  // regionIDMap owns objs
     uhash_setKeyDeleter(newRegionAliases.getAlias(), uprv_deleteUObject); // regionAliases owns the string keys
-
-
     while ( ures_hasNext(regionRegular.getAlias()) ) {
         UnicodeString regionName = ures_getNextUnicodeString(regionRegular.getAlias(),NULL,&status);
         int32_t rangeMarkerLocation = regionName.indexOf(RANGE_MARKER_STRING);
@@ -538,8 +534,6 @@ Region::getInstance (int32_t code, UErrorCode &status) {
 
     return r;
 }
-
-
 /**
  * Returns an enumeration over the IDs of all known regions that match the given type.
  */
@@ -676,8 +670,6 @@ Region::getPreferredValues(UErrorCode &status) const {
     }
     return new RegionNameEnumeration(preferredValues,status);
 }
-
-
 /**
  * Return this region's canonical region code.
  */

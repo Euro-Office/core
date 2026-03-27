@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -48,8 +46,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttobjs
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
   /*************************************************************************/
@@ -57,8 +53,6 @@
   /*                       GLYPH ZONE FUNCTIONS                            */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -74,8 +68,6 @@
   tt_glyphzone_done( TT_GlyphZone  zone )
   {
     FT_Memory  memory = zone->memory;
-
-
     if ( memory )
     {
       FT_FREE( zone->contours );
@@ -89,8 +81,6 @@
       zone->memory       = NULL;
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -119,8 +109,6 @@
                     TT_GlyphZone  zone )
   {
     FT_Error  error;
-
-
     FT_MEM_ZERO( zone, sizeof ( *zone ) );
     zone->memory = memory;
 
@@ -141,8 +129,6 @@
     return error;
   }
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
   /* Compare the face with a list of well-known `tricky' fonts. */
   /* This list shall be expanded as we find more of them.       */
 
@@ -168,16 +154,12 @@
     };
 
     int  nn;
-
-
     for ( nn = 0; nn < TRICK_NAMES_COUNT; nn++ )
       if ( ft_strstr( name, trick_names[nn] ) )
         return TRUE;
 
     return FALSE;
   }
-
-
   /* XXX: This function should be in the `sfnt' module. */
 
   /* Some PDF generators clear the checksums in the TrueType header table. */
@@ -192,8 +174,6 @@
     FT_Error   error;
     FT_UInt32  checksum = 0;
     int        i;
-
-
     if ( FT_FRAME_ENTER( length ) )
       return 0;
 
@@ -207,8 +187,6 @@
 
     return checksum;
   }
-
-
   /* XXX: This function should be in the `sfnt' module. */
 
   static FT_ULong
@@ -232,16 +210,12 @@
     return (FT_ULong)tt_synth_sfnt_checksum( face->root.stream,
                                              face->dir_tables[i].Length );
   }
-
-
   typedef struct tt_sfnt_id_rec_
   {
     FT_ULong  CheckSum;
     FT_ULong  Length;
 
   } tt_sfnt_id_rec;
-
-
   static FT_Bool
   tt_check_trickyness_sfnt_ids( TT_Face  face )
   {
@@ -347,8 +321,6 @@
     FT_Bool    has_cvt, has_fpgm, has_prep;
     FT_UShort  i;
     int        j, k;
-
-
     FT_MEM_SET( num_matched_ids, 0,
                 sizeof ( int ) * TRICK_SFNT_IDS_NUM_FACES );
     has_cvt  = FALSE;
@@ -408,8 +380,6 @@
 
     return FALSE;
   }
-
-
   static FT_Bool
   tt_check_trickyness( FT_Face  face )
   {
@@ -429,8 +399,6 @@
 
     return FALSE;
   }
-
-
   /* Check whether `.notdef' is the only glyph in the `loca' table. */
   static FT_Bool
   tt_check_single_notdef( FT_Face  ttface )
@@ -442,8 +410,6 @@
     FT_ULong  i;
     FT_ULong  glyph_index = 0;
     FT_UInt   count       = 0;
-
-
     for( i = 0; i < face->num_locations; i++ )
     {
       tt_face_get_location( face, i, &asize );
@@ -466,8 +432,6 @@
         /* FIXME: Need to test glyphname == .notdef ? */
         FT_Error error;
         char buf[8];
-
-
         error = FT_Get_Glyph_Name( ttface, glyph_index, buf, 8 );
         if ( !error                                            &&
              buf[0] == '.' && !ft_strncmp( buf, ".notdef", 8 ) )
@@ -477,8 +441,6 @@
 
     return result;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -513,8 +475,6 @@
     FT_Library    library;
     SFNT_Service  sfnt;
     TT_Face       face = (TT_Face)ttface;
-
-
     FT_TRACE2(( "TTF driver\n" ));
 
     library = ttface->driver->root.library;
@@ -633,8 +593,6 @@
     {
       FT_Bool  unpatented_hinting;
       int      i;
-
-
       /* Determine whether unpatented hinting is to be used for this face. */
       unpatented_hinting = FT_BOOL
         ( library->debug_hooks[FT_DEBUG_HOOK_UNPATENTED_HINTING] != NULL );
@@ -660,8 +618,6 @@
     error = FT_THROW( Unknown_File_Format );
     goto Exit;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -680,8 +636,6 @@
     FT_Memory     memory;
     FT_Stream     stream;
     SFNT_Service  sfnt;
-
-
     if ( !face )
       return;
 
@@ -716,8 +670,6 @@
     face->blend = NULL;
 #endif
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                           SIZE  FUNCTIONS                             */
@@ -749,8 +701,6 @@
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
     FT_Error        error;
-
-
     /* debugging instances have their own context */
     if ( size->debug )
       exec = size->context;
@@ -777,8 +727,6 @@
     {
       FT_Size_Metrics*  metrics    = &exec->metrics;
       TT_Size_Metrics*  tt_metrics = &exec->tt_metrics;
-
-
       metrics->x_ppem   = 0;
       metrics->y_ppem   = 0;
       metrics->x_scale  = 0;
@@ -818,8 +766,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -843,8 +789,6 @@
     TT_Face         face = (TT_Face)size->root.face;
     TT_ExecContext  exec;
     FT_Error        error;
-
-
     /* debugging instances have their own context */
     if ( size->debug )
       exec = size->context;
@@ -913,8 +857,6 @@
   }
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
   static void
@@ -923,8 +865,6 @@
     TT_Size    size   = (TT_Size)ftsize;
     TT_Face    face   = (TT_Face)ftsize->face;
     FT_Memory  memory = face->root.memory;
-
-
     if ( size->debug )
     {
       /* the debug context must be deleted by the debugger itself */
@@ -956,8 +896,6 @@
     size->bytecode_ready = 0;
     size->cvt_ready      = 0;
   }
-
-
   /* Initialize bytecode-related fields in the size object.       */
   /* We do this only if bytecode interpretation is really needed. */
   static FT_Error
@@ -972,8 +910,6 @@
 
     FT_UShort       n_twilight;
     TT_MaxProfile*  maxp = &face->max_profile;
-
-
     size->bytecode_ready = 1;
     size->cvt_ready      = 0;
 
@@ -992,8 +928,6 @@
     /* Set default metrics */
     {
       TT_Size_Metrics*  metrics = &size->ttmetrics;
-
-
       metrics->rotated   = FALSE;
       metrics->stretched = FALSE;
 
@@ -1026,8 +960,6 @@
     /* set `face->interpreter' according to the debug hook present */
     {
       FT_Library  library = face->root.driver->root.library;
-
-
       face->interpreter = (TT_Interpreter)
                             library->debug_hooks[FT_DEBUG_HOOK_TRUETYPE];
       if ( !face->interpreter )
@@ -1043,15 +975,11 @@
 
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_size_ready_bytecode( TT_Size  size,
                           FT_Bool  pedantic )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     if ( !size->bytecode_ready )
     {
       error = tt_size_init_bytecode( (FT_Size)size, pedantic );
@@ -1064,8 +992,6 @@
     {
       FT_UInt  i;
       TT_Face  face = (TT_Face)size->root.face;
-
-
       /* Scale the cvt values to the new ppem.          */
       /* We use by default the y ppem to scale the CVT. */
       for ( i = 0; i < size->cvt_size; i++ )
@@ -1096,8 +1022,6 @@
   }
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1128,8 +1052,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1145,8 +1067,6 @@
   tt_size_done( FT_Size  ttsize )           /* TT_Size */
   {
     TT_Size  size = (TT_Size)ttsize;
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
     if ( size->bytecode_ready )
       tt_size_done_bytecode( ttsize );
@@ -1154,8 +1074,6 @@
 
     size->ttmetrics.valid = FALSE;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1174,8 +1092,6 @@
     TT_Face           face;
     FT_Error          error = FT_Err_Ok;
     FT_Size_Metrics*  metrics;
-
-
     size->ttmetrics.valid = FALSE;
 
     face = (TT_Face)size->root.face;
@@ -1237,8 +1153,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1260,8 +1174,6 @@
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
     TT_Driver  driver = (TT_Driver)ttdriver;
-
-
     if ( !TT_New_Context( driver ) )
       return FT_THROW( Could_Not_Find_Context );
 
@@ -1279,8 +1191,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1297,8 +1207,6 @@
   {
 #ifdef TT_USE_BYTECODE_INTERPRETER
     TT_Driver  driver = (TT_Driver)ttdriver;
-
-
     /* destroy the execution context */
     if ( driver->context )
     {
@@ -1310,8 +1218,6 @@
 #endif
 
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1331,6 +1237,4 @@
   {
     return FT_GlyphLoader_CreateExtra( slot->internal->loader );
   }
-
-
 /* END */

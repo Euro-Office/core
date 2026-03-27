@@ -14,19 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1DECODE_H_
 #define T1DECODE_H_
-
-
 #include <freetype/internal/psaux.h>
 #include <freetype/internal/t1types.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_CALLBACK_TABLE
   const T1_Decoder_FuncsRec  t1_decoder_funcs;
 
@@ -63,11 +55,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   t1_decoder_done( T1_Decoder  decoder );
-
-
 FT_END_HEADER
 
 #endif /* T1DECODE_H_ */
-
-
 /* END */

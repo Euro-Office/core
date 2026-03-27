@@ -51,8 +51,6 @@ namespace agg
         const GammaLut& m_gamma;
     };
 
-
-
     //=====================================================apply_gamma_inv_rgb
     template<class ColorT, class Order, class GammaLut> class apply_gamma_inv_rgb
     {
@@ -71,8 +69,6 @@ namespace agg
     private:
         const GammaLut& m_gamma;
     };
-
-
     //=========================================================blender_rgb
     template<class ColorT, class Order> struct blender_rgb
     {
@@ -93,8 +89,6 @@ namespace agg
             p[Order::B] += (value_type)(((cb - p[Order::B]) * alpha) >> base_shift);
         }
     };
-
-
     //======================================================blender_rgb_pre
     template<class ColorT, class Order> struct blender_rgb_pre
     {
@@ -130,8 +124,6 @@ namespace agg
 
     };
 
-
-
     //===================================================blender_rgb_gamma
     template<class ColorT, class Order, class Gamma> class blender_rgb_gamma
     {
@@ -164,10 +156,6 @@ namespace agg
     private:
         const gamma_type* m_gamma;
     };
-
-
-
-    
     //==================================================pixfmt_alpha_blend_rgb
     template<class Blender, class RenBuf> class pixfmt_alpha_blend_rgb
     {
@@ -227,8 +215,6 @@ namespace agg
                 }
             }
         }
-
-
     public:
         //--------------------------------------------------------------------
         explicit pixfmt_alpha_blend_rgb(rbuf_type& rb) :
@@ -308,8 +294,6 @@ namespace agg
         {
             copy_or_blend_pix((value_type*)m_rbuf->row_ptr(x, y, 1) + x + x + x, c, cover);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
@@ -325,8 +309,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
@@ -342,8 +324,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_hline(int x, int y,
                          unsigned len, 
@@ -378,8 +358,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_vline(int x, int y,
                          unsigned len, 
@@ -416,8 +394,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_hspan(int x, int y,
                                unsigned len, 
@@ -448,8 +424,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_vspan(int x, int y,
                                unsigned len, 
@@ -479,8 +453,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y,
                               unsigned len, 
@@ -499,8 +471,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_vspan(int x, int y,
                               unsigned len, 
@@ -517,8 +487,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_color_hspan(int x, int y,
                                unsigned len, 
@@ -560,8 +528,6 @@ namespace agg
                 }
             }
         }
-
-
 
         //--------------------------------------------------------------------
         void blend_color_vspan(int x, int y,
@@ -658,8 +624,6 @@ namespace agg
                         len * pix_width);
             }
         }
-
-
         //--------------------------------------------------------------------
         template<class SrcPixelFormatRenderer>
         void blend_from(const SrcPixelFormatRenderer& from, 
@@ -852,8 +816,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
 }
 
 #endif

@@ -19,11 +19,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "platform/agg_platform_support.h"
 #include "interactive_polygon.h"
-
-
 int global_offset = 0;
-
-
 enum flip_y_e { flip_y = true };
 
 agg::rasterizer_scanline_aa<> g_rasterizer;
@@ -88,8 +84,6 @@ public:
         m_blur.label("Blur=%.3f");
         add_ctrl(m_blur);
     }
-
-
     virtual void on_init()
     {
         g_x1 = -150;
@@ -296,8 +290,6 @@ public:
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_blur);
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -308,8 +300,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -324,8 +314,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_quad.on_mouse_button_up(x, y))
@@ -351,15 +339,7 @@ public:
         }
     }
 
-
-
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -383,17 +363,9 @@ int agg_main(int argc, char* argv[])
         app.message(buf);
         return 1;
     }
-    
-
     if(app.init(600, 600, agg::window_resize))
     {
         return app.run();
     }
     return 1;
 }
-
-
-
-
-
-

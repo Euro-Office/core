@@ -26,13 +26,9 @@
 #include "platform/agg_platform_support.h"
 
 #include "agg_rasterizer_compound_aa.h"
-
-
 enum { flip_y = true };
 
 typedef agg::pixfmt_bgra32_pre pixfmt;
-
-
 namespace agg
 {
 
@@ -73,14 +69,10 @@ namespace agg
             p1(p1_), p2(p2_), tl(tl_), tr(tr_) 
         {}
     };
-
-
     static double random(double v1, double v2)
     {
         return (v2 - v1) * (rand() % 1000) / 999.0 + v1;
     }
-
-
     class mesh_ctrl
     {
     public:
@@ -92,8 +84,6 @@ namespace agg
 
         void randomize_points(double delta); 
         void rotate_colors();
-
-
         bool on_mouse_button_down(double x, double y, unsigned flags);
         bool on_mouse_move(double x, double y, unsigned flags);
         bool on_mouse_button_up(double x, double y, unsigned flags);
@@ -127,8 +117,6 @@ namespace agg
         pod_bvector<mesh_triangle> m_triangles;
         pod_bvector<mesh_edge>     m_edges;
     };
-
-
     mesh_ctrl::mesh_ctrl() :
         m_cols(0),
         m_rows(0),
@@ -136,8 +124,6 @@ namespace agg
         m_drag_dx(0),
         m_drag_dy(0)
     {}
-
-
     void mesh_ctrl::generate(unsigned cols, unsigned rows, 
                              double cell_w, double cell_h,
                              double start_x, double start_y)
@@ -165,8 +151,6 @@ namespace agg
             }
             start_y += cell_h;
         }
-
-
 
         //  4---3
         //  |t2/|
@@ -239,8 +223,6 @@ namespace agg
             }
         }
     }
-
-
     void mesh_ctrl::rotate_colors()
     {
         unsigned i;
@@ -259,8 +241,6 @@ namespace agg
             c.b = b; 
         }
     }
-
-
     bool mesh_ctrl::on_mouse_button_down(double x, double y, unsigned flags)
     {
         if(flags & 1)
@@ -304,8 +284,6 @@ namespace agg
         m_drag_idx = -1;
         return ret;
     }
-
-
 
     class styles_gouraud
     {
@@ -352,10 +330,6 @@ namespace agg
     };
 }
 
-
-
-
-
 class the_application : public agg::platform_support
 {
 
@@ -367,8 +341,6 @@ public:
 
     agg::mesh_ctrl      m_mesh;
     agg::gamma_lut<>    m_gamma;
-
-
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y)
     {
@@ -379,8 +351,6 @@ public:
     {
         m_mesh.generate(20, 20, 17, 17, 40, 40);
     }
-
-
     virtual void on_draw()
     {
         pixfmt pf(rbuf_window());
@@ -430,8 +400,6 @@ public:
 
         ras.add_path(pt);
         agg::render_scanlines_aa_solid(ras, sl, ren_base, agg::rgba(1,1,1));
-
-
         if(m_gamma.gamma() != 1.0)
         {
             pf.apply_gamma_inv(m_gamma);
@@ -477,8 +445,6 @@ public:
     {
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgra32, flip_y);
@@ -491,8 +457,4 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
 

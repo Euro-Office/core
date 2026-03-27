@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordSplitMenuColorRecord: public CUnknownRecord
@@ -54,8 +52,6 @@ class CRecordMostRecentlyUserColors : public CUnknownRecord
 {
 public:
     std::vector<ODRAW::SColorAtom>	m_oColors;
-	
-
     CRecordMostRecentlyUserColors();
     ~CRecordMostRecentlyUserColors();
 

@@ -383,8 +383,6 @@ horizontalAccumulate8(uint16 *wp, int n, int stride, unsigned char *op,
 	}
     }
 }
-
-
 static void
 horizontalAccumulate8abgr(uint16 *wp, int n, int stride, unsigned char *op,
 	unsigned char *ToLinear8)
@@ -1040,8 +1038,6 @@ horizontalDifference16(unsigned short *ip, int n, int stride,
 	}
     }
 }
-
-
 static void
 horizontalDifference8(unsigned char *ip, int n, int stride, 
 	unsigned short *wp, uint16 *From8)

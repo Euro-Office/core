@@ -55,8 +55,6 @@ PIVOTCACHE::PIVOTCACHE()
 PIVOTCACHE::~PIVOTCACHE()
 {
 }
-
-
 BaseObjectPtr PIVOTCACHE::clone()
 {
 	return BaseObjectPtr(new PIVOTCACHE(*this));

@@ -692,8 +692,6 @@ static void j2k_write_com(opj_j2k_t *j2k)
         cio_seek(cio, lenp);
         cio_write(cio, len, 2);
         cio_seek(cio, lenp + len);
-
-
         if (j2k->cstr_info) {
             j2k_add_mhmarker(j2k->cstr_info, J2K_MS_COM, lenp, len);
         }
@@ -1982,8 +1980,6 @@ void j2k_setup_decoder(opj_j2k_t *j2k, opj_dparameters_t *parameters)
         cp->exp_comps = parameters->jpwl_exp_comps;
         cp->max_tiles = parameters->jpwl_max_tiles;
 #endif /* USE_JPWL */
-
-
         /* keep a link to cp so that we can destroy it later in j2k_destroy_decompress */
         j2k->cp = cp;
     }
@@ -2311,8 +2307,6 @@ void j2k_setup_encoder(opj_j2k_t *j2k, opj_cparameters_t *parameters,
     for (i = 0; i < image->numcomps ; i++) {
         cp->img_size += (image->comps[i].w * image->comps[i].h * image->comps[i].prec);
     }
-
-
 #ifdef USE_JPWL
     /*
     calculate JPWL encoding parameters
@@ -2368,8 +2362,6 @@ void j2k_setup_encoder(opj_j2k_t *j2k, opj_cparameters_t *parameters,
         cp->epc_on = OPJ_FALSE;
     }
 #endif /* USE_JPWL */
-
-
     /* initialize the multiple tiles */
     /* ---------------------------- */
     cp->tcps = (opj_tcp_t*) opj_calloc(cp->tw * cp->th, sizeof(opj_tcp_t));
@@ -2593,8 +2585,6 @@ opj_bool j2k_encode(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image,
         /* UniPG>> */
         int acc_pack_num = 0;
         /* <<UniPG */
-
-
         opj_tcp_t *tcp = &cp->tcps[tileno];
         opj_event_msg(j2k->cinfo, EVT_INFO, "tile number %d / %d\n", tileno + 1,
                       cp->tw * cp->th);
@@ -2673,8 +2663,6 @@ opj_bool j2k_encode(opj_j2k_t *j2k, opj_cio_t *cio, opj_image_t *image,
             cstr_info->tile[j2k->curtileno].end_pos = cio_tell(cio) + j2k->pos_correction -
                     1;
         }
-
-
         /*
         if (tile->PPT) { // BAD PPT !!!
         FILE *PPT_file;

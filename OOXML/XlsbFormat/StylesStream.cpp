@@ -59,8 +59,6 @@ StylesStream::StylesStream()
 StylesStream::~StylesStream()
 {
 }
-
-
 BaseObjectPtr StylesStream::clone()
 {
         return BaseObjectPtr(new StylesStream(*this));

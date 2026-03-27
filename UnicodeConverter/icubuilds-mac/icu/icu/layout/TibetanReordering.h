@@ -72,8 +72,6 @@ class LEGlyphStorage;
 //     There are a number of characters in the CJK block that are used in Tibetan script, two of these are symbols
 //     are used as bases for combining glyphs, and have not been encoded in Tibetan. As these characters are outside
 //     of the tibetan block, they have not been treated in this program.
-    
-
 struct TibetanClassTable    // This list must include all types of components that can be used inside a syllable
 {
     enum CharClassValues  // order is important here! This order must be the same that is found in each horizontal 
@@ -129,8 +127,6 @@ struct TibetanClassTable    // This list must include all types of components th
 
     static const TibetanClassTable *getTibetanClassTable();
 };
-
-
 class TibetanReordering /* not : public UObject because all methods are static */ {
 public:
     static le_int32 reorder(const LEUnicode *theChars, le_int32 charCount, le_int32 scriptCode,
@@ -145,7 +141,5 @@ private:
     static le_int32 findSyllable(const TibetanClassTable *classTable, const LEUnicode *chars, le_int32 prev, le_int32 charCount);
 
 };
-
-
 U_NAMESPACE_END
 #endif

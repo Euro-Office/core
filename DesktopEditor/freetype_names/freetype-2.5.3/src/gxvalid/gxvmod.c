@@ -23,8 +23,6 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_TRUETYPE_TABLES_H
 #include FT_TRUETYPE_TAGS_H
@@ -35,8 +33,6 @@
 #include "gxvmod.h"
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -45,8 +41,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmodule
-
-
   static FT_Error
   gxv_load_table( FT_Face             face,
                   FT_Tag              tag,
@@ -55,8 +49,6 @@
   {
     FT_Error   error;
     FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
     if ( FT_ERR_EQ( error, Table_Missing ) )
       return FT_Err_Ok;
@@ -71,8 +63,6 @@
   Exit:
     return error;
   }
-
-
 #define GXV_TABLE_DECL( _sfnt )                     \
           FT_Byte* volatile  _sfnt          = NULL; \
           FT_ULong            len_ ## _sfnt = 0
@@ -102,8 +92,6 @@
 #define GXV_TABLE_SET( _sfnt )                                        \
           if ( FT_VALIDATE_ ## _sfnt ## _INDEX < table_count )        \
             tables[FT_VALIDATE_ ## _sfnt ## _INDEX] = (FT_Bytes)_sfnt
-
-
   static FT_Error
   gxv_validate( FT_Face   face,
                 FT_UInt   gx_flags,
@@ -116,8 +104,6 @@
     FT_ValidatorRec volatile  valid;
 
     FT_UInt  i;
-
-
     GXV_TABLE_DECL( feat );
     GXV_TABLE_DECL( bsln );
     GXV_TABLE_DECL( trak );
@@ -185,8 +171,6 @@
 
     return error;
   }
-
-
   static FT_Error
   classic_kern_validate( FT_Face    face,
                          FT_UInt    ckern_flags,
@@ -202,8 +186,6 @@
     /* this warning seems spurious but ---                                   */
     FT_Error volatile         error;
     FT_ValidatorRec volatile  valid;
-
-
     *ckern_table = NULL;
 
     error = gxv_load_table( face, TTAG_kern, &ckern, &len_ckern );
@@ -230,22 +212,16 @@
 
     return error;
   }
-
-
   static
   const FT_Service_GXvalidateRec  gxvalid_interface =
   {
     gxv_validate
   };
-
-
   static
   const FT_Service_CKERNvalidateRec  ckernvalid_interface =
   {
     classic_kern_validate
   };
-
-
   static
   const FT_ServiceDescRec  gxvalid_services[] =
   {
@@ -253,8 +229,6 @@
     { FT_SERVICE_ID_CLASSICKERN_VALIDATE, &ckernvalid_interface },
     { NULL, NULL }
   };
-
-
   static FT_Pointer
   gxvalid_get_service( FT_Module    module,
                        const char*  service_id )
@@ -263,8 +237,6 @@
 
     return ft_service_list_lookup( gxvalid_services, service_id );
   }
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Module_Class  gxv_module_class =
   {
@@ -280,6 +252,4 @@
     (FT_Module_Destructor) 0,
     (FT_Module_Requester)  gxvalid_get_service
   };
-
-
 /* END */

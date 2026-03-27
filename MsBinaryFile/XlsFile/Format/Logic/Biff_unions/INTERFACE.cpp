@@ -37,24 +37,16 @@
 
 namespace XLS
 {
-
-
 INTERFACE_T::INTERFACE_T()
 {
 }
-
-
 INTERFACE_T::~INTERFACE_T()
 {
 }
-
-
 BaseObjectPtr INTERFACE_T::clone()
 {
 	return BaseObjectPtr(new INTERFACE_T(*this));
 }
-
-
 // INTERFACE = InterfaceHdr Mms InterfaceEnd
 const bool INTERFACE_T::loadContent(BinProcessor& proc)
 {
@@ -84,6 +76,4 @@ const bool INTERFACE_T::saveContent(BinProcessor& proc)
     proc.mandatory<InterfaceEnd>();
     return true;
 }
-
-
 } // namespace XLS

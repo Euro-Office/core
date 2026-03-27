@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 CFParsedFormulaNoCCE::CFParsedFormulaNoCCE(const CellRef& cell_base_ref_init) :	ParsedFormula(cell_base_ref_init)
 {
 }

@@ -45,8 +45,6 @@ std::wostream & operator << (std::wostream & _Wostream, const chart_series_sourc
 	}
     return _Wostream;    
 }
-
-
 chart_series_source chart_series_source::parse(const std::wstring & Str)
 {
     std::wstring tmp = Str;

@@ -25,7 +25,6 @@
  *        pix4.c: histograms, statistics, fg/bg estimation
  *        pix5.c: property measurements, rectangle extraction
  *
- *
  *    This file has the basic constructors, destructors and field accessors
  *
  *    Pix memory management (allows custom allocator and deallocator)
@@ -95,7 +94,6 @@
  *    Pix debug
  *          l_int32       pixPrintStreamInfo()
  *
- *
  *  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
  *      Important notes on direct management of pix image data 
  *  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -115,7 +113,6 @@
  *  In pixalloc.c, we provide an example custom allocator and deallocator.
  *  To use it, you must call pmsCreate() before any pix have been allocated
  *  and pmsDestroy() at the end after all pix have been destroyed.
- *
  *
  *  Direct manipulation of the pix data field
  *  -----------------------------------------
@@ -172,8 +169,6 @@
 #include "allheaders.h"
 
 static void pixFree(PIX *pix);
-
-
 /*-------------------------------------------------------------------------*
  *                        Pix Memory Management                            *
  *                                                                         *
@@ -253,8 +248,6 @@ setPixMemoryManager(void  *((*allocator)(size_t)),
     return;
 }
 #endif /* _MSC_VER */
-
-
 /*--------------------------------------------------------------------*
  *                              Pix Creation                          *
  *--------------------------------------------------------------------*/
@@ -279,8 +272,6 @@ PIX  *pixd;
     memset(pixd->data, 0, 4 * pixd->wpl * pixd->h);
     return pixd;
 }
-
-
 /*!
  *  pixCreateNoInit()
  *
@@ -311,8 +302,6 @@ l_uint32  *data;
     pixSetPadBits(pixd, 0);
     return pixd;
 }
-
-
 /*!
  *  pixCreateTemplate()
  *
@@ -339,8 +328,6 @@ PIX  *pixd;
     memset(pixd->data, 0, 4 * pixd->wpl * pixd->h);
     return pixd;
 }
-
-
 /*!
  *  pixCreateTemplateNoInit()
  *
@@ -373,8 +360,6 @@ PIX     *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixCreateHeader()
  *
@@ -412,8 +397,6 @@ PIX     *pixd;
     pixd->informat = IFF_UNKNOWN;
     return pixd;
 }
-
-
 /*!
  *  pixClone()
  *
@@ -447,8 +430,6 @@ pixClone(PIX  *pixs)
 
     return pixs;
 }
-
-
 /*--------------------------------------------------------------------*
  *                           Pix Destruction                          *
  *--------------------------------------------------------------------*/
@@ -481,8 +462,6 @@ PIX  *pix;
     *ppix = NULL;
     return;
 }
-
-
 /*!
  *  pixFree()
  *
@@ -511,8 +490,6 @@ char      *text;
     }
     return;
 }
-
-
 /*-------------------------------------------------------------------------*
  *                                 Pix Copy                                *
  *-------------------------------------------------------------------------*/
@@ -587,8 +564,6 @@ l_uint32  *datas, *datad;
     memcpy((char*)datad, (char*)datas, bytes);
     return pixd;
 }
-
-
 /*!
  *  pixResizeImageData()
  *
@@ -631,8 +606,6 @@ l_uint32  *data;
     pixSetData(pixd, data);
     return 0;
 }
-
-
 /*!
  *  pixCopyColormap()
  *
@@ -668,8 +641,6 @@ PIXCMAP  *cmaps, *cmapd;
 
     return 0;
 }
-
-
 /*!
  *  pixSizesEqual()
  *
@@ -695,8 +666,6 @@ pixSizesEqual(PIX  *pix1,
     else
         return 1;
 }
-
-
 /*!
  *  pixTransferAllData()
  *
@@ -793,8 +762,6 @@ PIX     *pixs;
     pixDestroy(ppixs);
     return 0;
 }
-        
-
 
 /*--------------------------------------------------------------------*
  *                                Accessors                           *
@@ -809,8 +776,6 @@ pixGetWidth(PIX  *pix)
 
     return pix->w;
 }
-
-
 l_int32
 pixSetWidth(PIX     *pix,
             l_int32  width)
@@ -827,8 +792,6 @@ pixSetWidth(PIX     *pix,
     pix->w = width;
     return 0;
 }
-
-
 l_int32
 pixGetHeight(PIX  *pix)
 {
@@ -839,8 +802,6 @@ pixGetHeight(PIX  *pix)
 
     return pix->h;
 }
-
-
 l_int32
 pixSetHeight(PIX     *pix,
              l_int32  height)
@@ -857,8 +818,6 @@ pixSetHeight(PIX     *pix,
     pix->h = height;
     return 0;
 }
-
-
 l_int32
 pixGetDepth(PIX  *pix)
 {
@@ -869,8 +828,6 @@ pixGetDepth(PIX  *pix)
 
     return pix->d;
 }
-
-
 l_int32
 pixSetDepth(PIX     *pix,
             l_int32  depth)
@@ -885,8 +842,6 @@ pixSetDepth(PIX     *pix,
     pix->d = depth;
     return 0;
 }
-
-
 /*!
  *  pixGetDimensions()
  *
@@ -909,8 +864,6 @@ pixGetDimensions(PIX      *pix,
     if (pd) *pd = pix->d;
     return 0;
 }
-
-
 /*!
  *  pixSetDimensions()
  *
@@ -933,8 +886,6 @@ pixSetDimensions(PIX     *pix,
     if (d > 0) pixSetDepth(pix, d);
     return 0;
 }
-
-
 /*!
  *  pixCopyDimensions()
  *
@@ -961,8 +912,6 @@ pixCopyDimensions(PIX  *pixd,
     pixSetWpl(pixd, pixGetWpl(pixs));
     return 0;
 }
-
-
 l_int32
 pixGetWpl(PIX  *pix)
 {
@@ -972,8 +921,6 @@ pixGetWpl(PIX  *pix)
         return ERROR_INT("pix not defined", procName, UNDEF);
     return pix->wpl;
 }
-
-
 l_int32
 pixSetWpl(PIX     *pix,
           l_int32  wpl)
@@ -986,8 +933,6 @@ pixSetWpl(PIX     *pix,
     pix->wpl = wpl;
     return 0;
 }
-
-
 l_int32
 pixGetRefcount(PIX  *pix)
 {
@@ -997,8 +942,6 @@ pixGetRefcount(PIX  *pix)
         return ERROR_INT("pix not defined", procName, UNDEF);
     return pix->refcount;
 }
-
-
 l_int32
 pixChangeRefcount(PIX     *pix,
                   l_int32  delta)
@@ -1011,8 +954,6 @@ pixChangeRefcount(PIX     *pix,
     pix->refcount += delta;
     return 0;
 }
-
-
 l_uint32
 pixGetXRes(PIX  *pix)
 {
@@ -1022,8 +963,6 @@ pixGetXRes(PIX  *pix)
         return ERROR_INT("pix not defined", procName, 0);
     return pix->xres;
 }
-
-
 l_int32
 pixSetXRes(PIX      *pix,
            l_uint32  res)
@@ -1036,8 +975,6 @@ pixSetXRes(PIX      *pix,
     pix->xres = res;
     return 0;
 }
-
-
 l_uint32
 pixGetYRes(PIX  *pix)
 {
@@ -1047,8 +984,6 @@ pixGetYRes(PIX  *pix)
         return ERROR_INT("pix not defined", procName, 0);
     return pix->yres;
 }
-
-
 l_int32
 pixSetYRes(PIX      *pix,
            l_uint32  res)
@@ -1061,8 +996,6 @@ pixSetYRes(PIX      *pix,
     pix->yres = res;
     return 0;
 }
-
-
 /*!
  *  pixGetResolution()
  *
@@ -1083,8 +1016,6 @@ pixGetResolution(PIX       *pix,
     if (pyres) *pyres = pix->yres;
     return 0;
 }
-
-
 /*!
  *  pixSetResolution()
  *
@@ -1105,8 +1036,6 @@ pixSetResolution(PIX      *pix,
     if (yres > 0) pix->yres = yres;
     return 0;
 }
-
-
 l_int32
 pixCopyResolution(PIX  *pixd,
                   PIX  *pixs)
@@ -1124,8 +1053,6 @@ pixCopyResolution(PIX  *pixd,
     pixSetYRes(pixd, pixGetYRes(pixs));
     return 0;
 }
-
-
 l_int32
 pixScaleResolution(PIX       *pix,
                    l_float32  xscale,
@@ -1142,8 +1069,6 @@ pixScaleResolution(PIX       *pix,
     }
     return 0;
 }
-
-
 l_int32
 pixGetInputFormat(PIX  *pix)
 {
@@ -1153,8 +1078,6 @@ pixGetInputFormat(PIX  *pix)
         return ERROR_INT("pix not defined", procName, UNDEF);
     return pix->informat;
 }
-
-
 l_int32
 pixSetInputFormat(PIX     *pix,
                   l_int32  informat)
@@ -1167,8 +1090,6 @@ pixSetInputFormat(PIX     *pix,
     pix->informat = informat;
     return 0;
 }
-
-
 l_int32
 pixCopyInputFormat(PIX  *pixd,
                    PIX  *pixs)
@@ -1185,8 +1106,6 @@ pixCopyInputFormat(PIX  *pixd,
     pixSetInputFormat(pixd, pixGetInputFormat(pixs));
     return 0;
 }
-
-
 /*!
  *  pixGetText()
  *
@@ -1206,8 +1125,6 @@ pixGetText(PIX  *pix)
         return (char *)ERROR_PTR("pix not defined", procName, NULL);
     return pix->text;
 }
-
-
 /*!
  *  pixSetText()
  *
@@ -1231,8 +1148,6 @@ pixSetText(PIX         *pix,
     stringReplace(&pix->text, textstring);
     return 0;
 }
-
-
 /*!
  *  pixAddText()
  *
@@ -1261,8 +1176,6 @@ char  *newstring;
     FREE(newstring);
     return 0;
 }
-
-
 l_int32
 pixCopyText(PIX  *pixd,
             PIX  *pixs)
@@ -1279,8 +1192,6 @@ pixCopyText(PIX  *pixd,
     pixSetText(pixd, pixGetText(pixs));
     return 0;
 }
-
-
 PIXCMAP *
 pixGetColormap(PIX  *pix)
 {
@@ -1290,8 +1201,6 @@ pixGetColormap(PIX  *pix)
         return (PIXCMAP *)ERROR_PTR("pix not defined", procName, NULL);
     return pix->colormap;
 }
-
-
 /*!
  *  pixSetColormap()
  *
@@ -1318,8 +1227,6 @@ pixSetColormap(PIX      *pix,
     pix->colormap = colormap;
     return 0;
 }
-
-
 /*!
  *  pixDestroyColormap()
  *
@@ -1342,8 +1249,6 @@ PIXCMAP  *cmap;
     }
     return 0;
 }
-
-
 /*!
  *  pixGetData()
  *
@@ -1360,8 +1265,6 @@ pixGetData(PIX  *pix)
         return (l_uint32 *)ERROR_PTR("pix not defined", procName, NULL);
     return pix->data;
 }
-
-
 /*!
  *  pixSetData()
  *
@@ -1381,8 +1284,6 @@ pixSetData(PIX       *pix,
     pix->data = data;
     return 0;
 }
-
-
 /*!
  *  pixExtractData()
  *
@@ -1420,8 +1321,6 @@ l_uint32  *data, *datas;
 
     return data;
 }
-
-
 /*!
  *  pixFreeData()
  *
@@ -1447,8 +1346,6 @@ l_uint32  *data;
     }
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                          Pix line ptrs                             *
  *--------------------------------------------------------------------*/
@@ -1544,8 +1441,6 @@ void     **lines;
 
     return lines;
 }
-
-
 /*--------------------------------------------------------------------*
  *                    Print output for debugging                      *
  *--------------------------------------------------------------------*/

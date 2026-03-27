@@ -21,8 +21,6 @@
 
 import fileinput, re, sys, os, string
 
-
-
 ################################################################
 ##
 ##  BLOCK FORMAT PATTERN
@@ -42,8 +40,6 @@ class  SourceBlockFormat:
         self.start  = re.compile( start, re.VERBOSE )
         self.column = re.compile( column, re.VERBOSE )
         self.end    = re.compile( end, re.VERBOSE )
-
-
 
 #
 # format 1 documentation comment blocks look like the following:
@@ -72,8 +68,6 @@ column = r'''
 '''
 
 re_source_block_format1 = SourceBlockFormat( 1, start, column, start )
-
-
 #
 # format 2 documentation comment blocks look like the following:
 #
@@ -104,15 +98,11 @@ end = r'''
 '''
 
 re_source_block_format2 = SourceBlockFormat( 2, start, column, end )
-
-
 #
 # the list of supported documentation block formats, we could add new ones
 # relatively easily
 #
 re_source_block_formats = [re_source_block_format1, re_source_block_format2]
-
-
 #
 # the following regular expressions corresponds to markup tags
 # within the documentation comment blocks. they're equivalent
@@ -209,8 +199,6 @@ re_source_keywords = re.compile( '''\\b ( typedef   |
                                           \#ifndef  |
                                           \#else    |
                                           \#endif   ) \\b''', re.VERBOSE )
-
-
 ################################################################
 ##
 ##  SOURCE BLOCK CLASS
@@ -284,8 +272,6 @@ class  SourceBlock:
 
         for line in self.lines:
             print line
-
-
 
 ################################################################
 ##

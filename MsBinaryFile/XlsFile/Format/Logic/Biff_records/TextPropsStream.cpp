@@ -38,13 +38,9 @@ namespace XLS
 TextPropsStream::TextPropsStream()
 {
 }
-
-
 TextPropsStream::~TextPropsStream()
 {
 }
-
-
 BaseObjectPtr TextPropsStream::clone()
 {
 	return BaseObjectPtr(new TextPropsStream(*this));

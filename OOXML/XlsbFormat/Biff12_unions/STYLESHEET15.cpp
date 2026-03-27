@@ -94,8 +94,6 @@ namespace XLSB
         }
 		else
 			m_bBrtFRTEnd = false;
-
-
         return m_bBrtBeginTimelineStyleSheetExt15 && m_TIMELINESTYLES && m_bBrtEndTimelineStyleSheetExt15 && m_bBrtFRTEnd;
     }
 

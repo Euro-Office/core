@@ -21,8 +21,6 @@ if re.regexpIsDeterminist() != 1:
     print("error checking determinism")
     sys.exit(1)
 del re
-    
-
 # Memory debug specific
 libxml2.cleanupParser()
 if libxml2.debugMemory(1) == 0:

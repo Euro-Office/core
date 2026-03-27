@@ -4,8 +4,6 @@
 #include "../compoundfile.h"
 #include <iostream>
 #include <iomanip>
-
-
 struct CompoundFileTest : testing::Test
 {
     wstring srcFilePath = sourcePath + L"ex.ppt";
@@ -16,8 +14,6 @@ struct CompoundFileTest : testing::Test
 
     }
 };
-
-
 wstring SaveToFile(CompoundFile& cf, wstring filename)
 {
     wstring filePath = InitOutPath(filename);
@@ -103,8 +99,6 @@ TEST_F(CompoundFileTest, add2StreamWithSameName)
 
     cf.RootStorage()->AddStorage(storageName)->AddStream(streamsName);
     cf.RootStorage()->AddStream(streamsName);
-
-
     wstring savedFilePath = SaveToFile(cf, L"ex5.ppt");
 
     CompoundFile cf2(savedFilePath);

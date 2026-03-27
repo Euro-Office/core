@@ -249,8 +249,6 @@ xmlCatalogErr(xmlCatalogEntryPtr catal, xmlNodePtr node, int error,
 		    (const char *) str3, 0, 0,
 		    msg, str1, str2, str3);
 }
-
-
 /************************************************************************
  *									*
  *			Allocation and Freeing				*
@@ -1088,8 +1086,6 @@ xmlCatalogListXMLResolve(xmlCatalogEntryPtr catal, const xmlChar *pubID,
 	              const xmlChar *sysID);
 static xmlChar *
 xmlCatalogListXMLResolveURI(xmlCatalogEntryPtr catal, const xmlChar *URI);
-
-
 /**
  * xmlGetXMLCatalogEntryType:
  * @name:  the name
@@ -2136,8 +2132,6 @@ xmlCatalogListXMLResolveURI(xmlCatalogEntryPtr catal, const xmlChar *URI) {
  *			The SGML Catalog parser				*
  *									*
  ************************************************************************/
-
-
 #define RAW *cur
 #define NEXT cur++;
 #define SKIP(x) cur += x;
@@ -2686,8 +2680,6 @@ xmlLoadACatalog(const char *filename)
     content = xmlLoadFileContent(filename);
     if (content == NULL)
         return(NULL);
-
-
     first = content;
 
     while ((*first != 0) && (*first != '-') && (*first != '<') &&
@@ -2737,8 +2729,6 @@ xmlExpandCatalog(xmlCatalogPtr catal, const char *filename)
 
     if ((catal == NULL) || (filename == NULL))
 	return(-1);
-
-
     if (catal->type == XML_SGML_CATALOG_TYPE) {
 	xmlChar *content;
 
@@ -3180,8 +3170,6 @@ xmlInitializeCatalog(void) {
 
     xmlRMutexUnlock(xmlCatalogMutex);
 }
-
-
 /**
  * xmlLoadCatalog:
  * @filename:  a file path
@@ -3606,8 +3594,6 @@ xmlCatalogFreeLocal(void *catalogs) {
     if (catal != NULL)
 	xmlFreeCatalogEntryList(catal);
 }
-
-
 /**
  * xmlCatalogAddLocal:
  * @catalogs:  a document's list of catalogs

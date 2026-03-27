@@ -27,8 +27,6 @@
 #include "lcms2_internal.h"
 
 // Multilocalized unicode objects. That is an attempt to encapsulate i18n.
-
-
 // Allocates an empty multi localizad unicode object
 cmsMLU* CMSEXPORT cmsMLUalloc(cmsContext ContextID, cmsUInt32Number nItems)
 {
@@ -56,8 +54,6 @@ cmsMLU* CMSEXPORT cmsMLUalloc(cmsContext ContextID, cmsUInt32Number nItems)
 
     return mlu;
 }
-
-
 // Grows a mempool table for a MLU. Each time this function is called, mempool size is multiplied times two.
 static
 cmsBool GrowMLUpool(cmsMLU* mlu)
@@ -79,15 +75,11 @@ cmsBool GrowMLUpool(cmsMLU* mlu)
     // Reallocate the pool
     NewPtr = _cmsRealloc(mlu ->ContextID, mlu ->MemPool, size);
     if (NewPtr == NULL) return FALSE;
-
-
     mlu ->MemPool  = NewPtr;
     mlu ->PoolSize = size;
 
     return TRUE;
 }
-
-
 // Grows a entry table for a MLU. Each time this function is called, table size is multiplied times two.
 static
 cmsBool GrowMLUtable(cmsMLU* mlu)
@@ -112,8 +104,6 @@ cmsBool GrowMLUtable(cmsMLU* mlu)
 
     return TRUE;
 }
-
-
 // Search for a specific entry in the structure. Language and Country are used.
 static
 int SearchMLUEntry(cmsMLU* mlu, cmsUInt16Number LanguageCode, cmsUInt16Number CountryCode)
@@ -314,8 +304,6 @@ void CMSEXPORT cmsMLUfree(cmsMLU* mlu)
         _cmsFree(mlu ->ContextID, mlu);
     }
 }
-
-
 // The algorithm first searches for an exact match of country and language, if not found it uses
 // the Language. If none is found, first entry is used instead.
 static
@@ -365,8 +353,6 @@ const wchar_t* _cmsMLUgetWide(const cmsMLU* mlu,
 
     return(wchar_t*) ((cmsUInt8Number*) mlu ->MemPool + v ->StrW);
 }
-
-
 // Obtain an ASCII representation of the wide string. Setting buffer to NULL returns the len
 cmsUInt32Number CMSEXPORT cmsMLUgetASCII(const cmsMLU* mlu,
                                        const char LanguageCode[3], const char CountryCode[3],
@@ -444,8 +430,6 @@ cmsUInt32Number CMSEXPORT cmsMLUgetWide(const cmsMLU* mlu,
 
     return StrLen + sizeof(wchar_t);
 }
-
-
 // Get also the language and country
 CMSAPI cmsBool CMSEXPORT cmsMLUgetTranslation(const cmsMLU* mlu,
                                               const char LanguageCode[3], const char CountryCode[3],
@@ -469,8 +453,6 @@ CMSAPI cmsBool CMSEXPORT cmsMLUgetTranslation(const cmsMLU* mlu,
 
     return TRUE;
 }
-
-
 
 // Get the number of translations in the MLU object
 cmsUInt32Number CMSEXPORT cmsMLUtranslationsCount(const cmsMLU* mlu)
@@ -498,8 +480,6 @@ cmsBool CMSEXPORT cmsMLUtranslationsCodes(const cmsMLU* mlu,
 
     return TRUE;
 }
-
-
 // Named color lists --------------------------------------------------------------------------------------------
 
 // Grow the list to keep at least NumElements
@@ -581,8 +561,6 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsDupNamedColorList(const cmsNAMEDCOLORLIST* v)
     NewNC ->nColors = v ->nColors;
     return NewNC;
 }
-
-
 // Append a color to a list. List pointer may change if reallocated
 cmsBool  CMSEXPORT cmsAppendNamedColor(cmsNAMEDCOLORLIST* NamedColorList,
                                        const char* Name,
@@ -610,8 +588,6 @@ cmsBool  CMSEXPORT cmsAppendNamedColor(cmsNAMEDCOLORLIST* NamedColorList,
     }
     else
         NamedColorList ->List[NamedColorList ->nColors].Name[0] = 0;
-
-
     NamedColorList ->nColors++;
     return TRUE;
 }
@@ -644,8 +620,6 @@ cmsBool  CMSEXPORT cmsNamedColorInfo(const cmsNAMEDCOLORLIST* NamedColorList, cm
     if (Colorant)
         memmove(Colorant, NamedColorList ->List[nColor].DeviceColorant,
                                 sizeof(cmsUInt16Number) * NamedColorList ->ColorantCount);
-
-
     return TRUE;
 }
 
@@ -713,8 +687,6 @@ void EvalNamedColor(const cmsFloat32Number In[], cmsFloat32Number Out[], const c
             Out[j] = (cmsFloat32Number) (NamedColorList->List[index].DeviceColorant[j] / 65535.0);
     }
 }
-
-
 // Named color lookup element
 cmsStage* _cmsStageAllocNamedColor(cmsNAMEDCOLORLIST* NamedColorList, cmsBool UsePCS)
 {
@@ -727,8 +699,6 @@ cmsStage* _cmsStageAllocNamedColor(cmsNAMEDCOLORLIST* NamedColorList, cmsBool Us
                                    cmsDupNamedColorList(NamedColorList));
 
 }
-
-
 // Retrieve the named color list from a transform. Should be first element in the LUT
 cmsNAMEDCOLORLIST* CMSEXPORT cmsGetNamedColorList(cmsHTRANSFORM xform)
 {
@@ -738,8 +708,6 @@ cmsNAMEDCOLORLIST* CMSEXPORT cmsGetNamedColorList(cmsHTRANSFORM xform)
     if (mpe ->Type != cmsSigNamedColorElemType) return NULL;
     return (cmsNAMEDCOLORLIST*) mpe ->Data;
 }
-
-
 // Profile sequence description routines -------------------------------------------------------------------------------------
 
 cmsSEQ* CMSEXPORT cmsAllocProfileSequenceDescription(cmsContext ContextID, cmsUInt32Number n)
@@ -798,8 +766,6 @@ cmsSEQ* CMSEXPORT cmsDupProfileSequenceDescription(const cmsSEQ* pseq)
 
     NewSeq = (cmsSEQ*) _cmsMalloc(pseq -> ContextID, sizeof(cmsSEQ));
     if (NewSeq == NULL) return NULL;
-
-
     NewSeq -> seq      = (cmsPSEQDESC*) _cmsCalloc(pseq ->ContextID, pseq ->n, sizeof(cmsPSEQDESC));
     if (NewSeq ->seq == NULL) goto Error;
 
@@ -832,14 +798,10 @@ Error:
 // Dictionaries --------------------------------------------------------------------------------------------------------
 
 // Dictionaries are just very simple linked lists
-
-
 typedef struct _cmsDICT_struct {
     cmsDICTentry* head;
     cmsContext ContextID;
 } _cmsDICT;
-
-
 // Allocate an empty dictionary
 cmsHANDLE CMSEXPORT cmsDictAlloc(cmsContext ContextID)
 {
@@ -877,8 +839,6 @@ void CMSEXPORT cmsDictFree(cmsHANDLE hDict)
 
     _cmsFree(dict ->ContextID, dict);
 }
-
-
 // Duplicate a wide char string
 static
 wchar_t* DupWcs(cmsContext ContextID, const wchar_t* ptr)
@@ -909,8 +869,6 @@ cmsBool CMSEXPORT cmsDictAddEntry(cmsHANDLE hDict, const wchar_t* Name, const wc
 
     return TRUE;
 }
-
-
 // Duplicates an existing dictionary
 cmsHANDLE CMSEXPORT cmsDictDup(cmsHANDLE hDict)
 {

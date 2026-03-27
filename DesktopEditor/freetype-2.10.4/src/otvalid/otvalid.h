@@ -14,23 +14,15 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef OTVALID_H_
 #define OTVALID_H_
-
-
 #include <freetype/freetype.h>
 
 #include "otverror.h"                      /* must come before `ftvalid.h' */
 
 #include <freetype/internal/ftvalid.h>
 #include <freetype/internal/ftstream.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( void )
   otv_BASE_validate( FT_Bytes      table,
                      FT_Validator  valid );
@@ -67,11 +59,7 @@ FT_BEGIN_HEADER
   otv_MATH_validate( FT_Bytes      table,
                      FT_UInt       glyph_count,
                      FT_Validator  ftvalid );
-
-
 FT_END_HEADER
 
 #endif /* OTVALID_H_ */
-
-
 /* END */

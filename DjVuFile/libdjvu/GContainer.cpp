@@ -64,21 +64,15 @@
 #endif
 
 #include "GContainer.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // ------------------------------------------------------------
 // DYNAMIC ARRAYS
 // ------------------------------------------------------------
-
-
 GArrayBase::GArrayBase(const GArrayBase &ref)
   : traits(ref.traits), data(0),
     minlo(ref.minlo), maxhi(ref.maxhi),
@@ -91,16 +85,12 @@ GArrayBase::GArrayBase(const GArrayBase &ref)
                 traits.lea(ref.data, lobound-minlo),
                 hibound - lobound + 1, 0);
 }
-
-
 GArrayBase::GArrayBase(const GCONT Traits &traits)
   : traits(traits), data(0),
     minlo(0), maxhi(-1),
     lobound(0), hibound(-1)
 {
 }
-
-
 GArrayBase::GArrayBase(const GCONT Traits &traits, int lobound, int hibound)
   : traits(traits), data(0),
     minlo(0), maxhi(-1),
@@ -108,14 +98,10 @@ GArrayBase::GArrayBase(const GCONT Traits &traits, int lobound, int hibound)
 {
   resize(lobound, hibound);
 }
-
-
 GArrayBase::~GArrayBase()
 {
   G_TRY { empty(); } G_CATCH_ALL { } G_ENDCATCH;
 }
-
-
 GArrayBase &
 GArrayBase::operator= (const GArrayBase &ga)
 {
@@ -131,8 +117,6 @@ GArrayBase::operator= (const GArrayBase &ga)
     }
   return *this;
 }
-
-
 void
 GArrayBase::steal(GArrayBase &ga)
 {
@@ -149,15 +133,11 @@ GArrayBase::steal(GArrayBase &ga)
       ga.hibound = ga.maxhi = -1;
     }
 }
-
-
 void 
 GArrayBase::empty()
 {
   resize(0, -1);
 }
-
-
 void 
 GArrayBase::touch(int n)
 {
@@ -167,8 +147,6 @@ GArrayBase::touch(int n)
     nlo = nhi = n;
   resize(nlo, nhi);
 }
-
-
 void 
 GArrayBase::resize(int lo, int hi)
 {
@@ -255,8 +233,6 @@ GArrayBase::resize(int lo, int hi)
   lobound = lo;
   hibound = hi;
 }
-
-
 void 
 GArrayBase::shift(int disp)
 {
@@ -265,8 +241,6 @@ GArrayBase::shift(int disp)
   minlo += disp;
   maxhi += disp;
 }
-
-
 void 
 GArrayBase::del(int n, int howmany)
 {
@@ -283,22 +257,16 @@ GArrayBase::del(int n, int howmany)
                  hibound - (n+howmany-1), 1 );
   hibound = hibound - howmany;
 }
-
-
 static inline void *
 nextptr(void *p, int elsize)
 {
   return (void*)(((char*)p) + elsize);
 }
-
-
 static inline void *
 prevptr(void *p, int elsize)
 {
   return (void*)(((char*)p) - elsize);  
 }
-
-
 void 
 GArrayBase::ins(int n, const void *src, int howmany)
 {
@@ -365,13 +333,9 @@ GArrayBase::ins(int n, const void *src, int howmany)
     }
 }
 
-
-
 // ------------------------------------------------------------
 // GPOSITION
 // ------------------------------------------------------------
-
-
 
 void 
 GPosition::throw_invalid(void *c) const
@@ -384,21 +348,15 @@ GPosition::throw_invalid(void *c) const
     G_THROW( ERR_MSG("GContainer.bad_pos") );
 }
 
-
-
 // ------------------------------------------------------------
 // DOUBLY LINKED LISTS
 // ------------------------------------------------------------
-
-
 GListBase::GListBase(const Traits& traits)
   : traits(traits)
 {
   nelem = 0;
   head.next = head.prev = 0;
 }
-
-
 GListBase::GListBase(const GListBase &ref)
   : traits(ref.traits)
 {
@@ -418,8 +376,6 @@ GListBase::~GListBase()
   }
   G_ENDCATCH;
 }
-
-
 void 
 GListBase::append(Node *n)
 {
@@ -434,8 +390,6 @@ GListBase::append(Node *n)
   // Finish
   nelem += 1;
 }
-
-
 void 
 GListBase::prepend(Node *n)
 {
@@ -450,8 +404,6 @@ GListBase::prepend(Node *n)
   // Finish
   nelem += 1;
 }
-
-
 void 
 GListBase::insert_after(GPosition pos, Node *n)
 {
@@ -481,8 +433,6 @@ GListBase::insert_after(GPosition pos, Node *n)
   // Finish
   nelem += 1;
 }
-
-
 void 
 GListBase::insert_before(GPosition pos, Node *n)
 {
@@ -512,8 +462,6 @@ GListBase::insert_before(GPosition pos, Node *n)
   // Finish
   nelem += 1;
 }
-
-
 void
 GListBase::insert_before(GPosition pos, GListBase &fromlist, GPosition &frompos)
 {
@@ -559,8 +507,6 @@ GListBase::insert_before(GPosition pos, GListBase &fromlist, GPosition &frompos)
     head.prev = n;
   nelem += 1;
 }
-
-
 void 
 GListBase::del(GPosition &pos)
 {
@@ -582,8 +528,6 @@ GListBase::del(GPosition &pos)
   operator delete ( (void*)n );
   pos.ptr = 0;
 }
-
-
 GPosition 
 GListBase::nth(unsigned int n) const
 {
@@ -594,8 +538,6 @@ GListBase::nth(unsigned int n) const
         break;
   return GPosition(p, (void*)this);
 }
-
-
 void 
 GListBase::empty()
 {
@@ -610,8 +552,6 @@ GListBase::empty()
   head.next = head.prev = 0;
   nelem = 0;
 }
-
-
 GListBase & 
 GListBase::operator= (const GListBase & ref)
 {
@@ -627,40 +567,26 @@ GListBase::operator= (const GListBase & ref)
   return *this;
 }
 
-
-
-
-
 // ------------------------------------------------------------
 // ASSOCIATIVE MAPS
 // ------------------------------------------------------------
-
-
-
-
 GSetBase::GSetBase(const Traits &traits)
   : traits(traits), nelems(0), nbuckets(0), 
     gtable(table), first(0)
 {
   rehash(17);
 }
-
-
 GSetBase::GSetBase(const GSetBase &ref)
   : traits(ref.traits), 
     nelems(0), nbuckets(0), gtable(table), first(0)
 {
   GSetBase::operator= (ref);
 }
-
-
 GSetBase::~GSetBase()
 {
   G_TRY { empty(); } G_CATCH_ALL { } G_ENDCATCH;
 //  delete [] table;
 }
-
-
 GCONT HNode *
 GSetBase::hashnode(unsigned int hashcode) const
 {
@@ -704,8 +630,6 @@ GSetBase::insertnode(HNode *n)
   table[bucket] = n;
   nelems += 1;
 }
-
-
 void   
 GSetBase::deletenode(GCONT HNode *n)
 {
@@ -732,8 +656,6 @@ GSetBase::deletenode(GCONT HNode *n)
   operator delete ( (void*)n );
   nelems -= 1;
 }
-
-
 void   
 GSetBase::rehash(int newbuckets)
 {
@@ -760,8 +682,6 @@ GSetBase::rehash(int newbuckets)
       n = p;
     }
 }
-
-
 GSetBase& 
 GSetBase::operator=(const GSetBase &ref)
 {
@@ -777,15 +697,11 @@ GSetBase::operator=(const GSetBase &ref)
     }
   return *this;
 }
-
-
 GPosition 
 GSetBase::firstpos() const
 {
   return GPosition(first, (void*)this);
 }
-
-
 void 
 GSetBase::del(GPosition &pos)
 {
@@ -813,8 +729,6 @@ GSetBase::empty()
 //  for (int i=0; i<nbuckets; i++)
 //    table[i] = 0;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

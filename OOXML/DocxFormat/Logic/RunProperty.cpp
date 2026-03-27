@@ -784,9 +784,5 @@ namespace OOX
 		{
 			return et_w_rPr;
 		}
-
-
 	} // Logic
 } // ComplexTypes
-
-

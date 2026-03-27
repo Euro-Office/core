@@ -38,13 +38,9 @@ namespace XLS
 Area::Area()
 {
 }
-
-
 Area::~Area()
 {
 }
-
-
 BaseObjectPtr Area::clone()
 {
 	return BaseObjectPtr(new Area(*this));

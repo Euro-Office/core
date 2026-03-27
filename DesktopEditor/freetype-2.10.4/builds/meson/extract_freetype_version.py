@@ -25,8 +25,6 @@ import sys
 RE_MAJOR = re.compile(r"^ \#define \s+ FREETYPE_MAJOR \s+ (.*) $", re.X)
 RE_MINOR = re.compile(r"^ \#define \s+ FREETYPE_MINOR \s+ (.*) $", re.X)
 RE_PATCH = re.compile(r"^ \#define \s+ FREETYPE_PATCH \s+ (.*) $", re.X)
-
-
 def parse_freetype_header(header):
     major = None
     minor = None
@@ -57,8 +55,6 @@ def parse_freetype_header(header):
     ), "This header is missing one of FREETYPE_MAJOR, FREETYPE_MINOR or FREETYPE_PATCH!"
 
     return (major, minor, patch)
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -101,7 +97,5 @@ def main():
         print("%s.%s.%s" % version)
 
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

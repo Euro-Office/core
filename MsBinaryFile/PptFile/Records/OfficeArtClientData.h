@@ -34,16 +34,12 @@
 #include "ShapeProgBinaryTagSubContainerOrAtom.h"
 #include "PlaceHolderAtom.h"
 #include "Animations/AnimationInfoContainer.h"
-
-
 namespace PPT
 {
 class CRecordShapeProgBinaryTagContainer : public CUnknownRecord
 {
 public:
     CRecordShapeProgBinaryTagSubContainerOrAtom m_rec;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 

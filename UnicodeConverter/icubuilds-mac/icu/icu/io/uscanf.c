@@ -29,8 +29,6 @@
 
 #include "cmemory.h"
 #include "cstring.h"
-
-
 U_CAPI int32_t U_EXPORT2
 u_fscanf(UFILE        *f,
          const char    *patternSpecification,

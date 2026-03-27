@@ -128,8 +128,6 @@ void xlsx_text_context::Impl::serialize_shared_strings(std::wostream & strm)
 {
     xlsx_shared_strings_.serialize(strm);    
 }
-
-
 xlsx_text_context::Impl::Impl(odf_reader::odf_read_context & odf_context) :
 	paragraphs_cout_(0), odf_context_(odf_context),
 	in_comment(false), in_draw(false), in_paragraph(false), in_span(false), in_cell_content(false), only_text(false)
@@ -388,8 +386,6 @@ void xlsx_text_context::Impl::write_rPr(std::wostream & strm)
 		}
     }
 }
-
-
 std::wstring xlsx_text_context::Impl::dump_paragraph(/*bool last*/)
 {				
 	if (!in_draw) return L""; 
@@ -594,8 +590,6 @@ int xlsx_text_context::Impl::end_cell_content(bool need_cache)
 xlsx_text_context::xlsx_text_context(odf_reader::odf_read_context & odfContext) :
 	impl_(new xlsx_text_context::Impl(odfContext))
 {}
-
-
 xlsx_text_context::~xlsx_text_context()
 {
 }
@@ -687,7 +681,5 @@ void xlsx_text_context::serialize_shared_strings(std::wostream & strm)
 {
     return impl_->serialize_shared_strings(strm);
 }
-
-    
 }
 }

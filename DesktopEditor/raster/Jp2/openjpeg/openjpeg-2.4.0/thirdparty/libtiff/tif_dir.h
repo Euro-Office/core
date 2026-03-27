@@ -171,8 +171,6 @@ typedef struct {
 /*      FIELD_CUSTOM (see tiffio.h)    65 */
 /* end of support for well-known tags; codec-private tags follow */
 #define FIELD_CODEC                    66  /* base of codec-private tags */
-
-
 /*
  * Pseudo-tags don't normally need field bits since they are not written to an
  * output file (by definition). The library also has express logic to always

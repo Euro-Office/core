@@ -68,8 +68,6 @@ namespace XLSB {
                     //      Data_Form,Auto_Activate,Auto_Deactivate,Sheet_Title,FilterDatabase)
                     default : wcscpy(wszNameType, L"Normal"); break;
                 }
-
-
                 WCHAR s[256];
                 swprintf(s, sizeof(s), L"\tinfo : hidden=%s, addinfunc=%s, builtin=%s, type=%s, name=%s, lenName=%d, lenFormula=%d\r\n",
                     bHidden ? L"true" : L"false",
@@ -321,6 +319,4 @@ namespace XLSB {
 
     };
 }
-
-
 #endif

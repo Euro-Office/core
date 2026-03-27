@@ -69,8 +69,6 @@ namespace XLSB
         }
 		else
 			return false;
-
-     
         if (proc.optional<EndDynamicArrayPr>())
         {
             m_EndDynamicArrayPr = elements_.back();

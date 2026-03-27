@@ -69,8 +69,6 @@ static int bio_bytein(opj_bio_t *bio);
 /*@}*/
 
 /*@}*/
-
-
 /*
 ==========================================================
    local functions

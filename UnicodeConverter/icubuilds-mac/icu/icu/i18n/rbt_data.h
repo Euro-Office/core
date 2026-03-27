@@ -139,8 +139,6 @@ public:
      * @return           return the UnicodeReplacer that 'standIn' represents
      */
     UnicodeReplacer* lookupReplacer(UChar32 standIn) const;
-
-
 private:
     TransliterationRuleData &operator=(const TransliterationRuleData &other); // forbid copying of this class
 };

@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 MDBLOCK::MDBLOCK()
 {
 }
-
-
 MDBLOCK::~MDBLOCK()
 {
 }
-
-
 BaseObjectPtr MDBLOCK::clone()
 {
 	return BaseObjectPtr(new MDBLOCK(*this));
 }
-
-
 // MDBLOCK = MDB *ContinueFrt12
 const bool MDBLOCK::loadContent(BinProcessor& proc)
 {

@@ -108,6 +108,4 @@ Computes the minimum between two integers
 #endif /* min */
 
 #endif /* __RS_HEADER__ */
-
-
 #endif /* USE_JPWL */

@@ -29,15 +29,11 @@ ulistfmt_open(const char*  locale,
     }
     return (UListFormatter*)listfmt.orphan();
 }
-
-
 U_CAPI void U_EXPORT2
 ulistfmt_close(UListFormatter *listfmt)
 {
     delete (ListFormatter*)listfmt;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ulistfmt_format(const UListFormatter* listfmt,
                 const UChar* const strings[],
@@ -84,6 +80,4 @@ ulistfmt_format(const UListFormatter* listfmt,
     }
     return res.extract(result, resultCapacity, *status);
 }
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */

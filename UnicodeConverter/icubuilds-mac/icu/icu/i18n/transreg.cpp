@@ -96,8 +96,6 @@ TransliteratorAlias::TransliteratorAlias(const UnicodeString& theID,
 TransliteratorAlias::~TransliteratorAlias() {
     delete transes;
 }
-
-
 Transliterator* TransliteratorAlias::create(UParseError& pe,
                                             UErrorCode& ec) {
     if (U_FAILURE(ec)) {

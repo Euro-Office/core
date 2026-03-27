@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of LegendException record in BIFF8
 class LegendException: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~LegendException();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 
@@ -57,8 +53,6 @@ public:
 	bool	fLabel = false;
 
 	int serialize(std::wostream & _stream);
-
-
 };
 
 } // namespace XLS

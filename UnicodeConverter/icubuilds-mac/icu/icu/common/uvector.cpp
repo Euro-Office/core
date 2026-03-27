@@ -284,8 +284,6 @@ UBool   UVector::equals(const UVector &other) const {
     return TRUE;
 }
 
-
-
 int32_t UVector::indexOf(void* obj, int32_t startIndex) const {
     UElement key;
     key.pointer = obj;
@@ -500,8 +498,6 @@ sortComparator(const void *context, const void *left, const void *right) {
     int32_t result = (*compare)(e1, e2);
     return result;
 }
-
-
 /**
   *  Array sort comparison function for use from UVector::sorti()
   *  Compares int32_t vector elements.
@@ -527,8 +523,6 @@ void UVector::sorti(UErrorCode &ec) {
                        sortiComparator, NULL,  FALSE, &ec);
     }
 }
-
-
 /**
  *  Sort with a user supplied comparator.
  *
@@ -549,8 +543,6 @@ void UVector::sort(UElementComparator *compare, UErrorCode &ec) {
                        sortComparator, &compare, FALSE, &ec);
     }
 }
-
-
 /**
  *  Stable sort with a user supplied comparator of type UComparator.
  */

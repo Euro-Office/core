@@ -73,8 +73,6 @@ private:
 };
 
 typedef ::boost::shared_ptr<BiffDecoderBase> BiffDecoderRef;
-
-
 class BiffDecoder_RCF : public BiffDecoderBase
 {
 public:
@@ -95,6 +93,4 @@ private:
 	std::vector<unsigned char>	maVerifier;
 	std::vector<unsigned char>	maVerifierHash;
 };
-
-
 } // namespace CRYPT

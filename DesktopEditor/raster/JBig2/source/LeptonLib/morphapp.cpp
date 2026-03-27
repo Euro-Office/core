@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  morphapp.c
  *
@@ -69,8 +67,6 @@
 #include "allheaders.h"
 
 #define   SWAP(x, y)   {temp = (x); (x) = (y); (y) = temp;}
-
-
 /*-----------------------------------------------------------------*
  *                   Extraction of boundary pixels                 *
  *-----------------------------------------------------------------*/
@@ -103,8 +99,6 @@ PIX  *pixd;
     pixXor(pixd, pixd, pixs);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *           Selective morph sequence operation under mask         *
  *-----------------------------------------------------------------*/
@@ -142,8 +136,6 @@ PIX  *pixd;
     pixCombineMasked(pixd, pixs, pixm);  /* restore src pixels under mask fg */
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *             Morph sequence operation on each component          *
  *-----------------------------------------------------------------*/
@@ -217,8 +209,6 @@ PIXA    *pixas, *pixad;
     pixaDestroy(&pixad);
     return pixd;
 }
-
-
 /*!
  *  pixaMorphSequenceByComponent()
  *
@@ -282,8 +272,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-
-
 /*-----------------------------------------------------------------*
  *              Morph sequence operation on each region            *
  *-----------------------------------------------------------------*/
@@ -367,8 +355,6 @@ PIXA    *pixam, *pixad;
     pixaDestroy(&pixad);
     return pixd;
 }
-
-
 /*!
  *  pixaMorphSequenceByRegion()
  *
@@ -447,8 +433,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-
-
 /*-----------------------------------------------------------------*
  *      Union and intersection of parallel composite operations    *
  *-----------------------------------------------------------------*/
@@ -503,8 +487,6 @@ SEL     *sel;
 
     return pixd;
 }
-
-
 /*!
  *  pixIntersectionOfMorphOps()
  *
@@ -557,8 +539,6 @@ SEL     *sel;
 
     return pixd;
 }
-
-
 
 /*-----------------------------------------------------------------*
  *             Selective connected component filling               *
@@ -616,8 +596,6 @@ PIXA    *pixa;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *                    Removal of matched patterns                  *
  *-----------------------------------------------------------------*/
@@ -717,8 +695,6 @@ SEL     *sel;
     pixDestroy(&pixt2);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------*
  *                    Display of matched patterns                  *
  *-----------------------------------------------------------------*/
@@ -834,8 +810,6 @@ PIXCMAP  *cmap;
     ptaDestroy(&pta);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *             Iterative morphological seed filling                *
  *-----------------------------------------------------------------*/
@@ -910,8 +884,6 @@ SEL     *sel_3;
 
     return pixd;
 }
-
-
 
 /*-----------------------------------------------------------------*
  *                   Granulometry on binary images                 *
@@ -1005,8 +977,6 @@ SEL       *sel_2a;
 
     return nah;
 }
-
-
 /*-----------------------------------------------------------------*
  *            Composite operations on grayscale images             *
  *-----------------------------------------------------------------*/
@@ -1078,8 +1048,6 @@ PIX  *pixt, *pixd;
 
     return pixd;
 }
-        
-
 /*!
  *  pixHDome()
  *
@@ -1153,8 +1121,6 @@ PIX  *pixsd, *pixd;
     pixDestroy(&pixsd);
     return pixd;
 }
-
-
 /*!
  *  pixFastTophat()
  *
@@ -1231,8 +1197,6 @@ PIX  *pixt1, *pixt2, *pixt3, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-        
-
 /*!
  *  pixMorphGradient()
  *
@@ -1278,8 +1242,6 @@ PIX  *pixg, *pixd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *                            Center of mass                       *
  *-----------------------------------------------------------------*/

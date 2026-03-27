@@ -160,16 +160,12 @@
 #include <errno.h>
 #include <unistd.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 static const char djvuopts[]="DJVUOPTS";
 static const char localhost[]="file://localhost/";
 static const char backslash='\\';  
@@ -192,8 +188,6 @@ static const char nillchar=0;
 #else
 #error "Define something here for your operating system"
 #endif
-
-
 static const int
 pathname_start(const GUTF8String &url, const int protolength);
 
@@ -211,8 +205,6 @@ hexval(char c)
       :((c>='a' && c<='f')
         ?(c-'a'+10):(-1))));
 }
-
-
 static bool
 is_argument(const char * start)
       // Returns TRUE if 'start' points to the beginning of an argument
@@ -355,8 +347,6 @@ GURL::beautify_path(GUTF8String xurl)
   xurl=buffer;
   return (xurl+args);
 }
-
-
 void
 GURL::beautify_path(void)
 {
@@ -1900,8 +1890,6 @@ hash(const GURL & gurl)
   }
   return retval;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

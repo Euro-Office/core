@@ -12,8 +12,6 @@
 #define PARSEERR_H
 
 #include "unicode/utypes.h"
-
-
 /**
  * \file
  * \brief C API: Parse Error Information

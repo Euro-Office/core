@@ -36,8 +36,6 @@
 #ifdef PSD_INCLUDE_LIBJPEG
 #include <setjmp.h>
 #include "jpeglib.h"
-
-
 /* we are a "source manager" as far as libjpeg is concerned */
 #define JPEG_PROG_BUF_SIZE 32768
 
@@ -72,8 +70,6 @@ typedef struct {
 	struct jpeg_decompress_struct 	cinfo;
 	struct error_handler_data     	jerr;
 } JpegProgContext;
-
-
 /**** Progressive image loading handling *****/
 
 psd_static void fatal_error_handler (j_common_ptr cinfo)
@@ -270,8 +266,6 @@ psd_static boolean psd_jpeg_image_load_increment(JpegProgContext * jpeg_context,
 			   src->pub.next_input_byte != src->buffer)
 				memmove(src->buffer, src->pub.next_input_byte,
 					src->pub.bytes_in_buffer);
-
-
 			num_copy = PSD_MIN(JPEG_PROG_BUF_SIZE - src->pub.bytes_in_buffer,
 					num_left);
 

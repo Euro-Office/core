@@ -49,8 +49,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	int twpHeight = -1;
 	Ts ts;
 	short bls = 0;

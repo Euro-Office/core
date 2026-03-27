@@ -25,11 +25,7 @@
 //
 
 #include "lcms2_internal.h"
-
-
 #define DSWAP(x, y)     {cmsFloat64Number tmp = (x); (x)=(y); (y)=tmp;}
-
-
 // Initiate a vector
 void CMSEXPORT _cmsVEC3init(cmsVEC3* r, cmsFloat64Number x, cmsFloat64Number y, cmsFloat64Number z)
 {
@@ -78,8 +74,6 @@ cmsFloat64Number CMSEXPORT _cmsVEC3distance(const cmsVEC3* a, const cmsVEC3* b)
     return sqrt(d1*d1 + d2*d2 + d3*d3);
 }
 
-
-
 // 3x3 Identity
 void CMSEXPORT _cmsMAT3identity(cmsMAT3* a)
 {
@@ -93,8 +87,6 @@ cmsBool CloseEnough(cmsFloat64Number a, cmsFloat64Number b)
 {
     return fabs(b - a) < (1.0 / 65535.0);
 }
-
-
 cmsBool CMSEXPORT _cmsMAT3isIdentity(const cmsMAT3* a)
 {
     cmsMAT3 Identity;
@@ -108,8 +100,6 @@ cmsBool CMSEXPORT _cmsMAT3isIdentity(const cmsMAT3* a)
 
     return TRUE;
 }
-
-
 // Multiply two matrices
 void CMSEXPORT _cmsMAT3per(cmsMAT3* r, const cmsMAT3* a, const cmsMAT3* b)
 {
@@ -122,8 +112,6 @@ void CMSEXPORT _cmsMAT3per(cmsMAT3* r, const cmsMAT3* a, const cmsMAT3* b)
 
 #undef ROWCOL //(i, j)
 }
-
-
 
 // Inverse of a matrix b = a^(-1)
 cmsBool  CMSEXPORT _cmsMAT3inverse(const cmsMAT3* a, cmsMAT3* b)
@@ -150,8 +138,6 @@ cmsBool  CMSEXPORT _cmsMAT3inverse(const cmsMAT3* a, cmsMAT3* b)
 
    return TRUE;
 }
-
-
 // Solve a system in the form Ax = b
 cmsBool  CMSEXPORT _cmsMAT3solve(cmsVEC3* x, cmsMAT3* a, cmsVEC3* b)
 {
@@ -172,5 +158,3 @@ void CMSEXPORT _cmsMAT3eval(cmsVEC3* r, const cmsMAT3* a, const cmsVEC3* v)
     r->n[VY] = a->v[1].n[VX]*v->n[VX] + a->v[1].n[VY]*v->n[VY] + a->v[1].n[VZ]*v->n[VZ];
     r->n[VZ] = a->v[2].n[VX]*v->n[VX] + a->v[2].n[VY]*v->n[VY] + a->v[2].n[VZ]*v->n[VZ];
 }
-
-

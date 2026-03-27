@@ -43,8 +43,6 @@
 #define logstream stderr
 #endif /*SERVER*/
 
-
-
 placeholderlist_param_t * gene_placeholderlist(void)
 {
     placeholderlist_param_t *list;

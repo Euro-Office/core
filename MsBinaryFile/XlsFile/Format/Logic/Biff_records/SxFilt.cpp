@@ -39,8 +39,6 @@ SxFilt::SxFilt()
 {
 	isxvd = iDim = cisxvi = grbitSbt = 0;
 }
-
-
 SxFilt::~SxFilt()
 {
 }
@@ -49,8 +47,6 @@ BaseObjectPtr SxFilt::clone()
 {
 	return BaseObjectPtr(new SxFilt(*this));
 }
-
-
 void SxFilt::readFields(CFRecord& record)
 {
 	unsigned short flags1, flags2;

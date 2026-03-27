@@ -28,5 +28,3 @@ int xmlCharEncOutput(xmlOutputBufferPtr output, int init);
 }
 #endif
 #endif /* __XML_ENC_H__ */
-
-

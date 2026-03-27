@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTCFFDRV_H__
 #define __FTCFFDRV_H__
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -109,8 +103,6 @@ FT_BEGIN_HEADER
    *   Unless there are conflicting hstems, the smallest movement is taken
    *   to minimize distortion.
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -143,8 +135,6 @@ FT_BEGIN_HEADER
    *   This property can be used with @FT_Property_Get also.
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -164,8 +154,6 @@ FT_BEGIN_HEADER
    */
 #define FT_CFF_HINTING_FREETYPE  0
 #define FT_CFF_HINTING_ADOBE     1
-
-
   /**************************************************************************
    *
    * @property:
@@ -194,8 +182,6 @@ FT_BEGIN_HEADER
    *   This property can be used with @FT_Property_Get also.
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -241,14 +227,8 @@ FT_BEGIN_HEADER
    *   This property can be used with @FT_Property_Get also.
    *
    */
-
-
  /* */
 
 FT_END_HEADER
-
-
 #endif /* __FTCFFDRV_H__ */
-
-
 /* END */

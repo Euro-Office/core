@@ -40,16 +40,12 @@
 #include "ChartSheetSubstream.h"
 #include "Biff_records/BOF.h"
 #include "Biff_records/EOF.h"
-
-
 namespace XLS
 {;
 
 WorkbookStreamObject::WorkbookStreamObject() : code_page_(DefaultCodePage)
 {
 }
-
-
 WorkbookStreamObject::WorkbookStreamObject(const unsigned short code_page) : code_page_(code_page)
 {
 }
@@ -184,8 +180,6 @@ const bool WorkbookStreamObject::loadContent(BinProcessor& proc)
 		
 		}
 	}
-
-
 	if(!GlobalsSubstream_found)
 	{
 		Log::error("GLOBALS substream hasn't been found in intermediate XML.");

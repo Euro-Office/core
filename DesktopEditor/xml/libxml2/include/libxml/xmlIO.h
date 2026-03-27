@@ -135,8 +135,6 @@ struct _xmlParserInputBuffer {
     int error;
     unsigned long rawconsumed;/* amount consumed from raw */
 };
-
-
 #ifdef LIBXML_OUTPUT_ENABLED
 struct _xmlOutputBuffer {
     void*                   context;

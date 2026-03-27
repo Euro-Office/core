@@ -104,15 +104,11 @@ static const l_int32 BinSizeArray[] = {2, 5, 10, 20, 50, 100, 200, 500, 1000,\
                       500000, 1000000, 2000000, 5000000, 10000000,\
                       200000000, 50000000, 100000000};
 static const l_int32 NBinSizes = 24;
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_HISTO        0
 #define  DEBUG_CROSSINGS    0
 #define  DEBUG_FREQUENCY    0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*----------------------------------------------------------------------*
  *                     Morphological operations                         *
  *----------------------------------------------------------------------*/
@@ -187,8 +183,6 @@ NUMA       *nad;
     FREE(fas);
     return nad;
 }
-
-
 /*!
  *  numaDilate()
  *
@@ -253,8 +247,6 @@ NUMA       *nad;
     FREE(fas);
     return nad;
 }
-
-
 /*!
  *  numaOpen()
  *
@@ -291,8 +283,6 @@ NUMA  *nat, *nad;
     numaDestroy(&nat);
     return nad;
 }
-
-
 /*!
  *  numaClose()
  *
@@ -339,8 +329,6 @@ NUMA  *nab, *nat1, *nat2, *nad;
     numaDestroy(&nat2);
     return nad;
 }
-
-
 /*----------------------------------------------------------------------*
  *                            Other transforms                          *
  *----------------------------------------------------------------------*/
@@ -380,8 +368,6 @@ NUMA      *nad;
     }
     return nad;
 }
-
-
 /*!
  *  numaWindowedStats()
  *
@@ -447,8 +433,6 @@ NUMA  *nam, *nams;
         numaDestroy(&nams);
     return 0;
 }
-
-
 /*!
  *  numaWindowedMean()
  *
@@ -502,8 +486,6 @@ NUMA       *na1, *nad;
     numaDestroy(&na1);
     return nad;
 }
-
-
 /*!
  *  numaWindowedMeanSquare()
  *
@@ -557,8 +539,6 @@ NUMA       *na1, *nad;
     numaDestroy(&na1);
     return nad;
 }
-
-
 /*!
  *  numaWindowedVariance()
  *
@@ -625,8 +605,6 @@ NUMA       *nav, *narv;  /* variance and square root of variance */
 
     return 0;
 }
-
-
 /*!
  *  numaConvertToInt()
  *
@@ -654,8 +632,6 @@ NUMA    *nad;
     }
     return nad;
 }
-
-
 /*----------------------------------------------------------------------*
  *                 Histogram generation and statistics                  *
  *----------------------------------------------------------------------*/
@@ -769,8 +745,6 @@ NUMA      *nai, *nahist;
     numaDestroy(&nai);
     return nahist;
 }
-
-
 /*!
  *  numaMakeHistogramAuto()
  *
@@ -853,8 +827,6 @@ NUMA      *nah;
 
     return nah;
 }
-
-
 /*!
  *  numaMakeHistogramClipped()
  *
@@ -913,8 +885,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaRebinHistogram()
  *
@@ -960,8 +930,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaNormalizeHistogram()
  *
@@ -1003,8 +971,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaGetStatsUsingHistogram()
  *
@@ -1114,8 +1080,6 @@ NUMA      *nah;
         numaDestroy(&nah);
     return 0;
 }
-
-
 /*!
  *  numaGetHistogramStats()
  *
@@ -1159,8 +1123,6 @@ numaGetHistogramStats(NUMA       *nahisto,
                                            pxmean, pxmedian, pxmode,
                                            pxvariance);
 }
-
-
 /*!
  *  numaGetHistogramStatsOnInterval()
  *
@@ -1255,8 +1217,6 @@ l_float32  sum, sumval, halfsum, moment, var, x, y, ymax;
 
     return 0;
 }
-
-
 /*!
  *  numaMakeRankFromHistogram()
  *
@@ -1314,8 +1274,6 @@ NUMA      *nan, *nar;
     numaDestroy(&nar);
     return 0;
 }
-
-
 /*!
  *  numaHistogramGetRankFromVal()
  *
@@ -1383,8 +1341,6 @@ l_float32  startval, binsize, binval, maxval, fractval, total, sum, val;
 
     return 0;
 }
-
-
 /*!
  *  numaHistogramGetValFromRank()
  *
@@ -1453,8 +1409,6 @@ l_float32  startval, binsize, rankcount, total, sum, fract, val;
 
     return 0;
 }
-
-
 /*!
  *  numaDiscretizeRankAndIntensity()
  *
@@ -1602,8 +1556,6 @@ l_float32  sum, midrank, endrank, val;
         numaDestroy(&nabb);
     return 0;
 }
-
-
 /*!
  *  numaGetRankBinValues()
  *
@@ -1657,8 +1609,6 @@ l_float32  maxval, delx;
     numaDestroy(&nan);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                      Splitting a distribution                        *
  *----------------------------------------------------------------------*/
@@ -1835,8 +1785,6 @@ NUMA      *nascore, *naave1, *naave2, *nanum1, *nanum2;
     if (pnum2) numaDestroy(&nanum2);
     return 0;
 } 
-
-
 /*----------------------------------------------------------------------*
  *                             Extrema finding                          *
  *----------------------------------------------------------------------*/
@@ -1939,8 +1887,6 @@ NUMA      *na, *napeak;
     numaDestroy(&na);
     return napeak;
 }
-
-
 /*!
  *  numaFindExtrema()
  *
@@ -2037,8 +1983,6 @@ NUMA      *nad;
 /*    numaAddNumber(nad, loc); */
     return nad;
 }
-
-
 /*!
  *  numaCountReversals()
  *
@@ -2085,8 +2029,6 @@ NUMA      *nat;
     numaDestroy(&nat);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                Threshold crossings and frequency analysis            *
  *----------------------------------------------------------------------*/
@@ -2220,8 +2162,6 @@ NUMA      *nat, *nac;
     numaDestroy(&nat);
     return 0;
 }
-
-
 /*!
  *  numaCrossingsByThreshold()
  *
@@ -2283,8 +2223,6 @@ NUMA      *nad;
         
     return nad;
 }
-
-
 /*!
  *  numaCrossingsByPeaks()
  *
@@ -2374,8 +2312,6 @@ NUMA      *nap, *nad;
     numaDestroy(&nap);
     return nad;
 }
-
-
 /*!
  *  numaEvalBestHaarParameters()
  *
@@ -2460,8 +2396,6 @@ l_float32  bestwidth, bestshift, bestscore;
         *pbestscore = bestscore;
     return 0;
 }
-
-
 /*!
  *  numaEvalHaarSum()
  *

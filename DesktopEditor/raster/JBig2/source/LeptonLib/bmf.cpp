@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  bmf.c
  *
@@ -82,8 +80,6 @@ static const l_float32  VERT_FRACT_SEP = 0.3;
 
 static l_int32 pixGetTextBaseline(PIX *pixs, l_int32 *tab8, l_int32 *py);
 static l_int32 bmfMakeAsciiTables(L_BMF *bmf);
-
-
 /*---------------------------------------------------------------------*/
 /*                           Bmf create/destroy                        */
 /*---------------------------------------------------------------------*/
@@ -133,8 +129,6 @@ PIXA  *pixa;
     bmfMakeAsciiTables(bmf);
     return bmf;
 }
-
-
 /*!
  *  bmfDestroy()
  *
@@ -165,8 +159,6 @@ L_BMF  *bmf;
     *pbmf = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*/
 /*                             Bmf accessors                           */
 /*---------------------------------------------------------------------*/
@@ -197,8 +189,6 @@ PIXA    *pixa;
 
     return pixaGetPix(pixa, i, L_CLONE);
 }
-
-
 /*!
  *  bmfGetWidth()
  *
@@ -235,8 +225,6 @@ PIXA    *pixa;
 
     return 0;
 }
-
-
 /*!
  *  bmfGetBaseline()
  *
@@ -266,8 +254,6 @@ l_int32  bl;
     *pbaseline = bl;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*/
 /*               Font bitmap acquisition and generation                */
 /*---------------------------------------------------------------------*/
@@ -314,8 +300,6 @@ PIXA     *pixa;
         L_WARNING("pixa of char bitmaps not found", procName);
     return pixa;
 }
-
-
 /*!
  *  pixaSaveFont()
  *
@@ -359,8 +343,6 @@ PIXA    *pixa;
     pixaDestroy(&pixa);
     return 0;
 }
-
-
 /*!
  *  pixaGenerateFont()
  *
@@ -531,8 +513,6 @@ PIXA     *pixa;
 
     return pixa;
 }
-
-
 /*!
  *  pixGetTextBaseline()
  *
@@ -588,8 +568,6 @@ NUMA     *na;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*!
  *  bmfMakeAsciiTables
  *

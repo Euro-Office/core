@@ -185,8 +185,6 @@ ByteStream::Stdio::init(FILE * const f,const char mode[],const bool closeme)
   return init(mode);
 }
 #endif // BUILDING_WASM_MODULE
-
-
 /** ByteStream interface managing a memory buffer.  
     Class #ByteStream::Memory# manages a dynamically resizable buffer from
     which data can be read or written.  The buffer itself is organized as an
@@ -243,8 +241,6 @@ protected:
   GPBuffer<char *> gblocks;
 };
 
-
-
 inline int
 ByteStream::Memory::size(void) const
 {
@@ -256,8 +252,6 @@ ByteStream::Memory::operator[] (int n)
 {
   return blocks[n>>12][n&0xfff];
 }
-
-
 
 /** Read-only ByteStream interface to a memory area.  
     Class #ByteStream::Static# implements a read-only ByteStream interface for a
@@ -314,8 +308,6 @@ private:
 #endif
 
 //// CLASS BYTESTREAM
-
-
 ByteStream::~ByteStream()
 {
 }
@@ -503,8 +495,6 @@ ByteStream::copy(ByteStream &bsfrom, size_t size)
     }
   return total;
 }
-
-
 void 
 ByteStream::write8 (unsigned int card)
 {
@@ -582,8 +572,6 @@ ByteStream::read32()
     G_THROW( ByteStream::EndOfFile );
   return (((((c[0]<<8)+c[1])<<8)+c[2])<<8)+c[3];
 }
-
-
 #ifndef BUILDING_WASM_MODULE
 //// CLASS ByteStream::Stdio
 
@@ -788,8 +776,6 @@ ByteStream::Stdio::seek(long offset, int whence, bool nothrow)
 }
 #endif // BUILDING_WASM_MODULE
 
-
-
 ///////// ByteStream::Memory
 
 ByteStream::Memory::Memory()
@@ -930,8 +916,6 @@ ByteStream::Memory::seek(long offset, int whence, bool nothrow)
   return 0;
 }
 
-
-
 /** This function has been moved into Arrays.cpp
     In order to avoid dependencies from ByteStream.o
     to Arrays.o */
@@ -944,8 +928,6 @@ ByteStream::get_data(void)
    return data;
 }
 #endif
-
-
 ///////// ByteStream::Static
 
 ByteStream::Static::Static(const void * const buffer, const size_t sz)
@@ -1246,8 +1228,6 @@ MemoryMapByteStream::~MemoryMapByteStream()
 #endif
 
 ByteStream::Wrapper::~Wrapper() {}
-
-
 GP<ByteStream> 
 ByteStream::get_stdin(char const *mode)
 {
@@ -1277,8 +1257,6 @@ ByteStream::get_stderr(char const *mode)
   return NULL;
 //>
 }
-
-
 /** Looks up the message and writes it to the specified stream. */
 void ByteStream::formatmessage( const char *fmt, ... )
 {
@@ -1333,8 +1311,6 @@ ByteStream::getAsUTF8(void)
   read_file(*this,buffer,gbuffer);
   return GUTF8String(buffer);
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

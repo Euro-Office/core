@@ -66,8 +66,6 @@ static const char  *SupportedBarcodeFormatName[] = {
     "Ean13"
 };
 static const l_int32  NumSupportedBarcodeFormats = 7;
-
-
     /* ----------------------------------------------------------------- *
      *                       Code 2 of 5 symbology                       *
      * ----------------------------------------------------------------- */
@@ -80,8 +78,6 @@ static const char *Code2of5[] = {
 
 static const l_int32  C25_START = 10;
 static const l_int32  C25_STOP =  11;
-
-
     /* ----------------------------------------------------------------- *
      *                Code Interleaved 2 of 5 symbology                  *
      * ----------------------------------------------------------------- */
@@ -93,8 +89,6 @@ static const char *CodeI2of5[] = {
 
 static const l_int32  CI25_START = 10;
 static const l_int32  CI25_STOP =  11;
-
-
     /* ----------------------------------------------------------------- *
      *                         Code 93 symbology                         *
      * ----------------------------------------------------------------- */
@@ -117,8 +111,6 @@ static const char Code93Val[] =
 
 static const l_int32  C93_START = 47;
 static const l_int32  C93_STOP =  47;
-
-
     /* ----------------------------------------------------------------- *
      *                         Code 39 symbology                         *
      * ----------------------------------------------------------------- */
@@ -142,8 +134,6 @@ static const char Code39Val[] =
 
 static const l_int32  C39_START = 43;
 static const l_int32  C39_STOP =  43;
-
-
     /* ----------------------------------------------------------------- *
      *                         Codabar symbology                         *
      * ----------------------------------------------------------------- */
@@ -157,8 +147,6 @@ static const char *Codabar[] = {
     /* Ascii representations for codes 16-19: (A or T), (B or N), (C or *),
      * (D or E).  These are used in pairs for the Start and Stop codes. */
 static const char CodabarVal[] = "0123456789-$:/.+ABCD";
-
-
     /* ----------------------------------------------------------------- *
      *                          UPC-A symbology                          *
      * ----------------------------------------------------------------- */
@@ -171,8 +159,6 @@ static const char *Upca[] = {
 static const l_int32  UPCA_START = 10;
 static const l_int32  UPCA_STOP =  11;
 static const l_int32  UPCA_MID =   12;
-
-
     /* ----------------------------------------------------------------- *
      *                         Code128 symbology                         *
      * ----------------------------------------------------------------- */
@@ -214,7 +200,5 @@ static const l_int32  C128_START_C = 105;
 static const l_int32  C128_STOP =    106;
     /* code 128 symbols are 11 units */
 static const l_int32  C128_SYMBOL_WIDTH = 11;
-
-
 
 #endif  /* LEPTONICA_READBARCODE_H */

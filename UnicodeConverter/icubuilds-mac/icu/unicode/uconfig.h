@@ -14,8 +14,6 @@
 
 #ifndef __UCONFIG_H__
 #define __UCONFIG_H__
-
-
 /*!
  * \file
  * \brief User-configurable settings
@@ -425,8 +423,6 @@
 #ifndef UCONFIG_HAVE_PARSEALLINPUT
 #   define UCONFIG_HAVE_PARSEALLINPUT 1
 #endif
-
-
 /**
  * \def UCONFIG_FORMAT_FASTPATHS_49
  * This switch turns on other formatting fastpaths. Binary incompatible in object DecimalFormat and DecimalFormatSymbols

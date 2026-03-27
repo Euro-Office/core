@@ -12,8 +12,6 @@
 <h1><a name="top">Microsoft FrontPage 2000 Server Extensions, UNIX</a></h1>
 
 <font size="2"><i>&copy; Copyright Microsoft Corporation, 1999&nbsp;</i></font>
-
-
 <p>The FrontPage Server Extensions are a set of programs on the Web server that support: 
 
 </p>
@@ -22,8 +20,6 @@
   <li>Administering FrontPage webs</li>
   <li>Browse-time FrontPage web functionality</li>
 </ul>
-
-
 <h2>Contents&nbsp;</h2>
 
 <a href="#relnotes">Release Notes</a><br>
@@ -38,19 +34,13 @@ information to supplement the Microsoft FrontPage Server Extensions documentatio
 <p><a href="#apache">Apache 1.3.4 Support</a><br>
 <a href="#upgrading">Upgrading from previous version of FrontPage Server Extensions</a><br>
 <a href="#executables">Uploading files into executable folders</a></p>
-
-
 <p align="right"><font size="1"><a href="#top">Top of Page</a></font></p>
-
-
 <h3><a name="apache">Apache 1.3.4 Support</a></h3>
 
 <p>You need to take some special steps to run the FrontPage Server Extensions with Apache 1.3.4.
 FrontPage Server Extensions expect to find all resource directives in the main server 
 configuration file, usually http.conf. To prevent the server extensions from using any secondary
 configuration files (access.conf, srm.conf), add the following lines to http.conf:</p>
-
-
 </font>
 <blockquote>
   <font face="Courier New">
@@ -58,17 +48,11 @@ ResourceConfig /dev/null&nbsp;<br>
 AccessConfig /dev/null</font>
 </blockquote>
 <font face="Verdana">
-
-
 <p>If you have some settings stored in secondary configuration files, move them to http.conf.</p>
 
 <p>You must stop and restart the web server for your changes to http.conf to take effect.</p>
 
-
-
 <p align="right"><font size="1"><a href="#relnotes">Top of Section</a></font></p>
-
-
 
 <h3><a name="upgrading">Upgrading from previous version of FrontPage Server Extensions</a></h3>
 
@@ -81,15 +65,9 @@ your custom settings from the previous-version frontpage.cnf file after you inst
 <p>Do not overwrite the FrontPage 2000 frontpage.cnf file with a frontpage.cnf file from an 
 earlier version of the FrontPage Server Extensions.</p>
 
-
-
 <p align="right"><font size="1"><a href="#relnotes">Top of Section</a></font></p>
 
-
-
 <h3><a name="executables">Uploading files into executable folders</a></h3>
-
-
 <p>After upgrading to FrontPage 2000, FrontPage authors will not be able to upload files into
 executable folders. For security reasons, the default setting on FrontPage 2000 webs does not 
 allow authors to upload executable files into executable folders in a FrontPage web. This 
@@ -100,15 +78,9 @@ or a virus.</p>
 variable to zero (0). For information about FrontPage Server Extension configuration variables, 
 see the FrontPage 2000 Server Extensions Resource Kit at <a href="http://officeupdate.microsoft.com/frontpage/wpp/serk/">http://officeupdate.microsoft.com/frontpage/wpp/serk/</a>.</p>
 
-
-
 <p align="right"><font size="1"><a href="#relnotes">Top of Section</a></font></p>
 
-
-
 <hr>
-
-
 
 <h2><a name="moreinfo">Resources for More Information</a></h2>
 
@@ -118,11 +90,7 @@ FrontPage Server Extensions.</p>
 <p><a href="#serk">Server Extensions Resource Kit</a><br>
 <a href="#serkupdate">Server Extensions Resource Kit Update</a><br>
 <a href="#kb">Knowledge Base</a></p>
-
-
 <p align="right"><font size="1"><a href="#top">Top of Page</a></font></p>
-
-
 <h3><a name="serk">Server Extensions Resource Kit</a></h3>
 
 <p>The FrontPage 2000 Server Extensions include a full set of documentation: the Server
@@ -136,17 +104,11 @@ Extensions, a detailed discussion of Server Extensions security on UNIX and Wind
 troubleshooting information, and a full set of appendixes.</p>
 
 <p align="right"><font size="1"><a href="#moreinfo">Top of Section</a></font></p>
-
-
 <h3><a name="serkupdate">Server Extensions Resource Kit Update</a></h3>
 
 <p>For updated information about installing, setting up, and administrating the FrontPage Server 
 Extensions, see the Server Extensions Resource Kit Update at: <a href="http://officeupdate.microsoft.com/frontpage/wpp/serk/">http://officeupdate.microsoft.com/frontpage/wpp/serk/</a>.</p>
-
-
 <p align="right"><font size="1"><a href="#moreinfo">Top of Section</a></font></p>
-
-
 <h3><a name="kb">Microsoft Knowledge Base</a></h3>
 
 <p>For further technical information on FrontPage, please consult Support Online. Use Support
@@ -158,8 +120,6 @@ answering inquiries, so you can write your question in your own words. To begin,
 <a href="http://support.microsoft.com/support/">http://support.microsoft.com/support/</a>.</p>  
 
 <p align="right"><font size="1"><a href="#moreinfo">Top of Section</a></font></p>
-
-
 <p>&nbsp;</p>  
 
 </font>

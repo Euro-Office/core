@@ -15,8 +15,6 @@
 #include <math.h>
 
 #define S(i) symbols->pix[i]
-
-
 // -----------------------------------------------------------------------------
 // iota isn't part of the STL standard, and it can be a pain to include even on
 // gcc based systems. Thus we define it here and save the issues

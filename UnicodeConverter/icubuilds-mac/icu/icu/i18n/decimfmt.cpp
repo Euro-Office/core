@@ -69,8 +69,6 @@
 #ifdef round
 #undef round
 #endif
-
-
 U_NAMESPACE_BEGIN
 
 #ifdef FMT_DEBUG
@@ -88,8 +86,6 @@ static const UnicodeString dbg_null("<NULL>","");
 #define debugout(x)
 #define debug(x)
 #endif
-
-
 /* For currency parsing purose,
  * Need to remember all prefix patterns and suffix patterns of
  * every currency format pattern,
@@ -171,8 +167,6 @@ U_CDECL_BEGIN
  * @internal ICU 4.2
  */
 static UBool U_CALLCONV decimfmtAffixPatternValueComparator(UHashTok val1, UHashTok val2);
-
-
 static UBool
 U_CALLCONV decimfmtAffixPatternValueComparator(UHashTok val1, UHashTok val2) {
     const AffixPatternsForCurrency* affix_1 =
@@ -191,10 +185,6 @@ U_CALLCONV decimfmtAffixPatternValueComparator(UHashTok val1, UHashTok val2) {
 }
 
 U_CDECL_END
-
-
-
-
 // *****************************************************************************
 // class DecimalFormat
 // *****************************************************************************
@@ -569,8 +559,6 @@ DecimalFormat::setupCurrencyAffixPatterns(UErrorCode& status) {
         }
     }
 }
-
-
 //------------------------------------------------------------------------------
 
 DecimalFormat::~DecimalFormat()
@@ -653,8 +641,6 @@ DecimalFormat::clone() const
 {
     return new DecimalFormat(*this);
 }
-
-
 FixedDecimal
 DecimalFormat::getFixedDecimal(double number, UErrorCode &status) const {
     VisibleDigitsWithExponent digits;
@@ -711,8 +697,6 @@ DecimalFormat::initVisibleDigitsWithExponent(
     return fImpl->initVisibleDigitsWithExponent(
             number.getInt64(), digits, status);
 }
-
-
 // Create a fixed decimal from a DigitList.
 //    The digit list may be modified.
 //    Internal function only.
@@ -734,8 +718,6 @@ DecimalFormat::initVisibleDigitsWithExponent(
     return fImpl->initVisibleDigitsWithExponent(
             number, digits, status);
 }
-
-
 //------------------------------------------------------------------------------
 
 UnicodeString&
@@ -764,8 +746,6 @@ DecimalFormat::format(int32_t number,
 {
     return fImpl->format(number, appendTo, posIter, status);
 }
-
-
 //------------------------------------------------------------------------------
 
 UnicodeString&
@@ -825,8 +805,6 @@ DecimalFormat::format(  double number,
 }
 
 //------------------------------------------------------------------------------
-
-
 UnicodeString&
 DecimalFormat::format(const StringPiece &number,
                       UnicodeString &toAppendTo,
@@ -835,8 +813,6 @@ DecimalFormat::format(const StringPiece &number,
 {
   return fImpl->format(number, toAppendTo, posIter, status);
 }
-
-
 UnicodeString&
 DecimalFormat::format(const DigitList &number,
                       UnicodeString &appendTo,
@@ -844,8 +820,6 @@ DecimalFormat::format(const DigitList &number,
                       UErrorCode &status) const {
     return fImpl->format(number, appendTo, posIter, status);
 }
-
-
 UnicodeString&
 DecimalFormat::format(const DigitList &number,
                      UnicodeString& appendTo,
@@ -861,8 +835,6 @@ DecimalFormat::format(const VisibleDigitsWithExponent &number,
                       UErrorCode &status) const {
     return fImpl->format(number, appendTo, posIter, status);
 }
-
-
 UnicodeString&
 DecimalFormat::format(const VisibleDigitsWithExponent &number,
                      UnicodeString& appendTo,
@@ -1034,8 +1006,6 @@ void DecimalFormat::parse(const UnicodeString& text,
     }
 }
 
-
-
 UBool
 DecimalFormat::parseForCurrency(const UnicodeString& text,
                                 ParsePosition& parsePosition,
@@ -1173,8 +1143,6 @@ DecimalFormat::parseForCurrency(const UnicodeString& text,
     }
     return found;
 }
-
-
 /**
  * Parse the given text into a number.  The text is parsed beginning at
  * parsePosition, until an unparseable character is seen.
@@ -1405,8 +1373,6 @@ UBool DecimalFormat::subparse(const UnicodeString& text,
         // though, so we keep track of the location of the decimal point,
         // put only significant digits into the DigitList, and adjust the
         // exponent as needed.
-
-
         UBool strictFail = FALSE; // did we exit with a strict parse failure?
         int32_t lastGroup = -1; // where did we last see a grouping separator?
         int32_t digitStart = position;
@@ -1777,8 +1743,6 @@ printf("PP -> %d, SLOW = [%s]!    pp=%d, os=%d, err=%s\n", position, parsedNum.d
             return FALSE;
         }
     }
-
-
     return TRUE;
 }
 
@@ -2289,8 +2253,6 @@ UBool DecimalFormat::matchGrouping(UChar32 groupingChar,
     }
 }
 
-
-
 //------------------------------------------------------------------------------
 // Gets the pointer to the localized decimal format symbols
 
@@ -2320,15 +2282,11 @@ DecimalFormat::setDecimalFormatSymbols(const DecimalFormatSymbols& symbols)
 {
     adoptDecimalFormatSymbols(new DecimalFormatSymbols(symbols));
 }
-
-
 const CurrencyPluralInfo*
 DecimalFormat::getCurrencyPluralInfo(void) const
 {
     return fCurrencyPluralInfo;
 }
-
-
 void
 DecimalFormat::adoptCurrencyPluralInfo(CurrencyPluralInfo* toAdopt)
 {
@@ -2351,8 +2309,6 @@ DecimalFormat::setCurrencyPluralInfo(const CurrencyPluralInfo& info)
 {
     adoptCurrencyPluralInfo(info.clone());
 }
-
-
 //------------------------------------------------------------------------------
 // Gets the positive prefix of the number pattern.
 
@@ -2788,8 +2744,6 @@ DecimalFormat::setDecimalPatternMatchRequired(UBool newValue)
 {
     fBoolFlags.set(UNUM_PARSE_DECIMAL_MARK_REQUIRED, newValue);
 }
-
-
 //------------------------------------------------------------------------------
 // Emits the pattern of this DecimalFormat instance.
 
@@ -2996,8 +2950,6 @@ DecimalFormat::deleteHashForAffixPattern()
     delete fAffixPatternsForCurrency;
     fAffixPatternsForCurrency = NULL;
 }
-
-
 void
 DecimalFormat::copyHashForAffixPattern(const Hashtable* source,
                                        Hashtable* target,

@@ -14,8 +14,6 @@
 #ifdef CURRENCY_PLURAL_INFO_DEBUG
 #include <iostream>
 #endif
-
-
 #include "unicode/locid.h"
 #include "unicode/plurrule.h"
 #include "unicode/ures.h"
@@ -26,8 +24,6 @@
 #include "ureslocs.h"
 
 U_NAMESPACE_BEGIN
-
-
 static const UChar gNumberPatternSeparator = 0x3B; // ;
 
 U_CDECL_BEGIN
@@ -45,8 +41,6 @@ U_CALLCONV ValueComparator(UHashTok val1, UHashTok val2) {
 }
 
 U_CDECL_END
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(CurrencyPluralInfo)
 
 static const UChar gDefaultCurrencyPluralPattern[] = {'0', '.', '#', '#', ' ', 0xA4, 0xA4, 0xA4, 0};
@@ -82,8 +76,6 @@ CurrencyPluralInfo::CurrencyPluralInfo(const CurrencyPluralInfo& info)
     fLocale(NULL) {
     *this = info;
 }
-
-
 CurrencyPluralInfo&
 CurrencyPluralInfo::operator=(const CurrencyPluralInfo& info) {
     if (this == &info) {
@@ -113,8 +105,6 @@ CurrencyPluralInfo::operator=(const CurrencyPluralInfo& info) {
     }
     return *this;
 }
-
-
 CurrencyPluralInfo::~CurrencyPluralInfo() {
     deleteHash(fPluralCountToCurrencyUnitPattern);
     fPluralCountToCurrencyUnitPattern = NULL;
@@ -141,8 +131,6 @@ CurrencyPluralInfo::operator==(const CurrencyPluralInfo& info) const {
            *fLocale == *info.fLocale &&
            fPluralCountToCurrencyUnitPattern->equals(*info.fPluralCountToCurrencyUnitPattern);
 }
-
-
 CurrencyPluralInfo*
 CurrencyPluralInfo::clone() const {
     return new CurrencyPluralInfo(*this);
@@ -193,8 +181,6 @@ CurrencyPluralInfo::setPluralRules(const UnicodeString& ruleDescription,
         fPluralRules = PluralRules::createRules(ruleDescription, status);
     }
 }
-
-
 void
 CurrencyPluralInfo::setCurrencyPluralPattern(const UnicodeString& pluralCount,
                                              const UnicodeString& pattern,
@@ -203,14 +189,10 @@ CurrencyPluralInfo::setCurrencyPluralPattern(const UnicodeString& pluralCount,
         fPluralCountToCurrencyUnitPattern->put(pluralCount, new UnicodeString(pattern), status);
     }
 }
-
-
 void
 CurrencyPluralInfo::setLocale(const Locale& loc, UErrorCode& status) {
     initialize(loc, status);
 }
-
-
 void 
 CurrencyPluralInfo::initialize(const Locale& loc, UErrorCode& status) {
     if (U_FAILURE(status)) {
@@ -224,8 +206,6 @@ CurrencyPluralInfo::initialize(const Locale& loc, UErrorCode& status) {
     fPluralRules = PluralRules::forLocale(loc, status);
     setupCurrencyPluralPattern(loc, status);
 }
-
-   
 void
 CurrencyPluralInfo::setupCurrencyPluralPattern(const Locale& loc, UErrorCode& status) {
     if (U_FAILURE(status)) {
@@ -330,8 +310,6 @@ CurrencyPluralInfo::setupCurrencyPluralPattern(const Locale& loc, UErrorCode& st
     ures_close(currRb);
 }
 
-
-
 void
 CurrencyPluralInfo::deleteHash(Hashtable* hTable) 
 {
@@ -348,8 +326,6 @@ CurrencyPluralInfo::deleteHash(Hashtable* hTable)
     delete hTable;
     hTable = NULL;
 }
-
-
 Hashtable*
 CurrencyPluralInfo::initHash(UErrorCode& status) {
     if ( U_FAILURE(status) ) {
@@ -367,8 +343,6 @@ CurrencyPluralInfo::initHash(UErrorCode& status) {
     hTable->setValueComparator(ValueComparator);
     return hTable;
 }
-
-
 void
 CurrencyPluralInfo::copyHash(const Hashtable* source,
                            Hashtable* target,
@@ -392,8 +366,6 @@ CurrencyPluralInfo::copyHash(const Hashtable* source,
         }
     }
 }
-
-
 U_NAMESPACE_END
 
 #endif

@@ -38,13 +38,9 @@ namespace XLS
 Fbi::Fbi()
 {
 }
-
-
 Fbi::~Fbi()
 {
 }
-
-
 BaseObjectPtr Fbi::clone()
 {
 	return BaseObjectPtr(new Fbi(*this));

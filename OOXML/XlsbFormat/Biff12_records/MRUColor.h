@@ -35,8 +35,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BiffRecord.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/Color.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtMRUColor record in BIFF12

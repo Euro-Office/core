@@ -155,8 +155,6 @@ static const uint8_t escSeqCompoundText[NUM_OF_CONVERTERS][5] = {
 
 #define isIBM923(codepoint) \
         ((codepoint == 0x0152) || (codepoint == 0x0153) || (codepoint == 0x0178) || (codepoint == 0x20AC))
-
-
 typedef struct{
     UConverterSharedData *myConverterArray[NUM_OF_CONVERTERS];
     COMPOUND_TEXT_CONVERTERS state;
@@ -174,8 +172,6 @@ _CompoundTextReset(UConverter *converter, UConverterResetChoice choice);
 
 static const char*
 _CompoundTextgetName(const UConverter* cnv);
-
-
 static int32_t findNextEsc(const char *source, const char *sourceLimit) {
     int32_t length = sourceLimit - source;
     int32_t i;
@@ -296,8 +292,6 @@ _CompoundTextOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorC
         *errorCode = U_MEMORY_ALLOCATION_ERROR;
     }
 }
-
-
 static void
 _CompoundTextClose(UConverter *converter) {
     UConverterDataCompoundText* myConverterData = (UConverterDataCompoundText*)(converter->extraInfo);
@@ -454,8 +448,6 @@ getTrail:
     args->source = source;
     args->target = (char*)target;
 }
-
-
 static void
 UConverter_toUnicode_CompoundText_OFFSETS(UConverterToUnicodeArgs *args,
                                                UErrorCode* err){

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFMODULE_H__
 #define __AFMODULE_H__
 
@@ -24,11 +22,7 @@
 #include FT_MODULE_H
 
 #include "afloader.h"
-
-
 FT_BEGIN_HEADER
-
-
   /*
    *  This is the `extended' FT_Module structure which holds the
    *  autofitter's global data.  Right before hinting a glyph, the data
@@ -46,14 +40,8 @@ FT_BEGIN_HEADER
     AF_LoaderRec  loader[1];
 
   } AF_ModuleRec;
-
-
 FT_DECLARE_MODULE(autofit_module_class)
-
-
 FT_END_HEADER
 
 #endif /* __AFMODULE_H__ */
-
-
 /* END */

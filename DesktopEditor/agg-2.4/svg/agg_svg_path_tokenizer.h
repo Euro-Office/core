@@ -67,8 +67,6 @@ namespace svg
 
         char   last_command() const { return m_last_command; }
         double last_number() const { return m_last_number; }
-
-
     private:
         static void init_char_mask(char* mask, const char* char_set);
 
@@ -109,6 +107,4 @@ namespace svg
 
 } //namespace svg
 } //namespace agg
-
-
 #endif

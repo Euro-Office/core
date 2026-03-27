@@ -21,8 +21,6 @@
 namespace agg
 {
 
-
-
     //===========================================span_interpolator_persp_exact
     template<unsigned SubpixelShift = 8> 
     class span_interpolator_persp_exact
@@ -84,8 +82,6 @@ namespace agg
             src[5] = src[7] = y2;
             quad_to_quad(src, quad);
         }
-
-
         //--------------------------------------------------------------------
         // Set the reverse transformations, i.e., quadrangle -> rectangle
         void quad_to_rect(const double* quad, 
@@ -147,8 +143,6 @@ namespace agg
             m_scale_x = dda2_line_interpolator(sx1, sx2, len);
             m_scale_y = dda2_line_interpolator(sy1, sy2, len);
         }
-
-
         //----------------------------------------------------------------
         void resynchronize(double xe, double ye, unsigned len)
         {
@@ -186,8 +180,6 @@ namespace agg
             m_scale_y = dda2_line_interpolator(sy1, sy2, len);
         }
 
-
-
         //----------------------------------------------------------------
         void operator++()
         {
@@ -223,16 +215,6 @@ namespace agg
         dda2_line_interpolator m_scale_x;
         dda2_line_interpolator m_scale_y;
     };
-
-
-
-
-
-
-
-
-
-
 
     //============================================span_interpolator_persp_lerp
     template<unsigned SubpixelShift = 8> 
@@ -294,8 +276,6 @@ namespace agg
             src[5] = src[7] = y2;
             quad_to_quad(src, quad);
         }
-
-
         //--------------------------------------------------------------------
         // Set the reverse transformations, i.e., quadrangle -> rectangle
         void quad_to_rect(const double* quad, 
@@ -373,8 +353,6 @@ namespace agg
             m_scale_x = dda2_line_interpolator(sx1, sx2, len);
             m_scale_y = dda2_line_interpolator(sy1, sy2, len);
         }
-
-
         //----------------------------------------------------------------
         void resynchronize(double xe, double ye, unsigned len)
         {
@@ -417,8 +395,6 @@ namespace agg
             m_scale_x = dda2_line_interpolator(sx1, sx2, len);
             m_scale_y = dda2_line_interpolator(sy1, sy2, len);
         }
-
-
         //----------------------------------------------------------------
         void operator++()
         {

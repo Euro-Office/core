@@ -14,23 +14,15 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFFOBJS_H__
 #define __CFFOBJS_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include "cfftypes.h"
 #include FT_INTERNAL_TRUETYPE_TYPES_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -42,8 +34,6 @@ FT_BEGIN_HEADER
   typedef struct CFF_DriverRec_*  CFF_Driver;
 
   typedef TT_Face  CFF_Face;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -58,8 +48,6 @@ FT_BEGIN_HEADER
     FT_ULong    strike_index;    /* 0xFFFFFFFF to indicate invalid */
 
   } CFF_SizeRec, *CFF_Size;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -79,8 +67,6 @@ FT_BEGIN_HEADER
     FT_Fixed         y_scale;
 
   } CFF_GlyphSlotRec, *CFF_GlyphSlot;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -95,8 +81,6 @@ FT_BEGIN_HEADER
     PSH_Globals  subfonts[CFF_MAX_CID_FONTS];
 
   } CFF_InternalRec, *CFF_Internal;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Subglyph transformation record.                                       */
@@ -108,8 +92,6 @@ FT_BEGIN_HEADER
     FT_F26Dot6  ox, oy;     /* offsets        */
 
   } CFF_Transform;
-
-
   /***********************************************************************/
   /*                                                                     */
   /* CFF driver class.                                                   */
@@ -124,8 +106,6 @@ FT_BEGIN_HEADER
     FT_Int  darken_params[8];
 
   } CFF_DriverRec;
-
-
   FT_LOCAL( FT_Error )
   cff_size_init( FT_Size  size );           /* CFF_Size */
 
@@ -149,8 +129,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   cff_slot_init( FT_GlyphSlot  slot );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Face functions                                                        */
@@ -164,8 +142,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   cff_face_done( FT_Face  face );               /* CFF_Face */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Driver functions                                                      */
@@ -175,11 +151,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   cff_driver_done( FT_Module  module );         /* CFF_Driver */
-
-
 FT_END_HEADER
 
 #endif /* __CFFOBJS_H__ */
-
-
 /* END */

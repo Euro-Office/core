@@ -437,8 +437,6 @@ void xlsx_conversion_context::end_document()
         output_document_->get_xl_files().set_comments(comments);        
 	}
 }
-
-
 void xlsx_conversion_context::serialize_bookViews(std::wostream & strm)
 {
 	odf_reader::settings_container &settings = odf_document_->odf_context().Settings();
@@ -682,8 +680,6 @@ void xlsx_conversion_context::start_table_column(unsigned int repeated, const st
 void xlsx_conversion_context::end_table_column()
 {
 }
-
-
 int xlsx_conversion_context::current_table_column()
 {
     return xlsx_table_context_.current_column();

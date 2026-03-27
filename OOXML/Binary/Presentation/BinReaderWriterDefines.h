@@ -202,8 +202,6 @@ namespace NSBinPptxRW
 #define SPTREE_TYPE_LOCKED_CANVAS		9
 
 #define SPTREE_TYPE_ALTERNATIVE			0x99
-
-
 #define DIAGRAM_LAYOUT_TYPE_NONE			0xB0
 #define DIAGRAM_LAYOUT_TYPE_ALG				0xB1
 #define DIAGRAM_LAYOUT_TYPE_CHOOSE			0xB2
@@ -214,11 +212,7 @@ namespace NSBinPptxRW
 #define DIAGRAM_LAYOUT_TYPE_RULELST			0xB7
 #define DIAGRAM_LAYOUT_TYPE_SHAPE			0xB8
 #define DIAGRAM_LAYOUT_TYPE_VARIABLELIST	0xB9
-
-
 #define SPTREE_TYPE_MACRO					0xA1
-
-
 static BYTE SchemeClr_GetBYTECode(const std::wstring& sValue)
 {
     if ((L"accent1") == sValue)

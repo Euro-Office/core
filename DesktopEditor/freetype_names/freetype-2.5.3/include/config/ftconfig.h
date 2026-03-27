@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This header file contains a number of macro definitions that are used */
@@ -41,11 +39,7 @@
 #include <ft2build.h>
 #include FT_CONFIG_OPTIONS_H
 #include FT_CONFIG_STANDARD_LIBRARY_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /*               PLATFORM-SPECIFIC CONFIGURATION MACROS                  */
@@ -56,8 +50,6 @@ FT_BEGIN_HEADER
   /* `builds/<system>' directory, and edit it to port the engine.          */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* There are systems (like the Texas Instruments 'C54x) where a `char' */
   /* has 16 bits.  ANSI C says that sizeof(char) is always 1.  Since an  */
   /* `int' has 16 bits also for this system, sizeof(int) gives 1 which   */
@@ -69,8 +61,6 @@ FT_BEGIN_HEADER
 #ifndef FT_CHAR_BIT
 #define FT_CHAR_BIT  CHAR_BIT
 #endif
-
-
   /* The size of an `int' type.  */
 #if                                 FT_UINT_MAX == 0xFFFFUL
 #define FT_SIZEOF_INT  (16 / FT_CHAR_BIT)
@@ -93,15 +83,11 @@ FT_BEGIN_HEADER
 #else
 #error "Unsupported size of `long' type!"
 #endif
-
-
   /* FT_UNUSED is a macro used to indicate that a given parameter is not  */
   /* used -- this is only used to get rid of unpleasant compiler warnings */
 #ifndef FT_UNUSED
 #define FT_UNUSED( arg )  ( (arg) = (arg) )
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                     AUTOMATIC CONFIGURATION MACROS                    */
@@ -111,8 +97,6 @@ FT_BEGIN_HEADER
   /* porter should need to mess with them.                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Mac support                                                           */
@@ -141,16 +125,12 @@ FT_BEGIN_HEADER
 #endif
 
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    basic_types                                                        */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -160,8 +140,6 @@ FT_BEGIN_HEADER
   /*    A typedef for a 16bit signed integer type.                         */
   /*                                                                       */
   typedef signed short  FT_Int16;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -173,8 +151,6 @@ FT_BEGIN_HEADER
   typedef unsigned short  FT_UInt16;
 
   /* */
-
-
   /* this #if 0 ... #endif clause is for documentation purposes */
 #if 0
 
@@ -188,8 +164,6 @@ FT_BEGIN_HEADER
   /*    the configuration.                                                 */
   /*                                                                       */
   typedef signed XXX  FT_Int32;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -199,8 +173,6 @@ FT_BEGIN_HEADER
   /*    the configuration.                                                 */
   /*                                                                       */
   typedef unsigned XXX  FT_UInt32;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -211,8 +183,6 @@ FT_BEGIN_HEADER
   /*    otherwise, it gets emulated with a structure (if necessary).       */
   /*                                                                       */
   typedef signed XXX  FT_Int64;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -241,8 +211,6 @@ FT_BEGIN_HEADER
 #else
 #error "no 32bit type found -- please check your configuration files"
 #endif
-
-
   /* look up an integer type that is at least 32 bits */
 #if FT_SIZEOF_INT >= (32 / FT_CHAR_BIT)
 
@@ -255,8 +223,6 @@ FT_BEGIN_HEADER
   typedef unsigned long  FT_UFast;
 
 #endif
-
-
   /* determine whether we have a 64-bit int type for platforms without */
   /* Autoconf                                                          */
 #if FT_SIZEOF_LONG == (64 / FT_CHAR_BIT)
@@ -301,8 +267,6 @@ FT_BEGIN_HEADER
 #define FT_UINT64  unsigned long long int
 
 #endif /* FT_SIZEOF_LONG == (64 / FT_CHAR_BIT) */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* A 64-bit data type will create compilation problems if you compile    */
@@ -326,13 +290,9 @@ FT_BEGIN_HEADER
   typedef FT_INT64   FT_Int64;
   typedef FT_UINT64  FT_UInt64;
 #endif
-
-
 #define FT_BEGIN_STMNT  do {
 #define FT_END_STMNT    } while ( 0 )
 #define FT_DUMMY_STMNT  FT_BEGIN_STMNT FT_END_STMNT
-
-
 #ifndef  FT_CONFIG_OPTION_NO_ASSEMBLER
   /* Provide assembler fragments for performance-critical functions. */
   /* These must be defined `static __inline__' with GCC.             */
@@ -348,8 +308,6 @@ FT_BEGIN_HEADER
                  FT_Int32  b )
   {
     register FT_Int32  t, t2;
-
-
     __asm
     {
       smull t2, t,  b,  a           /* (lo=t2,hi=t) = a*b */
@@ -364,8 +322,6 @@ FT_BEGIN_HEADER
   }
 
 #endif /* __CC_ARM || __ARMCC__ */
-
-
 #ifdef __GNUC__
 
 #if defined( __arm__ )                                 && \
@@ -381,8 +337,6 @@ FT_BEGIN_HEADER
                  FT_Int32  b )
   {
     register FT_Int32  t, t2;
-
-
     __asm__ __volatile__ (
       "smull  %1, %2, %4, %3\n\t"       /* (lo=%1,hi=%2) = a*b */
       "mov    %0, %2, asr #31\n\t"      /* %0  = (hi >> 31) */
@@ -404,8 +358,6 @@ FT_BEGIN_HEADER
 #endif /* __arm__                      && */
        /* ( __thumb2__ || !__thumb__ ) && */
        /* !( __CC_ARM || __ARMCC__ )      */
-
-
 #if defined( __i386__ )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_i386
@@ -417,8 +369,6 @@ FT_BEGIN_HEADER
                   FT_Int32  b )
   {
     register FT_Int32  result;
-
-
     __asm__ __volatile__ (
       "imul  %%edx\n"
       "movl  %%edx, %%ecx\n"
@@ -438,8 +388,6 @@ FT_BEGIN_HEADER
 #endif /* i386 */
 
 #endif /* __GNUC__ */
-
-
 #ifdef _MSC_VER /* Visual C++ */
 
 #ifdef _M_IX86
@@ -475,8 +423,6 @@ FT_BEGIN_HEADER
 #endif /* _M_IX86 */
 
 #endif /* _MSC_VER */
-
-
 #if defined( __GNUC__ ) && defined( __x86_64__ )
 
 #define FT_MULFIX_ASSEMBLER  FT_MulFix_x86_64
@@ -496,8 +442,6 @@ FT_BEGIN_HEADER
     /* Technically not an assembly fragment, but GCC does a really good */
     /* job at inlining it and generating good machine code for it.      */
     long long  ret, tmp;
-
-
     ret  = (long long)a * b;
     tmp  = ret >> 63;
     ret += 0x8000 + tmp;
@@ -514,8 +458,6 @@ FT_BEGIN_HEADER
     long long  wide_a = (long long)a;
     long long  wide_b = (long long)b;
     long long  result;
-
-
     __asm__ __volatile__ (
       "imul %2, %1\n"
       "mov %1, %0\n"
@@ -537,15 +479,11 @@ FT_BEGIN_HEADER
 #endif /* __GNUC__ && __x86_64__ */
 
 #endif /* !FT_CONFIG_OPTION_NO_ASSEMBLER */
-
-
 #ifdef FT_CONFIG_OPTION_INLINE_MULFIX
 #ifdef FT_MULFIX_ASSEMBLER
 #define FT_MULFIX_INLINED  FT_MULFIX_ASSEMBLER
 #endif
 #endif
-
-
 #ifdef FT_MAKE_OPTION_SINGLE_OBJECT
 
 #define FT_LOCAL( x )      static  x
@@ -565,8 +503,6 @@ FT_BEGIN_HEADER
 
 #define FT_LOCAL_ARRAY( x )      extern const  x
 #define FT_LOCAL_ARRAY_DEF( x )  const  x
-
-
 #ifndef FT_BASE
 
 #ifdef __cplusplus
@@ -576,8 +512,6 @@ FT_BEGIN_HEADER
 #endif
 
 #endif /* !FT_BASE */
-
-
 #ifndef FT_BASE_DEF
 
 #ifdef __cplusplus
@@ -587,8 +521,6 @@ FT_BEGIN_HEADER
 #endif
 
 #endif /* !FT_BASE_DEF */
-
-
 #ifndef FT_EXPORT
 
 #ifdef __cplusplus
@@ -598,8 +530,6 @@ FT_BEGIN_HEADER
 #endif
 
 #endif /* !FT_EXPORT */
-
-
 #ifndef FT_EXPORT_DEF
 
 #ifdef __cplusplus
@@ -609,8 +539,6 @@ FT_BEGIN_HEADER
 #endif
 
 #endif /* !FT_EXPORT_DEF */
-
-
 #ifndef FT_EXPORT_VAR
 
 #ifdef __cplusplus
@@ -661,12 +589,6 @@ FT_BEGIN_HEADER
 #define FT_CALLBACK_TABLE_DEF  /* nothing */
 #endif
 #endif /* FT_CALLBACK_TABLE */
-
-
 FT_END_HEADER
-
-
 #endif /* __FTCONFIG_H__ */
-
-
 /* END */

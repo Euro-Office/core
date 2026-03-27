@@ -14,20 +14,14 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * The auto-hinter is used to load and automatically hint glyphs if a
    * format-specific hinter isn't available.
    *
    */
-
-
 #ifndef AUTOHINT_H_
 #define AUTOHINT_H_
-
-
   /**************************************************************************
    *
    * A small technical note regarding automatic hinting in order to clarify
@@ -68,17 +62,9 @@
    * fly.
    *
    */
-
-
 #include <freetype/freetype.h>
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct FT_AutoHinterRec_  *FT_AutoHinter;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -109,8 +95,6 @@ FT_BEGIN_HEADER
                                   FT_Face        face,
                                   void**         global_hints,
                                   long*          global_len );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -131,8 +115,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_AutoHinter_GlobalDoneFunc)( FT_AutoHinter  hinter,
                                    void*          global );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -153,8 +135,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_AutoHinter_GlobalResetFunc)( FT_AutoHinter  hinter,
                                     FT_Face        face );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -187,8 +167,6 @@ FT_BEGIN_HEADER
                                   FT_Size        size,
                                   FT_UInt        glyph_index,
                                   FT_Int32       load_flags );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -205,8 +183,6 @@ FT_BEGIN_HEADER
     FT_AutoHinter_GlyphLoadFunc    load_glyph;
 
   } FT_AutoHinter_InterfaceRec, *FT_AutoHinter_Interface;
-
-
 #define FT_DECLARE_AUTOHINTER_INTERFACE( class_ )            \
   FT_CALLBACK_TABLE const FT_AutoHinter_InterfaceRec  class_;
 
@@ -224,11 +200,7 @@ FT_BEGIN_HEADER
     done_global_hints_,                       \
     load_glyph_                               \
   };
-
-
 FT_END_HEADER
 
 #endif /* AUTOHINT_H_ */
-
-
 /* END */

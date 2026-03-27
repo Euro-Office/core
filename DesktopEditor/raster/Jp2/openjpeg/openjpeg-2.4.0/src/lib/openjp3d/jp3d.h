@@ -147,8 +147,6 @@ typedef enum J3D_STATUS {
     J3D_STATE_NEOC   = 0x0040
 } J3D_STATUS;
 
-
-
 /**
 Arbitrary transformation kernel
 */
@@ -180,8 +178,6 @@ typedef struct opj_atk {
     /** Lifting coefficient k for lifting step s */
     double Aatk[256][256];
 } opj_atk_t;
-
-
 /**
 Quantization stepsize
 */

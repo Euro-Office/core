@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
@@ -28,8 +26,6 @@
 #include "cffgload.h"
 
 #include "cfferrs.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -38,8 +34,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  cffgload
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_get_glyph_data( TT_Face    face,
                       FT_UInt    glyph_index,
@@ -56,8 +50,6 @@
                   face->root.internal->incremental_interface->funcs->get_glyph_data(
                     face->root.internal->incremental_interface->object,
                     glyph_index, &data );
-
-
       *pointer = (FT_Byte*)data.pointer;
       *length  = (FT_ULong)data.length;
 
@@ -68,14 +60,10 @@
 
     {
       CFF_Font  cff = (CFF_Font)(face->extra.data);
-
-
       return cff_index_access_element( &cff->charstrings_index, glyph_index,
                                        pointer, length );
     }
   }
-
-
   FT_LOCAL_DEF( void )
   cff_free_glyph_data( TT_Face    face,
                        FT_Byte**  pointer,
@@ -91,8 +79,6 @@
     if ( face->root.internal->incremental_interface )
     {
       FT_Data  data;
-
-
       data.pointer = *pointer;
       data.length  = (FT_Int)length;
 
@@ -104,13 +90,9 @@
 
     {
       CFF_Font  cff = (CFF_Font)(face->extra.data);
-
-
       cff_index_forget_element( &cff->charstrings_index, pointer );
     }
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -127,11 +109,7 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
 #if 0 /* unused until we support pure CFF fonts */
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_compute_max_advance( TT_Face  face,
                            FT_Int*  max_advance )
@@ -143,8 +121,6 @@
 
     PSAux_Service            psaux         = (PSAux_Service)face->psaux;
     const CFF_Decoder_Funcs  decoder_funcs = psaux->cff_decoder_funcs;
-
-
     *max_advance = 0;
 
     /* Initialize load decoder */
@@ -160,8 +136,6 @@
     {
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
-
-
       /* now get load the unscaled outline */
       error = cff_get_glyph_data( face, glyph_index,
                                   &charstring, &charstring_len );
@@ -185,11 +159,7 @@
 
     return FT_Err_Ok;
   }
-
-
 #endif /* 0 */
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_slot_load( CFF_GlyphSlot  glyph,
                  CFF_Size       size,
@@ -208,8 +178,6 @@
 
     FT_Matrix  font_matrix;
     FT_Vector  font_offset;
-
-
     force_scaling = FALSE;
 
     /* in a CID-keyed font, consider `glyph_index' as a CID and map */
@@ -252,15 +220,11 @@
       CFF_Face      cff_face = (CFF_Face)size->root.face;
       SFNT_Service  sfnt     = (SFNT_Service)cff_face->sfnt;
       FT_Stream     stream   = cff_face->root.stream;
-
-
       if ( size->strike_index != 0xFFFFFFFFUL      &&
            sfnt->load_eblc                         &&
            ( load_flags & FT_LOAD_NO_BITMAP ) == 0 )
       {
         TT_SBit_MetricsRec  metrics;
-
-
         error = sfnt->load_sbit_image( face,
                                        size->strike_index,
                                        glyph_index,
@@ -274,8 +238,6 @@
           FT_Bool    has_vertical_info;
           FT_UShort  advance;
           FT_Short   dummy;
-
-
           glyph->root.outline.n_points   = 0;
           glyph->root.outline.n_contours = 0;
 
@@ -355,8 +317,6 @@
       FT_Long  top_upm, sub_upm;
       FT_Byte  fd_index = cff_fd_select_get( &cff->fd_select,
                                              glyph_index );
-
-
       if ( fd_index >= cff->num_subfonts )
         fd_index = (FT_Byte)( cff->num_subfonts - 1 );
 
@@ -399,8 +359,6 @@
 
       FT_Byte*  charstring;
       FT_ULong  charstring_len;
-
-
       decoder_funcs->init( &decoder, face, size, glyph, hinting,
                            FT_LOAD_TARGET_MODE( load_flags ),
                            cff_get_glyph_data,
@@ -477,8 +435,6 @@
       /* cffload.c.                                                    */
       {
         CFF_Index  csindex = &cff->charstrings_index;
-
-
         if ( csindex->offsets )
         {
           glyph->root.control_data = csindex->bytes +
@@ -502,8 +458,6 @@
          face->root.internal->incremental_interface->funcs->get_glyph_metrics )
     {
       FT_Incremental_MetricsRec  metrics;
-
-
       metrics.bearing_x = decoder.builder.left_bearing.x;
       metrics.bearing_y = 0;
       metrics.advance   = decoder.builder.advance.x;
@@ -531,8 +485,6 @@
       if ( load_flags & FT_LOAD_NO_RECURSE )
       {
         FT_Slot_Internal  internal = glyph->root.internal;
-
-
         glyph->root.metrics.horiBearingX = decoder.builder.left_bearing.x;
         glyph->root.metrics.horiAdvance  = decoder.glyph_width;
         internal->glyph_matrix           = font_matrix;
@@ -544,14 +496,10 @@
         FT_BBox            cbox;
         FT_Glyph_Metrics*  metrics = &glyph->root.metrics;
         FT_Bool            has_vertical_info;
-
-
         if ( face->horizontal.number_Of_HMetrics )
         {
           FT_Short   horiBearingX = 0;
           FT_UShort  horiAdvance  = 0;
-
-
           ( (SFNT_Service)face->sfnt )->get_metrics( face, 0,
                                                      glyph_index,
                                                      &horiBearingX,
@@ -577,8 +525,6 @@
         {
           FT_Short   vertBearingY = 0;
           FT_UShort  vertAdvance  = 0;
-
-
           ( (SFNT_Service)face->sfnt )->get_metrics( face, 1,
                                                      glyph_index,
                                                      &vertBearingY,
@@ -637,8 +583,6 @@
           FT_Vector*   vec     = cur->points;
           FT_Fixed     x_scale = glyph->x_scale;
           FT_Fixed     y_scale = glyph->y_scale;
-
-
           /* First of all, scale the points */
           if ( !hinting || !decoder.builder.hints_funcs )
             for ( n = cur->n_points; n > 0; n--, vec++ )
@@ -679,6 +623,4 @@
 
     return error;
   }
-
-
 /* END */

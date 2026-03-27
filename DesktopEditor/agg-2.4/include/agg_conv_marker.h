@@ -58,8 +58,6 @@ namespace agg
         unsigned       m_marker;
         unsigned       m_num_markers;
     };
-
-
     //------------------------------------------------------------------------
     template<class MarkerLocator, class MarkerShapes> 
     conv_marker<MarkerLocator, MarkerShapes>::conv_marker(MarkerLocator& ml, MarkerShapes& ms) :
@@ -70,8 +68,6 @@ namespace agg
         m_num_markers(1)
     {
     }
-
-
     //------------------------------------------------------------------------
     template<class MarkerLocator, class MarkerShapes> 
     void conv_marker<MarkerLocator, MarkerShapes>::rewind(unsigned)
@@ -80,8 +76,6 @@ namespace agg
         m_marker = 0;
         m_num_markers = 1;
     }
-
-
     //------------------------------------------------------------------------
     template<class MarkerLocator, class MarkerShapes> 
     unsigned conv_marker<MarkerLocator, MarkerShapes>::vertex(double* x, double* y)
@@ -142,7 +136,5 @@ namespace agg
     }
 
 }
-
-
 #endif
 

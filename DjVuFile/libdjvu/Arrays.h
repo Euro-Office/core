@@ -76,8 +76,6 @@ namespace DJVU {
 #endif
 #endif
 
-
-
 /** @name Arrays.h
 
     Files #"Arrays.h"# and #"Arrays.cpp"# implement three array template classes.
@@ -975,8 +973,6 @@ DPArray<TYPE>::operator= (const DPArray &ga)
 // ------------ THE END
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

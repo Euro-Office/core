@@ -34,7 +34,6 @@
  *          GPLOT      *gplotRead()
  *          l_int32     gplotWrite()
  *
- *
  *     Utility for programmatic plotting using gnuplot 7.3.2 or later
  *     Enabled:
  *         - output to png (color), ps (mono), x11 (color), latex (mono)
@@ -101,8 +100,6 @@ const char  *gplotfileoutputs[] = {"",
                                    "EPS",
                                    "X11",
                                    "LATEX"};
-
-
 /*-----------------------------------------------------------------*
  *                       Basic Plotting Functions                  *
  *-----------------------------------------------------------------*/
@@ -173,8 +170,6 @@ GPLOT  *gplot;
 
     return gplot;
 }
-
-
 /*!
  *   gplotDestroy()
  *
@@ -215,8 +210,6 @@ GPLOT  *gplot;
     *pgplot = NULL;
     return;
 }
-
-
 /*!
  *  gplotAddPlot()
  *
@@ -299,8 +292,6 @@ SARRAY    *sa;
             
     return 0;
 }
-
-
 /*!
  *  gplotSetScaling()
  *
@@ -329,8 +320,6 @@ gplotSetScaling(GPLOT   *gplot,
     gplot->scaling = scaling;
     return 0;
 }
-
-
 /*!
  *  gplotMakeOutput()
  *
@@ -377,8 +366,6 @@ l_int32  ignore;
 #endif
     return 0;
 }
-
-
 /*!
  *  gplotGenCommandFile()
  *
@@ -478,8 +465,6 @@ FILE    *fp;
     FREE(cmdstr);
     return 0;
 }
-
-
 /*!
  *  gplotGenDataFiles()
  *
@@ -510,8 +495,6 @@ FILE    *fp;
 
     return 0;
 }
-
-
 /*-----------------------------------------------------------------*
  *                       Quick and Dirty Plots                     *
  *-----------------------------------------------------------------*/
@@ -559,8 +542,6 @@ GPLOT  *gplot;
     gplotDestroy(&gplot);
     return 0;
 }
-
-
 /*!
  *  gplotSimple2()
  *
@@ -608,8 +589,6 @@ GPLOT  *gplot;
     gplotDestroy(&gplot);
     return 0;
 }
-
-
 /*!
  *  gplotSimpleN()
  *
@@ -663,8 +642,6 @@ NUMA    *na;
     gplotDestroy(&gplot);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------*
  *                           Serialize for I/O                     *
  *-----------------------------------------------------------------*/
@@ -749,8 +726,6 @@ GPLOT   *gplot;
     fclose(fp);
     return gplot;
 }
-
-
 /*!
  *  gplotWrite()
  * 
@@ -800,5 +775,3 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-

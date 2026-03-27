@@ -62,8 +62,6 @@ private:
 
 };
 std::wostream& operator << (std::wostream& _Wostream, const smil_additive& _Val);
-
-
 }
 
 APPLY_PARSE_XML_ATTRIBUTES(odf_types::smil_additive);

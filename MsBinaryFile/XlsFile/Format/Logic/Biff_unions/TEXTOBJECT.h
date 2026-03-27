@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of TEXTOBJECT union of records 
 class TEXTOBJECT: public CompositeObject
 {

@@ -34,8 +34,6 @@
 #include <memory>
 #include <string>
 #include "../../../OOXML/Base/Types_32.h"
-
-
 namespace RedBlackTree
 {
 class IRBNode;

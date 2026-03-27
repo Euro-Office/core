@@ -16,8 +16,6 @@
 
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 #include <ctype.h>		/* to declare isdigit(), isspace() */
-
-
 LOCAL(int)
 text_getc (FILE * file)
 /* Read next char, skipping over any comments (# to end of line) */
@@ -33,8 +31,6 @@ text_getc (FILE * file)
   }
   return ch;
 }
-
-
 LOCAL(boolean)
 read_text_integer (FILE * file, long * result, int * termchar)
 /* Read an unsigned decimal integer from a file, store it in result */
@@ -68,8 +64,6 @@ read_text_integer (FILE * file, long * result, int * termchar)
   *termchar = ch;
   return TRUE;
 }
-
-
 GLOBAL(boolean)
 read_quant_tables (j_compress_ptr cinfo, char * filename, boolean force_baseline)
 /* Read a set of quantization tables from the specified file.
@@ -122,8 +116,6 @@ read_quant_tables (j_compress_ptr cinfo, char * filename, boolean force_baseline
   fclose(fp);
   return TRUE;
 }
-
-
 #ifdef C_MULTISCAN_FILES_SUPPORTED
 
 LOCAL(boolean)
@@ -153,8 +145,6 @@ read_scan_integer (FILE * file, long * result, int * termchar)
   *termchar = ch;
   return TRUE;
 }
-
-
 GLOBAL(boolean)
 read_scan_script (j_compress_ptr cinfo, char * filename)
 /* Read a scan script from the specified text file.
@@ -261,8 +251,6 @@ bogus:
 }
 
 #endif /* C_MULTISCAN_FILES_SUPPORTED */
-
-
 GLOBAL(boolean)
 set_quality_ratings (j_compress_ptr cinfo, char *arg, boolean force_baseline)
 /* Process a quality-ratings parameter string, of the form
@@ -293,8 +281,6 @@ set_quality_ratings (j_compress_ptr cinfo, char *arg, boolean force_baseline)
   jpeg_default_qtables(cinfo, force_baseline);
   return TRUE;
 }
-
-
 GLOBAL(boolean)
 set_quant_slots (j_compress_ptr cinfo, char *arg)
 /* Process a quantization-table-selectors parameter string, of the form
@@ -328,8 +314,6 @@ set_quant_slots (j_compress_ptr cinfo, char *arg)
   }
   return TRUE;
 }
-
-
 GLOBAL(boolean)
 set_sample_factors (j_compress_ptr cinfo, char *arg)
 /* Process a sample-factors parameter string, of the form

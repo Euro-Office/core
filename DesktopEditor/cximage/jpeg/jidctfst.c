@@ -38,8 +38,6 @@
 #include "jdct.h"		/* Private declarations for DCT subsystem */
 
 #ifdef DCT_IFAST_SUPPORTED
-
-
 /*
  * This module is specialized to the case DCTSIZE = 8.
  */
@@ -47,8 +45,6 @@
 #if DCTSIZE != 8
   Sorry, this code only copes with 8x8 DCTs. /* deliberate syntax err */
 #endif
-
-
 /* Scaling decisions are generally the same as in the LL&M algorithm;
  * see jidctint.c for more details.  However, we choose to descale
  * (right shift) multiplication products as soon as they are formed,
@@ -99,8 +95,6 @@
 #define FIX_1_847759065  FIX(1.847759065)
 #define FIX_2_613125930  FIX(2.613125930)
 #endif
-
-
 /* We can gain a little more speed, with a further compromise in accuracy,
  * by omitting the addition in a descaling shift.  This yields an incorrectly
  * rounded result half the time...
@@ -110,15 +104,11 @@
 #undef DESCALE
 #define DESCALE(x,n)  RIGHT_SHIFT(x, n)
 #endif
-
-
 /* Multiply a DCTELEM variable by an INT32 constant, and immediately
  * descale to yield a DCTELEM result.
  */
 
 #define MULTIPLY(var,const)  ((DCTELEM) DESCALE((var) * (const), CONST_BITS))
-
-
 /* Dequantize a coefficient by multiplying it by the multiplier-table
  * entry; produce a DCTELEM result.  For 8-bit data a 16x16->16
  * multiplication will do.  For 12-bit data, the multiplier table is
@@ -131,8 +121,6 @@
 #define DEQUANTIZE(coef,quantval)  \
 	DESCALE((coef)*(quantval), IFAST_SCALE_BITS-PASS1_BITS)
 #endif
-
-
 /* Like DESCALE, but applies to a DCTELEM and produces an int.
  * We assume that int right shift is unsigned if INT32 right shift is.
  */
@@ -158,8 +146,6 @@
 #else
 #define IDESCALE(x,n)  ((int) IRIGHT_SHIFT(x, n))
 #endif
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients.
  */

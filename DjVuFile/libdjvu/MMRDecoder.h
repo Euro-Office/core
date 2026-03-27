@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GSmartPointer.h"
 
 #ifdef HAVE_NAMESPACES
@@ -139,12 +137,8 @@ class JB2Image;
     Leon Bottou <leonb@research.att.com> */
 //@{
 
-
-
 #define MMRDECODER_HAS_SCANRUNS  1
 #define MMRDECODER_HAS_SCANRLE   1
-
-
 
 /** Class for G4/MMR decoding.  The simplest way to use this class is
     the static member function \Ref{MMRDecoder::decode}.  This
@@ -224,11 +218,7 @@ private:
   friend class VLSource;
   friend class VLTable;
 };
-
-
 //@}
-
-
 // -----------
 
 #ifdef HAVE_NAMESPACES

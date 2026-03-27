@@ -39,19 +39,13 @@ ShrFmla::ShrFmla(const CellRef& cell_base_ref_init)
 :	formula(false, cell_base_ref_init)
 {
 }
-
-
 ShrFmla::~ShrFmla()
 {
 }
-
-
 BaseObjectPtr ShrFmla::clone()
 {
 	return BaseObjectPtr(new ShrFmla(*this));
 }
-
-
 void ShrFmla::readFields(CFRecord& record)
 {	
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)

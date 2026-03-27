@@ -38,19 +38,13 @@ namespace XLS
 CodeName::CodeName()
 {
 }
-
-
 CodeName::~CodeName()
 {
 }
-
-
 BaseObjectPtr CodeName::clone()
 {
 	return BaseObjectPtr(new CodeName(*this));
 }
-
-
 void CodeName::readFields(CFRecord& record)
 {
 	XLUnicodeString codeName;

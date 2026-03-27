@@ -44,8 +44,6 @@ BiffStructurePtr CFExTemplateParams::clone()
 {
 	return BiffStructurePtr(new CFExTemplateParams(*this));
 }
-
-
 void CFExTemplateParams::load(CFRecord& record)
 {
 	record.loadAnyData(data);

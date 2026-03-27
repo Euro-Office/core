@@ -40,6 +40,4 @@
 #include FT_ERRORS_H
 
 #endif /* __BDFERROR_H__ */
-
-
 /* END */

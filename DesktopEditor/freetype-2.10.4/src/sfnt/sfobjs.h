@@ -14,19 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SFOBJS_H_
 #define SFOBJS_H_
-
-
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
@@ -48,11 +40,7 @@ FT_BEGIN_HEADER
   tt_face_get_name( TT_Face      face,
                     FT_UShort    nameid,
                     FT_String**  name );
-
-
 FT_END_HEADER
 
 #endif /* SFOBJS_H_ */
-
-
 /* END */

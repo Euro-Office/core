@@ -30,8 +30,6 @@ namespace agg
         glyph_data_gray8   = 2,
         glyph_data_outline = 3
     };
-
-
     //-------------------------------------------------------------glyph_cache
     struct glyph_cache
     {
@@ -43,8 +41,6 @@ namespace agg
         double          advance_x;
         double          advance_y;
     };
-
-
     //--------------------------------------------------------------font_cache
     class font_cache
     {
@@ -122,12 +118,6 @@ namespace agg
         glyph_cache**   m_glyphs[256];
         char*           m_font_signature;
     };
-
-
-
-
-
-
     
     //---------------------------------------------------------font_cache_pool
     class font_cache_pool
@@ -151,8 +141,6 @@ namespace agg
             m_num_fonts(0),
             m_cur_font(0)
         {}
-
-
         //--------------------------------------------------------------------
         void font(const char* font_signature, bool reset_cache = false)
         {
@@ -218,8 +206,6 @@ namespace agg
             }
             return 0;
         }
-
-
         //--------------------------------------------------------------------
         int find_font(const char* font_signature)
         {
@@ -237,10 +223,6 @@ namespace agg
         unsigned     m_num_fonts;
         font_cache*  m_cur_font;
     };
-
-
-
-
     //------------------------------------------------------------------------
     enum glyph_rendering
     {
@@ -250,10 +232,6 @@ namespace agg
         glyph_ren_agg_mono,
         glyph_ren_agg_gray8
     };
-
-
-
-
     //------------------------------------------------------font_cache_manager
     template<class FontEngine> class font_cache_manager
     {
@@ -334,8 +312,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         path_adaptor_type&   path_adaptor()   { return m_path_adaptor;   }
         gray8_adaptor_type&  gray8_adaptor()  { return m_gray8_adaptor;  }

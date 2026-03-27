@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 RRD::RRD()
 {
 }
-
-
 RRD::RRD(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr RRD::clone()
 {
 	return BiffStructurePtr(new RRD(*this));
@@ -61,7 +55,5 @@ void RRD::load(CFRecord& record)
 	fDelAtEdgeOfSort = GETBIT(flags, 3);
 	record >> tabid;
 }
-
-
 } // namespace XLS
 

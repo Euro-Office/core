@@ -14,25 +14,17 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVSFNT_H_
 #define SVSFNT_H_
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/tttables.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * SFNT table loading service.
    */
 
 #define FT_SERVICE_ID_SFNT_TABLE  "sfnt-table"
-
-
   /*
    * Used to implement FT_Load_Sfnt_Table().
    */
@@ -49,8 +41,6 @@ FT_BEGIN_HEADER
   typedef void*
   (*FT_SFNT_TableGetFunc)( FT_Face      face,
                            FT_Sfnt_Tag  tag );
-
-
   /*
    * Used to implement FT_Sfnt_Table_Info().
    */
@@ -60,16 +50,12 @@ FT_BEGIN_HEADER
                             FT_ULong  *tag,
                             FT_ULong  *offset,
                             FT_ULong  *length );
-
-
   FT_DEFINE_SERVICE( SFNT_Table )
   {
     FT_SFNT_TableLoadFunc  load_table;
     FT_SFNT_TableGetFunc   get_table;
     FT_SFNT_TableInfoFunc  table_info;
   };
-
-
 #define FT_DEFINE_SERVICE_SFNT_TABLEREC( class_, load_, get_, info_ )  \
   static const FT_Service_SFNT_TableRec  class_ =                      \
   {                                                                    \
@@ -77,12 +63,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVSFNT_H_ */
-
-
 /* END */

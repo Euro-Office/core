@@ -65,8 +65,6 @@ public:
      * @internal
      */
     BuddhistCalendar(const Locale& aLocale, UErrorCode& success);
-
-
     /**
      * Destructor
      * @internal

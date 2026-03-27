@@ -37,8 +37,6 @@ namespace XLS
 {
 
 class StreamCacheReader;
-
-
 // Logical representation of Mms record in BIFF8
 class Mms: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~Mms();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

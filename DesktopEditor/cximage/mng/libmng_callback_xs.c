@@ -1235,5 +1235,3 @@ mng_processarow MNG_DECL mng_getcb_processarow (mng_handle hHandle)
 /* * end of file                                                            * */
 /* ************************************************************************** */
 
-
-

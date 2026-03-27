@@ -40,8 +40,6 @@ RGBA_QUAD   bwmap[2] = { {255,255,255,0}, {0,0,0,0} };
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*!
  *  pixReadStreamBmp()
  *
@@ -278,8 +276,6 @@ PIXCMAP   *cmap;
     return pix;
 }
 
-
-
 /*!
  *  pixWriteStreamBmp()
  *
@@ -498,8 +494,6 @@ RGBA_QUAD  *pquad;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Read/write to memory                        *
  *---------------------------------------------------------------------*/
@@ -542,8 +536,6 @@ PIX      *pix;
     fclose(fp);
     return pix;
 }
-
-
 /*!
  *  pixWriteMemBmp()
  *
@@ -590,8 +582,6 @@ pixReadMemBmp(const l_uint8  *cdata,
         "bmp read from memory not implemented on this platform",
         "pixReadMemBmp", NULL);
 }
-
-
 l_int32
 pixWriteMemBmp(l_uint8  **pdata,
                size_t    *psize,

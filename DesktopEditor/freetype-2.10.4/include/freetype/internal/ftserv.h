@@ -26,8 +26,6 @@
    * than data pointers (e.g. 48 bits instead of 32).
    *
    */
-
-
 #ifndef FTSERV_H_
 #define FTSERV_H_
 
@@ -85,8 +83,6 @@ FT_BEGIN_HEADER
   FT_END_STMNT
 
 #endif /* !C++ */
-
-
   /**************************************************************************
    *
    * @macro:
@@ -136,8 +132,6 @@ FT_BEGIN_HEADER
   FT_END_STMNT
 
 #endif /* !C++ */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -158,8 +152,6 @@ FT_BEGIN_HEADER
   } FT_ServiceDescRec;
 
   typedef const FT_ServiceDescRec*  FT_ServiceDesc;
-
-
   /**************************************************************************
    *
    * @macro:
@@ -349,8 +341,6 @@ FT_BEGIN_HEADER
     { serv_id_10, serv_data_10 },                                           \
     { NULL, NULL }                                                          \
   };
-
-
   /*
    * Parse a list of FT_ServiceDescRec descriptors and look for a specific
    * service by ID.  Note that the last element in the array must be { NULL,
@@ -363,8 +353,6 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -396,16 +384,12 @@ FT_BEGIN_HEADER
     FT_Pointer  service_WINFNT;
 
   } FT_ServiceCacheRec, *FT_ServiceCache;
-
-
   /*
    * A magic number used within the services cache.
    */
 
   /* ensure that value `1' has the same width as a pointer */
 #define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~(FT_PtrDist)1)
-
-
   /**************************************************************************
    *
    * @macro:
@@ -490,6 +474,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTSERV_H_ */
-
-
 /* END */

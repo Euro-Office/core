@@ -48,8 +48,6 @@ static void debug_islamcal_msg(const char *pat, ...)
 #else
 #define U_DEBUG_ISLAMCAL_MSG(x)
 #endif
-
-
 // --- The cache --
 // cache of months
 static UMutex astroLock = U_MUTEX_INITIALIZER;  // pod bay door lock
@@ -83,8 +81,6 @@ static const int32_t CIVIL_EPOC = 1948440; // CE 622 July 16 Friday (Julian cale
   * Thursday EPOC
   */
 static const int32_t ASTRONOMICAL_EPOC = 1948439; // CE 622 July 15 Thursday (Julian calendar)
-
-
 static const int32_t UMALQURA_YEAR_START = 1300;
 static const int32_t UMALQURA_YEAR_END = 1600;
 
@@ -681,8 +677,6 @@ void IslamicCalendar::handleComputeFields(int32_t julianDay, UErrorCode &status)
 
     // Now figure out the day of the year.
     dayOfYear = (days - monthStart(year, 0)) + 1;
-
-
     internalSet(UCAL_ERA, 0);
     internalSet(UCAL_YEAR, year);
     internalSet(UCAL_EXTENDED_YEAR, year);
@@ -712,8 +706,6 @@ IslamicCalendar::inDaylightTime(UErrorCode& status) const
 static UDate           gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t         gSystemDefaultCenturyStartYear   = -1;
 static icu::UInitOnce  gSystemDefaultCenturyInit        = U_INITONCE_INITIALIZER;
-
-
 UBool IslamicCalendar::haveDefaultCentury() const
 {
     return TRUE;
@@ -732,8 +724,6 @@ int32_t IslamicCalendar::defaultCenturyStartYear() const
     umtx_initOnce(gSystemDefaultCenturyInit, &initializeSystemDefaultCentury);
     return gSystemDefaultCenturyStartYear;
 }
-
-
 void U_CALLCONV
 IslamicCalendar::initializeSystemDefaultCentury()
 {
@@ -752,8 +742,6 @@ IslamicCalendar::initializeSystemDefaultCentury()
     // We have no recourse upon failure unless we want to propagate the failure
     // out.
 }
-
-
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(IslamicCalendar)
 

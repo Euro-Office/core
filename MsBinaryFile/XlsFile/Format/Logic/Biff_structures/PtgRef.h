@@ -55,8 +55,6 @@ public:
 	void assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref = false) override;
 
 	static const unsigned short fixed_id = 0x04;
-
-
     RgceLoc loc;
     XLSB::RgceLoc loc_xlsb;
 

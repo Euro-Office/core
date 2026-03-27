@@ -12,11 +12,7 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 class the_application : public agg::platform_support
 {
     double m_x[2];
@@ -28,8 +24,6 @@ class the_application : public agg::platform_support
     agg::slider_ctrl<agg::rgba8> m_gamma;
     agg::slider_ctrl<agg::rgba8> m_offset;
     agg::cbox_ctrl<agg::rgba8>   m_white_on_black;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -59,8 +53,6 @@ public:
         m_white_on_black.text_color(agg::rgba8(127, 127, 127));
         m_white_on_black.inactive_color(agg::rgba8(127, 127, 127));
     }
-
-
     virtual void on_draw()
     {
         typedef agg::gamma_lut<agg::int8u, agg::int8u, 8, 8> gamma_lut_type;
@@ -110,8 +102,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_offset);
         agg::render_ctrl(ras, sl, rb, m_white_on_black);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -129,8 +119,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -152,11 +140,7 @@ public:
     {
         m_idx = -1;
     }
-
-
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -168,5 +152,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

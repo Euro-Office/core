@@ -48,8 +48,6 @@ static const cmsTagSignature PCS2DeviceFloat[] = {cmsSigBToD0Tag,     // Percept
                                                   cmsSigBToD1Tag,     // Relative colorimetric
                                                   cmsSigBToD2Tag,     // Saturation
                                                   cmsSigBToD3Tag };   // Absolute colorimetric
-
-
 // Factors to convert from 1.15 fixed point to 0..1.0 range and vice-versa
 #define InpAdj   (1.0/MAX_ENCODEABLE_XYZ)     // (65536.0/(65535.0*2.0))
 #define OutpAdj  (MAX_ENCODEABLE_XYZ)         // ((2.0*65535.0)/65536.0)
@@ -88,8 +86,6 @@ cmsBool  _cmsReadMediaWhitePoint(cmsCIEXYZ* Dest, cmsHPROFILE hProfile)
     *Dest = *Tag;
     return TRUE;
 }
-
-
 // Chromatic adaptation matrix. Fix some issues as well
 cmsBool  _cmsReadCHAD(cmsMAT3* Dest, cmsHPROFILE hProfile)
 {
@@ -126,8 +122,6 @@ cmsBool  _cmsReadCHAD(cmsMAT3* Dest, cmsHPROFILE hProfile)
 
     return TRUE;
 }
-
-
 // Auxiliary, read colorants as a MAT3 structure. Used by any function that needs a matrix-shaper
 static
 cmsBool ReadICCMatrixRGB2XYZ(cmsMAT3* r, cmsHPROFILE hProfile)
@@ -149,8 +143,6 @@ cmsBool ReadICCMatrixRGB2XYZ(cmsMAT3* r, cmsHPROFILE hProfile)
 
     return TRUE;
 }
-
-
 // Gray input pipeline
 static
 cmsPipeline* BuildGrayInputMatrixPipeline(cmsHPROFILE hProfile)
@@ -225,8 +217,6 @@ cmsPipeline* BuildRGBInputMatrixShaper(cmsHPROFILE hProfile)
     for (i=0; i < 3; i++)
         for (j=0; j < 3; j++)
             Mat.v[i].n[j] *= InpAdj;
-
-
     Shapes[0] = (cmsToneCurve *) cmsReadTag(hProfile, cmsSigRedTRCTag);
     Shapes[1] = (cmsToneCurve *) cmsReadTag(hProfile, cmsSigGreenTRCTag);
     Shapes[2] = (cmsToneCurve *) cmsReadTag(hProfile, cmsSigBlueTRCTag);
@@ -258,8 +248,6 @@ Error:
     cmsPipelineFree(Lut);
     return NULL;
 }
-
-
 
 // Read the DToAX tag, adjusting the encoding of Lab or XYZ if neded
 static
@@ -302,8 +290,6 @@ Error:
     cmsPipelineFree(Lut);
     return NULL;
 }
-
-
 // Read and create a BRAND NEW MPE LUT from a given profile. All stuff dependent of version, etc
 // is adjusted here in order to create a LUT that takes care of all those details.
 // We add intent = -1 as a way to read matrix shaper always, no matter of other LUT
@@ -450,8 +436,6 @@ Error:
     cmsPipelineFree(Lut);
     return NULL;
 }
-
-
 static
 cmsPipeline* BuildRGBOutputMatrixShaper(cmsHPROFILE hProfile)
 {
@@ -514,8 +498,6 @@ Error:
     cmsPipelineFree(Lut);
     return NULL;
 }
-
-
 // Change CLUT interpolation to trilinear
 static
 void ChangeInterpolationToTrilinear(cmsPipeline* Lut)
@@ -535,8 +517,6 @@ void ChangeInterpolationToTrilinear(cmsPipeline* Lut)
             }
     }
 }
-
-
 // Read the DToAX tag, adjusting the encoding of Lab or XYZ if neded
 static
 cmsPipeline* _cmsReadFloatOutputTag(cmsHPROFILE hProfile, cmsTagSignature tagFloat)
@@ -588,8 +568,6 @@ cmsPipeline* _cmsReadOutputLUT(cmsHPROFILE hProfile, int Intent)
     cmsTagSignature tag16;
     cmsTagSignature tagFloat;
     cmsContext ContextID  = cmsGetProfileContextID(hProfile);
-
-
     if (Intent >= INTENT_PERCEPTUAL && Intent <= INTENT_ABSOLUTE_COLORIMETRIC) {
 
         tag16 = PCS2Device16[Intent];
@@ -712,8 +690,6 @@ cmsPipeline* _cmsReadDevicelinkLUT(cmsHPROFILE hProfile, int Intent)
     cmsTagSignature tag16;
     cmsTagSignature tagFloat;
     cmsContext ContextID = cmsGetProfileContextID(hProfile);
-
-
     if (Intent < INTENT_PERCEPTUAL || Intent > INTENT_ABSOLUTE_COLORIMETRIC)
         return NULL;
 
@@ -744,8 +720,6 @@ cmsPipeline* _cmsReadDevicelinkLUT(cmsHPROFILE hProfile, int Intent)
         cmsFreeNamedColorList(nc);
         return NULL;
     }
-
-
     if (cmsIsTag(hProfile, tagFloat)) {  // Float tag takes precedence
 
         // Floating point LUT are always V
@@ -858,8 +832,6 @@ cmsBool  CMSEXPORT cmsIsCLUT(cmsHPROFILE hProfile, cmsUInt32Number Intent, cmsUI
     return cmsIsTag(hProfile, TagTable[Intent]);
 
 }
-
-
 // Return info about supported intents
 cmsBool  CMSEXPORT cmsIsIntentSupported(cmsHPROFILE hProfile,
                                         cmsUInt32Number Intent, cmsUInt32Number UsedDirection)
@@ -874,8 +846,6 @@ cmsBool  CMSEXPORT cmsIsIntentSupported(cmsHPROFILE hProfile,
 
     return cmsIsMatrixShaper(hProfile);
 }
-
-
 // ---------------------------------------------------------------------------------------------------------------
 
 // Read both, profile sequence description and profile sequence id if present. Then combine both to
@@ -926,8 +896,6 @@ cmsBool _cmsWriteProfileSequence(cmsHPROFILE hProfile, const cmsSEQ* seq)
 
     return TRUE;
 }
-
-
 // Auxiliary, read and duplicate a MLU if found.
 static
 cmsMLU* GetMLUFromProfile(cmsHPROFILE h, cmsTagSignature sig)
@@ -973,8 +941,6 @@ cmsSEQ* _cmsCompileProfileSequence(cmsContext ContextID, cmsUInt32Number nProfil
 }
 
 // -------------------------------------------------------------------------------------------------------------------
-
-
 static
 const cmsMLU* GetInfo(cmsHPROFILE hProfile, cmsInfoType Info)
 {
@@ -1000,12 +966,8 @@ const cmsMLU* GetInfo(cmsHPROFILE hProfile, cmsInfoType Info)
 
     default: return NULL;
     }
-
-
     return (cmsMLU*) cmsReadTag(hProfile, sig);
 }
-
-
 
 cmsUInt32Number CMSEXPORT cmsGetProfileInfo(cmsHPROFILE hProfile, cmsInfoType Info,
                                             const char LanguageCode[3], const char CountryCode[3],
@@ -1016,8 +978,6 @@ cmsUInt32Number CMSEXPORT cmsGetProfileInfo(cmsHPROFILE hProfile, cmsInfoType In
 
     return cmsMLUgetWide(mlu, LanguageCode, CountryCode, Buffer, BufferSize);
 }
-
-
 cmsUInt32Number  CMSEXPORT cmsGetProfileInfoASCII(cmsHPROFILE hProfile, cmsInfoType Info,
                                                           const char LanguageCode[3], const char CountryCode[3],
                                                           char* Buffer, cmsUInt32Number BufferSize)

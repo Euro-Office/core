@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the Type 1 error enumeration constants.
@@ -36,6 +34,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* T1ERRORS_H_ */
-
-
 /* END */

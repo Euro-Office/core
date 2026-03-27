@@ -34,8 +34,6 @@
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class shadow_type
@@ -74,8 +72,6 @@ private:
 };
 
 std::wostream & operator << (std::wostream & _Wostream, const shadow_type & _Val);
-
-
 //--------------------------------------------------------------------------------------------------------------------------------
 class shadow_type1
 {

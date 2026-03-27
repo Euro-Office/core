@@ -64,8 +64,6 @@
 
 #include "styles_list.h"
 #include "style_map.h"
-
-
 namespace cpdoccore { namespace odf_reader { 
 
 class graphic_format_properties;
@@ -743,8 +741,6 @@ public:
     odf_types::color			style_color_; // default #000000
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_column_sep);
-
-
 class style_section_properties : public office_element_impl<style_section_properties>
 {
 public:

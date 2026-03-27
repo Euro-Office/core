@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DocRoute record in BIFF8
 class DocRoute: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~DocRoute();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeDocRoute;

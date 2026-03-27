@@ -30,8 +30,6 @@
  *
  */
 #include "ScalingStruct.h"
-
-
 void PPT::ScalingStruct::ReadFromStream(POLE::Stream *pStream)
 {
     m_x.ReadFromStream(pStream);

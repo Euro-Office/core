@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AutoFilterInfo record in BIFF8
 class AutoFilterInfo: public BiffRecord
 {
@@ -49,8 +47,6 @@ class AutoFilterInfo: public BiffRecord
 	~AutoFilterInfo();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 //-----------------------------

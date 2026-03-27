@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PHONETICINFO union of records 
 class PHONETICINFO: public CompositeObject
 {

@@ -21,8 +21,6 @@
 #include "agg_gsv_text.h"
 #include "agg_bounding_rect.h"
 
-
-
 namespace agg
 {
     int8u gsv_default_font[] = 
@@ -670,6 +668,4 @@ namespace agg
         bounding_rect_single(*this, 0, &x1, &y1, &x2, &y2);
         return x2 - x1;
     }
-
-
 }

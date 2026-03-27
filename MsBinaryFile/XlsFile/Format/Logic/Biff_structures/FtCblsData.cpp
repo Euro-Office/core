@@ -74,7 +74,5 @@ void FtCblsData::save(CFRecord& record)
 	SETBIT(flags, 0, fNo3d)
 	record << flags;
 }
-
-
 } // namespace XLS
 

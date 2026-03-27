@@ -47,8 +47,6 @@ namespace agg
         int           m_vertices;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class VertexSource, class VPGen>
     void conv_adaptor_vpgen<VertexSource, VPGen>::rewind(unsigned path_id) 
@@ -60,8 +58,6 @@ namespace agg
         m_poly_flags = 0;
         m_vertices   = 0;
     }
-
-
     //------------------------------------------------------------------------
     template<class VertexSource, class VPGen>
     unsigned conv_adaptor_vpgen<VertexSource, VPGen>::vertex(double* x, double* y)
@@ -150,10 +146,6 @@ namespace agg
         }
         return cmd;
     }
-
-
 }
-
-
 #endif
 

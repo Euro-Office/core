@@ -15,26 +15,18 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFLATIN_H__
 #define __AFLATIN_H__
 
 #include "afhints.h"
-
-
 FT_BEGIN_HEADER
 
   /* the `latin' writing system */
 
   AF_DECLARE_WRITING_SYSTEM_CLASS( af_latin_writing_system_class )
-
-
   /* constants are given with units_per_em == 2048 in mind */
 #define AF_LATIN_CONSTANT( metrics, c )                                      \
   ( ( (c) * (FT_Long)( (AF_LatinMetrics)(metrics) )->units_per_em ) / 2048 )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -42,15 +34,11 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*
    *  The following declarations could be embedded in the file `aflatin.c';
    *  they have been made semi-public to allow alternate writing system
    *  hinters to re-use some of them.
    */
-
-
 #define AF_LATIN_IS_TOP_BLUE( b ) \
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_TOP )
 #define AF_LATIN_IS_X_HEIGHT_BLUE( b ) \
@@ -59,8 +47,6 @@ FT_BEGIN_HEADER
           ( (b)->properties & AF_BLUE_PROPERTY_LATIN_LONG )
 
 #define AF_LATIN_MAX_WIDTHS  16
-
-
   enum
   {
     AF_LATIN_BLUE_ACTIVE     = 1 << 0,  /* set if zone height is <= 3/4px */
@@ -69,8 +55,6 @@ FT_BEGIN_HEADER
                                         /* optimization                   */
     AF_LATIN_BLUE_FLAG_MAX
   };
-
-
   typedef struct  AF_LatinBlueRec_
   {
     AF_WidthRec  ref;
@@ -78,8 +62,6 @@ FT_BEGIN_HEADER
     FT_UInt      flags;
 
   } AF_LatinBlueRec, *AF_LatinBlue;
-
-
   typedef struct  AF_LatinAxisRec_
   {
     FT_Fixed         scale;
@@ -99,8 +81,6 @@ FT_BEGIN_HEADER
     FT_Pos           org_delta;
 
   } AF_LatinAxisRec, *AF_LatinAxis;
-
-
   typedef struct  AF_LatinMetricsRec_
   {
     AF_StyleMetricsRec  root;
@@ -108,8 +88,6 @@ FT_BEGIN_HEADER
     AF_LatinAxisRec     axis[AF_DIMENSION_MAX];
 
   } AF_LatinMetricsRec, *AF_LatinMetrics;
-
-
   FT_LOCAL( FT_Error )
   af_latin_metrics_init( AF_LatinMetrics  metrics,
                          FT_Face          face );
@@ -125,8 +103,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   af_latin_metrics_check_digits( AF_LatinMetrics  metrics,
                                  FT_Face          face );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -144,8 +120,6 @@ FT_BEGIN_HEADER
     AF_LATIN_HINTS_MONO        = 1 << 3  /* indicate monochrome         */
                                          /* rendering                   */
   };
-
-
 #define AF_LATIN_HINTS_DO_HORZ_SNAP( h )             \
   AF_HINTS_TEST_OTHER( h, AF_LATIN_HINTS_HORZ_SNAP )
 
@@ -157,8 +131,6 @@ FT_BEGIN_HEADER
 
 #define AF_LATIN_HINTS_DO_MONO( h )             \
   AF_HINTS_TEST_OTHER( h, AF_LATIN_HINTS_MONO )
-
-
   /*
    *  The next functions shouldn't normally be exported.  However, other
    *  writing systems might like to use these functions as-is.
@@ -184,6 +156,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AFLATIN_H__ */
-
-
 /* END */

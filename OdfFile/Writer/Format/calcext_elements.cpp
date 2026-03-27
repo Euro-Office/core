@@ -97,8 +97,6 @@ void calcext_sparkline_group_attr::serialize(CP_ATTR_NODE)
 	CP_XML_ATTR_OPT(L"calcext:color-high", color_high_);
 	CP_XML_ATTR_OPT(L"calcext:color-low", color_low_);
 }
-
-
 // calcext_conditional_formats
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * calcext_conditional_formats::ns = L"calcext";

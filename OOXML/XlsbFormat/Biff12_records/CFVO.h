@@ -37,8 +37,6 @@
 #include "../Biff12_structures/CFVOtype.h"
 #include  "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/Xnum.h"
 #include  "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/CFVOParsedFormula.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtCFVO record in BIFF12

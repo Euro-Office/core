@@ -143,8 +143,6 @@ static void  fdilate_1_56(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_i
 static void  ferode_1_56(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  fdilate_1_57(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  ferode_1_57(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
-
-
 /*---------------------------------------------------------------------*
  *                          Fast morph dispatcher                      *
  *---------------------------------------------------------------------*/
@@ -517,8 +515,6 @@ fmorphopgen_low_1(l_uint32  *datad,
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                 Low-level auto-generated static routines                 *
  *--------------------------------------------------------------------------*/

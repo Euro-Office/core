@@ -70,8 +70,6 @@ TIFFWarningExt(thandle_t fd, const char* module, const char* fmt, ...)
 		(*_TIFFwarningHandlerExt)(fd, module, fmt, ap);
 	va_end(ap);
 }
-
-
 /*
  * Local Variables:
  * mode: c

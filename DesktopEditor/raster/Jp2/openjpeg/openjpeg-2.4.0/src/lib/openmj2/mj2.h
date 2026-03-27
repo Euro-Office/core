@@ -87,8 +87,6 @@ Compressed format used in parameters
 MJ2 = 0
 */
 #define MJ2_CFMT 2
-
-
 /* ----------------------------------------------------------------------- */
 
 /**
@@ -298,8 +296,6 @@ typedef struct mj2_cparameters {
     unsigned int meth;
     unsigned int enumcs;
 } mj2_cparameters_t;
-
-
 /** @name Exported functions */
 /*@{*/
 /* ----------------------------------------------------------------------- */
@@ -386,8 +382,6 @@ Write the MOOV box to an output buffer stream
 @param cio Output buffer stream
 */
 OPJ_API void OPJ_CALLCONV mj2_write_moov(opj_mj2_t *movie, opj_cio_t *cio);
-
-
 /* ----------------------------------------------------------------------- */
 /*@}*/
 

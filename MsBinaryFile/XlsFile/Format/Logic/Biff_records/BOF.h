@@ -69,8 +69,6 @@ public:
 		st_Chart		= 0x0020,
 		st_Macro		= 0x040
 	} SubstreamType;
-
-
 //-----------------------------
     _UINT16 vers = 0x0600;
 	_UINT16 dt = 0;

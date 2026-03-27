@@ -30,15 +30,11 @@
    * and FT_FloorFix() are declared in freetype.h.
    *
    */
-
-
 #include <freetype/ftglyph.h>
 #include <freetype/fttrigon.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
-
-
 #ifdef FT_MULFIX_ASSEMBLER
 #undef FT_MulFix
 #endif
@@ -55,8 +51,6 @@
   } FT_Int64;
 
 #endif /* !FT_LONG64 */
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -65,8 +59,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  calc
-
-
   /* transfer sign, leaving a positive number;                        */
   /* we need an unsigned value to safely negate INT_MIN (or LONG_MIN) */
 #define FT_MOVE_SIGN( x, x_unsigned, s ) \
@@ -88,8 +80,6 @@
   {
     return ( ADD_LONG( a, 0x8000L - ( a < 0 ) ) ) & ~0xFFFFL;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Fixed )
@@ -97,8 +87,6 @@
   {
     return ( ADD_LONG( a, 0xFFFFL ) ) & ~0xFFFFL;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Fixed )
@@ -113,8 +101,6 @@
   FT_MSB( FT_UInt32 z )
   {
     FT_Int  shift = 0;
-
-
     /* determine msb bit index in `shift' */
     if ( z & 0xFFFF0000UL )
     {
@@ -146,8 +132,6 @@
   }
 
 #endif /* !FT_MSB */
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Fixed )
@@ -155,18 +139,12 @@
             FT_Fixed  y )
   {
     FT_Vector  v;
-
-
     v.x = x;
     v.y = y;
 
     return FT_Vector_Length( &v );
   }
-
-
 #ifdef FT_LONG64
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -177,8 +155,6 @@
     FT_Int     s = 1;
     FT_UInt64  a, b, c, d;
     FT_Long    d_;
-
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
     c = (FT_UInt64)c_;
@@ -194,8 +170,6 @@
 
     return s < 0 ? NEG_LONG( d_ ) : d_;
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Long )
@@ -206,8 +180,6 @@
     FT_Int     s = 1;
     FT_UInt64  a, b, c, d;
     FT_Long    d_;
-
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
     c = (FT_UInt64)c_;
@@ -223,8 +195,6 @@
 
     return s < 0 ? NEG_LONG( d_ ) : d_;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -244,8 +214,6 @@
 
 #endif /* FT_MULFIX_ASSEMBLER */
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -255,8 +223,6 @@
     FT_Int     s = 1;
     FT_UInt64  a, b, q;
     FT_Long    q_;
-
-
     a = (FT_UInt64)a_;
     b = (FT_UInt64)b_;
 
@@ -270,19 +236,13 @@
 
     return s < 0 ? NEG_LONG( q_ ) : q_;
   }
-
-
 #else /* !FT_LONG64 */
-
-
   static void
   ft_multo64( FT_UInt32  x,
               FT_UInt32  y,
               FT_Int64  *z )
   {
     FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
-
-
     lo1 = x & 0x0000FFFFU;  hi1 = x >> 16;
     lo2 = y & 0x0000FFFFU;  hi2 = y >> 16;
 
@@ -305,8 +265,6 @@
     z->lo = lo;
     z->hi = hi;
   }
-
-
   static FT_UInt32
   ft_div64by32( FT_UInt32  hi,
                 FT_UInt32  lo,
@@ -314,8 +272,6 @@
   {
     FT_UInt32  r, q;
     FT_Int     i;
-
-
     if ( hi >= y )
       return (FT_UInt32)0x7FFFFFFFL;
 
@@ -344,24 +300,18 @@
 
     return q;
   }
-
-
   static void
   FT_Add64( FT_Int64*  x,
             FT_Int64*  y,
             FT_Int64  *z )
   {
     FT_UInt32  lo, hi;
-
-
     lo = x->lo + y->lo;
     hi = x->hi + y->hi + ( lo < x->lo );
 
     z->lo = lo;
     z->hi = hi;
   }
-
-
   /*  The FT_MulDiv function has been optimized thanks to ideas from     */
   /*  Graham Asher and Alexei Podtelezhnikov.  The trick is to optimize  */
   /*  a rather common case when everything fits within 32-bits.          */
@@ -418,8 +368,6 @@
   {
     FT_Int     s = 1;
     FT_UInt32  a, b, c;
-
-
     /* XXX: this function does not allow 64-bit arguments */
 
     a = (FT_UInt32)a_;
@@ -439,8 +387,6 @@
     else
     {
       FT_Int64  temp, temp2;
-
-
       ft_multo64( a, b, &temp );
 
       temp2.hi = 0;
@@ -457,8 +403,6 @@
 
     return s < 0 ? NEG_LONG( a_ ) : a_;
   }
-
-
   FT_BASE_DEF( FT_Long )
   FT_MulDiv_No_Round( FT_Long  a_,
                       FT_Long  b_,
@@ -466,8 +410,6 @@
   {
     FT_Int     s = 1;
     FT_UInt32  a, b, c;
-
-
     /* XXX: this function does not allow 64-bit arguments */
 
     a = (FT_UInt32)a_;
@@ -487,8 +429,6 @@
     else
     {
       FT_Int64  temp;
-
-
       ft_multo64( a, b, &temp );
 
       /* last attempt to ditch long division */
@@ -500,8 +440,6 @@
 
     return s < 0 ? NEG_LONG( a_ ) : a_;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -523,8 +461,6 @@
 
     FT_Long    sa, sb;
     FT_UInt32  a, b;
-
-
     /*
      * This is a clever way of converting a signed number `a' into its
      * absolute value (stored back into `a') and its sign.  The sign is
@@ -556,8 +492,6 @@
     else
     {
       FT_UInt32  al = a & 0xFFFFUL;
-
-
       a = ( a >> 16 ) * b + al * ( b >> 16 ) +
           ( ( al * ( b & 0xFFFFUL ) + 0x8000UL ) >> 16 );
     }
@@ -571,8 +505,6 @@
 
     FT_Int     s = 1;
     FT_UInt32  a, b;
-
-
     /* XXX: this function does not allow 64-bit arguments */
 
     a = (FT_UInt32)a_;
@@ -586,8 +518,6 @@
     else
     {
       FT_UInt32  al = a & 0xFFFFUL;
-
-
       a = ( a >> 16 ) * b + al * ( b >> 16 ) +
           ( ( al * ( b & 0xFFFFUL ) + 0x8000UL ) >> 16 );
     }
@@ -599,8 +529,6 @@
 #endif /* 0 */
 
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -610,8 +538,6 @@
     FT_Int     s = 1;
     FT_UInt32  a, b, q;
     FT_Long    q_;
-
-
     /* XXX: this function does not allow 64-bit arguments */
 
     a = (FT_UInt32)a_;
@@ -634,8 +560,6 @@
     {
       /* we need more bits; we have to do it by hand */
       FT_Int64  temp, temp2;
-
-
       temp.hi  = a >> 16;
       temp.lo  = a << 16;
       temp2.hi = 0;
@@ -649,11 +573,7 @@
 
     return s < 0 ? NEG_LONG( q_ ) : q_;
   }
-
-
 #endif /* !FT_LONG64 */
-
-
   /* documentation is in ftglyph.h */
 
   FT_EXPORT_DEF( void )
@@ -661,8 +581,6 @@
                       FT_Matrix        *b )
   {
     FT_Fixed  xx, xy, yx, yy;
-
-
     if ( !a || !b )
       return;
 
@@ -680,16 +598,12 @@
     b->yx = yx;
     b->yy = yy;
   }
-
-
   /* documentation is in ftglyph.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Matrix_Invert( FT_Matrix*  matrix )
   {
     FT_Pos  delta, xx, yy;
-
-
     if ( !matrix )
       return FT_THROW( Invalid_Argument );
 
@@ -711,8 +625,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( void )
@@ -723,8 +635,6 @@
     FT_Fixed  xx, xy, yx, yy;
 
     FT_Long   val = 0x10000L * scaling;
-
-
     if ( !a || !b )
       return;
 
@@ -742,8 +652,6 @@
     b->yx = yx;
     b->yy = yy;
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Bool )
@@ -754,8 +662,6 @@
     FT_Fixed   nonzero_minval, maxval;
     FT_Fixed   temp1, temp2;
     FT_UInt    i;
-
-
     if ( !matrix )
       return 0;
 
@@ -790,8 +696,6 @@
     if ( maxval > 23170 )
     {
       FT_Fixed  scale = FT_DivFix( maxval, 23170 );
-
-
       if ( !FT_DivFix( nonzero_minval, scale ) )
         return 0;    /* value range too large */
 
@@ -812,8 +716,6 @@
 
     return 1;
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( void )
@@ -824,8 +726,6 @@
     FT_Pos   xz, yz;
 
     FT_Long  val = 0x10000L * scaling;
-
-
     if ( !vector || !matrix )
       return;
 
@@ -837,8 +737,6 @@
     vector->x = xz;
     vector->y = yz;
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_UInt32 )
@@ -849,8 +747,6 @@
     FT_Int32   b, z;
     FT_UInt32  x, y, u, v, l;
     FT_Int     sx = 1, sy = 1, shift;
-
-
     x = (FT_UInt32)x_;
     y = (FT_UInt32)y_;
 
@@ -933,8 +829,6 @@
 
     return l;
   }
-
-
 #if 0
 
   /* documentation is in ftcalc.h */
@@ -944,8 +838,6 @@
   {
     FT_UInt32  root, rem_hi, rem_lo, test_div;
     FT_Int     count;
-
-
     root = 0;
 
     if ( x > 0 )
@@ -972,8 +864,6 @@
   }
 
 #endif /* 0 */
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Int )
@@ -989,22 +879,16 @@
 
     FT_Int64  delta = SUB_INT64( MUL_INT64( in_x, out_y ),
                                  MUL_INT64( in_y, out_x ) );
-
-
     return ( delta > 0 ) - ( delta < 0 );
 
 #else
 
     FT_Int  result;
-
-
     if ( ADD_LONG( FT_ABS( in_x ), FT_ABS( out_y ) ) <= 131071L &&
          ADD_LONG( FT_ABS( in_y ), FT_ABS( out_x ) ) <= 131071L )
     {
       FT_Long  z1 = MUL_LONG( in_x, out_y );
       FT_Long  z2 = MUL_LONG( in_y, out_x );
-
-
       if ( z1 > z2 )
         result = +1;
       else if ( z1 < z2 )
@@ -1015,8 +899,6 @@
     else /* products might overflow 32 bits */
     {
       FT_Int64  z1, z2;
-
-
       /* XXX: this function does not allow 64-bit arguments */
       ft_multo64( (FT_UInt32)in_x, (FT_UInt32)out_y, &z1 );
       ft_multo64( (FT_UInt32)in_y, (FT_UInt32)out_x, &z2 );
@@ -1038,8 +920,6 @@
 
 #endif
   }
-
-
   /* documentation is in ftcalc.h */
 
   FT_BASE_DEF( FT_Int )
@@ -1052,8 +932,6 @@
     FT_Pos  ay = in_y + out_y;
 
     FT_Pos  d_in, d_out, d_hypot;
-
-
     /* The idea of this function is to compare the length of the */
     /* hypotenuse with the `in' and `out' length.  The `corner'  */
     /* represented by `in' and `out' is flat if the hypotenuse's */
@@ -1083,6 +961,4 @@
 
     return ( d_in + d_out - d_hypot ) < ( d_hypot >> 4 );
   }
-
-
 /* END */

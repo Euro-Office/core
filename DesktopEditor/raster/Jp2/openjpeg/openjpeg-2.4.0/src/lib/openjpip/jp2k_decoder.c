@@ -35,8 +35,6 @@
 #include <limits.h>
 #include "jp2k_decoder.h"
 #include "openjpeg.h"
-
-
 static void error_callback(const char *msg, void *client_data);
 static void warning_callback(const char *msg, void *client_data);
 static void info_callback(const char *msg, void *client_data);
@@ -132,8 +130,6 @@ Byte_t * j2k_to_pnm(const char *fn, ihdrbox_param_t **ihdrbox)
 
     return pnmstream;
 }
-
-
 /**
    sample error callback expecting a FILE* client object
 */
@@ -159,8 +155,6 @@ static void info_callback(const char *msg, void *client_data)
     (void)msg;
     /*  fprintf(stdout, "[INFO] %s", msg); */
 }
-
-
 static Byte_t * imagetopnm(opj_image_t *image, ihdrbox_param_t **ihdrbox)
 {
     OPJ_UINT32 adjustR, adjustG = 0, adjustB = 0;

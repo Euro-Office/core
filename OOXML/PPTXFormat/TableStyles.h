@@ -54,8 +54,6 @@ namespace PPTX
 
 		virtual const OOX::CPath DefaultDirectory() const;
 		virtual const OOX::CPath DefaultFileName() const;
-
-
 		virtual void toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const;
 		virtual void fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader);
 		virtual void toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const;

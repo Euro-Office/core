@@ -33,8 +33,6 @@
 
 #include "svector.h"
 #include "idirectoryentry.h"
-
-
 namespace CFCPP
 {
 class DirectoryEntry : public IDirectoryEntry

@@ -90,8 +90,6 @@ const wchar_t * content_type::name = L"Types";
         CP_XML_NODE(L"Types")
         {
             CP_XML_ATTR(L"xmlns", xmlns::types.value);
-
-            
             BOOST_FOREACH(const default_content_type & elm, default_)
             {
                 elm.xml_to_stream(CP_XML_STREAM());

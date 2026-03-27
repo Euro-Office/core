@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFHINTS_H__
 #define __AFHINTS_H__
 
@@ -40,8 +38,6 @@ FT_BEGIN_HEADER
     AF_DIMENSION_MAX  /* do not remove */
 
   } AF_Dimension;
-
-
   /* hint directions -- the values are computed so that two vectors are */
   /* in opposite directions iff `dir1 + dir2 == 0'                      */
   typedef enum  AF_Direction_
@@ -53,8 +49,6 @@ FT_BEGIN_HEADER
     AF_DIR_DOWN  = -2
 
   } AF_Direction;
-
-
   /*
    *  The following explanations are mostly taken from the article
    *
@@ -208,8 +202,6 @@ FT_BEGIN_HEADER
    *    alignment of edges and strong points, thus weak points are processed
    *    after strong points.
    */
-
-
   /* point hint flags */
   typedef enum  AF_Flags_
   {
@@ -242,8 +234,6 @@ FT_BEGIN_HEADER
     AF_FLAG_NEAR = 1 << 10
 
   } AF_Flags;
-
-
   /* edge hint flags */
   typedef enum  AF_Edge_Flags_
   {
@@ -253,13 +243,9 @@ FT_BEGIN_HEADER
     AF_EDGE_DONE   = 1 << 2
 
   } AF_Edge_Flags;
-
-
   typedef struct AF_PointRec_*    AF_Point;
   typedef struct AF_SegmentRec_*  AF_Segment;
   typedef struct AF_EdgeRec_*     AF_Edge;
-
-
   typedef struct  AF_PointRec_
   {
     FT_UShort  flags;    /* point flags used by hinter   */
@@ -275,8 +261,6 @@ FT_BEGIN_HEADER
     AF_Point   prev;     /* previous point in contour */
 
   } AF_PointRec;
-
-
   typedef struct  AF_SegmentRec_
   {
     FT_Byte     flags;       /* edge/segment flags for this segment */
@@ -299,8 +283,6 @@ FT_BEGIN_HEADER
     AF_Point    last;        /* last point in edge segment  */
 
   } AF_SegmentRec;
-
-
   typedef struct  AF_EdgeRec_
   {
     FT_Short    fpos;       /* original, unscaled position (in font units) */
@@ -321,8 +303,6 @@ FT_BEGIN_HEADER
     AF_Segment  last;       /* last segment in edge  */
 
   } AF_EdgeRec;
-
-
   typedef struct  AF_AxisHintsRec_
   {
     FT_Int        num_segments; /* number of used segments      */
@@ -339,8 +319,6 @@ FT_BEGIN_HEADER
     AF_Direction  major_dir;    /* either vertical or horizontal */
 
   } AF_AxisHintsRec, *AF_AxisHints;
-
-
   typedef struct  AF_GlyphHintsRec_
   {
     FT_Memory        memory;
@@ -370,12 +348,8 @@ FT_BEGIN_HEADER
     FT_Pos           xmax_delta;
 
   } AF_GlyphHintsRec;
-
-
 #define AF_HINTS_TEST_SCALER( h, f )  ( (h)->scaler_flags & (f) )
 #define AF_HINTS_TEST_OTHER( h, f )   ( (h)->other_flags  & (f) )
-
-
 #ifdef FT_DEBUG_AUTOFIT
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                     \
@@ -405,13 +379,9 @@ FT_BEGIN_HEADER
 #define AF_HINTS_DO_BLUES( h )  1
 
 #endif /* !FT_DEBUG_AUTOFIT */
-
-
   FT_LOCAL( AF_Direction )
   af_direction_compute( FT_Pos  dx,
                         FT_Pos  dy );
-
-
   FT_LOCAL( FT_Error )
   af_axis_hints_new_segment( AF_AxisHints  axis,
                              FT_Memory     memory,
@@ -470,11 +440,7 @@ FT_BEGIN_HEADER
 #define AF_SEGMENT_DIST( seg1, seg2 )  ( ( (seg1)->pos > (seg2)->pos )   \
                                            ? (seg1)->pos - (seg2)->pos   \
                                            : (seg2)->pos - (seg1)->pos )
-
-
 FT_END_HEADER
 
 #endif /* __AFHINTS_H__ */
-
-
 /* END */

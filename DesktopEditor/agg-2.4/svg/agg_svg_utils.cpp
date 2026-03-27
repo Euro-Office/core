@@ -38,8 +38,6 @@ std::string to_str(const wchar_t* chars, int len )
 	}
 	
 }
-
-
 std::wstring to_wstr(const char* chars, int len )
 {
     using namespace std;
@@ -64,7 +62,5 @@ std::wstring to_wstr(const char* chars, int len )
 	}
 	
 }
-
-
 }
 }

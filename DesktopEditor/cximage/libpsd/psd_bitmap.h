@@ -8,8 +8,6 @@ extern "C" {
 #include "libpsd.h"
 #include "psd_fixed.h"
 #include "psd_rect.h"
-
-
 typedef struct _psd_bitamp
 {
 	psd_argb_color *			image_data;
@@ -42,8 +40,6 @@ psd_status psd_bitmap_ajust_range(psd_bitmap * bitmap, psd_int range);
 psd_argb_color psd_bitmap_get_pixel(psd_bitmap * bitmap, psd_int x, psd_int y);
 psd_argb_color psd_bitmap_get_fixed_pixel(psd_bitmap * bitmap, psd_fixed_16_16 x, psd_fixed_16_16 y);
 psd_status psd_bitmap_blend_mask(psd_bitmap * bitmap, psd_layer_mask_info * layer_mask_info);
-
-
 #ifdef __cplusplus
 }
 #endif

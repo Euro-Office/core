@@ -38,19 +38,13 @@ namespace XLS
 BRAI::BRAI()
 {
 }
-
-
 BRAI::~BRAI()
 {
 }
-
-
 BaseObjectPtr BRAI::clone()
 {
 	return BaseObjectPtr(new BRAI(*this));
 }
-
-
 void BRAI::readFields(CFRecord& record)
 {
 	GlobalWorkbookInfoPtr global_info = record.getGlobalWorkbookInfo();

@@ -15,11 +15,7 @@
 
 #define AGG_BGR24
 #include "pixel_formats.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 
 class the_application : public agg::platform_support
 {
@@ -34,8 +30,6 @@ class the_application : public agg::platform_support
     agg::rasterizer_scanline_aa<> m_ras;
     agg::scanline_p8              m_sl_p8;
     agg::scanline_bin             m_sl_bin;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -63,13 +57,9 @@ public:
         add_ctrl(m_test);
         m_test.no_transform();
     }
-
-
     typedef agg::renderer_base<pixfmt> renderer_base;
     typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_aa;
     typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_bin;
-
-    
     void draw_anti_aliased()
     {
         pixfmt pixf(rbuf_window());
@@ -89,8 +79,6 @@ public:
         m_ras.add_path(path);
         agg::render_scanlines(m_ras, m_sl_p8, ren_aa);
     }
-
-
     void draw_aliased()
     {
         pixfmt pixf(rbuf_window());
@@ -98,8 +86,6 @@ public:
         renderer_bin ren_bin(rb);
 
         agg::path_storage path;
-        
-
         path.move_to(m_x[0] - 200, m_y[0]);
         path.line_to(m_x[1] - 200, m_y[1]);
         path.line_to(m_x[2] - 200, m_y[2]);
@@ -136,8 +122,6 @@ public:
         agg::render_ctrl(ras_aa, m_sl_p8, rb, m_alpha);
         agg::render_ctrl(ras_aa, m_sl_p8, rb, m_test);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -173,8 +157,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -210,8 +192,6 @@ public:
     {
         m_idx = -1;
     }
-
-
     virtual void on_ctrl_change()
     {
         if(m_test.status())
@@ -241,8 +221,6 @@ public:
             message(buf);
         }
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         double dx = 0;
@@ -263,8 +241,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -276,5 +252,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

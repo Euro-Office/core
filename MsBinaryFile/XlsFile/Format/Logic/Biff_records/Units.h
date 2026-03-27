@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Units record in BIFF8
 class Units: public BiffRecord
 {

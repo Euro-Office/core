@@ -38,8 +38,6 @@
 #include "j2kheader_manager.h"
 #include "imgreg_manager.h"
 #include "opj_inttypes.h"
-
-
 #ifdef SERVER
 #include "fcgi_stdio.h"
 #define logstream FCGI_stdout
@@ -48,8 +46,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 /**
  * search a message by class_id
  *
@@ -537,8 +533,6 @@ Byte_t * recons_PCRLbitstream(msgqueue_param_t *msgqueue, Byte_t *jpipstream,
 
     return j2kstream;
 }
-
-
 Byte_t * recons_CPRLbitstream(msgqueue_param_t *msgqueue, Byte_t *jpipstream,
                               Byte_t *j2kstream, Byte8_t csn,
                               Byte8_t tileID, SIZmarker_param_t SIZ, CODmarker_param_t COD, int mindeclev,
@@ -631,8 +625,6 @@ Byte_t * recons_packet(msgqueue_param_t *msgqueue, Byte_t *jpipstream,
 
     return j2kstream;
 }
-
-
 Byte_t * recons_precinct(msgqueue_param_t *msgqueue, Byte_t *jpipstream,
                          Byte_t *j2kstream, Byte8_t csn,
                          Byte8_t tileID, SIZmarker_param_t SIZ, CODmarker_param_t COD, int *max_reslev,
@@ -712,8 +704,6 @@ Byte8_t get_last_tileID(msgqueue_param_t *msgqueue, Byte8_t csn,
     }
     return last_tileID;
 }
-
-
 message_param_t * search_message(Byte8_t class_id, Byte8_t in_class_id,
                                  Byte8_t csn, message_param_t *msg)
 {
@@ -732,8 +722,6 @@ message_param_t * search_message(Byte8_t class_id, Byte8_t in_class_id,
     }
     return NULL;
 }
-
-
 Byte_t * gene_msgstream(message_param_t *message, Byte_t *stream,
                         Byte8_t *length);
 Byte_t * gene_emptytilestream(const Byte8_t tileID, Byte8_t *length);
@@ -765,8 +753,6 @@ Byte_t * add_msgstream(message_param_t *message, Byte_t *origstream,
 
     return buf;
 }
-
-
 Byte_t * add_emptyboxstream(placeholder_param_t *phld, Byte_t *jp2stream,
                             Byte8_t *jp2len)
 {

@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr CondFmtStructure::clone()
 {
 	return BiffStructurePtr(new CondFmtStructure(*this));
 }
-
-
 void CondFmtStructure::load(CFRecord& record)
 {
 	record >> ccf;
@@ -62,8 +58,6 @@ void CondFmtStructure::save(CFRecord& record)
 
     record << refBound << sqref;
 }
-
-
 const CellRef CondFmtStructure::getLocation() const
 {
 	return sqref.getLocationFirstCell();

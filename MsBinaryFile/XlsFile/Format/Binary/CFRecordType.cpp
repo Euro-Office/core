@@ -439,35 +439,25 @@ CFRecordType::CFRecordType()
 		all_types_string.insert(std::make_pair(val.name, val.id));
 	}
 }
-
-
 CFRecordType& CFRecordType::getInst()
 {
 	static CFRecordType inst;
 	return inst;
 }
-
-
 const CFRecordType::TypeId CFRecordType::getIdByString(const TypeString& str)
 {
 	return getInst().all_types_string[str];
 }
 
-
-
 const CFRecordType::TypeString& CFRecordType::getStringById(const TypeId id)
 {
 	return getInst().all_types_id[id];
 }
-
-
 // Whether the specified type is one of Continue records
 const bool CFRecordType::isContinue(const TypeId type)
 {
 	return rt_Continue == type || rt_ContinueBigName == type || rt_ContinueFrt == type || 
 		rt_ContinueFrt11 == type || rt_ContinueFrt12 == type;
 }
-
-
 } // namespace XLS
 

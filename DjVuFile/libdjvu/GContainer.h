@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GException.h"
 #include "GSmartPointer.h"
 #include <string.h>
@@ -76,8 +74,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 // Supports old iterators (first/last/next/prev) on lists and maps?
 #ifndef GCONTAINER_OLD_ITERATORS
 #define GCONTAINER_OLD_ITERATORS 1
@@ -113,8 +109,6 @@ namespace DJVU {
 #if GCONTAINER_NO_TYPENAME
 #define typename /**/
 #endif
-
-
 /** @name GContainer.h
 
     Files #"GContainer.h"# and #"GContainer.cpp"# implement three main
@@ -135,13 +129,9 @@ namespace DJVU {
     #$Id: GContainer.h,v 1.21 2008/01/07 11:48:52 leonb Exp $# */
 //@{
 
-
-
 // ------------------------------------------------------------
 // HASH FUNCTIONS
 // ------------------------------------------------------------
-
-
 /** @name Hash functions
     These functions let you use template class \Ref{GMap} with the
     corresponding elementary types. The returned hash code may be reduced to
@@ -211,27 +201,19 @@ hash(const double & x)
     return addr[0]^addr[1]^addr[2]^addr[3];    
 }
 
-
-
 // ------------------------------------------------------------
 // HELPER CLASSES
 // ------------------------------------------------------------
-
-
 
 /* Namespace for containers support classes.  This class is used as a
    namespace for global identifiers related to the implementation of
    containers.  It is inherited by all container objects.  This is disabled by
    defining compilation symbol #GCONTAINER_NO_MEMBER_TEMPATES# to 1. */
-
-
 #ifdef _MSC_VER
 // Language lawyer say MS is wrong on that one. 
 // Cf section 5.4.7 in november 1997 draft.
 #pragma warning( disable : 4243 )
 #endif
-
-
 // GPEnabled inhertenced removed again so the code works on more machines.
 class GCont
 #if GCONTAINER_NO_MEMBER_TEMPLATES
@@ -320,8 +302,6 @@ protected:
 #if !GCONTAINER_NO_MEMBER_TEMPLATES
 };
 #endif
-
-
 #if !GCONTAINER_NO_MEMBER_TEMPLATES
 #define GCONT GCont::
 #else
@@ -353,13 +333,9 @@ GCONT NormTraits<T>::traits()
   };
   return theTraits;
 }
-
-
 // ------------------------------------------------------------
 // DYNAMIC ARRAYS
 // ------------------------------------------------------------
-
-
 /** @name Dynamic Arrays
 
     These class implement arrays of objects of any type.  Each element is
@@ -415,8 +391,6 @@ protected:
   int   lobound;
   int   hibound;
 };
-
-
 /** Common base class for all dynamic arrays.  
     Class \Ref{GArrayTemplate} implements all methods for manipulating arrays
     of type #TYPE#.  You should not however create instances of this class.
@@ -556,8 +530,6 @@ public:
   void sort(int lo, int hi);
 };
 
-
-
 /* That one must be implemented as a regular template function. */
 template <class TYPE> void
 GArrayTemplate<TYPE>::sort(int lo, int hi)
@@ -621,8 +593,6 @@ GArrayTemplate<TYPE>::operator[](int const n)
 #endif
   return ((TYPE*)data)[n-minlo];
 }
-
-
 template<class TYPE> inline const TYPE &
 GArrayTemplate<TYPE>::operator[](int const n) const
 {
@@ -634,8 +604,6 @@ GArrayTemplate<TYPE>::operator[](int const n) const
 #endif
   return ((const TYPE*)data)[n-minlo];
 }
-
-
 
 /** Dynamic array for general types.  
     Template class #GArray<TYPE># implements an array of elements of type
@@ -672,8 +640,6 @@ public:
   GArray& operator=(const GArray &r)
     { GArrayBase::operator=(r); return *this; }
 };
-
-
 /** Dynamic array for smart pointers.  
     Template class #GPArray<TYPE># implements an array of elements of type
     #GP<TYPE># (see \Ref{GSmartPointer.h}).  Significantly smaller code sizes
@@ -719,17 +685,11 @@ public:
   GTArray& operator=(const GTArray &r)
     { GArrayBase::operator=(r); return *this; }
 };
-
-
 //@}
-
-
 
 // ------------------------------------------------------------
 // DOUBLY LINKED LISTS
 // ------------------------------------------------------------
-
-
 /** @name Doubly Linked Lists
 
     The template classes \Ref{GList} and \Ref{GPList} implement a doubly
@@ -810,8 +770,6 @@ protected:
   friend class GSetBase;
   void throw_invalid(void *c) const no_return;
 };
-
-
 class DJVUAPI GListBase : public GCont
 {
 protected:
@@ -836,8 +794,6 @@ public:
   GPosition nth(unsigned int n) const;
   void empty();
 };
-
-
 template<class TI>
 class GListImpl : public GListBase
 {
@@ -886,8 +842,6 @@ GListImpl<TI>::search(const TI &elt, GPosition &pos) const
   if (n) pos = GPosition(n, (void*)this);
   return (n != 0);
 }
-
-
 /** Common base class for all doubly linked lists.  
     Class \Ref{GListTemplate} implements all methods for manipulating lists 
     of of objects of type #TYPE#.  You should not however create instances of 
@@ -1010,8 +964,6 @@ public:
     { if (!pos) return 0; TYPE *x=&((*this)[pos]); --pos; return x; }
 #endif
 };
-
-
 /** Doubly linked lists.  Template class #GList<TYPE># implements a doubly
     linked list of elements of type #TYPE#.  This class only implement
     constructors.  See class \Ref{GListTemplate} and \Ref{GPosition} for a
@@ -1026,8 +978,6 @@ public:
   GList& operator=(const GList &r) 
     { GListBase::operator=(r); return *this; }
 };
-
-
 /** Doubly linked lists for smart pointers. 
     Template class #GList<TYPE># implements a doubly linked list of elements
     of type #GP<TYPE># (see \Ref{GSmartPointer.h}).  Significantly smaller
@@ -1045,11 +995,7 @@ public:
   GPList& operator=(const GPList &r) 
     { GListBase::operator=(r); return *this; }
 };
-
-
 //@}
-
-
 
 // ------------------------------------------------------------
 // ASSOCIATIVE MAPS
@@ -1218,8 +1164,6 @@ GMapImpl<K,TI>::get_or_create(const K &key)
   return n;
 }
 
-
-
 /** Common base class for all associative maps.
     Class \Ref{GArrayTemplate} implements all methods for manipulating 
     associative maps with key type #KTYPE# and value type #VTYPE#. 
@@ -1305,8 +1249,6 @@ public:
 #endif
 };
 
-
-
 /** Associative maps.  
     Template class #GMap<KTYPE,VTYPE># implements an associative map.
     The map contains an arbitrary number of entries. Each entry is a
@@ -1348,15 +1290,11 @@ public:
     { GSetBase::operator=(r); return *this; }
 };
 
-
-
 //@}
 //@}
 //@}
 
 // ------------ THE END
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE
@@ -1364,5 +1302,3 @@ using namespace DJVU;
 # endif
 #endif
 #endif
-
-

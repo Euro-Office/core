@@ -156,8 +156,6 @@ static void buffer_dump (struct buffer *b, const char *fname)
 	fclose (f);
     }
 }
-
-
 static void usage(const char *progname) {
     printf("Usage : %s [options] XMLfiles ...\n", progname);
     printf("\tParse the XML files using the xmlTextReader API\n");
@@ -218,8 +216,6 @@ static int processNode (xmlTextReaderPtr reader, void *data)
 
     return TRUE;
 }
-
-
 struct file_params {
     const char *filename;
     struct buffer *verif_buff;

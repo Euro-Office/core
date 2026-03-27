@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   ptabasic.c
  *
@@ -67,8 +65,6 @@
 #include "allheaders.h"
 
 static const l_int32  INITIAL_PTR_ARRAYSIZE = 20;   /* n'import quoi */
-
-
 /*---------------------------------------------------------------------*
  *                Pta creation, destruction, copy, clone               *
  *---------------------------------------------------------------------*/
@@ -101,8 +97,6 @@ PTA  *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaCreateFromNuma()
  *
@@ -139,8 +133,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaDestroy()
  *
@@ -176,8 +168,6 @@ PTA  *pta;
     *ppta = NULL;
     return;
 }
-
-
 /*!
  *  ptaCopy()
  *
@@ -206,8 +196,6 @@ PTA       *npta;
 
     return npta;
 }
-
-
 /*!
  *  ptaClone()
  *
@@ -225,8 +213,6 @@ ptaClone(PTA  *pta)
     ptaChangeRefcount(pta, 1);
     return pta;
 }
-
-
 /*!
  *  ptaEmpty()
  *
@@ -245,8 +231,6 @@ ptaEmpty(PTA  *pta)
     pta->n = 0;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Pta array extension                         *
  *---------------------------------------------------------------------*/
@@ -278,8 +262,6 @@ l_int32  n;
 
     return 0;
 }
-
-
 /*!
  *  ptaExtendArrays()
  *
@@ -306,8 +288,6 @@ ptaExtendArrays(PTA  *pta)
     pta->nalloc = 2 * pta->nalloc;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Pta accessors                             *
  *---------------------------------------------------------------------*/
@@ -320,8 +300,6 @@ ptaGetRefcount(PTA  *pta)
         return ERROR_INT("pta not defined", procName, 1);
     return pta->refcount;
 }
-
-
 l_int32
 ptaChangeRefcount(PTA     *pta,
                   l_int32  delta)
@@ -333,8 +311,6 @@ ptaChangeRefcount(PTA     *pta,
     pta->refcount += delta;
     return 0;
 }
-
-
 /*!
  *  ptaGetCount()
  *
@@ -351,8 +327,6 @@ ptaGetCount(PTA  *pta)
 
     return pta->n;
 }
-
-
 /*!
  *  ptaGetPt()
  *
@@ -379,8 +353,6 @@ ptaGetPt(PTA        *pta,
     if (py) *py = pta->y[index];
     return 0;
 }
-
-
 /*!
  *  ptaGetIPt()
  *
@@ -407,8 +379,6 @@ ptaGetIPt(PTA      *pta,
     if (py) *py = (l_int32)(pta->y[index] + 0.5);
     return 0;
 }
-
-
 /*!
  *  ptaGetArrays()
  *
@@ -457,8 +427,6 @@ NUMA    *nax, *nay;
     }
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                       Pta serialized for I/O                        *
  *---------------------------------------------------------------------*/
@@ -489,8 +457,6 @@ PTA   *pta;
     fclose(fp);
     return pta;
 }
-
-
 /*!
  *  ptaReadStream()
  *
@@ -538,8 +504,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaWrite()
  *
@@ -570,8 +534,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  ptaWriteStream()
  *
@@ -614,8 +576,6 @@ l_float32  x, y;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                     PTAA creation, destruction                      *
  *---------------------------------------------------------------------*/
@@ -645,8 +605,6 @@ PTAA  *ptaa;
 
     return ptaa;
 }
-
-
 /*!
  *  ptaaDestroy()
  *
@@ -677,8 +635,6 @@ PTAA    *ptaa;
     *pptaa = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          PTAA array extension                       *
  *---------------------------------------------------------------------*/
@@ -726,8 +682,6 @@ PTA     *ptac;
 
     return 0;
 }
-
-
 /*!
  *  ptaaExtendArray()
  *
@@ -750,8 +704,6 @@ ptaaExtendArray(PTAA  *ptaa)
     ptaa->nalloc = 2 * ptaa->nalloc;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Ptaa accessors                             *
  *---------------------------------------------------------------------*/
@@ -771,8 +723,6 @@ ptaaGetCount(PTAA  *ptaa)
 
     return ptaa->n;
 }
-
-
 /*!
  *  ptaaGetPta()
  *
@@ -800,8 +750,6 @@ ptaaGetPta(PTAA    *ptaa,
     else
         return (PTA *)ERROR_PTR("invalid accessflag", procName, NULL);
 }
-
-
 /*!
  *  ptaaGetPt()
  *
@@ -840,8 +788,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                       Ptaa serialized for I/O                       *
  *---------------------------------------------------------------------*/
@@ -872,8 +818,6 @@ PTAA  *ptaa;
     fclose(fp);
     return ptaa;
 }
-
-
 /*!
  *  ptaaReadStream()
  *
@@ -909,8 +853,6 @@ PTAA    *ptaa;
 
     return ptaa;
 }
-
-
 /*!
  *  ptaaWrite()
  *
@@ -941,8 +883,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  ptaaWriteStream()
  *

@@ -164,8 +164,6 @@ UnicodeString &Win32DateFormat::format(Calendar &cal, UnicodeString &appendTo, F
 
     FileTimeToSystemTime(&ft, &st_gmt);
     SystemTimeToTzSpecificLocalTime(&tzi, &st_gmt, &st_local);
-
-
     if (fDateStyle != DateFormat::kNone && fTimeStyle != DateFormat::kNone) {
         UnicodeString *date = new UnicodeString();
         UnicodeString *time = new UnicodeString();

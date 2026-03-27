@@ -93,8 +93,6 @@ namespace Jpeg2000
 			pAi += nW;
 		}
 	}
-
-
 	static void DWT_ForwardRev1D(int *pA, int nDn, int nSn, int nCase)
 	{
 		if (!nCase)

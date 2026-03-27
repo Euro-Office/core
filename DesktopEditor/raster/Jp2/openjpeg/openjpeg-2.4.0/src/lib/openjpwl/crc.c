@@ -97,8 +97,6 @@ void updateCRC16(unsigned short *crc, unsigned char data)
 {
     *crc = CRC16_table[(*crc >> 8) & 0xFF] ^ (*crc << 8) ^ data;
 }
-
-
 /** file: CRC32.CPP
  *
  * CRC - Cyclic Redundancy Check (32-bit)

@@ -153,8 +153,6 @@ findCommonICUDataByName(const char *inBasename)
     }
     return found;
 }
-
-
 /*
  * setCommonICUData.   Set a UDataMemory to be the global ICU Data
  */
@@ -254,8 +252,6 @@ typedef struct DataCacheElement {
     UDataMemory   *item;
 } DataCacheElement;
 
-
-
 /*
  * Deleter function for DataCacheElements.
  *         udata cleanup function closes the hash table; hash table in turn calls back to
@@ -291,8 +287,6 @@ static UHashtable *udata_getHashTable() {
     return gCommonDataCache;
 }
 
-
-
 static UDataMemory *udata_findCachedData(const char *path)
 {
     UHashtable        *htable;
@@ -313,8 +307,6 @@ static UDataMemory *udata_findCachedData(const char *path)
 #endif
     return retVal;
 }
-
-
 static UDataMemory *udata_cacheDataItem(const char *path, UDataMemory *item, UErrorCode *pErr) {
     DataCacheElement *newElement;
     const char       *baseName;
@@ -615,8 +607,6 @@ const char *UDataPathIterator::next(UErrorCode *pErrorCode)
 U_NAMESPACE_END
 
 /* ==================================================================================*/
-
-
 /*----------------------------------------------------------------------*
  *                                                                      *
  *  Add a static reference to the common data  library                  *
@@ -700,8 +690,6 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
             return gCommonICUDataArray[commonDataIndex];
         }
     }
-
-
     /* request is NOT for ICU Data.  */
 
     /* Find the base name portion of the supplied path.   */
@@ -767,15 +755,11 @@ openCommonData(const char *path,          /*  Path from OpenChoice?          */
 
     /* we have mapped a file, check its header */
     udata_checkCommonData(&tData, pErrorCode);
-
-
     /* Cache the UDataMemory struct for this .dat file,
      *   so we won't need to hunt it down and map it again next time
      *   something is needed from it.                */
     return udata_cacheDataItem(inBasename, &tData, pErrorCode);
 }
-
-
 /*----------------------------------------------------------------------*
  *                                                                      *
  *   extendICUData   If the full set of ICU data was not loaded at      *
@@ -1111,8 +1095,6 @@ static UBool isTimeZoneFile(const char *name, const char *type) {
  *  They have a flag to indicate when they're heap allocated and thus
  *  must be deleted when closed.
  */
-
-
 /*----------------------------------------------------------------------------*
  *                                                                            *
  * main data loading functions                                                *
@@ -1133,8 +1115,6 @@ doOpenChoice(const char *path, const char *type, const char *name,
     const char         *treeChar;
 
     UBool               isICUData = FALSE;
-
-
     /* Is this path ICU data? */
     if(path == NULL ||
        !strcmp(path, U_ICUDATA_ALIAS) ||  /* "ICUDATA" */
@@ -1341,8 +1321,6 @@ doOpenChoice(const char *path, const char *type, const char *name,
     return retVal;
 }
 
-
-
 /* API ---------------------------------------------------------------------- */
 
 U_CAPI UDataMemory * U_EXPORT2
@@ -1363,8 +1341,6 @@ udata_open(const char *path, const char *type, const char *name,
     }
 }
 
-
-
 U_CAPI UDataMemory * U_EXPORT2
 udata_openChoice(const char *path, const char *type, const char *name,
                  UDataMemoryIsAcceptable *isAcceptable, void *context,
@@ -1382,8 +1358,6 @@ udata_openChoice(const char *path, const char *type, const char *name,
         return doOpenChoice(path, type, name, isAcceptable, context, pErrorCode);
     }
 }
-
-
 
 U_CAPI void U_EXPORT2
 udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
@@ -1405,8 +1379,6 @@ udata_getInfo(UDataMemory *pData, UDataInfo *pInfo) {
         }
     }
 }
-
-
 U_CAPI void U_EXPORT2 udata_setFileAccess(UDataFileAccess access, UErrorCode * /*status*/)
 {
     // Note: this function is documented as not thread safe.

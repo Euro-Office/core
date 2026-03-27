@@ -81,8 +81,6 @@ namespace agg
         bool m_flip_y;
         const trans_affine* m_mtx;
     };
-
-
     //--------------------------------------------------------------------
     template<class Rasterizer, class Scanline, class Renderer, class Ctrl> 
     void render_ctrl(Rasterizer& ras, Scanline& sl, Renderer& r, Ctrl& c)
@@ -95,8 +93,6 @@ namespace agg
             render_scanlines_aa_solid(ras, sl, r, c.color(i));
         }
     }
-
-
     //--------------------------------------------------------------------
     template<class Rasterizer, class Scanline, class Renderer, class Ctrl> 
     void render_ctrl_rs(Rasterizer& ras, Scanline& sl, Renderer& r, Ctrl& c)
@@ -110,9 +106,5 @@ namespace agg
             render_scanlines(ras, sl, r);
         }
     }
-
-
 }
-
-
 #endif

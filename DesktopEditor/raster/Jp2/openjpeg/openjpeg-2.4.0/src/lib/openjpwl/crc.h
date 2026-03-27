@@ -62,8 +62,6 @@
 void updateCRC16(unsigned short *, unsigned char);
 
 #endif /* __CRC16_HEADER__ */
-
-
 #ifndef __CRC32_HEADER__
 #define __CRC32_HEADER__
 
@@ -84,6 +82,4 @@ void updateCRC16(unsigned short *, unsigned char);
 void updateCRC32(unsigned long *, unsigned char);
 
 #endif /* __CRC32_HEADER__ */
-
-
 #endif /* USE_JPWL */

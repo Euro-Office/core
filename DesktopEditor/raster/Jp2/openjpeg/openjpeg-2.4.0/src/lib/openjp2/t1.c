@@ -66,8 +66,6 @@
 #define opj_smr_abs(x)  (((OPJ_UINT32)(x)) & 0x7FFFFFFFU)
 #define opj_smr_sign(x) (((OPJ_UINT32)(x)) >> 31)
 #define opj_to_smr(x)   ((x) >= 0 ? (OPJ_UINT32)(x) : ((OPJ_UINT32)(-x) | 0x80000000U))
-
-
 /** @name Local static functions */
 /*@{*/
 
@@ -78,8 +76,6 @@ static OPJ_INT16 opj_t1_getnmsedec_ref(OPJ_UINT32 x, OPJ_UINT32 bitpos);
 static INLINE void opj_t1_update_flags(opj_flag_t *flagsp, OPJ_UINT32 ci,
                                        OPJ_UINT32 s, OPJ_UINT32 stride,
                                        OPJ_UINT32 vsc);
-
-
 /**
 Decode significant pass
 */
@@ -131,8 +127,6 @@ Decode refinement pass
 static void opj_t1_dec_refpass_raw(
     opj_t1_t *t1,
     OPJ_INT32 bpno);
-
-
 /**
 Decode refinement pass
 */
@@ -149,8 +143,6 @@ static INLINE void opj_t1_dec_refpass_step_mqc(
     OPJ_INT32 *datap,
     OPJ_INT32 poshalf,
     OPJ_UINT32 row);
-
-
 /**
 Decode clean-up pass
 */
@@ -324,8 +316,6 @@ static OPJ_INT16 opj_t1_getnmsedec_ref(OPJ_UINT32 x, OPJ_UINT32 bitpos)
         south[1] |= T1_SIGMA_0; \
     } \
 }
-
-
 static INLINE void opj_t1_update_flags(opj_flag_t *flagsp, OPJ_UINT32 ci,
                                        OPJ_UINT32 s, OPJ_UINT32 stride,
                                        OPJ_UINT32 vsc)
@@ -738,8 +728,6 @@ Encode refinement pass step
         flagsUpdated |= T1_MU_THIS << ((ci) * 3U); \
     } \
 }
-
-
 static INLINE void opj_t1_dec_refpass_step_raw(
     opj_t1_t *t1,
     opj_flag_t *flagsp,
@@ -896,8 +884,6 @@ static void opj_t1_enc_refpass(
 
     UPLOAD_MQC_VARIABLES(mqc, curctx, a, c, ct);
 }
-
-
 static void opj_t1_dec_refpass_raw(
     opj_t1_t *t1,
     OPJ_INT32 bpno)
@@ -1387,8 +1373,6 @@ static void opj_t1_dec_clnpass(
     }
     opj_t1_dec_clnpass_check_segsym(t1, cblksty);
 }
-
-
 /** mod fixed_quality */
 static OPJ_FLOAT64 opj_t1_getwmsedec(
     OPJ_INT32 nmsedec,
@@ -1537,8 +1521,6 @@ opj_t1_t* opj_t1_create(OPJ_BOOL isEncoder)
 
     return l_t1;
 }
-
-
 /**
  * Destroys a previously created T1 handle
  *
@@ -1794,8 +1776,6 @@ static void opj_t1_clbl_decode_processor(void* user_data, opj_tls_t* tls)
 
     opj_free(job);
 }
-
-
 void opj_t1_decode_cblks(opj_tcd_t* tcd,
                          volatile OPJ_BOOL* pret,
                          opj_tcd_tilecomp_t* tilec,
@@ -1920,8 +1900,6 @@ void opj_t1_decode_cblks(opj_tcd_t* tcd,
 #endif
     return;
 }
-
-
 static OPJ_BOOL opj_t1_decode_cblk(opj_t1_t *t1,
                                    opj_tcd_cblk_dec_t* cblk,
                                    OPJ_UINT32 orient,
@@ -2103,8 +2081,6 @@ static OPJ_BOOL opj_t1_decode_cblk(opj_t1_t *t1,
 
     return OPJ_TRUE;
 }
-
-
 typedef struct {
     OPJ_UINT32 compno;
     OPJ_UINT32 resno;
@@ -2262,8 +2238,6 @@ static void opj_t1_cblk_encode_processor(void* user_data, opj_tls_t* tls)
 
     opj_free(job);
 }
-
-
 OPJ_BOOL opj_t1_encode_cblks(opj_tcd_t* tcd,
                              opj_tcd_tile_t *tile,
                              opj_tcp_t *tcp,
@@ -2362,8 +2336,6 @@ static int opj_t1_enc_is_term_pass(opj_tcd_cblk_enc_t* cblk,
 
     return OPJ_FALSE;
 }
-
-
 /** mod fixed_quality */
 static OPJ_FLOAT64 opj_t1_encode_cblk(opj_t1_t *t1,
                                       opj_tcd_cblk_enc_t* cblk,

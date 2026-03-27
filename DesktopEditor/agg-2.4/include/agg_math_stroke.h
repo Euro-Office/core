@@ -42,8 +42,6 @@ namespace agg
         bevel_join         = 3,
         miter_join_round   = 4
     };
-
-
     //-----------------------------------------------------------inner_join_e
     enum inner_join_e
     {
@@ -517,10 +515,6 @@ namespace agg
             }
         }
     }
-
-
-
-
 }
 
 #endif

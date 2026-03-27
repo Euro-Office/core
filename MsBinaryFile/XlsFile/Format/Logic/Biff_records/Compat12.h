@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Compat12 record in BIFF8
 class Compat12: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Compat12();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeCompat12;

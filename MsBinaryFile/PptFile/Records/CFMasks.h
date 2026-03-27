@@ -61,8 +61,6 @@ struct SCFMasks
     bool m_csTypeface;
     bool m_pp11ext;
     // reserved 5 bits
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

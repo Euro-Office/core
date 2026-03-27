@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/tttags.h>
 #include "woff2tags.h"
 
@@ -97,13 +95,9 @@
       FT_MAKE_TAG('F', 'e', 'a', 't'),  /*  61 */
       FT_MAKE_TAG('S', 'i', 'l', 'l'),  /*  62 */
     };
-
-
     if ( index > 62 )
       return 0;
 
     return known_tags[index];
   }
-
-
 /* END */

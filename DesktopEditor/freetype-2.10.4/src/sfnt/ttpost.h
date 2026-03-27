@@ -15,20 +15,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTPOST_H_
 #define TTPOST_H_
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/internal/tttypes.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   tt_face_get_ps_name( TT_Face      face,
                        FT_UInt      idx,
@@ -36,11 +28,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   tt_face_free_ps_names( TT_Face  face );
-
-
 FT_END_HEADER
 
 #endif /* TTPOST_H_ */
-
-
 /* END */

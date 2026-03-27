@@ -40,8 +40,6 @@ Continue::Continue()
 	m_pData		= NULL;
 	m_iDataSize = 0;
 }
-
-
 Continue::~Continue()
 {
 	if (m_pData)
@@ -51,8 +49,6 @@ Continue::~Continue()
 	m_pData		= NULL;	
 	m_iDataSize = 0;
 }
-
-
 BaseObjectPtr Continue::clone()
 {
 	Continue* n = new Continue(*this);

@@ -33,8 +33,6 @@ struct ULocaleData;
 /** A locale data object. @stable ICU 3.6 */
 typedef struct ULocaleData ULocaleData;
 
-
-
 /** The possible types of exemplar character sets.
   * @stable ICU 3.4
   */
@@ -253,8 +251,6 @@ ulocdata_getLocaleDisplayPattern(ULocaleData *uld,
                                  UChar *pattern,
                                  int32_t patternCapacity,
                                  UErrorCode *status);
-
-
 /**
  * Returns locale separator associated with a locale.
  *

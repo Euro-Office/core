@@ -161,8 +161,6 @@ U_STABLE UResourceBundle*  U_EXPORT2
 ures_open(const char*    packageName,
           const char*  locale, 
           UErrorCode*     status);
-
-
 /** This function does not care what kind of localeID is passed in. It simply opens a bundle with 
  *  that name. Fallback mechanism is disabled for the new bundle. If the requested bundle contains
  *  an %%ALIAS directive, the results are undefined.
@@ -323,8 +321,6 @@ U_STABLE const char* U_EXPORT2
 ures_getLocaleByType(const UResourceBundle* resourceBundle, 
                      ULocDataLocaleType type, 
                      UErrorCode* status);
-
-
 #ifndef U_HIDE_INTERNAL_API
 /**
  * Same as ures_open() but uses the fill-in parameter instead of allocating
@@ -881,7 +877,5 @@ U_NAMESPACE_END
  */
 U_STABLE UEnumeration* U_EXPORT2
 ures_openAvailableLocales(const char *packageName, UErrorCode *status);
-
-
 #endif /*_URES*/
 /*eof*/

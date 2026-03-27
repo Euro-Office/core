@@ -161,8 +161,6 @@ typedef struct {
 #endif
 
 } dcr_options;
-
-
 struct dcr_decode {
 	struct dcr_decode *branch[2];
 	int leaf;
@@ -249,8 +247,6 @@ struct dcr_DCRAW {
 	jmp_buf failure;
 	char *sz_error;
 };
-
-
 #define DCR_CLASS
 
 #define FORC(cnt) for (c=0; c < cnt; c++)

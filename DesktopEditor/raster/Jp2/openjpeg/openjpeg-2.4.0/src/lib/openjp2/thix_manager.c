@@ -35,8 +35,6 @@
 
 #include "opj_includes.h"
 
-
-
 int opj_write_thix(int coff, opj_codestream_info_t cstr_info,
                    opj_stream_private_t *cio,
                    opj_event_mgr_t * p_manager)

@@ -82,8 +82,6 @@ class RBBINode : public UMemory {
         UVector       *fFirstPosSet;
         UVector       *fLastPosSet;         // TODO: rename fFirstPos & fLastPos to avoid confusion.
         UVector       *fFollowPos;
-
-
         RBBINode(NodeType t);
         RBBINode(const RBBINode &other);
         ~RBBINode();

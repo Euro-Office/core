@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This special header file is used to define the handling of FT2        */
@@ -79,16 +77,10 @@
   /*     }                                                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTERRORS_H__
 #define __FTERRORS_H__
-
-
   /* include module base error codes */
 #include FT_MODULE_ERRORS_H
-
-
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -96,19 +88,13 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
-
-
 #undef  FT_NEED_EXTERN_C
-
-
   /* FT_ERR_PREFIX is used as a prefix for error identifiers. */
   /* By default, we use `FT_Err_'.                            */
   /*                                                          */
 #ifndef FT_ERR_PREFIX
 #define FT_ERR_PREFIX  FT_Err_
 #endif
-
-
   /* FT_ERR_BASE is used as the base for module-specific errors. */
   /*                                                             */
 #ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
@@ -123,8 +109,6 @@
 #define FT_ERR_BASE  0
 
 #endif /* FT_CONFIG_OPTION_USE_MODULE_ERRORS */
-
-
   /* If FT_ERRORDEF is not defined, we need to define a simple */
   /* enumeration type.                                         */
   /*                                                           */
@@ -140,8 +124,6 @@
 #endif
 
 #endif /* !FT_ERRORDEF */
-
-
   /* this macro is used to define an error */
 #define FT_ERRORDEF_( e, v, s )                                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
@@ -149,22 +131,14 @@
   /* this is only used for <module>_Err_Ok, which must be 0! */
 #define FT_NOERRORDEF_( e, v, s )                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
-
-
 #ifdef FT_ERROR_START_LIST
   FT_ERROR_START_LIST
 #endif
-
-
   /* now include the error codes */
 #include FT_ERROR_DEFINITIONS_H
-
-
 #ifdef FT_ERROR_END_LIST
   FT_ERROR_END_LIST
 #endif
-
-
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -193,6 +167,4 @@
 #endif
 
 #endif /* __FTERRORS_H__ */
-
-
 /* END */

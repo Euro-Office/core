@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************
    *
    *  The auto-fitter is a complete rewrite of the old auto-hinter.
@@ -27,8 +25,6 @@
    *  code.
    *
    *************************************************************************/
-
-
 #ifndef __AFTYPES_H__
 #define __AFTYPES_H__
 
@@ -40,8 +36,6 @@
 #include FT_INTERNAL_DEBUG_H
 
 #include "afblue.h"
-
-
 FT_BEGIN_HEADER
 
   /*************************************************************************/
@@ -62,8 +56,6 @@ extern int    _af_debug_disable_blue_hints;
 extern void*  _af_debug_hints;
 
 #endif /* FT_DEBUG_AUTOFIT */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -79,8 +71,6 @@ extern void*  _af_debug_hints;
     FT_Pos  fit;  /* current/fitted position/width in device sub-pixels */
 
   } AF_WidthRec, *AF_Width;
-
-
   FT_LOCAL( void )
   af_sort_pos( FT_UInt  count,
                FT_Pos*  table );
@@ -89,8 +79,6 @@ extern void*  _af_debug_hints;
   af_sort_and_quantize_widths( FT_UInt*  count,
                                AF_Width  widths,
                                FT_Pos    threshold );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -106,14 +94,10 @@ extern void*  _af_debug_hints;
    */
 
   typedef FT_Int  AF_Angle;
-
-
 #define AF_ANGLE_PI   256
 #define AF_ANGLE_2PI  ( AF_ANGLE_PI * 2 )
 #define AF_ANGLE_PI2  ( AF_ANGLE_PI / 2 )
 #define AF_ANGLE_PI4  ( AF_ANGLE_PI / 4 )
-
-
 #if 0
   /*
    *  compute the angle of a given 2-D vector
@@ -121,8 +105,6 @@ extern void*  _af_debug_hints;
   FT_LOCAL( AF_Angle )
   af_angle_atan( FT_Pos  dx,
                  FT_Pos  dy );
-
-
   /*
    *  compute `angle2 - angle1'; the result is always within
    *  the range [-AF_ANGLE_PI .. AF_ANGLE_PI - 1]
@@ -131,8 +113,6 @@ extern void*  _af_debug_hints;
   af_angle_diff( AF_Angle  angle1,
                  AF_Angle  angle2 );
 #endif /* 0 */
-
-
 #define AF_ANGLE_DIFF( result, angle1, angle2 ) \
   FT_BEGIN_STMNT                                \
     AF_Angle  _delta = (angle2) - (angle1);     \
@@ -147,14 +127,10 @@ extern void*  _af_debug_hints;
                                                 \
     result = _delta;                            \
   FT_END_STMNT
-
-
   /*  opaque handle to glyph-specific hints -- see `afhints.h' for more
    *  details
    */
   typedef struct AF_GlyphHintsRec_*  AF_GlyphHints;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -175,8 +151,6 @@ extern void*  _af_debug_hints;
     AF_SCALER_FLAG_NO_ADVANCE    = 4   /* disable advance hinting    */
 
   } AF_ScalerFlags;
-
-
   typedef struct  AF_ScalerRec_
   {
     FT_Face         face;        /* source font face                        */
@@ -188,15 +162,11 @@ extern void*  _af_debug_hints;
     FT_UInt32       flags;       /* additional control flags, see above     */
 
   } AF_ScalerRec, *AF_Scaler;
-
-
 #define AF_SCALER_EQUAL_SCALES( a, b )      \
           ( (a)->x_scale == (b)->x_scale && \
             (a)->y_scale == (b)->y_scale && \
             (a)->x_delta == (b)->x_delta && \
             (a)->y_delta == (b)->y_delta )
-
-
   typedef struct AF_StyleMetricsRec_*  AF_StyleMetrics;
 
   /*  This function parses an FT_Face to compute global metrics for
@@ -212,8 +182,6 @@ extern void*  _af_debug_hints;
 
   typedef void
   (*AF_WritingSystem_DoneMetricsFunc)( AF_StyleMetrics  metrics );
-
-
   typedef FT_Error
   (*AF_WritingSystem_InitHintsFunc)( AF_GlyphHints    hints,
                                      AF_StyleMetrics  metrics );
@@ -222,8 +190,6 @@ extern void*  _af_debug_hints;
   (*AF_WritingSystem_ApplyHintsFunc)( AF_GlyphHints    hints,
                                       FT_Outline*      outline,
                                       AF_StyleMetrics  metrics );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -267,8 +233,6 @@ extern void*  _af_debug_hints;
   } AF_WritingSystem;
 
 #undef  __AFWRTSYS_H__
-
-
   typedef struct  AF_WritingSystemClassRec_
   {
     AF_WritingSystem  writing_system;
@@ -284,8 +248,6 @@ extern void*  _af_debug_hints;
   } AF_WritingSystemClassRec;
 
   typedef const AF_WritingSystemClassRec*  AF_WritingSystemClass;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -315,8 +277,6 @@ extern void*  _af_debug_hints;
     AF_SCRIPT_MAX   /* do not remove */
 
   } AF_Script;
-
-
   typedef struct  AF_Script_UniRangeRec_
   {
     FT_UInt32  first;
@@ -327,8 +287,6 @@ extern void*  _af_debug_hints;
 #define AF_UNIRANGE_REC( a, b ) { (FT_UInt32)(a), (FT_UInt32)(b) }
 
   typedef const AF_Script_UniRangeRec*  AF_Script_UniRange;
-
-
   typedef struct  AF_ScriptClassRec_
   {
     AF_Script  script;
@@ -342,8 +300,6 @@ extern void*  _af_debug_hints;
   } AF_ScriptClassRec;
 
   typedef const AF_ScriptClassRec*  AF_ScriptClass;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -395,8 +351,6 @@ extern void*  _af_debug_hints;
 #define COVERAGE( name, NAME, description, \
                   tag1, tag2, tag3, tag4 ) \
           AF_COVERAGE_ ## NAME,
-
-
   typedef enum  AF_Coverage_
   {
 #include "afcover.h"
@@ -404,8 +358,6 @@ extern void*  _af_debug_hints;
     AF_COVERAGE_DEFAULT
 
   } AF_Coverage;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -432,8 +384,6 @@ extern void*  _af_debug_hints;
     AF_STYLE_MAX   /* do not remove */
 
   } AF_Style;
-
-
   typedef struct  AF_StyleClassRec_
   {
     AF_Style  style;
@@ -446,8 +396,6 @@ extern void*  _af_debug_hints;
   } AF_StyleClassRec;
 
   typedef const AF_StyleClassRec*  AF_StyleClass;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -471,8 +419,6 @@ extern void*  _af_debug_hints;
     AF_FaceGlobals  globals;    /* to access properties */
 
   } AF_StyleMetricsRec;
-
-
   /* Declare and define vtables for classes */
 #ifndef FT_CONFIG_OPTION_PIC
 
@@ -503,8 +449,6 @@ extern void*  _af_debug_hints;
     h_init,                                              \
     h_apply                                              \
   };
-
-
 #define AF_DECLARE_SCRIPT_CLASS( script_class ) \
   FT_CALLBACK_TABLE const AF_ScriptClassRec     \
   script_class;
@@ -525,8 +469,6 @@ extern void*  _af_debug_hints;
     std_char2,                            \
     std_char3                             \
   };
-
-
 #define AF_DECLARE_STYLE_CLASS( style_class ) \
   FT_CALLBACK_TABLE const AF_StyleClassRec    \
   style_class;
@@ -577,8 +519,6 @@ extern void*  _af_debug_hints;
     ac->style_hints_init    = h_init;                                     \
     ac->style_hints_apply   = h_apply;                                    \
   }
-
-
 #define AF_DECLARE_SCRIPT_CLASS( script_class )             \
   FT_LOCAL( void )                                          \
   FT_Init_Class_ ## script_class( AF_ScriptClassRec*  ac );
@@ -599,8 +539,6 @@ extern void*  _af_debug_hints;
     ac->standard_char2    = std_char2;                     \
     ac->standard_char3    = std_char3;                     \
   }
-
-
 #define AF_DECLARE_STYLE_CLASS( style_class )             \
   FT_LOCAL( void )                                        \
   FT_Init_Class_ ## style_class( AF_StyleClassRec*  ac );
@@ -623,13 +561,9 @@ extern void*  _af_debug_hints;
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* */
 
 FT_END_HEADER
 
 #endif /* __AFTYPES_H__ */
-
-
 /* END */

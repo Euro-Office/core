@@ -93,8 +93,6 @@ typedef int jas_clrspc_t;
 #define	JAS_CMXFORM_OPTM_SPEED	0
 #define JAS_CMXFORM_OPTM_SIZE	1
 #define	JAS_CMXFORM_OPTM_ACC	2
-
-
 #define	jas_clrspc_create(fam, mbr)	(((fam) << 8) | (mbr))
 #define	jas_clrspc_fam(clrspc)	((clrspc) >> 8)
 #define	jas_clrspc_mbr(clrspc)	((clrspc) & 0xff)

@@ -122,8 +122,6 @@
 // Name:        test.cpp
 // Purpose:     wxHtml testing example
 /////////////////////////////////////////////////////////////////////////////
-
-
 #include "OPJViewer.h"
 
 IMPLEMENT_APP(OPJViewerApp)
@@ -602,8 +600,6 @@ OPJFrame::OPJFrame(wxWindow *parent, const wxWindowID id, const wxString& title,
 
 	view_menu->Append(OPJFRAME_VIEWNEXTCOMP, wxT("&Next component\tUp"));
 	view_menu->SetHelpString(OPJFRAME_VIEWNEXTCOMP, wxT("View next component"));
-
-
 	// settings menu and its items
 	wxMenu *sets_menu = new wxMenu;
 
@@ -825,8 +821,6 @@ void OPJFrame::OnNotebook(wxNotebookEvent& event)
 	//wxLogMessage(wxT("Selection changed (now %d --> %d)"), childnum, m_childhash[childnum]->m_winnumber);
 
 }
-
-
 void OPJFrame::Resize(int number)
 {
 	wxSize size = GetClientSize();
@@ -1016,8 +1010,6 @@ void OPJFrame::Rescale(int zooml, OPJChildFrame *currframe)
 	// update zoom
 	currframe->m_canvas->m_zooml = zooml;
 }
-
-
 void OPJFrame::OnReload(wxCommandEvent& event)
 {
 	OPJChildFrame *currframe = (OPJChildFrame *) GetActiveChild();
@@ -1248,8 +1240,6 @@ void OPJFrame::OnThreadLogmsg(wxCommandEvent& event)
     }
 #endif
 }
-
-
 // physically save the file
 void OPJFrame::SaveFile(wxArrayString paths, wxArrayString filenames)
 {
@@ -1281,8 +1271,6 @@ void OPJFrame::SaveFile(wxArrayString paths, wxArrayString filenames)
         wxLogMessage(wxT("Can't start enco thread!"));
     else
 		wxLogMessage(wxT("New enco thread started."));
-
-
 }
 
 // physically open the files
@@ -1394,8 +1382,6 @@ void OPJFrame::OnFileSaveAs(wxCommandEvent& WXUNUSED(event))
 
 		SaveFile(paths, filenames);
     }
-
-
 }
 
 void OPJFrame::OnMemoryOpen(wxCommandEvent& WXUNUSED(event))
@@ -1431,8 +1417,6 @@ OPJCanvas::OPJCanvas(wxFileName fname, wxWindow *parent, const wxPoint& pos, con
 	m_childframe = (OPJChildFrame *) parent;
 	// 100% zoom
 	m_zooml = 100;
-
-
     OPJDecoThread *dthread = CreateDecoThread();
 
     if (dthread->Run() != wxTHREAD_NO_ERROR)
@@ -1551,8 +1535,6 @@ void OPJCanvas::OnThreadSignal(wxCommandEvent& event)
     }
 #endif
 }
-
-
 // Note that OPJFRAME_FILEOPEN and OPJFRAME_HELPABOUT commands get passed
 // to the parent window for processing, so no need to
 // duplicate event handlers here.
@@ -1606,8 +1588,6 @@ OPJChildFrame::~OPJChildFrame(void)
 {
   //my_children.DeleteObject(this);
 }
-
-
 void OPJChildFrame::OnClose(wxCloseEvent& event)
 {
 	for (unsigned int p = 0; p < m_frame->m_bookCtrl->GetPageCount(); p++) {
@@ -1649,8 +1629,6 @@ void OPJChildFrame::OnLostFocus(wxFocusEvent& event)
 {
 	//wxLogMessage(wxT("Lost focus: %d (%x)"), m_winnumber, event.GetWindow());
 }
-
-
 ////////////////////////////////
 // drag and drop 
 ////////////////////////////////

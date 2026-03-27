@@ -38,13 +38,9 @@ namespace XLS
 WebPub::WebPub()
 {
 }
-
-
 WebPub::~WebPub()
 {
 }
-
-
 BaseObjectPtr WebPub::clone()
 {
 	return BaseObjectPtr(new WebPub(*this));

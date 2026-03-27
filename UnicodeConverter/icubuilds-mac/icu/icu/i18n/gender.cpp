@@ -81,8 +81,6 @@ void U_CALLCONV GenderInfo_initCache(UErrorCode &status) {
   }
   uhash_setKeyDeleter(gGenderInfoCache, uprv_free);
 }
-
-
 GenderInfo::GenderInfo() {
 }
 

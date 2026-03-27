@@ -126,8 +126,6 @@ void content_types_file::set_media(external_items & _Mediaitems)
 		}
 	}
 }
-
-
 //--------------------------------------------------------------------------------------------------------------------------
 simple_element_ptr simple_element::create(const std::wstring & FileName, const std::wstring & Content)
 {
@@ -298,7 +296,5 @@ void media::write(const std::wstring & RootPath)
 {
 
 }
-
-
 }
 }

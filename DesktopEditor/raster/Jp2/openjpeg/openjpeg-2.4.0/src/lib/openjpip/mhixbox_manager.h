@@ -45,8 +45,6 @@ typedef struct markeridx_param {
     struct markeridx_param *next; /**< pointer to the next markeridx*/
 } markeridx_param_t;
 
-
-
 /** header index table box parameters*/
 /** I.3.2.4.3 Header Index Table box*/
 typedef struct mhixbox_param {
@@ -55,8 +53,6 @@ typedef struct mhixbox_param {
     markeridx_param_t *first; /**< first marker index pointer of the list*/
 } mhixbox_param_t;
 
-
-
 /**
  * generate mhix box
  *
@@ -64,8 +60,6 @@ typedef struct mhixbox_param {
  * @return        generated mhixbox pointer
  */
 mhixbox_param_t * gene_mhixbox(box_param_t *box);
-
-
 /**
  * search a marker index by marker code from mhix box
  *
@@ -74,24 +68,18 @@ mhixbox_param_t * gene_mhixbox(box_param_t *box);
  * @return         found marker index pointer
  */
 markeridx_param_t * search_markeridx(Byte2_t code, mhixbox_param_t *mhix);
-
-
 /**
  * print mhix box parameters
  *
  * @param[in] mhix mhix box pointer
  */
 void print_mhixbox(mhixbox_param_t *mhix);
-
-
 /**
  * print marker index parameters
  *
  * @param[in] markeridx marker index pointer
  */
 void print_markeridx(markeridx_param_t *markeridx);
-
-
 /**
  * delete mhix box
  *

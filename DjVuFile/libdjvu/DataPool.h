@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GThreads.h"
 #include "GString.h"
 #include "GURL.h"
@@ -556,8 +554,6 @@ public:
       /** Useful in comparing data pools.  Returns true if dirived from
           same URL or bytestream. */
    bool simple_compare(DataPool &pool) const;
-
-
 private:
    bool		eof_flag;
    bool		stop_flag;
@@ -620,8 +616,6 @@ DataPool::is_connected(void) const
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

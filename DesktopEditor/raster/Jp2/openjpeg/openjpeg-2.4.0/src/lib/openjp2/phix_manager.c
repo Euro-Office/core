@@ -34,8 +34,6 @@
  */
 
 #include "opj_includes.h"
-
-
 /*
  * Write faix box of phix
  *
@@ -91,8 +89,6 @@ int opj_write_phix(int coff, opj_codestream_info_t cstr_info, OPJ_BOOL EPHused,
 
     return (int)len;
 }
-
-
 int opj_write_phixfaix(int coff, int compno, opj_codestream_info_t cstr_info,
                        OPJ_BOOL EPHused, int j2klen, opj_stream_private_t *cio,
                        opj_event_mgr_t * p_manager)
@@ -109,8 +105,6 @@ int opj_write_phixfaix(int coff, int compno, opj_codestream_info_t cstr_info,
 
     packet.end_ph_pos = packet.start_pos = -1;
     (void)EPHused; /* unused ? */
-
-
     if (j2klen > pow(2, 32)) {
         size_of_coding =  8;
         version = 1;

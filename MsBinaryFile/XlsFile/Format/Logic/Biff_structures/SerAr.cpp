@@ -67,6 +67,4 @@ SerArPtr SerAr::createSerAr(const unsigned char type)
     return SerArPtr(); 
 }
 
-
-
 } // namespace XLS

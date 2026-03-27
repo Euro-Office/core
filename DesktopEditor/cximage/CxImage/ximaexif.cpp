@@ -395,8 +395,6 @@ static const int32_t BytesPerFormat[] = {0,1,1,2,4,8,1,1,2,4,8,4,8};
 
 #define TAG_THUMBNAIL_OFFSET  0x0201
 #define TAG_THUMBNAIL_LENGTH  0x0202
-
-
 /*--------------------------------------------------------------------------
    Process one of the nested EXIF directories.
 --------------------------------------------------------------------------*/
@@ -686,8 +684,6 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
             continue;
         }
     }
-
-
     {
         /* In addition to linking to subdirectories via exif tags,
            there's also a potential link to another directory at the end
@@ -707,8 +703,6 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(uint8_t * DirStart, uint8_t * Offset
             ProcessExifDir(SubdirStart, OffsetBase, ExifLength, m_exifinfo, LastExifRefdP, NestingLevel+1);
         }
     }
-
-
     if (ThumbnailSize && ThumbnailOffset){
         if (ThumbnailSize + ThumbnailOffset <= ExifLength){
             /* The thumbnail pointer appears to be valid.  Store it. */
@@ -1004,8 +998,6 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir2(CSafeReader DirStart, CSafeReader O
             continue;
         }
     }
-
-
     {
         /* In addition to linking to subdirectories via exif tags,
            there's also a potential link to another directory at the end
@@ -1023,8 +1015,6 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir2(CSafeReader DirStart, CSafeReader O
             ProcessExifDir2(OffsetBase.Offset(Offset), OffsetBase, ExifLength, m_exifinfo, LastExifRefdP, NestingLevel+1);
         }
     }
-
-
     if (ThumbnailSize && ThumbnailOffset){
         if (ThumbnailSize + ThumbnailOffset <= ExifLength){
             /* The thumbnail pointer appears to be valid.  Store it. */

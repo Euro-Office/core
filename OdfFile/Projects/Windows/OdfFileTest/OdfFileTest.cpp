@@ -39,8 +39,6 @@
 #include "../../../../DesktopEditor/common/Directory.h"
 #include "../../../Reader/Converter/ConvertOO2OOX.h"
 #include "../../../Common/logging.h"
-
-
 #if defined(_WIN64)
 	#pragma comment(lib, "../../build/bin/icu/win_64/icuuc.lib")
 #elif defined (_WIN32)

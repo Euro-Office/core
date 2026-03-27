@@ -49,8 +49,6 @@ P96IFace* IP96 = 0;
 
 Class* RequesterClass = 0;
 Class* WindowClass = 0;
-
-
 namespace agg
 {
 	void handle_idcmp(Hook* hook, APTR win, IntuiMessage* msg);
@@ -721,8 +719,6 @@ namespace agg
 				{
 					return;
 				}
-
-
 				if ( app->m_ctrls.on_mouse_button_up(x, y) )
 				{
 					app->on_ctrl_change();

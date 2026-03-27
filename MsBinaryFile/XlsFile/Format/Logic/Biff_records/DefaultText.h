@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DefaultText record in BIFF8
 class DefaultText: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~DefaultText();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

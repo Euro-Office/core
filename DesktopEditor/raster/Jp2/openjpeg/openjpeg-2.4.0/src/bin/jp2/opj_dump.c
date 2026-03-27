@@ -65,8 +65,6 @@ typedef struct dircnt {
     /** Pointer to the buffer*/
     char **filename;
 } dircnt_t;
-
-
 typedef struct img_folder {
     /** The directory path of the folder containing input images*/
     char *imgdirpath;
@@ -260,8 +258,6 @@ static int infile_format(const char *fname)
     if (l_nb_read != 12) {
         return -1;
     }
-
-
 
     ext_format = get_file_format(fname);
 

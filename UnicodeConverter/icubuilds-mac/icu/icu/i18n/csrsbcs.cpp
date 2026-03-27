@@ -800,8 +800,6 @@ static const NGramsPlusLang ngrams_8859_1[] =  {
     "sv"
   }
 };
-
-
 static const NGramsPlusLang ngrams_8859_2[] =  {
   {
     {
@@ -908,8 +906,6 @@ const char *CharsetRecog_8859_1::getName() const
 {
     return "ISO-8859-1";
 }
-
-
 CharsetRecog_8859_2::~CharsetRecog_8859_2()
 {
     // nothing to do
@@ -935,8 +931,6 @@ const char *CharsetRecog_8859_2::getName() const
 {
     return "ISO-8859-2";
 }
-
-
 CharsetRecog_8859_5::~CharsetRecog_8859_5()
 {
     // nothing to do
@@ -1218,8 +1212,6 @@ const char *CharsetRecog_IBM420_ar::getLanguage() const
 {
     return "ar";
 }
-
-    
 int32_t CharsetRecog_IBM420_ar::match_sbcs(InputText *det, const int32_t ngrams[],  const uint8_t byteMap[]) const
 {
     NGramParser_IBM420 parser(ngrams, byteMap);

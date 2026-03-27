@@ -37,8 +37,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -63,6 +61,4 @@ private:
 };
 
 typedef boost::shared_ptr<OfficeArtContainer> OfficeArtContainerPtr;
-
-
 } // namespace ODRAW

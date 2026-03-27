@@ -480,8 +480,6 @@ _TIFFVSetField(TIFF* tif, ttag_t tag, va_list ap)
 		tv->count = td->td_samplesperpixel;
 	    else
                 tv->count = fip->field_writecount;
-            
-    
 	    if (fip->field_type == TIFF_ASCII)
 		    _TIFFsetString((char **)&tv->value, va_arg(ap, char *));
 	    else {

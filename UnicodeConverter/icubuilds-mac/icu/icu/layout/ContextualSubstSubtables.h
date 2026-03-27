@@ -65,8 +65,6 @@ struct ContextualSubstitutionFormat1Subtable : ContextualSubstitutionSubtable
     le_uint32  process(const LookupProcessor *lookupProcessor, GlyphIterator *glyphIterator, const LEFontInstance *fontInstance, LEErrorCode& success) const;
 };
 LE_VAR_ARRAY(ContextualSubstitutionFormat1Subtable, subRuleSetTableOffsetArray)
-
-
 struct SubRuleSetTable
 {
     le_uint16  subRuleCount;
@@ -94,16 +92,12 @@ struct ContextualSubstitutionFormat2Subtable : ContextualSubstitutionSubtable
     le_uint32  process(const LookupProcessor *lookupProcessor, GlyphIterator *glyphIterator, const LEFontInstance *fontInstance, LEErrorCode& success) const;
 };
 LE_VAR_ARRAY(ContextualSubstitutionFormat2Subtable, subClassSetTableOffsetArray)
-
-
 struct SubClassSetTable
 {
     le_uint16  subClassRuleCount;
     Offset  subClassRuleTableOffsetArray[ANY_NUMBER];
 };
 LE_VAR_ARRAY(SubClassSetTable, subClassRuleTableOffsetArray)
-
-
 // NOTE: Multiple variable size arrays!!
 struct SubClassRuleTable
 {
@@ -113,8 +107,6 @@ struct SubClassRuleTable
   //SubstitutionLookupRecord substLookupRecordArray[ANY_NUMBER];
 };
 LE_VAR_ARRAY(SubClassRuleTable, classArray)
-
-
 // NOTE: This isn't a subclass of GlyphSubstitutionSubtable 'cause
 // it has an array of coverage tables instead of a single coverage table...
 //
@@ -144,8 +136,6 @@ struct ChainingContextualSubstitutionFormat1Subtable : ChainingContextualSubstit
     le_uint32  process(const LookupProcessor *lookupProcessor, GlyphIterator *glyphIterator, const LEFontInstance *fontInstance, LEErrorCode& success) const;
 };
 LE_VAR_ARRAY(ChainingContextualSubstitutionFormat1Subtable, chainSubRuleSetTableOffsetArray)
-
-
 struct ChainSubRuleSetTable
 {
     le_uint16  chainSubRuleCount;
@@ -186,8 +176,6 @@ struct ChainSubClassSetTable
     Offset  chainSubClassRuleTableOffsetArray[ANY_NUMBER];
 };
 LE_VAR_ARRAY(ChainSubClassSetTable, chainSubClassRuleTableOffsetArray)
-
-
 // NOTE: Multiple variable size arrays!!
 struct ChainSubClassRuleTable
 {
@@ -221,7 +209,5 @@ struct ChainingContextualSubstitutionFormat3Subtable
     le_uint32  process(const LookupProcessor *lookupProcessor, GlyphIterator *glyphIterator, const LEFontInstance *fontInstance, LEErrorCode& success) const;
 };
 LE_VAR_ARRAY(ChainingContextualSubstitutionFormat3Subtable, backtrackCoverageTableOffsetArray)
-
-
 U_NAMESPACE_END
 #endif

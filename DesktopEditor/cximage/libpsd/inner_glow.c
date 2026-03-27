@@ -31,15 +31,11 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_bitmap.h"
-
-
 extern void psd_bitmap_gaussian_blur_alpha_channel(psd_bitmap * bitmap, psd_double radius);
 extern void psd_effects_add_noise(psd_bitmap * bitmap, psd_int noise, psd_int left, psd_int top, psd_context * context);
 extern void psd_gradient_color_get_table(psd_gradient_color * gradient_color, psd_argb_color * color_table, psd_int table_count, psd_bool reverse);
 extern void psd_effects_apply_gradient(psd_bitmap * bitmap, psd_argb_color * gradient_table, psd_bool edge_hidden, 
 	psd_int jitter, psd_int left, psd_int top, psd_context * context);
-
-
 // set default value
 psd_static void psd_set_layer_inner_glow_default(psd_layer_effects_inner_glow * inner_glow)
 {

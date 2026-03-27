@@ -47,8 +47,6 @@ extern "C" {
 /*
  * Functions
  */
-
-
 /*
  * Document
  */
@@ -472,8 +470,6 @@ extern "C" {
 
     XMLPUBFUN int XMLCALL
         xmlTextWriterSetQuoteChar(xmlTextWriterPtr writer, xmlChar quotechar);
-
-
 /*
  * misc
  */

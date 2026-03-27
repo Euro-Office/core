@@ -38,8 +38,6 @@ namespace oox {
 namespace utils {
 
 namespace media {
-
-
 bool is_internal(const std::wstring & uri)
 {
 	if (uri.empty())return false;

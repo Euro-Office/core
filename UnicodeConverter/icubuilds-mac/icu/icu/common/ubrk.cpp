@@ -73,16 +73,12 @@ ubrk_open(UBreakIteratorType type,
     *status = U_MEMORY_ALLOCATION_ERROR;
     return 0;
   }
-
-
   UBreakIterator *uBI = (UBreakIterator *)result;
   if (text != NULL) {
       ubrk_setText(uBI, text, textLength, status);
   }
   return uBI;
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -116,10 +112,6 @@ ubrk_openRules(  const UChar        *rules,
     return uBI;
 }
 
-
-
-
-
 U_CAPI UBreakIterator * U_EXPORT2
 ubrk_safeClone(
           const UBreakIterator *bi,
@@ -150,8 +142,6 @@ ubrk_safeClone(
     return (UBreakIterator *)newBI;
 }
 
-
-
 U_CAPI void U_EXPORT2
 ubrk_close(UBreakIterator *bi)
 {
@@ -171,8 +161,6 @@ ubrk_setText(UBreakIterator* bi,
     //   can be dumped without explicitly closing it.
 }
 
-
-
 U_CAPI void U_EXPORT2
 ubrk_setUText(UBreakIterator *bi,
              UText          *text,
@@ -180,10 +168,6 @@ ubrk_setUText(UBreakIterator *bi,
 {
   ((BreakIterator*)bi)->setText(text, *status);
 }
-
-
-
-
 
 U_CAPI int32_t U_EXPORT2
 ubrk_current(const UBreakIterator *bi)
@@ -249,15 +233,11 @@ ubrk_countAvailable()
 
   return uloc_countAvailable();
 }
-
-
 U_CAPI  UBool U_EXPORT2
 ubrk_isBoundary(UBreakIterator *bi, int32_t offset)
 {
     return ((BreakIterator*)bi)->isBoundary(offset);
 }
-
-
 U_CAPI  int32_t U_EXPORT2
 ubrk_getRuleStatus(UBreakIterator *bi)
 {
@@ -269,8 +249,6 @@ ubrk_getRuleStatusVec(UBreakIterator *bi, int32_t *fillInVec, int32_t capacity, 
 {
     return ((BreakIterator*)bi)->getRuleStatusVec(fillInVec, capacity, *status);
 }
-
-
 U_CAPI const char* U_EXPORT2
 ubrk_getLocaleByType(const UBreakIterator *bi,
                      ULocDataLocaleType type,
@@ -284,8 +262,6 @@ ubrk_getLocaleByType(const UBreakIterator *bi,
     }
     return ((BreakIterator*)bi)->getLocaleID(type, *status);
 }
-
-
 void ubrk_refreshUText(UBreakIterator *bi,
                        UText          *text,
                        UErrorCode     *status)
@@ -293,7 +269,5 @@ void ubrk_refreshUText(UBreakIterator *bi,
     BreakIterator *bii = reinterpret_cast<BreakIterator *>(bi);
     bii->refreshInputText(text, *status);
 }
-
-
 
 #endif /* #if !UCONFIG_NO_BREAK_ITERATION */

@@ -48,11 +48,7 @@ U_NAMESPACE_BEGIN
 
 // The state-transition value indicating "stop"
 #define STOP_STATE  0
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(RuleBasedBreakIterator)
-
-
 //=======================================================================
 // constructors
 //=======================================================================
@@ -85,8 +81,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(const RBBIDataHeader* data, enum 
         return;
     }
 }
-
-
 //
 //  Construct from precompiled binary rules (tables).  This constructor is public API,
 //  taking the rules as a (const uint8_t *) to match the type produced by getBinaryRules().
@@ -114,8 +108,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(const uint8_t *compiledRules,
         return;
     }
 }    
-
-
 //-------------------------------------------------------------------------------
 //
 //   Constructor   from a UDataMemory handle to precompiled break rules
@@ -132,8 +124,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(UDataMemory* udm, UErrorCode &sta
         return;
     }
 }
-
-
 
 //-------------------------------------------------------------------------------
 //
@@ -157,8 +147,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator( const UnicodeString  &rules,
         delete bi;
     }
 }
-
-
 //-------------------------------------------------------------------------------
 //
 // Default Constructor.      Create an empty shell that can be set up later.
@@ -168,8 +156,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator( const UnicodeString  &rules,
 RuleBasedBreakIterator::RuleBasedBreakIterator() {
     init();
 }
-
-
 //-------------------------------------------------------------------------------
 //
 //   Copy constructor.  Will produce a break iterator with the same behavior,
@@ -182,8 +168,6 @@ RuleBasedBreakIterator::RuleBasedBreakIterator(const RuleBasedBreakIterator& oth
     this->init();
     *this = other;
 }
-
-
 /**
  * Destructor
  */
@@ -260,8 +244,6 @@ RuleBasedBreakIterator::operator=(const RuleBasedBreakIterator& that) {
     return *this;
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //    init()      Shared initialization routine.   Used by all the constructors.
@@ -300,8 +282,6 @@ void RuleBasedBreakIterator::init() {
     }
 #endif
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -355,8 +335,6 @@ RuleBasedBreakIterator::hashCode(void) const {
     }
     return hash;
 }
-
-
 void RuleBasedBreakIterator::setText(UText *ut, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return;
@@ -387,14 +365,10 @@ void RuleBasedBreakIterator::setText(UText *ut, UErrorCode &status) {
 
     this->first();
 }
-
-
 UText *RuleBasedBreakIterator::getUText(UText *fillIn, UErrorCode &status) const {
     UText *result = utext_clone(fillIn, fText, FALSE, TRUE, &status);  
     return result;
 }
-
-
 
 /**
  * Returns the description used to create this iterator
@@ -483,8 +457,6 @@ RuleBasedBreakIterator::setText(const UnicodeString& newText) {
 
     this->first();
 }
-
-
 /**
  *  Provide a new UText for the input text.  Must reference text with contents identical
  *  to the original.
@@ -515,8 +487,6 @@ RuleBasedBreakIterator &RuleBasedBreakIterator::refreshInputText(UText *input, U
     }
     return *this;
 }
-
-
 /**
  * Sets the current iteration position to the beginning of the text, position zero.
  * @return The new iterator position, which is zero.
@@ -981,8 +951,6 @@ enum RBBIRunMode {
     RBBI_RUN,       // state machine processing is in the user text
     RBBI_END        // state machine processing is after end of user text.
 };
-
-
 //-----------------------------------------------------------------------------------
 //
 //  handleNext(stateTable)
@@ -1032,15 +1000,11 @@ int32_t RuleBasedBreakIterator::handleNext(const RBBIStateTable *statetable) {
     row = (RBBIStateTableRow *)
             //(statetable->fTableData + (statetable->fRowLen * state));
             (tableData + tableRowLen * state);
-            
-    
     mode     = RBBI_RUN;
     if (statetable->fFlags & RBBI_BOF_REQUIRED) {
         category = 2;
         mode     = RBBI_START;
     }
-
-
     // loop until we reach the end of the text or transition to state 0
     //
     for (;;) {
@@ -1113,8 +1077,6 @@ int32_t RuleBasedBreakIterator::handleNext(const RBBIStateTable *statetable) {
         row = (RBBIStateTableRow *)
             // (statetable->fTableData + (statetable->fRowLen * state));
             (tableData + tableRowLen * state);
-
-
         if (row->fAccepting == -1) {
             // Match found, common case.
             if (mode != RBBI_START) {
@@ -1146,8 +1108,6 @@ int32_t RuleBasedBreakIterator::handleNext(const RBBIStateTable *statetable) {
             lookaheadTagIdx = row->fTagIdx;
             goto continueOn;
         }
-
-
         if (row->fAccepting != 0) {
             // Because this is an accepting state, any in-progress look-ahead match
             //   is no longer relavant.  Clear out the pending lookahead status.
@@ -1173,8 +1133,6 @@ continueOn:
                 mode = RBBI_RUN;
             }
         }
-
-
     }
 
     // The state machine is done.  Check whether it found a match...
@@ -1197,8 +1155,6 @@ continueOn:
     #endif
     return result;
 }
-
-
 
 //-----------------------------------------------------------------------------------
 //
@@ -1255,8 +1211,6 @@ int32_t RuleBasedBreakIterator::handlePrevious(const RBBIStateTable *statetable)
         category = 2;
         mode     = RBBI_START;
     }
-
-
     // loop until we reach the start of the text or transition to state 0
     //
     for (;;) {
@@ -1359,8 +1313,6 @@ int32_t RuleBasedBreakIterator::handlePrevious(const RBBIStateTable *statetable)
             lookaheadStatus = row->fLookAhead;
             goto continueOn;
         }
-
-
         if (row->fAccepting != 0) {
             // Because this is an accepting state, any in-progress look-ahead match
             //   is no longer relavant.  Clear out the pending lookahead status.
@@ -1408,8 +1360,6 @@ continueOn:
     #endif
     return result;
 }
-
-
 void
 RuleBasedBreakIterator::reset()
 {
@@ -1421,8 +1371,6 @@ RuleBasedBreakIterator::reset()
     fDictionaryCharCount = 0;
     fPositionInCache = 0;
 }
-
-
 
 //-------------------------------------------------------------------------------
 //
@@ -1461,8 +1409,6 @@ void RuleBasedBreakIterator::makeRuleStatusValid() {
     }
     U_ASSERT(fLastRuleStatusIndex >= 0  &&  fLastRuleStatusIndex < fData->fStatusMaxIdx);
 }
-
-
 int32_t  RuleBasedBreakIterator::getRuleStatus() const {
     RuleBasedBreakIterator *nonConstThis  = (RuleBasedBreakIterator *)this;
     nonConstThis->makeRuleStatusValid();
@@ -1475,10 +1421,6 @@ int32_t  RuleBasedBreakIterator::getRuleStatus() const {
 
     return tagVal;
 }
-
-
-
-
 int32_t RuleBasedBreakIterator::getRuleStatusVec(
              int32_t *fillInVec, int32_t capacity, UErrorCode &status)
 {
@@ -1501,8 +1443,6 @@ int32_t RuleBasedBreakIterator::getRuleStatusVec(
     return numVals;
 }
 
-
-
 //-------------------------------------------------------------------------------
 //
 //   getBinaryRules        Access to the compiled form of the rules,
@@ -1520,8 +1460,6 @@ const uint8_t  *RuleBasedBreakIterator::getBinaryRules(uint32_t &length) {
     }
     return retPtr;
 }
-
-
 BreakIterator *  RuleBasedBreakIterator::createBufferClone(void * /*stackBuffer*/,
                                    int32_t &bufferSize,
                                    UErrorCode &status)
@@ -1543,8 +1481,6 @@ BreakIterator *  RuleBasedBreakIterator::createBufferClone(void * /*stackBuffer*
     }
     return (RuleBasedBreakIterator *)clonedBI;
 }
-
-
 //-------------------------------------------------------------------------------
 //
 //  isDictionaryChar      Return true if the category lookup for this char
@@ -1563,8 +1499,6 @@ BreakIterator *  RuleBasedBreakIterator::createBufferClone(void * /*stackBuffer*
     UTRIE_GET16(&fData->fTrie, c, category);
     return (category & 0x4000) != 0;
 }*/
-
-
 //-------------------------------------------------------------------------------
 //
 //  checkDictionary       This function handles all processing of characters in
@@ -1728,8 +1662,6 @@ int32_t RuleBasedBreakIterator::checkDictionary(int32_t startPos,
 }
 
 U_NAMESPACE_END
-
-
 static icu::UStack *gLanguageBreakFactories = NULL;
 static icu::UInitOnce gLanguageBreakFactoriesInitOnce = U_INITONCE_INITIALIZER;
 
@@ -1770,8 +1702,6 @@ static void U_CALLCONV initLanguageFactories() {
     }
     ucln_common_registerCleanup(UCLN_COMMON_BREAKITERATOR_DICT, breakiterator_cleanup_dict);
 }
-
-
 static const LanguageBreakEngine*
 getLanguageBreakEngineFromFactory(UChar32 c, int32_t breakType)
 {
@@ -1791,8 +1721,6 @@ getLanguageBreakEngineFromFactory(UChar32 c, int32_t breakType)
     }
     return lbe;
 }
-
-
 //-------------------------------------------------------------------------------
 //
 //  getLanguageBreakEngine  Find an appropriate LanguageBreakEngine for the
@@ -1857,8 +1785,6 @@ RuleBasedBreakIterator::getLanguageBreakEngine(UChar32 c) {
         
     return fUnhandledBreakEngine;
 }
-
-
 
 /*int32_t RuleBasedBreakIterator::getBreakType() const {
     return fBreakType;

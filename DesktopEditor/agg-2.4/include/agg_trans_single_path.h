@@ -90,8 +90,6 @@ namespace agg
         status_e       m_status;
         bool           m_preserve_x_scale;
     };
-
-
 }
 
 #endif

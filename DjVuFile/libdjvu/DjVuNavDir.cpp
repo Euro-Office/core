@@ -71,16 +71,12 @@
 #include "GURL.h"
 #include <ctype.h>
 
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 
 DjVuNavDir::DjVuNavDir(const GURL &dirURL)
 {
@@ -228,8 +224,6 @@ DjVuNavDir::delete_page(int page_num)
    page2name.resize(--pages-1);
 }
 #endif
-
-
 
 #ifdef HAVE_NAMESPACES
 }

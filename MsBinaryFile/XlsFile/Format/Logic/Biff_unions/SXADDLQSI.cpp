@@ -45,8 +45,6 @@ SXADDLQSI::SXADDLQSI() : current( &content)
 SXADDLQSI::~SXADDLQSI()
 {
 }
-
-
 BaseObjectPtr SXADDLQSI::clone()
 {
 	return BaseObjectPtr(new SXADDLQSI(*this));

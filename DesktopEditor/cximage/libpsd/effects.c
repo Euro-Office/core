@@ -32,8 +32,6 @@
 #include "psd_bitmap.h"
 #include "psd_math.h"
 #include "psd_descriptor.h"
-
-
 extern psd_status psd_get_layer_drop_shadow(psd_context * context, psd_layer_effects_drop_shadow * drop_shadow);
 extern psd_status psd_get_layer_drop_shadow2(psd_context * context, psd_layer_effects_drop_shadow * drop_shadow);
 extern psd_status psd_get_layer_inner_shadow(psd_context * context, psd_layer_effects_inner_shadow * inner_shadow);
@@ -65,8 +63,6 @@ extern void psd_layer_blend_normal(psd_context * context, psd_layer_record * lay
 extern void psd_layer_blend(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern void psd_layer_blend_normal_restricted(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern void psd_layer_blend_restricted(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
-
-
 // Effects Layer (Photoshop 5.0)
 psd_status psd_get_layer_effects(psd_context * context, psd_layer_record * layer)
 {
@@ -379,8 +375,6 @@ psd_status psd_layer_effects_update(psd_layer_record * layer, psd_layer_effects_
 
 	return psd_status_done;
 }
-
-
 #ifdef PSD_SUPPORT_EFFECTS_BLEND
 
 psd_static void psd_layer_blend_effects_image(psd_context * context, psd_layer_record * layer, 
@@ -768,8 +762,6 @@ void psd_effects_apply_gradient(psd_bitmap * bitmap, psd_argb_color * gradient_t
 }
 
 #endif // ifdef PSD_SUPPORT_EFFECTS_BLEND
-
-
 psd_static void psd_gradient_color_free(psd_gradient_color * gradient_color)
 {
 	psd_freeif(gradient_color->name);

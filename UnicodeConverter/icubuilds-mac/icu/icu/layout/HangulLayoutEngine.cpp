@@ -18,8 +18,6 @@
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(HangulOpenTypeLayoutEngine)
-
-
 #define FEATURE_MAP(name) {name ## FeatureTag, name ## FeatureMask}
 
 #define LJMO_FIRST 0x1100
@@ -81,8 +79,6 @@ static const StateTransition stateTable[][CC_COUNT] =
     {{-1, a_N}, {-1, a_N},  {3, a_T},  {-1, a_N}, {-1, a_N},   {-1, a_N}}, // 3 - L+V+T*
     {{-1, a_N}, {-1, a_N}, {-1, a_N},  {-1, a_N}, {-1, a_N},    {4, a_T}}  // 4 - X+
 };
-
-
 #define ccmpFeatureTag LE_CCMP_FEATURE_TAG
 #define ljmoFeatureTag LE_LJMO_FEATURE_TAG
 #define vjmoFeatureTag LE_VJMO_FEATURE_TAG

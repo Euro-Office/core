@@ -42,8 +42,6 @@ class CRecordLinkedSlide10Atom : public CUnknownRecord
 public:
     SlideIdRef  m_nLinkedSlideIdRef;
     _INT32      m_cLinkedShapes;
-
-
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
 }

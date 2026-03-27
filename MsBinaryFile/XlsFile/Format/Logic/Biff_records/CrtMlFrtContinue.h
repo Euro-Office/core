@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CrtMlFrtContinue record in BIFF8
 class CrtMlFrtContinue: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CrtMlFrtContinue();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeCrtMlFrtContinue;

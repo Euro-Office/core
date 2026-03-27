@@ -14,15 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CIDRIVER_H_
 #define CIDRIVER_H_
-
-
 #include <freetype/internal/ftdrv.h>
-
-
 FT_BEGIN_HEADER
 
   FT_CALLBACK_TABLE
@@ -31,6 +25,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* CIDRIVER_H_ */
-
-
 /* END */

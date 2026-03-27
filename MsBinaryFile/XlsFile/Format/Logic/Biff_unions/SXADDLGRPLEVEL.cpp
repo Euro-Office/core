@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLGRPLEVEL::SXADDLGRPLEVEL()
 {
 }
-
-
 SXADDLGRPLEVEL::~SXADDLGRPLEVEL()
 {
 }
-
-
 BaseObjectPtr SXADDLGRPLEVEL::clone()
 {
 	return BaseObjectPtr(new SXADDLGRPLEVEL(*this));
 }
-
-
 /*
 SXADDLGRPLEVEL = SXAddl_SXCGrpLevel_SXDId *Continue_SxaddlSxString SXAddl_SXCGrpLevel_SXDGrpLevelInfo
 				*SXADDLGROUP *UNKNOWNFRT SXAddl_SXCGrpLevel_SXDEnd

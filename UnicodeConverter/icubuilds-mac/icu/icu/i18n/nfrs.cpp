@@ -601,8 +601,6 @@ NFRuleSet::findFractionRuleSetRule(double number) const
         // that's an integer, and if not, how close it is to being
         // an integer.
         tempDifference = numerator * rules[i]->getBaseValue() % leastCommonMultiple;
-
-
         // normalize the result of the above calculation: we want
         // the numerator's distance from the CLOSEST multiple
         // of the LCD
@@ -1016,8 +1014,6 @@ uint32_t util64_tou(int64_t w, UChar* buf, uint32_t len, uint32_t radix, UBool r
 
     return len;
 }
-
-
 U_NAMESPACE_END
 
 /* U_HAVE_RBNF */

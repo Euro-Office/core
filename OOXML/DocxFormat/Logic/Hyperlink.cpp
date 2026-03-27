@@ -46,15 +46,11 @@
 #include "../Math/OMath.h"
 
 #include "../../Common/ComplexTypes.h"
-
-
 // TO DO: Нехватающие классы:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
 //        <w:subDoc>
-
-
 namespace OOX
 {
 	namespace Logic

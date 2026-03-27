@@ -448,8 +448,6 @@ void gz_uncompress(in, out)
 
     if (gzclose(in) != Z_OK) error("failed gzclose");
 }
-
-
 /* ===========================================================================
  * Compress the given file: create a corresponding .gz file and remove the
  * original.
@@ -488,8 +486,6 @@ void file_compress(file, mode)
 
     unlink(file);
 }
-
-
 /* ===========================================================================
  * Uncompress the given file and remove the original.
  */
@@ -541,8 +537,6 @@ void file_uncompress(file)
 
     unlink(infile);
 }
-
-
 /* ===========================================================================
  * Usage:  minigzip [-c] [-d] [-f] [-h] [-r] [-1 to -9] [files...]
  *   -c : write to standard output

@@ -69,8 +69,6 @@ void info_callback(const char *msg, void *client_data)
 }
 
 /* -------------------------------------------------------------------------- */
-
-
 int main(int argc, char *argv[])
 {
     opj_dinfo_t* dinfo;

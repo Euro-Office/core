@@ -20,8 +20,6 @@
 #include "platform/agg_platform_support.h"
 
 enum flip_y_e { flip_y = true };
-
-
 namespace agg
 {
     
@@ -58,10 +56,6 @@ namespace agg
     };
 
 }
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::spline_ctrl<agg::rgba8> m_alpha;
@@ -89,8 +83,6 @@ public:
     virtual ~the_application()
     {
     }
-
-
     virtual void on_init()
     {
         unsigned i;
@@ -106,8 +98,6 @@ public:
                                      rand() & 0xFF);
         }
     }
-    
-
 
     virtual void on_draw()
     {
@@ -141,16 +131,12 @@ public:
         }
         agg::span_conv_brightness_alpha_rgb8 color_alpha(brightness_alpha_array);
 
-
-
         typedef agg::image_accessor_clip<pixfmt> img_source_type;
         typedef agg::span_interpolator_linear<> interpolator_type; 
         typedef agg::span_image_filter_rgb_bilinear<img_source_type,
                                                     interpolator_type> span_gen;
         typedef agg::span_converter<span_gen,
                                     agg::span_conv_brightness_alpha_rgb8> span_conv;
-
-
         span_alloc sa;
         interpolator_type interpolator(img_mtx);
         pixfmt img_pixf(rbuf_img(0));
@@ -167,17 +153,11 @@ public:
             ras.add_path(ell);
             agg::render_scanlines_aa_solid(ras, sl, rb, m_colors[i]);
         }
-
-
         ell.init(initial_width()  / 2.0, 
                  initial_height() / 2.0, 
                  initial_width()  / 1.9, 
                  initial_height() / 1.9, 200);
-
-
         agg::conv_transform<agg::ellipse> tr(ell, src_mtx);
-
-
         ras.add_path(tr);
         agg::render_scanlines_aa(ras, sl, rb, sa, sc);
 
@@ -203,15 +183,7 @@ public:
             fclose(fd);
         }
     }
-
-
-
-
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -243,5 +215,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

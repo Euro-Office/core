@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "BuildListSubContainer.h"
 
 namespace PPT

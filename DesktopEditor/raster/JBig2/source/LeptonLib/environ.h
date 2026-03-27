@@ -73,8 +73,6 @@ typedef unsigned int uintptr_t;
 
 typedef intptr_t l_intptr_t;
 typedef uintptr_t l_uintptr_t;
-
-
 /*--------------------------------------------------------------------*
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*
  *                          USER CONFIGURABLE                         *
@@ -110,8 +108,6 @@ typedef uintptr_t l_uintptr_t;
 #ifndef HAVE_CONFIG_H
 #define  HAVE_FMEMOPEN    0
 #endif  /* ~HAVE_CONFIG_H */
-
-
 /*--------------------------------------------------------------------*
  * !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*
  *                          USER CONFIGURABLE                         *
@@ -125,8 +121,6 @@ typedef uintptr_t l_uintptr_t;
 #define  USE_BMPIO        1
 #define  USE_PNMIO        1
 #define  USE_PSIO         1
-
-
 /*--------------------------------------------------------------------*
  *                          Built-in types                            *
  *--------------------------------------------------------------------*/
@@ -138,8 +132,6 @@ typedef int                     l_int32;
 typedef unsigned int            l_uint32;
 typedef float                   l_float32;
 typedef double                  l_float64;
-
-
 /*------------------------------------------------------------------------*
  *                            Standard macros                             *
  *------------------------------------------------------------------------*/
@@ -174,8 +166,6 @@ typedef double                  l_float64;
 #ifndef FALSE
 #define FALSE         0
 #endif
-
-
 /*--------------------------------------------------------------------*
  *         Environ variables used within compiler invocation          *
  *--------------------------------------------------------------------*/
@@ -188,8 +178,6 @@ typedef double                  l_float64;
  *  is defined when the GCC compiler is invoked.
  *  All code should compile properly for both hardware architectures.
  */
-
-
 /*------------------------------------------------------------------------*
  *                   Simple search state variables                        *
  *------------------------------------------------------------------------*/
@@ -197,8 +185,6 @@ enum {
     L_NOT_FOUND = 0,
     L_FOUND = 1
 };
-
-
 /*------------------------------------------------------------------------*
  *                      Standard memory allocation                        *
  *
@@ -210,8 +196,6 @@ enum {
 #define CALLOC(numelem, elemsize)   calloc(numelem, elemsize)
 #define REALLOC(ptr, blocksize)     realloc(ptr, blocksize)
 #define FREE(ptr)                   free(ptr)
-
-
 /*------------------------------------------------------------------------*
  *         Control printing of error, warning, and info messages         *
  *                                                                        *
@@ -264,15 +248,11 @@ enum {
 #define L_INFO_FLOAT2(a,b,c,d)      l_infoFloat2((a),(b),(c),(d))
 
 #endif  /* NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------------*
  *                        snprintf() renamed in MSVC                      *
  *------------------------------------------------------------------------*/
 #if defined(_MSC_VER) && _MSC_VER < 1900
 #define snprintf _snprintf
 #endif
-
-
 #endif /* LEPTONICA_ENVIRON_H */
 

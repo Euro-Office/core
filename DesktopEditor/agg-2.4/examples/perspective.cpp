@@ -58,19 +58,9 @@ void parse_lion()
     g_path.flip_x(g_x1, g_x2);
     g_path.flip_y(g_y1, g_y2);
 }
-
-
-
-
 namespace agg
 {
 }
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -101,8 +91,6 @@ public:
         m_trans_type.cur_item(0);
         add_ctrl(m_trans_type);
     }
-
-
     virtual void on_init()
     {
         double dx = width()  / 2.0 - (m_quad.xn(1) - m_quad.xn(0)) / 2.0;
@@ -139,8 +127,6 @@ public:
 
                 agg::render_all_paths(g_rasterizer, g_scanline, r, trans, g_colors, g_path_idx, g_npaths);
                 //--------------------------
-
-
 
                 //--------------------------
                 // Render transformed ellipse
@@ -183,8 +169,6 @@ public:
 
                 //--------------------------
 
-
-
                 //--------------------------
                 // Render transformed ellipse
                 //
@@ -196,12 +180,8 @@ public:
                 ell_stroke.width(3.0);
                 agg::conv_transform<agg::ellipse, 
                                     agg::trans_perspective> trans_ell(ell, tr);
-
-
                 agg::conv_transform<agg::conv_stroke<agg::ellipse>, 
                                     agg::trans_perspective> trans_ell_stroke(ell_stroke, tr);
-
-
                 g_rasterizer.add_path(trans_ell);
                 r.color(agg::rgba(0.5, 0.3, 0.0, 0.3));
                 agg::render_scanlines(g_rasterizer, g_scanline, r);
@@ -210,8 +190,6 @@ public:
                 r.color(agg::rgba(0.0, 0.3, 0.2, 1.0));
                 agg::render_scanlines(g_rasterizer, g_scanline, r);
                 //--------------------------
-
-
                 // Testing the reverse transformations
                 //agg::trans_perspective tr2(m_quad.polygon(), g_x1, g_y1, g_x2, g_y2);
                 //if(tr2.is_valid())
@@ -234,10 +212,6 @@ public:
                 //}
             }
         }
-
-
-
-
         //--------------------------
         // Render the "quad" tool and controls
         g_rasterizer.add_path(m_quad);
@@ -246,8 +220,6 @@ public:
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_trans_type);
         //--------------------------
     }
-
-
 
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -259,8 +231,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -275,8 +245,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_quad.on_mouse_button_up(x, y))
@@ -286,12 +254,6 @@ public:
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -303,9 +265,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

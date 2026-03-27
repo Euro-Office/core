@@ -461,8 +461,6 @@ uloc_getVariant(const char*    localeID,
         char* variant,
         int32_t variantCapacity,
         UErrorCode* err);
-
-
 /**
  * Gets the full name for the specified locale.
  * Note: This has the effect of 'canonicalizing' the ICU locale ID to
@@ -517,8 +515,6 @@ uloc_canonicalize(const char*    localeID,
  */
 U_STABLE const char* U_EXPORT2
 uloc_getISO3Language(const char* localeID);
-
-
 /**
  * Gets the ISO country code for the specified locale.
  *
@@ -608,8 +604,6 @@ uloc_getDisplayCountry(const char* locale,
                        UChar* country,
                        int32_t countryCapacity,
                        UErrorCode* status);
-
-
 /**
  * Gets the variant name suitable for display for the specified locale.
  *
@@ -728,8 +722,6 @@ uloc_getDisplayName(const char* localeID,
             UChar* result,
             int32_t maxResultSize,
             UErrorCode* err);
-
-
 /**
  * Gets the specified locale from a list of all available locales.  
  * The return value is a pointer to an item of 
@@ -795,10 +787,6 @@ uloc_getParent(const char*    localeID,
                  char* parent,
                  int32_t parentCapacity,
                  UErrorCode* err);
-
-
-
-
 /**
  * Gets the full name for the specified locale, like uloc_getName(),
  * but without keywords.
@@ -856,8 +844,6 @@ uloc_getKeywordValue(const char* localeID,
                      const char* keywordName,
                      char* buffer, int32_t bufferCapacity,
                      UErrorCode* status);
-
-
 /**
  * Sets or removes the value of the specified keyword.
  *
@@ -953,8 +939,6 @@ typedef enum {
                                 Accept list contained 'ja_JP'
                                 which matched available locale 'ja'. */
 } UAcceptResult;
-
-
 /**
  * Based on a HTTP header from a web browser and a list of available locales,
  * determine an acceptable locale for the user.
@@ -993,8 +977,6 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
                     int32_t acceptListCount,
                     UEnumeration* availableLocales,
                     UErrorCode *status);
-
-
 /**
  * Gets the ICU locale ID for the specified Win32 LCID value.
  *
@@ -1010,8 +992,6 @@ uloc_acceptLanguage(char *result, int32_t resultAvailable,
 U_STABLE int32_t U_EXPORT2
 uloc_getLocaleForLCID(uint32_t hostID, char *locale, int32_t localeCapacity,
                     UErrorCode *status);
-
-
 /**
  * Add the likely subtags for a provided locale ID, per the algorithm described
  * in the following CLDR technical report:
@@ -1050,8 +1030,6 @@ uloc_addLikelySubtags(const char*    localeID,
          char* maximizedLocaleID,
          int32_t maximizedLocaleIDCapacity,
          UErrorCode* err);
-
-
 /**
  * Minimize the subtags for a provided locale ID, per the algorithm described
  * in the following CLDR technical report:

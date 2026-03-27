@@ -116,7 +116,6 @@
  * \endcode
  *  </pre>
  *
- *
  * Example 3:
  * <pre>
  * \code
@@ -380,8 +379,6 @@ u_vparseMessageWithError(const char  *locale,
  * @stable ICU 2.0
  */
 typedef void* UMessageFormat;
-
-
 /**
  * Open a message formatter with given pattern and for the given locale.
  * @param pattern       A pattern specifying the format to use.
@@ -586,8 +583,6 @@ umsg_vparse(const UMessageFormat *fmt,
             int32_t        *count,
             va_list        ap,
             UErrorCode     *status);
-
-
 /**
  * Convert an 'apostrophe-friendly' pattern into a standard
  * pattern.  Standard patterns treat all apostrophes as

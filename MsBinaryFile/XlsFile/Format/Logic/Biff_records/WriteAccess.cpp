@@ -39,13 +39,9 @@ WriteAccess::WriteAccess()
 {
     userName = L"";
 }
-
-
 WriteAccess::~WriteAccess()
 {
 }
-
-
 BaseObjectPtr WriteAccess::clone()
 {
 	return BaseObjectPtr(new WriteAccess(*this));

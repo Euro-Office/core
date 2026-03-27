@@ -38,13 +38,9 @@ namespace XLS
 PrintGrid::PrintGrid()
 {
 }
-
-
 PrintGrid::~PrintGrid()
 {
 }
-
-
 BaseObjectPtr PrintGrid::clone()
 {
 	return BaseObjectPtr(new PrintGrid(*this));

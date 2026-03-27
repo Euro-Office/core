@@ -43,5 +43,3 @@ namespace Log
 	void error(const std::string& message);
 
 }
-
-

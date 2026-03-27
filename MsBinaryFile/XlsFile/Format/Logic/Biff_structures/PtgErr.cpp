@@ -34,24 +34,16 @@
 
 namespace XLS
 {
-
-
 PtgErr::PtgErr()
 {
 }
-
-
 PtgErr::PtgErr(const std::wstring  str) : err(str),	OperandPtg(fixed_id)
 {
 }
-
-
 BiffStructurePtr PtgErr::clone()
 {
 	return BiffStructurePtr(new PtgErr(*this));
 }
-
-
 void PtgErr::loadFields(CFRecord& record)
 {
 	record >> err;
@@ -66,8 +58,6 @@ void PtgErr::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
 {
 	ptg_stack.push(err.toString());
 }
-
-
 
 } // namespace XLS
 

@@ -50,8 +50,6 @@ public:
 	static const ElementType	type = typeRRD;
 
 	virtual void load(CFRecord& record);
-
-
 	_UINT32		cbMemory;
     _INT32		revid;
 	RevisionType revt;

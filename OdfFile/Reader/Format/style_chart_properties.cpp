@@ -43,8 +43,6 @@ namespace cpdoccore {
 
 namespace odf_reader {
 
-
-
 // style:chart-properties
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_chart_properties::ns = L"style";

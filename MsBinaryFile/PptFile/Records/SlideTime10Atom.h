@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 typedef struct _FILETIME {
@@ -42,8 +40,6 @@ typedef struct _FILETIME {
  } FILETIME,
   *PFILETIME,
   *LPFILETIME;
-
-
 class CRecordSlideTime10Atom : public CUnknownRecord
 {
 public:

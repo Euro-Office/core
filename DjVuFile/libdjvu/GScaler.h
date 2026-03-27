@@ -79,8 +79,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 /** @name GScaler.h 
 
     Files #"GScaler.h"# and #"GScaler.cpp"# implement a fast bilinear
@@ -102,8 +100,6 @@ namespace DJVU {
     @version
     #$Id: GScaler.h,v 1.12 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 /** Base class for GBitmapScaler and GPixmapScaler.  This base class
     implements the common elements of class \Ref{GBitmapScaler} and
     \Ref{GPixmapScaler}.  Functions \Ref{set_input_size} and
@@ -159,8 +155,6 @@ protected:
   // Helper
   void make_rectangles(const GRect &desired, GRect &red, GRect &inp);
 };
-
-
 
 /** Fast rescaling code for gray level images.  This class augments the base
     class \Ref{GScaler} with a function for rescaling gray level
@@ -233,8 +227,6 @@ protected:
   int l1;
   int l2;
 };
-
-
 /** Fast rescaling code for color images.  This class augments the base class
     \Ref{GScaler} with a function for rescaling color images.  Function
     \Ref{GPixmapScaler::scale} computes an arbitrary segment of the output
@@ -303,15 +295,7 @@ protected:
   int    l2;
 };
 
-
-
-
-
 //@}
-    
-
-
-
 // -------- END
 
 #ifdef HAVE_NAMESPACES

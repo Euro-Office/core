@@ -106,8 +106,6 @@ namespace writer
         std::basic_ostream<T>& os_;      // output stream
         bool need_header_;               // have we written an XML header yet?
         std::stack<element<T>*> elements_;  // stack of open element tags
-        
-
         // write XML header, if necessary
         writer& header() 
         {
@@ -312,8 +310,6 @@ typedef xml::writer::element<char>	xml_element;
 
 #define CP_GET_XML_NODE()			_xml_node_
 #define CP_ATTR_NODE xml_element&	_xml_node_
-
-
 
 #define CP_XML_ATTR_OPT(NAME, VAL) if (VAL)CP_XML_ATTR(NAME, (*VAL))
 

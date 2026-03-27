@@ -14,26 +14,16 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __T1OBJS_H__
 #define __T1OBJS_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_CONFIG_CONFIG_H
 #include FT_INTERNAL_TYPE1_TYPES_H
-
-
 FT_BEGIN_HEADER
-
-
   /* The following structures must be defined by the hinter */
   typedef struct T1_Size_Hints_   T1_Size_Hints;
   typedef struct T1_Glyph_Hints_  T1_Glyph_Hints;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -43,8 +33,6 @@ FT_BEGIN_HEADER
   /*    A handle to a Type 1 size object.                                  */
   /*                                                                       */
   typedef struct T1_SizeRec_*  T1_Size;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -54,8 +42,6 @@ FT_BEGIN_HEADER
   /*    A handle to a Type 1 glyph slot object.                            */
   /*                                                                       */
   typedef struct T1_GlyphSlotRec_*  T1_GlyphSlot;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -70,15 +56,11 @@ FT_BEGIN_HEADER
   /*    corresponding to these tables.                                     */
   /*                                                                       */
   typedef struct T1_CharMapRec_*   T1_CharMap;
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                  HERE BEGINS THE TYPE1 SPECIFIC STUFF                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -92,8 +74,6 @@ FT_BEGIN_HEADER
     FT_SizeRec  root;
 
   } T1_SizeRec;
-
-
   FT_LOCAL( void )
   T1_Size_Done( FT_Size  size );
 
@@ -103,8 +83,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   T1_Size_Init( FT_Size  size );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -127,8 +105,6 @@ FT_BEGIN_HEADER
     FT_Fixed         y_scale;
 
   } T1_GlyphSlotRec;
-
-
   FT_LOCAL( FT_Error )
   T1_Face_Init( FT_Stream      stream,
                 FT_Face        face,
@@ -150,11 +126,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   T1_Driver_Done( FT_Module  driver );
-
-
 FT_END_HEADER
 
 #endif /* __T1OBJS_H__ */
-
-
 /* END */

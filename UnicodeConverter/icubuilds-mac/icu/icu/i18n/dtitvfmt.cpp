@@ -33,13 +33,9 @@
 
 U_NAMESPACE_BEGIN
 
-
-
 #ifdef DTITVFMT_DEBUG 
 #define PRINTMESG(msg) { std::cout << "(" << __FILE__ << ":" << __LINE__ << ") " << msg << "\n"; }
 #endif
-
-
 static const UChar gDateFormatSkeleton[][11] = {
 //yMMMMEEEEd
 {LOW_Y, CAP_M, CAP_M, CAP_M, CAP_M, CAP_E, CAP_E, CAP_E, CAP_E, LOW_D, 0},
@@ -49,29 +45,19 @@ static const UChar gDateFormatSkeleton[][11] = {
 {LOW_Y, CAP_M, CAP_M, CAP_M, LOW_D, 0},
 //yMd
 {LOW_Y, CAP_M, LOW_D, 0} };
-
-
 static const char gDateTimePatternsTag[]="DateTimePatterns";
-
-
 // latestFirst:
 static const UChar gLaterFirstPrefix[] = {LOW_L, LOW_A, LOW_T, LOW_E, LOW_S,LOW_T, CAP_F, LOW_I, LOW_R, LOW_S, LOW_T, COLON};
 
 // earliestFirst:
 static const UChar gEarlierFirstPrefix[] = {LOW_E, LOW_A, LOW_R, LOW_L, LOW_I, LOW_E, LOW_S, LOW_T, CAP_F, LOW_I, LOW_R, LOW_S, LOW_T, COLON};
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(DateIntervalFormat)
-
-
 
 DateIntervalFormat* U_EXPORT2
 DateIntervalFormat::createInstance(const UnicodeString& skeleton, 
                                    UErrorCode& status) {
     return createInstance(skeleton, Locale::getDefault(), status);
 }
-
-
 DateIntervalFormat* U_EXPORT2
 DateIntervalFormat::createInstance(const UnicodeString& skeleton, 
                                    const Locale& locale, 
@@ -92,16 +78,12 @@ DateIntervalFormat::createInstance(const UnicodeString& skeleton,
     return create(locale, dtitvinf, &skeleton, status);
 }
 
-
-
 DateIntervalFormat* U_EXPORT2
 DateIntervalFormat::createInstance(const UnicodeString& skeleton,
                                    const DateIntervalInfo& dtitvinf,
                                    UErrorCode& status) {
     return createInstance(skeleton, Locale::getDefault(), dtitvinf, status);
 }
-
-
 DateIntervalFormat* U_EXPORT2
 DateIntervalFormat::createInstance(const UnicodeString& skeleton,
                                    const Locale& locale,
@@ -110,8 +92,6 @@ DateIntervalFormat::createInstance(const UnicodeString& skeleton,
     DateIntervalInfo* ptn = dtitvinf.clone();
     return create(locale, ptn, &skeleton, status);
 }
-
-
 DateIntervalFormat::DateIntervalFormat()
 :   fInfo(NULL),
     fDateFormat(NULL),
@@ -122,8 +102,6 @@ DateIntervalFormat::DateIntervalFormat()
     fTimePattern(NULL),
     fDateTimeFormat(NULL)
 {}
-
-
 DateIntervalFormat::DateIntervalFormat(const DateIntervalFormat& itvfmt)
 :   Format(itvfmt),
     fInfo(NULL),
@@ -136,8 +114,6 @@ DateIntervalFormat::DateIntervalFormat(const DateIntervalFormat& itvfmt)
     fDateTimeFormat(NULL) {
     *this = itvfmt;
 }
-
-
 DateIntervalFormat&
 DateIntervalFormat::operator=(const DateIntervalFormat& itvfmt) {
     if ( this != &itvfmt ) {
@@ -180,8 +156,6 @@ DateIntervalFormat::operator=(const DateIntervalFormat& itvfmt) {
     }
     return *this;
 }
-
-
 DateIntervalFormat::~DateIntervalFormat() {
     delete fInfo;
     delete fDateFormat;
@@ -191,14 +165,10 @@ DateIntervalFormat::~DateIntervalFormat() {
     delete fTimePattern;
     delete fDateTimeFormat;
 }
-
-
 Format*
 DateIntervalFormat::clone(void) const {
     return new DateIntervalFormat(*this);
 }
-
-
 UBool
 DateIntervalFormat::operator==(const Format& other) const {
     if (typeid(*this) == typeid(other)) {
@@ -245,8 +215,6 @@ DateIntervalFormat::operator==(const Format& other) const {
     return FALSE;
 }
 
-
-
 UnicodeString&
 DateIntervalFormat::format(const Formattable& obj,
                            UnicodeString& appendTo,
@@ -266,8 +234,6 @@ DateIntervalFormat::format(const Formattable& obj,
     status = U_ILLEGAL_ARGUMENT_ERROR;
     return appendTo;
 }
-
-
 UnicodeString&
 DateIntervalFormat::format(const DateInterval* dtInterval,
                            UnicodeString& appendTo,
@@ -287,8 +253,6 @@ DateIntervalFormat::format(const DateInterval* dtInterval,
     }
     return appendTo;
 }
-
-
 UnicodeString&
 DateIntervalFormat::format(Calendar& fromCalendar,
                            Calendar& toCalendar,
@@ -402,8 +366,6 @@ DateIntervalFormat::format(Calendar& fromCalendar,
     return appendTo;
 }
 
-
-
 void
 DateIntervalFormat::parseObject(const UnicodeString& /* source */, 
                                 Formattable& /* result */,
@@ -412,16 +374,10 @@ DateIntervalFormat::parseObject(const UnicodeString& /* source */,
     // will set status as U_INVALID_FORMAT_ERROR if 
     // parse_pos is still 0
 }
-
-
-
-
 const DateIntervalInfo*
 DateIntervalFormat::getDateIntervalInfo() const {
     return fInfo;
 }
-
-
 void
 DateIntervalFormat::setDateIntervalInfo(const DateIntervalInfo& newItvPattern,
                                         UErrorCode& status) {
@@ -440,15 +396,11 @@ DateIntervalFormat::setDateIntervalInfo(const DateIntervalInfo& newItvPattern,
         initializePattern(status);
     }
 }
-
-
  
 const DateFormat*
 DateIntervalFormat::getDateFormat() const {
     return fDateFormat;
 }
-
-
 void
 DateIntervalFormat::adoptTimeZone(TimeZone* zone)
 {
@@ -559,8 +511,6 @@ DateIntervalFormat::create(const Locale& locale,
     return f;
 }
 
-
-
 /** 
  * Initialize interval patterns locale to this formatter
  * 
@@ -634,8 +584,6 @@ DateIntervalFormat::initializePattern(UErrorCode& status) {
     UnicodeString timeSkeleton;
     UnicodeString normalizedTimeSkeleton;
     UnicodeString normalizedDateSkeleton;
-
-
     /* the difference between time skeleton and normalizedTimeSkeleton are:
      * 1. (Formerly, normalized time skeleton folded 'H' to 'h'; no longer true)
      * 2. 'a' is omitted in normalized time skeleton.
@@ -785,8 +733,6 @@ DateIntervalFormat::initializePattern(UErrorCode& status) {
     }
 }
 
-
-
 void  U_EXPORT2 
 DateIntervalFormat::getDateTimeSkeleton(const UnicodeString& skeleton, 
                                         UnicodeString& dateSkeleton, 
@@ -929,8 +875,6 @@ DateIntervalFormat::getDateTimeSkeleton(const UnicodeString& skeleton,
         normalizedTimeSkeleton.append(LOW_V);
     }
 }
-
-
 /**
  * Generate date or time interval pattern from resource,
  * and set them into the interval pattern locale to this formatter.
@@ -1047,8 +991,6 @@ DateIntervalFormat::setSeparateDateTimePtn(
     return true;
 }
 
-
-
 void
 DateIntervalFormat::setFallbackPattern(UCalendarDateFields field,
                                        const UnicodeString& skeleton,
@@ -1063,10 +1005,6 @@ DateIntervalFormat::setFallbackPattern(UCalendarDateFields field,
     }
     setPatternInfo(field, NULL, &pattern, fInfo->getDefaultOrder());
 }
-
-
-
-
 void
 DateIntervalFormat::setPatternInfo(UCalendarDateFields field, 
                                    const UnicodeString* firstPart,
@@ -1099,8 +1037,6 @@ DateIntervalFormat::setIntervalPattern(UCalendarDateFields field,
     UBool order = fInfo->getDefaultOrder();
     setIntervalPattern(field, intervalPattern, order);
 }
-
-
 void
 DateIntervalFormat::setIntervalPattern(UCalendarDateFields field,
                                        const UnicodeString& intervalPattern,
@@ -1136,10 +1072,6 @@ DateIntervalFormat::setIntervalPattern(UCalendarDateFields field,
     }
     setPatternInfo(field, &firstPart, &secondPart, order);
 }
-
-
-
-
 /**
  * Generate interval pattern from existing resource
  *
@@ -1235,8 +1167,6 @@ DateIntervalFormat::setIntervalPattern(UCalendarDateFields field,
     }
     return FALSE;
 }
-
-
 
 int32_t  U_EXPORT2 
 DateIntervalFormat::splitPatternInto2Part(const UnicodeString& intervalPattern) {
@@ -1403,10 +1333,6 @@ DateIntervalFormat::fallbackFormat(Calendar& fromCalendar,
     }
     return appendTo;
 }
-
-
-
-
 UBool  U_EXPORT2 
 DateIntervalFormat::fieldExistsInSkeleton(UCalendarDateFields field,
                                           const UnicodeString& skeleton)
@@ -1414,8 +1340,6 @@ DateIntervalFormat::fieldExistsInSkeleton(UCalendarDateFields field,
     const UChar fieldChar = fgCalendarFieldToPatternLetter[field];
     return ( (skeleton.indexOf(fieldChar) == -1)?FALSE:TRUE ) ;
 }
-
-
 
 void  U_EXPORT2 
 DateIntervalFormat::adjustFieldWidth(const UnicodeString& inputSkeleton,
@@ -1526,8 +1450,6 @@ DateIntervalFormat::adjustFieldWidth(const UnicodeString& inputSkeleton,
     }
 }
 
-
-
 void 
 DateIntervalFormat::concatSingleDate2TimeInterval(UnicodeString& format,
                                               const UnicodeString& datePattern,
@@ -1559,8 +1481,6 @@ DateIntervalFormat::concatSingleDate2TimeInterval(UnicodeString& format,
     // it should not happen if the interval format defined is valid
 }
 
-
-
 const UChar
 DateIntervalFormat::fgCalendarFieldToPatternLetter[] =
 {
@@ -1573,8 +1493,6 @@ DateIntervalFormat::fgCalendarFieldToPatternLetter[] =
     /*eug*/ LOW_E, LOW_U, LOW_G, // DOW_LOCAL, EXTENDED_YEAR, JULIAN_DAY,
     /*A..*/ CAP_A, SPACE, SPACE, // MILLISECONDS_IN_DAY, IS_LEAP_MONTH, FIELD_COUNT
 };
-
-
 U_NAMESPACE_END
 
 #endif

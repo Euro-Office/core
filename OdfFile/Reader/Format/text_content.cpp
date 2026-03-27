@@ -65,8 +65,6 @@ void paragraph_attrs::add_attributes( const xml::attributes_wc_ptr & Attributes 
         xml_id_ = Attributes->get_val< std::wstring >(L"text:id").get_value_or(L"");
     
 }
-
-
 }
 }
 }

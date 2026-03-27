@@ -343,8 +343,6 @@ u_fsetcodepage(    const char    *codepage,
     }
     return retVal;
 }
-
-
 U_CAPI UConverter * U_EXPORT2 /* U_CAPI ... U_EXPORT2 added by Peter Kirk 17 Nov 2001 */
 u_fgetConverter(UFILE *file)
 {

@@ -38,13 +38,9 @@ namespace XLS
 XCT::XCT()
 {
 }
-
-
 XCT::~XCT()
 {
 }
-
-
 BaseObjectPtr XCT::clone()
 {
 	return BaseObjectPtr(new XCT(*this));

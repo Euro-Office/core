@@ -70,8 +70,6 @@ namespace XLSB
             bool           fMTREnabled;
             bool           fUserSetThreadCount;
             bool           fNoDeps;
-
-
     };
 
 } // namespace XLSB

@@ -40,19 +40,13 @@ namespace XLSB
     WsFmtInfo::WsFmtInfo()
     {
     }
-
-
     WsFmtInfo::~WsFmtInfo()
     {
     }
-
-
     BaseObjectPtr WsFmtInfo::clone()
     {
         return BaseObjectPtr(new WsFmtInfo(*this));
     }
-
-
     void WsFmtInfo::readFields(XLS::CFRecord& record)
     {
         _UINT16 flags;

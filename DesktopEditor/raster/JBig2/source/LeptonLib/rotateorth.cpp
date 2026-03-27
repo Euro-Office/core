@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  rotateorth.c
  *
@@ -36,8 +34,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*!
  *  pixRotateOrth()
  *
@@ -65,8 +61,6 @@ pixRotateOrth(PIX     *pixs,
     else /* quads == 3 */
         return pixRotate90(pixs, -1);
 }
-    
-
 /*!
  *  pixRotate180()
  *
@@ -112,8 +106,6 @@ l_int32  d;
     pixFlipTB(pixd, pixd);
     return pixd;
 }
-    
-
 /*!
  *  pixRotate90()
  *
@@ -162,8 +154,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixFlipLR()
  *
@@ -235,8 +225,6 @@ l_uint32  *datad, *buffer;
     if (tab) FREE(tab);
     return pixd;
 }
-
-
 /*!
  *  pixFlipTB()
  *

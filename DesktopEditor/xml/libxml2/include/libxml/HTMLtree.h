@@ -21,8 +21,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 /**
  * HTML_TEXT_NODE:
  *
@@ -135,8 +133,6 @@ XMLPUBFUN void XMLCALL
 
 XMLPUBFUN int XMLCALL
 		htmlIsBooleanAttr	(const xmlChar *name);
-
-
 #ifdef __cplusplus
 }
 #endif

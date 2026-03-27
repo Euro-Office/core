@@ -100,8 +100,6 @@ typedef	struct {
 	uint32	tiff_diroff;	/* byte offset to first directory */
 #define TIFF_DIROFFSET_SIZE	4
 } TIFFHeader;
-
-
 /*
  * TIFF Image File Directories are comprised of a table of field
  * descriptors of the form shown below.  The table is sorted in

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_LIST_H
 #include FT_OUTLINE_H
@@ -40,8 +38,6 @@
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 #include "ftbase.h"
 #endif
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
 #include FT_BITMAP_H
@@ -63,19 +59,13 @@
 #endif
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
-
 #define GRID_FIT_METRICS
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id )
   {
     FT_Pointer      result = NULL;
     FT_ServiceDesc  desc   = service_descriptors;
-
-
     if ( desc && service_id )
     {
       for ( ; desc->serv_id != NULL; desc++ )
@@ -90,8 +80,6 @@
 
     return result;
   }
-
-
   FT_BASE_DEF( void )
   ft_validator_init( FT_Validator        valid,
                      const FT_Byte*      base,
@@ -103,8 +91,6 @@
     valid->level = level;
     valid->error = FT_Err_Ok;
   }
-
-
   FT_BASE_DEF( FT_Int )
   ft_validator_run( FT_Validator  valid )
   {
@@ -113,8 +99,6 @@
 
     return -1;
   }
-
-
   FT_BASE_DEF( void )
   ft_validator_error( FT_Validator  valid,
                       FT_Error      error )
@@ -123,16 +107,12 @@
     /* type check, we introduce a dummy variable, which  */
     /* will be optimized away                            */
     volatile ft_jmp_buf* jump_buffer = &valid->jump_buffer;
-
-
     valid->error = error;
 
     /* throw away volatileness; use `jump_buffer' or the  */
     /* compiler may warn about an unused local variable   */
     ft_longjmp( *(ft_jmp_buf*) jump_buffer, 1 );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -144,8 +124,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* create a new input stream from an FT_Open_Args structure */
   /*                                                          */
   FT_BASE_DEF( FT_Error )
@@ -156,8 +134,6 @@
     FT_Error   error;
     FT_Memory  memory;
     FT_Stream  stream = NULL;
-
-
     *astream = 0;
 
     if ( !library )
@@ -214,8 +190,6 @@
   Exit:
     return error;
   }
-
-
   FT_BASE_DEF( void )
   FT_Stream_Free( FT_Stream  stream,
                   FT_Int     external )
@@ -223,16 +197,12 @@
     if ( stream )
     {
       FT_Memory  memory = stream->memory;
-
-
       FT_Stream_Close( stream );
 
       if ( !external )
         FT_FREE( stream );
     }
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -241,8 +211,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_objs
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -254,8 +222,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   static FT_Error
   ft_glyphslot_init( FT_GlyphSlot  slot )
   {
@@ -264,8 +230,6 @@
     FT_Memory         memory   = driver->root.memory;
     FT_Error          error    = FT_Err_Ok;
     FT_Slot_Internal  internal = NULL;
-
-
     slot->library = driver->root.library;
 
     if ( FT_NEW( internal ) )
@@ -282,16 +246,12 @@
   Exit:
     return error;
   }
-
-
   FT_BASE_DEF( void )
   ft_glyphslot_free_bitmap( FT_GlyphSlot  slot )
   {
     if ( slot->internal && ( slot->internal->flags & FT_GLYPH_OWN_BITMAP ) )
     {
       FT_Memory  memory = FT_FACE_MEMORY( slot->face );
-
-
       FT_FREE( slot->bitmap.buffer );
       slot->internal->flags &= ~FT_GLYPH_OWN_BITMAP;
     }
@@ -302,8 +262,6 @@
       slot->bitmap.buffer = NULL;
     }
   }
-
-
   FT_BASE_DEF( void )
   ft_glyphslot_set_bitmap( FT_GlyphSlot  slot,
                            FT_Byte*      buffer )
@@ -314,16 +272,12 @@
 
     FT_ASSERT( (slot->internal->flags & FT_GLYPH_OWN_BITMAP) == 0 );
   }
-
-
   FT_BASE_DEF( FT_Error )
   ft_glyphslot_alloc_bitmap( FT_GlyphSlot  slot,
                              FT_ULong      size )
   {
     FT_Memory  memory = FT_FACE_MEMORY( slot->face );
     FT_Error   error;
-
-
     if ( slot->internal->flags & FT_GLYPH_OWN_BITMAP )
       FT_FREE( slot->bitmap.buffer );
     else
@@ -332,8 +286,6 @@
     (void)FT_ALLOC( slot->bitmap.buffer, size );
     return error;
   }
-
-
   static void
   ft_glyphslot_clear( FT_GlyphSlot  slot )
   {
@@ -364,16 +316,12 @@
     slot->lsb_delta         = 0;
     slot->rsb_delta         = 0;
   }
-
-
   static void
   ft_glyphslot_done( FT_GlyphSlot  slot )
   {
     FT_Driver        driver = slot->face->driver;
     FT_Driver_Class  clazz  = driver->clazz;
     FT_Memory        memory = driver->root.memory;
-
-
     if ( clazz->done_slot )
       clazz->done_slot( slot );
 
@@ -393,8 +341,6 @@
       FT_FREE( slot->internal );
     }
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Error )
@@ -406,8 +352,6 @@
     FT_Driver_Class  clazz;
     FT_Memory        memory;
     FT_GlyphSlot     slot = NULL;
-
-
     if ( !face || !face->driver )
       return FT_THROW( Invalid_Argument );
 
@@ -436,14 +380,10 @@
     }
     else if ( aslot )
       *aslot = 0;
-
-
   Exit:
     FT_TRACE4(( "FT_New_GlyphSlot: Return %d\n", error ));
     return error;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )
@@ -455,8 +395,6 @@
       FT_Memory     memory = driver->root.memory;
       FT_GlyphSlot  prev;
       FT_GlyphSlot  cur;
-
-
       /* Remove slot from its parent face's list */
       prev = NULL;
       cur  = slot->face->glyph;
@@ -483,8 +421,6 @@
       }
     }
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( void )
@@ -493,8 +429,6 @@
                     FT_Vector*  delta )
   {
     FT_Face_Internal  internal;
-
-
     if ( !face )
       return;
 
@@ -532,12 +466,8 @@
     if ( delta->x | delta->y )
       internal->transform_flags |= 2;
   }
-
-
   static FT_Renderer
   ft_lookup_glyph_renderer( FT_GlyphSlot  slot );
-
-
 #ifdef GRID_FIT_METRICS
   static void
   ft_glyphslot_grid_fit_metrics( FT_GlyphSlot  slot,
@@ -545,8 +475,6 @@
   {
     FT_Glyph_Metrics*  metrics = &slot->metrics;
     FT_Pos             right, bottom;
-
-
     if ( vertical )
     {
       metrics->horiBearingX = FT_PIX_FLOOR( metrics->horiBearingX );
@@ -580,8 +508,6 @@
     metrics->vertAdvance = FT_PIX_ROUND( metrics->vertAdvance );
   }
 #endif /* GRID_FIT_METRICS */
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -596,8 +522,6 @@
     FT_Bool       autohint = FALSE;
     FT_Module     hinter;
     TT_Face       ttface = (TT_Face)face;
-
-
     if ( !face || !face->size || !face->glyph )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -661,8 +585,6 @@
       else
       {
         FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
-
-
         /* the check for `num_locations' assures that we actually    */
         /* test for instructions in a TTF and not in a CFF-based OTF */
         /*                                                           */
@@ -684,8 +606,6 @@
     if ( autohint )
     {
       FT_AutoHinter_Interface  hinting;
-
-
       /* try to load embedded bitmaps first if available            */
       /*                                                            */
       /* XXX: This is really a temporary hack that should disappear */
@@ -705,8 +625,6 @@
       {
         FT_Face_Internal  internal        = face->internal;
         FT_Int            transform_flags = internal->transform_flags;
-
-
         /* since the auto-hinter calls FT_Load_Glyph by itself, */
         /* make sure that glyphs aren't transformed             */
         internal->transform_flags = 0;
@@ -763,8 +681,6 @@
          ( FT_IS_SCALABLE( face ) )                  )
     {
       FT_Size_Metrics*  metrics = &face->size->metrics;
-
-
       /* it's tricky! */
       slot->linearHoriAdvance = FT_MulDiv( slot->linearHoriAdvance,
                                            metrics->x_scale, 64 );
@@ -776,15 +692,11 @@
     if ( ( load_flags & FT_LOAD_IGNORE_TRANSFORM ) == 0 )
     {
       FT_Face_Internal  internal = face->internal;
-
-
       /* now, transform the glyph image if needed */
       if ( internal->transform_flags )
       {
         /* get renderer */
         FT_Renderer  renderer = ft_lookup_glyph_renderer( slot );
-
-
         if ( renderer )
           error = renderer->clazz->transform_glyph(
                                      renderer, slot,
@@ -821,8 +733,6 @@
          load_flags & FT_LOAD_RENDER )
     {
       FT_Render_Mode  mode = FT_LOAD_TARGET_MODE( load_flags );
-
-
       if ( mode == FT_RENDER_MODE_NORMAL      &&
            (load_flags & FT_LOAD_MONOCHROME ) )
         mode = FT_RENDER_MODE_MONO;
@@ -833,8 +743,6 @@
   Exit:
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -843,8 +751,6 @@
                 FT_Int32  load_flags )
   {
     FT_UInt  glyph_index;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -854,8 +760,6 @@
 
     return FT_Load_Glyph( face, glyph_index, load_flags );
   }
-
-
   /* destructor for sizes list */
   static void
   destroy_size( FT_Memory  memory,
@@ -873,27 +777,19 @@
     FT_FREE( size->internal );
     FT_FREE( size );
   }
-
-
   static void
   ft_cmap_done_internal( FT_CMap  cmap );
-
-
   static void
   destroy_charmaps( FT_Face    face,
                     FT_Memory  memory )
   {
     FT_Int  n;
-
-
     if ( !face )
       return;
 
     for ( n = 0; n < face->num_charmaps; n++ )
     {
       FT_CMap  cmap = FT_CMAP( face->charmaps[n] );
-
-
       ft_cmap_done_internal( cmap );
 
       face->charmaps[n] = NULL;
@@ -902,8 +798,6 @@
     FT_FREE( face->charmaps );
     face->num_charmaps = 0;
   }
-
-
   /* destructor for faces list */
   static void
   destroy_face( FT_Memory  memory,
@@ -911,8 +805,6 @@
                 FT_Driver  driver )
   {
     FT_Driver_Class  clazz = driver->clazz;
-
-
     /* discard auto-hinting data */
     if ( face->autohint.finalizer )
       face->autohint.finalizer( face->autohint.data );
@@ -954,8 +846,6 @@
     }
     FT_FREE( face );
   }
-
-
   static void
   Destroy_Driver( FT_Driver  driver )
   {
@@ -968,8 +858,6 @@
     if ( FT_DRIVER_USES_OUTLINES( driver ) )
       FT_GlyphLoader_Done( driver->glyph_loader );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -989,8 +877,6 @@
   {
     FT_CharMap*  first;
     FT_CharMap*  cur;
-
-
     /* caller should have already checked that `face' is valid */
     FT_ASSERT( face );
 
@@ -1077,8 +963,6 @@
 
     return FT_THROW( Invalid_CharMap_Handle );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1094,8 +978,6 @@
     FT_CharMap*  first;
     FT_CharMap*  end;
     FT_CharMap*  cur;
-
-
     /* caller should have already checked that `face' is valid */
     FT_ASSERT( face );
 
@@ -1126,8 +1008,6 @@
 
     return NULL;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1151,8 +1031,6 @@
     FT_Face_Internal  internal = NULL;
 
     FT_Error          error, error2;
-
-
     clazz  = driver->clazz;
     memory = driver->root.memory;
 
@@ -1176,8 +1054,6 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     {
       int  i;
-
-
       face->internal->incremental_interface = 0;
       for ( i = 0; i < num_params && !face->internal->incremental_interface;
             i++ )
@@ -1225,8 +1101,6 @@
 
     return error;
   }
-
-
   /* there's a Mac-specific extended implementation of FT_New_Face() */
   /* in src/base/ftmac.c                                             */
 
@@ -1241,8 +1115,6 @@
                FT_Face     *aface )
   {
     FT_Open_Args  args;
-
-
     /* test for valid `library' and `aface' delayed to FT_Open_Face() */
     if ( !pathname )
       return FT_THROW( Invalid_Argument );
@@ -1255,8 +1127,6 @@
   }
 
 #endif
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -1267,8 +1137,6 @@
                       FT_Face        *aface )
   {
     FT_Open_Args  args;
-
-
     /* test for valid `library' and `face' delayed to FT_Open_Face() */
     if ( !file_base )
       return FT_THROW( Invalid_Argument );
@@ -1280,8 +1148,6 @@
 
     return FT_Open_Face( library, &args, face_index, aface );
   }
-
-
 #ifdef FT_CONFIG_OPTION_MAC_FONTS
 
   /* The behavior here is very similar to that in base/ftmac.c, but it     */
@@ -1309,8 +1175,6 @@
   /* going to try to save the kerning info.  After all that lives in the   */
   /* `FOND' which isn't in the file containing the `POST' resources so     */
   /* we don't really have access to it.                                    */
-
-
   /* Finalizer for a memory stream; gets called by FT_Done_Face(). */
   /* It frees the memory it uses.                                  */
   /* From ftmac.c.                                                 */
@@ -1318,16 +1182,12 @@
   memory_stream_close( FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
-
-
     FT_FREE( stream->base );
 
     stream->size  = 0;
     stream->base  = 0;
     stream->close = 0;
   }
-
-
   /* Create a new memory stream from a buffer and a size. */
   /* From ftmac.c.                                        */
   static FT_Error
@@ -1340,8 +1200,6 @@
     FT_Error   error;
     FT_Memory  memory;
     FT_Stream  stream = NULL;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -1362,8 +1220,6 @@
   Exit:
     return error;
   }
-
-
   /* Create a new FT_Face given a buffer and a driver name. */
   /* from ftmac.c */
   FT_LOCAL_DEF( FT_Error )
@@ -1378,8 +1234,6 @@
     FT_Error      error;
     FT_Stream     stream = NULL;
     FT_Memory     memory = library->memory;
-
-
     error = new_memory_stream( library,
                                base,
                                size,
@@ -1425,8 +1279,6 @@
 
     return error;
   }
-
-
   /* Look up `TYP1' or `CID ' table from sfnt table directory.       */
   /* `offset' and `length' must exclude the binary header in tables. */
 
@@ -1448,8 +1300,6 @@
     FT_Long    pstable_index;
     FT_ULong   tag;
     int        i;
-
-
     *offset = 0;
     *length = 0;
     *is_sfnt_cid = FALSE;
@@ -1499,8 +1349,6 @@
     }
     return FT_THROW( Table_Missing );
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   open_face_PS_from_sfnt_stream( FT_Library     library,
                                  FT_Stream      stream,
@@ -1518,8 +1366,6 @@
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-
-
     pos = FT_Stream_Pos( stream );
 
     error = ft_lookup_PS_in_sfnt_stream( stream,
@@ -1549,8 +1395,6 @@
   Exit:
     {
       FT_Error  error1;
-
-
       if ( FT_ERR_EQ( error, Unknown_File_Format ) )
       {
         error1 = FT_Stream_Seek( stream, pos );
@@ -1561,8 +1405,6 @@
       return error;
     }
   }
-
-
 #ifndef FT_MACINTOSH
 
   /* The resource header says we've got resource_cnt `POST' (type1) */
@@ -1586,8 +1428,6 @@
     FT_Long    len;
     FT_Long    pfb_len, pfb_pos, pfb_lenpos;
     FT_Long    rlen, temp;
-
-
     if ( face_index == -1 )
       face_index = 0;
     if ( face_index != 0 )
@@ -1707,8 +1547,6 @@
   Exit:
     return error;
   }
-
-
   /* The resource header says we've got resource_cnt `sfnt'      */
   /* (TrueType/OpenType) resources in this file.  Look through   */
   /* them for the one indicated by face_index, load it into mem, */
@@ -1729,8 +1567,6 @@
     FT_Long    rlen;
     int        is_cff;
     FT_Long    face_index_in_resource = 0;
-
-
     if ( face_index == -1 )
       face_index = 0;
     if ( face_index >= resource_cnt )
@@ -1775,8 +1611,6 @@
   Exit:
     return error;
   }
-
-
   /* Check for a valid resource fork header, or a valid dfont    */
   /* header.  In a resource fork the first 16 bytes are repeated */
   /* at the location specified by bytes 4-7.  In a dfont bytes   */
@@ -1794,8 +1628,6 @@
     FT_Long    map_offset, rdara_pos;
     FT_Long    *data_offsets;
     FT_Long    count;
-
-
     error = FT_Raccess_Get_HeaderInfo( library, stream, resource_offset,
                                        &map_offset, &rdara_pos );
     if ( error )
@@ -1826,8 +1658,6 @@
     if ( !error )
     {
       FT_Long  face_index_internal = face_index % count;
-
-
       error = Mac_Read_sfnt_Resource( library, stream, data_offsets, count,
                                       face_index_internal, aface );
       FT_FREE( data_offsets );
@@ -1837,8 +1667,6 @@
 
     return error;
   }
-
-
   /* Check for a valid macbinary header, and if we find one   */
   /* check that the (flattened) resource fork in it is valid. */
   /*                                                          */
@@ -1851,8 +1679,6 @@
     unsigned char  header[128];
     FT_Error       error;
     FT_Long        dlen, offset;
-
-
     if ( NULL == stream )
       return FT_THROW( Invalid_Stream_Operation );
 
@@ -1890,8 +1716,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   load_face_in_embedded_rfork( FT_Library           library,
                                FT_Stream            stream,
@@ -1914,8 +1738,6 @@
 
     FT_Open_Args  args2;
     FT_Stream     stream2 = 0;
-
-
     FT_Raccess_Guess( library, stream,
                       args->pathname, file_names, offsets, errors );
 
@@ -1980,8 +1802,6 @@
 #define FT_COMPONENT  trace_objs
 
   }
-
-
   /* Check for some macintosh formats without Carbon framework.    */
   /* Is this a macbinary file?  If so look at the resource fork.   */
   /* Is this a mac dfont file?                                     */
@@ -1998,8 +1818,6 @@
   {
     FT_Error error;
     FT_UNUSED( args );
-
-
     error = IsMacBinary( library, stream, face_index, aface );
     if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
@@ -2028,8 +1846,6 @@
 #endif
 
 #endif  /* !FT_MACINTOSH && FT_CONFIG_OPTION_MAC_FONTS */
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2047,8 +1863,6 @@
     FT_Bool      external_stream;
     FT_Module*   cur;
     FT_Module*   limit;
-
-
     /* test for valid `library' delayed to */
     /* FT_Stream_New()                     */
 
@@ -2076,8 +1890,6 @@
       {
         FT_Int         num_params = 0;
         FT_Parameter*  params     = 0;
-
-
         if ( args->flags & FT_OPEN_PARAMS )
         {
           num_params = args->num_params;
@@ -2110,8 +1922,6 @@
         {
           FT_Int         num_params = 0;
           FT_Parameter*  params     = 0;
-
-
           driver = FT_DRIVER( cur[0] );
 
           if ( args->flags & FT_OPEN_PARAMS )
@@ -2210,8 +2020,6 @@
       /* finally, allocate a size object for the face */
       {
         FT_Size  size;
-
-
         FT_TRACE4(( "FT_Open_Face: Creating size object\n" ));
 
         error = FT_New_Size( face, &size );
@@ -2236,13 +2044,9 @@
     if ( FT_HAS_FIXED_SIZES( face ) )
     {
       FT_Int  i;
-
-
       for ( i = 0; i < face->num_fixed_sizes; i++ )
       {
         FT_Bitmap_Size*  bsize = face->available_sizes + i;
-
-
         if ( bsize->height < 0 )
           bsize->height = (FT_Short)-bsize->height;
         if ( bsize->x_ppem < 0 )
@@ -2255,8 +2059,6 @@
     /* initialize internal face data */
     {
       FT_Face_Internal  internal = face->internal;
-
-
       internal->transform_matrix.xx = 0x10000L;
       internal->transform_matrix.xy = 0;
       internal->transform_matrix.yx = 0;
@@ -2286,8 +2088,6 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2295,8 +2095,6 @@
                   const char*  filepathname )
   {
     FT_Open_Args  open;
-
-
     /* test for valid `face' delayed to FT_Attach_Stream() */
 
     if ( !filepathname )
@@ -2308,8 +2106,6 @@
 
     return FT_Attach_Stream( face, &open );
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2321,8 +2117,6 @@
     FT_Driver  driver;
 
     FT_Driver_Class  clazz;
-
-
     /* test for valid `parameters' delayed to FT_Stream_New() */
 
     if ( !face )
@@ -2352,8 +2146,6 @@
   Exit:
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2363,8 +2155,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2374,8 +2164,6 @@
     FT_Driver    driver;
     FT_Memory    memory;
     FT_ListNode  node;
-
-
     error = FT_ERR( Invalid_Face_Handle );
     if ( face && face->driver )
     {
@@ -2404,8 +2192,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2419,8 +2205,6 @@
 
     FT_Size          size = 0;
     FT_ListNode      node = 0;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -2465,8 +2249,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2477,8 +2259,6 @@
     FT_Memory    memory;
     FT_Face      face;
     FT_ListNode  node;
-
-
     if ( !size )
       return FT_THROW( Invalid_Size_Handle );
 
@@ -2513,8 +2293,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Error )
@@ -2525,8 +2303,6 @@
   {
     FT_Int   i;
     FT_Long  w, h;
-
-
     if ( !FT_HAS_FIXED_SIZES( face ) )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -2548,8 +2324,6 @@
     for ( i = 0; i < face->num_fixed_sizes; i++ )
     {
       FT_Bitmap_Size*  bsize = face->available_sizes + i;
-
-
       if ( h != FT_PIX_ROUND( bsize->y_ppem ) )
         continue;
 
@@ -2566,8 +2340,6 @@
 
     return FT_THROW( Invalid_Pixel_Size );
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )
@@ -2575,8 +2347,6 @@
                                   FT_Pos             advance )
   {
     FT_Pos  height = metrics->height;
-
-
     /* compensate for glyph with bbox above/below the baseline */
     if ( metrics->horiBearingY < 0 )
     {
@@ -2594,8 +2364,6 @@
     metrics->vertBearingY = ( advance - height ) / 2;
     metrics->vertAdvance  = advance;
   }
-
-
   static void
   ft_recompute_scaled_metrics( FT_Face           face,
                                FT_Size_Metrics*  metrics )
@@ -2628,16 +2396,12 @@
                                       metrics->x_scale );
 #endif /* !GRID_FIT_METRICS */
   }
-
-
   FT_BASE_DEF( void )
   FT_Select_Metrics( FT_Face   face,
                      FT_ULong  strike_index )
   {
     FT_Size_Metrics*  metrics;
     FT_Bitmap_Size*   bsize;
-
-
     metrics = &face->size->metrics;
     bsize   = face->available_sizes + strike_index;
 
@@ -2675,22 +2439,16 @@
     FT_TRACE5(( "  x ppem: %d\n",      metrics->x_ppem ));
     FT_TRACE5(( "  y ppem: %d\n",      metrics->y_ppem ));
   }
-
-
   FT_BASE_DEF( void )
   FT_Request_Metrics( FT_Face          face,
                       FT_Size_Request  req )
   {
     FT_Size_Metrics*  metrics;
-
-
     metrics = &face->size->metrics;
 
     if ( FT_IS_SCALABLE( face ) )
     {
       FT_Long  w = 0, h = 0, scaled_w = 0, scaled_h = 0;
-
-
       switch ( req->type )
       {
       case FT_SIZE_REQUEST_TYPE_NOMINAL:
@@ -2795,8 +2553,6 @@
     FT_TRACE5(( "  x ppem: %d\n",      metrics->x_ppem ));
     FT_TRACE5(( "  y ppem: %d\n",      metrics->y_ppem ));
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2804,8 +2560,6 @@
                   FT_Int   strike_index )
   {
     FT_Driver_Class  clazz;
-
-
     if ( !face || !FT_HAS_FIXED_SIZES( face ) )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -2817,15 +2571,11 @@
     if ( clazz->select_size )
     {
       FT_Error  error;
-
-
       error = clazz->select_size( face->size, (FT_ULong)strike_index );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
       {
         FT_Size_Metrics*  metrics = &face->size->metrics;
-
-
         FT_TRACE5(( "FT_Select_Size (font driver's `select_size'):\n" ));
         FT_TRACE5(( "  x scale: %d (%f)\n",
                     metrics->x_scale, metrics->x_scale / 65536.0 ));
@@ -2847,8 +2597,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2857,8 +2605,6 @@
   {
     FT_Driver_Class  clazz;
     FT_ULong         strike_index;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -2871,15 +2617,11 @@
     if ( clazz->request_size )
     {
       FT_Error  error;
-
-
       error = clazz->request_size( face->size, req );
 
 #ifdef FT_DEBUG_LEVEL_TRACE
       {
         FT_Size_Metrics*  metrics = &face->size->metrics;
-
-
         FT_TRACE5(( "FT_Request_Size (font driver's `request_size'):\n" ));
         FT_TRACE5(( "  x scale: %d (%f)\n",
                     metrics->x_scale, metrics->x_scale / 65536.0 ));
@@ -2907,8 +2649,6 @@
     if ( !FT_IS_SCALABLE( face ) && FT_HAS_FIXED_SIZES( face ) )
     {
       FT_Error  error;
-
-
       error = FT_Match_Size( face, req, 0, &strike_index );
       if ( error )
         return error;
@@ -2920,8 +2660,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2932,8 +2670,6 @@
                     FT_UInt     vert_resolution )
   {
     FT_Size_RequestRec  req;
-
-
     if ( !char_width )
       char_width = char_height;
     else if ( !char_height )
@@ -2960,8 +2696,6 @@
 
     return FT_Request_Size( face, &req );
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -2970,8 +2704,6 @@
                       FT_UInt  pixel_height )
   {
     FT_Size_RequestRec  req;
-
-
     if ( pixel_width == 0 )
       pixel_width = pixel_height;
     else if ( pixel_height == 0 )
@@ -2996,8 +2728,6 @@
 
     return FT_Request_Size( face, &req );
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3009,8 +2739,6 @@
   {
     FT_Error   error = FT_Err_Ok;
     FT_Driver  driver;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3056,8 +2784,6 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3068,8 +2794,6 @@
   {
     FT_Service_Kerning  service;
     FT_Error            error = FT_Err_Ok;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3087,8 +2811,6 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3097,8 +2819,6 @@
   {
     FT_CharMap*  cur;
     FT_CharMap*  limit;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3138,8 +2858,6 @@
 
     return FT_THROW( Invalid_Argument );
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3148,8 +2866,6 @@
   {
     FT_CharMap*  cur;
     FT_CharMap*  limit;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3180,16 +2896,12 @@
     }
     return FT_THROW( Invalid_Argument );
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Int )
   FT_Get_Charmap_Index( FT_CharMap  charmap )
   {
     FT_Int  i;
-
-
     if ( !charmap || !charmap->face )
       return -1;
 
@@ -3210,23 +2922,17 @@
 #endif
     return i;
   }
-
-
   static void
   ft_cmap_done_internal( FT_CMap  cmap )
   {
     FT_CMap_Class  clazz  = cmap->clazz;
     FT_Face        face   = cmap->charmap.face;
     FT_Memory      memory = FT_FACE_MEMORY( face );
-
-
     if ( clazz->done )
       clazz->done( cmap );
 
     FT_FREE( cmap );
   }
-
-
   FT_BASE_DEF( void )
   FT_CMap_Done( FT_CMap  cmap )
   {
@@ -3236,15 +2942,11 @@
       FT_Memory  memory = FT_FACE_MEMORY( face );
       FT_Error   error;
       FT_Int     i, j;
-
-
       for ( i = 0; i < face->num_charmaps; i++ )
       {
         if ( (FT_CMap)face->charmaps[i] == cmap )
         {
           FT_CharMap  last_charmap = face->charmaps[face->num_charmaps - 1];
-
-
           if ( FT_RENEW_ARRAY( face->charmaps,
                                face->num_charmaps,
                                face->num_charmaps - 1 ) )
@@ -3271,8 +2973,6 @@
       }
     }
   }
-
-
   FT_BASE_DEF( FT_Error )
   FT_CMap_New( FT_CMap_Class  clazz,
                FT_Pointer     init_data,
@@ -3283,8 +2983,6 @@
     FT_Face    face;
     FT_Memory  memory;
     FT_CMap    cmap = NULL;
-
-
     if ( clazz == NULL || charmap == NULL || charmap->face == NULL )
       return FT_THROW( Invalid_Argument );
 
@@ -3323,8 +3021,6 @@
     cmap = NULL;
     goto Exit;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt )
@@ -3332,13 +3028,9 @@
                      FT_ULong  charcode )
   {
     FT_UInt  result = 0;
-
-
     if ( face && face->charmap )
     {
       FT_CMap  cmap = FT_CMAP( face->charmap );
-
-
       if ( charcode > 0xFFFFFFFFUL )
       {
         FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3348,8 +3040,6 @@
     }
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_ULong )
@@ -3358,8 +3048,6 @@
   {
     FT_ULong  result = 0;
     FT_UInt   gindex = 0;
-
-
     /* only do something if we have a charmap, and we have glyphs at all */
     if ( face && face->charmap && face->num_glyphs )
     {
@@ -3373,8 +3061,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_ULong )
@@ -3384,14 +3070,10 @@
   {
     FT_ULong  result = 0;
     FT_UInt   gindex = 0;
-
-
     if ( face && face->charmap && face->num_glyphs )
     {
       FT_UInt32  code = (FT_UInt32)charcode;
       FT_CMap    cmap = FT_CMAP( face->charmap );
-
-
       do
       {
         gindex = cmap->clazz->char_next( cmap, &code );
@@ -3406,8 +3088,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt )
@@ -3416,20 +3096,14 @@
                                FT_ULong  variantSelector )
   {
     FT_UInt  result = 0;
-
-
     if ( face && face->charmap &&
         face->charmap->encoding == FT_ENCODING_UNICODE )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
       FT_CMap     ucmap = FT_CMAP( face->charmap );
-
-
       if ( charmap != NULL )
       {
         FT_CMap  vcmap = FT_CMAP( charmap );
-
-
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3449,8 +3123,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Int )
@@ -3459,18 +3131,12 @@
                                    FT_ULong  variantSelector )
   {
     FT_Int  result = -1;
-
-
     if ( face )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
-
-
       if ( charmap != NULL )
       {
         FT_CMap  vcmap = FT_CMAP( charmap );
-
-
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3490,35 +3156,25 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
   FT_Face_GetVariantSelectors( FT_Face  face )
   {
     FT_UInt32  *result = NULL;
-
-
     if ( face )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
-
-
       if ( charmap != NULL )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
         result = vcmap->clazz->variant_list( vcmap, memory );
       }
     }
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
@@ -3526,19 +3182,13 @@
                              FT_ULong  charcode )
   {
     FT_UInt32  *result = NULL;
-
-
     if ( face )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
-
-
       if ( charmap != NULL )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
         if ( charcode > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large charcode" ));
@@ -3551,8 +3201,6 @@
     }
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt32* )
@@ -3560,19 +3208,13 @@
                              FT_ULong  variantSelector )
   {
     FT_UInt32  *result = NULL;
-
-
     if ( face )
     {
       FT_CharMap  charmap = find_variant_selector_charmap( face );
-
-
       if ( charmap != NULL )
       {
         FT_CMap    vcmap  = FT_CMAP( charmap );
         FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
         if ( variantSelector > 0xFFFFFFFFUL )
         {
           FT_TRACE1(( "FT_Get_Char_Index: too large variantSelector" ));
@@ -3586,8 +3228,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_UInt )
@@ -3595,13 +3235,9 @@
                      FT_String*  glyph_name )
   {
     FT_UInt  result = 0;
-
-
     if ( face && FT_HAS_GLYPH_NAMES( face ) )
     {
       FT_Service_GlyphDict  service;
-
-
       FT_FACE_LOOKUP_SERVICE( face,
                               service,
                               GLYPH_DICT );
@@ -3612,8 +3248,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3623,8 +3257,6 @@
                      FT_UInt     buffer_max )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     /* clean up buffer */
     if ( buffer && buffer_max > 0 )
       ((FT_Byte*)buffer)[0] = 0;
@@ -3634,8 +3266,6 @@
          FT_HAS_GLYPH_NAMES( face )               )
     {
       FT_Service_GlyphDict  service;
-
-
       FT_FACE_LOOKUP_SERVICE( face,
                               service,
                               GLYPH_DICT );
@@ -3646,24 +3276,18 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( const char* )
   FT_Get_Postscript_Name( FT_Face  face )
   {
     const char*  result = NULL;
-
-
     if ( !face )
       goto Exit;
 
     if ( !result )
     {
       FT_Service_PsFontName  service;
-
-
       FT_FACE_LOOKUP_SERVICE( face,
                               service,
                               POSTSCRIPT_FONT_NAME );
@@ -3675,8 +3299,6 @@
   Exit:
     return result;
   }
-
-
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( void* )
@@ -3685,8 +3307,6 @@
   {
     void*                  table = 0;
     FT_Service_SFNT_Table  service;
-
-
     if ( face && FT_IS_SFNT( face ) )
     {
       FT_FACE_FIND_SERVICE( face, service, SFNT_TABLE );
@@ -3696,8 +3316,6 @@
 
     return table;
   }
-
-
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3708,8 +3326,6 @@
                       FT_ULong*  length )
   {
     FT_Service_SFNT_Table  service;
-
-
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3719,8 +3335,6 @@
 
     return service->load_table( face, tag, offset, buffer, length );
   }
-
-
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -3731,8 +3345,6 @@
   {
     FT_Service_SFNT_Table  service;
     FT_ULong               offset;
-
-
     if ( !face || !FT_IS_SFNT( face ) )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -3742,8 +3354,6 @@
 
     return service->table_info( face, table_index, tag, &offset, length );
   }
-
-
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( FT_ULong )
@@ -3752,8 +3362,6 @@
     FT_Service_TTCMaps  service;
     FT_Face             face;
     TT_CMapInfo         cmap_info;
-
-
     if ( !charmap || !charmap->face )
       return 0;
 
@@ -3766,8 +3374,6 @@
 
     return cmap_info.language;
   }
-
-
   /* documentation is in tttables.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -3776,8 +3382,6 @@
     FT_Service_TTCMaps  service;
     FT_Face             face;
     TT_CMapInfo         cmap_info;
-
-
     if ( !charmap || !charmap->face )
       return -1;
 
@@ -3790,16 +3394,12 @@
 
     return cmap_info.format;
   }
-
-
   /* documentation is in ftsizes.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Activate_Size( FT_Size  size )
   {
     FT_Face  face;
-
-
     if ( size == NULL )
       return FT_THROW( Invalid_Argument );
 
@@ -3813,8 +3413,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -3835,8 +3433,6 @@
   {
     FT_ListNode  cur;
     FT_Renderer  result = 0;
-
-
     if ( !library )
       goto Exit;
 
@@ -3852,8 +3448,6 @@
     while ( cur )
     {
       FT_Renderer  renderer = FT_RENDERER( cur->data );
-
-
       if ( renderer->glyph_format == format )
       {
         if ( node )
@@ -3868,34 +3462,24 @@
   Exit:
     return result;
   }
-
-
   static FT_Renderer
   ft_lookup_glyph_renderer( FT_GlyphSlot  slot )
   {
     FT_Face      face    = slot->face;
     FT_Library   library = FT_FACE_LIBRARY( face );
     FT_Renderer  result  = library->cur_renderer;
-
-
     if ( !result || result->glyph_format != slot->format )
       result = FT_Lookup_Renderer( library, slot->format, 0 );
 
     return result;
   }
-
-
   static void
   ft_set_current_renderer( FT_Library  library )
   {
     FT_Renderer  renderer;
-
-
     renderer = FT_Lookup_Renderer( library, FT_GLYPH_FORMAT_OUTLINE, 0 );
     library->cur_renderer = renderer;
   }
-
-
   static FT_Error
   ft_add_renderer( FT_Module  module )
   {
@@ -3903,16 +3487,12 @@
     FT_Memory    memory  = library->memory;
     FT_Error     error;
     FT_ListNode  node    = NULL;
-
-
     if ( FT_NEW( node ) )
       goto Exit;
 
     {
       FT_Renderer         render = FT_RENDERER( module );
       FT_Renderer_Class*  clazz  = (FT_Renderer_Class*)module->clazz;
-
-
       render->clazz        = clazz;
       render->glyph_format = clazz->glyph_format;
 
@@ -3942,16 +3522,12 @@
   Exit:
     return error;
   }
-
-
   static void
   ft_remove_renderer( FT_Module  module )
   {
     FT_Library   library;
     FT_Memory    memory;
     FT_ListNode  node;
-
-
     library = module->library;
     if ( !library )
       return;
@@ -3962,8 +3538,6 @@
     if ( node )
     {
       FT_Renderer  render = FT_RENDERER( module );
-
-
       /* release raster object, if any */
       if ( render->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
            render->raster                                         )
@@ -3976,8 +3550,6 @@
       ft_set_current_renderer( library );
     }
   }
-
-
   /* documentation is in ftrender.h */
 
   FT_EXPORT_DEF( FT_Renderer )
@@ -3988,8 +3560,6 @@
 
     return FT_Lookup_Renderer( library, format, 0 );
   }
-
-
   /* documentation is in ftrender.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4000,8 +3570,6 @@
   {
     FT_ListNode  node;
     FT_Error     error = FT_Err_Ok;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -4023,8 +3591,6 @@
     if ( num_params > 0 )
     {
       FT_Renderer_SetModeFunc  set_mode = renderer->clazz->set_mode;
-
-
       for ( ; num_params > 0; num_params-- )
       {
         error = set_mode( renderer, parameters->tag, parameters->data );
@@ -4037,8 +3603,6 @@
   Exit:
     return error;
   }
-
-
   FT_BASE_DEF( FT_Error )
   FT_Render_Glyph_Internal( FT_Library      library,
                             FT_GlyphSlot    slot,
@@ -4046,8 +3610,6 @@
   {
     FT_Error     error = FT_Err_Ok;
     FT_Renderer  renderer;
-
-
     /* if it is already a bitmap, no need to do anything */
     switch ( slot->format )
     {
@@ -4058,8 +3620,6 @@
       {
         FT_ListNode  node   = 0;
         FT_Bool      update = 0;
-
-
         /* small shortcut for the very common case */
         if ( slot->format == FT_GLYPH_FORMAT_OUTLINE )
         {
@@ -4103,8 +3663,6 @@
     {
       FT_Bitmap  bitmap;
       FT_Error   err;
-
-
       FT_Bitmap_New( &bitmap );
 
       err = FT_Bitmap_Convert( library, &slot->bitmap, &bitmap, 1 );
@@ -4113,8 +3671,6 @@
         MD5_CTX        ctx;
         unsigned char  md5[16];
         int            i;
-
-
         MD5_Init( &ctx);
         MD5_Update( &ctx, bitmap.buffer, bitmap.rows * bitmap.pitch );
         MD5_Final( md5, &ctx );
@@ -4137,8 +3693,6 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4146,8 +3700,6 @@
                    FT_Render_Mode  render_mode )
   {
     FT_Library  library;
-
-
     if ( !slot || !slot->face )
       return FT_THROW( Invalid_Argument );
 
@@ -4155,8 +3707,6 @@
 
     return FT_Render_Glyph_Internal( library, slot, render_mode );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -4168,8 +3718,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -4191,8 +3739,6 @@
     FT_Memory         memory  = module->memory;
     FT_Module_Class*  clazz   = module->clazz;
     FT_Library        library = module->library;
-
-
     if ( library && library->auto_hinter == module )
       library->auto_hinter = 0;
 
@@ -4211,8 +3757,6 @@
     /* discard it */
     FT_FREE( module );
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4223,8 +3767,6 @@
     FT_Memory  memory;
     FT_Module  module;
     FT_UInt    nn;
-
-
 #define FREETYPE_VER_FIXED  ( ( (FT_Long)FREETYPE_MAJOR << 16 ) | \
                                 FREETYPE_MINOR                  )
 
@@ -4292,8 +3834,6 @@
     {
       /* allocate glyph loader if needed */
       FT_Driver  driver = FT_DRIVER( module );
-
-
       driver->clazz = (FT_Driver_Class)module->clazz;
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
       {
@@ -4320,8 +3860,6 @@
     if ( FT_MODULE_IS_DRIVER( module ) )
     {
       FT_Driver  driver = FT_DRIVER( module );
-
-
       if ( FT_DRIVER_USES_OUTLINES( driver ) )
         FT_GlyphLoader_Done( driver->glyph_loader );
     }
@@ -4329,8 +3867,6 @@
     if ( FT_MODULE_IS_RENDERER( module ) )
     {
       FT_Renderer  renderer = FT_RENDERER( module );
-
-
       if ( renderer->clazz                                          &&
            renderer->clazz->glyph_format == FT_GLYPH_FORMAT_OUTLINE &&
            renderer->raster                                         )
@@ -4340,8 +3876,6 @@
     FT_FREE( module );
     goto Exit;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Module )
@@ -4351,8 +3885,6 @@
     FT_Module   result = 0;
     FT_Module*  cur;
     FT_Module*  limit;
-
-
     if ( !library || !module_name )
       return result;
 
@@ -4368,8 +3900,6 @@
 
     return result;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( const void* )
@@ -4377,23 +3907,17 @@
                            const char*  mod_name )
   {
     FT_Module  module;
-
-
     /* test for valid `library' delayed to FT_Get_Module() */
 
     module = FT_Get_Module( library, mod_name );
 
     return module ? module->clazz->module_interface : 0;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_module_get_service( FT_Module    module,
                          const char*  service_id )
   {
     FT_Pointer  result = NULL;
-
-
     if ( module )
     {
       FT_ASSERT( module->clazz && module->clazz->get_interface );
@@ -4408,8 +3932,6 @@
         FT_Library  library = module->library;
         FT_Module*  cur     = library->modules;
         FT_Module*  limit   = cur + library->num_modules;
-
-
         for ( ; cur < limit; cur++ )
         {
           if ( cur[0] != module )
@@ -4429,8 +3951,6 @@
 
     return result;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4446,8 +3966,6 @@
     {
       FT_Module*  cur   = library->modules;
       FT_Module*  limit = cur + library->num_modules;
-
-
       for ( ; cur < limit; cur++ )
       {
         if ( cur[0] == module )
@@ -4471,8 +3989,6 @@
     }
     return FT_THROW( Invalid_Driver_Handle );
   }
-
-
   static FT_Error
   ft_property_do( FT_Library        library,
                   const FT_String*  module_name,
@@ -4493,8 +4009,6 @@
 #endif
 
     FT_Bool  missing_func;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -4551,8 +4065,6 @@
     return set ? service->set_property( cur[0], property_name, value )
                : service->get_property( cur[0], property_name, value );
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4567,8 +4079,6 @@
                            (void*)value,
                            TRUE );
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4583,8 +4093,6 @@
                            value,
                            FALSE );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -4596,8 +4104,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4607,8 +4113,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4617,8 +4121,6 @@
   {
     FT_Library  library = NULL;
     FT_Error    error;
-
-
     if ( !memory )
       return FT_THROW( Invalid_Argument );
 
@@ -4665,8 +4167,6 @@
     FT_FREE( library );
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( void )
@@ -4678,8 +4178,6 @@
     FT_Int  major = 0;
     FT_Int  minor = 0;
     FT_Int  patch = 0;
-
-
     if ( library )
     {
       major = library->version_major;
@@ -4696,16 +4194,12 @@
     if ( apatch )
       *apatch = patch;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Done_Library( FT_Library  library )
   {
     FT_Memory  memory;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -4734,8 +4228,6 @@
     {
       FT_UInt      m, n;
       const char*  driver_name[] = { "type42", NULL };
-
-
       for ( m = 0;
             m < sizeof ( driver_name ) / sizeof ( driver_name[0] );
             m++ )
@@ -4745,8 +4237,6 @@
           FT_Module    module      = library->modules[n];
           const char*  module_name = module->clazz->module_name;
           FT_List      faces;
-
-
           if ( driver_name[m]                                &&
                ft_strcmp( module_name, driver_name[m] ) != 0 )
             continue;
@@ -4778,13 +4268,9 @@
 #else
     {
       FT_UInt  n;
-
-
       for ( n = 0; n < library->num_modules; n++ )
       {
         FT_Module  module = library->modules[n];
-
-
         if ( module )
         {
           Destroy_Module( module );
@@ -4808,8 +4294,6 @@
   Exit:
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( void )
@@ -4822,26 +4306,18 @@
            ( sizeof ( library->debug_hooks ) / sizeof ( void* ) ) )
       library->debug_hooks[hook_index] = debug_hook;
   }
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( FT_TrueTypeEngineType )
   FT_Get_TrueType_Engine_Type( FT_Library  library )
   {
     FT_TrueTypeEngineType  result = FT_TRUETYPE_ENGINE_TYPE_NONE;
-
-
     if ( library )
     {
       FT_Module  module = FT_Get_Module( library, "truetype" );
-
-
       if ( module )
       {
         FT_Service_TrueTypeEngine  service;
-
-
         service = (FT_Service_TrueTypeEngine)
                     ft_module_get_service( module,
                                            FT_SERVICE_ID_TRUETYPE_ENGINE );
@@ -4852,8 +4328,6 @@
 
     return result;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -4866,16 +4340,12 @@
                         FT_Matrix    *p_transform )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( glyph                                      &&
          glyph->subglyphs                           &&
          glyph->format == FT_GLYPH_FORMAT_COMPOSITE &&
          sub_index < glyph->num_subglyphs           )
     {
       FT_SubGlyph  subg = glyph->subglyphs + sub_index;
-
-
       *p_index     = subg->index;
       *p_flags     = subg->flags;
       *p_arg1      = subg->arg1;
@@ -4885,6 +4355,4 @@
 
     return error;
   }
-
-
 /* END */

@@ -19,11 +19,7 @@
 
 #ifndef AGG_ELLIPSE_BRESENHAM_INCLUDED
 #define AGG_ELLIPSE_BRESENHAM_INCLUDED
-
-
 #include "agg_basics.h"
-
-
 namespace agg
 {
 

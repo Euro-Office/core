@@ -56,7 +56,5 @@ void PropertyBag::load(XLS::CFRecord& record)
 		properties.push_back(prop);
 	}
 }
-
-
 } // namespace OSHARED
 

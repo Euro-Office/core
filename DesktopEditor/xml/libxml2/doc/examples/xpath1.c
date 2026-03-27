@@ -19,8 +19,6 @@
 #include <libxml/xpathInternals.h>
 
 #if defined(LIBXML_XPATH_ENABLED) && defined(LIBXML_SAX1_ENABLED)
-
-
 static void usage(const char *name);
 int  execute_xpath_expression(const char* filename, const xmlChar* xpathExpr, const xmlChar* nsList);
 int  register_namespaces(xmlXPathContextPtr xpathCtx, const xmlChar* nsList);

@@ -34,8 +34,6 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 #include FT_INTERNAL_DEBUG_H
 
@@ -44,8 +42,6 @@
 #include "cf2stack.h"
 
 #include "cf2error.h"
-
-
   /* Allocate and initialize an instance of CF2_Stack.       */
   /* Note: This function returns NULL on error (does not set */
   /* `error').                                               */
@@ -56,8 +52,6 @@
     FT_Error  error = FT_Err_Ok;     /* for FT_QNEW */
 
     CF2_Stack  stack = NULL;
-
-
     if ( !FT_QNEW( stack ) )
     {
       /* initialize the structure; FT_QNEW zeroes it */
@@ -68,29 +62,21 @@
 
     return stack;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_stack_free( CF2_Stack  stack )
   {
     if ( stack )
     {
       FT_Memory  memory = stack->memory;
-
-
       /* free the main structure */
       FT_FREE( stack );
     }
   }
-
-
   FT_LOCAL_DEF( CF2_UInt )
   cf2_stack_count( CF2_Stack  stack )
   {
     return (CF2_UInt)( stack->top - &stack->buffer[0] );
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_stack_pushInt( CF2_Stack  stack,
                      CF2_Int    val )
@@ -105,8 +91,6 @@
     stack->top->type = CF2_NumberInt;
     ++stack->top;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_stack_pushFixed( CF2_Stack  stack,
                        CF2_Fixed  val )
@@ -121,8 +105,6 @@
     stack->top->type = CF2_NumberFixed;
     ++stack->top;
   }
-
-
   /* this function is only allowed to pop an integer type */
   FT_LOCAL_DEF( CF2_Int )
   cf2_stack_popInt( CF2_Stack  stack )
@@ -142,8 +124,6 @@
 
     return stack->top->u.i;
   }
-
-
   /* Note: type mismatch is silently cast */
   /* TODO: check this */
   FT_LOCAL_DEF( CF2_Fixed )
@@ -167,8 +147,6 @@
       return stack->top->u.r;
     }
   }
-
-
   /* Note: type mismatch is silently cast */
   /* TODO: check this */
   FT_LOCAL_DEF( CF2_Fixed )
@@ -193,13 +171,9 @@
       return stack->buffer[idx].u.r;
     }
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_stack_clear( CF2_Stack  stack )
   {
     stack->top = &stack->buffer[0];
   }
-
-
 /* END */

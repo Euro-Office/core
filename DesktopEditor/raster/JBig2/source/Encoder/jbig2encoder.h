@@ -11,8 +11,6 @@
 #include "../LeptonLib/allheaders.h"
 #include "../LeptonLib/pix.h"
 #include "jbig2enc.h"
-
-
 #if defined(_WIN32) || defined (_WIN64)
 // -----------------------------------------------------------------------------
 // Windows, sadly, lacks asprintf

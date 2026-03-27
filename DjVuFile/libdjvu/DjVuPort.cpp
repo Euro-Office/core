@@ -70,16 +70,12 @@
 #include "DjVuFile.h"
 #include "DjVuMessageLite.h"
 #include "DataPool.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 //****************************************************************************
 //******************************* Globals ************************************
 //****************************************************************************
@@ -237,13 +233,9 @@ DjVuPort::~DjVuPort(void)
 {
   get_portcaster()->del_port(this);
 }
-
-
 //****************************************************************************
 //**************************** DjVuPortcaster ********************************
 //****************************************************************************
-
-
 
 DjVuPortcaster::DjVuPortcaster(void)
 {
@@ -676,15 +668,9 @@ DjVuSimplePort::notify_status(const DjVuPort * source, const GUTF8String &msg)
    return 1;
 }
 
-
-
-
-
 //****************************************************************************
 //*************************** DjVuMemoryPort *********************************
 //****************************************************************************
-
-
 
 GP<DataPool>
 DjVuMemoryPort::request_data(const DjVuPort * source, const GURL & url)
@@ -703,8 +689,6 @@ DjVuMemoryPort::add_data(const GURL & url, const GP<DataPool> & pool)
    GCriticalSectionLock lk(&lock);
    map[url]=pool;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

@@ -33,17 +33,11 @@
 #include "PtgBool.h"
 
 #include <boost/algorithm/string.hpp>
-
-
 namespace XLS
 {
-
-
 PtgBool::PtgBool(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgBool::PtgBool(const std::wstring& word)
 :	OperandPtg(fixed_id)
 {
@@ -62,14 +56,10 @@ PtgBool::PtgBool(const std::wstring& word)
 	}
 
 }
-
-
 BiffStructurePtr PtgBool::clone()
 {
 	return BiffStructurePtr(new PtgBool(*this));
 }
-
-
 void PtgBool::loadFields(CFRecord& record)
 {
 	record >> boolean_;
@@ -79,13 +69,9 @@ void PtgBool::writeFields(CFRecord& record)
 {
 	record << boolean_;
 }
-
-
 void PtgBool::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	ptg_stack.push(boolean_ ? L"TRUE" : L"FALSE");
 }
-
-
 } // namespace XLS
 

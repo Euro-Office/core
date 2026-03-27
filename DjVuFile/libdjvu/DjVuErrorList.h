@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVuPort.h"
 
 #ifdef HAVE_NAMESPACES
@@ -185,8 +183,6 @@ DjVuErrorList::HasError(void) const
 inline bool
 DjVuErrorList::HasStatus(void) const
 { return !Status.isempty(); }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

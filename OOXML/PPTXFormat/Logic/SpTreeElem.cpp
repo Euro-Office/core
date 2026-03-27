@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "SpTreeElem.h"
 #include "Shape.h"
 #include "Pic.h"

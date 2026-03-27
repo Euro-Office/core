@@ -436,7 +436,5 @@ ScientificPrecision::initVisibleDigitsWithExponent(
     digitList.set(value);
     return initVisibleDigitsWithExponent(digitList, digits, status);
 }
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */

@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name GRect.h
     Files #"GRect.h"# and #"GRect.cpp"# implement basic operations on
     rectangles. Class \Ref{GRect} is used to represent rectangles.  Class
@@ -88,16 +86,12 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 /* Flag to indicate that this djvulibre version
    gets rid of all the crap about orientation bits.
    All rotation code has been fixed and consistently
    implements counter-clockwise rotations. */
 
 #define GRECT_WITHOUT_ORIENTATION_BITS 1
-
-
 /** @name Point Coordinates vs. Pixel Coordinates
 
     The DjVu technology relies on the accurate superposition of images at
@@ -128,8 +122,6 @@ namespace DJVU {
 */
 //@{
 //@}
-
-
 
 /** Rectangle class.  Each instance of this class represents a rectangle whose
     sides are parallel to the axis. Such a rectangle represents all the points
@@ -199,8 +191,6 @@ public:
   /** Maximal vertical point coordinate of the rectangle. */
   int ymax;
 };
-
-
 /** Maps points from one rectangle to another rectangle.  This class
     represents a relation between the points of two rectangles. Given the
     coordinates of a point in the first rectangle (input rectangle), function
@@ -285,11 +275,7 @@ private:
   GRatio rw;
   GRatio rh;
 };
-
-
 //@}
-
-
 
 // ---- INLINES
 

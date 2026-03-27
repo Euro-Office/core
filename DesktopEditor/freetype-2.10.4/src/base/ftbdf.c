@@ -14,14 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svbdf.h>
-
-
   /* documentation is in ftbdf.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -34,8 +30,6 @@
     const char*  registry = NULL;
 
     FT_Service_BDF  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -54,8 +48,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftbdf.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -66,8 +58,6 @@
     FT_Error  error;
 
     FT_Service_BDF  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -85,6 +75,4 @@
 
     return error;
   }
-
-
 /* END */

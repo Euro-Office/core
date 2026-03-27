@@ -188,8 +188,6 @@ ftDrawBitmap(l_uint32  *datad,
 	}
 	return NULL;
 }
-
-
 FT_LIBRARY *
 ftInitLibrary(void)
 {
@@ -205,8 +203,6 @@ ftInitLibrary(void)
 	}
 	return lib_ptr;
 }
-
-
 void
 ftShutdownLibrary(FT_LIBRARY  *lib_ptr)
 {
@@ -215,8 +211,6 @@ ftShutdownLibrary(FT_LIBRARY  *lib_ptr)
         FREE(lib_ptr);
     }
 }
-
-
 PIX *
 pixWriteTTFText(FT_LIBRARY  *lib_ptr,
                 PIX         *pixs,

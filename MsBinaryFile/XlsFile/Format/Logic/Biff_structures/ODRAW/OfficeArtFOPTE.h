@@ -269,8 +269,6 @@ class PictureRecolor : public OfficeArtFOPTE
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(PictureRecolor)
 };
-
-
 class FillOpacity : public FixedPoint
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(FillOpacity)
@@ -383,8 +381,6 @@ class AnyString : public OfficeArtFOPTE
 
 	std::wstring string_;
 };
-
-
 class FillBlipFlags : public OfficeArtFOPTE
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(FillBlipFlags)
@@ -473,8 +469,6 @@ class FillShadeColors : public OfficeArtFOPTE
 
 	IMsoArray<MSOSHADECOLOR> complex;
 };
-
-
 class FillShapeOriginX : public FixedPoint
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(FillShapeOriginX)
@@ -736,8 +730,6 @@ class MSORECT : public XLS::BiffStructure
 
 	int cbElement;
 };
-
-
 class MSOPATHINFO : public XLS::BiffStructure 
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(MSOPATHINFO)
@@ -1154,6 +1146,4 @@ private:
 	std::vector<MSOPATHINFO> &m_arSegments;
 	std::vector<POINT> m_arPoints;
 };
-
-
 }

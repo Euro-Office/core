@@ -303,8 +303,6 @@ public:
 		lnr_lineppage,			// lineppage	Line numbers restart on each page.
 		lnr_linecont,			// linecont	Line numbers continue from the preceding section.
 	}	m_eLineNumberRestart; 
-
-
 //Page Information
 	int m_nPageWidth;			// pgwsxnN	N is the page width in twips. A \sectd resets the value to that specified by \paperwN in the document properties.
 	int m_nPageHeight;			// pghsxnN	N is the page height in twips. A \sectd resets the value to that specified by \paperhN in the document properties.

@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTCCACHE_H__
 #define __FTCCACHE_H__
-
-
 #include "ftcmru.h"
 
 FT_BEGIN_HEADER
@@ -32,8 +28,6 @@ FT_BEGIN_HEADER
 
   /* handle to cache class */
   typedef const struct FTC_CacheClassRec_*  FTC_CacheClass;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -64,8 +58,6 @@ FT_BEGIN_HEADER
     FT_Short        ref_count;    /* reference count for this node       */
 
   } FTC_NodeRec;
-
-
 #define FTC_NODE( x )    ( (FTC_Node)(x) )
 #define FTC_NODE_P( x )  ( (FTC_Node*)(x) )
 
@@ -85,8 +77,6 @@ FT_BEGIN_HEADER
 #define FTC_NODE__TOP_FOR_HASH( cache, hash )            \
         ftc_get_top_node_for_hash( ( cache ), ( hash ) )
 #endif
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -111,8 +101,6 @@ FT_BEGIN_HEADER
                            FT_Pointer  key,
                            FTC_Cache   cache,
                            FT_Bool*    list_changed );
-
-
   typedef void
   (*FTC_Node_FreeFunc)( FTC_Node   node,
                         FTC_Cache  cache );
@@ -122,8 +110,6 @@ FT_BEGIN_HEADER
 
   typedef void
   (*FTC_Cache_DoneFunc)( FTC_Cache  cache );
-
-
   typedef struct  FTC_CacheClassRec_
   {
     FTC_Node_NewFunc      node_new;
@@ -137,8 +123,6 @@ FT_BEGIN_HEADER
     FTC_Cache_DoneFunc    cache_done;
 
   } FTC_CacheClassRec;
-
-
   /* each cache really implements a dynamic hash table to manage its nodes */
   typedef struct  FTC_CacheRec_
   {
@@ -156,12 +140,8 @@ FT_BEGIN_HEADER
     FTC_CacheClass     org_class;   /* original class pointer */
 
   } FTC_CacheRec;
-
-
 #define FTC_CACHE( x )    ( (FTC_Cache)(x) )
 #define FTC_CACHE_P( x )  ( (FTC_Cache*)(x) )
-
-
   /* default cache initialize */
   FT_LOCAL( FT_Error )
   FTC_Cache_Init( FTC_Cache  cache );
@@ -203,8 +183,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   FTC_Cache_RemoveFaceID( FTC_Cache   cache,
                           FTC_FaceID  face_id );
-
-
 #ifdef FTC_INLINE
 
 #define FTC_CACHE_LOOKUP_CMP( cache, nodecmp, hash, query, node, error ) \
@@ -291,8 +269,6 @@ FT_BEGIN_HEADER
   FT_END_STMNT
 
 #endif /* !FTC_INLINE */
-
-
   /*
    * This macro, together with FTC_CACHE_TRYLOOP_END, defines a retry
    * loop to flush the cache repeatedly in case of memory overflows.
@@ -318,8 +294,6 @@ FT_BEGIN_HEADER
     for (;;)                                                 \
     {                                                        \
       FT_UInt  _try_done;
-
-
 #define FTC_CACHE_TRYLOOP_END( list_changed )                     \
       if ( !error || FT_ERR_NEQ( error, Out_Of_Memory ) )         \
         break;                                                    \
@@ -344,9 +318,5 @@ FT_BEGIN_HEADER
  /* */
 
 FT_END_HEADER
-
-
 #endif /* __FTCCACHE_H__ */
-
-
 /* END */

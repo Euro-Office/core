@@ -22,8 +22,6 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __GXVALID_H__
 #define __GXVALID_H__
 
@@ -34,23 +32,15 @@
 
 #include FT_INTERNAL_VALIDATE_H
 #include FT_INTERNAL_STREAM_H
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( void )
   gxv_feat_validate( FT_Bytes      table,
                      FT_Face       face,
                      FT_Validator  valid );
-
-
   FT_LOCAL( void )
   gxv_bsln_validate( FT_Bytes      table,
                      FT_Face       face,
                      FT_Validator  valid );
-
-
   FT_LOCAL( void )
   gxv_trak_validate( FT_Bytes      table,
                      FT_Face       face,
@@ -96,12 +86,6 @@ FT_BEGIN_HEADER
   gxv_lcar_validate( FT_Bytes      table,
                      FT_Face       face,
                      FT_Validator  valid );
-
-
 FT_END_HEADER
-
-
 #endif /* __GXVALID_H__ */
-
-
 /* END */

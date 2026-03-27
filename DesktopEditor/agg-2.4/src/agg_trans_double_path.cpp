@@ -30,8 +30,6 @@ namespace agg
         m_preserve_x_scale(true)
     {
     }
-
-
         //------------------------------------------------------------------------
     void trans_double_path::reset()
     {
@@ -42,8 +40,6 @@ namespace agg
         m_status1 = initial;
         m_status2 = initial;
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::move_to1(double x, double y)
     {
@@ -57,8 +53,6 @@ namespace agg
             line_to1(x, y);
         }
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::line_to1(double x, double y)
     {
@@ -67,8 +61,6 @@ namespace agg
             m_src_vertices1.add(vertex_dist(x, y));
         }
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::move_to2(double x, double y)
     {
@@ -82,8 +74,6 @@ namespace agg
             line_to2(x, y);
         }
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::line_to2(double x, double y)
     {
@@ -92,8 +82,6 @@ namespace agg
             m_src_vertices2.add(vertex_dist(x, y));
         }
     }
-
-
     //------------------------------------------------------------------------
     double trans_double_path::finalize_path(vertex_storage& vertices)
     {
@@ -129,8 +117,6 @@ namespace agg
 
         return (vertices.size() - 1) / dist;
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::finalize_paths()
     {
@@ -143,8 +129,6 @@ namespace agg
             m_status2 = ready;
         }
     }
-
-
     //------------------------------------------------------------------------
     double trans_double_path::total_length1() const
     {
@@ -153,8 +137,6 @@ namespace agg
             m_src_vertices1[m_src_vertices1.size() - 1].dist :
             0.0;
     }
-
-
     //------------------------------------------------------------------------
     double trans_double_path::total_length2() const
     {
@@ -163,8 +145,6 @@ namespace agg
             m_src_vertices2[m_src_vertices2.size() - 1].dist :
             0.0;
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::transform1(const vertex_storage& vertices, 
                                        double kindex, double kx, 
@@ -241,8 +221,6 @@ namespace agg
         *x = x1 + dx * d / dd;
         *y = y1 + dy * d / dd;
     }
-
-
     //------------------------------------------------------------------------
     void trans_double_path::transform(double *x, double *y) const
     {

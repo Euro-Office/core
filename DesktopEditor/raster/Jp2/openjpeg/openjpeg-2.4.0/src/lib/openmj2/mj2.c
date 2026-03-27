@@ -300,8 +300,6 @@ void mj2_stsc_decompact(mj2_tk_t * tk)
     }
 
 }
-
-
 /*
 * Chunk offset box Decompact
 *
@@ -429,8 +427,6 @@ int mj2_read_ftyp(opj_mj2_t * movie, opj_cio_t *cio)
     }
     return 0;
 }
-
-
 /*
 * Write the STCO box
 *
@@ -488,8 +484,6 @@ int mj2_read_stco(mj2_tk_t * tk, opj_cio_t *cio)
                       "Error with flag in STCO box. Expected flag 0\n");
         return 1;
     }
-
-
     if (cio_read(cio, 4) != tk->num_chunks) {
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error in STCO box: expecting same amount of entry-count as chunks \n");
@@ -500,8 +494,6 @@ int mj2_read_stco(mj2_tk_t * tk, opj_cio_t *cio)
     }
 
     mj2_stco_decompact(tk);
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with STCO Box size\n");
         return 1;
@@ -566,8 +558,6 @@ int mj2_read_stsz(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected STSZ Marker\n");
         return 1;
     }
-
-
     if (0 != cio_read(cio, 1)) {  /* Version = 0 */
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error: Only Version 0 handled in STSZ box\n");
@@ -634,8 +624,6 @@ void mj2_write_stsc(mj2_tk_t * tk, opj_cio_t *cio)
         cio_write(cio, tk->sampletochunk[i].sample_descr_idx,
                   4);   /* Samples description index */
     }
-
-
     box.length = cio_tell(cio) - box.init_pos;
     cio_seek(cio, box.init_pos);
     cio_write(cio, box.length, 4);    /* L          */
@@ -658,8 +646,6 @@ int mj2_read_stsc(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected STSC Marker\n");
         return 1;
     }
-
-
     if (0 != cio_read(cio, 1)) {  /* Version = 0 */
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error: Only Version 0 handled in STSC box\n");
@@ -684,8 +670,6 @@ int mj2_read_stsc(mj2_tk_t * tk, opj_cio_t *cio)
     }
 
     mj2_stsc_decompact(tk);   /* decompact sample to chunk box */
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with STSC Box size\n");
         return 1;
@@ -740,8 +724,6 @@ int mj2_read_stts(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected STTS Marker\n");
         return 1;
     }
-
-
     if (0 != cio_read(cio, 1)) {  /* Version = 0 */
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error: Only Version 0 handled in STTS box\n");
@@ -789,8 +771,6 @@ void mj2_write_fiel(mj2_tk_t * tk, opj_cio_t *cio)
 
     cio_write(cio, tk->fieldcount, 1);    /* Field count */
     cio_write(cio, tk->fieldorder, 1);    /* Field order */
-
-
     box.length = cio_tell(cio) - box.init_pos;
     cio_seek(cio, box.init_pos);
     cio_write(cio, box.length, 4);    /* L          */
@@ -813,8 +793,6 @@ int mj2_read_fiel(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected FIEL Marker\n");
         return 1;
     }
-
-
     tk->fieldcount = cio_read(cio, 1);
     tk->fieldorder = cio_read(cio, 1);
 
@@ -841,8 +819,6 @@ void mj2_write_orfo(mj2_tk_t * tk, opj_cio_t *cio)
 
     cio_write(cio, tk->or_fieldcount, 1); /* Original Field count */
     cio_write(cio, tk->or_fieldorder, 1); /* Original Field order */
-
-
     box.length = cio_tell(cio) - box.init_pos;
     cio_seek(cio, box.init_pos);
     cio_write(cio, box.length, 4);    /* L          */
@@ -865,8 +841,6 @@ int mj2_read_orfo(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected ORFO Marker\n");
         return 1;
     }
-
-
     tk->or_fieldcount = cio_read(cio, 1);
     tk->or_fieldorder = cio_read(cio, 1);
 
@@ -934,8 +908,6 @@ int mj2_read_jp2p(mj2_tk_t * tk, opj_cio_t *cio)
                       "Error with flag in JP2P box. Expected flag 0\n");
         return 1;
     }
-
-
     tk->num_br = (box.length - 12) / 4;
     tk->br = (unsigned int*) opj_malloc(tk->num_br * sizeof(unsigned int));
 
@@ -993,8 +965,6 @@ int mj2_read_jp2x(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected JP2X Marker\n");
         return 1;
     }
-
-
     tk->num_jp2x = (box.length - 8);
     tk->jp2xdata = (unsigned char*) opj_malloc(tk->num_jp2x * sizeof(
                        unsigned char));
@@ -1268,8 +1238,6 @@ int mj2_read_smj2(opj_image_t * img, mj2_tk_t * tk, opj_cio_t *cio)
     }
     return 0;
 }
-
-
 /*
 * Write the STSD box
 *
@@ -1297,8 +1265,6 @@ void mj2_write_stsd(mj2_tk_t * tk, opj_cio_t *cio)
     if (tk->track_type == 2) {
         /* Not implemented*/
     }
-
-
     box.length = cio_tell(cio) - box.init_pos;
     cio_seek(cio, box.init_pos);
     cio_write(cio, box.length, 4);    /* L          */
@@ -1352,8 +1318,6 @@ int mj2_read_stsd(mj2_tk_t * tk, opj_image_t * img, opj_cio_t *cio)
         len_2skip = cio_read(cio, 4);   /* Not implemented -> skipping box*/
         cio_skip(cio, len_2skip - 4);
     }
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with STSD Box size\n");
         return 1;
@@ -1487,8 +1451,6 @@ int mj2_read_url(mj2_tk_t * tk, int urn_num, opj_cio_t *cio)
     } else {
         tk->num_url--;
     }
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with URL Box size\n");
         return 1;
@@ -1560,16 +1522,12 @@ int mj2_read_urn(mj2_tk_t * tk, int urn_num, opj_cio_t *cio)
         tk->urn[urn_num].location[2] = cio_read(cio, 4);
         tk->urn[urn_num].location[3] = cio_read(cio, 4);
     }
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with URN Box size\n");
         return 1;
     }
     return 0;
 }
-
-
 /*
 * Write the DREF box
 *
@@ -1665,8 +1623,6 @@ int mj2_read_dref(mj2_tk_t * tk, opj_cio_t *cio)
         }
 
     }
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with DREF Box size\n");
         return 1;
@@ -1939,8 +1895,6 @@ int mj2_read_hmhd(mj2_tk_t * tk, opj_cio_t *cio)
     tk->num_tts = 0;
     tk->num_samplestochunk = 0;
     tk->num_samples = 0;
-
-
     if (cio_tell(cio) - box.init_pos != box.length) {
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error with HMHD Box size\n");
         return 1;
@@ -2112,8 +2066,6 @@ int mj2_read_hdlr(mj2_tk_t * tk, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected HDLR Marker\n");
         return 1;
     }
-
-
     if (0 != cio_read(cio, 1)) {  /* Version = 0 */
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error: Only Version 0 handled in HDLR box\n");
@@ -2220,8 +2172,6 @@ int mj2_read_mdhd(mj2_tk_t * tk, opj_cio_t *cio)
                       "Error with flag in MDHD box. Expected flag 0\n");
         return 1;
     }
-
-
     tk->creation_time = cio_read(cio, 4); /* Creation Time */
 
     tk->modification_time = cio_read(cio, 4); /* Modification Time */
@@ -2562,8 +2512,6 @@ void mj2_write_mvhd(opj_mj2_t * movie, opj_cio_t *cio)
     cio_write(cio, 0, 4);     /* Pre-defined */
     cio_write(cio, 0, 4);     /* Pre-defined */
     cio_write(cio, 0, 4);     /* Pre-defined */
-
-
     for (i = 0; i < movie->num_htk + movie->num_stk + movie->num_vtk; i++) {
         if (max_tk_num < movie->tk[i].track_ID) {
             max_tk_num = movie->tk[i].track_ID;
@@ -2595,8 +2543,6 @@ int mj2_read_mvhd(opj_mj2_t * movie, opj_cio_t *cio)
         opj_event_msg(cio->cinfo, EVT_ERROR, "Error: Expected MVHD Marker\n");
         return 1;
     }
-
-
     if (0 != cio_read(cio, 4)) {  /* Version = 0, flags = 0 */
         opj_event_msg(cio->cinfo, EVT_ERROR,
                       "Error: Only Version 0 handled in MVHD box\n");
@@ -2637,8 +2583,6 @@ int mj2_read_mvhd(opj_mj2_t * movie, opj_cio_t *cio)
     }
     return 0;
 }
-
-
 /*
 * Write the MOOV box
 *

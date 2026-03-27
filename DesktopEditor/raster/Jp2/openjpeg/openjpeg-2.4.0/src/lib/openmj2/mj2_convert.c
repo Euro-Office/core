@@ -170,16 +170,12 @@ char OPJ_CALLCONV yuvtoimage(mj2_tk_t * tk, opj_image_t * img, int frame_num,
     return 0;
 }
 
-
-
 /*  ----------------------- */
 /* */
 /* */
 /*  IMAGE to YUV */
 /* */
 /*  ----------------------- */
-
-
 opj_bool OPJ_CALLCONV imagetoyuv(opj_image_t * img, char *outfile)
 {
     FILE *f;
@@ -219,8 +215,6 @@ opj_bool OPJ_CALLCONV imagetoyuv(opj_image_t * img, char *outfile)
 
         fwrite(buf, 1, prec_bytes, f);
     }
-
-
     if (img->numcomps == 3) {
         data = img->comps[1].data;
 
@@ -264,8 +258,6 @@ opj_bool OPJ_CALLCONV imagetoyuv(opj_image_t * img, char *outfile)
         for (i = 0; i < (img->comps[0].w * img->comps[0].h * 0.25); i++) {
             fwrite(buf, 1, prec_bytes, f);
         }
-
-
         for (i = 0; i < (img->comps[0].w * img->comps[0].h * 0.25); i++) {
             fwrite(buf, 1, prec_bytes, f);
         }

@@ -851,8 +851,6 @@ protected:
 
 private:
     friend class ZoneMeta;
-
-
     static TimeZone*        createCustomTimeZone(const UnicodeString&); // Creates a time zone based on the string.
 
     /**
@@ -939,8 +937,6 @@ private:
 
     friend class TZEnumeration;
 };
-
-
 // -------------------------------------
 
 inline UnicodeString&

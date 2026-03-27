@@ -232,8 +232,6 @@
     /* Default parameter values */
 static const l_int32     L_DEFAULT_SAMPLING = 30;
 static const l_float32   DEFAULT_SLOPE_FACTOR = 2000.;
-
-
 /*----------------------------------------------------------------------*
  *                             Create/destroy                           *
  *----------------------------------------------------------------------*/
@@ -297,8 +295,6 @@ L_DEWARP  *dew;
     dew->ny = (h + 2 * sampling - 2) / sampling;
     return dew;
 }
-
-
 /*!
  *  dewarpDestroy()
  *
@@ -331,8 +327,6 @@ L_DEWARP  *dew;
     *pdew = NULL;
     return;
 }
-
-
 /*----------------------------------------------------------------------*
  *                            Build warp model                          *
  *----------------------------------------------------------------------*/
@@ -601,8 +595,6 @@ FPIX       *fpix1, *fpix2, *fpix3;
     ptaaDestroy(&ptaa7);
     return 0;
 }
-
-
 /*!
  *  pixGetTextlineCenters()
  *
@@ -683,8 +675,6 @@ PTAA     *ptaa;
     pixaDestroy(&pixa2);
     return ptaa;
 }
-
-
 /*!
  *  ptaGetMeanVerticals()
  *
@@ -727,8 +717,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaaRemoveShortLines()
  *
@@ -798,8 +786,6 @@ PTAA      *ptaad;
     numaDestroy(&naindex);
     return ptaad;
 }
-
-
 /*!
  *  fpixBuildHorizontalDisparity()
  *
@@ -870,8 +856,6 @@ FPIX       *fpixh;
     numaDestroy(&nadiff);
     return fpixh;
 }
-
-
 /*!
  *  fpixSampledDisparity()
  *
@@ -935,8 +919,6 @@ FPIX       *fpixd;
     FREE(array);
     return fpixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Apply warping disparity array                    *
  *----------------------------------------------------------------------*/
@@ -998,8 +980,6 @@ PIX  *pixv, *pixd;
         dew->pixd = pixv;
     return 0;
 }
-
-
 /*!
  *  pixApplyVerticalDisparity()
  *
@@ -1087,8 +1067,6 @@ PIX        *pixd;
     FREE(lineptrs);
     return pixd;
 }
-
-
 /*!
  *  pixApplyHorizontalDisparity()
  *
@@ -1178,8 +1156,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *          Stripping out data and populating full res disparity        *
  *----------------------------------------------------------------------*/
@@ -1210,8 +1186,6 @@ dewarpMinimize(L_DEWARP  *dew)
     numaDestroy(&dew->nacurves);
     return 0;
 }
-
-
 /*!
  *  dewarpPopulateFullRes()
  *
@@ -1241,8 +1215,6 @@ dewarpPopulateFullRes(L_DEWARP  *dew)
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Dewarp serialized I/O                          *
  *----------------------------------------------------------------------*/
@@ -1273,8 +1245,6 @@ L_DEWARP  *dew;
     fclose(fp);
     return dew;
 }
-
-
 /*!
  *  dewarpReadStream()
  *
@@ -1328,8 +1298,6 @@ FPIX      *fpixv, *fpixh;
 
     return dew;
 }
-
-
 /*!
  *  dewarpWrite()
  *
@@ -1358,8 +1326,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  dewarpWriteStream()
  *
@@ -1392,5 +1358,3 @@ l_int32  hdispar;
 
     return 0;
 }
-
-

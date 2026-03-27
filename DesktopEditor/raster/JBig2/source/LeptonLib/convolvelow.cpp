@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  convolvelow.c
  *
@@ -27,8 +25,6 @@
 
 #include <stdio.h>
 #include "allheaders.h"
-
-
 /*----------------------------------------------------------------------*
  *                     Grayscale Block Convolution                      *
  *----------------------------------------------------------------------*/
@@ -198,8 +194,6 @@ l_uint32  *linemina, *linemaxa, *line;
     return;
 }
 
-
-
 /*
  *  blockconvAccumLow()
  *
@@ -314,8 +308,6 @@ l_uint32  *lines, *lined, *linedp;
 
     return;
 }
-
-
 /*----------------------------------------------------------------------*
  *                        Binary Block Sum/Rank                         *
  *----------------------------------------------------------------------*/

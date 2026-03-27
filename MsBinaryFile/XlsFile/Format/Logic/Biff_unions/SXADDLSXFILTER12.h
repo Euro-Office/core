@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SXADDLSXFILTER12 union of records 
 class SXADDLSXFILTER12: public CompositeObject
 {

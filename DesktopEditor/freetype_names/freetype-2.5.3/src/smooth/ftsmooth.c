@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
@@ -25,23 +23,17 @@
 #include "ftspic.h"
 
 #include "ftsmerrs.h"
-
-
   /* initialize renderer -- init its raster */
   static FT_Error
   ft_smooth_init( FT_Renderer  render )
   {
     FT_Library  library = FT_MODULE_LIBRARY( render );
-
-
     render->clazz->raster_class->raster_reset( render->raster,
                                                library->raster_pool,
                                                library->raster_pool_size );
 
     return 0;
   }
-
-
   /* sets render-specific mode */
   static FT_Error
   ft_smooth_set_mode( FT_Renderer  render,
@@ -62,8 +54,6 @@
                        const FT_Vector*  delta )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     if ( slot->format != render->glyph_format )
     {
       error = FT_THROW( Invalid_Argument );
@@ -79,8 +69,6 @@
   Exit:
     return error;
   }
-
-
   /* return the glyph's control box */
   static void
   ft_smooth_get_cbox( FT_Renderer   render,
@@ -92,8 +80,6 @@
     if ( slot->format == render->glyph_format )
       FT_Outline_Get_CBox( &slot->outline, cbox );
   }
-
-
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
   ft_smooth_render_generic( FT_Renderer       render,
@@ -122,8 +108,6 @@
     FT_Bool  have_translated_origin = FALSE;
     FT_Bool  have_outline_shifted   = FALSE;
     FT_Bool  have_buffer            = FALSE;
-
-
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
     {
@@ -210,8 +194,6 @@
     if ( slot->library->lcd_filter_func )
     {
       FT_Int  extra = slot->library->lcd_extra;
-
-
       if ( hmul )
       {
         x_shift -= 64 * ( extra >> 1 );
@@ -273,8 +255,6 @@
       FT_Vector*  points     = outline->points;
       FT_Vector*  points_end = points + outline->n_points;
       FT_Vector*  vec;
-
-
       if ( hmul )
         for ( vec = points; vec < points_end; vec++ )
           vec->x *= 3;
@@ -292,8 +272,6 @@
       FT_Vector*  points     = outline->points;
       FT_Vector*  points_end = points + outline->n_points;
       FT_Vector*  vec;
-
-
       if ( hmul )
         for ( vec = points; vec < points_end; vec++ )
           vec->x /= 3;
@@ -321,19 +299,13 @@
     {
       FT_Byte*  line = bitmap->buffer;
       FT_UInt   hh;
-
-
       for ( hh = height_org; hh > 0; hh--, line += pitch )
       {
         FT_UInt   xx;
         FT_Byte*  end = line + width;
-
-
         for ( xx = width_org; xx > 0; xx-- )
         {
           FT_UInt  pixel = line[xx-1];
-
-
           end[-3] = (FT_Byte)pixel;
           end[-2] = (FT_Byte)pixel;
           end[-1] = (FT_Byte)pixel;
@@ -348,8 +320,6 @@
       FT_Byte*  read  = bitmap->buffer + ( height - height_org ) * pitch;
       FT_Byte*  write = bitmap->buffer;
       FT_UInt   hh;
-
-
       for ( hh = height_org; hh > 0; hh-- )
       {
         ft_memcpy( write, read, pitch );
@@ -398,8 +368,6 @@
 
     return error;
   }
-
-
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
   ft_smooth_render( FT_Renderer       render,
@@ -413,8 +381,6 @@
     return ft_smooth_render_generic( render, slot, mode, origin,
                                      FT_RENDER_MODE_NORMAL );
   }
-
-
   /* convert a slot's glyph image into a horizontal LCD bitmap */
   static FT_Error
   ft_smooth_render_lcd( FT_Renderer       render,
@@ -431,8 +397,6 @@
 
     return error;
   }
-
-
   /* convert a slot's glyph image into a vertical LCD bitmap */
   static FT_Error
   ft_smooth_render_lcd_v( FT_Renderer       render,
@@ -449,8 +413,6 @@
 
     return error;
   }
-
-
   FT_DEFINE_RENDERER( ft_smooth_renderer_class,
 
       FT_MODULE_RENDERER,
@@ -476,8 +438,6 @@
 
     (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
   )
-
-
   FT_DEFINE_RENDERER( ft_smooth_lcd_renderer_class,
 
       FT_MODULE_RENDERER,
@@ -529,6 +489,4 @@
 
     (FT_Raster_Funcs*)    &FT_GRAYS_RASTER_GET
   )
-
-
 /* END */

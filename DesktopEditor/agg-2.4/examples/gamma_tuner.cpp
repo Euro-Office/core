@@ -27,8 +27,6 @@ class the_application : public agg::platform_support
     agg::slider_ctrl<agg::rgba8> m_g;
     agg::slider_ctrl<agg::rgba8> m_b;
     agg::rbox_ctrl  <agg::rgba8> m_pattern;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -83,8 +81,6 @@ public:
 
         agg::rasterizer_scanline_aa<> ras;
         agg::scanline_u8 sl;
-
-
         enum 
         { 
             square_size = 400,
@@ -97,8 +93,6 @@ public:
         color_type color(agg::rgba(m_r.value(), m_g.value(), m_b.value()));
 
         unsigned i, j;
-
-
         // Draw vertical gradient
         //-----------------------
         unsigned w = (unsigned)width();
@@ -166,8 +160,6 @@ public:
         // Clear the area
         //---------------------
         renb.copy_bar(50, 80, 50+square_size-1, 80+square_size-1, agg::rgba(0,0,0));
-
-
         // Draw the patern
         //---------------------
         for(i = 0; i < square_size; i += 2)
@@ -184,8 +176,6 @@ public:
             renb.blend_color_hspan(50, i + 80 + 0, square_size, span1, 0, 255);
             renb.blend_color_hspan(50, i + 80 + 1, square_size, span2, 0, 255);
         }
-
-
         // Draw vertical strips
         //---------------------
         for(i = 0; i < square_size; i++)
@@ -200,8 +190,6 @@ public:
                 renb.copy_hline(50+xc-10, i+80, 50+xc+10, c);
             }
         }
-
-
         agg::render_ctrl(ras, sl, renb, m_gamma);
         agg::render_ctrl(ras, sl, renb, m_r);
         agg::render_ctrl(ras, sl, renb, m_g);
@@ -209,20 +197,14 @@ public:
         agg::render_ctrl(ras, sl, renb, m_pattern);
 
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
     }
 
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -234,5 +216,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

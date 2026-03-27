@@ -175,8 +175,6 @@ static UBool getString(
     result.setTo(TRUE, resStr, len);
     return TRUE;
 }
-
-
 static UBool loadMeasureUnitData(
         const UResourceBundle *resource,
         MeasureFormatCacheData &cacheData,
@@ -451,8 +449,6 @@ static int32_t toHMS(
     }
     return result;
 }
-
-
 MeasureFormat::MeasureFormat(
         const Locale &locale, UMeasureFormatWidth w, UErrorCode &status)
         : cache(NULL),

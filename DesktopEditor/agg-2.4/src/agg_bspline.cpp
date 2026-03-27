@@ -52,8 +52,6 @@ namespace agg
     {
         init(num, x, y);
     }
-
-    
     //------------------------------------------------------------------------
     void bspline::init(int max)
     {
@@ -67,8 +65,6 @@ namespace agg
         m_num = 0;
         m_last_idx = -1;
     }
-
-
     //------------------------------------------------------------------------
     void bspline::add_point(double x, double y)
     {
@@ -79,8 +75,6 @@ namespace agg
             ++m_num;
         }
     }
-
-
     //------------------------------------------------------------------------
     void bspline::prepare()
     {
@@ -145,8 +139,6 @@ namespace agg
         m_last_idx = -1;
     }
 
-
-
     //------------------------------------------------------------------------
     void bspline::init(int num, const double* x, const double* y)
     {
@@ -162,8 +154,6 @@ namespace agg
         }
         m_last_idx = -1;
     }
-
-
     //------------------------------------------------------------------------
     void bspline::bsearch(int n, const double *x, double x0, int *i) 
     {
@@ -177,8 +167,6 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     double bspline::interpolation(double x, int i) const
     {
@@ -190,8 +178,6 @@ namespace agg
         return (m_am[j] * r * r * r + m_am[i] * h * h * h) / 6.0 / d +
                ((m_y[j] - m_am[j] * p) * r + (m_y[i] - m_am[i] * p) * h) / d;
     }
-
-
     //------------------------------------------------------------------------
     double bspline::extrapolation_left(double x) const
     {
@@ -229,8 +215,6 @@ namespace agg
         }
         return 0.0;
     }
-
-
     //------------------------------------------------------------------------
     double bspline::get_stateful(double x) const
     {

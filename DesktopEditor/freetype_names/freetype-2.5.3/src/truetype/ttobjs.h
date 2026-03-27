@@ -14,20 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __TTOBJS_H__
 #define __TTOBJS_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_TRUETYPE_TYPES_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -37,8 +29,6 @@ FT_BEGIN_HEADER
   /*    A handle to a TrueType driver object.                              */
   /*                                                                       */
   typedef struct TT_DriverRec_*  TT_Driver;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -48,8 +38,6 @@ FT_BEGIN_HEADER
   /*    A handle to a TrueType size object.                                */
   /*                                                                       */
   typedef struct TT_SizeRec_*  TT_Size;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -63,8 +51,6 @@ FT_BEGIN_HEADER
   /*    specific about the TrueType glyph slot.                            */
   /*                                                                       */
   typedef FT_GlyphSlot  TT_GlyphSlot;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -111,8 +97,6 @@ FT_BEGIN_HEADER
     FT_UShort      gep2;
 
   } TT_GraphicsState;
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
 
   FT_LOCAL( void )
@@ -126,8 +110,6 @@ FT_BEGIN_HEADER
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
-
-
   /*************************************************************************/
   /*                                                                       */
   /*  EXECUTION SUBTABLES                                                  */
@@ -135,11 +117,7 @@ FT_BEGIN_HEADER
   /*  These sub-tables relate to instruction execution.                    */
   /*                                                                       */
   /*************************************************************************/
-
-
 #define TT_MAX_CODE_RANGES  3
-
-
   /*************************************************************************/
   /*                                                                       */
   /* There can only be 3 active code ranges at once:                       */
@@ -155,8 +133,6 @@ FT_BEGIN_HEADER
     tt_coderange_glyph
 
   } TT_CodeRange_Tag;
-
-
   typedef struct  TT_CodeRange_
   {
     FT_Byte*  base;
@@ -165,8 +141,6 @@ FT_BEGIN_HEADER
   } TT_CodeRange;
 
   typedef TT_CodeRange  TT_CodeRangeTable[TT_MAX_CODE_RANGES];
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Defines a function/instruction definition record.                     */
@@ -182,8 +156,6 @@ FT_BEGIN_HEADER
     FT_ULong  sph_fdef_flags; /* flags to identify special functions    */
 
   } TT_DefRecord, *TT_DefArray;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Subglyph transformation record.                                       */
@@ -195,8 +167,6 @@ FT_BEGIN_HEADER
     FT_F26Dot6  ox, oy;     /* offsets                            */
 
   } TT_Transform;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* A note regarding non-squared pixels:                                  */
@@ -257,8 +227,6 @@ FT_BEGIN_HEADER
   /*     ratio * ppem                                                      */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Metrics used by the TrueType size and context objects.                */
@@ -281,8 +249,6 @@ FT_BEGIN_HEADER
     FT_Bool     stretched;          /* `is the glyph stretched?'-flag */
 
   } TT_Size_Metrics;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* TrueType size class.                                                  */
@@ -339,8 +305,6 @@ FT_BEGIN_HEADER
 #endif /* TT_USE_BYTECODE_INTERPRETER */
 
   } TT_SizeRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* TrueType driver class.                                                */
@@ -355,8 +319,6 @@ FT_BEGIN_HEADER
     FT_UInt  interpreter_version;
 
   } TT_DriverRec;
-
-
   /* Note: All of the functions below (except tt_size_reset()) are used    */
   /* as function pointers in a FT_Driver_ClassRec.  Therefore their        */
   /* parameters are of types FT_Face, FT_Size, etc., rather than TT_Face,  */
@@ -364,8 +326,6 @@ FT_BEGIN_HEADER
   /* number of parameters are correct.  In all cases the FT_xxx types are  */
   /* cast to their TT_xxx counterparts inside the functions since FreeType */
   /* will always use the TT driver to create them.                         */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Face functions                                                        */
@@ -379,8 +339,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   tt_face_done( FT_Face  ttface );          /* TT_Face */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Size functions                                                        */
@@ -409,8 +367,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   tt_size_reset( TT_Size  size );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Driver functions                                                      */
@@ -420,23 +376,15 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   tt_driver_done( FT_Module  ttdriver );    /* TT_Driver */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Slot functions                                                        */
   /*                                                                       */
   FT_LOCAL( FT_Error )
   tt_slot_init( FT_GlyphSlot  slot );
-
-
   /* auxiliary */
 #define IS_HINTED( flags )  ( ( flags & FT_LOAD_NO_HINTING ) == 0 )
-
-
 FT_END_HEADER
 
 #endif /* __TTOBJS_H__ */
-
-
 /* END */

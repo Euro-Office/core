@@ -31,11 +31,7 @@
  */
 #include "stream_utils.h"
 #include "fstream_wrapper.h"
-
-
 using namespace CFCPP;
-
-
 _INT64 CFCPP::Length(const CFCPP::Stream& st)
 {
     if (st.get() == nullptr)

@@ -34,21 +34,15 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 #include FT_INTERNAL_DEBUG_H
 
 #include "cf2glue.h"
 
 #include "cf2error.h"
-
-
   /* Define CF2_IO_FAIL as 1 to enable random errors and random */
   /* value errors in I/O.                                       */
 #define CF2_IO_FAIL  0
-
-
 #if CF2_IO_FAIL
 
   /* set the .00 value to a nonzero probability */
@@ -67,8 +61,6 @@
   }
 
 #endif /* CF2_IO_FAIL */
-
-
   /* Region Buffer                                      */
   /*                                                    */
   /* Can be constructed from a copied buffer managed by */
@@ -99,14 +91,10 @@
       return 0;
     }
   }
-
-
   /* note: end condition can occur without error */
   FT_LOCAL_DEF( FT_Bool )
   cf2_buf_isEnd( CF2_Buffer  buf )
   {
     return (FT_Bool)( buf->ptr >= buf->end );
   }
-
-
 /* END */

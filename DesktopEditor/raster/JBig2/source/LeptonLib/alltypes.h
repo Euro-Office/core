@@ -43,7 +43,5 @@
 #include "sudoku.h"
 #include "stack.h"
 #include "watershed.h"
-
-
 #endif /* LEPTONICA_ALLTYPES_H */
 

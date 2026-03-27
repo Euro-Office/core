@@ -877,8 +877,6 @@ png_set_expand_gray_1_2_4_to_8(png_structp png_ptr)
    png_ptr->flags &= ~PNG_FLAG_ROW_INIT;
 }
 
-
-
 /* Expand tRNS chunks to alpha channels. */
 void PNGAPI
 png_set_tRNS_to_alpha(png_structp png_ptr)
@@ -3491,8 +3489,6 @@ png_build_grayscale_palette(int bit_depth, png_colorp palette)
    }
 }
 #endif
-
-
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
 #if defined(PNG_READ_BACKGROUND_SUPPORTED) ||\
    defined(PNG_READ_ALPHA_MODE_SUPPORTED)

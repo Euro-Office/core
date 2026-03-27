@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_CACHE_H
 #include "ftcimage.h"
@@ -23,8 +21,6 @@
 
 #include "ftccback.h"
 #include "ftcerror.h"
-
-
   /* finalize a given glyph image node */
   FT_LOCAL_DEF( void )
   ftc_inode_free( FTC_Node   ftcinode,
@@ -32,8 +28,6 @@
   {
     FTC_INode  inode = (FTC_INode)ftcinode;
     FT_Memory  memory = cache->memory;
-
-
     if ( inode->glyph )
     {
       FT_Done_Glyph( inode->glyph );
@@ -43,16 +37,12 @@
     FTC_GNode_Done( FTC_GNODE( inode ), cache );
     FT_FREE( inode );
   }
-
-
   FT_LOCAL_DEF( void )
   FTC_INode_Free( FTC_INode  inode,
                   FTC_Cache  cache )
   {
     ftc_inode_free( FTC_NODE( inode ), cache );
   }
-
-
   /* initialize a new glyph image node */
   FT_LOCAL_DEF( FT_Error )
   FTC_INode_New( FTC_INode   *pinode,
@@ -62,16 +52,12 @@
     FT_Memory  memory = cache->memory;
     FT_Error   error;
     FTC_INode  inode  = NULL;
-
-
     if ( !FT_NEW( inode ) )
     {
       FTC_GNode         gnode  = FTC_GNODE( inode );
       FTC_Family        family = gquery->family;
       FT_UInt           gindex = gquery->gindex;
       FTC_IFamilyClass  clazz  = FTC_CACHE__IFAMILY_CLASS( cache );
-
-
       /* initialize its inner fields */
       FTC_GNode_Init( gnode, gindex, family );
 
@@ -88,8 +74,6 @@
     *pinode = inode;
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   ftc_inode_new( FTC_Node   *ftcpinode,
                  FT_Pointer  ftcgquery,
@@ -97,12 +81,8 @@
   {
     FTC_INode  *pinode = (FTC_INode*)ftcpinode;
     FTC_GQuery  gquery = (FTC_GQuery)ftcgquery;
-
-
     return FTC_INode_New( pinode, gquery, cache );
   }
-
-
   FT_LOCAL_DEF( FT_Offset )
   ftc_inode_weight( FTC_Node   ftcinode,
                     FTC_Cache  ftccache )
@@ -112,15 +92,11 @@
     FT_Glyph   glyph = inode->glyph;
 
     FT_UNUSED( ftccache );
-
-
     switch ( glyph->format )
     {
     case FT_GLYPH_FORMAT_BITMAP:
       {
         FT_BitmapGlyph  bitg;
-
-
         bitg = (FT_BitmapGlyph)glyph;
         size = bitg->bitmap.rows * ft_labs( bitg->bitmap.pitch ) +
                sizeof ( *bitg );
@@ -130,8 +106,6 @@
     case FT_GLYPH_FORMAT_OUTLINE:
       {
         FT_OutlineGlyph  outg;
-
-
         outg = (FT_OutlineGlyph)glyph;
         size = outg->outline.n_points *
                  ( sizeof ( FT_Vector ) + sizeof ( FT_Byte ) ) +
@@ -147,8 +121,6 @@
     size += sizeof ( *inode );
     return size;
   }
-
-
 #if 0
 
   FT_LOCAL_DEF( FT_Offset )
@@ -158,6 +130,4 @@
   }
 
 #endif /* 0 */
-
-
 /* END */

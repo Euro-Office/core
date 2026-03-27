@@ -65,8 +65,6 @@ private:
     void parseCharacters(InputText *det);
 };
 #endif
-
-
 class CharsetRecog_sbcs : public CharsetRecognizer
 {
 public:
@@ -131,8 +129,6 @@ public:
 
     const char *getName() const;
 };
-
-
 
 class CharsetRecog_8859_5_ru : public CharsetRecog_8859_5
 {
@@ -219,8 +215,6 @@ public:
 
     virtual UBool match(InputText *det, CharsetMatch *results) const;
 };
-
-
 class CharsetRecog_KOI8_R : public CharsetRecog_sbcs
 {
 public:

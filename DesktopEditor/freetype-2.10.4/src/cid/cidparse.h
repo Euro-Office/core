@@ -14,20 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CIDPARSE_H_
 #define CIDPARSE_H_
-
-
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @Struct:
@@ -81,8 +73,6 @@ FT_BEGIN_HEADER
     FT_Int        num_dict;
 
   } CID_Parser;
-
-
   FT_LOCAL( FT_Error )
   cid_parser_new( CID_Parser*    parser,
                   FT_Stream      stream,
@@ -91,8 +81,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   cid_parser_done( CID_Parser*  parser );
-
-
   /**************************************************************************
    *
    *                           PARSING ROUTINES
@@ -120,11 +108,7 @@ FT_BEGIN_HEADER
           (p)->root.funcs.load_field( &(p)->root, f, o, 0, 0 )
 #define cid_parser_load_field_table( p, f, o )                       \
           (p)->root.funcs.load_field_table( &(p)->root, f, o, 0, 0 )
-
-
 FT_END_HEADER
 
 #endif /* CIDPARSE_H_ */
-
-
 /* END */

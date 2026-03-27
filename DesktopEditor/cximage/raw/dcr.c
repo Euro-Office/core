@@ -47,8 +47,6 @@
 #include <sys/types.h>
 
 #include "libdcr.h"
-
-
 #ifdef LOCALEDIR
 #include <libintl.h>
 #define _(String) gettext(String)
@@ -77,8 +75,6 @@ typedef unsigned __int64 UINT64;
 typedef long long INT64;
 typedef unsigned long long UINT64;
 #endif
-
-
 int DCR_CLASS main (int argc, char **argv)
 {
 	DCRAW  dcr;
@@ -162,8 +158,6 @@ int DCR_CLASS main (int argc, char **argv)
 		//!!! check file header
 		dcr_identify(&dcr);
 		status = !dcr.is_raw;
-
-
 		if (dcr.opt.user_flip >= 0)
 			dcr.flip = dcr.opt.user_flip;
 

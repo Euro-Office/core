@@ -35,8 +35,6 @@
 #include <stdexcept>
 #include <vector>
 #include <exception>
-
-
 template <class T>
 using SVectorBase = std::vector<std::shared_ptr<T>>;
 

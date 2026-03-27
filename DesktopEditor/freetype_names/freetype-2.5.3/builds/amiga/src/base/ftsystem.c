@@ -22,8 +22,6 @@
   /* synchronisation.                                                      */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Maintained by Detlef Würkner <TetiSoft@apg.lahn.de>                   */
@@ -104,8 +102,6 @@ Free_VecPooled( APTR  poolHeader,
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                       MEMORY MANAGEMENT INTERFACE                     */
@@ -119,8 +115,6 @@ Free_VecPooled( APTR  poolHeader,
   /* routines like ft_mem_alloc() or ft_mem_realloc().                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -147,8 +141,6 @@ Free_VecPooled( APTR  poolHeader,
     return Alloc_VecPooled( memory->user, size );
 #endif
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -194,8 +186,6 @@ Free_VecPooled( APTR  poolHeader,
     }
     return new_block;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -219,15 +209,11 @@ Free_VecPooled( APTR  poolHeader,
     Free_VecPooled( memory->user, block );
 #endif
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                     RESOURCE MANAGEMENT INTERFACE                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -240,8 +226,6 @@ Free_VecPooled( APTR  poolHeader,
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
 #define STREAM_FILE( stream )  ( (struct SysFile *)stream->descriptor.pointer )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -266,8 +250,6 @@ Free_VecPooled( APTR  poolHeader,
     stream->size               = 0;
     stream->base               = 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -373,8 +355,6 @@ Free_VecPooled( APTR  poolHeader,
 
     return read_bytes;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Error )
@@ -383,8 +363,6 @@ Free_VecPooled( APTR  poolHeader,
   {
     struct FileInfoBlock*  fib;
     struct SysFile*        sysfile;
-
-
     if ( !stream )
       return FT_THROW( Invalid_Stream_Handle );
 
@@ -456,8 +434,6 @@ Free_VecPooled( APTR  poolHeader,
 
     return FT_Err_Ok;
   }
-
-
 #ifdef FT_DEBUG_MEMORY
 
   extern FT_Int
@@ -467,16 +443,12 @@ Free_VecPooled( APTR  poolHeader,
   ft_mem_debug_done( FT_Memory  memory );
 
 #endif
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Memory )
   FT_New_Memory( void )
   {
     FT_Memory  memory;
-
-
 #ifdef __amigaos4__
     memory = (FT_Memory)AllocVec( sizeof ( *memory ), MEMF_SHARED );
 #else
@@ -507,8 +479,6 @@ Free_VecPooled( APTR  poolHeader,
 
     return memory;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )

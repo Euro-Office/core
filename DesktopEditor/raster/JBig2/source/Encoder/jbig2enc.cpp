@@ -160,8 +160,6 @@ jbig2_pages_complete(struct jbig2ctx *ctx, int *const length) {
      original source image.
 
      Remember that you need the Init without WithoutComponents to use this */
-
-
   /*NUMA *samples_per_composition;
   PTA *grayed_centroids;
   PIXA *grayed;

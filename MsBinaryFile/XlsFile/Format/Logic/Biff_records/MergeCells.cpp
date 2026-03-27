@@ -38,19 +38,13 @@ namespace XLS
 MergeCells::MergeCells()
 {
 }
-
-
 MergeCells::~MergeCells()
 {
 }
-
-
 BaseObjectPtr MergeCells::clone()
 {
 	return BaseObjectPtr(new MergeCells(*this));
 }
-
-
 void MergeCells::readFields(CFRecord& record)
 {
 	record >> cmcs;

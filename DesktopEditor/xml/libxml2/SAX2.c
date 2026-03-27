@@ -5,8 +5,6 @@
  *
  * Daniel Veillard <daniel@veillard.com>
  */
-
-
 #define IN_LIBXML
 #include "libxml.h"
 #include <stdlib.h>
@@ -646,8 +644,6 @@ xmlSAX2GetParameterEntity(void *ctx, const xmlChar *name)
     ret = xmlGetParameterEntity(ctxt->myDoc, name);
     return(ret);
 }
-
-
 /**
  * xmlSAX2EntityDecl:
  * @ctx: the user data (XML parser context)
@@ -1614,14 +1610,10 @@ xmlSAX2StartElement(void *ctx, const xmlChar *fullname, const xmlChar **atts)
 	  "Validation failed: no DTD found !", NULL, NULL);
 	ctxt->validate = 0;
     }
-
-
     /*
      * Split the full name into a namespace prefix and the tag name
      */
     name = xmlSplitQName(ctxt, fullname, &prefix);
-
-
     /*
      * Note : the namespace resolution is deferred until the end of the
      *        attributes parsing, since local namespace can be defined as
@@ -1818,8 +1810,6 @@ xmlSAX2EndElement(void *ctx, const xmlChar *name ATTRIBUTE_UNUSED)
         ctxt->valid &= xmlValidateOneElement(&ctxt->vctxt, ctxt->myDoc,
 					     cur);
 #endif /* LIBXML_VALID_ENABLED */
-
-
     /*
      * end of parsing of this node.
      */

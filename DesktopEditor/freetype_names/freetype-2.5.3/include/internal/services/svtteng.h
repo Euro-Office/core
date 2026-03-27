@@ -14,18 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SVTTENG_H__
 #define __SVTTENG_H__
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_MODULE_H
-
-
 FT_BEGIN_HEADER
-
-
   /*
    *  SFNT table loading service.
    */
@@ -42,12 +36,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* __SVTTENG_H__ */
-
-
 /* END */

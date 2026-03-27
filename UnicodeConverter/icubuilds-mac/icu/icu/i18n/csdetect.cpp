@@ -333,8 +333,6 @@ typedef struct {
     UBool *enabledRecognizers;
 } Context;
 
-
-
 static void U_CALLCONV
 enumClose(UEnumeration *en) {
     if(en->context != NULL) {
@@ -410,8 +408,6 @@ enumNext(UEnumeration *en, int32_t *resultLength, UErrorCode * /*status*/) {
 
     return currName;
 }
-
-
 static void U_CALLCONV
 enumReset(UEnumeration *en, UErrorCode *) {
     ((Context *)en->context)->currIndex = 0;

@@ -526,8 +526,6 @@ public:
      * @stable ICU 4.2
      */
     inline USet *toUSet();
-
-
     /**
      * Produce a const USet * pointer for this UnicodeSet.
      * USet is the plain C type for UnicodeSet
@@ -536,8 +534,6 @@ public:
      * @stable ICU 4.2
      */
     inline const USet * toUSet() const;
-
-
     //----------------------------------------------------------------
     // Freezable API
     //----------------------------------------------------------------
@@ -1155,8 +1151,6 @@ public:
      * @stable ICU 2.4
      */
     static UnicodeSet* U_EXPORT2 createFrom(const UnicodeString& s);
-
-
     /**
      * Makes a set from each of the characters in the string. Thus "ch" => {"c", "h"}
      * @param s the source string
@@ -1180,8 +1174,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UnicodeSet& retain(UChar32 start, UChar32 end);
-
-
     /**
      * Retain the specified character from this set if it is present.
      * A frozen set will not be modified.
@@ -1645,8 +1637,6 @@ private:
 
     friend class UnicodeSetIterator;
 };
-
-
 
 inline UBool UnicodeSet::operator!=(const UnicodeSet& o) const {
     return !operator==(o);

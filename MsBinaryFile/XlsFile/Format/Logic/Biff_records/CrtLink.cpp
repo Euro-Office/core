@@ -38,13 +38,9 @@ namespace XLS
 CrtLink::CrtLink()
 {
 }
-
-
 CrtLink::~CrtLink()
 {
 }
-
-
 BaseObjectPtr CrtLink::clone()
 {
 	return BaseObjectPtr(new CrtLink(*this));

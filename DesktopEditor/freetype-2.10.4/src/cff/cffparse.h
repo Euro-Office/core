@@ -14,19 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CFFPARSE_H_
 #define CFFPARSE_H_
-
-
 #include <freetype/internal/cfftypes.h>
 #include <freetype/internal/ftobjs.h>
-
-
 FT_BEGIN_HEADER
-
-
   /* CFF uses constant parser stack size; */
   /* CFF2 can increase from default 193   */
 #define CFF_MAX_STACK_DEPTH  96
@@ -46,8 +38,6 @@ FT_BEGIN_HEADER
 #define CFF2_CODE_TOPDICT   0x3000
 #define CFF2_CODE_FONTDICT  0x4000
 #define CFF2_CODE_PRIVATE   0x5000
-
-
   typedef struct  CFF_ParserRec_
   {
     FT_Library  library;
@@ -70,8 +60,6 @@ FT_BEGIN_HEADER
     FT_UShort   num_axes;    /* a copy of `CFF_FontRecDict->num_axes'    */
 
   } CFF_ParserRec, *CFF_Parser;
-
-
   FT_LOCAL( FT_Long )
   cff_parse_num( CFF_Parser  parser,
                  FT_Byte**   d );
@@ -92,8 +80,6 @@ FT_BEGIN_HEADER
   cff_parser_run( CFF_Parser  parser,
                   FT_Byte*    start,
                   FT_Byte*    limit );
-
-
   enum
   {
     cff_kind_none = 0,
@@ -108,8 +94,6 @@ FT_BEGIN_HEADER
 
     cff_kind_max  /* do not remove */
   };
-
-
   /* now generate handlers for the most simple fields */
   typedef FT_Error  (*CFF_Field_Reader)( CFF_Parser  parser );
 
@@ -128,11 +112,7 @@ FT_BEGIN_HEADER
 #endif
 
   } CFF_Field_Handler;
-
-
 FT_END_HEADER
-
-
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
   typedef struct  CFF_T2_String_
   {
@@ -143,6 +123,4 @@ FT_END_HEADER
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
 
 #endif /* CFFPARSE_H_ */
-
-
 /* END */

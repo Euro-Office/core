@@ -116,8 +116,6 @@ namespace agg
         double   m_pdy;
     };
 
-
-
     template<class ColorT> class gamma_ctrl : public gamma_ctrl_impl
     {
     public:
@@ -163,8 +161,6 @@ namespace agg
         ColorT  m_text_color;
         ColorT* m_colors[7];
     };
-
-
 }
 
 #endif

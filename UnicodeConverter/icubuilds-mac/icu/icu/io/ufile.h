@@ -130,7 +130,5 @@ ufile_flush_translit(UFILE *f);
  */
 void 
 ufile_flush_io(UFILE *f);
-
-
 #endif
 #endif

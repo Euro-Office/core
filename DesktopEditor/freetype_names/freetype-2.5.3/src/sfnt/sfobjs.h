@@ -14,20 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SFOBJS_H__
 #define __SFOBJS_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_SFNT_H
 #include FT_INTERNAL_OBJECTS_H
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
@@ -44,11 +36,7 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   sfnt_done_face( TT_Face  face );
-
-
 FT_END_HEADER
 
 #endif /* __SFDRIVER_H__ */
-
-
 /* END */

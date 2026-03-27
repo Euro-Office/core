@@ -14,26 +14,16 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTSBIT_H_
 #define TTSBIT_H_
-
-
 #include "ttload.h"
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   tt_face_load_sbit( TT_Face    face,
                      FT_Stream  stream );
 
   FT_LOCAL( void )
   tt_face_free_sbit( TT_Face  face );
-
-
   FT_LOCAL( FT_Error )
   tt_face_set_sbit_strike( TT_Face          face,
                            FT_Size_Request  req,
@@ -52,11 +42,7 @@ FT_BEGIN_HEADER
                            FT_Stream            stream,
                            FT_Bitmap           *map,
                            TT_SBit_MetricsRec  *metrics );
-
-
 FT_END_HEADER
 
 #endif /* TTSBIT_H_ */
-
-
 /* END */

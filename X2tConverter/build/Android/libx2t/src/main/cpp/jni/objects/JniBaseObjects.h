@@ -16,15 +16,11 @@
     if (REFERENCE != NULL && !ENV->IsSameObject(REFERENCE, NULL)) {                  \
         ENV->DeleteWeakGlobalRef(REFERENCE);                                         \
     }
-
-
 class JniBaseObjects {
 
     public:
 
         static constexpr const char * CLASS_PATH_STRING = "java/lang/String";
-
-
     protected:
 
         jclass m_jClazz;
@@ -34,8 +30,6 @@ class JniBaseObjects {
         std::string m_sClassPackage;
 
         std::string m_sConstructorSignature;
-
-
     public:
 
         JniBaseObjects() {
@@ -44,8 +38,6 @@ class JniBaseObjects {
         }
 
         virtual ~JniBaseObjects() {}
-
-
     protected:
 
         virtual bool initClass(JNIEnv * jEnv) {
@@ -94,8 +86,6 @@ class JniBaseObjects {
 
             return true;
         }
-
-
     public:
 
         virtual const jclass getClass() {
@@ -132,8 +122,6 @@ class JniBaseObjects {
 
             return jObject;
         }
-
-
     public:
 
         static std::string jstringToString(JNIEnv* env, jstring jstr) {
@@ -216,6 +204,4 @@ class JniBaseObjects {
             return stringArr;
         }
 };
-
-
 #endif

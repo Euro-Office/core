@@ -51,8 +51,6 @@ DWT.C are used by some function in TCD.C.
 /**
 DCCS-LIWT properties
 */
-
-
 typedef struct opj_wtfilt {
     double *LPS;
     int lenLPS;

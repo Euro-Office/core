@@ -139,8 +139,6 @@ namespace XLSB
             elements_.pop_back();
         }
         else return false;
-
-
         CELL cell(static_cast<RowHdr*>(m_BrtRowHdr.get())->rw + 1, shared_formulas_locations_ref_);
 
         /*while(proc.optional(cell))

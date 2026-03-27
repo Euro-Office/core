@@ -34,8 +34,6 @@
 #include "OfficeArtRecord.h"
 #include "OfficeArtRecordHeader.h"
 #include "OfficeArtBlip.h"
-
-
 namespace XLS
 {
 	class CFRecord;
@@ -71,8 +69,6 @@ public:
 	}
 	
 	virtual void load(XLS::CFRecord& record);
-
-
 	static const XLS::ElementType	type = XLS::typeOfficeArtBStoreContainerFileBlock;
 
 	void readCompressedData(XLS::CFRecord& record, OfficeArtMetafileHeader & metafileHeader);
@@ -103,6 +99,4 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtBStoreContainerFileBlock> OfficeArtBStoreContainerFileBlockPtr;
-
-
 } // namespace XLS

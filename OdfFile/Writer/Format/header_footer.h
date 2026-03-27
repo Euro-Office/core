@@ -39,12 +39,8 @@
 #include "office_elements_create.h"
 
 #include "../../DataTypes/common_attlists.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer {
-
-
 // style:header-footer-properties-attlist
 class style_header_footer_properties_attlist
 {
@@ -73,8 +69,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStyleHeaderFooterProperties;
-    
-
     virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child)
     {
@@ -87,8 +81,6 @@ public:
     
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_header_footer_properties)
-
-
 // common:style-header-footer-attlist
 class common_style_header_footer_attlist
 {

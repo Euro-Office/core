@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr SortCond12::clone()
 {
 	return BiffStructurePtr(new SortCond12(*this));

@@ -588,8 +588,6 @@ RGBQUAD CxImage::GetAreaColorInterpolated(
 		CxRect2 area(xc-w/2.0f, yc-h/2.0f, xc+w/2.0f, yc+h/2.0f);   //area
 		int32_t xi1=(int32_t)(area.botLeft.x+0.49999999f);                //low x
 		int32_t yi1=(int32_t)(area.botLeft.y+0.49999999f);                //low y
-		
-		
 		int32_t xi2=(int32_t)(area.topRight.x+0.5f);                      //top x
 		int32_t yi2=(int32_t)(area.topRight.y+0.5f);                      //top y (for loops)
 		

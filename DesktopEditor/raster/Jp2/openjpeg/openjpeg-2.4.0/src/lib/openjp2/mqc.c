@@ -207,8 +207,6 @@ void opj_mqc_init_enc(opj_mqc_t *mqc, OPJ_BYTE *bp)
     mqc->start = bp;
     mqc->end_of_byte_stream_counter = 0;
 }
-
-
 void opj_mqc_flush(opj_mqc_t *mqc)
 {
     /* C.2.9 Termination of coding (FLUSH) */
@@ -458,8 +456,6 @@ void opj_mqc_init_dec(opj_mqc_t *mqc, OPJ_BYTE *bp, OPJ_UINT32 len,
     mqc->ct -= 7;
     mqc->a = 0x8000;
 }
-
-
 void opj_mqc_raw_init_dec(opj_mqc_t *mqc, OPJ_BYTE *bp, OPJ_UINT32 len,
                           OPJ_UINT32 extra_writable_bytes)
 {
@@ -467,8 +463,6 @@ void opj_mqc_raw_init_dec(opj_mqc_t *mqc, OPJ_BYTE *bp, OPJ_UINT32 len,
     mqc->c = 0;
     mqc->ct = 0;
 }
-
-
 void opq_mqc_finish_dec(opj_mqc_t *mqc)
 {
     /* Restore the bytes overwritten by opj_mqc_init_dec_common() */

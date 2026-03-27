@@ -215,8 +215,6 @@ namespace DocFileFormat
 			Handles.push_back (one);
 		}
 	};
-
-
 	class BracketPairType : public ShapeType
 	{
 	public:
@@ -250,6 +248,4 @@ namespace DocFileFormat
 			Handles.push_back (one);
 		}
 	};
-
-
 }

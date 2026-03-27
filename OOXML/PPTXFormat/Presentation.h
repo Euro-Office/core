@@ -47,8 +47,6 @@
 
 #include "../DocxFormat/Media/VbaProject.h"
 #include "../DocxFormat/Media/JsaProject.h"
-
-
 namespace PPTX
 {
 	namespace nsPresentation

@@ -39,8 +39,6 @@ SXLI::SXLI(int count_)
 {
 	count = count_;
 }
-
-
 SXLI::~SXLI()
 {
 }

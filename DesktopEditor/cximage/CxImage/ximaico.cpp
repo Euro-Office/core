@@ -373,8 +373,6 @@ bool CxImageICO::Encode(CxFile * hFile, bool bAppend, int32_t nPageCount)
 		icon_header.idType = m_ntohs(icon_header.idType);
 		icon_header.idCount = m_ntohs(icon_header.idCount);
 	}
-
-
 	if ((bAppend && nPageCount==info.nNumFrames) || (!bAppend && nPageCount==0)){
 		icon_list.wPlanes = m_ntohs(icon_list.wPlanes);
 		icon_list.wBitCount = m_ntohs(icon_list.wBitCount);

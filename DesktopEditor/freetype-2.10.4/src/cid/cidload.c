@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <ft2build.h>
 #include <freetype/internal/ftdebug.h>
 #include FT_CONFIG_CONFIG_H
@@ -26,8 +24,6 @@
 #include "cidload.h"
 
 #include "ciderrs.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -36,8 +32,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  cidload
-
-
   /* read a single offset */
   FT_LOCAL_DEF( FT_ULong )
   cid_get_offset( FT_Byte*  *start,
@@ -45,8 +39,6 @@
   {
     FT_ULong  result;
     FT_Byte*  p = *start;
-
-
     for ( result = 0; offsize > 0; offsize-- )
     {
       result <<= 8;
@@ -56,8 +48,6 @@
     *start = p;
     return result;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -65,8 +55,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   static FT_Error
   cid_load_keyword( CID_Face        face,
                     CID_Loader*     loader,
@@ -77,8 +65,6 @@
     FT_Byte*      object;
     void*         dummy_object;
     CID_FaceInfo  cid = &face->cid;
-
-
     /* if the keyword has a dedicated callback, call it */
     if ( keyword->type == T1_FIELD_TYPE_CALLBACK )
     {
@@ -111,8 +97,6 @@
     default:
       {
         CID_FaceDict  dict;
-
-
         if ( parser->num_dict < 0 || parser->num_dict >= cid->num_dicts )
         {
           FT_ERROR(( "cid_load_keyword: invalid use of `%s'\n",
@@ -152,8 +136,6 @@
   Exit:
     return error;
   }
-
-
   FT_CALLBACK_DEF( void )
   cid_parse_font_matrix( CID_Face     face,
                          CID_Parser*  parser )
@@ -162,15 +144,11 @@
     FT_Face       root = (FT_Face)&face->root;
     FT_Fixed      temp[6];
     FT_Fixed      temp_scale;
-
-
     if ( parser->num_dict >= 0 && parser->num_dict < face->cid.num_dicts )
     {
       FT_Matrix*  matrix;
       FT_Vector*  offset;
       FT_Int      result;
-
-
       dict   = face->cid.font_dicts + parser->num_dict;
       matrix = &dict->font_matrix;
       offset = &dict->font_offset;
@@ -234,8 +212,6 @@
   Exit:
     return;
   }
-
-
   FT_CALLBACK_DEF( void )
   parse_fd_array( CID_Face     face,
                   CID_Parser*  parser )
@@ -245,8 +221,6 @@
     FT_Stream     stream = parser->stream;
     FT_Error      error  = FT_Err_Ok;
     FT_Long       num_dicts;
-
-
     num_dicts = cid_parser_to_int( parser );
     if ( num_dicts < 0 )
     {
@@ -284,8 +258,6 @@
     if ( !cid->font_dicts )
     {
       FT_Int  n;
-
-
       if ( FT_NEW_ARRAY( cid->font_dicts, num_dicts ) )
         goto Exit;
 
@@ -295,8 +267,6 @@
       for ( n = 0; n < cid->num_dicts; n++ )
       {
         CID_FaceDict  dict = cid->font_dicts + n;
-
-
         dict->private_dict.blue_shift       = 7;
         dict->private_dict.blue_fuzz        = 1;
         dict->private_dict.lenIV            = 4;
@@ -309,8 +279,6 @@
   Exit:
     return;
   }
-
-
   /* By mistake, `expansion_factor' appears both in PS_PrivateRec */
   /* and CID_FaceDictRec (both are public header files and can't  */
   /* changed).  We simply copy the value.                         */
@@ -320,8 +288,6 @@
                           CID_Parser*  parser )
   {
     CID_FaceDict  dict;
-
-
     if ( parser->num_dict >= 0 && parser->num_dict < face->cid.num_dicts )
     {
       dict = face->cid.font_dicts + parser->num_dict;
@@ -334,8 +300,6 @@
 
     return;
   }
-
-
   /* By mistake, `CID_FaceDictRec' doesn't contain a field for the */
   /* `FontName' keyword.  FreeType doesn't need it, but it is nice */
   /* to catch it for producing better trace output.                */
@@ -349,8 +313,6 @@
     {
       T1_TokenRec  token;
       FT_UInt      len;
-
-
       cid_parser_to_token( parser, &token );
 
       len = (FT_UInt)( token.limit - token.start );
@@ -366,8 +328,6 @@
 
     return;
   }
-
-
   static
   const T1_FieldRec  cid_field_records[] =
   {
@@ -381,8 +341,6 @@
 
     { 0, T1_FIELD_LOCATION_CID_INFO, T1_FIELD_TYPE_NONE, 0, 0, 0, 0, 0, 0 }
   };
-
-
   static FT_Error
   cid_parse_dict( CID_Face     face,
                   CID_Loader*  loader,
@@ -390,8 +348,6 @@
                   FT_ULong     size )
   {
     CID_Parser*  parser = &loader->parser;
-
-
     parser->root.cursor = base;
     parser->root.limit  = base + size;
     parser->root.error  = FT_Err_Ok;
@@ -399,13 +355,9 @@
     {
       FT_Byte*  cur   = base;
       FT_Byte*  limit = cur + size;
-
-
       for (;;)
       {
         FT_Byte*  newlimit;
-
-
         parser->root.cursor = cur;
         cid_parser_skip_spaces( parser );
 
@@ -449,8 +401,6 @@
         if ( *cur == '/' && cur + 2 < limit )
         {
           FT_UInt  len;
-
-
           cur++;
           len = (FT_UInt)( parser->root.cursor - cur );
 
@@ -458,13 +408,9 @@
           {
             /* now compare the immediate name to the keyword table */
             T1_Field  keyword = (T1_Field)cid_field_records;
-
-
             for (;;)
             {
               FT_Byte*  name;
-
-
               name = (FT_Byte*)keyword->ident;
               if ( !name )
                 break;
@@ -473,8 +419,6 @@
                    len == ft_strlen( (const char*)name ) )
               {
                 FT_UInt  n;
-
-
                 for ( n = 1; n < len; n++ )
                   if ( cur[n] != name[n] )
                     break;
@@ -507,8 +451,6 @@
 
     return parser->root.error;
   }
-
-
   /* read the subrmap and the subrs of each font dict */
   static FT_Error
   cid_read_subrs( CID_Face  face )
@@ -522,8 +464,6 @@
     FT_UInt        max_offsets = 0;
     FT_ULong*      offsets = NULL;
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
-
-
     if ( FT_NEW_ARRAY( face->subrs, cid->num_dicts ) )
       goto Exit;
 
@@ -535,8 +475,6 @@
       FT_UInt       count, num_subrs = dict->num_subrs;
       FT_ULong      data_len;
       FT_Byte*      p;
-
-
       if ( !num_subrs )
         continue;
 
@@ -544,8 +482,6 @@
       if ( num_subrs + 1 > max_offsets )
       {
         FT_UInt  new_max = FT_PAD_CEIL( num_subrs + 1, 4 );
-
-
         if ( new_max <= max_offsets )
         {
           error = FT_THROW( Syntax_Error );
@@ -601,8 +537,6 @@
       for ( count = 1; count <= num_subrs; count++ )
       {
         FT_ULong  len;
-
-
         len               = offsets[count] - offsets[count - 1];
         subr->code[count] = subr->code[count - 1] + len;
       }
@@ -613,8 +547,6 @@
         for ( count = 0; count < num_subrs; count++ )
         {
           FT_ULong  len;
-
-
           len = offsets[count + 1] - offsets[count];
           psaux->t1_decrypt( subr->code[count], len, 4330 );
         }
@@ -641,8 +573,6 @@
     }
     goto Exit;
   }
-
-
   static void
   cid_init_loader( CID_Loader*  loader,
                    CID_Face     face )
@@ -651,19 +581,13 @@
 
     FT_ZERO( loader );
   }
-
-
   static  void
   cid_done_loader( CID_Loader*  loader )
   {
     CID_Parser*  parser = &loader->parser;
-
-
     /* finalize parser */
     cid_parser_done( parser );
   }
-
-
   static FT_Error
   cid_hex_to_binary( FT_Byte*  data,
                      FT_ULong  data_len,
@@ -679,8 +603,6 @@
     FT_Byte    val;
 
     FT_Bool    upper_nibble, done;
-
-
     if ( FT_STREAM_SEEK( offset ) )
       goto Exit;
 
@@ -698,8 +620,6 @@
       {
         FT_ULong  oldpos = FT_STREAM_POS();
         FT_ULong  size   = stream->size - oldpos;
-
-
         if ( size == 0 )
         {
           error = FT_THROW( Syntax_Error );
@@ -760,8 +680,6 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_face_open( CID_Face  face,
                  FT_Int    face_index )
@@ -776,8 +694,6 @@
 
     FT_ULong  binary_length;
     FT_ULong  entry_len;
-
-
     cid_init_loader( &loader, face );
 
     parser = &loader.parser;
@@ -856,8 +772,6 @@
     for ( n = 0; n < cid->num_dicts; n++ )
     {
       CID_FaceDict  dict = cid->font_dicts + n;
-
-
       /* the upper limits are ad-hoc values */
       if ( dict->private_dict.blue_shift > 1000 ||
            dict->private_dict.blue_shift < 0    )
@@ -936,6 +850,4 @@
     cid_done_loader( &loader );
     return error;
   }
-
-
 /* END */

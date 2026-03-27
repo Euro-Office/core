@@ -38,13 +38,9 @@ namespace XLS
 SxItm::SxItm()
 {
 }
-
-
 SxItm::~SxItm()
 {
 }
-
-
 BaseObjectPtr SxItm::clone()
 {
 	return BaseObjectPtr(new SxItm(*this));

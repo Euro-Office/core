@@ -41,8 +41,6 @@ namespace agg
         image_subpixel_scale = 1 << image_subpixel_shift, //----image_subpixel_scale 
         image_subpixel_mask  = image_subpixel_scale - 1   //----image_subpixel_mask 
     };
-
-
     //-----------------------------------------------------image_filter_lut
     class image_filter_lut
     {
@@ -94,8 +92,6 @@ namespace agg
         pod_array<int16> m_weight_array;
     };
 
-
-
     //--------------------------------------------------------image_filter
     template<class FilterF> class image_filter : public image_filter_lut
     {
@@ -107,8 +103,6 @@ namespace agg
     private:
         FilterF m_filter_function;
     };
-
-
     //-----------------------------------------------image_filter_bilinear
     struct image_filter_bilinear
     {
@@ -118,8 +112,6 @@ namespace agg
             return 1.0 - x;
         }
     };
-
-
     //-----------------------------------------------image_filter_hanning
     struct image_filter_hanning
     {
@@ -129,8 +121,6 @@ namespace agg
             return 0.5 + 0.5 * cos(pi * x);
         }
     };
-
-
     //-----------------------------------------------image_filter_hamming
     struct image_filter_hamming
     {
@@ -258,8 +248,6 @@ namespace agg
             return 0.0;
         }
     };
-
-
     //----------------------------------------------image_filter_spline16
     struct image_filter_spline16
     {
@@ -273,8 +261,6 @@ namespace agg
             return ((-1.0/3.0 * (x-1) + 4.0/5.0) * (x-1) - 7.0/15.0 ) * (x-1);
         }
     };
-
-
     //---------------------------------------------image_filter_spline36
     struct image_filter_spline36
     {
@@ -292,8 +278,6 @@ namespace agg
            return ((1.0/11.0 * (x-2) - 45.0/209.0) * (x-2) +  26.0/209.0) * (x-2);
         }
     };
-
-
     //----------------------------------------------image_filter_gaussian
     struct image_filter_gaussian
     {
@@ -303,8 +287,6 @@ namespace agg
             return exp(-2.0 * x * x) * sqrt(2.0 / pi);
         }
     };
-
-
     //------------------------------------------------image_filter_bessel
     struct image_filter_bessel
     {
@@ -314,8 +296,6 @@ namespace agg
             return (x == 0.0) ? pi / 4.0 : besj(pi * x, 1) / (2.0 * x);
         }
     };
-
-
     //-------------------------------------------------image_filter_sinc
     class image_filter_sinc
     {
@@ -331,8 +311,6 @@ namespace agg
     private:
         double m_radius;
     };
-
-
     //-----------------------------------------------image_filter_lanczos
     class image_filter_lanczos
     {
@@ -350,8 +328,6 @@ namespace agg
     private:
         double m_radius;
     };
-
-
     //----------------------------------------------image_filter_blackman
     class image_filter_blackman
     {
@@ -441,8 +417,6 @@ namespace agg
     //-------------------------------------------image_filter_blackman256
     class image_filter_blackman256 : public image_filter_blackman
     { public: image_filter_blackman256() : image_filter_blackman(8.0){} };
-
-
 }
 
 #endif

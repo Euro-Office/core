@@ -14,8 +14,6 @@
  * \file
  * \brief C++ API: Format and parse duration in single time unit
  */
-
-
 #if !UCONFIG_NO_FORMATTING
 #ifndef U_HIDE_DEPRECATED_API
 
@@ -25,8 +23,6 @@
 #include "unicode/measfmt.h"
 #include "unicode/numfmt.h"
 #include "unicode/plurrule.h"
-
-
 /**
  * Constants for various styles.
  * There are 2 styles: full name and abbreviated name.
@@ -43,8 +39,6 @@ enum UTimeUnitFormatStyle {
     UTMUTFMT_FORMAT_STYLE_COUNT
 };
 typedef enum UTimeUnitFormatStyle UTimeUnitFormatStyle; /**< @deprecated ICU 53 */
-
-
 U_NAMESPACE_BEGIN
 
 class Hashtable;
@@ -144,8 +138,6 @@ public:
      * @deprecated ICU 53
      */
     void setLocale(const Locale& locale, UErrorCode& status);
-
-
     /**
      * Set the number format used for formatting or parsing.
      * @param format  the number formatter to be set

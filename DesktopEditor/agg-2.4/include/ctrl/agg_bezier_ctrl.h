@@ -27,8 +27,6 @@
 #include "agg_conv_stroke.h"
 #include "agg_conv_curve.h"
 #include "agg_polygon_ctrl.h"
-
-
 namespace agg
 {
 
@@ -78,8 +76,6 @@ namespace agg
         unsigned num_paths() { return 7; };
         void     rewind(unsigned path_id);
         unsigned vertex(double* x, double* y);
-
-
     private:
         curve4              m_curve;
         ellipse             m_ellipse;
@@ -87,8 +83,6 @@ namespace agg
         polygon_ctrl_impl   m_poly;
         unsigned            m_idx;
     };
-
-
 
     //----------------------------------------------------------bezier_ctrl
     template<class ColorT> class bezier_ctrl : public bezier_ctrl_impl
@@ -108,10 +102,6 @@ namespace agg
 
         ColorT m_color;
     };
-
-
-
-
 
     //--------------------------------------------------------curve3_ctrl_impl
     class curve3_ctrl_impl : public ctrl
@@ -154,8 +144,6 @@ namespace agg
         unsigned num_paths() { return 6; };
         void     rewind(unsigned path_id);
         unsigned vertex(double* x, double* y);
-
-
     private:
         curve3              m_curve;
         ellipse             m_ellipse;
@@ -163,8 +151,6 @@ namespace agg
         polygon_ctrl_impl   m_poly;
         unsigned            m_idx;
     };
-
-
 
     //----------------------------------------------------------curve3_ctrl
     template<class ColorT> class curve3_ctrl : public curve3_ctrl_impl
@@ -184,13 +170,7 @@ namespace agg
 
         ColorT m_color;
     };
-
-
-
-
 }
-
-
 
 #endif
 

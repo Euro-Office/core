@@ -11,8 +11,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Private subobject */
 
 typedef struct {
@@ -23,8 +21,6 @@ typedef struct {
 } my_color_converter;
 
 typedef my_color_converter * my_cconvert_ptr;
-
-
 /**************** RGB -> YCbCr conversion: most common case **************/
 
 /*
@@ -76,8 +72,6 @@ typedef my_color_converter * my_cconvert_ptr;
 #define G_CR_OFF	(6*(MAXJSAMPLE+1))
 #define B_CR_OFF	(7*(MAXJSAMPLE+1))
 #define TABLE_SIZE	(8*(MAXJSAMPLE+1))
-
-
 /*
  * Initialize for RGB->YCC colorspace conversion.
  */
@@ -112,8 +106,6 @@ rgb_ycc_start (j_compress_ptr cinfo)
     rgb_ycc_tab[i+B_CR_OFF] = (-FIX(0.08131)) * i;
   }
 }
-
-
 /*
  * Convert some rows of samples to the JPEG colorspace.
  *
@@ -170,11 +162,7 @@ rgb_ycc_convert (j_compress_ptr cinfo,
     }
   }
 }
-
-
 /**************** Cases other than RGB -> YCbCr **************/
-
-
 /*
  * Convert some rows of samples to the JPEG colorspace.
  * This version handles RGB->grayscale conversion, which is the same
@@ -211,8 +199,6 @@ rgb_gray_convert (j_compress_ptr cinfo,
     }
   }
 }
-
-
 /*
  * Convert some rows of samples to the JPEG colorspace.
  * This version handles Adobe-style CMYK->YCCK conversion,
@@ -268,8 +254,6 @@ cmyk_ycck_convert (j_compress_ptr cinfo,
     }
   }
 }
-
-
 /*
  * Convert some rows of samples to the JPEG colorspace.
  * This version handles grayscale output with no conversion.
@@ -297,8 +281,6 @@ grayscale_convert (j_compress_ptr cinfo,
     }
   }
 }
-
-
 /*
  * Convert some rows of samples to the JPEG colorspace.
  * This version handles multi-component colorspaces without conversion.
@@ -331,8 +313,6 @@ null_convert (j_compress_ptr cinfo,
     output_row++;
   }
 }
-
-
 /*
  * Empty method for start_pass.
  */
@@ -342,8 +322,6 @@ null_method (j_compress_ptr cinfo)
 {
   /* no work needed */
 }
-
-
 /*
  * Module initialization routine for input colorspace conversion.
  */

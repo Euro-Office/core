@@ -7,8 +7,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_SCHEMA_H__
 #define __XML_SCHEMA_H__
 
@@ -231,8 +229,6 @@ XMLPUBFUN xmlSchemaSAXPlugPtr XMLCALL
 					 void **user_data);
 XMLPUBFUN int XMLCALL
             xmlSchemaSAXUnplug		(xmlSchemaSAXPlugPtr plug);
-
-
 XMLPUBFUN void XMLCALL
             xmlSchemaValidateSetLocator	(xmlSchemaValidCtxtPtr vctxt,
 					 xmlSchemaValidityLocatorFunc f,

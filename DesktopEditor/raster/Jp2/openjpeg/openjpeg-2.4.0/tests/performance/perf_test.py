@@ -31,8 +31,6 @@ import os
 import subprocess
 import sys
 import time
-
-
 def Usage():
     print('Usage: perf_test.py [-kakadu] [-i filelist.csv] [-o out.csv] [-q]')
     sys.exit(1)

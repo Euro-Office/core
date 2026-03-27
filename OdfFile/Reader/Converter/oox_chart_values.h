@@ -33,8 +33,6 @@
 
 #include <iosfwd>
 #include <CPOptional.h>
-
-                 
 namespace cpdoccore {
 namespace oox {
 

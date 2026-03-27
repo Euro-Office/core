@@ -18,8 +18,6 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "platform/agg_platform_support.h"
 #include "interactive_polygon.h"
-
-
 #include "agg_pixfmt_rgb.h"
 #include "agg_span_image_filter_rgb.h"
 #define span_image_filter_2x2 agg::span_image_filter_rgb_2x2
@@ -37,8 +35,6 @@ double            g_x1 = 0;
 double            g_y1 = 0;
 double            g_x2 = 0;
 double            g_y2 = 0;
-
-
 class the_application : public agg::platform_support
 {
 public:
@@ -128,8 +124,6 @@ public:
         g_rasterizer.line_to_d(m_quad.xn(1), m_quad.yn(1));
         g_rasterizer.line_to_d(m_quad.xn(2), m_quad.yn(2));
         g_rasterizer.line_to_d(m_quad.xn(3), m_quad.yn(3));
-
-
         typedef agg::span_allocator<color_type> span_alloc_type;
         span_alloc_type sa;
         agg::image_filter<agg::image_filter_hanning> filter;
@@ -202,8 +196,6 @@ public:
         }
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -229,8 +221,6 @@ public:
 
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -245,8 +235,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_quad.on_mouse_button_up(x, y))
@@ -256,12 +244,6 @@ public:
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -292,9 +274,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

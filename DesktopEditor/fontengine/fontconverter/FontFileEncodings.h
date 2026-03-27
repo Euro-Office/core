@@ -88,8 +88,6 @@ namespace NSFontConverter
         {
             return (m_cwsString == NULL);
         }
-
-
         inline const int  GetLength() const
         {
             if ( NULL == m_cwsString )
@@ -651,8 +649,6 @@ namespace NSFontConverter
         "Thornsmall",
         "Ydieresissmall"
     };
-
-
     //------------------------------------------------------------------------
     // Type 1C font data
     //------------------------------------------------------------------------

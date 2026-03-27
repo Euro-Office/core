@@ -32,8 +32,6 @@
 #pragma once
 #include "OutlineTextPropsHeaderExAtom.h"
 #include "StyleTextProp9Atom.h"
-
-
 namespace PPT
 {
 class CRecordOutlineTextProps9Entry : public CRecordOutlineTextPropsHeaderExAtom
@@ -44,8 +42,6 @@ public:
 public:
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
-
-
 class CRecordOutlineTextProps9Container : public CUnknownRecord
 {
 public:

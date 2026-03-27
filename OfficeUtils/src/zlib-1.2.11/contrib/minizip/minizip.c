@@ -11,8 +11,6 @@
          Modifications for Zip64 support on both zip and unzip
          Copyright (C) 2009-2010 Mathias Svensson ( http://result42.com )
 */
-
-
 #if (!defined(_WIN32)) && (!defined(WIN32)) && (!defined(_WIN64)) && (!defined(__APPLE__))
         #ifndef __USE_FILE_OFFSET64
                 #define __USE_FILE_OFFSET64
@@ -39,8 +37,6 @@
 #define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
 
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -64,8 +60,6 @@
         #define USEWIN32IOAPI
         #include "iowin32.h"
 #endif
-
-
 
 #define WRITEBUFFERSIZE (16384)
 #define MAXFILENAME (256)
@@ -146,10 +140,6 @@ uLong filetime(f, tmzip, dt)
 }
 #endif
 #endif
-
-
-
-
 int check_exist_file(filename)
     const char* filename;
 {
@@ -261,8 +251,6 @@ int main(argc,argv)
     int size_buf=0;
     void* buf=NULL;
     const char* password=NULL;
-
-
     do_banner();
     if (argc==1)
     {

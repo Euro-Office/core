@@ -38,19 +38,13 @@ namespace XLS
 Series::Series()
 {
 }
-
-
 Series::~Series()
 {
 }
-
-
 BaseObjectPtr Series::clone()
 {
 	return BaseObjectPtr(new Series(*this));
 }
-
-
 void Series::readFields(CFRecord& record)
 {
 	record >> sdtX >> sdtY >> cValx >> cValy >> sdtBSize >> cValBSize;

@@ -23,16 +23,12 @@
 #include "platform/win32/agg_win32_bmp.h"
 #include "util/agg_color_conv_rgb8.h"
 #include "util/agg_color_conv_rgb16.h"
-
-
 namespace agg
 {
     
     //------------------------------------------------------------------------
     HINSTANCE g_windows_instance = 0;
     int       g_windows_cmd_show = 0;
-
-
     //------------------------------------------------------------------------
     class platform_specific
     {
@@ -69,8 +65,6 @@ namespace agg
         LARGE_INTEGER m_sw_freq;
         LARGE_INTEGER m_sw_start;
     };
-
-
     //------------------------------------------------------------------------
     platform_specific::platform_specific(pix_format_e format, bool flip_y) :
         m_format(format),
@@ -137,8 +131,6 @@ namespace agg
         m_keymap[VK_NUMLOCK]    = key_numlock;
         m_keymap[VK_CAPITAL]    = key_capslock;
         m_keymap[VK_SCROLL]     = key_scrollock;
-
-
         switch(m_format)
         {
         case pix_format_bw:
@@ -210,8 +202,6 @@ namespace agg
         ::QueryPerformanceFrequency(&m_sw_freq);
         ::QueryPerformanceCounter(&m_sw_start);
     }
-
-
     //------------------------------------------------------------------------
     void platform_specific::create_pmap(unsigned width, 
                                         unsigned height,
@@ -225,8 +215,6 @@ namespace agg
                       m_pmap_window.stride() :
                      -m_pmap_window.stride());
     }
-
-
     //------------------------------------------------------------------------
     static void convert_pmap(rendering_buffer* dst, 
                              const rendering_buffer* src, 
@@ -302,8 +290,6 @@ namespace agg
             break;
         }
     }
-
-
     //------------------------------------------------------------------------
     void platform_specific::display_pmap(HDC dc, const rendering_buffer* src)
     {
@@ -331,8 +317,6 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_specific::save_pmap(const char* fn, unsigned idx, 
                                       const rendering_buffer* src)
@@ -358,8 +342,6 @@ namespace agg
         convert_pmap(&rbuf_tmp, src, m_format);
         return pmap_tmp.save_as_bmp(fn);
     }
-
-
 
     //------------------------------------------------------------------------
     bool platform_specific::load_pmap(const char* fn, unsigned idx, 
@@ -538,21 +520,11 @@ namespace agg
 
         return true;
     }
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     unsigned platform_specific::translate(unsigned keycode)
     {
         return m_last_translated_key = (keycode > 255) ? 0 : m_keymap[keycode];
     }
-
-
 
     //------------------------------------------------------------------------
     platform_support::platform_support(pix_format_e format, bool flip_y) :
@@ -567,15 +539,11 @@ namespace agg
     {
         strcpy(m_caption, "Anti-Grain Geometry Application");
     }
-
-
     //------------------------------------------------------------------------
     platform_support::~platform_support()
     {
         delete m_specific;
     }
-
-
 
     //------------------------------------------------------------------------
     void platform_support::caption(const char* cap)
@@ -603,8 +571,6 @@ namespace agg
                       double(m_specific->m_sw_freq.QuadPart);
     }
 
-
-
     //------------------------------------------------------------------------
     static unsigned get_key_flags(int wflags)
     {
@@ -615,21 +581,15 @@ namespace agg
         if(wflags & MK_CONTROL) flags |= kbd_ctrl;
         return flags;
     }
-
-
     void* platform_support::raw_display_handler()
     {
         return m_specific->m_current_dc;
     }
-
-
     //------------------------------------------------------------------------
     LRESULT CALLBACK window_proc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     {
         PAINTSTRUCT ps;
         HDC paintDC;
-
-
         void* user_data = reinterpret_cast<void*>(::GetWindowLong(hWnd, GWL_USERDATA));
         platform_support* app = 0;
 
@@ -752,8 +712,6 @@ namespace agg
             }
 */
             break;
-
-
         //--------------------------------------------------------------------
         case WM_RBUTTONDOWN:
             ::SetCapture(app->m_specific->m_hwnd);
@@ -814,8 +772,6 @@ namespace agg
                 app->m_specific->m_cur_y = int16(HIWORD(lParam));
             }
             app->m_specific->m_input_flags = get_key_flags(wParam);
-
-
             if(app->m_ctrls.on_mouse_move(
                 app->m_specific->m_cur_x, 
                 app->m_specific->m_cur_y,
@@ -984,15 +940,11 @@ namespace agg
         ::ReleaseDC(app->m_specific->m_hwnd, dc);
         return ret;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::message(const char* msg)
     {
         ::MessageBox(m_specific->m_hwnd, msg, "AGG Message", MB_OK);
     }
-
-
     //------------------------------------------------------------------------
     bool platform_support::init(unsigned width, unsigned height, unsigned flags)
     {
@@ -1041,8 +993,6 @@ namespace agg
         {
             return false;
         }
-
-
         RECT rct;
         ::GetClientRect(m_specific->m_hwnd, &rct);
 
@@ -1062,8 +1012,6 @@ namespace agg
         ::ShowWindow(m_specific->m_hwnd, g_windows_cmd_show);
         return true;
     }
-
-
 
     //------------------------------------------------------------------------
     int platform_support::run()
@@ -1100,12 +1048,8 @@ namespace agg
         }
         return (int)msg.wParam;
     }
-
-
     //------------------------------------------------------------------------
     const char* platform_support::img_ext() const { return ".bmp"; }
-
-
     //------------------------------------------------------------------------
     const char* platform_support::full_file_name(const char* file_name)
     {
@@ -1129,8 +1073,6 @@ namespace agg
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_support::save_img(unsigned idx, const char* file)
     {
@@ -1147,8 +1089,6 @@ namespace agg
         }
         return true;
     }
-
-
 
     //------------------------------------------------------------------------
     bool platform_support::create_img(unsigned idx, unsigned width, unsigned height)
@@ -1168,16 +1108,12 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::force_redraw()
     {
         m_specific->m_redraw_flag = true;
         ::InvalidateRect(m_specific->m_hwnd, 0, FALSE);
     }
-
-
 
     //------------------------------------------------------------------------
     void platform_support::update_window()
@@ -1186,8 +1122,6 @@ namespace agg
         m_specific->display_pmap(dc, &m_rbuf_window);
         ::ReleaseDC(m_specific->m_hwnd, dc);
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::on_init() {}
     void platform_support::on_resize(int sx, int sy) {}
@@ -1200,10 +1134,6 @@ namespace agg
     void platform_support::on_draw() {}
     void platform_support::on_post_draw(void* raw_handler) {}
 }
-
-
-
-
 namespace agg
 {
     // That's ridiculous. I have to parse the command line by myself
@@ -1252,23 +1182,17 @@ namespace agg
         sep_flag    m_sep_flag;
     };
 
-
-
     //-----------------------------------------------------------------------
     inline void tokenizer::set_str(const char* str) 
     { 
         m_src_string = str; 
         m_start = 0;
     }
-
-
     //-----------------------------------------------------------------------
     inline int tokenizer::check_chr(const char *str, char chr)
     {
         return int(strchr(str, chr));
     }
-
-
     //-----------------------------------------------------------------------
     tokenizer::tokenizer(const char* sep, 
                          const char* trim,
@@ -1285,8 +1209,6 @@ namespace agg
         m_sep_flag(sep ? sf : single)
     {
     }
-
-
     //-----------------------------------------------------------------------
     tokenizer::token tokenizer::next_token()
     {
@@ -1416,16 +1338,10 @@ namespace agg
         }
         return tok;
     }
-
-
 }
-
-
 
 //----------------------------------------------------------------------------
 int agg_main(int argc, char* argv[]);
-
-
 
 //----------------------------------------------------------------------------
 int PASCAL WinMain(HINSTANCE hInstance,
@@ -1467,7 +1383,3 @@ int PASCAL WinMain(HINSTANCE hInstance,
 
     return ret;
 }
-
-
-
-

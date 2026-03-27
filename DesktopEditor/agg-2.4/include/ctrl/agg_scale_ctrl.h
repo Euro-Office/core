@@ -26,8 +26,6 @@
 #include "agg_trans_affine.h"
 #include "agg_color_rgba.h"
 #include "agg_ctrl.h"
-
-
 namespace agg
 {
 
@@ -95,8 +93,6 @@ namespace agg
 
     };
 
-
-
     //------------------------------------------------------------------------
     template<class ColorT> class scale_ctrl : public scale_ctrl_impl
     {
@@ -114,8 +110,6 @@ namespace agg
             m_colors[3] = &m_pointers_color;
             m_colors[4] = &m_slider_color;
         }
-          
-
         void background_color(const ColorT& c) { m_background_color = c; }
         void border_color(const ColorT& c)     { m_border_color = c; }
         void pointers_color(const ColorT& c)   { m_pointers_color = c; }
@@ -134,13 +128,7 @@ namespace agg
         ColorT* m_colors[5];
     };
 
-
-
-
-
 }
-
-
 
 #endif
 

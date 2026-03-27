@@ -59,8 +59,6 @@ struct jbg_buf {
 #define JBG_DELAY_AT   0x100  /* delay ATMOVE until the first line of the next
 			       * stripe. Option available for compatibility
 			       * with conformance test example in clause 7.2.*/
-
-
 /*
  * Possible error code return values
  */
@@ -99,8 +97,6 @@ struct jbg_arenc_state {
   void (*byte_out)(int, void *); /* function which receives all PSCD bytes */
   void *file;                              /* parameter passed to byte_out */
 };
-
-
 /*
  * Status description of an arithmetic decoder
  */
@@ -132,8 +128,6 @@ void arith_encode(struct jbg_arenc_state *s, int cx, int pix);
 void arith_decode_init(struct jbg_ardec_state *s, int reuse_st);
 int arith_decode(struct jbg_ardec_state *s, int cx);
 #endif
-
- 
 /*
  * Status of a JBIG encoder
  */
@@ -166,8 +160,6 @@ struct jbg_enc_state {
   void *file;                            /* parameter passed to data_out() */
   char *tp;    /* buffer for temp. values used by diff. typical prediction */
 };
-
-
 /*
  * Status of a JBIG decoder
  */
@@ -221,13 +213,9 @@ struct jbg_dec_state {
 				     * larger than this size */
   int dmax;                                      /* abort after this layer */
 };
-
-
 /* some macros (too trivial for a function) */
 
 #define jbg_dec_getplanes(s)     ((s)->planes)
-
-
 /* function prototypes */
 
 void jbg_enc_init(struct jbg_enc_state *s, unsigned long x, unsigned long y,

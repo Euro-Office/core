@@ -20,8 +20,6 @@
 #include "jinclude.h"
 #include "jpeglib.h"
 #include "jdct.h"		/* Private declarations for DCT subsystem */
-
-
 /*
  * The decompressor input side (jdinput.c) saves away the appropriate
  * quantization table for each component at the start of the first scan
@@ -37,8 +35,6 @@
  * been saved away.  To handle this case, multiplier tables are preset
  * to zeroes; the result of the IDCT will be a neutral gray level.
  */
-
-
 /* Private subobject for this module */
 
 typedef struct {
@@ -53,8 +49,6 @@ typedef struct {
 } my_idct_controller;
 
 typedef my_idct_controller * my_idct_ptr;
-
-
 /* Allocated multiplier tables: big enough for any supported variant */
 
 typedef union {
@@ -66,8 +60,6 @@ typedef union {
   FLOAT_MULT_TYPE float_array[DCTSIZE2];
 #endif
 } multiplier_table;
-
-
 /* The current scaled-IDCT routines require ISLOW-style multiplier tables,
  * so be sure to compile that code if either ISLOW or SCALING is requested.
  */
@@ -78,8 +70,6 @@ typedef union {
 #define PROVIDE_ISLOW_TABLES
 #endif
 #endif
-
-
 /*
  * Prepare for an output pass.
  * Here we select the proper IDCT routine for each component and build
@@ -352,8 +342,6 @@ start_pass (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 /*
  * Initialize IDCT manager.
  */

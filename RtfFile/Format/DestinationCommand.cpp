@@ -971,8 +971,6 @@ bool RtfSectionCommand::ExecuteCommand(RtfDocument& oDocument, RtfReader& oReade
 
 	return true;
 }
-
-
 bool RtfShadingCommand::ExecuteCommand(RtfDocument& oDocument, RtfReader& oReader,  std::string sCommand, bool hasParameter, int parameter, RtfShading& oOutput )
 {
 	if		( "bghoriz"	== sCommand )	oOutput.m_eType = RtfShading::st_chbghoriz;

@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  rotateam.c
  *
@@ -88,8 +86,6 @@
 #include "allheaders.h"
 
 static const l_float32  VERY_SMALL_ANGLE = 0.001;  /* radians; ~0.06 degrees */
-
-
 /*------------------------------------------------------------------*
  *                     Rotation about the center                    *
  *------------------------------------------------------------------*/
@@ -152,8 +148,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixRotateAMColor()
  *
@@ -197,8 +191,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixRotateAMGray()
  *
@@ -242,8 +234,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                    Rotation about the UL corner                  *
  *------------------------------------------------------------------*/
@@ -304,8 +294,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixRotateAMColorCorner()
  *
@@ -349,8 +337,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixRotateAMGrayCorner()
  *
@@ -394,8 +380,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                    Fast rotation about the center                *
  *------------------------------------------------------------------*/

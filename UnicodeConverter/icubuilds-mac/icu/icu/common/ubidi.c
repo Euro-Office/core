@@ -70,7 +70,6 @@
  * Changes of dirProp values are done on the fly, without writing
  * them back to the dirProps array.
  *
- *
  * This implementation contains code that allows to bypass steps of the
  * algorithm that are not needed on the specific paragraph
  * in order to speed up the most common cases considerably,
@@ -1045,9 +1044,7 @@ directionFromFlags(UBiDi *pBiDi) {
  * on the other hand, this saves another loop to reset these codes,
  * or saves making and modifying a copy of dirProps[].
  *
- *
  * Note that (Pn) and (Xn) changed significantly from version 4 of the BiDi algorithm.
- *
  *
  * Handling the stack of explicit levels (Xn):
  *
@@ -1447,8 +1444,6 @@ enum { DirProp_L=0, DirProp_R=1, DirProp_EN=2, DirProp_AN=3, DirProp_ON=4, DirPr
      the digits must be processed as one sequence, and the CS
      must be processed as an ON sequence, all this before starting
      assembling chars for the opening L sequence.
-
-
 */
 static const uint8_t impTabProps[][IMPTABPROPS_COLUMNS] =
 {
@@ -1633,8 +1628,6 @@ static const ImpTabPair impTab_GROUP_NUMBERS_WITH_R = {
                         {&impTabL_GROUP_NUMBERS_WITH_R,
                          &impTabR_GROUP_NUMBERS_WITH_R},
                         {&impAct0, &impAct0}};
-
-
 static const ImpTab impTabL_INVERSE_NUMBERS_AS_L =
 /*  This table is identical to the Default LTR table except that EN and AN are
     handled like L.

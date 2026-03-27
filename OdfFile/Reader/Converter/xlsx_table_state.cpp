@@ -421,8 +421,6 @@ void xlsx_table_state::start_cell(size_t columnsSpanned, size_t rowsSpanned)
 
     // обновляем вектор, в котором хранятся информация об объединении строк
     // добавляем в него новый столбец
-
-    
     for (size_t i = 0; i <= columns_spanned_num_; ++i)
     {
         if (current_table_column_+i >= (int)(rows_spanned_.size()))
@@ -857,9 +855,5 @@ void xlsx_table_state::start_hyperlink()
 {
     return xlsx_hyperlinks_.add(ref, href, display);
 }
-
-
-
-
 }
 }

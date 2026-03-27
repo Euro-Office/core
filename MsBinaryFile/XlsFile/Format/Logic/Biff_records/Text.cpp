@@ -42,13 +42,9 @@ Text::Text()
 	iReadingOrder	= 0;
 	icvText			= 0;
 }
-
-
 Text::~Text()
 {
 }
-
-
 BaseObjectPtr Text::clone()
 {
 	return BaseObjectPtr(new Text(*this));
@@ -114,8 +110,6 @@ void Text::writeFields(CFRecord& record)
 	SETBITS(flags2, 0, 3, dlp);
 	SETBITS(flags2, 14, 15, iReadingOrder);
 	record << icvText << flags2 << trot;
-
-
 }
 
 int Text::serialize(std::wostream & _stream)

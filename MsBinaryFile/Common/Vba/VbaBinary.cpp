@@ -37,8 +37,6 @@
 #include <algorithm>
 #include <sstream>
 
-
-
 CVbaFile::~CVbaFile()
 {
 	streams.clear();

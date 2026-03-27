@@ -35,19 +35,13 @@
 
 namespace XLS
 {
-
-
 XFExtNoFRT::XFExtNoFRT()
 {
 }
-
-
 XFExtNoFRT::XFExtNoFRT(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr XFExtNoFRT::clone()
 {
 	return BiffStructurePtr(new XFExtNoFRT(*this));

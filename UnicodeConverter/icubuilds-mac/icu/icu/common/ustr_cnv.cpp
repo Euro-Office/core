@@ -101,8 +101,6 @@ u_flushDefaultConverter()
          ucnv_close(converter);
     }
 }
-
-
 /* conversions between char* and UChar* ------------------------------------- */
 
 /* maximum string length for u_uastrcpy() and u_austrcpy() implementations */

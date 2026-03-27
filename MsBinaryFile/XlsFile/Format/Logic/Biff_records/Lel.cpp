@@ -38,19 +38,13 @@ namespace XLS
 Lel::Lel()
 {
 }
-
-
 Lel::~Lel()
 {
 }
-
-
 BaseObjectPtr Lel::clone()
 {
 	return BaseObjectPtr(new Lel(*this));
 }
-
-
 
 void Lel::readFields(CFRecord& record)
 {

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/sfnt.h>
@@ -41,8 +39,6 @@
 #endif
 
 #include "tterrors.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -51,8 +47,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttdriver
-
-
   /*
    * PROPERTY SERVICE
    *
@@ -69,27 +63,19 @@
 #ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
     FT_UNUSED( value_is_string );
 #endif
-
-
     if ( !ft_strcmp( property_name, "interpreter-version" ) )
     {
       FT_UInt  interpreter_version;
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
-
-
         interpreter_version = (FT_UInt)ft_strtol( s, NULL, 10 );
       }
       else
 #endif
       {
         FT_UInt*  iv = (FT_UInt*)value;
-
-
         interpreter_version = *iv;
       }
 
@@ -112,8 +98,6 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
   static FT_Error
   tt_property_get( FT_Module    module,         /* TT_Driver */
                    const char*  property_name,
@@ -123,13 +107,9 @@
     TT_Driver  driver = (TT_Driver)module;
 
     FT_UInt  interpreter_version = driver->interpreter_version;
-
-
     if ( !ft_strcmp( property_name, "interpreter-version" ) )
     {
       FT_UInt*  val = (FT_UInt*)value;
-
-
       *val = interpreter_version;
 
       return error;
@@ -139,16 +119,12 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
   FT_DEFINE_SERVICE_PROPERTIESREC(
     tt_service_properties,
 
     (FT_Properties_SetFunc)tt_property_set,     /* set_property */
     (FT_Properties_GetFunc)tt_property_get      /* get_property */
   )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -160,8 +136,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @Function:
@@ -206,8 +180,6 @@
   {
     TT_Face       face = (TT_Face)ttface;
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
-
-
     kerning->x = 0;
     kerning->y = 0;
 
@@ -216,8 +188,6 @@
 
     return 0;
   }
-
-
   static FT_Error
   tt_get_advances( FT_Face    ttface,
                    FT_UInt    start,
@@ -227,8 +197,6 @@
   {
     FT_UInt  nn;
     TT_Face  face = (TT_Face)ttface;
-
-
     /* XXX: TODO: check for sbits */
 
     if ( flags & FT_LOAD_VERTICAL_LAYOUT )
@@ -244,8 +212,6 @@
       {
         FT_Short   tsb;
         FT_UShort  ah;
-
-
         /* since we don't need `tsb', we use zero for `yMax' parameter */
         TT_Get_VMetrics( face, start + nn, 0, &tsb, &ah );
         advances[nn] = ah;
@@ -264,8 +230,6 @@
       {
         FT_Short   lsb;
         FT_UShort  aw;
-
-
         TT_Get_HMetrics( face, start + nn, &lsb, &aw );
         advances[nn] = aw;
       }
@@ -273,8 +237,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -286,8 +248,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
   static FT_Error
@@ -297,8 +257,6 @@
     TT_Face   ttface = (TT_Face)size->face;
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = FT_Err_Ok;
-
-
     ttsize->strike_index = strike_index;
 
     if ( FT_IS_SCALABLE( size->face ) )
@@ -312,8 +270,6 @@
     {
       SFNT_Service      sfnt         = (SFNT_Service)ttface->sfnt;
       FT_Size_Metrics*  size_metrics = &size->metrics;
-
-
       error = sfnt->load_strike_metrics( ttface,
                                          strike_index,
                                          size_metrics );
@@ -325,16 +281,12 @@
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-
   static FT_Error
   tt_size_request( FT_Size          size,
                    FT_Size_Request  req )
   {
     TT_Size   ttsize = (TT_Size)size;
     FT_Error  error  = FT_Err_Ok;
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
@@ -342,8 +294,6 @@
       TT_Face       ttface = (TT_Face)size->face;
       SFNT_Service  sfnt   = (SFNT_Service)ttface->sfnt;
       FT_ULong      strike_index;
-
-
       error = sfnt->set_sbit_strike( ttface, req, &strike_index );
 
       if ( error )
@@ -368,8 +318,6 @@
                    ttsize->metrics->x_ppem > ttsize->metrics->y_ppem
                      ? req->horiResolution
                      : req->vertResolution;
-
-
         /* if we don't have a resolution value, assume 72dpi */
         if ( req->type == FT_SIZE_REQUEST_TYPE_SCALES ||
              !resolution                              )
@@ -384,8 +332,6 @@
 
     return error;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -426,8 +372,6 @@
     TT_Size       size = (TT_Size)ttsize;
     FT_Face       face = ttslot->face;
     FT_Error      error;
-
-
     if ( !slot )
       return FT_THROW( Invalid_Slot_Handle );
 
@@ -478,8 +422,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -528,8 +470,6 @@
   )
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-
   static const FT_Service_TrueTypeEngineRec  tt_service_truetype_engine =
   {
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -542,15 +482,11 @@
 
 #endif /* TT_USE_BYTECODE_INTERPRETER */
   };
-
-
   FT_DEFINE_SERVICE_TTGLYFREC(
     tt_service_truetype_glyf,
 
     (TT_Glyf_GetLocationFunc)tt_face_get_location      /* get_location */
   )
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
   FT_DEFINE_SERVICEDESCREC6(
     tt_services,
@@ -570,8 +506,6 @@
     FT_SERVICE_ID_TT_GLYF,         &tt_service_truetype_glyf,
     FT_SERVICE_ID_PROPERTIES,      &tt_service_properties )
 #endif
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   tt_get_interface( FT_Module    driver,    /* TT_Driver */
                     const char*  tt_interface )
@@ -580,8 +514,6 @@
     FT_Module_Interface  result;
     FT_Module            sfntd;
     SFNT_Service         sfnt;
-
-
     result = ft_service_list_lookup( tt_services, tt_interface );
     if ( result )
       return result;
@@ -603,8 +535,6 @@
 
     return 0;
   }
-
-
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
 #ifdef TT_USE_BYTECODE_INTERPRETER
@@ -658,6 +588,4 @@
     tt_size_request,            /* FT_Size_RequestFunc  request_size */
     TT_SIZE_SELECT              /* FT_Size_SelectFunc   select_size  */
   )
-
-
 /* END */

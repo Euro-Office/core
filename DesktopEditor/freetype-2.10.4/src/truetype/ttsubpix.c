@@ -24,8 +24,6 @@
 #include <freetype/ftdriver.h>
 
 #include "ttsubpix.h"
-
-
 #if defined( TT_USE_BYTECODE_INTERPRETER )            && \
     defined( TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY )
 
@@ -211,14 +209,10 @@
         "Bitstream Vera Sans",
         "Verdana", "", }, },
   };
-
-
   /* Define this to force natural (i.e. not bitmap-compatible) widths.     */
   /* The default leans strongly towards natural widths except for a few    */
   /* legacy fonts where a selective combination produces nicer results.    */
 /* #define FORCE_NATURAL_WIDTHS   */
-
-
   /* Define `classes' of styles that can be grouped together and used in   */
   /* rules below.  A blank entry "" is required at the end of these!       */
 #define STYLE_CLASS_RULES_SIZE  5
@@ -274,8 +268,6 @@
       },
     },
   };
-
-
   /* Force special legacy fixes for fonts.                                 */
 #define COMPATIBILITY_MODE_RULES_SIZE  1
 
@@ -284,8 +276,6 @@
   {
     { "Verdana Clones", 0, "", 0 },
   };
-
-
   /* Don't do subpixel (ignore_x_mode) hinting; do normal hinting.         */
 #define PIXEL_HINTING_RULES_SIZE  2
 
@@ -296,8 +286,6 @@
     { "Courier New", 12, "Italic", 'z' },
     { "Courier New", 11, "Italic", 'z' },
   };
-
-
   /* Subpixel hinting ignores SHPIX rules on X.  Force SHPIX for these.    */
 #define DO_SHPIX_RULES_SIZE  1
 
@@ -306,8 +294,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
   /* Skip Y moves that start with a point that is not on a Y pixel         */
   /* boundary and don't move that point to a Y pixel boundary.             */
 #define SKIP_NONPIXEL_Y_MOVES_RULES_SIZE  4
@@ -324,8 +310,6 @@
     /* Fix artifacts with some Regular & Bold */
     { "Verdana Clones", 0, "", 0 },
   };
-
-
 #define SKIP_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  1
 
   static const SPH_TweakRule  SKIP_NONPIXEL_Y_MOVES_Rules_Exceptions
@@ -334,8 +318,6 @@
     /* Fixes < and > */
     { "Courier New", 0, "Regular", 0 },
   };
-
-
   /* Skip Y moves that start with a point that is not on a Y pixel         */
   /* boundary and don't move that point to a Y pixel boundary.             */
 #define SKIP_NONPIXEL_Y_MOVES_DELTAP_RULES_SIZE  2
@@ -347,8 +329,6 @@
     { "Times New Roman", 0, "Regular/Bold Class", 'N' },
     { "Georgia", 0, "Regular/Bold Class", 'N' },
   };
-
-
   /* Skip Y moves that move a point off a Y pixel boundary.                */
 #define SKIP_OFFPIXEL_Y_MOVES_RULES_SIZE  1
 
@@ -357,8 +337,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
 #define SKIP_OFFPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  1
 
   static const SPH_TweakRule  SKIP_OFFPIXEL_Y_MOVES_Rules_Exceptions
@@ -366,8 +344,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
   /* Round moves that don't move a point to a Y pixel boundary.            */
 #define ROUND_NONPIXEL_Y_MOVES_RULES_SIZE  2
 
@@ -378,8 +354,6 @@
     { "Droid Sans", 0, "Regular/Italic Class", 0 },
     { "Droid Sans Mono", 0, "", 0 },
   };
-
-
 #define ROUND_NONPIXEL_Y_MOVES_RULES_EXCEPTIONS_SIZE  1
 
   static const SPH_TweakRule  ROUND_NONPIXEL_Y_MOVES_Rules_Exceptions
@@ -387,8 +361,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
   /* Allow a Direct_Move along X freedom vector if matched.                */
 #define ALLOW_X_DMOVE_RULES_SIZE  1
 
@@ -398,8 +370,6 @@
     /* Fixes vanishing diagonal in 4 */
     { "Verdana", 0, "Regular", '4' },
   };
-
-
   /* Return MS rasterizer version 35 if matched.                           */
 #define RASTERIZER_35_RULES_SIZE  8
 
@@ -416,8 +386,6 @@
     { "Times New Roman", 0, "Regular", 'p' },
     { "Times", 0, "", 0 },
   };
-
-
   /* Don't round to the subpixel grid.  Round to pixel grid.               */
 #define NORMAL_ROUND_RULES_SIZE  1
 
@@ -428,8 +396,6 @@
     /* Can probably be generalized somehow   */
     { "Courier New", 0, "", 0 },
   };
-
-
   /* Skip IUP instructions if matched.                                     */
 #define SKIP_IUP_RULES_SIZE  1
 
@@ -438,8 +404,6 @@
   {
     { "Arial", 13, "Regular", 'a' },
   };
-
-
   /* Skip MIAP Twilight hack if matched.                                   */
 #define MIAP_HACK_RULES_SIZE  1
 
@@ -448,8 +412,6 @@
   {
     { "Geneva", 12, "", 0 },
   };
-
-
   /* Skip DELTAP instructions if matched.                                  */
 #define ALWAYS_SKIP_DELTAP_RULES_SIZE  23
 
@@ -484,8 +446,6 @@
     { "Arial", 25, "Regular", 's' },
     { "Arial", 26, "Regular", 's' },
   };
-
-
   /* Always do DELTAP instructions if matched.                             */
 #define ALWAYS_DO_DELTAP_RULES_SIZE  1
 
@@ -494,8 +454,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
   /* Don't allow ALIGNRP after IUP.                                        */
 #define NO_ALIGNRP_AFTER_IUP_RULES_SIZE  1
 
@@ -505,8 +463,6 @@
     /* Prevent creation of dents in outline */
     { "-", 0, "", 0 },
   };
-
-
   /* Don't allow DELTAP after IUP.                                         */
 #define NO_DELTAP_AFTER_IUP_RULES_SIZE  1
 
@@ -515,8 +471,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
   /* Don't allow CALL after IUP.                                           */
 #define NO_CALL_AFTER_IUP_RULES_SIZE  1
 
@@ -526,8 +480,6 @@
     /* Prevent creation of dents in outline */
     { "-", 0, "", 0 },
   };
-
-
   /* De-embolden these glyphs slightly.                                    */
 #define DEEMBOLDEN_RULES_SIZE  9
 
@@ -544,8 +496,6 @@
     { "Courier New", 0, "Bold", 'z' },
     { "Courier New", 0, "Bold", 'v' },
   };
-
-
   /* Embolden these glyphs slightly.                                       */
 #define EMBOLDEN_RULES_SIZE  2
 
@@ -555,8 +505,6 @@
     { "Courier New", 0, "Regular", 0 },
     { "Courier New", 0, "Italic", 0 },
   };
-
-
   /* This is a CVT hack that makes thick horizontal stems on 2, 5, 7       */
   /* similar to Windows XP.                                                */
 #define TIMES_NEW_ROMAN_HACK_RULES_SIZE  12
@@ -577,8 +525,6 @@
     { "Times New Roman", 17, "Regular", '5' },
     { "Times New Roman", 17, "Regular", '7' },
   };
-
-
   /* This fudges distance on 2 to get rid of the vanishing stem issue.     */
   /* A real solution to this is certainly welcome.                         */
 #define COURIER_NEW_2_HACK_RULES_SIZE  15
@@ -602,8 +548,6 @@
     { "Courier New", 23, "Regular", '2' },
     { "Courier New", 24, "Regular", '2' },
   };
-
-
 #ifndef FORCE_NATURAL_WIDTHS
 
   /* Use compatible widths with these glyphs.  Compatible widths is always */
@@ -657,8 +601,6 @@
     { "Verdana and Clones", 13, "Regular Class", 'l' },
     { "Verdana and Clones", 14, "Regular Class", 'm' },
   };
-
-
   /* Scaling slightly in the x-direction prior to hinting results in       */
   /* more visually pleasing glyphs in certain cases.                       */
   /* This sometimes needs to be coordinated with compatible width rules.   */
@@ -731,8 +673,6 @@
   {
     { "-", 0, "", 0 },
   };
-
-
 #define X_SCALING_RULES_SIZE  1
 
   static const SPH_ScaleRule  X_SCALING_Rules
@@ -742,15 +682,11 @@
   };
 
 #endif /* FORCE_NATURAL_WIDTHS */
-
-
   static FT_Bool
   is_member_of_family_class( const FT_String*  detected_font_name,
                              const FT_String*  rule_font_name )
   {
     FT_UInt  i, j;
-
-
     /* Does font name match rule family? */
     if ( ft_strcmp( detected_font_name, rule_font_name ) == 0 )
       return TRUE;
@@ -777,15 +713,11 @@
 
     return FALSE;
   }
-
-
   static FT_Bool
   is_member_of_style_class( const FT_String*  detected_font_style,
                             const FT_String*  rule_font_style )
   {
     FT_UInt  i, j;
-
-
     /* Does font style match rule style? */
     if ( ft_strcmp( detected_font_style, rule_font_style ) == 0 )
       return TRUE;
@@ -812,8 +744,6 @@
 
     return FALSE;
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   sph_test_tweak( TT_Face               face,
                   const FT_String*      family,
@@ -824,8 +754,6 @@
                   FT_UInt               num_rules )
   {
     FT_UInt  i;
-
-
     /* rule checks may be able to be optimized further */
     for ( i = 0; i < num_rules; i++ )
     {
@@ -843,8 +771,6 @@
 
     return FALSE;
   }
-
-
   static FT_UInt
   scale_test_tweak( TT_Face               face,
                     const FT_String*      family,
@@ -855,8 +781,6 @@
                     FT_UInt               num_rules )
   {
     FT_UInt  i;
-
-
     /* rule checks may be able to be optimized further */
     for ( i = 0; i < num_rules; i++ )
     {
@@ -874,8 +798,6 @@
 
     return 1000;
   }
-
-
   FT_LOCAL_DEF( FT_UInt )
   sph_test_tweak_x_scaling( TT_Face           face,
                             const FT_String*  family,
@@ -886,8 +808,6 @@
     return scale_test_tweak( face, family, ppem, style, glyph_index,
                              X_SCALING_Rules, X_SCALING_RULES_SIZE );
   }
-
-
 #define TWEAK_RULES( x )                                       \
   if ( sph_test_tweak( face, family, ppem, style, glyph_index, \
                        x##_Rules, x##_RULES_SIZE ) )           \
@@ -897,8 +817,6 @@
   if ( sph_test_tweak( face, family, ppem, style, glyph_index,             \
                        x##_Rules_Exceptions, x##_RULES_EXCEPTIONS_SIZE ) ) \
     loader->exec->sph_tweak_flags &= ~SPH_TWEAK_##x;
-
-
   FT_LOCAL_DEF( void )
   sph_set_tweaks( TT_Loader  loader,
                   FT_UInt    glyph_index )
@@ -907,8 +825,6 @@
     FT_String*  family = face->root.family_name;
     FT_UInt     ppem   = loader->size->metrics->x_ppem;
     FT_String*  style  = face->root.style_name;
-
-
     /* don't apply rules if style isn't set */
     if ( !face->root.style_name )
       return;
@@ -990,8 +906,6 @@
     if ( sph_test_tweak( face, family, ppem, style, glyph_index,
            COMPATIBILITY_MODE_Rules, COMPATIBILITY_MODE_RULES_SIZE ) )
       loader->exec->face->sph_compatibility_mode = TRUE;
-
-
     if ( IS_HINTED( loader->load_flags ) )
     {
       if ( sph_test_tweak( face, family, ppem, style, glyph_index,
@@ -1008,6 +922,4 @@
 
 #endif /* !(TT_USE_BYTECODE_INTERPRETER &&          */
        /*   TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY) */
-
-
 /* END */

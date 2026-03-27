@@ -36,8 +36,6 @@ using namespace XLS;
 
 namespace XLSB
 {
-
-
 BiffStructurePtr CFTextOper::clone()
 {
     return BiffStructurePtr(new CFTextOper(*this));

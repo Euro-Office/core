@@ -4870,8 +4870,6 @@ mng_retcode MNG_DECL mng_putchunk_clip (mng_handle hHandle,
   return MNG_NOERROR;
 }
 #endif
-
-
 /* ************************************************************************** */
 
 #ifndef MNG_SKIPCHUNK_SHOW
@@ -6821,8 +6819,6 @@ mng_retcode MNG_DECL mng_getimgdata_seq (mng_handle        hHandle,
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_SEQ, MNG_LC_START);
 #endif
 
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_SEQ, MNG_LC_END);
 #endif
@@ -6841,8 +6837,6 @@ mng_retcode MNG_DECL mng_getimgdata_chunkseq (mng_handle        hHandle,
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_CHUNKSEQ, MNG_LC_START);
 #endif
 
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_CHUNKSEQ, MNG_LC_END);
 #endif
@@ -6860,8 +6854,6 @@ mng_retcode MNG_DECL mng_getimgdata_chunk (mng_handle        hHandle,
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_CHUNK, MNG_LC_START);
 #endif
-
-
 
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_GETIMGDATA_CHUNK, MNG_LC_END);
@@ -6892,8 +6884,6 @@ mng_retcode MNG_DECL mng_putimgdata_ihdr (mng_handle        hHandle,
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_PUTIMGDATA_IHDR, MNG_LC_START);
 #endif
 
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_PUTIMGDATA_IHDR, MNG_LC_END);
 #endif
@@ -6921,8 +6911,6 @@ mng_retcode MNG_DECL mng_putimgdata_jhdr (mng_handle        hHandle,
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_PUTIMGDATA_JHDR, MNG_LC_START);
 #endif
-
-
 
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (((mng_datap)hHandle), MNG_FN_PUTIMGDATA_JHDR, MNG_LC_END);
@@ -7011,6 +6999,4 @@ mng_retcode MNG_DECL mng_updatemngsimplicity (mng_handle hHandle,
 /* ************************************************************************** */
 /* * end of file                                                            * */
 /* ************************************************************************** */
-
-
 

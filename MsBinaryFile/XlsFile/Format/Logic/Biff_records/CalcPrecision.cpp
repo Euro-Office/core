@@ -38,19 +38,13 @@ namespace XLS
 CalcPrecision::CalcPrecision()
 {
 }
-
-
 CalcPrecision::~CalcPrecision()
 {
 }
-
-
 BaseObjectPtr CalcPrecision::clone()
 {
 	return BaseObjectPtr(new CalcPrecision(*this));
 }
-
-
 void CalcPrecision::readFields(CFRecord& record)
 {
 	record >> fFullPrec;

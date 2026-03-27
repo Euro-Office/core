@@ -47,8 +47,6 @@ struct BMP_FileHeader
 typedef struct BMP_FileHeader  BMP_FH;
 
 #define BMP_FHBYTES  sizeof(BMP_FH)
-
-
 /*-------------------------------------------------------------*
  *                       BMP info header                       *
  *-------------------------------------------------------------*/
@@ -69,6 +67,4 @@ struct BMP_InfoHeader
 typedef struct BMP_InfoHeader  BMP_IH;
 
 #define BMP_IHBYTES  sizeof(BMP_IH)
-
- 
 #endif  /* LEPTONICA_BMP_H */

@@ -54,8 +54,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_writer {
-
-
 ///////////////////////////////////////////////////////////////
 
 odp_page_state::odp_page_state(odf_conversion_context * Context, office_element_ptr & elm) 
@@ -545,8 +543,6 @@ void odp_page_state::set_anim_transform_from(const std::wstring& val)
 		return;
 
 	anim_levels.back().transform_attlist->smil_from_= val;
-
-
 }
 
 void odp_page_state::set_anim_transform_to(const std::wstring& val)

@@ -120,8 +120,6 @@ SelectFormat::toPattern(UnicodeString& appendTo) {
     }
     return appendTo;
 }
-
-
 int32_t SelectFormat::findSubMessage(const MessagePattern& pattern, int32_t partIndex,
                                      const UnicodeString& keyword, UErrorCode& ec) {
     if (U_FAILURE(ec)) {

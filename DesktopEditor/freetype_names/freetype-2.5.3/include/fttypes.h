@@ -14,23 +14,15 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTTYPES_H__
 #define __FTTYPES_H__
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_SYSTEM_H
 #include FT_IMAGE_H
 
 #include <stddef.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -90,8 +82,6 @@ FT_BEGIN_HEADER
   /*    FT_IMAGE_TAG                                                       */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -102,8 +92,6 @@ FT_BEGIN_HEADER
   /*    values 1 and~0 represent true and false, respectively.             */
   /*                                                                       */
   typedef unsigned char  FT_Bool;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -114,8 +102,6 @@ FT_BEGIN_HEADER
   /*    units.                                                             */
   /*                                                                       */
   typedef signed short  FT_FWord;   /* distance in FUnits */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -126,8 +112,6 @@ FT_BEGIN_HEADER
   /*    font units.                                                        */
   /*                                                                       */
   typedef unsigned short  FT_UFWord;  /* unsigned distance */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -137,8 +121,6 @@ FT_BEGIN_HEADER
   /*    A simple typedef for the _signed_ char type.                       */
   /*                                                                       */
   typedef signed char  FT_Char;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -148,8 +130,6 @@ FT_BEGIN_HEADER
   /*    A simple typedef for the _unsigned_ char type.                     */
   /*                                                                       */
   typedef unsigned char  FT_Byte;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -159,8 +139,6 @@ FT_BEGIN_HEADER
   /*    A typedef for constant memory areas.                               */
   /*                                                                       */
   typedef const FT_Byte*  FT_Bytes;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -170,8 +148,6 @@ FT_BEGIN_HEADER
   /*    A typedef for 32-bit tags (as used in the SFNT format).            */
   /*                                                                       */
   typedef FT_UInt32  FT_Tag;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -181,8 +157,6 @@ FT_BEGIN_HEADER
   /*    A simple typedef for the char type, usually used for strings.      */
   /*                                                                       */
   typedef char  FT_String;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -192,8 +166,6 @@ FT_BEGIN_HEADER
   /*    A typedef for signed short.                                        */
   /*                                                                       */
   typedef signed short  FT_Short;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -203,8 +175,6 @@ FT_BEGIN_HEADER
   /*    A typedef for unsigned short.                                      */
   /*                                                                       */
   typedef unsigned short  FT_UShort;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -214,8 +184,6 @@ FT_BEGIN_HEADER
   /*    A typedef for the int type.                                        */
   /*                                                                       */
   typedef signed int  FT_Int;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -225,8 +193,6 @@ FT_BEGIN_HEADER
   /*    A typedef for the unsigned int type.                               */
   /*                                                                       */
   typedef unsigned int  FT_UInt;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -236,8 +202,6 @@ FT_BEGIN_HEADER
   /*    A typedef for signed long.                                         */
   /*                                                                       */
   typedef signed long  FT_Long;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -247,8 +211,6 @@ FT_BEGIN_HEADER
   /*    A typedef for unsigned long.                                       */
   /*                                                                       */
   typedef unsigned long  FT_ULong;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -258,8 +220,6 @@ FT_BEGIN_HEADER
   /*    A signed 2.14 fixed-point type used for unit vectors.              */
   /*                                                                       */
   typedef signed short  FT_F2Dot14;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -270,8 +230,6 @@ FT_BEGIN_HEADER
   /*    coordinates.                                                       */
   /*                                                                       */
   typedef signed long  FT_F26Dot6;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -282,8 +240,6 @@ FT_BEGIN_HEADER
   /*    values or matrix coefficients.                                     */
   /*                                                                       */
   typedef signed long  FT_Fixed;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -294,8 +250,6 @@ FT_BEGIN_HEADER
   /*    as a successful operation.                                         */
   /*                                                                       */
   typedef int  FT_Error;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -305,8 +259,6 @@ FT_BEGIN_HEADER
   /*    A simple typedef for a typeless pointer.                           */
   /*                                                                       */
   typedef void*  FT_Pointer;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -318,8 +270,6 @@ FT_BEGIN_HEADER
   /*    or a memory block size.                                            */
   /*                                                                       */
   typedef size_t  FT_Offset;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -331,8 +281,6 @@ FT_BEGIN_HEADER
   /*    between two pointers.                                              */
   /*                                                                       */
   typedef ft_ptrdiff_t  FT_PtrDist;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -353,8 +301,6 @@ FT_BEGIN_HEADER
     FT_F2Dot14  y;
 
   } FT_UnitVector;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -384,8 +330,6 @@ FT_BEGIN_HEADER
     FT_Fixed  yx, yy;
 
   } FT_Matrix;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -405,8 +349,6 @@ FT_BEGIN_HEADER
     FT_Int          length;
 
   } FT_Data;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -422,8 +364,6 @@ FT_BEGIN_HEADER
   /*    Its client data is accessed through its `generic' field.           */
   /*                                                                       */
   typedef void  (*FT_Generic_Finalizer)(void*  object);
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -458,8 +398,6 @@ FT_BEGIN_HEADER
     FT_Generic_Finalizer  finalizer;
 
   } FT_Generic;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -479,8 +417,6 @@ FT_BEGIN_HEADER
             ( (FT_ULong)_x2 << 16 ) |     \
             ( (FT_ULong)_x3 <<  8 ) |     \
               (FT_ULong)_x4         )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*                                                                       */
@@ -488,16 +424,12 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    list_processing                                                    */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -509,8 +441,6 @@ FT_BEGIN_HEADER
   /*     FT_ListNode is a handle to a single list element.                 */
   /*                                                                       */
   typedef struct FT_ListNodeRec_*  FT_ListNode;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -520,8 +450,6 @@ FT_BEGIN_HEADER
   /*    A handle to a list record (see @FT_ListRec).                       */
   /*                                                                       */
   typedef struct FT_ListRec_*  FT_List;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -544,8 +472,6 @@ FT_BEGIN_HEADER
     void*        data;
 
   } FT_ListNodeRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -566,8 +492,6 @@ FT_BEGIN_HEADER
     FT_ListNode  tail;
 
   } FT_ListRec;
-
-
   /* */
 
 #define FT_IS_EMPTY( list )  ( (list).head == 0 )
@@ -588,11 +512,7 @@ FT_BEGIN_HEADER
           ( FT_ERROR_BASE( x ) == FT_ERROR_BASE( FT_ERR( e ) ) )
 #define FT_ERR_NEQ( x, e )                                       \
           ( FT_ERROR_BASE( x ) != FT_ERROR_BASE( FT_ERR( e ) ) )
-
-
 FT_END_HEADER
 
 #endif /* __FTTYPES_H__ */
-
-
 /* END */

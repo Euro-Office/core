@@ -14,24 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTSMOOTH_H_
 #define FTSMOOTH_H_
-
-
 #include <freetype/ftrender.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_DECLARE_RENDERER( ft_smooth_renderer_class )
-
-
 FT_END_HEADER
 
 #endif /* FTSMOOTH_H_ */
-
-
 /* END */

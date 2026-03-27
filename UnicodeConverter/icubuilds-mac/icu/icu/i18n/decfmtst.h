@@ -21,8 +21,6 @@
 U_NAMESPACE_BEGIN
 
 class  UnicodeSet;
-
-
 class DecimalFormatStaticSets : public UMemory
 {
 public:
@@ -57,8 +55,6 @@ private:
     void cleanup();
 
 };
-
-
 U_NAMESPACE_END
 
 #endif   // !UCONFIG_NO_FORMATTING

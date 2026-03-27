@@ -146,21 +146,15 @@
     @version
     #$Id: BSByteStream.h,v 1.10 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 #include "ByteStream.h"
 #include "GException.h"
 #include "ZPCodec.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 /** Performs bzz compression/decompression.
     
     Class #BSByteStream# defines a \Ref{ByteStream} which transparently
@@ -266,8 +260,6 @@ private:
 };
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

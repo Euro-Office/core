@@ -14,8 +14,6 @@
 
 U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_ABSTRACT_RTTI_IMPLEMENTATION(UnicodeFilter)
-
-
 /* Define this here due to the lack of another file.
    It can't be defined in the header */
 UnicodeMatcher::~UnicodeMatcher() {}

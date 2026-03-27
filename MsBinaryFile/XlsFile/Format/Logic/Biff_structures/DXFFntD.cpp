@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr DXFFntD::clone()
 {
 	return BiffStructurePtr(new DXFFntD(*this));

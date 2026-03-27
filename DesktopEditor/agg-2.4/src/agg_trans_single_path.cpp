@@ -59,8 +59,6 @@ namespace agg
             m_src_vertices.add(vertex_dist(x, y));
         }
     }
-
-
     //------------------------------------------------------------------------
     void trans_single_path::finalize_path()
     {
@@ -100,8 +98,6 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     double trans_single_path::total_length() const
     {
@@ -110,8 +106,6 @@ namespace agg
             m_src_vertices[m_src_vertices.size() - 1].dist :
             0.0;
     }
-
-
     //------------------------------------------------------------------------
     void trans_single_path::transform(double *x, double *y) const
     {
@@ -196,7 +190,5 @@ namespace agg
             *y = y2 + *y * dx / dd;
         }
     }
-
-
 }
 

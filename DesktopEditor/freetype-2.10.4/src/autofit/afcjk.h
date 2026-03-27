@@ -14,23 +14,15 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFCJK_H_
 #define AFCJK_H_
 
 #include "afhints.h"
 #include "aflatin.h"
-
-
 FT_BEGIN_HEADER
-
-
   /* the CJK-specific writing system */
 
   AF_DECLARE_WRITING_SYSTEM_CLASS( af_cjk_writing_system_class )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -38,8 +30,6 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*
    * CJK glyphs tend to fill the square.  So we have both vertical and
    * horizontal blue zones.  But some glyphs have flat bounding strokes that
@@ -53,14 +43,10 @@ FT_BEGIN_HEADER
 #define AF_CJK_IS_RIGHT_BLUE  AF_CJK_IS_TOP_BLUE
 
 #define AF_CJK_MAX_WIDTHS  16
-
-
 #define AF_CJK_BLUE_ACTIVE      ( 1U << 0 ) /* zone height is <= 3/4px      */
 #define AF_CJK_BLUE_TOP         ( 1U << 1 ) /* result of AF_CJK_IS_TOP_BLUE */
 #define AF_CJK_BLUE_ADJUSTMENT  ( 1U << 2 ) /* used for scale adjustment    */
                                             /* optimization                 */
-
-
   typedef struct  AF_CJKBlueRec_
   {
     AF_WidthRec  ref;
@@ -68,8 +54,6 @@ FT_BEGIN_HEADER
     FT_UInt      flags;
 
   } AF_CJKBlueRec, *AF_CJKBlue;
-
-
   typedef struct  AF_CJKAxisRec_
   {
     FT_Fixed       scale;
@@ -90,8 +74,6 @@ FT_BEGIN_HEADER
     FT_Pos         org_delta;
 
   } AF_CJKAxisRec, *AF_CJKAxis;
-
-
   typedef struct  AF_CJKMetricsRec_
   {
     AF_StyleMetricsRec  root;
@@ -99,8 +81,6 @@ FT_BEGIN_HEADER
     AF_CJKAxisRec       axis[AF_DIMENSION_MAX];
 
   } AF_CJKMetricsRec, *AF_CJKMetrics;
-
-
 #ifdef AF_CONFIG_OPTION_CJK
   FT_LOCAL( FT_Error )
   af_cjk_metrics_init( AF_CJKMetrics  metrics,
@@ -129,13 +109,9 @@ FT_BEGIN_HEADER
   af_cjk_metrics_init_widths( AF_CJKMetrics  metrics,
                               FT_Face        face );
 #endif /* AF_CONFIG_OPTION_CJK */
-
-
 /* */
 
 FT_END_HEADER
 
 #endif /* AFCJK_H_ */
-
-
 /* END */

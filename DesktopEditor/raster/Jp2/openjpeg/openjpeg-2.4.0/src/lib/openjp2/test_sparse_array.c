@@ -146,8 +146,6 @@ int main()
     }
 
     opj_sparse_array_int32_free(sa);
-
-
     sa = opj_sparse_array_int32_create(99, 101, 15, 17);
     memset(buffer, 0xFF, sizeof(buffer));
     ret = opj_sparse_array_int32_read(sa, 0, 0, 2, 1, buffer, 2, 4, OPJ_FALSE);

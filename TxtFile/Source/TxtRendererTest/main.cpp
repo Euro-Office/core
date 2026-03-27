@@ -86,8 +86,6 @@ int main(int argc, char* argv[])
 
 		std::cout << U_TO_UTF8(filename_with_ext) << " " << end - start << " sec" << std::endl;
 	}
-
-
 	fonts->Release();
 	return 0;
 }

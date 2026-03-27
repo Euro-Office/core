@@ -27,22 +27,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 PROGRAM=libtool
 PACKAGE=libtool
 VERSION=2.4.6
 package_revision=2.4.6
-
-
 ## ------ ##
 ## Usage. ##
 ## ------ ##
 
 # Run './libtool --help' for help with using this script from the
 # command line.
-
-
 ## ------------------------------- ##
 ## User overridable command paths. ##
 ## ------------------------------- ##
@@ -54,8 +48,6 @@ package_revision=2.4.6
 
 : ${AUTOCONF="autoconf"}
 : ${AUTOMAKE="automake"}
-
-
 ## -------------------------- ##
 ## Source external libraries. ##
 ## -------------------------- ##
@@ -92,8 +84,6 @@ scriptversion=2015-01-20.17; # UTC
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 # Please report bugs or propose patches to gary@gnu.org.
-
-
 ## ------ ##
 ## Usage. ##
 ## ------ ##
@@ -105,8 +95,6 @@ scriptversion=2015-01-20.17; # UTC
 #
 # If you need to override any of the default environment variable
 # settings, do that before evaluating this file.
-
-
 ## -------------------- ##
 ## Shell normalisation. ##
 ## -------------------- ##
@@ -158,13 +146,9 @@ if test "${PATH_SEPARATOR+set}" != set; then
   }
 fi
 
-
-
 ## ------------------------- ##
 ## Locate command utilities. ##
 ## ------------------------- ##
-
-
 # func_executable_p FILE
 # ----------------------
 # Check that FILE is an executable regular file.
@@ -172,8 +156,6 @@ func_executable_p ()
 {
     test -f "$1" && test -x "$1"
 }
-
-
 # func_path_progs PROGS_LIST CHECK_FUNC [PATH]
 # --------------------------------------------
 # Search for either a program that responds to --version with output
@@ -216,8 +198,6 @@ func_path_progs ()
       exit 1
     }
 }
-
-
 # We want to be able to use the functions in this file before configure
 # has figured out where the best binaries are kept, which means we have
 # to search for them ourselves - except when the results are already set
@@ -263,8 +243,6 @@ test -z "$SED" && {
   rm -f conftest.sed
   SED=$func_path_progs_result
 }
-
-
 # Unless the user overrides by setting GREP, search the path for either GNU
 # grep, or the grep that truncates its output the least.
 test -z "$GREP" && {
@@ -298,8 +276,6 @@ test -z "$GREP" && {
   func_path_progs "grep ggrep" func_check_prog_grep $PATH:/usr/xpg4/bin
   GREP=$func_path_progs_result
 }
-
-
 ## ------------------------------- ##
 ## User overridable command paths. ##
 ## ------------------------------- ##
@@ -319,8 +295,6 @@ test -z "$GREP" && {
 : ${MV="mv -f"}
 : ${RM="rm -f"}
 : ${SHELL="${CONFIG_SHELL-/bin/sh}"}
-
-
 ## -------------------- ##
 ## Useful sed snippets. ##
 ## -------------------- ##
@@ -359,8 +333,6 @@ sed_double_backslash="\
   s/^$_G_bs2$_G_dollar/$_G_bs&/
   s/\\([^$_G_bs]\\)$_G_bs2$_G_dollar/\\1$_G_bs2$_G_bs$_G_dollar/g
   s/\n//g"
-
-
 ## ----------------- ##
 ## Global variables. ##
 ## ----------------- ##
@@ -430,8 +402,6 @@ case $progpath in
      progpath=$progdir/$progname
      ;;
 esac
-
-
 ## ----------------- ##
 ## Standard options. ##
 ## ----------------- ##
@@ -458,8 +428,6 @@ warning_func=func_warn_and_continue
 # warnings, or a space delimited list of some subset of
 # 'warning_categories' to display only the listed warnings.
 opt_warning_types=all
-
-
 ## -------------------- ##
 ## Resource management. ##
 ## -------------------- ##
@@ -474,8 +442,6 @@ opt_warning_types=all
 # variables that don't obey the namespace limitations obeyed by the rest
 # of this file, in order that that they be as useful as possible to
 # callers.
-
-
 # require_term_colors
 # -------------------
 # Allow display of bold text on terminals that support it.
@@ -513,8 +479,6 @@ func_require_term_colors ()
 
     require_term_colors=:
 }
-
-
 ## ----------------- ##
 ## Function library. ##
 ## ----------------- ##
@@ -523,8 +487,6 @@ func_require_term_colors ()
 # scripts. Take note of the portable wrappers for features provided by
 # some modern shells, which will fall back to slower equivalents on
 # less featureful shells.
-
-
 # func_append VAR VALUE
 # ---------------------
 # Append VALUE onto the existing contents of VAR.
@@ -569,8 +531,6 @@ else
     eval "$1=\$$1\$2"
   }
 fi
-
-
 # func_append_quoted VAR VALUE
 # ----------------------------
 # Quote VALUE and append to the end of shell variable VAR, separated
@@ -592,8 +552,6 @@ else
     eval "$1=\$$1\\ \$func_quote_for_eval_result"
   }
 fi
-
-
 # func_append_uniq VAR VALUE
 # --------------------------
 # Append unique VALUE onto the existing contents of VAR, assuming
@@ -616,8 +574,6 @@ func_append_uniq ()
       *) func_append "$@" ;;
     esac
 }
-
-
 # func_arith TERM...
 # ------------------
 # Set func_arith_result to the result of evaluating TERMs.
@@ -640,8 +596,6 @@ else
     func_arith_result=`expr "$@"`
   }
 fi
-
-
 # func_basename FILE
 # ------------------
 # Set func_basename_result to FILE with everything up to and including
@@ -673,8 +627,6 @@ eval 'func_basename ()
 
     '"$_b"'
 }'
-
-
 # func_dirname FILE APPEND NONDIR_REPLACEMENT
 # -------------------------------------------
 # Compute the dirname of FILE.  If nonempty, add APPEND to the result,
@@ -685,8 +637,6 @@ eval 'func_dirname ()
 
     '"$_d"'
 }'
-
-
 # func_dirname_and_basename FILE APPEND NONDIR_REPLACEMENT
 # --------------------------------------------------------
 # Perform func_basename and func_dirname in a single function
@@ -706,8 +656,6 @@ eval 'func_dirname_and_basename ()
     '"$_b"'
     '"$_d"'
 }'
-
-
 # func_echo ARG...
 # ----------------
 # Echo program name prefixed message.
@@ -725,8 +673,6 @@ func_echo ()
     done
     IFS=$func_echo_IFS
 }
-
-
 # func_echo_all ARG...
 # --------------------
 # Invoke $ECHO with all args, space-separated.
@@ -734,8 +680,6 @@ func_echo_all ()
 {
     $ECHO "$*"
 }
-
-
 # func_echo_infix_1 INFIX ARG...
 # ------------------------------
 # Echo program name, followed by INFIX on the first line, with any
@@ -770,8 +714,6 @@ func_echo_infix_1 ()
     done
     IFS=$func_echo_infix_1_IFS
 }
-
-
 # func_error ARG...
 # -----------------
 # Echo program name prefixed message to standard error.
@@ -783,8 +725,6 @@ func_error ()
 
     func_echo_infix_1 "  $tc_standout${tc_red}error$tc_reset" "$*" >&2
 }
-
-
 # func_fatal_error ARG...
 # -----------------------
 # Echo program name prefixed message to standard error, and exit.
@@ -795,8 +735,6 @@ func_fatal_error ()
     func_error "$*"
     exit $EXIT_FAILURE
 }
-
-
 # func_grep EXPRESSION FILENAME
 # -----------------------------
 # Check whether EXPRESSION matches any line of FILENAME, without output.
@@ -806,8 +744,6 @@ func_grep ()
 
     $GREP "$1" "$2" >/dev/null 2>&1
 }
-
-
 # func_len STRING
 # ---------------
 # Set func_len_result to the length of STRING. STRING may not
@@ -832,8 +768,6 @@ else
     func_len_result=`expr "$1" : ".*" 2>/dev/null || echo $max_cmd_len`
   }
 fi
-
-
 # func_mkdir_p DIRECTORY-PATH
 # ---------------------------
 # Make sure the entire path to DIRECTORY-PATH is available.
@@ -880,8 +814,6 @@ func_mkdir_p ()
         func_fatal_error "Failed to create '$1'"
     fi
 }
-
-
 # func_mktempdir [BASENAME]
 # -------------------------
 # Make a temporary directory that won't clash with other running
@@ -918,8 +850,6 @@ func_mktempdir ()
 
     $ECHO "$_G_tmpdir"
 }
-
-
 # func_normal_abspath PATH
 # ------------------------
 # Remove doubled-up and trailing slashes, "." path components,
@@ -1008,8 +938,6 @@ func_normal_abspath ()
     # Restore leading double-slash if one was found on entry.
     func_normal_abspath_result=$func_normal_abspath_altnamespace$func_normal_abspath_result
 }
-
-
 # func_notquiet ARG...
 # --------------------
 # Echo program name prefixed message only when not in quiet mode.
@@ -1024,8 +952,6 @@ func_notquiet ()
     # work around that:
     :
 }
-
-
 # func_relative_path SRCDIR DSTDIR
 # --------------------------------
 # Set func_relative_path_result to the relative path from SRCDIR to DSTDIR.
@@ -1089,8 +1015,6 @@ func_relative_path ()
 
     :
 }
-
-
 # func_quote_for_eval ARG...
 # --------------------------
 # Aesthetically quote ARGs to be evaled later.
@@ -1141,8 +1065,6 @@ func_quote_for_eval ()
       shift
     done
 }
-
-
 # func_quote_for_expand ARG
 # -------------------------
 # Aesthetically quote ARG to be evaled later; same as above,
@@ -1171,8 +1093,6 @@ func_quote_for_expand ()
 
     func_quote_for_expand_result=$_G_arg
 }
-
-
 # func_stripname PREFIX SUFFIX NAME
 # ---------------------------------
 # strip PREFIX and SUFFIX from NAME, and store in func_stripname_result.
@@ -1201,8 +1121,6 @@ else
     esac
   }
 fi
-
-
 # func_show_eval CMD [FAIL_EXP]
 # -----------------------------
 # Unless opt_quiet is true, then output CMD.  Then, if opt_dryrun is
@@ -1226,8 +1144,6 @@ func_show_eval ()
       fi
     }
 }
-
-
 # func_show_eval_locale CMD [FAIL_EXP]
 # ------------------------------------
 # Unless opt_quiet is true, then output CMD.  Then, if opt_dryrun is
@@ -1255,8 +1171,6 @@ func_show_eval_locale ()
       fi
     }
 }
-
-
 # func_tr_sh
 # ----------
 # Turn $1 into a string suitable for a shell variable name.
@@ -1276,8 +1190,6 @@ func_tr_sh ()
       ;;
     esac
 }
-
-
 # func_verbose ARG...
 # -------------------
 # Echo program name prefixed message in verbose mode only.
@@ -1289,8 +1201,6 @@ func_verbose ()
 
     :
 }
-
-
 # func_warn_and_continue ARG...
 # -----------------------------
 # Echo program name prefixed warning message to standard error.
@@ -1302,8 +1212,6 @@ func_warn_and_continue ()
 
     func_echo_infix_1 "${tc_red}warning$tc_reset" "$*" >&2
 }
-
-
 # func_warning CATEGORY ARG...
 # ----------------------------
 # Echo program name prefixed warning message to standard error. Warning
@@ -1327,8 +1235,6 @@ func_warning ()
       *" $_G_category "*) $warning_func ${1+"$@"} ;;
     esac
 }
-
-
 # func_sort_ver VER1 VER2
 # -----------------------
 # 'sort -V' is not generally available.
@@ -1358,8 +1264,6 @@ func_lt_ver ()
 
     test "x$1" = x`func_sort_ver "$1" "$2" | $SED 1q`
 }
-
-
 # Local variables:
 # mode: shell-script
 # sh-indentation: 2
@@ -1393,8 +1297,6 @@ scriptversion=2014-01-07.03; # UTC
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Please report bugs or propose patches to gary@gnu.org.
-
-
 ## ------ ##
 ## Usage. ##
 ## ------ ##
@@ -1469,8 +1371,6 @@ Warning categories include:
 # Help message printed before fatal option parsing errors.
 fatal_help="Try '\$progname --help' for more information."
 
-
-
 ## ------------------------- ##
 ## Hook function management. ##
 ## ------------------------- ##
@@ -1489,8 +1389,6 @@ func_hookable ()
 
     func_append hookable_fns " $1"
 }
-
-
 # func_add_hook FUNC_NAME HOOK_FUNC
 # ---------------------------------
 # Request that FUNC_NAME call HOOK_FUNC before it returns.  FUNC_NAME must
@@ -1506,8 +1404,6 @@ func_add_hook ()
 
     eval func_append ${1}_hooks '" $2"'
 }
-
-
 # func_remove_hook FUNC_NAME HOOK_FUNC
 # ------------------------------------
 # Remove HOOK_FUNC from the list of functions called by FUNC_NAME.
@@ -1517,8 +1413,6 @@ func_remove_hook ()
 
     eval ${1}_hooks='`$ECHO "\$'$1'_hooks" |$SED "s| '$2'||"`'
 }
-
-
 # func_run_hooks FUNC_NAME [ARG]...
 # ---------------------------------
 # Run all hook functions registered to FUNC_NAME.
@@ -1549,8 +1443,6 @@ func_run_hooks ()
     func_quote_for_eval ${1+"$@"}
     func_run_hooks_result=$func_quote_for_eval_result
 }
-
-
 
 ## --------------- ##
 ## Option parsing. ##
@@ -1619,8 +1511,6 @@ func_run_hooks ()
 # You'll alse need to manually amend $usage_message to reflect the extra
 # options you parse.  It's preferable to append if you can, so that
 # multiple option parsing hooks can be added safely.
-
-
 # func_options [ARG]...
 # ---------------------
 # All the functions called inside func_options are hookable. See the
@@ -1642,8 +1532,6 @@ func_options ()
     # save modified positional parameters for caller
     func_options_result=$func_run_hooks_result
 }
-
-
 # func_options_prep [ARG]...
 # --------------------------
 # All initialisations required before starting the option parse loop.
@@ -1666,8 +1554,6 @@ func_options_prep ()
     # save modified positional parameters for caller
     func_options_prep_result=$func_run_hooks_result
 }
-
-
 # func_parse_options [ARG]...
 # ---------------------------
 # The main option parsing loop.
@@ -1767,8 +1653,6 @@ func_parse_options ()
     func_quote_for_eval ${1+"$@"}
     func_parse_options_result=$func_quote_for_eval_result
 }
-
-
 # func_validate_options [ARG]...
 # ------------------------------
 # Perform any sanity checks on option settings and/or unconsumed
@@ -1790,16 +1674,12 @@ func_validate_options ()
     func_validate_options_result=$func_run_hooks_result
 }
 
-
-
 ## ----------------- ##
 ## Helper functions. ##
 ## ----------------- ##
 
 # This section contains the helper functions used by the rest of the
 # hookable option parser framework in ascii-betical order.
-
-
 # func_fatal_help ARG...
 # ----------------------
 # Echo program name prefixed message to standard error, followed by
@@ -1813,8 +1693,6 @@ func_fatal_help ()
     func_error ${1+"$@"}
     exit $EXIT_FAILURE
 }
-
-
 # func_help
 # ---------
 # Echo long help message to standard output and exit.
@@ -1826,8 +1704,6 @@ func_help ()
     $ECHO "$long_help_message"
     exit 0
 }
-
-
 # func_missing_arg ARGNAME
 # ------------------------
 # Echo program name prefixed message to standard error and set global
@@ -1839,8 +1715,6 @@ func_missing_arg ()
     func_error "Missing argument for '$1'."
     exit_cmd=exit
 }
-
-
 # func_split_equals STRING
 # ------------------------
 # Set func_split_equals_lhs and func_split_equals_rhs shell variables after
@@ -1874,8 +1748,6 @@ else
         || func_split_equals_rhs=`expr "x$1" : 'x[^=]*=\(.*\)$'`
   }
 fi #func_split_equals
-
-
 # func_split_short_opt SHORTOPT
 # -----------------------------
 # Set func_split_short_opt_name and func_split_short_opt_arg shell
@@ -1900,8 +1772,6 @@ else
       func_split_short_opt_arg=`expr "x$1" : 'x-.\(.*\)$'`
   }
 fi #func_split_short_opt
-
-
 # func_usage
 # ----------
 # Echo short help message to standard output and exit.
@@ -1913,8 +1783,6 @@ func_usage ()
     $ECHO "Run '$progname --help |${PAGER-more}' for full usage"
     exit 0
 }
-
-
 # func_usage_message
 # ------------------
 # Echo short help message to standard output.
@@ -1933,8 +1801,6 @@ func_usage_message ()
     echo
     eval \$ECHO \""$usage_message"\"
 }
-
-
 # func_version
 # ------------
 # Echo version message to standard output and exit.
@@ -1966,8 +1832,6 @@ func_version ()
 
     exit $?
 }
-
-
 # Local variables:
 # mode: shell-script
 # sh-indentation: 2
@@ -1978,8 +1842,6 @@ func_version ()
 
 # Set a version string.
 scriptversion='(GNU libtool) 2.4.6'
-
-
 # func_echo ARG...
 # ----------------
 # Libtool also displays the current mode in messages, so override
@@ -1998,8 +1860,6 @@ func_echo ()
     done
     IFS=$func_echo_IFS
 }
-
-
 # func_warning ARG...
 # -------------------
 # Libtool warnings are not categorized, so override funclib.sh
@@ -2010,8 +1870,6 @@ func_warning ()
 
     $warning_func ${1+"$@"}
 }
-
-
 ## ---------------- ##
 ## Options parsing. ##
 ## ---------------- ##
@@ -2077,8 +1935,6 @@ GNU libtool home page: <http://www.gnu.org/software/libtool/>.
 General help using GNU software: <http://www.gnu.org/gethelp/>."
     exit 0
 }
-
-
 # func_lo2o OBJECT-NAME
 # ---------------------
 # Transform OBJECT-NAME from a '.lo' suffix to the platform specific
@@ -2116,8 +1972,6 @@ else
     func_xform_result=`$ECHO "$1" | $SED 's|\.[^.]*$|.lo|'`
   }
 fi
-
-
 # func_fatal_configuration ARG...
 # -------------------------------
 # Echo program name prefixed message to standard error, followed by
@@ -2128,8 +1982,6 @@ func_fatal_configuration ()
       "See the $PACKAGE documentation for more information." \
       "Fatal configuration error."
 }
-
-
 # func_config
 # -----------
 # Display the configuration for all the tags in this script.
@@ -2148,8 +2000,6 @@ func_config ()
 
     exit $?
 }
-
-
 # func_features
 # -------------
 # Display the features supported by this script.
@@ -2169,8 +2019,6 @@ func_features ()
 
     exit $?
 }
-
-
 # func_enable_tag TAGNAME
 # -----------------------
 # Verify that TAGNAME is valid, and either flag an error and exit, or
@@ -2212,8 +2060,6 @@ func_enable_tag ()
         ;;
     esac
 }
-
-
 # func_check_version_match
 # ------------------------
 # Ensure that we are using m4 macros, and libtool script from the same
@@ -2249,8 +2095,6 @@ _LT_EOF
       exit $EXIT_MISMATCH
     fi
 }
-
-
 # libtool_options_prep [ARG]...
 # -----------------------------
 # Preparation for options parsed by libtool.
@@ -2300,8 +2144,6 @@ libtool_options_prep ()
     libtool_options_prep_result=$func_quote_for_eval_result
 }
 func_add_hook func_options_prep libtool_options_prep
-
-
 # libtool_parse_options [ARG]...
 # ---------------------------------
 # Provide handling for libtool specific options.
@@ -2390,15 +2232,11 @@ libtool_parse_options ()
         *)		set dummy "$_G_opt" ${1+"$@"};	shift; break  ;;
       esac
     done
-
-
     # save modified positional parameters for caller
     func_quote_for_eval ${1+"$@"}
     libtool_parse_options_result=$func_quote_for_eval_result
 }
 func_add_hook func_parse_options libtool_parse_options
-
-
 
 # libtool_validate_options [ARG]...
 # ---------------------------------
@@ -2455,14 +2293,10 @@ libtool_validate_options ()
     libtool_validate_options_result=$func_quote_for_eval_result
 }
 func_add_hook func_validate_options libtool_validate_options
-
-
 # Process options as early as possible so that --help and --version
 # can return quickly.
 func_options ${1+"$@"}
 eval set dummy "$func_options_result"; shift
-
-
 
 ## ----------- ##
 ##    Main.    ##
@@ -2479,8 +2313,6 @@ extracted_serial=0
 # will be execed at the end.  This prevents here-documents from being
 # left over by shells.
 exec_cmd=
-
-
 # A function that is used when there is no print builtin or printf.
 func_fallback_echo ()
 {
@@ -2573,8 +2405,6 @@ func_ltwrapper_p ()
 {
     func_ltwrapper_script_p "$1" || func_ltwrapper_executable_p "$1"
 }
-
-
 # func_execute_cmds commands fail_cmd
 # Execute tilde-delimited COMMANDS.
 # If FAIL_CMD is given, eval that upon failure.
@@ -2592,8 +2422,6 @@ func_execute_cmds ()
     done
     IFS=$save_ifs
 }
-
-
 # func_source file
 # Source FILE, adding directory component if necessary.
 # Note that it is not necessary on cygwin/mingw to append a dot to
@@ -2609,8 +2437,6 @@ func_source ()
     *)		. "./$1" ;;
     esac
 }
-
-
 # func_resolve_sysroot PATH
 # Replace a leading = in PATH with a sysroot.  Store the result into
 # func_resolve_sysroot_result
@@ -2704,8 +2530,6 @@ func_infer_tag ()
     fi
 }
 
-
-
 # func_write_libtool_object output_name pic_name nonpic_name
 # Create a libtool object file (analogous to a ".la" file),
 # but don't create it if we're doing a dry run.
@@ -2742,8 +2566,6 @@ EOF
       $MV "${write_libobj}T" "$write_libobj"
     }
 }
-
-
 ##################################################
 # FILE NAME AND PATH CONVERSION HELPER FUNCTIONS #
 ##################################################
@@ -2778,8 +2600,6 @@ func_convert_core_file_wine_to_w32 ()
   fi
 }
 # end: func_convert_core_file_wine_to_w32
-
-
 # func_convert_core_path_wine_to_w32 ARG
 # Helper function used by path conversion functions when $build is *nix, and
 # $host is mingw, cygwin, or some other w32 environment. Relies on a correctly
@@ -2814,8 +2634,6 @@ func_convert_core_path_wine_to_w32 ()
   fi
 }
 # end: func_convert_core_path_wine_to_w32
-
-
 # func_cygpath ARGS...
 # Wrapper around calling the cygpath program via LT_CYGPATH. This is used when
 # when (1) $build is *nix and Cygwin is hosted via a wine environment; or (2)
@@ -2847,8 +2665,6 @@ func_cygpath ()
   fi
 }
 #end: func_cygpath
-
-
 # func_convert_core_msys_to_w32 ARG
 # Convert file name or path ARG from MSYS format to w32 format.  Return
 # result in func_convert_core_msys_to_w32_result.
@@ -2861,8 +2677,6 @@ func_convert_core_msys_to_w32 ()
     $SED -e 's/[ ]*$//' -e "$sed_naive_backslashify"`
 }
 #end: func_convert_core_msys_to_w32
-
-
 # func_convert_file_check ARG1 ARG2
 # Verify that ARG1 (a file name in $build format) was converted to $host
 # format in ARG2. Otherwise, emit an error message, but continue (resetting
@@ -2880,8 +2694,6 @@ func_convert_file_check ()
   fi
 }
 # end func_convert_file_check
-
-
 # func_convert_path_check FROM_PATHSEP TO_PATHSEP FROM_PATH TO_PATH
 # Verify that FROM_PATH (a path in $build format) was converted to $host
 # format in TO_PATH. Otherwise, emit an error message, but continue, resetting
@@ -2906,8 +2718,6 @@ func_convert_path_check ()
   fi
 }
 # end func_convert_path_check
-
-
 # func_convert_path_front_back_pathsep FRONTPAT BACKPAT REPL ORIG
 # Modifies func_to_host_path_result by prepending REPL if ORIG matches FRONTPAT
 # and appending REPL if ORIG matches BACKPAT.
@@ -2925,8 +2735,6 @@ func_convert_path_front_back_pathsep ()
   esac
 }
 # end func_convert_path_front_back_pathsep
-
-
 ##################################################
 # $build to $host FILE NAME CONVERSION FUNCTIONS #
 ##################################################
@@ -2934,8 +2742,6 @@ func_convert_path_front_back_pathsep ()
 #
 # In each case, ARG is the path to be converted from $build to $host format.
 # Result will be available in $func_to_host_file_result.
-
-
 # func_to_host_file ARG
 # Converts the file name ARG from $build format to $host format. Return result
 # in func_to_host_file_result.
@@ -2946,8 +2752,6 @@ func_to_host_file ()
   $to_host_file_cmd "$1"
 }
 # end func_to_host_file
-
-
 # func_to_tool_file ARG LAZY
 # converts the file name ARG from $build format to toolchain format. Return
 # result in func_to_tool_file_result.  If the conversion in use is listed
@@ -2967,8 +2771,6 @@ func_to_tool_file ()
   esac
 }
 # end func_to_tool_file
-
-
 # func_convert_file_noop ARG
 # Copy ARG to func_to_host_file_result.
 func_convert_file_noop ()
@@ -2976,8 +2778,6 @@ func_convert_file_noop ()
   func_to_host_file_result=$1
 }
 # end func_convert_file_noop
-
-
 # func_convert_file_msys_to_w32 ARG
 # Convert file name ARG from (mingw) MSYS to (mingw) w32 format; automatic
 # conversion to w32 is not available inside the cwrapper.  Returns result in
@@ -2994,8 +2794,6 @@ func_convert_file_msys_to_w32 ()
   func_convert_file_check "$1" "$func_to_host_file_result"
 }
 # end func_convert_file_msys_to_w32
-
-
 # func_convert_file_cygwin_to_w32 ARG
 # Convert file name ARG from Cygwin to w32 format.  Returns result in
 # func_to_host_file_result.
@@ -3012,8 +2810,6 @@ func_convert_file_cygwin_to_w32 ()
   func_convert_file_check "$1" "$func_to_host_file_result"
 }
 # end func_convert_file_cygwin_to_w32
-
-
 # func_convert_file_nix_to_w32 ARG
 # Convert file name ARG from *nix to w32 format.  Requires a wine environment
 # and a working winepath. Returns result in func_to_host_file_result.
@@ -3029,8 +2825,6 @@ func_convert_file_nix_to_w32 ()
   func_convert_file_check "$1" "$func_to_host_file_result"
 }
 # end func_convert_file_nix_to_w32
-
-
 # func_convert_file_msys_to_cygwin ARG
 # Convert file name ARG from MSYS to Cygwin format.  Requires LT_CYGPATH set.
 # Returns result in func_to_host_file_result.
@@ -3047,8 +2841,6 @@ func_convert_file_msys_to_cygwin ()
   func_convert_file_check "$1" "$func_to_host_file_result"
 }
 # end func_convert_file_msys_to_cygwin
-
-
 # func_convert_file_nix_to_cygwin ARG
 # Convert file name ARG from *nix to Cygwin format.  Requires Cygwin installed
 # in a wine environment, working winepath, and LT_CYGPATH set.  Returns result
@@ -3067,8 +2859,6 @@ func_convert_file_nix_to_cygwin ()
   func_convert_file_check "$1" "$func_to_host_file_result"
 }
 # end func_convert_file_nix_to_cygwin
-
-
 #############################################
 # $build to $host PATH CONVERSION FUNCTIONS #
 #############################################
@@ -3088,8 +2878,6 @@ func_convert_file_nix_to_cygwin ()
 # same.  If conversion functions are added for new $build/$host combinations,
 # the two new functions must follow this pattern, or func_init_to_host_path_cmd
 # will break.
-
-
 # func_init_to_host_path_cmd
 # Ensures that function "pointer" variable $to_host_path_cmd is set to the
 # appropriate value, based on the value of $to_host_file_cmd.
@@ -3103,8 +2891,6 @@ func_init_to_host_path_cmd ()
     to_host_path_cmd=func_convert_path_$func_stripname_result
   fi
 }
-
-
 # func_to_host_path ARG
 # Converts the path ARG from $build format to $host format. Return result
 # in func_to_host_path_result.
@@ -3116,8 +2902,6 @@ func_to_host_path ()
   $to_host_path_cmd "$1"
 }
 # end func_to_host_path
-
-
 # func_convert_path_noop ARG
 # Copy ARG to func_to_host_path_result.
 func_convert_path_noop ()
@@ -3125,8 +2909,6 @@ func_convert_path_noop ()
   func_to_host_path_result=$1
 }
 # end func_convert_path_noop
-
-
 # func_convert_path_msys_to_w32 ARG
 # Convert path ARG from (mingw) MSYS to (mingw) w32 format; automatic
 # conversion to w32 is not available inside the cwrapper.  Returns result in
@@ -3150,8 +2932,6 @@ func_convert_path_msys_to_w32 ()
   fi
 }
 # end func_convert_path_msys_to_w32
-
-
 # func_convert_path_cygwin_to_w32 ARG
 # Convert path ARG from Cygwin to w32 format.  Returns result in
 # func_to_host_file_result.
@@ -3171,8 +2951,6 @@ func_convert_path_cygwin_to_w32 ()
   fi
 }
 # end func_convert_path_cygwin_to_w32
-
-
 # func_convert_path_nix_to_w32 ARG
 # Convert path ARG from *nix to w32 format.  Requires a wine environment and
 # a working winepath.  Returns result in func_to_host_file_result.
@@ -3193,8 +2971,6 @@ func_convert_path_nix_to_w32 ()
   fi
 }
 # end func_convert_path_nix_to_w32
-
-
 # func_convert_path_msys_to_cygwin ARG
 # Convert path ARG from MSYS to Cygwin format.  Requires LT_CYGPATH set.
 # Returns result in func_to_host_file_result.
@@ -3216,8 +2992,6 @@ func_convert_path_msys_to_cygwin ()
   fi
 }
 # end func_convert_path_msys_to_cygwin
-
-
 # func_convert_path_nix_to_cygwin ARG
 # Convert path ARG from *nix to Cygwin format.  Requires Cygwin installed in a
 # a wine environment, working winepath, and LT_CYGPATH set.  Returns result in
@@ -3242,8 +3016,6 @@ func_convert_path_nix_to_cygwin ()
   fi
 }
 # end func_convert_path_nix_to_cygwin
-
-
 # func_dll_def_p FILE
 # True iff FILE is a Windows DLL '.def' file.
 # Keep in sync with _LT_DLL_DEF_P in libtool.m4
@@ -3259,8 +3031,6 @@ func_dll_def_p ()
     "$1"`
   test DEF = "$func_dll_def_p_tmp"
 }
-
-
 # func_mode_compile arg...
 func_mode_compile ()
 {
@@ -3828,8 +3598,6 @@ if $opt_help; then
   fi
   exit $?
 fi
-
-
 # func_mode_execute arg...
 func_mode_execute ()
 {
@@ -3962,8 +3730,6 @@ func_mode_execute ()
 }
 
 test execute = "$opt_mode" && func_mode_execute ${1+"$@"}
-
-
 # func_mode_finish arg...
 func_mode_finish ()
 {
@@ -4082,8 +3848,6 @@ func_mode_finish ()
 }
 
 test finish = "$opt_mode" && func_mode_finish ${1+"$@"}
-
-
 # func_mode_install arg...
 func_mode_install ()
 {
@@ -4556,8 +4320,6 @@ func_mode_install ()
 }
 
 test install = "$opt_mode" && func_mode_install ${1+"$@"}
-
-
 # func_generate_dlsyms outputname originator pic_p
 # Extract symbols from dlprefiles and create ${outputname}S.o with
 # a dlpreopen symbol table.
@@ -5079,8 +4841,6 @@ func_cygming_dll_for_implib_fallback ()
     sharedlib_from_linklib_result=
   fi
 }
-
-
 # func_extract_an_archive dir oldlib
 func_extract_an_archive ()
 {
@@ -5106,8 +4866,6 @@ func_extract_an_archive ()
       func_fatal_error "object name conflicts in archive: $f_ex_an_ar_dir/$f_ex_an_ar_oldlib"
     fi
 }
-
-
 # func_extract_archives gentop oldlib ...
 func_extract_archives ()
 {
@@ -5192,8 +4950,6 @@ func_extract_archives ()
 
     func_extract_archives_result=$my_oldobjs
 }
-
-
 # func_emit_wrapper [arg=no]
 #
 # Emit a libtool wrapper script on stdout.
@@ -5504,8 +5260,6 @@ func_exec_program ()
 fi\
 "
 }
-
-
 # func_emit_cwrapperexe_src
 # emit the source code for a wrapper executable on stdout
 # Must ONLY be called from within func_mode_link because
@@ -5715,8 +5469,6 @@ EOF
 const char * TARGET_PROGRAM_NAME = "$outputname"; /* hopefully, no .exe */
 EOF
 	    fi
-
-
 	    cat <<"EOF"
 
 #define LTWRAPPER_OPTION_PREFIX         "--lt-"
@@ -7854,8 +7606,6 @@ func_mode_link ()
 	installed=yes
 	shouldnotlink=no
 	avoidtemprpath=
-
-
 	# Read the .la file
 	func_source "$lib"
 
@@ -7902,8 +7652,6 @@ func_mode_link ()
 	  done
 	  continue
 	fi # $pass = conv
-
-
 	# Get the name of the library we link against.
 	linklib=
 	if test -n "$old_library" &&
@@ -8040,8 +7788,6 @@ func_mode_link ()
 	  fi
 	  continue
 	fi
-
-
 	if test prog = "$linkmode" && test link != "$pass"; then
 	  func_append newlib_search_path " $ladir"
 	  deplibs="$lib $deplibs"
@@ -10223,8 +9969,6 @@ EOF
 	finalize_deplibs=`$ECHO " $finalize_deplibs" | $SED 's% \([^ $]*\).ltframework% -framework \1%g'`
 	;;
       esac
-
-
       # move library search paths that coincide with paths to not yet
       # installed libraries to the beginning of the library search list
       new_libs=
@@ -10251,8 +9995,6 @@ EOF
 	esac
       done
       compile_deplibs=$new_libs
-
-
       func_append compile_command " $compile_deplibs"
       func_append finalize_command " $finalize_deplibs"
 
@@ -10930,8 +10672,6 @@ relink_command=\"$relink_command\""
 if test link = "$opt_mode" || test relink = "$opt_mode"; then
   func_mode_link ${1+"$@"}
 fi
-
-
 # func_mode_uninstall arg...
 func_mode_uninstall ()
 {
@@ -11119,8 +10859,6 @@ if test -n "$exec_cmd"; then
 fi
 
 exit $exit_status
-
-
 # The TAGs below are defined such that we never get into a situation
 # where we disable both kinds of libraries.  Given conflicting
 # choices, we go for a static library, that is the most portable,

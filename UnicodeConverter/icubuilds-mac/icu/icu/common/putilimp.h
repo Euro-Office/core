@@ -227,8 +227,6 @@ typedef size_t uintptr_t;
 #      define U_HAVE_STD_ATOMICS 0
 #   endif
 #endif
-
-
 /**
  *  \def U_HAVE_CLANG_ATOMICS
  *  Defines whether Clang c11 style built-in atomics are avaialable.
@@ -602,6 +600,4 @@ U_INTERNAL UVoidFunction* U_EXPORT2 uprv_dlsym_func( void *lib, const char *symb
 # define uprv_default_realloc(x,y) realloc(x,y)
 # define uprv_default_free(x) free(x)
 #endif
-
-
 #endif

@@ -41,7 +41,3 @@
 #define ecBadTable          5       // RTF table (sym or prop) invalid
 #define ecAssertion         6       // Assertion failure
 #define ecEndOfFile         7       // End of file reached while reading RTF
-
-
-
-

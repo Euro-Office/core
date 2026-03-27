@@ -49,8 +49,6 @@ public:
     { 
         return value_; 
     }
-    
-
     static clockvalue parse(const std::wstring & Str);
 
 private:

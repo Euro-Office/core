@@ -18,10 +18,6 @@
 #include "platform/agg_platform_support.h"
 
 enum flip_y_e { flip_y = true };
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba> m_polygon_angle;
@@ -48,8 +44,6 @@ class the_application : public agg::platform_support
     double m_dy;
 
     int m_flag;
-
-
 public:
     //------------------------------------------------------------------------
     the_application(agg::pix_format_e format, bool flip_y) :
@@ -92,14 +86,10 @@ public:
         m_example.add_item("6");
         m_example.cur_item(0);
     }
-
-
     //------------------------------------------------------------------------
     virtual ~the_application()
     {
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_init()
     {
@@ -108,8 +98,6 @@ public:
         m_polygon_cx = m_image_cx = initial_width() / 2.0;
         m_polygon_cy = m_image_cy = initial_height() / 2.0;
     }
-
-
     //------------------------------------------------------------------------
     void create_star(agg::path_storage& ps)
     {
@@ -139,10 +127,6 @@ public:
         }
     }
 
-
-
-
-
     //------------------------------------------------------------------------
     virtual void on_draw()
     {
@@ -166,16 +150,12 @@ public:
         polygon_mtx *= agg::trans_affine_scaling(m_polygon_scale.value());
         polygon_mtx *= agg::trans_affine_translation(m_polygon_cx, m_polygon_cy);
 
-
-
         switch(m_example.cur_item())
         {
         default:
         case 0:
 // --------------(Example 0, Identity matrix)
         break;
-
-
         case 1:
 // --------------(Example 1)
         image_mtx *= agg::trans_affine_translation(-m_image_center_x, -m_image_center_y);
@@ -184,8 +164,6 @@ public:
         image_mtx *= agg::trans_affine_translation(m_polygon_cx, m_polygon_cy);
         image_mtx.invert();
         break;
-
-
 
         case 2:
 // --------------(Example 2)
@@ -196,8 +174,6 @@ public:
         image_mtx.invert();
         break;
 
-
-
         case 3:
 // --------------(Example 3)
         image_mtx *= agg::trans_affine_translation(-m_image_center_x, -m_image_center_y);
@@ -207,8 +183,6 @@ public:
         image_mtx.invert();
         break;
 
-
-
         case 4:
 // --------------(Example 4)
         image_mtx *= agg::trans_affine_translation(-m_image_cx, -m_image_cy);
@@ -217,8 +191,6 @@ public:
         image_mtx *= agg::trans_affine_translation(m_polygon_cx, m_polygon_cy);
         image_mtx.invert();
         break;
-
-
 
         case 5:
 // --------------(Example 5)
@@ -230,8 +202,6 @@ public:
         image_mtx *= agg::trans_affine_translation(m_image_cx, m_image_cy);
         image_mtx.invert();
         break;
-
-
 
         case 6:
 // --------------(Example 6)
@@ -289,8 +259,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_example);
     }
 
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -327,8 +295,6 @@ public:
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
@@ -353,19 +319,11 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
-
-
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         m_flag = 0;
     }
-
-
 
     //------------------------------------------------------------------------
     virtual void on_ctrl_change() 
@@ -408,13 +366,7 @@ public:
         if(redraw) force_redraw();
 
     }
-
-
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -448,5 +400,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

@@ -154,7 +154,5 @@ UChar*
 ufmt_defaultCPToUnicode(const char *s, int32_t sSize,
                         UChar *target, int32_t tSize);
 
-
-
 #endif
 

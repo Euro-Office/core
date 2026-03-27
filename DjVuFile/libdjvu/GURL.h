@@ -64,13 +64,9 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GString.h"
 #include "Arrays.h"
 #include "GThreads.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -404,8 +400,6 @@ class DJVUAPI GURL::Filename::Native : public GURL::Filename
 public:
   Native(const GNativeString &filename);
 };
-
-
 inline bool
 GURL::operator!=(const GURL & gurl2) const
 {
@@ -434,11 +428,7 @@ GURL::is_valid(void) const
   return validurl;
 }
 
-
-
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

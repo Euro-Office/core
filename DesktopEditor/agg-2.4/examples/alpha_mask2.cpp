@@ -25,8 +25,6 @@
 #include "agg_ellipse.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 //#define AGG_GRAY8 
 //#define AGG_BGR24
 //#define AGG_RGB24
@@ -57,8 +55,6 @@ double            g_scale = 1.0;
 double            g_skew_x = 0;
 double            g_skew_y = 0;
 int               g_nclick = 0;
-
-
 unsigned parse_lion(agg::path_storage& ps, agg::rgba8* colors, unsigned* path_idx);
 void parse_lion()
 {
@@ -68,8 +64,6 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
 namespace agg
 {
     // Specializations of the gradient_linear_color for rgba8 and gray8
@@ -104,8 +98,6 @@ namespace agg
         color_type m_c1;
         color_type m_c2;
     };
-
-
     //========================================================================
     template<> struct gradient_linear_color<gray8>
     {
@@ -135,14 +127,6 @@ namespace agg
     };
 
 }
-
-
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba> m_num_cb;
@@ -155,8 +139,6 @@ class the_application : public agg::platform_support
     alpha_mask_type m_alpha_mask;
 
     double m_slider_value;
-
-
 public:
     ~the_application()
     {
@@ -179,8 +161,6 @@ public:
         m_num_cb.label("N=%.2f");
         m_num_cb.no_transform();
     }
-
-
 
     void generate_alpha_mask(int cx, int cy)
     {
@@ -216,16 +196,10 @@ public:
             agg::render_scanlines(g_rasterizer, sl, r);
         }
     }
-
-
     virtual void on_resize(int cx, int cy)
     {
         generate_alpha_mask(cx, cy);
     }
-
-
-
-
     virtual void on_draw()
     {
         unsigned i;
@@ -237,8 +211,6 @@ public:
             generate_alpha_mask(width, height);
             m_slider_value = m_num_cb.value();
         }
-
-
         pixfmt pf(rbuf_window());
 
         typedef agg::pixfmt_amask_adaptor<pixfmt, alpha_mask_type> pixfmt_amask_type;
@@ -266,8 +238,6 @@ public:
         // Render the lion
         agg::conv_transform<agg::path_storage, agg::trans_affine> trans(g_path, mtx);
         agg::render_all_paths(g_rasterizer, g_scanline, rs, trans, g_colors, g_path_idx, g_npaths);
-
-
         // Render random Bresenham lines and markers
         agg::renderer_markers<amask_ren_type> m(r);
         for(i = 0; i < 50; i++)
@@ -287,8 +257,6 @@ public:
             m.marker(rand() % width, rand() % height, rand() % 10 + 5,
                      agg::marker_e(rand() % agg::end_of_markers));
         }
-
-
         // Render random anti-aliased lines
         double w = 5.0;
         agg::line_profile_aa profile;
@@ -312,8 +280,6 @@ public:
             ras.line_to_d(rand() % width, rand() % height);
             ras.render(false);
         }
-
-
         // Render random circles with gradient
         typedef agg::gradient_linear_color<color_type> grad_color;
         typedef agg::gradient_circle grad_func;
@@ -355,8 +321,6 @@ public:
 
         agg::render_ctrl(g_rasterizer, g_scanline, rbase, m_num_cb);
     }
-
-
     void transform(double width, double height, double x, double y)
     {
         x -= width / 2;
@@ -364,8 +328,6 @@ public:
         g_angle = atan2(y, x);
         g_scale = sqrt(y * y + x * x) / 100.0;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -383,20 +345,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -408,9 +362,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

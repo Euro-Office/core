@@ -21,12 +21,8 @@
   /*  can instead define pointers here.                                    */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTPIC_H__
 #define __FTPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_PIC
@@ -47,14 +43,10 @@ FT_BEGIN_HEADER
     void*  truetype;
 
   } FT_PIC_Container;
-
-
   /* Initialize the various function tables, structs, etc. */
   /* stored in the container.                              */
   FT_BASE( FT_Error )
   ft_pic_container_init( FT_Library  library );
-
-
   /* Destroy the contents of the container. */
   FT_BASE( void )
   ft_pic_container_destroy( FT_Library  library );
@@ -66,6 +58,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTPIC_H__ */
-
-
 /* END */

@@ -59,7 +59,5 @@ namespace XLSB
 	{
 		record << istrMbr << istrProp;
 	}
-
-
 } // namespace XLSB
 

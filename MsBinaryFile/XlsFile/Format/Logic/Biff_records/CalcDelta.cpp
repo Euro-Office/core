@@ -39,19 +39,13 @@ CalcDelta::CalcDelta()
 {
     numDelta.data.value = 0.001;
 }
-
-
 CalcDelta::~CalcDelta()
 {
 }
-
-
 BaseObjectPtr CalcDelta::clone()
 {
 	return BaseObjectPtr(new CalcDelta(*this));
 }
-
-
 void CalcDelta::readFields(CFRecord& record)
 {
 	record >> numDelta;

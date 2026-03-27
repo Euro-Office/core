@@ -28,8 +28,6 @@
 #include "psd_stream.h"
 #include "psd_color.h"
 #include "psd_rect.h"
-
-
 psd_status psd_get_layer_photo_filter(psd_context * context, psd_layer_record * layer)
 {
 	psd_layer_photo_filter * data;

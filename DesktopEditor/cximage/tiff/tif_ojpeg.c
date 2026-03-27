@@ -119,8 +119,6 @@
    a single sequential scan of the input stream, and no restarting of LibJpeg decoding
    session.
 */
-
-
 #include "tiffiop.h"
 #ifdef OJPEG_SUPPORT
 
@@ -2429,8 +2427,6 @@ OJPEGLibjpegJpegSourceMgrTermSource(jpeg_decompress_struct* cinfo)
 }
 
 #endif
-
-
 /*
  * Local Variables:
  * mode: c

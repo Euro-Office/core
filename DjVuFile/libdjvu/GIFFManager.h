@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "IFFByteStream.h"
 #include "GContainer.h"
 #include "Arrays.h"
@@ -78,8 +76,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 /** @name GIFFManager.h
 
     Files #"GIFFManager.h"# and #"GIFFManager.cpp"# define more convenient
@@ -385,8 +381,6 @@ GIFFManager::init(const GUTF8String &name)
 {
   top_level=GIFFChunk::create(name);
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

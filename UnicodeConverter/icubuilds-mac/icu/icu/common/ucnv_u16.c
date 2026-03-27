@@ -42,8 +42,6 @@ _UTF16ToUnicodeWithOffsets(UConverterToUnicodeArgs *pArgs,
 #else
 #   define _UTF16PEFromUnicodeWithOffsets   _UTF16LEFromUnicodeWithOffsets
 #endif
-
-
 static void
 _UTF16BEFromUnicodeWithOffsets(UConverterFromUnicodeArgs *pArgs,
                                UErrorCode *pErrorCode) {
@@ -633,8 +631,6 @@ static const UConverterStaticData _UTF16BEStaticData={
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-
-
 const UConverterSharedData _UTF16BEData=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16BEStaticData, &_UTF16BEImpl);
 
@@ -1219,8 +1215,6 @@ static const UConverterImpl _UTF16LEImpl={
     NULL,
     ucnv_getNonSurrogateUnicodeSet
 };
-
-
 static const UConverterStaticData _UTF16LEStaticData={
     sizeof(UConverterStaticData),
     "UTF-16LE",
@@ -1230,8 +1224,6 @@ static const UConverterStaticData _UTF16LEStaticData={
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-
-
 const UConverterSharedData _UTF16LEData=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF16LEStaticData, &_UTF16LEImpl);
 

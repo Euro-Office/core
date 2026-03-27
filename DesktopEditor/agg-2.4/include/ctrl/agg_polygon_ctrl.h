@@ -76,10 +76,6 @@ namespace agg
         bool     m_roundoff;
         bool     m_close;
     };
-
-
-
-
     class polygon_ctrl_impl : public ctrl
     {
     public:
@@ -115,8 +111,6 @@ namespace agg
         virtual bool on_mouse_button_up(double x, double y);
         virtual bool on_mouse_move(double x, double y, bool button_flag);
         virtual bool on_arrow_keys(bool left, bool right, bool down, bool up);
-
-
     private:
         bool check_edge(unsigned i, double x, double y) const;
         bool point_in_polygon(double x, double y) const;
@@ -134,8 +128,6 @@ namespace agg
         double   m_dy;
         bool     m_in_polygon_check;
     };
-
-
 
     //----------------------------------------------------------polygon_ctrl
     template<class ColorT> class polygon_ctrl : public polygon_ctrl_impl
@@ -156,10 +148,6 @@ namespace agg
 
         ColorT m_color;
     };
-
-
-
-
 }
 
 #endif

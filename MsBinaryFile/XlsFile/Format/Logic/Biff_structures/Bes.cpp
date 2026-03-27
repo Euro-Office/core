@@ -36,14 +36,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr Bes::clone()
 {
 	return BiffStructurePtr(new Bes(*this));
 }
-
-
 void Bes::load(CFRecord& record)
 {
 	record >> bBoolErr >> fError;
@@ -53,8 +49,6 @@ void Bes::save(CFRecord& record)
 {
     record << bBoolErr << fError;
 }
-
-
 const std::wstring Bes::toString()
 {
 	if(fError || bBoolErr > 0x01)
@@ -89,8 +83,6 @@ const std::wstring Bes::toString()
     
     return L""; // TODO: need fixed
 }
-
-
 void Bes::fromString(const std::wstring str)
 {
 	const std::wstring upper_str = boost::algorithm::to_upper_copy(str);
@@ -149,7 +141,5 @@ void Bes::fromString(const std::wstring str)
 		// EXCEPT::RT::WrongBiffRecord("Unsupported type of Bes.", "unknown");
 	}
 }
-
-
 } // namespace XLS
 

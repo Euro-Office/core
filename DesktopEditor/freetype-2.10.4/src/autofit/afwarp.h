@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFWARP_H_
 #define AFWARP_H_
 
@@ -27,8 +25,6 @@ FT_BEGIN_HEADER
 
 #define AF_WARPER_FLOOR( x )  ( (x) & ~FT_TYPEOF( x )63 )
 #define AF_WARPER_CEIL( x )   AF_WARPER_FLOOR( (x) + 63 )
-
-
   typedef FT_Int32  AF_WarpScore;
 
   typedef struct  AF_WarperRec_
@@ -45,8 +41,6 @@ FT_BEGIN_HEADER
     AF_WarpScore  best_distort;
 
   } AF_WarperRec, *AF_Warper;
-
-
 #ifdef AF_CONFIG_OPTION_USE_WARPER
   FT_LOCAL( void )
   af_warper_compute( AF_Warper      warper,
@@ -55,12 +49,6 @@ FT_BEGIN_HEADER
                      FT_Fixed      *a_scale,
                      FT_Pos        *a_delta );
 #endif
-
-
 FT_END_HEADER
-
-
 #endif /* AFWARP_H_ */
-
-
 /* END */

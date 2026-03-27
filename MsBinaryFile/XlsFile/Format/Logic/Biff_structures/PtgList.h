@@ -77,7 +77,5 @@ private:
 };
 
 typedef boost::shared_ptr<PtgList> PtgListPtr;
-
-
 } // namespace XLS
 

@@ -66,9 +66,5 @@ public:
 	virtual const bool read(StreamCacheReaderPtr reader, BaseObject* parent, const bool is_mandatory);
 
 	static const ElementType	type = typeABNFParenthesis;
-	
-
 };
-
-
 } // namespace XLS

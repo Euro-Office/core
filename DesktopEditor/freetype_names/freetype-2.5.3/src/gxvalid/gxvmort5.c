@@ -23,11 +23,7 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmort.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmort
-
-
   /*
    * mort subtable type5 (Contextual Glyph Insertion)
    * has the format of StateTable with insertion-glyph-list,
@@ -60,8 +54,6 @@
 
   }  GXV_mort_subtable_type5_StateOptRec,
     *GXV_mort_subtable_type5_StateOptRecData;
-
-
   FT_LOCAL_DEF( void )
   gxv_mort_subtable_type5_subtable_setup( FT_UShort      table_size,
                                           FT_UShort      classTable,
@@ -74,8 +66,6 @@
   {
     GXV_mort_subtable_type5_StateOptRecData  optdata =
       (GXV_mort_subtable_type5_StateOptRecData)valid->statetable.optdata;
-
-
     gxv_StateTable_subtable_setup( table_size,
                                    classTable,
                                    stateArray,
@@ -93,8 +83,6 @@
     optdata->stateArray_length_p = stateArray_length_p;
     optdata->entryTable_length_p = entryTable_length_p;
   }
-
-
   static void
   gxv_mort_subtable_type5_InsertList_validate( FT_UShort      offset,
                                                FT_UShort      count,
@@ -127,8 +115,6 @@
     while ( p < table + offset + ( count * 2 ) )
     {
       FT_UShort insert_glyphID;
-
-
       GXV_LIMIT_CHECK( 2 );
       insert_glyphID = FT_NEXT_USHORT( p );
       GXV_TRACE(( " 0x%04x", insert_glyphID ));
@@ -136,8 +122,6 @@
     GXV_TRACE(( "\n" ));
 #endif
   }
-
-
   static void
   gxv_mort_subtable_type5_entry_validate(
     FT_Byte                         state,
@@ -161,8 +145,6 @@
     FT_UShort  markedInsertList;
 
     FT_UNUSED( state );
-
-
 #ifdef GXV_LOAD_UNUSED_VARS
     setMark              = FT_BOOL( ( flags >> 15 ) & 1 );
     dontAdvance          = FT_BOOL( ( flags >> 14 ) & 1 );
@@ -196,8 +178,6 @@
                                                    valid );
     }
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_mort_subtable_type5_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -207,8 +187,6 @@
 
     GXV_mort_subtable_type5_StateOptRec      et_rec;
     GXV_mort_subtable_type5_StateOptRecData  et = &et_rec;
-
-
     GXV_NAME_ENTER( "mort chain subtable type5 (Glyph Insertion)" );
 
     GXV_LIMIT_CHECK( GXV_MORT_SUBTABLE_TYPE5_HEADER_SIZE );
@@ -228,6 +206,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

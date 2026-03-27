@@ -679,8 +679,6 @@ namespace Jpeg2000
 				Free(pTCDImage->pTiles);
 		}
 	}
-
-
 	void TCD_MallocDecode(TCD *pTCD, Image *pImage, CodingParams *pCodingParams)
 	{
 		pTCD->pImage                  = pImage;

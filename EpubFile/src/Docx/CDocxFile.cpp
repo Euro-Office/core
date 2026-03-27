@@ -240,8 +240,6 @@ bool CDocxFile::SaveToFile()
     std::wstring sPathConTypeFile = m_sTempDir + L"/[Content_Types].xml";
     std::wstring sPathFontTableFile = m_sWordDir + L"/fontTable.xml";
     std::wstring sParhSettingsFile = m_sWordDir + L"/settings.xml";
-
-
     if (!m_oDocumentXml->SaveToFile(sPathDocFile))
         return false;
     if (!m_oFontTableXml->SaveToFile(sPathFontTableFile))

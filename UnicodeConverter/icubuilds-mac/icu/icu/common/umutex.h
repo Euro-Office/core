@@ -22,8 +22,6 @@
 #include "unicode/uclean.h"
 #include "putilimp.h"
 
-
-
 // Forward Declarations. UMutex is not in the ICU namespace (yet) because
 //                       there are some remaining references from plain C.
 struct UMutex;
@@ -106,8 +104,6 @@ inline int32_t umtx_loadAcquire(u_atomic_int32_t &var) {
 inline void umtx_storeRelease(u_atomic_int32_t &var, int32_t val) {
     InterlockedExchange(&var, val);
 }
-
-
 inline int32_t umtx_atomic_inc(u_atomic_int32_t *var) {
     return InterlockedIncrement(var);
 }
@@ -116,8 +112,6 @@ inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
     return InterlockedDecrement(var);
 }
 U_NAMESPACE_END
-
-
 #elif U_HAVE_CLANG_ATOMICS
 /*
  *  Clang __c11 atomic built-ins
@@ -143,8 +137,6 @@ inline int32_t umtx_atomic_dec(u_atomic_int32_t *var) {
     return __c11_atomic_fetch_sub(var, 1, __ATOMIC_SEQ_CST) - 1;
 }
 U_NAMESPACE_END
-
-
 #elif U_HAVE_GCC_ATOMICS
 /*
  * gcc atomic ops. These are available on several other compilers as well.
@@ -203,8 +195,6 @@ U_NAMESPACE_END
 
 #endif  /* Low Level Atomic Ops Platfrom Chain */
 
-
-
 /*************************************************************************************************
  *
  *  UInitOnce Definitions.
@@ -224,8 +214,6 @@ struct UInitOnce {
 };
 
 #define U_INITONCE_INITIALIZER {ATOMIC_INT32_T_INITIALIZER(0), U_ZERO_ERROR}
-
-
 U_COMMON_API UBool U_EXPORT2 umtx_initImplPreInit(UInitOnce &);
 U_COMMON_API void  U_EXPORT2 umtx_initImplPostInit(UInitOnce &);
 
@@ -238,8 +226,6 @@ template<class T> void umtx_initOnce(UInitOnce &uio, T *obj, void (T::*fp)()) {
         umtx_initImplPostInit(uio);
     }
 }
-
-
 // umtx_initOnce variant for plain functions, or static class functions.
 //               No context parameter.
 inline void umtx_initOnce(UInitOnce &uio, void (*fp)()) {
@@ -304,8 +290,6 @@ template<class T> void umtx_initOnce(UInitOnce &uio, void (*fp)(T, UErrorCode &)
 
 U_NAMESPACE_END
 
-
-
 /*************************************************************************************************
  *
  *  Mutex Definitions. Platform Dependent, #if platform chain follows.
@@ -324,8 +308,6 @@ U_NAMESPACE_END
  *    Windows comes first in the platform chain.
  *    Cygwin (and possibly others) have both WIN32 and POSIX APIs. Prefer Win32 in this case.
  */
-
-
 /* For CRITICAL_SECTION */
 
 /*
@@ -345,8 +327,6 @@ U_NAMESPACE_END
 # define NOMINMAX
 # endif
 # include <windows.h>
-
-
 typedef struct UMutex {
     icu::UInitOnce    fInitOnce;
     CRITICAL_SECTION  fCS;
@@ -364,8 +344,6 @@ struct UConditionVar {
 };
 
 #define U_CONDITION_INITIALIZER {NULL, NULL, 0}
-    
-
 
 #elif U_PLATFORM_IMPLEMENTS_POSIX
 
@@ -396,8 +374,6 @@ struct UConditionVar {
 #error Unknown Platform.
 
 #endif
-
-
 
 /**************************************************************************************
  *
@@ -430,8 +406,6 @@ U_INTERNAL void U_EXPORT2 umtx_unlock (UMutex* mutex);
  */
 
 U_INTERNAL void U_EXPORT2 umtx_condWait(UConditionVar *cond, UMutex *mutex);
-
-
 /*
  * Broadcast wakeup of all threads waiting on a Condition.
  * The associated mutex must be locked by the calling thread when calling

@@ -346,8 +346,6 @@ TEST_F(CHashEmbedTest, hash_WHIRLPOOL_long_with_whitespaces)
 	std::string sHashExp = "6bc062ea83003d44c2dbff2f9cbd2385806f6450171410fca4f189ed5c44726c4dc0330030af2c647082975b41f1c83bcc0722576d7e8cb2aabb5ff0ba38aaa9";
 	EXPECT_EQ(sRes, sHashExp);
 }
-
-
 // =============== HASH2 TESTS ===============
 
 // MD2

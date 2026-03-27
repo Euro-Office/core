@@ -27,8 +27,6 @@
 #include "decfmtst.h"
 
 U_NAMESPACE_BEGIN
-
-
 //------------------------------------------------------------------------------
 //
 // Unicode Set pattern strings for all of the required constant sets.
@@ -116,8 +114,6 @@ DecimalFormatStaticSets::DecimalFormatStaticSets(UErrorCode &status)
     fStrictCommaEquivalents        = new UnicodeSet(UnicodeString(TRUE, gStrictCommaEquivalentsPattern, -1),        status);
     fStrictOtherGroupingSeparators = new UnicodeSet(UnicodeString(TRUE, gStrictOtherGroupingSeparatorsPattern, -1), status);
     fStrictDashEquivalents         = new UnicodeSet(UnicodeString(TRUE, gStrictDashEquivalentsPattern, -1),         status);
-
-
     fDefaultGroupingSeparators = new UnicodeSet(*fDotEquivalents);
     fDefaultGroupingSeparators->addAll(*fCommaEquivalents);
     fDefaultGroupingSeparators->addAll(*fOtherGroupingSeparators);
@@ -185,8 +181,6 @@ void DecimalFormatStaticSets::cleanup() { // Be sure to clean up newly added fie
 
 static DecimalFormatStaticSets *gStaticSets;
 static icu::UInitOnce gStaticSetsInitOnce = U_INITONCE_INITIALIZER;
-
-
 //------------------------------------------------------------------------------
 //
 //   decfmt_cleanup     Memory cleanup function, free/delete all
@@ -222,8 +216,6 @@ const DecimalFormatStaticSets *DecimalFormatStaticSets::getStaticSets(UErrorCode
     umtx_initOnce(gStaticSetsInitOnce, initSets, status);
     return gStaticSets;
 }
-
-
 const UnicodeSet *DecimalFormatStaticSets::getSimilarDecimals(UChar32 decimal, UBool strictParse)
 {
     UErrorCode status = U_ZERO_ERROR;
@@ -243,7 +235,5 @@ const UnicodeSet *DecimalFormatStaticSets::getSimilarDecimals(UChar32 decimal, U
     // if there is no match, return NULL
     return NULL;
 }
-
-
 U_NAMESPACE_END
 #endif   // !UCONFIG_NO_FORMATTING

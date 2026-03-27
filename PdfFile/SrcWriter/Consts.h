@@ -66,8 +66,6 @@
 // #define  COMP_BEST_COMPRESS   0x10
 // #define  COMP_BEST_SPEED      0x20
 #define  COMP_MASK            0xFF
-
-
 // Permission flags (only Revision 2 is supported)
 
 #define ENABLE_READ         0
@@ -83,8 +81,6 @@
 #define HIDE_WINDOW_UI  4
 #define FIT_WINDOW      8
 #define CENTER_WINDOW   16
-
-
 // Ограничения, в соответствии со спецификацией
 #define LIMIT_MAX_INT             2147483647
 #define LIMIT_MIN_INT             -2147483647

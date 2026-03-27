@@ -38,8 +38,6 @@
  * \file
  * \brief C++ API: Symbols for formatting numbers.
  */
-
-
 U_NAMESPACE_BEGIN
 
 /**
@@ -456,8 +454,6 @@ DecimalFormatSymbols::getConstSymbol(ENumberFormatSymbol symbol) const {
 }
 
 //#endif  /* U_HIDE_INTERNAL_API */
-
-
 // -------------------------------------
 
 inline void

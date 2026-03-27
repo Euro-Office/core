@@ -28,8 +28,6 @@
 #include FT_INTERNAL_DEBUG_H
 #include FT_LZW_H
 #include FT_CONFIG_STANDARD_LIBRARY_H
-
-
 #include FT_MODULE_ERRORS_H
 
 #undef __FTERRORS_H__
@@ -39,8 +37,6 @@
 #define FT_ERR_BASE    FT_Mod_Err_LZW
 
 #include FT_ERRORS_H
-
-
 #ifdef FT_CONFIG_OPTION_USE_LZW
 
 #ifdef FT_CONFIG_OPTION_PIC
@@ -48,8 +44,6 @@
 #endif
 
 #include "ftzopen.h"
-
-
 /***************************************************************************/
 /***************************************************************************/
 /*****                                                                 *****/
@@ -81,16 +75,12 @@
     FT_Byte*        limit;
 
   } FT_LZWFileRec, *FT_LZWFile;
-
-
   /* check and skip .Z header */
   static FT_Error
   ft_lzw_check_header( FT_Stream  stream )
   {
     FT_Error  error;
     FT_Byte   head[2];
-
-
     if ( FT_STREAM_SEEK( 0 )       ||
          FT_STREAM_READ( head, 2 ) )
       goto Exit;
@@ -103,8 +93,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   ft_lzw_file_init( FT_LZWFile  zip,
                     FT_Stream   stream,
@@ -112,8 +100,6 @@
   {
     FT_LzwState  lzw   = &zip->lzw;
     FT_Error     error;
-
-
     zip->stream = stream;
     zip->source = source;
     zip->memory = stream->memory;
@@ -133,8 +119,6 @@
   Exit:
     return error;
   }
-
-
   static void
   ft_lzw_file_done( FT_LZWFile  zip )
   {
@@ -145,15 +129,11 @@
     zip->source = NULL;
     zip->stream = NULL;
   }
-
-
   static FT_Error
   ft_lzw_file_reset( FT_LZWFile  zip )
   {
     FT_Stream  stream = zip->source;
     FT_Error   error;
-
-
     if ( !FT_STREAM_SEEK( 0 ) )
     {
       ft_lzwstate_reset( &zip->lzw );
@@ -165,16 +145,12 @@
 
     return error;
   }
-
-
   static FT_Error
   ft_lzw_file_fill_output( FT_LZWFile  zip )
   {
     FT_LzwState  lzw = &zip->lzw;
     FT_ULong     count;
     FT_Error     error = FT_Err_Ok;
-
-
     zip->cursor = zip->buffer;
 
     count = ft_lzwstate_io( lzw, zip->buffer, FT_LZW_BUFFER_SIZE );
@@ -186,21 +162,15 @@
 
     return error;
   }
-
-
   /* fill output buffer; `count' must be <= FT_LZW_BUFFER_SIZE */
   static FT_Error
   ft_lzw_file_skip_output( FT_LZWFile  zip,
                            FT_ULong    count )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     /* first, we skip what we can from the output buffer */
     {
       FT_ULong  delta = (FT_ULong)( zip->limit - zip->cursor );
-
-
       if ( delta >= count )
         delta = count;
 
@@ -215,8 +185,6 @@
     {
       FT_ULong  delta = FT_LZW_BUFFER_SIZE;
       FT_ULong  numread;
-
-
       if ( delta > count )
         delta = count;
 
@@ -234,8 +202,6 @@
 
     return error;
   }
-
-
   static FT_ULong
   ft_lzw_file_io( FT_LZWFile  zip,
                   FT_ULong    pos,
@@ -244,8 +210,6 @@
   {
     FT_ULong  result = 0;
     FT_Error  error;
-
-
     /* seeking backwards. */
     if ( pos < zip->pos )
     {
@@ -279,8 +243,6 @@
     for (;;)
     {
       FT_ULong  delta;
-
-
       delta = (FT_ULong)( zip->limit - zip->cursor );
       if ( delta >= count )
         delta = count;
@@ -302,8 +264,6 @@
   Exit:
     return result;
   }
-
-
 /***************************************************************************/
 /***************************************************************************/
 /*****                                                                 *****/
@@ -317,8 +277,6 @@
   {
     FT_LZWFile  zip    = (FT_LZWFile)stream->descriptor.pointer;
     FT_Memory   memory = stream->memory;
-
-
     if ( zip )
     {
       /* finalize lzw file descriptor */
@@ -329,8 +287,6 @@
       stream->descriptor.pointer = NULL;
     }
   }
-
-
   static FT_ULong
   ft_lzw_stream_io( FT_Stream  stream,
                     FT_ULong   pos,
@@ -338,12 +294,8 @@
                     FT_ULong   count )
   {
     FT_LZWFile  zip = (FT_LZWFile)stream->descriptor.pointer;
-
-
     return ft_lzw_file_io( zip, pos, buffer, count );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Stream_OpenLZW( FT_Stream  stream,
                      FT_Stream  source )
@@ -351,8 +303,6 @@
     FT_Error    error;
     FT_Memory   memory = source->memory;
     FT_LZWFile  zip = NULL;
-
-
     /*
      *  Check the header right now; this prevents allocation of a huge
      *  LZWFile object (400 KByte of heap memory) if not necessary.
@@ -388,14 +338,8 @@
   Exit:
     return error;
   }
-
-
 #include "ftzopen.c"
-
-
 #else  /* !FT_CONFIG_OPTION_USE_LZW */
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Stream_OpenLZW( FT_Stream  stream,
                      FT_Stream  source )
@@ -405,9 +349,5 @@
 
     return FT_THROW( Unimplemented_Feature );
   }
-
-
 #endif /* !FT_CONFIG_OPTION_USE_LZW */
-
-
 /* END */

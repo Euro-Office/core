@@ -421,12 +421,8 @@ for f in fkeys:
 		    pline += " ((c) <= 0x%x))" % rg[1]
 	    pline += "))\n\n"
 	    header.write(pline)
-
-
     if len(Functs[f][1]) > 0:
 	header.write("XMLPUBVAR const xmlChRangeGroup %sGroup;\n" % f)
-
-
 #
 # Next we do the unicode ranges
 #

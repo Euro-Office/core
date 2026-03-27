@@ -22,8 +22,6 @@
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/services/svsfnt.h>
 #include <freetype/internal/services/svttglyf.h>
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Bool )
@@ -33,8 +31,6 @@
 
     return FALSE;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Bool )

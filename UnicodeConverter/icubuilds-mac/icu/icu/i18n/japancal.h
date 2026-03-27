@@ -72,8 +72,6 @@ public:
      * @stable ICU 2.0
      */
     JapaneseCalendar(const Locale& aLocale, UErrorCode& success);
-
-
     /**
      * Destructor
      * @internal
@@ -113,8 +111,6 @@ public:
      * @internal
      */
     virtual int32_t getActualMaximum(UCalendarDateFields field, UErrorCode& status) const;
-
-
 public:
     /**
      * Override Calendar Returns a unique class ID POLYMORPHICALLY. Pure virtual

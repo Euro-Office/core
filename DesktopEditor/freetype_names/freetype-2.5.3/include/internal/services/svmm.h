@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SVMM_H__
 #define __SVMM_H__
 
 #include FT_INTERNAL_SERVICE_H
-
-
 FT_BEGIN_HEADER
-
-
   /*
    *  A service used to manage multiple-masters data in a given face.
    *
@@ -33,8 +27,6 @@ FT_BEGIN_HEADER
    */
 
 #define FT_SERVICE_ID_MULTI_MASTERS  "multi-masters"
-
-
   typedef FT_Error
   (*FT_Get_MM_Func)( FT_Face           face,
                      FT_Multi_Master*  master );
@@ -57,8 +49,6 @@ FT_BEGIN_HEADER
   (*FT_Set_MM_Blend_Func)( FT_Face   face,
                            FT_UInt   num_coords,
                            FT_Long*  coords );
-
-
   FT_DEFINE_SERVICE( MultiMasters )
   {
     FT_Get_MM_Func          get_mm;
@@ -67,8 +57,6 @@ FT_BEGIN_HEADER
     FT_Get_MM_Var_Func      get_mm_var;
     FT_Set_Var_Design_Func  set_var_design;
   };
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define FT_DEFINE_SERVICE_MULTIMASTERSREC( class_,                          \
@@ -103,11 +91,7 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_PIC */
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __SVMM_H__ */
-
-
 /* END */

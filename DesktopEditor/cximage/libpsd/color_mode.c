@@ -27,8 +27,6 @@
 #include "psd_system.h"
 #include "psd_stream.h"
 #include "psd_color.h"
-
-
 // The color mode data section
 psd_status psd_get_color_mode_data(psd_context * context)
 {

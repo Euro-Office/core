@@ -56,8 +56,6 @@ public:
 	size_t raw_data_size;
 
 	static const ElementType	type = typeAnyObject;
-	
-	
 	//Log::info("<" + tag_name + ">" + STR::bin2str(raw_data.get(), raw_data_size) + "</" + tag_name + ">");
 };
 

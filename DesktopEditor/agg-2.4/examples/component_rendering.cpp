@@ -10,8 +10,6 @@
 #include "platform/agg_platform_support.h"
 
 enum flip_y_e { flip_y = true };
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_alpha;
@@ -69,8 +67,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -82,5 +78,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

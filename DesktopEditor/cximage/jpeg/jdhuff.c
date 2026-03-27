@@ -19,8 +19,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Derived data constructed for each Huffman table */
 
 #define HUFF_LOOKAHEAD	8	/* # of bits of lookahead */
@@ -46,8 +44,6 @@ typedef struct {
   int look_nbits[1<<HUFF_LOOKAHEAD]; /* # bits, or 0 if too long */
   UINT8 look_sym[1<<HUFF_LOOKAHEAD]; /* symbol, or unused */
 } d_derived_tbl;
-
-
 /*
  * Fetching the next N bits from the input stream is a time-critical operation
  * for the Huffman decoders.  We implement it with a combination of inline
@@ -146,8 +142,6 @@ typedef struct {		/* Bitreading working state within an MCU */
 
 #define DROP_BITS(nbits) \
 	(bits_left -= (nbits))
-
-
 /*
  * Code for extracting next Huffman-coded symbol from input bit stream.
  * Again, this is time-critical and we make the main paths be macros.
@@ -186,8 +180,6 @@ slowlabel: \
     get_buffer = state.get_buffer; bits_left = state.bits_left; \
   } \
 }
-
-
 /*
  * Expanded entropy decoder object for Huffman decoding.
  *
@@ -217,8 +209,6 @@ typedef struct {
 	 (dest).last_dc_val[3] = (src).last_dc_val[3])
 #endif
 #endif
-
-
 typedef struct {
   struct jpeg_entropy_decoder pub; /* public fields */
 
@@ -255,8 +245,6 @@ typedef struct {
 } huff_entropy_decoder;
 
 typedef huff_entropy_decoder * huff_entropy_ptr;
-
-
 static const int jpeg_zigzag_order[8][8] = {
   {  0,  1,  5,  6, 14, 15, 27, 28 },
   {  2,  4,  7, 13, 16, 26, 29, 42 },
@@ -312,8 +300,6 @@ static const int jpeg_zigzag_order2[2][2] = {
   { 0, 1 },
   { 2, 3 }
 };
-
-
 /*
  * Compute the derived values for a Huffman table.
  * This routine also performs some validation checks on the table.
@@ -438,8 +424,6 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
     }
   }
 }
-
-
 /*
  * Out-of-line code for bit fetching.
  * Note: current values of get_buffer and bits_left are passed as parameters,
@@ -459,8 +443,6 @@ jpeg_make_d_derived_tbl (j_decompress_ptr cinfo, boolean isDC, int tblno,
 #else
 #define MIN_GET_BITS  (BIT_BUF_SIZE-7)
 #endif
-
-
 LOCAL(boolean)
 jpeg_fill_bit_buffer (bitread_working_state * state,
 		      register bit_buf_type get_buffer, register int bits_left,
@@ -560,8 +542,6 @@ jpeg_fill_bit_buffer (bitread_working_state * state,
 
   return TRUE;
 }
-
-
 /*
  * Figure F.12: extend sign bit.
  * On some machines, a shift and sub will be faster than a table lookup.
@@ -582,8 +562,6 @@ static const int bmask[16] =	/* bmask[n] is mask for n rightmost bits */
     0x01FF, 0x03FF, 0x07FF, 0x0FFF, 0x1FFF, 0x3FFF, 0x7FFF };
 
 #endif /* AVOID_TABLES */
-
-
 /*
  * Out-of-line code for Huffman code decoding.
  */
@@ -625,8 +603,6 @@ jpeg_huff_decode (bitread_working_state * state,
 
   return htbl->pub->huffval[ (int) (code + htbl->valoffset[l]) ];
 }
-
-
 /*
  * Check for a restart marker & resynchronize decoder.
  * Returns FALSE if must suspend.
@@ -666,8 +642,6 @@ process_restart (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 /*
  * Huffman MCU decoding.
  * Each of these routines decodes and returns one MCU's worth of
@@ -755,8 +729,6 @@ decode_mcu_DC_first (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for AC initial scan (either spectral selection,
  * or first pass of successive approximation).
@@ -843,8 +815,6 @@ decode_mcu_AC_first (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for DC successive approximation refinement scan.
  * Note: we assume such scans can be multi-component, although the spec
@@ -894,8 +864,6 @@ decode_mcu_DC_refine (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for AC successive approximation refinement scan.
  */
@@ -1048,8 +1016,6 @@ undoit:
 
   return FALSE;
 }
-
-
 /*
  * Decode one MCU's worth of Huffman-compressed coefficients,
  * partial blocks.
@@ -1176,8 +1142,6 @@ decode_mcu_sub (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Decode one MCU's worth of Huffman-compressed coefficients,
  * full-size blocks.
@@ -1300,8 +1264,6 @@ decode_mcu (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Initialize for a Huffman-compressed scan.
  */
@@ -1499,8 +1461,6 @@ start_pass_huff_decoder (j_decompress_ptr cinfo)
   /* Initialize restart counter */
   entropy->restarts_to_go = cinfo->restart_interval;
 }
-
-
 /*
  * Module initialization routine for Huffman entropy decoding.
  */

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of TEXTPROPS union of records 
 class TEXTPROPS: public CompositeObject
 {

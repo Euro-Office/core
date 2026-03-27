@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSPIC_H__
 #define __PSPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
@@ -39,14 +35,10 @@ FT_BEGIN_HEADER
     FT_Service_PsCMapsRec  pscmaps_interface;
 
   } PSModulePIC;
-
-
 #define GET_PIC( lib )                                     \
           ( (PSModulePIC*)((lib)->pic_container.psnames) )
 #define PSCMAPS_SERVICES_GET   ( GET_PIC( library )->pscmaps_services )
 #define PSCMAPS_INTERFACE_GET  ( GET_PIC( library )->pscmaps_interface )
-
-
   /* see pspic.c for the implementation */
   void
   psnames_module_class_pic_free( FT_Library  library );
@@ -61,6 +53,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __PSPIC_H__ */
-
-
 /* END */

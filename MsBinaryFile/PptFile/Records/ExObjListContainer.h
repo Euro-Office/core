@@ -39,8 +39,6 @@ class CRecordExObjListContainer : public CRecordsContainer
 public:
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
-
-
 class CRecordExObjStg : public CUnknownRecord
 {
 public:

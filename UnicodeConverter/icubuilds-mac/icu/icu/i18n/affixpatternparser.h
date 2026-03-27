@@ -393,8 +393,6 @@ UnicodeString fPermill;
 UnicodeString fNegative;
 UnicodeString fPositive;
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif  // __AFFIX_PATTERN_PARSER_H__

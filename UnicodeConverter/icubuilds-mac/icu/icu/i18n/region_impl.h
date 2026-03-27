@@ -20,8 +20,6 @@
 #include "unicode/strenum.h"
 
 U_NAMESPACE_BEGIN
-
-
 class RegionNameEnumeration : public StringEnumeration {
 public:
     RegionNameEnumeration(UVector *fNameList, UErrorCode& status);

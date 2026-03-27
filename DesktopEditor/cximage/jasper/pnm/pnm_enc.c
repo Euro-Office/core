@@ -166,8 +166,6 @@ int pnm_encode(jas_image_t *image, jas_stream_t *out, char *optstr)
 		return -1;
 		break;
 	}
-
-
 	width = jas_image_cmptwidth(image, enc->cmpts[0]);
 	height = jas_image_cmptheight(image, enc->cmpts[0]);
 	prec = jas_image_cmptprec(image, enc->cmpts[0]);

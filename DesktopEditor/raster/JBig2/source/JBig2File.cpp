@@ -1,6 +1,4 @@
 ﻿// JBig2File.cpp : Implementation of CJBig2File
-
-
 #include "JBig2File.h"
 
 #include "Encoder/jbig2encoder.h"
@@ -48,8 +46,6 @@ bool CJBig2File::MemoryToJBig2(unsigned char* pBufferBGRA ,int BufferSize, int n
             pixSetRGBPixel( pSource, nX, nY, pSourceBuffer[ ShiftR ], pSourceBuffer[ ShiftG ], pSourceBuffer[ ShiftB ] );
 		}
 	}
-
-
 	jbig2ctx *pContext = jbig2_init( m_dTreshold, 0.5, 0, 0, ! m_bPDFMode,  m_bRefine ? 10 : -1 );
 
 	// Пока сделаем запись одной картинки в JBig2
@@ -204,7 +200,5 @@ bool CJBig2File::MemoryToJBig2(unsigned char* pBufferBGRA ,int BufferSize, int n
 
 	return true;
 }
-
-
 // CJBig2File
 

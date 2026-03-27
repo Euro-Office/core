@@ -47,8 +47,6 @@ BaseObjectPtr WsBool::clone()
 {
 	return BaseObjectPtr(new WsBool(*this));
 }
-
-
 void WsBool::readFields(CFRecord& record)
 {
 	unsigned short flags;

@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is automatically included by `ft2build.h'.                  */
   /* Do not include it manually!                                           */
   /*                                                                       */
   /*************************************************************************/
-
-
 #define FT_INTERNAL_OBJECTS_H             <internal/ftobjs.h>
 #define FT_INTERNAL_PIC_H                 <internal/ftpic.h>
 #define FT_INTERNAL_STREAM_H              <internal/ftstream.h>
@@ -46,8 +42,6 @@
 #define FT_INTERNAL_POSTSCRIPT_GLOBALS_H  <internal/psglobal.h>
 
 #define FT_INTERNAL_AUTOHINT_H            <internal/autohint.h>
-
-
 #if defined( _MSC_VER )      /* Visual C++ (and Intel C++) */
 
   /* We disable the warning `conditional expression is constant' here */
@@ -58,6 +52,4 @@
 #pragma warning( disable : 4127 )
 
 #endif /* _MSC_VER */
-
-
 /* END */

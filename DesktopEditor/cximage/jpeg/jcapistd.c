@@ -17,8 +17,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Compression initialization.
  * Before calling this, all parameters and a data destination must be set up.
@@ -56,8 +54,6 @@ jpeg_start_compress (j_compress_ptr cinfo, boolean write_all_tables)
   cinfo->next_scanline = 0;
   cinfo->global_state = (cinfo->raw_data_in ? CSTATE_RAW_OK : CSTATE_SCANNING);
 }
-
-
 /*
  * Write some scanlines of data to the JPEG compressor.
  *
@@ -109,8 +105,6 @@ jpeg_write_scanlines (j_compress_ptr cinfo, JSAMPARRAY scanlines,
   cinfo->next_scanline += row_ctr;
   return row_ctr;
 }
-
-
 /*
  * Alternate entry point to write raw data.
  * Processes exactly one iMCU row per call, unless suspended.

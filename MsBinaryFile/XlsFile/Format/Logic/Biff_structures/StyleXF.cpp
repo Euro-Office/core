@@ -37,8 +37,6 @@
 #include "BitMarkedStructs.h"
 #include "XFPropBorder.h"
 #include "../Biff_records/Font.h"
-
-
 namespace XLS
 {
 
@@ -55,7 +53,5 @@ BiffStructurePtr StyleXF::clone()
 void StyleXF::load(CFRecord& record)
 {
 }
-
-
 } // namespace XLS
 

@@ -46,8 +46,6 @@ CommentsStream::CommentsStream()
 CommentsStream::~CommentsStream()
 {
 }
-
-
 BaseObjectPtr CommentsStream::clone()
 {
         return BaseObjectPtr(new CommentsStream(*this));

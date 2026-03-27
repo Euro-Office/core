@@ -52,13 +52,9 @@ const int8_t SimpleTimeZone::STATICMONTHLENGTH[] = {31,29,31,30,31,30,31,31,30,3
 
 static const UChar DST_STR[] = {0x0028,0x0044,0x0053,0x0054,0x0029,0}; // "(DST)"
 static const UChar STD_STR[] = {0x0028,0x0053,0x0054,0x0044,0x0029,0}; // "(STD)"
-
-
 // *****************************************************************************
 // class SimpleTimeZone
 // *****************************************************************************
-
-
 SimpleTimeZone::SimpleTimeZone(int32_t rawOffsetGMT, const UnicodeString& ID)
 :   BasicTimeZone(ID),
     startMonth(0),
@@ -1242,8 +1238,6 @@ SimpleTimeZone::getTimeZoneRules(const InitialTimeZoneRule*& initial,
     }
     trscount = cnt;
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

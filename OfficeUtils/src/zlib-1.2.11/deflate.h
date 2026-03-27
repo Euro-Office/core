@@ -62,8 +62,6 @@
 #define BUSY_STATE   113    /* deflate -> FINISH_STATE */
 #define FINISH_STATE 666    /* stream complete */
 /* Stream status */
-
-
 /* Data structure describing a single value and its code string. */
 typedef struct ct_data_s {
     union {
@@ -279,8 +277,6 @@ typedef struct internal_state {
  * IN assertion: there is enough room in pending_buf.
  */
 #define put_byte(s, c) {s->pending_buf[s->pending++] = (Bytef)(c);}
-
-
 #define MIN_LOOKAHEAD (MAX_MATCH+MIN_MATCH+1)
 /* Minimum amount of lookahead, except at the end of the input file.
  * See deflate.c for comments about the MIN_MATCH+1.

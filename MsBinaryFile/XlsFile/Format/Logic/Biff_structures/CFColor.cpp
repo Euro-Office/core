@@ -34,13 +34,9 @@
 
 namespace XLS
 {
-
-
 CFColor::CFColor()
 {
 }
-
-
 CFColor::CFColor(CFRecord& record)
 {
 	load(record);

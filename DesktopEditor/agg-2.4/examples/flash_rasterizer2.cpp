@@ -18,13 +18,9 @@
 #include "agg_pixfmt_rgba.h"
 #include "agg_bounding_rect.h"
 #include "platform/agg_platform_support.h"
-
-
 enum { flip_y = false };
 
 typedef agg::pixfmt_bgra32_pre pixfmt;
-
-
 
 namespace agg
 {
@@ -115,8 +111,6 @@ namespace agg
                             if(style.right_fill > m_max_style) m_max_style = style.right_fill;
                         }
                     }
-
-
                     if(buf[0] == 'C')
                     {
                         ts = strtok(buf, space); // Curve;
@@ -242,12 +236,6 @@ namespace agg
     };
 
 }
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
 
@@ -257,8 +245,6 @@ public:
     agg::trans_affine          m_scale;
     agg::gamma_lut<>           m_gamma;
     int                        m_point_idx;
-
-
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
         m_point_idx(-1)
@@ -277,8 +263,6 @@ public:
             m_colors[i].premultiply();
         }
     }
-
-
 
     bool open(const char* fname)
     {
@@ -390,8 +374,6 @@ public:
             }
         }
         double tstroke = elapsed_time();
-
-
         char buf[256]; 
         agg::gsv_text t;
         t.size(8.0);
@@ -420,8 +402,6 @@ public:
             pixf.apply_gamma_inv(m_gamma);
         }
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -500,11 +480,7 @@ public:
     {
         m_point_idx = -1;
     }
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -536,8 +512,4 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
 

@@ -37,13 +37,9 @@ namespace CRYPT
 BiffDecoderBase::BiffDecoderBase() : mbValid(false)
 {
 }
-
-
 BiffDecoderBase::~BiffDecoderBase()
 {
 }
-
-
 bool BiffDecoderBase::verifyPassword(const std::wstring& rPassword)
 {
 	mbValid = implVerify(rPassword);
@@ -78,8 +74,6 @@ BiffDecoder_RCF::BiffDecoder_RCF(unsigned char pnSalt[16], unsigned char pnVerif
 	maVerifierHash(pnVerifierHash, pnVerifierHash + 16)
 {
 }
-
-
 bool BiffDecoder_RCF::implVerify(const std::wstring& rPassword)
 {
 	int nLen = rPassword.length();
@@ -134,8 +128,4 @@ void BiffDecoder_RCF::implDecode(unsigned char* pnDestData, const unsigned char*
 		nBytesLeft = nBytesLeft - nDecBytes;
 	}
 }
-
-
 };
-
-

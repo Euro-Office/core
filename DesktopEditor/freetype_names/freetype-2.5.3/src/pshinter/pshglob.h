@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSHGLOB_H__
 #define __PSHGLOB_H__
-
-
 #include FT_FREETYPE_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -34,8 +26,6 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* @constant:                                                            */
@@ -46,8 +36,6 @@ FT_BEGIN_HEADER
   /*    See @PS_Globals_BluesRec.                                          */
   /*                                                                       */
 #define PS_GLOBALS_MAX_BLUE_ZONES  16
-
-
   /*************************************************************************/
   /*                                                                       */
   /* @constant:                                                            */
@@ -58,8 +46,6 @@ FT_BEGIN_HEADER
   /*    horizontal or vertical direction.  See @PS_Globals_WidthsRec.      */
   /*                                                                       */
 #define PS_GLOBALS_MAX_STD_WIDTHS  16
-
-
   /* standard and snap width */
   typedef struct  PSH_WidthRec_
   {
@@ -68,8 +54,6 @@ FT_BEGIN_HEADER
     FT_Pos  fit;
 
   } PSH_WidthRec, *PSH_Width;
-
-
   /* standard and snap widths table */
   typedef struct  PSH_WidthsRec_
   {
@@ -77,8 +61,6 @@ FT_BEGIN_HEADER
     PSH_WidthRec  widths[PS_GLOBALS_MAX_STD_WIDTHS];
 
   } PSH_WidthsRec, *PSH_Widths;
-
-
   typedef struct  PSH_DimensionRec_
   {
     PSH_WidthsRec  stdw;
@@ -86,8 +68,6 @@ FT_BEGIN_HEADER
     FT_Fixed       scale_delta;
 
   } PSH_DimensionRec, *PSH_Dimension;
-
-
   /* blue zone descriptor */
   typedef struct  PSH_Blue_ZoneRec_
   {
@@ -102,16 +82,12 @@ FT_BEGIN_HEADER
     FT_Pos  cur_top;
 
   } PSH_Blue_ZoneRec, *PSH_Blue_Zone;
-
-
   typedef struct  PSH_Blue_TableRec_
   {
     FT_UInt           count;
     PSH_Blue_ZoneRec  zones[PS_GLOBALS_MAX_BLUE_ZONES];
 
   } PSH_Blue_TableRec, *PSH_Blue_Table;
-
-
   /* blue zones table */
   typedef struct  PSH_BluesRec_
   {
@@ -127,8 +103,6 @@ FT_BEGIN_HEADER
     FT_Bool            no_overshoots;
 
   } PSH_BluesRec, *PSH_Blues;
-
-
   /* font globals.                                         */
   /* dimension 0 => X coordinates + vertical hints/stems   */
   /* dimension 1 => Y coordinates + horizontal hints/stems */
@@ -139,13 +113,9 @@ FT_BEGIN_HEADER
     PSH_BluesRec      blues;
 
   } PSH_GlobalsRec;
-
-
 #define PSH_BLUE_ALIGN_NONE  0
 #define PSH_BLUE_ALIGN_TOP   1
 #define PSH_BLUE_ALIGN_BOT   2
-
-
   typedef struct  PSH_AlignmentRec_
   {
     int     align;
@@ -153,12 +123,8 @@ FT_BEGIN_HEADER
     FT_Pos  align_bot;
 
   } PSH_AlignmentRec, *PSH_Alignment;
-
-
   FT_LOCAL( void )
   psh_globals_funcs_init( PSH_Globals_FuncsRec*  funcs );
-
-
 #if 0
   /* snap a stem width to fitter coordinates.  `org_width' is in font */
   /* units.  The result is in device pixels (26.6 format).            */
@@ -185,12 +151,6 @@ FT_BEGIN_HEADER
 #ifdef DEBUG_HINTER
   extern PSH_Globals  ps_debug_globals;
 #endif
-
-
 FT_END_HEADER
-
-
 #endif /* __PSHGLOB_H__ */
-
-
 /* END */

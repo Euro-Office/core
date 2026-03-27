@@ -44,8 +44,6 @@ static const xmlChar *xmlRelaxNGNs = (const xmlChar *)
     (node->type == XML_ELEMENT_NODE) &&					\
     (xmlStrEqual(node->name, (const xmlChar *) typ)) &&		\
     (xmlStrEqual(node->ns->href, xmlRelaxNGNs)))
-
-
 #if 0
 #define DEBUG 1
 
@@ -115,8 +113,6 @@ struct _xmlRelaxNGGrammar {
     xmlHashTablePtr defs;       /* define* */
     xmlHashTablePtr refs;       /* references */
 };
-
-
 typedef enum {
     XML_RELAXNG_NOOP = -1,      /* a no operation from simplification  */
     XML_RELAXNG_EMPTY = 0,      /* an empty pattern */
@@ -418,8 +414,6 @@ struct _xmlRelaxNGDocument {
     xmlRelaxNGPtr schema;       /* the schema */
     int externalRef;            /* 1 if an external ref */
 };
-
-
 /************************************************************************
  *									*
  *		Some factorized error routines				*
@@ -1740,8 +1734,6 @@ xmlRelaxNGLoadInclude(xmlRelaxNGParserCtxtPtr ctxt, const xmlChar * URL,
         }
         cur = cur->next;
     }
-
-
     return (ret);
 }
 
@@ -2390,8 +2382,6 @@ xmlRelaxNGAddValidError(xmlRelaxNGValidCtxtPtr ctxt,
         xmlRelaxNGValidErrorPush(ctxt, err, arg1, arg2, dup);
     }
 }
-
-
 /************************************************************************
  *									*
  *			Type library hooks				*
@@ -2857,8 +2847,6 @@ xmlRelaxNGCleanupTypes(void)
 
 /* from automata.c but not exported */
 void xmlAutomataSetFlags(xmlAutomataPtr am, int flags);
-
-
 static int xmlRelaxNGTryCompile(xmlRelaxNGParserCtxtPtr ctxt,
                                 xmlRelaxNGDefinePtr def);
 
@@ -3352,8 +3340,6 @@ static xmlRelaxNGGrammarPtr xmlRelaxNGParseGrammar(xmlRelaxNGParserCtxtPtr
 static int xmlRelaxNGElementMatch(xmlRelaxNGValidCtxtPtr ctxt,
                                   xmlRelaxNGDefinePtr define,
                                   xmlNodePtr elem);
-
-
 #define IS_BLANK_NODE(n) (xmlRelaxNGIsBlank((n)->content))
 
 /**
@@ -6621,8 +6607,6 @@ xmlRelaxNGParseGrammar(xmlRelaxNGParserCtxtPtr ctxt, xmlNodePtr nodes)
         xmlHashScan(ret->refs, (xmlHashScanner) xmlRelaxNGCheckReference,
                     ctxt);
     }
-
-
     /* @@@@ */
 
     ctxt->grammar = old;
@@ -9579,8 +9563,6 @@ xmlRelaxNGValidateDefinitionList(xmlRelaxNGValidCtxtPtr ctxt,
                                  xmlRelaxNGDefinePtr defines)
 {
     int ret = 0, res;
-
-
     if (defines == NULL) {
         VALID_ERR2(XML_RELAXNG_ERR_INTERNAL,
                    BAD_CAST "NULL definition list");

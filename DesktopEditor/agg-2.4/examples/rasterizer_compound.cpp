@@ -15,11 +15,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 //-------------------------------------------------
 class style_handler
 {
@@ -49,8 +45,6 @@ private:
     const agg::rgba8*   m_styles;
     unsigned            m_count;
 };
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_width;
@@ -148,8 +142,6 @@ public:
         m_path.close_polygon();
     }
 
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<agg::pixfmt_bgra32>     ren_base;
@@ -176,8 +168,6 @@ public:
             renb.copy_color_hspan(0, i, pixf.width(), &gr[0]);
         }
         pixf.apply_gamma_dir(lut);
-
-
         agg::rasterizer_scanline_aa<> ras;
         agg::rasterizer_compound_aa<agg::rasterizer_sl_clip_dbl> rasc;
         agg::scanline_u8 sl;
@@ -283,8 +273,6 @@ public:
     }
 
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {

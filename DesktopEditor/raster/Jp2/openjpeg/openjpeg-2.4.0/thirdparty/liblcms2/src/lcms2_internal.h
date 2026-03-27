@@ -51,8 +51,6 @@
 #define sinf(x) (float)sin((float)x)
 #define sqrtf(x) (float)sqrt((float)x)
 #endif
-
-
 // Alignment of ICC file format uses 4 bytes (cmsUInt32Number)
 #define _cmsALIGNLONG(x) (((x)+(sizeof(cmsUInt32Number)-1)) & ~(sizeof(cmsUInt32Number)-1))
 
@@ -97,8 +95,6 @@
 #       define vsnprintf  _vsnprintf
 # endif
 #endif
-
-
 // A fast way to convert from/to 16 <-> 8 bits
 #define FROM_8_TO_16(rgb) (cmsUInt16Number) ((((cmsUInt16Number) (rgb)) << 8)|(rgb))
 #define FROM_16_TO_8(rgb) (cmsUInt8Number) ((((cmsUInt32Number)(rgb) * 65281U + 8388608U) >> 24) & 0xFFU)
@@ -171,8 +167,6 @@ cmsINLINE cmsUInt16Number _cmsQuickSaturateWord(cmsFloat64Number d)
 
     return _cmsQuickFloorWord(d);
 }
-
-
 // Pthread support --------------------------------------------------------------------
 #ifndef CMS_NO_PTHREADS
 
@@ -183,8 +177,6 @@ cmsINLINE cmsUInt16Number _cmsQuickSaturateWord(cmsFloat64Number d)
 
 #define WIN32_LEAN_AND_MEAN 1
 #include <windows.h>
-
-
 // From: http://locklessinc.com/articles/pthreads_on_windows/
 // The pthreads API has an initialization macro that has no correspondence to anything in 
 // the windows API. By investigating the internal definition of the critical section type, 
@@ -257,8 +249,6 @@ cmsINLINE int _cmsLeaveCriticalSectionPrimitive(_cmsMutex *m)
 
 #define CMS_MUTEX_INITIALIZER PTHREAD_MUTEX_INITIALIZER
 typedef pthread_mutex_t _cmsMutex;
-
-
 cmsINLINE int _cmsLockPrimitive(_cmsMutex *m)
 {
 	return pthread_mutex_lock(m);
@@ -294,8 +284,6 @@ cmsINLINE int _cmsLeaveCriticalSectionPrimitive(_cmsMutex *m)
 
 #define CMS_MUTEX_INITIALIZER 0
 typedef int _cmsMutex;
-
-
 cmsINLINE int _cmsLockPrimitive(_cmsMutex *m)
 {
     cmsUNUSED_PARAMETER(m);
@@ -383,16 +371,12 @@ typedef struct _cmsSubAllocator_chunk_st {
     struct _cmsSubAllocator_chunk_st* next;
 
 } _cmsSubAllocator_chunk;
-
-
 typedef struct {
 
     cmsContext ContextID;
     _cmsSubAllocator_chunk* h;
 
 } _cmsSubAllocator;
-
-
 _cmsSubAllocator* _cmsCreateSubAlloc(cmsContext ContextID, cmsUInt32Number Initial);
 void              _cmsSubAllocDestroy(_cmsSubAllocator* s);
 void*             _cmsSubAlloc(_cmsSubAllocator* s, cmsUInt32Number size);
@@ -423,8 +407,6 @@ typedef enum {
     MemoryClientMax
 
 } _cmsMemoryClient;
-
-
 // Container for memory management plug-in.
 typedef struct {
 
@@ -458,8 +440,6 @@ struct _cmsContext_struct* _cmsGetContext(cmsContext ContextID);
 
 // Returns the block assigned to the specific zone. 
 void*     _cmsContextGetClientChunk(cmsContext id, _cmsMemoryClient mc);
-
-
 // Chunks of context memory by plug-in client -------------------------------------------------------
 
 // Those structures encapsulates all variables needed by the several context clients (mostly plug-ins)
@@ -505,8 +485,6 @@ extern  _cmsAdaptationStateChunkType    _cmsAdaptationStateChunk;
 // Allocate and init adaptation state container.
 void _cmsAllocAdaptationStateChunk(struct _cmsContext_struct* ctx, 
                                    const struct _cmsContext_struct* src);
-
-
 // The global Context0 storage for memory management
 extern  _cmsMemPluginChunkType _cmsMemPluginChunk;
 
@@ -562,12 +540,8 @@ typedef struct {
     struct _cmsTagTypeLinkedList_st* TagTypes;
 
 } _cmsTagTypePluginChunkType;
-
-
 // The global Context0 storage for tag types plug-in
 extern  _cmsTagTypePluginChunkType      _cmsTagTypePluginChunk;
-
-
 // The global Context0 storage for mult process elements plug-in
 extern  _cmsTagTypePluginChunkType      _cmsMPETypePluginChunk;
 
@@ -583,8 +557,6 @@ typedef struct {
     struct _cmsTagLinkedList_st* Tag;
 
 } _cmsTagPluginChunkType;
-
-
 // The global Context0 storage for tag plug-in
 extern  _cmsTagPluginChunkType _cmsTagPluginChunk;
 
@@ -598,8 +570,6 @@ typedef struct {
     struct _cms_intents_list* Intents;
 
 } _cmsIntentsPluginChunkType;
-
-
 // The global Context0 storage for intents plug-in
 extern  _cmsIntentsPluginChunkType _cmsIntentsPluginChunk;
 
@@ -613,8 +583,6 @@ typedef struct {
     struct _cmsOptimizationCollection_st* OptimizationCollection;
 
 } _cmsOptimizationPluginChunkType;
-
-
 // The global Context0 storage for optimizers plug-in
 extern  _cmsOptimizationPluginChunkType _cmsOptimizationPluginChunk;
 
@@ -702,8 +670,6 @@ struct _cms_NAMEDCOLORLIST_struct {
 
     cmsContext ContextID;
 };
-
-
 // ----------------------------------------------------------------------------------
 
 // This is the internal struct holding profile details.
@@ -796,8 +762,6 @@ struct _cms_curve_struct {
     cmsUInt32Number    nEntries;      // Number of table elements
     cmsUInt16Number*   Table16;       // The table itself.
 };
-
-
 //  Pipelines & Stages ---------------------------------------------------------------------------------------------
 
 // A single stage
@@ -821,8 +785,6 @@ struct _cmsStage_struct {
     // Maintains linked list (used internally)
     struct _cmsStage_struct* Next;
 };
-
-
 // Special Stages (cannot be saved)
 cmsStage*        _cmsStageAllocLab2XYZ(cmsContext ContextID);
 cmsStage*        _cmsStageAllocXYZ2Lab(cmsContext ContextID);
@@ -838,12 +800,8 @@ cmsStage*        _cmsStageNormalizeFromXyzFloat(cmsContext ContextID);
 cmsStage*        _cmsStageNormalizeToLabFloat(cmsContext ContextID);
 cmsStage*        _cmsStageNormalizeToXyzFloat(cmsContext ContextID);
 cmsStage*        _cmsStageClipNegatives(cmsContext ContextID, int nChannels);
-
-
 // For curve set only
 cmsToneCurve**     _cmsStageGetPtrToCurveSet(const cmsStage* mpe);
-
-
 // Pipeline Evaluator (in floating point)
 typedef void (* _cmsPipelineEvalFloatFn)(const cmsFloat32Number In[],
                                          cmsFloat32Number Out[],
@@ -895,8 +853,6 @@ cmsPipeline* _cmsLinkProfiles(cmsContext         ContextID,
 cmsSEQ* _cmsReadProfileSequence(cmsHPROFILE hProfile);
 cmsBool _cmsWriteProfileSequence(cmsHPROFILE hProfile, const cmsSEQ* seq);
 cmsSEQ* _cmsCompileProfileSequence(cmsContext ContextID, cmsUInt32Number nProfiles, cmsHPROFILE hProfiles[]);
-
-
 // LUT optimization ------------------------------------------------------------------------------------------------
 
 cmsUInt16Number  _cmsQuantizeVal(cmsFloat64Number i, int MaxSamples);
@@ -913,8 +869,6 @@ cmsBool          _cmsOptimizePipeline(cmsContext ContextID,
                                       cmsUInt32Number* InputFormat,
                                       cmsUInt32Number* OutputFormat,
                                       cmsUInt32Number* dwFlags );
-
-
 // Hi level LUT building ----------------------------------------------------------------------------------------------
 
 cmsPipeline*     _cmsCreateGamutCheckPipeline(cmsContext ContextID,
@@ -924,8 +878,6 @@ cmsPipeline*     _cmsCreateGamutCheckPipeline(cmsContext ContextID,
                                               cmsFloat64Number AdaptationStates[],
                                               cmsUInt32Number nGamutPCSposition,
                                               cmsHPROFILE hGamut);
-
-
 // Formatters ------------------------------------------------------------------------------------------------------------
 
 #define cmsFLAGS_CAN_CHANGE_FORMATTER     0x02000000   // Allow change buffer format
@@ -937,8 +889,6 @@ cmsFormatter    _cmsGetFormatter(cmsContext ContextID,
                                  cmsUInt32Number Type,          // Specific type, i.e. TYPE_RGB_8
                                  cmsFormatterDirection Dir,
                                  cmsUInt32Number dwFlags);
-
-
 #ifndef CMS_NO_HALF_SUPPORT 
 
 // Half float
@@ -958,8 +908,6 @@ typedef struct {
     cmsUInt16Number CacheOut[cmsMAXCHANNELS];
 
 } _cmsCACHE;
-
-
 
 // Transformation
 typedef struct _cmstransform_struct {
@@ -1037,8 +985,6 @@ cmsHTRANSFORM _cmsChain2Lab(cmsContext             ContextID,
                             const cmsBool          BPC[],
                             const cmsFloat64Number AdaptationStates[],
                             cmsUInt32Number        dwFlags);
-
-
 cmsToneCurve* _cmsBuildKToneCurve(cmsContext       ContextID,
                             cmsUInt32Number        nPoints,
                             cmsUInt32Number        nProfiles,
@@ -1051,7 +997,5 @@ cmsToneCurve* _cmsBuildKToneCurve(cmsContext       ContextID,
 cmsBool   _cmsAdaptationMatrix(cmsMAT3* r, const cmsMAT3* ConeMatrix, const cmsCIEXYZ* FromIll, const cmsCIEXYZ* ToIll);
 
 cmsBool   _cmsBuildRGB2XYZtransferMatrix(cmsMAT3* r, const cmsCIExyY* WhitePoint, const cmsCIExyYTRIPLE* Primaries);
-
-
 #define _lcms_internal_H
 #endif

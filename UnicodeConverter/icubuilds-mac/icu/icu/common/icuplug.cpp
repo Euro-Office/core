@@ -14,11 +14,7 @@
 */
 
 #include "unicode/icuplug.h"
-
-
 #if UCONFIG_ENABLE_PLUGINS
-
-
 #include "icuplugimp.h"
 #include "cstring.h"
 #include "cmemory.h"
@@ -62,8 +58,6 @@ struct UPlugData {
   UErrorCode pluginStatus; /**< status code of plugin */
 };
 
-
-
 #define UPLUG_LIBRARY_INITIAL_COUNT 8
 #define UPLUG_PLUGIN_INITIAL_COUNT 12
 
@@ -90,10 +84,6 @@ static int32_t uplug_removeEntryAt(void *list, int32_t listSize, int32_t memberS
     
   return listSize-1;
 }
-
-
-
-
 #if U_ENABLE_DYLOAD
 /**
  * Library management. Internal. 
@@ -232,10 +222,6 @@ uplug_closeLibrary(void *lib, UErrorCode *status) {
 
 static UPlugData pluginList[UPLUG_PLUGIN_INITIAL_COUNT];
 static int32_t pluginCount = 0;
-
-
-
-  
 static int32_t uplug_pluginNumber(UPlugData* d) {
   UPlugData *pastPlug = &pluginList[pluginCount];
   if(d<=pluginList) {
@@ -246,8 +232,6 @@ static int32_t uplug_pluginNumber(UPlugData* d) {
     return (d-pluginList)/sizeof(pluginList[0]);
   }
 }
-
-
 U_CAPI UPlugData * U_EXPORT2
 uplug_nextPlug(UPlugData *prior) {
   if(prior==NULL) {
@@ -264,8 +248,6 @@ uplug_nextPlug(UPlugData *prior) {
   }
 }
 
-
-
 /**
  * Call the plugin with some params
  */
@@ -279,8 +261,6 @@ static void uplug_callPlug(UPlugData *plug, UPlugReason reason, UErrorCode *stat
     *status = U_INTERNAL_PROGRAM_ERROR;
   }
 }
-
-
 static void uplug_unloadPlug(UPlugData *plug, UErrorCode *status) {
   if(plug->awaitingLoad) {  /* shouldn't happen. Plugin hasn'tbeen loaded yet.*/
     *status = U_INTERNAL_PROGRAM_ERROR;
@@ -309,8 +289,6 @@ static void uplug_queryPlug(UPlugData *plug, UErrorCode *status) {
     plug->awaitingLoad = FALSE;
   }
 }
-
-
 static void uplug_loadPlug(UPlugData *plug, UErrorCode *status) {
   if(U_FAILURE(*status)) {
     return;
@@ -353,8 +331,6 @@ static UPlugData *uplug_allocateEmptyPlug(UErrorCode *status)
   plug->sym[0]=0;
   plug->lib=NULL;
   plug->entrypoint=NULL;
-
-
   return plug;
 }
 
@@ -431,41 +407,27 @@ uplug_removePlug(UPlugData *plug, UErrorCode *status)  {
     
   uplug_doUnloadPlug(plugToRemove, status);
 }
-
-
-
-
 U_CAPI void U_EXPORT2 
 uplug_setPlugNoUnload(UPlugData *data, UBool dontUnload)
 {
   data->dontUnload = dontUnload;
 }
-
-
 U_CAPI void U_EXPORT2
 uplug_setPlugLevel(UPlugData *data, UPlugLevel level) {
   data->level = level;
 }
-
-
 U_CAPI UPlugLevel U_EXPORT2
 uplug_getPlugLevel(UPlugData *data) {
   return data->level;
 }
-
-
 U_CAPI void U_EXPORT2
 uplug_setPlugName(UPlugData *data, const char *name) {
   uprv_strncpy(data->name, name, UPLUG_NAME_MAX);
 }
-
-
 U_CAPI const char * U_EXPORT2
 uplug_getPlugName(UPlugData *data) {
   return data->name;
 }
-
-
 U_CAPI const char * U_EXPORT2
 uplug_getSymbolName(UPlugData *data) {
   return data->sym;
@@ -493,8 +455,6 @@ U_CAPI void * U_EXPORT2
 uplug_getContext(UPlugData *data) {
   return data->context;
 }
-
-
 U_CAPI void U_EXPORT2
 uplug_setContext(UPlugData *data, void *context) {
   data->context = context;
@@ -513,16 +473,10 @@ uplug_getPlugInternal(int32_t n) {
     return &(pluginList[n]);
   }
 }
-
-
 U_CAPI UErrorCode U_EXPORT2
 uplug_getPlugLoadStatus(UPlugData *plug) {
   return plug->pluginStatus;
 }
-
-
-
-
 /**
  * Initialize a plugin fron an entrypoint and library - but don't load it.
  */
@@ -713,8 +667,6 @@ uplug_getPluginFile() {
   return NULL;
 #endif
 }
-
-
 //  uplug_init()  is called first thing from u_init().
 
 U_CAPI void U_EXPORT2
@@ -801,8 +753,6 @@ uplug_init(UErrorCode *status) {
       char linebuf[1024];
       char *p, *libName=NULL, *symName=NULL, *config=NULL;
       int32_t line = 0;
-            
-            
       while(fgets(linebuf,1023,f)) {
         line++;
 
@@ -878,5 +828,3 @@ uplug_init(UErrorCode *status) {
 }
 
 #endif
-
-

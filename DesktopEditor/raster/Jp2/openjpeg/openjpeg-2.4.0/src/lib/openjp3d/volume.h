@@ -40,8 +40,6 @@ The functions in VOLUME.C have for goal to realize operations on volumes.
 
 /** @defgroup VOLUME VOLUME - Implementation of operations on volumes */
 /*@{*/
-
-
 /*@}*/
 
 #endif /* __VOLUME_H */

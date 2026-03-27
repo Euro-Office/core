@@ -38,8 +38,6 @@
  *       pstackCreate() created the auxiliary stack!]   
  *       pstackDestroy() checks for the auxiliary stack and removes it.
  */
-
-
     /* Note that array[n] is the first null ptr in the array */
 struct L_Stack
 {
@@ -49,7 +47,5 @@ struct L_Stack
     struct L_Stack  *auxstack;     /* auxiliary stack                */
 };
 typedef struct L_Stack  L_STACK;
-
-
 #endif /*  LEPTONICA_STACK_H */
 

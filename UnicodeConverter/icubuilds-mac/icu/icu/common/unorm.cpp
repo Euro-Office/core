@@ -107,8 +107,6 @@ unorm_normalize(const UChar *src, int32_t srcLength,
             src, srcLength, dest, destCapacity, pErrorCode);
     }
 }
-
-
 /* iteration functions ------------------------------------------------------ */
 
 static int32_t

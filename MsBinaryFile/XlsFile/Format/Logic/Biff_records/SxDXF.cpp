@@ -38,8 +38,6 @@ namespace XLS
 SxDXF::SxDXF()
 {
 }
-
-
 SxDXF::~SxDXF()
 {
 }

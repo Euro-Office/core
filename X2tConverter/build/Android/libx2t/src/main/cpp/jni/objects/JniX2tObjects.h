@@ -63,8 +63,6 @@ class EncodingsJniObject : public JniBaseObjects {
             return jArrayObj;
         }
 };
-
-
 class JniHashMap: public JniBaseObjects
 {
     public:

@@ -202,7 +202,6 @@ enum {
  * uint16_t canonStartSets[canonStartSetsTop]   -- canonStartSetsTop=indexes[_NORM_INDEX_CANON_SET_COUNT]
  *                                                 serialized USets and binary search tables, see below
  *
- *
  * The indexes array contains lengths and sizes of the following arrays and structures
  * as well as the following values:
  *  indexes[_NORM_INDEX_COMBINE_FWD_COUNT]=combineFwdTop
@@ -215,20 +214,17 @@ enum {
  *  indexes[_NORM_INDEX_MIN_NF*_NO_MAYBE] (where *={ C, D, KC, KD })
  *      -- first code point with a quick check NF* value of NO/MAYBE
  *
- *
  * - Tries
  *
  * The main structures are two UTrie tables ("compact arrays"),
  * each with one index array and one data array.
  * See utrie.h and utrie.c.
  *
- *
  * - Tries in unorm.dat
  *
  * The first trie (normTrie above)
  * provides data for the NF* quick checks and normalization.
  * The second trie (fcdTrie above) provides data just for FCD checks.
- *
  *
  * - norm32 data words from the first trie
  *
@@ -269,7 +265,6 @@ enum {
  *  3..0    _NORM_QC_ANY_NO
  *              see further related constants
  *
- *
  * - Extra data per code point
  *
  * "Extra data" is referenced by the index in norm32.
@@ -303,7 +298,6 @@ enum {
  *   High byte: leading cc==cc of the first code point in the decomposition string
  *   Low byte: trailing cc==cc of the last code point in the decomposition string
  * - The decomposition string in UTF-16, with length code units.
- *
  *
  * - Combining indexes and combiningTable[]
  *
@@ -353,7 +347,6 @@ enum {
  *          Bits 12..10 of the second word are not used.
  *          The trailing surrogate is stored in the third word.
  *
- *
  * - FCD trie
  *
  * The FCD trie is very simple.
@@ -368,7 +361,6 @@ enum {
  * This is done only if the 16-bit data word is not zero.
  * If the code unit is a leading surrogate and the data word is not zero,
  * then instead of cc's it contains the offset for the second trie lookup.
- *
  *
  * - Auxiliary trie and data
  *
@@ -418,7 +410,6 @@ enum {
  * code points get a 0 bit.
  * This bit is only valid after (a)..(e) test FALSE; test NFD_NO before (f) as well.
  * Test Hangul LV syllables entirely in code.
- *
  *
  * - structure inside canonStartSets[]
  *

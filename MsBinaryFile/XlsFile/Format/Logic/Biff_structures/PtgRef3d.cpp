@@ -38,8 +38,6 @@
 
 namespace XLS
 {
-
-
 PtgRef3d::PtgRef3d(const unsigned short full_ptg_id, const CellRef& cell_base_ref_init) : OperandPtg(full_ptg_id), cell_base_ref(cell_base_ref_init)
 {
 }
@@ -62,8 +60,6 @@ BiffStructurePtr PtgRef3d::clone()
 {
 	return BiffStructurePtr(new PtgRef3d(*this));
 }
-
-
 void PtgRef3d::loadFields(CFRecord& record)
 {
 	global_info = record.getGlobalWorkbookInfo();
@@ -127,8 +123,6 @@ void PtgRef3d::writeFields(CFRecord& record)
 		record << ixti << rgce_loc_xlsb;
 	}
 }
-
-
 void PtgRef3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	RevExternPtr tab_ids;
@@ -186,7 +180,5 @@ void PtgRef3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool fu
 		ptg_stack.push(link + cell_ref);
 	}
 }
-
-
 } // namespace XLS
 

@@ -15,16 +15,10 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
 bool font_flip_y = !flip_y;
-
-
 #define pix_format agg::pix_format_bgr24
 typedef agg::pixfmt_bgr24 pixfmt_type;
-
-
 static char text[] = 
 "Anti-Grain Geometry is designed as a set of loosely coupled "
 "algorithms and class templates united with a common idea, "
@@ -136,12 +130,6 @@ static char text[] =
 "processing, you still can use the rasterizers with their "
 "integer interfaces. Although, you won't be able to use the "
 "floating point coordinate pipelines in this case. ";
- 
-
-
-
-
-
 
 template<class VS> void dump_path(VS& path)
 {
@@ -156,10 +144,6 @@ template<class VS> void dump_path(VS& path)
     }
     fclose(fd);
 }
-
-
-
-
 class the_application : public agg::platform_support
 {
     typedef agg::renderer_base<pixfmt_type> base_ren_type;
@@ -183,10 +167,6 @@ class the_application : public agg::platform_support
     // Pipeline to process the vectors glyph paths (curves + contour)
     agg::conv_curve<font_manager_type::path_adaptor_type> m_curves;
     agg::conv_contour<agg::conv_curve<font_manager_type::path_adaptor_type> > m_contour;
-
-
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -256,8 +236,6 @@ public:
         m_curves.approximation_scale(2.0);
         m_contour.auto_detect_orientation(false);
     }
-
-
     template<class Rasterizer, class Scanline, class RenSolid, class RenBin>
     unsigned draw_text(Rasterizer& ras, Scanline& sl, 
                        RenSolid& ren_solid, RenBin& ren_bin)
@@ -366,8 +344,6 @@ public:
 
         return num_glyphs;
     }
-
-
     virtual void on_draw()
     {
         pixfmt_type pf(rbuf_window());
@@ -407,8 +383,6 @@ public:
         draw_text(ras, sl, ren_solid, ren_bin);
 
         ras.gamma(agg::gamma_power(1.0));
-
-
         agg::render_ctrl(ras, sl, ren_base, m_ren_type);
         agg::render_ctrl(ras, sl, ren_base, m_height);
         agg::render_ctrl(ras, sl, ren_base, m_width);
@@ -418,8 +392,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_kerning);
         agg::render_ctrl(ras, sl, ren_base, m_performance);
     }
-
-
 
     virtual void on_ctrl_change()
     {
@@ -454,8 +426,6 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -466,8 +436,6 @@ public:
     }
 
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -480,5 +448,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

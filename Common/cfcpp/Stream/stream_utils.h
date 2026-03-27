@@ -32,8 +32,6 @@
 #pragma once
 
 #include "stream.h"
-
-
 namespace CFCPP
 {
 bool IsOpen(const Stream& st);

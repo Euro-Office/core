@@ -90,8 +90,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 static const char octets[4]={0x41,0x54,0x26,0x54};
 const float	DjVuDocument::thumb_gamma=(float)2.20;
 
@@ -1560,8 +1558,6 @@ DjVuDocument::request_data(const DjVuPort * source, const GURL & url)
       }
    return data_pool;
 }
-
-
 static void
 add_file_to_djvm(const GP<DjVuFile> & file, bool page,
 		 DjVmDoc & doc, GMap<GURL, void *> & map)
@@ -1991,8 +1987,6 @@ void DjVuDocument::ReadPageInfo(int nPage, int& width, int& height, int& nDpi)
 	{
 	}
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

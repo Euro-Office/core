@@ -395,8 +395,6 @@ public:
      * @stable ICU 2.0
      */
     static const Locale* U_EXPORT2 getAvailableLocales(int32_t& count);
-
-
     /**
      * Given a key and a locale, returns an array of string values in a preferred
      * order that would make a difference. These are all and only those values where
@@ -1646,8 +1644,6 @@ protected:
      * @internal
      */
     virtual int32_t getLimit(UCalendarDateFields field, ELimitType limitType) const;
-
-
     /**
      * Return the Julian day number of day before the first day of the
      * given month in the given extended year.  Subclasses should override
@@ -1681,8 +1677,6 @@ protected:
      * @stable ICU 2.0
      */
     virtual int32_t handleGetYearLength(int32_t eyear) const;
-
-
     /**
      * Return the extended year defined by the current fields.  This will
      * use the UCAL_EXTENDED_YEAR field or the UCAL_YEAR and supra-year fields (such
@@ -1751,8 +1745,6 @@ protected:
      * @internal
      */
     int32_t computeZoneOffset(double millis, int32_t millisInDay, UErrorCode &ec);
-
-
     /**
      * Determine the best stamp in a range.
      * @param start first enum to look at
@@ -1825,8 +1817,6 @@ protected:
      */
     UCalendarDateFields resolveFields(const UFieldResolutionTable *precedenceTable);
 #endif  /* U_HIDE_INTERNAL_API */
-
-
     /**
      * @internal
      */
@@ -1840,8 +1830,6 @@ protected:
      */
     UCalendarDateFields newerField(UCalendarDateFields defaultField, UCalendarDateFields alternateField) const;
 #endif  /* U_HIDE_INTERNAL_API */
-
-
 private:
     /**
      * Helper function for calculating limits by trial and error
@@ -1852,8 +1840,6 @@ private:
      * @internal
      */
     int32_t getActualHelper(UCalendarDateFields field, int32_t startValue, int32_t endValue, UErrorCode &status) const;
-
-
 protected:
     /**
      * The flag which indicates if the current time is set in the calendar.
@@ -2006,8 +1992,6 @@ protected:
      * @internal
      */
     virtual int32_t getDefaultMonthInYear(int32_t eyear) ;
-
-
     /**
      * Called by computeJulianDay.  Returns the default day (1-based) for the month,
      * taking currently-set year and era into account.  Defaults to 1 for Gregorian.
@@ -2097,8 +2081,6 @@ protected:
      * @stable ICU 2.8
      */
     int32_t weekNumber(int32_t desiredDay, int32_t dayOfPeriod, int32_t dayOfWeek);
-
-
 #ifndef U_HIDE_INTERNAL_API
     /**
      * Return the week number of a day, within a period. This may be the week number in
@@ -2290,8 +2272,6 @@ private:
      * proleptic Gregorian calendar, which has no field larger than a year.
      */
     void computeWeekFields(UErrorCode &ec);
-
-
     /**
      * Ensure that each field is within its valid range by calling {@link
      * #validateField(int, int&)} on each field that has been set.  This method
@@ -2517,8 +2497,6 @@ Calendar::roll(EDateFields field, UBool up, UErrorCode& status)
     roll((UCalendarDateFields) field, up, status);
 }
 #endif  /* U_HIDE_DEPRECATED_API */
-
-
 // -------------------------------------
 
 /**
@@ -2533,8 +2511,6 @@ Calendar::internalSet(UCalendarDateFields field, int32_t value)
     fStamp[field] = kInternallySet;
     fIsSet[field]     = TRUE; // Remove later
 }
-
-
 #ifndef U_HIDE_INTERNAL_API
 inline int32_t  Calendar::weekNumber(int32_t dayOfPeriod, int32_t dayOfWeek)
 {

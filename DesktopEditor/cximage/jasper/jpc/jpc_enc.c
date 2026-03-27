@@ -251,8 +251,6 @@ typedef enum {
 	PO_L = 0,
 	PO_R
 } poid_t;
-
-
 jas_taginfo_t prgordtab[] = {
 	{JPC_COD_LRCPPRG, "lrcp"},
 	{JPC_COD_RLCPPRG, "rlcp"},
@@ -1190,8 +1188,6 @@ assert(jas_image_numcmpts(enc->image) == 3);
 			jpc_tsfb_analyze(comp->tsfb, comp->data);
 
 		}
-
-
 		endcomps = &tile->tcmpts[tile->numtcmpts];
 		for (cmptno = 0, comp = tile->tcmpts; comp != endcomps; ++cmptno, ++comp) {
 			mingbits = 0;
@@ -1668,8 +1664,6 @@ int rateallocate(jpc_enc_t *enc, int numlyrs, uint_fast32_t *cumlens)
 	if (!(out = jas_stream_memopen(0, 0))) {
 		return -1;
 	}
-
-
 	/* Find minimum and maximum R-D slope values. */
 	mnrdslope = DBL_MAX;
 	mxrdslope = 0;

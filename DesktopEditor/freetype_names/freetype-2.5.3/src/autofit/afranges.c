@@ -14,11 +14,7 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "afranges.h"
-
-
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400UL,  0x04FFUL ),  /* Cyrillic */

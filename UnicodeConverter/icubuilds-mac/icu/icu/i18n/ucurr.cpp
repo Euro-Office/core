@@ -662,8 +662,6 @@ static UBool fallback(char *loc) {
  */
     return TRUE;
 }
-
-
 U_CAPI const UChar* U_EXPORT2
 ucurr_getName(const UChar* currency,
               const char* locale,
@@ -838,8 +836,6 @@ ucurr_getPluralName(const UChar* currency,
     *ec = U_USING_DEFAULT_WARNING;
     return currency;
 }
-
-
 //========================================================================
 // Following are structure and function for parsing currency names
 
@@ -854,8 +850,6 @@ typedef struct {
     int32_t currencyNameLen;  // value length
     int32_t flag;  // flags
 } CurrencyNameStruct;
-
-
 #ifndef MIN
 #define MIN(a,b) (((a)<(b)) ? (a) : (b))
 #endif
@@ -863,8 +857,6 @@ typedef struct {
 #ifndef MAX
 #define MAX(a,b) (((a)<(b)) ? (b) : (a))
 #endif
-
-
 // Comparason function used in quick sort.
 static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
     const CurrencyNameStruct* currName_1 = (const CurrencyNameStruct*)a;
@@ -886,8 +878,6 @@ static int U_CALLCONV currencyNameComparator(const void* a, const void* b) {
     }
     return 0;
 }
-
-
 // Give a locale, return the maximum number of currency names associated with
 // this locale.
 // It gets currency names from resource bundles using fallback.
@@ -973,8 +963,6 @@ toUpperCase(const UChar* source, int32_t len, const char* locale) {
     } 
     return dest;
 }
-
-
 // Collect all available currency names associated with the given locale
 // (enable fallback chain).
 // Read currenc names defined in resource bundle "Currencies" and
@@ -1301,8 +1289,6 @@ binarySearch(const CurrencyNameStruct* currencyNames,
    *end = -1;
    return -1;    // failed to find range.
 }
-
-
 // Linear search "text" in "currencyNames".
 // @param  begin, end: the begin and end index in currencyNames, within which
 //         range should the search be performed.
@@ -1405,8 +1391,6 @@ typedef struct {
     // the entry is replaced out of cache and no process is accessing it.
     int32_t refCount;
 } CurrencyNameCacheEntry;
-
-
 #define CURRENCY_NAME_CACHE_NUM 10
 
 // Reserve 10 cache entries.
@@ -1427,16 +1411,12 @@ deleteCurrencyNames(CurrencyNameStruct* currencyNames, int32_t count) {
     }
     uprv_free(currencyNames);
 }
-
-
 static void
 deleteCacheEntry(CurrencyNameCacheEntry* entry) {
     deleteCurrencyNames(entry->currencyNames, entry->totalCurrencyNameCount);
     deleteCurrencyNames(entry->currencySymbols, entry->totalCurrencySymbolCount);
     uprv_free(entry);
 }
-
-
 // Cache clean up
 static UBool U_CALLCONV
 currency_cache_cleanup(void) {
@@ -1448,8 +1428,6 @@ currency_cache_cleanup(void) {
     }
     return TRUE;
 }
-
-
 U_CFUNC void
 uprv_parseCurrency(const char* locale,
                    const icu::UnicodeString& text,
@@ -1594,8 +1572,6 @@ uprv_parseCurrency(const char* locale,
     }
     umtx_unlock(&gCurrencyCacheMutex);
 }
-
-
 /**
  * Internal method.  Given a currency ISO code and a locale, return
  * the "static" currency name.  This is usually the same as the
@@ -2163,8 +2139,6 @@ static const UEnumeration gEnumCurrencyList = {
     ucurr_resetCurrencyList
 };
 U_CDECL_END
-
-
 static void U_CALLCONV initIsoCodes(UErrorCode &status) {
     U_ASSERT(gIsoCodes == NULL);
     ucln_i18n_registerCleanup(UCLN_I18N_CURRENCY, currency_cleanup);
@@ -2685,8 +2659,6 @@ U_CAPI UEnumeration *U_EXPORT2 ucurr_getKeywordValuesForLocale(const char *key, 
     
     return en;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ucurr_getNumericCode(const UChar* currency) {
     int32_t code = 0;

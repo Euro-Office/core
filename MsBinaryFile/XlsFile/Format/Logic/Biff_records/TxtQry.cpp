@@ -40,19 +40,13 @@ TxtQry::TxtQry()
 	iCpidNew	= 0;
 	iTextDelm	= 0;
 }
-
-
 TxtQry::~TxtQry()
 {
 }
-
-
 BaseObjectPtr TxtQry::clone()
 {
 	return BaseObjectPtr(new TxtQry(*this));
 }
-
-
 void TxtQry::readFields(CFRecord& record)
 {
 	unsigned short reserved, flags1, unused1;

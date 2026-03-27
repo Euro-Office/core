@@ -327,8 +327,6 @@ enum UCurrencySpacing {
     UNUM_CURRENCY_SPACING_COUNT
 };
 typedef enum UCurrencySpacing UCurrencySpacing; /**< @stable ICU 4.8 */
-
-
 /**
  * FieldPosition and UFieldPosition selectors for format fields
  * defined by NumberFormat and UNumberFormat.
@@ -360,8 +358,6 @@ typedef enum UNumberFormatFields {
     /** @stable ICU 49 */
     UNUM_FIELD_COUNT
 } UNumberFormatFields;
-
-
 /**
  * Create and return a new UNumberFormat for formatting and parsing
  * numbers.  A UNumberFormat may be used to format numbers by calling
@@ -402,8 +398,6 @@ unum_open(  UNumberFormatStyle    style,
             const    char*     locale,
             UParseError*       parseErr,
             UErrorCode*        status);
-
-
 /**
 * Close a UNumberFormat.
 * Once closed, a UNumberFormat may no longer be used.
@@ -715,8 +709,6 @@ unum_parseDouble(    const   UNumberFormat*  fmt,
             int32_t         textLength,
             int32_t         *parsePos /* 0 = start */,
             UErrorCode      *status);
-
-
 /**
 * Parse a number from a string into an unformatted numeric string using a UNumberFormat.
 * The input string will be parsed according to the UNumberFormat's locale.
@@ -1041,8 +1033,6 @@ U_STABLE void U_EXPORT2
 unum_setAttribute(    UNumberFormat*          fmt,
             UNumberFormatAttribute  attr,
             int32_t                 newValue);
-
-
 /**
 * Get a numeric attribute associated with a UNumberFormat.
 * An example of a numeric attribute is the number of integer digits a formatter will produce.
@@ -1184,8 +1174,6 @@ unum_toPattern(    const    UNumberFormat*          fmt,
         UChar*                  result,
         int32_t                 resultLength,
         UErrorCode*             status);
-
-
 /**
  * Constants for specifying a number format symbol.
  * @stable ICU 2.0
@@ -1318,8 +1306,6 @@ unum_setSymbol(UNumberFormat *fmt,
                const UChar *value,
                int32_t length,
                UErrorCode *status);
-
-
 /**
  * Get the locale for this number format object.
  * You can choose between valid and actual locale.

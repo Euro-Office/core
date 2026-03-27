@@ -64,13 +64,9 @@ public:
 SXFMLA::SXFMLA()
 {
 }
-
-
 SXFMLA::~SXFMLA()
 {
 }
-
-
 BaseObjectPtr SXFMLA::clone()
 {
 	return BaseObjectPtr(new SXFMLA(*this));
@@ -146,7 +142,5 @@ void SXFMLA::serialize_attr(CP_ATTR_NODE)
 	std::wstring fmla = sx_fmla->fmla.getAssembledFormula();
 	CP_XML_ATTR(L"formula", fmla);
 }
-
-
 } // namespace XLS
 

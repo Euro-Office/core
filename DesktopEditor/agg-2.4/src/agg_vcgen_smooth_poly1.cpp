@@ -31,8 +31,6 @@ namespace agg
         m_src_vertex(0)
     {
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_smooth_poly1::remove_all()
     {
@@ -40,8 +38,6 @@ namespace agg
         m_closed = 0;
         m_status = initial;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_smooth_poly1::add_vertex(double x, double y, unsigned cmd)
     {
@@ -62,8 +58,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_smooth_poly1::rewind(unsigned)
     {
@@ -74,8 +68,6 @@ namespace agg
         m_status = ready;
         m_src_vertex = 0;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_smooth_poly1::calculate(const vertex_dist& v0, 
                                        const vertex_dist& v1, 
@@ -96,8 +88,6 @@ namespace agg
         m_ctrl2_x = v2.x + m_smooth_value * (v1.x - xm2);
         m_ctrl2_y = v2.y + m_smooth_value * (v1.y - ym2);
     }
-
-
     //------------------------------------------------------------------------
     unsigned vcgen_smooth_poly1::vertex(double* x, double* y)
     {

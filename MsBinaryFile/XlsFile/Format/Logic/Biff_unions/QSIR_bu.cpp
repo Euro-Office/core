@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 QSIR::QSIR()
 {
 }
-
-
 QSIR::~QSIR()
 {
 }
-
-
 BaseObjectPtr QSIR::clone()
 {
 	return BaseObjectPtr(new QSIR(*this));
 }
-
-
 // QSIR = Qsir *Qsif
 const bool QSIR::loadContent(BinProcessor& proc)
 {

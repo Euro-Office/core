@@ -127,8 +127,6 @@ static const l_uint32  power85[5] = {1,
  * PostScript image that will be composited with other images,
  * where more than one image may be placed in an arbitrary location
  * on a page.  */
-
-
 /*-------------------------------------------------------------*
  *                  For uncompressed images                    *
  *-------------------------------------------------------------*/
@@ -180,8 +178,6 @@ PIX       *pix;
     pixDestroy(&pix);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreamPS()
  *
@@ -227,8 +223,6 @@ PIX     *pixc;
 
     return 0;
 }
-
-
 /*!
  *  pixWriteStringPS()
  *
@@ -375,8 +369,6 @@ PIX       *pix;
     pixDestroy(&pix);
     return outstr;
 }
-
-
 /*!
  *  generateUncompressedPS()
  *
@@ -481,8 +473,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return outstr;
 }
-
-
 /*!
  *  getScaledParametersPS()
  *
@@ -574,8 +564,6 @@ l_float32  winch, hinch, xinch, yinch, fres;
     *pypt = 72. * yinch;
     return;
 }
-    
-
 /*!
  *  convertByteToHexAscii()
  *
@@ -603,8 +591,6 @@ l_uint8  nib;
 
     return;
 }
-
-
 /*-------------------------------------------------------------*
  *                  For jpeg compressed images                 *
  *-------------------------------------------------------------*/
@@ -681,8 +667,6 @@ l_float32  xpt, ypt, wpt, hpt;
     FREE(outstr);
     return 0;
 }
-
-
 /*!
  *  convertJpegToPS()
  *
@@ -780,8 +764,6 @@ l_int32  nbytes;
     FREE(outstr);
     return 0;
 }
-
-
 /*!
  *  convertJpegToPSString()
  *
@@ -877,8 +859,6 @@ l_float32  xpt, ypt, wpt, hpt;
     *pnbytes = strlen(outstr);
     return 0;
 }
-
-
 /*!
  *  generateJpegPS()
  *
@@ -1000,8 +980,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return outstr;
 }
-
-
 /*-------------------------------------------------------------*
  *                  For tiff g4 compressed images              *
  *-------------------------------------------------------------*/
@@ -1082,8 +1060,6 @@ l_float32  xpt, ypt, wpt, hpt;
     FREE(outstr);
     return 0;
 }
-    
-
 /*!
  *  convertTiffG4ToPS()
  *
@@ -1174,8 +1150,6 @@ l_int32  nbytes;
     FREE(outstr);
     return 0;
 }
-
-
 /*!
  *  convertTiffG4ToPSString()
  *
@@ -1280,8 +1254,6 @@ l_float32  xpt, ypt, wpt, hpt;
     *pnbytes = strlen(outstr);
     return 0;
 }
-
-
 /*!
  *  generateTiffG4PS()
  *
@@ -1412,8 +1384,6 @@ SARRAY  *sa;
     return outstr;
 }
 
-
-
 /*-------------------------------------------------------------*
  *                     For tiff multipage files                *
  *-------------------------------------------------------------*/
@@ -1498,8 +1468,6 @@ FILE        *fp;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *            For flate (gzip) compressed images (e.g., png)           *
  *---------------------------------------------------------------------*/
@@ -1610,8 +1578,6 @@ PIXCMAP   *cmap;
     FREE(outstr);
     return 0;
 }
-
-
 /*!
  *  convertFlateToPS()
  *
@@ -1708,8 +1674,6 @@ l_int32  nbytes;
     FREE(outstr);
     return 0;
 }
-
-
 /*!
  *  convertFlateToPSString()
  *
@@ -1847,8 +1811,6 @@ PIXCMAP   *cmap;
     *pnbytes = strlen(outstr);
     return 0;
 }
-
-
 /*!
  *  generateFlatePS()
  *
@@ -1983,8 +1945,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return outstr;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Write to memory                            *
  *---------------------------------------------------------------------*/
@@ -2025,8 +1985,6 @@ pixWriteMemPS(l_uint8  **pdata,
     *psize = strlen((char *)(*pdata));
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                    Converting resolution                    *
  *-------------------------------------------------------------*/
@@ -2053,8 +2011,6 @@ l_int32  resw, resh, res;
     res = L_MAX(resw, resh);
     return res;
 }
-
-
 /*!
  *  getResA4Page()
  *
@@ -2078,8 +2034,6 @@ l_int32  resw, resh, res;
     res = L_MAX(resw, resh);
     return res;
 }
-
-
 
 /*-------------------------------------------------------------*
  *      Utility for encoding and decoding data with ascii85    *
@@ -2147,8 +2101,6 @@ l_int32  maxsize, i, index, outindex, linecount, nbout, eof;
     *poutsize = outindex;
     return chara;
 }
-
-
 /*!
  *  convertChunkToAscii85()
  *
@@ -2211,8 +2163,6 @@ l_int32   eof, index, nread, nbout, i;
 
     return eof;
 }
-
-
 /*!
  *  decodeAscii85()
  *
@@ -2312,8 +2262,6 @@ l_uint32  oword;
 
     return outa;
 }
-
-
 /*-------------------------------------------------------------*
  *           Setting flag for writing bounding box hint        *
  *-------------------------------------------------------------*/
@@ -2322,8 +2270,6 @@ l_psWriteBoundingBox(l_int32  flag)
 {
     var_PS_WRITE_BOUNDING_BOX = flag;
 }
-
-
 /* --------------------------------------------*/
 #endif  /* USE_PSIO */
 /* --------------------------------------------*/

@@ -1059,8 +1059,6 @@ private:
      * @return a reference to tzID.
      */
     UnicodeString& getTimeZoneID(const TimeZoneNames::MatchInfoCollection* matches, int32_t idx, UnicodeString& tzID) const;
-
-
     /**
      * Parse a zone ID.
      * @param text the text contains a time zone ID string at the position.

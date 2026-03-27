@@ -146,8 +146,6 @@ namespace agg
         const trans_affine& parl_to_rect(const double* parl, 
                                          double x1, double y1, 
                                          double x2, double y2);
-
-
         //------------------------------------------ Operations
         // Reset - load an identity matrix
         const trans_affine& reset();
@@ -454,8 +452,6 @@ namespace agg
           trans_affine(1.0, tan(y), tan(x), 1.0, 0.0, 0.0)
         {}
     };
-
-
     //===============================================trans_affine_line_segment
     // Rotate, Scale and Translate, associating 0...dist with line segment 
     // x1,y1,x2,y2
@@ -475,8 +471,6 @@ namespace agg
             multiply(trans_affine_translation(x1, y1));
         }
     };
-
-
     //============================================trans_affine_reflection_unit
     // Reflection matrix. Reflect coordinates across the line through 
     // the origin containing the unit vector (ux, uy).
@@ -492,8 +486,6 @@ namespace agg
                        0.0, 0.0)
         {}
     };
-
-
     //=================================================trans_affine_reflection
     // Reflection matrix. Reflect coordinates across the line through 
     // the origin at the angle a or containing the non-unit vector (x, y).
@@ -504,15 +496,11 @@ namespace agg
         trans_affine_reflection(double a) :
           trans_affine_reflection_unit(cos(a), sin(a))
         {}
-
-
         trans_affine_reflection(double x, double y) :
           trans_affine_reflection_unit(x / sqrt(x * x + y * y), y / sqrt(x * x + y * y))
         {}
     };
 
 }
-
-
 #endif
 

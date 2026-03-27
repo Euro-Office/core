@@ -611,8 +611,6 @@ opj_pi_iterator_t *pi_create_decode(opj_image_t *image, opj_cp_t *cp,
 
     return pi;
 }
-
-
 opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp,
                                         int tileno, J2K_T2_MODE t2_mode)
 {
@@ -764,8 +762,6 @@ opj_pi_iterator_t *pi_initialise_encode(opj_image_t *image, opj_cp_t *cp,
     }
     return pi;
 }
-
-
 
 void pi_destroy(opj_pi_iterator_t *pi, opj_cp_t *cp, int tileno)
 {

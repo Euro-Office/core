@@ -26,8 +26,6 @@
 #ifdef HAVE_STDLIB_H
 #include <stdlib.h>
 #endif
-
-
 #include <libxml/xpath.h>
 #include <libxml/tree.h>
 #include <libxml/parser.h>
@@ -73,8 +71,6 @@ static xmlChar buffer[] =
   </chapter>\n\
 </EXAMPLE>\n\
 ";
-
-
 static void
 testXPath(const char *str) {
     xmlXPathObjectPtr res;

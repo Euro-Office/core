@@ -336,8 +336,6 @@ private:
     xlsx_content_types_file content_type_file_;
     xl_files				xl_files_;
 };
-
-
 }
 }
 }

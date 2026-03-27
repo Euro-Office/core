@@ -40,18 +40,12 @@
 
 namespace XLS
 {
-
-
 SERIESDATA::SERIESDATA()
 {
 }
-
-
 SERIESDATA::~SERIESDATA()
 {
 }
-
-
 //  (Number / BoolErr / Blank / Label)
 class Parenthesis_SERIESDATA_2: public ABNFParenthesis
 {
@@ -70,8 +64,6 @@ public:
 				proc.optional<Label>();
 	};
 };
-
-
 //  (SIIndex *(Number / BoolErr / Blank / Label))
 class Parenthesis_SERIESDATA_1: public ABNFParenthesis
 {
@@ -97,14 +89,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr SERIESDATA::clone()
 {
 	return BaseObjectPtr(new SERIESDATA(*this));
 }
-
-
 // SERIESDATA = Dimensions 3(SIIndex *(Number / BoolErr / Blank / Label))
 const bool SERIESDATA::loadContent(BinProcessor& proc)
 {

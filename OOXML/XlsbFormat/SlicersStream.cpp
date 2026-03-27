@@ -45,8 +45,6 @@ SlicersStream::SlicersStream()
 SlicersStream::~SlicersStream()
 {
 }
-
-
 BaseObjectPtr SlicersStream::clone()
 {
         return BaseObjectPtr(new SlicersStream(*this));

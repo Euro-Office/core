@@ -30,8 +30,6 @@
  *
  */
 #include "pptx_format.h"
-
-
 PPTXFormatLib::PPTXFormatLib()
 {
 }

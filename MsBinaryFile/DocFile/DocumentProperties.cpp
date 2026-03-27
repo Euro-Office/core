@@ -511,8 +511,6 @@ namespace DocFileFormat
 
 		RELEASEARRAYOBJECTS( bytes );
     }
-
-
 	void WordDocumentProperties::setDefaultCompatibilityOptions( FibVersion nFib )
     {
         if( nFib == Fib1997 )
@@ -576,8 +574,6 @@ namespace DocFileFormat
         {
         }
     }
-
-
 	void WordDocumentProperties::Initialize()
 	{
       fFacingPages = false;

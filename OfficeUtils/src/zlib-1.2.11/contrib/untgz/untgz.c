@@ -35,8 +35,6 @@
 #else
 #  include <utime.h>
 #endif
-
-
 /* values used in typeflag field */
 
 #define REGTYPE  '0'            /* regular file */
@@ -58,8 +56,6 @@
 #define GNUTYPE_NAMES    'N'    /* file name that does not fit into main hdr */
 #define GNUTYPE_SPARSE   'S'    /* sparse file */
 #define GNUTYPE_VOLHDR   'V'    /* tape/volume header */
-
-
 /* tar header */
 
 #define BLOCKSIZE     512
@@ -145,8 +141,6 @@ char *TGZfname (const char *arcname)
     }
   return NULL;
 }
-
-
 /* error message for the filename */
 
 void TGZnotfound (const char *arcname)
@@ -160,8 +154,6 @@ void TGZnotfound (const char *arcname)
             TGZsuffix[i]);
   exit(1);
 }
-
-
 /* convert octal digits to int */
 /* on error return -1 */
 
@@ -183,8 +175,6 @@ int getoct (char *p,int width)
     }
   return result;
 }
-
-
 /* convert time_t to string */
 /* use the "YYYY/MM/DD hh:mm:ss" format */
 
@@ -199,8 +189,6 @@ char *strtime (time_t *t)
           local->tm_hour, local->tm_min, local->tm_sec);
   return result;
 }
-
-
 /* set file time */
 
 int setfiletime (char *fname,time_t ftime)
@@ -246,8 +234,6 @@ int setfiletime (char *fname,time_t ftime)
   return utime(fname,&settime);
 #endif
 }
-
-
 /* push file attributes */
 
 void push_attr(struct attr_item **list,char *fname,int mode,time_t time)
@@ -263,8 +249,6 @@ void push_attr(struct attr_item **list,char *fname,int mode,time_t time)
   item->next  = *list;
   *list       = item;
 }
-
-
 /* restore file attributes */
 
 void restore_attr(struct attr_item **list)
@@ -281,8 +265,6 @@ void restore_attr(struct attr_item **list)
     }
   *list = NULL;
 }
-
-
 /* match regular expression */
 
 #define ISSPECIAL(c) (((c) == '*') || ((c) == '/'))
@@ -318,8 +300,6 @@ int ExprMatch (char *string,char *expr)
         }
     }
 }
-
-
 /* recursive mkdir */
 /* abort on ENOENT; ignore other errors like "directory already exists" */
 /* return 1 if OK */
@@ -366,8 +346,6 @@ int makedir (char *newdir)
   free(buffer);
   return 1;
 }
-
-
 int matchname (int arg,int argc,char **argv,char *fname)
 {
   if (arg == argc)      /* no arguments given (untgz tgzarchive) */
@@ -379,8 +357,6 @@ int matchname (int arg,int argc,char **argv,char *fname)
 
   return 0; /* ignore this for the moment being */
 }
-
-
 /* tar file list or extract */
 
 int tar (gzFile in,int action,int arg,int argc,char **argv)
@@ -574,8 +550,6 @@ int tar (gzFile in,int action,int arg,int argc,char **argv)
 
   return 0;
 }
-
-
 /* ============================================================ */
 
 void help(int exitval)
@@ -595,8 +569,6 @@ void error(const char *msg)
   fprintf(stderr, "%s: %s\n", prog, msg);
   exit(1);
 }
-
-
 /* ============================================================ */
 
 #if defined(WIN32) && defined(__GNUC__)

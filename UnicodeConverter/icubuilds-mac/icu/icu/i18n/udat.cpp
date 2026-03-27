@@ -121,8 +121,6 @@ udat_unregisterOpener(UDateFormatOpener opener, UErrorCode *status)
   return oldOpener;
 }
 
-
-
 U_CAPI UDateFormat* U_EXPORT2
 udat_open(UDateFormatStyle  timeStyle,
           UDateFormatStyle  dateStyle,
@@ -182,8 +180,6 @@ udat_open(UDateFormatStyle  timeStyle,
 
     return (UDateFormat*)fmt;
 }
-
-
 U_CAPI void U_EXPORT2
 udat_close(UDateFormat* format)
 {
@@ -1231,8 +1227,6 @@ udat_getContext(const UDateFormat* fmt, UDisplayContextType type, UErrorCode* st
     }
     return ((const DateFormat*)fmt)->getContext(type, *status);
 }
-
-
 /**
  * Verify that fmt is a RelativeDateFormat. Invalid error if not.
  * @param fmt the UDateFormat, definitely a DateFormat, maybe something else
@@ -1244,8 +1238,6 @@ static void verifyIsRelativeDateFormat(const UDateFormat* fmt, UErrorCode *statu
        *status = U_ILLEGAL_ARGUMENT_ERROR;
    }
 }
-
-
 U_CAPI int32_t U_EXPORT2 
 udat_toPatternRelativeDate(const UDateFormat *fmt,
                            UChar             *result,

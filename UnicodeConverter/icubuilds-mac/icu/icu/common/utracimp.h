@@ -57,8 +57,6 @@ U_EXPORT int32_t
 U_CFUNC U_COMMON_API int32_t
 #endif
 utrace_level;
-
-
 /** 
  *   Traced Function Exit return types.  
  *   Flags indicating the number and types of varargs included in a call
@@ -101,8 +99,6 @@ utrace_entry(int32_t fnNumber);
  */
 U_CAPI void U_EXPORT2
 utrace_exit(int32_t fnNumber, int32_t returnType, ...);
-
-
 /**
  * Trace function used inside functions that have a UTRACE_ENTRY() statement.
  * Do not use directly, use UTRACE_DATAX() macros instead.
@@ -160,8 +156,6 @@ U_CDECL_END
         utrace_entry(fnNumber); \
         utraceFnNumber |= UTRACE_TRACED_ENTRY; \
     }
-
-
 /**
  * Trace statement for the entry point of open and close functions.
  * Produces trace output at a less verbose setting than plain UTRACE_ENTRY

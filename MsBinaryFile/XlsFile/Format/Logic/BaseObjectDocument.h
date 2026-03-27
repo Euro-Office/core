@@ -30,14 +30,10 @@
  *
  */
 #pragma once
-
-
 #include "BaseObject.h" 
 
 namespace XLS
 {;
-
-
 // Logical representation of an XML record
 class BaseObjectDocument : public BaseObject 
 {
@@ -57,5 +53,3 @@ public:
 typedef boost::shared_ptr<BaseObjectDocument> BaseObjectDocumentPtr;
 
 } // namespace XLS
-
-

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftstream.h>
@@ -28,8 +26,6 @@
 #endif
 
 #include "tterrors.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -38,8 +34,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttpload
-
-
   /**************************************************************************
    *
    * @Function:
@@ -66,8 +60,6 @@
     FT_Error  error;
     FT_ULong  table_len;
     FT_Int    shift;
-
-
     /* we need the size of the `glyf' table for malformed `loca' tables */
     error = face->goto_table( face, TTAG_glyf, stream, &face->glyf_len );
 
@@ -138,14 +130,10 @@
         FT_Long  pos   = (FT_Long)FT_STREAM_POS();
         FT_Long  dist  = 0x7FFFFFFFL;
         FT_Bool  found = 0;
-
-
         /* compute the distance to next table in font file */
         for ( ; entry < limit; entry++ )
         {
           FT_Long  diff = (FT_Long)entry->Offset - pos;
-
-
           if ( diff > 0 && diff < dist )
           {
             dist  = diff;
@@ -190,8 +178,6 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_ULong )
   tt_face_get_location( TT_Face   face,
                         FT_UInt   gindex,
@@ -200,8 +186,6 @@
     FT_ULong  pos1, pos2;
     FT_Byte*  p;
     FT_Byte*  p_limit;
-
-
     pos1 = pos2 = 0;
 
     if ( gindex < face->num_locations )
@@ -284,19 +268,13 @@
 
     return pos1;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_done_loca( TT_Face  face )
   {
     FT_Stream  stream = face->root.stream;
-
-
     FT_FRAME_RELEASE( face->glyph_locations );
     face->num_locations = 0;
   }
-
-
 
   /**************************************************************************
    *
@@ -326,8 +304,6 @@
     FT_Error   error;
     FT_Memory  memory = stream->memory;
     FT_ULong   table_len;
-
-
     FT_TRACE2(( "CVT " ));
 
     error = face->goto_table( face, TTAG_cvt, stream, &table_len );
@@ -353,8 +329,6 @@
     {
       FT_Int32*  cur   = face->cvt;
       FT_Int32*  limit = cur + face->cvt_size;
-
-
       for ( ; cur < limit; cur++ )
         *cur = FT_GET_SHORT() * 64;
     }
@@ -379,8 +353,6 @@
 
 #endif
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -408,8 +380,6 @@
 
     FT_Error  error;
     FT_ULong  table_len;
-
-
     FT_TRACE2(( "Font program " ));
 
     /* The font program is optional */
@@ -443,8 +413,6 @@
 
 #endif
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -472,8 +440,6 @@
 
     FT_Error  error;
     FT_ULong  table_len;
-
-
     FT_TRACE2(( "Prep program " ));
 
     error = face->goto_table( face, TTAG_prep, stream, &table_len );
@@ -506,8 +472,6 @@
 
 #endif
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -537,8 +501,6 @@
     FT_ULong   table_size, record_size;
     FT_Byte*   p;
     FT_Byte*   limit;
-
-
     /* this table is optional */
     error = face->goto_table( face, TTAG_hdmx, stream, &table_size );
     if ( error || table_size < 8 )
@@ -605,20 +567,14 @@
     face->hdmx_table_size = 0;
     goto Exit;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_free_hdmx( TT_Face  face )
   {
     FT_Stream  stream = face->root.stream;
     FT_Memory  memory = stream->memory;
-
-
     FT_FREE( face->hdmx_record_sizes );
     FT_FRAME_RELEASE( face->hdmx_table );
   }
-
-
   /**************************************************************************
    *
    * Return the advance width table for a given pixel size if it is found
@@ -633,8 +589,6 @@
     FT_Byte*  result      = NULL;
     FT_ULong  record_size = face->hdmx_record_size;
     FT_Byte*  record      = FT_OFFSET( face->hdmx_table, 8 );
-
-
     for ( nn = 0; nn < face->hdmx_record_count; nn++ )
       if ( face->hdmx_record_sizes[nn] == ppem )
       {
@@ -646,6 +600,4 @@
 
     return result;
   }
-
-
 /* END */

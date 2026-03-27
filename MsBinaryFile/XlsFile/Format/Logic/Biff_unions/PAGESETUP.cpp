@@ -73,14 +73,10 @@ namespace XLS
 		};
 	};
 
-
-
 	BaseObjectPtr PAGESETUP::clone()
 	{
 		return BaseObjectPtr(new PAGESETUP(*this));
 	}
-
-
 	// PAGESETUP = Header Footer HCenter VCenter [LeftMargin] [RightMargin] [TopMargin] [BottomMargin] [Pls *Continue] Setup
 	const bool PAGESETUP::loadContent(BinProcessor& proc)
 	{

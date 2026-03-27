@@ -69,16 +69,12 @@
 #include "GException.h"
 #include "DjVuMessageLite.h"
 #include "debug.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // - Author: Leon Bottou, 05/1997
 
 GException::GException() 
@@ -251,8 +247,6 @@ GExceptionHandler::rethrow(void)
 
 #endif
 
-
-
 // ------ MEMORY MANAGEMENT HANDLER
 
 #ifndef NEED_DJVU_MEMORY
@@ -275,8 +269,6 @@ static void (*old_handler)() = set_new_handler(throw_memory_error);
 #  endif // ! WIN32
 # endif // !_MSC_VER
 #endif // !NEED_DJVU_MEMORY
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

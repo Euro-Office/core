@@ -193,8 +193,6 @@ static const UChar iOgonekDot[3] = { 0x12f, 0x307 };
 static const UChar iDotGrave[3] = { 0x69, 0x307, 0x300 };
 static const UChar iDotAcute[3] = { 0x69, 0x307, 0x301 };
 static const UChar iDotTilde[3] = { 0x69, 0x307, 0x303 };
-
-
 U_CFUNC void U_EXPORT2
 ucase_addCaseClosure(const UCaseProps *csp, UChar32 c, const USetAdder *sa) {
     uint16_t props;

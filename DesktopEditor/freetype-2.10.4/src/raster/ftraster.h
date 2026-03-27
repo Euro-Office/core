@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTRASTER_H_
 #define FTRASTER_H_
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/ftimage.h>
@@ -27,8 +23,6 @@
 #include <freetype/internal/compiler-macros.h>
 
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * Uncomment the following line if you are using ftraster.c as a
@@ -37,11 +31,7 @@ FT_BEGIN_HEADER
 /* #define STANDALONE_ */
 
   FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_standard_raster;
-
-
 FT_END_HEADER
 
 #endif /* FTRASTER_H_ */
-
-
 /* END */

@@ -69,8 +69,6 @@ class  UnicodeSet;
 class  UVector;
 class  UVector32;
 class  UVector64;
-
-
 /**
   * Class <code>RegexPattern</code> represents a compiled regular expression.  It includes
   * factory methods for creating a RegexPattern object from the source (string) form
@@ -144,8 +142,6 @@ public:
      * @stable ICU 2.4
      */
     virtual RegexPattern  *clone() const;
-
-
    /**
     * Compiles the regular expression in string form into a RegexPattern
     * object.  These compile methods, rather than the constructors, are the usual
@@ -361,8 +357,6 @@ private:
     RegexMatcher *matcher(const UChar *input,
         UErrorCode          &status) const;
 public:
-
-
    /**
     * Creates a RegexMatcher that will match against this pattern.  The
     * RegexMatcher can be used to perform match, find or replace operations.
@@ -375,8 +369,6 @@ public:
     * @stable ICU 2.6
     */
     virtual RegexMatcher *matcher(UErrorCode  &status) const;
-
-
    /**
     * Test whether a string matches a regular expression.  This convenience function
     * both compiles the regular expression and applies it in a single operation.
@@ -424,8 +416,6 @@ public:
     * @stable ICU 2.4
     */
     virtual UnicodeString pattern() const;
-    
-    
    /**
     * Returns the regular expression from which this pattern was compiled. This method will work
     * even if the pattern was compiled from a UnicodeString.
@@ -437,8 +427,6 @@ public:
     * @stable ICU 4.6
     */
     virtual UText *patternText(UErrorCode      &status) const;
-
-
     /**
      * Get the group number corresponding to a named capture group.
      * The returned number can be used with any function that access
@@ -453,8 +441,6 @@ public:
      * @draft ICU 55
      */
     virtual int32_t groupNumberFromName(const UnicodeString &groupName, UErrorCode &status) const;
-
-
     /**
      * Get the group number corresponding to a named capture group.
      * The returned number can be used with any function that access
@@ -472,8 +458,6 @@ public:
      * @draft ICU 55
      */
     virtual int32_t groupNumberFromName(const char *groupName, int32_t nameLength, UErrorCode &status) const;
-
-
     /**
      * Split a string into fields.  Somewhat like split() from Perl or Java.
      * Pattern matches identify delimiters that separate the input
@@ -516,8 +500,6 @@ public:
         UnicodeString    dest[],
         int32_t          destCapacity,
         UErrorCode       &status) const;
-
-
     /**
      * Split a string into fields.  Somewhat like split() from Perl or Java.
      * Pattern matches identify delimiters that separate the input
@@ -560,8 +542,6 @@ public:
         UText            *dest[],
         int32_t          destCapacity,
         UErrorCode       &status) const;
-
-
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
@@ -590,8 +570,6 @@ private:
 
     UVector         *fSets;        // Any UnicodeSets referenced from the pattern.
     Regex8BitSet    *fSets8;       //      (and fast sets for latin-1 range.)
-
-
     UErrorCode      fDeferredStatus; // status if some prior error has left this
                                    //  RegexPattern in an unusable state.
 
@@ -647,8 +625,6 @@ private:
     void        dumpPattern() const;
 #endif  /* U_HIDE_INTERNAL_API */
 };
-
-
 
 /**
  *  class RegexMatcher bundles together a regular expression pattern and
@@ -759,16 +735,12 @@ private:
     RegexMatcher(const UnicodeString &regexp, const UChar *input,
         uint32_t flags, UErrorCode &status);
 public:
-
-
    /**
     *   Destructor.
     *
     *  @stable ICU 2.4
     */
     virtual ~RegexMatcher();
-
-
    /**
     *   Attempts to match the entire input region against the pattern.
     *    @param   status     A reference to a UErrorCode to receive any errors.
@@ -776,8 +748,6 @@ public:
     *    @stable ICU 2.4
     */
     virtual UBool matches(UErrorCode &status);
-
-
    /**
     *   Resets the matcher, then attempts to match the input beginning 
     *   at the specified startIndex, and extending to the end of the input.
@@ -789,8 +759,6 @@ public:
     *    @stable ICU 2.8
     */
     virtual UBool matches(int64_t startIndex, UErrorCode &status);
-
-
    /**
     *   Attempts to match the input string, starting from the beginning of the region,
     *   against the pattern.  Like the matches() method, this function 
@@ -805,8 +773,6 @@ public:
     *    @stable ICU 2.4
     */
     virtual UBool lookingAt(UErrorCode &status);
-
-
   /**
     *   Attempts to match the input string, starting from the specified index, against the pattern.
     *   The match may be of any length, and is not required to extend to the end
@@ -821,8 +787,6 @@ public:
     *    @stable ICU 2.8
     */
     virtual UBool lookingAt(int64_t startIndex, UErrorCode &status);
-
-
    /**
     *  Find the next pattern match in the input string.
     *  The find begins searching the input at the location following the end of
@@ -836,8 +800,6 @@ public:
     *  @stable ICU 2.4
     */
     virtual UBool find();
-
-
    /**
     *  Find the next pattern match in the input string.
     *  The find begins searching the input at the location following the end of
@@ -863,8 +825,6 @@ public:
     *   @stable ICU 2.4
     */
     virtual UBool find(int64_t start, UErrorCode &status);
-
-
    /**
     *   Returns a string containing the text matched by the previous match.
     *   If the pattern can match an empty string, an empty string may be returned.
@@ -875,8 +835,6 @@ public:
     *   @stable ICU 2.4
     */
     virtual UnicodeString group(UErrorCode &status) const;
-
-
    /**
     *    Returns a string containing the text captured by the given group
     *    during the previous match operation.  Group(0) is the entire match.
@@ -902,8 +860,6 @@ public:
     *   @stable ICU 2.4
     */
     virtual int32_t groupCount() const;
-
-
    /**
     *   Returns a shallow clone of the entire live input string with the UText current native index
     *   set to the beginning of the requested group.
@@ -959,8 +915,6 @@ public:
     *   @stable ICU 4.6
     */
     virtual int64_t start64(UErrorCode &status) const;
-
-
    /**
     *   Returns the index in the input string of the start of the text matched by the
     *    specified capture group during the previous match operation.  Return -1 if
@@ -1020,8 +974,6 @@ public:
     *   @stable ICU 4.6
     */
     virtual int64_t end64(UErrorCode &status) const;
-
-
    /**
     *    Returns the index in the input string of the character following the
     *    text matched by the specified capture group during the previous match operation.
@@ -1069,8 +1021,6 @@ public:
     *   @stable ICU 2.4
     */
     virtual RegexMatcher &reset();
-
-
    /**
     *   Resets this matcher, and set the current input position.
     *   The effect is to remove any memory of previous matches,
@@ -1087,8 +1037,6 @@ public:
     *   @stable ICU 2.8
     */
     virtual RegexMatcher &reset(int64_t index, UErrorCode &status);
-
-
    /**
     *   Resets this matcher with a new input string.  This allows instances of RegexMatcher
     *     to be reused, which is more efficient than creating a new RegexMatcher for
@@ -1107,8 +1055,6 @@ public:
     *   @stable ICU 2.4
     */
     virtual RegexMatcher &reset(const UnicodeString &input);
-
-
    /**
     *   Resets this matcher with a new input string.  This allows instances of RegexMatcher
     *     to be reused, which is more efficient than creating a new RegexMatcher for
@@ -1123,8 +1069,6 @@ public:
     *   @stable ICU 4.6
     */
     virtual RegexMatcher &reset(UText *input);
-
-
   /**
     *  Set the subject text string upon which the regular expression is looking for matches
     *  without changing any other aspect of the matching state.
@@ -1197,8 +1141,6 @@ public:
     *   @stable ICU 4.6
     */
     virtual UText *getInput(UText *dest, UErrorCode &status) const;
-    
-
    /** Sets the limits of this matcher's region.
      * The region is the part of the input string that will be searched to find a match.
      * Invoking this method resets the matcher, and then sets the region to start
@@ -1251,8 +1193,6 @@ public:
      * @stable ICU 4.6
      */
      virtual int64_t regionStart64() const;
-
-
     /**
       * Reports the end (limit) index (exclusive) of this matcher's region. The searches
       * this matcher conducts are limited to finding matches within regionStart
@@ -1302,8 +1242,6 @@ public:
       * @stable ICU 4.0
       **/
       virtual RegexMatcher &useTransparentBounds(UBool b);
-
-     
     /**
       * Return true if this matcher is using anchoring bounds.
       * By default, matchers use anchoring region bounds.
@@ -1312,8 +1250,6 @@ public:
       * @stable ICU 4.0
       */    
       virtual UBool hasAnchoringBounds() const;
-
-
     /**
       * Set whether this matcher is using Anchoring Bounds for its region.
       * With anchoring bounds, pattern anchors such as ^ and $ will match at the start
@@ -1327,8 +1263,6 @@ public:
       * @stable ICU 4.0
       */
       virtual RegexMatcher &useAnchoringBounds(UBool b);
-
-
     /**
       * Return TRUE if the most recent matching operation attempted to access
       *  additional input beyond the available input text.
@@ -1353,16 +1287,12 @@ public:
       * @stable ICU 4.0
       */
       virtual UBool requireEnd() const;
-
-
    /**
     *    Returns the pattern that is interpreted by this matcher.
     *    @return  the RegexPattern for this RegexMatcher
     *    @stable ICU 2.4
     */
     virtual const RegexPattern &pattern() const;
-
-
    /**
     *    Replaces every substring of the input that matches the pattern
     *    with the given replacement string.  This is a convenience function that
@@ -1380,8 +1310,6 @@ public:
     *    @stable ICU 2.4
     */
     virtual UnicodeString replaceAll(const UnicodeString &replacement, UErrorCode &status);
-
-
    /**
     *    Replaces every substring of the input that matches the pattern
     *    with the given replacement string.  This is a convenience function that
@@ -1403,8 +1331,6 @@ public:
     *    @stable ICU 4.6
     */
     virtual UText *replaceAll(UText *replacement, UText *dest, UErrorCode &status);
-    
-
    /**
     * Replaces the first substring of the input that matches
     * the pattern with the replacement string.   This is a convenience
@@ -1426,8 +1352,6 @@ public:
     *    @stable ICU 2.4
     */
     virtual UnicodeString replaceFirst(const UnicodeString &replacement, UErrorCode &status);
-    
-
    /**
     * Replaces the first substring of the input that matches
     * the pattern with the replacement string.   This is a convenience
@@ -1453,8 +1377,6 @@ public:
     *    @stable ICU 4.6
     */
     virtual UText *replaceFirst(UText *replacement, UText *dest, UErrorCode &status);
-    
-    
    /**
     *   Implements a replace operation intended to be used as part of an
     *   incremental find-and-replace.
@@ -1484,8 +1406,6 @@ public:
     */
     virtual RegexMatcher &appendReplacement(UnicodeString &dest,
         const UnicodeString &replacement, UErrorCode &status);
-    
-    
    /**
     *   Implements a replace operation intended to be used as part of an
     *   incremental find-and-replace.
@@ -1515,8 +1435,6 @@ public:
     */
     virtual RegexMatcher &appendReplacement(UText *dest,
         UText *replacement, UErrorCode &status);
-
-
    /**
     * As the final step in a find-and-replace operation, append the remainder
     * of the input string, starting at the position following the last appendReplacement(),
@@ -1528,8 +1446,6 @@ public:
     *  @stable ICU 2.4
     */
     virtual UnicodeString &appendTail(UnicodeString &dest);
-
-
    /**
     * As the final step in a find-and-replace operation, append the remainder
     * of the input string, starting at the position following the last appendReplacement(),
@@ -1544,8 +1460,6 @@ public:
     *  @stable ICU 4.6
     */
     virtual UText *appendTail(UText *dest, UErrorCode &status);
-
-
     /**
      * Split a string into fields.  Somewhat like split() from Perl.
      * The pattern matches identify delimiters that separate the input
@@ -1573,8 +1487,6 @@ public:
         UnicodeString    dest[],
         int32_t          destCapacity,
         UErrorCode       &status);
-
-
     /**
      * Split a string into fields.  Somewhat like split() from Perl.
      * The pattern matches identify delimiters that separate the input
@@ -1665,8 +1577,6 @@ public:
     *  @stable ICU 4.0
     */
     virtual int32_t  getStackLimit() const;
-
-
   /**
     * Set a callback function for use with this Matcher.
     * During matching operations the function will be called periodically,
@@ -1683,8 +1593,6 @@ public:
     virtual void setMatchCallback(URegexMatchCallback     *callback,
                                   const void              *context,
                                   UErrorCode              &status);
-
-
   /**
     *  Get the callback function for this URegularExpression.
     *
@@ -1698,8 +1606,6 @@ public:
     virtual void getMatchCallback(URegexMatchCallback     *&callback,
                                   const void              *&context,
                                   UErrorCode              &status);
-
-
   /**
     * Set a progress callback function for use with find operations on this Matcher.
     * During find operations, the callback will be invoked after each return from a
@@ -1716,8 +1622,6 @@ public:
     virtual void setFindProgressCallback(URegexFindProgressCallback      *callback,
                                               const void                              *context,
                                               UErrorCode                              &status);
-
-
   /**
     *  Get the find progress callback function for this URegularExpression.
     *
@@ -1866,8 +1770,6 @@ private:
     URegexFindProgressCallback  *fFindProgressCallbackFn;  // Pointer to match progress callback funct.
                                                            //   NULL if there is no callback.
     const void         *fFindProgressCallbackContext;      // User Context ptr for callback function.
-
-
     UBool               fInputUniStrMaybeMutable;  // Set when fInputText wraps a UnicodeString that may be mutable - compatibility.
 
     UBool               fTraceDebug;       // Set true for debug tracing of match engine.

@@ -159,7 +159,5 @@ private:
 	virtual void add_text(const std::wstring & Text){}
 };
 CP_REGISTER_OFFICE_ELEMENT2(settings_config_item_map_entry);
-
-
 }
 }

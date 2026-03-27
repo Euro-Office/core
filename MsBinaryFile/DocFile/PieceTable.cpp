@@ -491,8 +491,6 @@ namespace DocFileFormat
 
 		word->seek(pos);
 		word->read(bytes, size);
-
-
         FormatUtils::GetSTLCollectionFromBytes(encodingChars, bytes, size, coding);
 
         RELEASEARRAYOBJECTS(bytes);

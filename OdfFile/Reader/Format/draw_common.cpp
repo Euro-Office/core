@@ -121,8 +121,6 @@ namespace cpdoccore {
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 int get_value_emu(const _CP_OPT(length) & len)
 {
     return static_cast<int>(len.get_value_or( length(0, length::pt) ).get_value_unit( length::emu ));
@@ -333,8 +331,6 @@ void Compute_GradientFill(draw_gradient* gradient_style, oox::oox_gradient_fill_
 
 		fill->angle += 360 * fullRotations;
 	}
-		
-
 	for (size_t i = 0; i < gradient_style->content_.size(); ++i)
 	{
 		loext_gradient_stop* gradient_stop = dynamic_cast<loext_gradient_stop*>(gradient_style->content_[i].get());
@@ -462,8 +458,6 @@ void Compute_GradientFill(draw_gradient* gradient_style, oox::oox_gradient_fill_
 		}
 	}
 }
-
-
 void Compute_GraphicFill(const common_draw_fill_attlist & props, const office_element_ptr & style_image, odf_document* document, oox::_oox_fill & fill, bool txbx, bool reset_fill)
 {
 	styles_lite_container& styles = document->odf_context().drawStyles();
@@ -827,8 +821,6 @@ void docx_convert_transforms(std::wstring transformStr,std::vector<odf_reader::_
 		}
 	}
 }
-
-
 void xlsx_convert_transforms(std::wstring transformStr, oox::xlsx_conversion_context & Context)
 {
 	std::vector<std::wstring> transforms;

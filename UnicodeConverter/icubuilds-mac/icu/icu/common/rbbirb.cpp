@@ -32,11 +32,7 @@
 #include "rbbisetb.h"
 #include "rbbitblb.h"
 #include "rbbidata.h"
-
-
 U_NAMESPACE_BEGIN
-
-
 //----------------------------------------------------------------------------------------
 //
 //  Constructor.
@@ -53,8 +49,6 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
 #ifdef RBBI_DEBUG
     fDebugEnv   = getenv("U_RBBIDEBUG");
 #endif
-
-
     fForwardTree        = NULL;
     fReverseTree        = NULL;
     fSafeFwdTree        = NULL;
@@ -92,8 +86,6 @@ RBBIRuleBuilder::RBBIRuleBuilder(const UnicodeString   &rules,
     }
 }
 
-
-
 //----------------------------------------------------------------------------------------
 //
 //  Destructor
@@ -124,10 +116,6 @@ RBBIRuleBuilder::~RBBIRuleBuilder() {
     delete fScanner;
     delete fRuleStatusVals;
 }
-
-
-
-
 
 //----------------------------------------------------------------------------------------
 //
@@ -172,8 +160,6 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
         return NULL;
     }
     uprv_memset(data, 0, totalSize);
-
-
     data->fMagic            = 0xb1a0;
     data->fFormatVersion[0] = 3;
     data->fFormatVersion[1] = 1;
@@ -215,12 +201,6 @@ RBBIDataHeader *RBBIRuleBuilder::flattenData() {
 
     return data;
 }
-
-
-
-
-
-
 //----------------------------------------------------------------------------------------
 //
 //  createRuleBasedBreakIterator    construct from source rules that are passed in
@@ -251,8 +231,6 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     //    the character categories.
     //
     builder.fSetBuilder->build();
-
-
     //
     //   Generate the DFA state transition table.
     //
@@ -290,13 +268,9 @@ RBBIRuleBuilder::createRuleBasedBreakIterator( const UnicodeString    &rules,
     if (U_FAILURE(*builder.fStatus)) {
         return NULL;
     }
-
-
     //
     //  Clean up the compiler related stuff
     //
-
-
     //
     //  Create a break iterator from the compiled rules.
     //     (Identical to creation from stored pre-compiled rules)

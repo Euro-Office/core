@@ -43,13 +43,9 @@ SXSRC::SXSRC()
 	bSql = false;
 	bOLAP = false;
 }
-
-
 SXSRC::~SXSRC()
 {
 }
-
-
 BaseObjectPtr SXSRC::clone()
 {
 	return BaseObjectPtr(new SXSRC(*this));

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTWINFNT_H__
 #define __FTWINFNT_H__
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -48,8 +42,6 @@ FT_BEGIN_HEADER
   /*    functions.                                                         */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************
    *
    * @enum:
@@ -171,8 +163,6 @@ FT_BEGIN_HEADER
 #define FT_WinFNT_ID_CP874   222
 #define FT_WinFNT_ID_CP1250  238
 #define FT_WinFNT_ID_OEM     255
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -221,8 +211,6 @@ FT_BEGIN_HEADER
     FT_ULong   reserved1[4];
 
   } FT_WinFNT_HeaderRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -232,8 +220,6 @@ FT_BEGIN_HEADER
   /*    A handle to an @FT_WinFNT_HeaderRec structure.                     */
   /*                                                                       */
   typedef struct FT_WinFNT_HeaderRec_*  FT_WinFNT_Header;
-
-
   /**********************************************************************
    *
    * @function:
@@ -258,18 +244,12 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_WinFNT_Header( FT_Face               face,
                         FT_WinFNT_HeaderRec  *aheader );
-
-
   /* */
 
 FT_END_HEADER
 
 #endif /* __FTWINFNT_H__ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

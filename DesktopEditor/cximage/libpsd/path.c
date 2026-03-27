@@ -29,12 +29,8 @@
 #include "psd_stream.h"
 #include "psd_fixed.h"
 #include "psd_math.h"
-
-
 #define PSD_MIN_PATH_COUNT		4
 #define PSD_MIN_SUBPATH_COUNT	4
-
-
 #ifdef PSD_GET_PATH_RESOURCE
 
 psd_static psd_status psd_get_path_record(psd_context * context, psd_path * path, psd_int length)

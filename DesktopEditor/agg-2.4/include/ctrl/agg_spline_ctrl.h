@@ -109,8 +109,6 @@ namespace agg
         double   m_pdy;
         const trans_affine* m_mtx;
     };
-
-
     template<class ColorT> class spline_ctrl : public spline_ctrl_impl
     {
     public:
@@ -149,11 +147,5 @@ namespace agg
         ColorT  m_active_pnt_color;
         ColorT* m_colors[5];
     };
-
-
-
-
 }
-
-
 #endif

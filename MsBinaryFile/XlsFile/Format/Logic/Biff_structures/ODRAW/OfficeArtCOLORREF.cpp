@@ -34,8 +34,6 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtCOLORREF::OfficeArtCOLORREF() : index(-1), nColorRGB(-1)
 {
 }

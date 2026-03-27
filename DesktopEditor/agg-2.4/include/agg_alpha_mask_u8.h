@@ -30,8 +30,6 @@ namespace agg
     {
         static unsigned calculate(const int8u* p) { return *p; }
     };
-
-
     //=====================================================rgb_to_gray_mask_u8
     template<unsigned R, unsigned G, unsigned B>
     struct rgb_to_gray_mask_u8
@@ -63,8 +61,6 @@ namespace agg
 
         MaskF& mask_function() { return m_mask_function; }
         const MaskF& mask_function() const { return m_mask_function; }
-
-        
         //--------------------------------------------------------------------
         cover_type pixel(int x, int y) const
         {
@@ -92,8 +88,6 @@ namespace agg
             }
             return 0;
         }
-
-
         //--------------------------------------------------------------------
         void fill_hspan(int x, int y, cover_type* dst, int num_pix) const
         {
@@ -142,8 +136,6 @@ namespace agg
             }
             while(--count);
         }
-
-
         //--------------------------------------------------------------------
         void combine_hspan(int x, int y, cover_type* dst, int num_pix) const
         {
@@ -296,8 +288,6 @@ namespace agg
             }
             while(--count);
         }
-
-
     private:
         alpha_mask_u8(const self_type&);
         const self_type& operator = (const self_type&);
@@ -305,8 +295,6 @@ namespace agg
         rendering_buffer* m_rbuf;
         MaskF             m_mask_function;
     };
-    
-
     typedef alpha_mask_u8<1, 0> alpha_mask_gray8;   //----alpha_mask_gray8
 
     typedef alpha_mask_u8<3, 0> alpha_mask_rgb24r;  //----alpha_mask_rgb24r
@@ -344,8 +332,6 @@ namespace agg
     typedef alpha_mask_u8<4, 0, rgb_to_gray_mask_u8<2, 1, 0> > alpha_mask_bgra32gray; //----alpha_mask_bgra32gray
     typedef alpha_mask_u8<4, 1, rgb_to_gray_mask_u8<2, 1, 0> > alpha_mask_abgr32gray; //----alpha_mask_abgr32gray
 
-
-
     //==========================================================amask_no_clip_u8
     template<unsigned Step=1, unsigned Offset=0, class MaskF=one_component_mask_u8>
     class amask_no_clip_u8
@@ -367,16 +353,12 @@ namespace agg
 
         MaskF& mask_function() { return m_mask_function; }
         const MaskF& mask_function() const { return m_mask_function; }
-
-
         //--------------------------------------------------------------------
         cover_type pixel(int x, int y) const
         {
             return (cover_type)m_mask_function.calculate(
                                    m_rbuf->row_ptr(y) + x * Step + Offset);
         }
-
-        
         //--------------------------------------------------------------------
         cover_type combine_pixel(int x, int y, cover_type val) const
         {
@@ -385,8 +367,6 @@ namespace agg
                                     m_rbuf->row_ptr(y) + x * Step + Offset)) >> 
                                  cover_shift);
         }
-
-
         //--------------------------------------------------------------------
         void fill_hspan(int x, int y, cover_type* dst, int num_pix) const
         {
@@ -398,8 +378,6 @@ namespace agg
             }
             while(--num_pix);
         }
-
-
 
         //--------------------------------------------------------------------
         void combine_hspan(int x, int y, cover_type* dst, int num_pix) const
@@ -415,8 +393,6 @@ namespace agg
             }
             while(--num_pix);
         }
-
-
         //--------------------------------------------------------------------
         void fill_vspan(int x, int y, cover_type* dst, int num_pix) const
         {
@@ -428,8 +404,6 @@ namespace agg
             }
             while(--num_pix);
         }
-
-
         //--------------------------------------------------------------------
         void combine_vspan(int x, int y, cover_type* dst, int num_pix) const
         {
@@ -452,8 +426,6 @@ namespace agg
         rendering_buffer* m_rbuf;
         MaskF             m_mask_function;
     };
-    
-
     typedef amask_no_clip_u8<1, 0> amask_no_clip_gray8;   //----amask_no_clip_gray8
 
     typedef amask_no_clip_u8<3, 0> amask_no_clip_rgb24r;  //----amask_no_clip_rgb24r
@@ -490,10 +462,6 @@ namespace agg
     typedef amask_no_clip_u8<4, 1, rgb_to_gray_mask_u8<0, 1, 2> > amask_no_clip_argb32gray; //----amask_no_clip_argb32gray
     typedef amask_no_clip_u8<4, 0, rgb_to_gray_mask_u8<2, 1, 0> > amask_no_clip_bgra32gray; //----amask_no_clip_bgra32gray
     typedef amask_no_clip_u8<4, 1, rgb_to_gray_mask_u8<2, 1, 0> > amask_no_clip_abgr32gray; //----amask_no_clip_abgr32gray
-
-
 }
-
-
 
 #endif

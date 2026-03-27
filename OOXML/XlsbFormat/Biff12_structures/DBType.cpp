@@ -36,8 +36,6 @@ using namespace XLS;
 
 namespace XLSB
 {
-
-
 BiffStructurePtr DBType::clone()
 {
     return BiffStructurePtr(new DBType(*this));

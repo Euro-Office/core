@@ -196,8 +196,6 @@ static void U_CALLCONV initService() {
     gService = new ICUCollatorService();
     ucln_i18n_registerCleanup(UCLN_I18N_COLLATOR, collator_cleanup);
 }
-
-
 static ICULocaleService* 
 getService(void)
 {
@@ -252,8 +250,6 @@ static UBool isAvailableLocaleListInitialized(UErrorCode &status) {
     umtx_initOnce(gAvailableLocaleListInitOnce, &initAvailableLocaleList, status);
     return U_SUCCESS(status);
 }
-
-
 // Collator public methods -----------------------------------------------
 
 namespace {
@@ -452,8 +448,6 @@ Collator* U_EXPORT2 Collator::createInstance(const Locale& desiredLocale,
     }
     return coll;
 }
-
-
 Collator* Collator::makeInstance(const Locale&  desiredLocale, UErrorCode& status) {
     const CollationCacheEntry *entry = CollationLoader::loadTailoring(desiredLocale, status);
     if (U_SUCCESS(status)) {
@@ -848,8 +842,6 @@ public:
 CollationLocaleListEnumeration::~CollationLocaleListEnumeration() {}
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(CollationLocaleListEnumeration)
-
-
 // -------------------------------------
 
 StringEnumeration* U_EXPORT2

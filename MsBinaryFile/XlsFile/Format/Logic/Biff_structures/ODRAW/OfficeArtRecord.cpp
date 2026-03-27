@@ -34,8 +34,6 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtRecord::OfficeArtRecord(const unsigned char recVer, const unsigned short recType)
 {
 	rh_own.recVer = recVer;
@@ -52,8 +50,6 @@ void OfficeArtRecord::load(XLS::CFRecord& record)
 	//Log::warning(STR::int2str(rh_own.recType, 16));
 }
 
-
-
 bool OfficeArtRecord::IsThisHeaderMine(const OfficeArtRecordHeader& rh_check)
 {
 	return rh_check.recVer == rh_own.recVer && rh_check.recType == rh_own.recType;
@@ -64,6 +60,4 @@ const unsigned short OfficeArtRecord::GetInstanceToStore()
 {
 	return 0;
 }
-
-
 } // namespace ODRAW

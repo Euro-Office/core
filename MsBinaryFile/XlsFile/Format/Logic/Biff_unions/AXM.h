@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AXM union of records 
 class AXM: public CompositeObject
 {

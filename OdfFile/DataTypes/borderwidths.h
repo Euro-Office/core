@@ -30,14 +30,10 @@
  *
  */
 #pragma once
-
-
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
 #include "length.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class border_widths

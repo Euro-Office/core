@@ -161,8 +161,6 @@ public:
         AlignTop = AlignRight,
         AlignBottom = AlignLeft
     };
-
-
     enum DrawPathFlag
     {
         FillOnly,
@@ -195,8 +193,6 @@ public:
     {
         double affineMatrix[6];
     };
-
-
     struct Image
     {
         agg::rendering_buffer renBuf;
@@ -213,8 +209,6 @@ public:
         void premultiply();
         void demultiply();
     };
-
-
 	/*struct SVGImage
 	{
 		agg::svg::path_renderer m_path;
@@ -338,8 +332,6 @@ public:
       agg::trans_affine               m_affine;
 
     };
-
-
     ~Agg2D();
     Agg2D();
 
@@ -461,8 +453,6 @@ public:
     void curve(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);
     void polygon(double* xy, int numPoints);
     void polyline(double* xy, int numPoints);
-
-
     // Text
     //-----------------------
     void   flipText(bool flip);
@@ -483,8 +473,6 @@ public:
 
     double textWidth(const char* str);
     void   text(double x, double y, const char* str, bool roundOff=false, double dx=0.0, double dy=0.0);
-
-
     // Path commands
     //-----------------------
     void resetPath();
@@ -541,8 +529,6 @@ public:
     void drawPathNoTransform(DrawPathFlag flag = FillAndStroke);
 
 	//void drawSVG(SVGImage* svg_im);
-
-
     // Image Transformations
     //-----------------------
     void imageFilter(ImageFilter f);
@@ -563,8 +549,6 @@ public:
                         const double* parallelogram);
 
     void transformImage(const Image& img, const double* parallelogram);
-
-
     void transformImagePath(const Image& img,
                             int imgX1,    int imgY1,    int imgX2,    int imgY2,
                             double dstX1, double dstY1, double dstX2, double dstY2);
@@ -577,15 +561,11 @@ public:
                             const double* parallelogram);
 
     void transformImagePath(const Image& img, const double* parallelogram);
-
-
     // Image Blending (no transformations available)
     void blendImage(Image& img,
                     int imgX1, int imgY1, int imgX2, int imgY2,
                     double dstX, double dstY, unsigned alpha=255);
     void blendImage(Image& img, double dstX, double dstY, unsigned alpha=255);
-
-
     // Copy image directly, together with alpha-channel
     void copyImage(Image& img,
                    int imgX1, int imgY1, int imgX2, int imgY2,
@@ -597,8 +577,6 @@ public:
 
     void saveStateTo(State& st);
     void restoreStateFrom(const State& st);
-
-
 
     // Auxiliary
     //-----------------------
@@ -705,8 +683,6 @@ private:
     FontCacheManager                m_fontCacheManager;
 
 };
-
-
 inline bool operator == (const Agg2D::Color& c1, const Agg2D::Color& c2)
 {
    return c1.r == c2.r && c1.g == c2.g && c1.b == c2.b && c1.a == c2.a;
@@ -716,8 +692,4 @@ inline bool operator != (const Agg2D::Color& c1, const Agg2D::Color& c2)
 {
    return !(c1 == c2);
 }
-
-
 #endif
-
-

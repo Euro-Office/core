@@ -16,18 +16,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef __TTCOLR_H__
 #define __TTCOLR_H__
-
-
 #include "ttload.h"
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   tt_face_load_colr( TT_Face    face,
                      FT_Stream  stream );
@@ -47,11 +39,7 @@ FT_BEGIN_HEADER
                             FT_UInt       color_index,
                             FT_GlyphSlot  dstSlot,
                             FT_GlyphSlot  srcSlot );
-
-
 FT_END_HEADER
-
-
 #endif /* __TTCOLR_H__ */
 
 /* END */

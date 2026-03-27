@@ -54,13 +54,9 @@ namespace XLS
 CrtMlFrt::CrtMlFrt()
 {
 }
-
-
 CrtMlFrt::~CrtMlFrt()
 {
 }
-
-
 BaseObjectPtr CrtMlFrt::clone()
 {
 	return BaseObjectPtr(new CrtMlFrt(*this));

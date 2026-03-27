@@ -38,16 +38,12 @@ ScriptSet::~ScriptSet() {
 ScriptSet::ScriptSet(const ScriptSet &other) {
     *this = other;
 }
-    
-
 ScriptSet & ScriptSet::operator =(const ScriptSet &other) {
     for (uint32_t i=0; i<UPRV_LENGTHOF(bits); i++) {
         bits[i] = other.bits[i];
     }
     return *this;
 }
-
-
 UBool ScriptSet::operator == (const ScriptSet &other) const {
     for (uint32_t i=0; i<UPRV_LENGTHOF(bits); i++) {
         if (bits[i] != other.bits[i]) {
@@ -69,8 +65,6 @@ UBool ScriptSet::test(UScriptCode script, UErrorCode &status) const {
     uint32_t bit   = 1 << (script & 31);
     return ((bits[index] & bit) != 0);
 }
-
-
 ScriptSet &ScriptSet::set(UScriptCode script, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -98,8 +92,6 @@ ScriptSet &ScriptSet::reset(UScriptCode script, UErrorCode &status) {
     bits[index] &= ~bit;
     return *this;
 }
-
-
 
 ScriptSet &ScriptSet::Union(const ScriptSet &other) {
     for (uint32_t i=0; i<UPRV_LENGTHOF(bits); i++) {
@@ -138,16 +130,12 @@ UBool ScriptSet::contains(const ScriptSet &other) const {
     t.intersect(other);
     return (t == other);
 }
-
-
 ScriptSet &ScriptSet::setAll() {
     for (uint32_t i=0; i<UPRV_LENGTHOF(bits); i++) {
         bits[i] = 0xffffffffu;
     }
     return *this;
 }
-
-
 ScriptSet &ScriptSet::resetAll() {
     for (uint32_t i=0; i<UPRV_LENGTHOF(bits); i++) {
         bits[i] = 0;

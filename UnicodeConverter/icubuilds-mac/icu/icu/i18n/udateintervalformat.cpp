@@ -18,8 +18,6 @@
 #include "unicode/unistr.h"
 
 U_NAMESPACE_USE
-
-
 U_CAPI UDateIntervalFormat* U_EXPORT2
 udtitvfmt_open(const char*  locale,
                const UChar* skeleton,
@@ -53,15 +51,11 @@ udtitvfmt_open(const char*  locale,
     }
     return (UDateIntervalFormat*)formatter.orphan();
 }
-
-
 U_CAPI void U_EXPORT2
 udtitvfmt_close(UDateIntervalFormat *formatter)
 {
     delete (DateIntervalFormat*)formatter;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 udtitvfmt_format(const UDateIntervalFormat* formatter,
                  UDate           fromDate,
@@ -101,6 +95,4 @@ udtitvfmt_format(const UDateIntervalFormat* formatter,
 
     return res.extract(result, resultCapacity, *status);
 }
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */

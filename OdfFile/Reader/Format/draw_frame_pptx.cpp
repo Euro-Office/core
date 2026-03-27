@@ -278,8 +278,6 @@ void draw_frame::pptx_convert(oox::pptx_conversion_context & Context)
 
 		if (office_event_listeners_) office_event_listeners_->pptx_convert(Context);
 
-		
-
 		oox_drawing_ = oox_drawing_ptr(new oox::_pptx_drawing());
 	}
 

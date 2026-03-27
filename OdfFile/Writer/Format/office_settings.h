@@ -51,8 +51,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettings;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -71,8 +69,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettingsConfigItemSet;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -91,8 +87,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettingsConfigItem;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -112,8 +106,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettingsConfigItemMapIndexed;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -132,8 +124,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettingsConfigItemMapNamed;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -152,8 +142,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeOfficeSettingsConfigItemMapEntry;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -163,7 +151,5 @@ public:
     office_element_ptr_array	content_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(settings_config_item_map_entry);
-
-
 }
 }

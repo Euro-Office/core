@@ -36,7 +36,5 @@ const char *PluralMapBase::getCategoryName(Category c) {
     return (index < 0 || index >= UPRV_LENGTHOF(gPluralForms)) ?
             NULL : gPluralForms[index];
 }
-
-
 U_NAMESPACE_END
 

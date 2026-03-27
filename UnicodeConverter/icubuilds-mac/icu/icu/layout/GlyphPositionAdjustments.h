@@ -315,8 +315,6 @@ inline float GlyphPositionAdjustments::getYAdvance(le_int32 index) const
 {
     return fAdjustments[index].getYAdvance();
 }
-
-
 inline le_int32 GlyphPositionAdjustments::getBaseOffset(le_int32 index) const
 {
     return fAdjustments[index].getBaseOffset();

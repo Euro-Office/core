@@ -61,6 +61,4 @@ private:
 	
 	bool m_VerifyPassword;
 };
-
-
 } // namespace CRYPT

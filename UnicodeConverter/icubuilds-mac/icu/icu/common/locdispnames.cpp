@@ -263,8 +263,6 @@ BreakIterator::getDisplayName(const Locale& objectLocale,
 }
 
 #endif
-
-
 U_NAMESPACE_END
 
 // C API ------------------------------------------------------------------- ***
@@ -778,8 +776,6 @@ uloc_getDisplayKeyword(const char* keyword,
         *status=U_ILLEGAL_ARGUMENT_ERROR;
         return 0;
     }
-
-
     /* pass itemKey=NULL to look for a top-level item */
     return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,
                                _kKeys, NULL, 
@@ -789,8 +785,6 @@ uloc_getDisplayKeyword(const char* keyword,
                                status);
 
 }
-
-
 #define UCURRENCY_DISPLAY_NAME_INDEX 1
 
 U_CAPI int32_t U_EXPORT2
@@ -800,8 +794,6 @@ uloc_getDisplayKeywordValue(   const char* locale,
                                UChar* dest,
                                int32_t destCapacity,
                                UErrorCode* status){
-
-
     char keywordValue[ULOC_FULLNAME_CAPACITY*4];
     int32_t capacity = ULOC_FULLNAME_CAPACITY*4;
     int32_t keywordValueLen =0;
@@ -868,8 +860,6 @@ uloc_getDisplayKeywordValue(   const char* locale,
                 return keywordValueLen;
             }
         }
-
-        
     }else{
 
         return _getStringOrCopyKey(U_ICUDATA_LANG, displayLocale,

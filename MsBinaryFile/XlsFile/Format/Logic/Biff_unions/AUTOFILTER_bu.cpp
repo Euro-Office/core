@@ -71,8 +71,6 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr AUTOFILTER::clone()
 {
 	return BaseObjectPtr(new AUTOFILTER(*this));

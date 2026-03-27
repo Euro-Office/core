@@ -39,13 +39,9 @@ Footer::Footer()
 {
     ast = L"";
 }
-
-
 Footer::~Footer()
 {
 }
-
-
 BaseObjectPtr Footer::clone()
 {
 	return BaseObjectPtr(new Footer(*this));

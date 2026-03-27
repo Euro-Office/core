@@ -71,8 +71,6 @@
 
 #include <string.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------*
  *                Colormap creation and addition               *
  *-------------------------------------------------------------*/
@@ -104,8 +102,6 @@ PIXCMAP    *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  pixcmapCreateRandom()
  *
@@ -161,8 +157,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  pixcmapCreateLinear()
  *
@@ -196,8 +190,6 @@ PIXCMAP  *cmap;
     }
     return cmap;
 }
-
-
 /*!
  *  pixcmapCopy()
  *
@@ -227,8 +219,6 @@ PIXCMAP  *cmapd;
 
     return cmapd;
 }
-
-
 /*!
  *  pixcmapDestroy()
  *
@@ -256,8 +246,6 @@ PIXCMAP  *cmap;
 
     return;
 }
-
-
 /*!
  *  pixcmapAddColor()
  *
@@ -291,8 +279,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapAddNewColor()
  *
@@ -338,8 +324,6 @@ pixcmapAddNewColor(PIXCMAP  *cmap,
     *pindex = pixcmapGetCount(cmap) - 1;
     return 0;
 }
-
-
 /*!
  *  pixcmapUsableColor()
  *
@@ -381,8 +365,6 @@ l_int32  index;
         *pusable = 1;
     return 0;
 }
-
-
 /*!
  *  pixcmapAddBlackOrWhite()
  *
@@ -427,8 +409,6 @@ l_int32  index;
         *pindex = index;
     return 0;
 }
-
-
 /*!
  *  pixcmapSetBlackAndWhite()
  *
@@ -460,8 +440,6 @@ l_int32  index;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetCount()
  *
@@ -478,8 +456,6 @@ pixcmapGetCount(PIXCMAP  *cmap)
 
     return cmap->n;
 }
-
-
 /*!
  *  pixcmapGetFreeCount()
  *
@@ -496,8 +472,6 @@ pixcmapGetFreeCount(PIXCMAP  *cmap)
 
     return (cmap->nalloc - cmap->n);
 }
-
-
 /*!
  *  pixcmapGetDepth()
  *
@@ -514,8 +488,6 @@ pixcmapGetDepth(PIXCMAP  *cmap)
 
     return cmap->depth;
 }
-
-
 /*!
  *  pixcmapGetMinDepth()
  *
@@ -550,8 +522,6 @@ l_int32  ncolors;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapClear()
  *
@@ -570,8 +540,6 @@ pixcmapClear(PIXCMAP  *cmap)
     cmap->n = 0;
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                      Colormap random access                 *
  *-------------------------------------------------------------*/
@@ -609,8 +577,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetColor32()
  *
@@ -641,8 +607,6 @@ l_int32  rval, gval, bval;
     composeRGBPixel(rval, gval, bval, pval32);
     return 0;
 }
-
-
 /*!
  *  pixcmapResetColor()
  *
@@ -679,8 +643,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetIndex()
  *
@@ -719,8 +681,6 @@ RGBA_QUAD  *cta;
 
     return 1;
 }
-
-
 /*!
  *  pixcmapHasColor()
  *
@@ -758,8 +718,6 @@ l_int32  *rmap, *gmap, *bmap;
     FREE(bmap);
     return 0;
 }
-
-
 /*!
  *  pixcmapCountGrayColors()
  *
@@ -800,8 +758,6 @@ l_int32  *array;
     *pngray = count;
     return 0;
 }
-
-
 /*!
  *  pixcmapGetRankIntensity()
  *
@@ -843,8 +799,6 @@ NUMA    *na, *nasort;
     numaDestroy(&nasort);
     return 0;
 }
-
-
 /*!
  *  pixcmapGetNearestIndex()
  *
@@ -900,8 +854,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetNearestGrayIndex()
  *
@@ -952,8 +904,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetComponentRange()
  *
@@ -998,8 +948,6 @@ pixcmapGetComponentRange(PIXCMAP  *cmap,
 
     return 0;
 }
-
-
 /*!
  *  pixcmapGetExtremeValue()
  *
@@ -1065,8 +1013,6 @@ l_int32  i, n, rval, gval, bval, extrval, extgval, extbval;
     if (pbval) *pbval = extbval;
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                       Colormap conversion                   *
  *-------------------------------------------------------------*/
@@ -1099,8 +1045,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  pixcmapColorToGray()
  *
@@ -1155,8 +1099,6 @@ PIXCMAP   *cmapd;
         
     return cmapd;
 }
-
-
 /*-------------------------------------------------------------*
  *                         Colormap I/O                        *
  *-------------------------------------------------------------*/
@@ -1198,8 +1140,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*!
  *  pixcmapWriteStream()
  *
@@ -1236,8 +1176,6 @@ l_int32   i;
     FREE(bmap);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *               Extract colormap arrays and serialization              *
  *----------------------------------------------------------------------*/
@@ -1284,8 +1222,6 @@ RGBA_QUAD  *cta;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapToRGBTable()
  *
@@ -1327,8 +1263,6 @@ l_uint32  *tab;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapSerializeToMemory()
  *
@@ -1381,8 +1315,6 @@ l_uint8  *data;
     }
     return 0;
 }
-
-
 /*!
  *  pixcmapDeserializeFromMemory()
  *
@@ -1432,8 +1364,6 @@ PIXCMAP  *cmap;
 
     return cmap;
 }
-
-
 /*-------------------------------------------------------------*
  *                     Colormap transforms                     *
  *-------------------------------------------------------------*/
@@ -1489,8 +1419,6 @@ NUMA     *nag;
     numaDestroy(&nag);
     return 0;
 }
-
-
 /*!
  *  pixcmapContrastTRC()
  *
@@ -1535,8 +1463,6 @@ NUMA     *nac;
     numaDestroy(&nac);
     return 0;
 }
-
-
 /*!
  *  pixcmapShiftIntensity()
  *
@@ -1584,8 +1510,6 @@ l_int32   i, ncolors, rval, gval, bval;
 
     return 0;
 }
-
-
 /*!
  *  pixcmapConvertRGBToHSV()
  *
@@ -1615,8 +1539,6 @@ l_int32   i, ncolors, rval, gval, bval, hval, sval, vval;
     }
     return 0;
 }
-
-
 /*!
  *  pixcmapConvertHSVToRGB()
  *

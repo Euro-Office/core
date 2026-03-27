@@ -34,8 +34,6 @@
 #define LOGFILE "runsuite.log"
 static FILE *logfile = NULL;
 static int verbose = 0;
-
-
 /************************************************************************
  *									*
  *		File name and path utilities				*
@@ -1060,8 +1058,6 @@ main(int argc ATTRIBUTE_UNUSED, char **argv ATTRIBUTE_UNUSED) {
 
     if ((argc >= 2) && (!strcmp(argv[1], "-v")))
         verbose = 1;
-
-
     old_errors = nb_errors;
     old_tests = nb_tests;
     old_leaks = nb_leaks;

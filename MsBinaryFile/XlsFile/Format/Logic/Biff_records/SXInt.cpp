@@ -38,8 +38,6 @@ namespace XLS
 SXInt::SXInt()
 {
 }
-
-
 SXInt::~SXInt()
 {
 }

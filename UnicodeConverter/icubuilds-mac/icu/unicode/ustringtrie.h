@@ -21,8 +21,6 @@
  */
 
 #include "unicode/utypes.h"
-
-
 /**
  * Return values for BytesTrie::next(), UCharsTrie::next() and similar methods.
  * @see USTRINGTRIE_MATCHES

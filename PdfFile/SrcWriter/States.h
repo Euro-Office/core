@@ -1267,8 +1267,6 @@ public:
 	{
 		return m_dHorizontalScaling;
 	}
-
-
 private:
 
     std::wstring m_wsName;

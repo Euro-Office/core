@@ -88,8 +88,6 @@ XMLPUBFUN int XMLCALL
 					 int with_comments,
 					 const char* filename,
 					 int compression);
-
-
 /**
  * This is the core C14N function
  */

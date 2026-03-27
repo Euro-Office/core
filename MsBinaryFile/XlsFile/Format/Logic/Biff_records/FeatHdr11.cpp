@@ -38,13 +38,9 @@ namespace XLS
 FeatHdr11::FeatHdr11()
 {
 }
-
-
 FeatHdr11::~FeatHdr11()
 {
 }
-
-
 BaseObjectPtr FeatHdr11::clone()
 {
 	return BaseObjectPtr(new FeatHdr11(*this));

@@ -73,8 +73,6 @@
 #ifdef BSORT_TIMER
 #include "GOS.h"
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -145,8 +143,6 @@ BSByteStream::Decode::flush()
 
 // ========================================
 // -- Decoding
-
-
 static int 
 decode_raw(ZPCodec &zp, int bits)
 {
@@ -173,8 +169,6 @@ decode_binary(ZPCodec &zp, BitContext *ctx, int bits)
     }
   return n - m;
 }
-
-
 static inline void
 assignmtf(unsigned char xmtf[256])
 {
@@ -353,8 +347,6 @@ BSByteStream::Decode::decode(void)
       mtf[k] = data[i];
       freq[k] = fc;
     }
-  
-
   /////////////////////////////////
   ////////// Reconstruct the string
   
@@ -405,12 +397,8 @@ BSByteStream::Decode::decode(void)
   return size;
 }
 
-
-
 // ========================================
 // -- ByteStream interface
-
-
 
 long 
 BSByteStream::tell() const
@@ -457,8 +445,6 @@ BSByteStream::Decode::read(void *buffer, size_t sz)
   // Return copied bytes
   return copied;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

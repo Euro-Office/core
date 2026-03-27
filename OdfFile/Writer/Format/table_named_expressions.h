@@ -50,8 +50,6 @@ public:
 
     static const ElementType type = typeTableNamedExpressions;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -73,8 +71,6 @@ public:
 
     static const ElementType type = typeTableNamedRange;
 
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -89,8 +85,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(table_named_range);
-
-
 /// \brief  table:named-expression
 class table_named_expression : public office_element_impl<table_named_expression>
 {
@@ -99,8 +93,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTableNamedExpression;
-
-    
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
@@ -114,8 +106,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(table_named_expression);
-
-
 
 }
 }

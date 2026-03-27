@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of BUNDLESHEET union of records 
 class BUNDLESHEET: public CompositeObject
 {

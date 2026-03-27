@@ -42,8 +42,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------------------*
  *         Run a sequence of binary rasterop morphological operations      *
  *-------------------------------------------------------------------------*/
@@ -251,8 +249,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-
 /*-------------------------------------------------------------------------*
  *   Run a sequence of binary composite rasterop morphological operations  *
  *-------------------------------------------------------------------------*/
@@ -431,8 +427,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-
 /*-------------------------------------------------------------------------*
  *           Run a sequence of binary dwa morphological operations         *
  *-------------------------------------------------------------------------*/
@@ -592,8 +586,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-
 /*-------------------------------------------------------------------------*
  *      Run a sequence of binary composite dwa morphological operations    *
  *-------------------------------------------------------------------------*/
@@ -753,8 +745,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-
 /*-------------------------------------------------------------------------*
  *            Parser verifier for binary morphological operations          *
  *-------------------------------------------------------------------------*/
@@ -892,8 +882,6 @@ l_int32  intlogbase2[5] = {1, 2, 3, 0, 4};  /* of arg/4 */
     }
     return valid;
 }
-
-
 /*-----------------------------------------------------------------*
  *       Run a sequence of grayscale morphological operations      *
  *-----------------------------------------------------------------*/
@@ -1104,8 +1092,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-
 /*-----------------------------------------------------------------*
  *         Run a sequence of color morphological operations        *
  *-----------------------------------------------------------------*/
@@ -1277,5 +1263,3 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixt1;
 }
-
-

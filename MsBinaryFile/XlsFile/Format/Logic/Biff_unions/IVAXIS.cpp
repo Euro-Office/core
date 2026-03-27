@@ -42,26 +42,18 @@
 
 namespace XLS
 {
-
-
 IVAXIS::IVAXIS()
 :	id(0), bDataAxis(false)
 {
 	m_bSecondary = false;
 }
-
-
 IVAXIS::~IVAXIS()
 {
 }
-
-
 BaseObjectPtr IVAXIS::clone()
 {
 	return BaseObjectPtr(new IVAXIS(*this));
 }
-
-
 const bool IVAXIS::loadContentRead(BinReaderProcessor& proc)
 {
 	bool ok = loadContent(proc);

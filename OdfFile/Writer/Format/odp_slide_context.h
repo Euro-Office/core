@@ -121,7 +121,5 @@ private:
 	friend class odp_conversion_context;
 
 };
-
-
 }
 }

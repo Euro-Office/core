@@ -233,10 +233,6 @@ namespace agg
         pod_array<span>       m_spans;
         span*                 m_cur_span;
     };
-
-
-
-
     //==========================================================scanline_u8_am
     // 
     // The scanline container with alpha-masking
@@ -277,10 +273,6 @@ namespace agg
     private:
         const AlphaMask* m_alpha_mask;
     };
-
-
-
-
     //===========================================================scanline32_u8
     class scanline32_u8
     {
@@ -340,8 +332,6 @@ namespace agg
             span_array_type& m_spans;
             unsigned         m_span_idx;
         };
-
-
 
         //--------------------------------------------------------------------
         scanline32_u8() :
@@ -445,10 +435,6 @@ namespace agg
         pod_array<cover_type> m_covers;
         span_array_type       m_spans;
     };
-
-
-
-
     //========================================================scanline32_u8_am
     // 
     // The scanline container with alpha-masking
@@ -462,8 +448,6 @@ namespace agg
         typedef AlphaMask             alpha_mask_type;
         typedef base_type::cover_type cover_type;
         typedef base_type::coord_type coord_type;
-
-
         scanline32_u8_am() : base_type(), m_alpha_mask(0) {}
         scanline32_u8_am(const AlphaMask& am) : base_type(), m_alpha_mask(&am) {}
 
@@ -490,8 +474,6 @@ namespace agg
     private:
         const AlphaMask* m_alpha_mask;
     };
-
-
 
 }
 

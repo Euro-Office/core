@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 /***************************************************************************/
 /*                                                                         */
 /*                                                                         */
@@ -25,8 +23,6 @@
 /*                                                                         */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTOTVAL_H__
 #define __FTOTVAL_H__
 
@@ -38,11 +34,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -59,8 +51,6 @@ FT_BEGIN_HEADER
   /*    some OpenType tables (BASE, GDEF, GPOS, GSUB, JSTF, MATH).         */
   /*                                                                       */
   /*************************************************************************/
-
-
  /**********************************************************************
   *
   * @enum:
@@ -190,14 +180,8 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_OpenType_Free( FT_Face   face,
                     FT_Bytes  table );
-
-
  /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTOTVAL_H__ */
-
-
 /* END */

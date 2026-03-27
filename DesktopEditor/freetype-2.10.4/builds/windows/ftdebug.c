@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This component contains various macros and functions used to ease the
@@ -39,12 +37,8 @@
    *   debugging parts.
    *
    */
-
-
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
-
-
 #ifdef FT_DEBUG_LEVEL_ERROR
 
 #include <stdarg.h>
@@ -52,8 +46,6 @@
 #include <string.h>
 
 #include <windows.h>
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
@@ -62,8 +54,6 @@
   {
     static char  buf[8192];
     va_list      ap;
-
-
     va_start( ap, fmt );
     vfprintf( stderr, fmt, ap );
     /* send the string to the debugger as well */
@@ -71,8 +61,6 @@
     OutputDebugStringA( buf );
     va_end( ap );
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
@@ -81,8 +69,6 @@
   {
     static char  buf[8192];
     va_list      ap;
-
-
     va_start( ap, fmt );
     vsprintf( buf, fmt, ap );
     OutputDebugStringA( buf );
@@ -90,8 +76,6 @@
 
     exit( EXIT_FAILURE );
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( int )
@@ -117,8 +101,6 @@
   }
 
 #endif /* FT_DEBUG_LEVEL_ERROR */
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
 
   /* array of trace levels, initialized to 0; */
@@ -142,8 +124,6 @@
   };
 
 #undef FT_TRACE_DEF
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( FT_Int )
@@ -151,23 +131,17 @@
   {
     return trace_count;
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( const char * )
   FT_Trace_Get_Name( FT_Int  idx )
   {
     int  max = FT_Trace_Get_Count();
-
-
     if ( idx < max )
       return ft_trace_toggles[idx];
     else
       return NULL;
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
@@ -175,8 +149,6 @@
   {
     ft_trace_levels = ft_trace_levels_disabled;
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
@@ -184,8 +156,6 @@
   {
     ft_trace_levels = ft_trace_levels_enabled;
   }
-
-
   /**************************************************************************
    *
    * Initialize the tracing sub-system.  This is done by retrieving the
@@ -208,14 +178,10 @@
   ft_debug_init( void )
   {
     const char*  ft2_debug = getenv( "FT2_DEBUG" );
-
-
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
       const char*  q;
-
-
       for ( ; *p; p++ )
       {
         /* skip leading whitespace and separators */
@@ -234,13 +200,9 @@
         {
           FT_Int  n, i, len = (FT_Int)( p - q );
           FT_Int  level = -1, found = -1;
-
-
           for ( n = 0; n < trace_count; n++ )
           {
             const char*  toggle = ft_trace_toggles[n];
-
-
             for ( i = 0; i < len; i++ )
             {
               if ( toggle[i] != q[i] )
@@ -280,25 +242,17 @@
 
     ft_trace_levels = ft_trace_levels_enabled;
   }
-
-
 #else  /* !FT_DEBUG_LEVEL_TRACE */
-
-
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
     /* nothing */
   }
-
-
   FT_BASE_DEF( FT_Int )
   FT_Trace_Get_Count( void )
   {
     return 0;
   }
-
-
   FT_BASE_DEF( const char * )
   FT_Trace_Get_Name( FT_Int  idx )
   {
@@ -306,15 +260,11 @@
 
     return NULL;
   }
-
-
   FT_BASE_DEF( void )
   FT_Trace_Disable( void )
   {
     /* nothing */
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( void )
@@ -322,9 +272,5 @@
   {
     /* nothing */
   }
-
-
 #endif /* !FT_DEBUG_LEVEL_TRACE */
-
-
 /* END */

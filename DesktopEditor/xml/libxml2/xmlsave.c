@@ -799,8 +799,6 @@ xmlAttrListDumpOutput(xmlSaveCtxtPtr ctxt, xmlAttrPtr cur) {
     }
 }
 
-
-
 /**
  * xmlNodeListDumpOutput:
  * @cur:  the first node
@@ -1184,8 +1182,6 @@ xmlDocContentDumpOutput(xmlSaveCtxtPtr ctxt, xmlDocPtr cur) {
 	    if (ctxt->escapeAttr == xmlEscapeEntities)
 		ctxt->escapeAttr = NULL;
 	}
-
-
 	/*
 	 * Save the XML declaration
 	 */
@@ -2731,8 +2727,6 @@ xmlSaveFormatFileEnc( const char * filename, xmlDocPtr cur,
     ret = xmlOutputBufferClose(buf);
     return(ret);
 }
-
-
 /**
  * xmlSaveFileEnc:
  * @filename:  the filename (or URL)

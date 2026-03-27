@@ -41,8 +41,6 @@
 #include "VisioDocument.h"
 #include "VisioConnections.h"
 #include "Shapes.h"
-
-
 OOX::Draw::CVsdx::CVsdx() : OOX::IFileContainer(dynamic_cast<OOX::Document*>(this))
 {
 }

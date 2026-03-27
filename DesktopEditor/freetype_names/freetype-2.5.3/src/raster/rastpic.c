@@ -14,42 +14,30 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "rastpic.h"
 #include "rasterrs.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from ftraster.c */
   void
   FT_Init_Class_ft_standard_raster( FT_Raster_Funcs*  funcs );
-
-
   void
   ft_raster1_renderer_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->raster )
     {
       RasterPIC*  container = (RasterPIC*)pic_container->raster;
-
-
       if ( --container->ref_count )
         return;
       FT_FREE( container );
       pic_container->raster = NULL;
     }
   }
-
-
   FT_Error
   ft_raster1_renderer_class_pic_init( FT_Library  library )
   {
@@ -57,8 +45,6 @@
     FT_Error           error         = FT_Err_Ok;
     RasterPIC*         container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* since this function also serves raster5 renderer, */
     /* it implements reference counting                  */
     if ( pic_container->raster )
@@ -81,16 +67,12 @@
 
     return error;
   }
-
-
   /* re-route these init and free functions to the above functions */
   FT_Error
   ft_raster5_renderer_class_pic_init( FT_Library  library )
   {
     return ft_raster1_renderer_class_pic_init( library );
   }
-
-
   void
   ft_raster5_renderer_class_pic_free( FT_Library  library )
   {
@@ -98,6 +80,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

@@ -126,8 +126,6 @@ namespace ODRAW
                 *this = oSrc;
             }
         };
-
-
         double m_dLeft;
         double m_dTop;
         double m_dWidth;

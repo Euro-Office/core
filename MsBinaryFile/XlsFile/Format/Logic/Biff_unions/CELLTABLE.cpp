@@ -41,8 +41,6 @@
 
 namespace XLS
 {
-
-
 const bool CELL_GROUP::loadContent(BinProcessor& proc)
 {
     global_info_ = proc.getGlobalWorkbookInfo();
@@ -163,8 +161,6 @@ CELLTABLE::CELLTABLE(std::vector<CellRangeRef>& shared_formulas_locations_ref) :
 											isConcatinate_(false), shared_formulas_locations_ref_(shared_formulas_locations_ref)
 {
 }
-
-
 CELLTABLE::~CELLTABLE()
 {
 }
@@ -173,8 +169,6 @@ BaseObjectPtr CELLTABLE::clone()
 {
 	return BaseObjectPtr(new CELLTABLE(*this));
 }
-
-
 // CELLTABLE = 1*(1*Row *CELL 1*DBCell) *EntExU2
 const bool CELLTABLE::loadContent(BinProcessor& proc)
 {
@@ -219,8 +213,6 @@ const bool CELLTABLE::saveContent(BinProcessor& proc)
             proc.mandatory(*i);
     return true;
 }
-
-
 int CELLTABLE::serialize(std::wostream & stream)
 {
 	GlobalWorkbookInfo::_sheet_info & sheet_info = global_info_->sheets_info[index_sheet_info_];

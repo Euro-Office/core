@@ -533,8 +533,6 @@ namespace OOX
 			nullable<SimpleTypes::CDecimalNumber>			m_oId;
             nullable<std::wstring>							m_sName;
 		};
-
-
 	// Range Permissions 17.13.7
 
 		//--------------------------------------------------------------------------------
@@ -590,8 +588,6 @@ namespace OOX
 			nullable<SimpleTypes::CEdGrp>					m_oEdGrp;
             nullable<std::wstring>							m_sId;
 		};
-
-
 	// Spelling and Grammar 17.13.8
 
 		//--------------------------------------------------------------------------------

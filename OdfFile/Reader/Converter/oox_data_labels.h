@@ -80,8 +80,6 @@ public:
 	void set_general_dLbls_status( bool flag );
 
 	bool get_general_dLbls_status() const;
-
-   
 private:
 
 	std::wstring formatCode_;
@@ -100,8 +98,6 @@ private:
 
 	odf_reader::text_format_properties_ptr					textPr_;
 	std::map<int, odf_reader::text_format_properties_ptr>	dLbls_;
-
-
 //delete (Delete) §21.2.2.40
 //dLblPos (Data Label Position) §21.2.2.48
 //extLst (Chart Extensibility) §21.2.2.64

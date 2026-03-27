@@ -7,11 +7,7 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 namespace agg
 {
 
@@ -35,8 +31,6 @@ namespace agg
     private:
         double m_size;
     };
-
-
 
     template<class Renderer> class renderer_enlarged
     {
@@ -88,27 +82,7 @@ namespace agg
         double      m_size;
     };
 
-
-
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -148,18 +122,12 @@ public:
         m_slider1.no_transform();
         m_slider2.no_transform();
     }
-
-
     virtual ~the_application()
     {
     }
-
-
     virtual void on_init()
     {
     }
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<agg::pixfmt_bgr24> ren_base;
@@ -175,8 +143,6 @@ public:
         int size_mul = int(m_slider1.value());
 
         ras.gamma(agg::gamma_power(m_slider2.value()));
-
-
         agg::renderer_enlarged<ren_base> ren_en(ren, size_mul);
 
         ras.reset();
@@ -185,8 +151,6 @@ public:
         ras.line_to_d(m_x[2]/size_mul, m_y[2]/size_mul);
         ren_en.color(agg::rgba8(0,0,0, 255));
         agg::render_scanlines(ras, sl, ren_en);
-
-
         agg::render_scanlines_aa_solid(ras, sl, ren, agg::rgba8(0,0,0));
 
         ras.gamma(agg::gamma_none());
@@ -217,10 +181,6 @@ public:
         agg::render_ctrl(ras, sl, ren, m_slider1);
         agg::render_ctrl(ras, sl, ren, m_slider2);
     }
-
-
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -250,8 +210,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -288,8 +246,6 @@ public:
         m_idx = -1;
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -301,5 +257,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

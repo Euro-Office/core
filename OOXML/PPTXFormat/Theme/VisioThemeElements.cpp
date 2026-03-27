@@ -686,8 +686,6 @@ namespace PPTX
 			oAttr.Write(L"lineIdx", lineIdx);
 			oAttr.Write(L"effectIdx", effectIdx);
 			oAttr.Write(L"fontIdx", fontIdx);
-
-
 			XmlUtils::CNodeValue oValue;
 
 			return XmlUtils::CreateNode(L"vt:varStyle", oAttr, oValue);

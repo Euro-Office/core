@@ -21,8 +21,6 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "platform/agg_platform_support.h"
 #include "interactive_polygon.h"
-
-
 enum flip_y_e { flip_y = true };
 
 agg::rasterizer_scanline_aa<> g_rasterizer;
@@ -31,8 +29,6 @@ double            g_x1 = 0;
 double            g_y1 = 0;
 double            g_x2 = 0;
 double            g_y2 = 0;
-
-
 
 class the_application : public agg::platform_support
 {
@@ -59,8 +55,6 @@ public:
         m_trans_type.cur_item(2);
         add_ctrl(m_trans_type);
     }
-
-
     virtual void on_init()
     {
         double d = 0.0;
@@ -87,8 +81,6 @@ public:
         renderer_base_pre rb_pre(pixf_pre);
 
         renderer_solid r(rb);
-
-
         rb.clear(agg::rgba(1, 1, 1));
 
         if(m_trans_type.cur_item() == 0)
@@ -224,8 +216,6 @@ public:
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_trans_type);
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -236,8 +226,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -252,8 +240,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_quad.on_mouse_button_up(x, y))
@@ -263,12 +249,6 @@ public:
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgra32, flip_y);
@@ -322,9 +302,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

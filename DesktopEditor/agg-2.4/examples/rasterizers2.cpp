@@ -28,8 +28,6 @@
 //#define AGG_RGB565
 //#define AGG_RGB555
 #include "pixel_formats.h"
-
-
 enum flip_y_e { flip_y = true };
 
 static const agg::int32u pixmap_chain[] = 
@@ -43,8 +41,6 @@ static const agg::int32u pixmap_chain[] =
     0x00ffffff, 0x00ffffff, 0x0cfbf9f9, 0xff9a5757, 0xff660000, 0xff660000, 0xff660000, 0xff660000, 0xff660000, 0xff660000, 0xff660000, 0xff660000, 0xb4c29999, 0x00ffffff, 0x00ffffff, 0x00ffffff, 
     0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0xb4c29999, 0xff9a5757, 0xff9a5757, 0xff9a5757, 0xff9a5757, 0xff9a5757, 0xff9a5757, 0xb4c29999, 0x00ffffff, 0x00ffffff, 0x00ffffff, 0x00ffffff
 };
-
-
 
 namespace agg
 {
@@ -67,8 +63,6 @@ namespace agg
         const int32u* m_pixmap;
     };
 }
-
-
 
 class spiral
 {
@@ -123,8 +117,6 @@ private:
     double m_dr;
     bool   m_start;
 };
-
-
 struct roundoff
 {
     void transform(double* x, double* y) const
@@ -133,8 +125,6 @@ struct roundoff
         *y = floor(*y);
     }
 };
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_step;
@@ -144,8 +134,6 @@ class the_application : public agg::platform_support
     agg::cbox_ctrl<agg::rgba8>   m_accurate_joins;
     agg::cbox_ctrl<agg::rgba8>   m_scale_pattern;
     double m_start_angle;
-
-
 public:
     typedef agg::renderer_base<pixfmt> renderer_base;
     typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_aa;
@@ -159,8 +147,6 @@ public:
     typedef agg::renderer_outline_image<renderer_base, image_pattern> renderer_img;
     typedef agg::rasterizer_outline_aa<renderer_oaa> rasterizer_outline_aa;
     typedef agg::rasterizer_outline_aa<renderer_img> rasterizer_outline_img;
-    
-
 
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -202,8 +188,6 @@ public:
         m_scale_pattern.status(true);
     }
 
-
-
     void draw_aliased_pix_accuracy(rasterizer_outline& ras, renderer_prim& prim)
     {
         spiral s1(width()/5, height()/4+50, 5, 70, 8, m_start_angle);
@@ -243,8 +227,6 @@ public:
         spiral s5(width() - width()/5, height() - height()/4 + 20, 5, 70, 8, m_start_angle);
         ras.add_path(s5);
     }
-    
-
 
     void text(rasterizer_scanline& ras, 
               scanline& sl,
@@ -261,10 +243,6 @@ public:
         ren.color(agg::rgba(0,0,0));
         agg::render_scanlines(ras, sl, ren);
     }
-
-
-
-
     virtual void on_draw()
     {
         pixfmt pf(rbuf_window());
@@ -315,16 +293,12 @@ public:
         text(ras_aa, sl, ren_aa, 50, height()/2+50, "Anti-aliased lines");
         text(ras_aa, sl, ren_aa, width()/2-50, height()/2+50, "Scanline rasterizer");
         text(ras_aa, sl, ren_aa, width() - width()/5 - 50, height()/2+50, "Arbitrary Image Pattern");
-
-
         agg::render_ctrl(ras_aa, sl, ren_base, m_step);
         agg::render_ctrl(ras_aa, sl, ren_base, m_width);
         agg::render_ctrl(ras_aa, sl, ren_base, m_test);
         agg::render_ctrl(ras_aa, sl, ren_base, m_rotate);
         agg::render_ctrl(ras_aa, sl, ren_base, m_accurate_joins);
         agg::render_ctrl(ras_aa, sl, ren_base, m_scale_pattern);
-
-
 
 /*
 // An example of using anti-aliased outline rasterizer. 
@@ -370,10 +344,6 @@ ras.render(false);     //false means "don't close
 //-- doesn't require invoking render()
 //ras.add_path(some_path);
 */
-
-
-
-
 /*
 // An example of using image pattern outline rasterizer
 // Uncomment it to see the result
@@ -384,8 +354,6 @@ ras.render(false);     //false means "don't close
 //#include "agg_pattern_filters_rgba.h"  // for all rgba-8-bit color formats
 //#include "agg_renderer_outline_image.h"
 //#include "agg_rasterizer_outline_aa.h"
-
-
 agg::pattern_filter_bilinear_rgba8 fltr;          // Filtering functor
 
 agg::pattern_pixmap_argb32 patt_src(pixmap_chain); // Source. Must have an interface:
@@ -435,8 +403,6 @@ ras.render(false);     //false means "don't close
 */
 
     }
-
-
     virtual void on_idle()
     {
         m_start_angle += agg::deg2rad(m_step.value());
@@ -531,8 +497,6 @@ ras.render(false);     //false means "don't close
         }
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -545,5 +509,3 @@ int agg_main(int argc, char* argv[])
 
     return 1;
 }
-
-

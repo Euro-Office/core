@@ -65,8 +65,6 @@ class DigitInterval;
 #if !U_PLATFORM_IS_DARWIN_BASED
 template class U_I18N_API MaybeStackHeaderAndArray<decNumber, char, DEFAULT_DIGITS>;
 #endif
-
-
 enum EStackMode { kOnStack };
 
 enum EFastpathBits { kFastpathOk = 1, kNoDecimal = 2 };
@@ -151,8 +149,6 @@ public:
     UBool operator==(const DigitList& other) const;
 
     int32_t  compare(const DigitList& other);
-
-
     inline UBool operator!=(const DigitList& other) const { return !operator==(other); }
 
     /**
@@ -348,8 +344,6 @@ public:
      * @return invariant format of the digit
      */
     char     getDigit(int32_t i);
-
-
     /**
      * Get the digit's value, as an integer from 0..9 inclusive.
      * Note that internally this value is a decNumberUnit, but ICU configures it to be a uint8_t.
@@ -481,8 +475,6 @@ private:
       kInt64
     } fHave;
 
-
-
     UBool shouldRoundUp(int32_t maximumDigits) const;
 
  public:
@@ -521,8 +513,6 @@ private:
       fHave = kNone;
     }
 };
-
-
 U_NAMESPACE_END
 
 #endif // #if !UCONFIG_NO_FORMATTING

@@ -202,8 +202,6 @@ uLong* bytesRecovered;
                 break;
               }
             }
-
-
           } else {
             err = Z_ERRNO;
             break;

@@ -20,15 +20,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftmemory.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftbzip2.h>
 #include FT_CONFIG_STANDARD_LIBRARY_H
-
-
 #include <freetype/ftmoderr.h>
 
 #undef FTERRORS_H_
@@ -38,14 +34,10 @@
 #define FT_ERR_BASE    FT_Mod_Err_Bzip2
 
 #include <freetype/fterrors.h>
-
-
 #ifdef FT_CONFIG_OPTION_USE_BZIP2
 
 #define BZ_NO_STDIO /* Do not need FILE */
 #include <bzlib.h>
-
-
 /***************************************************************************/
 /***************************************************************************/
 /*****                                                                 *****/
@@ -68,21 +60,15 @@
     FT_ULong    sz = (FT_ULong)size * (FT_ULong)items;
     FT_Error    error;
     FT_Pointer  p  = NULL;
-
-
     (void)FT_ALLOC( p, sz );
     return p;
   }
-
-
   static void
   ft_bzip2_free( FT_Memory  memory,
                  void*      address )
   {
     FT_MEM_FREE( address );
   }
-
-
 /***************************************************************************/
 /***************************************************************************/
 /*****                                                                 *****/
@@ -108,16 +94,12 @@
     FT_Byte*   limit;
 
   } FT_BZip2FileRec, *FT_BZip2File;
-
-
   /* check and skip .bz2 header - we don't support `transparent' compression */
   static FT_Error
   ft_bzip2_check_header( FT_Stream  stream )
   {
     FT_Error  error = FT_Err_Ok;
     FT_Byte   head[4];
-
-
     if ( FT_STREAM_SEEK( 0 )       ||
          FT_STREAM_READ( head, 4 ) )
       goto Exit;
@@ -135,8 +117,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   ft_bzip2_file_init( FT_BZip2File  zip,
                       FT_Stream     stream,
@@ -144,8 +124,6 @@
   {
     bz_stream*  bzstream = &zip->bzstream;
     FT_Error    error    = FT_Err_Ok;
-
-
     zip->stream = stream;
     zip->source = source;
     zip->memory = stream->memory;
@@ -181,14 +159,10 @@
   Exit:
     return error;
   }
-
-
   static void
   ft_bzip2_file_done( FT_BZip2File  zip )
   {
     bz_stream*  bzstream = &zip->bzstream;
-
-
     BZ2_bzDecompressEnd( bzstream );
 
     /* clear the rest */
@@ -204,20 +178,14 @@
     zip->source = NULL;
     zip->stream = NULL;
   }
-
-
   static FT_Error
   ft_bzip2_file_reset( FT_BZip2File  zip )
   {
     FT_Stream  stream = zip->source;
     FT_Error   error;
-
-
     if ( !FT_STREAM_SEEK( 0 ) )
     {
       bz_stream*  bzstream = &zip->bzstream;
-
-
       BZ2_bzDecompressEnd( bzstream );
 
       bzstream->avail_in  = 0;
@@ -234,16 +202,12 @@
 
     return error;
   }
-
-
   static FT_Error
   ft_bzip2_file_fill_input( FT_BZip2File  zip )
   {
     bz_stream*  bzstream = &zip->bzstream;
     FT_Stream   stream    = zip->source;
     FT_ULong    size;
-
-
     if ( stream->read )
     {
       size = stream->read( stream, stream->pos, zip->input,
@@ -275,15 +239,11 @@
 
     return FT_Err_Ok;
   }
-
-
   static FT_Error
   ft_bzip2_file_fill_output( FT_BZip2File  zip )
   {
     bz_stream*  bzstream = &zip->bzstream;
     FT_Error    error    = FT_Err_Ok;
-
-
     zip->cursor         = zip->buffer;
     bzstream->next_out  = (char*)zip->cursor;
     bzstream->avail_out = FT_BZIP2_BUFFER_SIZE;
@@ -291,8 +251,6 @@
     while ( bzstream->avail_out > 0 )
     {
       int  err;
-
-
       if ( bzstream->avail_in == 0 )
       {
         error = ft_bzip2_file_fill_input( zip );
@@ -319,8 +277,6 @@
 
     return error;
   }
-
-
   /* fill output buffer; `count' must be <= FT_BZIP2_BUFFER_SIZE */
   static FT_Error
   ft_bzip2_file_skip_output( FT_BZip2File  zip,
@@ -328,8 +284,6 @@
   {
     FT_Error  error = FT_Err_Ok;
     FT_ULong  delta;
-
-
     for (;;)
     {
       delta = (FT_ULong)( zip->limit - zip->cursor );
@@ -350,8 +304,6 @@
 
     return error;
   }
-
-
   static FT_ULong
   ft_bzip2_file_io( FT_BZip2File  zip,
                     FT_ULong      pos,
@@ -360,8 +312,6 @@
   {
     FT_ULong  result = 0;
     FT_Error  error;
-
-
     /* Reset inflate stream if we're seeking backwards.        */
     /* Yes, that is not too efficient, but it saves memory :-) */
     if ( pos < zip->pos )
@@ -386,8 +336,6 @@
     for (;;)
     {
       FT_ULong  delta;
-
-
       delta = (FT_ULong)( zip->limit - zip->cursor );
       if ( delta >= count )
         delta = count;
@@ -410,8 +358,6 @@
   Exit:
     return result;
   }
-
-
 /***************************************************************************/
 /***************************************************************************/
 /*****                                                                 *****/
@@ -425,8 +371,6 @@
   {
     FT_BZip2File  zip    = (FT_BZip2File)stream->descriptor.pointer;
     FT_Memory     memory = stream->memory;
-
-
     if ( zip )
     {
       /* finalize bzip file descriptor */
@@ -437,8 +381,6 @@
       stream->descriptor.pointer = NULL;
     }
   }
-
-
   static unsigned long
   ft_bzip2_stream_io( FT_Stream       stream,
                       unsigned long   offset,
@@ -446,12 +388,8 @@
                       unsigned long   count )
   {
     FT_BZip2File  zip = (FT_BZip2File)stream->descriptor.pointer;
-
-
     return ft_bzip2_file_io( zip, offset, buffer, count );
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Stream_OpenBzip2( FT_Stream  stream,
                        FT_Stream  source )
@@ -459,8 +397,6 @@
     FT_Error      error;
     FT_Memory     memory;
     FT_BZip2File  zip = NULL;
-
-
     if ( !stream || !source )
     {
       error = FT_THROW( Invalid_Stream_Handle );
@@ -515,6 +451,4 @@
   }
 
 #endif /* !FT_CONFIG_OPTION_USE_BZIP2 */
-
-
 /* END */

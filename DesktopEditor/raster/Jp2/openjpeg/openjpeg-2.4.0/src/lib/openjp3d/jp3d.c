@@ -826,8 +826,6 @@ static void j3d_read_siz(opj_j3d_t *j3d)
     }
 }
 
-
-
 static void j3d_write_com(opj_j3d_t *j3d)
 {
     unsigned int i;
@@ -2406,8 +2404,6 @@ static int j3d_create_index(opj_j3d_t *j3d, opj_cio_t *cio,
 
     fprintf(stream, "SE_MAX\t%8e\n", volume_info->D_max);   /* SE max */
     fprintf(stream, "SE_TOTAL\t%.8e\n", total_disto);           /* SE totale */
-
-
     fclose(stream);
 
     return 1;

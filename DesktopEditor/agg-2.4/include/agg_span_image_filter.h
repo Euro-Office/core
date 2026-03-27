@@ -85,10 +85,6 @@ namespace agg
         unsigned m_dx_int;
         unsigned m_dy_int;
     };
-
-
-
-
     //==============================================span_image_resample_affine
     template<class Source> 
     class span_image_resample_affine : 
@@ -115,8 +111,6 @@ namespace agg
             m_blur_x(1.0),
             m_blur_y(1.0)
         {}
-
-
         //--------------------------------------------------------------------
         int  scale_limit() const { return uround(m_scale_limit); }
         void scale_limit(int v)  { m_scale_limit = v; }
@@ -172,8 +166,6 @@ namespace agg
         double m_blur_x;
         double m_blur_y;
     };
-
-
 
     //=====================================================span_image_resample
     template<class Source, class Interpolator> 
@@ -237,10 +229,6 @@ namespace agg
         int m_blur_x;
         int m_blur_y;
     };
-
-
-
-
 }
 
 #endif

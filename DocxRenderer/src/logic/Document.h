@@ -6,8 +6,6 @@
 #include "managers/FontStyleManager.h"
 #include "managers/ParagraphStyleManager.h"
 #include <list>
-
-
 namespace NSDocxRenderer
 {
 	class CDocument

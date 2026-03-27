@@ -34,21 +34,15 @@
 
 namespace XLS
 {
-
-
 PtgExp::PtgExp()
 :	Ptg(fixed_id)
 {
 
 }
-
-
 BiffStructurePtr PtgExp::clone()
 {
 	return BiffStructurePtr(new PtgExp(*this));
 }
-
-
 void PtgExp::loadFields(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)
@@ -66,15 +60,11 @@ void PtgExp::writeFields(CFRecord& record)
 		record << rowXlsb;
 
 }
-
-
 void PtgExp::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	// The reference coordinates shall be obtained from row/column values.
 	// No textual form need but the empty line.
 	ptg_stack.push(L""); 
 }
-
-
 } // namespace XLS
 

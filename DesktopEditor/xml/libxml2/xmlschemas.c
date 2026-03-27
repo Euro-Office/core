@@ -502,8 +502,6 @@ struct _xmlSchemaTreeItem {
     xmlSchemaTreeItemPtr next;
     xmlSchemaTreeItemPtr children;
 };
-
-
 #define XML_SCHEMA_ATTR_USE_FIXED 1<<0
 /**
  * xmlSchemaAttributeUsePtr:
@@ -802,8 +800,6 @@ struct _xmlSchemaPSVIIDCBinding {
     int sizeNodes; /* size of the node table */
     xmlSchemaItemListPtr dupls;
 };
-
-
 #define XPATH_STATE_OBJ_TYPE_IDC_SELECTOR 1
 #define XPATH_STATE_OBJ_TYPE_IDC_FIELD 2
 
@@ -953,8 +949,6 @@ struct _xmlSchemaAttrInfo {
     const xmlChar *vcValue; /* the value constraint value */
     xmlSchemaNodeInfoPtr parent;
 };
-
-
 #define XML_SCHEMA_VALID_CTXT_FLAG_STREAM 1
 /**
  * xmlSchemaValidCtxt:
@@ -1274,8 +1268,6 @@ xmlSchemaGetNextComponent(xmlSchemaBasicItemPtr item)
     }
 }
 #endif
-
-
 /**
  * xmlSchemaFormatQName:
  * @buf: the string buffer
@@ -1485,8 +1477,6 @@ xmlSchemaGetCanonValueWhtspExt(xmlSchemaValPtr val,
     int list;
     xmlSchemaValType valType;
     const xmlChar *value, *value2 = NULL;
-
-
     if ((retValue == NULL) || (val == NULL))
 	return (-1);
     list = xmlSchemaValueGetNext(val) ? 1 : 0;
@@ -1932,8 +1922,6 @@ xmlSchemaPErr2(xmlSchemaParserCtxtPtr ctxt, xmlNodePtr node,
     else
         xmlSchemaPErr(ctxt, node, error, msg, str1, str2);
 }
-
-
 /**
  * xmlSchemaPErrExt:
  * @ctxt: the parsing context
@@ -2356,8 +2344,6 @@ xmlSchemaCustomErr(xmlSchemaAbstractCtxtPtr actxt,
 	message, str1, str2, NULL, NULL);
 }
 
-
-
 static void LIBXML_ATTR_FORMAT(5,0)
 xmlSchemaCustomWarning(xmlSchemaAbstractCtxtPtr actxt,
 		   xmlParserErrors error,
@@ -2380,8 +2366,6 @@ xmlSchemaCustomWarning(xmlSchemaAbstractCtxtPtr actxt,
 
     FREE_AND_NULL(msg)
 }
-
-
 
 static void LIBXML_ATTR_FORMAT(5,0)
 xmlSchemaKeyrefErr(xmlSchemaValidCtxtPtr vctxt,
@@ -2766,8 +2750,6 @@ xmlSchemaFacetErr(xmlSchemaAbstractCtxtPtr actxt,
 #define PERROR_INT2(func, msg) xmlSchemaInternalErr(ACTXT_CAST ctxt, func, msg);
 
 #define AERROR_INT(func, msg) xmlSchemaInternalErr(actxt, func, msg);
-
-
 /**
  * xmlSchemaPMissingAttrErr:
  * @ctxt: the schema validation context
@@ -2800,8 +2782,6 @@ xmlSchemaPMissingAttrErr(xmlSchemaParserCtxtPtr ctxt,
 	    BAD_CAST des, BAD_CAST name);
     FREE_AND_NULL(des);
 }
-
-
 /**
  * xmlSchemaPResCompAttrErr:
  * @ctxt: the schema validation context
@@ -3237,17 +3217,11 @@ xmlSchemaPContentErr(xmlSchemaParserCtxtPtr ctxt,
  *			Streamable error functions                      *
  *									*
  ************************************************************************/
-
-
-
-
 /************************************************************************
  *									*
  *			Validation helper functions			*
  *									*
  ************************************************************************/
-
-
 /************************************************************************
  *									*
  *			Allocation functions				*
@@ -4194,8 +4168,6 @@ xmlSchemaElementDump(xmlSchemaElementPtr elem, FILE * output,
 {
     if (elem == NULL)
         return;
-
-
     fprintf(output, "Element");
     if (elem->flags & XML_SCHEMAS_ELEM_GLOBAL)
 	fprintf(output, " (global)");
@@ -5460,8 +5432,6 @@ xmlSchemaAddAttributeUseProhib(xmlSchemaParserCtxtPtr pctxt)
     WXS_ADD_LOCAL(pctxt, ret);
     return (ret);
 }
-
-
 /**
  * xmlSchemaAddModelGroup:
  * @ctxt:  a schema parser context
@@ -5501,8 +5471,6 @@ xmlSchemaAddModelGroup(xmlSchemaParserCtxtPtr ctxt,
 	WXS_ADD_PENDING(ctxt, ret);
     return (ret);
 }
-
-
 /**
  * xmlSchemaAddParticle:
  * @ctxt:  a schema parser context
@@ -7098,8 +7066,6 @@ xmlSchemaParseAnyAttribute(xmlSchemaParserCtxtPtr ctxt,
 
     return (ret);
 }
-
-
 /**
  * xmlSchemaParseAttribute:
  * @ctxt:  a schema validation context
@@ -7501,8 +7467,6 @@ check_children:
     }
     return (WXS_BASIC_CAST use);
 }
-
-
 static xmlSchemaAttributePtr
 xmlSchemaParseGlobalAttribute(xmlSchemaParserCtxtPtr pctxt,
 			      xmlSchemaPtr schema,
@@ -9527,8 +9491,6 @@ xmlSchemaParseModelGroupDefinition(xmlSchemaParserCtxtPtr ctxt,
 	child = child->next;
     }
 
-
-
     if (child != NULL) {
 	xmlSchemaPContentErr(ctxt,
 	    XML_SCHEMAP_S4S_ELEM_NOT_ALLOWED,
@@ -9612,8 +9574,6 @@ xmlSchemaCleanupDoc(xmlSchemaParserCtxtPtr ctxt, xmlNodePtr root)
         delete = NULL;
     }
 }
-
-
 static void
 xmlSchemaClearSchemaDefaults(xmlSchemaPtr schema)
 {
@@ -10076,8 +10036,6 @@ xmlSchemaGetChameleonSchemaBucket(xmlSchemaParserCtxtPtr pctxt,
     }
     return(NULL);
 }
-
-
 #define IS_BAD_SCHEMA_DOC(b) \
     (((b)->doc == NULL) && ((b)->schemaLocation != NULL))
 
@@ -10217,8 +10175,6 @@ xmlSchemaParseNewDoc(xmlSchemaParserCtxtPtr pctxt,
     xmlSchemaSetParserStructuredErrors(newpctxt, pctxt->serror,
 	pctxt->errCtxt);
     newpctxt->counter = pctxt->counter;
-
-
     res = xmlSchemaParseNewDocWithContext(newpctxt, schema, bucket);
 
     /* Channel back errors and cleanup the temporary parser context. */
@@ -10246,8 +10202,6 @@ xmlSchemaSchemaRelationAddChild(xmlSchemaBucketPtr bucket,
 	cur = cur->next;
     cur->next = rel;
 }
-
-
 static const xmlChar *
 xmlSchemaBuildAbsoluteURI(xmlDictPtr dict, const xmlChar* location,
 			  xmlNodePtr ctxtNode)
@@ -10278,8 +10232,6 @@ xmlSchemaBuildAbsoluteURI(xmlDictPtr dict, const xmlChar* location,
     }
     return(NULL);
 }
-
-
 
 /**
  * xmlSchemaAddSchemaDoc:
@@ -10326,8 +10278,6 @@ xmlSchemaAddSchemaDoc(xmlSchemaParserCtxtPtr pctxt,
 	    err = XML_SCHEMAP_SRC_REDEFINE;
 	    break;
     }
-
-
     /* Special handling for the main schema:
     * skip the location and relation logic and just parse the doc.
     * We need just a bucket to be returned in this case.
@@ -12125,8 +12075,6 @@ xmlSchemaParseComplexType(xmlSchemaParserCtxtPtr ctxt, xmlSchemaPtr schema,
     char buf[40];
 #endif
     int final = 0, block = 0, hasRestrictionOrExtension = 0;
-
-
     if ((ctxt == NULL) || (schema == NULL) || (node == NULL))
         return (NULL);
 
@@ -14400,8 +14348,6 @@ not_found:
     }
     return(0);
 }
-
-
 static int
 xmlSchemaExpandAttributeGroupRefs(xmlSchemaParserCtxtPtr pctxt,
 				  xmlSchemaBasicItemPtr item,
@@ -15146,8 +15092,6 @@ xmlSchemaResolveTypeReferences(xmlSchemaTypePtr typeDef,
 	}
     }
 }
-
-
 
 /**
  * xmlSchemaCheckSTPropsCorrect:
@@ -17058,8 +17002,6 @@ xmlSchemaCheckCOSParticleRestrict(xmlSchemaParserCtxtPtr ctxt,
     */
     if (r == b)
 	return (0);
-
-
     return (0);
 }
 
@@ -17156,8 +17098,6 @@ xmlSchemaCheckRCaseRecurse(xmlSchemaParserCtxtPtr ctxt,
     if (xmlSchemaCheckParticleRangeOK(r->minOccurs, r->maxOccurs,
 	    b->minOccurs, b->maxOccurs))
 	return (1);
-
-
     return (0);
 }
 
@@ -17875,8 +17815,6 @@ xmlSchemaTypeFixupOptimFacets(xmlSchemaTypePtr type)
 static int
 xmlSchemaTypeFixupWhitespace(xmlSchemaTypePtr type)
 {
-
-
     /*
     * Evaluate the whitespace-facet value.
     */
@@ -18597,8 +18535,6 @@ exit_failure:
 #endif
     return(-1);
 }
-
-
 /**
  * xmlSchemaTypeFixup:
  * @typeDecl:  the schema type definition
@@ -20313,10 +20249,6 @@ xmlSchemaCheckAttrUsePropsCorrect(xmlSchemaParserCtxtPtr ctxt,
     }
     return(0);
 }
-
-
-
-
 /**
  * xmlSchemaResolveAttrTypeReferences:
  * @item:  an attribute declaration
@@ -20710,8 +20642,6 @@ xmlSchemaCheckSRCRedefineSecond(xmlSchemaParserCtxtPtr pctxt)
     } while (redef != NULL);
     return(0);
 }
-
-
 static int
 xmlSchemaAddComponents(xmlSchemaParserCtxtPtr pctxt,
 		       xmlSchemaBucketPtr bucket)
@@ -21580,8 +21510,6 @@ xmlSchemaGetWhiteSpaceFacetValue(xmlSchemaTypePtr type)
  *			Simple type validation				*
  *									*
  ************************************************************************/
-
-
 /************************************************************************
  *									*
  *			DOM Validation code				*
@@ -26013,8 +25941,6 @@ xmlSchemaVCheckINodeDataType(xmlSchemaValidCtxtPtr vctxt,
 	    type, value, NULL, 1, 0, 0));
 }
 
-
-
 /*
 * Process END of element.
 */
@@ -27608,8 +27534,6 @@ xmlSchemaClearValidCtxt(xmlSchemaValidCtxtPtr vctxt)
 	}
 	vctxt->idcMatcherCache = NULL;
     }
-
-
     if (vctxt->idcNodes != NULL) {
 	int i;
 	xmlSchemaPSVIIDCNodePtr item;
@@ -27842,8 +27766,6 @@ xmlSchemaGetValidErrors(xmlSchemaValidCtxtPtr ctxt,
 		*ctx = ctxt->errCtxt;
 	return (0);
 }
-
-
 /**
  * xmlSchemaSetValidOptions:
  * @ctxt:	a schema validation context
@@ -28226,8 +28148,6 @@ xmlSchemaValidateDoc(xmlSchemaValidCtxtPtr ctxt, xmlDocPtr doc)
     ctxt->validationRoot = ctxt->node;
     return (xmlSchemaVStart(ctxt));
 }
-
-
 /************************************************************************
  *									*
  *		Function and data for SAX streaming API			*
@@ -28342,8 +28262,6 @@ getParameterEntitySplit(void *ctx, const xmlChar *name)
 	return(ctxt->user_sax->getParameterEntity(ctxt->user_data, name));
     return(NULL);
 }
-
-
 static void
 entityDeclSplit(void *ctx, const xmlChar *name, int type,
           const xmlChar *publicId, const xmlChar *systemId, xmlChar *content)

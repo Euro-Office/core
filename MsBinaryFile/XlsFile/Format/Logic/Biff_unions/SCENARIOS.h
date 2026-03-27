@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SCENARIOS union of records 
 class SCENARIOS: public CompositeObject
 {

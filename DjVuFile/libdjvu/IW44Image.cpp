@@ -91,22 +91,16 @@
 #include <assert.h>
 #include <string.h>
 #include <math.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 #define IWALLOCSIZE    4080
 #define IWCODEC_MAJOR     1
 #define IWCODEC_MINOR     2
 #define DECIBEL_PRUNE   5.0
-
-
 //////////////////////////////////////////////////////
 // WAVELET DECOMPOSITION CONSTANTS
 //////////////////////////////////////////////////////
@@ -116,8 +110,6 @@ namespace DJVU {
 // - iw_norm: norm of all wavelets (for db estimation)
 // - iw_border: pixel border required to run filters
 // - iw_shift: scale applied before decomposition
-
-
 static const int iw_quant[16] = {
   0x004000, 
   0x008000, 0x008000, 0x010000,
@@ -152,8 +144,6 @@ public:
 //////////////////////////////////////////////////////
 // MMX IMPLEMENTATION HELPERS
 //////////////////////////////////////////////////////
-
-
 // Note:
 // MMX implementation for vertical transforms only.
 // Speedup is basically related to faster memory transfer
@@ -208,8 +198,6 @@ mmx_bv_1 ( short* &q, short* e, int s, int s3 )
       q += 4;
     }
 }
-
-
 static void
 mmx_bv_2 ( short* &q, short* e, int s, int s3 )
 {
@@ -457,13 +445,9 @@ filter_bh(short *p, int w, int h, int rowsize, int scale)
       p += rowsize;
     }
 }
-
-
 //////////////////////////////////////////////////////
 // REPRESENTATION OF WAVELET DECOMPOSED IMAGES
 //////////////////////////////////////////////////////
-
-
 
 //---------------------------------------------------------------
 // Zig zag location in a 1024 liftblock.
@@ -474,8 +458,6 @@ filter_bh(short *p, int w, int h, int rowsize, int scale)
 //   x = (x<<1) | (n&1);  n >>= 1;
 //   y = (y<<1) | (n&1);  n >>= 1;
 // }
-
-
 static int zigzagloc[1024] = {
    0,  16, 512, 528,   8,  24, 520, 536, 256, 272, 768, 784, 264, 280, 776, 792,
    4,  20, 516, 532,  12,  28, 524, 540, 260, 276, 772, 788, 268, 284, 780, 796,
@@ -555,8 +537,6 @@ struct IW44Image::Alloc // DJVU_CLASS
 
 //---------------------------------------------------------------
 // *** Class IW44Image::Block [implementation]
-
-
 IW44Image::Block::Block(void)
 {
   pdata[0] = pdata[1] = pdata[2] = pdata[3] = 0;
@@ -599,8 +579,6 @@ IW44Image::Block::write_liftblock(short *coeff, int bmin, int bmax) const
 
 //---------------------------------------------------------------
 // *** Class IW44Image::Map [implementation]
-
-
 IW44Image::Map::Map(int w, int h)
   :  blocks(0), iw(w), ih(h), chain(0)
 {
@@ -621,8 +599,6 @@ IW44Image::Map::~Map()
     }
   delete [] blocks;
 }
-
-
 IW44Image::Alloc::Alloc(Alloc *n)
   : next(n) 
 { 
@@ -677,10 +653,6 @@ IW44Image::Map::get_memory_usage(void) const
     usage += sizeof(IW44Image::Alloc);
   return usage;
 }
-
-
-
-
 void 
 IW44Image::Map::image(signed char *img8, int rowsize, int pixsep, int fast)
 {
@@ -876,21 +848,13 @@ IW44Image::Map::image(int subsample, const GRect &rect,
       p += dataw;
     }
 }
-
-
-
-
 //////////////////////////////////////////////////////
 // ENCODING/DECODING WAVELET COEFFICIENTS 
 //    USING HIERARCHICAL SET DIFFERENCE
 //////////////////////////////////////////////////////
-
-
 //-----------------------------------------------
 // Class IW44Image::Codec [implementation]
 // Maintains information shared while encoding or decoding
-
-
 // Constant
 
 static const struct { int start; int size; }  
@@ -902,8 +866,6 @@ bandbuckets[] =
   { 4, 4 }, { 8, 4 }, { 12,4 }, 
   { 16,16 }, { 32,16 }, { 48,16 }, 
 };
-
-
 // IW44Image::Codec constructor
 
 IW44Image::Codec::Codec(IW44Image::Map &xmap)
@@ -937,8 +899,6 @@ IW44Image::Codec::Codec(IW44Image::Map &xmap)
   ctxMant = 0;
   ctxRoot = 0;
 }
-
-
 // IW44Image::Codec destructor
 
 IW44Image::Codec::~Codec() {}
@@ -971,8 +931,6 @@ IW44Image::Codec::is_null_slice(int bit, int band)
       return (! (threshold>0 && threshold<0x8000));
     }
 }
-
-
 // code_slice
 // -- read/write a slice of datafile
 
@@ -1086,8 +1044,6 @@ IW44Image::Codec::decode_prepare(int fbucket, int nbucket, IW44Image::Block &blk
     }
   return bbstate;
 }
-
-
 // decode_buckets
 // -- code a sequence of buckets in a given block
 
@@ -1279,13 +1235,9 @@ IW44Image::Codec::decode_buckets(ZPCodec &zp, int bit, int band,
           }
     }
 }
-
-
 //////////////////////////////////////////////////////
 // UTILITIES
 //////////////////////////////////////////////////////
-
-
 #ifdef min
 #undef min
 #endif
@@ -1303,8 +1255,6 @@ max(const int x, const int y)
 {
   return (y <= x) ? x : y;
 }
-
-
 void 
 IW44Image::PrimaryHeader::decode(GP<ByteStream> gbs)
 {
@@ -1330,8 +1280,6 @@ IW44Image::TertiaryHeader::decode(GP<ByteStream> gbs, int major, int minor)
   if (major== 1 && minor>=2)
     crcbdelay = gbs->read8();
 }
-
-
 
 //////////////////////////////////////////////////////
 // CLASS IW44Image
@@ -1376,8 +1324,6 @@ IW44Image::encode_iff(IFFByteStream &, int nchunks, const IWEncoderParms *)
 {
   G_THROW( ERR_MSG("IW44Image.codec_open2") );
 }
-
-  
 void 
 IWBitmap::close_codec(void)
 {
@@ -1407,8 +1353,6 @@ IW44Image::get_height(void) const
 {
   return (ymap)?(ymap->ih):0;
 }
-
-
 //////////////////////////////////////////////////////
 // CLASS IWBITMAP
 //////////////////////////////////////////////////////
@@ -1443,8 +1387,6 @@ IWBitmap::get_memory_usage(void) const
     usage += ymap->get_memory_usage();
   return usage;
 }
-
-
 GP<GBitmap> 
 IWBitmap::get_bitmap(void)
 {
@@ -1467,8 +1409,6 @@ IWBitmap::get_bitmap(void)
   pbm->set_grays(256);
   return pbm;
 }
-
-
 GP<GBitmap>
 IWBitmap::get_bitmap(int subsample, const GRect &rect)
 {
@@ -1490,8 +1430,6 @@ IWBitmap::get_bitmap(int subsample, const GRect &rect)
   pbm->set_grays(256);
   return pbm;
 }
-
-
 int
 IWBitmap::decode_chunk(GP<ByteStream> gbs)
 {
@@ -1554,8 +1492,6 @@ IWBitmap::parm_dbfrac(float frac)
   else
     G_THROW( ERR_MSG("IW44Image.param_range") );
 }
-
-
 int 
 IWBitmap::get_serial(void)
 {
@@ -1580,30 +1516,18 @@ IWBitmap::decode_iff(IFFByteStream &iff, int maxchunks)
   iff.close_chunk();
   close_codec();
 }
-
-
-
-
 //////////////////////////////////////////////////////
 // CLASS IWENCODERPARMS
 //////////////////////////////////////////////////////
-
-
 IWEncoderParms::IWEncoderParms(void)
 {
   // Zero represent default values
   memset((void*)this, 0, sizeof(IWEncoderParms));
 }
 
-
-
-
-
 //////////////////////////////////////////////////////
 // CLASS IWPIXMAP
 //////////////////////////////////////////////////////
-
-
 IWPixmap::IWPixmap(void)
 : IW44Image(), crcb_delay(10), crcb_half(0), ycodec(0), cbcodec(0), crcodec(0)
 {}
@@ -1648,8 +1572,6 @@ IWPixmap::get_memory_usage(void) const
     usage += crmap->get_memory_usage();
   return usage;
 }
-
-
 GP<GPixmap> 
 IWPixmap::get_pixmap(void)
 {
@@ -1689,8 +1611,6 @@ IWPixmap::get_pixmap(void)
   return ppm;
 }
 
-
-
 GP<GPixmap>
 IWPixmap::get_pixmap(int subsample, const GRect &rect)
 {
@@ -1728,8 +1648,6 @@ IWPixmap::get_pixmap(int subsample, const GRect &rect)
   // Return
   return ppm;
 }
-
-
 int
 IWPixmap::decode_chunk(GP<ByteStream> gbs)
 {
@@ -1803,8 +1721,6 @@ IWPixmap::decode_chunk(GP<ByteStream> gbs)
   cserial += 1;
   return nslices;
 }
-
-
 int 
 IWPixmap::parm_crcbdelay(const int parm)
 {
@@ -1827,8 +1743,6 @@ IWPixmap::get_serial(void)
 {
   return cserial;
 }
-
-
 void 
 IWPixmap::decode_iff(IFFByteStream &iff, int maxchunks)
 {
@@ -1858,8 +1772,6 @@ IW44Image::Transform::filter_begin(int w, int h)
   if (MMXControl::mmxflag < 0)  
     MMXControl::enable_mmx();
 }
-
-
 void
 IW44Image::Transform::filter_end(void)
 {
@@ -1868,13 +1780,9 @@ IW44Image::Transform::filter_end(void)
     MMXemms;
 #endif
 }
-
-
 //////////////////////////////////////////////////////
 // WAVELET TRANSFORM 
 //////////////////////////////////////////////////////
-
-
 //----------------------------------------------------
 // Function for applying bidimensional IW44 between 
 // scale intervals begin(inclusive) and end(exclusive)
@@ -1905,10 +1813,6 @@ IW44Image::Transform::Decode::backward(short *p, int w, int h, int rowsize, int 
   // TERMINATE
   filter_end();
 }
-  
-
-
-
 //////////////////////////////////////////////////////
 // COLOR TRANSFORM 
 //////////////////////////////////////////////////////
@@ -1938,8 +1842,6 @@ IW44Image::Transform::Decode::YCbCr_to_RGB(GPixel *p, int w, int h, int rowsize)
         }
     }
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

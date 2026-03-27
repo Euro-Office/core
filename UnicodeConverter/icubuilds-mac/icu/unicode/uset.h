@@ -15,8 +15,6 @@
 *
 *   C version of UnicodeSet.
 */
-
-
 /**
  * \file
  * \brief C API: Unicode Set

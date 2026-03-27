@@ -64,8 +64,6 @@ TEST_F(Test59708, body_text_empty_paragraph_font_size_1)
 {
 	using namespace cpdoccore;
 	using namespace cpdoccore::odf_reader;
-	
-
 	office_body* body = g_TestEnv59708->GetBody();
 	ASSERT_TRUE(body);
 
@@ -95,8 +93,6 @@ TEST_F(Test59708, body_text_empty_paragraph_font_size_2)
 {
 	using namespace cpdoccore;
 	using namespace cpdoccore::odf_reader;
-
-
 	office_body* body = g_TestEnv59708->GetBody();
 	ASSERT_TRUE(body);
 

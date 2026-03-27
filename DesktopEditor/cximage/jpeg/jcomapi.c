@@ -12,8 +12,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Abort processing of a JPEG compression or decompression operation,
  * but don't destroy the object itself.
@@ -52,8 +50,6 @@ jpeg_abort (j_common_ptr cinfo)
     cinfo->global_state = CSTATE_START;
   }
 }
-
-
 /*
  * Destruction of a JPEG object.
  *
@@ -75,8 +71,6 @@ jpeg_destroy (j_common_ptr cinfo)
   cinfo->mem = NULL;		/* be safe if jpeg_destroy is called twice */
   cinfo->global_state = 0;	/* mark it destroyed */
 }
-
-
 /*
  * Convenience routines for allocating quantization and Huffman tables.
  * (Would jutils.c be a more reasonable place to put these?)
@@ -92,8 +86,6 @@ jpeg_alloc_quant_table (j_common_ptr cinfo)
   tbl->sent_table = FALSE;	/* make sure this is false in any new table */
   return tbl;
 }
-
-
 GLOBAL(JHUFF_TBL *)
 jpeg_alloc_huff_table (j_common_ptr cinfo)
 {

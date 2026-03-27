@@ -73,16 +73,12 @@
 #include "debug.h"
 
 #include <ctype.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // GLParser.h and GLParser.cpp used to be separate files capable to decode
 // that weird ANTa chunk format into C++ structures and lists. But since
 // its implementation is temporary and is used only in this file (DjVuAnno.cpp)
@@ -91,8 +87,6 @@ namespace DJVU {
 //***************************************************************************
 //****************************** GLParser.h *********************************
 //***************************************************************************
-
-
 class GLObject : public GPEnabled
 {
 public:
@@ -189,13 +183,9 @@ GLParser::GLParser(const char * str)
 {
   parse(str); 
 }
-
-
 //***************************************************************************
 //***************************** GLParser.cpp ********************************
 //***************************************************************************
-
-
 GLObject::GLObject(int xnumber) : type(NUMBER), number(xnumber) {}
 
 GLObject::GLObject(GLObjectType xtype, const char * str) : type(xtype)
@@ -779,8 +769,6 @@ DjVuANT::decode(class GLParser & parser)
    metadata=get_metadata(parser); 
 #endif
 }
-
-
 void 
 DjVuANT::decode(ByteStream & str)
 {
@@ -1471,8 +1459,6 @@ GP<DjVuANT>
 DjVuANT::copy(void) const
 {
    GP<DjVuANT> ant=new DjVuANT(*this);
-
-
       // Now process the list of hyperlinks.
    ant->map_areas.empty();
    for(GPosition pos=map_areas;pos;++pos)
@@ -1518,8 +1504,6 @@ DjVuAnno::writeParam(ByteStream &str_out) const
 {
   str_out.writestring(get_paramtags());
 }
-
-
 void
 DjVuAnno::decode(const GP<ByteStream> &gbs)
 {
@@ -1575,8 +1559,6 @@ DjVuAnno::encode(const GP<ByteStream> &gbs)
     }
   // Add encoding of other chunks here
 }
-
-
 GP<DjVuAnno>
 DjVuAnno::copy(void) const
 {
@@ -1600,8 +1582,6 @@ DjVuAnno::merge(const GP<DjVuAnno> & anno)
       decode(gstr);
    }
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

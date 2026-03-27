@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "pfrsbit.h"
 #include "pfrload.h"
 #include <freetype/internal/ftdebug.h>
@@ -25,8 +23,6 @@
 
 #undef  FT_COMPONENT
 #define FT_COMPONENT  pfr
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -44,8 +40,6 @@
     FT_UInt   total;     /* total number of bits to draw     */
 
   } PFR_BitWriterRec, *PFR_BitWriter;
-
-
   static void
   pfr_bitwriter_init( PFR_BitWriter  writer,
                       FT_Bitmap*     target,
@@ -63,8 +57,6 @@
       writer->pitch = -writer->pitch;
     }
   }
-
-
   static void
   pfr_bitwriter_decode_bytes( PFR_BitWriter  writer,
                               FT_Byte*       p,
@@ -76,8 +68,6 @@
     FT_UInt   mask = 0x80;
     FT_UInt   val  = 0;
     FT_UInt   c    = 0;
-
-
     n = (FT_UInt)( limit - p ) * 8;
     if ( n > writer->total )
       n = writer->total;
@@ -117,8 +107,6 @@
     if ( mask != 0x80 )
       cur[0] = (FT_Byte)c;
   }
-
-
   static void
   pfr_bitwriter_decode_rle1( PFR_BitWriter  writer,
                              FT_Byte*       p,
@@ -130,8 +118,6 @@
     FT_Byte*  cur  = writer->line;
     FT_UInt   mask = 0x80;
     FT_UInt   c    = 0;
-
-
     n = writer->total;
 
     phase     = 1;
@@ -149,8 +135,6 @@
           if ( phase )
           {
             FT_Int  v;
-
-
             if ( p >= limit )
               break;
 
@@ -198,8 +182,6 @@
     if ( mask != 0x80 )
       cur[0] = (FT_Byte) c;
   }
-
-
   static void
   pfr_bitwriter_decode_rle2( PFR_BitWriter  writer,
                              FT_Byte*       p,
@@ -211,8 +193,6 @@
     FT_Byte*  cur  = writer->line;
     FT_UInt   mask = 0x80;
     FT_UInt   c    = 0;
-
-
     n = writer->total;
 
     phase  = 1;
@@ -263,8 +243,6 @@
     if ( mask != 0x80 )
       cur[0] = (FT_Byte) c;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -285,8 +263,6 @@
     FT_UInt   min, max, char_len;
     FT_Bool   two = FT_BOOL( *flags & PFR_BITMAP_2BYTE_CHARCODE );
     FT_Byte*  buff;
-
-
     char_len = 4;
     if ( two )
       char_len += 1;
@@ -301,8 +277,6 @@
       FT_Byte*  lim;
       FT_UInt   code;
       FT_Long   prev_code;
-
-
       *flags    |= PFR_BITMAP_VALID_CHARCODES;
       prev_code  = -1;
       lim        = base + count * char_len;
@@ -354,8 +328,6 @@
     while ( min < max )
     {
       FT_UInt  mid, code;
-
-
       mid  = ( min + max ) >> 1;
       buff = base + mid * char_len;
 
@@ -389,8 +361,6 @@
     else
       *found_offset = PFR_NEXT_USHORT( buff );
   }
-
-
   /* load bitmap metrics.  `*padvance' must be set to the default value */
   /* before calling this function                                       */
   /*                                                                    */
@@ -411,8 +381,6 @@
     FT_Byte*  p = *pdata;
     FT_Long   xpos, ypos, advance;
     FT_UInt   xsize, ysize;
-
-
     PFR_CHECK( 1 );
     flags = PFR_NEXT_BYTE( p );
 
@@ -527,8 +495,6 @@
     FT_ERROR(( "pfr_load_bitmap_metrics: invalid glyph data\n" ));
     goto Exit;
   }
-
-
   static FT_Error
   pfr_load_bitmap_bits( FT_Byte*    p,
                         FT_Byte*    limit,
@@ -538,8 +504,6 @@
   {
     FT_Error          error = FT_Err_Ok;
     PFR_BitWriterRec  writer;
-
-
     if ( target->rows > 0 && target->width > 0 )
     {
       pfr_bitwriter_init( &writer, target, decreasing );
@@ -565,8 +529,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -589,16 +551,12 @@
     FT_ULong     gps_size;
     PFR_Char     character;
     PFR_Strike   strike;
-
-
     character = &phys->chars[glyph_index];
 
     /* look up a bitmap strike corresponding to the current */
     /* character dimensions                                 */
     {
       FT_UInt  n;
-
-
       strike = phys->strikes;
       for ( n = 0; n < phys->num_strikes; n++ )
       {
@@ -618,8 +576,6 @@
     /* now look up the glyph's position within the file */
     {
       FT_UInt  char_len;
-
-
       char_len = 4;
       if ( strike->flags & PFR_BITMAP_2BYTE_CHARCODE )
         char_len += 1;
@@ -656,8 +612,6 @@
       FT_Long   xpos = 0, ypos = 0, advance = 0;
       FT_UInt   xsize = 0, ysize = 0, format = 0;
       FT_Byte*  p;
-
-
       /* compute linear advance */
       advance = character->advance;
       if ( phys->metrics_resolution != phys->outline_resolution )
@@ -782,8 +736,6 @@
         /* Allocate and read bitmap data */
         {
           FT_ULong  len = (FT_ULong)glyph->root.bitmap.pitch * ysize;
-
-
           error = ft_glyphslot_alloc_bitmap( &glyph->root, len );
           if ( !error )
             error = pfr_load_bitmap_bits(
@@ -803,6 +755,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

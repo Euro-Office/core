@@ -14,17 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTSYSTEM_H_
 #define FTSYSTEM_H_
-
-
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -42,15 +34,11 @@ FT_BEGIN_HEADER
    *  use a custom memory manager or you own i/o streams.
    *
    */
-
-
   /**************************************************************************
    *
    *                 M E M O R Y   M A N A G E M E N T
    *
    */
-
-
   /**************************************************************************
    *
    * @type:
@@ -62,8 +50,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct FT_MemoryRec_*  FT_Memory;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -86,8 +72,6 @@ FT_BEGIN_HEADER
   typedef void*
   (*FT_Alloc_Func)( FT_Memory  memory,
                     long       size );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -107,8 +91,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FT_Free_Func)( FT_Memory  memory,
                    void*      block );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -142,8 +124,6 @@ FT_BEGIN_HEADER
                       long       cur_size,
                       long       new_size,
                       void*      block );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -173,15 +153,11 @@ FT_BEGIN_HEADER
     FT_Free_Func     free;
     FT_Realloc_Func  realloc;
   };
-
-
   /**************************************************************************
    *
    *                      I / O   M A N A G E M E N T
    *
    */
-
-
   /**************************************************************************
    *
    * @type:
@@ -196,8 +172,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct FT_StreamRec_*  FT_Stream;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -214,8 +188,6 @@ FT_BEGIN_HEADER
     void*  pointer;
 
   } FT_StreamDesc;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -250,8 +222,6 @@ FT_BEGIN_HEADER
                        unsigned long   offset,
                        unsigned char*  buffer,
                        unsigned long   count );
-
-
   /**************************************************************************
    *
    * @functype:
@@ -267,8 +237,6 @@ FT_BEGIN_HEADER
    */
   typedef void
   (*FT_Stream_CloseFunc)( FT_Stream  stream );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -342,11 +310,7 @@ FT_BEGIN_HEADER
   } FT_StreamRec;
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTSYSTEM_H_ */
-
-
 /* END */

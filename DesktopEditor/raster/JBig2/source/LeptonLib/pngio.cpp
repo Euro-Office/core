@@ -116,13 +116,9 @@ static l_int32   var_PNG_STRIP_ALPHA = 1;
 static l_int32   var_PNG_WRITE_ALPHA = 0;
     /* zlib compression in png; default is for standard compression */
 static l_int32   var_ZLIB_COMPRESSION = Z_DEFAULT_COMPRESSION;
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*---------------------------------------------------------------------*
  *                              Reading png                            *
  *---------------------------------------------------------------------*/
@@ -325,8 +321,6 @@ PIXCMAP     *cmap;
     png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
     return pix;
 }
-
-
 /*!
  *  readHeaderPng()
  *
@@ -364,8 +358,6 @@ FILE    *fp;
     fclose(fp);
     return ret;
 }
-
-
 /*!
  *  freadHeaderPng()
  *
@@ -409,8 +401,6 @@ l_uint8  *data;
     FREE(data);
     return ret;
 }
-
-
 /*!
  *  sreadHeaderPng()
  *
@@ -478,8 +468,6 @@ l_uint32  *pword;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Writing png                            *
  *---------------------------------------------------------------------*/
@@ -520,8 +508,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreamPng()
  *
@@ -805,8 +791,6 @@ char        *text;
     return 0;
 
 }
-
-
 /*---------------------------------------------------------------------*
  *                    Read and write of png to RGBA                    *
  *---------------------------------------------------------------------*/
@@ -862,8 +846,6 @@ PIX     *pix;
     if (!pix) L_ERROR("pix not read", procName);
     return pix;
 }
-
-
 /*!
  *  pixWriteRGBAPng()
  *
@@ -904,8 +886,6 @@ l_int32  ret;
     l_pngSetWriteAlpha(0);  /* reset to default */
     return ret;
 }
-
-
 /*---------------------------------------------------------------------*
  *                   Setting flags for special modes                   *
  *---------------------------------------------------------------------*/
@@ -920,8 +900,6 @@ l_pngSetStrip16To8(l_int32  flag)
 {
     var_PNG_STRIP_16_TO_8 = flag;
 }
-
-
 /*!
  *  l_pngSetStripAlpha()
  *
@@ -933,8 +911,6 @@ l_pngSetStripAlpha(l_int32  flag)
 {
     var_PNG_STRIP_ALPHA = flag;
 }
-
-
 /*!
  *  l_pngSetWriteAlpha()
  *
@@ -946,8 +922,6 @@ l_pngSetWriteAlpha(l_int32  flag)
 {
     var_PNG_WRITE_ALPHA = flag;
 }
-
-
 /*!
  *  l_pngSetZlibCompression()
  *
@@ -976,8 +950,6 @@ l_pngSetZlibCompression(l_int32  val)
     }
     var_ZLIB_COMPRESSION = val;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                         Read/write to memory                        *
@@ -1017,8 +989,6 @@ PIX      *pix;
     fclose(fp);
     return pix;
 }
-
-
 /*!
  *  pixWriteMemPng()
  *
@@ -1067,8 +1037,6 @@ pixReadMemPng(const l_uint8  *cdata,
         "png read from memory not implemented on this platform",
         "pixReadMemPng", NULL);
 }
-
-
 l_int32
 pixWriteMemPng(l_uint8  **pdata,
                size_t    *psize,

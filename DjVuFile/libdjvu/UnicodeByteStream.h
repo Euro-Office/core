@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name UnicodeByteStream.h
 
     Files #"UnicodeByteStream.h"# and #"UnicodeByteStream.cpp"# implement a parser for
@@ -90,16 +88,12 @@
 #include "DjVuGlobal.h"
 #include "GString.h"
 #include "ByteStream.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 
 /** ByteStream interface for an Unicode file. 
 
@@ -167,8 +161,6 @@ private:
   // Cancel C++ default stuff
   UnicodeByteStream & operator=(UnicodeByteStream &);
 };
-
-
 class XMLByteStream : public UnicodeByteStream
 {
 protected:
@@ -189,8 +181,6 @@ XMLByteStream::create(UnicodeByteStream &bs)
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

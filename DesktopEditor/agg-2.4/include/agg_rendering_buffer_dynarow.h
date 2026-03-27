@@ -129,9 +129,5 @@ namespace agg
         unsigned            m_height;     // Height in pixels
         unsigned            m_byte_width; // Width in bytes
     };
-
-
 }
-
-
 #endif

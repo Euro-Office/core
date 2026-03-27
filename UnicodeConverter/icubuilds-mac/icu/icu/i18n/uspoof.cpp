@@ -27,13 +27,9 @@
 #include "ucln_in.h"
 #include "uspoof_impl.h"
 #include "umutex.h"
-
-
 #if !UCONFIG_NO_NORMALIZATION
 
 U_NAMESPACE_USE
-
-
 //
 // Static Objects used by the spoof impl, their thread safe initialization and their cleanup.
 //
@@ -164,8 +160,6 @@ uspoof_open(UErrorCode *status) {
     }
     return reinterpret_cast<USpoofChecker *>(si);
 }
-
-
 U_CAPI USpoofChecker * U_EXPORT2
 uspoof_openFromSerialized(const void *data, int32_t length, int32_t *pActualLength,
                           UErrorCode *status) {
@@ -192,8 +186,6 @@ uspoof_openFromSerialized(const void *data, int32_t length, int32_t *pActualLeng
     }
     return reinterpret_cast<USpoofChecker *>(si);
 }
-
-
 U_CAPI USpoofChecker * U_EXPORT2
 uspoof_clone(const USpoofChecker *sc, UErrorCode *status) {
     const SpoofImpl *src = SpoofImpl::validateThis(sc, *status);
@@ -207,16 +199,12 @@ uspoof_clone(const USpoofChecker *sc, UErrorCode *status) {
     }
     return reinterpret_cast<USpoofChecker *>(result);
 }
-
-
 U_CAPI void U_EXPORT2
 uspoof_close(USpoofChecker *sc) {
     UErrorCode status = U_ZERO_ERROR;
     SpoofImpl *This = SpoofImpl::validateThis(sc, status);
     delete This;
 }
-
-
 U_CAPI void U_EXPORT2
 uspoof_setChecks(USpoofChecker *sc, int32_t checks, UErrorCode *status) {
     SpoofImpl *This = SpoofImpl::validateThis(sc, *status);
@@ -233,8 +221,6 @@ uspoof_setChecks(USpoofChecker *sc, int32_t checks, UErrorCode *status) {
 
     This->fChecks = checks;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_getChecks(const USpoofChecker *sc, UErrorCode *status) {
     const SpoofImpl *This = SpoofImpl::validateThis(sc, *status);
@@ -280,8 +266,6 @@ uspoof_getAllowedLocales(USpoofChecker *sc, UErrorCode *status) {
     }
     return This->getAllowedLocales(*status);
 }
-
-
 U_CAPI const USet * U_EXPORT2
 uspoof_getAllowedChars(const USpoofChecker *sc, UErrorCode *status) {
     const UnicodeSet *result = uspoof_getAllowedUnicodeSet(sc, status);
@@ -296,15 +280,11 @@ uspoof_getAllowedUnicodeSet(const USpoofChecker *sc, UErrorCode *status) {
     }
     return This->fAllowedCharsSet;
 }
-
-
 U_CAPI void U_EXPORT2
 uspoof_setAllowedChars(USpoofChecker *sc, const USet *chars, UErrorCode *status) {
     const UnicodeSet *set = UnicodeSet::fromUSet(chars);
     uspoof_setAllowedUnicodeSet(sc, set, status);
 }
-
-
 U_CAPI void U_EXPORT2
 uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const UnicodeSet *chars, UErrorCode *status) {
     SpoofImpl *This = SpoofImpl::validateThis(sc, *status);
@@ -325,8 +305,6 @@ uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const UnicodeSet *chars, UErrorCo
     This->fAllowedCharsSet = clonedSet;
     This->fChecks |= USPOOF_CHAR_LIMIT;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_check(const USpoofChecker *sc,
              const UChar *id, int32_t length,
@@ -345,8 +323,6 @@ uspoof_check(const USpoofChecker *sc,
     int32_t result = uspoof_checkUnicodeString(sc, idStr, position, status);
     return result;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_checkUTF8(const USpoofChecker *sc,
                  const char *id, int32_t length,
@@ -360,8 +336,6 @@ uspoof_checkUTF8(const USpoofChecker *sc,
     int32_t result = uspoof_checkUnicodeString(sc, idStr, position, status);
     return result;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_areConfusable(const USpoofChecker *sc,
                      const UChar *id1, int32_t length1,
@@ -380,8 +354,6 @@ uspoof_areConfusable(const USpoofChecker *sc,
     UnicodeString id2Str((length2==-1), id2, length2);  // Aliasing constructor
     return uspoof_areConfusableUnicodeString(sc, id1Str, id2Str, status);
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_areConfusableUTF8(const USpoofChecker *sc,
                          const char *id1, int32_t length1,
@@ -400,8 +372,6 @@ uspoof_areConfusableUTF8(const USpoofChecker *sc,
     int32_t results = uspoof_areConfusableUnicodeString(sc, id1Str, id2Str, status);
     return results;
 }
- 
-
 U_CAPI int32_t U_EXPORT2
 uspoof_areConfusableUnicodeString(const USpoofChecker *sc,
                                   const icu::UnicodeString &id1,
@@ -487,10 +457,6 @@ uspoof_areConfusableUnicodeString(const USpoofChecker *sc,
 
     return result;
 }
-
-
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_checkUnicodeString(const USpoofChecker *sc,
                           const icu::UnicodeString &id, 
@@ -511,8 +477,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
         identifierInfo->setIdentifier(id, *status);
         identifierInfo->setIdentifierProfile(*This->fAllowedCharsSet);
     }
-
-
     if ((This->fChecks) & USPOOF_RESTRICTION_LEVEL) {
         URestrictionLevel idRestrictionLevel = identifierInfo->getRestrictionLevel(*status);
         if (idRestrictionLevel > This->fRestrictionLevel) {
@@ -535,8 +499,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
         //     checkResult.numerics = numerics;
         // }
     }
-
-
     if (This->fChecks & (USPOOF_CHAR_LIMIT)) {
         int32_t i;
         UChar32 c;
@@ -596,8 +558,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
                 marksSeenSoFar.add(c);
             }
         }
-       
-        
         if (This->fChecks & (USPOOF_WHOLE_SCRIPT_CONFUSABLE | USPOOF_MIXED_SCRIPT_CONFUSABLE)) {
             // The basic test is the same for both whole and mixed script confusables.
             // Compute the set of scripts that every input character has a confusable in.
@@ -649,8 +609,6 @@ cleanupAndReturn:
     }
     return result;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_getSkeleton(const USpoofChecker *sc,
                    uint32_t type,
@@ -673,8 +631,6 @@ uspoof_getSkeleton(const USpoofChecker *sc,
     destStr.extract(dest, destCapacity, *status);
     return destStr.length();
 }
-
-
 
 U_I18N_API UnicodeString &  U_EXPORT2
 uspoof_getSkeletonUnicodeString(const USpoofChecker *sc,
@@ -723,8 +679,6 @@ uspoof_getSkeletonUnicodeString(const USpoofChecker *sc,
     gNfdNormalizer->normalize(skelStr, dest, *status);
     return dest;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_getSkeletonUTF8(const USpoofChecker *sc,
                        uint32_t type,
@@ -752,8 +706,6 @@ uspoof_getSkeletonUTF8(const USpoofChecker *sc,
                 destStr.getBuffer(), destStr.length(), status);
     return lengthInUTF8;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uspoof_serialize(USpoofChecker *sc,void *buf, int32_t capacity, UErrorCode *status) {
     SpoofImpl *This = SpoofImpl::validateThis(sc, *status);
@@ -793,7 +745,5 @@ uspoof_getRecommendedUnicodeSet(UErrorCode *status) {
     umtx_initOnce(gSpoofInitStaticsOnce, &initializeStatics, *status);
     return gRecommendedSet;
 }
-
-
 
 #endif // !UCONFIG_NO_NORMALIZATION

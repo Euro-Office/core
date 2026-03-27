@@ -72,16 +72,12 @@
 
 #include <assert.h>
 #include "IFFByteStream.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // Constructor
 IFFByteStream::IFFByteStream(const GP<ByteStream> &xbs,const int xpos)
   : ByteStream::Wrapper(xbs), ctx(0), dir(0)
@@ -104,8 +100,6 @@ IFFByteStream::create(const GP<ByteStream> &bs)
   const int pos=bs->tell();
   return new IFFByteStream(bs,pos);
 }
-
-
 // IFFByteStream::ready
 // -- indicates if bytestream is ready for reading
 //    returns number of bytes available
@@ -120,8 +114,6 @@ IFFByteStream::ready()
   else
     return 0;
 }
-
-
 // IFFByteStream::composite
 // -- indicates if bytestream is ready for putting or getting chunks
 
@@ -133,10 +125,6 @@ IFFByteStream::composite()
   else
     return 1;
 }
-
-
-
-
 // IFFByteStream::check_id
 // -- checks if an id is legal
 
@@ -161,8 +149,6 @@ IFFByteStream::check_id(const char *id)
   // regular chunk
   return 0;
 }
-
-
 
 // IFFByteStream::get_chunk
 // -- get next chunk header
@@ -304,8 +290,6 @@ IFFByteStream::get_chunk(GUTF8String &chkid, int *rawoffsetptr, int *rawsizeptr)
   return size;
 }
 
-
-
 // IFFByteStream::put_chunk
 // -- write new chunk header
 
@@ -388,8 +372,6 @@ IFFByteStream::put_chunk(const char *chkid, int insert_magic)
   ctx = nctx;
 }
 
-
-
 void 
 IFFByteStream::close_chunk()
 {
@@ -447,8 +429,6 @@ IFFByteStream::short_id(GUTF8String &chkid)
   else
     chkid = GUTF8String(ctx->idOne, 4);
 }
-
-
 // IFFByteStream::full_id
 // Returns the full chunk id of the current chunk
 
@@ -467,8 +447,6 @@ IFFByteStream::full_id(GUTF8String &chkid)
         break;
       }
 }
-
-
 
 // IFFByteStream::read
 // -- read bytes from IFF file chunk
@@ -493,8 +471,6 @@ IFFByteStream::read(void *buffer, size_t size)
   offset += bytes;
   return bytes;
 }
-
-
 // IFFByteStream::write
 // -- write bytes to IFF file chunk
 
@@ -562,8 +538,6 @@ IFFByteStream::compare(IFFByteStream &iff)
   }
   return retval;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

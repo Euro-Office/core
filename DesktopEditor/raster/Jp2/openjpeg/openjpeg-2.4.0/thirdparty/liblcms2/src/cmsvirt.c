@@ -57,8 +57,6 @@ Error:
         cmsMLUfree(CopyrightMLU);
     return rc;
 }
-
-
 static
 cmsBool  SetSeqDescTag(cmsHPROFILE hProfile, const char* Model)
 {
@@ -94,8 +92,6 @@ Error:
     return rc;
 }
 
-
-
 // This function creates a profile based on White point, primaries and
 // transfer functions.
 cmsHPROFILE CMSEXPORT cmsCreateRGBProfileTHR(cmsContext ContextID,
@@ -121,8 +117,6 @@ cmsHPROFILE CMSEXPORT cmsCreateRGBProfileTHR(cmsContext ContextID,
     cmsSetPCS(hICC,              cmsSigXYZData);
 
     cmsSetHeaderRenderingIntent(hICC,  INTENT_PERCEPTUAL);
-
-
     // Implement profile using following tags:
     //
     //  1 cmsSigProfileDescriptionTag
@@ -136,8 +130,6 @@ cmsHPROFILE CMSEXPORT cmsCreateRGBProfileTHR(cmsContext ContextID,
     //  9 Chromatic adaptation Tag
     // This conforms a standard RGB DisplayProfile as says ICC, and then I add (As per addendum II)
     // 10 cmsSigChromaticityTag
-
-
     if (!SetTextTags(hICC, L"RGB built-in")) goto Error;
 
     if (WhitePoint) {
@@ -175,8 +167,6 @@ cmsHPROFILE CMSEXPORT cmsCreateRGBProfileTHR(cmsContext ContextID,
         if (!cmsWriteTag(hICC, cmsSigBlueColorantTag,  (void*) &Colorants.Blue)) goto Error;
         if (!cmsWriteTag(hICC, cmsSigGreenColorantTag, (void*) &Colorants.Green)) goto Error;
     }
-
-
     if (TransferFunction) {
 
         // Tries to minimize space. Thanks to Richard Hughes for this nice idea         
@@ -204,8 +194,6 @@ cmsHPROFILE CMSEXPORT cmsCreateRGBProfileTHR(cmsContext ContextID,
     if (Primaries) {
         if (!cmsWriteTag(hICC, cmsSigChromaticityTag, (void*) Primaries)) goto Error;
     }
-
-
     return hICC;
 
 Error:
@@ -220,8 +208,6 @@ cmsHPROFILE CMSEXPORT cmsCreateRGBProfile(const cmsCIExyY* WhitePoint,
 {
     return cmsCreateRGBProfileTHR(NULL, WhitePoint, Primaries, TransferFunction);
 }
-
-
 
 // This function creates a profile based on White point and transfer function.
 cmsHPROFILE CMSEXPORT cmsCreateGrayProfileTHR(cmsContext ContextID,
@@ -241,8 +227,6 @@ cmsHPROFILE CMSEXPORT cmsCreateGrayProfileTHR(cmsContext ContextID,
     cmsSetColorSpace(hICC,       cmsSigGrayData);
     cmsSetPCS(hICC,              cmsSigXYZData);
     cmsSetHeaderRenderingIntent(hICC,  INTENT_PERCEPTUAL);
-
-
     // Implement profile using following tags:
     //
     //  1 cmsSigProfileDescriptionTag
@@ -254,8 +238,6 @@ cmsHPROFILE CMSEXPORT cmsCreateGrayProfileTHR(cmsContext ContextID,
     // Fill-in the tags
 
     if (!SetTextTags(hICC, L"gray built-in")) goto Error;
-
-
     if (WhitePoint) {
 
         cmsxyY2XYZ(&tmp, WhitePoint);
@@ -274,8 +256,6 @@ Error:
         cmsCloseProfile(hICC);
     return NULL;
 }
-
-
 
 cmsHPROFILE CMSEXPORT cmsCreateGrayProfile(const cmsCIExyY* WhitePoint,
                                                     const cmsToneCurve* TransferFunction)
@@ -311,8 +291,6 @@ cmsHPROFILE CMSEXPORT cmsCreateLinearizationDeviceLinkTHR(cmsContext ContextID,
     // Creates a Pipeline with prelinearization step only
     Pipeline = cmsPipelineAlloc(ContextID, nChannels, nChannels);
     if (Pipeline == NULL) goto Error;
-
-
     // Copy tables to Pipeline
     if (!cmsPipelineInsertStage(Pipeline, cmsAT_BEGIN, cmsStageAllocToneCurves(ContextID, nChannels, TransferFunctions)))
         goto Error;
@@ -332,8 +310,6 @@ Error:
     cmsPipelineFree(Pipeline);
     if (hICC)
         cmsCloseProfile(hICC);
-
-
     return NULL;
 }
 
@@ -423,13 +399,9 @@ cmsHPROFILE CMSEXPORT cmsCreateInkLimitingDeviceLinkTHR(cmsContext ContextID,
     cmsSetPCS(hICC,              ColorSpace);
 
     cmsSetHeaderRenderingIntent(hICC,  INTENT_PERCEPTUAL);
-
-
     // Creates a Pipeline with 3D grid only
     LUT = cmsPipelineAlloc(ContextID, 4, 4);
     if (LUT == NULL) goto Error;
-
-
     nChannels = cmsChannelsOf(ColorSpace);
 
     CLUT = cmsStageAllocCLut16bit(ContextID, 17, nChannels, nChannels, NULL);
@@ -468,8 +440,6 @@ cmsHPROFILE CMSEXPORT cmsCreateInkLimitingDeviceLink(cmsColorSpaceSignature Colo
 {
     return cmsCreateInkLimitingDeviceLinkTHR(NULL, ColorSpace, Limit);
 }
-
-
 // Creates a fake Lab identity.
 cmsHPROFILE CMSEXPORT cmsCreateLab2ProfileTHR(cmsContext ContextID, const cmsCIExyY* WhitePoint)
 {
@@ -509,14 +479,10 @@ Error:
 
     return NULL;
 }
-
-
 cmsHPROFILE CMSEXPORT cmsCreateLab2Profile(const cmsCIExyY* WhitePoint)
 {
     return cmsCreateLab2ProfileTHR(NULL, WhitePoint);
 }
-
-
 // Creates a fake Lab V4 identity.
 cmsHPROFILE CMSEXPORT cmsCreateLab4ProfileTHR(cmsContext ContextID, const cmsCIExyY* WhitePoint)
 {
@@ -561,8 +527,6 @@ cmsHPROFILE CMSEXPORT cmsCreateLab4Profile(const cmsCIExyY* WhitePoint)
 {
     return cmsCreateLab4ProfileTHR(NULL, WhitePoint);
 }
-
-
 // Creates a fake XYZ identity
 cmsHPROFILE CMSEXPORT cmsCreateXYZProfileTHR(cmsContext ContextID)
 {
@@ -602,14 +566,10 @@ Error:
 
     return NULL;
 }
-
-
 cmsHPROFILE CMSEXPORT cmsCreateXYZProfile(void)
 {
     return cmsCreateXYZProfileTHR(NULL);
 }
-
-
 //sRGB Curves are defined by:
 //
 //If  R’sRGB,G’sRGB, B’sRGB < 0.04045
@@ -672,8 +632,6 @@ cmsHPROFILE CMSEXPORT cmsCreate_sRGBProfile(void)
     return cmsCreate_sRGBProfileTHR(NULL);
 }
 
-
-
 typedef struct {
                 cmsFloat64Number Brightness;
                 cmsFloat64Number Contrast;
@@ -683,8 +641,6 @@ typedef struct {
                 cmsCIEXYZ WPsrc, WPdest;
 
 } BCHSWADJUSTS, *LPBCHSWADJUSTS;
-
-
 static
 int bchswSampler(register const cmsUInt16Number In[], register cmsUInt16Number Out[], register void* Cargo)
 {
@@ -692,11 +648,7 @@ int bchswSampler(register const cmsUInt16Number In[], register cmsUInt16Number O
     cmsCIELCh LChIn, LChOut;
     cmsCIEXYZ XYZ;
     LPBCHSWADJUSTS bchsw = (LPBCHSWADJUSTS) Cargo;
-
-
     cmsLabEncoded2Float(&LabIn, In);
-
-
     cmsLab2LCh(&LChIn, &LabIn);
 
     // Do some adjusts on LCh
@@ -704,8 +656,6 @@ int bchswSampler(register const cmsUInt16Number In[], register cmsUInt16Number O
     LChOut.L = LChIn.L * bchsw ->Contrast + bchsw ->Brightness;
     LChOut.C = LChIn.C + bchsw -> Saturation;
     LChOut.h = LChIn.h + bchsw -> Hue;
-
-
     cmsLCh2Lab(&LabOut, &LChOut);
 
     // Move white point in Lab
@@ -720,8 +670,6 @@ int bchswSampler(register const cmsUInt16Number In[], register cmsUInt16Number O
 
     return TRUE;
 }
-
-
 // Creates an abstract profile operating in Lab space for Brightness,
 // contrast, Saturation and white point displacement
 
@@ -779,8 +727,6 @@ cmsHPROFILE CMSEXPORT cmsCreateBCHSWabstractProfileTHR(cmsContext ContextID,
     for (i=0; i < MAX_INPUT_DIMENSIONS; i++) Dimensions[i] = nLUTPoints;
     CLUT = cmsStageAllocCLut16bitGranular(ContextID, Dimensions, 3, 3, NULL);
     if (CLUT == NULL) return NULL;
-
-
     if (!cmsStageSampleCLut16bit(CLUT, bchswSampler, (void*) &bchsw, 0)) {
 
         // Shouldn't reach here
@@ -809,8 +755,6 @@ Error:
     cmsCloseProfile(hICC);
     return NULL;
 }
-
-
 CMSAPI cmsHPROFILE   CMSEXPORT cmsCreateBCHSWabstractProfile(int nLUTPoints,
                                                              cmsFloat64Number Bright,
                                                              cmsFloat64Number Contrast,
@@ -821,8 +765,6 @@ CMSAPI cmsHPROFILE   CMSEXPORT cmsCreateBCHSWabstractProfile(int nLUTPoints,
 {
     return cmsCreateBCHSWabstractProfileTHR(NULL, nLUTPoints, Bright, Contrast, Hue, Saturation, TempSrc, TempDest);
 }
-
-
 // Creates a fake NULL profile. This profile return 1 channel as always 0.
 // Is useful only for gamut checking tricks
 cmsHPROFILE CMSEXPORT cmsCreateNULLProfileTHR(cmsContext ContextID)
@@ -840,8 +782,6 @@ cmsHPROFILE CMSEXPORT cmsCreateNULLProfileTHR(cmsContext ContextID)
     cmsSetProfileVersion(hProfile, 4.3);
 
     if (!SetTextTags(hProfile, L"NULL profile built-in")) goto Error;
-
-
 
     cmsSetDeviceClass(hProfile, cmsSigOutputClass);
     cmsSetColorSpace(hProfile,  cmsSigGrayData);
@@ -879,16 +819,12 @@ cmsHPROFILE CMSEXPORT cmsCreateNULLProfile(void)
 {
     return cmsCreateNULLProfileTHR(NULL);
 }
-
-
 static
 int IsPCS(cmsColorSpaceSignature ColorSpace)
 {
     return (ColorSpace == cmsSigXYZData ||
             ColorSpace == cmsSigLabData);
 }
-
-
 static
 void FixColorSpaces(cmsHPROFILE hProfile,
                               cmsColorSpaceSignature ColorSpace,
@@ -926,8 +862,6 @@ void FixColorSpaces(cmsHPROFILE hProfile,
     cmsSetColorSpace(hProfile,       ColorSpace);
     cmsSetPCS(hProfile,              PCS);
 }
-
-
 
 // This function creates a named color profile dumping all the contents of transform to a single profile
 // In this way, LittleCMS may be used to "group" several named color databases into a single profile.
@@ -982,8 +916,6 @@ Error:
     if (hICC != NULL) cmsCloseProfile(hICC);
     return NULL;
 }
-
-
 // This structure holds information about which MPU can be stored on a profile based on the version
 
 typedef struct {
@@ -1029,8 +961,6 @@ cmsBool CheckOne(const cmsAllowedLUT* Tab, const cmsPipeline* Lut)
 
     return (n == Tab ->nTypes);
 }
-
-
 static
 const cmsAllowedLUT* FindCombination(const cmsPipeline* Lut, cmsBool IsV4, cmsTagSignature DestinationTag)
 {
@@ -1048,8 +978,6 @@ const cmsAllowedLUT* FindCombination(const cmsPipeline* Lut, cmsBool IsV4, cmsTa
 
     return NULL;
 }
-
-
 // Does convert a transform into a device link profile
 cmsHPROFILE CMSEXPORT cmsTransform2DeviceLink(cmsHTRANSFORM hTransform, cmsFloat64Number Version, cmsUInt32Number dwFlags)
 {
@@ -1094,8 +1022,6 @@ cmsHPROFILE CMSEXPORT cmsTransform2DeviceLink(cmsHTRANSFORM hTransform, cmsFloat
         if (!cmsPipelineInsertStage(LUT, cmsAT_END, _cmsStageAllocLabV4ToV2(ContextID)))
             goto Error;
     }
-
-
     hProfile = cmsCreateProfilePlaceholder(ContextID);
     if (!hProfile) goto Error;                    // can't allocate
 
@@ -1162,8 +1088,6 @@ cmsHPROFILE CMSEXPORT cmsTransform2DeviceLink(cmsHTRANSFORM hTransform, cmsFloat
     if (AllowedLUT == NULL) {
         goto Error;
     }
-
-
     if (dwFlags & cmsFLAGS_8BITS_DEVICELINK)
                      cmsPipelineSetSaveAs8bitsFlag(LUT, TRUE);
 
@@ -1172,8 +1096,6 @@ cmsHPROFILE CMSEXPORT cmsTransform2DeviceLink(cmsHTRANSFORM hTransform, cmsFloat
 
     // Store result
     if (!cmsWriteTag(hProfile, DestinationTag, LUT)) goto Error;
-
-
     if (xform -> InputColorant != NULL) {
            if (!cmsWriteTag(hProfile, cmsSigColorantTableTag, xform->InputColorant)) goto Error;
     }
@@ -1193,8 +1115,6 @@ cmsHPROFILE CMSEXPORT cmsTransform2DeviceLink(cmsHTRANSFORM hTransform, cmsFloat
     else {
          if (!cmsWriteTag(hProfile, cmsSigMediaWhitePointTag, &xform ->ExitWhitePoint)) goto Error;
     }
-
-  
     // Per 7.2.15 in spec 4.3
     cmsSetHeaderRenderingIntent(hProfile, xform ->RenderingIntent);
 

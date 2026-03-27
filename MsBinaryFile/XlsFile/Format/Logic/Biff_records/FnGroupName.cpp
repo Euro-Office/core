@@ -38,19 +38,13 @@ namespace XLS
 FnGroupName::FnGroupName()
 {
 }
-
-
 FnGroupName::~FnGroupName()
 {
 }
-
-
 BaseObjectPtr FnGroupName::clone()
 {
 	return BaseObjectPtr(new FnGroupName(*this));
 }
-
-
 void FnGroupName::readFields(CFRecord& record)
 {
 	record >> rgch;

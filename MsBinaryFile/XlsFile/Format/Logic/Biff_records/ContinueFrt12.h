@@ -35,8 +35,6 @@
 #include "../Biff_structures/FrtRefHeader.h"
 namespace XLS
 {
-
-
 // Logical representation of ContinueFrt12 record in BIFF8
 class ContinueFrt12: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ContinueFrt12();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

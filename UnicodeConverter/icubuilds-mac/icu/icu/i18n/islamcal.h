@@ -177,8 +177,6 @@ class U_I18N_API IslamicCalendar : public Calendar {
     
     ISLAMIC_MONTH_MAX
   }; 
-
-
   //-------------------------------------------------------------------------
   // Constructors...
   //-------------------------------------------------------------------------
@@ -223,8 +221,6 @@ class U_I18N_API IslamicCalendar : public Calendar {
    * @internal
    */
   UBool isCivil();
-
-
   // TODO: copy c'tor, etc
 
   // clone
@@ -390,8 +386,6 @@ class U_I18N_API IslamicCalendar : public Calendar {
    * @internal
    */
   virtual UBool inDaylightTime(UErrorCode& status) const;
-
-
   /**
    * Returns TRUE because the Islamic Calendar does have a default century
    * @internal
@@ -424,6 +418,4 @@ U_NAMESPACE_END
 
 #endif
 #endif
-
-
 

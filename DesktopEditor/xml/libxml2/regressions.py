@@ -276,8 +276,6 @@ class testDefaults:
                 print "   %s : '%s'" % (k, defaultParams[k])
             curClass = rootClass()
         return curClass
-
-
 class testClass:
     def __init__(self):
         self.testParams = {}	# start with an empty set of params
@@ -309,8 +307,6 @@ class testClass:
             runTest(self.testParams)
             curClass = rootClass()
         return curClass
-
-
 class rootClass:
     def processNode(self, reader, curClass):
         if reader.Depth() == 0:

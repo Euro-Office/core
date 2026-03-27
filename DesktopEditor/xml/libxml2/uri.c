@@ -56,8 +56,6 @@ static void xmlCleanURI(xmlURIPtr uri);
  * alpha    = lowalpha | upalpha
  */
 #define IS_ALPHA(x) (IS_LOWALPHA(x) || IS_UPALPHA(x))
-
-
 /*
  * lowalpha = "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" |
  *            "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" |
@@ -839,8 +837,6 @@ xmlParse3986RelativeRef(xmlURIPtr uri, const char *str) {
     }
     return(0);
 }
-
-
 /**
  * xmlParse3986URI:
  * @uri:  pointer to an URI structure
@@ -1063,8 +1059,6 @@ xmlSaveUri(xmlURIPtr uri) {
     int max;
 
     if (uri == NULL) return(NULL);
-
-
     max = 80;
     ret = (xmlChar *) xmlMallocAtomic((max + 1) * sizeof(xmlChar));
     if (ret == NULL) {
@@ -2039,8 +2033,6 @@ xmlBuildURI(const xmlChar *URI, const xmlChar *base) {
 	res->path = xmlMemStrdup(ref->path);
 	goto step_7;
     }
-
-
     /*
      * 6) If this step is reached, then we are resolving a relative-path
      *    reference.  The relative path needs to be merged with the base

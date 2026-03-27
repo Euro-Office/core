@@ -1967,8 +1967,6 @@ _SCSUSafeClone(const UConverter *cnv,
 
     return &localClone->cnv;
 }
-
-
 static const UConverterImpl _SCSUImpl={
     UCNV_SCSU,
 

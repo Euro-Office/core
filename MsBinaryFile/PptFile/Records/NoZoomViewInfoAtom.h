@@ -41,8 +41,6 @@ public:
     ODRAW::SPointAtom m_nOrigin;
 
     BOOL1 m_bDraftMode;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

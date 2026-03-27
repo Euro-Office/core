@@ -192,8 +192,6 @@ public:
   char *getEmbeddedFileMem(int idx, int *size);
   GBool makeWritable(bool bWritable, GString *ownerPassword = NULL,
                      GString *userPassword = NULL);
-
-
 private:
 
   void init(PDFCore *coreA);

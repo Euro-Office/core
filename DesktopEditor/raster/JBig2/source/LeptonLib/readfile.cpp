@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  readfile.c:  reads image on file into memory
  *
@@ -123,8 +121,6 @@ SARRAY  *sa;
     sarrayDestroy(&sa);
     return pixa;
 }
-
-
 /*!
  *  pixaReadFilesSA()
  *
@@ -157,8 +153,6 @@ PIXA    *pixa;
 
     return pixa;
 }
-
-
 /*!
  *  pixRead()
  *
@@ -193,8 +187,6 @@ PIX   *pix;
         return (PIX *)ERROR_PTR("image not returned", procName, NULL);
     return pix;
 }
-
-
 /*!
  *  pixReadWithHint()
  *
@@ -227,8 +219,6 @@ PIX   *pix;
         return (PIX *)ERROR_PTR("image not returned", procName, NULL);
     return pix;
 }
-
-
 /*!
  *  pixReadIndexed()
  *
@@ -282,8 +272,6 @@ PIX     *pix;
 
     return pix;
 }
-
-
 /*!
  *  pixReadStream()
  *
@@ -371,8 +359,6 @@ PIX     *pix;
         pixSetInputFormat(pix, format);
     return pix;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                     Read header information from file               *
@@ -512,8 +498,6 @@ PIX      *pix;
     if (pformat) *pformat = format;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Format finders                           *
  *---------------------------------------------------------------------*/
@@ -561,8 +545,6 @@ l_int32  format;
     else
         return 0;
 }
-
-
 /*!
  *  findFileFormatBuffer()
  *
@@ -677,8 +659,6 @@ l_uint16  twobytepw;
         /* File format identifier not found; unknown */
     return 1;
 }
-
-
 /*!
  *  fileFormatIsTiff()
  *
@@ -704,8 +684,6 @@ l_int32  format;
     else
         return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                            Read from memory                         *
  *---------------------------------------------------------------------*/
@@ -806,8 +784,6 @@ PIX     *pix;
 
     return pix;
 }
-
-
 /*!
  *  pixReadHeaderMem()
  *
@@ -937,8 +913,6 @@ PIX     *pix;
     if (pformat) *pformat = format;
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *             Test function for I/O with different formats            *
  *---------------------------------------------------------------------*/

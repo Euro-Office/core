@@ -404,10 +404,6 @@ void OPJDecoderDialog::OnEnableDeco(wxCommandEvent& event)
 	}
 
 }
-
-
-
-
 // ----------------------------------------------------------------------------
 // OPJEncoderDialog
 // ----------------------------------------------------------------------------
@@ -1372,7 +1368,5 @@ void OPJEncoderDialog::OnSensiSelect(wxCommandEvent& event)
 
 	//wxLogMessage(wxT("sprot changed: %d"), specno);
 }
-
-
 #endif // USE_JPWL
 

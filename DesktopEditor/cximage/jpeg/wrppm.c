@@ -19,8 +19,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef PPM_SUPPORTED
-
-
 /*
  * For 12-bit JPEG data, we either downscale the values to 8 bits
  * (to write standard byte-per-sample PPM/PGM files), or output
@@ -51,8 +49,6 @@
 #define PPM_MAXVAL ((1<<BITS_IN_JSAMPLE)-1)
 #endif
 #endif
-
-
 /*
  * When JSAMPLE is the same size as char, we can just fwrite() the
  * decompressed data to the PPM or PGM file.  On PCs, in order to make this
@@ -62,8 +58,6 @@
  * in large-memory model, or else replace fwrite() with a putc() loop ---
  * which will be much slower.
  */
-
-
 /* Private version of data destination object */
 
 typedef struct {
@@ -77,8 +71,6 @@ typedef struct {
 } ppm_dest_struct;
 
 typedef ppm_dest_struct * ppm_dest_ptr;
-
-
 /*
  * Write some pixel data.
  * In this module rows_supplied will always be 1.
@@ -95,8 +87,6 @@ put_pixel_rows (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 /*
  * This code is used when we have to copy the data and apply a pixel
  * format translation.  Typically this only happens in 12-bit mode.
@@ -118,8 +108,6 @@ copy_pixel_rows (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   }
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 /*
  * Write some pixel data when color quantization is in effect.
  * We have to demap the color index values to straight data.
@@ -148,8 +136,6 @@ put_demapped_rgb (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   }
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 METHODDEF(void)
 put_demapped_gray (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 		   JDIMENSION rows_supplied)
@@ -167,8 +153,6 @@ put_demapped_gray (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   }
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 /*
  * Startup: write the file header.
  */
@@ -196,8 +180,6 @@ start_output_ppm (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
     ERREXIT(cinfo, JERR_PPM_COLORSPACE);
   }
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -210,8 +192,6 @@ finish_output_ppm (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (ferror(dinfo->output_file))
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * The module selection routine for PPM format output.
  */

@@ -54,8 +54,6 @@
 #include "math_token_elements.h"
 //#include "math_elementaries.h"
 
-
-
 namespace cpdoccore
 {
 using namespace odf_types;

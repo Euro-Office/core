@@ -77,8 +77,6 @@ private:
     std::vector<std::wstring>	m_arUserSources;
     std::wstring				m_strTempDirectory;
 	std::wstring				m_sTempDecryptFileName;
-	
-
 
 	std::wstring GetDirectory(std::wstring strFileName);
 };

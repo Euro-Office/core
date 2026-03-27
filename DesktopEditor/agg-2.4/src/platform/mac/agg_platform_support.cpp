@@ -35,8 +35,6 @@
 #include "platform/agg_platform_support.h"
 #include "platform/mac/agg_mac_pmap.h"
 #include "util/agg_color_conv_rgb8.h"
-
-
 namespace agg
 {
     
@@ -49,8 +47,6 @@ pascal OSStatus DoMouseDragged (EventHandlerCallRef nextHandler, EventRef theEve
 pascal OSStatus DoKeyDown (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData);
 pascal OSStatus DoKeyUp (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData);
 pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
-
-
     //------------------------------------------------------------------------
     class platform_specific
     {
@@ -86,8 +82,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         UnsignedWide     m_sw_freq;
         UnsignedWide     m_sw_start;
     };
-
-
     //------------------------------------------------------------------------
     platform_specific::platform_specific(pix_format_e format, bool flip_y) :
        	m_format(format),
@@ -189,8 +183,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         ::Microseconds(&m_sw_freq);
         ::Microseconds(&m_sw_start);
     }
-
-
     //------------------------------------------------------------------------
     void platform_specific::create_pmap(unsigned width, 
                                         unsigned height,
@@ -204,8 +196,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
                      -m_pmap_window.row_bytes() :
                       m_pmap_window.row_bytes());
     }
-
-
     //------------------------------------------------------------------------
     void platform_specific::display_pmap(WindowRef window, const rendering_buffer* src)
     {
@@ -256,8 +246,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
             pmap_tmp.draw(window);
         }
     }
-
-
     //------------------------------------------------------------------------
     bool platform_specific::save_pmap(const char* fn, unsigned idx, 
                                       const rendering_buffer* src)
@@ -309,8 +297,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         }
         return true;
     }
-
-
 
     //------------------------------------------------------------------------
     bool platform_specific::load_pmap(const char* fn, unsigned idx, 
@@ -420,21 +406,11 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         
         return true;
     }
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     unsigned platform_specific::translate(unsigned keycode)
     {
         return m_last_translated_key = (keycode > 255) ? 0 : m_keymap[keycode];
     }
-
-
 
     //------------------------------------------------------------------------
     platform_support::platform_support(pix_format_e format, bool flip_y) :
@@ -449,15 +425,11 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
     {
         strcpy(m_caption, "Anti-Grain Geometry Application");
     }
-
-
     //------------------------------------------------------------------------
     platform_support::~platform_support()
     {
         delete m_specific;
     }
-
-
 
     //------------------------------------------------------------------------
     void platform_support::caption(const char* cap)
@@ -469,8 +441,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         }
     }
 
-
-
     //------------------------------------------------------------------------
     static unsigned get_key_flags(UInt32 wflags)
     {
@@ -481,8 +451,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
 
         return flags;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::message(const char* msg)
     {
@@ -493,15 +461,11 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
 		::StandardAlert (kAlertPlainAlert, (const unsigned char*) "\013AGG Message", p_msg, NULL, &item);
 		//::StandardAlert (kAlertPlainAlert, (const unsigned char*) "\pAGG Message", p_msg, NULL, &item);
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::start_timer()
     {
 		::Microseconds (&(m_specific->m_sw_start));
     }
-
-
     //------------------------------------------------------------------------
     double platform_support::elapsed_time() const
     {
@@ -511,8 +475,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
                       m_specific->m_sw_start.lo) * 1e6 / 
                       double(m_specific->m_sw_freq.lo);
     }
-
-
     //------------------------------------------------------------------------
     bool platform_support::init(unsigned width, unsigned height, unsigned flags)
     {
@@ -611,8 +573,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
 		
       return true;
     }
-
-
     //------------------------------------------------------------------------
     int platform_support::run()
     {
@@ -620,8 +580,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
 		RunApplicationEventLoop ();
         return true;
     }
-
-
     //------------------------------------------------------------------------
     const char* platform_support::img_ext() const { return ".bmp"; }
 
@@ -652,8 +610,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_support::save_img(unsigned idx, const char* file)
     {
@@ -675,8 +631,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_support::create_img(unsigned idx, unsigned width, unsigned height)
     {
@@ -695,8 +649,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::force_redraw()
     {
@@ -710,15 +662,11 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
     	InvalWindowRect(m_specific->m_window, &bounds);
     }
 
-
-
     //------------------------------------------------------------------------
     void platform_support::update_window()
     {
         m_specific->display_pmap(m_specific->m_window, &m_rbuf_window);
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::on_init() {}
     void platform_support::on_resize(int sx, int sy) {}
@@ -730,8 +678,6 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData);
     void platform_support::on_ctrl_change() {}
     void platform_support::on_draw() {}
     void platform_support::on_post_draw(void* raw_handler) {}
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoWindowClose (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -741,8 +687,6 @@ pascal OSStatus DoWindowClose (EventHandlerCallRef nextHandler, EventRef theEven
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoAppQuit (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -750,8 +694,6 @@ pascal OSStatus DoAppQuit (EventHandlerCallRef nextHandler, EventRef theEvent, v
 	
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoMouseDown (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -805,8 +747,6 @@ pascal OSStatus DoMouseDown (EventHandlerCallRef nextHandler, EventRef theEvent,
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoMouseUp (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -842,8 +782,6 @@ pascal OSStatus DoMouseUp (EventHandlerCallRef nextHandler, EventRef theEvent, v
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoMouseDragged (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -866,8 +804,6 @@ pascal OSStatus DoMouseDragged (EventHandlerCallRef nextHandler, EventRef theEve
         app->m_specific->m_cur_y = wheresMyMouse.v;
     }
     app->m_specific->m_input_flags = mouse_left | get_key_flags(modifier);
-
-
     if(app->m_ctrls.on_mouse_move(
         app->m_specific->m_cur_x, 
         app->m_specific->m_cur_y,
@@ -885,8 +821,6 @@ pascal OSStatus DoMouseDragged (EventHandlerCallRef nextHandler, EventRef theEve
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoKeyDown (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -945,8 +879,6 @@ pascal OSStatus DoKeyDown (EventHandlerCallRef nextHandler, EventRef theEvent, v
             app->save_img(agg::platform_support::max_images - 1, "screenshot");
             break;
         }
-
-
         if(app->m_ctrls.on_arrow_keys(left, right, down, up))
         {
             app->on_ctrl_change();
@@ -963,8 +895,6 @@ pascal OSStatus DoKeyDown (EventHandlerCallRef nextHandler, EventRef theEvent, v
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoKeyUp (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -990,8 +920,6 @@ pascal OSStatus DoKeyUp (EventHandlerCallRef nextHandler, EventRef theEvent, voi
     
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal OSStatus DoWindowDrawContent (EventHandlerCallRef nextHandler, EventRef theEvent, void* userData)
 {
@@ -1009,8 +937,6 @@ pascal OSStatus DoWindowDrawContent (EventHandlerCallRef nextHandler, EventRef t
 
 	return CallNextEventHandler (nextHandler, theEvent);
 }
-
-
 //------------------------------------------------------------------------
 pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData)
 {
@@ -1019,17 +945,9 @@ pascal void DoPeriodicTask (EventLoopTimerRef theTimer, void* userData)
     if(!app->wait_mode())
 		app->on_idle();
 }
-
-
 }
-
-
-
-
 //----------------------------------------------------------------------------
 int agg_main(int argc, char* argv[]);
-
-
 // Hm. Classic MacOS does not know command line input.
 // CodeWarrior provides a way to mimic command line input.
 // The function 'ccommand' can be used to get the command

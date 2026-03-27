@@ -2,8 +2,6 @@
 
 import sys, os
 import libxml2
-
-
 libxml2.debugMemory(1)
 baseDir = os.path.join('msxsdtest', 'Particles')
 filenames = os.listdir(baseDir)
@@ -27,8 +25,6 @@ def gatherFiles():
 def debugMsg(text):
     #pass
     print "DEBUG:", text
-    
-    
 def fixup():      
     for mainXSD in dictXSD:
         debugMsg("fixing '%s'..." % mainXSD)	

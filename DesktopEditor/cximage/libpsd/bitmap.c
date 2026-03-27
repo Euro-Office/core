@@ -30,11 +30,7 @@
 #include "psd_color.h"
 #include "psd_bitmap.h"
 #include "psd_math.h"
-
-
 #define PSD_MIN_TEMP_IMAGE_LENGTH		12288
-
-
 psd_status psd_get_bitmap(psd_bitmap * bitmap, psd_int width, psd_int height, psd_context * context)
 {
 	psd_int length;

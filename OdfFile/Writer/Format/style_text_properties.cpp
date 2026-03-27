@@ -29,19 +29,13 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include <iostream>
 #include <xml/simple_xml_writer.h>
 #include <logging.h>
 
 #include "style_text_properties.h"
-
-
 #include "../../DataTypes/fontvariant.h"
 #include "../../DataTypes/common_attlists.h"
-
-
 
 //#include "../docx/oox_drawing_fills.h"
 
@@ -385,8 +379,6 @@ void text_format_properties::serialize(std::wostream & _Wostream,const wchar_t *
 		}
 	}
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_text_properties::ns = L"style";
 const wchar_t * style_text_properties::name = L"text-properties";

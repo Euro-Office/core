@@ -74,8 +74,6 @@ public:
   // non-shown layers?
   virtual GBool needCharCount() { return gFalse; }
 
-
-
   //----- initialization and control
 
   // Set default transform matrix.

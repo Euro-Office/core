@@ -78,8 +78,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*
  *  The struct FillSeg is used by the Heckbert seedfill algorithm to
  *  hold information about image segments that are waiting to be
@@ -94,8 +92,6 @@ struct FillSeg
     l_int32    dy;       /* parent segment direction: 1 above, -1 below) */
 };
 typedef struct FillSeg    FILLSEG;
-
-
     /* Static accessors for FillSegs on a stack */
 static void pushFillsegBB(L_STACK *lstack, l_int32 xleft, l_int32 xright,
                           l_int32 y, l_int32 dy, l_int32 ymax,
@@ -105,13 +101,9 @@ static void pushFillseg(L_STACK *lstack, l_int32 xleft, l_int32 xright,
                         l_int32 y, l_int32 dy, l_int32 ymax);
 static void popFillseg(L_STACK *lstack, l_int32 *pxleft, l_int32 *pxright,
                        l_int32 *py, l_int32 *pdy);
-
-
 #ifndef  NO_CONSOLE_IO
 #define   DEBUG    0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-----------------------------------------------------------------------*
  *                Bounding boxes of 4 Connected Components               *
  *-----------------------------------------------------------------------*/
@@ -149,8 +141,6 @@ pixConnComp(PIX     *pixs,
     else
         return pixConnCompPixa(pixs, ppixa, connectivity);
 }
-
-
 /*!
  *  pixConnCompPixa()
  *
@@ -256,8 +246,6 @@ L_STACK  *lstack, *auxstack;
 
     return boxa;
 }
-
-
 /*!
  *  pixConnCompBB()
  *
@@ -333,8 +321,6 @@ L_STACK  *lstack, *auxstack;
 
     return boxa;
 }
-
-
 /*!
  *  pixCountConnComp()
  *
@@ -402,8 +388,6 @@ L_STACK  *lstack, *auxstack;
 
     return 0;
 }
-
-
 /*!
  *  nextOnPixelInRaster()
  *
@@ -434,8 +418,6 @@ l_uint32  *data;
     data = pixGetData(pixs);
     return nextOnPixelInRasterLow(data, w, h, wpl, xstart, ystart, px, py);
 }
-
-
 l_int32
 nextOnPixelInRasterLow(l_uint32  *data,
                        l_int32    w,
@@ -496,8 +478,6 @@ l_uint32  *line, *pword;
 
     return 0;
 }
-
-
 /*!
  *  pixSeedfillBB()
  *
@@ -542,8 +522,6 @@ BOX  *box;
 
     return box;
 }
-
-
 /*!
  *  pixSeedfill4BB()
  *
@@ -661,8 +639,6 @@ BOX       *box;
         return (BOX *)ERROR_PTR("box not made", procName, NULL);
     return box;
 }
-            
-
 /*!
  *  pixSeedfill8BB()
  *
@@ -773,8 +749,6 @@ BOX       *box;
         return (BOX *)ERROR_PTR("box not made", procName, NULL);
     return box;
 }
-            
-
 /*!
  *  pixSeedfill()
  *
@@ -813,8 +787,6 @@ l_int32  retval;
 
     return retval;
 }
-
-
 /*!
  *  pixSeedfill4()
  *
@@ -904,8 +876,6 @@ l_uint32  *data, *line;
 
     return 0;
 }
-            
-
 /*!
  *  pixSeedfill8()
  *
@@ -995,8 +965,6 @@ l_uint32  *data, *line;
 
     return 0;
 }
-            
-
 
 /*-----------------------------------------------------------------------*
  *          Static stack helper functions: push and pop fillsegs         *
@@ -1072,8 +1040,6 @@ L_STACK  *auxstack;
     }
     return;
 }
-
-
 /*!
  *  pushFillseg()
  *
@@ -1132,8 +1098,6 @@ L_STACK  *auxstack;
     }
     return;
 }
-
-
 /*!
  *  popFillseg()
  * 
@@ -1182,6 +1146,4 @@ L_STACK  *auxstack;
     lstackAdd(auxstack, fseg);
     return;
 }
-
-
 

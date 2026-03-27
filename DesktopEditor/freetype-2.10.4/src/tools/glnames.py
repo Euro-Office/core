@@ -4,8 +4,6 @@
 #
 # FreeType 2 glyph name builder
 #
-
-
 # Copyright (C) 1996-2020 by
 # David Turner, Robert Wilhelm, and Werner Lemberg.
 #
@@ -14,8 +12,6 @@
 # LICENSE.TXT.  By continuing to use, modify, or distribute this file you
 # indicate that you have read the license and understand and accept it
 # fully.
-
-
 """\
 
 usage: %s <output-file>
@@ -25,11 +21,7 @@ usage: %s <output-file>
 
   Its single argument is the name of the header file to be created.
 """
-
-
 import sys, string, struct, re, os.path
-
-
 # This table lists the glyphs according to the Macintosh specification.
 # It is used by the TrueType Postscript names table.
 #
@@ -146,8 +138,6 @@ mac_standard_names = \
   "Idotaccent", "Scedilla", "scedilla", "Cacute", "cacute",
   "Ccaron", "ccaron", "dcroat"
 ]
-
-
 # The list of standard `SID' glyph names.  For the official list,
 # see Annex A of document at
 #
@@ -332,8 +322,6 @@ sid_standard_names = \
   # 390
   "Semibold"
 ]
-
-
 # This table maps character codes of the Adobe Standard Type 1
 # encoding to glyph indices in the sid_standard_names table.
 #
@@ -371,8 +359,6 @@ t1_standard_encoding = \
 
   148, 149,   0,   0,   0,   0
 ]
-
-
 # This table maps character codes of the Adobe Expert Type 1
 # encoding to glyph indices in the sid_standard_names table.
 #
@@ -410,8 +396,6 @@ t1_expert_encoding = \
 
   373, 374, 375, 376, 377, 378
 ]
-
-
 # This data has been taken literally from the files `glyphlist.txt'
 # and `zapfdingbats.txt' version 2.0, Sept 2002.  It is available from
 #
@@ -4901,8 +4885,6 @@ a98;275C
 a99;275D
 a9;2720
 """
-
-
 # string table management
 #
 class StringTable:
@@ -4981,8 +4963,6 @@ class StringTable:
     write( "  }\n" )
     write( "#endif /* DEFINE_PS_TABLES_DATA */\n" )
     write( "  ;\n\n\n" )
-
-
 # We now store the Adobe Glyph List in compressed form.  The list is put
 # into a data structure called `trie' (because it has a tree-like
 # appearance).  Consider, for example, that you want to store the
@@ -5172,8 +5152,6 @@ class StringNode:
       storage = child.store( storage )
 
     return storage
-
-
 def adobe_glyph_values():
   """return the list of glyph names and their unicode values"""
 
@@ -5191,8 +5169,6 @@ def adobe_glyph_values():
         values.append( fields[1] )
 
   return glyphs, values
-
-
 def filter_glyph_names( alist, filter ):
   """filter `alist' by taking _out_ all glyph names that are in `filter'"""
 
@@ -5206,8 +5182,6 @@ def filter_glyph_names( alist, filter ):
       extras.append( name )
 
   return extras
-
-
 def dump_encoding( file, encoding_name, encoding_list ):
   """dump a given encoding"""
 
@@ -5243,8 +5217,6 @@ def dump_encoding( file, encoding_name, encoding_list ):
   write( "  }\n" )
   write( "#endif /* DEFINE_PS_TABLES_DATA */\n" )
   write( "  ;\n\n\n" )
-
-
 def dump_array( the_array, write, array_name ):
   """dumps a given encoding"""
 
@@ -5284,8 +5256,6 @@ def dump_array( the_array, write, array_name ):
   write( "  }\n" )
   write( "#endif /* DEFINE_PS_TABLES_DATA */\n" )
   write( "  ;\n\n\n" )
-
-
 def main():
   """main program body"""
 
@@ -5389,8 +5359,6 @@ def main():
     int                   c = 0;
     int                   count, min, max;
     const unsigned char*  p = ft_adobe_glyph_list;
-
-
     if ( name == 0 || name >= limit )
       goto NotFound;
 
@@ -5406,8 +5374,6 @@ def main():
       int                   mid = ( min + max ) >> 1;
       const unsigned char*  q   = p + mid * 2;
       int                   c2;
-
-
       q = ft_adobe_glyph_list + ( ( (int)q[0] << 8 ) | q[1] );
 
       c2 = q[0] & 127;
@@ -5505,15 +5471,11 @@ def main():
     int                   result = 0;
     const char* const*    names  = the_names;
     const unsigned long*  values = the_values;
-
-
     for ( ; *names; names++, values++ )
     {
       const char*    name      = *names;
       unsigned long  reference = *values;
       unsigned long  value;
-
-
       value = ft_get_adobe_glyph_index( name, name + strlen( name ) );
       if ( value != reference )
       {
@@ -5530,11 +5492,7 @@ def main():
     write( "#endif /* TEST */\n" )
 
   write("\n/* END */\n")
-
-
 # Now run the main routine
 #
 main()
-
-
 # END

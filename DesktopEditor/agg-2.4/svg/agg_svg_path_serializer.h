@@ -6,8 +6,6 @@
 #include "agg_array.h"
 #include "agg_svg_basics.h"
 #include "agg_svg_parse_real.h"
-
-
 namespace agg
 {
 namespace svg
@@ -70,14 +68,10 @@ namespace svg
         double            m_last_number;
         unsigned          m_num_count;
         value_type        m_last_command;
-
-
         static const agg::int8u s_commands[];
         static const agg::int8u s_numeric[];
         static const agg::int8u s_separators[];
     };
-
-
     //------------------------------------------------------------------------
     template<class CharT> 
     const agg::int8u path_tokenizer<CharT>::s_commands[] = "+-MmZzLlHhVvCcSsQqTtAa";
@@ -378,8 +372,6 @@ namespace svg
         unsigned        m_num_vertices;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class Container>
     path_serializer<Container>::path_serializer(container_type& buffer) : 
@@ -548,8 +540,6 @@ namespace svg
     {
         append_c('z');
     }
-
-
     //-------------------------------------------------------------------------
     // Ths class is used to parse, validate, and serialize polygons and polylines
     // into binary format.

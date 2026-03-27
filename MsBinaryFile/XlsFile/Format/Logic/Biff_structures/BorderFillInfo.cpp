@@ -325,8 +325,6 @@ int FontInfo::serialize(std::wostream & stream)
 
 	return 0;
 }
-
-
 //------------------------------------------------------------------------------------------
 bool FillInfo::operator == (const FillInfo & rVal) const
 {
@@ -346,8 +344,6 @@ bool FillInfo::operator != (const FillInfo & rVal) const
 {
 	return !(this->operator ==(rVal));
 }
-
-
 static std::wstring PatternType [] = 
 {
 	L"none",
@@ -458,8 +454,6 @@ bool BorderInfo::operator == (const BorderInfo & rVal) const
 		((	dgDiag		== rVal.dgDiag		&&
 			grbitDiag	== rVal.grbitDiag	&& icvDiag	== rVal.icvDiag) || 
 												(dgDiag	== 0 && rVal.dgDiag == 0 && grbitDiag == 0 && rVal.grbitDiag== 0)) &&
-	
-
 		(bottomFillInfo_ == rVal.bottomFillInfo_ && leftFillInfo_ == rVal.leftFillInfo_ && topFillInfo_ == rVal.topFillInfo_
 			&& rightFillInfo_ == rVal.rightFillInfo_)
 		;

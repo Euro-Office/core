@@ -392,8 +392,6 @@ Defined in FT_MODULE_H (ftmodapi.h).
 <p>The following example sets property &lsquo;bar&rsquo; (a simple integer) in module &lsquo;foo&rsquo; to value&nbsp;1.</p>
 <pre class="colored">
   FT_UInt  bar;
-
-
   bar = 1;
   FT_Property_Set( library, "foo", "bar", &amp;bar );
 </pre>
@@ -463,8 +461,6 @@ Defined in FT_MODULE_H (ftmodapi.h).
   } range;
 
   range  baz;
-
-
   FT_Property_Get( library, "foo", "baz", &amp;baz );
 </pre>
 <p>It is not possible to retrieve properties of the FreeType Cache sub-system with FT_Property_Get; use ?FTC_Property_Get? instead.</p>

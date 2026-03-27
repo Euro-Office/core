@@ -35,8 +35,6 @@
 #include <boost/functional/hash/hash.hpp>
 
 #include "xlsx_font.h"
-
-
 namespace cpdoccore {
 namespace oox {
 
@@ -74,8 +72,6 @@ void xlsx_serialize(std::wostream & _Wostream, const xlsx_color & color, const s
         _Wostream << L"/>";
     }
 }
-
-
 bool xlsx_color::operator == (const xlsx_color & rVal) const
 {
     const bool res = 

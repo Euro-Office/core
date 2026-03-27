@@ -17,12 +17,8 @@
 // 4, 7, 10, or 13 vertices.
 //
 //----------------------------------------------------------------------------
-
-
 #include <math.h>
 #include "agg_bezier_arc.h"
-
-
 namespace agg
 {
 
@@ -64,8 +60,6 @@ namespace agg
             curve[i * 2 + 1] = cy + ry * (px[i] * sn + py[i] * cs);
         }
     }
-
-
 
     //------------------------------------------------------------------------
     void bezier_arc::init(double x,  double y, 
@@ -129,10 +123,6 @@ namespace agg
         }
         while(!done && m_num_vertices < 26);
     }
-
-
-
-
     //--------------------------------------------------------------------
     void bezier_arc_svg::init(double x0, double y0, 
                               double rx, double ry, 
@@ -253,6 +243,4 @@ namespace agg
             m_arc.vertices()[m_arc.num_vertices() - 1] = y2;
         }
     }
-
-
 }

@@ -28,8 +28,6 @@
 #include "psd_color.h"
 #include "psd_stream.h"
 #include "psd_system.h"
-
-
 typedef struct
 {
 	psd_char 			signature[4];			//Signature: always equal to '8BPS'. Do not try to read the file if the signature does not match this value.
@@ -41,8 +39,6 @@ typedef struct
 	psd_uchar			depth[2];				//Depth: the number of bits per channel. Supported values are 1, 8, and 16.
 	psd_uchar			color_mode[2];			//The color mode of the file. Supported values are: Bitmap = 0; Grayscale = 1; Indexed = 2; RGB = 3; CMYK = 4; Multichannel = 7; Duotone = 8; Lab = 9.
 } psd_file_header_binary;
-
-
 // The file header contains the basic properties of the image
 // input: context, the context of psd file
 // output: status of done

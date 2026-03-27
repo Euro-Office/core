@@ -29,8 +29,6 @@
 #include "agg_conv_stroke.h"
 #include "agg_path_storage.h"
 #include "agg_ctrl.h"
-
-
 namespace agg
 {
 
@@ -98,8 +96,6 @@ namespace agg
 
     };
 
-
-
     //----------------------------------------------------------slider_ctrl
     template<class ColorT> class slider_ctrl : public slider_ctrl_impl
     {
@@ -119,8 +115,6 @@ namespace agg
             m_colors[4] = &m_pointer_color;
             m_colors[5] = &m_text_color;
         }
-          
-
         void background_color(const ColorT& c) { m_background_color = c; }
         void pointer_color(const ColorT& c) { m_pointer_color = c; }
 
@@ -138,13 +132,7 @@ namespace agg
         ColorT* m_colors[6];
     };
 
-
-
-
-
 }
-
-
 
 #endif
 

@@ -50,8 +50,6 @@
 
 typedef enum
   { GRAYSCALE, MAPPEDGRAY, PSEUDOCOLOR, TRUECOLOR, DIRECTCOLOR } rle_kind;
-
-
 /*
  * Since RLE stores scanlines bottom-to-top, we have to invert the image
  * to conform to JPEG's top-to-bottom order.  To do this, we read the
@@ -71,8 +69,6 @@ typedef struct _rle_source_struct {
   rle_pixel** rle_row;          /* holds a row returned by rle_getrow() */
 
 } rle_source_struct;
-
-
 /*
  * Read the file header; return image size and component count.
  */
@@ -175,8 +171,6 @@ start_input_rle (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   source->pub.buffer_height = 1;
 }
-
-
 /*
  * Read one row of pixels.
  * Called only after load_image has read the image into the virtual array.
@@ -225,8 +219,6 @@ get_pseudocolor_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   return 1;
 }
-
-
 /*
  * Load the image into a virtual array.  We have to do this because RLE
  * files start at the lower left while the JPEG standard has them starting
@@ -350,8 +342,6 @@ load_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   /* And fetch the topmost (bottommost) row */
   return (*source->pub.get_pixel_rows) (cinfo, sinfo);   
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -361,8 +351,6 @@ finish_input_rle (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 {
   /* no work */
 }
-
-
 /*
  * The module selection routine for RLE format input.
  */

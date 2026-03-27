@@ -100,17 +100,11 @@
  *
  * \internal ICU 4.4 Technology Preview
  */
-
-
 #ifndef ICUPLUG_H
 #define ICUPLUG_H
 
 #include "unicode/utypes.h"
-
-
 #if UCONFIG_ENABLE_PLUGINS
-
-
 
 /* === Basic types === */
 
@@ -139,8 +133,6 @@ typedef struct UPlugData UPlugData;
  * @internal ICU 4.4 Technology Preview
  */
 #define UPLUG_NAME_MAX              100
-
-
 /**
  * Return value from a plugin entrypoint. 
  * Must always be set to UPLUG_TOKEN
@@ -159,8 +151,6 @@ typedef enum {
     UPLUG_REASON_UNLOAD = 2,   /**< The plugin is being unloaded. **/
     UPLUG_REASON_COUNT         /**< count of known reasons **/
 } UPlugReason;
-
-
 /**
  * Level of plugin loading
  *     INITIAL:  UNKNOWN
@@ -228,8 +218,6 @@ uplug_getPlugLevel(UPlugData *plug);
  */
 U_INTERNAL UPlugLevel U_EXPORT2
 uplug_getCurrentLevel(void);
-
-
 /**
  * Get plug load status
  * @return The error code of this plugin's load attempt.
@@ -302,8 +290,6 @@ uplug_getContext(UPlugData *plug);
  */
 U_INTERNAL void U_EXPORT2
 uplug_setContext(UPlugData *plug, void *context);
-
-
 /**
  * Get the configuration string, if available.
  * The string is in the platform default codepage.
@@ -346,8 +332,6 @@ uplug_nextPlug(UPlugData *prior);
  */
 U_INTERNAL UPlugData* U_EXPORT2
 uplug_loadPlugFromEntrypoint(UPlugEntrypoint *entrypoint, const char *config, UErrorCode *status);
-
-
 /**
  * Inject a plugin from a library, as if the information came from a config file.
  * Low level plugins may not be able to load, and ordering can't be enforced.

@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ExternOleDdeLink::clone()
 {
 	return BiffStructurePtr(new ExternOleDdeLink(*this));
@@ -54,7 +52,5 @@ void ExternOleDdeLink::save(CFRecord& record)
 {
     record << lStgName << linkName;
 }
-
-
 } // namespace XLS
 

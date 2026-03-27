@@ -39,13 +39,9 @@ namespace XLS
 BiffRecordSplit::BiffRecordSplit()
 {
 }
-
-
 BiffRecordSplit::~BiffRecordSplit()
 {
 }
-
-
 
 // Read all the Continue records that follow the record
 const bool BiffRecordSplit::storeRecordAndDecideProceeding(CFRecordPtr record)
@@ -85,8 +81,6 @@ const bool BiffRecordSplit::storeRecordAndDecideProceeding(CFRecordPtr record)
 	}
 	return is_end;
 }
-
-
 
 } // namespace XLS
 

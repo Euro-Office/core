@@ -31,8 +31,6 @@
 
 #ifndef UTYPES_H
 #define UTYPES_H
-
-
 #include "unicode/umachine.h"
 #include "unicode/uversion.h"
 #include "unicode/uconfig.h"
@@ -51,8 +49,6 @@
  * basic character and string definitions and umachine.h for consistent
  * integer and other types.
  */
-
-
 /**
  * \def U_SHOW_CPLUSPLUS_API
  * @internal
@@ -372,8 +368,6 @@ typedef double UDate;
 #else
 #define U_STANDARD_CPP_NAMESPACE
 #endif
-
-
 /*===========================================================================*/
 /* Global delete operator                                                    */
 /*===========================================================================*/
@@ -500,8 +494,6 @@ typedef enum UErrorCode {
     U_PLUGIN_CHANGED_LEVEL_WARNING = -120, /**< A plugin caused a level change. May not be an error, but later plugins may not load. */
 
     U_ERROR_WARNING_LIMIT,              /**< This must always be the last warning value to indicate the limit for UErrorCode warnings (last warning code +1) */
-
-
     U_ZERO_ERROR              =  0,     /**< No error, no warning. */
 
     U_ILLEGAL_ARGUMENT_ERROR  =  1,     /**< Start of codes indicating failure */
@@ -724,6 +716,4 @@ typedef enum UErrorCode {
  */
 U_STABLE const char * U_EXPORT2
 u_errorName(UErrorCode code);
-
-
 #endif /* _UTYPES */

@@ -9,13 +9,9 @@
 #include "../Stream/fstream_utils.h"
 #include "../Stream/stream_utils.h"
 #include "../../DesktopEditor/common/Directory.h"
-
-
 using namespace testing;
 using namespace std;
 using namespace CFCPP;
-
-
 constexpr int _70MBLen = 1024 * 1024 * 70;
 const vector<BYTE> _8ByteData = {0x28, 0xFF, 0x28, 0x1D, 0x4C, 0xFA, 0x00, 0x79};
 const vector<BYTE> _70MBVector(_70MBLen, 0x90);
@@ -23,8 +19,6 @@ const vector<BYTE> _70MBVector(_70MBLen, 0x90);
 const wstring testDataPath = L"../../../data/";
 const wstring sourcePath = testDataPath + L"src/";
 const wstring outPath = testDataPath + L"out/";
-
-
 void EXPECT_FILE_EXIST(const wstring& filePath)
 {
     EXPECT_TRUE(NSFile::CFileBinary::Exists(filePath));
@@ -43,8 +37,6 @@ wstring InitOutPath(const wstring& filename)
 
     return fullpath;
 }
-
-
 vector<wstring> arrForeignFileNames=
 {
     L"file",        // Englang

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTCOLOR_H_
 #define FTCOLOR_H_
 
@@ -26,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -46,8 +40,6 @@ FT_BEGIN_HEADER
    *   The functions described here allow access and manipulation of color
    *   palette entries in OpenType's 'CPAL' tables.
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -83,8 +75,6 @@ FT_BEGIN_HEADER
     FT_Byte  alpha;
 
   } FT_Color;
-
-
   /**************************************************************************
    *
    * @enum:
@@ -109,8 +99,6 @@ FT_BEGIN_HEADER
    */
 #define FT_PALETTE_FOR_LIGHT_BACKGROUND  0x01
 #define FT_PALETTE_FOR_DARK_BACKGROUND   0x02
-
-
   /**************************************************************************
    *
    * @struct:
@@ -177,8 +165,6 @@ FT_BEGIN_HEADER
     const FT_UShort*  palette_entry_name_ids;
 
   } FT_Palette_Data;
-
-
   /**************************************************************************
    *
    * @function:
@@ -210,8 +196,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Palette_Data_Get( FT_Face           face,
                        FT_Palette_Data  *apalette );
-
-
   /**************************************************************************
    *
    * @function:
@@ -264,8 +248,6 @@ FT_BEGIN_HEADER
   FT_Palette_Select( FT_Face     face,
                      FT_UShort   palette_index,
                      FT_Color*  *apalette );
-
-
   /**************************************************************************
    *
    * @function:
@@ -303,11 +285,7 @@ FT_BEGIN_HEADER
                                    FT_Color  foreground_color );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTCOLOR_H_ */
-
-
 /* END */

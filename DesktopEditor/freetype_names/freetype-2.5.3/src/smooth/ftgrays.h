@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTGRAYS_H__
 #define __FTGRAYS_H__
 
 #ifdef __cplusplus
   extern "C" {
 #endif
-
-
 #ifdef _STANDALONE_
 #include "ftimage.h"
 #else
@@ -31,8 +27,6 @@
 #include FT_CONFIG_CONFIG_H /* for FT_CONFIG_OPTION_PIC */
 #include FT_IMAGE_H
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* To make ftgrays.h independent from configuration files we check       */
@@ -46,13 +40,9 @@
 #endif
 
   FT_EXPORT_VAR( const FT_Raster_Funcs )  ft_grays_raster;
-
-
 #ifdef __cplusplus
   }
 #endif
 
 #endif /* __FTGRAYS_H__ */
-
-
 /* END */

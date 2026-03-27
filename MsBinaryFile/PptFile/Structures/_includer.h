@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "ColorIndexStruct.h"
 #include "ColorStruct.h"
 #include "PointStruct.h"

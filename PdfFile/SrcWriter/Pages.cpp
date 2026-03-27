@@ -801,8 +801,6 @@ namespace PdfWriter
 			}
 			return;
 		}
-
-
 		while (_dAngle1 < 0)
 			_dAngle1 += 360;
 

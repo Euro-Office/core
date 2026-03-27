@@ -99,11 +99,7 @@ void BulletsConverter::ConvertPFRun(PPTX::Logic::TextParagraphPr &oPPr, CTextPFR
             oPPr.hangingPunct = true;
 
     }
-
-
     ConvertTabStops(oPPr.tabLst, pPF->tabStops);
-
-
     if (pPF->lineSpacing.is_init())
     {
         LONG val = pPF->lineSpacing.get();
@@ -259,8 +255,6 @@ void BulletsConverter::ConvertAllBullets(PPTX::Logic::TextParagraphPr &oPPr, CTe
         FillBuChar(oPPr.ParagraphBullet, L'\x2022');
     }
 }
-
-
 void BulletsConverter::FillBuClr(PPTX::Logic::BulletColor &oBuClr, ODRAW::CColor &oColor)
 {
     auto pBuClr = new PPTX::Logic::BuClr;

@@ -35,18 +35,12 @@
 
 namespace XLS
 {
-
-
 FilePass::FilePass()
 {
 }
-
-
 FilePass::~FilePass()
 {
 }
-
-
 BaseObjectPtr FilePass::clone()
 {
 	return BaseObjectPtr(new FilePass(*this));

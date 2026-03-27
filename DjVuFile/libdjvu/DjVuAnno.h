@@ -65,8 +65,6 @@
 # pragma interface
 #endif
 
-
-
 /** @name DjVuAnno.h
 
     Files #"DjVuAnno.h"# and #"DjVuAnno.cpp"# implement the mechanism for
@@ -77,8 +75,6 @@
 
     This file implements annotations understood by the DjVu plugins 
     and encoders.
-
-
     using: contents of #ANT*# chunks.
 
     Contents of the #FORM:ANNO# should be passed to \Ref{DjVuAnno::decode}()
@@ -89,8 +85,6 @@
     @version
     #$Id: DjVuAnno.h,v 1.10 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 #include "GString.h"
 
 #ifdef HAVE_NAMESPACES
@@ -225,8 +219,6 @@ private:
 };
 
 // -------- DJVUANNO --------
-
-
 /** This is a top-level class containing annotations of a DjVu document (or
     just a page). It has only two functions: \Ref{encode}() and
     \Ref{decode}().  Both of them work with a sequence of annotation chunks

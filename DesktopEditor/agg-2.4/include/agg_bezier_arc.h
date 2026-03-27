@@ -30,8 +30,6 @@ namespace agg
     void arc_to_bezier(double cx, double cy, double rx, double ry, 
                        double start_angle, double sweep_angle,
                        double* curve);
-
-
     //==============================================================bezier_arc
     // 
     // See implemantaion agg_bezier_arc.cpp
@@ -84,8 +82,6 @@ namespace agg
         double   m_vertices[26];
         unsigned m_cmd;
     };
-
-
 
     //==========================================================bezier_arc_svg
     // Compute an SVG-style bezier arc. 
@@ -149,11 +145,5 @@ namespace agg
         bezier_arc m_arc;
         bool       m_radii_ok;
     };
-
-
-
-
 }
-
-
 #endif

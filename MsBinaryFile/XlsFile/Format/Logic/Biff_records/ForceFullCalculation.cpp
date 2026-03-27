@@ -38,13 +38,9 @@ namespace XLS
 ForceFullCalculation::ForceFullCalculation()
 {
 }
-
-
 ForceFullCalculation::~ForceFullCalculation()
 {
 }
-
-
 BaseObjectPtr ForceFullCalculation::clone()
 {
 	return BaseObjectPtr(new ForceFullCalculation(*this));

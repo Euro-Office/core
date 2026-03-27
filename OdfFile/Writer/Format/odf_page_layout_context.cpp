@@ -41,8 +41,6 @@
 
 #include "styles.h"
 #include "style_page_layout_properties.h" 
-
-
 namespace cpdoccore {
 
 	using namespace odf_types;
@@ -65,8 +63,6 @@ odf_page_layout_context::odf_page_layout_context(odf_conversion_context * Contex
 odf_page_layout_context::~odf_page_layout_context()
 {
 }
-
-
 odf_layout_state * odf_page_layout_context::last_layout()
 {
 	if (!layout_state_list_.empty())

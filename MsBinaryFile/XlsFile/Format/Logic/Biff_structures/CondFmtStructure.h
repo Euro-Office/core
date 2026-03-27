@@ -47,8 +47,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	const CellRef getLocation() const;
 
     unsigned short	ccf = 0;

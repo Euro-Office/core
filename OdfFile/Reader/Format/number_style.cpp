@@ -136,8 +136,6 @@ void number_style_base::oox_convert(oox::num_format_context & Context)
     Context.add_format(L"", num_format);
 
 }
-
-
 //void number_style_base::xlsx_convert(oox::xlsx_conversion_context & Context)
 //{
 //    if (!style_map_.empty())
@@ -344,8 +342,6 @@ void number_currency_symbol::oox_convert(oox::num_format_context & Context)
     }
     strm << L"]";
 }
-
-
 // number:currency-style
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_currency_style::ns = L"number";
@@ -460,8 +456,6 @@ void number_text::oox_convert(oox::num_format_context & Context)
 	}
 	Context.output() << text_;
 }
-
-
 // number:day
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_day::ns = L"number";
@@ -489,8 +483,6 @@ void number_day::oox_convert(oox::num_format_context & Context)
         strm << L"d";
     }
 }
-
-
 // number:day-of-week
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * number_day_of_week::ns = L"number";

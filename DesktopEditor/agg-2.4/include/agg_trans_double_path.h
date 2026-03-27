@@ -126,6 +126,4 @@ namespace agg
     };
 
 }
-
-
 #endif

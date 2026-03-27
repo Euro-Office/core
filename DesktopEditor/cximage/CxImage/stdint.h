@@ -64,8 +64,6 @@ extern "C" {
 #     define _W64
 #  endif
 #endif
-
-
 // 7.18.1 Integer types
 
 // 7.18.1.1 Exact-width integer types
@@ -141,8 +139,6 @@ typedef uint64_t  uint_fast64_t;
 // 7.18.1.5 Greatest-width integer types
 typedef int64_t   intmax_t;
 typedef uint64_t  uintmax_t;
-
-
 // 7.18.2 Limits of specified-width integer types
 
 #if !defined(__cplusplus) || defined(__STDC_LIMIT_MACROS) // [   See footnote 220 at page 257 and footnote 221 at page 259
@@ -238,8 +234,6 @@ typedef uint64_t  uintmax_t;
 #define WINT_MAX  _UI16_MAX
 
 #endif // __STDC_LIMIT_MACROS ]
-
-
 // 7.18.4 Limits of other integer types
 
 #if !defined(__cplusplus) || defined(__STDC_CONSTANT_MACROS) // [   See footnote 224 at page 260
@@ -261,6 +255,4 @@ typedef uint64_t  uintmax_t;
 #define UINTMAX_C  UINT64_C
 
 #endif // __STDC_CONSTANT_MACROS ]
-
-
 #endif // _MSC_STDINT_H_ ]

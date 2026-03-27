@@ -47,8 +47,6 @@ struct ClassDefFormat1Table : ClassDefinitionTable
     le_bool  hasGlyphClass(const LETableReference &base, le_int32 glyphClass, LEErrorCode &success) const;
 };
 LE_VAR_ARRAY(ClassDefFormat1Table, classValueArray)
-
-
 struct ClassRangeRecord
 {
     TTGlyphID start;

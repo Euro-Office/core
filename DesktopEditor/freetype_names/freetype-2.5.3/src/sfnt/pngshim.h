@@ -14,16 +14,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PNGSHIM_H__
 #define __PNGSHIM_H__
-
-
 #include <ft2build.h>
 #include "ttload.h"
-
-
 FT_BEGIN_HEADER
 
 #ifdef FT_CONFIG_OPTION_USE_PNG
@@ -44,6 +38,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __PNGSHIM_H__ */
-
-
 /* END */

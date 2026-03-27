@@ -14,15 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "t1afm.h"
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>
 #include "t1errors.h"
-
-
 #ifndef T1_CONFIG_OPTION_NO_AFM
 
   /**************************************************************************
@@ -33,8 +29,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  t1afm
-
-
   FT_LOCAL_DEF( void )
   T1_Done_Metrics( FT_Memory     memory,
                    AFM_FontInfo  fi )
@@ -47,8 +41,6 @@
 
     FT_FREE( fi );
   }
-
-
   /* read a glyph name and return the equivalent glyph index */
   static FT_Int
   t1_get_index( const char*  name,
@@ -57,8 +49,6 @@
   {
     T1_Font  type1 = (T1_Font)user_data;
     FT_Int   n;
-
-
     /* PS string/name length must be < 16-bit */
     if ( len > 0xFFFFU )
       return 0;
@@ -66,8 +56,6 @@
     for ( n = 0; n < type1->num_glyphs; n++ )
     {
       char*  gname = (char*)type1->glyph_names[n];
-
-
       if ( gname && gname[0] == name[0]        &&
            ft_strlen( gname ) == len           &&
            ft_strncmp( gname, name, len ) == 0 )
@@ -76,12 +64,8 @@
 
     return 0;
   }
-
-
 #undef  KERN_INDEX
 #define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)(g1) << 16 ) | (g2) )
-
-
   /* compare two kerning pairs */
   FT_CALLBACK_DEF( int )
   compare_kern_pairs( const void*  a,
@@ -92,8 +76,6 @@
 
     FT_ULong  index1 = KERN_INDEX( pair1->index1, pair1->index2 );
     FT_ULong  index2 = KERN_INDEX( pair2->index1, pair2->index2 );
-
-
     if ( index1 > index2 )
       return 1;
     else if ( index1 < index2 )
@@ -101,8 +83,6 @@
     else
       return 0;
   }
-
-
   /* parse a PFM file -- for now, only read the kerning pairs */
   static FT_Error
   T1_Read_PFM( FT_Face       t1_face,
@@ -119,8 +99,6 @@
     FT_CharMap    oldcharmap;
     FT_CharMap    charmap;
     FT_Int        n;
-
-
     start = (FT_Byte*)stream->cursor;
     limit = (FT_Byte*)stream->limit;
 
@@ -227,8 +205,6 @@
 
     return error;
   }
-
-
   /* parse a metrics file -- either AFM or PFM depending on what */
   /* it turns out to be                                          */
   FT_LOCAL_DEF( FT_Error )
@@ -242,8 +218,6 @@
     FT_Error       error   = FT_ERR( Unknown_File_Format );
     T1_Face        face    = (T1_Face)t1_face;
     T1_Font        t1_font = &face->type1;
-
-
     if ( face->afm_data )
     {
       FT_TRACE1(( "T1_Read_Metrics:"
@@ -283,8 +257,6 @@
     if ( FT_ERR_EQ( error, Unknown_File_Format ) )
     {
       FT_Byte*  start = stream->cursor;
-
-
       /* MS Windows allows versions up to 0x3FF without complaining */
       if ( stream->size > 6                              &&
            start[1] < 4                                  &&
@@ -322,8 +294,6 @@
 
     return error;
   }
-
-
   /* find the kerning for a given glyph pair */
   FT_LOCAL_DEF( void )
   T1_Get_Kerning( AFM_FontInfo  fi,
@@ -333,8 +303,6 @@
   {
     AFM_KernPair  min, mid, max;
     FT_ULong      idx = KERN_INDEX( glyph1, glyph2 );
-
-
     /* simple binary search */
     min = fi->KernPairs;
     max = min + fi->NumKernPair - 1;
@@ -342,8 +310,6 @@
     while ( min <= max )
     {
       FT_ULong  midi;
-
-
       mid  = min + ( max - min ) / 2;
       midi = KERN_INDEX( mid->index1, mid->index2 );
 
@@ -364,8 +330,6 @@
     kerning->x = 0;
     kerning->y = 0;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   T1_Get_Track_Kerning( FT_Face    face,
                         FT_Fixed   ptsize,
@@ -374,16 +338,12 @@
   {
     AFM_FontInfo  fi = (AFM_FontInfo)( (T1_Face)face )->afm_data;
     FT_UInt       i;
-
-
     if ( !fi )
       return FT_THROW( Invalid_Argument );
 
     for ( i = 0; i < fi->NumTrackKern; i++ )
     {
       AFM_TrackKern  tk = fi->TrackKerns + i;
-
-
       if ( tk->degree != degree )
         continue;
 
@@ -409,6 +369,4 @@
   typedef int  _t1_afm_dummy;
 
 #endif /* T1_CONFIG_OPTION_NO_AFM */
-
-
 /* END */

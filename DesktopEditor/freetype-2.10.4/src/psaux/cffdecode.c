@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftserv.h>
@@ -25,8 +23,6 @@
 #include "psobjs.h"
 
 #include "psauxerr.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -35,8 +31,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  cffdecode
-
-
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 
   typedef enum  CFF_Operator_
@@ -120,8 +114,6 @@
     cff_op_max
 
   } CFF_Operator;
-
-
 #define CFF_COUNT_CHECK_WIDTH  0x80
 #define CFF_COUNT_EXACT        0x40
 #define CFF_COUNT_CLEAR_STACK  0x20
@@ -208,8 +200,6 @@
     4, /* sbw */
     2  /* setcurrentpoint */
   };
-
-
   static FT_Error
   cff_operator_seac( CFF_Decoder*  decoder,
                      FT_Pos        asb,
@@ -226,8 +216,6 @@
     FT_Byte*      charstring;
     FT_ULong      charstring_len;
     FT_Pos        glyph_width;
-
-
     if ( decoder->seac )
     {
       FT_ERROR(( "cff_operator_seac: invalid nested seac\n" ));
@@ -249,8 +237,6 @@
 #endif /* FT_CONFIG_OPTION_INCREMENTAL */
     {
       CFF_Font cff = (CFF_Font)(face->extra.data);
-
-
       bchar_index = cff_lookup_glyph_by_stdcharcode( cff, bchar );
       achar_index = cff_lookup_glyph_by_stdcharcode( cff, achar );
     }
@@ -269,8 +255,6 @@
       FT_GlyphSlot    glyph  = (FT_GlyphSlot)builder->glyph;
       FT_GlyphLoader  loader = glyph->internal->loader;
       FT_SubGlyph     subg;
-
-
       /* reallocate subglyph array if necessary */
       error = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
       if ( error )
@@ -363,8 +347,6 @@
   }
 
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -402,8 +384,6 @@
                     FT_UInt  num_subrs )
   {
     FT_Int  result;
-
-
     if ( in_charstring_type == 1 )
       result = 0;
     else if ( num_subrs < 1240 )
@@ -415,8 +395,6 @@
 
     return result;
   }
-
-
   FT_LOCAL_DEF( FT_Int )
   cff_lookup_glyph_by_stdcharcode( CFF_Font  cff,
                                    FT_Int    charcode )
@@ -425,8 +403,6 @@
     FT_UShort  glyph_sid;
 
     FT_Service_CFFLoad  cffload;
-
-
     /* CID-keyed fonts don't have glyph names */
     if ( !cff->charset.sids )
       return -1;
@@ -438,8 +414,6 @@
 #if 0
     /* retrieve cffload from list of current modules */
     FT_Service_CFFLoad  cffload;
-
-
     FT_FACE_FIND_GLOBAL_SERVICE( face, cffload, CFF_LOAD );
     if ( !cffload )
     {
@@ -462,8 +436,6 @@
 
     return -1;
   }
-
-
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
 
   /**************************************************************************
@@ -513,8 +485,6 @@
                          decoder->cff->top_font.font_dict.num_axes;
 
     T2_Hints_Funcs  hinter;
-
-
     /* set default width */
     decoder->num_hints  = 0;
     decoder->read_width = 1;
@@ -550,8 +520,6 @@
     {
       CFF_Operator  op;
       FT_Byte       v;
-
-
       /*********************************************************************
        *
        * Decode operator or operand
@@ -561,8 +529,6 @@
       {
         FT_Int    shift = 16;
         FT_Int32  val;
-
-
         /* this is an operand, push it on the stack */
 
         /* if we use shifts, all computations are done with unsigned */
@@ -624,8 +590,6 @@
         FT_Fixed*  args     = decoder->top;
         FT_Int     num_args = (FT_Int)( args - decoder->stack );
         FT_Int     req_args;
-
-
         /* find operator */
         op = cff_op_unknown;
 
@@ -893,8 +857,6 @@
             /* -- for either case.                                         */
 
             FT_Int  set_width_ok;
-
-
             switch ( op )
             {
             case cff_op_hmoveto:
@@ -1025,8 +987,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
           {
             FT_UInt  maskbyte;
-
-
             FT_TRACE4(( " (maskbytes:" ));
 
             for ( maskbyte = 0;
@@ -1095,8 +1055,6 @@
         case cff_op_vlineto:
           {
             FT_Int  phase = ( op == cff_op_hlineto );
-
-
             FT_TRACE4(( "%s\n", op == cff_op_hlineto ? " hlineto"
                                                      : " vlineto" ));
 
@@ -1133,8 +1091,6 @@
         case cff_op_rrcurveto:
           {
             FT_Int  nargs;
-
-
             FT_TRACE4(( " rrcurveto\n" ));
 
             if ( num_args < 6 )
@@ -1170,8 +1126,6 @@
         case cff_op_vvcurveto:
           {
             FT_Int  nargs;
-
-
             FT_TRACE4(( " vvcurveto\n" ));
 
             if ( num_args < 4 )
@@ -1218,8 +1172,6 @@
         case cff_op_hhcurveto:
           {
             FT_Int  nargs;
-
-
             FT_TRACE4(( " hhcurveto\n" ));
 
             if ( num_args < 4 )
@@ -1267,8 +1219,6 @@
           {
             FT_Int  phase;
             FT_Int  nargs;
-
-
             FT_TRACE4(( "%s\n", op == cff_op_vhcurveto ? " vhcurveto"
                                                        : " hvcurveto" ));
 
@@ -1331,8 +1281,6 @@
           {
             FT_Int  num_lines;
             FT_Int  nargs;
-
-
             FT_TRACE4(( " rlinecurve\n" ));
 
             if ( num_args < 8 )
@@ -1379,8 +1327,6 @@
           {
             FT_Int  num_curves;
             FT_Int  nargs;
-
-
             FT_TRACE4(( " rcurveline\n" ));
 
             if ( num_args < 8 )
@@ -1427,8 +1373,6 @@
         case cff_op_hflex1:
           {
             FT_Pos  start_y;
-
-
             FT_TRACE4(( " hflex1\n" ));
 
             /* adding five more points: 4 control points, 1 on-curve point */
@@ -1478,8 +1422,6 @@
         case cff_op_hflex:
           {
             FT_Pos  start_y;
-
-
             FT_TRACE4(( " hflex\n" ));
 
             /* adding six more points; 4 control points, 2 on-curve points */
@@ -1531,8 +1473,6 @@
                                          /* algorithm below              */
             FT_Int     horizontal, count;
             FT_Fixed*  temp;
-
-
             FT_TRACE4(( " flex1\n" ));
 
             /* adding six more points; 4 control points, 2 on-curve points */
@@ -1595,8 +1535,6 @@
         case cff_op_flex:
           {
             FT_UInt  count;
-
-
             FT_TRACE4(( " flex\n" ));
 
             if ( cff_builder_start_point( builder, x, y ) ||
@@ -1643,8 +1581,6 @@
           {
             /* Save glyph width so that the subglyphs don't overwrite it. */
             FT_Pos  glyph_width = decoder->glyph_width;
-
-
             error = cff_operator_seac( decoder,
                                        0L, args[-4], args[-3],
                                        (FT_Int)( args[-2] >> 16 ),
@@ -1727,8 +1663,6 @@
           {
             FT_UInt32*  randval = in_dict ? &decoder->cff->top_font.random
                                           : &decoder->current_subfont->random;
-
-
             FT_TRACE4(( " random\n" ));
 
             /* only use the lower 16 bits of `random'  */
@@ -1757,8 +1691,6 @@
           {
             FT_Fixed  root = args[0];
             FT_Fixed  new_root;
-
-
             for (;;)
             {
               new_root = ( root + FT_DivFix( args[0], root ) + 1 ) >> 1;
@@ -1782,8 +1714,6 @@
         case cff_op_exch:
           {
             FT_Fixed  tmp;
-
-
             FT_TRACE4(( " exch\n" ));
 
             tmp     = args[0];
@@ -1796,8 +1726,6 @@
         case cff_op_index:
           {
             FT_Int  idx = (FT_Int)( args[0] >> 16 );
-
-
             FT_TRACE4(( " index\n" ));
 
             if ( idx < 0 )
@@ -1813,8 +1741,6 @@
           {
             FT_Int  count = (FT_Int)( args[0] >> 16 );
             FT_Int  idx   = (FT_Int)( args[1] >> 16 );
-
-
             FT_TRACE4(( " roll\n" ));
 
             if ( count <= 0 )
@@ -1831,8 +1757,6 @@
               {
                 FT_Fixed  tmp = args[count - 1];
                 FT_Int    i;
-
-
                 for ( i = count - 2; i >= 0; i-- )
                   args[i + 1] = args[i];
                 args[0] = tmp;
@@ -1849,8 +1773,6 @@
               {
                 FT_Fixed  tmp = args[0];
                 FT_Int    i;
-
-
                 for ( i = 0; i < count - 1; i++ )
                   args[i] = args[i + 1];
                 args[count - 1] = tmp;
@@ -1872,8 +1794,6 @@
           {
             FT_Fixed  val = args[0];
             FT_Int    idx = (FT_Int)( args[1] >> 16 );
-
-
             FT_TRACE4(( " put\n" ));
 
             /* the Type2 specification before version 16-March-2000 */
@@ -1889,8 +1809,6 @@
           {
             FT_Int    idx = (FT_Int)( args[0] >> 16 );
             FT_Fixed  val = 0;
-
-
             FT_TRACE4(( " get\n" ));
 
             if ( idx >= 0 && idx < CFF_MAX_TRANS_ELEMENTS )
@@ -1917,8 +1835,6 @@
             FT_Int  reg_idx = (FT_Int)args[0];
             FT_Int  idx     = (FT_Int)args[1];
             FT_Int  count   = (FT_Int)args[2];
-
-
             FT_TRACE4(( " load\n" ));
 
             /* since we currently don't handle interpolation of multiple */
@@ -1929,8 +1845,6 @@
                  count >= 0 && count <= num_axes          )
             {
               FT_Int  end, i;
-
-
               end = FT_MIN( idx + count, CFF_MAX_TRANS_ELEMENTS );
 
               if ( idx < end )
@@ -1948,8 +1862,6 @@
           if ( num_designs )
           {
             FT_Int  num_results = (FT_Int)( args[0] >> 16 );
-
-
             FT_TRACE4(( " blend\n" ));
 
             if ( num_results < 0 )
@@ -2035,8 +1947,6 @@
         case cff_op_callothersubr:
           {
             FT_Fixed  arg;
-
-
             /* this is an invalid Type 2 operator; however, there      */
             /* exist fonts which are incorrectly converted from        */
             /* probably Type 1 to CFF, and some parsers seem to accept */
@@ -2089,8 +1999,6 @@
         case cff_op_and:
           {
             FT_Fixed  cond = ( args[0] && args[1] );
-
-
             FT_TRACE4(( " and\n" ));
 
             args[0] = cond ? 0x10000L : 0;
@@ -2101,8 +2009,6 @@
         case cff_op_or:
           {
             FT_Fixed  cond = ( args[0] || args[1] );
-
-
             FT_TRACE4(( " or\n" ));
 
             args[0] = cond ? 0x10000L : 0;
@@ -2113,8 +2019,6 @@
         case cff_op_not:
           {
             FT_Fixed  cond = !args[0];
-
-
             FT_TRACE4(( " not\n" ));
 
             args[0] = cond ? 0x10000L : 0;
@@ -2125,8 +2029,6 @@
         case cff_op_eq:
           {
             FT_Fixed  cond = ( args[0] == args[1] );
-
-
             FT_TRACE4(( " eq\n" ));
 
             args[0] = cond ? 0x10000L : 0;
@@ -2137,8 +2039,6 @@
         case cff_op_ifelse:
           {
             FT_Fixed  cond = ( args[2] <= args[3] );
-
-
             FT_TRACE4(( " ifelse\n" ));
 
             if ( !cond )
@@ -2151,8 +2051,6 @@
           {
             FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
                                       decoder->locals_bias );
-
-
             FT_TRACE4(( " callsubr (idx %d, entering level %d)\n",
                         idx,
                         zone - decoder->zones + 1 ));
@@ -2195,8 +2093,6 @@
           {
             FT_UInt  idx = (FT_UInt)( ( args[0] >> 16 ) +
                                       decoder->globals_bias );
-
-
             FT_TRACE4(( " callgsubr (idx %d, entering level %d)\n",
                         idx,
                         zone - decoder->zones + 1 ));
@@ -2295,8 +2191,6 @@
   }
 
 #endif /* CFF_CONFIG_OPTION_OLD_ENGINE */
-
-
   /**************************************************************************
    *
    * @Function:
@@ -2336,8 +2230,6 @@
                     CFF_Decoder_Free_Glyph_Callback  free_callback )
   {
     CFF_Font  cff = (CFF_Font)face->extra.data;
-
-
     /* clear everything */
     FT_ZERO( decoder );
 
@@ -2357,8 +2249,6 @@
     decoder->get_glyph_callback  = get_callback;
     decoder->free_glyph_callback = free_callback;
   }
-
-
   /* this function is used to select the subfont */
   /* and the locals subrs array                  */
   FT_LOCAL_DEF( FT_Error )
@@ -2372,15 +2262,11 @@
     FT_Error      error   = FT_Err_Ok;
 
     FT_Service_CFFLoad  cffload = (FT_Service_CFFLoad)cff->cffload;
-
-
     /* manage CID fonts */
     if ( cff->num_subfonts )
     {
       FT_Byte  fd_index = cffload->fd_select_get( &cff->fd_select,
                                                   glyph_index );
-
-
       if ( fd_index >= cff->num_subfonts )
       {
         FT_TRACE4(( "cff_decoder_prepare: invalid CID subfont index\n" ));
@@ -2396,8 +2282,6 @@
       {
         FT_Size       ftsize   = FT_SIZE( size );
         CFF_Internal  internal = (CFF_Internal)ftsize->internal->module_data;
-
-
         /* for CFFs without subfonts, this value has already been set */
         builder->hints_globals = (void *)internal->subfonts[fd_index];
       }
@@ -2417,6 +2301,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

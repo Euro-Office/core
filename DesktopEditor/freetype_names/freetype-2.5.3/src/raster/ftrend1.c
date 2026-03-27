@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
@@ -25,23 +23,17 @@
 #include "rastpic.h"
 
 #include "rasterrs.h"
-
-
   /* initialize renderer -- init its raster */
   static FT_Error
   ft_raster1_init( FT_Renderer  render )
   {
     FT_Library  library = FT_MODULE_LIBRARY( render );
-
-
     render->clazz->raster_class->raster_reset( render->raster,
                                                library->raster_pool,
                                                library->raster_pool_size );
 
     return FT_Err_Ok;
   }
-
-
   /* set render-specific mode */
   static FT_Error
   ft_raster1_set_mode( FT_Renderer  render,
@@ -53,8 +45,6 @@
                                                          mode_tag,
                                                          data );
   }
-
-
   /* transform a given glyph image */
   static FT_Error
   ft_raster1_transform( FT_Renderer       render,
@@ -63,8 +53,6 @@
                         const FT_Vector*  delta )
   {
     FT_Error error = FT_Err_Ok;
-
-
     if ( slot->format != render->glyph_format )
     {
       error = FT_THROW( Invalid_Argument );
@@ -80,8 +68,6 @@
   Exit:
     return error;
   }
-
-
   /* return the glyph's control box */
   static void
   ft_raster1_get_cbox( FT_Renderer   render,
@@ -93,8 +79,6 @@
     if ( slot->format == render->glyph_format )
       FT_Outline_Get_CBox( &slot->outline, cbox );
   }
-
-
   /* convert a slot's glyph image into a bitmap */
   static FT_Error
   ft_raster1_render( FT_Renderer       render,
@@ -110,8 +94,6 @@
     FT_Memory    memory;
 
     FT_Raster_Params  params;
-
-
     /* check glyph image format */
     if ( slot->format != render->glyph_format )
     {
@@ -243,8 +225,6 @@
   Exit:
     return error;
   }
-
-
   FT_DEFINE_RENDERER( ft_raster1_renderer_class,
 
       FT_MODULE_RENDERER,
@@ -270,8 +250,6 @@
 
     (FT_Raster_Funcs*)    &FT_STANDARD_RASTER_GET
   )
-
-
   /* This renderer is _NOT_ part of the default modules; you will need */
   /* to register it by hand in your application.  It should only be    */
   /* used for backwards-compatibility with FT 1.x anyway.              */
@@ -301,6 +279,4 @@
 
     (FT_Raster_Funcs*)    &FT_STANDARD_RASTER_GET
   )
-
-
 /* END */

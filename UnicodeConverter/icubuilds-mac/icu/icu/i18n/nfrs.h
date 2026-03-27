@@ -96,8 +96,6 @@ int64_t util64_utoi(const UChar* str, uint32_t radix = 10);
 uint32_t util64_toa(int64_t n, char* buffer, uint32_t buflen, uint32_t radix = 10, UBool raw = FALSE);
 int64_t util64_atoi(const char* str, uint32_t radix);
 #endif
-
-
 U_NAMESPACE_END
 
 /* U_HAVE_RBNF */

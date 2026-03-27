@@ -64,22 +64,14 @@ namespace agg
         {
             m_dy -= m_inc * n;
         }
-
-
         //--------------------------------------------------------------------
         int y()  const { return m_y + (m_dy >> (FractionShift-YShift)); }
         int dy() const { return m_dy; }
-
-
     private:
         int m_y;
         int m_inc;
         int m_dy;
     };
-
-
-
-
 
     //=================================================dda2_line_interpolator
     class dda2_line_interpolator
@@ -139,8 +131,6 @@ namespace agg
                 m_lft--;
             }
         }
-
-
         //--------------------------------------------------------------------
         void save(save_data_type* data) const
         {
@@ -206,12 +196,6 @@ namespace agg
         int m_mod;
         int m_y;
     };
-
-
-
-
-
-
 
     //---------------------------------------------line_bresenham_interpolator
     class line_bresenham_interpolator
@@ -281,10 +265,6 @@ namespace agg
         dda2_line_interpolator m_interpolator;
 
     };
-
-
 }
-
-
 
 #endif

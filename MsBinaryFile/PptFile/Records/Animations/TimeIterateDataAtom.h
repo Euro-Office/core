@@ -32,16 +32,12 @@
 #pragma once
 
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTimeIterateDataAtom: public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     _UINT32 m_nIterateInterval;
     _UINT32 m_nIterateType;
     _UINT32 m_nIterateDirection;

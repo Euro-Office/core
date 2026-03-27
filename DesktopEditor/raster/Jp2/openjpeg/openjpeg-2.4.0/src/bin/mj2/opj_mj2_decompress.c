@@ -65,8 +65,6 @@ static void warning_callback(const char *msg, void *client_data)
 }
 
 /* -------------------------------------------------------------------------- */
-
-
 int main(int argc, char *argv[])
 {
     mj2_dparameters_t mj2_parameters;           /* decompression parameters */

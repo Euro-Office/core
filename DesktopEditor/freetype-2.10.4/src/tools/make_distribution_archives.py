@@ -13,8 +13,6 @@ import tempfile
 
 _TOP_DIR = os.path.abspath(os.path.join(__file__, "..", "..", ".."))
 _SCRIPT_DIR = os.path.dirname(os.path.join(_TOP_DIR, "builds", "meson", ""))
-
-
 def get_cmd_output(cmd, cwd=None):
     """Run a command and return its output as a string."""
     if cwd is not None:
@@ -22,14 +20,10 @@ def get_cmd_output(cmd, cwd=None):
     else:
         out = subprocess.check_output(cmd)
     return out.decode("utf-8").rstrip()
-
-
 def is_git_dir_clean(git_dir):
     """Return True iff |git_dir| is a git directory in clean state."""
     out = get_cmd_output(["git", "status", "--porcelain"], cwd=git_dir)
     return len(out) == 0
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -202,7 +196,5 @@ def main():
 
     # Done!
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

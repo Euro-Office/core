@@ -52,8 +52,6 @@
 /* Unsigned 64-bit type */
 #define TIFF_UINT64_T uint64_t
 #endif
-
-
 /* Set the native cpu bit order */
 #define HOST_FILLORDER FILLORDER_LSB2MSB
 

@@ -38,13 +38,9 @@ namespace XLS
 BuiltInFnGroupCount::BuiltInFnGroupCount()
 {
 }
-
-
 BuiltInFnGroupCount::~BuiltInFnGroupCount()
 {
 }
-
-
 BaseObjectPtr BuiltInFnGroupCount::clone()
 {
 	return BaseObjectPtr(new BuiltInFnGroupCount(*this));

@@ -51,8 +51,6 @@ namespace agg
         {
             attach(buf, width, height, stride);
         }
-
-
         //--------------------------------------------------------------------
         void attach(T* buf, unsigned width, unsigned height, int stride)
         {
@@ -136,10 +134,6 @@ namespace agg
         unsigned      m_height; // Height in pixels
         int           m_stride; // Number of bytes per row. Can be < 0
     };
-
-
-
-
     //==========================================================row_ptr_cache
     template<class T> class row_ptr_cache
     {
@@ -266,10 +260,6 @@ namespace agg
         unsigned      m_height;     // Height in pixels
         int           m_stride;     // Number of bytes per row. Can be < 0
     };
-
-
-
-
     //========================================================rendering_buffer
     // 
     // The definition of the main type for accessing the rows in the frame 
@@ -297,6 +287,4 @@ namespace agg
 #endif
 
 }
-
-
 #endif

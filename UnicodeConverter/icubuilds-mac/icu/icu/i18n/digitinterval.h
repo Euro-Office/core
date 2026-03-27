@@ -34,8 +34,6 @@ public:
      */
     DigitInterval()
             : fLargestExclusive(INT32_MAX), fSmallestInclusive(INT32_MIN) { }
-
-
     /**
      * Makes this instance span all digits.
      */

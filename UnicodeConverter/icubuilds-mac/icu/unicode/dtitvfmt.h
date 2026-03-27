@@ -10,8 +10,6 @@
 
 #ifndef __DTITVFMT_H__
 #define __DTITVFMT_H__
-
-
 #include "unicode/utypes.h"
 
 /**
@@ -28,8 +26,6 @@
 #include "unicode/dtptngen.h"
 
 U_NAMESPACE_BEGIN
-
-
 
 /**
  * DateIntervalFormat is a class for formatting and parsing date
@@ -156,7 +152,6 @@ U_NAMESPACE_BEGIN
  *    to "Jan 10, 2007 11:10am" is "Jan 10, 2007 10:10 am - 11:10am"
  * </li>
  * </ol>
- *
  *
  * <P>
  * If two dates are the same, the interval pattern is the single date pattern.
@@ -373,8 +368,6 @@ public:
      * @stable ICU 4.0
      */
     UBool operator!=(const Format& other) const;
-
-
     using Format::format;
 
     /**
@@ -401,8 +394,6 @@ public:
                                   FieldPosition& fieldPosition,
                                   UErrorCode& status) const ;
 
-
-
     /**
      * Format a DateInterval to produce a string.
      *
@@ -422,8 +413,6 @@ public:
                           UnicodeString& appendTo,
                           FieldPosition& fieldPosition,
                           UErrorCode& status) const ;
-
-
     /**
      * Format 2 Calendars to produce a string.
      *
@@ -482,8 +471,6 @@ public:
     virtual void parseObject(const UnicodeString& source,
                              Formattable& result,
                              ParsePosition& parse_pos) const;
-
-
     /**
      * Gets the date time interval patterns.
      * @return the date time interval patterns associated with
@@ -491,8 +478,6 @@ public:
      * @stable ICU 4.0
      */
     const DateIntervalInfo* getDateIntervalInfo(void) const;
-
-
     /**
      * Set the date time interval patterns.
      * @param newIntervalPatterns   the given interval patterns to copy.
@@ -501,8 +486,6 @@ public:
      */
     void setDateIntervalInfo(const DateIntervalInfo& newIntervalPatterns,
                              UErrorCode& status);
-
-
     /**
      * Gets the date formatter
      * @return the date formatter associated with this date interval formatter.
@@ -605,8 +588,6 @@ private:
          */
         UBool         laterDateFirst;
     };
-
-
     /**
      * default constructor
      * @internal ICU 4.0
@@ -633,8 +614,6 @@ private:
      */
     DateIntervalFormat(const Locale& locale, DateIntervalInfo* dtItvInfo,
                        const UnicodeString* skeleton, UErrorCode& status);
-
-
     /**
      * Construct a DateIntervalFormat from DateFormat
      * and a DateIntervalInfo.
@@ -677,8 +656,6 @@ private:
                    UnicodeString& pat0, FieldPosition& pos0, // pattern and pos corresponding to {0}
                    UnicodeString& pat1, FieldPosition& pos1, // pattern and pos corresponding to {1}
                    FieldPosition& posResult);
-
-
     /**
      * Format 2 Calendars using fall-back interval pattern
      *
@@ -704,8 +681,6 @@ private:
                                   UnicodeString& appendTo,
                                   FieldPosition& pos,
                                   UErrorCode& status) const;
-
-
 
     /**
      * Initialize interval patterns locale to this formatter
@@ -743,8 +718,6 @@ private:
      */
     void initializePattern(UErrorCode& status);
 
-
-
     /**
      * Set fall back interval pattern given a calendar field,
      * a skeleton, and a date time pattern generator.
@@ -755,8 +728,6 @@ private:
     void setFallbackPattern(UCalendarDateFields field,
                             const UnicodeString& skeleton,
                             UErrorCode& status);
-
-
 
     /**
      * get separated date and time skeleton from a combined skeleton.
@@ -788,8 +759,6 @@ private:
                                     UnicodeString& time,
                                     UnicodeString& normalizedTime);
 
-
-
     /**
      * Generate date or time interval pattern from resource,
      * and set them into the interval pattern locale to this formatter.
@@ -815,10 +784,6 @@ private:
      */
     UBool setSeparateDateTimePtn(const UnicodeString& dateSkeleton,
                                  const UnicodeString& timeSkeleton);
-
-
-
-
     /**
      * Generate interval pattern from existing resource
      *
@@ -908,16 +873,12 @@ private:
      */
     static UBool U_EXPORT2 fieldExistsInSkeleton(UCalendarDateFields field,
                                                  const UnicodeString& skeleton);
-
-
     /**
      * Split interval patterns into 2 part.
      * @param intervalPattern  interval pattern
      * @return the index in interval pattern which split the pattern into 2 part
      */
     static int32_t  U_EXPORT2 splitPatternInto2Part(const UnicodeString& intervalPattern);
-
-
     /**
      * Break interval patterns as 2 part and save them into pattern info.
      * @param field            calendar field
@@ -925,8 +886,6 @@ private:
      */
     void setIntervalPattern(UCalendarDateFields field,
                             const UnicodeString& intervalPattern);
-
-
     /**
      * Break interval patterns as 2 part and save them into pattern info.
      * @param field            calendar field
@@ -936,8 +895,6 @@ private:
     void setIntervalPattern(UCalendarDateFields field,
                             const UnicodeString& intervalPattern,
                             UBool laterDateFirst);
-
-
     /**
      * Set pattern information.
      *
@@ -951,12 +908,8 @@ private:
                         const UnicodeString* firstPart,
                         const UnicodeString* secondPart,
                         UBool laterDateFirst);
-
-
     // from calendar field to pattern letter
     static const UChar fgCalendarFieldToPatternLetter[];
-
-
     /**
      * The interval patterns for this locale.
      */

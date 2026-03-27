@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GSmartPointer.h"
 #ifndef NDEBUG
 #include "GException.h"
@@ -77,8 +75,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 class GRect;
 class GMonitor;
 class ByteStream;
@@ -107,8 +103,6 @@ class ByteStream;
 
  */
 //@{
-
-
 /** Bilevel and gray-level images.  Instances of class #GBitmap# represent
     bilevel or gray-level images.  Images are usually represented using one
     byte per pixel.  Value zero represents a white pixel.  A value equal to
@@ -451,8 +445,6 @@ public:
   enum {RUNOVERFLOWVALUE=0xc0};
   enum {RUNMSBMASK=0x3f};
   enum {RUNLSBMASK=0xff};
-
-
 protected:
   // bitmap components
   unsigned short nrows;
@@ -498,8 +490,6 @@ public:
   void check_border() const;
 #endif
 };
-
-
 /** @name PNM and RLE file formats
 
     {\bf PNM} --- There are actually three PNM file formats: PBM for bilevel
@@ -538,8 +528,6 @@ public:
     Simple image file formats.  */
 
 //@}
-
-
 // ---------------- IMPLEMENTATION
 
 inline unsigned int
@@ -620,8 +608,6 @@ GBitmap::euclidian_ratio(int a, int b, int &q, int &r)
     r += b;
   }
 }
-
-
 inline int
 GBitmap::read_run(unsigned char *&data)
 {
@@ -657,8 +643,6 @@ GBitmap::append_run(unsigned char *&data, int count)
       append_long_run(data, count);
     }
 }
-
-
 inline void
 GBitmap::borrow_data(unsigned char &data,int w,int h)
 {

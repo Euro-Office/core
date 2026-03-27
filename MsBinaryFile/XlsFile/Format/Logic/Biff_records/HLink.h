@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of HLink record in BIFF8
 class HLink: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~HLink();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 
@@ -60,8 +56,6 @@ public:
 	Ref8U ref8;
 	std::wstring hlinkClsid = L"{79EAC9D0-BAF9-11CE-8C82-00AA004BA90B}";
 	OSHARED::HyperlinkObject hyperlink;
-
-
 };
 
 } // namespace XLS

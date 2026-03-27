@@ -141,6 +141,4 @@ std::wstring presentation_class::get_type_ms()
 	return res;
 }
 
-
-
 } }

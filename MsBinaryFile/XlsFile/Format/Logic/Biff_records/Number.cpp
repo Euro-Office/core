@@ -72,8 +72,6 @@ void Number::readFields(CFRecord& record)
 	{ // sizeof record == 14
 		record >> cell >> num;
 	}
-
-
 	_INT32 val = 0;
 	if (record.getDataSize() >= 18)//SchetPrintForm.xls
 	{

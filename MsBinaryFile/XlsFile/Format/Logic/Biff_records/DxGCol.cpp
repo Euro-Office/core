@@ -38,13 +38,9 @@ namespace XLS
 DxGCol::DxGCol()
 {
 }
-
-
 DxGCol::~DxGCol()
 {
 }
-
-
 BaseObjectPtr DxGCol::clone()
 {
 	return BaseObjectPtr(new DxGCol(*this));

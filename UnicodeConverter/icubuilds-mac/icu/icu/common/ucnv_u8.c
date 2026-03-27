@@ -38,8 +38,6 @@ U_CFUNC void ucnv_fromUnicode_UTF8(UConverterFromUnicodeArgs *args,
                                            UErrorCode *err);
 U_CFUNC void ucnv_fromUnicode_UTF8_OFFSETS_LOGIC(UConverterFromUnicodeArgs *args,
                                                         UErrorCode *err);
-
-
 /* UTF-8 -------------------------------------------------------------------- */
 
 /* UTF-8 Conversion DATA
@@ -120,8 +118,6 @@ static void ucnv_toUnicode_UTF8 (UConverterToUnicodeArgs * args,
         cnv->toUnicodeStatus = 0;
         goto morebytes;
     }
-
-
     while (mySource < sourceLimit && myTarget < targetLimit)
     {
         ch = *(mySource++);
@@ -1041,8 +1037,6 @@ static const UConverterStaticData _UTF8StaticData={
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-
-
 const UConverterSharedData _UTF8Data=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_UTF8StaticData, &_UTF8Impl);
 
@@ -1081,8 +1075,6 @@ static const UConverterStaticData _CESU8StaticData={
     0,
     { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 } /* reserved */
 };
-
-
 const UConverterSharedData _CESU8Data=
         UCNV_IMMUTABLE_SHARED_DATA_INITIALIZER(&_CESU8StaticData, &_CESU8Impl);
 

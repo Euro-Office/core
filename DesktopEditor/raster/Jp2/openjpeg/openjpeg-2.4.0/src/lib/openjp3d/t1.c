@@ -573,8 +573,6 @@ static void t1_dec_clnpass(opj_t1_t *t1, int w, int h, int l, int bpno,
         */
     }
 }               /* VSC and  BYPASS by Antonin */
-
-
 static void t1_encode_cblk(opj_t1_t *t1, opj_tcd_cblk_t * cblk, int orient,
                            int compno, int level[3], int dwtid[3], double stepsize, int cblksty,
                            int numcomps, opj_tcd_tile_t * tile)
@@ -1270,8 +1268,6 @@ void t1_decode_cblks(opj_t1_t *t1, opj_tcd_tile_t *tile, opj_tcp_t *tcp)
         } /* resno */
     } /* compno */
 }
-
-
 /** mod fixed_quality */
 double t1_getwmsedec(int nmsedec, int compno, int level[3], int orient,
                      int bpno, double stepsize, int numcomps, int dwtid[3])

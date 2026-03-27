@@ -49,8 +49,6 @@ struct internal_state {
     *blocks;            /* current inflate_blocks state */
 
 };
-
-
 ZEXPORT(int) inflateReset( /* z) */
 z_streamp z )
 {
@@ -63,8 +61,6 @@ z_streamp z )
   Tracev((stderr, "inflate: reset\n"));
   return Z_OK;
 }
-
-
 ZEXPORT(int) inflateEnd( /* z) */
 z_streamp z )
 {
@@ -77,8 +73,6 @@ z_streamp z )
   Tracev((stderr, "inflate: end\n"));
   return Z_OK;
 }
-
-
 ZEXPORT(int) inflateInit2_( /* z, w, version, stream_size) */
 z_streamp z,
 int w,
@@ -135,15 +129,11 @@ int stream_size )
   return Z_OK;
 }
 
-
-
 #undef  NEEDBYTE
 #define NEEDBYTE {if(z->avail_in==0)return r;r=f;}
 
 #undef  NEXTBYTE
 #define NEXTBYTE (z->avail_in--,z->total_in++,*z->next_in++)
-
-
 ZEXPORT(int) inflate( /* z, f) */
 z_streamp z,
 int f )

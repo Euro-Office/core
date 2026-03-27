@@ -67,8 +67,6 @@
 #include "GException.h"
 #include "ByteStream.h"
 #include "GString.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -78,12 +76,8 @@ namespace DJVU {
 
 // ----------------------------------------
 // CLASS DJVUINFO
-
-
 #define STRINGIFY(x) STRINGIFY_(x)
 #define STRINGIFY_(x) #x
-
-
 DjVuInfo::DjVuInfo()
   : width(0), height(0), 
 #ifdef DJVUVERSION_FOR_OUTPUT
@@ -200,8 +194,6 @@ DjVuInfo::writeParam(ByteStream &str_out) const
 {
   str_out.writestring(get_paramtags());
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

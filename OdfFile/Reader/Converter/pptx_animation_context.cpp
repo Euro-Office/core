@@ -61,8 +61,6 @@
 			back->AnimationActionArray.push_back(impl_->element_description);	\
 	}																			\
 	impl_->element_description = nullptr
-
-
 namespace cpdoccore {
 namespace oox {
 
@@ -247,8 +245,6 @@ namespace oox {
 	{
 		impl_->set_description_->Direction = value;
 	}
-
-
 	void pptx_animation_context::set_set_restart(const std::wstring& value)
 	{
 		impl_->set_description_->Restart = value;
@@ -907,8 +903,6 @@ namespace oox {
 			}
 		}
 	}
-
-
 	void pptx_animation_context::Impl::_set::serialize(std::wostream& strm)
 	{
 		CP_XML_WRITER(strm)
@@ -968,8 +962,6 @@ namespace oox {
 			}
 		}
 	}
-
-
 	void pptx_animation_context::Impl::_anim_effect::serialize(std::wostream& strm)
 	{
 		CP_XML_WRITER(strm)

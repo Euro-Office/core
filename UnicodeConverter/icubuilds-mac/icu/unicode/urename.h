@@ -49,8 +49,6 @@
 #ifndef U_ICU_ENTRY_POINT_RENAME
 #error U_ICU_ENTRY_POINT_RENAME is not defined - cannot continue. Consider defining U_DISABLE_RENAMING if renaming should not be used.
 #endif
-
-
 /* C exports renaming data */
 
 #define T_CString_int64ToString U_ICU_ENTRY_POINT_RENAME(T_CString_int64ToString)

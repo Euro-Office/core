@@ -74,8 +74,6 @@ public:
      */
     static ScientificNumberFormatter *createSuperscriptInstance(
             const Locale &locale, UErrorCode &status);
-
-
     /**
      * Creates a ScientificNumberFormatter instance that uses
      * markup for exponents.
@@ -110,8 +108,6 @@ public:
             const UnicodeString &beginMarkup,
             const UnicodeString &endMarkup,
             UErrorCode &status);
-
-
     /**
      * Returns a copy of this object. Caller must free returned copy.
      * @draft ICU 55

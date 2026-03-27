@@ -34,16 +34,12 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 
 #include "cf2glue.h"
 #include "cf2font.h"
 #include "cf2error.h"
 #include "cf2intrp.h"
-
-
   /* Compute a stem darkening amount in character space. */
   static void
   cf2_computeDarkening( CF2_Fixed   emRatio,
@@ -105,8 +101,6 @@
     /* adjusting for emRatio converts darkenAmount to character */
     /* space (font units).                                      */
     CF2_Fixed  stemWidthPer1000, scaledStem;
-
-
     *darkenAmount = 0;
 
     if ( boldenAmount == 0 && !stemDarkened )
@@ -126,8 +120,6 @@
       FT_Int  y3 = darkenParams[5];
       FT_Int  x4 = darkenParams[6];
       FT_Int  y4 = darkenParams[7];
-
-
       /* convert from true character space to 1000 unit character space; */
       /* add synthetic emboldening effect                                */
 
@@ -162,8 +154,6 @@
         FT_Int  ydelta = y2 - y1;
         FT_Int  x      = stemWidthPer1000 -
                            FT_DivFix( cf2_intToFixed( x1 ), ppem );
-
-
         if ( !xdelta )
           goto Try_x3;
 
@@ -179,8 +169,6 @@
           FT_Int  ydelta = y3 - y2;
           FT_Int  x      = stemWidthPer1000 -
                              FT_DivFix( cf2_intToFixed( x2 ), ppem );
-
-
           if ( !xdelta )
             goto Try_x4;
 
@@ -197,8 +185,6 @@
           FT_Int  ydelta = y4 - y3;
           FT_Int  x      = stemWidthPer1000 -
                              FT_DivFix( cf2_intToFixed( x3 ), ppem );
-
-
           if ( !xdelta )
             goto Use_y4;
 
@@ -221,8 +207,6 @@
     /* add synthetic emboldening effect in character space */
     *darkenAmount += boldenAmount / 2;
   }
-
-
   /* set up values for the current FontDict and matrix */
 
   /* caller's transform is adjusted for subpixel positioning */
@@ -241,8 +225,6 @@
 
     CFF_SubFont  subFont;
     CF2_Fixed    ppem;
-
-
     /* clear previous error */
     font->error = FT_Err_Ok;
 
@@ -323,8 +305,6 @@
       CF2_Fixed  emRatio;
       CF2_Fixed  stdHW;
       CF2_Int    unitsPerEm = font->unitsPerEm;
-
-
       if ( unitsPerEm == 0 )
         unitsPerEm = 1000;
 
@@ -414,8 +394,6 @@
       cf2_blues_init( &font->blues, font );
     }
   }
-
-
   /* equivalent to AdobeGetOutline */
   FT_LOCAL_DEF( FT_Error )
   cf2_getGlyphOutline( CF2_Font           font,
@@ -433,8 +411,6 @@
 
     CF2_Fixed  advWidth = 0;
     FT_Bool    needWinding;
-
-
     /* Note: use both integer and fraction for outlines.  This allows bbox */
     /*       to come out directly.                                         */
 
@@ -496,6 +472,4 @@
 
     return font->error;
   }
-
-
 /* END */

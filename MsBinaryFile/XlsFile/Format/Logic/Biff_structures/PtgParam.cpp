@@ -86,15 +86,11 @@ PtgParam::PtgParam(const std::wstring unparsed_line)
 	}
 	clear_line_ = unparsed_line.substr(excl_place + 1, unparsed_line.length() - excl_place - 1);
 }
-
-
 PtgParam::PtgParam(const ParamType type, const std::wstring clear_line)
 :	type_(type),
 	clear_line_(clear_line)
 {
 }
-
-
 const PtgParam::ParamType PtgParam::str2type(const std::wstring str) const
 {
 	if(str == type2str(ptUNDEFINED_NAME))
@@ -111,8 +107,6 @@ const PtgParam::ParamType PtgParam::str2type(const std::wstring str) const
 	}
 	return ptNONE;
 }
-
-
 const std::wstring PtgParam::type2str(const PtgParam::ParamType type) const
 {
 	switch(type)
@@ -130,50 +124,34 @@ const std::wstring PtgParam::type2str(const PtgParam::ParamType type) const
 			return L"NONE";
 	}
 }
-
-
 const PtgParam::ParamType PtgParam::getType() const
 {
 	return type_;
 }
-
-
 const std::wstring PtgParam::getClearLine() const
 {
 	return clear_line_;
 }
-
-
 const int PtgParam::getFirstParam() const
 {
 	return params[0];
 }
-
-
 const int PtgParam::getSecondParam() const
 {
 	return params[1];
 }
-
-
 const int PtgParam::getParam(const size_t pos) const
 {
 	return params[pos];
 }
-
-
 const int PtgParam::getParamsNum() const
 {
 	return params.size();
 }
-
-
 void PtgParam::addParam(const int param)
 {
 	params.push_back(param);
 }
-
-
 const std::wstring PtgParam::toString() const
 {
 	std::wstring result = L'#' + type2str(type_);
@@ -190,8 +168,6 @@ const std::wstring PtgParam::toString() const
 	result += L'!';
 	return result;
 }
-
-
 
 } // namespace XLS
 

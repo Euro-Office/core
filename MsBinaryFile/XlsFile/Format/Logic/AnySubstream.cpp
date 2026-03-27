@@ -35,24 +35,16 @@
 
 namespace XLS
 {;
-
-
 AnySubstream::AnySubstream()
 {
 }
-
-
 AnySubstream::~AnySubstream()
 {
 }
-
-
 BaseObjectPtr AnySubstream::clone()
 {
 	return BaseObjectPtr(new AnySubstream(*this));
 }
-
-
 // AnySubstream = 
 const bool AnySubstream::loadContent(BinProcessor& proc)
 {

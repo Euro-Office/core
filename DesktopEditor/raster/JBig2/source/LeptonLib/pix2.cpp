@@ -96,8 +96,6 @@
  *
  *      *** indicates implicit assumption about RGB component ordering
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -117,13 +115,9 @@ static const l_uint32 rmask32[] = {0x0,
      * for rings at distance 1 and 2 from the border.  Declare extern
      * to use.  To change the values, use l_setAlphaMaskBorder(). */
 LEPT_DLL l_float32  AlphaMaskBorderVals[2] = {0.0, 0.5};
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_SERIALIZE        0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *                         Pixel poking                        *
  *-------------------------------------------------------------*/
@@ -199,8 +193,6 @@ l_uint32  *line, *data;
     *pval = val;
     return 0;
 }
-
-
 /*!
  *  pixSetPixel()
  *
@@ -269,8 +261,6 @@ l_uint32  *line, *data;
 
     return 0;
 }
-
-
 /*!
  *  pixGetRGBPixel()
  *
@@ -312,8 +302,6 @@ l_uint32  *data, *ppixel;
     if (pbval) *pbval = GET_DATA_BYTE(ppixel, COLOR_BLUE);
     return 0;
 }
-
-
 /*!
  *  pixSetRGBPixel()
  *
@@ -355,8 +343,6 @@ l_uint32  *data, *line;
     *(line + x) = pixel;
     return 0;
 }
-
-
 /*!
  *  pixGetRandomPixel()
  *
@@ -402,8 +388,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixClearPixel()
  *
@@ -459,8 +443,6 @@ l_uint32  *line, *data;
 
     return 0;
 }
-
-
 /*!
  *  pixFlipPixel()
  *
@@ -530,8 +512,6 @@ l_uint32  *line, *data;
 
     return 0;
 }
-
-
 /*!
  *  setPixelLow()
  *
@@ -579,8 +559,6 @@ setPixelLow(l_uint32  *line,
 
     return;
 }
-
-
 /*-------------------------------------------------------------*
  *     Full image clear/set/set-to-arbitrary-value/invert      *
  *-------------------------------------------------------------*/
@@ -608,8 +586,6 @@ pixClearAll(PIX  *pix)
                 PIX_CLR, NULL, 0, 0);
     return 0;
 }
-
-
 /*!
  *  pixSetAll()
  *
@@ -643,8 +619,6 @@ PIXCMAP  *cmap;
                 PIX_SET, NULL, 0, 0);
     return 0;
 }
-
-
 /*!
  *  pixSetAllArbitrary()
  *
@@ -716,8 +690,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixSetBlackOrWhite()
  *
@@ -766,8 +738,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *     Rectangular region clear/set/set-to-arbitrary-value     *
  *-------------------------------------------------------------*/
@@ -801,8 +771,6 @@ l_int32  x, y, w, h;
     pixRasterop(pix, x, y, w, h, PIX_CLR, NULL, 0, 0);
     return 0;
 }
-
-
 /*!
  *  pixSetInRect()
  *
@@ -840,8 +808,6 @@ PIXCMAP  *cmap;
     pixRasterop(pix, x, y, w, h, PIX_SET, NULL, 0, 0);
     return 0;
 }
-
-
 /*!
  *  pixSetInRectArbitrary()
  *
@@ -955,8 +921,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixBlendInRect()
  *
@@ -1010,8 +974,6 @@ l_uint32  *datas, *lines;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                         Set pad bits                        *
  *-------------------------------------------------------------*/
@@ -1069,8 +1031,6 @@ l_uint32  *data, *pword;
 
     return 0;
 }
-
-
 /*!
  *  pixSetPadBitsBand()
  *
@@ -1137,8 +1097,6 @@ l_uint32  *data, *pword;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                       Set border pixels                     *
  *-------------------------------------------------------------*/
@@ -1185,8 +1143,6 @@ l_int32  w, h;
 
     return 0;
 }
-
-
 /*!
  *  pixSetBorderVal()
  *
@@ -1296,8 +1252,6 @@ l_uint32  *datas, *lines;
 
     return 0;
 }
-
-
 /*!
  *  pixSetBorderRingVal()
  *
@@ -1343,8 +1297,6 @@ l_int32  w, h, d, i, j, xend, yend;
 
     return 0;
 }
-
-
 /*!
  *  pixSetMirroredBorder()
  *
@@ -1390,8 +1342,6 @@ l_int32  i, j, w, h;
 
     return 0;
 }
-     
-
 /*!
  *  pixCopyBorder()
  *
@@ -1445,8 +1395,6 @@ l_int32  w, h;
     return pixd;
 }
 
-
-
 /*-------------------------------------------------------------*
  *                     Add and remove border                   *
  *-------------------------------------------------------------*/
@@ -1474,8 +1422,6 @@ pixAddBorder(PIX      *pixs,
         return pixClone(pixs);
     return pixAddBorderGeneral(pixs, npix, npix, npix, npix, val);
 }
-
-
 /*!
  *  pixAddBlackBorder()
  *
@@ -1505,8 +1451,6 @@ PIXCMAP  *cmap;
     }
     return pixAddBorderGeneral(pixs, npix, npix, npix, npix, val);
 }
-
-
 /*!
  *  pixAddBorderGeneral()
  *
@@ -1576,8 +1520,6 @@ PIX     *pixd;
     pixRasterop(pixd, left, top, ws, hs, PIX_SRC, pixs, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixRemoveBorder()
  *
@@ -1597,8 +1539,6 @@ pixRemoveBorder(PIX     *pixs,
         return pixClone(pixs);
     return pixRemoveBorderGeneral(pixs, npix, npix, npix, npix);
 }
-
-
 /*!
  *  pixRemoveBorderGeneral()
  *
@@ -1638,8 +1578,6 @@ PIX     *pixd;
     pixRasterop(pixd, 0, 0, wd, hd, PIX_SRC, pixs, left, top);
     return pixd;
 }
-
-
 /*!
  *  pixAddMirroredBorder()
  *
@@ -1740,8 +1678,6 @@ PIX     *pixd;
 
     return pixd;
 }
-     
-
 /*!
  *  pixAddMixedBorder()
  *
@@ -1798,8 +1734,6 @@ PIX     *pixd;
 
     return pixd;
 }
-     
-
 
 /*-------------------------------------------------------------*
  *                Color sample setting and extraction          *
@@ -1860,8 +1794,6 @@ PIX     *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixGetRGBComponent()
  *
@@ -1922,8 +1854,6 @@ PIX           *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixSetRGBComponent()
  *
@@ -1982,8 +1912,6 @@ l_uint32  *datas, *datad;
 
     return 0;
 }
-
-
 /*!
  *  pixGetRGBComponentCmap()
  *
@@ -2059,8 +1987,6 @@ RGBA_QUAD  *cta;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  composeRGBPixel()
  *
@@ -2089,8 +2015,6 @@ composeRGBPixel(l_int32    rval,
               (bval << L_BLUE_SHIFT);
     return 0;
 }
-
-
 /*!
  *  extractRGBValues()
  *
@@ -2117,8 +2041,6 @@ extractRGBValues(l_uint32  pixel,
     if (pbval) *pbval = (pixel >> L_BLUE_SHIFT) & 0xff;
     return;
 }
-
-
 /*!
  *  extractMinMaxComponent()
  *
@@ -2143,8 +2065,6 @@ l_int32  rval, gval, bval, val;
     }
     return val;
 }
-
-
 /*!
  *  pixGetRGBLine()
  *
@@ -2193,8 +2113,6 @@ l_int32    wpls;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                    Pixel endian conversion                  *
  *-------------------------------------------------------------*/
@@ -2259,8 +2177,6 @@ PIX       *pixd;
 #endif   /* L_BIG_ENDIAN */
 
 }
-
-
 /*!
  *  pixEndianByteSwap()
  *
@@ -2317,8 +2233,6 @@ l_uint32   word;
 #endif   /* L_BIG_ENDIAN */
 
 }
-
-
 /*!
  *  lineEndianByteSwap()
  *
@@ -2369,8 +2283,6 @@ l_uint32  word;
 #endif   /* L_BIG_ENDIAN */
 
 }
-
-
 /*!
  *  pixEndianTwoByteSwapNew()
  *
@@ -2424,8 +2336,6 @@ PIX       *pixd;
 #endif   /* L_BIG_ENDIAN */
 
 }
-
-
 /*!
  *  pixEndianTwoByteSwap()
  *
@@ -2472,8 +2382,6 @@ l_uint32   word;
 #endif   /* L_BIG_ENDIAN */
 
 }
-
-
 /*-------------------------------------------------------------*
  *             Extract raster data as binary string            *
  *-------------------------------------------------------------*/
@@ -2552,8 +2460,6 @@ l_uint32  *rline, *rdata;  /* data in pix raster */
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *             Setup helpers for 8 bpp byte processing         *
  *-------------------------------------------------------------*/
@@ -2604,8 +2510,6 @@ l_int32  w, h;
     pixEndianByteSwap(pix);
     return (l_uint8 **)pixGetLinePtrs(pix, NULL);
 }
-
-
 /*!
  *  pixCleanupByteProcessing()
  *
@@ -2632,8 +2536,6 @@ pixCleanupByteProcessing(PIX      *pix,
     FREE(lineptrs);
     return 0;
 }
-
-
 /*------------------------------------------------------------------------*
  *      Setting parameters for antialias masking with alpha transforms    *
  *------------------------------------------------------------------------*/
@@ -2664,5 +2566,3 @@ l_setAlphaMaskBorder(l_float32  val1,
     AlphaMaskBorderVals[0] = val1;
     AlphaMaskBorderVals[1] = val2;
 }
-
-

@@ -40,8 +40,6 @@
 
 #include "opj_includes.h"
 #include "opj_common.h"
-
-
 /** @defgroup T2 T2 - Implementation of a tier-2 coding */
 /*@{*/
 
@@ -429,8 +427,6 @@ OPJ_BOOL opj_t2_decode_packets(opj_tcd_t* tcd,
     if (!l_pi) {
         return OPJ_FALSE;
     }
-
-
     l_current_pi = l_pi;
 
     for (pino = 0; pino <= l_tcp->numpocs; ++pino) {
@@ -1044,8 +1040,6 @@ static OPJ_BOOL opj_t2_skip_packet(opj_t2_t* p_t2,
 
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_t2_read_packet_header(opj_t2_t* p_t2,
         opj_tcd_tile_t *p_tile,
         opj_tcp_t *p_tcp,
@@ -1089,8 +1083,6 @@ static OPJ_BOOL opj_t2_read_packet_header(opj_t2_t* p_t2,
                     opj_event_msg(p_manager, EVT_ERROR, "Invalid precinct\n");
                     return OPJ_FALSE;
                 }
-
-
                 opj_tgt_reset(l_prc->incltree);
                 opj_tgt_reset(l_prc->imsbtree);
                 l_cblk = l_prc->cblks.dec;
@@ -1457,8 +1449,6 @@ static OPJ_BOOL opj_t2_read_packet_data(opj_t2_t* p_t2,
     }
 
     *(p_data_read) = (OPJ_UINT32)(l_current_data - p_src_data);
-
-
     return OPJ_TRUE;
 }
 
@@ -1566,8 +1556,6 @@ static OPJ_BOOL opj_t2_skip_packet_data(opj_t2_t* p_t2,
 
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_t2_init_seg(opj_tcd_cblk_dec_t* cblk,
                                 OPJ_UINT32 index,
                                 OPJ_UINT32 cblksty,

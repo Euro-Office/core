@@ -38,19 +38,13 @@ namespace XLS
 BopPopCustom::BopPopCustom()
 {
 }
-
-
 BopPopCustom::~BopPopCustom()
 {
 }
-
-
 BaseObjectPtr BopPopCustom::clone()
 {
 	return BaseObjectPtr(new BopPopCustom(*this));
 }
-
-
 void BopPopCustom::readFields(CFRecord& record)
 {
 	record >> rggrbit;
@@ -65,8 +59,6 @@ BiffStructurePtr BopPopCustomPiesIndices::clone()
 {
 	return BiffStructurePtr(new BopPopCustomPiesIndices(*this));
 }
-
-
 void BopPopCustomPiesIndices::load(CFRecord& record)
 {
 	record >> cxi;
@@ -129,7 +121,5 @@ void BopPopCustomPiesIndices::save(CFRecord& record)
         record << b;
     }
 }
-
-
 } // namespace XLS
 

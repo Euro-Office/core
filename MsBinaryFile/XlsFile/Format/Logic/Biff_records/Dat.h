@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Dat record in BIFF8
 class Dat: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Dat();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

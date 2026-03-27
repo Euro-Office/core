@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DVAXIS union of records 
 class DVAXIS: public CompositeObject
 {

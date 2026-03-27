@@ -224,8 +224,6 @@ HyphenDict* hnj_hyphen_load_stream(std::istream &in)
 	}
 	return dict[0];
 }
-
-
 namespace NSHyphen
 {
 	class CEngine_private

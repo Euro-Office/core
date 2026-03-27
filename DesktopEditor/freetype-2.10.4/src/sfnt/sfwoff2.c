@@ -20,15 +20,11 @@
 #include <freetype/tttags.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
-
-
 #ifdef FT_CONFIG_OPTION_USE_BROTLI
 
 #include <brotli/decode.h>
 
 #endif
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  sfwoff2
-
-
 #define READ_255USHORT( var )  FT_SET_ERROR( Read255UShort( stream, &var ) )
 
 #define READ_BASE128( var )    FT_SET_ERROR( ReadBase128( stream, &var ) )
@@ -85,22 +79,16 @@
 #define COMPOSITE_STREAM    4
 #define BBOX_STREAM         5
 #define INSTRUCTION_STREAM  6
-
-
   static void
   stream_close( FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
-
-
     FT_FREE( stream->base );
 
     stream->size  = 0;
     stream->base  = NULL;
     stream->close = NULL;
   }
-
-
   FT_CALLBACK_DEF( int )
   compare_tags( const void*  a,
                 const void*  b )
@@ -110,8 +98,6 @@
 
     FT_ULong  tag1 = table1->Tag;
     FT_ULong  tag2 = table2->Tag;
-
-
     if ( tag1 > tag2 )
       return 1;
     else if ( tag1 < tag2 )
@@ -119,8 +105,6 @@
     else
       return 0;
   }
-
-
   static FT_Error
   Read255UShort( FT_Stream   stream,
                  FT_UShort*  value )
@@ -134,8 +118,6 @@
     FT_Byte    code;
     FT_Byte    result_byte  = 0;
     FT_UShort  result_short = 0;
-
-
     if ( FT_READ_BYTE( code ) )
       return error;
     if ( code == wordCode )
@@ -166,8 +148,6 @@
       return FT_Err_Ok;
     }
   }
-
-
   static FT_Error
   ReadBase128( FT_Stream  stream,
                FT_ULong*  value )
@@ -176,8 +156,6 @@
     FT_Int    i;
     FT_Byte   code;
     FT_Error  error  = FT_Err_Ok;
-
-
     for ( i = 0; i < 5; ++i )
     {
       code = 0;
@@ -205,8 +183,6 @@
     /* Make sure not to exceed the size bound. */
     return FT_THROW( Invalid_Table );
   }
-
-
   /* Extend memory of `dst_bytes' buffer and copy data from `src'. */
   static FT_Error
   write_buf( FT_Byte**  dst_bytes,
@@ -219,8 +195,6 @@
     FT_Error  error = FT_Err_Ok;
     /* We are reallocating memory for `dst', so its pointer may change. */
     FT_Byte*  dst   = *dst_bytes;
-
-
     /* Check whether we are within limits. */
     if ( ( *offset + size ) > WOFF2_DEFAULT_MAX_SIZE  )
       return FT_THROW( Array_Too_Large );
@@ -248,8 +222,6 @@
   Exit:
     return error;
   }
-
-
   /* Pad buffer to closest multiple of 4. */
   static FT_Error
   pad4( FT_Byte**  sfnt_bytes,
@@ -262,8 +234,6 @@
 
     FT_Byte   zeroes[] = { 0, 0, 0 };
     FT_ULong  pad_bytes;
-
-
     if ( dest_offset + 3 < dest_offset )
       return FT_THROW( Invalid_Table );
 
@@ -278,8 +248,6 @@
     *out_offset = dest_offset;
     return FT_Err_Ok;
   }
-
-
   /* Calculate table checksum of `buf'. */
   static FT_ULong
   compute_ULong_sum( FT_Byte*  buf,
@@ -289,8 +257,6 @@
     FT_ULong  aligned_size = size & ~3UL;
     FT_ULong  i;
     FT_ULong  v;
-
-
     for ( i = 0; i < aligned_size; i += 4 )
       checksum += ( (FT_ULong)buf[i    ] << 24 ) |
                   ( (FT_ULong)buf[i + 1] << 16 ) |
@@ -308,8 +274,6 @@
 
     return checksum;
   }
-
-
   static FT_Error
   woff2_decompress( FT_Byte*        dst,
                     FT_ULong        dst_size,
@@ -322,8 +286,6 @@
     /* we don't validate it                              */
     FT_Offset            uncompressed_size = (FT_Offset)dst_size;
     BrotliDecoderResult  result;
-
-
     result = BrotliDecoderDecompress( src_size,
                                       src,
                                       &uncompressed_size,
@@ -346,16 +308,12 @@
 
 #endif /* !FT_CONFIG_OPTION_USE_BROTLI */
   }
-
-
   static WOFF2_Table
   find_table( WOFF2_Table*  tables,
               FT_UShort     num_tables,
               FT_ULong      tag )
   {
     FT_Int  i;
-
-
     for ( i = 0; i < num_tables; i++ )
     {
       if ( tables[i]->Tag == tag )
@@ -363,8 +321,6 @@
     }
     return NULL;
   }
-
-
   /* Read `numberOfHMetrics' field from `hhea' table. */
   static FT_Error
   read_num_hmetrics( FT_Stream   stream,
@@ -372,8 +328,6 @@
   {
     FT_Error   error = FT_Err_Ok;
     FT_UShort  num_metrics;
-
-
     if ( FT_STREAM_SKIP( 34 )  )
       return FT_THROW( Invalid_Table );
 
@@ -384,8 +338,6 @@
 
     return error;
   }
-
-
   /* An auxiliary function for overflow-safe addition. */
   static FT_Int
   with_sign( FT_Byte  flag,
@@ -394,8 +346,6 @@
     /* Precondition: 0 <= base_val < 65536 (to avoid overflow). */
     return ( flag & 1 ) ? base_val : -base_val;
   }
-
-
   /* An auxiliary function for overflow-safe addition. */
   static FT_Int
   safe_int_addition( FT_Int   a,
@@ -409,8 +359,6 @@
     *result = a + b;
     return FT_Err_Ok;
   }
-
-
   /*
    * Decode variable-length (flag, xCoordinate, yCoordinate) triplet for a
    * simple glyph.  See
@@ -435,8 +383,6 @@
     FT_ULong  data_bytes;
 
     FT_UInt  i;
-
-
     if ( n_points > in_size )
       return FT_THROW( Invalid_Table );
 
@@ -444,8 +390,6 @@
     {
       FT_Byte  flag     = flags_in[i];
       FT_Bool  on_curve = !( flag >> 7 );
-
-
       flag &= 0x7f;
       if ( flag < 84 )
         data_bytes = 1;
@@ -526,8 +470,6 @@
     *in_bytes_used = triplet_index;
     return FT_Err_Ok;
   }
-
-
   /* Store decoded points in glyph buffer. */
   static FT_Error
   store_points( FT_ULong           n_points,
@@ -550,8 +492,6 @@
     FT_UInt   x_offset;
     FT_UInt   y_offset;
     FT_Byte*  pointer;
-
-
     for ( i = 0; i < n_points; ++i )
     {
       const WOFF2_PointRec  point = points[i];
@@ -559,8 +499,6 @@
       FT_Byte  flag = point.on_curve ? GLYF_ON_CURVE : 0;
       FT_Int   dx   = point.x - last_x;
       FT_Int   dy   = point.y - last_y;
-
-
       if ( dx == 0 )
         flag |= GLYF_THIS_X_IS_SAME;
       else if ( dx > -256 && dx < 256 )
@@ -630,8 +568,6 @@
     {
       FT_Int  dx = points[i].x - last_x;
       FT_Int  dy = points[i].y - last_y;
-
-
       if ( dx == 0 )
         ;
       else if ( dx > -256 && dx < 256 )
@@ -662,8 +598,6 @@
     *glyph_size = y_offset;
     return FT_Err_Ok;
   }
-
-
   static void
   compute_bbox( FT_ULong           n_points,
                 const WOFF2_Point  points,
@@ -679,8 +613,6 @@
 
     FT_ULong  offset;
     FT_Byte*  pointer;
-
-
     if ( n_points > 0 )
     {
       x_min = points[0].x;
@@ -693,8 +625,6 @@
     {
       FT_Int  x = points[i].x;
       FT_Int  y = points[i].y;
-
-
       x_min = FT_MIN( x, x_min );
       y_min = FT_MIN( y, y_min );
       x_max = FT_MAX( x, x_max );
@@ -712,8 +642,6 @@
 
     *src_x_min = (FT_UShort)x_min;
   }
-
-
   static FT_Error
   compositeGlyph_size( FT_Stream  stream,
                        FT_ULong   offset,
@@ -724,15 +652,11 @@
     FT_ULong   start_offset = offset;
     FT_Bool    we_have_inst = FALSE;
     FT_UShort  flags        = FLAG_MORE_COMPONENTS;
-
-
     if ( FT_STREAM_SEEK( start_offset ) )
       goto Exit;
     while ( flags & FLAG_MORE_COMPONENTS )
     {
       FT_ULong  arg_size;
-
-
       if ( FT_READ_USHORT( flags ) )
         goto Exit;
       we_have_inst |= ( flags & FLAG_WE_HAVE_INSTRUCTIONS ) != 0;
@@ -760,8 +684,6 @@
   Exit:
     return error;
   }
-
-
   /* Store loca values (provided by `reconstruct_glyf') to output stream. */
   static FT_Error
   store_loca( FT_ULong*  loca_values,
@@ -784,8 +706,6 @@
     FT_ULong  loca_buf_size;
 
     const FT_ULong  offset_size = index_format ? 4 : 2;
-
-
     if ( ( loca_values_size << 2 ) >> 2 != loca_values_size )
       goto Fail;
 
@@ -797,8 +717,6 @@
     for ( i = 0; i < loca_values_size; i++ )
     {
       FT_ULong  value = loca_values[i];
-
-
       if ( index_format )
         WRITE_ULONG( dst, value );
       else
@@ -825,8 +743,6 @@
 
     return error;
   }
-
-
   static FT_Error
   reconstruct_glyf( FT_Stream    stream,
                     FT_ULong*    glyf_checksum,
@@ -864,8 +780,6 @@
     FT_UShort*   n_points_arr = NULL;
     FT_Byte*     glyph_buf    = NULL;
     WOFF2_Point  points       = NULL;
-
-
     if ( FT_NEW_ARRAY( substreams, num_substreams ) )
       goto Fail;
 
@@ -897,8 +811,6 @@
     for ( i = 0; i < num_substreams; ++i )
     {
       FT_ULong  substream_size;
-
-
       if ( FT_READ_ULONG( substream_size ) )
         goto Fail;
       if ( substream_size > info->glyf_table->TransformLength - offset )
@@ -938,8 +850,6 @@
       FT_Byte    bbox_bitmap;
       FT_ULong   bbox_offset;
       FT_UShort  x_min      = 0;
-
-
       /* Set `have_bbox'. */
       bbox_offset = bbox_bitmap_offset + ( i >> 3 );
       if ( FT_STREAM_SEEK( bbox_offset ) ||
@@ -962,8 +872,6 @@
         FT_ULong   composite_size;
         FT_ULong   size_needed;
         FT_Byte*   pointer           = NULL;
-
-
         /* Composite glyphs must have explicit bbox. */
         if ( !have_bbox )
           goto Fail;
@@ -1045,8 +953,6 @@
         FT_UInt    contour_ix;
 
         FT_Byte*   pointer = NULL;
-
-
         if ( FT_NEW_ARRAY( n_points_arr, n_contours ) )
           goto Fail;
 
@@ -1251,8 +1157,6 @@
 
     return error;
   }
-
-
   /* Get `x_mins' for untransformed `glyf' table. */
   static FT_Error
   get_x_mins( FT_Stream     stream,
@@ -1275,8 +1179,6 @@
                                                 TTAG_maxp );
     const WOFF2_Table  head_table = find_table( tables, num_tables,
                                                 TTAG_head );
-
-
     if ( !maxp_table )
     {
       FT_ERROR(( "`maxp' table is missing.\n" ));
@@ -1352,8 +1254,6 @@
 
     return error;
   }
-
-
   static FT_Error
   reconstruct_hmtx( FT_Stream  stream,
                     FT_UShort  num_glyphs,
@@ -1378,8 +1278,6 @@
     FT_Short*   lsbs           = NULL;
     FT_Byte*    hmtx_table     = NULL;
     FT_Byte*    dst            = NULL;
-
-
     if ( FT_READ_BYTE( hmtx_flags ) )
       goto Fail;
 
@@ -1411,8 +1309,6 @@
     for ( i = 0; i < num_hmetrics; i++ )
     {
       FT_UShort  advance_width;
-
-
       if ( FT_READ_USHORT( advance_width ) )
         goto Fail;
 
@@ -1423,8 +1319,6 @@
     for ( i = 0; i < num_hmetrics; i++ )
     {
       FT_Short  lsb;
-
-
       if ( has_proportional_lsbs )
       {
         if ( FT_READ_SHORT( lsb ) )
@@ -1440,8 +1334,6 @@
     for ( i = num_hmetrics; i < num_glyphs; i++ )
     {
       FT_Short  lsb;
-
-
       if ( has_monospace_lsbs )
       {
         if ( FT_READ_SHORT( lsb ) )
@@ -1498,8 +1390,6 @@
 
     return error;
   }
-
-
   static FT_Error
   reconstruct_font( FT_Byte*      transformed_buf,
                     FT_ULong      transformed_buf_size,
@@ -1531,8 +1421,6 @@
     FT_Bool    is_glyf_xform = FALSE;
 
     FT_ULong  table_entry_offset = 12;
-
-
     /* A few table checks before reconstruction. */
     /* `glyf' must be present with `loca'.       */
     info->glyf_table = find_table( indices, num_tables, TTAG_glyf );
@@ -1571,8 +1459,6 @@
     for ( nn = 0; nn < num_tables; nn++ )
     {
       WOFF2_TableRec  table = *( indices[nn] );
-
-
       FT_TRACE3(( "Seeking to %ld with table size %ld.\n",
                   table.src_offset, table.src_length ));
       FT_TRACE3(( "Table tag: %c%c%c%c.\n",
@@ -1741,8 +1627,6 @@
 
     return error;
   }
-
-
   /* Replace `face->root.stream' with a stream containing the extracted */
   /* SFNT of a WOFF2 font.                                              */
 
@@ -1801,8 +1685,6 @@
         FT_FRAME_ULONG     ( privLength ),
       FT_FRAME_END
     };
-
-
     FT_ASSERT( stream == face->root.stream );
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
@@ -1861,8 +1743,6 @@
     for ( nn = 0; nn < woff2.num_tables; nn++ )
     {
       WOFF2_Table  table = tables + nn;
-
-
       if ( FT_READ_BYTE( table->FlagByte ) )
         goto Exit;
 
@@ -1988,8 +1868,6 @@
       for ( nn = 0; nn < woff2.num_fonts; nn++ )
       {
         WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + nn;
-
-
         if ( READ_255USHORT( ttc_font->num_tables ) )
           goto Exit;
         if ( FT_READ_ULONG( ttc_font->flavor ) )
@@ -2013,8 +1891,6 @@
         {
           FT_UShort    table_index;
           WOFF2_Table  table;
-
-
           if ( READ_255USHORT( table_index ) )
             goto Exit;
 
@@ -2116,8 +1992,6 @@
     if ( woff2.header_version )
     {
       WOFF2_TtcFont  ttc_font = woff2.ttc_fonts + face_index;
-
-
       /* Create a temporary array. */
       if ( FT_NEW_ARRAY( temp_indices,
                          ttc_font->num_tables ) )
@@ -2181,8 +2055,6 @@
     if ( woff2.num_tables )
     {
       FT_UInt  searchRange, entrySelector, rangeShift, x;
-
-
       x             = woff2.num_tables;
       entrySelector = 0;
       while ( x )
@@ -2291,8 +2163,6 @@
     if ( woff2.ttc_fonts )
     {
       WOFF2_TtcFont  ttc_font = woff2.ttc_fonts;
-
-
       for ( nn = 0; nn < woff2.num_fonts; nn++ )
       {
         FT_FREE( ttc_font->table_indices );
@@ -2314,8 +2184,6 @@
 
     return error;
   }
-
-
 #undef READ_255USHORT
 #undef READ_BASE128
 #undef ROUND4
@@ -2332,6 +2200,4 @@
 #undef COMPOSITE_STREAM
 #undef BBOX_STREAM
 #undef INSTRUCTION_STREAM
-
-
 /* END */

@@ -42,8 +42,6 @@
 
 #define STREAM_TO_UINT16(C, P)	(((unsigned long int) (C)[(P) + 0] << 8) + \
 								((unsigned long int) (C)[(P) + 1] << 0))
-
-
 /* Markers values */
 #define J2KMARK_NUM 24
 enum {
@@ -1029,8 +1027,6 @@ void OPJParseThread::ParseJ2KFile(wxFile *m_file, wxFileOffset offset, wxFileOff
 				image, imageSel,
 				new OPJMarkerData(wxT("INFO"))
 				);
-
-
 			image = m_tree->TreeCtrlIcon_Folder;
 			imageSel = image + 1;
 

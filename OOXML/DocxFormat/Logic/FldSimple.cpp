@@ -49,8 +49,6 @@
 //        <w:moveFrom>
 //        <w:moveTo>
 //        <w:subDoc>
-
-
 namespace OOX
 {
 	namespace Logic

@@ -4,8 +4,6 @@
 # Author: suzuki toshiya, 2009, 2013
 #
 # This code is explicitly into the public domain.
-
-
 import sys
 import os
 import re
@@ -16,8 +14,6 @@ KNOWN_COMPONENT = {}
 
 SRC_FILE_DIRS   = [ "src" ]
 TRACE_DEF_FILES = [ "include/freetype/internal/fttrace.h" ]
-
-
 # --------------------------------------------------------------
 # Parse command line options
 #
@@ -43,8 +39,6 @@ for i in range( 1, len( sys.argv ) ):
     SRC_FILE_DIRS = sys.argv[i].replace( "--src-dirs=", "", 1 ).split( ":" )
   elif sys.argv[i].startswith( "--def-files=" ):
     TRACE_DEF_FILES = sys.argv[i].replace( "--def-files=", "", 1 ).split( ":" )
-
-
 # --------------------------------------------------------------
 # Scan C source and header files using trace macros.
 #
@@ -68,8 +62,6 @@ for d in SRC_FILE_DIRS:
               USED_COMPONENT[component_name].append( "%s:%d" % ( src_pathname, line_num ) )
             else:
               USED_COMPONENT[component_name] = [ "%s:%d" % ( src_pathname, line_num ) ]
-
-
 # --------------------------------------------------------------
 # Scan header file(s) defining trace macros.
 #
@@ -91,8 +83,6 @@ for f in TRACE_DEF_FILES:
       else:
         KNOWN_COMPONENT[component_name] = "%s:%d" % \
           ( os.path.basename( f ), line_num )
-
-
 # --------------------------------------------------------------
 # Compare the used and defined trace macros.
 #

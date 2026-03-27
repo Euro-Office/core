@@ -13,8 +13,6 @@
  -  or altered from any source or modified source distribution.
  *====================================================================*/
 
-
-
 /*
  *  sel1.c
  *
@@ -212,8 +210,6 @@ static const struct CompParameterMap  comp_parameter_map[] =
       { 62, 9, 7, "sel_9h", "sel_comb_63h", "sel_9v", "sel_comb_63v" },
       { 63, 9, 7, "sel_9h", "sel_comb_63h", "sel_9v", "sel_comb_63v" } };
 
-
-
 /*------------------------------------------------------------------------*
  *                      Create / Destroy / Copy                           *
  *------------------------------------------------------------------------*/
@@ -247,8 +243,6 @@ SELA  *sela;
 
     return sela;
 }
-
-
 /*!
  *  selaDestroy()
  *
@@ -272,8 +266,6 @@ l_int32  i;
     *psela = NULL;
     return;
 }
-
-
 /*!
  *  selCreate()
  *
@@ -307,8 +299,6 @@ SEL  *sel;
 
     return sel;
 }
-
-
 /*!
  *  selDestroy()
  *
@@ -340,8 +330,6 @@ SEL     *sel;
     *psel = NULL;
     return;
 }
-
-
 /*!
  *  selCopy() 
  *
@@ -379,8 +367,6 @@ SEL     *csel;
 
     return csel;
 }
-
-
 /*!
  *  selCreateBrick()
  *
@@ -418,8 +404,6 @@ SEL     *sel;
 
     return sel;
 }
-
-
 /*!
  *  selCreateComb()
  *
@@ -472,8 +456,6 @@ SEL     *sel;
 
     return sel;
 }
-
-
 /*!
  *  create2dIntArray()
  *
@@ -505,8 +487,6 @@ l_int32  **array;
 
     return array;
 }
-
-
 
 /*------------------------------------------------------------------------*
  *                           Extension of sela                            *
@@ -562,8 +542,6 @@ SEL     *csel;
 
     return 0;
 }
-    
-
 /*!
  *  selaExtendArray()
  *
@@ -587,8 +565,6 @@ selaExtendArray(SELA  *sela)
     return 0;
 }
 
-
-
 /*----------------------------------------------------------------------*
  *                               Accessors                              *
  *----------------------------------------------------------------------*/
@@ -608,8 +584,6 @@ selaGetCount(SELA  *sela)
 
     return sela->n;
 }
-
-
 /*!
  *  selaGetSel()
  *
@@ -634,8 +608,6 @@ selaGetSel(SELA    *sela,
         return (SEL *)ERROR_PTR("invalid index", procName, NULL);
     return sela->sel[i];
 }
-
-
 /*!
  *  selGetName()
  *
@@ -652,8 +624,6 @@ selGetName(SEL  *sel)
 
     return sel->name;
 }
-
-
 /*!
  *  selSetName()
  *
@@ -676,8 +646,6 @@ selSetName(SEL         *sel,
 
     return stringReplace(&sel->name, name);
 }
-
-
 /*!
  *  selaFindSelByName()
  *
@@ -725,8 +693,6 @@ SEL     *sel;
     
     return 1;
 }
-
-
 /*!
  *  selGetElement()
  *
@@ -757,8 +723,6 @@ selGetElement(SEL      *sel,
     *ptype = sel->data[row][col];
     return 0;
 }
-
-
 /*!
  *  selSetElement()
  *
@@ -794,8 +758,6 @@ selSetElement(SEL     *sel,
     sel->data[row][col] = type;
     return 0;
 }
-
-
 /*!
  *  selGetParameters()
  *
@@ -824,8 +786,6 @@ selGetParameters(SEL      *sel,
     if (pcx) *pcx = sel->cx; 
     return 0;
 }
-
-
 /*!
  *  selSetOrigin()
  *
@@ -846,8 +806,6 @@ selSetOrigin(SEL     *sel,
     sel->cx = cx;
     return 0;
 }
-
-
 /*!
  *  selGetTypeAtOrigin()
  *
@@ -881,8 +839,6 @@ l_int32  sx, sy, cx, cy, i, j;
 
     return ERROR_INT("sel origin not found", procName, 1);
 }
-
-
 /*!
  *  selaGetBrickName()
  *
@@ -913,8 +869,6 @@ SEL     *sel;
 
     return (char *)ERROR_PTR("sel not found", procName, NULL);
 }
-
-
 /*!
  *  selaGetCombName()
  *
@@ -969,8 +923,6 @@ SEL     *sel;
     else
         return (char *)ERROR_PTR("sel not found", procName, NULL);
 }
-
-
 /*!
  *  selaComputeCompParameters()
  *
@@ -1027,8 +979,6 @@ SELA    *selabasic, *selacomb;
     selaDestroy(&selacomb);
     return;
 }
-
-
 /*!
  *  getCompositeParameters()
  *
@@ -1081,8 +1031,6 @@ l_int32  index;
         *pnamev2 = stringNew(comp_parameter_map[index].selnamev2);
     return 0;
 }
-
-
 /*!
  *  selaGetSelnames()
  *
@@ -1114,8 +1062,6 @@ SARRAY  *sa;
 
     return sa;
 }
-
-
 
 /*----------------------------------------------------------------------*
  *                Max translations for erosion and hmt                  *
@@ -1169,8 +1115,6 @@ l_int32  maxxp, maxyp, maxxn, maxyn;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                   Rotation by multiples of 90 degrees                *
  *----------------------------------------------------------------------*/
@@ -1237,8 +1181,6 @@ SEL     *seld;
 
     return seld;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Sela and Sel serialized I/O                    *
  *----------------------------------------------------------------------*/
@@ -1267,8 +1209,6 @@ SELA  *sela;
 
     return sela;
 }
-
-
 /*!
  *  selaReadStream()
  *
@@ -1307,8 +1247,6 @@ SELA    *sela;
 
     return sela;
 }
-
-
 /*!
  *  selRead()
  *
@@ -1334,8 +1272,6 @@ SEL   *sel;
 
     return sel;
 }
-
-
 /*!
  *  selReadStream()
  *
@@ -1384,8 +1320,6 @@ SEL     *sel;
     FREE(selname);
     return sel;
 }
-
-
 /*!
  *  selaWrite()
  *
@@ -1413,8 +1347,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  selaWriteStream()
  *
@@ -1446,8 +1378,6 @@ SEL     *sel;
     }
     return 0;
 }
-
-
 /*!
  *  selWrite()
  *
@@ -1475,8 +1405,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  selWriteStream()
  *
@@ -1511,8 +1439,6 @@ l_int32  sx, sy, cx, cy, i, j;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *           Building custom hit-miss sels from compiled strings        *
  *----------------------------------------------------------------------*/
@@ -1594,8 +1520,6 @@ char     ch;
 
     return sel;
 }
-
-
 /*!
  *  selPrintToString()
  *
@@ -1652,8 +1576,6 @@ l_int32  sx, sy, cx, cy, x, y;
 
     return str;
 }
-
-
 /*----------------------------------------------------------------------*
  *         Building custom hit-miss sels from a simple file format      *
  *----------------------------------------------------------------------*/
@@ -1754,8 +1676,6 @@ SELA    *sela;
     sarrayDestroy(&sa);
     return sela;
 }
-
-
 /*!
  *  selCreateFromSArray()
  *
@@ -1844,8 +1764,6 @@ SEL     *sel;
 
     return sel;
 }
-
-
 /*----------------------------------------------------------------------*
  *               Making hit-only SELs from Pta and Pix                  *
  *----------------------------------------------------------------------*/
@@ -1895,8 +1813,6 @@ SEL     *sel;
 
     return sel;
 }
-
-
 /*!
  *  selCreateFromPix()
  *
@@ -1940,8 +1856,6 @@ l_uint32  val;
 
     return sel;
 }
-
-
 /*----------------------------------------------------------------------*
  *            Making hit-miss sels from color Pix and image files             *
  *----------------------------------------------------------------------*/
@@ -1979,8 +1893,6 @@ char  *basename, *selname;
 
     return sel;
 }
-
-
 /*!
  *
  *  selCreateFromColorPix()
@@ -2071,8 +1983,6 @@ l_uint32  pixval;
     }
     return sel;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Printable display of sel                         *
  *----------------------------------------------------------------------*/
@@ -2190,8 +2100,6 @@ PTA     *pta1, *pta2, *pta1t, *pta2t;
     ptaDestroy(&pta2t);
     return pixd;
 }
-
-
 /*!
  *  selaDisplayInPix()
  *

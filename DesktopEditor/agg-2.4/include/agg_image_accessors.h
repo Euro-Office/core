@@ -100,10 +100,6 @@ namespace agg
         int                m_x, m_x0, m_y;
         const int8u*       m_pix_ptr;
     };
-
-
-
-
     //--------------------------------------------------image_accessor_no_clip
     template<class PixFmt> class image_accessor_no_clip
     {
@@ -147,10 +143,6 @@ namespace agg
         int                m_x, m_y;
         const int8u*       m_pix_ptr;
     };
-
-
-
-
     //----------------------------------------------------image_accessor_clone
     template<class PixFmt> class image_accessor_clone
     {
@@ -223,10 +215,6 @@ namespace agg
         const int8u*       m_pix_ptr;
     };
 
-
-
-
-
     //-----------------------------------------------------image_accessor_wrap
     template<class PixFmt, class WrapX, class WrapY> class image_accessor_wrap
     {
@@ -275,10 +263,6 @@ namespace agg
         WrapX              m_wrap_x;
         WrapY              m_wrap_y;
     };
-
-
-
-
     //--------------------------------------------------------wrap_mode_repeat
     class wrap_mode_repeat
     {
@@ -306,8 +290,6 @@ namespace agg
         unsigned m_add;
         unsigned m_value;
     };
-
-
     //---------------------------------------------------wrap_mode_repeat_pow2
     class wrap_mode_repeat_pow2
     {
@@ -333,8 +315,6 @@ namespace agg
         unsigned m_mask;
         unsigned m_value;
     };
-
-
     //----------------------------------------------wrap_mode_repeat_auto_pow2
     class wrap_mode_repeat_auto_pow2
     {
@@ -365,8 +345,6 @@ namespace agg
         unsigned m_mask;
         unsigned m_value;
     };
-
-
     //-------------------------------------------------------wrap_mode_reflect
     class wrap_mode_reflect
     {
@@ -399,8 +377,6 @@ namespace agg
         unsigned m_add;
         unsigned m_value;
     };
-
-
 
     //--------------------------------------------------wrap_mode_reflect_pow2
     class wrap_mode_reflect_pow2
@@ -435,8 +411,6 @@ namespace agg
         unsigned m_mask;
         unsigned m_value;
     };
-
-
 
     //---------------------------------------------wrap_mode_reflect_auto_pow2
     class wrap_mode_reflect_auto_pow2
@@ -473,9 +447,5 @@ namespace agg
         unsigned m_mask;
         unsigned m_value;
     };
-
-
 }
-
-
 #endif

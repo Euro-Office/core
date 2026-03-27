@@ -82,8 +82,6 @@ namespace agg
         m_y1  = y;
         m_cmd = path_cmd_move_to;
     }
-
-
     //----------------------------------------------------------------------------
     void vpgen_clip_polygon::line_to(double x, double y)
     {
@@ -112,8 +110,6 @@ namespace agg
         m_x1 = x;
         m_y1 = y;
     }
-
-
     //----------------------------------------------------------------------------
     unsigned vpgen_clip_polygon::vertex(double* x, double* y)
     {
@@ -128,6 +124,4 @@ namespace agg
         }
         return path_cmd_stop;
     }
-
-
 }

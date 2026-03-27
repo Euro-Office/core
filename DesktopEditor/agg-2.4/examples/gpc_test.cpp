@@ -17,13 +17,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
-
-
 class spiral
 {
 public:
@@ -78,8 +72,6 @@ private:
     bool   m_start;
 };
 
-
-
 namespace agg
 {
     // A simple counter of points and contours
@@ -109,14 +101,8 @@ namespace agg
         Src* m_src;
     };
 }
-
-
-
-
 void make_gb_poly(agg::path_storage& ps);
 void make_arrows(agg::path_storage& ps);
-
-
 class the_application : public agg::platform_support
 {
     agg::rbox_ctrl<agg::rgba8> m_polygons;
@@ -147,8 +133,6 @@ public:
         m_polygons.cur_item(3);
         add_ctrl(m_polygons);
     }
-
-
     template<class Scanline, class Ras, class Ren, class Gpc>
     void perform_rendering(Scanline& sl, Ras& ras, Ren& ren, Gpc& gpc)
     {
@@ -164,8 +148,6 @@ public:
                 case 5: gpc.operation(agg::gpc_b_minus_a);    break;
             }
             agg::conv_poly_counter<Gpc> counter(gpc);
-
-
             start_timer();
             counter.rewind(0);
             double t1 = elapsed_time();
@@ -205,16 +187,12 @@ public:
             agg::render_scanlines(ras, sl, ren);
         }
     }
-
-
     template<class Scanline, class Ras>
     unsigned render_gpc(Scanline& sl, Ras& ras)
     {
         agg::pixfmt_bgr24 pf(rbuf_window());
         agg::renderer_base<agg::pixfmt_bgr24> rb(pf);
         agg::renderer_scanline_aa_solid<agg::renderer_base<agg::pixfmt_bgr24> > ren(rb);
-
-
         switch(m_polygons.cur_item())
         {
             case 0:
@@ -280,8 +258,6 @@ public:
 
                 agg::conv_gpc<agg::path_storage, 
                               agg::conv_stroke<agg::path_storage> > gpc(ps1, stroke);
-
-
                 double x = m_x - initial_width()/2 + 100;
                 double y = m_y - initial_height()/2 + 100;
                 ps1.move_to(x+140, y+145);
@@ -316,8 +292,6 @@ public:
                 perform_rendering(sl, ras, ren, gpc);
             }
             break;
-
-
             case 2:
             {
                 //------------------------------------
@@ -360,8 +334,6 @@ public:
                 perform_rendering(sl, ras, ren, gpc);
             }
             break;
-
-
             case 3:
             {
                 //------------------------------------
@@ -382,8 +354,6 @@ public:
 
                 agg::conv_gpc<agg::conv_transform<agg::path_storage>, 
                               agg::conv_stroke<spiral> > gpc(trans_gb_poly, stroke);
-
-
 /*
 FILE* fd = fopen("contours.txt", "w");
 if(fd)
@@ -431,8 +401,6 @@ if(fd)
                 perform_rendering(sl, ras, ren, gpc);
             }
             break;
-
-
             case 4:
             {
                 //------------------------------------
@@ -516,8 +484,6 @@ if(fd)
 
         return 0;
     }
-
-
     virtual void on_init()
     {
         m_x = width() / 2.0;
@@ -540,8 +506,6 @@ if(fd)
         agg::render_ctrl(ras, sl, ren_base, m_polygons);
         agg::render_ctrl(ras, sl, ren_base, m_operation);
     }
-
-
 /*
 // Stress-test.
 // Works quite well on random polygons, no crashes, no memory leaks! 
@@ -552,8 +516,6 @@ if(fd)
         int r = (rand() << 15) | rand();
         return ((r & 0xFFFFFFF) / double(0xFFFFFFF + 1)) * (max - min) + min;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         agg::scanline_u8 sl;
@@ -614,8 +576,6 @@ if(fd)
                 case 3: gpc.operation(agg::gpc_a_minus_b);    break;
                 case 4: gpc.operation(agg::gpc_b_minus_a);    break;
             }
-
-
             ras.add_path(gpc);
             ren_solid.color(agg::rgba(0.5, 0.0, 0, 0.5));
             agg::render_scanlines(ras, sl, ren_solid);
@@ -626,12 +586,6 @@ if(fd)
         message("Done");
     }
 */
-
-
-
-
-
-
 
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -649,8 +603,6 @@ if(fd)
             message(buf);
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -661,11 +613,7 @@ if(fd)
         }
     }
 
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -678,5 +626,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

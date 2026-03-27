@@ -34,8 +34,6 @@
  * and you accept them fully.
  *
  */
-
-
   /*
    * A `CF2_Blues' object stores the blue zones (horizontal alignment
    * zones) of a font.  These are specified in the CFF private dictionary
@@ -63,18 +61,10 @@
    * curved edge of a zone.
    *
    */
-
-
 #ifndef PSBLUES_H_
 #define PSBLUES_H_
-
-
 #include "psglue.h"
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * `CF2_Hint' is shared by `cf2hints.h' and
    * `cf2blues.h', but `cf2blues.h' depends on
@@ -92,8 +82,6 @@ FT_BEGIN_HEADER
                             /* by a blue zone                 */
     CF2_Synthetic   = 0x20  /* this edge was synthesized      */
   };
-
-
   /*
    * Default value for OS/2 typoAscender/Descender when their difference
    * is not equal to `unitsPerEm'.  The default is based on -250 and 1100
@@ -105,15 +93,11 @@ FT_BEGIN_HEADER
     CF2_ICF_Top    = cf2_intToFixed(  880 ),
     CF2_ICF_Bottom = cf2_intToFixed( -120 )
   };
-
-
   /*
    * Constant used for hint adjustment and for synthetic em box hint
    * placement.
    */
 #define CF2_MIN_COUNTER  cf2_doubleToFixed( 0.5 )
-
-
   /* shared typedef is in cf2glue.h */
   struct  CF2_HintRec_
   {
@@ -124,8 +108,6 @@ FT_BEGIN_HEADER
     CF2_Fixed  dsCoord;
     CF2_Fixed  scale;
   };
-
-
   typedef struct  CF2_BlueRec_
   {
     CF2_Fixed  csBottomEdge;
@@ -136,16 +118,12 @@ FT_BEGIN_HEADER
     FT_Bool  bottomZone;
 
   } CF2_BlueRec;
-
-
   /* max total blue zones is 12 */
   enum
   {
     CF2_MAX_BLUES      = 7,
     CF2_MAX_OTHERBLUES = 5
   };
-
-
   typedef struct  CF2_BluesRec_
   {
     CF2_Fixed  scale;
@@ -165,8 +143,6 @@ FT_BEGIN_HEADER
     CF2_BlueRec  zone[CF2_MAX_BLUES + CF2_MAX_OTHERBLUES];
 
   } CF2_BluesRec, *CF2_Blues;
-
-
   FT_LOCAL( void )
   cf2_blues_init( CF2_Blues  blues,
                   CF2_Font   font );
@@ -174,12 +150,6 @@ FT_BEGIN_HEADER
   cf2_blues_capture( const CF2_Blues  blues,
                      CF2_Hint         bottomHintEdge,
                      CF2_Hint         topHintEdge );
-
-
 FT_END_HEADER
-
-
 #endif /* PSBLUES_H_ */
-
-
 /* END */

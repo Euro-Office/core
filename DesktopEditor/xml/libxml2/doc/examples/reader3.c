@@ -16,8 +16,6 @@
 #include <libxml/xmlreader.h>
 
 #if defined(LIBXML_READER_ENABLED) && defined(LIBXML_PATTERN_ENABLED) && defined(LIBXML_OUTPUT_ENABLED)
-
-
 /**
  * streamFile:
  * @filename: the file name to parse
@@ -99,8 +97,6 @@ int main(int argc, char **argv) {
 	 */
 	xmlFreeDoc(doc);
     }
-
-
     /*
      * Cleanup function for the XML library.
      */

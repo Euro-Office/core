@@ -473,8 +473,6 @@ void ASResource::buildOperators(vector<const string*>* operators, int fileType)
 		operators->reserve(elements);
 		reserved = true;
 	}
-
-
 	operators->emplace_back(&AS_PLUS_ASSIGN);
 	operators->emplace_back(&AS_MINUS_ASSIGN);
 	operators->emplace_back(&AS_MULT_ASSIGN);

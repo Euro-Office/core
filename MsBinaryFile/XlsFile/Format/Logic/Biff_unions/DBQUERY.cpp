@@ -49,18 +49,12 @@
 
 namespace XLS
 {
-
-
 DBQUERY::DBQUERY()
 {
 }
-
-
 DBQUERY::~DBQUERY()
 {
 }
-
-
 class Parenthesis_DBQUERY_3: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_DBQUERY_3)
@@ -81,8 +75,6 @@ public:
 		return true;
 	};
 };
-
-
 class Parenthesis_DBQUERY_2: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_DBQUERY_2)
@@ -105,8 +97,6 @@ public:
 		return true;
 	};
 };
-
-
 class Parenthesis_DBQUERY_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_DBQUERY_1)
@@ -130,8 +120,6 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr DBQUERY::clone()
 {
 	return BaseObjectPtr(new DBQUERY(*this));
@@ -446,7 +434,5 @@ int DBQUERY::serialize_connection(std::wstring & name)
 	}
 	return global_info->connectionId;
 }
-
-
 } // namespace XLS
 

@@ -38,19 +38,13 @@ namespace XLS
 SXTBRGIITM::SXTBRGIITM()
 {
 }
-
-
 SXTBRGIITM::~SXTBRGIITM()
 {
 }
-
-
 BaseObjectPtr SXTBRGIITM::clone()
 {
 	return BaseObjectPtr(new SXTBRGIITM(*this));
 }
-
-
 void SXTBRGIITM::readFields(CFRecord& record)
 {
 	record >> cItems;

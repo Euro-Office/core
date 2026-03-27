@@ -26,8 +26,6 @@
 #include "agg_basics.h"
 #include "agg_color_rgba.h"
 #include "agg_span_image_filter.h"
-
-
 namespace agg
 {
 
@@ -80,8 +78,6 @@ namespace agg
         }
     };
 
-
-
     //==========================================span_image_filter_rgb_bilinear
     template<class Source, class Interpolator> 
     class span_image_filter_rgb_bilinear : 
@@ -107,8 +103,6 @@ namespace agg
                                        interpolator_type& inter) :
             base_type(src, inter, 0) 
         {}
-
-
         //--------------------------------------------------------------------
         void generate(color_type* span, int x, int y, unsigned len)
         {
@@ -174,8 +168,6 @@ namespace agg
             } while(--len);
         }
     };
-
-
 
     //=====================================span_image_filter_rgb_bilinear_clip
     template<class Source, class Interpolator> 
@@ -409,8 +401,6 @@ namespace agg
         color_type m_back_color;
     };
 
-
-
     //===============================================span_image_filter_rgb_2x2
     template<class Source, class Interpolator> 
     class span_image_filter_rgb_2x2 : 
@@ -437,8 +427,6 @@ namespace agg
                                   const image_filter_lut& filter) :
             base_type(src, inter, &filter) 
         {}
-
-
         //--------------------------------------------------------------------
         void generate(color_type* span, int x, int y, unsigned len)
         {
@@ -525,8 +513,6 @@ namespace agg
             } while(--len);
         }
     };
-
-
 
     //===================================================span_image_filter_rgb
     template<class Source, class Interpolator> 
@@ -642,8 +628,6 @@ namespace agg
         }
     };
 
-
-
     //==========================================span_image_resample_rgb_affine
     template<class Source> 
     class span_image_resample_rgb_affine : 
@@ -671,8 +655,6 @@ namespace agg
                                        const image_filter_lut& filter) :
             base_type(src, inter, filter) 
         {}
-
-
         //--------------------------------------------------------------------
         void generate(color_type* span, int x, int y, unsigned len)
         {
@@ -758,8 +740,6 @@ namespace agg
             } while(--len);
         }
     };
-
-
 
     //=================================================span_image_resample_rgb
     template<class Source, class Interpolator>
@@ -881,12 +861,6 @@ namespace agg
             } while(--len);
         }
     };
-
-
 }
-
-
 #endif
-
-
 

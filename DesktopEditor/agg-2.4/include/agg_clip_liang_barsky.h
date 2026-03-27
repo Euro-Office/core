@@ -68,16 +68,12 @@ namespace agg
     {
         return  (x > clip_box.x2) | ((x < clip_box.x1) << 2);
     }
-
-
     //--------------------------------------------------------clipping_flags_y
     template<class T>
     inline unsigned clipping_flags_y(T y, const rect_base<T>& clip_box)
     {
         return ((y > clip_box.y2) << 1) | ((y < clip_box.y1) << 3);
     }
-
-
     //-------------------------------------------------------clip_liang_barsky
     template<class T>
     inline unsigned clip_liang_barsky(T x1, T y1, T x2, T y2,
@@ -227,8 +223,6 @@ namespace agg
         }
         return np;
     }
-
-
     //----------------------------------------------------------------------------
     template<class T>
     bool clip_move_point(T x1, T y1, T x2, T y2, 
@@ -325,9 +319,5 @@ namespace agg
         }
         return ret;
     }
-
-
 }
-
-
 #endif

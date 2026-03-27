@@ -158,8 +158,6 @@ namespace OOX
                             if(m_oNumFmt->m_oFormatCode.IsInit())
                                 if(m_oNumFmt->m_oFormatCode.get().find(L"&quot;"))
                                     boost::algorithm::replace_all(m_oNumFmt->m_oFormatCode.get(), L"&quot;", L"\"");
-
-
                         }
 						else if ( _T("protection") == sName )
 							m_oProtection = oReader;

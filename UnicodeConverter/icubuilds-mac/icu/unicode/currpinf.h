@@ -65,48 +65,36 @@ public:
      * @stable ICU 4.2
      */
     CurrencyPluralInfo(const CurrencyPluralInfo& info);
-
-
     /**
      * Assignment operator
      *
      * @stable ICU 4.2
      */
     CurrencyPluralInfo& operator=(const CurrencyPluralInfo& info);
-
-
     /**
      * Destructor
      *
      * @stable ICU 4.2
      */
     virtual ~CurrencyPluralInfo();
-
-
     /**
      * Equal operator.
      *
      * @stable ICU 4.2
      */
     UBool operator==(const CurrencyPluralInfo& info) const;
-
-
     /**
      * Not equal operator
      *
      * @stable ICU 4.2
      */
     UBool operator!=(const CurrencyPluralInfo& info) const;
-
-
     /**
      * Clone
      *
      * @stable ICU 4.2
      */
     CurrencyPluralInfo* clone() const;
-
-
     /**
      * Gets plural rules of this locale, used for currency plural format
      *
@@ -203,8 +191,6 @@ private:
      * @param hTable  hash table to be deleted
      */
     void deleteHash(Hashtable* hTable);
-
-
     /*
      * initialize hash table
      *
@@ -212,8 +198,6 @@ private:
      * @return         hash table initialized
      */
     Hashtable* initHash(UErrorCode& status);
-
-
 
     /**
      * copy hash table
@@ -246,8 +230,6 @@ private:
     // locale
     Locale* fLocale;
 };
-
-
 inline UBool
 CurrencyPluralInfo::operator!=(const CurrencyPluralInfo& info) const {              return !operator==(info);                                                   }  
 

@@ -99,7 +99,5 @@ private:
 	friend class ods_conversion_context;
 
 };
-
-
 }
 }

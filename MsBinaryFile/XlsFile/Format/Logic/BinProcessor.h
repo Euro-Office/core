@@ -94,8 +94,6 @@ protected:
 	BaseObject*				parent_;
 	GlobalWorkbookInfoPtr	global_info_;
 };
-
-
 class BinReaderProcessor : public BinProcessor
 {
 public:
@@ -144,6 +142,4 @@ private:
 
 	StreamCacheWriterPtr	writer_;
 };
-
-
 } // namespace XLS

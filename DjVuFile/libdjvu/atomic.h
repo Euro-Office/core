@@ -73,8 +73,6 @@
 //    OBEY_HAVE_INTEL_ATOMIC_BUILTINS
 //  and by tweaking the files include in atomic.h.
 // ------------------------------------------------------------ */
-
-
 # ifdef __cplusplus
 extern "C" {
 #endif
@@ -96,8 +94,6 @@ int atomicDecrement(int volatile *var);
 
 /* { if (*var == oldval) { *var = newval; return TRUE; } return FALSE; } */
 int atomicCompareAndSwap(int volatile *var, int oldval, int newval);
-
-
 # ifdef __cplusplus
 }
 #endif

@@ -93,8 +93,6 @@ struct RBBIDataHeader {
 
 };
 
-
-
 struct  RBBIStateTableRow {
     int16_t          fAccepting;    /*  Non-zero if this row is for an accepting state.   */
                                     /*  Value 0: not an accepting state.                  */
@@ -119,8 +117,6 @@ struct  RBBIStateTableRow {
                                     /*    CAUTION:  see RBBITableBuilder::getTableSize()  */
                                     /*              before changing anything here.        */
 };
-
-
 struct RBBIStateTable {
     uint32_t         fNumStates;    /*  Number of states.                                 */
     uint32_t         fRowLen;       /*  Length of a state table row, in bytes.            */
@@ -135,8 +131,6 @@ typedef enum {
     RBBI_LOOKAHEAD_HARD_BREAK = 1,
     RBBI_BOF_REQUIRED = 2
 } RBBIStateTableFlags;
-
-
 /*                                        */
 /*   The reference counting wrapper class */
 /*                                        */
@@ -190,8 +184,6 @@ private:
     RBBIDataWrapper(const RBBIDataWrapper &other); /*  forbid copying of this class */
     RBBIDataWrapper &operator=(const RBBIDataWrapper &other); /*  forbid copying of this class */
 };
-
-
 
 U_NAMESPACE_END
 

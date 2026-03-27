@@ -95,8 +95,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 class GURL;
 
 /** Operating System dependent functions. */
@@ -149,8 +147,6 @@ class DJVUAPI GOS
 #endif
 
 };
-
-
 //@}
 // ------------
 

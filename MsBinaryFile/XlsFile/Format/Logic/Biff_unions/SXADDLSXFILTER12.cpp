@@ -35,24 +35,16 @@
 
 namespace XLS
 {
-
-
 SXADDLSXFILTER12::SXADDLSXFILTER12()
 {
 }
-
-
 SXADDLSXFILTER12::~SXADDLSXFILTER12()
 {
 }
-
-
 BaseObjectPtr SXADDLSXFILTER12::clone()
 {
 	return BaseObjectPtr(new SXADDLSXFILTER12(*this));
 }
-
-
 /*
 SXADDLSXFILTER12 = SXAddl_SXCSXFilter12_SXDId SXAddl_SXCSXFilter12_SXDSXFilter 
 					[SXAddl_SXCSXFilter12_SXDCaption *Continue_SxaddlSxString] 

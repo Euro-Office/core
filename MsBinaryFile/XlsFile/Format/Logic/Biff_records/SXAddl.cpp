@@ -60,13 +60,9 @@ void XLUnicodeStringSegmentedSXADDL::save(CFRecord& record)
 SXAddl::SXAddl() : bEndElement(false), bStartElement(false)
 {
 }
-
-
 SXAddl::~SXAddl()
 {
 }
-
-
 BaseObjectPtr SXAddl::clone()
 {
 	return BaseObjectPtr(new SXAddl(*this));

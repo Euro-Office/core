@@ -51,8 +51,6 @@ void CPivotCacheDefinitionExt::toXML(NSStringUtils::CStringBuilder& writer, cons
     WritingNullable(m_oSrvSupportSubQueryCalcMem, writer.WriteAttribute(L"supportSubqueryCalcMem", *m_oSrvSupportSubQueryCalcMem););
     WritingNullable(m_oSrvSupportAddCalcMems, writer.WriteAttribute(L"supportAddCalcMems", *m_oSrvSupportAddCalcMems););
     writer.EndAttributesAndNode();
-
-
 }
 void CPivotCacheDefinitionExt::fromXML(XmlUtils::CXmlLiteReader& oReader)
 {

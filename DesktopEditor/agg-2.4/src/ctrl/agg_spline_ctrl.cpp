@@ -18,8 +18,6 @@
 //----------------------------------------------------------------------------
 
 #include "ctrl/agg_spline_ctrl.h"
-
-
 namespace agg
 {
 
@@ -52,8 +50,6 @@ namespace agg
         calc_spline_box();
         update_spline();
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::border_width(double t, double extra)
     { 
@@ -61,8 +57,6 @@ namespace agg
         m_border_extra = extra;
         calc_spline_box(); 
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::calc_spline_box()
     {
@@ -71,8 +65,6 @@ namespace agg
         m_xs2 = m_x2 - m_border_width;
         m_ys2 = m_y2 - m_border_width;
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::update_spline()
     {
@@ -86,8 +78,6 @@ namespace agg
             m_spline_values8[i] = (int8u)(m_spline_values[i] * 255.0);
         }
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::calc_curve()
     {
@@ -100,22 +90,16 @@ namespace agg
                                 m_ys1 + (m_ys2 - m_ys1) * m_spline_values[i]);
         }
     }
-
-
     //------------------------------------------------------------------------
     double spline_ctrl_impl::calc_xp(unsigned idx)
     {
         return m_xs1 + (m_xs2 - m_xs1) * m_xp[idx];
     }
-
-
     //------------------------------------------------------------------------
     double spline_ctrl_impl::calc_yp(unsigned idx)
     {
         return m_ys1 + (m_ys2 - m_ys1) * m_yp[idx];
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::set_xp(unsigned idx, double val)
     {
@@ -145,8 +129,6 @@ namespace agg
         if(val > 1.0) val = 1.0;
         m_yp[idx] = val;
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::point(unsigned idx, double x, double y)
     {
@@ -156,8 +138,6 @@ namespace agg
             set_yp(idx, y);
         }
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::value(unsigned idx, double y)
     {
@@ -175,8 +155,6 @@ namespace agg
         if(x > 1.0) x = 1.0;
         return x;
     }
-
-
     //------------------------------------------------------------------------
     void spline_ctrl_impl::rewind(unsigned idx)
     {
@@ -225,8 +203,6 @@ namespace agg
             m_curve_poly.width(m_curve_width);
             m_curve_poly.rewind(0);
             break;
-
-
         case 3:                 // Inactive points
             m_curve_pnt.remove_all();
             for(i = 0; i < m_num_pnt; i++)
@@ -240,8 +216,6 @@ namespace agg
             }
             m_curve_poly.rewind(0);
             break;
-
-
         case 4:                 // Active point
             m_curve_pnt.remove_all();
             if(m_active_pnt >= 0)
@@ -256,8 +230,6 @@ namespace agg
 
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned spline_ctrl_impl::vertex(double* x, double* y)
     {
@@ -301,24 +273,18 @@ namespace agg
 
         return cmd;
     }
-
-
     
     //------------------------------------------------------------------------
     void spline_ctrl_impl::active_point(int i)
     {
         m_active_pnt = i;
     }
-
-
     //------------------------------------------------------------------------
     bool spline_ctrl_impl::in_rect(double x, double y) const
     {
         inverse_transform_xy(&x, &y);
         return x >= m_x1 && x <= m_x2 && y >= m_y1 && y <= m_y2;
     }
-
-
     //------------------------------------------------------------------------
     bool spline_ctrl_impl::on_mouse_button_down(double x, double y)
     {
@@ -338,8 +304,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool spline_ctrl_impl::on_mouse_button_up(double, double)
     {
@@ -350,8 +314,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool spline_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
@@ -374,8 +336,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool spline_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {
@@ -399,9 +359,5 @@ namespace agg
         }
         return ret;
     }
-
-
-
-
 }
 

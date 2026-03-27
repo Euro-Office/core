@@ -29,12 +29,8 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_blend.h"
-
-
 extern void psd_adjustment_blend_image(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect,
 	psd_uchar * lookup_table);
-
-
 psd_status psd_get_layer_invert(psd_context * context, psd_layer_record * layer)
 {
 	layer->layer_info_type[layer->layer_info_count] = psd_layer_info_type_invert;

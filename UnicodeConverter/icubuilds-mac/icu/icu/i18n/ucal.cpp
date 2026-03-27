@@ -632,8 +632,6 @@ ucal_getFieldDifference(UCalendar* cal, UDate target,
     }
     return ((Calendar*)cal)->fieldDifference(target, field, *status);
 }
-
-
 static const UEnumeration defaultKeywordValues = {
     NULL,
     NULL,

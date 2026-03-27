@@ -275,8 +275,6 @@ TIFFOpenW(const wchar_t* name, const char* mode)
 }
 
 #endif /* ndef _WIN32_WCE */
-
-
 tdata_t
 _TIFFmalloc(tsize_t s)
 {

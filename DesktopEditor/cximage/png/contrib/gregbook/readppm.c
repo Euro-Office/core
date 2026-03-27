@@ -19,8 +19,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -38,8 +36,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -62,28 +58,20 @@
 #include <stdlib.h>
 
 #include "readpng.h"    /* typedefs, common macros, public prototypes */
-
-
 ulg  width, height;
 int  bit_depth, color_type, channels;
 uch  *image_data = NULL;
 FILE *saved_infile;
-
-
 void readpng_version_info()
 {
     fprintf(stderr, "   Compiled without libpng, zlib or PBMPLUS/NetPBM.\n");
 }
-
-
 /* return value = 0 for success, 1 for bad sig, 2 for bad IHDR, 4 for no mem */
 
 int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
 {
     static uch ppmline[256];
     int maxval;
-
-
     saved_infile = infile;
 
     fgets(ppmline, 256, infile);
@@ -123,10 +111,6 @@ int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
 
     return 0;
 }
-
-
-
-
 /* returns 0 if succeeds, 1 if fails due to no bKGD chunk, 2 if libpng error;
  * scales values to 8-bit if necessary */
 
@@ -134,17 +118,11 @@ int readpng_get_bgcolor(uch *red, uch *green, uch *blue)
 {
     return 1;
 }
-
-
-
-
 /* display_exponent == LUT_exponent * CRT_exponent */
 
 uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
 {
     ulg  rowbytes;
-
-
     /* expand palette images to RGB, low-bit-depth grayscale images to 8 bits,
      * transparency chunks to full alpha channel; strip 16-bit-per-sample
      * images to 8 bits per sample; and convert grayscale to RGB[A] */
@@ -159,17 +137,11 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
     }
 
     Trace((stderr, "readpng_get_image:  rowbytes = %ld, height = %ld\n", rowbytes, height));
-
-
     /* now we can go ahead and just read the whole image */
 
     fread(image_data, 1L, rowbytes*height, saved_infile);
-
-
     return image_data;
 }
-
-
 void readpng_cleanup(int free_image_data)
 {
     if (free_image_data && image_data) {

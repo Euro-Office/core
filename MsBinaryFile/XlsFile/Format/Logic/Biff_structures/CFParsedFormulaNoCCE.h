@@ -48,8 +48,6 @@ public:
 private:
 	// stub to make the class non-abstract
 	virtual void load(CFRecord& record);
-
-
 };
 
 } // namespace XLS

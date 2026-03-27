@@ -54,11 +54,7 @@
 #endif
 
 #include "tiffiop.h"
-
-
 #define TIFF_IO_MAX 2147483647U
-
-
 typedef union fd_as_handle_union
 {
 	int fd;

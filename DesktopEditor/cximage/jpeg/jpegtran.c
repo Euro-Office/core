@@ -24,8 +24,6 @@
 #include <console.h>		/* Think declares it here */
 #endif
 #endif
-
-
 /*
  * Argument-parsing code.
  * The switch parser is designed to be useful with DOS-style command line
@@ -33,15 +31,11 @@
  * to the left of a given file name affect processing of that file.
  * The main program in this file doesn't actually use this capability...
  */
-
-
 static const char * progname;	/* program name for error messages */
 static char * outfilename;	/* for -outfile switch */
 static char * scaleoption;	/* -scale switch */
 static JCOPY_OPTION copyoption;	/* -copy switch */
 static jpeg_transform_info transformoption; /* image transformation options */
-
-
 LOCAL(void)
 usage (void)
 /* complain about bad command line */
@@ -91,8 +85,6 @@ usage (void)
 #endif
   exit(EXIT_FAILURE);
 }
-
-
 LOCAL(void)
 select_transform (JXFORM_CODE transform)
 /* Silly little routine to detect multiple transform options,
@@ -114,8 +106,6 @@ select_transform (JXFORM_CODE transform)
   exit(EXIT_FAILURE);
 #endif
 }
-
-
 LOCAL(int)
 parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 		int last_file_arg_seen, boolean for_real)

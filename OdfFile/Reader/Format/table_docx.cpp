@@ -356,8 +356,6 @@ void table_table_cell::docx_convert(oox::docx_conversion_context & Context)
 		{
 			_Wostream << L"<w:tcW w:w=\"" << (int)width << L"\" w:type=\"dxa\"/>";
 		}
-		
-
 
 		const style_instance * inst = 
             Context.root()->odf_context().styleContainer().style_by_name( styleName , style_family::TableCell, Context.process_headers_footers_);

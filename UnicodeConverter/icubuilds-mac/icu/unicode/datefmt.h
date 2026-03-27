@@ -188,11 +188,7 @@ public:
         kMediumRelative = kMedium | kRelative,
 
         kShortRelative = kShort | kRelative,
-
-
         kDefault      = kMedium,
-
-
 
     /**
      * These constants are provided for backwards compatibility only.
@@ -219,8 +215,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UBool operator==(const Format&) const;
-
-
     using Format::format;
 
     /**
@@ -681,15 +675,11 @@ public:
      * @stable ICU 2.0     
      */
     virtual void setLenient(UBool lenient);
-
-
     /**
      * Returns whether date/time parsing in the encapsulated Calendar object processing is lenient.
      * @stable ICU 53
      */
     virtual UBool isCalendarLenient(void) const;
-
-
     /**
      * Specifies whether encapsulated Calendar date/time parsing is to be lenient.  With
      * lenient parsing, the parser may use heuristics to interpret inputs that
@@ -700,8 +690,6 @@ public:
      * @stable ICU 53
      */
     virtual void setCalendarLenient(UBool lenient);
-
-
     /**
      * Gets the calendar associated with this date/time formatter.
      * The calendar is owned by the formatter and must not be modified.
@@ -731,8 +719,6 @@ public:
      * @stable ICU 2.0
      */
     virtual void setCalendar(const Calendar& newCalendar);
-
-
     /**
      * Gets the number formatter which this date/time formatter uses to format
      * and parse the numeric portions of the pattern.
@@ -863,8 +849,6 @@ protected:
      * @stable ICU 2.4
      */
     NumberFormat* fNumberFormat;
-
-
 private:
 
     /**
@@ -876,14 +860,10 @@ private:
      * @return a date/time formatter, or 0 on failure.
      */
     static DateFormat* U_EXPORT2 create(EStyle timeStyle, EStyle dateStyle, const Locale& inLocale);
-
-     
     /**
      * enum set of active boolean attributes for this instance
      */
     EnumSet<UDateFormatBooleanAttribute, 0, UDAT_BOOLEAN_ATTRIBUTE_COUNT> fBoolFlags;
-
-
     UDisplayContext fCapitalizationContext;
     friend class DateFmtKeyByStyle;
 

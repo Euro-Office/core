@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSHPIC_H__
 #define __PSHPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define PSHINTER_INTERFACE_GET  pshinter_interface
@@ -38,8 +32,6 @@ FT_BEGIN_HEADER
     PSHinter_Interface  pshinter_interface;
 
   } PSHinterPIC;
-
-
 #define GET_PIC( lib )  ( (PSHinterPIC*)( (lib)->pic_container.pshinter ) )
 
 #define PSHINTER_INTERFACE_GET  ( GET_PIC( library )->pshinter_interface )
@@ -58,6 +50,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __PSHPIC_H__ */
-
-
 /* END */

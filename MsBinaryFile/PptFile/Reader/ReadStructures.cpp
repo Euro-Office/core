@@ -565,8 +565,6 @@ void CTextCFRunRecord::LoadFromStream(POLE::Stream* pStream, bool bIsIndentation
 
     // или два последних наоборот????
 }
-
-
 void ConvertPPTTextToEditorStructure(std::vector<CTextPFRunRecord>& oArrayPF, std::vector<CTextCFRunRecord>& oArrayCF,
                                      std::wstring& strText, PPT::CTextAttributesEx& oAttributes)
 {
@@ -790,8 +788,6 @@ void CMetaHeader::ToPICTHeader(BYTE *& pHeader, int & size)
     //	long 		handleSize;
 
     myRowBytes = cbSize & 0x3fff;
-
-
     //Skip picSize and put out picFrame (10 bytes).
     picPtr = (short *)pHeader;
 
@@ -825,8 +821,6 @@ void CMetaHeader::ToPICTHeader(BYTE *& pHeader, int & size)
     //{			/* Must be 32-bits/pixel */
     ///* Put out opCode $9A, DirectBitsRect. */
     *picPtr++ = 0x9A;
-
-
     //	*picPtr++ = 0;	/* BaseAddr for direct pixMaps is 0x000000FF. */
     //	*picPtr++ = 0xFF;
     //	PutOutPixMapSrcRectDstRectAndMode(srcBits, &picPtr, srcRect,

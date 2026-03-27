@@ -197,8 +197,6 @@ you can use one of the following u_fprintf examples to display a UnicodeString.<
 </code></pre>
 
  */
-
-
 /**
  * When an end of file is encountered, this value can be returned.
  * @see u_fgetc
@@ -453,8 +451,6 @@ u_fgetcodepage(UFILE *file);
 U_STABLE int32_t U_EXPORT2
 u_fsetcodepage(const char   *codepage,
                UFILE        *file);
-
-
 /**
  * Returns an alias to the converter being used for this file.
  * @param f The UFILE to get the value from
@@ -604,8 +600,6 @@ U_STABLE int32_t U_EXPORT2
 u_file_write(const UChar    *ustring, 
              int32_t        count, 
              UFILE          *f);
-
-
 /* Input functions */
 #if !UCONFIG_NO_FORMATTING
 
@@ -770,12 +764,8 @@ u_fsettransliterator(UFILE *file, UFileDirection direction,
                      UTransliterator *adopt, UErrorCode *status);
 
 #endif
-
-
 /* Output string functions */
 #if !UCONFIG_NO_FORMATTING
-
-
 /**
  * Write formatted data to a Unicode string.
  *
@@ -1007,10 +997,6 @@ U_STABLE int32_t U_EXPORT2
 u_vsscanf_u(const UChar *buffer,
         const UChar     *patternSpecification,
         va_list         ap);
-
-
 #endif
 #endif
 #endif
-
-

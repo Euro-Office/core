@@ -65,8 +65,6 @@ public:
 
 	bool is_alpha;
 };
-
-
 class LongRGB : public LongRGBA
 {
 	BASE_STRUCTURE_DEFINE_CLASS_NAME(LongRGB)

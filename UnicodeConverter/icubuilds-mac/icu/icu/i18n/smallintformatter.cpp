@@ -2576,8 +2576,6 @@ static const UChar gDigits[] = {
         4,4,4,4,4,4,4,4};
 
 U_NAMESPACE_BEGIN
-
-
 IntDigitCountRange::IntDigitCountRange(int32_t min, int32_t max) {
     fMin = min < 0 ? 0 : min;
     fMax = max < fMin ? fMin : max;

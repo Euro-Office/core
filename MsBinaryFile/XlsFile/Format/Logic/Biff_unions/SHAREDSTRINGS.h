@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SHAREDSTRINGS union of records 
 class SHAREDSTRINGS: public CompositeObject
 {

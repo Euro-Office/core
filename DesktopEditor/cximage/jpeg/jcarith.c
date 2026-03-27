@@ -16,8 +16,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Expanded entropy encoder object for arithmetic encoding. */
 
 typedef struct {
@@ -110,8 +108,6 @@ typedef arith_entropy_encoder * arith_entropy_ptr;
 #define ISHIFT_TEMPS
 #define IRIGHT_SHIFT(x,shft)	((x) >> (shft))
 #endif
-
-
 LOCAL(void)
 emit_byte (int val, j_compress_ptr cinfo)
 /* Write next output byte; we do not support suspension in this module. */
@@ -123,8 +119,6 @@ emit_byte (int val, j_compress_ptr cinfo)
     if (! (*dest->empty_output_buffer) (cinfo))
       ERREXIT(cinfo, JERR_CANT_SUSPEND);
 }
-
-
 /*
  * Finish up at the end of an arithmetic-compressed scan.
  */
@@ -191,8 +185,6 @@ finish_pass (j_compress_ptr cinfo)
     }
   }
 }
-
-
 /*
  * The core arithmetic encoding routine (common in JPEG and JBIG).
  * This needs to go as fast as possible.
@@ -309,8 +301,6 @@ arith_encode (j_compress_ptr cinfo, unsigned char *st, int val)
     }
   } while (e->a < 0x8000L);
 }
-
-
 /*
  * Emit a restart marker & resynchronize predictions.
  */
@@ -351,8 +341,6 @@ emit_restart (j_compress_ptr cinfo, int restart_num)
   entropy->ct = 11;
   entropy->buffer = -1;  /* empty */
 }
-
-
 /*
  * MCU encoding for DC initial scan (either spectral selection,
  * or first pass of successive approximation).
@@ -442,8 +430,6 @@ encode_mcu_DC_first (j_compress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU encoding for AC initial scan (either spectral selection,
  * or first pass of successive approximation).
@@ -545,8 +531,6 @@ encode_mcu_AC_first (j_compress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU encoding for DC successive approximation refinement scan.
  */
@@ -580,8 +564,6 @@ encode_mcu_DC_refine (j_compress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU encoding for AC successive approximation refinement scan.
  */
@@ -676,8 +658,6 @@ encode_mcu_AC_refine (j_compress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Encode and output one MCU's worth of arithmetic-compressed coefficients.
  */
@@ -821,8 +801,6 @@ encode_mcu (j_compress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Initialize for an arithmetic-compressed scan.
  */
@@ -904,8 +882,6 @@ start_pass (j_compress_ptr cinfo, boolean gather_statistics)
   entropy->restarts_to_go = cinfo->restart_interval;
   entropy->next_restart_num = 0;
 }
-
-
 /*
  * Module initialization routine for arithmetic entropy encoding.
  */

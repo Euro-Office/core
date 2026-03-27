@@ -9,7 +9,6 @@
  *  ucnv_err.c
  *  Implements error behaviour functions called by T_UConverter_{from,to}Unicode
  *
- *
 *   Change history:
 *
 *   06/29/2000  helena      Major rewrite of the callback APIs.
@@ -92,8 +91,6 @@
     (0x0E0080 <= c && c <= 0x0E00FF) || \
     (0x0E01F0 <= c && c <= 0x0E0FFF) \
     )
-
-
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
 U_CAPI void    U_EXPORT2
 UCNV_FROM_U_CALLBACK_STOP (
@@ -115,8 +112,6 @@ UCNV_FROM_U_CALLBACK_STOP (
     /* the caller must have set the error code accordingly */
     return;
 }
-
-
 /*Function Pointer STOPS at the ILLEGAL_SEQUENCE */
 U_CAPI void    U_EXPORT2
 UCNV_TO_U_CALLBACK_STOP (
@@ -354,8 +349,6 @@ UCNV_FROM_U_CALLBACK_ESCAPE (
 
   return;
 }
-
-
 
 U_CAPI void  U_EXPORT2
 UCNV_TO_U_CALLBACK_SKIP (

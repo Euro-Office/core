@@ -244,7 +244,5 @@ void odf_settings_context::process_office_settings(office_element_ptr root )
 		}
 	}
 }
-
-
 }
 }

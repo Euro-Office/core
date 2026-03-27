@@ -911,8 +911,6 @@ png_push_process_row(png_structp png_ptr)
 
    else if (png_ptr->transformed_pixel_depth != row_info.pixel_depth)
       png_error(png_ptr, "internal progressive row size calculation error");
-
-
 #ifdef PNG_READ_INTERLACING_SUPPORTED
    /* Blow up interlaced rows to full size */
    if (png_ptr->interlaced && (png_ptr->transformations & PNG_INTERLACE))

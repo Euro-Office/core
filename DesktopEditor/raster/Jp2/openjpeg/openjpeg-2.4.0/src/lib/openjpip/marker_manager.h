@@ -32,8 +32,6 @@
 # define    MARKER_MANAGER_H_
 
 #include "codestream_manager.h"
-
-
 /** Marker parameters*/
 typedef struct marker_param {
     codestream_param_t cs; /**< corresponding codestream*/
@@ -41,8 +39,6 @@ typedef struct marker_param {
     OPJ_OFF_T offset;        /**< offset relative to the start of the codestream ( including the length parameter but not the marker itself)*/
     Byte2_t length;        /**< marker segment length*/
 } marker_param_t;
-
-
 /**
  * set marker parameters from inputs
  *
@@ -54,8 +50,6 @@ typedef struct marker_param {
  */
 marker_param_t set_marker(codestream_param_t cs, Byte2_t code, OPJ_OFF_T offset,
                           Byte2_t length);
-
-
 /**
  * fetch marker content 1-bytes of data in file stream
  *
@@ -82,6 +76,4 @@ Byte2_t fetch_marker2bytebigendian(marker_param_t marker, OPJ_OFF_T offset);
  * @return           fetched code
  */
 Byte4_t fetch_marker4bytebigendian(marker_param_t marker, OPJ_OFF_T offset);
-
-
 #endif      /* !MARKER_MANAGER_H_ */

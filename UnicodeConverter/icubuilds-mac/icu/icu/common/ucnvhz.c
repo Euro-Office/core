@@ -34,8 +34,6 @@
 #define DB_ESCAPE    "\x7E\x7B"
 #define TILDE_ESCAPE "\x7E\x7E"
 #define ESC_LEN       2
-
-
 #define CONCAT_ESCAPE_MACRO( args, targetIndex,targetLength,strToAppend, err, len,sourceIndex){                             \
     while(len-->0){                                                                                                         \
         if(targetIndex < targetLength){                                                                                     \
@@ -52,8 +50,6 @@
         strToAppend++;                                                                                                      \
     }                                                                                                                       \
 }
-
-
 typedef struct{
     UConverter* gbConverter;
     int32_t targetIndex;
@@ -63,8 +59,6 @@ typedef struct{
     UBool isTargetUCharDBCS;
     UBool isEmptySegment;
 }UConverterDataHZ;
-
-
 
 static void 
 _HZOpen(UConverter *cnv, UConverterLoadArgs *pArgs, UErrorCode *errorCode){
@@ -148,8 +142,6 @@ _HZReset(UConverter *cnv, UConverterResetChoice choice){
 *   intended definition of single-byte-segment is as follows (pedberg):
 *   single-byte-segment = single-byte-seq 1*single-byte-char
 */
-
-
 static void 
 UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
                                                             UErrorCode* err){
@@ -328,8 +320,6 @@ UConverter_toUnicode_HZ_OFFSETS_LOGIC(UConverterToUnicodeArgs *args,
     args->target = myTarget;
     args->source = mySource;
 }
-
-
 static void 
 UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
                                                       UErrorCode * err){
@@ -362,8 +352,6 @@ UConverter_fromUnicode_HZ_OFFSETS_LOGIC (UConverterFromUnicodeArgs * args,
         if (myTargetIndex < targetLength){
             
             mySourceChar = (UChar) mySource[mySourceIndex++];
-            
-
             oldIsTargetUCharDBCS = isTargetUCharDBCS;
             if(mySourceChar ==UCNV_TILDE){
                 /*concatEscape(args, &myTargetIndex, &targetLength,"\x7E\x7E",err,2,&mySourceIndex);*/
@@ -531,8 +519,6 @@ struct cloneHZStruct
     UAlignedMemory deadSpace;
     UConverterDataHZ mydata;
 };
-
-
 static UConverter * 
 _HZ_SafeClone(const UConverter *cnv, 
               void *stackBuffer, 

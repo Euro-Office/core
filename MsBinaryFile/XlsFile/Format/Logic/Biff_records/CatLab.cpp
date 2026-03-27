@@ -39,13 +39,9 @@ namespace XLS
 CatLab::CatLab()
 {
 }
-
-
 CatLab::~CatLab()
 {
 }
-
-
 BaseObjectPtr CatLab::clone()
 {
 	return BaseObjectPtr(new CatLab(*this));

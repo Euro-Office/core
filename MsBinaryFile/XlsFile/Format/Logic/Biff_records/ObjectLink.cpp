@@ -38,13 +38,9 @@ namespace XLS
 ObjectLink::ObjectLink()
 {
 }
-
-
 ObjectLink::~ObjectLink()
 {
 }
-
-
 BaseObjectPtr ObjectLink::clone()
 {
 	return BaseObjectPtr(new ObjectLink(*this));

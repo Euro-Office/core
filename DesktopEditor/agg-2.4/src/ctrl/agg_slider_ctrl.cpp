@@ -44,8 +44,6 @@ namespace agg
         m_label[0] = 0;
         calc_box();
     }
-
-
     //------------------------------------------------------------------------
     void slider_ctrl_impl::calc_box()
     {
@@ -54,8 +52,6 @@ namespace agg
         m_xs2 = m_x2 - m_border_width;
         m_ys2 = m_y2 - m_border_width;
     }
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::normalize_value(bool preview_value_flag)
     {
@@ -77,8 +73,6 @@ namespace agg
         }
         return ret;
     }
-
-
     //------------------------------------------------------------------------
     void slider_ctrl_impl::border_width(double t, double extra)
     { 
@@ -86,8 +80,6 @@ namespace agg
         m_border_extra = extra;
         calc_box(); 
     }
-
-
     //------------------------------------------------------------------------
     void slider_ctrl_impl::value(double value) 
     { 
@@ -180,8 +172,6 @@ namespace agg
                            m_y2 - m_y1, 
                            32);
             break;
-
-
         case 4:                 // pointer
             normalize_value(false);
             m_ellipse.init(m_xs1 + (m_xs2 - m_xs1) * m_value,
@@ -209,8 +199,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned slider_ctrl_impl::vertex(double* x, double* y)
     {
@@ -259,16 +247,12 @@ namespace agg
         return cmd;
     }
 
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::in_rect(double x, double y) const
     {
         inverse_transform_xy(&x, &y);
         return x >= m_x1 && x <= m_x2 && y >= m_y1 && y <= m_y2;
     }
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::on_mouse_button_down(double x, double y)
     {
@@ -285,8 +269,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
@@ -307,8 +289,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::on_mouse_button_up(double, double)
     {
@@ -316,8 +296,6 @@ namespace agg
         normalize_value(true);
         return true;
     }
-
-
     //------------------------------------------------------------------------
     bool slider_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {

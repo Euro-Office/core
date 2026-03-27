@@ -100,13 +100,9 @@ private:
     //office_element_ptr_array				content_;
 	office_element_ptr						presentation_sound_;
 	presentation_event_listener_attlist		attlist_;
-
-    
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(presentation_event_listener);
-
-
 //  script:event-listeners_
 class script_event_listener : public office_element_impl<presentation_event_listener>
 {
@@ -123,12 +119,8 @@ private:
 
 private:
     office_element_ptr_array content_;
-
-    
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(script_event_listener);
-
-
 }
 }

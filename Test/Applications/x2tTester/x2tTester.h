@@ -72,8 +72,6 @@ private:
 	std::vector<std::wstring> m_draw;
 	std::wstring m_pdf;
 };
-
-
 // setups folders, parse xml config, takes formats, create CConverters
 class Cx2tTester
 {
@@ -157,8 +155,6 @@ private:
 	std::wstring m_defaultCsvTxtEndcoding;
 	std::wstring m_defaultCsvDelimiter;
 	std::wstring m_defaultTsvDelimiter;
-
-
 	unsigned long m_timeout;
 	unsigned long m_timeStart;
 

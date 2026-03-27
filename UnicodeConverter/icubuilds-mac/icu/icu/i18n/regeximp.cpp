@@ -54,23 +54,15 @@ UChar32 CaseFoldingUTextIterator::next() {
     }
     return foldedC;
 }
-    
-
 UBool CaseFoldingUTextIterator::inExpansion() {
     return fFoldChars != NULL;
 }
-
-
 
 CaseFoldingUCharIterator::CaseFoldingUCharIterator(const UChar *chars, int64_t start, int64_t limit) :
    fChars(chars), fIndex(start), fLimit(limit), fcsp(NULL), fFoldChars(NULL), fFoldLength(0) {
    fcsp = ucase_getSingleton();
 }
-
-
 CaseFoldingUCharIterator::~CaseFoldingUCharIterator() {}
-
-
 UChar32 CaseFoldingUCharIterator::next() {
     UChar32  foldedC;
     UChar32  originalC;
@@ -103,8 +95,6 @@ UChar32 CaseFoldingUCharIterator::next() {
     }
     return foldedC;
 }
-    
-
 UBool CaseFoldingUCharIterator::inExpansion() {
     return fFoldChars != NULL;
 }
@@ -112,8 +102,6 @@ UBool CaseFoldingUCharIterator::inExpansion() {
 int64_t CaseFoldingUCharIterator::getIndex() {
     return fIndex;
 }
-
-
 U_NAMESPACE_END
 
 #endif

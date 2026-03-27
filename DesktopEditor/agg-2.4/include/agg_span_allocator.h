@@ -47,8 +47,4 @@ namespace agg
         pod_array<color_type> m_span;
     };
 }
-
-
 #endif
-
-

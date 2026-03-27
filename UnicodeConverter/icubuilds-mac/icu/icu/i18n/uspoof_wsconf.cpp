@@ -37,8 +37,6 @@
 #include "uspoof_wsconf.h"
 
 U_NAMESPACE_USE
-
-
 // Regular expression for parsing a line from the Unicode file confusablesWholeScript.txt
 // Example Lines:
 //   006F          ; Latn; Deva; A #      (o)  LATIN SMALL LETTER O
@@ -66,8 +64,6 @@ static const char *parseExp =
                                                        //    Any line not matching the preceding
                                                        //    parts of the expression.will match
                                                        //    this, and thus be flagged as an error
-
-
 // Extract a regular expression match group into a char * string.
 //    The group must contain only invariant characters.
 //    Used for script names
@@ -85,8 +81,6 @@ static void extractGroup(
     UnicodeString s(FALSE, ubuf, len);   // Aliasing constructor
     s.extract(0, len, destBuf, destCapacity, US_INV);
 }
-
-
 
 U_NAMESPACE_BEGIN
 
@@ -292,8 +286,6 @@ void buildWSConfusableData(SpoofImpl *spImpl, const char * confusablesWS,
         // printf("Number of distinct script sets: %d\n", rtScriptSetsCount);
     }
 
-    
-
     // Update the Trie values to be reflect the run time script indexes (after duplicate merging).
     //    (Trie Values 0 and 1 are reserved, and the corresponding slots in scriptSets
     //     are unused, which is why the loop index starts at 2.)
@@ -390,8 +382,6 @@ void buildWSConfusableData(SpoofImpl *spImpl, const char * confusablesWS,
             NULL,
             &status);
 
-    
-
 cleanup:
     if (U_FAILURE(status)) {
         pe->line = lineNum;
@@ -413,8 +403,6 @@ cleanup:
 }
 
 U_NAMESPACE_END
-
-
 
 BuilderScriptSet::BuilderScriptSet() {
     codePoint = -1;

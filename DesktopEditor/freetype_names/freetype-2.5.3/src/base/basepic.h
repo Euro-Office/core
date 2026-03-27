@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __BASEPIC_H__
 #define __BASEPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
@@ -41,8 +37,6 @@ FT_BEGIN_HEADER
 #ifdef FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK
 #include FT_INTERNAL_RFORK_H
 #endif
-
-
   typedef struct  BasePIC_
   {
     FT_Module_Class**  default_module_classes;
@@ -54,8 +48,6 @@ FT_BEGIN_HEADER
 #endif
 
   } BasePIC;
-
-
 #define GET_PIC( lib )  ( (BasePIC*)( (lib)->pic_container.base ) )
 
 #define FT_OUTLINE_GLYPH_CLASS_GET                      \
@@ -69,8 +61,6 @@ FT_BEGIN_HEADER
 #define FT_RACCESS_GUESS_TABLE_GET                       \
           ( GET_PIC( library )->ft_raccess_guess_table )
 #endif
-
-
   /* see basepic.c for the implementation */
   void
   ft_base_pic_free( FT_Library  library );
@@ -85,6 +75,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __BASEPIC_H__ */
-
-
 /* END */

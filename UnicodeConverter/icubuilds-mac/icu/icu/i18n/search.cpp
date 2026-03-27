@@ -436,8 +436,6 @@ void SearchIterator::setMatchNotFound()
         setOffset(0, status);
     }
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_COLLATION */

@@ -50,8 +50,6 @@
 //        <w:moveFrom>
 //        <w:moveTo>
 //        <w:subDoc>
-
-
 namespace ComplexTypes
 {
 	namespace Word

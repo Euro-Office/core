@@ -12,6 +12,4 @@ namespace MetaFile
 		//TODO:: реализовать
 	};
 }
-
-
 #endif // CWMFINTERPRETATOR_H

@@ -42,8 +42,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 cachemodellist_param_t * gene_cachemodellist(void)
 {
     cachemodellist_param_t *cachemodellist;

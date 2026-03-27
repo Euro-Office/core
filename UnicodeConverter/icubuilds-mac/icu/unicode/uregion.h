@@ -241,8 +241,6 @@ uregion_getNumericCode(const URegion* uregion);
  */
 U_STABLE URegionType U_EXPORT2
 uregion_getType(const URegion* uregion);
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 #endif

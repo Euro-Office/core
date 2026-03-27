@@ -38,18 +38,12 @@
 
 namespace XLS
 {
-
-
 TABLESTYLES::TABLESTYLES()
 {
 }
-
-
 TABLESTYLES::~TABLESTYLES()
 {
 }
-
-
 
 class Parenthesis_TABLESTYLES_1: public ABNFParenthesis
 {
@@ -70,14 +64,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr TABLESTYLES::clone()
 {
 	return BaseObjectPtr(new TABLESTYLES(*this));
 }
-
-
 // TABLESTYLES = TableStyles *(TableStyle *28TableStyleElement)
 
 const bool TABLESTYLES::loadContent(BinProcessor& proc)

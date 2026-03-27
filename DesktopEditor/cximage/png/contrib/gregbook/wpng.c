@@ -48,8 +48,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -67,8 +65,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -134,8 +130,6 @@
 
 #include "writepng.h"   /* typedefs, common macros, writepng prototypes */
 
-
-
 /* local prototypes */
 
 static int  wpng_isvalid_latin1(uch *p, int len);
@@ -145,11 +139,7 @@ static void wpng_cleanup(void);
    static char *dos_kbd_gets(char *buf, int len);
 #endif
 
-
-
 static mainprog_info wpng_info;   /* lone global */
-
-
 
 int main(int argc, char **argv)
 {
@@ -172,8 +162,6 @@ int main(int argc, char **argv)
     double CRT_exponent = 2.2;          /* just the monitor */
     double default_display_exponent;    /* whole display system */
     double default_gamma = 0.0;
-
-
     wpng_info.infile = NULL;
     wpng_info.outfile = NULL;
     wpng_info.image_data = NULL;
@@ -184,8 +172,6 @@ int main(int argc, char **argv)
     wpng_info.have_time = FALSE;
     wpng_info.have_text = 0;
     wpng_info.gamma = 0.0;
-
-
     /* First get the default value for our display-system exponent, i.e.,
      * the product of the CRT exponent and the exponent corresponding to
      * the frame-buffer's lookup table (LUT), if any.  If the PNM image
@@ -228,8 +214,6 @@ int main(int argc, char **argv)
 
     /* the defaults above give 1.0, 1.3, 1.5 and 2.2, respectively: */
     default_display_exponent = LUT_exponent * CRT_exponent;
-
-
     /* If the user has set the SCREEN_GAMMA environment variable as suggested
      * (somewhat imprecisely) in the libpng documentation, use that; otherwise
      * use the default value we just calculated.  Either way, the user may
@@ -244,8 +228,6 @@ int main(int argc, char **argv)
 
     if (default_gamma == 0.0)
         default_gamma = 1.0 / default_display_exponent;
-
-
     /* Now parse the command line for options and the PNM filename. */
 
     while (*++argv && !error) {
@@ -293,8 +275,6 @@ int main(int argc, char **argv)
                 ++error;   /* not expecting any other options */
         }
     }
-
-
     /* open the input and output files, or register an error and abort */
 
     if (!inname) {
@@ -394,8 +374,6 @@ int main(int argc, char **argv)
             }
         }
     }
-
-
     /* if we had any errors, print usage and die horrible death...arrr! */
 
     if (error) {
@@ -428,8 +406,6 @@ int main(int argc, char **argv)
          "\n", PROGNAME, PROGNAME, default_gamma);
         exit(1);
     }
-
-
     /* prepare the text buffers for libpng's use; note that even though
      * PNG's png_text struct includes a length field, we don't have to fill
      * it out */
@@ -646,8 +622,6 @@ int main(int argc, char **argv)
         text = FALSE;
         wpng_info.have_text = 0;
     }
-
-
     /* allocate libpng stuff, initialize transformations, write pre-IDAT data */
 
     if ((rc = writepng_init(&wpng_info)) != 0) {
@@ -670,8 +644,6 @@ int main(int argc, char **argv)
         }
         exit(rc);
     }
-
-
     /* free textbuf, since it's a completely local variable and all text info
      * has just been written to the PNG file */
 
@@ -679,8 +651,6 @@ int main(int argc, char **argv)
         free(textbuf);
         textbuf = NULL;
     }
-
-
     /* calculate rowbytes on basis of image type; note that this becomes much
      * more complicated if we choose to support PBM type, ASCII PNM types, or
      * 16-bit-per-sample binary data [currently not an official NetPBM type] */
@@ -691,8 +661,6 @@ int main(int argc, char **argv)
         rowbytes = wpng_info.width * 3;
     else /* if (wpng_info.pnmtype == 8) */
         rowbytes = wpng_info.width * 4;
-
-
     /* read and write the image, either in its entirety (if writing interlaced
      * PNG) or row by row (if non-interlaced) */
 
@@ -769,8 +737,6 @@ int main(int argc, char **argv)
             exit(2);
         }
     }
-
-
     /* OK, we're done (successfully):  clean up all resources and quit */
 
     fprintf(stderr, "Done.\n");
@@ -781,10 +747,6 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-
-
-
 
 static int wpng_isvalid_latin1(uch *p, int len)
 {
@@ -799,10 +761,6 @@ static int wpng_isvalid_latin1(uch *p, int len)
 
     return result;
 }
-
-
-
-
 
 static void wpng_cleanup(void)
 {
@@ -826,10 +784,6 @@ static void wpng_cleanup(void)
         wpng_info.row_pointers = NULL;
     }
 }
-
-
-
-
 #ifdef DOS_OS2_W32
 
 static char *dos_kbd_gets(char *buf, int len)

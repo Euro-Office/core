@@ -28,8 +28,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*-----------------------------------------------------------------*
  *              Top-level color morphological operations           *
  *-----------------------------------------------------------------*/
@@ -113,6 +111,4 @@ PIX  *pixr, *pixg, *pixb, *pixrm, *pixgm, *pixbm, *pixd;
 
     return pixd;
 }
-
-
 

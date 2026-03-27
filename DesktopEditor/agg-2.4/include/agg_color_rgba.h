@@ -125,8 +125,6 @@ namespace agg
             b *= a_;
             return *this;
         }
-
-
         //--------------------------------------------------------------------
         rgba gradient(rgba c, double k) const
         {
@@ -215,10 +213,6 @@ namespace agg
         t.b = pow(t.b * s, gamma);
         return t;
     }
-
-
-
-    
     //===================================================================rgba8
     struct rgba8
     {
@@ -232,8 +226,6 @@ namespace agg
             base_mask  = base_scale - 1
         };
         typedef rgba8 self_type;
-
-
         value_type r;
         value_type g;
         value_type b;
@@ -427,8 +419,6 @@ namespace agg
 			return !operator==(other);
 		}
     };
-
-
     //-------------------------------------------------------------rgba8_pre
     inline rgba8 rgba8_pre(unsigned r, unsigned g, unsigned b, 
                            unsigned a = rgba8::base_mask)
@@ -451,8 +441,6 @@ namespace agg
     {
         return rgba8(c,a).premultiply();
     }
-
-
     //-------------------------------------------------------------rgb8_packed
     inline rgba8 rgb8_packed(unsigned v)
     {
@@ -484,10 +472,6 @@ namespace agg
     {
         return rgba8(gamma.inv(c.r), gamma.inv(c.g), gamma.inv(c.b), c.a);
     }
-
-
-
-
 
     //==================================================================rgba16
     struct rgba16
@@ -701,8 +685,6 @@ namespace agg
         }
     };
 
-
-
     //--------------------------------------------------------------rgba16_pre
     inline rgba16 rgba16_pre(unsigned r, unsigned g, unsigned b, 
                              unsigned a = rgba16::base_mask)
@@ -729,8 +711,6 @@ namespace agg
     {
         return rgba16(c,a).premultiply();
     }
-
-
     //------------------------------------------------------rgba16_gamma_dir
     template<class GammaLUT>
     rgba16 rgba16_gamma_dir(rgba16 c, const GammaLUT& gamma)
@@ -744,10 +724,6 @@ namespace agg
     {
         return rgba16(gamma.inv(c.r), gamma.inv(c.g), gamma.inv(c.b), c.a);
     }
-
-
 }
-
-
 
 #endif

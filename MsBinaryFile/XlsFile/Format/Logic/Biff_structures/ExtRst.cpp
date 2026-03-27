@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ExtRst::clone()
 {
 	return BiffStructurePtr(new ExtRst(*this));
 }
-
-
 ExtRst::ExtRst(std::list<CFRecordPtr>& cont_recs) : cont_recs_(cont_recs)
 {
 }
-
-
 void ExtRst::load(CFRecord& record)
 {
 	record.skipNunBytes(2); // reserved
@@ -98,6 +92,4 @@ const size_t ExtRst::getSize() const
 {
 	return 2/*reserved*/ + sizeof(unsigned short) /*cb*/ + sizeof(unsigned short) * 2/*phs*/ + rphssub.getSize() + (rgphruns.size() ? rgphruns.size() * sizeof(short) * 3 : 0);
 }
-
-
 } // namespace XLS

@@ -20,8 +20,6 @@
 // PostScript and PDF technology for software developers.
 // 
 //----------------------------------------------------------------------------
-
-
 #ifndef AGG_SCANLINE_STORAGE_BIN_INCLUDED
 #define AGG_SCANLINE_STORAGE_BIN_INCLUDED
 
@@ -29,8 +27,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "agg_array.h"
-
-
 namespace agg
 {
 
@@ -52,8 +48,6 @@ namespace agg
             unsigned num_spans;
             unsigned start_span;
         };
-
-
         //---------------------------------------------------------------
         class embedded_scanline
         {
@@ -87,8 +81,6 @@ namespace agg
             };
 
             friend class const_iterator;
-
-
             //-----------------------------------------------------------
             embedded_scanline(const scanline_storage_bin& storage) :
                 m_storage(&storage)
@@ -114,8 +106,6 @@ namespace agg
             scanline_data               m_scanline;
             unsigned                    m_scanline_idx;
         };
-
-
         //---------------------------------------------------------------
         scanline_storage_bin() :
             m_spans(256-2),         // Block increment size
@@ -176,8 +166,6 @@ namespace agg
             }
             m_scanlines.add(sl_this);
         }
-
-
         //---------------------------------------------------------------
         // Iterate scanlines interface
         int min_x() const { return m_min_x; }
@@ -191,8 +179,6 @@ namespace agg
             m_cur_scanline = 0;
             return m_scanlines.size() > 0;
         }
-
-
         //---------------------------------------------------------------
         template<class Scanline> bool sweep_scanline(Scanline& sl)
         {
@@ -220,8 +206,6 @@ namespace agg
             }
             return true;
         }
-
-
         //---------------------------------------------------------------
         // Specialization for embedded_scanline
         bool sweep_scanline(embedded_scanline& sl)
@@ -235,8 +219,6 @@ namespace agg
             while(sl.num_spans() == 0);
             return true;
         }
-
-
         //---------------------------------------------------------------
         unsigned byte_size() const
         {
@@ -250,8 +232,6 @@ namespace agg
             }
             return size;
         }
-
-
         //---------------------------------------------------------------
         static void write_int32(int8u* dst, int32 val)
         {
@@ -260,8 +240,6 @@ namespace agg
             dst[2] = ((const int8u*)&val)[2];
             dst[3] = ((const int8u*)&val)[3];
         }
-
-
         //---------------------------------------------------------------
         void serialize(int8u* data) const
         {
@@ -301,8 +279,6 @@ namespace agg
                 while(--num_spans);
             }
         }
-
-
         //---------------------------------------------------------------
         const scanline_data& scanline_by_index(unsigned i) const
         {
@@ -314,8 +290,6 @@ namespace agg
         {
             return (i < m_spans.size()) ? m_spans[i] : m_fake_span;
         }
-
-
     private:
         pod_bvector<span_data, 10>    m_spans;
         pod_bvector<scanline_data, 8> m_scanlines;
@@ -327,18 +301,6 @@ namespace agg
         int           m_max_y;
         unsigned      m_cur_scanline;
     };
-
-
-
-
-
-
-
-
-
-
-
-
 
     //---------------------------------------serialized_scanlines_adaptor_bin
     class serialized_scanlines_adaptor_bin
@@ -396,8 +358,6 @@ namespace agg
             };
 
             friend class const_iterator;
-
-
             //----------------------------------------------------------------
             embedded_scanline() : m_ptr(0), m_y(0), m_num_spans(0) {}
 
@@ -406,8 +366,6 @@ namespace agg
             unsigned num_spans()   const { return m_num_spans;  }
             int      y()           const { return m_y;          }
             const_iterator begin() const { return const_iterator(*this); }
-
-
         private:
             //----------------------------------------------------------------
             int read_int32()
@@ -436,8 +394,6 @@ namespace agg
             unsigned     m_num_spans;
             int          m_dx;
         };
-
-
 
     public:
         //--------------------------------------------------------------------
@@ -544,8 +500,6 @@ namespace agg
             }
             return true;
         }
-
-
         //--------------------------------------------------------------------
         // Specialization for embedded_scanline
         bool sweep_scanline(embedded_scanline& sl)
@@ -577,8 +531,6 @@ namespace agg
         int          m_max_x;
         int          m_max_y;
     };
-
-
 
 }
 

@@ -26,12 +26,8 @@
   /*  differently than data pointers (e.g. 48 bits instead of 32).         */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTSERV_H__
 #define __FTSERV_H__
-
-
 FT_BEGIN_HEADER
 
   /*
@@ -83,8 +79,6 @@ FT_BEGIN_HEADER
   FT_END_STMNT
 
 #endif /* !C++ */
-
-
   /*
    * @macro:
    *   FT_FACE_FIND_GLOBAL_SERVICE
@@ -133,8 +127,6 @@ FT_BEGIN_HEADER
   FT_END_STMNT
 
 #endif /* !C++ */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -155,8 +147,6 @@ FT_BEGIN_HEADER
   } FT_ServiceDescRec;
 
   typedef const FT_ServiceDescRec*  FT_ServiceDesc;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -594,8 +584,6 @@ FT_BEGIN_HEADER
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
   /*
    *  Parse a list of FT_ServiceDescRec descriptors and look for
    *  a specific service by ID.  Note that the last element in the
@@ -608,8 +596,6 @@ FT_BEGIN_HEADER
   FT_BASE( FT_Pointer )
   ft_service_list_lookup( FT_ServiceDesc  service_descriptors,
                           const char*     service_id );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -640,16 +626,12 @@ FT_BEGIN_HEADER
     FT_Pointer  service_WINFNT;
 
   } FT_ServiceCacheRec, *FT_ServiceCache;
-
-
   /*
    *  A magic number used within the services cache.
    */
 
   /* ensure that value `1' has the same width as a pointer */
 #define FT_SERVICE_UNAVAILABLE  ((FT_Pointer)~(FT_PtrDist)1)
-
-
   /*
    * @macro:
    *   FT_FACE_LOOKUP_SERVICE
@@ -758,6 +740,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTSERV_H__ */
-
-
 /* END */

@@ -22,8 +22,6 @@
 
 #ifndef __UMACHINE_H__
 #define __UMACHINE_H__
-
-
 /**
  * \file
  * \brief Basic types and constants for UTF
@@ -241,8 +239,6 @@ typedef int8_t UBool;
 /** The FALSE value of a UBool @stable ICU 2.0 */
 #   define FALSE 0
 #endif
-
-
 /*==========================================================================*/
 /* Unicode data types                                                       */
 /*==========================================================================*/

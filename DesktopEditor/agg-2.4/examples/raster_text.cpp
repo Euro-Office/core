@@ -14,13 +14,7 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
-
-
 //------------------------------------------------------------------------
 template<class GradientF> class gradient_sine_repeat_adaptor
 {
@@ -38,10 +32,6 @@ private:
     GradientF m_gradient;
     double    m_periods;
 };
-
-
-
-
 //------------------------------------------------------------------------
 class the_application : public agg::platform_support
 {
@@ -54,8 +44,6 @@ public:
         agg::platform_support(format, flip_y)
     {
     }
-
-
     virtual void on_draw()
     {
         struct font_type
@@ -102,14 +90,10 @@ public:
             0, 0
         };
 
-
-
         glyph_gen glyph(0);
         pixfmt pixf(rbuf_window());
         ren_base rb(pixf);
         rb.clear(agg::rgba(1,1,1));
-
-
         agg::renderer_raster_htext_solid<ren_base, glyph_gen> rt(rb, glyph);
 
         int i;
@@ -132,8 +116,6 @@ public:
             rt.render_text(5, y, wbuf, !flip_y());
             y += glyph.height() + 1;
         }
-
-
         // Rendering raster text with a custom span generator, gradient
 
         typedef agg::span_interpolator_linear<> interpolator_type;
@@ -161,8 +143,6 @@ public:
     }
 
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -174,5 +154,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

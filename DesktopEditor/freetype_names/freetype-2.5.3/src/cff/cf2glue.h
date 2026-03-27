@@ -34,22 +34,14 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CF2GLUE_H__
 #define __CF2GLUE_H__
-
-
 /* common includes for other modules */
 #include "cf2error.h"
 #include "cf2fixed.h"
 #include "cf2arrst.h"
 #include "cf2read.h"
-
-
 FT_BEGIN_HEADER
-
-
   /* rendering parameters */
 
   /* apply hints to rendered glyphs */
@@ -59,8 +51,6 @@ FT_BEGIN_HEADER
 
   /* type for holding the flags */
   typedef CF2_Int  CF2_RenderingFlags;
-
-
   /* elements of a glyph outline */
   typedef enum  CF2_PathOp_
   {
@@ -70,8 +60,6 @@ FT_BEGIN_HEADER
     CF2_PathOpCubeTo = 4      /* cubic curve              */
 
   } CF2_PathOp;
-
-
   /* a matrix of fixed point values */
   typedef struct  CF2_Matrix_
   {
@@ -83,14 +71,10 @@ FT_BEGIN_HEADER
     CF2_F16Dot16  ty;
 
   } CF2_Matrix;
-
-
   /* these typedefs are needed by more than one header file */
   /* and gcc compiler doesn't allow redefinition            */
   typedef struct CF2_FontRec_  CF2_FontRec, *CF2_Font;
   typedef struct CF2_HintRec_  CF2_HintRec, *CF2_Hint;
-
-
   /* A common structure for all callback parameters.                       */
   /*                                                                       */
   /* Some members may be unused.  For example, `pt0' is not used for       */
@@ -109,8 +93,6 @@ FT_BEGIN_HEADER
     CF2_Int  op;
 
   } CF2_CallbackParamsRec, *CF2_CallbackParams;
-
-
   /* forward reference */
   typedef struct CF2_OutlineCallbacksRec_  CF2_OutlineCallbacksRec,
                                            *CF2_OutlineCallbacks;
@@ -119,8 +101,6 @@ FT_BEGIN_HEADER
   typedef void
   (*CF2_Callback_Type)( CF2_OutlineCallbacks      callbacks,
                         const CF2_CallbackParams  params );
-
-
   struct  CF2_OutlineCallbacksRec_
   {
     CF2_Callback_Type  moveTo;
@@ -133,12 +113,6 @@ FT_BEGIN_HEADER
     FT_Memory  memory;
     FT_Error*  error;
   };
-
-
 FT_END_HEADER
-
-
 #endif /* __CF2GLUE_H__ */
-
-
 /* END */

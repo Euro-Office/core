@@ -64,8 +64,6 @@ extern void _TIFFFax3fillruns(unsigned char*, uint32*, uint32*, uint32);
 #if defined(__cplusplus)
 }
 #endif
-
-
 /* finite state machine codes */
 #define S_Null     0
 #define S_Pass     1

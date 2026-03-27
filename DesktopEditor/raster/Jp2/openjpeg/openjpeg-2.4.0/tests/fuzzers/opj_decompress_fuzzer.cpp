@@ -44,15 +44,11 @@ typedef struct {
     size_t         nCurPos;
     size_t         nLength;
 } MemFile;
-
-
 static void ErrorCallback(const char * msg, void *)
 {
     (void)msg;
     //fprintf(stderr, "%s\n", msg);
 }
-
-
 static void WarningCallback(const char *, void *)
 {
 }
@@ -97,8 +93,6 @@ static OPJ_OFF_T SkipCallback(OPJ_OFF_T nBytes, void * pUserData)
     memFile->nCurPos += nBytes;
     return nBytes;
 }
-
-
 int LLVMFuzzerInitialize(int* /*argc*/, char*** argv)
 {
     return 0;

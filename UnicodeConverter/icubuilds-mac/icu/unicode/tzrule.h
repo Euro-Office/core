@@ -572,8 +572,6 @@ public:
      */
     virtual UBool getPreviousStart(UDate base, int32_t prevRawOffset, int32_t prevDSTSavings,
         UBool inclusive, UDate& result) const;
-
-
 private:
     DateTimeRule* fDateTimeRule;
     int32_t fStartYear;
@@ -778,8 +776,6 @@ public:
      */
     virtual UBool getPreviousStart(UDate base, int32_t prevRawOffset, int32_t prevDSTSavings,
         UBool inclusive, UDate& result) const;
-
-
 private:
     enum { TIMEARRAY_STACK_BUFFER_SIZE = 32 };
     UBool initStartTimes(const UDate source[], int32_t size, UErrorCode& ec);
@@ -817,8 +813,6 @@ public:
      */
     virtual UClassID getDynamicClassID(void) const;
 };
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

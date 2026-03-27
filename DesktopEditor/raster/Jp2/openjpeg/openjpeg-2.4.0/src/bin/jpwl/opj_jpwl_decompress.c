@@ -77,8 +77,6 @@ typedef struct dircnt {
     /** Pointer to the buffer*/
     char **filename;
 } dircnt_t;
-
-
 typedef struct img_folder {
     /** The directory path of the folder containing input images*/
     char *imgdirpath;
@@ -381,16 +379,12 @@ int parse_cmdline_decoder(int argc, char **argv, opj_dparameters_t *parameters,
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'r': {     /* reduce option */
             sscanf(opj_optarg, "%d", &parameters->cp_reduce);
         }
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'l': {     /* layering option */
             sscanf(opj_optarg, "%d", &parameters->cp_layer);
         }
@@ -894,7 +888,3 @@ int main(int argc, char **argv)
     return 0;
 }
 /*end main*/
-
-
-
-

@@ -39,8 +39,6 @@
 
 #include "odfcontext.h"
 #include "odf_document.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
@@ -223,8 +221,6 @@ void table_table::add_child_element( xml::sax * Reader, const std::wstring & Ns,
     else
         CP_NOT_APPLICABLE_ELM();
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 void table_table_column_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
@@ -660,8 +656,6 @@ void table_rows::remove_equals_empty()
 		table_table_row_.pop_back();
 	}
 }
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 // table:rows-no-group
 const wchar_t * table_rows_no_group::ns = L"table";

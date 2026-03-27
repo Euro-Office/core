@@ -22,8 +22,6 @@ extern "C" {
 
 typedef struct _xmlRelaxNG xmlRelaxNG;
 typedef xmlRelaxNG *xmlRelaxNGPtr;
-
-
 /**
  * xmlRelaxNGValidityErrorFunc:
  * @ctx: the validation context

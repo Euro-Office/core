@@ -133,8 +133,6 @@ class docParser(xml.sax.handler.ContentHandler):
                 str = str + c
             if self.in_function == 1:
                 self.function_cond = str
-
-
 def function(name, desc, ret, args, file, cond):
     functions[name] = (desc, ret, args, file, cond)
 
@@ -541,8 +539,6 @@ def buildStubs():
         parser.close()
     except IOError as msg:
         print(file, ":", msg)
-
-
     print("Found %d functions in libxml2-python-api.xml" % (
           len(list(functions.keys())) - n))
     nb_wrap = 0
@@ -783,8 +779,6 @@ def nameFixup(name, classe, type, file):
     elif func[0:3] == 'sAX':
         func = "SAX" + func[3:]
     return func
-
-
 def functionCompare(info1, info2):
     (index1, func1, name1, ret1, args1, file1) = info1
     (index2, func2, name2, ret2, args2, file2) = info2

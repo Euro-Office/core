@@ -53,8 +53,6 @@ struct _xmlChRangeGroup {
  */
 XMLPUBFUN int XMLCALL
 		xmlCharInRange(unsigned int val, const xmlChRangeGroup *group);
-
-
 /**
  * xmlIsBaseChar_ch:
  * @c: char to validate
@@ -97,8 +95,6 @@ XMLPUBVAR const xmlChRangeGroup xmlIsBaseCharGroup;
  */
 #define xmlIsBlankQ(c)		(((c) < 0x100) ? \
 				 xmlIsBlank_ch((c)) : 0)
-
-
 /**
  * xmlIsChar_ch:
  * @c: char to validate

@@ -1054,8 +1054,6 @@ namespace NSBinPptxRW
 			pContentTypes->Registration(L"application/vnd.openxmlformats-officedocument.presentationml.presProps+xml", L"/ppt", L"presProps.xml");
 			pContentTypes->Registration(L"application/vnd.openxmlformats-officedocument.presentationml.viewProps+xml", L"/ppt", L"viewProps.xml");
 			pContentTypes->Registration(L"application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml", L"/ppt", L"tableStyles.xml");
-
-
 			pContentTypes->Registration(L"application/vnd.openxmlformats-package.core-properties+xml", L"/docProps", L"core.xml");
 			pContentTypes->Registration(L"application/vnd.openxmlformats-officedocument.extended-properties+xml", L"/docProps", L"app.xml");
 			if (m_oCustomProperties.IsInit())
@@ -1103,8 +1101,6 @@ namespace NSBinPptxRW
 			}
 
 			pContentTypes->Write(m_strDstFolder);
-
-
 			std::wstring strRELS = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\
 <Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">\
 <Relationship Id=\"rId3\" Type=\"http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties\" Target=\"docProps/core.xml\"/>\

@@ -20,8 +20,6 @@ getReference (xmlDocPtr doc, xmlNodePtr cur) {
 	}
 	return;
 }
-
-
 void
 parseDoc(char *docname) {
 

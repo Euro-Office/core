@@ -51,8 +51,6 @@
 #include <string.h>
 #include "allheaders.h"
 #include "readbarcode.h"
-
-
 static l_int32 barcodeFindFormat(char *barstr);
 static l_int32 barcodeVerifyFormat(char *barstr, l_int32 format,
                                    l_int32 *pvalid, l_int32 *preverse);
@@ -63,13 +61,9 @@ static char *barcodeDecode39(char *barstr, l_int32 debugflag);
 static char *barcodeDecodeCodabar(char *barstr, l_int32 debugflag);
 static char *barcodeDecodeUpca(char *barstr, l_int32 debugflag);
 static char *barcodeDecodeEan13(char *barstr, l_int32 first, l_int32 debugflag);
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_CODES       0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------------*
  *                           Decoding dispatcher                          *
  *------------------------------------------------------------------------*/
@@ -117,8 +111,6 @@ char  *data = NULL;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                      Barcode format determination                      *
  *------------------------------------------------------------------------*/
@@ -149,8 +141,6 @@ l_int32  i, format, valid;
    }
    return L_BF_UNKNOWN;
 }
-
-
 /*!
  *  barcodeFormatIsSupported()
  *
@@ -169,8 +159,6 @@ l_int32  i;
    }
    return 0;
 }
-
-
 /*!
  *  barcodeVerifyFormat()
  *
@@ -315,8 +303,6 @@ l_int32  i, start, len, stop, mid;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------------*
  *                             Code 2 of 5                                *
  *------------------------------------------------------------------------*/
@@ -404,8 +390,6 @@ l_int32  valid, reverse, i, j, len, error, ndigits, start, found;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                       Interleaved Code 2 of 5                          *
  *------------------------------------------------------------------------*/
@@ -492,8 +476,6 @@ l_int32  valid, reverse, i, j, len, error, npairs, start, found;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                                 Code 93                                *
  *------------------------------------------------------------------------*/
@@ -608,8 +590,6 @@ l_int32     *index;
     FREE(index);
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                                 Code 39                                *
  *------------------------------------------------------------------------*/
@@ -687,8 +667,6 @@ l_int32   valid, reverse, i, j, len, error, nsymb, start, found;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                                 Codabar                                *
  *------------------------------------------------------------------------*/
@@ -767,8 +745,6 @@ l_int32   valid, reverse, i, j, len, error, nsymb, start, found;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                               Code UPC-A                               *
  *------------------------------------------------------------------------*/
@@ -876,8 +852,6 @@ l_int32   valid, i, j, len, error, start, found, sum, checkdigit;
 
     return data;
 }
-
-
 /*------------------------------------------------------------------------*
  *                               Code EAN-13                              *
  *------------------------------------------------------------------------*/
@@ -994,5 +968,3 @@ l_int32   valid, i, j, len, error, start, found, sum, checkdigit;
 
     return data;
 }
-
-

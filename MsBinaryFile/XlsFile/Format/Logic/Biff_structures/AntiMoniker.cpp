@@ -34,8 +34,6 @@
 
 namespace OSHARED
 {
-
-
 XLS::BiffStructurePtr AntiMoniker::clone()
 {
 	return XLS::BiffStructurePtr(new AntiMoniker(*this));

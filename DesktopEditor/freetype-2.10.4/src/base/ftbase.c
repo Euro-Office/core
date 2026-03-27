@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define  FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "ftadvanc.c"
@@ -36,6 +34,4 @@
 #include "ftstream.c"
 #include "fttrigon.c"
 #include "ftutil.c"
-
-
 /* END */

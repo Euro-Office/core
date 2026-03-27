@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Footer record in BIFF8
 class Footer: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~Footer();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

@@ -40,8 +40,6 @@ public:
                const bool Value =         true,
                const bool Arguments =     true);
     void EditBoolNamespace(bool bNamespace);
-
-
     std::wstring GetArguments();
     std::wstring GetName();
     std::wstring GetValue();

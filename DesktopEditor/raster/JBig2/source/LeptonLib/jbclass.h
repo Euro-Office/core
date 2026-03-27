@@ -22,8 +22,6 @@
  *       JbClasser
  *       JbData
  */
-
-
     /* The JbClasser struct holds all the data accumulated during the
      * classification process that can be used for a compressed
      * jbig2-type representation of a set of images.  This is created
@@ -70,8 +68,6 @@ struct JbClasser
     struct Pta      *ptall;        /* similar to ptaul, but for LL corners   */
 };
 typedef struct JbClasser  JBCLASSER;
-
-
     /* The JbData struct holds all the data required for
      * the compressed jbig-type representation of a set of images.
      * The data can be written to file, read back, and used
@@ -98,8 +94,6 @@ struct JbData
                                     /* component                             */
 };
 typedef struct JbData  JBDATA;
-
-
     /* Classifier methods */
 enum {
    JB_RANKHAUS = 0,
@@ -117,6 +111,4 @@ enum {
      * in which the jbig2-like compressed data is stored.  */
 #define   JB_TEMPLATE_EXT      ".templates.png"
 #define   JB_DATA_EXT          ".data"
-
-
 #endif  /* LEPTONICA_JBCLASS_H */

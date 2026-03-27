@@ -27,8 +27,6 @@
 #include "psd_config.h"
 #include "psd_system.h"
 #include "psd_stream.h"
-
-
 enum {
 	PSD_FILE_HEADER,
 	PSD_COLOR_MODE_DATA,

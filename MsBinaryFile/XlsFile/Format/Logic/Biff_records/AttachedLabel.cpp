@@ -39,19 +39,13 @@ AttachedLabel::AttachedLabel()
 {
 	is_area = false;
 }
-
-
 AttachedLabel::~AttachedLabel()
 {
 }
-
-
 BaseObjectPtr AttachedLabel::clone()
 {
 	return BaseObjectPtr(new AttachedLabel(*this));
 }
-
-
 void AttachedLabel::readFields(CFRecord& record)
 {
 	unsigned short flags;

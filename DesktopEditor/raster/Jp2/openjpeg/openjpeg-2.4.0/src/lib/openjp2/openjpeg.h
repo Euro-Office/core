@@ -41,8 +41,6 @@
 */
 #ifndef OPENJPEG_H
 #define OPENJPEG_H
-
-
 /*
 ==========================================================
    Compiler directives
@@ -327,8 +325,6 @@ typedef enum CODEC_FORMAT {
     OPJ_CODEC_JPP  = 3,     /**< JPP-stream (JPEG 2000, JPIP) : to be coded */
     OPJ_CODEC_JPX  = 4      /**< JPX file format (JPEG 2000 Part-2) : to be coded */
 } OPJ_CODEC_FORMAT;
-
-
 /*
 ==========================================================
    event manager typedef definitions
@@ -604,8 +600,6 @@ typedef struct opj_dparameters {
     unsigned int flags;
 
 } opj_dparameters_t;
-
-
 /**
  * JPEG2000 codec V2.
  * */
@@ -720,8 +714,6 @@ typedef struct opj_image {
     /** size of ICC profile */
     OPJ_UINT32 icc_profile_len;
 } opj_image_t;
-
-
 /**
  * Component parameters structure used by the opj_image_create function
  * */
@@ -745,8 +737,6 @@ typedef struct opj_image_comptparm {
     /** signed (1) / unsigned (0) */
     OPJ_UINT32 sgnd;
 } opj_image_cmptparm_t;
-
-
 /*
 ==========================================================
    Information on the JPEG 2000 codestream
@@ -767,8 +757,6 @@ typedef struct opj_packet_info {
     /** packet distorsion */
     double disto;
 } opj_packet_info_t;
-
-
 /* UniPG>> */
 /**
  * Marker structure
@@ -978,8 +966,6 @@ typedef struct opj_codestream_info_v2 {
     opj_tile_info_v2_t *tile_info; /* FIXME not used for the moment */
 
 } opj_codestream_info_v2_t;
-
-
 /**
  * Index structure about a tile part
  */
@@ -1079,13 +1065,9 @@ typedef struct opj_jp2_index {
     OPJ_INT32   not_used;
 
 } opj_jp2_index_t;
-
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 /*
 ==========================================================
    openjpeg version
@@ -1318,8 +1300,6 @@ OPJ_API void OPJ_CALLCONV opj_destroy_codec(opj_codec_t * p_codec);
  */
 OPJ_API OPJ_BOOL OPJ_CALLCONV opj_end_decompress(opj_codec_t *p_codec,
         opj_stream_t *p_stream);
-
-
 /**
  * Set decoding parameters to default values
  * @param parameters Decompression parameters
@@ -1372,8 +1352,6 @@ OPJ_API OPJ_BOOL OPJ_CALLCONV opj_codec_set_threads(opj_codec_t *p_codec,
 OPJ_API OPJ_BOOL OPJ_CALLCONV opj_read_header(opj_stream_t *p_stream,
         opj_codec_t *p_codec,
         opj_image_t **p_image);
-
-
 /** Restrict the number of components to decode.
  *
  * This function should be called after opj_read_header().
@@ -1578,8 +1556,6 @@ OPJ_API void OPJ_CALLCONV opj_set_default_encoder_parameters(
 OPJ_API OPJ_BOOL OPJ_CALLCONV opj_setup_encoder(opj_codec_t *p_codec,
         opj_cparameters_t *parameters,
         opj_image_t *image);
-
-
 /**
  * Specify extra options for the encoder.
  *
@@ -1646,8 +1622,6 @@ Destroy Codestream information after compression or decompression
 */
 OPJ_API void OPJ_CALLCONV opj_destroy_cstr_info(opj_codestream_info_v2_t
         **cstr_info);
-
-
 /**
  * Dump the codec information into the output stream
  *
@@ -1684,8 +1658,6 @@ OPJ_API opj_codestream_index_t * OPJ_CALLCONV opj_get_cstr_index(
 
 OPJ_API void OPJ_CALLCONV opj_destroy_cstr_index(opj_codestream_index_t
         **p_cstr_index);
-
-
 /**
  * Get the JP2 file information from the codec FIXME
  *
@@ -1706,8 +1678,6 @@ OPJ_API opj_jp2_metadata_t* OPJ_CALLCONV opj_get_jp2_metadata(
  *
  */
 OPJ_API opj_jp2_index_t* OPJ_CALLCONV opj_get_jp2_index(opj_codec_t *p_codec);
-
-
 /*
 ==========================================================
    MCT functions
@@ -1742,8 +1712,6 @@ OPJ_API OPJ_BOOL OPJ_CALLCONV opj_has_thread_support(void);
 
 /** Return the number of virtual CPUs */
 OPJ_API int OPJ_CALLCONV opj_get_num_cpus(void);
-
-
 #ifdef __cplusplus
 }
 #endif

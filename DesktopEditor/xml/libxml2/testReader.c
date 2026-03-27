@@ -30,8 +30,6 @@
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
-
-
 #include <libxml/xmlreader.h>
 
 static int debug = 0;

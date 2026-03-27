@@ -1746,8 +1746,6 @@ std::wstring RtfShape::GroupRenderToRtf(RenderParameter oRenderParameter)
 			sResult += L"{\\sp{\\sn fUseShapeAnchor}{\\sv 0}}";
 			sResult += L"{\\sp{\\sn fPseudoInline}{\\sv 1}}";
 		}
-
-		
 		sResult +=  RenderToRtfShapeProperty( oRenderParameter );
 		
 		for (size_t i = 0 ; i < m_aArray.size(); i++)

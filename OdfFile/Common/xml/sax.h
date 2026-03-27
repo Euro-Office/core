@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include <string>
 #include <exception>
 #include <iosfwd>
@@ -103,8 +101,6 @@ public:
     virtual ~sax() = 0;
 
 };
-
-
 inline sax::~sax() {};
 
 sax_ptr create_sax(const wchar_t * FileName);

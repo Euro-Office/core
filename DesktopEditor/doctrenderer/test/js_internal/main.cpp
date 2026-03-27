@@ -60,8 +60,6 @@ public:
 public:
 	JSSmart<CJSContext> m_pContext;
 };
-
-
 TEST_F(CGetPropertyNamesTest, normal_object)
 {
 	std::vector<std::string> result = getObjectProperties("{number: 42, name: 'foo', arr: [1, 'abc', 2, 3], func() { return 'bar'; }}");

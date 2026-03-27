@@ -251,8 +251,6 @@ xmlErrValidWarning(xmlValidCtxtPtr ctxt,
                     (const char *) str3, 0, 0, msg, str1, str2, str3);
 }
 
-
-
 #ifdef LIBXML_REGEXP_ENABLED
 /*
  * If regexp are enabled we can do continuous validation without the
@@ -261,15 +259,11 @@ xmlErrValidWarning(xmlValidCtxtPtr ctxt,
  * Each xmlValidState represent the validation state associated to the
  * set of nodes currently open from the document root to the current element.
  */
-
-
 typedef struct _xmlValidState {
     xmlElementPtr	 elemDecl;	/* pointer to the content model */
     xmlNodePtr           node;		/* pointer to the current node */
     xmlRegExecCtxtPtr    exec;		/* regexp runtime */
 } _xmlValidState;
-
-
 static int
 vstateVPush(xmlValidCtxtPtr ctxt, xmlElementPtr elemDecl, xmlNodePtr node) {
     if ((ctxt->vstateMax == 0) || (ctxt->vstateTab == NULL)) {
@@ -630,8 +624,6 @@ xmlValidStateDebug(xmlValidCtxtPtr ctxt) {
 #endif
 
 /* TODO: use hash table for accesses to elem and attribute definitions */
-
-
 #define CHECK_DTD						\
    if (doc == NULL) return(0);					\
    else if ((doc->intSubset == NULL) &&				\
@@ -1363,8 +1355,6 @@ xmlFreeElement(xmlElementPtr elem) {
 #endif
     xmlFree(elem);
 }
-
-
 /**
  * xmlAddElementDecl:
  * @ctxt:  the validation context
@@ -1903,8 +1893,6 @@ xmlFreeAttribute(xmlAttributePtr attr) {
     }
     xmlFree(attr);
 }
-
-
 /**
  * xmlAddAttributeDecl:
  * @ctxt:  the validation context
@@ -2019,8 +2007,6 @@ xmlAddAttributeDecl(xmlValidCtxtPtr ctxt,
 	xmlFreeEnumeration(tree);
         return(NULL);
     }
-
-
     ret = (xmlAttributePtr) xmlMalloc(sizeof(xmlAttribute));
     if (ret == NULL) {
 	xmlVErrMemory(ctxt, "malloc failed");
@@ -2329,8 +2315,6 @@ xmlFreeNotation(xmlNotationPtr nota) {
 	xmlFree((xmlChar *) nota->SystemID);
     xmlFree(nota);
 }
-
-
 /**
  * xmlAddNotationDecl:
  * @dtd:  pointer to the DTD
@@ -2561,8 +2545,6 @@ xmlFreeID(xmlIDPtr id) {
 	DICT_FREE(id->name)
     xmlFree(id);
 }
-
-
 /**
  * xmlAddID:
  * @ctxt:  the validation context
@@ -4395,8 +4377,6 @@ xmlValidateOneAttribute(xmlValidCtxtPtr ctxt, xmlDocPtr doc,
 					     elem->name, attr->name);
 	}
     }
-
-
     /* Validity Constraint: Attribute Value Type */
     if (attrDecl == NULL) {
 	xmlErrValidNode(ctxt, elem, XML_DTD_UNKNOWN_ATTRIBUTE,
@@ -4575,8 +4555,6 @@ xmlNodePtr elem, const xmlChar *prefix, xmlNsPtr ns, const xmlChar *value) {
 					     elem->name, BAD_CAST "xmlns");
 	}
     }
-
-
     /* Validity Constraint: Attribute Value Type */
     if (attrDecl == NULL) {
 	if (ns->prefix != NULL) {
@@ -4818,8 +4796,6 @@ cont:
 	if (vstateVPush(ctxt, CONT, NODE, DEPTH, OCCURS, ROLLBACK_PARENT) < 0)
 	    return(0);
     }
-
-
     /*
      * Check first if the content matches
      */
@@ -6353,8 +6329,6 @@ xmlValidateRoot(xmlValidCtxtPtr ctxt, xmlDocPtr doc) {
 name_ok:
     return(1);
 }
-
-
 /**
  * xmlValidateElement:
  * @ctxt:  the validation context

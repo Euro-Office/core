@@ -59,8 +59,6 @@ class pptx_content_types_file : public content_types_file
 public:
     pptx_content_types_file();
 };
-
-
 //------------------------------------------------------------------------------
 class slide_content;
 typedef _CP_PTR(slide_content) slide_content_ptr;

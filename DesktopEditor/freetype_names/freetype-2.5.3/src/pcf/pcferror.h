@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is used to define the PCF error enumeration constants.      */
@@ -36,6 +34,4 @@
 #include FT_ERRORS_H
 
 #endif /* __PCFERROR_H__ */
-
-
 /* END */

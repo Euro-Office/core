@@ -42,8 +42,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER */
-
-
 sessionlist_param_t * gene_sessionlist(void)
 {
     sessionlist_param_t *sessionlist;
@@ -131,8 +129,6 @@ OPJ_BOOL delete_session(session_param_t **session,
     if (*session == NULL) {
         return OPJ_FALSE;
     }
-
-
     if (*session == sessionlist->first) {
         sessionlist->first = (*session)->next;
     } else {

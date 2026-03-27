@@ -149,8 +149,6 @@ TIFFVStripSize(TIFF* tif, uint32 nrows)
 		return ((tsize_t) multiply(tif, nrows, TIFFScanlineSize(tif),
 					   "TIFFVStripSize"));
 }
-
-
 /*
  * Compute the # bytes in a raw strip.
  */

@@ -74,7 +74,5 @@ void xlsx_cell_styles::serialize(std::wostream & _Wostream) const
         }
     }
 }
-
-
 }
 }

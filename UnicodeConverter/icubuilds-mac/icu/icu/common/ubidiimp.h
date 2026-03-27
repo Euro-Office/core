@@ -240,8 +240,6 @@ typedef struct InsertPoints {
     UErrorCode errorCode;   /* for eventual memory shortage */
     Point_ICU *points;          /* pointer to array of points */
 } InsertPoints;
-
-
 /* UBiDi structure ----------------------------------------------------------- */
 
 struct UBiDi {

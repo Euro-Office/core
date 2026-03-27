@@ -18,14 +18,10 @@
   test_cos( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
       double    d2;
-
-
       f1 = FT_Cos(i);
       d2 = cos( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
@@ -38,20 +34,14 @@
       }
     }
   }
-
-
   static void
   test_sin( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
       double    d2;
-
-
       f1 = FT_Sin(i);
       d2 = sin( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
@@ -64,20 +54,14 @@
       }
     }
   }
-
-
   static void
   test_tan( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_PI2-0x2000000; i += 0x10000 )
     {
       FT_Fixed  f1, f2;
       double    d2;
-
-
       f1 = FT_Tan(i);
       d2 = tan( i*SPI );
       f2 = (FT_Fixed)(d2*65536.0);
@@ -90,21 +74,15 @@
       }
     }
   }
-
-
   static void
   test_atan2( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Fixed  c2, s2;
       double    l, a, c1, s1;
       int       j;
-
-
       l  = 5.0;
       a  = i*SPI;
 
@@ -125,21 +103,15 @@
       }
     }
   }
-
-
   static void
   test_unit( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Vector  v;
       double     a, c1, s1;
       FT_Fixed   c2, s2;
-
-
       FT_Vector_Unit( &v, i );
       a  = ( i*SPI );
       c1 = cos(a);
@@ -158,20 +130,14 @@
       }
     }
   }
-
-
   static void
   test_length( void )
   {
     int  i;
-
-
     for ( i = 0; i < FT_ANGLE_2PI; i += 0x10000 )
     {
       FT_Vector  v;
       FT_Fixed   l, l2;
-
-
       l   = (FT_Fixed)(500.0*65536.0);
       v.x = (FT_Fixed)( l * cos( i*SPI ) );
       v.y = (FT_Fixed)( l * sin( i*SPI ) );
@@ -185,20 +151,14 @@
       }
     }
   }
-
-
   static void
   test_rotate( void )
   {
     int  rotate;
-
-
     for ( rotate = 0; rotate < FT_ANGLE_2PI; rotate += 0x10000 )
     {
       double  ra, cra, sra;
       int     i;
-
-
       ra  = rotate*SPI;
       cra = cos( ra );
       sra = sin( ra );
@@ -208,8 +168,6 @@
         FT_Fixed   c2, s2, c4, s4;
         FT_Vector  v;
         double     l, a, c1, s1, c3, s3;
-
-
         l  = 500.0;
         a  = i*SPI;
 
@@ -239,8 +197,6 @@
       }
     }
   }
-
-
   int main( void )
   {
     test_cos();

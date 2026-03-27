@@ -29,8 +29,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include "OPJViewer.h"
-
-
 /////////////////////////////////////////////////////////////////////
 // Encoding thread class
 /////////////////////////////////////////////////////////////////////
@@ -133,8 +131,6 @@ void *OPJEncoThread::Entry()
     WriteText(text);
     return NULL;
 }
-
-
 /////////////////////////////////////////////////////////////////////
 // Decoding thread class
 /////////////////////////////////////////////////////////////////////
@@ -362,14 +358,10 @@ void *OPJParseThread::Entry()
     LoadFile(m_tree->m_fname);
     text.Printf(wxT("Parse thread 0x%lx finished."), GetId());
     WriteText(text);
-
-
     //wxLogMessage(wxT("Entering\n")); //test wxLog thread safeness
 
     //wxBusyCursor wait;
     //wxBusyInfo wait(wxT("Decoding image ..."));
-
-
     /*for ( m_count = 0; m_count < m_countnum; m_count++ )
     {
         // check if we were asked to exit
@@ -389,8 +381,6 @@ void *OPJParseThread::Entry()
 
     return NULL;
 }
-
-
 ///////////////////////////////////////////
 // Parsing hread and related
 ///////////////////////////////////////////
@@ -771,8 +761,6 @@ OPJParseThread *OPJMarkerTree::CreateParseThread(wxTreeItemId parentid,
 
     return pthread;
 }
-
-
 /*// avoid repetition
 #define TREE_EVENT_HANDLER(name)                                 \
 void OPJMarkerTree::name(wxTreeEvent& event)                        \

@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  arithlow.c
  *
@@ -37,15 +35,11 @@
  *      Absolute value of difference, component-wise.
  *            void       absDifferenceLow()
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------*
  *        One image grayscale arithmetic (8, 16 or 32 bpp)          *
  *------------------------------------------------------------------*/
@@ -104,8 +98,6 @@ l_uint32  *line;
     }
     return;
 }
-
-
 /*!
  *  multConstantGrayLow()
  */
@@ -149,8 +141,6 @@ l_uint32  *line;
     }
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *        Two image grayscale arithmetic (8, 16 or 32 bpp)          *
  *------------------------------------------------------------------*/
@@ -168,8 +158,6 @@ addGrayLow(l_uint32  *datad,
 {
 l_int32    i, j, val, sum;
 l_uint32  *lines, *lined;
-
-
     for (i = 0; i < h; i++) {
         lined = datad + i * wpld;
         lines = datas + i * wpls;
@@ -196,8 +184,6 @@ l_uint32  *lines, *lined;
 
     return;
 }
-
-
 /*!
  *  subtractGrayLow()
  */
@@ -239,8 +225,6 @@ l_uint32  *lines, *lined;
 
     return;
 }
-
-
 /*-------------------------------------------------------------*
  *                  Grayscale threshold operation              *
  *-------------------------------------------------------------*/
@@ -310,8 +294,6 @@ l_uint32  *lined;
     return;
 }
 
-
-
 /*-------------------------------------------------------------*
  *          Image accumulator arithmetic operations            *
  *-------------------------------------------------------------*/
@@ -369,8 +351,6 @@ l_uint32  *lines, *lined;
     }
     return;
 }
-   
-
 void
 finalAccumulateThreshLow(l_uint32 *datad,
                          l_int32 w,
@@ -397,8 +377,6 @@ l_uint32  *lines, *lined;
         }
     }
 }
-
-
 /*!
  *  accumulateLow()
  */
@@ -476,8 +454,6 @@ l_uint32  *lines, *lined;
     }
     return;
 }
-   
-
 /*!
  *  multConstAccumulateLow()
  */
@@ -504,8 +480,6 @@ l_uint32  *line;
     }
     return;
 }
-   
-
 /*-----------------------------------------------------------------------*
  *              Absolute value of difference, component-wise             *
  *-----------------------------------------------------------------------*/

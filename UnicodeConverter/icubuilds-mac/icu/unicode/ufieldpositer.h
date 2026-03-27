@@ -62,8 +62,6 @@ ufieldpositer_open(UErrorCode* status);
  */
 U_DRAFT void U_EXPORT2
 ufieldpositer_close(UFieldPositionIterator *fpositer);
-
-
 #if U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN

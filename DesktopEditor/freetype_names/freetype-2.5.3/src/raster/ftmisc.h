@@ -15,8 +15,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /***************************************************/
   /*                                                 */
   /* This file is *not* portable!  You have to adapt */
@@ -26,8 +24,6 @@
 
 #ifndef __FTMISC_H__
 #define __FTMISC_H__
-
-
   /* memset */
 #include FT_CONFIG_STANDARD_LIBRARY_H
 
@@ -35,8 +31,6 @@
 #define FT_END_HEADER
 
 #define FT_LOCAL_DEF( x )   static x
-
-
   /* from include/freetype2/fttypes.h */
 
   typedef unsigned char  FT_Byte;
@@ -52,8 +46,6 @@
             ( (FT_ULong)_x2 << 16 ) |     \
             ( (FT_ULong)_x3 <<  8 ) |     \
               (FT_ULong)_x4         )
-
-
   /* from include/freetype2/ftsystem.h */
 
   typedef struct FT_MemoryRec_*  FT_Memory;
@@ -78,8 +70,6 @@
     FT_Realloc_Func  realloc;
 
   } FT_MemoryRec;
-
-
   /* from src/ftcalc.c */
 
 #if ( defined _WIN32 || defined _WIN64 )
@@ -93,8 +83,6 @@
   typedef int64_t  FT_Int64;
 
 #endif
-
-
   static FT_Long
   FT_MulDiv( FT_Long  a,
              FT_Long  b,
@@ -102,8 +90,6 @@
   {
     FT_Int   s;
     FT_Long  d;
-
-
     s = 1;
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
@@ -114,8 +100,6 @@
 
     return ( s > 0 ) ? d : -d;
   }
-
-
   static FT_Long
   FT_MulDiv_No_Round( FT_Long  a,
                       FT_Long  b,
@@ -123,8 +107,6 @@
   {
     FT_Int   s;
     FT_Long  d;
-
-
     s = 1;
     if ( a < 0 ) { a = -a; s = -1; }
     if ( b < 0 ) { b = -b; s = -s; }
@@ -137,6 +119,4 @@
   }
 
 #endif /* __FTMISC_H__ */
-
-
 /* END */

@@ -22,8 +22,6 @@ U_NAMESPACE_BEGIN
     static const uint8_t kRuleSet_name_start_char = 130;
     static const uint8_t kRuleSet_rule_char = 131;
     static const uint8_t kRuleSet_white_space = 132;
-
-
 enum RBBI_RuleParseAction {
     doCheckVarDef,
     doDotAny,

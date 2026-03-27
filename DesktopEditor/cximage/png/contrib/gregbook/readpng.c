@@ -14,8 +14,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -33,8 +31,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -64,16 +60,12 @@
 #ifndef png_jmpbuf
 #  define png_jmpbuf(png_ptr)   ((png_ptr)->jmpbuf)
 #endif
-
-
 static png_structp png_ptr = NULL;
 static png_infop info_ptr = NULL;
 
 png_uint_32  width, height;
 int  bit_depth, color_type;
 uch  *image_data = NULL;
-
-
 void readpng_version_info(void)
 {
     fprintf(stderr, "   Compiled with libpng %s; using libpng %s.\n",
@@ -81,23 +73,17 @@ void readpng_version_info(void)
     fprintf(stderr, "   Compiled with zlib %s; using zlib %s.\n",
       ZLIB_VERSION, zlib_version);
 }
-
-
 /* return value = 0 for success, 1 for bad sig, 2 for bad IHDR, 4 for no mem */
 
 int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
 {
     uch sig[8];
-
-
     /* first do a quick check that the file really is a PNG image; could
      * have used slightly more general png_sig_cmp() function instead */
 
     fread(sig, 1, 8, infile);
     if (png_sig_cmp(sig, 0, 8))
         return 1;   /* bad signature */
-
-
     /* could pass pointers to user-defined error handlers instead of NULLs: */
 
     png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
@@ -109,13 +95,9 @@ int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
         png_destroy_read_struct(&png_ptr, NULL, NULL);
         return 4;   /* out of memory */
     }
-
-
     /* we could create a second info struct here (end_info), but it's only
      * useful if we want to keep pre- and post-IDAT chunk info separated
      * (mainly for PNG-aware image editors and converters) */
-
-
     /* setjmp() must be called in every function that calls a PNG-reading
      * libpng function */
 
@@ -123,14 +105,10 @@ int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         return 2;
     }
-
-
     png_init_io(png_ptr, infile);
     png_set_sig_bytes(png_ptr, 8);  /* we already read the 8 signature bytes */
 
     png_read_info(png_ptr, info_ptr);  /* read all PNG info up to image data */
-
-
     /* alternatively, could make separate calls to png_get_image_width(),
      * etc., but want bit_depth and color_type for later [don't care about
      * compression_type and filter_type => NULLs] */
@@ -139,24 +117,16 @@ int readpng_init(FILE *infile, ulg *pWidth, ulg *pHeight)
       NULL, NULL, NULL);
     *pWidth = width;
     *pHeight = height;
-
-
     /* OK, that's all we need for now; return happy */
 
     return 0;
 }
-
-
-
-
 /* returns 0 if succeeds, 1 if fails due to no bKGD chunk, 2 if libpng error;
  * scales values to 8-bit if necessary */
 
 int readpng_get_bgcolor(uch *red, uch *green, uch *blue)
 {
     png_color_16p pBackground;
-
-
     /* setjmp() must be called in every function that calls a PNG-reading
      * libpng function */
 
@@ -164,8 +134,6 @@ int readpng_get_bgcolor(uch *red, uch *green, uch *blue)
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         return 2;
     }
-
-
     if (!png_get_valid(png_ptr, info_ptr, PNG_INFO_bKGD))
         return 1;
 
@@ -174,8 +142,6 @@ int readpng_get_bgcolor(uch *red, uch *green, uch *blue)
      * and blue values, regardless of color_type: */
 
     png_get_bKGD(png_ptr, info_ptr, &pBackground);
-
-
     /* however, it always returns the raw bKGD data, regardless of any
      * bit-depth transformations, so check depth and adjust if necessary */
 
@@ -198,10 +164,6 @@ int readpng_get_bgcolor(uch *red, uch *green, uch *blue)
 
     return 0;
 }
-
-
-
-
 /* display_exponent == LUT_exponent * CRT_exponent */
 
 uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
@@ -209,8 +171,6 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
     double  gamma;
     png_uint_32  i, rowbytes;
     png_bytepp  row_pointers = NULL;
-
-
     /* setjmp() must be called in every function that calls a PNG-reading
      * libpng function */
 
@@ -222,8 +182,6 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
         png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
         return NULL;
     }
-
-
     /* expand palette images to RGB, low-bit-depth grayscale images to 8 bits,
      * transparency chunks to full alpha channel; strip 16-bit-per-sample
      * images to 8 bits per sample; and convert grayscale to RGB[A] */
@@ -245,16 +203,12 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
     if (color_type == PNG_COLOR_TYPE_GRAY ||
         color_type == PNG_COLOR_TYPE_GRAY_ALPHA)
         png_set_gray_to_rgb(png_ptr);
-
-
     /* unlike the example in the libpng documentation, we have *no* idea where
      * this file may have come from--so if it doesn't have a file gamma, don't
      * do any correction ("do no harm") */
 
     if (png_get_gAMA(png_ptr, info_ptr, &gamma))
         png_set_gamma(png_ptr, display_exponent, gamma);
-
-
     /* all transformations have been registered; now update info_ptr data,
      * get rowbytes and channels, and allocate image memory */
 
@@ -276,19 +230,13 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
 
     Trace((stderr, "readpng_get_image:  channels = %d, rowbytes = %ld, height = %ld\n",
         *pChannels, rowbytes, height));
-
-
     /* set the individual row_pointers to point at the correct offsets */
 
     for (i = 0;  i < height;  ++i)
         row_pointers[i] = image_data + i*rowbytes;
-
-
     /* now we can go ahead and just read the whole image */
 
     png_read_image(png_ptr, row_pointers);
-
-
     /* and we're done!  (png_read_end() can be omitted if no processing of
      * post-IDAT text/time/etc. is desired) */
 
@@ -299,8 +247,6 @@ uch *readpng_get_image(double display_exponent, int *pChannels, ulg *pRowbytes)
 
     return image_data;
 }
-
-
 void readpng_cleanup(int free_image_data)
 {
     if (free_image_data && image_data) {

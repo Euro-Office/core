@@ -134,8 +134,6 @@ u_vformatMessageWithError(  const char  *locale,
     umsg_close(fmt);
     return retVal;
 }
-
-
 // For parse, do the reverse of format:
 //  1. Call through to the C++ APIs
 //  2. Just assume the user passed in enough arguments.
@@ -218,8 +216,6 @@ u_vparseMessageWithError(const char  *locale,
 //  Message format C API
 //
 /////////////////////////////////////////////////////////////////////////////////
-
-
 U_CAPI UMessageFormat* U_EXPORT2
 umsg_open(  const UChar     *pattern,
             int32_t         patternLength,
@@ -348,8 +344,6 @@ umsg_toPattern(const UMessageFormat *fmt,
         *status=U_ILLEGAL_ARGUMENT_ERROR;
         return -1;
     }
-
-
     UnicodeString res;
     if(!(result==NULL && resultLength==0)) {
         // NULL destination for pure preflighting: empty dummy string
@@ -372,8 +366,6 @@ umsg_format(    const UMessageFormat *fmt,
     //argument checking defered to last method call umsg_vformat which
     //saves time when arguments are valid and we dont care when arguments are not
     //since we return an error anyway
-
-    
     // start vararg processing
     va_start(ap, status);
 

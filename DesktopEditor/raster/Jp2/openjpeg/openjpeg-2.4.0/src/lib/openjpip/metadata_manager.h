@@ -55,16 +55,12 @@ typedef struct metadatalist_param {
     metadata_param_t *first; /**< first metadata-bin pointer of the list*/
     metadata_param_t *last;  /**< last metadata-bin pointer of the list*/
 } metadatalist_param_t;
-
-
 /**
  * generate a metadata list
  *
  * @return pointer to the generated metadata list
  */
 metadatalist_param_t * gene_metadatalist(void);
-
-
 /**
  * construct metadata-bin list of JP2 file
  *
@@ -72,16 +68,12 @@ metadatalist_param_t * gene_metadatalist(void);
  * @return            pointer to the generated metadata-bin list
  */
 metadatalist_param_t * const_metadatalist(int fd);
-
-
 /**
  * delete metadata list
  *
  * @param[in,out] list address of the metadata list pointer
  */
 void delete_metadatalist(metadatalist_param_t **list);
-
-
 /**
  * generate a metadata bin
  *
@@ -121,8 +113,6 @@ void print_metadata(metadata_param_t *metadata);
  * @param[in] list metadata list pointer
  */
 void print_allmetadata(metadatalist_param_t *list);
-
-
 /**
  * search a metadata bin by index
  *
@@ -131,8 +121,6 @@ void print_allmetadata(metadatalist_param_t *list);
  * @return         found metadata-bin pointer
  */
 metadata_param_t * search_metadata(Byte8_t idx, metadatalist_param_t *list);
-
-
 /**
  * search a metadata index by box-type
  *
@@ -141,8 +129,6 @@ metadata_param_t * search_metadata(Byte8_t idx, metadatalist_param_t *list);
  * @return            found metadata-bin index, if not found, -1
  */
 Byte8_t search_metadataidx(char boxtype[4], metadatalist_param_t *list);
-
-
 /**
  * insert a metadata-bin into list
  *

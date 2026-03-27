@@ -69,16 +69,12 @@
 
 #include <math.h>
 #include <stdio.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 /****************************************************************************
 ***************************** GMapArea definition ***************************
 ****************************************************************************/
@@ -423,8 +419,6 @@ GMapArea::unmap(GRectMapper &mapper)
     clear_bounds();
 }
 */
-
-
 /// Virtual function generating a list of defining coordinates
 /// (default are the opposite corners of the enclosing rectangle)
 void GMapArea::get_coords( GList<int> & CoordList ) const
@@ -434,8 +428,6 @@ void GMapArea::get_coords( GList<int> & CoordList ) const
   CoordList.append( get_xmax() );
   CoordList.append( get_ymax() );
 }
-
-
 /****************************************************************************
 **************************** GMapRect definition ****************************
 ****************************************************************************/
@@ -823,8 +815,6 @@ GMapPoly::unmap(GRectMapper &mapper)
     clear_bounds();
 }
 
-
-
 /****************************************************************************
 **************************** GMapOval definition ****************************
 ****************************************************************************/
@@ -1109,8 +1099,6 @@ GMapPoly::get_xmltag(const int height) const
   }
   return retval;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

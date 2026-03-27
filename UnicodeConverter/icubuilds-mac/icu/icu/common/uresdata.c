@@ -379,8 +379,6 @@ res_getBinary(const ResourceData *pResData, Resource res, int32_t *pLength) {
     }
     return p;
 }
-
-
 U_CAPI const int32_t * U_EXPORT2
 res_getIntVector(const ResourceData *pResData, Resource res, int32_t *pLength) {
     const int32_t *p;
@@ -931,8 +929,6 @@ ures_swapResource(const UDataSwapper *ds,
             /* resources */
             {
                 Resource *r;
-
-
                 if(p!=q) {
                     r=q;
                 } else {

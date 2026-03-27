@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
@@ -58,8 +56,6 @@
 #include <freetype/ftmm.h>
 #include <freetype/internal/services/svmm.h>
 #endif
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -68,8 +64,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  sfdriver
-
-
   /*
    * SFNT TABLE SERVICE
    *
@@ -80,8 +74,6 @@
                   FT_Sfnt_Tag  tag )
   {
     void*  table;
-
-
     switch ( tag )
     {
     case FT_SFNT_HEAD:
@@ -118,8 +110,6 @@
 
     return table;
   }
-
-
   static FT_Error
   sfnt_table_info( TT_Face    face,
                    FT_UInt    idx,
@@ -144,8 +134,6 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_DEFINE_SERVICE_SFNT_TABLEREC(
     sfnt_service_sfnt_table,
 
@@ -153,8 +141,6 @@
     (FT_SFNT_TableGetFunc) get_sfnt_table,       /* get_table  */
     (FT_SFNT_TableInfoFunc)sfnt_table_info       /* table_info */
   )
-
-
 #ifdef TT_CONFIG_OPTION_POSTSCRIPT_NAMES
 
   /*
@@ -170,16 +156,12 @@
   {
     FT_String*  gname;
     FT_Error    error;
-
-
     error = tt_face_get_ps_name( (TT_Face)face, glyph_index, &gname );
     if ( !error )
       FT_STRCPYN( buffer, gname, buffer_max );
 
     return error;
   }
-
-
   static FT_UInt
   sfnt_get_name_index( FT_Face           face,
                        const FT_String*  glyph_name )
@@ -187,8 +169,6 @@
     TT_Face  ttface = (TT_Face)face;
 
     FT_UInt  i, max_gid = FT_UINT_MAX;
-
-
     if ( face->num_glyphs < 0 )
       return 0;
     else if ( (FT_ULong)face->num_glyphs < FT_UINT_MAX )
@@ -201,8 +181,6 @@
     {
       FT_String*  gname;
       FT_Error    error = tt_face_get_ps_name( ttface, i, &gname );
-
-
       if ( error )
         continue;
 
@@ -212,8 +190,6 @@
 
     return 0;
   }
-
-
   FT_DEFINE_SERVICE_GLYPHDICTREC(
     sfnt_service_glyph_dict,
 
@@ -222,8 +198,6 @@
   )
 
 #endif /* TT_CONFIG_OPTION_POSTSCRIPT_NAMES */
-
-
   /*
    * POSTSCRIPT NAME SERVICE
    *
@@ -242,14 +216,10 @@
     0xFF, 0xFF, /* 0x60: 1 1 1 1  1 1 1 1  1 1 1 1  1 1 1 1 */
     0xFF, 0x57  /* 0x70: 1 1 1 1  1 1 1 1  0 1 0 1  0 1 1 1 */
   };
-
-
   static int
   sfnt_is_postscript( int  c )
   {
     unsigned int  cc;
-
-
     if ( c < 0 || c >= 0x80 )
       return 0;
 
@@ -257,8 +227,6 @@
 
     return sfnt_ps_map[cc >> 3] & ( 1 << ( cc & 0x07 ) );
   }
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
   /* Only ASCII letters and digits are taken for a variation font */
@@ -271,14 +239,10 @@
   {
     return ft_isalnum( c );
   }
-
-
   /* the implementation of MurmurHash3 is taken and adapted from          */
   /* https://github.com/aappleby/smhasher/blob/master/src/MurmurHash3.cpp */
 
 #define ROTL32( x, r )  ( x << r ) | ( x >> ( 32 - r ) )
-
-
   static FT_UInt32
   fmix32( FT_UInt32  h )
   {
@@ -290,8 +254,6 @@
 
     return h;
   }
-
-
   static void
   murmur_hash_3_128( const void*         key,
                      const unsigned int  len,
@@ -314,16 +276,12 @@
     const FT_UInt32*  blocks = (const FT_UInt32*)( data + nblocks * 16 );
 
     int  i;
-
-
     for( i = -nblocks; i; i++ )
     {
       FT_UInt32  k1 = blocks[i * 4 + 0];
       FT_UInt32  k2 = blocks[i * 4 + 1];
       FT_UInt32  k3 = blocks[i * 4 + 2];
       FT_UInt32  k4 = blocks[i * 4 + 3];
-
-
       k1 *= c1;
       k1  = ROTL32( k1, 15 );
       k1 *= c2;
@@ -368,8 +326,6 @@
       FT_UInt32  k2 = 0;
       FT_UInt32  k3 = 0;
       FT_UInt32  k4 = 0;
-
-
       switch ( len & 15 )
       {
       case 15:
@@ -469,14 +425,8 @@
     ((FT_UInt32*)out)[2] = h3;
     ((FT_UInt32*)out)[3] = h4;
   }
-
-
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-
   typedef int (*char_type_func)( int  c );
-
-
   /* Handling of PID/EID 3/0 and 3/1 is the same. */
 #define IS_WIN( n )  ( (n)->platformID == 3                             && \
                        ( (n)->encodingID == 1 || (n)->encodingID == 0 ) )
@@ -499,8 +449,6 @@
     FT_UInt     len;
 
     FT_UNUSED( error );
-
-
     if ( FT_ALLOC( result, entry->stringLength / 2 + 1 ) )
       return NULL;
 
@@ -541,8 +489,6 @@
 
     return NULL;
   }
-
-
   static char*
   get_apple_string( FT_Memory       memory,
                     FT_Stream       stream,
@@ -558,8 +504,6 @@
     FT_UInt     len;
 
     FT_UNUSED( error );
-
-
     if ( FT_ALLOC( result, entry->stringLength + 1 ) )
       return NULL;
 
@@ -600,8 +544,6 @@
 
     return NULL;
   }
-
-
   static FT_Bool
   sfnt_get_name_id( TT_Face    face,
                     FT_UShort  id,
@@ -609,16 +551,12 @@
                     FT_Int    *apple )
   {
     FT_Int  n;
-
-
     *win   = -1;
     *apple = -1;
 
     for ( n = 0; n < face->num_names; n++ )
     {
       TT_Name  name = face->name_table.names + n;
-
-
       if ( name->nameID == id && name->stringLength > 0 )
       {
         if ( IS_WIN( name ) && ( name->languageID == 0x409 || *win == -1 ) )
@@ -631,8 +569,6 @@
 
     return ( *win >= 0 ) || ( *apple >= 0 );
   }
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
   /*
@@ -650,12 +586,8 @@
       bytes for the axis tag.
    */
 #define MAX_VALUE_DESCRIPTOR_LEN  ( 1 + 5 + 1 + 5 + 1 + 4 )
-
-
   /* the maximum length of PostScript font names */
 #define MAX_PS_NAME_LEN  127
-
-
   /*
    * Find the shortest decimal representation of a 16.16 fixed point
    * number.  The function fills `buf' with the result, returning a pointer
@@ -674,8 +606,6 @@
     FT_Int  frac_part;
 
     FT_Int  i;
-
-
     p = buf;
 
     if ( fixed == 0 )
@@ -770,15 +700,11 @@
 
     return p + 1;
   }
-
-
   static const char  hexdigits[16] =
   {
     '0', '1', '2', '3', '4', '5', '6', '7',
     '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'
   };
-
-
   static const char*
   sfnt_get_var_ps_name( TT_Face  face )
   {
@@ -796,13 +722,9 @@
 
     char*  result = NULL;
     char*  p;
-
-
     if ( !face->var_postscript_prefix )
     {
       FT_UInt  len;
-
-
       /* check whether we have a Variations PostScript Name Prefix */
       found = sfnt_get_name_id( face,
                                 TT_NAME_ID_VARIATIONS_PREFIX,
@@ -892,8 +814,6 @@
       FT_UInt  psid     = mm_var->namedstyle[instance].psid;
 
       char*  ps_name = NULL;
-
-
       /* try first to load the name string with index `postScriptNameID' */
       if ( psid == 6                      ||
            ( psid > 255 && psid < 32768 ) )
@@ -913,8 +833,6 @@
 
         char*  subfamily_name;
         char*  s;
-
-
         (void)sfnt->get_name( face, (FT_UShort)strid, &subfamily_name );
 
         if ( !subfamily_name )
@@ -952,8 +870,6 @@
     else
     {
       FT_Var_Axis*  axis;
-
-
     construct_instance_name:
       axis = mm_var->axis;
 
@@ -970,8 +886,6 @@
       for ( i = 0; i < num_coords; i++, coords++, axis++ )
       {
         char  t;
-
-
         /* omit axis value descriptor if it is identical */
         /* to the default axis value                     */
         if ( *coords == axis->def )
@@ -1005,8 +919,6 @@
 
       FT_UInt32   hash[4];
       FT_UInt32*  h;
-
-
       murmur_hash_3_128( result, p - result, seed, hash );
 
       p = result + face->var_postscript_prefix_len;
@@ -1024,8 +936,6 @@
       for ( i = 0; i < 4; i++, h-- )
       {
         FT_UInt32  v = *h;
-
-
         for ( j = 0; j < 8; j++ )
         {
           *p--   = hexdigits[v & 0xF];
@@ -1038,15 +948,11 @@
   }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-
   static const char*
   sfnt_get_ps_name( TT_Face  face )
   {
     FT_Int       found, win, apple;
     const char*  result = NULL;
-
-
     if ( face->postscript_name )
       return face->postscript_name;
 
@@ -1084,15 +990,11 @@
 
     return result;
   }
-
-
   FT_DEFINE_SERVICE_PSFONTNAMEREC(
     sfnt_service_ps_name,
 
     (FT_PsName_GetFunc)sfnt_get_ps_name       /* get_ps_font_name */
   )
-
-
   /*
    * TT CMAP INFO
    */
@@ -1101,8 +1003,6 @@
 
     (TT_CMap_Info_GetFunc)tt_get_cmap_info    /* get_cmap_info */
   )
-
-
 #ifdef TT_CONFIG_OPTION_BDF
 
   static FT_Error
@@ -1112,8 +1012,6 @@
   {
     BDF_PropertyRec  encoding, registry;
     FT_Error         error;
-
-
     /* XXX: I don't know whether this is correct, since
      *      tt_face_find_bdf_prop only returns something correct if we have
      *      previously selected a size that is listed in the BDF table.
@@ -1139,19 +1037,13 @@
 
     return error;
   }
-
-
   FT_DEFINE_SERVICE_BDFRec(
     sfnt_service_bdf,
 
     (FT_BDF_GetCharsetIdFunc)sfnt_get_charset_id,     /* get_charset_id */
     (FT_BDF_GetPropertyFunc) tt_face_find_bdf_prop    /* get_property   */
   )
-
-
 #endif /* TT_CONFIG_OPTION_BDF */
-
-
   /*
    * SERVICE LIST
    */
@@ -1189,8 +1081,6 @@
     FT_SERVICE_ID_POSTSCRIPT_FONT_NAME, &sfnt_service_ps_name,
     FT_SERVICE_ID_TT_CMAP,              &tt_service_get_cmap_info )
 #endif
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   sfnt_get_interface( FT_Module    module,
                       const char*  module_interface )
@@ -1199,8 +1089,6 @@
 
     return ft_service_list_lookup( sfnt_services, module_interface );
   }
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 #define PUT_EMBEDDED_BITMAPS( a )  a
 #else
@@ -1295,8 +1183,6 @@
     tt_face_get_name,       /* TT_Get_Name_Func        get_name        */
     sfnt_get_name_id        /* TT_Get_Name_ID_Func     get_name_id     */
   )
-
-
   FT_DEFINE_MODULE(
     sfnt_module_class,
 
@@ -1313,6 +1199,4 @@
     (FT_Module_Destructor) NULL,               /* module_done   */
     (FT_Module_Requester)  sfnt_get_interface  /* get_interface */
   )
-
-
 /* END */

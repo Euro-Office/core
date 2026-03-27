@@ -39,8 +39,6 @@
 
 namespace cpdoccore { 
 namespace odf_reader {
-
-    
 office_element_creator * office_element_creator::instance_ = NULL;
 
 office_element_creator::office_element_creator()
@@ -70,8 +68,6 @@ office_element_ptr office_element_creator::create(const std::wstring & ns, const
         return office_element_ptr();
     }
 }
-
-
 
 office_element_creator * office_element_creator::get() 
 {

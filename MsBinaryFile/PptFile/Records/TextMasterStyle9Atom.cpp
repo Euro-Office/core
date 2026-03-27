@@ -37,8 +37,6 @@ void CRecordTextMasterStyle9Atom::ReadFromStream(SRecordHeader &oHeader, POLE::S
 {
     m_oHeader = oHeader;
     LONG lPos; StreamUtils::StreamPosition(lPos, pStream);
-
-
     m_cLevels = StreamUtils::ReadWORD(pStream);
     if (m_cLevels > 0)
     {

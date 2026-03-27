@@ -34,8 +34,6 @@
 
 #include "openjpeg.h"
 #include "format_defs.h"
-
-
 /* -------------------------------------------------------------------------- */
 #define JP2_RFC3745_MAGIC "\x00\x00\x00\x0c\x6a\x50\x20\x20\x0d\x0a\x87\x0a"
 #define JP2_MAGIC "\x0d\x0a\x87\x0a"
@@ -69,8 +67,6 @@ static int infile_format(const char *fname)
         return -1;
     }
 }
-
-
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -117,8 +113,6 @@ static opj_codec_t* create_codec_and_stream(const char* input_file,
 
     /* */
     l_param.decod_format = infile_format(input_file);
-
-
     switch (l_param.decod_format) {
     case J2K_CFMT: { /* JPEG-2000 codestream */
         /* Get a decoder handle */
@@ -153,8 +147,6 @@ static opj_codec_t* create_codec_and_stream(const char* input_file,
     *pOutStream = l_stream;
     return l_codec;
 }
-
-
 opj_image_t* decode(
     OPJ_BOOL quiet,
     const char* input_file,
@@ -235,8 +227,6 @@ opj_image_t* decode(
         opj_image_destroy(l_image);
         return NULL;
     }
-
-
     opj_stream_destroy(l_stream);
     opj_destroy_codec(l_codec);
     return l_image;
@@ -368,8 +358,6 @@ int decode_by_strip(OPJ_BOOL quiet,
         opj_image_destroy(l_image);
         return 1;
     }
-
-
     opj_stream_destroy(l_stream);
     opj_destroy_codec(l_codec);
     opj_image_destroy(l_image);

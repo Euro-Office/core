@@ -25,10 +25,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
-
-
 static char text[] = 
 "Anti-Grain Geometry is designed as a set of loosely coupled "
 "algorithms and class templates united with a common idea, "
@@ -36,10 +32,6 @@ static char text[] =
 "the template based design allows you to replace any part of "
 "the library without the necessity to modify a single byte in "
 "the existing code. ";
-
-
-
-
 class the_application : public agg::platform_support
 {
 public:
@@ -88,8 +80,6 @@ public:
         m_poly1.close(false);
         m_poly2.close(false);
     }
-
-
     virtual void on_init()
     {
         m_poly1.xn(0) =  10 + 50;
@@ -118,10 +108,6 @@ public:
         m_poly2.xn(5) = -10 + 550;
         m_poly2.yn(5) =  10 + 550;
     }
-
-
-
-
     virtual void on_draw()
     {
         pixfmt pixf(rbuf_window());
@@ -141,15 +127,11 @@ public:
                                                 m_poly2.num_points(), 
                                                 false, 
                                                 false);
-
-
         typedef agg::conv_bspline<agg::simple_polygon_vertex_source> conv_bspline_type;
         conv_bspline_type bspline1(path1);
         conv_bspline_type bspline2(path2);
         bspline1.interpolation_step(1.0 / m_num_points.value());
         bspline2.interpolation_step(1.0 / m_num_points.value());
-
-
         typedef agg::conv_curve<font_manager_type::path_adaptor_type>            conv_font_curve_type;
         typedef agg::conv_segmentator<conv_font_curve_type>                      conv_font_segm_type;
         typedef agg::conv_transform<conv_font_segm_type, agg::trans_double_path> conv_font_trans_type;
@@ -166,8 +148,6 @@ public:
         tcurve.add_paths(bspline1, bspline2);
         fsegm.approximation_scale(3.0);
         fcurves.approximation_scale(5.0);
-
-
 
         m_feng.height(40.0);
         m_feng.hinting(false);
@@ -206,8 +186,6 @@ public:
 
         }
 
-
-
         typedef agg::conv_stroke<conv_bspline_type> conv_stroke_type;
         conv_stroke_type stroke1(bspline1);
         conv_stroke_type stroke2(bspline2);
@@ -221,8 +199,6 @@ public:
 
         ras.add_path(stroke2);
         agg::render_scanlines(ras, sl, r);
-
-
         //--------------------------
         // Render the "poly" tool and controls
         r.color(agg::rgba(0, 0.3, 0.5, 0.2));
@@ -231,8 +207,6 @@ public:
 
         ras.add_path(m_poly2);
         agg::render_scanlines(ras, sl, r);
-
-
         agg::render_ctrl(ras, sl, rb, m_fixed_len);
         agg::render_ctrl(ras, sl, rb, m_preserve_x_scale);
         agg::render_ctrl(ras, sl, rb, m_animate);
@@ -240,8 +214,6 @@ public:
         //--------------------------
 
     }
-
-
 
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -257,8 +229,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -277,8 +247,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_poly1.on_mouse_button_up(x, y))
@@ -290,13 +258,9 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
     }
-
-
     virtual void on_ctrl_change()
     {
         if(m_animate.status() != m_prev_animate)
@@ -321,8 +285,6 @@ public:
             m_prev_animate = m_animate.status();
         }
     }
-
-
     void move_point(double& x, double& y, double& dx, double& dy)
     {
         if(x < 0.0)      { x = 0.0;      dx = -dx; }
@@ -332,8 +294,6 @@ public:
         x += dx;
         y += dy;
     }
-
-
     void normalize_point(unsigned i)
     {
         double d = agg::calc_distance(m_poly1.xn(i), m_poly1.yn(i), 
@@ -345,8 +305,6 @@ public:
             m_poly2.yn(i) = m_poly1.yn(i) + (m_poly2.yn(i) - m_poly1.yn(i)) * 28.28 / d;
         }
     }
-
-
 
     virtual void on_idle()
     {
@@ -361,12 +319,6 @@ public:
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     HDC dc = ::GetDC(0);
@@ -380,13 +332,3 @@ int agg_main(int argc, char* argv[])
     ::ReleaseDC(0, dc);
     return 1;
 }
-
-
-
-
-
-
-
-
-
-

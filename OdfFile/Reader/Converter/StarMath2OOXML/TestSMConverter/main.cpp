@@ -1,8 +1,6 @@
 #include "../conversionmathformula.h"
 #include "gtest/gtest.h"
 
-
-
 TEST(SMConvectorTest, BinOperatorPlus)
 {
 	std::wstring wsBinOperator = L"2 + 3";
@@ -1138,8 +1136,4 @@ TEST(SMConvectorTest,UnarPlusMinus)
 //	std::wstring wsXmlString = L"";
 //	EXPECT_EQ(oConverterStarMath.ConvertStarMathToOOXml(wsString),wsXmlString);
 //}
-
-
-
-
 

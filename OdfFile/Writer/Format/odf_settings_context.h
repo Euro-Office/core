@@ -36,8 +36,6 @@
 #include <map>
 
 #include <CPSharedPtr.h>
-
-
 namespace cpdoccore {
 namespace odf_writer {
 
@@ -93,7 +91,5 @@ private:
 	int								current_view_;
 
 };
-
-
 }
 }

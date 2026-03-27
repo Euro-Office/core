@@ -24,8 +24,6 @@ static ScriptSet *CHINESE;
 static ScriptSet *KOREAN;
 static ScriptSet *CONFUSABLE_WITH_LATIN;
 static UInitOnce gIdentifierInfoInitOnce = U_INITONCE_INITIALIZER;
-
-
 U_CDECL_BEGIN
 static UBool U_CALLCONV
 IdentifierInfo_cleanup(void) {
@@ -65,8 +63,6 @@ IdentifierInfo_init(UErrorCode &status) {
     ucln_i18n_registerCleanup(UCLN_I18N_IDENTIFIER_INFO, IdentifierInfo_cleanup);
 }
 U_CDECL_END
-
-
 IdentifierInfo::IdentifierInfo(UErrorCode &status):
          fIdentifier(NULL), fRequiredScripts(NULL), fScriptSetSet(NULL), 
          fCommonAmongAlternates(NULL), fNumerics(NULL), fIdentifierProfile(NULL) {
@@ -97,8 +93,6 @@ IdentifierInfo::~IdentifierInfo() {
     delete fNumerics;
     delete fIdentifierProfile;
 }
-
-
 IdentifierInfo &IdentifierInfo::clear() {
     fRequiredScripts->resetAll();
     uhash_removeAll(fScriptSetSet);
@@ -106,19 +100,13 @@ IdentifierInfo &IdentifierInfo::clear() {
     fCommonAmongAlternates->resetAll();
     return *this;
 }
-
-
 IdentifierInfo &IdentifierInfo::setIdentifierProfile(const UnicodeSet &identifierProfile) {
     *fIdentifierProfile = identifierProfile;
     return *this;
 }
-
-
 const UnicodeSet &IdentifierInfo::getIdentifierProfile() const {
     return *fIdentifierProfile;
 }
-
-
 IdentifierInfo &IdentifierInfo::setIdentifier(const UnicodeString &identifier, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return *this;
@@ -198,8 +186,6 @@ IdentifierInfo &IdentifierInfo::setIdentifier(const UnicodeString &identifier, U
     }
     return *this;
 }
-
-
 const UnicodeString *IdentifierInfo::getIdentifier() const {
     return fIdentifier;
 }
@@ -211,8 +197,6 @@ const ScriptSet *IdentifierInfo::getScripts() const {
 const UHashtable *IdentifierInfo::getAlternates() const {
     return fScriptSetSet;
 }
-
-
 const UnicodeSet *IdentifierInfo::getNumerics() const {
     return fNumerics;
 }
@@ -262,8 +246,6 @@ int32_t IdentifierInfo::getScriptCount() const {
             (fCommonAmongAlternates->countMembers() == 0 ? uhash_count(fScriptSetSet) : 1);
     return count;
 }
-    
-
 
 UBool IdentifierInfo::containsWithAlternates(const ScriptSet &container, const ScriptSet &containee) const {
     if (!container.contains(containee)) {

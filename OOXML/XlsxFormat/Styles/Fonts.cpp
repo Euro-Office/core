@@ -275,8 +275,6 @@ namespace OOX
 						ptr->bFontScheme = 2;
 				}
 			}
-
-
 			if(m_oRFont.IsInit())
 				ptr->fontName = m_oRFont->m_sVal.get();
 			if(m_oVertAlign.IsInit())

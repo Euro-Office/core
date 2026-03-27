@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of NameCmt record in BIFF8
 class NameCmt: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~NameCmt();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 //-----------------------------
 	XLUnicodeStringNoCch name;

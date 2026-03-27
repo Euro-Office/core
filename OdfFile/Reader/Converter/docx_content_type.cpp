@@ -80,8 +80,6 @@ std::wostream & content_type::xml_to_stream(std::wostream & _Wostream) const
         CP_XML_NODE(L"Types")
         {
             CP_XML_ATTR(L"xmlns", xmlns::types.value);
-
-            
 			for (size_t i = 0; i < default_.size(); i++)
             {
                 default_[i].xml_to_stream(CP_XML_STREAM());

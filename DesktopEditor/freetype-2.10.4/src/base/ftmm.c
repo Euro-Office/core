@@ -14,16 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 
 #include <freetype/ftmm.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svmm.h>
 #include <freetype/internal/services/svmetric.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -32,15 +28,11 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  mm
-
-
   static FT_Error
   ft_face_get_mm_service( FT_Face                   face,
                           FT_Service_MultiMasters  *aservice )
   {
     FT_Error  error;
-
-
     *aservice = NULL;
 
     if ( !face )
@@ -60,15 +52,11 @@
 
     return error;
   }
-
-
   static FT_Error
   ft_face_get_mvar_service( FT_Face                        face,
                             FT_Service_MetricsVariations  *aservice )
   {
     FT_Error  error;
-
-
     *aservice = NULL;
 
     if ( !face )
@@ -88,8 +76,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -98,8 +84,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( !amaster )
@@ -115,8 +99,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -125,8 +107,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( !amaster )
@@ -142,8 +122,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -151,8 +129,6 @@
                   FT_MM_Var*  amaster )
   {
     FT_Memory  memory;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -161,8 +137,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -172,8 +146,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( num_coords && !coords )
@@ -196,8 +168,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -207,8 +177,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( len && !weightvector )
@@ -231,8 +199,6 @@
 
     return error;
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Get_MM_WeightVector( FT_Face    face,
                           FT_UInt*   len,
@@ -240,8 +206,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( len && !weightvector )
@@ -257,8 +221,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -269,8 +231,6 @@
     FT_Error                      error;
     FT_Service_MultiMasters       service_mm   = NULL;
     FT_Service_MetricsVariations  service_mvar = NULL;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( num_coords && !coords )
@@ -305,8 +265,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -316,8 +274,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( !coords )
@@ -333,8 +289,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -345,8 +299,6 @@
     FT_Error                      error;
     FT_Service_MultiMasters       service_mm   = NULL;
     FT_Service_MetricsVariations  service_mvar = NULL;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( num_coords && !coords )
@@ -381,8 +333,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   /* This is exactly the same as the previous function.  It exists for */
@@ -396,8 +346,6 @@
     FT_Error                      error;
     FT_Service_MultiMasters       service_mm   = NULL;
     FT_Service_MetricsVariations  service_mvar = NULL;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( num_coords && !coords )
@@ -432,8 +380,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -443,8 +389,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( !coords )
@@ -460,8 +404,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   /* This is exactly the same as the previous function.  It exists for */
@@ -474,8 +416,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     if ( !coords )
@@ -491,8 +431,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -501,8 +439,6 @@
                          FT_UInt*    flags )
   {
     FT_UShort*  axis_flags;
-
-
     if ( !master || !flags )
       return FT_THROW( Invalid_Argument );
 
@@ -515,8 +451,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -527,8 +461,6 @@
 
     FT_Service_MultiMasters       service_mm   = NULL;
     FT_Service_MetricsVariations  service_mvar = NULL;
-
-
     /* check of `face' delayed to `ft_face_get_mm_service' */
 
     error = ft_face_get_mm_service( face, &service_mm );
@@ -563,6 +495,4 @@
 
     return error;
   }
-
-
 /* END */

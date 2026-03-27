@@ -66,8 +66,6 @@
  * @stable ICU 2.8
  */
 typedef struct UStringPrepProfile UStringPrepProfile;
-
-
 /** 
  * Option to prohibit processing of unassigned code points in the input
  * 
@@ -262,8 +260,6 @@ usprep_prepare(   const UStringPrepProfile* prep,
                   int32_t options,
                   UParseError* parseError,
                   UErrorCode* status );
-
-
 #endif /* #if !UCONFIG_NO_IDNA */
 
 #endif

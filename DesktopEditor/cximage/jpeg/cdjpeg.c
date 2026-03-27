@@ -19,8 +19,6 @@
 /* If you have setmode() but not <io.h>, just delete this line: */
 #include <io.h>			/* to declare setmode() */
 #endif
-
-
 /*
  * Signal catcher to ensure that temporary files are removed before aborting.
  * NB: for Amiga Manx C this is actually a global routine named _abort();
@@ -41,8 +39,6 @@ signal_catcher (int signum)
   }
   exit(EXIT_FAILURE);
 }
-
-
 GLOBAL(void)
 enable_signal_catcher (j_common_ptr cinfo)
 {
@@ -56,8 +52,6 @@ enable_signal_catcher (j_common_ptr cinfo)
 }
 
 #endif
-
-
 /*
  * Optional progress monitor: display a percent-done figure on stderr.
  */
@@ -83,8 +77,6 @@ progress_monitor (j_common_ptr cinfo)
     fflush(stderr);
   }
 }
-
-
 GLOBAL(void)
 start_progress_monitor (j_common_ptr cinfo, cd_progress_ptr progress)
 {
@@ -97,8 +89,6 @@ start_progress_monitor (j_common_ptr cinfo, cd_progress_ptr progress)
     cinfo->progress = &progress->pub;
   }
 }
-
-
 GLOBAL(void)
 end_progress_monitor (j_common_ptr cinfo)
 {
@@ -110,8 +100,6 @@ end_progress_monitor (j_common_ptr cinfo)
 }
 
 #endif
-
-
 /*
  * Case-insensitive matching of possibly-abbreviated keyword switches.
  * keyword is the constant keyword (must be lower case already),
@@ -138,8 +126,6 @@ keymatch (char * arg, const char * keyword, int minchars)
     return FALSE;
   return TRUE;			/* A-OK */
 }
-
-
 /*
  * Routines to establish binary I/O mode for stdin and stdout.
  * Non-Unix systems often require some hacking to get out of text mode.
@@ -161,8 +147,6 @@ read_stdin (void)
 #endif
   return input_file;
 }
-
-
 GLOBAL(FILE *)
 write_stdout (void)
 {

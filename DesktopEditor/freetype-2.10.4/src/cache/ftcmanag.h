@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * A cache manager is in charge of the following:
@@ -42,8 +40,6 @@
    *   count to avoid destroying it (due to caching).
    *
    */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -57,36 +53,24 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
 #ifndef FTCMANAG_H_
 #define FTCMANAG_H_
-
-
 #include <freetype/ftcache.h>
 #include "ftcmru.h"
 #include "ftccache.h"
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @Section:
    *   cache_subsystem
    *
    */
-
-
 #define FTC_MAX_FACES_DEFAULT  2
 #define FTC_MAX_SIZES_DEFAULT  4
 #define FTC_MAX_BYTES_DEFAULT  200000L  /* ~200kByte by default */
 
   /* maximum number of caches registered in a single manager */
 #define FTC_MAX_CACHES         16
-
-
   typedef struct  FTC_ManagerRec_
   {
     FT_Library          library;
@@ -107,8 +91,6 @@ FT_BEGIN_HEADER
     FTC_Face_Requester  request_face;
 
   } FTC_ManagerRec;
-
-
   /**************************************************************************
    *
    * @Function:
@@ -133,16 +115,12 @@ FT_BEGIN_HEADER
    */
   FT_LOCAL( void )
   FTC_Manager_Compress( FTC_Manager  manager );
-
-
   /* try to flush `count' old nodes from the cache; return the number
    * of really flushed nodes
    */
   FT_LOCAL( FT_UInt )
   FTC_Manager_FlushN( FTC_Manager  manager,
                       FT_UInt      count );
-
-
   /* this must be used internally for the moment */
   FT_LOCAL( FT_Error )
   FTC_Manager_RegisterCache( FTC_Manager      manager,
@@ -170,6 +148,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTCMANAG_H_ */
-
-
 /* END */

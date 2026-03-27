@@ -75,8 +75,6 @@ namespace svg
         unsigned           m_last_command;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class DA>
     const agg::int8u path_interpreter<DA>::m_commands[58] = 
@@ -501,8 +499,6 @@ namespace svg
          0,                                    //121 y
          &path_interpreter<DA>::close_subpath  //122 z
     };
-
-
     // AGG Vertex Source interface functions
     //------------------------------------------------------------------------
     template<class DA>
@@ -553,10 +549,6 @@ namespace svg
         }
         return last_command();
     }
-
-
-
-
 
     //-------------------------------------------------------------------------
     // Similar to path_interpreter.
@@ -625,6 +617,4 @@ namespace svg
 
 }
 }
-
-
 #endif

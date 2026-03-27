@@ -205,8 +205,6 @@ private:
      * Default Constructor. Internal - use factory methods only.
      */
     Region();
-
-
     /*
      * Initializes the region data from the ICU resource bundles.  The region data
      * contains the basic relationships such as which regions are known, what the numeric

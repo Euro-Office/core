@@ -226,8 +226,6 @@ _buf Hmac(_buf &  buf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & pla
 	
 	return _buf(mac);
 }
-
-
 _buf HashAppend(_buf &  hashBuf, _buf & block, CRYPT_METHOD::_hashAlgorithm algorithm)
 {//todooo переделать
 	if (algorithm == CRYPT_METHOD::MD5)

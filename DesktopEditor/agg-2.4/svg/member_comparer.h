@@ -64,5 +64,3 @@ namespace svg
 
 #endif // #ifndef AGG_SVG_MEMBER_COMPARER_INCLUDED
 
-
-

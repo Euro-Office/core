@@ -43,8 +43,6 @@ struct L_Pixel
     l_int32    y;
 };
 typedef struct L_Pixel  L_PIXEL;
-
-
 /*-----------------------------------------------------------------------*
  *                 Vincent's Iterative Binary Seedfill                   *
  *-----------------------------------------------------------------------*/
@@ -244,8 +242,6 @@ l_uint32  *lines, *linem;
 
     return;
 }
-
-
 
 /*-----------------------------------------------------------------------*
  *                 Vincent's Hybrid Grayscale Seedfill                *
@@ -705,8 +701,6 @@ L_QUEUE  *lq_pixel;
     lqueueDestroy(&lq_pixel, TRUE);
     return;
 }
-
-
 /*!
  *  seedfillGrayInvLow()
  *
@@ -1332,8 +1326,6 @@ l_uint32  *lines, *linem;
 
     return;
 }
-
-
 /*!
  *  seedfillGrayInvLowSimple()
  *
@@ -1490,8 +1482,6 @@ l_uint32  *lines, *linem;
 
     return;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                   Vincent's Distance Function method                  *
  *-----------------------------------------------------------------------*/
@@ -1664,8 +1654,6 @@ l_uint32  *lined;
 
     return;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                 Seed spread (based on distance function)              *
  *-----------------------------------------------------------------------*/

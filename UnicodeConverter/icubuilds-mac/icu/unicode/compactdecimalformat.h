@@ -102,8 +102,6 @@ public:
      * @stable ICU 51
      */
     virtual UBool operator==(const Format& other) const;
-
-
     using DecimalFormat::format;
 
     /**

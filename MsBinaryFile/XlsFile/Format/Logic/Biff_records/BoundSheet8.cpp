@@ -38,13 +38,9 @@ namespace XLS
 BoundSheet8::BoundSheet8()
 {
 }
-
-
 BoundSheet8::~BoundSheet8()
 {
 }
-
-
 BaseObjectPtr BoundSheet8::clone()
 {
 	return BaseObjectPtr(new BoundSheet8(*this));

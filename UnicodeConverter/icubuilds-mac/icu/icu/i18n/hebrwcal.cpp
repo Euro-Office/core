@@ -157,8 +157,6 @@ HebrewCalendar::HebrewCalendar(const Locale& aLocale, UErrorCode& success)
 {
     setTimeInMillis(getNow(), success); // Call this again now that the vtable is set up properly.
 }
-
-
 HebrewCalendar::~HebrewCalendar() {
 }
 
@@ -172,8 +170,6 @@ Calendar* HebrewCalendar::clone() const {
 
 HebrewCalendar::HebrewCalendar(const HebrewCalendar& other) : Calendar(other) {
 }
-
-
 //-------------------------------------------------------------------------
 // Rolling and adding functions overridden from Calendar
 //
@@ -706,8 +702,6 @@ static void U_CALLCONV initializeSystemDefaultCentury()
     // We have no recourse upon failure unless we want to propagate the failure
     // out.
 }
-
-
 UDate HebrewCalendar::defaultCenturyStart() const {
     // lazy-evaluate systemDefaultCenturyStart
     umtx_initOnce(gSystemDefaultCenturyInit, &initializeSystemDefaultCentury);
@@ -719,8 +713,6 @@ int32_t HebrewCalendar::defaultCenturyStartYear() const {
     umtx_initOnce(gSystemDefaultCenturyInit, &initializeSystemDefaultCentury);
     return gSystemDefaultCenturyStartYear;
 }
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(HebrewCalendar)
 
 U_NAMESPACE_END

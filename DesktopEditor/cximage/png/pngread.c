@@ -159,12 +159,8 @@ png_create_read_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
    png_ptr->zstream.avail_out = (uInt)png_ptr->zbuf_size;
 
    png_set_read_fn(png_ptr, NULL, NULL);
-
-
    return (png_ptr);
 }
-
-
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 /* Read the information before the actual image data.  This has been
  * changed in v0.90 to allow reading a file that already has the magic
@@ -596,8 +592,6 @@ png_read_row(png_structp png_ptr, png_bytep row, png_bytep dsp_row)
       png_do_read_intrapixel(&row_info, png_ptr->row_buf + 1);
    }
 #endif
-
-
 #ifdef PNG_READ_TRANSFORMS_SUPPORTED
    if (png_ptr->transformations)
       png_do_read_transformations(png_ptr, &row_info);
@@ -1114,8 +1108,6 @@ png_set_read_status_fn(png_structp png_ptr, png_read_status_ptr read_row_fn)
 
    png_ptr->read_row_fn = read_row_fn;
 }
-
-
 #ifdef PNG_SEQUENTIAL_READ_SUPPORTED
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI

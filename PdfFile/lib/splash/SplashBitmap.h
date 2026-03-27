@@ -93,6 +93,4 @@ private:
 
   friend class Splash;
 };
-
-
 #endif

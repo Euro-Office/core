@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTLZW_H_
 #define FTLZW_H_
 
@@ -26,8 +24,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /**************************************************************************
@@ -90,11 +86,7 @@ FT_BEGIN_HEADER
                      FT_Stream  source );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTLZW_H_ */
-
-
 /* END */

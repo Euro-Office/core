@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of RRSort record in BIFF8
 class RRSort: public BiffRecordContinued
 {
@@ -47,13 +45,9 @@ public:
 	~RRSort();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeRRSort;
-
-
 };
 
 } // namespace XLS

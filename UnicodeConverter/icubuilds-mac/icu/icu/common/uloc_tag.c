@@ -532,8 +532,6 @@ _addAttributeToList(AttributeListEntry **first, AttributeListEntry *attr) {
 
     return bAdded;
 }
-
-
 static UBool
 _addExtensionToList(ExtensionListEntry **first, ExtensionListEntry *ext, UBool localeToBCP) {
     UBool bAdded = TRUE;
@@ -1494,8 +1492,6 @@ cleanup:
         kwd = nextKwd;
     }
 }
-
-
 static int32_t
 _appendKeywords(ULanguageTag* langtag, char* appendAt, int32_t capacity, UErrorCode* status) {
     int32_t reslen = 0;
@@ -2299,8 +2295,6 @@ ultag_getGrandfathered(const ULanguageTag* langtag) {
     return langtag->grandfathered;
 }
 #endif
-
-
 /*
 * -------------------------------------------------
 *
@@ -2385,8 +2379,6 @@ uloc_toLanguageTag(const char* localeID,
 
     return reslen;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uloc_forLanguageTag(const char* langtag,
                     char* localeID,
@@ -2507,5 +2499,3 @@ uloc_forLanguageTag(const char* langtag,
     ultag_close(lt);
     return u_terminateChars(localeID, localeIDCapacity, reslen, status);
 }
-
-

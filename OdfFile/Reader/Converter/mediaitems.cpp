@@ -503,7 +503,5 @@ bool mediaitems::pdf2image(const std::wstring& pdf_file_name, const std::wstring
 	delete pReader;
 	return bResult;
 }
-
-
 }
 }

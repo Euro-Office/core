@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/FRTProductVersion.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtFRTBegin record in BIFF12

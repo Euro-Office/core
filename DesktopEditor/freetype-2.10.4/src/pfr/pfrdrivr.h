@@ -14,23 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PFRDRIVR_H_
 #define PFRDRIVR_H_
-
-
 #include <freetype/internal/ftdrv.h>
-
-
 FT_BEGIN_HEADER
 
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  pfr_driver_class;
 
 FT_END_HEADER
-
-
 #endif /* PFRDRIVR_H_ */
-
-
 /* END */

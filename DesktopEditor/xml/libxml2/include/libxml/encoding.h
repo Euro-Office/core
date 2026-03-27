@@ -100,8 +100,6 @@ typedef enum {
  */
 typedef int (* xmlCharEncodingInputFunc)(unsigned char *out, int *outlen,
                                          const unsigned char *in, int *inlen);
-
-
 /**
  * xmlCharEncodingOutputFunc:
  * @out:  a pointer to an array of bytes to store the result
@@ -122,8 +120,6 @@ typedef int (* xmlCharEncodingInputFunc)(unsigned char *out, int *outlen,
  */
 typedef int (* xmlCharEncodingOutputFunc)(unsigned char *out, int *outlen,
                                           const unsigned char *in, int *inlen);
-
-
 /*
  * Block defining the handlers for non UTF-8 encodings.
  * If iconv is supported, there are two extra fields.

@@ -41,14 +41,10 @@ struct ListFormatData : public UMemory {
   ListFormatData(const UnicodeString& two, const UnicodeString& start, const UnicodeString& middle, const UnicodeString& end) :
       twoPattern(two), startPattern(start), middlePattern(middle), endPattern(end) {}
 };
-
-
 /**
  * \file
  * \brief C++ API: API for formatting a list.
  */
-
-
 /**
  * An immutable class for formatting a list, using data from CLDR (or supplied
  * separately).
@@ -116,8 +112,6 @@ class U_COMMON_API ListFormatter : public UObject{
      * @stable ICU 50
      */
     virtual ~ListFormatter();
-
-
     /**
      * Formats a list of strings.
      *

@@ -28,8 +28,6 @@ namespace agg
     {
         values(1.0, 1.0, 1.0, 1.0);
     }
-
-
     //------------------------------------------------------------------------
     double gamma_spline::y(double x) const 
     { 
@@ -40,8 +38,6 @@ namespace agg
         if(val > 1.0) val = 1.0;
         return val;
     }
-
-
 
     //------------------------------------------------------------------------
     void gamma_spline::values(double kx1, double ky1, double kx2, double ky2)
@@ -72,8 +68,6 @@ namespace agg
             m_gamma[i] = (unsigned char)(y(double(i) / 255.0) * 255.0);
         }
     }
-
-
     //------------------------------------------------------------------------
     void gamma_spline::values(double* kx1, double* ky1, double* kx2, double* ky2) const
     {
@@ -82,8 +76,6 @@ namespace agg
         *kx2 = (1.0 - m_x[2]) * 4.0;
         *ky2 = (1.0 - m_y[2]) * 4.0;
     }
-
-
     //------------------------------------------------------------------------
     void gamma_spline::box(double x1, double y1, double x2, double y2)
     {
@@ -92,15 +84,11 @@ namespace agg
         m_x2 = x2;
         m_y2 = y2;
     }
-
-
     //------------------------------------------------------------------------
     void gamma_spline::rewind(unsigned)
     {
         m_cur_x = 0.0;
     }
-
-
     //------------------------------------------------------------------------
     unsigned gamma_spline::vertex(double* vx, double* vy)
     {
@@ -123,8 +111,6 @@ namespace agg
         m_cur_x += 1.0 / (m_x2 - m_x1);
         return path_cmd_line_to;
     }
-  
-
 
 }
 

@@ -19,8 +19,6 @@ struct TTab
 		DECIMAL
 	} m_eType;
 	ELineStyle2 m_eLeader;
-
-
 	TTab();
 	TTab(CXMLReader& oReader);
 

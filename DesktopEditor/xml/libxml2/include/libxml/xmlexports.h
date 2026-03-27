@@ -158,5 +158,3 @@
 #endif
 
 #endif /* __XML_EXPORTS_H__ */
-
-

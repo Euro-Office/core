@@ -6,8 +6,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_VALID_H__
 #define __XML_VALID_H__
 

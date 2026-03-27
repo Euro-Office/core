@@ -748,8 +748,6 @@ int32_t RuleHalf::parseSection(const UnicodeString& rule, int32_t pos, int32_t l
                 }
             }
             break;
-
-
         //------------------------------------------------------
         // Non-special characters
         //------------------------------------------------------

@@ -7,8 +7,6 @@
 
 #ifndef __TMUTAMT_H__
 #define __TMUTAMT_H__
-
-
 /**
  * \file
  * \brief C++ API: time unit amount object.
@@ -20,8 +18,6 @@
 #if !UCONFIG_NO_FORMATTING
 
 U_NAMESPACE_BEGIN
-
-
 /**
  * Express a duration as a time unit and number. Patterned after Currency.
  * @see TimeUnitAmount
@@ -60,37 +56,27 @@ public:
      */
     TimeUnitAmount(double amount, TimeUnit::UTimeUnitFields timeUnitField,
                    UErrorCode& status);
-
-
     /**
      * Copy constructor 
      * @stable ICU 4.2
      */
     TimeUnitAmount(const TimeUnitAmount& other);
-
-
     /**
      * Assignment operator
      * @stable ICU 4.2
      */
     TimeUnitAmount& operator=(const TimeUnitAmount& other);
-
-
     /**
      * Clone. 
      * @return a polymorphic clone of this object. The result will have the same               class as returned by getDynamicClassID().
      * @stable ICU 4.2
      */
     virtual UObject* clone() const;
-
-    
     /**
      * Destructor
      * @stable ICU 4.2
      */
     virtual ~TimeUnitAmount();
-
-    
     /** 
      * Equality operator.  
      * @param other  the object to compare to.
@@ -98,8 +84,6 @@ public:
      * @stable ICU 4.2
      */
     virtual UBool operator==(const UObject& other) const;
-
-
     /** 
      * Not-equality operator.  
      * @param other  the object to compare to.
@@ -107,8 +91,6 @@ public:
      * @stable ICU 4.2
      */
     UBool operator!=(const UObject& other) const;
-
-
     /**
      * Return the class ID for this class. This is useful only for comparing to
      * a return value from getDynamicClassID(). For example:
@@ -121,8 +103,6 @@ public:
      * @stable ICU 4.2
      */
     static UClassID U_EXPORT2 getStaticClassID(void);
-
-
     /**
      * Returns a unique class ID POLYMORPHICALLY. Pure virtual override. This
      * method is to implement a simple version of RTTI, since not all C++
@@ -135,8 +115,6 @@ public:
      * @stable ICU 4.2
      */
     virtual UClassID getDynamicClassID(void) const;
-
-
     /**
      * Get the time unit.
      * @return time unit object.
@@ -151,8 +129,6 @@ public:
      */
     TimeUnit::UTimeUnitFields getTimeUnitField() const;
 };
-
-
 
 inline UBool 
 TimeUnitAmount::operator!=(const UObject& other) const {

@@ -34,8 +34,6 @@ RegexPattern::RegexPattern() {
     // Init all of this instances data.
     init();
 }
-
-
 //--------------------------------------------------------------------------
 //
 //   Copy Constructor        Note:  This is a rather inefficient implementation,
@@ -46,8 +44,6 @@ RegexPattern::RegexPattern(const RegexPattern &other) :  UObject(other) {
     init();
     *this = other;
 }
-
-
 
 //--------------------------------------------------------------------------
 //
@@ -150,8 +146,6 @@ RegexPattern &RegexPattern::operator = (const RegexPattern &other) {
     }
     return *this;
 }
-
-
 //--------------------------------------------------------------------------
 //
 //    init        Shared initialization for use by constructors.
@@ -206,8 +200,6 @@ void RegexPattern::init() {
     // fNamedCaptureMap owns its key strings, type (UnicodeString *)
     uhash_setKeyDeleter(fNamedCaptureMap, uprv_deleteUObject);
 }
-
-
 //--------------------------------------------------------------------------
 //
 //   zap            Delete everything owned by this RegexPattern.
@@ -245,8 +237,6 @@ void RegexPattern::zap() {
     uhash_close(fNamedCaptureMap);
     fNamedCaptureMap = NULL;
 }
-
-
 //--------------------------------------------------------------------------
 //
 //   Destructor
@@ -255,8 +245,6 @@ void RegexPattern::zap() {
 RegexPattern::~RegexPattern() {
     zap();
 }
-
-
 //--------------------------------------------------------------------------
 //
 //   Clone
@@ -266,8 +254,6 @@ RegexPattern  *RegexPattern::clone() const {
     RegexPattern  *copy = new RegexPattern(*this);
     return copy;
 }
-
-
 //--------------------------------------------------------------------------
 //
 //   operator ==   (comparison)    Consider to patterns to be == if the
@@ -344,8 +330,6 @@ RegexPattern::compile(const UnicodeString &regex,
 
     return This;
 }
-
-
 //
 //   compile, UText mode
 //
@@ -406,8 +390,6 @@ RegexPattern::compile(const UnicodeString &regex,
 {
     return compile(regex, 0, pe, err);
 }
-
-
 //
 //   compile with default flags, UText mode
 //
@@ -418,8 +400,6 @@ RegexPattern::compile(UText               *regex,
 {
     return compile(regex, 0, pe, err);
 }
-
-
 //
 //   compile with no UParseErr parameter.
 //
@@ -431,8 +411,6 @@ RegexPattern::compile(const UnicodeString &regex,
     UParseError pe;
     return compile(regex, flags, pe, err);
 }
-
-
 //
 //   compile with no UParseErr parameter, UText mode
 //
@@ -444,8 +422,6 @@ RegexPattern::compile(UText                *regex,
     UParseError pe;
     return compile(regex, flags, pe, err);
 }
-
-
 //---------------------------------------------------------------------
 //
 //   flags
@@ -454,8 +430,6 @@ RegexPattern::compile(UText                *regex,
 uint32_t RegexPattern::flags() const {
     return fFlags;
 }
-
-
 //---------------------------------------------------------------------
 //
 //   matcher(UnicodeString, err)
@@ -470,8 +444,6 @@ RegexMatcher *RegexPattern::matcher(const UnicodeString &input,
     }
     return retMatcher;
 }
-
-
 //---------------------------------------------------------------------
 //
 //   matcher(status)
@@ -495,8 +467,6 @@ RegexMatcher *RegexPattern::matcher(UErrorCode &status)  const {
     }
     return retMatcher;
 }
-
-
 
 //---------------------------------------------------------------------
 //
@@ -523,8 +493,6 @@ UBool U_EXPORT2 RegexPattern::matches(const UnicodeString   &regex,
     delete pat;
     return retVal;
 }
-
-
 //
 //   matches, UText mode
 //
@@ -551,10 +519,6 @@ UBool U_EXPORT2 RegexPattern::matches(UText                *regex,
     return retVal;
 }
 
-
-
-
-
 //---------------------------------------------------------------------
 //
 //   pattern
@@ -579,10 +543,6 @@ UnicodeString RegexPattern::pattern() const {
         return result;
     }
 }
-
-
-
-
 //---------------------------------------------------------------------
 //
 //   patternText
@@ -599,8 +559,6 @@ UText *RegexPattern::patternText(UErrorCode      &status) const {
         return RegexStaticSets::gStaticSets->fEmptyText;
     }
 }
-
-
 //--------------------------------------------------------------------------------
 //
 //  groupNumberFromName()
@@ -628,8 +586,6 @@ int32_t RegexPattern::groupNumberFromName(const char *groupName, int32_t nameLen
     UnicodeString name(groupName, nameLength, US_INV);
     return groupNumberFromName(name, status);
 }
-
-
 //---------------------------------------------------------------------
 //
 //   split
@@ -673,8 +629,6 @@ int32_t  RegexPattern::split(UText *input,
     }
     return r;
 }
-
-
 
 //---------------------------------------------------------------------
 //
@@ -796,8 +750,6 @@ void   RegexPattern::dumpOp(int32_t index) const {
             }
         }
         break;
-
-
     default:
         printf("??????");
         break;
@@ -805,8 +757,6 @@ void   RegexPattern::dumpOp(int32_t index) const {
     printf("\n");
 #endif
 }
-
-
 void RegexPattern::dumpPattern() const {
 #if defined(REGEX_DEBUG)
     // TODO: This function assumes an ASCII based charset.
@@ -884,8 +834,6 @@ void RegexPattern::dumpPattern() const {
     printf("\n\n");
 #endif
 }
-
-
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(RegexPattern)
 

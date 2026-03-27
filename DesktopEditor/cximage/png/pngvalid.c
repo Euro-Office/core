@@ -3361,8 +3361,6 @@ perform_standard_test(png_modifier *pm)
    if (!test_standard(pm, 6, 3, READ_BDHI))
       return;
 }
-
-
 /********************************** SIZE TESTS ********************************/
 static int
 test_size(png_modifier* PNG_CONST pm, png_byte PNG_CONST colour_type,
@@ -3459,8 +3457,6 @@ perform_size_test(png_modifier *pm)
    if (!test_size(pm, 6, 3, READ_BDHI))
       return;
 }
-
-
 /******************************* TRANSFORM TESTS ******************************/
 /* A set of tests to validate libpng image transforms.  The possibilities here
  * are legion because the transforms can be combined in a combinatorial
@@ -4279,8 +4275,6 @@ image_transform_png_set_palette_to_rgb_add(image_transform *this,
 }
 
 IT(palette_to_rgb, end);
-
-
 /* png_set_tRNS_to_alpha */
 static void
 image_transform_png_set_tRNS_to_alpha_set(PNG_CONST image_transform *this,
@@ -5020,8 +5014,6 @@ perform_transform_test(png_modifier *pm)
    if (!test_transform(pm, 6, 3, READ_BDHI, 1))
       return;
 }
-
-
 /********************************* GAMMA TESTS ********************************/
 /* Gamma test images. */
 typedef struct gamma_modification

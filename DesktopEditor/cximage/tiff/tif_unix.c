@@ -75,8 +75,6 @@ _tiffCloseProc(thandle_t fd)
 {
 	return (close((int) fd));
 }
-
-
 static toff_t
 _tiffSizeProc(thandle_t fd)
 {

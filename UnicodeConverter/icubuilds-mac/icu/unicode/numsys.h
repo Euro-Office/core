@@ -24,16 +24,12 @@
  * @internal
  */
 #define NUMSYS_NAME_CAPACITY 8
-
-
 /**
  * \file
  * \brief C++ API: NumberingSystem object
  */
 
 #if !UCONFIG_NO_FORMATTING
-
-
 #include "unicode/format.h"
 #include "unicode/uobject.h"
 
@@ -122,8 +118,6 @@ public:
      * @stable ICU 4.2
      */
     static NumberingSystem* U_EXPORT2 createInstanceByName(const char* name, UErrorCode& status);
-
-
     /**
      * Returns the radix of this numbering system. Simple positional numbering systems
      * typically have radix 10, but might have a radix of e.g. 16 for hexadecimal. The
@@ -154,8 +148,6 @@ public:
      */
     virtual UnicodeString getDescription() const;
 
-
-
     /**
      * Returns TRUE if the given numbering system is algorithmic
      *
@@ -179,8 +171,6 @@ public:
      * @stable ICU 4.2
      */
     virtual UClassID getDynamicClassID() const;
-
-
 private:
     UnicodeString   desc;
     int32_t         radix;

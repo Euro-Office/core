@@ -40,8 +40,6 @@
 #include "../../DataTypes/length.h"
 #include "../../DataTypes/borderstyle.h"
 #include "../Format/style_table_properties.h"
-
-
 namespace cpdoccore {
 
 	using namespace odf_types;
@@ -291,5 +289,3 @@ xlsx_borders::~xlsx_borders()
 
 }
 }
-
-

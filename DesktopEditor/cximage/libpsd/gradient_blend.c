@@ -30,11 +30,7 @@
 #include "psd_bitmap.h"
 #include "psd_gradient.h"
 #include "psd_math.h"
-
-
 #define PSD_COLOR_SCALE				4
-
-
 // from quake3 source code
 psd_float psd_carm_sqrt(psd_float x)
 {

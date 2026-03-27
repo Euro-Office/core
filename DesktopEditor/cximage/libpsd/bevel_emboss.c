@@ -31,11 +31,7 @@
 #include "psd_bitmap.h"
 #include "psd_color.h"
 #include "psd_math.h"
-
-
 extern void psd_bitmap_gaussian_blur_alpha_channel(psd_bitmap * bitmap, psd_double radius);
-
-
 psd_static void psd_set_layer_bevel_emboss_default(psd_layer_effects_bevel_emboss * bevel_emboss)
 {
 	psd_int i;

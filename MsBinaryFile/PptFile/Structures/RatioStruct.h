@@ -33,16 +33,12 @@
 
 #include "IStruct.h"
 
-
-
 namespace PPT
 {
 struct RatioStruct : public IStruct
 {
     LONG m_nNumber;
     LONG m_nDenom;
-
-
     void ReadFromStream(POLE::Stream* pStream) override;
 };
 }

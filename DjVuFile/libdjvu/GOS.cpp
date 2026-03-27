@@ -105,8 +105,6 @@
 # include <stdio.h>
 # include <unistd.h>
 #endif
-
-
 // -- TRUE FALSE
 #undef TRUE
 #undef FALSE
@@ -133,8 +131,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 #if defined(AUTOCONF) && !defined(HAVE_STRERROR)
 # define NEED_STRERROR
 #elif defined(sun) && !defined(__svr4__) && !defined(__SVR4)
@@ -153,16 +149,12 @@ strerror(int errno)
   return "unknown stdio error";
 }
 #endif
-
-
 static const char slash='/';
 static const char percent='%';
 static const char backslash='\\';
 static const char colon=':';
 static const char dot='.';
 static const char nillchar=0;
-
-
 // -----------------------------------------
 // Functions for dealing with filenames
 // -----------------------------------------
@@ -180,8 +172,6 @@ finddirsep(const GUTF8String &fname)
 # error "Define something here for your operating system"
 #endif  
 }
-
-
 // basename(filename[, suffix])
 // -- returns the last component of filename and removes suffix
 //    when present. works like /bin/basename.
@@ -211,8 +201,6 @@ GOS::basename(const GUTF8String &gfname, const char *suffix)
     }
   }
 #endif
-
-
   // Allocate buffer
   GUTF8String retval(gfname,finddirsep(gfname)+1,(unsigned int)(-1));
   fname=retval;
@@ -240,8 +228,6 @@ GOS::basename(const GUTF8String &gfname, const char *suffix)
   return retval;
 }
 
-
-
 // errmsg --
 // -- A small helper function returning a 
 //    stdio error message in a static buffer.
@@ -254,8 +240,6 @@ errmsg()
   buffer.format("%s (errno = %d)", errname, errno);
   return buffer;
 }
-
-
 
 // -----------------------------------------
 // Functions for measuring time
@@ -315,8 +299,6 @@ GOS::sleep(int milliseconds)
   }
 #endif
 }
-
-
 // -----------------------------------------
 // Testing
 // -----------------------------------------
@@ -368,8 +350,6 @@ GOS::getenv(const GUTF8String &name)
   }
   return retval;
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

@@ -18,11 +18,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 static agg::int8u g_gradient_colors[] = 
 {
     255, 255, 255, 255,
@@ -283,8 +279,6 @@ static agg::int8u g_gradient_colors[] =
     154,  74,   0, 255
 };
 
-
-
 class periodic_distortion
 {
 public:
@@ -311,8 +305,6 @@ protected:
     double m_phase;
 };
 
-
-
 inline void calculate_wave(int* x, int* y, 
                            double cx, double cy, 
                            double period, double amplitude, double phase)
@@ -328,8 +320,6 @@ inline void calculate_wave(int* x, int* y,
     }
 }
 
-
-
 inline void calculate_swirl(int* x, int* y,
                             double cx, double cy, 
                             double amplitude, double phase)
@@ -342,10 +332,6 @@ inline void calculate_swirl(int* x, int* y,
     *x = int((xd * ca - yd * sa + cx) * agg::image_subpixel_scale);
     *y = int((xd * sa + yd * ca + cy) * agg::image_subpixel_scale);
 }
-
-
-
-
 
 class distortion_wave : public periodic_distortion
 {
@@ -371,8 +357,6 @@ class distortion_swirl_wave : public periodic_distortion
         calculate_wave(x, y, m_cx, m_cy, m_period, m_amplitude, m_phase);
     }
 };
-
-
 class distortion_wave_swirl : public periodic_distortion
 {
     virtual void calculate(int* x, int* y) const
@@ -381,16 +365,6 @@ class distortion_wave_swirl : public periodic_distortion
         calculate_swirl(x, y, m_cx, m_cy, m_amplitude, m_phase);
     }
 };
-
-
-
-
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_angle;
@@ -491,8 +465,6 @@ public:
         img_mtx *= agg::trans_affine_translation(img_width/2 + 10, img_height/2 + 10 + 40);
         img_mtx *= trans_affine_resizing();
         img_mtx.invert();
-
-
         typedef agg::span_allocator<agg::rgba8> span_alloc_type;
 
         span_alloc_type sa;
@@ -562,8 +534,6 @@ public:
         span_gen_type sg(img_src, interpolator, filter);
         //------------------------------------------
 */
-
-
         agg::rasterizer_scanline_aa<> ras;
         agg::scanline_u8 sl;
         double r = img_width;
@@ -572,8 +542,6 @@ public:
                          img_height / 2.0, 
                          r / 2.0 - 20.0, 
                          r / 2.0 - 20.0, 200);
-
-
         agg::conv_transform<agg::ellipse> tr(ell, src_mtx);
 
         ras.add_path(tr);
@@ -633,8 +601,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_period);
         agg::render_ctrl(ras, sl, rb, m_distortion);
     }
-
-
     
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -645,8 +611,6 @@ public:
             force_redraw();
         }
     }
-
-
 
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
@@ -664,13 +628,7 @@ public:
         if(m_phase > agg::pi * 200.0) m_phase -= agg::pi * 200.0;
         force_redraw();
     }
-
-
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -703,5 +661,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

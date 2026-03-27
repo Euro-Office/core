@@ -20,8 +20,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Initialization of a JPEG compression object.
  * The error manager must already be set up (in case memory manager fails).
@@ -86,8 +84,6 @@ jpeg_CreateCompress (j_compress_ptr cinfo, int version, size_t structsize)
   /* OK, I'm ready */
   cinfo->global_state = CSTATE_START;
 }
-
-
 /*
  * Destruction of a JPEG compression object
  */
@@ -97,8 +93,6 @@ jpeg_destroy_compress (j_compress_ptr cinfo)
 {
   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
 }
-
-
 /*
  * Abort processing of a JPEG compression operation,
  * but don't destroy the object itself.
@@ -109,8 +103,6 @@ jpeg_abort_compress (j_compress_ptr cinfo)
 {
   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
 }
-
-
 /*
  * Forcibly suppress or un-suppress all quantization and Huffman tables.
  * Marks all currently defined tables as already written (if suppress)
@@ -142,8 +134,6 @@ jpeg_suppress_tables (j_compress_ptr cinfo, boolean suppress)
       htbl->sent_table = suppress;
   }
 }
-
-
 /*
  * Finish JPEG compression.
  *
@@ -187,8 +177,6 @@ jpeg_finish_compress (j_compress_ptr cinfo)
   /* We can use jpeg_abort to release memory and reset global_state */
   jpeg_abort((j_common_ptr) cinfo);
 }
-
-
 /*
  * Write a special marker.
  * This is only recommended for writing COM or APPn markers.
@@ -235,8 +223,6 @@ jpeg_write_m_byte (j_compress_ptr cinfo, int val)
 {
   (*cinfo->marker->write_marker_byte) (cinfo, val);
 }
-
-
 /*
  * Alternate compression function: just write an abbreviated table file.
  * Before calling this, all parameters and a data destination must be set up.

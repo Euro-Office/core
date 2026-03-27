@@ -44,25 +44,17 @@
 
 namespace XLS
 {
-
-
 LD::LD()
 {
 	m_countSeries = 1;
 }
-
-
 LD::~LD()
 {
 }
-
-
 BaseObjectPtr LD::clone()
 {
 	return BaseObjectPtr(new LD(*this));
 }
-
-
 // LD = Legend Begin Pos ATTACHEDLABEL [FRAME] [CrtLayout12] [TEXTPROPS] [CRTMLFRT] CRTMLFRT
 const bool LD::loadContent(BinProcessor& proc)
 {
@@ -141,8 +133,6 @@ int LD::serialize (std::wostream & _stream, const std::wstring & entries)
 		legend->serialize(_stream, m_countSeries);
 	}else if (m_CrtLayout12)
 		m_CrtLayout12->serialize(_stream);
-
-	
 	if (!entries.empty())
 		_stream << entries;
 

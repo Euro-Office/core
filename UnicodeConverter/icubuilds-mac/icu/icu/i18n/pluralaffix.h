@@ -37,8 +37,6 @@ class FieldPositionHandler;
 #if !U_PLATFORM_IS_DARWIN_BASED
 template class U_I18N_API PluralMap<DigitAffix>;
 #endif
-
-
 /**
  * A plural aware prefix or suffix of a formatted number.
  *
@@ -168,8 +166,6 @@ private:
         return x.equals(y);
     }
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif  // __PLURALAFFIX_H__

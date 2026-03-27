@@ -307,8 +307,6 @@ namespace OOX
 
 			const CTableProperty& operator=(const XmlUtils::CXmlNode &oNode);
 			const CTableProperty& operator=(const XmlUtils::CXmlLiteReader& oReader);
-
-
 			virtual void fromXML(XmlUtils::CXmlNode& oNode);
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
 

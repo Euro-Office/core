@@ -38,15 +38,11 @@ static const psd_uchar ExifHeader[] = {0x45, 0x78, 0x69, 0x66, 0x00, 0x00};
 #ifdef PSD_INCLUDE_LIBXML
 #include <libxml/parser.h>
 #endif
-
-
 extern psd_status psd_thumbnail_decode_jpeg(psd_argb_color ** dst_image, psd_int compress_len, psd_context * context);
 extern psd_status psd_thumbnail_decode_raw(psd_argb_color ** dst_image, psd_int image_len, psd_context * context);
 extern void psd_alpha_channel_free(psd_context * context);
 extern psd_status psd_get_path(psd_context * context, psd_int length);
 extern void psd_path_free(psd_context * context);
-
-
 psd_status psd_get_image_resource(psd_context * context)
 {
 	psd_int length, i, size;

@@ -1108,8 +1108,6 @@ static void t1_dec_clnpass(
         */
     }
 }               /* VSC and  BYPASS by Antonin */
-
-
 /** mod fixed_quality */
 static double t1_getwmsedec(
     int nmsedec,

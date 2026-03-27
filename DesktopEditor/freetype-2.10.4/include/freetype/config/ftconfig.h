@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This header file contains a number of macro definitions that are used by
@@ -46,6 +44,4 @@
 #include <freetype/config/mac-support.h>
 
 #endif /* FTCONFIG_H_ */
-
-
 /* END */

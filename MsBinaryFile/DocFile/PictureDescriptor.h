@@ -87,8 +87,6 @@ namespace DocFileFormat
 		virtual ~PictureDescriptor();
 		
 		void parse( POLE::Stream* stream, int fc, int sz, int nWordVersion);
-
-		
 		// Returns the fcPic into the "data" stream, where the PIC begins.
 		// Returns -1 if the CHPX has no fcPic.
 		static int GetFcPic( const CharacterPropertyExceptions* chpx );
@@ -134,8 +132,6 @@ namespace DocFileFormat
 		int				embeddedDataSize;						
 	};
 }
-
-
 namespace ImageHelper
 {
     struct __BITMAPINFOHEADER

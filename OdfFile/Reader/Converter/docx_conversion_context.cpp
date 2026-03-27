@@ -266,8 +266,6 @@ void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 			{
 				odf_reader::style_text_properties_ptr textProp = this->current_text_properties();
 				get_styles_context().start();
-
-
 				if(( textProp) && (textProp->content_.r_style_)) parenStyleId = _T("");
 				textProp->content_.docx_convert(*this);
 			}
@@ -321,8 +319,6 @@ void docx_conversion_context::finish_paragraph()
 	state_.is_paragraph_keep_	= false;
 	state_.in_paragraph_		= false;
 }
-
-
 void docx_conversion_context::finish_run()
 {
     if (false == state_.in_run_) return;
@@ -630,8 +626,6 @@ void docx_conversion_context::end_alphabetical_index (const std::wstring &id)
 	else
 		current_alphabetic_index_ = mapAlphabeticals.begin()->first; // todooo vector+map+level
 }
-
-
 void docx_conversion_context::start_chart(std::wstring  name)
 {
 	charts_.push_back(oox_chart_context_ptr(new oox_chart_context(mediaitems_, name)));
@@ -747,13 +741,9 @@ void docx_conversion_context::start_document()
 	output_stream() << L"xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" ";
 	output_stream() << L"xmlns:w16se=\"http://schemas.microsoft.com/office/word/2015/wordml/symex\" ";
 	output_stream() << L"mc:Ignorable=\"w14 w15 w16se wne wp14\">";
-
-
 	//apply page-default prop
 	//пока временно сюда воткнем обработку свойств документа в целом
 }
-
-
 void docx_conversion_context::end_document()
 {
     output_stream() << L"</w:document>";
@@ -1518,8 +1508,6 @@ void docx_conversion_context::process_styles()
 
     output_document_->get_word_files().set_styles( package::simple_element::create(L"styles.xml", styles_xml_.str()) );
 }
-
-
 void docx_conversion_context::start_process_style_content()
 {
     styles_context_.start();
@@ -1734,8 +1722,6 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 				}
 				CP_XML_STREAM() << paragraph_style.str();
 				serialize_list_properties(CP_XML_STREAM());
-				
-
 				if ((run_style.tellp() > 0 && in_styles == false) || !get_text_tracked_context().dumpRPrInsDel_.empty())
 				{
 					CP_XML_NODE(L"w:rPr")
@@ -2303,8 +2289,6 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 
     return 0;
 }
-
-
 void docx_conversion_context::process_page_break_after(const odf_reader::style_instance * styleInst)
 {
     if (styleInst)

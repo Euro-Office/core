@@ -39,19 +39,13 @@ namespace XLS
 Dimensions::Dimensions()
 {
 }
-
-
 Dimensions::~Dimensions()
 {
 }
-
-
 BaseObjectPtr Dimensions::clone()
 {
 	return BaseObjectPtr(new Dimensions(*this));
 }
-
-
 
 void Dimensions::readFields(CFRecord& record)
 {

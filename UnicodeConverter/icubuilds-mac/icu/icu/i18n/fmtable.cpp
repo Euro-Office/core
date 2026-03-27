@@ -37,8 +37,6 @@
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(Formattable)
-
-
 //-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.
 
 // NOTE: As of 3.0, there are limitations to the UObject API.  It does
@@ -159,8 +157,6 @@ Formattable::Formattable(const StringPiece &number, UErrorCode &status) {
     init();
     setDecimalNumber(number, status);
 }
-
-
 // -------------------------------------
 // Creates a formattable object with a UnicodeString instance.
 
@@ -202,8 +198,6 @@ Formattable::Formattable(const Formattable* arrayToCopy, int32_t count)
 
 // -------------------------------------
 // copy constructor
-
-
 Formattable::Formattable(const Formattable &source)
      :  UObject(*this)
 {
@@ -688,8 +682,6 @@ Formattable::getBogus() const
 {
     return (UnicodeString*)&fBogus; /* cast away const :-( */
 }
-
-
 // --------------------------------------
 StringPiece Formattable::getDecimalNumber(UErrorCode &status) {
     if (U_FAILURE(status)) {
@@ -747,8 +739,6 @@ CharString *Formattable::internalGetCharString(UErrorCode &status) {
     }
     return fDecimalStr;
 }
-
-
 DigitList *
 Formattable::getInternalDigitList() {
   FmtStackData *stackData = (FmtStackData*)fStackData;
@@ -789,8 +779,6 @@ Formattable::adoptDigitList(DigitList *dl) {
         fValue.fDouble = fDecimalNum->getDouble();
     }
 }
-
-
 // ---------------------------------------
 void
 Formattable::setDecimalNumber(const StringPiece &numberString, UErrorCode &status) {
@@ -927,8 +915,6 @@ ufmt_getType(const UFormattable *fmt, UErrorCode *status) {
   const Formattable *obj = Formattable::fromUFormattable(fmt);
   return (UFormattableType)obj->getType();
 }
-
-
 U_INTERNAL UBool U_EXPORT2
 ufmt_isNumeric(const UFormattable *fmt) {
   const Formattable *obj = Formattable::fromUFormattable(fmt);
@@ -955,8 +941,6 @@ ufmt_getLong(UFormattable *fmt, UErrorCode *status) {
 
   return obj->getLong(*status);
 }
-
-
 U_DRAFT const void *U_EXPORT2
 ufmt_getObject(const UFormattable *fmt, UErrorCode *status) {
   const Formattable *obj = Formattable::fromUFormattable(fmt);

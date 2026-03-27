@@ -41,8 +41,6 @@
 // #include <QWaitCondition>
 
 #define OBEY_HAVE_INTEL_ATOMIC_BUILTINS 1
-
-
 /* ============================================================ 
 // PART1 - THE WAITING .
 // This part must define the four macros MUTEX_ENTER,
@@ -50,8 +48,6 @@
 // on a single monitor in a way that is consistent with
 // the pthread semantics. 
 */
-
-
 #if defined(WIN32)
 # define USE_WINDOWS_WAIT 1
 #elif defined(__cplusplus) && defined(_GTHREADS_H_)
@@ -61,8 +57,6 @@
 #elif defined(PTHREAD_MUTEX_INITIALIZER)
 # define USE_PTHREAD_WAIT 1
 #endif
-
-
 #if USE_PTHREAD_WAIT
 static pthread_mutex_t ptm = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t  ptc = PTHREAD_COND_INITIALIZER;
@@ -71,8 +65,6 @@ static pthread_cond_t  ptc = PTHREAD_COND_INITIALIZER;
 # define COND_WAIT    pthread_cond_wait(&ptc,&ptm)
 # define COND_WAKEALL pthread_cond_broadcast(&ptc)
 #endif
-
-
 #if USE_GTHREAD_WAIT
 static GMonitor m;
 # define MUTEX_ENTER  m.enter()
@@ -80,8 +72,6 @@ static GMonitor m;
 # define COND_WAIT    m.wait()
 # define COND_WAKEALL m.broadcast()
 #endif
-
-
 #if USE_QT4_WAIT
 static QMutex qtm;
 static QWaitCondition qtc;
@@ -90,8 +80,6 @@ static QWaitCondition qtc;
 # define COND_WAIT    qtc.wait(&qtm)
 # define COND_WAKEALL qtc.wakeAll()
 #endif
-
-
 #if USE_WINDOWS_WAIT
 static LONG ini = 0;
 static CRITICAL_SECTION cs;
@@ -122,8 +110,6 @@ static void cond_wait()
 #if ! defined(COND_WAKEALL) || ! defined(COND_WAIT)
 # error "Could not select suitable waiting code"
 #endif
-
-
 /* ============================================================ 
 // PART2 - ATOMIC PRIMITIVES
 // This part should define very fast SYNC_XXX and SYNC_REL
@@ -135,8 +121,6 @@ static void cond_wait()
 // the monitor macros to implement 
 // slow replacement functions.
 */
-
-
 #ifndef OBEY_HAVE_INTEL_ATOMIC_BUILTINS
 # if defined(__INTEL_COMPILER)
 #  define USE_INTEL_ATOMIC_BUILTINS 1
@@ -155,8 +139,6 @@ static void cond_wait()
 #elif defined(__GNUC__) && (defined(__ppc__) || defined(__powerpc__))
 # define USE_GCC_PPC_ASM 1
 #endif
-
-
 #if USE_INTEL_ATOMIC_BUILTINS && !HAVE_SYNC
 # define SYNC_ACQ(l)     (! __sync_lock_test_and_set(l, 1))
 # define SYNC_REL(l)     (__sync_lock_release(l))
@@ -165,8 +147,6 @@ static void cond_wait()
 # define SYNC_CAS(l,o,n) (__sync_bool_compare_and_swap(l,o,n))
 # define HAVE_SYNC 1
 #endif
-
-
 #if USE_WIN32_INTERLOCKED && !HAVE_SYNC
 # define SYNC_ACQ(l)                                    \
   (!InterlockedExchange((LONG volatile *)(l),1))
@@ -185,8 +165,6 @@ static void cond_wait()
   (InterlockedCompareExchange((LONG volatile *)(l),n,o)==(o))
 # define HAVE_SYNC 1
 #endif
-
-
 #if USE_GCC_I386_ASM && !HAVE_SYNC
 static int xchgl(int volatile *atomic, int newval) 
 {
@@ -220,8 +198,6 @@ static int cmpxchglf(int volatile *atomic, int oldval, int newval)
 # define SYNC_CAS(l,o,n) (cmpxchglf(l,o,n))
 # define HAVE_SYNC 1
 #endif
-
-
 #if USE_GCC_PPC_ASM && !HAVE_SYNC
 static int xchg_acq(int volatile *atomic, int newval) 
 {
@@ -274,8 +250,6 @@ static int cmpxchgl(int volatile *atomic, int oldval, int newval)
 # define SYNC_CAS(l,o,n) (cmpxchgl(l,o,n)==o)
 # define HAVE_SYNC 1
 #endif
-
-
 /* ============================================================ 
 // PART3 - THE IMPLEMENTATION
 */
@@ -340,8 +314,6 @@ atomicCompareAndSwap(int volatile *var, int oldval, int newval)
 {
   return SYNC_CAS(var,oldval,newval);
 }
-
-
 
 #else
 
@@ -408,5 +380,3 @@ atomicCompareAndSwap(int volatile *var, int oldval, int newval)
 }
 
 #endif  /* HAVE_SYNC */
-
-

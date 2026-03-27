@@ -8,8 +8,6 @@
 #include "inftrees.h"
 #include "infcodes.h"
 #include "infutil.h"
-
-
 /* simplify the use of the inflate_huft type with some defines */
 #define exop word.what.Exop
 #define bits word.what.Bits
@@ -62,8 +60,6 @@ local const uInt border[] = { /* Order of the bit length code lengths */
       a repeat code (16, 17, or 18) to go across the boundary between
       the two sets of lengths.
  */
-
-
 local void inflate_blocks_reset( /* s, z, c) */
 inflate_blocks_statef *s,
 z_streamp z,
@@ -83,8 +79,6 @@ uLongf *c )
     z->adler = s->check = (*s->checkfn)(0L, (const Bytef *)Z_NULL, 0);
   Tracev((stderr, "inflate:   blocks reset\n"));
 }
-
-
 local inflate_blocks_statef *inflate_blocks_new( /* z, c, w) */
 z_streamp z,
 check_func c,
@@ -114,8 +108,6 @@ uInt w )
   inflate_blocks_reset(s, z, Z_NULL);
   return s;
 }
-
-
 local int inflate_blocks( /* s, z, r) */
 inflate_blocks_statef *s,
 z_streamp z,
@@ -375,8 +367,6 @@ int r )
   return 0;
 #endif
 }
-
-
 local int inflate_blocks_free( /* s, z) */
 inflate_blocks_statef *s,
 z_streamp z )
@@ -388,5 +378,3 @@ z_streamp z )
   Tracev((stderr, "inflate:   blocks freed\n"));
   return Z_OK;
 }
-
-

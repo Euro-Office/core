@@ -21,8 +21,6 @@
 #include "agg_ellipse.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 //#define AGG_GRAY8 
 #define AGG_BGR24 
 //#define AGG_RGB24
@@ -53,8 +51,6 @@ double            g_scale = 1.0;
 double            g_skew_x = 0;
 double            g_skew_y = 0;
 int               g_nclick = 0;
-
-
 unsigned parse_lion(agg::path_storage& ps, agg::rgba8* colors, unsigned* path_idx);
 void parse_lion()
 {
@@ -64,8 +60,6 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
 namespace agg
 {
     // Specializations of the gradient_linear_color for rgba8 and gray8
@@ -100,8 +94,6 @@ namespace agg
         color_type m_c1;
         color_type m_c2;
     };
-
-
     //========================================================================
     template<> struct gradient_linear_color<gray8>
     {
@@ -131,10 +123,6 @@ namespace agg
     };
 
 }
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_num_cb;
@@ -172,8 +160,6 @@ public:
         mtx *= agg::trans_affine_translation(width/2, height/2);
 
         r.clear(agg::rgba(1, 1, 1));
-        
-
         r.reset_clipping(false);  // Visibility: "false" means "no visible regions"
         int x, y;
         double n = m_num_cb.value();
@@ -189,13 +175,9 @@ public:
             }
         }
 
-
-
         // Render the lion
         agg::conv_transform<agg::path_storage, agg::trans_affine> trans(g_path, mtx);
         agg::render_all_paths(g_rasterizer, g_scanline, rs, trans, g_colors, g_path_idx, g_npaths);
-
-
 // The scanline rasterizer allows you to perform clipping to multiple
 // regions "manually", like in the following code, but the "embedded" method 
 // shows much better performance.
@@ -223,8 +205,6 @@ public:
 //    }
 //}
 
-
-
         // Render random Bresenham lines and markers
         agg::renderer_markers<base_ren_type> m(r);
         for(i = 0; i < 50; i++)
@@ -244,8 +224,6 @@ public:
             m.marker(rand() % width, rand() % height, rand() % 10 + 5,
                      agg::marker_e(rand() % agg::end_of_markers));
         }
-
-
         // Render random anti-aliased lines
         double w = 5.0;
         agg::line_profile_aa profile;
@@ -268,8 +246,6 @@ public:
             ras.line_to_d(rand() % width, rand() % height);
             ras.render(false);
         }
-
-
         // Render random circles with gradient
         typedef agg::gradient_linear_color<color_type> grad_color;
         typedef agg::gradient_circle grad_func;
@@ -309,8 +285,6 @@ public:
         r.reset_clipping(true); // "true" means "all rendering buffer is visible".
         agg::render_ctrl(g_rasterizer, g_scanline, r, m_num_cb);
     }
-
-
     void transform(double width, double height, double x, double y)
     {
         x -= width / 2;
@@ -318,8 +292,6 @@ public:
         g_angle = atan2(y, x);
         g_scale = sqrt(y * y + x * x) / 100.0;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -337,20 +309,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -362,9 +326,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

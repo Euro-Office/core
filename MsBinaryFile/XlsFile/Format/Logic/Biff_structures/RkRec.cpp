@@ -39,8 +39,6 @@ BiffStructurePtr RkRec::clone()
 {
 	return BiffStructurePtr(new RkRec(*this));
 }
-
-
 void RkRec::load(CFRecord& record)
 {
 	global_info_ = record.getGlobalWorkbookInfo();

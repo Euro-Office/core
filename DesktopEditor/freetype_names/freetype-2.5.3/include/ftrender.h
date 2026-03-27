@@ -14,28 +14,18 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTRENDER_H__
 #define __FTRENDER_H__
-
-
 #include <ft2build.h>
 #include FT_MODULE_H
 #include FT_GLYPH_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    module_management                                                  */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* create a new glyph object */
   typedef FT_Error
   (*FT_Glyph_InitFunc)( FT_Glyph      glyph,
@@ -69,8 +59,6 @@ FT_BEGIN_HEADER
 #define FT_Glyph_BBox_Func       FT_Glyph_GetBBoxFunc
 #define FT_Glyph_Copy_Func       FT_Glyph_CopyFunc
 #define FT_Glyph_Prepare_Func    FT_Glyph_PrepareFunc
-
-
   struct  FT_Glyph_Class_
   {
     FT_Long                 glyph_size;
@@ -82,8 +70,6 @@ FT_BEGIN_HEADER
     FT_Glyph_GetBBoxFunc    glyph_bbox;
     FT_Glyph_PrepareFunc    glyph_prepare;
   };
-
-
   typedef FT_Error
   (*FT_Renderer_RenderFunc)( FT_Renderer       renderer,
                              FT_GlyphSlot      slot,
@@ -95,14 +81,10 @@ FT_BEGIN_HEADER
                                 FT_GlyphSlot      slot,
                                 const FT_Matrix*  matrix,
                                 const FT_Vector*  delta );
-
-
   typedef void
   (*FT_Renderer_GetCBoxFunc)( FT_Renderer   renderer,
                               FT_GlyphSlot  slot,
                               FT_BBox*      cbox );
-
-
   typedef FT_Error
   (*FT_Renderer_SetModeFunc)( FT_Renderer  renderer,
                               FT_ULong     mode_tag,
@@ -113,8 +95,6 @@ FT_BEGIN_HEADER
 #define FTRenderer_transform  FT_Renderer_TransformFunc
 #define FTRenderer_getCBox  FT_Renderer_GetCBoxFunc
 #define FTRenderer_setMode  FT_Renderer_SetModeFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -155,8 +135,6 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs*           raster_class;
 
   } FT_Renderer_Class;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -183,8 +161,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Renderer )
   FT_Get_Renderer( FT_Library       library,
                    FT_Glyph_Format  format );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -225,14 +201,8 @@ FT_BEGIN_HEADER
                    FT_Renderer    renderer,
                    FT_UInt        num_params,
                    FT_Parameter*  parameters );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTRENDER_H__ */
-
-
 /* END */

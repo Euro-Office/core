@@ -46,8 +46,6 @@ class CRecordPP9ShapeBinaryTagExtension : public CUnknownRecord
 {
 public:
     CRecordStyleTextProp9Atom m_styleTextPropAtom;
-
-
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
 
@@ -55,8 +53,6 @@ class CRecordPP10ShapeBinaryTagExtension : public CUnknownRecord
 {
 public:
     CRecordStyleTextProp10Atom m_styleTextPropAtom;
-
-
     void ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream) override;
 };
 

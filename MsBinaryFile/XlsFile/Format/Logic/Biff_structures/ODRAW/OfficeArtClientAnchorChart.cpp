@@ -34,14 +34,10 @@
 
 namespace ODRAW
 {
-
-
 OfficeArtClientAnchorChart::OfficeArtClientAnchorChart()
 :	OfficeArtRecord(0x00, ClientAnchor)
 {
 }
-
-
 XLS::BiffStructurePtr OfficeArtClientAnchorChart::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtClientAnchorChart(*this));
@@ -67,6 +63,4 @@ void OfficeArtClientAnchorChart::save(XLS::CFRecord& record)
 	record << flags << lx1 << ly1 << lx2 << ly2;
 
 }
-
-
 } // namespace XLS

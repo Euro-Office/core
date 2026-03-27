@@ -49,19 +49,13 @@ FORMULA::FORMULA(std::vector<CellRangeRef>& shared_formulas_locations_ref) : sha
 {
 	m_sharedIndex = -1;
 }
-
-
 FORMULA::~FORMULA()
 {
 }
-
-
 BaseObjectPtr FORMULA::clone()
 {
 	return BaseObjectPtr(new FORMULA(*this));
 }
-
-
 // FORMULA = [Uncalced] Formula [Array / Table / ShrFmla / SUB] [String *Continue]
 const bool FORMULA::loadContent(BinProcessor& proc)
 {

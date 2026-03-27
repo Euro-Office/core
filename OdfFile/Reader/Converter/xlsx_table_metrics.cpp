@@ -243,8 +243,6 @@ public:
     {
 		std::pair<int, double> c = cols_.search (last_col, 0);
 		std::pair<int, double> r = rows_.search (last_row, 0); 
-		
-     
 		xlsx_table_position res = {(size_t)c.first, c.second, (size_t)r.first, r.second};
       
 		return res;

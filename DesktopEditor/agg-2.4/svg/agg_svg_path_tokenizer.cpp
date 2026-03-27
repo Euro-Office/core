@@ -40,8 +40,6 @@ namespace svg
         init_char_mask(m_numeric_mask,    s_numeric);
         init_char_mask(m_separators_mask, s_separators);
     }
-
-
     //------------------------------------------------------------------------
     void path_tokenizer::set_path_str(const char* str)
     {
@@ -49,8 +47,6 @@ namespace svg
         m_last_command = 0;
         m_last_number = 0.0;
     }
-
-
     //------------------------------------------------------------------------
     void path_tokenizer::init_char_mask(char* mask, const char* char_set)
     {
@@ -61,8 +57,6 @@ namespace svg
             mask[c >> 3] |= 1 << (c & 7);
         }
     }
-
-
     //------------------------------------------------------------------------
     bool path_tokenizer::next()
     {
@@ -96,8 +90,6 @@ namespace svg
         return parse_number();
     }
 
-
-
     //------------------------------------------------------------------------
     double path_tokenizer::next(char cmd)
     {
@@ -110,8 +102,6 @@ namespace svg
         }
         return last_number();
     }
-
-
     //------------------------------------------------------------------------
     bool path_tokenizer::parse_number()
     {
@@ -133,11 +123,5 @@ namespace svg
         m_last_number = atof(buf);
         return true;
     }
-
-
 } //namespace svg
 } //namespace agg
-
-
-
-

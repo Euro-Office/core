@@ -34,8 +34,6 @@
 
 namespace CRYPTO
 {
-
-
 XLS::BiffStructurePtr EncryptionVerifier::clone()
 {
 	return XLS::BiffStructurePtr(new EncryptionVerifier(*this));
@@ -49,7 +47,5 @@ void EncryptionVerifier::load(XLS::CFRecord& record)
 	record >> VerifierHashSize;
 	record.loadAnyData(EncryptedVerifierHash);
 }
-
-
 } // namespace CRYPTO
 

@@ -21,8 +21,6 @@
 
 U_NAMESPACE_BEGIN
 
-
-
 /**
  * <p>Ultralightweight C++ implementation of a <tt>void*</tt> vector
  * that is (mostly) compatible with java.util.Vector.
@@ -150,8 +148,6 @@ public:
      * @return true if the test condition is met
      */
     UBool containsNone(const UVector32& other) const;
-
-
     /**
      * Insert the given integer into this vector at its sorted position.
      * The current elements are assumed to be sorted already.
@@ -189,8 +185,6 @@ private:
 
     // Disallow
     UVector32& operator=(const UVector32&);
-
-
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector32, they are all together.
@@ -206,8 +200,6 @@ public:
     int32_t *reserveBlock(int32_t size, UErrorCode &status);
     int32_t *popFrame(int32_t size);
 };
-
-
 // UVector32 inlines
 
 inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
@@ -221,8 +213,6 @@ inline UBool UVector32::ensureCapacity(int32_t minimumCapacity, UErrorCode &stat
 inline int32_t UVector32::elementAti(int32_t index) const {
     return (index >= 0 && count > 0 && count - index > 0) ? elements[index] : 0;
 }
-
-
 inline void UVector32::addElement(int32_t elem, UErrorCode &status) {
     if (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
@@ -248,8 +238,6 @@ inline int32_t *UVector32::popFrame(int32_t size) {
     return elements+count-size;
 }
 
-
-
 inline int32_t UVector32::size(void) const {
     return count;
 }
@@ -273,8 +261,6 @@ inline UBool UVector32::operator!=(const UVector32& other) {
 inline int32_t *UVector32::getBuffer() const {
     return elements;
 }
-
-
 // UStack inlines
 
 inline UBool UVector32::empty(void) const {

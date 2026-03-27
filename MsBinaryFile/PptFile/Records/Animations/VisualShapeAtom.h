@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 namespace PPT
 {
 class CRecordVisualShapeAtom : public CUnknownRecord
@@ -43,8 +39,6 @@ class CRecordVisualShapeAtom : public CUnknownRecord
 public:
     // Привязка анимации через этот объект к ID объекту
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     TimeVisualElementEnum	m_Type;
     ElementTypeEnum			m_RefType;
     _UINT32					m_nObjectIdRef;		//	ShapeIdRef || SoundIdRef

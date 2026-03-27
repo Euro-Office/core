@@ -38,13 +38,9 @@ namespace XLS
 PieFormat::PieFormat()
 {
 }
-
-
 PieFormat::~PieFormat()
 {
 }
-
-
 BaseObjectPtr PieFormat::clone()
 {
 	return BaseObjectPtr(new PieFormat(*this));

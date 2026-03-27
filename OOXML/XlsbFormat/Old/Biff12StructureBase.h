@@ -32,8 +32,6 @@
 
 #ifndef BIFF12STRUCTUREBASE_H
 #define BIFF12STRUCTUREBASE_H
-
-
 #include "../../../../../DesktopEditor/common/Types.h"
 #include "../../Base/Types_32.h"
 #include "Biff12StructType.h"

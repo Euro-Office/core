@@ -23,12 +23,8 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvprop
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -64,8 +58,6 @@
 #define GXV_PROP_ATTACHING_TO_RIGHT           0x0080U
 #define GXV_PROP_RESERVED                     0x0060U
 #define GXV_PROP_DIRECTIONALITY_CLASS         0x001FU
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -81,8 +73,6 @@
     FT_Face       face;
     FT_Error      error;
     FT_GlyphSlot  glyph;
-
-
     GXV_NAME_ENTER( "zero advance" );
 
     face = gxvalid->face;
@@ -104,8 +94,6 @@
 
     GXV_EXIT;
   }
-
-
   /* Pass 0 as GLYPH to check the default property */
   static void
   gxv_prop_property_validate( FT_UShort      property,
@@ -119,8 +107,6 @@
     {
       FT_UShort  offset;
       char       complement;
-
-
       offset = (FT_UShort)( property & GXV_PROP_COMPLEMENTARY_BRACKET_OFFSET );
       if ( offset == 0 )
       {
@@ -183,8 +169,6 @@
       }
     }
   }
-
-
   static void
   gxv_prop_LookupValue_validate( FT_UShort            glyph,
                                  GXV_LookupValueCPtr  value_p,
@@ -192,8 +176,6 @@
   {
     gxv_prop_property_validate( value_p->u, glyph, gxvalid );
   }
-
-
   /*
     +===============+ --------+
     | lookup header |         |
@@ -243,8 +225,6 @@
 
     return value;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -269,8 +249,6 @@
     FT_Fixed          version;
     FT_UShort         format;
     FT_UShort         defaultProp;
-
-
     gxvalid->root       = ftvalid;
     gxvalid->table_data = prop;
     gxvalid->face       = face;
@@ -295,8 +273,6 @@
       GXV_TRACE(( "  found unknown version\n" ));
       FT_INVALID_FORMAT;
     }
-
-
     /* only formats 0x0000, 0x0001 are defined (1996) */
     if ( format > 1 )
     {
@@ -325,6 +301,4 @@
   Exit:
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

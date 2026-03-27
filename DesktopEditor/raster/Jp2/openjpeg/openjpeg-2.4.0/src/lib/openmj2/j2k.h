@@ -95,8 +95,6 @@ The functions in J2K.C have for goal to read/write the several parts of the code
 #define J2K_MS_INSEC 0xff94  /**< INSEC marker value (Part 8: Secure JPEG 2000) */
 #endif /* USE_JPSEC */
 /* <<UniPG */
-
-
 /* ----------------------------------------------------------------------- */
 
 /**

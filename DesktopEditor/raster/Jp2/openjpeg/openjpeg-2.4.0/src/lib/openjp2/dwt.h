@@ -48,8 +48,6 @@ DWT.C are used by some function in TCD.C.
 
 /** @defgroup DWT DWT - Implementation of a discrete wavelet transform */
 /*@{*/
-
-
 /** @name Exported functions */
 /*@{*/
 /* ----------------------------------------------------------------------- */

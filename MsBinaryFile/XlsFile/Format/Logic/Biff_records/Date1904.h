@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Date1904 record in BIFF8
 class Date1904: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Date1904();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

@@ -34,28 +34,18 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSFT_H_
 #define PSFT_H_
-
-
 #include <freetype/internal/compiler-macros.h>
 #include "pstypes.h"
 
   /* TODO: disable asserts for now */
 #define CF2_NDEBUG
-
-
 #include <freetype/ftsystem.h>
 
 #include "psglue.h"
 #include <freetype/internal/psaux.h>    /* for PS_Decoder */
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   cf2_decoder_parse_charstrings( PS_Decoder*  decoder,
                                  FT_Byte*     charstring_base,
@@ -129,8 +119,6 @@ FT_BEGIN_HEADER
   cf2_getDefaultWidthX( PS_Decoder*  decoder );
   FT_LOCAL( CF2_Fixed )
   cf2_getNominalWidthX( PS_Decoder*  decoder );
-
-
   FT_LOCAL( FT_Error )
   cf2_getT1SeacComponent( PS_Decoder*  decoder,
                           FT_UInt      glyph_index,
@@ -150,18 +138,10 @@ FT_BEGIN_HEADER
     PS_Decoder*              decoder;
 
   } CF2_OutlineRec, *CF2_Outline;
-
-
   FT_LOCAL( void )
   cf2_outline_reset( CF2_Outline  outline );
   FT_LOCAL( void )
   cf2_outline_close( CF2_Outline  outline );
-
-
 FT_END_HEADER
-
-
 #endif /* PSFT_H_ */
-
-
 /* END */

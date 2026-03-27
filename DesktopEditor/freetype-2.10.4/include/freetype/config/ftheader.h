@@ -17,8 +17,6 @@
 
 #ifndef FTHEADER_H_
 #define FTHEADER_H_
-
-
   /*@***********************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -37,8 +35,6 @@
 #  define FT_BEGIN_HEADER  /* nothing */
 #  endif
 #endif
-
-
   /*@***********************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -57,8 +53,6 @@
 #   define FT_END_HEADER  /* nothing */
 #  endif
 #endif
-
-
   /**************************************************************************
    *
    * Aliases for the FreeType 2 public and configuration files.
@@ -99,8 +93,6 @@
    *   than `ftmm.h`).
    *
    */
-
-
   /* configuration files */
 
   /**************************************************************************
@@ -116,8 +108,6 @@
 #ifndef FT_CONFIG_CONFIG_H
 #define FT_CONFIG_CONFIG_H  <freetype/config/ftconfig.h>
 #endif
-
-
   /**************************************************************************
    *
    * @macro:
@@ -131,8 +121,6 @@
 #ifndef FT_CONFIG_STANDARD_LIBRARY_H
 #define FT_CONFIG_STANDARD_LIBRARY_H  <freetype/config/ftstdlib.h>
 #endif
-
-
   /**************************************************************************
    *
    * @macro:
@@ -146,8 +134,6 @@
 #ifndef FT_CONFIG_OPTIONS_H
 #define FT_CONFIG_OPTIONS_H  <freetype/config/ftoption.h>
 #endif
-
-
   /**************************************************************************
    *
    * @macro:
@@ -178,8 +164,6 @@
    *
    */
 #define FT_FREETYPE_H  <freetype/freetype.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -193,8 +177,6 @@
    *
    */
 #define FT_ERRORS_H  <freetype/fterrors.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -206,8 +188,6 @@
    *
    */
 #define FT_MODULE_ERRORS_H  <freetype/ftmoderr.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -222,8 +202,6 @@
    *
    */
 #define FT_SYSTEM_H  <freetype/ftsystem.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -238,8 +216,6 @@
    *
    */
 #define FT_IMAGE_H  <freetype/ftimage.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -253,8 +229,6 @@
    *
    */
 #define FT_TYPES_H  <freetype/fttypes.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -268,8 +242,6 @@
    *
    */
 #define FT_LIST_H  <freetype/ftlist.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -281,8 +253,6 @@
    *
    */
 #define FT_OUTLINE_H  <freetype/ftoutln.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -294,8 +264,6 @@
    *
    */
 #define FT_SIZES_H  <freetype/ftsizes.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -307,8 +275,6 @@
    *
    */
 #define FT_MODULE_H  <freetype/ftmodapi.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -320,8 +286,6 @@
    *
    */
 #define FT_RENDER_H  <freetype/ftrender.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -333,8 +297,6 @@
    *
    */
 #define FT_DRIVER_H  <freetype/ftdriver.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -348,8 +310,6 @@
    *
    */
 #define FT_AUTOHINTER_H  FT_DRIVER_H
-
-
   /**************************************************************************
    *
    * @macro:
@@ -363,8 +323,6 @@
    *
    */
 #define FT_CFF_DRIVER_H  FT_DRIVER_H
-
-
   /**************************************************************************
    *
    * @macro:
@@ -378,8 +336,6 @@
    *
    */
 #define FT_TRUETYPE_DRIVER_H  FT_DRIVER_H
-
-
   /**************************************************************************
    *
    * @macro:
@@ -393,8 +349,6 @@
    *
    */
 #define FT_PCF_DRIVER_H  FT_DRIVER_H
-
-
   /**************************************************************************
    *
    * @macro:
@@ -406,8 +360,6 @@
    *
    */
 #define FT_TYPE1_TABLES_H  <freetype/t1tables.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -421,8 +373,6 @@
    *
    */
 #define FT_TRUETYPE_IDS_H  <freetype/ttnameid.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -434,8 +384,6 @@
    *
    */
 #define FT_TRUETYPE_TABLES_H  <freetype/tttables.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -448,8 +396,6 @@
    *
    */
 #define FT_TRUETYPE_TAGS_H  <freetype/tttags.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -461,8 +407,6 @@
    *
    */
 #define FT_BDF_H  <freetype/ftbdf.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -474,8 +418,6 @@
    *
    */
 #define FT_CID_H  <freetype/ftcid.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -487,8 +429,6 @@
    *
    */
 #define FT_GZIP_H  <freetype/ftgzip.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -500,8 +440,6 @@
    *
    */
 #define FT_LZW_H  <freetype/ftlzw.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -513,8 +451,6 @@
    *
    */
 #define FT_BZIP2_H  <freetype/ftbzip2.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -526,8 +462,6 @@
    *
    */
 #define FT_WINFONTS_H   <freetype/ftwinfnt.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -539,8 +473,6 @@
    *
    */
 #define FT_GLYPH_H  <freetype/ftglyph.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -552,8 +484,6 @@
    *
    */
 #define FT_BITMAP_H  <freetype/ftbitmap.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -565,8 +495,6 @@
    *
    */
 #define FT_BBOX_H  <freetype/ftbbox.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -578,8 +506,6 @@
    *
    */
 #define FT_CACHE_H  <freetype/ftcache.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -595,8 +521,6 @@
    *
    */
 #define FT_MAC_H  <freetype/ftmac.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -608,8 +532,6 @@
    *
    */
 #define FT_MULTIPLE_MASTERS_H  <freetype/ftmm.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -622,8 +544,6 @@
    *
    */
 #define FT_SFNT_NAMES_H  <freetype/ftsnames.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -636,8 +556,6 @@
    *
    */
 #define FT_OPENTYPE_VALIDATE_H  <freetype/ftotval.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -650,8 +568,6 @@
    *
    */
 #define FT_GX_VALIDATE_H  <freetype/ftgxval.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -663,8 +579,6 @@
    *
    */
 #define FT_PFR_H  <freetype/ftpfr.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -675,8 +589,6 @@
    *   FreeType~2 API which provides functions to stroke outline paths.
    */
 #define FT_STROKER_H  <freetype/ftstroke.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -687,8 +599,6 @@
    *   FreeType~2 API which performs artificial obliquing and emboldening.
    */
 #define FT_SYNTHESIS_H  <freetype/ftsynth.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -702,8 +612,6 @@
 
   /* deprecated */
 #define FT_XFREE86_H  FT_FONT_FORMATS_H
-
-
   /**************************************************************************
    *
    * @macro:
@@ -715,8 +623,6 @@
    *   cosines and arc tangents).
    */
 #define FT_TRIGONOMETRY_H  <freetype/fttrigon.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -727,8 +633,6 @@
    *   FreeType~2 API which performs color filtering for subpixel rendering.
    */
 #define FT_LCD_FILTER_H  <freetype/ftlcdfil.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -739,8 +643,6 @@
    *   FreeType~2 API which performs incremental glyph loading.
    */
 #define FT_INCREMENTAL_H  <freetype/ftincrem.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -751,8 +653,6 @@
    *   FreeType~2 API which returns entries from the TrueType GASP table.
    */
 #define FT_GASP_H  <freetype/ftgasp.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -763,8 +663,6 @@
    *   FreeType~2 API which returns individual and ranged glyph advances.
    */
 #define FT_ADVANCES_H  <freetype/ftadvanc.h>
-
-
   /**************************************************************************
    *
    * @macro:
@@ -775,8 +673,6 @@
    *   FreeType~2 API which handles the OpenType 'CPAL' table.
    */
 #define FT_COLOR_H  <freetype/ftcolor.h>
-
-
   /* */
 
   /* These header files don't need to be included by the user. */
@@ -819,6 +715,4 @@
 #endif /* FT2_BUILD_LIBRARY */
 
 #endif /* FTHEADER_H_ */
-
-
 /* END */

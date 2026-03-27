@@ -72,6 +72,4 @@ namespace agg
         const distortion_type* m_distortion;
     };
 }
-
-
 #endif

@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVuFile.h"
 
 #ifndef macintosh //MCW can't compile
@@ -76,8 +74,6 @@
 #else
 # include <time.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -216,8 +212,6 @@ private:
    void		clear_to_size(int size);
 };
 
-
-
 //@}
    
 inline
@@ -283,8 +277,6 @@ DjVuFileCache::create(const int max_size)
 {
   return new DjVuFileCache(max_size);
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

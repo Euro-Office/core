@@ -88,8 +88,6 @@ TimeZoneRule::isEquivalentTo(const TimeZoneRule& other) const {
             fRawOffset == other.fRawOffset &&
             fDSTSavings == other.fDSTSavings));
 }
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(InitialTimeZoneRule)
 
 InitialTimeZoneRule::InitialTimeZoneRule(const UnicodeString& name,
@@ -172,8 +170,6 @@ InitialTimeZoneRule::getPreviousStart(UDate /*base*/,
                                      UDate& /*result*/) const {
     return FALSE;
 }
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(AnnualTimeZoneRule)
 
 const int32_t AnnualTimeZoneRule::MAX_YEAR = 0x7FFFFFFF; /* max signed int32 */
@@ -409,16 +405,12 @@ TimeArrayTimeZoneRule::TimeArrayTimeZoneRule(const UnicodeString& name,
     initStartTimes(startTimes, numStartTimes, status);
     //TODO - status?
 }
-
-
 TimeArrayTimeZoneRule::TimeArrayTimeZoneRule(const TimeArrayTimeZoneRule& source)
 : TimeZoneRule(source), fTimeRuleType(source.fTimeRuleType), fStartTimes(NULL) {
     UErrorCode status = U_ZERO_ERROR;
     initStartTimes(source.fStartTimes, source.fNumStartTimes, status);
     //TODO - status?
 }
-
-
 TimeArrayTimeZoneRule::~TimeArrayTimeZoneRule() {
     if (fStartTimes != NULL && fStartTimes != fLocalStartTimes) {
         uprv_free(fStartTimes);
@@ -429,8 +421,6 @@ TimeArrayTimeZoneRule*
 TimeArrayTimeZoneRule::clone(void) const {
     return new TimeArrayTimeZoneRule(*this);
 }
-
-
 TimeArrayTimeZoneRule&
 TimeArrayTimeZoneRule::operator=(const TimeArrayTimeZoneRule& right) {
     if (this != &right) {
@@ -573,8 +563,6 @@ TimeArrayTimeZoneRule::getPreviousStart(UDate base,
     }
     return FALSE;
 }
-
-
 // ---- private methods ------
 
 UBool

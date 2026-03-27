@@ -39,13 +39,9 @@ Style::Style()
 {
 	ixfe = 0;
 }
-
-
 Style::~Style()
 {
 }
-
-
 BaseObjectPtr Style::clone()
 {
 	return BaseObjectPtr(new Style(*this));

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include "cidload.h"
 #include "cidgload.h"
@@ -25,8 +23,6 @@
 #include FT_INTERNAL_CALC_H
 
 #include "ciderrs.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -35,8 +31,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cidgload
-
-
   FT_CALLBACK_DEF( FT_Error )
   cid_load_glyph( T1_Decoder  decoder,
                   FT_UInt     glyph_index )
@@ -56,8 +50,6 @@
     FT_Incremental_InterfaceRec *inc =
                                   face->root.internal->incremental_interface;
 #endif
-
-
     FT_TRACE1(( "cid_load_glyph: glyph index %d\n", glyph_index ));
 
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
@@ -67,8 +59,6 @@
     if ( inc )
     {
       FT_Data  glyph_data;
-
-
       error = inc->funcs->get_glyph_data( inc->object,
                                           glyph_index, &glyph_data );
       if ( error )
@@ -101,8 +91,6 @@
     {
       FT_UInt   entry_len = cid->fd_bytes + cid->gd_bytes;
       FT_ULong  off1;
-
-
       if ( FT_STREAM_SEEK( cid->data_offset + cid->cidmap_offset +
                            glyph_index * entry_len )               ||
            FT_FRAME_ENTER( 2 * entry_len )                         )
@@ -134,8 +122,6 @@
       CID_FaceDict  dict;
       CID_Subrs     cid_subrs = face->subrs + fd_select;
       FT_Int        cs_offset;
-
-
       /* Set up subrs */
       decoder->num_subrs = cid_subrs->num_subrs;
       decoder->subrs     = cid_subrs->code;
@@ -170,8 +156,6 @@
     if ( !error && inc && inc->funcs->get_glyph_metrics )
     {
       FT_Incremental_MetricsRec  metrics;
-
-
       metrics.bearing_x = FIXED_TO_INT( decoder->builder.left_bearing.x );
       metrics.bearing_y = 0;
       metrics.advance   = FIXED_TO_INT( decoder->builder.advance.x );
@@ -190,11 +174,7 @@
   Exit:
     return error;
   }
-
-
 #if 0
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -211,8 +191,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_face_compute_max_advance( CID_Face  face,
                                 FT_Int*   max_advance )
@@ -222,8 +200,6 @@
     FT_Int         glyph_index;
 
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
-
-
     *max_advance = 0;
 
     /* Initialize load decoder */
@@ -260,11 +236,7 @@
 
     return FT_Err_Ok;
   }
-
-
 #endif /* 0 */
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_slot_load_glyph( FT_GlyphSlot  cidglyph,      /* CID_GlyphSlot */
                        FT_Size       cidsize,       /* CID_Size      */
@@ -280,8 +252,6 @@
     PSAux_Service  psaux = (PSAux_Service)face->psaux;
     FT_Matrix      font_matrix;
     FT_Vector      font_offset;
-
-
     if ( glyph_index >= (FT_UInt)face->root.num_glyphs )
     {
       error = FT_THROW( Invalid_Argument );
@@ -342,8 +312,6 @@
     if ( load_flags & FT_LOAD_NO_RECURSE )
     {
       FT_Slot_Internal  internal = cidglyph->internal;
-
-
       cidglyph->metrics.horiBearingX =
         FIXED_TO_INT( decoder.builder.left_bearing.x );
       cidglyph->metrics.horiAdvance =
@@ -358,8 +326,6 @@
       FT_BBox            cbox;
       FT_Glyph_Metrics*  metrics = &cidglyph->metrics;
       FT_Vector          advance;
-
-
       /* copy the _unscaled_ advance width */
       metrics->horiAdvance =
         FIXED_TO_INT( decoder.builder.advance.x );
@@ -402,8 +368,6 @@
         FT_Vector*   vec = cur->points;
         FT_Fixed     x_scale = glyph->x_scale;
         FT_Fixed     y_scale = glyph->y_scale;
-
-
         /* First of all, scale the points */
         if ( !hinting || !decoder.builder.hints_funcs )
           for ( n = cur->n_points; n > 0; n--, vec++ )
@@ -437,6 +401,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

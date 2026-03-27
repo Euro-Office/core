@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Excel9File record in BIFF8
 class Excel9File: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Excel9File();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeExcel9File;

@@ -39,8 +39,6 @@ typedef struct codestream_param {
     OPJ_OFF_T offset; /**< byte position of DBox (Box Contents) in the file*/
     Byte8_t length; /**< content length*/
 } codestream_param_t;
-
-
 /**
  * set codestream parameters from inputs
  *
@@ -50,8 +48,6 @@ typedef struct codestream_param {
  * @return           structure of generated codestream parameters
  */
 codestream_param_t set_codestream(int fd, OPJ_OFF_T offset, OPJ_SIZE_T length);
-
-
 /**
  * fetch Codestream bytes of data in file stream
  *
@@ -91,14 +87,10 @@ Byte2_t fetch_codestream2bytebigendian(codestream_param_t *cs,
  */
 Byte4_t fetch_codestream4bytebigendian(codestream_param_t *cs,
                                        OPJ_OFF_T offset);
-
-
 /**
  * print codestream parameters
  *
  * @param[in] cs codestream
  */
 void print_codestream(codestream_param_t cs);
-
-
 #endif      /* !CODESTREAM_MANAGER_H_ */

@@ -188,6 +188,4 @@ namespace SVG
 		virtual bool Apply(IRenderer* pRenderer, const CSvgFile *pFile, const TBounds &oObjectBounds) = 0;
 	};
 }
-
-
 #endif // COBJECTBASE_H

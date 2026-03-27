@@ -240,8 +240,6 @@ assert(pass->term == 1);
 	cblk->flags = jas_matrix_create(jas_matrix_numrows(cblk->data) + 2,
 	  jas_matrix_numcols(cblk->data) + 2);
 	assert(cblk->flags);
-
-
 	bitpos = cblk->numbps - 1;
 	pass = cblk->passes;
 	n = cblk->numpasses;

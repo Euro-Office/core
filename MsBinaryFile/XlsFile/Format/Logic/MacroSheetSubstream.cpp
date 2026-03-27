@@ -65,24 +65,16 @@
 
 namespace XLS
 {;
-
-
 MacroSheetSubstream::MacroSheetSubstream(const size_t ws_index) :	CommonSubstream(ws_index)
 {
 }
-
-
 MacroSheetSubstream::~MacroSheetSubstream()
 {
 }
-
-
 BaseObjectPtr MacroSheetSubstream::clone()
 {
 	return BaseObjectPtr(new MacroSheetSubstream(*this));
 }
-
-
 /*
 MACROSHEETCONTENT = [Uncalced] Index [Intl] GLOBALS PAGESETUP [HeaderFooter] [BACKGROUND] *BIGNAME 
 					[PROTECTION] COLUMNS MACROSORTANDFILTER Dimensions [CELLTABLE] OBJECTS *HFPicture 

@@ -48,14 +48,10 @@ PtgInt::PtgInt(const std::wstring& word) : OperandPtg(fixed_id)
     value_ = wcstol(word.c_str(), &pEnd ,10);
 #endif
 }
-
-
 BiffStructurePtr PtgInt::clone()
 {
 	return BiffStructurePtr(new PtgInt(*this));
 }
-
-
 void PtgInt::loadFields(CFRecord& record)
 {
 	if (record.checkFitReadSafe(2))
@@ -81,7 +77,5 @@ void PtgInt::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
 	if (value_)	ptg_stack.push(STR::int2wstr(*value_));
 	else		ptg_stack.push(L"");
 }
-
-
 } // namespace XLS
 

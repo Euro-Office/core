@@ -949,8 +949,6 @@ int jas_stream_display(jas_stream_t *stream, FILE *fp, int n)
 			}
 			fprintf(fp, "\n");
 		}
-
-
 	}
 	return 0;
 }

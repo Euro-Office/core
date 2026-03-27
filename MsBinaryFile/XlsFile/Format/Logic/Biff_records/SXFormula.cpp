@@ -38,8 +38,6 @@ namespace XLS
 SXFormula::SXFormula()
 {
 }
-
-
 SXFormula::~SXFormula()
 {
 }

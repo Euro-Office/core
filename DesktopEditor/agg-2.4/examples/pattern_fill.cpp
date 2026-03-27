@@ -31,10 +31,6 @@ enum flip_y_e { flip_y = true };
 //#define AGG_RGB565
 //#define AGG_RGB555
 #include "pixel_formats.h"
-
-
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba> m_polygon_angle;
@@ -63,8 +59,6 @@ class the_application : public agg::platform_support
     agg::rasterizer_scanline_aa<> m_ras;
     agg::scanline_p8 m_sl;
     agg::path_storage m_ps;
-
-
 public:
     //------------------------------------------------------------------------
     the_application(agg::pix_format_e format, bool flip_y) :
@@ -112,8 +106,6 @@ public:
     {
         delete [] m_pattern;
     }
-
-
     //------------------------------------------------------------------------
     void create_star(double xc, double yc,
                      double r1, double r2, 
@@ -140,8 +132,6 @@ public:
         }
         m_ps.close_polygon();
     }
-
-
     //------------------------------------------------------------------------
     void generate_pattern()
     {
@@ -179,8 +169,6 @@ public:
         rs.color(agg::rgba8(0,50,80));
         agg::render_scanlines(m_ras, m_sl, rs);
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_init()
     {
@@ -188,8 +176,6 @@ public:
         m_polygon_cy = initial_height() / 2.0;
         generate_pattern();
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_draw()
     {
@@ -256,8 +242,6 @@ public:
         agg::render_ctrl(m_ras, m_sl, rb, m_tie_pattern);
     }
 
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -283,8 +267,6 @@ public:
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
@@ -303,15 +285,11 @@ public:
         }
     }
 
-
-
     //------------------------------------------------------------------------
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         m_flag = 0;
     }
-
-
 
     //------------------------------------------------------------------------
     virtual void on_ctrl_change() 
@@ -328,8 +306,6 @@ public:
         generate_pattern();
         force_redraw();
     }
-
-
     //------------------------------------------------------------------------
     virtual void on_idle() 
     {
@@ -358,13 +334,7 @@ public:
         if(redraw) force_redraw();
 
     }
-
-
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -377,5 +347,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

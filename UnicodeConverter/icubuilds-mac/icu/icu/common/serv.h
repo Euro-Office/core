@@ -860,8 +860,6 @@ class U_COMMON_API ICUService : public ICUNotifier {
      * @return a clone of the passed-in instance, or NULL if cloning was unsuccessful.
      */
     virtual UObject* cloneInstance(UObject* instance) const = 0;
-
-
     /************************************************************************
      * Subclassing API
      */

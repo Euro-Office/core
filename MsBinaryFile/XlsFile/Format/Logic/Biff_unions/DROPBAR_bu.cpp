@@ -45,24 +45,16 @@
 
 namespace XLS
 {
-
-
 DROPBAR::DROPBAR()
 {
 }
-
-
 DROPBAR::~DROPBAR()
 {
 }
-
-
 BaseObjectPtr DROPBAR::clone()
 {
 	return BaseObjectPtr(new DROPBAR(*this));
 }
-
-
 // DROPBAR = DropBar Begin LineFormat AreaFormat [GELFRAME] [SHAPEPROPS] End
 const bool DROPBAR::loadContent(BinProcessor& proc)
 {

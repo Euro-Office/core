@@ -76,8 +76,6 @@ namespace MyPSD
 			unsigned char* ColourData;
 			COLOUR_MODE_DATA();
 		};
-
-
 		struct IMAGE_RESOURCE
 		{
 			// Table 2–1: Image resource block
@@ -195,8 +193,6 @@ namespace MyPSD
 			unsigned char* Data;
 			THUMBNAIL();
 		};
-
-
 		CxImage	&m_image;
 
 		HEADER_INFO header_info;
@@ -259,8 +255,6 @@ namespace MyPSD
 #endif // __MyPSD_H__
 
 // MyPSD.cpp ///////////////////////////////////////////////////////////////////
-
-
 inline int dti(double value) { return (int)floor(value+.5f); }
 
 #define assert(a) 
@@ -750,8 +744,6 @@ namespace MyPSD
 
 		return bSuccess;
 	}
-
-
 	void CPSD::ProccessBuffer(unsigned char* pData )
 	{
 		if (!pData) return;
@@ -985,8 +977,6 @@ namespace MyPSD
 
 		return 0;
 	}
-
-
 	int CPSD::DecodeRLEData(CxFile & pFile)
 	{
 		if (header_info.nBitsPerPixel != 8) return -7; // can't read this

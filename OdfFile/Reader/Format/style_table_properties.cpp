@@ -39,15 +39,11 @@
 #include "../../DataTypes/borderstyle.h"
 #include "odfcontext.h"
 #include "odf_document_impl.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 
 void table_format_properties::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
@@ -271,8 +267,6 @@ void style_table_column_properties::docx_convert(oox::docx_conversion_context & 
 		strm << L"<w:gridCol/>";
 	}
 }
-
-
 void style_table_column_properties::pptx_convert(oox::pptx_conversion_context & Context)
 {
     std::wostream & strm = Context.get_table_context().tableData();
@@ -284,8 +278,6 @@ void style_table_column_properties::pptx_convert(oox::pptx_conversion_context & 
         strm << L"<a:gridCol w=\"" << val << "\"/>";
     }
 }
-
-
 void style_table_column_properties::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
                     
@@ -322,8 +314,6 @@ void style_table_cell_properties_attlist::add_attributes( const xml::attributes_
     CP_APPLY_ATTR(L"style:repeat-content"	, style_repeat_content_);
     CP_APPLY_ATTR(L"style:shrink-to-fit"	, style_shrink_to_fit_);
 }
-
-
 /// style:table-cell-properties
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_table_cell_properties::ns = L"style";
@@ -392,8 +382,6 @@ void style_table_row_properties_attlist::docx_convert(oox::docx_conversion_conte
         strm << L"<w:cantSplit w:val=\"true\" />";
     }
 }
-
-
 
 //  style:table-row-properties
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -490,8 +478,6 @@ void insert_cell_border(oox::docx_conversion_context & Context,
     catch(...)
     {
     }
-
-
     if (!none)
     {
         strm << L"<w:" << Side << " ";
@@ -506,8 +492,6 @@ void insert_cell_border(oox::docx_conversion_context & Context,
         strm << L"/>";
     }
 }
-
-
 void insert_cell_border(oox::pptx_conversion_context & Context, 
                         const std::wstring & Side,
                         const std::wstring & BorderStyle,
@@ -569,8 +553,6 @@ void insert_cell_border(oox::pptx_conversion_context & Context,
     catch(...)
     {
     }
-
-
     if (!none)
     {
         strm << L"<a:" << Side << " ";
@@ -585,8 +567,6 @@ void insert_cell_border(oox::pptx_conversion_context & Context,
         strm << L"/>";
     }
 }
-
-
 void style_table_cell_properties_attlist::docx_convert(oox::docx_conversion_context & Context)
 {
     std::wostream & strm = Context.output_stream();

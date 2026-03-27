@@ -46,8 +46,6 @@ namespace XLS
 // Example of a construction: 
 // PIVOTTH = SXTH *ContinueFrt
 // ContinueFrt may appear in the stream and may not. So, this class will increase performance much
-
-
 class StreamCacheReader
 {
 public:

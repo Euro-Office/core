@@ -386,8 +386,6 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position)
 	Scale[0] = position / 100.0;
 	DrawPath1();
 }
-
-
 void MainWindow::on_horizontalSlider_2_sliderMoved(int position)
 {
 	Scale[1] = position / 100.0;

@@ -38,19 +38,13 @@ namespace XLS
 CalcIter::CalcIter()
 {
 }
-
-
 CalcIter::~CalcIter()
 {
 }
-
-
 BaseObjectPtr CalcIter::clone()
 {
 	return BaseObjectPtr(new CalcIter(*this));
 }
-
-
 void CalcIter::readFields(CFRecord& record)
 {
 	record >> vfIter;

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_OBJECTS_H
@@ -24,8 +22,6 @@
 #include "cidparse.h"
 
 #include "ciderrs.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -34,8 +30,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cidparse
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -45,8 +39,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_LOCAL_DEF( FT_Error )
   cid_parser_new( CID_Parser*    parser,
                   FT_Stream      stream,
@@ -57,8 +49,6 @@
     FT_ULong  base_offset, offset, ps_len;
     FT_Byte   *cur, *limit;
     FT_Byte   *arg1, *arg2;
-
-
     FT_MEM_ZERO( parser, sizeof ( *parser ) );
     psaux->ps_parser_funcs->init( &parser->root, 0, 0, memory );
 
@@ -88,13 +78,9 @@
       FT_Byte   buffer[256 + 10];
       FT_Long   read_len = 256 + 10; /* same as signed FT_Stream->size */
       FT_Byte*  p        = buffer;
-
-
       for ( offset = FT_STREAM_POS(); ; offset += 256 )
       {
         FT_Long  stream_len; /* same as signed FT_Stream->size */
-
-
         stream_len = stream->size - FT_STREAM_POS();
         if ( stream_len == 0 )
         {
@@ -203,8 +189,6 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   cid_parser_done( CID_Parser*  parser )
   {
@@ -212,12 +196,8 @@
     if ( parser->postscript )
     {
       FT_Stream  stream = parser->stream;
-
-
       FT_FRAME_RELEASE( parser->postscript );
     }
     parser->root.funcs.done( &parser->root );
   }
-
-
 /* END */

@@ -133,8 +133,6 @@ namespace BinDocxRW {
 			oThemeShade->SetValue(Shade);
 		}
 	}
-
-
 	Background::Background() : bColor (false), bThemeColor(false) {}
 	std::wstring Background::Write()
 	{

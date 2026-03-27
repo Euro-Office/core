@@ -170,8 +170,6 @@ static int jas_iccputxyz(jas_stream_t *out, jas_iccxyz_t *xyz);
 static long jas_iccpowi(int x, int n);
 
 static char *jas_iccsigtostr(int sig, char *buf);
-
-
 jas_iccattrvalinfo_t jas_iccattrvalinfos[] = {
 	{JAS_ICC_TYPE_CURV, {jas_icccurv_destroy, jas_icccurv_copy,
 	  jas_icccurv_input, jas_icccurv_output, jas_icccurv_getsize,
@@ -1686,8 +1684,6 @@ static long jas_iccpowi(int x, int n)
 		y *= x;
 	return y;
 }
-
-
 jas_iccprof_t *jas_iccprof_createfrombuf(uchar *buf, int len)
 {
 	jas_stream_t *in;

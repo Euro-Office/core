@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  rotateamlow.c
  *
@@ -40,8 +38,6 @@
 #include <string.h>
 #include <math.h>   /* required for sin and tan */
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------*
  *             32 bpp grayscale rotation about the center           *
  *------------------------------------------------------------------*/
@@ -116,8 +112,6 @@ l_float32  sina, cosa;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *             8 bpp grayscale rotation about the center            *
  *------------------------------------------------------------------*/
@@ -181,8 +175,6 @@ l_float32  sina, cosa;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *           32 bpp grayscale rotation about the UL corner          *
  *------------------------------------------------------------------*/
@@ -254,8 +246,6 @@ l_float32  sina, cosa;
     return;
 }
 
-
-
 /*------------------------------------------------------------------*
  *            8 bpp grayscale rotation about the UL corner          *
  *------------------------------------------------------------------*/
@@ -315,8 +305,6 @@ l_float32  sina, cosa;
 
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *               Fast RGB color rotation about center               *
  *------------------------------------------------------------------*/
@@ -663,5 +651,3 @@ l_float32  sina, cosa;
 
     return;
 }
-
-

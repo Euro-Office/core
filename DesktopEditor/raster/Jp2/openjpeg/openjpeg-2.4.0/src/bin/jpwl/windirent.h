@@ -23,7 +23,6 @@
  * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  * OTHER DEALINGS IN THE SOFTWARE.
  *
- *
  * May 28 1998, Toni Ronkko <tronkko@messi.uku.fi>
  *
  * $Id: uce-dirent.h,v 1.7 2002/05/13 10:48:35 tr Exp $
@@ -58,7 +57,6 @@
  *
  * Revision 1.1  1998/07/04 16:27:51  tr
  * Initial revision
- *
  *
  * MSVC 1.0 scans automatic dependencies incorrectly when your project
  * contains this very header.  The problem is that MSVC cannot handle
@@ -187,8 +185,6 @@
 #   if !defined(DIRENT_MAXNAMLEN)
 #     define DIRENT_MAXNAMLEN (MAX_PATH)
 #   endif
-
-
 /*** MS-DOS specifics ***/
 # elif defined(DIRENT_MSDOS_INTERFACE)
 #   include <dos.h>
@@ -237,8 +233,6 @@
 # if NAME_MAX < DIRENT_MAXNAMLEN
 #   error "assertion failed: NAME_MAX >= DIRENT_MAXNAMLEN"
 # endif
-
-
 /*
  * Substitute for real dirent structure.  Note that `d_name' field is a
  * true character array although we have it copied in the implementation
@@ -384,8 +378,6 @@ static DIR *opendir(const char *dirname)
     }
     return dirp;
 }
-
-
 /*
  * <function name="readdir">
  * <intro>read a directory entry
@@ -485,8 +477,6 @@ readdir(DIR *dirp)
     }
     return &dirp->current;
 }
-
-
 /*
  * <function name="closedir">
  * <intro>close directory stream.
@@ -542,8 +532,6 @@ closedir(DIR *dirp)
     free(dirp);
     return retcode;
 }
-
-
 /*
  * <function name="rewinddir">
  * <intro>rewind directory stream to the beginning
@@ -593,8 +581,6 @@ rewinddir(DIR *dirp)
         /*EMPTY*/;
     }
 }
-
-
 /*
  * Open native directory stream object and retrieve first file.
  * Be sure to close previous stream before opening new one.
@@ -632,8 +618,6 @@ _initdir(DIR *dirp)
     dirp->dirent_filled = 1;
     return 1;
 }
-
-
 /*
  * Return implementation dependent name of the current directory entry.
  */
@@ -650,8 +634,6 @@ _getdirname(const struct dirent *dp)
     return dp->data.name;
 #endif
 }
-
-
 /*
  * Copy name of implementation dependent directory entry to the d_name field.
  */
@@ -675,6 +657,4 @@ _setdirname(struct DIR *dirp)
 #else
 # error "missing dirent interface"
 #endif
-
-
 #endif /*DIRENT_H*/

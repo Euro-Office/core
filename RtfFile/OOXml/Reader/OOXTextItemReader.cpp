@@ -93,8 +93,6 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 			{
 				m_oTextItems->AddItem(oNewParagraph);
 			}
-
-
 		}break;
 		case OOX::et_w_tbl:
 		{

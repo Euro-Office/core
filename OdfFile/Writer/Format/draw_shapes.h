@@ -74,8 +74,6 @@ public:
     static const wchar_t * name;
    
 	static const ElementType type = typeDrawRect;
-
-
     virtual void serialize(std::wostream & _Wostream);
 
     draw_rect_attlist draw_rect_attlist_;    
@@ -99,8 +97,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawEllipse;
-
-
     virtual void serialize(std::wostream & _Wostream);
 
 	draw_ellipse_attlist draw_ellipse_attlist_;
@@ -115,8 +111,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawCircle;
-
-
     virtual void serialize(std::wostream & _Wostream);
 };
 
@@ -141,8 +135,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawLine;
-
-
     virtual void serialize(std::wostream & _Wostream);
 
     draw_line_attlist draw_line_attlist_;
@@ -167,8 +159,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawPath;
-
-
     virtual void serialize(std::wostream & _Wostream);
     
 	draw_path_attlist draw_path_attlist_;
@@ -194,8 +184,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawPolygon;
-
-
     virtual void serialize(std::wostream & _Wostream);
 
     draw_polygon_attlist draw_polygon_attlist_;
@@ -214,8 +202,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawCustomShape;
-
-
     virtual void serialize(std::wostream & _Wostream);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -243,8 +229,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawEquation;
-
-    
 	
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
@@ -289,8 +273,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawHandle;
-
-	
 		
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
@@ -339,8 +321,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawEnhancedGeometry;
-
-	
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -359,8 +339,6 @@ public:
 	office_element_ptr_array			draw_equation_;//некоторые заданные параметры отрисовки которые используются в draw_handle - автозамена общих частей
 	
 	static int parsing(_CP_OPT(std::wstring) val);//todoooo наоборот
-
-	
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(draw_enhanced_geometry);
@@ -374,8 +352,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawCaption;
-
-
 	virtual void serialize(std::wostream & _Wostream);
 };
 
@@ -398,8 +374,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawConnector;
-
-
 	virtual void serialize(std::wostream & _Wostream);
 
     draw_connector_attlist draw_connector_attlist_;
@@ -417,8 +391,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDrawControl;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -441,8 +413,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDr3dScene;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -461,8 +431,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDr3dExtrude;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -478,8 +446,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDr3dRotate;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -495,8 +461,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeDr3dLight;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -518,8 +482,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDr3dCube;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -540,8 +502,6 @@ public:
     static const wchar_t * name;
 	
 	static const ElementType type = typeDr3dSphere;
-
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -563,8 +523,6 @@ public:
     static const wchar_t * name;
    
 	static const ElementType type = typeDrawA;
-
-	
 
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);

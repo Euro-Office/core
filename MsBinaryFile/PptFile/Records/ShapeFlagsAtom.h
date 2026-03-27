@@ -38,8 +38,6 @@ class CRecordShapeFlagsAtom : public CUnknownRecord
 {
 public:
 	BYTE m_nFlags;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

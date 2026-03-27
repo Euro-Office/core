@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 PtgExtraList::PtgExtraList()
 {
 }
-
-
 PtgExtraList::PtgExtraList(CFRecord& record)
 {
     load(record);
 }
-
-
 BiffStructurePtr PtgExtraList::clone()
 {
     return BiffStructurePtr(new PtgExtraList(*this));
 }
-
-
 void PtgExtraList::load(CFRecord& record)
 {
     unsigned short flags;
@@ -84,13 +76,9 @@ void PtgExtraList::save(CFRecord& record)
 
 	record << columns;
 }
-
-
 const std::wstring PtgExtraList::toString() const
 {
     return L"";
 }
-
-
 } // namespace XLS
 

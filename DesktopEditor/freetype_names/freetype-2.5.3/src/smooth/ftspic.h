@@ -14,12 +14,8 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTSPIC_H__
 #define __FTSPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
@@ -36,13 +32,9 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs  ft_grays_raster;
 
   } SmoothPIC;
-
-
 #define GET_PIC( lib ) \
           ( (SmoothPIC*)( (lib)->pic_container.smooth ) )
 #define FT_GRAYS_RASTER_GET  ( GET_PIC( library )->ft_grays_raster )
-
-
   /* see ftspic.c for the implementation */
   void
   ft_smooth_renderer_class_pic_free( FT_Library  library );
@@ -69,6 +61,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTSPIC_H__ */
-
-
 /* END */

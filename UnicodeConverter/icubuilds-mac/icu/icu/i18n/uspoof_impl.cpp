@@ -21,8 +21,6 @@
 #include "uspoof_impl.h"
 
 #if !UCONFIG_NO_NORMALIZATION
-
-
 U_NAMESPACE_BEGIN
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(SpoofImpl)
@@ -45,8 +43,6 @@ SpoofImpl::SpoofImpl(SpoofData *data, UErrorCode &status) :
     }
     fMagic = USPOOF_MAGIC;
 }
-
-
 SpoofImpl::SpoofImpl() :
         fMagic(USPOOF_MAGIC), fChecks(USPOOF_ALL_CHECKS), fSpoofData(NULL), fAllowedCharsSet(NULL) , 
         fAllowedLocales(NULL), fCachedIdentifierInfo(NULL) {
@@ -56,8 +52,6 @@ SpoofImpl::SpoofImpl() :
     fAllowedLocales  = uprv_strdup("");
     fRestrictionLevel = USPOOF_HIGHLY_RESTRICTIVE;
 }
-
-
 // Copy Constructor, used by the user level clone() function.
 SpoofImpl::SpoofImpl(const SpoofImpl &src, UErrorCode &status)  :
         fMagic(0), fChecks(USPOOF_ALL_CHECKS), fSpoofData(NULL), fAllowedCharsSet(NULL) , 
@@ -117,8 +111,6 @@ SpoofImpl *SpoofImpl::validateThis(USpoofChecker *sc, UErrorCode &status) {
     return const_cast<SpoofImpl *>
         (SpoofImpl::validateThis(const_cast<const USpoofChecker *>(sc), status));
 }
-
-
 
 //--------------------------------------------------------------------------------------
 //
@@ -220,8 +212,6 @@ int32_t SpoofImpl::confusableLookup(UChar32 inChar, int32_t tableMask, UnicodeSt
     dest.append(src, stringLen);
     return stringLen;
 }
-
-
 //---------------------------------------------------------------------------------------
 //
 //  wholeScriptCheck()
@@ -259,8 +249,6 @@ void SpoofImpl::wholeScriptCheck(
         }
     }
 }
-
-
 void SpoofImpl::setAllowedLocales(const char *localesList, UErrorCode &status) {
     UnicodeSet    allowedChars;
     UnicodeSet    *tmpSet = NULL;
@@ -314,8 +302,6 @@ void SpoofImpl::setAllowedLocales(const char *localesList, UErrorCode &status) {
         fChecks &= ~USPOOF_CHAR_LIMIT;
         return;
     }
-
-        
     // Add all common and inherited characters to the set of allowed chars.
     UnicodeSet tempSet;
     tempSet.applyIntPropertyValue(UCHAR_SCRIPT, USCRIPT_COMMON, status);
@@ -343,13 +329,9 @@ void SpoofImpl::setAllowedLocales(const char *localesList, UErrorCode &status) {
     fAllowedCharsSet = tmpSet;
     fChecks |= USPOOF_CHAR_LIMIT;
 }
-
-
 const char * SpoofImpl::getAllowedLocales(UErrorCode &/*status*/) {
     return fAllowedLocales;
 }
-
-
 // Given a locale (a language), add all the characters from all of the scripts used with that language
 // to the allowedChars UnicodeSet
 
@@ -371,8 +353,6 @@ void SpoofImpl::addScriptChars(const char *locale, UnicodeSet *allowedChars, UEr
         allowedChars->addAll(tmpSet);
     }
 }
-
-
 // Convert a text format hex number.  Utility function used by builder code.  Static.
 // Input: UChar *string text.  Output: a UChar32
 // Input has been pre-checked, and will have no non-hex chars.
@@ -435,8 +415,6 @@ IdentifierInfo *SpoofImpl::getIdentifierInfo(UErrorCode &status) const {
     }
     return returnIdInfo;
 }
-
-
 void SpoofImpl::releaseIdentifierInfo(IdentifierInfo *idInfo) const {
     if (idInfo != NULL) {
         SpoofImpl *nonConstThis = const_cast<SpoofImpl *>(this);
@@ -450,17 +428,11 @@ void SpoofImpl::releaseIdentifierInfo(IdentifierInfo *idInfo) const {
         delete idInfo;
     }
 }
-
-
-
-
 //----------------------------------------------------------------------------------------------
 //
 //   class SpoofData Implementation
 //
 //----------------------------------------------------------------------------------------------
-
-
 UBool SpoofData::validateDataVersion(const SpoofDataHeader *rawData, UErrorCode &status) {
     if (U_FAILURE(status) ||
         rawData == NULL ||
@@ -536,8 +508,6 @@ SpoofData::SpoofData(UDataMemory *udm, UErrorCode &status)
     validateDataVersion(fRawData, status);
     initPtrs(status);
 }
-
-
 SpoofData::SpoofData(const void *data, int32_t length, UErrorCode &status)
 {
     reset();
@@ -557,8 +527,6 @@ SpoofData::SpoofData(const void *data, int32_t length, UErrorCode &status)
     validateDataVersion(fRawData, status);
     initPtrs(status);
 }
-
-
 // Spoof Data constructor for use from data builder.
 //   Initializes a new, empty data area that will be populated later.
 SpoofData::SpoofData(UErrorCode &status) {
@@ -606,8 +574,6 @@ void SpoofData::reset() {
    fLowerCaseTrie = NULL;
    fScriptSets = NULL;
 }
-
-
 //  SpoofData::initPtrs()
 //            Initialize the pointers to the various sections of the raw data.
 //
@@ -657,8 +623,6 @@ void SpoofData::initPtrs(UErrorCode &status) {
         fScriptSets = (ScriptSet *)((char *)fRawData + fRawData->fScriptSets);
     }
 }
-
-
 SpoofData::~SpoofData() {
     utrie2_close(fAnyCaseTrie);
     fAnyCaseTrie = NULL;
@@ -673,21 +637,15 @@ SpoofData::~SpoofData() {
     }
     fUDM = NULL;
 }
-
-
 void SpoofData::removeReference() {
     if (umtx_atomic_dec(&fRefCount) == 0) {
         delete this;
     }
 }
-
-
 SpoofData *SpoofData::addReference() {
     umtx_atomic_inc(&fRefCount);
     return this;
 }
-
-
 void *SpoofData::reserveSpace(int32_t numBytes,  UErrorCode &status) {
     if (U_FAILURE(status)) {
         return NULL;
@@ -707,8 +665,6 @@ void *SpoofData::reserveSpace(int32_t numBytes,  UErrorCode &status) {
     initPtrs(status);
     return (char *)fRawData + returnOffset;
 }
-
-
 U_NAMESPACE_END
 
 U_NAMESPACE_USE
@@ -757,8 +713,6 @@ uspoof_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *ou
     //                         of the uspoof specific data.
     //
     int32_t headerSize=udata_swapDataHeader(ds, inData, length, outData, status);
-
-
     //
     // Get the Spoof Data Header, and check that it appears to be OK.
     //
@@ -791,8 +745,6 @@ uspoof_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *ou
         *status=U_INDEX_OUTOFBOUNDS_ERROR;
         return 0;
         }
-
-
     //
     // Swap the Data.  Do the data itself first, then the Spoof Data Header, because
     //                 we need to reference the header to locate the data, and an
@@ -866,5 +818,3 @@ uspoof_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *ou
 }
 
 #endif
-
-

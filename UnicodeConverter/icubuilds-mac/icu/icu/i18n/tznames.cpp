@@ -22,8 +22,6 @@
 #include "uhash.h"
 #include "umutex.h"
 #include "uvector.h"
-
-
 U_NAMESPACE_BEGIN
 
 // TimeZoneNames object cache handling
@@ -329,8 +327,6 @@ TimeZoneNames::getDisplayName(const UnicodeString& tzID, UTimeZoneNameType type,
     }
     return name;
 }
-
-
 struct MatchInfo : UMemory {
     UTimeZoneNameType nameType;
     UnicodeString id;
@@ -469,7 +465,5 @@ TimeZoneNames::MatchInfoCollection::matches(UErrorCode& status) {
     }
     return fMatches;
 }
-
-
 U_NAMESPACE_END
 #endif

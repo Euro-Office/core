@@ -651,8 +651,6 @@ enum ElementType
 	typeCalcextSparkline
 
 };
-
-
 //}
 }
 

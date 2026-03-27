@@ -38,13 +38,9 @@ namespace XLS
 Excel9File::Excel9File()
 {
 }
-
-
 Excel9File::~Excel9File()
 {
 }
-
-
 BaseObjectPtr Excel9File::clone()
 {
 	return BaseObjectPtr(new Excel9File(*this));

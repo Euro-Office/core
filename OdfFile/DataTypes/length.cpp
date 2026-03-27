@@ -278,7 +278,5 @@ vector3D vector3D::parse(const std::wstring & Str)
  
     return vector3D(std::stod(coord[0]), std::stod(coord[1]), std::stod(coord[2]));
 }
-
-
 } }
 

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "afranges.h"
 
   /*
@@ -42,8 +40,6 @@
    *   script.
    *
    */
-
-
   /* XXX Check base character ranges again:                        */
   /*     Right now, they are quickly derived by visual inspection. */
   /*     I can imagine that fine-tuning is necessary.              */
@@ -54,8 +50,6 @@
 
   /* the `af_xxxx_nonbase_uniranges' ranges must be strict subsets */
   /* of the corresponding `af_xxxx_uniranges' ranges               */
-
-
   const AF_Script_UniRangeRec  af_adlm_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x1E900, 0x1E95F ),   /* Adlam */
@@ -67,8 +61,6 @@
     AF_UNIRANGE_REC( 0x1D944, 0x1E94A ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_arab_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0600,  0x06FF ),  /* Arabic                                 */
@@ -103,8 +95,6 @@
     AF_UNIRANGE_REC(  0xFE7E,  0xFE7E ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_armn_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0530,  0x058F ),  /* Armenian                          */
@@ -117,8 +107,6 @@
     AF_UNIRANGE_REC(  0x0559,  0x055F ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_avst_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10B00,  0x10B3F ),  /* Avestan */
@@ -130,8 +118,6 @@
     AF_UNIRANGE_REC( 0x10B39,  0x10B3F ),
     AF_UNIRANGE_REC(       0,        0 )
   };
-
-
   const AF_Script_UniRangeRec  af_bamu_uniranges[] =
   {
     AF_UNIRANGE_REC( 0xA6A0,   0xA6FF ),   /* Bamum */
@@ -148,8 +134,6 @@
     AF_UNIRANGE_REC(  0xA6F0,  0xA6F1 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_beng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0980,  0x09FF ),  /* Bengali */
@@ -166,8 +150,6 @@
     AF_UNIRANGE_REC(  0x09FE,  0x09FE ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_buhd_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1740,  0x175F ),   /* Buhid */
@@ -179,8 +161,6 @@
     AF_UNIRANGE_REC(  0x1752,  0x1753 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cakm_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x11100, 0x1114F ),   /* Chakma */
@@ -194,8 +174,6 @@
     AF_UNIRANGE_REC( 0x11146, 0x11146 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cans_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1400,  0x167F ), /* Unified Canadian Aboriginal Syllabics          */
@@ -207,8 +185,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cari_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x102A0, 0x102DF ),   /* Carian */
@@ -219,8 +195,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cher_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x13A0,  0x13FF ),  /* Cherokee            */
@@ -232,8 +206,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_copt_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x2C80,  0x2CFF ),   /* Coptic */
@@ -245,8 +217,6 @@
     AF_UNIRANGE_REC(  0x2CEF,  0x2CF1 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cprt_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10800, 0x1083F ),   /* Cypriot */
@@ -257,8 +227,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_cyrl_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0400,  0x04FF ),  /* Cyrillic            */
@@ -277,8 +245,6 @@
     AF_UNIRANGE_REC(  0xA69E,  0xA69F ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   /* There are some characters in the Devanagari Unicode block that are    */
   /* generic to Indic scripts; we omit them so that their presence doesn't */
   /* trigger Devanagari.                                                   */
@@ -309,8 +275,6 @@
     AF_UNIRANGE_REC(  0xA8FF,  0xA8FF ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_dsrt_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10400, 0x1044F ),  /* Deseret */
@@ -321,8 +285,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_ethi_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1200,  0x137F ),  /* Ethiopic            */
@@ -337,8 +299,6 @@
     AF_UNIRANGE_REC(  0x135D,  0x135F ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_geor_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x10D0,  0x10FF ),  /* Georgian (Mkhedruli)          */
@@ -350,8 +310,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_geok_uniranges[] =
   {
     /* Khutsuri */
@@ -364,8 +322,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_glag_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x2C00,  0x2C5F ),  /* Glagolitic */
@@ -378,8 +334,6 @@
     AF_UNIRANGE_REC( 0x1E000, 0x1E02F ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_goth_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10330, 0x1034F ),   /* Gothic */
@@ -390,8 +344,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_grek_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0370,  0x03FF ),  /* Greek and Coptic */
@@ -410,8 +362,6 @@
     AF_UNIRANGE_REC(  0x1FFD,  0x1FFE ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_gujr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0A80,  0x0AFF ),  /* Gujarati */
@@ -428,8 +378,6 @@
     AF_UNIRANGE_REC(  0x0AFA,  0x0AFF ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_guru_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0A00,  0x0A7F ),  /* Gurmukhi */
@@ -445,8 +393,6 @@
     AF_UNIRANGE_REC(  0x0A75,  0x0A75 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_hebr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0590,  0x05FF ),  /* Hebrew                          */
@@ -463,8 +409,6 @@
     AF_UNIRANGE_REC(  0xFB1E,  0xFB1E ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_kali_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA900,  0xA92F ),   /* Kayah Li */
@@ -476,8 +420,6 @@
     AF_UNIRANGE_REC(  0xA926,  0xA92D ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_knda_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C80,  0x0CFF ),  /* Kannada */
@@ -494,8 +436,6 @@
     AF_UNIRANGE_REC(  0x0CE2,  0x0CE3 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_khmr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1780,  0x17FF ),  /* Khmer */
@@ -510,8 +450,6 @@
     AF_UNIRANGE_REC(  0x17DD,  0x17DD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_khms_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x19E0,  0x19FF ),  /* Khmer Symbols */
@@ -522,8 +460,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_lao_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0E80,  0x0EFF ),  /* Lao */
@@ -537,8 +473,6 @@
     AF_UNIRANGE_REC(  0x0EC8,  0x0ECD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_latn_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0020,  0x007F ),  /* Basic Latin (no control chars)         */
@@ -596,8 +530,6 @@
     AF_UNIRANGE_REC(  0xA7F8,  0xA7FA ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_latb_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1D62,  0x1D6A ),  /* some small subscript letters   */
@@ -610,8 +542,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_latp_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x00AA,  0x00AA ),  /* feminine ordinal indicator          */
@@ -634,8 +564,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_lisu_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA4D0,  0xA4FF ),    /* Lisu */
@@ -646,8 +574,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_mlym_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D00,  0x0D7F ),  /* Malayalam */
@@ -662,8 +588,6 @@
     AF_UNIRANGE_REC(  0x0D62,  0x0D63 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_medf_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x16E40, 0x16E9F ),  /* Medefaidrin */
@@ -674,8 +598,6 @@
   {
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_mong_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1800,  0x18AF ),  /* Mongolian            */
@@ -689,8 +611,6 @@
     AF_UNIRANGE_REC(  0x18A9,  0x18A9 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_mymr_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1000,  0x109F ),    /* Myanmar            */
@@ -715,8 +635,6 @@
     AF_UNIRANGE_REC(  0xAA7C,  0xAA7C ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_nkoo_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x07C0,  0x07FF ),    /* N'Ko */
@@ -729,8 +647,6 @@
     AF_UNIRANGE_REC(  0x07FD,  0x07FD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_none_uniranges[] =
   {
     AF_UNIRANGE_REC( 0, 0 )
@@ -740,8 +656,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_olck_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1C50,  0x1C7F ),    /* Ol Chiki */
@@ -752,8 +666,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_orkh_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10C00, 0x10C4F ),    /* Old Turkic */
@@ -764,8 +676,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_osge_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x104B0, 0x104FF ),    /* Osage */
@@ -776,8 +686,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_osma_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10480, 0x104AF ),   /* Osmanya */
@@ -788,8 +696,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_rohg_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10D00, 0x10D3F ),   /* Hanifi Rohingya */
@@ -800,8 +706,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_saur_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA880,  0xA8DF ),   /* Saurashtra */
@@ -814,8 +718,6 @@
     AF_UNIRANGE_REC(  0xA8B4,  0xA8C5 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_shaw_uniranges[] =
   {
     AF_UNIRANGE_REC( 0x10450, 0x1047F ),   /* Shavian */
@@ -826,8 +728,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_sinh_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0D80,  0x0DFF ),  /* Sinhala */
@@ -840,8 +740,6 @@
     AF_UNIRANGE_REC(  0x0DD2,  0x0DD6 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_sund_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x1B80,  0x1BBF ), /* Sundanese            */
@@ -855,8 +753,6 @@
     AF_UNIRANGE_REC(  0x1BA1,  0x1BAD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_taml_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B80,  0x0BFF ),  /* Tamil */
@@ -870,8 +766,6 @@
     AF_UNIRANGE_REC(  0x0BCD,  0x0BCD ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_tavt_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xAA80,  0xAADF ),   /* Tai Viet */
@@ -887,8 +781,6 @@
     AF_UNIRANGE_REC(  0xAAC1,  0xAAC1 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_telu_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0C00,  0x0C7F ),  /* Telugu */
@@ -904,8 +796,6 @@
     AF_UNIRANGE_REC(  0x0C62,  0x0C63 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_thai_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0E00,  0x0E7F ),  /* Thai */
@@ -919,8 +809,6 @@
     AF_UNIRANGE_REC(  0x0E47,  0x0E4E ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_tfng_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x2D30,  0x2D7F ),   /* Tifinagh */
@@ -931,8 +819,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
   const AF_Script_UniRangeRec  af_vaii_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA500,  0xA63F ),   /* Vai */
@@ -943,8 +829,6 @@
   {
     AF_UNIRANGE_REC( 0, 0 )
   };
-
-
 #ifdef AF_CONFIG_OPTION_INDIC
 
   const AF_Script_UniRangeRec  af_limb_uniranges[] =
@@ -960,8 +844,6 @@
     AF_UNIRANGE_REC(  0x1937,  0x193B ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_orya_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0B00,  0x0B7F ),  /* Oriya */
@@ -978,8 +860,6 @@
     AF_UNIRANGE_REC(  0x0B62,  0x0B63 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_sylo_uniranges[] =
   {
     AF_UNIRANGE_REC(  0xA800,  0xA82F ),  /* Syloti Nagri */
@@ -994,8 +874,6 @@
     AF_UNIRANGE_REC(  0xA825,  0xA826 ),
     AF_UNIRANGE_REC(       0,       0 )
   };
-
-
   const AF_Script_UniRangeRec  af_tibt_uniranges[] =
   {
     AF_UNIRANGE_REC(  0x0F00,  0x0FFF ),  /* Tibetan */

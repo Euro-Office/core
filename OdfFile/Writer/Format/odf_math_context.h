@@ -38,8 +38,6 @@
 #include "office_elements_create.h"
 #include <fstream>
 //#include "../../DataTypes/mathclass.h"
-
-
 #define CREATE_MATH_TAG(tag)\
 	odf_writer::office_element_ptr elm;\
 	odf_writer::create_element(L"math", tag, elm, odf_context());\

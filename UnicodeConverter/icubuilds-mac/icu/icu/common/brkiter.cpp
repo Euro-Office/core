@@ -266,8 +266,6 @@ U_NAMESPACE_END
 static icu::UInitOnce gInitOnce;
 static icu::ICULocaleService* gService = NULL;
 
-
-
 /**
  * Release all static memory held by breakiterator.
  */
@@ -297,8 +295,6 @@ getService(void)
     umtx_initOnce(gInitOnce, &initService);
     return gService;
 }
-
-
 // -------------------------------------
 
 static inline UBool
@@ -456,8 +452,6 @@ BreakIterator::getLocaleID(ULocDataLocaleType type, UErrorCode& status) const {
     U_LOCALE_BASED(locBased, *this);
     return locBased.getLocaleID(type, status);
 }
-
-
 // This implementation of getRuleStatus is a do-nothing stub, here to
 // provide a default implementation for any derived BreakIterator classes that
 // do not implement it themselves.

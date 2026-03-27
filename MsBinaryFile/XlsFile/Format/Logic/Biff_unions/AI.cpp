@@ -37,24 +37,16 @@
 
 namespace XLS
 {
-
-
 AI::AI()
 {
 }
-
-
 AI::~AI()
 {
 }
-
-
 BaseObjectPtr AI::clone()
 {
 	return BaseObjectPtr(new AI(*this));
 }
-
-
 // AI = BRAI [SeriesText]
 const bool AI::loadContent(BinProcessor& proc)
 {

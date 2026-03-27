@@ -112,8 +112,6 @@ namespace svg
         void parse_object_units_attr(attr_e);
         void parse_paint_attr(attr_e);
         void parse_uri_attr(attr_e);
-
-
         unsigned parse_transform_args(const char* str, double* args, 
                                       unsigned max_na, unsigned* na);
  
@@ -176,6 +174,4 @@ namespace svg
 } // namespace agg
 
 #endif // #ifndef AGG_SVG_PARSER_INCLUDED
-
-
 

@@ -202,8 +202,6 @@ void OfficeArtSpContainer::save(XLS::CFRecord& record)
 		m_OfficeArtAnchor->save(record);
 	if(m_oOfficeArtClientData != nullptr)
 		m_oOfficeArtClientData->save(record);
-
-
 	//calculating size
 	rh_own.recLen = record.getRdPtr() - sizePos;
 	record.RollRdPtrBack(rh_own.recLen + 4);

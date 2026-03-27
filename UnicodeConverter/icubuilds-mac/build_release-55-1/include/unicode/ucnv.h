@@ -309,8 +309,6 @@ U_CDECL_END
  */
 U_STABLE int U_EXPORT2
 ucnv_compareNames(const char *name1, const char *name2);
-
-
 /**
  * Creates a UConverter object with the name of a coded character set specified as a C string.
  * The actual name will be resolved with the alias file
@@ -363,8 +361,6 @@ ucnv_compareNames(const char *name1, const char *name2);
  */
 U_STABLE UConverter* U_EXPORT2
 ucnv_open(const char *converterName, UErrorCode *err);
-
-
 /**
  * Creates a Unicode converter with the names specified as unicode string.
  * The name should be limited to the ASCII-7 alphanumerics range.
@@ -929,8 +925,6 @@ U_STABLE void U_EXPORT2
 ucnv_getStarters(const UConverter* converter,
                  UBool starters[256],
                  UErrorCode* err);
-
-
 /**
  * Selectors for Unicode sets that can be returned by ucnv_getUnicodeSet().
  * @see ucnv_getUnicodeSet
@@ -944,8 +938,6 @@ typedef enum UConverterUnicodeSet {
     /** Number of UConverterUnicodeSet selectors. @stable ICU 2.6 */
     UCNV_SET_COUNT
 } UConverterUnicodeSet;
-
-
 /**
  * Returns the set of Unicode code points that can be converted by an ICU converter.
  *

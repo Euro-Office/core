@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr ExternDocName::clone()
 {
 	return BiffStructurePtr(new ExternDocName(*this));
 }
-
-
 void ExternDocName::load(CFRecord& record)
 {
 	record >> ixals;

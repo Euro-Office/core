@@ -43,15 +43,11 @@
 #include "style_table_properties.h"
 #include "style_graphic_properties.h"
 #include "draw_common.h"
-
-
 namespace cpdoccore { 
 
 	using namespace odf_types;
 
 namespace odf_reader {
-
-
 bool table_table_cell_content::pptx_convert(oox::pptx_conversion_context & Context)
 {
     bool wasPar = false;

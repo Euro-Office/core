@@ -35,24 +35,16 @@
 
 namespace XLS
 {
-
-
 UNKNOWNFRT::UNKNOWNFRT()
 {
 }
-
-
 UNKNOWNFRT::~UNKNOWNFRT()
 {
 }
-
-
 BaseObjectPtr UNKNOWNFRT::clone()
 {
 	return BaseObjectPtr(new UNKNOWNFRT(*this));
 }
-
-
 // UNKNOWNFRT = SXAddl
 const bool UNKNOWNFRT::loadContent(BinProcessor& proc)
 {

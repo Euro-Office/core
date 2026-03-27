@@ -138,12 +138,6 @@ namespace agg
         pod_array<span> m_spans;
         span*           m_cur_span;
     };
-
-
-
-
-
-
     //===========================================================scanline32_bin
     class scanline32_bin
     {
@@ -160,8 +154,6 @@ namespace agg
             coord_type len;
         };
         typedef pod_bvector<span, 4> span_array_type;
-
-
         //--------------------------------------------------------------------
         class const_iterator
         {
@@ -180,8 +172,6 @@ namespace agg
             const span_array_type& m_spans;
             unsigned               m_span_idx;
         };
-
-
         //--------------------------------------------------------------------
         scanline32_bin() : m_max_len(0), m_last_x(0x7FFFFFF0) {}
 
@@ -254,11 +244,5 @@ namespace agg
         span_array_type m_spans;
     };
 
-
-
-
-
 }
-
-
 #endif

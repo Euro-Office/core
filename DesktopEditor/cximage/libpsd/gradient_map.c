@@ -28,13 +28,9 @@
 #include "psd_stream.h"
 #include "psd_color.h"
 #include "psd_rect.h"
-
-
 typedef void psd_adjustment_blend_proc(psd_uint layer_info_data, psd_int * red, psd_int * green, psd_int * blue);
 extern void psd_adjustment_blend_color(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect, 
 	psd_adjustment_blend_proc * blend_proc, psd_uint layer_info_data);
-
-
 // Gradient settings
 psd_status psd_get_layer_gradient_map(psd_context * context, psd_layer_record * layer)
 {

@@ -65,6 +65,4 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtFSPGR> OfficeArtFSPGRPtr;
-
-
 } // namespace XLS

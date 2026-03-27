@@ -69,8 +69,6 @@ static UBool U_CALLCONV compareEntries(const UHashTok p1, const UHashTok p2) {
     return (UBool)(uhash_compareChars(name1, name2) &&
         uhash_compareChars(path1, path2));
 }
-
-
 /**
  *  Internal function, gets parts of locale name according 
  *  to the position of '_' character
@@ -498,8 +496,6 @@ static void ures_setIsStackObject( UResourceBundle* resB, UBool state) {
 static UBool ures_isStackObject(const UResourceBundle* resB) {
   return((resB->fMagic1 == MAGIC1 && resB->fMagic2 == MAGIC2)?FALSE:TRUE);
 }
-
-
 U_CFUNC void ures_initStackObject(UResourceBundle* resB) {
   uprv_memset(resB, 0, sizeof(UResourceBundle));
   ures_setIsStackObject(resB, TRUE);
@@ -1003,8 +999,6 @@ static UResourceBundle *init_resb_result(const ResourceData *rdata, Resource r,
                     }
                     path = realData->fPath;
                 }
-
-
                 {
                     /* got almost everything, let's try to open */
                     /* first, open the bundle with real data */
@@ -1881,8 +1875,6 @@ ures_getByKeyWithFallback(const UResourceBundle *resB,
     ures_close(helper);
     return fillIn;
 }
-
-
 U_CAPI UResourceBundle* U_EXPORT2 ures_getByKey(const UResourceBundle *resB, const char* inKey, UResourceBundle *fillIn, UErrorCode *status) {
     Resource res = RES_BOGUS;
     UResourceDataEntry *realData = NULL;
@@ -2055,8 +2047,6 @@ ures_getLocale(const UResourceBundle* resourceBundle,
 {
   return ures_getLocaleInternal(resourceBundle, status);
 }
-
-
 U_CAPI const char* U_EXPORT2 
 ures_getLocaleByType(const UResourceBundle* resourceBundle, 
                      ULocDataLocaleType type, 
@@ -2253,8 +2243,6 @@ ures_getVersionNumberInternal(const UResourceBundle *resourceBundle)
     
         /* Allocate the string, and build it up. */
         /* + 1 for zero byte */
-
-
         ((UResourceBundle *)resourceBundle)->fVersion = (char *)uprv_malloc(1 + len); 
         /* Check for null pointer. */
         if (((UResourceBundle *)resourceBundle)->fVersion == NULL) {
@@ -2339,8 +2327,6 @@ ures_loc_resetLocales(UEnumeration* en,
     UResourceBundle *res = &((ULocalesContext *)en->context)->installed;
     ures_resetIterator(res);
 }
-
-
 static const UEnumeration gLocalesEnum = {
     NULL,
         NULL,
@@ -2350,8 +2336,6 @@ static const UEnumeration gLocalesEnum = {
         ures_loc_nextLocale,
         ures_loc_resetLocales
 };
-
-
 U_CAPI UEnumeration* U_EXPORT2
 ures_openAvailableLocales(const char *path, UErrorCode *status)
 {
@@ -2435,8 +2419,6 @@ ures_getFunctionalEquivalent(char *result, int32_t resultCapacity,
 #endif
     ures_initStackObject(&bund1);
     ures_initStackObject(&bund2);
-    
-    
     uprv_strcpy(parent, base);
     uprv_strcpy(found, base);
 

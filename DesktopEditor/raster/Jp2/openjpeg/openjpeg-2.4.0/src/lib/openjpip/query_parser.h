@@ -70,8 +70,6 @@ typedef struct query_param {
     image_return_t return_type;                 /**< image return type */
     int len;                                    /**< maximum response length */
 } query_param_t;
-
-
 /**
  * parse query
  *
@@ -86,8 +84,6 @@ query_param_t * parse_query(const char *query_string);
  * @param[in] query_param  query parameters
  */
 void print_queryparam(query_param_t query_param);
-
-
 /**
  * delete query
  *

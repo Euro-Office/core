@@ -164,8 +164,6 @@ namespace svg
             v->b = at(i+2);
             v->a = at(i+3);
         }
-
-
         template<class T> void read_value(T* v)
         {
             value_at(0, v);

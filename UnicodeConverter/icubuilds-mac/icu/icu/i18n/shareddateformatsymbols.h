@@ -14,8 +14,6 @@
 #include "unicode/dtfmtsym.h"
 
 U_NAMESPACE_BEGIN
-
-
 class U_I18N_API SharedDateFormatSymbols : public SharedObject {
 public:
     SharedDateFormatSymbols(

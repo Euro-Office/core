@@ -17,13 +17,9 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_bezier_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
 
 typedef agg::pixfmt_bgr24 pixfmt;
-
-
 static agg::int8u brightness_to_alpha[256 * 3] = 
 {
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
@@ -75,8 +71,6 @@ static agg::int8u brightness_to_alpha[256 * 3] =
      39,  37,  36,  35,  34,  33,  31,  30,  29,  28,  27,  25,  24,  23,  22,  20, 
      19,  18,  17,  15,  14,  13,  12,  11,   9,   8,   7,   6,   4,   3,   2,   1
 };
-
-
 class pattern_src_brightness_to_alpha_rgba8
 {
 public:
@@ -96,8 +90,6 @@ private:
     agg::rendering_buffer* m_rb;
     pixfmt m_pf;
 };
-
-
 class the_application : public agg::platform_support
 {
     agg::rgba8 m_ctrl_color;
@@ -118,8 +110,6 @@ public:
     typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_scanline;
     typedef agg::rasterizer_scanline_aa<> rasterizer_scanline;
     typedef agg::scanline_p8 scanline;
-
-
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
         m_ctrl_color(agg::rgba(0, 0.3, 0.5, 0.3)),
@@ -178,8 +168,6 @@ public:
         m_start_x.no_transform();
         add_ctrl(m_start_x);
     }
-
-
     template<class Pattern, 
              class Rasterizer, 
              class Renderer, 
@@ -196,8 +184,6 @@ public:
         ren.start_x(m_start_x.value());
         ras.add_path(vs);
     }
-
-
     virtual void on_draw()
     {
         pixfmt pf(rbuf_window());
@@ -270,8 +256,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_scale_x);
         agg::render_ctrl(ras, sl, ren_base, m_start_x);
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -290,8 +274,6 @@ public:
     {
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -325,5 +307,3 @@ int agg_main(int argc, char* argv[])
 
     return 1;
 }
-
-

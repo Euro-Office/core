@@ -22,8 +22,6 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __GXVMORT_H__
 #define __GXVMORT_H__
 
@@ -31,8 +29,6 @@
 #include "gxvcommn.h"
 
 #include FT_SFNT_NAMES_H
-
-
   typedef struct  GXV_mort_featureRec_
   {
     FT_UShort  featureType;
@@ -49,8 +45,6 @@
             (f).featureSetting == 1            || \
             (f).enableFlags    == 0x00000000UL || \
             (f).disableFlags   == 0x00000000UL )
-
-
   FT_LOCAL( void )
   gxv_mort_featurearray_validate( FT_Bytes       table,
                                   FT_Bytes       limit,
@@ -85,9 +79,5 @@
   gxv_mort_subtable_type5_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
                                     GXV_Validator  valid );
-
-
 #endif /* __GXVMORT_H__ */
-
-
 /* END */

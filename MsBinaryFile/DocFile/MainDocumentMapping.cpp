@@ -75,8 +75,6 @@ namespace DocFileFormat
 		m_pXmlWriter->WriteAttribute(L"xmlns:wne",		L"http://schemas.microsoft.com/office/word/2006/wordml");
 		m_pXmlWriter->WriteAttribute(L"xmlns:wps",		L"http://schemas.microsoft.com/office/word/2010/wordprocessingShape");
 		m_pXmlWriter->WriteAttribute(L"mc:Ignorable",	L"w14 w15 w16se wp14");
-	
-
 		  m_pXmlWriter->WriteNodeEnd( L"", TRUE, FALSE );
 
 		if ((m_document->GetOfficeArt()) && (m_document->GetOfficeArt()->GetShapeBackgound()))

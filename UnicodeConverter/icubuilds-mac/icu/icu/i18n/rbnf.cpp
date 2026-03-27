@@ -182,8 +182,6 @@ LocalizationInfo::indexForRuleSet(const UChar* ruleset) const {
     }
     return -1;
 }
-
-
 typedef void (*Fn_Deleter)(void*);
 
 class VArray {
@@ -277,8 +275,6 @@ public:
 private:
     void init(UErrorCode& status) const;
 };
-
-
 enum {
     OPEN_ANGLE = 0x003c, /* '<' */
     CLOSE_ANGLE = 0x003e, /* '>' */
@@ -335,8 +331,6 @@ private:
 #define ERROR(msg) parseError(NULL); return NULL;
 #define EXPLANATION_ARG
 #endif
-        
-
 static const UChar DQUOTE_STOPLIST[] = { 
     QUOTE, 0
 };
@@ -384,8 +378,6 @@ LocDataParser::parse(UChar* _data, int32_t len) {
 
     return doParse();
 }
-
-
 StringLocalizationInfo*
 LocDataParser::doParse(void) {
     skipWhitespace();
@@ -622,8 +614,6 @@ StringLocalizationInfo::~StringLocalizationInfo() {
     if (data) uprv_free(data);
     if (info) uprv_free(info);
 }
-
-
 const UChar*
 StringLocalizationInfo::getRuleSetName(int32_t index) const {
     if (index >= 0 && index < getNumberOfRuleSets()) {
@@ -1089,8 +1079,6 @@ RuleBasedNumberFormat::format(int32_t number,
     }
     return toAppendTo;
 }
-
-
 UnicodeString&
 RuleBasedNumberFormat::format(int64_t number,
                               UnicodeString& toAppendTo,
@@ -1104,8 +1092,6 @@ RuleBasedNumberFormat::format(int64_t number,
     }
     return toAppendTo;
 }
-
-
 UnicodeString&
 RuleBasedNumberFormat::format(double number,
                               UnicodeString& toAppendTo,
@@ -1118,8 +1104,6 @@ RuleBasedNumberFormat::format(double number,
     }
     return adjustForCapitalizationContext(startPos, toAppendTo);
 }
-
-
 UnicodeString&
 RuleBasedNumberFormat::format(int32_t number,
                               const UnicodeString& ruleSetName,
@@ -1143,8 +1127,6 @@ RuleBasedNumberFormat::format(int32_t number,
     }
     return toAppendTo;
 }
-
-
 UnicodeString&
 RuleBasedNumberFormat::format(int64_t number,
                               const UnicodeString& ruleSetName,
@@ -1167,8 +1149,6 @@ RuleBasedNumberFormat::format(int64_t number,
     }
     return toAppendTo;
 }
-
-
 UnicodeString&
 RuleBasedNumberFormat::format(double number,
                               const UnicodeString& ruleSetName,
@@ -1214,8 +1194,6 @@ RuleBasedNumberFormat::adjustForCapitalizationContext(int32_t startPos,
 #endif
     return currentResult;
 }
-
-
 void
 RuleBasedNumberFormat::parse(const UnicodeString& text,
                              Formattable& result,
@@ -1345,8 +1323,6 @@ RuleBasedNumberFormat::initDefaultRuleSet()
         }
     }
 }
-
-
 void
 RuleBasedNumberFormat::init(const UnicodeString& rules, LocalizationInfo* localizationInfos,
                             UParseError& pErr, UErrorCode& status)
@@ -1611,8 +1587,6 @@ RuleBasedNumberFormat::stripWhitespace(UnicodeString& description)
 
     description.setTo(result);
 }
-
-
 void
 RuleBasedNumberFormat::dispose()
 {
@@ -1655,8 +1629,6 @@ RuleBasedNumberFormat::dispose()
         localizations = localizations->unref();
     }
 }
-
-
 //-----------------------------------------------------------------------
 // package-internal API
 //-----------------------------------------------------------------------
@@ -1715,8 +1687,6 @@ RuleBasedNumberFormat::getCollator() const
     // (see setLenientParseMode())
     return collator;
 }
-
-
 DecimalFormatSymbols*
 RuleBasedNumberFormat::initializeDecimalFormatSymbols(UErrorCode &status)
 {

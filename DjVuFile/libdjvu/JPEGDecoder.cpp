@@ -102,16 +102,12 @@ extern "C" {
 #include "GString.h"
 #endif // LIBJPEGNAME
 
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 //< Changed for WinDjView project
 #ifdef WIN32_JPEG
 
@@ -391,8 +387,6 @@ typedef struct
   JOCTET * buffer;    /* start of buffer */
   boolean start_of_stream;  
 } byte_stream_src_mgr;
-                
-
 typedef byte_stream_src_mgr * byte_stream_src_ptr; 
 
 #define INPUT_BUF_SIZE   4096
@@ -430,8 +424,6 @@ fill_input_buffer (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 METHODDEF(void)
 skip_input_data (j_decompress_ptr cinfo, long num_bytes)
 {

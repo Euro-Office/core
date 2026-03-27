@@ -47,8 +47,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
 	static const ElementType	type = typeRkRec;
 
 	const unsigned short get_ixfe() const;

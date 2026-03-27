@@ -62,18 +62,12 @@
 
 namespace XLS
 {
-
-
 CHARTFORMATS::CHARTFORMATS()
 {
 }
-
-
 CHARTFORMATS::~CHARTFORMATS()
 {
 }
-
-
 //  ([DataLabExt StartObject] ATTACHEDLABEL [EndObject])
 class Parenthesis_CHARTFORMATS_1: public ABNFParenthesis
 {
@@ -124,14 +118,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr CHARTFORMATS::clone()
 {
 	return BaseObjectPtr(new CHARTFORMATS(*this));
 }
-
-
 /*
 CHARTFOMATS = Chart Begin *2FONTLIST Scl PlotGrowth [FRAME] *SERIESFORMAT *SS ShtProps *2DFTTEXT 
 				AxesUsed 1*2AXISPARENT [CrtLayout12A] [DAT] *ATTACHEDLABEL [CRTMLFRT] 

@@ -17,8 +17,6 @@
 #define AGG_VCGEN_STROKE_INCLUDED
 
 #include "agg_math_stroke.h"
-
-
 namespace agg
 {
 
@@ -95,8 +93,6 @@ namespace agg
         unsigned                   m_src_vertex;
         unsigned                   m_out_vertex;
     };
-
-
 }
 
 #endif

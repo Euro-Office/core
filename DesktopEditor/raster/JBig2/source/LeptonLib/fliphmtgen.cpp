@@ -45,8 +45,6 @@ static void  fhmt_1_0(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32
 static void  fhmt_1_1(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  fhmt_1_2(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  fhmt_1_3(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
-
-
 /*---------------------------------------------------------------------*
  *                          Top-level hmt functions                    *
  *---------------------------------------------------------------------*/
@@ -123,8 +121,6 @@ PIX       *pixt;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Fast hmt dispatcher                       *
  *---------------------------------------------------------------------*/
@@ -161,8 +157,6 @@ flipfhmtgen_low(l_uint32  *datad,
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                  Low-level auto-generated hmt routines                   *
  *--------------------------------------------------------------------------*/
@@ -215,8 +209,6 @@ l_int32              wpls2, wpls3;
         }
     }
 }
-
-
 static void
 fhmt_1_1(l_uint32  *datad,
          l_int32    w,
@@ -257,8 +249,6 @@ l_int32              wpls2, wpls3;
         }
     }
 }
-
-
 static void
 fhmt_1_2(l_uint32  *datad,
          l_int32    w,
@@ -299,8 +289,6 @@ l_int32              wpls2, wpls3;
         }
     }
 }
-
-
 static void
 fhmt_1_3(l_uint32  *datad,
          l_int32    w,
@@ -341,5 +329,3 @@ l_int32              wpls2, wpls3;
         }
     }
 }
-
-

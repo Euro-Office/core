@@ -89,8 +89,6 @@ for f in "$@"; do
 			echo -ne "Formatting $f $elcr"
 			cmd="autopep8 --in-place --ignore=E261,E265,E402,E501"
 			;;
-
-
 		*)
 			echo -ne "$f skipped $elcr"
 			continue

@@ -1064,8 +1064,6 @@ static int jpc_dec_tiledecode(jpc_dec_t *dec, jpc_dec_tile_t *tile)
 		ccp = &tile->cp->ccps[compno];
 		jpc_tsfb_synthesize(tcomp->tsfb, tcomp->data);
 	}
-
-
 	/* Apply an inverse intercomponent transform if necessary. */
 	switch (tile->cp->mctid) {
 	case JPC_MCT_RCT:

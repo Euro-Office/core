@@ -107,8 +107,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*!
  *  pixColorContent()
  *
@@ -265,8 +263,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixc);
     return 0;
 }
-
-
 /*!
  *  pixColorMagnitude()
  *
@@ -422,8 +418,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixMaskOverColorPixels()
  *
@@ -502,8 +496,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixColorFraction()
  *
@@ -614,8 +606,6 @@ l_uint32  *data, *line;
     *pcolorfract = (l_float32)ncolor / (l_float32)npix;
     return 0;
 }
-
-
 /*!
  *  pixNumSignificantGrayColors()
  *
@@ -690,8 +680,6 @@ NUMA    *na;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*!
  *  pixColorsForQuantization()
  *      Input:  pixs (8 bpp gray or 32 bpp rgb; with or without colormap)
@@ -880,8 +868,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixm);
     return 0;
 }
-
-
 /*!
  *  pixNumColors()
  *      Input:  pixs (2, 4, 8, 32 bpp)
@@ -981,5 +967,3 @@ PIXCMAP   *cmap;
     FREE(inta);
     return 0;
 }
-
-

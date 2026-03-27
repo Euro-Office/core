@@ -171,12 +171,8 @@
 
 */
 //@{
-
-
 #include "GString.h"
 #include "ZPCodec.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -206,8 +202,6 @@ public:
   /** Index of the shape to blit. */
   unsigned int shapeno;
 };
-
-
 /** Shape data structure.  A #JB2Image# contains an array of #JB2Shape# data
     structures.  Each array entry represents an elementary blob of ink such as
     a character or a segment of line art.  Member #bits# points to a bilevel
@@ -236,8 +230,6 @@ public:
   long userdata;
 };
 
-
-
 /** JB2 Dictionary callback.
     The decoding function call this callback function when they discover that
     the current JB2Image or JB2Dict needs a pre-existing shape dictionary. 
@@ -245,8 +237,6 @@ public:
     if none is found. */
 
 typedef GP<JB2Dict> JB2DecoderCallback ( void* );
-
-
 /** Dictionary of JB2 shapes. */
 
 class DJVUAPI JB2Dict : public GPEnabled
@@ -317,13 +307,9 @@ public:
       inherited dictionary.  The callback should return null if no such
       dictionary is found. */
   void decode(const GP<ByteStream> &gbs, JB2DecoderCallback *cb=0, void *arg=0);
-
-  
 public:
   /** Comment string coded by JB2 file. */
   GUTF8String comment;
-
-
 private:
   int inherited_shapes;
   GP<JB2Dict> inherited_dict;
@@ -445,8 +431,6 @@ public:
   bool reproduce_old_bug;
 };
 
-
-
 // JB2DICT INLINE FUNCTIONS
 
 inline int
@@ -480,15 +464,11 @@ JB2Image::get_height(void) const
 {
   return height;
 }
-
-
 inline int
 JB2Image::get_blit_count(void) const
 {
   return blits.size();
 }
-
-
 inline JB2Blit *
 JB2Image::get_blit(int blitno)
 {
@@ -500,10 +480,6 @@ JB2Image::get_blit(int blitno) const
 {
   return & blits[blitno];
 }
-
-
-
-
 
 /** @name JB2 extensions for version 21.
 
@@ -552,8 +528,6 @@ JB2Image::get_blit(int blitno) const
     Each page {\bf FORM:DJVU} may directly contain a {\bf Djbz} chunk,
     or may indirectly point to such a chunk using an {\bf INCL} chunk
     (cf. \Ref{Multipage DjVu documents.}).
-    
-
     {\bf Numcoder Reset} --- This extension addresses a problem for
     hardware implementations.  The encoding of numbers (cf. ICFDD page
     26) potentially uses an unbounded number of binary coding
@@ -576,8 +550,6 @@ JB2Image::get_blit(int blitno) const
     coding contexts.  Old JB2 decoders will treat this record type as
     an #END_OF_DATA# record and cleanly stop decoding (cf. ICFDD page
     30, Image refinement data).
-
-
     {\bf References} ---
     \begin{itemize}
     \item ICFDD Draft Proposed American National Standard, 1999-08-26.
@@ -594,8 +566,6 @@ JB2Image::get_blit(int blitno) const
 
 // This class is accessed via the encode and decode
 // functions of class JB2Image
-
-
 //**** Class JB2Codec
 // This class implements the base class for both the JB2 coder and decoder.
 // The JB2Codec's Contains all contextual information for encoding/decoding

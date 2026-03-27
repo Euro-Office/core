@@ -272,8 +272,6 @@ ucase_toFullFolding(const UCaseProps *csp, UChar32 c,
 
 U_CFUNC int32_t U_EXPORT2
 ucase_hasBinaryProperty(UChar32 c, UProperty which);
-
-
 U_CDECL_BEGIN
 
 /**

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr TableFeatureType::clone()
 {
 	return BiffStructurePtr(new TableFeatureType(*this));
@@ -45,8 +43,6 @@ BiffStructurePtr TableFeatureType::clone()
 TableFeatureType::TableFeatureType()
 {		
 }
-
-
 TableFeatureType::~TableFeatureType()
 {
 }

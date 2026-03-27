@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTGZIP_H_
 #define FTGZIP_H_
 
@@ -26,8 +24,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /**************************************************************************
@@ -55,8 +51,6 @@ FT_BEGIN_HEADER
    *   This section contains the declaration of Gzip-specific functions.
    *
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -90,8 +84,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Stream_OpenGzip( FT_Stream  stream,
                       FT_Stream  source );
-
-
   /**************************************************************************
    *
    * @function:
@@ -141,11 +133,7 @@ FT_BEGIN_HEADER
                       FT_ULong        input_len );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTGZIP_H_ */
-
-
 /* END */

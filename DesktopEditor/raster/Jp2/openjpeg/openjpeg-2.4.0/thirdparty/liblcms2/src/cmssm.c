@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 // ------------------------------------------------------------------------
 
 // Gamut boundary description by using Jan Morovic's Segment maxima method
@@ -53,24 +51,18 @@ typedef  enum {
         GP_MODELED
 
     } GDBPointType;
-
-
 typedef struct {
 
     GDBPointType Type;
     cmsSpherical p;         // Keep also alpha & theta of maximum
 
 } cmsGDBPoint;
-
-
 typedef struct {
 
     cmsContext ContextID;
     cmsGDBPoint Gamut[SECTORS][SECTORS];
 
 } cmsGDB;
-
-
 // A line using the parametric form
 // P = a + t*u
 typedef struct {
@@ -79,8 +71,6 @@ typedef struct {
     cmsVEC3 u;
 
 } cmsLine;
-
-
 // A plane using the parametric form
 // Q = b + r*v + s*w
 typedef struct {
@@ -90,8 +80,6 @@ typedef struct {
     cmsVEC3 w;
 
 } cmsPlane;
-
-
 
 // --------------------------------------------------------------------------------------------
 
@@ -135,8 +123,6 @@ void ToSpherical(cmsSpherical* sp, const cmsVEC3* v)
     sp ->alpha = _cmsAtan2(a, b);
     sp ->theta = _cmsAtan2(sqrt(a*a + b*b), L);
 }
-
-
 // Convert to cartesian from spherical
 static
 void ToCartesian(cmsVEC3* v, const cmsSpherical* sp)
@@ -160,8 +146,6 @@ void ToCartesian(cmsVEC3* v, const cmsSpherical* sp)
     v ->n[VY] = a;
     v ->n[VZ] = b;
 }
-
-
 // Quantize sector of a spherical coordinate. Saturate 360, 180 to last sector
 // The limits are the centers of each sector, so
 static
@@ -175,8 +159,6 @@ void QuantizeToSector(const cmsSpherical* sp, int* alpha, int* theta)
     if (*theta >= SECTORS)
         *theta = SECTORS-1;
 }
-
-
 // Line determined by 2 points
 static
 void LineOf2Points(cmsLine* line, cmsVEC3* a, cmsVEC3* b)
@@ -187,8 +169,6 @@ void LineOf2Points(cmsLine* line, cmsVEC3* a, cmsVEC3* b)
                             b ->n[VY] - a ->n[VY],
                             b ->n[VZ] - a ->n[VZ]);
 }
-
-
 // Evaluate parametric line
 static
 void GetPointOfLine(cmsVEC3* p, const cmsLine* line, cmsFloat64Number t)
@@ -197,8 +177,6 @@ void GetPointOfLine(cmsVEC3* p, const cmsLine* line, cmsFloat64Number t)
     p ->n[VY] = line ->a.n[VY] + t * line->u.n[VY];
     p ->n[VZ] = line ->a.n[VZ] + t * line->u.n[VZ];
 }
-
-
 
 /*
     Closest point in sector line1 to sector line2 (both are defined as 0 <=t <= 1)
@@ -293,11 +271,7 @@ cmsBool ClosestLineToLine(cmsVEC3* r, const cmsLine* line1, const cmsLine* line2
     return TRUE;
 }
 
-
-
 // ------------------------------------------------------------------ Wrapper
-
-
 // Allocate & free structure
 cmsHANDLE  CMSEXPORT cmsGBDAlloc(cmsContext ContextID)
 {
@@ -308,16 +282,12 @@ cmsHANDLE  CMSEXPORT cmsGBDAlloc(cmsContext ContextID)
 
     return (cmsHANDLE) gbd;
 }
-
-
 void CMSEXPORT cmsGBDFree(cmsHANDLE hGBD)
 {
     cmsGDB* gbd = (cmsGDB*) hGBD;
     if (hGBD != NULL)
         _cmsFree(gbd->ContextID, (void*) gbd);
 }
-
-
 // Auxiliary to retrieve a pointer to the segmentr containing the Lab value
 static
 cmsGDBPoint* GetPoint(cmsGDB* gbd, const cmsCIELab* Lab, cmsSpherical* sp)
@@ -360,8 +330,6 @@ cmsBool CMSEXPORT cmsGDBAddPoint(cmsHANDLE hGBD, const cmsCIELab* Lab)
     cmsGDB* gbd = (cmsGDB*) hGBD;
     cmsGDBPoint* ptr;
     cmsSpherical sp;
-
-
     // Get pointer to the sector
     ptr = GetPoint(gbd, Lab, &sp);
     if (ptr == NULL) return FALSE;
@@ -373,8 +341,6 @@ cmsBool CMSEXPORT cmsGDBAddPoint(cmsHANDLE hGBD, const cmsCIELab* Lab)
         ptr -> p    = sp;
     }
     else {
-
-
         // Substitute only if radius is greater
         if (sp.r > ptr -> p.r) {
 
@@ -422,8 +388,6 @@ cmsBool CMSEXPORT cmsGDBCheckPoint(cmsHANDLE hGBD, const cmsCIELab* Lab)
 // {-2, 0}, {-1,  0}, {0,  0}, {+1,  0}, {+2,   0},
 // {-2,+1}, {-1, +1}, {0, +1}, {+1,  +1}, {+2,  +1},
 // {-2,+2}, {-1, +2}, {0, +2}, {+1,  +2}, {+2,  +2}};
-
-
 static
 const struct _spiral {
 
@@ -467,8 +431,6 @@ int FindNearSectors(cmsGDB* gbd, int alpha, int theta, cmsGDBPoint* Close[])
 
     return nSectors;
 }
-
-
 // Interpolate a missing sector. Method identifies whatever this is top, bottom or mid
 static
 cmsBool InterpolateMissingSector(cmsGDB* gbd, int alpha, int theta)
@@ -488,8 +450,6 @@ cmsBool InterpolateMissingSector(cmsGDB* gbd, int alpha, int theta)
 
     // Fill close points
     nCloseSectors = FindNearSectors(gbd, alpha, theta, Close);
-
-
     // Find a central point on the sector
     sp.alpha = (cmsFloat64Number) ((alpha + 0.5) * 360.0) / (SECTORS);
     sp.theta = (cmsFloat64Number) ((theta + 0.5) * 180.0) / (SECTORS);
@@ -524,8 +484,6 @@ cmsBool InterpolateMissingSector(cmsGDB* gbd, int alpha, int theta)
 
             // Convert to spherical
             ToSpherical(&templ, &temp);
-
-
             if ( templ.r > closel.r &&
                  templ.theta >= (theta*180.0/SECTORS) &&
                  templ.theta <= ((theta+1)*180.0/SECTORS) &&
@@ -543,8 +501,6 @@ cmsBool InterpolateMissingSector(cmsGDB* gbd, int alpha, int theta)
     return TRUE;
 
 }
-
-
 // Interpolate missing parts. The algorithm fist computes slices at
 // theta=0 and theta=Max.
 cmsBool CMSEXPORT cmsGDBCompute(cmsHANDLE hGBD, cmsUInt32Number dwFlags)
@@ -565,8 +521,6 @@ cmsBool CMSEXPORT cmsGDBCompute(cmsHANDLE hGBD, cmsUInt32Number dwFlags)
 
         if (!InterpolateMissingSector(gbd, alpha, SECTORS-1)) return FALSE;
     }
-
-
     // Interpolate Mid
     for (theta = 1; theta < SECTORS; theta++) {
         for (alpha = 0; alpha < SECTORS; alpha++) {
@@ -580,10 +534,6 @@ cmsBool CMSEXPORT cmsGDBCompute(cmsHANDLE hGBD, cmsUInt32Number dwFlags)
 
     cmsUNUSED_PARAMETER(dwFlags);
 }
-
-
-
-
 // --------------------------------------------------------------------------------------------------------
 
 // Great for debug, but not suitable for real use
@@ -652,8 +602,6 @@ cmsBool cmsGBDdumpVRML(cmsHANDLE hGBD, const char* fname)
     fprintf (fp, "\t\t\t\t\t0, 3, -1]\n");
     fprintf (fp, "\t\t\t}\n");
     fprintf (fp, "\t\t}\n");
-
-
     fprintf (fp, "\t\tShape {\n");
     fprintf (fp, "\t\t\tappearance Appearance {\n");
     fprintf (fp, "\t\t\t\tmaterial Material {\n");
@@ -688,8 +636,6 @@ cmsBool cmsGBDdumpVRML(cmsHANDLE hGBD, const char* fname)
 
         fprintf (fp, "\t\t\t\t}\n");
 
-
-
     // fill in the face colors
     fprintf (fp, "\t\t\t\tcolor Color {\n");
     fprintf (fp, "\t\t\t\t\tcolor [\n");
@@ -700,11 +646,7 @@ cmsBool cmsGBDdumpVRML(cmsHANDLE hGBD, const char* fname)
            cmsVEC3 v;
 
             pt = &gbd ->Gamut[i][j];
-
-
             ToCartesian(&v, &pt ->p);
-
-
         if (pt ->Type == GP_EMPTY)
             fprintf (fp, "\t\t\t\t\t%g %g %g", 0.0, 0.0, 0.0);
         else
@@ -721,8 +663,6 @@ cmsBool cmsGBDdumpVRML(cmsHANDLE hGBD, const char* fname)
                 fprintf (fp, ",\n");
     }
     fprintf (fp, "\t\t\t}\n");
-
-
     fprintf (fp, "\t\t\t}\n");
     fprintf (fp, "\t\t}\n");
     fprintf (fp, "\t]\n");

@@ -32,16 +32,12 @@
 
 #include <setjmp.h>
 
-
-
 /******************** JPEG COMPRESSION SAMPLE INTERFACE *******************/
 
 /* This half of the example shows how to feed data into the JPEG compressor.
  * We present a minimal version that does not worry about refinements such
  * as error recovery (the JPEG code will just exit() if it gets an error).
  */
-
-
 /*
  * IMAGE DATA FORMATS:
  *
@@ -61,8 +57,6 @@
 extern JSAMPLE * image_buffer;	/* Points to large array of R,G,B-order data */
 extern int image_height;	/* Number of rows in image */
 extern int image_width;		/* Number of columns in image */
-
-
 /*
  * Sample routine for JPEG compression.  We assume that the target file name
  * and a compression quality factor are passed in.
@@ -175,8 +169,6 @@ write_JPEG_file (char * filename, int quality)
 
   /* And we're done! */
 }
-
-
 /*
  * SOME FINE POINTS:
  *
@@ -205,8 +197,6 @@ write_JPEG_file (char * filename, int quality)
  * source data using the JPEG code's internal virtual-array mechanisms.
  */
 
-
-
 /******************** JPEG DECOMPRESSION SAMPLE INTERFACE *******************/
 
 /* This half of the example shows how to read data from the JPEG decompressor.
@@ -222,8 +212,6 @@ write_JPEG_file (char * filename, int quality)
  * because we don't need to remember to deallocate the buffer separately: it
  * will go away automatically when the JPEG object is cleaned up.
  */
-
-
 /*
  * ERROR HANDLING:
  *
@@ -272,14 +260,10 @@ my_error_exit (j_common_ptr cinfo)
   /* Return control to the setjmp point */
   longjmp(myerr->setjmp_buffer, 1);
 }
-
-
 /*
  * Sample routine for JPEG decompression.  We assume that the source file name
  * is passed in.  We want to return 1 on success, 0 on error.
  */
-
-
 GLOBAL(int)
 read_JPEG_file (char * filename)
 {
@@ -405,8 +389,6 @@ read_JPEG_file (char * filename)
   /* And we're done! */
   return 1;
 }
-
-
 /*
  * SOME FINE POINTS:
  *

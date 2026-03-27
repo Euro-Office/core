@@ -53,8 +53,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeManifestEncryptionData;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -78,8 +76,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeManifestAlgorithm;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -98,8 +94,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeManifestKeyDerivation;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 
@@ -120,8 +114,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeManifestStartKeyGeneration;
-    
-
 	virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name){}
 	virtual void add_child_element( const office_element_ptr & child_element){}
 

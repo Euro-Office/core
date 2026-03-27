@@ -632,8 +632,6 @@ namespace Word
 		}
 		return sResult;
 	}
-
-
 	void COnOff::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
 		WritingElement_ReadAttributes_Start( oReader )
@@ -1587,8 +1585,6 @@ namespace Word
 		WritingElement_ReadAttributes_ReadSingle( oReader, L"w:val", m_oVal )
 		WritingElement_ReadAttributes_End( oReader )
 	}
-
-
 //--------------------------------------------------------------------------------
 // Empty 17.15.1.48 (Part 1)
 //--------------------------------------------------------------------------------

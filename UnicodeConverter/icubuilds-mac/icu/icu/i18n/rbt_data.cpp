@@ -110,8 +110,6 @@ TransliterationRuleData::lookupReplacer(UChar32 standIn) const {
     UnicodeFunctor *f = lookup(standIn);
     return (f != 0) ? f->toReplacer() : 0;
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_TRANSLITERATION */

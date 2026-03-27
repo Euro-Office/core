@@ -32,8 +32,6 @@
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/fttrigon.h>
-
-
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
 #define FT_TRIG_SCALE      0xDBD95B16UL
 
@@ -51,8 +49,6 @@
     14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
     57L, 29L, 14L, 7L, 4L, 2L, 1L
   };
-
-
 #ifdef FT_LONG64
 
   /* multiply a given value by the CORDIC shrink factor */
@@ -60,8 +56,6 @@
   ft_trig_downscale( FT_Fixed  val )
   {
     FT_Int  s = 1;
-
-
     if ( val < 0 )
     {
        val = -val;
@@ -84,8 +78,6 @@
   {
     FT_Int     s = 1;
     FT_UInt32  lo1, hi1, lo2, hi2, lo, hi, i1, i2;
-
-
     if ( val < 0 )
     {
        val = -val;
@@ -126,16 +118,12 @@
   }
 
 #endif /* !FT_LONG64 */
-
-
   /* undefined and never called for zero vector */
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
     FT_Pos  x, y;
     FT_Int  shift;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -157,8 +145,6 @@
 
     return shift;
   }
-
-
   static void
   ft_trig_pseudo_rotate( FT_Vector*  vec,
                          FT_Angle    theta )
@@ -166,8 +152,6 @@
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
     const FT_Angle  *arctanptr;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -212,8 +196,6 @@
     vec->x = x;
     vec->y = y;
   }
-
-
   static void
   ft_trig_pseudo_polarize( FT_Vector*  vec )
   {
@@ -221,8 +203,6 @@
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
     const FT_Angle  *arctanptr;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -289,50 +269,36 @@
     vec->x = x;
     vec->y = theta;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
   FT_Cos( FT_Angle  angle )
   {
     FT_Vector  v;
-
-
     FT_Vector_Unit( &v, angle );
 
     return v.x;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
   FT_Sin( FT_Angle  angle )
   {
     FT_Vector  v;
-
-
     FT_Vector_Unit( &v, angle );
 
     return v.y;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
   FT_Tan( FT_Angle  angle )
   {
     FT_Vector  v = { 1 << 24, 0 };
-
-
     ft_trig_pseudo_rotate( &v, angle );
 
     return FT_DivFix( v.y, v.x );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Angle )
@@ -340,8 +306,6 @@
             FT_Fixed  dy )
   {
     FT_Vector  v;
-
-
     if ( dx == 0 && dy == 0 )
       return 0;
 
@@ -352,8 +316,6 @@
 
     return v.y;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -369,8 +331,6 @@
     vec->x = ( vec->x + 0x80L ) >> 8;
     vec->y = ( vec->y + 0x80L ) >> 8;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -379,8 +339,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     if ( !vec || !angle )
       return;
 
@@ -397,8 +355,6 @@
     if ( shift > 0 )
     {
       FT_Int32  half = (FT_Int32)1L << ( shift - 1 );
-
-
       vec->x = ( v.x + half - ( v.x < 0 ) ) >> shift;
       vec->y = ( v.y + half - ( v.y < 0 ) ) >> shift;
     }
@@ -409,8 +365,6 @@
       vec->y = (FT_Pos)( (FT_ULong)v.y << shift );
     }
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
@@ -418,8 +372,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     if ( !vec )
       return 0;
 
@@ -446,8 +398,6 @@
 
     return (FT_Fixed)( (FT_UInt32)v.x << -shift );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -457,8 +407,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     if ( !vec || !length || !angle )
       return;
 
@@ -476,8 +424,6 @@
                          : (FT_Fixed)( (FT_UInt32)v.x << -shift );
     *angle  = v.y;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -493,8 +439,6 @@
 
     FT_Vector_Rotate( vec, angle );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Angle )
@@ -502,8 +446,6 @@
                  FT_Angle  angle2 )
   {
     FT_Angle  delta = angle2 - angle1;
-
-
     while ( delta <= -FT_ANGLE_PI )
       delta += FT_ANGLE_2PI;
 
@@ -512,6 +454,4 @@
 
     return delta;
   }
-
-
 /* END */

@@ -409,8 +409,6 @@ namespace PPTX2EditorAdvanced
         return OOXMLShapes::sptNil;
     }
 }
-
-
 namespace NS_DWC_Common
 {
 	void CorrentCropString(std::wstring& s)
@@ -2537,8 +2535,6 @@ void CDrawingConverter::ConvertShape(PPTX::Logic::SpTreeElem *elem, XmlUtils::CX
 		//NSBinPptxRW::CXmlWriter oXml;
 		//elem->toXmlWriter(&oXml);
 		//std::wstring test = oXml.GetXmlString();
-
-		
 	}
 }
 void CDrawingConverter::ConvertWordArtShape(PPTX::Logic::SpTreeElem* elem, XmlUtils::CXmlNode& oNodeShape, CPPTShape* pPPTShape)
@@ -3461,8 +3457,6 @@ void CDrawingConverter::LoadCoordPos(XmlUtils::CXmlNode& oNode, CShapePtr pShape
 	}
 	pShape->getBaseShape()->m_oPath.SetCoordpos((LONG)pShape->m_dXLogic, (LONG)pShape->m_dYLogic);
 }
-
-
 void CDrawingConverter::LoadCoordSize(XmlUtils::CXmlNode& oNode, CShapePtr pShape)
 {
 	if (!pShape) return;
@@ -3790,8 +3784,6 @@ std::wstring CDrawingConverter::GetDrawingMainProps(XmlUtils::CXmlNode& oNode, P
 		
 		oWriter.WriteAttribute(L"relativeHeight", std::to_wstring(zIndex_));
 	}
-
-    
 	XmlUtils::CXmlNode oNodeWrap = oNode.ReadNode(L"w10:wrap");
     
 	std::wstring strWrapType;
@@ -4666,8 +4658,6 @@ void CDrawingConverter::CheckBrushShape(PPTX::Logic::SpTreeElem* oElem, XmlUtils
 			pSpPr->Fill.m_type = PPTX::Logic::UniFill::gradFill;
 			pSpPr->Fill.Fill = pGradFill;
 		}
-
-
 		if ((oType.IsInit() && oType->GetValue() == SimpleTypes::filltypePattern) && pSpPr->Fill.m_type != PPTX::Logic::UniFill::blipFill)
 		{
 			PPTX::Logic::PattFill* pPattFill = new PPTX::Logic::PattFill();
@@ -5949,8 +5939,6 @@ void CDrawingConverter::ConvertMainPropsToVML(const std::wstring& bsMainProps, N
 
 			outWriter.m_strAttributesMain += strAttr;
 		}
-		
-
 	}
 	XmlUtils::CXmlNode oNodeDocPr;
 	if (oNode.GetNode(L"wp:docPr", oNodeDocPr))

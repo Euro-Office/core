@@ -53,8 +53,6 @@ struct inflate_codes_state {
   inflate_huft *dtree;          /* distance tree */
 
 };
-
-
 local inflate_codes_statef *inflate_codes_new( /* bl, bd, tl, td, z) */
 uInt bl, uInt bd,
 inflate_huft *tl,
@@ -75,8 +73,6 @@ z_streamp z )
   }
   return c;
 }
-
-
 local int inflate_codes( /* s, z, r) */
 inflate_blocks_statef *s,
 z_streamp z,
@@ -243,8 +239,6 @@ int r )
   return Z_STREAM_ERROR;  /* Some dumb compilers complain without this */
 #endif
 }
-
-
 local void inflate_codes_free( /* c, z) */
 inflate_codes_statef *c,
 z_streamp z )

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the PS auxiliary module error enumeration
@@ -37,6 +35,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* PSAUXERR_H_ */
-
-
 /* END */

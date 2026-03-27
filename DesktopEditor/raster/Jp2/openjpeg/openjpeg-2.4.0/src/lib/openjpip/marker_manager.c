@@ -51,8 +51,6 @@ marker_param_t set_marker(codestream_param_t cs, Byte2_t code, OPJ_OFF_T offset,
 
     return mkr;
 }
-
-
 Byte_t fetch_marker1byte(marker_param_t marker, OPJ_OFF_T offset)
 {
     return fetch_codestream1byte(&(marker.cs), marker.offset + offset);

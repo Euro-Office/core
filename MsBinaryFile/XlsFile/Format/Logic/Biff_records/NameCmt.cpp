@@ -39,19 +39,13 @@ namespace XLS
 NameCmt::NameCmt()
 {
 }
-
-
 NameCmt::NameCmt(const XLUnicodeStringNoCch lbl_name)
 :	name(lbl_name)
 {
 }
-
-
 NameCmt::~NameCmt()
 {
 }
-
-
 BaseObjectPtr NameCmt::clone()
 {
 	return BaseObjectPtr(new NameCmt(*this));

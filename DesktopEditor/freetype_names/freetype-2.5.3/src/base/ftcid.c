@@ -13,14 +13,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_CID_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_CID_H
-
-
   /* documentation is in ftcid.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -33,15 +29,11 @@
     const char*  r = NULL;
     const char*  o = NULL;
     FT_Int       s = 0;
-
-
     error = FT_ERR( Invalid_Argument );
 
     if ( face )
     {
       FT_Service_CID  service;
-
-
       FT_FACE_FIND_SERVICE( face, service, CID );
 
       if ( service && service->get_ros )
@@ -59,21 +51,15 @@
 
     return error;
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Get_CID_Is_Internally_CID_Keyed( FT_Face   face,
                                       FT_Bool  *is_cid )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
     FT_Bool   ic = 0;
-
-
     if ( face )
     {
       FT_Service_CID  service;
-
-
       FT_FACE_FIND_SERVICE( face, service, CID );
 
       if ( service && service->get_is_cid )
@@ -85,8 +71,6 @@
 
     return error;
   }
-
-
   FT_EXPORT_DEF( FT_Error )
   FT_Get_CID_From_Glyph_Index( FT_Face   face,
                                FT_UInt   glyph_index,
@@ -94,13 +78,9 @@
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
     FT_UInt   c = 0;
-
-
     if ( face )
     {
       FT_Service_CID  service;
-
-
       FT_FACE_FIND_SERVICE( face, service, CID );
 
       if ( service && service->get_cid_from_glyph_index )
@@ -112,6 +92,4 @@
 
     return error;
   }
-
-
 /* END */

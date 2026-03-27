@@ -9,8 +9,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_SCHEMA_INTERNALS_H__
 #define __XML_SCHEMA_INTERNALS_H__
 

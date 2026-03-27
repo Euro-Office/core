@@ -108,8 +108,6 @@
  */
 #define U16_GET_SUPPLEMENTARY(lead, trail) \
     (((UChar32)(lead)<<10UL)+(UChar32)(trail)-U16_SURROGATE_OFFSET)
-
-
 /**
  * Get the lead surrogate (0xd800..0xdbff) for a
  * supplementary code point (0x10000..0x10ffff).

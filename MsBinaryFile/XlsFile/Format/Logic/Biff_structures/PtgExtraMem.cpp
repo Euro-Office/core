@@ -34,25 +34,17 @@
 
 namespace XLS
 {
-
-
 PtgExtraMem::PtgExtraMem()
 {
 }
-
-
 PtgExtraMem::PtgExtraMem(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr PtgExtraMem::clone()
 {
 	return BiffStructurePtr(new PtgExtraMem(*this));
 }
-
-
 void PtgExtraMem::load(CFRecord& record)
 {	
     global_info = record.getGlobalWorkbookInfo();
@@ -104,8 +96,6 @@ void PtgExtraMem::save(CFRecord& record)
 		}
 	}
 }
-
-
 const std::wstring PtgExtraMem::toString() const
 {
 	std::wstring range;
@@ -128,7 +118,5 @@ const std::wstring PtgExtraMem::toString() const
 
     return L"";
 }
-
-
 } // namespace XLS
 

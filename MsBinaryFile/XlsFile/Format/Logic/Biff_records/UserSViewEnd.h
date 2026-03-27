@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of UserSViewEnd record in BIFF8
 class UserSViewEnd: public BiffRecord
 {
@@ -52,8 +50,6 @@ public:
     void writeFields(CFRecord& record);
 
 	static const ElementType	type = typeUserSViewEnd;
-
-
 };
 
 } // namespace XLS

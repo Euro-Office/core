@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * Typical application would normally not need to use these functions.
@@ -23,12 +21,8 @@
    * they are needed.
    *
    */
-
-
 #ifndef FTSIZES_H_
 #define FTSIZES_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -36,11 +30,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -69,8 +59,6 @@ FT_BEGIN_HEADER
    *   if they use the caching sub-system, so be cautious when using these.
    *
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -98,8 +86,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_New_Size( FT_Face   face,
                FT_Size*  size );
-
-
   /**************************************************************************
    *
    * @function:
@@ -118,8 +104,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Done_Size( FT_Size  size );
-
-
   /**************************************************************************
    *
    * @function:
@@ -149,11 +133,7 @@ FT_BEGIN_HEADER
   FT_Activate_Size( FT_Size  size );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTSIZES_H_ */
-
-
 /* END */

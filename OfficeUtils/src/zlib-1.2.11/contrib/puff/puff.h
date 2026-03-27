@@ -20,8 +20,6 @@
 
   Mark Adler    madler@alumni.caltech.edu
  */
-
-
 /*
  * See puff.c for purpose and usage.
  */

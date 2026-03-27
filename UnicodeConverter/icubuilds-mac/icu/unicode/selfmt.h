@@ -217,8 +217,6 @@ public:
      * @stable ICU 4.4
      */
     void applyPattern(const UnicodeString& pattern, UErrorCode& status);
-
-
     using Format::format;
 
     /**

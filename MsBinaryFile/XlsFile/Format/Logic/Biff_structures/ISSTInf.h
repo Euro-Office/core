@@ -48,8 +48,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     _UINT32 ib = 0;
     _UINT16 cbOffset = 0;
 };

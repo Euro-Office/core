@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Area record in BIFF8
 class Area: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Area();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

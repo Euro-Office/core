@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DataLabExtContents record in BIFF8
 class DataLabExtContents: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~DataLabExtContents();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

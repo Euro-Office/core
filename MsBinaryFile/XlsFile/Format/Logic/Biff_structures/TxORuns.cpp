@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr TxORuns::clone()
 {
 	return BiffStructurePtr(new TxORuns(*this));
@@ -52,8 +50,6 @@ TxORuns::~TxORuns()
 {
 	recs = NULL;
 }
-
-
 void TxORuns::load(CFRecord& record)
 {
 	for (int i = 0; i < m_runCount; i++)
@@ -87,7 +83,5 @@ void TxORuns::save(CFRecord& record)
 {
 
 }
-
-
 } // namespace XLS
 

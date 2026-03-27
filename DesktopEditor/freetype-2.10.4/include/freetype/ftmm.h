@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTMM_H_
 #define FTMM_H_
-
-
 #include <freetype/t1tables.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -48,8 +40,6 @@ FT_BEGIN_HEADER
    *   enough that a consistent interface makes sense.
    *
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -79,8 +69,6 @@ FT_BEGIN_HEADER
     FT_Long     maximum;
 
   } FT_MM_Axis;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -111,8 +99,6 @@ FT_BEGIN_HEADER
     FT_MM_Axis  axis[T1_MAX_MM_AXIS];
 
   } FT_Multi_Master;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -164,8 +150,6 @@ FT_BEGIN_HEADER
     FT_UInt     strid;
 
   } FT_Var_Axis;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -196,8 +180,6 @@ FT_BEGIN_HEADER
     FT_UInt    psid;   /* since 2.7.1 */
 
   } FT_Var_Named_Style;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -248,8 +230,6 @@ FT_BEGIN_HEADER
     FT_Var_Named_Style*  namedstyle;
 
   } FT_MM_Var;
-
-
   /**************************************************************************
    *
    * @function:
@@ -275,8 +255,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_Multi_Master( FT_Face           face,
                        FT_Multi_Master  *amaster );
-
-
   /**************************************************************************
    *
    * @function:
@@ -302,8 +280,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_MM_Var( FT_Face      face,
                  FT_MM_Var*  *amaster );
-
-
   /**************************************************************************
    *
    * @function:
@@ -323,8 +299,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Done_MM_Var( FT_Library   library,
                   FT_MM_Var   *amaster );
-
-
   /**************************************************************************
    *
    * @function:
@@ -366,8 +340,6 @@ FT_BEGIN_HEADER
   FT_Set_MM_Design_Coordinates( FT_Face   face,
                                 FT_UInt   num_coords,
                                 FT_Long*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -409,8 +381,6 @@ FT_BEGIN_HEADER
   FT_Set_Var_Design_Coordinates( FT_Face    face,
                                  FT_UInt    num_coords,
                                  FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -444,8 +414,6 @@ FT_BEGIN_HEADER
   FT_Get_Var_Design_Coordinates( FT_Face    face,
                                  FT_UInt    num_coords,
                                  FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -490,8 +458,6 @@ FT_BEGIN_HEADER
   FT_Set_MM_Blend_Coordinates( FT_Face    face,
                                FT_UInt    num_coords,
                                FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -527,8 +493,6 @@ FT_BEGIN_HEADER
   FT_Get_MM_Blend_Coordinates( FT_Face    face,
                                FT_UInt    num_coords,
                                FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -541,8 +505,6 @@ FT_BEGIN_HEADER
   FT_Set_Var_Blend_Coordinates( FT_Face    face,
                                 FT_UInt    num_coords,
                                 FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -558,8 +520,6 @@ FT_BEGIN_HEADER
   FT_Get_Var_Blend_Coordinates( FT_Face    face,
                                 FT_UInt    num_coords,
                                 FT_Fixed*  coords );
-
-
   /**************************************************************************
    *
    * @function:
@@ -606,8 +566,6 @@ FT_BEGIN_HEADER
   FT_Set_MM_WeightVector( FT_Face    face,
                           FT_UInt    len,
                           FT_Fixed*  weightvector );
-
-
   /**************************************************************************
    *
    * @function:
@@ -650,8 +608,6 @@ FT_BEGIN_HEADER
   FT_Get_MM_WeightVector( FT_Face    face,
                           FT_UInt*   len,
                           FT_Fixed*  weightvector );
-
-
   /**************************************************************************
    *
    * @enum:
@@ -669,8 +625,6 @@ FT_BEGIN_HEADER
    *   2.8.1
    */
 #define FT_VAR_AXIS_FLAG_HIDDEN  1
-
-
   /**************************************************************************
    *
    * @function:
@@ -702,8 +656,6 @@ FT_BEGIN_HEADER
   FT_Get_Var_Axis_Flags( FT_MM_Var*  master,
                          FT_UInt     axis_index,
                          FT_UInt*    flags );
-
-
   /**************************************************************************
    *
    * @function:
@@ -742,11 +694,7 @@ FT_BEGIN_HEADER
                          FT_UInt  instance_index );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTMM_H_ */
-
-
 /* END */

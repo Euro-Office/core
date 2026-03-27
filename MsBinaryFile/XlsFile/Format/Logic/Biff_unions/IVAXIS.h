@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of IVAXIS union of records 
 class IVAXIS: public CompositeObject
 {

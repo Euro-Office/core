@@ -22,29 +22,19 @@
   /*       FT_Outlines into FT_Bitmaps.                                    */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTIMAGE_H__
 #define __FTIMAGE_H__
-
-
   /* _STANDALONE_ is from ftgrays.c */
 #ifndef _STANDALONE_
 #include <ft2build.h>
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    basic_types                                                        */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -56,8 +46,6 @@ FT_BEGIN_HEADER
   /*    units, or 16.16, or 26.6 fixed-point pixel coordinates.            */
   /*                                                                       */
   typedef signed long  FT_Pos;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -77,8 +65,6 @@ FT_BEGIN_HEADER
     FT_Pos  y;
 
   } FT_Vector;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -118,8 +104,6 @@ FT_BEGIN_HEADER
     FT_Pos  xMax, yMax;
 
   } FT_BBox;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -191,8 +175,6 @@ FT_BEGIN_HEADER
     FT_PIXEL_MODE_MAX      /* do not remove */
 
   } FT_Pixel_Mode;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -253,8 +235,6 @@ FT_BEGIN_HEADER
   /* */
 
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -328,16 +308,12 @@ FT_BEGIN_HEADER
     void*           palette;
 
   } FT_Bitmap;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    outline_processing                                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -406,8 +382,6 @@ FT_BEGIN_HEADER
   /* FT_Outline.{n_contours,n_points}         */
 #define FT_OUTLINE_CONTOURS_MAX  SHRT_MAX
 #define FT_OUTLINE_POINTS_MAX    SHRT_MAX
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -490,8 +464,6 @@ FT_BEGIN_HEADER
 
 #define FT_OUTLINE_HIGH_PRECISION   0x100
 #define FT_OUTLINE_SINGLE_PASS      0x200
-
-
  /*************************************************************************
   *
   * @enum:
@@ -539,8 +511,6 @@ FT_BEGIN_HEADER
 #define FT_Curve_Tag_Cubic    FT_CURVE_TAG_CUBIC
 #define FT_Curve_Tag_Touch_X  FT_CURVE_TAG_TOUCH_X
 #define FT_Curve_Tag_Touch_Y  FT_CURVE_TAG_TOUCH_Y
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -566,8 +536,6 @@ FT_BEGIN_HEADER
                             void*             user );
 
 #define FT_Outline_MoveTo_Func  FT_Outline_MoveToFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -593,8 +561,6 @@ FT_BEGIN_HEADER
                             void*             user );
 
 #define FT_Outline_LineTo_Func  FT_Outline_LineToFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -625,8 +591,6 @@ FT_BEGIN_HEADER
                              void*             user );
 
 #define FT_Outline_ConicTo_Func  FT_Outline_ConicToFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -658,8 +622,6 @@ FT_BEGIN_HEADER
                              void*             user );
 
 #define FT_Outline_CubicTo_Func  FT_Outline_CubicToFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -708,16 +670,12 @@ FT_BEGIN_HEADER
     FT_Pos                  delta;
 
   } FT_Outline_Funcs;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
   /*    basic_types                                                        */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -744,8 +702,6 @@ FT_BEGIN_HEADER
                     ( (unsigned long)_x3 << 8  ) | \
                       (unsigned long)_x4         )
 #endif /* FT_IMAGE_TAG */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -794,8 +750,6 @@ FT_BEGIN_HEADER
     FT_IMAGE_TAG( FT_GLYPH_FORMAT_PLOTTER,   'p', 'l', 'o', 't' )
 
   } FT_Glyph_Format;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -817,8 +771,6 @@ FT_BEGIN_HEADER
 #define ft_glyph_format_bitmap     FT_GLYPH_FORMAT_BITMAP
 #define ft_glyph_format_outline    FT_GLYPH_FORMAT_OUTLINE
 #define ft_glyph_format_plotter    FT_GLYPH_FORMAT_PLOTTER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -828,8 +780,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* A raster is a scan converter, in charge of rendering an outline into  */
@@ -840,8 +790,6 @@ FT_BEGIN_HEADER
   /* details on renderers.                                                 */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -857,8 +805,6 @@ FT_BEGIN_HEADER
   /*    This section contains technical definitions.                       */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -869,8 +815,6 @@ FT_BEGIN_HEADER
   /*    independently to convert an outline into a bitmap or pixmap.       */
   /*                                                                       */
   typedef struct FT_RasterRec_*  FT_Raster;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -904,8 +848,6 @@ FT_BEGIN_HEADER
     unsigned char   coverage;
 
   } FT_Span;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -949,8 +891,6 @@ FT_BEGIN_HEADER
                   void*           user );
 
 #define FT_Raster_Span_Func  FT_SpanFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -978,8 +918,6 @@ FT_BEGIN_HEADER
   (*FT_Raster_BitTest_Func)( int    y,
                              int    x,
                              void*  user );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1006,8 +944,6 @@ FT_BEGIN_HEADER
   (*FT_Raster_BitSet_Func)( int    y,
                             int    x,
                             void*  user );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -1058,8 +994,6 @@ FT_BEGIN_HEADER
 #define ft_raster_flag_aa       FT_RASTER_FLAG_AA
 #define ft_raster_flag_direct   FT_RASTER_FLAG_DIRECT
 #define ft_raster_flag_clip     FT_RASTER_FLAG_CLIP
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -1123,8 +1057,6 @@ FT_BEGIN_HEADER
     FT_BBox                 clip_box;
 
   } FT_Raster_Params;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1154,8 +1086,6 @@ FT_BEGIN_HEADER
                         FT_Raster*  raster );
 
 #define FT_Raster_New_Func  FT_Raster_NewFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1171,8 +1101,6 @@ FT_BEGIN_HEADER
   (*FT_Raster_DoneFunc)( FT_Raster  raster );
 
 #define FT_Raster_Done_Func  FT_Raster_DoneFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1206,8 +1134,6 @@ FT_BEGIN_HEADER
                           unsigned long   pool_size );
 
 #define FT_Raster_Reset_Func  FT_Raster_ResetFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1232,8 +1158,6 @@ FT_BEGIN_HEADER
                             void*          args );
 
 #define FT_Raster_Set_Mode_Func  FT_Raster_SetModeFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <FuncType>                                                            */
@@ -1273,8 +1197,6 @@ FT_BEGIN_HEADER
                            const FT_Raster_Params*  params );
 
 #define FT_Raster_Render_Func  FT_Raster_RenderFunc
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -1304,19 +1226,11 @@ FT_BEGIN_HEADER
     FT_Raster_DoneFunc     raster_done;
 
   } FT_Raster_Funcs;
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTIMAGE_H__ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

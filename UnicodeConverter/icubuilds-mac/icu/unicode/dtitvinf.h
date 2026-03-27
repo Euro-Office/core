@@ -100,7 +100,6 @@ U_NAMESPACE_BEGIN
  * For time skeleton, the interval patterns when am/pm, or hour, or minute is
  * different are defined in resource files.
  *
- *
  * <P>
  * There are 2 dates in interval pattern. For most locales, the first date
  * in an interval pattern is the earlier date. There might be a locale in which
@@ -166,8 +165,6 @@ public:
      */
     DateIntervalInfo(UErrorCode& status);
 #endif  /* U_HIDE_INTERNAL_API */
-
-
     /** 
      * Construct DateIntervalInfo for the given locale,
      * @param locale  the interval patterns are loaded from the appropriate calendar
@@ -176,8 +173,6 @@ public:
      * @stable ICU 4.0
      */
     DateIntervalInfo(const Locale& locale, UErrorCode& status);
-
-
     /**
      * Copy constructor.
      * @stable ICU 4.0
@@ -204,8 +199,6 @@ public:
      * @stable ICU 4.0
      */
     virtual ~DateIntervalInfo();
-
-
     /**
      * Return true if another object is semantically equal to this one.
      *
@@ -223,8 +216,6 @@ public:
      * @stable ICU 4.0
      */
     UBool operator!=(const DateIntervalInfo& other) const;
-
-
 
     /** 
      * Provides a way for client to build interval patterns.
@@ -285,8 +276,6 @@ public:
      * @stable ICU 4.0 
      */
     UnicodeString& getFallbackIntervalPattern(UnicodeString& result) const;
-
-
     /**
      * Re-set the fallback interval pattern.
      *
@@ -302,8 +291,6 @@ public:
      */
     void setFallbackIntervalPattern(const UnicodeString& fallbackPattern,
                                     UErrorCode& status);
-
-
     /** Get default order -- whether the first date in pattern is later date
                              or not.
      * return default date ordering in interval pattern. TRUE if the first date
@@ -311,8 +298,6 @@ public:
      * @stable ICU 4.0 
      */
     UBool getDefaultOrder() const;
-
-
     /**
      * ICU "poor man's RTTI", returns a UClassID for the actual class.
      *
@@ -326,8 +311,6 @@ public:
      * @stable ICU 4.0
      */
     static UClassID U_EXPORT2 getStaticClassID();
-
-
 private:
     /**
      * DateIntervalFormat will need access to
@@ -367,16 +350,12 @@ public:
      };
 #endif  /* U_HIDE_INTERNAL_API */
 private:
-
-
     /** 
      * Initialize the DateIntervalInfo from locale
      * @param locale   the given locale.
      * @param status   output param set to success/failure code on exit
      */
     void initializeData(const Locale& locale, UErrorCode& status);
-
-
     /* Set Interval pattern.
      *
      * It sets interval pattern into the hash map.
@@ -391,8 +370,6 @@ private:
                                       UCalendarDateFields lrgDiffCalUnit,
                                       const UnicodeString& intervalPattern,
                                       UErrorCode& status); 
-
-
     /**given an input skeleton, get the best match skeleton 
      * which has pre-defined interval pattern in resource file.
      * Also return the difference between the input skeleton
@@ -413,8 +390,6 @@ private:
      */
     const UnicodeString* getBestSkeleton(const UnicodeString& skeleton,
                                          int8_t& bestMatchDistanceInfo) const;
-
-
     /**
      * Parse skeleton, save each field's width.
      * It is used for looking for best match skeleton,
@@ -424,8 +399,6 @@ private:
      */
     static void U_EXPORT2 parseSkeleton(const UnicodeString& skeleton, 
                                         int32_t* skeletonFieldWidth);
-
-
     /**
      * Check whether one field width is numeric while the other is string.
      *
@@ -440,8 +413,6 @@ private:
     static UBool U_EXPORT2 stringNumeric(int32_t fieldWidth,
                                          int32_t anotherFieldWidth,
                                          char patternLetter);
-
-
     /** 
      * Convert calendar field to the interval pattern index in 
      * hash table.
@@ -458,16 +429,12 @@ private:
     static IntervalPatternIndex U_EXPORT2 calendarFieldToIntervalIndex(
                                                       UCalendarDateFields field,
                                                       UErrorCode& status);
-
-
     /**
      * delete hash table (of type fIntervalPatterns).
      *
      * @param hTable  hash table to be deleted
      */
     void deleteHash(Hashtable* hTable);
-
-
     /**
      * initialize hash table (of type fIntervalPatterns).
      *
@@ -475,8 +442,6 @@ private:
      * @return         hash table initialized
      */
     Hashtable* initHash(UErrorCode& status);
-
-
 
     /**
      * copy hash table (of type fIntervalPatterns).
@@ -486,8 +451,6 @@ private:
      * @param status   output param set to success/failure code on exit
      */
     void copyHash(const Hashtable* source, Hashtable* target, UErrorCode& status);
-
-
     // data members
     // fallback interval pattern 
     UnicodeString fFallbackIntervalPattern;
@@ -499,14 +462,10 @@ private:
     Hashtable* fIntervalPatterns;
 
 };// end class DateIntervalInfo
-
-
 inline UBool
 DateIntervalInfo::operator!=(const DateIntervalInfo& other) const {
     return !operator==(other);
 }
-
-
 U_NAMESPACE_END
 
 #endif

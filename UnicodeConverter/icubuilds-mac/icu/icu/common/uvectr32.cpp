@@ -42,8 +42,6 @@ UVector32::UVector32(int32_t initialCapacity, UErrorCode &status) :
     _init(initialCapacity, status);
 }
 
-
-
 void UVector32::_init(int32_t initialCapacity, UErrorCode &status) {
     // Fix bogus initialCapacity values; avoid malloc(0)
     if (initialCapacity < 1) {
@@ -79,8 +77,6 @@ void UVector32::assign(const UVector32& other, UErrorCode &ec) {
         }
     }
 }
-
-
 UBool UVector32::operator==(const UVector32& other) {
     int32_t i;
     if (count != other.count) return FALSE;
@@ -91,8 +87,6 @@ UBool UVector32::operator==(const UVector32& other) {
     }
     return TRUE;
 }
-
-
 void UVector32::setElementAt(int32_t elem, int32_t index) {
     if (0 <= index && index < count) {
         elements[index] = elem;
@@ -180,10 +174,6 @@ UBool   UVector32::equals(const UVector32 &other) const {
     }
     return TRUE;
 }
-
-
-
-
 int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
     int32_t i;
     for (i=startIndex; i<count; ++i) {
@@ -193,8 +183,6 @@ int32_t UVector32::indexOf(int32_t key, int32_t startIndex) const {
     }
     return -1;
 }
-
-
 UBool UVector32::expandCapacity(int32_t minimumCapacity, UErrorCode &status) {
     if (U_FAILURE(status)) {
         return FALSE;
@@ -289,10 +277,6 @@ void UVector32::setSize(int32_t newSize) {
     } 
     count = newSize;
 }
-
-
-
-
 /**
  * Insert the given integer into this vector at its sorted position
  * as defined by 'compare'.  The current elements are assumed to
@@ -324,10 +308,6 @@ void UVector32::sortedInsert(int32_t tok, UErrorCode& ec) {
         ++count;
     }
 }
-
-
-
-
 
 U_NAMESPACE_END
 

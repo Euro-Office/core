@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FrtRefHeader::clone()
 {
 	return BiffStructurePtr(new FrtRefHeader(*this));
 }
-
-
 void FrtRefHeader::load(CFRecord& record)
 {
 	record >> rt >> grbitFrt;
@@ -53,7 +49,5 @@ void FrtRefHeader::save(CFRecord& record)
     record << rt << grbitFrt;
     record << ref8;
 }
-
-
 } // namespace XLS
 

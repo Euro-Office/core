@@ -30,19 +30,13 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTimeMotionBehaviorAtom : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
-
-
     bool	m_bByPropertyUsed;
     bool	m_bFromPropertyUsed;
     bool	m_bToPropertyUsed;

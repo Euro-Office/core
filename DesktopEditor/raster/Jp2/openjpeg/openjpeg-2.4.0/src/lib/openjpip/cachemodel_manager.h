@@ -49,8 +49,6 @@ typedef struct cachemodellist_param {
     cachemodel_param_t *first; /**< first cache model pointer of the list*/
     cachemodel_param_t *last;  /**< last  cache model pointer of the list*/
 } cachemodellist_param_t;
-
-
 /**
  * generate a cache model list
  *
@@ -68,16 +66,12 @@ cachemodellist_param_t * gene_cachemodellist(void);
  */
 cachemodel_param_t * gene_cachemodel(cachemodellist_param_t *cachemodellist,
                                      target_param_t *target, OPJ_BOOL reqJPP);
-
-
 /**
  * print cache model
  *
  * @param[in] cachemodel cache model
  */
 void print_cachemodel(cachemodel_param_t cachemodel);
-
-
 /**
  * search a cache model of a target
  *
@@ -87,8 +81,6 @@ void print_cachemodel(cachemodel_param_t cachemodel);
  */
 cachemodel_param_t * search_cachemodel(target_param_t *target,
                                        cachemodellist_param_t *cachemodellist);
-
-
 /**
  * check if all data has been sent
  *
@@ -96,8 +88,6 @@ cachemodel_param_t * search_cachemodel(target_param_t *target,
  * @return               true if sent all, false otherwise
  */
 OPJ_BOOL is_allsent(cachemodel_param_t cachemodel);
-
-
 /**
  * delete a cache model
  *
@@ -111,6 +101,4 @@ void delete_cachemodel(cachemodel_param_t **cachemodel);
  * @param[in,out] cachemodellist address of the cachemodel list pointer
  */
 void delete_cachemodellist(cachemodellist_param_t **cachemodellist);
-
-
 #endif      /* !CACHEMODEL_MANAGER_H_ */

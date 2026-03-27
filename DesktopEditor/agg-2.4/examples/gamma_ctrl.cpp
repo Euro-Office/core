@@ -21,8 +21,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
 agg::gamma_ctrl<agg::rgba8> g_ctrl(10.0, 10.0, 300.0, 200.0, !flip_y);
 
 void read_gamma(const char* fname)
@@ -41,8 +39,6 @@ void read_gamma(const char* fname)
     }
 }
 
-
-
 void write_gamma_bin(const char* fname)
 {
     const unsigned char* gamma = g_ctrl.gamma();
@@ -53,8 +49,6 @@ void write_gamma_bin(const char* fname)
         fclose(fd);
     }
 }
-
-
 void write_gamma_txt(const char* fname)
 {
     const unsigned char* gamma = g_ctrl.gamma();
@@ -78,8 +72,6 @@ void write_gamma_txt(const char* fname)
         fclose(fd);
     }
 }
-
-
 
 class the_application : public agg::platform_support
 {
@@ -206,8 +198,6 @@ public:
         color = agg::rgba(0.0, 0.5, 0.0);
         ras.add_path(text1, 0);
         agg::render_scanlines_aa_solid(ras, sl, rb, color);
-
-
         color = agg::rgba(0.5, 0.0, 0.0);
         agg::path_storage path;
         path.move_to(30, -1.0);
@@ -232,8 +222,6 @@ public:
     }
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -245,5 +233,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

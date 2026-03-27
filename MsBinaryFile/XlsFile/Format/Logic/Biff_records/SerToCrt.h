@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SerToCrt record in BIFF8
 class SerToCrt: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~SerToCrt();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

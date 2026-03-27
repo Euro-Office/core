@@ -183,8 +183,6 @@ void LayoutEngine::getGlyphs(LEGlyphID glyphs[], LEErrorCode &success) const
 {
     fGlyphStorage->getGlyphs(glyphs, success);
 }
-
-
 void LayoutEngine::getGlyphPositions(float positions[], LEErrorCode &success) const
 {
     fGlyphStorage->getGlyphPositions(positions, success);

@@ -160,8 +160,6 @@
 #include "allheaders.h"
 
 static const l_int32 INITIAL_PTR_ARRAYSIZE = 50;      /* n'importe quoi */
-
-
 /*--------------------------------------------------------------------------*
  *               Numa creation, destruction, copy, clone, etc.              *
  *--------------------------------------------------------------------------*/
@@ -194,8 +192,6 @@ NUMA  *na;
 
     return na;
 }
-
-
 /*!
  *  numaCreateFromIArray()
  *
@@ -229,8 +225,6 @@ NUMA    *na;
 
     return na;
 }
-
-
 /*!
  *  numaCreateFromFArray()
  *
@@ -274,8 +268,6 @@ NUMA    *na;
 
     return na;
 }
-
-
 /*!
  *  numaDestroy()
  *
@@ -312,8 +304,6 @@ NUMA  *na;
     *pna = NULL;
     return;
 }
-
-
 /*!
  *  numaCopy()
  *
@@ -341,8 +331,6 @@ NUMA    *cna;
 
     return cna;
 }
-
-
 /*!
  *  numaClone()
  *
@@ -360,8 +348,6 @@ numaClone(NUMA  *na)
     numaChangeRefcount(na, 1);
     return na;
 }
-
-
 /*!
  *  numaEmpty()
  *
@@ -384,8 +370,6 @@ numaEmpty(NUMA  *na)
     na->n = 0;
     return 0;
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                 Number array: add number and extend array                *
@@ -415,8 +399,6 @@ l_int32  n;
     na->n++;
     return 0;
 }
-
-
 /*!
  *  numaExtendArray()
  *
@@ -439,8 +421,6 @@ numaExtendArray(NUMA  *na)
     na->nalloc *= 2;
     return 0;
 }
-
-
 /*!
  *  numaInsertNumber()
  *
@@ -479,8 +459,6 @@ l_int32  i, n;
     na->n++;
     return 0;
 }
-
-
 /*!
  *  numaRemoveNumber()
  *
@@ -512,8 +490,6 @@ l_int32  i, n;
     na->n--;
     return 0;
 }
-
-
 /*!
  *  numaReplaceNumber()
  *
@@ -540,8 +516,6 @@ l_int32  n;
     na->array[index] = val;
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                            Numa accessors                            *
  *----------------------------------------------------------------------*/
@@ -560,8 +534,6 @@ numaGetCount(NUMA  *na)
         return ERROR_INT("na not defined", procName, 0);
     return na->n;
 }
-
-
 /*!
  *  numaSetCount()
  *
@@ -594,8 +566,6 @@ numaSetCount(NUMA    *na,
     na->n = newcount;
     return 0;
 }
-
-
 /*!
  *  numaGetFValue()
  *
@@ -627,8 +597,6 @@ numaGetFValue(NUMA       *na,
     *pval = na->array[index];
     return 0;
 }
-
-
 /*!
  *  numaGetIValue()
  *
@@ -663,8 +631,6 @@ l_float32  val;
     *pival = (l_int32)(val + L_SIGN(val) * 0.5);
     return 0;
 }
-
-
 /*!
  *  numaSetValue()
  *
@@ -688,8 +654,6 @@ numaSetValue(NUMA      *na,
     na->array[index] = val;
     return 0;
 }
-
-
 /*!
  *  numaShiftValue()
  *
@@ -713,8 +677,6 @@ numaShiftValue(NUMA      *na,
     na->array[index] += diff;
     return 0;
 }
-
-
 /*!
  *  numaGetIArray()
  *
@@ -753,8 +715,6 @@ l_int32  *array;
 
     return array;
 }
-
-
 /*!
  *  numaGetFArray()
  *
@@ -799,8 +759,6 @@ l_float32  *array;
 
     return array;
 }
-
-
 /*!
  *  numaGetRefCount()
  *
@@ -816,8 +774,6 @@ numaGetRefcount(NUMA  *na)
         return ERROR_INT("na not defined", procName, UNDEF);
     return na->refcount;
 }
-
-
 /*!
  *  numaChangeRefCount()
  *
@@ -836,8 +792,6 @@ numaChangeRefcount(NUMA    *na,
     na->refcount += delta;
     return 0;
 }
-
-
 /*!
  *  numaGetXParameters()
  *
@@ -860,8 +814,6 @@ numaGetXParameters(NUMA       *na,
     if (pdelx) *pdelx = na->delx;
     return 0;
 }
-
-
 /*!
  *  numaSetXParameters()
  *
@@ -886,8 +838,6 @@ numaSetXParameters(NUMA      *na,
     na->delx = delx;
     return 0;
 }
-
-
 /*!
  *  numaCopyXParameters()
  *
@@ -910,8 +860,6 @@ l_float32  start, binsize;
     numaSetXParameters(nad, start, binsize);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Serialize numa for I/O                         *
  *----------------------------------------------------------------------*/
@@ -943,8 +891,6 @@ NUMA  *na;
     fclose(fp);
     return na;
 }
-
-
 /*!
  *  numaReadStream()
  *
@@ -986,8 +932,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*!
  *  numaWrite()
  *
@@ -1015,8 +959,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  numaWriteStream()
  *
@@ -1052,8 +994,6 @@ l_float32  startx, delx;
     return 0;
 }
 
-
-
 /*--------------------------------------------------------------------------*
  *                     Numaa creation, destruction                          *
  *--------------------------------------------------------------------------*/
@@ -1084,8 +1024,6 @@ NUMAA  *naa;
 
     return naa;
 }
-
-
 /*!
  *  numaaDestroy()
  *
@@ -1116,8 +1054,6 @@ NUMAA   *naa;
 
     return;
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                              Add Numa to Numaa                           *
@@ -1163,8 +1099,6 @@ NUMA    *nac;
     naa->n++;
     return 0;
 }
-
-
 /*!
  *  numaaExtendArray()
  *
@@ -1187,8 +1121,6 @@ numaaExtendArray(NUMAA  *naa)
     naa->nalloc *= 2;
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                           Numaa accessors                            *
  *----------------------------------------------------------------------*/
@@ -1207,8 +1139,6 @@ numaaGetCount(NUMAA  *naa)
         return ERROR_INT("naa not defined", procName, 0);
     return naa->n;
 }
-
-
 /*!
  *  numaaGetNumberCount()
  *
@@ -1235,8 +1165,6 @@ l_int32  n, sum, i;
 
     return sum;
 }
-
-
 /*!
  *  numaaGetPtrArray()
  *
@@ -1273,8 +1201,6 @@ numaaGetPtrArray(NUMAA  *naa)
     naa->n = naa->nalloc;
     return naa->numa;
 }
-
-
 /*!
  *  numaaGetNuma()
  *
@@ -1302,8 +1228,6 @@ numaaGetNuma(NUMAA   *naa,
     else
         return (NUMA *)ERROR_PTR("invalid accessflag", procName, NULL);
 }
-
-
 /*!
  *  numaaReplaceNuma()
  *
@@ -1338,8 +1262,6 @@ l_int32  n;
     naa->numa[index] = na;
     return 0;
 }
-
-
 /*!
  *  numaaAddNumber()
  *
@@ -1372,8 +1294,6 @@ NUMA    *na;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                      Serialize numaa for I/O                         *
  *----------------------------------------------------------------------*/
@@ -1405,8 +1325,6 @@ NUMAA  *naa;
     fclose(fp);
     return naa;
 }
-
-
 /*!
  *  numaaReadStream()
  *
@@ -1445,8 +1363,6 @@ NUMAA     *naa;
 
     return naa;
 }
-
-
 /*!
  *  numaaWrite()
  *
@@ -1474,8 +1390,6 @@ FILE  *fp;
 
     return 0;
 }
-
-
 /*!
  *  numaaWriteStream()
  *
@@ -1509,8 +1423,6 @@ NUMA    *na;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                      Numa2d creation, destruction                        *
  *--------------------------------------------------------------------------*/
@@ -1557,8 +1469,6 @@ NUMA2D  *na2d;
 
     return na2d;
 }
-
-
 /*!
  *  numa2dDestroy()
  *
@@ -1592,8 +1502,6 @@ NUMA2D  *na2d;
 
     return;
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                               Numa2d accessors                           *
@@ -1631,8 +1539,6 @@ NUMA  *na;
     numaAddNumber(na, val);
     return 0;
 }
-
-
 /*!
  *  numa2dGetCount()
  *
@@ -1662,8 +1568,6 @@ NUMA  *na;
     else
         return na->n;
 }
-
-
 /*!
  *  numa2dGetNuma()
  *
@@ -1692,8 +1596,6 @@ NUMA  *na;
         return NULL;
     return numaClone(na);
 }
-
-
 /*!
  *  numa2dGetFValue()
  *
@@ -1730,8 +1632,6 @@ NUMA  *na;
 
     return numaGetFValue(na, index, pval);
 }
-
-
 /*!
  *  numa2dGetIValue()
  *
@@ -1768,8 +1668,6 @@ NUMA  *na;
 
     return numaGetIValue(na, index, pval);
 }
-
-
 /*--------------------------------------------------------------------------*
  *               Number array hash: Creation and destruction                *
  *--------------------------------------------------------------------------*/
@@ -1804,8 +1702,6 @@ NUMAHASH  *nahash;
     nahash->initsize = initsize;
     return nahash;
 }
-
-
 /*!
  *  numaHashDestroy()
  *
@@ -1834,8 +1730,6 @@ l_int32    i;
     FREE(nahash);
     *pnahash = NULL;
 }
-
-
 /*--------------------------------------------------------------------------*
  *               Number array hash: Add elements and return numas
  *--------------------------------------------------------------------------*/

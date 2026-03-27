@@ -63,6 +63,4 @@ private:
     size_t			m_nOffset;       // Key offset.
     int				m_nRotateDistance;
 };
-
-
 } // namespace CRYPT

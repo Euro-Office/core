@@ -832,8 +832,6 @@ namespace OOX
 						version.product = 0;
 						version.version = 0x0F03;
 						ptr3->productVersion = version;
-						
-						
 
 						for(auto j:i->m_oSlicerCachePivotTables)
 						{
@@ -1179,8 +1177,6 @@ namespace OOX
                                 element->fromBin(item);
                                 oExt->m_oSlicerCachePivotTables.push_back(element);
                             }
-
-
                             if (oExt)
                                 m_arrExt.push_back( oExt );
                         }

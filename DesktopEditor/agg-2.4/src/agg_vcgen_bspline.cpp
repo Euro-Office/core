@@ -29,8 +29,6 @@ namespace agg
         m_src_vertex(0)
     {
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_bspline::remove_all()
     {
@@ -39,8 +37,6 @@ namespace agg
         m_status = initial;
         m_src_vertex = 0;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_bspline::add_vertex(double x, double y, unsigned cmd)
     {
@@ -61,8 +57,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_bspline::rewind(unsigned)
     {
@@ -116,12 +110,6 @@ namespace agg
         }
         m_status = ready;
     }
-
-
-
-
-
-
     //------------------------------------------------------------------------
     unsigned vcgen_bspline::vertex(double* x, double* y)
     {
@@ -188,7 +176,5 @@ namespace agg
         }
         return cmd;
     }
-
-
 }
 

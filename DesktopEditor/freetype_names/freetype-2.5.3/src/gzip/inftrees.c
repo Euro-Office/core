@@ -9,8 +9,6 @@
 #if !defined(BUILDFIXED) && !defined(STDC)
 #  define BUILDFIXED   /* non ANSI compilers may not accept inffixed.h */
 #endif
-
-
 #if 0
 local const char inflate_copyright[] =
    " inflate 1.1.4 Copyright 1995-2002 Mark Adler ";
@@ -25,8 +23,6 @@ local const char inflate_copyright[] =
 /* simplify the use of the inflate_huft type with some defines */
 #define exop word.what.Exop
 #define bits word.what.Bits
-
-
 local int huft_build OF((
     uIntf *,            /* code lengths in bits */
     uInt,               /* number of codes */
@@ -87,8 +83,6 @@ local const uInt cpdext[30] = { /* Extra bits for distance codes */
    The optimum values may differ though from machine to machine, and
    possibly even between compilers.  Your mileage may vary.
  */
-
-
 /* If BMAX needs to be larger than 16, then h and x[] should be uLong. */
 #define BMAX 15         /* maximum bit length of any code */
 
@@ -129,8 +123,6 @@ uIntf *v                /* working area: values in order of bit length */
   uIntf *xp;                    /* pointer into x */
   int y;                        /* number of dummy codes added */
   uInt z;                       /* number of entries in current table */
-
-
   /* Make compiler happy */
   r.base = 0;
 
@@ -150,8 +142,6 @@ uIntf *v                /* working area: values in order of bit length */
     *m = 0;
     return Z_OK;
   }
-
-
   /* Find minimum and maximum length, bound *m by those */
   l = *m;
   for (j = 1; j <= BMAX; j++)
@@ -167,8 +157,6 @@ uIntf *v                /* working area: values in order of bit length */
   if ((uInt)l > i)
     l = i;
   *m = l;
-
-
   /* Adjust last length count to fill out codes, if needed */
   for (y = 1 << j; j < i; j++, y <<= 1)
     if ((y -= c[j]) < 0)
@@ -176,16 +164,12 @@ uIntf *v                /* working area: values in order of bit length */
   if ((y -= c[i]) < 0)
     return Z_DATA_ERROR;
   c[i] += y;
-
-
   /* Generate starting offsets into the value table for each length */
   x[1] = j = 0;
   p = c + 1;  xp = x + 2;
   while (--i) {                 /* note that i == g from above */
     *xp++ = (j += *p++);
   }
-
-
   /* Make a table of values in order of bit lengths */
   p = b;  i = 0;
   do {
@@ -193,8 +177,6 @@ uIntf *v                /* working area: values in order of bit length */
       v[x[j]++] = i;
   } while (++i < n);
   n = x[g];                     /* set n to length of v */
-
-
   /* Generate the Huffman codes and for each, make the table entries */
   x[0] = i = 0;                 /* first Huffman code is zero */
   p = v;                        /* grab values in bit order */
@@ -289,13 +271,9 @@ uIntf *v                /* working area: values in order of bit length */
       }
     }
   }
-
-
   /* Return Z_BUF_ERROR if we were given an incomplete table */
   return y != 0 && g != 1 ? Z_BUF_ERROR : Z_OK;
 }
-
-
 local int inflate_trees_bits( /* c, bb, tb, hp, z) */
 uIntf *c,               /* 19 code lengths */
 uIntf *bb,              /* bits tree desired/actual depth */
@@ -322,8 +300,6 @@ z_streamp z             /* for messages */
   ZFREE(z, v);
   return r;
 }
-
-
 local int inflate_trees_dynamic( /* nl, nd, c, bl, bd, tl, td, hp, z) */
 uInt nl,                /* number of literal/length codes */
 uInt nd,                /* number of distance codes */
@@ -390,8 +366,6 @@ z_streamp z             /* for messages */
   ZFREE(z, v);
   return Z_OK;
 }
-
-
 /* build fixed tables only once--keep them here */
 #ifdef BUILDFIXED
 local int fixed_built = 0;
@@ -404,8 +378,6 @@ local inflate_huft *fixed_td;
 #else
 #include "inffixed.h"
 #endif
-
-
 local int inflate_trees_fixed( /* bl, bd, tl, td, z) */
 uIntf *bl,                      /* literal desired/actual bit depth */
 uIntf *bd,                      /* distance desired/actual bit depth */

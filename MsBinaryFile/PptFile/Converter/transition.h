@@ -34,8 +34,6 @@
 #include "../../../OOXML/PPTXFormat/Logic/Transitions/Transition.h"
 #include "../Drawing/SlideShow.h"
 #include "../PPTXWriter/ImageManager.h"
-
-
 namespace PPT 
 {
 	namespace Converter 

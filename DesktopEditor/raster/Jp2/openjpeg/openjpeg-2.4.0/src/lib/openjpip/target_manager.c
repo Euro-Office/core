@@ -65,8 +65,6 @@ targetlist_param_t * gene_targetlist(void)
 
     return targetlist;
 }
-
-
 /**
  * open jp2 format image file
  *

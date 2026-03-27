@@ -59,8 +59,6 @@ namespace agg
         double         m_shorten;
         bool           m_ready;
     };
-
-
     //------------------------------------------------------------------------
     inline void vcgen_vertex_sequence::remove_all()
     {
@@ -90,8 +88,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     inline void vcgen_vertex_sequence::rewind(unsigned) 
     { 
@@ -128,8 +124,6 @@ namespace agg
         *y = v.y;
         return v.cmd;
     }
-
-
 }
 
 #endif

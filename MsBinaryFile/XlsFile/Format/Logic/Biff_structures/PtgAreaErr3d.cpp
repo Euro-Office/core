@@ -43,8 +43,6 @@ BiffStructurePtr PtgAreaErr3d::clone()
 {
 	return BiffStructurePtr(new PtgAreaErr3d(*this));
 }
-
-
 void PtgAreaErr3d::loadFields(CFRecord& record)
 {
 	global_info = record.getGlobalWorkbookInfo();
@@ -87,7 +85,5 @@ void PtgAreaErr3d::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, boo
 	
 	ptg_stack.push(link + L"#REF!"); // full_ref ???
 }
-
-
 } // namespace XLS
 

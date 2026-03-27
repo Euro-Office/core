@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * An MRU is a list that cannot hold more than a certain number of
@@ -38,12 +36,8 @@
    * allocations/releases during the lookup process.
    *
    */
-
-
 #ifndef FTCMRU_H_
 #define FTCMRU_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/internal/compiler-macros.h>
 
@@ -66,8 +60,6 @@ FT_BEGIN_HEADER
     FTC_MruNode  prev;
 
   } FTC_MruNodeRec;
-
-
   FT_LOCAL( void )
   FTC_MruNode_Prepend( FTC_MruNode  *plist,
                        FTC_MruNode   node );
@@ -79,13 +71,9 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   FTC_MruNode_Remove( FTC_MruNode  *plist,
                       FTC_MruNode   node );
-
-
   typedef struct FTC_MruListRec_*              FTC_MruList;
 
   typedef struct FTC_MruListClassRec_ const *  FTC_MruListClass;
-
-
   typedef FT_Bool
   (*FTC_MruNode_CompareFunc)( FTC_MruNode  node,
                               FT_Pointer   key );
@@ -103,8 +91,6 @@ FT_BEGIN_HEADER
   typedef void
   (*FTC_MruNode_DoneFunc)( FTC_MruNode  node,
                            FT_Pointer   data );
-
-
   typedef struct  FTC_MruListClassRec_
   {
     FT_Offset                node_size;
@@ -115,8 +101,6 @@ FT_BEGIN_HEADER
     FTC_MruNode_DoneFunc     node_done;
 
   } FTC_MruListClassRec;
-
-
   typedef struct  FTC_MruListRec_
   {
     FT_UInt              num_nodes;
@@ -127,8 +111,6 @@ FT_BEGIN_HEADER
     FT_Memory            memory;
 
   } FTC_MruListRec;
-
-
   FT_LOCAL( void )
   FTC_MruList_Init( FTC_MruList       list,
                     FTC_MruListClass  clazz,
@@ -138,12 +120,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   FTC_MruList_Reset( FTC_MruList  list );
-
-
   FT_LOCAL( void )
   FTC_MruList_Done( FTC_MruList  list );
-
-
   FT_LOCAL( FT_Error )
   FTC_MruList_New( FTC_MruList   list,
                    FT_Pointer    key,
@@ -157,8 +135,6 @@ FT_BEGIN_HEADER
   FTC_MruList_RemoveSelection( FTC_MruList              list,
                                FTC_MruNode_CompareFunc  selection,
                                FT_Pointer               key );
-
-
 #ifdef FTC_INLINE
 
 #define FTC_MRULIST_LOOKUP_CMP( list, key, compare, node, error )           \
@@ -213,8 +189,6 @@ FT_BEGIN_HEADER
   error = FTC_MruList_Lookup( (list), (key), (FTC_MruNode*)&(node) )
 
 #endif /* !FTC_INLINE */
-
-
 #define FTC_MRULIST_LOOP( list, node )        \
   FT_BEGIN_STMNT                              \
     FTC_MruNode  _first = (list)->nodes;      \
@@ -228,8 +202,6 @@ FT_BEGIN_HEADER
       do                                      \
       {                                       \
         *(FTC_MruNode*)&(node) = _node;
-
-
 #define FTC_MRULIST_LOOP_END()               \
         _node = _node->next;                 \
                                              \
@@ -240,9 +212,5 @@ FT_BEGIN_HEADER
  /* */
 
 FT_END_HEADER
-
-
 #endif /* FTCMRU_H_ */
-
-
 /* END */

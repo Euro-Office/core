@@ -37,8 +37,6 @@ namespace XLS
 {
 	class CFRecord;
 }
-
-
 namespace ODRAW
 {
 
@@ -89,7 +87,5 @@ public:
 	std::vector<Type>	data;
 	unsigned int		op;
 };
-
-
 
 } // namespace XLS

@@ -127,8 +127,6 @@ void DirectoryEntry::SetEntryName(const std::wstring &entryName)
 
         if (entryName.length() > 31)
             throw CFException("Entry name MUST NOT exceed 31 characters");
-
-
         std::fill(this->entryName, this->entryName + 64, 0);
         for (size_t i = 0; i < entryName.size(); i++)
         {
@@ -259,8 +257,6 @@ void DirectoryEntry::AssignValueTo(RedBlackTree::PIRBNode other)
     auto d = std::dynamic_pointer_cast<DirectoryEntry>(other);
     if (d == nullptr)
         return;
-
-
     d->SetEntryName(this->GetEntryName());
 
     d->creationDate = creationDate;

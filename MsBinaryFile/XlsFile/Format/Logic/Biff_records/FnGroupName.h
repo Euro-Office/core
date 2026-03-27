@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FnGroupName record in BIFF8
 class FnGroupName: public BiffRecord
 {
@@ -48,12 +46,8 @@ public:
 	~FnGroupName();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
-
-
 	static const ElementType	type = typeFnGroupName;
 
 //-----------------------------

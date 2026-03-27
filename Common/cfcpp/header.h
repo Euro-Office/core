@@ -32,8 +32,6 @@
 #pragma once
 
 #include "sector.h"
-
-
 namespace CFCPP
 {
 class Header

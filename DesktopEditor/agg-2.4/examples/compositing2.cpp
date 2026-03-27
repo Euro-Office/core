@@ -12,21 +12,15 @@
 #include "platform/agg_platform_support.h"
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
 
 typedef agg::rgba8 color;
 typedef agg::order_bgra order;
 typedef agg::pixel32_type pixel_type;
 #define pix_format agg::pix_format_bgra32
-
-
 typedef agg::blender_rgba<color, order> prim_blender_type; 
 typedef agg::pixfmt_alpha_blend_rgba<prim_blender_type, agg::rendering_buffer, pixel_type> prim_pixfmt_type;
 typedef agg::renderer_base<prim_pixfmt_type> prim_ren_base_type;
-
-
 void force_comp_op_link()
 {
     // For unknown reason Digital Mars C++ doesn't want to link these 
@@ -61,8 +55,6 @@ void force_comp_op_link()
     agg::comp_op_rgba_dst_out    <color, order>::blend_pix(p,0,0,0,0,0);
     agg::comp_op_rgba_clear      <color, order>::blend_pix(p,0,0,0,0,0);
 }
-
-
 template<class Container, class ColorT> 
 void generate_color_ramp(Container& c, 
                          ColorT c1, ColorT c2, ColorT c3, ColorT c4)
@@ -81,8 +73,6 @@ void generate_color_ramp(Container& c,
         c[i] = c3.gradient(c4, (i - 170)/85.0);
     }
 }
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<color>    m_alpha_dst;
@@ -142,8 +132,6 @@ public:
         m_comp_op.cur_item(3);
         add_ctrl(m_comp_op);
     }
-
-
     template<class RenBase, class ColorRamp> 
     void radial_shape(RenBase& rbase, const ColorRamp& colors,
                       double x1, double y1, double x2, double y2)
@@ -182,8 +170,6 @@ public:
 
         agg::render_scanlines_aa(m_ras, m_sl, rbase, span_allocator, span_gradient);
     }
-
-
     template<class RenBase> void render_scene(RenBase& rb)
     {
         typedef agg::comp_op_adaptor_rgba<color, order> blender_type;
@@ -192,8 +178,6 @@ public:
 
         pixfmt_type pixf(rbuf_window());
         renderer_type ren(pixf);
-
-
         pixf.comp_op(agg::comp_op_difference);
         radial_shape(ren, m_ramp1, 50, 50, 50+320, 50+320);
 
@@ -205,8 +189,6 @@ public:
         radial_shape(ren, m_ramp2, cx+120-70, cy+200-70, cx+120+70, cy+200+70); 
         radial_shape(ren, m_ramp2, cx+200-70, cy+200-70, cx+200+70, cy+200+70);
     }
-
-
     virtual void on_draw()
     {
         prim_pixfmt_type pixf(rbuf_window());
@@ -234,8 +216,6 @@ public:
     }
 
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     force_comp_op_link();
@@ -248,5 +228,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

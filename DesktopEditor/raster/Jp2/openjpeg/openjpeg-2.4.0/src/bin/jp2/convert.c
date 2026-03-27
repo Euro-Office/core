@@ -147,8 +147,6 @@ void scale_component(opj_image_comp_t* component, OPJ_UINT32 precision)
     component->bpp = precision;
     component->prec = precision;
 }
-
-
 /* planar / interleaved conversions */
 /* used by PNG/TIFF */
 static void convert_32s_C1P1(const OPJ_INT32* pSrc, OPJ_INT32* const* pDst,
@@ -395,8 +393,6 @@ const convert_XXx32s_C1R convert_XXu32s_C1R_LUT[9] = {
     NULL,
     convert_8u32s_C1R
 };
-
-
 static void convert_32s1u_C1R(const OPJ_INT32* pSrc, OPJ_BYTE* pDst,
                               OPJ_SIZE_T length)
 {
@@ -613,8 +609,6 @@ static int tga_readheader(FILE *fp, unsigned int *bits_per_pixel,
     /*cmap_index = get_tga_ushort(&tga[3]);*/
     cmap_len = get_tga_ushort(&tga[5]);
     cmap_entry_size = tga[7];
-
-
 #if 0
     x_origin = get_tga_ushort(&tga[8]);
     y_origin = get_tga_ushort(&tga[10]);
@@ -853,8 +847,6 @@ opj_image_t* tgatoimage(const char *filename, opj_cparameters_t *parameters)
         fclose(f);
         return NULL;
     }
-
-
     /* set image offset and reference grid */
     image->x0 = (OPJ_UINT32)parameters->image_offset_x0;
     image->y0 = (OPJ_UINT32)parameters->image_offset_y0;
@@ -1089,8 +1081,6 @@ fin:
 PGX IMAGE FORMAT
 
 <<-- <<-- <<-- <<-- */
-
-
 static unsigned char readuchar(FILE * f)
 {
     unsigned char c1;
@@ -2014,8 +2004,6 @@ static int are_comps_similar(opj_image_t * image)
     }
     return OPJ_TRUE;
 }
-
-
 int imagetopnm(opj_image_t * image, const char *outfile, int force_split)
 {
     int *red, *green, *blue, *alpha;

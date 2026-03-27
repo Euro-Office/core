@@ -470,8 +470,6 @@ class CDocBuilderValue:
         for idx in range(length, i, -1):
             self.Set(idx, self.Get(idx - 1))
         self.Set(i, x)
-
-
 class CDocBuilder:
     _initialized = False
 

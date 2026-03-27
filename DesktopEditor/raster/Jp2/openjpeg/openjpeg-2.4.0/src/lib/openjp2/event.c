@@ -85,8 +85,6 @@ static void opj_default_callback(const char *msg, void *client_data)
 }
 
 /* ----------------------------------------------------------------------- */
-
-
 /* ----------------------------------------------------------------------- */
 OPJ_BOOL opj_event_msg(opj_event_mgr_t* p_event_mgr, OPJ_INT32 event_type,
                        const char *fmt, ...)

@@ -95,8 +95,6 @@ inline void * operator new(size_t, void * ptr) { return ptr; }
 #ifndef DJVUAPI
 # define DJVUAPI
 #endif
-
-
 /** @name DjVuGlobal.h 
 
     This file is included by all include files in the DjVu reference library.
@@ -115,8 +113,6 @@ inline void * operator new(size_t, void * ptr) { return ptr; }
     L\'eon Bottou <leonb@research.att.com> -- empty file.\\
     Bill Riemers <docbill@sourceforge.net> -- real work.  */
 //@{
-
-
 /** @name DjVu Memory 
 
     This section is enabled when compilation symbol #NEED_DJVU_MEMORY# is
@@ -297,8 +293,6 @@ private:
 # endif // ! NEED_DJVU_PROGRESS
 #endif // HAS_DJVU_PROGRESS_CALLBACKS
 //@}
-
-
 /** @name General functions.
 
     This section contains functions that replace some of the standard
@@ -354,8 +348,6 @@ DJVUEXTERNCAPI(void DjVuMessageLookUpNative(
     searching for language files.
 */
 DJVUEXTERNCAPI(const char *djvu_programname(const char *programname));
-
-
 /** @name DjVu Names  
 
     This section is enabled when compilation symbol #NEED_DJVU_NAMES# is
@@ -404,5 +396,3 @@ DJVUEXTERNCAPI(const char *djvu_programname(const char *programname));
 #endif
 
 #endif /* _DJVUGLOBAL_H_ */
-
-

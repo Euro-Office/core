@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
  /*
   * This is a development version of <ft2build.h> to build the library in
   * debug mode.  Its only difference to the default version is that it
@@ -36,6 +34,4 @@
 #include <freetype/config/ftheader.h>
 
 #endif /* FT2BUILD_H_ */
-
-
 /* END */

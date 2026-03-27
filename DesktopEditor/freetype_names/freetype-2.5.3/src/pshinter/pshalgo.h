@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSHALGO_H__
 #define __PSHALGO_H__
-
-
 #include "pshrec.h"
 #include "pshglob.h"
-
-
 FT_BEGIN_HEADER
-
-
   /* handle to Hint structure */
   typedef struct PSH_HintRec_*  PSH_Hint;
 
@@ -39,8 +31,6 @@ FT_BEGIN_HEADER
     PSH_HINT_FITTED = 8
 
   } PSH_Hint_Flags;
-
-
 #define psh_hint_is_active( x )  ( ( (x)->flags & PSH_HINT_ACTIVE ) != 0 )
 #define psh_hint_is_ghost( x )   ( ( (x)->flags & PSH_HINT_GHOST  ) != 0 )
 #define psh_hint_is_fitted( x )  ( ( (x)->flags & PSH_HINT_FITTED ) != 0 )
@@ -61,8 +51,6 @@ FT_BEGIN_HEADER
     FT_Int    order;
 
   } PSH_HintRec;
-
-
   /* this is an interpolation zone used for strong points;  */
   /* weak points are interpolated according to their strong */
   /* neighbours                                             */
@@ -74,8 +62,6 @@ FT_BEGIN_HEADER
     FT_Pos    max;
 
   } PSH_ZoneRec, *PSH_Zone;
-
-
   typedef struct  PSH_Hint_TableRec_
   {
     FT_UInt        max_hints;
@@ -90,8 +76,6 @@ FT_BEGIN_HEADER
     PS_Mask_Table  counter_masks;
 
   } PSH_Hint_TableRec, *PSH_Hint_Table;
-
-
   typedef struct PSH_PointRec_*    PSH_Point;
   typedef struct PSH_ContourRec_*  PSH_Contour;
 
@@ -110,8 +94,6 @@ FT_BEGIN_HEADER
 #define PSH_DIR_COMPARE( d1, d2 )   ( (d1) == (d2) || (d1) == -(d2) )
 #define PSH_DIR_IS_HORIZONTAL( d )  PSH_DIR_COMPARE( d, PSH_DIR_HORIZONTAL )
 #define PSH_DIR_IS_VERTICAL( d )    PSH_DIR_COMPARE( d, PSH_DIR_VERTICAL )
-
-
  /* the following bit-flags are computed once by the glyph */
  /* analyzer, for both dimensions                          */
   enum
@@ -156,8 +138,6 @@ FT_BEGIN_HEADER
 #define psh_point_set_negative( p )  (p)->flags2 |= PSH_POINT_NEGATIVE
 #define psh_point_set_edge_min( p )  (p)->flags2 |= PSH_POINT_EDGE_MIN
 #define psh_point_set_edge_max( p )  (p)->flags2 |= PSH_POINT_EDGE_MAX
-
-
   typedef struct  PSH_PointRec_
   {
     PSH_Point    prev;
@@ -181,16 +161,12 @@ FT_BEGIN_HEADER
 #endif
 
   } PSH_PointRec;
-
-
   typedef struct  PSH_ContourRec_
   {
     PSH_Point  start;
     FT_UInt    count;
 
   } PSH_ContourRec;
-
-
   typedef struct  PSH_GlyphRec_
   {
     FT_UInt            num_points;
@@ -215,8 +191,6 @@ FT_BEGIN_HEADER
     FT_Bool            do_stem_adjust;
 
   } PSH_GlyphRec, *PSH_Glyph;
-
-
 #ifdef DEBUG_HINTER
   extern PSH_Hint_Table  ps_debug_hint_table;
 
@@ -228,19 +202,11 @@ FT_BEGIN_HEADER
 
   extern PSH_Glyph       ps_debug_glyph;
 #endif
-
-
   extern FT_Error
   ps_hints_apply( PS_Hints        ps_hints,
                   FT_Outline*     outline,
                   PSH_Globals     globals,
                   FT_Render_Mode  hint_mode );
-
-
 FT_END_HEADER
-
-
 #endif /* __PSHALGO_H__ */
-
-
 /* END */

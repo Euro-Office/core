@@ -51,6 +51,4 @@ uprv_wcslen(const wchar_t *src);
 /* The following are part of the ANSI C standard, defined in stdlib.h . */
 #define uprv_wcstombs(mbstr, wcstr, count) U_STANDARD_CPP_NAMESPACE wcstombs(mbstr, wcstr, count)
 #define uprv_mbstowcs(wcstr, mbstr, count) U_STANDARD_CPP_NAMESPACE mbstowcs(wcstr, mbstr, count)
-
-
 #endif

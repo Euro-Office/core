@@ -63,8 +63,6 @@
 #  define inline __inline
 # endif
 #endif
-
-
 /*
  * Local Variables:
  * mode: c

@@ -15,12 +15,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTOUTLN_H_
 #define FTOUTLN_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -28,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -79,8 +71,6 @@ FT_BEGIN_HEADER
    *   FT_OUTLINE_XXX
    *
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -123,8 +113,6 @@ FT_BEGIN_HEADER
   FT_Outline_Decompose( FT_Outline*              outline,
                         const FT_Outline_Funcs*  func_interface,
                         void*                    user );
-
-
   /**************************************************************************
    *
    * @function:
@@ -163,8 +151,6 @@ FT_BEGIN_HEADER
                   FT_UInt      numPoints,
                   FT_Int       numContours,
                   FT_Outline  *anoutline );
-
-
   /**************************************************************************
    *
    * @function:
@@ -190,8 +176,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Outline_Done( FT_Library   library,
                    FT_Outline*  outline );
-
-
   /**************************************************************************
    *
    * @function:
@@ -213,8 +197,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_Outline_Check( FT_Outline*  outline );
-
-
   /**************************************************************************
    *
    * @function:
@@ -246,8 +228,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Outline_Get_CBox( const FT_Outline*  outline,
                        FT_BBox           *acbox );
-
-
   /**************************************************************************
    *
    * @function:
@@ -271,8 +251,6 @@ FT_BEGIN_HEADER
   FT_Outline_Translate( const FT_Outline*  outline,
                         FT_Pos             xOffset,
                         FT_Pos             yOffset );
-
-
   /**************************************************************************
    *
    * @function:
@@ -297,8 +275,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Outline_Copy( const FT_Outline*  source,
                    FT_Outline        *target );
-
-
   /**************************************************************************
    *
    * @function:
@@ -323,8 +299,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Outline_Transform( const FT_Outline*  outline,
                         const FT_Matrix*   matrix );
-
-
   /**************************************************************************
    *
    * @function:
@@ -373,8 +347,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Outline_Embolden( FT_Outline*  outline,
                        FT_Pos       strength );
-
-
   /**************************************************************************
    *
    * @function:
@@ -392,8 +364,6 @@ FT_BEGIN_HEADER
   FT_Outline_EmboldenXY( FT_Outline*  outline,
                          FT_Pos       xstrength,
                          FT_Pos       ystrength );
-
-
   /**************************************************************************
    *
    * @function:
@@ -416,8 +386,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Outline_Reverse( FT_Outline*  outline );
-
-
   /**************************************************************************
    *
    * @function:
@@ -456,8 +424,6 @@ FT_BEGIN_HEADER
   FT_Outline_Get_Bitmap( FT_Library        library,
                          FT_Outline*       outline,
                          const FT_Bitmap  *abitmap );
-
-
   /**************************************************************************
    *
    * @function:
@@ -494,8 +460,6 @@ FT_BEGIN_HEADER
   FT_Outline_Render( FT_Library         library,
                      FT_Outline*        outline,
                      FT_Raster_Params*  params );
-
-
   /**************************************************************************
    *
    * @enum:
@@ -540,8 +504,6 @@ FT_BEGIN_HEADER
     FT_ORIENTATION_NONE
 
   } FT_Orientation;
-
-
   /**************************************************************************
    *
    * @function:
@@ -568,19 +530,11 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Orientation )
   FT_Outline_Get_Orientation( FT_Outline*  outline );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTOUTLN_H_ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

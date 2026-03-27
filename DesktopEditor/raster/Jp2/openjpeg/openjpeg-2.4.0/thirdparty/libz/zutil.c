@@ -25,8 +25,6 @@ z_const char * const z_errmsg[10] = {
 "buffer error",        /* Z_BUF_ERROR     (-5) */
 "incompatible version",/* Z_VERSION_ERROR (-6) */
 ""};
-
-
 const char * ZEXPORT zlibVersion()
 {
     return ZLIB_VERSION;
@@ -264,8 +262,6 @@ void ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)
 }
 
 #endif /* __TURBOC__ */
-
-
 #ifdef M_I86
 /* Microsoft C in 16-bit mode */
 
@@ -291,8 +287,6 @@ void ZLIB_INTERNAL zcfree (voidpf opaque, voidpf ptr)
 #endif /* M_I86 */
 
 #endif /* SYS16BIT */
-
-
 #ifndef MY_ZCALLOC /* Any system without a special alloc function */
 
 #ifndef STDC

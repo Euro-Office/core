@@ -351,8 +351,6 @@ void read_png(FILE *fp, int sig_read)  /* File is already open */
 #else
    number_passes = 1;
 #endif /* PNG_READ_INTERLACING_SUPPORTED */
-
-
    /* Optional call to gamma correct and add the background to the palette
     * and update info structure.  REQUIRED if you are expecting libpng to
     * update the palette for you (ie you selected such a transform above).
@@ -687,8 +685,6 @@ void write_png(char *file_name /* , ... other image information ... */)
    sig_bit.alpha = true_alpha_bit_depth;
 
    png_set_sBIT(png_ptr, info_ptr, &sig_bit);
-
-
    /* Optional gamma chunk is strongly suggested if you have any guess
     * as to the correct gamma of the image.
     */

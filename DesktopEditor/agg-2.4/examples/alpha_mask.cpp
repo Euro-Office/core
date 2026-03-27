@@ -33,8 +33,6 @@ double            g_scale = 1.0;
 double            g_skew_x = 0;
 double            g_skew_y = 0;
 int               g_nclick = 0;
-
-
 unsigned parse_lion(agg::path_storage& ps, agg::rgba8* colors, unsigned* path_idx);
 void parse_lion()
 {
@@ -44,13 +42,9 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
 agg::rendering_buffer g_alpha_mask_rbuf;
 agg::alpha_mask_gray8 g_alpha_mask(g_alpha_mask_rbuf);
 agg::rasterizer_scanline_aa<> g_rasterizer;
-
-
 class the_application : public agg::platform_support
 {
     unsigned char* m_alpha_buf;
@@ -68,8 +62,6 @@ public:
     {
         parse_lion();
     }
-
-
     void generate_alpha_mask(int cx, int cy)
     {
         delete [] m_alpha_buf;
@@ -102,8 +94,6 @@ public:
             agg::render_scanlines(g_rasterizer, sl, r);
         }
     }
-
-
     virtual void on_resize(int cx, int cy)
     {
         generate_alpha_mask(cx, cy);
@@ -136,8 +126,6 @@ public:
 
         agg::render_all_paths(g_rasterizer, sl, r, trans, g_colors, g_path_idx, g_npaths);
     }
-
-
     void transform(double width, double height, double x, double y)
     {
         x -= width / 2;
@@ -145,8 +133,6 @@ public:
         g_angle = atan2(y, x);
         g_scale = sqrt(y * y + x * x) / 100.0;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -164,21 +150,11 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
-
-
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -190,9 +166,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

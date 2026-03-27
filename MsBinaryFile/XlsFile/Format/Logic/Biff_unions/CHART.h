@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CHART union of records 
 class CHART: public CompositeObject
 {

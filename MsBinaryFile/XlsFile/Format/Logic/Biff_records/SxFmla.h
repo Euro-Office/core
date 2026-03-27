@@ -34,8 +34,6 @@
 #include "BiffRecord.h"
 
 #include "../Biff_structures/PivotParsedFormula.h"
-
-
 namespace XLS
 {
 

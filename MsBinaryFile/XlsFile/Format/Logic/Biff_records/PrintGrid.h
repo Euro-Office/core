@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PrintGrid record in BIFF8
 class PrintGrid: public BiffRecord
 {
@@ -47,12 +45,8 @@ public:
 	~PrintGrid();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
-
-
 	static const ElementType	type = typePrintGrid;
 
 //-----------------------------

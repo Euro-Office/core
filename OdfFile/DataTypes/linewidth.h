@@ -37,8 +37,6 @@
 #include "odfattributes.h"
 #include "lengthorpercent.h"
 
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class line_width

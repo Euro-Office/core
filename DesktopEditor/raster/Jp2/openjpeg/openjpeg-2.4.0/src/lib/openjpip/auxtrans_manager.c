@@ -79,8 +79,6 @@ void close_aux_transport(auxtrans_param_t auxtrans)
             perror("close");
         }
 }
-
-
 /*!< auxiliary response parameters */
 typedef struct aux_response_param {
     char *cid;            /*!< channel ID */
@@ -98,8 +96,6 @@ aux_response_param_t * gene_auxresponse(OPJ_BOOL istcp,
                                         OPJ_SIZE_T maxlenPerFrame);
 
 void delete_auxresponse(aux_response_param_t **auxresponse);
-
-
 #ifdef _WIN32
 unsigned __stdcall aux_streaming(void *arg);
 #else
@@ -248,8 +244,6 @@ void * aux_streaming(void *arg)
 
     return 0;
 }
-
-
 OPJ_BOOL identify_cid(SOCKET connected_socket, char refcid[], FILE *fp)
 {
     char *cid;

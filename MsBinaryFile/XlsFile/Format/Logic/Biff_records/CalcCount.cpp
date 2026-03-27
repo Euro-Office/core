@@ -38,13 +38,9 @@ namespace XLS
 CalcCount::CalcCount()
 {
 }
-
-
 CalcCount::~CalcCount()
 {
 }
-
-
 BaseObjectPtr CalcCount::clone()
 {
 	return BaseObjectPtr(new CalcCount(*this));

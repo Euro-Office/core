@@ -229,8 +229,6 @@ OlsonTimeZone::OlsonTimeZone(const UResourceBundle* top,
                     // start year, finalZone works fine around the year boundary of the start year.
 
                     // finalZone->setStartYear(finalStartYear);
-
-
                     // Compute the millis for Jan 1, 0:00 GMT of the finalYear
 
                     // Note: finalStartMillis is used for detecting either if
@@ -410,8 +408,6 @@ OlsonTimeZone::getOffsetFromLocal(UDate date, int32_t nonExistingTimeOpt, int32_
         getHistoricalOffset(date, TRUE, nonExistingTimeOpt, duplicatedTimeOpt, rawoff, dstoff);
     }
 }
-
-
 /**
  * TimeZone API.
  */

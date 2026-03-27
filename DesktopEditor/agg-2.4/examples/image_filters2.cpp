@@ -260,10 +260,6 @@ public:
 
 };
 
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgra32, flip_y);
@@ -275,5 +271,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

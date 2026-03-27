@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Apple documents the `fvar', `gvar', `cvar', and `avar' tables at      */
@@ -41,8 +39,6 @@
   /* classes) this issue is ignored.                                       */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_CONFIG_CONFIG_H
@@ -55,17 +51,11 @@
 #include "ttgxvar.h"
 
 #include "tterrors.h"
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
-
-
 #define FT_Stream_FTell( stream )  \
           (FT_ULong)( (stream)->cursor - (stream)->base )
 #define FT_Stream_SeekSet( stream, off ) \
           ( (stream)->cursor = (stream)->base + (off) )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -74,8 +64,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttgxvar
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -83,8 +71,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro ALL_POINTS is used in `ft_var_readpackedpoints'.  It        */
@@ -94,12 +80,8 @@
 
   /* ensure that value `0' has the same width as a pointer */
 #define ALL_POINTS  (FT_UShort*)~(FT_PtrDist)0
-
-
 #define GX_PT_POINTS_ARE_WORDS      0x80
 #define GX_PT_POINT_RUN_COUNT_MASK  0x7F
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -135,8 +117,6 @@
     FT_Error   error  = FT_Err_Ok;
 
     FT_UNUSED( error );
-
-
     *point_cnt = n = FT_GET_BYTE();
     if ( n == 0 )
       return ALL_POINTS;
@@ -178,16 +158,12 @@
   Exit:
     return points;
   }
-
-
   enum
   {
     GX_DT_DELTAS_ARE_ZERO      = 0x80,
     GX_DT_DELTAS_ARE_WORDS     = 0x40,
     GX_DT_DELTA_RUN_COUNT_MASK = 0x3F
   };
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -220,8 +196,6 @@
     FT_Error   error  = FT_Err_Ok;
 
     FT_UNUSED( error );
-
-
     if ( FT_NEW_ARRAY( deltas, delta_cnt ) )
       return NULL;
 
@@ -264,8 +238,6 @@
 
     return deltas;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -292,8 +264,6 @@
     FT_ULong        table_len;
 
     FT_UNUSED( error );
-
-
     blend->avar_checked = TRUE;
     if ( (error = face->goto_table( face, TTAG_avar, stream, &table_len )) != 0 )
       return;
@@ -340,8 +310,6 @@
   Exit:
     FT_FRAME_EXIT();
   }
-
-
   typedef struct  GX_GVar_Head_
   {
     FT_Long    version;
@@ -353,8 +321,6 @@
     FT_ULong   offsetToData;
 
   } GX_GVar_Head;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -466,8 +432,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -504,8 +468,6 @@
   {
     FT_UInt   i;
     FT_Fixed  apply = 0x10000L;
-
-
     for ( i = 0; i < blend->num_axis; ++i )
     {
       if ( tuple_coords[i] == 0 )
@@ -550,8 +512,6 @@
 
     return apply;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -559,8 +519,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   typedef struct  GX_FVar_Head_
   {
     FT_Long    version;
@@ -572,8 +530,6 @@
     FT_UShort  instanceSize;
 
   } GX_FVar_Head;
-
-
   typedef struct  fvar_axis_
   {
     FT_ULong   axisTag;
@@ -584,8 +540,6 @@
     FT_UShort  nameID;
 
   } GX_FVar_Axis;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -654,8 +608,6 @@
         FT_FRAME_USHORT( nameID ),
       FT_FRAME_END
     };
-
-
     if ( face->blend == NULL )
     {
       /* both `fvar' and `gvar' must be present */
@@ -737,8 +689,6 @@
       for ( i = 0; i < fvar_head.axisCount; ++i )
       {
         GX_FVar_Axis  axis_rec;
-
-
         if ( FT_STREAM_READ_FIELDS( fvaraxis_fields, &axis_rec ) )
           goto Exit;
         a->tag     = axis_rec.axisTag;
@@ -775,8 +725,6 @@
     if ( master != NULL )
     {
       FT_UInt  n;
-
-
       if ( FT_ALLOC( mmvar, face->blend->mmvar_len ) )
         goto Exit;
       FT_MEM_COPY( mmvar, face->blend->mmvar, face->blend->mmvar_len );
@@ -820,8 +768,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -862,8 +808,6 @@
       mcvt_load
 
     } manageCvt;
-
-
     face->doblend = FALSE;
 
     if ( face->blend == NULL )
@@ -956,8 +900,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -993,8 +935,6 @@
     FT_Var_Axis*    a;
     GX_AVarSegment  av;
     FT_Memory       memory = face->root.memory;
-
-
     if ( face->blend == NULL )
     {
       if ( (error = TT_Get_MM_Var( face, NULL )) != 0 )
@@ -1063,8 +1003,6 @@
     FT_FREE( normalized );
     return error;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -1072,8 +1010,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1114,8 +1050,6 @@
     FT_UInt     point_count;
     FT_UShort*  localpoints;
     FT_Short*   deltas;
-
-
     FT_TRACE2(( "CVAR " ));
 
     if ( blend == NULL )
@@ -1175,8 +1109,6 @@
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
       FT_Fixed  apply;
-
-
       tupleDataSize = FT_GET_USHORT();
       tupleIndex    = FT_GET_USHORT();
 
@@ -1273,8 +1205,6 @@
 
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1322,8 +1252,6 @@
     FT_UShort*  localpoints  = NULL;
     FT_UShort*  points;
     FT_Short    *deltas_x, *deltas_y;
-
-
     if ( !face->doblend || blend == NULL )
       return FT_THROW( Invalid_Argument );
 
@@ -1372,8 +1300,6 @@
       FT_UInt   tupleDataSize;
       FT_UInt   tupleIndex;
       FT_Fixed  apply;
-
-
       tupleDataSize = FT_GET_USHORT();
       tupleIndex    = FT_GET_USHORT();
 
@@ -1491,8 +1417,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1508,8 +1432,6 @@
     if ( blend != NULL )
     {
       FT_UInt  i;
-
-
       FT_FREE( blend->normalizedcoords );
       FT_FREE( blend->mmvar );
 
@@ -1527,6 +1449,4 @@
   }
 
 #endif /* TT_CONFIG_OPTION_GX_VAR_SUPPORT */
-
-
 /* END */

@@ -15,19 +15,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef WINFNT_H_
 #define WINFNT_H_
-
-
 #include <freetype/ftwinfnt.h>
 #include <freetype/internal/ftdrv.h>
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct  WinMZ_HeaderRec_
   {
     FT_UShort  magic;
@@ -35,8 +27,6 @@ FT_BEGIN_HEADER
     FT_UShort  lfanew;
 
   } WinMZ_HeaderRec;
-
-
   typedef struct  WinNE_HeaderRec_
   {
     FT_UShort  magic;
@@ -45,8 +35,6 @@ FT_BEGIN_HEADER
     FT_UShort  rname_tab_offset;
 
   } WinNE_HeaderRec;
-
-
   typedef struct  WinPE32_HeaderRec_
   {
     FT_ULong   magic;
@@ -62,8 +50,6 @@ FT_BEGIN_HEADER
     /* skipped content */
 
   } WinPE32_HeaderRec;
-
-
   typedef struct  WinPE32_SectionRec_
   {
     FT_Byte   name[8];
@@ -74,8 +60,6 @@ FT_BEGIN_HEADER
     /* skipped content */
 
   } WinPE32_SectionRec;
-
-
   typedef struct  WinPE_RsrcDirRec_
   {
     FT_ULong   characteristics;
@@ -86,16 +70,12 @@ FT_BEGIN_HEADER
     FT_UShort  number_of_id_entries;
 
   } WinPE_RsrcDirRec;
-
-
   typedef struct  WinPE_RsrcDirEntryRec_
   {
     FT_ULong  name;
     FT_ULong  offset;
 
   } WinPE_RsrcDirEntryRec;
-
-
   typedef struct  WinPE_RsrcDataEntryRec_
   {
     FT_ULong  offset_to_data;
@@ -104,8 +84,6 @@ FT_BEGIN_HEADER
     FT_ULong  reserved;
 
   } WinPE_RsrcDataEntryRec;
-
-
   typedef struct  WinNameInfoRec_
   {
     FT_UShort  offset;
@@ -116,21 +94,15 @@ FT_BEGIN_HEADER
     FT_UShort  usage;
 
   } WinNameInfoRec;
-
-
   typedef struct  WinResourceInfoRec_
   {
     FT_UShort  type_id;
     FT_UShort  count;
 
   } WinResourceInfoRec;
-
-
 #define WINFNT_MZ_MAGIC  0x5A4D
 #define WINFNT_NE_MAGIC  0x454E
 #define WINFNT_PE_MAGIC  0x4550
-
-
   typedef struct  FNT_FontRec_
   {
     FT_ULong             offset;
@@ -142,23 +114,13 @@ FT_BEGIN_HEADER
     FT_String*           family_name;
 
   } FNT_FontRec, *FNT_Font;
-
-
   typedef struct  FNT_FaceRec_
   {
     FT_FaceRec     root;
     FNT_Font       font;
 
   } FNT_FaceRec, *FNT_Face;
-
-
   FT_EXPORT_VAR( const FT_Driver_ClassRec )  winfnt_driver_class;
-
-
 FT_END_HEADER
-
-
 #endif /* WINFNT_H_ */
-
-
 /* END */

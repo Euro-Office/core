@@ -46,8 +46,6 @@
 
 #include <stdio.h>
 #include "allheaders.h"
-
-
 /*----------------------------------------------------------------------*
  *                 Access within an array of 32-bit words               *
  *----------------------------------------------------------------------*/
@@ -64,8 +62,6 @@ l_getDataBit(void    *line,
 {
     return (*((l_uint32 *)line + (n >> 5)) >> (31 - (n & 31))) & 1;
 }
-
-
 /*!
  *  l_setDataBit()
  *
@@ -81,8 +77,6 @@ l_setDataBit(void    *line,
 {
     *((l_uint32 *)line + (n >> 5)) |= (0x80000000 >> (n & 31));
 }
-
-
 /*!
  *  l_clearDataBit()
  *
@@ -98,8 +92,6 @@ l_clearDataBit(void    *line,
 {
     *((l_uint32 *)line + (n >> 5)) &= ~(0x80000000 >> (n & 31));
 }
-
-
 /*!
  *  l_setDataBitVal()
  *
@@ -128,8 +120,6 @@ l_uint32    *pword;
     *pword |= val << (31 - (n & 31));   /* set */
     return;
 }
-
-
 /*!
  *  l_getDataDibit()
  *
@@ -143,8 +133,6 @@ l_getDataDibit(void    *line,
 {
     return (*((l_uint32 *)line + (n >> 4)) >> (2 * (15 - (n & 15)))) & 3;
 }
-
-
 /*!
  *  l_setDataDibit()
  *
@@ -165,8 +153,6 @@ l_uint32    *pword;
     *pword |= (val & 3) << (30 - 2 * (n & 15));   /* set */
     return;
 }
-
-
 /*!
  *  l_clearDataDibit()
  *
@@ -182,8 +168,6 @@ l_clearDataDibit(void    *line,
 {
     *((l_uint32 *)line + (n >> 4)) &= ~(0xc0000000 >> (2 * (n & 15)));
 }
-
-
 /*!
  *  l_getDataQbit()
  *
@@ -197,8 +181,6 @@ l_getDataQbit(void    *line,
 {
     return (*((l_uint32 *)line + (n >> 3)) >> (4 * (7 - (n & 7)))) & 0xf;
 }
-
-
 /*!
  *  l_setDataQbit()
  *
@@ -219,8 +201,6 @@ l_uint32    *pword;
     *pword |= (val & 15) << (28 - 4 * (n & 7));   /* set */
     return;
 }
-
-
 /*!
  *  l_clearDataQbit()
  *
@@ -236,8 +216,6 @@ l_clearDataQbit(void    *line,
 {
     *((l_uint32 *)line + (n >> 3)) &= ~(0xf0000000 >> (4 * (n & 7)));
 }
-
-
 /*!
  *  l_getDataByte()
  *
@@ -255,8 +233,6 @@ l_getDataByte(void    *line,
     return *(l_uint8 *)((l_uintptr_t)((l_uint8 *)line + n) ^ 3);
 #endif  /* L_BIG_ENDIAN */
 }
-
-
 /*!
  *  l_setDataByte()
  *
@@ -276,8 +252,6 @@ l_setDataByte(void    *line,
     *(l_uint8 *)((l_uintptr_t)((l_uint8 *)line + n) ^ 3) = val;
 #endif  /* L_BIG_ENDIAN */
 }
-
-
 /*!
  *  l_getDataTwoBytes()
  *
@@ -295,8 +269,6 @@ l_getDataTwoBytes(void    *line,
     return *(l_uint16 *)((l_uintptr_t)((l_uint16 *)line + n) ^ 2);
 #endif  /* L_BIG_ENDIAN */
 }
-
-
 /*!
  *  l_setDataTwoBytes()
  *
@@ -316,8 +288,6 @@ l_setDataTwoBytes(void    *line,
     *(l_uint16 *)((l_uintptr_t)((l_uint16 *)line + n) ^ 2) = val;
 #endif  /* L_BIG_ENDIAN */
 }
-
-
 /*!
  *  l_getDataFourBytes()
  *
@@ -331,8 +301,6 @@ l_getDataFourBytes(void    *line,
 {
     return *((l_uint32 *)line + n);
 }
-
-
 /*!
  *  l_setDataFourBytes()
  *
@@ -348,6 +316,4 @@ l_setDataFourBytes(void    *line,
 {
     *((l_uint32 *)line + n) = val;
 }
-
-
 

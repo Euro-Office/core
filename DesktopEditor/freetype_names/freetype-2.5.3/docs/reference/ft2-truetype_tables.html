@@ -1008,8 +1008,6 @@ Defined in FT_TRUETYPE_TABLES_H (tttables.h).
 <p>Here an example how to access the &lsquo;vhea&rsquo; table:</p>
 <pre class="colored">
   TT_VertHeader*  vert_header;                                     
-                                                                   
-                                                                   
   vert_header =                                                    
     (TT_VertHeader*)FT_Get_Sfnt_Table( face, ft_sfnt_vhea );       
 </pre>
@@ -1077,8 +1075,6 @@ Defined in FT_TRUETYPE_TABLES_H (tttables.h).
 <p>If you need to determine the table's length you should first call this function with &lsquo;*length&rsquo; set to&nbsp;0, as in the following example:</p>
 <pre class="colored">
   FT_ULong  length = 0;
-
-
   error = FT_Load_Sfnt_Table( face, tag, 0, NULL, &amp;length );
   if ( error ) { ... table does not exist ... }
 

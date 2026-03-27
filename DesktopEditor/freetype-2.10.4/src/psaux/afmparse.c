@@ -25,8 +25,6 @@
 #include "psconv.h"
 
 #include "psauxerr.h"
-
-
   /**************************************************************************
    *
    * AFM_Stream
@@ -42,8 +40,6 @@
     AFM_STREAM_STATUS_EOL,
     AFM_STREAM_STATUS_EOF
   };
-
-
   typedef struct  AFM_StreamRec_
   {
     FT_Byte*  cursor;
@@ -53,13 +49,9 @@
     FT_Int    status;
 
   } AFM_StreamRec;
-
-
 #ifndef EOF
 #define EOF -1
 #endif
-
-
   /* this works because empty lines are ignored */
 #define AFM_IS_NEWLINE( ch )  ( (ch) == '\r' || (ch) == '\n' )
 
@@ -87,14 +79,10 @@
 
 #define AFM_STATUS_EOF( stream ) \
           ( (stream)->status >= AFM_STREAM_STATUS_EOF )
-
-
   static int
   afm_stream_skip_spaces( AFM_Stream  stream )
   {
     int  ch = 0;  /* make stupid compiler happy */
-
-
     if ( AFM_STATUS_EOC( stream ) )
       return ';';
 
@@ -114,15 +102,11 @@
 
     return ch;
   }
-
-
   /* read a key or value in current column */
   static char*
   afm_stream_read_one( AFM_Stream  stream )
   {
     char*  str;
-
-
     afm_stream_skip_spaces( stream );
     if ( AFM_STATUS_EOC( stream ) )
       return NULL;
@@ -132,8 +116,6 @@
     while ( 1 )
     {
       int  ch = AFM_GETC();
-
-
       if ( AFM_IS_SPACE( ch ) )
         break;
       else if ( AFM_IS_NEWLINE( ch ) )
@@ -155,15 +137,11 @@
 
     return str;
   }
-
-
   /* read a string (i.e., read to EOL) */
   static char*
   afm_stream_read_string( AFM_Stream  stream )
   {
     char*  str;
-
-
     afm_stream_skip_spaces( stream );
     if ( AFM_STATUS_EOL( stream ) )
       return NULL;
@@ -174,8 +152,6 @@
     while ( 1 )
     {
       int  ch = AFM_GETC();
-
-
       if ( AFM_IS_NEWLINE( ch ) )
       {
         stream->status = AFM_STREAM_STATUS_EOL;
@@ -190,8 +166,6 @@
 
     return str;
   }
-
-
   /**************************************************************************
    *
    * AFM_Parser
@@ -279,8 +253,6 @@
     AFM_TOKEN_UNKNOWN
 
   } AFM_Token;
-
-
   static const char*  const afm_key_table[N_AFM_TOKENS] =
   {
     "Ascender",
@@ -358,8 +330,6 @@
     "WeightVector",
     "XHeight"
   };
-
-
   /*
    * `afm_parser_read_vals' and `afm_parser_next_key' provide
    * high-level operations to an AFM_Stream.  The rest of the
@@ -375,8 +345,6 @@
     AFM_Stream  stream = parser->stream;
     char*       str;
     FT_Int      i;
-
-
     if ( n > AFM_MAX_ARGUMENTS )
       return 0;
 
@@ -384,8 +352,6 @@
     {
       FT_Offset  len;
       AFM_Value  val = vals + i;
-
-
       if ( val->type == AFM_VALUE_TYPE_STRING )
         str = afm_stream_read_string( stream );
       else
@@ -403,8 +369,6 @@
         {
           FT_Memory  memory = parser->memory;
           FT_Error   error;
-
-
           if ( !FT_QALLOC( val->u.s, len + 1 ) )
           {
             ft_memcpy( val->u.s, str, len );
@@ -439,8 +403,6 @@
 
     return i;
   }
-
-
   FT_LOCAL_DEF( char* )
   afm_parser_next_key( AFM_Parser  parser,
                        FT_Bool     line,
@@ -448,8 +410,6 @@
   {
     AFM_Stream  stream = parser->stream;
     char*       key    = NULL;  /* make stupid compiler happy */
-
-
     if ( line )
     {
       while ( 1 )
@@ -497,15 +457,11 @@
 
     return key;
   }
-
-
   static AFM_Token
   afm_tokenize( const char*  key,
                 FT_Offset    len )
   {
     int  n;
-
-
     for ( n = 0; n < N_AFM_TOKENS; n++ )
     {
       if ( *( afm_key_table[n] ) == *key )
@@ -523,8 +479,6 @@
 
     return AFM_TOKEN_UNKNOWN;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   afm_parser_init( AFM_Parser  parser,
                    FT_Memory   memory,
@@ -533,8 +487,6 @@
   {
     AFM_Stream  stream = NULL;
     FT_Error    error;
-
-
     if ( FT_NEW( stream ) )
       return error;
 
@@ -551,25 +503,17 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_LOCAL( void )
   afm_parser_done( AFM_Parser  parser )
   {
     FT_Memory  memory = parser->memory;
-
-
     FT_FREE( parser->stream );
   }
-
-
   static FT_Error
   afm_parser_read_int( AFM_Parser  parser,
                        FT_Int*     aint )
   {
     AFM_ValueRec  val;
-
-
     val.type = AFM_VALUE_TYPE_INTEGER;
 
     if ( afm_parser_read_vals( parser, &val, 1 ) == 1 )
@@ -581,8 +525,6 @@
     else
       return FT_THROW( Syntax_Error );
   }
-
-
   static FT_Error
   afm_parse_track_kern( AFM_Parser  parser )
   {
@@ -592,8 +534,6 @@
     FT_Offset      len;
     int            n = -1;
     FT_Int         tmp;
-
-
     if ( afm_parser_read_int( parser, &tmp ) )
         goto Fail;
 
@@ -606,8 +546,6 @@
     {
       FT_Memory  memory = parser->memory;
       FT_Error   error;
-
-
       if ( FT_QNEW_ARRAY( fi->TrackKerns, fi->NumTrackKern ) )
         return error;
     }
@@ -615,8 +553,6 @@
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_ValueRec  shared_vals[5];
-
-
       switch ( afm_tokenize( key, len ) )
       {
       case AFM_TOKEN_TRACKKERN:
@@ -660,12 +596,8 @@
   Fail:
     return FT_THROW( Syntax_Error );
   }
-
-
 #undef  KERN_INDEX
 #define KERN_INDEX( g1, g2 )  ( ( (FT_ULong)g1 << 16 ) | g2 )
-
-
   /* compare two kerning pairs */
   FT_CALLBACK_DEF( int )
   afm_compare_kern_pairs( const void*  a,
@@ -676,8 +608,6 @@
 
     FT_ULong  index1 = KERN_INDEX( kp1->index1, kp1->index2 );
     FT_ULong  index2 = KERN_INDEX( kp2->index1, kp2->index2 );
-
-
     if ( index1 > index2 )
       return 1;
     else if ( index1 < index2 )
@@ -685,8 +615,6 @@
     else
       return 0;
   }
-
-
   static FT_Error
   afm_parse_kern_pairs( AFM_Parser  parser )
   {
@@ -696,8 +624,6 @@
     FT_Offset     len;
     int           n = -1;
     FT_Int        tmp;
-
-
     if ( afm_parser_read_int( parser, &tmp ) )
       goto Fail;
 
@@ -710,8 +636,6 @@
     {
       FT_Memory  memory = parser->memory;
       FT_Error   error;
-
-
       if ( FT_QNEW_ARRAY( fi->KernPairs, fi->NumKernPair ) )
         return error;
     }
@@ -719,8 +643,6 @@
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_Token  token = afm_tokenize( key, len );
-
-
       switch ( token )
       {
       case AFM_TOKEN_KP:
@@ -729,8 +651,6 @@
         {
           FT_Int        r;
           AFM_ValueRec  shared_vals[4];
-
-
           n++;
 
           if ( n >= (int)fi->NumKernPair )
@@ -783,16 +703,12 @@
   Fail:
     return FT_THROW( Syntax_Error );
   }
-
-
   static FT_Error
   afm_parse_kern_data( AFM_Parser  parser )
   {
     FT_Error   error;
     char*      key;
     FT_Offset  len;
-
-
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       switch ( afm_tokenize( key, len ) )
@@ -825,8 +741,6 @@
   Fail:
     return FT_THROW( Syntax_Error );
   }
-
-
   static FT_Error
   afm_parser_skip_section( AFM_Parser  parser,
                            FT_Int      n,
@@ -834,8 +748,6 @@
   {
     char*      key;
     FT_Offset  len;
-
-
     while ( n-- > 0 )
     {
       key = afm_parser_next_key( parser, 1, NULL );
@@ -846,8 +758,6 @@
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_Token  token = afm_tokenize( key, len );
-
-
       if ( token == end_section || token == AFM_TOKEN_ENDFONTMETRICS )
         return FT_Err_Ok;
     }
@@ -855,8 +765,6 @@
   Fail:
     return FT_THROW( Syntax_Error );
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   afm_parser_parse( AFM_Parser  parser )
   {
@@ -866,8 +774,6 @@
     char*         key;
     FT_Offset     len;
     FT_Int        metrics_sets = 0;
-
-
     if ( !fi )
       return FT_THROW( Invalid_Argument );
 
@@ -879,8 +785,6 @@
     while ( ( key = afm_parser_next_key( parser, 1, &len ) ) != 0 )
     {
       AFM_ValueRec  shared_vals[4];
-
-
       switch ( afm_tokenize( key, len ) )
       {
       case AFM_TOKEN_METRICSSETS:
@@ -936,8 +840,6 @@
       case AFM_TOKEN_STARTCHARMETRICS:
         {
           FT_Int  n = 0;
-
-
           if ( afm_parser_read_int( parser, &n ) )
             goto Fail;
 
@@ -981,6 +883,4 @@
   typedef int  _afm_parse_dummy;
 
 #endif /* T1_CONFIG_OPTION_NO_AFM */
-
-
 /* END */

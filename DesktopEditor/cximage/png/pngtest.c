@@ -203,8 +203,6 @@ write_row_callback(png_structp png_ptr, png_uint_32 row_number, int pass)
    fprintf(stdout, "w");
 }
 #endif
-
-
 #ifdef PNG_READ_USER_TRANSFORM_SUPPORTED
 /* Example of using a user transform callback (doesn't do anything at present).
  */
@@ -626,8 +624,6 @@ png_debug_free(png_structp png_ptr, png_voidp ptr)
 }
 #endif /* USER_MEM && DEBUG */
 /* END of code to test memory allocation/deallocation */
-
-
 #ifdef PNG_READ_USER_CHUNKS_SUPPORTED
 /* Demonstration of user chunk support of the sTER and vpAg chunks */
 

@@ -38,8 +38,6 @@
 
 namespace XLS
 {
-
-
 class FutureFunctionParser
 {
 public:
@@ -52,6 +50,4 @@ private:
     std::map<std::wstring, std::vector<bool>> FutureFunctions;
 
 };
-
-
 } // namespace XLS

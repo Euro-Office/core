@@ -32,8 +32,6 @@
 
 #include "CFRecord.h"
 #include "CFStream.h"
-
-
 namespace XLS
 {
 
@@ -246,8 +244,6 @@ const unsigned int CFRecord::getStreamPointer() const
 	}
 	return file_ptr;
 }
-
-
 const char* CFRecord::getData() const
 {
 	if(data_)
@@ -259,8 +255,6 @@ const char* CFRecord::getData() const
 		return intData;
 	}
 }
-
-
 const size_t CFRecord::getDataSize() const
 {
 	return size_;
@@ -279,14 +273,10 @@ const size_t CFRecord::getMaxRecordSize() const
 	}
 	return MAX_RECORD_SIZE;
 }
-
-
 void CFRecord::appendRawData(CFRecordPtr where_from)
 {
 	appendRawData(where_from->getData(), where_from->getDataSize());
 }
-
-
 void CFRecord::appendRawData(const char* raw_data, const size_t size)
 {
 	char* data_new = new char[size_ + size];
@@ -385,14 +375,10 @@ void CFRecord::insertDataFromRecordToBeginning(CFRecordPtr where_from)
 	std::swap(data_, data_new);
 	delete[] data_new;
 }
-
-
 const size_t CFRecord::getRdPtr() const
 {
 	return rdPtr;
 }
-
-
 const bool CFRecord::isEOF() const
 {
 	if(rdPtr > size_)
@@ -401,8 +387,6 @@ const bool CFRecord::isEOF() const
 	}
 	return rdPtr >= size_;
 }
-
-
 // Checks whether the specified number of unsigned chars present in the non-read part of the buffer
 // Doesn't generate an exception
 const bool CFRecord::checkFitReadSafe(const size_t size) const
@@ -416,8 +400,6 @@ const bool CFRecord::checkFitWriteSafe(const size_t size) const
 		return (rdPtr + size <= MAX_RECORD_SIZE_XLSB);
     return (rdPtr + size <= MAX_RECORD_SIZE);
 }
-
-
 // Checks whether the specified number of unsigned chars present in the non-read part of the buffer
 // Generates an exception
 bool CFRecord::checkFitRead(const size_t size) const
@@ -466,8 +448,6 @@ void CFRecord::reserveNunBytes(const size_t n)
 	}
 
 }
-
-
 void CFRecord::RollRdPtrBack(const size_t n)
 {
 	//ASSERT(data_); // This throws if we use RollRdPtrBack while storing data
@@ -505,8 +485,6 @@ CFRecord& CFRecord::operator << (bool& val)
 {
 	throw;// EXCEPT::LE::WrongAPIUsage("This function may only be called by mistake.", __FUNCTION__);
 }
-
-
 #if !defined(_WIN32) && !defined(_WIN64)
 CFRecord& operator>>(CFRecord & record, std::string & str)
 {
@@ -537,5 +515,3 @@ CFRecord& operator>>(CFRecord & record, std::wstring & str)
 }
 #endif
 } // namespace XLS
-
-

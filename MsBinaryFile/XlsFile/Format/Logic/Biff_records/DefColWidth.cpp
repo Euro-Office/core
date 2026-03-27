@@ -38,13 +38,9 @@ namespace XLS
 DefColWidth::DefColWidth()
 {
 }
-
-
 DefColWidth::~DefColWidth()
 {
 }
-
-
 BaseObjectPtr DefColWidth::clone()
 {
 	return BaseObjectPtr(new DefColWidth(*this));

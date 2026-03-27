@@ -33,11 +33,7 @@
 #include "psd_rect.h"
 #include "psd_bitmap.h"
 #include "psd_math.h"
-
-
 extern void psd_bitmap_gaussian_blur_alpha_channel(psd_bitmap * bitmap, psd_double radius);
-
-
 psd_static void psd_set_layer_satin_default(psd_layer_effects_satin * satin)
 {
 	psd_int i;

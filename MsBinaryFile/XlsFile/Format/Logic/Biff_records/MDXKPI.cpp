@@ -38,13 +38,9 @@ namespace XLS
 MDXKPI::MDXKPI()
 {
 }
-
-
 MDXKPI::~MDXKPI()
 {
 }
-
-
 BaseObjectPtr MDXKPI::clone()
 {
 	return BaseObjectPtr(new MDXKPI(*this));

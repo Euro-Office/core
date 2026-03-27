@@ -33,8 +33,6 @@
 
 #include <exception>
 #include <string>
-
-
 namespace RedBlackTree
 {
 class RBTreeException : virtual public std::exception

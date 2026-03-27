@@ -38,8 +38,6 @@ class CRecordExObjRefAtom : public CUnknownRecord
 {
 public:
     _UINT32 m_nExObjID = 0;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

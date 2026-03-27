@@ -299,8 +299,6 @@ bool CxImageMNG::Decode(CxFile *hFile)
 			}
 #endif
 		} else cx_throw("CxImageMNG::Decode cannot create image");
-
-
 	} cx_catch {
 		if (strcmp(message,"")) strncpy(info.szLastError,message,255);
 		return false;

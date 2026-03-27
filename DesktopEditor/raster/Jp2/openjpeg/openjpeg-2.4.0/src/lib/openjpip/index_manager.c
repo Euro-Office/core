@@ -431,8 +431,6 @@ OPJ_BOOL set_cptrdata(box_param_t *cidx_box, index_param_t *jp2idx)
 
     return OPJ_TRUE;
 }
-
-
 /**
  * set SIZ marker information
  * A.5 Fixed information marker segment
@@ -711,8 +709,6 @@ OPJ_BOOL set_CODmkrdata(markeridx_param_t *codmkidx,
     }
     return OPJ_TRUE;
 }
-
-
 /* very very generic name see NOMINMAX */
 #ifdef min
 #undef min

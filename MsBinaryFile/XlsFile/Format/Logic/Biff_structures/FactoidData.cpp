@@ -34,19 +34,13 @@
 
 namespace XLS
 {
-
-
 FactoidData::FactoidData()
 {
 }
-
-
 FactoidData::FactoidData(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr FactoidData::clone()
 {
 	return BiffStructurePtr(new FactoidData(*this));
@@ -60,7 +54,5 @@ void FactoidData::load(CFRecord& record)
 	fXMLBased = GETBIT(flags, 0);
 	record >> propertyBag;
 }
-
-
 } // namespace XLS
 

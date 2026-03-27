@@ -8,8 +8,6 @@
 
 // To use inspector set V8_USE_INSPECTOR environment variable to any non-zero value
 // Unset V8_USE_INSPECTOR or set it to '0' for disabling the inspector
-
-
 // Inspector code structure based on "V8 Inspector simple examle" from this repository:
 // https://github.com/ahmadov/v8_inspector_example
 

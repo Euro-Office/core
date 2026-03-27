@@ -163,8 +163,6 @@ public:
      * @internal
      */
     HebrewCalendar(const Locale& aLocale, UErrorCode& success);
-
-
     /**
      * Destructor
      * @internal
@@ -225,8 +223,6 @@ public:
      * @internal
      */
     virtual const char * getType() const;
-
-
     // Calendar API
  public:
     /**
@@ -245,8 +241,6 @@ public:
      * @deprecated ICU 2.6 use UCalendarDateFields instead of EDateFields
      */
     virtual void add(EDateFields field, int32_t amount, UErrorCode& status);
-
-
     /**
      * (Overrides Calendar) Rolls up or down by the given amount in the specified field.
      * For more information, see the documentation for Calendar::roll().
@@ -360,8 +354,6 @@ public:
      */
     virtual int32_t handleComputeMonthStart(int32_t eyear, int32_t month,
                                                    UBool useMonth) const;
-
-
     /**
      * Validate a single field of this calendar.
      * Overrides Calendar::validateField(int) to provide

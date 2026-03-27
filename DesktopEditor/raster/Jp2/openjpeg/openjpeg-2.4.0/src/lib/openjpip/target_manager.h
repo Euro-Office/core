@@ -53,15 +53,11 @@ typedef struct target_param {
     struct target_param
         *next;      /**< pointer to the next target                         */
 } target_param_t;
-
-
 /** Target list parameters*/
 typedef struct targetlist_param {
     target_param_t *first; /**< first target pointer of the list*/
     target_param_t *last;  /**< last  target pointer of the list*/
 } targetlist_param_t;
-
-
 
 /**
  * generate a target list
@@ -69,8 +65,6 @@ typedef struct targetlist_param {
  * @return pointer to the generated target list
  */
 targetlist_param_t * gene_targetlist(void);
-
-
 /**
  * generate a target
  *
@@ -79,8 +73,6 @@ targetlist_param_t * gene_targetlist(void);
  * @return               pointer to the generated target
  */
 target_param_t * gene_target(targetlist_param_t *targetlist, char *targetpath);
-
-
 /**
  * refer a target, used to make a new cache model
  *
@@ -88,8 +80,6 @@ target_param_t * gene_target(targetlist_param_t *targetlist, char *targetpath);
  * @param[out] ptr       address of feeding target pointer
  */
 void refer_target(target_param_t *reftarget, target_param_t **ptr);
-
-
 /**
  * refer a target, used to make a new cache model
  *
@@ -103,8 +93,6 @@ void unrefer_target(target_param_t *target);
  * @param[in,out] target address of the deleting target pointer
  */
 void delete_target(target_param_t **target);
-
-
 /**
  * delete a target in list
  *
@@ -113,16 +101,12 @@ void delete_target(target_param_t **target);
  */
 void delete_target_in_list(target_param_t **target,
                            targetlist_param_t *targetlist);
-
-
 /**
  * delete target list
  *
  * @param[in,out] targetlist address of the target list pointer
  */
 void delete_targetlist(targetlist_param_t **targetlist);
-
-
 /**
  * print target parameters
  *
@@ -136,8 +120,6 @@ void print_target(target_param_t *target);
  * @param[in] targetlist target list pointer
  */
 void print_alltarget(targetlist_param_t *targetlist);
-
-
 /**
  * search a target by target name
  *
@@ -147,8 +129,6 @@ void print_alltarget(targetlist_param_t *targetlist);
  */
 target_param_t * search_target(const char targetname[],
                                targetlist_param_t *targetlist);
-
-
 /**
  * search a target by tid
  *

@@ -23,12 +23,8 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvlcar
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -52,11 +46,7 @@
     FT_UShort  format;
 
   } GXV_lcar_DataRec, *GXV_lcar_Data;
-
-
 #define GXV_LCAR_DATA( FIELD )  GXV_TABLE_DATA( lcar, FIELD )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -80,8 +70,6 @@
   Exit:
     GXV_EXIT;
   }
-
-
   static void
   gxv_lcar_LookupValue_validate( FT_UShort            glyph,
                                  GXV_LookupValueCPtr  value_p,
@@ -92,8 +80,6 @@
     FT_UShort  count;
     FT_Short   partial;
     FT_UShort  i;
-
-
     GXV_NAME_ENTER( "element in lookupTable" );
 
     GXV_LIMIT_CHECK( 2 );
@@ -108,8 +94,6 @@
 
     GXV_EXIT;
   }
-
-
   /*
     +------ lcar --------------------+
     |                                |
@@ -169,8 +153,6 @@
 
     return value;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -193,8 +175,6 @@
     GXV_lcar_Data     lcar = &lcarrec;
 
     FT_Fixed          version;
-
-
     gxvalid->root       = ftvalid;
     gxvalid->table_data = lcar;
     gxvalid->face       = face;
@@ -219,6 +199,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

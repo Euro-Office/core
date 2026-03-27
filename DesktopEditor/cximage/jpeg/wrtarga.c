@@ -17,8 +17,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef TARGA_SUPPORTED
-
-
 /*
  * To support 12-bit JPEG data, we'd have to scale output down to 8 bits.
  * This is not yet implemented.
@@ -36,8 +34,6 @@
  * model, or else replace fwrite() with a putc() loop --- which will be much
  * slower.
  */
-
-
 /* Private version of data destination object */
 
 typedef struct {
@@ -48,8 +44,6 @@ typedef struct {
 } tga_dest_struct;
 
 typedef tga_dest_struct * tga_dest_ptr;
-
-
 LOCAL(void)
 write_header (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo, int num_colors)
 /* Create and write a Targa header */
@@ -88,8 +82,6 @@ write_header (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo, int num_colors)
   if (JFWRITE(dinfo->output_file, targaheader, 18) != (size_t) 18)
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * Write some pixel data.
  * In this module rows_supplied will always be 1.
@@ -133,8 +125,6 @@ put_gray_rows (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   }
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 /*
  * Write some demapped pixel data when color quantization is in effect.
  * For Targa, this is only applied to grayscale data.
@@ -157,8 +147,6 @@ put_demapped_gray (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
   }
   (void) JFWRITE(dest->pub.output_file, dest->iobuffer, dest->buffer_width);
 }
-
-
 /*
  * Startup: write the file header.
  */
@@ -201,8 +189,6 @@ start_output_tga (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
     ERREXIT(cinfo, JERR_TGA_COLORSPACE);
   }
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -215,8 +201,6 @@ finish_output_tga (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (ferror(dinfo->output_file))
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * The module selection routine for Targa format output.
  */

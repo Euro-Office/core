@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Header record in BIFF8
 class Header: public BiffRecord
 {
@@ -48,8 +46,6 @@ public:
 	~Header();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

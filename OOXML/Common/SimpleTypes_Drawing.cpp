@@ -98,8 +98,6 @@ namespace SimpleTypes
 	{
 		return m_sGuide;
 	}
-
-
 	//--------------------------------------------------------------------------------
 	// AdjCoordinate 20.1.10.2 (Part 1)
 	//--------------------------------------------------------------------------------
@@ -145,8 +143,6 @@ namespace SimpleTypes
 				}
 			}
 		}
-
-
 		if ( bGuide )
 		{
 			this->m_eValue = adjcoordinateGuide;
@@ -325,8 +321,6 @@ namespace SimpleTypes
 		default                             : return (L"allAtOnce");
 		}
 	}
-
-
 	//--------------------------------------------------------------------------------
 	// AnimationDgmOnlyBuildType 20.1.10.8 (Part 1)
 	//--------------------------------------------------------------------------------
@@ -849,8 +843,6 @@ namespace SimpleTypes
 	{
 		m_sValue = sValue;
 	}
-
-
 	std::wstring CGeomGuideFormula::FromString(const std::wstring &sValue)
 	{
 		m_sValue = sValue;
@@ -883,8 +875,6 @@ namespace SimpleTypes
 	{
 		m_sValue = sValue;
 	}
-
-
 	std::wstring CGeomGuideName::FromString(const std::wstring &sValue)
 	{
 		m_sValue = sValue;
@@ -4229,8 +4219,6 @@ namespace SimpleTypes
 	{
 		m_sValue = sValue;
 	}
-
-
 	std::wstring CTextTypeface::FromString(const std::wstring &sValue)
 	{
 		m_sValue = sValue;
@@ -4475,8 +4463,6 @@ namespace SimpleTypes
 
 		return sResult;
 	}
-
-
 	double CPositionOffset::ToPoints()
 	{
 		return Emu_To_Pt( (double)this->m_eValue );

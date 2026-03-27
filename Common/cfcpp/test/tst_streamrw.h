@@ -4,8 +4,6 @@
 #include "streamrw.h"
 #include <array>
 #include <cstring>
-
-
 struct StreamRWTest : testing::Test
 {
     wstring filename;
@@ -25,8 +23,6 @@ struct StreamRWTest : testing::Test
     {
     }
 };
-
-
 TEST_F(StreamRWTest, open)
 {
     EXPECT_TRUE(IsOpen(stream));

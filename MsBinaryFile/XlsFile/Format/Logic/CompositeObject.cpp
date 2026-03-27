@@ -32,8 +32,6 @@
 
 #include "CompositeObject.h"
 #include "BinProcessor.h"
-
-
 namespace XLS
 {;
 
@@ -87,7 +85,5 @@ const bool ABNFParenthesis::read(StreamCacheReaderPtr reader, BaseObject* parent
 	//parent->add_child(this);
 	return res;
 };
-
-
 
 } // namespace XLS

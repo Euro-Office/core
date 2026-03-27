@@ -25,8 +25,6 @@ U_NAMESPACE_BEGIN
 //                   creates the TRIE table used to map from Unicode to the
 //                   character categories.
 //
-
-
 //
 //  RangeDescriptor
 //
@@ -56,8 +54,6 @@ private:
     RangeDescriptor(const RangeDescriptor &other); // forbid copying of this class
     RangeDescriptor &operator=(const RangeDescriptor &other); // forbid copying of this class
 };
-
-
 //
 //  RBBISetBuilder   Handles processing of Unicode Sets from RBBI rules.
 //
@@ -71,8 +67,6 @@ private:
 //                   -  construct the trie table that maps input characters
 //                      to set numbers in the non-overlapping set of sets.
 //
-
-
 class RBBISetBuilder : public UMemory {
 public:
     RBBISetBuilder(RBBIRuleBuilder *rb);
@@ -123,8 +117,6 @@ private:
     RBBISetBuilder(const RBBISetBuilder &other); // forbid copying of this class
     RBBISetBuilder &operator=(const RBBISetBuilder &other); // forbid copying of this class
 };
-
-
 
 U_NAMESPACE_END
 #endif

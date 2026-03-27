@@ -710,10 +710,6 @@ jas_image_fmtinfo_t *jas_image_lookupfmtbyname(const char *name)
 	return 0;
 }
 
-
-
-
-
 static uint_fast32_t inttobits(jas_seqent_t v, int prec, bool sgnd)
 {
 	uint_fast32_t ret;
@@ -943,22 +939,6 @@ int jas_image_getcmptbytype(jas_image_t *image, int ctype)
 	}
 	return -1;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /***********************************************/
 /***********************************************/
 /***********************************************/
@@ -1197,8 +1177,6 @@ static void jas_image_calcbbox2(jas_image_t *image, jas_image_coord_t *tlx,
 	*brx = tmpbrx;
 	*bry = tmpbry;
 }
-
-
 
 static int getint(jas_stream_t *in, int sgnd, int prec, long *val)
 {

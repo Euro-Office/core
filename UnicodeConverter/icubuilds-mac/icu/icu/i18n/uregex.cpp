@@ -273,8 +273,6 @@ uregex_close(URegularExpression  *re2) {
     }
     delete re;
 }
-
-
 //----------------------------------------------------------------------------------------
 //
 //    uregex_clone
@@ -308,10 +306,6 @@ uregex_clone(const URegularExpression *source2, UErrorCode *status)  {
 
     return (URegularExpression*)clone;
 }
-
-
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_pattern
@@ -331,8 +325,6 @@ uregex_pattern(const  URegularExpression *regexp2,
     }
     return regexp->fPatString;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_patternUText
@@ -344,8 +336,6 @@ uregex_patternUText(const URegularExpression *regexp2,
     RegularExpression *regexp = (RegularExpression*)regexp2;
     return regexp->fPat->patternText(*status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_flags
@@ -360,8 +350,6 @@ uregex_flags(const URegularExpression *regexp2, UErrorCode *status)  {
     int32_t flags = regexp->fPat->flags();
     return flags;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setText
@@ -394,8 +382,6 @@ uregex_setText(URegularExpression *regexp2,
     regexp->fMatcher->reset(&input);
     utext_close(&input); // reset() made a shallow clone, so we don't need this copy
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setUText
@@ -423,8 +409,6 @@ uregex_setUText(URegularExpression *regexp2,
     regexp->fOwnsText   = TRUE;
     regexp->fMatcher->reset(text);
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -464,8 +448,6 @@ uregex_getText(URegularExpression *regexp2,
     }
     return regexp->fText;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_getUText
@@ -481,8 +463,6 @@ uregex_getUText(URegularExpression *regexp2,
     }
     return regexp->fMatcher->getInput(dest, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_refreshUText
@@ -498,8 +478,6 @@ uregex_refreshUText(URegularExpression *regexp2,
     }
     regexp->fMatcher->refreshInputText(text, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_matches
@@ -528,8 +506,6 @@ uregex_matches64(URegularExpression *regexp2,
     }
     return result;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_lookingAt
@@ -558,8 +534,6 @@ uregex_lookingAt64(URegularExpression *regexp2,
     }
     return result;
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -590,8 +564,6 @@ uregex_find64(URegularExpression *regexp2,
     }
     return result;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_findNext
@@ -623,8 +595,6 @@ uregex_groupCount(URegularExpression *regexp2,
     int32_t  result = regexp->fMatcher->groupCount();
     return result;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_groupNumberFromName
@@ -723,8 +693,6 @@ uregex_group(URegularExpression *regexp2,
     }
 
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_groupUText
@@ -815,8 +783,6 @@ uregex_reset64(URegularExpression    *regexp2,
     }
     regexp->fMatcher->reset(index, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setRegion
@@ -841,8 +807,6 @@ uregex_setRegion64(URegularExpression   *regexp2,
     }
     regexp->fMatcher->region(regionStart, regionLimit, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setRegionAndStart
@@ -881,8 +845,6 @@ uregex_regionStart64(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->regionStart();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_regionEnd
@@ -903,8 +865,6 @@ uregex_regionEnd64(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->regionEnd();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_hasTransparentBounds
@@ -919,8 +879,6 @@ uregex_hasTransparentBounds(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->hasTransparentBounds();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_useTransparentBounds
@@ -936,8 +894,6 @@ uregex_useTransparentBounds(URegularExpression    *regexp2,
     }
     regexp->fMatcher->useTransparentBounds(b);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_hasAnchoringBounds
@@ -952,8 +908,6 @@ uregex_hasAnchoringBounds(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->hasAnchoringBounds();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_useAnchoringBounds
@@ -969,8 +923,6 @@ uregex_useAnchoringBounds(URegularExpression    *regexp2,
     }
     regexp->fMatcher->useAnchoringBounds(b);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_hitEnd
@@ -985,8 +937,6 @@ uregex_hitEnd(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->hitEnd();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_requireEnd
@@ -1001,8 +951,6 @@ uregex_requireEnd(const  URegularExpression   *regexp2,
     }
     return regexp->fMatcher->requireEnd();
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setTimeLimit
@@ -1017,8 +965,6 @@ uregex_setTimeLimit(URegularExpression   *regexp2,
         regexp->fMatcher->setTimeLimit(limit, *status);
     }
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -1036,8 +982,6 @@ uregex_getTimeLimit(const  URegularExpression   *regexp2,
     return retVal;
 }
 
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setStackLimit
@@ -1052,8 +996,6 @@ uregex_setStackLimit(URegularExpression   *regexp2,
         regexp->fMatcher->setStackLimit(limit, *status);
     }
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -1070,8 +1012,6 @@ uregex_getStackLimit(const  URegularExpression   *regexp2,
     }
     return retVal;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setMatchCallback
@@ -1087,8 +1027,6 @@ uregex_setMatchCallback(URegularExpression      *regexp2,
         regexp->fMatcher->setMatchCallback(callback, context, *status);
     }
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_getMatchCallback
@@ -1104,8 +1042,6 @@ uregex_getMatchCallback(const URegularExpression    *regexp2,
          regexp->fMatcher->getMatchCallback(*callback, *context, *status);
      }
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_setMatchProgressCallback
@@ -1121,8 +1057,6 @@ uregex_setFindProgressCallback(URegularExpression              *regexp2,
         regexp->fMatcher->setFindProgressCallback(callback, context, *status);
     }
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_getMatchCallback
@@ -1138,8 +1072,6 @@ uregex_getFindProgressCallback(const URegularExpression          *regexp2,
          regexp->fMatcher->getFindProgressCallback(*callback, *context, *status);
      }
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_replaceAll
@@ -1188,8 +1120,6 @@ uregex_replaceAll(URegularExpression    *regexp2,
 
     return len;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_replaceAllUText
@@ -1212,8 +1142,6 @@ uregex_replaceAllUText(URegularExpression    *regexp2,
     dest = regexp->fMatcher->replaceAll(replacementText, dest, *status);
     return dest;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_replaceFirst
@@ -1249,8 +1177,6 @@ uregex_replaceFirst(URegularExpression  *regexp2,
 
     return len;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_replaceFirstUText
@@ -1273,8 +1199,6 @@ uregex_replaceFirstUText(URegularExpression  *regexp2,
     dest = regexp->fMatcher->replaceFirst(replacementText, dest, *status);
     return dest;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_appendReplacement
@@ -1311,8 +1235,6 @@ class RegexCImpl {
 
 U_NAMESPACE_END
 
-
-
 static const UChar BACKSLASH  = 0x5c;
 static const UChar DOLLARSIGN = 0x24;
 static const UChar LEFTBRACKET = 0x7b;
@@ -1329,8 +1251,6 @@ static inline void appendToBuf(UChar c, int32_t *idx, UChar *buf, int32_t bufCap
     }
     (*idx)++;
 }
-
-
 //
 //  appendReplacement, the actual implementation.
 //
@@ -1518,8 +1438,6 @@ int32_t RegexCImpl::appendReplacement(RegularExpression    *regexp,
             // $ not followed by {name} or digits.
             *status = U_REGEX_INVALID_CAPTURE_GROUP_NAME;
         }
-
-
         // Finally, append the capture group data to the destination.
         if (U_SUCCESS(*status)) {
             destIdx += uregex_group((URegularExpression*)regexp, groupNum,
@@ -1602,8 +1520,6 @@ uregex_appendReplacementUText(URegularExpression    *regexp2,
     RegularExpression *regexp = (RegularExpression*)regexp2;
     regexp->fMatcher->appendReplacement(dest, replText, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    uregex_appendTail
@@ -1729,8 +1645,6 @@ int32_t RegexCImpl::appendTail(RegularExpression    *regexp,
 
     return destIdx;
 }
-
-
 //
 //   appendTail   the actual API function
 //
@@ -1742,8 +1656,6 @@ uregex_appendTail(URegularExpression    *regexp2,
     RegularExpression *regexp = (RegularExpression*)regexp2;
     return RegexCImpl::appendTail(regexp, destBuf, destCapacity, status);
 }
-
-
 //
 //   uregex_appendTailUText...can just use the normal C++ method
 //
@@ -1754,8 +1666,6 @@ uregex_appendTailUText(URegularExpression    *regexp2,
     RegularExpression *regexp = (RegularExpression*)regexp2;
     return regexp->fMatcher->appendTail(dest, *status);
 }
-
-
 //------------------------------------------------------------------------------
 //
 //    copyString     Internal utility to copy a string to an output buffer,
@@ -1956,8 +1866,6 @@ uregex_split(URegularExpression      *regexp2,
 
     return RegexCImpl::split(regexp, destBuf, destCapacity, requiredCapacity, destFields, destFieldsCapacity, status);
 }
-
-
 //
 //   uregex_splitUText...can just use the normal C++ method
 //
@@ -1969,7 +1877,5 @@ uregex_splitUText(URegularExpression    *regexp2,
     RegularExpression *regexp = (RegularExpression*)regexp2;
     return regexp->fMatcher->split(regexp->fMatcher->inputText(), destFields, destFieldsCapacity, *status);
 }
-
-
 #endif   // !UCONFIG_NO_REGULAR_EXPRESSIONS
 

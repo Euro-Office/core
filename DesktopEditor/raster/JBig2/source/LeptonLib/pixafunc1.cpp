@@ -53,8 +53,6 @@
      * semi-perimeter (w + h) about 5000 or less, the O(n) binsort
      * is faster than the O(nlogn) shellsort.  */
 static const l_int32   MIN_COMPS_FOR_BIN_SORT = 500;
-
-
 /*---------------------------------------------------------------------*
  *                                Filters                              *
  *---------------------------------------------------------------------*/
@@ -131,8 +129,6 @@ static const l_int32   MIN_COMPS_FOR_BIN_SORT = 500;
  *        // Remove the components, in-place.
  *    pixRemoveWithIndicator(pixs, pixa, nad);
  */
-
-
 /*!
  *  pixSelectBySize()
  *
@@ -219,8 +215,6 @@ PIXA    *pixas, *pixad;
         return pixd;
     }
 }
-
-
 /*!
  *  pixaSelectBySize()
  *
@@ -278,8 +272,6 @@ PIXA    *pixad;
     numaDestroy(&na);
     return pixad;
 }
-
-
 /*!
  *  pixSelectByAreaPerimRatio()
  *
@@ -358,8 +350,6 @@ PIXA    *pixas, *pixad;
         return pixd;
     }
 }
-
-
 /*!
  *  pixaSelectByAreaPerimRatio()
  *
@@ -409,8 +399,6 @@ PIXA  *pixad;
     numaDestroy(&nai);
     return pixad;
 }
-
-
 /*!
  *  pixSelectByAreaFraction()
  *
@@ -489,8 +477,6 @@ PIXA    *pixas, *pixad;
         return pixd;
     }
 }
-
-
 /*!
  *  pixaSelectByAreaFraction()
  *
@@ -540,8 +526,6 @@ PIXA  *pixad;
     numaDestroy(&nai);
     return pixad;
 }
-
-
 /*!
  *  pixSelectByWidthHeightRatio()
  *
@@ -619,8 +603,6 @@ PIXA    *pixas, *pixad;
         return pixd;
     }
 }
-
-
 /*!
  *  pixaSelectByWidthHeightRatio()
  *
@@ -670,8 +652,6 @@ PIXA  *pixad;
     numaDestroy(&nai);
     return pixad;
 }
-
-
 /*!
  *  pixaSelectWithIndicator()
  *
@@ -726,8 +706,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-
-
 /*!
  *  pixRemoveWithIndicator()
  *
@@ -776,8 +754,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*!
  *  pixAddWithIndicator()
  *
@@ -826,8 +802,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Sort functions                         *
  *---------------------------------------------------------------------*/
@@ -949,8 +923,6 @@ PIXA    *pixad;
     numaDestroy(&na);
     return pixad;
 }
-
-
 /*!
  *  pixaBinSort()
  *
@@ -1050,8 +1022,6 @@ PIXA    *pixad;
     numaDestroy(&na);
     return pixad;
 }
-
-
 /*!
  *  pixaSortByIndex()
  * 
@@ -1091,8 +1061,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-
-
 /*!
  *  pixaSort2dByIndex()
  * 
@@ -1145,8 +1113,6 @@ PIXAA   *pixaa;
 
     return pixaa;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                        Miscellaneous functions                      *
@@ -1231,8 +1197,6 @@ PIX     *pixs, *pixd;
 
     return pixad;
 }
-
-
 /*!
  *  pixaaFlattenToPixa()
  *
@@ -1289,8 +1253,6 @@ PIXA    *pixa, *pixat;
 
     return pixa;
 }
-
-
 /*!
  *  pixaSizeRange()
  *
@@ -1341,8 +1303,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*!
  *  pixaClipToPix()
  *
@@ -1395,8 +1355,6 @@ PIXA    *pixad;
 
     return pixad;
 }
-    
-
 /*!
  *  pixaAnyColormaps()
  *
@@ -1433,8 +1391,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixaEqual()
  *
@@ -1530,5 +1486,3 @@ PIX      *pix1, *pix2;
         numaDestroy(&na);
     return 0;
 }
-
-

@@ -39,8 +39,6 @@
 #include "OOXSectionPropertyReader.h"
 
 #include "OOXcnfStyleReader.h"
-
-
 class OOXpPrReader
 {
 private:

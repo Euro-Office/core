@@ -27,11 +27,7 @@ extern int ZEXPORT unzRepair(const char* file,
                              const char* fileOutTmp,
                              uLong* nRecovered,
                              uLong* bytesRecovered);
-
-
 #ifdef __cplusplus
 }
 #endif
-
-
 #endif

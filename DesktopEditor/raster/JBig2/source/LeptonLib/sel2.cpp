@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  sel2.c
  *
@@ -46,8 +44,6 @@
      * for decomposable sels up to size 63. */
 static const l_int32  num_linear = 25;
 static const l_int32  basic_linear[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 21, 25, 30, 31, 35, 40, 41, 45, 50, 51};
-
-
 /*! 
  *  selaAddBasic()
  *
@@ -141,8 +137,6 @@ SEL     *sel;
 
     return sela;
 }
-
-
 /*!
  *  selaAddHitMiss()
  *
@@ -165,16 +159,12 @@ SEL  *sel;
     sel = selCreateBrick(3, 3, 1, 1, 2);
     selaAddSel(sela, sel, "sel_bad", 0);
 #endif
-
-
     /*--------------------------------------------------------------*
      *                   Isolated foreground pixel                  *
      *--------------------------------------------------------------*/
     sel = selCreateBrick(3, 3, 1, 1, 2);
     selSetElement(sel, 1, 1, 1);
     selaAddSel(sela, sel, "sel_3hm", 0);
-
-
     /*--------------------------------------------------------------*
      *                Horizontal and vertical edges                 *
      *--------------------------------------------------------------*/
@@ -201,8 +191,6 @@ SEL  *sel;
     selSetElement(sel, 1, 0, 2);
     selSetElement(sel, 2, 0, 2);
     selaAddSel(sela, sel, "sel_3le", 0);
-
-
     /*--------------------------------------------------------------*
      *                       Slanted edge                           *
      *--------------------------------------------------------------*/
@@ -219,8 +207,6 @@ SEL  *sel;
 
     return sela;
 }
-
-
 /*!
  *  selaAddDwaLinear()
  *
@@ -258,8 +244,6 @@ SEL     *sel;
     }
     return sela;
 }
-
-
 /*!
  *  selaAddDwaCombs()
  *
@@ -303,8 +287,6 @@ SEL     *selh, *selv;
 
     return sela;
 }
-
-
 /*!
  *  selaAddCrossJunctions()
  *
@@ -430,8 +412,6 @@ SEL       *sel;
 
     return sela;
 }
-
-
 /*! 
  *  selaAddTJunctions()
  *

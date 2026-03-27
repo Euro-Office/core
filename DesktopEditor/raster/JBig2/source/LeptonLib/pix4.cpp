@@ -60,8 +60,6 @@
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------*
  *                  Pixel histogram and averaging                   *
  *------------------------------------------------------------------*/
@@ -160,8 +158,6 @@ PIX        *pixg;
     pixDestroy(&pixg);
     return na;
 }
-
-
 /*!
  *  pixGetGrayHistogramMasked()
  *
@@ -243,8 +239,6 @@ PIX        *pixg;
     pixDestroy(&pixg);
     return na;
 }
-
-
 /*!
  *  pixGetColorHistogram()
  *
@@ -337,8 +331,6 @@ PIXCMAP    *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixGetColorHistogramMasked()
  *
@@ -457,8 +449,6 @@ PIXCMAP    *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixGetCmapHistogram()
  *
@@ -515,8 +505,6 @@ NUMA       *na;
 
     return na;
 }
-
-
 /*!
  *  pixGetCmapHistogramMasked()
  *
@@ -595,8 +583,6 @@ NUMA       *na;
 
     return na;
 }
-
-
 /*!
  *  pixGetRankValueMaskedRGB()
  *
@@ -677,8 +663,6 @@ PIX       *pixmt, *pixt;
     pixDestroy(&pixmt);
     return 0;
 }
-
-
 /*!
  *  pixGetRankValueMasked()
  *
@@ -749,8 +733,6 @@ NUMA  *na;
 
     return 0;
 }
-
-
 /*!
  *  pixGetAverageMaskedRGB()
  *
@@ -832,8 +814,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixGetAverageMasked()
  *
@@ -964,8 +944,6 @@ PIX       *pixg;
 
     return 0;
 }
-
-
 /*!
  *  pixGetAverageTiledRGB()
  *
@@ -1036,8 +1014,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixGetAverageTiled()
  *
@@ -1130,8 +1106,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixRowStats()
  *
@@ -1272,8 +1246,6 @@ l_float32  *famedian, *famode, *famodecount;
 
     return 0;
 }
-
-
 /*!
  *  pixColumnStats()
  *
@@ -1413,8 +1385,6 @@ l_float32  *famedian, *famode, *famodecount;
 
     return 0;
 }
-
-
 /*!
  *  pixGetComponentRange()
  *
@@ -1485,8 +1455,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixGetExtremeValue()
  *
@@ -1602,8 +1570,6 @@ PIXCMAP   *cmap;
     if (pbval) *pbval = extbval;
     return 0;
 }
-
-
 /*!
  *  pixGetMaxValueInRect()
  *
@@ -1685,8 +1651,6 @@ l_uint32  *data, *line;
     if (pymax) *pymax = ymax;
     return 0;
 }
-
-
 /*!
  *  pixGetBinnedComponentRange()
  *
@@ -1764,8 +1728,6 @@ PIX       *pixt;
         FREE(carray);
     return 0;
 }
-
-
 /*!
  *  pixGetRankColorArray()
  *
@@ -1912,8 +1874,6 @@ PIXCMAP   *cmap;
     numaDestroy(&narbin);
     return 0;
 }
-
-
 /*!
  *  pixGetBinnedColor()
  *
@@ -2053,8 +2013,6 @@ l_float64  *rarray, *garray, *barray, *narray;
     FREE(narray);
     return 0;
 }
-
-
 /*!
  *  pixDisplayColorArray()
  *
@@ -2108,8 +2066,6 @@ PIXA    *pixa;
     bmfDestroy(&bmf6);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                 Pixelwise aligned statistics                *
  *-------------------------------------------------------------*/
@@ -2169,8 +2125,6 @@ PIX        *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixaExtractColumnFromEachPix()
  *
@@ -2220,8 +2174,6 @@ PIX       *pixt;
 
     return 0;
 }
-
-
 /*!
  *  pixGetRowStats()
  *
@@ -2350,8 +2302,6 @@ l_uint32  *lines, *datas;
     FREE(bin2gray);
     return 0;
 }
-
-
 /*!
  *  pixGetColumnStats()
  *
@@ -2473,8 +2423,6 @@ l_uint32  *datas;
     FREE(bin2gray);
     return 0;
 }
-
-
 /*!
  *  pixSetPixelColumn()
  *
@@ -2508,8 +2456,6 @@ l_uint32  *data;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *              Foreground/background estimation               *
  *-------------------------------------------------------------*/
@@ -2557,8 +2503,6 @@ PIX       *pixg, *pixm;
     pixDestroy(&pixm);
     return 0;
 }
-
-
 /*!
  *  pixSplitDistributionFgBg()
  *
@@ -2638,5 +2582,3 @@ PIX       *pixg;
     numaDestroy(&na);
     return 0;
 }
-
-

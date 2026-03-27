@@ -36,8 +36,6 @@ void test()
 	res = NSStringExt::FromHumanReadableByteCount(sBytes, nBytes);
 	wcout<<L"res="<<res<<L";equal="<<(-1000 == nBytes)<<L";sBytes="<<sBytes<<L";nBytes="<<nBytes<< endl;
 }
-
-
 int main(int argc, char* argv[])
 {
 	test();

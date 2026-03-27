@@ -197,6 +197,4 @@ public:
 private:
 	std::vector<CHeading*> m_arrHeading;
 };
-
-
 #endif // _BUILD_DOCINFO_H_

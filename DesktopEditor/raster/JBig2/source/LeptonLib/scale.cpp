@@ -99,8 +99,6 @@
 #include "allheaders.h"
 
 extern l_float32  AlphaMaskBorderVals[2];
-
-
 /*------------------------------------------------------------------*
  *                    Top level scaling dispatcher                  *
  *------------------------------------------------------------------*/
@@ -192,8 +190,6 @@ l_float32  maxscale, sharpfract;
 
     return pixScaleGeneral(pixs, scalex, scaley, sharpfract, sharpwidth);
 }
-
-
 /*!
  *  pixScaleToSize()
  *
@@ -242,8 +238,6 @@ l_float32  scalex, scaley;
 
     return pixScale(pixs, scalex, scaley);
 }
-
-
 /*!
  *  pixScaleGeneral()
  *
@@ -322,8 +316,6 @@ PIX       *pixt, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                  Scaling by linear interpolation                 *
  *------------------------------------------------------------------*/
@@ -384,8 +376,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixScaleColorLI()
  *
@@ -450,8 +440,6 @@ PIX       *pixd;
     scaleColorLILow(datad, wd, hd, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 /*!
  *  pixScaleColor2xLI()
  * 
@@ -493,8 +481,6 @@ PIX       *pixd;
     scaleColor2xLILow(datad, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 /*!
  *  pixScaleColor4xLI()
  *
@@ -542,8 +528,6 @@ PIX  *pixd;
     pixDestroy(&pixbs);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGrayLI()
  *
@@ -664,8 +648,6 @@ PIX       *pixd;
     scaleGrayLILow(datad, wd, hd, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGray2xLI()
  * 
@@ -705,8 +687,6 @@ PIX       *pixd;
     scaleGray2xLILow(datad, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGray4xLI()
  * 
@@ -746,8 +726,6 @@ PIX       *pixd;
     scaleGray4xLILow(datad, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 
 /*------------------------------------------------------------------*
  *                  Scaling by closest pixel sampling               *
@@ -798,8 +776,6 @@ PIX       *pixd;
     scaleBySamplingLow(datad, wd, hd, wpld, datas, ws, hs, d, wpls);
     return pixd;
 }
-
-
 /*!
  *  pixScaleByIntSubsampling()
  *
@@ -831,8 +807,6 @@ l_float32  scale;
     scale = 1. / (l_float32)factor;
     return pixScaleBySampling(pixs, scale, scale);
 }
-
-
 /*------------------------------------------------------------------*
  *            Fast integer factor subsampling RGB to gray           *
  *------------------------------------------------------------------*/
@@ -906,8 +880,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixScaleRGBToBinaryFast()
  *
@@ -970,8 +942,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixScaleGrayToBinaryFast()
  *
@@ -1033,8 +1003,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *               Downscaling with (antialias) smoothing             *
  *------------------------------------------------------------------*/
@@ -1141,8 +1109,6 @@ PIX       *pixs, *pixd;
     pixDestroy(&pixs);
     return pixd;
 }
-
-
 /*!
  *  pixScaleRGBToGray2()
  *
@@ -1182,8 +1148,6 @@ PIX       *pixd;
     scaleRGBToGray2Low(datad, wd, hd, wpld, datas, wpls, rwt, gwt, bwt);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *             Downscaling with (antialias) area mapping            *
  *------------------------------------------------------------------*/
@@ -1304,8 +1268,6 @@ PIX       *pixs, *pixd, *pixt1, *pixt2, *pixt3;
     pixDestroy(&pixs);
     return pixd;
 }
-
-
 /*!
  *  pixScaleAreaMap2()
  *
@@ -1371,8 +1333,6 @@ PIX       *pixs, *pixd;
     pixDestroy(&pixs);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *               Binary scaling by closest pixel sampling           *
  *------------------------------------------------------------------*/
@@ -1421,8 +1381,6 @@ PIX       *pixd;
     scaleBinaryLow(datad, wd, hd, wpld, datas, ws, hs, wpls);
     return pixd;
 }
-
-
 
 /*------------------------------------------------------------------*
  *      Scale-to-gray (1 bpp --> 8 bpp; arbitrary downscaling)      *
@@ -1583,8 +1541,6 @@ PIX       *pixt, *pixd;
         return pixd;
 }
 
-
-
 /*!
  *  pixScaleToGrayFast()
  *
@@ -1663,8 +1619,6 @@ PIX       *pixt, *pixd;
     else
         return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *          Scale-to-gray (1 bpp --> 8 bpp; integer downscaling)         *
  *-----------------------------------------------------------------------*/
@@ -1718,8 +1672,6 @@ PIX       *pixd;
     FREE(valtab);
     return pixd;
 }
-
-
 /*!
  *  pixScaleToGray3()
  *
@@ -1776,8 +1728,6 @@ PIX       *pixd;
     FREE(valtab);
     return pixd;
 }
-
-
 /*!
  *  pixScaleToGray4()
  *
@@ -1832,8 +1782,6 @@ PIX       *pixd;
     return pixd;
 }
 
-
-
 /*!
  *  pixScaleToGray6()
  *
@@ -1886,8 +1834,6 @@ PIX       *pixd;
     FREE(valtab);
     return pixd;
 }
-
-
 /*!
  *  pixScaleToGray8()
  *
@@ -1938,8 +1884,6 @@ PIX       *pixd;
     FREE(valtab);
     return pixd;
 }
-
-
 /*!
  *  pixScaleToGray16()
  *
@@ -1986,8 +1930,6 @@ PIX       *pixd;
     FREE(tab8);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *    Scale-to-gray mipmap(1 bpp --> 8 bpp, arbitrary reduction)    *
  *------------------------------------------------------------------*/
@@ -2092,8 +2034,6 @@ PIX       *pixs1, *pixs2, *pixt, *pixd;
     pixDestroy(&pixs2);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                  Grayscale scaling using mipmap                  *
  *------------------------------------------------------------------*/
@@ -2157,8 +2097,6 @@ PIX       *pixd;
     scaleMipmapLow(datad, wd, hd, wpld, datas1, wpls1, datas2, wpls2, scale);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                  Replicated (integer) expansion                  *
  *------------------------------------------------------------------*/
@@ -2286,8 +2224,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                Scale 2x followed by binarization                 *
  *------------------------------------------------------------------*/
@@ -2362,8 +2298,6 @@ PIX       *pixd;
     FREE(lineb);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGray2xLIDither()
  *
@@ -2471,8 +2405,6 @@ PIX       *pixd;
     FREE(linebp);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                Scale 4x followed by binarization                 *
  *------------------------------------------------------------------*/
@@ -2555,8 +2487,6 @@ PIX       *pixd;
     FREE(lineb);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGray4xLIDither()
  *
@@ -2676,8 +2606,6 @@ PIX       *pixd;
     FREE(linebp);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                    Downscaling using min or max                       *
  *-----------------------------------------------------------------------*/
@@ -2781,8 +2709,6 @@ PIX       *pixd;
             
     return pixd;
 }
-
-
 /*!
  *  pixScaleGrayMinMax2()
  *
@@ -2871,8 +2797,6 @@ PIX       *pixd;
             
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                  Grayscale downscaling using rank value               *
  *-----------------------------------------------------------------------*/
@@ -2928,8 +2852,6 @@ PIX  *pixt1, *pixt2, *pixt3, *pixt4;
     pixDestroy(&pixt3);
     return pixt4;
 }
-
-
 /*!
  *  pixScaleGrayRank2()
  *
@@ -3022,8 +2944,6 @@ PIX       *pixd;
             
     return pixd;
 }
-
-
 /*------------------------------------------------------------------------*
  *    RGB scaling including alpha (blend) component and gamma transform   *
  *------------------------------------------------------------------------*/
@@ -3113,8 +3033,6 @@ PIX     *pixd, *pixg2, *pixgs;
     pixDestroy(&pixgs);
     return pixd;
 }
-
-
 /*!
  *  pixScaleGammaXform()
  *

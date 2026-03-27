@@ -5,8 +5,6 @@
 #include "../../../xml/include/xmlutils.h"
 #include "../../../graphics/pro/Graphics.h"
 #include "../../../graphics/Matrix.h"
-
-
 #define GET_ATTRIBUTEN(NAME)	if(style == NAME) return m_n##NAME;
 #define GET_ATTRIBUTED(NAME)	if(style == NAME) return m_n##NAME;
 #define GET_ATTRIBUTE(NAME)		if(style == NAME) return m_##NAME;
@@ -4302,8 +4300,6 @@ namespace SVG
 		{
 			return m_clips[nInd];
 		}
-
-
 		// RefElement
 		virtual bool RefreshXLinkSource (IRefStorage* pStorage)						//	NOT IMPLEMENTED
 		{
@@ -5666,8 +5662,6 @@ namespace SVG
 						L"g" != sNodeName &&
 						L"xml" != sNodeName)
 					return false;
-
-
 				m_nLayerLevel = 0;
 
 				if (Explore(oXml))
@@ -5756,8 +5750,6 @@ namespace SVG
 
 					return true;
 				}
-
-
 				// ATLTRACE ( L"Node : %s\n", oXml.GetName() );
 
 				ExploreLayer	=	true;

@@ -60,8 +60,6 @@ public:
 
     void addParam(const int param);
 
-
-
 private:
 	const ParamType str2type(const std::wstring str) const;
 	const std::wstring type2str(const ParamType type) const;
@@ -72,7 +70,5 @@ private:
 	std::wstring clear_line_;
 	
 };
-
-
 } // namespace XLS
 

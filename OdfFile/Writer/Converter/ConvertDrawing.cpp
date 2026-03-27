@@ -1690,8 +1690,6 @@ void OoxConverter::convert(PPTX::Logic::Ln *oox_line_prop, DWORD ARGB, PPTX::Log
 	//nullable<SimpleTypes::CPenAlignment<>>            m_oAlgn;
 	//nullable<SimpleTypes::CLineCap<>>                 m_oCap;
 	//nullable<SimpleTypes::CCompoundLine<>>            m_oCmpd;
-
-
 	//ELineJoinType                                     m_eJoinType;   // Тип соединения линий
 	//nullable<OOX::Drawing::CLineJoinBevel>            m_oBevel;
 	//nullable<OOX::Drawing::CLineJoinMiterProperties>  m_oMiter;
@@ -1852,8 +1850,6 @@ void OoxConverter::convert(PPTX::Logic::NvCxnSpPr *oox_nvSpPr)
 void OoxConverter::convert(PPTX::Logic::NvPr *oox_nvPr)
 {
 	if (!oox_nvPr) return;
-	
-
 
 //ph уровнем выше
 
@@ -2824,8 +2820,6 @@ void OoxConverter::convert(PPTX::Logic::Hyperlink* oox_hyperlink)
 					hlink = L"../" + hlink;
 				odf_context()->drawing_context()->add_link(hlink);
 			}
-
-
 			smart_ptr<OOX::File> file = find_file_by_id(oox_hyperlink->id.get());
 			OOX::HyperLink* hyperlink = dynamic_cast<OOX::HyperLink*>(file.GetPointer());
 

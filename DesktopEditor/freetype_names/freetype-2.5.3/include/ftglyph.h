@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file contains the definition of several convenience functions    */
@@ -27,12 +25,8 @@
   /* handy for many other simple uses of the library.                      */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTGLYPH_H__
 #define __FTGLYPH_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
@@ -41,11 +35,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -63,12 +53,8 @@ FT_BEGIN_HEADER
   /*    bitmap, a vector outline, or even images in other formats.         */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* forward declaration to a private type */
   typedef struct FT_Glyph_Class_  FT_Glyph_Class;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -85,8 +71,6 @@ FT_BEGIN_HEADER
   /*    @FT_Done_FreeType.                                                 */
   /*                                                                       */
   typedef struct FT_GlyphRec_*  FT_Glyph;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -113,8 +97,6 @@ FT_BEGIN_HEADER
     FT_Vector              advance;
 
   } FT_GlyphRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -125,8 +107,6 @@ FT_BEGIN_HEADER
   /*    a sub-class of @FT_Glyph, and a pointer to @FT_BitmapGlyphRec.     */
   /*                                                                       */
   typedef struct FT_BitmapGlyphRec_*  FT_BitmapGlyph;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -165,8 +145,6 @@ FT_BEGIN_HEADER
     FT_Bitmap    bitmap;
 
   } FT_BitmapGlyphRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Type>                                                                */
@@ -177,8 +155,6 @@ FT_BEGIN_HEADER
   /*    is a sub-class of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec. */
   /*                                                                       */
   typedef struct FT_OutlineGlyphRec_*  FT_OutlineGlyph;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -211,8 +187,6 @@ FT_BEGIN_HEADER
     FT_Outline   outline;
 
   } FT_OutlineGlyphRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -234,8 +208,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_Glyph( FT_GlyphSlot  slot,
                 FT_Glyph     *aglyph );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -258,8 +230,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Glyph_Copy( FT_Glyph   source,
                  FT_Glyph  *target );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -288,8 +258,6 @@ FT_BEGIN_HEADER
   FT_Glyph_Transform( FT_Glyph    glyph,
                       FT_Matrix*  matrix,
                       FT_Vector*  delta );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -323,8 +291,6 @@ FT_BEGIN_HEADER
     FT_GLYPH_BBOX_PIXELS    = 3
 
   } FT_Glyph_BBox_Mode;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Enum>                                                                */
@@ -346,8 +312,6 @@ FT_BEGIN_HEADER
 #define ft_glyph_bbox_gridfit    FT_GLYPH_BBOX_GRIDFIT
 #define ft_glyph_bbox_truncate   FT_GLYPH_BBOX_TRUNCATE
 #define ft_glyph_bbox_pixels     FT_GLYPH_BBOX_PIXELS
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -421,8 +385,6 @@ FT_BEGIN_HEADER
   FT_Glyph_Get_CBox( FT_Glyph  glyph,
                      FT_UInt   bbox_mode,
                      FT_BBox  *acbox );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -534,8 +496,6 @@ FT_BEGIN_HEADER
                       FT_Render_Mode  render_mode,
                       FT_Vector*      origin,
                       FT_Bool         destroy );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -551,8 +511,6 @@ FT_BEGIN_HEADER
   FT_Done_Glyph( FT_Glyph  glyph );
 
   /* */
-
-
   /* other helpful functions */
 
   /*************************************************************************/
@@ -561,8 +519,6 @@ FT_BEGIN_HEADER
   /*    computations                                                       */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -583,8 +539,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Matrix_Multiply( const FT_Matrix*  a,
                       FT_Matrix*        b );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -602,19 +556,11 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   FT_Matrix_Invert( FT_Matrix*  matrix );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTGLYPH_H__ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

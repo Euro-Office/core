@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  shear.c
  *
@@ -49,13 +47,9 @@
 static const l_float32   MIN_DIFF_FROM_HALF_PI = 0.04;
 
 static l_float32 normalizeAngleForShear(l_float32 radang, l_float32 mindif);
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *                    About arbitrary lines                    *
  *-------------------------------------------------------------*/
@@ -172,8 +166,6 @@ l_float32  tanangle, invangle;
 
     return pixd;
 }
-                        
-
 /*!
  *  pixVShear()
  *
@@ -287,8 +279,6 @@ l_float32  tanangle, invangle;
 
     return pixd;
 }
-                        
-
 
 /*-------------------------------------------------------------*
  *             Shears about UL corner and center               *
@@ -320,8 +310,6 @@ pixHShearCorner(PIX       *pixd,
 
     return pixHShear(pixd, pixs, 0, radang, incolor);
 }
-
-
 /*!
  *  pixVShearCorner()
  *
@@ -349,8 +337,6 @@ pixVShearCorner(PIX       *pixd,
 
     return pixVShear(pixd, pixs, 0, radang, incolor);
 }
-                        
-
 /*!
  *  pixHShearCenter()
  *
@@ -378,8 +364,6 @@ pixHShearCenter(PIX       *pixd,
 
     return pixHShear(pixd, pixs, pixGetHeight(pixs) / 2, radang, incolor);
 }
-
-
 /*!
  *  pixVShearCenter()
  *
@@ -407,8 +391,6 @@ pixVShearCenter(PIX       *pixd,
 
     return pixVShear(pixd, pixs, pixGetWidth(pixs) / 2, radang, incolor);
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                       In place about arbitrary lines                     *
@@ -481,8 +463,6 @@ l_float32  tanangle, invangle;
 
     return 0;
 }
-                        
-
 /*!
  *  pixVShearIP()
  *
@@ -551,8 +531,6 @@ l_float32  tanangle, invangle;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------------------*
  *              Linear interpolated shear about arbitrary lines            *
  *-------------------------------------------------------------------------*/
@@ -664,8 +642,6 @@ PIX       *pix, *pixd;
     pixDestroy(&pix);
     return pixd;
 }
-
-
 /*!
  *  pixVShearLI()
  *
@@ -774,8 +750,6 @@ PIX       *pix, *pixd;
     pixDestroy(&pix);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------------------*
  *                           Angle normalization                           *
  *-------------------------------------------------------------------------*/
@@ -804,6 +778,4 @@ l_float32  pi2;
 
     return radang;
 }
-
-
 

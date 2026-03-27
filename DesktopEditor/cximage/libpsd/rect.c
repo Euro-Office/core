@@ -27,8 +27,6 @@
 #include "psd_system.h"
 #include "psd_rect.h"
 #include "psd_math.h"
-
-
 psd_bool psd_incept_rect(psd_rect * r1, psd_rect * r2, psd_rect * dst_rect)
 {
 	dst_rect->left = PSD_MAX(r1->left, r2->left);

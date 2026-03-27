@@ -2,8 +2,6 @@
 #define CSMALLTEXTOUT_H
 
 #include "CSharedWidget.h"
-
-
 class CSmallTextOutWidget : public CSharedWidget
 {
 public:

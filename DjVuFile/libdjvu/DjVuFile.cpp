@@ -81,20 +81,14 @@
 #endif // NEED_DECODER_ONLY
 
 #include "debug.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 #define STRINGIFY(x) STRINGIFY_(x)
 #define STRINGIFY_(x) #x
-
-
 #define REPORT_EOF(x) \
   {G_TRY{G_THROW( ByteStream::EndOfFile );}G_CATCH(ex){report_error(ex,(x));}G_ENDCATCH;}
 
@@ -149,8 +143,6 @@ private:
   // Cancel C++ default stuff
   ProgressByteStream & operator=(const ProgressByteStream &);
 };
-
-
 DjVuFile::DjVuFile()
 : file_size(0), recover_errors(ABORT), verbose_eof(false), chunks_number(-1),
 initialized(false)
@@ -658,8 +650,6 @@ DjVuFile::process_incl_chunk(ByteStream & str, int file_num)
   }
   return 0;
 }
-
-
 void
 DjVuFile::report_error(const GException &ex,bool throw_errors)
 {
@@ -851,8 +841,6 @@ is_meta(const GUTF8String &chkid)
 {
   return (chkid=="METa" || chkid=="METz");
 }
-
-
 GUTF8String
 DjVuFile::decode_chunk( const GUTF8String &id, const GP<ByteStream> &gbs,
   bool djvi, bool djvu, bool iw44)
@@ -1726,8 +1714,6 @@ DjVuFile::get_merged_anno(int * max_level_ptr)
   GList<GURL> ignore_list;
   return get_merged_anno(ignore_list, max_level_ptr);
 }
-
-
 // [LB->BCR] The following six functions get_anno, get_text, get_meta 
 // contain the same code in triplicate!!!
 
@@ -2012,8 +1998,6 @@ DjVuFile::move(GMap<GURL, void *> & map, const GURL & dir_url)
     map[url]=0;
     
     url=GURL::UTF8(url.name(),dir_url);
-    
-    
     // Leave the lock here!
     GCriticalSectionLock lock(&inc_files_lock);
     for(GPosition pos=inc_files_list;pos;++pos)
@@ -2259,8 +2243,6 @@ copy_chunks(const GP<ByteStream> &from, IFFByteStream &ostr)
     }
   }
 }
-
-
 void
 DjVuFile::add_djvu_data(IFFByteStream & ostr, GMap<GURL, void *> & map,
                         const bool included_too, const bool no_ndir)
@@ -2462,8 +2444,6 @@ DjVuFile::get_meta(ByteStream &out)
     out.copy(*str);
   }
 }
-
-
 
 //****************************************************************************
 //******************************* Modifying **********************************
@@ -2862,8 +2842,6 @@ DjVuFile::change_meta(const GUTF8String &xmeta,const bool do_reset)
   }
 }
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

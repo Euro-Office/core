@@ -48,8 +48,6 @@ void test_dict_deflate  OF((Byte *compr, uLong comprLen));
 void test_dict_inflate  OF((Byte *compr, uLong comprLen,
                             Byte *uncompr, uLong uncomprLen));
 int  main               OF((int argc, char *argv[]));
-
-
 #ifdef Z_SOLO
 
 void *myalloc OF((void *, unsigned, unsigned));

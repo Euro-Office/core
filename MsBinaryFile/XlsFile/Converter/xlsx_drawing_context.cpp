@@ -397,8 +397,6 @@ void xlsx_drawing_context::start_comment()
 
 	context_.get_comments_context().start_comment();
 }
-
-
 void xlsx_drawing_context::start_group()
 {
 	_drawing_state_ptr newState = create_drawing_state();
@@ -3428,8 +3426,6 @@ void xlsx_drawing_context::set_fill_old_version (_UINT32 val)
 	{
 		set_fill_color(backColorIdx, 2);
 	}
-
-
 }
 void xlsx_drawing_context::set_line_old_version (_UINT32 val)
 {

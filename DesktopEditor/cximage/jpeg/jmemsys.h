@@ -17,8 +17,6 @@
  * symbol supplied in jconfig.h, as we have done with USE_MSDOS_MEMMGR
  * and USE_MAC_MEMMGR.
  */
-
-
 /* Short forms of external names for systems with brain-damaged linkers. */
 
 #ifdef NEED_SHORT_EXTERNAL_NAMES
@@ -31,8 +29,6 @@
 #define jpeg_mem_init		jMemInit
 #define jpeg_mem_term		jMemTerm
 #endif /* NEED_SHORT_EXTERNAL_NAMES */
-
-
 /*
  * These two functions are used to allocate and release small chunks of
  * memory.  (Typically the total amount requested through jpeg_get_small is
@@ -104,8 +100,6 @@ EXTERN(long) jpeg_mem_available JPP((j_common_ptr cinfo,
 				     long min_bytes_needed,
 				     long max_bytes_needed,
 				     long already_allocated));
-
-
 /*
  * This structure holds whatever state is needed to access a single
  * backing-store object.  The read/write/close method pointers are called
@@ -114,8 +108,6 @@ EXTERN(long) jpeg_mem_available JPP((j_common_ptr cinfo,
  */
 
 #define TEMP_NAME_LENGTH   64	/* max length of a temporary file's name */
-
-
 #ifdef USE_MSDOS_MEMMGR		/* DOS-specific junk */
 
 typedef unsigned short XMSH;	/* type of extended-memory handles */
@@ -132,8 +124,6 @@ typedef union {
 #ifdef USE_MAC_MEMMGR		/* Mac-specific junk */
 #include <Files.h>
 #endif /* USE_MAC_MEMMGR */
-
-
 typedef struct backing_store_struct * backing_store_ptr;
 
 typedef struct backing_store_struct {
@@ -167,8 +157,6 @@ typedef struct backing_store_struct {
 #endif
 #endif
 } backing_store_info;
-
-
 /*
  * Initial opening of a backing-store object.  This must fill in the
  * read/write/close pointers in the object.  The read/write routines
@@ -180,8 +168,6 @@ typedef struct backing_store_struct {
 EXTERN(void) jpeg_open_backing_store JPP((j_common_ptr cinfo,
 					  backing_store_ptr info,
 					  long total_bytes_needed));
-
-
 /*
  * These routines take care of any system-dependent initialization and
  * cleanup required.  jpeg_mem_init will be called before anything is

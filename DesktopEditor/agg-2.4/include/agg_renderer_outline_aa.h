@@ -159,10 +159,6 @@ namespace agg
         int m_dist;
     };
 
-
-
-
-
     //===================================================distance_interpolator2
     class distance_interpolator2
     {
@@ -206,8 +202,6 @@ namespace agg
             m_dx_start <<= line_mr_subpixel_shift;
             m_dy_start <<= line_mr_subpixel_shift;
         }
-
-
         //---------------------------------------------------------------------
         void inc_x() { m_dist += m_dy; m_dist_start += m_dy_start; }
         void dec_x() { m_dist -= m_dy; m_dist_start -= m_dy_start; }
@@ -305,10 +299,6 @@ namespace agg
         int m_dist;
         int m_dist_start;
     };
-
-
-
-
 
     //===================================================distance_interpolator3
     class distance_interpolator3
@@ -455,10 +445,6 @@ namespace agg
         int m_dist_start;
         int m_dist_end;
     };
-
-
-
-
     
     //================================================line_interpolator_aa_base
     template<class Renderer> class line_interpolator_aa_base
@@ -566,12 +552,6 @@ namespace agg
         cover_type m_covers[max_half_width * 2 + 4];
     };
 
-
-
-
-
-
-
     //====================================================line_interpolator_aa0
     template<class Renderer> class line_interpolator_aa0 :
     public line_interpolator_aa_base<Renderer>
@@ -660,12 +640,6 @@ namespace agg
         //---------------------------------------------------------------------
         distance_interpolator1 m_di; 
     };
-
-
-
-
-
-
     //====================================================line_interpolator_aa1
     template<class Renderer> class line_interpolator_aa1 :
     public line_interpolator_aa_base<Renderer>
@@ -865,18 +839,6 @@ namespace agg
         //---------------------------------------------------------------------
         distance_interpolator2 m_di; 
     };
-
-
-
-
-
-
-
-
-
-
-
-
     //====================================================line_interpolator_aa2
     template<class Renderer> class line_interpolator_aa2 :
     public line_interpolator_aa_base<Renderer>
@@ -1016,16 +978,6 @@ namespace agg
         //---------------------------------------------------------------------
         distance_interpolator2 m_di; 
     };
-
-
-
-
-
-
-
-
-
-
     //====================================================line_interpolator_aa3
     template<class Renderer> class line_interpolator_aa3 :
     public line_interpolator_aa_base<Renderer>
@@ -1110,8 +1062,6 @@ namespace agg
             base_type::m_li.adjust_forward();
             base_type::m_step -= base_type::m_max_extent;
         }
-
-
         //---------------------------------------------------------------------
         bool step_hor()
         {
@@ -1246,10 +1196,6 @@ namespace agg
         //---------------------------------------------------------------------
         distance_interpolator3 m_di; 
     };
-
-
-
-
     //==========================================================line_profile_aa
     //
     // See Implementation agg_line_profile_aa.cpp 
@@ -1338,8 +1284,6 @@ namespace agg
         double                m_min_width;
         double                m_smoother_width;
     };
-
-
     //======================================================renderer_outline_aa
     template<class BaseRenderer> class renderer_outline_aa
     {
@@ -1512,8 +1456,6 @@ namespace agg
                                      color(), 
                                      p0);
         }
-
-
         //-------------------------------------------------------------------------
         void pie(int xc, int yc, int x1, int y1, int x2, int y2)
         {
@@ -1624,8 +1566,6 @@ namespace agg
                 while(li.step_hor());
             }
         }
-
-
         //-------------------------------------------------------------------------
         void line1(const line_parameters& lp, int sx, int sy)
         {
@@ -1820,8 +1760,6 @@ namespace agg
                 line3_no_clip(lp, sx, sy, ex, ey);
             }
         }
-
-
     private:
         base_ren_type*         m_ren;
         const line_profile_aa* m_profile;
@@ -1829,8 +1767,6 @@ namespace agg
         rect_i                 m_clip_box;
         bool                   m_clipping;
     };
-
-
 
 }
 

@@ -72,8 +72,6 @@ static const l_int32  MIN_BUFFER_SIZE_HEAP = 20;             /* n'importe quoi *
 #define SWAP_ITEMS(i, j)       { void *tempitem = lh->array[(i)]; \
                                  lh->array[(i)] = lh->array[(j)]; \
                                  lh->array[(j)] = tempitem; }
-
-
 /*--------------------------------------------------------------------------*
  *                          L_Heap create/destroy                           *
  *--------------------------------------------------------------------------*/
@@ -105,8 +103,6 @@ L_HEAP  *lh;
     lh->direction = direction;
     return lh;
 }
-
-
 /*!
  *  lheapDestroy()
  *
@@ -187,8 +183,6 @@ lheapAdd(L_HEAP  *lh,
     lheapSwapUp(lh, lh->n - 1);
     return 0;
 }
-
-
 /*!
  *  lheapExtendArray()
  *
@@ -211,8 +205,6 @@ lheapExtendArray(L_HEAP  *lh)
     lh->nalloc = 2 * lh->nalloc;
     return 0;
 }
-
-
 /*!
  *  lheapRemove()
  *
@@ -241,8 +233,6 @@ void   *item;
     lheapSwapDown(lh);  /* restore the heap */
     return item;
 }
-       
-
 /*!
  *  lheapGetCount()
  *
@@ -259,8 +249,6 @@ lheapGetCount(L_HEAP  *lh)
 
     return lh->n;
 }
-        
-
 
 /*--------------------------------------------------------------------------*
  *                               Heap operations                            *
@@ -324,8 +312,6 @@ l_float32  valp, valc;
   }
   return 0;
 }
-
-
 /*!
  *  lheapSwapDown()
  *
@@ -419,8 +405,6 @@ l_float32  valp, valcl, valcr;
 
   return 0;
 }
-
-
 /*!
  *  lheapSort()
  *
@@ -446,8 +430,6 @@ l_int32  i;
 
   return 0;
 }
-
-
 /*!
  *  lheapSortStrictOrder()
  *
@@ -487,8 +469,6 @@ l_int32  i, index, size;
 
   return 0;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                            Debug output                             *

@@ -51,8 +51,6 @@ void initlibxml2mod(void);
 #define PY_IMPORT_STRING_SIZE PyString_FromStringAndSize
 #define PY_IMPORT_STRING PyString_FromString
 #endif
-
-
 /**
  * TODO:
  *
@@ -504,8 +502,6 @@ libxml_xmlCreateOutputBuffer(ATTRIBUTE_UNUSED PyObject *self, PyObject *args) {
     xmlChar  *encoding;
     xmlCharEncodingHandlerPtr handler = NULL;
     xmlOutputBufferPtr buffer;
-
-
     if (!PyArg_ParseTuple(args, (char *)"Oz:xmlOutputBufferCreate",
 		&file, &encoding))
 	return(NULL);
@@ -644,8 +640,6 @@ libxml_xmlSaveFormatFileTo(PyObject *self ATTRIBUTE_UNUSED, PyObject *args) {
     return(py_retval);
 }
 #endif /* LIBXML_OUTPUT_ENABLED */
-
-
 /**
  * xmlParserInputBufferCreatePythonFile:
  * @file:  a PyFile_Type
@@ -681,8 +675,6 @@ libxml_xmlCreateInputBuffer(ATTRIBUTE_UNUSED PyObject *self, PyObject *args) {
     xmlChar  *encoding;
     xmlCharEncoding enc = XML_CHAR_ENCODING_NONE;
     xmlParserInputBufferPtr buffer;
-
-
     if (!PyArg_ParseTuple(args, (char *)"Oz:xmlParserInputBufferCreate",
 		&file, &encoding))
 	return(NULL);
@@ -1277,8 +1269,6 @@ pythonEntityDecl(void *user_data,
     }
 }
 
-
-
 static void
 
 pythonNotationDecl(void *user_data,
@@ -1624,8 +1614,6 @@ libxml_xmlErrorFuncHandler(ATTRIBUTE_UNUSED void *ctx, const char *msg,
 #ifdef DEBUG_ERROR
     printf("libxml_xmlErrorFuncHandler(%p, %s, ...) called\n", ctx, msg);
 #endif
-
-
     if (libxml_xmlPythonErrorFuncHandler == NULL) {
         va_start(ap, msg);
         vfprintf(stderr, msg, ap);
@@ -1692,8 +1680,6 @@ libxml_xmlRegisterErrorHandler(ATTRIBUTE_UNUSED PyObject * self,
     py_retval = libxml_intWrap(1);
     return (py_retval);
 }
-
-
 /************************************************************************
  *									*
  *                      Per parserCtxt error handler                    *
@@ -1997,8 +1983,6 @@ libxml_xmlSetValidErrors(ATTRIBUTE_UNUSED PyObject * self, PyObject * args)
             return(py_retval);
     }
     memset(pyCtxt, 0, sizeof(xmlValidCtxtPyCtxt));
-
-    
     /* TODO: check warn and error is a function ! */
     Py_XDECREF(pyCtxt->error);
     Py_XINCREF(pyobj_error);
@@ -2019,8 +2003,6 @@ libxml_xmlSetValidErrors(ATTRIBUTE_UNUSED PyObject * self, PyObject * args)
     py_retval = libxml_intWrap(1);
     return (py_retval);
 }
-
-
 static PyObject *
 libxml_xmlFreeValidCtxt(PyObject *self ATTRIBUTE_UNUSED, PyObject *args) {
     xmlValidCtxtPtr cur;
@@ -2981,8 +2963,6 @@ libxml_serializeNode(ATTRIBUTE_UNUSED PyObject * self, PyObject * args)
             return (Py_None);
         }
     }
-
-
     buf = xmlBufferCreate();
     if (buf == NULL) {
 	Py_INCREF(Py_None);
@@ -3108,8 +3088,6 @@ libxml_xmlNewNode(ATTRIBUTE_UNUSED PyObject * self, PyObject * args)
     py_retval = libxml_xmlNodePtrWrap(node);
     return (py_retval);
 }
-
-
 /************************************************************************
  *									*
  *			Local Catalog stuff				*

@@ -81,8 +81,6 @@ static const int32_t MONTHLENGTH[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30
 static const UChar ICU_TZINFO_PROP[] = {0x58, 0x2D, 0x54, 0x5A, 0x49, 0x4E, 0x46, 0x4F, 0x3A, 0}; /* "X-TZINFO:" */
 static const UChar ICU_TZINFO_PARTIAL[] = {0x2F, 0x50, 0x61, 0x72, 0x74, 0x69, 0x61, 0x6C, 0x40, 0}; /* "/Partial@" */
 static const UChar ICU_TZINFO_SIMPLE[] = {0x2F, 0x53, 0x69, 0x6D, 0x70, 0x6C, 0x65, 0x40, 0}; /* "/Simple@" */
-
-
 /*
  * Simple fixed digit ASCII number to integer converter
  */
@@ -949,8 +947,6 @@ VTZReader::read(void) {
     index++;
     return ch;
 }
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(VTimeZone)
 
 VTimeZone::VTimeZone()

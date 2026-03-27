@@ -54,8 +54,6 @@ struct UCollator;
  * @stable ICU 2.0
  */
 typedef struct UCollator UCollator;
-
-
 /**
  * UCOL_LESS is returned if source string is compared to be less than target
  * string in the ucol_strcoll() method.
@@ -76,8 +74,6 @@ typedef enum {
   /** string a < string b */
   UCOL_LESS    = -1
 } UCollationResult ;
-
-
 /** Enum containing attribute values for controling collation behavior.
  * Here are all the allowable values. Not every attribute can take every value. The only
  * universal value is UCOL_DEFAULT, which resets the attribute value to the predefined  
@@ -977,8 +973,6 @@ ucol_normalizeShortDefinitionString(const char *source,
                                     UParseError *parseError,
                                     UErrorCode *status);
 #endif  /* U_HIDE_DEPRECATED_API */
-
-
 /**
  * Get a sort key for a string from a UCollator.
  * Sort keys may be compared using <TT>strcmp</TT>.
@@ -1007,8 +1001,6 @@ ucol_getSortKey(const    UCollator    *coll,
         int32_t        sourceLength,
         uint8_t        *result,
         int32_t        resultLength);
-
-
 /** Gets the next count bytes of a sort key. Caller needs
  *  to preserve state array between calls and to provide
  *  the same type of UCharIterator set with the same string.
@@ -1473,8 +1465,6 @@ U_STABLE UCollator* U_EXPORT2
 ucol_openBinary(const uint8_t *bin, int32_t length, 
                 const UCollator *base, 
                 UErrorCode *status);
-
-
 #endif /* #if !UCONFIG_NO_COLLATION */
 
 #endif

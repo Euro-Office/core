@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AF12Criteria::clone()
 {
 	return BiffStructurePtr(new AF12Criteria(*this));
@@ -44,8 +42,6 @@ BiffStructurePtr AF12Criteria::clone()
 AF12Criteria::AF12Criteria()
 {		
 }
-
-
 AF12Criteria::~AF12Criteria()
 {
 }

@@ -3,8 +3,6 @@
 #include <stdlib.h>
 #include "libpsd.h"
 #include "psd_system.h"
-
-
 void * psd_malloc(psd_int size)
 {
 	return malloc(size);

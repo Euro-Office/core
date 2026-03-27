@@ -113,16 +113,12 @@
 # include <sys/types.h>
 # include <sys/time.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // ----------------------------------------
 // NOTHREADS
 // ----------------------------------------
@@ -135,8 +131,6 @@ GThread::create( void (*entry)(void*), void *arg)
   return 0;
 }
 #endif
-
-
 // ----------------------------------------
 // WIN32 IMPLEMENTATION
 // ----------------------------------------
@@ -388,8 +382,6 @@ GMonitor::wait(unsigned long timeout)
 
 #endif
 
-
-
 // ----------------------------------------
 // MACTHREADS IMPLEMENTATION (obsolete)
 // ----------------------------------------
@@ -405,8 +397,6 @@ struct thr_waiting {
 };
 static struct thr_waiting *first_waiting_thr = 0;
 static struct thr_waiting *last_waiting_thr = 0;
-
-
 // Stops current thread. 
 // Argument ``self'' must be current thread id.
 // Assumes ``ThreadBeginCritical'' has been called before.
@@ -527,8 +517,6 @@ GThread::current()
   GetCurrentThread(&thid);
   return (void*) thid;
 }
-
-
 // GMonitor implementation
 GMonitor::GMonitor() 
   : ok(0), count(1), locker(0), wlock(0), wsig(0)
@@ -638,8 +626,6 @@ GMonitor::wait(unsigned long timeout)
 
 #endif
 
-
-
 // ----------------------------------------
 // POSIXTHREADS IMPLEMENTATION
 // ----------------------------------------
@@ -653,8 +639,6 @@ GMonitor::wait(unsigned long timeout)
 #define pthread_mutexattr_default  NULL
 #define pthread_condattr_default   NULL
 #endif
-
-
 void *
 GThread::start(void *arg)
 {
@@ -702,8 +686,6 @@ GThread::start(void *arg)
 #endif
   return 0;
 }
-
-
 // GThread
 
 GThread::GThread(int stacksize) : 
@@ -797,8 +779,6 @@ GMonitor::~GMonitor()
   pthread_cond_destroy(&cond);
   pthread_mutex_destroy(&mutex); 
 }
-
-
 void 
 GMonitor::enter()
 {
@@ -904,8 +884,6 @@ GMonitor::wait(unsigned long timeout)
 }
 
 #endif
-
-
 
 // ----------------------------------------
 // CUSTOM COOPERATIVE THREADS
@@ -1052,8 +1030,6 @@ int main() {
 }
 #endif
 
-
-
 // -------------------------------------- select
 
 struct coselect {
@@ -1084,8 +1060,6 @@ coselect_test(coselect *c)
   fd_set copye = c->eset;
   return select(c->nfds, &copyr, &copyw, &copye, &tmzero);
 }
-
-
 // -------------------------------------- cotask
 
 class GThread::cotask {
@@ -1138,8 +1112,6 @@ static GThread::cotask *autodeletetask = 0;
 static unsigned long globalmaxwait = 0;
 static void (*scheduling_callback)(int) = 0;
 static timeval time_base;
-
-
 GThread::cotask::~cotask()
 {
   gstack.resize(0);
@@ -1162,8 +1134,6 @@ cotask_free(GThread::cotask *task)
     delete task;
   }
 }
-
-
 // -------------------------------------- time
 
 static unsigned long
@@ -1185,8 +1155,6 @@ time_elapsed(int reset=1)
     }
   return elapsed;
 }
-
-
 // -------------------------------------- scheduler
 
 static int
@@ -1323,8 +1291,6 @@ cotask_yield()
   elapsed = time_elapsed();
   goto reschedule;
 }
-
-
 static void
 cotask_terminate(GThread::cotask *task)
 {
@@ -1351,8 +1317,6 @@ cotask_terminate(GThread::cotask *task)
         }
     }
 }
-
-
 static void
 cotask_wakeup(void *wchan, int onlyone)
 {
@@ -1376,8 +1340,6 @@ cotask_wakeup(void *wchan, int onlyone)
       while (q!=n);
     }
 }
-
-
 // -------------------------------------- select / get_select
 
 static int
@@ -1417,8 +1379,6 @@ cotask_select(int nfds,
   static timeval tmzero = {0,0};
   return select(nfds, rfds, wfds, efds, &tmzero);
 }
-
-
 static void 
 cotask_get_select(int &nfds, fd_set *rfds, fd_set *wfds, fd_set *efds, 
                   unsigned long &timeout)
@@ -1457,8 +1417,6 @@ cotask_get_select(int &nfds, fd_set *rfds, fd_set *wfds, fd_set *efds,
     timeout = minwait-elapsed;
 }
 
-
-
 // -------------------------------------- libgcc hook
 
 #ifndef NO_LIBGCC_HOOKS
@@ -1488,8 +1446,6 @@ cotask_get_eh_context()
 }
 #endif
 
-
-
 // -------------------------------------- GThread
 
 void 
@@ -1499,8 +1455,6 @@ GThread::set_scheduling_callback(void (*call)(int))
     G_THROW( ERR_MSG("GThreads.dupl_callback") );
   scheduling_callback = call;
 }
-
-
 GThread::GThread(int stacksize)
   : task(0), xentry(0), xarg(0)
 {
@@ -1532,8 +1486,6 @@ GThread::GThread(int stacksize)
   task = new GThread::cotask(stacksize);
 #endif
 }
-
-
 GThread::~GThread()
 {
   if (task && task!=maintask)
@@ -1634,8 +1586,6 @@ GThread::create(void (*entry)(void*), void *arg)
     (*scheduling_callback)(CallbackCreate);
   return 0;
 }
-
-
 void 
 GThread::terminate()
 {
@@ -1671,8 +1621,6 @@ GThread::current()
     return (void*)curtask;
   return (void*)0;
 }
-
-
 // -------------------------------------- GMonitor
 
 GMonitor::GMonitor()
@@ -1815,15 +1763,9 @@ GMonitor::wait(unsigned long timeout)
 }
 
 #endif
-
-
-
-
 // ----------------------------------------
 // GSAFEFLAGS 
 // ----------------------------------------
-
-
 
 GSafeFlags &
 GSafeFlags::operator=(long xflags)
@@ -1887,8 +1829,6 @@ GSafeFlags::wait_and_modify(long set_mask, long clr_mask,
    }
    leave();
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

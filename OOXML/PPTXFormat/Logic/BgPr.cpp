@@ -66,8 +66,6 @@ namespace PPTX
 					}
 				}
 			}
-
-
 			FillParentPointersForChilds();
 		}
 		std::wstring BgPr::toXML() const

@@ -54,8 +54,6 @@ extern "C" {
  */
 
 #define XML_CAST_FPTR(fptr) fptr
-
-
 /*
  * function types:
  */

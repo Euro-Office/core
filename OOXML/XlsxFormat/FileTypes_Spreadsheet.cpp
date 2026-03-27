@@ -167,8 +167,6 @@ namespace OOX
 			const FileType Metadata			(L"", L"metadata.xml",
 												L"application/vnd.openxmlformats-officedocument.spreadsheetml.sheetMetadata+xml",
 												L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/sheetMetadata");
-
-
 			const FileType RdRichValue		(L"richData", L"rdrichvalue.xml",
 												L"application/vnd.ms-excel.rdrichvalue+xml",
 												L"http://schemas.microsoft.com/office/2017/06/relationships/rdRichValue");

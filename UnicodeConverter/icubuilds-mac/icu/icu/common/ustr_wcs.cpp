@@ -139,8 +139,6 @@ _strToWCS(wchar_t *dest,
     }
     
     saveBuf[count]=0;
-      
-
     /* allocate more space than required 
      * here we assume that every char requires 
      * no more than 2 wchar_ts
@@ -295,8 +293,6 @@ _strFromWCS( UChar   *dest,
 
     wchar_t wStack[_STACK_BUFFER_CAPACITY];
     wchar_t* pWStack = wStack;
-
-
     char cStack[_STACK_BUFFER_CAPACITY];
     int32_t cStackCap = _STACK_BUFFER_CAPACITY;
     char* pCSrc=cStack;
@@ -377,8 +373,6 @@ _strFromWCS( UChar   *dest,
                 pSrc += nulLen; /* skip past the null */
                 srcLength-=nulLen; /* decrement the srcLength */
                 remaining -= (pCSrc-pCSave);
-
-
             }else{
                 /* the source is not null terminated and we are 
                  * end of source so we copy the source to a temp buffer

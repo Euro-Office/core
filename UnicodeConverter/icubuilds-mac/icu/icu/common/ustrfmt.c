@@ -7,8 +7,6 @@
 
 #include "cstring.h"
 #include "ustrfmt.h"
-
-
 /***
  * Fills in a UChar* string with the radix-based representation of a
  * uint32_t number padded with zeroes to minwidth.  The result

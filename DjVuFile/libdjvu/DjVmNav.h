@@ -75,8 +75,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 class ByteStream;
 
 /** The NAVM chunk.
@@ -140,8 +138,6 @@ public:
   GUTF8String displayname; // example:  "Section 3.5 - Encryption"
   GUTF8String url;	   // url, may be blank or relative.
 };
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

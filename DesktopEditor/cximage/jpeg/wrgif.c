@@ -40,8 +40,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef GIF_SUPPORTED
-
-
 /* Private version of data destination object */
 
 typedef struct {
@@ -70,8 +68,6 @@ typedef gif_dest_struct * gif_dest_ptr;
 
 /* Largest value that will fit in N bits */
 #define MAXCODE(n_bits)	((1 << (n_bits)) - 1)
-
-
 /*
  * Routines to package finished data bytes into GIF data blocks.
  * A data block consists of a count byte (1..255) and that many data bytes.
@@ -89,16 +85,12 @@ flush_packet (gif_dest_ptr dinfo)
     dinfo->bytesinpkt = 0;
   }
 }
-
-
 /* Add a character to current packet; flush to disk if necessary */
 #define CHAR_OUT(dinfo,c)  \
 	{ (dinfo)->packetbuf[++(dinfo)->bytesinpkt] = (char) (c);  \
 	    if ((dinfo)->bytesinpkt >= 255)  \
 	      flush_packet(dinfo);  \
 	}
-
-
 /* Routine to convert variable-width codes into a byte stream */
 
 LOCAL(void)
@@ -115,8 +107,6 @@ output (gif_dest_ptr dinfo, int code)
     dinfo->cur_bits -= 8;
   }
 }
-
-
 /* The pseudo-compression algorithm.
  *
  * In this module we simply output each pixel value as a separate symbol;
@@ -156,8 +146,6 @@ compress_init (gif_dest_ptr dinfo, int i_bits)
   /* GIF specifies an initial Clear code */
   output(dinfo, dinfo->ClearCode);
 }
-
-
 LOCAL(void)
 compress_pixel (gif_dest_ptr dinfo, int c)
 /* Accept and "compress" one pixel value.
@@ -176,8 +164,6 @@ compress_pixel (gif_dest_ptr dinfo, int c)
     dinfo->code_counter = dinfo->ClearCode + 2;	/* reset the counter */
   }
 }
-
-
 LOCAL(void)
 compress_term (gif_dest_ptr dinfo)
 /* Clean up at end */
@@ -191,11 +177,7 @@ compress_term (gif_dest_ptr dinfo)
   /* Flush the packet buffer */
   flush_packet(dinfo);
 }
-
-
 /* GIF header construction */
-
-
 LOCAL(void)
 put_word (gif_dest_ptr dinfo, unsigned int w)
 /* Emit a 16-bit word, LSB first */
@@ -203,8 +185,6 @@ put_word (gif_dest_ptr dinfo, unsigned int w)
   putc(w & 0xFF, dinfo->pub.output_file);
   putc((w >> 8) & 0xFF, dinfo->pub.output_file);
 }
-
-
 LOCAL(void)
 put_3bytes (gif_dest_ptr dinfo, int val)
 /* Emit 3 copies of same byte value --- handy subr for colormap construction */
@@ -213,8 +193,6 @@ put_3bytes (gif_dest_ptr dinfo, int val)
   putc(val, dinfo->pub.output_file);
   putc(val, dinfo->pub.output_file);
 }
-
-
 LOCAL(void)
 emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
 /* Output the GIF file header, including color map */
@@ -292,8 +270,6 @@ emit_header (gif_dest_ptr dinfo, int num_colors, JSAMPARRAY colormap)
   /* Initialize for "compression" of image data */
   compress_init(dinfo, InitCodeSize+1);
 }
-
-
 /*
  * Startup: write the file header.
  */
@@ -308,8 +284,6 @@ start_output_gif (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   else
     emit_header(dest, 256, (JSAMPARRAY) NULL);
 }
-
-
 /*
  * Write some pixel data.
  * In this module rows_supplied will always be 1.
@@ -328,8 +302,6 @@ put_pixel_rows (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
     compress_pixel(dest, GETJSAMPLE(*ptr++));
   }
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -350,8 +322,6 @@ finish_output_gif (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (ferror(dest->pub.output_file))
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * The module selection routine for GIF format output.
  */

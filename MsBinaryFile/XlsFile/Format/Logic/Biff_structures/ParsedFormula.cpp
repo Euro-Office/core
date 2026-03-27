@@ -85,8 +85,6 @@ const bool ParsedFormula::HasPtgTbl() const
 	}
 	return false;
 }
-
-
 const std::wstring ParsedFormula::getAssembledFormula(bool full_ref) const
 {
 	const PtgVector& ptgs = rgce.getPtgs();
@@ -115,8 +113,6 @@ const std::wstring ParsedFormula::getAssembledFormula(bool full_ref) const
 	}
 	return L"";
 }
-
-
 const bool ParsedFormula::parseStringFormula(const std::wstring formula, const std::wstring & tag_name)
 {
     StringPtgParser parser;
@@ -126,7 +122,5 @@ const bool ParsedFormula::parseStringFormula(const std::wstring formula, const s
     }
     return false;
 }
-
-
 } // namespace XLS
 

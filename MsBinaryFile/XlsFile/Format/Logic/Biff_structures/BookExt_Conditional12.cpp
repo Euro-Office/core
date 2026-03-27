@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr BookExt_Conditional12::clone()
 {
 	return BiffStructurePtr(new BookExt_Conditional12(*this));
@@ -56,7 +54,5 @@ void BookExt_Conditional12::save(CFRecord& record)
 	SETBIT(flags, 2, fShowPivotChartFilter)
 	record << flags;
 }
-
-
 } // namespace XLS
 

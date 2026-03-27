@@ -30,8 +30,6 @@
  *
  */
 #include "RtfFile.h"
-
-
 RtfFormatLib::RtfFormatLib()
 {
 }

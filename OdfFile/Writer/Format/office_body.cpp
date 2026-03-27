@@ -54,14 +54,10 @@ void office_body::create_child_element( const std::wstring & Ns, const std::wstr
 {
 	CP_CREATE_ELEMENT(content_);
 }
-
-
 void office_body::add_child_element( const office_element_ptr & child_element)
 {
 	content_ = child_element;
 }
-
-
 void office_body::serialize(std::wostream & _Wostream)
 {
     CP_XML_WRITER(_Wostream)
@@ -72,7 +68,5 @@ void office_body::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 }
 }

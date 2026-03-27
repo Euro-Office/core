@@ -28,8 +28,6 @@
  */
 U_CAPI UConverter* U_EXPORT2
 u_getDefaultConverter(UErrorCode *status);
-
-
 /**
  * Release the default converter to the converter cache.
  * @internal

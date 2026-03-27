@@ -30,13 +30,9 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_math.h"
-
-
 extern void psd_adjustment_blend_rgb(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect, 
 	psd_uchar * red_lookup_table, psd_uchar * green_lookup_table, psd_uchar * blue_lookup_table,
 	psd_bool preserve_luminosity);
-
-
 // Additional layer -- levels
 // Levels settings files are loaded and saved in the Levels dialog.
 psd_status psd_get_layer_levels(psd_context * context, psd_layer_record * layer, psd_int data_length)

@@ -66,16 +66,12 @@
 #include "GIFFManager.h"
 #include "GException.h"
 #include "debug.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 GIFFChunk::~GIFFChunk(void) {}
 
 GIFFManager::~GIFFManager(void) {}
@@ -654,8 +650,6 @@ GIFFManager::save_file(GP<ByteStream> str)
   GP<IFFByteStream> istr=IFFByteStream::create(str);
   top_level->save(*istr, 1);
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

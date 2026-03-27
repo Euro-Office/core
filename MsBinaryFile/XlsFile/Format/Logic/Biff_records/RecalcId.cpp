@@ -38,13 +38,9 @@ namespace XLS
 RecalcId::RecalcId()
 {
 }
-
-
 RecalcId::~RecalcId()
 {
 }
-
-
 BaseObjectPtr RecalcId::clone()
 {
 	return BaseObjectPtr(new RecalcId(*this));

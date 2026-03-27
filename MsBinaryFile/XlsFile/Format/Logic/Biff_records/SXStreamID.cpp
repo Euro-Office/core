@@ -38,19 +38,13 @@ namespace XLS
 SXStreamID::SXStreamID()
 {
 }
-
-
 SXStreamID::~SXStreamID()
 {
 }
-
-
 BaseObjectPtr SXStreamID::clone()
 {
 	return BaseObjectPtr(new SXStreamID(*this));
 }
-
-
 void SXStreamID::readFields(CFRecord& record)
 {
 	record >> idStm;

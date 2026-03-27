@@ -34,17 +34,11 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSTYPES_H_
 #define PSTYPES_H_
 
 #include <freetype/freetype.h>
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * The data models that we expect to support are as follows:
    *
@@ -57,21 +51,11 @@ FT_BEGIN_HEADER
    *    *) type may be supported by emulation on a 32-bit architecture
    *
    */
-
-
   /* integers at least 32 bits wide */
 #define CF2_UInt  FT_UFast
 #define CF2_Int   FT_Fast
-
-
   /* fixed-float numbers */
   typedef FT_Int32  CF2_F16Dot16;
-
-
 FT_END_HEADER
-
-
 #endif /* PSTYPES_H_ */
-
-
 /* END */

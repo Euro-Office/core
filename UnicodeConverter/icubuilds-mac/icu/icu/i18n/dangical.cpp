@@ -129,8 +129,6 @@ const TimeZone* DangiCalendar::getDangiCalZoneAstroCalc(void) const {
     umtx_initOnce(gDangiCalendarInitOnce, &initDangiCalZoneAstroCalc);
     return gDangiCalendarZoneAstroCalc;
 }
-
-
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(DangiCalendar)
 
 U_NAMESPACE_END

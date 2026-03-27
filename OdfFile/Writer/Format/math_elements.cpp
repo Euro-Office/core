@@ -169,8 +169,6 @@ void math_annotation::add_text(const std::wstring& Text)
 const wchar_t * math_annotation_xml::ns = L"math";
 const wchar_t * math_annotation_xml::name = L"annotation-xml";
 //----------------------------------------------------------------------------------------------------
-
-
 void math_annotation_xml::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
 	CP_CREATE_ELEMENT(content_);

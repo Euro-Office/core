@@ -16,8 +16,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Expanded entropy decoder object for arithmetic decoding. */
 
 typedef struct {
@@ -59,8 +57,6 @@ typedef arith_entropy_decoder * arith_entropy_ptr;
 
 #define DC_STAT_BINS 64
 #define AC_STAT_BINS 256
-
-
 LOCAL(int)
 get_byte (j_decompress_ptr cinfo)
 /* Read next input byte; we do not support suspension in this module. */
@@ -73,8 +69,6 @@ get_byte (j_decompress_ptr cinfo)
   src->bytes_in_buffer--;
   return GETJOCTET(*src->next_input_byte++);
 }
-
-
 /*
  * The core arithmetic decoding routine (common in JPEG and JBIG).
  * This needs to go as fast as possible.
@@ -180,8 +174,6 @@ arith_decode (j_decompress_ptr cinfo, unsigned char *st)
 
   return sv >> 7;
 }
-
-
 /*
  * Check for a restart marker & resynchronize decoder.
  */
@@ -220,8 +212,6 @@ process_restart (j_decompress_ptr cinfo)
   /* Reset restart counter */
   entropy->restarts_to_go = cinfo->restart_interval;
 }
-
-
 /*
  * Arithmetic MCU decoding.
  * Each of these routines decodes and returns one MCU's worth of
@@ -310,8 +300,6 @@ decode_mcu_DC_first (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for AC initial scan (either spectral selection,
  * or first pass of successive approximation).
@@ -388,8 +376,6 @@ decode_mcu_AC_first (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for DC successive approximation refinement scan.
  */
@@ -421,8 +407,6 @@ decode_mcu_DC_refine (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * MCU decoding for AC successive approximation refinement scan.
  */
@@ -493,8 +477,6 @@ decode_mcu_AC_refine (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Decode one MCU's worth of arithmetic-compressed coefficients.
  */
@@ -621,8 +603,6 @@ decode_mcu (j_decompress_ptr cinfo, JBLOCKROW *MCU_data)
 
   return TRUE;
 }
-
-
 /*
  * Initialize for an arithmetic-compressed scan.
  */
@@ -731,8 +711,6 @@ start_pass (j_decompress_ptr cinfo)
   /* Initialize restart counter */
   entropy->restarts_to_go = cinfo->restart_interval;
 }
-
-
 /*
  * Module initialization routine for arithmetic entropy decoding.
  */

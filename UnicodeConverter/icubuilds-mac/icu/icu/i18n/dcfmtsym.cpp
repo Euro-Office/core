@@ -51,8 +51,6 @@ static const char gAfterCurrencyTag[] = "afterCurrency";
 static const char gCurrencyMatchTag[] = "currencyMatch";
 static const char gCurrencySudMatchTag[] = "surroundingMatch";
 static const char gCurrencyInsertBtnTag[] = "insertBetween";
-
-
 static const UChar INTL_CURRENCY_SYMBOL_STR[] = {0xa4, 0xa4, 0};
 
 // -------------------------------------

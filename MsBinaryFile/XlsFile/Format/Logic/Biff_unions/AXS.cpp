@@ -46,18 +46,12 @@
 #include "../Biff_records/EndObject.h"
 namespace XLS
 {
-
-
 AXS::AXS()
 {
 }
-
-
 AXS::~AXS()
 {
 }
-
-
 //  (AxisLine LineFormat)
 class Parenthesis_AXS_1: public ABNFParenthesis
 {
@@ -84,14 +78,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr AXS::clone()
 {
 	return BaseObjectPtr(new AXS(*this));
 }
-
-
 /*
 AXS = [IFmtRecord] [Tick] [FontX] *4(AxisLine LineFormat) [AreaFormat] [GELFRAME] *4SHAPEPROPS 
 		[TextPropsStream *ContinueFrt12]
@@ -249,8 +239,6 @@ int AXS::serialize(std::wostream & _stream)
 									CP_XML_ATTR(L"rot",	-tick->trot			* 60000);
 									CP_XML_ATTR(L"vert", L"horz");		//(1-333.xls) .. todoooo может тут нужно проверять гоизонт ось или нет
 								}
-								
-
 							}
 						}
 						if (tick->iReadingOrder == (unsigned char)2) rtl = true;

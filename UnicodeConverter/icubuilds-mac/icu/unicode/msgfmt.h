@@ -285,7 +285,6 @@ class NumberFormat;
  *  \endcode
  *  </pre>
  *
- *
  * <p>For messages that include plural forms, you can use a plural argument:
  * <pre>
  * \code
@@ -522,8 +521,6 @@ public:
      * @param cnt        the size of the array.
      */
     virtual void setFormats(const Format** newFormats, int32_t cnt);
-
-
     /**
      * Sets one subformat.
      * See the class description about format numbering.
@@ -620,8 +617,6 @@ public:
      * @stable ICU 2.0
      */
     virtual const Format** getFormats(int32_t& count) const;
-
-
     using Format::format;
 
     /**
@@ -791,8 +786,6 @@ public:
      */
     static UnicodeString autoQuoteApostrophe(const UnicodeString& pattern,
         UErrorCode& status);
-
-
     /**
      * Returns true if this MessageFormat uses named arguments,
      * and false otherwise.  See class description.
@@ -801,8 +794,6 @@ public:
      * @stable ICU 4.0
      */
     UBool usesNamedArguments() const;
-
-
 #ifndef U_HIDE_INTERNAL_API
     /**
      * This API is for ICU internal use only.

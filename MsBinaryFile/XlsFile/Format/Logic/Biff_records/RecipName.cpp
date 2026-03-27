@@ -38,19 +38,13 @@ namespace XLS
 RecipName::RecipName()
 {
 }
-
-
 RecipName::~RecipName()
 {
 }
-
-
 BaseObjectPtr RecipName::clone()
 {
 	return BaseObjectPtr(new RecipName(*this));
 }
-
-
 void RecipName::readFields(CFRecord& record)
 {
 #pragma message("####################### RecipName record is not implemented")

@@ -19,11 +19,7 @@
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_polygon_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 class the_application : public agg::platform_support
 {
     agg::rbox_ctrl<agg::rgba8>    m_method;
@@ -45,8 +41,6 @@ class the_application : public agg::platform_support
     agg::recursive_blur<agg::rgba8, agg::recursive_blur_calc_rgb<> > m_recursive_blur;
 
     agg::rect_d m_shape_bounds;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -142,8 +136,6 @@ public:
         m_shadow_ctrl.yn(3) = m_shape_bounds.y2;
         m_shadow_ctrl.line_color(agg::rgba(0, 0.3, 0.5, 0.3));
     }
-
-
 
     virtual void on_draw()
     {
@@ -291,8 +283,6 @@ public:
 
         m_ras.add_path(st);
         agg::render_scanlines_aa_solid(m_ras, m_sl, renb, agg::rgba(0,0,0));
-
-
         agg::render_ctrl(m_ras, m_sl, renb, m_method);
         agg::render_ctrl(m_ras, m_sl, renb, m_radius);
         agg::render_ctrl(m_ras, m_sl, renb, m_channel_r);
@@ -301,8 +291,6 @@ public:
     }
 
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -315,5 +303,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

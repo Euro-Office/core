@@ -44,8 +44,6 @@ namespace agg
         const conv_marker_adaptor<VertexSource, Markers>& 
             operator = (const conv_marker_adaptor<VertexSource, Markers>&);
     };
-
-
 }
 
 #endif

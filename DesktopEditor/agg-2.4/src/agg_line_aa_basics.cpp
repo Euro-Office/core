@@ -45,8 +45,6 @@ namespace agg
     const int8u line_parameters::s_orthogonal_quadrant[8] = { 0,0,1,1,3,3,2,2 };
     const int8u line_parameters::s_diagonal_quadrant[8]   = { 0,1,2,1,0,3,2,3 };
 
-
-
     //-------------------------------------------------------------------------
     void bisectrix(const line_parameters& l1, 
                    const line_parameters& l2, 

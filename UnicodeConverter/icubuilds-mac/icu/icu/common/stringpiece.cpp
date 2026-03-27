@@ -66,8 +66,6 @@ operator==(const StringPiece& x, const StringPiece& y) {
   // At this point we can, but don't have to, ignore the last byte.
   return uprv_memcmp(p, p2, len) == 0;
 }
-
-
 const int32_t StringPiece::npos = 0x7fffffff;
 
 U_NAMESPACE_END

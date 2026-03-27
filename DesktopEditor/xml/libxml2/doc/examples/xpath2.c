@@ -20,14 +20,10 @@
 
 #if defined(LIBXML_XPATH_ENABLED) && defined(LIBXML_SAX1_ENABLED) && \
     defined(LIBXML_OUTPUT_ENABLED)
-
-
 static void usage(const char *name);
 static int example4(const char *filename, const xmlChar * xpathExpr,
                     const xmlChar * value);
 static void update_xpath_nodes(xmlNodeSetPtr nodes, const xmlChar * value);
-
-
 int 
 main(int argc, char **argv) {
     /* Parse command line and process file */
@@ -117,16 +113,12 @@ example4(const char* filename, const xmlChar* xpathExpr, const xmlChar* value) {
 
     /* update selected nodes */
     update_xpath_nodes(xpathObj->nodesetval, value);
-
-    
     /* Cleanup of XPath data */
     xmlXPathFreeObject(xpathObj);
     xmlXPathFreeContext(xpathCtx); 
 
     /* dump the resulting document */
     xmlDocDump(stdout, doc);
-
-
     /* free the document */
     xmlFreeDoc(doc); 
     

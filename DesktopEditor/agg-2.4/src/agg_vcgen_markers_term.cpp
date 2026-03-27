@@ -27,8 +27,6 @@ namespace agg
     {
         m_markers.remove_all();
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_markers_term::add_vertex(double x, double y, unsigned cmd)
     {
@@ -70,16 +68,12 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_markers_term::rewind(unsigned path_id)
     {
         m_curr_id = path_id * 2;
         m_curr_idx = m_curr_id;
     }
-
-
     //------------------------------------------------------------------------
     unsigned vcgen_markers_term::vertex(double* x, double* y)
     {
@@ -98,6 +92,4 @@ namespace agg
         ++m_curr_idx;
         return path_cmd_move_to;
     }
-
-
 }

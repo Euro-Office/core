@@ -654,8 +654,6 @@ alloc_downsampled_buffers(TIFF* tif, jpeg_component_info* comp_info,
 	sp->samplesperclump = samples_per_clump;
 	return (1);
 }
-
-
 /*
  * JPEG Decoding.
  */
@@ -954,8 +952,6 @@ JPEGFixupTagsSubsamplingSkip(struct JPEGFixupTagsSubsamplingData* data, uint16 s
 }
 
 #endif
-
-
 static int
 JPEGSetupDecode(TIFF* tif)
 {
@@ -1495,8 +1491,6 @@ JPEGDecodeRaw(TIFF* tif, uint8* buf, tmsize_t cc, uint16 s)
 	return sp->cinfo.d.output_scanline < sp->cinfo.d.output_height
 		|| TIFFjpeg_finish_decompress(sp);
 }
-
-
 /*
  * JPEG Encoding.
  */

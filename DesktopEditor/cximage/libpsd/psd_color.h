@@ -4,8 +4,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 #define PSD_ARGB_TO_COLOR(a, r, g, b)		(((a) << 24) | ((r) << 16) | ((g) << 8) | (b))
 #define PSD_RGB_TO_COLOR(r, g, b)			(((0xFF) << 24) | ((r) << 16) | ((g) << 8) | (b))
 #define PSD_GET_ALPHA_COMPONENT(color)		((color) >> 24)
@@ -41,8 +39,6 @@ extern "C" {
 #define psd_color_trblue        0x7F0000FF
 
 #define psd_color_clear			0x00FFFFFF
-
-
 psd_argb_color psd_argb_to_color(psd_color_component alpha, psd_color_component red, 
 	psd_color_component green, psd_color_component blue);
 psd_argb_color psd_rgb_to_color(psd_color_component red, psd_color_component green, 
@@ -71,8 +67,6 @@ void psd_rgb_to_intcmyk(psd_int red, psd_int green, psd_int blue,
 	psd_int * cyan, psd_int * magenta, psd_int * yellow, psd_int * black);
 void psd_intcmyk_to_rgb(psd_int cyan, psd_int magenta, psd_int yellow, psd_int black, 
 	psd_int * red, psd_int * green, psd_int * blue);
-
-
 #ifdef __cplusplus
 }
 #endif

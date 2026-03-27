@@ -74,8 +74,6 @@ typedef struct ILcidPosixMap
     const uint32_t numRegions;
     const struct ILcidPosixElement* const regionMaps;
 } ILcidPosixMap;
-
-
 /*
 /////////////////////////////////////////////////
 //
@@ -104,8 +102,6 @@ static const ILcidPosixElement locmap_ ## languageID [] = { \
  */
 #define ILCID_POSIX_SUBTABLE(id) \
 static const ILcidPosixElement locmap_ ## id [] =
-
-
 /**
  * Create the map for the posixID. This macro supposes that the language string
  * name is the same as the global variable name, and that the first element
@@ -523,8 +519,6 @@ ILCID_POSIX_SUBTABLE(or_IN) {
     {0x48,   "or"},
     {0x0448, "or_IN"},
 };
-
-
 ILCID_POSIX_SUBTABLE(pa) {
     {0x46,   "pa"},
     {0x0446, "pa_IN"},

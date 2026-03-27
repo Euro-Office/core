@@ -25,8 +25,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef BMP_SUPPORTED
-
-
 /* Macros to deal with unsigned chars as efficiently as compiler allows */
 
 #ifdef HAVE_UNSIGNED_CHAR
@@ -41,11 +39,7 @@ typedef char U_CHAR;
 #define UCH(x)	((int) (x) & 0xFF)
 #endif
 #endif /* HAVE_UNSIGNED_CHAR */
-
-
 #define	ReadOK(file,buffer,len)	(JFREAD(file,buffer,len) == ((size_t) (len)))
-
-
 /* Private version of data source object */
 
 typedef struct _bmp_source_struct * bmp_source_ptr;
@@ -63,8 +57,6 @@ typedef struct _bmp_source_struct {
 
   int bits_per_pixel;		/* remembers 8- or 24-bit format */
 } bmp_source_struct;
-
-
 LOCAL(int)
 read_byte (bmp_source_ptr sinfo)
 /* Read next byte from BMP file */
@@ -76,8 +68,6 @@ read_byte (bmp_source_ptr sinfo)
     ERREXIT(sinfo->cinfo, JERR_INPUT_EOF);
   return c;
 }
-
-
 LOCAL(void)
 read_colormap (bmp_source_ptr sinfo, int cmaplen, int mapentrysize)
 /* Read the colormap from a BMP file */
@@ -107,8 +97,6 @@ read_colormap (bmp_source_ptr sinfo, int cmaplen, int mapentrysize)
     break;
   }
 }
-
-
 /*
  * Read one row of pixels.
  * The image has been read into the whole_image array, but is otherwise
@@ -145,8 +133,6 @@ get_8bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_24bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading 24-bit pixels */
@@ -176,8 +162,6 @@ get_24bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_32bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading 32-bit pixels */
@@ -207,8 +191,6 @@ get_32bit_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 
   return 1;
 }
-
-
 /*
  * This method loads the image into whole_image during the first call on
  * get_pixel_rows.  The get_pixel_rows pointer is then adjusted to call
@@ -266,8 +248,6 @@ preload_image (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   /* And read the first row */
   return (*source->pub.get_pixel_rows) (cinfo, sinfo);
 }
-
-
 /*
  * Read the file header; return image size and component count.
  */
@@ -443,8 +423,6 @@ start_input_bmp (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   cinfo->image_width = (JDIMENSION) biWidth;
   cinfo->image_height = (JDIMENSION) biHeight;
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -454,8 +432,6 @@ finish_input_bmp (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 {
   /* no work */
 }
-
-
 /*
  * The module selection routine for BMP format input.
  */

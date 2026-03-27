@@ -115,6 +115,4 @@ pptx_comments_ptr pptx_comments::create()
 
 }
 }
-
-
        

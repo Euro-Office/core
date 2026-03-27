@@ -56,8 +56,6 @@ void PtgMemArea::writeFields(CFRecord& record)
 	record.reserveNunBytes(4); // unused
 	record << cce;
 }
-
-
 void PtgMemArea::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	PtgExtraMemPtr range;
@@ -69,7 +67,5 @@ void PtgMemArea::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool 
 //	ptg_stack.push("#CACHE(" + STR::int2str(getOffsetInRecord() + getSizeOfStruct() + cce, 10) + ")!" + range->toString());
 	extra_data.pop();
 }
-
-
 } // namespace XLS
 

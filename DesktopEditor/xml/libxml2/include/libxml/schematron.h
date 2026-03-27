@@ -6,8 +6,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_SCHEMATRON_H__
 #define __XML_SCHEMATRON_H__
 

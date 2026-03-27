@@ -868,8 +868,6 @@ public:
      * @stable ICU 2.0
      */
     virtual UBool operator==(const Format& other) const;
-
-
     using DateFormat::format;
 
     /**
@@ -946,8 +944,6 @@ public:
     virtual void parse( const UnicodeString& text,
                         Calendar& cal,
                         ParsePosition& pos) const;
-
-
     /**
      * Set the start UDate used to interpret two-digit year strings.
      * When dates are parsed having 2-digit year strings, they are placed within
@@ -1176,8 +1172,6 @@ public:
      * @internal ICU 4.0
      */
     UBool isFieldUnitIgnored(UCalendarDateFields field) const;
-
-
     /**
      * This is for ICU internal use only. Please do not use.
      * Check whether the 'field' is smaller than all the fields covered in
@@ -1528,8 +1522,6 @@ private:
      * The numbering system override for times.
      */
     UnicodeString       fTimeOverride;
-
-
     /**
      * The original locale used (for reloading symbols)
      */

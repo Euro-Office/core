@@ -14,8 +14,6 @@ help_platform = 'set a platform. win_64 or win_32. default: ' + default_platform
 help_docbuilder = 'set path to DocumentBuilder. default: '+ default_docbuilder
 help_msbuild = 'set path to MSBuild. default: '+ default_msbuild
 help_out = 'set output path. default: ' + default_out
-
-
 def createParser ():
     parser = argparse.ArgumentParser()
 
@@ -31,8 +29,6 @@ def createParser ():
     # out dir
     parser.add_argument('-out', nargs='?', default=default_out, help=help_out)
     return parser
-
-
 if __name__ == "__main__":
     
     parser = createParser()
@@ -55,8 +51,6 @@ if __name__ == "__main__":
     # delete intermediate folder
     tmp_directory = deploy_directory + "/" + args.platform + '/tmp'
     shutil.rmtree(tmp_directory)
-    
-
     deploy_platform_directory = deploy_directory + '/' + args.platform
     get_files = os.listdir(deploy_platform_directory)
 
@@ -75,5 +69,3 @@ if __name__ == "__main__":
         for g in get_files:
             os.replace(deploy_platform_directory + '/' + g, args.out + '/' + g)
         shutil.rmtree(deploy_platform_directory)
-        
-    

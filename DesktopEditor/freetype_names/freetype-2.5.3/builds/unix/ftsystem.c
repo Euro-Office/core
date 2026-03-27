@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
   /* we use our special ftconfig.h file, not the standard one */
 #include <ftconfig.h>
@@ -55,8 +53,6 @@
 #define MUNMAP_ARG_CAST  char *
 
 #endif /* NEED_DECLARATION_MUNMAP */
-
-
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -68,15 +64,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                       MEMORY MANAGEMENT INTERFACE                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -101,8 +93,6 @@
 
     return malloc( size );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -134,8 +124,6 @@
 
     return realloc( block, new_size );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -157,15 +145,11 @@
 
     free( block );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                     RESOURCE MANAGEMENT INTERFACE                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -178,8 +162,6 @@
   /* We use the macro STREAM_FILE for convenience to extract the       */
   /* system-specific stream handle from a given FreeType stream object */
 #define STREAM_FILE( stream )  ( (FILE*)stream->descriptor.pointer )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -200,8 +182,6 @@
     stream->size               = 0;
     stream->base               = 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -222,8 +202,6 @@
     stream->size               = 0;
     stream->base               = 0;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Error )
@@ -232,8 +210,6 @@
   {
     int          file;
     struct stat  stat_buf;
-
-
     if ( !stream )
       return FT_THROW( Invalid_Stream_Handle );
 
@@ -302,8 +278,6 @@
     else
     {
       ssize_t  total_read_count;
-
-
       FT_ERROR(( "FT_Stream_Open:" ));
       FT_ERROR(( " could not `mmap' file `%s'\n", filepathname ));
 
@@ -320,8 +294,6 @@
       do
       {
         ssize_t  read_count;
-
-
         read_count = read( file,
                            stream->base + total_read_count,
                            stream->size - total_read_count );
@@ -368,8 +340,6 @@
 
     return FT_THROW( Cannot_Open_Stream );
   }
-
-
 #ifdef FT_DEBUG_MEMORY
 
   extern FT_Int
@@ -379,16 +349,12 @@
   ft_mem_debug_done( FT_Memory  memory );
 
 #endif
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( FT_Memory )
   FT_New_Memory( void )
   {
     FT_Memory  memory;
-
-
     memory = (FT_Memory)malloc( sizeof ( *memory ) );
     if ( memory )
     {
@@ -403,8 +369,6 @@
 
     return memory;
   }
-
-
   /* documentation is in ftobjs.h */
 
   FT_BASE_DEF( void )
@@ -415,6 +379,4 @@
 #endif
     memory->free( memory, memory );
   }
-
-
 /* END */

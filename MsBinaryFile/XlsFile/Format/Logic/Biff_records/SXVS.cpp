@@ -38,13 +38,9 @@ namespace XLS
 SXVS::SXVS()
 {
 }
-
-
 SXVS::~SXVS()
 {
 }
-
-
 BaseObjectPtr SXVS::clone()
 {
 	return BaseObjectPtr(new SXVS(*this));

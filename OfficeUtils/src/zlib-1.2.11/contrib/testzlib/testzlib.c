@@ -3,8 +3,6 @@
 #include <windows.h>
 
 #include "zlib.h"
-
-
 void MyDoMinus64(LARGE_INTEGER *R,LARGE_INTEGER A,LARGE_INTEGER B)
 {
     R->HighPart = A.HighPart - B.HighPart;
@@ -102,8 +100,6 @@ DWORD GetMsecSincePerfCounter(LARGE_INTEGER beginTime64,BOOL fComputeTimeQueryPe
     {
         MyDoMinus64(&ticks,endTime64,beginTime64);
         QueryPerformanceFrequency(&ticksPerSecond);
-
-
         {
             ticksShifted = Int64ShrlMod32(*(DWORDLONG*)&ticks,dwLog);
             tickSecShifted = Int64ShrlMod32(*(DWORDLONG*)&ticksPerSecond,dwLog);
@@ -199,8 +195,6 @@ int main(int argc, char *argv[])
 
         zcpr.next_in = FilePtr;
         zcpr.next_out = CprPtr;
-
-
         do
         {
             long all_read_before = zcpr.total_in;
@@ -240,8 +234,6 @@ int main(int argc, char *argv[])
 
         zcpr.next_in = CprPtr;
         zcpr.next_out = UncprPtr;
-
-
         do
         {
             long all_read_before = zcpr.total_in;

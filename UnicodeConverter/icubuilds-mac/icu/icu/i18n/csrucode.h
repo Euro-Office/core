@@ -38,8 +38,6 @@ public:
      */
     UBool match(InputText* textIn, CharsetMatch *results) const = 0;
 };
-
-
 class CharsetRecog_UTF_16_BE : public CharsetRecog_Unicode
 {
 public:
@@ -74,8 +72,6 @@ public:
 
     UBool match(InputText* textIn, CharsetMatch *results) const;
 };
-
-
 class CharsetRecog_UTF_32_BE : public CharsetRecog_UTF_32
 {
 protected:
@@ -87,8 +83,6 @@ public:
 
     const char *getName() const;
 };
-
-
 class CharsetRecog_UTF_32_LE : public CharsetRecog_UTF_32
 {
 protected:

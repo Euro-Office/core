@@ -431,8 +431,6 @@ png_create_struct_2,(int type, png_malloc_ptr malloc_fn, png_voidp mem_ptr),
 
    return (struct_ptr);
 }
-
-
 /* Free memory allocated by a png_create_struct() call */
 void /* PRIVATE */
 png_destroy_struct(png_voidp struct_ptr)
@@ -633,8 +631,6 @@ png_malloc_warn,(png_structp png_ptr, png_alloc_size_t size),PNG_ALLOCATED)
    png_ptr->flags=save_flags;
    return(ptr);
 }
-
-
 #ifdef PNG_USER_MEM_SUPPORTED
 /* This function is called when the application wants to use another method
  * of allocating and freeing memory.

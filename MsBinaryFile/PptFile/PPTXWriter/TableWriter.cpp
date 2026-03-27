@@ -94,8 +94,6 @@ void TableWriter::FillTable(PPTX::Logic::Table &oTable)
     prepareShapes(arrCells, arrSpliters);
     m_nPTable = new ProtoTable(arrCells, arrSpliters, m_pRels);
     FillTblGrid(oTable.TableCols , arrCells);
-
-
     auto protoTable = m_nPTable->getTable();
     auto arrHeight = ProtoTable::getHeight(arrCells, m_pTableElement->GetHeight());
     for (UINT cRow = 0; cRow < protoTable.size(); cRow++)
@@ -784,8 +782,6 @@ void TCell::setPShape(CElementPtr ptrShape)
     m_ptrSpElCell = ptrShape;
     m_parentDirection = none;
 }
-
-
 
 ProtoTable::ProtoTable(std::vector<CElementPtr> &arrCells,
                        std::vector<CElementPtr> &arrSpliters,

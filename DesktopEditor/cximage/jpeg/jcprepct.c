@@ -17,8 +17,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* At present, jcsample.c can request context rows only for smoothing.
  * In the future, we might also need context rows for CCIR601 sampling
  * or other more-complex downsampling procedures.  The code to support
@@ -27,8 +25,6 @@
 #ifdef INPUT_SMOOTHING_SUPPORTED
 #define CONTEXT_ROWS_SUPPORTED
 #endif
-
-
 /*
  * For the simple (no-context-row) case, we just need to buffer one
  * row group's worth of pixels for the downsampling step.  At the bottom of
@@ -46,8 +42,6 @@
  * by pointer hacking as is done in jdmainct.c, but it doesn't seem worth the
  * trouble on the compression side.
  */
-
-
 /* Private buffer controller object */
 
 typedef struct {
@@ -68,8 +62,6 @@ typedef struct {
 } my_prep_controller;
 
 typedef my_prep_controller * my_prep_ptr;
-
-
 /*
  * Initialize for a processing pass.
  */
@@ -95,8 +87,6 @@ start_pass_prep (j_compress_ptr cinfo, J_BUF_MODE pass_mode)
   prep->next_buf_stop = 2 * cinfo->max_v_samp_factor;
 #endif
 }
-
-
 /*
  * Expand an image vertically from height input_rows to height output_rows,
  * by duplicating the bottom row.
@@ -113,8 +103,6 @@ expand_bottom_edge (JSAMPARRAY image_data, JDIMENSION num_cols,
 		      1, num_cols);
   }
 }
-
-
 /*
  * Process some data in the simple no-context case.
  *
@@ -185,8 +173,6 @@ pre_process_data (j_compress_ptr cinfo,
     }
   }
 }
-
-
 #ifdef CONTEXT_ROWS_SUPPORTED
 
 /*
@@ -259,8 +245,6 @@ pre_process_context (j_compress_ptr cinfo,
     }
   }
 }
-
-
 /*
  * Create the wrapped-around downsampling input buffer needed for context mode.
  */
@@ -308,8 +292,6 @@ create_context_buffer (j_compress_ptr cinfo)
 }
 
 #endif /* CONTEXT_ROWS_SUPPORTED */
-
-
 /*
  * Initialize preprocessing controller.
  */

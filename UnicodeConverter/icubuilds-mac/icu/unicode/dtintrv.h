@@ -19,11 +19,7 @@
  * \file
  * \brief C++ API: Date Interval data type
  */
-
-
 U_NAMESPACE_BEGIN
-
-
 /**
  * This class represents a date interval.
  * It is a pair of UDate representing from UDate 1 to UDate 2.
@@ -59,8 +55,6 @@ public:
      * @stable ICU 4.0
      */
     UDate getToDate() const;
-
-
     /**
      * Return the class ID for this class. This is useful only for comparing to
      * a return value from getDynamicClassID(). For example:
@@ -86,8 +80,6 @@ public:
      * @stable ICU 4.0
      */
     virtual UClassID getDynamicClassID(void) const;
-
-    
     /**
      * Copy constructor.
      * @stable ICU 4.0
@@ -113,8 +105,6 @@ public:
      * @stable ICU 4.0
      */
     UBool operator!=(const DateInterval& other) const;
-
-
     /**
      * clone this object. 
      * The caller owns the result and should delete it when done.
@@ -133,26 +123,18 @@ private:
     UDate toDate;
 
 } ;// end class DateInterval
-
-
 inline UDate 
 DateInterval::getFromDate() const { 
     return fromDate; 
 }
-
-
 inline UDate 
 DateInterval::getToDate() const { 
     return toDate; 
 }
-
-
 inline UBool 
 DateInterval::operator!=(const DateInterval& other) const { 
     return ( !operator==(other) );
 }
-
-
 U_NAMESPACE_END
 
 #endif

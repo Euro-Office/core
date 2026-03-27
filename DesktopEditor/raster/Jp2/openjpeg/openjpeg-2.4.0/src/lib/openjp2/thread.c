@@ -378,8 +378,6 @@ void opj_cond_destroy(opj_cond_t* cond)
     pthread_cond_destroy(&(cond->cond));
     opj_free(cond);
 }
-
-
 struct opj_thread_t {
     opj_thread_fn thread_fn;
     void* user_data;
@@ -568,8 +566,6 @@ OPJ_BOOL opj_tls_set(opj_tls_t* tls, int key, void* value,
     tls->key_val_count ++;
     return OPJ_TRUE;
 }
-
-
 typedef struct {
     opj_job_fn          job_fn;
     void               *user_data;

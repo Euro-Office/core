@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/freetype.h>
 #include <freetype/ftadvanc.h>
 #include "afglobal.h"
@@ -23,8 +21,6 @@
 #include "afshaper.h"
 
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -33,8 +29,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  afshaper
-
-
   /*
    * We use `sets' (in the HarfBuzz sense, which comes quite near to the
    * usual mathematical meaning) to manage both lookups and glyph indices.
@@ -53,8 +47,6 @@
    *    special coverages (like `oldstyle figures') don't get overwritten.
    *
    */
-
-
   /* load coverage tags */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description,             \
@@ -64,37 +56,25 @@
             HB_TAG( tag1, tag2, tag3, tag4 ),          \
             HB_TAG_NONE                                \
           };
-
-
 #include "afcover.h"
-
-
   /* define mapping between coverage tags and AF_Coverage */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description, \
                   tag1, tag2, tag3, tag4 ) \
           name ## _coverage,
-
-
   static const hb_tag_t*  coverages[] =
   {
 #include "afcover.h"
 
     NULL /* AF_COVERAGE_DEFAULT */
   };
-
-
   /* load HarfBuzz script tags */
 #undef  SCRIPT
 #define SCRIPT( s, S, d, h, H, ss )  h,
-
-
   static const hb_script_t  scripts[] =
   {
 #include "afscript.h"
   };
-
-
   FT_Error
   af_shaper_get_coverage( AF_FaceGlobals  globals,
                           AF_StyleClass   style_class,
@@ -119,8 +99,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     int             count;
 #endif
-
-
     if ( !globals || !style_class || !gstyles )
       return FT_THROW( Invalid_Argument );
 
@@ -257,26 +235,18 @@
       const AF_Blue_StringRec*  bs  = &af_blue_stringsets[bss];
 
       FT_Bool  found = 0;
-
-
       for ( ; bs->string != AF_BLUE_STRING_MAX; bs++ )
       {
         const char*  p = &af_blue_strings[bs->string];
-
-
         while ( *p )
         {
           hb_codepoint_t  ch;
-
-
           GET_UTF8_CHAR( ch, p );
 
           for ( idx = HB_SET_VALUE_INVALID; hb_set_next( gsub_lookups,
                                                          &idx ); )
           {
             hb_codepoint_t  gidx = FT_Get_Char_Index( globals->face, ch );
-
-
             if ( hb_ot_layout_lookup_would_substitute( face, idx,
                                                        &gidx, 1, 1 ) )
             {
@@ -389,8 +359,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /* construct HarfBuzz features */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description,                \
@@ -402,26 +370,18 @@
               1, 0, (unsigned int)-1                      \
             }                                             \
           };
-
-
 #include "afcover.h"
-
-
   /* define mapping between HarfBuzz features and AF_Coverage */
 #undef  COVERAGE
 #define COVERAGE( name, NAME, description, \
                   tag1, tag2, tag3, tag4 ) \
           name ## _feature,
-
-
   static const hb_feature_t*  features[] =
   {
 #include "afcover.h"
 
     NULL /* AF_COVERAGE_DEFAULT */
   };
-
-
   void*
   af_shaper_buf_create( FT_Face  face )
   {
@@ -429,8 +389,6 @@
 
     return (void*)hb_buffer_create();
   }
-
-
   void
   af_shaper_buf_destroy( FT_Face  face,
                          void*    buf )
@@ -439,8 +397,6 @@
 
     hb_buffer_destroy( (hb_buffer_t*)buf );
   }
-
-
   const char*
   af_shaper_get_cluster( const char*      p,
                          AF_StyleMetrics  metrics,
@@ -456,8 +412,6 @@
     hb_buffer_t*    buf = (hb_buffer_t*)buf_;
     hb_font_t*      font;
     hb_codepoint_t  dummy;
-
-
     upem        = (FT_Int)metrics->globals->face->units_per_EM;
     style_class = metrics->style_class;
     feature     = features[style_class->coverage];
@@ -496,8 +450,6 @@
 
       unsigned int      hb_gcount;
       hb_glyph_info_t*  hb_ginfo;
-
-
       /* we have to check whether applying a feature does actually change */
       /* glyph indices; otherwise the affected glyph or glyphs aren't     */
       /* available at all in the feature                                  */
@@ -513,8 +465,6 @@
       if ( gcount == hb_gcount )
       {
         unsigned int  i;
-
-
         for (i = 0; i < gcount; i++ )
           if ( ginfo[i].codepoint != hb_ginfo[i].codepoint )
             break;
@@ -537,8 +487,6 @@
 
     return q;
   }
-
-
   FT_ULong
   af_shaper_get_elem( AF_StyleMetrics  metrics,
                       void*            buf_,
@@ -552,8 +500,6 @@
     unsigned int          gcount;
 
     FT_UNUSED( metrics );
-
-
     ginfo = hb_buffer_get_glyph_infos( buf, &gcount );
     gpos  = hb_buffer_get_glyph_positions( buf, &gcount );
 
@@ -567,11 +513,7 @@
 
     return ginfo[idx].codepoint;
   }
-
-
 #else /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-
   FT_Error
   af_shaper_get_coverage( AF_FaceGlobals  globals,
                           AF_StyleClass   style_class,
@@ -585,8 +527,6 @@
 
     return FT_Err_Ok;
   }
-
-
   void*
   af_shaper_buf_create( FT_Face  face )
   {
@@ -594,8 +534,6 @@
 
     return NULL;
   }
-
-
   void
   af_shaper_buf_destroy( FT_Face  face,
                          void*    buf )
@@ -603,8 +541,6 @@
     FT_UNUSED( face );
     FT_UNUSED( buf );
   }
-
-
   const char*
   af_shaper_get_cluster( const char*      p,
                          AF_StyleMetrics  metrics,
@@ -614,8 +550,6 @@
     FT_Face    face      = metrics->globals->face;
     FT_ULong   ch, dummy = 0;
     FT_ULong*  buf       = (FT_ULong*)buf_;
-
-
     while ( *p == ' ' )
       p++;
 
@@ -639,8 +573,6 @@
 
     return p;
   }
-
-
   FT_ULong
   af_shaper_get_elem( AF_StyleMetrics  metrics,
                       void*            buf_,
@@ -652,8 +584,6 @@
     FT_ULong  glyph_index = *(FT_ULong*)buf_;
 
     FT_UNUSED( idx );
-
-
     if ( advance )
       FT_Get_Advance( face,
                       glyph_index,
@@ -667,9 +597,5 @@
 
     return glyph_index;
   }
-
-
 #endif /* !FT_CONFIG_OPTION_USE_HARFBUZZ */
-
-
 /* END */

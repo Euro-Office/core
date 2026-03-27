@@ -31,8 +31,6 @@
  */
 #ifndef RTFFORMATLIB_H
 #define RTFFORMATLIB_H
-
-
 class RtfFormatLib
 {
 

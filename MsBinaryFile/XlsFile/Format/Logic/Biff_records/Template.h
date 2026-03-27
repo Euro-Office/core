@@ -37,8 +37,6 @@ namespace XLS
 {
 
 class StreamCacheReader;
-
-
 // Logical representation of Template record in BIFF8
 class Template: public BiffRecord
 {
@@ -53,8 +51,6 @@ public:
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeTemplate;
-
-
 };
 
 } // namespace XLS

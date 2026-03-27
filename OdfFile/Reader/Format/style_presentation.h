@@ -44,8 +44,6 @@
 
 namespace cpdoccore { 
 namespace odf_reader {
-
-
 class presentation_placeholder : public office_element_impl<presentation_placeholder>
 {
 public:

@@ -43,15 +43,11 @@
 #include "Dir.h"
 #include "../Math/oMathPara.h"
 #include "../Math/OMath.h"
-
-
 // TO DO: Нехватающие классы:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
 //        <w:subDoc>
-
-
 namespace OOX
 {
 	namespace Logic
@@ -272,8 +268,6 @@ namespace OOX
                     sResult += m_sUri.get2();
 					sResult += _T("\" ");
 				}
-
-
 				sResult += _T(">");
 
                 for ( size_t i = 0; i < m_arrItems.size(); ++i)

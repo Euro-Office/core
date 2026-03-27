@@ -484,8 +484,6 @@ int jas_image_fmtfromname(char *filename);
 
 /* Get the format of image data in a stream. */
 int jas_image_getfmt(jas_stream_t *in);
-
-
 #define	jas_image_cmprof(image)	((image)->cmprof_)
 int jas_image_ishomosamp(jas_image_t *image);
 int jas_image_sampcmpt(jas_image_t *image, int cmptno, int newcmptno,

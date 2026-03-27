@@ -38,13 +38,9 @@ namespace XLS
 FrtWrapper::FrtWrapper()
 {
 }
-
-
 FrtWrapper::~FrtWrapper()
 {
 }
-
-
 BaseObjectPtr FrtWrapper::clone()
 {
 	return BaseObjectPtr(new FrtWrapper(*this));

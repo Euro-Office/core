@@ -54,8 +54,6 @@ namespace agg
     {
         calc_spline_box();
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::calc_spline_box()
     {
@@ -64,8 +62,6 @@ namespace agg
         m_xs2 = m_xc2 - m_border_width;
         m_ys2 = m_yc2 - m_border_width * 0.5;
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::calc_points()
     {
@@ -76,8 +72,6 @@ namespace agg
         m_xp2 = m_xs2 - (m_xs2 - m_xs1) * kx2 * 0.25;
         m_yp2 = m_ys2 - (m_ys2 - m_ys1) * ky2 * 0.25;
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::calc_values()
     {
@@ -89,8 +83,6 @@ namespace agg
         ky2 = (m_ys2 - m_yp2) * 4.0 / (m_ys2 - m_ys1);
         m_gamma_spline.values(kx1, ky1, kx2, ky2);
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::text_size(double h, double w) 
     { 
@@ -100,8 +92,6 @@ namespace agg
         m_yt1 = m_y2 - m_text_height * 2.0;
         calc_spline_box();
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::border_width(double t, double extra)
     { 
@@ -115,8 +105,6 @@ namespace agg
     {
         m_gamma_spline.values(kx1, ky1, kx2, ky2);
     }
-
-
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::values(double* kx1, double* ky1, double* kx2, double* ky2) const
     {
@@ -251,8 +239,6 @@ namespace agg
             break;
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned gamma_ctrl_impl::vertex(double* x, double* y)
     {
@@ -313,8 +299,6 @@ namespace agg
         return cmd;
     }
 
-
-
     //------------------------------------------------------------------------
     bool gamma_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {
@@ -341,26 +325,18 @@ namespace agg
         }
         return ret;
     }
-
-
     
     //------------------------------------------------------------------------
     void gamma_ctrl_impl::change_active_point()
     {
         m_p1_active = m_p1_active ? false : true;
     }
-
-
-
-
     //------------------------------------------------------------------------
     bool gamma_ctrl_impl::in_rect(double x, double y) const
     {
         inverse_transform_xy(&x, &y);
         return x >= m_x1 && x <= m_x2 && y >= m_y1 && y <= m_y2;
     }
-
-
     //------------------------------------------------------------------------
     bool gamma_ctrl_impl::on_mouse_button_down(double x, double y)
     {
@@ -387,8 +363,6 @@ namespace agg
 
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool gamma_ctrl_impl::on_mouse_button_up(double, double)
     {
@@ -399,8 +373,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool gamma_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
@@ -426,8 +398,6 @@ namespace agg
         }
         return false;
     }
-
-
 
 }
 

@@ -33,8 +33,6 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_CALC_H
 #include FT_TRIGONOMETRY_H
-
-
   /* the Cordic shrink factor 0.858785336480436 * 2^32 */
 #define FT_TRIG_SCALE      0xDBD95B16UL
 
@@ -52,8 +50,6 @@
     14668L, 7334L, 3667L, 1833L, 917L, 458L, 229L, 115L,
     57L, 29L, 14L, 7L, 4L, 2L, 1L
   };
-
-
 #ifdef FT_LONG64
 
   /* multiply a given value by the CORDIC shrink factor */
@@ -62,8 +58,6 @@
   {
     FT_Fixed  s;
     FT_Int64  v;
-
-
     s   = val;
     val = FT_ABS( val );
 
@@ -81,8 +75,6 @@
   {
     FT_Fixed   s;
     FT_UInt32  v1, v2, k1, k2, hi, lo1, lo2, lo3;
-
-
     s   = val;
     val = FT_ABS( val );
 
@@ -109,15 +101,11 @@
   }
 
 #endif /* !FT_LONG64 */
-
-
   static FT_Int
   ft_trig_prenorm( FT_Vector*  vec )
   {
     FT_Pos  x, y;
     FT_Int  shift;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -139,8 +127,6 @@
 
     return shift;
   }
-
-
   static void
   ft_trig_pseudo_rotate( FT_Vector*  vec,
                          FT_Angle    theta )
@@ -148,8 +134,6 @@
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
     const FT_Fixed  *arctanptr;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -194,8 +178,6 @@
     vec->x = x;
     vec->y = y;
   }
-
-
   static void
   ft_trig_pseudo_polarize( FT_Vector*  vec )
   {
@@ -203,8 +185,6 @@
     FT_Int           i;
     FT_Fixed         x, y, xtemp, b;
     const FT_Fixed  *arctanptr;
-
-
     x = vec->x;
     y = vec->y;
 
@@ -270,24 +250,18 @@
     vec->x = x;
     vec->y = theta;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
   FT_Cos( FT_Angle  angle )
   {
     FT_Vector  v;
-
-
     v.x = FT_TRIG_SCALE >> 8;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
 
     return ( v.x + 0x80L ) >> 8;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
@@ -295,24 +269,18 @@
   {
     return FT_Cos( FT_ANGLE_PI2 - angle );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
   FT_Tan( FT_Angle  angle )
   {
     FT_Vector  v;
-
-
     v.x = FT_TRIG_SCALE >> 8;
     v.y = 0;
     ft_trig_pseudo_rotate( &v, angle );
 
     return FT_DivFix( v.y, v.x );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Angle )
@@ -320,8 +288,6 @@
             FT_Fixed  dy )
   {
     FT_Vector  v;
-
-
     if ( dx == 0 && dy == 0 )
       return 0;
 
@@ -332,8 +298,6 @@
 
     return v.y;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -346,16 +310,12 @@
     vec->x = ( vec->x + 0x80L ) >> 8;
     vec->y = ( vec->y + 0x80L ) >> 8;
   }
-
-
   /* these macros return 0 for positive numbers,
      and -1 for negative ones */
 #define FT_SIGN_LONG( x )   ( (x) >> ( FT_SIZEOF_LONG * 8 - 1 ) )
 #define FT_SIGN_INT( x )    ( (x) >> ( FT_SIZEOF_INT * 8 - 1 ) )
 #define FT_SIGN_INT32( x )  ( (x) >> 31 )
 #define FT_SIGN_INT16( x )  ( (x) >> 15 )
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -364,8 +324,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     v.x   = vec->x;
     v.y   = vec->y;
 
@@ -379,8 +337,6 @@
       if ( shift > 0 )
       {
         FT_Int32  half = (FT_Int32)1L << ( shift - 1 );
-
-
         vec->x = ( v.x + half + FT_SIGN_LONG( v.x ) ) >> shift;
         vec->y = ( v.y + half + FT_SIGN_LONG( v.y ) ) >> shift;
       }
@@ -392,8 +348,6 @@
       }
     }
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Fixed )
@@ -401,8 +355,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     v = *vec;
 
     /* handle trivial cases */
@@ -426,8 +378,6 @@
 
     return (FT_Fixed)( (FT_UInt32)v.x << -shift );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -437,8 +387,6 @@
   {
     FT_Int     shift;
     FT_Vector  v;
-
-
     v = *vec;
 
     if ( v.x == 0 && v.y == 0 )
@@ -453,8 +401,6 @@
                              : (FT_Fixed)( (FT_UInt32)v.x << -shift );
     *angle  = v.y;
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( void )
@@ -467,8 +413,6 @@
 
     FT_Vector_Rotate( vec, angle );
   }
-
-
   /* documentation is in fttrigon.h */
 
   FT_EXPORT_DEF( FT_Angle )
@@ -476,8 +420,6 @@
                  FT_Angle  angle2 )
   {
     FT_Angle  delta = angle2 - angle1;
-
-
     delta %= FT_ANGLE_2PI;
     if ( delta < 0 )
       delta += FT_ANGLE_2PI;
@@ -487,6 +429,4 @@
 
     return delta;
   }
-
-
 /* END */

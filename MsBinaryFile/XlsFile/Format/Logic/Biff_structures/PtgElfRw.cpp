@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgElfRw::clone()
 {
 	return BiffStructurePtr(new PtgElfRw(*this));
@@ -46,14 +44,10 @@ void PtgElfRw::loadFields(CFRecord& record)
 {
 	record >> loc;
 }
-
-
 void PtgElfRw::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	ptg_stack.push(CellRangeRef(loc, CellRangeRef::stRow).toString());
 }
-
-
 
 } // namespace XLS
 

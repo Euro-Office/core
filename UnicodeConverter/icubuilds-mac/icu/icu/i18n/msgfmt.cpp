@@ -179,8 +179,6 @@ static UnicodeString& itos(int32_t i, UnicodeString& appendTo) {
     appendTo.append(temp, -1);
     return appendTo;
 }
-
-
 // AppendableWrapper: encapsulates the result of formatting, keeping track
 // of the string and its length.
 class AppendableWrapper : public UMemory {
@@ -222,8 +220,6 @@ private:
     Appendable& app;
     int32_t len;
 };
-
-
 // -------------------------------------
 // Creates a MessageFormat instance based on the pattern.
 
@@ -473,8 +469,6 @@ MessageFormat::applyPattern(const UnicodeString& newPattern,
     UParseError parseError;
     applyPattern(newPattern,parseError,status);
 }
-
-
 // -------------------------------------
 // Applies the new pattern and returns an error if the pattern
 // is not correct.
@@ -565,8 +559,6 @@ void MessageFormat::setArgStartFormat(int32_t argStart,
     }
     uhash_iput(cachedFormatters, argStart, formatter, &status);
 }
-
-
 UBool MessageFormat::argNameMatches(int32_t partIndex, const UnicodeString& argName, int32_t argNumber) {
     const MessagePattern::Part& part = msgPattern.getPart(partIndex);
     return part.getType() == UMSGPAT_PART_TYPE_ARG_NAME ?
@@ -835,8 +827,6 @@ MessageFormat::getFormats(int32_t& cnt) const
 
     return (const Format**)formatAliases;
 }
-
-
 UnicodeString MessageFormat::getArgName(int32_t partIndex) {
     const MessagePattern::Part& part = msgPattern.getPart(partIndex);
     return msgPattern.getSubstring(part);
@@ -933,8 +923,6 @@ const Formattable* MessageFormat::getArgFromListByName(const Formattable* argume
     }
     return NULL;
 }
-
-
 UnicodeString&
 MessageFormat::format(const Formattable* arguments,
                       const UnicodeString *argumentNames,
@@ -1149,8 +1137,6 @@ void MessageFormat::format(int32_t msgStart, const void *plNumber,
         i = argLimit;
     }
 }
-
-
 void MessageFormat::formatComplexSubMessage(int32_t msgStart,
                                             const void *plNumber,
                                             const Formattable* arguments,
@@ -1214,8 +1200,6 @@ void MessageFormat::formatComplexSubMessage(int32_t msgStart,
         appendTo.append(sb);
     }
 }
-
-
 UnicodeString MessageFormat::getLiteralStringUntilNextArgument(int32_t from) const {
     const UnicodeString& msgString=msgPattern.getPatternString();
     int32_t prevIndex=msgPattern.getPart(from).getLimit();
@@ -1233,8 +1217,6 @@ UnicodeString MessageFormat::getLiteralStringUntilNextArgument(int32_t from) con
         prevIndex=part.getLimit();
     }
 }
-
-
 FieldPosition* MessageFormat::updateMetaData(AppendableWrapper& /*dest*/, int32_t /*prevLength*/,
                              FieldPosition* /*fp*/, const Formattable* /*argId*/) const {
     // Unlike in Java, there are no field attributes defined for MessageFormat. Do nothing.
@@ -1357,8 +1339,6 @@ void MessageFormat::copyObjects(const MessageFormat& that, UErrorCode& ec) {
         }
     }
 }
-
-
 Formattable*
 MessageFormat::parse(int32_t msgStart,
                      const UnicodeString& source,
@@ -1669,8 +1649,6 @@ void MessageFormat::cacheExplicitFormats(UErrorCode& status) {
         }
     }
 }
-
-
 Format* MessageFormat::createAppropriateFormat(UnicodeString& type, UnicodeString& style,
                                                Formattable::Type& formattableType, UParseError& parseError,
                                                UErrorCode& ec) {
@@ -1750,8 +1728,6 @@ Format* MessageFormat::createAppropriateFormat(UnicodeString& type, UnicodeStrin
 
     return fmt;
 }
-
-
 //-------------------------------------
 // Finds the string, s, in the string array, list.
 int32_t MessageFormat::findKeyword(const UnicodeString& s,
@@ -1843,8 +1819,6 @@ MessageFormat::getArgTypeCount() const {
 UBool MessageFormat::equalFormats(const void* left, const void* right) {
     return *(const Format*)left==*(const Format*)right;
 }
-
-
 UBool MessageFormat::DummyFormat::operator==(const Format&) const {
     return TRUE;
 }
@@ -1886,8 +1860,6 @@ void MessageFormat::DummyFormat::parseObject(const UnicodeString&,
                                                      Formattable&,
                                                      ParsePosition& ) const {
 }
-
-
 FormatNameEnumeration::FormatNameEnumeration(UVector *fNameList, UErrorCode& /*status*/) {
     pos=0;
     fFormatNames = fNameList;
@@ -1971,8 +1943,6 @@ void MessageFormat::PluralSelectorProvider::reset() {
     delete rules;
     rules = NULL;
 }
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

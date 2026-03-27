@@ -47,8 +47,6 @@ BaseObjectPtr SXVDEx::clone()
 {
 	return BaseObjectPtr(new SXVDEx(*this));
 }
-
-
 void SXVDEx::readFields(CFRecord& record)
 {
 	GlobalWorkbookInfoPtr global_info = record.getGlobalWorkbookInfo();

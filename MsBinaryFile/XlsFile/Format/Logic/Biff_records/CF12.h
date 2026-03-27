@@ -37,8 +37,6 @@
 #include "../Biff_structures/CFParsedFormulaNoCCE.h"
 #include "../Biff_structures/CFParsedFormula.h"
 #include "../Biff_structures/CFExTemplateParams.h"
-
-
 namespace XLS
 {
 
@@ -51,8 +49,6 @@ public:
 	~CF12();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

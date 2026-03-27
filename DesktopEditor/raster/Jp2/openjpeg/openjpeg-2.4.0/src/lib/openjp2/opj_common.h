@@ -37,8 +37,6 @@
  ==========================================================
 */
 #define OPJ_COMMON_CBLK_DATA_EXTRA        2    /**< Margin for a fake FFFF marker */
-
-
 #define OPJ_COMP_PARAM_DEFAULT_CBLOCKW        64
 #define OPJ_COMP_PARAM_DEFAULT_CBLOCKH        64
 #define OPJ_COMP_PARAM_DEFAULT_PROG_ORDER     OPJ_LRCP

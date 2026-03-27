@@ -18,13 +18,9 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_bezier_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
 
 typedef agg::pixfmt_bgr24 pixfmt;
-
-
 static agg::int8u brightness_to_alpha[256 * 3] = 
 {
     255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 
@@ -76,8 +72,6 @@ static agg::int8u brightness_to_alpha[256 * 3] =
      39,  37,  36,  35,  34,  33,  31,  30,  29,  28,  27,  25,  24,  23,  22,  20, 
      19,  18,  17,  15,  14,  13,  12,  11,   9,   8,   7,   6,   4,   3,   2,   1
 };
-
-
 class pattern_src_brightness_to_alpha_rgba8
 {
 public:
@@ -97,8 +91,6 @@ private:
     agg::rendering_buffer* m_rb;
     pixfmt m_pf;
 };
-
-
 class the_application : public agg::platform_support
 {
     agg::rgba8 m_ctrl_color;
@@ -112,8 +104,6 @@ public:
     typedef agg::renderer_scanline_aa_solid<renderer_base> renderer_scanline;
     typedef agg::rasterizer_scanline_aa<agg::rasterizer_sl_clip_int_sat> rasterizer_scanline;
     typedef agg::scanline_p8 scanline;
-
-
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
         m_ctrl_color(agg::rgba(0, 0.3, 0.5, 0.3)),
@@ -149,8 +139,6 @@ public:
         add_ctrl(m_start_x);
         m_start_x.no_transform();
     }
-
-
     template<class Rasterizer, class Renderer>
     void draw_polyline(Rasterizer& ras, 
                        Renderer& ren, 
@@ -161,8 +149,6 @@ public:
         agg::conv_transform<agg::poly_plain_adaptor<double> > trans(vs, m_scale);
         ras.add_path(trans);
     }
-
-
     virtual void on_draw()
     {
         pixfmt pf(rbuf_window());
@@ -200,8 +186,6 @@ public:
 
         typedef agg::renderer_outline_aa<base_ren_type> renderer_line_type;
         typedef agg::rasterizer_outline_aa<renderer_line_type, agg::line_coord_sat> rasterizer_line_type;
-
-
         //-- Create with specifying the source
         //pattern_type patt(fltr, src);   
 
@@ -210,8 +194,6 @@ public:
         patt.create(p1);
         renderer_img_type ren_img(ren_base, patt);
         rasterizer_img_type ras_img(ren_img);
-
-
         //-- create uninitialized and set parameters
         agg::line_profile_aa profile;
         profile.smoother_width(10.0);                    //optional
@@ -226,8 +208,6 @@ public:
         // drawn correctly.
         //---------------
         double w2 = 9.0;//p1.height() / 2 + 2;
-
-
         // Set the clip box a bit bigger than you expect. You need it
         // to draw the clipped line caps correctly. The correct result
         // is achieved with raster clipping.
@@ -245,8 +225,6 @@ public:
         // Clear the area, almost opaque, but not completely
         //------------------------
         ren_base.blend_bar(0, 0, (int)width(), (int)height(), agg::rgba(1,1,1), 200);
-
-
         // Set the raster clip box and then, draw again. 
         // In reality there shouldn't be two calls above. 
         // It's done only for demonstration
@@ -265,8 +243,6 @@ public:
         ren_img.start_x(m_start_x.value());
         draw_polyline(ras_line, ren_line, m_line1.polygon(), m_line1.num_points());
         draw_polyline(ras_img, ren_img,   m_line1.polygon(), m_line1.num_points());
-
-
         // Reset clipping and draw the controls and stuff
         ren_base.reset_clipping(true);
 
@@ -276,8 +252,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_line1);
         agg::render_ctrl(ras, sl, ren_base, m_scale_x);
         agg::render_ctrl(ras, sl, ren_base, m_start_x);
-
-
         char buf[256]; 
         agg::gsv_text t;
         t.size(10.0);
@@ -297,8 +271,6 @@ public:
         agg::render_scanlines(ras, sl, ren);
 
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == '+' || key == agg::key_kp_plus)
@@ -322,8 +294,6 @@ public:
     {
     }
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -344,5 +314,3 @@ int agg_main(int argc, char* argv[])
 
     return 1;
 }
-
-

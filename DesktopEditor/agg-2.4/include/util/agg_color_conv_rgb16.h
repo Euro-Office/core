@@ -53,8 +53,6 @@ namespace agg
             while(--width);
         }
     };
-
-
     //-----------------------------------------------------color_conv_rgb24_rgb48
     template<int I1, int I3> class color_conv_rgb24_rgb48
     {
@@ -79,8 +77,6 @@ namespace agg
     typedef color_conv_rgb24_rgb48<0,2> color_conv_bgr24_to_bgr48;
     typedef color_conv_rgb24_rgb48<2,0> color_conv_rgb24_to_bgr48;
     typedef color_conv_rgb24_rgb48<2,0> color_conv_bgr24_to_rgb48;
-
-
     //-----------------------------------------------------color_conv_rgb24_rgb48
     template<int I1, int I3> class color_conv_rgb48_rgb24
     {
@@ -105,8 +101,6 @@ namespace agg
     typedef color_conv_rgb48_rgb24<0,2> color_conv_bgr48_to_bgr24;
     typedef color_conv_rgb48_rgb24<2,0> color_conv_rgb48_to_bgr24;
     typedef color_conv_rgb48_rgb24<2,0> color_conv_bgr48_to_rgb24;
-
-
     //----------------------------------------------color_conv_rgbAAA_rgb24
     template<int R, int B> class color_conv_rgbAAA_rgb24
     {
@@ -132,8 +126,6 @@ namespace agg
     typedef color_conv_rgbAAA_rgb24<2,0> color_conv_rgbAAA_to_bgr24;
     typedef color_conv_rgbAAA_rgb24<2,0> color_conv_bgrAAA_to_rgb24;
     typedef color_conv_rgbAAA_rgb24<0,2> color_conv_bgrAAA_to_bgr24;
-
-
     //----------------------------------------------color_conv_rgbBBA_rgb24
     template<int R, int B> class color_conv_rgbBBA_rgb24
     {
@@ -157,8 +149,6 @@ namespace agg
 
     typedef color_conv_rgbBBA_rgb24<0,2> color_conv_rgbBBA_to_rgb24;
     typedef color_conv_rgbBBA_rgb24<2,0> color_conv_rgbBBA_to_bgr24;
-
-
     //----------------------------------------------color_conv_bgrABB_rgb24
     template<int B, int R> class color_conv_bgrABB_rgb24
     {
@@ -182,8 +172,6 @@ namespace agg
 
     typedef color_conv_bgrABB_rgb24<2,0> color_conv_bgrABB_to_rgb24;
     typedef color_conv_bgrABB_rgb24<0,2> color_conv_bgrABB_to_bgr24;
-
-
     //-------------------------------------------------color_conv_rgba64_rgba32
     template<int I1, int I2, int I3, int I4> class color_conv_rgba64_rgba32
     {
@@ -222,8 +210,6 @@ namespace agg
     typedef color_conv_rgba64_rgba32<1,2,3,0> color_conv_abgr64_to_bgra32; //----color_conv_abgr64_to_bgra32
     typedef color_conv_rgba64_rgba32<3,2,1,0> color_conv_abgr64_to_rgba32; //----color_conv_abgr64_to_rgba32
 
-
-
     //--------------------------------------------color_conv_rgb24_rgba64
     template<int I1, int I2, int I3, int A> class color_conv_rgb24_rgba64
     {
@@ -245,8 +231,6 @@ namespace agg
             while(--width);
         }
     };
-
-
     //------------------------------------------------------------------------
     typedef color_conv_rgb24_rgba64<1,2,3,0> color_conv_rgb24_to_argb64; //----color_conv_rgb24_to_argb64
     typedef color_conv_rgb24_rgba64<3,2,1,0> color_conv_rgb24_to_abgr64; //----color_conv_rgb24_to_abgr64
@@ -256,8 +240,6 @@ namespace agg
     typedef color_conv_rgb24_rgba64<1,2,3,0> color_conv_bgr24_to_abgr64; //----color_conv_bgr24_to_abgr64
     typedef color_conv_rgb24_rgba64<0,1,2,3> color_conv_bgr24_to_bgra64; //----color_conv_bgr24_to_bgra64
     typedef color_conv_rgb24_rgba64<2,1,0,3> color_conv_bgr24_to_rgba64; //----color_conv_bgr24_to_rgba64
-
-
     template<int R, int B> class color_conv_rgb24_gray16
     {
     public:
@@ -277,9 +259,5 @@ namespace agg
 
     typedef color_conv_rgb24_gray16<0,2> color_conv_rgb24_to_gray16;
     typedef color_conv_rgb24_gray16<2,0> color_conv_bgr24_to_gray16;
-
-
 }
-
-
 #endif

@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/IsoPasswordData.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtSheetProtectionIso record in BIFF12

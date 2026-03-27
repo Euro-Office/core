@@ -32,8 +32,6 @@ while i < 5000:
         sys.exit(1)
     doc.freeDoc()
     i = i + 1
-
-
 # Memory debug specific
 libxml2.cleanupParser()
 if libxml2.debugMemory(1) == 0:

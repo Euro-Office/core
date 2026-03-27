@@ -313,8 +313,6 @@ namespace VBA
 		PROJECTLCID(CVbaFileStreamPtr stream);
 		~PROJECTLCID();
 		BaseRecordPtr clone();
-
-
 		virtual void load(CVbaFileStreamPtr stream);
 
 		_UINT32 Lcid;

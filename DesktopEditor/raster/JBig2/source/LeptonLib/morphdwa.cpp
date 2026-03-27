@@ -123,8 +123,6 @@
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_SEL_LOOKUP   0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-----------------------------------------------------------------*
  *           Binary morphological (dwa) ops with brick Sels        *
  *-----------------------------------------------------------------*/
@@ -225,8 +223,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt2, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixErodeBrickDwa()
  *
@@ -327,8 +323,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt2, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixOpenBrickDwa()
  *
@@ -432,8 +426,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt3, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixCloseBrickDwa()
  *
@@ -549,8 +541,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt3, 0, 0);
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *    Binary composite morphological (dwa) ops with brick Sels     *
  *-----------------------------------------------------------------*/
@@ -685,8 +675,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt1, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixErodeCompBrickDwa()
  *
@@ -814,8 +802,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt1, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixOpenCompBrickDwa()
  *
@@ -985,8 +971,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt1, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixCloseCompBrickDwa()
  *
@@ -1150,8 +1134,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt1, 0, 0);
     return pixd;
 }
-
-
 /*--------------------------------------------------------------------------*
  *    Binary expanded composite morphological (dwa) ops with brick Sels     *
  *--------------------------------------------------------------------------*/
@@ -1288,8 +1270,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt3, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixErodeCompBrickExtendDwa()
  *
@@ -1410,8 +1390,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt3, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  pixOpenCompBrickExtendDwa()
  *
@@ -1451,8 +1429,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixCloseCompBrickExtendDwa()
  *
@@ -1514,8 +1490,6 @@ PIX     *pixt1, *pixt2, *pixt3;
     pixTransferAllData(pixd, &pixt3, 0, 0);
     return pixd;
 }
-
-
 /*!
  *  getExtendedCompositeParameters()
  *
@@ -1588,5 +1562,3 @@ l_int32  n, extra, fact1, fact2;
     *pextra = extra;
     return 0;
 }
-
-

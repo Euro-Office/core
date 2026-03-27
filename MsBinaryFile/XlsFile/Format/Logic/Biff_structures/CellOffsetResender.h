@@ -46,8 +46,6 @@ public:
 	BiffStructurePtr clone();
 
 	virtual void load(CFRecord& record);
-
-
 	static void resend(CFStream& stream, const unsigned int data_place, const unsigned int data);
 
 	static const ElementType	type = typeCellOffsetResender;

@@ -231,8 +231,6 @@ static const SplitMatra kndaSplitTable[] = {{0x0CBF, 0x0CD5}, {0x0CC6, 0x0CD5}, 
                                             {0x0CC6, 0x0CC2, 0x0CD5}};
 
 static const SplitMatra mlymSplitTable[] = {{0x0D46, 0x0D3E}, {0x0D47, 0x0D3E}, {0x0D46, 0x0D57}};
-
- 
 static const SplitMatra sinhSplitTable[] = {{0x0DD9, 0x0DCA}, {0x0DD9, 0x0DCF}, {0x0DD9, 0x0DCF, 0x0DCA},
                                             {0x0DD9, 0x0DDF}};
 //

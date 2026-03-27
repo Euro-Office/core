@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1GLOAD_H_
 #define T1GLOAD_H_
-
-
 #include "t1objs.h"
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   T1_Compute_Max_Advance( T1_Face  face,
                           FT_Pos*  max_advance );
@@ -42,11 +34,7 @@ FT_BEGIN_HEADER
                  FT_Size       size,
                  FT_UInt       glyph_index,
                  FT_Int32      load_flags );
-
-
 FT_END_HEADER
 
 #endif /* T1GLOAD_H_ */
-
-
 /* END */

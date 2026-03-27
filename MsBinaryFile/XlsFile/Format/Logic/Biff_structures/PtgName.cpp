@@ -35,20 +35,14 @@
 
 namespace XLS
 {
-
-
 PtgName::PtgName(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgName::PtgName(const unsigned int index, const PtgDataType data_type)
 :	nameindex(index),
 	OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5))
 {
 }
-
-
 BiffStructurePtr PtgName::clone()
 {
 	return BiffStructurePtr(new PtgName(*this));
@@ -87,8 +81,6 @@ void PtgName::writeFields(CFRecord& record)
 
 	global_info = record.getGlobalWorkbookInfo();
 }
-
-
 void PtgName::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	RevNameTabidPtr tab_id;
@@ -116,7 +108,5 @@ void PtgName::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool ful
 		ptg_stack.push(L"#UNDEFINED_NAME(" + STR::int2wstr(nameindex) + L")!");
 	}
 }
-
-
 } // namespace XLS
 

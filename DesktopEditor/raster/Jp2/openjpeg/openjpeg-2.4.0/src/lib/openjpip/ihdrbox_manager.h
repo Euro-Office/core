@@ -52,6 +52,4 @@ typedef struct ihdrbox_param {
  */
 ihdrbox_param_t * gene_ihdrbox(metadatalist_param_t *metadatalist,
                                Byte_t *jpipstream);
-
-
 #endif      /* !IHDRBOX_MANAGER_H_ */

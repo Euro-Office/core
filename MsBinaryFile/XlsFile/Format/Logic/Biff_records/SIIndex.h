@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SIIndex record in BIFF8
 class SIIndex: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~SIIndex();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 	

@@ -32,11 +32,7 @@
 #include "psd_rect.h"
 #include "psd_bitmap.h"
 #include "psd_descriptor.h"
-
-
 extern psd_status psd_pattern_fill(psd_bitmap * dst_bmp, psd_pattern * pattern, psd_int scale, psd_int offset_x, psd_int offset_y);
-
-
 psd_static void psd_set_layer_pattern_overlay_default(psd_layer_effects_pattern_overlay * pattern_overlay)
 {
 	pattern_overlay->blend_mode = psd_blend_mode_normal;

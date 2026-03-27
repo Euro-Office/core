@@ -12,8 +12,6 @@
 
 #include <string.h>
 #include <stdarg.h>
-
-
 #ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
 #endif
@@ -178,8 +176,6 @@ static xmlParserInputPtr
 resolveEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *publicId, const xmlChar *systemId)
 {
     /* xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx; */
-
-
     fprintf(stdout, "SAX.resolveEntity(");
     if (publicId != NULL)
 	fprintf(stdout, "%s", (char *)publicId);
@@ -228,8 +224,6 @@ getParameterEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *name)
     fprintf(stdout, "SAX.getParameterEntity(%s)\n", name);
     return(NULL);
 }
-
-
 /**
  * entityDeclDebug:
  * @ctxt:  An XML parser context

@@ -607,8 +607,6 @@ namespace SimpleTypes
 			cellcommentsAsDisplayed = 1,
 			cellcommentsAtEnd = 2
 		};
-
-
 		DEFINE_SIMPLE_TYPE(CCellComments, ECellComments, cellcommentsNone)
 
 		enum EPrintError
@@ -755,8 +753,6 @@ namespace SimpleTypes
 			Stars3				= 18,
 			Boxes5				= 19,
 			NoIcons				= 20
-
-
 		};
 
 		DEFINE_SIMPLE_TYPE(ST_IconSetType, EIconSetType, Arrows3)
@@ -1001,8 +997,6 @@ namespace SimpleTypes
 			typeSeriesLayoutTreemap			=  6,
 			typeSeriesLayoutWaterfall		=  7,
 		};
-
-
 		DEFINE_SIMPLE_TYPE(CSeriesLayout, ESeriesLayout, typeSeriesLayoutBoxWhisker)
 		
 		enum EAxisUnit

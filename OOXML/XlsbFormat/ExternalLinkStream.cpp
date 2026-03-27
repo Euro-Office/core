@@ -34,8 +34,6 @@
 
 #include "Biff12_unions/EXTERNALLINK.h"
 #include "Biff12_records/BeginSupBook.h"
-
-
 using namespace XLS;
 
 namespace XLSB
@@ -48,8 +46,6 @@ ExternalLinkStream::ExternalLinkStream()
 ExternalLinkStream::~ExternalLinkStream()
 {
 }
-
-
 BaseObjectPtr ExternalLinkStream::clone()
 {
         return BaseObjectPtr(new ExternalLinkStream(*this));

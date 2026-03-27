@@ -30,8 +30,6 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_math.h"
-
-
 #define PSD_SQR(x)			((x) * (x))
 
 static psd_bool transfer_initialized = psd_false;
@@ -49,8 +47,6 @@ static psd_float  shadows_sub[256]    = { 0 };
 extern void psd_adjustment_blend_rgb(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect, 
 	psd_uchar * red_lookup_table, psd_uchar * green_lookup_table, psd_uchar * blue_lookup_table,
 	psd_bool preserve_luminosity);
-
-
 psd_status psd_get_layer_color_balance(psd_context * context, psd_layer_record * layer)
 {
 	psd_layer_color_balance * data;

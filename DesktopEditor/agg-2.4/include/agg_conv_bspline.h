@@ -18,8 +18,6 @@
 #include "agg_basics.h"
 #include "agg_vcgen_bspline.h"
 #include "agg_conv_adaptor_vcgen.h"
-
-
 namespace agg
 {
 
@@ -42,7 +40,5 @@ namespace agg
     };
 
 }
-
-
 #endif
 

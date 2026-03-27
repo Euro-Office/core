@@ -23,16 +23,10 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #ifndef GXVFEAT_H_
 #define GXVFEAT_H_
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -50,13 +44,9 @@
     FT_Byte  nSettings;
 
   } GX_Feature_RegistryRec;
-
-
 #define gxv_feat_registry_length                  \
           ( sizeof ( gxv_feat_registry ) /        \
               sizeof ( GX_Feature_RegistryRec ) )
-
-
   static GX_Feature_RegistryRec  gxv_feat_registry[] =
   {
     /* Generated from gxvfgen.c */
@@ -165,9 +155,5 @@
     {1, 0, 1,  2},   /* Ideographic Spacing */
     {1, 0, 1,  4},   /* CJK Roman Spacing */
   };
-
-
 #endif /* GXVFEAT_H_ */
-
-
 /* END */

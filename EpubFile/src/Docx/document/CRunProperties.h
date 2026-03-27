@@ -2,8 +2,6 @@
 #define CRUNPROPERTIES_H
 
 #include "../CElement.h"
-
-
 class CRunProperties : public CElement
 {
 public:

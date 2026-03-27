@@ -69,8 +69,6 @@ namespace agg
         pod_array<double> m_am;
         mutable int       m_last_idx;
     };
-
-
 }
 
 #endif

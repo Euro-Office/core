@@ -36,8 +36,6 @@
 #include <xml/simple_xml_writer.h>
 
 #include "pptx_output_xml.h"
-
-
 namespace cpdoccore {
 namespace oox {
 

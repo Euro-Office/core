@@ -46,8 +46,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -65,8 +63,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -145,8 +141,6 @@ int repl_getch( void )
 /* #define DEBUG */     /* this enables the Trace() macros */
 
 #include "readpng2.h"   /* typedefs, common macros, readpng2 prototypes */
-
-
 /* could just include png.h, but this macro is the only thing we need
  * (name and typedefs changed to local versions); note that side effects
  * only happen with alpha (which could easily be avoided with
@@ -157,8 +151,6 @@ int repl_getch( void )
                 (ush)(bg)*(ush)(255 - (ush)(alpha)) + (ush)128);  \
     (composite) = (uch)((temp + (temp >> 8)) >> 8);               \
 }
-
-
 #define INBUFSIZE 4096   /* with pseudo-timing on (1 sec delay/block), this
                           *  block size corresponds roughly to a download
                           *  speed 10% faster than theoretical 33.6K maximum
@@ -173,8 +165,6 @@ static void       rpng2_win_display_row(ulg row);
 static void       rpng2_win_finish_display(void);
 static void       rpng2_win_cleanup(void);
 LRESULT CALLBACK  rpng2_win_wndproc(HWND, UINT, WPARAM, LPARAM);
-
-
 static char titlebar[1024];
 static char *progname = PROGNAME;
 static char *appname = LONGNAME;
@@ -256,8 +246,6 @@ static struct background_pattern {
     {2, 10000, 256,  11,   0}   /* radial:  dipole-moire' (almost fractal) */
 };
 static int num_bgpat = sizeof(bg) / sizeof(struct background_pattern);
-
-
 /* Windows-specific global variables (could go in struct, but messy...) */
 static ulg wimage_rowbytes;
 static uch *dib;
@@ -267,10 +255,6 @@ static BITMAPINFOHEADER *bmih;
 static HWND global_hwnd;
 static HINSTANCE global_hInst;
 static int global_showmode;
-
-
-
-
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 {
     char *args[1024];                 /* arbitrary limit, but should suffice */
@@ -285,8 +269,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
     double CRT_exponent = 2.2;        /* just the monitor */
     double default_display_exponent;  /* whole display system */
     MSG msg;
-
-
     /* First initialize a few things, just to be sure--memset takes care of
      * default background color (black), booleans (FALSE), pointers (NULL),
      * etc. */
@@ -347,8 +329,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 
     /* the defaults above give 1.0, 1.3, 1.5 and 2.2, respectively: */
     default_display_exponent = LUT_exponent * CRT_exponent;
-
-
     /* If the user has set the SCREEN_GAMMA environment variable as suggested
      * (somewhat imprecisely) in the libpng documentation, use that; otherwise
      * use the default value we just calculated.  Either way, the user may
@@ -358,8 +338,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
         rpng2_info.display_exponent = atof(p);
     else
         rpng2_info.display_exponent = default_display_exponent;
-
-
     /* Windows really hates command lines, so we have to set up our own argv.
      * Note that we do NOT bother with quoted arguments here, so don't use
      * filenames with spaces in 'em! */
@@ -383,8 +361,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
         p = q + 1;
     }
     argv[argc] = NULL;   /* terminate the argv array itself */
-
-
     /* Now parse the command line for options and the PNG filename. */
 
     while (*++argv && !error) {
@@ -434,8 +410,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 
     if (!filename)
         ++error;
-
-
     /* print usage screen if any errors up to this point */
 
     if (error) {
@@ -479,8 +453,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 #endif
         exit(1);
     }
-
-
     if (!(infile = fopen(filename, "rb"))) {
         fprintf(stderr, PROGNAME ":  can't open PNG file [%s]\n", filename);
         ++error;
@@ -510,8 +482,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
         if (error)
             fclose(infile);
     }
-
-
     if (error) {
 #ifndef __CYGWIN__
         int ch;
@@ -533,8 +503,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 #endif
         fflush(stderr);
     }
-
-
     /* set the title-bar string, but make sure buffer doesn't overflow */
 
     alen = strlen(appname);
@@ -543,8 +511,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
         sprintf(titlebar, "%s:  ...%s", appname, filename+(alen+flen+6-1023));
     else
         sprintf(titlebar, "%s:  %s", appname, filename);
-
-
     /* set some final rpng2_info variables before entering main data loop */
 
     if (have_bg) {
@@ -561,8 +527,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
     rpng2_info.mainprog_init = rpng2_win_init;
     rpng2_info.mainprog_display_row = rpng2_win_display_row;
     rpng2_info.mainprog_finish_display = rpng2_win_finish_display;
-
-
     /* OK, this is the fun part:  call readpng2_decode_data() at the start of
      * the loop to deal with our first buffer of data (read in above to verify
      * that the file is a PNG image), then loop through the file and continue
@@ -600,8 +564,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 
         incount = fread(inbuf, 1, INBUFSIZE, infile);
     }
-
-
     /* clean up PNG stuff and report any decoding errors */
 
     fclose(infile);
@@ -612,16 +574,12 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
         fprintf(stderr, PROGNAME ":  libpng error while decoding PNG image\n");
         exit(3);
     }
-
-
     /* wait for the user to tell us when to quit */
 
     while (GetMessage(&msg, NULL, 0, 0)) {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
     }
-
-
     /* we're done:  clean up all image and Windows resources and go away */
 
     Trace((stderr, "about to call rpng2_win_cleanup()\n"))
@@ -629,10 +587,6 @@ int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPrevInst, PSTR cmd, int showmode)
 
     return msg.wParam;
 }
-
-
-
-
 
 /* this function is called by readpng2_info_callback() in readpng2.c, which
  * in turn is called by libpng after all of the pre-IDAT chunks have been
@@ -678,10 +632,6 @@ static void rpng2_win_init()
     rpng2_info.state = kWindowInit;
 }
 
-
-
-
-
 static int rpng2_win_create_window()
 {
     uch bg_red   = rpng2_info.bg_red;
@@ -692,8 +642,6 @@ static int rpng2_win_create_window()
     ulg i, j;
     WNDCLASSEX wndclass;
     RECT rect;
-
-
 /*---------------------------------------------------------------------------
     Allocate memory for the display-specific version of the image (round up
     to multiple of 4 for Windows DIB).
@@ -823,10 +771,6 @@ static int rpng2_win_create_window()
     return 0;
 
 } /* end function rpng2_win_create_window() */
-
-
-
-
 
 static int rpng2_win_load_bg_image()
 {
@@ -1061,10 +1005,6 @@ static int rpng2_win_load_bg_image()
 
 } /* end function rpng2_win_load_bg_image() */
 
-
-
-
-
 static void rpng2_win_display_row(ulg row)
 {
     uch bg_red   = rpng2_info.bg_red;
@@ -1159,10 +1099,6 @@ static void rpng2_win_display_row(ulg row)
 
 } /* end function rpng2_win_display_row() */
 
-
-
-
-
 static void rpng2_win_finish_display()
 {
     Trace((stderr, "beginning rpng2_win_finish_display()\n"))
@@ -1181,10 +1117,6 @@ static void rpng2_win_finish_display()
     );
     fflush(stdout);
 }
-
-
-
-
 
 static void rpng2_win_cleanup()
 {
@@ -1208,10 +1140,6 @@ static void rpng2_win_cleanup()
         dib = NULL;
     }
 }
-
-
-
-
 
 LRESULT CALLBACK rpng2_win_wndproc(HWND hwnd, UINT iMsg, WPARAM wP, LPARAM lP)
 {

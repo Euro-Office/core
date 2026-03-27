@@ -30,8 +30,6 @@ namespace agg
             m_source1(&source1), m_source2(&source2), m_status(2) {}
         void attach1(VS1& source) { m_source1 = &source; }
         void attach2(VS2& source) { m_source2 = &source; }
-
-
         void rewind(unsigned path_id)
         { 
             m_source1->rewind(path_id);
@@ -68,6 +66,4 @@ namespace agg
 
     };
 }
-
-
 #endif

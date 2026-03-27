@@ -28,8 +28,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 #ifdef _WIN32
 #include <windows.h>
 #define strcasecmp  _stricmp
@@ -53,8 +51,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 /**
  * Get initialized query parameters
  *
@@ -77,8 +73,6 @@ void parse_metareq(char *field, query_param_t *query_param);
 
 /* parse the requested components (parses forms like:a; a,b; a-b; a-b,c;  a,b-c)*/
 void parse_comps(char *field, query_param_t *query_param);
-
-
 /** maximum length of field name*/
 #define MAX_LENOFFIELDNAME 10
 
@@ -206,8 +200,6 @@ query_param_t * get_initquery(void)
 
     return query;
 }
-
-
 char * get_fieldparam(const char *stringptr, char *fieldname, char *fieldval)
 {
     char *eqp, *andp, *nexfieldptr;

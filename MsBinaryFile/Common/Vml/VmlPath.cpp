@@ -602,8 +602,6 @@ namespace ODRAW
 				{
 					double lX = pGeomInfo.m_oCurPoint.dX + (dKoefX * m_arPoints[nIndex].x);
 					double lY = pGeomInfo.m_oCurPoint.dY + (dKoefY * m_arPoints[nIndex].y);
-
-
 					lX -= pGeomInfo.m_oCurPoint.dX;
 					lY -= pGeomInfo.m_oCurPoint.dY;
 

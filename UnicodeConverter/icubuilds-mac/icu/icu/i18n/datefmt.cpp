@@ -118,8 +118,6 @@ public:
 };
 
 DateFmtBestPatternKey::~DateFmtBestPatternKey() { }
-
-
 DateFormat::DateFormat()
 :   fCalendar(0),
     fNumberFormat(0),
@@ -683,11 +681,7 @@ DateFormat::isCalendarLenient() const
     // fCalendar is rarely null
     return FALSE;
 }
-
-
 //----------------------------------------------------------------------
-
-
 void DateFormat::setContext(UDisplayContext value, UErrorCode& status)
 {
     if (U_FAILURE(status))
@@ -698,11 +692,7 @@ void DateFormat::setContext(UDisplayContext value, UErrorCode& status)
         status = U_ILLEGAL_ARGUMENT_ERROR;
    }
 }
-
-
 //----------------------------------------------------------------------
-
-
 UDisplayContext DateFormat::getContext(UDisplayContextType type, UErrorCode& status) const
 {
     if (U_FAILURE(status))
@@ -713,11 +703,7 @@ UDisplayContext DateFormat::getContext(UDisplayContextType type, UErrorCode& sta
     }
     return fCapitalizationContext;
 }
-
-
 //----------------------------------------------------------------------
-
-
 DateFormat& 
 DateFormat::setBooleanAttribute(UDateFormatBooleanAttribute attr,
     									UBool newValue,

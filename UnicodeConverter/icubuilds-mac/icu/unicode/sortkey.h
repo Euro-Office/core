@@ -104,8 +104,6 @@ public:
     * @stable ICU 2.0
     */
     CollationKey();
-
-
     /**
     * Creates a collation key based on the collation key values.
     * @param values the collation key values
@@ -150,8 +148,6 @@ public:
     * @stable ICU 2.0
     */
     UBool                   operator!=(const CollationKey& source) const;
-
-
     /**
     * Test to see if the key is in an invalid state. The key will be in an
     * invalid state if it couldn't allocate memory for some operation.

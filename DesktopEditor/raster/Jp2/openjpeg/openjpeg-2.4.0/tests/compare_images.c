@@ -116,8 +116,6 @@ static int get_decod_format_from_string(const char *filename)
     }
     return -1;
 }
-
-
 /*******************************************************************************
  * Create filenames from a filename using separator and nb components
  * (begin from 0)

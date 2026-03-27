@@ -35,8 +35,6 @@
 #include "../../XlsxFormat/WritingElement.h"
 
 #include "../Biff12_structures/BookProtectionFlags.h"
-
-
 namespace XLSB
 {
     // Logical representation of BrtBookProtection record in BIFF12

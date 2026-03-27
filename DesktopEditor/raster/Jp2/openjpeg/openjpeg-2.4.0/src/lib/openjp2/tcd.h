@@ -49,8 +49,6 @@ each other. The functions in TCD.C are used by other functions in J2K.C.
 
 /** @defgroup TCD TCD - Implementation of a tile coder/decoder */
 /*@{*/
-
-
 /**
 FIXME DOC
 */
@@ -88,8 +86,6 @@ typedef struct opj_tcd_cblk_enc {
     OPJ_UINT32 numpassesinlayers; /* number of passes in the layer */
     OPJ_UINT32 totalpasses;       /* total number of passes */
 } opj_tcd_cblk_enc_t;
-
-
 /** Chunk of codestream data that is part of a code block */
 typedef struct opj_tcd_seg_data_chunk {
     /* Point to tilepart buffer. We don't make a copy !
@@ -220,8 +216,6 @@ typedef struct opj_tcd_tilecomp {
     /* add fixed_quality */
     OPJ_INT32 numpix;
 } opj_tcd_tilecomp_t;
-
-
 /**
 FIXME DOC
 */
@@ -243,8 +237,6 @@ typedef struct opj_tcd_image {
     opj_tcd_tile_t *tiles;      /* Tiles information */
 }
 opj_tcd_image_t;
-
-
 /**
 Tile coder/decoder
 */
@@ -321,22 +313,16 @@ Destroy a previously created TCD handle
 @param tcd TCD handle to destroy
 */
 void opj_tcd_destroy(opj_tcd_t *tcd);
-
-
 /**
  * Create a new opj_tcd_marker_info_t* structure
  * @param need_PLT Whether information is needed to generate PLT markers.
  */
 opj_tcd_marker_info_t* opj_tcd_marker_info_create(OPJ_BOOL need_PLT);
-
-
 /**
 Destroy a previously created opj_tcd_marker_info_t* structure
 @param p_tcd_marker_info Structure to destroy
 */
 void opj_tcd_marker_info_destroy(opj_tcd_marker_info_t *p_tcd_marker_info);
-
-
 /**
  * Initialize the tile coder and may reuse some memory.
  * @param   p_tcd       TCD handle.
@@ -407,8 +393,6 @@ OPJ_BOOL opj_tcd_encode_tile(opj_tcd_t *p_tcd,
                              struct opj_codestream_info *p_cstr_info,
                              opj_tcd_marker_info_t* p_marker_info,
                              opj_event_mgr_t *p_manager);
-
-
 /**
 Decode a tile from a buffer into a raw image
 @param tcd TCD handle
@@ -438,8 +422,6 @@ OPJ_BOOL opj_tcd_decode_tile(opj_tcd_t *tcd,
                              OPJ_UINT32 tileno,
                              opj_codestream_index_t *cstr_info,
                              opj_event_mgr_t *manager);
-
-
 /**
  * Copies tile data from the system onto the given memory block.
  */
@@ -478,7 +460,6 @@ OPJ_BOOL opj_tcd_copy_tile_data(opj_tcd_t *p_tcd,
 /**
  * Allocates tile component data
  *
- *
  */
 OPJ_BOOL opj_alloc_tile_component_data(opj_tcd_tilecomp_t *l_tilec);
 
@@ -490,8 +471,6 @@ OPJ_BOOL opj_tcd_is_band_empty(opj_tcd_band_t* band);
 
 /** Reinitialize a segment */
 void opj_tcd_reinit_segment(opj_tcd_seg_t* seg);
-
-
 /** Returns whether a sub-band region contributes to the area of interest
  * tcd->win_x0,tcd->win_y0,tcd->win_x1,tcd->win_y1.
  *

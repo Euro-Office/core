@@ -67,8 +67,6 @@
 #define UFMT_UCHAR          {ufmt_uchar, u_printf_uchar_handler}
 /* S  U is old format */
 #define UFMT_USTRING        {ufmt_ustring, u_printf_ustring_handler}
-
-
 #define UFMT_EMPTY {ufmt_empty, NULL}
 
 /**
@@ -172,8 +170,6 @@ u_printf_reset_sign(UNumberFormat        *format,
                               status);
     }
 }
-
-
 /* handle a '%' */
 static int32_t
 u_printf_simple_percent_handler(const u_printf_stream_handler  *handler,
@@ -419,8 +415,6 @@ u_printf_hex_handler(const u_printf_stream_handler  *handler,
     int64_t         num        = args[0].int64Value;
     UChar           result[UPRINTF_BUFFER_SIZE];
     int32_t         len        = UPRINTF_BUFFER_SIZE;
-
-
     /* mask off any necessary bits */
     if (info->fIsShort)
         num &= UINT16_MAX;
@@ -454,8 +448,6 @@ u_printf_octal_handler(const u_printf_stream_handler  *handler,
     int64_t         num        = args[0].int64Value;
     UChar           result[UPRINTF_BUFFER_SIZE];
     int32_t         len        = UPRINTF_BUFFER_SIZE;
-
-
     /* mask off any necessary bits */
     if (info->fIsShort)
         num &= UINT16_MAX;

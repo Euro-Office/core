@@ -73,8 +73,6 @@
 #include <assert.h>
 #include <math.h>
 #include <stdio.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -85,8 +83,6 @@ namespace DJVU {
 ////////////////////////////////////////////////////////////////
 // CODER SPECIFICATION
 ////////////////////////////////////////////////////////////////
-
-
 #ifndef ZPCODER
 #ifndef ZCODER
 #define ZPCODER
@@ -100,18 +96,12 @@ namespace DJVU {
 #warning "The ZCODER may infringe non-LizardTech patent(s)."
 #warning "You should use the ZPCODER instead."
 #endif
-
-
 ////////////////////////////////////////////////////////////////
 // ZP CODER DEFAULT ADAPTATION TABLE
 ////////////////////////////////////////////////////////////////
-
-
 // See ZPCodec::ZPCodec to see how this
 // default table is modified when not
 // using the DjVu compatibility mode.
-
-
 static ZPCodec::Table default_ztable[256] = 
 {
 #ifdef ZPCODER
@@ -630,8 +620,6 @@ static ZPCodec::Table default_ztable[256] =
 #endif
 };
 
-
-
 ////////////////////////////////////////////////////////////////
 // CONSTRUCTOR/DESTRUCTOR
 ////////////////////////////////////////////////////////////////
@@ -730,8 +718,6 @@ ZPCodec::create(GP<ByteStream> gbs, const bool encoding, const bool djvucompat)
 // Z CODER DECODE ALGORITHM
 ////////////////////////////////////////////////////////////////
 
-
-
 void 
 ZPCodec::Decode::init(void)
 {
@@ -754,8 +740,6 @@ ZPCodec::Decode::init(void)
   if (code >= 0x8000)
     fence = 0x7fff;
 }
-
-
 void
 ZPCodec::preload(void)
 {
@@ -771,8 +755,6 @@ ZPCodec::preload(void)
       scount += 8;
     }
 }
-
-
 inline int
 ZPCodec::ffz(unsigned int x)
 {
@@ -801,8 +783,6 @@ ZPCodec::ffz(unsigned int x)
   return (x>=0xff00) ? (ffzt[x&0xff]+8) : (ffzt[(x>>8)&0xff]);
 #endif
 }
-
-
 int 
 ZPCodec::decode_sub(BitContext &ctx, unsigned int z)
 {
@@ -862,8 +842,6 @@ ZPCodec::decode_sub(BitContext &ctx, unsigned int z)
       return bit;
     }
 }
-
-
 int 
 ZPCodec::decode_sub_simple(int mps, unsigned int z)
 {
@@ -906,8 +884,6 @@ ZPCodec::decode_sub_simple(int mps, unsigned int z)
       return mps;
     }
 }
-
-
 int  
 ZPCodec::decode_sub_nolearn(int mps, unsigned int z)
 {
@@ -960,17 +936,9 @@ ZPCodec::decode_sub_nolearn(int mps, unsigned int z)
     }
 }
 
-
-
-
-
 ////////////////////////////////////////////////////////////////
 // Z CODER ENCODE ALGORITHM
 ////////////////////////////////////////////////////////////////
-
-
-
-
 void 
 ZPCodec::Encode::init(void)
 {
@@ -1104,8 +1072,6 @@ ZPCodec::encode_mps(BitContext &ctx, unsigned int z)
       a = (unsigned short)(a<<1);
     }
 }
-
-
 void 
 ZPCodec::encode_lps(BitContext &ctx, unsigned int z)
 {
@@ -1133,8 +1099,6 @@ ZPCodec::encode_lps(BitContext &ctx, unsigned int z)
       a = (unsigned short)(a<<1);
     }
 }
-
-
 void 
 ZPCodec::encode_mps_simple(unsigned int z)
 {
@@ -1164,8 +1128,6 @@ ZPCodec::encode_lps_simple(unsigned int z)
       a = (unsigned short)(a<<1);
     }
 }
-
-
 void 
 ZPCodec::encode_mps_nolearn(unsigned int z)
 {
@@ -1188,8 +1150,6 @@ ZPCodec::encode_mps_nolearn(unsigned int z)
       a = (unsigned short)(a<<1);
     }
 }
-
-
 void 
 ZPCodec::encode_lps_nolearn(unsigned int z)
 {
@@ -1214,19 +1174,9 @@ ZPCodec::encode_lps_nolearn(unsigned int z)
       a = (unsigned short)(a<<1);
     }
 }
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////
 // TABLE AND PARAMETER MANAGEMENT
 ////////////////////////////////////////////////////////////////
-
-
-
-
 void 
 ZPCodec::newtable(ZPCodec::Table *table)
 {
@@ -1256,8 +1206,6 @@ p_to_plps(unsigned short p)
 #endif
   return fplps;
 }
-
-
 BitContext 
 ZPCodec::state(float prob1)
 {
@@ -1284,8 +1232,6 @@ ZPCodec::state(float prob1)
   float f2 = plps-p_to_plps(p[lo+2]);
   return (f1<f2) ? lo : lo+2;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

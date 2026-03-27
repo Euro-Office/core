@@ -41,13 +41,9 @@ DConRef::DConRef()
 	index_external = -1;
 	bFilePath = false;
 }
-
-
 DConRef::~DConRef()
 {
 }
-
-
 BaseObjectPtr DConRef::clone()
 {
 	return BaseObjectPtr(new DConRef(*this));

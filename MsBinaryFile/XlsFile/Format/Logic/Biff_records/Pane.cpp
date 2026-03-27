@@ -38,19 +38,13 @@ namespace XLS
 Pane::Pane()
 {
 }
-
-
 Pane::~Pane()
 {
 }
-
-
 BaseObjectPtr Pane::clone()
 {
 	return BaseObjectPtr(new Pane(*this));
 }
-
-
 void Pane::readFields(CFRecord& record)
 {
     if (record.getGlobalWorkbookInfo()->Version < 0x0800)

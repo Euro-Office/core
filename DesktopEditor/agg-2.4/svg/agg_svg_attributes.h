@@ -9,8 +9,6 @@
 #include "agg_svg_frame_buffer_rgba.h"
 #include "agg_svg_gradient_lut_cache.h"
 #include <string>
-
-
 namespace agg
 {
 namespace svg
@@ -56,15 +54,11 @@ namespace svg
         double mm2pix_y(double mm) const { return mm2pix(mm, m_dpi_y); }
         double in2pix_x(double in) const { return in2pix(in, m_dpi_x); }
         double in2pix_y(double in) const { return in2pix(in, m_dpi_y); }
-
-
         double pt2pix(double pt) const { return pt2pix(pt, m_dpi_x); }
         double pc2pix(double pc) const { return pc2pix(pc, m_dpi_x); }
         double cm2pix(double cm) const { return cm2pix(cm, m_dpi_x); }
         double mm2pix(double mm) const { return mm2pix(mm, m_dpi_x); }
         double in2pix(double in) const { return in2pix(in, m_dpi_x); }
-
-
         // Full color gamma correction
         //-----------------------------------------------------------------------
         void gamma(double g) { m_gamma.gamma(g); }
@@ -137,8 +131,6 @@ namespace svg
             {}
 				unsigned attr_type() const { return type & (~large_block_flag); }
         };
-
-
         //-----------------------------------------------------------------------
         attr_stack() : 
             m_heap(256-4),
@@ -166,8 +158,6 @@ namespace svg
 
         //-----------------------------------------------------------------------
         agg::int8u* push_attribute(unsigned type, unsigned size);
-
-
         //-----------------------------------------------------------------------
         unsigned num_attributes() const
         {
@@ -231,8 +221,6 @@ namespace svg
         agg::pod_bvector<attr, 8>                           m_attributes;
         agg::pod_bvector<session, 6>                        m_sessions;
     };
-
-
     //-------------------------------------------------------------------------
 	class attr_string
 	{
@@ -457,8 +445,6 @@ namespace svg
         stroke_linejoin_e  stroke_linejoin()    const { return m_values.stroke_linejoin; }
         stroke_linecap_e   stroke_linecap()     const { return m_values.stroke_linecap; }
         double             stroke_miterlimit()  const { return m_values.stroke_miterlimit; }
-
-
         const transformer& transform()          const { return m_values.transformer; }
         transformer&       transform()                { return m_values.transformer; }
         double             scale()              const { return m_values.transformer.scale(); }
@@ -486,8 +472,6 @@ namespace svg
         {
             return m_values.transformer.is_visible(x1, y1, x2, y2);
         }
-
-
         // Metrics
         //-----------------------------------------------------------------------
         double percent2pix(double percent) const;
@@ -514,8 +498,6 @@ namespace svg
         {
             serializer.deserialize(data, size);
         }
-
-
         template<class T>
         void save_attribute(attr_e attr, const T& data)
         {

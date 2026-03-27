@@ -65,8 +65,6 @@
 
 #include "UnicodeByteStream.h"
 #include "ByteStream.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -173,8 +171,6 @@ UnicodeByteStream::flush(void)
   bufferpos=0;
   buffer=GUTF8String::create(0,0,buffer.get_remainder());
 }
-
-
 
 GUTF8String
 UnicodeByteStream::gets(
@@ -360,8 +356,6 @@ XMLByteStream::init(void)
 
 XMLByteStream::~XMLByteStream()
 {}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

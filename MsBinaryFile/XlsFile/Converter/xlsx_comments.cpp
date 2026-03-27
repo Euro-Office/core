@@ -38,8 +38,6 @@
 
 #include "../../Common/Utils/simple_xml_writer.h"
 #include "oox_rels.h"
-
-
 struct sort_
 {
 	inline bool operator() (const oox::_xlsx_comment& c1, const oox::_xlsx_comment& c2)
@@ -155,7 +153,3 @@ xlsx_comments_ptr xlsx_comments::create()
 }
 
 }
-
-
-
-       

@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordMasterPersistAtom : public CUnknownRecord
@@ -41,8 +39,6 @@ class CRecordMasterPersistAtom : public CUnknownRecord
 public:
 	UINT m_nPsrRef;
 	INT m_nMasterID;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

@@ -193,8 +193,6 @@ void MainWindow::on_expandButton_clicked()
                 ui->expandButton->setText("Expand All");
         }
 }
-
-
 void MainWindow::on_ModButton_clicked()
 {
         if (ui->treeView->IsClearTree())
@@ -212,14 +210,10 @@ void MainWindow::on_ModButton_clicked()
         }
 }
 
-
-
 void MainWindow::on_actionExit_triggered()
 {
         QApplication::quit();
 }
-
-
 void MainWindow::on_actionChange_File_triggered()
 {
         std::wstring wsPathToFile = QFileDialog::getOpenFileName(this, tr("Open file"), "", tr("Metafile (*.emf *.wmf)")).toStdWString();
@@ -233,8 +227,6 @@ void MainWindow::on_actionChange_File_triggered()
         ui->actionSave_XML_as->setEnabled(true);
         ui->actionSave_EMF_as->setEnabled(true);
 }
-
-
 void MainWindow::on_actionStatistics_triggered()
 {
         CStatisticsWidget *pStaticsWidget = new CStatisticsWidget;
@@ -242,8 +234,6 @@ void MainWindow::on_actionStatistics_triggered()
         pStaticsWidget->SetStatistics(ui->treeView->GetStatistics());
         pStaticsWidget->show();
 }
-
-
 void MainWindow::on_actionSave_XML_as_triggered()
 {
         QString sSaveFilePath = QFileDialog::getSaveFileName(this, tr("Save file"), "", tr("XML file (*.xml)"));

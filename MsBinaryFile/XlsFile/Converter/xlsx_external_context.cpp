@@ -89,8 +89,6 @@ public:
 			}
 		}
     }
-
-
     void add_rels(
         bool isInternal,
         std::wstring const & rid,
@@ -156,7 +154,5 @@ void oox_external_context::write_to(std::wostream & strm)
 oox_external_context::~oox_external_context()
 {
 }
-
-
 }
 

@@ -44,8 +44,6 @@
  * in the language are needed.  The detection process will attempt to
  * ignore html or xml style markup that could otherwise obscure the content.
  */
- 
-
 struct UCharsetDetector;
 /**
   * Structure representing a charset detector
@@ -120,8 +118,6 @@ U_NAMESPACE_END
   */
 U_STABLE void U_EXPORT2
 ucsdet_setText(UCharsetDetector *ucsd, const char *textIn, int32_t len, UErrorCode *status);
-
-
 /** Set the declared encoding for charset detection.
  *  The declared encoding of an input text is an encoding obtained
  *  by the user from an http header or xml declaration or similar source that
@@ -142,8 +138,6 @@ ucsdet_setText(UCharsetDetector *ucsd, const char *textIn, int32_t len, UErrorCo
  */
 U_STABLE void U_EXPORT2
 ucsdet_setDeclaredEncoding(UCharsetDetector *ucsd, const char *encoding, int32_t length, UErrorCode *status);
-
-
 /**
  * Return the charset that best matches the supplied input data.
  * 
@@ -171,8 +165,6 @@ ucsdet_setDeclaredEncoding(UCharsetDetector *ucsd, const char *encoding, int32_t
  */
 U_STABLE const UCharsetMatch * U_EXPORT2
 ucsdet_detect(UCharsetDetector *ucsd, UErrorCode *status);
-    
-
 /**
  *  Find all charset matches that appear to be consistent with the input,
  *  returning an array of results.  The results are ordered with the
@@ -205,8 +197,6 @@ ucsdet_detect(UCharsetDetector *ucsd, UErrorCode *status);
  */
 U_STABLE const UCharsetMatch ** U_EXPORT2
 ucsdet_detectAll(UCharsetDetector *ucsd, int32_t *matchesFound, UErrorCode *status);
-
-
 
 /**
  *  Get the name of the charset represented by a UCharsetMatch.
@@ -283,8 +273,6 @@ ucsdet_getConfidence(const UCharsetMatch *ucsm, UErrorCode *status);
  */
 U_STABLE const char * U_EXPORT2
 ucsdet_getLanguage(const UCharsetMatch *ucsm, UErrorCode *status);
-
-
 /**
   *  Get the entire input text as a UChar string, placing it into
   *  a caller-supplied buffer.  A terminating
@@ -310,8 +298,6 @@ ucsdet_getLanguage(const UCharsetMatch *ucsm, UErrorCode *status);
 U_STABLE  int32_t U_EXPORT2
 ucsdet_getUChars(const UCharsetMatch *ucsm,
                  UChar *buf, int32_t cap, UErrorCode *status);
-
-
 
 /**
   *  Get an iterator over the set of all detectable charsets - 
@@ -357,8 +343,6 @@ ucsdet_getAllDetectableCharsets(const UCharsetDetector *ucsd,  UErrorCode *statu
 
 U_STABLE  UBool U_EXPORT2
 ucsdet_isInputFilterEnabled(const UCharsetDetector *ucsd);
-
-
 /**
  * Enable filtering of input text. If filtering is enabled,
  * text within angle brackets ("<" and ">") will be removed
@@ -409,5 +393,3 @@ ucsdet_setDetectableCharset(UCharsetDetector *ucsd, const char *encoding, UBool 
 
 #endif
 #endif   /* __UCSDET_H */
-
-

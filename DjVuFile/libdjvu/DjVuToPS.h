@@ -404,13 +404,9 @@ public:
       \end{itemize} */
   void print(ByteStream&, GP<DjVuDocument> doc, GUTF8String page_range);
   void print(ByteStream&, GP<DjVuDocument> doc);
- 
-  
   /** Default constructor. Initializes the class. */
   DjVuToPS(void);
 };
-
-
 //****************************************************************************
 //******************************** DjVuToPS **********************************
 //****************************************************************************

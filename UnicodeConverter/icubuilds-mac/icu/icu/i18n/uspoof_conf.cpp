@@ -33,8 +33,6 @@
 #include "uspoof_conf.h"
 
 U_NAMESPACE_USE
-
-
 //---------------------------------------------------------------------
 //
 //  buildConfusableData   Compile the source confusable data, as defined by
@@ -63,13 +61,9 @@ SPUString::SPUString(UnicodeString *s) {
     fStr = s;
     fStrTableIndex = 0;
 }
-
-
 SPUString::~SPUString() {
     delete fStr;
 }
-
-
 SPUStringPool::SPUStringPool(UErrorCode &status) : fVec(NULL), fHash(NULL) {
     fVec = new UVector(status);
     fHash = uhash_open(uhash_hashUnicodeString,           // key hash function
@@ -77,8 +71,6 @@ SPUStringPool::SPUStringPool(UErrorCode &status) : fVec(NULL), fHash(NULL) {
                        NULL,                              // Value Comparator
                        &status);
 }
-
-
 SPUStringPool::~SPUStringPool() {
     int i;
     for (i=fVec->size()-1; i>=0; i--) {
@@ -88,8 +80,6 @@ SPUStringPool::~SPUStringPool() {
     delete fVec;
     uhash_close(fHash);
 }
-
-
 int32_t SPUStringPool::size() {
     return fVec->size();
 }
@@ -98,8 +88,6 @@ SPUString *SPUStringPool::getByIndex(int32_t index) {
     SPUString *retString = (SPUString *)fVec->elementAt(index);
     return retString;
 }
-
-
 // Comparison function for ordering strings in the string pool.
 // Compare by length first, then, within a group of the same length,
 // by code point order.
@@ -124,8 +112,6 @@ static int8_t U_CALLCONV SPUStringCompare(UHashTok left, UHashTok right) {
 void SPUStringPool::sort(UErrorCode &status) {
     fVec->sort(SPUStringCompare, status);
 }
-
-
 SPUString *SPUStringPool::addString(UnicodeString *src, UErrorCode &status) {
     SPUString *hashedString = static_cast<SPUString *>(uhash_get(fHash, src));
     if (hashedString != NULL) {
@@ -137,8 +123,6 @@ SPUString *SPUStringPool::addString(UnicodeString *src, UErrorCode &status) {
     }
     return hashedString;
 }
-
-
 
 ConfusabledataBuilder::ConfusabledataBuilder(SpoofImpl *spImpl, UErrorCode &status) :
     fSpoofImpl(spImpl),
@@ -169,8 +153,6 @@ ConfusabledataBuilder::ConfusabledataBuilder(SpoofImpl *spImpl, UErrorCode &stat
     fValueVec   = new UVector(status);
     stringPool = new SPUStringPool(status);
 }
-
-
 ConfusabledataBuilder::~ConfusabledataBuilder() {
     uprv_free(fInput);
     uregex_close(fParseLine);
@@ -186,8 +168,6 @@ ConfusabledataBuilder::~ConfusabledataBuilder() {
     delete fValueVec;
     delete stringPool;
 }
-
-
 void ConfusabledataBuilder::buildConfusableData(SpoofImpl * spImpl, const char * confusables,
     int32_t confusablesLen, int32_t *errorType, UParseError *pe, UErrorCode &status) {
 
@@ -201,8 +181,6 @@ void ConfusabledataBuilder::buildConfusableData(SpoofImpl * spImpl, const char *
         pe->line = builder.fLineNum;
     }
 }
-
-
 void ConfusabledataBuilder::build(const char * confusables, int32_t confusablesLen,
                UErrorCode &status) {
 
@@ -222,8 +200,6 @@ void ConfusabledataBuilder::build(const char * confusables, int32_t confusablesL
         return;
     }
     u_strFromUTF8(fInput, inputLen+1, NULL, confusables, confusablesLen, &status);
-
-
     // Regular Expression to parse a line from Confusables.txt.  The expression will match
     // any line.  What was matched is determined by examining which capture groups have a match.
     //   Capture Group 1:  the source char
@@ -448,8 +424,6 @@ void ConfusabledataBuilder::outputData(UErrorCode &status) {
     rawData->fCFUKeys = (int32_t)((char *)keys - (char *)rawData);
     rawData->fCFUKeysSize = numKeys;
     fSpoofImpl->fSpoofData->fCFUKeys = keys;
-
-
     // The Value Table, parallels the key table
     int32_t numValues = fValueVec->size();
     U_ASSERT(numKeys == numValues);
@@ -517,8 +491,6 @@ void ConfusabledataBuilder::outputData(UErrorCode &status) {
     fSpoofImpl->fSpoofData->fCFUStringLengths =
         reinterpret_cast<SpoofStringLengthsElement *>(stringLengths);
 }
-
-
 
 //  addKeyEntry   Construction of the confusable Key and Mapping Values tables.
 //                This is an intermediate point in the building process.
@@ -591,8 +563,6 @@ void ConfusabledataBuilder::addKeyEntry(
         fKeyVec->setElementAt(previousKey, previousKeyIndex);
     }
 }
-
-
 
 UnicodeString ConfusabledataBuilder::getMapping(int32_t index) {
     int32_t key = fKeyVec->elementAti(index);

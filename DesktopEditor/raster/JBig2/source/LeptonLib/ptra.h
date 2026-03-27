@@ -26,8 +26,6 @@
  *      L_Ptra shifting flags for insert
  *      L_Ptraa accessor flags
  */
-
-
 /*------------------------------------------------------------------------* 
  *                     Generic Ptr Array Structs                          *
  *------------------------------------------------------------------------*/
@@ -41,8 +39,6 @@ struct L_Ptra
     void           **array;     /* ptr array                           */
 };
 typedef struct L_Ptra  L_PTRA;
-
-
     /* Array of generic pointer arrays */
 struct L_Ptraa
 {
@@ -50,8 +46,6 @@ struct L_Ptraa
     struct L_Ptra  **ptra;      /* array of ptra                       */
 };
 typedef struct L_Ptraa  L_PTRAA;
-
-
 
 /*------------------------------------------------------------------------* 
  *                              Array flags                               *
@@ -75,6 +69,4 @@ enum {
     L_HANDLE_ONLY = 0,          /* ptr to L_Ptra; caller can inspect only    */
     L_REMOVE = 1                /* caller owns; destroy or save in L_Ptraa   */
 };
-
-
 #endif  /* LEPTONICA_PTRA_H */

@@ -78,8 +78,6 @@ typedef struct faixbox_param {
     Byte_t version;                /**< Refer to the Table I.3 - Version values*/
     subfaixbox_param_t subfaixbox; /**< rest information in faixbox*/
 } faixbox_param_t;
-
-
 /**
  * generate faix box
  *
@@ -87,16 +85,12 @@ typedef struct faixbox_param {
  * @return        generated faixbox
  */
 faixbox_param_t * gene_faixbox(box_param_t *box);
-
-
 /**
  * print faix box parameters
  *
  * @param[in] faix faix box pointer
  */
 void print_faixbox(faixbox_param_t *faix);
-
-
 /**
  * delete faix box
  *

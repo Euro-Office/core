@@ -30,8 +30,6 @@
  *
  */
 #include "docx_format.h"
-
-
 DocxFormatLib::DocxFormatLib()
 {
 }

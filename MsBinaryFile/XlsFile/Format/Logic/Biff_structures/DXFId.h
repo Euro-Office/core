@@ -52,8 +52,6 @@ public:
 	static const ElementType	type = typeDXFId;
 
 	virtual void load(CFRecord& record);
-
-
 	_UINT32 index;
 };
 

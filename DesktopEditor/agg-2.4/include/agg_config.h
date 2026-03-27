@@ -25,8 +25,6 @@
 // It will result in overflow in 16 bit-per-component image/pattern resampling
 // but it won't result any crash and the rest of the library will remain 
 // fully functional.
-
-
 //---------------------------------------
 // 2. Default rendering_buffer type. Can be:
 //

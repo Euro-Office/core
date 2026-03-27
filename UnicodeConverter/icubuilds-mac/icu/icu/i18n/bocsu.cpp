@@ -13,8 +13,6 @@
 *   Modification history:
 *   05/18/2001  weiv    Made into separate module
 */
-
-
 #include "unicode/utypes.h"
 
 #if !UCONFIG_NO_COLLATION

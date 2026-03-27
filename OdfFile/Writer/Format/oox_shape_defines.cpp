@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "Shapes/oox_shapeMaths.h"
 #include "Shapes/oox_shapeSnipRoundRects.h"
 #include "Shapes/oox_shapeCustoms.h"

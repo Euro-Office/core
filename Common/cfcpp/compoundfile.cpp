@@ -141,8 +141,6 @@ CompoundFile_impl::CompoundFile_impl(CFSVersion cfsVersion, CFSConfiguration con
         Ver3SizeLimitReached action = std::bind(&CompoundFile_impl::OnSizeLimitReached, this);
         sectors.OnVer3SizeLimitReached += action;
     }
-
-
     DIFAT_SECTOR_FAT_ENTRIES_COUNT = (GetSectorSize() / 4) - 1;
     FAT_SECTOR_ENTRIES_COUNT = (GetSectorSize() / 4);
 
@@ -182,8 +180,6 @@ void CompoundFile_impl::OnSizeLimitReached()
     transactionLockAdded = true;
     lockSectorId = rangeLockSector->id;
 }
-
-
 void CompoundFile_impl::Commit(bool releaseMemory)
 {
     if (isDisposed)
@@ -206,8 +202,6 @@ void CompoundFile_impl::Commit(bool releaseMemory)
     CommitDirectory();
 
     bool gap = true;
-
-
     for (_INT32 i = 0; i < (int)sectors.largeArraySlices.size(); i++)
     {
         std::shared_ptr<Sector> sector = sectors[i];
@@ -292,8 +286,6 @@ void CompoundFile_impl::Load(Stream stream)
 
         if (Length(stream) > 0x7FFFFF0)
             this->isTransactionLockAllocated = true;
-
-
         sectors.Clear();
 
         for (_INT32 i = 0; i < countSectors; i++)
@@ -355,8 +347,6 @@ bool CompoundFile_impl::Save(std::wstring wFileName)
     }
 	return result;
 }
-
-
 void CompoundFile_impl::Save(Stream stream)
 {
     if (isDisposed)
@@ -384,8 +374,6 @@ void CompoundFile_impl::Save(Stream stream)
                 sector.reset(new Sector(sectorSize, sourceStream));
                 sector->id = i;
             }
-
-
             stream->write(reinterpret_cast<char*>(sector->GetData().data()), sectorSize);
         }
 
@@ -586,8 +574,6 @@ SVector<Sector> CompoundFile_impl::GetNormalSectorChain(_INT32 sectorID)
         EnsureUniqueSectorIndex(next, processedSectors);
         nextSectorID = next;
     }
-
-
     return result;
 }
 
@@ -875,8 +861,6 @@ void CompoundFile_impl::LoadDirectories()
     SList<Sector> zeroQueue;
     const auto sectorSize = GetSectorSize();
     Stream dirReader(new StreamView(directoryChain, sectorSize, directoryChain.size() * sectorSize, zeroQueue, sourceStream));
-
-
     while (dirReader->tell() < (_INT64)directoryChain.size() * sectorSize)
     {
         std::shared_ptr<IDirectoryEntry> de(DirectoryEntry::New(L"", StgType::StgInvalid, directoryEntries));
@@ -1009,8 +993,6 @@ void CompoundFile_impl::AllocateFATSectorChain(SVector<Sector> &sectorChain)
                 sourceStream,
                 true
                 );
-
-
     for (_INT32 i = 0; i < (int)sectorChain.size() - 1; i++)
     {
 
@@ -1076,8 +1058,6 @@ void CompoundFile_impl::AllocateDIFATSectorChain(SVector<Sector> &FATsectorChain
             nCurrentSectors++;
         }
     }
-
-
     SVector<Sector> difatSectors = GetSectorChain(-1, SectorType::DIFAT);
 
     StreamView difatStream(difatSectors, GetSectorSize(), sourceStream);
@@ -1112,8 +1092,6 @@ void CompoundFile_impl::AllocateDIFATSectorChain(SVector<Sector> &FATsectorChain
     }
 
     header->difatSectorsNumber = (_UINT16)countDIFATSectors;
-
-
     if (difatStream.BaseSectorChain() != nullptr && difatStream.BaseSectorChain().size() > 0)
     {
         header->firstDIFATSectorID = difatStream.BaseSectorChain()[0]->id;
@@ -1379,8 +1357,6 @@ void CompoundFile_impl::SetStreamLength(std::shared_ptr<CFItem> cfItem, _INT64 l
         oldSectorType = SectorType::Mini;
         oldSectorSize = Sector::MINISECTOR_SIZE;
     }
-
-
     _INT64 oldSize = cfItem->size();
     SVector<Sector> sectorChain = GetSectorChain(cfItem->dirEntry.lock()->getStartSetc(), oldSectorType);
     _INT64 delta = length - cfItem->size();
@@ -1408,8 +1384,6 @@ void CompoundFile_impl::SetStreamLength(std::shared_ptr<CFItem> cfItem, _INT64 l
             }
         }
     }
-
-
     SList<Sector> freeList;
     std::shared_ptr<StreamView> sv;
 
@@ -1664,8 +1638,6 @@ _INT32 CompoundFile_impl::ReadData(CFStream *cFStream, _INT64 position, std::vec
     {
         sv.reset(new StreamView(GetSectorChain(de->getStartSetc(), SectorType::Normal), GetSectorSize(), de->getSize(), zeroQueue, sourceStream));
     }
-
-
     sv->seek(position, std::ios::beg);
     _INT32 result = sv->read(reinterpret_cast<char*>(buffer.data()), count);
 
@@ -1689,8 +1661,6 @@ _INT32 CompoundFile_impl::ReadData(CFStream *cFStream, _INT64 position, std::vec
     {
         sv.reset(new StreamView(GetSectorChain(de->getStartSetc(), SectorType::Normal), GetSectorSize(), de->getSize(), zeroQueue, sourceStream));
     }
-
-
     sv->seek(position, std::ios::beg);
     _INT32 result = sv->read(reinterpret_cast<char*>(buffer.data() + offset), count);
 

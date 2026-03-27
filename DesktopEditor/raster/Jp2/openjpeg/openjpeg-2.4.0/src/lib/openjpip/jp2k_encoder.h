@@ -48,8 +48,6 @@
  */
 Byte_t * recons_j2k(msgqueue_param_t *msgqueue, Byte_t *jpipstream, Byte8_t csn,
                     int fw, int fh, Byte8_t *j2klen);
-
-
 /**
  * reconstruct jp2 file codestream from message queue
  *

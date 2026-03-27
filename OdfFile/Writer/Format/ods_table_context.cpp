@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "ods_table_context.h"
 #include "table.h"
 #include "text_elements.h"
@@ -546,8 +544,6 @@ void ods_table_context::add_defined_expression(const std::wstring & name, const 
 	
 	table_named_expression* named_expression = dynamic_cast<table_named_expression*>(elm.get());
 	if (named_expression == NULL)return;
-
-
 	std::wstring odf_value		= formulas_converter.convert_named_formula(value);
 	std::wstring odf_base_cell	= formulas_converter.get_table_name();
 

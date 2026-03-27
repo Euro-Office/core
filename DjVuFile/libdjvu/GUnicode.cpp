@@ -67,8 +67,6 @@
 #if HAS_ICONV
 #include <iconv.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -781,8 +779,6 @@ GUTF8String::create( void const * const buf,
   retval.init(GStringRep::Unicode::create(buf,size,encoding ));
   return retval;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

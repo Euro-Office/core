@@ -1,7 +1,5 @@
 #ifndef TEST_FUNCTIONS_H_
 #define TEST_FUNCTIONS_H_
-
-
 /**
  * NOTE: V8 ONLY!
  * The function tests the work of two CJSContexts in one thread.

@@ -38,8 +38,6 @@ namespace XLS
 AnyObject::AnyObject()
 {
 }
-
-
 AnyObject::~AnyObject()
 {
 }
@@ -56,7 +54,5 @@ void AnyObject::readFields(CFRecord& record)
 	raw_data.reset(new char[raw_data_size]);
 	memcpy(raw_data.get(), record.getData(), raw_data_size);
 }
-
-
 } // namespace XLS
 

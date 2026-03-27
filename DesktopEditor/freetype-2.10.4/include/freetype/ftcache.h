@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTCACHE_H_
 #define FTCACHE_H_
-
-
 #include <freetype/ftglyph.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -128,8 +120,6 @@ FT_BEGIN_HEADER
    *   FTC_CMapCache_Lookup
    *
    *************************************************************************/
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -139,8 +129,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @type:
@@ -169,8 +157,6 @@ FT_BEGIN_HEADER
    *   leaks and crashes.
    */
   typedef FT_Pointer  FTC_FaceID;
-
-
   /**************************************************************************
    *
    * @functype:
@@ -213,8 +199,6 @@ FT_BEGIN_HEADER
                          FT_Face*    aface );
 
   /* */
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -224,8 +208,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @type:
@@ -248,8 +230,6 @@ FT_BEGIN_HEADER
    *   ones.
    */
   typedef struct FTC_ManagerRec_*  FTC_Manager;
-
-
   /**************************************************************************
    *
    * @type:
@@ -268,8 +248,6 @@ FT_BEGIN_HEADER
    *   See also @FTC_SBitCache_Lookup and @FTC_ImageCache_Lookup.
    */
   typedef struct FTC_NodeRec_*  FTC_Node;
-
-
   /**************************************************************************
    *
    * @function:
@@ -318,8 +296,6 @@ FT_BEGIN_HEADER
                    FTC_Face_Requester  requester,
                    FT_Pointer          req_data,
                    FTC_Manager        *amanager );
-
-
   /**************************************************************************
    *
    * @function:
@@ -335,8 +311,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FTC_Manager_Reset( FTC_Manager  manager );
-
-
   /**************************************************************************
    *
    * @function:
@@ -351,8 +325,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FTC_Manager_Done( FTC_Manager  manager );
-
-
   /**************************************************************************
    *
    * @function:
@@ -400,8 +372,6 @@ FT_BEGIN_HEADER
   FTC_Manager_LookupFace( FTC_Manager  manager,
                           FTC_FaceID   face_id,
                           FT_Face     *aface );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -448,8 +418,6 @@ FT_BEGIN_HEADER
     FT_UInt     y_res;
 
   } FTC_ScalerRec;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -459,8 +427,6 @@ FT_BEGIN_HEADER
    *   A handle to an @FTC_ScalerRec structure.
    */
   typedef struct FTC_ScalerRec_*  FTC_Scaler;
-
-
   /**************************************************************************
    *
    * @function:
@@ -504,8 +470,6 @@ FT_BEGIN_HEADER
   FTC_Manager_LookupSize( FTC_Manager  manager,
                           FTC_Scaler   scaler,
                           FT_Size     *asize );
-
-
   /**************************************************************************
    *
    * @function:
@@ -526,8 +490,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FTC_Node_Unref( FTC_Node     node,
                   FTC_Manager  manager );
-
-
   /**************************************************************************
    *
    * @function:
@@ -558,8 +520,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FTC_Manager_RemoveFaceID( FTC_Manager  manager,
                             FTC_FaceID   face_id );
-
-
   /**************************************************************************
    *
    * @type:
@@ -571,8 +531,6 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct FTC_CMapCacheRec_*  FTC_CMapCache;
-
-
   /**************************************************************************
    *
    * @function:
@@ -600,8 +558,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FTC_CMapCache_New( FTC_Manager     manager,
                      FTC_CMapCache  *acache );
-
-
   /**************************************************************************
    *
    * @function:
@@ -634,8 +590,6 @@ FT_BEGIN_HEADER
                         FTC_FaceID     face_id,
                         FT_Int         cmap_index,
                         FT_UInt32      char_code );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -645,8 +599,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @struct:
@@ -677,8 +629,6 @@ FT_BEGIN_HEADER
     FT_Int32    flags;
 
   } FTC_ImageTypeRec;
-
-
   /**************************************************************************
    *
    * @type:
@@ -689,17 +639,11 @@ FT_BEGIN_HEADER
    *
    */
   typedef struct FTC_ImageTypeRec_*  FTC_ImageType;
-
-
   /* */
-
-
 #define FTC_IMAGE_TYPE_COMPARE( d1, d2 )      \
           ( (d1)->face_id == (d2)->face_id && \
             (d1)->width   == (d2)->width   && \
             (d1)->flags   == (d2)->flags   )
-
-
   /**************************************************************************
    *
    * @type:
@@ -711,8 +655,6 @@ FT_BEGIN_HEADER
    *   threshold.
    */
   typedef struct FTC_ImageCacheRec_*  FTC_ImageCache;
-
-
   /**************************************************************************
    *
    * @function:
@@ -735,8 +677,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FTC_ImageCache_New( FTC_Manager      manager,
                       FTC_ImageCache  *acache );
-
-
   /**************************************************************************
    *
    * @function:
@@ -787,8 +727,6 @@ FT_BEGIN_HEADER
                          FT_UInt         gindex,
                          FT_Glyph       *aglyph,
                          FTC_Node       *anode );
-
-
   /**************************************************************************
    *
    * @function:
@@ -847,8 +785,6 @@ FT_BEGIN_HEADER
                                FT_UInt         gindex,
                                FT_Glyph       *aglyph,
                                FTC_Node       *anode );
-
-
   /**************************************************************************
    *
    * @type:
@@ -859,8 +795,6 @@ FT_BEGIN_HEADER
    *   for details.
    */
   typedef struct FTC_SBitRec_*  FTC_SBit;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -919,8 +853,6 @@ FT_BEGIN_HEADER
     FT_Byte*  buffer;
 
   } FTC_SBitRec;
-
-
   /**************************************************************************
    *
    * @type:
@@ -933,8 +865,6 @@ FT_BEGIN_HEADER
    *   by @FTC_ImageCache.
    */
   typedef struct FTC_SBitCacheRec_*  FTC_SBitCache;
-
-
   /**************************************************************************
    *
    * @function:
@@ -957,8 +887,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FTC_SBitCache_New( FTC_Manager     manager,
                      FTC_SBitCache  *acache );
-
-
   /**************************************************************************
    *
    * @function:
@@ -1014,8 +942,6 @@ FT_BEGIN_HEADER
                         FT_UInt          gindex,
                         FTC_SBit        *sbit,
                         FTC_Node        *anode );
-
-
   /**************************************************************************
    *
    * @function:
@@ -1077,11 +1003,7 @@ FT_BEGIN_HEADER
                               FTC_Node      *anode );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTCACHE_H_ */
-
-
 /* END */

@@ -36,28 +36,18 @@
 #include "SXADDLSXMGS.h"
 
 #include "../Biff_records/SXAddl.h"
-
-
 namespace XLS
 {
-
-
 SXADDLCACHE12::SXADDLCACHE12()
 {
 }
-
-
 SXADDLCACHE12::~SXADDLCACHE12()
 {
 }
-
-
 BaseObjectPtr SXADDLCACHE12::clone()
 {
 	return BaseObjectPtr(new SXADDLCACHE12(*this));
 }
-
-
 // SXADDLCACHE12 = SXAddl_SXCCache_SXDVerUpdInv SXAddl_SXCCache_SXDInfo12 SXAddl_SXCCache_SXDInvRefreshReal
 //   *SXADDLCACHEFIELD [SXADDLSXDH] [SXADDLSXMGS] SXAddl_SXCCache_SXDVerUpdInv
 const bool SXADDLCACHE12::loadContent(BinProcessor& proc)

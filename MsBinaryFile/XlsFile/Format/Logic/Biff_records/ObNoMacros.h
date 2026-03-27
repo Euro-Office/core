@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ObNoMacros record in BIFF8
 class ObNoMacros: public BiffRecord
 {
@@ -47,13 +45,9 @@ public:
 	~ObNoMacros();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeObNoMacros;
-
-
 };
 
 } // namespace XLS

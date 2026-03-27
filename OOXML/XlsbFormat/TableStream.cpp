@@ -47,8 +47,6 @@ TableStream::TableStream()
 TableStream::~TableStream()
 {
 }
-
-
 BaseObjectPtr TableStream::clone()
 {
         return BaseObjectPtr(new TableStream(*this));

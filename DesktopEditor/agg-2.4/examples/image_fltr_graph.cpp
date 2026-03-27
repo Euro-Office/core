@@ -16,19 +16,13 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 struct filter_base
 {
     virtual double radius() const = 0;
     virtual void set_radius(double r) = 0;
     virtual double calc_weight(double x) const = 0;
 };
-
-
 template<class Filter> struct image_filter_const_radius_adaptor : filter_base
 {
     virtual double radius() const { return m_filter.radius(); }
@@ -36,8 +30,6 @@ template<class Filter> struct image_filter_const_radius_adaptor : filter_base
     virtual double calc_weight(double x) const { return m_filter.calc_weight(fabs(x)); }
     Filter m_filter;
 };
-
-
 template<class Filter> struct image_filter_variable_radius_adaptor : filter_base
 {
     virtual double radius() const { return m_filter.radius(); }
@@ -46,8 +38,6 @@ template<class Filter> struct image_filter_variable_radius_adaptor : filter_base
     image_filter_variable_radius_adaptor() : m_filter(2.0) {}
     Filter m_filter;
 };
-
-
 
 class the_application : public agg::platform_support
 {
@@ -89,8 +79,6 @@ class the_application : public agg::platform_support
 
     filter_base* m_filter_func[32];
     unsigned     m_num_filters;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -208,8 +196,6 @@ public:
         ras.add_path(tr);
         rs.color(agg::rgba8(0, 0, 0));
         agg::render_scanlines(ras, sl, rs);
-
-
         pl.width(1.0);
         
         for(i = 0; i < m_num_filters; i++)
@@ -293,12 +279,6 @@ public:
     }
 };
 
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -310,5 +290,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

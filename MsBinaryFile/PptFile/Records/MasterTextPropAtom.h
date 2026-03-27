@@ -48,8 +48,6 @@ public:
 	};
 
 	std::vector<SMasterTextPropRun> m_arrProps;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

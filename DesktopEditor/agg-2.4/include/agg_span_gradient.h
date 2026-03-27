@@ -35,8 +35,6 @@ namespace agg
         gradient_subpixel_mask  = gradient_subpixel_scale - 1     //-----gradient_subpixel_mask
     };
 
-
-
     //==========================================================span_gradient
     template<class ColorT>
 	struct TBlendColor
@@ -50,8 +48,6 @@ namespace agg
 		float factor;   // [0..1]
 		float position; // [0..1]
 	};
-	
-	
 	template<class ColorT,
              class Interpolator,
              class GradientF, 
@@ -130,8 +126,6 @@ namespace agg
         int                m_d1;
         int                m_d2;
     };
-
-
 	template<class ColorT>
     class my_span_gradient
 	{
@@ -328,8 +322,6 @@ namespace agg
 			m_valid_table[index] = true;
 		}
 	};
-
-	
 	template<class ColorT>
     class my_span_path_gradient
 	{
@@ -465,8 +457,6 @@ namespace agg
 			m_valid_table[index] = true;
 		}
 	};
-
-
     //=====================================================gradient_linear_color
     template<class ColorT> 
     struct gradient_linear_color
@@ -495,12 +485,6 @@ namespace agg
         color_type m_c2;
         unsigned m_size;
     };
-
-
-
-
-
-
     //==========================================================gradient_circle
     class gradient_circle
     {
@@ -511,8 +495,6 @@ namespace agg
             return int(fast_sqrt(x*x + y*y));
         }
     };
-
-
     //==========================================================gradient_radial
     class gradient_radial
     {
@@ -612,16 +594,12 @@ namespace agg
         double m_fy2;
         double m_mul;
     };
-
-
     //==============================================================gradient_x
     class gradient_x
     {
     public:
         static int calculate(int x, int, int) { return x; }
     };
-
-
     //==============================================================gradient_y
     class gradient_y
     {

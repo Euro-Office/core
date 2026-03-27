@@ -39,19 +39,13 @@ MsoDrawingGroup::MsoDrawingGroup(const bool is_inside_chart_sheet)
 :	rgChildRec(is_inside_chart_sheet ? ODRAW::OfficeArtRecord::CA_Chart : ODRAW::OfficeArtRecord::CA_Sheet)
 {
 }
-
-
 MsoDrawingGroup::~MsoDrawingGroup()
 {
 }
-
-
 BaseObjectPtr MsoDrawingGroup::clone()
 {
 	return BaseObjectPtr(new MsoDrawingGroup(*this));
 }
-
-
 void MsoDrawingGroup::readFields(CFRecord& record)
 {
 	std::list<CFRecordPtr>& recs = continue_records[rt_Continue];

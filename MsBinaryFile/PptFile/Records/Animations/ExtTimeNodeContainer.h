@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
-
-
 #include "TimeAnimateBehaviorContainer.h"
 #include "TimeColorBehaviorContainer.h"
 #include "TimeEffectBehaviorContainer.h"
@@ -50,8 +46,6 @@
 #include "TimeConditionContainer.h"
 #include "TimeModifierAtom.h"
 #include "SubEffectContainer.h"
-
-
 namespace PPT
 {
 

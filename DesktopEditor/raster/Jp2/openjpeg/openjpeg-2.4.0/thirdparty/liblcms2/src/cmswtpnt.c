@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 // D50 - Widely used
 const cmsCIEXYZ* CMSEXPORT cmsD50_XYZ(void)
 {
@@ -91,8 +89,6 @@ cmsBool  CMSEXPORT cmsWhitePointFromTemp(cmsCIExyY* WhitePoint, cmsFloat64Number
         return TRUE;
 }
 
-
-
 typedef struct {
 
     cmsFloat64Number mirek;  // temp (in microreciprocal kelvin)
@@ -138,8 +134,6 @@ static ISOTEMPERATURE isotempdata[] = {
 };
 
 #define NISO sizeof(isotempdata)/sizeof(ISOTEMPERATURE)
-
-
 // Robertson's method
 cmsBool  CMSEXPORT cmsTempFromWhitePoint(cmsFloat64Number* TempK, const cmsCIExyY* WhitePoint)
 {
@@ -159,8 +153,6 @@ cmsBool  CMSEXPORT cmsTempFromWhitePoint(cmsFloat64Number* TempK, const cmsCIExy
 
     us = (2*xs) / (-xs + 6*ys + 1.5);
     vs = (3*ys) / (-xs + 6*ys + 1.5);
-
-
     for (j=0; j < NISO; j++) {
 
         uj = isotempdata[j].ut;
@@ -184,8 +176,6 @@ cmsBool  CMSEXPORT cmsTempFromWhitePoint(cmsFloat64Number* TempK, const cmsCIExy
     // Not found
     return FALSE;
 }
-
-
 // Compute chromatic adaptation matrix using Chad as cone matrix
 
 static
@@ -200,8 +190,6 @@ cmsBool ComputeChromaticAdaptation(cmsMAT3* Conversion,
     cmsVEC3 ConeSourceXYZ, ConeSourceRGB;
     cmsVEC3 ConeDestXYZ, ConeDestRGB;
     cmsMAT3 Cone, Tmp;
-
-
     Tmp = *Chad;
     if (!_cmsMAT3inverse(&Tmp, &Chad_Inv)) return FALSE;
 
@@ -220,8 +208,6 @@ cmsBool ComputeChromaticAdaptation(cmsMAT3* Conversion,
     _cmsVEC3init(&Cone.v[0], ConeDestRGB.n[0]/ConeSourceRGB.n[0],    0.0,  0.0);
     _cmsVEC3init(&Cone.v[1], 0.0,   ConeDestRGB.n[1]/ConeSourceRGB.n[1],   0.0);
     _cmsVEC3init(&Cone.v[2], 0.0,   0.0,   ConeDestRGB.n[2]/ConeSourceRGB.n[2]);
-
-
     // Normalize
     _cmsMAT3per(&Tmp, &Cone, Chad);
     _cmsMAT3per(Conversion, &Chad_Inv, &Tmp);
@@ -298,13 +284,9 @@ cmsBool _cmsBuildRGB2XYZtransferMatrix(cmsMAT3* r, const cmsCIExyY* WhitePt, con
     _cmsVEC3init(&Primaries.v[0], xr,        xg,         xb);
     _cmsVEC3init(&Primaries.v[1], yr,        yg,         yb);
     _cmsVEC3init(&Primaries.v[2], (1-xr-yr), (1-xg-yg),  (1-xb-yb));
-
-
     // Result = Primaries ^ (-1) inverse matrix
     if (!_cmsMAT3inverse(&Primaries, &Result))
         return FALSE;
-
-
     _cmsVEC3init(&WhitePoint, xn/yn, 1.0, (1.0-xn-yn)/yn);
 
     // Across inverse primaries ...
@@ -314,13 +296,9 @@ cmsBool _cmsBuildRGB2XYZtransferMatrix(cmsMAT3* r, const cmsCIExyY* WhitePt, con
     _cmsVEC3init(&r -> v[0], Coef.n[VX]*xr,          Coef.n[VY]*xg,          Coef.n[VZ]*xb);
     _cmsVEC3init(&r -> v[1], Coef.n[VX]*yr,          Coef.n[VY]*yg,          Coef.n[VZ]*yb);
     _cmsVEC3init(&r -> v[2], Coef.n[VX]*(1.0-xr-yr), Coef.n[VY]*(1.0-xg-yg), Coef.n[VZ]*(1.0-xb-yb));
-
-
     return _cmsAdaptMatrixToD50(r, WhitePt);
 
 }
-
-
 // Adapts a color to a given illuminant. Original color is expected to have
 // a SourceWhitePt white point.
 cmsBool CMSEXPORT cmsAdaptToIlluminant(cmsCIEXYZ* Result,
@@ -347,5 +325,3 @@ cmsBool CMSEXPORT cmsAdaptToIlluminant(cmsCIEXYZ* Result,
 
     return TRUE;
 }
-
-

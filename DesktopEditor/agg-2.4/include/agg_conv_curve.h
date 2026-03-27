@@ -25,8 +25,6 @@
 
 namespace agg
 {
-
-
     //---------------------------------------------------------------conv_curve
     // Curve converter class. Any path storage can have Bezier curves defined 
     // by their control points. There're two types of curves supported: curve3 
@@ -122,8 +120,6 @@ namespace agg
         curve4_type   m_curve4;
     };
 
-
-
     //------------------------------------------------------------------------
     template<class VertexSource, class Curve3, class Curve4>
     void conv_curve<VertexSource, Curve3, Curve4>::rewind(unsigned path_id)
@@ -134,8 +130,6 @@ namespace agg
         m_curve3.reset();
         m_curve4.reset();
     }
-
-
     //------------------------------------------------------------------------
     template<class VertexSource, class Curve3, class Curve4>
     unsigned conv_curve<VertexSource, Curve3, Curve4>::vertex(double* x, double* y)
@@ -192,10 +186,6 @@ namespace agg
         m_last_y = *y;
         return cmd;
     }
-
-
 }
-
-
 
 #endif

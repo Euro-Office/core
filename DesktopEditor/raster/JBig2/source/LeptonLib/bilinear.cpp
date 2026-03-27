@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  bilinear.c
  *
@@ -104,8 +102,6 @@
 #include "allheaders.h"
 
 extern l_float32  AlphaMaskBorderVals[2];
-
-
 /*-------------------------------------------------------------*
  *             Sampled bilinear image transformation           *
  *-------------------------------------------------------------*/
@@ -157,8 +153,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixBilinearSampled()
  *
@@ -251,8 +245,6 @@ PIXCMAP    *cmap;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *            Interpolated bilinear image transformation             *
  *---------------------------------------------------------------------*/
@@ -323,8 +315,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixBilinear()
  *
@@ -382,8 +372,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixBilinearPtaColor()
  *
@@ -424,8 +412,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixBilinearColor()
  *
@@ -476,8 +462,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixBilinearPtaGray()
  *
@@ -518,8 +502,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixBilinearGray()
  *
@@ -568,8 +550,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*-------------------------------------------------------------------------*
  *  Bilinear transform including alpha (blend) component and gamma xform   *
  *-------------------------------------------------------------------------*/
@@ -685,8 +665,6 @@ PTA     *ptad2, *ptas2;
     ptaDestroy(&ptas2);
     return pixd;
 }
-
-
 /*!
  *  pixBilinearPtaGammaXform()
  *
@@ -737,8 +715,6 @@ PIX  *pixg, *pixd;
     pixDestroy(&pixg);
     return  pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                Bilinear coordinate transformation           *
  *-------------------------------------------------------------*/
@@ -871,8 +847,6 @@ l_float32  *a[8];  /* 8x8 matrix A  */
 
     return 0;
 }
-
-
 /*!
  *  bilinearXformSampledPt()
  *
@@ -902,8 +876,6 @@ bilinearXformSampledPt(l_float32  *vc,
     *pyp = (l_int32)(vc[4] * x + vc[5] * y + vc[6] * x * y + vc[7] + 0.5);
     return 0;
 }
-
-
 /*!
  *  bilinearXformPt()
  *

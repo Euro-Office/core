@@ -25,11 +25,7 @@
 //
 
 #include "lcms2_internal.h"
-
-
 // IT8.7 / CGATS.17-200x handling -----------------------------------------------------------------------------
-
-
 #define MAXID        128     // Max length of identifier
 #define MAXSTR      1024     // Max length of string
 #define MAXTABLES    255     // Max Number of tables in a single stream
@@ -43,8 +39,6 @@
 #else
 #    define DIR_CHAR    '/'
 #endif
-
-
 // Symbols
 typedef enum {
 
@@ -69,8 +63,6 @@ typedef enum {
         SINCLUDE
 
     } SYMBOL;
-
-
 // How to write the value
 typedef enum {
 
@@ -93,8 +85,6 @@ typedef struct _KeyVal {
         WRITEMODE        WriteAs;       // How to write the value
 
    } KEYVALUE;
-
-
 // Linked list of memory chunks (Memory sink)
 typedef struct _OwnedMem {
 
@@ -135,8 +125,6 @@ typedef struct _FileContext {
 
 // This struct hold all information about an open IT8 handler.
 typedef struct {
-
-
         cmsUInt32Number  TablesCount;                     // How many tables in this stream
         cmsUInt32Number  nTable;                          // The actual table
 
@@ -172,8 +160,6 @@ typedef struct {
         cmsContext    ContextID;              // The threading context
 
    } cmsIT8;
-
-
 // The stream for save operations
 typedef struct {
 
@@ -185,11 +171,7 @@ typedef struct {
         cmsUInt32Number Max;
 
     } SAVESTREAM;
-
-
 // ------------------------------------------------------ cmsIT8 parsing routines
-
-
 // A keyword
 typedef struct {
 
@@ -298,8 +280,6 @@ static PROPERTY PredefinedProperties[] = {
 };
 
 #define NUMPREDEFINEDPROPS (sizeof(PredefinedProperties)/sizeof(PROPERTY))
-
-
 // Predefined sample types on dataset
 static const char* PredefinedSampleID[] = {
         "SAMPLE_ID",      // Identifies sample that data represents
@@ -405,8 +385,6 @@ cmsBool isabsolutepath(const char *path)
 #endif
     return FALSE;
 }
-
-
 // Makes a file path based on a given reference path
 // NOTE: this function doesn't check if the path exists or even if it's legal
 static
@@ -438,8 +416,6 @@ cmsBool BuildAbsolutePath(const char *relPath, const char *basePath, char *buffe
 
     return TRUE;
 }
-
-
 // Make sure no exploit is being even tried
 static
 const char* NoMeta(const char* str)
@@ -502,8 +478,6 @@ void NextCh(cmsIT8* it8)
         if (it8->ch) it8->Source++;
     }
 }
-
-
 // Try to see if current identifier is a keyword, if so return the referred symbol
 static
 SYMBOL BinSrchKey(const char *id)
@@ -523,16 +497,12 @@ SYMBOL BinSrchKey(const char *id)
 
     return SUNDEFINED;
 }
-
-
 // 10 ^n
 static
 cmsFloat64Number xpow10(int n)
 {
     return pow(10, (cmsFloat64Number) n);
 }
-
-
 //  Reads a Real number, tries to follow from integer number
 static
 void ReadReal(cmsIT8* it8, int inum)
@@ -612,8 +582,6 @@ cmsFloat64Number ParseFloatNumber(const char *Buffer)
          sign = (*Buffer == '-') ? -1 : 1;
          Buffer++;
     }
-
-
     while (*Buffer && isdigit((int) *Buffer)) {
 
         dnum = dnum * 10.0 + (*Buffer - '0');
@@ -673,8 +641,6 @@ cmsFloat64Number ParseFloatNumber(const char *Buffer)
 
     return sign * dnum;
 }
-
-
 // Reads next symbol
 static
 void InSymbol(cmsIT8* it8)
@@ -703,8 +669,6 @@ void InSymbol(cmsIT8* it8)
             } while (isidchar(it8->ch));
 
             *idptr = '\0';
-
-
             key = BinSrchKey(it8->id);
             if (key == SUNDEFINED) it8->sy = SIDENT;
             else it8->sy = key;
@@ -770,8 +734,6 @@ void InSymbol(cmsIT8* it8)
                         return;
                     }
                 }
-
-
                 while (isdigit(it8->ch)) {
 
                     if ((long) it8->inum * 10L > (long) INT_MAX) {
@@ -837,8 +799,6 @@ void InSymbol(cmsIT8* it8)
         case -1:
             it8->sy = SEOF;
             break;
-
-
         // Next line
         case '\r':
             NextCh(it8);
@@ -885,8 +845,6 @@ void InSymbol(cmsIT8* it8)
             *idptr = '\0';
             NextCh(it8);
             break;
-
-
         default:
             SynError(it8, "Unrecognized character: 0x%x", it8 ->ch);
             return;
@@ -957,8 +915,6 @@ void Skip(cmsIT8* it8, SYMBOL sy)
         if (it8->sy == sy && it8->sy != SEOF)
                         InSymbol(it8);
 }
-
-
 // Skip multiple EOLN
 static
 void SkipEOLN(cmsIT8* it8)
@@ -967,8 +923,6 @@ void SkipEOLN(cmsIT8* it8)
              InSymbol(it8);
     }
 }
-
-
 // Returns a string holding current value
 static
 cmsBool GetVal(cmsIT8* it8, char* Buffer, cmsUInt32Number max, const char* ErrorTitle)
@@ -986,8 +940,6 @@ cmsBool GetVal(cmsIT8* it8, char* Buffer, cmsUInt32Number max, const char* Error
     case SSTRING: strncpy(Buffer, it8->str, max);
                   Buffer[max-1] = 0;
                   break;
-
-
     default:
          return SynError(it8, "%s", ErrorTitle);
     }
@@ -1011,8 +963,6 @@ TABLE* GetTable(cmsIT8* it8)
 }
 
 // ---------------------------------------------------------- Memory management
-
-
 // Frees an allocator and owned memory
 void CMSEXPORT cmsIT8Free(cmsHANDLE hIT8)
 {
@@ -1039,8 +989,6 @@ void CMSEXPORT cmsIT8Free(cmsHANDLE hIT8)
 
     _cmsFree(it8 ->ContextID, it8);
 }
-
-
 // Allocates a chunk of data, keep linked list
 static
 void* AllocBigBlock(cmsIT8* it8, cmsUInt32Number size)
@@ -1065,8 +1013,6 @@ void* AllocBigBlock(cmsIT8* it8, cmsUInt32Number size)
 
     return ptr;
 }
-
-
 // Suballocator.
 static
 void* AllocChunk(cmsIT8* it8, cmsUInt32Number size)
@@ -1097,16 +1043,12 @@ void* AllocChunk(cmsIT8* it8, cmsUInt32Number size)
     return (void*) ptr;
 
 }
-
-
 // Allocates a string
 static
 char *AllocString(cmsIT8* it8, const char* str)
 {
     cmsUInt32Number Size = (cmsUInt32Number) strlen(str)+1;
     char *ptr;
-
-
     ptr = (char *) AllocChunk(it8, Size);
     if (ptr) strncpy (ptr, str, Size-1);
 
@@ -1150,16 +1092,12 @@ cmsBool IsAvailableOnList(KEYVALUE* p, const char* Key, const char* Subkey, KEYV
     return FALSE;
 }
 
-
-
 // Add a property into a linked list
 static
 KEYVALUE* AddToList(cmsIT8* it8, KEYVALUE** Head, const char *Key, const char *Subkey, const char* xValue, WRITEMODE WriteAs)
 {
     KEYVALUE* p;
     KEYVALUE* last;
-
-
     // Check if property is already in list
 
     if (IsAvailableOnList(*Head, Key, Subkey, &p)) {
@@ -1226,15 +1164,11 @@ KEYVALUE* AddAvailableProperty(cmsIT8* it8, const char* Key, WRITEMODE as)
 {
     return AddToList(it8, &it8->ValidKeywords, Key, NULL, NULL, as);
 }
-
-
 static
 KEYVALUE* AddAvailableSampleID(cmsIT8* it8, const char* Key)
 {
     return AddToList(it8, &it8->ValidSampleID, Key, NULL, NULL, WRITE_UNCOOKED);
 }
-
-
 static
 void AllocTable(cmsIT8* it8)
 {
@@ -1248,8 +1182,6 @@ void AllocTable(cmsIT8* it8)
 
     it8 ->TablesCount++;
 }
-
-
 cmsInt32Number CMSEXPORT cmsIT8SetTable(cmsHANDLE  IT8, cmsUInt32Number nTable)
 {
      cmsIT8* it8 = (cmsIT8*) IT8;
@@ -1270,8 +1202,6 @@ cmsInt32Number CMSEXPORT cmsIT8SetTable(cmsHANDLE  IT8, cmsUInt32Number nTable)
 
      return (cmsInt32Number) nTable;
 }
-
-
 
 // Init an empty container
 cmsHANDLE  CMSEXPORT cmsIT8Alloc(cmsContext ContextID)
@@ -1317,12 +1247,8 @@ cmsHANDLE  CMSEXPORT cmsIT8Alloc(cmsContext ContextID)
 
     for (i=0; i < NUMPREDEFINEDSAMPLEID; i++)
             AddAvailableSampleID(it8, PredefinedSampleID[i]);
-
-
    return (cmsHANDLE) it8;
 }
-
-
 const char* CMSEXPORT cmsIT8GetSheetType(cmsHANDLE hIT8)
 {
         return GetTable((cmsIT8*) hIT8)->SheetType;
@@ -1404,8 +1330,6 @@ const char* CMSEXPORT cmsIT8GetProperty(cmsHANDLE hIT8, const char* Key)
     }
     return NULL;
 }
-
-
 cmsFloat64Number CMSEXPORT cmsIT8GetPropertyDbl(cmsHANDLE hIT8, const char* cProp)
 {
     const char *v = cmsIT8GetProperty(hIT8, cProp);
@@ -1427,8 +1351,6 @@ const char* CMSEXPORT cmsIT8GetPropertyMulti(cmsHANDLE hIT8, const char* Key, co
 }
 
 // ----------------------------------------------------------------- Datasets
-
-
 static
 void AllocateDataFormat(cmsIT8* it8)
 {
@@ -1482,8 +1404,6 @@ cmsBool SetDataFormat(cmsIT8* it8, int n, const char *label)
 
     return TRUE;
 }
-
-
 cmsBool CMSEXPORT cmsIT8SetDataFormat(cmsHANDLE  h, int n, const char *Sample)
 {
         cmsIT8* it8 = (cmsIT8*) h;
@@ -1545,11 +1465,7 @@ cmsBool SetData(cmsIT8* it8, int nSet, int nField, const char *Val)
     t->Data [nSet * t -> nSamples + nField] = AllocString(it8, Val);
     return TRUE;
 }
-
-
 // --------------------------------------------------------------- File I/O
-
-
 // Writes a string to file
 static
 void WriteStr(SAVESTREAM* f, const char *str)
@@ -1562,8 +1478,6 @@ void WriteStr(SAVESTREAM* f, const char *str)
     // Length to write
     len = (cmsUInt32Number) strlen(str);
     f ->Used += len;
-
-
     if (f ->stream) {   // Should I write it to a file?
 
         if (fwrite(str, 1, len, f->stream) != len) {
@@ -1588,8 +1502,6 @@ void WriteStr(SAVESTREAM* f, const char *str)
 
     }
 }
-
-
 // Write formatted
 
 static
@@ -1625,8 +1537,6 @@ void WriteHeader(cmsIT8* it8, SAVESTREAM* fp)
 
             WriteStr(fp, "#\n# ");
             for (Pt = p ->Value; *Pt; Pt++) {
-
-
                 Writef(fp, "%c", *Pt);
 
                 if (*Pt == '\n') {
@@ -1637,8 +1547,6 @@ void WriteHeader(cmsIT8* it8, SAVESTREAM* fp)
             WriteStr(fp, "\n#\n");
             continue;
         }
-
-
         if (!IsAvailableOnList(it8-> ValidKeywords, p->Keyword, NULL, NULL)) {
 
 #ifdef CMS_STRICT_CGATS
@@ -1684,8 +1592,6 @@ void WriteHeader(cmsIT8* it8, SAVESTREAM* fp)
     }
 
 }
-
-
 // Writes the data format
 static
 void WriteDataFormat(SAVESTREAM* fp, cmsIT8* it8)
@@ -1707,8 +1613,6 @@ void WriteDataFormat(SAVESTREAM* fp, cmsIT8* it8)
 
        WriteStr (fp, "END_DATA_FORMAT\n");
 }
-
-
 // Writes data array
 static
 void WriteData(SAVESTREAM* fp, cmsIT8* it8)
@@ -1750,8 +1654,6 @@ void WriteData(SAVESTREAM* fp, cmsIT8* it8)
        WriteStr (fp, "END_DATA\n");
 }
 
-
-
 // Saves whole file
 cmsBool CMSEXPORT cmsIT8SaveToFile(cmsHANDLE hIT8, const char* cFileName)
 {
@@ -1776,8 +1678,6 @@ cmsBool CMSEXPORT cmsIT8SaveToFile(cmsHANDLE hIT8, const char* cFileName)
 
     return TRUE;
 }
-
-
 // Saves to memory
 cmsBool CMSEXPORT cmsIT8SaveToMem(cmsHANDLE hIT8, void *MemPtr, cmsUInt32Number* BytesNeeded)
 {
@@ -1815,8 +1715,6 @@ cmsBool CMSEXPORT cmsIT8SaveToMem(cmsHANDLE hIT8, void *MemPtr, cmsUInt32Number*
 
     return TRUE;
 }
-
-
 // -------------------------------------------------------------- Higher level parsing
 
 static
@@ -1851,14 +1749,10 @@ cmsBool DataFormatSection(cmsIT8* it8)
 
        if (iField != t ->nSamples) {
            SynError(it8, "Count mismatch. NUMBER_OF_FIELDS was %d, found %d\n", t ->nSamples, iField);
-
-
        }
 
        return TRUE;
 }
-
-
 
 static
 cmsBool DataSection (cmsIT8* it8)
@@ -1908,10 +1802,6 @@ cmsBool DataSection (cmsIT8* it8)
 
     return TRUE;
 }
-
-
-
-
 static
 cmsBool HeaderSection(cmsIT8* it8)
 {
@@ -1923,8 +1813,6 @@ cmsBool HeaderSection(cmsIT8* it8)
                it8->sy != SSYNERROR &&
                it8->sy != SBEGIN_DATA_FORMAT &&
                it8->sy != SBEGIN_DATA) {
-
-
         switch (it8 -> sy) {
 
         case SKEYWORD:
@@ -1933,16 +1821,12 @@ cmsBool HeaderSection(cmsIT8* it8)
                 if (!AddAvailableProperty(it8, Buffer, WRITE_UNCOOKED)) return FALSE;
                 InSymbol(it8);
                 break;
-
-
         case SDATA_FORMAT_ID:
                 InSymbol(it8);
                 if (!GetVal(it8, Buffer, MAXSTR-1, "Keyword expected")) return FALSE;
                 if (!AddAvailableSampleID(it8, Buffer)) return FALSE;
                 InSymbol(it8);
                 break;
-
-
         case SIDENT:
                 strncpy(VarName, it8->id, MAXID-1);
                 VarName[MAXID-1] = 0;
@@ -2005,8 +1889,6 @@ cmsBool HeaderSection(cmsIT8* it8)
 
                 InSymbol(it8);
                 break;
-
-
         case SEOLN: break;
 
         default:
@@ -2019,8 +1901,6 @@ cmsBool HeaderSection(cmsIT8* it8)
     return TRUE;
 
 }
-
-
 static
 void ReadType(cmsIT8* it8, char* SheetTypePtr)
 {
@@ -2037,8 +1917,6 @@ void ReadType(cmsIT8* it8, char* SheetTypePtr)
 
     *SheetTypePtr = 0;
 }
-
-
 static
 cmsBool ParseIT8(cmsIT8* it8, cmsBool nosheet)
 {
@@ -2118,8 +1996,6 @@ cmsBool ParseIT8(cmsIT8* it8, cmsBool nosheet)
     return (it8 -> sy != SSYNERROR);
 }
 
-
-
 // Init useful pointers
 
 static
@@ -2146,8 +2022,6 @@ void CookPointers(cmsIT8* it8)
 
         Fld = t->DataFormat[idField];
         if (!Fld) continue;
-
-
         if (cmsstrcasecmp(Fld, "SAMPLE_ID") == 0) {
 
             t -> SampleID = idField;
@@ -2205,13 +2079,9 @@ void CookPointers(cmsIT8* it8)
                                         SetData(it8, i, idField, Buffer);
                                     }
                                 }
-
-
                             }
 
                     }
-
-
         }
 
     }
@@ -2260,8 +2130,6 @@ int IsMyBlock(cmsUInt8Number* Buffer, int n)
 
     return 0;
 }
-
-
 static
 cmsBool IsMyFile(const char* FileName)
 {
@@ -2286,8 +2154,6 @@ cmsBool IsMyFile(const char* FileName)
 }
 
 // ---------------------------------------------------------- Exported routines
-
-
 cmsHANDLE  CMSEXPORT cmsIT8LoadFromMem(cmsContext ContextID, void *Ptr, cmsUInt32Number len)
 {
     cmsHANDLE hIT8;
@@ -2325,11 +2191,7 @@ cmsHANDLE  CMSEXPORT cmsIT8LoadFromMem(cmsContext ContextID, void *Ptr, cmsUInt3
     it8 -> MemoryBlock = NULL;
 
     return hIT8;
-
-
 }
-
-
 cmsHANDLE  CMSEXPORT cmsIT8LoadFromFile(cmsContext ContextID, const char* cFileName)
 {
 
@@ -2345,16 +2207,12 @@ cmsHANDLE  CMSEXPORT cmsIT8LoadFromFile(cmsContext ContextID, const char* cFileN
      hIT8 = cmsIT8Alloc(ContextID);
      it8 = (cmsIT8*) hIT8;
      if (!hIT8) return NULL;
-
-
      it8 ->FileStack[0]->Stream = fopen(cFileName, "rt");
 
      if (!it8 ->FileStack[0]->Stream) {
          cmsIT8Free(hIT8);
          return NULL;
      }
-
-
     strncpy(it8->FileStack[0]->FileName, cFileName, cmsMAX_PATH-1);
     it8->FileStack[0]->FileName[cmsMAX_PATH-1] = 0;
 
@@ -2390,8 +2248,6 @@ int CMSEXPORT cmsIT8EnumDataFormat(cmsHANDLE hIT8, char ***SampleNames)
         *SampleNames = t -> DataFormat;
     return t -> nSamples;
 }
-
-
 cmsUInt32Number CMSEXPORT cmsIT8EnumProperties(cmsHANDLE hIT8, char ***PropertyNames)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2410,8 +2266,6 @@ cmsUInt32Number CMSEXPORT cmsIT8EnumProperties(cmsHANDLE hIT8, char ***PropertyN
     for (p = t -> HeaderList;  p != NULL; p = p->Next) {
         n++;
     }
-
-
     Props = (char **) AllocChunk(it8, sizeof(char *) * n);
 
     // Pass#2 - Fill pointers
@@ -2433,8 +2287,6 @@ cmsUInt32Number CMSEXPORT cmsIT8EnumPropertyMulti(cmsHANDLE hIT8, const char* cP
     TABLE* t;
 
     _cmsAssert(hIT8 != NULL);
-
-
     t = GetTable(it8);
 
     if(!IsAvailableOnList(t->HeaderList, cProp, NULL, &p)) {
@@ -2449,8 +2301,6 @@ cmsUInt32Number CMSEXPORT cmsIT8EnumPropertyMulti(cmsHANDLE hIT8, const char* cP
         if(tmp->Subkey != NULL)
             n++;
     }
-
-
     Props = (const char **) AllocChunk(it8, sizeof(char *) * n);
 
     // Pass#2 - Fill pointers
@@ -2485,8 +2335,6 @@ int LocatePatch(cmsIT8* it8, const char* cPatch)
         // SynError(it8, "Couldn't find patch '%s'\n", cPatch);
         return -1;
 }
-
-
 static
 int LocateEmptyPatch(cmsIT8* it8)
 {
@@ -2525,8 +2373,6 @@ int LocateSample(cmsIT8* it8, const char* cSample)
     return -1;
 
 }
-
-
 int CMSEXPORT cmsIT8FindDataFormat(cmsHANDLE hIT8, const char* cSample)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2536,8 +2382,6 @@ int CMSEXPORT cmsIT8FindDataFormat(cmsHANDLE hIT8, const char* cSample)
     return LocateSample(it8, cSample);
 }
 
-
-
 const char* CMSEXPORT cmsIT8GetDataRowCol(cmsHANDLE hIT8, int row, int col)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2546,8 +2390,6 @@ const char* CMSEXPORT cmsIT8GetDataRowCol(cmsHANDLE hIT8, int row, int col)
 
     return GetData(it8, row, col);
 }
-
-
 cmsFloat64Number CMSEXPORT cmsIT8GetDataRowColDbl(cmsHANDLE hIT8, int row, int col)
 {
     const char* Buffer;
@@ -2558,8 +2400,6 @@ cmsFloat64Number CMSEXPORT cmsIT8GetDataRowColDbl(cmsHANDLE hIT8, int row, int c
 
     return ParseFloatNumber(Buffer);
 }
-
-
 cmsBool CMSEXPORT cmsIT8SetDataRowCol(cmsHANDLE hIT8, int row, int col, const char* Val)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2568,8 +2408,6 @@ cmsBool CMSEXPORT cmsIT8SetDataRowCol(cmsHANDLE hIT8, int row, int col, const ch
 
     return SetData(it8, row, col, Val);
 }
-
-
 cmsBool CMSEXPORT cmsIT8SetDataRowColDbl(cmsHANDLE hIT8, int row, int col, cmsFloat64Number Val)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2581,8 +2419,6 @@ cmsBool CMSEXPORT cmsIT8SetDataRowColDbl(cmsHANDLE hIT8, int row, int col, cmsFl
 
     return SetData(it8, row, col, Buff);
 }
-
-
 
 const char* CMSEXPORT cmsIT8GetData(cmsHANDLE hIT8, const char* cPatch, const char* cSample)
 {
@@ -2603,8 +2439,6 @@ const char* CMSEXPORT cmsIT8GetData(cmsHANDLE hIT8, const char* cPatch, const ch
 
     return GetData(it8, iSet, iField);
 }
-
-
 cmsFloat64Number CMSEXPORT cmsIT8GetDataDbl(cmsHANDLE  it8, const char* cPatch, const char* cSample)
 {
     const char* Buffer;
@@ -2613,8 +2447,6 @@ cmsFloat64Number CMSEXPORT cmsIT8GetDataDbl(cmsHANDLE  it8, const char* cPatch, 
 
     return ParseFloatNumber(Buffer);
 }
-
-
 
 cmsBool CMSEXPORT cmsIT8SetData(cmsHANDLE hIT8, const char* cPatch, const char* cSample, const char *Val)
 {
@@ -2656,8 +2488,6 @@ cmsBool CMSEXPORT cmsIT8SetData(cmsHANDLE hIT8, const char* cPatch, const char* 
 
     return SetData(it8, iSet, iField, Val);
 }
-
-
 cmsBool CMSEXPORT cmsIT8SetDataDbl(cmsHANDLE hIT8, const char* cPatch,
                                    const char* cSample,
                                    cmsFloat64Number Val)
@@ -2741,8 +2571,6 @@ int CMSEXPORT cmsIT8SetTableByLabel(cmsHANDLE hIT8, const char* cSet, const char
 
     return cmsIT8SetTable(hIT8, nTable);
 }
-
-
 cmsBool CMSEXPORT cmsIT8SetIndexColumn(cmsHANDLE hIT8, const char* cSample)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;
@@ -2757,8 +2585,6 @@ cmsBool CMSEXPORT cmsIT8SetIndexColumn(cmsHANDLE hIT8, const char* cSample)
     it8->Tab[it8->nTable].SampleID = pos;
     return TRUE;
 }
-
-
 void CMSEXPORT cmsIT8DefineDblFormat(cmsHANDLE hIT8, const char* Formatter)
 {
     cmsIT8* it8 = (cmsIT8*) hIT8;

@@ -643,8 +643,6 @@ static void t1_3d_dec_clnpass(opj_t1_3d_t *t1, int w, int h, int l, int bpno,
         */
     }
 }               /* VSC and  BYPASS by Antonin */
-
-
 static void t1_3d_encode_cblk(opj_t1_3d_t *t1, opj_tcd_cblk_t * cblk,
                               int orient, int compno, int level[3], int dwtid[3], double stepsize,
                               int cblksty, int numcomps, opj_tcd_tile_t * tile)
@@ -813,8 +811,6 @@ static void t1_3d_decode_cblk(opj_t1_3d_t *t1, opj_tcd_cblk_t * cblk,
             }
         }
     }
-
-
     bpno = roishift + cblk->numbps - 1;
     passtype = 2;
 

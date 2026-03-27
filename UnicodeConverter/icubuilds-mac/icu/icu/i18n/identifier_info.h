@@ -77,8 +77,6 @@ class U_I18N_API IdentifierInfo : public UMemory {
      * @internal
      */
     const UnicodeSet &getIdentifierProfile() const;
-
-
     /**
      * Set an identifier to analyze. Afterwards, call methods like getScripts()
      * 
@@ -88,8 +86,6 @@ class U_I18N_API IdentifierInfo : public UMemory {
      * @internal
      */
     IdentifierInfo &setIdentifier(const UnicodeString &identifier, UErrorCode &status);
-
-
     /**
      * Get the identifier that was analyzed. The returned string is owned by the ICU library,
      * and must not be deleted by the caller.
@@ -98,8 +94,6 @@ class U_I18N_API IdentifierInfo : public UMemory {
      * @internal
      */
     const UnicodeString *getIdentifier() const;
-    
-
     /**
      * Get the scripts found in the identifiers.
      * 

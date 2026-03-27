@@ -162,8 +162,6 @@ bool CxImageJAS::Decode(CxFile *hFile, uint32_t imagetype)
 			}
 		}
 	}
-
-
   } cx_catch {
 	if (strcmp(message,"")) strncpy(info.szLastError,message,255);
 	if (info.nEscape == -1 && fmt>0){
@@ -245,8 +243,6 @@ bool CxImageJAS::Encode(CxFile * hFile, uint32_t imagetype)
 		jas_image_setcmpttype(image, 0,
 		  JAS_IMAGE_CT_COLOR(JAS_CLRSPC_CHANIND_GRAY_Y));
 	}
-
-
 	for (x = 0; x < numcmpts; ++x) { cmpts[x] = 0; }
 	/* Create temporary matrices to hold component data. */
 	for (x = 0; x < numcmpts; ++x) {

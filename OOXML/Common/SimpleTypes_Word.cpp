@@ -636,8 +636,6 @@ namespace SimpleTypes
 	//--------------------------------------------------------------------------------
 	// BrType 17.18.4 (Part 1)
 	//--------------------------------------------------------------------------------
-
-
 	EBrType CBrType::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"column")       == sValue ) this->m_eValue = brtypeColumn;
@@ -743,8 +741,6 @@ namespace SimpleTypes
 	//--------------------------------------------------------------------------------
 	// CombineBrackets 17.18.8 (Part 1)
 	//--------------------------------------------------------------------------------
-
-
 	ECombineBrackets CCombineBrackets::FromString(const std::wstring &sValue)
 	{
 		if      ( (L"angle")  == sValue ) this->m_eValue = combinebracketsAngle;
@@ -3071,8 +3067,6 @@ namespace SimpleTypes
 	{
 		return this->m_eValue / 72.0;
 	}
-
-
 	void CPointMeasure::FromPoints(double dValue)
 	{
 		this->m_eValue = (int)dValue;
@@ -4366,8 +4360,6 @@ namespace SimpleTypes
 
 }; // SimpleTypes
 
-
-
 // Дополнительные типы
 namespace SimpleTypes
 {
@@ -4808,8 +4800,6 @@ namespace SimpleTypes
 		else if (L"all" == sValue)								this->m_eValue = ligatureAll;
 		return this->m_eValue;
 	}
-
-
 	std::wstring CLigatures::ToString() const
 	{
 		switch (this->m_eValue)

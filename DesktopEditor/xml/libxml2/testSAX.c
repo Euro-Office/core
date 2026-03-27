@@ -40,8 +40,6 @@
 #ifdef HAVE_STRING_H
 #include <string.h>
 #endif
-
-
 #include <libxml/globals.h>
 #include <libxml/xmlerror.h>
 #include <libxml/parser.h>
@@ -367,8 +365,6 @@ resolveEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *publicId, const xm
     if (quiet)
 	return(NULL);
     /* xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx; */
-
-
     fprintf(stdout, "SAX.resolveEntity(");
     if (publicId != NULL)
 	fprintf(stdout, "%s", (char *)publicId);
@@ -423,8 +419,6 @@ getParameterEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *name)
     fprintf(stdout, "SAX.getParameterEntity(%s)\n", name);
     return(NULL);
 }
-
-
 /**
  * entityDeclDebug:
  * @ctxt:  An XML parser context
@@ -1124,8 +1118,6 @@ parseAndPrintFile(char *filename) {
     }
 #endif
 }
-
-
 int main(int argc, char **argv) {
     int i;
     int files = 0;

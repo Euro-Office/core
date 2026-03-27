@@ -429,8 +429,6 @@ namespace MetaFile
 
 			pImage = (CEmfPlusImage*)oFoundElement->second;
 		}
-
-
 		BYTE* pBuffer = new BYTE[unNeedRead];
 
 		m_oStream.ReadBytes(pBuffer, unNeedRead);
@@ -1810,8 +1808,6 @@ namespace MetaFile
 
 		m_pDC->RemovePen(pPen);
 	}
-
-
 	void CEmfPlusParser::Read_EMFPLUS_DRAWBEZIERS(unsigned short unShFlags)
 	{
 		if ((unShFlags >>(11)) & 1 )

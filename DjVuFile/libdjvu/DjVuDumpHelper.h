@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name DjVuDupmHelper.h
     This file contains code capable of generating information on
     DjVu documents without actually decoding them. The code has
@@ -79,8 +77,6 @@
     @version
     #$Id: DjVuDumpHelper.h,v 1.11 2007/05/19 03:07:33 leonb Exp $# */
 //@{
-
-
 
 #include "GSmartPointer.h"
 
@@ -113,8 +109,6 @@ public:
 	  the results in \Ref{ByteStream}. */
    GP<ByteStream>	dump(GP<ByteStream> str);
 };
-
-
 //@}
 
 // ----- THE END

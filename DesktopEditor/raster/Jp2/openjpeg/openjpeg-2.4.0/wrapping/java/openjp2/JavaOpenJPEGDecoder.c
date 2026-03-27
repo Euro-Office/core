@@ -66,8 +66,6 @@ typedef struct dircnt{
 	/** Pointer to the buffer*/
 	char **filename;
 }dircnt_t;
-
-
 typedef struct img_folder{
 	/** The directory path of the folder containing input images*/
 	char *imgdirpath;
@@ -79,8 +77,6 @@ typedef struct img_folder{
 	char set_out_format;
 
 }img_fol_t;
-
-
 void decode_help_display() {
 	fprintf(stdout,"HELP\n----\n\n");
 	fprintf(stdout,"- the -h option displays this help information on screen\n\n");
@@ -201,8 +197,6 @@ int get_file_format(char *filename) {
 
 	return -1;
 }
-
-
 /* -------------------------------------------------------------------------- */
 
 int parse_cmdline_decoder(int argc, char **argv, opj_dparameters_t *parameters,img_fol_t *img_fol) {
@@ -313,8 +307,6 @@ int parse_cmdline_decoder(int argc, char **argv, opj_dparameters_t *parameters,i
 			break;
 
 				/* ----------------------------------------------------- */
-
-
 			case 'r':		/* reduce option */
 			{
 				sscanf(opj_optarg, "%d", &parameters->cp_reduce);
@@ -322,8 +314,6 @@ int parse_cmdline_decoder(int argc, char **argv, opj_dparameters_t *parameters,i
 			break;
 			
 				/* ----------------------------------------------------- */
-      
-
 			case 'l':		/* layering option */
 			{
 				sscanf(opj_optarg, "%d", &parameters->cp_layer);
@@ -489,8 +479,6 @@ void info_callback(const char *msg, void *client_data) {
 	}
 	(*env)->DeleteLocalRef(env, jbuffer);
 }
-
-
 /* --------------------------------------------------------------------------
    --------------------   MAIN METHOD, CALLED BY JAVA -----------------------*/
 JNIEXPORT jint JNICALL Java_org_openJpeg_OpenJPEGJavaDecoder_internalDecodeJ2KtoImage(JNIEnv *env, jobject obj, jobjectArray javaParameters) {
@@ -869,8 +857,6 @@ JNIEXPORT jint JNICALL Java_org_openJpeg_OpenJPEGJavaDecoder_internalDecodeJ2Kto
 				printf("C: image16 completely filled\n");
 			}
 		}	
-
-
 		/* free remaining structures */
 		if(dinfo) {
 			opj_destroy_decompress(dinfo);

@@ -73,8 +73,6 @@
 
 // File "$Id: GBitmap.cpp,v 1.14 2007/07/14 01:21:56 leonb Exp $"
 // - Author: Leon Bottou, 05/1997
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -177,8 +175,6 @@ GBitmap::GBitmap(const GBitmap &ref, int border)
   }
   G_ENDCATCH;
 }
-
-
 GBitmap::GBitmap(const GBitmap &ref, const GRect &rect, int border)
   : nrows(0), ncolumns(0), border(0), 
     bytes_per_row(0), grays(0), bytes(0), gbytes_data(bytes_data),
@@ -196,12 +192,6 @@ GBitmap::GBitmap(const GBitmap &ref, const GRect &rect, int border)
   }
   G_ENDCATCH;
 }
-
-
-
-
-
-
 // ----- initialization
 
 void 
@@ -223,8 +213,6 @@ GBitmap::init(int arows, int acolumns, int aborder)
       bytes = bytes_data;
     }
 }
-
-
 void 
 GBitmap::init(const GBitmap &ref, int aborder)
 {
@@ -243,8 +231,6 @@ GBitmap::init(const GBitmap &ref, int aborder)
       minborder(aborder);
     }
 }
-
-
 void 
 GBitmap::init(const GBitmap &ref, const GRect &rect, int border)
 {
@@ -287,8 +273,6 @@ GBitmap::init(const GBitmap &ref, const GRect &rect, int border)
         }
     }
 }
-
-
 void 
 GBitmap::init(ByteStream &ref, int aborder)
 {
@@ -371,8 +355,6 @@ GBitmap::donate_rle(unsigned char *rledata, unsigned int rledatalen, int w, int 
   grle.replace(rledata,rledatalen);
   rlelength = rledatalen;
 }
-
-
 unsigned char *
 GBitmap::take_data(size_t &offset)
 {
@@ -393,8 +375,6 @@ GBitmap::get_rle(unsigned int &rle_length)
 }
 
 // ----- compression
-
-
 void 
 GBitmap::compress()
 {
@@ -422,8 +402,6 @@ GBitmap::uncompress()
     decode(rle);
 }
 
-
-
 unsigned int 
 GBitmap::get_memory_usage() const
 {
@@ -434,8 +412,6 @@ GBitmap::get_memory_usage() const
     usage += rlelength;
   return usage;
 }
-
-
 void 
 GBitmap::minborder(int minimum)
 {
@@ -457,8 +433,6 @@ GBitmap::minborder(int minimum)
         }
     }
 }
-
-
 #define NMONITORS 8
 static GMonitor monitors[NMONITORS];
 
@@ -471,8 +445,6 @@ GBitmap::share()
       monitorptr = &monitors[(x^(x>>5)) % NMONITORS];
     }
 }
-
-
 // ----- gray levels
 
 void
@@ -528,8 +500,6 @@ GBitmap::binarize_grays(int threshold)
       }
   grays = 2;
 }
-
-
 // ----- additive blitting
 
 #undef min
@@ -619,8 +589,6 @@ GBitmap::blit(const GBitmap *bm, int x, int y)
         }
     }
 }
-
-
 
 void 
 GBitmap::blit(const GBitmap *bm, int xh, int yh, int subsample)
@@ -739,11 +707,7 @@ GBitmap::blit(const GBitmap *bm, int xh, int yh, int subsample)
     }
 }
 
-
-
 // ------ load bitmaps
-
-
 unsigned int 
 GBitmap::read_integer(char &c, ByteStream &bs)
 {
@@ -768,8 +732,6 @@ GBitmap::read_integer(char &c, ByteStream &bs)
     }
   return x;
 }
-
-
 void 
 GBitmap::read_pbm_text(ByteStream &bs)
 {
@@ -907,8 +869,6 @@ GBitmap::read_rle_raw(ByteStream &bs)
         }
     }
 }
-
-
 // ------ save bitmaps
 
 void 
@@ -1032,11 +992,7 @@ GBitmap::save_rle(ByteStream &bs)
       bs.writall((void*)runs, size);
     }
 }
-
-
 // ------ runs
-
-
 void
 GBitmap::makerows(
   int nrows, const int ncolumns, unsigned char *runs, unsigned char *rlerows[])
@@ -1051,8 +1007,6 @@ GBitmap::makerows(
       G_THROW( ERR_MSG("GBitmap.lost_sync2") );
   }
 }
-
-
 void
 GBitmap::rle_get_bitmap (
   const int ncolumns,
@@ -1132,8 +1086,6 @@ GBitmap::rle_get_bits(int rowno, unsigned char *bits) const
     }
   return n;
 }
-
-
 int 
 GBitmap::rle_get_runs(int rowno, int *rlens) const
 {
@@ -1167,8 +1119,6 @@ GBitmap::rle_get_runs(int rowno, int *rlens) const
     }
   return n;
 }
-
-
 int 
 GBitmap::rle_get_rect(GRect &rect) const
 {
@@ -1219,8 +1169,6 @@ GBitmap::rle_get_rect(GRect &rect) const
     rect.clear();
   return area;
 }
-
-
 
 // ------ helpers
 
@@ -1488,8 +1436,6 @@ GBitmap::zeroes(int required)
   }
   return gzerobuffer;
 }
-
-
 // Fills a bitmap with the given value
 void 
 GBitmap::fill(unsigned char value)
@@ -1502,8 +1448,6 @@ GBitmap::fill(unsigned char value)
         bm_y[x] = value;
     }
 }
-
-
 void 
 GBitmap::append_long_run(unsigned char *&data, int count)
 {
@@ -1526,8 +1470,6 @@ GBitmap::append_long_run(unsigned char *&data, int count)
       data += 2;
     }
 }
-
-
 void
 GBitmap::append_line(unsigned char *&data,const unsigned char *row,
                      const int rowlen,bool invert)
@@ -1676,8 +1618,6 @@ GBitmap::check_border() const
     }
 }
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

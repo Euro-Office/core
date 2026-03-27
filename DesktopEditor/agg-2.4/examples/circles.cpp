@@ -39,8 +39,6 @@ static double spline_g_y[] = { 0.000000, 0.607260, 0.964065, 0.892558, 0.435571,
 
 static double spline_b_x[] = { 0.000000, 0.055045, 0.143034, 0.433082, 0.764859, 1.000000 };
 static double spline_b_y[] = { 0.385480, 0.128493, 0.021416, 0.271507, 0.713974, 1.000000 };
-
-
 struct scatter_point
 {
     double     x;
@@ -48,15 +46,11 @@ struct scatter_point
     double     z;
     agg::rgba  color;
 };
-
-
 double random_dbl(double start, double end)
 {
     unsigned r = rand() & 0x7FFF;
     return double(r) * (end - start) / 32768.0 + start;
 }
-
-
 class the_application : public agg::platform_support
 {
     unsigned       m_num_points;
@@ -96,8 +90,6 @@ public:
         m_slider_ctrl_size.label("Size");
         m_slider_ctrl_sel.label("Selectivity");
     }
-
-    
     void generate()
     {
         unsigned i;
@@ -122,14 +114,10 @@ public:
                                           1.0);
         }
     }
-
-
     virtual void on_init()
     {
         generate();
     }
-
-
     virtual void on_draw()
     {
         agg::rasterizer_scanline_aa<> pf;
@@ -144,8 +132,6 @@ public:
       
         agg::ellipse e1;
         agg::conv_transform<agg::ellipse> t1(e1, trans_affine_resizing());
-
-
         unsigned i;
         unsigned n_drawn = 0;
         for(i = 0; i < m_num_points; i++)
@@ -167,8 +153,6 @@ public:
                     (z - m_scale_ctrl_z.value2()) * 
                         m_slider_ctrl_sel.value() * 100.0;
             }
-
-
 
             if(alpha > 1.0) alpha = 1.0;
             if(alpha < 0.0) alpha = 0.0;
@@ -208,8 +192,6 @@ public:
         agg::render_scanlines_aa_solid(pf, sl, rb, agg::rgba(0,0,0));
 
     }
-
-
     virtual void on_idle()
     {
         unsigned i;
@@ -223,8 +205,6 @@ public:
         }
         force_redraw();
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -240,8 +220,6 @@ public:
     }
 
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -262,5 +240,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

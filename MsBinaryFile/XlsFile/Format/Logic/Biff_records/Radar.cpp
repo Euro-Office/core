@@ -38,13 +38,9 @@ namespace XLS
 Radar::Radar()
 {
 }
-
-
 Radar::~Radar()
 {
 }
-
-
 BaseObjectPtr Radar::clone()
 {
 	return BaseObjectPtr(new Radar(*this));

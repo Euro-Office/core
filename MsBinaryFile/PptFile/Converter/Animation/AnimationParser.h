@@ -33,8 +33,6 @@
 
 #include "intermediate_anim.h"
 #include "../../Records/SlideContainer.h"
-
-
 namespace PPT {
 class CSlide;
 	namespace Intermediate {

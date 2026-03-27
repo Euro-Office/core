@@ -292,16 +292,12 @@ inline const UChar*
 GMTOffsetField::getPatternText(void) const {
     return fText;
 }
-
-
 U_CDECL_BEGIN
 static void U_CALLCONV
 deleteGMTOffsetField(void *obj) {
     delete static_cast<GMTOffsetField *>(obj);
 }
 U_CDECL_END
-
-
 // ------------------------------------------------------------------
 // TimeZoneFormat
 // ------------------------------------------------------------------
@@ -415,8 +411,6 @@ TimeZoneFormat::TimeZoneFormat(const TimeZoneFormat& other)
     }
     *this = other;
 }
-
-
 TimeZoneFormat::~TimeZoneFormat() {
     delete fTimeZoneNames;
     delete fTimeZoneGenericNames;
@@ -468,8 +462,6 @@ TimeZoneFormat::operator=(const TimeZoneFormat& other) {
 
     return *this;
 }
-
-
 UBool
 TimeZoneFormat::operator==(const Format& other) const {
     TimeZoneFormat* tzfmt = (TimeZoneFormat*)&other;
@@ -541,8 +533,6 @@ uint32_t
 TimeZoneFormat::getDefaultParseOptions(void) const {
     return fDefParseOptionFlags;
 }
-
-
 UnicodeString& 
 TimeZoneFormat::getGMTPattern(UnicodeString& pattern) const {
     return pattern.setTo(fGMTPattern);
@@ -1085,8 +1075,6 @@ TimeZoneFormat::parse(UTimeZoneFormatStyle style, const UnicodeString& text, Par
         }
     }
     evaluated |= STYLE_PARSE_FLAGS[style];
-
-
     if (parsedPos > startIdx) {
         // When the specified style is one of SPECIFIC_XXX or GENERIC_XXX, we tried to parse the input
         // as localized GMT format earlier. If parsedOffset is positive, it means it was successfully
@@ -1317,8 +1305,6 @@ TimeZoneFormat::parseObject(const UnicodeString& source, Formattable& result,
         ParsePosition& parse_pos) const {
     result.adoptObject(parse(UTZFMT_STYLE_GENERIC_LOCATION, source, parse_pos, UTZFMT_PARSE_OPTION_ALL_STYLES));
 }
-
-
 // ------------------------------------------------------------------
 // Private zone name format/parse implementation
 
@@ -1431,8 +1417,6 @@ TimeZoneFormat::formatExemplarLocation(const TimeZone& tz, UnicodeString& name) 
     }
     return name;
 }
-
-
 // ------------------------------------------------------------------
 // Zone offset format and parse
 
@@ -2688,8 +2672,6 @@ TimeZoneFormat::getTimeZoneID(const TimeZoneNames::MatchInfoCollection* matches,
     }
     return tzID;
 }
-
-
 class ZoneIdMatchHandler : public TextTrieMapSearchResultHandler {
 public:
     ZoneIdMatchHandler();
@@ -2736,8 +2718,6 @@ int32_t
 ZoneIdMatchHandler::getMatchLen() {
     return fLen;
 }
-
-
 static void U_CALLCONV initZoneIdTrie(UErrorCode &status) {
     U_ASSERT(gZoneIdTrie == NULL);
     ucln_i18n_registerCleanup(UCLN_I18N_TIMEZONEFORMAT, tzfmt_cleanup);
@@ -2756,8 +2736,6 @@ static void U_CALLCONV initZoneIdTrie(UErrorCode &status) {
     }
     delete tzenum;
 }
-
-
 UnicodeString&
 TimeZoneFormat::parseZoneID(const UnicodeString& text, ParsePosition& pos, UnicodeString& tzID) const {
     UErrorCode status = U_ZERO_ERROR;
@@ -2806,8 +2784,6 @@ static void U_CALLCONV initShortZoneIdTrie(UErrorCode &status) {
     }
     delete tzenum;
 }
-
-
 UnicodeString&
 TimeZoneFormat::parseShortZoneID(const UnicodeString& text, ParsePosition& pos, UnicodeString& tzID) const {
     UErrorCode status = U_ZERO_ERROR;
@@ -2834,8 +2810,6 @@ TimeZoneFormat::parseShortZoneID(const UnicodeString& text, ParsePosition& pos, 
 
     return tzID;
 }
-
-
 UnicodeString&
 TimeZoneFormat::parseExemplarLocation(const UnicodeString& text, ParsePosition& pos, UnicodeString& tzID) const {
     int32_t startIdx = pos.getIndex();

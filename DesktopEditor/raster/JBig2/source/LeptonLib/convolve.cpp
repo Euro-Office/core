@@ -146,8 +146,6 @@ PIX     *pixs, *pixd, *pixr, *pixrc, *pixg, *pixgc, *pixb, *pixbc;
     pixDestroy(&pixs);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                     Grayscale block convolution                      *
  *----------------------------------------------------------------------*/
@@ -224,8 +222,6 @@ PIX       *pixd, *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *              Accumulator for 1, 8 and 32 bpp convolution             *
  *----------------------------------------------------------------------*/
@@ -269,8 +265,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *               Un-normalized grayscale block convolution              *
  *----------------------------------------------------------------------*/
@@ -364,8 +358,6 @@ PIX       *pixsb, *pixacc, *pixd;
     pixDestroy(&pixacc);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *               Tiled grayscale or color block convolution             *
  *----------------------------------------------------------------------*/
@@ -500,8 +492,6 @@ PIXTILING  *pt;
     pixTilingDestroy(&pt);
     return pixd;
 }
-
-
 /*!
  *  pixBlockconvGrayTile()
  *
@@ -605,8 +595,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *     Convolution for mean, mean square, variance and rms deviation    *
  *----------------------------------------------------------------------*/
@@ -683,8 +671,6 @@ PIX  *pixb, *pixm, *pixms;
     pixDestroy(&pixb);
     return 0;
 }
-
-
 /*!
  *  pixWindowedMean()
  *
@@ -770,8 +756,6 @@ PIX       *pixc, *pixd;
     pixDestroy(&pixc);
     return pixd;
 }
-
-
 /*!
  *  pixWindowedMeanSquare()
  *
@@ -854,8 +838,6 @@ PIX        *pixd;
     dpixDestroy(&dpix);
     return pixd;
 }
-
-
 /*!
  *  pixWindowedVariance()
  *
@@ -945,8 +927,6 @@ FPIX       *fpixv, *fpixrv;  /* variance and square root of variance */
 
     return 0;
 }
-
-
 /*!
  *  pixMeanSquareAccum()
  *
@@ -974,8 +954,6 @@ l_float64  *data, *line, *linep;
 DPIX       *dpix;
 
     PROCNAME("pixMeanSquareAccum");
-
-    
     if (!pixs || (pixGetDepth(pixs) != 8))
         return (DPIX *)ERROR_PTR("pixs undefined or not 8 bpp", procName, NULL);
     pixGetDimensions(pixs, &w, &h, NULL);
@@ -1013,8 +991,6 @@ DPIX       *dpix;
 
     return dpix;
 }
-
-
 /*----------------------------------------------------------------------*
  *                        Binary block sum/rank                         *
  *----------------------------------------------------------------------*/
@@ -1092,8 +1068,6 @@ PIX     *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixBlocksum()
  *
@@ -1177,8 +1151,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                          Census transform                            *
  *----------------------------------------------------------------------*/
@@ -1260,8 +1232,6 @@ PIX       *pixav, *pixd;
     pixDestroy(&pixav);
     return pixd;
 }
-        
-
 /*----------------------------------------------------------------------*
  *                         Generic convolution                          *
  *----------------------------------------------------------------------*/
@@ -1386,8 +1356,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixConvolveSep()
  *
@@ -1476,8 +1444,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixConvolveRGB()
  *
@@ -1531,8 +1497,6 @@ PIX  *pixt, *pixr, *pixg, *pixb, *pixd;
     pixDestroy(&pixb);
     return pixd;
 }
-
-
 /*!
  *  pixConvolveRGBSep()
  *
@@ -1589,8 +1553,6 @@ PIX  *pixt, *pixr, *pixg, *pixb, *pixd;
     pixDestroy(&pixb);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                  Generic convolution with float array                *
  *----------------------------------------------------------------------*/
@@ -1674,8 +1636,6 @@ FPIX       *fpixt, *fpixd;
     fpixDestroy(&fpixt);
     return fpixd;
 }
-
-
 /*!
  *  fpixConvolveSep()
  *
@@ -1746,8 +1706,6 @@ FPIX      *fpixt, *fpixd;
     fpixDestroy(&fpixt);
     return fpixd;
 }
-
-
 /*------------------------------------------------------------------------*
  *                Set parameter for convolution subsampling               *
  *------------------------------------------------------------------------*/

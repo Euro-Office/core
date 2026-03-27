@@ -17,12 +17,8 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Forward declarations */
 LOCAL(boolean) output_pass_setup JPP((j_decompress_ptr cinfo));
-
-
 /*
  * Decompression initialization.
  * jpeg_read_header must be completed before calling this.
@@ -81,8 +77,6 @@ jpeg_start_decompress (j_decompress_ptr cinfo)
   /* Perform any dummy output passes, and set up for the final pass */
   return output_pass_setup(cinfo);
 }
-
-
 /*
  * Set up for an output pass, and perform any dummy pass(es) needed.
  * Common subroutine for jpeg_start_decompress and jpeg_start_output.
@@ -133,8 +127,6 @@ output_pass_setup (j_decompress_ptr cinfo)
   cinfo->global_state = cinfo->raw_data_out ? DSTATE_RAW_OK : DSTATE_SCANNING;
   return TRUE;
 }
-
-
 /*
  * Read some scanlines of data from the JPEG decompressor.
  *
@@ -174,8 +166,6 @@ jpeg_read_scanlines (j_decompress_ptr cinfo, JSAMPARRAY scanlines,
   cinfo->output_scanline += row_ctr;
   return row_ctr;
 }
-
-
 /*
  * Alternate entry point to read raw data.
  * Processes exactly one iMCU row per call, unless suspended.
@@ -214,8 +204,6 @@ jpeg_read_raw_data (j_decompress_ptr cinfo, JSAMPIMAGE data,
   cinfo->output_scanline += lines_per_iMCU_row;
   return lines_per_iMCU_row;
 }
-
-
 /* Additional entry points for buffered-image mode. */
 
 #ifdef D_MULTISCAN_FILES_SUPPORTED
@@ -240,8 +228,6 @@ jpeg_start_output (j_decompress_ptr cinfo, int scan_number)
   /* Perform any dummy output passes, and set up for the real pass */
   return output_pass_setup(cinfo);
 }
-
-
 /*
  * Finish up after an output pass in buffered-image mode.
  *

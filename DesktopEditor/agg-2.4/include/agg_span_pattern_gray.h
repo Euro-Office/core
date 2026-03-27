@@ -20,8 +20,6 @@
 // PostScript and PDF technology for software developers.
 // 
 //----------------------------------------------------------------------------
-
-
 #ifndef AGG_SPAN_PATTERN_GRAY_INCLUDED
 #define AGG_SPAN_PATTERN_GRAY_INCLUDED
 

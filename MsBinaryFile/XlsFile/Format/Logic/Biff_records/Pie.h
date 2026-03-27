@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Pie record in BIFF8
 class Pie: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Pie();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

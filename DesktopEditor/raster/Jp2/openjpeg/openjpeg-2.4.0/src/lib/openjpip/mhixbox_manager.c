@@ -27,8 +27,6 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include "mhixbox_manager.h"
@@ -42,8 +40,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER */
-
-
 mhixbox_param_t * gene_mhixbox(box_param_t *box)
 {
     mhixbox_param_t *mhix;
@@ -73,8 +69,6 @@ mhixbox_param_t * gene_mhixbox(box_param_t *box)
     }
     return mhix;
 }
-
-
 markeridx_param_t * search_markeridx(Byte2_t code, mhixbox_param_t *mhix)
 {
     markeridx_param_t *found;
@@ -93,8 +87,6 @@ markeridx_param_t * search_markeridx(Byte2_t code, mhixbox_param_t *mhix)
 
     return NULL;
 }
-
-
 void print_mhixbox(mhixbox_param_t *mhix)
 {
     markeridx_param_t *ptr;
@@ -112,8 +104,6 @@ void print_mhixbox(mhixbox_param_t *mhix)
         ptr = ptr->next;
     }
 }
-
-
 void print_markeridx(markeridx_param_t *markeridx)
 {
     fprintf(logstream, "marker index info:\n"
@@ -123,8 +113,6 @@ void print_markeridx(markeridx_param_t *markeridx)
             "\t length: %#x\n", markeridx->code, markeridx->num_remain, markeridx->offset,
             markeridx->length);
 }
-
-
 void delete_mhixbox(mhixbox_param_t **mhix)
 {
     markeridx_param_t *mkPtr, *mkNext;
@@ -140,5 +128,3 @@ void delete_mhixbox(mhixbox_param_t **mhix)
     }
     free(*mhix);
 }
-
-

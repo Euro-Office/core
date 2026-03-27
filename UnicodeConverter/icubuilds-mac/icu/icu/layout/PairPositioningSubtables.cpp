@@ -108,8 +108,6 @@ le_uint32 PairPositioningFormat2Subtable::process(const LEReferenceTo<PairPositi
         le_int16 class1RecordSize = class2RecordSize * SWAPW(class2Count);
         const Class1Record *class1Record = (const Class1Record *) ((char *) class1RecordArray + (class1RecordSize * class1));
         const Class2Record *class2Record = (const Class2Record *) ((char *) class1Record->class2RecordArray + (class2RecordSize * class2));
-
-
         if (valueFormat1 != 0) {
             class2Record->valueRecord1.adjustPosition(SWAPW(valueFormat1), (char *) this, tempIterator, fontInstance);
         }

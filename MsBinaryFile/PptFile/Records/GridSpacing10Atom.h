@@ -39,8 +39,6 @@ class CRecordGridSpacing10Atom : public CUnknownRecord
 public:
     INT m_nX = 0;
     INT m_nY = 0;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

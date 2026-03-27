@@ -16,10 +16,6 @@
 #include "LayoutTables.h"
 
 U_NAMESPACE_BEGIN
-
-
-
-
 /* 
  * State table loop detection. 
  * Detects if too many ( LE_STATE_PATIENCE_COUNT ) state changes occur without moving the glyph index 'g'.
@@ -50,8 +46,6 @@ U_NAMESPACE_BEGIN
 #define LE_STATE_PATIENCE_DECR()  --le_patience_count==0
 #define LE_STATE_PATIENCE_CURR(type,x)  type le_patience_curr=(x)
 #define LE_STATE_PATIENCE_INCR(x)    if((x)!=le_patience_curr) ++le_patience_count;
-
-
 struct StateTableHeader
 {
     le_int16 stateSize;

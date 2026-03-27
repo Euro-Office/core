@@ -175,8 +175,6 @@ namespace OOX
 		delete []pSlashPoints;
 		delete []pDataNorm;
 	}
-
-
 	bool CPath::FileInDirectoryCorrect()
 	{
 		std::wstring fileDirectory = GetDirectory(false);

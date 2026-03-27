@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr AFDOperStr::clone()
 {
 	return BiffStructurePtr(new AFDOperStr(*this));
@@ -50,8 +48,6 @@ AFDOperStr::AFDOperStr(bool bAutoFilter)
 {
 	m_bAutoFilter = bAutoFilter;
 }
-
-
 AFDOperStr::~AFDOperStr()
 {
 }
@@ -80,7 +76,5 @@ void AFDOperStr::save(CFRecord& record)
     if (!m_bAutoFilter)		// AutoFilter12
         record.reserveNunBytes(4);
 }
-
-
 } // namespace XLS
 

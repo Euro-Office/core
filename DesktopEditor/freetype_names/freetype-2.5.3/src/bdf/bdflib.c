@@ -29,8 +29,6 @@
   /*  taken from Mark Leisher's xmbdfed package                            */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 
 #include FT_FREETYPE_H
@@ -40,8 +38,6 @@
 
 #include "bdf.h"
 #include "bdferror.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -50,15 +46,11 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_bdflib
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Default BDF font options.                                             */
   /*                                                                       */
   /*************************************************************************/
-
-
   static const bdf_options_t  _bdf_opts =
   {
     1,                /* Correct metrics.               */
@@ -66,8 +58,6 @@
     0,                /* Preserve comments.             */
     BDF_PROPORTIONAL  /* Default spacing.               */
   };
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Builtin BDF font properties.                                          */
@@ -167,8 +157,6 @@
   static const unsigned long
   _num_bdf_properties = sizeof ( _bdf_properties ) /
                         sizeof ( _bdf_properties[0] );
-
-
   /* Auto correction messages. */
 #define ACMSG1   "FONT_ASCENT property missing.  " \
                  "Added `FONT_ASCENT %hd'.\n"
@@ -204,8 +192,6 @@
   /* Debug messages. */
 #define DBGMSG1  "  [%6ld] %s" /* no \n */
 #define DBGMSG2  " (0x%lX)\n"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Hash table utilities for the properties.                              */
@@ -213,8 +199,6 @@
   /*************************************************************************/
 
   /* XXX: Replace this with FreeType's hash functions */
-
-
 #define INITIAL_HT_SIZE  241
 
   typedef void
@@ -227,8 +211,6 @@
     const char*    kp  = key;
     unsigned long  res = 0;
     hashnode*      bp  = ht->table, *ndp;
-
-
     /* Mocklisp hash function. */
     while ( *kp )
       res = ( res << 5 ) - res + *kp++;
@@ -246,8 +228,6 @@
 
     return ndp;
   }
-
-
   static FT_Error
   hash_rehash( hashtable*  ht,
                FT_Memory   memory )
@@ -255,8 +235,6 @@
     hashnode*  obp = ht->table, *bp, *nbp;
     int        i, sz = ht->size;
     FT_Error   error = FT_Err_Ok;
-
-
     ht->size <<= 1;
     ht->limit  = ht->size / 3;
 
@@ -276,16 +254,12 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   hash_init( hashtable*  ht,
              FT_Memory   memory )
   {
     int       sz    = INITIAL_HT_SIZE;
     FT_Error  error = FT_Err_Ok;
-
-
     ht->size  = sz;
     ht->limit = sz / 3;
     ht->used  = 0;
@@ -296,8 +270,6 @@
   Exit:
     return error;
   }
-
-
   static void
   hash_free( hashtable*  ht,
              FT_Memory   memory )
@@ -306,16 +278,12 @@
     {
       int        i, sz = ht->size;
       hashnode*  bp = ht->table;
-
-
       for ( i = 0; i < sz; i++, bp++ )
         FT_FREE( *bp );
 
       FT_FREE( ht->table );
     }
   }
-
-
   static FT_Error
   hash_insert( char*       key,
                size_t      data,
@@ -325,8 +293,6 @@
     hashnode   nn;
     hashnode*  bp      = hash_bucket( key, ht );
     FT_Error   error   = FT_Err_Ok;
-
-
     nn = *bp;
     if ( !nn )
     {
@@ -351,26 +317,18 @@
   Exit:
     return error;
   }
-
-
   static hashnode
   hash_lookup( const char* key,
                hashtable*  ht )
   {
     hashnode *np = hash_bucket( key, ht );
-
-
     return *np;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Utility types and functions.                                          */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* Function type for parsing lines of a BDF font. */
 
   typedef FT_Error
@@ -379,8 +337,6 @@
                        unsigned long  lineno,
                        void*          call_data,
                        void*          client_data );
-
-
   /* List structure for splitting lines into fields. */
 
   typedef struct  _bdf_list_t_
@@ -391,8 +347,6 @@
     FT_Memory      memory;
 
   } _bdf_list_t;
-
-
   /* Structure used while loading BDF fonts. */
 
   typedef struct  _bdf_parse_t_
@@ -422,14 +376,10 @@
     FT_Memory       memory;
 
   } _bdf_parse_t;
-
-
 #define setsbit( m, cc ) \
           ( m[(FT_Byte)(cc) >> 3] |= (FT_Byte)( 1 << ( (cc) & 7 ) ) )
 #define sbitset( m, cc ) \
           ( m[(FT_Byte)(cc) >> 3]  & ( 1 << ( (cc) & 7 ) ) )
-
-
   static void
   _bdf_list_init( _bdf_list_t*  list,
                   FT_Memory     memory )
@@ -437,37 +387,27 @@
     FT_ZERO( list );
     list->memory = memory;
   }
-
-
   static void
   _bdf_list_done( _bdf_list_t*  list )
   {
     FT_Memory  memory = list->memory;
-
-
     if ( memory )
     {
       FT_FREE( list->field );
       FT_ZERO( list );
     }
   }
-
-
   static FT_Error
   _bdf_list_ensure( _bdf_list_t*   list,
                     unsigned long  num_items ) /* same as _bdf_list_t.used */
   {
     FT_Error  error = FT_Err_Ok;
-
-
     if ( num_items > list->size )
     {
       unsigned long  oldsize = list->size; /* same as _bdf_list_t.size */
       unsigned long  newsize = oldsize + ( oldsize >> 1 ) + 5;
       unsigned long  bigsize = (unsigned long)( FT_INT_MAX / sizeof ( char* ) );
       FT_Memory      memory  = list->memory;
-
-
       if ( oldsize == bigsize )
       {
         error = FT_THROW( Out_Of_Memory );
@@ -485,15 +425,11 @@
   Exit:
     return error;
   }
-
-
   static void
   _bdf_list_shift( _bdf_list_t*   list,
                    unsigned long  n )
   {
     unsigned long  i, u;
-
-
     if ( list == 0 || list->used == 0 || n == 0 )
       return;
 
@@ -507,13 +443,9 @@
       list->field[i] = list->field[u];
     list->used -= n;
   }
-
-
   /* An empty string for empty fields. */
 
   static const char  empty[1] = { 0 };      /* XXX eliminate this */
-
-
   static char *
   _bdf_list_join( _bdf_list_t*    list,
                   int             c,
@@ -521,8 +453,6 @@
   {
     unsigned long  i, j;
     char*          dp;
-
-
     *alen = 0;
 
     if ( list == 0 || list->used == 0 )
@@ -532,8 +462,6 @@
     for ( i = j = 0; i < list->used; i++ )
     {
       char*  fp = list->field[i];
-
-
       while ( *fp )
         dp[j++] = *fp++;
 
@@ -546,8 +474,6 @@
     *alen = j;
     return dp;
   }
-
-
   /* The code below ensures that we have at least 4 + 1 `field' */
   /* elements in `list' (which are possibly NULL) so that we    */
   /* don't have to check the number of fields in most cases.    */
@@ -562,8 +488,6 @@
     char      *sp, *ep, *end;
     char      seps[32];
     FT_Error  error = FT_Err_Ok;
-
-
     /* Initialize the list. */
     list->used = 0;
     if ( list->size )
@@ -655,11 +579,7 @@
   Exit:
     return error;
   }
-
-
 #define NO_SKIP  256  /* this value cannot be stored in a 'char' */
-
-
   static FT_Error
   _bdf_readstream( FT_Stream         stream,
                    _bdf_line_func_t  callback,
@@ -673,8 +593,6 @@
     char*             buf    = 0;
     FT_Memory         memory = stream->memory;
     FT_Error          error  = FT_Err_Ok;
-
-
     if ( callback == 0 )
     {
       error = FT_THROW( Invalid_Argument );
@@ -735,8 +653,6 @@
           /* this line is definitely too long; try resizing the input */
           /* buffer a bit to handle it.                               */
           FT_ULong  new_size;
-
-
           if ( buf_size >= 65536UL )  /* limit ourselves to 64KByte */
           {
             FT_ERROR(( "_bdf_readstream: " ERRMSG6, lineno ));
@@ -800,8 +716,6 @@
     FT_FREE( buf );
     return error;
   }
-
-
   /* XXX: make this work with EBCDIC also */
 
   static const unsigned char  a2i[128] =
@@ -842,8 +756,6 @@
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
   };
-
-
   /* Routine to convert an ASCII string into an unsigned long integer. */
   static unsigned long
   _bdf_atoul( char*   s,
@@ -852,8 +764,6 @@
   {
     unsigned long         v;
     const unsigned char*  dmap;
-
-
     if ( s == 0 || *s == 0 )
       return 0;
 
@@ -889,8 +799,6 @@
 
     return v;
   }
-
-
   /* Routine to convert an ASCII string into an signed long integer. */
   static long
   _bdf_atol( char*   s,
@@ -899,8 +807,6 @@
   {
     long                  v, neg;
     const unsigned char*  dmap;
-
-
     if ( s == 0 || *s == 0 )
       return 0;
 
@@ -944,8 +850,6 @@
 
     return ( !neg ) ? v : -v;
   }
-
-
   /* Routine to convert an ASCII string into an signed short integer. */
   static short
   _bdf_atos( char*   s,
@@ -954,8 +858,6 @@
   {
     short                 v, neg;
     const unsigned char*  dmap;
-
-
     if ( s == 0 || *s == 0 )
       return 0;
 
@@ -999,16 +901,12 @@
 
     return (short)( ( !neg ) ? v : -v );
   }
-
-
   /* Routine to compare two glyphs by encoding so they can be sorted. */
   static int
   by_encoding( const void*  a,
                const void*  b )
   {
     bdf_glyph_t  *c1, *c2;
-
-
     c1 = (bdf_glyph_t *)a;
     c2 = (bdf_glyph_t *)b;
 
@@ -1020,8 +918,6 @@
 
     return 0;
   }
-
-
   static FT_Error
   bdf_create_property( char*        name,
                        int          format,
@@ -1031,8 +927,6 @@
     bdf_property_t*  p;
     FT_Memory        memory = font->memory;
     FT_Error         error  = FT_Err_Ok;
-
-
     /* First check whether the property has        */
     /* already been added or not.  If it has, then */
     /* simply ignore it.                           */
@@ -1070,16 +964,12 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( bdf_property_t * )
   bdf_get_property( char*        name,
                     bdf_font_t*  font )
   {
     hashnode  hn;
     size_t    propid;
-
-
     if ( name == 0 || *name == 0 )
       return 0;
 
@@ -1092,15 +982,11 @@
 
     return (bdf_property_t*)_bdf_properties + propid;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* BDF font file parsing flags and functions.                            */
   /*                                                                       */
   /*************************************************************************/
-
-
   /* Parse flags. */
 
 #define _BDF_START      0x0001
@@ -1127,8 +1013,6 @@
 
 #define _BDF_GLYPH_WIDTH_CHECK   0x40000000UL
 #define _BDF_GLYPH_HEIGHT_CHECK  0x80000000UL
-
-
   static FT_Error
   _bdf_add_comment( bdf_font_t*    font,
                     char*          comment,
@@ -1137,8 +1021,6 @@
     char*      cp;
     FT_Memory  memory = font->memory;
     FT_Error   error  = FT_Err_Ok;
-
-
     if ( FT_RENEW_ARRAY( font->comments,
                          font->comments_len,
                          font->comments_len + len + 1 ) )
@@ -1154,8 +1036,6 @@
   Exit:
     return error;
   }
-
-
   /* Set the spacing from the font name if it exists, or set it to the */
   /* default specified in the options.                                 */
   static FT_Error
@@ -1170,8 +1050,6 @@
     FT_Error     error = FT_Err_Ok;
 
     FT_UNUSED( lineno );        /* only used in debug mode */
-
-
     if ( font == 0 || font->name == 0 || font->name[0] == 0 )
     {
       error = FT_THROW( Invalid_Argument );
@@ -1224,8 +1102,6 @@
   Exit:
     return error;
   }
-
-
   /* Determine whether the property is an atom or not.  If it is, then */
   /* clean it up so the double quotes are removed if they exist.       */
   static int
@@ -1238,8 +1114,6 @@
     int              hold;
     char             *sp, *ep;
     bdf_property_t*  p;
-
-
     *name = sp = ep = line;
 
     while ( *ep && *ep != ' ' && *ep != '\t' )
@@ -1290,8 +1164,6 @@
 
     return 1;
   }
-
-
   static FT_Error
   _bdf_add_property( bdf_font_t*    font,
                      char*          name,
@@ -1305,8 +1177,6 @@
     FT_Error        error  = FT_Err_Ok;
 
     FT_UNUSED( lineno );        /* only used in debug mode */
-
-
     /* First, check whether the property already exists in the font. */
     if ( ( hn = hash_lookup( name, (hashtable *)font->internal ) ) != 0 )
     {
@@ -1452,14 +1322,10 @@
   Exit:
     return error;
   }
-
-
   static const unsigned char nibble_mask[8] =
   {
     0xFF, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE
   };
-
-
   /* Actually parse the glyph info and bitmaps. */
   static FT_Error
   _bdf_parse_glyphs( char*          line,
@@ -1482,8 +1348,6 @@
 
     FT_UNUSED( call_data );
     FT_UNUSED( lineno );        /* only used in debug mode */
-
-
     p = (_bdf_parse_t *)client_data;
 
     font   = p->font;
@@ -1881,8 +1745,6 @@
                                glyph->dwidth, 72000L,
                                (FT_Long)( font->point_size *
                                           font->resolution_x ) );
-
-
         if ( sw != glyph->swidth )
         {
           glyph->swidth = sw;
@@ -1906,8 +1768,6 @@
     if ( ft_strncmp( line, "BITMAP", 6 ) == 0 )
     {
       unsigned long  bitmap_size;
-
-
       if ( !( p->flags & _BDF_BBX ) )
       {
         /* Missing BBX field. */
@@ -1953,8 +1813,6 @@
 
     return error;
   }
-
-
   /* Load the font properties. */
   static FT_Error
   _bdf_parse_properties( char*          line,
@@ -1972,8 +1830,6 @@
     FT_Error           error = FT_Err_Ok;
 
     FT_UNUSED( lineno );
-
-
     next = (_bdf_line_func_t *)call_data;
     p    = (_bdf_parse_t *)    client_data;
 
@@ -2058,8 +1914,6 @@
   Exit:
     return error;
   }
-
-
   /* Load the font header. */
   static FT_Error
   _bdf_parse_start( char*          line,
@@ -2078,8 +1932,6 @@
     FT_Error           error  = FT_Err_Ok;
 
     FT_UNUSED( lineno );            /* only used in debug mode */
-
-
     next = (_bdf_line_func_t *)call_data;
     p    = (_bdf_parse_t *)    client_data;
 
@@ -2135,8 +1987,6 @@
       { /* setup */
         size_t           i;
         bdf_property_t*  prop;
-
-
         error = hash_init( &(font->proptbl), memory );
         if ( error )
           goto Exit;
@@ -2279,8 +2129,6 @@
       if ( p->list.used == 5 )
       {
         unsigned short bitcount, i, shift;
-
-
         p->font->bpp = (unsigned short)_bdf_atos( p->list.field[4], 0, 10 );
 
         /* Only values 1, 2, 4, 8 are allowed. */
@@ -2314,8 +2162,6 @@
     if ( ft_strncmp( line, "CHARS", 5 ) == 0 )
     {
       char  nbuf[128];
-
-
       if ( !( p->flags & _BDF_FONT_BBX ) )
       {
         /* Missing the FONTBOUNDINGBOX field. */
@@ -2357,15 +2203,11 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* API.                                                                  */
   /*                                                                       */
   /*************************************************************************/
-
-
   FT_LOCAL_DEF( FT_Error )
   bdf_load_font( FT_Stream       stream,
                  FT_Memory       extmemory,
@@ -2377,8 +2219,6 @@
 
     FT_Memory  memory = extmemory; /* needed for FT_NEW */
     FT_Error   error  = FT_Err_Ok;
-
-
     if ( FT_NEW( p ) )
       goto Exit;
 
@@ -2521,8 +2361,6 @@
 
     goto Exit;
   }
-
-
   FT_LOCAL_DEF( void )
   bdf_free_font( bdf_font_t*  font )
   {
@@ -2530,8 +2368,6 @@
     unsigned long    i;
     bdf_glyph_t*     glyphs;
     FT_Memory        memory;
-
-
     if ( font == 0 )
       return;
 
@@ -2602,15 +2438,11 @@
 
     /* FREE( font ); */ /* XXX Fixme */
   }
-
-
   FT_LOCAL_DEF( bdf_property_t * )
   bdf_get_font_property( bdf_font_t*  font,
                          const char*  name )
   {
     hashnode  hn;
-
-
     if ( font == 0 || font->props_size == 0 || name == 0 || *name == 0 )
       return 0;
 
@@ -2618,6 +2450,4 @@
 
     return hn ? ( font->props + hn->data ) : 0;
   }
-
-
 /* END */

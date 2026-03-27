@@ -3209,11 +3209,7 @@ READ_CHUNK (mng_read_phys)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3316,11 +3312,7 @@ READ_CHUNK (mng_read_sbit)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3419,11 +3411,7 @@ READ_CHUNK (mng_read_splt)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -3492,11 +3480,7 @@ READ_CHUNK (mng_read_hist)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -4170,8 +4154,6 @@ READ_CHUNK (mng_read_basi)
   pData->iCompression = *(pRawdata+10);
   pData->iFilter      = *(pRawdata+11);
   pData->iInterlace   = *(pRawdata+12);
-
-
 #if defined(MNG_NO_1_2_4BIT_SUPPORT) || defined(MNG_NO_16BIT_SUPPORT)
   pData->iPNGmult = 1;
   pData->iPNGdepth = pData->iBitdepth;
@@ -5398,11 +5380,7 @@ READ_CHUNK (mng_read_save)
 #ifdef MNG_SUPPORT_DISPLAY
   {
     mng_retcode iRetcode;
-
-
     /* TODO: something with the parameters */
-
-
                                        /* create a SAVE animation object */
     iRetcode = mng_create_ani_save (pData);
 
@@ -5689,11 +5667,7 @@ READ_CHUNK (mng_read_expi)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -5752,11 +5726,7 @@ READ_CHUNK (mng_read_fpri)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -6053,11 +6023,7 @@ READ_CHUNK (mng_read_phyg)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -6123,8 +6089,6 @@ READ_CHUNK (mng_read_jhdr)
   pData->iJHDRalphacompression = *(pRawdata+13);
   pData->iJHDRalphafilter      = *(pRawdata+14);
   pData->iJHDRalphainterlace   = *(pRawdata+15);
-
-
 #if defined(MNG_NO_1_2_4BIT_SUPPORT) || defined(MNG_NO_16BIT_SUPPORT)
   pData->iPNGmult = 1;
   pData->iPNGdepth = pData->iJHDRalphabitdepth;
@@ -6963,11 +6927,7 @@ READ_CHUNK (mng_read_drop)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -7030,11 +6990,7 @@ READ_CHUNK (mng_read_dbyk)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 
@@ -7087,11 +7043,7 @@ READ_CHUNK (mng_read_ordr)
 
 #ifdef MNG_SUPPORT_DISPLAY
   {
-
-
     /* TODO: something !!! */
-
-
   }
 #endif /* MNG_SUPPORT_DISPLAY */
 

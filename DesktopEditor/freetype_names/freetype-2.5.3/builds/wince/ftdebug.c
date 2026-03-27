@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This component contains various macros and functions used to ease the */
@@ -39,28 +37,18 @@
   /*   debugging parts.                                                    */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
-
-
 #ifdef FT_DEBUG_LEVEL_ERROR
-
-
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <windows.h>
-
-
   void
   OutputDebugStringEx( const char*  str )
   {
     static WCHAR  buf[8192];
-
-
     int sz = MultiByteToWideChar( CP_ACP, 0, str, -1, buf,
                                   sizeof ( buf ) / sizeof ( *buf ) );
     if ( !sz )
@@ -68,16 +56,12 @@
 
     OutputDebugStringW( buf );
   }
-
-
   FT_BASE_DEF( void )
   FT_Message( const char*  fmt,
               ... )
   {
     static char  buf[8192];
     va_list      ap;
-
-
     va_start( ap, fmt );
     vprintf( fmt, ap );
     /* send the string to the debugger as well */
@@ -85,16 +69,12 @@
     OutputDebugStringEx( buf );
     va_end( ap );
   }
-
-
   FT_BASE_DEF( void )
   FT_Panic( const char*  fmt,
             ... )
   {
     static char  buf[8192];
     va_list      ap;
-
-
     va_start( ap, fmt );
     vsprintf( buf, fmt, ap );
     OutputDebugStringEx( buf );
@@ -102,8 +82,6 @@
 
     exit( EXIT_FAILURE );
   }
-
-
   /* documentation is in ftdebug.h */
 
   FT_BASE_DEF( int )
@@ -119,8 +97,6 @@
   }
 
 #ifdef FT_DEBUG_LEVEL_TRACE
-
-
   /* array of trace levels, initialized to 0 */
   int  ft_trace_levels[trace_count];
 
@@ -134,8 +110,6 @@
   };
 
 #undef FT_TRACE_DEF
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Initialize the tracing sub-system.  This is done by retrieving the    */
@@ -165,14 +139,10 @@
     /* const char*  ft2_debug = getenv( "FT2_DEBUG" ); */
 
     const char*  ft2_debug = 0;
-
-
     if ( ft2_debug )
     {
       const char*  p = ft2_debug;
       const char*  q;
-
-
       for ( ; *p; p++ )
       {
         /* skip leading whitespace and separators */
@@ -191,13 +161,9 @@
         {
           int  n, i, len = (int)( p - q );
           int  level = -1, found = -1;
-
-
           for ( n = 0; n < trace_count; n++ )
           {
             const char*  toggle = ft_trace_toggles[n];
-
-
             for ( i = 0; i < len; i++ )
             {
               if ( toggle[i] != q[i] )
@@ -235,21 +201,13 @@
       }
     }
   }
-
-
 #else  /* !FT_DEBUG_LEVEL_TRACE */
-
-
   FT_BASE_DEF( void )
   ft_debug_init( void )
   {
     /* nothing */
   }
-
-
 #endif /* !FT_DEBUG_LEVEL_TRACE */
 
 #endif /* FT_DEBUG_LEVEL_ERROR */
-
-
 /* END */

@@ -8,8 +8,6 @@
 #define DCFMTIMP_H
 
 #include "unicode/utypes.h"
-
-
 #if UCONFIG_FORMAT_FASTPATHS_49
 
 U_NAMESPACE_BEGIN
@@ -42,8 +40,6 @@ struct DecimalFormatInternal {
   }
 #endif
 };
-
-
 
 U_NAMESPACE_END
 

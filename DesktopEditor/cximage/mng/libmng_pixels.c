@@ -5927,8 +5927,6 @@ mng_retcode mng_display_bgr565 (mng_datap pData)
         {                              /* copy the values */
           *(pScanline+1) = (mng_uint8)( ( (*(pDataline))&0xF8 )  |  ( (*(pDataline+1)>>5   )     ) );
           *pScanline     = (mng_uint8)( (  *(pDataline+2) >>3 )  |  ( (*(pDataline+1)&0xFC ) << 3) );
-
-
           pScanline += (pData->iColinc * 2);
           pDataline += 4;
         }
@@ -6192,8 +6190,6 @@ mng_retcode mng_display_bgr565 (mng_datap pData)
         {                              /* copy the values */
           *(pScanline+1) = (mng_uint8)( ( (*(pDataline))&0xF8 )  |  ( (*(pDataline+1)>>5   )     ) );
           *pScanline     = (mng_uint8)( (  *(pDataline+2) >>3 )  |  ( (*(pDataline+1)&0xFC ) << 3) );
-
-
           pScanline += (pData->iColinc * 2);
           pDataline += 4;
         }
@@ -6796,8 +6792,6 @@ mng_retcode mng_display_bgra565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCb8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCr8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -6976,8 +6970,6 @@ mng_retcode mng_display_bgra565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCb8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCr8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -7080,8 +7072,6 @@ mng_retcode mng_display_bgra565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCb8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCr8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -7280,8 +7270,6 @@ mng_retcode mng_display_rgba565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCr8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCb8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -7460,8 +7448,6 @@ mng_retcode mng_display_rgba565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCr8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCb8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -7564,8 +7550,6 @@ mng_retcode mng_display_rgba565 (mng_datap pData)
                             iRed      , iGreen        , iBlue         , iBGa8,
                             iCr8, iCg8, iCb8, iCa8);
                                        /* and return the composed values */
-
-
                 *pScanline     = (mng_uint8) ( ( iCr8 >>  3  )  | ( (iCg8 & 0xFC) << 3) );
                 *(pScanline+1) = (mng_uint8) ( ( iCb8  & 0xF8 )  |   (iCg8>>5) );
 				*(pScanline+2) = (mng_uint8) iCa8;
@@ -7815,8 +7799,6 @@ mng_retcode mng_display_bgr565_a8 (mng_datap pData)
   mng_uint8  iA8, iBGa8, iCa8;
   mng_uint8  iCr8, iCg8, iCb8;
   mng_uint8  iBps;
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (pData, MNG_FN_DISPLAY_BGR565_A8, MNG_LC_START);
 #endif
@@ -8004,8 +7986,6 @@ mng_retcode mng_display_bgr565_a8 (mng_datap pData)
   mng_int32  iX;
   mng_uint8  iA8, iBGa8, iCa8;
   mng_uint8  iCr8, iCg8, iCb8;
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (pData, MNG_FN_DISPLAY_BGR565_A8, MNG_LC_START);
 #endif
@@ -8853,8 +8833,6 @@ mng_retcode mng_display_bgr555 (mng_datap pData)
 }
 #endif /* MNG_NO_16BIT_SUPPORT */
 #endif /* MNG_SKIPCANVAS_BGR555 */
-
-
 #ifndef MNG_SKIPCHUNK_BACK
 /* ************************************************************************** */
 /* *                                                                        * */
@@ -9352,8 +9330,6 @@ mng_retcode mng_restore_bkgd_rgb565 (mng_datap pData)
   return MNG_NOERROR;
 }
 #endif /* MNG_SKIPCANVAS_RBB565 */
-
-
 /* ************************************************************************** */
 /* *                                                                        * */
 /* * Row retrieval routines - retrieve processed & uncompressed row-data    * */
@@ -18603,8 +18579,6 @@ mng_retcode mng_init_jpeg_a16_ni    (mng_datap pData)
 
 #endif /* MNG_INCLUDE_JNG */
 #endif /* MNG_OPTIMIZE_FOOTPRINT_INIT */
-
-
 /* ************************************************************************** */
 /* *                                                                        * */
 /* * Generic row processing initialization & cleanup routines               * */

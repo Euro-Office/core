@@ -57,8 +57,6 @@ docx_content_types_file::docx_content_types_file()
     content()->add_override(L"/docProps/app.xml",             L"application/vnd.openxmlformats-officedocument.extended-properties+xml");
     content()->add_override(L"/docProps/core.xml",            L"application/vnd.openxmlformats-package.core-properties+xml");
 }
-
-
 ////////////////////////////////////////////////////////////////////////////////////////
 
 word_files::word_files()
@@ -435,15 +433,11 @@ void notes_elements::write(const std::wstring & RootPath)
 		notes_context_.endnotesRels(),
         get_main_document());
 }
-
-
 ///////////////////
 
 comments_elements::comments_elements(comments_context & commentsContext) : comments_context_(commentsContext)
 {
 }
-
-
 void comments_elements::write(const std::wstring & RootPath)
 {
     if (comments_context_.comments_.size())
@@ -529,8 +523,6 @@ void docx_document::write(const std::wstring & RootPath)
 	get_docProps_files().write (RootPath);
     content_type_file_.write(RootPath);
 }
-
-
 
 }
 }

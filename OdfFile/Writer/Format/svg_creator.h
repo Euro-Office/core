@@ -35,8 +35,6 @@
 #include <sstream>
 #include <string>
 #include <vector>
-
-
 #include <CPOptional.h>
 
 namespace cpdoccore 

@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SFNTPIC_H__
 #define __SFNTPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define SFNT_SERVICES_GET            sfnt_services
@@ -54,8 +48,6 @@ FT_BEGIN_HEADER
 #include FT_INTERNAL_STREAM_H
 #include FT_INTERNAL_SFNT_H
 #include "ttcmap.h"
-
-
   typedef struct  sfntModulePIC_
   {
     FT_ServiceDescRec*        sfnt_services;
@@ -70,8 +62,6 @@ FT_BEGIN_HEADER
     SFNT_Interface            sfnt_interface;
 
   } sfntModulePIC;
-
-
 #define GET_PIC( lib )                                      \
           ( (sfntModulePIC*)( (lib)->pic_container.sfnt ) )
 
@@ -93,8 +83,6 @@ FT_BEGIN_HEADER
           ( GET_PIC( library )->sfnt_service_bdf )
 #define SFNT_INTERFACE_GET                       \
           ( GET_PIC( library )->sfnt_interface )
-
-
   /* see sfntpic.c for the implementation */
   void
   sfnt_module_class_pic_free( FT_Library  library );
@@ -109,6 +97,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __SFNTPIC_H__ */
-
-
 /* END */

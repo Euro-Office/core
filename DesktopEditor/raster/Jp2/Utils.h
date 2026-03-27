@@ -14,8 +14,6 @@ namespace Jpeg2000
 		//   return ( oTime.QuadPart /(double) oFreq.QuadPart ) ;
 	}
 
-
-
 	static __inline int FixedMult(int nA, int nB)
 	{
 		__int64 nTemp = (__int64)nA * (__int64)nB >> 12;
@@ -58,8 +56,6 @@ namespace Jpeg2000
 		}
 		return nL;
 	}
-
-
 
 	//-------------------------------------------------------------------------------------------------------------------------------
 	//    Multi-Component Transform

@@ -22,8 +22,6 @@
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-
 #include "agg_scanline_storage_aa.h"
 #include "agg_scanline_storage_bin.h"
 #include "agg_scanline_u.h"
@@ -36,8 +34,6 @@
 
 namespace agg
 {
-
-
     //-----------------------------------------------font_engine_freetype_base
     class font_engine_freetype_base
     {
@@ -85,8 +81,6 @@ namespace agg
         double      descender()    const;
         bool        hinting()      const { return m_hinting;    }
         bool        flip_y()       const { return m_flip_y;     }
-
-
         // Interface mandatory to implement for font_cache_manager
         //--------------------------------------------------------------------
         const char*     font_signature() const { return m_signature;    }
@@ -150,10 +144,6 @@ namespace agg
         scanlines_bin_type       m_scanlines_bin;
         rasterizer_scanline_aa<> m_rasterizer;
     };
-
-
-
-
     //------------------------------------------------font_engine_freetype_int16
     // This class uses values of type int16 (10.6 format) for the vector cache. 
     // The vector cache is compact, but when rendering glyphs of height
@@ -189,8 +179,6 @@ namespace agg
         font_engine_freetype_int32(unsigned max_faces = 32) : 
             font_engine_freetype_base(true, max_faces) {}
     };
-
-
 }
 
 #endif

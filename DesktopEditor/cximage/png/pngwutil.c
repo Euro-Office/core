@@ -1637,8 +1637,6 @@ png_write_iTXt(png_structp png_ptr, int compression, png_const_charp key,
    /* Compute the compressed data; do it now for the length */
    text_len = png_text_compress(png_ptr, text, text_len, compression - 2,
        &comp);
-
-
    /* Make sure we include the compression flag, the compression byte,
     * and the NULs after the key, lang, and lang_key parts
     */
@@ -2310,8 +2308,6 @@ png_write_find_filter(png_structp png_ptr, png_row_infop row_info)
     *   (2) minimum sum of squared differences from zero or running average
     *       (i.e., ~ root-mean-square approach)
     */
-
-
    /* We don't need to test the 'no filter' case if this is the only filter
     * that has been chosen, as it doesn't actually do anything to the data.
     */

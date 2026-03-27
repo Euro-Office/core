@@ -100,8 +100,6 @@ namespace Jpeg2000
 		}
 
 		int nStartPos =  pStream->Tell();
-
-
 		//>>>>
 
 		// Достаем первую картинку в потоке MDAT
@@ -139,8 +137,6 @@ namespace Jpeg2000
 		pStream->Skip(oBox.nLength - nReaded - 8);
 		if (pStream->GetLeftSize() < 0)
 			return false;
-
-
 		return true;
 	}
 	static bool Mj2_ReadMVHD(Mj2_Movie* pMovie, CReader * pStream)
@@ -152,8 +148,6 @@ namespace Jpeg2000
 			Event_Message(EVT_ERROR, "Error: Expected MVHD Marker\n");
 			return false;
 		}
-
-
 		if (0 != pStream->Read(4)) // Version = 0, flags = 0
 		{
 			Event_Message(EVT_ERROR, "Error: Only Version 0 handled in MVHD box\n");
@@ -193,8 +187,6 @@ namespace Jpeg2000
 		}
 		return true;
 	}
-
-
 	static bool Mj2_ReadTKHD(Mj2_TrackParams* pTrack, CReader * pStream)
 	{
 		Mj2_Box oBox;
@@ -460,8 +452,6 @@ namespace Jpeg2000
 		pTrack->nNumTimeToSample   = 0;
 		pTrack->nNumSamplesToChunk = 0;
 		pTrack->unNumSamples       = 0;
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with HMHD Box size\n");
@@ -498,8 +488,6 @@ namespace Jpeg2000
 		{
 			pTrack->nNumUrl--;
 		}
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with URL Box size\n");
@@ -537,8 +525,6 @@ namespace Jpeg2000
 			pTrack->pUrn[nUrnNum].anLocation[2] = pStream->Read(4);
 			pTrack->pUrn[nUrnNum].anLocation[3] = pStream->Read(4);
 		}
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with URN Box size\n");
@@ -546,8 +532,6 @@ namespace Jpeg2000
 		}
 		return true;
 	}
-
-
 	static bool Mj2_ReadDREF(Mj2_TrackParams* pTrack, CReader * pStream)
 	{
 		Mj2_Box oBox;
@@ -604,8 +588,6 @@ namespace Jpeg2000
 			}
 
 		}
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with DREF Box size\n");
@@ -1149,8 +1131,6 @@ namespace Jpeg2000
 		}
 		return true;
 	}
-
-
 	static bool Mj2_ReadSTSD(Mj2_TrackParams* pTrack, Image* pImage, CReader * pStream)
 	{
 		Mj2_Box oBox;
@@ -1195,8 +1175,6 @@ namespace Jpeg2000
 			int nSkipLen = pStream->Read(4);
 			pStream->Skip(nSkipLen - 4);
 		}
-
-
 		if (pStream->Tell() - oBox.nInitPos != oBox.nLength)
 		{
 			Event_Message(EVT_ERROR, "Error with STSD Box size\n");
@@ -1487,8 +1465,6 @@ namespace Jpeg2000
 			Free(pMovie);
 		}
 	}
-
-
 	Mj2_Movie* Mj2_CreateDecompress(PCommon pCodecInfo)
 	{
 		Mj2_Movie* pMj2 = (Mj2_Movie*)Malloc(sizeof(Mj2_Movie));

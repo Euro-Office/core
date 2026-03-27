@@ -47,8 +47,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 Byte_t * fetch_bytes(int fd, OPJ_OFF_T offset, OPJ_SIZE_T size)
 {
     Byte_t *data;
@@ -137,8 +135,6 @@ Byte8_t fetch_8bytebigendian(int fd, OPJ_OFF_T offset)
 
     return code;
 }
-
-
 Byte2_t big2(Byte_t *buf)
 {
     return (Byte2_t)((((Byte2_t) buf[0]) << 8) + ((Byte2_t) buf[1]));

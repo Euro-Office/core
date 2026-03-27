@@ -177,8 +177,6 @@ public:
      * @stable ICU 2.0
      */
     RuleBasedCollator(const RuleBasedCollator& other);
-
-
     /** Opens a collator from a collator binary image created using
     *  cloneBinary. Binary image used in instantiation of the 
     *  collator remains owned by the user and should stay around for 

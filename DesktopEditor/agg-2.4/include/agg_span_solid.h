@@ -46,8 +46,6 @@ namespace agg
     private:
         color_type m_color;
     };
-
-
 }
 
 #endif

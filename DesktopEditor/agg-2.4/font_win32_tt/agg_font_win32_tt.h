@@ -93,8 +93,6 @@ namespace agg
         DWORD       pitch_and_family() const { return m_pitch_and_family; }
         bool        hinting()      const { return m_hinting;    }
         bool        flip_y()       const { return m_flip_y;     }
-
-
         // Interface mandatory to implement for font_cache_manager
         //--------------------------------------------------------------------
         const char*     font_signature() const { return m_signature;    }
@@ -168,10 +166,6 @@ namespace agg
         scanlines_bin_type       m_scanlines_bin;
         rasterizer_scanline_aa<> m_rasterizer;
     };
-
-
-
-
     //------------------------------------------------font_engine_win32_tt_int16
     // This class uses values of type int16 (10.6 format) for the vector cache. 
     // The vector cache is compact, but when rendering glyphs of height
@@ -207,8 +201,6 @@ namespace agg
         font_engine_win32_tt_int32(HDC dc, unsigned max_fonts = 32) : 
             font_engine_win32_tt_base(true, dc, max_fonts) {}
     };
-
-
 }
 
 #endif

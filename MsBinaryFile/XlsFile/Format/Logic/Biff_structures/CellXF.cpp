@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 CellXF::CellXF()
 {
 }
@@ -50,8 +48,6 @@ void CellXF::load(CFRecord& record)
 {
 
 }
-
-
 
 } // namespace XLS
 

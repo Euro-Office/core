@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
   /* This header file can be included multiple times. */
   /* Define `COVERAGE' as needed.                     */
-
-
   /* Add new coverages here.  The first and second arguments are the   */
   /* coverage name in lowercase and uppercase, respectively, followed  */
   /* by a description string.  The last four arguments are the four    */
@@ -100,6 +96,4 @@
   COVERAGE(nalt, 'n', 'a', 'l', 't'); /* Alternate Annotation Forms (?) */
   COVERAGE(ornm, 'o', 'r', 'n', 'm'); /* Ornaments (?) */
 #endif
-
-
 /* END */

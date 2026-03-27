@@ -30,8 +30,6 @@ namespace NSDocxRenderer
 		else
 			oWriter.AddInt(static_cast<int>(0));
 		oWriter.WriteString(L"\"");
-
-
 		if (m_dSpaceAfter > 0)
 		{
 			oWriter.WriteString(L" w:after=\"");

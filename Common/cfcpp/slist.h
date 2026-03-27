@@ -33,8 +33,6 @@
 
 #include <memory>
 #include <list>
-
-
 template <class T>
 class SList : public std::list<std::shared_ptr<T>>
 {

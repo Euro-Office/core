@@ -669,8 +669,6 @@ png_set_sRGB_gAMA_and_cHRM(png_structp png_ptr, png_infop info_ptr,
 #  endif /* cHRM */
 }
 #endif /* sRGB */
-
-
 #ifdef PNG_iCCP_SUPPORTED
 void PNGAPI
 png_set_iCCP(png_structp png_ptr, png_infop info_ptr,
@@ -1226,8 +1224,6 @@ png_set_unknown_chunk_location(png_structp png_ptr, png_infop info_ptr,
       info_ptr->unknown_chunks[chunk].location = (png_byte)location;
 }
 #endif
-
-
 #ifdef PNG_MNG_FEATURES_SUPPORTED
 png_uint_32 PNGAPI
 png_permit_mng_features (png_structp png_ptr, png_uint_32 mng_features)
@@ -1369,8 +1365,6 @@ png_set_invalid(png_structp png_ptr, png_infop info_ptr, int mask)
       info_ptr->valid &= ~mask;
 }
 
-
-
 #ifdef PNG_SET_USER_LIMITS_SUPPORTED
 /* This function was added to libpng 1.2.6 */
 void PNGAPI
@@ -1406,8 +1400,6 @@ png_set_chunk_malloc_max (png_structp png_ptr,
       png_ptr->user_chunk_malloc_max = user_chunk_malloc_max;
 }
 #endif /* ?PNG_SET_USER_LIMITS_SUPPORTED */
-
-
 #ifdef PNG_BENIGN_ERRORS_SUPPORTED
 void PNGAPI
 png_set_benign_errors(png_structp png_ptr, int allowed)

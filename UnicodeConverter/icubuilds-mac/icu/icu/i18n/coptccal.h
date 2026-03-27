@@ -187,8 +187,6 @@ protected:
      * @internal
      */
     virtual int32_t getJDEpochOffset() const;
-
-
 public:
     /**
      * Override Calendar Returns a unique class ID POLYMORPHICALLY. Pure virtual

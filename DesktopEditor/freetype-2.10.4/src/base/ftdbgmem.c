@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/internal/ftdebug.h>
@@ -23,8 +21,6 @@
 #include <freetype/ftsystem.h>
 #include <freetype/fterrors.h>
 #include <freetype/fttypes.h>
-
-
 #ifdef FT_DEBUG_MEMORY
 
 #define  KEEPALIVE /* `Keep alive' means that freed blocks aren't released
@@ -40,13 +36,9 @@
 
   extern void
   FT_DumpMemory( FT_Memory  memory );
-
-
   typedef struct FT_MemSourceRec_*  FT_MemSource;
   typedef struct FT_MemNodeRec_*    FT_MemNode;
   typedef struct FT_MemTableRec_*   FT_MemTable;
-
-
 #define FT_MEM_VAL( addr )  ( (FT_PtrDist)(FT_Pointer)( addr ) )
 
   /*
@@ -73,8 +65,6 @@
     FT_MemSource  link;
 
   } FT_MemSourceRec;
-
-
   /*
    * We don't need a resizable array for the memory sources because
    * their number is pretty limited within FreeType.
@@ -103,8 +93,6 @@
     FT_MemNode    link;
 
   } FT_MemNodeRec;
-
-
   /*
    * The global structure, containing compound statistics and all hash
    * tables.
@@ -137,14 +125,10 @@
     FT_Realloc_Func  realloc;
 
   } FT_MemTableRec;
-
-
 #define FT_MEM_SIZE_MIN  7
 #define FT_MEM_SIZE_MAX  13845163
 
 #define FT_FILENAME( x )  ( (x) ? (x) : "unknown file" )
-
-
   /*
    * Prime numbers are ugly to handle.  It would be better to implement
    * L-Hashing, which is 10% faster and doesn't require divisions.
@@ -187,14 +171,10 @@
     9230113,
     13845163,
   };
-
-
   static FT_Long
   ft_mem_closest_prime( FT_Long  num )
   {
     size_t  i;
-
-
     for ( i = 0;
           i < sizeof ( ft_mem_primes ) / sizeof ( ft_mem_primes[0] ); i++ )
       if ( ft_mem_primes[i] > num )
@@ -202,15 +182,11 @@
 
     return FT_MEM_SIZE_MAX;
   }
-
-
   static void
   ft_mem_debug_panic( const char*  fmt,
                       ... )
   {
     va_list  ap;
-
-
     printf( "FreeType.Debug: " );
 
     va_start( ap, fmt );
@@ -220,50 +196,36 @@
     printf( "\n" );
     exit( EXIT_FAILURE );
   }
-
-
   static FT_Pointer
   ft_mem_table_alloc( FT_MemTable  table,
                       FT_Long      size )
   {
     FT_Memory   memory = table->memory;
     FT_Pointer  block;
-
-
     memory->user = table->memory_user;
     block = table->alloc( memory, size );
     memory->user = table;
 
     return block;
   }
-
-
   static void
   ft_mem_table_free( FT_MemTable  table,
                      FT_Pointer   block )
   {
     FT_Memory  memory = table->memory;
-
-
     memory->user = table->memory_user;
     table->free( memory, block );
     memory->user = table;
   }
-
-
   static void
   ft_mem_table_resize( FT_MemTable  table )
   {
     FT_Long  new_size;
-
-
     new_size = ft_mem_closest_prime( table->nodes );
     if ( new_size != table->size )
     {
       FT_MemNode*  new_buckets;
       FT_Long      i;
-
-
       new_buckets = (FT_MemNode *)
                       ft_mem_table_alloc(
                         table,
@@ -277,8 +239,6 @@
       {
         FT_MemNode  node, next, *pnode;
         FT_PtrDist  hash;
-
-
         node = table->buckets[i];
         while ( node )
         {
@@ -300,14 +260,10 @@
       table->size    = new_size;
     }
   }
-
-
   static FT_MemTable
   ft_mem_table_new( FT_Memory  memory )
   {
     FT_MemTable  table;
-
-
     table = (FT_MemTable)memory->alloc( memory, sizeof ( *table ) );
     if ( !table )
       goto Exit;
@@ -340,24 +296,18 @@
   Exit:
     return table;
   }
-
-
   static void
   ft_mem_table_destroy( FT_MemTable  table )
   {
     FT_Long  i;
     FT_Long  leak_count = 0;
     FT_Long  leaks      = 0;
-
-
     FT_DumpMemory( table->memory );
 
     /* remove all blocks from the table, revealing leaked ones */
     for ( i = 0; i < table->size; i++ )
     {
       FT_MemNode  *pnode = table->buckets + i, next, node = *pnode;
-
-
       while ( node )
       {
         next       = node->link;
@@ -397,8 +347,6 @@
     for ( i = 0; i < FT_MEM_SOURCE_BUCKETS; i++ )
     {
       FT_MemSource  source, next;
-
-
       for ( source = table->sources[i]; source != NULL; source = next )
       {
         next = source->link;
@@ -422,16 +370,12 @@
 
     printf( "FreeType: no memory leaks detected\n" );
   }
-
-
   static FT_MemNode*
   ft_mem_table_get_nodep( FT_MemTable  table,
                           FT_Byte*     address )
   {
     FT_PtrDist   hash;
     FT_MemNode  *pnode, node;
-
-
     hash  = FT_MEM_VAL( address );
     pnode = table->buckets + ( hash % (FT_PtrDist)table->size );
 
@@ -448,15 +392,11 @@
     }
     return pnode;
   }
-
-
   static FT_MemSource
   ft_mem_table_get_source( FT_MemTable  table )
   {
     FT_UInt32     hash;
     FT_MemSource  node, *pnode;
-
-
     /* cast to FT_PtrDist first since void* can be larger */
     /* than FT_UInt32 and GCC 4.1.1 emits a warning       */
     hash  = (FT_UInt32)(FT_PtrDist)(void*)_ft_debug_file +
@@ -501,8 +441,6 @@
   Exit:
     return node;
   }
-
-
   static void
   ft_mem_table_set( FT_MemTable  table,
                     FT_Byte*     address,
@@ -510,13 +448,9 @@
                     FT_Long      delta )
   {
     FT_MemNode  *pnode, node;
-
-
     if ( table )
     {
       FT_MemSource  source;
-
-
       pnode = ft_mem_table_get_nodep( table, address );
       node  = *pnode;
       if ( node )
@@ -600,8 +534,6 @@
         ft_mem_table_resize( table );
     }
   }
-
-
   static void
   ft_mem_table_remove( FT_MemTable  table,
                        FT_Byte*     address,
@@ -610,15 +542,11 @@
     if ( table )
     {
       FT_MemNode  *pnode, node;
-
-
       pnode = ft_mem_table_get_nodep( table, address );
       node  = *pnode;
       if ( node )
       {
         FT_MemSource  source;
-
-
         if ( node->size < 0 )
           ft_mem_debug_panic(
             "freeing memory block at %p more than once\n"
@@ -674,16 +602,12 @@
           FT_FILENAME( _ft_debug_file ), _ft_debug_lineno );
     }
   }
-
-
   static FT_Pointer
   ft_mem_debug_alloc( FT_Memory  memory,
                       FT_Long    size )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
     FT_Byte*     block;
-
-
     if ( size <= 0 )
       ft_mem_debug_panic( "negative block size allocation (%ld)", size );
 
@@ -710,15 +634,11 @@
 
     return (FT_Pointer)block;
   }
-
-
   static void
   ft_mem_debug_free( FT_Memory   memory,
                      FT_Pointer  block )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
-
-
     if ( !block )
       ft_mem_debug_panic( "trying to free NULL in (%s:%ld)",
                           FT_FILENAME( _ft_debug_file ),
@@ -734,8 +654,6 @@
     _ft_debug_file   = "<unknown>";
     _ft_debug_lineno = 0;
   }
-
-
   static FT_Pointer
   ft_mem_debug_realloc( FT_Memory   memory,
                         FT_Long     cur_size,
@@ -749,8 +667,6 @@
 
     const char*  file_name = FT_FILENAME( _ft_debug_file );
     FT_Long      line_no   = _ft_debug_lineno;
-
-
     /* unlikely, but possible */
     if ( new_size == cur_size )
       return block;
@@ -819,23 +735,17 @@
 
     return new_block;
   }
-
-
   extern FT_Int
   ft_mem_debug_init( FT_Memory  memory )
   {
     FT_MemTable  table;
     FT_Int       result = 0;
-
-
     if ( ft_getenv( "FT2_DEBUG_MEMORY" ) )
     {
       table = ft_mem_table_new( memory );
       if ( table )
       {
         const char*  p;
-
-
         memory->user    = table;
         memory->alloc   = ft_mem_debug_alloc;
         memory->realloc = ft_mem_debug_realloc;
@@ -845,8 +755,6 @@
         if ( p )
         {
           FT_Long  total_max = ft_strtol( p, NULL, 10 );
-
-
           if ( total_max > 0 )
           {
             table->bound_total     = 1;
@@ -858,8 +766,6 @@
         if ( p )
         {
           FT_Long  total_count = ft_strtol( p, NULL, 10 );
-
-
           if ( total_count > 0 )
           {
             table->bound_count     = 1;
@@ -871,8 +777,6 @@
         if ( p )
         {
           FT_Long  keep_alive = ft_strtol( p, NULL, 10 );
-
-
           if ( keep_alive > 0 )
             table->keep_alive = 1;
         }
@@ -882,14 +786,10 @@
     }
     return result;
   }
-
-
   extern void
   ft_mem_debug_done( FT_Memory  memory )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
-
-
     if ( table )
     {
       memory->free    = table->free;
@@ -900,16 +800,12 @@
       memory->user = NULL;
     }
   }
-
-
   static int
   ft_mem_source_compare( const void*  p1,
                          const void*  p2 )
   {
     FT_MemSource  s1 = *(FT_MemSource*)p1;
     FT_MemSource  s2 = *(FT_MemSource*)p2;
-
-
     if ( s2->max_size > s1->max_size )
       return 1;
     else if ( s2->max_size < s1->max_size )
@@ -917,14 +813,10 @@
     else
       return 0;
   }
-
-
   extern void
   FT_DumpMemory( FT_Memory  memory )
   {
     FT_MemTable  table = (FT_MemTable)memory->user;
-
-
     if ( table )
     {
       FT_MemSource*  bucket = table->sources;
@@ -932,14 +824,10 @@
       FT_MemSource*  sources;
       FT_Int         nn, count;
       const char*    fmt;
-
-
       count = 0;
       for ( ; bucket < limit; bucket++ )
       {
         FT_MemSource  source = *bucket;
-
-
         for ( ; source; source = source->link )
           count++;
       }
@@ -952,8 +840,6 @@
       for ( bucket = table->sources; bucket < limit; bucket++ )
       {
         FT_MemSource  source = *bucket;
-
-
         for ( ; source; source = source->link )
           sources[count++] = source;
       }
@@ -976,8 +862,6 @@
       for ( nn = 0; nn < count; nn++ )
       {
         FT_MemSource  source = sources[nn];
-
-
         printf( fmt,
                 source->cur_blocks, source->max_blocks,
                 source->cur_size, source->max_size, source->cur_max,
@@ -996,6 +880,4 @@
   typedef int  _debug_mem_dummy;
 
 #endif /* !FT_DEBUG_MEMORY */
-
-
 /* END */

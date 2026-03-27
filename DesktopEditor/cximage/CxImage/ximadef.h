@@ -10,8 +10,6 @@
 #else
  #define DLL_EXP
 #endif
-
-
 #if CXIMAGE_SUPPORT_EXCEPTION_HANDLING
   #define cx_try try
   #define cx_throw(message) throw(message)
@@ -21,8 +19,6 @@
   #define cx_throw(message) {cx_error=true; if(strcmp(message,"")) strncpy(info.szLastError,message,255); goto cx_error_catch;}
   #define cx_catch cx_error_catch: char message[]=""; if(cx_error)
 #endif
-
-
 #if CXIMAGE_SUPPORT_JP2 || CXIMAGE_SUPPORT_JPC || CXIMAGE_SUPPORT_PGX || CXIMAGE_SUPPORT_PNM || CXIMAGE_SUPPORT_RAS
  #define CXIMAGE_SUPPORT_JASPER 1
 #else
@@ -72,8 +68,6 @@
 #ifndef PI
  #define PI 3.141592653589793f
 #endif
-
-
 #if defined(WIN32) || defined(_WIN32_WCE)
 
 #ifdef CXIMAGE_ATTACK_NO_UNICODE

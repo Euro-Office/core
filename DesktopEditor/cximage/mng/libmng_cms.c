@@ -520,12 +520,8 @@ mng_retcode mng_correct_gamma_only (mng_datap pData)
 
   if (pData->bIsRGBA16)                /* 16-bit intermediate row ? */
   {
-
-  
      /* TODO: 16-bit precision gamma processing */
      /* we'll just do the high-order byte for now */
-
-     
                                        /* convert all samples in the row */
      for (iX = 0; iX < pData->iRowsamples; iX++)
      {                                 /* using the precalculated gamma lookup table */
@@ -753,6 +749,4 @@ mng_retcode mng_correct_app_cms (mng_datap pData)
 /* ************************************************************************** */
 /* * end of file                                                            * */
 /* ************************************************************************** */
-
-
 

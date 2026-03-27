@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFPIC_H__
 #define __AFPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define AF_SERVICES_GET                af_services
@@ -41,8 +35,6 @@ FT_BEGIN_HEADER
 #include FT_SERVICE_PROPERTIES_H
 
 #include "aftypes.h"
-
-
   typedef struct  AFModulePIC_
   {
     FT_ServiceDescRec*          af_services;
@@ -66,8 +58,6 @@ FT_BEGIN_HEADER
     FT_AutoHinter_InterfaceRec  af_autofitter_interface;
 
   } AFModulePIC;
-
-
 #define GET_PIC( lib )  \
           ( (AFModulePIC*)((lib)->pic_container.autofit) )
 
@@ -84,8 +74,6 @@ FT_BEGIN_HEADER
           ( GET_PIC( FT_FACE_LIBRARY( globals->face ) )->af_style_classes )
 #define AF_INTERFACE_GET  \
           ( GET_PIC( library )->af_autofitter_interface )
-
-
   /* see afpic.c for the implementation */
   void
   autofit_module_class_pic_free( FT_Library  library );
@@ -100,6 +88,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AFPIC_H__ */
-
-
 /* END */

@@ -22,12 +22,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
 public:
@@ -52,8 +46,6 @@ public:
         m_num_points.label("Number of intermediate Points = %.3f");
         add_ctrl(m_num_points);
     }
-
-
     virtual void on_init()
     {
         if(m_flip)
@@ -84,10 +76,6 @@ public:
         m_poly.yn(5) = height() / 3;
 
     }
-
-
-
-
     virtual void on_draw()
     {
         pixfmt pixf(rbuf_window());
@@ -113,8 +101,6 @@ public:
 
         ras.add_path(stroke);
         agg::render_scanlines_aa_solid(ras, sl, rb, agg::rgba(0, 0, 0));
-
-
         //--------------------------
         // Render the "poly" tool and controls
         ras.add_path(m_poly);
@@ -126,8 +112,6 @@ public:
 
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -138,8 +122,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -154,8 +136,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_poly.on_mouse_button_up(x, y))
@@ -163,8 +143,6 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -176,12 +154,6 @@ public:
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -193,13 +165,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-
-
-
-
-

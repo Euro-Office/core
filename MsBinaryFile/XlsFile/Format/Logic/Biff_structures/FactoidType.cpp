@@ -34,14 +34,10 @@
 
 namespace OSHARED
 {
-
-
 XLS::BiffStructurePtr FactoidType::clone()
 {
 	return XLS::BiffStructurePtr(new FactoidType(*this));
 }
-
-
 void FactoidType::load(XLS::CFRecord& record)
 {
 	_UINT32 cbFactoid;
@@ -59,7 +55,5 @@ void FactoidType::save(XLS::CFRecord& record)
 	record << cbFactoid;
 	record.skipNunBytes(cbFactoid);
 }
-
-
 } // namespace OSHARED
 

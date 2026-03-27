@@ -34,8 +34,6 @@
  * and you accept them fully.
  *
  */
-
-
 #include "psft.h"
 #include <freetype/internal/ftdebug.h>
 
@@ -43,8 +41,6 @@
 #include "psarrst.h"
 
 #include "pserror.h"
-
-
   /*
    * CF2_ArrStack uses an error pointer, to enable shared errors.
    * Shared errors are necessary when multiple objects allow the program
@@ -70,14 +66,10 @@
     arrstack->totalSize = 0;
     arrstack->ptr       = NULL;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_arrstack_finalize( CF2_ArrStack  arrstack )
   {
     FT_Memory  memory = arrstack->memory;     /* for FT_FREE */
-
-
     FT_ASSERT( arrstack );
 
     arrstack->allocated = 0;
@@ -87,8 +79,6 @@
     /* free the data buffer */
     FT_FREE( arrstack->ptr );
   }
-
-
   /* allocate or reallocate the buffer size; */
   /* return false on memory error */
   static FT_Bool
@@ -102,12 +92,8 @@
       FT_Memory  memory = arrstack->memory; /* for FT_REALLOC */
 
       size_t  newSize = numElements * arrstack->sizeItem;
-
-
       if ( numElements > FT_LONG_MAX / arrstack->sizeItem )
         goto exit;
-
-
       FT_ASSERT( newSize > 0 );   /* avoid realloc with zero size */
 
       if ( !FT_REALLOC( arrstack->ptr, arrstack->totalSize, newSize ) )
@@ -133,8 +119,6 @@
 
     return FALSE;
   }
-
-
   /* set the count, ensuring allocation is sufficient */
   FT_LOCAL_DEF( void )
   cf2_arrstack_setCount( CF2_ArrStack  arrstack,
@@ -151,8 +135,6 @@
 
     arrstack->count = numElements;
   }
-
-
   /* clear the count */
   FT_LOCAL_DEF( void )
   cf2_arrstack_clear( CF2_ArrStack  arrstack )
@@ -161,8 +143,6 @@
 
     arrstack->count = 0;
   }
-
-
   /* current number of items */
   FT_LOCAL_DEF( size_t )
   cf2_arrstack_size( const CF2_ArrStack  arrstack )
@@ -171,8 +151,6 @@
 
     return arrstack->count;
   }
-
-
   FT_LOCAL_DEF( void* )
   cf2_arrstack_getBuffer( const CF2_ArrStack  arrstack )
   {
@@ -180,16 +158,12 @@
 
     return arrstack->ptr;
   }
-
-
   /* return pointer to the given element */
   FT_LOCAL_DEF( void* )
   cf2_arrstack_getPointer( const CF2_ArrStack  arrstack,
                            size_t              idx )
   {
     void*  newPtr;
-
-
     FT_ASSERT( arrstack );
 
     if ( idx >= arrstack->count )
@@ -203,8 +177,6 @@
 
     return newPtr;
   }
-
-
   /* push (append) an element at the end of the list;         */
   /* return false on memory error                             */
   /* TODO: should there be a length param for extra checking? */
@@ -230,12 +202,8 @@
     {
       size_t  offset = arrstack->count * arrstack->sizeItem;
       void*   newPtr = (FT_Byte*)arrstack->ptr + offset;
-
-
       FT_MEM_COPY( newPtr, ptr, arrstack->sizeItem );
       arrstack->count += 1;
     }
   }
-
-
 /* END */

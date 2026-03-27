@@ -221,8 +221,6 @@ ucnv_safeClone(const UConverter* cnv, void *stackBuffer, int32_t *pBufferSize, U
             return NULL;
         }
     }
-
-
     /* Pointers on 64-bit platforms need to be aligned
      * on a 64-bit boundary in memory.
      */
@@ -314,8 +312,6 @@ ucnv_safeClone(const UConverter* cnv, void *stackBuffer, int32_t *pBufferSize, U
     UTRACE_EXIT_PTR_STATUS(localConverter, *status);
     return localConverter;
 }
-
-
 
 /*Decreases the reference counter in the shared immutable section of the object
  *and frees the mutable part*/
@@ -645,8 +641,6 @@ ucnv_getMaxCharSize (const UConverter * converter)
 {
     return converter->maxBytesPerUChar;
 }
-
-
 U_CAPI int8_t   U_EXPORT2
 ucnv_getMinCharSize (const UConverter * converter)
 {
@@ -689,8 +683,6 @@ ucnv_getCCSID(const UConverter * converter,
     }
     return ccsid;
 }
-
-
 U_CAPI UConverterPlatform   U_EXPORT2
 ucnv_getPlatform (const UConverter * converter,
                                       UErrorCode * err)
@@ -2778,8 +2770,6 @@ ucnv_detectUnicodeSignature( const char* source,
     if(sourceLength==-1){
         sourceLength=(int32_t)uprv_strlen(source);
     }
-
-    
     while(i<sourceLength&& i<SIG_MAX_LEN){
         start[i]=source[i];
         i++;
@@ -2831,8 +2821,6 @@ ucnv_detectUnicodeSignature( const char* source,
         *signatureLength=4;
         return "UTF-EBCDIC";
     }
-
-
     /* no known Unicode signature byte sequence recognized */
     *signatureLength=0;
     return NULL;

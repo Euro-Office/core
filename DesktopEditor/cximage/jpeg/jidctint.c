@@ -54,8 +54,6 @@
 #include "jdct.h"		/* Private declarations for DCT subsystem */
 
 #ifdef DCT_ISLOW_SUPPORTED
-
-
 /*
  * This module is specialized to the case DCTSIZE = 8.
  */
@@ -63,8 +61,6 @@
 #if DCTSIZE != 8
   Sorry, this code only copes with 8x8 DCT blocks. /* deliberate syntax err */
 #endif
-
-
 /*
  * The poop on this scaling stuff is as follows:
  *
@@ -139,8 +135,6 @@
 #define FIX_2_562915447  FIX(2.562915447)
 #define FIX_3_072711026  FIX(3.072711026)
 #endif
-
-
 /* Multiply an INT32 variable by an INT32 constant to yield an INT32 result.
  * For 8-bit samples with the recommended scaling, all the variable
  * and constant values involved are no more than 16 bits wide, so a
@@ -153,16 +147,12 @@
 #else
 #define MULTIPLY(var,const)  ((var) * (const))
 #endif
-
-
 /* Dequantize a coefficient by multiplying it by the multiplier-table
  * entry; produce an int result.  In this module, both inputs and result
  * are 16 bits or less, so either int or short multiply will work.
  */
 
 #define DEQUANTIZE(coef,quantval)  (((ISLOW_MULT_TYPE) (coef)) * (quantval))
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients.
  */
@@ -414,8 +404,6 @@ jpeg_idct_islow (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 }
 
 #ifdef IDCT_SCALING_SUPPORTED
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 7x7 output block.
@@ -563,8 +551,6 @@ jpeg_idct_7x7 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 7;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 6x6 output block.
@@ -684,8 +670,6 @@ jpeg_idct_6x6 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 6;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 5x5 output block.
@@ -799,8 +783,6 @@ jpeg_idct_5x5 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 5;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 4x4 output block.
@@ -904,8 +886,6 @@ jpeg_idct_4x4 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 4;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 3x3 output block.
@@ -994,8 +974,6 @@ jpeg_idct_3x3 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 3;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 2x2 output block.
@@ -1048,8 +1026,6 @@ jpeg_idct_2x2 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
   outptr[0] = range_limit[(int) RIGHT_SHIFT(tmp2 + tmp3, 3) & RANGE_MASK];
   outptr[1] = range_limit[(int) RIGHT_SHIFT(tmp2 - tmp3, 3) & RANGE_MASK];
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 1x1 output block.
@@ -1075,8 +1051,6 @@ jpeg_idct_1x1 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 
   output_buf[0][output_col] = range_limit[dcval & RANGE_MASK];
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 9x9 output block.
@@ -1246,8 +1220,6 @@ jpeg_idct_9x9 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 10x10 output block.
@@ -1441,8 +1413,6 @@ jpeg_idct_10x10 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 11x11 output block.
@@ -1635,8 +1605,6 @@ jpeg_idct_11x11 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 12x12 output block.
@@ -1851,8 +1819,6 @@ jpeg_idct_12x12 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 13x13 output block.
@@ -2079,8 +2045,6 @@ jpeg_idct_13x13 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 14x14 output block.
@@ -2305,8 +2269,6 @@ jpeg_idct_14x14 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 15x15 output block.
@@ -2547,8 +2509,6 @@ jpeg_idct_15x15 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 16x16 output block.
@@ -2809,8 +2769,6 @@ jpeg_idct_16x16 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 16x8 output block.
@@ -3080,8 +3038,6 @@ jpeg_idct_16x8 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 14x7 output block.
@@ -3275,8 +3231,6 @@ jpeg_idct_14x7 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 12x6 output block.
@@ -3451,8 +3405,6 @@ jpeg_idct_12x6 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 10x5 output block.
@@ -3612,8 +3564,6 @@ jpeg_idct_10x5 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 8;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 8x4 output block.
@@ -3765,8 +3715,6 @@ jpeg_idct_8x4 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += DCTSIZE;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 6x3 output block.
@@ -3875,8 +3823,6 @@ jpeg_idct_6x3 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 6;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 4x2 output block.
@@ -3965,8 +3911,6 @@ jpeg_idct_4x2 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 4;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 2x1 output block.
@@ -4007,8 +3951,6 @@ jpeg_idct_2x1 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
   outptr[0] = range_limit[(int) RIGHT_SHIFT(tmp10 + tmp0, 3) & RANGE_MASK];
   outptr[1] = range_limit[(int) RIGHT_SHIFT(tmp10 - tmp0, 3) & RANGE_MASK];
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 8x16 output block.
@@ -4225,8 +4167,6 @@ jpeg_idct_8x16 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += DCTSIZE;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 7x14 output block.
@@ -4408,8 +4348,6 @@ jpeg_idct_7x14 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 7;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 6x12 output block.
@@ -4572,8 +4510,6 @@ jpeg_idct_6x12 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 6;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 5x10 output block.
@@ -4724,8 +4660,6 @@ jpeg_idct_5x10 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 5;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 4x8 output block.
@@ -4904,8 +4838,6 @@ jpeg_idct_4x8 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 4;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a reduced-size 3x6 output block.
@@ -5008,8 +4940,6 @@ jpeg_idct_3x6 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 3;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 2x4 output block.
@@ -5092,8 +5022,6 @@ jpeg_idct_2x4 (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     wsptr += 2;		/* advance pointer to next row */
   }
 }
-
-
 /*
  * Perform dequantization and inverse DCT on one block of coefficients,
  * producing a 1x2 output block.

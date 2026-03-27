@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTPFR_H__
 #define __FTPFR_H__
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -47,8 +41,6 @@ FT_BEGIN_HEADER
   /*    This section contains the declaration of PFR-specific functions.   */
   /*                                                                       */
   /*************************************************************************/
-
-
  /**********************************************************************
   *
   * @function:
@@ -92,8 +84,6 @@ FT_BEGIN_HEADER
                       FT_UInt   *ametrics_resolution,
                       FT_Fixed  *ametrics_x_scale,
                       FT_Fixed  *ametrics_y_scale );
-
-
  /**********************************************************************
   *
   * @function:
@@ -130,8 +120,6 @@ FT_BEGIN_HEADER
                       FT_UInt     left,
                       FT_UInt     right,
                       FT_Vector  *avector );
-
-
  /**********************************************************************
   *
   * @function:
@@ -162,11 +150,7 @@ FT_BEGIN_HEADER
                       FT_Pos   *aadvance );
 
  /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTPFR_H__ */
-
-
 /* END */

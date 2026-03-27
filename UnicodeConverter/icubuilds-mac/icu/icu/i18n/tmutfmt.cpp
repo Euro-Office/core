@@ -39,8 +39,6 @@
 #define LOW_O             ((UChar)0x006F)
 #define LOW_N             ((UChar)0x006E)
 #define LOW_T             ((UChar)0x0074)
-
-
 //TODO: define in compile time
 //#define TMUTFMT_DEBUG 1
 
@@ -49,8 +47,6 @@
 #endif
 
 U_NAMESPACE_BEGIN
-
-
 
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(TimeUnitFormat)
 
@@ -81,14 +77,10 @@ TimeUnitFormat::TimeUnitFormat(UErrorCode& status) {
     initMeasureFormat(Locale::getDefault(), UMEASFMT_WIDTH_WIDE, NULL, status);
     create(UTMUTFMT_FULL_STYLE, status);
 }
-
-
 TimeUnitFormat::TimeUnitFormat(const Locale& locale, UErrorCode& status) {
     initMeasureFormat(locale, UMEASFMT_WIDTH_WIDE, NULL, status);
     create(UTMUTFMT_FULL_STYLE, status);
 }
-
-
 TimeUnitFormat::TimeUnitFormat(const Locale& locale, UTimeUnitFormatStyle style, UErrorCode& status) {
     switch (style) {
     case UTMUTFMT_FULL_STYLE:
@@ -121,8 +113,6 @@ TimeUnitFormat::TimeUnitFormat(const TimeUnitFormat& other)
         }
     } 
 }
-
-
 TimeUnitFormat::~TimeUnitFormat() {
     for (TimeUnit::UTimeUnitFields i = TimeUnit::UTIMEUNIT_YEAR;
          i < TimeUnit::UTIMEUNIT_FIELD_COUNT;
@@ -131,14 +121,10 @@ TimeUnitFormat::~TimeUnitFormat() {
         fTimeUnitToCountToPatterns[i] = NULL;
     }
 }
-
-
 Format* 
 TimeUnitFormat::clone(void) const {
     return new TimeUnitFormat(*this);
 }
-
-
 TimeUnitFormat& 
 TimeUnitFormat::operator=(const TimeUnitFormat& other) {
     if (this == &other) {
@@ -332,8 +318,6 @@ TimeUnitFormat::setup(UErrorCode& err) {
     checkConsistency(UTMUTFMT_ABBREVIATED_STYLE, gShortUnitsTag, err);
     delete keywords;
 }
-
-
 void
 TimeUnitFormat::initDataMembers(UErrorCode& err){
     if (U_FAILURE(err)) {
@@ -466,8 +450,6 @@ TimeUnitFormat::readFromCurrentLocale(UTimeUnitFormatStyle style, const char* ke
     ures_close(unitsRes);
     ures_close(rb);
 }
-
-
 void 
 TimeUnitFormat::checkConsistency(UTimeUnitFormatStyle style, const char* key, UErrorCode& err) {
     if (U_FAILURE(err)) {
@@ -525,8 +507,6 @@ TimeUnitFormat::checkConsistency(UTimeUnitFormatStyle style, const char* key, UE
     }
     delete keywords;
 }
-
-
 
 // srcPluralCount is the original plural count on which the pattern is
 // searched for.
@@ -673,8 +653,6 @@ TimeUnitFormat::setLocale(const Locale& locale, UErrorCode& status) {
         setup(status);
     }
 }
-
-
 void 
 TimeUnitFormat::setNumberFormat(const NumberFormat& format, UErrorCode& status){
     if (U_FAILURE(status)) {
@@ -682,8 +660,6 @@ TimeUnitFormat::setNumberFormat(const NumberFormat& format, UErrorCode& status){
     }
     adoptNumberFormat((NumberFormat *)format.clone(), status);
 }
-
-
 void
 TimeUnitFormat::deleteHash(Hashtable* htable) {
     int32_t pos = UHASH_FIRST;
@@ -700,8 +676,6 @@ TimeUnitFormat::deleteHash(Hashtable* htable) {
     }
     delete htable;
 }
-
-
 void
 TimeUnitFormat::copyHash(const Hashtable* source, Hashtable* target, UErrorCode& status) {
     if ( U_FAILURE(status) ) {
@@ -728,8 +702,6 @@ TimeUnitFormat::copyHash(const Hashtable* source, Hashtable* target, UErrorCode&
         }
     }
 }
-
-
 U_CDECL_BEGIN 
 
 /**
@@ -767,8 +739,6 @@ TimeUnitFormat::initHash(UErrorCode& status) {
     hTable->setValueComparator(tmutfmtHashTableValueComparator);
     return hTable;
 }
-
-
 const char*
 TimeUnitFormat::getTimeUnitName(TimeUnit::UTimeUnitFields unitField, 
                                 UErrorCode& status) {

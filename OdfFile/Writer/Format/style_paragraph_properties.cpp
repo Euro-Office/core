@@ -47,8 +47,6 @@ namespace cpdoccore {
 namespace odf_writer {
 
 using xml::xml_char_wc;
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * style_tab_stop::ns = L"style";
 const wchar_t * style_tab_stop::name = L"tab-stop";
@@ -236,8 +234,6 @@ void paragraph_format_properties::serialize(std::wostream & _Wostream ,const wch
 			//	if ((res=style_page_number_str_.get().find(L"auto"))<0)
 			//		style_page_number_=  boost::lexical_cast<int>(style_page_number_str_.get());
 			//}
-
-
 			if (style_tab_stops_)		style_tab_stops_->serialize(CP_XML_STREAM());
 			if (style_drop_cap_)		style_drop_cap_->serialize(CP_XML_STREAM());
 			if (style_background_image_)style_background_image_->serialize(CP_XML_STREAM());
@@ -393,7 +389,5 @@ void paragraph_format_properties::apply_from(paragraph_format_properties & Other
     
 	_CP_APPLY_PROP(outline_level_, Other.outline_level_);
 }
-
-
 }
 }

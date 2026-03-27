@@ -35,16 +35,12 @@ typedef enum  OutputFormat_
   OUTPUT_NETWARE_IMP    /* output a NetWare ImportFile                        */
 
 } OutputFormat;
-
-
 static void
 panic( const char*  message )
 {
   fprintf( stderr, "PANIC: %s\n", message );
   exit(2);
 }
-
-
 typedef struct  NameRec_
 {
   char*         name;
@@ -103,8 +99,6 @@ names_add( const char*  name,
   memcpy( nm->name, name, len );
   nm->name[len] = 0;
 }
-
-
 static int
 name_compare( const void*  name1,
               const void*  name2 )
@@ -121,16 +115,12 @@ names_sort( void )
   qsort( the_names, (size_t)num_names,
          sizeof ( the_names[0] ), name_compare );
 }
-
-
 static void
 names_dump( FILE*         out,
             OutputFormat  format,
             const char*   dll_name )
 {
   int  nn;
-
-
   switch ( format )
   {
     case OUTPUT_WINDOWS_DEF:
@@ -156,8 +146,6 @@ names_dump( FILE*         out,
     case OUTPUT_WATCOM_LBC:
       {
         const char*  dot;
-
-
         if ( dll_name == NULL )
         {
           fprintf( stderr,
@@ -171,8 +159,6 @@ names_dump( FILE*         out,
         {
           char  temp[512];
           int   len = dot - dll_name;
-
-
           if ( len > (int)( sizeof ( temp ) - 1 ) )
             len = sizeof ( temp ) - 1;
 
@@ -203,10 +189,6 @@ names_dump( FILE*         out,
         fprintf( out, "%s\n", the_names[nn].name );
   }
 }
-
-
-
-
 /* states of the line parser */
 
 typedef enum  State_
@@ -302,8 +284,6 @@ read_header_file( FILE*  file, int  verbose )
 
   return 0;
 }
-
-
 static void
 usage( void )
 {
@@ -333,8 +313,6 @@ usage( void )
            );
   exit(1);
 }
-
-
 int  main( int argc, const char* const*  argv )
 {
   int           from_stdin = 0;

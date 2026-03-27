@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "afglobal.h"
 #include "afmodule.h"
 #include "afloader.h"
@@ -57,8 +55,6 @@
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftdriver.h>
 #include <freetype/internal/services/svprop.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -67,8 +63,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  afmodule
-
-
   static FT_Error
   af_property_get_face_globals( FT_Face          face,
                                 AF_FaceGlobals*  aglobals,
@@ -76,8 +70,6 @@
   {
     FT_Error        error = FT_Err_Ok;
     AF_FaceGlobals  globals;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -101,8 +93,6 @@
 
     return error;
   }
-
-
   static FT_Error
   af_property_set( FT_Module    ft_module,
                    const char*  property_name,
@@ -115,14 +105,10 @@
 #ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
     FT_UNUSED( value_is_string );
 #endif
-
-
     if ( !ft_strcmp( property_name, "fallback-script" ) )
     {
       FT_UInt*  fallback_script;
       FT_UInt   ss;
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
@@ -136,8 +122,6 @@
       for ( ss = 0; af_style_classes[ss]; ss++ )
       {
         AF_StyleClass  style_class = af_style_classes[ss];
-
-
         if ( (FT_UInt)style_class->script == *fallback_script &&
              style_class->coverage == AF_COVERAGE_DEFAULT     )
         {
@@ -158,8 +142,6 @@
     else if ( !ft_strcmp( property_name, "default-script" ) )
     {
       FT_UInt*  default_script;
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
@@ -175,8 +157,6 @@
     {
       FT_Prop_IncreaseXHeight*  prop;
       AF_FaceGlobals            globals;
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
         return FT_THROW( Invalid_Argument );
@@ -198,8 +178,6 @@
       {
         const char*  s = (const char*)value;
         long         w = ft_strtol( s, NULL, 10 );
-
-
         if ( w == 0 )
           module->warping = 0;
         else if ( w == 1 )
@@ -211,8 +189,6 @@
 #endif
       {
         FT_Bool*  warping = (FT_Bool*)value;
-
-
         module->warping = *warping;
       }
 
@@ -226,15 +202,11 @@
 
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       FT_Int   dp[8];
-
-
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
         char*        ep;
         int          i;
-
-
         /* eight comma-separated numbers */
         for ( i = 0; i < 7; i++ )
         {
@@ -288,8 +260,6 @@
       {
         const char*  s   = (const char*)value;
         long         nsd = ft_strtol( s, NULL, 10 );
-
-
         if ( !nsd )
           module->no_stem_darkening = FALSE;
         else
@@ -299,8 +269,6 @@
 #endif
       {
         FT_Bool*  no_stem_darkening = (FT_Bool*)value;
-
-
         module->no_stem_darkening = *no_stem_darkening;
       }
 
@@ -311,8 +279,6 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
   static FT_Error
   af_property_get( FT_Module    ft_module,
                    const char*  property_name,
@@ -325,14 +291,10 @@
 #ifdef AF_CONFIG_OPTION_USE_WARPER
     FT_Bool    warping        = module->warping;
 #endif
-
-
     if ( !ft_strcmp( property_name, "glyph-to-script-map" ) )
     {
       FT_Prop_GlyphToScriptMap*  prop = (FT_Prop_GlyphToScriptMap*)value;
       AF_FaceGlobals             globals;
-
-
       error = af_property_get_face_globals( prop->face, &globals, module );
       if ( !error )
         prop->map = globals->glyph_styles;
@@ -344,8 +306,6 @@
       FT_UInt*  val = (FT_UInt*)value;
 
       AF_StyleClass  style_class = af_style_classes[fallback_style];
-
-
       *val = style_class->script;
 
       return error;
@@ -353,8 +313,6 @@
     else if ( !ft_strcmp( property_name, "default-script" ) )
     {
       FT_UInt*  val = (FT_UInt*)value;
-
-
       *val = default_script;
 
       return error;
@@ -363,8 +321,6 @@
     {
       FT_Prop_IncreaseXHeight*  prop = (FT_Prop_IncreaseXHeight*)value;
       AF_FaceGlobals            globals;
-
-
       error = af_property_get_face_globals( prop->face, &globals, module );
       if ( !error )
         prop->limit = globals->increase_x_height;
@@ -375,8 +331,6 @@
     else if ( !ft_strcmp( property_name, "warping" ) )
     {
       FT_Bool*  val = (FT_Bool*)value;
-
-
       *val = warping;
 
       return error;
@@ -386,8 +340,6 @@
     {
       FT_Int*  darken_params = module->darken_params;
       FT_Int*  val           = (FT_Int*)value;
-
-
       val[0] = darken_params[0];
       val[1] = darken_params[1];
       val[2] = darken_params[2];
@@ -403,8 +355,6 @@
     {
       FT_Bool   no_stem_darkening = module->no_stem_darkening;
       FT_Bool*  val               = (FT_Bool*)value;
-
-
       *val = no_stem_darkening;
 
       return error;
@@ -414,21 +364,15 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
   FT_DEFINE_SERVICE_PROPERTIESREC(
     af_service_properties,
 
     (FT_Properties_SetFunc)af_property_set,        /* set_property */
     (FT_Properties_GetFunc)af_property_get )       /* get_property */
-
-
   FT_DEFINE_SERVICEDESCREC1(
     af_services,
 
     FT_SERVICE_ID_PROPERTIES, &af_service_properties )
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   af_get_interface( FT_Module    module,
                     const char*  module_interface )
@@ -437,14 +381,10 @@
 
     return ft_service_list_lookup( af_services, module_interface );
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   af_autofitter_init( FT_Module  ft_module )      /* AF_Module */
   {
     AF_Module  module = (AF_Module)ft_module;
-
-
     module->fallback_style    = AF_STYLE_FALLBACK;
     module->default_script    = AF_SCRIPT_DEFAULT;
 #ifdef AF_CONFIG_OPTION_USE_WARPER
@@ -463,8 +403,6 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_CALLBACK_DEF( void )
   af_autofitter_done( FT_Module  ft_module )      /* AF_Module */
   {
@@ -475,8 +413,6 @@
       af_glyph_hints_done( _af_debug_hints_rec );
 #endif
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   af_autofitter_load_glyph( AF_Module     module,
                             FT_GlyphSlot  slot,
@@ -495,8 +431,6 @@
     AF_LoaderRec   loader[1];
 
     FT_UNUSED( size );
-
-
     if ( hints->memory )
       af_glyph_hints_done( hints );
 
@@ -527,8 +461,6 @@
     AF_LoaderRec      loader[1];
 
     FT_UNUSED( size );
-
-
     af_glyph_hints_init( hints, memory );
     af_loader_init( loader, hints );
 
@@ -542,8 +474,6 @@
 
 #endif /* !FT_DEBUG_AUTOFIT */
   }
-
-
   FT_DEFINE_AUTOHINTER_INTERFACE(
     af_autofitter_interface,
 
@@ -569,6 +499,4 @@
     (FT_Module_Destructor) af_autofitter_done,  /* module_done   */
     (FT_Module_Requester)  af_get_interface     /* get_interface */
   )
-
-
 /* END */

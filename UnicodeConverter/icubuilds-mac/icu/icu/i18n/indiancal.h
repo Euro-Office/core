@@ -64,8 +64,6 @@ U_NAMESPACE_BEGIN
  * <p>
  * @internal
  */
-
-
 class IndianCalendar : public Calendar {
 public:
   /**
@@ -179,8 +177,6 @@ public:
    * @internal
    */
   //UBool isCivil();
-
-
   // TODO: copy c'tor, etc
 
   // clone
@@ -298,8 +294,6 @@ protected:
    * @internal
    */
   virtual UBool inDaylightTime(UErrorCode& status) const;
-
-
   /**
    * Returns TRUE because the Indian Calendar does have a default century
    * @internal
@@ -367,6 +361,4 @@ U_NAMESPACE_END
 
 #endif
 #endif
-
-
 

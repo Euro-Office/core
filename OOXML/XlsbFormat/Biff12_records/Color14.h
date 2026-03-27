@@ -36,8 +36,6 @@
 #include "../Biff12_structures/FRTBlank.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/Color.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtColor14 record in BIFF12

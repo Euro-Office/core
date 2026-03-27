@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name IFFByteStream.h
 
     Files #"IFFByteStream.h"# and #"IFFByteStream.cpp"# implement a parser for
@@ -125,8 +123,6 @@
     @version
     #$Id: IFFByteStream.h,v 1.13 2007/05/19 03:07:34 leonb Exp $# */
 //@{
-
-
 #include "DjVuGlobal.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -134,8 +130,6 @@
 #include "GException.h"
 #include "GString.h"
 #include "ByteStream.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -305,8 +299,6 @@ private:
 };
 
 //@}
-
-
 
 #ifdef HAVE_NAMESPACES
 }

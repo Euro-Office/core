@@ -34,19 +34,11 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CF2INTRP_H__
 #define __CF2INTRP_H__
-
-
 #include "cf2ft.h"
 #include "cf2hints.h"
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( void )
   cf2_hintmask_init( CF2_HintMask  hintmask,
                      FT_Error*     error );
@@ -72,12 +64,6 @@ FT_BEGIN_HEADER
                           CF2_Fixed             curX,
                           CF2_Fixed             curY,
                           CF2_Fixed*            width );
-
-
 FT_END_HEADER
-
-
 #endif /* __CF2INTRP_H__ */
-
-
 /* END */

@@ -120,8 +120,6 @@ def handleError(test, msg):
 		test.failUnimplemented()
 	elif msg.find("Internal") > -1:
 		test.failInternal()
-		
-	
 def fixFileNames(fileName):
 	if (fileName is None) or (fileName == ""):
 		return ""
@@ -217,8 +215,6 @@ class XSTCTestCase:
 			raise Exception("Could not compute the combine name of a test.")
 		if (not options.silent) and (self.group.descr is not None):
 			self.log.append("'%s'   group-descr: %s\n" % (self.name, self.group.descr))
-		
-
 	def addLibLog(self, msg):		
 		"""This one is intended to be used by the error handler
 		function"""
@@ -336,8 +332,6 @@ def parseSchema(fileName):
 	finally:		
 		del ctxt
 		return schema
-				
-
 class XSTCSchemaTest(XSTCTestCase):
 
 	def __init__(self, groupName, name, accepted, file, val, descr):
@@ -445,8 +439,6 @@ class XSTCInstanceTest(XSTCTestCase):
 		finally:
 			if instance is not None:
 				instance.freeDoc()
-
-
 ####################
 # Test runner class.
 #
@@ -610,8 +602,6 @@ class XSTCTestRunner:
 				self.displayTestLog(test)
 			if (options.verbose or error) and (not options.reportInternalErrOnly) and (not options.reportMemLeakErrOnly) and (not options.reportUnimplErrOnly):
 				self.displayTestLog(test)
-
-
 	def addToCombines(self, test):
 		found = False
 		if self.combinesRan.has_key(test.combineName):

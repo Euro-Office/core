@@ -50,8 +50,6 @@ void _cmsAllocAdaptationStateChunk(struct _cmsContext_struct* ctx,
     
     ctx ->chunks[AdaptationStateContext] = _cmsSubAllocDup(ctx ->MemPool, from, sizeof(_cmsAdaptationStateChunkType));     
 }
-
-
 // Sets adaptation state for absolute colorimetric intent in the given context.  Adaptation state applies on all 
 // but cmsCreateExtendedTransformTHR().  Little CMS can handle incomplete adaptation states.
 cmsFloat64Number CMSEXPORT cmsSetAdaptationStateTHR(cmsContext ContextID, cmsFloat64Number d)
@@ -71,8 +69,6 @@ cmsFloat64Number CMSEXPORT cmsSetAdaptationStateTHR(cmsContext ContextID, cmsFlo
     // Always return previous value
     return prev;
 }
-
-
 // The adaptation state may be defaulted by this function. If you don't like it, use the extended transform routine
 cmsFloat64Number CMSEXPORT cmsSetAdaptationState(cmsFloat64Number d)
 {    
@@ -122,8 +118,6 @@ void CMSEXPORT cmsGetAlarmCodes(cmsUInt16Number OldAlarm[cmsMAXCHANNELS])
     _cmsAssert(OldAlarm != NULL);
     cmsGetAlarmCodesTHR(NULL, OldAlarm);
 }
-
-
 // Init and duplicate alarm codes
 void _cmsAllocAlarmCodesChunk(struct _cmsContext_struct* ctx, 
                               const struct _cmsContext_struct* src)
@@ -188,8 +182,6 @@ void CMSEXPORT cmsDoTransform(cmsHTRANSFORM  Transform,
            
     p -> xform(p, InputBuffer, OutputBuffer, Size, 1, &stride);
 }
-
-
 // This is a legacy stride for planar
 void CMSEXPORT cmsDoTransformStride(cmsHTRANSFORM  Transform,
                               const void* InputBuffer,
@@ -230,8 +222,6 @@ void CMSEXPORT cmsDoTransformLineStride(cmsHTRANSFORM  Transform,
 
     p->xform(p, InputBuffer, OutputBuffer, PixelsPerLine, LineCount, &stride);
 }
-
-
 
 // Transform routines ----------------------------------------------------------------------------------------------------------
 
@@ -289,8 +279,6 @@ void FloatXFORM(_cmsTRANSFORM* p,
                 // No gamut check at all
                 cmsPipelineEvalFloat(fIn, fOut, p->Lut);
             }
-
-
             output = p->ToOutputFloat(p, fOut, output, Stride->BytesPerPlaneOut);
         }
 
@@ -299,8 +287,6 @@ void FloatXFORM(_cmsTRANSFORM* p,
     }
 
 }
-
-
 static
 void NullFloatXFORM(_cmsTRANSFORM* p,
                     const void* in,
@@ -373,8 +359,6 @@ void NullXFORM(_cmsTRANSFORM* p,
     }
 
 }
-
-
 // No gamut check, no cache, 16 bits
 static
 void PrecalculatedXFORM(_cmsTRANSFORM* p,
@@ -411,8 +395,6 @@ void PrecalculatedXFORM(_cmsTRANSFORM* p,
     }
 
 }
-
-
 // Auxiliary: Handle precalculated gamut check. The retrieval of context may be alittle bit slow, but this function is not critical.
 static
 void TransformOnePixelWithGamutCheck(_cmsTRANSFORM* p,
@@ -471,8 +453,6 @@ void PrecalculatedXFORMGamutCheck(_cmsTRANSFORM* p,
            strideOut += Stride->BytesPerLineOut;
     }
 }
-
-
 // No gamut check, Caché, 16 bits,
 static
 void CachedXFORM(_cmsTRANSFORM* p,
@@ -597,8 +577,6 @@ typedef struct _cmsTransformCollection_st {
 
 // The linked list head
 _cmsTransformPluginChunkType _cmsTransformPluginChunk = { NULL };
-
-
 // Duplicates the zone of memory used by the plug-in in the new context
 static
 void DupPluginTransformList(struct _cmsContext_struct* ctx, 
@@ -677,8 +655,6 @@ void _cmsTransform2toTransformAdaptor(struct _cmstransform_struct *CMMcargo,
        }
 }
 
-
-
 // Register new ways to transform
 cmsBool  _cmsRegisterTransformPlugin(cmsContext ContextID, cmsPluginBase* Data)
 {
@@ -695,8 +671,6 @@ cmsBool  _cmsRegisterTransformPlugin(cmsContext ContextID, cmsPluginBase* Data)
 
     // Factory callback is required
     if (Plugin->factories.xform == NULL) return FALSE;
-
-
     fl = (_cmsTransformCollection*) _cmsPluginMalloc(ContextID, sizeof(_cmsTransformCollection));
     if (fl == NULL) return FALSE;
 
@@ -718,8 +692,6 @@ cmsBool  _cmsRegisterTransformPlugin(cmsContext ContextID, cmsPluginBase* Data)
     // All is ok
     return TRUE;
 }
-
-
 void CMSEXPORT _cmsSetTransformUserData(struct _cmstransform_struct *CMMcargo, void* ptr, _cmsFreeUserDataFn FreePrivateDataFn)
 {
     _cmsAssert(CMMcargo != NULL);
@@ -748,8 +720,6 @@ void CMSEXPORT _cmsGetTransformFormattersFloat(struct _cmstransform_struct *CMMc
      if (FromInput) *FromInput = CMMcargo ->FromInputFloat;
      if (ToOutput)  *ToOutput  = CMMcargo ->ToOutputFloat;
 }
-
-
 // Allocate transform struct and set it to defaults. Ask the optimization plug-in about if those formats are proper
 // for separated transforms. If this is the case,
 static
@@ -1058,8 +1028,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateExtendedTransform(cmsContext ContextID,
         cmsSignalError(ContextID, cmsERROR_NOT_SUITABLE, "Channel count doesn't match. Profile is corrupted");
         return NULL;
     }
-
-
     // All seems ok
     xform = AllocEmptyTransform(ContextID, Lut, LastIntent, &InputFormat, &OutputFormat, &dwFlags);
     if (xform == NULL) {
@@ -1074,8 +1042,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateExtendedTransform(cmsContext ContextID,
     // Take white points
     SetWhitePoint(&xform->EntryWhitePoint, (cmsCIEXYZ*) cmsReadTag(hProfiles[0], cmsSigMediaWhitePointTag));
     SetWhitePoint(&xform->ExitWhitePoint,  (cmsCIEXYZ*) cmsReadTag(hProfiles[nProfiles-1], cmsSigMediaWhitePointTag));
-   
-
     // Create a gamut check LUT if requested
     if (hGamutProfile != NULL && (dwFlags & cmsFLAGS_GAMUTCHECK))
         xform ->GamutCheck  = _cmsCreateGamutCheckPipeline(ContextID, hProfiles,
@@ -1083,8 +1049,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateExtendedTransform(cmsContext ContextID,
                                                         AdaptationStates,
                                                         nGamutPCSposition,
                                                         hGamutProfile);
-
-
     // Try to read input and output colorant table
     if (cmsIsTag(hProfiles[0], cmsSigColorantTableTag)) {
 
@@ -1159,12 +1123,8 @@ cmsHTRANSFORM CMSEXPORT cmsCreateMultiprofileTransformTHR(cmsContext ContextID,
         Intents[i] = Intent;
         AdaptationStates[i] = cmsSetAdaptationStateTHR(ContextID, -1);
     }
-
-
     return cmsCreateExtendedTransform(ContextID, nProfiles, hProfiles, BPC, Intents, AdaptationStates, NULL, 0, InputFormat, OutputFormat, dwFlags);
 }
-
-
 
 cmsHTRANSFORM CMSEXPORT cmsCreateMultiprofileTransform(cmsHPROFILE hProfiles[],
                                                   cmsUInt32Number nProfiles,
@@ -1214,8 +1174,6 @@ CMSAPI cmsHTRANSFORM CMSEXPORT cmsCreateTransform(cmsHPROFILE Input,
 {
     return cmsCreateTransformTHR(cmsGetProfileContextID(Input), Input, InputFormat, Output, OutputFormat, Intent, dwFlags);
 }
-
-
 cmsHTRANSFORM CMSEXPORT cmsCreateProofingTransformTHR(cmsContext ContextID,
                                                    cmsHPROFILE InputProfile,
                                                    cmsUInt32Number InputFormat,
@@ -1231,8 +1189,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateProofingTransformTHR(cmsContext ContextID,
     cmsBool  BPC[4];
     cmsFloat64Number Adaptation[4];
     cmsBool  DoBPC = (dwFlags & cmsFLAGS_BLACKPOINTCOMPENSATION) ? TRUE : FALSE;
-
-
     hArray[0]  = InputProfile; hArray[1] = ProofingProfile; hArray[2]  = ProofingProfile;               hArray[3] = OutputProfile;
     Intents[0] = nIntent;      Intents[1] = nIntent;        Intents[2] = INTENT_RELATIVE_COLORIMETRIC;  Intents[3] = ProofingIntent;
     BPC[0]     = DoBPC;        BPC[1] = DoBPC;              BPC[2] = 0;                                 BPC[3] = 0;
@@ -1246,8 +1202,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateProofingTransformTHR(cmsContext ContextID,
                                         ProofingProfile, 1, InputFormat, OutputFormat, dwFlags);
 
 }
-
-
 cmsHTRANSFORM CMSEXPORT cmsCreateProofingTransform(cmsHPROFILE InputProfile,
                                                    cmsUInt32Number InputFormat,
                                                    cmsHPROFILE OutputProfile,
@@ -1267,8 +1221,6 @@ cmsHTRANSFORM CMSEXPORT cmsCreateProofingTransform(cmsHPROFILE InputProfile,
                                                    ProofingIntent,
                                                    dwFlags);
 }
-
-
 // Grab the ContextID from an open transform. Returns NULL if a NULL transform is passed
 cmsContext CMSEXPORT cmsGetTransformContextID(cmsHTRANSFORM hTransform)
 {
@@ -1302,8 +1254,6 @@ cmsBool CMSEXPORT cmsChangeBuffersFormat(cmsHTRANSFORM hTransform,
 {
     _cmsTRANSFORM* xform = (_cmsTRANSFORM*) hTransform;
     cmsFormatter16 FromInput, ToOutput;
-
-
     // We only can afford to change formatters if previous transform is at least 16 bits
     if (!(xform ->dwOriginalFlags & cmsFLAGS_CAN_CHANGE_FORMATTER)) {
 

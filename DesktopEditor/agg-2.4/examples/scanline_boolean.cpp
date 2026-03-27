@@ -33,14 +33,6 @@
 
 enum flip_y_e { flip_y = true };
 
-
-
-
-
-
-
-
-
 void generate_circles(agg::path_storage& ps, 
                       const double* quad, 
                       unsigned num_circles, 
@@ -62,10 +54,6 @@ void generate_circles(agg::path_storage& ps,
         }
     }
 }
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -107,8 +95,6 @@ public:
         m_mul1.label("Opacity1=%.3f");
         m_mul2.label("Opacity2=%.3f");
     }
-
-
     virtual void on_init()
     {
         m_quad1.xn(0) = 50;
@@ -129,10 +115,6 @@ public:
         m_quad2.xn(3) = width() / 2 + 25;
         m_quad2.yn(3) = height() - 50;
     }
-
-
-
-
     virtual void on_draw()
     {
         pixfmt pixf(rbuf_window());
@@ -159,8 +141,6 @@ public:
         generate_circles(ps2, m_quad2.polygon(), 5, 20);
 
         ras1.filling_rule(agg::fill_even_odd);
-
-
         r.color(agg::rgba8(240, 255, 200, 100));
         ras1.add_path(ps1);
         agg::render_scanlines(ras1, sl, r);
@@ -168,8 +148,6 @@ public:
         r.color(agg::rgba8(255, 240, 240, 100));
         ras2.add_path(ps2);
         agg::render_scanlines(ras2, sl, r);
-
-
         
         typedef agg::scanline_p8                               sbool_scanline_type;
         typedef agg::renderer_scanline_aa_solid<renderer_base> sbool_renderer_type;
@@ -198,8 +176,6 @@ public:
 
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -211,8 +187,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -228,8 +202,6 @@ public:
             on_mouse_button_up(x, y, flags);
         }
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         if(m_quad1.on_mouse_button_up(x, y) ||
@@ -238,8 +210,6 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_ctrl_change()
     {
         if(m_reset.status())
@@ -250,12 +220,6 @@ public:
         }
     }
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -267,13 +231,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-
-
-
-
-

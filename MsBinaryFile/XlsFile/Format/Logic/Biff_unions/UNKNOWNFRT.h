@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of UNKNOWNFRT union of records 
 class UNKNOWNFRT: public CompositeObject
 {

@@ -32,16 +32,12 @@
 #if BITS_IN_JSAMPLE != 8
   Sorry, this code only copes with 8-bit JSAMPLEs. /* deliberate syntax err */
 #endif
-
-
 /*
  * Since RLE stores scanlines bottom-to-top, we have to invert the image
  * from JPEG's top-to-bottom order.  To do this, we save the outgoing data
  * in a virtual array during put_pixel_row calls, then actually emit the
  * RLE file during finish_output.
  */
-
-
 /*
  * For now, if we emit an RLE color map then it is always 256 entries long,
  * though not all of the entries need be used.
@@ -65,8 +61,6 @@ typedef rle_dest_struct * rle_dest_ptr;
 METHODDEF(void) rle_put_pixel_rows
     JPP((j_decompress_ptr cinfo, djpeg_dest_ptr dinfo,
 	 JDIMENSION rows_supplied));
-
-
 /*
  * Write the file header.
  *
@@ -141,8 +135,6 @@ start_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   }
 #endif
 }
-
-
 /*
  * Write some pixel data.
  *
@@ -267,8 +259,6 @@ finish_output_rle (j_decompress_ptr cinfo, djpeg_dest_ptr dinfo)
   if (ferror(dest->pub.output_file))
     ERREXIT(cinfo, JERR_FILE_WRITE);
 }
-
-
 /*
  * The module selection routine for RLE format output.
  */

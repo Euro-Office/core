@@ -149,8 +149,6 @@ u_setMemoryFunctions(const void *context, UMemAllocFn *a, UMemReallocFn *r, UMem
     pRealloc  = r;
     pFree     = f;
 }
-
-
 U_CFUNC UBool cmemory_cleanup(void) {
     pContext   = NULL;
     pAlloc     = NULL;

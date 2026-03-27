@@ -4080,8 +4080,6 @@ private:
 	{
 		if(m_oLightReader.IsEmptyNode())
 			return false;
-
-
 	}
 
 	bool readLi     (NSStringUtils::CStringBuilder* oXml, std::vector<NSCSS::CNode>& sSelectors, CTextSettings& oTS, bool bType)

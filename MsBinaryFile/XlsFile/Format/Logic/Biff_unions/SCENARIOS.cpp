@@ -37,18 +37,12 @@
 
 namespace XLS
 {
-
-
 SCENARIOS::SCENARIOS()
 {
 }
-
-
 SCENARIOS::~SCENARIOS()
 {
 }
-
-
 class Parenthesis_SCENARIOS_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_SCENARIOS_1)
@@ -68,14 +62,10 @@ public:
 		return true;
 	};
 };
-
-
 BaseObjectPtr SCENARIOS::clone()
 {
 	return BaseObjectPtr(new SCENARIOS(*this));
 }
-
-
 // SCENARIOS = ScenMan *(SCENARIO *Continue)
 const bool SCENARIOS::loadContent(BinProcessor& proc)
 {

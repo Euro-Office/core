@@ -35,8 +35,6 @@
 
 namespace XLS
 {;
-
-
 // Logical representation of AnySubstream union of records 
 class AnySubstream: public CompositeObject
 {

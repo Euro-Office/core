@@ -198,8 +198,6 @@ const LETag paucScriptTag = 0x70617563; /* 'pauc' (PAU_CIN_HAU) */
 const LETag siddScriptTag = 0x73696464; /* 'sidd' (SIDDHAM) */
 
 const LETag nullScriptTag = 0x00000000; /* ''     (NULL) */
-
-
 const LETag nullLanguageTag = 0x00000000; /* '' (null) */
 const LETag araLanguageTag = 0x41524120; /* 'ARA' (Arabic) */
 const LETag asmLanguageTag = 0x41534D20; /* 'ASM' (Assamese) */
@@ -272,7 +270,5 @@ const LETag sveLanguageTag = 0x53564520; /* 'SVE' (Swedish) */
 const LETag tibLanguageTag = 0x54494220; /* 'TIB' (Tibetan) */
 const LETag trkLanguageTag = 0x54524B20; /* 'TRK' (Turkish) */
 const LETag welLanguageTag = 0x57454C20; /* 'WEL' (Welsh) */
-
-
 U_NAMESPACE_END
 #endif

@@ -80,8 +80,6 @@ public:
 			Rels.add(relationship(r.rid_, r.type_, r.target_, (r.is_internal_ ? L"" : L"External")));	
 		}
     }
-
-
     void add_rels(
         bool isInternal,
         std::wstring const & rid,
@@ -259,8 +257,6 @@ void oox_activeX_context::write_to(std::wostream & strm)
 		}
 	}
 }
-
-
 
 }
 

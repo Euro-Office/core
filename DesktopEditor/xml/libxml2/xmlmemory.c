@@ -98,8 +98,6 @@ typedef struct memnod {
    const char    *mh_file;
    unsigned int   mh_line;
 }  MEMHDR;
-
-
 #ifdef SUN4
 #define ALIGN_SIZE  16
 #else
@@ -113,8 +111,6 @@ typedef struct memnod {
 
 #define CLIENT_2_HDR(a) ((MEMHDR *) (((char *) (a)) - RESERVE_SIZE))
 #define HDR_2_CLIENT(a)    ((void *) (((char *) (a)) + RESERVE_SIZE))
-
-
 static unsigned int block=0;
 static unsigned int xmlMemStopAtBlock = 0;
 static void *xmlMemTraceBlockAt = NULL;
@@ -759,8 +755,6 @@ xmlMemDisplay(FILE *fp)
     strftime(buf, sizeof(buf) - 1, "%I:%M:%S %p", tstruct);
     fprintf(fp,"      %s\n\n", buf);
 #endif
-
-
     fprintf(fp,"      MEMORY ALLOCATED : %lu, MAX was %lu\n",
             debugMemSize, debugMaxMemSize);
     fprintf(fp,"BLOCK  NUMBER   SIZE  TYPE\n");
@@ -924,8 +918,6 @@ xmlMemoryDump(void)
     if (dump != NULL) fclose(dump);
 #endif /* MEM_LIST */
 }
-
-
 /****************************************************************
  *								*
  *		Initialization Routines				*

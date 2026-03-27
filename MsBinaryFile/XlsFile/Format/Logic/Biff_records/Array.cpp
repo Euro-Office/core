@@ -42,8 +42,6 @@ Array::Array(const CellRef& cell_base_ref_init) :formula(false, cell_base_ref_in
 Array::~Array()
 {
 }
-
-
 BaseObjectPtr Array::clone()
 {
 	return BaseObjectPtr(new Array(*this));
@@ -90,7 +88,5 @@ void Array::writeFields(CFRecord& record)
 		formula.save(record);
 	}
 }
-
-
 } // namespace XLS
 

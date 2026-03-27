@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordUserEditAtom : public CUnknownRecord
@@ -55,8 +53,6 @@ public:
 	_UINT32 m_nEncryptSessionPersistIdRef;
 
 	USHORT m_nLastView;
-
-
     CRecordUserEditAtom();
     ~CRecordUserEditAtom();
 

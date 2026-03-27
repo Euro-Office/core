@@ -44,8 +44,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 OPJ_BOOL identify_target(query_param_t query_param,
                          targetlist_param_t *targetlist, target_param_t **target)
 {
@@ -179,8 +177,6 @@ OPJ_BOOL close_channel(query_param_t query_param,
     }
     return OPJ_TRUE;
 }
-
-
 /**
  * enqueue tiles or precincts into the message queue
  *
@@ -199,8 +195,6 @@ void enqueue_imagedata(query_param_t query_param, msgqueue_param_t *msgqueue);
  */
 OPJ_BOOL enqueue_metabins(query_param_t query_param,
                           metadatalist_param_t *metadatalist, msgqueue_param_t *msgqueue);
-
-
 OPJ_BOOL gene_JPIPstream(query_param_t query_param,
                          target_param_t *target,
                          session_param_t *cursession,
@@ -262,8 +256,6 @@ OPJ_BOOL gene_JPIPstream(query_param_t query_param,
 
     return OPJ_TRUE;
 }
-
-
 /**
  * enqueue precinct data-bins into the queue
  *
@@ -381,8 +373,6 @@ void enqueue_imagedata(query_param_t query_param, msgqueue_param_t *msgqueue)
         }
     }
 }
-
-
 void enqueue_precincts(int xmin, int xmax, int ymin, int ymax, int tile_id,
                        int level, int lastcomp, OPJ_BOOL *comps, int layers,
                        msgqueue_param_t *msgqueue)

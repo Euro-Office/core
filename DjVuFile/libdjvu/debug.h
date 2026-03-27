@@ -67,8 +67,6 @@
 #endif
 
 #include <stdio.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -243,8 +241,6 @@ public:
 # define DEBUG_MSGF_LVL(level,x)  //{ ( DjVuDebug::lock(level,1) << x ).unlock(); }
 
 #endif
-
-
 // ------------ EAF MACROS
 
 #if ( DEBUGLVL >= 1 )

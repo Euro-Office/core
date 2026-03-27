@@ -80,16 +80,12 @@
 #ifdef WIN32
 # include <windows.h>  // OutputDebugString
 #endif 
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 #ifndef UNIX
 #ifndef WIN32
 #ifndef macintosh
@@ -293,8 +289,6 @@ DjVuDebugIndent::~DjVuDebugIndent()
   dbg.modify_indent(-inc);
   dbg.unlock();
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

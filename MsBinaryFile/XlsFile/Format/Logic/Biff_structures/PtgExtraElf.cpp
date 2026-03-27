@@ -35,19 +35,13 @@
 
 namespace XLS
 {
-
-
 PtgExtraElf::PtgExtraElf()
 {
 }
-
-
 PtgExtraElf::PtgExtraElf(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr PtgExtraElf::clone()
 {
 	return BiffStructurePtr(new PtgExtraElf(*this));
@@ -80,8 +74,6 @@ void PtgExtraElf::save(CFRecord& record)
 		record << item;
 	}
 }
-
-
 const std::wstring PtgExtraElf::toString() const
 {
 	std::wstring range;
@@ -91,8 +83,6 @@ const std::wstring PtgExtraElf::toString() const
 	}
 	return range + array_.back().toString();
 }
-
-
 const std::wstring PtgExtraElf::toColumnsSet() const
 {
 	std::wstring range;
@@ -102,7 +92,5 @@ const std::wstring PtgExtraElf::toColumnsSet() const
 	}
 	return range + CellRangeRef(array_.back(), CellRangeRef::stColumnBelow).toString();
 }
-
-
 } // namespace XLS
 

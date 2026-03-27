@@ -102,8 +102,6 @@ if [ -s "$ASTYLEDIFF" ]; then
 else
   rm $ASTYLEDIFF
 fi
-
-
 # If there are whitespace errors, print the offending file names and fail.
 exec git diff-index --check --cached HEAD --
 

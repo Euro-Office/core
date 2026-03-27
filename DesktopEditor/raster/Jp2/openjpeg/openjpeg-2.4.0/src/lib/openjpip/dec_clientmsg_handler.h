@@ -115,6 +115,4 @@ void handle_SIZreqMSG(SOCKET connected_socket, Byte_t *jpipstream,
  */
 void handle_JP2saveMSG(SOCKET connected_socket, cachelist_param_t *cachelist,
                        msgqueue_param_t *msgqueue, Byte_t *jpipstream);
-
-
 #endif      /* !DEC_CLIENTMSG_HANDLER_H_ */

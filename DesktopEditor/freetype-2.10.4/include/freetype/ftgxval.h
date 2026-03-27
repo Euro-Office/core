@@ -23,8 +23,6 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #ifndef FTGXVAL_H_
 #define FTGXVAL_H_
 
@@ -35,11 +33,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -89,8 +83,6 @@ FT_BEGIN_HEADER
 #define FT_VALIDATE_prop_INDEX     8
 #define FT_VALIDATE_lcar_INDEX     9
 #define FT_VALIDATE_GX_LAST_INDEX  FT_VALIDATE_lcar_INDEX
-
-
   /**************************************************************************
    *
    * @macro:
@@ -109,8 +101,6 @@ FT_BEGIN_HEADER
 #define FT_VALIDATE_GX_START  0x4000
 #define FT_VALIDATE_GX_BITFIELD( tag ) \
           ( FT_VALIDATE_GX_START << FT_VALIDATE_##tag##_INDEX )
-
-
   /**************************************************************************
    *
    * @enum:
@@ -178,8 +168,6 @@ FT_BEGIN_HEADER
                           FT_VALIDATE_trak | \
                           FT_VALIDATE_prop | \
                           FT_VALIDATE_lcar )
-
-
   /**************************************************************************
    *
    * @function:
@@ -226,8 +214,6 @@ FT_BEGIN_HEADER
                           FT_UInt   validation_flags,
                           FT_Bytes  tables[FT_VALIDATE_GX_LENGTH],
                           FT_UInt   table_length );
-
-
   /**************************************************************************
    *
    * @function:
@@ -250,8 +236,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_TrueTypeGX_Free( FT_Face   face,
                       FT_Bytes  table );
-
-
   /**************************************************************************
    *
    * @enum:
@@ -276,8 +260,6 @@ FT_BEGIN_HEADER
 #define FT_VALIDATE_APPLE  ( FT_VALIDATE_GX_START << 1 )
 
 #define FT_VALIDATE_CKERN  ( FT_VALIDATE_MS | FT_VALIDATE_APPLE )
-
-
   /**************************************************************************
    *
    * @function:
@@ -317,8 +299,6 @@ FT_BEGIN_HEADER
   FT_ClassicKern_Validate( FT_Face    face,
                            FT_UInt    validation_flags,
                            FT_Bytes  *ckern_table );
-
-
   /**************************************************************************
    *
    * @function:
@@ -344,11 +324,7 @@ FT_BEGIN_HEADER
                        FT_Bytes  table );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTGXVAL_H_ */
-
-
 /* END */

@@ -84,8 +84,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 static const char octets[4]={0x41,0x54,0x26,0x54};
 
 int        DjVuDocEditor::thumbnails_per_file=10;
@@ -526,8 +524,6 @@ DjVuDocEditor::insert_file(const GURL &file_url, bool is_page,
   DEBUG_MAKE_INDENT(3);
   if (refresh_cb)
     refresh_cb(refresh_cl_data);
-
-
       // We do not want to insert the same file twice (important when
       // we insert a group of files at the same time using insert_group())
       // So we check if we already did that and return if so.
@@ -2188,8 +2184,6 @@ DjVuDocEditor::get_doc_url(void) const
 {
    return doc_url.is_empty() ? init_url : doc_url;
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

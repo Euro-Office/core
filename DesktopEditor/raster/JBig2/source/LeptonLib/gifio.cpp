@@ -58,8 +58,6 @@
 static PIX * pixInterlaceGIF(PIX  *pixs);
 static const l_int32 InterlacedOffset[] = {0, 4, 2, 1};
 static const l_int32 InterlacedJumps[] = {8, 8, 4, 2};
-
-
 /*---------------------------------------------------------------------*
  *                       Reading gif from file                         *
  *---------------------------------------------------------------------*/
@@ -191,8 +189,6 @@ SavedImage       si;
     DGifCloseFile(gif);
     return pixd;
 }
-
-
 static PIX *
 pixInterlaceGIF(PIX  *pixs)
 {
@@ -222,8 +218,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Writing gif to file                         *
  *---------------------------------------------------------------------*/
@@ -408,8 +402,6 @@ GifByteType     *gif_line;
     EGifCloseFile(gif);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                      Read/write from/to memory                      *
  *---------------------------------------------------------------------*/
@@ -446,8 +438,6 @@ PIX   *pix;
         return (PIX *)ERROR_PTR("pix not read", procName, NULL);
     return pix;
 }
-
-
 /*!
  *  pixWriteMemGif()
  *
@@ -488,8 +478,6 @@ l_int32   nbytes;
     *psize = nbytes;
     return 0;
 }
-
-
 /* -----------------------------------------------------------------*/
 #endif    /* HAVE_LIBGIF || HAVE_LIBUNGIF  */
 /* -----------------------------------------------------------------*/

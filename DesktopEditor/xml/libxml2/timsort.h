@@ -97,8 +97,6 @@ int compute_minrun(uint64_t size) /* {{{ */
 #ifndef SORT_CMP
 #define SORT_CMP(x, y)  ((x) < (y) ? -1 : ((x) == (y) ? 0 : 1))
 #endif
-
-
 #define SORT_SWAP(x,y) {SORT_TYPE __SORT_SWAP_t = (x); (x) = (y); (y) = __SORT_SWAP_t;}
 
 #define SORT_CONCAT(x, y) x ## _ ## y
@@ -314,8 +312,6 @@ typedef struct {
   size_t alloc;
   SORT_TYPE *storage;
 } TEMP_STORAGE_T;
-
-
 static void TIM_SORT_RESIZE(TEMP_STORAGE_T *store, const size_t new_size)
 {
   if (store->alloc < new_size)

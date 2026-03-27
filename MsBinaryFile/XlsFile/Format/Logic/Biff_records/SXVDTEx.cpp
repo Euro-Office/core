@@ -38,13 +38,9 @@ namespace XLS
 SXVDTEx::SXVDTEx()
 {
 }
-
-
 SXVDTEx::~SXVDTEx()
 {
 }
-
-
 BaseObjectPtr SXVDTEx::clone()
 {
 	return BaseObjectPtr(new SXVDTEx(*this));

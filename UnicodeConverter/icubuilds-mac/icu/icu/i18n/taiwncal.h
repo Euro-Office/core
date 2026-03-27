@@ -62,8 +62,6 @@ public:
      * @internal
      */
     TaiwanCalendar(const Locale& aLocale, UErrorCode& success);
-
-
     /**
      * Destructor
      * @internal

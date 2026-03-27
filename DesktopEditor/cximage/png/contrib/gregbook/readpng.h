@@ -14,8 +14,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -33,8 +31,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -72,8 +68,6 @@
 typedef unsigned char   uch;
 typedef unsigned short  ush;
 typedef unsigned long   ulg;
-
-
 /* prototypes for public functions in readpng.c */
 
 void readpng_version_info(void);

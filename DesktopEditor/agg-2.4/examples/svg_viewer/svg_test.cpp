@@ -13,8 +13,6 @@
 //#include "agg_gamma_lut.h"
 
 enum { flip_y = false };
-
-
 class the_application : public agg::platform_support
 {
     agg::svg::path_renderer m_path;
@@ -122,8 +120,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_gamma);
         agg::render_ctrl(ras, sl, rb, m_scale);
         agg::render_ctrl(ras, sl, rb, m_rotate);
-
-
         char buf[128]; 
         agg::gsv_text t;
         t.size(10.0);
@@ -140,8 +136,6 @@ public:
         ras.add_path(pt);
         ren.color(agg::rgba(0,0,0));
         agg::render_scanlines(ras, sl, ren);
-
-
         //agg::gamma_lut<> gl(m_gamma.value());
         //unsigned x, y;
         //unsigned w = unsigned(width());
@@ -212,13 +206,7 @@ public:
         }
     }
 
-
-
 };
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgra32, flip_y);
@@ -256,6 +244,4 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
 

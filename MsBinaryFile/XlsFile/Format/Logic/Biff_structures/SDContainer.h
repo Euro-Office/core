@@ -50,8 +50,6 @@ public:
 	static const ElementType	type = typeSDContainer;
 
 	virtual void load(CFRecord& record);
-
-
 	SecurityDescriptor sd;
 };
 

@@ -38,19 +38,13 @@ namespace XLS
 AxcExt::AxcExt()
 {
 }
-
-
 AxcExt::~AxcExt()
 {
 }
-
-
 BaseObjectPtr AxcExt::clone()
 {
 	return BaseObjectPtr(new AxcExt(*this));
 }
-
-
 void AxcExt::readFields(CFRecord& record)
 {
 	unsigned char flags, reserved;

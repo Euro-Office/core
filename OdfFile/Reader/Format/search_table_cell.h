@@ -46,5 +46,3 @@ const office_element * search_table_cell(const office_element * base, std::wstri
 }
 
 #endif
-
-

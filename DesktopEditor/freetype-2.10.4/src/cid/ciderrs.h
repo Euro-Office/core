@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the CID error enumeration constants.
@@ -36,6 +34,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* CIDERRS_H_ */
-
-
 /* END */

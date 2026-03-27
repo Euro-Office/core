@@ -14,34 +14,20 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __AFMPARSE_H__
 #define __AFMPARSE_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   afm_parser_init( AFM_Parser  parser,
                    FT_Memory   memory,
                    FT_Byte*    base,
                    FT_Byte*    limit );
-
-
   FT_LOCAL( void )
   afm_parser_done( AFM_Parser  parser );
-
-
   FT_LOCAL( FT_Error )
   afm_parser_parse( AFM_Parser  parser );
-
-
   enum  AFM_ValueType_
   {
     AFM_VALUE_TYPE_STRING,
@@ -51,8 +37,6 @@ FT_BEGIN_HEADER
     AFM_VALUE_TYPE_BOOL,
     AFM_VALUE_TYPE_INDEX    /* glyph index */
   };
-
-
   typedef struct  AFM_ValueRec_
   {
     enum AFM_ValueType_  type;
@@ -83,6 +67,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __AFMPARSE_H__ */
-
-
 /* END */

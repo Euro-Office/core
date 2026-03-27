@@ -38,13 +38,9 @@ namespace XLS
 SXViewLink::SXViewLink()
 {
 }
-
-
 SXViewLink::~SXViewLink()
 {
 }
-
-
 BaseObjectPtr SXViewLink::clone()
 {
 	return BaseObjectPtr(new SXViewLink(*this));

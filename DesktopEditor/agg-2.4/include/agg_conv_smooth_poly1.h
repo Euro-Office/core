@@ -23,8 +23,6 @@
 #include "agg_vcgen_smooth_poly1.h"
 #include "agg_conv_adaptor_vcgen.h"
 #include "agg_conv_curve.h"
-
-
 namespace agg
 {
 
@@ -49,8 +47,6 @@ namespace agg
             operator = (const conv_smooth_poly1<VertexSource>&);
     };
 
-
-
     //-------------------------------------------------conv_smooth_poly1_curve
     template<class VertexSource> 
     struct conv_smooth_poly1_curve : 
@@ -74,7 +70,5 @@ namespace agg
     };
 
 }
-
-
 #endif
 

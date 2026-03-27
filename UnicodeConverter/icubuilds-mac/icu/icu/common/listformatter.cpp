@@ -55,8 +55,6 @@ ListFormatInternal(const ListFormatInternal &other) :
     endPattern(other.endPattern) { }
 };
 
-
-
 static Hashtable* listPatternHash = NULL;
 static UMutex listFormatterMutex = U_MUTEX_INITIALIZER;
 static const char *STANDARD_STYLE = "standard";

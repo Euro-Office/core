@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __RASTPIC_H__
 #define __RASTPIC_H__
-
-
 FT_BEGIN_HEADER
 
 #include FT_INTERNAL_PIC_H
-
-
 #ifndef FT_CONFIG_OPTION_PIC
 
 #define FT_STANDARD_RASTER_GET  ft_standard_raster
@@ -37,13 +31,9 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs  ft_standard_raster;
 
   } RasterPIC;
-
-
 #define GET_PIC( lib )                                    \
           ( (RasterPIC*)( (lib)->pic_container.raster ) )
 #define FT_STANDARD_RASTER_GET  ( GET_PIC( library )->ft_standard_raster )
-
-
   /* see rastpic.c for the implementation */
   void
   ft_raster1_renderer_class_pic_free( FT_Library  library );
@@ -64,6 +54,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __RASTPIC_H__ */
-
-
 /* END */

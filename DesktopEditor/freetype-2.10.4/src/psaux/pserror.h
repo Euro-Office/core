@@ -34,12 +34,8 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSERROR_H_
 #define PSERROR_H_
-
-
 #include <freetype/ftmoderr.h>
 
 #undef FTERRORS_H_
@@ -47,16 +43,10 @@
 #undef  FT_ERR_PREFIX
 #define FT_ERR_PREFIX  CF2_Err_
 #define FT_ERR_BASE    FT_Mod_Err_CF2
-
-
 #include <freetype/fterrors.h>
 #include <freetype/internal/compiler-macros.h>
 #include "psft.h"
-
-
 FT_BEGIN_HEADER
-
-
   /*
    * A poor-man error facility.
    *
@@ -92,14 +82,10 @@ FT_BEGIN_HEADER
    * }
    *
    */
-
-
   /* Set error code to a particular value. */
   FT_LOCAL( void )
   cf2_setError( FT_Error*  error,
                 FT_Error   value );
-
-
   /*
    * A macro that conditionally sets an error code.
    *
@@ -109,12 +95,6 @@ FT_BEGIN_HEADER
   */
 #define CF2_SET_ERROR( error, e )              \
           cf2_setError( error, FT_THROW( e ) )
-
-
 FT_END_HEADER
-
-
 #endif /* PSERROR_H_ */
-
-
 /* END */

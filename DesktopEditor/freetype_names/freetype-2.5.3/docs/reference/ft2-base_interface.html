@@ -1479,8 +1479,6 @@ Defined in FT_FREETYPE_H (freetype.h).
 <pre class="colored">
   FT_Pos  origin_x       = 0;                                      
   FT_Pos  prev_rsb_delta = 0;                                      
-                                                                   
-                                                                   
   for all glyphs do                                                
     &lt;compute kern between current and previous glyph and add it to 
      `origin_x'&gt;                                                   
@@ -3337,8 +3335,6 @@ Defined in FT_FREETYPE_H (freetype.h).
 <pre class="colored">
   FT_ULong  charcode;                                              
   FT_UInt   gindex;                                                
-                                                                   
-                                                                   
   charcode = FT_Get_First_Char( face, &amp;gindex );                   
   while ( gindex != 0 )                                            
   {                                                                

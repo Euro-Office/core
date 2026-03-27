@@ -572,8 +572,6 @@ Defined in FT_GLYPH_H (ftglyph.h).
 <pre class="colored">
   FT_Glyph        glyph;                                         
   FT_BitmapGlyph  glyph_bitmap;                                  
-                                                                 
-                                                                 
   // load glyph                                                  
   error = FT_Load_Char( face, glyph_index, FT_LOAD_DEFAUT );     
                                                                  
@@ -603,8 +601,6 @@ Defined in FT_GLYPH_H (ftglyph.h).
 <p></p>
 <pre class="colored">
   FT_Glyph  glyphs[MAX_GLYPHS]                                   
-                                                                 
-                                                                 
   ...                                                            
                                                                  
   for ( idx = 0; i &lt; MAX_GLYPHS; i++ )                           
@@ -616,8 +612,6 @@ Defined in FT_GLYPH_H (ftglyph.h).
   for ( idx = 0; i &lt; MAX_GLYPHS; i++ )                           
   {                                                              
     FT_Glyph  bitmap = glyphs[idx];                              
-                                                                 
-                                                                 
     ...                                                          
                                                                  
     // after this call, `bitmap' no longer points into           

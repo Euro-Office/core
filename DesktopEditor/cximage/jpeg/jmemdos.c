@@ -37,8 +37,6 @@
 #ifndef EMS_SUPPORTED
 #define EMS_SUPPORTED  1
 #endif
-
-
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
@@ -84,8 +82,6 @@ extern char * getenv JPP((const char * name));
 #if MAX_ALLOC_CHUNK >= 65535L	/* make sure jconfig.h got this right */
   MAX_ALLOC_CHUNK should be less than 64K. /* deliberate syntax error */
 #endif
-
-
 /*
  * Declarations for assembly-language support routines (see jmemdosa.asm).
  *
@@ -115,8 +111,6 @@ extern void far jxms_getdriver JPP((XMSDRIVER far *));
 extern void far jxms_calldriver JPP((XMSDRIVER, XMScontext far *));
 extern short far jems_available JPP((void));
 extern void far jems_calldriver JPP((EMScontext far *));
-
-
 /*
  * Selection of a file name for a temporary file.
  * This is highly system-dependent, and you may want to customize it.
@@ -155,8 +149,6 @@ select_file_name (char * fname)
     fclose(tfile);		/* oops, it's there; close tfile & try again */
   }
 }
-
-
 /*
  * Near-memory allocation and freeing are controlled by the regular library
  * routines malloc() and free().
@@ -173,8 +165,6 @@ jpeg_free_small (j_common_ptr cinfo, void * object, size_t sizeofobject)
 {
   free(object);
 }
-
-
 /*
  * "Large" objects are allocated in far memory, if possible
  */
@@ -190,8 +180,6 @@ jpeg_free_large (j_common_ptr cinfo, void FAR * object, size_t sizeofobject)
 {
   far_free(object);
 }
-
-
 /*
  * This routine computes the total memory space available for allocation.
  * It's impossible to do this in a portable way; our current solution is
@@ -210,8 +198,6 @@ jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,
 {
   return cinfo->mem->max_memory_to_use - already_allocated;
 }
-
-
 /*
  * Backing store (temporary file) management.
  * Backing store objects are only used when the value returned by
@@ -232,13 +218,9 @@ jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,
  * (oak.oakland.edu and its various mirror sites).  See files
  * pub/msdos/microsoft/xms20.arc and pub/msdos/info/limems41.zip.
  */
-
-
 /*
  * Access methods for a DOS file.
  */
-
-
 METHODDEF(void)
 read_file_store (j_common_ptr cinfo, backing_store_ptr info,
 		 void FAR * buffer_address,
@@ -253,8 +235,6 @@ read_file_store (j_common_ptr cinfo, backing_store_ptr info,
 		(unsigned short) byte_count))
     ERREXIT(cinfo, JERR_TFILE_READ);
 }
-
-
 METHODDEF(void)
 write_file_store (j_common_ptr cinfo, backing_store_ptr info,
 		  void FAR * buffer_address,
@@ -269,8 +249,6 @@ write_file_store (j_common_ptr cinfo, backing_store_ptr info,
 		 (unsigned short) byte_count))
     ERREXIT(cinfo, JERR_TFILE_WRITE);
 }
-
-
 METHODDEF(void)
 close_file_store (j_common_ptr cinfo, backing_store_ptr info)
 {
@@ -282,8 +260,6 @@ close_file_store (j_common_ptr cinfo, backing_store_ptr info)
  */
   TRACEMSS(cinfo, 1, JTRC_TFILE_CLOSE, info->temp_name);
 }
-
-
 LOCAL(boolean)
 open_file_store (j_common_ptr cinfo, backing_store_ptr info,
 		 long total_bytes_needed)
@@ -303,8 +279,6 @@ open_file_store (j_common_ptr cinfo, backing_store_ptr info,
   TRACEMSS(cinfo, 1, JTRC_TFILE_OPEN, info->temp_name);
   return TRUE;			/* succeeded */
 }
-
-
 /*
  * Access methods for extended memory.
  */
@@ -327,8 +301,6 @@ typedef struct {		/* XMS move specification structure */
       } XMSspec;
 
 #define ODD(X)	(((X) & 1L) != 0)
-
-
 METHODDEF(void)
 read_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 		void FAR * buffer_address,
@@ -360,8 +332,6 @@ read_xms_store (j_common_ptr cinfo, backing_store_ptr info,
     ((char FAR *) buffer_address)[byte_count - 1L] = endbuffer[0];
   }
 }
-
-
 METHODDEF(void)
 write_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 		 void FAR * buffer_address,
@@ -395,8 +365,6 @@ write_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 		    file_offset + byte_count - 1L, 2L);
   }
 }
-
-
 METHODDEF(void)
 close_xms_store (j_common_ptr cinfo, backing_store_ptr info)
 {
@@ -408,8 +376,6 @@ close_xms_store (j_common_ptr cinfo, backing_store_ptr info)
   TRACEMS1(cinfo, 1, JTRC_XMS_CLOSE, info->handle.xms_handle);
   /* we ignore any error return from the driver */
 }
-
-
 LOCAL(boolean)
 open_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 		long total_bytes_needed)
@@ -444,8 +410,6 @@ open_xms_store (j_common_ptr cinfo, backing_store_ptr info,
 }
 
 #endif /* XMS_SUPPORTED */
-
-
 /*
  * Access methods for expanded memory.
  */
@@ -485,8 +449,6 @@ typedef union {			/* EMS move specification structure */
 
 #define HIBYTE(W)  (((W) >> 8) & 0xFF)
 #define LOBYTE(W)  ((W) & 0xFF)
-
-
 METHODDEF(void)
 read_ems_store (j_common_ptr cinfo, backing_store_ptr info,
 		void FAR * buffer_address,
@@ -510,8 +472,6 @@ read_ems_store (j_common_ptr cinfo, backing_store_ptr info,
   if (HIBYTE(ctx.ax) != 0)
     ERREXIT(cinfo, JERR_EMS_READ);
 }
-
-
 METHODDEF(void)
 write_ems_store (j_common_ptr cinfo, backing_store_ptr info,
 		 void FAR * buffer_address,
@@ -535,8 +495,6 @@ write_ems_store (j_common_ptr cinfo, backing_store_ptr info,
   if (HIBYTE(ctx.ax) != 0)
     ERREXIT(cinfo, JERR_EMS_WRITE);
 }
-
-
 METHODDEF(void)
 close_ems_store (j_common_ptr cinfo, backing_store_ptr info)
 {
@@ -548,8 +506,6 @@ close_ems_store (j_common_ptr cinfo, backing_store_ptr info)
   TRACEMS1(cinfo, 1, JTRC_EMS_CLOSE, info->handle.ems_handle);
   /* we ignore any error return from the driver */
 }
-
-
 LOCAL(boolean)
 open_ems_store (j_common_ptr cinfo, backing_store_ptr info,
 		long total_bytes_needed)
@@ -589,8 +545,6 @@ open_ems_store (j_common_ptr cinfo, backing_store_ptr info,
 }
 
 #endif /* EMS_SUPPORTED */
-
-
 /*
  * Initial opening of a backing-store object.
  */
@@ -612,8 +566,6 @@ jpeg_open_backing_store (j_common_ptr cinfo, backing_store_ptr info,
     return;
   ERREXITS(cinfo, JERR_TFILE_CREATE, "");
 }
-
-
 /*
  * These routines take care of any system-dependent initialization and
  * cleanup required.

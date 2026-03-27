@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -23,12 +21,8 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
-
-
   /* You need to define both FT_ERRORDEF_ and FT_NOERRORDEF_ before */
   /* including this file.                                           */
-
-
   /* generic errors */
 
   FT_NOERRORDEF_( Ok,                                        0x00, \
@@ -244,6 +238,4 @@
                 "Font header corrupted or missing fields" )
   FT_ERRORDEF_( Corrupted_Font_Glyphs,                       0xBA, \
                 "Font glyphs corrupted or missing fields" )
-
-
 /* END */

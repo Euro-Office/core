@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  * jbclass.c
  *
@@ -238,8 +236,6 @@ struct JbFindTemplatesState
     l_int32          n;          /* current element of numa               */
 };
 typedef struct JbFindTemplatesState JBFINDCTX;
-
-
     /* Static initialization function */
 static JBCLASSER * jbCorrelationInitInternal(l_int32 components,
                        l_int32 maxwidth, l_int32 maxheight, l_float32 thresh,
@@ -257,8 +253,6 @@ static l_int32 finalPositioningForAlignment(PIX *pixs, l_int32 x, l_int32 y,
 #define  DEBUG_PLOT_CC             0
 #define  DEBUG_CORRELATION_SCORE   0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*----------------------------------------------------------------------*
  *                            Initialization                            *
  *----------------------------------------------------------------------*/
@@ -314,8 +308,6 @@ JBCLASSER  *classer;
     classer->nahash = numaHashCreate(5507, 4);  /* 5507 is prime */
     return classer;
 }
-
-
 /*!
  *  jbCorrelationInit()
  *
@@ -364,8 +356,6 @@ jbCorrelationInitWithoutComponents(l_int32    components,
     return jbCorrelationInitInternal(components, maxwidth, maxheight, thresh,
                                      weightfactor, 0);
 }
-
-
 static JBCLASSER *
 jbCorrelationInitInternal(l_int32    components,
                           l_int32    maxwidth,
@@ -397,8 +387,6 @@ JBCLASSER  *classer;
     }
     if (maxheight == 0)
         maxheight = MAX_COMP_HEIGHT;
-
-
     if ((classer = jbClasserCreate(JB_CORRELATION, components)) == NULL)
         return (JBCLASSER *)ERROR_PTR("classer not made", procName, NULL);
     classer->maxwidth = maxwidth;
@@ -409,8 +397,6 @@ JBCLASSER  *classer;
     classer->keep_pixaa = keep_components;
     return classer;
 }
-
-
 /*----------------------------------------------------------------------*
  *                       Classify the pages                             *
  *----------------------------------------------------------------------*/
@@ -458,8 +444,6 @@ PIX     *pix;
 
     return 0;
 }
-
-
 /*!
  *  jbAddPage()
  *
@@ -495,8 +479,6 @@ PIXA  *pixas;
     pixaDestroy(&pixas);
     return 0;
 }
-    
-
 /*!
  *  jbAddPageComponents()
  *
@@ -559,8 +541,6 @@ l_int32  n;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *         Classification using windowed rank hausdorff metric          *
  *----------------------------------------------------------------------*/
@@ -803,8 +783,6 @@ SEL        *sel;
     selDestroy(&sel);
     return 0;
 }
-
-
 /*!
  *  pixHaustest()
  *
@@ -891,8 +869,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return boolmatch;
 }
-
-
 /*!
  *  pixRankHaustest()
  *
@@ -998,8 +974,6 @@ PIX     *pixt;
     else
         return TRUE;
 }
-
-
 /*----------------------------------------------------------------------*
  *            Classification using windowed correlation score           *
  *----------------------------------------------------------------------*/
@@ -1273,8 +1247,6 @@ l_uint8     byte;
     pixaDestroy(&pixa1);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *             Determine the image components we start with             *
  *----------------------------------------------------------------------*/
@@ -1399,8 +1371,6 @@ PIXA      *pixa, *pixat;
 
     return 0;
 }
-
-
 /*!
  *  pixWordMaskByDilation()
  *
@@ -1503,8 +1473,6 @@ SEL     *sel;
     numaDestroy(&nacc);
     return pixt3;
 }
-
-
 /*----------------------------------------------------------------------*
  *                 Build grayscale composites (templates)               *
  *----------------------------------------------------------------------*/
@@ -1598,8 +1566,6 @@ PTA       *ptat, *pta;
 
     return pixad;
 }
-
-
 /*!
  *  jbTemplatesFromComposites()
  *
@@ -1640,8 +1606,6 @@ PIXA      *pixad;
 
     return pixad;
 }
-
-
 
 /*----------------------------------------------------------------------*
  *                       jbig2 utility routines                         *
@@ -1685,8 +1649,6 @@ JBCLASSER  *classer;
 
     return classer;
 }
-
-
 /*
  *  jbClasserDestroy()
  *
@@ -1721,8 +1683,6 @@ JBCLASSER  *classer;
     *pclasser = NULL;
     return;
 }
-    
-
 /*!
  *  jbDataSave()
  *
@@ -1773,8 +1733,6 @@ PIX     *pix;
 
     return data;
 }
-
-
 /*
  *  jbDataDestroy()
  *
@@ -1799,8 +1757,6 @@ JBDATA  *data;
     *pdata = NULL;
     return;
 }
-    
-
 /*!
  *  jbDataWrite()
  *
@@ -1863,8 +1819,6 @@ FILE    *fp;
 
     return 0;
 }
-
-
 /*!
  *  jbDataRead()
  *
@@ -1954,8 +1908,6 @@ SARRAY   *sa;
     sarrayDestroy(&sa);
     return jbdata;
 }
-
-
 /*!
  *  jbDataRender()
  *
@@ -2045,8 +1997,6 @@ PTA      *ptaul;
     pixaDestroy(&pixat);
     return pixad;
 }
-
-
 /*!
  *  jbGetULCorners()
  *
@@ -2132,8 +2082,6 @@ PTA       *ptac, *ptact, *ptaul;
     FREE(sumtab);
     return 0;
 }
-
-
 /*!
  *  jbGetLLCorners()
  *
@@ -2197,8 +2145,6 @@ PTA       *ptaul, *ptall;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                              Static helpers                          *
  *----------------------------------------------------------------------*/
@@ -2232,8 +2178,6 @@ static int two_by_two_walk[50] = {
   2, -2,
   2, 2,
   -2, 2};
-
-
 /*!
  *  findSimilarSizedTemplatesInit()
  *
@@ -2254,8 +2198,6 @@ JBFINDCTX  *state;
 
     return state;
 }
-
-
 static void
 findSimilarSizedTemplatesDestroy(JBFINDCTX  **pstate)
 {
@@ -2275,8 +2217,6 @@ JBFINDCTX  *state;
     *pstate = NULL;
     return;
 }
-
-
 /*!
  *  findSimilarSizedTemplatesNext()
  *
@@ -2342,8 +2282,6 @@ PIX     *pixt;
         continue;
     }
 }
-
-
 /*!
  *  finalPositioningForAlignment()
  *

@@ -61,8 +61,6 @@ namespace agg
         const conv_dash<VertexSource, Markers>& 
             operator = (const conv_dash<VertexSource, Markers>&);
     };
-
-
 }
 
 #endif

@@ -64,8 +64,6 @@ The auto-hinter
   FT_Library                library;
   FT_Face                   face;
   FT_Prop_GlyphToScriptMap  prop;
-
-
   FT_Init_FreeType( &amp;library );
   FT_New_Face( library, "foo.ttf", 0, &amp;face );
 
@@ -241,8 +239,6 @@ Defined in FT_AUTOHINTER_H (ftautoh.h).
 <pre class="colored">
   FT_Library  library;
   FT_UInt     fallback_script = FT_AUTOHINTER_SCRIPT_NONE;
-
-
   FT_Init_FreeType( &amp;library );
 
   FT_Property_Set( library, "autofitter",
@@ -268,8 +264,6 @@ Defined in FT_AUTOHINTER_H (ftautoh.h).
 <pre class="colored">
   FT_Library  library;
   FT_UInt     default_script = FT_AUTOHINTER_SCRIPT_NONE;
-
-
   FT_Init_FreeType( &amp;library );
 
   FT_Property_Set( library, "autofitter",
@@ -294,8 +288,6 @@ Defined in FT_AUTOHINTER_H (ftautoh.h).
   FT_Library               library;
   FT_Face                  face;
   FT_Prop_IncreaseXHeight  prop;
-
-
   FT_Init_FreeType( &amp;library );
   FT_New_Face( library, "foo.ttf", 0, &amp;face );
   FT_Set_Char_Size( face, 10 * 64, 0, 72, 0 );

@@ -34,8 +34,6 @@
 #include "../Biff12_records/BeginEsstr.h"
 #include "../Biff12_records/Str.h"
 #include "../Biff12_records/EndEsstr.h"
-
-
 using namespace XLS;
 
 namespace XLSB

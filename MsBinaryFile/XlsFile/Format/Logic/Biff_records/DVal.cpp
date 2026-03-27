@@ -38,13 +38,9 @@ namespace XLS
 DVal::DVal()
 {
 }
-
-
 DVal::~DVal()
 {
 }
-
-
 BaseObjectPtr DVal::clone()
 {
 	return BaseObjectPtr(new DVal(*this));

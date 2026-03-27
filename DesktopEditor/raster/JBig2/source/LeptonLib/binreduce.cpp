@@ -30,8 +30,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------*
  *                       Subsampled reduction                       *
  *------------------------------------------------------------------*/
@@ -88,8 +86,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                   Rank filtered binary reductions                *
  *------------------------------------------------------------------*/
@@ -156,8 +152,6 @@ l_uint8  *tab;
     FREE(tab);
     return pix4;
 }
-
-
 /*!
  *  pixReduceRankBinary2()
  *
@@ -222,5 +216,3 @@ PIX       *pixd;
 
     return pixd;
 }
-
-

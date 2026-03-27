@@ -85,8 +85,6 @@ namespace DJVU {
 }
 #endif
 #endif
-
-
 // ------ GPENABLED
 
 GPEnabled::~GPEnabled()
@@ -106,16 +104,10 @@ GPEnabled::destroy()
   if (atomicCompareAndSwap(&count, 0, -0x7fff))
     delete this;
 }
-
-
 // ------ GPBASE
-
-
 #define LOCKMASK 0x3f
 #define LOCKIDX(addr) ((((size_t)(addr))/sizeof(void*))&LOCKMASK)
 static int volatile locks[LOCKMASK+1];
-
-
 GPBase&
 GPBase::assign (const GPBase &sptr)
 {
@@ -149,13 +141,7 @@ GPBase::assign (GPEnabled *nptr)
     old->unref();
   return *this;
 }
-
-
-
-
 // ------ GPBUFFERBASE
-
-
 void
 GPBufferBase::replace(void *nptr,const size_t n)
 {
@@ -215,8 +201,6 @@ GPBufferBase::set(const size_t t,const char c)
   if(num)
     memset(ptr,c,num*t);
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

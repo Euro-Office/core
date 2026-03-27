@@ -163,8 +163,6 @@ u_versionFromString(UVersionInfo versionArray, const char *versionString);
  */
 U_STABLE void U_EXPORT2
 u_versionFromUString(UVersionInfo versionArray, const UChar *versionString);
-
-
 /**
  * Write a string with dotted-decimal version information according
  * to the input UVersionInfo.

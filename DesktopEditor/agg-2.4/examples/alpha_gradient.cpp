@@ -18,14 +18,10 @@
 
 enum flip_y_e { flip_y = true };
 
-
-
 #define pix_format agg::pix_format_bgr24
 typedef agg::pixfmt_bgr24 pixfmt_type;
 typedef pixfmt_type::color_type color_type;
 typedef color_type::value_type color_value_type;
-
-
 class the_application : public agg::platform_support
 {
     double m_x[3];
@@ -34,8 +30,6 @@ class the_application : public agg::platform_support
     double m_dy;
     int    m_idx;
     agg::spline_ctrl<color_type> m_alpha;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -55,8 +49,6 @@ public:
         m_alpha.update_spline();
         add_ctrl(m_alpha);
     }
-
-
 
     // A simple function to form the gradient color array 
     // consisting of 3 colors, "begin", "middle", "end"
@@ -78,8 +70,6 @@ public:
         }
     }
 
-
-
     virtual void on_draw()
     {
         typedef agg::renderer_base<pixfmt_type> base_ren_type;
@@ -90,8 +80,6 @@ public:
 
         agg::scanline_u8 sl;
         agg::rasterizer_scanline_aa<> ras;
-
-
         // Draw some background
         agg::ellipse ell;
         srand(1234);
@@ -109,8 +97,6 @@ public:
                                                      rand() / double(RAND_MAX) / 2.0));
         }
 
-
-
         double parallelogram[6];
         parallelogram[0] = m_x[0];
         parallelogram[1] = m_y[0];
@@ -118,8 +104,6 @@ public:
         parallelogram[3] = m_y[1];
         parallelogram[4] = m_x[2];
         parallelogram[5] = m_y[2];
-
-
         // Gradient shape function (linear, radial, custom, etc)
         //-----------------
         typedef agg::gradient_circle gradient_func_type;   
@@ -133,21 +117,15 @@ public:
         // for example, image transformers use the interpolator too.
         //-----------------
         typedef agg::span_interpolator_linear<> interpolator_type;
-
-
         // Span allocator is an object that allocates memory for 
         // the array of colors that will be used to render the 
         // color spans. One object can be shared between different 
         // span generators.
         //-----------------
         typedef agg::span_allocator<color_type> span_allocator_type;
-
-
         // Gradient colors array adaptor
         //-----------------
         typedef agg::pod_auto_array<color_type, 256> gradient_colors_type;
-
-
         // Finally, the gradient span generator working with the color_type 
         // color type. 
         //-----------------
@@ -155,8 +133,6 @@ public:
                                    interpolator_type, 
                                    gradient_func_type, 
                                    gradient_colors_type> span_gradient_type;
-
-
         // Gradient alpha array adaptor
         //-----------------
         typedef agg::pod_auto_array<color_value_type, 256> gradient_alpha_type;
@@ -168,14 +144,10 @@ public:
                                          interpolator_type, 
                                          gradient_alpha_func_type, 
                                          gradient_alpha_type> span_gradient_alpha_type;
-
-
         // Span converter type
         //-----------------
         typedef agg::span_converter<span_gradient_type,
                                     span_gradient_alpha_type> span_conv_type;
-
-
         // The gradient objects declarations
         //----------------
         gradient_func_type       gradient_func;                      // The gradient function
@@ -212,8 +184,6 @@ public:
 
         // Span converter declaration
         span_conv_type span_conv(span_gradient, span_gradient_alpha);
-
-
         // Finally we can draw a circle.
         //----------------
         gradient_mtx *= agg::trans_affine_scaling(0.75, 1.2);
@@ -238,8 +208,6 @@ public:
 
         // Render the circle with gradient plus alpha-gradient 
         agg::render_scanlines_aa(ras, sl, ren_base, span_allocator, span_conv);
-
-
         // Draw the control points and the parallelogram
         //-----------------
         agg::rgba color_pnt(0, 0.4, 0.4, 0.31);
@@ -264,10 +232,6 @@ public:
 
         agg::render_ctrl(ras, sl, ren_base, m_alpha);
     }
-
-
-
-
 
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
@@ -299,8 +263,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -336,8 +298,6 @@ public:
     {
         m_idx = -1;
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         double dx = 0;
@@ -355,11 +315,7 @@ public:
         m_y[1] += dy;
         force_redraw();
     }
-
-
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -371,5 +327,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

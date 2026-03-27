@@ -38,13 +38,9 @@ namespace XLS
 SerAuxErrBar::SerAuxErrBar()
 {
 }
-
-
 SerAuxErrBar::~SerAuxErrBar()
 {
 }
-
-
 BaseObjectPtr SerAuxErrBar::clone()
 {
 	return BaseObjectPtr(new SerAuxErrBar(*this));

@@ -7,8 +7,6 @@
 
 #ifndef __TZNAMES_IMPL_H__
 #define __TZNAMES_IMPL_H__
-
-
 /**
  * \file
  * \brief C++ API: TimeZoneNames object
@@ -155,8 +153,6 @@ private:
     void search(CharacterNode *node, const UnicodeString &text, int32_t start,
         int32_t index, TextTrieMapSearchResultHandler *handler, UErrorCode &status) const;
 };
-
-
 
 class ZNames;
 class TZNames;

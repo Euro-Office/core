@@ -37,8 +37,6 @@
 #define FTELLO_FUNC(stream) ftello64(stream)
 #define FSEEKO_FUNC(stream, offset, origin) fseeko64(stream, offset, origin)
 #endif
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,8 +52,6 @@
 # include <utime.h>
 # include <sys/stat.h>
 #endif
-
-
 #include "unzip.h"
 
 #define CASESENSITIVITY (0)
@@ -75,8 +71,6 @@
   list the file in the zipfile, and print the content of FILE_ID.ZIP or README.TXT
     if it exists
 */
-
-
 /* change_file_date : change the date/time of a file
     filename : the filename of the file where date/time must be modified
     dosdate : the new date at the MSDos format (4 bytes)
@@ -117,8 +111,6 @@ void change_file_date(filename,dosdate,tmu_date)
 #endif
 #endif
 }
-
-
 /* mymkdir and change_file_date are not 100 % portable
    As I don't know well Unix, I wait feedback for the unix portion */
 #ifdef __APPLE__
@@ -326,8 +318,6 @@ int do_list(uf)
 
     return 0;
 }
-
-
 int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
     unzFile uf;
     const int* popt_extract_without_path;
@@ -489,8 +479,6 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
     free(buf);
     return err;
 }
-
-
 int do_extract(uf,opt_extract_without_path,opt_overwrite,password)
     unzFile uf;
     int opt_extract_without_path;
@@ -548,8 +536,6 @@ int do_extract_onefile(uf,filename,opt_extract_without_path,opt_overwrite,passwo
     else
         return 1;
 }
-
-
 #ifndef BUILD_ZLIB_AS_SOURCES
 int main(argc,argv)
     int argc;

@@ -40,8 +40,6 @@ namespace agg
         const conv_segmentator<VertexSource>& 
             operator = (const conv_segmentator<VertexSource>&);
     };
-
-
 }
 
 #endif

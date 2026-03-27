@@ -14,20 +14,14 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SVKERN_H__
 #define __SVKERN_H__
 
 #include FT_INTERNAL_SERVICE_H
 #include FT_TRUETYPE_TABLES_H
-
-
 FT_BEGIN_HEADER
 
 #define FT_SERVICE_ID_KERNING  "kerning"
-
-
   typedef FT_Error
   (*FT_Kerning_TrackGetFunc)( FT_Face    face,
                               FT_Fixed   point_size,
@@ -40,12 +34,6 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* __SVKERN_H__ */
-
-
 /* END */

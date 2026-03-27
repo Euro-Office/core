@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTBZIP2_H__
 #define __FTBZIP2_H__
 
@@ -27,8 +25,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /*************************************************************************/
@@ -46,8 +42,6 @@ FT_BEGIN_HEADER
   /*    This section contains the declaration of Bzip2-specific functions. */
   /*                                                                       */
   /*************************************************************************/
-
-
  /************************************************************************
   *
   * @function:
@@ -92,11 +86,7 @@ FT_BEGIN_HEADER
                        FT_Stream  source );
 
  /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTBZIP2_H__ */
-
-
 /* END */

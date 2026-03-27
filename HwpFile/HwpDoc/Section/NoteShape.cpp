@@ -62,6 +62,4 @@ CNoteShape* CNoteShape::Parse(int nLevel, int nSize, CHWPStream& oBuffer, int nO
 
 	return pNoteShape;
 }
-
-
 }

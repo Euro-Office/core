@@ -52,17 +52,11 @@ static const l_float32  DIST_EXPAND_FACT = 1.3;
      * very fast.  Using 5 takes 8 times as long to set up the LUT
      * for little perceptual gain, even with 100 colors. */
 static const l_int32  LEVEL_IN_OCTCUBE = 4;
-
-
 static l_int32 pixColorSegmentTryCluster(PIX *pixd, PIX *pixs,
                                          l_int32 maxdist, l_int32 maxcolors);
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_HISTO       1
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------*
  *                 Unsupervised color segmentation                  *
  *------------------------------------------------------------------*/
@@ -165,8 +159,6 @@ PIX       *pixd;
     pixColorSegmentRemoveColors(pixd, pixs, finalcolors);
     return pixd;
 }
-
-
 /*!
  *  pixColorSegmentCluster()
  *
@@ -238,8 +230,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixColorSegmentTryCluster()
  *
@@ -345,8 +335,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixAssignToNearestColor()
  *
@@ -462,8 +450,6 @@ PIXCMAP   *cmap;
     FREE(btab);
     return 0;
 }
-
-
 /*!
  *  pixColorSegmentClean()
  *
@@ -530,8 +516,6 @@ PIXCMAP   *cmap;
     numaDestroy(&nasi);
     return 0;
 }
-
-
 /*!
  *  pixColorSegmentRemoveColors()
  *
@@ -621,8 +605,6 @@ PIXCMAP   *cmap;
     numaDestroy(&nasi);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *       Selection and display of range of colors in HSV space      *
  *------------------------------------------------------------------*/
@@ -722,8 +704,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixMakeRangeMaskHV()
  *
@@ -820,8 +800,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixMakeRangeMaskSV()
  *
@@ -910,8 +888,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixMakeHistoHS()
  *
@@ -999,8 +975,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixMakeHistoHV()
  *
@@ -1080,8 +1054,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixMakeHistoSV()
  *
@@ -1161,8 +1133,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixFindHistoPeaksHSV()
  *
@@ -1280,8 +1250,6 @@ PTA      *pta;
     pixDestroy(&pixw);
     return 0;
 }
-
-
 /*!
  *  displayHSVColorRange()
  *
@@ -1343,5 +1311,3 @@ PIX     *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-

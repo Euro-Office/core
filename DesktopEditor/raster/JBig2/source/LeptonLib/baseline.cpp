@@ -63,8 +63,6 @@ static const l_float32  OVERLAP_FRACTION = 0.5;
 
     /* Minimum allowed confidence (ratio) for accepting a value */
 static const l_float32  MIN_ALLOWED_CONFIDENCE = 3.0;
-
-
 /*---------------------------------------------------------------------*
  *                    Locate text baselines in an image                *
  *---------------------------------------------------------------------*/
@@ -250,8 +248,6 @@ PTA       *pta;
     numaDestroy(&naval);
     return naloc;
 }
-
-
 /*---------------------------------------------------------------------*
  *               Projective transform to remove local skew             *
  *---------------------------------------------------------------------*/
@@ -324,8 +320,6 @@ PTA       *ptas, *ptad;
     ptaDestroy(&ptad);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                       Determine the local skew                      *
  *---------------------------------------------------------------------*/
@@ -436,8 +430,6 @@ PTA       *ptas, *ptad;
     numaDestroy(&naskew);
     return 0;
 }
-
-
 /*!
  *  pixGetLocalSkewAngles()
  *
@@ -561,5 +553,3 @@ PTA       *pta;
     ptaDestroy(&pta);
     return naskew;
 }
-
-

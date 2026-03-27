@@ -142,15 +142,11 @@ static OPJ_BOOL opj_tcd_code_block_enc_allocate_data(opj_tcd_cblk_enc_t *
  * Deallocates the encoding data of the given precinct.
  */
 static void opj_tcd_code_block_enc_deallocate(opj_tcd_precinct_t * p_precinct);
-
-
 /**
 Free the memory allocated for encoding
 @param tcd TCD handle
 */
 static void opj_tcd_free_tile(opj_tcd_t *tcd);
-
-
 static OPJ_BOOL opj_tcd_t2_decode(opj_tcd_t *p_tcd,
                                   OPJ_BYTE * p_src_data,
                                   OPJ_UINT32 * p_data_read,
@@ -167,8 +163,6 @@ static OPJ_BOOL opj_tcd_mct_decode(opj_tcd_t *p_tcd,
                                    opj_event_mgr_t *p_manager);
 
 static OPJ_BOOL opj_tcd_dc_level_shift_decode(opj_tcd_t *p_tcd);
-
-
 static OPJ_BOOL opj_tcd_dc_level_shift_encode(opj_tcd_t *p_tcd);
 
 static OPJ_BOOL opj_tcd_mct_encode(opj_tcd_t *p_tcd);
@@ -190,8 +184,6 @@ static OPJ_BOOL opj_tcd_rate_allocate_encode(opj_tcd_t *p_tcd,
         OPJ_UINT32 p_max_dest_size,
         opj_codestream_info_t *p_cstr_info,
         opj_event_mgr_t *p_manager);
-
-
 static OPJ_BOOL opj_tcd_is_whole_tilecomp_decoding(opj_tcd_t *tcd,
         OPJ_UINT32 compno);
 
@@ -220,8 +212,6 @@ opj_tcd_t* opj_tcd_create(OPJ_BOOL p_is_decoder)
 
     return l_tcd;
 }
-
-
 /* ----------------------------------------------------------------------- */
 
 void opj_tcd_rateallocate_fixed(opj_tcd_t *tcd)
@@ -232,8 +222,6 @@ void opj_tcd_rateallocate_fixed(opj_tcd_t *tcd)
         opj_tcd_makelayer_fixed(tcd, layno, 1);
     }
 }
-
-
 void opj_tcd_makelayer(opj_tcd_t *tcd,
                        OPJ_UINT32 layno,
                        OPJ_FLOAT64 thresh,
@@ -787,8 +775,6 @@ static INLINE OPJ_BOOL opj_tcd_init_tile(opj_tcd_t *p_tcd, OPJ_UINT32 p_tile_no,
         opj_event_msg(manager, EVT_ERROR, "Tile Y coordinates are not supported\n");
         return OPJ_FALSE;
     }
-
-
     /* testcase 1888.pdf.asan.35.988 */
     if (l_tccp->numresolutions == 0) {
         opj_event_msg(manager, EVT_ERROR, "tiles require at least one resolution\n");
@@ -1275,8 +1261,6 @@ static OPJ_BOOL opj_tcd_code_block_enc_allocate_data(opj_tcd_cblk_enc_t *
     }
     return OPJ_TRUE;
 }
-
-
 void opj_tcd_reinit_segment(opj_tcd_seg_t* seg)
 {
     memset(seg, 0, sizeof(opj_tcd_seg_t));
@@ -1655,8 +1639,6 @@ OPJ_BOOL opj_tcd_decode_tile(opj_tcd_t *p_tcd,
         return OPJ_FALSE;
     }
     /* FIXME _ProfStop(PGROUP_T1); */
-
-
     /* For subtile decoding, now we know the resno_decoded, we can allocate */
     /* the tile data buffer */
     if (!p_tcd->whole_tile_decoding) {
@@ -1722,8 +1704,6 @@ OPJ_BOOL opj_tcd_decode_tile(opj_tcd_t *p_tcd,
         return OPJ_FALSE;
     }
     /* FIXME _ProfStop(PGROUP_DC_SHIFT); */
-
-
     /*---------------TILE-------------------*/
     return OPJ_TRUE;
 }
@@ -1847,10 +1827,6 @@ OPJ_BOOL opj_tcd_update_tile_data(opj_tcd_t *p_tcd,
 
     return OPJ_TRUE;
 }
-
-
-
-
 static void opj_tcd_free_tile(opj_tcd_t *p_tcd)
 {
     OPJ_UINT32 compno, resno, bandno, precno;
@@ -1936,8 +1912,6 @@ static void opj_tcd_free_tile(opj_tcd_t *p_tcd)
     opj_free(p_tcd->tcd_image->tiles);
     p_tcd->tcd_image->tiles = 00;
 }
-
-
 static OPJ_BOOL opj_tcd_t2_decode(opj_tcd_t *p_tcd,
                                   OPJ_BYTE * p_src_data,
                                   OPJ_UINT32 * p_data_read,
@@ -2010,8 +1984,6 @@ static OPJ_BOOL opj_tcd_t1_decode(opj_tcd_t *p_tcd, opj_event_mgr_t *p_manager)
     }
     return ret;
 }
-
-
 static OPJ_BOOL opj_tcd_dwt_decode(opj_tcd_t *p_tcd)
 {
     OPJ_UINT32 compno;
@@ -2192,8 +2164,6 @@ static OPJ_BOOL opj_tcd_mct_decode(opj_tcd_t *p_tcd, opj_event_mgr_t *p_manager)
 
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_tcd_dc_level_shift_decode(opj_tcd_t *p_tcd)
 {
     OPJ_UINT32 compno;
@@ -2246,8 +2216,6 @@ static OPJ_BOOL opj_tcd_dc_level_shift_decode(opj_tcd_t *p_tcd)
             l_min = 0;
             l_max = (OPJ_INT32)((1U << l_img_comp->prec) - 1);
         }
-
-
         if (l_tccp->qmfbid == 1) {
             for (j = 0; j < l_height; ++j) {
                 for (i = 0; i < l_width; ++i) {
@@ -2282,8 +2250,6 @@ static OPJ_BOOL opj_tcd_dc_level_shift_decode(opj_tcd_t *p_tcd)
     return OPJ_TRUE;
 }
 
-
-
 /**
  * Deallocates the encoding data of the given precinct.
  */
@@ -2297,8 +2263,6 @@ static void opj_tcd_code_block_dec_deallocate(opj_tcd_precinct_t * p_precinct)
         /*fprintf(stderr,"\t x0=%d, y0=%d, x1=%d, y1=%d\n",l_code_block->x0, l_code_block->y0, l_code_block->x1, l_code_block->y1);*/
         /*fprintf(stderr,"\t numbps=%d, numlenbits=%d, len=%d, numnewpasses=%d, real_num_segs=%d, m_current_max_segs=%d\n ",
                         l_code_block->numbps, l_code_block->numlenbits, l_code_block->len, l_code_block->numnewpasses, l_code_block->real_num_segs, l_code_block->m_current_max_segs );*/
-
-
         l_nb_code_blocks = p_precinct->block_size / (OPJ_UINT32)sizeof(
                                opj_tcd_cblk_dec_t);
         /*fprintf(stderr,"nb_code_blocks =%d\t}\n", l_nb_code_blocks);*/
@@ -2584,8 +2548,6 @@ static OPJ_BOOL opj_tcd_t2_encode(opj_tcd_t *p_tcd,
     /*---------------CLEAN-------------------*/
     return OPJ_TRUE;
 }
-
-
 static OPJ_BOOL opj_tcd_rate_allocate_encode(opj_tcd_t *p_tcd,
         OPJ_BYTE * p_dest_data,
         OPJ_UINT32 p_max_dest_size,
@@ -2614,8 +2576,6 @@ static OPJ_BOOL opj_tcd_rate_allocate_encode(opj_tcd_t *p_tcd,
 
     return OPJ_TRUE;
 }
-
-
 OPJ_BOOL opj_tcd_copy_tile_data(opj_tcd_t *p_tcd,
                                 OPJ_BYTE * p_src,
                                 OPJ_SIZE_T p_src_length)

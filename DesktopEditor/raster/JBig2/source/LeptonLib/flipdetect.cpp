@@ -193,8 +193,6 @@ static const l_float32  DEFAULT_MIN_MIRROR_FLIP_CONF = 5.0;
     /* Static debug function */
 static void pixDebugFlipDetect(const char *filename, PIX *pixs,
                                PIX *pixhm, l_int32 enable);
-
-
 /*----------------------------------------------------------------*
  *         Orientation detection (four 90 degree angles)          *
  *                      Rasterop implementation                   *
@@ -285,8 +283,6 @@ PIX  *pixt;
 
     return 0;
 }
-
-
 /*!
  *  makeOrientDecision()
  *
@@ -366,8 +362,6 @@ l_float32  absupconf, absleftconf;
 
     return 0;
 }
-
-
 /*!
  *  pixUpDownDetect()
  *
@@ -395,8 +389,6 @@ pixUpDownDetect(PIX        *pixs,
 {
     return pixUpDownDetectGeneral(pixs, pconf, mincount, 0, debug);
 }
-
-
 /*!
  *  pixUpDownDetectGeneral()
  *
@@ -545,8 +537,6 @@ SEL       *sel1, *sel2, *sel3, *sel4;
     selDestroy(&sel4);
     return 0;
 }
-
-
 /*----------------------------------------------------------------*
  *         Orientation detection (four 90 degree angles)          *
  *                         DWA implementation                     *
@@ -600,8 +590,6 @@ PIX  *pixt;
 
     return 0;
 }
-
-
 /*!
  *  pixUpDownDetectDwa()
  *
@@ -631,8 +619,6 @@ pixUpDownDetectDwa(PIX        *pixs,
 {
     return pixUpDownDetectGeneralDwa(pixs, pconf, mincount, 0, debug);
 }
-
-
 /*!
  *  pixUpDownDetectGeneralDwa()
  *
@@ -756,8 +742,6 @@ PIX       *pixt, *pixt0, *pixt1, *pixt2, *pixt3, *pixm;
     return 0;
 }
 
-
-
 /*----------------------------------------------------------------*
  *                     Left-right mirror detection                *
  *                       Rasterop implementation                  *
@@ -869,8 +853,6 @@ SEL       *sel1, *sel2;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------*
  *                     Left-right mirror detection                *
  *                          DWA implementation                    *
@@ -955,8 +937,6 @@ PIX       *pixt0, *pixt1, *pixt2, *pixt3;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------*
  *                        Static debug helper                     *
  *----------------------------------------------------------------*/
@@ -989,5 +969,3 @@ PIX  *pixt, *pixthm;
     pixDestroy(&pixt);
     return;
 }
-
-

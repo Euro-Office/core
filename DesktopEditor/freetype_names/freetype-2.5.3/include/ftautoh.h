@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTAUTOH_H__
 #define __FTAUTOH_H__
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -53,8 +47,6 @@ FT_BEGIN_HEADER
    *   historical reasons.
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -107,8 +99,6 @@ FT_BEGIN_HEADER
    *   }
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -232,8 +222,6 @@ FT_BEGIN_HEADER
 #define FT_AUTOHINTER_SCRIPT_LATIN  1
 #define FT_AUTOHINTER_SCRIPT_CJK    2
 #define FT_AUTOHINTER_SCRIPT_INDIC  3
-
-
   /**************************************************************************
    *
    * @struct:
@@ -251,8 +239,6 @@ FT_BEGIN_HEADER
      FT_Byte*  map;
 
    } FT_Prop_GlyphToScriptMap;
-
-
   /**************************************************************************
    *
    * @property:
@@ -290,8 +276,6 @@ FT_BEGIN_HEADER
    *   auto-hinter), a change of the fallback script will affect this face.
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -335,8 +319,6 @@ FT_BEGIN_HEADER
    *   auto-hinter), a change of the default script will affect this face.
    *
    */
-
-
   /**************************************************************************
    *
    * @property:
@@ -373,8 +355,6 @@ FT_BEGIN_HEADER
    *   loading any glyph (using the auto-hinter).
    *
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -390,13 +370,9 @@ FT_BEGIN_HEADER
      FT_UInt  limit;
 
    } FT_Prop_IncreaseXHeight;
-
-
  /* */
 
 FT_END_HEADER
 
 #endif /* __FTAUTOH_H__ */
-
-
 /* END */

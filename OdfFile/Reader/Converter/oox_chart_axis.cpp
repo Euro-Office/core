@@ -40,8 +40,6 @@
 
 namespace cpdoccore {
 namespace oox {
-
-
 _CP_PTR(oox_axis_content) oox_axis_content::create(unsigned int id)
 {
     return boost::make_shared<oox_axis_content>(id);
@@ -279,8 +277,6 @@ void oox_axis_content::oox_serialize_content(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 
 }
 }

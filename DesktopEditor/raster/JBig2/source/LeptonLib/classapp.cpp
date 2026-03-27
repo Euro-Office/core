@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  classapp.c
  *
@@ -56,8 +54,6 @@ static l_int32 countAlignedMatches(NUMA *nai1, NUMA *nai2, NUMA *nasx,
                                    l_int32 debugflag);
 static void printRowIndices(l_int32 *index1, l_int32 n1,
                             l_int32 *index2, l_int32 n2);
-
-
 /*------------------------------------------------------------------*
  *          Top-level jb2 correlation and rank-hausdorff            *
  *------------------------------------------------------------------*/
@@ -141,8 +137,6 @@ SARRAY     *safiles;
     jbDataDestroy(&data);
     return 0;
 }
-
-
 /*!
  *  jbRankHaus()
  *
@@ -221,8 +215,6 @@ SARRAY     *safiles;
     jbDataDestroy(&data);
     return 0;
 }
-
-
 
 /*------------------------------------------------------------------*
  *           Extract and classify words in textline order           *
@@ -317,8 +309,6 @@ SARRAY     *safiles;
     sarrayDestroy(&safiles);
     return classer;
 }
-
-
 /*!
  *  pixGetWordsInTextlines()
  *
@@ -449,8 +439,6 @@ PIXAA   *paa;
     numaaDestroy(&naa);
     return 0;
 }
-
-
 /*!
  *  pixGetWordBoxesInTextlines()
  *
@@ -539,8 +527,6 @@ PIX     *pixt1, *pixt2;
     boxaaDestroy(&baa);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *           Use word bounding boxes to compare page images         *
  *------------------------------------------------------------------*/
@@ -601,8 +587,6 @@ NUMAA   *naa;
 
     return naa;
 }
-
-
 /*!
  *  numaaCompareImagesByBoxes()
  *
@@ -769,8 +753,6 @@ NUMA     *na1, *na2, *nai1, *nai2, *nasx, *nasy;
     numaDestroy(&nasy);
     return 0;
 }
-
-
 static l_int32
 testLineAlignmentX(NUMA    *na1,
                    NUMA    *na2,
@@ -800,8 +782,6 @@ l_int32  i, xl1, xr1, xl2, xr2, diffl, diffr;
 
     return 1;
 }
-
-
 /*
  *  countAlignedMatches()
  *      Input:  nai1, nai2 (numas of row pairs for matches)
@@ -904,8 +884,6 @@ l_int32  *ia1, *ia2, *iasx, *iasy, *index1, *index2;
     FREE(index2);
     return 0;
 }
-
-
 static void
 printRowIndices(l_int32  *index1,
                 l_int32   n1,
@@ -931,5 +909,3 @@ l_int32  i;
     fprintf(stderr, "\n");
     return;
 }
-
-

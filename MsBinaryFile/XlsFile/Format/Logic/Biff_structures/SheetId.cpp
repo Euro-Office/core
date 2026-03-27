@@ -34,14 +34,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr SheetId::clone()
 {
 	return BiffStructurePtr(new SheetId(*this));
 }
-
-
 void SheetId::load(CFRecord& record)
 {
 	record >> id;

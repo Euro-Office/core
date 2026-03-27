@@ -1,8 +1,6 @@
 <![CDATA[
 #include <string.h>
 #include <libxml/parser.h>
-
-
 unsigned char*
 convert (unsigned char *in, char *encoding)
 {
@@ -43,8 +41,6 @@ convert (unsigned char *in, char *encoding)
         }
         return (out);
 }	
-
-
 int
 main(int argc, char **argv) {
 
@@ -52,8 +48,6 @@ main(int argc, char **argv) {
 	xmlDocPtr doc;
 	xmlNodePtr rootnode;
 	char *encoding = "ISO-8859-1";
-	
-		
 	if (argc <= 1) {
 		printf("Usage: %s content\n", argv[0]);
 		return(0);

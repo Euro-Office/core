@@ -24,11 +24,7 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvmort.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -37,8 +33,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvmort
-
-
   typedef struct  GXV_mort_subtable_type2_StateOptRec_
   {
     FT_UShort  ligActionTable;
@@ -53,8 +47,6 @@
 
 #define GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE \
           ( GXV_STATETABLE_HEADER_SIZE + 2 + 2 + 2 )
-
-
   static void
   gxv_mort_subtable_type2_opttable_load( FT_Bytes       table,
                                          FT_Bytes       limit,
@@ -63,8 +55,6 @@
     FT_Bytes  p = table;
     GXV_mort_subtable_type2_StateOptRecData  optdata =
       (GXV_mort_subtable_type2_StateOptRecData)gxvalid->statetable.optdata;
-
-
     GXV_LIMIT_CHECK( 2 + 2 + 2 );
     optdata->ligActionTable = FT_NEXT_USHORT( p );
     optdata->componentTable = FT_NEXT_USHORT( p );
@@ -77,8 +67,6 @@
     GXV_TRACE(( "offset to ligatureTable=0x%04x\n",
                 optdata->ligatureTable ));
   }
-
-
   static void
   gxv_mort_subtable_type2_subtable_setup( FT_UShort      table_size,
                                           FT_UShort      classTable,
@@ -95,8 +83,6 @@
 
     GXV_mort_subtable_type2_StateOptRecData  optdata =
       (GXV_mort_subtable_type2_StateOptRecData)gxvalid->statetable.optdata;
-
-
     GXV_NAME_ENTER( "subtable boundaries setup" );
 
     o[0] = classTable;
@@ -132,8 +118,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_mort_subtable_type2_ligActionOffset_validate(
     FT_Bytes       table,
@@ -147,8 +131,6 @@
     FT_Bytes lat_base  = table + optdata->ligActionTable;
     FT_Bytes p         = table + ligActionOffset;
     FT_Bytes lat_limit = lat_base + optdata->ligActionTable;
-
-
     GXV_32BIT_ALIGNMENT_VALIDATE( ligActionOffset );
     if ( p < lat_base )
     {
@@ -175,8 +157,6 @@
       FT_UShort  store;
 #endif
       FT_ULong   offset;
-
-
       lig_action = FT_NEXT_ULONG( p );
 #ifdef GXV_LOAD_UNUSED_VARS
       last   = (FT_UShort)( ( lig_action >> 31 ) & 1 );
@@ -206,8 +186,6 @@
       }
     }
   }
-
-
   static void
   gxv_mort_subtable_type2_entry_validate(
     FT_Byte                         state,
@@ -226,8 +204,6 @@
     FT_UNUSED( state );
     FT_UNUSED( glyphOffset_p );
     FT_UNUSED( limit );
-
-
 #ifdef GXV_LOAD_UNUSED_VARS
     setComponent = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance  = (FT_UShort)( ( flags >> 14 ) & 1 );
@@ -239,8 +215,6 @@
       gxv_mort_subtable_type2_ligActionOffset_validate( table, offset,
                                                         gxvalid );
   }
-
-
   static void
   gxv_mort_subtable_type2_ligatureTable_validate( FT_Bytes       table,
                                                   GXV_Validator  gxvalid )
@@ -251,8 +225,6 @@
     FT_Bytes p     = table + optdata->ligatureTable;
     FT_Bytes limit = table + optdata->ligatureTable
                            + optdata->ligatureTable_length;
-
-
     GXV_NAME_ENTER( "mort chain subtable type2 - substitutionTable" );
     if ( 0 != optdata->ligatureTable )
     {
@@ -260,8 +232,6 @@
       while ( p < limit )
       {
         FT_UShort  lig_gid;
-
-
         GXV_LIMIT_CHECK( 2 );
         lig_gid = FT_NEXT_USHORT( p );
 
@@ -271,8 +241,6 @@
     }
     GXV_EXIT;
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_mort_subtable_type2_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -281,8 +249,6 @@
     FT_Bytes  p = table;
 
     GXV_mort_subtable_type2_StateOptRec  lig_rec;
-
-
     GXV_NAME_ENTER( "mort chain subtable type2 (Ligature Substitution)" );
 
     GXV_LIMIT_CHECK( GXV_MORT_SUBTABLE_TYPE2_HEADER_SIZE );
@@ -307,6 +273,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

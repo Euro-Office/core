@@ -97,8 +97,6 @@ public:
 	void ToFile(NSFile::CFileBinary* pFile);
 	bool isWMV();
 };
-
-
 typedef enum _BlipCompression
 	{
 		BlipCompressionDeflate,

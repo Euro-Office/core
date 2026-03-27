@@ -20,13 +20,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
-
-
 class spiral
 {
 public:
@@ -81,8 +75,6 @@ private:
     bool   m_start;
 };
 
-
-
 template<class Rasterizer, class Scanline> 
 unsigned count_spans(Rasterizer& ras, Scanline& sl)
 {
@@ -98,12 +90,8 @@ unsigned count_spans(Rasterizer& ras, Scanline& sl)
     return n;
 }
 
-
-
 void make_gb_poly(agg::path_storage& ps);
 void make_arrows(agg::path_storage& ps);
-
-
 class the_application : public agg::platform_support
 {
     typedef agg::pixfmt_bgr24 pixfmt_type;
@@ -156,10 +144,6 @@ public:
         add_ctrl(m_polygons);
         m_polygons.no_transform();
     }
-
-
-
-
     template<class Rasterizer>
     void render_scanline_boolean(Rasterizer& ras1, Rasterizer& ras2)
     {
@@ -258,8 +242,6 @@ public:
                     num_spans = count_spans(storage, sl);
                 }
                 break;
-
-
                 case 2:
                 {
                     typedef agg::renderer_scanline_bin_solid<renderer_base> renderer_solid;
@@ -295,8 +277,6 @@ public:
                 break;
 
             }
-
-
             char buf[100];
             sprintf(buf, "Combine=%.3fms\n\nRender=%.3fms\n\nnum_spans=%d", t1, t2, num_spans);
             agg::renderer_scanline_aa_solid<renderer_base> ren(rb);
@@ -311,14 +291,8 @@ public:
             ras1.add_path(txt_stroke);
             ren.color(agg::rgba(0.0, 0.0, 0.0));
             agg::render_scanlines(ras1, sl, ren);
-
-        
         }
     }
-
-
-
-
     template<class Rasterizer>
     unsigned render_sbool(Rasterizer& ras1, Rasterizer& ras2)
     {
@@ -425,8 +399,6 @@ public:
                 render_scanline_boolean(ras1, ras2);
             }
             break;
-
-
             case 2:
             {
                 //------------------------------------
@@ -469,8 +441,6 @@ public:
                 render_scanline_boolean(ras1, ras2);
             }
             break;
-
-
             case 3:
             {
                 //------------------------------------
@@ -489,8 +459,6 @@ public:
                 mtx *= trans_affine_resizing();
 
                 agg::conv_transform<agg::path_storage> trans_gb_poly(gb_poly, mtx);
-
-
                 ras1.add_path(trans_gb_poly);
                 ren.color(agg::rgba(0.5, 0.5, 0, 0.1));
                 agg::render_scanlines(ras1, sl, ren);
@@ -512,8 +480,6 @@ public:
                 render_scanline_boolean(ras1, ras2);
             }
             break;
-
-
             case 4:
             {
                 //------------------------------------
@@ -592,8 +558,6 @@ public:
 
         return 0;
     }
-
-
     virtual void on_init()
     {
         m_x = width() / 2.0;
@@ -622,10 +586,6 @@ public:
         render_sbool(ras, ras2);
 
     }
-
-
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -642,8 +602,6 @@ public:
             message(buf);
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -654,11 +612,7 @@ public:
         }
     }
 
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -671,5 +625,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

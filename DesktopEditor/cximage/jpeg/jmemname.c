@@ -92,8 +92,6 @@ static int next_file_num;	/* to distinguish among several temp files */
 #ifndef errno
 extern int errno;
 #endif
-
-
 LOCAL(void)
 select_file_name (char * fname)
 {
@@ -135,8 +133,6 @@ select_file_name (char * fname)
 }
 
 #endif /* NO_MKTEMP */
-
-
 /*
  * Memory allocation and freeing are controlled by the regular library
  * routines malloc() and free().
@@ -153,8 +149,6 @@ jpeg_free_small (j_common_ptr cinfo, void * object, size_t sizeofobject)
 {
   free(object);
 }
-
-
 /*
  * "Large" objects are treated the same as "small" ones.
  * NB: although we include FAR keywords in the routine declarations,
@@ -173,8 +167,6 @@ jpeg_free_large (j_common_ptr cinfo, void FAR * object, size_t sizeofobject)
 {
   free(object);
 }
-
-
 /*
  * This routine computes the total memory space available for allocation.
  * It's impossible to do this in a portable way; our current solution is
@@ -193,16 +185,12 @@ jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,
 {
   return cinfo->mem->max_memory_to_use - already_allocated;
 }
-
-
 /*
  * Backing store (temporary file) management.
  * Backing store objects are only used when the value returned by
  * jpeg_mem_available is less than the total space needed.  You can dispense
  * with these routines if you have plenty of virtual memory; see jmemnobs.c.
  */
-
-
 METHODDEF(void)
 read_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 		    void FAR * buffer_address,
@@ -214,8 +202,6 @@ read_backing_store (j_common_ptr cinfo, backing_store_ptr info,
       != (size_t) byte_count)
     ERREXIT(cinfo, JERR_TFILE_READ);
 }
-
-
 METHODDEF(void)
 write_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 		     void FAR * buffer_address,
@@ -227,8 +213,6 @@ write_backing_store (j_common_ptr cinfo, backing_store_ptr info,
       != (size_t) byte_count)
     ERREXIT(cinfo, JERR_TFILE_WRITE);
 }
-
-
 METHODDEF(void)
 close_backing_store (j_common_ptr cinfo, backing_store_ptr info)
 {
@@ -240,8 +224,6 @@ close_backing_store (j_common_ptr cinfo, backing_store_ptr info)
  */
   TRACEMSS(cinfo, 1, JTRC_TFILE_CLOSE, info->temp_name);
 }
-
-
 /*
  * Initial opening of a backing-store object.
  */
@@ -258,8 +240,6 @@ jpeg_open_backing_store (j_common_ptr cinfo, backing_store_ptr info,
   info->close_backing_store = close_backing_store;
   TRACEMSS(cinfo, 1, JTRC_TFILE_OPEN, info->temp_name);
 }
-
-
 /*
  * These routines take care of any system-dependent initialization and
  * cleanup required.

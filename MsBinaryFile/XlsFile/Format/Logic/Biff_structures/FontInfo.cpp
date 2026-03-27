@@ -53,7 +53,5 @@ void FrtFontInfo::save(CFRecord& record)
 	SETBIT(flags, 0, fScaled);
 	record 	<< flags << ifnt;
 }
-
-
 } // namespace XLS
 

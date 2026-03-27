@@ -15,8 +15,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is used to group all #includes to the ANSI C library that   */
@@ -27,17 +25,11 @@
   /* it.                                                                   */
   /*                                                                       */
   /*************************************************************************/
-
-
 #ifndef __FTSTDLIB_H__
 #define __FTSTDLIB_H__
-
-
 #include <stddef.h>
 
 #define ft_ptrdiff_t  ptrdiff_t
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                           integer limits                           */
@@ -55,8 +47,6 @@
   /* message like `couldn't find 32-bit type' or something similar.     */
   /*                                                                    */
   /**********************************************************************/
-
-
 #include <limits.h>
 
 #define FT_CHAR_BIT    CHAR_BIT
@@ -65,15 +55,11 @@
 #define FT_INT_MIN     INT_MIN
 #define FT_UINT_MAX    UINT_MAX
 #define FT_ULONG_MAX   ULONG_MAX
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                 character and string processing                    */
   /*                                                                    */
   /**********************************************************************/
-
-
 #include <string.h>
 
 #define ft_memchr   memchr
@@ -89,15 +75,11 @@
 #define ft_strncpy  strncpy
 #define ft_strrchr  strrchr
 #define ft_strstr   strstr
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                           file handling                            */
   /*                                                                    */
   /**********************************************************************/
-
-
 #include <stdio.h>
 
 #define FT_FILE     FILE
@@ -107,51 +89,35 @@
 #define ft_fseek    fseek
 #define ft_ftell    ftell
 #define ft_sprintf  sprintf
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                             sorting                                */
   /*                                                                    */
   /**********************************************************************/
-
-
 #include <stdlib.h>
 
 #define ft_qsort  qsort
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                        memory allocation                           */
   /*                                                                    */
   /**********************************************************************/
-
-
 #define ft_scalloc   calloc
 #define ft_sfree     free
 #define ft_smalloc   malloc
 #define ft_srealloc  realloc
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                          miscellaneous                             */
   /*                                                                    */
   /**********************************************************************/
-
-
 #define ft_atol   atol
 #define ft_labs   labs
-
-
   /**********************************************************************/
   /*                                                                    */
   /*                         execution control                          */
   /*                                                                    */
   /**********************************************************************/
-
-
 #include <setjmp.h>
 
 #define ft_jmp_buf     jmp_buf  /* note: this cannot be a typedef since */
@@ -160,15 +126,9 @@
 
 #define ft_longjmp     longjmp
 #define ft_setjmp( b ) setjmp( *(ft_jmp_buf*) &(b) ) /* same thing here */
-
-
   /* the following is only used for debugging purposes, i.e., if */
   /* FT_DEBUG_LEVEL_ERROR or FT_DEBUG_LEVEL_TRACE are defined    */
 
 #include <stdarg.h>
-
-
 #endif /* __FTSTDLIB_H__ */
-
-
 /* END */

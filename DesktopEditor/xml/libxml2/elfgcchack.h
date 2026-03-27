@@ -17808,8 +17808,6 @@ extern __typeof (xmlXPtrWrapLocationSet) xmlXPtrWrapLocationSet__internal_alias 
 #endif
 #endif
 #endif
-
-
 #endif
 #endif
 #endif

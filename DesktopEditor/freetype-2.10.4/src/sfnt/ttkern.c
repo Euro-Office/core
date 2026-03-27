@@ -15,16 +15,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 #include "ttkern.h"
 
 #include "sferrors.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -33,12 +29,8 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttkern
-
-
 #undef  TT_KERN_INDEX
 #define TT_KERN_INDEX( g1, g2 )  ( ( (FT_ULong)(g1) << 16 ) | (g2) )
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_kern( TT_Face    face,
                      FT_Stream  stream )
@@ -49,8 +41,6 @@
     FT_Byte*   p_limit;
     FT_UInt    nn, num_tables;
     FT_UInt32  avail = 0, ordered = 0;
-
-
     /* the kern table is optional; exit silently if it is missing */
     error = face->goto_table( face, TTAG_kern, stream, &table_size );
     if ( error )
@@ -87,8 +77,6 @@
       FT_UInt    num_pairs, length, coverage, format;
       FT_Byte*   p_next;
       FT_UInt32  mask = (FT_UInt32)1UL << nn;
-
-
       if ( p + 6 > p_limit )
         break;
 
@@ -133,16 +121,12 @@
       {
         FT_ULong  count;
         FT_ULong  old_pair;
-
-
         old_pair = FT_NEXT_ULONG( p );
         p       += 2;
 
         for ( count = num_pairs - 1; count > 0; count-- )
         {
           FT_UInt32  cur_pair;
-
-
           cur_pair = FT_NEXT_ULONG( p );
           if ( cur_pair <= old_pair )
             break;
@@ -166,22 +150,16 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_done_kern( TT_Face  face )
   {
     FT_Stream  stream = face->root.stream;
-
-
     FT_FRAME_RELEASE( face->kern_table );
     face->kern_table_size = 0;
     face->num_kern_tables = 0;
     face->kern_avail_bits = 0;
     face->kern_order_bits = 0;
   }
-
-
   FT_LOCAL_DEF( FT_Int )
   tt_face_get_kerning( TT_Face  face,
                        FT_UInt  left_glyph,
@@ -191,8 +169,6 @@
     FT_UInt   count, mask;
     FT_Byte*  p       = face->kern_table;
     FT_Byte*  p_limit = p + face->kern_table_size;
-
-
     p   += 4;
     mask = 0x0001;
 
@@ -209,8 +185,6 @@
       FT_Int   value    = 0;
 
       FT_UNUSED( version );
-
-
       next = base + length;
 
       if ( next > p_limit )  /* handle broken table */
@@ -232,21 +206,15 @@
       case 0:
         {
           FT_ULong  key0 = TT_KERN_INDEX( left_glyph, right_glyph );
-
-
           if ( face->kern_order_bits & mask )   /* binary search */
           {
             FT_UInt   min = 0;
             FT_UInt   max = num_pairs;
-
-
             while ( min < max )
             {
               FT_UInt   mid = ( min + max ) >> 1;
               FT_Byte*  q   = p + 6 * mid;
               FT_ULong  key;
-
-
               key = FT_NEXT_ULONG( q );
 
               if ( key == key0 )
@@ -263,13 +231,9 @@
           else /* linear search */
           {
             FT_UInt  count2;
-
-
             for ( count2 = num_pairs; count2 > 0; count2-- )
             {
               FT_ULong  key = FT_NEXT_ULONG( p );
-
-
               if ( key == key0 )
               {
                 value = FT_PEEK_SHORT( p );

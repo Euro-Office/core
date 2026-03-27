@@ -44,7 +44,5 @@ void RC4CryptoAPIEncryptionHeader::load(XLS::CFRecord& record)
 {
 	record >> EncryptionVersionInfo >> Flags >> EncryptionHeaderSize >> encryptionHeader >> encryptionVerifier;
 }
-
-
 } // namespace CRYPTO
 

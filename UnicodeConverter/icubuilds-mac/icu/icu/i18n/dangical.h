@@ -103,8 +103,6 @@ class DangiCalendar : public ChineseCalendar {
    * @internal
    */
   const char * getType() const;
-
-
  private:
  
   DangiCalendar(); // default constructor not implemented
@@ -114,6 +112,4 @@ U_NAMESPACE_END
 
 #endif
 #endif
-
-
 

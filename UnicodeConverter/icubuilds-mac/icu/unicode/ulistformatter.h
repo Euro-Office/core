@@ -60,8 +60,6 @@ ulistfmt_open(const char*  locale,
  */
 U_DRAFT void U_EXPORT2
 ulistfmt_close(UListFormatter *listfmt);
-
-
 #if U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN

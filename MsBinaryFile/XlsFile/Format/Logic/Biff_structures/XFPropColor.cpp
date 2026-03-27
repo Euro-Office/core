@@ -38,14 +38,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XFPropColor::clone()
 {
 	return BiffStructurePtr(new XFPropColor(*this));
 }
-
-
 void XFPropColor::load(CFRecord& record)
 {
 	unsigned char flags;
@@ -139,6 +135,4 @@ int XFPropColor::deserialize(XmlUtils::CXmlLiteReader& oReader)
 	}
 	return 0;
 }
-
-
 } // namespace XLS

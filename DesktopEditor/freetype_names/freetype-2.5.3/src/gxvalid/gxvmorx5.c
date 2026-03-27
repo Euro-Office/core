@@ -23,11 +23,7 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmorx.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmorx
-
-
   /*
    * `morx' subtable type5 (Contextual Glyph Insertion)
    * has format of a StateTable with insertion-glyph-list
@@ -46,8 +40,6 @@
    * without variable name specification (the existence of
    * this offset to the table is different from mort type5).
    */
-
-
   typedef struct  GXV_morx_subtable_type5_StateOptRec_
   {
     FT_ULong  insertionGlyphList;
@@ -55,12 +47,8 @@
 
   }  GXV_morx_subtable_type5_StateOptRec,
     *GXV_morx_subtable_type5_StateOptRecData;
-
-
 #define GXV_MORX_SUBTABLE_TYPE5_HEADER_SIZE \
           ( GXV_STATETABLE_HEADER_SIZE + 4 )
-
-
   static void
   gxv_morx_subtable_type5_insertionGlyphList_load( FT_Bytes       table,
                                                    FT_Bytes       limit,
@@ -70,13 +58,9 @@
 
     GXV_morx_subtable_type5_StateOptRecData  optdata =
       (GXV_morx_subtable_type5_StateOptRecData)valid->xstatetable.optdata;
-
-
     GXV_LIMIT_CHECK( 4 );
     optdata->insertionGlyphList = FT_NEXT_ULONG( p );
   }
-
-
   static void
   gxv_morx_subtable_type5_subtable_setup( FT_ULong       table_size,
                                           FT_ULong       classTable,
@@ -93,8 +77,6 @@
 
     GXV_morx_subtable_type5_StateOptRecData  optdata =
       (GXV_morx_subtable_type5_StateOptRecData)valid->xstatetable.optdata;
-
-
     o[0] = classTable;
     o[1] = stateArray;
     o[2] = entryTable;
@@ -106,8 +88,6 @@
 
     gxv_set_length_by_ulong_offset( o, l, buff, 4, table_size, valid );
   }
-
-
   static void
   gxv_morx_subtable_type5_InsertList_validate( FT_UShort      table_index,
                                                FT_UShort      count,
@@ -116,16 +96,12 @@
                                                GXV_Validator  valid )
   {
     FT_Bytes p = table + table_index * 2;
-
-
 #ifndef GXV_LOAD_TRACE_VARS
     GXV_LIMIT_CHECK( count * 2 );
 #else
     while ( p < table + count * 2 + table_index * 2 )
     {
       FT_UShort  insert_glyphID;
-
-
       GXV_LIMIT_CHECK( 2 );
       insert_glyphID = FT_NEXT_USHORT( p );
       GXV_TRACE(( " 0x%04x", insert_glyphID ));
@@ -134,8 +110,6 @@
     GXV_TRACE(( "\n" ));
 #endif
   }
-
-
   static void
   gxv_morx_subtable_type5_entry_validate(
     FT_UShort                       state,
@@ -159,8 +133,6 @@
     FT_UShort  markedInsertList;
 
     FT_UNUSED( state );
-
-
 #ifdef GXV_LOAD_UNUSED_VARS
     setMark              = FT_BOOL( ( flags >> 15 ) & 1 );
     dontAdvance          = FT_BOOL( ( flags >> 14 ) & 1 );
@@ -188,8 +160,6 @@
                                                    table, limit,
                                                    valid );
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_morx_subtable_type5_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -199,8 +169,6 @@
 
     GXV_morx_subtable_type5_StateOptRec      et_rec;
     GXV_morx_subtable_type5_StateOptRecData  et = &et_rec;
-
-
     GXV_NAME_ENTER( "morx chain subtable type5 (Glyph Insertion)" );
 
     GXV_LIMIT_CHECK( GXV_MORX_SUBTABLE_TYPE5_HEADER_SIZE );
@@ -220,6 +188,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

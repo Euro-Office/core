@@ -133,8 +133,6 @@ typedef enum {
     XML_OP_NS,
     XML_OP_ALL
 } xmlPatOp;
-
-
 typedef struct _xmlStepState xmlStepState;
 typedef xmlStepState *xmlStepStatePtr;
 struct _xmlStepState {
@@ -724,8 +722,6 @@ rollback:
 
 #define CURRENT (*ctxt->cur)
 #define NEXT ((*ctxt->cur) ?  ctxt->cur++: ctxt->cur)
-
-
 #define PUSH(op, val, val2)						\
     if (xmlPatternAdd(ctxt, ctxt->comp, (op), (val), (val2))) goto error;
 
@@ -2408,8 +2404,6 @@ xmlPatterncompile(const xmlChar *pattern, xmlDict *dict, int flags,
 	    goto error;
 	xmlFreePatParserContext(ctxt);
 	ctxt = NULL;
-
-
         if (streamable) {
 	    if (type == 0) {
 	        type = cur->flags & (PAT_FROM_ROOT | PAT_FROM_CUR);

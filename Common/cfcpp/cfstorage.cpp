@@ -39,8 +39,6 @@
 
 using namespace CFCPP;
 using RedBlackTree::RBTree;
-
-
 CFStorage::CFStorage(CompoundFile_impl *compFile, const std::weak_ptr<IDirectoryEntry> &dirEntry) :
     CFItem(compFile)
 {
@@ -67,8 +65,6 @@ std::shared_ptr<CFStream> CFStorage::AddStream(const std::wstring& streamName)
 
     if (streamName.empty())
         throw CFException("Stream name cannot be null or empty");
-
-
 
     std::shared_ptr<IDirectoryEntry> dirEntry = DirectoryEntry::TryNew(streamName, StgType::StgStream, compoundFile->GetDirectories());
 
@@ -278,8 +274,6 @@ void CFStorage::Delete(const std::wstring &entryName)
 
     if (std::dynamic_pointer_cast<IDirectoryEntry>(foundObj)->getStgType() == StgType::StgRoot)
         throw CFException("Root storage cannot be removed");
-
-
     RedBlackTree::PIRBNode altDel;
     switch (std::dynamic_pointer_cast<IDirectoryEntry>(foundObj)->getStgType())
     {

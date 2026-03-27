@@ -5,8 +5,6 @@
 *   Corporation and others.  All Rights Reserved.
 *
 ******************************************************************************/
-
-
 /*----------------------------------------------------------------------------------
  *
  *  UDataMemory     A class-like struct that serves as a handle to a piece of memory

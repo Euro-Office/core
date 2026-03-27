@@ -78,8 +78,6 @@ static const l_uint32 rmask32[] = {0x0,
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_EDGES         0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *                 Measurement of properties                   *
  *-------------------------------------------------------------*/
@@ -120,8 +118,6 @@ PIX     *pixt;
     }
     return 0;
 }
-
-
 /*!
  *  pixaFindAreaPerimRatio()
  *
@@ -158,8 +154,6 @@ PIX       *pixt;
     FREE(tab);
     return na;
 }
-
-
 /*!
  *  pixFindAreaPerimRatio()
  *
@@ -208,8 +202,6 @@ PIX      *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixaFindPerimSizeRatio()
  *
@@ -246,8 +238,6 @@ PIX       *pixt;
     FREE(tab);
     return na;
 }
-
-
 /*!
  *  pixFindPerimSizeRatio()
  *
@@ -296,8 +286,6 @@ PIX      *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixaFindAreaFraction()
  *
@@ -334,8 +322,6 @@ PIX       *pixt;
     FREE(tab);
     return na;
 }
-
-
 /*!
  *  pixFindAreaFraction()
  *
@@ -378,8 +364,6 @@ l_int32  *tab8;
         FREE(tab8);
     return 0;
 }
-
-
 /*!
  *  pixaFindWidthHeightRatio()
  *
@@ -412,8 +396,6 @@ PIX     *pixt;
     }
     return na;
 }
-
-
 /*!
  *  pixaFindWidthHeightProduct()
  *
@@ -446,8 +428,6 @@ PIX     *pixt;
     }
     return na;
 }
-
-
 /*!
  *  pixFindOverlapFraction()
  *
@@ -506,8 +486,6 @@ PIX      *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixFindRectangleComps()
  *
@@ -569,8 +547,6 @@ PIXA    *pixa;
 
     return boxad;
 }
-
-
 /*!
  *  pixConformsToRectangle()
  *
@@ -655,8 +631,6 @@ PIX     *pixt1, *pixt2;
     *pconforms = (empty) ? 1 : 0;
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                Extract rectangular region                   *
  *-------------------------------------------------------------*/
@@ -734,8 +708,6 @@ PIX     *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixClipMasked()
  *
@@ -807,8 +779,6 @@ PIXCMAP  *cmap;
     pixDestroy(&pixmi);
     return pixd;
 }
-
-
 /*!
  *  pixResizeToMatch()
  *
@@ -875,8 +845,6 @@ PIX     *pixd;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Clip to Foreground                        *
  *---------------------------------------------------------------------*/
@@ -975,8 +943,6 @@ maxx_found:
 
     return 0;
 }
-
-
 /*!
  *  pixClipBoxToForeground()
  *
@@ -1040,8 +1006,6 @@ BOX     *boxt, *boxd;
     boxDestroy(&boxt);
     return 0;
 }
-
-
 /*!
  *  pixScanForForeground()
  *
@@ -1140,8 +1104,6 @@ BOX       *boxt;
 
     return 1;  /* no fg found */
 }
-
-
 /*!
  *  pixClipBoxToEdges()
  *
@@ -1272,8 +1234,6 @@ BOX     *boxt, *boxd;
 
     return 0;
 }
-
-
 /*!
  *  pixScanForEdge()
  *
@@ -1455,8 +1415,6 @@ BOX       *boxt;
 
     return 1;  /* edge not found */
 }
-
-
 /*---------------------------------------------------------------------*
  *           Extract pixel averages and reversals along lines          *
  *---------------------------------------------------------------------*/
@@ -1581,8 +1539,6 @@ PTA       *pta;
 
     return na;
 }
-
-
 /*!
  *  pixAverageOnLine()
  *
@@ -1666,8 +1622,6 @@ l_float32  sum;
 
     return sum / (l_float32)count;
 }
-
-
 /*!
  *  pixAverageIntensityProfile()
  *
@@ -1770,8 +1724,6 @@ PIX       *pixr, *pixg;
     pixDestroy(&pixg);
     return nad;
 }
-
-
 /*!
  *  pixReversalProfile()
  *
@@ -1888,8 +1840,6 @@ PIX      *pixr, *pixg;
     pixDestroy(&pixg);
     return nad;
 }
-
-
 /*---------------------------------------------------------------------*
  *                     Rank row and column transforms                  *
  *---------------------------------------------------------------------*/
@@ -1942,8 +1892,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixRankColumnTransform()
  *

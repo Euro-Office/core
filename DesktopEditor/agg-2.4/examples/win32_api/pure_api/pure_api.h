@@ -7,6 +7,4 @@
 #endif // _MSC_VER > 1000
 
 #include "resource.h"
-
-
 #endif // !defined(AFX_PURE_API_H__B17A1161_38FE_4F00_8284_B215A497C968__INCLUDED_)

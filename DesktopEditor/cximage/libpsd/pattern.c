@@ -30,8 +30,6 @@
 #include "psd_color.h"
 #include "psd_bitmap.h"
 #include "psd_math.h"
-
-
 #define PSD_MIN_PATTERN_COUNT		4
 
 #ifdef PSD_INCLUDE_ZLIB
@@ -41,8 +39,6 @@ extern psd_status psd_unzip_with_prediction(psd_uchar *src_buf, psd_int src_len,
 	psd_uchar *dst_buf, psd_int dst_len, 
 	psd_int row_size, psd_int color_depth);
 #endif
-
-
 static psd_status psd_combine_bitmap1_channel(psd_context * context, psd_pattern * pattern)
 {
 	psd_int i, j, rowstride;
@@ -254,8 +250,6 @@ static psd_status psd_combine_rgb16_channel(psd_context * context, psd_pattern *
 
 	return psd_status_done;
 }
-
-
 #ifdef PSD_SUPPORT_CMYK
 
 static psd_status psd_combine_cmyk8_channel(psd_context * context, psd_pattern * pattern)
@@ -355,8 +349,6 @@ static psd_status psd_combine_cmyk16_channel(psd_context * context, psd_pattern 
 }
 
 #endif // ifdef PSD_SUPPORT_CMYK
-
-
 #ifdef PSD_SUPPORT_LAB
 
 static psd_status psd_combine_lab8_channel(psd_context * context, psd_pattern * pattern)
@@ -492,8 +484,6 @@ static psd_status psd_combine_multichannel8_channel(psd_context * context, psd_p
 }
 
 #endif // ifdef PSD_SUPPORT_MULTICHANNEL
-
-
 // Patterns (Photoshop 6.0 and CS (8.0))
 // The following is repeated for each pattern.
 psd_status psd_get_pattern(psd_context * context)

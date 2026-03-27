@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  * finditalic.c
  *
@@ -64,8 +62,6 @@ static const char *str_ital3 = " x"
                                "Cx"
                                "x "
                                "x ";
-
-
 /*!
  *  pixItalicWords()
  *

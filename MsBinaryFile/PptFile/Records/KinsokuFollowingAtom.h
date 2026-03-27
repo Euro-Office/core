@@ -32,16 +32,12 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordKinsokuFollowingAtom : public CUnknownRecord
 {
 public:
     std::wstring m_arKinsokuFollowing;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

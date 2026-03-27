@@ -823,8 +823,6 @@ static const uint16_t nuktaSpecialCases[][2]={
     { 0xDB , 0x0962 },
     { 0xDC , 0x0963 },
 };
-
-
 #define WRITE_TO_TARGET_FROM_U(args,offsets,source,target,targetLimit,targetByteUnit,err){      \
     int32_t offset = (int32_t)(source - args->source-1);                                        \
       /* write the targetUniChar  to target */                                                  \

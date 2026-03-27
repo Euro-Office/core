@@ -61,8 +61,6 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/FRTHeader.h"
 
 #include "../../XlsxFormat/WritingElement.h"
-
-
 namespace XLSB
 {
     // Logical representation of common record in BIFF12
@@ -456,6 +454,4 @@ namespace XLSB
             return XLS::BaseObjectPtr(new BeginCsView(*this));
         }
     };
-
-
 } // namespace XLSB

@@ -21,8 +21,6 @@
 
 #include "rbbirb.h"
 #include "rbbinode.h"
-
-
 //
 //  RBBISymbolTableEntry_deleter    Used by the UHashTable to delete the contents
 //                                  when the hash table is deleted.
@@ -33,8 +31,6 @@ static void U_CALLCONV RBBISymbolTableEntry_deleter(void *p) {
     delete px;
 }
 U_CDECL_END
-
-
 
 U_NAMESPACE_BEGIN
 
@@ -52,14 +48,10 @@ RBBISymbolTable::RBBISymbolTable(RBBIRuleScanner *rs, const UnicodeString &rules
     uhash_setValueDeleter(fHashTable, RBBISymbolTableEntry_deleter);
 }
 
-
-
 RBBISymbolTable::~RBBISymbolTable()
 {
     uhash_close(fHashTable);
 }
-
-
 //
 //  RBBISymbolTable::lookup       This function from the abstract symbol table inteface
 //                                looks up a variable name and returns a UnicodeString
@@ -100,8 +92,6 @@ const UnicodeString  *RBBISymbolTable::lookup(const UnicodeString& s) const
     }
     return retString;
 }
-
-
 
 //
 //  RBBISymbolTable::lookupMatcher   This function from the abstract symbol table
@@ -156,8 +146,6 @@ UnicodeString   RBBISymbolTable::parseReference(const UnicodeString& text,
     return result;
 }
 
-
-
 //
 // RBBISymbolTable::lookupNode      Given a key (a variable name), return the
 //                                  corresponding RBBI Node.  If there is no entry
@@ -174,8 +162,6 @@ RBBINode       *RBBISymbolTable::lookupNode(const UnicodeString &key) const{
     }
     return retNode;
 }
-
-
 //
 //    RBBISymbolTable::addEntry     Add a new entry to the symbol table.
 //                                  Indicate an error if the name already exists -
@@ -203,8 +189,6 @@ void            RBBISymbolTable::addEntry  (const UnicodeString &key, RBBINode *
     e->val = val;
     uhash_put( fHashTable, &e->key, e, &err);
 }
-
-
 RBBISymbolTableEntry::RBBISymbolTableEntry() : UMemory(), key(), val(NULL) {}
 
 RBBISymbolTableEntry::~RBBISymbolTableEntry() {
@@ -219,8 +203,6 @@ RBBISymbolTableEntry::~RBBISymbolTableEntry() {
 
     // Note: the key UnicodeString is destructed by virtue of being in the object by value.
 }
-
-
 //
 //  RBBISymbolTable::print    Debugging function, dump out the symbol table contents.
 //
@@ -259,10 +241,6 @@ void RBBISymbolTable::rbbiSymtablePrint() const {
     }
 }
 #endif
-
-
-
-
 
 U_NAMESPACE_END
 

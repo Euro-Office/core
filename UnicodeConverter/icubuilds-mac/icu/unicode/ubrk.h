@@ -122,8 +122,6 @@ typedef enum UBreakIteratorType {
  *  @stable ICU 2.0
  */
 #define UBRK_DONE ((int32_t) -1)
-
-
 /**
  *  Enum constants for the word break tags returned by
  *  getRuleStatus().  A range of values is defined for each category of
@@ -177,8 +175,6 @@ typedef enum ULineBreakTag {
     UBRK_LINE_HARD_LIMIT      = 200
 } ULineBreakTag;
 
-
-
 /**
  *  Enum constants for the sentence break tags returned by getRuleStatus().
  *  A range of values is defined for each category of
@@ -204,8 +200,6 @@ typedef enum USentenceBreakTag {
     UBRK_SENTENCE_SEP_LIMIT  = 200
     /** Tag value for a hard, or mandatory line break  */
 } USentenceBreakTag;
-
-
 /**
  * Open a new UBreakIterator for locating text boundaries for a specified locale.
  * A UBreakIterator may be used for detecting character, line, word,
@@ -328,8 +322,6 @@ ubrk_setText(UBreakIterator* bi,
              const UChar*    text,
              int32_t         textLength,
              UErrorCode*     status);
-
-
 /**
  * Sets an existing iterator to point to a new piece of text.
  *
@@ -351,8 +343,6 @@ U_STABLE void U_EXPORT2
 ubrk_setUText(UBreakIterator* bi,
              UText*          text,
              UErrorCode*     status);
-
-
 
 /**
  * Determine the most recently-returned text boundary.
@@ -459,8 +449,6 @@ ubrk_getAvailable(int32_t index);
 */
 U_STABLE int32_t U_EXPORT2
 ubrk_countAvailable(void);
-
-
 /**
 * Returns true if the specfied position is a boundary position.  As a side
 * effect, leaves the iterator pointing to the first boundary position at

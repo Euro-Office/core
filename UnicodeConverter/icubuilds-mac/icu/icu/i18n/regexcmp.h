@@ -9,8 +9,6 @@
 //  This class is internal to the regular expression implementation.
 //  For the public Regular Expression API, see the file "unicode/regex.h"
 //
-
-
 #ifndef RBBISCAN_H
 #define RBBISCAN_H
 
@@ -24,11 +22,7 @@
 #include "uvector.h"
 #include "uvectr32.h"
 
-
-
 U_NAMESPACE_BEGIN
-
-
 //--------------------------------------------------------------------------------
 //
 //  class RegexCompile    Contains the regular expression compiler.
@@ -36,8 +30,6 @@ U_NAMESPACE_BEGIN
 //--------------------------------------------------------------------------------
 struct  RegexTableEl;
 class   RegexPattern;
-
-
 class U_I18N_API RegexCompile : public UMemory {
 public:
 
@@ -56,15 +48,11 @@ public:
 
     void       compile(const UnicodeString &pat, UParseError &pp, UErrorCode &e);
     void       compile(UText *pat, UParseError &pp, UErrorCode &e);
-    
-
     virtual    ~RegexCompile();
 
     void        nextChar(RegexPatternChar &c);      // Get the next char from the input stream.
 
     static void cleanup();                       // Memory cleanup
-
-
 
     // Categories of parentheses in pattern.
     //   The category is saved in the compile-time parentheses stack frame, and
@@ -81,8 +69,6 @@ public:
     };
 
 private:
-
-
     UBool       doParseActions(int32_t a);
     void        error(UErrorCode e);                   // error reporting convenience function.
 
@@ -126,8 +112,6 @@ private:
 public:   // Public for testing only.
     static void U_EXPORT2 findCaseInsensitiveStarters(UChar32 c, UnicodeSet *starterChars);
 private:
-
-
     UErrorCode                    *fStatus;
     RegexPattern                  *fRXPat;
     UParseError                   *fParseErr;
@@ -146,8 +130,6 @@ private:
     UChar32                       fLastChar;         // Previous char, needed to count CR-LF
                                                      //   as a single line, not two.
     UChar32                       fPeekChar;         // Saved char, if we've scanned ahead.
-
-
     RegexPatternChar              fC;                // Current char for parse state machine
                                                      //   processing.
 
@@ -189,8 +171,6 @@ private:
                                                      //   The negative value (-1, -2,...) indicates
                                                      //   the kind of paren that opened the frame.  Some
                                                      //   need special handling on close.
-
-
     int32_t                       fMatchOpenParen;   // The position in the compiled pattern
                                                      //   of the slot reserved for a state save
                                                      //   at the start of the most recently processed

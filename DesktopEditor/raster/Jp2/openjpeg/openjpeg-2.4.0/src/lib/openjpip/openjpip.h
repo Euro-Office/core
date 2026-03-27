@@ -161,8 +161,6 @@ typedef struct dec_server_record {
     msgqueue_param_t *msgqueue;   /**< parsed message queue of jpipstream*/
     SOCKET listening_socket;      /**< listenning socket*/
 } dec_server_record_t;
-
-
 /** Client socket identifier*/
 typedef SOCKET client_t;
 
@@ -298,8 +296,6 @@ OPJ_API index_t * OPJ_CALLCONV get_index_from_JP2file(int fd);
  * @param[in,out] idx addressof the index pointer
  */
 OPJ_API void OPJ_CALLCONV destroy_index(index_t **idx);
-
-
 /**
  * print index parameters
  *

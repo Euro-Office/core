@@ -24,14 +24,8 @@
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/tttables.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_TT_CMAP  "tt-cmaps"
-
-
   /**************************************************************************
    *
    * @struct:
@@ -60,19 +54,13 @@ FT_BEGIN_HEADER
     FT_Long   format;
 
   } TT_CMapInfo;
-
-
   typedef FT_Error
   (*TT_CMap_Info_GetFunc)( FT_CharMap    charmap,
                            TT_CMapInfo  *cmap_info );
-
-
   FT_DEFINE_SERVICE( TTCMaps )
   {
     TT_CMap_Info_GetFunc  get_cmap_info;
   };
-
-
 #define FT_DEFINE_SERVICE_TTCMAPSREC( class_, get_cmap_info_ )  \
   static const FT_Service_TTCMapsRec  class_ =                  \
   {                                                             \
@@ -80,11 +68,7 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* SVTTCMAP_H_ */
-
-
 /* END */

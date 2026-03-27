@@ -95,8 +95,6 @@ The functions in T1_3D.C are used by some function in TCD.C.
 #define T1_3D_CTXNO_SC  (T1_3D_CTXNO_MAG+T1_3D_NUMCTXS_MAG) /*20*/
 #define T1_3D_CTXNO_UNI (T1_3D_CTXNO_SC+T1_3D_NUMCTXS_SC)   /*26*/
 #define T1_3D_NUMCTXS   (T1_3D_CTXNO_UNI+T1_3D_NUMCTXS_UNI) /*27*/
-
-
 /* ----------------------------------------------------------------------- */
 
 /**

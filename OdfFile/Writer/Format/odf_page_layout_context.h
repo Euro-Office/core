@@ -110,8 +110,6 @@ public:
 
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
-
-
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 
 	office_element_ptr	root_header_footer_; //для топовых элементов в style:footer
@@ -119,8 +117,6 @@ public:
 	double				current_page_width_;
 	bool				even_and_left_headers_;
 private:
-
-
 	style_page_layout_properties	*get_properties();
 	style_header_footer_properties	*get_header_properties();
 	style_header_footer_properties	*get_footer_properties();
@@ -133,7 +129,5 @@ private:
  	std::vector<odf_master_state> master_state_list_;
 	
 };
-
-
 }
 }

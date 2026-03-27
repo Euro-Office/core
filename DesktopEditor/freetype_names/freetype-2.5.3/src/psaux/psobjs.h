@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __PSOBJS_H__
 #define __PSOBJS_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_POSTSCRIPT_AUX_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -34,8 +26,6 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_CALLBACK_TABLE
   const PS_Table_FuncsRec    ps_table_funcs;
 
@@ -44,8 +34,6 @@ FT_BEGIN_HEADER
 
   FT_CALLBACK_TABLE
   const T1_Builder_FuncsRec  t1_builder_funcs;
-
-
   FT_LOCAL( FT_Error )
   ps_table_new( PS_Table   table,
                 FT_Int     count,
@@ -59,12 +47,8 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   ps_table_done( PS_Table  table );
-
-
   FT_LOCAL( void )
   ps_table_release( PS_Table  table );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -72,8 +56,6 @@ FT_BEGIN_HEADER
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_LOCAL( void )
   ps_parser_skip_spaces( PS_Parser  parser );
 
@@ -106,21 +88,15 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Long )
   ps_parser_to_int( PS_Parser  parser );
-
-
   FT_LOCAL( FT_Error )
   ps_parser_to_bytes( PS_Parser  parser,
                       FT_Byte*   bytes,
                       FT_Offset  max_bytes,
                       FT_Long*   pnum_bytes,
                       FT_Bool    delimiters );
-
-
   FT_LOCAL( FT_Fixed )
   ps_parser_to_fixed( PS_Parser  parser,
                       FT_Int     power_ten );
-
-
   FT_LOCAL( FT_Int )
   ps_parser_to_coord_array( PS_Parser  parser,
                             FT_Int     max_coords,
@@ -131,8 +107,6 @@ FT_BEGIN_HEADER
                             FT_Int     max_values,
                             FT_Fixed*  values,
                             FT_Int     power_ten );
-
-
   FT_LOCAL( void )
   ps_parser_init( PS_Parser  parser,
                   FT_Byte*   base,
@@ -141,8 +115,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   ps_parser_done( PS_Parser  parser );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -178,18 +150,12 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( FT_Error )
   t1_builder_add_contour( T1_Builder  builder );
-
-
   FT_LOCAL( FT_Error )
   t1_builder_start_point( T1_Builder  builder,
                           FT_Pos      x,
                           FT_Pos      y );
-
-
   FT_LOCAL( void )
   t1_builder_close_contour( T1_Builder  builder );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -202,11 +168,7 @@ FT_BEGIN_HEADER
   t1_decrypt( FT_Byte*   buffer,
               FT_Offset  length,
               FT_UShort  seed );
-
-
 FT_END_HEADER
 
 #endif /* __PSOBJS_H__ */
-
-
 /* END */

@@ -15,22 +15,14 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __T1TYPES_H__
 #define __T1TYPES_H__
-
-
 #include <ft2build.h>
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -42,8 +34,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -76,8 +66,6 @@ FT_BEGIN_HEADER
     FT_String**  char_name;
 
   } T1_EncodingRec, *T1_Encoding;
-
-
   /* used to hold extra data of PS_FontInfoRec that
    * cannot be stored in the publicly defined structure.
    *
@@ -88,8 +76,6 @@ FT_BEGIN_HEADER
     FT_UShort  fs_type;
 
   } PS_FontExtraRec;
-
-
   typedef struct  T1_FontRec_
   {
     PS_FontInfoRec   font_info;         /* font info dictionary   */
@@ -123,16 +109,12 @@ FT_BEGIN_HEADER
     FT_Fixed         stroke_width;
 
   } T1_FontRec, *T1_Font;
-
-
   typedef struct  CID_SubrsRec_
   {
     FT_UInt    num_subrs;
     FT_Byte**  code;
 
   } CID_SubrsRec, *CID_Subrs;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -176,8 +158,6 @@ FT_BEGIN_HEADER
     FT_Int         NumKernPair;
 
   } AFM_FontInfoRec, *AFM_FontInfo;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -189,12 +169,8 @@ FT_BEGIN_HEADER
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   typedef struct T1_FaceRec_*   T1_Face;
   typedef struct CID_FaceRec_*  CID_Face;
-
-
   typedef struct  T1_FaceRec_
   {
     FT_FaceRec      root;
@@ -223,8 +199,6 @@ FT_BEGIN_HEADER
     const void*     pshinter;
 
   } T1_FaceRec;
-
-
   typedef struct  CID_FaceRec_
   {
     FT_FaceRec       root;
@@ -245,11 +219,7 @@ FT_BEGIN_HEADER
     FT_Stream        cid_stream;
 
   } CID_FaceRec;
-
-
 FT_END_HEADER
 
 #endif /* __T1TYPES_H__ */
-
-
 /* END */

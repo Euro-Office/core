@@ -39,8 +39,6 @@ namespace agg
     {
     }
 
-
-
     //------------------------------------------------------------------------
     void arrowhead::rewind(unsigned path_id)
     {
@@ -92,8 +90,6 @@ namespace agg
             return;
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned arrowhead::vertex(double* x, double* y)
     {

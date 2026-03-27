@@ -35,15 +35,11 @@
    * able to provide their own `ftsystem.c'.
    *
    */
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftmodapi.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -52,8 +48,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  init
-
-
 #undef  FT_USE_MODULE
 #ifdef __cplusplus
 #define FT_USE_MODULE( type, x )  extern "C" const type  x;
@@ -72,8 +66,6 @@
 #include FT_CONFIG_MODULES_H
     0
   };
-
-
   /* documentation is in ftmodapi.h */
 
   FT_EXPORT_DEF( void )
@@ -81,8 +73,6 @@
   {
     FT_Error                       error;
     const FT_Module_Class* const*  cur;
-
-
     /* GCC 4.6 warns the type difference:
      *   FT_Module_Class** != const FT_Module_Class* const*
      */
@@ -100,8 +90,6 @@
       cur++;
     }
   }
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
 
 #define MAX_LENGTH  128
@@ -120,8 +108,6 @@
     char  property_value[MAX_LENGTH + 1];
 
     int  i;
-
-
     env = ft_getenv( "FREETYPE_PROPERTIES" );
     if ( !env )
       return;
@@ -191,8 +177,6 @@
   }
 
 #endif
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -200,8 +184,6 @@
   {
     FT_Error   error;
     FT_Memory  memory;
-
-
     /* check of `alibrary' delayed to `FT_New_Library' */
 
     /* First of all, allocate a new system object -- this function is part */
@@ -227,16 +209,12 @@
 
     return error;
   }
-
-
   /* documentation is in freetype.h */
 
   FT_EXPORT_DEF( FT_Error )
   FT_Done_FreeType( FT_Library  library )
   {
     FT_Memory  memory;
-
-
     if ( !library )
       return FT_THROW( Invalid_Library_Handle );
 
@@ -250,6 +228,4 @@
 
     return FT_Err_Ok;
   }
-
-
 /* END */

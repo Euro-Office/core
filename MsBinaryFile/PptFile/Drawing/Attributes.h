@@ -632,11 +632,7 @@ namespace ODRAW
 
             if (DashStyle != Gdiplus::DashStyleSolid)
             {
-
-
                 pRenderer->PenDashPattern(DashPattern, Count);
-
-
                 pRenderer->put_PenDashOffset(DashOffset);
             }
         }
@@ -785,8 +781,6 @@ namespace ODRAW
 
             TextureAlpha = dNewAlpha;
         }
-
-
         bool IsEqual(CBrush* pBrush)
         {
             if (NULL == pBrush)
@@ -999,8 +993,6 @@ namespace ODRAW
         {
             pRenderer->put_FontName(Name);
             pRenderer->put_FontPath(Path);
-
-
             pRenderer->put_FontSize(Size);
             pRenderer->put_FontStyle(GetStyle());
             pRenderer->put_FontStringGID(StringGID);

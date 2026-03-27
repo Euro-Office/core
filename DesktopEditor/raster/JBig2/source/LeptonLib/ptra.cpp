@@ -114,8 +114,6 @@
 #include "allheaders.h"
 
 static const l_int32 INITIAL_PTR_ARRAYSIZE = 20;      /* n'importe quoi */
-
-
 /*--------------------------------------------------------------------------*
  *                       Ptra creation and destruction                      *
  *--------------------------------------------------------------------------*/
@@ -146,8 +144,6 @@ L_PTRA  *pa;
 
     return pa;
 }
-
-
 /*!
  *  ptraDestroy()
  *
@@ -206,8 +202,6 @@ L_PTRA  *pa;
     *ppa = NULL;
     return;
 }
-
-
 /*--------------------------------------------------------------------------*
  *               Add/insert/remove/replace generic ptr object               *
  *--------------------------------------------------------------------------*/
@@ -246,8 +240,6 @@ l_int32  imax;
     pa->nactual++;
     return 0;
 }
-
-
 /*!
  *  ptraExtendArray()
  *
@@ -270,8 +262,6 @@ ptraExtendArray(L_PTRA  *pa)
     pa->nalloc *= 2;
     return 0;
 }
-
-
 /*!
  *  ptraInsert()
  *
@@ -393,8 +383,6 @@ l_float32  nexpected;
 
     return 0;
 }
-
-
 /*!
  *  ptraGetHandle()
  *
@@ -423,8 +411,6 @@ ptraGetHandle(L_PTRA  *pa,
 
     return pa->array[index];
 }
-
-
 /*!
  *  ptraRemove()
  *
@@ -485,8 +471,6 @@ void    *item;
     }
     return item;
 }
-
-
 /*!
  *  ptraRemoveLast()
  *
@@ -510,8 +494,6 @@ l_int32  imax;
     else  /* empty */
         return NULL;
 }
-
-
 /*!
  *  ptraReplace()
  *
@@ -553,8 +535,6 @@ void    *olditem;
         FREE(olditem);
     return NULL;
 }
-
-
 /*!
  *  ptraSwap()
  *
@@ -586,8 +566,6 @@ void    *item;
     ptraInsert(pa, index1, item, L_MIN_DOWNSHIFT);
     return 0;
 }
-
-
 /*!
  *  ptraCompactArray()
  *
@@ -622,8 +600,6 @@ l_int32  i, imax, nactual, index;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                        Other array operations                        *
  *----------------------------------------------------------------------*/
@@ -648,8 +624,6 @@ l_int32  i, imax;
         ptraSwap(pa, i, imax - i);
     return 0;
 }
-
-
 /*!
  *  ptraJoin()
  *
@@ -679,8 +653,6 @@ void    *item;
     
     return 0;
 }
-
-
 
 /*----------------------------------------------------------------------*
  *                        Simple ptra accessors                         *
@@ -718,8 +690,6 @@ ptraGetMaxIndex(L_PTRA   *pa,
     *pmaxindex = pa->imax;
     return 0;
 }
-        
-
 /*!
  *  ptraGetActualCount()
  *
@@ -745,8 +715,6 @@ ptraGetActualCount(L_PTRA   *pa,
 
     return 0;
 }
-
-
 /*!
  *  ptraGetPtrToItem()
  *
@@ -771,8 +739,6 @@ ptraGetPtrToItem(L_PTRA  *pa,
 
     return pa->array[index];
 }
-
-
 /*--------------------------------------------------------------------------*
  *                      Ptraa creation and destruction                      *
  *--------------------------------------------------------------------------*/
@@ -804,8 +770,6 @@ L_PTRAA  *paa;
     paa->nalloc = n;
     return paa;
 }
-
-
 /*!
  *  ptraaDestroy()
  *
@@ -848,8 +812,6 @@ L_PTRAA  *paa;
     *ppaa = NULL;
     return;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                             Ptraa accessors                              *
  *--------------------------------------------------------------------------*/
@@ -874,8 +836,6 @@ ptraaGetSize(L_PTRAA  *paa,
 
     return 0;
 }
-
-
 /*!
  *  ptraaInsertPtra()
  *
@@ -911,8 +871,6 @@ l_int32  n;
     paa->ptra[index] = pa;
     return 0;
 }
-
-
 /*!
  *  ptraaGetPtra()
  *
@@ -953,8 +911,6 @@ L_PTRA  *pa;
         paa->ptra[index] = NULL;
     return pa;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                             Ptraa conversion                             *
  *--------------------------------------------------------------------------*/
@@ -992,8 +948,6 @@ L_PTRA    *pat, *pad;
 
     return pad;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                          Functions using L_PTRA                          *
  *--------------------------------------------------------------------------*/
@@ -1070,5 +1024,3 @@ L_PTRA    *paindex;
     ptraDestroy(&paindex, FALSE, FALSE);
     return nad;
 }
-
-

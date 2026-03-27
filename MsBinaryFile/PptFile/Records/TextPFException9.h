@@ -32,22 +32,16 @@
 #pragma once
 #include "../Reader/Records.h"
 #include "PFMasks.h"
-
-
 namespace PPT
 {
 struct STextAutoNumberScheme
 {
     TextAutoNumberSchemeEnum    m_eScheme;
     SHORT                       m_nStartNum;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 
     std::wstring SchemeToStr()const;
 };
-
-
 struct STextPFException9
 {
     PFMasks m_masks;
@@ -56,8 +50,6 @@ struct STextPFException9
     nullable<SHORT>                 m_optBulletBlipRef;
     nullable_bool                   m_optfBulletHasAutoNumber;
     nullable<STextAutoNumberScheme> m_optBulletAutoNumberScheme;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

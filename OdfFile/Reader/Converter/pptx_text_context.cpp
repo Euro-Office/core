@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include "pptx_conversion_context.h"
 #include "pptx_text_context.h"
 
@@ -85,8 +83,6 @@ public:
 	void set_rel_id(const std::wstring& rId);
 	void set_action(const std::wstring& action);
 	void end_hyperlink	();
-	
-
     void start_list		(const std::wstring & StyleName, bool Continue = false);
     void end_list		();
     void start_list_item(bool restart = false);
@@ -155,8 +151,6 @@ private:
 	std::wstring		last_paragraph_style_name_;
 	std::wstring		paragraph_style_name_;
     std::wstring		span_style_name_;
-	
-
 	std::wstring					base_style_name_;
 	odf_types::style_family::type	base_style_family_;//Presentation Or SpreadSheet
 //-------------------------------------------------------------------------------
@@ -440,8 +434,6 @@ void pptx_text_context::Impl::write_pPr(std::wostream & strm)
 	}
 	else
 		seroing_predump();
-
-
 	odf_reader::paragraph_format_properties paragraph_properties_;
 	
 	ApplyParagraphProperties	(paragraph_style_name_,	paragraph_properties_, process_layouts_);
@@ -451,8 +443,6 @@ void pptx_text_context::Impl::write_pPr(std::wostream & strm)
 	
 	const std::wstring& paragraphAttr = get_styles_context().paragraph_attr().str();
 	const std::wstring & paragraphNodes = get_styles_context().paragraph_nodes().str();
-
-
 	if (level < 0 && paragraphAttr.length() < 1 && paragraphNodes.empty()) return;
 	
 	strm << L"<a:pPr ";
@@ -910,8 +900,6 @@ std::wstring pptx_text_context::Impl::get_last_paragraph_style_name()
 pptx_text_context::pptx_text_context(odf_reader::odf_read_context & odf_context_, pptx_conversion_context & pptx_context_):
 	impl_(new pptx_text_context::Impl(odf_context_,pptx_context_))
 {}
-
-
 pptx_text_context::~pptx_text_context()
 {
 }

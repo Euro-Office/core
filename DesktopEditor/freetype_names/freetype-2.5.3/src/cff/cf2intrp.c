@@ -34,8 +34,6 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "cf2ft.h"
 #include FT_INTERNAL_DEBUG_H
 
@@ -45,8 +43,6 @@
 #include "cf2hints.h"
 
 #include "cf2error.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -55,13 +51,9 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cf2interp
-
-
   /* some operators are not implemented yet */
 #define CF2_FIXME  FT_TRACE4(( "cf2_interpT2CharString:"            \
                                " operator not implemented yet\n" ))
-
-
 
   FT_LOCAL_DEF( void )
   cf2_hintmask_init( CF2_HintMask  hintmask,
@@ -71,30 +63,22 @@
 
     hintmask->error = error;
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   cf2_hintmask_isValid( const CF2_HintMask  hintmask )
   {
     return hintmask->isValid;
   }
-
-
   FT_LOCAL_DEF( FT_Bool )
   cf2_hintmask_isNew( const CF2_HintMask  hintmask )
   {
     return hintmask->isNew;
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_hintmask_setNew( CF2_HintMask  hintmask,
                        FT_Bool       val )
   {
     hintmask->isNew = val;
   }
-
-
   /* clients call `getMaskPtr' in order to iterate */
   /* through hint mask                             */
 
@@ -103,8 +87,6 @@
   {
     return hintmask->mask;
   }
-
-
   static size_t
   cf2_hintmask_setCounts( CF2_HintMask  hintmask,
                           size_t        bitCount )
@@ -124,8 +106,6 @@
 
     return bitCount;
   }
-
-
   /* consume the hintmask bytes from the charstring, advancing the src */
   /* pointer                                                           */
   static void
@@ -141,8 +121,6 @@
     /* and then only if CF2_NDEBUG is not defined                     */
     CF2_UInt  mask = ( 1 << ( -(CF2_Int)bitCount & 7 ) ) - 1;
 #endif
-
-
     /* initialize counts and isValid */
     if ( cf2_hintmask_setCounts( hintmask, bitCount ) == 0 )
       return;
@@ -168,16 +146,12 @@
                *hintmask->error                                        );
 #endif
   }
-
-
   FT_LOCAL_DEF( void )
   cf2_hintmask_setAll( CF2_HintMask  hintmask,
                        size_t        bitCount )
   {
     size_t    i;
     CF2_UInt  mask = ( 1 << ( -(CF2_Int)bitCount & 7 ) ) - 1;
-
-
     /* initialize counts and isValid */
     if ( cf2_hintmask_setCounts( hintmask, bitCount ) == 0 )
       return;
@@ -194,8 +168,6 @@
     /* bitCount -> mask, 0 -> 0, 1 -> 7f, 2 -> 3f, ... 6 -> 3, 7 -> 1 */
     hintmask->mask[hintmask->byteCount - 1] &= ~mask;
   }
-
-
   /* Type2 charstring opcodes */
   enum
   {
@@ -274,8 +246,6 @@
     cf2_escHFLEX1,       /* 36 */
     cf2_escFLEX1         /* 37 */
   };
-
-
   /* `stemHintArray' does not change once we start drawing the outline. */
   static void
   cf2_doStems( const CF2_Font  font,
@@ -303,8 +273,6 @@
     {
       /* construct a CF2_StemHint and push it onto the list */
       CF2_StemHintRec  stemhint;
-
-
       stemhint.min  =
         position   += cf2_stack_getReal( opStack, i );
       stemhint.max  =
@@ -323,8 +291,6 @@
     /* cf2_doStems must define a width (may be default) */
     *haveWidth = TRUE;
   }
-
-
   static void
   cf2_doFlex( CF2_Stack       opStack,
               CF2_Fixed*      curX,
@@ -337,8 +303,6 @@
     CF2_UInt   index;
     FT_Bool    isHFlex;
     CF2_Int    top, i, j;
-
-
     vals[0] = *curX;
     vals[1] = *curY;
     index   = 0;
@@ -360,8 +324,6 @@
       FT_Bool    lastIsX = (FT_Bool)( cf2_fixedAbs( vals[10] - *curX ) >
                                         cf2_fixedAbs( vals[11] - *curY ) );
       CF2_Fixed  lastVal = cf2_stack_getReal( opStack, index );
-
-
       if ( lastIsX )
       {
         vals[12] = vals[10] + lastVal;
@@ -399,8 +361,6 @@
     *curX = vals[12];
     *curY = vals[13];
   }
-
-
   /*
    * `error' is a shared error code used by many objects in this
    * routine.  Before the code continues from an error, it must check and
@@ -463,8 +423,6 @@
 
     CF2_HintMaskRec   hintMask;
     CF2_GlyphPathRec  glyphPath;
-
-
     /* initialize the remaining objects */
     cf2_arrstack_init( &subrStack,
                        memory,
@@ -651,8 +609,6 @@
         {
           CF2_UInt  index;
           CF2_UInt  count = cf2_stack_count( opStack );
-
-
           FT_TRACE4(( " rlineto\n" ));
 
           for ( index = 0; index < count; index += 2 )
@@ -674,15 +630,11 @@
           CF2_UInt  count = cf2_stack_count( opStack );
 
           FT_Bool  isX = op1 == cf2_cmdHLINETO;
-
-
           FT_TRACE4(( isX ? " hlineto\n" : " vlineto\n" ));
 
           for ( index = 0; index < count; index++ )
           {
             CF2_Fixed  v = cf2_stack_getReal( opStack, index );
-
-
             if ( isX )
               curX += v;
             else
@@ -702,8 +654,6 @@
         {
           CF2_UInt  count = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
-
-
           FT_TRACE4(( op1 == cf2_cmdRCURVELINE ? " rcurveline\n"
                                                : " rrcurveto\n" ));
 
@@ -715,8 +665,6 @@
             CF2_Fixed  y2 = cf2_stack_getReal( opStack, index + 3 ) + y1;
             CF2_Fixed  x3 = cf2_stack_getReal( opStack, index + 4 ) + x2;
             CF2_Fixed  y3 = cf2_stack_getReal( opStack, index + 5 ) + y2;
-
-
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
 
             curX   = x3;
@@ -740,8 +688,6 @@
       case cf2_cmdCALLSUBR:
         {
           CF2_UInt  subrIndex;
-
-
           FT_TRACE4(( op1 == cf2_cmdCALLGSUBR ? " callgsubr"
                                               : " callsubr" ));
 
@@ -810,8 +756,6 @@
       case cf2_cmdESC:
         {
           FT_Byte  op2 = (FT_Byte)cf2_buf_readByte( charstring );
-
-
           switch ( op2 )
           {
           case cf2_escDOTSECTION:
@@ -952,8 +896,6 @@
                 TRUE /* dx5 */, FALSE /* dy5 */,
                 TRUE /* dx6 */, FALSE /* dy6 */
               };
-
-
               FT_TRACE4(( " hflex\n" ));
 
               cf2_doFlex( opStack,
@@ -976,8 +918,6 @@
                 TRUE /* dx5 */, TRUE /* dy5 */,
                 TRUE /* dx6 */, TRUE /* dy6 */
               };
-
-
               FT_TRACE4(( " flex\n" ));
 
               cf2_doFlex( opStack,
@@ -1000,8 +940,6 @@
                 TRUE /* dx5 */, TRUE  /* dy5 */,
                 TRUE /* dx6 */, FALSE /* dy6 */
               };
-
-
               FT_TRACE4(( " hflex1\n" ));
 
               cf2_doFlex( opStack,
@@ -1024,8 +962,6 @@
                 TRUE  /* dx5 */, TRUE  /* dy5 */,
                 FALSE /* dx6 */, FALSE /* dy6 */
               };
-
-
               FT_TRACE4(( " flex1\n" ));
 
               cf2_doFlex( opStack,
@@ -1087,8 +1023,6 @@
           CF2_BufferRec  component;
           CF2_Fixed      dummyWidth;   /* ignore component width */
           FT_Error       error2;
-
-
           if ( doingSeac )
           {
             lastError = FT_THROW( Invalid_Glyph_Format );
@@ -1185,8 +1119,6 @@
            */
           CF2_HintMapRec   counterHintMap;
           CF2_HintMaskRec  counterMask;
-
-
           cf2_hintmap_init( &counterHintMap,
                             font,
                             &glyphPath.initialHintMap,
@@ -1248,8 +1180,6 @@
         {
           CF2_UInt  count = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
-
-
           FT_TRACE4(( " rlinecurve\n" ));
 
           while ( index + 6 < count )
@@ -1269,8 +1199,6 @@
             CF2_Fixed  y2 = cf2_stack_getReal( opStack, index + 3 ) + y1;
             CF2_Fixed  x3 = cf2_stack_getReal( opStack, index + 4 ) + x2;
             CF2_Fixed  y3 = cf2_stack_getReal( opStack, index + 5 ) + y2;
-
-
             cf2_glyphpath_curveTo( &glyphPath, x1, y1, x2, y2, x3, y3 );
 
             curX   = x3;
@@ -1286,15 +1214,11 @@
         {
           CF2_UInt  count = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
-
-
           FT_TRACE4(( " vvcurveto\n" ));
 
           while ( index < count )
           {
             CF2_Fixed  x1, y1, x2, y2, x3, y3;
-
-
             if ( ( count - index ) & 1 )
             {
               x1 = cf2_stack_getReal( opStack, index ) + curX;
@@ -1325,15 +1249,11 @@
         {
           CF2_UInt  count = cf2_stack_count( opStack );
           CF2_UInt  index = 0;
-
-
           FT_TRACE4(( " hhcurveto\n" ));
 
           while ( index < count )
           {
             CF2_Fixed  x1, y1, x2, y2, x3, y3;
-
-
             if ( ( count - index ) & 1 )
             {
               y1 = cf2_stack_getReal( opStack, index ) + curY;
@@ -1367,15 +1287,11 @@
           CF2_UInt  index = 0;
 
           FT_Bool  alternate = op1 == cf2_cmdHVCURVETO;
-
-
           FT_TRACE4(( alternate ? " hvcurveto\n" : " vhcurveto\n" ));
 
           while ( index < count )
           {
             CF2_Fixed x1, x2, x3, y1, y2, y3;
-
-
             if ( alternate )
             {
               x1 = cf2_stack_getReal( opStack, index + 0 ) + curX;
@@ -1429,8 +1345,6 @@
       case cf2_cmdEXTENDEDNMBR:
         {
           CF2_Int  v;
-
-
           v = (FT_Short)( ( cf2_buf_readByte( charstring ) << 8 ) |
                             cf2_buf_readByte( charstring )        );
 
@@ -1446,8 +1360,6 @@
           if ( /* op1 >= 32 && */ op1 <= 246 )
           {
             CF2_Int  v;
-
-
             v = op1 - 139;
 
             FT_TRACE4(( " %d", v ));
@@ -1459,8 +1371,6 @@
           else if ( /* op1 >= 247 && */ op1 <= 250 )
           {
             CF2_Int  v;
-
-
             v  = op1;
             v -= 247;
             v *= 256;
@@ -1476,8 +1386,6 @@
           else if ( /* op1 >= 251 && */ op1 <= 254 )
           {
             CF2_Int  v;
-
-
             v  = op1;
             v -= 251;
             v *= 256;
@@ -1493,8 +1401,6 @@
           else /* op1 == 255 */
           {
             CF2_Fixed  v;
-
-
             v = (CF2_Fixed)
                   ( ( (FT_UInt32)cf2_buf_readByte( charstring ) << 24 ) |
                     ( (FT_UInt32)cf2_buf_readByte( charstring ) << 16 ) |
@@ -1533,6 +1439,4 @@
 
     return;
   }
-
-
 /* END */

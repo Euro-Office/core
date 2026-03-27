@@ -39,8 +39,6 @@
 #include <CPSharedPtr.h>
 
 #include "office_elements.h"
-
-
 namespace cpdoccore { 
 namespace odf_writer {
 

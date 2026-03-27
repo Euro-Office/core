@@ -167,14 +167,10 @@ and the fact that the processing will still work if there is no local copy
 resource to reference it but always use the canonical URL. For example in a
 DocBook instance the following should not be used:</p>
 <pre>&lt;!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"<br>
-
-
                          "/usr/share/xml/docbook/4.2/docbookx.dtd"&gt;</pre>
 
 <p>But always reference the canonical URL for the DTD:</p>
 <pre>&lt;!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"<br>
-
-
                          "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"&gt;   </pre>
 
 <p>Similarly, the document instance may reference the <a

@@ -322,8 +322,6 @@ public:
 #endif
 
 #endif // !CPP_SUPPORTS_EXCEPTIONS
-
-
 inline void G_EXTHROW(const GException &ex,
    const char *msg=0,const char *file=0,int line=0, const char *func=0,
    const GException::source_type source=GException::GINTERNAL)

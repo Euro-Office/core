@@ -52,8 +52,6 @@ namespace DocFileFormat
 			
 			RELEASEARRAYOBJECTS(chars);
 			chars = reader->ReadBytes(length - cch - 1 - 4, true);
-			
-
 			RELEASEARRAYOBJECTS(chars);
 		}
 		else
@@ -71,8 +69,6 @@ namespace DocFileFormat
 
 			newObject->m_BookmarkId = reader->ReadInt32(); //-1 - comment is on a length zero text range in the Main Document
 		}
-
-
 		return static_cast<ByteStructure*>(newObject);
 	}
 	AnnotationReferenceExDescriptors::AnnotationReferenceExDescriptors(size_t count, POLE::Stream* stream, unsigned int fc, unsigned int lcb)

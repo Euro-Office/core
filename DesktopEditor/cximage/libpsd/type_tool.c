@@ -27,8 +27,6 @@
 #include "psd_system.h"
 #include "psd_stream.h"
 #include "psd_color.h"
-
-
 // Type Tool Info (Photoshop 5.0 and 5.5 only)
 psd_status psd_get_layer_type_tool(psd_context * context, psd_layer_record * layer)
 {

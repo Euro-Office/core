@@ -81,8 +81,6 @@ public:
 
     const bool loadContent(BinProcessor& proc);
     const bool saveContent(BinProcessor& proc);
-
-
     static const ElementType type = typeCELL_GROUP;
 
 //---------------------------------------------------------------------------

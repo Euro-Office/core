@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 FrtHeaderOld::FrtHeaderOld()
 {
 }
@@ -49,8 +47,6 @@ BiffStructurePtr FrtHeaderOld::clone()
 {
 	return BiffStructurePtr(new FrtHeaderOld(*this));
 }
-
-
 void FrtHeaderOld::load(CFRecord& record)
 {
 	record >> rt >> grbitFrt;

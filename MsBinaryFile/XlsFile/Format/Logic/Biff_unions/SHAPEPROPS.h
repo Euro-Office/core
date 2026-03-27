@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of SHAPEPROPS union of records 
 class SHAPEPROPS: public CompositeObject
 {

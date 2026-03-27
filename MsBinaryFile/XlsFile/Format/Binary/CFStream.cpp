@@ -49,15 +49,11 @@ CFStream::CFStream(POLE::Stream* stream)
 	}
 	stream_ = stream;
 }
-
-
 CFStream::~CFStream()
 {
 	if (stream_) delete stream_;
 	stream_ = NULL;
 }
-
-
 // Read 'size' unsigned chars from the stream
 void CFStream::read(void* buf, const size_t size)
 {
@@ -114,8 +110,6 @@ void CFStream::copy( std::wstring streamNameCreate, POLE::Storage * storageOut)
 	delete streamNew;
 }
 
-
-
 // Write 'size' unsigned chars to the stream
 void CFStream::write(const void* buf, const size_t size)
 {
@@ -139,39 +133,29 @@ void CFStream::write(const void* buf, const size_t size)
 	stream_->flush();
 	// Tipa successful
 }
-
-
 // If the current pointer is exactly at the end of the stream.
 const bool CFStream::isEOF() const
 {
 	return getStreamPointer() == getStreamSize();
 }
-
-
 // Stream pointer
 const unsigned long CFStream::getStreamPointer() const
 {
 	POLE::uint64 pos = stream_->tell();
 	return (unsigned long)pos;
 }
-
-
 void CFStream::seekFromCurForward(const size_t offset)
 {
 	POLE::uint64 pos = offset + stream_->tell();
 
 	stream_->seek(pos);
 }
-
-
 void CFStream::seekFromBegin(const unsigned long offset)
 {
 	POLE::uint64 pos = offset;
 
 	stream_->seek(pos);
 }
-
-
 void CFStream::seekToEnd()
 {
 	stream_->seek(stream_->size());
@@ -182,8 +166,6 @@ const unsigned long CFStream::getStreamSize() const
 {
 	return (unsigned long)stream_->size();
 }
-
-
 void CFStream::writeAndApplyDelayedItems(void* buf, const size_t size, const ReceiverItems& receiver_items_from_record, const SourceItems& source_items_from_record)
 {
 	appendDelayedItems(receiver_items_from_record, source_items_from_record);
@@ -193,8 +175,6 @@ void CFStream::writeAndApplyDelayedItems(void* buf, const size_t size, const Rec
 		applyDelayedItems();
 	}
 }
-
-
 // The file pointer of the start of the record will be appended to all receiver items 'data_place' fields 
 // Then all items will be appended to the common queue
 void CFStream::appendDelayedItems(const ReceiverItems& receiver_items_from_record, const SourceItems& source_items_from_record)
@@ -217,8 +197,6 @@ void CFStream::appendDelayedItems(const ReceiverItems& receiver_items_from_recor
 		source_items.push_back(copy_item);
 	}
 }
-
-
 // Try to apply
 void CFStream::applyDelayedItems()
 {
@@ -247,7 +225,5 @@ void CFStream::applyDelayedItems()
 	}
 	seekToEnd();
 }
-
-
 } // namespace XLS
 

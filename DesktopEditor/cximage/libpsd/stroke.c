@@ -34,12 +34,8 @@
 #include "psd_gradient.h"
 #include "psd_math.h"
 #include "psd_descriptor.h"
-
-
 extern psd_bool psd_draw_stroke(psd_bitmap * dst_bmp, psd_bitmap * src_bmp, psd_int stroke_size);
 extern psd_status psd_pattern_fill(psd_bitmap * dst_bmp, psd_pattern * pattern, psd_int scale, psd_int offset_x, psd_int offset_y);
-
-
 psd_static void psd_set_layer_stroke_default(psd_layer_effects_stroke * stroke)
 {
 	stroke->size = 3;

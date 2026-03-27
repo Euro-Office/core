@@ -29,6 +29,4 @@ THE SOFTWARE.
 #include <ft2build.h>
 #include "bdflib.c"
 #include "bdfdrivr.c"
-
-
 /* END */

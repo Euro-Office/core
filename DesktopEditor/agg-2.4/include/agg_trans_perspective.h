@@ -82,8 +82,6 @@ namespace agg
         // Map square (0,0,1,1) to the quadrilateral and vice versa
         bool square_to_quad(const double* q);
         bool quad_to_square(const double* q);
-
-
         //--------------------------------------------------------- Operations
         // Reset - load an identity matrix
         const trans_perspective& reset();
@@ -203,8 +201,6 @@ namespace agg
         // operations it's better to invert() the matrix and then use 
         // direct transformations. 
         void inverse_transform(double* x, double* y) const;
-
-
         //---------------------------------------------------------- Auxiliary
         const trans_perspective& from_affine(const trans_affine& a);
         double determinant() const;
@@ -222,8 +218,6 @@ namespace agg
         void   translation(double* dx, double* dy) const;
         void   scaling(double* x, double* y) const;
         void   scaling_abs(double* x, double* y) const;
-
-
 
         //--------------------------------------------------------------------
         class iterator_x
@@ -268,20 +262,6 @@ namespace agg
             return iterator_x(x, y, step, *this);
         }
     };
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
     //------------------------------------------------------------------------
     inline bool trans_perspective::square_to_quad(const double* q)
     {
@@ -723,8 +703,6 @@ namespace agg
         *x = sqrt(sx  * sx  + shx * shx);
         *y = sqrt(shy * shy + sy  * sy);
     }
-
-
 }
 
 #endif

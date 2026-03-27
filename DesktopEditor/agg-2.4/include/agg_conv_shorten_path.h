@@ -43,8 +43,6 @@ namespace agg
         const conv_shorten_path<VertexSource>& 
             operator = (const conv_shorten_path<VertexSource>&);
     };
-
-
 }
 
 #endif

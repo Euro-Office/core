@@ -309,8 +309,6 @@ enum ElementType
 
 	typeScriptEventListener,
 
-
-
     typeNumberNumberStyle,
     typeNumberDataStyle,
     typeNumberText,
@@ -361,8 +359,6 @@ enum ElementType
 	typeStyleChartProperties
 
 };
-
-
 }
 }
 

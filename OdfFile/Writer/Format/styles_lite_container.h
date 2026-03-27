@@ -49,8 +49,6 @@ public:
     void add(const int oox_style, office_element_ptr content);
  
 	office_element_ptr find_by_style_oox(const int style_oox);
-	
- 
 private:
     struct Impl;
     _CP_SCOPED_PTR(Impl) impl_;

@@ -132,8 +132,6 @@ void BuddhistCalendar::timeToFields(UDate theTime, UBool quick, UErrorCode& stat
 static UDate     gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t   gSystemDefaultCenturyStartYear   = -1;
 static icu::UInitOnce gBCInitOnce;
-
-
 UBool BuddhistCalendar::haveDefaultCentury() const
 {
     return TRUE;
@@ -172,8 +170,6 @@ int32_t BuddhistCalendar::defaultCenturyStartYear() const
     umtx_initOnce(gBCInitOnce, &initializeSystemDefaultCentury);
     return gSystemDefaultCenturyStartYear;
 }
-
-
 U_NAMESPACE_END
 
 #endif

@@ -48,8 +48,6 @@ public:
 
 	virtual void load(XLS::CFRecord& record);
     virtual void save(XLS::CFRecord& record);
-
-
     _UINT32 count  = 0;
 };
 

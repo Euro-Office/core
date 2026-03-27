@@ -38,8 +38,6 @@ namespace XLS
 NamePublish::NamePublish()
 {
 }
-
-
 NamePublish::~NamePublish()
 {
 }

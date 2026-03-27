@@ -65,8 +65,6 @@
  * @stable ICU 2.0
  */
 U_STABLE const char* U_EXPORT2 u_getDataDirectory(void);
-
-
 /** 
  * Set the ICU data directory. 
  * The data directory is where common format ICU data files (.dat files)
@@ -109,8 +107,6 @@ U_INTERNAL const char * U_EXPORT2 u_getTimeZoneFilesDirectory(UErrorCode *status
   */
 U_INTERNAL void U_EXPORT2 u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status);
 #endif  /* U_HIDE_INTERNAL_API */
-
-
 /**
  * @{
  * Filesystem file and path separator characters.

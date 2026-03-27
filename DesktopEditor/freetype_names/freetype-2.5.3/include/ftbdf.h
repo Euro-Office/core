@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTBDF_H__
 #define __FTBDF_H__
 
@@ -27,11 +25,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -48,8 +42,6 @@ FT_BEGIN_HEADER
   /*    and PCF fonts.                                                     */
   /*                                                                       */
   /*************************************************************************/
-
-
   /**********************************************************************
    *
    * @enum:
@@ -79,8 +71,6 @@ FT_BEGIN_HEADER
     BDF_PROPERTY_TYPE_CARDINAL = 3
 
   } BDF_PropertyType;
-
-
   /**********************************************************************
    *
    * @type:
@@ -91,8 +81,6 @@ FT_BEGIN_HEADER
    *    BDF/PCF property.
    */
   typedef struct BDF_PropertyRec_*  BDF_Property;
-
-
  /**********************************************************************
   *
   * @struct:
@@ -126,8 +114,6 @@ FT_BEGIN_HEADER
     } u;
 
   } BDF_PropertyRec;
-
-
  /**********************************************************************
   *
   * @function:
@@ -158,8 +144,6 @@ FT_BEGIN_HEADER
   FT_Get_BDF_Charset_ID( FT_Face       face,
                          const char*  *acharset_encoding,
                          const char*  *acharset_registry );
-
-
  /**********************************************************************
   *
   * @function:
@@ -205,6 +189,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __FTBDF_H__ */
-
-
 /* END */

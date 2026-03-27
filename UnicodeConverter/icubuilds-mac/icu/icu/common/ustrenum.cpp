@@ -309,8 +309,6 @@ ucharstrenum_unext(UEnumeration* en,
     }
     return result;
 }
-
-
 static const char* U_CALLCONV
 ucharstrenum_next(UEnumeration* en,
                   int32_t* resultLength,
@@ -391,6 +389,4 @@ uenum_openUCharStringsEnumeration(const UChar* const strings[], int32_t count,
     }
     return (UEnumeration*) result;
 }
-
-
 // end C Wrapper

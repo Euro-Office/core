@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include "sfobjs.h"
 #include "ttload.h"
@@ -33,8 +31,6 @@
 #ifdef TT_CONFIG_OPTION_BDF
 #include "ttbdf.h"
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -43,8 +39,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_sfobjs
-
-
 
   /* convert a UTF-16 name entry to ASCII */
   static FT_String*
@@ -55,8 +49,6 @@
     FT_UInt     len, code, n;
     FT_Byte*    read   = (FT_Byte*)entry->string;
     FT_Error    error;
-
-
     len = (FT_UInt)entry->stringLength / 2;
 
     if ( FT_NEW_ARRAY( string, len + 1 ) )
@@ -88,8 +80,6 @@
     FT_UInt     len, code, n;
     FT_Byte*    read   = (FT_Byte*)entry->string;
     FT_Error    error;
-
-
     len = (FT_UInt)entry->stringLength / 2;
 
     string = (wchar_t*)malloc((len + 1) * sizeof(wchar_t));
@@ -108,8 +98,6 @@
 
     return string;
   }
-
-
   /* convert an Apple Roman or symbol name entry to ASCII */
   static FT_String*
   tt_name_entry_ascii_from_other( TT_NameEntry  entry,
@@ -119,8 +107,6 @@
     FT_UInt     len, code, n;
     FT_Byte*    read   = (FT_Byte*)entry->string;
     FT_Error    error;
-
-
     len = (FT_UInt)entry->stringLength;
 
     if ( FT_NEW_ARRAY( string, len + 1 ) )
@@ -152,8 +138,6 @@
     FT_UInt     len, code, n;
     FT_Byte*    read   = (FT_Byte*)entry->string;
     FT_Error    error;
-
-
     len = (FT_UInt)entry->stringLength;
 
     string = (wchar_t*)malloc((len + 1) * sizeof(wchar_t));
@@ -181,8 +165,6 @@
 
   typedef wchar_t*  (*TT_NameEntry_ConvertFunc2)( TT_NameEntry  entry,
                                                    FT_Memory     memory );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -214,8 +196,6 @@
     TT_NameEntryRec*  rec;
 
 	TT_NameEntry_ConvertFunc2  convert;
-
-    
     found_apple = found_apple_roman;
     if ( found_apple_english >= 0 )
       found_apple = found_apple_english;
@@ -265,8 +245,6 @@
       if ( rec->string == NULL )
       {
         FT_Stream  stream = face->name_table.stream;
-
-
         if ( FT_QNEW_ARRAY ( rec->string, rec->stringLength ) ||
              FT_STREAM_SEEK( rec->stringOffset )              ||
              FT_STREAM_READ( rec->string, rec->stringLength ) )
@@ -299,8 +277,6 @@
 			face->utf16_len += 1;
 		}
 	}
-	
-
     return error;
   }
  
@@ -323,8 +299,6 @@
     FT_Bool           is_english = 0;
 
     TT_NameEntry_ConvertFunc  convert;
-
-
     FT_ASSERT( name );
 
     rec = face->name_table.names;
@@ -470,8 +444,6 @@
       if ( rec->string == NULL )
       {
         FT_Stream  stream = face->name_table.stream;
-
-
         if ( FT_QNEW_ARRAY ( rec->string, rec->stringLength ) ||
              FT_STREAM_SEEK( rec->stringOffset )              ||
              FT_STREAM_READ( rec->string, rec->stringLength ) )
@@ -490,8 +462,6 @@
     *name = result;
     return error;
   }
-
-  
   static FT_Encoding
   sfnt_find_encoding( int  platform_id,
                       int  encoding_id )
@@ -524,8 +494,6 @@
     };
 
     const TEncoding  *cur, *limit;
-
-
     cur   = tt_encodings;
     limit = cur + sizeof ( tt_encodings ) / sizeof ( tt_encodings[0] );
 
@@ -541,8 +509,6 @@
 
     return FT_ENCODING_NONE;
   }
-
-
 #define WRITE_BYTE( p, v )     \
           do                   \
           {                    \
@@ -567,22 +533,16 @@
             *(p)++ = (v) >>  0; \
                                 \
           } while ( 0 )
-
-
   static void
   sfnt_stream_close( FT_Stream  stream )
   {
     FT_Memory  memory = stream->memory;
-
-
     FT_FREE( stream->base );
 
     stream->size  = 0;
     stream->base  = 0;
     stream->close = 0;
   }
-
-
   FT_CALLBACK_DEF( int )
   compare_offsets( const void*  a,
                    const void*  b )
@@ -592,8 +552,6 @@
 
     FT_ULong  offset1 = table1->Offset;
     FT_ULong  offset2 = table2->Offset;
-
-
     if ( offset1 > offset2 )
       return 1;
     else if ( offset1 < offset2 )
@@ -601,8 +559,6 @@
     else
       return 0;
   }
-
-
   /* Replace `face->root.stream' with a stream containing the extracted */
   /* SFNT of a WOFF font.                                               */
 
@@ -649,8 +605,6 @@
         FT_FRAME_ULONG ( privLength ),
       FT_FRAME_END
     };
-
-
     FT_ASSERT( stream == face->root.stream );
     FT_ASSERT( FT_STREAM_POS() == 0 );
 
@@ -682,8 +636,6 @@
     /* Write sfnt header. */
     {
       FT_UInt  searchRange, entrySelector, rangeShift, x;
-
-
       x             = woff.num_tables;
       entrySelector = 0;
       while ( x )
@@ -766,8 +718,6 @@
     for ( nn = 0; nn < woff.num_tables; nn++ )
     {
       WOFF_Table  table = indices[nn];
-
-
       if ( table->Offset != woff_offset                         ||
            table->Offset + table->CompLength > woff.length      ||
            sfnt_offset + table->OrigLength > woff.totalSfntSize ||
@@ -834,8 +784,6 @@
     for ( nn = 0; nn < woff.num_tables; nn++ )
     {
       WOFF_Table  table = tables + nn;
-
-
       /* Write SFNT table entry. */
       WRITE_ULONG( sfnt_header, table->Tag );
       WRITE_ULONG( sfnt_header, table->CheckSum );
@@ -858,8 +806,6 @@
       {
         /* Uncompress with zlib. */
         FT_ULong  output_len = table->OrigLength;
-
-
         error = FT_Gzip_Uncompress( memory,
                                     sfnt + table->OrigOffset, &output_len,
                                     stream->cursor, table->CompLength );
@@ -910,13 +856,9 @@
 
     return error;
   }
-
-
 #undef WRITE_BYTE
 #undef WRITE_USHORT
 #undef WRITE_ULONG
-
-
   /* Fill in face->ttc_header.  If the font is not a TTC, it is */
   /* synthesized into a TTC with one offset table.              */
   static FT_Error
@@ -937,8 +879,6 @@
         FT_FRAME_LONG( count   ),  /* this is ULong in the specs */
       FT_FRAME_END
     };
-
-
     face->ttc_header.tag     = 0;
     face->ttc_header.version = 0;
     face->ttc_header.count   = 0;
@@ -981,8 +921,6 @@
     if ( tag == TTAG_ttcf )
     {
       FT_Int  n;
-
-
       FT_TRACE3(( "sfnt_open_font: file is a collection\n" ));
 
       if ( FT_STREAM_READ_FIELDS( ttc_header_fields, &face->ttc_header ) )
@@ -1026,8 +964,6 @@
 
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   sfnt_init_face( FT_Stream      stream,
                   TT_Face        face,
@@ -1038,13 +974,9 @@
     FT_Error        error;
     FT_Library      library = face->root.driver->root.library;
     SFNT_Service    sfnt;
-
-
     /* for now, parameters are unused */
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-
-
     sfnt = (SFNT_Service)face->sfnt;
     if ( !sfnt )
     {
@@ -1091,8 +1023,6 @@
 
     return error;
   }
-
-
 #define LOAD_( x )                                          \
   do                                                        \
   {                                                         \
@@ -1133,8 +1063,6 @@
     if ( error )                                                \
       goto Exit;                                                \
   } while ( 0 )
-
-
   FT_LOCAL_DEF( FT_Error )
   sfnt_load_face( FT_Stream      stream,
                   TT_Face        face,
@@ -1155,14 +1083,10 @@
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
 
     FT_UNUSED( face_index );
-
-
     /* Check parameters */
 
     {
       FT_Int  i;
-
-
       for ( i = 0; i < num_params; i++ )
       {
         if ( params[i].tag == FT_PARAM_TAG_IGNORE_PREFERRED_FAMILY )
@@ -1209,8 +1133,6 @@
      * the 'glyf' outline and advertise it as a bitmap-only font. */
     if ( is_apple_sbix )
       has_outline = FALSE;
-
-
     /* if this font doesn't contain outlines, we try to load */
     /* a `bhed' table                                        */
     if ( !has_outline && sfnt->load_bhed )
@@ -1407,8 +1329,6 @@
     {
       FT_Face  root  = &face->root;
       FT_Long  flags = root->face_flags;
-
-
       /*********************************************************************/
       /*                                                                   */
       /* Compute face flags.                                               */
@@ -1496,18 +1416,12 @@
       /*                                                                   */
 
       tt_face_build_cmaps( face );  /* ignore errors */
-
-
       /* set the encoding fields */
       {
         FT_Int  m;
-
-
         for ( m = 0; m < root->num_charmaps; m++ )
         {
           FT_CharMap  charmap = root->charmaps[m];
-
-
           charmap->encoding = sfnt_find_encoding( charmap->platform_id,
                                                   charmap->encoding_id );
 
@@ -1531,8 +1445,6 @@
        */
       {
         FT_UInt  i, count;
-
-
         count = face->sbit_num_strikes;
 
         if ( count > 0 )
@@ -1541,8 +1453,6 @@
           FT_UShort        em_size  = face->header.Units_Per_EM;
           FT_Short         avgwidth = face->os2.xAvgCharWidth;
           FT_Size_Metrics  metrics;
-
-
           if ( em_size == 0 || face->os2.version == 0xFFFFU )
           {
             avgwidth = 1;
@@ -1555,8 +1465,6 @@
           for ( i = 0; i < count; i++ )
           {
             FT_Bitmap_Size*  bsize = root->available_sizes + i;
-
-
             error = sfnt->load_strike_metrics( face, i, &metrics );
             if ( error )
               goto Exit;
@@ -1583,8 +1491,6 @@
       /* it has only empty glyphs then                       */
       if ( !FT_HAS_FIXED_SIZES( root ) && !FT_IS_SCALABLE( root ) )
         root->face_flags |= FT_FACE_FLAG_SCALABLE;
-
-
       /*********************************************************************/
       /*                                                                   */
       /*  Set up metrics.                                                  */
@@ -1598,8 +1504,6 @@
         root->bbox.xMax    = face->header.xMax;
         root->bbox.yMax    = face->header.yMax;
         root->units_per_EM = face->header.Units_Per_EM;
-
-
         /* XXX: Computing the ascender/descender/height is very different */
         /*      from what the specification tells you.  Apparently, we    */
         /*      must be careful because                                   */
@@ -1677,20 +1581,14 @@
 
     return error;
   }
-
-
 #undef LOAD_
 #undef LOADM_
 #undef GET_NAME
-
-
   FT_LOCAL_DEF( void )
   sfnt_done_face( TT_Face  face )
   {
     FT_Memory     memory;
     SFNT_Service  sfnt;
-
-
     if ( !face )
       return;
 
@@ -1726,8 +1624,6 @@
 
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
-
-
       /* simply release the 'cmap' table frame */
       FT_FRAME_RELEASE( face->cmap_table );
       face->cmap_size = 0;
@@ -1736,8 +1632,6 @@
     /* freeing the horizontal metrics */
     {
       FT_Stream  stream = FT_FACE_STREAM( face );
-
-
       FT_FRAME_RELEASE( face->horz_metrics );
       FT_FRAME_RELEASE( face->vert_metrics );
       face->horz_metrics_size = 0;
@@ -1772,6 +1666,4 @@
 
     face->sfnt = 0;
   }
-
-
 /* END */

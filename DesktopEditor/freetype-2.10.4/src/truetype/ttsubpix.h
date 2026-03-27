@@ -14,18 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef TTSUBPIX_H_
 #define TTSUBPIX_H_
 
 #include "ttobjs.h"
 #include "ttinterp.h"
-
-
 FT_BEGIN_HEADER
-
-
 #ifdef TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY
 
   /**************************************************************************
@@ -42,8 +36,6 @@ FT_BEGIN_HEADER
 #define SPH_FDEF_SPACING_2            0x0000040
 #define SPH_FDEF_TYPEMAN_STROKES      0x0000080
 #define SPH_FDEF_TYPEMAN_DIAGENDCTRL  0x0000100
-
-
   /**************************************************************************
    *
    * Tweak flags that are set for each glyph by the below rules.
@@ -69,8 +61,6 @@ FT_BEGIN_HEADER
 #define SPH_TWEAK_SKIP_OFFPIXEL_Y_MOVES           0x0020000UL
 #define SPH_TWEAK_TIMES_NEW_ROMAN_HACK            0x0040000UL
 #define SPH_TWEAK_SKIP_NONPIXEL_Y_MOVES_DELTAP    0x0080000UL
-
-
   FT_LOCAL( FT_Bool )
   sph_test_tweak( TT_Face               face,
                   const FT_String*      family,
@@ -90,8 +80,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   sph_set_tweaks( TT_Loader  loader,
                   FT_UInt    glyph_index );
-
-
   /* These macros are defined absent a method for setting them */
 #define SPH_OPTION_BITMAP_WIDTHS           FALSE
 #define SPH_OPTION_SET_SUBPIXEL            TRUE
@@ -100,11 +88,7 @@ FT_BEGIN_HEADER
 #define SPH_OPTION_SET_RASTERIZER_VERSION  38
 
 #endif /* TT_SUPPORT_SUBPIXEL_HINTING_INFINALITY */
-
-
 FT_END_HEADER
 
 #endif /* TTSUBPIX_H_ */
-
-
 /* END */

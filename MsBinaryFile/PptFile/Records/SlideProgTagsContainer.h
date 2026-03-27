@@ -50,8 +50,6 @@
 #define TN_PPT9 L"___PPT9"
 #define TN_PPT10 L"___PPT10"
 #define TN_PPT12 L"___PPT12"
-
-
 namespace PPT
 {
 class CRecordPP9SlideBinaryTagExtension : public CUnknownRecord
@@ -65,8 +63,6 @@ public:
 
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream );
 };
-
-
 class CRecordPP10SlideBinaryTagExtension : public CUnknownRecord
 {
 public:
@@ -115,11 +111,7 @@ public:
 
 public:
     CRecordRoundTripHeaderFooterDefaults12Atom m_oRoundTripHeaderFooterDefaultsAtom;
-
-
 };
-
-
 class CRecordSlideProgBinaryTagSubContainerOrAtom : public CUnknownRecord
 {
 public:
@@ -139,8 +131,6 @@ public:
     CRecordSlideProgTagsContainer ();
 
     ~CRecordSlideProgTagsContainer();
-
-
     virtual void ReadFromStream (SRecordHeader & oHeader, POLE::Stream* pStream) override;
 
     CRecordPP10SlideBinaryTagExtension* getPP10SlideBinaryTagExtension();

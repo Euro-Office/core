@@ -111,8 +111,6 @@ void usage(void)
         "          [-num_resolutions val] [-offset x y] [-num_threads val]\n");
     exit(1);
 }
-
-
 OPJ_FLOAT64 opj_clock(void)
 {
 #ifdef _WIN32
@@ -309,8 +307,6 @@ int main(int argc, char** argv)
         } else {
             opj_dwt_decode(&tcd, &tilec, tilec.numresolutions);
         }
-
-
         if (display && !irreversible) {
             if (bench_decode) {
                 printf("After FDWT\n");

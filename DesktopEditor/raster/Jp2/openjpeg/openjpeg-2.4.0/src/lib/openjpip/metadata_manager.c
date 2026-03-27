@@ -44,8 +44,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 metadatalist_param_t * gene_metadatalist(void)
 {
     metadatalist_param_t *list;

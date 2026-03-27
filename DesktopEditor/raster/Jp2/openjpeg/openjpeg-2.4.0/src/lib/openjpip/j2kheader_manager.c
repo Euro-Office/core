@@ -44,8 +44,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER */
-
-
 SIZmarker_param_t get_SIZmkrdata_from_j2kstream(Byte_t *SIZstream);
 CODmarker_param_t get_CODmkrdata_from_j2kstream(Byte_t *CODstream);
 
@@ -151,8 +149,6 @@ CODmarker_param_t get_CODmkrdata_from_j2kstream(Byte_t *CODstream)
     }
     return COD;
 }
-
-
 OPJ_BOOL modify_SIZmkrstream(SIZmarker_param_t SIZ, int difOfdecomplev,
                              Byte_t *SIZstream);
 Byte2_t modify_CODmkrstream(CODmarker_param_t COD, int numOfdecomp,

@@ -34,21 +34,13 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSFIXED_H_
 #define PSFIXED_H_
-
-
 FT_BEGIN_HEADER
-
-
   /* rasterizer integer and fixed point arithmetic must be 32-bit */
 
 #define   CF2_Fixed  CF2_F16Dot16
   typedef FT_Int32   CF2_Frac;   /* 2.30 fixed point */
-
-
 #define CF2_FIXED_MAX      ( (CF2_Fixed)0x7FFFFFFFL )
 #define CF2_FIXED_MIN      ( (CF2_Fixed)0x80000000L )
 #define CF2_FIXED_ONE      ( (CF2_Fixed)0x10000L )
@@ -73,8 +65,6 @@ FT_BEGIN_HEADER
           ( (x) - cf2_fixedFloor( x ) )
 #define cf2_fracToFixed( x )                                             \
           ( ( (x) + 0x2000 - ( (x) < 0 ) ) >> 14 )
-
-
   /* signed numeric types */
   typedef enum  CF2_NumberType_
   {
@@ -83,12 +73,6 @@ FT_BEGIN_HEADER
     CF2_NumberInt       /* 32.0  */
 
   } CF2_NumberType;
-
-
 FT_END_HEADER
-
-
 #endif /* PSFIXED_H_ */
-
-
 /* END */

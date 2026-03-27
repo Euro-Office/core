@@ -532,10 +532,6 @@ mng_retcode mngzlib_deflaterows (mng_datap  pData,
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (pData, MNG_FN_ZLIB_DEFLATEROWS, MNG_LC_START);
 #endif
-
-
-
-
 #ifdef MNG_SUPPORT_TRACE
   MNG_TRACE (pData, MNG_FN_ZLIB_DEFLATEROWS, MNG_LC_END);
 #endif

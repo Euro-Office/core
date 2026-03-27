@@ -32,12 +32,8 @@
 #include "agg_rasterizer_cells_aa.h"
 #include "agg_rasterizer_sl_clip.h"
 #include "agg_gamma_functions.h"
-
-
 namespace agg
 {
-
-
     //-----------------------------------------------------------------cell_aa
     // A pixel cell. There're no constructors defined and it was done 
     // intentionally in order to avoid extra overhead when allocating an 
@@ -64,8 +60,6 @@ namespace agg
             return (ex - x) | (ey - y);
         }
     };
-
-
     //==================================================rasterizer_scanline_aa
     // Polygon rasterizer that is used to render filled polygons with 
     // high-quality Anti-Aliasing. Internally, by default, the class uses 
@@ -288,8 +282,6 @@ namespace agg
 
         //--------------------------------------------------------------------
         bool hit_test(int tx, int ty);
-
-
     private:
         //--------------------------------------------------------------------
         // Disable copying
@@ -308,18 +300,6 @@ namespace agg
         unsigned       m_status;
         int            m_scan_y;
     };
-
-
-
-
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     template<class Clip> 
     void rasterizer_scanline_aa<Clip>::reset() 
@@ -472,8 +452,6 @@ namespace agg
         m_scan_y = m_outline.min_y();
         return true;
     }
-
-
     //------------------------------------------------------------------------
     template<class Clip> 
     AGG_INLINE bool rasterizer_scanline_aa<Clip>::navigate_scanline(int y)
@@ -500,11 +478,7 @@ namespace agg
         return sl.hit();
     }
 
-
-
 }
-
-
 
 #endif
 

@@ -59,8 +59,6 @@ namespace agg
         unsigned      m_curr_id;
         unsigned      m_curr_idx;
     };
-
-
 }
 
 #endif

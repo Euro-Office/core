@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FeatHdr record in BIFF8
 class FeatHdr: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~FeatHdr();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

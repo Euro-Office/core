@@ -38,13 +38,9 @@ namespace XLS
 DCon::DCon()
 {
 }
-
-
 DCon::~DCon()
 {
 }
-
-
 BaseObjectPtr DCon::clone()
 {
 	return BaseObjectPtr(new DCon(*this));

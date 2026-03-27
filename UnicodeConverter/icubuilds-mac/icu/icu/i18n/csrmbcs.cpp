@@ -171,8 +171,6 @@ int32_t CharsetRecog_mbcs::match_mbcs(InputText *det, const uint16_t commonChars
                 }
             }
         }
-
-
         if (badCharCount >= 2 && badCharCount*5 >= doubleByteCharCount) {
             // Bail out early if the byte data is not matching the encoding scheme.
             // break detectBlock;

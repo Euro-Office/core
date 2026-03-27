@@ -143,8 +143,6 @@ public:
     _CP_OPT(odf_types::length_or_percent)	fo_min_width_;
     _CP_OPT(odf_types::length_or_percent)	fo_min_height_;
 };
-
-
 class draw_frame : public office_element_impl<draw_frame>
 {
 public:
@@ -400,7 +398,5 @@ private:
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);
 };
 CP_REGISTER_OFFICE_ELEMENT2(draw_plugin);
-
-
 }
 }

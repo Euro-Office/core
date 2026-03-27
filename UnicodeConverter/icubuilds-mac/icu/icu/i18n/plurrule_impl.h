@@ -8,8 +8,6 @@
 *
 *******************************************************************************
 */
-
-
 #ifndef PLURRULE_IMPLE
 #define PLURRULE_IMPLE
 
@@ -95,8 +93,6 @@ static const UChar LOW_V           = ((UChar)0x0076);
 static const UChar LOW_W           = ((UChar)0x0077);
 static const UChar LOW_Y           = ((UChar)0x0079);
 static const UChar LOW_Z           = ((UChar)0x007A);
-
-
 static const int32_t PLURAL_RANGE_HIGH = 0x7fffffff;
 
 enum tokenType {
@@ -130,8 +126,6 @@ enum tokenType {
   tInteger,
   tEOF
 };
-
-
 class PluralRuleParser: public UMemory {
 public:
     PluralRuleParser();
@@ -260,8 +254,6 @@ public:
     UnicodeString   fIntegerSamples;  //   without @decimal or @integer, otherwise unprocessed.
     UBool           fDecimalSamplesUnbounded;
     UBool           fIntegerSamplesUnbounded;
-
-
     RuleChain();
     RuleChain(const RuleChain& other);
     virtual ~RuleChain();
@@ -285,8 +277,6 @@ private:
     int32_t         pos;
     UVector         fKeywordNames;
 };
-
-
 class U_I18N_API PluralAvailableLocalesEnumeration: public StringEnumeration {
   public:
     PluralAvailableLocalesEnumeration(UErrorCode &status);

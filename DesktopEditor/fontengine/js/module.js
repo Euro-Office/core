@@ -481,8 +481,6 @@ function onLoadFontsModule(window, undefined)
 		return this.codePoints[this.currentCodePoint + nPos];
 	};
 	const CODEPOINTS_CALCULATOR = new CCodePointsCalculator(CODEPOINTS, CLUSTER);
-
-
 	AscFonts.HB_StartString = function()
 	{
 		if (!STRING_POINTER)

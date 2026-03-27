@@ -41,8 +41,6 @@ namespace agg
         m_poly.xn(3) =   0.0;
         m_poly.yn(3) = 100.0;
     }
-
-
     //------------------------------------------------------------------------
     void bezier_ctrl_impl::curve(double x1, double y1, 
                                  double x2, double y2, 
@@ -128,8 +126,6 @@ namespace agg
             break;
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned bezier_ctrl_impl::vertex(double* x, double* y)
     {
@@ -158,49 +154,33 @@ namespace agg
         return cmd;
     }
 
-
-
     //------------------------------------------------------------------------
     bool bezier_ctrl_impl::in_rect(double x, double y) const
     {
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool bezier_ctrl_impl::on_mouse_button_down(double x, double y)
     {
         inverse_transform_xy(&x, &y);
         return m_poly.on_mouse_button_down(x, y);
     }
-
-
     //------------------------------------------------------------------------
     bool bezier_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
         inverse_transform_xy(&x, &y);
         return m_poly.on_mouse_move(x, y, button_flag);
     }
-
-
     //------------------------------------------------------------------------
     bool bezier_ctrl_impl::on_mouse_button_up(double x, double y)
     {
         return m_poly.on_mouse_button_up(x, y);
     }
-
-
     //------------------------------------------------------------------------
     bool bezier_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {
         return m_poly.on_arrow_keys(left, right, down, up);
     }
-
-
-
-
-
-
     //------------------------------------------------------------------------
     curve3_ctrl_impl::curve3_ctrl_impl() :
         ctrl(0,0,1,1,false),
@@ -216,8 +196,6 @@ namespace agg
         m_poly.xn(2) =  50.0;
         m_poly.yn(2) = 100.0;
     }
-
-
     //------------------------------------------------------------------------
     void curve3_ctrl_impl::curve(double x1, double y1, 
                                  double x2, double y2, 
@@ -288,8 +266,6 @@ namespace agg
             break;
         }
     }
-
-
     //------------------------------------------------------------------------
     unsigned curve3_ctrl_impl::vertex(double* x, double* y)
     {
@@ -317,54 +293,32 @@ namespace agg
         return cmd;
     }
 
-
-
     //------------------------------------------------------------------------
     bool curve3_ctrl_impl::in_rect(double x, double y) const
     {
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool curve3_ctrl_impl::on_mouse_button_down(double x, double y)
     {
         inverse_transform_xy(&x, &y);
         return m_poly.on_mouse_button_down(x, y);
     }
-
-
     //------------------------------------------------------------------------
     bool curve3_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
         inverse_transform_xy(&x, &y);
         return m_poly.on_mouse_move(x, y, button_flag);
     }
-
-
     //------------------------------------------------------------------------
     bool curve3_ctrl_impl::on_mouse_button_up(double x, double y)
     {
         return m_poly.on_mouse_button_up(x, y);
     }
-
-
     //------------------------------------------------------------------------
     bool curve3_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {
         return m_poly.on_arrow_keys(left, right, down, up);
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }
 

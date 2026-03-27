@@ -32,16 +32,12 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordExObjListAtom : public CUnknownRecord
 {
 public:
     _INT32 m_nObjectIdSeed = -1;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

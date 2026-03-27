@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FilterMode record in BIFF8
 class FilterMode: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~FilterMode();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeFilterMode;

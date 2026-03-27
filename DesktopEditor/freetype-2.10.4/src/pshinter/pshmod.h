@@ -14,25 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PSHMOD_H_
 #define PSHMOD_H_
-
-
 #include <freetype/ftmodapi.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_DECLARE_MODULE( pshinter_module_class )
-
-
 FT_END_HEADER
-
-
 #endif /* PSHMOD_H_ */
-
-
 /* END */

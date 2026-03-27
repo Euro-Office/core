@@ -98,8 +98,6 @@ namespace XLSB
         }
 		else
 			m_bBrtFRTEnd = false;
-
-
         return m_BrtFRTBegin && m_bBrtBeginConditionalFormattings && !m_arCONDITIONALFORMATTING14.empty() && m_bBrtEndConditionalFormattings;
     }
 

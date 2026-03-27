@@ -5,8 +5,6 @@
 *   Corporation and others.  All Rights Reserved.
 *
 ******************************************************************************/
-
-
 /*----------------------------------------------------------------------------
  *
  *       Memory mapped file wrappers for use by the ICU Data Implementation
@@ -155,8 +153,6 @@
         }
     }
 
-
-
 #elif MAP_IMPLEMENTATION==MAP_POSIX
     U_CFUNC UBool
     uprv_mapFile(UDataMemory *pData, const char *path) {
@@ -210,8 +206,6 @@
             pData->mapAddr=NULL;
         }
     }
-
-
 
 #elif MAP_IMPLEMENTATION==MAP_STDIO
     /* copy of the filestrm.c/T_FileStream_size() implementation */
@@ -278,8 +272,6 @@
             pData->pHeader = NULL;
         }
     }
-
-
 #elif MAP_IMPLEMENTATION==MAP_390DLL
     /*  390 specific Library Loading.
      *  This is the only platform left that dynamically loads an ICU Data Library.
@@ -353,8 +345,6 @@
         *(pathBuffer+pathLen) = 0;
         return pathBuffer+pathLen;
     }
-    
-
 #   define DATA_TYPE "dat"
 
     U_CFUNC UBool uprv_mapFile(UDataMemory *pData, const char *path) {

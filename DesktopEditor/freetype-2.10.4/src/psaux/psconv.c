@@ -14,15 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/psaux.h>
 #include <freetype/internal/ftdebug.h>
 
 #include "psconv.h"
 #include "psauxerr.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -31,8 +27,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  psconv
-
-
   /* The following array is used by various functions to quickly convert */
   /* digits (both decimal and non-decimal) into numbers.                 */
 
@@ -77,8 +71,6 @@
 #define OP  <
 
 #endif /* 'A' == 193 */
-
-
   FT_LOCAL_DEF( FT_Long )
   PS_Conv_Strtol( FT_Byte**  cursor,
                   FT_Byte*   limit,
@@ -92,8 +84,6 @@
 
     FT_Long   num_limit;
     FT_Char   c_limit;
-
-
     if ( p >= limit )
       goto Bad;
 
@@ -122,8 +112,6 @@
     for ( ; p < limit; p++ )
     {
       FT_Char  c;
-
-
       if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
         break;
 
@@ -155,8 +143,6 @@
     FT_TRACE4(( "!!!END OF DATA:!!!" ));
     return 0;
   }
-
-
   FT_LOCAL_DEF( FT_Long )
   PS_Conv_ToInt( FT_Byte**  cursor,
                  FT_Byte*   limit )
@@ -166,8 +152,6 @@
     FT_Byte*  curp;
 
     FT_Long   num;
-
-
     curp = p;
     num  = PS_Conv_Strtol( &p, limit, 10 );
 
@@ -189,8 +173,6 @@
 
     return num;
   }
-
-
   FT_LOCAL_DEF( FT_Fixed )
   PS_Conv_ToFixed( FT_Byte**  cursor,
                    FT_Byte*   limit,
@@ -206,8 +188,6 @@
     FT_Bool   sign           = 0;
     FT_Bool   have_overflow  = 0;
     FT_Bool   have_underflow = 0;
-
-
     if ( p >= limit )
       goto Bad;
 
@@ -247,8 +227,6 @@
       for ( ; p < limit; p++ )
       {
         FT_Char  c;
-
-
         if ( IS_PS_SPACE( *p ) || *p OP 0x80 )
           break;
 
@@ -274,8 +252,6 @@
     if ( p + 1 < limit && ( *p == 'e' || *p == 'E' ) )
     {
       FT_Long  exponent;
-
-
       p++;
 
       curp     = p;
@@ -362,8 +338,6 @@
     FT_TRACE4(( "!!!UNDERFLOW:!!!" ));
     return 0;
   }
-
-
 #if 0
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_StringDecode( FT_Byte**  cursor,
@@ -373,13 +347,9 @@
   {
     FT_Byte*  p;
     FT_UInt   r = 0;
-
-
     for ( p = *cursor; r < n && p < limit; p++ )
     {
       FT_Byte  b;
-
-
       if ( *p != '\\' )
       {
         buffer[r++] = *p;
@@ -458,8 +428,6 @@
     return r;
   }
 #endif /* 0 */
-
-
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_ASCIIHexDecode( FT_Byte**  cursor,
                           FT_Byte*   limit,
@@ -470,8 +438,6 @@
     FT_UInt   r   = 0;
     FT_UInt   w   = 0;
     FT_UInt   pad = 0x01;
-
-
     n *= 2;
 
 #if 1
@@ -488,8 +454,6 @@
     for ( ; r < n; r++ )
     {
       FT_UInt  c = p[r];
-
-
       if ( IS_PS_SPACE( c ) )
         continue;
 
@@ -520,8 +484,6 @@
     for ( r = 0; r < n; r++ )
     {
       FT_Char  c;
-
-
       if ( IS_PS_SPACE( *p ) )
         continue;
 
@@ -551,8 +513,6 @@
 #endif /* 0 */
 
   }
-
-
   FT_LOCAL_DEF( FT_UInt )
   PS_Conv_EexecDecode( FT_Byte**   cursor,
                        FT_Byte*    limit,
@@ -563,8 +523,6 @@
     FT_Byte*  p;
     FT_UInt   r;
     FT_UInt   s = *seed;
-
-
 #if 1
 
     p = *cursor;
@@ -579,8 +537,6 @@
     {
       FT_UInt  val = p[r];
       FT_UInt  b   = ( val ^ ( s >> 8 ) );
-
-
       s         = ( (val + s)*52845U + 22719 ) & 0xFFFFU;
       buffer[r] = (FT_Byte) b;
     }
@@ -593,8 +549,6 @@
     for ( r = 0, p = *cursor; r < n && p < limit; r++, p++ )
     {
       FT_Byte  b = (FT_Byte)( *p ^ ( s >> 8 ) );
-
-
       s = (FT_UShort)( ( *p + s ) * 52845U + 22719 );
       *buffer++ = b;
     }
@@ -605,6 +559,4 @@
 
     return r;
   }
-
-
 /* END */

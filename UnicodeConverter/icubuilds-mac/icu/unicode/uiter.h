@@ -68,8 +68,6 @@ enum {
      */
     UITER_UNKNOWN_INDEX=-2
 };
-
-
 /**
  * Constant for UCharIterator getState() indicating an error or
  * an unknown state.
@@ -305,8 +303,6 @@ UCharIteratorGetState(const UCharIterator *iter);
  */
 typedef void U_CALLCONV
 UCharIteratorSetState(UCharIterator *iter, uint32_t state, UErrorCode *pErrorCode);
-
-
 /**
  * C API for code unit iteration.
  * This can be used as a C wrapper around

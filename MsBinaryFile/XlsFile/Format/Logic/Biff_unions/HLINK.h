@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of HLINK union of records 
 class HLINK: public CompositeObject
 {

@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "otvalid.h"
 #include "otvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -28,8 +24,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  otvgsub
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -46,8 +40,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "SingleSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -62,8 +54,6 @@
         FT_Bytes  Coverage;
         FT_Int    DeltaGlyphID;
         FT_Long   idx;
-
-
         OTV_LIMIT_CHECK( 4 );
         Coverage     = table + FT_NEXT_USHORT( p );
         DeltaGlyphID = FT_NEXT_SHORT( p );
@@ -83,8 +73,6 @@
     case 2:     /* SingleSubstFormat2 */
       {
         FT_UInt  Coverage, GlyphCount;
-
-
         OTV_LIMIT_CHECK( 4 );
         Coverage   = FT_NEXT_USHORT( p );
         GlyphCount = FT_NEXT_USHORT( p );
@@ -110,8 +98,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -128,8 +114,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "MultipleSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -151,8 +135,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -169,8 +151,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "AlternateSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -192,8 +172,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -212,8 +190,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   LigatureGlyph, CompCount;
-
-
     OTV_ENTER;
 
     OTV_LIMIT_CHECK( 4 );
@@ -236,16 +212,12 @@
 
     OTV_EXIT;
   }
-
-
   static void
   otv_LigatureSubst_validate( FT_Bytes       table,
                               OTV_Validator  otvalid )
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "LigatureSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -266,8 +238,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -284,8 +254,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "ContextSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -325,8 +293,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -343,8 +309,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "ChainContextSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -386,8 +350,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -404,8 +366,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   SubstFormat;
-
-
     OTV_NAME_ENTER( "ExtensionSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -420,8 +380,6 @@
         FT_UInt            ExtensionLookupType;
         FT_ULong           ExtensionOffset;
         OTV_Validate_Func  validate;
-
-
         OTV_LIMIT_CHECK( 6 );
         ExtensionLookupType = FT_NEXT_USHORT( p );
         ExtensionOffset     = FT_NEXT_ULONG( p );
@@ -442,8 +400,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -461,8 +417,6 @@
     FT_Bytes  p = table, Coverage;
     FT_UInt   SubstFormat;
     FT_UInt   BacktrackGlyphCount, LookaheadGlyphCount, GlyphCount;
-
-
     OTV_NAME_ENTER( "ReverseChainSingleSubst" );
 
     OTV_LIMIT_CHECK( 2 );
@@ -517,8 +471,6 @@
 
     OTV_EXIT;
   }
-
-
   static const OTV_Validate_Func  otv_gsub_validate_funcs[8] =
   {
     otv_SingleSubst_validate,
@@ -530,8 +482,6 @@
     otv_ExtensionSubst_validate,
     otv_ReverseChainSingleSubst_validate
   };
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -557,8 +507,6 @@
     FT_UInt           ScriptList, FeatureList, LookupList;
 
     OTV_OPTIONAL_TABLE32( featureVariations );
-
-
     otvalid->root = ftvalid;
 
     FT_TRACE3(( "validating GSUB table\n" ));
@@ -612,6 +560,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

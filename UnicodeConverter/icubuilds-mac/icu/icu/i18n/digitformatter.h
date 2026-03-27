@@ -107,8 +107,6 @@ class U_I18N_API SciFormatterOptions : public UMemory {
      */
     DigitFormatterIntOptions fExponent;
 };
-
-
 /**
  * Does fixed point formatting.
  *
@@ -279,8 +277,6 @@ int32_t countChar32ForExponent(
         const DigitFormatterIntOptions &options) const;
 
 };
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */
 #endif  // __DIGITFORMATTER_H__

@@ -39,24 +39,16 @@
 
 namespace XLS
 {
-
-
 SORTANDFILTER::SORTANDFILTER()
 {
 }
-
-
 SORTANDFILTER::~SORTANDFILTER()
 {
 }
-
-
 BaseObjectPtr SORTANDFILTER::clone()
 {
 	return BaseObjectPtr(new SORTANDFILTER(*this));
 }
-
-
 // SORTANDFILTER = [Sort] [SORTDATA12] [FilterMode] [DropDownObjIds] [AUTOFILTER]
 const bool SORTANDFILTER::loadContent(BinProcessor& proc)
 {

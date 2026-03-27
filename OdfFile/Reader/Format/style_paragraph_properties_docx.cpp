@@ -47,8 +47,6 @@ namespace cpdoccore {
 
 namespace odf_reader {
 
-
-
 namespace {
 
 std::wstring process_border(const border_style & borderStyle,
@@ -660,7 +658,5 @@ void style_paragraph_properties::docx_convert(oox::docx_conversion_context & Con
 {
     content_.docx_convert(Context);
 }
-
-
 }
 }

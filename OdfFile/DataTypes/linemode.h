@@ -35,8 +35,6 @@
 #include <string>
 #include <iosfwd>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class line_mode

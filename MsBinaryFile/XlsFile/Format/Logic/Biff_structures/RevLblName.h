@@ -51,8 +51,6 @@ public:
 
 	void load(CFRecord& record) override;
 	void save(CFRecord& record) override;
-
-
 	const std::wstring toString() const;
 
 	std::wstring  st;

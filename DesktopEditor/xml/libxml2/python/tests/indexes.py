@@ -40,8 +40,6 @@ class callback:
                 print("element start at wrong index: %d expecting %d\n" % (
                    ctxt.byteConsumed(), expect))
                 sys.exit(1)
-            
-
     def endElement(self, tag):
         global ctxt
         if tag == "bar1":

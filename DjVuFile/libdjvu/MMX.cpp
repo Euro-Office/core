@@ -66,20 +66,14 @@
 #include "MMX.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // ----------------------------------------
 // PRINTING MMX REGISTERS (Debug)
-
-
 #if defined(MMX) && defined(DEBUG)
 extern "C" void
 mmx_show()
@@ -109,8 +103,6 @@ mmx_show()
   MMXar( movq,  &mmregs[14], mm7);
 }
 #endif
-
-
 
 // ----------------------------------------
 // MMX ENABLE/DISABLE
@@ -204,8 +196,6 @@ MMXControl::enable_mmx()
   mmxflag = !!(cpuflags & 0x800000);
   return mmxflag;
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

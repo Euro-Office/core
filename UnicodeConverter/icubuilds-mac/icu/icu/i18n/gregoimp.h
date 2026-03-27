@@ -95,8 +95,6 @@ class ClockMath {
 #define kEpochStartAsJulianDay  2440588 // January 1, 1970 (Gregorian)
 
 #define kEpochYear              1970
-
-
 #define kEarliestViableMillis  -185331720384000000.0  // minimum representable by julian day  -1e17
 
 #define kLatestViableMillis     185753453990400000.0  // max representable by julian day      +1e17

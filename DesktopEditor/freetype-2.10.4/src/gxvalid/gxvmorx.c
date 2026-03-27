@@ -23,11 +23,7 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvmorx.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -36,8 +32,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvmorx
-
-
   static void
   gxv_morx_subtables_validate( FT_Bytes       table,
                                FT_Bytes       limit,
@@ -58,8 +52,6 @@
     };
 
     FT_UShort  i;
-
-
     GXV_NAME_ENTER( "subtables in a chain" );
 
     for ( i = 0; i < nSubtables; i++ )
@@ -73,8 +65,6 @@
 #endif
       FT_ULong  type;
       FT_ULong  rest;
-
-
       GXV_LIMIT_CHECK( 4 + 4 + 4 );
       length          = FT_NEXT_ULONG( p );
       coverage        = FT_NEXT_ULONG( p );
@@ -111,8 +101,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_morx_chain_validate( FT_Bytes       table,
                            FT_Bytes       limit,
@@ -125,8 +113,6 @@
     FT_ULong  chainLength;
     FT_ULong  nFeatureFlags;
     FT_ULong  nSubtables;
-
-
     GXV_NAME_ENTER( "morx chain header" );
 
     GXV_LIMIT_CHECK( 4 + 4 + 4 + 4 );
@@ -155,8 +141,6 @@
 
     GXV_EXIT;
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_morx_validate( FT_Bytes      table,
                      FT_Face       face,
@@ -169,8 +153,6 @@
     FT_ULong          version;
     FT_ULong          nChains;
     FT_ULong          i;
-
-
     gxvalid->root = ftvalid;
     gxvalid->face = face;
 
@@ -194,6 +176,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

@@ -19,22 +19,16 @@
 
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svpfr.h>
-
-
   /* check the format */
   static FT_Service_PfrMetrics
   ft_pfr_check( FT_Face  face )
   {
     FT_Service_PfrMetrics  service = NULL;
-
-
     if ( face )
       FT_FACE_LOOKUP_SERVICE( face, service, PFR_METRICS );
 
     return service;
   }
-
-
   /* documentation is in ftpfr.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -46,8 +40,6 @@
   {
     FT_Error               error = FT_Err_Ok;
     FT_Service_PfrMetrics  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -63,8 +55,6 @@
     else
     {
       FT_Fixed  x_scale, y_scale;
-
-
       /* this is not a PFR font */
       if ( aoutline_resolution )
         *aoutline_resolution = face->units_per_EM;
@@ -90,8 +80,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftpfr.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -102,8 +90,6 @@
   {
     FT_Error               error;
     FT_Service_PfrMetrics  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -119,8 +105,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftpfr.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -130,8 +114,6 @@
   {
     FT_Error               error;
     FT_Service_PfrMetrics  service;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -147,6 +129,4 @@
 
     return error;
   }
-
-
 /* END */

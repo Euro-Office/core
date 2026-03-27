@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "BuildAtom.h"
 #include "ChartBuildAtom.h"

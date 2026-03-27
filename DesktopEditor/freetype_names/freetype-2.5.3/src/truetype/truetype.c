@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include <ft2build.h>
@@ -33,6 +31,4 @@
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 #include "ttgxvar.c"    /* gx distortable font */
 #endif
-
-
 /* END */

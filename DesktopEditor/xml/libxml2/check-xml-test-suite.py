@@ -358,8 +358,6 @@ def runTest(test):
 	log.write("\n")
 
     return 0
-	    
-
 def runTestCases(case):
     profile = case.prop('PROFILE')
     if profile != None and \

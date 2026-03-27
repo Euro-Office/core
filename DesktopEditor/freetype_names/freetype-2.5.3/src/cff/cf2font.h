@@ -34,23 +34,13 @@
 /*  and you accept them fully.                                             */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CF2FONT_H__
 #define __CF2FONT_H__
-
-
 #include "cf2ft.h"
 #include "cf2blues.h"
-
-
 FT_BEGIN_HEADER
-
-
 #define CF2_OPERAND_STACK_SIZE  48
 #define CF2_MAX_SUBR            10 /* maximum subroutine nesting */
-
-
   /* typedef is in `cf2glue.h' */
   struct  CF2_FontRec_
   {
@@ -98,19 +88,11 @@ FT_BEGIN_HEADER
 
     CF2_BluesRec  blues;                         /* computed zone data */
   };
-
-
   FT_LOCAL( FT_Error )
   cf2_getGlyphOutline( CF2_Font           font,
                        CF2_Buffer         charstring,
                        const CF2_Matrix*  transform,
                        CF2_F16Dot16*      glyphWidth );
-
-
 FT_END_HEADER
-
-
 #endif /* __CF2FONT_H__ */
-
-
 /* END */

@@ -72,8 +72,6 @@
 #if HAS_WCTYPE
 #include <wctype.h>
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -409,8 +407,6 @@ lt_XMLContents::write(ByteStream &bs) const
     bs.writestring(raw);
   } 
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

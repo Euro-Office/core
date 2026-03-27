@@ -90,8 +90,6 @@ struct boxdef {
 		j22boxtype             ins;                      /* contained in box...     */
 
 };
-
-
 /* jp2 family box signatures */
 #define FILE_SIGN           ""
 #define JP_SIGN             "jP\040\040"
@@ -322,8 +320,6 @@ struct boxdef j22box[] =
 /* ins */	ANY_BOX}
 
 };
-
-
 /* macro functions */
 /* From little endian to big endian, 2 and 4 bytes */
 #define	BYTE_SWAP2(X)	((X & 0x00FF) << 8) | ((X & 0xFF00) >> 8)
@@ -377,8 +373,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 						 wxTreeItemId parentid, int level, char *scansign, unsigned long int *scanpoint)
 {
 	switch ((j22boxtype) boxtype) {
-
-
 	/* JPEG 2000 Signature box */
 	case (JP_BOX): {
 
@@ -395,8 +389,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 
 		};
 		break;
-
-
 	/* JPEG 2000 codestream box */
 	case (JP2C_BOX): {
 
@@ -414,10 +406,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 
 		};
 		break;
-
-
-
-
 
 	/* File Type box */
 	case (FTYP_BOX): {
@@ -455,8 +443,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 			
 		};
 		break;
-
-
 
 	/* JP2 Header box */
 	case (IHDR_BOX): {
@@ -502,8 +488,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 			
 		};
 		break;
-
-
 
 	/* Colour Specification box */
 	case (COLR_BOX): {
@@ -580,16 +564,8 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 					m_tree->TreeCtrlIcon_File, m_tree->TreeCtrlIcon_File + 1,
 					new OPJMarkerData(wxT("INFO"))
 					);
-
-
 		};
 		break;
-
-
-
-
-		
-
 	/* Movie Header Box */
 	case (MVHD_BOX): {
 
@@ -687,8 +663,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 				);
 		};
 		break;
-
-
 			/* Sample Description box */
 	case (STSD_BOX): {
 
@@ -705,8 +679,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 			jpeg2000parse(fileid, filepoint + 8, filelimit, parentid, level + 1, scansign, scanpoint);
 		};
 		break;
-
-
 			/* Sample Size box */
 	case (STSZ_BOX): {
 
@@ -756,8 +728,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 
 		};
 		break;
-
-
 			/* Video Media Header box */
 	case (VMHD_BOX): {
 
@@ -811,8 +781,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 				);
 		};
 		break;
-
-
 
 			/* MJP2 Sample Description box */
 	case (MJP2_BOX): {
@@ -970,8 +938,6 @@ int OPJParseThread::box_handler_function(int boxtype, wxFile *fileid, wxFileOffs
 
 	return (0);
 }
-
-
 void OPJParseThread::ParseJP2File(wxFile *fileid, wxFileOffset filepoint, wxFileOffset filelimit, wxTreeItemId parentid)
 {
 	unsigned long int scanpoint;

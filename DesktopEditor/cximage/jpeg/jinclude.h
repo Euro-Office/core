@@ -13,8 +13,6 @@
  * NOTE: this file is NOT intended to be included by applications using the
  * JPEG library.  Most applications need only include jpeglib.h.
  */
-
-
 /* Include auto-config file to find out which system include files we need. */
 
 #include "jconfig.h"		/* auto configuration options */

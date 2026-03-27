@@ -8,8 +8,6 @@
 from sources import *
 from utils import *
 import string, re
-
-
 # this regular expression is used to detect code sequences. these
 # are simply code fragments embedded in '{' and '}' like in:
 #
@@ -27,21 +25,15 @@ import string, re
 #
 re_code_start = re.compile( r"(\s*){\s*$" )
 re_code_end   = re.compile( r"(\s*)}\s*$" )
-
-
 # this regular expression is used to isolate identifiers from
 # other text
 #
 re_identifier = re.compile( r'((?:\w|-)*)' )
-
-
 # we collect macros ending in `_H'; while outputting the object data, we use
 # this info together with the object's file location to emit the appropriate
 # header file macro and name before the object itself
 #
 re_header_macro = re.compile( r'^#define\s{1,}(\w{1,}_H)\s{1,}<(.*)>' )
-
-
 #############################################################################
 #
 # The DocCode class is used to store source code lines.
@@ -74,8 +66,6 @@ class  DocCode:
         for l in self.lines:
             result.append( " " * margin + l )
         return result
-
-
 
 #############################################################################
 #
@@ -121,8 +111,6 @@ class  DocPara:
             result.append( " " * margin + cur )
 
         return result
-
-
 
 #############################################################################
 #
@@ -221,13 +209,9 @@ class  DocField:
 
         return result
 
-
-
 # this regular expression is used to detect field definitions
 #
 re_field = re.compile( r"\s*(\w*|\w(\w|\.)*\w)\s*::" )
-
-
 
 class  DocMarkup:
 
@@ -274,8 +258,6 @@ class  DocMarkup:
             f.dump( "  " )
         print " " * margin + "</" + self.tag + ">"
 
-
-
 class  DocChapter:
 
     def  __init__( self, block ):
@@ -289,8 +271,6 @@ class  DocChapter:
             self.name  = "Other"
             self.title = string.split( "Miscellaneous" )
             self.order = []
-
-
 
 class  DocSection:
 
@@ -326,8 +306,6 @@ class  DocSection:
     def  reorder( self ):
         self.block_names = sort_order_list( self.block_names, self.order )
 
-
-
 class  ContentProcessor:
 
     def  __init__( self ):
@@ -353,8 +331,6 @@ class  ContentProcessor:
     def  add_chapter( self, block ):
         chapter = DocChapter( block )
         self.chapters.append( chapter )
-
-
     def  reset( self ):
         """reset the content processor for a new block"""
         self.markups      = []
@@ -461,8 +437,6 @@ class  ContentProcessor:
             chap = DocChapter( None )
             chap.sections = others
             self.chapters.append( chap )
-
-
 
 class  DocBlock:
 

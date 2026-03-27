@@ -58,8 +58,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*---------------------------------------------------------------------*
  *                             Box geometry                            *
  *---------------------------------------------------------------------*/
@@ -90,8 +88,6 @@ boxContains(BOX     *box1,
         *presult = 0;
     return 0;
 }
-                
-
 
 /*!
  *  boxIntersects()
@@ -128,8 +124,6 @@ l_int32  left1, left2, top1, top2, right1, right2, bot1, bot2;
         *presult = 0;
     return 0;
 }
-                
-
 /*!
  *  boxaContainedInBox()
  *
@@ -169,8 +163,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxaIntersectsBox()
  *
@@ -211,8 +203,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxaClipToBox()
  *
@@ -252,8 +242,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxaCombineOverlaps()
  *
@@ -335,8 +323,6 @@ BOXA    *boxat1, *boxat2;
     boxaDestroy(&boxat1);
     return boxat2;
 }
-
-
 /*!
  *  boxOverlapRegion()
  *
@@ -375,8 +361,6 @@ l_int32  x, y, w, h, left1, left2, top1, top2, right1, right2, bot1, bot2;
     h = L_MIN(bot1 - y + 1, bot2 - y + 1);
     return boxCreate(x, y, w, h);
 }
-
-
 /*!
  *  boxBoundingRegion()
  *
@@ -407,8 +391,6 @@ l_int32  left, top, right1, right2, right, bot1, bot2, bot;
     bot = L_MAX(bot1, bot2);
     return boxCreate(left, top, right - left + 1, bot - top + 1);
 }
-
-
 /*!
  *  boxOverlapFraction()
  *
@@ -447,8 +429,6 @@ BOX     *boxo;
     boxDestroy(&boxo);
     return 0;
 }
-
-
 /*!
  *  boxContainsPt()
  *
@@ -477,8 +457,6 @@ l_int32  bx, by, bw, bh;
         *pcontains = 1;
     return 0;
 }
-
-
 /*!
  *  boxaGetNearestToPt()
  *
@@ -523,8 +501,6 @@ BOX       *box;
 
     return boxaGetBox(boxa, minindex, L_COPY);
 }
-
-
 /*!
  *  boxGetCenter()
  *
@@ -552,8 +528,6 @@ l_int32  x, y, w, h;
 
     return 0;
 }
-
-
 /*!
  *  boxIntersectByLine()
  *
@@ -652,8 +626,6 @@ PTA       *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  boxClipToRectangle()
  *
@@ -694,8 +666,6 @@ BOX  *boxd;
         boxd->h = hi - boxd->y;
     return boxd;
 }
-
-
 /*!
  *  boxRelocateOneSide()
  *
@@ -741,8 +711,6 @@ l_int32  x, y, w, h;
         boxSetGeometry(boxd, -1, -1, -1, loc - y + 1);
     return boxd;
 }
-
-
 /*!
  *  boxAdjustSides()
  *
@@ -798,8 +766,6 @@ l_int32  x, y, w, h, xl, xr, yt, yb, wnew, hnew;
         return boxd;
     }
 }
-
-
 /*!
  *  boxEqual()
  *
@@ -825,8 +791,6 @@ boxEqual(BOX      *box1,
         *psame = 1;
     return 0;
 }
-
-
 /*!
  *  boxaEqual()
  *
@@ -913,8 +877,6 @@ NUMA     *na;
     FREE(countarray);
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                          Boxa Combination                            *
  *----------------------------------------------------------------------*/
@@ -969,8 +931,6 @@ BOX     *box;
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                        Other Boxa functions                         *
  *---------------------------------------------------------------------*/
@@ -1026,8 +986,6 @@ l_int32  i, n, x, y, w, h, xmax, ymax, xmin, ymin;
 
     return 0;
 }
-
-
 /*!
  *  boxaGetCoverage()
  *
@@ -1099,8 +1057,6 @@ PIX     *pixt;
     *pfract = (l_float32)sum / (l_float32)(wc * hc);
     return 0;
 }
-
-
 /*!
  *  boxaSizeRange()
  *
@@ -1147,8 +1103,6 @@ l_int32  minw, minh, maxw, maxh, i, n, w, h;
 
     return 0;
 }
-
-
 /*!
  *  boxaLocationRange()
  *
@@ -1195,8 +1149,6 @@ l_int32  minx, miny, maxx, maxy, i, n, x, y;
 
     return 0;
 }
-
-
 /*!
  *  boxaSelectBySize()
  *
@@ -1252,8 +1204,6 @@ NUMA  *na;
     numaDestroy(&na);
     return boxad;
 }
-
-
 /*!
  *  boxaMakeSizeIndicator()
  *
@@ -1339,8 +1289,6 @@ NUMA    *na;
 
     return na;
 }
-
-
 /*!
  *  boxaSelectWithIndicator()
  *
@@ -1392,8 +1340,6 @@ BOXA    *boxad;
 
     return boxad;
 }
-
-
 /*!
  *  boxaPermutePseudorandom()
  *
@@ -1424,8 +1370,6 @@ BOXA    *boxad;
     numaDestroy(&na);
     return boxad;
 }
-
-
 /*!
  *  boxaPermuteRandom()
  *
@@ -1471,8 +1415,6 @@ l_int32  i, n, index;
 
     return boxad;
 }
-
-
 /*!
  *  boxaSwapBoxes()
  *
@@ -1505,8 +1447,6 @@ BOX     *box;
     boxa->box[j] = box;
     return 0;
 }
-
-
 /*!
  *  boxaConvertToPta()
  *
@@ -1550,8 +1490,6 @@ PTA     *pta;
 
     return pta;
 }
-
-
 /*!
  *  ptaConvertToBoxa()
  *
@@ -1605,5 +1543,3 @@ BOXA    *boxa;
 
     return boxa;
 }
-
-

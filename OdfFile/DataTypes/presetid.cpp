@@ -264,8 +264,6 @@ namespace cpdoccore { namespace odf_types {
 		else if (tmp == L"libo-motionpath-curve")			return preset_id::type::libo_motionpath_curve;
 		else if (tmp == L"libo-motionpath-polygon")			return preset_id::type::libo_motionpath_polygon;
 		else if (tmp == L"libo-motionpath-freeform-line")	return preset_id::type::libo_motionpath_freeform_line;
-		
-
 		return preset_id::type::none;
 	}
 

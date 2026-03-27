@@ -38,13 +38,9 @@ namespace XLS
 MDXStr::MDXStr()
 {
 }
-
-
 MDXStr::~MDXStr()
 {
 }
-
-
 BaseObjectPtr MDXStr::clone()
 {
 	return BaseObjectPtr(new MDXStr(*this));

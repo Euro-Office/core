@@ -124,8 +124,6 @@ int gzfilebuf::setcompressionstrategy( int comp_strategy ) {
   return gzsetparams(file, -2, comp_strategy);
 
 }
-
-
 streampos gzfilebuf::seekoff( streamoff off, ios::seek_dir dir, int which ) {
 
   return streampos(EOF);

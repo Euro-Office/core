@@ -23,8 +23,6 @@
 #define UNDERSCORE_CHAR ((UChar)0x005f)
 #define AT_SIGN_CHAR    ((UChar)64)
 #define PERIOD_CHAR     ((UChar)46)
-
-
 U_NAMESPACE_BEGIN
 
 LocaleKeyFactory::LocaleKeyFactory(int32_t coverage)
@@ -146,5 +144,3 @@ U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
 #endif
-
-

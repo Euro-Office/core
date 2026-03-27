@@ -110,8 +110,6 @@ class U_COMMON_API FilteredBreakIteratorBuilder : public UObject {
    */
   FilteredBreakIteratorBuilder();
 };
-
-
 U_NAMESPACE_END
 
 #endif  /* U_HIDE_DRAFT_API */

@@ -34,31 +34,21 @@
 #include "PICF.h"
 #include "../Biff_records/GelFrame.h"
 #include "../Biff_records/Continue.h"
-
-
 #include "../../../Converter/XlsConverter.h"
 #include "../../../Converter/xlsx_conversion_context.h"
 
 namespace XLS
 {
-
-
 GELFRAME::GELFRAME()
 {
 }
-
-
 GELFRAME::~GELFRAME()
 {
 }
-
-
 BaseObjectPtr GELFRAME::clone()
 {
 	return BaseObjectPtr(new GELFRAME(*this));
 }
-
-
 // GELFRAME = 1*2GelFrame *Continue [PICF]
 const bool GELFRAME::loadContent(BinProcessor& proc)
 {

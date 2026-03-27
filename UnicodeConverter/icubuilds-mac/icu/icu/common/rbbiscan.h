@@ -6,8 +6,6 @@
 //
 //  This file contains declarations for class RBBIRuleScanner
 //
-
-
 #ifndef RBBISCAN_H
 #define RBBISCAN_H
 
@@ -23,14 +21,10 @@
 #include "rbbinode.h"
 //#include "rbbitblb.h"
 
-
-
 U_NAMESPACE_BEGIN
 
 class   RBBIRuleBuilder;
 class   RBBISymbolTable;
-
-
 //--------------------------------------------------------------------------------
 //
 //  class RBBIRuleScanner does the lowest level, character-at-a-time
@@ -57,8 +51,6 @@ public:
     };
 
     RBBIRuleScanner(RBBIRuleBuilder  *rb);
-
-
     virtual    ~RBBIRuleScanner();
 
     void        nextChar(RBBIRuleChar &c);          // Get the next char from the input stream.
@@ -91,8 +83,6 @@ private:
 #endif
     RBBINode    *pushNewNode(RBBINode::NodeType  t);
     void        scanSet();
-
-
     RBBIRuleBuilder               *fRB;              // The rule builder that we are part of.
 
     int32_t                       fScanIndex;        // Index of current character being processed
@@ -120,8 +110,6 @@ private:
     RBBINode                      *fNodeStack[kStackSize]; // Node stack, holds nodes created
                                                            //  during the parse of a rule
     int32_t                        fNodeStackPtr;
-
-
     UBool                          fReverseRule;     // True if the rule currently being scanned
                                                      //  is a reverse direction rule (if it
                                                      //  starts with a '!')

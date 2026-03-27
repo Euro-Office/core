@@ -122,8 +122,6 @@ bool tryGetInt(std::vector<wchar_t> &data, _INT32 &value)
         return false;
     }
 }
-
-
 enum class DateElemTypes
 {
     none = 0,
@@ -139,8 +137,6 @@ enum class ParsingElem
     date,
     time
 };
-
-
 void SetDateElem(tm &result, _INT32 value, const std::wstring datePattern,  bool &day, bool &month, bool &year, bool &Berror)
 {
 	_INT16 Partscount = day + month + year;
@@ -481,8 +477,6 @@ double DateReader::getStandartTime(tm date)
     double result = ((date.tm_sec + (60 * date.tm_min) + (3600*date.tm_hour))/ 86400.0);
     return result;
 }
-
-
 // Функция для определения високосного года
 bool isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);

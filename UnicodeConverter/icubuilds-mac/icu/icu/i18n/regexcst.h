@@ -19,8 +19,6 @@ U_NAMESPACE_BEGIN
     static const uint8_t kRuleSet_ascii_letter = 128;
     static const uint8_t kRuleSet_digit_char = 129;
     static const uint8_t kRuleSet_rule_char = 130;
-
-
 enum Regex_PatternParseAction {
     doSetBackslash_V,
     doSetBackslash_h,

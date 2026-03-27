@@ -79,8 +79,6 @@ private:
     _CP_PTR(Impl) impl_;
 };
 
-
-
 typedef _CP_PTR(xlsx_drawing_context_handle) xlsx_drawing_context_handle_ptr;
 
 class xlsx_drawing_context

@@ -162,8 +162,6 @@ struct static_tree_desc_s {int dummy;}; /* for buggy compilers */
  *    previous key instead of complete recalculation each time.
  */
 #define UPDATE_HASH(s,h,c) (h = (((h)<<s->hash_shift) ^ (c)) & s->hash_mask)
-
-
 /* ===========================================================================
  * Insert string str in the dictionary and set match_head to the previous head
  * of the hash chain (the most recent string with same hash key). Return
@@ -937,8 +935,6 @@ int ZEXPORT deflateCopy (dest, source)
     deflate_state *ds;
     deflate_state *ss;
     ushf *overlay;
-
-
     if (source == Z_NULL || dest == Z_NULL || source->state == Z_NULL) {
         return Z_STREAM_ERROR;
     }

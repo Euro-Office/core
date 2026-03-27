@@ -1,8 +1,6 @@
 #include "CFontTable.h"
 #include "CFont.h"
 #include "../../../../DesktopEditor/common/File.h"
-
-
 CFontTable::CFontTable()
     : CElement(L"fonts", L"", L"w", false)
 {

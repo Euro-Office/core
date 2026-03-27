@@ -86,8 +86,6 @@ namespace PdfWriter
 
 		return nCharIndex;
 	}
-
-
 	class CXref;
 	class CStream;
 	class CFontFileTrueType;

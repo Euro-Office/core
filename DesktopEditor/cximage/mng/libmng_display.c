@@ -1423,14 +1423,10 @@ mng_retcode mng_display_image (mng_datap  pData,
                       pData->bIsOpaque      = (mng_bool)(!pImage->pImgbuf->bHasTRNS);
                       break;
                     }
-
-
           case  3 : { pData->fRetrieverow   = (mng_fptr)mng_retrieve_idx8;
                       pData->bIsOpaque      = (mng_bool)(!pImage->pImgbuf->bHasTRNS);
                       break;
                     }
-
-
           case  4 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                       if (pImage->pImgbuf->iBitdepth > 8)
@@ -1442,8 +1438,6 @@ mng_retcode mng_display_image (mng_datap  pData,
                       pData->bIsOpaque      = MNG_FALSE;
                       break;
                     }
-
-
           case  6 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                       if (pImage->pImgbuf->iBitdepth > 8)
@@ -1479,8 +1473,6 @@ mng_retcode mng_display_image (mng_datap  pData,
                       pData->bIsOpaque      = MNG_TRUE;
                       break;
                     }
-
-
           case 12 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                       if (pImage->pImgbuf->iBitdepth > 8)
@@ -1492,8 +1484,6 @@ mng_retcode mng_display_image (mng_datap  pData,
                       pData->bIsOpaque      = MNG_FALSE;
                       break;
                     }
-
-
           case 14 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                       if (pImage->pImgbuf->iBitdepth > 8)
@@ -3237,8 +3227,6 @@ mng_retcode mng_process_display_iend (mng_datap pData)
   if (!pData->bTimerset)               /* can we continue ? */
   {
     pData->iBreakpoint = 0;            /* clear this flag now ! */
-
-
 #ifdef MNG_INCLUDE_MPNG_PROPOSAL
     if (pData->eImagetype == mng_it_mpng)
     {
@@ -6726,14 +6714,10 @@ mng_retcode mng_process_display_past (mng_datap  pData)
                         pData->bIsOpaque      = (mng_bool)(!pBuf->bHasTRNS);
                         break;
                       }
-
-
             case  3 : { pData->fRetrieverow   = (mng_fptr)mng_retrieve_idx8;
                         pData->bIsOpaque      = (mng_bool)(!pBuf->bHasTRNS);
                         break;
                       }
-
-
             case  4 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                         if (bSourceRGBA16)
@@ -6745,8 +6729,6 @@ mng_retcode mng_process_display_past (mng_datap  pData)
                         pData->bIsOpaque      = MNG_FALSE;
                         break;
                       }
-
-
             case  6 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                          if (bSourceRGBA16)
@@ -6782,8 +6764,6 @@ mng_retcode mng_process_display_past (mng_datap  pData)
                         pData->bIsOpaque      = MNG_TRUE;
                         break;
                       }
-
-
             case 12 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                          if (bSourceRGBA16)
@@ -6795,8 +6775,6 @@ mng_retcode mng_process_display_past (mng_datap  pData)
                         pData->bIsOpaque      = MNG_FALSE;
                         break;
                       }
-
-
             case 14 : {
 #ifndef MNG_NO_16BIT_SUPPORT
                          if (bSourceRGBA16)
@@ -7131,5 +7109,3 @@ mng_retcode mng_process_display_past2 (mng_datap pData)
 /* ************************************************************************** */
 /* * end of file                                                            * */
 /* ************************************************************************** */
-
-

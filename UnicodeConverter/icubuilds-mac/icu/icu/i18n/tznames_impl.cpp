@@ -27,8 +27,6 @@
 #include "ucln_in.h"
 #include "uvector.h"
 #include "olsontz.h"
-
-
 U_NAMESPACE_BEGIN
 
 #define ZID_KEY_MAX  128
@@ -170,8 +168,6 @@ int32_t TextTrieMap::isEmpty() const {
     //   thread safety complications.
     return fIsEmpty;
 }
-
-
 //  We defer actually building the TextTrieMap node structure until the first time a
 //     search is performed.  put() simply saves the parameters in case we do
 //     eventually need to build it.
@@ -476,8 +472,6 @@ const UChar *ZNStringPool::get(const UChar *s, UErrorCode &status) {
     uhash_put(fHash, destString, destString, &status);
     return destString;
 }        
-
-
 //
 //  ZNStringPool::adopt()    Put a string into the hash, but do not copy the string data
 //                           into the pool's storage.  Used for strings from resource bundles,
@@ -497,8 +491,6 @@ const UChar *ZNStringPool::adopt(const UChar * s, UErrorCode &status) {
     }
     return s;
 }
-
-    
 const UChar *ZNStringPool::get(const UnicodeString &s, UErrorCode &status) {
     UnicodeString &nonConstStr = const_cast<UnicodeString &>(s);
     return this->get(nonConstStr.getTerminatedBuffer(), status);
@@ -515,8 +507,6 @@ void ZNStringPool::freeze() {
     uhash_close(fHash);
     fHash = NULL;
 }
-
-
 // ---------------------------------------------------
 // ZNames - names common for time zone and meta zone
 // ---------------------------------------------------
@@ -790,8 +780,6 @@ typedef struct ZMatchInfo {
     int32_t             matchLength;
 } ZMatchInfo;
 U_CDECL_END
-
-
 // ---------------------------------------------------
 // ZNameSearchHandler
 // ---------------------------------------------------
@@ -1095,8 +1083,6 @@ TimeZoneNamesImpl::_getReferenceZoneID(const UnicodeString& mzID, const char* re
     ZoneMeta::getZoneIdByMetazone(mzID, UnicodeString(region, -1, US_INV), tzID);
     return tzID;
 }
-
-
 UnicodeString&
 TimeZoneNamesImpl::getMetaZoneDisplayName(const UnicodeString& mzID,
                                           UTimeZoneNameType type,
@@ -1171,8 +1157,6 @@ TimeZoneNamesImpl::getExemplarLocationName(const UnicodeString& tzID, UnicodeStr
 
     return name;
 }
-
-
 // Merge the MZ_PREFIX and mzId
 static void mergeTimeZoneKey(const UnicodeString& mzID, char* result) {
     if (mzID.isEmpty()) {
@@ -1606,8 +1590,6 @@ typedef struct TZDBNameInfo {
     int32_t             nRegions;
 } TZDBNameInfo;
 U_CDECL_END
-
-
 class TZDBNameSearchHandler : public TextTrieMapSearchResultHandler {
 public:
     TZDBNameSearchHandler(uint32_t types, const char* region);
@@ -2012,8 +1994,6 @@ TZDBTimeZoneNames::getMetaZoneNames(const UnicodeString& mzID, UErrorCode& statu
 }
 
 U_NAMESPACE_END
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

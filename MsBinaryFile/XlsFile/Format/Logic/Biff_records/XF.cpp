@@ -399,8 +399,6 @@ void XF::readFields(CFRecord& record)
 void XF::writeFields(CFRecord& record)
 {
 	global_info = record.getGlobalWorkbookInfo();
-
-
     /*if (global_info->Version == 0x0400)
 	{
 		//stub
@@ -746,8 +744,6 @@ int XF::serialize(std::wostream & stream)
 				
 				if (fAtrProt)
 					CP_XML_ATTR(L"applyProtection", fAtrProt);
-
-
 				if ((alc >= 0 && alc < 8) || (alcV >= 0 && alcV < 5) || (fShrinkToFit) || 
 					(cIndent > 0) || (trot > 0 && trot < 0xff) || (fWrap))
 				{
@@ -775,7 +771,5 @@ int XF::serialize(std::wostream & stream)
 	 }
 	return 0;
 }
-
-
 } // namespace XLS
 

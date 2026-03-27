@@ -104,8 +104,6 @@ std::string RoundTripExtractor::removeXMLAnnouncement(const std::string &strXMLF
 {
     std::string strClearXML;
     auto iter = strXMLFile.find("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>");
-
-
     return strClearXML;
 }
 

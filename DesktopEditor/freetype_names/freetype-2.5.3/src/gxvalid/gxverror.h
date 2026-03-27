@@ -23,8 +23,6 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is used to define the OpenType validation module error      */
@@ -46,6 +44,4 @@
 #include FT_ERRORS_H
 
 #endif /* __GXVERROR_H__ */
-
-
 /* END */

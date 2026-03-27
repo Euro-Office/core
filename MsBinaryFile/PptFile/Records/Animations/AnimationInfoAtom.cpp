@@ -46,14 +46,10 @@ struct SFlagsAH {
     USHORT getB()const {return (m_fA_H & 0xC) >> 2;}
     USHORT getA()const {return (m_fA_H & 0x3) >> 0;}
 
-
-
     void ReadFromStream(POLE::Stream* pStream) {
         m_fA_H = StreamUtils::ReadWORD(pStream);
     }
 };
-
-
 CRecordAnimationInfoAtom::CRecordAnimationInfoAtom()
 {
 
@@ -96,8 +92,6 @@ void CRecordAnimationInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
     m_AnimAfterEffect           = StreamUtils::ReadBYTE(pStream);
     m_TextBuildSubEffect        = StreamUtils::ReadBYTE(pStream);
     m_OleVerb                   = StreamUtils::ReadBYTE(pStream);
-
-
     StreamUtils::StreamSkip(2, pStream);
     m_OldSoundIdRef = m_SoundIdRef;
 

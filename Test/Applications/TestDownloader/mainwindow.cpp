@@ -75,5 +75,3 @@ void MainWindow::on_buttonCancel_clicked()
 
     qDebug() << "Stop finished";
 }
-
-

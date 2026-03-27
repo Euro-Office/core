@@ -106,5 +106,3 @@ typedef boost::shared_ptr<BaseObject> BaseObjectPtr;
 typedef std::list<BaseObjectPtr> BaseObjectPtrList;
 
 } // namespace XLS
-
-

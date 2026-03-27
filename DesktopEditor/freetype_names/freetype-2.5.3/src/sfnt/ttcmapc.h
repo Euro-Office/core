@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifdef TT_CONFIG_CMAP_FORMAT_0
   TTCMAPCITEM( tt_cmap0_class_rec )
 #endif
@@ -51,6 +49,4 @@
 #ifdef TT_CONFIG_CMAP_FORMAT_14
   TTCMAPCITEM( tt_cmap14_class_rec )
 #endif
-
-
   /* END */

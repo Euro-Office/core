@@ -32,8 +32,6 @@ static void  fhmt_1_2(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32
 static void  fhmt_1_3(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  fhmt_1_4(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
 static void  fhmt_1_5(l_uint32 *, l_int32, l_int32, l_int32, l_uint32 *, l_int32);
-
-
 /*---------------------------------------------------------------------*
  *                           Fast hmt dispatcher                       *
  *---------------------------------------------------------------------*/
@@ -76,8 +74,6 @@ fhmtgen_low_1(l_uint32  *datad,
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *                 Low-level auto-generated static routines                 *
  *--------------------------------------------------------------------------*/

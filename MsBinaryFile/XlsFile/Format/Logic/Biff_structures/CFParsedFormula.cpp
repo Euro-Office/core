@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 CFParsedFormula::CFParsedFormula(const CellRef& cell_base_ref) :	ParsedFormula(cell_base_ref)
 {
 }
@@ -120,7 +118,5 @@ void CFParsedFormula::save(CFRecord& record)
 	}
 	
 }
-
-
 } // namespace XLS
 

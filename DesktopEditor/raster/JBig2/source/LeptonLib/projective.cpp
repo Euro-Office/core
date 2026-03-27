@@ -102,8 +102,6 @@
 #include "allheaders.h"
 
 extern l_float32  AlphaMaskBorderVals[2];
-
-
 /*------------------------------------------------------------n
  *            Sampled projective image transformation          *
  *-------------------------------------------------------------*/
@@ -155,8 +153,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixProjectiveSampled()
  *
@@ -249,8 +245,6 @@ PIXCMAP    *cmap;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *            Interpolated projective image transformation             *
  *---------------------------------------------------------------------*/
@@ -321,8 +315,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixProjective()
  *
@@ -380,8 +372,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixProjectivePtaColor()
  *
@@ -422,8 +412,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixProjectiveColor()
  *
@@ -474,8 +462,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixProjectivePtaGray()
  *
@@ -516,8 +502,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 
 /*!
  *  pixProjectiveGray()
@@ -567,8 +551,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *   Projective transform including alpha (blend) component and gamma xform  *
  *---------------------------------------------------------------------------*/
@@ -686,8 +668,6 @@ PTA     *ptad2, *ptas2;
     ptaDestroy(&ptas2);
     return pixd;
 }
-
-
 /*!
  *  pixProjectivePtaGammaXform()
  *
@@ -738,8 +718,6 @@ PIX  *pixg, *pixd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 
 /*-------------------------------------------------------------*
  *                Projective coordinate transformation         *
@@ -881,8 +859,6 @@ l_float32  *a[8];  /* 8x8 matrix A  */
 
     return 0;
 }
-
-
 /*!
  *  projectiveXformSampledPt()
  *
@@ -914,8 +890,6 @@ l_float32  factor;
     *pyp = (l_int32)(factor * (vc[3] * x + vc[4] * y + vc[5]) + 0.5);
     return 0;
 }
-
-
 /*!
  *  projectiveXformPt()
  *
@@ -947,5 +921,3 @@ l_float32  factor;
     *pyp = factor * (vc[3] * x + vc[4] * y + vc[5]);
     return 0;
 }
-
-

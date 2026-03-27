@@ -25,14 +25,10 @@
  *           void     rasteropHipLow()
  *           void     shiftDataHorizontalLow()
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 #define COMBINE_PARTIAL(d, s, m)     ( ((d) & ~(m)) | ((s) & (m)) )
 
 static const l_uint32 lmask32[] = {0x0,
@@ -54,8 +50,6 @@ static const l_uint32 rmask32[] = {0x0,
     0x001fffff, 0x003fffff, 0x007fffff, 0x00ffffff,
     0x01ffffff, 0x03ffffff, 0x07ffffff, 0x0fffffff,
     0x1fffffff, 0x3fffffff, 0x7fffffff, 0xffffffff};
-
-
 /*--------------------------------------------------------------------*
  *                 Low-level Vertical In-place Rasterop               *
  *--------------------------------------------------------------------*/
@@ -112,8 +106,6 @@ l_int32    dirwpl;     /* directed wpl (-wpl * sign(shift)) */
 l_int32    absshift;   /* absolute value of shift; for use in iterator */
 l_int32    vlimit;     /* vertical limit value for iterations */
 l_int32    i, j;
-
-
    /*--------------------------------------------------------*
     *            Scale horizontal dimensions by depth        *
     *--------------------------------------------------------*/
@@ -122,8 +114,6 @@ l_int32    i, j;
         x *= depth;
         w *= depth;
     }
-
-
    /*--------------------------------------------------------*
     *                   Clip horizontally                    *
     *--------------------------------------------------------*/
@@ -226,8 +216,6 @@ l_int32    i, j;
     dirwpl = (shift >= 0) ? -wpl : wpl;
     absshift = L_ABS(shift);
     vlimit = L_MAX(0, pixh - absshift);
-
-
 /*--------------------------------------------------------*
  *            Now we're ready to do the ops               *
  *--------------------------------------------------------*/
@@ -282,8 +270,6 @@ l_int32    i, j;
     return;
 }
 
-
-
 /*--------------------------------------------------------------------*
  *                 Low-level Horizontal In-place Rasterop             *
  *--------------------------------------------------------------------*/
@@ -335,8 +321,6 @@ l_uint32  *line;
         shiftDataHorizontalLow(line, wpl, line, wpl, shift * depth);
     }
 }
-
-
 /*!
  *  shiftDataHorizontalLow()
  *

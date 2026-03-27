@@ -38,13 +38,9 @@ namespace XLS
 ExtString::ExtString()
 {
 }
-
-
 ExtString::~ExtString()
 {
 }
-
-
 BaseObjectPtr ExtString::clone()
 {
 	return BaseObjectPtr(new ExtString(*this));

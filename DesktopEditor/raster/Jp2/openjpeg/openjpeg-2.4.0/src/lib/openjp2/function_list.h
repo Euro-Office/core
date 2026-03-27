@@ -119,8 +119,6 @@ OPJ_UINT32 opj_procedure_list_get_nb_procedures(opj_procedure_list_t *
  */
 opj_procedure* opj_procedure_list_get_first_procedure(opj_procedure_list_t *
         p_validation_list);
-
-
 /**
  * Clears the list of validation procedures.
  *

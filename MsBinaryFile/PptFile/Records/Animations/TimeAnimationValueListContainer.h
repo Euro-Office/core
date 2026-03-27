@@ -30,13 +30,9 @@
  *
  */
 #pragma once
-
-
 #include "../../Reader/Records.h"
 #include "TimeAnimationValueListEntry.h"
 #include <memory>
-
-
 namespace PPT
 {
 class CRecordTimeAnimationValueListContainer : public CUnknownRecord

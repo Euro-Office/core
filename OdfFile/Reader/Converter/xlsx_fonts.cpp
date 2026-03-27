@@ -47,16 +47,12 @@ class xlsx_fonts::Impl
 {
 public:
 	Impl(odf_reader::fonts_container & fonts) : fonts_container(fonts){}
-
-
     size_t size() const;
     size_t fontId(	const odf_reader::text_format_properties_ptr &textProp,
 					const odf_reader::paragraph_format_properties			*parProp,
 					const odf_reader::style_table_cell_properties_attlist	*cellProp, bool default_set);
 
 	void serialize(std::wostream & _Wostream) const;
-
-    
 private:
     typedef boost::unordered_set<xlsx_font, boost::hash<xlsx_font> > fonts_array_t;
     fonts_array_t fonts_;
@@ -143,8 +139,6 @@ int xlsx_fonts::Impl::getIndex(const odf_reader::text_format_properties_ptr text
 */
 
 size_t xlsx_fonts::Impl::size() const { return fonts_.size(); }
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 xlsx_fonts::xlsx_fonts(odf_reader::fonts_container & fonts): impl_(new xlsx_fonts::Impl(fonts))

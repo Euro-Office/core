@@ -107,8 +107,6 @@ channel_param_t * gene_channel(query_param_t query_param,
 
     return channel;
 }
-
-
 void set_channel_variable_param(query_param_t query_param,
                                 channel_param_t *channel)
 {
@@ -116,8 +114,6 @@ void set_channel_variable_param(query_param_t query_param,
     (void)query_param;
     (void)channel;
 }
-
-
 void delete_channel(channel_param_t **channel, channellist_param_t *channellist)
 {
     channel_param_t *ptr;

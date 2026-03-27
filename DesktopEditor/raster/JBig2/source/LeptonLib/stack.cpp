@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  stack.c
  *
@@ -49,8 +47,6 @@
 #include "allheaders.h"
 
 static const l_int32  INITIAL_PTR_ARRAYSIZE = 20;
-
-
 /*---------------------------------------------------------------------*
  *                          Create/Destroy                             *
  *---------------------------------------------------------------------*/
@@ -81,8 +77,6 @@ L_STACK  *lstack;
     
     return lstack;
 }
-
-
 /*!
  *  lstackDestroy()
  *
@@ -134,8 +128,6 @@ L_STACK  *lstack;
     *plstack = NULL;
 }
 
-
-
 /*---------------------------------------------------------------------*
  *                               Accessors                             *
  *---------------------------------------------------------------------*/
@@ -167,8 +159,6 @@ lstackAdd(L_STACK  *lstack,
 
     return 0;
 }
-
-
 /*!
  *  lstackRemove()
  *
@@ -194,8 +184,6 @@ void  *item;
         
     return item;
 }
-
-
 /*!
  *  lstackExtendArray()
  *
@@ -218,8 +206,6 @@ lstackExtendArray(L_STACK  *lstack)
     lstack->nalloc = 2 * lstack->nalloc;
     return 0;
 }
-
-
 /*!
  *  lstackGetCount()
  *
@@ -236,8 +222,6 @@ lstackGetCount(L_STACK  *lstack)
 
     return lstack->n;
 }
-
-
 
 /*---------------------------------------------------------------------*
  *                            Debug output                             *

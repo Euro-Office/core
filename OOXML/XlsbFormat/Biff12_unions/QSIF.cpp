@@ -90,7 +90,5 @@ namespace XLSB
 
 		return true;
 	}
-
-
 } // namespace XLSB
 

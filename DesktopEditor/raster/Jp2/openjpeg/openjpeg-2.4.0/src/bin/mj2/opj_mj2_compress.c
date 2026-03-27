@@ -43,8 +43,6 @@
 Size of memory first allocated for MOOV box
 */
 #define TEMP_BUF 10000
-
-
 /* -------------------------------------------------------------------------- */
 
 /**
@@ -65,14 +63,10 @@ static void warning_callback(const char *msg, void *client_data)
 }
 
 /* -------------------------------------------------------------------------- */
-
-
 static void help_display()
 {
     fprintf(stdout, "HELP for frames_to_mj2\n----\n\n");
     fprintf(stdout, "- the -h option displays this help information on screen\n\n");
-
-
     fprintf(stdout, "List of parameters for the MJ2 encoder:\n");
     fprintf(stdout, "\n");
     fprintf(stdout, "REMARKS:\n");
@@ -230,10 +224,6 @@ static OPJ_PROG_ORDER give_progression(const char progression[5])
         }
     }
 }
-
-
-
-
 int main(int argc, char **argv)
 {
     mj2_cparameters_t mj2_parameters;   /* MJ2 compression parameters */

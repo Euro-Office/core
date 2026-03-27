@@ -201,8 +201,6 @@ static UBool U_CALLCONV usprep_cleanup(void){
     return (SHARED_DATA_HASHTABLE == NULL);
 }
 U_CDECL_END
-
-
 /** Initializes the cache for resources */
 static void U_CALLCONV
 createCache(UErrorCode &status) {
@@ -247,8 +245,6 @@ loadData(UStringPrepProfile* profile,
     pb=(const uint8_t *)(p+_SPREP_INDEX_TOP);
     utrie_unserialize(&_sprepTrie, pb, p[_SPREP_INDEX_TRIE_SIZE], errorCode);
     _sprepTrie.getFoldingOffset=getSPrepFoldingOffset;
-
-
     if(U_FAILURE(*errorCode)) {
         udata_close(dataMemory);
         return FALSE;
@@ -293,8 +289,6 @@ loadData(UStringPrepProfile* profile,
     if(dataMemory!=NULL) {
         udata_close(dataMemory); /* NULL if it was set correctly */
     }
-
-
     return profile->isDataLoaded;
 }
 
@@ -462,8 +456,6 @@ uprv_syntaxError(const UChar* rules,
     //null terminate the buffer
     parseError->postContext[limit-start]= 0;
 }
-
-
 static inline UStringPrepType
 getValues(uint16_t trieWord, int16_t& value, UBool& isIndex){
 
@@ -618,8 +610,6 @@ usprep_map(  const UStringPrepProfile* profile,
        the requirements below, an "RandALCat character" is a character that
        has Unicode bidirectional categories "R" or "AL"; an "LCat character"
        is a character that has Unicode bidirectional category "L".  Note
-
-
        that there are many characters which fall in neither of the above
        definitions; Latin digits (<U+0030> through <U+0039>) are examples of
        this because they have bidirectional category "EN".
@@ -767,8 +757,6 @@ usprep_prepare(   const UStringPrepProfile* profile,
     }
     return s2.extract(dest, destCapacity, *status);
 }
-
-
 /* data swapping ------------------------------------------------------------ */
 
 U_CAPI int32_t U_EXPORT2

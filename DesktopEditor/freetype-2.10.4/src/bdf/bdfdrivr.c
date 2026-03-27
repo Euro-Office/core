@@ -23,8 +23,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/ftobjs.h>
@@ -38,8 +36,6 @@ THE SOFTWARE.
 #include "bdfdrivr.h"
 
 #include "bdferror.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -48,8 +44,6 @@ THE SOFTWARE.
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  bdfdriver
-
-
   typedef struct  BDF_CMapRec_
   {
     FT_CMapRec        cmap;
@@ -57,8 +51,6 @@ THE SOFTWARE.
     BDF_encoding_el*  encodings;
 
   } BDF_CMapRec, *BDF_CMap;
-
-
   FT_CALLBACK_DEF( FT_Error )
   bdf_cmap_init( FT_CMap     bdfcmap,
                  FT_Pointer  init_data )
@@ -66,26 +58,18 @@ THE SOFTWARE.
     BDF_CMap  cmap = (BDF_CMap)bdfcmap;
     BDF_Face  face = (BDF_Face)FT_CMAP_FACE( cmap );
     FT_UNUSED( init_data );
-
-
     cmap->num_encodings = face->bdffont->glyphs_used;
     cmap->encodings     = face->en_table;
 
     return FT_Err_Ok;
   }
-
-
   FT_CALLBACK_DEF( void )
   bdf_cmap_done( FT_CMap  bdfcmap )
   {
     BDF_CMap  cmap = (BDF_CMap)bdfcmap;
-
-
     cmap->encodings     = NULL;
     cmap->num_encodings = 0;
   }
-
-
   FT_CALLBACK_DEF( FT_UInt )
   bdf_cmap_char_index( FT_CMap    bdfcmap,
                        FT_UInt32  charcode )
@@ -94,8 +78,6 @@ THE SOFTWARE.
     BDF_encoding_el*  encodings = cmap->encodings;
     FT_ULong          min, max, mid; /* num_encodings */
     FT_UShort         result    = 0; /* encodings->glyph */
-
-
     min = 0;
     max = cmap->num_encodings;
     mid = ( min + max ) >> 1;
@@ -103,8 +85,6 @@ THE SOFTWARE.
     while ( min < max )
     {
       FT_ULong  code;
-
-
       if ( mid >= max || mid < min )
         mid = ( min + max ) >> 1;
 
@@ -129,8 +109,6 @@ THE SOFTWARE.
 
     return result;
   }
-
-
   FT_CALLBACK_DEF( FT_UInt )
   bdf_cmap_char_next( FT_CMap     bdfcmap,
                       FT_UInt32  *acharcode )
@@ -140,8 +118,6 @@ THE SOFTWARE.
     FT_ULong          min, max, mid; /* num_encodings */
     FT_UShort         result   = 0;  /* encodings->glyph */
     FT_ULong          charcode = *acharcode + 1;
-
-
     min = 0;
     max = cmap->num_encodings;
     mid = ( min + max ) >> 1;
@@ -149,8 +125,6 @@ THE SOFTWARE.
     while ( min < max )
     {
       FT_ULong  code; /* same as BDF_encoding_el.enc */
-
-
       if ( mid >= max || mid < min )
         mid = ( min + max ) >> 1;
 
@@ -192,8 +166,6 @@ THE SOFTWARE.
       *acharcode = (FT_UInt32)charcode;
     return result;
   }
-
-
   static
   const FT_CMap_ClassRec  bdf_cmap_class =
   {
@@ -205,8 +177,6 @@ THE SOFTWARE.
 
     NULL, NULL, NULL, NULL, NULL
   };
-
-
   static FT_Error
   bdf_interpret_style( BDF_Face  bdf )
   {
@@ -218,8 +188,6 @@ THE SOFTWARE.
 
     const char*   strings[4] = { NULL, NULL, NULL, NULL };
     size_t        lengths[4], nn, len;
-
-
     face->style_flags = 0;
 
     prop = bdf_get_font_property( font, "SLANT" );
@@ -274,8 +242,6 @@ THE SOFTWARE.
 
     {
       char*  s;
-
-
       if ( FT_ALLOC( face->style_name, len ) )
         return error;
 
@@ -284,8 +250,6 @@ THE SOFTWARE.
       for ( nn = 0; nn < 4; nn++ )
       {
         const char*  src = strings[nn];
-
-
         len = lengths[nn];
 
         if ( !src )
@@ -302,8 +266,6 @@ THE SOFTWARE.
         if ( nn == 0 || nn == 3 )
         {
           size_t  mm;
-
-
           for ( mm = 0; mm < len; mm++ )
             if ( s[mm] == ' ' )
               s[mm] = '-';
@@ -316,15 +278,11 @@ THE SOFTWARE.
 
     return error;
   }
-
-
   FT_CALLBACK_DEF( void )
   BDF_Face_Done( FT_Face  bdfface )         /* BDF_Face */
   {
     BDF_Face   face = (BDF_Face)bdfface;
     FT_Memory  memory;
-
-
     if ( !face )
       return;
 
@@ -343,8 +301,6 @@ THE SOFTWARE.
 
     FT_FREE( face->bdffont );
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   BDF_Face_Init( FT_Stream      stream,
                  FT_Face        bdfface,        /* BDF_Face */
@@ -361,8 +317,6 @@ THE SOFTWARE.
 
     FT_UNUSED( num_params );
     FT_UNUSED( params );
-
-
     FT_TRACE2(( "BDF driver\n" ));
 
     if ( FT_STREAM_SEEK( 0 ) )
@@ -400,8 +354,6 @@ THE SOFTWARE.
 
     {
       bdf_property_t*  prop = NULL;
-
-
       FT_TRACE4(( "  number of glyphs: allocated %ld (used %ld)\n",
                   font->glyphs_size,
                   font->glyphs_used ));
@@ -449,8 +401,6 @@ THE SOFTWARE.
         FT_Bitmap_Size*  bsize = bdfface->available_sizes;
         FT_Short         resolution_x = 0, resolution_y = 0;
         long             value;
-
-
         FT_ZERO( bsize );
 
         /* sanity checks */
@@ -606,8 +556,6 @@ THE SOFTWARE.
       {
         bdf_glyph_t*   cur = font->glyphs;
         unsigned long  n;
-
-
         if ( FT_NEW_ARRAY( face->en_table, font->glyphs_size ) )
           goto Exit;
 
@@ -633,8 +581,6 @@ THE SOFTWARE.
       {
         bdf_property_t  *charset_registry, *charset_encoding;
         FT_Bool          unicode_charmap  = 0;
-
-
         charset_registry =
           bdf_get_font_property( font, "CHARSET_REGISTRY" );
         charset_encoding =
@@ -647,8 +593,6 @@ THE SOFTWARE.
                charset_encoding->value.atom         )
           {
             const char*  s;
-
-
             if ( FT_STRDUP( face->charset_encoding,
                             charset_encoding->value.atom ) ||
                  FT_STRDUP( face->charset_registry,
@@ -675,8 +619,6 @@ THE SOFTWARE.
 
             {
               FT_CharMapRec  charmap;
-
-
               charmap.face        = FT_FACE( face );
               charmap.encoding    = FT_ENCODING_NONE;
               /* initial platform/encoding should indicate unset status? */
@@ -701,8 +643,6 @@ THE SOFTWARE.
 
         {
           FT_CharMapRec  charmap;
-
-
           charmap.face        = FT_FACE( face );
           charmap.encoding    = FT_ENCODING_ADOBE_STANDARD;
           charmap.platform_id = TT_PLATFORM_ADOBE;
@@ -724,15 +664,11 @@ THE SOFTWARE.
     BDF_Face_Done( bdfface );
     return FT_THROW( Unknown_File_Format );
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   BDF_Size_Select( FT_Size   size,
                    FT_ULong  strike_index )
   {
     bdf_font_t*  bdffont = ( (BDF_Face)size->face )->bdffont;
-
-
     FT_Select_Metrics( size->face, strike_index );
 
     size->metrics.ascender    = bdffont->font_ascent * 64;
@@ -741,8 +677,6 @@ THE SOFTWARE.
 
     return FT_Err_Ok;
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   BDF_Size_Request( FT_Size          size,
                     FT_Size_Request  req )
@@ -752,8 +686,6 @@ THE SOFTWARE.
     bdf_font_t*      bdffont = ( (BDF_Face)face )->bdffont;
     FT_Error         error   = FT_ERR( Invalid_Pixel_Size );
     FT_Long          height;
-
-
     height = FT_REQUEST_HEIGHT( req );
     height = ( height + 32 ) >> 6;
 
@@ -781,8 +713,6 @@ THE SOFTWARE.
       return BDF_Size_Select( size, 0 );
   }
 
-
-
   FT_CALLBACK_DEF( FT_Error )
   BDF_Glyph_Load( FT_GlyphSlot  slot,
                   FT_Size       size,
@@ -797,8 +727,6 @@ THE SOFTWARE.
     int          bpp    = bdf->bdffont->bpp;
 
     FT_UNUSED( load_flags );
-
-
     if ( !face )
     {
       error = FT_THROW( Invalid_Face_Handle );
@@ -870,8 +798,6 @@ THE SOFTWARE.
   Exit:
     return error;
   }
-
-
  /*
   *
   * BDF SERVICE
@@ -884,8 +810,6 @@ THE SOFTWARE.
                         BDF_PropertyRec  *aproperty )
   {
     bdf_property_t*  prop;
-
-
     FT_ASSERT( face && face->bdffont );
 
     prop = bdf_get_font_property( face->bdffont, prop_name );
@@ -929,8 +853,6 @@ THE SOFTWARE.
   Fail:
     return FT_THROW( Invalid_Argument );
   }
-
-
   static FT_Error
   bdf_get_charset_id( BDF_Face      face,
                       const char*  *acharset_encoding,
@@ -941,15 +863,11 @@ THE SOFTWARE.
 
     return 0;
   }
-
-
   static const FT_Service_BDFRec  bdf_service_bdf =
   {
     (FT_BDF_GetCharsetIdFunc)bdf_get_charset_id,       /* get_charset_id */
     (FT_BDF_GetPropertyFunc) bdf_get_bdf_property      /* get_property   */
   };
-
-
  /*
   *
   * SERVICES LIST
@@ -962,8 +880,6 @@ THE SOFTWARE.
     { FT_SERVICE_ID_FONT_FORMAT, FT_FONT_FORMAT_BDF },
     { NULL, NULL }
   };
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   bdf_driver_requester( FT_Module    module,
                         const char*  name )
@@ -972,8 +888,6 @@ THE SOFTWARE.
 
     return ft_service_list_lookup( bdf_services, name );
   }
-
-
 
   FT_CALLBACK_TABLE_DEF
   const FT_Driver_ClassRec  bdf_driver_class =
@@ -1014,6 +928,4 @@ THE SOFTWARE.
     BDF_Size_Request,           /* FT_Size_RequestFunc  request_size */
     BDF_Size_Select             /* FT_Size_SelectFunc   select_size  */
   };
-
-
 /* END */

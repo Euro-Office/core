@@ -28,8 +28,6 @@
 
 #include "uspoof_impl.h"
 #include "utrie2.h"
-
-
 U_NAMESPACE_BEGIN
 
 //
@@ -58,8 +56,6 @@ class BuilderScriptSet: public UMemory {
     BuilderScriptSet();
     ~BuilderScriptSet();
 };
-
-
 void buildWSConfusableData(SpoofImpl *spImpl, const char * confusablesWS,
           int32_t confusablesWSLen, UParseError *pe, UErrorCode &status); 
 

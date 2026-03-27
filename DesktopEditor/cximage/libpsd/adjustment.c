@@ -31,8 +31,6 @@
 #include "psd_rect.h"
 #include "psd_blend.h"
 #include "psd_math.h"
-
-
 typedef void psd_adjustment_blend_proc(psd_uint layer_info_data, psd_int * red, psd_int * green, psd_int * blue);
 
 extern psd_bool psd_layer_blend_levels(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
@@ -47,8 +45,6 @@ extern psd_bool psd_layer_blend_posterize(psd_context * context, psd_layer_recor
 extern psd_bool psd_layer_blend_channel_mixer(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern psd_bool psd_layer_blend_gradient_map(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
 extern psd_bool psd_layer_blend_photo_filter(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect);
-
-
 psd_status psd_adjustment_layer_update(psd_layer_record * layer)
 {
 	if(layer == NULL)

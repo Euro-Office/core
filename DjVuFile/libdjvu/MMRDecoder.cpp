@@ -67,16 +67,12 @@
 #include "JB2Image.h"
 #include "ByteStream.h"
 #include "GBitmap.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // ----------------------------------------
 // MMR CODEBOOKS
 
@@ -108,8 +104,6 @@ static const VLCode mrcodes[] =
   { 0x02,   7,  VL3 }, // 0000010
   { 0x00,   0,   -1 }  // Illegal entry
 };
-
-
 static const VLCode wcodes[] = {    
   // 13 bit codes
   { 0x06a0,  8,    0 }, // 00110101
@@ -218,8 +212,6 @@ static const VLCode wcodes[] = {
   { 0x003e, 12, 2560 }, // 000000011111
   { 0x0000,  0,   -1 }  // Illegal entry
 };
-
-
 static const VLCode bcodes[] = {
   // 13 bit codes
   { 0x01b8, 10,    0 }, // 0000110111
@@ -328,10 +320,6 @@ static const VLCode bcodes[] = {
   { 0x003e, 12, 2560 }, // 000000011111
   { 0x0000,  0,   -1 }  // Illegal entry
 };
-
-
-
-
 // ----------------------------------------
 // SOURCE OF BITS
 
@@ -405,8 +393,6 @@ MMRDecoder::VLSource::peek(void)
 {
   return codeword;
 }
-
-
 void
 MMRDecoder::VLSource::nextstripe(void)
 {
@@ -449,12 +435,8 @@ MMRDecoder::VLSource::preload(void)
     }
 }
 
-
-
 // ----------------------------------------
 // VARIABLE LENGTH CODES
-
-
 
 class MMRDecoder::VLTable : public GPEnabled
 {
@@ -532,8 +514,6 @@ MMRDecoder::VLTable::init(const int nbits)
 
 // ----------------------------------------
 // MMR DECODER
-
-
 
 MMRDecoder::~MMRDecoder() {}
 
@@ -789,8 +769,6 @@ MMRDecoder::scanruns(const unsigned short **endptr)
   return lineruns;
 }
 
-
-
 const unsigned char *
 MMRDecoder::scanrle(const bool invert, const unsigned char **endptr)
 {
@@ -822,8 +800,6 @@ MMRDecoder::scanrle(const bool invert, const unsigned char **endptr)
   p[1] = 0;
   return line;
 }
-
-
 #if 0
 const unsigned char *
 MMRDecoder::scanline(void)
@@ -846,10 +822,6 @@ MMRDecoder::scanline(void)
   return line;
 }
 #endif
-
-
-
-
 // ----------------------------------------
 // MAIN DECODING ROUTINE
 
@@ -952,8 +924,6 @@ MMRDecoder::decode(GP<ByteStream> gbs)
   // Return
   return jimg;
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

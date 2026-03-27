@@ -14,15 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFSHAPER_H_
 #define AFSHAPER_H_
-
-
 #include <freetype/freetype.h>
-
-
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
 #include <hb.h>
@@ -30,8 +24,6 @@
 #include <hb-ft.h>
 
 #endif
-
-
 FT_BEGIN_HEADER
 
   FT_Error
@@ -39,8 +31,6 @@ FT_BEGIN_HEADER
                           AF_StyleClass   style_class,
                           FT_UShort*      gstyles,
                           FT_Bool         default_script );
-
-
   void*
   af_shaper_buf_create( FT_Face  face );
 
@@ -66,6 +56,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* AFSHAPER_H_ */
-
-
 /* END */

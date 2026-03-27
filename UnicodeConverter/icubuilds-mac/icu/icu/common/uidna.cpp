@@ -68,8 +68,6 @@ startsWithPrefix(const UChar* src , int32_t srcLength){
     }
     return startsWithPrefix;
 }
-
-
 inline static int32_t
 compareCaseInsensitiveASCII(const UChar* s1, int32_t s1Len, 
                             const UChar* s2, int32_t s2Len){
@@ -116,8 +114,6 @@ compareCaseInsensitiveASCII(const UChar* s1, int32_t s1Len,
     }
     return lengthResult;
 }
-
-
 /**
  * Ascertain if the given code point is a label separator as 
  * defined by the IDNA RFC
@@ -507,8 +503,6 @@ _internal_toUnicode(const UChar* src, int32_t srcLength,
 
             b2Len =  u_strFromPunycode(b1Prime, b1PrimeLen, b2, b2Len, caseFlags, status);
         }
-
-
         //step 6:Apply toASCII
         b3Len = uidna_toASCII(b2, b2Len, b3, b3Capacity, options, parseError, status);
 
@@ -574,8 +568,6 @@ _internal_toUnicode(const UChar* src, int32_t srcLength,
         }
         reqLength = srcLength;
     }
-
-
 CLEANUP:
 
     if(b1 != b1Stack && b1!=src){
@@ -662,8 +654,6 @@ uidna_toUnicode(const UChar* src, int32_t srcLength,
     
     return retLen;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uidna_IDNToASCII(  const UChar *src, int32_t srcLength,
                    UChar* dest, int32_t destCapacity,
@@ -695,8 +685,6 @@ uidna_IDNToASCII(  const UChar *src, int32_t srcLength,
     int32_t remainingDestCapacity = destCapacity;
     int32_t labelLen = 0, labelReqLength = 0;
     UBool done = FALSE;
-
-
     for(;;){
 
         labelLen = getNextSeparator(labelStart,remainingLen, &delimiter,&done);
@@ -714,8 +702,6 @@ uidna_IDNToASCII(  const UChar *src, int32_t srcLength,
                 remainingDestCapacity = 0;
             }
         }
-
-    
         if(U_FAILURE(*status)){
             break;
         }

@@ -135,8 +135,6 @@ namespace svg
         objectUnits_objectBoundingBox,
         objectUnits_strokeWidth
     };
-
-
     //------------------------------------------------------------spreadMethod_e
     enum spreadMethod_e
     {
@@ -163,8 +161,6 @@ namespace svg
         stroke_linejoin_round = 1,
         stroke_linejoin_bevel = 2
     };
-
-
     //-----------------------------------------------------------stroke_linecap_e
     enum stroke_linecap_e
     {
@@ -172,8 +168,6 @@ namespace svg
         stroke_linecap_round  = 1,
         stroke_linecap_square = 2
     };
-    
-
     //----------------------------------------------------------------fill_rule_e
     enum fill_rule_e
     {
@@ -219,11 +213,7 @@ namespace svg
         units_grad,
         units_rad,
     };
-   
-
 } // namespace svg
 } // namespace agg
-
-
 #endif // ifndef AGG_SVG_DEFINES_INCLUDED
 

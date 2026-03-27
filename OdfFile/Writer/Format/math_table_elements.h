@@ -43,10 +43,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMTable;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -66,10 +62,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMAlignMark;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -89,10 +81,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMAlignGroup;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -112,10 +100,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMTd;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -135,10 +119,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMLabelEdTr;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);
@@ -158,10 +138,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeMTr;
-
-    
-
-
 private:
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
 	virtual void add_child_element(const office_element_ptr & child_element);

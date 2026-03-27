@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 DREF::DREF()
 {
 }
@@ -142,7 +140,5 @@ int DREF::serialize(std::wostream & strm)
 	}
 	return 0;
 }
-
-
 } // namespace XLS
 

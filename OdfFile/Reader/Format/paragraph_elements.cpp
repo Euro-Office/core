@@ -643,8 +643,6 @@ void span::docx_convert(oox::docx_conversion_context & Context)
         }
                                      
     }
-
-
     if (!addNewRun)Context.add_new_run();
 
     for (size_t i = 0; i < content_.size(); i++)

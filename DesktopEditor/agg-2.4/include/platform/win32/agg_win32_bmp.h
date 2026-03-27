@@ -18,12 +18,8 @@
 //----------------------------------------------------------------------------
 #ifndef AGG_WIN32_BMP_INCLUDED
 #define AGG_WIN32_BMP_INCLUDED
-
-
 #include <windows.h>
 #include <stdio.h>
-
-
 namespace agg
 {
     enum org_e
@@ -71,8 +67,6 @@ namespace agg
                           const RECT* device_rect=0, 
                           const RECT* bmp_rect=0) const;
         void        blend(HDC h_dc, int x, int y, double scale=1.0) const;
-
-
         unsigned char* buf();
         unsigned       width() const;
         unsigned       height() const;
@@ -112,6 +106,4 @@ namespace agg
     };
 
 }
-
-
 #endif

@@ -29,8 +29,6 @@
 #include "agg_basics.h"
 #include "util/agg_color_conv_rgb8.h"
 #include "platform/agg_platform_support.h"
-
-
 namespace agg
 {
     //------------------------------------------------------------------------
@@ -68,8 +66,6 @@ namespace agg
         //bool m_wait_mode;
         clock_t m_sw_start;
     };
-
-
 
     //------------------------------------------------------------------------
     platform_specific::platform_specific(pix_format_e format, bool flip_y) :
@@ -211,8 +207,6 @@ namespace agg
         XSetIconName(m_display, m_window, capt);
         XSetWMIconName(m_display, m_window, &tp);
     }
-
-    
     //------------------------------------------------------------------------
     void platform_specific::put_image(const rendering_buffer* src)
     {    
@@ -347,8 +341,6 @@ namespace agg
             delete [] buf_tmp;
         }
     }
-    
-
     //------------------------------------------------------------------------
     platform_support::platform_support(pix_format_e format, bool flip_y) :
         m_specific(new platform_specific(format, flip_y)),
@@ -369,8 +361,6 @@ namespace agg
         delete m_specific;
     }
 
-
-
     //------------------------------------------------------------------------
     void platform_support::caption(const char* cap)
     {
@@ -380,8 +370,6 @@ namespace agg
             m_specific->caption(cap);
         }
     }
-
-   
     //------------------------------------------------------------------------
     enum xevent_mask_e
     { 
@@ -393,8 +381,6 @@ namespace agg
             KeyPressMask|
             StructureNotifyMask
     };
-
-
     //------------------------------------------------------------------------
     bool platform_support::init(unsigned width, unsigned height, unsigned flags)
     {
@@ -421,8 +407,6 @@ namespace agg
 //       m_specific->m_visual->red_mask,
 //       m_specific->m_visual->green_mask,
 //       m_specific->m_visual->blue_mask);
-           
-
 //         // NOT COMPLETED YET!
 //         // Try to find an appropriate Visual if the default doesn't fit.
 //         if(m_specific->m_depth < 15 ||
@@ -576,8 +560,6 @@ namespace agg
             XCloseDisplay(m_specific->m_display);
             return false;
         }
-                
-        
         
         memset(&m_specific->m_window_attributes, 
                0, 
@@ -605,8 +587,6 @@ namespace agg
                           CopyFromParent,
                           window_mask,
                           &m_specific->m_window_attributes);
-
-
         m_specific->m_gc = XCreateGC(m_specific->m_display, 
                                      m_specific->m_window, 
                                      0, 0); 
@@ -672,16 +652,12 @@ namespace agg
 
             XFree(hints);
         }
-
-
         XMapWindow(m_specific->m_display, 
                    m_specific->m_window);
 
         XSelectInput(m_specific->m_display, 
                      m_specific->m_window, 
                      xevent_mask);
-
-        
         m_specific->m_close_atom = XInternAtom(m_specific->m_display, 
                                                "WM_DELETE_WINDOW", 
                                                false);
@@ -693,8 +669,6 @@ namespace agg
 
         return true;
     }
-
-
 
     //------------------------------------------------------------------------
     void platform_support::update_window()
@@ -708,8 +682,6 @@ namespace agg
         // we cannot afford to miss any events
         XSync(m_specific->m_display, m_wait_mode);
     }
-
-
     //------------------------------------------------------------------------
     int platform_support::run()
     {
@@ -859,8 +831,6 @@ namespace agg
                     }
                 }
                 break;
-
-
             case ButtonPress:
                 {
                     flags = 0;
@@ -905,8 +875,6 @@ namespace agg
                     //m_wait_mode = true;
                 }
                 break;
-
-                
             case MotionNotify:
                 {
                     flags = 0;
@@ -971,8 +939,6 @@ namespace agg
                 break;
             }           
         }
-
-
         unsigned i = platform_support::max_images;
         while(i--)
         {
@@ -991,8 +957,6 @@ namespace agg
         
         return 0;
     }
-
-
 
     //------------------------------------------------------------------------
     const char* platform_support::img_ext() const { return ".ppm"; }
@@ -1137,10 +1101,6 @@ namespace agg
         }
         return false;
     }
-
-
-
-
     //------------------------------------------------------------------------
     bool platform_support::save_img(unsigned idx, const char* file)
     {
@@ -1211,8 +1171,6 @@ namespace agg
         return false;
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_support::create_img(unsigned idx, unsigned width, unsigned height)
     {
@@ -1234,15 +1192,11 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::force_redraw()
     {
         m_specific->m_update_flag = true;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::message(const char* msg)
     {
@@ -1261,8 +1215,6 @@ namespace agg
         clock_t stop = clock();
         return double(stop - m_specific->m_sw_start) * 1000.0 / CLOCKS_PER_SEC;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::on_init() {}
     void platform_support::on_resize(int sx, int sy) {}
@@ -1275,21 +1227,9 @@ namespace agg
     void platform_support::on_draw() {}
     void platform_support::on_post_draw(void* raw_handler) {}
 
-
-
 }
-
-
 int agg_main(int argc, char* argv[]);
-
-
 int main(int argc, char* argv[])
 {
     return agg_main(argc, argv);
 }
-
-
-
-
-
-

@@ -216,8 +216,6 @@ namespace PPTX
 
 		pWriter->Write(transition);
 		pWriter->Write(timing);
-
-
 		if (ridModernComment.IsInit())
 		{ 
 			pWriter->WriteString(L"<p:extLst>");

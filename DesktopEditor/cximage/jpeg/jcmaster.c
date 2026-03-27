@@ -15,8 +15,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Private state */
 
 typedef enum {
@@ -37,8 +35,6 @@ typedef struct {
 } my_comp_master;
 
 typedef my_comp_master * my_master_ptr;
-
-
 /*
  * Support routines that do various essential calculations.
  */
@@ -203,8 +199,6 @@ jpeg_calc_jpeg_dimensions (j_compress_ptr cinfo)
 
 #endif /* DCT_SCALING_SUPPORTED */
 }
-
-
 LOCAL(void)
 jpeg_calc_trans_dimensions (j_compress_ptr cinfo)
 {
@@ -214,8 +208,6 @@ jpeg_calc_trans_dimensions (j_compress_ptr cinfo)
 
   cinfo->block_size = cinfo->min_DCT_h_scaled_size;
 }
-
-
 LOCAL(void)
 initial_setup (j_compress_ptr cinfo, boolean transcode_only)
 /* Do computations that are needed before master selection phase */
@@ -350,8 +342,6 @@ initial_setup (j_compress_ptr cinfo, boolean transcode_only)
     jdiv_round_up((long) cinfo->jpeg_height,
 		  (long) (cinfo->max_v_samp_factor * cinfo->block_size));
 }
-
-
 #ifdef C_MULTISCAN_FILES_SUPPORTED
 
 LOCAL(void)
@@ -487,8 +477,6 @@ validate_script (j_compress_ptr cinfo)
     }
   }
 }
-
-
 LOCAL(void)
 reduce_script (j_compress_ptr cinfo)
 /* Adapt scan script for use with reduced block size;
@@ -522,8 +510,6 @@ reduce_script (j_compress_ptr cinfo)
 }
 
 #endif /* C_MULTISCAN_FILES_SUPPORTED */
-
-
 LOCAL(void)
 select_scan_parameters (j_compress_ptr cinfo)
 /* Set up the scan parameters for the current scan */
@@ -566,8 +552,6 @@ select_scan_parameters (j_compress_ptr cinfo)
   cinfo->Ah = 0;
   cinfo->Al = 0;
 }
-
-
 LOCAL(void)
 per_scan_setup (j_compress_ptr cinfo)
 /* Do computations that are needed before processing a JPEG scan */
@@ -651,8 +635,6 @@ per_scan_setup (j_compress_ptr cinfo)
     cinfo->restart_interval = (unsigned int) MIN(nominal, 65535L);
   }
 }
-
-
 /*
  * Per-pass setup.
  * This is called at the beginning of each pass.  We determine which modules
@@ -737,8 +719,6 @@ prepare_for_pass (j_compress_ptr cinfo)
     cinfo->progress->total_passes = master->total_passes;
   }
 }
-
-
 /*
  * Special start-of-pass hook.
  * This is called by jpeg_write_scanlines if call_pass_startup is TRUE.
@@ -757,8 +737,6 @@ pass_startup (j_compress_ptr cinfo)
   (*cinfo->marker->write_frame_header) (cinfo);
   (*cinfo->marker->write_scan_header) (cinfo);
 }
-
-
 /*
  * Finish up at end of pass.
  */
@@ -797,8 +775,6 @@ finish_pass_master (j_compress_ptr cinfo)
 
   master->pass_number++;
 }
-
-
 /*
  * Initialize master compression control.
  */

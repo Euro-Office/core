@@ -15,8 +15,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Private state */
 
 typedef struct {
@@ -26,17 +24,11 @@ typedef struct {
 } my_input_controller;
 
 typedef my_input_controller * my_inputctl_ptr;
-
-
 /* Forward declarations */
 METHODDEF(int) consume_markers JPP((j_decompress_ptr cinfo));
-
-
 /*
  * Routines to calculate various quantities related to the size of the image.
  */
-
-
 /*
  * Compute output image dimensions and related values.
  * NOTE: this is exported for possible use by application.
@@ -202,8 +194,6 @@ jpeg_core_output_dimensions (j_decompress_ptr cinfo)
 
 #endif /* IDCT_SCALING_SUPPORTED */
 }
-
-
 LOCAL(void)
 initial_setup (j_decompress_ptr cinfo)
 /* Called once, when first SOS marker is reached */
@@ -382,8 +372,6 @@ initial_setup (j_decompress_ptr cinfo)
   else
     cinfo->inputctl->has_multiple_scans = FALSE;
 }
-
-
 LOCAL(void)
 per_scan_setup (j_decompress_ptr cinfo)
 /* Do computations that are needed before processing a JPEG scan */
@@ -460,8 +448,6 @@ per_scan_setup (j_decompress_ptr cinfo)
     
   }
 }
-
-
 /*
  * Save away a copy of the Q-table referenced by each component present
  * in the current scan, unless already saved during a prior scan.
@@ -508,8 +494,6 @@ latch_quant_tables (j_decompress_ptr cinfo)
     compptr->quant_table = qtbl;
   }
 }
-
-
 /*
  * Initialize the input modules to read a scan of compressed data.
  * The first call to this is done by jdmaster.c after initializing
@@ -526,8 +510,6 @@ start_input_pass (j_decompress_ptr cinfo)
   (*cinfo->coef->start_input_pass) (cinfo);
   cinfo->inputctl->consume_input = cinfo->coef->consume_data;
 }
-
-
 /*
  * Finish up after inputting a compressed-data scan.
  * This is called by the coefficient controller after it's read all
@@ -539,8 +521,6 @@ finish_input_pass (j_decompress_ptr cinfo)
 {
   cinfo->inputctl->consume_input = consume_markers;
 }
-
-
 /*
  * Read JPEG markers before, between, or after compressed-data scans.
  * Change state as necessary when a new scan is reached.
@@ -609,8 +589,6 @@ consume_markers (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 /*
  * Reset state to begin a fresh datastream.
  */
@@ -630,8 +608,6 @@ reset_input_controller (j_decompress_ptr cinfo)
   /* Reset progression state -- would be cleaner if entropy decoder did this */
   cinfo->coef_bits = NULL;
 }
-
-
 /*
  * Initialize the input controller module.
  * This is called only once, when the decompression object is created.

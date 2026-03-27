@@ -42,8 +42,6 @@ typedef struct boxheader_param {
     char    type[4];              /**< type of information in the DBox*/
     struct boxheader_param *next; /**< pointer to the next header box*/
 } boxheader_param_t;
-
-
 /**
  * generate a box header at the given offset
  *

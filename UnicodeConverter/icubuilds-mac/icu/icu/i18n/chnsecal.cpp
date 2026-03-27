@@ -46,8 +46,6 @@ static void debug_chnsecal_msg(const char *pat, ...)
 #else
 #define U_DEBUG_CHNSECAL_MSG(x)
 #endif
-
-
 // --- The cache --
 static UMutex astroLock = U_MUTEX_INITIALIZER;  // Protects access to gChineseCalendarAstro.
 static icu::CalendarAstronomer *gChineseCalendarAstro = NULL;
@@ -80,8 +78,6 @@ static const int32_t CHINA_OFFSET = 8 * kOneHour;
  * >= 1 and < CalendarAstronomer.SYNODIC_MONTH.
  */
 static const int32_t SYNODIC_GAP = 25;
-
-
 U_CDECL_BEGIN
 static UBool calendar_chinese_cleanup(void) {
     if (gChineseCalendarAstro) {
@@ -106,16 +102,10 @@ static UBool calendar_chinese_cleanup(void) {
 U_CDECL_END
 
 U_NAMESPACE_BEGIN
-
-
 // Implementation of the ChineseCalendar class
-
-
 //-------------------------------------------------------------------------
 // Constructors...
 //-------------------------------------------------------------------------
-
-
 Calendar* ChineseCalendar::clone() const {
     return new ChineseCalendar(*this);
 }
@@ -166,8 +156,6 @@ const TimeZone* ChineseCalendar::getChineseCalZoneAstroCalc(void) const {
 //-------------------------------------------------------------------------
 // Minimum / Maximum access functions
 //-------------------------------------------------------------------------
-
-
 static const int32_t LIMITS[UCAL_FIELD_COUNT][4] = {
     // Minimum  Greatest     Least    Maximum
     //           Minimum   Maximum
@@ -195,16 +183,12 @@ static const int32_t LIMITS[UCAL_FIELD_COUNT][4] = {
     {/*N/A*/-1,/*N/A*/-1,/*N/A*/-1,/*N/A*/-1}, // MILLISECONDS_IN_DAY
     {        0,        0,        1,        1}, // IS_LEAP_MONTH
 };
-
-
 /**
 * @draft ICU 2.4
 */
 int32_t ChineseCalendar::handleGetLimit(UCalendarDateFields field, ELimitType limitType) const {
     return LIMITS[field][limitType];
 }
-
-
 //----------------------------------------------------------------------
 // Calendar framework
 //----------------------------------------------------------------------
@@ -363,8 +347,6 @@ int32_t ChineseCalendar::handleComputeMonthStart(int32_t eyear, int32_t month, U
 
     return julianDay - 1;
 }
-
-
 /**
  * Override Calendar to handle leap months properly.
  * @stable ICU 2.8
@@ -460,8 +442,6 @@ void ChineseCalendar::roll(UCalendarDateFields field, int32_t amount, UErrorCode
 void ChineseCalendar::roll(EDateFields field, int32_t amount, UErrorCode& status) {
     roll((UCalendarDateFields)field, amount, status);
 }
-
-
 //------------------------------------------------------------------
 // Support methods and constants
 //------------------------------------------------------------------
@@ -511,8 +491,6 @@ double ChineseCalendar::millisToDays(double millis) const {
 //------------------------------------------------------------------
 // Astronomical computations
 //------------------------------------------------------------------
-
-
 /**
  * Return the major solar term on or after December 15 of the given
  * Gregorian year, that is, the winter solstice of the given year.
@@ -621,8 +599,6 @@ UBool ChineseCalendar::hasNoMajorSolarTerm(int32_t newMoon) const {
     return majorSolarTerm(newMoon) ==
         majorSolarTerm(newMoonNear(newMoon + SYNODIC_GAP, TRUE));
 }
-
-
 //------------------------------------------------------------------
 // Time to fields
 //------------------------------------------------------------------
@@ -742,8 +718,6 @@ void ChineseCalendar::computeChineseFields(int32_t days, int32_t gyear, int32_t 
         internalSet(UCAL_DAY_OF_YEAR, days - theNewYear + 1);
     }
 }
-
-
 //------------------------------------------------------------------
 // Fields to time
 //------------------------------------------------------------------
@@ -822,8 +796,6 @@ void ChineseCalendar::offsetMonth(int32_t newMoon, int32_t dom, int32_t delta) {
         set(UCAL_JULIAN_DAY, jd);
     }
 }
-
-
 UBool
 ChineseCalendar::inDaylightTime(UErrorCode& status) const
 {
@@ -842,8 +814,6 @@ ChineseCalendar::inDaylightTime(UErrorCode& status) const
 static UDate     gSystemDefaultCenturyStart       = DBL_MIN;
 static int32_t   gSystemDefaultCenturyStartYear   = -1;
 static icu::UInitOnce gSystemDefaultCenturyInitOnce = U_INITONCE_INITIALIZER;
-
-
 UBool ChineseCalendar::haveDefaultCentury() const
 {
     return TRUE;

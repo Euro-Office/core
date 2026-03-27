@@ -705,8 +705,6 @@ static double poly1[] =
     1255.2,1315.6,
     1252,1314
 };
-
-
 static double poly2[] = 
 {
     1284,1396.4,
@@ -1865,8 +1863,6 @@ static double poly2[] =
     1282.4,1393.2,
     1283.6,1393.6
 };
-
-
 
 void make_gb_poly(agg::path_storage& ps)
 {

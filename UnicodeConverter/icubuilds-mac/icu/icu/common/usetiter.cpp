@@ -130,8 +130,6 @@ void UnicodeSetIterator::loadRange(int32_t iRange) {
     nextElement = set->getRangeStart(iRange);
     endElement = set->getRangeEnd(iRange);
 }
-
-
 const UnicodeString& UnicodeSetIterator::getString()  {
     if (string==NULL && codepoint!=(UChar32)IS_STRING) {
        if (cpString == NULL) {

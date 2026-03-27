@@ -37,12 +37,8 @@
 #include <map>
 
 #include "../Format/odfcontext.h"
-
-
 namespace cpdoccore {
 namespace oox {
-
-
 class num_format_context::Impl2
 {
 public:

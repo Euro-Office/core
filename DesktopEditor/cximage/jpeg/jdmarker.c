@@ -16,8 +16,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 typedef enum {			/* JPEG marker codes */
   M_SOF0  = 0xc0,
   M_SOF1  = 0xc1,
@@ -84,8 +82,6 @@ typedef enum {			/* JPEG marker codes */
   
   M_ERROR = 0x100
 } JPEG_MARKER;
-
-
 /* Private state */
 
 typedef struct {
@@ -106,8 +102,6 @@ typedef struct {
 } my_marker_reader;
 
 typedef my_marker_reader * my_marker_ptr;
-
-
 /*
  * Macros for fetching data from the data source module.
  *
@@ -161,8 +155,6 @@ typedef my_marker_reader * my_marker_ptr;
 		  MAKE_BYTE_AVAIL(cinfo,action); \
 		  bytes_in_buffer--; \
 		  V += GETJOCTET(*next_input_byte++); )
-
-
 /*
  * Routines to process JPEG markers.
  *
@@ -192,8 +184,6 @@ typedef my_marker_reader * my_marker_ptr;
  * suspension occurs within marker parameters.  Other side effects
  * require more care.
  */
-
-
 LOCAL(boolean)
 get_soi (j_decompress_ptr cinfo)
 /* Process an SOI marker */
@@ -232,8 +222,6 @@ get_soi (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 LOCAL(boolean)
 get_sof (j_decompress_ptr cinfo, boolean is_baseline, boolean is_prog,
 	 boolean is_arith)
@@ -298,8 +286,6 @@ get_sof (j_decompress_ptr cinfo, boolean is_baseline, boolean is_prog,
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 LOCAL(boolean)
 get_sos (j_decompress_ptr cinfo)
 /* Process a SOS marker */
@@ -370,8 +356,6 @@ get_sos (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 #ifdef D_ARITH_CODING_SUPPORTED
 
 LOCAL(boolean)
@@ -418,8 +402,6 @@ get_dac (j_decompress_ptr cinfo)
 #define get_dac(cinfo)  skip_variable(cinfo)
 
 #endif /* D_ARITH_CODING_SUPPORTED */
-
-
 LOCAL(boolean)
 get_dht (j_decompress_ptr cinfo)
 /* Process a DHT marker */
@@ -489,8 +471,6 @@ get_dht (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 LOCAL(boolean)
 get_dqt (j_decompress_ptr cinfo)
 /* Process a DQT marker */
@@ -579,8 +559,6 @@ get_dqt (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 LOCAL(boolean)
 get_dri (j_decompress_ptr cinfo)
 /* Process a DRI marker */
@@ -603,8 +581,6 @@ get_dri (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 /*
  * Routines for processing APPn and COM markers.
  * These are either saved in memory or discarded, per application request.
@@ -615,8 +591,6 @@ get_dri (j_decompress_ptr cinfo)
 #define APP0_DATA_LEN	14	/* Length of interesting data in APP0 */
 #define APP14_DATA_LEN	12	/* Length of interesting data in APP14 */
 #define APPN_DATA_LEN	14	/* Must be the largest of the above!! */
-
-
 LOCAL(void)
 examine_app0 (j_decompress_ptr cinfo, JOCTET FAR * data,
 	      unsigned int datalen, INT32 remaining)
@@ -691,8 +665,6 @@ examine_app0 (j_decompress_ptr cinfo, JOCTET FAR * data,
     TRACEMS1(cinfo, 1, JTRC_APP0, (int) totallen);
   }
 }
-
-
 LOCAL(void)
 examine_app14 (j_decompress_ptr cinfo, JOCTET FAR * data,
 	       unsigned int datalen, INT32 remaining)
@@ -722,8 +694,6 @@ examine_app14 (j_decompress_ptr cinfo, JOCTET FAR * data,
     TRACEMS1(cinfo, 1, JTRC_APP14, (int) (datalen + remaining));
   }
 }
-
-
 METHODDEF(boolean)
 get_interesting_appn (j_decompress_ptr cinfo)
 /* Process an APP0 or APP14 marker without saving it */
@@ -768,8 +738,6 @@ get_interesting_appn (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 #ifdef SAVE_MARKERS_SUPPORTED
 
 METHODDEF(boolean)
@@ -876,8 +844,6 @@ save_marker (j_decompress_ptr cinfo)
 }
 
 #endif /* SAVE_MARKERS_SUPPORTED */
-
-
 METHODDEF(boolean)
 skip_variable (j_decompress_ptr cinfo)
 /* Skip over an unknown or uninteresting variable-length marker */
@@ -896,8 +862,6 @@ skip_variable (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 /*
  * Find the next JPEG marker, save it in cinfo->unread_marker.
  * Returns FALSE if had to suspend before reaching a marker;
@@ -952,8 +916,6 @@ next_marker (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 LOCAL(boolean)
 first_marker (j_decompress_ptr cinfo)
 /* Like next_marker, but used to obtain the initial SOI marker. */
@@ -976,8 +938,6 @@ first_marker (j_decompress_ptr cinfo)
   INPUT_SYNC(cinfo);
   return TRUE;
 }
-
-
 /*
  * Read markers until SOS or EOI.
  *
@@ -1141,8 +1101,6 @@ read_markers (j_decompress_ptr cinfo)
     cinfo->unread_marker = 0;
   } /* end loop */
 }
-
-
 /*
  * Read a restart marker, which is expected to appear next in the datastream;
  * if the marker is not there, take appropriate recovery action.
@@ -1183,8 +1141,6 @@ read_restart_marker (j_decompress_ptr cinfo)
 
   return TRUE;
 }
-
-
 /*
  * This is the default resync_to_restart method for data source managers
  * to use if they don't have any better approach.  Some data source managers
@@ -1278,8 +1234,6 @@ jpeg_resync_to_restart (j_decompress_ptr cinfo, int desired)
     }
   } /* end loop */
 }
-
-
 /*
  * Reset marker processing state to begin a fresh datastream.
  */
@@ -1297,8 +1251,6 @@ reset_marker_reader (j_decompress_ptr cinfo)
   marker->pub.discarded_bytes = 0;
   marker->cur_marker = NULL;
 }
-
-
 /*
  * Initialize the marker reader module.
  * This is called only once, when the decompression object is created.
@@ -1334,8 +1286,6 @@ jinit_marker_reader (j_decompress_ptr cinfo)
   /* Reset marker processing state */
   reset_marker_reader(cinfo);
 }
-
-
 /*
  * Control saving of COM and APPn markers into marker_list.
  */
@@ -1385,8 +1335,6 @@ jpeg_save_markers (j_decompress_ptr cinfo, int marker_code,
 }
 
 #endif /* SAVE_MARKERS_SUPPORTED */
-
-
 /*
  * Install a special processing method for COM or APPn markers.
  */

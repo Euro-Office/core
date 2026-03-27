@@ -74,8 +74,6 @@ namespace agg
         void close(bool remove_flag);
     };
 
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     void vertex_sequence<T, S>::add(const T& val)
@@ -89,8 +87,6 @@ namespace agg
         }
         base_type::add(val);
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     void vertex_sequence<T, S>::modify_last(const T& val)
@@ -98,8 +94,6 @@ namespace agg
         base_type::remove_last();
         add(val);
     }
-
-
 
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
@@ -122,8 +116,6 @@ namespace agg
             }
         }
     }
-
-
     //-------------------------------------------------------------vertex_dist
     // Vertex (x, y) with the distance to the next one. The last vertex has 
     // distance between the last and the first points if the polygon is closed
@@ -150,8 +142,6 @@ namespace agg
         }
     };
 
-
-
     //--------------------------------------------------------vertex_dist_cmd
     // Save as the above but with additional "command" value
     struct vertex_dist_cmd : public vertex_dist
@@ -165,8 +155,6 @@ namespace agg
         {
         }
     };
-
-
 }
 
 #endif

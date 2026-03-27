@@ -25,8 +25,6 @@
 #define  PROGRAM_VERSION  "0.3"
 
 #define  LINEBUFF_SIZE  1024
-
-
 typedef enum  OutputFormat_
 {
   OUTPUT_LIST = 0,      /* output the list of names, one per line             */
@@ -37,29 +35,21 @@ typedef enum  OutputFormat_
   OUTPUT_GNU_VERMAP     /* output a version map for GNU or Solaris linker     */
 
 } OutputFormat;
-
-
 static void
 panic( const char*  message )
 {
   fprintf( stderr, "PANIC: %s\n", message );
   exit(2);
 }
-
-
 typedef struct  NameRec_
 {
   char*         name;
   unsigned int  hash;
 
 } NameRec, *Name;
-
-
 static Name  the_names;
 static int   num_names;
 static int   max_names;
-
-
 static void
 names_add( const char*  name,
            const char*  end )
@@ -67,8 +57,6 @@ names_add( const char*  name,
   unsigned int  h;
   int           nn, len;
   Name          nm;
-
-
   if ( end <= name )
     return;
 
@@ -109,8 +97,6 @@ names_add( const char*  name,
   memcpy( nm->name, name, len );
   nm->name[len] = 0;
 }
-
-
 static int
 name_compare( const void*  name1,
               const void*  name2 )
@@ -120,24 +106,18 @@ name_compare( const void*  name1,
 
   return strcmp( n1->name, n2->name );
 }
-
-
 static void
 names_sort( void )
 {
   qsort( the_names, (size_t)num_names,
          sizeof ( the_names[0] ), name_compare );
 }
-
-
 static void
 names_dump( FILE*         out,
             OutputFormat  format,
             const char*   dll_name )
 {
   int  nn;
-
-
   switch ( format )
   {
   case OUTPUT_WINDOWS_DEF:
@@ -168,8 +148,6 @@ names_dump( FILE*         out,
     {
       const char*  dot;
       char         temp[512];
-
-
       if ( !dll_name )
       {
         fprintf( stderr,
@@ -182,8 +160,6 @@ names_dump( FILE*         out,
       if ( dot )
       {
         int  len = dot - dll_name;
-
-
         if ( len > (int)( sizeof ( temp ) - 1 ) )
           len = sizeof ( temp ) - 1;
 
@@ -227,8 +203,6 @@ names_dump( FILE*         out,
     break;
   }
 }
-
-
 /* states of the line parser */
 
 typedef enum  State_
@@ -237,21 +211,15 @@ typedef enum  State_
   STATE_TYPE        /* type was read, waiting for function name      */
 
 } State;
-
-
 static int
 read_header_file( FILE*  file,
                   int    verbose )
 {
   static char  buff[LINEBUFF_SIZE + 1];
   State        state = STATE_START;
-
-
   while ( !feof( file ) )
   {
     char*  p;
-
-
     if ( !fgets( buff, LINEBUFF_SIZE, file ) )
       break;
 
@@ -303,8 +271,6 @@ read_header_file( FILE*  file,
     case STATE_TYPE:
       {
         char*   name = p;
-
-
         while ( isalnum( *p ) || *p == '_' )
           p++;
 
@@ -331,8 +297,6 @@ NextLine:
 
   return 0;
 }
-
-
 static void
 usage( void )
 {
@@ -364,8 +328,6 @@ usage( void )
 
   exit( 1 );
 }
-
-
 int
 main( int                 argc,
       const char* const*  argv )
@@ -375,8 +337,6 @@ main( int                 argc,
   OutputFormat  format       = OUTPUT_LIST;  /* the default */
   FILE*         out          = stdout;
   const char*   library_name = NULL;
-
-
   if ( argc < 2 )
     usage();
 
@@ -384,8 +344,6 @@ main( int                 argc,
   while ( argc > 1 && argv[1][0] == '-' )
   {
     const char*  arg = argv[1];
-
-
     switch ( arg[1] )
     {
     case 'v':
@@ -483,8 +441,6 @@ main( int                 argc,
     for ( --argc, argv++; argc > 0; argc--, argv++ )
     {
       FILE*  file = fopen( argv[0], "rb" );
-
-
       if ( !file )
         fprintf( stderr, "unable to open '%s'\n", argv[0] );
       else
@@ -509,6 +465,4 @@ main( int                 argc,
 
   return 0;
 }
-
-
 /* END */

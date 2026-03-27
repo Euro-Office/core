@@ -65,8 +65,6 @@ static const UChar gRuleSet_name_start_char_pattern[] = {
     0x5b, 0x5f, 0x5c, 0x70, 0x7b, 0x4c, 0x7d, 0x5d, 0 };
 
 static const UChar kAny[] = {0x61, 0x6e, 0x79, 0x00};  // "any"
-
-
 U_CDECL_BEGIN
 static void U_CALLCONV RBBISetTable_deleter(void *p) {
     icu::RBBISetTableEl *px = (icu::RBBISetTableEl *)p;
@@ -151,8 +149,6 @@ RBBIRuleScanner::RBBIRuleScanner(RBBIRuleBuilder *rb)
     uhash_setValueDeleter(fSetTable, RBBISetTable_deleter);
 }
 
-
-
 //------------------------------------------------------------------------------
 //
 //  Destructor
@@ -165,8 +161,6 @@ RBBIRuleScanner::~RBBIRuleScanner() {
          fSetTable = NULL;
 
     }
-
-
     // Node Stack.
     //   Normally has one entry, which is the entire parse tree for the rules.
     //   If errors occured, there may be additional subtrees left on the stack.
@@ -203,8 +197,6 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         pushNewNode(RBBINode::opStart);
         fRuleNum++;
         break;
-
-
     case doExprOrOperator:
         {
             fixOpStack(RBBINode::precOpCat);
@@ -266,10 +258,6 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         //   RHS expression happy.
         pushNewNode(RBBINode::opStart);
         break;
-
-
-
-
     case doEndAssign:
         {
             // We have reached the end of an assignement statement.
@@ -375,19 +363,13 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         fNodeStackPtr  = 0;
         }
         break;
-
-
     case doRuleError:
         error(U_BRK_RULE_SYNTAX);
         returnVal = FALSE;
         break;
-
-
     case doVariableNameExpectedErr:
         error(U_BRK_RULE_SYNTAX);
         break;
-
-
     //
     //  Unary operands  + ? *
     //    These all appear after the operand to which they apply.
@@ -474,8 +456,6 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
         fRB->fRules.extractBetween(n->fFirstPos, n->fLastPos, n->fText);
         fLookAheadRule = TRUE;
         break;
-
-
     case doStartTagValue:
         // Scanned a '{', the opening delimiter for a tag value within a rule.
         n = pushNewNode(RBBINode::tag);
@@ -594,10 +574,6 @@ UBool RBBIRuleScanner::doParseActions(int32_t action)
     }
     return returnVal && U_SUCCESS(*fRB->fStatus);
 }
-
-
-
-
 //------------------------------------------------------------------------------
 //
 //  Error         Report a rule parse error.
@@ -615,10 +591,6 @@ void RBBIRuleScanner::error(UErrorCode e) {
         }
     }
 }
-
-
-
-
 //------------------------------------------------------------------------------
 //
 //  fixOpStack   The parse stack holds partially assembled chunks of the parse tree.
@@ -676,10 +648,6 @@ void RBBIRuleScanner::fixOpStack(RBBINode::OpPrecedence p) {
     }
     // printNodeStack("leaving fixOpStack()");
 }
-
-
-
-
 //------------------------------------------------------------------------------
 //
 //   findSetFor    given a UnicodeString,
@@ -737,14 +705,10 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     usetNode->fParent     = node;
     node->fLeftChild      = usetNode;
     usetNode->fText = s;
-
-
     //
     // Add the new uset node to the list of all uset nodes.
     //
     fRB->fUSetNodes->addElement(usetNode, *fRB->fStatus);
-
-
     //
     // Add the new set to the set hash table.
     //
@@ -769,8 +733,6 @@ void RBBIRuleScanner::findSetFor(const UnicodeString &s, RBBINode *node, Unicode
     return;
 }
 
-
-
 //
 //  Assorted Unicode character constants.
 //     Numeric because there is no portable way to enter them as literals.
@@ -785,8 +747,6 @@ static const UChar      chPound     = 0x23;      // '#', introduces a comment.
 static const UChar      chBackSlash = 0x5c;      // '\'  introduces a char escape
 static const UChar      chLParen    = 0x28;
 static const UChar      chRParen    = 0x29;
-
-
 //------------------------------------------------------------------------------
 //
 //  stripRules    Return a rules string without unnecessary
@@ -812,8 +772,6 @@ UnicodeString RBBIRuleScanner::stripRules(const UnicodeString &rules) {
     // strippedRules = strippedRules.unescape();
     return strippedRules;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //  nextCharLL    Low Level Next Char from rule input source.
@@ -853,8 +811,6 @@ UChar32  RBBIRuleScanner::nextCharLL() {
     fLastChar = ch;
     return ch;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //   nextChar     for rules scanning.  At this level, we handle stripping
@@ -1091,8 +1047,6 @@ void RBBIRuleScanner::parse() {
         operand->fParent              = fRB->fReverseTree;
         fNodeStackPtr -= 2;
     }
-
-
     //
     // Parsing of the input RBBI rules is complete.
     // We now have a parse tree for the rule expressions
@@ -1113,8 +1067,6 @@ void RBBIRuleScanner::parse() {
     }
 #endif
 }
-
-
 //------------------------------------------------------------------------------
 //
 //  printNodeStack     for debugging...
@@ -1127,10 +1079,6 @@ void RBBIRuleScanner::printNodeStack(const char *title) {
     for (i=fNodeStackPtr; i>0; i--) {fNodeStack[i]->printTree(TRUE);}
 }
 #endif
-
-
-
-
 //------------------------------------------------------------------------------
 //
 //  pushNewNode   create a new RBBINode of the specified type and push it
@@ -1154,8 +1102,6 @@ RBBINode  *RBBIRuleScanner::pushNewNode(RBBINode::NodeType  t) {
     }
     return fNodeStack[fNodeStackPtr];
 }
-
-
 
 //------------------------------------------------------------------------------
 //
@@ -1213,8 +1159,6 @@ void RBBIRuleScanner::scanSet() {
         delete uset;
         return;
     }
-
-
     // Advance the RBBI parse postion over the UnicodeSet pattern.
     //   Don't just set fScanIndex because the line/char positions maintained
     //   for error reporting would be thrown off.

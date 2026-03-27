@@ -32,8 +32,6 @@ struct CoverageFormat1Table : CoverageTable
     le_int32 getGlyphCoverage(LEGlyphID glyphID) const;
 };
 LE_VAR_ARRAY(CoverageFormat1Table, glyphArray)
-
-
 struct CoverageFormat2Table : CoverageTable
 {
     le_uint16        rangeCount;

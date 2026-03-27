@@ -15,19 +15,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef WOFFTYPES_H_
 #define WOFFTYPES_H_
-
-
 #include <freetype/tttables.h>
 #include <freetype/internal/ftobjs.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @struct:
@@ -58,8 +50,6 @@ FT_BEGIN_HEADER
     FT_ULong   privLength;
 
   } WOFF_HeaderRec, *WOFF_Header;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -101,8 +91,6 @@ FT_BEGIN_HEADER
     FT_ULong  OrigOffset;    /* uncompressed table file offset */
                              /* (not in the WOFF file)         */
   } WOFF_TableRec, *WOFF_Table;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -129,8 +117,6 @@ FT_BEGIN_HEADER
     FT_UShort*  table_indices;
 
   } WOFF2_TtcFontRec, *WOFF2_TtcFont;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -173,8 +159,6 @@ FT_BEGIN_HEADER
     WOFF2_TtcFont  ttc_fonts;        /* metadata for fonts in a TTC     */
 
   } WOFF2_HeaderRec, *WOFF2_Header;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -201,8 +185,6 @@ FT_BEGIN_HEADER
     FT_ULong  dst_offset;         /* uncompressed table offset */
 
   } WOFF2_TableRec, *WOFF2_Table;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -246,8 +228,6 @@ FT_BEGIN_HEADER
     WOFF2_Table  head_table;
 
   } WOFF2_InfoRec, *WOFF2_Info;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -274,8 +254,6 @@ FT_BEGIN_HEADER
     FT_ULong  size;
 
   } WOFF2_SubstreamRec, *WOFF2_Substream;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -302,11 +280,7 @@ FT_BEGIN_HEADER
     FT_Bool  on_curve;
 
   } WOFF2_PointRec, *WOFF2_Point;
-
-
 FT_END_HEADER
 
 #endif /* WOFFTYPES_H_ */
-
-
 /* END */

@@ -34,8 +34,6 @@
 #include "../../Reader/Records.h"
 #include "VisualPageAtom.h"
 #include "VisualShapeAtom.h"
-
-
 namespace PPT
 {
 class CRecordClientVisualElementContainer : public CUnknownRecord

@@ -14,8 +14,6 @@
 #include "unicode/localpointer.h"
 
 U_NAMESPACE_USE
-
-
 U_CAPI UFieldPositionIterator* U_EXPORT2
 ufieldpositer_open(UErrorCode* status)
 {
@@ -28,15 +26,11 @@ ufieldpositer_open(UErrorCode* status)
     }
     return (UFieldPositionIterator*)fpositer;
 }
-
-
 U_CAPI void U_EXPORT2
 ufieldpositer_close(UFieldPositionIterator *fpositer)
 {
     delete (FieldPositionIterator*)fpositer;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ufieldpositer_next(UFieldPositionIterator *fpositer,
                    int32_t *beginIndex, int32_t *endIndex)
@@ -54,6 +48,4 @@ ufieldpositer_next(UFieldPositionIterator *fpositer,
     }
     return field;
 }
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */

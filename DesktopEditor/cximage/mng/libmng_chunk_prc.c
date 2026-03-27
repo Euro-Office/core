@@ -1117,8 +1117,6 @@ INIT_CHUNK_HDR (mng_init_drop)
   return MNG_NOERROR;
 }
 #endif
-
-
 /* ************************************************************************** */
 
 #ifndef MNG_NO_DELTA_PNG

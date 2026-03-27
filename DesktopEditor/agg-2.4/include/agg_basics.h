@@ -18,8 +18,6 @@
 
 #include <math.h>
 #include "agg_config.h"
-
-
 //---------------------------------------------------------AGG_CUSTOM_ALLOCATOR
 #ifdef AGG_CUSTOM_ALLOCATOR
 #include "agg_allocator.h"
@@ -57,8 +55,6 @@ namespace agg
     };
 }
 #endif
-
-
 
 //-------------------------------------------------------- Default basic types
 //
@@ -320,8 +316,6 @@ namespace agg
         if(r.y1 < r2.y1) r.y1 = r2.y1;
         return r;
     }
-
-
     //---------------------------------------------------------unite_rectangles
     template<class Rect> 
     inline Rect unite_rectangles(const Rect& r1, const Rect& r2)
@@ -529,7 +523,5 @@ namespace agg
     }
 
 }
-
-
 #endif
 

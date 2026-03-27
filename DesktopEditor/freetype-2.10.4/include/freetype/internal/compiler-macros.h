@@ -206,8 +206,6 @@ FT_BEGIN_HEADER
 #define FT_BASE( x )      FT_INTERNAL_FUNCTION_ATTRIBUTE \
                           FT_FUNCTION_DECLARATION( x )
 #define FT_BASE_DEF( x )  FT_FUNCTION_DEFINITION( x )
-
-
   /*
    * NOTE: Conditionally define `FT_EXPORT_VAR` due to its definition in
    * `src/smooth/ftgrays.h` to make the header more portable.

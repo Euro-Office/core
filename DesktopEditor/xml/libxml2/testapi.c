@@ -15,8 +15,6 @@
 #include <string.h>
 #include <libxml/xmlerror.h>
 #include <libxml/relaxng.h>
-
-
 static int testlibxml2(void);
 static int test_module(const char *module);
 
@@ -239,8 +237,6 @@ static void *gen_userdata(int no, int nr ATTRIBUTE_UNUSED) {
 }
 static void des_userdata(int no ATTRIBUTE_UNUSED, void *val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
-
-
 #define gen_nb_int 4
 
 static int gen_int(int no, int nr ATTRIBUTE_UNUSED) {
@@ -746,8 +742,6 @@ static xmlHashDeallocator gen_xmlHashDeallocator(int no, int nr ATTRIBUTE_UNUSED
 }
 static void des_xmlHashDeallocator(int no ATTRIBUTE_UNUSED, xmlHashDeallocator val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
-
-
 static void desret_int(int val ATTRIBUTE_UNUSED) {
 }
 static void desret_xmlChar(xmlChar val ATTRIBUTE_UNUSED) {
@@ -1290,8 +1284,6 @@ testlibxml2(void)
            function_tests, call_tests, test_ret);
     return(test_ret);
 }
-
-
 static int
 test_UTF8ToHtml(void) {
     int test_ret = 0;
@@ -1355,8 +1347,6 @@ static htmlElemDesc * gen_const_htmlElemDesc_ptr(int no ATTRIBUTE_UNUSED, int nr
 static void des_const_htmlElemDesc_ptr(int no ATTRIBUTE_UNUSED, const htmlElemDesc * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_htmlAttrAllowed(void) {
     int test_ret = 0;
@@ -1413,8 +1403,6 @@ static htmlNodePtr gen_htmlNodePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNU
 static void des_htmlNodePtr(int no ATTRIBUTE_UNUSED, htmlNodePtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_htmlAutoCloseTag(void) {
     int test_ret = 0;
@@ -1461,8 +1449,6 @@ test_htmlAutoCloseTag(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCreateMemoryParserCtxt(void) {
     int test_ret = 0;
@@ -1512,8 +1498,6 @@ static htmlSAXHandlerPtr gen_htmlSAXHandlerPtr(int no ATTRIBUTE_UNUSED, int nr A
 static void des_htmlSAXHandlerPtr(int no ATTRIBUTE_UNUSED, htmlSAXHandlerPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_htmlCreatePushParserCtxt(void) {
     int test_ret = 0;
@@ -1581,8 +1565,6 @@ test_htmlCreatePushParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCtxtReadDoc(void) {
     int test_ret = 0;
@@ -1643,8 +1625,6 @@ test_htmlCtxtReadDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCtxtReadFile(void) {
     int test_ret = 0;
@@ -1686,8 +1666,6 @@ test_htmlCtxtReadFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCtxtReadMemory(void) {
     int test_ret = 0;
@@ -1755,8 +1733,6 @@ test_htmlCtxtReadMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCtxtReset(void) {
     int test_ret = 0;
@@ -1787,8 +1763,6 @@ test_htmlCtxtReset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlCtxtUseOptions(void) {
     int test_ret = 0;
@@ -1828,8 +1802,6 @@ test_htmlCtxtUseOptions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlElementAllowedHere(void) {
     int test_ret = 0;
@@ -1869,8 +1841,6 @@ test_htmlElementAllowedHere(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlElementStatusHere(void) {
     int test_ret = 0;
@@ -1910,8 +1880,6 @@ test_htmlElementStatusHere(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlEncodeEntities(void) {
     int test_ret = 0;
@@ -1972,8 +1940,6 @@ test_htmlEncodeEntities(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlEntityLookup(void) {
     int test_ret = 0;
@@ -2006,8 +1972,6 @@ test_htmlEntityLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlEntityValueLookup(void) {
     int test_ret = 0;
@@ -2040,8 +2004,6 @@ test_htmlEntityValueLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlHandleOmittedElem(void) {
     int test_ret = 0;
@@ -2074,8 +2036,6 @@ test_htmlHandleOmittedElem(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlIsAutoClosed(void) {
     int test_ret = 0;
@@ -2115,8 +2075,6 @@ test_htmlIsAutoClosed(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlIsScriptAttribute(void) {
     int test_ret = 0;
@@ -2149,8 +2107,6 @@ test_htmlIsScriptAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNewParserCtxt(void) {
     int test_ret = 0;
@@ -2176,8 +2132,6 @@ test_htmlNewParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeStatus(void) {
     int test_ret = 0;
@@ -2217,8 +2171,6 @@ test_htmlNodeStatus(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseCharRef(void) {
     int test_ret = 0;
@@ -2251,8 +2203,6 @@ test_htmlParseCharRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseChunk(void) {
     int test_ret = 0;
@@ -2307,8 +2257,6 @@ test_htmlParseChunk(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseDoc(void) {
     int test_ret = 0;
@@ -2348,8 +2296,6 @@ test_htmlParseDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseDocument(void) {
     int test_ret = 0;
@@ -2383,8 +2329,6 @@ test_htmlParseDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseElement(void) {
     int test_ret = 0;
@@ -2415,8 +2359,6 @@ test_htmlParseElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseEntityRef(void) {
     int test_ret = 0;
@@ -2456,8 +2398,6 @@ test_htmlParseEntityRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlParseFile(void) {
     int test_ret = 0;
@@ -2487,8 +2427,6 @@ test_htmlParseFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlReadDoc(void) {
     int test_ret = 0;
@@ -2542,8 +2480,6 @@ test_htmlReadDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlReadFile(void) {
     int test_ret = 0;
@@ -2590,8 +2526,6 @@ test_htmlReadFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlReadMemory(void) {
     int test_ret = 0;
@@ -2652,8 +2586,6 @@ test_htmlReadMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSAXParseDoc(void) {
     int test_ret = 0;
@@ -2707,8 +2639,6 @@ test_htmlSAXParseDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSAXParseFile(void) {
     int test_ret = 0;
@@ -2762,13 +2692,9 @@ test_htmlSAXParseFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlTagLookup(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -2868,8 +2794,6 @@ test_htmlDocContentDumpFormatOutput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlDocContentDumpOutput(void) {
     int test_ret = 0;
@@ -2914,8 +2838,6 @@ test_htmlDocContentDumpOutput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlDocDump(void) {
     int test_ret = 0;
@@ -2955,8 +2877,6 @@ test_htmlDocDump(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlChar_ptr_ptr 1
 static xmlChar ** gen_xmlChar_ptr_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -3008,8 +2928,6 @@ test_htmlDocDumpMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlDocDumpMemoryFormat(void) {
     int test_ret = 0;
@@ -3061,8 +2979,6 @@ test_htmlDocDumpMemoryFormat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlGetMetaEncoding(void) {
     int test_ret = 0;
@@ -3095,8 +3011,6 @@ test_htmlGetMetaEncoding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlIsBooleanAttr(void) {
     int test_ret = 0;
@@ -3129,8 +3043,6 @@ test_htmlIsBooleanAttr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNewDoc(void) {
     int test_ret = 0;
@@ -3170,8 +3082,6 @@ test_htmlNewDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNewDocNoDtD(void) {
     int test_ret = 0;
@@ -3211,8 +3121,6 @@ test_htmlNewDocNoDtD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeDump(void) {
     int test_ret = 0;
@@ -3259,8 +3167,6 @@ test_htmlNodeDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeDumpFile(void) {
     int test_ret = 0;
@@ -3305,8 +3211,6 @@ test_htmlNodeDumpFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeDumpFileFormat(void) {
     int test_ret = 0;
@@ -3367,8 +3271,6 @@ test_htmlNodeDumpFileFormat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeDumpFormatOutput(void) {
     int test_ret = 0;
@@ -3427,8 +3329,6 @@ test_htmlNodeDumpFormatOutput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlNodeDumpOutput(void) {
     int test_ret = 0;
@@ -3480,8 +3380,6 @@ test_htmlNodeDumpOutput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSaveFile(void) {
     int test_ret = 0;
@@ -3521,8 +3419,6 @@ test_htmlSaveFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSaveFileEnc(void) {
     int test_ret = 0;
@@ -3569,8 +3465,6 @@ test_htmlSaveFileEnc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSaveFileFormat(void) {
     int test_ret = 0;
@@ -3624,8 +3518,6 @@ test_htmlSaveFileFormat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlSetMetaEncoding(void) {
     int test_ret = 0;
@@ -3720,8 +3612,6 @@ test_docbDefaultSAXHandlerInit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlDefaultSAXHandlerInit(void) {
     int test_ret = 0;
@@ -3747,8 +3637,6 @@ test_htmlDefaultSAXHandlerInit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDefaultSAXHandlerInit(void) {
     int test_ret = 0;
@@ -3770,8 +3658,6 @@ test_xmlDefaultSAXHandlerInit(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlEnumerationPtr 1
 static xmlEnumerationPtr gen_xmlEnumerationPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -3849,8 +3735,6 @@ test_xmlSAX2AttributeDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2CDataBlock(void) {
     int test_ret = 0;
@@ -3893,8 +3777,6 @@ test_xmlSAX2CDataBlock(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2Characters(void) {
     int test_ret = 0;
@@ -3937,8 +3819,6 @@ test_xmlSAX2Characters(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2Comment(void) {
     int test_ret = 0;
@@ -3974,8 +3854,6 @@ test_xmlSAX2Comment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2ElementDecl(void) {
     int test_ret = 0;
@@ -4025,8 +3903,6 @@ test_xmlSAX2ElementDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2EndDocument(void) {
     int test_ret = 0;
@@ -4055,8 +3931,6 @@ test_xmlSAX2EndDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2EndElement(void) {
     int test_ret = 0;
@@ -4096,8 +3970,6 @@ test_xmlSAX2EndElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2EndElementNs(void) {
     int test_ret = 0;
@@ -4147,8 +4019,6 @@ test_xmlSAX2EndElementNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2EntityDecl(void) {
     int test_ret = 0;
@@ -4212,8 +4082,6 @@ test_xmlSAX2EntityDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2ExternalSubset(void) {
     int test_ret = 0;
@@ -4263,8 +4131,6 @@ test_xmlSAX2ExternalSubset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetColumnNumber(void) {
     int test_ret = 0;
@@ -4295,8 +4161,6 @@ test_xmlSAX2GetColumnNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetEntity(void) {
     int test_ret = 0;
@@ -4334,8 +4198,6 @@ test_xmlSAX2GetEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetLineNumber(void) {
     int test_ret = 0;
@@ -4366,8 +4228,6 @@ test_xmlSAX2GetLineNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetParameterEntity(void) {
     int test_ret = 0;
@@ -4405,8 +4265,6 @@ test_xmlSAX2GetParameterEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetPublicId(void) {
     int test_ret = 0;
@@ -4437,8 +4295,6 @@ test_xmlSAX2GetPublicId(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2GetSystemId(void) {
     int test_ret = 0;
@@ -4469,8 +4325,6 @@ test_xmlSAX2GetSystemId(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2HasExternalSubset(void) {
     int test_ret = 0;
@@ -4501,8 +4355,6 @@ test_xmlSAX2HasExternalSubset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2HasInternalSubset(void) {
     int test_ret = 0;
@@ -4533,8 +4385,6 @@ test_xmlSAX2HasInternalSubset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2IgnorableWhitespace(void) {
     int test_ret = 0;
@@ -4577,8 +4427,6 @@ test_xmlSAX2IgnorableWhitespace(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlSAXHandler_ptr 1
 static xmlSAXHandler * gen_xmlSAXHandler_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -4621,8 +4469,6 @@ test_xmlSAX2InitDefaultSAXHandler(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2InitDocbDefaultSAXHandler(void) {
     int test_ret = 0;
@@ -4653,8 +4499,6 @@ test_xmlSAX2InitDocbDefaultSAXHandler(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2InitHtmlDefaultSAXHandler(void) {
     int test_ret = 0;
@@ -4685,8 +4529,6 @@ test_xmlSAX2InitHtmlDefaultSAXHandler(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2InternalSubset(void) {
     int test_ret = 0;
@@ -4736,8 +4578,6 @@ test_xmlSAX2InternalSubset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2IsStandalone(void) {
     int test_ret = 0;
@@ -4768,8 +4608,6 @@ test_xmlSAX2IsStandalone(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2NotationDecl(void) {
     int test_ret = 0;
@@ -4819,8 +4657,6 @@ test_xmlSAX2NotationDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2ProcessingInstruction(void) {
     int test_ret = 0;
@@ -4863,8 +4699,6 @@ test_xmlSAX2ProcessingInstruction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2Reference(void) {
     int test_ret = 0;
@@ -4900,8 +4734,6 @@ test_xmlSAX2Reference(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2ResolveEntity(void) {
     int test_ret = 0;
@@ -4946,8 +4778,6 @@ test_xmlSAX2ResolveEntity(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlSAXLocatorPtr 1
 static xmlSAXLocatorPtr gen_xmlSAXLocatorPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -4990,8 +4820,6 @@ test_xmlSAX2SetDocumentLocator(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2StartDocument(void) {
     int test_ret = 0;
@@ -5020,8 +4848,6 @@ test_xmlSAX2StartDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2StartElement(void) {
     int test_ret = 0;
@@ -5068,8 +4894,6 @@ test_xmlSAX2StartElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2StartElementNs(void) {
     int test_ret = 0;
@@ -5154,8 +4978,6 @@ test_xmlSAX2StartElementNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAX2UnparsedEntityDecl(void) {
     int test_ret = 0;
@@ -5212,8 +5034,6 @@ test_xmlSAX2UnparsedEntityDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXDefaultVersion(void) {
     int test_ret = 0;
@@ -5248,8 +5068,6 @@ test_xmlSAXDefaultVersion(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXVersion(void) {
     int test_ret = 0;
@@ -5404,8 +5222,6 @@ test_xmlC14NDocDumpMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlC14NDocSave(void) {
     int test_ret = 0;
@@ -5480,8 +5296,6 @@ test_xmlC14NDocSave(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlC14NDocSaveTo(void) {
     int test_ret = 0;
@@ -5549,13 +5363,9 @@ test_xmlC14NDocSaveTo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlC14NExecute(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -5583,8 +5393,6 @@ static xmlCatalogPtr gen_xmlCatalogPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE
 static void des_xmlCatalogPtr(int no ATTRIBUTE_UNUSED, xmlCatalogPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlACatalogAdd(void) {
     int test_ret = 0;
@@ -5638,8 +5446,6 @@ test_xmlACatalogAdd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogDump(void) {
     int test_ret = 0;
@@ -5677,8 +5483,6 @@ test_xmlACatalogDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogRemove(void) {
     int test_ret = 0;
@@ -5718,8 +5522,6 @@ test_xmlACatalogRemove(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogResolve(void) {
     int test_ret = 0;
@@ -5766,8 +5568,6 @@ test_xmlACatalogResolve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogResolvePublic(void) {
     int test_ret = 0;
@@ -5807,8 +5607,6 @@ test_xmlACatalogResolvePublic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogResolveSystem(void) {
     int test_ret = 0;
@@ -5848,8 +5646,6 @@ test_xmlACatalogResolveSystem(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlACatalogResolveURI(void) {
     int test_ret = 0;
@@ -5889,8 +5685,6 @@ test_xmlACatalogResolveURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogAdd(void) {
     int test_ret = 0;
@@ -5937,15 +5731,11 @@ test_xmlCatalogAdd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogCleanup(void) {
     int test_ret = 0;
 
 #if defined(LIBXML_CATALOG_ENABLED)
-
-
         xmlCatalogCleanup();
         call_tests++;
         xmlResetLastError();
@@ -5954,16 +5744,12 @@ test_xmlCatalogCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogConvert(void) {
     int test_ret = 0;
 
 #if defined(LIBXML_CATALOG_ENABLED)
     int ret_val;
-
-
         ret_val = xmlCatalogConvert();
         desret_int(ret_val);
         call_tests++;
@@ -5973,8 +5759,6 @@ test_xmlCatalogConvert(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogDump(void) {
     int test_ret = 0;
@@ -6005,8 +5789,6 @@ test_xmlCatalogDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogGetDefaults(void) {
     int test_ret = 0;
@@ -6032,8 +5814,6 @@ test_xmlCatalogGetDefaults(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogIsEmpty(void) {
     int test_ret = 0;
@@ -6066,8 +5846,6 @@ test_xmlCatalogIsEmpty(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogLocalResolve(void) {
     int test_ret = 0;
@@ -6114,8 +5892,6 @@ test_xmlCatalogLocalResolve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogLocalResolveURI(void) {
     int test_ret = 0;
@@ -6155,8 +5931,6 @@ test_xmlCatalogLocalResolveURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogRemove(void) {
     int test_ret = 0;
@@ -6180,8 +5954,6 @@ test_xmlCatalogRemove(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogResolve(void) {
     int test_ret = 0;
@@ -6211,8 +5983,6 @@ test_xmlCatalogResolve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogResolvePublic(void) {
     int test_ret = 0;
@@ -6245,8 +6015,6 @@ test_xmlCatalogResolvePublic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogResolveSystem(void) {
     int test_ret = 0;
@@ -6279,8 +6047,6 @@ test_xmlCatalogResolveSystem(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogResolveURI(void) {
     int test_ret = 0;
@@ -6313,8 +6079,6 @@ test_xmlCatalogResolveURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogSetDefaultPrefer(void) {
     int test_ret = 0;
@@ -6347,8 +6111,6 @@ test_xmlCatalogSetDefaultPrefer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCatalogSetDefaults(void) {
     int test_ret = 0;
@@ -6379,8 +6141,6 @@ test_xmlCatalogSetDefaults(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlConvertSGMLCatalog(void) {
     int test_ret = 0;
@@ -6413,8 +6173,6 @@ test_xmlConvertSGMLCatalog(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitializeCatalog(void) {
     int test_ret = 0;
@@ -6438,18 +6196,12 @@ test_xmlInitializeCatalog(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLoadACatalog(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlLoadCatalog(void) {
     int test_ret = 0;
@@ -6473,8 +6225,6 @@ test_xmlLoadCatalog(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLoadCatalogs(void) {
     int test_ret = 0;
@@ -6496,28 +6246,18 @@ test_xmlLoadCatalogs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLoadSGMLSuperCatalog(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNewCatalog(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParseCatalogFile(void) {
     int test_ret = 0;
@@ -6636,8 +6376,6 @@ test_xmlCharInRange(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsBaseChar(void) {
     int test_ret = 0;
@@ -6668,8 +6406,6 @@ test_xmlIsBaseChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsBlank(void) {
     int test_ret = 0;
@@ -6700,8 +6436,6 @@ test_xmlIsBlank(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsChar(void) {
     int test_ret = 0;
@@ -6732,8 +6466,6 @@ test_xmlIsChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsCombining(void) {
     int test_ret = 0;
@@ -6764,8 +6496,6 @@ test_xmlIsCombining(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsDigit(void) {
     int test_ret = 0;
@@ -6796,8 +6526,6 @@ test_xmlIsDigit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsExtender(void) {
     int test_ret = 0;
@@ -6828,8 +6556,6 @@ test_xmlIsExtender(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsIdeographic(void) {
     int test_ret = 0;
@@ -6860,8 +6586,6 @@ test_xmlIsIdeographic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsPubidChar(void) {
     int test_ret = 0;
@@ -6945,8 +6669,6 @@ test_xmlBoolToText(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugCheckDocument(void) {
     int test_ret = 0;
@@ -6986,8 +6708,6 @@ test_xmlDebugCheckDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpAttr(void) {
     int test_ret = 0;
@@ -7032,8 +6752,6 @@ test_xmlDebugDumpAttr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpAttrList(void) {
     int test_ret = 0;
@@ -7078,8 +6796,6 @@ test_xmlDebugDumpAttrList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpDTD(void) {
     int test_ret = 0;
@@ -7117,8 +6833,6 @@ test_xmlDebugDumpDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpDocument(void) {
     int test_ret = 0;
@@ -7156,8 +6870,6 @@ test_xmlDebugDumpDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpDocumentHead(void) {
     int test_ret = 0;
@@ -7195,8 +6907,6 @@ test_xmlDebugDumpDocumentHead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpEntities(void) {
     int test_ret = 0;
@@ -7234,8 +6944,6 @@ test_xmlDebugDumpEntities(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpNode(void) {
     int test_ret = 0;
@@ -7280,8 +6988,6 @@ test_xmlDebugDumpNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpNodeList(void) {
     int test_ret = 0;
@@ -7326,8 +7032,6 @@ test_xmlDebugDumpNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpOneNode(void) {
     int test_ret = 0;
@@ -7372,8 +7076,6 @@ test_xmlDebugDumpOneNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDebugDumpString(void) {
     int test_ret = 0;
@@ -7411,8 +7113,6 @@ test_xmlDebugDumpString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLsCountNode(void) {
     int test_ret = 0;
@@ -7445,8 +7145,6 @@ test_xmlLsCountNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLsOneNode(void) {
     int test_ret = 0;
@@ -7484,8 +7182,6 @@ test_xmlLsOneNode(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_char_ptr 1
 static char * gen_char_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -7496,13 +7192,9 @@ static void des_char_ptr(int no ATTRIBUTE_UNUSED, char * val ATTRIBUTE_UNUSED, i
 static int
 test_xmlShell(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlShellBase(void) {
     int test_ret = 0;
@@ -7556,8 +7248,6 @@ test_xmlShellBase(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellCat(void) {
     int test_ret = 0;
@@ -7611,8 +7301,6 @@ test_xmlShellCat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellDir(void) {
     int test_ret = 0;
@@ -7666,8 +7354,6 @@ test_xmlShellDir(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellDu(void) {
     int test_ret = 0;
@@ -7721,8 +7407,6 @@ test_xmlShellDu(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellList(void) {
     int test_ret = 0;
@@ -7776,8 +7460,6 @@ test_xmlShellList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellLoad(void) {
     int test_ret = 0;
@@ -7831,8 +7513,6 @@ test_xmlShellLoad(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellPrintXPathResult(void) {
     int test_ret = 0;
@@ -7863,8 +7543,6 @@ test_xmlShellPrintXPathResult(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellPwd(void) {
     int test_ret = 0;
@@ -7918,8 +7596,6 @@ test_xmlShellPwd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellSave(void) {
     int test_ret = 0;
@@ -7973,8 +7649,6 @@ test_xmlShellSave(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellValidate(void) {
     int test_ret = 0;
@@ -8028,8 +7702,6 @@ test_xmlShellValidate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlShellWrite(void) {
     int test_ret = 0;
@@ -8142,8 +7814,6 @@ test_xmlDictCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictCreate(void) {
     int test_ret = 0;
@@ -8167,8 +7837,6 @@ test_xmlDictCreate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictCreateSub(void) {
     int test_ret = 0;
@@ -8199,8 +7867,6 @@ test_xmlDictCreateSub(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictExists(void) {
     int test_ret = 0;
@@ -8245,18 +7911,12 @@ test_xmlDictExists(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictGetUsage(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlDictLookup(void) {
     int test_ret = 0;
@@ -8301,8 +7961,6 @@ test_xmlDictLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictOwns(void) {
     int test_ret = 0;
@@ -8340,8 +7998,6 @@ test_xmlDictOwns(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictQLookup(void) {
     int test_ret = 0;
@@ -8386,8 +8042,6 @@ test_xmlDictQLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictReference(void) {
     int test_ret = 0;
@@ -8419,18 +8073,12 @@ test_xmlDictReference(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDictSetLimit(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlDictSize(void) {
     int test_ret = 0;
@@ -8461,8 +8109,6 @@ test_xmlDictSize(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitializeDict(void) {
     int test_ret = 0;
@@ -8565,8 +8211,6 @@ test_UTF8Toisolat1(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_isolat1ToUTF8(void) {
     int test_ret = 0;
@@ -8618,8 +8262,6 @@ test_isolat1ToUTF8(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddEncodingAlias(void) {
     int test_ret = 0;
@@ -8647,8 +8289,6 @@ test_xmlAddEncodingAlias(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlCharEncodingHandler_ptr 1
 static xmlCharEncodingHandler * gen_xmlCharEncodingHandler_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -8686,8 +8326,6 @@ test_xmlCharEncCloseFunc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCharEncFirstLine(void) {
     int test_ret = 0;
@@ -8732,8 +8370,6 @@ test_xmlCharEncFirstLine(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCharEncInFunc(void) {
     int test_ret = 0;
@@ -8778,8 +8414,6 @@ test_xmlCharEncInFunc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCharEncOutFunc(void) {
     int test_ret = 0;
@@ -8824,13 +8458,9 @@ test_xmlCharEncOutFunc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCleanupCharEncodingHandlers(void) {
     int test_ret = 0;
-
-
 
         xmlCleanupCharEncodingHandlers();
         call_tests++;
@@ -8839,8 +8469,6 @@ test_xmlCleanupCharEncodingHandlers(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCleanupEncodingAliases(void) {
     int test_ret = 0;
@@ -8862,8 +8490,6 @@ test_xmlCleanupEncodingAliases(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDelEncodingAlias(void) {
     int test_ret = 0;
@@ -8894,8 +8520,6 @@ test_xmlDelEncodingAlias(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDetectCharEncoding(void) {
     int test_ret = 0;
@@ -8933,28 +8557,18 @@ test_xmlDetectCharEncoding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFindCharEncodingHandler(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlGetCharEncodingHandler(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlGetCharEncodingName(void) {
     int test_ret = 0;
@@ -8985,8 +8599,6 @@ test_xmlGetCharEncodingName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetEncodingAlias(void) {
     int test_ret = 0;
@@ -9017,13 +8629,9 @@ test_xmlGetEncodingAlias(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitCharEncodingHandlers(void) {
     int test_ret = 0;
-
-
 
         xmlInitCharEncodingHandlers();
         call_tests++;
@@ -9032,18 +8640,12 @@ test_xmlInitCharEncodingHandlers(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewCharEncodingHandler(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParseCharEncoding(void) {
     int test_ret = 0;
@@ -9074,8 +8676,6 @@ test_xmlParseCharEncoding(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlCharEncodingHandlerPtr 1
 static xmlCharEncodingHandlerPtr gen_xmlCharEncodingHandlerPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -9207,8 +8807,6 @@ test_xmlAddDocEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddDtdEntity(void) {
     int test_ret = 0;
@@ -9274,8 +8872,6 @@ test_xmlAddDtdEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCleanupPredefinedEntities(void) {
     int test_ret = 0;
@@ -9301,8 +8897,6 @@ test_xmlCleanupPredefinedEntities(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlEntitiesTablePtr 1
 static xmlEntitiesTablePtr gen_xmlEntitiesTablePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -9313,23 +8907,15 @@ static void des_xmlEntitiesTablePtr(int no ATTRIBUTE_UNUSED, xmlEntitiesTablePtr
 static int
 test_xmlCopyEntitiesTable(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateEntitiesTable(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlDumpEntitiesTable(void) {
     int test_ret = 0;
@@ -9367,8 +8953,6 @@ test_xmlDumpEntitiesTable(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlEntityPtr 1
 static xmlEntityPtr gen_xmlEntityPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -9413,8 +8997,6 @@ test_xmlDumpEntityDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlEncodeEntitiesReentrant(void) {
     int test_ret = 0;
@@ -9452,8 +9034,6 @@ test_xmlEncodeEntitiesReentrant(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlDoc_ptr 1
 static xmlDoc * gen_const_xmlDoc_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -9498,8 +9078,6 @@ test_xmlEncodeSpecialChars(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDocEntity(void) {
     int test_ret = 0;
@@ -9537,8 +9115,6 @@ test_xmlGetDocEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdEntity(void) {
     int test_ret = 0;
@@ -9576,8 +9152,6 @@ test_xmlGetDtdEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetParameterEntity(void) {
     int test_ret = 0;
@@ -9615,8 +9189,6 @@ test_xmlGetParameterEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetPredefinedEntity(void) {
     int test_ret = 0;
@@ -9647,8 +9219,6 @@ test_xmlGetPredefinedEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitializePredefinedEntities(void) {
     int test_ret = 0;
@@ -9674,8 +9244,6 @@ test_xmlInitializePredefinedEntities(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewEntity(void) {
     int test_ret = 0;
@@ -9812,8 +9380,6 @@ test_xmlHashAddEntry(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashAddEntry2(void) {
     int test_ret = 0;
@@ -9865,8 +9431,6 @@ test_xmlHashAddEntry2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashAddEntry3(void) {
     int test_ret = 0;
@@ -9925,38 +9489,24 @@ test_xmlHashAddEntry3(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashCopy(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashCreate(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashCreateDict(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashLookup(void) {
     int test_ret = 0;
@@ -9994,8 +9544,6 @@ test_xmlHashLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashLookup2(void) {
     int test_ret = 0;
@@ -10040,8 +9588,6 @@ test_xmlHashLookup2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashLookup3(void) {
     int test_ret = 0;
@@ -10093,8 +9639,6 @@ test_xmlHashLookup3(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashQLookup(void) {
     int test_ret = 0;
@@ -10139,8 +9683,6 @@ test_xmlHashQLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashQLookup2(void) {
     int test_ret = 0;
@@ -10199,8 +9741,6 @@ test_xmlHashQLookup2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashQLookup3(void) {
     int test_ret = 0;
@@ -10273,8 +9813,6 @@ test_xmlHashQLookup3(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashRemoveEntry(void) {
     int test_ret = 0;
@@ -10319,8 +9857,6 @@ test_xmlHashRemoveEntry(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashRemoveEntry2(void) {
     int test_ret = 0;
@@ -10372,8 +9908,6 @@ test_xmlHashRemoveEntry2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashRemoveEntry3(void) {
     int test_ret = 0;
@@ -10432,48 +9966,30 @@ test_xmlHashRemoveEntry3(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashScan(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashScan3(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashScanFull(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashScanFull3(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlHashSize(void) {
     int test_ret = 0;
@@ -10504,8 +10020,6 @@ test_xmlHashSize(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashUpdateEntry(void) {
     int test_ret = 0;
@@ -10557,8 +10071,6 @@ test_xmlHashUpdateEntry(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashUpdateEntry2(void) {
     int test_ret = 0;
@@ -10617,8 +10129,6 @@ test_xmlHashUpdateEntry2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHashUpdateEntry3(void) {
     int test_ret = 0;
@@ -10756,8 +10266,6 @@ test_xmlLinkGetData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListAppend(void) {
     int test_ret = 0;
@@ -10795,8 +10303,6 @@ test_xmlListAppend(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListClear(void) {
     int test_ret = 0;
@@ -10825,8 +10331,6 @@ test_xmlListClear(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlListPtr 1
 static xmlListPtr gen_const_xmlListPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -10871,28 +10375,18 @@ test_xmlListCopy(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListCreate(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlListDup(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlListEmpty(void) {
     int test_ret = 0;
@@ -10923,28 +10417,18 @@ test_xmlListEmpty(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListEnd(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlListFront(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlListInsert(void) {
     int test_ret = 0;
@@ -10982,8 +10466,6 @@ test_xmlListInsert(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListMerge(void) {
     int test_ret = 0;
@@ -11019,8 +10501,6 @@ test_xmlListMerge(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListPopBack(void) {
     int test_ret = 0;
@@ -11049,8 +10529,6 @@ test_xmlListPopBack(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListPopFront(void) {
     int test_ret = 0;
@@ -11079,8 +10557,6 @@ test_xmlListPopFront(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListPushBack(void) {
     int test_ret = 0;
@@ -11118,8 +10594,6 @@ test_xmlListPushBack(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListPushFront(void) {
     int test_ret = 0;
@@ -11157,8 +10631,6 @@ test_xmlListPushFront(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListRemoveAll(void) {
     int test_ret = 0;
@@ -11196,8 +10668,6 @@ test_xmlListRemoveAll(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListRemoveFirst(void) {
     int test_ret = 0;
@@ -11235,8 +10705,6 @@ test_xmlListRemoveFirst(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListRemoveLast(void) {
     int test_ret = 0;
@@ -11274,8 +10742,6 @@ test_xmlListRemoveLast(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListReverse(void) {
     int test_ret = 0;
@@ -11304,8 +10770,6 @@ test_xmlListReverse(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListReverseSearch(void) {
     int test_ret = 0;
@@ -11343,18 +10807,12 @@ test_xmlListReverseSearch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListReverseWalk(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlListSearch(void) {
     int test_ret = 0;
@@ -11392,8 +10850,6 @@ test_xmlListSearch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListSize(void) {
     int test_ret = 0;
@@ -11424,8 +10880,6 @@ test_xmlListSize(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListSort(void) {
     int test_ret = 0;
@@ -11454,13 +10908,9 @@ test_xmlListSort(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlListWalk(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -11533,8 +10983,6 @@ test_xmlNanoFTPCheckResponse(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPCleanup(void) {
     int test_ret = 0;
@@ -11558,8 +11006,6 @@ test_xmlNanoFTPCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPCloseConnection(void) {
     int test_ret = 0;
@@ -11592,8 +11038,6 @@ test_xmlNanoFTPCloseConnection(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPCwd(void) {
     int test_ret = 0;
@@ -11633,8 +11077,6 @@ test_xmlNanoFTPCwd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPDele(void) {
     int test_ret = 0;
@@ -11674,28 +11116,18 @@ test_xmlNanoFTPDele(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPGet(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPGetConnection(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPGetResponse(void) {
     int test_ret = 0;
@@ -11728,18 +11160,12 @@ test_xmlNanoFTPGetResponse(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPGetSocket(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPInit(void) {
     int test_ret = 0;
@@ -11763,18 +11189,12 @@ test_xmlNanoFTPInit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPList(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPNewCtxt(void) {
     int test_ret = 0;
@@ -11807,8 +11227,6 @@ test_xmlNanoFTPNewCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPOpen(void) {
     int test_ret = 0;
@@ -11841,8 +11259,6 @@ test_xmlNanoFTPOpen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPProxy(void) {
     int test_ret = 0;
@@ -11888,8 +11304,6 @@ test_xmlNanoFTPProxy(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPQuit(void) {
     int test_ret = 0;
@@ -11922,8 +11336,6 @@ test_xmlNanoFTPQuit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPRead(void) {
     int test_ret = 0;
@@ -11970,8 +11382,6 @@ test_xmlNanoFTPRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPScanProxy(void) {
     int test_ret = 0;
@@ -11993,8 +11403,6 @@ test_xmlNanoFTPScanProxy(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoFTPUpdateURL(void) {
     int test_ret = 0;
@@ -12096,8 +11504,6 @@ test_xmlNanoHTTPAuthHeader(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPCleanup(void) {
     int test_ret = 0;
@@ -12121,8 +11527,6 @@ test_xmlNanoHTTPCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPContentLength(void) {
     int test_ret = 0;
@@ -12155,8 +11559,6 @@ test_xmlNanoHTTPContentLength(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPEncoding(void) {
     int test_ret = 0;
@@ -12189,8 +11591,6 @@ test_xmlNanoHTTPEncoding(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_char_ptr_ptr 1
 static char ** gen_char_ptr_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -12244,8 +11644,6 @@ test_xmlNanoHTTPFetch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPInit(void) {
     int test_ret = 0;
@@ -12269,8 +11667,6 @@ test_xmlNanoHTTPInit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPMimeType(void) {
     int test_ret = 0;
@@ -12303,8 +11699,6 @@ test_xmlNanoHTTPMimeType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPOpen(void) {
     int test_ret = 0;
@@ -12344,8 +11738,6 @@ test_xmlNanoHTTPOpen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPOpenRedir(void) {
     int test_ret = 0;
@@ -12392,8 +11784,6 @@ test_xmlNanoHTTPOpenRedir(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPRead(void) {
     int test_ret = 0;
@@ -12440,18 +11830,12 @@ test_xmlNanoHTTPRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPRedir(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPReturnCode(void) {
     int test_ret = 0;
@@ -12484,8 +11868,6 @@ test_xmlNanoHTTPReturnCode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPSave(void) {
     int test_ret = 0;
@@ -12525,8 +11907,6 @@ test_xmlNanoHTTPSave(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNanoHTTPScanProxy(void) {
     int test_ret = 0;
@@ -12604,8 +11984,6 @@ test_xmlByteConsumed(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlClearNodeInfoSeq(void) {
     int test_ret = 0;
@@ -12634,8 +12012,6 @@ test_xmlClearNodeInfoSeq(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlClearParserCtxt(void) {
     int test_ret = 0;
@@ -12664,8 +12040,6 @@ test_xmlClearParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateDocParserCtxt(void) {
     int test_ret = 0;
@@ -12696,8 +12070,6 @@ test_xmlCreateDocParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreatePushParserCtxt(void) {
     int test_ret = 0;
@@ -12758,8 +12130,6 @@ test_xmlCreatePushParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtReadDoc(void) {
     int test_ret = 0;
@@ -12818,8 +12188,6 @@ test_xmlCtxtReadDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtReadFile(void) {
     int test_ret = 0;
@@ -12871,8 +12239,6 @@ test_xmlCtxtReadFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtReadMemory(void) {
     int test_ret = 0;
@@ -12938,8 +12304,6 @@ test_xmlCtxtReadMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtReset(void) {
     int test_ret = 0;
@@ -12968,8 +12332,6 @@ test_xmlCtxtReset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtResetPush(void) {
     int test_ret = 0;
@@ -13028,8 +12390,6 @@ test_xmlCtxtResetPush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtUseOptions(void) {
     int test_ret = 0;
@@ -13067,18 +12427,12 @@ test_xmlCtxtUseOptions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetExternalEntityLoader(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlGetFeature(void) {
     int test_ret = 0;
@@ -13127,8 +12481,6 @@ test_xmlGetFeature(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_char_ptr_ptr 1
 static char ** gen_const_char_ptr_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -13177,8 +12529,6 @@ test_xmlGetFeaturesList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHasFeature(void) {
     int test_ret = 0;
@@ -13209,8 +12559,6 @@ test_xmlHasFeature(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOParseDTD(void) {
     int test_ret = 0;
@@ -13249,8 +12597,6 @@ test_xmlIOParseDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitNodeInfoSeq(void) {
     int test_ret = 0;
@@ -13279,8 +12625,6 @@ test_xmlInitNodeInfoSeq(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitParser(void) {
     int test_ret = 0;
@@ -13302,8 +12646,6 @@ test_xmlInitParser(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlInitParserCtxt(void) {
     int test_ret = 0;
@@ -13334,8 +12676,6 @@ test_xmlInitParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlKeepBlanksDefault(void) {
     int test_ret = 0;
@@ -13366,8 +12706,6 @@ test_xmlKeepBlanksDefault(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLineNumbersDefault(void) {
     int test_ret = 0;
@@ -13398,8 +12736,6 @@ test_xmlLineNumbersDefault(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLoadExternalEntity(void) {
     int test_ret = 0;
@@ -13444,8 +12780,6 @@ test_xmlLoadExternalEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewIOInputStream(void) {
     int test_ret = 0;
@@ -13491,8 +12825,6 @@ test_xmlNewIOInputStream(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewParserCtxt(void) {
     int test_ret = 0;
@@ -13516,8 +12848,6 @@ test_xmlNewParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlNodePtr_ptr 1
 static xmlNodePtr * gen_xmlNodePtr_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -13563,8 +12893,6 @@ test_xmlParseBalancedChunkMemory(void) {
 #ifdef LIBXML_SAX1_ENABLED
         if (sax == (xmlSAXHandlerPtr)&xmlDefaultSAXHandler) user_data = NULL;
 #endif
-
-
         ret_val = xmlParseBalancedChunkMemory(doc, sax, user_data, depth, (const xmlChar *)string, lst);
         desret_int(ret_val);
         call_tests++;
@@ -13599,8 +12927,6 @@ test_xmlParseBalancedChunkMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseBalancedChunkMemoryRecover(void) {
     int test_ret = 0;
@@ -13643,8 +12969,6 @@ test_xmlParseBalancedChunkMemoryRecover(void) {
 #ifdef LIBXML_SAX1_ENABLED
         if (sax == (xmlSAXHandlerPtr)&xmlDefaultSAXHandler) user_data = NULL;
 #endif
-
-
         ret_val = xmlParseBalancedChunkMemoryRecover(doc, sax, user_data, depth, (const xmlChar *)string, lst, recover);
         desret_int(ret_val);
         call_tests++;
@@ -13682,8 +13006,6 @@ test_xmlParseBalancedChunkMemoryRecover(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseChunk(void) {
     int test_ret = 0;
@@ -13738,8 +13060,6 @@ test_xmlParseChunk(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseCtxtExternalEntity(void) {
     int test_ret = 0;
@@ -13791,8 +13111,6 @@ test_xmlParseCtxtExternalEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseDTD(void) {
     int test_ret = 0;
@@ -13834,8 +13152,6 @@ test_xmlParseDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseDoc(void) {
     int test_ret = 0;
@@ -13870,8 +13186,6 @@ test_xmlParseDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseDocument(void) {
     int test_ret = 0;
@@ -13903,8 +13217,6 @@ test_xmlParseDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseEntity(void) {
     int test_ret = 0;
@@ -13939,8 +13251,6 @@ test_xmlParseEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseExtParsedEnt(void) {
     int test_ret = 0;
@@ -13972,8 +13282,6 @@ test_xmlParseExtParsedEnt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseExternalEntity(void) {
     int test_ret = 0;
@@ -14050,8 +13358,6 @@ test_xmlParseExternalEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseFile(void) {
     int test_ret = 0;
@@ -14086,8 +13392,6 @@ test_xmlParseFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseInNodeContext(void) {
     int test_ret = 0;
@@ -14146,8 +13450,6 @@ test_xmlParseInNodeContext(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseMemory(void) {
     int test_ret = 0;
@@ -14189,8 +13491,6 @@ test_xmlParseMemory(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlParserNodeInfoPtr 1
 static xmlParserNodeInfoPtr gen_const_xmlParserNodeInfoPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -14233,8 +13533,6 @@ test_xmlParserAddNodeInfo(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlParserCtxtPtr 1
 static xmlParserCtxtPtr gen_const_xmlParserCtxtPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -14286,8 +13584,6 @@ test_xmlParserFindNodeInfo(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlParserNodeInfoSeqPtr 1
 static xmlParserNodeInfoSeqPtr gen_const_xmlParserNodeInfoSeqPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -14332,8 +13628,6 @@ test_xmlParserFindNodeInfoIndex(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlParserInputPtr 1
 static xmlParserInputPtr gen_xmlParserInputPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -14378,8 +13672,6 @@ test_xmlParserInputGrow(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputRead(void) {
     int test_ret = 0;
@@ -14417,8 +13709,6 @@ test_xmlParserInputRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPedanticParserDefault(void) {
     int test_ret = 0;
@@ -14449,8 +13739,6 @@ test_xmlPedanticParserDefault(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReadDoc(void) {
     int test_ret = 0;
@@ -14502,8 +13790,6 @@ test_xmlReadDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReadFile(void) {
     int test_ret = 0;
@@ -14548,8 +13834,6 @@ test_xmlReadFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReadMemory(void) {
     int test_ret = 0;
@@ -14608,8 +13892,6 @@ test_xmlReadMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRecoverDoc(void) {
     int test_ret = 0;
@@ -14644,8 +13926,6 @@ test_xmlRecoverDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRecoverFile(void) {
     int test_ret = 0;
@@ -14680,8 +13960,6 @@ test_xmlRecoverFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRecoverMemory(void) {
     int test_ret = 0;
@@ -14723,8 +14001,6 @@ test_xmlRecoverMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseDTD(void) {
     int test_ret = 0;
@@ -14773,8 +14049,6 @@ test_xmlSAXParseDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseDoc(void) {
     int test_ret = 0;
@@ -14823,8 +14097,6 @@ test_xmlSAXParseDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseEntity(void) {
     int test_ret = 0;
@@ -14866,8 +14138,6 @@ test_xmlSAXParseEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseFile(void) {
     int test_ret = 0;
@@ -14916,8 +14186,6 @@ test_xmlSAXParseFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseFileWithData(void) {
     int test_ret = 0;
@@ -14973,8 +14241,6 @@ test_xmlSAXParseFileWithData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseMemory(void) {
     int test_ret = 0;
@@ -15030,8 +14296,6 @@ test_xmlSAXParseMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXParseMemoryWithData(void) {
     int test_ret = 0;
@@ -15094,8 +14358,6 @@ test_xmlSAXParseMemoryWithData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXUserParseFile(void) {
     int test_ret = 0;
@@ -15122,8 +14384,6 @@ test_xmlSAXUserParseFile(void) {
 #ifdef LIBXML_SAX1_ENABLED
         if (sax == (xmlSAXHandlerPtr)&xmlDefaultSAXHandler) user_data = NULL;
 #endif
-
-
         ret_val = xmlSAXUserParseFile(sax, user_data, filename);
         desret_int(ret_val);
         call_tests++;
@@ -15149,8 +14409,6 @@ test_xmlSAXUserParseFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSAXUserParseMemory(void) {
     int test_ret = 0;
@@ -15181,8 +14439,6 @@ test_xmlSAXUserParseMemory(void) {
 #ifdef LIBXML_SAX1_ENABLED
         if (sax == (xmlSAXHandlerPtr)&xmlDefaultSAXHandler) user_data = NULL;
 #endif
-
-
         ret_val = xmlSAXUserParseMemory(sax, user_data, (const char *)buffer, size);
         desret_int(ret_val);
         call_tests++;
@@ -15211,18 +14467,12 @@ test_xmlSAXUserParseMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetExternalEntityLoader(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSetFeature(void) {
     int test_ret = 0;
@@ -15271,8 +14521,6 @@ test_xmlSetFeature(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetupParserForBuffer(void) {
     int test_ret = 0;
@@ -15319,8 +14567,6 @@ test_xmlSetupParserForBuffer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStopParser(void) {
     int test_ret = 0;
@@ -15351,8 +14597,6 @@ test_xmlStopParser(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSubstituteEntitiesDefault(void) {
     int test_ret = 0;
@@ -15497,8 +14741,6 @@ test_htmlCreateFileParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_htmlInitAutoClose(void) {
     int test_ret = 0;
@@ -15522,8 +14764,6 @@ test_htmlInitAutoClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_inputPop(void) {
     int test_ret = 0;
@@ -15554,8 +14794,6 @@ test_inputPop(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_inputPush(void) {
     int test_ret = 0;
@@ -15593,8 +14831,6 @@ test_inputPush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_namePop(void) {
     int test_ret = 0;
@@ -15625,8 +14861,6 @@ test_namePop(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_namePush(void) {
     int test_ret = 0;
@@ -15664,8 +14898,6 @@ test_namePush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_nodePop(void) {
     int test_ret = 0;
@@ -15696,8 +14928,6 @@ test_nodePop(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_nodePush(void) {
     int test_ret = 0;
@@ -15735,8 +14965,6 @@ test_nodePush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCheckLanguageID(void) {
     int test_ret = 0;
@@ -15767,8 +14995,6 @@ test_xmlCheckLanguageID(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyChar(void) {
     int test_ret = 0;
@@ -15813,8 +15039,6 @@ test_xmlCopyChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyCharMultiByte(void) {
     int test_ret = 0;
@@ -15852,8 +15076,6 @@ test_xmlCopyCharMultiByte(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateEntityParserCtxt(void) {
     int test_ret = 0;
@@ -15898,8 +15120,6 @@ test_xmlCreateEntityParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateFileParserCtxt(void) {
     int test_ret = 0;
@@ -15930,8 +15150,6 @@ test_xmlCreateFileParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateMemoryParserCtxt(void) {
     int test_ret = 0;
@@ -15969,8 +15187,6 @@ test_xmlCreateMemoryParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateURLParserCtxt(void) {
     int test_ret = 0;
@@ -16008,8 +15224,6 @@ test_xmlCreateURLParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCurrentChar(void) {
     int test_ret = 0;
@@ -16047,8 +15261,6 @@ test_xmlCurrentChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlErrMemory(void) {
     int test_ret = 0;
@@ -16084,8 +15296,6 @@ test_xmlErrMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsLetter(void) {
     int test_ret = 0;
@@ -16116,8 +15326,6 @@ test_xmlIsLetter(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewEntityInputStream(void) {
     int test_ret = 0;
@@ -16155,8 +15363,6 @@ test_xmlNewEntityInputStream(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewInputFromFile(void) {
     int test_ret = 0;
@@ -16194,8 +15400,6 @@ test_xmlNewInputFromFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewInputStream(void) {
     int test_ret = 0;
@@ -16226,8 +15430,6 @@ test_xmlNewInputStream(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewStringInputStream(void) {
     int test_ret = 0;
@@ -16265,8 +15467,6 @@ test_xmlNewStringInputStream(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNextChar(void) {
     int test_ret = 0;
@@ -16295,8 +15495,6 @@ test_xmlNextChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputShrink(void) {
     int test_ret = 0;
@@ -16325,8 +15523,6 @@ test_xmlParserInputShrink(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPopInput(void) {
     int test_ret = 0;
@@ -16357,8 +15553,6 @@ test_xmlPopInput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPushInput(void) {
     int test_ret = 0;
@@ -16396,18 +15590,12 @@ test_xmlPushInput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetEntityReferenceFunc(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSplitQName(void) {
     int test_ret = 0;
@@ -16452,8 +15640,6 @@ test_xmlSplitQName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStringCurrentChar(void) {
     int test_ret = 0;
@@ -16498,8 +15684,6 @@ test_xmlStringCurrentChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStringDecodeEntities(void) {
     int test_ret = 0;
@@ -16565,8 +15749,6 @@ test_xmlStringDecodeEntities(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStringLenDecodeEntities(void) {
     int test_ret = 0;
@@ -16639,8 +15821,6 @@ test_xmlStringLenDecodeEntities(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSwitchEncoding(void) {
     int test_ret = 0;
@@ -16678,8 +15858,6 @@ test_xmlSwitchEncoding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSwitchInputEncoding(void) {
     int test_ret = 0;
@@ -16724,8 +15902,6 @@ test_xmlSwitchInputEncoding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSwitchToEncoding(void) {
     int test_ret = 0;
@@ -16841,18 +16017,12 @@ test_xmlPatternFromRoot(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPatternGetStreamCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlPatternMatch(void) {
     int test_ret = 0;
@@ -16892,8 +16062,6 @@ test_xmlPatternMatch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPatternMaxDepth(void) {
     int test_ret = 0;
@@ -16926,8 +16094,6 @@ test_xmlPatternMaxDepth(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPatternMinDepth(void) {
     int test_ret = 0;
@@ -16960,8 +16126,6 @@ test_xmlPatternMinDepth(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPatternStreamable(void) {
     int test_ret = 0;
@@ -16994,13 +16158,9 @@ test_xmlPatternStreamable(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPatterncompile(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -17014,8 +16174,6 @@ static xmlStreamCtxtPtr gen_xmlStreamCtxtPtr(int no ATTRIBUTE_UNUSED, int nr ATT
 static void des_xmlStreamCtxtPtr(int no ATTRIBUTE_UNUSED, xmlStreamCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlStreamPop(void) {
     int test_ret = 0;
@@ -17048,8 +16206,6 @@ test_xmlStreamPop(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStreamPush(void) {
     int test_ret = 0;
@@ -17096,8 +16252,6 @@ test_xmlStreamPush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStreamPushAttr(void) {
     int test_ret = 0;
@@ -17144,8 +16298,6 @@ test_xmlStreamPushAttr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStreamPushNode(void) {
     int test_ret = 0;
@@ -17199,8 +16351,6 @@ test_xmlStreamPushNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStreamWantsAnyNode(void) {
     int test_ret = 0;
@@ -17265,8 +16415,6 @@ static xmlRelaxNGPtr gen_xmlRelaxNGPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE
 static void des_xmlRelaxNGPtr(int no ATTRIBUTE_UNUSED, xmlRelaxNGPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlRelaxNGDump(void) {
     int test_ret = 0;
@@ -17304,8 +16452,6 @@ test_xmlRelaxNGDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGDumpTree(void) {
     int test_ret = 0;
@@ -17373,8 +16519,6 @@ static xmlRelaxNGValidityWarningFunc * gen_xmlRelaxNGValidityWarningFunc_ptr(int
 static void des_xmlRelaxNGValidityWarningFunc_ptr(int no ATTRIBUTE_UNUSED, xmlRelaxNGValidityWarningFunc * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlRelaxNGGetParserErrors(void) {
     int test_ret = 0;
@@ -17438,8 +16582,6 @@ static xmlRelaxNGValidCtxtPtr gen_xmlRelaxNGValidCtxtPtr(int no ATTRIBUTE_UNUSED
 static void des_xmlRelaxNGValidCtxtPtr(int no ATTRIBUTE_UNUSED, xmlRelaxNGValidCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlRelaxNGGetValidErrors(void) {
     int test_ret = 0;
@@ -17493,8 +16635,6 @@ test_xmlRelaxNGGetValidErrors(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGInitTypes(void) {
     int test_ret = 0;
@@ -17520,8 +16660,6 @@ test_xmlRelaxNGInitTypes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGNewDocParserCtxt(void) {
     int test_ret = 0;
@@ -17554,8 +16692,6 @@ test_xmlRelaxNGNewDocParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGNewMemParserCtxt(void) {
     int test_ret = 0;
@@ -17595,8 +16731,6 @@ test_xmlRelaxNGNewMemParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGNewParserCtxt(void) {
     int test_ret = 0;
@@ -17629,68 +16763,42 @@ test_xmlRelaxNGNewParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGNewValidCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGParse(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGSetParserErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGSetParserStructuredErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGSetValidErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGSetValidStructuredErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGValidateDoc(void) {
     int test_ret = 0;
@@ -17730,8 +16838,6 @@ test_xmlRelaxNGValidateDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGValidateFullElement(void) {
     int test_ret = 0;
@@ -17778,8 +16884,6 @@ test_xmlRelaxNGValidateFullElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGValidatePopElement(void) {
     int test_ret = 0;
@@ -17826,8 +16930,6 @@ test_xmlRelaxNGValidatePopElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGValidatePushCData(void) {
     int test_ret = 0;
@@ -17874,8 +16976,6 @@ test_xmlRelaxNGValidatePushCData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxNGValidatePushElement(void) {
     int test_ret = 0;
@@ -17922,8 +17022,6 @@ test_xmlRelaxNGValidatePushElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRelaxParserSetFlag(void) {
     int test_ret = 0;
@@ -18008,28 +17106,18 @@ test_schemasInternals(void) {
 static int
 test_xmlSchematronNewDocParserCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchematronNewMemParserCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchematronNewParserCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -18043,13 +17131,9 @@ static xmlSchematronPtr gen_xmlSchematronPtr(int no ATTRIBUTE_UNUSED, int nr ATT
 static void des_xmlSchematronPtr(int no ATTRIBUTE_UNUSED, xmlSchematronPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchematronNewValidCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -18063,13 +17147,9 @@ static xmlSchematronParserCtxtPtr gen_xmlSchematronParserCtxtPtr(int no ATTRIBUT
 static void des_xmlSchematronParserCtxtPtr(int no ATTRIBUTE_UNUSED, xmlSchematronParserCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchematronParse(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -18083,18 +17163,12 @@ static xmlSchematronValidCtxtPtr gen_xmlSchematronValidCtxtPtr(int no ATTRIBUTE_
 static void des_xmlSchematronValidCtxtPtr(int no ATTRIBUTE_UNUSED, xmlSchematronValidCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchematronSetValidStructuredErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchematronValidateDoc(void) {
     int test_ret = 0;
@@ -18191,8 +17265,6 @@ test_xmlAddChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddChildList(void) {
     int test_ret = 0;
@@ -18231,8 +17303,6 @@ test_xmlAddChildList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddNextSibling(void) {
     int test_ret = 0;
@@ -18271,8 +17341,6 @@ test_xmlAddNextSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddPrevSibling(void) {
     int test_ret = 0;
@@ -18313,8 +17381,6 @@ test_xmlAddPrevSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddSibling(void) {
     int test_ret = 0;
@@ -18353,8 +17419,6 @@ test_xmlAddSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAttrSerializeTxtContent(void) {
     int test_ret = 0;
@@ -18408,8 +17472,6 @@ test_xmlAttrSerializeTxtContent(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlBuf_ptr 1
 static xmlBuf * gen_const_xmlBuf_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -18447,8 +17509,6 @@ test_xmlBufContent(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlBufPtr 1
 static xmlBufPtr gen_xmlBufPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -18486,8 +17546,6 @@ test_xmlBufEnd(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlNode_ptr 1
 static xmlNode * gen_const_xmlNode_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -18532,28 +17590,18 @@ test_xmlBufGetNodeContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufNodeDump(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlBufShrink(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlBufPtr 1
 static xmlBufPtr gen_const_xmlBufPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -18564,13 +17612,9 @@ static void des_const_xmlBufPtr(int no ATTRIBUTE_UNUSED, const xmlBufPtr val ATT
 static int
 test_xmlBufUse(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferAdd(void) {
     int test_ret = 0;
@@ -18615,8 +17659,6 @@ test_xmlBufferAdd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferAddHead(void) {
     int test_ret = 0;
@@ -18661,8 +17703,6 @@ test_xmlBufferAddHead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferCCat(void) {
     int test_ret = 0;
@@ -18700,8 +17740,6 @@ test_xmlBufferCCat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferCat(void) {
     int test_ret = 0;
@@ -18739,8 +17777,6 @@ test_xmlBufferCat(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_const_xmlBuffer_ptr 1
 static xmlBuffer * gen_const_xmlBuffer_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -18778,8 +17814,6 @@ test_xmlBufferContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferCreate(void) {
     int test_ret = 0;
@@ -18803,28 +17837,18 @@ test_xmlBufferCreate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferCreateSize(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferCreateStatic(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferDetach(void) {
     int test_ret = 0;
@@ -18855,8 +17879,6 @@ test_xmlBufferDetach(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferEmpty(void) {
     int test_ret = 0;
@@ -18885,8 +17907,6 @@ test_xmlBufferEmpty(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferGrow(void) {
     int test_ret = 0;
@@ -18924,8 +17944,6 @@ test_xmlBufferGrow(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferLength(void) {
     int test_ret = 0;
@@ -18956,8 +17974,6 @@ test_xmlBufferLength(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferResize(void) {
     int test_ret = 0;
@@ -18995,8 +18011,6 @@ test_xmlBufferResize(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferSetAllocationScheme(void) {
     int test_ret = 0;
@@ -19033,8 +18047,6 @@ test_xmlBufferSetAllocationScheme(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferShrink(void) {
     int test_ret = 0;
@@ -19072,8 +18084,6 @@ test_xmlBufferShrink(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferWriteCHAR(void) {
     int test_ret = 0;
@@ -19109,8 +18119,6 @@ test_xmlBufferWriteCHAR(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferWriteChar(void) {
     int test_ret = 0;
@@ -19146,8 +18154,6 @@ test_xmlBufferWriteChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBufferWriteQuotedString(void) {
     int test_ret = 0;
@@ -19183,8 +18189,6 @@ test_xmlBufferWriteQuotedString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBuildQName(void) {
     int test_ret = 0;
@@ -19240,8 +18244,6 @@ test_xmlBuildQName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlChildElementCount(void) {
     int test_ret = 0;
@@ -19274,8 +18276,6 @@ test_xmlChildElementCount(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyDoc(void) {
     int test_ret = 0;
@@ -19315,8 +18315,6 @@ test_xmlCopyDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyDtd(void) {
     int test_ret = 0;
@@ -19349,8 +18347,6 @@ test_xmlCopyDtd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyNamespace(void) {
     int test_ret = 0;
@@ -19382,8 +18378,6 @@ test_xmlCopyNamespace(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyNamespaceList(void) {
     int test_ret = 0;
@@ -19415,8 +18409,6 @@ test_xmlCopyNamespaceList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyNode(void) {
     int test_ret = 0;
@@ -19454,8 +18446,6 @@ test_xmlCopyNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyNodeList(void) {
     int test_ret = 0;
@@ -19486,8 +18476,6 @@ test_xmlCopyNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyProp(void) {
     int test_ret = 0;
@@ -19525,8 +18513,6 @@ test_xmlCopyProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyPropList(void) {
     int test_ret = 0;
@@ -19564,8 +18550,6 @@ test_xmlCopyPropList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateIntSubset(void) {
     int test_ret = 0;
@@ -19617,8 +18601,6 @@ test_xmlCreateIntSubset(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlDOMWrapCtxtPtr 1
 static xmlDOMWrapCtxtPtr gen_xmlDOMWrapCtxtPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -19692,8 +18674,6 @@ test_xmlDOMWrapAdoptNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDOMWrapCloneNode(void) {
     int test_ret = 0;
@@ -19773,18 +18753,12 @@ test_xmlDOMWrapCloneNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDOMWrapNewCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlDOMWrapReconcileNamespaces(void) {
     int test_ret = 0;
@@ -19829,8 +18803,6 @@ test_xmlDOMWrapReconcileNamespaces(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDOMWrapRemoveNode(void) {
     int test_ret = 0;
@@ -19882,8 +18854,6 @@ test_xmlDOMWrapRemoveNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocCopyNode(void) {
     int test_ret = 0;
@@ -19928,8 +18898,6 @@ test_xmlDocCopyNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocCopyNodeList(void) {
     int test_ret = 0;
@@ -19967,8 +18935,6 @@ test_xmlDocCopyNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocDump(void) {
     int test_ret = 0;
@@ -20008,8 +18974,6 @@ test_xmlDocDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocDumpFormatMemory(void) {
     int test_ret = 0;
@@ -20061,8 +19025,6 @@ test_xmlDocDumpFormatMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocDumpFormatMemoryEnc(void) {
     int test_ret = 0;
@@ -20121,8 +19083,6 @@ test_xmlDocDumpFormatMemoryEnc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocDumpMemory(void) {
     int test_ret = 0;
@@ -20167,8 +19127,6 @@ test_xmlDocDumpMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocDumpMemoryEnc(void) {
     int test_ret = 0;
@@ -20220,8 +19178,6 @@ test_xmlDocDumpMemoryEnc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocFormatDump(void) {
     int test_ret = 0;
@@ -20268,8 +19224,6 @@ test_xmlDocFormatDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocGetRootElement(void) {
     int test_ret = 0;
@@ -20300,8 +19254,6 @@ test_xmlDocGetRootElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDocSetRootElement(void) {
     int test_ret = 0;
@@ -20342,8 +19294,6 @@ test_xmlDocSetRootElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlElemDump(void) {
     int test_ret = 0;
@@ -20388,8 +19338,6 @@ test_xmlElemDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFirstElementChild(void) {
     int test_ret = 0;
@@ -20422,8 +19370,6 @@ test_xmlFirstElementChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetBufferAllocationScheme(void) {
     int test_ret = 0;
@@ -20447,8 +19393,6 @@ test_xmlGetBufferAllocationScheme(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetCompressMode(void) {
     int test_ret = 0;
@@ -20472,8 +19416,6 @@ test_xmlGetCompressMode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDocCompressMode(void) {
     int test_ret = 0;
@@ -20504,8 +19446,6 @@ test_xmlGetDocCompressMode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetIntSubset(void) {
     int test_ret = 0;
@@ -20536,8 +19476,6 @@ test_xmlGetIntSubset(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetLastChild(void) {
     int test_ret = 0;
@@ -20568,8 +19506,6 @@ test_xmlGetLastChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetLineNo(void) {
     int test_ret = 0;
@@ -20600,8 +19536,6 @@ test_xmlGetLineNo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetNoNsProp(void) {
     int test_ret = 0;
@@ -20639,8 +19573,6 @@ test_xmlGetNoNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetNodePath(void) {
     int test_ret = 0;
@@ -20673,18 +19605,12 @@ test_xmlGetNodePath(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetNsList(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlGetNsProp(void) {
     int test_ret = 0;
@@ -20729,8 +19655,6 @@ test_xmlGetNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetProp(void) {
     int test_ret = 0;
@@ -20768,8 +19692,6 @@ test_xmlGetProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHasNsProp(void) {
     int test_ret = 0;
@@ -20814,8 +19736,6 @@ test_xmlHasNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlHasProp(void) {
     int test_ret = 0;
@@ -20853,8 +19773,6 @@ test_xmlHasProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsBlankNode(void) {
     int test_ret = 0;
@@ -20885,8 +19803,6 @@ test_xmlIsBlankNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsXHTML(void) {
     int test_ret = 0;
@@ -20924,8 +19840,6 @@ test_xmlIsXHTML(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlLastElementChild(void) {
     int test_ret = 0;
@@ -20958,8 +19872,6 @@ test_xmlLastElementChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewCDataBlock(void) {
     int test_ret = 0;
@@ -21004,8 +19916,6 @@ test_xmlNewCDataBlock(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewCharRef(void) {
     int test_ret = 0;
@@ -21043,8 +19953,6 @@ test_xmlNewCharRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewChild(void) {
     int test_ret = 0;
@@ -21100,8 +20008,6 @@ test_xmlNewChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewComment(void) {
     int test_ret = 0;
@@ -21132,8 +20038,6 @@ test_xmlNewComment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDoc(void) {
     int test_ret = 0;
@@ -21164,8 +20068,6 @@ test_xmlNewDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocComment(void) {
     int test_ret = 0;
@@ -21203,8 +20105,6 @@ test_xmlNewDocComment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocFragment(void) {
     int test_ret = 0;
@@ -21237,8 +20137,6 @@ test_xmlNewDocFragment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocNode(void) {
     int test_ret = 0;
@@ -21290,8 +20188,6 @@ test_xmlNewDocNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocNodeEatName(void) {
     int test_ret = 0;
@@ -21343,8 +20239,6 @@ test_xmlNewDocNodeEatName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocPI(void) {
     int test_ret = 0;
@@ -21389,8 +20283,6 @@ test_xmlNewDocPI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocProp(void) {
     int test_ret = 0;
@@ -21435,8 +20327,6 @@ test_xmlNewDocProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocRawNode(void) {
     int test_ret = 0;
@@ -21492,8 +20382,6 @@ test_xmlNewDocRawNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocText(void) {
     int test_ret = 0;
@@ -21531,8 +20419,6 @@ test_xmlNewDocText(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocTextLen(void) {
     int test_ret = 0;
@@ -21577,8 +20463,6 @@ test_xmlNewDocTextLen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDtd(void) {
     int test_ret = 0;
@@ -21630,8 +20514,6 @@ test_xmlNewDtd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewNode(void) {
     int test_ret = 0;
@@ -21669,8 +20551,6 @@ test_xmlNewNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewNodeEatName(void) {
     int test_ret = 0;
@@ -21708,8 +20588,6 @@ test_xmlNewNodeEatName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewNs(void) {
     int test_ret = 0;
@@ -21755,8 +20633,6 @@ test_xmlNewNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewNsProp(void) {
     int test_ret = 0;
@@ -21808,8 +20684,6 @@ test_xmlNewNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewNsPropEatName(void) {
     int test_ret = 0;
@@ -21861,8 +20735,6 @@ test_xmlNewNsPropEatName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewPI(void) {
     int test_ret = 0;
@@ -21900,8 +20772,6 @@ test_xmlNewPI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewProp(void) {
     int test_ret = 0;
@@ -21950,8 +20820,6 @@ test_xmlNewProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewReference(void) {
     int test_ret = 0;
@@ -21989,8 +20857,6 @@ test_xmlNewReference(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewText(void) {
     int test_ret = 0;
@@ -22021,8 +20887,6 @@ test_xmlNewText(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextChild(void) {
     int test_ret = 0;
@@ -22078,8 +20942,6 @@ test_xmlNewTextChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextLen(void) {
     int test_ret = 0;
@@ -22117,8 +20979,6 @@ test_xmlNewTextLen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNextElementSibling(void) {
     int test_ret = 0;
@@ -22151,8 +21011,6 @@ test_xmlNextElementSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeAddContent(void) {
     int test_ret = 0;
@@ -22188,8 +21046,6 @@ test_xmlNodeAddContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeAddContentLen(void) {
     int test_ret = 0;
@@ -22232,8 +21088,6 @@ test_xmlNodeAddContentLen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeBufGetContent(void) {
     int test_ret = 0;
@@ -22271,8 +21125,6 @@ test_xmlNodeBufGetContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeDump(void) {
     int test_ret = 0;
@@ -22333,8 +21185,6 @@ test_xmlNodeDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeDumpOutput(void) {
     int test_ret = 0;
@@ -22400,8 +21250,6 @@ test_xmlNodeDumpOutput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeGetBase(void) {
     int test_ret = 0;
@@ -22439,8 +21287,6 @@ test_xmlNodeGetBase(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeGetContent(void) {
     int test_ret = 0;
@@ -22471,8 +21317,6 @@ test_xmlNodeGetContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeGetLang(void) {
     int test_ret = 0;
@@ -22503,8 +21347,6 @@ test_xmlNodeGetLang(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeGetSpacePreserve(void) {
     int test_ret = 0;
@@ -22535,8 +21377,6 @@ test_xmlNodeGetSpacePreserve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeIsText(void) {
     int test_ret = 0;
@@ -22567,8 +21407,6 @@ test_xmlNodeIsText(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeListGetRawString(void) {
     int test_ret = 0;
@@ -22615,8 +21453,6 @@ test_xmlNodeListGetRawString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeListGetString(void) {
     int test_ret = 0;
@@ -22661,8 +21497,6 @@ test_xmlNodeListGetString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetBase(void) {
     int test_ret = 0;
@@ -22700,8 +21534,6 @@ test_xmlNodeSetBase(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetContent(void) {
     int test_ret = 0;
@@ -22737,8 +21569,6 @@ test_xmlNodeSetContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetContentLen(void) {
     int test_ret = 0;
@@ -22783,8 +21613,6 @@ test_xmlNodeSetContentLen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetLang(void) {
     int test_ret = 0;
@@ -22822,8 +21650,6 @@ test_xmlNodeSetLang(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetName(void) {
     int test_ret = 0;
@@ -22861,8 +21687,6 @@ test_xmlNodeSetName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNodeSetSpacePreserve(void) {
     int test_ret = 0;
@@ -22900,8 +21724,6 @@ test_xmlNodeSetSpacePreserve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPreviousElementSibling(void) {
     int test_ret = 0;
@@ -22934,8 +21756,6 @@ test_xmlPreviousElementSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReconciliateNs(void) {
     int test_ret = 0;
@@ -22977,8 +21797,6 @@ test_xmlReconciliateNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRemoveProp(void) {
     int test_ret = 0;
@@ -23010,8 +21828,6 @@ test_xmlRemoveProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReplaceNode(void) {
     int test_ret = 0;
@@ -23058,8 +21874,6 @@ test_xmlReplaceNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFile(void) {
     int test_ret = 0;
@@ -23099,8 +21913,6 @@ test_xmlSaveFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFileEnc(void) {
     int test_ret = 0;
@@ -23147,8 +21959,6 @@ test_xmlSaveFileEnc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFileTo(void) {
     int test_ret = 0;
@@ -23196,8 +22006,6 @@ test_xmlSaveFileTo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFormatFile(void) {
     int test_ret = 0;
@@ -23244,8 +22052,6 @@ test_xmlSaveFormatFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFormatFileEnc(void) {
     int test_ret = 0;
@@ -23299,8 +22105,6 @@ test_xmlSaveFormatFileEnc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFormatFileTo(void) {
     int test_ret = 0;
@@ -23355,8 +22159,6 @@ test_xmlSaveFormatFileTo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSearchNs(void) {
     int test_ret = 0;
@@ -23401,8 +22203,6 @@ test_xmlSearchNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSearchNsByHref(void) {
     int test_ret = 0;
@@ -23447,8 +22247,6 @@ test_xmlSearchNsByHref(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetBufferAllocationScheme(void) {
     int test_ret = 0;
@@ -23477,8 +22275,6 @@ test_xmlSetBufferAllocationScheme(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetCompressMode(void) {
     int test_ret = 0;
@@ -23507,8 +22303,6 @@ test_xmlSetCompressMode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetDocCompressMode(void) {
     int test_ret = 0;
@@ -23544,8 +22338,6 @@ test_xmlSetDocCompressMode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetNs(void) {
     int test_ret = 0;
@@ -23581,8 +22373,6 @@ test_xmlSetNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetNsProp(void) {
     int test_ret = 0;
@@ -23636,8 +22426,6 @@ test_xmlSetNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetProp(void) {
     int test_ret = 0;
@@ -23684,8 +22472,6 @@ test_xmlSetProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSplitQName2(void) {
     int test_ret = 0;
@@ -23723,8 +22509,6 @@ test_xmlSplitQName2(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSplitQName3(void) {
     int test_ret = 0;
@@ -23762,8 +22546,6 @@ test_xmlSplitQName3(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStringGetNodeList(void) {
     int test_ret = 0;
@@ -23801,8 +22583,6 @@ test_xmlStringGetNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStringLenGetNodeList(void) {
     int test_ret = 0;
@@ -23847,8 +22627,6 @@ test_xmlStringLenGetNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextConcat(void) {
     int test_ret = 0;
@@ -23893,8 +22671,6 @@ test_xmlTextConcat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextMerge(void) {
     int test_ret = 0;
@@ -23935,8 +22711,6 @@ test_xmlTextMerge(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUnsetNsProp(void) {
     int test_ret = 0;
@@ -23983,8 +22757,6 @@ test_xmlUnsetNsProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUnsetProp(void) {
     int test_ret = 0;
@@ -24024,8 +22796,6 @@ test_xmlUnsetProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNCName(void) {
     int test_ret = 0;
@@ -24067,8 +22837,6 @@ test_xmlValidateNCName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNMToken(void) {
     int test_ret = 0;
@@ -24110,8 +22878,6 @@ test_xmlValidateNMToken(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateName(void) {
     int test_ret = 0;
@@ -24153,8 +22919,6 @@ test_xmlValidateName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateQName(void) {
     int test_ret = 0;
@@ -24394,8 +23158,6 @@ test_xmlBuildRelativeURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlBuildURI(void) {
     int test_ret = 0;
@@ -24433,8 +23195,6 @@ test_xmlBuildURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCanonicPath(void) {
     int test_ret = 0;
@@ -24465,18 +23225,12 @@ test_xmlCanonicPath(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateURI(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlNormalizeURIPath(void) {
     int test_ret = 0;
@@ -24507,28 +23261,18 @@ test_xmlNormalizeURIPath(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParseURI(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParseURIRaw(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 #define gen_nb_xmlURIPtr 1
 static xmlURIPtr gen_xmlURIPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -24573,8 +23317,6 @@ test_xmlParseURIReference(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPathToURI(void) {
     int test_ret = 0;
@@ -24605,8 +23347,6 @@ test_xmlPathToURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPrintURI(void) {
     int test_ret = 0;
@@ -24642,8 +23382,6 @@ test_xmlPrintURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveUri(void) {
     int test_ret = 0;
@@ -24674,8 +23412,6 @@ test_xmlSaveUri(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlURIEscape(void) {
     int test_ret = 0;
@@ -24706,8 +23442,6 @@ test_xmlURIEscape(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlURIEscapeStr(void) {
     int test_ret = 0;
@@ -24745,13 +23479,9 @@ test_xmlURIEscapeStr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlURIUnescapeString(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -24867,8 +23597,6 @@ test_xmlAddAttributeDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddElementDecl(void) {
     int test_ret = 0;
@@ -24927,38 +23655,24 @@ test_xmlAddElementDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAddID(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAddNotationDecl(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAddRef(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 #define gen_nb_xmlAttributeTablePtr 1
 static xmlAttributeTablePtr gen_xmlAttributeTablePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -24969,13 +23683,9 @@ static void des_xmlAttributeTablePtr(int no ATTRIBUTE_UNUSED, xmlAttributeTableP
 static int
 test_xmlCopyAttributeTable(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyDocElementContent(void) {
     int test_ret = 0;
@@ -25013,8 +23723,6 @@ test_xmlCopyDocElementContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyElementContent(void) {
     int test_ret = 0;
@@ -25045,8 +23753,6 @@ test_xmlCopyElementContent(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlElementTablePtr 1
 static xmlElementTablePtr gen_xmlElementTablePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -25057,23 +23763,15 @@ static void des_xmlElementTablePtr(int no ATTRIBUTE_UNUSED, xmlElementTablePtr v
 static int
 test_xmlCopyElementTable(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlCopyEnumeration(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 #define gen_nb_xmlNotationTablePtr 1
 static xmlNotationTablePtr gen_xmlNotationTablePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -25084,23 +23782,15 @@ static void des_xmlNotationTablePtr(int no ATTRIBUTE_UNUSED, xmlNotationTablePtr
 static int
 test_xmlCopyNotationTable(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlCreateEnumeration(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 #define gen_nb_xmlAttributePtr 1
 static xmlAttributePtr gen_xmlAttributePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -25145,8 +23835,6 @@ test_xmlDumpAttributeDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDumpAttributeTable(void) {
     int test_ret = 0;
@@ -25184,8 +23872,6 @@ test_xmlDumpAttributeTable(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlElementPtr 1
 static xmlElementPtr gen_xmlElementPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -25230,8 +23916,6 @@ test_xmlDumpElementDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDumpElementTable(void) {
     int test_ret = 0;
@@ -25269,8 +23953,6 @@ test_xmlDumpElementTable(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlNotationPtr 1
 static xmlNotationPtr gen_xmlNotationPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -25315,8 +23997,6 @@ test_xmlDumpNotationDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlDumpNotationTable(void) {
     int test_ret = 0;
@@ -25354,8 +24034,6 @@ test_xmlDumpNotationTable(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdAttrDesc(void) {
     int test_ret = 0;
@@ -25400,8 +24078,6 @@ test_xmlGetDtdAttrDesc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdElementDesc(void) {
     int test_ret = 0;
@@ -25439,18 +24115,12 @@ test_xmlGetDtdElementDesc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdNotationDesc(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdQAttrDesc(void) {
     int test_ret = 0;
@@ -25502,8 +24172,6 @@ test_xmlGetDtdQAttrDesc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetDtdQElementDesc(void) {
     int test_ret = 0;
@@ -25548,8 +24216,6 @@ test_xmlGetDtdQElementDesc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetID(void) {
     int test_ret = 0;
@@ -25587,18 +24253,12 @@ test_xmlGetID(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetRefs(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlIsID(void) {
     int test_ret = 0;
@@ -25643,8 +24303,6 @@ test_xmlIsID(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsMixedElement(void) {
     int test_ret = 0;
@@ -25682,8 +24340,6 @@ test_xmlIsMixedElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIsRef(void) {
     int test_ret = 0;
@@ -25728,8 +24384,6 @@ test_xmlIsRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewDocElementContent(void) {
     int test_ret = 0;
@@ -25775,8 +24429,6 @@ test_xmlNewDocElementContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewElementContent(void) {
     int test_ret = 0;
@@ -25814,18 +24466,12 @@ test_xmlNewElementContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewValidCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRemoveID(void) {
     int test_ret = 0;
@@ -25863,8 +24509,6 @@ test_xmlRemoveID(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRemoveRef(void) {
     int test_ret = 0;
@@ -25902,8 +24546,6 @@ test_xmlRemoveRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSnprintfElementContent(void) {
     int test_ret = 0;
@@ -25953,8 +24595,6 @@ test_xmlSnprintfElementContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSprintfElementContent(void) {
     int test_ret = 0;
@@ -26001,8 +24641,6 @@ test_xmlSprintfElementContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidBuildContentModel(void) {
     int test_ret = 0;
@@ -26042,8 +24680,6 @@ test_xmlValidBuildContentModel(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidCtxtNormalizeAttributeValue(void) {
     int test_ret = 0;
@@ -26104,8 +24740,6 @@ test_xmlValidCtxtNormalizeAttributeValue(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlElementContent_ptr 1
 static xmlElementContent * gen_xmlElementContent_ptr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -26168,8 +24802,6 @@ test_xmlValidGetPotentialChildren(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidGetValidElements(void) {
     int test_ret = 0;
@@ -26225,8 +24857,6 @@ test_xmlValidGetValidElements(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidNormalizeAttributeValue(void) {
     int test_ret = 0;
@@ -26280,8 +24910,6 @@ test_xmlValidNormalizeAttributeValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateAttributeDecl(void) {
     int test_ret = 0;
@@ -26328,8 +24956,6 @@ test_xmlValidateAttributeDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateAttributeValue(void) {
     int test_ret = 0;
@@ -26369,8 +24995,6 @@ test_xmlValidateAttributeValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateDocument(void) {
     int test_ret = 0;
@@ -26410,8 +25034,6 @@ test_xmlValidateDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateDocumentFinal(void) {
     int test_ret = 0;
@@ -26451,8 +25073,6 @@ test_xmlValidateDocumentFinal(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateDtd(void) {
     int test_ret = 0;
@@ -26499,8 +25119,6 @@ test_xmlValidateDtd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateDtdFinal(void) {
     int test_ret = 0;
@@ -26540,8 +25158,6 @@ test_xmlValidateDtdFinal(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateElement(void) {
     int test_ret = 0;
@@ -26588,8 +25204,6 @@ test_xmlValidateElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateElementDecl(void) {
     int test_ret = 0;
@@ -26636,8 +25250,6 @@ test_xmlValidateElementDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNameValue(void) {
     int test_ret = 0;
@@ -26670,8 +25282,6 @@ test_xmlValidateNameValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNamesValue(void) {
     int test_ret = 0;
@@ -26704,8 +25314,6 @@ test_xmlValidateNamesValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNmtokenValue(void) {
     int test_ret = 0;
@@ -26738,8 +25346,6 @@ test_xmlValidateNmtokenValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNmtokensValue(void) {
     int test_ret = 0;
@@ -26772,8 +25378,6 @@ test_xmlValidateNmtokensValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNotationDecl(void) {
     int test_ret = 0;
@@ -26820,8 +25424,6 @@ test_xmlValidateNotationDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateNotationUse(void) {
     int test_ret = 0;
@@ -26868,8 +25470,6 @@ test_xmlValidateNotationUse(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateOneAttribute(void) {
     int test_ret = 0;
@@ -26930,8 +25530,6 @@ test_xmlValidateOneAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateOneElement(void) {
     int test_ret = 0;
@@ -26978,8 +25576,6 @@ test_xmlValidateOneElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateOneNamespace(void) {
     int test_ret = 0;
@@ -27047,8 +25643,6 @@ test_xmlValidateOneNamespace(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidatePopElement(void) {
     int test_ret = 0;
@@ -27102,8 +25696,6 @@ test_xmlValidatePopElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidatePushCData(void) {
     int test_ret = 0;
@@ -27150,8 +25742,6 @@ test_xmlValidatePushCData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidatePushElement(void) {
     int test_ret = 0;
@@ -27205,8 +25795,6 @@ test_xmlValidatePushElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlValidateRoot(void) {
     int test_ret = 0;
@@ -27322,13 +25910,9 @@ test_valid(void) {
 static int
 test_xmlXIncludeNewContext(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcess(void) {
     int test_ret = 0;
@@ -27361,8 +25945,6 @@ test_xmlXIncludeProcess(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcessFlags(void) {
     int test_ret = 0;
@@ -27402,8 +25984,6 @@ test_xmlXIncludeProcessFlags(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcessFlagsData(void) {
     int test_ret = 0;
@@ -27460,8 +26040,6 @@ static xmlXIncludeCtxtPtr gen_xmlXIncludeCtxtPtr(int no ATTRIBUTE_UNUSED, int nr
 static void des_xmlXIncludeCtxtPtr(int no ATTRIBUTE_UNUSED, xmlXIncludeCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlXIncludeProcessNode(void) {
     int test_ret = 0;
@@ -27501,8 +26079,6 @@ test_xmlXIncludeProcessNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcessTree(void) {
     int test_ret = 0;
@@ -27535,8 +26111,6 @@ test_xmlXIncludeProcessTree(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcessTreeFlags(void) {
     int test_ret = 0;
@@ -27576,8 +26150,6 @@ test_xmlXIncludeProcessTreeFlags(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeProcessTreeFlagsData(void) {
     int test_ret = 0;
@@ -27624,8 +26196,6 @@ test_xmlXIncludeProcessTreeFlagsData(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXIncludeSetFlags(void) {
     int test_ret = 0;
@@ -27718,8 +26288,6 @@ test_xmlAllocOutputBuffer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAllocParserInputBuffer(void) {
     int test_ret = 0;
@@ -27750,8 +26318,6 @@ test_xmlAllocParserInputBuffer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCheckFilename(void) {
     int test_ret = 0;
@@ -27782,8 +26348,6 @@ test_xmlCheckFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCheckHTTPInput(void) {
     int test_ret = 0;
@@ -27821,8 +26385,6 @@ test_xmlCheckHTTPInput(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCleanupInputCallbacks(void) {
     int test_ret = 0;
@@ -27844,8 +26406,6 @@ test_xmlCleanupInputCallbacks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCleanupOutputCallbacks(void) {
     int test_ret = 0;
@@ -27869,8 +26429,6 @@ test_xmlCleanupOutputCallbacks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFileClose(void) {
     int test_ret = 0;
@@ -27901,8 +26459,6 @@ test_xmlFileClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFileMatch(void) {
     int test_ret = 0;
@@ -27933,8 +26489,6 @@ test_xmlFileMatch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFileOpen(void) {
     int test_ret = 0;
@@ -27965,8 +26519,6 @@ test_xmlFileOpen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlFileRead(void) {
     int test_ret = 0;
@@ -28011,8 +26563,6 @@ test_xmlFileRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOFTPClose(void) {
     int test_ret = 0;
@@ -28045,8 +26595,6 @@ test_xmlIOFTPClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOFTPMatch(void) {
     int test_ret = 0;
@@ -28079,8 +26627,6 @@ test_xmlIOFTPMatch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOFTPOpen(void) {
     int test_ret = 0;
@@ -28113,8 +26659,6 @@ test_xmlIOFTPOpen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOFTPRead(void) {
     int test_ret = 0;
@@ -28161,8 +26705,6 @@ test_xmlIOFTPRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOHTTPClose(void) {
     int test_ret = 0;
@@ -28195,8 +26737,6 @@ test_xmlIOHTTPClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOHTTPMatch(void) {
     int test_ret = 0;
@@ -28229,8 +26769,6 @@ test_xmlIOHTTPMatch(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOHTTPOpen(void) {
     int test_ret = 0;
@@ -28263,8 +26801,6 @@ test_xmlIOHTTPOpen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlIOHTTPRead(void) {
     int test_ret = 0;
@@ -28311,8 +26847,6 @@ test_xmlIOHTTPRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNoNetExternalEntityLoader(void) {
     int test_ret = 0;
@@ -28357,8 +26891,6 @@ test_xmlNoNetExternalEntityLoader(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNormalizeWindowsPath(void) {
     int test_ret = 0;
@@ -28389,8 +26921,6 @@ test_xmlNormalizeWindowsPath(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferCreateBuffer(void) {
     int test_ret = 0;
@@ -28430,8 +26960,6 @@ test_xmlOutputBufferCreateBuffer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferCreateFd(void) {
     int test_ret = 0;
@@ -28471,8 +26999,6 @@ test_xmlOutputBufferCreateFd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferCreateFile(void) {
     int test_ret = 0;
@@ -28512,8 +27038,6 @@ test_xmlOutputBufferCreateFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferCreateFilename(void) {
     int test_ret = 0;
@@ -28560,8 +27084,6 @@ test_xmlOutputBufferCreateFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferFlush(void) {
     int test_ret = 0;
@@ -28594,8 +27116,6 @@ test_xmlOutputBufferFlush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferGetContent(void) {
     int test_ret = 0;
@@ -28628,18 +27148,12 @@ test_xmlOutputBufferGetContent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferGetSize(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferWrite(void) {
     int test_ret = 0;
@@ -28686,18 +27200,12 @@ test_xmlOutputBufferWrite(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferWriteEscape(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlOutputBufferWriteString(void) {
     int test_ret = 0;
@@ -28737,18 +27245,12 @@ test_xmlOutputBufferWriteString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserGetDirectory(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferCreateFd(void) {
     int test_ret = 0;
@@ -28787,8 +27289,6 @@ test_xmlParserInputBufferCreateFd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferCreateFile(void) {
     int test_ret = 0;
@@ -28826,8 +27326,6 @@ test_xmlParserInputBufferCreateFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferCreateFilename(void) {
     int test_ret = 0;
@@ -28865,8 +27363,6 @@ test_xmlParserInputBufferCreateFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferCreateMem(void) {
     int test_ret = 0;
@@ -28911,8 +27407,6 @@ test_xmlParserInputBufferCreateMem(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferCreateStatic(void) {
     int test_ret = 0;
@@ -28957,8 +27451,6 @@ test_xmlParserInputBufferCreateStatic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferGrow(void) {
     int test_ret = 0;
@@ -28996,8 +27488,6 @@ test_xmlParserInputBufferGrow(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferPush(void) {
     int test_ret = 0;
@@ -29042,8 +27532,6 @@ test_xmlParserInputBufferPush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserInputBufferRead(void) {
     int test_ret = 0;
@@ -29081,8 +27569,6 @@ test_xmlParserInputBufferRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlPopInputCallbacks(void) {
     int test_ret = 0;
@@ -29106,8 +27592,6 @@ test_xmlPopInputCallbacks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegisterDefaultInputCallbacks(void) {
     int test_ret = 0;
@@ -29129,8 +27613,6 @@ test_xmlRegisterDefaultInputCallbacks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegisterDefaultOutputCallbacks(void) {
     int test_ret = 0;
@@ -29154,8 +27636,6 @@ test_xmlRegisterDefaultOutputCallbacks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegisterHTTPPostCallbacks(void) {
     int test_ret = 0;
@@ -29242,28 +27722,18 @@ static xmlAutomataPtr gen_xmlAutomataPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBU
 static void des_xmlAutomataPtr(int no ATTRIBUTE_UNUSED, xmlAutomataPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlAutomataCompile(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataGetInitState(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataIsDeterminist(void) {
     int test_ret = 0;
@@ -29306,48 +27776,30 @@ static xmlAutomataStatePtr gen_xmlAutomataStatePtr(int no ATTRIBUTE_UNUSED, int 
 static void des_xmlAutomataStatePtr(int no ATTRIBUTE_UNUSED, xmlAutomataStatePtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlAutomataNewAllTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewCountTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewCountTrans2(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewCountedTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewCounter(void) {
     int test_ret = 0;
@@ -29394,88 +27846,54 @@ test_xmlAutomataNewCounter(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewCounterTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewEpsilon(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewNegTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewOnceTrans(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewOnceTrans2(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewState(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewTransition(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataNewTransition2(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlAutomataSetFinalState(void) {
     int test_ret = 0;
@@ -29515,13 +27933,9 @@ test_xmlAutomataSetFinalState(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewAutomata(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -29590,8 +28004,6 @@ test_initGenericErrorDefaultFunc(void) {
 
     return(test_ret);
 }
-
-
 #define gen_nb_xmlErrorPtr 1
 static xmlErrorPtr gen_xmlErrorPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
     return(NULL);
@@ -29636,18 +28048,12 @@ test_xmlCopyError(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtGetLastError(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlCtxtResetLastError(void) {
     int test_ret = 0;
@@ -29676,28 +28082,18 @@ test_xmlCtxtResetLastError(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetLastError(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParserError(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParserPrintFileContext(void) {
     int test_ret = 0;
@@ -29726,8 +28122,6 @@ test_xmlParserPrintFileContext(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserPrintFileInfo(void) {
     int test_ret = 0;
@@ -29756,38 +28150,24 @@ test_xmlParserPrintFileInfo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlParserValidityError(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParserValidityWarning(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlParserWarning(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlResetError(void) {
     int test_ret = 0;
@@ -29816,13 +28196,9 @@ test_xmlResetError(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlResetLastError(void) {
     int test_ret = 0;
-
-
 
         xmlResetLastError();
         call_tests++;
@@ -29831,23 +28207,15 @@ test_xmlResetLastError(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSetGenericErrorFunc(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSetStructuredErrorFunc(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -29886,8 +28254,6 @@ static xmlModulePtr gen_xmlModulePtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_U
 static void des_xmlModulePtr(int no ATTRIBUTE_UNUSED, xmlModulePtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlModuleClose(void) {
     int test_ret = 0;
@@ -29920,18 +28286,12 @@ test_xmlModuleClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlModuleOpen(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlModuleSymbol(void) {
     int test_ret = 0;
@@ -30032,8 +28392,6 @@ test_xmlNewTextReader(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextReaderFilename(void) {
     int test_ret = 0;
@@ -30066,8 +28424,6 @@ test_xmlNewTextReaderFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderForDoc(void) {
     int test_ret = 0;
@@ -30121,8 +28477,6 @@ test_xmlReaderForDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderForFile(void) {
     int test_ret = 0;
@@ -30169,8 +28523,6 @@ test_xmlReaderForFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderForMemory(void) {
     int test_ret = 0;
@@ -30231,8 +28583,6 @@ test_xmlReaderForMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderNewDoc(void) {
     int test_ret = 0;
@@ -30293,8 +28643,6 @@ test_xmlReaderNewDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderNewFile(void) {
     int test_ret = 0;
@@ -30348,8 +28696,6 @@ test_xmlReaderNewFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderNewMemory(void) {
     int test_ret = 0;
@@ -30417,8 +28763,6 @@ test_xmlReaderNewMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderNewWalker(void) {
     int test_ret = 0;
@@ -30458,8 +28802,6 @@ test_xmlReaderNewWalker(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlReaderWalker(void) {
     int test_ret = 0;
@@ -30492,8 +28834,6 @@ test_xmlReaderWalker(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderAttributeCount(void) {
     int test_ret = 0;
@@ -30526,8 +28866,6 @@ test_xmlTextReaderAttributeCount(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderBaseUri(void) {
     int test_ret = 0;
@@ -30560,8 +28898,6 @@ test_xmlTextReaderBaseUri(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderByteConsumed(void) {
     int test_ret = 0;
@@ -30594,8 +28930,6 @@ test_xmlTextReaderByteConsumed(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderClose(void) {
     int test_ret = 0;
@@ -30628,8 +28962,6 @@ test_xmlTextReaderClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstBaseUri(void) {
     int test_ret = 0;
@@ -30662,8 +28994,6 @@ test_xmlTextReaderConstBaseUri(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstEncoding(void) {
     int test_ret = 0;
@@ -30696,8 +29026,6 @@ test_xmlTextReaderConstEncoding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstLocalName(void) {
     int test_ret = 0;
@@ -30730,8 +29058,6 @@ test_xmlTextReaderConstLocalName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstName(void) {
     int test_ret = 0;
@@ -30764,8 +29090,6 @@ test_xmlTextReaderConstName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstNamespaceUri(void) {
     int test_ret = 0;
@@ -30798,8 +29122,6 @@ test_xmlTextReaderConstNamespaceUri(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstPrefix(void) {
     int test_ret = 0;
@@ -30832,8 +29154,6 @@ test_xmlTextReaderConstPrefix(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstString(void) {
     int test_ret = 0;
@@ -30873,8 +29193,6 @@ test_xmlTextReaderConstString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstValue(void) {
     int test_ret = 0;
@@ -30907,8 +29225,6 @@ test_xmlTextReaderConstValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstXmlLang(void) {
     int test_ret = 0;
@@ -30941,8 +29257,6 @@ test_xmlTextReaderConstXmlLang(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderConstXmlVersion(void) {
     int test_ret = 0;
@@ -30975,8 +29289,6 @@ test_xmlTextReaderConstXmlVersion(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderCurrentDoc(void) {
     int test_ret = 0;
@@ -31009,8 +29321,6 @@ test_xmlTextReaderCurrentDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderCurrentNode(void) {
     int test_ret = 0;
@@ -31043,8 +29353,6 @@ test_xmlTextReaderCurrentNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderDepth(void) {
     int test_ret = 0;
@@ -31077,8 +29385,6 @@ test_xmlTextReaderDepth(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderExpand(void) {
     int test_ret = 0;
@@ -31111,8 +29417,6 @@ test_xmlTextReaderExpand(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetAttribute(void) {
     int test_ret = 0;
@@ -31152,8 +29456,6 @@ test_xmlTextReaderGetAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetAttributeNo(void) {
     int test_ret = 0;
@@ -31193,8 +29495,6 @@ test_xmlTextReaderGetAttributeNo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetAttributeNs(void) {
     int test_ret = 0;
@@ -31251,8 +29551,6 @@ static xmlTextReaderErrorFunc * gen_xmlTextReaderErrorFunc_ptr(int no ATTRIBUTE_
 static void des_xmlTextReaderErrorFunc_ptr(int no ATTRIBUTE_UNUSED, xmlTextReaderErrorFunc * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlTextReaderGetErrorHandler(void) {
     int test_ret = 0;
@@ -31297,8 +29595,6 @@ test_xmlTextReaderGetErrorHandler(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetParserColumnNumber(void) {
     int test_ret = 0;
@@ -31331,8 +29627,6 @@ test_xmlTextReaderGetParserColumnNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetParserLineNumber(void) {
     int test_ret = 0;
@@ -31365,8 +29659,6 @@ test_xmlTextReaderGetParserLineNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetParserProp(void) {
     int test_ret = 0;
@@ -31406,8 +29698,6 @@ test_xmlTextReaderGetParserProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderGetRemainder(void) {
     int test_ret = 0;
@@ -31440,8 +29730,6 @@ test_xmlTextReaderGetRemainder(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderHasAttributes(void) {
     int test_ret = 0;
@@ -31474,8 +29762,6 @@ test_xmlTextReaderHasAttributes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderHasValue(void) {
     int test_ret = 0;
@@ -31508,8 +29794,6 @@ test_xmlTextReaderHasValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderIsDefault(void) {
     int test_ret = 0;
@@ -31542,8 +29826,6 @@ test_xmlTextReaderIsDefault(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderIsEmptyElement(void) {
     int test_ret = 0;
@@ -31576,8 +29858,6 @@ test_xmlTextReaderIsEmptyElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderIsNamespaceDecl(void) {
     int test_ret = 0;
@@ -31610,8 +29890,6 @@ test_xmlTextReaderIsNamespaceDecl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderIsValid(void) {
     int test_ret = 0;
@@ -31644,8 +29922,6 @@ test_xmlTextReaderIsValid(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderLocalName(void) {
     int test_ret = 0;
@@ -31688,8 +29964,6 @@ static xmlTextReaderLocatorPtr gen_xmlTextReaderLocatorPtr(int no ATTRIBUTE_UNUS
 static void des_xmlTextReaderLocatorPtr(int no ATTRIBUTE_UNUSED, xmlTextReaderLocatorPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlTextReaderLocatorBaseURI(void) {
     int test_ret = 0;
@@ -31722,8 +29996,6 @@ test_xmlTextReaderLocatorBaseURI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderLocatorLineNumber(void) {
     int test_ret = 0;
@@ -31756,8 +30028,6 @@ test_xmlTextReaderLocatorLineNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderLookupNamespace(void) {
     int test_ret = 0;
@@ -31797,8 +30067,6 @@ test_xmlTextReaderLookupNamespace(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToAttribute(void) {
     int test_ret = 0;
@@ -31838,8 +30106,6 @@ test_xmlTextReaderMoveToAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToAttributeNo(void) {
     int test_ret = 0;
@@ -31879,8 +30145,6 @@ test_xmlTextReaderMoveToAttributeNo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToAttributeNs(void) {
     int test_ret = 0;
@@ -31927,8 +30191,6 @@ test_xmlTextReaderMoveToAttributeNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToElement(void) {
     int test_ret = 0;
@@ -31961,8 +30223,6 @@ test_xmlTextReaderMoveToElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToFirstAttribute(void) {
     int test_ret = 0;
@@ -31995,8 +30255,6 @@ test_xmlTextReaderMoveToFirstAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderMoveToNextAttribute(void) {
     int test_ret = 0;
@@ -32029,8 +30287,6 @@ test_xmlTextReaderMoveToNextAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderName(void) {
     int test_ret = 0;
@@ -32063,8 +30319,6 @@ test_xmlTextReaderName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderNamespaceUri(void) {
     int test_ret = 0;
@@ -32097,8 +30351,6 @@ test_xmlTextReaderNamespaceUri(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderNext(void) {
     int test_ret = 0;
@@ -32131,8 +30383,6 @@ test_xmlTextReaderNext(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderNextSibling(void) {
     int test_ret = 0;
@@ -32165,8 +30415,6 @@ test_xmlTextReaderNextSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderNodeType(void) {
     int test_ret = 0;
@@ -32199,8 +30447,6 @@ test_xmlTextReaderNodeType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderNormalization(void) {
     int test_ret = 0;
@@ -32233,8 +30479,6 @@ test_xmlTextReaderNormalization(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderPrefix(void) {
     int test_ret = 0;
@@ -32267,8 +30511,6 @@ test_xmlTextReaderPrefix(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderPreserve(void) {
     int test_ret = 0;
@@ -32301,8 +30543,6 @@ test_xmlTextReaderPreserve(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderPreservePattern(void) {
     int test_ret = 0;
@@ -32351,8 +30591,6 @@ test_xmlTextReaderPreservePattern(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderQuoteChar(void) {
     int test_ret = 0;
@@ -32385,8 +30623,6 @@ test_xmlTextReaderQuoteChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderRead(void) {
     int test_ret = 0;
@@ -32419,8 +30655,6 @@ test_xmlTextReaderRead(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderReadAttributeValue(void) {
     int test_ret = 0;
@@ -32453,8 +30687,6 @@ test_xmlTextReaderReadAttributeValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderReadState(void) {
     int test_ret = 0;
@@ -32487,8 +30719,6 @@ test_xmlTextReaderReadState(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderRelaxNGSetSchema(void) {
     int test_ret = 0;
@@ -32528,8 +30758,6 @@ test_xmlTextReaderRelaxNGSetSchema(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderRelaxNGValidate(void) {
     int test_ret = 0;
@@ -32569,8 +30797,6 @@ test_xmlTextReaderRelaxNGValidate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderRelaxNGValidateCtxt(void) {
     int test_ret = 0;
@@ -32617,8 +30843,6 @@ test_xmlTextReaderRelaxNGValidateCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSchemaValidate(void) {
     int test_ret = 0;
@@ -32648,8 +30872,6 @@ test_xmlTextReaderSchemaValidate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSchemaValidateCtxt(void) {
     int test_ret = 0;
@@ -32696,18 +30918,12 @@ test_xmlTextReaderSchemaValidateCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSetErrorHandler(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSetParserProp(void) {
     int test_ret = 0;
@@ -32754,8 +30970,6 @@ test_xmlTextReaderSetParserProp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSetSchema(void) {
     int test_ret = 0;
@@ -32795,18 +31009,12 @@ test_xmlTextReaderSetSchema(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSetStructuredErrorHandler(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderSetup(void) {
     int test_ret = 0;
@@ -32866,8 +31074,6 @@ test_xmlTextReaderSetup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderStandalone(void) {
     int test_ret = 0;
@@ -32900,8 +31106,6 @@ test_xmlTextReaderStandalone(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderValue(void) {
     int test_ret = 0;
@@ -32934,8 +31138,6 @@ test_xmlTextReaderValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextReaderXmlLang(void) {
     int test_ret = 0;
@@ -33090,8 +31292,6 @@ test_xmlExpCtxtNbCons(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpCtxtNbNodes(void) {
     int test_ret = 0;
@@ -33124,8 +31324,6 @@ test_xmlExpCtxtNbNodes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpDump(void) {
     int test_ret = 0;
@@ -33163,18 +31361,12 @@ test_xmlExpDump(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpExpDerive(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpGetLanguage(void) {
     int test_ret = 0;
@@ -33228,8 +31420,6 @@ test_xmlExpGetLanguage(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpGetStart(void) {
     int test_ret = 0;
@@ -33283,8 +31473,6 @@ test_xmlExpGetStart(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpIsNillable(void) {
     int test_ret = 0;
@@ -33317,8 +31505,6 @@ test_xmlExpIsNillable(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpMaxToken(void) {
     int test_ret = 0;
@@ -33351,68 +31537,42 @@ test_xmlExpMaxToken(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpNewAtom(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpNewCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpNewOr(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpNewRange(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpNewSeq(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpParse(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpRef(void) {
     int test_ret = 0;
@@ -33443,18 +31603,12 @@ test_xmlExpRef(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlExpStringDerive(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlExpSubsume(void) {
     int test_ret = 0;
@@ -33511,8 +31665,6 @@ static xmlRegExecCtxtPtr gen_xmlRegExecCtxtPtr(int no ATTRIBUTE_UNUSED, int nr A
 static void des_xmlRegExecCtxtPtr(int no ATTRIBUTE_UNUSED, xmlRegExecCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlRegExecErrInfo(void) {
     int test_ret = 0;
@@ -33580,8 +31732,6 @@ test_xmlRegExecErrInfo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegExecNextValues(void) {
     int test_ret = 0;
@@ -33642,8 +31792,6 @@ test_xmlRegExecNextValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegExecPushString(void) {
     int test_ret = 0;
@@ -33690,8 +31838,6 @@ test_xmlRegExecPushString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegExecPushString2(void) {
     int test_ret = 0;
@@ -33755,28 +31901,18 @@ static xmlRegexpPtr gen_xmlRegexpPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBUTE_U
 static void des_xmlRegexpPtr(int no ATTRIBUTE_UNUSED, xmlRegexpPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlRegNewExecCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRegexpCompile(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlRegexpExec(void) {
     int test_ret = 0;
@@ -33816,8 +31952,6 @@ test_xmlRegexpExec(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegexpIsDeterminist(void) {
     int test_ret = 0;
@@ -33850,8 +31984,6 @@ test_xmlRegexpIsDeterminist(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlRegexpPrint(void) {
     int test_ret = 0;
@@ -33935,8 +32067,6 @@ static xmlSaveCtxtPtr gen_xmlSaveCtxtPtr(int no ATTRIBUTE_UNUSED, int nr ATTRIBU
 static void des_xmlSaveCtxtPtr(int no ATTRIBUTE_UNUSED, xmlSaveCtxtPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSaveClose(void) {
     int test_ret = 0;
@@ -33969,8 +32099,6 @@ test_xmlSaveClose(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveDoc(void) {
     int test_ret = 0;
@@ -34010,8 +32138,6 @@ test_xmlSaveDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveFlush(void) {
     int test_ret = 0;
@@ -34044,58 +32170,36 @@ test_xmlSaveFlush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveSetAttrEscape(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveSetEscape(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveToBuffer(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveToFd(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveToFilename(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSaveTree(void) {
     int test_ret = 0;
@@ -34223,8 +32327,6 @@ static xmlSchemaValidityWarningFunc * gen_xmlSchemaValidityWarningFunc_ptr(int n
 static void des_xmlSchemaValidityWarningFunc_ptr(int no ATTRIBUTE_UNUSED, xmlSchemaValidityWarningFunc * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaGetParserErrors(void) {
     int test_ret = 0;
@@ -34278,8 +32380,6 @@ test_xmlSchemaGetParserErrors(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetValidErrors(void) {
     int test_ret = 0;
@@ -34333,8 +32433,6 @@ test_xmlSchemaGetValidErrors(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaIsValid(void) {
     int test_ret = 0;
@@ -34367,8 +32465,6 @@ test_xmlSchemaIsValid(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewDocParserCtxt(void) {
     int test_ret = 0;
@@ -34401,8 +32497,6 @@ test_xmlSchemaNewDocParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewMemParserCtxt(void) {
     int test_ret = 0;
@@ -34442,8 +32536,6 @@ test_xmlSchemaNewMemParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewParserCtxt(void) {
     int test_ret = 0;
@@ -34476,23 +32568,15 @@ test_xmlSchemaNewParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewValidCtxt(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaParse(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -34506,13 +32590,9 @@ static xmlSAXHandlerPtr * gen_xmlSAXHandlerPtr_ptr(int no ATTRIBUTE_UNUSED, int 
 static void des_xmlSAXHandlerPtr_ptr(int no ATTRIBUTE_UNUSED, xmlSAXHandlerPtr * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaSAXPlug(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -34526,8 +32606,6 @@ static xmlSchemaSAXPlugPtr gen_xmlSchemaSAXPlugPtr(int no ATTRIBUTE_UNUSED, int 
 static void des_xmlSchemaSAXPlugPtr(int no ATTRIBUTE_UNUSED, xmlSchemaSAXPlugPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaSAXUnplug(void) {
     int test_ret = 0;
@@ -34560,38 +32638,24 @@ test_xmlSchemaSAXUnplug(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaSetParserErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaSetParserStructuredErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaSetValidErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaSetValidOptions(void) {
     int test_ret = 0;
@@ -34631,18 +32695,12 @@ test_xmlSchemaSetValidOptions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaSetValidStructuredErrors(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidCtxtGetOptions(void) {
     int test_ret = 0;
@@ -34675,8 +32733,6 @@ test_xmlSchemaValidCtxtGetOptions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidCtxtGetParserCtxt(void) {
     int test_ret = 0;
@@ -34709,8 +32765,6 @@ test_xmlSchemaValidCtxtGetParserCtxt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateDoc(void) {
     int test_ret = 0;
@@ -34750,8 +32804,6 @@ test_xmlSchemaValidateDoc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateFile(void) {
     int test_ret = 0;
@@ -34798,8 +32850,6 @@ test_xmlSchemaValidateFile(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateOneElement(void) {
     int test_ret = 0;
@@ -34839,8 +32889,6 @@ test_xmlSchemaValidateOneElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateSetFilename(void) {
     int test_ret = 0;
@@ -34878,18 +32926,12 @@ test_xmlSchemaValidateSetFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateSetLocator(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateStream(void) {
     int test_ret = 0;
@@ -35004,8 +33046,6 @@ static xmlSchemaTypePtr gen_xmlSchemaTypePtr(int no ATTRIBUTE_UNUSED, int nr ATT
 static void des_xmlSchemaTypePtr(int no ATTRIBUTE_UNUSED, xmlSchemaTypePtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaCheckFacet(void) {
     int test_ret = 0;
@@ -35059,15 +33099,11 @@ test_xmlSchemaCheckFacet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaCleanupTypes(void) {
     int test_ret = 0;
 
 #if defined(LIBXML_SCHEMAS_ENABLED)
-
-
         xmlSchemaCleanupTypes();
         call_tests++;
         xmlResetLastError();
@@ -35076,8 +33112,6 @@ test_xmlSchemaCleanupTypes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaCollapseString(void) {
     int test_ret = 0;
@@ -35120,8 +33154,6 @@ static xmlSchemaValPtr gen_xmlSchemaValPtr(int no ATTRIBUTE_UNUSED, int nr ATTRI
 static void des_xmlSchemaValPtr(int no ATTRIBUTE_UNUSED, xmlSchemaValPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaCompareValues(void) {
     int test_ret = 0;
@@ -35161,8 +33193,6 @@ test_xmlSchemaCompareValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaCompareValuesWhtsp(void) {
     int test_ret = 0;
@@ -35216,18 +33246,12 @@ test_xmlSchemaCompareValuesWhtsp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaCopyValue(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetBuiltInListSimpleTypeItemType(void) {
     int test_ret = 0;
@@ -35260,8 +33284,6 @@ test_xmlSchemaGetBuiltInListSimpleTypeItemType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetBuiltInType(void) {
     int test_ret = 0;
@@ -35285,8 +33307,6 @@ test_xmlSchemaGetBuiltInType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetCanonValue(void) {
     int test_ret = 0;
@@ -35326,8 +33346,6 @@ test_xmlSchemaGetCanonValue(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetCanonValueWhtsp(void) {
     int test_ret = 0;
@@ -35374,8 +33392,6 @@ test_xmlSchemaGetCanonValueWhtsp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetFacetValueAsULong(void) {
     int test_ret = 0;
@@ -35408,8 +33424,6 @@ test_xmlSchemaGetFacetValueAsULong(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetPredefinedType(void) {
     int test_ret = 0;
@@ -35449,8 +33463,6 @@ test_xmlSchemaGetPredefinedType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaGetValType(void) {
     int test_ret = 0;
@@ -35483,15 +33495,11 @@ test_xmlSchemaGetValType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaInitTypes(void) {
     int test_ret = 0;
 
 #if defined(LIBXML_SCHEMAS_ENABLED)
-
-
         xmlSchemaInitTypes();
         call_tests++;
         xmlResetLastError();
@@ -35500,8 +33508,6 @@ test_xmlSchemaInitTypes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaIsBuiltInTypeFacet(void) {
     int test_ret = 0;
@@ -35541,43 +33547,27 @@ test_xmlSchemaIsBuiltInTypeFacet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewFacet(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewNOTATIONValue(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewQNameValue(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaNewStringValue(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -35591,8 +33581,6 @@ static xmlSchemaValPtr * gen_xmlSchemaValPtr_ptr(int no ATTRIBUTE_UNUSED, int nr
 static void des_xmlSchemaValPtr_ptr(int no ATTRIBUTE_UNUSED, xmlSchemaValPtr * val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlSchemaValPredefTypeNode(void) {
     int test_ret = 0;
@@ -35646,8 +33634,6 @@ test_xmlSchemaValPredefTypeNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValPredefTypeNodeNoNorm(void) {
     int test_ret = 0;
@@ -35701,8 +33687,6 @@ test_xmlSchemaValPredefTypeNodeNoNorm(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateFacet(void) {
     int test_ret = 0;
@@ -35756,8 +33740,6 @@ test_xmlSchemaValidateFacet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateFacetWhtsp(void) {
     int test_ret = 0;
@@ -35825,8 +33807,6 @@ test_xmlSchemaValidateFacetWhtsp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateLengthFacet(void) {
     int test_ret = 0;
@@ -35887,8 +33867,6 @@ test_xmlSchemaValidateLengthFacet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateLengthFacetWhtsp(void) {
     int test_ret = 0;
@@ -35956,8 +33934,6 @@ test_xmlSchemaValidateLengthFacetWhtsp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidateListSimpleTypeFacet(void) {
     int test_ret = 0;
@@ -36011,8 +33987,6 @@ test_xmlSchemaValidateListSimpleTypeFacet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValidatePredefinedType(void) {
     int test_ret = 0;
@@ -36059,8 +34033,6 @@ test_xmlSchemaValidatePredefinedType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValueAppend(void) {
     int test_ret = 0;
@@ -36100,8 +34072,6 @@ test_xmlSchemaValueAppend(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValueGetAsBoolean(void) {
     int test_ret = 0;
@@ -36134,8 +34104,6 @@ test_xmlSchemaValueGetAsBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValueGetAsString(void) {
     int test_ret = 0;
@@ -36168,18 +34136,12 @@ test_xmlSchemaValueGetAsString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaValueGetNext(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlSchemaWhiteSpaceReplace(void) {
     int test_ret = 0;
@@ -36286,8 +34248,6 @@ test_xmlCharStrdup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCharStrndup(void) {
     int test_ret = 0;
@@ -36325,8 +34285,6 @@ test_xmlCharStrndup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlCheckUTF8(void) {
     int test_ret = 0;
@@ -36357,8 +34315,6 @@ test_xmlCheckUTF8(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlGetUTF8Char(void) {
     int test_ret = 0;
@@ -36396,8 +34352,6 @@ test_xmlGetUTF8Char(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrEqual(void) {
     int test_ret = 0;
@@ -36435,18 +34389,12 @@ test_xmlStrEqual(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrPrintf(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlStrQEqual(void) {
     int test_ret = 0;
@@ -36491,18 +34439,12 @@ test_xmlStrQEqual(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrVPrintf(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlStrcasecmp(void) {
     int test_ret = 0;
@@ -36540,8 +34482,6 @@ test_xmlStrcasecmp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrcasestr(void) {
     int test_ret = 0;
@@ -36579,8 +34519,6 @@ test_xmlStrcasestr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrchr(void) {
     int test_ret = 0;
@@ -36618,8 +34556,6 @@ test_xmlStrchr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrcmp(void) {
     int test_ret = 0;
@@ -36657,8 +34593,6 @@ test_xmlStrcmp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrdup(void) {
     int test_ret = 0;
@@ -36689,8 +34623,6 @@ test_xmlStrdup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrlen(void) {
     int test_ret = 0;
@@ -36721,8 +34653,6 @@ test_xmlStrlen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrncasecmp(void) {
     int test_ret = 0;
@@ -36767,8 +34697,6 @@ test_xmlStrncasecmp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrncatNew(void) {
     int test_ret = 0;
@@ -36813,8 +34741,6 @@ test_xmlStrncatNew(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrncmp(void) {
     int test_ret = 0;
@@ -36859,8 +34785,6 @@ test_xmlStrncmp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrndup(void) {
     int test_ret = 0;
@@ -36898,8 +34822,6 @@ test_xmlStrndup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrstr(void) {
     int test_ret = 0;
@@ -36937,8 +34859,6 @@ test_xmlStrstr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlStrsub(void) {
     int test_ret = 0;
@@ -36983,8 +34903,6 @@ test_xmlStrsub(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Charcmp(void) {
     int test_ret = 0;
@@ -37022,8 +34940,6 @@ test_xmlUTF8Charcmp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Size(void) {
     int test_ret = 0;
@@ -37054,8 +34970,6 @@ test_xmlUTF8Size(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strlen(void) {
     int test_ret = 0;
@@ -37086,8 +35000,6 @@ test_xmlUTF8Strlen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strloc(void) {
     int test_ret = 0;
@@ -37125,8 +35037,6 @@ test_xmlUTF8Strloc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strndup(void) {
     int test_ret = 0;
@@ -37164,8 +35074,6 @@ test_xmlUTF8Strndup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strpos(void) {
     int test_ret = 0;
@@ -37203,8 +35111,6 @@ test_xmlUTF8Strpos(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strsize(void) {
     int test_ret = 0;
@@ -37242,8 +35148,6 @@ test_xmlUTF8Strsize(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUTF8Strsub(void) {
     int test_ret = 0;
@@ -37360,8 +35264,6 @@ test_xmlUCSIsAegeanNumbers(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsAlphabeticPresentationForms(void) {
     int test_ret = 0;
@@ -37394,8 +35296,6 @@ test_xmlUCSIsAlphabeticPresentationForms(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsArabic(void) {
     int test_ret = 0;
@@ -37428,8 +35328,6 @@ test_xmlUCSIsArabic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsArabicPresentationFormsA(void) {
     int test_ret = 0;
@@ -37462,8 +35360,6 @@ test_xmlUCSIsArabicPresentationFormsA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsArabicPresentationFormsB(void) {
     int test_ret = 0;
@@ -37496,8 +35392,6 @@ test_xmlUCSIsArabicPresentationFormsB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsArmenian(void) {
     int test_ret = 0;
@@ -37530,8 +35424,6 @@ test_xmlUCSIsArmenian(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsArrows(void) {
     int test_ret = 0;
@@ -37564,8 +35456,6 @@ test_xmlUCSIsArrows(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBasicLatin(void) {
     int test_ret = 0;
@@ -37598,8 +35488,6 @@ test_xmlUCSIsBasicLatin(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBengali(void) {
     int test_ret = 0;
@@ -37632,8 +35520,6 @@ test_xmlUCSIsBengali(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBlock(void) {
     int test_ret = 0;
@@ -37673,8 +35559,6 @@ test_xmlUCSIsBlock(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBlockElements(void) {
     int test_ret = 0;
@@ -37707,8 +35591,6 @@ test_xmlUCSIsBlockElements(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBopomofo(void) {
     int test_ret = 0;
@@ -37741,8 +35623,6 @@ test_xmlUCSIsBopomofo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBopomofoExtended(void) {
     int test_ret = 0;
@@ -37775,8 +35655,6 @@ test_xmlUCSIsBopomofoExtended(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBoxDrawing(void) {
     int test_ret = 0;
@@ -37809,8 +35687,6 @@ test_xmlUCSIsBoxDrawing(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBraillePatterns(void) {
     int test_ret = 0;
@@ -37843,8 +35719,6 @@ test_xmlUCSIsBraillePatterns(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsBuhid(void) {
     int test_ret = 0;
@@ -37877,8 +35751,6 @@ test_xmlUCSIsBuhid(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsByzantineMusicalSymbols(void) {
     int test_ret = 0;
@@ -37911,8 +35783,6 @@ test_xmlUCSIsByzantineMusicalSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKCompatibility(void) {
     int test_ret = 0;
@@ -37945,8 +35815,6 @@ test_xmlUCSIsCJKCompatibility(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKCompatibilityForms(void) {
     int test_ret = 0;
@@ -37979,8 +35847,6 @@ test_xmlUCSIsCJKCompatibilityForms(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKCompatibilityIdeographs(void) {
     int test_ret = 0;
@@ -38013,8 +35879,6 @@ test_xmlUCSIsCJKCompatibilityIdeographs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKCompatibilityIdeographsSupplement(void) {
     int test_ret = 0;
@@ -38047,8 +35911,6 @@ test_xmlUCSIsCJKCompatibilityIdeographsSupplement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKRadicalsSupplement(void) {
     int test_ret = 0;
@@ -38081,8 +35943,6 @@ test_xmlUCSIsCJKRadicalsSupplement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKSymbolsandPunctuation(void) {
     int test_ret = 0;
@@ -38115,8 +35975,6 @@ test_xmlUCSIsCJKSymbolsandPunctuation(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKUnifiedIdeographs(void) {
     int test_ret = 0;
@@ -38149,8 +36007,6 @@ test_xmlUCSIsCJKUnifiedIdeographs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKUnifiedIdeographsExtensionA(void) {
     int test_ret = 0;
@@ -38183,8 +36039,6 @@ test_xmlUCSIsCJKUnifiedIdeographsExtensionA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCJKUnifiedIdeographsExtensionB(void) {
     int test_ret = 0;
@@ -38217,8 +36071,6 @@ test_xmlUCSIsCJKUnifiedIdeographsExtensionB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCat(void) {
     int test_ret = 0;
@@ -38258,8 +36110,6 @@ test_xmlUCSIsCat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatC(void) {
     int test_ret = 0;
@@ -38292,8 +36142,6 @@ test_xmlUCSIsCatC(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatCc(void) {
     int test_ret = 0;
@@ -38326,8 +36174,6 @@ test_xmlUCSIsCatCc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatCf(void) {
     int test_ret = 0;
@@ -38360,8 +36206,6 @@ test_xmlUCSIsCatCf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatCo(void) {
     int test_ret = 0;
@@ -38394,8 +36238,6 @@ test_xmlUCSIsCatCo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatCs(void) {
     int test_ret = 0;
@@ -38428,8 +36270,6 @@ test_xmlUCSIsCatCs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatL(void) {
     int test_ret = 0;
@@ -38462,8 +36302,6 @@ test_xmlUCSIsCatL(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatLl(void) {
     int test_ret = 0;
@@ -38496,8 +36334,6 @@ test_xmlUCSIsCatLl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatLm(void) {
     int test_ret = 0;
@@ -38530,8 +36366,6 @@ test_xmlUCSIsCatLm(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatLo(void) {
     int test_ret = 0;
@@ -38564,8 +36398,6 @@ test_xmlUCSIsCatLo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatLt(void) {
     int test_ret = 0;
@@ -38598,8 +36430,6 @@ test_xmlUCSIsCatLt(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatLu(void) {
     int test_ret = 0;
@@ -38632,8 +36462,6 @@ test_xmlUCSIsCatLu(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatM(void) {
     int test_ret = 0;
@@ -38666,8 +36494,6 @@ test_xmlUCSIsCatM(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatMc(void) {
     int test_ret = 0;
@@ -38700,8 +36526,6 @@ test_xmlUCSIsCatMc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatMe(void) {
     int test_ret = 0;
@@ -38734,8 +36558,6 @@ test_xmlUCSIsCatMe(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatMn(void) {
     int test_ret = 0;
@@ -38768,8 +36590,6 @@ test_xmlUCSIsCatMn(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatN(void) {
     int test_ret = 0;
@@ -38802,8 +36622,6 @@ test_xmlUCSIsCatN(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatNd(void) {
     int test_ret = 0;
@@ -38836,8 +36654,6 @@ test_xmlUCSIsCatNd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatNl(void) {
     int test_ret = 0;
@@ -38870,8 +36686,6 @@ test_xmlUCSIsCatNl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatNo(void) {
     int test_ret = 0;
@@ -38904,8 +36718,6 @@ test_xmlUCSIsCatNo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatP(void) {
     int test_ret = 0;
@@ -38938,8 +36750,6 @@ test_xmlUCSIsCatP(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPc(void) {
     int test_ret = 0;
@@ -38972,8 +36782,6 @@ test_xmlUCSIsCatPc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPd(void) {
     int test_ret = 0;
@@ -39006,8 +36814,6 @@ test_xmlUCSIsCatPd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPe(void) {
     int test_ret = 0;
@@ -39040,8 +36846,6 @@ test_xmlUCSIsCatPe(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPf(void) {
     int test_ret = 0;
@@ -39074,8 +36878,6 @@ test_xmlUCSIsCatPf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPi(void) {
     int test_ret = 0;
@@ -39108,8 +36910,6 @@ test_xmlUCSIsCatPi(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPo(void) {
     int test_ret = 0;
@@ -39142,8 +36942,6 @@ test_xmlUCSIsCatPo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatPs(void) {
     int test_ret = 0;
@@ -39176,8 +36974,6 @@ test_xmlUCSIsCatPs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatS(void) {
     int test_ret = 0;
@@ -39210,8 +37006,6 @@ test_xmlUCSIsCatS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatSc(void) {
     int test_ret = 0;
@@ -39244,8 +37038,6 @@ test_xmlUCSIsCatSc(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatSk(void) {
     int test_ret = 0;
@@ -39278,8 +37070,6 @@ test_xmlUCSIsCatSk(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatSm(void) {
     int test_ret = 0;
@@ -39312,8 +37102,6 @@ test_xmlUCSIsCatSm(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatSo(void) {
     int test_ret = 0;
@@ -39346,8 +37134,6 @@ test_xmlUCSIsCatSo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatZ(void) {
     int test_ret = 0;
@@ -39380,8 +37166,6 @@ test_xmlUCSIsCatZ(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatZl(void) {
     int test_ret = 0;
@@ -39414,8 +37198,6 @@ test_xmlUCSIsCatZl(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatZp(void) {
     int test_ret = 0;
@@ -39448,8 +37230,6 @@ test_xmlUCSIsCatZp(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCatZs(void) {
     int test_ret = 0;
@@ -39482,8 +37262,6 @@ test_xmlUCSIsCatZs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCherokee(void) {
     int test_ret = 0;
@@ -39516,8 +37294,6 @@ test_xmlUCSIsCherokee(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCombiningDiacriticalMarks(void) {
     int test_ret = 0;
@@ -39550,8 +37326,6 @@ test_xmlUCSIsCombiningDiacriticalMarks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCombiningDiacriticalMarksforSymbols(void) {
     int test_ret = 0;
@@ -39584,8 +37358,6 @@ test_xmlUCSIsCombiningDiacriticalMarksforSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCombiningHalfMarks(void) {
     int test_ret = 0;
@@ -39618,8 +37390,6 @@ test_xmlUCSIsCombiningHalfMarks(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCombiningMarksforSymbols(void) {
     int test_ret = 0;
@@ -39652,8 +37422,6 @@ test_xmlUCSIsCombiningMarksforSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsControlPictures(void) {
     int test_ret = 0;
@@ -39686,8 +37454,6 @@ test_xmlUCSIsControlPictures(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCurrencySymbols(void) {
     int test_ret = 0;
@@ -39720,8 +37486,6 @@ test_xmlUCSIsCurrencySymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCypriotSyllabary(void) {
     int test_ret = 0;
@@ -39754,8 +37518,6 @@ test_xmlUCSIsCypriotSyllabary(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCyrillic(void) {
     int test_ret = 0;
@@ -39788,8 +37550,6 @@ test_xmlUCSIsCyrillic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsCyrillicSupplement(void) {
     int test_ret = 0;
@@ -39822,8 +37582,6 @@ test_xmlUCSIsCyrillicSupplement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsDeseret(void) {
     int test_ret = 0;
@@ -39856,8 +37614,6 @@ test_xmlUCSIsDeseret(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsDevanagari(void) {
     int test_ret = 0;
@@ -39890,8 +37646,6 @@ test_xmlUCSIsDevanagari(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsDingbats(void) {
     int test_ret = 0;
@@ -39924,8 +37678,6 @@ test_xmlUCSIsDingbats(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsEnclosedAlphanumerics(void) {
     int test_ret = 0;
@@ -39958,8 +37710,6 @@ test_xmlUCSIsEnclosedAlphanumerics(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsEnclosedCJKLettersandMonths(void) {
     int test_ret = 0;
@@ -39992,8 +37742,6 @@ test_xmlUCSIsEnclosedCJKLettersandMonths(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsEthiopic(void) {
     int test_ret = 0;
@@ -40026,8 +37774,6 @@ test_xmlUCSIsEthiopic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGeneralPunctuation(void) {
     int test_ret = 0;
@@ -40060,8 +37806,6 @@ test_xmlUCSIsGeneralPunctuation(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGeometricShapes(void) {
     int test_ret = 0;
@@ -40094,8 +37838,6 @@ test_xmlUCSIsGeometricShapes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGeorgian(void) {
     int test_ret = 0;
@@ -40128,8 +37870,6 @@ test_xmlUCSIsGeorgian(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGothic(void) {
     int test_ret = 0;
@@ -40162,8 +37902,6 @@ test_xmlUCSIsGothic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGreek(void) {
     int test_ret = 0;
@@ -40196,8 +37934,6 @@ test_xmlUCSIsGreek(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGreekExtended(void) {
     int test_ret = 0;
@@ -40230,8 +37966,6 @@ test_xmlUCSIsGreekExtended(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGreekandCoptic(void) {
     int test_ret = 0;
@@ -40264,8 +37998,6 @@ test_xmlUCSIsGreekandCoptic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGujarati(void) {
     int test_ret = 0;
@@ -40298,8 +38030,6 @@ test_xmlUCSIsGujarati(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsGurmukhi(void) {
     int test_ret = 0;
@@ -40332,8 +38062,6 @@ test_xmlUCSIsGurmukhi(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHalfwidthandFullwidthForms(void) {
     int test_ret = 0;
@@ -40366,8 +38094,6 @@ test_xmlUCSIsHalfwidthandFullwidthForms(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHangulCompatibilityJamo(void) {
     int test_ret = 0;
@@ -40400,8 +38126,6 @@ test_xmlUCSIsHangulCompatibilityJamo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHangulJamo(void) {
     int test_ret = 0;
@@ -40434,8 +38158,6 @@ test_xmlUCSIsHangulJamo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHangulSyllables(void) {
     int test_ret = 0;
@@ -40468,8 +38190,6 @@ test_xmlUCSIsHangulSyllables(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHanunoo(void) {
     int test_ret = 0;
@@ -40502,8 +38222,6 @@ test_xmlUCSIsHanunoo(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHebrew(void) {
     int test_ret = 0;
@@ -40536,8 +38254,6 @@ test_xmlUCSIsHebrew(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHighPrivateUseSurrogates(void) {
     int test_ret = 0;
@@ -40570,8 +38286,6 @@ test_xmlUCSIsHighPrivateUseSurrogates(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHighSurrogates(void) {
     int test_ret = 0;
@@ -40604,8 +38318,6 @@ test_xmlUCSIsHighSurrogates(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsHiragana(void) {
     int test_ret = 0;
@@ -40638,8 +38350,6 @@ test_xmlUCSIsHiragana(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsIPAExtensions(void) {
     int test_ret = 0;
@@ -40672,8 +38382,6 @@ test_xmlUCSIsIPAExtensions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsIdeographicDescriptionCharacters(void) {
     int test_ret = 0;
@@ -40706,8 +38414,6 @@ test_xmlUCSIsIdeographicDescriptionCharacters(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKanbun(void) {
     int test_ret = 0;
@@ -40740,8 +38446,6 @@ test_xmlUCSIsKanbun(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKangxiRadicals(void) {
     int test_ret = 0;
@@ -40774,8 +38478,6 @@ test_xmlUCSIsKangxiRadicals(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKannada(void) {
     int test_ret = 0;
@@ -40808,8 +38510,6 @@ test_xmlUCSIsKannada(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKatakana(void) {
     int test_ret = 0;
@@ -40842,8 +38542,6 @@ test_xmlUCSIsKatakana(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKatakanaPhoneticExtensions(void) {
     int test_ret = 0;
@@ -40876,8 +38574,6 @@ test_xmlUCSIsKatakanaPhoneticExtensions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKhmer(void) {
     int test_ret = 0;
@@ -40910,8 +38606,6 @@ test_xmlUCSIsKhmer(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsKhmerSymbols(void) {
     int test_ret = 0;
@@ -40944,8 +38638,6 @@ test_xmlUCSIsKhmerSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLao(void) {
     int test_ret = 0;
@@ -40978,8 +38670,6 @@ test_xmlUCSIsLao(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLatin1Supplement(void) {
     int test_ret = 0;
@@ -41012,8 +38702,6 @@ test_xmlUCSIsLatin1Supplement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLatinExtendedA(void) {
     int test_ret = 0;
@@ -41046,8 +38734,6 @@ test_xmlUCSIsLatinExtendedA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLatinExtendedAdditional(void) {
     int test_ret = 0;
@@ -41080,8 +38766,6 @@ test_xmlUCSIsLatinExtendedAdditional(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLatinExtendedB(void) {
     int test_ret = 0;
@@ -41114,8 +38798,6 @@ test_xmlUCSIsLatinExtendedB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLetterlikeSymbols(void) {
     int test_ret = 0;
@@ -41148,8 +38830,6 @@ test_xmlUCSIsLetterlikeSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLimbu(void) {
     int test_ret = 0;
@@ -41182,8 +38862,6 @@ test_xmlUCSIsLimbu(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLinearBIdeograms(void) {
     int test_ret = 0;
@@ -41216,8 +38894,6 @@ test_xmlUCSIsLinearBIdeograms(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLinearBSyllabary(void) {
     int test_ret = 0;
@@ -41250,8 +38926,6 @@ test_xmlUCSIsLinearBSyllabary(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsLowSurrogates(void) {
     int test_ret = 0;
@@ -41284,8 +38958,6 @@ test_xmlUCSIsLowSurrogates(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMalayalam(void) {
     int test_ret = 0;
@@ -41318,8 +38990,6 @@ test_xmlUCSIsMalayalam(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMathematicalAlphanumericSymbols(void) {
     int test_ret = 0;
@@ -41352,8 +39022,6 @@ test_xmlUCSIsMathematicalAlphanumericSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMathematicalOperators(void) {
     int test_ret = 0;
@@ -41386,8 +39054,6 @@ test_xmlUCSIsMathematicalOperators(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMiscellaneousMathematicalSymbolsA(void) {
     int test_ret = 0;
@@ -41420,8 +39086,6 @@ test_xmlUCSIsMiscellaneousMathematicalSymbolsA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMiscellaneousMathematicalSymbolsB(void) {
     int test_ret = 0;
@@ -41454,8 +39118,6 @@ test_xmlUCSIsMiscellaneousMathematicalSymbolsB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMiscellaneousSymbols(void) {
     int test_ret = 0;
@@ -41488,8 +39150,6 @@ test_xmlUCSIsMiscellaneousSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMiscellaneousSymbolsandArrows(void) {
     int test_ret = 0;
@@ -41522,8 +39182,6 @@ test_xmlUCSIsMiscellaneousSymbolsandArrows(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMiscellaneousTechnical(void) {
     int test_ret = 0;
@@ -41556,8 +39214,6 @@ test_xmlUCSIsMiscellaneousTechnical(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMongolian(void) {
     int test_ret = 0;
@@ -41590,8 +39246,6 @@ test_xmlUCSIsMongolian(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMusicalSymbols(void) {
     int test_ret = 0;
@@ -41624,8 +39278,6 @@ test_xmlUCSIsMusicalSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsMyanmar(void) {
     int test_ret = 0;
@@ -41658,8 +39310,6 @@ test_xmlUCSIsMyanmar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsNumberForms(void) {
     int test_ret = 0;
@@ -41692,8 +39342,6 @@ test_xmlUCSIsNumberForms(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsOgham(void) {
     int test_ret = 0;
@@ -41726,8 +39374,6 @@ test_xmlUCSIsOgham(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsOldItalic(void) {
     int test_ret = 0;
@@ -41760,8 +39406,6 @@ test_xmlUCSIsOldItalic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsOpticalCharacterRecognition(void) {
     int test_ret = 0;
@@ -41794,8 +39438,6 @@ test_xmlUCSIsOpticalCharacterRecognition(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsOriya(void) {
     int test_ret = 0;
@@ -41828,8 +39470,6 @@ test_xmlUCSIsOriya(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsOsmanya(void) {
     int test_ret = 0;
@@ -41862,8 +39502,6 @@ test_xmlUCSIsOsmanya(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsPhoneticExtensions(void) {
     int test_ret = 0;
@@ -41896,8 +39534,6 @@ test_xmlUCSIsPhoneticExtensions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsPrivateUse(void) {
     int test_ret = 0;
@@ -41930,8 +39566,6 @@ test_xmlUCSIsPrivateUse(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsPrivateUseArea(void) {
     int test_ret = 0;
@@ -41964,8 +39598,6 @@ test_xmlUCSIsPrivateUseArea(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsRunic(void) {
     int test_ret = 0;
@@ -41998,8 +39630,6 @@ test_xmlUCSIsRunic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsShavian(void) {
     int test_ret = 0;
@@ -42032,8 +39662,6 @@ test_xmlUCSIsShavian(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSinhala(void) {
     int test_ret = 0;
@@ -42066,8 +39694,6 @@ test_xmlUCSIsSinhala(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSmallFormVariants(void) {
     int test_ret = 0;
@@ -42100,8 +39726,6 @@ test_xmlUCSIsSmallFormVariants(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSpacingModifierLetters(void) {
     int test_ret = 0;
@@ -42134,8 +39758,6 @@ test_xmlUCSIsSpacingModifierLetters(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSpecials(void) {
     int test_ret = 0;
@@ -42168,8 +39790,6 @@ test_xmlUCSIsSpecials(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSuperscriptsandSubscripts(void) {
     int test_ret = 0;
@@ -42202,8 +39822,6 @@ test_xmlUCSIsSuperscriptsandSubscripts(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSupplementalArrowsA(void) {
     int test_ret = 0;
@@ -42236,8 +39854,6 @@ test_xmlUCSIsSupplementalArrowsA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSupplementalArrowsB(void) {
     int test_ret = 0;
@@ -42270,8 +39886,6 @@ test_xmlUCSIsSupplementalArrowsB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSupplementalMathematicalOperators(void) {
     int test_ret = 0;
@@ -42304,8 +39918,6 @@ test_xmlUCSIsSupplementalMathematicalOperators(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSupplementaryPrivateUseAreaA(void) {
     int test_ret = 0;
@@ -42338,8 +39950,6 @@ test_xmlUCSIsSupplementaryPrivateUseAreaA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSupplementaryPrivateUseAreaB(void) {
     int test_ret = 0;
@@ -42372,8 +39982,6 @@ test_xmlUCSIsSupplementaryPrivateUseAreaB(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsSyriac(void) {
     int test_ret = 0;
@@ -42406,8 +40014,6 @@ test_xmlUCSIsSyriac(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTagalog(void) {
     int test_ret = 0;
@@ -42440,8 +40046,6 @@ test_xmlUCSIsTagalog(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTagbanwa(void) {
     int test_ret = 0;
@@ -42474,8 +40078,6 @@ test_xmlUCSIsTagbanwa(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTags(void) {
     int test_ret = 0;
@@ -42508,8 +40110,6 @@ test_xmlUCSIsTags(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTaiLe(void) {
     int test_ret = 0;
@@ -42542,8 +40142,6 @@ test_xmlUCSIsTaiLe(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTaiXuanJingSymbols(void) {
     int test_ret = 0;
@@ -42576,8 +40174,6 @@ test_xmlUCSIsTaiXuanJingSymbols(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTamil(void) {
     int test_ret = 0;
@@ -42610,8 +40206,6 @@ test_xmlUCSIsTamil(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTelugu(void) {
     int test_ret = 0;
@@ -42644,8 +40238,6 @@ test_xmlUCSIsTelugu(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsThaana(void) {
     int test_ret = 0;
@@ -42678,8 +40270,6 @@ test_xmlUCSIsThaana(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsThai(void) {
     int test_ret = 0;
@@ -42712,8 +40302,6 @@ test_xmlUCSIsThai(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsTibetan(void) {
     int test_ret = 0;
@@ -42746,8 +40334,6 @@ test_xmlUCSIsTibetan(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsUgaritic(void) {
     int test_ret = 0;
@@ -42780,8 +40366,6 @@ test_xmlUCSIsUgaritic(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsUnifiedCanadianAboriginalSyllabics(void) {
     int test_ret = 0;
@@ -42814,8 +40398,6 @@ test_xmlUCSIsUnifiedCanadianAboriginalSyllabics(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsVariationSelectors(void) {
     int test_ret = 0;
@@ -42848,8 +40430,6 @@ test_xmlUCSIsVariationSelectors(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsVariationSelectorsSupplement(void) {
     int test_ret = 0;
@@ -42882,8 +40462,6 @@ test_xmlUCSIsVariationSelectorsSupplement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsYiRadicals(void) {
     int test_ret = 0;
@@ -42916,8 +40494,6 @@ test_xmlUCSIsYiRadicals(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsYiSyllables(void) {
     int test_ret = 0;
@@ -42950,8 +40526,6 @@ test_xmlUCSIsYiSyllables(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlUCSIsYijingHexagramSymbols(void) {
     int test_ret = 0;
@@ -43195,8 +40769,6 @@ test_xmlNewTextWriter(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextWriterFilename(void) {
     int test_ret = 0;
@@ -43236,8 +40808,6 @@ test_xmlNewTextWriterFilename(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextWriterMemory(void) {
     int test_ret = 0;
@@ -43277,8 +40847,6 @@ test_xmlNewTextWriterMemory(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextWriterPushParser(void) {
     int test_ret = 0;
@@ -43319,8 +40887,6 @@ test_xmlNewTextWriterPushParser(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlNewTextWriterTree(void) {
     int test_ret = 0;
@@ -43367,8 +40933,6 @@ test_xmlNewTextWriterTree(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndAttribute(void) {
     int test_ret = 0;
@@ -43401,8 +40965,6 @@ test_xmlTextWriterEndAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndCDATA(void) {
     int test_ret = 0;
@@ -43435,8 +40997,6 @@ test_xmlTextWriterEndCDATA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndComment(void) {
     int test_ret = 0;
@@ -43469,8 +41029,6 @@ test_xmlTextWriterEndComment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndDTD(void) {
     int test_ret = 0;
@@ -43503,8 +41061,6 @@ test_xmlTextWriterEndDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndDTDAttlist(void) {
     int test_ret = 0;
@@ -43537,8 +41093,6 @@ test_xmlTextWriterEndDTDAttlist(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndDTDElement(void) {
     int test_ret = 0;
@@ -43571,8 +41125,6 @@ test_xmlTextWriterEndDTDElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndDTDEntity(void) {
     int test_ret = 0;
@@ -43605,8 +41157,6 @@ test_xmlTextWriterEndDTDEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndDocument(void) {
     int test_ret = 0;
@@ -43639,8 +41189,6 @@ test_xmlTextWriterEndDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndElement(void) {
     int test_ret = 0;
@@ -43673,8 +41221,6 @@ test_xmlTextWriterEndElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterEndPI(void) {
     int test_ret = 0;
@@ -43707,8 +41253,6 @@ test_xmlTextWriterEndPI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterFlush(void) {
     int test_ret = 0;
@@ -43741,8 +41285,6 @@ test_xmlTextWriterFlush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterFullEndElement(void) {
     int test_ret = 0;
@@ -43775,8 +41317,6 @@ test_xmlTextWriterFullEndElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterSetIndent(void) {
     int test_ret = 0;
@@ -43816,8 +41356,6 @@ test_xmlTextWriterSetIndent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterSetIndentString(void) {
     int test_ret = 0;
@@ -43857,8 +41395,6 @@ test_xmlTextWriterSetIndentString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterSetQuoteChar(void) {
     int test_ret = 0;
@@ -43898,8 +41434,6 @@ test_xmlTextWriterSetQuoteChar(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartAttribute(void) {
     int test_ret = 0;
@@ -43939,8 +41473,6 @@ test_xmlTextWriterStartAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartAttributeNS(void) {
     int test_ret = 0;
@@ -43994,8 +41526,6 @@ test_xmlTextWriterStartAttributeNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartCDATA(void) {
     int test_ret = 0;
@@ -44028,8 +41558,6 @@ test_xmlTextWriterStartCDATA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartComment(void) {
     int test_ret = 0;
@@ -44062,8 +41590,6 @@ test_xmlTextWriterStartComment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartDTD(void) {
     int test_ret = 0;
@@ -44117,8 +41643,6 @@ test_xmlTextWriterStartDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartDTDAttlist(void) {
     int test_ret = 0;
@@ -44158,8 +41682,6 @@ test_xmlTextWriterStartDTDAttlist(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartDTDElement(void) {
     int test_ret = 0;
@@ -44199,8 +41721,6 @@ test_xmlTextWriterStartDTDElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartDTDEntity(void) {
     int test_ret = 0;
@@ -44247,8 +41767,6 @@ test_xmlTextWriterStartDTDEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartDocument(void) {
     int test_ret = 0;
@@ -44302,8 +41820,6 @@ test_xmlTextWriterStartDocument(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartElement(void) {
     int test_ret = 0;
@@ -44343,8 +41859,6 @@ test_xmlTextWriterStartElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartElementNS(void) {
     int test_ret = 0;
@@ -44398,8 +41912,6 @@ test_xmlTextWriterStartElementNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterStartPI(void) {
     int test_ret = 0;
@@ -44439,8 +41951,6 @@ test_xmlTextWriterStartPI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteAttribute(void) {
     int test_ret = 0;
@@ -44487,8 +41997,6 @@ test_xmlTextWriterWriteAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteAttributeNS(void) {
     int test_ret = 0;
@@ -44549,8 +42057,6 @@ test_xmlTextWriterWriteAttributeNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteBase64(void) {
     int test_ret = 0;
@@ -44604,8 +42110,6 @@ test_xmlTextWriterWriteBase64(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteBinHex(void) {
     int test_ret = 0;
@@ -44659,8 +42163,6 @@ test_xmlTextWriterWriteBinHex(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteCDATA(void) {
     int test_ret = 0;
@@ -44700,8 +42202,6 @@ test_xmlTextWriterWriteCDATA(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteComment(void) {
     int test_ret = 0;
@@ -44741,8 +42241,6 @@ test_xmlTextWriterWriteComment(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTD(void) {
     int test_ret = 0;
@@ -44803,8 +42301,6 @@ test_xmlTextWriterWriteDTD(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDAttlist(void) {
     int test_ret = 0;
@@ -44851,8 +42347,6 @@ test_xmlTextWriterWriteDTDAttlist(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDElement(void) {
     int test_ret = 0;
@@ -44899,8 +42393,6 @@ test_xmlTextWriterWriteDTDElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDEntity(void) {
     int test_ret = 0;
@@ -44975,8 +42467,6 @@ test_xmlTextWriterWriteDTDEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDExternalEntity(void) {
     int test_ret = 0;
@@ -45044,8 +42534,6 @@ test_xmlTextWriterWriteDTDExternalEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDExternalEntityContents(void) {
     int test_ret = 0;
@@ -45099,8 +42587,6 @@ test_xmlTextWriterWriteDTDExternalEntityContents(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDInternalEntity(void) {
     int test_ret = 0;
@@ -45154,8 +42640,6 @@ test_xmlTextWriterWriteDTDInternalEntity(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteDTDNotation(void) {
     int test_ret = 0;
@@ -45209,8 +42693,6 @@ test_xmlTextWriterWriteDTDNotation(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteElement(void) {
     int test_ret = 0;
@@ -45257,8 +42739,6 @@ test_xmlTextWriterWriteElement(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteElementNS(void) {
     int test_ret = 0;
@@ -45319,138 +42799,84 @@ test_xmlTextWriterWriteElementNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatAttribute(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatAttributeNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatCDATA(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatComment(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatDTD(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatDTDAttlist(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatDTDElement(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatDTDInternalEntity(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatElement(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatElementNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatPI(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatRaw(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteFormatString(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWritePI(void) {
     int test_ret = 0;
@@ -45497,8 +42923,6 @@ test_xmlTextWriterWritePI(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteRaw(void) {
     int test_ret = 0;
@@ -45538,8 +42962,6 @@ test_xmlTextWriterWriteRaw(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteRawLen(void) {
     int test_ret = 0;
@@ -45586,8 +43008,6 @@ test_xmlTextWriterWriteRawLen(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteString(void) {
     int test_ret = 0;
@@ -45627,133 +43047,81 @@ test_xmlTextWriterWriteString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatAttribute(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatAttributeNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatCDATA(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatComment(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatDTD(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatDTDAttlist(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatDTDElement(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatDTDInternalEntity(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatElement(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatElementNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatPI(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatRaw(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlTextWriterWriteVFormatString(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -45879,8 +43247,6 @@ test_xmlXPathCastBooleanToNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastBooleanToString(void) {
     int test_ret = 0;
@@ -45913,8 +43279,6 @@ test_xmlXPathCastBooleanToString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNodeSetToBoolean(void) {
     int test_ret = 0;
@@ -45947,8 +43311,6 @@ test_xmlXPathCastNodeSetToBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNodeSetToNumber(void) {
     int test_ret = 0;
@@ -45981,8 +43343,6 @@ test_xmlXPathCastNodeSetToNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNodeSetToString(void) {
     int test_ret = 0;
@@ -46015,8 +43375,6 @@ test_xmlXPathCastNodeSetToString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNodeToNumber(void) {
     int test_ret = 0;
@@ -46049,8 +43407,6 @@ test_xmlXPathCastNodeToNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNodeToString(void) {
     int test_ret = 0;
@@ -46083,8 +43439,6 @@ test_xmlXPathCastNodeToString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNumberToBoolean(void) {
     int test_ret = 0;
@@ -46117,8 +43471,6 @@ test_xmlXPathCastNumberToBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastNumberToString(void) {
     int test_ret = 0;
@@ -46151,8 +43503,6 @@ test_xmlXPathCastNumberToString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastStringToBoolean(void) {
     int test_ret = 0;
@@ -46185,8 +43535,6 @@ test_xmlXPathCastStringToBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastStringToNumber(void) {
     int test_ret = 0;
@@ -46219,8 +43567,6 @@ test_xmlXPathCastStringToNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastToBoolean(void) {
     int test_ret = 0;
@@ -46253,8 +43599,6 @@ test_xmlXPathCastToBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastToNumber(void) {
     int test_ret = 0;
@@ -46287,8 +43631,6 @@ test_xmlXPathCastToNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCastToString(void) {
     int test_ret = 0;
@@ -46321,8 +43663,6 @@ test_xmlXPathCastToString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCmpNodes(void) {
     int test_ret = 0;
@@ -46362,13 +43702,9 @@ test_xmlXPathCmpNodes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCompile(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
@@ -46392,8 +43728,6 @@ static xmlXPathContextPtr gen_xmlXPathContextPtr(int no ATTRIBUTE_UNUSED, int nr
 static void des_xmlXPathContextPtr(int no ATTRIBUTE_UNUSED, xmlXPathContextPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlXPathCompiledEval(void) {
     int test_ret = 0;
@@ -46433,8 +43767,6 @@ test_xmlXPathCompiledEval(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCompiledEvalToBoolean(void) {
     int test_ret = 0;
@@ -46474,8 +43806,6 @@ test_xmlXPathCompiledEvalToBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathContextSetCache(void) {
     int test_ret = 0;
@@ -46529,8 +43859,6 @@ test_xmlXPathContextSetCache(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathConvertBoolean(void) {
     int test_ret = 0;
@@ -46564,8 +43892,6 @@ test_xmlXPathConvertBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathConvertNumber(void) {
     int test_ret = 0;
@@ -46599,8 +43925,6 @@ test_xmlXPathConvertNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathConvertString(void) {
     int test_ret = 0;
@@ -46634,18 +43958,12 @@ test_xmlXPathConvertString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCtxtCompile(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEval(void) {
     int test_ret = 0;
@@ -46685,8 +44003,6 @@ test_xmlXPathEval(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEvalExpression(void) {
     int test_ret = 0;
@@ -46726,8 +44042,6 @@ test_xmlXPathEvalExpression(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEvalPredicate(void) {
     int test_ret = 0;
@@ -46767,8 +44081,6 @@ test_xmlXPathEvalPredicate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathInit(void) {
     int test_ret = 0;
@@ -46792,8 +44104,6 @@ test_xmlXPathInit(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathIsInf(void) {
     int test_ret = 0;
@@ -46826,8 +44136,6 @@ test_xmlXPathIsInf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathIsNaN(void) {
     int test_ret = 0;
@@ -46860,18 +44168,12 @@ test_xmlXPathIsNaN(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewContext(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeEval(void) {
     int test_ret = 0;
@@ -46918,8 +44220,6 @@ test_xmlXPathNodeEval(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetCreate(void) {
     int test_ret = 0;
@@ -46952,8 +44252,6 @@ test_xmlXPathNodeSetCreate(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathObjectCopy(void) {
     int test_ret = 0;
@@ -46986,8 +44284,6 @@ test_xmlXPathObjectCopy(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathOrderDocElems(void) {
     int test_ret = 0;
@@ -47020,8 +44316,6 @@ test_xmlXPathOrderDocElems(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSetContextNode(void) {
     int test_ret = 0;
@@ -47116,8 +44410,6 @@ static xmlXPathParserContextPtr gen_xmlXPathParserContextPtr(int no ATTRIBUTE_UN
 static void des_xmlXPathParserContextPtr(int no ATTRIBUTE_UNUSED, xmlXPathParserContextPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_valuePop(void) {
     int test_ret = 0;
@@ -47150,8 +44442,6 @@ test_valuePop(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_valuePush(void) {
     int test_ret = 0;
@@ -47191,8 +44481,6 @@ test_valuePush(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathAddValues(void) {
     int test_ret = 0;
@@ -47223,8 +44511,6 @@ test_xmlXPathAddValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathBooleanFunction(void) {
     int test_ret = 0;
@@ -47262,8 +44548,6 @@ test_xmlXPathBooleanFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCeilingFunction(void) {
     int test_ret = 0;
@@ -47301,8 +44585,6 @@ test_xmlXPathCeilingFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCompareValues(void) {
     int test_ret = 0;
@@ -47349,8 +44631,6 @@ test_xmlXPathCompareValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathConcatFunction(void) {
     int test_ret = 0;
@@ -47388,8 +44668,6 @@ test_xmlXPathConcatFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathContainsFunction(void) {
     int test_ret = 0;
@@ -47427,8 +44705,6 @@ test_xmlXPathContainsFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathCountFunction(void) {
     int test_ret = 0;
@@ -47466,8 +44742,6 @@ test_xmlXPathCountFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDebugDumpCompExpr(void) {
     int test_ret = 0;
@@ -47512,8 +44786,6 @@ test_xmlXPathDebugDumpCompExpr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDebugDumpObject(void) {
     int test_ret = 0;
@@ -47558,8 +44830,6 @@ test_xmlXPathDebugDumpObject(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDifference(void) {
     int test_ret = 0;
@@ -47599,8 +44869,6 @@ test_xmlXPathDifference(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDistinct(void) {
     int test_ret = 0;
@@ -47633,8 +44901,6 @@ test_xmlXPathDistinct(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDistinctSorted(void) {
     int test_ret = 0;
@@ -47667,8 +44933,6 @@ test_xmlXPathDistinctSorted(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathDivValues(void) {
     int test_ret = 0;
@@ -47699,8 +44963,6 @@ test_xmlXPathDivValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEqualValues(void) {
     int test_ret = 0;
@@ -47733,8 +44995,6 @@ test_xmlXPathEqualValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathErr(void) {
     int test_ret = 0;
@@ -47772,8 +45032,6 @@ test_xmlXPathErr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEvalExpr(void) {
     int test_ret = 0;
@@ -47804,8 +45062,6 @@ test_xmlXPathEvalExpr(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathEvaluatePredicateResult(void) {
     int test_ret = 0;
@@ -47845,8 +45101,6 @@ test_xmlXPathEvaluatePredicateResult(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathFalseFunction(void) {
     int test_ret = 0;
@@ -47884,8 +45138,6 @@ test_xmlXPathFalseFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathFloorFunction(void) {
     int test_ret = 0;
@@ -47923,28 +45175,18 @@ test_xmlXPathFloorFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathFunctionLookup(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathFunctionLookupNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathHasSameNodes(void) {
     int test_ret = 0;
@@ -47984,8 +45226,6 @@ test_xmlXPathHasSameNodes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathIdFunction(void) {
     int test_ret = 0;
@@ -48023,8 +45263,6 @@ test_xmlXPathIdFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathIntersection(void) {
     int test_ret = 0;
@@ -48064,8 +45302,6 @@ test_xmlXPathIntersection(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathIsNodeType(void) {
     int test_ret = 0;
@@ -48098,8 +45334,6 @@ test_xmlXPathIsNodeType(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathLangFunction(void) {
     int test_ret = 0;
@@ -48137,8 +45371,6 @@ test_xmlXPathLangFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathLastFunction(void) {
     int test_ret = 0;
@@ -48176,8 +45408,6 @@ test_xmlXPathLastFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathLeading(void) {
     int test_ret = 0;
@@ -48217,8 +45447,6 @@ test_xmlXPathLeading(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathLeadingSorted(void) {
     int test_ret = 0;
@@ -48258,8 +45486,6 @@ test_xmlXPathLeadingSorted(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathLocalNameFunction(void) {
     int test_ret = 0;
@@ -48297,8 +45523,6 @@ test_xmlXPathLocalNameFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathModValues(void) {
     int test_ret = 0;
@@ -48329,8 +45553,6 @@ test_xmlXPathModValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathMultValues(void) {
     int test_ret = 0;
@@ -48361,8 +45583,6 @@ test_xmlXPathMultValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNamespaceURIFunction(void) {
     int test_ret = 0;
@@ -48400,8 +45620,6 @@ test_xmlXPathNamespaceURIFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewBoolean(void) {
     int test_ret = 0;
@@ -48434,8 +45652,6 @@ test_xmlXPathNewBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewCString(void) {
     int test_ret = 0;
@@ -48468,8 +45684,6 @@ test_xmlXPathNewCString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewFloat(void) {
     int test_ret = 0;
@@ -48502,8 +45716,6 @@ test_xmlXPathNewFloat(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewNodeSet(void) {
     int test_ret = 0;
@@ -48536,8 +45748,6 @@ test_xmlXPathNewNodeSet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewNodeSetList(void) {
     int test_ret = 0;
@@ -48570,18 +45780,12 @@ test_xmlXPathNewNodeSetList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewParserContext(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNewString(void) {
     int test_ret = 0;
@@ -48614,8 +45818,6 @@ test_xmlXPathNewString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextAncestor(void) {
     int test_ret = 0;
@@ -48655,8 +45857,6 @@ test_xmlXPathNextAncestor(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextAncestorOrSelf(void) {
     int test_ret = 0;
@@ -48696,8 +45896,6 @@ test_xmlXPathNextAncestorOrSelf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextAttribute(void) {
     int test_ret = 0;
@@ -48737,8 +45935,6 @@ test_xmlXPathNextAttribute(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextChild(void) {
     int test_ret = 0;
@@ -48778,8 +45974,6 @@ test_xmlXPathNextChild(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextDescendant(void) {
     int test_ret = 0;
@@ -48819,8 +46013,6 @@ test_xmlXPathNextDescendant(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextDescendantOrSelf(void) {
     int test_ret = 0;
@@ -48860,8 +46052,6 @@ test_xmlXPathNextDescendantOrSelf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextFollowing(void) {
     int test_ret = 0;
@@ -48901,8 +46091,6 @@ test_xmlXPathNextFollowing(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextFollowingSibling(void) {
     int test_ret = 0;
@@ -48942,8 +46130,6 @@ test_xmlXPathNextFollowingSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextNamespace(void) {
     int test_ret = 0;
@@ -48983,8 +46169,6 @@ test_xmlXPathNextNamespace(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextParent(void) {
     int test_ret = 0;
@@ -49024,8 +46208,6 @@ test_xmlXPathNextParent(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextPreceding(void) {
     int test_ret = 0;
@@ -49065,8 +46247,6 @@ test_xmlXPathNextPreceding(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextPrecedingSibling(void) {
     int test_ret = 0;
@@ -49106,8 +46286,6 @@ test_xmlXPathNextPrecedingSibling(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNextSelf(void) {
     int test_ret = 0;
@@ -49147,8 +46325,6 @@ test_xmlXPathNextSelf(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeLeading(void) {
     int test_ret = 0;
@@ -49188,8 +46364,6 @@ test_xmlXPathNodeLeading(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeLeadingSorted(void) {
     int test_ret = 0;
@@ -49229,8 +46403,6 @@ test_xmlXPathNodeLeadingSorted(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetAdd(void) {
     int test_ret = 0;
@@ -49270,8 +46442,6 @@ test_xmlXPathNodeSetAdd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetAddNs(void) {
     int test_ret = 0;
@@ -49318,8 +46488,6 @@ test_xmlXPathNodeSetAddNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetAddUnique(void) {
     int test_ret = 0;
@@ -49359,8 +46527,6 @@ test_xmlXPathNodeSetAddUnique(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetContains(void) {
     int test_ret = 0;
@@ -49400,8 +46566,6 @@ test_xmlXPathNodeSetContains(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetDel(void) {
     int test_ret = 0;
@@ -49439,8 +46603,6 @@ test_xmlXPathNodeSetDel(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetMerge(void) {
     int test_ret = 0;
@@ -49480,8 +46642,6 @@ test_xmlXPathNodeSetMerge(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetRemove(void) {
     int test_ret = 0;
@@ -49519,8 +46679,6 @@ test_xmlXPathNodeSetRemove(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeSetSort(void) {
     int test_ret = 0;
@@ -49551,8 +46709,6 @@ test_xmlXPathNodeSetSort(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeTrailing(void) {
     int test_ret = 0;
@@ -49592,8 +46748,6 @@ test_xmlXPathNodeTrailing(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNodeTrailingSorted(void) {
     int test_ret = 0;
@@ -49633,8 +46787,6 @@ test_xmlXPathNodeTrailingSorted(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNormalizeFunction(void) {
     int test_ret = 0;
@@ -49672,8 +46824,6 @@ test_xmlXPathNormalizeFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNotEqualValues(void) {
     int test_ret = 0;
@@ -49706,8 +46856,6 @@ test_xmlXPathNotEqualValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNotFunction(void) {
     int test_ret = 0;
@@ -49745,8 +46893,6 @@ test_xmlXPathNotFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNsLookup(void) {
     int test_ret = 0;
@@ -49786,8 +46932,6 @@ test_xmlXPathNsLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathNumberFunction(void) {
     int test_ret = 0;
@@ -49825,8 +46969,6 @@ test_xmlXPathNumberFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathParseNCName(void) {
     int test_ret = 0;
@@ -49859,8 +47001,6 @@ test_xmlXPathParseNCName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathParseName(void) {
     int test_ret = 0;
@@ -49893,8 +47033,6 @@ test_xmlXPathParseName(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPopBoolean(void) {
     int test_ret = 0;
@@ -49927,8 +47065,6 @@ test_xmlXPathPopBoolean(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPopExternal(void) {
     int test_ret = 0;
@@ -49961,8 +47097,6 @@ test_xmlXPathPopExternal(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPopNodeSet(void) {
     int test_ret = 0;
@@ -49995,8 +47129,6 @@ test_xmlXPathPopNodeSet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPopNumber(void) {
     int test_ret = 0;
@@ -50029,8 +47161,6 @@ test_xmlXPathPopNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPopString(void) {
     int test_ret = 0;
@@ -50063,8 +47193,6 @@ test_xmlXPathPopString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathPositionFunction(void) {
     int test_ret = 0;
@@ -50102,8 +47230,6 @@ test_xmlXPathPositionFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterAllFunctions(void) {
     int test_ret = 0;
@@ -50134,38 +47260,24 @@ test_xmlXPathRegisterAllFunctions(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterFunc(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterFuncLookup(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterFuncNS(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterNs(void) {
     int test_ret = 0;
@@ -50212,8 +47324,6 @@ test_xmlXPathRegisterNs(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterVariable(void) {
     int test_ret = 0;
@@ -50260,18 +47370,12 @@ test_xmlXPathRegisterVariable(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterVariableLookup(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisterVariableNS(void) {
     int test_ret = 0;
@@ -50325,8 +47429,6 @@ test_xmlXPathRegisterVariableNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisteredFuncsCleanup(void) {
     int test_ret = 0;
@@ -50357,8 +47459,6 @@ test_xmlXPathRegisteredFuncsCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisteredNsCleanup(void) {
     int test_ret = 0;
@@ -50389,8 +47489,6 @@ test_xmlXPathRegisteredNsCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRegisteredVariablesCleanup(void) {
     int test_ret = 0;
@@ -50421,8 +47519,6 @@ test_xmlXPathRegisteredVariablesCleanup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRoot(void) {
     int test_ret = 0;
@@ -50453,8 +47549,6 @@ test_xmlXPathRoot(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathRoundFunction(void) {
     int test_ret = 0;
@@ -50492,8 +47586,6 @@ test_xmlXPathRoundFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathStartsWithFunction(void) {
     int test_ret = 0;
@@ -50531,8 +47623,6 @@ test_xmlXPathStartsWithFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathStringEvalNumber(void) {
     int test_ret = 0;
@@ -50565,8 +47655,6 @@ test_xmlXPathStringEvalNumber(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathStringFunction(void) {
     int test_ret = 0;
@@ -50604,8 +47692,6 @@ test_xmlXPathStringFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathStringLengthFunction(void) {
     int test_ret = 0;
@@ -50643,8 +47729,6 @@ test_xmlXPathStringLengthFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSubValues(void) {
     int test_ret = 0;
@@ -50675,8 +47759,6 @@ test_xmlXPathSubValues(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSubstringAfterFunction(void) {
     int test_ret = 0;
@@ -50714,8 +47796,6 @@ test_xmlXPathSubstringAfterFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSubstringBeforeFunction(void) {
     int test_ret = 0;
@@ -50753,8 +47833,6 @@ test_xmlXPathSubstringBeforeFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSubstringFunction(void) {
     int test_ret = 0;
@@ -50792,8 +47870,6 @@ test_xmlXPathSubstringFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathSumFunction(void) {
     int test_ret = 0;
@@ -50831,8 +47907,6 @@ test_xmlXPathSumFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathTrailing(void) {
     int test_ret = 0;
@@ -50872,8 +47946,6 @@ test_xmlXPathTrailing(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathTrailingSorted(void) {
     int test_ret = 0;
@@ -50913,8 +47985,6 @@ test_xmlXPathTrailingSorted(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathTranslateFunction(void) {
     int test_ret = 0;
@@ -50952,8 +48022,6 @@ test_xmlXPathTranslateFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathTrueFunction(void) {
     int test_ret = 0;
@@ -50991,8 +48059,6 @@ test_xmlXPathTrueFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathValueFlipSign(void) {
     int test_ret = 0;
@@ -51023,8 +48089,6 @@ test_xmlXPathValueFlipSign(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathVariableLookup(void) {
     int test_ret = 0;
@@ -51064,8 +48128,6 @@ test_xmlXPathVariableLookup(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathVariableLookupNS(void) {
     int test_ret = 0;
@@ -51112,8 +48174,6 @@ test_xmlXPathVariableLookupNS(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathWrapCString(void) {
     int test_ret = 0;
@@ -51146,8 +48206,6 @@ test_xmlXPathWrapCString(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathWrapExternal(void) {
     int test_ret = 0;
@@ -51180,8 +48238,6 @@ test_xmlXPathWrapExternal(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPathWrapNodeSet(void) {
     int test_ret = 0;
@@ -51214,8 +48270,6 @@ test_xmlXPathWrapNodeSet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPatherror(void) {
     int test_ret = 0;
@@ -51424,8 +48478,6 @@ test_xmlXPtrBuildNodeList(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrEval(void) {
     int test_ret = 0;
@@ -51465,8 +48517,6 @@ test_xmlXPtrEval(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrEvalRangePredicate(void) {
     int test_ret = 0;
@@ -51507,8 +48557,6 @@ static xmlLocationSetPtr gen_xmlLocationSetPtr(int no ATTRIBUTE_UNUSED, int nr A
 static void des_xmlLocationSetPtr(int no ATTRIBUTE_UNUSED, xmlLocationSetPtr val ATTRIBUTE_UNUSED, int nr ATTRIBUTE_UNUSED) {
 }
 #endif
-
-
 static int
 test_xmlXPtrLocationSetAdd(void) {
     int test_ret = 0;
@@ -51546,18 +48594,12 @@ test_xmlXPtrLocationSetAdd(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrLocationSetCreate(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrLocationSetDel(void) {
     int test_ret = 0;
@@ -51595,18 +48637,12 @@ test_xmlXPtrLocationSetDel(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrLocationSetMerge(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrLocationSetRemove(void) {
     int test_ret = 0;
@@ -51644,8 +48680,6 @@ test_xmlXPtrLocationSetRemove(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewCollapsedRange(void) {
     int test_ret = 0;
@@ -51678,18 +48712,12 @@ test_xmlXPtrNewCollapsedRange(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewContext(void) {
     int test_ret = 0;
-
-
     /* missing type support */
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewLocationSetNodeSet(void) {
     int test_ret = 0;
@@ -51722,8 +48750,6 @@ test_xmlXPtrNewLocationSetNodeSet(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewLocationSetNodes(void) {
     int test_ret = 0;
@@ -51763,8 +48789,6 @@ test_xmlXPtrNewLocationSetNodes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRange(void) {
     int test_ret = 0;
@@ -51818,8 +48842,6 @@ test_xmlXPtrNewRange(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRangeNodeObject(void) {
     int test_ret = 0;
@@ -51859,8 +48881,6 @@ test_xmlXPtrNewRangeNodeObject(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRangeNodePoint(void) {
     int test_ret = 0;
@@ -51900,8 +48920,6 @@ test_xmlXPtrNewRangeNodePoint(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRangeNodes(void) {
     int test_ret = 0;
@@ -51941,8 +48959,6 @@ test_xmlXPtrNewRangeNodes(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRangePointNode(void) {
     int test_ret = 0;
@@ -51982,8 +48998,6 @@ test_xmlXPtrNewRangePointNode(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrNewRangePoints(void) {
     int test_ret = 0;
@@ -52023,8 +49037,6 @@ test_xmlXPtrNewRangePoints(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrRangeToFunction(void) {
     int test_ret = 0;
@@ -52062,8 +49074,6 @@ test_xmlXPtrRangeToFunction(void) {
 
     return(test_ret);
 }
-
-
 static int
 test_xmlXPtrWrapLocationSet(void) {
     int test_ret = 0;

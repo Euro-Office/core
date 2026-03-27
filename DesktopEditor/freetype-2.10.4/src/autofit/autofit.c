@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "afangles.c"
@@ -32,6 +30,4 @@
 #include "afranges.c"
 #include "afshaper.c"
 #include "afwarp.c"
-
-
 /* END */

@@ -41,8 +41,6 @@ namespace agg
         T*       m_array;
         unsigned m_size;
     };
-
-
     //---------------------------------------------------------pod_auto_array
     template<class T, unsigned Size> class pod_auto_array
     {
@@ -72,8 +70,6 @@ namespace agg
     private:
         T m_array[Size];
     };
-
-
     //--------------------------------------------------------pod_auto_vector
     template<class T, unsigned Size> class pod_auto_vector
     {
@@ -100,8 +96,6 @@ namespace agg
         T m_array[Size];
         unsigned m_size;
     };
-
-
     //---------------------------------------------------------------pod_array
     template<class T> class pod_array
     {
@@ -152,8 +146,6 @@ namespace agg
         T*       m_array;
         unsigned m_size;
     };
-
-
 
     //--------------------------------------------------------------pod_vector
     // A simple class template to store Plain Old Data, a vector
@@ -235,8 +227,6 @@ namespace agg
         capacity(size, extra_tail);
         m_size = size;
     }
-
-
     //------------------------------------------------------------------------
     template<class T> 
     void pod_vector<T>::resize(unsigned new_size)
@@ -508,8 +498,6 @@ namespace agg
         T**             m_blocks;
         unsigned        m_block_ptr_inc;
     };
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> pod_bvector<T, S>::~pod_bvector()
     {
@@ -524,8 +512,6 @@ namespace agg
         }
         pod_allocator<T*>::deallocate(m_blocks, m_max_blocks);
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     void pod_bvector<T, S>::free_tail(unsigned size)
@@ -546,8 +532,6 @@ namespace agg
             m_size = size;
         }
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> pod_bvector<T, S>::pod_bvector() :
         m_size(0),
@@ -557,8 +541,6 @@ namespace agg
         m_block_ptr_inc(block_size)
     {
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     pod_bvector<T, S>::pod_bvector(unsigned block_ptr_inc) :
@@ -569,8 +551,6 @@ namespace agg
         m_block_ptr_inc(block_ptr_inc)
     {
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     pod_bvector<T, S>::pod_bvector(const pod_bvector<T, S>& v) :
@@ -589,8 +569,6 @@ namespace agg
             memcpy(m_blocks[i], v.m_blocks[i], block_size * sizeof(T));
         }
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     const pod_bvector<T, S>& 
@@ -608,8 +586,6 @@ namespace agg
         m_size = v.m_size;
         return *this;
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S>
     void pod_bvector<T, S>::allocate_block(unsigned nb)
@@ -633,8 +609,6 @@ namespace agg
         m_num_blocks++;
     }
 
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S>
     inline T* pod_bvector<T, S>::data_ptr()
@@ -647,8 +621,6 @@ namespace agg
         return m_blocks[nb] + (m_size & block_mask);
     }
 
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     inline void pod_bvector<T, S>::add(const T& val)
@@ -656,16 +628,12 @@ namespace agg
         *data_ptr() = val;
         ++m_size;
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     inline void pod_bvector<T, S>::remove_last()
     {
         if(m_size) --m_size;
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     void pod_bvector<T, S>::modify_last(const T& val)
@@ -673,8 +641,6 @@ namespace agg
         remove_last();
         add(val);
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     int pod_bvector<T, S>::allocate_continuous_block(unsigned num_elements)
@@ -703,16 +669,12 @@ namespace agg
         }
         return -1; // Impossible to allocate
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     unsigned pod_bvector<T, S>::byte_size() const
     {
         return m_size * sizeof(T);
     }
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
     void pod_bvector<T, S>::serialize(int8u* ptr) const
@@ -739,8 +701,6 @@ namespace agg
             data += sizeof(T);
         }
     }
-
-
     // Replace or add a number of elements starting from "start" position
     //------------------------------------------------------------------------
     template<class T, unsigned S> 
@@ -768,8 +728,6 @@ namespace agg
             data += sizeof(T);
         }
     }
-
-
     //---------------------------------------------------------block_allocator
     // Allocator for arbitrary POD data. Most usable in different cache
     // systems for efficient memory allocations. 
@@ -823,8 +781,6 @@ namespace agg
             m_rest(0)
         {
         }
-       
-
         int8u* allocate(unsigned size, unsigned alignment=1)
         {
             if(size == 0) return 0;
@@ -854,8 +810,6 @@ namespace agg
             allocate_block(size + alignment - 1);
             return allocate(size, alignment);
         }
-
-
     private:
         void allocate_block(unsigned size)
         {
@@ -898,21 +852,11 @@ namespace agg
         int8u*      m_buf_ptr;
         unsigned    m_rest;
     };
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     enum quick_sort_threshold_e
     {
         quick_sort_threshold = 9
     };
-
-    
     //-----------------------------------------------------------swap_elements
     template<class T> inline void swap_elements(T& a, T& b)
     {
@@ -920,8 +864,6 @@ namespace agg
         a = b;
         b = temp;
     }
-
-
     //--------------------------------------------------------------quick_sort
     template<class Array, class Less>
     void quick_sort(Array& arr, Less less)
@@ -1026,10 +968,6 @@ namespace agg
             }
         }
     }
-
-
-
-
     //------------------------------------------------------remove_duplicates
     // Remove duplicates from a sorted array. It doesn't cut the 
     // tail of the array, it just returns the number of remaining elements.

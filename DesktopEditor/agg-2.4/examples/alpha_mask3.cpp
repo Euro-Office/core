@@ -19,13 +19,7 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
-
-
 class spiral
 {
 public:
@@ -80,14 +74,8 @@ private:
     bool   m_start;
 };
 
-
-
-
-
 void make_gb_poly(agg::path_storage& ps);
 void make_arrows(agg::path_storage& ps);
-
-
 class the_application : public agg::platform_support
 {
     agg::rbox_ctrl<agg::rgba8> m_polygons;
@@ -138,8 +126,6 @@ public:
         add_ctrl(m_polygons);
         m_polygons.no_transform();
     }
-
-
     void draw_text(double x, double y, const char* str)
     {
         pixfmt_type pf(rbuf_window());
@@ -157,8 +143,6 @@ public:
         ren.color(agg::rgba(0.0, 0.0, 0.0));
         agg::render_scanlines(m_ras, m_sl, ren);
     }
-
-
     template<class VertexSource> void generate_alpha_mask(VertexSource& vs)
     {
         unsigned cx = (unsigned)width();
@@ -194,8 +178,6 @@ public:
         sprintf(buf, "Generate AlphaMask: %.3fms", t1);
         draw_text(250, 20, buf);
     }
-
-
     template<class VertexSource>
     void perform_rendering(VertexSource& vs)
     {
@@ -203,8 +185,6 @@ public:
 
         typedef agg::pixfmt_amask_adaptor<pixfmt_type, alpha_mask_type> pixfmt_amask_type;
         typedef agg::renderer_base<pixfmt_amask_type>                   amask_ren_type;
-
-
         pixfmt_amask_type pixfa(pixf, m_alpha_mask);
         amask_ren_type rbase(pixfa);
         agg::renderer_scanline_aa_solid<amask_ren_type> ren(rbase);
@@ -216,14 +196,10 @@ public:
         m_ras.add_path(vs);
         agg::render_scanlines(m_ras, m_sl, ren);
         double t1 = elapsed_time();
-
-
         char buf[100];
         sprintf(buf, "Render with AlphaMask: %.3fms", t1);
         draw_text(250, 5, buf);
     }
-
-
     unsigned render()
     {
         pixfmt_type pf(rbuf_window());
@@ -327,8 +303,6 @@ public:
                 perform_rendering(stroke);
             }
             break;
-
-
             case 2:
             {
                 //------------------------------------
@@ -369,8 +343,6 @@ public:
                 perform_rendering(trans_arrows);
             }
             break;
-
-
             case 3:
             {
                 //------------------------------------
@@ -407,8 +379,6 @@ public:
                 perform_rendering(stroke);
             }
             break;
-
-
             case 4:
             {
                 //------------------------------------
@@ -488,8 +458,6 @@ public:
 
         return 0;
     }
-
-
     virtual void on_init()
     {
         m_x = width() / 2.0;
@@ -509,10 +477,6 @@ public:
         agg::render_ctrl(m_ras, m_sl, ren_base, m_polygons);
         agg::render_ctrl(m_ras, m_sl, ren_base, m_operation);
     }
-
-
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -529,8 +493,6 @@ public:
             message(buf);
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -541,11 +503,7 @@ public:
         }
     }
 
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -558,5 +516,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

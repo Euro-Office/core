@@ -50,8 +50,6 @@ public:
 	
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     unsigned short	ich = 0;
     FontIndex		ifnt;
 };

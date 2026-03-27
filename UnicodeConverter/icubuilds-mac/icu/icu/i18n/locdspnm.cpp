@@ -839,8 +839,6 @@ uldn_openForContext(const char * locale,
   }
   return (ULocaleDisplayNames *)LocaleDisplayNames::createInstance(Locale(locale), contexts, length);
 }
-
-
 U_CAPI void U_EXPORT2
 uldn_close(ULocaleDisplayNames *ldn) {
   delete (LocaleDisplayNames *)ldn;

@@ -557,8 +557,6 @@ png_create_write_struct_2,(png_const_charp user_png_ver, png_voidp error_ptr,
 
    return png_ptr;
 }
-
-
 /* Write a few rows of image data.  If the image is interlaced,
  * either you will have to write the 7 sub images, or, if you
  * have called png_set_interlace_handling(), you will have to
@@ -1325,8 +1323,6 @@ png_set_write_user_transform_fn(png_structrp png_ptr, png_user_transform_ptr
    png_ptr->write_user_transform_fn = write_user_transform_fn;
 }
 #endif
-
-
 #ifdef PNG_INFO_IMAGE_SUPPORTED
 void PNGAPI
 png_write_png(png_structrp png_ptr, png_inforp info_ptr,
@@ -1449,8 +1445,6 @@ png_write_png(png_structrp png_ptr, png_inforp info_ptr,
    PNG_UNUSED(params)
 }
 #endif
-
-
 #ifdef PNG_SIMPLIFIED_WRITE_SUPPORTED
 /* Initialize the write structure - general purpose utility. */
 static int
@@ -2146,8 +2140,6 @@ png_image_write_main(png_voidp argument)
    png_write_end(png_ptr, info_ptr);
    return 1;
 }
-
-
 static void (PNGCBAPI
 image_memory_write)(png_structp png_ptr, png_bytep/*const*/ data,
     png_size_t size)

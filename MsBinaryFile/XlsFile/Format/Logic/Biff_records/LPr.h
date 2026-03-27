@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of LPr record in BIFF8
 class LPr: public BiffRecord
 {
@@ -44,13 +42,9 @@ class LPr: public BiffRecord
 	BASE_OBJECT_DEFINE_CLASS_NAME(LPr)
 public:
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);	
 
 	static const ElementType	type = typeLPr;
-
-
 
 };
 

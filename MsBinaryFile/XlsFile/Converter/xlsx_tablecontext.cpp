@@ -36,8 +36,6 @@
 #include "../../Common/Utils/simple_xml_writer.h"
 
 namespace oox {
-
-
 class xlsx_tables_context::Impl
 {
 public:

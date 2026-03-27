@@ -37,8 +37,6 @@
 #include "CNvPr.h"
 #include "CNvPicPr.h"
 #include "NvPr.h"
-
-
 namespace PPTX
 {
 	namespace Logic

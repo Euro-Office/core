@@ -119,8 +119,6 @@ udtitvfmt_open(const char*  locale,
  */
 U_STABLE void U_EXPORT2
 udtitvfmt_close(UDateIntervalFormat *formatter);
-
-
 #if U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
@@ -139,8 +137,6 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUDateIntervalFormatPointer, UDateIntervalFormat
 U_NAMESPACE_END
 
 #endif
-
-
 /**
  * Formats a date/time range using the conventions established for the
  * UDateIntervalFormat object.

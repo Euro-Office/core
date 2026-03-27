@@ -31,8 +31,6 @@ U_NAMESPACE_BEGIN
 UOBJECT_DEFINE_RTTI_IMPLEMENTATION(BreakTransliterator)
 
 static const UChar SPACE       = 32;  // ' '
-
-
 /**
  * Constructs a transliterator with the default delimiters '{' and
  * '}'.
@@ -41,8 +39,6 @@ BreakTransliterator::BreakTransliterator(UnicodeFilter* adoptedFilter) :
         Transliterator(UNICODE_STRING("Any-BreakInternal", 17), adoptedFilter),
         cachedBI(NULL), cachedBoundaries(NULL), fInsertion(SPACE) {
     }
-
-
 /**
  * Destructor.
  */
@@ -55,8 +51,6 @@ BreakTransliterator::~BreakTransliterator() {
 BreakTransliterator::BreakTransliterator(const BreakTransliterator& o) :
         Transliterator(o), cachedBI(NULL), cachedBoundaries(NULL), fInsertion(o.fInsertion) {
 }
-
-
 /**
  * Transliterator API.
  */

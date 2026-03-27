@@ -811,8 +811,6 @@ namespace DocFileFormat
 		
 		return true;
 	}
-
-
 	void WordDocument::Clear()
 	{
 		nWordVersion =	0;

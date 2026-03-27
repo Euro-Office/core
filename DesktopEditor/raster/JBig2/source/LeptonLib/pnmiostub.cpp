@@ -64,8 +64,6 @@ l_int32 pixWriteMemPnm(l_uint8 **pdata, size_t *psize, PIX *pix)
     return ERROR_INT("function not present", "pixWriteMemPnm", 1);
 }
 
-
-
 /* --------------------------------------------*/
 #endif  /* !USE_PNMIO */
 /* --------------------------------------------*/

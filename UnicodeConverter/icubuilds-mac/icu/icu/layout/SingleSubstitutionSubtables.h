@@ -43,5 +43,3 @@ LE_VAR_ARRAY(SingleSubstitutionFormat2Subtable, substituteArray)
 
 U_NAMESPACE_END
 #endif
-
-

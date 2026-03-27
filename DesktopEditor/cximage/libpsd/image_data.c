@@ -28,8 +28,6 @@
 #include "psd_system.h"
 #include "psd_stream.h"
 #include "psd_color.h"
-
-
 #ifdef PSD_INCLUDE_ZLIB
 extern psd_status psd_unzip_without_prediction(psd_uchar *src_buf, psd_int src_len, 
 	psd_uchar *dst_buf, psd_int dst_len);
@@ -37,8 +35,6 @@ extern psd_status psd_unzip_with_prediction(psd_uchar *src_buf, psd_int src_len,
 	psd_uchar *dst_buf, psd_int dst_len, 
 	psd_int row_size, psd_int color_depth);
 #endif
-
-
 // 1bit bitamp
 static psd_status psd_combine_bitmap1_channel(psd_context * context)
 {
@@ -260,8 +256,6 @@ static psd_status psd_combine_rgb16_channel(psd_context * context)
 
 	return psd_status_done;
 }
-
-
 #ifdef PSD_SUPPORT_CMYK
 
 // 8bit cmyk
@@ -501,8 +495,6 @@ static psd_status psd_combine_multichannel8_channel(psd_context * context)
 }
 
 #endif // ifdef PSD_SUPPORT_MULTICHANNEL
-
-
 // The last section of a Photoshop file contains the image pixel data. Image data is
 // stored in planar order: first all the red data, then all the green data, etc. Each plane is
 // stored in scan-line order, with no pad bytes,

@@ -14,14 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftmemory.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/ftlist.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -30,8 +26,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  memory
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -43,8 +37,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_alloc( FT_Memory  memory,
                 FT_Long    size,
@@ -59,8 +51,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qalloc( FT_Memory  memory,
                  FT_Long    size,
@@ -68,8 +58,6 @@
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
-
-
     if ( size > 0 )
     {
       block = memory->alloc( memory, size );
@@ -85,8 +73,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_realloc( FT_Memory  memory,
                   FT_Long    item_size,
@@ -96,8 +82,6 @@
                   FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     block = ft_mem_qrealloc( memory, item_size,
                              cur_count, new_count, block, &error );
     if ( !error && block && new_count > cur_count )
@@ -107,8 +91,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qrealloc( FT_Memory  memory,
                    FT_Long    item_size,
@@ -118,8 +100,6 @@
                    FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     /* Note that we now accept `item_size == 0' as a valid parameter, in
      * order to cover very weird cases where an ALLOC_MULT macro would be
      * called.
@@ -151,8 +131,6 @@
       FT_Pointer  block2;
       FT_Long     cur_size = cur_count * item_size;
       FT_Long     new_size = new_count * item_size;
-
-
       block2 = memory->realloc( memory, cur_size, new_size, block );
       if ( !block2 )
         error = FT_THROW( Out_Of_Memory );
@@ -163,8 +141,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory   memory,
                const void *P )
@@ -172,8 +148,6 @@
     if ( P )
       memory->free( memory, (void*)P );
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_dup( FT_Memory    memory,
               const void*  address,
@@ -182,16 +156,12 @@
   {
     FT_Error    error;
     FT_Pointer  p = ft_mem_qalloc( memory, (FT_Long)size, &error );
-
-
     if ( !error && address && size > 0 )
       ft_memcpy( p, address, size );
 
     *p_error = error;
     return p;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_strdup( FT_Memory    memory,
                  const char*  str,
@@ -199,12 +169,8 @@
   {
     FT_ULong  len = str ? (FT_ULong)ft_strlen( str ) + 1
                         : 0;
-
-
     return ft_mem_dup( memory, str, len, p_error );
   }
-
-
   FT_BASE_DEF( FT_Int )
   ft_mem_strcpyn( char*        dst,
                   const char*  src,
@@ -220,8 +186,6 @@
 
     return *src != 0;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -244,8 +208,6 @@
                 void*    data )
   {
     FT_ListNode  cur;
-
-
     if ( !list )
       return NULL;
 
@@ -260,8 +222,6 @@
 
     return NULL;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -269,8 +229,6 @@
                FT_ListNode  node )
   {
     FT_ListNode  before;
-
-
     if ( !list || !node )
       return;
 
@@ -286,8 +244,6 @@
 
     list->tail = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -295,8 +251,6 @@
                   FT_ListNode  node )
   {
     FT_ListNode  after;
-
-
     if ( !list || !node )
       return;
 
@@ -312,8 +266,6 @@
 
     list->head = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -321,8 +273,6 @@
                   FT_ListNode  node )
   {
     FT_ListNode  before, after;
-
-
     if ( !list || !node )
       return;
 
@@ -339,8 +289,6 @@
     else
       list->tail = before;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -348,8 +296,6 @@
               FT_ListNode  node )
   {
     FT_ListNode  before, after;
-
-
     if ( !list || !node )
       return;
 
@@ -372,8 +318,6 @@
     list->head->prev = node;
     list->head       = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -383,8 +327,6 @@
   {
     FT_ListNode  cur;
     FT_Error     error = FT_Err_Ok;
-
-
     if ( !list || !iterator )
       return FT_THROW( Invalid_Argument );
 
@@ -393,8 +335,6 @@
     while ( cur )
     {
       FT_ListNode  next = cur->next;
-
-
       error = iterator( cur, user );
       if ( error )
         break;
@@ -404,8 +344,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -415,8 +353,6 @@
                     void*               user )
   {
     FT_ListNode  cur;
-
-
     if ( !list || !memory )
       return;
 
@@ -425,8 +361,6 @@
     {
       FT_ListNode  next = cur->next;
       void*        data = cur->data;
-
-
       if ( destroy )
         destroy( memory, data, user );
 
@@ -437,6 +371,4 @@
     list->head = NULL;
     list->tail = NULL;
   }
-
-
 /* END */

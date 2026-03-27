@@ -60,8 +60,6 @@ PivotCacheDefStream::PivotCacheDefStream()
 PivotCacheDefStream::~PivotCacheDefStream()
 {
 }
-
-
 BaseObjectPtr PivotCacheDefStream::clone()
 {
         return BaseObjectPtr(new PivotCacheDefStream(*this));
@@ -94,8 +92,6 @@ const bool PivotCacheDefStream::loadContent(BinProcessor& proc)
                         elements_.pop_back();
                     }
                 }break;
-
-
                 case rt_BeginPCDSource:
                 {
                     if (proc.optional<PCDSOURCE>())

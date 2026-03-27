@@ -101,8 +101,6 @@ static const l_int32  INITIAL_PTR_ARRAYSIZE = 20;   /* n'import quoi */
     /* These two globals are defined in writefile.c */
 extern l_int32 NumImageFileFormatExtensions;
 extern const char *ImageFileFormatExtensions[];
-
-
 /*---------------------------------------------------------------------*
  *                  Pixcomp creation and destruction                   *
  *---------------------------------------------------------------------*/
@@ -157,8 +155,6 @@ PIXC     *pixc;
 
     return pixc;
 }
-
-
 /*!
  *  pixcompCreateFromString()
  *
@@ -205,8 +201,6 @@ PIXC    *pixc;
     pixc->size = size;
     return pixc;
 }
-
-
 /*!
  *  pixcompCreateFromFile()
  *
@@ -269,8 +263,6 @@ PIXC     *pixc;
     pixDestroy(&pix);
     return pixc;
 }
-
-
 /*!
  *  pixcompDestroy()
  *
@@ -302,8 +294,6 @@ PIXC  *pixc;
     *ppixc = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Pixcomp accessors                         *
  *---------------------------------------------------------------------*/
@@ -329,8 +319,6 @@ pixcompGetDimensions(PIXC     *pixc,
     if (pd) *pd = pixc->d;
     return 0;
 }
-
-
 /*!
  *  pixcompDetermineFormat()
  *
@@ -380,8 +368,6 @@ pixcompDetermineFormat(l_int32   comptype,
 
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                      Pixcomp conversion to Pix                      *
  *---------------------------------------------------------------------*/
@@ -433,8 +419,6 @@ PIX     *pix;
     
     return pix;
 }
- 
-
 
 /*---------------------------------------------------------------------*
  *                Pixacomp creation and destruction                    *
@@ -467,8 +451,6 @@ PIXAC  *pixac;
 
     return pixac;
 }
-
-
 /*!
  *  pixacompCreateInitialized()
  *
@@ -518,8 +500,6 @@ PIXAC   *pixac;
 
     return pixac;
 }
-
-
 /*!
  *  pixacompCreateFromPixa()
  *
@@ -573,8 +553,6 @@ PIXAC   *pixac;
 
     return pixac;
 }
-
-
 /*!
  *  pixacompCreateFromFiles()
  *
@@ -616,8 +594,6 @@ SARRAY   *sa;
     sarrayDestroy(&sa);
     return pixac;
 }
-
-
 /*!
  *  pixacompCreateFromSA()
  *
@@ -660,8 +636,6 @@ PIXAC    *pixac;
     }
     return pixac;
 }
-
-
 /*!
  *  pixacompDestroy()
  *
@@ -696,8 +670,6 @@ PIXAC   *pixac;
     *ppixac = NULL;
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *                          Pixacomp addition                          *
  *---------------------------------------------------------------------*/
@@ -734,8 +706,6 @@ PIXC    *pixc;
     pixacompAddPixcomp(pixac, pixc);
     return 0;
 }
-
-
 /*!
  *  pixacompAddPixcomp()
  *
@@ -764,8 +734,6 @@ l_int32  n;
 
     return 0;
 }
-
-
 /*!
  *  pixacompExtendArray()
  *
@@ -794,8 +762,6 @@ pixacompExtendArray(PIXAC  *pixac)
     boxaExtendArray(pixac->boxa);
     return 0;
 }
-
-
 /*!
  *  pixacompReplacePix()
  *
@@ -835,8 +801,6 @@ PIXC    *pixc;
     pixacompReplacePixcomp(pixac, index, pixc);
     return 0;
 }
-
-
 /*!
  *  pixacompReplacePixcomp()
  *
@@ -873,8 +837,6 @@ PIXC    *pixct;
 
     return 0;
 }
-
-
 /*!
  *  pixacompAddBox()
  *
@@ -900,8 +862,6 @@ pixacompAddBox(PIXAC   *pixac,
     boxaAddBox(pixac->boxa, box, copyflag);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Pixacomp accessors                          *
  *---------------------------------------------------------------------*/
@@ -921,8 +881,6 @@ pixacompGetCount(PIXAC  *pixac)
 
     return pixac->n;
 }
-
-
 /*!
  *  pixacompGetPixcomp()
  *
@@ -947,8 +905,6 @@ pixacompGetPixcomp(PIXAC   *pixac,
 
     return pixac->pixc[index];
 }
-
-
 /*!
  *  pixacompGetPix()
  *
@@ -972,8 +928,6 @@ PIXC  *pixc;
     pixc = pixacompGetPixcomp(pixac, index);
     return pixCreateFromPixcomp(pixc);
 }
-
-
 /*!
  *  pixacompGetPixDimensions()
  *
@@ -1003,8 +957,6 @@ PIXC  *pixc;
     pixcompGetDimensions(pixc, pw, ph, pd);
     return 0;
 }
-
-
 /*!
  *  pixacompGetBoxa()
  *
@@ -1028,8 +980,6 @@ pixacompGetBoxa(PIXAC   *pixac,
 
     return boxaCopy(pixac->boxa, accesstype);
 }
-
-
 /*!
  *  pixacompGetBoxaCount()
  *
@@ -1046,8 +996,6 @@ pixacompGetBoxaCount(PIXAC  *pixac)
     
     return boxaGetCount(pixac->boxa);
 }
-
-
 /*!
  *  pixacompGetBox()
  *
@@ -1094,8 +1042,6 @@ BOX  *box;
     else
         return NULL;
 }
-
-
 /*!
  *  pixacompGetBoxGeometry()
  *
@@ -1127,8 +1073,6 @@ BOX  *box;
     boxDestroy(&box);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                      Pixacomp conversion to Pixa                    *
  *---------------------------------------------------------------------*/
@@ -1172,8 +1116,6 @@ PIXA    *pixa;
 
     return pixa;
 }
-
-
 /*---------------------------------------------------------------------*
  *                       Pixacomp serialized I/O                       *
  *---------------------------------------------------------------------*/
@@ -1209,8 +1151,6 @@ PIXAC  *pixac;
     fclose(fp);
     return pixac;
 }
-
-
 /*!
  *  pixacompReadStream()
  *
@@ -1274,8 +1214,6 @@ PIXAC    *pixac;
     }
     return pixac;
 }
-
-
 /*!
  *  pixacompWrite()
  *
@@ -1308,8 +1246,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*!
  *  pixacompWriteStream()
  *
@@ -1347,8 +1283,6 @@ PIXC    *pixc;
     }
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                        Output for debugging                        *
  *--------------------------------------------------------------------*/
@@ -1393,8 +1327,6 @@ PIXC    *pixc;
     }
     return 0;
 }
-
-
 /*!
  *  pixcompWriteStreamInfo()
  *
@@ -1434,8 +1366,6 @@ pixcompWriteStreamInfo(FILE        *fp,
         fprintf(fp, "    Error!! Invalid comptype index: %d\n", pixc->comptype);
     return 0;
 }
-
-
 /*!
  *  pixacompDisplayTiledAndScaled()
  *
@@ -1581,5 +1511,3 @@ PIXA      *pixan;
     FREE(rowht);
     return pixd;
 }
-
-

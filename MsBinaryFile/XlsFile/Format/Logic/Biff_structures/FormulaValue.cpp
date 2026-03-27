@@ -35,14 +35,10 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr FormulaValue::clone()
 {
 	return BiffStructurePtr(new FormulaValue(*this));
 }
-
-
 std::wstring FormulaValue::getValue()
 {
 	std::wstring result;
@@ -75,8 +71,6 @@ std::wstring FormulaValue::getValue()
 	}
 	return result;
 }
-
-
 void FormulaValue::load(CFRecord& record)
 {
 	record >> data.xnum;

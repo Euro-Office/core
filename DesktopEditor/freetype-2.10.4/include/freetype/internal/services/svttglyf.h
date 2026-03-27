@@ -20,14 +20,8 @@
 
 #include <freetype/internal/ftserv.h>
 #include <freetype/tttables.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_TT_GLYF  "tt-glyf"
-
-
   typedef FT_ULong
   (*TT_Glyf_GetLocationFunc)( FT_Face    face,
                               FT_UInt    gindex,
@@ -37,8 +31,6 @@ FT_BEGIN_HEADER
   {
     TT_Glyf_GetLocationFunc  get_location;
   };
-
-
 #define FT_DEFINE_SERVICE_TTGLYFREC( class_, get_location_ )  \
   static const FT_Service_TTGlyfRec  class_ =                 \
   {                                                           \
@@ -46,11 +38,7 @@ FT_BEGIN_HEADER
   };
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* SVTTGLYF_H_ */
-
-
 /* END */

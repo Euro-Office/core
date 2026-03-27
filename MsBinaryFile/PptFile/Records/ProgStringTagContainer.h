@@ -32,8 +32,6 @@
 #pragma once
 #include "../Reader/Records.h"
 #include "Animations/TimeVariant.h"
-
-
 namespace PPT
 {
 class CRecordProgStringTagContainer : public CUnknownRecord

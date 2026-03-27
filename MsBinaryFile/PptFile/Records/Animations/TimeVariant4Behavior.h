@@ -34,8 +34,6 @@
 #include "../../Reader/Records.h"
 #include "../../Enums/_includer.h"
 #include "TimeVariant.h"
-
-
 namespace PPT
 {
 class FactoryTimeVariant4Behavior

@@ -84,16 +84,12 @@
 #include <sys/types.h>
 #endif
 #include <locale.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 const DjVuMessageLite& (*DjVuMessageLite::create)(void) = 
   DjVuMessageLite::create_lite; 
 
@@ -168,15 +164,11 @@ DjVuMessageLite::DjVuMessageLite( void ) {}
 
 // Destructor
 DjVuMessageLite::~DjVuMessageLite( ) {}
-
-
 void
 DjVuMessageLite::perror( const GUTF8String & MessageList )
 {
   DjVuPrintErrorUTF8("%s\n",(const char *)DjVuMessageLite::LookUpUTF8(MessageList));
 }
-
-
 //  Expands message lists by looking up the message IDs and inserting
 //  arguments into the retrieved messages.
 //  N.B. The resulting string may be encoded in UTF-8 format (ISO 10646-1 Annex R)
@@ -221,8 +213,6 @@ DjVuMessageLite::LookUp( const GUTF8String & MessageList ) const
   //  All done 
   return result;
 }
-
-
 // Expands a single message and inserts the arguments. Single_Message
 // contains no separators (newlines), but includes all the parameters
 // separated by tabs.
@@ -284,8 +274,6 @@ DjVuMessageLite::LookUpSingle( const GUTF8String &Single_Message ) const
 
   return msg_text;
 }
-
-
 // Looks up the msgID in the file of messages and returns a pointer to
 // the beginning of the translated message, if found; and an empty string
 // otherwise.
@@ -335,8 +323,6 @@ DjVuMessageLite::LookUpID( const GUTF8String &xmsgID,
     }
   }
 }
-
-
 // Insert a string into the message text. Will insert into any field
 // description.  Except for an ArgId of zero (message number), if the ArgId
 // is not found, the routine adds a line with the parameter so information
@@ -408,8 +394,6 @@ DjVuMessageLite::InsertArg( GUTF8String &message,
     }
   }
 }
-
-
 //  A C function to perform a message lookup. Arguments are a buffer to received the
 //  translated message, a buffer size (bytes), and a message_list. The translated
 //  result is returned in msg_buffer encoded in UTF-8. In case of error, msg_buffer is
@@ -435,8 +419,6 @@ DjVuMessageLite::AddByteStream(const GP<ByteStream> &bs)
     lt_XMLTags::get_Maps(messagestring,namestring,Bodies,Map);
   }
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

@@ -89,8 +89,6 @@ const bool XLUnicodeRichExtendedString::appendNextContinue(CFRecord& record, con
 	}
 	return true;
 }
-
-
 XLUnicodeRichExtendedString::~XLUnicodeRichExtendedString()
 {
 }
@@ -99,8 +97,6 @@ void XLUnicodeRichExtendedString::set_code_page(short cp)
 {
 	code_page_ = cp;
 }
-
-
 BiffStructurePtr XLUnicodeRichExtendedString::clone()
 {
 	return BiffStructurePtr(new XLUnicodeRichExtendedString(*this));
@@ -349,8 +345,6 @@ CFRecord& operator>>(CFRecord& record, XLUnicodeRichExtendedString& val)
 	val.load(record);
 	return record;
 }
-
-
 const size_t XLUnicodeRichExtendedString::getNonVariablePartSize() const
 {	
 	unsigned short size = sizeof(unsigned short)/*cch*/ + sizeof(unsigned char)/*flags*/;
@@ -364,8 +358,6 @@ const size_t XLUnicodeRichExtendedString::getNonVariablePartSize() const
 	}
 	return size;
 }
-
-
 const size_t XLUnicodeRichExtendedString::getFullSize() const
 {	
 	unsigned short size = getNonVariablePartSize();
@@ -381,6 +373,4 @@ const size_t XLUnicodeRichExtendedString::getFullSize() const
 
 	return size;
 }
-
-
 } // namespace XLS

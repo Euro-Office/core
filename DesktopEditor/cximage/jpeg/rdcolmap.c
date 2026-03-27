@@ -36,8 +36,6 @@
 ** documentation.  This software is provided "as is" without express or
 ** implied warranty.
 */
-
-
 /*
  * Add a (potentially) new color to the color map.
  */
@@ -69,8 +67,6 @@ add_map_entry (j_decompress_ptr cinfo, int R, int G, int B)
   colormap2[ncolors] = (JSAMPLE) B;
   cinfo->actual_number_of_colors++;
 }
-
-
 /*
  * Extract color map from a GIF file.
  */
@@ -112,11 +108,7 @@ read_gif_map (j_decompress_ptr cinfo, FILE * infile)
 		  B << (BITS_IN_JSAMPLE-8));
   }
 }
-
-
 /* Support routines for reading PPM */
-
-
 LOCAL(int)
 pbm_getc (FILE * infile)
 /* Read next char, skipping over any comments */
@@ -132,8 +124,6 @@ pbm_getc (FILE * infile)
   }
   return ch;
 }
-
-
 LOCAL(unsigned int)
 read_pbm_integer (j_decompress_ptr cinfo, FILE * infile)
 /* Read an unsigned decimal integer from the PPM file */
@@ -161,8 +151,6 @@ read_pbm_integer (j_decompress_ptr cinfo, FILE * infile)
   }
   return val;
 }
-
-
 /*
  * Extract color map from a PPM file.
  */
@@ -219,8 +207,6 @@ read_ppm_map (j_decompress_ptr cinfo, FILE * infile)
     break;
   }
 }
-
-
 /*
  * Main entry point from djpeg.c.
  *  Input: opened input file (from file name argument on command line).

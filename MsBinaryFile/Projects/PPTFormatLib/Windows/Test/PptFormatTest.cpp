@@ -100,8 +100,6 @@ HRESULT convert_single(std::wstring srcFileName)
 
 	return hRes;
 }
-
-
 HRESULT convert_directory(std::wstring pathName)
 {
 	HRESULT hr = S_OK;

@@ -174,8 +174,6 @@ public:
 private:
     xlsx_drawings_ptr xlsx_drawings_;
 };
-
-
 xlsx_drawing_context::xlsx_drawing_context(xlsx_drawing_context_handle_ptr & h, bool in_text)
  : impl_(new xlsx_drawing_context::Impl(h))
 {
@@ -637,8 +635,6 @@ void xlsx_drawing_context::process_position_properties(drawing_object_descriptio
 		}
 	}
 }
-
-
 void xlsx_drawing_context::process_image(drawing_object_description & obj, _xlsx_drawing & drawing, xlsx_drawings_ptr xlsx_drawings_)
 {
 	if (!drawing.fill.bitmap)

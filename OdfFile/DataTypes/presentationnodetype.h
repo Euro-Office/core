@@ -67,8 +67,6 @@ private:
 	type type_;
 };
 std::wostream& operator << (std::wostream& _Wostream, const presentation_node_type& _Val);
-
-
 } // namespace odf_types
 	APPLY_PARSE_XML_ATTRIBUTES(odf_types::presentation_node_type);
 } // namespace cpdoccore

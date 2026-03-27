@@ -51,8 +51,6 @@ public:
 
 	virtual void load(CFRecord& record);
     virtual void save(CFRecord& record);
-
-
     _UINT32 offset = 0;
 };
 

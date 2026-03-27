@@ -20,8 +20,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Initialization of a JPEG decompression object.
  * The error manager must already be set up (in case memory manager fails).
@@ -82,8 +80,6 @@ jpeg_CreateDecompress (j_decompress_ptr cinfo, int version, size_t structsize)
   /* OK, I'm ready */
   cinfo->global_state = DSTATE_START;
 }
-
-
 /*
  * Destruction of a JPEG decompression object
  */
@@ -93,8 +89,6 @@ jpeg_destroy_decompress (j_decompress_ptr cinfo)
 {
   jpeg_destroy((j_common_ptr) cinfo); /* use common routine */
 }
-
-
 /*
  * Abort processing of a JPEG decompression operation,
  * but don't destroy the object itself.
@@ -105,8 +99,6 @@ jpeg_abort_decompress (j_decompress_ptr cinfo)
 {
   jpeg_abort((j_common_ptr) cinfo); /* use common routine */
 }
-
-
 /*
  * Set default decompression parameters.
  */
@@ -209,8 +201,6 @@ default_decompress_parms (j_decompress_ptr cinfo)
   cinfo->enable_external_quant = FALSE;
   cinfo->enable_2pass_quant = FALSE;
 }
-
-
 /*
  * Decompression startup: read start of JPEG datastream to see what's there.
  * Need only initialize JPEG object and supply a data source before calling.
@@ -270,8 +260,6 @@ jpeg_read_header (j_decompress_ptr cinfo, boolean require_image)
 
   return retcode;
 }
-
-
 /*
  * Consume data in advance of what the decompressor requires.
  * This can be called at any time once the decompressor object has
@@ -325,8 +313,6 @@ jpeg_consume_input (j_decompress_ptr cinfo)
   }
   return retcode;
 }
-
-
 /*
  * Have we finished reading the input file?
  */
@@ -340,8 +326,6 @@ jpeg_input_complete (j_decompress_ptr cinfo)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
   return cinfo->inputctl->eoi_reached;
 }
-
-
 /*
  * Is there more than one scan?
  */
@@ -355,8 +339,6 @@ jpeg_has_multiple_scans (j_decompress_ptr cinfo)
     ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
   return cinfo->inputctl->has_multiple_scans;
 }
-
-
 /*
  * Finish JPEG decompression.
  *

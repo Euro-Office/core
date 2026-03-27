@@ -14,18 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CIDGLOAD_H_
 #define CIDGLOAD_H_
-
-
 #include "cidobjs.h"
-
-
 FT_BEGIN_HEADER
-
-
 #if 0
 
   /* Compute the maximum advance width of a font through quick parsing */
@@ -40,11 +32,7 @@ FT_BEGIN_HEADER
                        FT_Size       size,          /* CID_Size       */
                        FT_UInt       glyph_index,
                        FT_Int32      load_flags );
-
-
 FT_END_HEADER
 
 #endif /* CIDGLOAD_H_ */
-
-
 /* END */

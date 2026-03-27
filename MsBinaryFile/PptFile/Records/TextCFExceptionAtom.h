@@ -32,16 +32,12 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordTextCFExceptionAtom : public CUnknownRecord
 {
 public:
 	CTextCFRunRecord m_oCFRun;
-	
-
     CRecordTextCFExceptionAtom();
     ~CRecordTextCFExceptionAtom();
 

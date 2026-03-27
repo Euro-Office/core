@@ -70,8 +70,6 @@ void Format2AnchorTable::getAnchor(LEGlyphID glyphID, const LEFontInstance *font
 
         fontInstance->transformFunits(x, y, point);
     }
-
-
     fontInstance->pixelsToUnits(point, anchor);
 }
 

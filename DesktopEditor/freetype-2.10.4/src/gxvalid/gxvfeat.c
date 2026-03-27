@@ -23,13 +23,9 @@
  * Promotion Agency(IPA), Japan.
  *
  */
-
-
 #include "gxvalid.h"
 #include "gxvcommn.h"
 #include "gxvfeat.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -38,8 +34,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  gxvfeat
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -55,11 +49,7 @@
     FT_UShort  setting;
 
   } GXV_feat_DataRec, *GXV_feat_Data;
-
-
 #define GXV_FEAT_DATA( field )  GXV_TABLE_DATA( feat, field )
-
-
   typedef enum  GXV_FeatureFlagsMask_
   {
     GXV_FEAT_MASK_EXCLUSIVE_SETTINGS = 0x8000U,
@@ -68,8 +58,6 @@
     GXV_FEAT_MASK_DEFAULT_SETTING    = 0x00FF
 
   } GXV_FeatureFlagsMask;
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -132,8 +120,6 @@
   Exit:
     GXV_EXIT;
   }
-
-
   static void
   gxv_feat_name_index_validate( FT_Bytes       table,
                                 FT_Bytes       limit,
@@ -142,8 +128,6 @@
     FT_Bytes  p = table;
 
     FT_Short  nameIndex;
-
-
     GXV_NAME_ENTER( "nameIndex" );
 
     GXV_LIMIT_CHECK( 2 );
@@ -157,8 +141,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_feat_setting_validate( FT_Bytes       table,
                              FT_Bytes       limit,
@@ -167,8 +149,6 @@
   {
     FT_Bytes   p = table;
     FT_UShort  setting;
-
-
     GXV_NAME_ENTER( "setting" );
 
     GXV_LIMIT_CHECK( 2 );
@@ -185,8 +165,6 @@
 
     GXV_EXIT;
   }
-
-
   static void
   gxv_feat_name_validate( FT_Bytes       table,
                           FT_Bytes       limit,
@@ -203,8 +181,6 @@
     FT_Bool    exclusive;
     FT_Int     last_setting;
     FT_UInt    i;
-
-
     GXV_NAME_ENTER( "name" );
 
     /* feature + nSettings + settingTable + featureFlags */
@@ -227,8 +203,6 @@
     if ( exclusive )
     {
       FT_Byte  dynamic_default;
-
-
       if ( featureFlags & GXV_FEAT_MASK_DYNAMIC_DEFAULT )
         dynamic_default = (FT_Byte)( featureFlags &
                                      GXV_FEAT_MASK_DEFAULT_SETTING );
@@ -259,8 +233,6 @@
 
     GXV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -287,8 +259,6 @@
 
     FT_UInt           i;
     FT_Int            last_feature;
-
-
     gxvalid->root       = ftvalid;
     gxvalid->table_data = feat;
     gxvalid->face       = face;
@@ -334,6 +304,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

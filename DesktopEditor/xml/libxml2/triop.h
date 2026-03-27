@@ -76,8 +76,6 @@ extern "C" {
 #ifndef TRIO_FREE
 # define TRIO_FREE(x) free(x)
 #endif
-
-
 /*************************************************************************
  * User-defined specifiers
  */

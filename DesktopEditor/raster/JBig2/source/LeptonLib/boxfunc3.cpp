@@ -47,8 +47,6 @@ static l_int32 pixSearchForRectangle(PIX *pixs, BOX *boxs, l_int32 minsum,
 #ifndef NO_CONSOLE_IO
 #define  DEBUG_SPLIT     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*---------------------------------------------------------------------*
  *                     Boxa/Boxaa painting into Pix                    *
  *---------------------------------------------------------------------*/
@@ -90,8 +88,6 @@ PIX   *pixd;
         boxaDestroy(&boxa);
     return pixd;
 }
-
-
 /*!
  *  pixMaskBoxa()
  *
@@ -158,8 +154,6 @@ BOX     *box;
 
     return pixd;
 }
-
-
 /*!
  *  pixPaintBoxa()
  *
@@ -237,8 +231,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixPaintBoxaRandom()
  *
@@ -303,8 +295,6 @@ PIXCMAP  *cmap;
         pixcmapDestroy(&cmap);
     return pixd;
 }
-
-
 /*!
  *  pixBlendBoxaRandom()
  *
@@ -364,8 +354,6 @@ PIXCMAP  *cmap;
     pixcmapDestroy(&cmap);
     return pixd;
 }
-
-
 /*!
  *  pixDrawBoxa()
  *
@@ -426,8 +414,6 @@ PIXCMAP  *cmap;
     pixRenderBoxaArb(pixd, boxa, width, rval, gval, bval);
     return pixd;
 }
-
-
 /*!
  *  pixDrawBoxaRandom()
  *
@@ -488,8 +474,6 @@ PTAA     *ptaa;
     pixcmapDestroy(&cmap);
     return pixd;
 }
-
-
 /*!
  *  boxaaDisplay()
  *
@@ -550,8 +534,6 @@ PIXCMAP  *cmap;
 
     return pix;
 }
-
-
 /*---------------------------------------------------------------------*
  *                   Split mask components into Boxa                   *
  *---------------------------------------------------------------------*/
@@ -625,8 +607,6 @@ PIXA    *pixas;
     boxaDestroy(&boxas);
     return boxad;
 }
-
-
 /*!
  *  pixSplitComponentIntoBoxa()
  *
@@ -784,8 +764,6 @@ PIX     *pixs;
     pixDestroy(&pixs);
     return boxad;
 }
-        
-
 /*!
  *  pixSearchForRectangle()
  *
@@ -1035,5 +1013,3 @@ success:
     FREE(lines1);
     return 0;
 }
-
-

@@ -62,8 +62,6 @@ namespace cpdoccore {
 namespace odf_writer {
 
 using xml::xml_char_wc;
-
-
 const wchar_t * draw_shape::ns = L"draw";
 const wchar_t * draw_shape::name = L"shape";
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,8 +116,6 @@ void draw_ellipse_attlist::serialize(CP_ATTR_NODE)
 //-------------------------------------------------------------------------------------------
 const wchar_t * draw_ellipse::ns = L"draw";
 const wchar_t * draw_ellipse::name = L"ellipse";
-
-
 void draw_ellipse::serialize(std::wostream & _Wostream)
 {
 	sub_type_ = 3;
@@ -410,8 +406,6 @@ int draw_enhanced_geometry::parsing(_CP_OPT(std::wstring) val)
 	res = boost::lexical_cast<int>(val.get());
 	return res;
 }
-
-
 //-------------------------------------------------------------------------------------------
 /// draw-enhanced_geometry_attlist
 void draw_enhanced_geometry_attlist::serialize(CP_ATTR_NODE)

@@ -140,8 +140,6 @@ private:
 	int		list_style_level;
 	int		list_style_id;
 };
-
-
 }
 }
 

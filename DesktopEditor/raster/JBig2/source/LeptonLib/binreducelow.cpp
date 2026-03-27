@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  binreducelow.c
  *
@@ -24,7 +22,6 @@
  *                  void       reduceRankBinary2Low()
  *                  l_uint8   *makeSubsampleTab2x()
  *
- *
  */
 
 #include <stdio.h>
@@ -32,8 +29,6 @@
 #include <stdlib.h>
 
 #include "allheaders.h"
-
-
 
 /*-------------------------------------------------------------------*
  *                   Low-level subsampled reduction                  *
@@ -89,8 +84,6 @@ l_uint32  *lines, *lined;
 
     return;
 }
-
-
 /*-------------------------------------------------------------------*
  *                 Low-level rank filtered reduction                 *
  *-------------------------------------------------------------------*/
@@ -221,10 +214,6 @@ l_uint32  *lines, *lined;
 
     return;
 }
-
-
-
-
 /*!
  *  makeSubsampleTab2x()
  *

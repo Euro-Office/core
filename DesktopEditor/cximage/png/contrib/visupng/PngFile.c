@@ -28,8 +28,6 @@ static OPENFILENAME ofn;
 
 static png_structp png_ptr = NULL;
 static png_infop info_ptr = NULL;
-
-
 /* cexcept interface */
 
 static void
@@ -220,8 +218,6 @@ BOOL PngLoadImage (PTSTR pstrFileName, png_byte **ppbImageData,
 
         png_get_IHDR(png_ptr, info_ptr, piWidth, piHeight, &iBitDepth,
             &iColorType, NULL, NULL, NULL);
-
-
         /* row_bytes is the width x number of channels */
 
         ulRowBytes = png_get_rowbytes(png_ptr, info_ptr);
@@ -290,8 +286,6 @@ BOOL PngLoadImage (PTSTR pstrFileName, png_byte **ppbImageData,
 
     return TRUE;
 }
-
-
 BOOL PngSaveImage (PTSTR pstrFileName, png_byte *pDiData,
                    int iWidth, int iHeight, png_color bkgColor)
 {

@@ -130,8 +130,6 @@ static const uint8_t IrrelevantPos[] = {
     0x0, 0x2, 0x4, 0x6,
     0x8, 0xA, 0xC, 0xE
 };
-
-
 static const UChar convertLamAlef[] =
 {
 /*FEF5*/    0x0622,
@@ -617,10 +615,6 @@ isIsolatedTashkeelChar(UChar ch){
         return 0;
     }
 }
-
-
-
-
 /*
  *Name     : calculateSize
  *Function : This function calculates the destSize to be used in preflighting
@@ -703,8 +697,6 @@ handleTashkeelWithTatweel(UChar *dest, int32_t sourceLength,
                  return sourceLength;
 }
 
-
-
 /*
  *Name     : handleGeneratedSpaces
  *Function : The shapeUnicode function converts Lam + Alef into LamAlef + space,
@@ -753,8 +745,6 @@ handleGeneratedSpaces(UChar *dest, int32_t sourceLength,
         *pErrorCode = U_MEMORY_ALLOCATION_ERROR;
         return 0;
     }
-
-
     if (lamAlefOption || tashkeelOption){
         uprv_memset(tempbuffer, 0, (sourceLength+1)*U_SIZEOF_UCHAR);
 
@@ -839,8 +829,6 @@ handleGeneratedSpaces(UChar *dest, int32_t sourceLength,
         destSize = sourceLength;
     }
 
-
-
     lamAlefOption = 0;
     tashkeelOption = 0;
 
@@ -880,8 +868,6 @@ handleGeneratedSpaces(UChar *dest, int32_t sourceLength,
         uprv_memcpy(dest,tempbuffer, sourceLength*U_SIZEOF_UCHAR);
         destSize = sourceLength;
     }
-
-
     if(tempbuffer){
         uprv_free(tempbuffer);
     }
@@ -1030,8 +1016,6 @@ static int32_t
 expandCompositCharAtNear(UChar *dest, int32_t sourceLength, int32_t destSize,UErrorCode *pErrorCode,
                          int yehHamzaOption, int seenTailOption, int lamAlefOption, struct uShapeVariables shapeVars) {
     int32_t      i = 0;
-
-
     UChar    lamalefChar, yehhamzaChar;
 
     for(i = 0 ;i<=sourceLength-1;i++) {
@@ -1143,14 +1127,10 @@ expandCompositChar(UChar *dest, int32_t sourceLength,
             lamAlefOption = 1;
         }
     }
-
-
     if (yehHamzaOption || seenTailOption || lamAlefOption){
         destSize = expandCompositCharAtNear(dest, sourceLength, destSize, pErrorCode, yehHamzaOption,
                                             seenTailOption,lamAlefOption,shapeVars);
     }
-
-
     if (shapingMode == 1){
         if ( (options&U_SHAPE_LAMALEF_MASK) == U_SHAPE_LAMALEF_RESIZE){
             destSize = calculateSize(dest,sourceLength,destSize,options);
@@ -1227,8 +1207,6 @@ shapeUnicode(UChar *dest, int32_t sourceLength,
             }
         }
     }
-
-
     /* sets the index to the end of the buffer, together with the step point to -1 */
     i = sourceLength - 1;
     iend = -1;

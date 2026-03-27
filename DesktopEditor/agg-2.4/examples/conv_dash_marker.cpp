@@ -18,11 +18,7 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 enum flip_y_e { flip_y = true };
-
-
 
 class the_application : public agg::platform_support
 {
@@ -36,8 +32,6 @@ class the_application : public agg::platform_support
     agg::slider_ctrl<agg::rgba8> m_smooth;
     agg::cbox_ctrl<agg::rgba8>   m_close;
     agg::cbox_ctrl<agg::rgba8>   m_even_odd;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -134,8 +128,6 @@ public:
         ras.add_path(smooth);
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0.1, 0.5, 0.7, 0.1));
         // (2)
-
-
         // (3)
         agg::conv_stroke<agg::conv_smooth_poly1<path_storage_type> > smooth_outline(smooth);
         ras.add_path(smooth_outline);
@@ -166,8 +158,6 @@ public:
         ras.add_path(arrow);
         agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba(0.0, 0.0, 0.0));
         // (4)
-
-
         ras.filling_rule(agg::fill_non_zero);
         agg::render_ctrl(ras, sl, renb, m_cap);
         agg::render_ctrl(ras, sl, renb, m_width);
@@ -175,8 +165,6 @@ public:
         agg::render_ctrl(ras, sl, renb, m_close);
         agg::render_ctrl(ras, sl, renb, m_even_odd);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -207,8 +195,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -244,8 +230,6 @@ public:
     {
         m_idx = -1;
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         double dx = 0;
@@ -266,8 +250,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -279,5 +261,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

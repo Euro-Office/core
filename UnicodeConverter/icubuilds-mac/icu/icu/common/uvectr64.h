@@ -21,8 +21,6 @@
 
 U_NAMESPACE_BEGIN
 
-
-
 /**
  * <p>Ultralightweight C++ implementation of an <tt>int64_t</tt> vector
  * that has a subset of methods from UVector32
@@ -143,8 +141,6 @@ public:
     //------------------------------------------------------------
 
     //UBool containsNone(const UVector64& other) const;
-
-
     //void sortedInsert(int64_t elem, UErrorCode& ec);
 
     /**
@@ -178,8 +174,6 @@ private:
 
     // Disallow
     UVector64& operator=(const UVector64&);
-
-
     //  API Functions for Stack operations.
     //  In the original UVector, these were in a separate derived class, UStack.
     //  Here in UVector64, they are all together.
@@ -195,8 +189,6 @@ public:
     int64_t *reserveBlock(int32_t size, UErrorCode &status);
     int64_t *popFrame(int32_t size);
 };
-
-
 // UVector64 inlines
 
 inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &status) {
@@ -210,8 +202,6 @@ inline UBool UVector64::ensureCapacity(int32_t minimumCapacity, UErrorCode &stat
 inline int64_t UVector64::elementAti(int32_t index) const {
     return (0 <= index && index < count) ? elements[index] : 0;
 }
-
-
 inline void UVector64::addElement(int64_t elem, UErrorCode &status) {
     if (ensureCapacity(count + 1, status)) {
         elements[count] = elem;
@@ -237,8 +227,6 @@ inline int64_t *UVector64::popFrame(int32_t size) {
     return elements+count-size;
 }
 
-
-
 inline int32_t UVector64::size(void) const {
     return count;
 }
@@ -254,8 +242,6 @@ inline UBool UVector64::operator!=(const UVector64& other) {
 inline int64_t *UVector64::getBuffer() const {
     return elements;
 }
-
-
 // UStack inlines
 
 inline int64_t UVector64::push(int64_t i, UErrorCode &status) {

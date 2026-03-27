@@ -1314,8 +1314,6 @@ TIFFRewriteDirectory( TIFF *tif )
 
     return TIFFWriteDirectory( tif );
 }
-
-
 /*
  * Link the current directory into the directory chain for the file.
  */

@@ -38,8 +38,6 @@ namespace agg
     {
         m_stroke.width(1.0);
     }
-
-
     void polygon_ctrl_impl::rewind(unsigned)
     {
         m_status = 0;
@@ -79,8 +77,6 @@ namespace agg
         }
         return cmd;
     }
-
-
     bool polygon_ctrl_impl::check_edge(unsigned i, double x, double y) const
     {
        bool ret = false;
@@ -119,14 +115,10 @@ namespace agg
        return ret;
     }
 
-
-
     bool polygon_ctrl_impl::in_rect(double x, double y) const
     {
         return false;
     }
-
-
     bool polygon_ctrl_impl::on_mouse_button_down(double x, double y)
     {
         unsigned i;
@@ -173,8 +165,6 @@ namespace agg
         }
         return ret;
     }
-
-
     bool polygon_ctrl_impl::on_mouse_move(double x, double y, bool button_flag)
     {
         bool ret = false;
@@ -231,14 +221,10 @@ namespace agg
         m_edge = -1;
         return ret;
     }
-
-
     bool polygon_ctrl_impl::on_arrow_keys(bool left, bool right, bool down, bool up)
     {
         return false;
     }
-
-
     //======= Crossings Multiply algorithm of InsideTest ======================== 
     //
     // By Eric Haines, 3D/Eye Inc, erich@eye.com

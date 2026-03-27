@@ -16,8 +16,6 @@ ForwardCharacterIterator::ForwardCharacterIterator()
 ForwardCharacterIterator::ForwardCharacterIterator(const ForwardCharacterIterator &other)
 : UObject(other)
 {}
-
-
 CharacterIterator::CharacterIterator()
 : textLength(0), pos(0), begin(0), end(0) {
 }

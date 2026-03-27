@@ -114,8 +114,6 @@ namespace PdfWriter
             free(pCorrectBuffer);
             return;
         }
-
-
 		CImageFileStream* pStream = new CImageFileStream();
 		if (!pStream)
 			return;

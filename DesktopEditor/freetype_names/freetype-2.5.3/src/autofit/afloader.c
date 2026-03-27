@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "afglobal.h"
 #include "afloader.h"
 #include "afhints.h"
 #include "aferrors.h"
 #include "afmodule.h"
 #include "afpic.h"
-
-
   /* Initialize glyph loader. */
 
   FT_LOCAL_DEF( FT_Error )
@@ -31,8 +27,6 @@
   {
     AF_Loader  loader = module->loader;
     FT_Memory  memory = module->root.library->memory;
-
-
     FT_ZERO( loader );
 
     af_glyph_hints_init( &loader->hints, memory );
@@ -41,8 +35,6 @@
 #endif
     return FT_GlyphLoader_New( memory, &loader->gloader );
   }
-
-
   /* Reset glyph loader and compute globals if necessary. */
 
   FT_LOCAL_DEF( FT_Error )
@@ -51,8 +43,6 @@
   {
     FT_Error   error  = FT_Err_Ok;
     AF_Loader  loader = module->loader;
-
-
     loader->face    = face;
     loader->globals = (AF_FaceGlobals)face->autohint.data;
 
@@ -72,16 +62,12 @@
 
     return error;
   }
-
-
   /* Finalize glyph loader. */
 
   FT_LOCAL_DEF( void )
   af_loader_done( AF_Module  module )
   {
     AF_Loader  loader = module->loader;
-
-
     af_glyph_hints_done( &loader->hints );
 
     loader->face    = NULL;
@@ -93,8 +79,6 @@
     FT_GlyphLoader_Done( loader->gloader );
     loader->gloader = NULL;
   }
-
-
   /* Load a single glyph component.  This routine calls itself */
   /* recursively, if necessary, and does the main work of      */
   /* `af_loader_load_glyph.'                                   */
@@ -114,8 +98,6 @@
     FT_GlyphSlot      slot     = face->glyph;
     FT_Slot_Internal  internal = slot->internal;
     FT_Int32          flags;
-
-
     flags = load_flags | FT_LOAD_LINEAR_DESIGN;
     error = FT_Load_Glyph( face, glyph_index, flags );
     if ( error )
@@ -125,8 +107,6 @@
     if ( loader->transformed )
     {
       FT_Matrix  inverse;
-
-
       loader->trans_matrix = internal->glyph_matrix;
       loader->trans_delta  = internal->glyph_delta;
 
@@ -188,8 +168,6 @@
         AF_StyleClass          style_class = metrics->style_class;
         AF_WritingSystemClass  writing_system_class =
           AF_WRITING_SYSTEM_CLASSES_GET[style_class->writing_system];
-
-
         if ( writing_system_class->style_hints_apply )
           writing_system_class->style_hints_apply( hints,
                                                    &gloader->current.outline,
@@ -206,8 +184,6 @@
         AF_Edge       edge1 = axis->edges;         /* leftmost edge  */
         AF_Edge       edge2 = edge1 +
                               axis->num_edges - 1; /* rightmost edge */
-
-
         if ( axis->num_edges > 1 && AF_HINTS_DO_ADVANCE( hints ) )
         {
           old_rsb = loader->pp2.x - edge2->opos;
@@ -245,8 +221,6 @@
         {
           FT_Pos  pp1x = loader->pp1.x;
           FT_Pos  pp2x = loader->pp2.x;
-
-
           loader->pp1.x = FT_PIX_ROUND( pp1x );
           loader->pp2.x = FT_PIX_ROUND( pp2x );
 
@@ -258,8 +232,6 @@
       {
         FT_Pos  pp1x = loader->pp1.x;
         FT_Pos  pp2x = loader->pp2.x;
-
-
         loader->pp1.x = FT_PIX_ROUND( pp1x + hints->xmin_delta );
         loader->pp2.x = FT_PIX_ROUND( pp2x + hints->xmax_delta );
 
@@ -276,8 +248,6 @@
         FT_UInt      nn, num_subglyphs = slot->num_subglyphs;
         FT_UInt      num_base_subgs, start_point;
         FT_SubGlyph  subglyph;
-
-
         start_point = gloader->base.outline.n_points;
 
         /* first of all, copy the subglyph descriptors in the glyph loader */
@@ -298,8 +268,6 @@
           FT_Vector  pp1, pp2;
           FT_Pos     x, y;
           FT_UInt    num_points, num_new_points, num_base_points;
-
-
           /* gloader.current.subglyphs can change during glyph loading due */
           /* to re-allocation -- we must recompute the current subglyph on */
           /* each iteration                                                */
@@ -336,8 +304,6 @@
             FT_Vector*  cur   = gloader->base.outline.points +
                                 num_base_points;
             FT_Vector*  limit = cur + num_new_points;
-
-
             for ( ; cur < limit; cur++ )
               FT_Vector_Transform( cur, &subglyph->transform );
           }
@@ -350,8 +316,6 @@
             FT_UInt     l = subglyph->arg2;
             FT_Vector*  p1;
             FT_Vector*  p2;
-
-
             if ( start_point + k >= num_base_points         ||
                                l >= (FT_UInt)num_new_points )
             {
@@ -380,8 +344,6 @@
 
           {
             FT_Outline  dummy = gloader->base.outline;
-
-
             dummy.points  += num_base_points;
             dummy.n_points = (short)num_new_points;
 
@@ -401,8 +363,6 @@
     {
       FT_BBox    bbox;
       FT_Vector  vvector;
-
-
       vvector.x = slot->metrics.vertBearingX - slot->metrics.horiBearingX;
       vvector.y = slot->metrics.vertBearingY - slot->metrics.horiBearingY;
       vvector.x = FT_MulFix( vvector.x, metrics->scaler.x_scale );
@@ -491,8 +451,6 @@
   Exit:
     return error;
   }
-
-
   /* Load a glyph. */
 
   FT_LOCAL_DEF( FT_Error )
@@ -505,8 +463,6 @@
     FT_Size       size   = face->size;
     AF_Loader     loader = module->loader;
     AF_ScalerRec  scaler;
-
-
     if ( !size )
       return FT_THROW( Invalid_Argument );
 
@@ -526,8 +482,6 @@
     {
       AF_StyleMetrics  metrics;
       FT_UInt          options = AF_STYLE_NONE_DFLT;
-
-
 #ifdef FT_OPTION_AUTOFIT2
       /* XXX: undocumented hook to activate the latin2 writing system */
       if ( load_flags & ( 1UL << 20 ) )
@@ -544,8 +498,6 @@
         AF_StyleClass          style_class = metrics->style_class;
         AF_WritingSystemClass  writing_system_class =
           AF_WRITING_SYSTEM_CLASSES_GET[style_class->writing_system];
-
-
         loader->metrics = metrics;
 
         if ( writing_system_class->style_metrics_scale )
@@ -570,6 +522,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

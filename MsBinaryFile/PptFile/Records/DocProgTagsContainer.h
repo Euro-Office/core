@@ -37,14 +37,10 @@
 #include "TextDefaults9Atom.h"
 #include "OutlineTextProps9Container.h"
 #include "BlipCollection9Container.h"
-
-
 #define ___PPT9  L"___PPT9"
 #define ___PPT10 L"___PPT10"
 #define ___PPT11 L"___PPT11"
 #define ___PPT12 L"___PPT12"
-
-
 namespace PPT
 {
 
@@ -59,8 +55,6 @@ public:
     ~CRecordPP9DocBinaryTagExtension();
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
 };
-
-
 class CRecordPP10DocBinaryTagExtension : public CUnknownRecord
 {
 public:
@@ -72,15 +66,11 @@ class CRecordPP11DocBinaryTagExtension : public CUnknownRecord
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream );
 };
-
-
 class CRecordPP12DocBinaryTagExtension : public CUnknownRecord
 {
 public:
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
 };
-
-
 class CRecordDocProgBinaryTagSubContainerOrAtom : public CUnknownRecord
 {
 public:

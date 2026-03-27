@@ -229,8 +229,6 @@ public:
     static const Locale &U_EXPORT2 getCanada(void);
     /** Useful constant for this country/region. @stable ICU 2.0 */
     static const Locale &U_EXPORT2 getCanadaFrench(void);
-
-
     /**
      * Construct a default locale object, a Locale for the default locale ID.
      *
@@ -276,8 +274,6 @@ public:
      * @stable ICU 2.0
      */
     Locale(const    Locale& other);
-
-
     /**
      * Destructor
      * @stable ICU 2.0
@@ -428,8 +424,6 @@ public:
      * @stable ICU 2.8
      */
     const char * getBaseName() const;
-
-
     /**
      * Gets the list of keywords for the specified locale.
      *

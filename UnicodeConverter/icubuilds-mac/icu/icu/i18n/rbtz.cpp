@@ -406,8 +406,6 @@ RuleBasedTimeZone::getOffsetFromLocal(UDate date, int32_t nonExistingTimeOpt, in
                                       int32_t& rawOffset, int32_t& dstOffset, UErrorCode& status) const {
     getOffsetInternal(date, TRUE, nonExistingTimeOpt, duplicatedTimeOpt, rawOffset, dstOffset, status);
 }
-
-
 /*
  * The internal getOffset implementation
  */

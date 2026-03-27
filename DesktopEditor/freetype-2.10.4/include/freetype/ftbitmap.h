@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTBITMAP_H_
 #define FTBITMAP_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/ftcolor.h>
 
@@ -28,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -56,8 +48,6 @@ FT_BEGIN_HEADER
    *   @FT_Bitmap_Init but before calling any of the other functions
    *   described here.
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -75,13 +65,9 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( void )
   FT_Bitmap_Init( FT_Bitmap  *abitmap );
-
-
   /* deprecated */
   FT_EXPORT( void )
   FT_Bitmap_New( FT_Bitmap  *abitmap );
-
-
   /**************************************************************************
    *
    * @function:
@@ -112,8 +98,6 @@ FT_BEGIN_HEADER
   FT_Bitmap_Copy( FT_Library        library,
                   const FT_Bitmap  *source,
                   FT_Bitmap        *target );
-
-
   /**************************************************************************
    *
    * @function:
@@ -158,8 +142,6 @@ FT_BEGIN_HEADER
                       FT_Bitmap*  bitmap,
                       FT_Pos      xStrength,
                       FT_Pos      yStrength );
-
-
   /**************************************************************************
    *
    * @function:
@@ -205,8 +187,6 @@ FT_BEGIN_HEADER
                      const FT_Bitmap  *source,
                      FT_Bitmap        *target,
                      FT_Int            alignment );
-
-
   /**************************************************************************
    *
    * @function:
@@ -267,8 +247,6 @@ FT_BEGIN_HEADER
                    FT_Bitmap*         target,
                    FT_Vector         *atarget_offset,
                    FT_Color           color );
-
-
   /**************************************************************************
    *
    * @function:
@@ -289,8 +267,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_Error )
   FT_GlyphSlot_Own_Bitmap( FT_GlyphSlot  slot );
-
-
   /**************************************************************************
    *
    * @function:
@@ -316,14 +292,8 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Bitmap_Done( FT_Library  library,
                   FT_Bitmap  *bitmap );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTBITMAP_H_ */
-
-
 /* END */

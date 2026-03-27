@@ -14,18 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __TTINTERP_H__
 #define __TTINTERP_H__
 
 #include <ft2build.h>
 #include "ttobjs.h"
-
-
 FT_BEGIN_HEADER
-
-
 #ifndef TT_CONFIG_OPTION_STATIC_INTERPRETER /* indirect implementation */
 
 #define EXEC_OP_   TT_ExecContext  exc,
@@ -41,8 +35,6 @@ FT_BEGIN_HEADER
 #define EXEC_ARG   /* void */
 
 #endif /* TT_CONFIG_OPTION_STATIC_INTERPRETER */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Rounding mode constants.                                              */
@@ -55,8 +47,6 @@ FT_BEGIN_HEADER
 #define TT_Round_Down_To_Grid    3
 #define TT_Round_Super           6
 #define TT_Round_Super_45        7
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Function types used by the interpreter, depending on various modes    */
@@ -90,8 +80,6 @@ FT_BEGIN_HEADER
   typedef void
   (*TT_Set_CVT_Func)( EXEC_OP_ FT_ULong    idx,
                                FT_F26Dot6  value );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This structure defines a call record, used to manage function calls.  */
@@ -105,8 +93,6 @@ FT_BEGIN_HEADER
     TT_DefRecord  *Def; /* either FDEF or IDEF */
 
   } TT_CallRec, *TT_CallStack;
-
-
 #ifdef TT_CONFIG_OPTION_SUBPIXEL_HINTING
 
   /*************************************************************************/
@@ -126,8 +112,6 @@ FT_BEGIN_HEADER
     const FT_ULong  glyph;
 
   } SPH_TweakRule;
-
-
   typedef struct  SPH_ScaleRule_
   {
     const char      family[SPH_MAX_NAME_SIZE];
@@ -137,8 +121,6 @@ FT_BEGIN_HEADER
     const FT_ULong  scale;
 
   } SPH_ScaleRule;
-
-
   typedef struct  SPH_Font_Class_
   {
     const char  name[SPH_MAX_NAME_SIZE];
@@ -147,8 +129,6 @@ FT_BEGIN_HEADER
   } SPH_Font_Class;
 
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The main structure for the interpreter which collects all necessary   */
@@ -289,11 +269,7 @@ FT_BEGIN_HEADER
 #endif /* TT_CONFIG_OPTION_SUBPIXEL_HINTING */
 
   } TT_ExecContextRec;
-
-
   extern const TT_GraphicsState  tt_default_graphics_state;
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
   FT_LOCAL( FT_Error )
   TT_Goto_CodeRange( TT_ExecContext  exec,
@@ -309,8 +285,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   TT_Clear_CodeRange( TT_ExecContext  exec,
                       FT_Int          range );
-
-
   FT_LOCAL( FT_Error )
   Update_Max( FT_Memory  memory,
               FT_ULong*  size,
@@ -318,8 +292,6 @@ FT_BEGIN_HEADER
               void*      _pbuff,
               FT_ULong   new_max );
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -341,8 +313,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( TT_ExecContext )
   TT_New_Context( TT_Driver  driver );
-
-
 #ifdef TT_USE_BYTECODE_INTERPRETER
   FT_LOCAL( FT_Error )
   TT_Done_Context( TT_ExecContext  exec );
@@ -360,8 +330,6 @@ FT_BEGIN_HEADER
   TT_Run_Context( TT_ExecContext  exec,
                   FT_Bool         debug );
 #endif /* TT_USE_BYTECODE_INTERPRETER */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -385,11 +353,7 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_EXPORT( FT_Error )
   TT_RunIns( TT_ExecContext  exec );
-
-
 FT_END_HEADER
 
 #endif /* __TTINTERP_H__ */
-
-
 /* END */

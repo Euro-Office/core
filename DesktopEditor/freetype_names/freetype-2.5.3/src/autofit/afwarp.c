@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*
    *  The idea of the warping code is to slightly scale and shift a glyph
    *  within a single dimension so that as much of its segments are aligned
@@ -35,8 +33,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_afwarp
-
-
   /* The weights cover the range 0/64 - 63/64 of a pixel.  Obviously, */
   /* values around a half pixel (which means exactly between two grid */
   /* lines) gets the worst weight.                                    */
@@ -61,8 +57,6 @@
      0,  0,  0,  0,  0,  0,  0,  0,  1,  2,  3,  4,  4,  5, 10, 20,
   };
 #endif
-
-
   /* Score segments for a given `scale' and `delta' in the range */
   /* `xx1' to `xx2', and store the best result in `warper'.  If  */
   /* the new best score is equal to the old one, prefer the      */
@@ -81,8 +75,6 @@
     FT_Int        idx_min, idx_max, idx0;
     FT_UInt       nn;
     AF_WarpScore  scores[65];
-
-
     for ( nn = 0; nn < 65; nn++ )
       scores[nn] = 0;
 
@@ -93,8 +85,6 @@
       FT_Pos  xx1min = warper->x1min;
       FT_Pos  xx1max = warper->x1max;
       FT_Pos  w      = xx2 - xx1;
-
-
       if ( xx1min + w < warper->x2min )
         xx1min = warper->x2min - w;
 
@@ -123,8 +113,6 @@
       FT_Pos  y0  = FT_MulFix( segments[nn].pos, scale ) + delta;
       FT_Pos  y   = y0 + ( idx_min - idx0 );
       FT_Int  idx;
-
-
       /* score the length of the segments for the given range */
       for ( idx = idx_min; idx <= idx_max; idx++, y++ )
         scores[idx] += af_warper_weights[y & 63] * len;
@@ -133,14 +121,10 @@
     /* find best score */
     {
       FT_Int  idx;
-
-
       for ( idx = idx_min; idx <= idx_max; idx++ )
       {
         AF_WarpScore  score = scores[idx];
         AF_WarpScore  distort = base_distort + ( idx - idx0 );
-
-
         if ( score > warper->best_score         ||
              ( score == warper->best_score    &&
                distort < warper->best_distort ) )
@@ -153,8 +137,6 @@
       }
     }
   }
-
-
   /* Compute optimal scaling and delta values for a given glyph and */
   /* dimension.                                                     */
 
@@ -177,8 +159,6 @@
 
     AF_WarpScore  base_distort;
     AF_Segment    segments;
-
-
     /* get original scaling transformation */
     if ( dim == AF_DIMENSION_VERT )
     {
@@ -214,8 +194,6 @@
     for ( nn = 1; nn < num_points; nn++ )
     {
       FT_Int  X = points[nn].fx;
-
-
       if ( X < X1 )
         X1 = X;
       if ( X > X2 )
@@ -226,8 +204,6 @@
     for ( nn = 1; nn < num_segments; nn++ )
     {
       FT_Int  X = segments[nn].pos;
-
-
       if ( X < X1 )
         X1 = X;
       if ( X > X2 )
@@ -272,8 +248,6 @@
     /* some heuristics to reduce the number of widths to be examined */
     {
       int  margin = 16;
-
-
       if ( warper->w0 <= 128 )
       {
          margin = 8;
@@ -303,8 +277,6 @@
       FT_Fixed  new_scale;
       FT_Pos    new_delta;
       FT_Pos    xx1, xx2;
-
-
       /* compute min and max positions for given width,       */
       /* assuring that they stay within the coordinate ranges */
       xx1 = warper->x1;
@@ -352,8 +324,6 @@
     {
       FT_Fixed  best_scale = warper->best_scale;
       FT_Pos    best_delta = warper->best_delta;
-
-
       hints->xmin_delta = FT_MulFix( X1, best_scale - org_scale )
                           + best_delta;
       hints->xmax_delta = FT_MulFix( X2, best_scale - org_scale )

@@ -22,7 +22,6 @@
  *   Contains this regression test parameter packaging struct
  *       struct L_RegParams
  *
- *
  *   The regression test utility allows you to write regression tests
  *   that compare results with existing "golden files".
  *
@@ -124,7 +123,5 @@ struct L_RegParams
     l_int32        display;
 };
 typedef struct L_RegParams  L_REGPARAMS;
-
-
 #endif  /* LEPTONICA_REGUTILS_H */
 

@@ -19,8 +19,6 @@ namespace agg
     {
         destroy();
     }
-
-
     //------------------------------------------------------------------------
     pixel_map::pixel_map() :
         m_bmp(0),
@@ -32,8 +30,6 @@ namespace agg
 
     {
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::destroy()
     {
@@ -42,8 +38,6 @@ namespace agg
         m_is_internal = false;
         m_buf = 0;
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::create(unsigned width, 
                            unsigned height, 
@@ -62,8 +56,6 @@ namespace agg
             memset(m_buf, clear_val, m_img_size);
         }
     }
-
-
     //------------------------------------------------------------------------
     HBITMAP pixel_map::create_dib_section(HDC h_dc,
                                           unsigned width, 
@@ -85,15 +77,11 @@ namespace agg
         return h_bitmap;
     }
 
-
-
     //------------------------------------------------------------------------
     void pixel_map::clear(unsigned clear_val)
     {
         if(m_buf) memset(m_buf, clear_val, m_img_size);
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::attach_to_bmp(BITMAPINFO *bmp)
     {
@@ -104,8 +92,6 @@ namespace agg
             m_is_internal = false;
         }
     }
-
-
 
     //static
     //------------------------------------------------------------------------
@@ -125,8 +111,6 @@ namespace agg
         if(bmp == 0) return 0;
         return sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * calc_palette_size(bmp);
     }
-
-
     //static
     //------------------------------------------------------------------------
     unsigned  pixel_map::calc_palette_size(unsigned  clr_used, unsigned bits_per_pixel)
@@ -151,8 +135,6 @@ namespace agg
         if(bmp == 0) return 0;
         return calc_palette_size(bmp->bmiHeader.biClrUsed, bmp->bmiHeader.biBitCount);
     }
-
-
     //static
     //------------------------------------------------------------------------
     unsigned char * pixel_map::calc_img_ptr(BITMAPINFO *bmp)
@@ -188,8 +170,6 @@ namespace agg
 
         return bmp;
     }
-
-
     //static
     //------------------------------------------------------------------------
     void pixel_map::create_gray_scale_palette(BITMAPINFO *bmp)
@@ -211,8 +191,6 @@ namespace agg
             rgb++;
         }
     }
-
-
 
     //static
     //------------------------------------------------------------------------
@@ -256,10 +234,6 @@ namespace agg
         }
         return ((n + 3) >> 2) << 2;
     }
-
-
-
-
 
     //------------------------------------------------------------------------
     void pixel_map::draw(HDC h_dc, const RECT *device_rect, const RECT *bmp_rect) const
@@ -333,8 +307,6 @@ namespace agg
             );
         }
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::draw(HDC h_dc, int x, int y, double scale) const
     {
@@ -349,10 +321,6 @@ namespace agg
         rect.bottom = y + height;
         draw(h_dc, &rect);
     }
-
-
-
-
     //------------------------------------------------------------------------
     void pixel_map::blend(HDC h_dc, const RECT *device_rect, const RECT *bmp_rect) const
     {
@@ -444,8 +412,6 @@ namespace agg
         ::DeleteObject(mem_dc);
 #endif //defined(AGG_BMP_ALPHA_BLEND)
     }
-
-
     //------------------------------------------------------------------------
     void pixel_map::blend(HDC h_dc, int x, int y, double scale) const
     {
@@ -459,8 +425,6 @@ namespace agg
         rect.bottom = y + height;
         blend(h_dc, &rect);
     }
-
-
     //------------------------------------------------------------------------
     bool pixel_map::load_from_bmp(FILE *fd)
     {
@@ -486,8 +450,6 @@ namespace agg
         return false;
     }
 
-
-
     //------------------------------------------------------------------------
     bool pixel_map::load_from_bmp(const char *filename)
     {
@@ -500,8 +462,6 @@ namespace agg
         }
         return ret;
     }
-
-
 
     //------------------------------------------------------------------------
     bool pixel_map::save_as_bmp(FILE *fd) const
@@ -521,8 +481,6 @@ namespace agg
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     bool pixel_map::save_as_bmp(const char *filename) const
     {
@@ -535,8 +493,6 @@ namespace agg
         }
         return ret;
     }
-
-
     //------------------------------------------------------------------------
     unsigned char* pixel_map::buf()
     {
@@ -561,8 +517,6 @@ namespace agg
         return calc_row_len(m_bmp->bmiHeader.biWidth, 
                             m_bmp->bmiHeader.biBitCount);
     }
-
-
     //private
     //------------------------------------------------------------------------
     void pixel_map::create_from_bmp(BITMAPINFO *bmp)
@@ -578,8 +532,6 @@ namespace agg
             m_buf       = calc_img_ptr(bmp);
         }
     }
-
-
     //private
     //------------------------------------------------------------------------
     HBITMAP pixel_map::create_dib_section_from_args(HDC h_dc,
@@ -620,6 +572,4 @@ namespace agg
         return h_bitmap;
     }
 }
-
-
 

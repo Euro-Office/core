@@ -72,6 +72,4 @@ struct GPlot
     char          *ylabel;     /* optional y axis label            */
 };
 typedef struct GPlot  GPLOT;
-
-
 #endif /* LEPTONICA_GPLOT_H */

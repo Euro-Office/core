@@ -4949,8 +4949,6 @@ namespace NSFontConverter
 			break;
 		}
 		}
-
-
 		return 0;
 	}
 	static int Type1NameToUnicode_t(CWCharWrapper &wsName)
@@ -5769,8 +5767,6 @@ namespace NSFontConverter
 
 		return 0;
 	};
-
-
 	int Type1NameToUnicodeA(const char *sName)
 	{
 		std::wstring sUnicode = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sName, (LONG)strlen(sName));

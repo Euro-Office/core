@@ -77,8 +77,6 @@ namespace OOX
 			// Читаем все файлы по рельсам
 			Read( *m_pCurRels, oRootPath, oPath.GetDirectory() );
 	}
-
-
 	void IFileContainer::Read (const OOX::CRels& oRels, const OOX::CPath& oRootPath, const OOX::CPath& oPath)
 	{
 		for (size_t i = 0; i < oRels.m_arRelations.size(); ++i)
@@ -119,8 +117,6 @@ namespace OOX
 			Add(oRels.m_arRelations[i]->rId(), pFile);
 		}
     }
-
-
 	void IFileContainer::Write(const OOX::CPath& oFileName, const OOX::CPath& oDirectory, OOX::CContentTypes& oContent) const
 	{
 		OOX::CPath oCurrent = oFileName.GetDirectory();
@@ -186,8 +182,6 @@ namespace OOX
 			}
 		}
 	}
-
-
 	void IFileContainer::Commit  (const OOX::CPath& oPath)
 	{
 		std::map<std::wstring, size_t> mNamepair;
@@ -223,8 +217,6 @@ namespace OOX
 			}
 		}
 	}
-
-
 	void IFileContainer::Finalize(const OOX::CPath& oFileName, const OOX::CPath& oDirectory, OOX::CContentTypes& oContent)
 	{
 		OOX::CPath oCurrent = oFileName.GetDirectory();
@@ -284,8 +276,6 @@ namespace OOX
 			}
 		}
 	}
-
-
 	const bool IFileContainer::IsExist(const RId& rId) const
 	{
         std::map<std::wstring, smart_ptr<OOX::File>>::const_iterator pFind = m_mapContainer.find(rId.get());
@@ -328,8 +318,6 @@ namespace OOX
 		}
 		return true;
 	}
-
-
 	const RId IFileContainer::Add(smart_ptr<OOX::File>& pFile)
 	{
 		const RId rId = GetMaxRId().next();

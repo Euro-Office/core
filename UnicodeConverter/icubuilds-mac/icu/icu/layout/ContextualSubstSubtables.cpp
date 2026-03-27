@@ -477,8 +477,6 @@ le_uint32 ChainingContextualSubstitutionFormat2Subtable::process(const LookupPro
                 le_uint16 lookaheadGlyphCount = SWAPW(inputClassArray[inputGlyphCount]);
                 const le_uint16 *lookaheadClassArray = &inputClassArray[inputGlyphCount + 1];
                 le_uint16 substCount = SWAPW(lookaheadClassArray[lookaheadGlyphCount]);
-                
-
                 tempIterator.setCurrStreamPosition(position);
 
                 if (! tempIterator.prev(backtrackGlyphCount)) {

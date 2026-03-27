@@ -147,8 +147,6 @@ public:
      * @stable ICU 2.0
      */
     virtual CharacterIterator& getText(void) const = 0;
-
-
     /**
       *  Get a UText for the text being analyzed.
       *  The returned UText is a shallow clone of the UText used internally

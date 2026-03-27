@@ -57,8 +57,6 @@ namespace cpdoccore {
 namespace odf_reader {
 
 class styles_lite_container;
-
-
 enum BorderSide { sideTop, sideBottom, sideLeft, sideRight, sideMiddle };
 
 int get_value_emu(const _CP_OPT(odf_types::length) & len);
@@ -90,8 +88,6 @@ public:
 	virtual void docx_convert(oox::docx_conversion_context & Context);
 	virtual void xlsx_convert(oox::xlsx_conversion_context & Context);
 	virtual void pptx_convert(oox::pptx_conversion_context & Context);
-
-  
 	office_element_ptr_array content_;
 
 	friend class odf_document;

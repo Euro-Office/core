@@ -163,8 +163,6 @@ void svg_font_face_name::add_child_element( xml::sax * Reader, const std::wstrin
 {
     CP_NOT_APPLICABLE_ELM();
 }
-
-    
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 void common_svg_font_face_xlink_attlist::add_attributes( const xml::attributes_wc_ptr & Attributes )

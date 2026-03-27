@@ -16,11 +16,7 @@
 // Filtering class image_filter_lut implemantation
 //
 //----------------------------------------------------------------------------
-
-
 #include "agg_image_filters.h"
-
-
 namespace agg
 {
     //--------------------------------------------------------------------
@@ -35,8 +31,6 @@ namespace agg
             m_weight_array.resize(size);
         }
     }
-
-
 
     //--------------------------------------------------------------------
     // This function normalizes integer values and corrects the rounding 
@@ -97,7 +91,5 @@ namespace agg
         unsigned end = (diameter() << image_subpixel_shift) - 1;
         m_weight_array[0] = m_weight_array[end];
     }
-
-
 }
 

@@ -1200,8 +1200,6 @@ xmlXPtrEvalChildSeq(xmlXPathParserContextPtr ctxt, xmlChar *name) {
 	xmlXPtrGetChildNo(ctxt, child);
     }
 }
-
-
 /**
  * xmlXPtrEvalXPointer:
  * @ctxt:  the XPointer Parser context
@@ -1250,8 +1248,6 @@ xmlXPtrEvalXPointer(xmlXPathParserContextPtr ctxt) {
     if (CUR != 0)
 	XP_ERROR(XPATH_EXPR_ERROR);
 }
-
-
 /************************************************************************
  *									*
  *			General routines				*
@@ -1920,8 +1916,6 @@ xmlXPtrEndPointFunction(xmlXPathParserContextPtr ctxt, int nargs) {
     xmlXPathFreeObject(obj);
     valuePush(ctxt, xmlXPtrWrapLocationSet(newset));
 }
-
-
 /**
  * xmlXPtrCoveringRange:
  * @ctxt:  the XPointer Parser context

@@ -37,10 +37,6 @@ double            g_scale = 1.0;
 double            g_skew_x = 0;
 double            g_skew_y = 0;
 int               g_nclick = 0;
-
-
-
-
 unsigned parse_lion(agg::path_storage& ps, agg::rgba8* colors, unsigned* path_idx);
 void parse_lion()
 {
@@ -50,12 +46,6 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
-
-
-
-
 namespace agg
 {
     template<class Order> class span_simple_blur_rgb24
@@ -134,18 +124,6 @@ namespace agg
     };
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
     double m_cx;
@@ -238,8 +216,6 @@ public:
         //copy_window_to_img(0);
         //agg::render_scanlines(ras2, sl2, rblur);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -249,20 +225,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -274,9 +242,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

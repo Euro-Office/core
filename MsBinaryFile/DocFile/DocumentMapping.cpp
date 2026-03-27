@@ -298,8 +298,6 @@ namespace DocFileFormat
 		}
 		writeParagraphRsid(papx);
 		}
-
-
 // ----------- check for section properties
 		bool isBidi = false;
 		SectionPropertyExceptions* currentSection = findValidSepx(getCurrentSection(cp));

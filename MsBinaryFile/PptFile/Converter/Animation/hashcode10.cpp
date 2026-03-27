@@ -55,8 +55,6 @@ namespace PPT
 					r4 = (r4 % 0x100) << 24;
 					randomArray[iRow * 256 + iCol] = r4 | r3 | r2 | r1;
 				}
-
-
 			return randomArray;
 		}
 

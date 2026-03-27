@@ -115,6 +115,4 @@ int CCtrlShapePolygon::ParseListHeaderAppend(CCtrlShapePolygon& oObj, int nSize,
 
 	return oBuffer.GetDistanceToLastPos(true);
 }
-
-
 }

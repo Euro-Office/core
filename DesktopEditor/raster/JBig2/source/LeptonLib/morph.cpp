@@ -165,8 +165,6 @@ static const l_int32  ACCEPTABLE_COST = 5;
     /* Static helpers for arg processing */
 static PIX * processMorphArgs1(PIX *pixd, PIX *pixs, SEL *sel, PIX **ppixt);
 static PIX * processMorphArgs2(PIX *pixd, PIX *pixs, SEL *sel);
-
-
 /*-----------------------------------------------------------------*
  *    Generic binary morphological ops implemented with rasterop   *
  *-----------------------------------------------------------------*/
@@ -220,8 +218,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixErode()
  *
@@ -291,8 +287,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixHMT()
  *
@@ -378,8 +372,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixOpen()
  *
@@ -420,8 +412,6 @@ PIX  *pixt;
 
     return pixd;
 }
-    
-    
 /*!
  *  pixClose()
  *
@@ -465,8 +455,6 @@ PIX  *pixt;
 
     return pixd;
 }
-    
-    
 /*!
  *  pixCloseSafe()
  *
@@ -534,8 +522,6 @@ PIX     *pixt1, *pixt2;
     pixDestroy(&pixt2);
     return pixd;
 }
-    
-    
 /*!
  *  pixOpenGeneralized()
  *
@@ -578,8 +564,6 @@ PIX  *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-    
-    
 /*!
  *  pixCloseGeneralized()
  *
@@ -624,8 +608,6 @@ PIX  *pixt;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *          Binary morphological (raster) ops with brick Sels      *
  *-----------------------------------------------------------------*/
@@ -690,8 +672,6 @@ SEL  *sel, *selh, *selv;
 
     return pixd;
 }
-
-
 /*!
  *  pixErodeBrick()
  *
@@ -753,8 +733,6 @@ SEL  *sel, *selh, *selv;
 
     return pixd;
 }
-
-
 /*!
  *  pixOpenBrick()
  *
@@ -818,8 +796,6 @@ SEL  *sel, *selh, *selv;
 
     return pixd;
 }
-
-
 /*!
  *  pixCloseBrick()
  *
@@ -883,8 +859,6 @@ SEL  *sel, *selh, *selv;
 
     return pixd;
 }
-
-
 /*!
  *  pixCloseSafeBrick()
  *
@@ -974,8 +948,6 @@ SEL     *sel, *selh, *selv;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *     Binary composed morphological (raster) ops with brick Sels  *
  *-----------------------------------------------------------------*/
@@ -1035,8 +1007,6 @@ l_int32  factor1, factor2;
         *psel2 = selCreateComb(factor1, factor2, direction);
     return 0;
 }
-
-
 /*!
  *  selectComposableSizes()
  *
@@ -1126,8 +1096,6 @@ l_int32  diff[256];  /* diff between product (sel size) and input size */
 
     return 0;
 }
-
-
 /*!
  *  pixDilateCompBrick()
  *
@@ -1226,8 +1194,6 @@ SEL  *selh1, *selh2, *selv1, *selv2;
     pixDestroy(&pixt1);
     return pixd;
 }
-
-
 /*!
  *  pixErodeCompBrick()
  *
@@ -1317,8 +1283,6 @@ SEL  *selh1, *selh2, *selv1, *selv2;
 
     return pixd;
 }
-
-
 /*!
  *  pixOpenCompBrick()
  *
@@ -1416,8 +1380,6 @@ SEL  *selh1, *selh2, *selv1, *selv2;
 
     return pixd;
 }
-
-
 /*!
  *  pixCloseCompBrick()
  *
@@ -1515,8 +1477,6 @@ SEL  *selh1, *selh2, *selv1, *selv2;
 
     return pixd;
 }
-
-
 /*!
  *  pixCloseSafeCompBrick()
  *
@@ -1640,8 +1600,6 @@ SEL     *selh1, *selh2, *selv1, *selv2;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------*
  *           Functions associated with boundary conditions         *
  *-----------------------------------------------------------------*/
@@ -1663,8 +1621,6 @@ resetMorphBoundaryCondition(l_int32  bc)
     MORPH_BC = bc;
     return;
 }
-
-
 /*!
  *  getMorphBorderPixelColor()
  *
@@ -1693,8 +1649,6 @@ getMorphBorderPixelColor(l_int32  type,
     else  /* depth == 32 */
         return 0xffffff00;
 }
-
-
 /*-----------------------------------------------------------------*
  *               Static helpers for arg processing                 *
  *-----------------------------------------------------------------*/
@@ -1753,8 +1707,6 @@ l_int32  sx, sy;
     }
     return pixd;
 }
-
-
 /*!
  *  processMorphArgs2()
  *

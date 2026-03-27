@@ -75,8 +75,6 @@ public:
 	XLS::BiffStructurePtr clone();
 
 	static const XLS::ElementType	type = XLS::typeOfficeArtMetafileHeader;
-	
-
 	virtual void load(XLS::CFRecord& record);
 
 	_UINT32 cbSize;
@@ -88,11 +86,5 @@ public:
 };
 
 typedef boost::shared_ptr<OfficeArtMetafileHeader> OfficeArtMetafileHeaderPtr;
-
-
-
-
-
-
 
 } // namespace XLS

@@ -26,8 +26,6 @@ namespace agg
     const double curve_angle_tolerance_epsilon           = 0.01;
     enum curve_recursion_limit_e { curve_recursion_limit = 32 };
 
-
-
     //------------------------------------------------------------------------
     void curve3_inc::approximation_scale(double s) 
     { 
@@ -236,10 +234,6 @@ namespace agg
         m_points.add(point_d(x3, y3));
     }
 
-
-
-
-
     //------------------------------------------------------------------------
     void curve4_inc::approximation_scale(double s) 
     { 
@@ -367,10 +361,6 @@ namespace agg
         --m_step;
         return path_cmd_line_to;
     }
-
-
-
-
     //------------------------------------------------------------------------
     void curve4_div::init(double x1, double y1, 
                           double x2, double y2, 
@@ -410,8 +400,6 @@ namespace agg
         double y234  = (y23 + y34) / 2;
         double x1234 = (x123 + x234) / 2;
         double y1234 = (y123 + y234) / 2;
-
-
         // Try to approximate the full cubic curve by a single straight line
         //------------------
         double dx = x4-x1;

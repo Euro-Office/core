@@ -152,8 +152,6 @@ void opj_image_comp_header_update(opj_image_t * p_image_header,
         ++l_img_comp;
     }
 }
-
-
 /**
  * Copy only header of image and its component header (no data are copied)
  * if dest image have data, they will be freed

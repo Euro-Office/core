@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  binexpandlow.c
  *
@@ -30,12 +28,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 static  l_uint32 expandtab16[] = {
             0x00000000, 0x0000ffff, 0xffff0000, 0xffffffff};
-
-
 /*-------------------------------------------------------------------*
  *              Low level power-of-2 binary expansion                *
  *-------------------------------------------------------------------*/
@@ -132,8 +126,6 @@ l_uint32  *lines, *lined;
     return 0;
 }
 
-
-
 /*-------------------------------------------------------------------*
  *             Expansion tables for 2x, 4x and 8x expansion          *
  *-------------------------------------------------------------------*/
@@ -169,8 +161,6 @@ l_int32    i;
 
     return tab;
 }
-
-
 l_uint32 *
 makeExpandTab4x(void)
 {
@@ -203,8 +193,6 @@ l_int32    i;
 
     return tab;
 }
-
-
 l_uint32 *
 makeExpandTab8x(void)
 {

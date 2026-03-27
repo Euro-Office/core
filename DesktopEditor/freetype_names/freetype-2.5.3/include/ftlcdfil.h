@@ -15,8 +15,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FT_LCD_FILTER_H__
 #define __FT_LCD_FILTER_H__
 
@@ -28,8 +26,6 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
 
   /***************************************************************************
@@ -92,8 +88,6 @@ FT_BEGIN_HEADER
    *   may have a sum larger than 0x100, which increases coloration slightly
    *   but also improves contrast.
    */
-
-
   /****************************************************************************
    *
    * @enum:
@@ -139,8 +133,6 @@ FT_BEGIN_HEADER
     FT_LCD_FILTER_MAX   /* do not remove */
 
   } FT_LcdFilter;
-
-
   /**************************************************************************
    *
    * @func:
@@ -198,8 +190,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Library_SetLcdFilter( FT_Library    library,
                            FT_LcdFilter  filter );
-
-
   /**************************************************************************
    *
    * @func:
@@ -241,11 +231,7 @@ FT_BEGIN_HEADER
                                   unsigned char  *weights );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FT_LCD_FILTER_H__ */
-
-
 /* END */

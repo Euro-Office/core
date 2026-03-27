@@ -37,18 +37,12 @@
 
 namespace XLS
 {
-
-
 FEAT::FEAT()
 {
 }
-
-
 FEAT::~FEAT()
 {
 }
-
-
 class Parenthesis_FEAT_1: public ABNFParenthesis
 {
 	BASE_OBJECT_DEFINE_CLASS_NAME(Parenthesis_FEAT_1)
@@ -71,14 +65,10 @@ public:
 	};
 };
 
-
-
 BaseObjectPtr FEAT::clone()
 {
 	return BaseObjectPtr(new FEAT(*this));
 }
-
-
 // FEAT = FeatHdr *(Feat *ContinueFrt)
 const bool FEAT::loadContent(BinProcessor& proc)
 {

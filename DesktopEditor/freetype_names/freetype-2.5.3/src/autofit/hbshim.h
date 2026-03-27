@@ -14,16 +14,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __HBSHIM_H__
 #define __HBSHIM_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
-
 #ifdef FT_CONFIG_OPTION_USE_HARFBUZZ
 
 #include <hb.h>
@@ -31,8 +25,6 @@
 #include <hb-ft.h>
 
 #endif
-
-
 FT_BEGIN_HEADER
 
   FT_Error
@@ -51,6 +43,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __HBSHIM_H__ */
-
-
 /* END */

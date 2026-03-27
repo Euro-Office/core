@@ -15,8 +15,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*
     Notes
 
@@ -60,8 +58,6 @@
       ignore errors from the `LWFN' and fallback to the `sfnt' if both are
       available.
   */
-
-
 #include <freetype/freetype.h>
 #include <freetype/tttags.h>
 #include <freetype/internal/ftstream.h>
@@ -105,8 +101,6 @@
 #undef FT_New_Face_From_FOND
 #undef FT_New_Face_From_FSSpec
 #undef FT_New_Face_From_FSRef
-
-
   /* FSSpec functions are deprecated since Mac OS X 10.4 */
 #ifndef HAVE_FSSPEC
 #if TARGET_API_MAC_OS8 || TARGET_API_MAC_CARBON
@@ -201,8 +195,6 @@ typedef short ResourceIndex;
                                                                &famIter );
     FMFont                the_font = 0;
     FMFontFamily          family   = 0;
-
-
     if ( !fontName || !face_index )
       return FT_THROW( Invalid_Argument );
 
@@ -216,8 +208,6 @@ typedef short ResourceIndex;
         FMFontFamilyInstanceIterator  instIter;
         Str255                        famNameStr;
         char                          famName[256];
-
-
         /* get the family name */
         FMGetFontFamilyName( family, famNameStr );
         CopyPascalStringToC( famNameStr, famName );
@@ -233,15 +223,11 @@ typedef short ResourceIndex;
           FMFontStyle  style;
           FMFontSize   size;
           FMFont       font;
-
-
           stat2 = FMGetNextFontFamilyInstance( &instIter, &font,
                                                &style, &size );
           if ( stat2 == 0 && size == 0 )
           {
             char  fullName[256];
-
-
             /* build up a complete face name */
             ft_strcpy( fullName, famName );
             if ( style & bold )
@@ -276,8 +262,6 @@ typedef short ResourceIndex;
   }
 
 #endif /* HAVE_QUICKDRAW_CARBON */
-
-
 #if HAVE_ATS
 
   /* Private function.                                         */
@@ -294,8 +278,6 @@ typedef short ResourceIndex;
 #if !defined( MAC_OS_X_VERSION_10_5 ) || \
     MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
     FSSpec    spec;
-
-
     err = ATSFontGetFileSpecification( ats_font_id, &spec );
     if ( noErr == err )
       err = FSpMakeFSRef( &spec, ats_font_ref );
@@ -305,8 +287,6 @@ typedef short ResourceIndex;
 
     return err;
   }
-
-
   static FT_Error
   FT_GetFileRef_From_Mac_ATS_Name( const char*  fontName,
                                    FSRef*       ats_font_ref,
@@ -314,8 +294,6 @@ typedef short ResourceIndex;
   {
     CFStringRef  cf_fontName;
     ATSFontRef   ats_font_id;
-
-
     *face_index = 0;
 
     cf_fontName = CFStringCreateWithCString( NULL, fontName,
@@ -335,8 +313,6 @@ typedef short ResourceIndex;
     {
       ATSFontRef  id2 = ats_font_id - 1;
       FSRef       ref2;
-
-
       while ( id2 > 0 )
       {
         if ( noErr != FT_ATSFontGetFileReference( id2, &ref2 ) )
@@ -380,8 +356,6 @@ typedef short ResourceIndex;
   {
     FSRef     ref;
     FT_Error  err;
-
-
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
     if ( err )
       return err;
@@ -393,8 +367,6 @@ typedef short ResourceIndex;
   }
 
 #endif /* HAVE_ATS */
-
-
 #if !HAVE_FSSPEC || !HAVE_ATS
 
   FT_EXPORT_DEF( FT_Error )
@@ -419,8 +391,6 @@ typedef short ResourceIndex;
   {
     FSRef     ref;
     FT_Error  err;
-
-
     err = FT_GetFileRef_From_Mac_ATS_Name( fontName, &ref, face_index );
     if ( err )
       return err;
@@ -433,13 +403,9 @@ typedef short ResourceIndex;
   }
 
 #endif
-
-
 #if defined( __MWERKS__ ) && !TARGET_RT_MAC_MACHO
 
 #define STREAM_FILE( stream )  ( (FT_FILE*)stream->descriptor.pointer )
-
-
   FT_CALLBACK_DEF( void )
   ft_FSp_stream_close( FT_Stream  stream )
   {
@@ -449,8 +415,6 @@ typedef short ResourceIndex;
     stream->size               = 0;
     stream->base               = 0;
   }
-
-
   FT_CALLBACK_DEF( unsigned long )
   ft_FSp_stream_io( FT_Stream       stream,
                     unsigned long   offset,
@@ -458,8 +422,6 @@ typedef short ResourceIndex;
                     unsigned long   count )
   {
     FT_FILE*  file;
-
-
     file = STREAM_FILE( stream );
 
     ft_fseek( file, offset, SEEK_SET );
@@ -468,8 +430,6 @@ typedef short ResourceIndex;
   }
 
 #endif  /* __MWERKS__ && !TARGET_RT_MAC_MACHO */
-
-
 #if HAVE_FSSPEC && !HAVE_FSREF
 
   /* isDirectory is a dummy to synchronize API with FSPathMakeRef() */
@@ -484,8 +444,6 @@ typedef short ResourceIndex;
     Str255      nodeName;
     OSErr       err;
     FT_UNUSED( isDirectory );
-
-
     p = q = (const char *)pathname;
     dirID   = 0;
     vRefNum = 0;
@@ -493,8 +451,6 @@ typedef short ResourceIndex;
     while ( 1 )
     {
       int  len = ft_strlen( p );
-
-
       if ( len > 255 )
         len = 255;
 
@@ -527,8 +483,6 @@ typedef short ResourceIndex;
       p = q;
     }
   }
-
-
   static OSErr
   FT_FSpMakePath( const FSSpec*  spec_p,
                   UInt8*         path,
@@ -539,16 +493,12 @@ typedef short ResourceIndex;
     short   vRefNum;
     long    dirID;
     Str255  parDir_name;
-
-
     FT_MEM_SET( path, 0, maxPathSize );
     while ( 1 )
     {
       int             child_namelen = ft_strlen( (char *)path );
       unsigned char   node_namelen  = spec.name[0];
       unsigned char*  node_name     = spec.name + 1;
-
-
       if ( node_namelen + child_namelen > maxPathSize )
         return errFSNameTooLong;
 
@@ -568,8 +518,6 @@ typedef short ResourceIndex;
   }
 
 #endif /* HAVE_FSSPEC && !HAVE_FSREF */
-
-
   static OSErr
   FT_FSPathMakeRes( const UInt8*    pathname,
                     ResFileRefNum*  res )
@@ -579,8 +527,6 @@ typedef short ResourceIndex;
 
     OSErr  err;
     FSRef  ref;
-
-
     if ( noErr != FSPathMakeRef( pathname, &ref, FALSE ) )
       return FT_THROW( Cannot_Open_Resource );
 
@@ -597,8 +543,6 @@ typedef short ResourceIndex;
 
     OSErr   err;
     FSSpec  spec;
-
-
     if ( noErr != FT_FSPathMakeSpec( pathname, &spec, FALSE ) )
       return FT_THROW( Cannot_Open_Resource );
 
@@ -611,8 +555,6 @@ typedef short ResourceIndex;
 
     return err;
   }
-
-
   /* Return the file type for given pathname */
   static OSType
   get_file_type_from_path( const UInt8*  pathname )
@@ -622,8 +564,6 @@ typedef short ResourceIndex;
 
     FSRef          ref;
     FSCatalogInfo  info;
-
-
     if ( noErr != FSPathMakeRef( pathname, &ref, FALSE ) )
       return ( OSType ) 0;
 
@@ -637,8 +577,6 @@ typedef short ResourceIndex;
 
     FSSpec  spec;
     FInfo   finfo;
-
-
     if ( noErr != FT_FSPathMakeSpec( pathname, &spec, FALSE ) )
       return ( OSType ) 0;
 
@@ -650,8 +588,6 @@ typedef short ResourceIndex;
 #endif /* HAVE_FSREF */
 
   }
-
-
   /* Given a PostScript font name, create the Macintosh LWFN file name. */
   static void
   create_lwfn_name( char*   ps_name,
@@ -660,8 +596,6 @@ typedef short ResourceIndex;
     int       max = 5, count = 0;
     FT_Byte*  p = lwfn_file_name;
     FT_Byte*  q = (FT_Byte*)ps_name;
-
-
     lwfn_file_name[0] = 0;
 
     while ( *q )
@@ -681,8 +615,6 @@ typedef short ResourceIndex;
       q++;
     }
   }
-
-
   static short
   count_faces_sfnt( char*  fond_data )
   {
@@ -692,15 +624,11 @@ typedef short ResourceIndex;
     return EndianS16_BtoN( *( (short*)( fond_data +
                                         sizeof ( FamRec ) ) ) ) + 1;
   }
-
-
   static short
   count_faces_scalable( char*  fond_data )
   {
     AsscEntry*  assoc;
     short       i, face, face_all;
-
-
     face_all = EndianS16_BtoN( *( (short *)( fond_data +
                                              sizeof ( FamRec ) ) ) ) + 1;
     assoc    = (AsscEntry*)( fond_data + sizeof ( FamRec ) + 2 );
@@ -713,8 +641,6 @@ typedef short ResourceIndex;
     }
     return face;
   }
-
-
   /* Look inside the FOND data, answer whether there should be an SFNT
      resource, and answer the name of a possible LWFN Type 1 file.
 
@@ -732,8 +658,6 @@ typedef short ResourceIndex;
     AsscEntry*  assoc;
     AsscEntry*  base_assoc;
     FamRec*     fond;
-
-
     *sfnt_id          = 0;
     *have_sfnt        = 0;
     lwfn_file_name[0] = 0;
@@ -773,8 +697,6 @@ typedef short ResourceIndex;
       char            ps_name[256];
       unsigned char*  names[64];
       int             i;
-
-
       p += EndianS32_BtoN( fond->ffStylOff );
       style = (StyleTable*)p;
       p += sizeof ( StyleTable );
@@ -791,8 +713,6 @@ typedef short ResourceIndex;
 
       {
         size_t  ps_name_len = (size_t)names[0][0];
-
-
         if ( ps_name_len != 0 )
         {
           ft_memcpy(ps_name, names[0] + 1, ps_name_len);
@@ -802,19 +722,13 @@ typedef short ResourceIndex;
              style->indexes[face_index] <= string_count )
         {
           unsigned char*  suffixes = names[style->indexes[face_index] - 1];
-
-
           for ( i = 1; i <= suffixes[0]; i++ )
           {
             unsigned char*  s;
             size_t          j = suffixes[i] - 1;
-
-
             if ( j < string_count && ( s = names[j] ) != NULL )
             {
               size_t  s_len = (size_t)s[0];
-
-
               if ( s_len != 0 && ps_name_len + s_len < sizeof ( ps_name ) )
               {
                 ft_memcpy( ps_name + ps_name_len, s + 1, s_len );
@@ -829,8 +743,6 @@ typedef short ResourceIndex;
       create_lwfn_name( ps_name, lwfn_file_name );
     }
   }
-
-
   static  FT_Error
   lookup_lwfn_by_fond( const UInt8*      path_fond,
                        ConstStr255Param  base_lwfn,
@@ -842,8 +754,6 @@ typedef short ResourceIndex;
 
     FSRef  ref, par_ref;
     int    dirname_len;
-
-
     /* Pathname for FSRef can be in various formats: HFS, HFS+, and POSIX. */
     /* We should not extract parent directory by string manipulation.      */
 
@@ -883,8 +793,6 @@ typedef short ResourceIndex;
 
     int     i;
     FSSpec  spec;
-
-
     /* pathname for FSSpec is always HFS format */
     if ( ft_strlen( (char *)path_fond ) > path_size )
       return FT_THROW( Invalid_Argument );
@@ -917,8 +825,6 @@ typedef short ResourceIndex;
 #endif /* HAVE_FSREF */
 
   }
-
-
   static short
   count_faces( Handle        fond,
                const UInt8*  pathname )
@@ -929,8 +835,6 @@ typedef short ResourceIndex;
     UInt8     buff[PATH_MAX];
     FT_Error  err;
     short     num_faces;
-
-
     have_sfnt = have_lwfn = 0;
 
     HLock( fond );
@@ -952,8 +856,6 @@ typedef short ResourceIndex;
     HUnlock( fond );
     return num_faces;
   }
-
-
   /* Read Type 1 data from the POST resources inside the LWFN file,
      return a PFB buffer.  This is somewhat convoluted because the FT2
      PFB parser wants the ASCII header as one chunk, and the LWFN
@@ -973,8 +875,6 @@ typedef short ResourceIndex;
     FT_ULong       post_size, pfb_chunk_size;
     Handle         post_data;
     char           code, last_code;
-
-
     UseResFile( res );
 
     /* First pass: load all POST resources, and determine the size of */
@@ -1073,8 +973,6 @@ typedef short ResourceIndex;
     CloseResFile( res );
     return error;
   }
-
-
   /* Create a new FT_Face from a file spec to an LWFN file. */
   static FT_Error
   FT_New_Face_From_LWFN( FT_Library    library,
@@ -1086,8 +984,6 @@ typedef short ResourceIndex;
     FT_ULong       pfb_size;
     FT_Error       error;
     ResFileRefNum  res;
-
-
     if ( noErr != FT_FSPathMakeRes( pathname, &res ) )
       return FT_THROW( Cannot_Open_Resource );
 
@@ -1105,8 +1001,6 @@ typedef short ResourceIndex;
                                   "type1",
                                   aface );
   }
-
-
   /* Create a new FT_Face from an SFNT resource, specified by res ID. */
   static FT_Error
   FT_New_Face_From_SFNT( FT_Library  library,
@@ -1120,8 +1014,6 @@ typedef short ResourceIndex;
     FT_Error   error  = FT_Err_Ok;
     FT_Memory  memory = library->memory;
     int        is_cff, is_sfnt_ps;
-
-
     sfnt = GetResource( TTAG_sfnt, sfnt_id );
     if ( sfnt == NULL )
       return FT_THROW( Invalid_Handle );
@@ -1144,8 +1036,6 @@ typedef short ResourceIndex;
     if ( is_sfnt_ps )
     {
       FT_Stream  stream;
-
-
       if ( FT_NEW( stream ) )
         goto Try_OpenType;
 
@@ -1174,8 +1064,6 @@ typedef short ResourceIndex;
   Exit:
     return error;
   }
-
-
   /* Create a new FT_Face from a file spec to a suitcase file. */
   static FT_Error
   FT_New_Face_From_Suitcase( FT_Library    library,
@@ -1188,8 +1076,6 @@ typedef short ResourceIndex;
     ResourceIndex  res_index;
     Handle         fond;
     short          num_faces_in_res;
-
-
     if ( noErr != FT_FSPathMakeRes( pathname, &res_ref ) )
       return FT_THROW( Cannot_Open_Resource );
 
@@ -1201,8 +1087,6 @@ typedef short ResourceIndex;
     for ( res_index = 1; ; ++res_index )
     {
       short  num_faces_in_fond;
-
-
       fond = Get1IndResource( TTAG_FOND, res_index );
       if ( ResError() )
         break;
@@ -1221,8 +1105,6 @@ typedef short ResourceIndex;
       (*aface)->num_faces = num_faces_in_res;
     return error;
   }
-
-
   /* documentation is in ftmac.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -1239,8 +1121,6 @@ typedef short ResourceIndex;
     UInt8     path_lwfn[PATH_MAX];
     OSErr     err;
     FT_Error  error = FT_Err_Ok;
-
-
     /* test for valid `aface' and `library' delayed to */
     /* `FT_New_Face_From_XXX'                          */
 
@@ -1255,8 +1135,6 @@ typedef short ResourceIndex;
     if ( lwfn_file_name[0] )
     {
       ResFileRefNum  res;
-
-
       res = HomeResFile( fond );
       if ( noErr != ResError() )
         goto found_no_lwfn_file;
@@ -1266,8 +1144,6 @@ typedef short ResourceIndex;
       {
         UInt8  path_fond[PATH_MAX];
         FSRef  ref;
-
-
         err = FSGetForkCBInfo( res, kFSInvalidVolumeRefNum,
                                NULL, NULL, NULL, &ref, NULL );
         if ( noErr != err )
@@ -1290,8 +1166,6 @@ typedef short ResourceIndex;
         FCBPBRec  pb;
         Str255    fond_file_name;
         FSSpec    spec;
-
-
         FT_MEM_SET( &spec, 0, sizeof ( FSSpec ) );
         FT_MEM_SET( &pb,   0, sizeof ( FCBPBRec ) );
 
@@ -1340,8 +1214,6 @@ typedef short ResourceIndex;
 
     return error;
   }
-
-
   /* Common function to load a new FT_Face from a resource file. */
   static FT_Error
   FT_New_Face_From_Resource( FT_Library    library,
@@ -1351,8 +1223,6 @@ typedef short ResourceIndex;
   {
     OSType    file_type;
     FT_Error  error;
-
-
     /* LWFN is a (very) specific file format, check for it explicitly */
     file_type = get_file_type_from_path( pathname );
     if ( file_type == TTAG_LWFN )
@@ -1371,8 +1241,6 @@ typedef short ResourceIndex;
     *aface = NULL;
     return 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1392,8 +1260,6 @@ typedef short ResourceIndex;
   {
     FT_Open_Args  args;
     FT_Error      error;
-
-
     /* test for valid `library' and `aface' delayed to FT_Open_Face() */
     if ( !pathname )
       return FT_THROW( Invalid_Argument );
@@ -1411,8 +1277,6 @@ typedef short ResourceIndex;
     args.pathname = (char*)pathname;
     return FT_Open_Face( library, &args, face_index, aface );
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1446,8 +1310,6 @@ typedef short ResourceIndex;
     FT_Open_Args  args;
     OSErr   err;
     UInt8   pathname[PATH_MAX];
-
-
     /* test for valid `library' and `aface' delayed to `FT_Open_Face' */
 
     if ( !ref )
@@ -1469,8 +1331,6 @@ typedef short ResourceIndex;
 #endif /* HAVE_FSREF */
 
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1492,8 +1352,6 @@ typedef short ResourceIndex;
 #if HAVE_FSREF
 
     FSRef  ref;
-
-
     if ( !spec || FSpMakeFSRef( spec, &ref ) != noErr )
       return FT_THROW( Invalid_Argument );
     else
@@ -1505,8 +1363,6 @@ typedef short ResourceIndex;
     FT_Open_Args  args;
     OSErr         err;
     UInt8         pathname[PATH_MAX];
-
-
     if ( !spec )
       return FT_THROW( Invalid_Argument );
 
@@ -1537,6 +1393,4 @@ typedef short ResourceIndex;
   }
 
 #endif /* FT_MACINTOSH */
-
-
 /* END */

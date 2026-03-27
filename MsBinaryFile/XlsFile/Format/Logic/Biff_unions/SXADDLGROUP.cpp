@@ -36,24 +36,16 @@
 
 namespace XLS
 {
-
-
 SXADDLGROUP::SXADDLGROUP()
 {
 }
-
-
 SXADDLGROUP::~SXADDLGROUP()
 {
 }
-
-
 BaseObjectPtr SXADDLGROUP::clone()
 {
 	return BaseObjectPtr(new SXADDLGROUP(*this));
 }
-
-
 /*
 SXADDLGROUP = SXAddl_SXCGroup_SXDId *Continue_SxaddlSxString SXAddl_SXCGroup_SXDGrpInfo 
 				*SXAddl_SXCGroup_SXDMember *UNKNOWNFRT SXAddl_SXCGroup_SXDEnd

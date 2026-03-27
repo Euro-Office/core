@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  utils.c
  *
@@ -118,8 +116,6 @@ static const char sepchar = '\\';
 #else
 static const char sepchar = '/';
 #endif
-
-
 /*----------------------------------------------------------------------*
  *                 Error, warning and info message procs                *
  *                                                                      *
@@ -148,8 +144,6 @@ returnErrorInt(const char  *msg,
     fprintf(stderr, "Error in %s: %s\n", procname, msg);
     return ival;
 }
-
-
 /*!
  *  returnErrorFloat()
  *
@@ -166,8 +160,6 @@ returnErrorFloat(const char  *msg,
     fprintf(stderr, "Error in %s: %s\n", procname, msg);
     return fval;
 }
-
-
 /*!
  *  returnErrorPtr()
  *
@@ -184,8 +176,6 @@ returnErrorPtr(const char  *msg,
     fprintf(stderr, "Error in %s: %s\n", procname, msg);
     return pval;
 }
-
-
 /*!
  *  l_error()
  *
@@ -199,8 +189,6 @@ l_error(const char  *msg,
     fprintf(stderr, "Error in %s: %s\n", procname, msg);
     return;
 }
-
-
 /*!
  *  l_errorString()
  *
@@ -234,8 +222,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_errorInt()
  *
@@ -268,8 +254,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_errorFloat()
  *
@@ -302,8 +286,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_warning()
  *
@@ -317,8 +299,6 @@ l_warning(const char  *msg,
     fprintf(stderr, "Warning in %s: %s\n", procname, msg);
     return;
 }
-
-
 /*!
  *  l_warningString()
  *
@@ -352,8 +332,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_warningInt()
  *
@@ -386,8 +364,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_warningInt2()
  *
@@ -421,8 +397,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_warningFloat()
  *
@@ -455,8 +429,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_warningFloat2()
  *
@@ -490,8 +462,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_info()
  *
@@ -505,8 +475,6 @@ l_info(const char  *msg,
     fprintf(stderr, "Info in %s: %s\n", procname, msg);
     return;
 }
-
-
 /*!
  *  l_infoString()
  *
@@ -539,8 +507,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_infoInt()
  *
@@ -573,8 +539,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_infoInt2()
  *
@@ -608,8 +572,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_infoFloat()
  *
@@ -642,8 +604,6 @@ char    *charbuf;
     FREE(charbuf);
     return;
 }
-
-
 /*!
  *  l_infoFloat2()
  *
@@ -678,8 +638,6 @@ char    *charbuf;
     return;
 }
 
-
-
 /*--------------------------------------------------------------------*
  *                       Safe string operations                       *
  *--------------------------------------------------------------------*/
@@ -707,8 +665,6 @@ char    *dest;
     stringCopy(dest, src, len);
     return dest;
 }
-
-
 /*!
  *  stringCopy()
  *
@@ -746,8 +702,6 @@ l_int32  i;
         dest[i] = '\0';
     return 0;
 }
-    
-
 /*!
  *  stringReplace()
  *
@@ -787,8 +741,6 @@ l_int32  len;
 
     return 0;
 }
-    
-
 /*!
  *  stringJoin()
  *
@@ -823,8 +775,6 @@ l_int32  srclen1, srclen2, destlen;
         strncat(dest, src2, srclen2);
     return dest;
 }
-
-
 /*!
  *  stringReverse()
  *
@@ -849,8 +799,6 @@ l_int32  i, len;
 
     return dest;
 }
-
-
 /*!
  *  strtokSafe()
  *
@@ -946,8 +894,6 @@ l_int32  istart, i, j, nchars;
 
     return substr;
 }
-
-
 /*!
  *  stringSplitOnToken()
  *
@@ -996,8 +942,6 @@ char  *saveptr;
         *ptail = stringNew(saveptr);
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                       Find and replace procs                       *
  *--------------------------------------------------------------------*/
@@ -1034,8 +978,6 @@ l_int32  nsrc, i, k;
 
     return dest;
 }
-
-
 /*!
  *  stringFindSubstr()
  *
@@ -1077,8 +1019,6 @@ char  *ptr;
         *ploc = ptr - src;
     return 1;
 }
-
-
 /*!
  *  stringReplaceSubstr()
  *
@@ -1147,8 +1087,6 @@ l_int32  nsrc, nsub1, nsub2, len, npre, loc;
 
     return dest;
 }
-
-
 /*!
  *  stringReplaceEachSubstr()
  *
@@ -1201,8 +1139,6 @@ l_int32  loc;
             (*pcount)++;
     }
 }
-            
-
 /*!
  *  arrayFindSequence()
  *
@@ -1263,8 +1199,6 @@ l_int32  i, j, found, lastpos;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                             Safe realloc                           *
  *--------------------------------------------------------------------*/
@@ -1333,8 +1267,6 @@ void    *newdata;
 
     return newdata;
 }
-    
-
 
 /*--------------------------------------------------------------------*
  *                       Reading bytes from file                      *
@@ -1369,8 +1301,6 @@ FILE     *fp;
 
     return data;
 }
-
-
 /*!
  *  arrayReadStream()
  *
@@ -1404,8 +1334,6 @@ l_uint8  *data;
     ignore = fread(data, 1, *pnbytes, fp);
     return data;
 }
-
-
 /*!
  *  nbytesInFile()
  *
@@ -1428,8 +1356,6 @@ FILE    *fp;
     fclose(fp);
     return nbytes;
 }
-
-
 /*!
  *  fnbytesInFile()
  *
@@ -1452,8 +1378,6 @@ l_int32  nbytes, pos;
     fseek(fp, 0, pos);        /* back to initial position */
     return nbytes;
 }
-
-
 /*!
  *  arrayWrite()
  *
@@ -1495,8 +1419,6 @@ char   actualOperation[20];
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                            Copy in memory                          *
  *--------------------------------------------------------------------*/
@@ -1523,8 +1445,6 @@ l_uint8  *datad;
     memcpy(datad, datas, size);
     return datad;
 }
-
-
 /*--------------------------------------------------------------------*
  *                         File copy operations                       *
  *--------------------------------------------------------------------*/
@@ -1550,8 +1470,6 @@ l_int32   nbytes, ret;
     FREE(data);
     return ret;
 }
-
-
 /*!
  *  fileConcatenate()
  *
@@ -1578,8 +1496,6 @@ l_int32   nbytes;
     FREE(data);
     return 0;
 }
-
-
 /*!
  *  fileAppendString()
  *
@@ -1606,8 +1522,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*--------------------------------------------------------------------*
  *                      Test files for equivalence                    *
  *--------------------------------------------------------------------*/
@@ -1657,8 +1571,6 @@ l_uint8  *array1, *array2;
 
     return 0;
 }
-
-
 /*--------------------------------------------------------------------------*
  *   16 and 32 bit byte-swapping on big endian and little  endian machines  *
  *                                                                          * 
@@ -1699,8 +1611,6 @@ convertOnBigEnd16(l_uint16  shortin)
 }
 
 #endif  /* L_BIG_ENDIAN */
-
-
 /*--------------------------------------------------------------------*
  *                        32-bit byte swapping                        *
  *--------------------------------------------------------------------*/
@@ -1736,8 +1646,6 @@ convertOnBigEnd32(l_uint32  wordin)
 
 #endif  /* L_BIG_ENDIAN */
 
-
-
 /*--------------------------------------------------------------------*
  *                         Opening read stream                        *
  *--------------------------------------------------------------------*/
@@ -1772,8 +1680,6 @@ FILE  *fp;
 
     return (FILE *)ERROR_PTR("file not found", procName, NULL);
 }
-
-
 /*--------------------------------------------------------------------*
  *                         File name operations                       *
  *--------------------------------------------------------------------*/
@@ -1836,8 +1742,6 @@ char  *cpathname, *lastslash;
 
     return 0;
 }
-
-
 /*!
  *  splitPathAtExtension()
  *
@@ -1900,8 +1804,6 @@ char   empty[4] = "";
     FREE(tail);
     return 0;
 }
-
-
 /*! 
  *  genPathname()
  *
@@ -1949,8 +1851,6 @@ l_int32  dirlen, namelen, totlen;
     strncat(charbuf, fname, namelen);
     return charbuf;
 }
-
-
 /*! 
  *  genTempFilename()
  *
@@ -2016,8 +1916,6 @@ l_int32  i, buflen, pid;
 
     return stringJoin(buf, tail);
 }
-
-
 /*! 
  *  mungePathnameForWindows()
  *
@@ -2057,8 +1955,6 @@ mungePathnameForWindows(const char  *namein)
     return stringNew(namein);
 #endif
 }
-
-
 /*! 
  *  extractNumberFromFilename()
  *
@@ -2107,8 +2003,6 @@ l_int32  len, nret, num;
     else
         return -1;  /* not found */
 }
-
-
 /*---------------------------------------------------------------------*
  *                Generate random integer in given range               *
  *---------------------------------------------------------------------*/
@@ -2240,8 +2134,6 @@ getImagelibVersions()
 
     return versionStrP;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Timing procs                              *
  *---------------------------------------------------------------------*/
@@ -2265,8 +2157,6 @@ startTimer(void)
 {
     getrusage(RUSAGE_SELF, &rusage_before);
 }
-
-
 l_float32
 stopTimer(void)
 {

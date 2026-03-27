@@ -48,8 +48,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Pointer to routine to downsample a single component */
 typedef JMETHOD(void, downsample1_ptr,
 		(j_compress_ptr cinfo, jpeg_component_info * compptr,
@@ -74,8 +72,6 @@ typedef struct {
 } my_downsampler;
 
 typedef my_downsampler * my_downsample_ptr;
-
-
 /*
  * Initialize for a downsampling pass.
  */
@@ -85,8 +81,6 @@ start_pass_downsample (j_compress_ptr cinfo)
 {
   /* no work for now */
 }
-
-
 /*
  * Expand a component horizontally from width input_cols to width output_cols,
  * by duplicating the rightmost samples.
@@ -111,8 +105,6 @@ expand_right_edge (JSAMPARRAY image_data, int num_rows,
     }
   }
 }
-
-
 /*
  * Do downsampling for a whole row group (all components).
  *
@@ -137,8 +129,6 @@ sep_downsample (j_compress_ptr cinfo,
     (*downsample->methods[ci]) (cinfo, compptr, in_ptr, out_ptr);
   }
 }
-
-
 /*
  * Downsample pixel values of a single component.
  * One row group is processed per call.
@@ -187,8 +177,6 @@ int_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
     outrow++;
   }
 }
-
-
 /*
  * Downsample pixel values of a single component.
  * This version handles the special case of a full-size component,
@@ -206,8 +194,6 @@ fullsize_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
   expand_right_edge(output_data, cinfo->max_v_samp_factor, cinfo->image_width,
 		    compptr->width_in_blocks * compptr->DCT_h_scaled_size);
 }
-
-
 /*
  * Downsample pixel values of a single component.
  * This version handles the common case of 2:1 horizontal and 1:1 vertical,
@@ -249,8 +235,6 @@ h2v1_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
     }
   }
 }
-
-
 /*
  * Downsample pixel values of a single component.
  * This version handles the standard case of 2:1 horizontal and 2:1 vertical,
@@ -291,8 +275,6 @@ h2v2_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
     outrow++;
   }
 }
-
-
 #ifdef INPUT_SMOOTHING_SUPPORTED
 
 /*
@@ -394,8 +376,6 @@ h2v2_smooth_downsample (j_compress_ptr cinfo, jpeg_component_info * compptr,
     outrow++;
   }
 }
-
-
 /*
  * Downsample pixel values of a single component.
  * This version handles the special case of a full-size component,
@@ -467,8 +447,6 @@ fullsize_smooth_downsample (j_compress_ptr cinfo, jpeg_component_info *compptr,
 }
 
 #endif /* INPUT_SMOOTHING_SUPPORTED */
-
-
 /*
  * Module initialization routine for downsampling.
  * Note that we must select a routine for each component.

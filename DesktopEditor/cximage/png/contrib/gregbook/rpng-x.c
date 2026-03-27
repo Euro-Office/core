@@ -39,8 +39,6 @@
       The contents of this file are DUAL-LICENSED.  You may modify and/or
       redistribute this software according to the terms of one of the
       following two licenses (at your option):
-
-
       LICENSE 1 ("BSD-like with advertising clause"):
 
       Permission is granted to anyone to use this software for any purpose,
@@ -58,8 +56,6 @@
             This product includes software developed by Greg Roelofs
             and contributors for the book, "PNG: The Definitive Guide,"
             published by O'Reilly and Associates.
-
-
       LICENSE 2 (GNU GPL v2 or later):
 
       This program is free software; you can redistribute it and/or modify
@@ -96,8 +92,6 @@
 /* #define DEBUG  :  this enables the Trace() macros */
 
 #include "readpng.h"   /* typedefs, common macros, readpng prototypes */
-
-
 /* could just include png.h, but this macro is the only thing we need
  * (name and typedefs changed to local versions); note that side effects
  * only happen with alpha (which could easily be avoided with
@@ -108,15 +102,11 @@
                 (ush)(bg)*(ush)(255 - (ush)(alpha)) + (ush)128);  \
     (composite) = (uch)((temp + (temp >> 8)) >> 8);               \
 }
-
-
 /* local prototypes */
 static int  rpng_x_create_window(void);
 static int  rpng_x_display_image(void);
 static void rpng_x_cleanup(void);
 static int  rpng_x_msb(ulg u32val);
-
-
 static char titlebar[1024], *window_name = titlebar;
 static char *appname = LONGNAME;
 static char *icon_name = PROGNAME;
@@ -155,10 +145,6 @@ static int have_gc = FALSE;
 ulg numcolors=0, pixels[256];
 ush reds[256], greens[256], blues[256];
  */
-
-
-
-
 int main(int argc, char **argv)
 {
 #ifdef sgi
@@ -173,12 +159,8 @@ int main(int argc, char **argv)
     double default_display_exponent;   /* whole display system */
     XEvent e;
     KeySym k;
-
-
     displayname = (char *)NULL;
     filename = (char *)NULL;
-
-
     /* First set the default value for our display-system exponent, i.e.,
      * the product of the CRT exponent and the exponent corresponding to
      * the frame-buffer's lookup table (LUT), if any.  This is not an
@@ -217,8 +199,6 @@ int main(int argc, char **argv)
 
     /* the defaults above give 1.0, 1.3, 1.5 and 2.2, respectively: */
     default_display_exponent = LUT_exponent * CRT_exponent;
-
-
     /* If the user has set the SCREEN_GAMMA environment variable as suggested
      * (somewhat imprecisely) in the libpng documentation, use that; otherwise
      * use the default value we just calculated.  Either way, the user may
@@ -228,8 +208,6 @@ int main(int argc, char **argv)
         display_exponent = atof(p);
     else
         display_exponent = default_display_exponent;
-
-
     /* Now parse the command line for options and the PNG filename. */
 
     while (*++argv && !error) {
@@ -268,8 +246,6 @@ int main(int argc, char **argv)
 
     if (!filename)
         ++error;
-
-
     /* print usage screen if any errors up to this point */
 
     if (error) {
@@ -290,8 +266,6 @@ int main(int argc, char **argv)
           "\n", PROGNAME, default_display_exponent);
         exit(1);
     }
-
-
     if (!(infile = fopen(filename, "rb"))) {
         fprintf(stderr, PROGNAME ":  can't open PNG file [%s]\n", filename);
         ++error;
@@ -328,14 +302,10 @@ int main(int argc, char **argv)
         if (error)
             fclose(infile);
     }
-
-
     if (error) {
         fprintf(stderr, PROGNAME ":  aborting.\n");
         exit(2);
     }
-
-
     /* set the title-bar string, but make sure buffer doesn't overflow */
 
     alen = strlen(appname);
@@ -344,8 +314,6 @@ int main(int argc, char **argv)
         sprintf(titlebar, "%s:  ...%s", appname, filename+(alen+flen+6-1023));
     else
         sprintf(titlebar, "%s:  %s", appname, filename);
-
-
     /* if the user didn't specify a background color on the command line,
      * check for one in the PNG file--if not, the initialized values of 0
      * (black) will be used */
@@ -363,23 +331,17 @@ int main(int argc, char **argv)
           ":  libpng error while checking for background color\n");
         exit(2);
     }
-
-
     /* do the basic X initialization stuff, make the window and fill it
      * with the background color */
 
     if (rpng_x_create_window())
         exit(2);
-
-
     /* decode the image, all at once */
 
     Trace((stderr, "calling readpng_get_image()\n"))
     image_data = readpng_get_image(display_exponent, &image_channels,
       &image_rowbytes);
     Trace((stderr, "done with readpng_get_image()\n"))
-
-
     /* done with PNG file, so clean up to minimize memory usage (but do NOT
      * nuke image_data!) */
 
@@ -390,8 +352,6 @@ int main(int argc, char **argv)
         fprintf(stderr, PROGNAME ":  unable to decode PNG image\n");
         exit(3);
     }
-
-
     /* display image (composite with background if requested) */
 
     Trace((stderr, "calling rpng_x_display_image()\n"))
@@ -400,8 +360,6 @@ int main(int argc, char **argv)
         exit(4);
     }
     Trace((stderr, "done with rpng_x_display_image()\n"))
-
-
     /* wait for the user to tell us when to quit */
 
     printf(
@@ -413,18 +371,12 @@ int main(int argc, char **argv)
     while (!(e.type == ButtonPress && e.xbutton.button == Button1) &&
            !(e.type == KeyPress &&    /*  v--- or 1 for shifted keys */
              ((k = XLookupKeysym(&e.xkey, 0)) == XK_q || k == XK_Escape) ));
-
-
     /* OK, we're done:  clean up all image and X resources and go away */
 
     rpng_x_cleanup();
 
     return 0;
 }
-
-
-
-
 
 static int rpng_x_create_window(void)
 {
@@ -443,8 +395,6 @@ static int rpng_x_create_window(void)
     XSizeHints *size_hints;
     XWMHints *wm_hints;
     XClassHint *class_hints;
-
-
     screen = DefaultScreen(display);
     depth = DisplayPlanes(display, screen);
     root = RootWindow(display, screen);
@@ -679,10 +629,6 @@ static int rpng_x_create_window(void)
 
 } /* end function rpng_x_create_window() */
 
-
-
-
-
 static int rpng_x_display_image(void)
 {
     uch *src;
@@ -692,8 +638,6 @@ static int rpng_x_display_image(void)
     ulg pixel;
     int ximage_rowbytes = ximage->bytes_per_line;
 /*  int bpp = ximage->bits_per_pixel;  */
-
-
     Trace((stderr, "beginning display loop (image_channels == %d)\n",
       image_channels))
     Trace((stderr, "   (width = %ld, rowbytes = %ld, ximage_rowbytes = %d)\n",
@@ -854,10 +798,6 @@ static int rpng_x_display_image(void)
 
     return 0;
 }
-
-
-
-
 static void rpng_x_cleanup(void)
 {
     if (image_data) {
@@ -886,10 +826,6 @@ static void rpng_x_cleanup(void)
     if (have_nondefault_visual)
         XFree(visual_list);
 }
-
-
-
-
 
 static int rpng_x_msb(ulg u32val)
 {

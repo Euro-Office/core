@@ -209,8 +209,6 @@ const char* color_parser::init()
 
 	return 0;	
 }
-
-
 //-- parses color string represented in hex format ( for ex. #FFF or #FFFFFF )
 //-- return value - position where parser stopped
 const char* color_parser::parse_color_hex(const char* str, agg::rgba8& color)
@@ -333,8 +331,6 @@ float color_parser::get_opacity_value( const char*& str )
 	return fValue;
 	
 }
-
-
 //-- parses input string and fills rgba structure.
 //-- returns pointer where the parser stopped.
 const char* color_parser::parse_color( const char* str, agg::rgba8& color )
@@ -389,8 +385,6 @@ const char* color_parser::parse_color( const char* str, agg::rgba8& color )
 	
 	return str + pos;
 }
-
-
 //-- parses input string and fills rgba structure.
 //-- returns pointer where the parser stopped.
 const wchar_t* color_parser::parse_color( const wchar_t* wstr, agg::rgba8& color )
@@ -410,16 +404,12 @@ const wchar_t* color_parser::parse_color( const wchar_t* wstr, agg::rgba8& color
 	
 	return  wstr + ( parse_color(szBuf, color) - szBuf );
 }
-
-
 agg::rgba8 color_parser::parse_str( const char* str )
 {
     agg::rgba8 color(0, 0, 0, 0);
     parse_color( str, color );
     return color;
 }
-
-
 //-- extracts next value from string ( R , G, B or Opacity )
 template<class T>
 T color_parser::extract_next_value( 
@@ -431,8 +421,6 @@ T color_parser::extract_next_value(
     //STATIC_ASSERT( 
        assert( sizeof(T) == sizeof(int) || sizeof(T) == sizeof(float) );
       //  Extract_next_value_supports_only_int_and_float )        
-
-	
 	value_is_percent = false;
 	
 	//--find value start position ( find_first_of )

@@ -86,10 +86,6 @@ namespace agg
         double   m_saved_dfy;
     };
 
-
-
-
-
     //-------------------------------------------------------------curve3_div
     class curve3_div
     {
@@ -157,12 +153,6 @@ namespace agg
         pod_bvector<point_d> m_points;
     };
 
-
-
-
-
-
-
     //-------------------------------------------------------------curve4_points
     struct curve4_points
     {
@@ -187,8 +177,6 @@ namespace agg
         double  operator [] (unsigned i) const { return cp[i]; }
         double& operator [] (unsigned i)       { return cp[i]; }
     };
-
-
 
     //-------------------------------------------------------------curve4_inc
     class curve4_inc
@@ -262,8 +250,6 @@ namespace agg
         double   m_saved_ddfy;
     };
 
-
-
     //-------------------------------------------------------catrom_to_bezier
     inline curve4_points catrom_to_bezier(double x1, double y1, 
                                           double x2, double y2, 
@@ -287,8 +273,6 @@ namespace agg
             x3,
             y3);
     }
-
-
     //-----------------------------------------------------------------------
     inline curve4_points
     catrom_to_bezier(const curve4_points& cp)
@@ -296,8 +280,6 @@ namespace agg
         return catrom_to_bezier(cp[0], cp[1], cp[2], cp[3], 
                                 cp[4], cp[5], cp[6], cp[7]);
     }
-
-
 
     //-----------------------------------------------------ubspline_to_bezier
     inline curve4_points ubspline_to_bezier(double x1, double y1, 
@@ -322,8 +304,6 @@ namespace agg
             (x2 + 4*x3 + x4) / 6,
             (y2 + 4*y3 + y4) / 6);
     }
-
-
     //-----------------------------------------------------------------------
     inline curve4_points 
     ubspline_to_bezier(const curve4_points& cp)
@@ -331,10 +311,6 @@ namespace agg
         return ubspline_to_bezier(cp[0], cp[1], cp[2], cp[3], 
                                   cp[4], cp[5], cp[6], cp[7]);
     }
-
-
-
-
     //------------------------------------------------------hermite_to_bezier
     inline curve4_points hermite_to_bezier(double x1, double y1, 
                                            double x2, double y2, 
@@ -359,8 +335,6 @@ namespace agg
             y2);
     }
 
-
-
     //-----------------------------------------------------------------------
     inline curve4_points 
     hermite_to_bezier(const curve4_points& cp)
@@ -368,8 +342,6 @@ namespace agg
         return hermite_to_bezier(cp[0], cp[1], cp[2], cp[3], 
                                  cp[4], cp[5], cp[6], cp[7]);
     }
-
-
     //-------------------------------------------------------------curve4_div
     class curve4_div
     {
@@ -468,8 +440,6 @@ namespace agg
         unsigned             m_count;
         pod_bvector<point_d> m_points;
     };
-
-
     //-----------------------------------------------------------------curve3
     class curve3
     {
@@ -570,10 +540,6 @@ namespace agg
         curve3_div m_curve_div;
         curve_approximation_method_e m_approximation_method;
     };
-
-
-
-
 
     //-----------------------------------------------------------------curve4
     class curve4
@@ -684,10 +650,6 @@ namespace agg
         curve4_div m_curve_div;
         curve_approximation_method_e m_approximation_method;
     };
-
-
-
-
 }
 
 #endif

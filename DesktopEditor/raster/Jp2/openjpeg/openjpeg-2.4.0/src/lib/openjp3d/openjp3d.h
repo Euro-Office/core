@@ -229,8 +229,6 @@ typedef struct opj_event_mgr {
     /** Debug message callback if available, NULL otherwise */
     opj_msg_callback info_handler;
 } opj_event_mgr_t;
-
-
 /*
 ==========================================================
    codec typedef definitions
@@ -247,8 +245,6 @@ typedef struct opj_poc {
     int tile;
     char progorder[4];
 } opj_poc_t;
-
-
 /**
 Compression parameters
 */
@@ -557,8 +553,6 @@ typedef struct opj_volume_comptparm {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 /*
 ==========================================================
    openjpeg version

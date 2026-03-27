@@ -110,8 +110,6 @@ xmlBufOverflowError(xmlBufPtr buf, const char *extra)
     if ((buf) && (buf->error == 0))
         buf->error = XML_BUF_OVERFLOW;
 }
-
-
 /**
  * xmlBufCreate:
  *
@@ -214,8 +212,6 @@ xmlBufDetach(xmlBufPtr buf) {
 
     return ret;
 }
-
-
 /**
  * xmlBufCreateStatic:
  * @mem: the memory area
@@ -1093,8 +1089,6 @@ xmlBufWriteChar(xmlBufPtr buf, const char *string) {
         return(-1);
     return(xmlBufCCat(buf, string));
 }
-
-
 /**
  * xmlBufWriteQuotedString:
  * @buf:  the XML buffer output

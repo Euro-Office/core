@@ -104,8 +104,6 @@ namespace NSShapeImageGen
 			
 			if(typeAdditionalFile == 1)	nRes += 4;
 			if(typeAdditionalFile == 2)	nRes += 8;
-			
-			
 			if(0 != nRes)
 				m_sName = L"display" + std::to_wstring(nRes) + L"image";
 		}

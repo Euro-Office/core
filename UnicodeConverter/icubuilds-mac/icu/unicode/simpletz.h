@@ -749,8 +749,6 @@ public:
      */
     virtual void getTimeZoneRules(const InitialTimeZoneRule*& initial,
         const TimeZoneRule* trsrules[], int32_t& trscount, UErrorCode& status) const;
-
-
 public:
 
     /**

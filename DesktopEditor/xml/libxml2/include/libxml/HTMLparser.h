@@ -296,8 +296,6 @@ XMLPUBFUN htmlStatus XMLCALL htmlNodeStatus(const htmlNodePtr, int) ;
  * Returns the attributes required for the specified element.
  */
 #define htmlRequiredAttrs(elt) (elt)->attrs_req
-
-
 #ifdef __cplusplus
 }
 #endif

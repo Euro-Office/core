@@ -70,8 +70,6 @@ uprv_isASCIILetter(char c);
 
 U_CAPI char U_EXPORT2
 uprv_toupper(char c);
-
-
 U_CAPI char U_EXPORT2
 uprv_asciitolower(char c);
 

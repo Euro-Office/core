@@ -7,8 +7,6 @@
 #include "agg_svg_basics.h"
 #include "agg_svg_defines.h"
 
-
-
 namespace agg
 {
 namespace svg
@@ -119,8 +117,6 @@ namespace svg
             agg::rect_d cb(m_clip_x1, m_clip_y1, m_clip_x2, m_clip_y2);
             return cb.clip(agg::rect_d(x1, y1, x2, y2));
         }
-
-
         //-------------------------------------------------------------
         void zoom(double wx1, double wy1, double wx2, double wy2,
                   double sx1, double sy1, double sx2, double sy2)

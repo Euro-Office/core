@@ -24,8 +24,6 @@
 //---------------------------------------------------------------------------------
 
 #include "lcms2_internal.h"
-
-
 // This function is here to help applications to prevent mixing lcms versions on header and shared objects.
 int CMSEXPORT cmsGetEncodedCMMversion(void)
 {
@@ -64,8 +62,6 @@ long int CMSEXPORT cmsfilelength(FILE* f)
 
     return n;
 }
-
-
 // Memory handling ------------------------------------------------------------------
 //
 // This is the interface to low-level memory management routines. By default a simple
@@ -107,8 +103,6 @@ void* _cmsMallocZeroDefaultFn(cmsContext ContextID, cmsUInt32Number size)
     memset(pt, 0, size);
     return pt;
 }
-
-
 // The default free function. The only check proformed is against NULL pointers
 static
 void _cmsFreeDefaultFn(cmsContext ContextID, void *Ptr)
@@ -133,8 +127,6 @@ void* _cmsReallocDefaultFn(cmsContext ContextID, void* Ptr, cmsUInt32Number size
 
     cmsUNUSED_PARAMETER(ContextID);
 }
-
-
 // The default calloc function. Allocates an array of num elements, each one of size bytes
 // all memory is initialized to zero.
 static
@@ -173,14 +165,10 @@ void* _cmsDupDefaultFn(cmsContext ContextID, const void* Org, cmsUInt32Number si
 
     return mem;
 }
-
-
 // Pointers to memory manager functions in Context0
 _cmsMemPluginChunkType _cmsMemPluginChunk = { _cmsMallocDefaultFn, _cmsMallocZeroDefaultFn, _cmsFreeDefaultFn, 
                                               _cmsReallocDefaultFn, _cmsCallocDefaultFn,    _cmsDupDefaultFn
                                             };
-
-
 // Reset and duplicate memory manager
 void _cmsAllocMemPluginChunk(struct _cmsContext_struct* ctx, const struct _cmsContext_struct* src)
 {
@@ -222,8 +210,6 @@ void _cmsInstallAllocFunctions(cmsPluginMemHandler* Plugin, _cmsMemPluginChunkTy
         
     }
 }
-
-
 // Plug-in replacement entry
 cmsBool  _cmsRegisterMemHandlerPlugin(cmsContext ContextID, cmsPluginBase *Data)
 {
@@ -357,8 +343,6 @@ _cmsSubAllocator* _cmsCreateSubAlloc(cmsContext ContextID, cmsUInt32Number Initi
 
     return sub;
 }
-
-
 // Get rid of whole linked list
 void _cmsSubAllocDestroy(_cmsSubAllocator* sub)
 {
@@ -374,8 +358,6 @@ void _cmsSubAllocDestroy(_cmsSubAllocator* sub)
     // Free the header
     _cmsFree(sub ->ContextID, sub);
 }
-
-
 // Get a pointer to small memory block.
 void*  _cmsSubAlloc(_cmsSubAllocator* sub, cmsUInt32Number size)
 {
@@ -425,8 +407,6 @@ void* _cmsSubAllocDup(_cmsSubAllocator* s, const void *ptr, cmsUInt32Number size
 
     return NewPtr;
 }
-
-
 
 // Error logging ******************************************************************
 
@@ -509,8 +489,6 @@ void CMSEXPORT cmsSignalError(cmsContext ContextID, cmsUInt32Number ErrorCode, c
     va_list args;
     char Buffer[MAX_ERROR_MESSAGE_LEN];
     _cmsLogErrorChunkType* lhg;
-
-
     va_start(args, ErrorText);
     vsnprintf(Buffer, MAX_ERROR_MESSAGE_LEN-1, ErrorText, args);
     va_end(args);
@@ -538,8 +516,6 @@ void _cmsTagSignature2String(char String[5], cmsTagSignature sig)
 }
 
 //--------------------------------------------------------------------------------------------------
-
-
 static
 void* defMtxCreate(cmsContext id)
 {
@@ -568,8 +544,6 @@ void defMtxUnlock(cmsContext id, void* mtx)
     cmsUNUSED_PARAMETER(id);
     _cmsUnlockPrimitive((_cmsMutex *) mtx); 
 }
-
-
 
 // Pointers to memory manager functions in Context0
 _cmsMutexPluginChunkType _cmsMutexPluginChunk = { defMtxCreate, defMtxDestroy, defMtxLock, defMtxUnlock };
@@ -610,8 +584,6 @@ cmsBool  _cmsRegisterMutexPlugin(cmsContext ContextID, cmsPluginBase* Data)
     // Factory callback is required
     if (Plugin ->CreateMutexPtr == NULL || Plugin ->DestroyMutexPtr == NULL || 
         Plugin ->LockMutexPtr == NULL || Plugin ->UnlockMutexPtr == NULL) return FALSE;
-
-
     ctx->CreateMutexPtr  = Plugin->CreateMutexPtr;
     ctx->DestroyMutexPtr = Plugin ->DestroyMutexPtr;
     ctx ->LockMutexPtr   = Plugin ->LockMutexPtr;

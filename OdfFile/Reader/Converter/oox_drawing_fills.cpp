@@ -49,8 +49,6 @@ namespace oox {
 	oox_solid_fill_ptr oox_solid_fill::create(){return boost::make_shared<oox_solid_fill>();}
 	
 	oox_gradient_fill_ptr oox_gradient_fill::create(){return boost::make_shared<oox_gradient_fill>();}
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void oox_serialize_none_fill(std::wostream & strm, const std::wstring &ns)

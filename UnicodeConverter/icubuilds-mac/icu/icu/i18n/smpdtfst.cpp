@@ -21,8 +21,6 @@
 #include "uassert.h"
 #include "ucln_in.h"
 #include "umutex.h"
-
-
 #include "smpdtfst.h"
 
 U_NAMESPACE_BEGIN
@@ -58,15 +56,11 @@ ExitConstrDeleteAll: // Remove all sets and return error
 
     status = U_MEMORY_ALLOCATION_ERROR;
 }
-
-
 SimpleDateFormatStaticSets::~SimpleDateFormatStaticSets() {
     delete fDateIgnorables;  fDateIgnorables = NULL;
     delete fTimeIgnorables;  fTimeIgnorables = NULL;
     delete fOtherIgnorables; fOtherIgnorables = NULL;
 }
-
-
 //------------------------------------------------------------------------------
 //
 //   smpdtfmt_cleanup     Memory cleanup function, free/delete all

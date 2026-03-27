@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of PhoneticInfo record in BIFF8
 class PhoneticInfo: public BiffRecordContinued
 {
@@ -49,8 +47,6 @@ public:
 	~PhoneticInfo();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typePhoneticInfo;

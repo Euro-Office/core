@@ -35,8 +35,6 @@
 #include <iostream>
 #include "../../DataTypes/length.h"
 #include "xlsx_utils.h"
-
-
 namespace cpdoccore { namespace oox {
 
 class xlsx_comments;
@@ -120,8 +118,6 @@ public:
 private:
     xlsx_comments_ptr xlsx_comments_;
 };
-
-
 xlsx_comments_context::xlsx_comments_context(xlsx_comments_context_handle & h)
  : impl_(new xlsx_comments_context::Impl(h))
 {    

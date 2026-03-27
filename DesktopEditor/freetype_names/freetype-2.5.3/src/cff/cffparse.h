@@ -14,26 +14,16 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFF_PARSE_H__
 #define __CFF_PARSE_H__
-
-
 #include <ft2build.h>
 #include "cfftypes.h"
 #include FT_INTERNAL_OBJECTS_H
-
-
 FT_BEGIN_HEADER
-
-
 #define CFF_MAX_STACK_DEPTH  96
 
 #define CFF_CODE_TOPDICT  0x1000
 #define CFF_CODE_PRIVATE  0x2000
-
-
   typedef struct  CFF_ParserRec_
   {
     FT_Library library;
@@ -48,8 +38,6 @@ FT_BEGIN_HEADER
     void*      object;
 
   } CFF_ParserRec, *CFF_Parser;
-
-
   FT_LOCAL( void )
   cff_parser_init( CFF_Parser  parser,
                    FT_UInt     code,
@@ -60,8 +48,6 @@ FT_BEGIN_HEADER
   cff_parser_run( CFF_Parser  parser,
                   FT_Byte*    start,
                   FT_Byte*    limit );
-
-
   enum
   {
     cff_kind_none = 0,
@@ -75,8 +61,6 @@ FT_BEGIN_HEADER
 
     cff_kind_max  /* do not remove */
   };
-
-
   /* now generate handlers for the most simple fields */
   typedef FT_Error  (*CFF_Field_Reader)( CFF_Parser  parser );
 
@@ -95,12 +79,6 @@ FT_BEGIN_HEADER
 #endif
 
   } CFF_Field_Handler;
-
-
 FT_END_HEADER
-
-
 #endif /* __CFF_PARSE_H__ */
-
-
 /* END */

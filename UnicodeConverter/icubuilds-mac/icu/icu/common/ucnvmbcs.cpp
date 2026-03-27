@@ -269,7 +269,6 @@
  *           useful for state changes in simple stateful encodings,
  *           at Shift-In/Shift-Out codes
  *
- *
  *        9..15 reserved for future use
  *           current implementations will only perform a state change
  *           and ignore bits 19..0
@@ -502,8 +501,6 @@ static const UConverterImpl _MBCSImpl={
     NULL,
     NULL
 };
-
-
 /* Static data is in tools/makeconv/ucnvstat.c for data-based
  * converters. Be sure to update it as well.
  */
@@ -513,8 +510,6 @@ const UConverterSharedData _MBCSData={
     NULL, NULL, FALSE, TRUE, &_MBCSImpl,
     0, UCNV_MBCS_TABLE_INITIALIZER
 };
-
-
 /* GB 18030 data ------------------------------------------------------------ */
 
 /* helper macros for linear values for GB 18030 four-byte sequences */
@@ -4944,8 +4939,6 @@ ucnv_MBCSFromUChar32(UConverterSharedData *sharedData,
     /* unassigned */
     return 0;
 }
-
-
 #if 0
 /*
  * This function has been moved to ucnv2022.c for inlining.

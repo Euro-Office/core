@@ -34,8 +34,6 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr OfficeArtRGFOPTE::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtRGFOPTE(*this));
@@ -140,8 +138,6 @@ void OfficeArtRGFOPTE::load(XLS::CFRecord& record)
 
 	rgfopte.clear();
 }
-
-
 void OfficeArtRGFOPTE::save(XLS::CFRecord& record)
 {
 	for(auto i : GroupShape_props)
@@ -183,8 +179,6 @@ void OfficeArtRGFOPTE::SetOptionsCount(const unsigned short count)
 {
 	options_count = count;
 }
-
-
 const unsigned short OfficeArtRGFOPTE::GetOptionsCount()
 {
 	return options_count;

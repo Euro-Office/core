@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Chart3DBarShape record in BIFF8
 class Chart3DBarShape: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Chart3DBarShape();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

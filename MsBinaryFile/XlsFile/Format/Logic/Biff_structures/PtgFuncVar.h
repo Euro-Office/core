@@ -77,7 +77,5 @@ private:
 };
 
 typedef boost::shared_ptr<PtgFuncVar> PtgFuncVarPtr;
-
-
 } // namespace XLS
 

@@ -61,8 +61,6 @@ namespace DocFileFormat
 
 			if ( size > 18 )
 				rgftcStandardChpStsh[3]			=	FormatUtils::BytesToUInt16 ( bytes, 18, size );
-
-
 			// not all stylesheet contain latent styles
 			if ( size > 20 )
 			{

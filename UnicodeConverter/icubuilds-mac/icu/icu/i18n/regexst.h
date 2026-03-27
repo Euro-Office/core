@@ -27,8 +27,6 @@
 U_NAMESPACE_BEGIN
 
 class  UnicodeSet;
-
-
 class RegexStaticSets : public UMemory {
 public:
     static RegexStaticSets *gStaticSets;  // Ptr to all lazily initialized constant
@@ -50,8 +48,6 @@ public:
                                                //   is created with no input.
 
 };
-
-
 U_NAMESPACE_END
 #endif   // !UCONFIG_NO_REGULAR_EXPRESSIONS
 #endif   // REGEXST_H

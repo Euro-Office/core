@@ -47,8 +47,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextNumber;
-    
-
 public:
     text_number() {}
 
@@ -64,8 +62,6 @@ public:
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(text_number);
-
-
 // text:list-item
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -76,8 +72,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListItem;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -112,8 +106,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeTextListHeader;
-    
-
 	virtual void create_child_element(const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child_element);
 
@@ -127,13 +119,9 @@ public:
 private:
     office_element_ptr          text_number_;
     office_element_ptr_array    content_;
-
-
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(text_list_header);
-
-
 }
 }
 

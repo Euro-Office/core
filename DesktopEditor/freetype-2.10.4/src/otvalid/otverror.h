@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file is used to define the OpenType validation module error
@@ -37,6 +35,4 @@
 #include <freetype/fterrors.h>
 
 #endif /* OTVERROR_H_ */
-
-
 /* END */

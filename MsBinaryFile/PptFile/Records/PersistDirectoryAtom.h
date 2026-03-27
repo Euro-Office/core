@@ -34,8 +34,6 @@
 #include <map>
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CPersistDirectoryEntry

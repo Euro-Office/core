@@ -14,16 +14,12 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This component has a _single_ role: to compute exact outline bounding
    * boxes.
    *
    */
-
-
 #include <freetype/internal/ftdebug.h>
 
 #include <freetype/ftbbox.h>
@@ -31,16 +27,12 @@
 #include <freetype/ftoutln.h>
 #include <freetype/internal/ftcalc.h>
 #include <freetype/internal/ftobjs.h>
-
-
   typedef struct  TBBox_Rec_
   {
     FT_Vector  last;
     FT_BBox    bbox;
 
   } TBBox_Rec;
-
-
 #define FT_UPDATE_BBOX( p, bbox ) \
   FT_BEGIN_STMNT                  \
     if ( p->x < bbox.xMin )       \
@@ -58,8 +50,6 @@
 
 #define CHECK_Y( p, bbox )                         \
           ( p->y < bbox.yMin || p->y > bbox.yMax )
-
-
   /**************************************************************************
    *
    * @Function:
@@ -92,8 +82,6 @@
 
     return 0;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -124,8 +112,6 @@
 
     return 0;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -174,8 +160,6 @@
     if ( y2 > *max )
       *max = y2;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -231,8 +215,6 @@
 
     return 0;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -271,8 +253,6 @@
   {
     FT_Pos  peak = 0;
     FT_Int  shift;
-
-
     /* This function finds a peak of a cubic segment if it is above 0    */
     /* using iterative bisection of the segment, or returns 0.           */
     /* The fixed-point arithmetic of bisection is inherently stable      */
@@ -354,8 +334,6 @@
 
     return peak;
   }
-
-
   static void
   BBox_Cubic_Check( FT_Pos   p1,
                     FT_Pos   p2,
@@ -376,8 +354,6 @@
     if ( p2 < *min || p3 < *min )
       *min -= cubic_peak( *min - p1, *min - p2, *min - p3, *min - p4 );
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -442,8 +418,6 @@
 
     return 0;
   }
-
-
   FT_DEFINE_OUTLINE_FUNCS(
     bbox_interface,
 
@@ -454,8 +428,6 @@
     0,                                       /* shift    */
     0                                        /* delta    */
   )
-
-
   /* documentation is in ftbbox.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -468,8 +440,6 @@
                          -0x7FFFFFFFL, -0x7FFFFFFFL };
     FT_Vector*  vec;
     FT_UShort   n;
-
-
     if ( !abbox )
       return FT_THROW( Invalid_Argument );
 
@@ -510,8 +480,6 @@
 
       FT_Error   error;
       TBBox_Rec  user;
-
-
       user.bbox = bbox;
 
       error = FT_Outline_Decompose( outline, &bbox_interface, &user );
@@ -525,6 +493,4 @@
 
     return FT_Err_Ok;
   }
-
-
 /* END */

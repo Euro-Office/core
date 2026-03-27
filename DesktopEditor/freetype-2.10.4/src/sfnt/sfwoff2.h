@@ -14,19 +14,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SFWOFF2_H_
 #define SFWOFF2_H_
-
-
 #include <freetype/internal/sfnt.h>
 #include <freetype/internal/ftobjs.h>
-
-
 FT_BEGIN_HEADER
-
-
   /* Leave the first byte open to store `flag_byte'. */
 #define WOFF2_FLAGS_TRANSFORM   1 << 8
 
@@ -58,18 +50,12 @@ FT_BEGIN_HEADER
 
   /* Other constants */
 #define CONTOUR_OFFSET_END_POINT  10
-
-
   FT_LOCAL( FT_Error )
   woff2_open_font( FT_Stream  stream,
                    TT_Face    face,
                    FT_Int*    face_index,
                    FT_Long*   num_faces );
-
-
 FT_END_HEADER
 
 #endif /* SFWOFF2_H_ */
-
-
 /* END */

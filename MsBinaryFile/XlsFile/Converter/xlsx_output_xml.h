@@ -95,7 +95,5 @@ private:
     class Impl;
     boost::scoped_ptr<Impl> impl_;
 };
-
-
 }
 

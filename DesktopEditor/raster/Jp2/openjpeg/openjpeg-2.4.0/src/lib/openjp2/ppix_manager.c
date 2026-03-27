@@ -46,8 +46,6 @@
  * @param[in] cio       file output handle
  * @return              length of faix box
  */
-
-
 int opj_write_ppix(int coff, opj_codestream_info_t cstr_info, OPJ_BOOL EPHused,
                    int j2klen, opj_stream_private_t *cio,
                    opj_event_mgr_t * p_manager)
@@ -85,8 +83,6 @@ int opj_write_ppix(int coff, opj_codestream_info_t cstr_info, OPJ_BOOL EPHused,
                                  EPHused, j2klen, cio, p_manager);
             box[compno].type = JPIP_FAIX;
         }
-
-
         len = (OPJ_UINT32)(opj_stream_tell(cio) - lenp);
         opj_stream_seek(cio, lenp, p_manager);
         opj_write_bytes(l_data_header, len, 4); /* L              */
@@ -98,8 +94,6 @@ int opj_write_ppix(int coff, opj_codestream_info_t cstr_info, OPJ_BOOL EPHused,
 
     return (int)len;
 }
-
-
 
 int opj_write_ppixfaix(int coff, int compno, opj_codestream_info_t cstr_info,
                        OPJ_BOOL EPHused, int j2klen, opj_stream_private_t *cio,

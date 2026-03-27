@@ -50,12 +50,8 @@
 // any platform dependent stuff such as HWND, X11 Window and so on.
 //
 //----------------------------------------------------------------------------
-
-
 #ifndef AGG_PLATFORM_SUPPORT_INCLUDED
 #define AGG_PLATFORM_SUPPORT_INCLUDED
-
-
 #include "agg_basics.h"
 #include "agg_rendering_buffer.h"
 #include "agg_trans_viewport.h"
@@ -232,8 +228,6 @@ namespace agg
         // Phew!
         end_of_key_codes
     };
-
-
     //------------------------------------------------------------------------
     // A predeclaration of the platform dependent class. Since we do not
     // know anything here the only we can have is just a pointer to this
@@ -243,8 +237,6 @@ namespace agg
     // cannot have access to its members or methods since it does not know
     // anything about them and it's a perfect incapsulation :-)
     class platform_specific;
-
-    
     //----------------------------------------------------------ctrl_container
     // A helper class that contains pointers to a number of controls.
     // This class is used to ease the event handling with controls.
@@ -351,8 +343,6 @@ namespace agg
         unsigned      m_num_ctrl;
         int           m_cur_ctrl;
     };
-
-
 
     //---------------------------------------------------------platform_support
     // This class is a base one to the apllication classes. It can be used 
@@ -485,8 +475,6 @@ namespace agg
         // the only buffer that can be actually displayed.
         rendering_buffer& rbuf_window()          { return m_rbuf_window; } 
         rendering_buffer& rbuf_img(unsigned idx) { return m_rbuf_img[idx]; } 
-        
-
         //--------------------------------------------------------------------
         // Returns file extension used in the implementation for the particular
         // system.
@@ -661,11 +649,7 @@ namespace agg
         int              m_initial_height;
         trans_affine     m_resize_mtx;
     };
-
-
 }
-
-
 
 #endif
 

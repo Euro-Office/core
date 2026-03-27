@@ -144,8 +144,6 @@ int main(int argc, char *argv[])
 
   opj_destroy_codec(l_codec);
   opj_image_destroy(image);
-
-
   /* read back the generated file */
 {
   opj_codec_t* d_codec = 00;

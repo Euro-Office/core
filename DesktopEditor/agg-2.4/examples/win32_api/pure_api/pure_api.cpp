@@ -57,8 +57,6 @@ int APIENTRY WinMain(HINSTANCE hInstance,
     return msg.wParam;
 }
 
-
-
 //
 //  FUNCTION: MyRegisterClass()
 //
@@ -199,8 +197,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 // Selecting the object before doing anything allows you 
                 // to use AGG together with native Windows GDI.
                 HBITMAP temp = (HBITMAP)::SelectObject(mem_dc, bmp);
-
-
                 //============================================================ 
                 // AGG lowest level code.
                 agg::rendering_buffer rbuf;
@@ -231,8 +227,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 agg::render_scanlines(ras, sl, ren);
                 //============================================================
 
-
-
                 //------------------------------------------------------------ 
                 // Display the image. If the image is B-G-R-A (32-bits per pixel)
                 // one can use AlphaBlend instead of BitBlt. In case of AlphaBlend
@@ -258,8 +252,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
                 EndPaint(hWnd, &ps);
             }
             break;
-
-
         case WM_ERASEBKGND: // Don't forget to do nothing on Erase Background event :-)
             break;
 

@@ -38,13 +38,9 @@ namespace XLS
 AxesUsed::AxesUsed()
 {
 }
-
-
 AxesUsed::~AxesUsed()
 {
 }
-
-
 BaseObjectPtr AxesUsed::clone()
 {
 	return BaseObjectPtr(new AxesUsed(*this));

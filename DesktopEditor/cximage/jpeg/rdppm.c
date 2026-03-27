@@ -22,8 +22,6 @@
 #include "cdjpeg.h"		/* Common decls for cjpeg/djpeg applications */
 
 #ifdef PPM_SUPPORTED
-
-
 /* Portions of this code are based on the PBMPLUS library, which is:
 **
 ** Copyright (C) 1988 by Jef Poskanzer.
@@ -35,8 +33,6 @@
 ** documentation.  This software is provided "as is" without express or
 ** implied warranty.
 */
-
-
 /* Macros to deal with unsigned chars as efficiently as compiler allows */
 
 #ifdef HAVE_UNSIGNED_CHAR
@@ -51,11 +47,7 @@ typedef char U_CHAR;
 #define UCH(x)	((int) (x) & 0xFF)
 #endif
 #endif /* HAVE_UNSIGNED_CHAR */
-
-
 #define	ReadOK(file,buffer,len)	(JFREAD(file,buffer,len) == ((size_t) (len)))
-
-
 /*
  * On most systems, reading individual bytes with getc() is drastically less
  * efficient than buffering a row at a time with fread().  On PCs, we must
@@ -65,8 +57,6 @@ typedef char U_CHAR;
  * model, or else replace fread() with a getc() loop --- which will be much
  * slower.
  */
-
-
 /* Private version of data source object */
 
 typedef struct {
@@ -79,8 +69,6 @@ typedef struct {
 } ppm_source_struct;
 
 typedef ppm_source_struct * ppm_source_ptr;
-
-
 LOCAL(int)
 pbm_getc (FILE * infile)
 /* Read next char, skipping over any comments */
@@ -96,8 +84,6 @@ pbm_getc (FILE * infile)
   }
   return ch;
 }
-
-
 LOCAL(unsigned int)
 read_pbm_integer (j_compress_ptr cinfo, FILE * infile)
 /* Read an unsigned decimal integer from the PPM file */
@@ -125,8 +111,6 @@ read_pbm_integer (j_compress_ptr cinfo, FILE * infile)
   }
   return val;
 }
-
-
 /*
  * Read one row of pixels.
  *
@@ -136,8 +120,6 @@ read_pbm_integer (j_compress_ptr cinfo, FILE * infile)
  * A really fast path is provided for reading byte/sample raw files with
  * maxval = MAXJSAMPLE, which is the normal case for 8-bit data.
  */
-
-
 METHODDEF(JDIMENSION)
 get_text_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading text-format PGM files with any maxval */
@@ -154,8 +136,6 @@ get_text_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_text_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading text-format PPM files with any maxval */
@@ -174,8 +154,6 @@ get_text_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_scaled_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading raw-byte-format PGM files with any maxval */
@@ -195,8 +173,6 @@ get_scaled_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_scaled_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading raw-byte-format PPM files with any maxval */
@@ -218,8 +194,6 @@ get_scaled_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_raw_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading raw-byte-format files with maxval = MAXJSAMPLE.
@@ -233,8 +207,6 @@ get_raw_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
     ERREXIT(cinfo, JERR_INPUT_EOF);
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_word_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading raw-word-format PGM files with any maxval */
@@ -257,8 +229,6 @@ get_word_gray_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 METHODDEF(JDIMENSION)
 get_word_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 /* This version is for reading raw-word-format PPM files with any maxval */
@@ -287,8 +257,6 @@ get_word_rgb_row (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
   }
   return 1;
 }
-
-
 /*
  * Read the file header; return image size and component count.
  */
@@ -423,8 +391,6 @@ start_input_ppm (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
     }
   }
 }
-
-
 /*
  * Finish up at the end of the file.
  */
@@ -434,8 +400,6 @@ finish_input_ppm (j_compress_ptr cinfo, cjpeg_source_ptr sinfo)
 {
   /* no work */
 }
-
-
 /*
  * The module selection routine for PPM format input.
  */

@@ -32,8 +32,6 @@ enum start_size_e
     start_width  = 400,
     start_height = 400
 };
-
-
 enum atom_color_e
 {
     atom_color_general = 0,
@@ -44,8 +42,6 @@ enum atom_color_e
     atom_color_halogen = 5,
     end_of_atom_colors
 };
-
-
 
 struct atom_type
 {
@@ -68,8 +64,6 @@ struct bond_type
     int      stereo;
     int      topology;
 };
-
-
 class molecule
 {
 public:
@@ -100,19 +94,11 @@ private:
     char       m_name[128];
     double     m_avr_len;
 };
-
-
-
-
 molecule::~molecule()
 {
     delete [] m_bonds;
     delete [] m_atoms;
 }
-
-
-
-
 molecule::molecule() :
     m_atoms(0),
     m_num_atoms(0),
@@ -122,8 +108,6 @@ molecule::molecule() :
 {
     m_name[0] = 0;
 }
-
-
 int molecule::get_int(const char* buf, int pos, int len)
 {
     char tmp[32];
@@ -157,8 +141,6 @@ char* molecule::get_str(char* dst, const char* buf, int pos, int len)
     *ts = 0;
     return dst;
 }
-
-
 unsigned trim_cr_lf(char* buf)
 {
     unsigned len = strlen(buf);
@@ -177,8 +159,6 @@ unsigned trim_cr_lf(char* buf)
     buf[len] = 0;
     return len;
 }
-
-
 /*
 MFCD00191150
   Mt7.00  09020210442D
@@ -276,8 +256,6 @@ bool molecule::read(FILE* fd)
     return false;
 }
 
-
-
 namespace agg
 {
     class line
@@ -320,15 +298,11 @@ namespace agg
         unsigned m_vertex;
     };
 
-
-
     inline void line::rewind(unsigned)
     {
         calc_orthogonal(m_thickness*0.5, m_x1, m_y1, m_x2, m_y2, &m_dx, &m_dy);
         m_vertex = 0;
     }
-
-
 
     inline unsigned line::vertex(double* x, double* y)
     {
@@ -360,8 +334,6 @@ namespace agg
         }
         return path_cmd_stop;
     }
-
-
 
     class solid_wedge
     {
@@ -403,15 +375,11 @@ namespace agg
         unsigned m_vertex;
     };
 
-
-
     inline void solid_wedge::rewind(unsigned)
     {
         calc_orthogonal(m_thickness*2.0, m_x1, m_y1, m_x2, m_y2, &m_dx, &m_dy);
         m_vertex = 0;
     }
-
-
 
     inline unsigned solid_wedge::vertex(double* x, double* y)
     {
@@ -437,14 +405,6 @@ namespace agg
         }
         return path_cmd_stop;
     }
-
-
-
-
-
-
-
-
 
     class dashed_wedge
     {
@@ -501,8 +461,6 @@ namespace agg
         unsigned m_vertex;
     };
 
-
-
     void dashed_wedge::rewind(unsigned)
     {
         double dx;
@@ -514,8 +472,6 @@ namespace agg
         m_yt3 = m_y2 + dy;
         m_vertex = 0;
     }
-
-
     unsigned dashed_wedge::vertex(double* x, double* y)
     {
         if(m_vertex < m_num_dashes * 4)
@@ -549,23 +505,7 @@ namespace agg
         return path_cmd_stop;
     }
 
-
-
-
-
-
-
-
-
-
-
 }
-
-
-
-
-
-
 class bond_vertex_generator
 {
     enum bond_style_e
@@ -672,8 +612,6 @@ public:
             break;
         }
     }
-
-
     unsigned vertex(double* x, double* y)
     {
         unsigned flag = agg::path_cmd_stop;
@@ -709,8 +647,6 @@ public:
         return m_line1.vertex(x, y);
     }
 
-
-
 private:
     bond_vertex_generator(const bond_vertex_generator&);
     const bond_vertex_generator& operator = (const bond_vertex_generator&);
@@ -725,16 +661,6 @@ private:
     agg::dashed_wedge m_dashed_wedge;
     unsigned m_status;
 };
-
-
-
-
-
-
-
-
-
-
 
 class the_application : public agg::platform_support
 {   
@@ -753,8 +679,6 @@ class the_application : public agg::platform_support
     double     m_prev_angle;
     bool       m_mouse_move;
     agg::rgba8 m_atom_colors[end_of_atom_colors];
-
-
 public:
     virtual ~the_application()
     {
@@ -809,13 +733,9 @@ public:
         m_atom_colors[atom_color_P]       = agg::rgba8(80,50,0);
         m_atom_colors[atom_color_halogen] = agg::rgba8(0,200,0);
     }
-
-
     virtual void on_init()
     {
     }
-
-
     virtual void on_draw()
     {
         double width = initial_width();
@@ -878,8 +798,6 @@ public:
             ras.add_path(tr);
             agg::render_scanlines(ras, sl, rs);
         }
-
-
         agg::ellipse ell;
         agg::conv_transform<agg::ellipse> tr(ell, mtx);
         for(i = 0; i < mol.num_atoms(); i++)
@@ -896,11 +814,7 @@ public:
                 agg::render_scanlines(ras, sl, rs);
             }
         }
-
-
         text_size *= 3.0;
-
-
         agg::gsv_text label;
         agg::conv_stroke<agg::gsv_text> ls(label);
         agg::conv_transform<agg::conv_stroke<agg::gsv_text> > lo(ls, mtx);
@@ -920,8 +834,6 @@ public:
                 agg::render_scanlines(ras, sl, rs);
             }
         }
-
-
         ls.approximation_scale(1.0);
         agg::conv_transform<agg::conv_stroke<agg::gsv_text> > name(ls, trans_affine_resizing());
         ls.width(1.5);
@@ -932,37 +844,15 @@ public:
         ras.add_path(name);
         rs.color(agg::rgba(0,0,0));
         agg::render_scanlines(ras, sl, rs);
-
-        
         
         agg::render_ctrl(ras, sl, rb, m_thickness);
         agg::render_ctrl(ras, sl, rb, m_text_size);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     virtual void on_idle()
     {
         m_angle += agg::deg2rad(0.1);
         force_redraw();
     }
-
-
-
-
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         m_mouse_move = true;
@@ -976,10 +866,6 @@ public:
         m_prev_angle = m_angle + agg::pi;
         force_redraw();
     }
-
-
-
-
 
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
@@ -1013,12 +899,6 @@ public:
 
     }
 
-
-
-
-
-
-
     virtual void on_key(int, int, unsigned key, unsigned)
     {
         switch(key)
@@ -1045,10 +925,6 @@ public:
 
 };
 
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     const char* fname = "1.sdf";
@@ -1056,8 +932,6 @@ int agg_main(int argc, char* argv[])
     {
         fname = argv[1];
     }
-
-
     the_application app(pix_format, flip_y, fname);
     app.caption("AGG - A Simple SDF Molecular Viewer");
 
@@ -1068,5 +942,3 @@ int agg_main(int argc, char* argv[])
 
     return 1;
 }
-
-

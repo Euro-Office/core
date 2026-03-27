@@ -36,8 +36,6 @@
 #include <console.h>		/* Think declares it here */
 #endif
 #endif
-
-
 /* Create the add-on message string table. */
 
 #define JMESSAGE(code,string)	string ,
@@ -46,8 +44,6 @@ static const char * const cdjpeg_message_table[] = {
 #include "cderror.h"
   NULL
 };
-
-
 /*
  * This routine determines what format the input file is,
  * and selects the appropriate input-reading module.
@@ -75,8 +71,6 @@ static const char * const cdjpeg_message_table[] = {
  */
 
 static boolean is_targa;	/* records user -targa switch */
-
-
 LOCAL(cjpeg_source_ptr)
 select_file_type (j_compress_ptr cinfo, FILE * infile)
 {
@@ -123,8 +117,6 @@ select_file_type (j_compress_ptr cinfo, FILE * infile)
 
   return NULL;			/* suppress compiler warnings */
 }
-
-
 /*
  * Argument-parsing code.
  * The switch parser is designed to be useful with DOS-style command line
@@ -132,12 +124,8 @@ select_file_type (j_compress_ptr cinfo, FILE * infile)
  * to the left of a given file name affect processing of that file.
  * The main program in this file doesn't actually use this capability...
  */
-
-
 static const char * progname;	/* program name for error messages */
 static char * outfilename;	/* for -outfile switch */
-
-
 LOCAL(void)
 usage (void)
 /* complain about bad command line */
@@ -201,8 +189,6 @@ usage (void)
 #endif
   exit(EXIT_FAILURE);
 }
-
-
 LOCAL(int)
 parse_switches (j_compress_ptr cinfo, int argc, char **argv,
 		int last_file_arg_seen, boolean for_real)

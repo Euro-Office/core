@@ -415,8 +415,6 @@ XMLPUBFUN xmlNodeSetPtr XMLCALL
 XMLPUBFUN xmlNodeSetPtr XMLCALL
 		xmlXPathTrailing		(xmlNodeSetPtr nodes1,
 						 xmlNodeSetPtr nodes2);
-
-
 /**
  * Extending a context.
  */

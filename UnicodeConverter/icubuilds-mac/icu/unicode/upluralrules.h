@@ -101,8 +101,6 @@ uplrules_openForType(const char *locale, UPluralType type, UErrorCode *status);
  */
 U_STABLE void U_EXPORT2
 uplrules_close(UPluralRules *uplrules);
-
-
 #if U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN
@@ -121,8 +119,6 @@ U_DEFINE_LOCAL_OPEN_POINTER(LocalUPluralRulesPointer, UPluralRules, uplrules_clo
 U_NAMESPACE_END
 
 #endif
-
-
 /**
  * Given a number, returns the keyword of the first rule that
  * applies to the number, according to the supplied UPluralRules object.

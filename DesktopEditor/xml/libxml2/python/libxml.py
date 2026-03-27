@@ -519,8 +519,6 @@ class xmlCore:
         except:
             pass
         libxml2mod.xmlFreeDoc(self._o)
-
-
 #
 # implements the depth-first iterator for libxml2 DOM tree
 #
@@ -671,8 +669,6 @@ class parserCtxtCore:
     def addLocalCatalog(self, uri):
         """Register a local catalog with the parser"""
         return libxml2mod.addLocalCatalog(self._o, uri)
-    
-
 class ValidCtxtCore:
 
     def __init__(self, *args, **kw):
@@ -684,8 +680,6 @@ class ValidCtxtCore:
         These will be called back as f(msg,arg)
         """
         libxml2mod.xmlSetValidErrors(self._o, err_func, warn_func, arg)
-    
-
 class SchemaValidCtxtCore:
 
     def __init__(self, *args, **kw):
@@ -697,8 +691,6 @@ class SchemaValidCtxtCore:
         These will be called back as f(msg,arg)
         """
         libxml2mod.xmlSchemaSetValidErrors(self._o, err_func, warn_func, arg)
-
-
 class relaxNgValidCtxtCore:
 
     def __init__(self, *args, **kw):
@@ -710,8 +702,6 @@ class relaxNgValidCtxtCore:
         These will be called back as f(msg,arg)
         """
         libxml2mod.xmlRelaxNGSetValidErrors(self._o, err_func, warn_func, arg)
-
-    
 def _xmlTextReaderErrorFunc(xxx_todo_changeme,msg,severity,locator):
     """Intermediate callback to wrap the locator"""
     (f,arg) = xxx_todo_changeme

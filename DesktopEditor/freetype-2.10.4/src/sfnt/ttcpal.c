@@ -16,8 +16,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * `CPAL' table specification:
@@ -25,24 +23,16 @@
    *   https://www.microsoft.com/typography/otspec/cpal.htm
    *
    */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
 #include <freetype/ftcolor.h>
-
-
 #ifdef TT_CONFIG_OPTION_COLOR_LAYERS
 
 #include "ttcpal.h"
-
-
   /* NOTE: These are the table sizes calculated through the specs. */
 #define CPAL_V0_HEADER_BASE_SIZE  12U
 #define COLOR_SIZE                 4U
-
-
   /* all data from `CPAL' not covered in FT_Palette_Data */
   typedef struct Cpal_
   {
@@ -58,8 +48,6 @@
     FT_ULong  table_size;
 
   } Cpal;
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -68,8 +56,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttcpal
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_cpal( TT_Face    face,
                      FT_Stream  stream )
@@ -84,8 +70,6 @@
 
     FT_ULong  colors_offset;
     FT_ULong  table_size;
-
-
     error = face->goto_table( face, TTAG_CPAL, stream, &table_size );
     if ( error )
       goto NoCpal;
@@ -132,8 +116,6 @@
       FT_UShort*  array = NULL;
       FT_UShort*  limit;
       FT_UShort*  q;
-
-
       if ( CPAL_V0_HEADER_BASE_SIZE             +
            face->palette_data.num_palettes * 2U +
            3U * 4                               > table_size )
@@ -238,8 +220,6 @@
 
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   tt_face_free_cpal( TT_Face  face )
   {
@@ -247,16 +227,12 @@
     FT_Memory  memory = face->root.memory;
 
     Cpal*  cpal = (Cpal*)face->cpal;
-
-
     if ( cpal )
     {
       FT_FRAME_RELEASE( cpal->table );
       FT_FREE( cpal );
     }
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_palette_set( TT_Face  face,
                        FT_UInt  palette_index )
@@ -270,8 +246,6 @@
     FT_Color*  limit;
 
     FT_UShort  color_index;
-
-
     if ( !cpal || palette_index >= face->palette_data.num_palettes )
       return FT_THROW( Invalid_Argument );
 
@@ -298,8 +272,6 @@
 
     return FT_Err_Ok;
   }
-
-
 #else /* !TT_CONFIG_OPTION_COLOR_LAYERS */
 
   /* ANSI C doesn't like empty source files */

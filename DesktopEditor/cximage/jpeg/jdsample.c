@@ -22,8 +22,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Pointer to routine to upsample a single component */
 typedef JMETHOD(void, upsample1_ptr,
 		(j_decompress_ptr cinfo, jpeg_component_info * compptr,
@@ -60,8 +58,6 @@ typedef struct {
 } my_upsampler;
 
 typedef my_upsampler * my_upsample_ptr;
-
-
 /*
  * Initialize for an upsampling pass.
  */
@@ -76,8 +72,6 @@ start_pass_upsample (j_decompress_ptr cinfo)
   /* Initialize total-height counter for detecting bottom of image */
   upsample->rows_to_go = cinfo->output_height;
 }
-
-
 /*
  * Control routine to do upsampling (and color conversion).
  *
@@ -139,14 +133,10 @@ sep_upsample (j_decompress_ptr cinfo,
   if (upsample->next_row_out >= cinfo->max_v_samp_factor)
     (*in_row_group_ctr)++;
 }
-
-
 /*
  * These are the routines invoked by sep_upsample to upsample pixel values
  * of a single component.  One row group is processed per call.
  */
-
-
 /*
  * For full-size components, we just make color_buf[ci] point at the
  * input buffer, and thus avoid copying any data.  Note that this is
@@ -160,8 +150,6 @@ fullsize_upsample (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 {
   *output_data_ptr = input_data;
 }
-
-
 /*
  * This is a no-op version used for "uninteresting" components.
  * These components will not be referenced by color conversion.
@@ -173,8 +161,6 @@ noop_upsample (j_decompress_ptr cinfo, jpeg_component_info * compptr,
 {
   *output_data_ptr = NULL;	/* safety check */
 }
-
-
 /*
  * This version handles any integral sampling ratios.
  * This is not used for typical JPEG files, so it need not be fast.
@@ -223,8 +209,6 @@ int_upsample (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     outrow += v_expand;
   }
 }
-
-
 /*
  * Fast processing for the common case of 2:1 horizontal and 1:1 vertical.
  * It's still a box filter.
@@ -251,8 +235,6 @@ h2v1_upsample (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     }
   }
 }
-
-
 /*
  * Fast processing for the common case of 2:1 horizontal and 2:1 vertical.
  * It's still a box filter.
@@ -284,8 +266,6 @@ h2v2_upsample (j_decompress_ptr cinfo, jpeg_component_info * compptr,
     outrow += 2;
   }
 }
-
-
 /*
  * Module initialization routine for upsampling.
  */

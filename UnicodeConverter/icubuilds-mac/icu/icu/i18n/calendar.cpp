@@ -391,8 +391,6 @@ static Calendar *createStandardCalendar(ECalType calType, const Locale &loc, UEr
     }
     return cal;
 }
-
-
 #if !UCONFIG_NO_SERVICE
 
 // -------------------------------------
@@ -1063,8 +1061,6 @@ Calendar::after(const Calendar& when, UErrorCode& status) const
 }
 
 // -------------------------------------
-
-
 const Locale* U_EXPORT2
 Calendar::getAvailableLocales(int32_t& count)
 {
@@ -1156,8 +1152,6 @@ Calendar::setTimeInMillis( double millis, UErrorCode& status ) {
         fStamp[i]     = kUnset;
         fIsSet[i]     = FALSE;
     }
-    
-
 }
 
 // -------------------------------------
@@ -1391,8 +1385,6 @@ Calendar::isSet(UCalendarDateFields field) const
 {
     return fAreFieldsVirtuallySet || (fStamp[field] != kUnset);
 }
-
-
 int32_t Calendar::newestStamp(UCalendarDateFields first, UCalendarDateFields last, int32_t bestStampSoFar) const
 {
     int32_t bestStamp = bestStampSoFar;
@@ -1403,8 +1395,6 @@ int32_t Calendar::newestStamp(UCalendarDateFields first, UCalendarDateFields las
     }
     return bestStamp;
 }
-
-
 // -------------------------------------
 
 void
@@ -1470,8 +1460,6 @@ void Calendar::pinField(UCalendarDateFields field, UErrorCode& status) {
         set(field, min);
     }
 }
-
-
 void Calendar::computeFields(UErrorCode &ec)
 {
   if (U_FAILURE(ec)) {
@@ -1684,8 +1672,6 @@ void Calendar::computeWeekFields(UErrorCode &ec) {
         __FILE__, __LINE__,fFields[UCAL_DAY_OF_WEEK_IN_MONTH], fTime);
 #endif
 }
-
-
 int32_t Calendar::weekNumber(int32_t desiredDay, int32_t dayOfPeriod, int32_t dayOfWeek)
 {
     // Determine the day of the week of the first day of the period
@@ -1723,8 +1709,6 @@ void Calendar::handleComputeFields(int32_t /* julianDay */, UErrorCode &/* statu
     internalSet(UCAL_YEAR, eyear);
 }
 // -------------------------------------
-
-
 void Calendar::roll(EDateFields field, int32_t amount, UErrorCode& status) 
 {
     roll((UCalendarDateFields)field, amount, status);
@@ -2713,8 +2697,6 @@ int32_t Calendar::getLimit(UCalendarDateFields field, ELimitType limitType) cons
         return handleGetLimit(field, limitType);
     }
 }
-
-
 int32_t
 Calendar::getActualMinimum(UCalendarDateFields field, UErrorCode& status) const
 {
@@ -2761,8 +2743,6 @@ Calendar::getActualMinimum(UCalendarDateFields field, UErrorCode& status) const
 }
 
 // -------------------------------------
-
-
 
 /**
 * Ensure that each field is within its valid range by calling {@link
@@ -2839,8 +2819,6 @@ void Calendar::validateField(UCalendarDateFields field, int32_t min, int32_t max
 const UFieldResolutionTable* Calendar::getFieldResolutionTable() const {
     return kDatePrecedence;
 }
-
-
 UCalendarDateFields Calendar::newerField(UCalendarDateFields defaultField, UCalendarDateFields alternateField) const
 {
     if (fStamp[alternateField] > fStamp[defaultField]) {
@@ -2916,8 +2894,6 @@ const UFieldResolutionTable Calendar::kDatePrecedence[] =
     }, 
     {{kResolveSTOP}}
 };
-
-
 const UFieldResolutionTable Calendar::kDOWPrecedence[] = 
 {
     {
@@ -2939,11 +2915,7 @@ const UFieldResolutionTable Calendar::kYearPrecedence[] =
     },
     {{kResolveSTOP}}
 };
-
-
 // -------------------------
-
-
 void Calendar::computeTime(UErrorCode& status) {
     if (!isLenient()) {
         validateFields(status);
@@ -3379,8 +3351,6 @@ int32_t Calendar::handleComputeJulianDay(UCalendarDateFields bestField)  {
                         fprintf(stderr, "%s:%d - date now %d, jd%d, ywoy%d\n",
                             __FILE__, __LINE__, date, julianDay, year-1);
 #endif
-
-
                     } /* correction needed */
                 } /* leastmaximum */
             } /* resolvefields(year) != year_woy */
@@ -3410,8 +3380,6 @@ Calendar::getDefaultDayInMonth(int32_t /*eyear*/, int32_t /*month*/)
 {
     return 1;
 }
-
-
 int32_t Calendar::getLocalDOW()
 {
   // Get zero-based localized DOW, valid range 0..6.  This is the DOW
@@ -3610,8 +3578,6 @@ Calendar::getActualMaximum(UCalendarDateFields field, UErrorCode& status) const
     }
     return result;
 }
-
-
 /**
 * Prepare this calendar for computing the actual minimum or maximum.
 * This method modifies this calendar's fields; it is called on a
@@ -3745,10 +3711,6 @@ int32_t Calendar::getActualHelper(UCalendarDateFields field, int32_t startValue,
 #endif
     return result;
 }
-
-
-
-
 // -------------------------------------
 
 void
@@ -3805,8 +3767,6 @@ Calendar::setWeekData(const Locale& desiredLocale, const char *type, UErrorCode&
         status = U_USING_FALLBACK_WARNING;
         return;
     }
-
-    
     // Read week data values from supplementalData week data
     UResourceBundle *rb = ures_openDirect(NULL, "supplementalData", &status);
     ures_getByKey(rb, "weekData", rb, &status);
@@ -3925,7 +3885,5 @@ Calendar::getBasicTimeZone(void) const {
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */
-
-
 //eof
 

@@ -223,8 +223,6 @@ namespace PPTX
 
 		if (m_lLevel > 0x0004)
 			m_lLevel = 0x0004;
-
-
 		DWORD dwFlags = *(_UINT32*)(Data + pos); pos += 4;
 		BYTE flag1 = (BYTE)(dwFlags);
 		BYTE flag2 = (BYTE)(dwFlags >> 8);

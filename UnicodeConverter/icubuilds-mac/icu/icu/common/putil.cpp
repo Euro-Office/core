@@ -65,8 +65,6 @@
 #ifndef U_COMMON_IMPLEMENTATION
 #error U_COMMON_IMPLEMENTATION not set - must be set for all ICU source files in common/ - see http://userguide.icu-project.org/howtouseicu
 #endif
-
-
 /* include system headers */
 #if U_PLATFORM_USES_ONLY_WIN32_API
     /*
@@ -224,8 +222,6 @@ u_signBit(double d) {
     return (hiByte & 0x80) != 0;
 }
 #endif
-
-
 
 #if defined (U_DEBUG_FAKETIME)
 /* Override the clock to test things without having to move the system clock.
@@ -1330,8 +1326,6 @@ static void U_CALLCONV TimeZoneDataDirInitFn(UErrorCode &status) {
     }
     setTimeZoneFilesDir(dir, status);
 }
-
-
 U_CAPI const char * U_EXPORT2
 u_getTimeZoneFilesDirectory(UErrorCode *status) {
     umtx_initOnce(gTimeZoneFilesInitOnce, &TimeZoneDataDirInitFn, *status);
@@ -1347,8 +1341,6 @@ u_setTimeZoneFilesDirectory(const char *path, UErrorCode *status) {
     //       environment, then immediately replacing with the value passed in.
     //       The logic is simpler that way, and performance shouldn't be an issue.
 }
-
-
 #if U_POSIX_LOCALE
 /* A helper function used by uprv_getPOSIXIDForDefaultLocale and
  * uprv_getPOSIXIDForDefaultCodepage. Returns the posix locale id for
@@ -1924,8 +1916,6 @@ int_getDefaultCodepage()
     return "US-ASCII";
 #endif
 }
-
-
 U_CAPI const char*  U_EXPORT2
 uprv_getDefaultCodepage()
 {
@@ -1938,8 +1928,6 @@ uprv_getDefaultCodepage()
     return name;
 }
 #endif  /* !U_CHARSET_IS_UTF8 */
-
-
 /* end of platform-specific implementation -------------- */
 
 /* version handling --------------------------------------------------------- */
@@ -2118,8 +2106,6 @@ uprv_dl_close(void *lib, UErrorCode *status) {
   *status = U_UNSUPPORTED_ERROR;
   return;
 }
-
-
 U_INTERNAL UVoidFunction* U_EXPORT2
 uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   if(U_SUCCESS(*status)) {
@@ -2127,8 +2113,6 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   }
   return (UVoidFunction*)NULL;
 }
-
-
 
 #endif
 
@@ -2158,8 +2142,6 @@ uprv_dl_close(void *lib, UErrorCode *status) {
   
   return;
 }
-
-
 U_INTERNAL UVoidFunction* U_EXPORT2
 uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   HMODULE handle = (HMODULE)lib;
@@ -2180,8 +2162,6 @@ uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   
   return addr;
 }
-
-
 #else
 
 /* No dynamic loading set. */
@@ -2199,8 +2179,6 @@ uprv_dl_close(void *lib, UErrorCode *status) {
     *status = U_UNSUPPORTED_ERROR;
     return;
 }
-
-
 U_INTERNAL UVoidFunction* U_EXPORT2
 uprv_dlsym_func(void *lib, const char* sym, UErrorCode *status) {
   if(U_SUCCESS(*status)) {

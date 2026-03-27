@@ -535,8 +535,6 @@ namespace Jpeg2000
 
 		return pPI;
 	}
-
-
 	bool            PI_Next(PacketIterator *pPI)
 	{
 		switch (pPI->oPOC.ePpoc)

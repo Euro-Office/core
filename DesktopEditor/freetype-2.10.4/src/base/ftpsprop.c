@@ -15,15 +15,11 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/ftdriver.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/psaux.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/ftpsprop.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -32,8 +28,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  psprops
-
-
   FT_BASE_CALLBACK_DEF( FT_Error )
   ps_property_set( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
@@ -46,8 +40,6 @@
 #ifndef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
     FT_UNUSED( value_is_string );
 #endif
-
-
     if ( !ft_strcmp( property_name, "darkening-parameters" ) )
     {
       FT_Int*  darken_params;
@@ -55,15 +47,11 @@
 
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       FT_Int   dp[8];
-
-
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
         char*        ep;
         int          i;
-
-
         /* eight comma-separated numbers */
         for ( i = 0; i < 7; i++ )
         {
@@ -117,14 +105,10 @@
     defined( T1_CONFIG_OPTION_OLD_ENGINE  )
       const char*  module_name = module->clazz->module_name;
 #endif
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
-
-
         if ( !ft_strcmp( s, "adobe" ) )
           driver->hinting_engine = FT_HINTING_ADOBE;
 
@@ -148,8 +132,6 @@
 #endif /* FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES */
       {
         FT_UInt*  hinting_engine = (FT_UInt*)value;
-
-
         if ( *hinting_engine == FT_HINTING_ADOBE
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
              || ( *hinting_engine == FT_HINTING_FREETYPE &&
@@ -176,8 +158,6 @@
       {
         const char*  s   = (const char*)value;
         long         nsd = ft_strtol( s, NULL, 10 );
-
-
         if ( !nsd )
           driver->no_stem_darkening = FALSE;
         else
@@ -187,8 +167,6 @@
 #endif
       {
         FT_Bool*  no_stem_darkening = (FT_Bool*)value;
-
-
         driver->no_stem_darkening = *no_stem_darkening;
       }
 
@@ -198,14 +176,10 @@
     else if ( !ft_strcmp( property_name, "random-seed" ) )
     {
       FT_Int32  random_seed;
-
-
 #ifdef FT_CONFIG_OPTION_ENVIRONMENT_PROPERTIES
       if ( value_is_string )
       {
         const char*  s = (const char*)value;
-
-
         random_seed = (FT_Int32)ft_strtol( s, NULL, 10 );
       }
       else
@@ -224,8 +198,6 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
   FT_BASE_CALLBACK_DEF( FT_Error )
   ps_property_get( FT_Module    module,         /* PS_Driver */
                    const char*  property_name,
@@ -233,14 +205,10 @@
   {
     FT_Error   error  = FT_Err_Ok;
     PS_Driver  driver = (PS_Driver)module;
-
-
     if ( !ft_strcmp( property_name, "darkening-parameters" ) )
     {
       FT_Int*  darken_params = driver->darken_params;
       FT_Int*  val           = (FT_Int*)value;
-
-
       val[0] = darken_params[0];
       val[1] = darken_params[1];
       val[2] = darken_params[2];
@@ -257,8 +225,6 @@
     {
       FT_UInt   hinting_engine    = driver->hinting_engine;
       FT_UInt*  val               = (FT_UInt*)value;
-
-
       *val = hinting_engine;
 
       return error;
@@ -268,8 +234,6 @@
     {
       FT_Bool   no_stem_darkening = driver->no_stem_darkening;
       FT_Bool*  val               = (FT_Bool*)value;
-
-
       *val = no_stem_darkening;
 
       return error;
@@ -279,6 +243,4 @@
                 property_name ));
     return FT_THROW( Missing_Property );
   }
-
-
 /* END */

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CFFOTYPES_H_
 #define CFFOTYPES_H_
 
@@ -24,14 +22,8 @@
 #include <freetype/internal/tttypes.h>
 #include <freetype/internal/services/svpscmap.h>
 #include <freetype/internal/pshints.h>
-
-
 FT_BEGIN_HEADER
-
-
   typedef TT_Face  CFF_Face;
-
-
   /**************************************************************************
    *
    * @type:
@@ -46,8 +38,6 @@ FT_BEGIN_HEADER
     FT_ULong    strike_index;    /* 0xFFFFFFFF to indicate invalid */
 
   } CFF_SizeRec, *CFF_Size;
-
-
   /**************************************************************************
    *
    * @type:
@@ -67,8 +57,6 @@ FT_BEGIN_HEADER
     FT_Fixed  y_scale;
 
   } CFF_GlyphSlotRec, *CFF_GlyphSlot;
-
-
   /**************************************************************************
    *
    * @type:
@@ -83,8 +71,6 @@ FT_BEGIN_HEADER
     PSH_Globals  subfonts[CFF_MAX_CID_FONTS];
 
   } CFF_InternalRec, *CFF_Internal;
-
-
   /**************************************************************************
    *
    * Subglyph transformation record.
@@ -96,12 +82,6 @@ FT_BEGIN_HEADER
     FT_F26Dot6  ox, oy;     /* offsets                            */
 
   } CFF_Transform;
-
-
 FT_END_HEADER
-
-
 #endif /* CFFOTYPES_H_ */
-
-
 /* END */

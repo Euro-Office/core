@@ -45,8 +45,6 @@ U_NAMESPACE_BEGIN
 #else
 #define REGEX_SCAN_DEBUG_PRINTF(a)
 #endif
-
-
 //
 //  Opcode types     In the compiled form of the regexp, these are the type, or opcodes,
 //                   of the entries.
@@ -242,15 +240,11 @@ enum {
         "URX_BACKSLASH_H",     \
         "URX_BACKSLASH_R",     \
         "URX_BACKSLASH_V" 
-
-
 //
 //  Convenience macros for assembling and disassembling a compiled operation.
 //
 #define URX_TYPE(x)          ((uint32_t)(x) >> 24)
 #define URX_VAL(x)           ((x) & 0xffffff)
-
-
 //
 //  Access to Unicode Sets composite character properties
 //     The sets are accessed by the match engine for things like \w (word boundary)
@@ -275,8 +269,6 @@ enum {
      URX_NEG_SET     = 0x800000          // Flag bit to reverse sense of set
                                          //   membership test.
 };
-
-
 //
 //  Match Engine State Stack Frame Layout.
 //
@@ -353,8 +345,6 @@ inline void Regex8BitSet::init(const UnicodeSet *s) {
 inline void Regex8BitSet::operator = (const Regex8BitSet &s) {
    uprv_memcpy(d, s.d, sizeof(d));
 }
-
-
 //  Case folded UText Iterator helper class.
 //  Wraps a UText, provides a case-folded enumeration over its contents.
 //  Used in implementing case insensitive matching constructs.
@@ -378,8 +368,6 @@ class CaseFoldingUTextIterator: public UMemory {
         int32_t            fFoldIndex;
 
 };
-
-
 // Case folded UChar * string iterator.
 //  Wraps a UChar  *, provides a case-folded enumeration over its contents.
 //  Used in implementing case insensitive matching constructs.

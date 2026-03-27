@@ -79,8 +79,6 @@ namespace DJVU {
 
 class ByteStream;
 
-
-
 /** @name ZPCodec.h
     
     Files #"ZPCodec.h"# and #"ZPCodec.cpp"# implement a fast binary adaptive
@@ -193,8 +191,6 @@ class ByteStream;
     @author
     L\'eon Bottou <leonb@research.att.com> */
 //@{
-
-
 /** Context variable.  
     Variables of type #BitContext# hold a single byte describing how to encode
     or decode message bits with similar statistical properties.  This single
@@ -213,8 +209,6 @@ class ByteStream;
     the encoder.  This is critical for proper decoding.  
 */
 typedef unsigned char  BitContext;
-
-
 /** Performs ZP-Coder encoding and decoding.  A ZPCodec object must either
     constructed for encoding or for decoding.  The ZPCodec object is connected
     with a \Ref{ByteStream} object specified at construction time.  A ZPCodec
@@ -355,12 +349,6 @@ private:
   friend ZPCODEC_FRIEND;
 #endif
 };
-
-
-
-
-
-
 // INLINE CODE
 
 inline void 
@@ -573,8 +561,6 @@ ZPCodec::IWencoder(const bool bit)
     and that successive points are independent.  It would be much smarter
     otherwise to sort the points and encode relative displacements between
     successive points.
-
-
     {\bf Huffman Coding Tricks} --- 
     Programmers with experience in Huffman codes can see the similarity in the
     ZP-Coder.  Huffman codes also organize the symbol values as a decision
@@ -604,8 +590,6 @@ ZPCodec::IWencoder(const bool bit)
     structure represents a priori knowledge about the distribution of the
     symbol values.  Small data discrepancies will be addressed transparently
     by the ZP-Coder.
-
-
     {\bf Encoding Numbers} ---
     This technique is illustrated with the following number encoding example.
     The multivalued technique described above is not practical with large
@@ -680,8 +664,6 @@ ZPCodec::IWencoder(const bool bit)
    the position within the smaller sets and using the regular decoding
    functions instead of the pass-thru variants.  Only experimentation can tell
    what works best for your particular encoding problem.
-
-
    {\bf Understanding Adaptation} ---
    We have so far explained that the ZP-Coder adaptation algorithm is able to
    quickly estimate of the probability distribution of the message bits coded
@@ -721,8 +703,6 @@ ZPCodec::IWencoder(const bool bit)
    predictability apparent, and (b) perform the predictions and generate the
    code bits.  The ZP-Coder is an efficient and effortless solution for
    implementing task (b).
-
-
    {\bf Practical Debugging Tricks} ---
    Sometimes you write an encoding program and a decoding program.
    Unfortunately there is a bug: the decoding program decodes half the file
@@ -745,5 +725,3 @@ using namespace DJVU;
 # endif
 #endif
 #endif
-
-

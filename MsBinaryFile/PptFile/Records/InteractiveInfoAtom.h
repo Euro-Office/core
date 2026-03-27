@@ -48,8 +48,6 @@ public:
     bool m_bStopSound;
     bool m_bCustomShowReturn;
     bool m_bVisited;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

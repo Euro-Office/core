@@ -138,8 +138,6 @@ UnicodeString::releaseArray() {
   }
 }
 
-
-
 //========================================
 // Constructors
 //========================================
@@ -1166,8 +1164,6 @@ UnicodeString::findAndReplace(int32_t start,
 
   return *this;
 }
-
-
 void
 UnicodeString::setToBogus()
 {

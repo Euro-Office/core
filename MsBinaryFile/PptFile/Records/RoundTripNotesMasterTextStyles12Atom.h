@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordRoundTripNotesMasterTextStyles12Atom : public CUnknownRecord

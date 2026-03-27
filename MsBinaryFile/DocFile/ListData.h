@@ -140,8 +140,6 @@ namespace DocFileFormat
 		
 		static NumberingDescriptorPtr create(unsigned char * data, int length);
 	};
-
-	
 	class OutlineListDescriptor : public IVisitable, public ByteStructure 
 	{
 		friend class ListTable;

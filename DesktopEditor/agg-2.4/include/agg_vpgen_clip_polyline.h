@@ -73,6 +73,4 @@ namespace agg
     };
 
 }
-
-
 #endif

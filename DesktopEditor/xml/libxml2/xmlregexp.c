@@ -5484,8 +5484,6 @@ xmlRegexpCompile(const xmlChar *regexp) {
 
     /* remove the Epsilon except for counted transitions */
     xmlFAEliminateEpsilonTransitions(ctxt);
-
-
     if (ctxt->error != 0) {
 	xmlRegFreeParserCtxt(ctxt);
 	return(NULL);
@@ -6083,8 +6081,6 @@ xmlAutomataNewOnceTrans2(xmlAutomataPtr am, xmlAutomataStatePtr from,
     return(to);
 }
 
-
-
 /**
  * xmlAutomataNewOnceTrans:
  * @am: an automata
@@ -6529,8 +6525,6 @@ xmlExpHashComputeKey(xmlExpNodeType type, xmlExpNodePtr left,
     }
     return(ret);
 }
-
-
 static xmlExpNodePtr
 xmlExpNewNode(xmlExpCtxtPtr ctxt, xmlExpNodeType type) {
     xmlExpNodePtr ret;
@@ -7957,8 +7951,6 @@ parse_quantifier:
     }
     return(ret);
 }
-
-
 static xmlExpNodePtr
 xmlExpParseSeq(xmlExpCtxtPtr ctxt) {
     xmlExpNodePtr ret, right;

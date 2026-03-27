@@ -29,8 +29,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 
 ===========================================================================
 */
-
-
 /*
 ===========================================================================
                                 Includes
@@ -41,8 +39,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 #include <stdlib.h>
 #include <float.h>
 #include <math.h>
-
-
 /*
 ===========================================================================
                                 Constants
@@ -64,8 +60,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
 #define SUBJ               1
 
 #define INVERT_TRISTRIPS   FALSE
-
-
 /*
 ===========================================================================
                                  Macros 
@@ -107,8 +101,6 @@ Copyright: (C) 1997-2004, Advanced Interfaces Group,
                             exit(0);}} else p= NULL;}
 
 #define FREE(p)            {if (p) {free(p); (p)= NULL;}}
-
-
 /*
 ===========================================================================
                             Private Data Types
@@ -222,8 +214,6 @@ typedef struct bbox_shape           /* Contour axis-aligned bounding box */
   double             xmax;          /* Maximum x coordinate              */
   double             ymax;          /* Maximum y coordinate              */
 } bbox;
-
-
 /*
 ===========================================================================
                                Global Data
@@ -239,8 +229,6 @@ const h_state next_h_state[3][6]=
   /* BH */ {NH, NH,   NH, NH,   TH, TH},
   /* TH */ {NH, NH,   NH, NH,   BH, BH}
 };
-
-
 /*
 ===========================================================================
                              Private Functions
@@ -258,8 +246,6 @@ static void reset_it(it_node **it)
     *it= itn;
   }
 }
-
-
 static void reset_lmt(lmt_node **lmt)
 {
   lmt_node *lmtn;
@@ -271,8 +257,6 @@ static void reset_lmt(lmt_node **lmt)
     *lmt= lmtn;
   }
 }
-
-
 static void insert_bound(edge_node **b, edge_node *e)
 {
   edge_node *existing_bound;
@@ -318,8 +302,6 @@ static void insert_bound(edge_node **b, edge_node *e)
     }
   }
 }
-
-
 static edge_node **bound_list(lmt_node **lmt, double y)
 {
   lmt_node *existing_node;
@@ -352,8 +334,6 @@ static edge_node **bound_list(lmt_node **lmt, double y)
         /* Use this existing LMT node */
         return &((*lmt)->first_bound);
 }
-
-
 static void add_to_sbtree(int *entries, sb_tree **sbtree, double y)
 {
   if (!*sbtree)
@@ -382,8 +362,6 @@ static void add_to_sbtree(int *entries, sb_tree **sbtree, double y)
     }
   }
 }
-
-
 static void build_sbt(int *entries, double *sbt, sb_tree *sbtree)
 {
   if (sbtree->less)
@@ -393,8 +371,6 @@ static void build_sbt(int *entries, double *sbt, sb_tree *sbtree)
   if (sbtree->more)
     build_sbt(entries, sbt, sbtree->more);
 }
-
-
 static void free_sbtree(sb_tree **sbtree)
 {
   if (*sbtree)
@@ -404,8 +380,6 @@ static void free_sbtree(sb_tree **sbtree)
     FREE(*sbtree);
   }
 }
-
-
 static int count_optimal_vertices(gpc_vertex_list c)
 {
   int result= 0, i;
@@ -420,8 +394,6 @@ static int count_optimal_vertices(gpc_vertex_list c)
   }
   return result;
 }
-
-
 static edge_node *build_lmt(lmt_node **lmt, sb_tree **sbtree,
                             int *sbt_entries, gpc_polygon *p, int type,
                             gpc_op op)
@@ -564,8 +536,6 @@ static edge_node *build_lmt(lmt_node **lmt, sb_tree **sbtree,
   }
   return edge_table;
 }
-
-
 static void add_edge_to_aet(edge_node **aet, edge_node *edge, edge_node *prev)
 {
   if (!*aet)
@@ -613,8 +583,6 @@ static void add_edge_to_aet(edge_node **aet, edge_node *edge, edge_node *prev)
     }
   }
 }
-
-
 static void add_intersection(it_node **it, edge_node *edge0, edge_node *edge1,
                              double x, double y)
 {
@@ -648,8 +616,6 @@ static void add_intersection(it_node **it, edge_node *edge0, edge_node *edge1,
       add_intersection(&((*it)->next), edge0, edge1, x, y);
   }
 }
-
-
 static void add_st_edge(st_node **st, it_node **it, edge_node *edge,
                         double dy)
 {
@@ -698,8 +664,6 @@ static void add_st_edge(st_node **st, it_node **it, edge_node *edge,
     }
   }
 }
-
-
 static void build_intersection_table(it_node **it, edge_node *aet, double dy)
 {
   st_node   *st, *stp;
@@ -758,8 +722,6 @@ static int count_contours(polygon_node *polygon)
     }
   return nc;
 }
-
-
 static void add_left(polygon_node *p, double x, double y)
 {
   vertex_node *nv;
@@ -775,8 +737,6 @@ static void add_left(polygon_node *p, double x, double y)
   /* Update proxy->[LEFT] to point to nv */
   p->proxy->v[LEFT]= nv;
 }
-
-
 static void merge_left(polygon_node *p, polygon_node *q, polygon_node *list)
 {
   polygon_node *target;
@@ -802,8 +762,6 @@ static void merge_left(polygon_node *p, polygon_node *q, polygon_node *list)
     }
   }
 }
-
-
 static void add_right(polygon_node *p, double x, double y)
 {
   vertex_node *nv;
@@ -820,8 +778,6 @@ static void add_right(polygon_node *p, double x, double y)
   /* Update proxy->v[RIGHT] to point to nv */
   p->proxy->v[RIGHT]= nv;
 }
-
-
 static void merge_right(polygon_node *p, polygon_node *q, polygon_node *list)
 {
   polygon_node *target;
@@ -846,8 +802,6 @@ static void merge_right(polygon_node *p, polygon_node *q, polygon_node *list)
     }
   }
 }
-
-
 static void add_local_min(polygon_node **p, edge_node *edge,
                           double x, double y)
 {
@@ -876,8 +830,6 @@ static void add_local_min(polygon_node **p, edge_node *edge,
   /* Assign polygon p to the edge */
   edge->outp[ABOVE]= *p;
 }
-
-
 static int count_tristrips(polygon_node *tn)
 {
   int total;
@@ -887,8 +839,6 @@ static int count_tristrips(polygon_node *tn)
       total++;
   return total;
 }
-
-
 static void add_vertex(vertex_node **t, double x, double y)
 {
   if (!(*t))
@@ -902,8 +852,6 @@ static void add_vertex(vertex_node **t, double x, double y)
     /* Head further down the list */
     add_vertex(&((*t)->next), x, y);
 }
-
-
 static void new_tristrip(polygon_node **tn, edge_node *edge,
                          double x, double y)
 {
@@ -921,8 +869,6 @@ static void new_tristrip(polygon_node **tn, edge_node *edge,
     /* Head further down the list */
     new_tristrip(&((*tn)->next), edge, x, y);
 }
-
-
 static bbox *create_contour_bboxes(gpc_polygon *p)
 {
   bbox *box;
@@ -954,8 +900,6 @@ static bbox *create_contour_bboxes(gpc_polygon *p)
   }
   return box;  
 }
-
-
 static void minimax_test(gpc_polygon *subj, gpc_polygon *clip, gpc_op op)
 {
   bbox *s_bbox, *c_bbox;
@@ -1007,8 +951,6 @@ static void minimax_test(gpc_polygon *subj, gpc_polygon *clip, gpc_op op)
   FREE(c_bbox);
   FREE(o_table);
 }
-
-
 /*
 ===========================================================================
                              Public Functions
@@ -1025,8 +967,6 @@ void gpc_free_polygon(gpc_polygon *p)
   FREE(p->contour);
   p->num_contours= 0;
 }
-
-
 void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
 {
   int c, v;
@@ -1052,8 +992,6 @@ void gpc_read_polygon(FILE *fp, int read_hole_flags, gpc_polygon *p)
                             &(p->contour[c].vertex[v].y));
   }
 }
-
-
 void gpc_write_polygon(FILE *fp, int write_hole_flags, gpc_polygon *p)
 {
   int c, v;
@@ -1072,8 +1010,6 @@ void gpc_write_polygon(FILE *fp, int write_hole_flags, gpc_polygon *p)
               DBL_DIG, p->contour[c].vertex[v].y);
   }
 }
-
-
 void gpc_add_contour(gpc_polygon *p, gpc_vertex_list *new_contour, int hole)
 {
   int             *extended_hole, c, v;
@@ -1112,8 +1048,6 @@ void gpc_add_contour(gpc_polygon *p, gpc_vertex_list *new_contour, int hole)
   p->hole= extended_hole;
   p->contour= extended_contour;
 }
-
-
 void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
                       gpc_polygon *result)
 {
@@ -1750,8 +1684,6 @@ void gpc_polygon_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
   FREE(s_heap);
   FREE(sbt);
 }
-
-
 void gpc_free_tristrip(gpc_tristrip *t)
 {
   int s;
@@ -1761,8 +1693,6 @@ void gpc_free_tristrip(gpc_tristrip *t)
   FREE(t->strip);
   t->num_strips= 0;
 }
-
-
 void gpc_polygon_to_tristrip(gpc_polygon *s, gpc_tristrip *t)
 {
   gpc_polygon c;
@@ -1772,8 +1702,6 @@ void gpc_polygon_to_tristrip(gpc_polygon *s, gpc_tristrip *t)
   c.contour= NULL;
   gpc_tristrip_clip(GPC_DIFF, s, &c, t);
 }
-
-
 void gpc_tristrip_clip(gpc_op op, gpc_polygon *subj, gpc_polygon *clip,
                        gpc_tristrip *result)
 {

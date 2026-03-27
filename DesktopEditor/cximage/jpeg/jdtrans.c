@@ -14,12 +14,8 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Forward declarations */
 LOCAL(void) transdecode_master_selection JPP((j_decompress_ptr cinfo));
-
-
 /*
  * Read the coefficient arrays from a JPEG file.
  * jpeg_read_header must be completed before calling this.
@@ -87,8 +83,6 @@ jpeg_read_coefficients (j_decompress_ptr cinfo)
   ERREXIT1(cinfo, JERR_BAD_STATE, cinfo->global_state);
   return NULL;			/* keep compiler happy */
 }
-
-
 /*
  * Master selection of decompression modules for transcoding.
  * This substitutes for jdmaster.c's initialization of the full decompressor.

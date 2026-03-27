@@ -1385,8 +1385,6 @@ xmlDebugDumpAttr(FILE *output, xmlAttrPtr attr, int depth) {
     xmlCtxtDumpAttr(&ctxt, attr);
     xmlCtxtDumpCleanCtxt(&ctxt);
 }
-
-
 /**
  * xmlDebugDumpEntities:
  * @output:  the FILE * for the output
@@ -1807,8 +1805,6 @@ xmlBoolToText(int boolval)
  *								*
  ****************************************************************/
 
-
-
 /*
  * TODO: Improvement/cleanups for the XML shell
  *     - allow to shell out an editor on a subpart
@@ -1876,8 +1872,6 @@ xmlShellPrintXPathError(int errorType, const char *arg)
                     arg);
 #endif
 }
-
-
 #ifdef LIBXML_OUTPUT_ENABLED
 /**
  * xmlShellPrintNodeCtxt:

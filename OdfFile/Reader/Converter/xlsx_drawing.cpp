@@ -351,8 +351,6 @@ void xml_serialize(std::wostream & strm, _xlsx_drawing & val, const std::wstring
 		xml_serialize_object(strm, val);
 	}
 }
-
-
 void _xlsx_drawing::serialize(std::wostream & strm, const std::wstring & ns, bool local)
 {
 	if (inGroup) 

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * This file contains the definition of several convenience functions that
@@ -27,12 +25,8 @@
    * for many other simple uses of the library.
    *
    */
-
-
 #ifndef FTGLYPH_H_
 #define FTGLYPH_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -40,11 +34,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -63,12 +53,8 @@ FT_BEGIN_HEADER
    *   detached from @FT_Face, contrary to @FT_GlyphSlot.
    *
    */
-
-
   /* forward declaration to a private type */
   typedef struct FT_Glyph_Class_  FT_Glyph_Class;
-
-
   /**************************************************************************
    *
    * @type:
@@ -85,8 +71,6 @@ FT_BEGIN_HEADER
    *   @FT_Done_FreeType.
    */
   typedef struct FT_GlyphRec_*  FT_Glyph;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -117,8 +101,6 @@ FT_BEGIN_HEADER
     FT_Vector              advance;
 
   } FT_GlyphRec;
-
-
   /**************************************************************************
    *
    * @type:
@@ -129,8 +111,6 @@ FT_BEGIN_HEADER
    *   sub-class of @FT_Glyph, and a pointer to @FT_BitmapGlyphRec.
    */
   typedef struct FT_BitmapGlyphRec_*  FT_BitmapGlyph;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -172,8 +152,6 @@ FT_BEGIN_HEADER
     FT_Bitmap    bitmap;
 
   } FT_BitmapGlyphRec;
-
-
   /**************************************************************************
    *
    * @type:
@@ -184,8 +162,6 @@ FT_BEGIN_HEADER
    *   sub-class of @FT_Glyph, and a pointer to @FT_OutlineGlyphRec.
    */
   typedef struct FT_OutlineGlyphRec_*  FT_OutlineGlyph;
-
-
   /**************************************************************************
    *
    * @struct:
@@ -220,8 +196,6 @@ FT_BEGIN_HEADER
     FT_Outline   outline;
 
   } FT_OutlineGlyphRec;
-
-
   /**************************************************************************
    *
    * @function:
@@ -252,8 +226,6 @@ FT_BEGIN_HEADER
   FT_New_Glyph( FT_Library       library,
                 FT_Glyph_Format  format,
                 FT_Glyph         *aglyph );
-
-
   /**************************************************************************
    *
    * @function:
@@ -282,8 +254,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_Glyph( FT_GlyphSlot  slot,
                 FT_Glyph     *aglyph );
-
-
   /**************************************************************************
    *
    * @function:
@@ -307,8 +277,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Glyph_Copy( FT_Glyph   source,
                  FT_Glyph  *target );
-
-
   /**************************************************************************
    *
    * @function:
@@ -340,8 +308,6 @@ FT_BEGIN_HEADER
   FT_Glyph_Transform( FT_Glyph    glyph,
                       FT_Matrix*  matrix,
                       FT_Vector*  delta );
-
-
   /**************************************************************************
    *
    * @enum:
@@ -375,8 +341,6 @@ FT_BEGIN_HEADER
     FT_GLYPH_BBOX_PIXELS    = 3
 
   } FT_Glyph_BBox_Mode;
-
-
   /* these constants are deprecated; use the corresponding */
   /* `FT_Glyph_BBox_Mode` values instead                   */
 #define ft_glyph_bbox_unscaled   FT_GLYPH_BBOX_UNSCALED
@@ -384,8 +348,6 @@ FT_BEGIN_HEADER
 #define ft_glyph_bbox_gridfit    FT_GLYPH_BBOX_GRIDFIT
 #define ft_glyph_bbox_truncate   FT_GLYPH_BBOX_TRUNCATE
 #define ft_glyph_bbox_pixels     FT_GLYPH_BBOX_PIXELS
-
-
   /**************************************************************************
    *
    * @function:
@@ -462,8 +424,6 @@ FT_BEGIN_HEADER
   FT_Glyph_Get_CBox( FT_Glyph  glyph,
                      FT_UInt   bbox_mode,
                      FT_BBox  *acbox );
-
-
   /**************************************************************************
    *
    * @function:
@@ -573,8 +533,6 @@ FT_BEGIN_HEADER
                       FT_Render_Mode  render_mode,
                       FT_Vector*      origin,
                       FT_Bool         destroy );
-
-
   /**************************************************************************
    *
    * @function:
@@ -591,8 +549,6 @@ FT_BEGIN_HEADER
   FT_Done_Glyph( FT_Glyph  glyph );
 
   /* */
-
-
   /* other helpful functions */
 
   /**************************************************************************
@@ -601,8 +557,6 @@ FT_BEGIN_HEADER
    *   computations
    *
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -628,8 +582,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_Matrix_Multiply( const FT_Matrix*  a,
                       FT_Matrix*        b );
-
-
   /**************************************************************************
    *
    * @function:
@@ -649,16 +601,10 @@ FT_BEGIN_HEADER
   FT_Matrix_Invert( FT_Matrix*  matrix );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTGLYPH_H_ */
-
-
 /* END */
-
-
 /* Local Variables: */
 /* coding: utf-8    */
 /* End:             */

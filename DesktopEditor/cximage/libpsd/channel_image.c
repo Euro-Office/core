@@ -29,8 +29,6 @@
 #include "psd_stream.h"
 #include "psd_color.h"
 #include "psd_math.h"
-
-
 #define PSD_MIN_TEMP_CHANNEL_LENGTH		4096
 #define PSD_MIN_TEMP_IMAGE_LENGTH		12288
 
@@ -41,8 +39,6 @@ extern psd_status psd_unzip_with_prediction(psd_uchar *src_buf, psd_int src_len,
 	psd_uchar *dst_buf, psd_int dst_len, 
 	psd_int row_size, psd_int color_depth);
 #endif
-
-
 // 1bit bitamp
 static psd_status psd_combine_bitmap1_channel(psd_context * context, psd_layer_record * layer)
 {
@@ -360,8 +356,6 @@ static psd_status psd_combine_rgb16_channel(psd_context * context, psd_layer_rec
 
 	return psd_status_done;
 }
-
-
 #ifdef PSD_SUPPORT_CMYK
 
 // 8bit cmyk
@@ -688,8 +682,6 @@ static psd_status psd_combine_multichannel8_channel(psd_context * context, psd_l
 }
 
 #endif // ifdef PSD_SUPPORT_MULTICHANNEL
-
-
 // 8bit user supplied layer mask
 psd_static psd_status psd_get_layer_user_supplied_layer_mask8(psd_context * context, psd_layer_record * layer)
 {

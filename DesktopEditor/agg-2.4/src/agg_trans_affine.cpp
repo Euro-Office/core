@@ -18,8 +18,6 @@
 //----------------------------------------------------------------------------
 #include "agg_trans_affine.h"
 
-
-
 namespace agg
 {
 
@@ -80,8 +78,6 @@ namespace agg
         tx  = t4;
         return *this;
     }
-
-
     //------------------------------------------------------------------------
     const trans_affine& trans_affine::invert()
     {
@@ -99,8 +95,6 @@ namespace agg
         tx = t4;
         return *this;
     }
-
-
    //------------------------------------------------------------------------
     const trans_affine& trans_affine::flip_x()
     {
@@ -188,7 +182,5 @@ namespace agg
         *x = x2 - x1;
         *y = y2 - y1;
     }
-
-
 }
 

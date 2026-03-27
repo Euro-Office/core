@@ -14,27 +14,17 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTRENDER_H_
 #define FTRENDER_H_
-
-
 #include <freetype/ftmodapi.h>
 #include <freetype/ftglyph.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
    *   module_management
    *
    */
-
-
   /* create a new glyph object */
   typedef FT_Error
   (*FT_Glyph_InitFunc)( FT_Glyph      glyph,
@@ -68,8 +58,6 @@ FT_BEGIN_HEADER
 #define FT_Glyph_BBox_Func       FT_Glyph_GetBBoxFunc
 #define FT_Glyph_Copy_Func       FT_Glyph_CopyFunc
 #define FT_Glyph_Prepare_Func    FT_Glyph_PrepareFunc
-
-
   struct  FT_Glyph_Class_
   {
     FT_Long                 glyph_size;
@@ -82,8 +70,6 @@ FT_BEGIN_HEADER
     FT_Glyph_GetBBoxFunc    glyph_bbox;
     FT_Glyph_PrepareFunc    glyph_prepare;
   };
-
-
   typedef FT_Error
   (*FT_Renderer_RenderFunc)( FT_Renderer       renderer,
                              FT_GlyphSlot      slot,
@@ -95,14 +81,10 @@ FT_BEGIN_HEADER
                                 FT_GlyphSlot      slot,
                                 const FT_Matrix*  matrix,
                                 const FT_Vector*  delta );
-
-
   typedef void
   (*FT_Renderer_GetCBoxFunc)( FT_Renderer   renderer,
                               FT_GlyphSlot  slot,
                               FT_BBox*      cbox );
-
-
   typedef FT_Error
   (*FT_Renderer_SetModeFunc)( FT_Renderer  renderer,
                               FT_ULong     mode_tag,
@@ -113,8 +95,6 @@ FT_BEGIN_HEADER
 #define FTRenderer_transform  FT_Renderer_TransformFunc
 #define FTRenderer_getCBox  FT_Renderer_GetCBoxFunc
 #define FTRenderer_setMode  FT_Renderer_SetModeFunc
-
-
   /**************************************************************************
    *
    * @struct:
@@ -161,8 +141,6 @@ FT_BEGIN_HEADER
     FT_Raster_Funcs*           raster_class;
 
   } FT_Renderer_Class;
-
-
   /**************************************************************************
    *
    * @function:
@@ -191,8 +169,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Renderer )
   FT_Get_Renderer( FT_Library       library,
                    FT_Glyph_Format  format );
-
-
   /**************************************************************************
    *
    * @function:
@@ -234,11 +210,7 @@ FT_BEGIN_HEADER
                    FT_Parameter*  parameters );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTRENDER_H_ */
-
-
 /* END */

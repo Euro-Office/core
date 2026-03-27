@@ -83,5 +83,3 @@ namespace svg
 } // namespace agg
 
 #endif // #ifndef AGG_SVG_RASTERIZER_INCLUDED
-
-

@@ -32,16 +32,12 @@
 #pragma once
 #include "TextCFException9.h"
 #include "TextPFException9.h"
-
-
 namespace PPT
 {
 struct STextMasterStyle9Level
 {
     STextPFException9 m_pf9;
     STextCFException9 m_cf9;
-
-
     void ReadFromStream(POLE::Stream* pStream);
 };
 }

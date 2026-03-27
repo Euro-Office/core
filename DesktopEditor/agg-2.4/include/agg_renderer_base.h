@@ -132,8 +132,6 @@ namespace agg
                 }
             }
         }
-          
-
         //--------------------------------------------------------------------
         void copy_pixel(int x, int y, const color_type& c)
         {
@@ -221,8 +219,6 @@ namespace agg
 
             m_ren->blend_vline(x, y1, y2 - y1 + 1, c, cover);
         }
-
-
         //--------------------------------------------------------------------
         void copy_bar(int x1, int y1, int x2, int y2, const color_type& c)
         {
@@ -325,8 +321,6 @@ namespace agg
             }
             m_ren->blend_solid_vspan(x, y, len, c, covers);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y, int len, const color_type* colors)
         {
@@ -348,8 +342,6 @@ namespace agg
             }
             m_ren->copy_color_hspan(x, y, len, colors);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_vspan(int x, int y, int len, const color_type* colors)
         {
@@ -371,8 +363,6 @@ namespace agg
             }
             m_ren->copy_color_vspan(x, y, len, colors);
         }
-
-
         //--------------------------------------------------------------------
         void blend_color_hspan(int x, int y, int len, 
                                const color_type* colors, 
@@ -733,8 +723,6 @@ namespace agg
         pixfmt_type* m_ren;
         rect_i       m_clip_box;
     };
-
-
 }
 
 #endif

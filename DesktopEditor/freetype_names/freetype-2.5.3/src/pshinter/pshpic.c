@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "pshpic.h"
 #include "pshnterr.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from pshmod.c */
@@ -35,16 +31,12 @@
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->pshinter )
     {
       FT_FREE( pic_container->pshinter );
       pic_container->pshinter = NULL;
     }
   }
-
-
   FT_Error
   pshinter_module_class_pic_init( FT_Library  library )
   {
@@ -52,8 +44,6 @@
     FT_Error           error         = FT_Err_Ok;
     PSHinterPIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC( container, sizeof ( *container ) ) )
       return error;
@@ -71,6 +61,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

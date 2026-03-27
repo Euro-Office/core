@@ -164,8 +164,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * @stable ICU 4.2
  */
 #define U_SHAPE_LAMALEF_BEGIN                    3 
-
-
 /**
  * Memory option: the result must have the same length as the source.
  * Shaping Mode: For each LAMALEF character found, expand LAMALEF using space at end.
@@ -183,8 +181,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
 
 /** Bit mask for memory options. @stable ICU 2.0 */
 #define U_SHAPE_LENGTH_MASK                      0x10003 /* Changed old value 3 */
-
-
 /**
  * Bit mask for LamAlef memory options.
  * @stable ICU 4.2
@@ -213,8 +209,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
 
 /** Bit mask for direction indicators. @stable ICU 2.0 */
 #define U_SHAPE_TEXT_DIRECTION_MASK             4
-
-
 /** Letter shaping option: do not perform letter shaping. @stable ICU 2.0 */
 #define U_SHAPE_LETTERS_NOOP                    0
 
@@ -232,12 +226,8 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * @stable ICU 2.0
  */
 #define U_SHAPE_LETTERS_SHAPE_TASHKEEL_ISOLATED 0x18
-
-
 /** Bit mask for letter shaping options. @stable ICU 2.0 */
 #define U_SHAPE_LETTERS_MASK                        0x18
-
-
 /** Digit shaping option: do not perform digit shaping. @stable ICU 2.0 */
 #define U_SHAPE_DIGITS_NOOP                     0
 
@@ -285,8 +275,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
 
 /** Bit mask for digit shaping options. @stable ICU 2.0 */
 #define U_SHAPE_DIGITS_MASK                     0xe0
-
-
 /** Digit type option: Use Arabic-Indic digits (U+0660...U+0669). @stable ICU 2.0 */
 #define U_SHAPE_DIGIT_TYPE_AN                   0
 
@@ -363,8 +351,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * @stable ICU 4.2
  */
 #define U_SHAPE_YEHHAMZA_TWOCELL_NEAR      0x1000000
-
-
 /**
  * Bit mask for YehHamza memory options. 
  * @stable ICU 4.2
@@ -420,8 +406,6 @@ u_shapeArabic(const UChar *source, int32_t sourceLength,
  * @stable ICU 4.2
  */
 #define U_SHAPE_TASHKEEL_MASK                       0xE0000
-
-
 /* Space location Control options */ 
 /**
  * This option affect the meaning of BEGIN and END options. if this option is not used the default

@@ -104,5 +104,3 @@ namespace PdfWriter
 }
 
 #endif // _PDF_WRITER_SRC_ENCRYPT_H
-
-

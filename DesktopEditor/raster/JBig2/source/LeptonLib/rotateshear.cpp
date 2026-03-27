@@ -145,8 +145,6 @@
 
 static const l_float32  VERY_SMALL_ANGLE = 0.001;  /* radians; ~0.06 degrees */
 static const l_float32  MAX_2_SHEAR_ANGLE = 0.05;  /* radians; ~3 degrees    */
-
-
 /*------------------------------------------------------------------*
  *                Rotations about an arbitrary point                *
  *------------------------------------------------------------------*/
@@ -189,8 +187,6 @@ pixRotateShear(PIX       *pixs,
         return pixRotate3Shear(pixs, xcen, ycen, angle, incolor);
 
 }
-
-
 /*!
  *  pixRotate2Shear()
  *
@@ -239,8 +235,6 @@ PIX  *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixRotate3Shear()
  *
@@ -298,8 +292,6 @@ PIX              *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *             Rotations in-place about an arbitrary point          *
  *------------------------------------------------------------------*/
@@ -354,8 +346,6 @@ l_float32  hangle;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                    Rotations about the image center              *
  *------------------------------------------------------------------*/
@@ -380,8 +370,6 @@ pixRotateShearCenter(PIX       *pixs,
     return pixRotateShear(pixs, pixGetWidth(pixs) / 2,
                           pixGetHeight(pixs) / 2, angle, incolor);
 }
-
-
 /*!
  *  pixRotateShearCenterIP()
  *

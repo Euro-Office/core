@@ -144,8 +144,6 @@ void draw_chart::add_child_element( xml::sax * Reader, const std::wstring & Ns, 
         CP_CREATE_ELEMENT(content_);
     //}
 }
-
-
 //------------------------------------------------------------------------------------------------------------
 // draw:g
 //------------------------------------------------------------------------------------------------------------
@@ -461,8 +459,6 @@ void draw_object_ole::detectObject(const std::wstring &fileName, std::wstring &p
 		}
 	}
 }
-
-
 std::wstring draw_object::office_convert(odf_document_ptr odfDocument, int type)
 {
 	if (!odfDocument) return L"";

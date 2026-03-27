@@ -21,8 +21,6 @@
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_OPENTYPE_VALIDATE_H
 #include FT_OPENTYPE_VALIDATE_H
-
-
   /* documentation is in ftotval.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -36,8 +34,6 @@
   {
     FT_Service_OTvalidate  service;
     FT_Error               error;
-
-
     if ( !face )
     {
       error = FT_THROW( Invalid_Face_Handle );
@@ -70,15 +66,11 @@
   Exit:
     return error;
   }
-
-
   FT_EXPORT_DEF( void )
   FT_OpenType_Free( FT_Face   face,
                     FT_Bytes  table )
   {
     FT_Memory  memory;
-
-
     if ( !face )
       return;
 
@@ -86,6 +78,4 @@
 
     FT_FREE( table );
   }
-
-
 /* END */

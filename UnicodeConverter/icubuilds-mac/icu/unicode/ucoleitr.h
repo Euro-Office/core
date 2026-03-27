@@ -112,8 +112,6 @@ ucol_openElements(const UCollator  *coll,
                   const UChar      *text,
                         int32_t    textLength,
                         UErrorCode *status);
-
-
 /**
  * get a hash code for a key... Not very useful!
  * @param key    the given key.

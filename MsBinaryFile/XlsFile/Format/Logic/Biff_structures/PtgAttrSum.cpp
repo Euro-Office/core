@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgAttrSum::clone()
 {
 	return BiffStructurePtr(new PtgAttrSum(*this));
@@ -50,8 +48,6 @@ void PtgAttrSum::writeFields(CFRecord& record)
 {
 	record.reserveNunBytes(2); // unused
 }
-
-
 void PtgAttrSum::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	addFuncWrapper(ptg_stack, L"SUM");

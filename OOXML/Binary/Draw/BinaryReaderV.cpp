@@ -281,7 +281,5 @@ namespace BinVsdxRW
 
 		return res;
 	}
-
-
 }
 

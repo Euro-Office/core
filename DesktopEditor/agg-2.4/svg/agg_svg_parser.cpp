@@ -924,8 +924,6 @@ namespace svg
             NV(  "nonzero", fill_rule_nonzero )
             NV(  "evenodd", fill_rule_evenodd )    
         PARSE_END()
-
-
         parse_paint_attr(attr_stroke);
 
         PARSE_ENUM_ATTR( attr_stroke_linecap )

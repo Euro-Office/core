@@ -39,19 +39,13 @@ Tick::Tick()
 {
 	iReadingOrder = 0;
 }
-
-
 Tick::~Tick()
 {
 }
-
-
 BaseObjectPtr Tick::clone()
 {
 	return BaseObjectPtr(new Tick(*this));
 }
-
-
 
 void Tick::readFields(CFRecord& record)
 {

@@ -48,23 +48,17 @@ typedef struct channel_param {
     time_t start_tm;                /**< starting time*/
     struct channel_param *next;     /**< pointer to the next channel*/
 } channel_param_t;
-
-
 /** Channel list parameters*/
 typedef struct channellist_param {
     channel_param_t *first; /**< first channel pointer of the list*/
     channel_param_t *last;  /**< last  channel pointer of the list*/
 } channellist_param_t;
-
-
 /**
  * generate a channel list
  *
  * @return pointer to the generated channel list
  */
 channellist_param_t * gene_channellist(void);
-
-
 /**
  * generate a channel under the channel list
  *
@@ -95,24 +89,18 @@ void set_channel_variable_param(query_param_t query_param,
  */
 void delete_channel(channel_param_t **channel,
                     channellist_param_t *channellist);
-
-
 /**
  * delete channel list
  *
  * @param[in,out] channellist address of the channel list pointer
  */
 void delete_channellist(channellist_param_t **channellist);
-
-
 /**
  * print all channel parameters
  *
  * @param[in] channellist channel list pointer
  */
 void print_allchannel(channellist_param_t *channellist);
-
-
 /**
  * search a channel by channel ID
  *

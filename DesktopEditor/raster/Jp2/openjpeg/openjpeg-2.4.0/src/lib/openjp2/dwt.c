@@ -468,8 +468,6 @@ static void  opj_idwt53_h_cas1(OPJ_INT32* tmp,
 #endif
     memcpy(tiledp, tmp, (OPJ_UINT32)len * sizeof(OPJ_INT32));
 }
-
-
 #endif /* !defined(STANDARD_SLOW_VERSION) */
 
 /* <summary>                            */
@@ -644,8 +642,6 @@ static void opj_idwt53_v_cas0_mcols_SSE2_OR_AVX2(
         /* d1n + ((s0n + tmp_len_minus_1) >> 1) */
         STORE(tmp + PARALLEL_COLS_53 * (len - 2) + VREG_INT_COUNT,
               ADD(d1n_1, SAR(ADD(s0n_1, tmp_len_minus_1), 1)));
-
-
     } else {
         STORE(tmp + PARALLEL_COLS_53 * (len - 1) + 0,
               ADD(d1n_0, s0n_0));
@@ -655,8 +651,6 @@ static void opj_idwt53_v_cas0_mcols_SSE2_OR_AVX2(
 
     opj_idwt53_v_final_memcpy(tiledp_col, tmp, len, stride);
 }
-
-
 /** Vertical inverse 5x3 wavelet transform for 8 columns in SSE2, or
  * 16 in AVX2, when top-most pixel is on odd coordinate */
 static void opj_idwt53_v_cas1_mcols_SSE2_OR_AVX2(
@@ -817,8 +811,6 @@ static void opj_idwt3_v_cas0(OPJ_INT32* tmp,
         tiledp_col[(OPJ_SIZE_T)i * stride] = tmp[i];
     }
 }
-
-
 /** Vertical inverse 5x3 wavelet transform for one column, when top-most
  * pixel is on odd coordinate */
 static void opj_idwt3_v_cas1(OPJ_INT32* tmp,
@@ -1330,8 +1322,6 @@ static INLINE void opj_dwt_deinterleave_v_cols(
         i = dn;
     }
 }
-
-
 /* Forward 5-3 transform, for the vertical pass, processing cols columns */
 /* where cols <= NB_ELTS_V8 */
 static void opj_dwt_encode_and_deinterleave_v(
@@ -1695,8 +1685,6 @@ static void opj_dwt_encode_and_deinterleave_v_real(
                            opj_K);
     opj_v8dwt_encode_step1(tmp + a * NB_ELTS_V8, (OPJ_UINT32)sn,
                            opj_invK);
-
-
     if (cols == NB_ELTS_V8) {
         opj_dwt_deinterleave_v_cols((OPJ_INT32*)tmp,
                                     (OPJ_INT32*)array,
@@ -1709,8 +1697,6 @@ static void opj_dwt_encode_and_deinterleave_v_real(
                                     stride_width, even ? 0 : 1, cols);
     }
 }
-
-
 /* <summary>                            */
 /* Forward 5-3 wavelet transform in 2-D. */
 /* </summary>                           */
@@ -2056,8 +2042,6 @@ static void opj_dwt_decode_v_func(void* user_data, opj_tls_t* tls)
     opj_aligned_free(job->v.mem);
     opj_free(job);
 }
-
-
 /* <summary>                            */
 /* Inverse wavelet transform in 2-D.    */
 /* </summary>                           */
@@ -2248,8 +2232,6 @@ static void opj_dwt_interleave_partial_h(OPJ_INT32 *dest,
     assert(ret);
     OPJ_UNUSED(ret);
 }
-
-
 static void opj_dwt_interleave_partial_v(OPJ_INT32 *dest,
         OPJ_INT32 cas,
         opj_sparse_array_int32_t* sa,
@@ -2547,8 +2529,6 @@ static void opj_dwt_segment_grow(OPJ_UINT32 filter_width,
     *end = opj_uint_adds(*end, filter_width);
     *end = opj_uint_min(*end, max_size);
 }
-
-
 static opj_sparse_array_int32_t* opj_dwt_init_sparse_array(
     opj_tcd_tilecomp_t* tilec,
     OPJ_UINT32 numres)
@@ -2603,8 +2583,6 @@ static opj_sparse_array_int32_t* opj_dwt_init_sparse_array(
 
     return sa;
 }
-
-
 static OPJ_BOOL opj_dwt_decode_partial_tile(
     opj_tcd_tilecomp_t* tilec,
     OPJ_UINT32 numres)
@@ -3243,8 +3221,6 @@ static void opj_dwt97_decode_h_func(void* user_data, opj_tls_t* tls)
     opj_aligned_free(job->h.wavelet);
     opj_free(job);
 }
-
-
 typedef struct {
     opj_v8dwt_t v;
     OPJ_UINT32 rh;
@@ -3281,8 +3257,6 @@ static void opj_dwt97_decode_v_func(void* user_data, opj_tls_t* tls)
     opj_aligned_free(job->v.wavelet);
     opj_free(job);
 }
-
-
 /* <summary>                             */
 /* Inverse 9-7 wavelet transform in 2-D. */
 /* </summary>                            */
@@ -3742,8 +3716,6 @@ OPJ_BOOL opj_dwt_decode_partial_97(opj_tcd_tilecomp_t* OPJ_RESTRICT tilec,
     opj_aligned_free(h.wavelet);
     return OPJ_TRUE;
 }
-
-
 OPJ_BOOL opj_dwt_decode_real(opj_tcd_t *p_tcd,
                              opj_tcd_tilecomp_t* OPJ_RESTRICT tilec,
                              OPJ_UINT32 numres)

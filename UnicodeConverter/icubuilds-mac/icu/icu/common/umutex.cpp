@@ -23,8 +23,6 @@
 #include "unicode/utypes.h"
 #include "uassert.h"
 #include "cmemory.h"
-
-
 // The ICU global mutex. Used when ICU implementation code passes NULL for the mutex pointer.
 static UMutex   globalMutex = U_MUTEX_INITIALIZER;
 
@@ -52,8 +50,6 @@ static UMutex   globalMutex = U_MUTEX_INITIALIZER;
 #error ICU on Win32 requires support for low level atomic operations.
 // Visual Studio, gcc, clang are OK. Shouldn't get here.
 #endif
-
-
 // This function is called when a test of a UInitOnce::fState reveals that
 //   initialization has not completed, that we either need to call the
 //   function on this thread, or wait for some other thread to complete.
@@ -126,8 +122,6 @@ umtx_unlock(UMutex* mutex)
     }
     LeaveCriticalSection(&mutex->fCS);
 }
-
-
 U_CAPI void U_EXPORT2
 umtx_condBroadcast(UConditionVar *condition) {
     // We require that the associated mutex be held by the caller,
@@ -182,8 +176,6 @@ umtx_condWait(UConditionVar *condition, UMutex *mutex) {
         umtx_lock(mutex);
     }
 }
-
-
 #elif U_PLATFORM_IMPLEMENTS_POSIX
 
 //-------------------------------------------------------------------------------------------
@@ -207,8 +199,6 @@ umtx_lock(UMutex *mutex) {
     (void)sysErr;   // Suppress unused variable warnings.
     U_ASSERT(sysErr == 0);
 }
-
-
 U_CAPI void  U_EXPORT2
 umtx_unlock(UMutex* mutex)
 {
@@ -219,8 +209,6 @@ umtx_unlock(UMutex* mutex)
     (void)sysErr;   // Suppress unused variable warnings.
     U_ASSERT(sysErr == 0);
 }
-
-
 U_CAPI void U_EXPORT2
 umtx_condWait(UConditionVar *cond, UMutex *mutex) {
     if (mutex == NULL) {
@@ -245,14 +233,10 @@ umtx_condSignal(UConditionVar *cond) {
     U_ASSERT(sysErr == 0);
 }
 
-
-
 U_NAMESPACE_BEGIN
 
 static pthread_mutex_t initMutex = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t initCondition = PTHREAD_COND_INITIALIZER;
-
-
 // This function is called when a test of a UInitOnce::fState reveals that
 //   initialization has not completed, that we either need to call the
 //   function on this thread, or wait for some other thread to complete.
@@ -281,8 +265,6 @@ umtx_initImplPreInit(UInitOnce &uio) {
     }
 }
 
-
-
 // This function is called by the thread that ran an initialization function,
 // just after completing the function.
 //   Some threads may be waiting on the condition, requiring the broadcast wakeup.
@@ -306,8 +288,6 @@ U_NAMESPACE_END
 #error Unknown Platform
 
 #endif  // Platform #define chain.
-
-
 //-------------------------------------------------------------------------------
 //
 //   Atomic Operations, out-of-line versions.
@@ -331,8 +311,6 @@ umtx_atomic_inc(u_atomic_int32_t *p)  {
     umtx_unlock(&gIncDecMutex);
     return retVal;
 }
-
-
 U_COMMON_API int32_t U_EXPORT2
 umtx_atomic_dec(u_atomic_int32_t *p) {
     int32_t retVal;
@@ -374,8 +352,6 @@ u_setMutexFunctions(const void * /*context */, UMtxInitFn *, UMtxFn *,
     }
     return;
 }
-
-
 
 U_DEPRECATED void U_EXPORT2
 u_setAtomicIncDecFunctions(const void * /*context */, UMtxAtomicFn *, UMtxAtomicFn *,

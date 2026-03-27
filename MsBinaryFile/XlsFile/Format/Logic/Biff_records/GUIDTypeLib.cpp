@@ -38,13 +38,9 @@ namespace XLS
 GUIDTypeLib::GUIDTypeLib()
 {
 }
-
-
 GUIDTypeLib::~GUIDTypeLib()
 {
 }
-
-
 BaseObjectPtr GUIDTypeLib::clone()
 {
 	return BaseObjectPtr(new GUIDTypeLib(*this));

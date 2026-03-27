@@ -340,8 +340,6 @@ Cx2tTester::Cx2tTester(const std::wstring& configPath)
 	m_troughConversionDirectory = m_outputDirectory + FILE_SEPARATOR_STR + L"_t";
 	m_tempDirectory = m_outputDirectory + FILE_SEPARATOR_STR + L"_temp";
 	m_fontsDirectory = NSFile::GetProcessDirectory() + FILE_SEPARATOR_STR + L"fonts";
-
-
 	// CorrectPathW works strange with directories starts with "./"
 	if(m_outputDirectory.find(L"./") == 0)
 		m_outputDirectory.erase(0, 2);
@@ -694,8 +692,6 @@ void Cx2tTester::Convert(const std::vector<std::wstring>& files, bool bNoDirecto
 		std::wstring delimiter = m_defaultCsvDelimiter;
 		if (input_ext == L"tsv")
 			delimiter = m_defaultTsvDelimiter;
-
-
 		// setup csv & txt additional params
 		if(m_bIsFilenameCsvTxtParams
 		        || input_ext == L"txt"
@@ -741,8 +737,6 @@ void Cx2tTester::Convert(const std::vector<std::wstring>& files, bool bNoDirecto
 		{
 			NSThreads::Sleep(50);
 		} while(IsAllBusy());
-
-
 
 		m_coresCS.Enter();
 
@@ -988,8 +982,6 @@ void CConverter::SetSaveEnvironment(bool bSaveEnvironment)
 {
 	m_bSaveEnvironment = bSaveEnvironment;
 }
-
-
 DWORD CConverter::ThreadProc()
 {
 	std::vector<Cx2tTester::Report> reports;
@@ -1025,8 +1017,6 @@ DWORD CConverter::ThreadProc()
 		std::wstring output_filename = NSFile::GetFileName(output_file);
 
 		xml_params_file = CorrectPathW(xml_params_file);
-
-
 		// creating temporary xml file with params
 		NSStringUtils::CStringBuilder builder;
 		builder.WriteString(L"<?xml version=\"1.0\" encoding=\"utf-8\"?>");

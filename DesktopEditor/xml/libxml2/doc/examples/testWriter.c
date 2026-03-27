@@ -626,8 +626,6 @@ testXmlwriterDoc(const char *file)
     xmlTextWriterPtr writer;
     xmlChar *tmp;
     xmlDocPtr doc;
-
-
     /* Create a new XmlWriter for DOM, with no compression. */
     writer = xmlNewTextWriterDoc(&doc, 0);
     if (writer == NULL) {

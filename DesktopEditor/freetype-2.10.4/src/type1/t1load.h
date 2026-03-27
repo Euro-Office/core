@@ -14,22 +14,14 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T1LOAD_H_
 #define T1LOAD_H_
-
-
 #include <freetype/internal/ftstream.h>
 #include <freetype/internal/psaux.h>
 #include <freetype/ftmm.h>
 
 #include "t1parse.h"
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct  T1_Loader_
   {
     T1_ParserRec  parser;          /* parser used to read the stream */
@@ -51,15 +43,11 @@ FT_BEGIN_HEADER
     FT_UInt       keywords_encountered; /* T1_LOADER_ENCOUNTERED_XXX */
 
   } T1_LoaderRec, *T1_Loader;
-
-
   /* treatment of some keywords differs depending on whether */
   /* they precede or follow certain other keywords           */
 
 #define T1_PRIVATE                ( 1 << 0 )
 #define T1_FONTDIR_AFTER_PRIVATE  ( 1 << 1 )
-
-
   FT_LOCAL( FT_Error )
   T1_Open_Face( T1_Face  face );
 
@@ -116,11 +104,7 @@ FT_BEGIN_HEADER
                           FT_Fixed*  weightvector );
 
 #endif /* !T1_CONFIG_OPTION_NO_MM_SUPPORT */
-
-
 FT_END_HEADER
 
 #endif /* T1LOAD_H_ */
-
-
 /* END */

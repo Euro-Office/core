@@ -88,8 +88,6 @@ ICULocaleService::get(const Locale& locale, int32_t kind, Locale* actualReturn, 
     }
     return result;
 }
-
-
 URegistryKey
 ICULocaleService::registerInstance(UObject* objToAdopt, const UnicodeString& locale, 
     UBool visible, UErrorCode& status)
@@ -289,5 +287,3 @@ U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
 #endif
-
-

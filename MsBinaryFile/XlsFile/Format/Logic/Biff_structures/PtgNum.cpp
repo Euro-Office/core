@@ -39,8 +39,6 @@ namespace XLS
 PtgNum::PtgNum(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgNum::PtgNum(const std::wstring& word) : value_(0), OperandPtg(fixed_id)
 {
 #if defined(_WIN32) || defined (_WIN64)
@@ -50,8 +48,6 @@ PtgNum::PtgNum(const std::wstring& word) : value_(0), OperandPtg(fixed_id)
     value_ = wcstod(word.c_str(), &pEnd);
 #endif
 }
-
-
 BiffStructurePtr PtgNum::clone()
 {
 	return BiffStructurePtr(new PtgNum(*this));
@@ -83,7 +79,5 @@ void PtgNum::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
 	if (value_)	ptg_stack.push(STR::double2str(*value_));
 	else		ptg_stack.push(L"");
 }
-
-
 } // namespace XLS
 

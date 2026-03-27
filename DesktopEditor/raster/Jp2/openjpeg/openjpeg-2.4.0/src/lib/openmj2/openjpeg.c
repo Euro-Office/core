@@ -62,8 +62,6 @@ DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 #endif /* _WIN32 */
 
 /* ---------------------------------------------------------------------- */
-
-
 const char* OPJ_CALLCONV opj_version(void)
 {
     return OPJ_PACKAGE_VERSION;

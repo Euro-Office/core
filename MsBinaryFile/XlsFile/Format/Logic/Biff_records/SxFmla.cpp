@@ -38,13 +38,9 @@ namespace XLS
 SxFmla::SxFmla()
 {
 }
-
-
 SxFmla::~SxFmla()
 {
 }
-
-
 BaseObjectPtr SxFmla::clone()
 {
 	return BaseObjectPtr(new SxFmla(*this));

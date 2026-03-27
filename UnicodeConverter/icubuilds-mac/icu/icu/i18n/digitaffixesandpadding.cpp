@@ -167,7 +167,5 @@ DigitAffixesAndPadding::appendPadding(int32_t paddingCount, UnicodeString &appen
     }
     return appendTo;
 }
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */

@@ -15,8 +15,6 @@ import argparse
 import os
 import re
 import sys
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -99,7 +97,5 @@ def main():
         print(result)
 
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

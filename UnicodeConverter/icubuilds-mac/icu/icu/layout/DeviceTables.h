@@ -36,5 +36,3 @@ LE_VAR_ARRAY(DeviceTable, deltaValues)
 
 U_NAMESPACE_END
 #endif
-
-

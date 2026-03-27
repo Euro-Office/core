@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVOTVAL_H_
 #define SVOTVAL_H_
 
@@ -23,11 +21,7 @@
 #include <freetype/internal/ftvalid.h>
 
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_OPENTYPE_VALIDATE  "opentype-validate"
-
-
   typedef FT_Error
   (*otv_validate_func)( FT_Face volatile  face,
                         FT_UInt           ot_flags,
@@ -36,20 +30,12 @@ FT_BEGIN_HEADER
                         FT_Bytes         *gpos,
                         FT_Bytes         *gsub,
                         FT_Bytes         *jstf );
-
-
   FT_DEFINE_SERVICE( OTvalidate )
   {
     otv_validate_func  validate;
   };
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* SVOTVAL_H_ */
-
-
 /* END */

@@ -34,8 +34,6 @@ enum {
       CCB_SAVE_ALL_PTS = 1,
       CCB_SAVE_TURNING_PTS = 2
 };
-
-
     /* CCBord contains:
      *
      *    (1) a minimally-clipped bitmap of the component (pix),
@@ -85,8 +83,6 @@ struct CCBord
     struct Pta          *spglobal;       /* pta of single chain (global)     */
 };
 typedef struct CCBord CCBORD;
-
-
 struct CCBorda
 {
     struct Pix          *pix;            /* input pix (may be null)          */
@@ -97,7 +93,5 @@ struct CCBorda
     struct CCBord      **ccb;            /* ccb ptr array                    */
 };
 typedef struct CCBorda CCBORDA;
-
-
 #endif  /* LEPTONICA_CCBORD_H */
 

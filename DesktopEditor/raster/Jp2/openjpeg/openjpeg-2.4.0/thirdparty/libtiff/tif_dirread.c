@@ -5602,8 +5602,6 @@ int _TIFFFillStriles( TIFF *tif )
         return 1;
 #endif 
 }
-
-
 /* vim: set ts=8 sts=8 sw=8 noet: */
 /*
  * Local Variables:

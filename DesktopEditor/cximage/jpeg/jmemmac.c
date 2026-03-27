@@ -69,8 +69,6 @@
 #endif
 
 static int next_file_num;	/* to distinguish among several temp files */
-
-
 /*
  * Memory allocation and freeing are controlled by the MacOS library
  * routines NewPtr() and DisposePtr(), which allocate fixed-address
@@ -89,8 +87,6 @@ jpeg_free_small (j_common_ptr cinfo, void * object, size_t sizeofobject)
 {
   DisposePtr((Ptr) object);
 }
-
-
 /*
  * "Large" objects are treated the same as "small" ones.
  * NB: we include FAR keywords in the routine declarations simply for
@@ -109,8 +105,6 @@ jpeg_free_large (j_common_ptr cinfo, void FAR * object, size_t sizeofobject)
 {
   DisposePtr((Ptr) object);
 }
-
-
 /*
  * This routine computes the total memory space available for allocation.
  */
@@ -140,16 +134,12 @@ jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,
     mem = limit;
   return mem;
 }
-
-
 /*
  * Backing store (temporary file) management.
  * Backing store objects are only used when the value returned by
  * jpeg_mem_available is less than the total space needed.  You can dispense
  * with these routines if you have plenty of virtual memory; see jmemnobs.c.
  */
-
-
 METHODDEF(void)
 read_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 		    void FAR * buffer_address,
@@ -166,8 +156,6 @@ read_backing_store (j_common_ptr cinfo, backing_store_ptr info,
   if ( retVal != noErr || bytes != byte_count )
     ERREXIT(cinfo, JERR_TFILE_READ);
 }
-
-
 METHODDEF(void)
 write_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 		     void FAR * buffer_address,
@@ -184,16 +172,12 @@ write_backing_store (j_common_ptr cinfo, backing_store_ptr info,
   if ( retVal != noErr || bytes != byte_count )
     ERREXIT(cinfo, JERR_TFILE_WRITE);
 }
-
-
 METHODDEF(void)
 close_backing_store (j_common_ptr cinfo, backing_store_ptr info)
 {
   FSClose ( info->temp_file );
   FSpDelete ( &(info->tempSpec) );
 }
-
-
 /*
  * Initial opening of a backing-store object.
  *
@@ -261,8 +245,6 @@ jpeg_open_backing_store (j_common_ptr cinfo, backing_store_ptr info,
   info->close_backing_store = close_backing_store;
   TRACEMSS(cinfo, 1, JTRC_TFILE_OPEN, info->temp_name);
 }
-
-
 /*
  * These routines take care of any system-dependent initialization and
  * cleanup required.

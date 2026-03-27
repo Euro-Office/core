@@ -40,8 +40,6 @@
 
 #include <string.h>
 #include "allheaders.h"
-
-
 /*-----------------------------------------------------------------------*
  *                          Reading spix from file                       *
  *-----------------------------------------------------------------------*/
@@ -77,8 +75,6 @@ PIX      *pix;
     FREE(data);
     return pix;
 }
-
-
 /*!
  *  readHeaderSpix()
  *
@@ -116,8 +112,6 @@ FILE    *fp;
     fclose(fp);
     return ret;
 }
-
-
 /*!
  *  freadHeaderSpix()
  *
@@ -161,8 +155,6 @@ l_uint32  *data;
     FREE(data);
     return ret;
 }
-
-
 /*!
  *  sreadHeaderSpix()
  *
@@ -220,8 +212,6 @@ l_int32  d, ncolors;
 
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                            Writing spix to file                       *
  *-----------------------------------------------------------------------*/
@@ -252,8 +242,6 @@ size_t    size;
     FREE(data);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *       Low-level serialization of pix to/from memory (uncompressed)    *
  *-----------------------------------------------------------------------*/
@@ -270,8 +258,6 @@ pixReadMemSpix(const l_uint8  *data,
 {
     return pixDeserializeFromMemory((l_uint32 *)data, size);
 }
-
-
 /*!
  *  pixWriteMemSpix()
  *
@@ -287,8 +273,6 @@ pixWriteMemSpix(l_uint8  **pdata,
 {
     return pixSerializeToMemory(pix, (l_uint32 **)pdata, psize);
 }
-
-
 /*!
  *  pixSerializeToMemory()
  *
@@ -375,8 +359,6 @@ PIXCMAP   *cmap;
     FREE(cdata);
     return 0;
 }
-
-
 /*!
  *  pixDeserializeFromMemory()
  *
@@ -435,5 +417,3 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-

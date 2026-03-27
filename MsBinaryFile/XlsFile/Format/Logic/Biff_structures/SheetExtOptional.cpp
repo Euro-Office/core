@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 SheetExtOptional::SheetExtOptional()
 {
 	fCondFmtCalc	= true;
@@ -43,14 +41,10 @@ SheetExtOptional::SheetExtOptional()
 
 	bEnabled = false;
 }
-
-
 SheetExtOptional::SheetExtOptional(CFRecord& record)
 {
 	load(record);
 }
-
-
 BiffStructurePtr SheetExtOptional::clone()
 {
 	return BiffStructurePtr(new SheetExtOptional(*this));
@@ -80,7 +74,5 @@ void SheetExtOptional::save(CFRecord& record)
     record << flags;
     record << color;
 }
-
-
 } // namespace XLS
 

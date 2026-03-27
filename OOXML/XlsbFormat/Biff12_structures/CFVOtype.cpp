@@ -36,8 +36,6 @@ using namespace XLS;
 
 namespace XLSB
 {
-
-
 BiffStructurePtr CFVOtype::clone()
 {
     return BiffStructurePtr(new CFVOtype(*this));

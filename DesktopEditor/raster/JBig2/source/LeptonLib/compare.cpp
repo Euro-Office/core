@@ -39,8 +39,6 @@
  *           NUMA       *pixGetDifferenceHistogram()
  *           l_int32     pixGetPSNR()
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -49,8 +47,6 @@
 
     /* Small enough to consider equal to 0.0, for plot output */
 static const l_float32  TINY = 0.00001;
-
-
 /*------------------------------------------------------------------*
  *                        Test for pix equality                     *
  *------------------------------------------------------------------*/
@@ -244,8 +240,6 @@ PIXCMAP   *cmap1, *cmap2;
     *psame = 1;
     return 0;
 }
-
-
 /*!
  *  pixEqualWithCmap()
  *
@@ -365,8 +359,6 @@ PIXCMAP   *cmap1, *cmap2;
     *psame = 1;
     return 0;
 }
-
-
 /*!
  *  pixUsesCmapColor()
  *
@@ -421,8 +413,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                          Binary correlation                      *
  *------------------------------------------------------------------*/
@@ -475,8 +465,6 @@ PIX      *pixn;
     FREE(tab8);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                   Difference of two images                       *
  *------------------------------------------------------------------*/
@@ -531,8 +519,6 @@ PIXCMAP  *cmap;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixCompareBinary()
  *
@@ -586,8 +572,6 @@ PIX      *pixt;
         pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixCompareGrayOrRGB()
  *
@@ -671,8 +655,6 @@ PIX     *pixt1, *pixt2;
     pixDestroy(&pixt2);
     return retval;
 }
-
-
 /*!
  *  pixCompareGray()
  *
@@ -765,8 +747,6 @@ PIX     *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixCompareRGB()
  *
@@ -902,8 +882,6 @@ PIX       *pixr1, *pixr2, *pixg1, *pixg2, *pixb1, *pixb2, *pixr, *pixg, *pixb;
     pixDestroy(&pixb);
     return 0;
 }
-
-
 /*!
  *  pixCompareTiled()
  *
@@ -989,8 +967,6 @@ PIXACC    *pixacc;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *            Other measures of the difference of two images        *
  *------------------------------------------------------------------*/
@@ -1053,8 +1029,6 @@ NUMA       *nah, *nan, *nad;
     numaDestroy(&nan);
     return nad;
 }
-
-
 /*!
  *  pixTestForSimilarity()
  *
@@ -1136,8 +1110,6 @@ l_float32   fractdiff, avediff;
         *psimilar = 1;
     return 0;
 }
-
-
 /*!
  *  pixGetDifferenceStats()
  *
@@ -1251,8 +1223,6 @@ NUMA       *nah, *nan, *nac;
     numaDestroy(&nan);
     return 0;
 }
-
-
 /*!
  *  pixGetDifferenceHistogram()
  *
@@ -1353,8 +1323,6 @@ PIX        *pixt1, *pixt2;
     pixDestroy(&pixt2);
     return na;
 }
-
-
 /*!
  *  pixGetPSNR()
  *

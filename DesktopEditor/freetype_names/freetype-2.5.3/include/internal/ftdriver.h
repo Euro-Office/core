@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTDRIVER_H__
 #define __FTDRIVER_H__
-
-
 #include <ft2build.h>
 #include FT_MODULE_H
-
-
 FT_BEGIN_HEADER
-
-
   typedef FT_Error
   (*FT_Face_InitFunc)( FT_Stream      stream,
                        FT_Face        face,
@@ -36,22 +28,16 @@ FT_BEGIN_HEADER
 
   typedef void
   (*FT_Face_DoneFunc)( FT_Face  face );
-
-
   typedef FT_Error
   (*FT_Size_InitFunc)( FT_Size  size );
 
   typedef void
   (*FT_Size_DoneFunc)( FT_Size  size );
-
-
   typedef FT_Error
   (*FT_Slot_InitFunc)( FT_GlyphSlot  slot );
 
   typedef void
   (*FT_Slot_DoneFunc)( FT_GlyphSlot  slot );
-
-
   typedef FT_Error
   (*FT_Size_RequestFunc)( FT_Size          size,
                           FT_Size_Request  req );
@@ -65,8 +51,6 @@ FT_BEGIN_HEADER
                        FT_Size       size,
                        FT_UInt       glyph_index,
                        FT_Int32      load_flags );
-
-
   typedef FT_UInt
   (*FT_CharMap_CharIndexFunc)( FT_CharMap  charmap,
                                FT_Long     charcode );
@@ -74,28 +58,20 @@ FT_BEGIN_HEADER
   typedef FT_Long
   (*FT_CharMap_CharNextFunc)( FT_CharMap  charmap,
                               FT_Long     charcode );
-
-
   typedef FT_Error
   (*FT_Face_GetKerningFunc)( FT_Face     face,
                              FT_UInt     left_glyph,
                              FT_UInt     right_glyph,
                              FT_Vector*  kerning );
-
-
   typedef FT_Error
   (*FT_Face_AttachFunc)( FT_Face    face,
                          FT_Stream  stream );
-
-
   typedef FT_Error
   (*FT_Face_GetAdvancesFunc)( FT_Face    face,
                               FT_UInt    first,
                               FT_UInt    count,
                               FT_Int32   flags,
                               FT_Fixed*  advances );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -191,8 +167,6 @@ FT_BEGIN_HEADER
     FT_Size_SelectFunc       select_size;
 
   } FT_Driver_ClassRec, *FT_Driver_Class;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Macro>                                                               */
@@ -397,13 +371,9 @@ FT_BEGIN_HEADER
                                                                  \
     return FT_Err_Ok;                                            \
   }
-
-
 #endif /* FT_CONFIG_OPTION_PIC */
 
 FT_END_HEADER
 
 #endif /* __FTDRIVER_H__ */
-
-
 /* END */

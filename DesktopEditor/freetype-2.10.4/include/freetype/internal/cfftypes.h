@@ -15,23 +15,15 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef CFFTYPES_H_
 #define CFFTYPES_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
 #include <freetype/internal/ftserv.h>
 #include <freetype/internal/services/svpscmap.h>
 #include <freetype/internal/pshints.h>
 #include <freetype/internal/t1types.h>
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @struct:
@@ -79,8 +71,6 @@ FT_BEGIN_HEADER
     FT_Byte*   bytes;
 
   } CFF_IndexRec, *CFF_Index;
-
-
   typedef struct  CFF_EncodingRec_
   {
     FT_UInt     format;
@@ -91,8 +81,6 @@ FT_BEGIN_HEADER
     FT_UShort   codes[256];
 
   } CFF_EncodingRec, *CFF_Encoding;
-
-
   typedef struct  CFF_CharsetRec_
   {
 
@@ -106,8 +94,6 @@ FT_BEGIN_HEADER
     FT_UInt     num_glyphs;
 
   } CFF_CharsetRec, *CFF_Charset;
-
-
   /* cf. similar fields in file `ttgxvar.h' from the `truetype' module */
 
   typedef struct  CFF_VarData_
@@ -121,8 +107,6 @@ FT_BEGIN_HEADER
     FT_UInt*  regionIndices;  /* array of `regionIdxCount' indices; */
                               /* these index `varRegionList'        */
   } CFF_VarData;
-
-
   /* contribution of one axis to a region */
   typedef struct  CFF_AxisCoords_
   {
@@ -131,15 +115,11 @@ FT_BEGIN_HEADER
     FT_Fixed  endCoord;
 
   } CFF_AxisCoords;
-
-
   typedef struct  CFF_VarRegion_
   {
     CFF_AxisCoords*  axisList;      /* array of axisCount records */
 
   } CFF_VarRegion;
-
-
   typedef struct  CFF_VStoreRec_
   {
     FT_UInt         dataCount;
@@ -150,12 +130,8 @@ FT_BEGIN_HEADER
     CFF_VarRegion*  varRegionList;
 
   } CFF_VStoreRec, *CFF_VStore;
-
-
   /* forward reference */
   typedef struct CFF_FontRec_*  CFF_Font;
-
-
   /* This object manages one cached blend vector.                  */
   /*                                                               */
   /* There is a BlendRec for Private DICT parsing in each subfont  */
@@ -179,8 +155,6 @@ FT_BEGIN_HEADER
     FT_Int32*  BV;             /* current blendV (per DICT/glyph) */
 
   } CFF_BlendRec, *CFF_Blend;
-
-
   typedef struct  CFF_FontRecDictRec_
   {
     FT_UInt    version;
@@ -235,12 +209,8 @@ FT_BEGIN_HEADER
     FT_UInt    maxstack;
 
   } CFF_FontRecDictRec, *CFF_FontRecDict;
-
-
   /* forward reference */
   typedef struct CFF_SubFontRec_*  CFF_SubFont;
-
-
   typedef struct  CFF_PrivateRec_
   {
     FT_Byte   num_blue_values;
@@ -278,8 +248,6 @@ FT_BEGIN_HEADER
     CFF_SubFont  subfont;
 
   } CFF_PrivateRec, *CFF_Private;
-
-
   typedef struct  CFF_FDSelectRec_
   {
     FT_Byte   format;
@@ -295,8 +263,6 @@ FT_BEGIN_HEADER
     FT_Byte   cache_fd;
 
   } CFF_FDSelectRec, *CFF_FDSelect;
-
-
   /* A SubFont packs a font dict and a private dict together.  They are */
   /* needed to support CID-keyed CFF fonts.                             */
   typedef struct  CFF_SubFontRec_
@@ -329,11 +295,7 @@ FT_BEGIN_HEADER
     FT_UInt32  random;
 
   } CFF_SubFontRec;
-
-
 #define CFF_MAX_CID_FONTS  256
-
-
   typedef struct  CFF_FontRec_
   {
     FT_Library       library;
@@ -406,11 +368,7 @@ FT_BEGIN_HEADER
     PS_FontExtraRec*  font_extra;
 
   } CFF_FontRec;
-
-
 FT_END_HEADER
 
 #endif /* CFFTYPES_H_ */
-
-
 /* END */

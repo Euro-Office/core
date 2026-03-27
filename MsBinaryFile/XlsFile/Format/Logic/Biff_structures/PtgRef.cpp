@@ -35,20 +35,14 @@
 
 namespace XLS
 {
-
-
 PtgRef::PtgRef(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgRef::PtgRef(const std::wstring& word, const PtgDataType data_type)
 :	OperandPtg(fixed_id | (static_cast<unsigned char>(data_type) << 5)),
 	loc(word), loc_xlsb(word)
 {
 }
-
-
 BiffStructurePtr PtgRef::clone()
 {
 	return BiffStructurePtr(new PtgRef(*this));
@@ -117,8 +111,6 @@ void PtgRef::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
     }
 
 }
-
-
 
 } // namespace XLS
 

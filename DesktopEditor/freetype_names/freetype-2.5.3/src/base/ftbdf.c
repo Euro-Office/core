@@ -14,13 +14,9 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_BDF_H
-
-
   /* documentation is in ftbdf.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -31,15 +27,11 @@
     FT_Error     error;
     const char*  encoding = NULL;
     const char*  registry = NULL;
-
-
     error = FT_ERR( Invalid_Argument );
 
     if ( face )
     {
       FT_Service_BDF  service;
-
-
       FT_FACE_FIND_SERVICE( face, service, BDF );
 
       if ( service && service->get_charset_id )
@@ -54,8 +46,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftbdf.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -64,8 +54,6 @@
                        BDF_PropertyRec  *aproperty )
   {
     FT_Error  error;
-
-
     error = FT_ERR( Invalid_Argument );
 
     aproperty->type = BDF_PROPERTY_TYPE_NONE;
@@ -73,8 +61,6 @@
     if ( face )
     {
       FT_Service_BDF  service;
-
-
       FT_FACE_FIND_SERVICE( face, service, BDF );
 
       if ( service && service->get_property )
@@ -83,6 +69,4 @@
 
     return  error;
   }
-
-
 /* END */

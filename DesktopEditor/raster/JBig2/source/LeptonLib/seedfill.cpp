@@ -59,7 +59,6 @@
  *      Removal of seeded connected components from a mask
  *               PIX      *pixRemoveSeededComponents()
  *
- *
  *           ITERATIVE RASTER-ORDER SEEDFILL
  *
  *      The basic method in the Vincent seedfill (aka reconstruction)
@@ -155,8 +154,6 @@ static const l_int32  MAX_ITERS = 40;
 
     /* Static function */
 static l_int32 pixQualifyLocalMinima(PIX *pixs, PIX *pixm, l_int32 maxval);
-
-
 /*-----------------------------------------------------------------------*
  *              Vincent's Iterative Binary Seedfill method               *
  *-----------------------------------------------------------------------*/
@@ -241,8 +238,6 @@ PIX       *pixt;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*!
  *  pixSeedfillBinaryRestricted()
  *
@@ -317,8 +312,6 @@ PIX     *pixr, *pixt;
     pixDestroy(&pixr);
     return pixd;
 }
-
-
 /*!
  *  pixHolesByFilling()
  *
@@ -365,8 +358,6 @@ PIX  *pixsi, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixFillClosedBorders()
  *
@@ -413,8 +404,6 @@ PIX  *pixsi, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixExtractBorderConnComps()
  *
@@ -447,8 +436,6 @@ PIX  *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixRemoveBorderConnComps()
  *
@@ -479,8 +466,6 @@ PIX  *pixd;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *            Hole-filling of components to bounding rectangle           *
  *-----------------------------------------------------------------------*/
@@ -566,8 +551,6 @@ PIXA      *pixa;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *             Vincent's hybrid Grayscale Seedfill method             *
  *-----------------------------------------------------------------------*/
@@ -623,8 +606,6 @@ l_uint32  *datas, *datam;
 
     return 0;
 }
-
-
 /*!
  *  pixSeedfillGrayInv()
  *
@@ -752,8 +733,6 @@ PIX       *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*!
  *  pixSeedfillGrayInvSimple()
  *
@@ -821,8 +800,6 @@ PIX       *pixt;
     pixDestroy(&pixt);
     return 0;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                         Gray seedfill variations                      *
  *-----------------------------------------------------------------------*/
@@ -898,8 +875,6 @@ PIX  *pixbi, *pixmi, *pixsd;
     pixDestroy(&pixmi);
     return pixsd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                   Vincent's Distance Function method                  *
  *-----------------------------------------------------------------------*/
@@ -990,8 +965,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *                Seed spread (based on distance function)               *
  *-----------------------------------------------------------------------*/
@@ -1081,8 +1054,6 @@ PIX       *pixm, *pixt, *pixg, *pixd;
     return pixd;
 }
 
-
-
 /*-----------------------------------------------------------------------*
  *                              Local extrema                            *
  *-----------------------------------------------------------------------*/
@@ -1159,8 +1130,6 @@ PIX  *pixmin, *pixmax, *pixt1, *pixt2;
 
     return 0;
 }
-
-
 /*!
  *  pixQualifyLocalMinima()
  *
@@ -1247,8 +1216,6 @@ PIXA      *pixa;
     pixaDestroy(&pixa);
     return 0;
 }
-
-
 /*!
  *  pixSelectedLocalExtrema()
  *
@@ -1323,8 +1290,6 @@ PIX  *pixmin, *pixmax, *pixt, *pixtmin, *pixtmax;
     }
     return 0;
 }
-
-
 /*!
  *  pixFindEqualValues()
  *
@@ -1378,8 +1343,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*-----------------------------------------------------------------------*
  *             Selection of minima in mask connected components          *
  *-----------------------------------------------------------------------*/
@@ -1474,8 +1437,6 @@ PTA       *pta;
         numaDestroy(&nav);
     return pta;
 }
-
-
 /*-----------------------------------------------------------------------*
  *            Removal of seeded connected components from a mask         *
  *-----------------------------------------------------------------------*/

@@ -14,21 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef T42TYPES_H_
 #define T42TYPES_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/t1tables.h>
 #include <freetype/internal/t1types.h>
 #include <freetype/internal/pshints.h>
-
-
 FT_BEGIN_HEADER
-
-
   typedef struct  T42_FaceRec_
   {
     FT_FaceRec      root;
@@ -46,11 +38,7 @@ FT_BEGIN_HEADER
     PS_UnicodesRec  unicode_map;
 
   } T42_FaceRec, *T42_Face;
-
-
 FT_END_HEADER
 
 #endif /* T42TYPES_H_ */
-
-
 /* END */

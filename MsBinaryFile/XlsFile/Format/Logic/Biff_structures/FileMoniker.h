@@ -50,8 +50,6 @@ public:
 
 	virtual void load(XLS::CFRecord& record);
     virtual void save(XLS::CFRecord& record);
-
-
     _UINT16			cAnti = 0;
     std::string		ansiPath = "";
     _UINT16			endServer = 0;

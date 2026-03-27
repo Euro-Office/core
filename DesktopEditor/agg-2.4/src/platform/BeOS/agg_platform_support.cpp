@@ -35,8 +35,6 @@
 #include "util/agg_color_conv_rgb8.h"
 
 using std::nothrow;
-
-
 static void
 attach_buffer_to_BBitmap(agg::rendering_buffer& buffer, BBitmap* bitmap, bool flipY)
 {
@@ -51,8 +49,6 @@ attach_buffer_to_BBitmap(agg::rendering_buffer& buffer, BBitmap* bitmap, bool fl
     }
     buffer.attach(bits, width, height, bpr);
 }
-
-
 static color_space
 pix_format_to_color_space(agg::pix_format_e format)
 {
@@ -84,11 +80,7 @@ pix_format_to_color_space(agg::pix_format_e format)
     }
     return bitmapFormat;
 }
-
-
 // #pragma mark -
-
-
 class AGGView : public BView {
  public:
                             AGGView(BRect frame, agg::platform_support* agg,
@@ -173,15 +165,11 @@ AGGView::AGGView(BRect frame,
         fBitmap = NULL;
     }
 }
-
-
 AGGView::~AGGView()
 {
     delete fBitmap;
     delete fPulse;
 }
-
-
 void
 AGGView::AttachedToWindow()
 {
@@ -197,16 +185,12 @@ AGGView::AttachedToWindow()
                     Bounds().IntegerHeight() + 1);
     MakeFocus();
 }
-
-
 void
 AGGView::DetachedFromWindow()
 {
     delete fPulse;
     fPulse = NULL;
 }
-
-
 void
 AGGView::MessageReceived(BMessage* message)
 {
@@ -237,8 +221,6 @@ AGGView::MessageReceived(BMessage* message)
             break;
     }
 }
-
-
 void
 AGGView::Draw(BRect updateRect)
 {
@@ -299,8 +281,6 @@ AGGView::Draw(BRect updateRect)
         FillRect(updateRect);
     }
 }
-
-
 void
 AGGView::FrameResized(float width, float height)
 {
@@ -322,8 +302,6 @@ AGGView::FrameResized(float width, float height)
     } else
         delete bitmap;
 }
-
-
 void
 AGGView::KeyDown(const char* bytes, int32 numBytes)
 {
@@ -359,8 +337,6 @@ fAGG->copy_window_to_img(agg::platform_support::max_images - 1);
 fAGG->save_img(agg::platform_support::max_images - 1, "screenshot");
 break;
 }*/
-
-
         if (fAGG->m_ctrls.on_arrow_keys(left, right, down, up)) {
             fAGG->on_ctrl_change();
             fAGG->force_redraw();
@@ -371,8 +347,6 @@ break;
 
     }
 }
-
-
 void
 AGGView::MouseDown(BPoint where)
 {
@@ -409,8 +383,6 @@ AGGView::MouseDown(BPoint where)
     }
     SetMouseEventMask(B_POINTER_EVENTS, B_LOCK_WINDOW_FOCUS);
 }
-
-
 void
 AGGView::MouseMoved(BPoint where, uint32 transit, const BMessage* dragMesage)
 {
@@ -438,8 +410,6 @@ AGGView::MouseMoved(BPoint where, uint32 transit, const BMessage* dragMesage)
         }
     }
 }
-
-
 void
 AGGView::MouseUp(BPoint where)
 {
@@ -461,22 +431,16 @@ AGGView::MouseUp(BPoint where)
         fAGG->on_mouse_button_up(fMouseX, fMouseY, GetKeyFlags());
     }
 }
-
-
 BBitmap*
 AGGView::Bitmap() const
 {
     return fBitmap;
 }
-
-
 uint8
 AGGView::LastKeyDown() const
 {
     return fLastKeyDown;
 }
-
-
 uint32
 AGGView::MouseButtons()
 {
@@ -487,8 +451,6 @@ AGGView::MouseButtons()
     }
     return buttons;
 }
-
-
 void
 AGGView::Update()
 {
@@ -498,8 +460,6 @@ AGGView::Update()
         UnlockLooper();
     }
 }
-
-
 void
 AGGView::ForceRedraw()
 {
@@ -511,8 +471,6 @@ AGGView::ForceRedraw()
         UnlockLooper();
     }
 }
-
-
 unsigned
 AGGView::GetKeyFlags()
 {
@@ -527,8 +485,6 @@ AGGView::GetKeyFlags()
 }
 
 // #pragma mark -
-
-
 class AGGWindow : public BWindow {
  public:
                     AGGWindow()
@@ -557,8 +513,6 @@ class AGGWindow : public BWindow {
 
                         return fView->Bitmap() != NULL;
                     }
-
-
         AGGView*    View() const
                     {
                         return fView;
@@ -568,8 +522,6 @@ class AGGWindow : public BWindow {
 };
 
 // #pragma mark -
-
-
 class AGGApplication : public BApplication {
  public:
                     AGGApplication()
@@ -597,8 +549,6 @@ class AGGApplication : public BApplication {
 
                         return fWindow->Init(r, agg, format, flipY, windowFlags);;
                     }
-
-
         AGGWindow*  Window() const
                     {
                         return fWindow;
@@ -607,11 +557,7 @@ class AGGApplication : public BApplication {
  private:
     AGGWindow*      fWindow;
 };
-
-
 // #pragma mark -
-
-
 namespace agg
 {
 
@@ -694,8 +640,6 @@ class platform_specific {
                     {
                         fApp->Window()->View()->Update();
                     }
-
-
     agg::platform_support*  fAGG;
     AGGApplication*     fApp;
     agg::pix_format_e    fFormat;
@@ -706,8 +650,6 @@ class platform_specific {
     char                fAppPath[B_PATH_NAME_LENGTH];
     char                fFilePath[B_PATH_NAME_LENGTH];
 };
-
-
     //------------------------------------------------------------------------
     platform_support::platform_support(pix_format_e format, bool flip_y) :
         m_specific(new platform_specific(this, format, flip_y)),
@@ -721,8 +663,6 @@ class platform_specific {
     {
         strcpy(m_caption, "Anti-Grain Geometry Application");
     }
-
-
     //------------------------------------------------------------------------
     platform_support::~platform_support()
     {
@@ -762,8 +702,6 @@ class platform_specific {
         BAlert* alert = new BAlert("AGG Message", msg, "Ok");
         alert->Go(/*NULL*/);
     }
-
-
     //------------------------------------------------------------------------
     bool platform_support::init(unsigned width, unsigned height, unsigned flags)
     {
@@ -778,26 +716,18 @@ class platform_specific {
 
         return false;
     }
-
-
     //------------------------------------------------------------------------
     int platform_support::run()
     {
         return m_specific->Run();
     }
-
-
     //------------------------------------------------------------------------
     const char* platform_support::img_ext() const { return ".ppm"; }
-
-
     const char* platform_support::full_file_name(const char* file_name)
     {
         sprintf(m_specific->fFilePath, "%s/%s", m_specific->fAppPath, file_name);
         return m_specific->fFilePath;
     }
-
-
     //------------------------------------------------------------------------
     bool platform_support::load_img(unsigned idx, const char* file)
     {
@@ -909,16 +839,12 @@ class platform_specific {
         return false;
     }
 
-
-
     //------------------------------------------------------------------------
     bool platform_support::save_img(unsigned idx, const char* file)
     {
         // TODO: implement using BTranslatorRoster and friends
         return false;
     }
-
-
 
     //------------------------------------------------------------------------
     bool platform_support::create_img(unsigned idx, unsigned width, unsigned height)
@@ -939,23 +865,17 @@ class platform_specific {
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::force_redraw()
     {
         m_specific->ForceRedraw();
     }
 
-
-
     //------------------------------------------------------------------------
     void platform_support::update_window()
     {
         m_specific->UpdateWindow();
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::on_init() {}
     void platform_support::on_resize(int sx, int sy) {}
@@ -968,23 +888,11 @@ class platform_specific {
     void platform_support::on_draw() {}
     void platform_support::on_post_draw(void* raw_handler) {}
 }
-
-
-
-
-
-
 //----------------------------------------------------------------------------
 int agg_main(int argc, char* argv[]);
-
-
 
 int
 main(int argc, char* argv[])
 {
     return agg_main(argc, argv);
 }
-
-
-
-

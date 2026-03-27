@@ -11,8 +11,6 @@
  * stdio.h - from Windows CE / Windows Mobile SDK 
  * wce_stdio.h - from WCELIBCEX library
  */
-
-
 /*
   Configuration defines for installed libtiff.
   This file maintained for backward compatibility. Do not use definitions
@@ -22,8 +20,6 @@
 #ifndef _WIN32_WCE
 # error This version of tif_config.h header is dedicated for Windows CE platform!
 #endif
-
-
 #ifndef _TIFFCONF_
 #define _TIFFCONF_
 

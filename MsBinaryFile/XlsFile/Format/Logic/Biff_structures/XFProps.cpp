@@ -41,8 +41,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr XFProps::clone()
 {
 	return BiffStructurePtr(new XFProps(*this));

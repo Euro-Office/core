@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
   /* The following part can be included multiple times. */
   /* Define `SCRIPT' as needed.                         */
-
-
   /* Add new scripts here.  The first and second arguments are the    */
   /* script name in lowercase and uppercase, respectively, followed   */
   /* by a description string.  Then comes the corresponding HarfBuzz  */
@@ -403,6 +399,4 @@
           "\xE7\x94\xB0 \xE5\x9B\x97" ) /* 田 囗 */
 
 #endif /* AF_CONFIG_OPTION_CJK */
-
-
 /* END */

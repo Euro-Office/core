@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
   /**************************************************************************
    *
    * @section:
@@ -121,12 +119,8 @@
 #if !( defined( FTERRORS_H_ ) && defined ( __FTERRORS_H__ ) )
 #define FTERRORS_H_
 #define __FTERRORS_H__
-
-
   /* include module base error codes */
 #include <freetype/ftmoderr.h>
-
-
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -134,19 +128,13 @@
   /*****                                                         *****/
   /*******************************************************************/
   /*******************************************************************/
-
-
 #undef  FT_NEED_EXTERN_C
-
-
   /* FT_ERR_PREFIX is used as a prefix for error identifiers. */
   /* By default, we use `FT_Err_`.                            */
   /*                                                          */
 #ifndef FT_ERR_PREFIX
 #define FT_ERR_PREFIX  FT_Err_
 #endif
-
-
   /* FT_ERR_BASE is used as the base for module-specific errors. */
   /*                                                             */
 #ifdef FT_CONFIG_OPTION_USE_MODULE_ERRORS
@@ -161,8 +149,6 @@
 #define FT_ERR_BASE  0
 
 #endif /* FT_CONFIG_OPTION_USE_MODULE_ERRORS */
-
-
   /* If FT_ERRORDEF is not defined, we need to define a simple */
   /* enumeration type.                                         */
   /*                                                           */
@@ -180,8 +166,6 @@
 #endif
 
 #endif /* !FT_ERRORDEF */
-
-
   /* this macro is used to define an error */
 #define FT_ERRORDEF_( e, v, s )                                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v + FT_ERR_BASE, s )
@@ -189,22 +173,14 @@
   /* this is only used for <module>_Err_Ok, which must be 0! */
 #define FT_NOERRORDEF_( e, v, s )                             \
           FT_ERRORDEF( FT_ERR_CAT( FT_ERR_PREFIX, e ), v, s )
-
-
 #ifdef FT_ERROR_START_LIST
   FT_ERROR_START_LIST
 #endif
-
-
   /* now include the error codes */
 #include <freetype/fterrdef.h>
-
-
 #ifdef FT_ERROR_END_LIST
   FT_ERROR_END_LIST
 #endif
-
-
   /*******************************************************************/
   /*******************************************************************/
   /*****                                                         *****/
@@ -247,8 +223,6 @@
 
 #ifndef FT_ERR_PROTOS_DEFINED
 #define FT_ERR_PROTOS_DEFINED
-
-
 FT_BEGIN_HEADER
 
   /**************************************************************************
@@ -282,13 +256,9 @@ FT_BEGIN_HEADER
   FT_Error_String( FT_Error  error_code );
 
 FT_END_HEADER
-
-
 #endif /* FT_ERR_PROTOS_DEFINED */
 
 #endif /* FT_INCLUDE_ERR_PROTOS */
 
 #endif /* !(FTERRORS_H_ && __FTERRORS_H__) */
-
-
 /* END */

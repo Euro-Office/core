@@ -234,8 +234,6 @@ public:
      */
     const uint8_t*
       getBinary(int32_t& len, UErrorCode& status) const;
-
-
     /**
      * returns an integer vector from a resource.
      *
@@ -314,8 +312,6 @@ public:
      */
     const char*
       getName(void) const;
-
-
     /**
      * Returns the type of a resource. Available types are defined in enum UResType
      *

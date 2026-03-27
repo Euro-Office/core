@@ -208,8 +208,6 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     template<class Rasterizer, class Scanline, class ScanlineStorage>
     void decompose_win32_glyph_bitmap_gray8(const char* gbuf, 
@@ -254,8 +252,6 @@ namespace agg
             }
         }
     }
-
-
 
     //------------------------------------------------------------------------
     template<class PathStorage>
@@ -337,10 +333,6 @@ namespace agg
         }
         return true;
     }
-
-
-
-
     //------------------------------------------------------------------------
     font_engine_win32_tt_base::~font_engine_win32_tt_base()
     {
@@ -358,8 +350,6 @@ namespace agg
         delete [] m_font_names;
         delete [] m_fonts;
     }
-
-
 
     //------------------------------------------------------------------------
     font_engine_win32_tt_base::font_engine_win32_tt_base(bool flag32, 
@@ -416,8 +406,6 @@ namespace agg
         m_matrix.eM11.value = 1;
         m_matrix.eM22.value = 1;
     }
-
-
 
     //------------------------------------------------------------------------
     int font_engine_win32_tt_base::find_font(const char* name) const
@@ -513,10 +501,6 @@ namespace agg
         return false;
     }
 
-
-
-
-
     //------------------------------------------------------------------------
     bool font_engine_win32_tt_base::create_font(const char* typeface_, 
                                                 glyph_rendering ren_type,
@@ -535,10 +519,6 @@ namespace agg
         pitch_and_family(pitch_and_family_);
         return create_font(typeface_, ren_type);
     }
-
-
-
-
     //------------------------------------------------------------------------
     void font_engine_win32_tt_base::update_signature()
     {
@@ -593,8 +573,6 @@ namespace agg
             ++m_change_stamp;
         }
     }
-
-
 
     //------------------------------------------------------------------------
     bool font_engine_win32_tt_base::prepare_glyph(unsigned glyph_code)
@@ -805,8 +783,6 @@ namespace agg
         return false;
     }
 
-
-
     //------------------------------------------------------------------------
     void font_engine_win32_tt_base::write_glyph_to(int8u* data) const
     {
@@ -830,24 +806,18 @@ namespace agg
         }
     }
 
-
-
     //------------------------------------------------------------------------
     static bool pair_less(const KERNINGPAIR& v1, const KERNINGPAIR& v2)
     {
         if(v1.wFirst != v2.wFirst) return v1.wFirst < v2.wFirst;
         return v1.wSecond < v2.wSecond;
     }
-
-
     //------------------------------------------------------------------------
     void font_engine_win32_tt_base::sort_kerning_pairs()
     {
         pod_array_adaptor<KERNINGPAIR> pairs(m_kerning_pairs, m_num_kerning_pairs);
         quick_sort(pairs, pair_less);
     }
-
-
 
     //------------------------------------------------------------------------
     void font_engine_win32_tt_base::load_kerning_pairs()
@@ -880,8 +850,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     bool font_engine_win32_tt_base::add_kerning(unsigned first, unsigned second,
                                                 double* x, double* y)
@@ -930,8 +898,6 @@ namespace agg
         }
         return false;
     }
-
-
 
 }
 

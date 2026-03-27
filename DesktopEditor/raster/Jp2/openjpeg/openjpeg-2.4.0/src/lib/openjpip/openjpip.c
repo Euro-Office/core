@@ -201,8 +201,6 @@ void end_QRprocess(server_record_t *rec, QR_t **qr)
     delete_msgqueue(&((*qr)->msgqueue));
     opj_free(*qr);
 }
-
-
 void local_log(OPJ_BOOL query, OPJ_BOOL messages, OPJ_BOOL sessions,
                OPJ_BOOL targets, QR_t *qr, server_record_t *rec)
 {
@@ -329,8 +327,6 @@ OPJ_BOOL OPJ_CALLCONV handle_clientreq(client_t client,
 
     return OPJ_TRUE;
 }
-
-
 jpip_dec_param_t * OPJ_CALLCONV init_jpipdecoder(OPJ_BOOL jp2)
 {
     jpip_dec_param_t *dec;
@@ -345,8 +341,6 @@ jpip_dec_param_t * OPJ_CALLCONV init_jpipdecoder(OPJ_BOOL jp2)
 
     return dec;
 }
-
-
 OPJ_BOOL OPJ_CALLCONV fread_jpip(const char fname[], jpip_dec_param_t *dec)
 {
     int infd;

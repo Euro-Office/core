@@ -57,6 +57,4 @@ public:
 };
 
 typedef boost::shared_ptr<PtgExtraCol> PtgExtraColPtr;
-
-
 } // namespace XLS

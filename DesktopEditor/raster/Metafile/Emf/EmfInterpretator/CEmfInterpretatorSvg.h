@@ -229,6 +229,4 @@ namespace MetaFile
 		void SwapClips(CSvgClip& oFirstClip, CSvgClip& oSecondClip);
 	};
 }
-
-
 #endif // CEMFINTERPRETATORSVG_H

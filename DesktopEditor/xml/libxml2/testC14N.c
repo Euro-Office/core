@@ -28,8 +28,6 @@
 #include <libxml/xpathInternals.h>
 
 #include <libxml/c14n.h>
-
-
 static void usage(const char *name) {
     fprintf(stderr,
 	"Usage: %s <mode> <xml-file> [<xpath-expr>] [<inclusive-ns-list>]\n",
@@ -366,5 +364,3 @@ int main(int argc ATTRIBUTE_UNUSED, char **argv ATTRIBUTE_UNUSED) {
     return(0);
 }
 #endif /* LIBXML_C14N_ENABLED */
-
-

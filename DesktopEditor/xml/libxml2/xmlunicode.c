@@ -32,8 +32,6 @@ typedef struct {
     xmlUnicodeRange *table;
     int		    numentries;
 } xmlUnicodeNameTable;
-
-
 static xmlIntFunc *xmlUnicodeLookup(xmlUnicodeNameTable *tptr, const char *tname);
 
 static xmlUnicodeRange xmlUnicodeBlocks[] = {

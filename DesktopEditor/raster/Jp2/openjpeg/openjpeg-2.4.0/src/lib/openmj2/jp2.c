@@ -269,8 +269,6 @@ static void jp2_write_bpcc(opj_jp2_t *jp2, opj_cio_t *cio)
     cio_write(cio, box.length, 4);  /* L */
     cio_seek(cio, box.init_pos + box.length);
 }
-
-
 static opj_bool jp2_read_bpcc(opj_jp2_t *jp2, opj_cio_t *cio)
 {
     unsigned int i;
@@ -832,8 +830,6 @@ opj_image_t* opj_jp2_decode(opj_jp2_t *jp2, opj_cio_t *cio,
     return image;
 
 }/* opj_jp2_decode() */
-
-
 void jp2_write_jp2h(opj_jp2_t *jp2, opj_cio_t *cio)
 {
     opj_jp2_box_t box;
@@ -1013,8 +1009,6 @@ static opj_bool jp2_read_jp(opj_jp2_t *jp2, opj_cio_t *cio)
 
     return OPJ_TRUE;
 }
-
-
 static opj_bool jp2_read_struct(opj_jp2_t *jp2, opj_cio_t *cio,
                                 opj_jp2_color_t *color)
 {
@@ -1034,10 +1028,6 @@ static opj_bool jp2_read_struct(opj_jp2_t *jp2, opj_cio_t *cio,
 
     return OPJ_TRUE;
 }
-
-
-
-
 /* ----------------------------------------------------------------------- */
 /* JP2 decoder interface                                             */
 /* ----------------------------------------------------------------------- */

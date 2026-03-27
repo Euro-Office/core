@@ -31,7 +31,6 @@
  *      Repaint all pixels through mask
  *           l_int32     pixSetMaskedCmap()
  *
- *
  *  The 'set select' functions condition the setting on a specific
  *  pixel value (i.e., index into the colormap) of the underyling
  *  Pix that is being modified.  The same conditioning is used in
@@ -50,8 +49,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------*
  *               Repaint selected pixels in region             *
  *-------------------------------------------------------------*/
@@ -170,8 +167,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                  Repaint gray pixels in region              *
  *-------------------------------------------------------------*/
@@ -313,8 +308,6 @@ PIXCMAP   *cmap, *cmapc;
     numaDestroy(&na);
     return 0;
 }
-
-
 /*!
  *  addColorizedGrayToCmap()
  *
@@ -406,8 +399,6 @@ NUMA    *na;
         numaDestroy(&na);
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *             Repaint selected pixels through mask            *
  *-------------------------------------------------------------*/
@@ -524,8 +515,6 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *               Repaint all pixels through mask               *
  *-------------------------------------------------------------*/
@@ -620,5 +609,3 @@ PIXCMAP   *cmap;
 
     return 0;
 }
-
-

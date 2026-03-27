@@ -117,9 +117,3 @@ namespace svg
 
 #endif // #ifndef AGG_SVG_IOMEMSTREAM_INCLUDE
 
-
-
-
-
-
-

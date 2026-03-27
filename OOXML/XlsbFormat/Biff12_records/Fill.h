@@ -36,8 +36,6 @@
 #include  "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/Xnum.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/Color.h"
 
-
-
 namespace XLSB
 {
     // Logical representation of BrtFill record in BIFF12

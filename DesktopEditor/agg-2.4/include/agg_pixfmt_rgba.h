@@ -55,8 +55,6 @@ namespace agg
                 p[Order::B] = value_type((p[Order::B] * a + ColorT::base_mask) >> ColorT::base_shift);
             }
         }
-
-
         //--------------------------------------------------------------------
         static AGG_INLINE void demultiply(value_type* p)
         {
@@ -115,16 +113,6 @@ namespace agg
     private:
         const GammaLut& m_gamma;
     };
-
-
-    
-
-
-
-
-
-
-
     //=============================================================blender_rgba
     template<class ColorT, class Order> struct blender_rgba
     {
@@ -295,16 +283,6 @@ namespace agg
             p[Order::B] = (value_type)((((cb << base_shift) - b) * alpha + (b << base_shift)) / a);
         }
     };
-
-
-
-
-
-
-
-
-
-
 
     //=========================================================comp_op_rgba_clear
     template<class ColorT, class Order> struct comp_op_rgba_clear
@@ -916,8 +894,6 @@ namespace agg
             }
         }
     };
-
-
     template<class T> inline T sd_min(T a, T b) { return (a < b) ? a : b; }
     template<class T> inline T sd_max(T a, T b) { return (a > b) ? a : b; }
 
@@ -1353,8 +1329,6 @@ namespace agg
             base_shift = color_type::base_shift,
             base_mask  = color_type::base_mask
         };
-
-
         static AGG_INLINE void blend_pix(value_type* p, 
                                          unsigned sr, unsigned sg, unsigned sb, 
                                          unsigned sa, unsigned cover)
@@ -1489,8 +1463,6 @@ namespace agg
         }
     };
 
-
-
     //======================================================comp_op_table_rgba
     template<class ColorT, class Order> struct comp_op_table_rgba
     {
@@ -1542,8 +1514,6 @@ namespace agg
         comp_op_rgba_draw_on_black<ColorT,Order>::blend_pix,
         0
     };
-
-
     //==============================================================comp_op_e
     enum comp_op_e
     {
@@ -1581,12 +1551,6 @@ namespace agg
 
         end_of_comp_op_e
     };
-
-
-
-
-
-
 
     //====================================================comp_op_adaptor_rgba
     template<class ColorT, class Order> struct comp_op_adaptor_rgba
@@ -1772,12 +1736,6 @@ namespace agg
                                   cover);
         }
     };
-
-
-
-
-
-
     //===============================================copy_or_blend_rgba_wrapper
     template<class Blender> struct copy_or_blend_rgba_wrapper
     {
@@ -1843,12 +1801,6 @@ namespace agg
             }
         }
     };
-
-
-
-
-
-    
     //=================================================pixfmt_alpha_blend_rgba
     template<class Blender, class RenBuf, class PixelT = int32u> 
     class pixfmt_alpha_blend_rgba
@@ -1913,8 +1865,6 @@ namespace agg
         {
             return m_rbuf->row_ptr(y) + x * pix_width;
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE static void make_pix(int8u* p, const color_type& c)
         {
@@ -1957,8 +1907,6 @@ namespace agg
                 c.r, c.g, c.b, c.a, 
                 cover);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_hline(int x, int y, 
                                    unsigned len, 
@@ -1977,8 +1925,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         AGG_INLINE void copy_vline(int x, int y,
                                    unsigned len, 
@@ -1996,8 +1942,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_hline(int x, int y,
                          unsigned len, 
@@ -2045,8 +1989,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_vline(int x, int y,
                          unsigned len, 
@@ -2094,8 +2036,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_hspan(int x, int y,
                                unsigned len, 
@@ -2149,8 +2089,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_vspan(int x, int y,
                                unsigned len, 
@@ -2179,8 +2117,6 @@ namespace agg
                 while(--len);
             }
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y,
                               unsigned len, 
@@ -2198,8 +2134,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_vspan(int x, int y,
                               unsigned len, 
@@ -2216,8 +2150,6 @@ namespace agg
             }
             while(--len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_color_hspan(int x, int y,
                                unsigned len, 
@@ -2274,8 +2206,6 @@ namespace agg
                 }
             }
         }
-
-
 
         //--------------------------------------------------------------------
         void blend_color_vspan(int x, int y,
@@ -2524,10 +2454,6 @@ namespace agg
     private:
         rbuf_type* m_rbuf;
     };
-
-
-
-
     //================================================pixfmt_custom_blend_rgba
     template<class Blender, class RenBuf> class pixfmt_custom_blend_rgba
     {
@@ -2546,8 +2472,6 @@ namespace agg
             base_mask  = color_type::base_mask,
             pix_width  = sizeof(value_type) * 4 
         };
-
-
         //--------------------------------------------------------------------
         pixfmt_custom_blend_rgba() : m_rbuf(0), m_comp_op(3) {}
         explicit pixfmt_custom_blend_rgba(rbuf_type& rb, unsigned comp_op=3) : 
@@ -2963,10 +2887,6 @@ namespace agg
         rbuf_type* m_rbuf;
         unsigned m_comp_op;
     };
-
-
-
-
     //-----------------------------------------------------------------------
     typedef blender_rgba<rgba8, order_rgba> blender_rgba32; //----blender_rgba32
     typedef blender_rgba<rgba8, order_argb> blender_argb32; //----blender_argb32
@@ -2992,8 +2912,6 @@ namespace agg
     typedef blender_rgba_pre<rgba16, order_argb> blender_argb64_pre; //----blender_argb64_pre
     typedef blender_rgba_pre<rgba16, order_abgr> blender_abgr64_pre; //----blender_abgr64_pre
     typedef blender_rgba_pre<rgba16, order_bgra> blender_bgra64_pre; //----blender_bgra64_pre
-
-
     //-----------------------------------------------------------------------
     typedef int32u pixel32_type;
     typedef pixfmt_alpha_blend_rgba<blender_rgba32, rendering_buffer, pixel32_type> pixfmt_rgba32; //----pixfmt_rgba32

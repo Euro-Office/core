@@ -180,8 +180,6 @@ public:
      */
     ChoiceFormat(const UnicodeString& pattern,
                  UErrorCode& status);
-
-
     /**
      * Constructs a new ChoiceFormat with the given limits and message strings.
      * All closure flags default to <code>FALSE</code>,
@@ -353,8 +351,6 @@ public:
      * @deprecated ICU 4.8 Use the MessagePattern class to analyze a ChoiceFormat pattern.
      */
     virtual const UnicodeString* getFormats(int32_t& count) const;
-
-
     using NumberFormat::format;
 
     /**
@@ -583,8 +579,6 @@ private:
     // UnicodeString*  fChoiceFormats;
     // int32_t         fCount;
 };
-
-
 U_NAMESPACE_END
 
 #endif  // U_HIDE_DEPRECATED_API

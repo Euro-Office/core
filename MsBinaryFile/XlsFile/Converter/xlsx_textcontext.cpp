@@ -72,8 +72,6 @@ public:
 
 	void			start_drawing_content();
 	std::wstring	end_drawing_content(); 
-
-
 	void ApplyTextProperties();
 
 	void set_local_styles_container();//это если стили объектов содержатся в другом документе
@@ -108,8 +106,6 @@ private:
     std::wstring span_style_name_;
 
 };
-
-
 
 xlsx_text_context::Impl::Impl(): paragraphs_cout_(0),
 				in_comment(false),in_draw(false),in_paragraph(false),in_span(false),in_cell_content(false)
@@ -373,8 +369,6 @@ int xlsx_text_context::Impl::end_cell_content(bool need_cache)
 
 xlsx_text_context::xlsx_text_context(): impl_(new xlsx_text_context::Impl())
 {}
-
-
 xlsx_text_context::~xlsx_text_context()
 {
 }
@@ -387,8 +381,6 @@ void xlsx_text_context::set_cell_text_properties()
 {
 	return impl_->set_cell_text_properties();
 }
-
-
 void xlsx_text_context::add_text(const std::wstring & text)
 {
     return impl_->add_text(text);
@@ -458,6 +450,4 @@ std::wstring xlsx_text_context::end_drawing_content()
 {
 	return impl_->end_drawing_content();
 }
-
-    
 }

@@ -13,11 +13,7 @@ from utils   import *
 import utils
 
 import sys, os, time, string, getopt
-
-
 content_processor = ContentProcessor()
-
-
 def  beautify_block( block ):
     if block.content:
         content_processor.reset()
@@ -37,8 +33,6 @@ def  beautify_block( block ):
         lines.append( "  */" )
 
         block.lines = lines
-
-
 def  usage():
     print "\nDocBeauty 0.1 Usage information\n"
     print "  docbeauty [options] file1 [file2 ...]\n"
@@ -47,8 +41,6 @@ def  usage():
     print "  -b : backup original files with the 'orig' extension"
     print ""
     print "  --backup : same as -b"
-
-
 def  main( argv ):
     """main program loop"""
 
@@ -102,12 +94,8 @@ def  main( argv ):
             file.close()
         except:
             ok = 0
-
-
 # if called from the command line
 #
 if __name__ == '__main__':
     main( sys.argv )
-
-
 # eof

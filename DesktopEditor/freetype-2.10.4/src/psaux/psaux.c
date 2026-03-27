@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "afmparse.c"
@@ -35,6 +33,4 @@
 #include "psintrp.c"
 #include "psread.c"
 #include "psstack.c"
-
-
 /* END */

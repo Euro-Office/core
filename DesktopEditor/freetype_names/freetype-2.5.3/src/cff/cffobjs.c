@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 
 #include FT_INTERNAL_DEBUG_H
@@ -33,8 +31,6 @@
 #include "cffpic.h"
 
 #include "cfferrs.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -43,8 +39,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_cffobjs
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                            SIZE FUNCTIONS                             */
@@ -53,8 +47,6 @@
   /*  field.                                                               */
   /*                                                                       */
   /*************************************************************************/
-
-
   static PSH_Globals_Funcs
   cff_size_get_globals_funcs( CFF_Size  size )
   {
@@ -62,16 +54,12 @@
     CFF_Font          font     = (CFF_Font)face->extra.data;
     PSHinter_Service  pshinter = font->pshinter;
     FT_Module         module;
-
-
     module = FT_Get_Module( size->root.face->driver->root.library,
                             "pshinter" );
     return ( module && pshinter && pshinter->get_globals_funcs )
            ? pshinter->get_globals_funcs( module )
            : 0;
   }
-
-
   FT_LOCAL_DEF( void )
   cff_size_done( FT_Size  cffsize )        /* CFF_Size */
   {
@@ -79,19 +67,13 @@
     CFF_Face      face     = (CFF_Face)size->root.face;
     CFF_Font      font     = (CFF_Font)face->extra.data;
     CFF_Internal  internal = (CFF_Internal)cffsize->internal;
-
-
     if ( internal )
     {
       PSH_Globals_Funcs  funcs;
-
-
       funcs = cff_size_get_globals_funcs( size );
       if ( funcs )
       {
         FT_UInt  i;
-
-
         funcs->destroy( internal->topfont );
 
         for ( i = font->num_subfonts; i > 0; i-- )
@@ -101,8 +83,6 @@
       /* `internal' is freed by destroy_size (in ftobjs.c) */
     }
   }
-
-
   /* CFF and Type 1 private dictionaries have slightly different      */
   /* structures; we need to synthesize a Type 1 dictionary on the fly */
 
@@ -112,8 +92,6 @@
   {
     CFF_Private  cpriv = &subfont->private_dict;
     FT_UInt      n, count;
-
-
     FT_MEM_ZERO( priv, sizeof ( *priv ) );
 
     count = priv->num_blue_values = cpriv->num_blue_values;
@@ -151,16 +129,12 @@
     priv->language_group = cpriv->language_group;
     priv->lenIV          = cpriv->lenIV;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_size_init( FT_Size  cffsize )         /* CFF_Size */
   {
     CFF_Size           size  = (CFF_Size)cffsize;
     FT_Error           error = FT_Err_Ok;
     PSH_Globals_Funcs  funcs = cff_size_get_globals_funcs( size );
-
-
     if ( funcs )
     {
       CFF_Face      face     = (CFF_Face)cffsize->face;
@@ -171,8 +145,6 @@
       FT_Memory      memory = cffsize->face->memory;
 
       FT_UInt  i;
-
-
       if ( FT_NEW( internal ) )
         goto Exit;
 
@@ -185,8 +157,6 @@
       for ( i = font->num_subfonts; i > 0; i-- )
       {
         CFF_SubFont  sub = font->subfonts[i - 1];
-
-
         cff_make_private_dict( sub, &priv );
         error = funcs->create( cffsize->face->memory, &priv,
                                &internal->subfonts[i - 1] );
@@ -202,8 +172,6 @@
   Exit:
     return error;
   }
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
   FT_LOCAL_DEF( FT_Error )
@@ -212,8 +180,6 @@
   {
     CFF_Size           cffsize = (CFF_Size)size;
     PSH_Globals_Funcs  funcs;
-
-
     cffsize->strike_index = strike_index;
 
     FT_Select_Metrics( size->face, strike_index );
@@ -228,8 +194,6 @@
 
       FT_ULong  top_upm  = font->top_font.font_dict.units_per_em;
       FT_UInt   i;
-
-
       funcs->set_scale( internal->topfont,
                         size->metrics.x_scale, size->metrics.y_scale,
                         0, 0 );
@@ -239,8 +203,6 @@
         CFF_SubFont  sub     = font->subfonts[i - 1];
         FT_ULong     sub_upm = sub->font_dict.units_per_em;
         FT_Pos       x_scale, y_scale;
-
-
         if ( top_upm != sub_upm )
         {
           x_scale = FT_MulDiv( size->metrics.x_scale, top_upm, sub_upm );
@@ -261,16 +223,12 @@
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_size_request( FT_Size          size,
                     FT_Size_Request  req )
   {
     CFF_Size           cffsize = (CFF_Size)size;
     PSH_Globals_Funcs  funcs;
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
     if ( FT_HAS_FIXED_SIZES( size->face ) )
@@ -278,8 +236,6 @@
       CFF_Face      cffface = (CFF_Face)size->face;
       SFNT_Service  sfnt    = (SFNT_Service)cffface->sfnt;
       FT_ULong      strike_index;
-
-
       if ( sfnt->set_sbit_strike( cffface, req, &strike_index ) )
         cffsize->strike_index = 0xFFFFFFFFUL;
       else
@@ -300,8 +256,6 @@
 
       FT_ULong  top_upm  = font->top_font.font_dict.units_per_em;
       FT_UInt   i;
-
-
       funcs->set_scale( internal->topfont,
                         size->metrics.x_scale, size->metrics.y_scale,
                         0, 0 );
@@ -311,8 +265,6 @@
         CFF_SubFont  sub     = font->subfonts[i - 1];
         FT_ULong     sub_upm = sub->font_dict.units_per_em;
         FT_Pos       x_scale, y_scale;
-
-
         if ( top_upm != sub_upm )
         {
           x_scale = FT_MulDiv( size->metrics.x_scale, top_upm, sub_upm );
@@ -331,8 +283,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                            SLOT  FUNCTIONS                            */
@@ -344,28 +294,20 @@
   {
     slot->internal->glyph_hints = 0;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_slot_init( FT_GlyphSlot  slot )
   {
     CFF_Face          face     = (CFF_Face)slot->face;
     CFF_Font          font     = (CFF_Font)face->extra.data;
     PSHinter_Service  pshinter = font->pshinter;
-
-
     if ( pshinter )
     {
       FT_Module  module;
-
-
       module = FT_Get_Module( slot->face->driver->root.library,
                               "pshinter" );
       if ( module )
       {
         T2_Hints_Funcs  funcs;
-
-
         funcs = pshinter->get_t2_funcs( module );
         slot->internal->glyph_hints = (void*)funcs;
       }
@@ -373,8 +315,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /*                           FACE  FUNCTIONS                             */
@@ -387,16 +327,12 @@
   {
     FT_Error    error;
     FT_String*  result;
-
-
     (void)FT_STRDUP( result, source );
 
     FT_UNUSED( error );
 
     return result;
   }
-
-
   /* Strip all subset prefixes of the form `ABCDEF+'.  Usually, there */
   /* is only one, but font names like `APCOOG+JFABTD+FuturaBQ-Bold'   */
   /* have been seen in the wild.                                      */
@@ -407,8 +343,6 @@
     FT_Int32  idx             = 0;
     FT_Int32  length          = (FT_Int32)strlen( name ) + 1;
     FT_Bool   continue_search = 1;
-
-
     while ( continue_search )
     {
       if ( length >= 7 && name[6] == '+' )
@@ -431,8 +365,6 @@
         continue_search = 0;
     }
   }
-
-
   /* Remove the style part from the family name (if present). */
 
   static void
@@ -440,16 +372,12 @@
                 const FT_String*  style_name )
   {
     FT_Int32  family_name_length, style_name_length;
-
-
     family_name_length = (FT_Int32)strlen( family_name );
     style_name_length  = (FT_Int32)strlen( style_name );
 
     if ( family_name_length > style_name_length )
     {
       FT_Int  idx;
-
-
       for ( idx = 1; idx <= style_name_length; ++idx )
       {
         if ( family_name[family_name_length - idx] !=
@@ -476,8 +404,6 @@
       }
     }
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_face_init( FT_Stream      stream,
                  FT_Face        cffface,        /* CFF_Face */
@@ -493,8 +419,6 @@
     FT_Bool             pure_cff    = 1;
     FT_Bool             sfnt_format = 0;
     FT_Library          library     = cffface->driver->root.library;
-
-
     sfnt = (SFNT_Service)FT_Get_Module_Interface(
              library, "sfnt" );
     if ( !sfnt )
@@ -573,8 +497,6 @@
       FT_Memory        memory = cffface->memory;
       FT_Int32         flags;
       FT_UInt          i;
-
-
       if ( FT_NEW( cff ) )
         goto Exit;
 
@@ -612,8 +534,6 @@
       {
         FT_UInt     idx;
         FT_String*  s;
-
-
         FT_TRACE4(( "SIDs\n" ));
 
         /* dump string index, including default strings for convenience */
@@ -642,8 +562,6 @@
         FT_Vector*  offset = &dict->font_offset;
         FT_ULong*   upm    = &dict->units_per_em;
         FT_Fixed    temp   = FT_ABS( matrix->yy );
-
-
         if ( temp != 0x10000L )
         {
           *upm = FT_DivFix( *upm, temp );
@@ -669,13 +587,9 @@
         FT_Vector*  offset;
         FT_ULong*   upm;
         FT_Fixed    temp;
-
-
         if ( sub->has_font_matrix )
         {
           FT_Long  scaling;
-
-
           /* if we have a top-level matrix, */
           /* concatenate the subfont matrix */
 
@@ -730,8 +644,6 @@
       if ( pure_cff )
       {
         char*  style_name = NULL;
-
-
         /* set up num_faces */
         cffface->num_faces = cff->num_faces;
 
@@ -771,8 +683,6 @@
           char*  fullp  = full;
           char*  family = cffface->family_name;
           char*  family_name = NULL;
-
-
           remove_subset_prefix( cffface->family_name );
 
           if ( dict->family_name )
@@ -831,8 +741,6 @@
           char  *cid_font_name =
                    cff_index_get_sid_string( cff,
                                              dict->cid_font_name );
-
-
           /* do we have a `/FontName' for a CID-keyed font? */
           if ( cid_font_name )
             cffface->family_name = cff_strcpy( memory, cid_font_name );
@@ -880,8 +788,6 @@
         {
           char  *weight = cff_index_get_sid_string( cff,
                                                     dict->weight );
-
-
           if ( weight )
             if ( !ft_strcmp( weight, "Bold"  ) ||
                  !ft_strcmp( weight, "Black" ) )
@@ -896,8 +802,6 @@
 
         cffface->style_flags = flags;
       }
-
-
 #ifndef FT_CONFIG_OPTION_NO_GLYPH_NAMES
       /* CID-keyed CFF fonts don't have glyph names -- the SFNT loader */
       /* has unset this flag because of the 3.0 `post' table.          */
@@ -907,8 +811,6 @@
 
       if ( dict->cid_registry != 0xFFFFU && pure_cff )
         cffface->face_flags |= FT_FACE_FLAG_CID_KEYED;
-
-
       /*******************************************************************/
       /*                                                                 */
       /* Compute char maps.                                              */
@@ -922,8 +824,6 @@
         FT_CharMap     cmap;
         FT_UInt        nn;
         CFF_Encoding   encoding = &cff->encoding;
-
-
         for ( nn = 0; nn < (FT_UInt)cffface->num_charmaps; nn++ )
         {
           cmap = cffface->charmaps[nn];
@@ -985,8 +885,6 @@
         if ( encoding->count > 0 )
         {
           FT_CMap_Class  clazz;
-
-
           cmaprec.face        = cffface;
           cmaprec.platform_id = TT_PLATFORM_ADOBE;  /* Adobe platform id */
 
@@ -1017,16 +915,12 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( void )
   cff_face_done( FT_Face  cffface )         /* CFF_Face */
   {
     CFF_Face      face = (CFF_Face)cffface;
     FT_Memory     memory;
     SFNT_Service  sfnt;
-
-
     if ( !face )
       return;
 
@@ -1038,8 +932,6 @@
 
     {
       CFF_Font  cff = (CFF_Font)face->extra.data;
-
-
       if ( cff )
       {
         cff_font_done( cff );
@@ -1047,14 +939,10 @@
       }
     }
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   cff_driver_init( FT_Module  module )        /* CFF_Driver */
   {
     CFF_Driver  driver = (CFF_Driver)module;
-
-
     /* set default property values, cf `ftcffdrv.h' */
 #ifdef CFF_CONFIG_OPTION_OLD_ENGINE
     driver->hinting_engine    = FT_CFF_HINTING_FREETYPE;
@@ -1074,13 +962,9 @@
 
     return FT_Err_Ok;
   }
-
-
   FT_LOCAL_DEF( void )
   cff_driver_done( FT_Module  module )        /* CFF_Driver */
   {
     FT_UNUSED( module );
   }
-
-
 /* END */

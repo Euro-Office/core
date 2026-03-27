@@ -1605,8 +1605,6 @@ uloc_openKeywords(const char* localeID,
         return NULL;
     }
 }
-
-
 /* bit-flags for 'options' parameter of _canonicalize */
 #define _ULOC_STRIP_KEYWORDS 0x2
 #define _ULOC_CANONICALIZE   0x1
@@ -2202,8 +2200,6 @@ uloc_getISOCountries()
 {
     return COUNTRIES;
 }
-
-
 /* this function to be moved into cstring.c later */
 static char gDecimal = 0;
 
@@ -2421,8 +2417,6 @@ uloc_acceptLanguageFromHTTP(char *result, int32_t resultAvailable, UAcceptResult
     }
     return res;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 uloc_acceptLanguage(char *result, int32_t resultAvailable, 
                     UAcceptResult *outResult, const char **acceptList,

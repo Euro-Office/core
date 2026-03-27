@@ -54,8 +54,6 @@ public:
 
 	DateAsNum	numDate;
 	_UINT32		cSxFormula = 0; //count formulas
-
-
 };
 
 } // namespace XLS

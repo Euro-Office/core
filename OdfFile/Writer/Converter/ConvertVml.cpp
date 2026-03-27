@@ -71,8 +71,6 @@ namespace Oox2Odf
 			}
 		}
 	}
-
-
 	void OoxConverter::convert(SimpleTypes::Vml::CCssStyle *vml_style)
 	{
 		if (vml_style == NULL) return;
@@ -294,8 +292,6 @@ namespace Oox2Odf
 				odf_context()->drawing_context()->set_anchor(2);
 			else if (false == bPosition)
 				odf_context()->drawing_context()->set_anchor(4);
-
-
 			//if (x && y && !anchor_set) 
 			//	odf_context()->drawing_context()->set_anchor(2);
 
@@ -905,8 +901,6 @@ namespace Oox2Odf
 
 		odf_context()->drawing_context()->set_text(odf_context()->text_context());
 		odf_context()->end_text_context();
-
-
 		odf_context()->drawing_context()->set_textarea_wrap(true);
 	}
 

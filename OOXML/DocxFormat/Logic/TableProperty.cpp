@@ -1955,7 +1955,5 @@ namespace OOX
 
 			return oProperties;
 		}
-
-
 	} // namespace Logic
 } // namespace OOX

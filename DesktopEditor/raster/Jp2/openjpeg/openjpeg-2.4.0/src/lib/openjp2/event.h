@@ -61,8 +61,6 @@ typedef struct opj_event_mgr {
     /** Debug message callback if available, NULL otherwise */
     opj_msg_callback info_handler;
 } opj_event_mgr_t;
-
-
 #define EVT_ERROR   1   /**< Error event type */
 #define EVT_WARNING 2   /**< Warning event type */
 #define EVT_INFO    4   /**< Debug event type */
@@ -73,8 +71,6 @@ typedef struct opj_event_mgr {
 /** @name Exported functions (see also openjpeg.h) */
 /*@{*/
 /* ----------------------------------------------------------------------- */
-
-
 /* ----------------------------------------------------------------------- */
 
 /**

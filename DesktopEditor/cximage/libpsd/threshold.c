@@ -28,12 +28,8 @@
 #include "psd_stream.h"
 #include "psd_color.h"
 #include "psd_rect.h"
-
-
 extern void psd_adjustment_blend_gray(psd_context * context, psd_layer_record * layer, psd_rect * dst_rect,
 	psd_uchar * lookup_table);
-
-
 psd_status psd_get_layer_threshold(psd_context * context, psd_layer_record * layer)
 {
 	psd_layer_threshold * data;

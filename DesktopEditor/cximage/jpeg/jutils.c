@@ -15,8 +15,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * jpeg_zigzag_order[i] is the zigzag-order position of the i'th element
  * of a DCT block read in natural order (left to right, top to bottom).
@@ -114,8 +112,6 @@ const int jpeg_natural_order2[2*2+16] = {
  63, 63, 63, 63, 63, 63, 63, 63, /* extra entries for safety in decoder */
  63, 63, 63, 63, 63, 63, 63, 63
 };
-
-
 /*
  * Arithmetic utilities
  */
@@ -127,8 +123,6 @@ jdiv_round_up (long a, long b)
 {
   return (a + b - 1L) / b;
 }
-
-
 GLOBAL(long)
 jround_up (long a, long b)
 /* Compute a rounded up to next multiple of b, ie, ceil(a/b)*b */
@@ -137,8 +131,6 @@ jround_up (long a, long b)
   a += b - 1L;
   return a - (a % b);
 }
-
-
 /* On normal machines we can apply MEMCOPY() and MEMZERO() to sample arrays
  * and coefficient-block arrays.  This won't work on 80x86 because the arrays
  * are FAR and we're assuming a small-pointer memory model.  However, some
@@ -157,8 +149,6 @@ jround_up (long a, long b)
 #define FMEMZERO(target,size)	_fmemset((void FAR *)(target), 0, (size_t)(size))
 #endif
 #endif
-
-
 GLOBAL(void)
 jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
 		   JSAMPARRAY output_array, int dest_row,
@@ -191,8 +181,6 @@ jcopy_sample_rows (JSAMPARRAY input_array, int source_row,
 #endif
   }
 }
-
-
 GLOBAL(void)
 jcopy_block_row (JBLOCKROW input_row, JBLOCKROW output_row,
 		 JDIMENSION num_blocks)
@@ -211,8 +199,6 @@ jcopy_block_row (JBLOCKROW input_row, JBLOCKROW output_row,
   }
 #endif
 }
-
-
 GLOBAL(void)
 jzero_far (void FAR * target, size_t bytestozero)
 /* Zero out a chunk of FAR memory. */

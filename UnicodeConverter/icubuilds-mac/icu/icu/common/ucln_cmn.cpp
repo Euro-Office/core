@@ -28,8 +28,6 @@
 
 static cleanupFunc *gCommonCleanupFunctions[UCLN_COMMON_COUNT];
 static cleanupFunc *gLibCleanupFunctions[UCLN_COMMON];
-
-
 /************************************************
  The cleanup order is important in this function.
  Please be sure that you have read ucln.h

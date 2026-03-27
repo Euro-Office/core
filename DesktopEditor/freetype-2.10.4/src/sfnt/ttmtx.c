@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
 #include <freetype/tttags.h>
@@ -27,16 +25,12 @@
 #include "ttmtx.h"
 
 #include "sferrors.h"
-
-
   /* IMPORTANT: The TT_HoriHeader and TT_VertHeader structures should   */
   /*            be identical except for the names of their fields,      */
   /*            which are different.                                    */
   /*                                                                    */
   /*            This ensures that `tt_face_load_hmtx' is able to read   */
   /*            both the horizontal and vertical headers.               */
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -45,8 +39,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  ttmtx
-
-
   /**************************************************************************
    *
    * @Function:
@@ -77,8 +69,6 @@
     FT_ULong   tag, table_size;
     FT_ULong*  ptable_offset;
     FT_ULong*  ptable_size;
-
-
     if ( vertical )
     {
       tag           = TTAG_vmtx;
@@ -102,8 +92,6 @@
   Fail:
     return error;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -158,13 +146,9 @@
         FT_FRAME_USHORT( number_Of_HMetrics ),
       FT_FRAME_END
     };
-
-
     if ( vertical )
     {
       void  *v = &face->vertical;
-
-
       error = face->goto_table( face, TTAG_vhea, stream, 0 );
       if ( error )
         goto Fail;
@@ -193,8 +177,6 @@
   Fail:
     return error;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -241,13 +223,9 @@
     FT_Service_MetricsVariations  var =
       (FT_Service_MetricsVariations)face->var;
 #endif
-
-
     if ( vertical )
     {
       void*  v = &face->vertical;
-
-
       header     = (TT_HoriHeader*)v;
       table_pos  = face->vert_metrics_offset;
       table_size = face->vert_metrics_size;
@@ -311,8 +289,6 @@
       FT_Face  f = FT_FACE( face );
       FT_Int   a = (FT_Int)*aadvance;
       FT_Int   b = (FT_Int)*abearing;
-
-
       if ( vertical )
       {
         if ( var->vadvance_adjust )
@@ -333,6 +309,4 @@
     }
 #endif
   }
-
-
 /* END */

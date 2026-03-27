@@ -40,13 +40,9 @@ Selection::Selection()
 {
 	pnn.value() = 0x3;
 }
-
-
 Selection::~Selection()
 {
 }
-
-
 BaseObjectPtr Selection::clone()
 {
 	return BaseObjectPtr(new Selection(*this));

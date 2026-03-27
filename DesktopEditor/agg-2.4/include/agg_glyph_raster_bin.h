@@ -138,8 +138,6 @@ namespace agg
             }
             return v;
         }
-
-
         //--------------------------------------------------------------------
         const int8u* m_font;
         bool m_big_endian;
@@ -148,8 +146,6 @@ namespace agg
         unsigned m_glyph_width;
         unsigned m_glyph_byte_width;
     };
-
-
 }
 
 #endif

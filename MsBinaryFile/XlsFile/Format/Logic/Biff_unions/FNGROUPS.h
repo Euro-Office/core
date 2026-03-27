@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of FNGROUPS union of records 
 class FNGROUPS: public CompositeObject
 {

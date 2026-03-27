@@ -48,8 +48,6 @@ static int32_t adjustConfidence(UChar codeUnit, int32_t confidence) {
     }
     return confidence;
 }
-
-
 UBool CharsetRecog_UTF_16_BE::match(InputText* textIn, CharsetMatch *results) const
 {
     const uint8_t *input = textIn->fRawInput;
@@ -140,8 +138,6 @@ UBool CharsetRecog_UTF_32::match(InputText* textIn, CharsetMatch *results) const
             numValid += 1;
         }
     }
-
-
     // Cook up some sort of confidence score, based on presense of a BOM
     //    and the existence of valid and/or invalid multi-byte sequences.
     if (hasBOM && numInvalid==0) {

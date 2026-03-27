@@ -19,8 +19,6 @@
 
 #include <string.h>
 #include "ctrl/agg_cbox_ctrl.h"
-
-
 namespace agg
 {
 
@@ -37,8 +35,6 @@ namespace agg
     {
         label(l);
     }
-
-
     //------------------------------------------------------------------------
     void cbox_ctrl_impl::text_size(double h, double w)
     {
@@ -54,8 +50,6 @@ namespace agg
         memcpy(m_label, l, len);
         m_label[len] = 0;
     }
-
-
     //------------------------------------------------------------------------
     bool cbox_ctrl_impl::on_mouse_button_down(double x, double y)
     {
@@ -67,8 +61,6 @@ namespace agg
         }
         return false;
     }
-
-
     //------------------------------------------------------------------------
     bool cbox_ctrl_impl::on_mouse_move(double, double, bool)
     {
@@ -93,8 +85,6 @@ namespace agg
     {
         return false;
     }
-
-
     //------------------------------------------------------------------------
     void cbox_ctrl_impl::rewind(unsigned idx)
     {
@@ -160,10 +150,6 @@ namespace agg
 
         }
     }
-
-
-
-
     //------------------------------------------------------------------------
     unsigned cbox_ctrl_impl::vertex(double* x, double* y)
     {
@@ -209,6 +195,4 @@ namespace agg
         return cmd;
     }
 }
-
-
 

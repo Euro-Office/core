@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTCID_H_
 #define FTCID_H_
 
@@ -26,11 +24,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -47,8 +41,6 @@ FT_BEGIN_HEADER
    *   functions.
    *
    */
-
-
   /**************************************************************************
    *
    * @function:
@@ -87,8 +79,6 @@ FT_BEGIN_HEADER
                                            const char*  *registry,
                                            const char*  *ordering,
                                            FT_Int       *supplement );
-
-
   /**************************************************************************
    *
    * @function:
@@ -120,8 +110,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_CID_Is_Internally_CID_Keyed( FT_Face   face,
                                       FT_Bool  *is_cid );
-
-
   /**************************************************************************
    *
    * @function:
@@ -157,11 +145,7 @@ FT_BEGIN_HEADER
                                FT_UInt  *cid );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTCID_H_ */
-
-
 /* END */

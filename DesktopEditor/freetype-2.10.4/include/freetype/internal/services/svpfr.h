@@ -14,21 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef SVPFR_H_
 #define SVPFR_H_
 
 #include <freetype/ftpfr.h>
 #include <freetype/internal/ftserv.h>
-
-
 FT_BEGIN_HEADER
-
-
 #define FT_SERVICE_ID_PFR_METRICS  "pfr-metrics"
-
-
   typedef FT_Error
   (*FT_PFR_GetMetricsFunc)( FT_Face    face,
                             FT_UInt   *aoutline,
@@ -46,8 +38,6 @@ FT_BEGIN_HEADER
   (*FT_PFR_GetAdvanceFunc)( FT_Face   face,
                             FT_UInt   gindex,
                             FT_Pos   *aadvance );
-
-
   FT_DEFINE_SERVICE( PfrMetrics )
   {
     FT_PFR_GetMetricsFunc  get_metrics;
@@ -55,11 +45,7 @@ FT_BEGIN_HEADER
     FT_PFR_GetAdvanceFunc  get_advance;
 
   };
-
-
 FT_END_HEADER
 
 #endif /* SVPFR_H_ */
-
-
 /* END */

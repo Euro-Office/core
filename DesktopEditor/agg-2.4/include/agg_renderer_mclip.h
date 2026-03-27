@@ -260,8 +260,6 @@ namespace agg
             }
             while(next_clip_box());
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y, int len, const color_type* colors)
         {
@@ -330,8 +328,6 @@ namespace agg
             }
             while(next_clip_box());
         }
-
-        
     private:
         renderer_mclip(const renderer_mclip<PixelFormat>&);
         const renderer_mclip<PixelFormat>& 
@@ -342,8 +338,6 @@ namespace agg
         unsigned               m_curr_cb;
         rect_i                 m_bounds;
     };
-
-
 }
 
 #endif

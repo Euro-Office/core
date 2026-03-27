@@ -211,8 +211,6 @@ typedef int                  cmsBool;
 #  endif
 
 #endif  // CMS_USE_BIG_ENDIAN
-
-
 // Calling convention -- this is hardly platform and compiler dependent
 #ifdef CMS_IS_WINDOWS_
 #  if defined(CMS_DLL) || defined(CMS_DLL_BUILD)
@@ -267,8 +265,6 @@ typedef int                  cmsBool;
 // Definitions in ICC spec
 #define cmsMagicNumber      0x61637370     // 'acsp'
 #define lcmsSignature       0x6c636d73     // 'lcms'
-
-
 // Base ICC type definitions
 typedef enum {
     cmsSigChromaticityType                  = 0x6368726D,  // 'chrm'
@@ -307,8 +303,6 @@ typedef enum {
     cmsSigVcgtType                          = 0x76636774,  // 'vcgt'
     cmsSigViewingConditionsType             = 0x76696577,  // 'view'
     cmsSigXYZType                           = 0x58595A20   // 'XYZ '
-
-
 } cmsTagTypeSignature;
 
 // Base ICC tag definitions
@@ -386,8 +380,6 @@ typedef enum {
     cmsSigArgyllArtsTag                     = 0x61727473   // 'arts'
 
 } cmsTagSignature;
-
-
 // ICC Technology tag
 typedef enum {
     cmsSigDigitalCamera                     = 0x6463616D,  // 'dcam'
@@ -418,8 +410,6 @@ typedef enum {
     cmsSigDigitalCinemaProjector            = 0x64636A70   // 'dcpj'
 
 } cmsTechnologySignature;
-
-
 // ICC Color spaces
 typedef enum {
     cmsSigXYZData                           = 0x58595A20,  // 'XYZ '
@@ -582,8 +572,6 @@ typedef struct {
     cmsS15Fixed16Number  Z;
 
 } cmsEncodedXYZNumber;
-
-
 // Profile ID as computed by MD5 algorithm
 typedef union {
     cmsUInt8Number       ID8[16];
@@ -591,8 +579,6 @@ typedef union {
     cmsUInt32Number      ID32[4];
 
 } cmsProfileID;
-
-
 // ----------------------------------------------------------------------------------------------
 // ICC profile internal base types. Strictly, shouldn't be declared in this header, but maybe
 // somebody want to use this info for accessing profile header directly, so here it is.
@@ -687,8 +673,6 @@ typedef void* cmsHTRANSFORM;
 #define T_EXTRA(e)            (((e)>>7)&7)
 #define T_CHANNELS(c)         (((c)>>3)&15)
 #define T_BYTES(b)            ((b)&7)
-
-
 // Pixel types
 #define PT_ANY       0    // Don't check colorspace
                           // 1 & 2 are reserved
@@ -1011,8 +995,6 @@ CMSAPI int               CMSEXPORT cmsGetEncodedCMMversion(void);
 
 CMSAPI int               CMSEXPORT cmsstrcasecmp(const char* s1, const char* s2);
 CMSAPI long int          CMSEXPORT cmsfilelength(FILE* f);
-
-
 // Context handling --------------------------------------------------------------------------------------------------------
 
 // Each context holds its owns globals and its own plug-ins. There is a global context with the id = 0 for lecacy compatibility
@@ -1112,8 +1094,6 @@ CMSAPI cmsBool           CMSEXPORT cmsAdaptToIlluminant(cmsCIEXYZ* Result, const
 // Viewing conditions. Please note those are CAM model viewing conditions, and not the ICC tag viewing
 // conditions, which I'm naming cmsICCViewingConditions to make differences evident. Unfortunately, the tag
 // cannot deal with surround La, Yb and D value so is basically useless to store CAM02 viewing conditions.
-
-
 #define AVG_SURROUND       1
 #define DIM_SURROUND       2
 #define DARK_SURROUND      3
@@ -1134,8 +1114,6 @@ CMSAPI cmsHANDLE         CMSEXPORT cmsCIECAM02Init(cmsContext ContextID, const c
 CMSAPI void              CMSEXPORT cmsCIECAM02Done(cmsHANDLE hModel);
 CMSAPI void              CMSEXPORT cmsCIECAM02Forward(cmsHANDLE hModel, const cmsCIEXYZ* pIn, cmsJCh* pOut);
 CMSAPI void              CMSEXPORT cmsCIECAM02Reverse(cmsHANDLE hModel, const cmsJCh* pIn,    cmsCIEXYZ* pOut);
-
-
 // Tone curves -----------------------------------------------------------------------------------------
 
 // This describes a curve segment. For a table of supported types, see the manual. User can increase the number of
@@ -1177,8 +1155,6 @@ CMSAPI cmsFloat64Number  CMSEXPORT cmsEstimateGamma(const cmsToneCurve* t, cmsFl
 // Tone curve tabular estimation
 CMSAPI cmsUInt32Number         CMSEXPORT cmsGetToneCurveEstimatedTableEntries(const cmsToneCurve* t);
 CMSAPI const cmsUInt16Number*  CMSEXPORT cmsGetToneCurveEstimatedTable(const cmsToneCurve* t);
-
-
 // Implements pipelines of multi-processing elements -------------------------------------------------------------
 
 // Nothing to see here, move along
@@ -1335,8 +1311,6 @@ typedef struct {
     cmsScreeningChannel Channels[cmsMAXCHANNELS];
 
 } cmsScreening;
-
-
 // Named color -----------------------------------------------------------------------------------------------------------------
 
 typedef struct _cms_NAMEDCOLORLIST_struct cmsNAMEDCOLORLIST;
@@ -1488,8 +1462,6 @@ CMSAPI cmsUInt32Number   CMSEXPORT cmsChannelsOf(cmsColorSpaceSignature ColorSpa
 // Build a suitable formatter for the colorspace of this profile. nBytes=1 means 8 bits, nBytes=2 means 16 bits. 
 CMSAPI cmsUInt32Number   CMSEXPORT cmsFormatterForColorspaceOfProfile(cmsHPROFILE hProfile, cmsUInt32Number nBytes, cmsBool lIsFloat);
 CMSAPI cmsUInt32Number   CMSEXPORT cmsFormatterForPCSOfProfile(cmsHPROFILE hProfile, cmsUInt32Number nBytes, cmsBool lIsFloat);
-
-
 // Localized info
 typedef enum {
              cmsInfoDescription  = 0,
@@ -1567,8 +1539,6 @@ CMSAPI cmsHPROFILE      CMSEXPORT cmsCreateInkLimitingDeviceLinkTHR(cmsContext C
                                                               cmsColorSpaceSignature ColorSpace, cmsFloat64Number Limit);
 
 CMSAPI cmsHPROFILE      CMSEXPORT cmsCreateInkLimitingDeviceLink(cmsColorSpaceSignature ColorSpace, cmsFloat64Number Limit);
-
-
 CMSAPI cmsHPROFILE      CMSEXPORT cmsCreateLab2ProfileTHR(cmsContext ContextID, const cmsCIExyY* WhitePoint);
 CMSAPI cmsHPROFILE      CMSEXPORT cmsCreateLab2Profile(const cmsCIExyY* WhitePoint);
 CMSAPI cmsHPROFILE      CMSEXPORT cmsCreateLab4ProfileTHR(cmsContext ContextID, const cmsCIExyY* WhitePoint);
@@ -1704,16 +1674,12 @@ CMSAPI cmsHTRANSFORM    CMSEXPORT cmsCreateMultiprofileTransformTHR(cmsContext C
                                                   cmsUInt32Number OutputFormat,
                                                   cmsUInt32Number Intent,
                                                   cmsUInt32Number dwFlags);
-
-
 CMSAPI cmsHTRANSFORM    CMSEXPORT cmsCreateMultiprofileTransform(cmsHPROFILE hProfiles[],
                                                   cmsUInt32Number nProfiles,
                                                   cmsUInt32Number InputFormat,
                                                   cmsUInt32Number OutputFormat,
                                                   cmsUInt32Number Intent,
                                                   cmsUInt32Number dwFlags);
-
-
 CMSAPI cmsHTRANSFORM    CMSEXPORT cmsCreateExtendedTransform(cmsContext ContextID,
                                                    cmsUInt32Number nProfiles, cmsHPROFILE hProfiles[],
                                                    cmsBool  BPC[],
@@ -1747,24 +1713,16 @@ CMSAPI void             CMSEXPORT cmsDoTransformLineStride(cmsHTRANSFORM  Transf
                                                  cmsUInt32Number BytesPerLineOut,
                                                  cmsUInt32Number BytesPerPlaneIn,
                                                  cmsUInt32Number BytesPerPlaneOut);
-
-
 CMSAPI void             CMSEXPORT cmsSetAlarmCodes(const cmsUInt16Number NewAlarm[cmsMAXCHANNELS]);
 CMSAPI void             CMSEXPORT cmsGetAlarmCodes(cmsUInt16Number NewAlarm[cmsMAXCHANNELS]);
-
-
 CMSAPI void             CMSEXPORT cmsSetAlarmCodesTHR(cmsContext ContextID, 
                                                           const cmsUInt16Number AlarmCodes[cmsMAXCHANNELS]);
 CMSAPI void             CMSEXPORT cmsGetAlarmCodesTHR(cmsContext ContextID, 
                                                           cmsUInt16Number AlarmCodes[cmsMAXCHANNELS]);
 
-
-
 // Adaptation state for absolute colorimetric intent
 CMSAPI cmsFloat64Number CMSEXPORT cmsSetAdaptationState(cmsFloat64Number d);
 CMSAPI cmsFloat64Number CMSEXPORT cmsSetAdaptationStateTHR(cmsContext ContextID, cmsFloat64Number d);
-
-
 
 // Grab the ContextID from an open transform. Returns NULL if a NULL transform is passed
 CMSAPI cmsContext       CMSEXPORT cmsGetTransformContextID(cmsHTRANSFORM hTransform);
@@ -1777,8 +1735,6 @@ CMSAPI cmsUInt32Number CMSEXPORT cmsGetTransformOutputFormat(cmsHTRANSFORM hTran
 CMSAPI cmsBool          CMSEXPORT cmsChangeBuffersFormat(cmsHTRANSFORM hTransform,
                                                          cmsUInt32Number InputFormat,
                                                          cmsUInt32Number OutputFormat);
-
-
 
 // PostScript ColorRenderingDictionary and ColorSpaceArray ----------------------------------------------------
 
@@ -1794,8 +1750,6 @@ CMSAPI cmsUInt32Number  CMSEXPORT cmsGetPostScriptColorResource(cmsContext Conte
 
 CMSAPI cmsUInt32Number  CMSEXPORT cmsGetPostScriptCSA(cmsContext ContextID, cmsHPROFILE hProfile, cmsUInt32Number Intent, cmsUInt32Number dwFlags, void* Buffer, cmsUInt32Number dwBufferLen);
 CMSAPI cmsUInt32Number  CMSEXPORT cmsGetPostScriptCRD(cmsContext ContextID, cmsHPROFILE hProfile, cmsUInt32Number Intent, cmsUInt32Number dwFlags, void* Buffer, cmsUInt32Number dwBufferLen);
-
-
 // IT8.7 / CGATS.17-200x handling -----------------------------------------------------------------------------
 
 CMSAPI cmsHANDLE        CMSEXPORT cmsIT8Alloc(cmsContext ContextID);
@@ -1824,8 +1778,6 @@ CMSAPI cmsBool          CMSEXPORT cmsIT8SetPropertyDbl(cmsHANDLE hIT8, const cha
 CMSAPI cmsBool          CMSEXPORT cmsIT8SetPropertyHex(cmsHANDLE hIT8, const char* cProp, cmsUInt32Number Val);
 CMSAPI cmsBool          CMSEXPORT cmsIT8SetPropertyMulti(cmsHANDLE hIT8, const char* Key, const char* SubKey, const char *Buffer);
 CMSAPI cmsBool          CMSEXPORT cmsIT8SetPropertyUncooked(cmsHANDLE hIT8, const char* Key, const char* Buffer);
-
-
 CMSAPI const char*      CMSEXPORT cmsIT8GetProperty(cmsHANDLE hIT8, const char* cProp);
 CMSAPI cmsFloat64Number CMSEXPORT cmsIT8GetPropertyDbl(cmsHANDLE hIT8, const char* cProp);
 CMSAPI const char*      CMSEXPORT cmsIT8GetPropertyMulti(cmsHANDLE hIT8, const char* Key, const char *SubKey);
@@ -1843,8 +1795,6 @@ CMSAPI cmsBool          CMSEXPORT cmsIT8SetDataRowColDbl(cmsHANDLE hIT8, int row
                                                 cmsFloat64Number Val);
 
 CMSAPI const char*      CMSEXPORT cmsIT8GetData(cmsHANDLE hIT8, const char* cPatch, const char* cSample);
-
-
 CMSAPI cmsFloat64Number CMSEXPORT cmsIT8GetDataDbl(cmsHANDLE hIT8, const char* cPatch, const char* cSample);
 
 CMSAPI cmsBool          CMSEXPORT cmsIT8SetData(cmsHANDLE hIT8, const char* cPatch,
@@ -1886,8 +1836,6 @@ CMSAPI cmsBool          CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* Blac
 
 // Estimate total area coverage
 CMSAPI cmsFloat64Number CMSEXPORT cmsDetectTAC(cmsHPROFILE hProfile);
-
-
 // Poor man's gamut mapping
 CMSAPI cmsBool          CMSEXPORT cmsDesaturateLab(cmsCIELab* Lab,
                                                    double amax, double amin,

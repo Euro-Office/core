@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 BiffStructurePtr PtgElfColV::clone()
 {
 	return BiffStructurePtr(new PtgElfColV(*this));

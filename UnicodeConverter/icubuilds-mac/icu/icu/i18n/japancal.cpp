@@ -351,8 +351,6 @@ int32_t JapaneseCalendar::getDefaultDayInMonth(int32_t eyear, int32_t month)
 
     return day;
 }
-
-
 int32_t JapaneseCalendar::internalGetEra() const
 {
     return internalGet(UCAL_ERA, kCurrentEra);
@@ -373,8 +371,6 @@ int32_t JapaneseCalendar::handleGetExtendedYear()
         }
         return year;
 }
-
-
 void JapaneseCalendar::handleComputeFields(int32_t julianDay, UErrorCode& status)
 {
     //Calendar::timeToFields(theTime, quick, status);

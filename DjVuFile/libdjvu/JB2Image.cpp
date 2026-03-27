@@ -72,8 +72,6 @@
 #include "GRect.h"
 #include "GBitmap.h"
 #include <string.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -87,8 +85,6 @@ namespace DJVU {
 
 // This class is accessed via the decode
 // functions of class JB2Image
-
-
 //**** Class JB2Codec
 // This class implements the JB2 decoder.
 // Contains all contextual information for decoding a JB2Image.
@@ -135,8 +131,6 @@ private:
 ////////////////////////////////////////
 //// CLASS JB2DICT: IMPLEMENTATION
 ////////////////////////////////////////
-
-
 JB2Dict::JB2Dict()
   : inherited_shapes(0)
 {
@@ -242,13 +236,9 @@ JB2Dict::decode(const GP<ByteStream> &gbs, JB2DecoderCallback *cb, void *arg)
   codec.code(this);
 }
 
-
-
 ////////////////////////////////////////
 //// CLASS JB2IMAGE: IMPLEMENTATION
 ////////////////////////////////////////
-
-
 JB2Image::JB2Image(void)
   : width(0), height(0), reproduce_old_bug(false)
 {
@@ -341,13 +331,9 @@ JB2Image::decode(const GP<ByteStream> &gbs, JB2DecoderCallback *cb, void *arg)
   codec.code(this);
 }
 
-
-
 ////////////////////////////////////////
 //// CLASS JB2CODEC : IMPLEMENTATION
 ////////////////////////////////////////
-
-
 
 #define START_OF_DATA                   (0)
 #define NEW_MARK                        (1)
@@ -362,16 +348,12 @@ JB2Image::decode(const GP<ByteStream> &gbs, JB2DecoderCallback *cb, void *arg)
 #define PRESERVED_COMMENT               (10)
 #define END_OF_DATA                     (11)
 
-
-
 // STATIC DATA MEMBERS
 
 static const int BIGPOSITIVE = 262142;
 static const int BIGNEGATIVE = -262143;
 static const int CELLCHUNK = 20000;
 static const int CELLEXTRA =   500;
-
-
 // CONSTRUCTOR
 
 JB2Dict::JB2Codec::Decode::Decode(void)
@@ -444,16 +426,12 @@ JB2Dict::JB2Codec::reset_numcoder()
   grightcell.clear();
   cur_ncell = 1;
 }
-
-
 void 
 JB2Dict::JB2Codec::Decode::set_dict_callback(JB2DecoderCallback *cb, void *arg)
 {
   cbfunc = cb;
   cbarg = arg;
 }
-
-
 // CODE NUMBERS
 
 inline bool
@@ -553,8 +531,6 @@ JB2Dict::JB2Codec::CodeNum(int low, int high, NumContext *pctx, int v)
     return (negative)?(- cutoff - 1):cutoff;
 }
 
-
-
 // CODE COMMENTS
 
 void 
@@ -569,11 +545,7 @@ JB2Dict::JB2Codec::Decode::code_comment(GUTF8String &comment)
         }
       comment.getbuf();
 }
-
-
 // LIBRARY
-
-
 void
 JB2Dict::JB2Codec::init_library(JB2Dict &jim)
 {
@@ -601,8 +573,6 @@ JB2Dict::JB2Codec::add_library(const int shapeno, JB2Shape &jshp)
   libinfo[libno].compute_bounding_box(*(jshp.bits));
   return libno;
 }
-
-
 // CODE SIMPLE VALUES
 
 inline void 
@@ -618,8 +588,6 @@ JB2Dict::JB2Codec::Decode::code_match_index(int &index, JB2Dict &)
     index = lib2shape[match];
     return match;
 }
-
-
 // HANDLE SHORT LIST
 
 int 
@@ -635,11 +603,7 @@ JB2Dict::JB2Codec::update_short_list(const int v)
     :((s[0] < s[2])?((s[1] >= s[2])?s[2]:s[1]):s[0]);
 }
 
-
-
 // CODE PAIRS
-
-
 void
 JB2Dict::JB2Codec::Decode::code_inherited_shape_count(JB2Dict &jim)
 {
@@ -802,10 +766,6 @@ JB2Dict::JB2Codec::Decode::code_relative_mark_size(GBitmap &bm, int cw, int ch, 
     G_THROW( ERR_MSG("JB2Image.bad_number") );
   bm.init(ysize, xsize, border);
 }
-
-
-
-
 // CODE BITMAP DIRECTLY
 
 void 
@@ -846,10 +806,6 @@ JB2Dict::JB2Codec::Decode::code_bitmap_directly(
       bm.check_border();
 #endif
 }
-
-
-
-
 
 // CODE BITMAP BY CROSS CODING
 
@@ -918,10 +874,6 @@ JB2Dict::JB2Codec::Decode::code_bitmap_by_cross_coding (GBitmap &bm, GBitmap &cb
 #endif
         }
 }
-
-
-
-
 // CODE JB2DICT RECORD
 
 void
@@ -1051,8 +1003,6 @@ JB2Dict::JB2Codec::code_record(
         bm->compress();
     }
 }
-
-
 // CODE JB2DICT
 
 void 
@@ -1082,8 +1032,6 @@ JB2Dict::JB2Codec::Decode::code(const GP<JB2Dict> &gjim)
   // compress
   jim.compress();
 }
-
-
 
 // CODE JB2IMAGE RECORD
 
@@ -1335,8 +1283,6 @@ JB2Dict::JB2Codec::code_record(
         }
     }
 }
-
-
 // CODE JB2IMAGE
 
 void 
@@ -1362,8 +1308,6 @@ JB2Dict::JB2Codec::Decode::code(const GP<JB2Image> &gjim)
         G_THROW( ERR_MSG("JB2Image.no_start") );
       jim.compress();
 }
-
-
 
 ////////////////////////////////////////
 //// HELPERS
@@ -1419,8 +1363,6 @@ JB2Dict::LibRect::compute_bounding_box(const GBitmap &bm)
         break;
     }
 }
-
-
 void
 JB2Dict::get_bounding_box(int shapeno, LibRect &dest)
 {
@@ -1439,15 +1381,11 @@ JB2Dict::get_bounding_box(int shapeno, LibRect &dest)
       dest.compute_bounding_box(*(jshp.bits));
     }
 }
-
-
 GP<JB2Dict>
 JB2Dict::create(void)
 {
   return new JB2Dict();
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

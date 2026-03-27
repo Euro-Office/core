@@ -602,8 +602,6 @@ ucnvsel_close_selector_iterator(UEnumeration *enumerator) {
   uprv_free(enumerator->context);
   uprv_free(enumerator);
 }
-
-
 static int32_t U_CALLCONV
 ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
   // check if already failed
@@ -612,8 +610,6 @@ ucnvsel_count_encodings(UEnumeration *enumerator, UErrorCode *status) {
   }
   return ((Enumerator*)(enumerator->context))->length;
 }
-
-
 static const char* U_CALLCONV ucnvsel_next_encoding(UEnumeration* enumerator,
                                                  int32_t* resultLength,
                                                  UErrorCode* status) {
@@ -647,8 +643,6 @@ static void U_CALLCONV ucnvsel_reset_iterator(UEnumeration* enumerator,
 }
 
 U_CDECL_END
-
-
 static const UEnumeration defaultEncodings = {
   NULL,
     NULL,
@@ -658,8 +652,6 @@ static const UEnumeration defaultEncodings = {
     ucnvsel_next_encoding, 
     ucnvsel_reset_iterator
 };
-
-
 // internal fn to intersect two sets of masks
 // returns whether the mask has reduced to all zeros
 static UBool intersectMasks(uint32_t* dest, const uint32_t* source1, int32_t len) {
@@ -684,8 +676,6 @@ static int16_t countOnes(uint32_t* mask, int32_t len) {
   }
   return totalOnes;
 }
-
-
 /* internal function! */
 static UEnumeration *selectForMask(const UConverterSelector* sel,
                                    uint32_t *mask, UErrorCode *status) {

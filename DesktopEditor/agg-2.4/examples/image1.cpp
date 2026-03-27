@@ -22,8 +22,6 @@ enum flip_y_e { flip_y = true };
 
 #define AGG_BGR24
 #include "pixel_formats.h"
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_angle;
@@ -131,8 +129,6 @@ public:
                          initial_height() / 2.0 + 20 + 10, 
                          r / 2.0 + 16.0, 
                          r / 2.0 + 16.0, 200);
-
-
         agg::conv_transform<agg::ellipse> tr(ell, src_mtx);
 
         ras.add_path(tr);
@@ -143,10 +139,6 @@ public:
     }
 
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -196,8 +188,6 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-
 
 /*
 E:\agg23\examples\image1.cpp(111) : error C2664: 

@@ -663,8 +663,6 @@ namespace NSJSBase
 		 */
 		static bool IsSupportNativeTypedArrays();
 	};
-
-
 	/**
 	 * The class that sets a new scope for any local variables created after its construction.
 	 * In the destructor of the class this scope and all local variables created in it will be removed.

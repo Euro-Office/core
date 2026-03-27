@@ -17,12 +17,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTSNAMES_H_
 #define FTSNAMES_H_
-
-
 #include <freetype/freetype.h>
 #include <freetype/ftparams.h>
 
@@ -31,11 +27,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -58,8 +50,6 @@ FT_BEGIN_HEADER
    *   Note that this has nothing to do with glyph names!
    *
    */
-
-
   /**************************************************************************
    *
    * @struct:
@@ -115,8 +105,6 @@ FT_BEGIN_HEADER
     FT_UInt    string_len;  /* in bytes                              */
 
   } FT_SfntName;
-
-
   /**************************************************************************
    *
    * @function:
@@ -138,8 +126,6 @@ FT_BEGIN_HEADER
    */
   FT_EXPORT( FT_UInt )
   FT_Get_Sfnt_Name_Count( FT_Face  face );
-
-
   /**************************************************************************
    *
    * @function:
@@ -181,8 +167,6 @@ FT_BEGIN_HEADER
   FT_Get_Sfnt_Name( FT_Face       face,
                     FT_UInt       idx,
                     FT_SfntName  *aname );
-
-
   /**************************************************************************
    *
    * @struct:
@@ -212,8 +196,6 @@ FT_BEGIN_HEADER
     FT_UInt   string_len;  /* in bytes                              */
 
   } FT_SfntLangTag;
-
-
   /**************************************************************************
    *
    * @function:
@@ -259,14 +241,8 @@ FT_BEGIN_HEADER
   FT_Get_Sfnt_LangTag( FT_Face          face,
                        FT_UInt          langID,
                        FT_SfntLangTag  *alangTag );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTSNAMES_H_ */
-
-
 /* END */

@@ -899,8 +899,6 @@ function ParseLocalFormatSymbol(Name){
 //_________________________________________________________________________________________
         case("tr-TR"):{console.log(Name);}break;
 //_________________________________________________________________________________________
-
-
     }
     return true;
 }
@@ -1261,8 +1259,6 @@ for(let i = 0; i < splited_repacked_arr_of_numbers.length; i++) {
 
         if (splited_repacked_arr_of_numbers[i][j] === etalarr_for_numbers[j]) {
         } else {
-
-
             repackarr_for_numbers.push(splited_repacked_arr_of_numbers[i][j])
             names_of_repacked_numbers.push(names_of_not_etalon_numbers[i])
 

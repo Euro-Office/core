@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "otvalid.h"
 #include "otvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -28,8 +24,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  otvgdef
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -51,8 +45,6 @@
     FT_Bytes           Coverage;
     FT_UInt            GlyphCount;
     OTV_Validate_Func  func;
-
-
     OTV_ENTER;
 
     OTV_LIMIT_CHECK( 4 );
@@ -78,8 +70,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -96,8 +86,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   CaretValueFormat;
-
-
     OTV_ENTER;
 
     OTV_LIMIT_CHECK( 4 );
@@ -131,8 +119,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -147,8 +133,6 @@
   {
     FT_Bytes  p = table;
     FT_UInt   MarkGlyphSetCount;
-
-
     OTV_NAME_ENTER( "MarkGlyphSets" );
 
     p += 2;     /* skip Format */
@@ -165,8 +149,6 @@
 
     OTV_EXIT;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -198,8 +180,6 @@
     OTV_OPTIONAL_TABLE( MarkGlyphSetsDef );
 
     OTV_OPTIONAL_TABLE32( itemVarStore );
-
-
     otvalid->root = ftvalid;
 
     FT_TRACE3(( "validating GDEF table\n" ));
@@ -298,6 +278,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

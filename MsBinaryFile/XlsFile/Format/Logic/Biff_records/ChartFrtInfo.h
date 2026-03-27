@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of ChartFrtInfo record in BIFF8
 class ChartFrtInfo: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~ChartFrtInfo();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeChartFrtInfo;

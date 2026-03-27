@@ -31,8 +31,6 @@ U_NAMESPACE_BEGIN
 //-------------------------------------------------------------------------
 // Constructors...
 //-------------------------------------------------------------------------
-
-
 Calendar* IndianCalendar::clone() const {
   return new IndianCalendar(*this);
 }
@@ -187,8 +185,6 @@ static int32_t* jdToGregorian(double jd, int32_t gregorianDate[3]) {
 
    return gregorianDate;
 }
-
-   
 //-------------------------------------------------------------------------
 // Functions for converting from field values to milliseconds....
 //-------------------------------------------------------------------------
@@ -197,8 +193,6 @@ static double IndianToJD(int32_t year, int32_t month, int32_t date) {
    double start, jd;
 
    gyear = year + INDIAN_ERA_START;
-
-
    if(isGregorianLeap(gyear)) {
       leapMonth = 31;
       start = gregorianToJD(gyear, 3, 21);
@@ -351,8 +345,6 @@ const int32_t   IndianCalendar::fgSystemDefaultCenturyYear      = -1;
 
 UDate           IndianCalendar::fgSystemDefaultCenturyStart     = DBL_MIN;
 int32_t         IndianCalendar::fgSystemDefaultCenturyStartYear = -1;
-
-
 UBool IndianCalendar::haveDefaultCentury() const
 {
     return TRUE;

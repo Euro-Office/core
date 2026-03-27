@@ -598,8 +598,6 @@ typedef struct png_unknown_chunk_t
     /* libpng-using applications should NOT directly modify this byte. */
     png_byte location; /* mode of operation at read time */
 }
-
-
 png_unknown_chunk;
 typedef png_unknown_chunk FAR * png_unknown_chunkp;
 typedef PNG_CONST png_unknown_chunk FAR * png_const_unknown_chunkp;

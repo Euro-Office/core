@@ -55,8 +55,6 @@
 #ifndef  NO_CONSOLE_IO
 #define DEBUG_UNROLLING 0
 #endif   /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------*
  *             Binarization by Floyd-Steinberg Dithering            *
  *------------------------------------------------------------------*/
@@ -95,8 +93,6 @@ l_uint32    *lined;
     ditherToBinaryLineLow(lined, w, bufs1, bufs2, lowerclip, upperclip, 1);
     return;
 }
-
-
 /*
  *  ditherToBinaryLineLow()
  *   
@@ -228,8 +224,6 @@ l_uint8   fval1, fval2, rval, bval, dval;
     return;
 }
 
-
-
 /*------------------------------------------------------------------*
  *             Simple binarization with fixed threshold             *
  *------------------------------------------------------------------*/
@@ -259,8 +253,6 @@ l_uint32  *lines, *lined;
     }
     return;
 }
-
-
 /*
  *  thresholdToBinaryLineLow()
  *
@@ -379,8 +371,6 @@ l_uint32 sword, dword;
     }
     return;
 }
-
-
 /*---------------------------------------------------------------------*
  *    Alternate implementation of dithering that uses lookup tables.   *
  *    This is analogous to the method used in dithering to 2 bpp.      *
@@ -430,8 +420,6 @@ l_uint32    *lined;
     ditherToBinaryLineLUTLow(lined, w, bufs1, bufs2, tabval, tab38, tab14,  1);
     return;
 }
-
-
 /*!
  *  ditherToBinaryLineLUTLow()
  *   
@@ -525,8 +513,6 @@ l_uint8  rval, bval, dval;
 
     return;
 }
-
-
 /*!
  *  make8To1DitherTables()
  *
@@ -589,8 +575,6 @@ l_int32  *tabval, *tab38, *tab14;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                         Dithering to 2 bpp                       *
  *------------------------------------------------------------------*/
@@ -639,8 +623,6 @@ l_uint32    *lined;
     ditherTo2bppLineLow(lined, w, bufs1, bufs2, tabval, tab38, tab14, 1);
     return;
 }
-
-
 /*
  *  ditherTo2bppLineLow()
  *   
@@ -736,8 +718,6 @@ l_uint8  rval, bval, dval;
 
     return;
 }
-
-
 /*!
  *  make8To2DitherTables()
  *
@@ -823,8 +803,6 @@ l_int32  *tabval, *tab38, *tab14;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *                   Simple thresholding to 2 bpp                   *
  *------------------------------------------------------------------*/
@@ -868,8 +846,6 @@ l_uint32  *lines, *lined;
     }
     return;
 }
-
-
 /*------------------------------------------------------------------*
  *                   Simple thresholding to 4 bpp                   *
  *------------------------------------------------------------------*/
@@ -914,5 +890,3 @@ l_uint32  *lines, *lined;
     }
     return;
 }
-
-

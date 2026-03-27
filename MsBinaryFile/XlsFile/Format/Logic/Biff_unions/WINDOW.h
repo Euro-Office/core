@@ -58,8 +58,6 @@ public:
 	BaseObjectPtr				m_PLV;
 	BaseObjectPtr				m_Window2;
 	BaseObjectPtr				m_Pane;
-
-
 	GlobalWorkbookInfoPtr		global_info;	
 };
 

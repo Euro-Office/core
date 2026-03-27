@@ -34,8 +34,6 @@
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class table_operator

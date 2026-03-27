@@ -49,7 +49,5 @@ namespace XLSB
     {
         return BaseObjectPtr(new EndDeletedNames(*this));
     }
-
-
 } // namespace XLSB
 

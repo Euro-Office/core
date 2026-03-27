@@ -46,16 +46,12 @@ typedef struct sessionlist_param {
     session_param_t *first; /**< first session pointer of the list*/
     session_param_t *last;  /**< last  session pointer of the list*/
 } sessionlist_param_t;
-
-
 /**
  * generate a session list
  *
  * @return pointer to the generated session list
  */
 sessionlist_param_t * gene_sessionlist(void);
-
-
 /**
  * generate a session under the sesion list
  *
@@ -86,8 +82,6 @@ OPJ_BOOL search_session_and_channel(char cid[],
  */
 void insert_cachemodel_into_session(session_param_t *session,
                                     cachemodel_param_t *cachemodel);
-
-
 /**
  * delete a session
  *
@@ -97,8 +91,6 @@ void insert_cachemodel_into_session(session_param_t *session,
  */
 OPJ_BOOL delete_session(session_param_t **session,
                         sessionlist_param_t *sessionlist);
-
-
 /**
  * delete session list
  *
@@ -112,6 +104,4 @@ void delete_sessionlist(sessionlist_param_t **sessionlist);
  * @param[in] sessionlist session list pointer
  */
 void print_allsession(sessionlist_param_t *sessionlist);
-
-
 #endif      /* !SESSION_MANAGER_H_ */

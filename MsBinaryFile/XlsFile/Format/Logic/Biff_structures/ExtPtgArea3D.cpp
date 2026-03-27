@@ -35,14 +35,10 @@
 
 namespace XLS
 {
-
-
 ExtPtgArea3D::ExtPtgArea3D(const CellRef& cell_base_ref_init)
 :	cell_base_ref(cell_base_ref_init)
 {
 }
-
-
 BiffStructurePtr ExtPtgArea3D::clone()
 {
 	return BiffStructurePtr(new ExtPtgArea3D(*this));
@@ -54,8 +50,6 @@ void ExtPtgArea3D::load(CFRecord& record)
 
 	record >> iTabs >> area;
 }
-
-
 void ExtPtgArea3D::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full_ref)
 {
 	std::wstring strRange;
@@ -83,9 +77,5 @@ void ExtPtgArea3D::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, boo
 	ptg_stack.push(strRange + range_ref);		
 
 }
-
-
-
-
 } // namespace XLS
 

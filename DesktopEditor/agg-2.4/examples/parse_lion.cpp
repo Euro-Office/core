@@ -151,8 +151,6 @@ static char g_lion[] =
 "M 157,342 L 156,349 L 150,356 L 157,353 L 163,346 L 162,342 L 157,342 L 157,342 L 157,342\n"
 "M 99,265 L 96,284 L 92,299 L 73,339 L 73,333 L 87,300 L 99,265 L 99,265 L 99,265\n";
 
-
-
 unsigned parse_lion(agg::path_storage& path, agg::rgba8* colors, unsigned* path_idx)
 {
     // Parse the lion and then detect its bounding

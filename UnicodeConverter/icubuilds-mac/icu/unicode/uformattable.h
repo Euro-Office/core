@@ -51,8 +51,6 @@ typedef enum UFormattableType {
   UFMT_OBJECT,   /**< ufmt_getObject() will return without conversion.  @see ufmt_getObject*/
   UFMT_COUNT     /**< Count of defined UFormattableType values */
 } UFormattableType;
-
-
 /**
  * Opaque type representing various types of data which may be used for formatting
  * and parsing operations.
@@ -177,8 +175,6 @@ ufmt_getDouble(UFormattable* fmt, UErrorCode *status);
  */
 U_STABLE int32_t U_EXPORT2
 ufmt_getLong(UFormattable* fmt, UErrorCode *status);
-
-
 /**
  * Gets the int64_t value of this object. If this object is of a numeric
  * type and the magnitude is too large to fit in an int64, then

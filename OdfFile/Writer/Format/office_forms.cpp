@@ -122,8 +122,6 @@ void form_form::serialize(std::wostream & _Wostream)
 		}
 	}
 }
-
-
 void form_form::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
     if CP_CHECK_NAME(L"form", L"properties")

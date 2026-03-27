@@ -31,8 +31,6 @@
  */
 #pragma once
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CRecordDocRoutingSlipAtom : public CUnknownRecord
@@ -54,8 +52,6 @@ public:
 	SDocRoutingSlipAtom m_oRgRecipientRoutingSlipStrings;
 	SDocRoutingSlipAtom m_oSubjectString;
 	SDocRoutingSlipAtom m_oMessageString;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 
 };

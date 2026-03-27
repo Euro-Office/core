@@ -38,13 +38,9 @@ namespace XLS
 DXF::DXF()
 {
 }
-
-
 DXF::~DXF()
 {
 }
-
-
 BaseObjectPtr DXF::clone()
 {
 	return BaseObjectPtr(new DXF(*this));

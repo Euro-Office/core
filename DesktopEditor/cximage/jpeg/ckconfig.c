@@ -24,8 +24,6 @@
  * changing a line that reads "#define SOME_SYMBOL" to "#undef SOME_SYMBOL",
  * or vice versa.  This is called defining or undefining that symbol.
  */
-
-
 /* First we must see if your system has the include files we need.
  * We start out with the assumption that your system has all the ANSI-standard
  * include files.  If you get any error trying to include one of these files,
@@ -67,8 +65,6 @@
 #ifdef NEED_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-
-
 /* Usually type size_t is defined in one of the include files we've included
  * above.  If not, you'll get an error on the "typedef size_t my_size_t;" line.
  * In that case, first try defining NEED_SYS_TYPES_H just above.
@@ -88,8 +84,6 @@
 #endif
 
 typedef size_t my_size_t;	/* The payoff: do we have size_t now? */
-
-
 /* The next question is whether your compiler supports ANSI-style function
  * prototypes.  You need to know this in order to choose between using
  * makefile.ansi and using makefile.unix.
@@ -118,8 +112,6 @@ int test2function (void)	/* check void arg list */
   return 0;
 }
 #endif
-
-
 /* Now we want to find out if your compiler knows what "unsigned char" means.
  * If you get an error on the "unsigned char un_char;" line,
  * then undefine HAVE_UNSIGNED_CHAR.
@@ -130,8 +122,6 @@ int test2function (void)	/* check void arg list */
 #ifdef HAVE_UNSIGNED_CHAR
 unsigned char un_char;
 #endif
-
-
 /* Now we want to find out if your compiler knows what "unsigned short" means.
  * If you get an error on the "unsigned short un_short;" line,
  * then undefine HAVE_UNSIGNED_SHORT.
@@ -142,8 +132,6 @@ unsigned char un_char;
 #ifdef HAVE_UNSIGNED_SHORT
 unsigned short un_short;
 #endif
-
-
 /* Now we want to find out if your compiler understands type "void".
  * If you get an error anywhere in here, undefine HAVE_VOID.
  */
@@ -172,8 +160,6 @@ void test3function (arg1, arg2)
   (*arg2) (1, 2);		/* check call of fcn returning void */
 }
 #endif
-
-
 /* Now we want to find out if your compiler knows what "const" means.
  * If you get an error here, undefine HAVE_CONST.
  */
@@ -193,8 +179,6 @@ int test4function (arg1)
   return carray[arg1];
 }
 #endif
-
-
 /* If you get an error or warning about this structure definition,
  * define INCOMPLETE_TYPES_BROKEN.
  */
@@ -204,8 +188,6 @@ int test4function (arg1)
 #ifndef INCOMPLETE_TYPES_BROKEN
 typedef struct undefined_structure * undef_struct_ptr;
 #endif
-
-
 /* If you get an error about duplicate names,
  * define NEED_SHORT_EXTERNAL_NAMES.
  */
@@ -226,8 +208,6 @@ int possibly_dupli_function ()
 
 #endif
 
-
-
 /************************************************************************
  *  OK, that's it.  You should not have to change anything beyond this
  *  point in order to compile and execute this program.  (You might get
@@ -237,8 +217,6 @@ int possibly_dupli_function ()
  *  any additional suggestions it has.
  ************************************************************************
  */
-
-
 #ifdef HAVE_PROTOTYPES
 int is_char_signed (int arg)
 #else
@@ -255,8 +233,6 @@ int is_char_signed (arg)
   }
   return 1;			/* assume char is signed otherwise */
 }
-
-
 #ifdef HAVE_PROTOTYPES
 int is_shifting_signed (long arg)
 #else

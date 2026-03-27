@@ -69,8 +69,6 @@
 #include "IFFByteStream.h"
 #include "GOS.h"
 #include "debug.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -655,8 +653,6 @@ DjVmDoc::expand(const GURL &codebase, const GUTF8String &idx_name)
       write_index(str);
    }
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

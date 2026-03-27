@@ -409,8 +409,6 @@ static void encode_help_display()
 
     fprintf(stdout, "TotalDisto\n\n");
 }
-
-
 static OPJ_PROG_ORDER give_progression(const char progression[4])
 {
     if (strncmp(progression, "LRCP", 4) == 0) {
@@ -576,8 +574,6 @@ static void cinema_setup_encoder(opj_cparameters_t *parameters,
     }
     parameters->cp_disto_alloc = 1;
 }
-
-
 /* ------------------------------------------------------------------------------------ */
 static int parse_cmdline_encoder(int argc, char **argv,
                                  opj_cparameters_t *parameters,
@@ -658,11 +654,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ----------------------------------------------------- */
-
-
         case 'r': {         /* rates rates/distorsion */
             char *s = opj_optarg;
             while (sscanf(s, "%f", &parameters->tcp_rates[parameters->tcp_numlayers]) ==
@@ -942,8 +934,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
-
-
         /* ------------------------------------------------------ */
 
         case 'I': {         /* reversible or not */
@@ -1063,8 +1053,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_hprot_TPH_tileno[tilespec] = lasttileno = tile;
                             parameters->jpwl_hprot_TPH[tilespec++] = hprot;
                         }
-
-
                     } else if (!strcmp(token, "h")) {
                         /* Main header, unspecified */
                         parameters->jpwl_hprot_MH = hprot;
@@ -1171,8 +1159,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                             parameters->jpwl_pprot_packno[packspec] = 0;
                             parameters->jpwl_pprot[packspec++] = pprot;
                         }
-
-
                     } else if (!strcmp(token, "p")) {
                         /* all default */
                         parameters->jpwl_pprot_tileno[0] = 0;
@@ -1324,8 +1310,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
                 /* next token or bust */
                 token = strtok(NULL, ",");
             };
-
-
             /* some info */
             fprintf(stdout, "Info: JPWL capabilities enabled\n");
             parameters->jpwl_epc_on = true;
@@ -1388,8 +1372,6 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
     return 0;
 }
-
-
 /** Create the same index as j2k_create_index does, but in an int[] instead of in a file ==> easy to pass it back to Java, to transfer it etc.
   @param buffer_size, increased by the length of the compressed index, in number of bytes
   @return a pointer to a char[]
@@ -1724,10 +1706,6 @@ static char* create_index_into_byte_array(opj_codestream_info_t *cstr_info,
 
     return --buffer;
 }
-
-
-
-
 /* --------------------------------------------------------------------------
    ------------ Get the image byte[] from the Java object -------------------*/
 
@@ -1907,8 +1885,6 @@ static opj_image_t* loadImage(opj_cparameters_t *parameters, JNIEnv *env,
     }
     return image;
 }
-
-
 /* --------------------------------------------------------------------------
    --------------------   MAIN METHOD, CALLED BY JAVA -----------------------*/
 JNIEXPORT jlong JNICALL
@@ -2010,8 +1986,6 @@ Java_org_openJpeg_OpenJPEGJavaEncoder_internalEncodeImageToJ2K(JNIEnv *env,
     if (parameters.cp_cinema) {
         cinema_parameters(&parameters);
     }
-
-
     /* Create comment for codestream */
     if (parameters.cp_comment == NULL) {
         const char comment[] = "Created by JavaOpenJPEG version ";

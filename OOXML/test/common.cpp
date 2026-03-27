@@ -44,8 +44,6 @@
 #include <locale>
 #include <codecvt>
 #include <boost/filesystem.hpp>
-
-
 std::wstring GetWorkDir()
 {
     std::wstring curDir = NSFile::GetProcessDirectory();

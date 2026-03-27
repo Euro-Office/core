@@ -65,12 +65,8 @@
 
 // -- Implementation of class GRect and GRectMapper
 // - Author: Leon Bottou, 05/1997
-
-
 #include "GRect.h"
 #include "GException.h"
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -211,8 +207,6 @@ GRect::scale(float xfactor, float yfactor)
 	ymax = (int)(((float)ymax) * yfactor);
 }
 // -- Class GRatio
-
-
 inline
 GRectMapper::GRatio::GRatio()
   : p(0), q(1)
@@ -250,8 +244,6 @@ GRectMapper::GRatio::GRatio(int p, int q)
   p /= gcd;
   q /= gcd;
 }
-
-
 //< Changed for WinDjView project
 #ifdef _MSC_VER
 #define llint_t __int64
@@ -302,15 +294,11 @@ operator/(int n, GRectMapper::GRatio r )
     return -static_cast<int>((r.p/2 - x) / r.p);
 //>
 }
-
-
 // -- Class GRectMapper
 
 #define MIRRORX  1
 #define MIRRORY  2
 #define SWAPXY 4
-
-
 GRectMapper::GRectMapper()
 : rectFrom(0,0,1,1), 
   rectTo(0,0,1,1),
@@ -470,8 +458,6 @@ GRectMapper::get_output()
 {
     return rectTo;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

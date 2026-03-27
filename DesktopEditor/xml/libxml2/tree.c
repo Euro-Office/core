@@ -1051,8 +1051,6 @@ xmlCreateIntSubset(xmlDocPtr doc, const xmlChar *name,
 	if ((str) && ((!dict) ||				\
 	    (xmlDictOwns(dict, (const xmlChar *)(str)) == 0)))	\
 	    xmlFree((char *)(str));
-
-
 /**
  * DICT_COPY:
  * @str:  a string
@@ -1086,8 +1084,6 @@ xmlCreateIntSubset(xmlDocPtr doc, const xmlChar *name,
 		cpy = xmlDictLookup((dict), (const xmlChar *)(str), -1); \
 	} else \
 	    cpy = (const xmlChar *) xmlStrdup((const xmlChar *)(str)); }
-
-
 /**
  * xmlFreeDtd:
  * @cur:  the DTD structure to free up
@@ -5020,8 +5016,6 @@ xmlNodeGetLang(const xmlNode *cur) {
     }
     return(NULL);
 }
-
-
 #ifdef LIBXML_TREE_ENABLED
 /**
  * xmlNodeSetSpacePreserve:
@@ -7087,8 +7081,6 @@ xmlBufferDetach(xmlBufferPtr buf) {
 
     return ret;
 }
-
-
 /**
  * xmlBufferCreateStatic:
  * @mem: the memory area
@@ -7680,8 +7672,6 @@ xmlBufferWriteChar(xmlBufferPtr buf, const char *string) {
     if (buf->alloc == XML_BUFFER_ALLOC_IMMUTABLE) return;
     xmlBufferCCat(buf, string);
 }
-
-
 /**
  * xmlBufferWriteQuotedString:
  * @buf:  the XML buffer output
@@ -7732,8 +7722,6 @@ xmlBufferWriteQuotedString(xmlBufferPtr buf, const xmlChar *string) {
         xmlBufferCCat(buf, "\"");
     }
 }
-
-
 /**
  * xmlGetDocCompressMode:
  * @doc:  the document

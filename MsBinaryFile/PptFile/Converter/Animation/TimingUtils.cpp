@@ -32,8 +32,6 @@
 #include "TimingUtils.h"
 #include "../../Reader/ExtXmlUtils.h"
 #include "../../Enums/enums.h"
-
-
 PPT::Intermediate::ShapeAnim PPT::Intermediate::ParseExisting5Level_CTn(const PPTX::Logic::CTn &oCTn)
 {
     ShapeAnim spAn;

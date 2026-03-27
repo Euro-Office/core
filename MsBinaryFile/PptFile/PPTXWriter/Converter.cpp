@@ -95,8 +95,6 @@ namespace PPT
         <cp:revision>1</cp:revision>\
         </cp:coreProperties>";
     }
-
-
     CPPTXWriter::CPPTXWriter(const std::wstring& destPath) : m_strDestPath(destPath)
     {
         m_pDocument = NULL;
@@ -210,8 +208,6 @@ namespace PPT
     {
         m_oManager.Clear();
     }
-
-
     void CPPTXWriter::WriteContentTypes()
     {
         std::wstring strContentTypes = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\
@@ -263,8 +259,6 @@ namespace PPT
 
             strContentTypes += L"<Override PartName=\"/ppt/slideMasters/slideMaster" + std::to_wstring(nIndexTheme) + \
                 L".xml\" ContentType=\"application/vnd.openxmlformats-officedocument.presentationml.slideMaster+xml\"/>";
-
-
             for (size_t nL = 0; nL < m_pDocument->m_arThemes[nT]->m_arLayouts.size(); nL++, nIndexLayout++)
             {
                 strContentTypes += L"<Override PartName=\"/ppt/slideLayouts/slideLayout" + std::to_wstring(nIndexLayout) +
@@ -303,8 +297,6 @@ namespace PPT
         oFile.WriteStringUTF8(strContentTypes);
         oFile.CloseFile();
     }
-
-
     void CPPTXWriter::WriteApp(NSFile::CFileBinary& oFile)
     {
         if (m_xmlApp.empty())
@@ -682,8 +674,6 @@ namespace PPT
                     return false;
             }
         }
-
-
         return arrRTTheme.size() && arrRTLayouts.size();
     }
 
@@ -925,8 +915,6 @@ namespace PPT
             }
             CStylesWriter styleWriter;
             styleWriter.m_pTheme = pTheme;
-
-
             // inserted roundtrip master
             // add media here rId
             if (pTheme->m_eType == typeMaster && arrRTMaster.size())
@@ -1381,8 +1369,6 @@ namespace PPT
     void CPPTXWriter::WriteTable(CStringWriter& oWriter, CRelsGenerator& oRels, CElementPtr pElement, CLayout* pLayout)
     {
         CTableElement* pTableElement = dynamic_cast<CTableElement*>(pElement.get());
-
-
         PPTX::Logic::GraphicFrame gf;
         TableWriter table(pTableElement, &oRels);
         if (pTableElement->m_xmlRawData.empty())
@@ -1399,8 +1385,6 @@ namespace PPT
     void CPPTXWriter::WriteElement(CStringWriter& oWriter, CRelsGenerator& oRels, CElementPtr pElement, CLayout* pLayout)
     {
         if (!pElement) return;
-
-
         CTableElement* pTableElement = dynamic_cast<CTableElement*>(pElement.get());
         if (pTableElement)
         {
@@ -1607,13 +1591,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
 
         // TODO write new method and class for timing
         WriteTiming(oWriter, oRels, nIndexSlide);
-
-
         oWriter.WriteString(std::wstring(L"</p:sld>"));
-
-
-
-
         oRels.CloseRels();
 
         std::wstring strXml = oWriter.GetData();
@@ -1902,8 +1880,6 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
 
         nStartLayout += nCountLayouts;
     }
-
-
     void CPPTXWriter::WriteTiming(CStringWriter& oWriter, CRelsGenerator& oRels, int nIndexSlide)
     {
         auto slide_iter = m_pUserInfo->m_mapSlides.find(m_pUserInfo->m_arrSlidesOrder[nIndexSlide]);

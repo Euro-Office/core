@@ -47,8 +47,6 @@ void info_callback(const char *msg, void *client_data)
 
 /* -------------------------------------------------------------------------- */
 
-
-
 /* ------------- */
 
 void help_display()
@@ -346,5 +344,3 @@ int main(int argc, char *argv[])
 
     return 0;
 }
-
-

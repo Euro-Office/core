@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  affine.c
  *
@@ -218,8 +216,6 @@
  *      Additionally, the computation time/pixel is nearly the same
  *      for 8 bpp and 32 bpp, for both sampled and interpolated.
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -231,8 +227,6 @@ extern l_float32  AlphaMaskBorderVals[2];
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*-------------------------------------------------------------*
  *               Sampled affine image transformation           *
  *-------------------------------------------------------------*/
@@ -295,8 +289,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixAffineSampled()
  *
@@ -389,8 +381,6 @@ PIXCMAP    *cmap;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *               Interpolated affine image transformation              *
  *---------------------------------------------------------------------*/
@@ -461,8 +451,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixAffine()
  *
@@ -520,8 +508,6 @@ PIX      *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-
 /*!
  *  pixAffinePtaColor()
  *
@@ -562,8 +548,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixAffineColor()
  *
@@ -614,8 +598,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixAffinePtaGray()
  *
@@ -656,8 +638,6 @@ PIX        *pixd;
 
     return pixd;
 }
-
-
 
 /*!
  *  pixAffineGray()
@@ -707,8 +687,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------------*
  *   Affine transform including alpha (blend) component and gamma transform  *
  *---------------------------------------------------------------------------*/
@@ -824,8 +802,6 @@ PTA     *ptad2, *ptas2;
     ptaDestroy(&ptas2);
     return pixd;
 }
-
-
 /*!
  *  pixAffinePtaGammaXform()
  *
@@ -876,8 +852,6 @@ PIX  *pixg, *pixd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*-------------------------------------------------------------*
  *                 Affine coordinate transformation            *
  *-------------------------------------------------------------*/
@@ -1010,8 +984,6 @@ l_float32  *a[6];  /* 6x6 matrix A  */
 
     return 0;
 }
-
-
 /*!
  *  affineInvertXform()
  *
@@ -1100,8 +1072,6 @@ l_float32   b[3] = {1.0, 1.0, 1.0};   /* anything; results ignored */
 
     return 0;
 }
-
-
 /*!
  *  affineXformSampledPt()
  *
@@ -1130,8 +1100,6 @@ affineXformSampledPt(l_float32  *vc,
     *pyp = (l_int32)(vc[3] * x + vc[4] * y + vc[5] + 0.5);
     return 0;
 }
-
-
 /*!
  *  affineXformPt()
  *
@@ -1160,8 +1128,6 @@ affineXformPt(l_float32  *vc,
     *pyp = vc[3] * x + vc[4] * y + vc[5];
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *                 Interpolation helper functions              *
  *-------------------------------------------------------------*/
@@ -1244,8 +1210,6 @@ l_uint32  *lines;
           (bval << L_BLUE_SHIFT);
     return 0;
 }
-
-
 /*!
  *  linearInterpolatePixelGray()
  *
@@ -1309,8 +1273,6 @@ l_uint32  *lines;
     *pval = (v00 + v01 + v10 + v11 + 128) / 256;
     return 0;
 }
-
-
 
 /*-------------------------------------------------------------*
  *               Gauss-jordan linear equation solver           *
@@ -1411,8 +1373,6 @@ l_float32  big, dum, pivinv, temp;
     FREE(ipiv);
     return 0;
 }
-
-
 /*-------------------------------------------------------------*
  *              Sequential affine image transformation         *
  *-------------------------------------------------------------*/
@@ -1586,5 +1546,3 @@ PIX       *pixt1, *pixt2, *pixd;
     pixDestroy(&pixt2);
     return pixd;
 }
-
-

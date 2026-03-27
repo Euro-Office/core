@@ -34,8 +34,6 @@
 
 namespace XLS
 {
-
-
 CFVOParsedFormula::CFVOParsedFormula()
 :	ParsedFormula(CellRef())
 {
@@ -116,7 +114,5 @@ void CFVOParsedFormula::save(CFRecord& record)
 		saving(rgcb);
 	}
 }
-
-
 } // namespace XLS
 

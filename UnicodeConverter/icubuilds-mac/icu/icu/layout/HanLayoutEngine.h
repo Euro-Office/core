@@ -49,8 +49,6 @@ public:
      */
     HanOpenTypeLayoutEngine(const LEFontInstance *fontInstance, le_int32 scriptCode, le_int32 languageCode,
                             le_int32 typoFlags, const LEReferenceTo<GlyphSubstitutionTableHeader> &gsubTablem, LEErrorCode &success);
-
-
     /**
      * The destructor, virtual for correct polymorphic invocation.
      *

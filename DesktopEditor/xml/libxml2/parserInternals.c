@@ -93,15 +93,11 @@ xmlCheckVersion(int version) {
 		(version / 100), (myversion / 100));
     }
 }
-
-
 /************************************************************************
  *									*
  *		Some factorized error routines				*
  *									*
  ************************************************************************/
-
-
 /**
  * xmlErrMemory:
  * @ctxt:  an XML parser context
@@ -239,8 +235,6 @@ xmlIsLetter(int c) {
 /* #define DEBUG_INPUT */
 /* #define DEBUG_STACK */
 /* #define DEBUG_PUSH */
-
-
 /* we need to keep enough input to show errors in context */
 #define LINE_LEN        80
 
@@ -269,8 +263,6 @@ void check_buffer(xmlParserInputPtr in) {
 #else
 #define CHECK_BUFFER(in)
 #endif
-
-
 /**
  * xmlParserInputRead:
  * @in:  an XML parser input
@@ -1888,8 +1880,6 @@ xmlClearParserCtxt(xmlParserCtxtPtr ctxt)
   xmlClearNodeInfoSeq(&ctxt->node_seq);
   xmlCtxtReset(ctxt);
 }
-
-
 /**
  * xmlParserFindNodeInfo:
  * @ctx:  an XML parser context
@@ -1914,8 +1904,6 @@ xmlParserFindNodeInfo(const xmlParserCtxtPtr ctx, const xmlNodePtr node)
     else
         return NULL;
 }
-
-
 /**
  * xmlInitNodeInfoSeq:
  * @seq:  a node info sequence pointer
@@ -1990,8 +1978,6 @@ xmlParserFindNodeInfoIndex(const xmlParserNodeInfoSeqPtr seq,
     else
         return middle - 1;
 }
-
-
 /**
  * xmlParserAddNodeInfo:
  * @ctxt:  an XML parser context

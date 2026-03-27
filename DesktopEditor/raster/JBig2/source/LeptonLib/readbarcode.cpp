@@ -13,8 +13,6 @@
  -  or altered from any source or modified source distribution.
  *====================================================================*/
 
-
-
 /*
  *  readbarcode.c
  *
@@ -53,7 +51,6 @@
  *          NUMA            *numaQuantizeCrossingsByWindow()
  *          static l_int32   numaEvalBestWidthAndShift()
  *          static l_int32   numaEvalSyncError()
- *
  *
  *  NOTE CAREFULLY: This is "early beta" code.  It has not been tuned
  *  to work robustly on a large database of barcode images.  I'm putting
@@ -99,14 +96,10 @@ static l_int32 numaEvalBestWidthAndShift(NUMA *nas, l_int32 nwidth,
 static l_int32 numaEvalSyncError(NUMA *nas, l_int32 ifirst, l_int32 ilast,
                                  l_float32 width, l_float32 shift,
                                  l_float32 *pscore, NUMA **pnad);
-
-
 #ifndef  NO_CONSOLE_IO
 #define  DEBUG_DESKEW     1
 #define  DEBUG_WIDTHS     0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------------*
  *                               Top level                                *
  *------------------------------------------------------------------------*/
@@ -158,8 +151,6 @@ SARRAY  *sad;
     pixaDestroy(&pixa);
     return sad;
 }
-
-
 /*!
  *  pixExtractBarcodes()
  *
@@ -228,8 +219,6 @@ PIXA      *pixa;
     boxaDestroy(&boxa);
     return pixa;
 }
-
-
 /*!
  *  pixReadBarcodes()
  *
@@ -312,8 +301,6 @@ SARRAY    *saw, *sad;
 
     return sad;
 }
-
-
 /*!
  *  pixReadBarcodeWidths()
  *
@@ -357,8 +344,6 @@ NUMA      *na;
 
     return na;
 }
-
-
 /*------------------------------------------------------------------------*
  *                        Locate barcode in image                         *
  *------------------------------------------------------------------------*/
@@ -413,8 +398,6 @@ PIX   *pix8, *pixe, *pixb, *pixm;
 
     return boxa;
 }
-
-
 /*!
  *  pixGenerateBarcodeMask()
  *
@@ -462,8 +445,6 @@ PIX  *pixt1, *pixt2, *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------------*
  *                        Extract and deskew barcode                      *
  *------------------------------------------------------------------------*/
@@ -585,8 +566,6 @@ PIX       *pixt1, *pixt2, *pixt3, *pixt4, *pixt5, *pixt6, *pixd;
     pixDestroy(&pixt5);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------------*
  *                        Process to get line widths                      *
  *------------------------------------------------------------------------*/
@@ -636,8 +615,6 @@ NUMA  *nac, *nad;
     numaDestroy(&nac);
     return nad;
 }
-
-
 /*!
  *  pixExtractBarcodeWidths2()
  *
@@ -685,8 +662,6 @@ NUMA  *nacp, *nad;
     numaDestroy(&nacp);
     return nad;
 }
-
-
 /*!
  *  pixExtractBarcodeCrossings()
  *
@@ -739,8 +714,6 @@ NUMA      *nas, *nax, *nay, *nad;
     numaDestroy(&nay);
     return nad;
 }
-
-
 /*------------------------------------------------------------------------*
  *                         Average adjacent rasters                       *
  *------------------------------------------------------------------------*/
@@ -792,8 +765,6 @@ NUMA       *nad;
 
     return nad;
 }
-        
-
 /*------------------------------------------------------------------------*
  *                   Signal processing for barcode widths                 *
  *------------------------------------------------------------------------*/
@@ -968,8 +939,6 @@ NUMA      *naerange, *naorange, *naelut, *naolut, *nad;
         numaDestroy(&naohist);
     return nad;
 }
-
-
 /*!
  *  numaGetCrossingDistances()
  *
@@ -1040,8 +1009,6 @@ NUMA      *naedist, *naodist;
     if (pmaxdist) *pmaxdist = maxdist;
     return 0;
 }
-
-
 /*!
  *  numaLocatePeakRanges()
  *
@@ -1113,8 +1080,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaGetPeakCentroids()
  *
@@ -1156,8 +1121,6 @@ NUMA      *nad;
 
     return nad;
 }
-
-
 /*!
  *  numaGetPeakWidthLUT()
  *
@@ -1241,8 +1204,6 @@ NUMA       *nalut;
 
     return nalut;
 }
-
-
 /*!
  *  numaQuantizeCrossingsByWindow()
  *
@@ -1342,8 +1303,6 @@ NUMA      *nac, *nad;
         numaDestroy(&nac);
     return nad;
 }
-
-
 /*!
  *  numaEvalBestWidthAndShift()
  *
@@ -1410,8 +1369,6 @@ l_float32  bestwidth, bestshift, bestscore;
         *pbestscore = bestscore;
     return 0;
 }
-
-
 /*!
  *  numaEvalSyncError()
  *

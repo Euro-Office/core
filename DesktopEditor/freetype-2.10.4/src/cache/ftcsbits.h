@@ -14,16 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTCSBITS_H_
 #define FTCSBITS_H_
-
-
 #include <freetype/ftcache.h>
 #include "ftcglyph.h"
-
-
 FT_BEGIN_HEADER
 
 #define FTC_SBIT_ITEMS_PER_NODE  16
@@ -35,8 +29,6 @@ FT_BEGIN_HEADER
     FTC_SBitRec   sbits[FTC_SBIT_ITEMS_PER_NODE];
 
   } FTC_SNodeRec, *FTC_SNode;
-
-
 #define FTC_SNODE( x )         ( (FTC_SNode)( x ) )
 #define FTC_SNODE_GINDEX( x )  FTC_GNODE( x )->gindex
 #define FTC_SNODE_FAMILY( x )  FTC_GNODE( x )->family
@@ -65,8 +57,6 @@ FT_BEGIN_HEADER
 
 #define FTC_CACHE_SFAMILY_CLASS( x )  \
           FTC_SFAMILY_CLASS( FTC_CACHE_GCACHE_CLASS( x )->family_class )
-
-
   FT_LOCAL( void )
   FTC_SNode_Free( FTC_SNode  snode,
                   FTC_Cache  cache );
@@ -80,8 +70,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_ULong )
   FTC_SNode_Weight( FTC_SNode  inode );
 #endif
-
-
 #ifdef FTC_INLINE
 
   FT_LOCAL( FT_Bool )
@@ -97,6 +85,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTCSBITS_H_ */
-
-
 /* END */

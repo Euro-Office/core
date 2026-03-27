@@ -51,13 +51,9 @@ static l_int32 boxCheckIfOverlapIsBig(BOX *box, BOXA *boxa,
                                       l_float32 maxoverlap);
 
 static const l_int32  DEFAULT_MAX_POPS = 20000;  /* a big number! */
-
-
 #ifndef  NO_CONSOLE_IO
 #define  OUTPUT_HEAP_STATS   0
 #endif  /* ~NO_CONSOLE_IO */
-
-
 /*------------------------------------------------------------------*
  *                    Whitespace block extraction                   *
  *------------------------------------------------------------------*/
@@ -238,8 +234,6 @@ L_HEAP  *lh;
                 break;
             continue;
         }
-
-
 	    /* Generate up to 4 subboxes and put them on the heap */
         boxa4 = boxaGenerateSubboxes(box, boxa, maxperim, fract);
 	boxDestroy(&box);
@@ -274,8 +268,6 @@ L_HEAP  *lh;
 
     return boxad;
 }
-
-
 /*------------------------------------------------------------------*
  *                               Helpers                            *
  *------------------------------------------------------------------*/
@@ -298,8 +290,6 @@ PARTEL  *partel;
     partel->box = boxCopy(box);
     return partel;
 }
-
-
 /*!
  *  partelDestroy()
  *
@@ -327,8 +317,6 @@ PARTEL  *partel;
     *ppartel = NULL;
     return;
 }
-
-
 /*!
  *  partelSetSize()
  *
@@ -366,8 +354,6 @@ l_int32  w, h;
         return ERROR_INT("invalid sortflag", procName, 1);
     return 0;
 }
-
-
 /*!
  *  boxaGenerateSubboxes()
  *
@@ -422,8 +408,6 @@ BOXA    *boxa4;
 
     return boxa4;
 }
-
-
 /*!
  *  boxaSelectPivotBox()
  *
@@ -524,8 +508,6 @@ BOX       *boxt;
     }
     return boxaGetBox(boxa, minindex, L_COPY);
 }
-
-
 /*!
  *  boxCheckIfOverlapIsBig()
  *
@@ -571,8 +553,6 @@ BOX       *boxt;
 
     return bigoverlap;
 }
-
-
 /*!
  *  boxaPruneSortedOnOverlap()
  *
@@ -632,8 +612,4 @@ BOXA      *boxad;
 
     return boxad;
 }
-
-
-
-
 

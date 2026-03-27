@@ -61,8 +61,6 @@ namespace cpdoccore {
 
 namespace odf_reader {
 
-
-
 void draw_shape::common_xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	if (enhanced_geometry_)
@@ -201,8 +199,6 @@ void draw_line::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 	Context.get_drawing_context().end_shape();
 }
-
-
 void draw_path::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	reset_svg_path();

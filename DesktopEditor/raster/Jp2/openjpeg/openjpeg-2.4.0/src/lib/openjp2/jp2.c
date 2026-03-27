@@ -736,8 +736,6 @@ static OPJ_BOOL opj_jp2_read_bpcc(opj_jp2_t *jp2,
     assert(p_bpc_header_data != 00);
     assert(jp2 != 00);
     assert(p_manager != 00);
-
-
     if (jp2->bpc != 255) {
         opj_event_msg(p_manager, EVT_WARNING,
                       "A BPCC header box is available although BPC given by the IHDR box (%d) indicate components bit depth is constant\n",
@@ -1305,8 +1303,6 @@ static OPJ_BOOL opj_jp2_read_cmap(opj_jp2_t * jp2,
     if (!cmap) {
         return OPJ_FALSE;
     }
-
-
     for (i = 0; i < nr_channels; ++i) {
         opj_read_bytes(p_cmap_header_data, &l_value, 2);            /* CMP^i */
         p_cmap_header_data += 2;
@@ -1921,8 +1917,6 @@ OPJ_BOOL opj_jp2_setup_encoder(opj_jp2_t *jp2,
     OPJ_UINT32 alpha_count;
     OPJ_UINT32 color_channels = 0U;
     OPJ_UINT32 alpha_channel = 0U;
-
-
     if (!jp2 || !parameters || !image) {
         return OPJ_FALSE;
     }
@@ -3414,8 +3408,6 @@ static void write_prxy(int offset_jp2c, int length_jp2c, int offset_idx,
     opj_stream_seek(cio, lenp + len, p_manager);
 }
 #endif
-
-
 #if 0
 static int write_fidx(int offset_jp2c, int length_jp2c, int offset_idx,
                       int length_idx, opj_stream_private_t *cio,

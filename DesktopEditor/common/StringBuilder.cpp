@@ -1085,8 +1085,6 @@ namespace NSStringUtils
 		WriteEncodeXmlString(value);
 		WriteNodeEnd(strNodeName);
 	}
-
-
 	unsigned char CStringBuilder::CheckXmlCode(unsigned int c)
 	{
 		if ('&' == c)

@@ -19,20 +19,12 @@
 /*             understand this code.                                       */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTDEBUG_H__
 #define __FTDEBUG_H__
-
-
 #include <ft2build.h>
 #include FT_CONFIG_CONFIG_H
 #include FT_FREETYPE_H
-
-
 FT_BEGIN_HEADER
-
-
   /* force the definition of FT_DEBUG_LEVEL_ERROR if FT_DEBUG_LEVEL_TRACE */
   /* is already defined; this simplifies the following #ifdefs            */
   /*                                                                      */
@@ -40,8 +32,6 @@ FT_BEGIN_HEADER
 #undef  FT_DEBUG_LEVEL_ERROR
 #define FT_DEBUG_LEVEL_ERROR
 #endif
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Define the trace enums as well as the trace levels array when they    */
@@ -60,16 +50,12 @@ FT_BEGIN_HEADER
     trace_count
 
   } FT_Trace;
-
-
   /* defining the array of trace levels, provided by `src/base/ftdebug.c' */
   extern int  ft_trace_levels[trace_count];
 
 #undef FT_TRACE_DEF
 
 #endif /* FT_DEBUG_LEVEL_TRACE */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Define the FT_TRACE macro                                             */
@@ -95,8 +81,6 @@ FT_BEGIN_HEADER
 #define FT_TRACE( level, varformat )  do { } while ( 0 )      /* nothing */
 
 #endif /* !FT_DEBUG_LEVEL_TRACE */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -115,8 +99,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_BASE( FT_Int )
   FT_Trace_Get_Count( void );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -142,8 +124,6 @@ FT_BEGIN_HEADER
   /*                                                                       */
   FT_BASE( const char * )
   FT_Trace_Get_Name( FT_Int  idx );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* You need two opening and closing parentheses!                         */
@@ -162,8 +142,6 @@ FT_BEGIN_HEADER
 #define FT_TRACE5( varformat )  FT_TRACE( 5, varformat )
 #define FT_TRACE6( varformat )  FT_TRACE( 6, varformat )
 #define FT_TRACE7( varformat )  FT_TRACE( 7, varformat )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Define the FT_ERROR macro.                                            */
@@ -181,8 +159,6 @@ FT_BEGIN_HEADER
 #define FT_ERROR( varformat )  do { } while ( 0 )      /* nothing */
 
 #endif /* !FT_DEBUG_LEVEL_ERROR */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Define the FT_ASSERT and FT_THROW macros.  The call to `FT_Throw'     */
@@ -213,8 +189,6 @@ FT_BEGIN_HEADER
 #define FT_THROW( e )  FT_ERR_CAT( FT_ERR_PREFIX, e )
 
 #endif /* !FT_DEBUG_LEVEL_ERROR */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* Define `FT_Message' and `FT_Panic' when needed.                       */
@@ -242,14 +216,10 @@ FT_BEGIN_HEADER
             const char*  file );
 
 #endif /* FT_DEBUG_LEVEL_ERROR */
-
-
   FT_BASE( void )
   ft_debug_init( void );
 
 FT_END_HEADER
 
 #endif /* __FTDEBUG_H__ */
-
-
 /* END */

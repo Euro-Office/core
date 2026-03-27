@@ -34,8 +34,6 @@
 #include  "../../../Common/3dParty/pole/pole.h"
 #include "../../../DesktopEditor/common/File.h"
 #include "../../../OOXML/Base/Base.h" // it used
-
-
 namespace PPT
 {
 struct IStruct {

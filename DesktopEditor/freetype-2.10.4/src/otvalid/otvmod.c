@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/tttables.h>
 #include <freetype/tttags.h>
 #include <freetype/ftotval.h>
@@ -25,8 +23,6 @@
 #include "otvmod.h"
 #include "otvalid.h"
 #include "otvcommn.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -35,8 +31,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  otvmodule
-
-
   static FT_Error
   otv_load_table( FT_Face             face,
                   FT_Tag              tag,
@@ -45,8 +39,6 @@
   {
     FT_Error   error;
     FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
     error = FT_Load_Sfnt_Table( face, tag, 0, NULL, table_len );
     if ( FT_ERR_EQ( error, Table_Missing ) )
       return FT_Err_Ok;
@@ -61,8 +53,6 @@
   Exit:
     return error;
   }
-
-
   static FT_Error
   otv_validate( FT_Face volatile   face,
                 FT_UInt            ot_flags,
@@ -83,8 +73,6 @@
     FT_ULong                  len_math;
     FT_UInt                   num_glyphs = (FT_UInt)face->num_glyphs;
     FT_ValidatorRec volatile  valid;
-
-
     base     = gdef     = gpos     = gsub     = jstf     = math     = NULL;
     len_base = len_gdef = len_gpos = len_gsub = len_jstf = len_math = 0;
 
@@ -216,8 +204,6 @@
     if ( error )
     {
       FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
       FT_FREE( base );
       FT_FREE( gdef );
       FT_FREE( gpos );
@@ -227,30 +213,22 @@
 
     {
       FT_Memory  memory = FT_FACE_MEMORY( face );
-
-
       FT_FREE( math );                 /* Can't return this as API is frozen */
     }
 
     return error;
   }
-
-
   static
   const FT_Service_OTvalidateRec  otvalid_interface =
   {
     otv_validate        /* validate */
   };
-
-
   static
   const FT_ServiceDescRec  otvalid_services[] =
   {
     { FT_SERVICE_ID_OPENTYPE_VALIDATE, &otvalid_interface },
     { NULL, NULL }
   };
-
-
   static FT_Pointer
   otvalid_get_service( FT_Module    module,
                        const char*  service_id )
@@ -259,8 +237,6 @@
 
     return ft_service_list_lookup( otvalid_services, service_id );
   }
-
-
   FT_CALLBACK_TABLE_DEF
   const FT_Module_Class  otv_module_class =
   {
@@ -276,6 +252,4 @@
     (FT_Module_Destructor) NULL,                /* module_done   */
     (FT_Module_Requester)  otvalid_get_service  /* get_interface */
   };
-
-
 /* END */

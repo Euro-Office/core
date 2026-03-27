@@ -55,8 +55,6 @@ public:
 	std::wstring	m_strUNICODEUserName;
 
 	_UINT32 m_nRelVersion;  // 0x00000008 or 0x00000009
-
-
     CRecordCurrentUserAtom();
 
     ~CRecordCurrentUserAtom();

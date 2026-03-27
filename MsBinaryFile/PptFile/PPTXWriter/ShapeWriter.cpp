@@ -1267,8 +1267,6 @@ void PPT::CShapeWriter::WriteTextInfo(PPT::CTextCFRun* pLastCF)
         buConverter.FillPPr(*pPPr, *pParagraph);
         m_oWriter.WriteString(pPPr->toXML());
         delete pPPr;
-
-
         std::wstring typeRun = L"a:r";
 
         size_t nCountSpans = pParagraph->m_arSpans.size();
@@ -1815,8 +1813,6 @@ std::wstring PPT::CShapeWriter::ConvertTable()
     WriteTableInfo();
 
     m_pElement->NormalizeCoordsByMetric();
-
-
     if (pGroupElement->m_bChildAnchorEnabled || pGroupElement->m_bAnchorEnabled)
     {
         std::wstring str;
@@ -2201,8 +2197,6 @@ std::wstring PPT::CShapeWriter::ConvertImage()
 				contrast = -100000;
             m_oWriter.WriteString(L" contrast=\"" + std::to_wstring(contrast) + L"\"");
         }
-
-
         m_oWriter.WriteString(L"/></a:blip>");
     }else
     {
@@ -2279,8 +2273,6 @@ HRESULT PPT::CShapeWriter::get_Height(double* dHeight)
 }
 HRESULT PPT::CShapeWriter::put_Height(const double& dHeight)
 {
-
-
     return S_OK;
 }
 HRESULT PPT::CShapeWriter::get_Width(double* dWidth)

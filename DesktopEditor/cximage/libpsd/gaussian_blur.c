@@ -29,8 +29,6 @@
 #include "psd_color.h"
 #include "psd_bitmap.h"
 #include "psd_math.h"
-
-
 /*
  * The equations: g(r) = exp (- r^2 / (2 * sigma^2))
  *                   r = sqrt (x^2 + y ^2)

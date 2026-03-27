@@ -14,14 +14,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/internal/ftdebug.h>
 #include <freetype/ftwinfnt.h>
 #include <freetype/internal/ftobjs.h>
 #include <freetype/internal/services/svwinfnt.h>
-
-
   /* documentation is in ftwinfnt.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -30,8 +26,6 @@
   {
     FT_Service_WinFnt  service;
     FT_Error           error;
-
-
     if ( !face )
       return FT_THROW( Invalid_Face_Handle );
 
@@ -47,6 +41,4 @@
 
     return error;
   }
-
-
 /* END */

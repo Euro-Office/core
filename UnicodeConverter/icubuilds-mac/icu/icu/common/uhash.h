@@ -236,8 +236,6 @@ uhash_init(UHashtable *hash,
 U_CAPI void U_EXPORT2 
 uhash_close(UHashtable *hash);
 
-
-
 /**
  * Set the function used to hash keys.
  * @param hash The UHashtable to set
@@ -673,8 +671,6 @@ uhash_deleteHashtable(void *obj);
  */
 U_CAPI UBool U_EXPORT2 
 uhash_equals(const UHashtable* hash1, const UHashtable* hash2);
-
-
 #if U_SHOW_CPLUSPLUS_API
 
 U_NAMESPACE_BEGIN

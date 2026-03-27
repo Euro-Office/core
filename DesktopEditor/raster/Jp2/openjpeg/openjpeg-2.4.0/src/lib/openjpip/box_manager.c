@@ -168,8 +168,6 @@ box_param_t * gene_boxbyOffinStream(Byte_t *stream, OPJ_OFF_T offset)
 
     return box;
 }
-
-
 box_param_t * gene_boxbyType(int fd, OPJ_OFF_T offset, OPJ_SIZE_T length,
                              const char TBox[])
 {
@@ -179,8 +177,6 @@ box_param_t * gene_boxbyType(int fd, OPJ_OFF_T offset, OPJ_SIZE_T length,
     Byte_t headlen;
     char *boxtype;
     box_param_t *foundbox;
-
-
     if (length == 0) { /* set the max length*/
         if (get_filesize(fd) <= offset) {
             return NULL;

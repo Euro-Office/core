@@ -70,8 +70,6 @@ public:
         pixfmt_type pixf(rbuf_window(), gamma);
         ren_base renb(pixf);
         renb.clear(agg::rgba(1, 1, 1));
-
-
         double dark = 1.0 - m_contrast.value();
         double light = m_contrast.value();
 
@@ -82,8 +80,6 @@ public:
         agg::rasterizer_scanline_aa<> ras;
         agg::scanline_u8 sl;
         agg::path_storage path;
-
-
         unsigned i;
         double x = (width() - 256.0) / 2.0;
         double y = 50.0;
@@ -134,8 +130,6 @@ public:
         agg::render_ctrl(ras, sl, renb, m_gamma);
         agg::render_ctrl(ras, sl, renb, m_contrast);
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -145,16 +139,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -166,5 +156,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

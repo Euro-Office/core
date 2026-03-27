@@ -14,17 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __SVXF86NM_H__
 #define __SVXF86NM_H__
 
 #include FT_INTERNAL_SERVICE_H
-
-
 FT_BEGIN_HEADER
-
-
   /*
    *  A trivial service used to return the name of a face's font driver,
    *  according to the XFree86 nomenclature.  Note that the service data
@@ -44,12 +38,6 @@ FT_BEGIN_HEADER
 #define FT_XF86_FORMAT_WINFNT    "Windows FNT"
 
   /* */
-
-
 FT_END_HEADER
-
-
 #endif /* __SVXF86NM_H__ */
-
-
 /* END */

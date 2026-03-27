@@ -23,14 +23,10 @@
 #include "unicode/localpointer.h"
 
 #if !UCONFIG_NO_NORMALIZATION
-
-
 #if U_SHOW_CPLUSPLUS_API
 #include "unicode/unistr.h"
 #include "unicode/uniset.h"
 #endif
-
-
 /**
  * \file
  * \brief Unicode Security and Spoofing Detection, C API.
@@ -74,7 +70,6 @@
  * More generally, the standard ICU thread safety rules apply:  functions that take a
  * const USpoofChecker parameter are thread safe.  Those that take a non-const 
  * USpoofChecier are not thread safe.
- *
  *
  * Descriptions of the available checks.
  *
@@ -264,8 +259,6 @@ typedef enum USpoofChecks {
     USPOOF_AUX_INFO                  = 0x40000000
 
     } USpoofChecks;
-    
-    
     /**
      * Constants from UAX #39 for use in setRestrictionLevel(), and
      * for returned identifier restriction levels in check results.
@@ -330,8 +323,6 @@ typedef enum USpoofChecks {
  */
 U_STABLE USpoofChecker * U_EXPORT2
 uspoof_open(UErrorCode *status);
-
-
 /**
  * Open a Spoof checker from its serialized form, stored in 32-bit-aligned memory.
  * Inverse of uspoof_serialize().
@@ -392,8 +383,6 @@ U_STABLE USpoofChecker * U_EXPORT2
 uspoof_openFromSource(const char *confusables,  int32_t confusablesLen,
                       const char *confusablesWholeScript, int32_t confusablesWholeScriptLen,
                       int32_t *errType, UParseError *pe, UErrorCode *status);
-
-
 /**
   * Close a Spoof Checker, freeing any memory that was being held by
   *   its implementation.
@@ -432,8 +421,6 @@ U_NAMESPACE_END
  */
 U_STABLE USpoofChecker * U_EXPORT2
 uspoof_clone(const USpoofChecker *sc, UErrorCode *status);
-
-
 /**
  * Specify the set of checks that will be performed by the check
  * functions of this Spoof Checker.
@@ -473,8 +460,6 @@ uspoof_getChecks(const USpoofChecker *sc, UErrorCode *status);
   */
 U_STABLE void U_EXPORT2
 uspoof_setRestrictionLevel(USpoofChecker *sc, URestrictionLevel restrictionLevel);
-
-
 /**
   * Get the Restriction Level that will be tested if the checks include RESTRICTION_LEVEL.
   *
@@ -553,8 +538,6 @@ uspoof_setAllowedLocales(USpoofChecker *sc, const char *localesList, UErrorCode 
  */
 U_STABLE const char * U_EXPORT2
 uspoof_getAllowedLocales(USpoofChecker *sc, UErrorCode *status);
-
-
 /**
  * Limit the acceptable characters to those specified by a Unicode Set.
  *   Any previously specified character limit is
@@ -575,8 +558,6 @@ uspoof_getAllowedLocales(USpoofChecker *sc, UErrorCode *status);
  */
 U_STABLE void U_EXPORT2
 uspoof_setAllowedChars(USpoofChecker *sc, const USet *chars, UErrorCode *status);
-
-
 /**
  * Get a USet for the characters permitted in an identifier.
  * This corresponds to the limits imposed by the Set Allowed Characters
@@ -590,7 +571,6 @@ uspoof_setAllowedChars(USpoofChecker *sc, const USet *chars, UErrorCode *status)
  * returned set will become invalid if the spoof detector is closed,
  * or if a new set of allowed characters is specified.
  *
- *
  * @param sc       The USpoofChecker 
  * @param status   The error code, set if this function encounters a problem.
  * @return         A USet containing the characters that are permitted by
@@ -599,8 +579,6 @@ uspoof_setAllowedChars(USpoofChecker *sc, const USet *chars, UErrorCode *status)
  */
 U_STABLE const USet * U_EXPORT2
 uspoof_getAllowedChars(const USpoofChecker *sc, UErrorCode *status);
-
-
 #if U_SHOW_CPLUSPLUS_API
 /**
  * Limit the acceptable characters to those specified by a Unicode Set.
@@ -622,8 +600,6 @@ uspoof_getAllowedChars(const USpoofChecker *sc, UErrorCode *status);
  */
 U_STABLE void U_EXPORT2
 uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const icu::UnicodeSet *chars, UErrorCode *status);
-
-
 /**
  * Get a UnicodeSet for the characters permitted in an identifier.
  * This corresponds to the limits imposed by the Set Allowed Characters / 
@@ -637,7 +613,6 @@ uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const icu::UnicodeSet *chars, UEr
  * returned set will become invalid if the spoof detector is closed,
  * or if a new set of allowed characters is specified.
  *
- *
  * @param sc       The USpoofChecker 
  * @param status   The error code, set if this function encounters a problem.
  * @return         A UnicodeSet containing the characters that are permitted by
@@ -647,8 +622,6 @@ uspoof_setAllowedUnicodeSet(USpoofChecker *sc, const icu::UnicodeSet *chars, UEr
 U_STABLE const icu::UnicodeSet * U_EXPORT2
 uspoof_getAllowedUnicodeSet(const USpoofChecker *sc, UErrorCode *status);
 #endif
-
-
 /**
  * Check the specified string for possible security issues.
  * The text to be checked will typically be an identifier of some sort.
@@ -680,8 +653,6 @@ uspoof_check(const USpoofChecker *sc,
                          const UChar *id, int32_t length, 
                          int32_t *position,
                          UErrorCode *status);
-
-
 /**
  * Check the specified string for possible security issues.
  * The text to be checked will typically be an identifier of some sort.
@@ -714,8 +685,6 @@ uspoof_checkUTF8(const USpoofChecker *sc,
                  const char *id, int32_t length,
                  int32_t *position,
                  UErrorCode *status);
-
-
 #if U_SHOW_CPLUSPLUS_API
 /**
  * Check the specified string for possible security issues.
@@ -747,8 +716,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
                           UErrorCode *status);
 
 #endif
-
-
 /**
  * Check the whether two specified strings are visually confusable.
  * The types of confusability to be tested - single script, mixed script,
@@ -765,7 +732,6 @@ uspoof_checkUnicodeString(const USpoofChecker *sc,
  *   may be of mixed case.
  * If identifiers are case folded for comparison and
  * display to the user, do not select the USPOOF_ANY_CASE option.
- *
  *
  * @param sc      The USpoofChecker
  * @param id1     The first of the two identifiers to be compared for 
@@ -793,8 +759,6 @@ uspoof_areConfusable(const USpoofChecker *sc,
                      const UChar *id1, int32_t length1,
                      const UChar *id2, int32_t length2,
                      UErrorCode *status);
-
-
 
 /**
  * Check the whether two specified strings are visually confusable.
@@ -826,10 +790,6 @@ uspoof_areConfusableUTF8(const USpoofChecker *sc,
                          const char *id1, int32_t length1,
                          const char *id2, int32_t length2,
                          UErrorCode *status);
-
-
-
-
 #if U_SHOW_CPLUSPLUS_API
 /**
  * Check the whether two specified strings are visually confusable.
@@ -858,8 +818,6 @@ uspoof_areConfusableUnicodeString(const USpoofChecker *sc,
                                   const icu::UnicodeString &s2,
                                   UErrorCode *status);
 #endif
-
-
 /**
   *  Get the "skeleton" for an identifier.
   *  Skeletons are a transformation of the input identifier;
@@ -1061,8 +1019,6 @@ U_STABLE int32_t U_EXPORT2
 uspoof_serialize(USpoofChecker *sc,
                  void *data, int32_t capacity,
                  UErrorCode *status);
-
-
 #endif
 
 #endif   /* USPOOF_H */

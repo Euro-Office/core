@@ -37,8 +37,6 @@
 #include "odf_number_styles_context.h"
 #include "odf_table_styles_context.h"
 #include "odf_lists_styles_context.h"
-
-
 namespace cpdoccore {
 namespace odf_writer {
 
@@ -104,8 +102,6 @@ private:
 	odf_table_styles_context	table_styles_context_;
 	odf_number_styles_context	number_styles_context_;
 	odf_lists_styles_context	lists_styles_context_;
-   
-    
 	std::vector<odf_style_state_ptr>		style_state_list_;	
 	std::vector<odf_style_state_ptr>		current_default_styles_;//для внутренней работы .. переодически очищаемый частично или полностью
    
@@ -114,7 +110,5 @@ private:
 	odf_conversion_context *	odf_context_;
 
 };
-
-
 }
 }

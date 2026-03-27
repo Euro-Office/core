@@ -20,8 +20,6 @@
 
 #ifndef FORMAT_H
 #define FORMAT_H
-
-
 #include "unicode/utypes.h"
 
 /**
@@ -278,8 +276,6 @@ protected:
      * @stable ICU 2.0
      */
     Format& operator=(const Format&); // Does nothing; for subclasses
-
-       
     /**
      * Simple function for initializing a UParseError from a UnicodeString.
      *

@@ -116,8 +116,6 @@ WASM_EXPORT unsigned char* hash2(const char* password, const char* salt, int spi
 #ifdef __cplusplus
 }
 #endif
-
-
 #ifdef TEST_AS_EXECUTABLE
 #include <string>
 #include <iostream>

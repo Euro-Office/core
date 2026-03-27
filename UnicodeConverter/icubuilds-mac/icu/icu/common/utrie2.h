@@ -834,8 +834,6 @@ utrie2_internalU8NextIndex(const UTrie2 *trie, UChar32 c,
 U_INTERNAL int32_t U_EXPORT2
 utrie2_internalU8PrevIndex(const UTrie2 *trie, UChar32 c,
                            const uint8_t *start, const uint8_t *src);
-
-
 /** Internal low-level trie getter. Returns a data index. */
 #define _UTRIE2_INDEX_RAW(offset, trieIndex, c) \
     (((int32_t)((trieIndex)[(offset)+((c)>>UTRIE2_SHIFT_2)]) \

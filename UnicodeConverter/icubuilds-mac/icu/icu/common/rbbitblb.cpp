@@ -7,8 +7,6 @@
 //
 //  rbbitblb.cpp
 //
-
-
 #include "unicode/utypes.h"
 
 #if !UCONFIG_NO_BREAK_ITERATION
@@ -42,8 +40,6 @@ RBBITableBuilder::RBBITableBuilder(RBBIRuleBuilder *rb, RBBINode **rootNode) :
     }
 }
 
-
-
 RBBITableBuilder::~RBBITableBuilder() {
     int i;
     for (i=0; i<fDStates->size(); i++) {
@@ -51,8 +47,6 @@ RBBITableBuilder::~RBBITableBuilder() {
     }
     delete   fDStates;
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //   RBBITableBuilder::build  -  This is the main function for building the DFA state transtion
@@ -140,8 +134,6 @@ void  RBBITableBuilder::build() {
         fTree->printTree(TRUE);
     }
 #endif
-
-
     //
     // calculate the functions nullable, firstpos, lastpos and followpos on
     // nodes in the parse tree.
@@ -190,8 +182,6 @@ void  RBBITableBuilder::build() {
     if (fRB->fDebugEnv && uprv_strstr(fRB->fDebugEnv, "states")) {printStates();};
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //   calcNullable.    Impossible to explain succinctly.  See Aho, section 3.9
@@ -214,8 +204,6 @@ void RBBITableBuilder::calcNullable(RBBINode *n) {
         n->fNullable = TRUE;
         return;
     }
-
-
     // The node is not a leaf.
     //  Calculate nullable on its children.
     calcNullable(n->fLeftChild);
@@ -235,10 +223,6 @@ void RBBITableBuilder::calcNullable(RBBINode *n) {
         n->fNullable = FALSE;
     }
 }
-
-
-
-
 //-----------------------------------------------------------------------------
 //
 //   calcFirstPos.    Impossible to explain succinctly.  See Aho, section 3.9
@@ -282,8 +266,6 @@ void RBBITableBuilder::calcFirstPos(RBBINode *n) {
         setAdd(n->fFirstPosSet, n->fLeftChild->fFirstPosSet);
     }
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -329,8 +311,6 @@ void RBBITableBuilder::calcLastPos(RBBINode *n) {
     }
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //   calcFollowPos.    Impossible to explain succinctly.  See Aho, section 3.9
@@ -371,11 +351,7 @@ void RBBITableBuilder::calcFollowPos(RBBINode *n) {
         }
     }
 
-
-
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //   calcChainedFollowPos.    Modify the previously calculated followPos sets
@@ -410,8 +386,6 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree) {
     }
     U_ASSERT(userRuleRoot != NULL);
     UVector *matchStartNodes = userRuleRoot->fFirstPosSet;
-
-
     // Iteratate over all leaf nodes,
     //
     int32_t  endNodeIx;
@@ -450,8 +424,6 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree) {
                 }
             }
         }
-
-
         // Now iterate over the nodes that can start a match, looking for ones
         //   with the same char class as our ending node.
         RBBINode *startNode;
@@ -474,8 +446,6 @@ void RBBITableBuilder::calcChainedFollowPos(RBBINode *tree) {
         }
     }
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //   bofFixup.    Fixup for state tables that include {bof} beginning of input testing.
@@ -680,8 +650,6 @@ ExitBuildSTdeleteall:
     delete failState;
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //   flagAcceptingStates    Identify accepting states.
@@ -746,8 +714,6 @@ void     RBBITableBuilder::flagAcceptingStates() {
         }
     }
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //    flagLookAheadStates   Very similar to flagAcceptingStates, above.
@@ -777,10 +743,6 @@ void     RBBITableBuilder::flagLookAheadStates() {
         }
     }
 }
-
-
-
-
 //-----------------------------------------------------------------------------
 //
 //    flagTaggedStates
@@ -813,10 +775,6 @@ void     RBBITableBuilder::flagTaggedStates() {
         }
     }
 }
-
-
-
-
 //-----------------------------------------------------------------------------
 //
 //  mergeRuleStatusVals
@@ -904,12 +862,6 @@ void  RBBITableBuilder::mergeRuleStatusVals() {
     }
 }
 
-
-
-
-
-
-
 //-----------------------------------------------------------------------------
 //
 //  sortedAdd  Add a value to a vector of sorted values (ints).
@@ -941,8 +893,6 @@ void RBBITableBuilder::sortedAdd(UVector **vector, int32_t val) {
     }
     vec->insertElementAt(val, i, *fStatus);
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -1007,8 +957,6 @@ void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
     dest->setSize(di, *fStatus);
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //  setEqual    Set operation on UVector.
@@ -1019,8 +967,6 @@ void RBBITableBuilder::setAdd(UVector *dest, UVector *source) {
 UBool RBBITableBuilder::setEquals(UVector *a, UVector *b) {
     return a->equals(*b);
 }
-
-
 //-----------------------------------------------------------------------------
 //
 //  printPosSets   Debug function.  Dump Nullable, firstpos, lastpos and followpos
@@ -1048,8 +994,6 @@ void RBBITableBuilder::printPosSets(RBBINode *n) {
     printPosSets(n->fRightChild);
 }
 #endif
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -1079,8 +1023,6 @@ int32_t  RBBITableBuilder::getTableSize() const {
     size   += numRows * rowSize;
     return size;
 }
-
-
 
 //-----------------------------------------------------------------------------
 //
@@ -1130,8 +1072,6 @@ void RBBITableBuilder::exportTable(void *where) {
     }
 }
 
-
-
 //-----------------------------------------------------------------------------
 //
 //   printSet    Debug function.   Print the contents of a UVector
@@ -1147,8 +1087,6 @@ void RBBITableBuilder::printSet(UVector *s) {
     RBBIDebugPrintf("\n");
 }
 #endif
-
-
 //-----------------------------------------------------------------------------
 //
 //   printStates    Debug Function.  Dump the fully constructed state transition table.
@@ -1184,8 +1122,6 @@ void RBBITableBuilder::printStates() {
 }
 #endif
 
-
-
 //-----------------------------------------------------------------------------
 //
 //   printRuleStatusTable    Debug Function.  Dump the common rule status table
@@ -1213,8 +1149,6 @@ void RBBITableBuilder::printRuleStatusTable() {
     RBBIDebugPrintf("\n\n");
 }
 #endif
-
-
 //-----------------------------------------------------------------------------
 //
 //   RBBIStateDescriptor     Methods.  This is a very struct-like class
@@ -1244,8 +1178,6 @@ RBBIStateDescriptor::RBBIStateDescriptor(int lastInputSymbol, UErrorCode *fStatu
                                            //   hold  the next state number for each
                                            //   symbol.
 }
-
-
 RBBIStateDescriptor::~RBBIStateDescriptor() {
     delete       fPositions;
     delete       fDtran;

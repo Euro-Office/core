@@ -43,8 +43,6 @@
 #define FCGI_stderr stderr
 #define logstream stderr
 #endif /*SERVER*/
-
-
 boxheader_param_t * gene_boxheader(int fd, OPJ_OFF_T offset)
 {
     Byte8_t boxlen;

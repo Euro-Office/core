@@ -28,8 +28,6 @@
 #include "platform/agg_platform_support.h"
 
 enum flip_y_e { flip_y = true };
-
-
 typedef agg::pixfmt_bgr24 pixfmt;
 typedef pixfmt::color_type color_type;
 typedef agg::renderer_base<pixfmt> base_renderer;
@@ -53,8 +51,6 @@ typedef agg::renderer_scanline_aa<base_renderer,
 
 typedef agg::rasterizer_scanline_aa<> scanline_rasterizer;
 typedef agg::rasterizer_outline<primitives_renderer> outline_rasterizer;
-
-
 
 //============================================================================
 class graph
@@ -139,14 +135,6 @@ private:
     node* m_nodes;
     edge* m_edges;
 };
-
-
-
-
-
-
-
-
     
 //============================================================================
 struct line
@@ -165,10 +153,6 @@ struct line
         return agg::path_cmd_stop;
     }
 };
-
-
-
-
 //============================================================================
 struct curve
 {
@@ -188,8 +172,6 @@ struct curve
     unsigned vertex(double* x, double* y) { return c.vertex(x, y); }
 };
 
-
-
 //============================================================================
 template<class Source> struct stroke_draft_simple
 {
@@ -202,8 +184,6 @@ template<class Source> struct stroke_draft_simple
     void rewind(unsigned path_id) { s.rewind(path_id); }
     unsigned vertex(double* x, double* y) { return s.vertex(x, y); }
 };
-
-
 //============================================================================
 template<class Source> struct stroke_draft_arrow
 {
@@ -230,8 +210,6 @@ template<class Source> struct stroke_draft_arrow
     unsigned vertex(double* x, double* y) { return c.vertex(x, y); }
 };
 
-
-
 //============================================================================
 template<class Source> struct stroke_fine_simple
 {
@@ -247,8 +225,6 @@ template<class Source> struct stroke_fine_simple
     void rewind(unsigned path_id) { s.rewind(path_id); }
     unsigned vertex(double* x, double* y) { return s.vertex(x, y); }
 };
-
-
 
 //============================================================================
 template<class Source> struct stroke_fine_arrow
@@ -277,8 +253,6 @@ template<class Source> struct stroke_fine_arrow
     unsigned vertex(double* x, double* y) { return c.vertex(x, y); }
 };
 
-
-
 //============================================================================
 template<class Source> struct dash_stroke_draft_simple
 {
@@ -298,8 +272,6 @@ template<class Source> struct dash_stroke_draft_simple
     void rewind(unsigned path_id) { d.rewind(path_id); }
     unsigned vertex(double* x, double* y) { return d.vertex(x, y); }
 };
-
-
 //============================================================================
 template<class Source> struct dash_stroke_draft_arrow
 {
@@ -327,10 +299,6 @@ template<class Source> struct dash_stroke_draft_arrow
     void rewind(unsigned path_id) { c.rewind(path_id); }
     unsigned vertex(double* x, double* y) { return c.vertex(x, y); }
 };
-
-
-
-
 //============================================================================
 template<class Source> struct dash_stroke_fine_simple
 {
@@ -352,12 +320,6 @@ template<class Source> struct dash_stroke_fine_simple
     void rewind(unsigned path_id) { s.rewind(path_id); }
     unsigned vertex(double* x, double* y) { return s.vertex(x, y); }
 };
-
-
-
-
-
-
 //============================================================================
 template<class Source> struct dash_stroke_fine_arrow
 {
@@ -390,8 +352,6 @@ template<class Source> struct dash_stroke_fine_arrow
     unsigned vertex(double* x, double* y) { return c.vertex(x, y); }
 };
 
-
-
 //#define stroke_draft      stroke_draft_simple
 //#define dash_stroke_draft dash_stroke_draft_simple
 //#define stroke_fine       stroke_fine_simple
@@ -401,10 +361,6 @@ template<class Source> struct dash_stroke_fine_arrow
 #define dash_stroke_draft dash_stroke_draft_arrow
 #define stroke_fine       stroke_fine_arrow
 #define dash_stroke_fine  dash_stroke_fine_arrow
-
-
-
-
 
 class the_application : public agg::platform_support
 {
@@ -419,8 +375,6 @@ class the_application : public agg::platform_support
     color_array_type            m_gradient_colors;
     int                         m_draw;
     agg::scanline_u8            m_sl;
-
-
 public:
     the_application(agg::pix_format_e format, bool flip_y) :
         agg::platform_support(format, flip_y),
@@ -470,12 +424,6 @@ public:
             m_gradient_colors[i] = c1.gradient(c2, double(i) / 255.0);
         }
     }
-
-
-
-
-
-
     //------------------------------------------------------------------------
     void draw_nodes_draft()
     {
@@ -493,8 +441,6 @@ public:
             prim.solid_ellipse(int(n.x), int(n.y), 4, 4);
         }
     }
-
-
 
     //------------------------------------------------------------------------
     void draw_nodes_fine(scanline_rasterizer& ras)
@@ -544,10 +490,6 @@ public:
             }
         }
     }
-
-
-
-
 
     //------------------------------------------------------------------------
     template<class Source>
@@ -599,8 +541,6 @@ public:
         }
     }
 
-
-
     //------------------------------------------------------------------------
     void draw_lines_draft()
     {
@@ -627,8 +567,6 @@ public:
             ras.add_path(s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_curves_draft()
     {
@@ -655,8 +593,6 @@ public:
             ras.add_path(s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_dashes_draft()
     {
@@ -683,8 +619,6 @@ public:
             ras.add_path(s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_lines_fine(scanline_rasterizer& ras, 
                          solid_renderer& solid,
@@ -701,8 +635,6 @@ public:
             render_edge_fine(ras, solid, draft, s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_curves_fine(scanline_rasterizer& ras, 
                           solid_renderer& solid,
@@ -720,8 +652,6 @@ public:
             render_edge_fine(ras, solid, draft, s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_dashes_fine(scanline_rasterizer& ras, 
                           solid_renderer& solid,
@@ -738,8 +668,6 @@ public:
             render_edge_fine(ras, solid, draft, s);
         }
     }
-
-
     //------------------------------------------------------------------------
     void draw_polygons(scanline_rasterizer& ras, 
                        solid_renderer& solid,
@@ -760,8 +688,6 @@ public:
         }
         ras.gamma(agg::gamma_none());
     }
-
-
 
     //------------------------------------------------------------------------
     void draw_scene(scanline_rasterizer& ras, 
@@ -806,18 +732,6 @@ public:
             }
         }
     }
-
-
-
-
-
-
-
-
-
-
-
-
     //------------------------------------------------------------------------
     virtual void on_draw()
     {
@@ -840,10 +754,6 @@ public:
         agg::render_ctrl(ras, m_sl, rb, m_draft);
         agg::render_ctrl(ras, m_sl, rb, m_translucent);
     }
-
-
-
-
     virtual void on_ctrl_change()
     {
         if(m_benchmark.status())
@@ -892,8 +802,6 @@ public:
                 fprintf(fd, "%10.3f %10.3f %10.3f %10.3f %10.3f\n", 
                             times[0], times[1], times[2], times[3], times[4]);
                 fclose(fd);
-            
-
                 sprintf(buf, "  pipeline  add_path         sort       render       total\n"
                              "%10.3f %10.3f %10.3f %10.3f %10.3f", 
                         times[0], times[1], times[2], times[3], times[4]);
@@ -906,8 +814,6 @@ public:
     }
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(agg::pix_format_bgr24, flip_y);
@@ -919,5 +825,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

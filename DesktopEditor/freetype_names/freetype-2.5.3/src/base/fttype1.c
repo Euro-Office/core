@@ -14,14 +14,10 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_POSTSCRIPT_INFO_H
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -29,13 +25,9 @@
                        PS_FontInfoRec*  afont_info )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( face )
     {
       FT_Service_PsInfo  service = NULL;
-
-
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
       if ( service && service->ps_get_font_info )
@@ -44,8 +36,6 @@
 
     return error;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Int )
@@ -53,8 +43,6 @@
   {
     FT_Int             result  = 0;
     FT_Service_PsInfo  service = NULL;
-
-
     if ( face )
     {
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
@@ -65,8 +53,6 @@
 
     return result;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -74,13 +60,9 @@
                           PS_PrivateRec*  afont_private )
   {
     FT_Error  error = FT_ERR( Invalid_Argument );
-
-
     if ( face )
     {
       FT_Service_PsInfo  service = NULL;
-
-
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
 
       if ( service && service->ps_get_font_private )
@@ -89,8 +71,6 @@
 
     return error;
   }
-
-
   /* documentation is in t1tables.h */
 
   FT_EXPORT_DEF( FT_Long )
@@ -102,8 +82,6 @@
   {
     FT_Int             result  = 0;
     FT_Service_PsInfo  service = NULL;
-
-
     if ( face )
     {
       FT_FACE_FIND_SERVICE( face, service, POSTSCRIPT_INFO );
@@ -115,6 +93,4 @@
 
     return result;
   }
-
-
 /* END */

@@ -48,8 +48,6 @@
 #define FT_END_HEADER  /* empty */
 #endif
 #endif  /* FT_END_HEADER */
-
-
 FT_BEGIN_HEADER
 
   /*
@@ -80,13 +78,9 @@ FT_BEGIN_HEADER
 #elif defined( __SUNPRO_C ) && __SUNPRO_C >= 0x550
 #define FT_PUBLIC_FUNCTION_ATTRIBUTE  __global
 #endif
-
-
 #ifndef FT_PUBLIC_FUNCTION_ATTRIBUTE
 #define FT_PUBLIC_FUNCTION_ATTRIBUTE  /* empty */
 #endif
-
-
   /*
    * Define a public FreeType API function.  This ensures it is properly
    * exported or imported at build time.  The macro parameter is the
@@ -113,8 +107,6 @@ FT_BEGIN_HEADER
 #ifndef FT_UNUSED
 #define FT_UNUSED( arg )  ( (arg) = (arg) )
 #endif
-
-
 FT_END_HEADER
 
 #endif  /* FREETYPE_CONFIG_PUBLIC_MACROS_H_ */

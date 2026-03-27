@@ -14,25 +14,15 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFFGLOAD_H__
 #define __CFFGLOAD_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include "cffobjs.h"
-
-
 FT_BEGIN_HEADER
-
-
 #define CFF_MAX_OPERANDS        48
 #define CFF_MAX_SUBRS_CALLS     32
 #define CFF_MAX_TRANS_ELEMENTS  32
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Structure>                                                           */
@@ -104,8 +94,6 @@ FT_BEGIN_HEADER
     void*           hints_globals;  /* hinter-specific */
 
   } CFF_Builder;
-
-
   FT_LOCAL( FT_Error )
   cff_check_points( CFF_Builder*  builder,
                     FT_Int        count );
@@ -125,8 +113,6 @@ FT_BEGIN_HEADER
                            FT_Pos        y );
   FT_LOCAL( void )
   cff_builder_close_contour( CFF_Builder*  builder );
-
-
   FT_LOCAL( FT_Int )
   cff_lookup_glyph_by_stdcharcode( CFF_Font  cff,
                                    FT_Int    charcode );
@@ -139,8 +125,6 @@ FT_BEGIN_HEADER
   cff_free_glyph_data( TT_Face    face,
                        FT_Byte**  pointer,
                        FT_ULong   length );
-
-
   /* execution context charstring zone */
 
   typedef struct  CFF_Decoder_Zone_
@@ -150,8 +134,6 @@ FT_BEGIN_HEADER
     FT_Byte*  cursor;
 
   } CFF_Decoder_Zone;
-
-
   typedef struct  CFF_Decoder_
   {
     CFF_Builder        builder;
@@ -194,8 +176,6 @@ FT_BEGIN_HEADER
     CFF_SubFont        current_subfont; /* for current glyph_index */
 
   } CFF_Decoder;
-
-
   FT_LOCAL( void )
   cff_decoder_init( CFF_Decoder*    decoder,
                     TT_Face         face,
@@ -230,11 +210,7 @@ FT_BEGIN_HEADER
                  CFF_Size       size,
                  FT_UInt        glyph_index,
                  FT_Int32       load_flags );
-
-
 FT_END_HEADER
 
 #endif /* __CFFGLOAD_H__ */
-
-
 /* END */

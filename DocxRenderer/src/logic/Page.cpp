@@ -262,8 +262,6 @@ namespace NSDocxRenderer
 		}
 		else
 			shape->m_eType = CShape::eShapeType::stVectorGraphics;
-
-
 		if (!shape->IsOoxmlValid())
 			return;
 
@@ -732,8 +730,6 @@ namespace NSDocxRenderer
 				        shape->m_dBot > this->m_dHeight * out_of_page_coeff ||
 				        shape->m_dLeft < 0 ||
 				        shape->m_dRight > this->m_dWidth * out_of_page_coeff;
-
-
 				bool is_too_big = (!shape->m_bIsNoFill && (shape->m_dWidth > c_dSHAPE_TROUGH_MAX_MM && shape->m_dHeight > c_dSHAPE_TROUGH_MAX_MM));
 
 				if (is_too_big || is_out_of_page)
@@ -776,8 +772,6 @@ namespace NSDocxRenderer
 				if (is_remove)
 					line = nullptr;
 			}
-
-
 		auto right = MoveNullptr(m_arTextLines.begin(), m_arTextLines.end());
 		m_arTextLines.erase(right, m_arTextLines.end());
 
@@ -2288,8 +2282,6 @@ namespace NSDocxRenderer
 		}
 		if (!curr_table->IsEmpty())
 			tables.push_back(std::move(curr_table));
-
-
 		for (auto& t : tables)
 			t->CalcGridCols();
 

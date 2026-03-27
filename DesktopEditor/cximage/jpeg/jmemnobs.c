@@ -24,8 +24,6 @@
 extern void * malloc JPP((size_t size));
 extern void free JPP((void *ptr));
 #endif
-
-
 /*
  * Memory allocation and freeing are controlled by the regular library
  * routines malloc() and free().
@@ -42,8 +40,6 @@ jpeg_free_small (j_common_ptr cinfo, void * object, size_t sizeofobject)
 {
   free(object);
 }
-
-
 /*
  * "Large" objects are treated the same as "small" ones.
  * NB: although we include FAR keywords in the routine declarations,
@@ -62,8 +58,6 @@ jpeg_free_large (j_common_ptr cinfo, void FAR * object, size_t sizeofobject)
 {
   free(object);
 }
-
-
 /*
  * This routine computes the total memory space available for allocation.
  * Here we always say, "we got all you want bud!"
@@ -75,8 +69,6 @@ jpeg_mem_available (j_common_ptr cinfo, long min_bytes_needed,
 {
   return max_bytes_needed;
 }
-
-
 /*
  * Backing store (temporary file) management.
  * Since jpeg_mem_available always promised the moon,
@@ -89,8 +81,6 @@ jpeg_open_backing_store (j_common_ptr cinfo, backing_store_ptr info,
 {
   ERREXIT(cinfo, JERR_NO_BACKING_STORE);
 }
-
-
 /*
  * These routines take care of any system-dependent initialization and
  * cleanup required.  Here, there isn't any.

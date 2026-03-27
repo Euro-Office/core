@@ -139,13 +139,9 @@ CommentText::CommentText()
 {
 	isst_ = -1;
 }
-
-
 CommentText::~CommentText()
 {
 }
-
-
 BaseObjectPtr CommentText::clone()
 {
 	return BaseObjectPtr(new CommentText(*this));
@@ -173,8 +169,6 @@ void CommentText::readFields(CFRecord& record)
 	else
 	{
 	}
-
-
     isst_ = global_info_->startAddedSharedStrings + global_info_->arAddedSharedStrings.size() ;
 	global_info_->arAddedSharedStrings.push_back(st.value());
 }

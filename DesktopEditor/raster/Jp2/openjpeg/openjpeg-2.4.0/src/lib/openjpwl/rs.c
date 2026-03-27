@@ -277,8 +277,6 @@ generate_gf(void)
     Index_of[0] = A0;
     Alpha_to[NN] = 0;
 }
-
-
 /*
  * Obtain the generator polynomial of the TT-error correcting, length
  * NN=(2**MM -1) Reed Solomon code from the product of (X+@**(B0+i)), i = 0,
@@ -319,8 +317,6 @@ gen_poly(void)
         Gg[i] = Index_of[Gg[i]];
     }
 }
-
-
 /*
  * take the string of symbols in data[i], i=0..(k-1) and encode
  * systematically to produce NN-KK parity symbols in bb[0]..bb[NN-KK-1] data[]
@@ -620,6 +616,4 @@ eras_dec_rs(dtype *data, int *eras_pos, int no_eras)
     }
     return count;
 }
-
-
 #endif /* USE_JPWL */

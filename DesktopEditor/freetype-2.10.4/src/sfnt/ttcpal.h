@@ -16,18 +16,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef __TTCPAL_H__
 #define __TTCPAL_H__
-
-
 #include "ttload.h"
-
-
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   tt_face_load_cpal( TT_Face    face,
                      FT_Stream  stream );
@@ -38,11 +30,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   tt_face_palette_set( TT_Face  face,
                        FT_UInt  palette_index );
-
-
 FT_END_HEADER
-
-
 #endif /* __TTCPAL_H__ */
 
 /* END */

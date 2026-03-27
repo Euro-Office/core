@@ -46,8 +46,6 @@
 #include "../../XlsbFormat/Biff12_records/BeginMap.h"
 #include "../../XlsbFormat/Biff12_records/BeginPCDCalcItems.h"
 #include "../../XlsbFormat/Biff12_records/BeginPCDCalcItem.h"
-
-
 namespace OOX
 {
 namespace Spreadsheet
@@ -430,8 +428,6 @@ XLS::BaseObjectPtr CCalculatedItems::toBin()
 
     return objectPtr;
 }
-
-
 void CCalculatedItem::fromXML(XmlUtils::CXmlLiteReader& oReader)
 {
     ReadAttributes( oReader );

@@ -184,8 +184,6 @@ namespace svg
         { "yellowgreen",154,205,50, 255 },
         { "zzzzzzzzzzz",0,0,0, 0 }
     }; 
-
-
     //------------------------------------------------------------------------
     parser::~parser()
     {
@@ -258,8 +256,6 @@ namespace svg
             ++ts;
         }
     }
-
-
     //------------------------------------------------------------------------
     void parser::start_element(void* data, const char* el, const char** attr)
     {
@@ -313,8 +309,6 @@ namespace svg
         //}
         // . . .
     } 
-
-
     //------------------------------------------------------------------------
     void parser::end_element(void* data, const char* el)
     {
@@ -340,8 +334,6 @@ namespace svg
         //}
         // . . .
     }
-
-
     //------------------------------------------------------------------------
     void parser::content(void* data, const char* s, int len)
     {
@@ -360,8 +352,6 @@ namespace svg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void parser::parse_attr(const char** attr)
     {
@@ -408,8 +398,6 @@ namespace svg
             }
         }
     }
-
-
     //-------------------------------------------------------------
     int cmp_color(const void* p1, const void* p2)
     {
@@ -454,8 +442,6 @@ namespace svg
         while(*str == ' ') ++str;
         return atof(str);
     }
-
-
 
     //-------------------------------------------------------------
     bool parser::parse_attr(const char* name, const char* value)
@@ -539,8 +525,6 @@ namespace svg
         return true;
     }
 
-
-
     //-------------------------------------------------------------
     void parser::copy_name(const char* start, const char* end)
     {
@@ -555,8 +539,6 @@ namespace svg
         m_attr_name[len] = 0;
     }
 
-
-
     //-------------------------------------------------------------
     void parser::copy_value(const char* start, const char* end)
     {
@@ -570,8 +552,6 @@ namespace svg
         if(len) memcpy(m_attr_value, start, len);
         m_attr_value[len] = 0;
     }
-
-
     //-------------------------------------------------------------
     bool parser::parse_name_value(const char* nv_start, const char* nv_end)
     {
@@ -592,8 +572,6 @@ namespace svg
         copy_value(val, nv_end);
         return parse_attr(m_attr_name, m_attr_value);
     }
-
-
 
     //-------------------------------------------------------------
     void parser::parse_style(const char* str)
@@ -616,8 +594,6 @@ namespace svg
         }
 
     }
-
-
     //-------------------------------------------------------------
     void parser::parse_rect(const char** attr)
     {
@@ -640,8 +616,6 @@ namespace svg
                 // ry - to be implemented
             }
         }
-
-
         if(w != 0.0 && h != 0.0)
         {
             if(w < 0.0) throw exception("parse_rect: Invalid width: %f", w);
@@ -655,8 +629,6 @@ namespace svg
         }
         m_path.end_path();
     }
-
-
     //-------------------------------------------------------------
     void parser::parse_line(const char** attr)
     {
@@ -682,8 +654,6 @@ namespace svg
         m_path.line_to(x2, y2);
         m_path.end_path();
     }
-
-
     //-------------------------------------------------------------
     void parser::parse_poly(const char** attr, bool close_flag)
     {
@@ -753,8 +723,6 @@ namespace svg
             }
         }
     }
-
-
     //-------------------------------------------------------------
     static bool is_numeric(char c)
     {
@@ -882,5 +850,3 @@ namespace svg
 
 }
 }
-
-

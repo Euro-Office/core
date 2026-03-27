@@ -300,8 +300,6 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 					castedCache->m_arDBB.push_back(CacheRecord->toXLS());
 				}
 			}
-
-
 			if(CachePtr->m_oPivotCashDefinition.IsInit())
 				writer.WritePivotCache(XLSBinCache, cacheHeader->m_oCacheId->GetValue());
 		}

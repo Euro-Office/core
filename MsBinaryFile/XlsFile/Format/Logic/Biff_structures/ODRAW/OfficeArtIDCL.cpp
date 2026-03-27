@@ -34,8 +34,6 @@
 
 namespace ODRAW
 {
-
-
 XLS::BiffStructurePtr OfficeArtIDCL::clone()
 {
 	return XLS::BiffStructurePtr(new OfficeArtIDCL(*this));
@@ -45,6 +43,4 @@ void OfficeArtIDCL::load(XLS::CFRecord& record)
 {
 	record >> dgid >> cspidCur;
 }
-
-
 } // namespace XLS

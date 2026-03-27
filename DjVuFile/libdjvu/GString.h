@@ -107,8 +107,6 @@
     @version
     #$Id: GString.h,v 1.24 2008/01/27 11:36:27 leonb Exp $# */
 //@{
-
-
 #include "DjVuGlobal.h"
 #include "GContainer.h"
 
@@ -124,8 +122,6 @@
 #  include <wchar.h>
 # endif
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -437,8 +433,6 @@ protected:
   // Return the next character and increment the source pointer.
   virtual unsigned long getValidUCS4(const char *&source) const;
 };
-
-
 /** General purpose character string.
     Each dirivied instance of class #GBaseString# represents a
     character string.  Overloaded operators provide a value semantic
@@ -801,8 +795,6 @@ public:
       floating point number #number#. The format is similar to
       format #"%f"# in function #printf#.  */
   GUTF8String(const double number);
-
-
   /** Initializes a string with a formatted string (as in #printf#).
       The string is re-initialized with the characters generated
       according to the specified format #fmt# and using the optional
@@ -840,8 +832,6 @@ public:
       for "*") are always converted. */
   GUTF8String fromEscaped(
     const GMap<GUTF8String,GUTF8String> ConvMap ) const;
-
-
   // -- CONCATENATION
   /// Appends character #ch# to the string.
   GUTF8String& operator+= (char ch);
@@ -909,8 +899,6 @@ public:
   static GUTF8String create( const unsigned short *buf, const unsigned int bufsize );
   static GUTF8String create( const unsigned long *buf, const unsigned int bufsize );
 };
-
-
 #if !HAS_WCHAR
 #define GBaseString GUTF8String
 #endif
@@ -1030,8 +1018,6 @@ public:
       string contains a copy of the current string with all letters
       turned into lower case letters. */
   GNativeString downcase( void ) const;
-
-
   GNativeString operator+(const GBaseString &s2) const;
   GNativeString operator+(const GNativeString &s2) const;
   GUTF8String operator+(const GUTF8String &s2) const;
@@ -1060,8 +1046,6 @@ public:
       "&apos;", and  '\"' to  "&quot;".   Characters 0x01 through
       0x1f are also escaped. */
   GNativeString toEscaped( const bool tosevenbit=false ) const;
-
-
   /** Provides a direct access to the string buffer.  Returns a
       pointer for directly accessing the string buffer.  This
       pointer valid remains valid as long as the string is not
@@ -1563,8 +1547,6 @@ GNativeString::GNativeString(const GBaseString &str)
   else
     init((GP<GStringRep>)str);
 }
-
-
 inline
 GNativeString::GNativeString(const GNativeString &fmt, va_list &args)
 {
@@ -1665,8 +1647,6 @@ operator<=(const char    s1, const GBaseString &s2)
 { return !(s1>s2); }
 
 // ------------------- The end
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

@@ -39,8 +39,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Offset )
   ftc_inode_weight( FTC_Node   inode,
                     FTC_Cache  cache );
-
-
   FT_LOCAL( void )
   ftc_snode_free( FTC_Node   snode,
                   FTC_Cache  cache );
@@ -59,22 +57,16 @@ FT_BEGIN_HEADER
                      FT_Pointer  gquery,
                      FTC_Cache   cache,
                      FT_Bool*    list_changed );
-
-
   FT_LOCAL( FT_Bool )
   ftc_gnode_compare( FTC_Node    gnode,
                      FT_Pointer  gquery,
                      FTC_Cache   cache,
                      FT_Bool*    list_changed );
-
-
   FT_LOCAL( FT_Error )
   ftc_gcache_init( FTC_Cache  cache );
 
   FT_LOCAL( void )
   ftc_gcache_done( FTC_Cache  cache );
-
-
   FT_LOCAL( FT_Error )
   ftc_cache_init( FTC_Cache  cache );
 
@@ -88,6 +80,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTCCBACK_H_ */
-
-
 /* END */

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFHINTS_H_
 #define AFHINTS_H_
 
@@ -40,8 +38,6 @@ FT_BEGIN_HEADER
     AF_DIMENSION_MAX  /* do not remove */
 
   } AF_Dimension;
-
-
   /* hint directions -- the values are computed so that two vectors are */
   /* in opposite directions iff `dir1 + dir2 == 0'                      */
   typedef enum  AF_Direction_
@@ -53,8 +49,6 @@ FT_BEGIN_HEADER
     AF_DIR_DOWN  = -2
 
   } AF_Direction;
-
-
   /*
    * The following explanations are mostly taken from the article
    *
@@ -204,8 +198,6 @@ FT_BEGIN_HEADER
    *   alignment of edges and strong points, thus weak points are processed
    *   after strong points.
    */
-
-
   /* point hint flags */
 #define AF_FLAG_NONE  0
 
@@ -223,21 +215,15 @@ FT_BEGIN_HEADER
 
   /* the distance to the next point is very small */
 #define AF_FLAG_NEAR  ( 1U << 5 )
-
-
   /* edge hint flags */
 #define AF_EDGE_NORMAL  0
 #define AF_EDGE_ROUND    ( 1U << 0 )
 #define AF_EDGE_SERIF    ( 1U << 1 )
 #define AF_EDGE_DONE     ( 1U << 2 )
 #define AF_EDGE_NEUTRAL  ( 1U << 3 ) /* edge aligns to a neutral blue zone */
-
-
   typedef struct AF_PointRec_*    AF_Point;
   typedef struct AF_SegmentRec_*  AF_Segment;
   typedef struct AF_EdgeRec_*     AF_Edge;
-
-
   typedef struct  AF_PointRec_
   {
     FT_UShort  flags;    /* point flags used by hinter   */
@@ -259,8 +245,6 @@ FT_BEGIN_HEADER
 #endif
 
   } AF_PointRec;
-
-
   typedef struct  AF_SegmentRec_
   {
     FT_Byte     flags;       /* edge/segment flags for this segment */
@@ -283,8 +267,6 @@ FT_BEGIN_HEADER
     AF_Point    last;        /* last point in edge segment  */
 
   } AF_SegmentRec;
-
-
   typedef struct  AF_EdgeRec_
   {
     FT_Short    fpos;       /* original, unscaled position (in font units) */
@@ -329,11 +311,7 @@ FT_BEGIN_HEADER
       AF_SegmentRec  segments[AF_SEGMENTS_EMBEDDED];
       AF_EdgeRec     edges[AF_EDGES_EMBEDDED];
     } embedded;
-
-
   } AF_AxisHintsRec, *AF_AxisHints;
-
-
 #define AF_POINTS_EMBEDDED     96   /* number of embedded points   */
 #define AF_CONTOURS_EMBEDDED    8   /* number of embedded contours */
 
@@ -374,12 +352,8 @@ FT_BEGIN_HEADER
     } embedded;
 
   } AF_GlyphHintsRec;
-
-
 #define AF_HINTS_TEST_SCALER( h, f )  ( (h)->scaler_flags & (f) )
 #define AF_HINTS_TEST_OTHER( h, f )   ( (h)->other_flags  & (f) )
-
-
 #ifdef FT_DEBUG_AUTOFIT
 
 #define AF_HINTS_DO_HORIZONTAL( h )                                     \
@@ -403,21 +377,15 @@ FT_BEGIN_HEADER
 #define AF_HINTS_DO_BLUES( h )  1
 
 #endif /* !FT_DEBUG_AUTOFIT */
-
-
 #define AF_HINTS_DO_ADVANCE( h )                                \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_ADVANCE )
 
 #define AF_HINTS_DO_WARP( h )                                  \
           !AF_HINTS_TEST_SCALER( h, AF_SCALER_FLAG_NO_WARPER )
 
-
-
   FT_LOCAL( AF_Direction )
   af_direction_compute( FT_Pos  dx,
                         FT_Pos  dy );
-
-
   FT_LOCAL( FT_Error )
   af_axis_hints_new_segment( AF_AxisHints  axis,
                              FT_Memory     memory,
@@ -477,11 +445,7 @@ FT_BEGIN_HEADER
 #define AF_SEGMENT_DIST( seg1, seg2 )  ( ( (seg1)->pos > (seg2)->pos )   \
                                            ? (seg1)->pos - (seg2)->pos   \
                                            : (seg2)->pos - (seg1)->pos )
-
-
 FT_END_HEADER
 
 #endif /* AFHINTS_H_ */
-
-
 /* END */

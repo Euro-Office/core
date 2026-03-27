@@ -38,13 +38,9 @@ namespace XLS
 MDTInfo::MDTInfo()
 {
 }
-
-
 MDTInfo::~MDTInfo()
 {
 }
-
-
 BaseObjectPtr MDTInfo::clone()
 {
 	return BaseObjectPtr(new MDTInfo(*this));

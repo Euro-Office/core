@@ -1197,8 +1197,6 @@ error:
     }
 
     return -1;
-
-
 }
 
 static UBool

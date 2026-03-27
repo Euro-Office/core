@@ -83,8 +83,6 @@ namespace agg
          24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24
     };
 
-
-
     //==============================================================stack_blur
     template<class ColorT, class CalculatorT> class stack_blur
     {
@@ -255,8 +253,6 @@ namespace agg
             v.a = value_type((a * mul) >> shr);
         }
     };
-
-
     //=====================================================stack_blur_calc_rgb
     template<class T=unsigned> struct stack_blur_calc_rgb
     {
@@ -306,8 +302,6 @@ namespace agg
             v.b = value_type((b * mul) >> shr);
         }
     };
-
-
     //====================================================stack_blur_calc_gray
     template<class T=unsigned> struct stack_blur_calc_gray
     {
@@ -347,8 +341,6 @@ namespace agg
             a.v = value_type((v * mul) >> shr);
         }
     };
-
-
 
     //========================================================stack_blur_gray8
     template<class Img> 
@@ -512,8 +504,6 @@ namespace agg
             }
         }
     }
-
-
 
     //========================================================stack_blur_rgb24
     template<class Img> 
@@ -766,8 +756,6 @@ namespace agg
             }
         }
     }
-
-
 
     //=======================================================stack_blur_rgba32
     template<class Img> 
@@ -1059,8 +1047,6 @@ namespace agg
         }
     }
 
-
-
     //===========================================================recursive_blur
     template<class ColorT, class CalculatorT> class recursive_blur
     {
@@ -1165,8 +1151,6 @@ namespace agg
         agg::pod_vector<calculator_type> m_sum2;
         agg::pod_vector<color_type>      m_buf;
     };
-
-
     //=================================================recursive_blur_calc_rgba
     template<class T=double> struct recursive_blur_calc_rgba
     {
@@ -1209,8 +1193,6 @@ namespace agg
             c.a = (cv_type)uround(a);
         }
     };
-
-
     //=================================================recursive_blur_calc_rgb
     template<class T=double> struct recursive_blur_calc_rgb
     {
@@ -1250,8 +1232,6 @@ namespace agg
             c.b = (cv_type)uround(b);
         }
     };
-
-
     //================================================recursive_blur_calc_gray
     template<class T=double> struct recursive_blur_calc_gray
     {
@@ -1287,8 +1267,4 @@ namespace agg
     };
 
 }
-
-
-
-
 #endif

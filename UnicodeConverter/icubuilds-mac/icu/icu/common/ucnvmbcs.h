@@ -316,8 +316,6 @@ enum {
 
 /* double-byte fromUTF8 using the mbcsIndex; l and t1 combined into lt1; lt1 and t2 must be masked externally */
 #define DBCS_RESULT_FROM_UTF8(table, results, lt1, t2) (results)[ (table)[lt1] +(t2) ]
-
-
 /**
  * MBCS output types for conversions from Unicode.
  * These per-converter types determine the storage method in stage 3 of the lookup table,

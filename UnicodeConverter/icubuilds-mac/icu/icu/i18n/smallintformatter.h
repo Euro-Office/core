@@ -36,8 +36,6 @@ private:
     int32_t fMin;
     int32_t fMax;
 };
-
-
 /**
  * A formatter for small, positive integers.
  */

@@ -40,8 +40,6 @@ static int convert = 0;
 static int no_super_update = 0;
 static int verbose = 0;
 static char *filename = NULL;
-
-
 #ifndef XML_SGML_DEFAULT_CATALOG
 #define XML_SGML_DEFAULT_CATALOG "/etc/sgml/catalog"
 #endif
@@ -330,8 +328,6 @@ int main(int argc, char **argv) {
     int i;
     int ret;
     int exit_value = 0;
-
-
     if (argc <= 1) {
 	usage(argv[0]);
 	return(1);

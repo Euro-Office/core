@@ -15,8 +15,6 @@
 #include "ctrl/agg_spline_ctrl.h"
 #include "ctrl/agg_gamma_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 //#define AGG_GRAY16
 #define AGG_BGR24
 //#define AGG_RGB24
@@ -32,10 +30,6 @@ enum flip_y_e { flip_y = true };
 
 const double center_x = 350;
 const double center_y = 280;
-
-
-
-
 class gradient_polymorphic_wrapper_base
 {
 public:
@@ -56,8 +50,6 @@ public:
     agg::gradient_reflect_adaptor<GradientF> m_adaptor;
 };
 
-
-
 struct color_function_profile
 {
     color_function_profile() {}
@@ -73,8 +65,6 @@ struct color_function_profile
     const color_type* m_colors;
     const agg::int8u* m_profile;
 };
-
-
 class the_application : public agg::platform_support
 {
     agg::gamma_ctrl<agg::rgba8>  m_profile;
@@ -320,8 +310,6 @@ public:
         }
 
     }
-
-
     virtual void on_draw()
     {
         agg::rasterizer_scanline_aa<> ras;
@@ -361,8 +349,6 @@ public:
         mtx_g1 *= agg::trans_affine_translation(m_center_x, m_center_y);
         mtx_g1 *= trans_affine_resizing();
         mtx_g1.invert();
-
-
         color_type color_profile[256]; // color_type is defined in pixel_formats.h
         int i;
         for(i = 0; i < 256; i++)
@@ -410,8 +396,6 @@ public:
         ras.add_path(t1);
         agg::render_scanlines_aa(ras, sl, rb, span_alloc, span_gen);
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         if(m_mouse_move)
@@ -451,8 +435,6 @@ public:
             }
         }
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         m_mouse_move = true;
@@ -468,14 +450,10 @@ public:
         m_prev_scale_y = m_scale_y;
         force_redraw();
     }
-
-
     virtual void on_mouse_button_up(int x, int y, unsigned flags)
     {
         m_mouse_move = false;
     }
-
-
     virtual void on_key(int x, int y, unsigned key, unsigned flags) 
     {
         if(key == agg::key_f1)
@@ -500,13 +478,9 @@ public:
             }
             fclose(fd);
         }
-
-
     }
 
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -524,5 +498,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

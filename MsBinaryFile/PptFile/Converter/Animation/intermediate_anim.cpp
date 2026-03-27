@@ -30,8 +30,6 @@
  *
  */
 #include "intermediate_anim.h"
-
-
 _UINT32 PPT::Intermediate::SOldAnimation::getAnimDur() const
 {
     _UINT32 dur = 500;

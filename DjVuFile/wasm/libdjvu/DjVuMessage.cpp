@@ -79,8 +79,6 @@
 #ifndef LC_MESSAGES
 # define LC_MESSAGES LC_ALL
 #endif
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
@@ -106,8 +104,6 @@ static const char headstring[]="HEAD";
 static const char includestring[]="INCLUDE";
 static const char messagestring[]="MESSAGE";
 static const char localestring[]="locale";
-
-
 // directory names for searching messages
 #ifdef AUTOCONF
 static const char DjVuDataDir[] = DIR_DATADIR "/djvu/osi";
@@ -246,8 +242,6 @@ parse(GMap<GUTF8String,GP<lt_XMLTags> > &retval)
   }
   return errors;
 }
-
-
 const DjVuMessageLite &
 DjVuMessage::create_full(void)
 {
@@ -273,8 +267,6 @@ DjVuMessage::use_language(void)
 { 
   DjVuMessageLite::create=create_full; 
 }
-
-
 // Constructor
 DjVuMessage::DjVuMessage( void ) {}
 
@@ -288,8 +280,6 @@ DjVuMessage::init(void)
 DjVuMessage::~DjVuMessage( )
 {
 }
-
-
 //  A C function to perform a message lookup. Arguments are a buffer to receiv
 //  translated message, a buffer size (bytes), and a message_list. The transla
 //  result is returned in msg_buffer encoded in Native MBS encoding. In case
@@ -319,8 +309,6 @@ DjVuMessageLookUpUTF8(
   else
     strcpy( msg_buffer, converted );
 }
-
-
 
 #ifdef HAVE_NAMESPACES
 }

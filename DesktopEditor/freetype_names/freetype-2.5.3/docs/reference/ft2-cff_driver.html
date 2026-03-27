@@ -67,8 +67,6 @@ The CFF driver
 <pre class="colored">
   FT_Library  library;
   FT_UInt     hinting_engine = FT_CFF_HINTING_ADOBE;
-
-
   FT_Init_FreeType( &amp;library );
 
   FT_Property_Set( library, "cff",
@@ -124,8 +122,6 @@ Defined in FT_CFF_DRIVER_H (ftcffdrv.h).
 <pre class="colored">
   FT_Library  library;
   FT_Bool     no_stem_darkening = TRUE;
-
-
   FT_Init_FreeType( &amp;library );
 
   FT_Property_Set( library, "cff",
@@ -158,8 +154,6 @@ Defined in FT_CFF_DRIVER_H (ftcffdrv.h).
                                    1000, 200,   // x2, y2
                                    1500, 100,   // x3, y3
                                    2000,   0 }; // x4, y4
-
-
   FT_Init_FreeType( &amp;library );
 
   FT_Property_Set( library, "cff",

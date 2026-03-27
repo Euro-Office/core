@@ -40,8 +40,6 @@
 namespace cpdoccore { 
 namespace odf_reader {
 
-
-
 std::wostream & office_document_base::text_to_stream(std::wostream & _Wostream, bool bXmlEncode) const
 {
     office_body_->text_to_stream(_Wostream, bXmlEncode);

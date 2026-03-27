@@ -26,8 +26,6 @@ class U_I18N_API FieldPositionHandler: public UMemory {
   virtual void shiftLast(int32_t delta);
   virtual UBool isRecording(void) const;
 };
-
-
 // utility subclass FieldPositionOnlyHandler
 
 class FieldPositionOnlyHandler : public FieldPositionHandler {
@@ -41,8 +39,6 @@ class FieldPositionOnlyHandler : public FieldPositionHandler {
   virtual void shiftLast(int32_t delta);
   virtual UBool isRecording(void) const;
 };
-
-
 // utility subclass FieldPositionIteratorHandler
 
 class FieldPositionIteratorHandler : public FieldPositionHandler {

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of RefreshAll record in BIFF8
 class RefreshAll: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~RefreshAll();
 
 	BaseObjectPtr clone();
-
-
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

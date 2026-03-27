@@ -58,13 +58,9 @@ CF12::CF12(const CellRef& cell_base_ref)
 	dxfId_ = -1;
 	ipriority_ = 0;
 }
-
-
 CF12::~CF12()
 {
 }
-
-
 BaseObjectPtr CF12::clone()
 {
 	return BaseObjectPtr(new CF12(*this));

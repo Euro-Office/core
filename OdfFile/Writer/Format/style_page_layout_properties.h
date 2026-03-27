@@ -124,8 +124,6 @@ public:
     static const wchar_t * name;
 
     static const ElementType type = typeStylePageLayout;
-    
-
     style_page_layout_properties() { }
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);

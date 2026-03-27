@@ -37,8 +37,6 @@ public:
 				      Splash *parentSplash,
 				      SplashBitmap *parentBitmap,
 				      int *xOut, int *yOut);
-
-
 private:
 
   static SplashBitmap *generateFunctionBitmap(GfxState *state,

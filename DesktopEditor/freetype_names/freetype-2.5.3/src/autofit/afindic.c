@@ -14,32 +14,22 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "aftypes.h"
 #include "aflatin.h"
-
-
 #ifdef AF_CONFIG_OPTION_INDIC
 
 #include "afindic.h"
 #include "aferrors.h"
 #include "afcjk.h"
-
-
 #ifdef AF_CONFIG_OPTION_USE_WARPER
 #include "afwarp.h"
 #endif
-
-
   static FT_Error
   af_indic_metrics_init( AF_CJKMetrics  metrics,
                          FT_Face        face )
   {
     /* skip blue zone init in CJK routines */
     FT_CharMap  oldmap = face->charmap;
-
-
     metrics->units_per_em = face->units_per_EM;
 
     if ( FT_Select_Charmap( face, FT_ENCODING_UNICODE ) )
@@ -58,8 +48,6 @@
 
     return FT_Err_Ok;
   }
-
-
   static void
   af_indic_metrics_scale( AF_CJKMetrics  metrics,
                           AF_Scaler      scaler )
@@ -67,8 +55,6 @@
     /* use CJK routines */
     af_cjk_metrics_scale( metrics, scaler );
   }
-
-
   static FT_Error
   af_indic_hints_init( AF_GlyphHints  hints,
                        AF_CJKMetrics  metrics )
@@ -76,8 +62,6 @@
     /* use CJK routines */
     return af_cjk_hints_init( hints, metrics );
   }
-
-
   static FT_Error
   af_indic_hints_apply( AF_GlyphHints  hints,
                         FT_Outline*    outline,
@@ -86,8 +70,6 @@
     /* use CJK routines */
     return af_cjk_hints_apply( hints, outline, metrics );
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -95,8 +77,6 @@
   /*****                                                               *****/
   /*************************************************************************/
   /*************************************************************************/
-
-
   AF_DEFINE_WRITING_SYSTEM_CLASS(
     af_indic_writing_system_class,
 
@@ -111,11 +91,7 @@
     (AF_WritingSystem_InitHintsFunc)   af_indic_hints_init,
     (AF_WritingSystem_ApplyHintsFunc)  af_indic_hints_apply
   )
-
-
 #else /* !AF_CONFIG_OPTION_INDIC */
-
-
   AF_DEFINE_WRITING_SYSTEM_CLASS(
     af_indic_writing_system_class,
 
@@ -130,9 +106,5 @@
     (AF_WritingSystem_InitHintsFunc)   NULL,
     (AF_WritingSystem_ApplyHintsFunc)  NULL
   )
-
-
 #endif /* !AF_CONFIG_OPTION_INDIC */
-
-
 /* END */

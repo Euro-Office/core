@@ -117,8 +117,6 @@ void xlsx_sheet_context::end_table()
         context_.current_sheet().set_comments_link(commentsName.first, commentsName.second);
     }    
 }
-
-
 xlsx_drawing_context & xlsx_sheet_context::get_drawing_context()
 {
 	if (state())

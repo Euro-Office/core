@@ -241,8 +241,6 @@ xmlParserEntityCheck(xmlParserCtxtPtr ctxt, size_t size,
  */
 unsigned int xmlParserMaxDepth = 256;
 
-
-
 #define SAX2 1
 #define XML_PARSER_BIG_BUFFER_SIZE 300
 #define XML_PARSER_BUFFER_SIZE 100
@@ -268,8 +266,6 @@ static const char *xmlW3CPIs[] = {
     "xml-model",
     NULL
 };
-
-
 /* DEPR void xmlParserHandleReference(xmlParserCtxtPtr ctxt); */
 static xmlEntityPtr xmlParseStringPEReference(xmlParserCtxtPtr ctxt,
                                               const xmlChar **str);
@@ -3128,8 +3124,6 @@ xmlSplitQName(xmlParserCtxtPtr ctxt, const xmlChar *name, xmlChar **prefix) {
 	buffer = NULL;
 	max = XML_MAX_NAMELEN;
     }
-
-
     if (c == ':') {
 	c = *cur;
         *prefix = ret;
@@ -4278,8 +4272,6 @@ error:
  *
  * Returns the AttValue parsed or NULL. The value has to be freed by the caller.
  */
-
-
 xmlChar *
 xmlParseAttValue(xmlParserCtxtPtr ctxt) {
     if ((ctxt == NULL) || (ctxt->input == NULL)) return(NULL);
@@ -5139,8 +5131,6 @@ get_more:
     ctxt->instate = state;
     return;
 }
-
-
 /**
  * xmlParsePITarget:
  * @ctxt:  an XML parser context
@@ -5387,8 +5377,6 @@ xmlParsePI(xmlParserCtxtPtr ctxt) {
 			xmlParseCatalogPI(ctxt, buf);
 		}
 #endif
-
-
 		/*
 		 * SAX: PI detected.
 		 */
@@ -7223,8 +7211,6 @@ xmlParseReference(xmlParserCtxtPtr ctxt) {
     int was_checked;
     xmlNodePtr list = NULL;
     xmlParserErrors ret = XML_ERR_OK;
-
-
     if (RAW != '&')
         return;
 
@@ -7879,8 +7865,6 @@ xmlParseStringEntityRef(xmlParserCtxtPtr ctxt, const xmlChar ** str) {
 	return(NULL);
     }
     ptr++;
-
-
     /*
      * Predefined entities override any extra definition
      */
@@ -10867,8 +10851,6 @@ xmlParseDocument(xmlParserCtxtPtr ctxt) {
 	    xmlSwitchEncoding(ctxt, enc);
 	}
     }
-
-
     if (CUR == 0) {
 	xmlFatalErr(ctxt, XML_ERR_DOCUMENT_EMPTY, NULL);
 	return(-1);
@@ -10961,8 +10943,6 @@ xmlParseDocument(xmlParserCtxtPtr ctxt) {
 	ctxt->instate = XML_PARSER_CONTENT;
 	xmlParseElement(ctxt);
 	ctxt->instate = XML_PARSER_EPILOG;
-
-
 	/*
 	 * The Misc part at the end
 	 */
@@ -11054,8 +11034,6 @@ xmlParseExtParsedEnt(xmlParserCtxtPtr ctxt) {
 	    xmlSwitchEncoding(ctxt, enc);
 	}
     }
-
-
     if (CUR == 0) {
 	xmlFatalErr(ctxt, XML_ERR_DOCUMENT_EMPTY, NULL);
     }
@@ -11407,8 +11385,6 @@ xmlParseTryOrFinish(xmlParserCtxtPtr ctxt, int terminate) {
     while (ctxt->instate != XML_PARSER_EOF) {
 	if ((ctxt->errNo != XML_ERR_OK) && (ctxt->disableSAX == 1))
 	    return(0);
-
-
 	/*
 	 * Pop-up of finished entities.
 	 */
@@ -13075,8 +13051,6 @@ xmlSAXParseDTD(xmlSAXHandlerPtr sax, const xmlChar *ExternalID,
 
     return(ret);
 }
-
-
 /**
  * xmlParseDTD:
  * @ExternalID:  a NAME* containing the External ID of the DTD
@@ -13346,8 +13320,6 @@ xmlParseExternalEntityPrivate(xmlDocPtr doc, xmlParserCtxtPtr oldctxt,
 	return(XML_ERR_INTERNAL_ERROR);
     if (doc == NULL)
 	return(XML_ERR_INTERNAL_ERROR);
-
-
     ctxt = xmlCreateEntityParserCtxtInternal(URL, ID, NULL, oldctxt);
     if (ctxt == NULL) return(XML_WAR_UNDECLARED_ENTITY);
     ctxt->userData = ctxt;
@@ -13608,8 +13580,6 @@ xmlParseBalancedChunkMemoryInternal(xmlParserCtxtPtr oldctxt,
         (oldctxt->depth >  1024)) {
 	return(XML_ERR_ENTITY_LOOP);
     }
-
-
     if (lst != NULL)
         *lst = NULL;
     if (string == NULL)
@@ -13972,8 +13942,6 @@ xmlParseInNodeContext(xmlNodePtr node, const char *data, int datalen,
 
     xmlUnlinkNode(fake);
     xmlFreeNode(fake);
-
-
     if (ret != XML_ERR_OK) {
         xmlFreeNodeList(*lst);
 	*lst = NULL;
@@ -14029,8 +13997,6 @@ xmlParseBalancedChunkMemoryRecover(xmlDocPtr doc, xmlSAXHandlerPtr sax,
     if (depth > 40) {
 	return(XML_ERR_ENTITY_LOOP);
     }
-
-
     if (lst != NULL)
         *lst = NULL;
     if (string == NULL)
@@ -14509,8 +14475,6 @@ xmlDocPtr
 xmlRecoverFile(const char *filename) {
     return(xmlSAXParseFile(NULL, filename, 1));
 }
-
-
 /**
  * xmlSetupParserForBuffer:
  * @ctxt:  an XML parser context
@@ -14845,8 +14809,6 @@ xmlSAXParseDoc(xmlSAXHandlerPtr sax, const xmlChar *cur, int recovery) {
     xmlSAXHandlerPtr oldsax = NULL;
 
     if (cur == NULL) return(NULL);
-
-
     ctxt = xmlCreateDocParserCtxt(cur);
     if (ctxt == NULL) return(NULL);
     if (sax != NULL) {
@@ -14911,8 +14873,6 @@ xmlAddEntityReference(xmlEntityPtr ent, xmlNodePtr firstNode,
         (*xmlEntityRefFunc) (ent, firstNode, lastNode);
     }
 }
-
-
 /**
  * xmlSetEntityReferenceFunc:
  * @func: A valid function
@@ -15078,8 +15038,6 @@ xmlCtxtReset(xmlParserCtxtPtr ctxt)
     } else {
         ctxt->space = NULL;
     }
-
-
     ctxt->nodeNr = 0;
     ctxt->node = NULL;
 
@@ -15249,8 +15207,6 @@ xmlCtxtResetPush(xmlParserCtxtPtr ctxt, const char *chunk,
 
     return(0);
 }
-
-
 /**
  * xmlCtxtUseOptionsInternal:
  * @ctxt: an XML parser context
@@ -15763,8 +15719,6 @@ xmlCtxtReadFd(xmlParserCtxtPtr ctxt, int fd,
     xmlInitParser();
 
     xmlCtxtReset(ctxt);
-
-
     input = xmlParserInputBufferCreateFd(fd, XML_CHAR_ENCODING_NONE);
     if (input == NULL)
         return (NULL);

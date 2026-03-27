@@ -34,8 +34,6 @@
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class Bool
@@ -57,8 +55,6 @@ public:
 		return bool_str_ ;
 	}
 	static Bool parse(const std::wstring & Str);
-
-
 private:
     bool bool_;
 	std::wstring bool_str_;

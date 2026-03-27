@@ -54,8 +54,6 @@ struct testDesc {
 };
 
 static int checkTestFile(const char *filename);
-
-
 #if defined(_WIN32) && !defined(__CYGWIN__)
 
 #include <windows.h>
@@ -91,8 +89,6 @@ static int glob(const char *pattern, int flags,
     }
     if (len <= 0)
         len = 0;
-
-
     ret = pglob;
     memset(ret, 0, sizeof(glob_t));
 
@@ -133,8 +129,6 @@ done:
     return(0);
 }
 
-
-
 static void globfree(glob_t *pglob) {
     unsigned int i;
     if (pglob == NULL)
@@ -157,8 +151,6 @@ static void globfree(glob_t *pglob) {
  ************************************************************************/
 
 #include <libxml/xmlIO.h>
-
-
 static const char *start = "<!DOCTYPE foo [\
 <!ENTITY f 'some internal data'> \
 <!ENTITY e '&f;&f;'> \
@@ -653,8 +645,6 @@ static int checkTestFile(const char *filename) {
 
     return(1);
 }
-
-
 
 /************************************************************************
  *									*

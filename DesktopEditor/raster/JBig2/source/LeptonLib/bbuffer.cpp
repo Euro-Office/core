@@ -33,7 +33,6 @@
  *      Accessors
  *          l_int32    bbufferBytesToWrite()
  *
- *
  *    The bbuffer is an implementation of a byte queue.
  *    The bbuffer holds a byte array from which bytes are
  *    processed in a first-in/first-out fashion.  As with
@@ -88,8 +87,6 @@
 #include "allheaders.h"
 
 static const l_int32  INITIAL_BUFFER_ARRAYSIZE_BBUFFER = 1024;   /* n'importe quoi */
-
-
 /*--------------------------------------------------------------------------*
  *                         BBuffer create/destroy                           *
  *--------------------------------------------------------------------------*/
@@ -133,8 +130,6 @@ BBUFFER  *bb;
 
     return bb;
 }
-
-
 /*!
  *  bbufferDestroy()
  *
@@ -167,8 +162,6 @@ BBUFFER  *bb;
 
     return;
 }
-
-
 /*!
  *  bbufferDestroyAndSaveData()
  *
@@ -214,8 +207,6 @@ BBUFFER  *bb;
     bbufferDestroy(pbb);
     return array;
 }
-
-
         
 /*--------------------------------------------------------------------------*
  *                   Operations to read data INTO a BBuffer                 *
@@ -274,8 +265,6 @@ l_int32  navail, nadd, nwritten;
 
     return 0;
 }
-
-
 /*!
  *  bbufferReadStream()
  *
@@ -321,8 +310,6 @@ l_int32  navail, nadd, nread, nwritten;
 
     return 0;
 }
-
-
 /*!
  *  bbufferExtendArray()
  *
@@ -351,8 +338,6 @@ bbufferExtendArray(BBUFFER  *bb,
     bb->nalloc += nbytes;
     return 0;
 }
-
-
 
 /*--------------------------------------------------------------------------*
  *                  Operations to write data FROM a BBuffer                 *
@@ -407,8 +392,6 @@ l_int32  nleft, nout;
 
     return 0;
 }
-
-
 /*!
  *  bbufferWriteStream()
  *
@@ -460,8 +443,6 @@ l_int32  nleft, nout;
     return 0;
 }
 
-
-
 /*--------------------------------------------------------------------------*
  *                                  Accessors                               *
  *--------------------------------------------------------------------------*/
@@ -486,5 +467,3 @@ bbufferBytesToWrite(BBUFFER  *bb,
     *pnbytes = bb->n - bb->nwritten;
     return 0;
 }
-        
-

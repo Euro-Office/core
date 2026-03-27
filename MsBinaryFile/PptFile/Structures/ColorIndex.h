@@ -33,8 +33,6 @@
 #pragma once
 
 #include "IStruct.h"
-
-
 namespace PPT
 {
 struct ColorIndex : public IStruct
@@ -43,8 +41,6 @@ struct ColorIndex : public IStruct
     BYTE m_green;
     BYTE m_blue;
     BYTE m_index;
-
-
     void clear();
     void ReadFromStream(POLE::Stream *pStream) override;
 };

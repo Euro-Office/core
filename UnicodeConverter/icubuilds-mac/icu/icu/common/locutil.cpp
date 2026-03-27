@@ -40,8 +40,6 @@ static UBool U_CALLCONV service_cleanup(void) {
     }
     return TRUE;
 }
-
-
 static void U_CALLCONV locale_utility_init(UErrorCode &status) {
     using namespace icu;
     U_ASSERT(LocaleUtility_cache == NULL);
@@ -269,5 +267,3 @@ U_NAMESPACE_END
 
 /* !UCONFIG_NO_SERVICE */
 #endif
-
-

@@ -39,24 +39,16 @@
 
 namespace XLS
 {
-
-
 AXM::AXM()
 {
 }
-
-
 AXM::~AXM()
 {
 }
-
-
 BaseObjectPtr AXM::clone()
 {
 	return BaseObjectPtr(new AXM(*this));
 }
-
-
 // AXM = YMult StartObject ATTACHEDLABEL EndObject
 const bool AXM::loadContent(BinProcessor& proc)
 {

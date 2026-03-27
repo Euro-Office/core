@@ -36,8 +36,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of AlRuns record in BIFF8
 class AlRuns: public BiffRecord
 {

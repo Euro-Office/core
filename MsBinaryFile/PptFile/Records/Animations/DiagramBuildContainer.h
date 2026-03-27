@@ -30,12 +30,8 @@
  *
  */
 #pragma once
-
-
 #include "BuildListSubContainer.h"
 #include "DiagramBuildAtom.h"
-
-
 namespace PPT
 {
 class CRecordDiagramBuildContainer : public CRecordBuildListSubContainer

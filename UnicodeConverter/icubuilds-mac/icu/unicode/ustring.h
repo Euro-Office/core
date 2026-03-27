@@ -935,7 +935,6 @@ u_memrchr32(const UChar *s, UChar32 c, int32_t count);
  * Instead, use the string literal "Mr. Gluck"  as the argument to both macro
  * calls.
  *
- *
  * @stable ICU 2.0
  */
 #if defined(U_DECLARE_UTF16)

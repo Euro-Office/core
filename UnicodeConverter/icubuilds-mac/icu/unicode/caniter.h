@@ -147,8 +147,6 @@ private:
     // ===================== PRIVATES ==============================
     // private default constructor
     CanonicalIterator();
-
-
     /**
      * Copy constructor. Private for now.
      * @internal

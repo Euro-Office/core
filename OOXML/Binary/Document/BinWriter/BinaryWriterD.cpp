@@ -445,8 +445,6 @@ template<typename T> void BinaryCommonWriter::WriteTrackRevision(const T& elem)
 	}
 }
 
-
-
 BinaryHeaderFooterTableWriter::BinaryHeaderFooterTableWriter(ParamsWriter& oParamsWriter, OOX::IFileContainer* oDocumentRels, std::map<int, bool>* mapIgnoreComments):
 																m_oBcw(oParamsWriter), 
 																m_oParamsWriter(oParamsWriter), 
@@ -946,8 +944,6 @@ void Binary_rPrWriter::Write_rPrChange(const OOX::Logic::CRPrChange& rPrChange)
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 }
-
-
 Binary_pPrWriter::Binary_pPrWriter(ParamsWriter& oParamsWriter, BinaryHeaderFooterTableWriter* oBinaryHeaderFooterTableWriter):
 		m_oParamsWriter(oParamsWriter),
 		m_oBcw(oParamsWriter), 
@@ -2452,8 +2448,6 @@ void Binary_tblPrWriter::WriteRowHeight(const ComplexTypes::Word::CHeight& rowHe
 		m_oBcw.m_oStream.WriteBYTE(c_oSerProp_rowPrType::Height_Rule);
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Byte);
 		m_oBcw.m_oStream.WriteBYTE(eHRule);
-
-
 		//Value
 		m_oBcw.m_oStream.WriteBYTE(c_oSerProp_rowPrType::Height_ValueTwips);
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Long);
@@ -2722,8 +2716,6 @@ void Binary_tblPrWriter::WriteTrPrChange(const OOX::Logic::CTrPrChange& trPrChan
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 }
-
-
 BinaryStyleTableWriter::BinaryStyleTableWriter(ParamsWriter& oParamsWriter):
   m_oBcw(oParamsWriter),bpPrs(oParamsWriter, NULL),brPrs(oParamsWriter),btblPrs(oParamsWriter)
 {
@@ -3008,8 +3000,6 @@ void BinaryStyleTableWriter::WriteTblStyleProperties(const OOX::Logic::CTableSty
 		}
 	}
 }
-
-
 BinaryNumberingTableWriter::BinaryNumberingTableWriter(ParamsWriter& oParamsWriter):
   m_oBcw(oParamsWriter),bpPrs(oParamsWriter, NULL),brPrs(oParamsWriter)
 {
@@ -3349,8 +3339,6 @@ void BinaryNumberingTableWriter::WriteLevelText(const std::wstring& text)
 		}
 	}
 }
-
-
 BinaryOtherTableWriter::BinaryOtherTableWriter(ParamsWriter& oParamsWriter, PPTX::Theme* pTheme) : m_oParamsWriter(oParamsWriter), m_oBcw(oParamsWriter), m_pTheme(pTheme)
 {
 }
@@ -3741,8 +3729,6 @@ void BinaryDocumentTableWriter::WriteBackground (OOX::WritingElement* pElement)
 void BinaryDocumentTableWriter::WriteAltChunk(OOX::Media& oAltChunkFile, OOX::CStyles* styles)
 {
 	if (false == oAltChunkFile.IsExist()) return;
-
-
 	std::wstring file_name_inp = oAltChunkFile.filename().GetPath();
 	
 	std::wstring sTempDir = NSDirectory::CreateDirectoryWithUniqueName(oAltChunkFile.filename().GetDirectory()); 
@@ -8620,8 +8606,6 @@ void BinaryDocumentTableWriter::WriteSdtTextFormPrComb(const ComplexTypes::Word:
 		m_oBcw.WriteItemEnd(nCurPos);
 	}
 }
-
-
 BinaryCommentsTableWriter::BinaryCommentsTableWriter(ParamsWriter& oParamsWriter) : 
 	m_oBcw(oParamsWriter), m_oParamsWriter(oParamsWriter), m_pOfficeDrawingConverter(oParamsWriter.m_pOfficeDrawingConverter)
 {

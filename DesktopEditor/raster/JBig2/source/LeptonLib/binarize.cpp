@@ -58,8 +58,6 @@
 #include <stdlib.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 /*------------------------------------------------------------------*
  *                 Adaptive Otsu-based thresholding                 *
  *------------------------------------------------------------------*/
@@ -188,8 +186,6 @@ PIXTILING  *pt;
     pixTilingDestroy(&pt);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *      Otsu thresholding on adaptive background normalization      *
  *------------------------------------------------------------------*/
@@ -279,8 +275,6 @@ PIX      *pixn, *pixt, *pixd;
     else
         return pixd;
 }
-    
-
 
 /*----------------------------------------------------------------------*
  *    Masking and Otsu estimate on adaptive background normalization    *
@@ -402,8 +396,6 @@ PIX      *pixn, *pixm, *pixd, *pixt1, *pixt2, *pixt3, *pixt4;
     else
         return pixd;
 }
-    
-
 /*----------------------------------------------------------------------*
  *                           Sauvola binarization                       *
  *----------------------------------------------------------------------*/
@@ -521,8 +513,6 @@ PIXTILING  *pt;
     pixTilingDestroy(&pt);
     return 0;
 }
-
-
 /*!
  *  pixSauvolaBinarize()
  *
@@ -573,8 +563,6 @@ l_int32  w, h;
 PIX     *pixg, *pixsc, *pixm, *pixms, *pixth, *pixd;
 
     PROCNAME("pixSauvolaBinarize");
-
-    
     if (!ppixm && !ppixsd && !ppixth && !ppixd)
         return ERROR_INT("no outputs", procName, 1);
     if (ppixm) *ppixm = NULL;
@@ -632,8 +620,6 @@ PIX     *pixg, *pixsc, *pixm, *pixms, *pixth, *pixd;
     pixDestroy(&pixsc);
     return 0;
 }
-
-
 /*!
  *  pixSauvolaGetThreshold()
  *
@@ -742,8 +728,6 @@ PIX        *pixsd, *pixd;
     if (usetab) FREE(tab);
     return pixd;
 }
-
-
 /*!
  *  pixApplyLocalThreshold()
  *
@@ -792,5 +776,3 @@ PIX       *pixd;
 
     return pixd;
 }
-
-

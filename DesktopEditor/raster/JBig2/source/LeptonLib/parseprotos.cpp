@@ -39,8 +39,6 @@
 
     /* MS VC++ can't handle array initialization with static consts ! */
 #define L_BUF_SIZE      512    /* max token size */
-
-
 static l_int32 getNextNonCommentLine(SARRAY *sa, l_int32 start, l_int32 *pnext);
 static l_int32 getNextNonBlankLine(SARRAY *sa, l_int32 start, l_int32 *pnext);
 static l_int32 getNextNonDoubleSlashLine(SARRAY *sa, l_int32 start,
@@ -62,8 +60,6 @@ static l_int32 getOffsetForCharacter(SARRAY *sa, l_int32 start, char tchar,
 static l_int32 getOffsetForMatchingRP(SARRAY *sa, l_int32 start,
             l_int32 soffsetlp, l_int32 boffsetlp, l_int32 toffsetlp,
             l_int32 *psoffset, l_int32 *pboffset, l_int32 *ptoffset);
-
-
 /*
  *  parseForProtos()
  *
@@ -198,8 +194,6 @@ SARRAY  *sa, *saout, *satest;
 
     return parsestr;
 }
-
-
 /* 
  *  getNextNonCommentLine()
  *
@@ -243,8 +237,6 @@ l_int32  i, n;
 
     return 0;
 }
-
-
 /* 
  *  getNextNonBlankLine()
  *
@@ -293,8 +285,6 @@ l_int32  i, j, n, len;
 
     return 0;
 }
-
-
 /* 
  *  getNextNonDoubleSlashLine()
  *
@@ -340,8 +330,6 @@ l_int32  i, n, len;
 
     return 0;
 }
-
-
 /*
  *  searchForProtoSignature()
  *
@@ -478,8 +466,6 @@ l_int32  toffsetlp, toffsetrp, toffsetlb, toffsetsc;
 
     return 0;
 }
-
-
 /*
  *  captureProtoSignature()
  *
@@ -524,8 +510,6 @@ l_int32  i;
 
     return cleanstr;
 }
-
-
 /*
  *  cleanProtoSignature()
  *
@@ -587,8 +571,6 @@ SARRAY  *sa, *saout;
     sarrayDestroy(&saout);
     return cleanstr;
 }
-
-
 /*
  *  skipToEndOfFunction()
  *
@@ -625,8 +607,6 @@ l_int32 soffsetlb, boffsetlb, toffsetlb;
     *pnext = end + 1;
     return 0;
 }
-
-
 /*
  *  skipToMatchingBrace()
  *
@@ -699,8 +679,6 @@ l_int32  i, j, jstart, n, sumbrace, found, instring, nchars;
 
     return ERROR_INT("matching right brace not found", procName, 1);
 }
-
-
 /*
  *  skipToSemicolon()
  *
@@ -755,8 +733,6 @@ l_int32  i, j, n, jstart, nchars, found;
 
     return ERROR_INT("semicolon not found", procName, 1);
 }
-
-
 /*
  *  getOffsetForCharacter()
  *
@@ -832,8 +808,6 @@ l_int32  i, j, n, nchars, totchars, found;
 
     return 0;
 }
-
-
 /*
  *  getOffsetForMatchingRP()
  *

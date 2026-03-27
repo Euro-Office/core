@@ -55,7 +55,5 @@ void AFDOperXNum::save(CFRecord& record)
     numValue.data.value = val;
     record << numValue;
 }
-
-
 } // namespace XLS
 

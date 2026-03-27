@@ -24,8 +24,6 @@
 
 namespace agg
 {
-
-
     //----------------------------------------------------vertex_block_storage
     template<class T, unsigned BlockShift=8, unsigned BlockPool=256>
     class vertex_block_storage
@@ -79,8 +77,6 @@ namespace agg
         T**      m_coord_blocks;
         int8u**  m_cmd_blocks;
     };
-
-
     //------------------------------------------------------------------------
     template<class T, unsigned S, unsigned P>
     void vertex_block_storage<T,S,P>::free_all()
@@ -344,10 +340,6 @@ namespace agg
         *xy_ptr = m_coord_blocks[nb] + ((m_total_vertices & block_mask) << 1);
         return m_cmd_blocks[nb] + (m_total_vertices & block_mask);
     }
-
-
-
-
     //-----------------------------------------------------poly_plain_adaptor
     template<class T> class poly_plain_adaptor
     {
@@ -411,10 +403,6 @@ namespace agg
         bool     m_stop;
     };
 
-
-
-
-
     //-------------------------------------------------poly_container_adaptor
     template<class Container> class poly_container_adaptor
     {
@@ -474,8 +462,6 @@ namespace agg
         bool     m_closed;
         bool     m_stop;
     };
-
-
 
     //-----------------------------------------poly_container_reverse_adaptor
     template<class Container> class poly_container_reverse_adaptor
@@ -537,10 +523,6 @@ namespace agg
         bool m_stop;
     };
 
-
-
-
-
     //--------------------------------------------------------line_adaptor
     class line_adaptor
     {
@@ -580,18 +562,6 @@ namespace agg
         double                     m_coord[4];
         poly_plain_adaptor<double> m_line;
     };
-
-
-
-
-
-
-
-
-
-
-
-
 
     //---------------------------------------------------------------path_base
     // A container to store vertices with their flags. 
@@ -667,8 +637,6 @@ namespace agg
 
         void curve4_rel(double x_ctrl2, double y_ctrl2, 
                         double x_to,    double y_to);
-
-
         void end_poly(unsigned flags = path_flags_close);
         void close_polygon(unsigned flags = path_flags_none);
 
@@ -834,8 +802,6 @@ namespace agg
             }
         }
 
-
-
     private:
         unsigned perceive_polygon_orientation(unsigned start, unsigned end);
         void     invert_polygon(unsigned start, unsigned end);
@@ -854,8 +820,6 @@ namespace agg
         }
         return m_vertices.total_vertices();
     }
-
-
     //------------------------------------------------------------------------
     template<class VC> 
     inline void path_base<VC>::rel_to_abs(double* x, double* y) const
@@ -1529,8 +1493,6 @@ namespace agg
 
 }
 
-
-
 // Example of declarations path_storage with std::vector as a container
 //---------------------------------------------------------------------------
 //#include <vector>
@@ -1538,8 +1500,4 @@ namespace agg
 //{
 //    typedef path_base<vertex_stl_storage<std::vector<vertex_d> > > stl_path_storage; 
 //}
-
-
-
-
 #endif

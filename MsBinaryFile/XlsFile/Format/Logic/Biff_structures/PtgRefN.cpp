@@ -137,7 +137,5 @@ void PtgRefN::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool ful
     }
 }
 
-
-
 } // namespace XLS
 

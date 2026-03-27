@@ -31,8 +31,6 @@
 //#define AGG_RGB565
 //#define AGG_RGB555
 #include "pixel_formats.h"
-
-
 static agg::int8u g_gradient_colors[] = 
 {
     255, 255, 255, 255,
@@ -292,11 +290,7 @@ static agg::int8u g_gradient_colors[] =
     151,  72,   0, 255,
     154,  74,   0, 255
 };
-
-
 enum flip_y_e { flip_y = true };
-
-
 class the_application : public agg::platform_support
 {
     agg::rbox_ctrl<agg::rgba8>    m_method;
@@ -403,8 +397,6 @@ public:
         m_shadow_ctrl.xn(3) = m_shape_bounds.x1;
         m_shadow_ctrl.yn(3) = m_shape_bounds.y2;
         m_shadow_ctrl.line_color(agg::rgba(0, 0.3, 0.5, 0.3));
-
-
         m_color_lut.resize(256);
         unsigned i;
         const agg::int8u* p = g_gradient_colors;
@@ -415,15 +407,11 @@ public:
             p += 4;
         }
     }
-
-
     virtual void on_resize(int sx, int sy)
     {
         m_gray8_buf.resize(sx * sy);
         m_gray8_rbuf.attach(m_gray8_buf.data(), sx, sy, sx);
     }
-
-
     virtual void on_draw()
     {
         typedef agg::pixfmt_gray8 pixfmt_gray8;
@@ -525,8 +513,6 @@ public:
 
 };
 
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -538,5 +524,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-

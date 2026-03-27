@@ -2898,8 +2898,6 @@ U_CAPI int32_t U_EXPORT2 usearch_getMatchedStart(
     }
     return strsrch->search->matchedIndex;
 }
-
-
 U_CAPI int32_t U_EXPORT2 usearch_getMatchedText(const UStringSearch *strsrch,
                                             UChar         *result,
                                             int32_t        resultCapacity,
@@ -3379,8 +3377,6 @@ U_CAPI int32_t U_EXPORT2 usearch_previous(UStringSearch *strsrch,
     return USEARCH_DONE;
 }
 
-
-
 U_CAPI void U_EXPORT2 usearch_reset(UStringSearch *strsrch)
 {
     /*
@@ -3471,15 +3467,11 @@ struct CEIBuffer {
     UCollationElements  *ceIter;
     UStringSearch       *strSearch;
 
-
-
                CEIBuffer(UStringSearch *ss, UErrorCode *status);
                ~CEIBuffer();
    const CEI   *get(int32_t index);
    const CEI   *getPrevious(int32_t index);
 };
-
-
 CEIBuffer::CEIBuffer(UStringSearch *ss, UErrorCode *status) {
     buf = defBuf;
     strSearch = ss;
@@ -3521,8 +3513,6 @@ CEIBuffer::~CEIBuffer() {
         uprv_free(buf);
     }
 }
-
-
 // Get the CE with the specified index.
 //   Index must be in the range
 //          n-history_size < index < n+1
@@ -3604,8 +3594,6 @@ const CEI *CEIBuffer::getPrevious(int32_t index) {
 }
 
 U_NAMESPACE_END
-
-
 // #define USEARCH_DEBUG
 
 #ifdef USEARCH_DEBUG
@@ -3870,8 +3858,6 @@ U_CAPI UBool U_EXPORT2 usearch_search(UStringSearch  *strsrch,
 
     ucol_setOffset(strsrch->textIter, startIdx, status);
     CEIBuffer ceb(strsrch, status);
-
-
     int32_t    targetIx = 0;
     const CEI *targetCEI = NULL;
     int32_t    patIx;
@@ -3881,8 +3867,6 @@ U_CAPI UBool U_EXPORT2 usearch_search(UStringSearch  *strsrch,
     int32_t  mLimit = -1;
     int32_t  minLimit;
     int32_t  maxLimit;
-
-
 
     // Outer loop moves over match starting positions in the
     //      target CE space.
@@ -3947,8 +3931,6 @@ U_CAPI UBool U_EXPORT2 usearch_search(UStringSearch  *strsrch,
             // No match at all, we have run off the end of the target text.
             break;
         }
-
-
         // We have found a match in CE space.
         // Now determine the bounds in string index space.
         //  There still is a chance of match failure if the CE range not correspond to
@@ -4002,8 +3984,6 @@ U_CAPI UBool U_EXPORT2 usearch_search(UStringSearch  *strsrch,
                 }
             }
         }
-
-
         // Check for the start of the match being within a combining sequence.
         //   This can happen if the pattern itself begins with a combining char, and
         //   the match found combining marks in the target text that were attached
@@ -4194,8 +4174,6 @@ U_CAPI UBool U_EXPORT2 usearch_searchBackwards(UStringSearch  *strsrch,
     } else {
         ucol_setOffset(strsrch->textIter, startIdx, status);
     }
-
-
     const CEI *targetCEI = NULL;
     int32_t    patIx;
     UBool      found;
@@ -4205,8 +4183,6 @@ U_CAPI UBool U_EXPORT2 usearch_searchBackwards(UStringSearch  *strsrch,
     int32_t  mLimit = -1;
     int32_t  minLimit;
     int32_t  maxLimit;
-
-
 
     // Outer loop moves over match starting positions in the
     //      target CE space.
@@ -4261,8 +4237,6 @@ U_CAPI UBool U_EXPORT2 usearch_searchBackwards(UStringSearch  *strsrch,
             // No match at all, we have run off the end of the target text.
             break;
         }
-
-
         // We have found a match in CE space.
         // Now determine the bounds in string index space.
         //  There still is a chance of match failure if the CE range not correspond to
@@ -4286,8 +4260,6 @@ U_CAPI UBool U_EXPORT2 usearch_searchBackwards(UStringSearch  *strsrch,
         if (mStart == firstCEI->highIndex) {
             found = FALSE;
         }
-
-
         minLimit = lastCEI->lowIndex;
 
         if (targetIx > 0) {
@@ -4374,8 +4346,6 @@ U_CAPI UBool U_EXPORT2 usearch_searchBackwards(UStringSearch  *strsrch,
             printf("minLimit, maxLimit, mLimit = %d, %d, %d\n", minLimit, maxLimit, mLimit);
         }
     #endif
-
-
         if (! checkIdentical(strsrch, mStart, mLimit)) {
             found = FALSE;
         }

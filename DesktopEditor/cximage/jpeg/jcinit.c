@@ -18,8 +18,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Master selection of compression modules.
  * This is done once at the start of processing an image.  We determine

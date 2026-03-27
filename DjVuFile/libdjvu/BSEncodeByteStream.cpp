@@ -65,8 +65,6 @@
 
 // - Author: Leon Bottou, 07/1998
 
-
-
 #include "BSByteStream.h"
 #include "GString.h"
 #undef BSORT_TIMER
@@ -77,27 +75,19 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 // ========================================
 // --- Assertion
 
 #define ASSERT(expr) do{if(!(expr))G_THROW("assertion ("#expr") failed");}while(0)
 
-
-
 // ========================================
 // --- Global Definitions
-            
-
 #ifdef OVERFLOW
 #undef OVERFLOW
 #endif
@@ -116,8 +106,6 @@ static const int FREQS1=1000000;
 
 // ========================================
 // -- Sorting Routines
-
-  
 class _BSort  // DJVU_CLASS
 {
 public:
@@ -147,8 +135,6 @@ private:
   void radixsort16(void);
   void radixsort8(void);
 };
-
-
 // blocksort -- the main entry point
 
 static void 
@@ -157,8 +143,6 @@ blocksort(unsigned char *data, int size, int &markerpos)
   _BSort bsort(data, size);
   bsort.run(markerpos);
 }
-
-
 // _BSort construction
 
 _BSort::_BSort(unsigned char *xdata, int xsize)
@@ -171,8 +155,6 @@ _BSort::_BSort(unsigned char *xdata, int xsize)
 _BSort::~_BSort()
 {
 }
-
-
 
 // GT -- compare suffixes using rank information
 
@@ -213,8 +195,6 @@ _BSort::GT(int p1, int p2, int depth)
         return (r1>r2);
     };
 }
-
-
 // _BSort::ranksort -- 
 // -- a simple insertion sort based on GT
 
@@ -261,8 +241,6 @@ _BSort::pivot3r(int *rr, int lo, int hi)
   else
     return c2;
 }
-
-
 // _BSort::quicksort3r -- Three way quicksort algorithm 
 //    Sort suffixes based on rank at pos+depth
 //    The algorithm breaks into ranksort when size is 
@@ -369,12 +347,6 @@ _BSort::quicksort3r(int lo, int hi, int depth)
         }
     }
 }
-
-
-
-
-
-
 // GTD -- compare suffixes using data information 
 //  (up to depth PRESORT_DEPTH)
 
@@ -427,8 +399,6 @@ _BSort::pivot3d(unsigned char *rr, int lo, int hi)
   else
     return c2;
 }
-
-
 // _BSort::quicksort3d -- Three way quicksort algorithm 
 //    Sort suffixes based on strings until reaching
 //    depth rank at pos+depth
@@ -551,10 +521,6 @@ _BSort::quicksort3d(int lo, int hi, int depth)
         }
     }
 }
-
-
-
-
 // _BSort::radixsort8 -- 8 bit radix sort
 
 void 
@@ -587,8 +553,6 @@ _BSort::radixsort8(void)
   // Extra element
   rank[size] = -1;
 }
-
-
 // _BSort::radixsort16 -- 16 bit radix sort
 
 void 
@@ -637,8 +601,6 @@ _BSort::radixsort16(void)
   // Extra element
   rank[size] = -1;
 }
-
-
 
 // _BSort::run -- main sort loop
 
@@ -744,8 +706,6 @@ _BSort::run(int &markerpos)
           size-1, middle-start, end-middle, end-start);
 #endif  
 }
-
-
 // ========================================
 // -- Encoding
 
@@ -1002,8 +962,6 @@ BSByteStream::Encode::write(const void *buffer, size_t sz)
   // return
   return copied;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

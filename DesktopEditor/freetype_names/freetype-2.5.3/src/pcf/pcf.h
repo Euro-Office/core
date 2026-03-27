@@ -23,17 +23,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
-
-
 #ifndef __PCF_H__
 #define __PCF_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DRIVER_H
 #include FT_INTERNAL_STREAM_H
-
-
 FT_BEGIN_HEADER
 
   typedef struct  PCF_TableRec_
@@ -44,8 +38,6 @@ FT_BEGIN_HEADER
     FT_ULong  offset;
 
   } PCF_TableRec, *PCF_Table;
-
-
   typedef struct  PCF_TocRec_
   {
     FT_ULong   version;
@@ -53,8 +45,6 @@ FT_BEGIN_HEADER
     PCF_Table  tables;
 
   } PCF_TocRec, *PCF_Toc;
-
-
   typedef struct  PCF_ParsePropertyRec_
   {
     FT_Long  name;
@@ -62,8 +52,6 @@ FT_BEGIN_HEADER
     FT_Long  value;
 
   } PCF_ParsePropertyRec, *PCF_ParseProperty;
-
-
   typedef struct  PCF_PropertyRec_
   {
     FT_String*  name;
@@ -78,8 +66,6 @@ FT_BEGIN_HEADER
     } value;
 
   } PCF_PropertyRec, *PCF_Property;
-
-
   typedef struct  PCF_Compressed_MetricRec_
   {
     FT_Byte  leftSideBearing;
@@ -89,8 +75,6 @@ FT_BEGIN_HEADER
     FT_Byte  descent;
 
   } PCF_Compressed_MetricRec, *PCF_Compressed_Metric;
-
-
   typedef struct  PCF_MetricRec_
   {
     FT_Short  leftSideBearing;
@@ -102,8 +86,6 @@ FT_BEGIN_HEADER
     FT_ULong  bits;
 
   } PCF_MetricRec, *PCF_Metric;
-
-
   typedef struct  PCF_AccelRec_
   {
     FT_Byte        noOverlap;
@@ -122,16 +104,12 @@ FT_BEGIN_HEADER
     PCF_MetricRec  ink_maxbounds;
 
   } PCF_AccelRec, *PCF_Accel;
-
-
   typedef struct  PCF_EncodingRec_
   {
     FT_Long    enc;
     FT_UShort  glyph;
 
   } PCF_EncodingRec, *PCF_Encoding;
-
-
   typedef struct  PCF_FaceRec_
   {
     FT_FaceRec     root;
@@ -161,8 +139,6 @@ FT_BEGIN_HEADER
     FT_CharMapRec  charmap;  /* a single charmap per face */
 
   } PCF_FaceRec, *PCF_Face;
-
-
   /* macros for pcf font format */
 
 #define LSBFirst  0
@@ -232,6 +208,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __PCF_H__ */
-
-
 /* END */

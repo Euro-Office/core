@@ -61,8 +61,6 @@ ulocimp_getCountry(const char *localeID,
 
 U_CAPI const char * U_EXPORT2
 locale_getKeywordsStart(const char *localeID);
-
-
 U_CFUNC UBool
 ultag_isUnicodeLocaleKey(const char* s, int32_t len);
 

@@ -40,8 +40,6 @@
 
 namespace xlscore
 {
-
-
 namespace xml 
 {
 
@@ -116,8 +114,6 @@ namespace writer
         std::basic_ostream<T>& os_;      // output stream
         bool need_header_;               // have we written an XML header yet?
         std::stack<element<T>*> elements_;  // stack of open element tags
-        
-
         // write XML header, if necessary
         writer& header() 
         {
@@ -327,8 +323,6 @@ typedef xlscore::xml::writer::element<wchar_t> xml_element;
 
 //#define CP_ATTR_NODE xml_element & _xml_node_
 #define CP_ATTR_NODE xlscore::xml::writer::element<wchar_t> & _xml_node_
-
-
 #define CP_XML_ATTR_OPT(NAME, VAL) if (VAL) CP_XML_ATTR(NAME, (*VAL))
 #define CP_XML_ATTR_STR(NAME, VAL) if (!VAL.empty()) CP_XML_ATTR((NAME), (VAL))
 #define CP_XML_ATTR_NULLABLE(NAME, VAL) if (VAL.IsInit()) CP_XML_ATTR(NAME, (*VAL))

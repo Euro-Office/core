@@ -46,8 +46,6 @@
 #include "style_text_properties.h"
 
 //#include "style_paragraph_properties.h"
-
-
 namespace cpdoccore 
 {
 
@@ -272,8 +270,6 @@ void odf_table_context::start_row(office_element_ptr &elm, bool styled)
 
 	if (false == default_cell_props.empty())
 		row->attlist_.table_default_cell_style_name_ = default_cell_props;
-
-
 	impl_->current_table().rows.push_back(state);
 
 	impl_->current_table().current_column = 0;
@@ -295,8 +291,6 @@ void odf_table_context::end_row()
 	//}
 	impl_->current_table().current_column = 0;
 }
-
-
 bool odf_table_context::empty()
 {
 	return impl_->empty();

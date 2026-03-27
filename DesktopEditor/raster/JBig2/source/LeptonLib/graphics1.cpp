@@ -77,8 +77,6 @@
 #include <math.h>
 #include "allheaders.h"
 
-
-
 /*------------------------------------------------------------------*
  *        Pta generation for arbitrary shapes built with lines      *
  *------------------------------------------------------------------*/
@@ -143,8 +141,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  generatePtaWideLine()
  *
@@ -211,8 +207,6 @@ PTA     *pta, *ptaj;
 
     return ptaj;
 }
-
-
 /*!
  *  generatePtaBox()
  *
@@ -280,8 +274,6 @@ PTA     *ptad, *pta;
 
     return ptad;
 }
-
-
 /*!
  *  generatePtaHashBox()
  *
@@ -372,8 +364,6 @@ PTA     *ptad, *pta;
 
     return ptad;
 }
-
-
 /*!
  *  generatePtaBoxa()
  *
@@ -420,8 +410,6 @@ PTA     *ptad, *ptat, *pta;
     ptaDestroy(&ptat);
     return ptad;
 }
-
-
 /*!
  *  generatePtaaBoxa()
  *
@@ -463,8 +451,6 @@ PTAA    *ptaa;
 
     return ptaa;
 }
-
-
 /*!
  *  generatePtaaHashBoxa()
  *
@@ -516,8 +502,6 @@ PTAA    *ptaa;
 
     return ptaa;
 }
-
-
 /*!
  *  generatePtaPolyline()
  *
@@ -577,8 +561,6 @@ PTA     *ptad, *ptat, *pta;
     ptaDestroy(&ptat);
     return ptad;
 }
-
-
 /*!
  *  generatePtaFilledCircle()
  *
@@ -617,8 +599,6 @@ PTA       *pta;
 
     return pta;
 }
-
-
 /*!
  *  generatePtaLineFromPt()
  *
@@ -644,8 +624,6 @@ l_int32  x2, y2;  /* the point at the other end of the line */
     y2 = y + (l_int32)((length - 1.0) * sin(radang));
     return generatePtaLine(x, y, x2, y2);
 }
-
-
 /*!
  *  locatePtRadially()
  *
@@ -673,8 +651,6 @@ locatePtRadially(l_int32     xr,
     *py = yr + dist * sin(radang);
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *        Pta generation for arbitrary shapes built with lines      *
  *------------------------------------------------------------------*/
@@ -760,8 +736,6 @@ l_int32  i, n, x, y, w, h, d, maxval;
 
     return 0;
 }
-
-
 /*!
  *  pixRenderPtaArb()
  *
@@ -840,8 +814,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  pixRenderPtaBlend()
  *
@@ -903,8 +875,6 @@ l_float32  frval, fgval, fbval;
 
     return 0;
 }
-
-
 /*------------------------------------------------------------------*
  *           Rendering of arbitrary shapes built with lines         *
  *------------------------------------------------------------------*/
@@ -946,8 +916,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderLineArb()
  *
@@ -986,8 +954,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderLineBlend()
  *
@@ -1028,8 +994,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBox()
  *
@@ -1062,8 +1026,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxArb()
  *
@@ -1096,8 +1058,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxBlend()
  *
@@ -1133,8 +1093,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderHashBox()
  *
@@ -1179,8 +1137,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxArb()
  *
@@ -1225,8 +1181,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderHashBoxBlend()
  *
@@ -1274,8 +1228,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxa()
  *
@@ -1308,8 +1260,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxaArb()
  *
@@ -1342,8 +1292,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderBoxaBlend()
  *
@@ -1381,8 +1329,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderPolyline()
  *
@@ -1419,8 +1365,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderPolylineArb()
  *
@@ -1457,8 +1401,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderPolylineBlend()
  *
@@ -1498,8 +1440,6 @@ PTA  *pta;
     ptaDestroy(&pta);
     return 0;
 }
-
-
 /*!
  *  pixRenderRandomCmapPtaa()
  *
@@ -1567,8 +1507,6 @@ PIX      *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *             Contour rendering on grayscale images                *
  *------------------------------------------------------------------*/
@@ -1697,8 +1635,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  fpixRenderContours()
  *
@@ -1752,5 +1688,3 @@ PIX        *pixd;
 
     return pixd;
 }
-
-

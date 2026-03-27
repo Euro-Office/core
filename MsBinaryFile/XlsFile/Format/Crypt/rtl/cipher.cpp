@@ -32,8 +32,6 @@
 
 #include "cipher.h"
 #include <memory>
-
-
 CipherARCFOUR::CipherARCFOUR()
 :	m_direction(rtl_Cipher_DirectionInvalid)
 {	
@@ -87,8 +85,6 @@ CipherARCFOUR::rtlCipherError CipherARCFOUR::Init(CipherARCFOUR::rtlCipherDirect
 
 	return rtl_Cipher_E_None;
 }
-
-
 CipherARCFOUR::rtlCipherError CipherARCFOUR::Encode(const void *pvData, const size_t nDatLen, unsigned char *pBuffer, const size_t nBufLen)
 {
 	if (m_direction == rtl_Cipher_DirectionInvalid)
@@ -98,8 +94,6 @@ CipherARCFOUR::rtlCipherError CipherARCFOUR::Encode(const void *pvData, const si
 
 	return Update((const unsigned char*)pvData, nDatLen, pBuffer, nBufLen);
 }
-
-
 CipherARCFOUR::rtlCipherError CipherARCFOUR::Decode(const void *pvData, const size_t nDatLen, unsigned char *pBuffer, const size_t nBufLen)
 {
 	if (m_direction == rtl_Cipher_DirectionInvalid)
@@ -109,8 +103,6 @@ CipherARCFOUR::rtlCipherError CipherARCFOUR::Decode(const void *pvData, const si
 
 	return Update((const unsigned char*)pvData, nDatLen, pBuffer, nBufLen);
 }
-
-
 CipherARCFOUR::rtlCipherError CipherARCFOUR::Update(const unsigned char *pData, const size_t nDatLen, unsigned char *pBuffer, const size_t nBufLen)
 {
 	_UINT32 *S;
@@ -146,5 +138,3 @@ CipherARCFOUR::rtlCipherError CipherARCFOUR::Update(const unsigned char *pData, 
 
 	return rtl_Cipher_E_None;
 }
-
-

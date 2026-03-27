@@ -29,8 +29,6 @@
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
  */
-
-
 #include <boost/date_time/posix_time/conversion.hpp>
 
 #include "PCDIDateTime.h"
@@ -136,8 +134,6 @@ namespace XLSB
             sec = 0;
         }
     }
-
-
 
 } // namespace XLSB
 

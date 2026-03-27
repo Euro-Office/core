@@ -162,8 +162,6 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 		}
 		RELEASEARRAYOBJECTS(pbBase64Buffer);
 	}
-
-
 	RELEASEOBJECT(pVsdx);
 
 	return result;

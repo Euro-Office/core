@@ -61,8 +61,6 @@ void office_math::add_child_element( xml::sax * Reader, const std::wstring & Ns,
         CP_CREATE_ELEMENT(semantics_);
     }
 }
-
-
 void office_math::oox_convert(oox::math_context & Context, int iTypeConversion)
 {
 	if (semantics_)
@@ -91,8 +89,6 @@ void math_semantics::add_child_element( xml::sax * Reader, const std::wstring & 
         CP_CREATE_ELEMENT(content_);
 
 }
-
-
 void math_semantics::oox_convert(oox::math_context & Context)
 {
     this->oox_convert(Context,0);

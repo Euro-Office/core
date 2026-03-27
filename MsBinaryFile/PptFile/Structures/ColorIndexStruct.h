@@ -32,8 +32,6 @@
 #pragma once
 
 #include "IStruct.h"
-
-
 namespace PPT
 {
 struct ColorIndexStruct : public IStruct

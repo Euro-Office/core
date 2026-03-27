@@ -34,8 +34,6 @@
 #define PPTX_LOGIC_CNVPICPR_INCLUDE_H_
 
 #include "./../WrapperWritingElement.h"
-
-
 namespace PPTX
 {
 	namespace Logic

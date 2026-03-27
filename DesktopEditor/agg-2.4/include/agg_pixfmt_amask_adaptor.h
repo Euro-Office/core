@@ -15,13 +15,9 @@
 
 #ifndef AGG_PIXFMT_AMASK_ADAPTOR_INCLUDED
 #define AGG_PIXFMT_AMASK_ADAPTOR_INCLUDED
-
-
 #include <string.h>
 #include "agg_array.h"
 #include "agg_rendering_buffer.h"
-
-
 namespace agg
 {
     //==================================================pixfmt_amask_adaptor
@@ -56,8 +52,6 @@ namespace agg
             realloc_span(len);
             memcpy(&m_span[0], covers, len * sizeof(cover_type));
         }
-
-
     public:
         pixfmt_amask_adaptor(pixfmt_type& pixf, const amask_type& mask) :
             m_pixf(&pixf), m_mask(&mask), m_span()
@@ -145,8 +139,6 @@ namespace agg
         {
             m_pixf->copy_from(from, xdst, ydst, xsrc, ysrc, len);
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_hspan(int x, int y,
                                unsigned len, 
@@ -157,8 +149,6 @@ namespace agg
             m_mask->combine_hspan(x, y, &m_span[0], len);
             m_pixf->blend_solid_hspan(x, y, len, c, &m_span[0]);
         }
-
-
         //--------------------------------------------------------------------
         void blend_solid_vspan(int x, int y,
                                unsigned len, 
@@ -169,8 +159,6 @@ namespace agg
             m_mask->combine_vspan(x, y, &m_span[0], len);
             m_pixf->blend_solid_vspan(x, y, len, c, &m_span[0]);
         }
-
-
         //--------------------------------------------------------------------
         void copy_color_hspan(int x, int y, unsigned len, const color_type* colors)
         {
@@ -206,8 +194,6 @@ namespace agg
             }
             m_pixf->blend_color_hspan(x, y, len, colors, &m_span[0], cover);
         }
-
-
         //--------------------------------------------------------------------
         void blend_color_vspan(int x, int y,
                                unsigned len, 

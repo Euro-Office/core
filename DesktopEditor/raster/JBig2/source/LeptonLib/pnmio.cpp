@@ -73,16 +73,12 @@
 /* --------------------------------------------*/
 #if  USE_PNMIO   /* defined in environ.h */
 /* --------------------------------------------*/
-
-
 static l_int32 pnmReadNextAsciiValue(FILE  *fp, l_int32 *pval);
 static l_int32 pnmSkipCommentLines(FILE  *fp);
 
     /* a sanity check on the size read from file */
 static const l_int32  MAX_PNM_WIDTH = 100000;
 static const l_int32  MAX_PNM_HEIGHT = 100000;
-
-
 /*--------------------------------------------------------------------*
  *                          Stream interface                          *
  *--------------------------------------------------------------------*/
@@ -195,8 +191,6 @@ PIX       *pix;
     }
     return pix;
 }
-
-
 /*!
  *  readHeaderPnm()
  *
@@ -235,8 +229,6 @@ FILE    *fp;
     fclose(fp);
     return ret;
 }
-
-
 /*!
  *  freadHeaderPnm()
  *
@@ -323,8 +315,6 @@ l_int32  maxval;
         return ERROR_INT( "pix not made", procName, 1);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreamPnm()
  *
@@ -443,8 +433,6 @@ PIX       *pixs;
         return ERROR_INT("image write fail", procName, 1);
     return 0;
 }
-
-
 /*!
  *  pixWriteStreamAsciiPnm()
  *
@@ -564,8 +552,6 @@ PIX       *pixs;
     pixDestroy(&pixs);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                         Read/write to memory                        *
  *---------------------------------------------------------------------*/
@@ -608,8 +594,6 @@ PIX      *pix;
     fclose(fp);
     return pix;
 }
-
-
 /*!
  *  sreadHeaderPnm()
  *
@@ -651,8 +635,6 @@ FILE     *fp;
         return ERROR_INT("header data read failed", procName, 1);
     return 0;
 }
-
-
 /*!
  *  pixWriteMemPnm()
  *
@@ -699,8 +681,6 @@ pixReadMemPnm(const l_uint8  *cdata,
         "pnm read from memory not implemented on this platform",
         "pixReadMemPnm", NULL);
 }
-
-
 l_int32
 sreadHeaderPnm(const l_uint8  *cdata,
                size_t          size,
@@ -715,8 +695,6 @@ sreadHeaderPnm(const l_uint8  *cdata,
         "pnm read header from memory not implemented on this platform",
         "sreadHeaderPnm", 1);
 }
-
-
 l_int32
 pixWriteMemPnm(l_uint8  **pdata,
                size_t    *psize,
@@ -728,8 +706,6 @@ pixWriteMemPnm(l_uint8  **pdata,
 }
 
 #endif  /* HAVE_FMEMOPEN */
-
-
 /*--------------------------------------------------------------------*
  *                          Static helpers                            *
  *--------------------------------------------------------------------*/
@@ -763,8 +739,6 @@ l_int32   c, ignore;
     ignore = fscanf(fp, "%d", pval);
     return 0;
 }
-
-
 /*!
  *  pnmSkipCommentLines()
  *

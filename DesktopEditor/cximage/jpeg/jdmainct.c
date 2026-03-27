@@ -16,8 +16,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * In the current system design, the main buffer need never be a full-image
  * buffer; any full-height buffers will be found inside the coefficient or
@@ -107,8 +105,6 @@
  * be worth providing --- if someone wants a 1/8th-size preview, they probably
  * want it quick and dirty, so a context-free upsampler is sufficient.
  */
-
-
 /* Private buffer controller object */
 
 typedef struct {
@@ -137,8 +133,6 @@ typedef my_main_controller * my_main_ptr;
 #define CTX_PREPARE_FOR_IMCU	0	/* need to prepare for MCU row */
 #define CTX_PROCESS_IMCU	1	/* feeding iMCU to postprocessor */
 #define CTX_POSTPONED_ROW	2	/* feeding postponed row group */
-
-
 /* Forward declarations */
 METHODDEF(void) process_data_simple_main
 	JPP((j_decompress_ptr cinfo, JSAMPARRAY output_buf,
@@ -151,8 +145,6 @@ METHODDEF(void) process_data_crank_post
 	JPP((j_decompress_ptr cinfo, JSAMPARRAY output_buf,
 	     JDIMENSION *out_row_ctr, JDIMENSION out_rows_avail));
 #endif
-
-
 LOCAL(void)
 alloc_funny_pointers (j_decompress_ptr cinfo)
 /* Allocate space for the funny pointer lists.
@@ -189,8 +181,6 @@ alloc_funny_pointers (j_decompress_ptr cinfo)
     main->xbuffer[1][ci] = xbuf;
   }
 }
-
-
 LOCAL(void)
 make_funny_pointers (j_decompress_ptr cinfo)
 /* Create the funny pointer lists discussed in the comments above.
@@ -232,8 +222,6 @@ make_funny_pointers (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 LOCAL(void)
 set_wraparound_pointers (j_decompress_ptr cinfo)
 /* Set up the "wraparound" pointers at top and bottom of the pointer lists.
@@ -260,8 +248,6 @@ set_wraparound_pointers (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 LOCAL(void)
 set_bottom_pointers (j_decompress_ptr cinfo)
 /* Change the pointer lists to duplicate the last sample row at the bottom
@@ -297,8 +283,6 @@ set_bottom_pointers (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 /*
  * Initialize for a processing pass.
  */
@@ -334,8 +318,6 @@ start_pass_main (j_decompress_ptr cinfo, J_BUF_MODE pass_mode)
     break;
   }
 }
-
-
 /*
  * Process some data.
  * This handles the simple case where no context is required.
@@ -374,8 +356,6 @@ process_data_simple_main (j_decompress_ptr cinfo,
     main->rowgroup_ctr = 0;
   }
 }
-
-
 /*
  * Process some data.
  * This handles the case where context rows must be provided.
@@ -445,8 +425,6 @@ process_data_context_main (j_decompress_ptr cinfo,
     main->context_state = CTX_POSTPONED_ROW;
   }
 }
-
-
 /*
  * Process some data.
  * Final pass of two-pass quantization: just call the postprocessor.
@@ -466,8 +444,6 @@ process_data_crank_post (j_decompress_ptr cinfo,
 }
 
 #endif /* QUANT_2PASS_SUPPORTED */
-
-
 /*
  * Initialize main buffer controller.
  */

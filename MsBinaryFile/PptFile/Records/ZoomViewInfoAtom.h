@@ -33,8 +33,6 @@
 #include "../Reader/Records.h"
 #include "../Structures/PointStruct.h"
 #include "../Structures/ScalingStruct.h"
-
-
 namespace PPT
 {
 class CRecordZoomViewInfoAtom : public CUnknownRecord
@@ -45,8 +43,6 @@ public:
 
     BOOL1 m_fUseVarScale;
     BOOL1 m_fDraftMode;
-	
-
     CRecordZoomViewInfoAtom();
     ~CRecordZoomViewInfoAtom();
 

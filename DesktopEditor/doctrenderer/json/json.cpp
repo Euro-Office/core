@@ -27,8 +27,6 @@ namespace NSJSON
 	CTypedValue::~CTypedValue()
 	{
 	}
-
-
 	IValue::IValue() : m_internal(new CTypedValue())
 	{
 	}

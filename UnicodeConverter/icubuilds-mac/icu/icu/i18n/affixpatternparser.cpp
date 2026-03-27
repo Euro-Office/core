@@ -259,8 +259,6 @@ static void escapeApostropheInLiteral(
         }
     }
 }
-
-
 // escapes literals for user strings where special characters in literals
 // are escaped with apostrophe.
 static void escapeLiteral(
@@ -429,8 +427,6 @@ private:
     AffixPatternAppender(const AffixPatternAppender &other);
     AffixPatternAppender &operator=(const AffixPatternAppender &other);
 };
-
-
 AffixPattern &
 AffixPattern::parseUserAffixString(
         const UnicodeString &affixStr,
@@ -686,7 +682,5 @@ AffixPatternParser::parse(
     }
     return appendTo;
 }
-
-
 U_NAMESPACE_END
 #endif /* #if !UCONFIG_NO_FORMATTING */

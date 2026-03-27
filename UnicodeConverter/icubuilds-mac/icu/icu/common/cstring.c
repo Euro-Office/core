@@ -19,8 +19,6 @@
 ******************************************************************************
 */
 
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "unicode/utypes.h"
@@ -70,8 +68,6 @@ uprv_toupper(char c) {
 #endif
     return c;
 }
-
-
 #if 0
 /*
  * Commented out because cstring.h defines uprv_tolower() to be
@@ -115,8 +111,6 @@ uprv_ebcdictolower(char c) {
     }
     return c;
 }
-
-
 U_CAPI char* U_EXPORT2
 T_CString_toLowerCase(char* str)
 {
@@ -182,8 +176,6 @@ T_CString_integerToString(char* buffer, int32_t v, int32_t radix)
     return length;
 }
 
-
-
 /*
  * Takes a int64_t and fills in  a char* string with that number "radix"-based.
  * Writes at most 21: chars ("-9223372036854775807" plus NUL).
@@ -219,8 +211,6 @@ T_CString_int64ToString(char* buffer, int64_t v, uint32_t radix)
     length += sizeof(tbuf) - tbx -1;
     return length;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 T_CString_stringToInteger(const char *integerString, int32_t radix)
 {

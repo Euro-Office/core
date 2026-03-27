@@ -38,19 +38,13 @@ namespace XLS
 SeriesText::SeriesText()
 {
 }
-
-
 SeriesText::~SeriesText()
 {
 }
-
-
 BaseObjectPtr SeriesText::clone()
 {
 	return BaseObjectPtr(new SeriesText(*this));
 }
-
-
 void SeriesText::readFields(CFRecord& record)
 {
 	record.skipNunBytes(2); // reserved

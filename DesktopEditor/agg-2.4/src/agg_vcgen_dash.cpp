@@ -39,8 +39,6 @@ namespace agg
     {
     }
 
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::remove_all_dashes()
     {
@@ -49,8 +47,6 @@ namespace agg
         m_curr_dash_start = 0.0;
         m_curr_dash = 0;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::add_dash(double dash_len, double gap_len)
     {
@@ -61,16 +57,12 @@ namespace agg
             m_dashes[m_num_dashes++] = gap_len;
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::dash_start(double ds)
     {
         m_dash_start = ds;
         calc_dash_start(fabs(ds));
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::calc_dash_start(double ds)
     {
@@ -92,8 +84,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::remove_all()
     {
@@ -101,8 +91,6 @@ namespace agg
         m_src_vertices.remove_all();
         m_closed = 0;
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::add_vertex(double x, double y, unsigned cmd)
     {
@@ -123,8 +111,6 @@ namespace agg
             }
         }
     }
-
-
     //------------------------------------------------------------------------
     void vcgen_dash::rewind(unsigned)
     {
@@ -136,8 +122,6 @@ namespace agg
         m_status = ready;
         m_src_vertex = 0;
     }
-
-
     //------------------------------------------------------------------------
     unsigned vcgen_dash::vertex(double* x, double* y)
     {
@@ -229,7 +213,5 @@ namespace agg
         }
         return path_cmd_stop;
     }
-
-
 }
 

@@ -79,13 +79,9 @@
 #include <string.h>
 #include <math.h>
 #include "allheaders.h"
-
-
 static l_int32 numaFillCmapFromHisto(NUMA *na, PIXCMAP *cmap,
                                      l_float32 minfract, l_int32 maxsize,
                                      l_int32 **plut);
-
-
 /*------------------------------------------------------------------*
  *             Binarization by Floyd-Steinberg dithering            *
  *------------------------------------------------------------------*/
@@ -132,8 +128,6 @@ pixDitherToBinary(PIX  *pixs)
     return pixDitherToBinarySpec(pixs, DEFAULT_CLIP_LOWER_1,
                                  DEFAULT_CLIP_UPPER_1);
 }
-
-
 /*!
  *  pixDitherToBinarySpec()
  *
@@ -197,8 +191,6 @@ PIX       *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *       Simple (pixelwise) binarization with fixed threshold       *
  *------------------------------------------------------------------*/
@@ -255,8 +247,6 @@ PIX       *pixt, *pixd;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                Binarization with variable threshold              *
  *------------------------------------------------------------------*/
@@ -312,8 +302,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *    Slower implementation of binarization by dithering using LUTs   *
  *--------------------------------------------------------------------*/
@@ -388,8 +376,6 @@ PIX       *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *       Generate a binary mask from pixels of particular value(s)    *
  *--------------------------------------------------------------------*/
@@ -464,8 +450,6 @@ PIX       *pixg, *pixd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*!
  *  pixGenerateMaskByBand()
  *
@@ -553,8 +537,6 @@ PIX       *pixg, *pixd;
     pixDestroy(&pixg);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                Thresholding to 2 bpp by dithering                *
  *------------------------------------------------------------------*/
@@ -611,8 +593,6 @@ pixDitherTo2bpp(PIX     *pixs,
     return pixDitherTo2bppSpec(pixs, DEFAULT_CLIP_LOWER_2,
                                DEFAULT_CLIP_UPPER_2, cmapflag);
 }
-
-
 /*!
  *  pixDitherTo2bppSpec()
  *
@@ -691,8 +671,6 @@ PIXCMAP   *cmap;
 
     return pixd;
 }
-
-
 /*--------------------------------------------------------------------*
  *  Simple (pixelwise) thresholding to 2 bpp with optional colormap   *
  *--------------------------------------------------------------------*/
@@ -787,8 +765,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *               Simple (pixelwise) thresholding to 4 bpp               *
  *----------------------------------------------------------------------*/
@@ -885,8 +861,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *    Simple (pixelwise) thresholding on 8 bpp with optional colormap   *
  *----------------------------------------------------------------------*/
@@ -959,8 +933,6 @@ PIXCMAP   *cmap;
     if (qtab) FREE(qtab);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *    Arbitrary (pixelwise) thresholding from 8 bpp to 2, 4 or 8 bpp    *
  *----------------------------------------------------------------------*/
@@ -1092,8 +1064,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt);
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *     Quantization tables for linear thresholds of grayscale images    *
  *----------------------------------------------------------------------*/
@@ -1130,8 +1100,6 @@ l_int32    i, j, thresh;
     }
     return tab;
 }
-
-
 /*!
  *  makeGrayQuantTargetTable()
  *
@@ -1185,8 +1153,6 @@ l_int32    i, j, thresh, maxval, quantval;
     }
     return tab;
 }
-
-
 /*----------------------------------------------------------------------*
  *   Quantization table for arbitrary thresholding of grayscale images  *
  *----------------------------------------------------------------------*/
@@ -1262,8 +1228,6 @@ PIXCMAP  *cmap;
 
     return 0;
 }
-
-
 /*!
  *  makeGrayQuantColormapArb()
  *
@@ -1356,8 +1320,6 @@ l_uint32  *line, *data;
     FREE(binstart);
     return 0;
 }
-	    
-
 /*--------------------------------------------------------------------*
  *                 Thresholding from 32 bpp rgb to 1 bpp              *
  *--------------------------------------------------------------------*/
@@ -1424,8 +1386,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixGenerateMaskByDiscr32()
  *
@@ -1504,8 +1464,6 @@ PIX       *pixd;
 
     return pixd;
 }
-
-
 /*----------------------------------------------------------------------*
  *                Histogram-based grayscale quantization                *
  *----------------------------------------------------------------------*/
@@ -1666,8 +1624,6 @@ PIXCMAP   *cmap;
     FREE(lut);
     return pixd;
 }
-                 
-
 /*!
  *  numaFillCmapFromHisto()
  *
@@ -1758,8 +1714,6 @@ l_float32  total;
     FREE(iahisto);
     return ret;
 }
-
-
 /*----------------------------------------------------------------------*
  *        Color quantize grayscale image using existing colormap        *
  *----------------------------------------------------------------------*/
@@ -1849,5 +1803,3 @@ PIX       *pixd;
     FREE(tab);
     return pixd;
 }
-
-

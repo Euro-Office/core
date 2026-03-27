@@ -469,8 +469,6 @@ namespace PPTX2EditorAdvanced
 			NSShapeImageGen::CMediaInfo& oRec = pPair->second;
 			oBinaryWriter.WriteString1(lIndexI++, oRec.GetPath2());
 		}
-
-
 		oBinaryWriter.WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 		oBinaryWriter.EndRecord();
 // FontMap ----------------------------------------

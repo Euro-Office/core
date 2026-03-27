@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 //----------------------------------------------------------------------------------
 
 // Optimization for 8 bits, Shaper-CLUT (3 inputs only)
@@ -38,11 +36,7 @@ typedef struct {
 
     cmsUInt16Number rx[256], ry[256], rz[256];
     cmsUInt32Number X0[256], Y0[256], Z0[256];  // Precomputed nodes and offsets for 8-bit input data
-
-
 } Prelin8Data;
-
-
 // Generic optimization for 16 bits Shaper-CLUT-Shaper (any inputs)
 typedef struct {
 
@@ -57,15 +51,9 @@ typedef struct {
 
     _cmsInterpFn16 EvalCLUT;            // The evaluator for 3D grid
     const cmsInterpParams* CLUTparams;  // (not-owned pointer)
-
-
     _cmsInterpFn16* EvalCurveOut16;       // Points to an array of curve evaluators in 16 bits (not-owned pointer)
     cmsInterpParams**  ParamsCurveOut16;  // Points to an array of references to interpolation params (not-owned pointer)
-
-
 } Prelin16Data;
-
-
 // Optimization for matrix-shaper in 8 bits. Numbers are operated in n.14 signed, tables are stored in 1.14 fixed
 
 typedef cmsInt32Number cmsS1Fixed14Number;   // Note that this may hold more than 16 bits!
@@ -99,11 +87,7 @@ typedef struct {
     cmsUInt16Number** Curves;     // Points to a dynamically  allocated array
 
 } Curves16Data;
-
-
 // Simple optimizations ----------------------------------------------------------------------------------------------------------
-
-
 // Remove an element in linked chain
 static
 void _RemoveElement(cmsStage** head)
@@ -161,8 +145,6 @@ cmsBool _Remove2Op(cmsPipeline* Lut, cmsStageSignature Op1, cmsStageSignature Op
 
     return AnyOpt;
 }
-
-
 static
 cmsBool CloseEnoughFloat(cmsFloat64Number a, cmsFloat64Number b)
 {
@@ -243,8 +225,6 @@ cmsBool _MultiplyMatrix(cmsPipeline* Lut)
 
        return AnyOpt;
 }
-
-
 // Preoptimize just gets rif of no-ops coming paired. Conversion from v2 to v4 followed
 // by a v4 to v2 and vice-versa. The elements are then discarded.
 static
@@ -319,8 +299,6 @@ void PrelinEval16(register const cmsUInt16Number Input[],
         p16 ->EvalCurveOut16[i](&StageDEF[i], &Output[i], p16 ->ParamsCurveOut16[i]);
     }
 }
-
-
 static
 void PrelinOpt16free(cmsContext ContextID, void* ptr)
 {
@@ -345,8 +323,6 @@ void* Prelin16dup(cmsContext ContextID, const void* ptr)
 
     return Duped;
 }
-
-
 static
 Prelin16Data* PrelinOpt16alloc(cmsContext ContextID,
                                const cmsInterpParams* ColorMap,
@@ -359,8 +335,6 @@ Prelin16Data* PrelinOpt16alloc(cmsContext ContextID,
 
     p16 ->nInputs = nInputs;
     p16 -> nOutputs = nOutputs;
-
-
     for (i=0; i < nInputs; i++) {
 
         if (In == NULL) {
@@ -376,8 +350,6 @@ Prelin16Data* PrelinOpt16alloc(cmsContext ContextID,
 
     p16 ->CLUTparams = ColorMap;
     p16 ->EvalCLUT   = ColorMap ->Interpolation.Lerp16;
-
-
     p16 -> EvalCurveOut16 = (_cmsInterpFn16*) _cmsCalloc(ContextID, nOutputs, sizeof(_cmsInterpFn16));
     p16 -> ParamsCurveOut16 = (cmsInterpParams**) _cmsCalloc(ContextID, nOutputs, sizeof(cmsInterpParams* ));
 
@@ -396,8 +368,6 @@ Prelin16Data* PrelinOpt16alloc(cmsContext ContextID,
 
     return p16;
 }
-
-
 
 // Resampling ---------------------------------------------------------------------------------
 
@@ -542,8 +512,6 @@ cmsBool WhitesAreEqual(int n, cmsUInt16Number White1[], cmsUInt16Number White2[]
     }
     return TRUE;
 }
-
-
 // Locate the node for the white point and fix it to pure white in order to avoid scum dot.
 static
 cmsBool FixWhiteMisalignment(cmsPipeline* Lut, cmsColorSpaceSignature EntryColorSpace, cmsColorSpaceSignature ExitColorSpace)
@@ -756,8 +724,6 @@ Error:
 
     if (NewPostLin == NULL) DataSetOut = NULL;
     else  DataSetOut = ((_cmsStageToneCurvesData*) NewPostLin ->Data) ->TheCurves;
-
-
     if (DataSetIn == NULL && DataSetOut == NULL) {
 
         _cmsPipelineSetOptimizationParameters(Dest, (_cmsOPTeval16Fn) DataCLUT->Params->Interpolation.Lerp16, DataCLUT->Params, NULL, NULL);
@@ -773,8 +739,6 @@ Error:
 
         _cmsPipelineSetOptimizationParameters(Dest, PrelinEval16, (void*) p16, PrelinOpt16free, Prelin16dup);
     }
-
-
     // Don't fix white on absolute colorimetric
     if (Intent == INTENT_ABSOLUTE_COLORIMETRIC)
         *dwFlags |= cmsFLAGS_NOWHITEONWHITEFIXUP;
@@ -789,15 +753,11 @@ Error:
 
     cmsUNUSED_PARAMETER(Intent);
 }
-
-
 // -----------------------------------------------------------------------------------------------------------------------------------------------
 // Fixes the gamma balancing of transform. This is described in my paper "Prelinearization Stages on
 // Color-Management Application-Specific Integrated Circuits (ASICs)" presented at NIP24. It only works
 // for RGB transforms. See the paper for more details
 // -----------------------------------------------------------------------------------------------------------------------------------------------
-
-
 // Normalize endpoints by slope limiting max and min. This assures endpoints as well.
 // Descending curves are handled as well.
 static
@@ -832,8 +792,6 @@ void SlopeLimiting(cmsToneCurve* g)
     for (i = AtEnd; i < (int) g ->nEntries; i++)
         g ->Table16[i] = _cmsQuickSaturateWord(i * Slope + beta);
 }
-
-
 // Precomputes tables for 8-bit on input devicelink.
 static
 Prelin8Data* PrelinOpt8alloc(cmsContext ContextID, const cmsInterpParams* p, cmsToneCurve* G[3])
@@ -863,8 +821,6 @@ Prelin8Data* PrelinOpt8alloc(cmsContext ContextID, const cmsInterpParams* p, cms
             Input[1] = FROM_8_TO_16(i);
             Input[2] = FROM_8_TO_16(i);
         }
-
-
         // Move to 0..1.0 in fixed domain
         v1 = _cmsToFixedDomain(Input[0] * p -> Domain[0]);
         v2 = _cmsToFixedDomain(Input[1] * p -> Domain[1]);
@@ -899,8 +855,6 @@ void* Prelin8dup(cmsContext ContextID, const void* ptr)
     return _cmsDupMem(ContextID, ptr, sizeof(Prelin8Data));
 }
 
-
-
 // A optimized interpolation for 8-bit input.
 #define DENS(i,j,k) (LutTable[(i)+(j)+(k)+OutChan])
 static
@@ -934,8 +888,6 @@ void PrelinEval8(register const cmsUInt16Number Input[],
     X1 = X0 + ((rx == 0) ? 0 : p ->opta[2]);
     Y1 = Y0 + ((ry == 0) ? 0 : p ->opta[1]);
     Z1 = Z0 + ((rz == 0) ? 0 : p ->opta[0]);
-
-
     // These are the 6 Tetrahedral
     for (OutChan=0; OutChan < TotalOut; OutChan++) {
 
@@ -985,8 +937,6 @@ void PrelinEval8(register const cmsUInt16Number Input[],
                             else  {
                                 c1 = c2 = c3 = 0;
                             }
-
-
                             Rest = c1 * rx + c2 * ry + c3 * rz + 0x8001;
                             Output[OutChan] = (cmsUInt16Number)c0 + ((Rest + (Rest>>16))>>16);
 
@@ -994,8 +944,6 @@ void PrelinEval8(register const cmsUInt16Number Input[],
 }
 
 #undef DENS
-
-
 // Curves that contain wide empty areas are not optimizeable
 static
 cmsBool IsDegenerated(const cmsToneCurve* g)
@@ -1035,8 +983,6 @@ cmsBool OptimizeByComputingLinearization(cmsPipeline** Lut, cmsUInt32Number Inte
     cmsStage* mpe;
     cmsToneCurve** OptimizedPrelinCurves;
     _cmsStageCLutData* OptimizedPrelinCLUT;
-
-
     // This is a loosy optimization! does not apply in floating-point cases
     if (_cmsFormatterIsFloat(*InputFormat) || _cmsFormatterIsFloat(*OutputFormat)) return FALSE;
 
@@ -1172,8 +1118,6 @@ cmsBool OptimizeByComputingLinearization(cmsPipeline** Lut, cmsUInt32Number Inte
     }
 
     cmsPipelineFree(LutPlusCurves);
-
-
     OptimizedPrelinCurves = _cmsStageGetPtrToCurveSet(OptimizedPrelinMpe);
     OptimizedPrelinCLUT   = (_cmsStageCLutData*) OptimizedCLUTmpe ->Data;
 
@@ -1232,8 +1176,6 @@ Error:
 
     cmsUNUSED_PARAMETER(Intent);
 }
-
-
 // Curves optimizer ------------------------------------------------------------------------------------------------------------------
 
 static
@@ -1331,8 +1273,6 @@ void FastEvaluateCurves8(register const cmsUInt16Number In[],
          Out[i] = Data -> Curves[i][x];
     }
 }
-
-
 static
 void FastEvaluateCurves16(register const cmsUInt16Number In[],
                           register cmsUInt16Number Out[],
@@ -1345,8 +1285,6 @@ void FastEvaluateCurves16(register const cmsUInt16Number In[],
          Out[i] = Data -> Curves[i][In[i]];
     }
 }
-
-
 static
 void FastIdentity16(register const cmsUInt16Number In[],
                     register cmsUInt16Number Out[],
@@ -1359,8 +1297,6 @@ void FastIdentity16(register const cmsUInt16Number In[],
          Out[i] = In[i];
     }
 }
-
-
 // If the target LUT holds only curves, the optimization procedure is to join all those
 // curves together. That only works on curves and does not work on matrices.
 static
@@ -1373,8 +1309,6 @@ cmsBool OptimizeByJoiningCurves(cmsPipeline** Lut, cmsUInt32Number Intent, cmsUI
     cmsPipeline* Dest = NULL;
     cmsStage* mpe;
     cmsStage* ObtainedCurves = NULL;
-
-
     // This is a loosy optimization! does not apply in floating-point cases
     if (_cmsFormatterIsFloat(*InputFormat) || _cmsFormatterIsFloat(*OutputFormat)) return FALSE;
 
@@ -1489,8 +1423,6 @@ Error:
 
 // -------------------------------------------------------------------------------------------------------------------------------------
 // LUT is Shaper - Matrix - Matrix - Shaper, which is very frequent when combining two matrix-shaper profiles
-
-
 static
 void  FreeMatShaper(cmsContext ContextID, void* Data)
 {
@@ -1502,8 +1434,6 @@ void* DupMatShaper(cmsContext ContextID, const void* Data)
 {
     return _cmsDupMem(ContextID, Data, sizeof(MatShaper8Data));
 }
-
-
 // A fast matrix-shaper evaluator for 8 bits. This is a bit ticky since I'm using 1.14 signed fixed point
 // to accomplish some performance. Actually it takes 256x3 16 bits tables and 16385 x 3 tables of 8 bits,
 // in total about 50K, and the performance boost is huge!
@@ -1757,8 +1687,6 @@ Error:
     cmsPipelineFree(Dest);
     return FALSE;
 }
-
-
 // -------------------------------------------------------------------------------------------------------------------------------------
 // Optimization plug-ins
 
@@ -1770,8 +1698,6 @@ typedef struct _cmsOptimizationCollection_st {
     struct _cmsOptimizationCollection_st *Next;
 
 } _cmsOptimizationCollection;
-
-
 // The built-in list. We currently implement 4 types of optimizations. Joining of curves, matrix-shaper, linearization and resampling
 static _cmsOptimizationCollection DefaultOptimization[] = {
 
@@ -1783,8 +1709,6 @@ static _cmsOptimizationCollection DefaultOptimization[] = {
 
 // The linked list head
 _cmsOptimizationPluginChunkType _cmsOptimizationPluginChunk = { NULL };
-
-
 // Duplicates the zone of memory used by the plug-in in the new context
 static
 void DupPluginOptimizationList(struct _cmsContext_struct* ctx, 
@@ -1835,8 +1759,6 @@ void  _cmsAllocOptimizationPluginChunk(struct _cmsContext_struct* ctx,
         ctx ->chunks[OptimizationPlugin] = _cmsSubAllocDup(ctx ->MemPool, &OptimizationPluginChunkType, sizeof(_cmsOptimizationPluginChunkType));
     }
 }
-
-
 // Register new ways to optimize
 cmsBool  _cmsRegisterOptimizationPlugin(cmsContext ContextID, cmsPluginBase* Data)
 {
@@ -1933,6 +1855,4 @@ cmsBool _cmsOptimizePipeline(cmsContext ContextID,
     // Only simple optimizations succeeded
     return AnySuccess;
 }
-
-
 

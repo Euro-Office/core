@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of Scl record in BIFF8
 class Scl: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~Scl();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

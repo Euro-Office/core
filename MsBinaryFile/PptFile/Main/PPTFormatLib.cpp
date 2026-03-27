@@ -31,8 +31,6 @@
  */
 
 #include "PPTFormatLib.h"
-
-
 #include "../Reader/PPTFileReader.h"
 #include "../PPTXWriter/Converter.h"
 

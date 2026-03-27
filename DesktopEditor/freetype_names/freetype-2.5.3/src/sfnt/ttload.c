@@ -15,8 +15,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_STREAM_H
@@ -24,8 +22,6 @@
 #include "ttload.h"
 
 #include "sferrors.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -34,8 +30,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_ttload
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -61,8 +55,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_Bool   zero_length = FALSE;
 #endif
-
-
     FT_TRACE4(( "tt_face_lookup_table: %08p, `%c%c%c%c' -- ",
                 face,
                 (FT_Char)( tag >> 24 ),
@@ -99,8 +91,6 @@
 
     return NULL;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -130,8 +120,6 @@
   {
     TT_Table  table;
     FT_Error  error;
-
-
     table = tt_face_lookup_table( face, tag );
     if ( table )
     {
@@ -147,8 +135,6 @@
   Exit:
     return error;
   }
-
-
   /* Here, we                                                         */
   /*                                                                  */
   /* - check that `num_tables' is valid (and adjust it if necessary)  */
@@ -186,16 +172,12 @@
         FT_FRAME_ULONG( Length ),
       FT_FRAME_END
     };
-
-
     if ( FT_STREAM_SEEK( offset ) )
       goto Exit;
 
     for ( nn = 0; nn < sfnt->num_tables; nn++ )
     {
       TT_TableRec  table;
-
-
       if ( FT_STREAM_READ_FIELDS( table_dir_entry_fields, &table ) )
       {
         nn--;
@@ -218,8 +200,6 @@
       if ( table.Tag == TTAG_head || table.Tag == TTAG_bhed )
       {
         FT_UInt32  magic;
-
-
 #ifndef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
         if ( table.Tag == TTAG_head )
 #endif
@@ -288,8 +268,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -334,8 +312,6 @@
         FT_FRAME_USHORT( range_shift ),
       FT_FRAME_END
     };
-
-
     FT_TRACE2(( "tt_face_load_font_dir: %08p\n", face ));
 
     /* read the offset table */
@@ -418,8 +394,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -471,8 +445,6 @@
     FT_Stream  stream;
     TT_Table   table;
     FT_ULong   size;
-
-
     if ( tag != 0 )
     {
       /* look for tag in font directory */
@@ -508,8 +480,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -561,8 +531,6 @@
         FT_FRAME_SHORT ( Glyph_Data_Format ),
       FT_FRAME_END
     };
-
-
     error = face->goto_table( face, tag, stream, 0 );
     if ( error )
       goto Exit;
@@ -578,16 +546,12 @@
   Exit:
     return error;
   }
-
-
   FT_LOCAL_DEF( FT_Error )
   tt_face_load_head( TT_Face    face,
                      FT_Stream  stream )
   {
     return tt_face_load_generic_header( face, stream, TTAG_head );
   }
-
-
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
 
   FT_LOCAL_DEF( FT_Error )
@@ -598,8 +562,6 @@
   }
 
 #endif /* TT_CONFIG_OPTION_EMBEDDED_BITMAPS */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -652,8 +614,6 @@
         FT_FRAME_USHORT( maxComponentDepth ),
       FT_FRAME_END
     };
-
-
     error = face->goto_table( face, TTAG_maxp, stream, 0 );
     if ( error )
       goto Exit;
@@ -715,8 +675,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -770,8 +728,6 @@
         FT_FRAME_USHORT( stringOffset ),
       FT_FRAME_END
     };
-
-
     table         = &face->name_table;
     table->stream = stream;
 
@@ -780,8 +736,6 @@
       goto Exit;
 
     table_pos = FT_STREAM_POS();
-
-
     if ( FT_STREAM_READ_FIELDS( name_table_fields, table ) )
       goto Exit;
 
@@ -814,8 +768,6 @@
     /* to hold the strings themselves.                                */
     {
       TT_NameEntryRec*  entry = table->names;
-
-
       for ( ; count > 0; count-- )
       {
         if ( FT_STREAM_READ_FIELDS( name_record_fields, entry ) )
@@ -850,8 +802,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -870,8 +820,6 @@
     TT_NameTable  table  = &face->name_table;
     TT_NameEntry  entry  = table->names;
     FT_UInt       count  = table->numNameRecords;
-
-
     if ( table->names )
     {
       for ( ; count > 0; count--, entry++ )
@@ -888,8 +836,6 @@
     table->format         = 0;
     table->storageOffset  = 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -913,8 +859,6 @@
                      FT_Stream  stream )
   {
     FT_Error  error;
-
-
     error = face->goto_table( face, TTAG_cmap, stream, &face->cmap_size );
     if ( error )
       goto Exit;
@@ -925,8 +869,6 @@
   Exit:
     return error;
   }
-
-
 
   /*************************************************************************/
   /*                                                                       */
@@ -1032,8 +974,6 @@
         FT_FRAME_USHORT( usUpperOpticalPointSize ),
       FT_FRAME_END
     };
-
-
     /* We now support old Mac fonts where the OS/2 table doesn't  */
     /* exist.  Simply put, we set the `version' field to 0xFFFF   */
     /* and test this value each time we need to access the table. */
@@ -1086,8 +1026,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1128,8 +1066,6 @@
         FT_FRAME_ULONG( maxMemType1 ),
       FT_FRAME_END
     };
-
-
     error = face->goto_table( face, TTAG_post, stream, 0 );
     if ( error )
       return error;
@@ -1146,8 +1082,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1194,8 +1128,6 @@
 
     FT_Error  error;
     TT_PCLT*  pclt = &face->pclt;
-
-
     /* optional table */
     error = face->goto_table( face, TTAG_PCLT, stream, 0 );
     if ( error )
@@ -1207,8 +1139,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -1234,8 +1164,6 @@
 
     FT_UInt        j,num_ranges;
     TT_GaspRange   gaspranges = NULL;
-
-
     /* the gasp table is optional */
     error = face->goto_table( face, TTAG_gasp, stream, 0 );
     if ( error )
@@ -1282,6 +1210,4 @@
   Exit:
     return error;
   }
-
-
 /* END */

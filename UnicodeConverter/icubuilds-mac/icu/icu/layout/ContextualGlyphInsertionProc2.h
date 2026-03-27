@@ -68,8 +68,6 @@ private:
                               le_bool isKashidaLike,
                               le_bool isBefore,
                               LEErrorCode &success);
-
-
 protected:
     le_int32 markGlyph;
     LEReferenceToArrayOf<le_uint16> insertionTable;

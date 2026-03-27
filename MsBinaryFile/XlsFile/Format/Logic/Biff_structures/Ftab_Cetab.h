@@ -83,8 +83,6 @@ public:
 				boost::multi_index::ordered_unique<boost::multi_index::tag<sort_by_iftab>, BOOST_MULTI_INDEX_MEMBER(ParamsFixed, unsigned short, iftab)>,
 				boost::multi_index::ordered_unique<boost::multi_index::tag<sort_by_name>, BOOST_MULTI_INDEX_MEMBER(ParamsFixed, std::wstring, name)> >
 		> ParamsFixedSet;
-
-
 		ParamsFixedSet params_fixed;
 	};
 

@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #define FT_MAKE_OPTION_SINGLE_OBJECT
 
 #include "ftcbasic.c"
@@ -26,6 +24,4 @@
 #include "ftcmanag.c"
 #include "ftcmru.c"
 #include "ftcsbits.c"
-
-
 /* END */

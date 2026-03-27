@@ -60,7 +60,5 @@ void PtgMemNoMem::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool
 {
 }
 
-
-
 } // namespace XLS
 

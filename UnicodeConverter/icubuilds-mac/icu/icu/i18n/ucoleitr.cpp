@@ -296,8 +296,6 @@ ucol_openElements(const UCollator  *coll,
 
     return cei->toUCollationElements();
 }
-
-
 U_CAPI void U_EXPORT2
 ucol_closeElements(UCollationElements *elems)
 {

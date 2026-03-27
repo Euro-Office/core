@@ -91,8 +91,6 @@ namespace OOX
 		}
 
 		sXml += _T(" xmlns:b=\"http://schemas.openxmlformats.org/officeDocument/2006/bibliography\" xmlns=\"http://schemas.openxmlformats.org/officeDocument/2006/bibliography\">");
-
-
 		sXml += _T("</a:Sources>");
 
         NSFile::CFileBinary::SaveToFile( oFilePath.GetPath(), sXml );

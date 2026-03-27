@@ -7,8 +7,6 @@
  *
  * Author: Daniel Veillard
  */
-
-
 #ifndef __XML_SAX_H__
 #define __XML_SAX_H__
 

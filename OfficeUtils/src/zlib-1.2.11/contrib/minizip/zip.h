@@ -107,8 +107,6 @@ typedef struct
 } zip_fileinfo;
 
 typedef const char* zipcharpc;
-
-
 #define APPEND_STATUS_CREATE        (0)
 #define APPEND_STATUS_CREATEAFTER   (1)
 #define APPEND_STATUS_ADDINZIP      (2)
@@ -182,8 +180,6 @@ extern int ZEXPORT zipOpenNewFileInZip64 OF((zipFile file,
                     this MUST be '1' if the uncompressed size is >= 0xffffffff.
 
 */
-
-
 extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
                                             const char* filename,
                                             const zip_fileinfo* zipfi,
@@ -195,8 +191,6 @@ extern int ZEXPORT zipOpenNewFileInZip2 OF((zipFile file,
                                             int method,
                                             int level,
                                             int raw));
-
-
 extern int ZEXPORT zipOpenNewFileInZip2_64 OF((zipFile file,
                                             const char* filename,
                                             const zip_fileinfo* zipfi,
@@ -275,8 +269,6 @@ extern int ZEXPORT zipOpenNewFileInZip4 OF((zipFile file,
                                             uLong versionMadeBy,
                                             uLong flagBase
                                             ));
-
-
 extern int ZEXPORT zipOpenNewFileInZip4_64 OF((zipFile file,
                                             const char* filename,
                                             const zip_fileinfo* zipfi,
@@ -302,8 +294,6 @@ extern int ZEXPORT zipOpenNewFileInZip4_64 OF((zipFile file,
     versionMadeBy : value for Version made by field
     flag : value for flag field (compression level info will be added)
  */
-
-
 extern int ZEXPORT zipWriteInFileInZip OF((zipFile file,
                        const void* buf,
                        unsigned len));
@@ -335,8 +325,6 @@ extern int ZEXPORT zipClose OF((zipFile file,
 /*
   Close the zipfile
 */
-
-
 extern int ZEXPORT zipRemoveExtraInfoBlock OF((char* pData, int* dataLen, short sHeader));
 /*
   zipRemoveExtraInfoBlock -  Added by Mathias Svensson

@@ -124,8 +124,6 @@ inline izstream& operator>(izstream& zs, T& x) {
     ::gzread(zs.fp(), &x, sizeof(T));
     return zs;
 }
-
-
 inline zstringlen::zstringlen(izstream& zs) {
     zs > val.byte;
     if (val.byte == 255) zs > val.word;

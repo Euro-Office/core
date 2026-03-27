@@ -34,14 +34,10 @@
 
 namespace CRYPTO
 {
-
-
 XLS::BiffStructurePtr EncryptionHeaderFlags::clone()
 {
 	return XLS::BiffStructurePtr(new EncryptionHeaderFlags(*this));
 }
-
-
 
 void EncryptionHeaderFlags::load(XLS::CFRecord& record)
 {
@@ -52,7 +48,5 @@ void EncryptionHeaderFlags::load(XLS::CFRecord& record)
 	fExternal = GETBIT(flags, 4);
 	fAES = GETBIT(flags, 5);
 }
-
-
 } // namespace CRYPTO
 

@@ -40,12 +40,8 @@
 #include "RevName.h"
 #include "RevExtern.h"
 #include "Ptg.h"
-
-
 namespace XLS
 {
-
-
 BiffStructurePtr RgbExtra::clone()
 {
 	return BiffStructurePtr(new RgbExtra(*this));
@@ -65,8 +61,6 @@ void RgbExtra::save(CFRecord& record)
 		ptg_records.pop();
 	}
 }
-
-
 void RgbExtra::load(CFRecord& record, const PtgVector& records_from_rgce, bool is_part_of_a_revision)
 {
 	for(PtgVectorIterator it = records_from_rgce.begin(), 
@@ -75,8 +69,6 @@ void RgbExtra::load(CFRecord& record, const PtgVector& records_from_rgce, bool i
 		load(record, (*it)->getPtgId(), is_part_of_a_revision);
 	}
 }
-
-
 void RgbExtra::load(CFRecord& record, unsigned short rgce_record_type, bool is_part_of_a_revision)
 {
 	PtgPtr extra_ptg;
@@ -146,25 +138,17 @@ void RgbExtra::load(CFRecord& record, unsigned short rgce_record_type, bool is_p
 		ptg_records.push(extra_ptg);
 	}
 }
-
-
 const PtgQueue& RgbExtra::getPtgs() const
 {
 	return ptg_records;
 }
-
-
 void RgbExtra::addPtg(const PtgPtr ptg)
 {
 	ptg_records.push(ptg);
 }
-
-
 const bool RgbExtra::isEmpty() const
 {
 	return ptg_records.empty();
 }
-
-
 } // namespace XLS
 

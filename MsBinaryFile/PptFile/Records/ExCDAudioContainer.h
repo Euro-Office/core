@@ -32,8 +32,6 @@
 #pragma once
 
 #include "ExMediaAtom.h"
-
-
 namespace PPT
 {
 class CRecordExCDAudioContainer : public CRecordsContainer
@@ -43,8 +41,6 @@ public:
 	
     double				m_dStartTime = .0;
     double				m_dEndTime = .0;
-
-
     virtual void ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pStream) override;
 };
 }

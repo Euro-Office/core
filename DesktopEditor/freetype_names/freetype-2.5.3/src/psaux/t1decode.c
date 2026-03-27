@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_DEBUG_H
@@ -38,8 +36,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_t1decode
-
-
   typedef enum  T1_Operator_
   {
     op_none = 0,
@@ -73,8 +69,6 @@
     op_max    /* never remove this one */
 
   } T1_Operator;
-
-
   static
   const FT_Int  t1_args_count[op_max] =
   {
@@ -106,8 +100,6 @@
     2, /* setcurrentpoint */
     2  /* opcode 15 (undocumented and obsolete) */
   };
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -133,8 +125,6 @@
     FT_UInt             n;
     const FT_String*    glyph_name;
     FT_Service_PsCMaps  psnames = decoder->psnames;
-
-
     /* check range of standard char code */
     if ( charcode < 0 || charcode > 255 )
       return -1;
@@ -145,8 +135,6 @@
     for ( n = 0; n < decoder->num_glyphs; n++ )
     {
       FT_String*  name = (FT_String*)decoder->glyph_names[n];
-
-
       if ( name                               &&
            name[0] == glyph_name[0]           &&
            ft_strcmp( name, glyph_name ) == 0 )
@@ -155,8 +143,6 @@
 
     return -1;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -200,8 +186,6 @@
 #ifdef FT_CONFIG_OPTION_INCREMENTAL
     T1_Face      face  = (T1_Face)decoder->builder.face;
 #endif
-
-
     if ( decoder->seac )
     {
       FT_ERROR(( "t1operator_seac: invalid nested seac\n" ));
@@ -259,8 +243,6 @@
       FT_GlyphSlot    glyph  = (FT_GlyphSlot)decoder->builder.glyph;
       FT_GlyphLoader  loader = glyph->internal->loader;
       FT_SubGlyph     subg;
-
-
       /* reallocate subglyph array if necessary */
       error = FT_GlyphLoader_CheckSubGlyphs( loader, 2 );
       if ( error )
@@ -337,8 +319,6 @@
   Exit:
     return error;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -378,8 +358,6 @@
 #ifdef FT_DEBUG_LEVEL_TRACE
     FT_Bool          bol = TRUE;
 #endif
-
-
     /* compute random seed from stack address of parameter */
     seed = (FT_Fixed)( ( (FT_PtrDist)(char*)&seed              ^
                          (FT_PtrDist)(char*)&decoder           ^
@@ -432,8 +410,6 @@
       FT_Long*     top   = decoder->top;
       T1_Operator  op    = op_none;
       FT_Int32     value = 0;
-
-
       FT_ASSERT( known_othersubr_result_cnt == 0   ||
                  unknown_othersubr_result_cnt == 0 );
 
@@ -679,8 +655,6 @@
       {
         FT_Int  subr_no;
         FT_Int  arg_cnt;
-
-
 #ifdef FT_DEBUG_LEVEL_TRACE
         FT_TRACE4(( " callothersubr\n" ));
         bol = TRUE;
@@ -765,8 +739,6 @@
         case 2:                     /* add flex vectors */
           {
             FT_Int  idx;
-
-
             if ( arg_cnt != 0 )
               goto Unexpected_OtherSubr;
 
@@ -815,8 +787,6 @@
             FT_UInt   num_points, nn, mm;
             FT_Long*  delta;
             FT_Long*  values;
-
-
             if ( !blend )
             {
               FT_ERROR(( "t1_decoder_parse_charstrings:"
@@ -853,8 +823,6 @@
             for ( nn = 0; nn < num_points; nn++ )
             {
               FT_Long  tmp = values[0];
-
-
               for ( mm = 1; mm < blend->num_designs; mm++ )
                 tmp += FT_MulFix( *delta++, blend->weight_vector[mm] );
 
@@ -872,8 +840,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
@@ -940,8 +906,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 2 || blend == NULL )
               goto Unexpected_OtherSubr;
 
@@ -961,8 +925,6 @@
           {
             FT_Int    idx;
             PS_Blend  blend = decoder->blend;
-
-
             if ( arg_cnt != 1 || blend == NULL )
               goto Unexpected_OtherSubr;
 
@@ -1007,8 +969,6 @@
 
           {
             FT_Fixed  Rand;
-
-
             Rand = seed;
             if ( Rand >= 0x8000L )
               Rand++;
@@ -1047,8 +1007,6 @@
       else  /* general operator */
       {
         FT_Int  num_args = t1_args_count[op];
-
-
         FT_ASSERT( num_args >= 0 );
 
         if ( top - decoder->stack < num_args )
@@ -1114,8 +1072,6 @@
           if ( decoder->len_buildchar > 0 )
           {
             FT_UInt  i;
-
-
             FT_TRACE4(( "BuildCharArray = [ " ));
 
             for ( i = 0; i < decoder->len_buildchar; ++i )
@@ -1339,8 +1295,6 @@
         case op_callsubr:
           {
             FT_Int  idx;
-
-
             FT_TRACE4(( " callsubr" ));
 
             idx = Fix2Int( top[0] );
@@ -1471,8 +1425,6 @@
           if ( hinter )
           {
             FT_Pos  dx = orig_x;
-
-
             top[0] += dx;
             top[2] += dx;
             top[4] += dx;
@@ -1550,8 +1502,6 @@
   Stack_Underflow:
     return FT_THROW( Stack_Underflow );
   }
-
-
   /* parse a single Type 1 glyph */
   FT_LOCAL_DEF( FT_Error )
   t1_decoder_parse_glyph( T1_Decoder  decoder,
@@ -1559,8 +1509,6 @@
   {
     return decoder->parse_callback( decoder, glyph );
   }
-
-
   /* initialize T1 decoder */
   FT_LOCAL_DEF( FT_Error )
   t1_decoder_init( T1_Decoder           decoder,
@@ -1578,8 +1526,6 @@
     /* retrieve PSNames interface from list of current modules */
     {
       FT_Service_PsCMaps  psnames = 0;
-
-
       FT_FACE_FIND_GLOBAL_SERVICE( face, psnames, POSTSCRIPT_CMAPS );
       if ( !psnames )
       {
@@ -1607,14 +1553,10 @@
 
     return FT_Err_Ok;
   }
-
-
   /* finalize T1 decoder */
   FT_LOCAL_DEF( void )
   t1_decoder_done( T1_Decoder  decoder )
   {
     t1_builder_done( &decoder->builder );
   }
-
-
 /* END */

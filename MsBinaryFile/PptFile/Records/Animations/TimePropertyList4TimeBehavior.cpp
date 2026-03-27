@@ -37,8 +37,6 @@ CRecordTimePropertyList4TimeBehavior::~CRecordTimePropertyList4TimeBehavior()
 {
     CRecordsContainer::Clear();
 }
-
-
 void CRecordTimePropertyList4TimeBehavior::ReadFromStream(SRecordHeader &thisHeader, POLE::Stream *pStream)
 {
     m_oHeader = thisHeader;

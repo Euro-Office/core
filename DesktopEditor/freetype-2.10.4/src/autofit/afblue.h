@@ -17,15 +17,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFBLUE_H_
 #define AFBLUE_H_
-
-
 FT_BEGIN_HEADER
-
-
   /* an auxiliary macro to decode a UTF-8 character -- since we only use */
   /* hard-coded, self-converted data, no error checking is performed     */
 #define GET_UTF8_CHAR( ch, p )                      \
@@ -57,8 +51,6 @@ FT_BEGIN_HEADER
                 ch = ( ch << 6 ) | ( *p++ & 0x3F ); \
             }                                       \
           } while ( 0 )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -68,8 +60,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* At the bottommost level, we define strings for finding blue zones. */
-
-
 #define AF_BLUE_STRING_MAX_LEN  51
 
   /* The AF_Blue_String enumeration values are offsets into the */
@@ -289,17 +279,11 @@ FT_BEGIN_HEADER
 #else
     af_blue_1_2 = af_blue_1_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
-
-
     AF_BLUE_STRING_MAX   /* do not remove */
 
   } AF_Blue_String;
-
-
   FT_LOCAL_ARRAY( char )
   af_blue_strings[];
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -309,8 +293,6 @@ FT_BEGIN_HEADER
   /*************************************************************************/
 
   /* The next level is to group blue strings into style-specific sets. */
-
-
   /* Properties are specific to a writing system.  We assume that a given  */
   /* blue string can't be used in more than a single writing system, which */
   /* is a safe bet.                                                        */
@@ -323,8 +305,6 @@ FT_BEGIN_HEADER
 #define AF_BLUE_PROPERTY_CJK_TOP    ( 1U << 0 )       /* must have value 1 */
 #define AF_BLUE_PROPERTY_CJK_HORIZ  ( 1U << 1 )       /* must have value 2 */
 #define AF_BLUE_PROPERTY_CJK_RIGHT  AF_BLUE_PROPERTY_CJK_TOP
-
-
 #define AF_BLUE_STRINGSET_MAX_LEN  8
 
   /* The AF_Blue_Stringset enumeration values are offsets into the */
@@ -400,30 +380,20 @@ FT_BEGIN_HEADER
 #else
     af_blue_2_2 = af_blue_2_1 + 0,
 #endif /* AF_CONFIG_OPTION_CJK                */
-
-
     AF_BLUE_STRINGSET_MAX   /* do not remove */
 
   } AF_Blue_Stringset;
-
-
   typedef struct  AF_Blue_StringRec_
   {
     AF_Blue_String  string;
     FT_UShort       properties;
 
   } AF_Blue_StringRec;
-
-
   FT_LOCAL_ARRAY( AF_Blue_StringRec )
   af_blue_stringsets[];
 
 /* */
 
 FT_END_HEADER
-
-
 #endif /* AFBLUE_H_ */
-
-
 /* END */

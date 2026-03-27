@@ -106,8 +106,6 @@ typedef struct {
 	uint16 tiff_unused;     /* unused word, should be 0 */
 	uint64 tiff_diroff;     /* byte offset to first directory */
 } TIFFHeaderBig;
-
-
 /*
  * NB: In the comments below,
  *  - items marked with a + are obsoleted by revision 5.0,

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /* definitions of trace levels for FreeType 2 */
 
   /* the first level must always be `trace_any' */

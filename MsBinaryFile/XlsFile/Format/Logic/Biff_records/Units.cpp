@@ -38,13 +38,9 @@ namespace XLS
 Units::Units()
 {
 }
-
-
 Units::~Units()
 {
 }
-
-
 BaseObjectPtr Units::clone()
 {
 	return BaseObjectPtr(new Units(*this));

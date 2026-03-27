@@ -51,8 +51,6 @@ namespace agg
         end_of_markers
     };
 
-
-
     //--------------------------------------------------------renderer_markers
     template<class BaseRenderer> class renderer_markers :
     public renderer_primitives<BaseRenderer>
@@ -127,8 +125,6 @@ namespace agg
             }
         }
 
-
-
         //--------------------------------------------------------------------
         void crossed_circle(int x, int y, int r)
         {
@@ -151,8 +147,6 @@ namespace agg
                 }
             }
         }
-
-
         //------------------------------------------------------------------------
         void semiellipse_left(int x, int y, int r)
         {
@@ -187,8 +181,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void semiellipse_right(int x, int y, int r)
         {
@@ -223,8 +215,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void semiellipse_up(int x, int y, int r)
         {
@@ -259,8 +249,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void semiellipse_down(int x, int y, int r)
         {
@@ -295,8 +283,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void triangle_left(int x, int y, int r)
         {
@@ -330,8 +316,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void triangle_right(int x, int y, int r)
         {
@@ -365,8 +349,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void triangle_up(int x, int y, int r)
         {
@@ -400,8 +382,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void triangle_down(int x, int y, int r)
         {
@@ -435,8 +415,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void four_rays(int x, int y, int r)
         {
@@ -479,8 +457,6 @@ namespace agg
                 }
             }
         }
-
-
         //--------------------------------------------------------------------
         void cross(int x, int y, int r)
         {
@@ -497,8 +473,6 @@ namespace agg
                 }
             }
         }
-        
-        
         //--------------------------------------------------------------------
         void xing(int x, int y, int r)
         {
@@ -520,8 +494,6 @@ namespace agg
                 base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
         }
-        
-        
         //--------------------------------------------------------------------
         void dash(int x, int y, int r)
         {
@@ -531,8 +503,6 @@ namespace agg
                 else  base_type::ren().blend_pixel(x, y, base_type::fill_color(), cover_full);
             }
         }
-        
-        
         //--------------------------------------------------------------------
         void dot(int x, int y, int r)
         {
@@ -574,8 +544,6 @@ namespace agg
                 case marker_pixel:             pixel(x, y, r);             break;
             }
         }
-
-
         //--------------------------------------------------------------------
         template<class T>
         void markers(int n, const T* x, const T* y, T r, marker_e type)

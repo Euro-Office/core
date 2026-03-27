@@ -18,8 +18,6 @@
 #include "OpenTypeTables.h"
 #include "TibetanReordering.h"
 #include "LEGlyphStorage.h"
-
-
 U_NAMESPACE_BEGIN
 
 // Characters that get refered to by name...
@@ -28,8 +26,6 @@ enum
     C_DOTTED_CIRCLE = 0x25CC,
     C_PRE_NUMBER_MARK = 0x0F3F
  };
-
-
 enum
 {
     // simple classes, they are used in the statetable (in this file) to control the length of a syllable
@@ -54,8 +50,6 @@ enum
     _pd = TibetanClassTable::CC_PRE_DIGIT_MARK | TibetanClassTable::CF_DOTTED_CIRCLE | TibetanClassTable::CF_PREDIGIT | TibetanClassTable::CF_POS_BEFORE ,
     _bd = TibetanClassTable::CC_POST_BELOW_DIGIT_M | TibetanClassTable::CF_DOTTED_CIRCLE | TibetanClassTable::CF_POS_AFTER
 };
-
-
 // Character class tables 
 //_xx Non Combining characters
 //_ba Base Consonants
@@ -95,8 +89,6 @@ static const TibetanClassTable::CharClass tibetanCharClasses[] =
     _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, // 0FE0 - 0FEF e
     _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, _xx, // 0FF0 - 0FFF f 
 };                                                                                  
-
-
 //
 // Tibetan Class Tables
 //                   
@@ -106,8 +98,6 @@ static const TibetanClassTable::CharClass tibetanCharClasses[] =
 // Even if the Tibetan range is bigger, most of the characters are not combinable, and therefore treated
 // as _xx
 static const TibetanClassTable tibetanClassTable = {0x0F00, 0x0FFF, tibetanCharClasses};
-
-
 // Below we define how a character in the input string is either in the tibetanCharClasses table
 // (in which case we get its type back), or an unknown object in which case we get _xx (CC_RESERVED) back
 TibetanClassTable::CharClass TibetanClassTable::getCharClass(LEUnicode ch) const
@@ -124,8 +114,6 @@ const TibetanClassTable *TibetanClassTable::getTibetanClassTable()
     return &tibetanClassTable;
 }
 
-
-
 class TibetanReorderingOutput : public UMemory {
 private:
     le_int32 fSyllableCount;
@@ -133,8 +121,6 @@ private:
     LEUnicode *fOutChars;
 
     LEGlyphStorage &fGlyphStorage;
-
-
 public:
     TibetanReorderingOutput(LEUnicode *outChars, LEGlyphStorage &glyphStorage)
         : fSyllableCount(0), fOutIndex(0), fOutChars(outChars), fGlyphStorage(glyphStorage)
@@ -169,8 +155,6 @@ public:
         return fOutIndex;
     }
 };
-
-
 //TODO remove unused flags
 #define ccmpFeatureTag LE_CCMP_FEATURE_TAG
 #define blwfFeatureTag LE_BLWF_FEATURE_TAG
@@ -213,8 +197,6 @@ public:
 #define tagBlwf    (ccmpFeatureMask | blwfFeatureMask | blwsFeatureMask | cligFeatureMask | distFeatureMask | blwmFeatureMask | mkmkFeatureMask)
 #define tagDefault (ccmpFeatureMask | prefFeatureMask | blwfFeatureMask | presFeatureMask | blwsFeatureMask | cligFeatureMask | distFeatureMask | abvmFeatureMask | blwmFeatureMask | mkmkFeatureMask)
 
-
-
 // These are in the order in which the features need to be applied
 // for correct processing
 static const FeatureMap featureMap[] =
@@ -254,8 +236,6 @@ static const le_int32 featureMapCount = LE_ARRAY_SIZE(featureMap);
 //
 static const le_int8 tibetanStateTable[][TibetanClassTable::CC_COUNT] =
 {
-
-     
     //Dzongkha state table
     //xx  ba  sj  tp  ac  cs  ha  bv  av  an  cb  vs  as  bs  di  pd  bd
     { 1,  2,  4,  3,  8,  7,  9, 10, 14, 13, 17, 18, 19, 19, 20, 21, 21,}, //  0 - ground state
@@ -280,19 +260,13 @@ static const le_int8 tibetanStateTable[][TibetanClassTable::CC_COUNT] =
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, // 19 - strss mark
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 21, 21,}, // 20 - digit 
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,}, // 21 - digit mark
-    
-
 };         
-
-
 const FeatureMap *TibetanReordering::getFeatureMap(le_int32 &count)
 {
     count = featureMapCount;
 
     return featureMap;
 }
-
-
 // Given an input string of characters and a location in which to start looking
 // calculate, using the state table, which one is the last character of the syllable
 // that starts in the starting position.
@@ -315,8 +289,6 @@ le_int32 TibetanReordering::findSyllable(const TibetanClassTable *classTable, co
 
     return cursor;
 }
-
-
 // This is the real reordering function as applied to the Tibetan language
 
 le_int32 TibetanReordering::reorder(const LEUnicode *chars, le_int32 charCount, le_int32,
@@ -384,6 +356,4 @@ le_int32 TibetanReordering::reorder(const LEUnicode *chars, le_int32 charCount, 
 
     return output.getOutputIndex();
 }
-
-
 U_NAMESPACE_END

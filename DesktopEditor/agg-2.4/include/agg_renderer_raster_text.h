@@ -83,8 +83,6 @@ namespace agg
         color_type m_color;
     };
 
-
-
     //=============================================renderer_raster_vtext_solid
     template<class BaseRenderer, class GlyphGenerator> 
     class renderer_raster_vtext_solid
@@ -146,12 +144,6 @@ namespace agg
         glyph_gen_type* m_glyph;
         color_type m_color;
     };
-
-
-
-
-
-
     //===================================================renderer_raster_htext
     template<class ScanlineRenderer, class GlyphGenerator> 
     class renderer_raster_htext
@@ -199,16 +191,12 @@ namespace agg
             const_span m_span;
         };
 
-
-
         //--------------------------------------------------------------------
         renderer_raster_htext(ren_type& ren, glyph_gen_type& glyph) :
             m_ren(&ren),
             m_glyph(&glyph)
         {
         }
-
-
         //--------------------------------------------------------------------
         template<class CharT>
         void render_text(double x, double y, const CharT* str, bool flip=false)
@@ -254,10 +242,6 @@ namespace agg
         ren_type* m_ren;
         glyph_gen_type* m_glyph;
     };
-
-
-
-
 }
 
 #endif

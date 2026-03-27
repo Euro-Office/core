@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef PFRSBIT_H_
 #define PFRSBIT_H_
 
@@ -32,6 +30,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* PFRSBIT_H_ */
-
-
 /* END */

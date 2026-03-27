@@ -94,8 +94,6 @@ void jbig2enc_tobuffer(const struct jbig2enc_ctx *__restrict__ ctx,
 // the type of the number. IAID is special and is handled by another function.
 // -----------------------------------------------------------------------------
 void jbig2enc_int(struct jbig2enc_ctx *__restrict__ ctx, int proc, int value);
-
-
 // -----------------------------------------------------------------------------
 // Encode an IAID number. This needs to know how many bits to use.
 // -----------------------------------------------------------------------------
@@ -134,8 +132,6 @@ void jbig2enc_image(struct jbig2enc_ctx *__restrict__ ctx,
 void jbig2enc_bitimage(struct jbig2enc_ctx *__restrict__ ctx,
                        const uint8_t *__restrict__ data, int mx, int my,
                        bool duplicate_line_removal);
-
-
 // -----------------------------------------------------------------------------
 // Encode the refinement of an exemplar to a bitmap.
 //

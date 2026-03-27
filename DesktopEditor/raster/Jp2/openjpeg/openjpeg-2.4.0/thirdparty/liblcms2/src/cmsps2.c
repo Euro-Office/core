@@ -27,8 +27,6 @@
 #include "lcms2_internal.h"
 
 // PostScript ColorRenderingDictionary and ColorSpaceArray
-
-
 #define MAXPSCOLS   60      // Columns on tables
 
 /*
@@ -41,8 +39,6 @@
   of each CRD, CSA the profiles are converted to Lab via a device
   link between  profile -> Lab or Lab -> profile. The PS code necessary to
   convert Lab <-> XYZ is also included.
-
-
 
   Color Space Arrays (CSA)
   ==================================================================================
@@ -73,16 +69,12 @@
     ]
 
    On simpler profiles, the PCS is already XYZ, so no conversion is required.
-
-
    Matrix-shaper based
    -------------------
 
    This is implemented both with /CIEBasedABC or /CIEBasedDEF on dependig
    of profile implementation. Since here there are no interpolation tables, I do
    the conversion directly to XYZ
-
-
 
     [ /CIEBasedABC
             <<
@@ -95,8 +87,6 @@
                 /RenderingIntent (intent)
             >>
     ]
-
-
     CLUT based
     ----------
 
@@ -115,8 +105,6 @@
             /BlackPoint [BP]
             /RenderingIntent (intent)
     ]
-
-
   Color Rendering Dictionaries (CRD)
   ==================================
   These are always implemented as CLUT, and always are using Lab. Since CRD are expected to
@@ -142,8 +130,6 @@
     /RenderingIntent (Perceptual)
   >>
   /Current exch /ColorRendering defineresource pop
-
-
   The following stages are used to convert from XYZ to Lab
   --------------------------------------------------------
 
@@ -158,8 +144,6 @@
     { 0.824900  div dup 0.008856 le {7.787 mul 16 116 div add}{1 3 div exp} ifelse } bind
 
     ]
-
-
   MatrixABC is used to compute f(Y/Yn), f(X/Xn) - f(Y/Yn), f(Y/Yn) - f(Z/Zn)
 
   | 0  1  0|
@@ -191,8 +175,6 @@
                 {dup 6 29 div ge {dup dup mul mul} {4 29 div sub 108 841 div mul} ifelse } bind
                 {dup 6 29 div ge {dup dup mul mul} {4 29 div sub 108 841 div mul} ifelse 0.824900 mul} bind
                 ]
-
-
 */
 
 /*
@@ -201,8 +183,6 @@
  =========================================================================================================
 
   1D interpolation algorithm
-
-
   1D interpolation (float)
   ------------------------
 
@@ -217,8 +197,6 @@
     y1 = LutTable[cell1] ;
 
     y = y0 + (y1 - y0) * rest;
-
-
 
   PostScript code                   Stack
   ================================================
@@ -259,11 +237,7 @@
     65535 div                       % result
 
   } bind
-
-
 */
-
-
 // This struct holds the memory block currently being write
 typedef struct {
     _cmsStageCLutData* Pipeline;
@@ -280,21 +254,15 @@ typedef struct {
     int  FixWhite;    // Force mapping of pure white
 
     cmsColorSpaceSignature  ColorSpace;  // ColorSpace of profile
-
-
 } cmsPsSamplerCargo;
 
 static int _cmsPSActualColumn = 0;
-
-
 // Convert to byte
 static
 cmsUInt8Number Word2Byte(cmsUInt16Number w)
 {
     return (cmsUInt8Number) floor((cmsFloat64Number) w / 257.0 + 0.5);
 }
-
-
 // Convert to byte (using ICC2 notation)
 /*
 static
@@ -324,8 +292,6 @@ void WriteByte(cmsIOHANDLER* m, cmsUInt8Number b)
 }
 
 // ----------------------------------------------------------------- PostScript generation
-
-
 // Removes offending Carriage returns
 static
 char* RemoveCR(const char* txt)
@@ -370,8 +336,6 @@ void EmitHeader(cmsIOHANDLER* m, const char* Title, cmsHPROFILE hProfile)
     _cmsIOPrintf(m, "%%%%BeginResource\n");
 
 }
-
-
 // Emits White & Black point. White point is always D50, Black point is the device
 // Black point adapted to D50.
 
@@ -387,8 +351,6 @@ void EmitWhiteBlackD50(cmsIOHANDLER* m, cmsCIEXYZ* BlackPoint)
                                           cmsD50_XYZ()->Y,
                                           cmsD50_XYZ()->Z);
 }
-
-
 static
 void EmitRangeCheck(cmsIOHANDLER* m)
 {
@@ -437,8 +399,6 @@ void EmitL2Y(cmsIOHANDLER* m)
             "ifelse } bind ");
 }
 */
-
-
 // Lab -> XYZ, see the discussion above
 
 static
@@ -458,8 +418,6 @@ void EmitLab2XYZ(cmsIOHANDLER* m)
     _cmsIOPrintf(m, "{dup 6 29 div ge {dup dup mul mul} {4 29 div sub 108 841 div mul} ifelse 0.824900 mul} bind\n");
     _cmsIOPrintf(m, "]\n");
 }
-
-
 
 // Outputs a table of words. It does use 16 bits
 
@@ -529,8 +487,6 @@ void Emit1Gamma(cmsIOHANDLER* m, cmsToneCurve* Table)
 
     _cmsIOPrintf(m, " } bind ");
 }
-
-
 // Compare gamma table
 
 static
@@ -538,8 +494,6 @@ cmsBool GammaTableEquals(cmsUInt16Number* g1, cmsUInt16Number* g2, int nEntries)
 {
     return memcmp(g1, g2, nEntries* sizeof(cmsUInt16Number)) == 0;
 }
-
-
 // Does write a set of gamma curves
 
 static
@@ -562,13 +516,7 @@ void EmitNGamma(cmsIOHANDLER* m, int n, cmsToneCurve* g[])
 
 }
 
-
-
-
-
 // Following code dumps a LUT onto memory stream
-
-
 // This is the sampler. Intended to work in SAMPLER_INSPECT mode,
 // that is, the callback will be called for each knot with
 //
@@ -586,8 +534,6 @@ int OutputValueSampler(register const cmsUInt16Number In[], register cmsUInt16Nu
 {
     cmsPsSamplerCargo* sc = (cmsPsSamplerCargo*) Cargo;
     cmsUInt32Number i;
-
-
     if (sc -> FixWhite) {
 
         if (In[0] == 0xFFFF) {  // Only in L* = 100, ab = [-8..8]
@@ -605,12 +551,8 @@ int OutputValueSampler(register const cmsUInt16Number In[], register cmsUInt16Nu
                 for (i=0; i < nOutputs; i++)
                         Out[i] = White[i];
             }
-
-
         }
     }
-
-
     // Hadle the parenthesis on rows
 
     if (In[0] != sc ->FirstComponent) {
@@ -628,8 +570,6 @@ int OutputValueSampler(register const cmsUInt16Number In[], register cmsUInt16Nu
             _cmsIOPrintf(sc ->m, sc ->PreMaj);
             sc ->FirstComponent = In[0];
     }
-
-
       if (In[1] != sc ->SecondComponent) {
 
             if (sc ->SecondComponent != -1) {
@@ -647,8 +587,6 @@ int OutputValueSampler(register const cmsUInt16Number In[], register cmsUInt16Nu
 
           cmsUInt16Number wWordOut = Out[i];
           cmsUInt8Number wByteOut;           // Value as byte
-
-
           // We always deal with Lab4
 
           wByteOut = Word2Byte(wWordOut);
@@ -697,8 +635,6 @@ void WriteCLUT(cmsIOHANDLER* m, cmsStage* mpe, const char* PreMaj,
     _cmsIOPrintf(m, "] ");
 
 }
-
-
 // Dumps CIEBasedA Color Space Array
 
 static
@@ -725,8 +661,6 @@ int EmitCIEBasedA(cmsIOHANDLER* m, cmsToneCurve* Curve, cmsCIEXYZ* BlackPoint)
 
     return 1;
 }
-
-
 // Dumps CIEBasedABC Color Space Array
 
 static
@@ -750,8 +684,6 @@ int EmitCIEBasedABC(cmsIOHANDLER* m, cmsFloat64Number* Matrix, cmsToneCurve** Cu
                                            Matrix[i + 3*1],
                                            Matrix[i + 3*2]);
     }
-
-
     _cmsIOPrintf(m, "]\n");
 
     _cmsIOPrintf(m, "/RangeLMN [ 0.0 0.9642 0.0 1.0000 0.0 0.8249 ]\n");
@@ -761,12 +693,8 @@ int EmitCIEBasedABC(cmsIOHANDLER* m, cmsFloat64Number* Matrix, cmsToneCurve** Cu
 
     _cmsIOPrintf(m, ">>\n");
     _cmsIOPrintf(m, "]\n");
-
-
     return 1;
 }
-
-
 static
 int EmitCIEBasedDEF(cmsIOHANDLER* m, cmsPipeline* Pipeline, int Intent, cmsCIEXYZ* BlackPoint)
 {
@@ -852,8 +780,6 @@ static
     return Out;
 }
 
-
-
 // Because PostScript has only 8 bits in /Table, we should use
 // a more perceptually uniform space... I do choose Lab.
 
@@ -873,8 +799,6 @@ int WriteInputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32Nu
 
     InputFormat = cmsFormatterForColorspaceOfProfile(hProfile, 2, FALSE);
     nChannels   = T_CHANNELS(InputFormat);
-
-
     cmsDetectBlackPoint(&BlackPointAdaptedToD50, hProfile, Intent, 0);
 
     // Adjust output to Lab4
@@ -926,8 +850,6 @@ int WriteInputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32Nu
         cmsSignalError(m ->ContextID, cmsERROR_COLORSPACE_CHECK, "Only 3, 4 channels supported for CSA. This profile has %d channels.", nChannels);
         return 0;
     }
-
-
     cmsDeleteTransform(xform);
 
     return 1;
@@ -940,8 +862,6 @@ cmsFloat64Number* GetPtrToMatrix(const cmsStage* mpe)
 
     return Data -> Double;
 }
-
-
 // Does create CSA based on matrix-shaper. Allowed types are gray and RGB based
 
 static
@@ -986,8 +906,6 @@ int WriteInputMatrixShaper(cmsIOHANDLER* m, cmsHPROFILE hProfile, cmsStage* Matr
         return rc;
 }
 
-
-
 // Creates a PostScript color list from a named profile data.
 // This is a HP extension, and it works in Lab instead of XYZ
 
@@ -1013,8 +931,6 @@ int WriteNamedColorCSA(cmsIOHANDLER* m, cmsHPROFILE hNamedColor, int Intent)
     _cmsIOPrintf(m, "(Suffix) [ ( CV) ( CVC) ( C) ]\n");
 
     nColors   = cmsNamedColorCount(NamedColorList);
-
-
     for (i=0; i < nColors; i++) {
 
         cmsUInt16Number In[1];
@@ -1029,16 +945,12 @@ int WriteNamedColorCSA(cmsIOHANDLER* m, cmsHPROFILE hNamedColor, int Intent)
         _cmsIOPrintf(m, "  (%s) [ %.3f %.3f %.3f ]\n", ColorName, Lab.L, Lab.a, Lab.b);
     }
 
-
-
     _cmsIOPrintf(m, ">>\n");
 
     cmsDeleteTransform(xform);
     cmsCloseProfile(hLab);
     return 1;
 }
-
-
 // Does create a Color Space Array on XYZ colorspace for PostScript usage
 static
 cmsUInt32Number GenerateCSA(cmsContext ContextID,
@@ -1050,16 +962,12 @@ cmsUInt32Number GenerateCSA(cmsContext ContextID,
     cmsUInt32Number dwBytesUsed;
     cmsPipeline* lut = NULL;
     cmsStage* Matrix, *Shaper;
-
-
     // Is a named color profile?
     if (cmsGetDeviceClass(hProfile) == cmsSigNamedColorClass) {
 
         if (!WriteNamedColorCSA(mem, hProfile, Intent)) goto Error;
     }
     else {
-
-
         // Any profile class are allowed (including devicelink), but
         // output (PCS) colorspace must be XYZ or Lab
         cmsColorSpaceSignature ColorSpace = cmsGetPCS(hProfile);
@@ -1070,13 +978,9 @@ cmsUInt32Number GenerateCSA(cmsContext ContextID,
                 cmsSignalError(ContextID, cmsERROR_COLORSPACE_CHECK, "Invalid output color space");
                 goto Error;
         }
-
-
         // Read the lut with all necessary conversion stages
         lut = _cmsReadInputLUT(hProfile, Intent);
         if (lut == NULL) goto Error;
-
-
         // Tone curves + matrix can be implemented without any LUT
         if (cmsPipelineCheckAndRetreiveStages(lut, 2, cmsSigCurveSetElemType, cmsSigMatrixElemType, &Shaper, &Matrix)) {
 
@@ -1088,8 +992,6 @@ cmsUInt32Number GenerateCSA(cmsContext ContextID,
            if (!WriteInputLUT(mem, hProfile, Intent, dwFlags)) goto Error;
         }
     }
-
-
     // Done, keep memory usage
     dwBytesUsed = mem ->UsedSpace;
 
@@ -1105,8 +1007,6 @@ Error:
 }
 
 // ------------------------------------------------------ Color Rendering Dictionary (CRD)
-
-
 
 /*
 
@@ -1125,16 +1025,12 @@ Error:
           (WPout - BPout)*X - WPout*(BPin - BPout)
     out = ---------------------------------------
                         WPout - BPin
-
-
   Algorithm discussion
   ====================
 
   TransformPQR(WPin, BPin, WPout, BPout, PQR)
 
   Wpin,etc= { Xws Yws Zws Pws Qws Rws }
-
-
   Algorithm             Stack 0...n
   ===========================================================
                         PQR BPout WPout BPin WPin
@@ -1168,13 +1064,9 @@ Error:
   exch pop
 
 */
-
-
 static
 void EmitPQRStage(cmsIOHANDLER* m, cmsHPROFILE hProfile, int DoBPC, int lIsAbsolute)
 {
-
-
         if (lIsAbsolute) {
 
             // For absolute colorimetric intent, encode back to relative
@@ -1197,14 +1089,10 @@ void EmitPQRStage(cmsIOHANDLER* m, cmsHPROFILE hProfile, int DoBPC, int lIsAbsol
                       White.X, White.Y, White.Z);
             return;
         }
-
-
         _cmsIOPrintf(m,"%% Bradford Cone Space\n"
                  "/MatrixPQR [0.8951 -0.7502 0.0389 0.2664 1.7135 -0.0685 -0.1614 0.0367 1.0296 ] \n");
 
         _cmsIOPrintf(m, "/RangePQR [ -0.5 2 -0.5 2 -0.5 2 ]\n");
-
-
         // No BPC
 
         if (!DoBPC) {
@@ -1240,11 +1128,7 @@ void EmitPQRStage(cmsIOHANDLER* m, cmsHPROFILE hProfile, int DoBPC, int lIsAbsol
                     "exch pop exch pop exch pop exch pop } bind\n]\n");
 
         }
-
-
 }
-
-
 static
 void EmitXYZ2Lab(cmsIOHANDLER* m)
 {
@@ -1256,16 +1140,10 @@ void EmitXYZ2Lab(cmsIOHANDLER* m)
     _cmsIOPrintf(m, "]\n");
     _cmsIOPrintf(m, "/MatrixABC [ 0 1 0 1 -1 1 0 0 -1 ]\n");
     _cmsIOPrintf(m, "/EncodeABC [\n");
-
-
     _cmsIOPrintf(m, "{ 116 mul  16 sub 100 div  } bind\n");
     _cmsIOPrintf(m, "{ 500 mul 128 add 256 div  } bind\n");
     _cmsIOPrintf(m, "{ 200 mul 128 add 256 div  } bind\n");
-
-
     _cmsIOPrintf(m, "]\n");
-
-
 }
 
 // Due to impedance mismatch between XYZ and almost all RGB and CMYK spaces
@@ -1290,8 +1168,6 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
     cmsUInt32Number InFrm = TYPE_Lab_16;
     int RelativeEncodingIntent;
     cmsColorSpaceSignature ColorSpace;
-
-
     hLab = cmsCreateLab4ProfileTHR(m ->ContextID, NULL);
     if (hLab == NULL) return 0;
 
@@ -1305,8 +1181,6 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
     RelativeEncodingIntent = Intent;
     if (RelativeEncodingIntent == INTENT_ABSOLUTE_COLORIMETRIC)
         RelativeEncodingIntent = INTENT_RELATIVE_COLORIMETRIC;
-
-
     // Use V4 Lab always
     Profiles[0] = hLab;
     Profiles[1] = hProfile;
@@ -1326,24 +1200,18 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
     v = (_cmsTRANSFORM*) xform;
     DeviceLink = cmsPipelineDup(v ->Lut);
     if (DeviceLink == NULL) return 0;
-
-
     // We need a CLUT
     dwFlags |= cmsFLAGS_FORCE_CLUT;
     _cmsOptimizePipeline(m->ContextID, &DeviceLink, RelativeEncodingIntent, &InFrm, &OutputFormat, &dwFlags);
 
     _cmsIOPrintf(m, "<<\n");
     _cmsIOPrintf(m, "/ColorRenderingType 1\n");
-
-
     cmsDetectBlackPoint(&BlackPointAdaptedToD50, hProfile, Intent, 0);
 
     // Emit headers, etc.
     EmitWhiteBlackD50(m, &BlackPointAdaptedToD50);
     EmitPQRStage(m, hProfile, lDoBPC, Intent == INTENT_ABSOLUTE_COLORIMETRIC);
     EmitXYZ2Lab(m);
-
-
     // FIXUP: map Lab (100, 0, 0) to perfect white, because the particular encoding for Lab
     // does map a=b=0 not falling into any specific node. Since range a,b goes -128..127,
     // zero is slightly moved towards right, so assure next node (in L=100 slice) is mapped to
@@ -1354,8 +1222,6 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
             lFixWhite = FALSE;
 
     _cmsIOPrintf(m, "/RenderTable ");
-
-
     WriteCLUT(m, cmsPipelineGetPtrToFirstStage(DeviceLink), "<", ">\n", "", "", lFixWhite, ColorSpace);
 
     _cmsIOPrintf(m, " %d {} bind ", nChannels);
@@ -1364,8 +1230,6 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
             _cmsIOPrintf(m, "dup ");
 
     _cmsIOPrintf(m, "]\n");
-
-
     EmitIntent(m, Intent);
 
     _cmsIOPrintf(m, ">>\n");
@@ -1380,8 +1244,6 @@ int WriteOutputLUT(cmsIOHANDLER* m, cmsHPROFILE hProfile, int Intent, cmsUInt32N
 
     return 1;
 }
-
-
 // Builds a ASCII string containing colorant list in 0..1.0 range
 static
 void BuildColorantList(char *Colorant, int nColorant, cmsUInt16Number Out[])
@@ -1403,8 +1265,6 @@ void BuildColorantList(char *Colorant, int nColorant, cmsUInt16Number Out[])
 
     }
 }
-
-
 // Creates a PostScript color list from a named profile data.
 // This is a HP extension.
 
@@ -1417,16 +1277,10 @@ int WriteNamedColorCRD(cmsIOHANDLER* m, cmsHPROFILE hNamedColor, int Intent, cms
     char ColorName[32];
     char Colorant[128];
     cmsNAMEDCOLORLIST* NamedColorList;
-
-
     OutputFormat = cmsFormatterForColorspaceOfProfile(hNamedColor, 2, FALSE);
     nColorant    = T_CHANNELS(OutputFormat);
-
-
     xform = cmsCreateTransform(hNamedColor, TYPE_NAMED_COLOR_INDEX, NULL, OutputFormat, Intent, dwFlags);
     if (xform == NULL) return 0;
-
-
     NamedColorList = cmsGetNamedColorList(xform);
     if (NamedColorList == NULL) return 0;
 
@@ -1463,8 +1317,6 @@ int WriteNamedColorCRD(cmsIOHANDLER* m, cmsHPROFILE hNamedColor, int Intent, cms
     return 1;
 }
 
-
-
 // This one does create a Color Rendering Dictionary.
 // CRD are always LUT-Based, no matter if profile is
 // implemented as matrix-shaper.
@@ -1481,8 +1333,6 @@ cmsUInt32Number  GenerateCRD(cmsContext ContextID,
 
         EmitHeader(mem, "Color Rendering Dictionary (CRD)", hProfile);
     }
-
-
     // Is a named color profile?
     if (cmsGetDeviceClass(hProfile) == cmsSigNamedColorClass) {
 
@@ -1513,10 +1363,6 @@ cmsUInt32Number  GenerateCRD(cmsContext ContextID,
 
     cmsUNUSED_PARAMETER(ContextID);
 }
-
-
-
-
 cmsUInt32Number CMSEXPORT cmsGetPostScriptColorResource(cmsContext ContextID,
                                                                cmsPSResourceType Type,
                                                                cmsHPROFILE hProfile,
@@ -1525,8 +1371,6 @@ cmsUInt32Number CMSEXPORT cmsGetPostScriptColorResource(cmsContext ContextID,
                                                                cmsIOHANDLER* io)
 {
     cmsUInt32Number  rc;
-
-
     switch (Type) {
 
         case cmsPS_RESOURCE_CSA:
@@ -1541,8 +1385,6 @@ cmsUInt32Number CMSEXPORT cmsGetPostScriptColorResource(cmsContext ContextID,
 
     return rc;
 }
-
-
 
 cmsUInt32Number CMSEXPORT cmsGetPostScriptCRD(cmsContext ContextID,
                               cmsHPROFILE hProfile,
@@ -1567,8 +1409,6 @@ cmsUInt32Number CMSEXPORT cmsGetPostScriptCRD(cmsContext ContextID,
 
     return dwBytesUsed;
 }
-
-
 
 // Does create a Color Space Array on XYZ colorspace for PostScript usage
 cmsUInt32Number CMSEXPORT cmsGetPostScriptCSA(cmsContext ContextID,

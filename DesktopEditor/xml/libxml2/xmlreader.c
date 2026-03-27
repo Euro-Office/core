@@ -765,8 +765,6 @@ xmlTextReaderEndElementNs(void *ctx,
 	reader->endElementNs(ctx, localname, prefix, URI);
     }
 }
-
-
 /**
  * xmlTextReaderCharacters:
  * @ctx: the user data (XML parser context)
@@ -1168,8 +1166,6 @@ xmlTextReaderValidateEntity(xmlTextReaderPtr reader) {
     reader->node = oldnode;
 }
 #endif /* LIBXML_REGEXP_ENABLED */
-
-
 /**
  * xmlTextReaderGetSuccessor:
  * @cur:  the current node
@@ -1287,8 +1283,6 @@ xmlTextReaderRead(xmlTextReaderPtr reader) {
     int val, olddepth = 0;
     xmlTextReaderState oldstate = XML_TEXTREADER_START;
     xmlNodePtr oldnode = NULL;
-
-
     if (reader == NULL)
 	return(-1);
     reader->curnode = NULL;
@@ -2440,8 +2434,6 @@ xmlTextReaderGetAttribute(xmlTextReaderPtr reader, const xmlChar *name) {
         xmlFree(prefix);
     return(ret);
 }
-
-
 /**
  * xmlTextReaderGetAttributeNs:
  * @reader:  the xmlTextReaderPtr used
@@ -2942,8 +2934,6 @@ xmlTextReaderConstEncoding(xmlTextReaderPtr reader) {
     else
       return(CONSTSTR(doc->encoding));
 }
-
-
 /************************************************************************
  *									*
  *			Acces API to the current node			*
@@ -3874,8 +3864,6 @@ xmlTextReaderGetParserProp(xmlTextReaderPtr reader, int prop) {
     }
     return(-1);
 }
-
-
 /**
  * xmlTextReaderGetParserLineNumber:
  * @reader: the user data (XML reader context)
@@ -4375,8 +4363,6 @@ xmlTextReaderRelaxNGValidateInternal(xmlTextReaderPtr reader,
 	/* We just want to deactivate the validation, so get out. */
 	return(0);
     }
-
-
     if (rng != NULL) {
 	xmlRelaxNGParserCtxtPtr pctxt;
 	/* Parse the schema and create validation environment. */
@@ -5327,8 +5313,6 @@ xmlTextReaderByteConsumed(xmlTextReaderPtr reader) {
         return(-1);
     return(xmlByteConsumed(reader->ctxt));
 }
-
-
 /**
  * xmlReaderWalker:
  * @doc:  a preparsed document

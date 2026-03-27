@@ -5,8 +5,6 @@
 *   Corporation and others.  All Rights Reserved.
 *
 ******************************************************************************/
-
-
 /*------------------------------------------------------------------------------
  *
  *   UCommonData   An abstract interface for dealing with ICU Common Data Files.
@@ -70,15 +68,11 @@ typedef struct {
     const char       *entryName;
     const DataHeader *pHeader;
 } PointerTOCEntry;
-
-
 typedef struct  {
     uint32_t          count;
     uint32_t          reserved;
     PointerTOCEntry   entry[2];   /* Actual size is from count. */
 }  PointerTOC;
-
-
 /* definition of OffsetTOC struct types moved to ucmndata.h */
 
 /*-----------------------------------------------------------------------------*
@@ -258,14 +252,10 @@ offsetTOCLookupFn(const UDataMemory *pData,
         return pData->pHeader;
     }
 }
-
-
 static uint32_t pointerTOCEntryCount(const UDataMemory *pData) {
     const PointerTOC *toc = (PointerTOC *)pData->toc;
     return (uint32_t)((toc != NULL) ? (toc->count) : 0);
 }
-
-
 static const DataHeader *pointerTOCLookupFn(const UDataMemory *pData,
                    const char *name,
                    int32_t *pLength,
@@ -301,8 +291,6 @@ static const DataHeader *pointerTOCLookupFn(const UDataMemory *pData,
 
 static const commonDataFuncs CmnDFuncs = {offsetTOCLookupFn,  offsetTOCEntryCount};
 static const commonDataFuncs ToCPFuncs = {pointerTOCLookupFn, pointerTOCEntryCount};
-
-
 
 /*----------------------------------------------------------------------*
  *                                                                      *

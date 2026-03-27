@@ -60,7 +60,5 @@ private:
 };
 
 typedef boost::shared_ptr<PtgExtraMem> PtgExtraMemPtr;
-
-
 } // namespace XLS
 

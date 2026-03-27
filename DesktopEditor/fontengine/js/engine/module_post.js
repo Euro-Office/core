@@ -47,8 +47,6 @@ AscFonts.AllocString = function(size)
 {
 	return new CShapeString(size);
 };
-
-
 AscFonts.FT_CreateLibrary = function() {
 	return Module["_ASC_FT_Init"].apply(this, arguments);
 }; 
@@ -625,5 +623,3 @@ Module.onRuntimeInitialized = function () {
 };
 
 })(window, undefined);
-
-

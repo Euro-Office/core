@@ -37,8 +37,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CondFmt12 record in BIFF8
 class CondFmt12: public BiffRecord
 {
@@ -49,8 +47,6 @@ public:
 	~CondFmt12();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

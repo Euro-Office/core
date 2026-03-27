@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of MACROSORTANDFILTER union of records 
 class MACROSORTANDFILTER: public CompositeObject
 {

@@ -15,14 +15,10 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef AFDUMMY_H_
 #define AFDUMMY_H_
 
 #include "aftypes.h"
-
-
 FT_BEGIN_HEADER
 
   /* A dummy writing system used when no hinting should be performed. */
@@ -32,9 +28,5 @@ FT_BEGIN_HEADER
 /* */
 
 FT_END_HEADER
-
-
 #endif /* AFDUMMY_H_ */
-
-
 /* END */

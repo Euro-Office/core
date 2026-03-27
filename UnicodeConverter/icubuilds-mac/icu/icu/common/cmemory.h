@@ -268,8 +268,6 @@ inline T *LocalMemory<T>::allocateInsteadAndReset(int32_t newCapacity) {
         return NULL;
     }
 }
-
-
 template<typename T>
 inline T *LocalMemory<T>::allocateInsteadAndCopy(int32_t newCapacity, int32_t length) {
     if(newCapacity>0) {

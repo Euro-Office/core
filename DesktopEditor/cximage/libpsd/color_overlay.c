@@ -31,8 +31,6 @@
 #include "psd_color.h"
 #include "psd_rect.h"
 #include "psd_bitmap.h"
-
-
 psd_static void psd_set_layer_color_overlay_default(psd_layer_effects_color_overlay * color_overlay)
 {
 	color_overlay->blend_mode = psd_blend_mode_normal;

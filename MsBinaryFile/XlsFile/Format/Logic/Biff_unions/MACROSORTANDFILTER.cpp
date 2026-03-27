@@ -38,24 +38,16 @@
 
 namespace XLS
 {
-
-
 MACROSORTANDFILTER::MACROSORTANDFILTER()
 {
 }
-
-
 MACROSORTANDFILTER::~MACROSORTANDFILTER()
 {
 }
-
-
 BaseObjectPtr MACROSORTANDFILTER::clone()
 {
 	return BaseObjectPtr(new MACROSORTANDFILTER(*this));
 }
-
-
 // MACROSORTANDFILTER = [Sort] [SORTDATA12] [DropDownObjIds] [AUTOFILTER]
 const bool MACROSORTANDFILTER::loadContent(BinProcessor& proc)
 {

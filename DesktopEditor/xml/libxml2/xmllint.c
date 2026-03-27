@@ -684,8 +684,6 @@ xmlHTMLWarning(void *ctx, const char *msg, ...)
     if ((input != NULL) && (input->filename == NULL) && (ctxt->inputNr > 1)) {
         input = ctxt->inputTab[ctxt->inputNr - 2];
     }
-
-
     xmlHTMLPrintFileInfo(input);
 
     xmlGenericError(xmlGenericErrorContext, "<b>warning</b>: ");
@@ -1010,8 +1008,6 @@ resolveEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *publicId, const xm
     if (noout)
 	return(NULL);
     /* xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx; */
-
-
     fprintf(stdout, "SAX.resolveEntity(");
     if (publicId != NULL)
 	fprintf(stdout, "%s", (char *)publicId);
@@ -1061,8 +1057,6 @@ getParameterEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *name)
     fprintf(stdout, "SAX.getParameterEntity(%s)\n", name);
     return(NULL);
 }
-
-
 /**
  * entityDeclDebug:
  * @ctxt:  An XML parser context
@@ -1745,8 +1739,6 @@ static void processNode(xmlTextReaderPtr reader) {
 	    name = BAD_CAST "--";
 
 	value = xmlTextReaderConstValue(reader);
-
-
 	printf("%d %d %s %d %d",
 		xmlTextReaderDepth(reader),
 		type,
@@ -1872,8 +1864,6 @@ static void streamFile(char *filename) {
 	}
     }
 #endif
-
-
     if (reader != NULL) {
 #ifdef LIBXML_VALID_ENABLED
 	if (valid)
@@ -2180,8 +2170,6 @@ static void parseAndPrintFile(char *filename, xmlParserCtxtPtr rectxt) {
 
     if ((timing) && (!repeat))
 	startTimer();
-
-
 #ifdef LIBXML_TREE_ENABLED
     if (filename == NULL) {
 	if (generate) {
@@ -3531,8 +3519,6 @@ main(int argc, char **argv) {
     if(indent != NULL) {
 	xmlTreeIndentString = indent;
     }
-
-
     defaultEntityLoader = xmlGetExternalEntityLoader();
     xmlSetExternalEntityLoader(xmllintExternalEntityLoader);
 

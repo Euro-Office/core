@@ -29,8 +29,6 @@ int main()
     //     std::wcout << L"Bad" << std::endl;
 
     // return 0;
-
-
     bool bBatchMode = false;
     bool bMhtMode = false;
     if(bBatchMode)

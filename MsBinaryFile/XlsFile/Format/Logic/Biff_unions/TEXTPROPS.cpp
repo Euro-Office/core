@@ -37,24 +37,16 @@
 
 namespace XLS
 {
-
-
 TEXTPROPS::TEXTPROPS()
 {
 }
-
-
 TEXTPROPS::~TEXTPROPS()
 {
 }
-
-
 BaseObjectPtr TEXTPROPS::clone()
 {
 	return BaseObjectPtr(new TEXTPROPS(*this));
 }
-
-
 // TEXTPROPS = (RichTextStream / TextPropsStream) *ContinueFrt12
 const bool TEXTPROPS::loadContent(BinProcessor& proc)
 {

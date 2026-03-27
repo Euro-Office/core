@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of DxGCol record in BIFF8
 class DxGCol: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~DxGCol();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
     void writeFields(CFRecord& record);
 

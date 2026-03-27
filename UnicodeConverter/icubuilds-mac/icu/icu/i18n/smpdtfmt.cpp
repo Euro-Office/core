@@ -141,8 +141,6 @@ static const UDateFormatField kTimeFields[] = {
     UDAT_TIMEZONE_RFC_FIELD,
     UDAT_TIMEZONE_LOCALIZED_GMT_OFFSET_FIELD };
 static const int8_t kTimeFieldsCount = 10;
-
-
 // This is a pattern-of-last-resort used when we can't load a usable pattern out
 // of a resource.
 static const UChar gDefaultPattern[] =
@@ -230,8 +228,6 @@ SimpleDateFormat::NSOverride::~NSOverride() {
         snf->removeRef();
     }
 }
-
-
 void SimpleDateFormat::NSOverride::free() {
     NSOverride *cur = this;
     while (cur) {
@@ -1805,8 +1801,6 @@ SimpleDateFormat::subFormat(UnicodeString &appendTo,
         else
             zeroPaddingNumber(currentNumberFormat,appendTo, (value/3) + 1, count, maxIntCount);
         break;
-
-
     // all of the other pattern symbols can be formatted as simple numbers with
     // appropriate zero padding
     default:
@@ -1973,8 +1967,6 @@ SimpleDateFormat::parse(const UnicodeString& text, Calendar& cal, ParsePosition&
         return;
     }
     int32_t start = pos;
-
-
     UBool ambiguousYear[] = { FALSE };
     int32_t saveHebrewMonth = -1;
     int32_t count = 0;
@@ -3552,8 +3544,6 @@ SimpleDateFormat::setTimeZoneFormat(const TimeZoneFormat& newTimeZoneFormat)
 }
 
 //----------------------------------------------------------------------
-
-
 void SimpleDateFormat::adoptCalendar(Calendar* calendarToAdopt)
 {
   UErrorCode status = U_ZERO_ERROR;
@@ -3569,11 +3559,7 @@ void SimpleDateFormat::adoptCalendar(Calendar* calendarToAdopt)
   fSymbols = newSymbols;
   initializeDefaultCentury();  // we need a new century (possibly)
 }
-
-
 //----------------------------------------------------------------------
-
-
 // override the DateFormat implementation in order to
 // lazily initialize fCapitalizationBrkIter
 void
@@ -3594,17 +3580,11 @@ SimpleDateFormat::setContext(UDisplayContext value, UErrorCode& status)
     }
 #endif
 }
-
-
 //----------------------------------------------------------------------
-
-
 UBool
 SimpleDateFormat::isFieldUnitIgnored(UCalendarDateFields field) const {
     return isFieldUnitIgnored(fPattern, field);
 }
-
-
 UBool
 SimpleDateFormat::isFieldUnitIgnored(const UnicodeString& pattern,
                                      UCalendarDateFields field) {

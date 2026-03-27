@@ -12,15 +12,12 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   zlibmem.c
  *
  *      zlib operations in memory, using bbuffer
  *          l_uint8   *zlibCompress()
  *          l_uint8   *zlibUncompress()
- *
  *
  *    This provides an example use of the byte buffer utility
  *    (see bbuffer.c for details of how the bbuffer works internally).
@@ -50,8 +47,6 @@
 
 static const l_int32  L_BUF_SIZE = 32768;
 static const l_int32  ZLIB_COMPRESSION_LEVEL = 6;
-
-
 /*!
  *  zlibCompress()
  *
@@ -140,8 +135,6 @@ z_stream  z;
     FREE(bufferout);
     return dataout;
 }
-        
-
 /*!
  *  zlibUncompress()
  *

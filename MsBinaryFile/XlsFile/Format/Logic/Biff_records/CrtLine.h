@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CrtLine record in BIFF8
 class CrtLine: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CrtLine();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 	void writeFields(CFRecord& record);
 

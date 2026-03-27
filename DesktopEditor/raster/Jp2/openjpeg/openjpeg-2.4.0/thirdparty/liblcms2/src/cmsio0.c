@@ -129,8 +129,6 @@ Error:
     return NULL;
 
 }
-
-
 // Memory-based stream --------------------------------------------------------------
 
 // Those functions implements an iohandler which takes a block of memory as storage medium.
@@ -189,8 +187,6 @@ cmsUInt32Number MemoryTell(struct _cms_io_handler* iohandler)
     if (ResData == NULL) return 0;
     return ResData -> Pointer;
 }
-
-
 // Writes data to memory, also keeps used space for further reference.
 static
 cmsBool MemoryWrite(struct _cms_io_handler* iohandler, cmsUInt32Number size, const void *Ptr)
@@ -214,8 +210,6 @@ cmsBool MemoryWrite(struct _cms_io_handler* iohandler, cmsUInt32Number size, con
 
     return TRUE;
 }
-
-
 static
 cmsBool  MemoryClose(struct _cms_io_handler* iohandler)
 {
@@ -264,8 +258,6 @@ cmsIOHANDLER* CMSEXPORT cmsOpenIOhandlerFromMem(cmsContext ContextID, void *Buff
             cmsSignalError(ContextID, cmsERROR_READ, "Couldn't allocate %ld bytes for profile", size);
             return NULL;
         }
-
-
         memmove(fm->Block, Buffer, size);
         fm ->FreeBlockOnClose = TRUE;
         fm ->Size    = size;
@@ -461,8 +453,6 @@ cmsIOHANDLER* CMSEXPORT cmsOpenIOhandlerFromStream(cmsContext ContextID, FILE* S
     return iohandler;
 }
 
-
-
 // Close an open IO handler
 cmsBool CMSEXPORT cmsCloseIOhandler(cmsIOHANDLER* io)
 {
@@ -511,8 +501,6 @@ cmsContext CMSEXPORT cmsGetProfileContextID(cmsHPROFILE hProfile)
     if (Icc == NULL) return NULL;
     return Icc -> ContextID;
 }
-
-
 // Return the number of tags
 cmsInt32Number CMSEXPORT cmsGetTagCount(cmsHPROFILE hProfile)
 {
@@ -532,8 +520,6 @@ cmsTagSignature CMSEXPORT cmsGetTagSignature(cmsHPROFILE hProfile, cmsUInt32Numb
 
     return Icc ->TagNames[n];
 }
-
-
 static
 int SearchOneTag(_cmsICCPROFILE* Profile, cmsTagSignature sig)
 {
@@ -585,8 +571,6 @@ void _cmsDeleteTagByPos(_cmsICCPROFILE* Icc, int i)
 {
     _cmsAssert(Icc != NULL);
     _cmsAssert(i >= 0);
-
-   
     if (Icc -> TagPtrs[i] != NULL) {
 
         // Free previous version
@@ -608,8 +592,6 @@ void _cmsDeleteTagByPos(_cmsICCPROFILE* Icc, int i)
 
     } 
 }
-
-
 // Creates a new tag entry
 static
 cmsBool _cmsNewTag(_cmsICCPROFILE* Icc, cmsTagSignature sig, int* NewPos)
@@ -639,16 +621,12 @@ cmsBool _cmsNewTag(_cmsICCPROFILE* Icc, cmsTagSignature sig, int* NewPos)
 
     return TRUE;
 }
-
-
 // Check existence
 cmsBool CMSEXPORT cmsIsTag(cmsHPROFILE hProfile, cmsTagSignature sig)
 {
        _cmsICCPROFILE*  Icc = (_cmsICCPROFILE*) (void*) hProfile;
        return _cmsSearchTag(Icc, sig, FALSE) >= 0;
 }
-
-
 
 // Enforces that the profile version is per. spec.
 // Operates on the big endian bytes from the profile.
@@ -684,8 +662,6 @@ cmsBool _cmsReadHeader(_cmsICCPROFILE* Icc)
     cmsUInt32Number HeaderSize;
     cmsIOHANDLER* io = Icc ->IOhandler;
     cmsUInt32Number TagCount;
-
-
     // Read the header
     if (io -> Read(io, &Header, sizeof(cmsICCHeader), 1) != 1) {
         return FALSE;
@@ -717,15 +693,11 @@ cmsBool _cmsReadHeader(_cmsICCPROFILE* Icc)
     // Make sure HeaderSize is lower than profile size
     if (HeaderSize >= Icc ->IOhandler ->ReportedSize)
             HeaderSize = Icc ->IOhandler ->ReportedSize;
-
-
     // Get creation date/time
     _cmsDecodeDateTimeNumber(&Header.date, &Icc ->Created);
 
     // The profile ID are 32 raw bytes
     memmove(Icc ->ProfileID.ID32, Header.profileID.ID32, 16);
-
-
     // Read tag directory
     if (!_cmsReadUInt32Number(io, &TagCount)) return FALSE;
     if (TagCount > MAX_TABLE_TAG) {
@@ -733,8 +705,6 @@ cmsBool _cmsReadHeader(_cmsICCPROFILE* Icc)
         cmsSignalError(Icc ->ContextID, cmsERROR_RANGE, "Too many tags (%d)", TagCount);
         return FALSE;
     }
-
-
     // Read tag directory
     Icc -> TagCount = 0;
     for (i=0; i < TagCount; i++) {
@@ -847,8 +817,6 @@ cmsBool _cmsWriteHeader(_cmsICCPROFILE* Icc, cmsUInt32Number UsedSpace)
 }
 
 // ----------------------------------------------------------------------- Set/Get several struct members
-
-
 cmsUInt32Number CMSEXPORT cmsGetHeaderRenderingIntent(cmsHPROFILE hProfile)
 {
     _cmsICCPROFILE*  Icc = (_cmsICCPROFILE*) hProfile;
@@ -1020,8 +988,6 @@ cmsFloat64Number CMSEXPORT cmsGetProfileVersion(cmsHPROFILE hProfile)
     return BaseToBase(n, 16, 10) / 100.0;
 }
 // --------------------------------------------------------------------------------------------------------------
-
-
 // Create profile from IOhandler
 cmsHPROFILE CMSEXPORT cmsOpenProfileFromIOhandlerTHR(cmsContext ContextID, cmsIOHANDLER* io)
 {
@@ -1065,8 +1031,6 @@ Error:
     cmsCloseProfile(hEmpty);
     return NULL;
 }
-
-
 // Create profile from disk file
 cmsHPROFILE CMSEXPORT cmsOpenProfileFromFileTHR(cmsContext ContextID, const char *lpFileName, const char *sAccess)
 {
@@ -1094,14 +1058,10 @@ Error:
     cmsCloseProfile(hEmpty);
     return NULL;
 }
-
-
 cmsHPROFILE CMSEXPORT cmsOpenProfileFromFile(const char *ICCProfile, const char *sAccess)
 {
     return cmsOpenProfileFromFileTHR(NULL, ICCProfile, sAccess);
 }
-
-
 cmsHPROFILE  CMSEXPORT cmsOpenProfileFromStreamTHR(cmsContext ContextID, FILE* ICCProfile, const char *sAccess)
 {
     _cmsICCPROFILE* NewIcc;
@@ -1133,8 +1093,6 @@ cmsHPROFILE  CMSEXPORT cmsOpenProfileFromStream(FILE* ICCProfile, const char *sA
 {
     return cmsOpenProfileFromStreamTHR(NULL, ICCProfile, sAccess);
 }
-
-
 // Open from memory block
 cmsHPROFILE CMSEXPORT cmsOpenProfileFromMemTHR(cmsContext ContextID, const void* MemPtr, cmsUInt32Number dwSize)
 {
@@ -1164,8 +1122,6 @@ cmsHPROFILE CMSEXPORT cmsOpenProfileFromMem(const void* MemPtr, cmsUInt32Number 
 {
     return cmsOpenProfileFromMemTHR(NULL, MemPtr, dwSize);
 }
-
-
 
 // Dump tag contents. If the profile is being modified, untouched tags are copied from FileOrig
 static
@@ -1213,8 +1169,6 @@ cmsBool SaveTags(_cmsICCPROFILE* Icc, _cmsICCPROFILE* FileOrig)
                 _cmsFree(Icc ->ContextID, Mem);
 
                 Icc -> TagSizes[i] = (io ->UsedSpace - Begin);
-
-
                 // Align to 32 bit boundary.
                 if (! _cmsWriteAlignment(io))
                     return FALSE;
@@ -1222,8 +1176,6 @@ cmsBool SaveTags(_cmsICCPROFILE* Icc, _cmsICCPROFILE* FileOrig)
 
             continue;
         }
-
-
         // Should this tag be saved as RAW? If so, tagsizes should be specified in advance (no further cooking is done)
         if (Icc ->TagSaveAsRaw[i]) {
 
@@ -1267,20 +1219,14 @@ cmsBool SaveTags(_cmsICCPROFILE* Icc, _cmsICCPROFILE* FileOrig)
                 return FALSE;
             }
         }
-
-
         Icc -> TagSizes[i] = (io ->UsedSpace - Begin);
 
         // Align to 32 bit boundary.
         if (! _cmsWriteAlignment(io))
             return FALSE;
     }
-
-
     return TRUE;
 }
-
-
 // Fill the offset and size fields for all linked tags
 static
 cmsBool SetLinks( _cmsICCPROFILE* Icc)
@@ -1352,8 +1298,6 @@ cmsUInt32Number CMSEXPORT cmsSaveProfileToIOhandler(cmsHPROFILE hProfile, cmsIOH
     _cmsUnlockMutex(Icc->ContextID, Icc->UsrMutex);
 
     return UsedSpace;
-
-
 Error:
     cmsCloseIOhandler(PrevIO);
     memmove(Icc, &Keep, sizeof(_cmsICCPROFILE));
@@ -1361,8 +1305,6 @@ Error:
 
     return 0;
 }
-
-
 // Low-level save to disk.
 cmsBool  CMSEXPORT cmsSaveProfileToFile(cmsHPROFILE hProfile, const char* FileName)
 {
@@ -1395,8 +1337,6 @@ cmsBool CMSEXPORT cmsSaveProfileToStream(cmsHPROFILE hProfile, FILE* Stream)
 
     return rc;
 }
-
-
 // Same as anterior, but for memory blocks. In this case, a NULL as MemPtr means calculate needed space only
 cmsBool CMSEXPORT cmsSaveProfileToMem(cmsHPROFILE hProfile, void *MemPtr, cmsUInt32Number* BytesNeeded)
 {
@@ -1422,8 +1362,6 @@ cmsBool CMSEXPORT cmsSaveProfileToMem(cmsHPROFILE hProfile, void *MemPtr, cmsUIn
 
     return rc;
 }
-
-
 
 // Closes a profile freeing any involved resources
 cmsBool  CMSEXPORT cmsCloseProfile(cmsHPROFILE hProfile)
@@ -1469,11 +1407,7 @@ cmsBool  CMSEXPORT cmsCloseProfile(cmsHPROFILE hProfile)
 
     return rc;
 }
-
-
 // -------------------------------------------------------------------------------------------------------------------
-
-
 // Returns TRUE if a given tag is supported by a plug-in
 static
 cmsBool IsTypeSupported(cmsTagDescriptor* TagDescriptor, cmsTagTypeSignature Type)
@@ -1490,8 +1424,6 @@ cmsBool IsTypeSupported(cmsTagDescriptor* TagDescriptor, cmsTagTypeSignature Typ
 
     return FALSE;
 }
-
-
 // That's the main read function
 void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
 {
@@ -1509,8 +1441,6 @@ void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
 
     n = _cmsSearchTag(Icc, sig, TRUE);
     if (n < 0) goto Error;               // Not found, return NULL
-
-
     // If the element is already in memory, return the pointer
     if (Icc -> TagPtrs[n]) {
 
@@ -1553,8 +1483,6 @@ void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
     TypeHandler = _cmsGetTagTypeHandler(Icc ->ContextID, BaseType);
     if (TypeHandler == NULL) goto Error;
     LocalTypeHandler = *TypeHandler;
-
-
     // Read the tag
     Icc -> TagTypeHandlers[n] = TypeHandler;
 
@@ -1583,20 +1511,14 @@ void* CMSEXPORT cmsReadTag(cmsHPROFILE hProfile, cmsTagSignature sig)
         cmsSignalError(Icc ->ContextID, cmsERROR_CORRUPTION_DETECTED, "'%s' Inconsistent number of items: expected %d, got %d",
             String, TagDescriptor ->ElemCount, ElemCount);
     }
-
-
     // Return the data
     _cmsUnlockMutex(Icc->ContextID, Icc ->UsrMutex);
     return Icc -> TagPtrs[n];
-
-
     // Return error and unlock tha data
 Error:
     _cmsUnlockMutex(Icc->ContextID, Icc ->UsrMutex);
     return NULL;
 }
-
-
 // Get true type of data
 cmsTagTypeSignature _cmsGetTagTrueType(cmsHPROFILE hProfile, cmsTagSignature sig)
 {
@@ -1612,8 +1534,6 @@ cmsTagTypeSignature _cmsGetTagTrueType(cmsHPROFILE hProfile, cmsTagSignature sig
     TypeHandler =  Icc -> TagTypeHandlers[n];
     return TypeHandler ->Signature;
 }
-
-
 // Write a single tag. This just keeps track of the tak into a list of "to be written". If the tag is already
 // in that list, the previous version is deleted.
 cmsBool CMSEXPORT cmsWriteTag(cmsHPROFILE hProfile, cmsTagSignature sig, const void* data)
@@ -1660,8 +1580,6 @@ cmsBool CMSEXPORT cmsWriteTag(cmsHPROFILE hProfile, cmsTagSignature sig, const v
          cmsSignalError(Icc ->ContextID, cmsERROR_UNKNOWN_EXTENSION, "Unsupported tag '%x'", sig);
         goto Error;
     }
-
-
     // Now we need to know which type to use. It depends on the version.
     Version = cmsGetProfileVersion(hProfile);
 
@@ -1699,8 +1617,6 @@ cmsBool CMSEXPORT cmsWriteTag(cmsHPROFILE hProfile, cmsTagSignature sig, const v
         cmsSignalError(Icc ->ContextID, cmsERROR_UNKNOWN_EXTENSION, "Unsupported type '%s' for tag '%s'", TypeString, SigString);
         goto Error;           // Should never happen
     }
-
-
     // Fill fields on icc structure
     Icc ->TagTypeHandlers[i]  = TypeHandler;
     Icc ->TagNames[i]         = sig;
@@ -1912,8 +1828,6 @@ cmsBool CMSEXPORT cmsLinkTag(cmsHPROFILE hProfile, cmsTagSignature sig, cmsTagSi
     _cmsUnlockMutex(Icc->ContextID, Icc ->UsrMutex);
     return TRUE;
 }
-
-
 // Returns the tag linked to sig, in the case two tags are sharing same resource
 cmsTagSignature  CMSEXPORT cmsTagLinkedTo(cmsHPROFILE hProfile, cmsTagSignature sig)
 {

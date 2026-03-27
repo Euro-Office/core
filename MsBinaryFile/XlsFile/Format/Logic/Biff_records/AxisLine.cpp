@@ -38,13 +38,9 @@ namespace XLS
 AxisLine::AxisLine()
 {
 }
-
-
 AxisLine::~AxisLine()
 {
 }
-
-
 BaseObjectPtr AxisLine::clone()
 {
 	return BaseObjectPtr(new AxisLine(*this));

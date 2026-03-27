@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTMM_H__
 #define __FTMM_H__
-
-
 #include <ft2build.h>
 #include FT_TYPE1_TABLES_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Section>                                                             */
@@ -50,8 +42,6 @@ FT_BEGIN_HEADER
   /*    consistent interface makes sense.                                  */
   /*                                                                       */
   /*************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -77,8 +67,6 @@ FT_BEGIN_HEADER
     FT_Long     maximum;
 
   } FT_MM_Axis;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -107,8 +95,6 @@ FT_BEGIN_HEADER
     FT_MM_Axis  axis[T1_MAX_MM_AXIS];
 
   } FT_Multi_Master;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -149,8 +135,6 @@ FT_BEGIN_HEADER
     FT_UInt     strid;
 
   } FT_Var_Axis;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -173,8 +157,6 @@ FT_BEGIN_HEADER
     FT_UInt    strid;
 
   } FT_Var_Named_Style;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -216,11 +198,7 @@ FT_BEGIN_HEADER
     FT_Var_Named_Style*  namedstyle;
 
   } FT_MM_Var;
-
-
   /* */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -243,8 +221,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_Multi_Master( FT_Face           face,
                        FT_Multi_Master  *amaster );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -266,8 +242,6 @@ FT_BEGIN_HEADER
   FT_EXPORT( FT_Error )
   FT_Get_MM_Var( FT_Face      face,
                  FT_MM_Var*  *amaster );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -295,8 +269,6 @@ FT_BEGIN_HEADER
   FT_Set_MM_Design_Coordinates( FT_Face   face,
                                 FT_UInt   num_coords,
                                 FT_Long*  coords );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -322,8 +294,6 @@ FT_BEGIN_HEADER
   FT_Set_Var_Design_Coordinates( FT_Face    face,
                                  FT_UInt    num_coords,
                                  FT_Fixed*  coords );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -350,8 +320,6 @@ FT_BEGIN_HEADER
   FT_Set_MM_Blend_Coordinates( FT_Face    face,
                                FT_UInt    num_coords,
                                FT_Fixed*  coords );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -364,14 +332,8 @@ FT_BEGIN_HEADER
   FT_Set_Var_Blend_Coordinates( FT_Face    face,
                                 FT_UInt    num_coords,
                                 FT_Fixed*  coords );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* __FTMM_H__ */
-
-
 /* END */

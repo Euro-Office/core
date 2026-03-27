@@ -14,20 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __OTVCOMMN_H__
 #define __OTVCOMMN_H__
-
-
 #include <ft2build.h>
 #include "otvalid.h"
 #include FT_INTERNAL_DEBUG_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -64,8 +56,6 @@ FT_BEGIN_HEADER
 #endif
 
   } OTV_ValidatorRec;
-
-
 #undef  FT_INVALID_
 #define FT_INVALID_( _prefix, _error )                         \
           ft_validator_error( valid->root, _prefix ## _error )
@@ -107,8 +97,6 @@ FT_BEGIN_HEADER
               }                                                     \
             }                                                       \
           FT_END_STMNT
-
-
 #define  OTV_NAME_(x)  #x
 #define  OTV_NAME(x)   OTV_NAME_(x)
 
@@ -200,11 +188,7 @@ FT_BEGIN_HEADER
 #define OTV_TRACE( s )          do { } while ( 0 )
 
 #endif  /* !FT_DEBUG_LEVEL_TRACE */
-
-
 #define OTV_RUN  valid->func[0]
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -229,8 +213,6 @@ FT_BEGIN_HEADER
   /* return number of covered glyphs */
   FT_LOCAL( FT_UInt )
   otv_Coverage_get_count( FT_Bytes  table );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -242,8 +224,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_ClassDef_validate( FT_Bytes       table,
                          OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -255,8 +235,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_Device_validate( FT_Bytes       table,
                        OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -272,8 +250,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_LookupList_validate( FT_Bytes       table,
                            OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -291,8 +267,6 @@ FT_BEGIN_HEADER
   otv_FeatureList_validate( FT_Bytes       table,
                             FT_Bytes       lookups,
                             OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -304,8 +278,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_LangSys_validate( FT_Bytes       table,
                         OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -323,8 +295,6 @@ FT_BEGIN_HEADER
   otv_ScriptList_validate( FT_Bytes       table,
                            FT_Bytes       features,
                            OTV_Validator  valid );
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*****                                                               *****/
@@ -419,8 +389,6 @@ FT_BEGIN_HEADER
   FT_LOCAL( void )
   otv_u_x_Ox_y_Oy_z_Oz_p_sp( FT_Bytes       table,
                              OTV_Validator  valid );
-
-
   FT_LOCAL( FT_UInt )
   otv_GSUBGPOS_get_Lookup_count( FT_Bytes  table );
 
@@ -432,6 +400,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __OTVCOMMN_H__ */
-
-
 /* END */

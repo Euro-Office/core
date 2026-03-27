@@ -76,8 +76,6 @@ U_NAMESPACE_BEGIN
 #define basicShapingFormsMask ( loclFeatureMask | nuktFeatureMask | akhnFeatureMask | rkrfFeatureMask | blwfFeatureMask | halfFeatureMask | vatuFeatureMask | cjctFeatureMask )
 #define positioningFormsMask ( kernFeatureMask | distFeatureMask | abvmFeatureMask | blwmFeatureMask )
 #define presentationFormsMask ( presFeatureMask | abvsFeatureMask | blwsFeatureMask | pstsFeatureMask | halnFeatureMask | caltFeatureMask )
-
-
 #define C_MALAYALAM_VOWEL_SIGN_U 0x0D41
 #define	C_DOTTED_CIRCLE 0x25CC
 #define NO_GLYPH 0xFFFF
@@ -505,8 +503,6 @@ public:
     }
 };
 
-
-
 // TODO: Find better names for these!
 #define tagArray4 (loclFeatureMask | nuktFeatureMask | akhnFeatureMask | vatuFeatureMask | presFeatureMask | blwsFeatureMask | abvsFeatureMask | pstsFeatureMask | halnFeatureMask | blwmFeatureMask | abvmFeatureMask | distFeatureMask)
 #define tagArray3 (pstfFeatureMask | tagArray4)
@@ -578,8 +574,6 @@ static const le_int8 stateTable[][CC_COUNT] =
     {-1, -1,  1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  7, -1,  7}, // 12 - consonant ZWJ (TODO: Take everything else that can be after a consonant?)
     {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  7, -1}  // 13 - consonant al-lakuna ZWJ consonant
 };
-
-
 const FeatureMap *IndicReordering::getFeatureMap(le_int32 &count)
 {
     count = featureCount;
@@ -769,8 +763,6 @@ le_int32 IndicReordering::reorder(const LEUnicode *chars, le_int32 charCount, le
             while (lastConsonant > baseLimit && !classTable->isConsonant(chars[lastConsonant])) {
                 lastConsonant -= 1;
             }
-
-            
             IndicClassTable::CharClass charClass = CC_RESERVED;
             IndicClassTable::CharClass nextClass = CC_RESERVED;
             le_int32 baseConsonant = lastConsonant;
@@ -1068,8 +1060,6 @@ void IndicReordering::finalReordering(LEGlyphStorage &glyphStorage, le_int32 cou
         }
     }
 }
-
-
 le_int32 IndicReordering::v2process(const LEUnicode *chars, le_int32 charCount, le_int32 scriptCode,
                                   LEUnicode *outChars, LEGlyphStorage &glyphStorage)
 {
@@ -1197,15 +1187,9 @@ le_int32 IndicReordering::v2process(const LEUnicode *chars, le_int32 charCount, 
 
         beginSyllable = nextSyllable;   
 	}
-
-
     return output.getOutputIndex();
 }
-
-
 void IndicReordering::getDynamicProperties( DynamicProperties *, const IndicClassTable *classTable ) {
-
-
     LEUnicode currentChar;
     LEUnicode workChars[2];
     LEGlyphStorage workGlyphs;
@@ -1231,8 +1215,6 @@ void IndicReordering::getDynamicProperties( DynamicProperties *, const IndicClas
             workOutput.reset();
         }
     }
-
-
 }
 
 U_NAMESPACE_END

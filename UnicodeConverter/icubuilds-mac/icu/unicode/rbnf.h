@@ -770,8 +770,6 @@ public:
      */
   virtual UnicodeString getRuleSetDisplayName(const UnicodeString& ruleSetName,
                           const Locale& locale = Locale::getDefault());
-
-
   using NumberFormat::format;
 
   /**

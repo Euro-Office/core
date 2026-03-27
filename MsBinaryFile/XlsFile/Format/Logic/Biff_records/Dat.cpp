@@ -38,13 +38,9 @@ namespace XLS
 Dat::Dat()
 {
 }
-
-
 Dat::~Dat()
 {
 }
-
-
 BaseObjectPtr Dat::clone()
 {
 	return BaseObjectPtr(new Dat(*this));

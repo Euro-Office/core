@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 #define cmsmin(a, b) (((a) < (b)) ? (a) : (b))
 #define cmsmax(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -34,8 +32,6 @@
 // and black preservation.
 
 // Black point detection -------------------------------------------------------------------------
-
-
 // PCS -> PCS round trip transform, always uses relative intent on the device -> pcs
 static
 cmsHTRANSFORM CreateRoundtripXForm(cmsHPROFILE hProfile, cmsUInt32Number nIntent)
@@ -225,8 +221,6 @@ cmsBool CMSEXPORT cmsDetectBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROFILE hProfil
 
             return TRUE;
     }
-
-
 #ifdef CMS_USE_PROFILE_BLACK_POINT_TAG
 
     // v2, v4 rel/abs colorimetric
@@ -273,8 +267,6 @@ cmsBool CMSEXPORT cmsDetectBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROFILE hProfil
     return BlackPointAsDarkerColorant(hProfile, Intent, BlackPoint, dwFlags);
 }
 
-
-
 // ---------------------------------------------------------------------------------------------------------
 
 // Least Squares Fit of a Quadratic Curve to Data
@@ -314,8 +306,6 @@ cmsFloat64Number RootOfLeastSquaresFitQuadraticCurve(int n, cmsFloat64Number x[]
     _cmsVEC3init(&v, sum_y, sum_yx, sum_yx2);
 
     if (!_cmsMAT3solve(&res, &m, &v)) return 0;
-
-      
     a = res.n[2];
     b = res.n[1];
     c = res.n[0];
@@ -339,8 +329,6 @@ cmsFloat64Number RootOfLeastSquaresFitQuadraticCurve(int n, cmsFloat64Number x[]
    }
 
 }
-
-
 
 // Calculates the black point of a destination profile.
 // This algorithm comes from the Adobe paper disclosing its black point compensation method.
@@ -374,8 +362,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
             BlackPoint -> X = BlackPoint ->Y = BlackPoint -> Z = 0.0;
             return FALSE;
     }
-
-
     // v4 + perceptual & saturation intents does have its own black point, and it is
     // well specified enough to use it. Black point tag is deprecated in V4.
     if ((cmsGetEncodedICCversion(hProfile) >= 0x4000000) &&
@@ -391,8 +377,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
             BlackPoint -> Z = cmsPERCEPTUAL_BLACK_Z;
             return TRUE;
     }
-
-
     // Check if the profile is lut based and gray, rgb or cmyk (7.2 in Adobe's document)
     ColorSpace = cmsGetColorSpace(hProfile);
     if (!cmsIsCLUT(hProfile, Intent, LCMS_USED_AS_OUTPUT ) ||
@@ -405,8 +389,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
     }
 
     // It is one of the valid cases!, use Adobe algorithm
-
-    
     // Set a first guess, that should work on good profiles.
     if (Intent == INTENT_RELATIVE_COLORIMETRIC) {
 
@@ -427,8 +409,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
         InitialLab.a = 0;
         InitialLab.b = 0;
     }
-
-
     // Step 2
     // ======
 
@@ -462,8 +442,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
         BlackPoint -> X = BlackPoint ->Y = BlackPoint -> Z = 0.0;
         return FALSE;
     }
-
-
     // Test for mid range straight (only on relative colorimetric)
     NearlyStraightMidrange = TRUE;
     MinL = outRamp[0]; MaxL = outRamp[255];
@@ -487,8 +465,6 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
             return TRUE;
         }
     }
-
- 
     // curve fitting: The round-trip curve normally looks like a nearly constant section at the black point,
     // with a corner and a nearly straight line to the white point.  
     for (l=0; l < 256; l++) {
@@ -520,16 +496,12 @@ cmsBool CMSEXPORT cmsDetectDestinationBlackPoint(cmsCIEXYZ* BlackPoint, cmsHPROF
             n++;
         }    
     }
-
-    
     // No suitable points
     if (n < 3 ) {
         cmsDeleteTransform(hRoundTrip);
         BlackPoint -> X = BlackPoint ->Y = BlackPoint -> Z = 0.0;
         return FALSE;
     }
-
-  
     // fit and get the vertex of quadratic curve
     Lab.L = RootOfLeastSquaresFitQuadraticCurve(n, x, y);
 

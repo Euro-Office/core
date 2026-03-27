@@ -83,8 +83,6 @@ CompoundTransliterator::CompoundTransliterator(const UnicodeString& id,
     // later may be used by parsing code...
     init(id, UTRANS_FORWARD, TRUE, status);
 }
-
-
 /**
  * Private constructor for use of TransliteratorAlias
  */

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This file is used to define the smooth renderer error enumeration     */
@@ -37,6 +35,4 @@
 #include FT_ERRORS_H
 
 #endif /* __FTSMERRS_H__ */
-
-
 /* END */

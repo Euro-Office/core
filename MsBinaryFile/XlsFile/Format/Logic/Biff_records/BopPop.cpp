@@ -39,19 +39,13 @@ namespace XLS
 BopPop::BopPop()
 {
 }
-
-
 BopPop::~BopPop()
 {
 }
-
-
 BaseObjectPtr BopPop::clone()
 {
 	return BaseObjectPtr(new BopPop(*this));
 }
-
-
 void BopPop::readFields(CFRecord& record)
 {
 	unsigned short flags;

@@ -82,8 +82,6 @@
 #include <string.h>
 #include <math.h>   /* for sqrt() */
 #include "allheaders.h"
-
-
 /*---------------------------------------------------------------------*
  *                               Pixa Display                          *
  *---------------------------------------------------------------------*/
@@ -158,8 +156,6 @@ PIX     *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayRandomCmap()
  *
@@ -227,8 +223,6 @@ PIXCMAP  *cmap;
 
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayOnLattice()
  *
@@ -308,8 +302,6 @@ PIXA    *pixat;
     pixaDestroy(&pixat);
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayUnsplit()
  *
@@ -380,8 +372,6 @@ PIX     *pixt, *pixd;
 
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayTiled()
  *
@@ -495,8 +485,6 @@ PIXA    *pixat;
     pixaDestroy(&pixat);
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayTiledInRows()
  *
@@ -655,8 +643,6 @@ PIXA    *pixan;
     pixaDestroy(&pixan);
     return pixd;
 }
-
-
 /*!
  *  pixaDisplayTiledAndScaled()
  *
@@ -797,8 +783,6 @@ PIXA      *pixan;
     FREE(rowht);
     return pixd;
 }
-
-
 /*---------------------------------------------------------------------*
  *                              Pixaa Display                          *
  *---------------------------------------------------------------------*/
@@ -886,8 +870,6 @@ PIXA    *pixa;
 
     return pixd;
 }
-
-
 /*!
  *  pixaaDisplayByPixa()
  *
@@ -981,8 +963,6 @@ PIXA    *pixa;
 
     return pixd;
 }
-
-
 /*!
  *  pixaaDisplayTiledAndScaled()
  *

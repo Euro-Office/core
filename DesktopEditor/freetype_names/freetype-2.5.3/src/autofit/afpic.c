@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_INTERNAL_OBJECTS_H
 #include "afpic.h"
 #include "afglobal.h"
 #include "aferrors.h"
-
-
 #ifdef FT_CONFIG_OPTION_PIC
 
   /* forward declaration of PIC init functions from afmodule.c */
@@ -41,27 +37,19 @@
   void FT_Init_Class_af_autofitter_interface(
     FT_Library                   library,
     FT_AutoHinter_InterfaceRec*  clazz );
-
-
   /* forward declaration of PIC init functions from writing system classes */
 #undef  WRITING_SYSTEM
 #define WRITING_SYSTEM( ws, WS )  /* empty */
 
 #include "afwrtsys.h"
-
-
   void
   autofit_module_class_pic_free( FT_Library  library )
   {
     FT_PIC_Container*  pic_container = &library->pic_container;
     FT_Memory          memory        = library->memory;
-
-
     if ( pic_container->autofit )
     {
       AFModulePIC*  container = (AFModulePIC*)pic_container->autofit;
-
-
       if ( container->af_services )
         FT_Destroy_Class_af_services( library,
                                       container->af_services );
@@ -71,8 +59,6 @@
       pic_container->autofit = NULL;
     }
   }
-
-
   FT_Error
   autofit_module_class_pic_init( FT_Library  library )
   {
@@ -81,8 +67,6 @@
     FT_Error           error         = FT_Err_Ok;
     AFModulePIC*       container     = NULL;
     FT_Memory          memory        = library->memory;
-
-
     /* allocate pointer, clear and set global container pointer */
     if ( FT_ALLOC ( container, sizeof ( *container ) ) )
       return error;
@@ -147,6 +131,4 @@
   }
 
 #endif /* FT_CONFIG_OPTION_PIC */
-
-
 /* END */

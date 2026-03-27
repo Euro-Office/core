@@ -22,8 +22,6 @@ from tohtml    import *
 import utils
 
 import sys, os, time, string, glob, getopt
-
-
 def  usage():
     print "\nDocMaker Usage information\n"
     print "  docmaker [options] file1 [file2 ...]\n"
@@ -36,8 +34,6 @@ def  usage():
     print "  --title  : same as -t, as in '--title=\"My Project\"'"
     print "  --output : same as -o, as in '--output=mydir'"
     print "  --prefix : same as -p, as in '--prefix=ft2'"
-
-
 def  main( argv ):
     """main program loop"""
 
@@ -95,12 +91,8 @@ def  main( argv ):
     formatter.toc_dump()
     formatter.index_dump()
     formatter.section_dump_all()
-
-
 # if called from the command line
 #
 if __name__ == '__main__':
     main( sys.argv )
-
-
 # eof

@@ -53,8 +53,6 @@ typedef GBool (*SplashImageMaskSource)(void *data, Guchar *pixel);
 // returns false.
 typedef GBool (*SplashImageSource)(void *data, SplashColorPtr colorLine,
 				   Guchar *alphaLine);
-
-
 //------------------------------------------------------------------------
 
 enum SplashPipeResultColorCtrl {
@@ -331,8 +329,6 @@ public:
 #if 1 //~tmp: turn off anti-aliasing temporarily
   void setInShading(GBool sh) { inShading = sh; }
 #endif
-
-
 private:
 
   void pipeInit(SplashPipe *pipe, SplashPattern *pattern,
@@ -501,8 +497,6 @@ private:
 			       int x, int y, int width);
   void dumpPath(SplashPath *path);
   void dumpXPath(SplashXPath *path);
-
-
   static SplashPipeResultColorCtrl pipeResultColorNoAlphaBlend[];
   static SplashPipeResultColorCtrl pipeResultColorAlphaNoBlend[];
   static SplashPipeResultColorCtrl pipeResultColorAlphaBlend[];

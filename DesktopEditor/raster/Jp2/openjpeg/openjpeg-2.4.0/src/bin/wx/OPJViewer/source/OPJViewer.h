@@ -159,16 +159,12 @@ typedef unsigned long long int8byte;
 #define OPJ_CANVAS_BORDER 10
 #define OPJ_CANVAS_COLOUR *wxWHITE
 
-
-
 #ifdef USE_JPWL
 
 //#define MYJPWL_MAX_NO_TILESPECS JPWL_MAX_NO_TILESPECS
 #define MYJPWL_MAX_NO_TILESPECS 4
 
 #endif // USE_JPWL
-
-
 class OPJDecoThread;
 class OPJEncoThread;
 class OPJParseThread;
@@ -294,8 +290,6 @@ public:
 
     OPJDecoThread *CreateDecoThread(void);
     OPJEncoThread *CreateEncoThread(void);
-
-
     OPJChildFrame *m_childframe;
 
     wxBitmap  m_image, m_image100;
@@ -338,8 +332,6 @@ public:
 private:
     wxString m_filestring;
 };
-
-
 class OPJMarkerTree : public wxTreeCtrl
 {
 public:
@@ -582,8 +574,6 @@ enum {
     OPJFRAME_THREADLOGMSG,
     OPJCANVAS_THREADSIGNAL
 };
-
-
 // menu and control ids
 enum {
     TreeTest_Quit = wxID_EXIT,
@@ -707,8 +697,6 @@ private:
                              wxTreeItemId parentid, int level, char *scansign, unsigned long int *scanpoint);
 
 };
-
-
 // Drag and drop files target
 class OPJDnDFile: public wxFileDropTarget
 {
@@ -722,8 +710,6 @@ public:
 private:
     OPJFrame *m_pOwner;
 };
-
-
 
 // Property sheet dialog: encoder
 class OPJEncoderDialog: public wxPropertySheetDialog
@@ -843,8 +829,6 @@ public:
     wxCheckBox *m_enablejpwlCheck;
 #endif // USE_JPWL
     wxSpinCtrl *m_framenumCtrl;
-
-
 protected:
 
     enum {
@@ -864,6 +848,4 @@ protected:
 };
 
 #endif //__OPJ_VIEWER_H__
-
-
 

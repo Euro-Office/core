@@ -59,8 +59,6 @@ struct inflate_blocks_state {
   uLong check;          /* check on output */
 
 };
-
-
 /* defines for inflate input/output */
 /*   update pointers and return */
 #define UPDBITS {s->bitb=b;s->bitk=k;}

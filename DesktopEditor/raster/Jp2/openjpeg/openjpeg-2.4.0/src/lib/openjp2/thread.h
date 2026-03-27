@@ -211,8 +211,6 @@ opj_thread_pool_t* opj_thread_pool_create(int num_threads);
  * @param tls handle to thread local storage
  */
 typedef void (*opj_job_fn)(void* user_data, opj_tls_t* tls);
-
-
 /** Submit a new job to be run by one of the thread in the thread pool.
  * The job ( thread_fn, user_data ) will be added in the queue of jobs managed
  * by the thread pool, and run by the first thread that is no longer busy.

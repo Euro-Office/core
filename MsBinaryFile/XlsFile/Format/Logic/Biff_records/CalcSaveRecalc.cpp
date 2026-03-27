@@ -38,19 +38,13 @@ namespace XLS
 CalcSaveRecalc::CalcSaveRecalc()
 {
 }
-
-
 CalcSaveRecalc::~CalcSaveRecalc()
 {
 }
-
-
 BaseObjectPtr CalcSaveRecalc::clone()
 {
 	return BaseObjectPtr(new CalcSaveRecalc(*this));
 }
-
-
 void CalcSaveRecalc::readFields(CFRecord& record)
 {
 	record >> fSaveRecalc;

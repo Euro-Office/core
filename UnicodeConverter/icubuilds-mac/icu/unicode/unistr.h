@@ -945,8 +945,6 @@ public:
   inline UBool endsWith(const UChar *srcChars,
           int32_t srcStart,
           int32_t srcLength) const;
-
-
   /* Searching - bitwise only */
 
   /**
@@ -1315,8 +1313,6 @@ public:
   inline int32_t lastIndexOf(UChar32 c,
               int32_t start,
               int32_t length) const;
-
-
   /* Character access */
 
   /**
@@ -1847,8 +1843,6 @@ public:
    * @stable ICU 2.0
    */
   inline UBool isBogus(void) const;
-
-
   //========================================
   // Write operations
   //========================================
@@ -2138,8 +2132,6 @@ public:
    */
   UnicodeString& setCharAt(int32_t offset,
                UChar ch);
-
-
   /* Append operations */
 
   /**
@@ -2240,8 +2232,6 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString& append(UChar32 srcChar);
-
-
   /* Insert operations */
 
   /**
@@ -2325,8 +2315,6 @@ public:
    */
   inline UnicodeString& insert(int32_t start,
             UChar32 srcChar);
-
-
   /* Replace operations */
 
   /**
@@ -2561,8 +2549,6 @@ public:
                 const UnicodeString& newText,
                 int32_t newStart,
                 int32_t newLength);
-
-
   /* Remove operations */
 
   /**
@@ -2649,8 +2635,6 @@ public:
    * @stable ICU 2.0
    */
   UnicodeString& trim(void);
-
-
   /* Miscellaneous operations */
 
   /**
@@ -3192,8 +3176,6 @@ public:
    * @stable ICU 3.2
    */
   UnicodeString(const char *src, int32_t length, enum EInvariant inv);
-
-
   /**
    * Copy constructor.
    *
@@ -4594,8 +4576,6 @@ inline UnicodeString&
 UnicodeString::insert(int32_t start,
               UChar32 srcChar)
 { return replace(start, 0, srcChar); }
-
-
 inline UnicodeString&
 UnicodeString::remove()
 {

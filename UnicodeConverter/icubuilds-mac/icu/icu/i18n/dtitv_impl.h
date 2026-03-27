@@ -8,8 +8,6 @@
 *
 *******************************************************************************
 */
-
-
 #ifndef DTITV_IMPL_H__
 #define DTITV_IMPL_H__
 
@@ -21,8 +19,6 @@
 #if !UCONFIG_NO_FORMATTING
 
 #include "unicode/unistr.h"
-
-
 #define QUOTE             ((UChar)0x0027)
 #define LOW_LINE          ((UChar)0x005F)
 #define COLON             ((UChar)0x003A)
@@ -86,8 +82,6 @@
 #define MAX_M_COUNT      5
 //#define MAX_INTERVAL_INDEX 4
 #define MAX_POSITIVE_INT  56632;
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 #endif 

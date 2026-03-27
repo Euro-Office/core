@@ -15,8 +15,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /* Private state */
 
 typedef struct {
@@ -34,8 +32,6 @@ typedef struct {
 } my_decomp_master;
 
 typedef my_decomp_master * my_master_ptr;
-
-
 /*
  * Determine whether merged upsample/color conversion should be used.
  * CRUCIAL: this must match the actual capabilities of jdmerge.c!
@@ -75,8 +71,6 @@ use_merged_upsample (j_decompress_ptr cinfo)
   return FALSE;
 #endif
 }
-
-
 /*
  * Compute output image dimensions and related values.
  * NOTE: this is exported for possible use by application.
@@ -182,8 +176,6 @@ jpeg_calc_output_dimensions (j_decompress_ptr cinfo)
   else
     cinfo->rec_outbuf_height = 1;
 }
-
-
 /*
  * Several decompression processes need to range-limit values to the range
  * 0..MAXJSAMPLE; the input value may fall somewhat outside this range
@@ -254,8 +246,6 @@ prepare_range_limit_table (j_decompress_ptr cinfo)
   MEMCOPY(table + (4 * (MAXJSAMPLE+1) - CENTERJSAMPLE),
 	  cinfo->sample_range_limit, CENTERJSAMPLE * SIZEOF(JSAMPLE));
 }
-
-
 /*
  * Master selection of decompression modules.
  * This is done once at jpeg_start_decompress time.  We determine
@@ -399,8 +389,6 @@ master_selection (j_decompress_ptr cinfo)
   }
 #endif /* D_MULTISCAN_FILES_SUPPORTED */
 }
-
-
 /*
  * Per-pass setup.
  * This is called at the beginning of each output pass.  We determine which
@@ -464,8 +452,6 @@ prepare_for_output_pass (j_decompress_ptr cinfo)
     }
   }
 }
-
-
 /*
  * Finish up at end of an output pass.
  */
@@ -479,8 +465,6 @@ finish_output_pass (j_decompress_ptr cinfo)
     (*cinfo->cquantize->finish_pass) (cinfo);
   master->pass_number++;
 }
-
-
 #ifdef D_MULTISCAN_FILES_SUPPORTED
 
 /*
@@ -508,8 +492,6 @@ jpeg_new_colormap (j_decompress_ptr cinfo)
 }
 
 #endif /* D_MULTISCAN_FILES_SUPPORTED */
-
-
 /*
  * Initialize master decompression control and select active modules.
  * This is performed at the start of jpeg_start_decompress.

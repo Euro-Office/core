@@ -31,13 +31,9 @@
  */
 
 #pragma once
-
-
 #include <iosfwd>
 #include <string>
 #include "odfattributes.h"
-
-
 namespace cpdoccore { namespace odf_types { 
 
 class chart_symbol_type
@@ -66,10 +62,6 @@ private:
     type type_;
 
 };
-
-
-
-
 class chart_symbol_name
 {
 public:

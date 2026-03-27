@@ -119,5 +119,3 @@ namespace NSDocxRenderer
 	};
 } // namespace NSDocxRenderer
 
-
-

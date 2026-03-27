@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __TTGXVAR_H__
 #define __TTGXVAR_H__
-
-
 #include <ft2build.h>
 #include "ttobjs.h"
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -42,8 +34,6 @@ FT_BEGIN_HEADER
     FT_Fixed  toCoord;
 
   } GX_AVarCorrespondenceRec_, *GX_AVarCorrespondence;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -59,8 +49,6 @@ FT_BEGIN_HEADER
     GX_AVarCorrespondence  correspondence; /* array with pairCount entries */
 
   } GX_AVarSegmentRec, *GX_AVarSegment;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -96,8 +84,6 @@ FT_BEGIN_HEADER
     FT_ULong*       glyphoffsets;
 
   } GX_BlendRec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <enum>                                                                */
@@ -113,8 +99,6 @@ FT_BEGIN_HEADER
     GX_TC_TUPLE_COUNT_MASK           = 0x0FFF
 
   } GX_TupleCountFlags;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <enum>                                                                */
@@ -133,14 +117,10 @@ FT_BEGIN_HEADER
     GX_TI_TUPLE_INDEX_MASK      = 0x0FFF
 
   } GX_TupleIndexFlags;
-
-
 #define TTAG_wght  FT_MAKE_TAG( 'w', 'g', 'h', 't' )
 #define TTAG_wdth  FT_MAKE_TAG( 'w', 'd', 't', 'h' )
 #define TTAG_opsz  FT_MAKE_TAG( 'o', 'p', 's', 'z' )
 #define TTAG_slnt  FT_MAKE_TAG( 's', 'l', 'n', 't' )
-
-
   FT_LOCAL( FT_Error )
   TT_Set_MM_Blend( TT_Face    face,
                    FT_UInt    num_coords,
@@ -154,29 +134,17 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Error )
   TT_Get_MM_Var( TT_Face      face,
                  FT_MM_Var*  *master );
-
-
   FT_LOCAL( FT_Error )
   tt_face_vary_cvt( TT_Face    face,
                     FT_Stream  stream );
-
-
   FT_LOCAL( FT_Error )
   TT_Vary_Get_Glyph_Deltas( TT_Face      face,
                             FT_UInt      glyph_index,
                             FT_Vector*  *deltas,
                             FT_UInt      n_points );
-
-
   FT_LOCAL( void )
   tt_done_blend( FT_Memory  memory,
                  GX_Blend   blend );
-
-
 FT_END_HEADER
-
-
 #endif /* __TTGXVAR_H__ */
-
-
 /* END */

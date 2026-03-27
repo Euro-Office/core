@@ -15,23 +15,15 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __CFFTYPES_H__
 #define __CFFTYPES_H__
-
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_TYPE1_TABLES_H
 #include FT_INTERNAL_SERVICE_H
 #include FT_SERVICE_POSTSCRIPT_CMAPS_H
 #include FT_INTERNAL_POSTSCRIPT_HINTS_H
-
-
 FT_BEGIN_HEADER
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Struct>                                                              */
@@ -73,8 +65,6 @@ FT_BEGIN_HEADER
     FT_Byte*   bytes;
 
   } CFF_IndexRec, *CFF_Index;
-
-
   typedef struct  CFF_EncodingRec_
   {
     FT_UInt     format;
@@ -85,8 +75,6 @@ FT_BEGIN_HEADER
     FT_UShort   codes[256];
 
   } CFF_EncodingRec, *CFF_Encoding;
-
-
   typedef struct  CFF_CharsetRec_
   {
 
@@ -100,8 +88,6 @@ FT_BEGIN_HEADER
     FT_UInt     num_glyphs;
 
   } CFF_CharsetRec, *CFF_Charset;
-
-
   typedef struct  CFF_FontRecDictRec_
   {
     FT_UInt    version;
@@ -146,8 +132,6 @@ FT_BEGIN_HEADER
     FT_UInt    cid_font_name;
 
   } CFF_FontRecDictRec, *CFF_FontRecDict;
-
-
   typedef struct  CFF_PrivateRec_
   {
     FT_Byte   num_blue_values;
@@ -181,8 +165,6 @@ FT_BEGIN_HEADER
     FT_Pos    nominal_width;
 
   } CFF_PrivateRec, *CFF_Private;
-
-
   typedef struct  CFF_FDSelectRec_
   {
     FT_Byte   format;
@@ -198,8 +180,6 @@ FT_BEGIN_HEADER
     FT_Byte   cache_fd;
 
   } CFF_FDSelectRec, *CFF_FDSelect;
-
-
   /* A SubFont packs a font dict and a private dict together.  They are */
   /* needed to support CID-keyed CFF fonts.                             */
   typedef struct  CFF_SubFontRec_
@@ -211,11 +191,7 @@ FT_BEGIN_HEADER
     FT_Byte**           local_subrs; /* array of pointers into Local Subrs INDEX data */
 
   } CFF_SubFontRec, *CFF_SubFont;
-
-
 #define CFF_MAX_CID_FONTS  256
-
-
   typedef struct  CFF_FontRec_
   {
     FT_Stream        stream;
@@ -227,8 +203,6 @@ FT_BEGIN_HEADER
     FT_Byte          version_minor;
     FT_Byte          header_size;
     FT_Byte          absolute_offsize;
-
-
     CFF_IndexRec     name_index;
     CFF_IndexRec     top_dict_index;
     CFF_IndexRec     global_subrs_index;
@@ -274,11 +248,7 @@ FT_BEGIN_HEADER
     FT_Generic       cf2_instance;
 
   } CFF_FontRec, *CFF_Font;
-
-
 FT_END_HEADER
 
 #endif /* __CFFTYPES_H__ */
-
-
 /* END */

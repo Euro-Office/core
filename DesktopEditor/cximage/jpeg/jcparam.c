@@ -14,8 +14,6 @@
 #define JPEG_INTERNALS
 #include "jinclude.h"
 #include "jpeglib.h"
-
-
 /*
  * Quantization table setup routines
  */
@@ -59,8 +57,6 @@ jpeg_add_quant_table (j_compress_ptr cinfo, int which_tbl,
   /* Initialize sent_table FALSE so table will be written to JPEG file. */
   (*qtblptr)->sent_table = FALSE;
 }
-
-
 /* These are the sample quantization tables given in JPEG spec section K.1.
  * The spec says that the values given produce "good" quality, and
  * when divided by 2, "very good" quality.
@@ -85,8 +81,6 @@ static const unsigned int std_chrominance_quant_tbl[DCTSIZE2] = {
   99,  99,  99,  99,  99,  99,  99,  99,
   99,  99,  99,  99,  99,  99,  99,  99
 };
-
-
 GLOBAL(void)
 jpeg_default_qtables (j_compress_ptr cinfo, boolean force_baseline)
 /* Set or change the 'quality' (quantization) setting, using default tables
@@ -100,8 +94,6 @@ jpeg_default_qtables (j_compress_ptr cinfo, boolean force_baseline)
   jpeg_add_quant_table(cinfo, 1, std_chrominance_quant_tbl,
 		       cinfo->q_scale_factor[1], force_baseline);
 }
-
-
 GLOBAL(void)
 jpeg_set_linear_quality (j_compress_ptr cinfo, int scale_factor,
 			 boolean force_baseline)
@@ -117,8 +109,6 @@ jpeg_set_linear_quality (j_compress_ptr cinfo, int scale_factor,
   jpeg_add_quant_table(cinfo, 1, std_chrominance_quant_tbl,
 		       scale_factor, force_baseline);
 }
-
-
 GLOBAL(int)
 jpeg_quality_scaling (int quality)
 /* Convert a user-specified quality rating to a percentage scaling factor
@@ -143,8 +133,6 @@ jpeg_quality_scaling (int quality)
 
   return quality;
 }
-
-
 GLOBAL(void)
 jpeg_set_quality (j_compress_ptr cinfo, int quality, boolean force_baseline)
 /* Set or change the 'quality' (quantization) setting, using default tables.
@@ -159,8 +147,6 @@ jpeg_set_quality (j_compress_ptr cinfo, int quality, boolean force_baseline)
   /* Set up standard quality tables */
   jpeg_set_linear_quality(cinfo, quality, force_baseline);
 }
-
-
 /*
  * Huffman table setup routines
  */
@@ -193,8 +179,6 @@ add_huff_table (j_compress_ptr cinfo,
   /* Initialize sent_table FALSE so table will be written to JPEG file. */
   (*htblptr)->sent_table = FALSE;
 }
-
-
 LOCAL(void)
 std_huff_tables (j_compress_ptr cinfo)
 /* Set up the standard Huffman tables (cf. JPEG standard section K.3) */
@@ -269,8 +253,6 @@ std_huff_tables (j_compress_ptr cinfo)
   add_huff_table(cinfo, &cinfo->ac_huff_tbl_ptrs[1],
 		 bits_ac_chrominance, val_ac_chrominance);
 }
-
-
 /*
  * Default parameter setup for compression.
  *
@@ -371,8 +353,6 @@ jpeg_set_defaults (j_compress_ptr cinfo)
 
   jpeg_default_colorspace(cinfo);
 }
-
-
 /*
  * Select an appropriate JPEG colorspace for in_color_space.
  */
@@ -403,8 +383,6 @@ jpeg_default_colorspace (j_compress_ptr cinfo)
     ERREXIT(cinfo, JERR_BAD_IN_COLORSPACE);
   }
 }
-
-
 /*
  * Set the JPEG colorspace, and choose colorspace-dependent default values.
  */
@@ -489,8 +467,6 @@ jpeg_set_colorspace (j_compress_ptr cinfo, J_COLOR_SPACE colorspace)
     ERREXIT(cinfo, JERR_BAD_J_COLORSPACE);
   }
 }
-
-
 #ifdef C_PROGRESSIVE_SUPPORTED
 
 LOCAL(jpeg_scan_info *)
@@ -548,8 +524,6 @@ fill_dc_scans (jpeg_scan_info * scanptr, int ncomps, int Ah, int Al)
   }
   return scanptr;
 }
-
-
 /*
  * Create a recommended progressive-JPEG script.
  * cinfo->num_components and cinfo->jpeg_color_space must be correct.

@@ -36,8 +36,6 @@
 #include "Animation/Timing_2010.h"
 #include "Animation/TimingExeption.h"
 #include "Animation/hashcode10.h"   // not work correct
-
-
 using namespace PPT::Converter;
 
 Timing::Timing(const PPT::Intermediate::SlideAnimation& slideAnim) :

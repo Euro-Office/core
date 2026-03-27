@@ -208,8 +208,6 @@ ResourceBundle::ResourceBundle(const char* path, const Locale& locale, UErrorCod
 {
     fResource = ures_open(path, locale.getName(), &err);
 }
-
-
 ResourceBundle& ResourceBundle::operator=(const ResourceBundle& other)
 {
     if(this == &other) {

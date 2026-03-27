@@ -137,8 +137,6 @@
 #endif
 
 typedef unsigned long trio_flags_t;
-
-
 /*************************************************************************
  * Platform specific definitions
  */
@@ -186,8 +184,6 @@ typedef int trio_wint_t;
 #  define iswxdigit(x) isxdigit(x)
 # endif
 #endif
-
-
 /*************************************************************************
  * Compiler dependent definitions
  */
@@ -640,8 +636,6 @@ enum {
 # define QUALIFIER_EQUAL '=' /* For scanlists */
 # define QUALIFIER_ROUNDING_UPPER 'R'
 #endif
-
-
 /*************************************************************************
  *
  * Internal Structures
@@ -795,8 +789,6 @@ static TRIO_VOLATILE trio_callback_t internalEnterCriticalRegion = NULL;
 static TRIO_VOLATILE trio_callback_t internalLeaveCriticalRegion = NULL;
 static trio_userdef_t *internalUserDef = NULL;
 #endif
-
-
 /*************************************************************************
  *
  * Internal Functions
@@ -2161,15 +2153,11 @@ TRIO_ARGS5((type, format, parameters, arglist, argarray),
     } /* for all specifiers */
   return num;
 }
-
-
 /*************************************************************************
  *
  * FORMATTING
  *
  ************************************************************************/
-
-
 /*************************************************************************
  * TrioWriteNumber
  *
@@ -5115,8 +5103,6 @@ TRIO_ARGS1((grouping),
 		sizeof(internalGrouping),
 		grouping);
 }
-
-
 /*************************************************************************
  *
  * SCANNING

@@ -14,13 +14,9 @@
  * understand and accept it fully.
  *
  */
-
-
 #include "otvalid.h"
 #include "otvcommn.h"
 #include "otvgpos.h"
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -29,8 +25,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  otvjstf
-
-
 #define JstfPriorityFunc  otv_JstfPriority_validate
 #define JstfLookupFunc    otv_GPOS_subtable_validate
 
@@ -56,8 +50,6 @@
     OTV_OPTIONAL_TABLE( ExtensionDisableGPOS );
     OTV_OPTIONAL_TABLE( ShrinkageJstfMax );
     OTV_OPTIONAL_TABLE( ExtensionJstfMax );
-
-
     OTV_ENTER;
     OTV_TRACE(( "JstfPriority table\n" ));
 
@@ -139,8 +131,6 @@
 
     OTV_EXIT;
   }
-
-
   /* sets otvalid->extra (glyph count)               */
   /* sets otvalid->func1 (otv_JstfPriority_validate) */
 
@@ -154,8 +144,6 @@
 
     OTV_OPTIONAL_TABLE( ExtGlyph );
     OTV_OPTIONAL_TABLE( DefJstfLangSys );
-
-
     OTV_NAME_ENTER( "JstfScript" );
 
     OTV_LIMIT_CHECK( 6 );
@@ -195,8 +183,6 @@
 
     OTV_EXIT;
   }
-
-
   /* sets otvalid->extra1 (GSUB lookup count) */
   /* sets otvalid->extra2 (GPOS lookup count) */
   /* sets otvalid->glyph_count                */
@@ -212,11 +198,7 @@
     OTV_Validator     otvalid = &otvalidrec;
     FT_Bytes          p     = table;
     FT_UInt           JstfScriptCount;
-
-
     otvalid->root = ftvalid;
-
-
     FT_TRACE3(( "validating JSTF table\n" ));
     OTV_INIT;
 
@@ -254,6 +236,4 @@
 
     FT_TRACE4(( "\n" ));
   }
-
-
 /* END */

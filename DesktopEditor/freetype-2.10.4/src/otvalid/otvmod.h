@@ -15,24 +15,12 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef OTVMOD_H_
 #define OTVMOD_H_
-
-
 #include <freetype/ftmodapi.h>
-
-
 FT_BEGIN_HEADER
-
-
   FT_EXPORT_VAR( const FT_Module_Class )  otv_module_class;
-
-
 FT_END_HEADER
 
 #endif /* OTVMOD_H_ */
-
-
 /* END */

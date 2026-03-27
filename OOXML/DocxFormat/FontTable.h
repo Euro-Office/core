@@ -62,8 +62,6 @@ namespace OOX
 		virtual void write(const CPath &oFilePath, const CPath &oDirectory, CContentTypes& oContent) const;
 
 		virtual const FileType type() const;
-
-
 		virtual const CPath DefaultDirectory() const;
 		virtual const CPath DefaultFileName() const;
 

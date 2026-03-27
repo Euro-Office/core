@@ -479,8 +479,6 @@ int Binary_HdrFtrTableReader::ReadHdrFtrItemContent(BYTE type, long length, void
 	Binary_DocumentTableReader* pBinary_DocumentTableReader = static_cast<Binary_DocumentTableReader*>(poResult);
 	return pBinary_DocumentTableReader->ReadDocumentContent(type, length, NULL);
 }
-
-
 Binary_rPrReader::Binary_rPrReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter)
 	: Binary_CommonReader(poBufferedStream), oBinary_CommonReader2(poBufferedStream), m_oFileWriter(oFileWriter)
 	, m_mapFonts(oFileWriter.get_font_table_writer().m_mapFonts)
@@ -2153,8 +2151,6 @@ int Binary_pPrReader::ReadPageBorder(BYTE type, long length, void* poResult)
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
-
-
 Binary_tblPrReader::Binary_tblPrReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter):Binary_CommonReader(poBufferedStream),oBinary_CommonReader2(poBufferedStream),oBinary_pPrReader(poBufferedStream, oFileWriter)
 {
 }
@@ -3305,8 +3301,6 @@ int Binary_NumberingTableReader::ReadLevelTextItem(BYTE type, long length, void*
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
-
-
 BinaryStyleTableReader::BinaryStyleTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter) 
 	:
 	Binary_CommonReader(poBufferedStream),
@@ -3619,8 +3613,6 @@ int BinaryStyleTableReader::ReadTblStyleProperty(BYTE type, long length, void* p
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }	
-
-
 Binary_OtherTableReader::Binary_OtherTableReader(std::wstring sFileInDir, NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter) 
 	: m_sFileInDir(sFileInDir), Binary_CommonReader(poBufferedStream), m_oFileWriter(oFileWriter)
 {
@@ -3899,8 +3891,6 @@ int Binary_CommentsTableReader::ReadReplies(BYTE type, long length, void* poResu
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 }
-
-
 Binary_SettingsTableReader::Binary_SettingsTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter, OOX::CSettingsCustom* pSettingsCustom)
 	:
 	Binary_CommonReader(poBufferedStream), 
@@ -4824,8 +4814,6 @@ int Binary_SettingsTableReader::ReadClrSchemeMapping(BYTE type, long length, voi
 		res = c_oSerConstants::ReadUnknown;
 	return res;
 };
-
-
 Binary_DocumentTableReader::Binary_DocumentTableReader(NSBinPptxRW::CBinaryFileReader& poBufferedStream, Writers::FileWriter& oFileWriter, Writers::ContentWriter& oDocumentWriter, bool bOFormRead)
         : Binary_CommonReader(poBufferedStream)
         , m_oDocumentWriter(oDocumentWriter)
@@ -10286,8 +10274,6 @@ int Binary_NotesTableReader::ReadNoteContent(BYTE type, long length, void* poRes
 	Binary_DocumentTableReader* pBinary_DocumentTableReader = static_cast<Binary_DocumentTableReader*>(poResult);
 	return pBinary_DocumentTableReader->ReadDocumentContent(type, length, NULL);
 };
-
-
 BinaryFileReader::BinaryFileReader(std::wstring& sFileInDir, NSBinPptxRW::CBinaryFileReader& oBufferedStream, Writers::FileWriter& oFileWriter, bool bMacro, bool bOForm)
 	: 
 	m_sFileInDir(sFileInDir), 

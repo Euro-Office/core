@@ -42,11 +42,7 @@
 #include "../../../OOXML/PPTXFormat/Logic/Transitions/WheelTransition.h"
 #include "../../../OOXML/PPTXFormat/Logic/Transitions/SplitTransition.h"
 #include "../../../OOXML/PPTXFormat/Logic/Transitions/ZoomTransition.h"
-
-
 using namespace PPT::Converter;
-
-
 Transition::Transition(const PPT::CSlideShowInfo &SSInfo, CRelsGenerator *pRels) :
     slideShowInfo(SSInfo), oldTransition(SSInfo.m_oTransition),
     pRels(pRels)

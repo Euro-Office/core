@@ -39,8 +39,6 @@
 namespace cpdoccore { 
 namespace oox {
 namespace package {
-
-
 pptx_content_types_file::pptx_content_types_file()
 {
     content()->add_default(L"rels",  L"application/vnd.openxmlformats-package.relationships+xml");
@@ -263,8 +261,6 @@ void notesMaster_files::write(const std::wstring & RootPath)
         package::simple_element(fileName, slides_[i]->str()).write(path);
     }
 }
-
-
 slideLayouts_files::slideLayouts_files()
 {}
 

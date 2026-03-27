@@ -50,8 +50,6 @@ void CRecordTimeStringListContainer::ReadFromStream(SRecordHeader &oHeader, POLE
         CRecordTimeVariantString Element;
         Element.ReadFromStream  ( ReadHeader, pStream );
         lCurLen += 8 + ReadHeader.RecLen;
-
-
         m_arrRgChildRec.push_back ( Element );
     }
     StreamUtils::StreamSeek(lPos + m_oHeader.RecLen, pStream);

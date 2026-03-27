@@ -159,8 +159,6 @@ KernTable::KernTable(const LETableReference& base, LEErrorCode &success)
 
             le_uint16 left = p->left;
             le_uint16 right = p->right;
-
-
             if (left < 256 && right < 256) {
               char c = ids[left];
 
@@ -184,8 +182,6 @@ KernTable::KernTable(const LETableReference& base, LEErrorCode &success)
     }
   }
 }
-
-
 /*
  * Process the glyph positions.  The positions array has two floats for each
 g * glyph, plus a trailing pair to mark the end of the last glyph.

@@ -38,13 +38,9 @@ namespace XLS
 AxisParent::AxisParent()
 {
 }
-
-
 AxisParent::~AxisParent()
 {
 }
-
-
 BaseObjectPtr AxisParent::clone()
 {
 	return BaseObjectPtr(new AxisParent(*this));

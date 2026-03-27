@@ -31,8 +31,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
 /*-------------------------------------------------------------------------*
  *                          Pix Memory Storage                             *
  *                                                                         *
@@ -98,8 +96,6 @@
  *  After use they won't be returned to a ptra; instead the deallocator
  *  will free them.
  */
-
-
 struct PixMemoryStore
 {
     struct L_Ptraa  *paa;          /* Holds ptrs to allocated memory        */
@@ -124,8 +120,6 @@ struct PixMemoryStore
 typedef struct PixMemoryStore   L_PIX_MEM_STORE;
 
 static L_PIX_MEM_STORE  *CustomPMS = NULL;
-
-
 /*!
  *  pmsCreate()
  *
@@ -237,8 +231,6 @@ L_PTRAA          *paa;
 
     return 0;
 }
-
-
 /*!
  *  pmsDestroy()
  *
@@ -276,8 +268,6 @@ L_PIX_MEM_STORE  *pms;
     CustomPMS = NULL;
     return;
 }
-
-
 /*!
  *  pmsCustomAlloc()
  *
@@ -328,8 +318,6 @@ L_PTRA           *pa;
 
     return data;
 }
-
-
 /*!
  *  pmsCustomDealloc()
  *
@@ -366,8 +354,6 @@ L_PTRA           *pa;
 
     return;
 }
-
-
 /*!
  *  pmsGetAlloc()
  *
@@ -403,8 +389,6 @@ L_PIX_MEM_STORE  *pms;
 
     return data;
 }
-
-
 /*!
  *  pmsGetLevelForAlloc()
  *
@@ -441,8 +425,6 @@ L_PIX_MEM_STORE  *pms;
 
     return 0;
 }
-
-
 /*!
  *  pmsGetLevelForDealloc()
  *
@@ -481,8 +463,6 @@ L_PIX_MEM_STORE  *pms;
 
     return 0;
 }
-
-
 /*!
  *  pmsLogInfo()
  *
@@ -515,5 +495,3 @@ L_PIX_MEM_STORE  *pms;
 
     return;
 }
-
-

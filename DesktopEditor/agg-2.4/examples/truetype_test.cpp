@@ -16,8 +16,6 @@
 #include "ctrl/agg_slider_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "ctrl/agg_rbox_ctrl.h"
-
-
 enum flip_y_e { flip = true };
 
 typedef char char_type;
@@ -134,13 +132,7 @@ static char_type text[] =
 "processing, you still can use the rasterizers with their "
 "integer interfaces. Although, you won't be able to use the "
 "floating point coordinate pipelines in this case. ";
-
-
-
-
 bool text_flip = false;
-
-
 class the_application : public agg::platform_support
 {
     typedef agg::gamma_lut<agg::int8u, agg::int16u, 8, 16> gamma_type;
@@ -242,8 +234,6 @@ public:
 //        m_curves.angle_tolerance(0.3);
         m_contour.auto_detect_orientation(false);
     }
-
-
     template<class Rasterizer, class Scanline, class RenSolid, class RenBin>
     unsigned draw_text(Rasterizer& ras, Scanline& sl, 
                        RenSolid& ren_solid, RenBin& ren_bin)
@@ -356,8 +346,6 @@ public:
         }
         return num_glyphs;
     }
-
-
     virtual void on_draw()
     {
         pixfmt_type pf(rbuf_window(), m_gamma_lut);
@@ -400,10 +388,6 @@ public:
         agg::render_ctrl(ras, sl, ren_base, m_kerning);
         agg::render_ctrl(ras, sl, ren_base, m_performance);
     }
-
-
-    
-
     virtual void on_ctrl_change()
     {
         if(m_performance.status())
@@ -443,11 +427,7 @@ public:
         text_flip = !text_flip;
         force_redraw();
     }
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -462,5 +442,3 @@ int agg_main(int argc, char* argv[])
     ::ReleaseDC(0, dc);
     return 1;
 }
-
-

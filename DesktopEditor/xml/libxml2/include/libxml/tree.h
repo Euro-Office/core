@@ -181,8 +181,6 @@ typedef enum {
    ,XML_DOCB_DOCUMENT_NODE=	21
 #endif
 } xmlElementType;
-
-
 /**
  * xmlNotation:
  *
@@ -364,8 +362,6 @@ struct _xmlElement {
     void	      *contModel;
 #endif
 };
-
-
 /**
  * XML_LOCAL_NAMESPACE:
  *
@@ -584,8 +580,6 @@ struct _xmlDoc {
     int             properties;	/* set of xmlDocProperties for this document
 				   set at the end of parsing */
 };
-
-
 typedef struct _xmlDOMWrapCtxt xmlDOMWrapCtxt;
 typedef xmlDOMWrapCtxt *xmlDOMWrapCtxtPtr;
 

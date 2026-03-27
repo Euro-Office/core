@@ -44,8 +44,6 @@ using xml::xml_char_wc;
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * office_text::ns = L"office";
 const wchar_t * office_text::name = L"text";
-
-
 namespace { 
 bool is_text_content(const std::wstring & ns, const std::wstring & name)
 {

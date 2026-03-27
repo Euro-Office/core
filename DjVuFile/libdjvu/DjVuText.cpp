@@ -69,16 +69,12 @@
 #include "debug.h"
 #include <ctype.h>
 
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 
 #ifdef min
 #undef min
@@ -180,8 +176,6 @@ DjVuTXT::Zone::memuse() const
     memuse += children[i].memuse();
   return memuse;
 }
-
-
 #ifndef NEED_DECODER_ONLY
 void 
 DjVuTXT::Zone::encode(
@@ -328,8 +322,6 @@ DjVuTXT::has_valid_zones() const
     return false;
   return true;
 }
-
-
 #ifndef NEED_DECODER_ONLY
 void 
 DjVuTXT::encode(const GP<ByteStream> &gbs) const
@@ -377,8 +369,6 @@ DjVuTXT::copy(void) const
 {
   return new DjVuTXT(*this);
 }
-
-
 static inline bool
 intersects_zone(GRect box, const GRect &zone)
 {
@@ -551,8 +541,6 @@ DjVuTXT::find_text_with_rect(const GRect &box, GUTF8String &text,
   text=textUTF8.substr(text_start,text_end-text_start);
   return retval;
 }
-
-
 GList<DjVuTXT::Zone *>
 DjVuTXT::find_text_in_rect(GRect target_rect, GUTF8String &text) const
    // returns a list of zones of type WORD in the nearest/selected paragraph 
@@ -689,8 +677,6 @@ DjVuTXT::get_memory_usage() const
   return sizeof(*this) + textUTF8.length() + page_zone.memuse() - sizeof(page_zone); 
 }
 
-
-
 //***************************************************************************
 //******************************** DjVuText *********************************
 //***************************************************************************
@@ -739,8 +725,6 @@ DjVuText::encode(const GP<ByteStream> &gbs)
   }
   // Add encoding of other chunks here
 }
-
-
 GP<DjVuText>
 DjVuText::copy(void) const
 {
@@ -822,8 +806,6 @@ start_tag(const int layer)
 {
   return start_tag((const DjVuTXT::ZoneType)layer);
 }
-
-
 static GUTF8String
 end_tag(const DjVuTXT::ZoneType zone)
 {
@@ -973,8 +955,6 @@ DjVuText::get_xmlText(const int height) const
   }
   return retval;
 }
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

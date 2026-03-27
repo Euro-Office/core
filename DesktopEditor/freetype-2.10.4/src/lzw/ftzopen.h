@@ -45,8 +45,6 @@ FT_BEGIN_HEADER
 #define LZW_BIT_MASK      0x1F
 #define LZW_BLOCK_MASK    0x80
 #define LZW_MASK( n )     ( ( 1U << (n) ) - 1U )
-
-
   typedef enum  FT_LzwPhase_
   {
     FT_LZW_PHASE_START = 0,
@@ -55,8 +53,6 @@ FT_BEGIN_HEADER
     FT_LZW_PHASE_EOF
 
   } FT_LzwPhase;
-
-
   /*
    * state of LZW decompressor
    *
@@ -145,20 +141,14 @@ FT_BEGIN_HEADER
     FT_Memory    memory;
 
   } FT_LzwStateRec, *FT_LzwState;
-
-
   FT_LOCAL( void )
   ft_lzwstate_init( FT_LzwState  state,
                     FT_Stream    source );
 
   FT_LOCAL( void )
   ft_lzwstate_done( FT_LzwState  state );
-
-
   FT_LOCAL( void )
   ft_lzwstate_reset( FT_LzwState  state );
-
-
   FT_LOCAL( FT_ULong )
   ft_lzwstate_io( FT_LzwState  state,
                   FT_Byte*     buffer,
@@ -169,6 +159,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* FTZOPEN_H_ */
-
-
 /* END */

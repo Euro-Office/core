@@ -17,8 +17,6 @@
 #include "ctrl/agg_rbox_ctrl.h"
 #include "ctrl/agg_cbox_ctrl.h"
 #include "platform/agg_platform_support.h"
-
-
 #include "agg_pixfmt_rgb.h"
 #include "agg_span_image_filter_rgb.h"
 #define span_image_filter          span_image_filter_rgb
@@ -38,8 +36,6 @@ enum flip_y_e { flip_y = true };
 // it uses regular clock() anyway, so, it won't work for short
 // time periods and will give you totally wrong result (probably #INF).
 #define AGG_ACCURATE_TIME  
-
-
 class the_application : public agg::platform_support
 {
     typedef agg::renderer_base<pixfmt> renderer_base;
@@ -177,8 +173,6 @@ public:
         agg::render_ctrl(ras, sl, rb, m_refresh);
     }
 
-
-
     void transform_image(double angle)
     {
         double width = rbuf_img(0).width();
@@ -301,8 +295,6 @@ public:
         }
 
     }
-
-
     void on_ctrl_change()
     {
         if(m_single_step.status())
@@ -378,13 +370,7 @@ public:
             wait_mode(true);
         }
     }
-
-
 };
-
-
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -426,5 +412,3 @@ int agg_main(int argc, char* argv[])
     }
     return 0;
 }
-
-

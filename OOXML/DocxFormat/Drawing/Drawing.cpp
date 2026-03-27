@@ -174,8 +174,6 @@ namespace OOX
 				sResult += _T("<wp:posOffset>") + m_oPosOffset->ToString() + _T("</wp:posOffset>");
 			else if (!m_bAlign && m_oPctOffset.IsInit())
 				sResult += _T("<wp14:pctPosHOffset>") + m_oPctOffset->ToString() + _T("</wp14:pctPosHOffset>");
-
-
 			sResult += _T("</wp:positionH>");
 
 			return sResult;
@@ -367,8 +365,6 @@ namespace OOX
 
 			if (m_oPctWidth.IsInit())
 				sResult += _T("<wp14:pctWidth>") + m_oPctWidth->ToStringDecimalNumber() + _T("</wp14:pctWidth>");
-
-
 			sResult += _T("</wp14:sizeRelH>");
 
 			return sResult;
@@ -443,8 +439,6 @@ namespace OOX
 
 			if (m_oPctHeight.IsInit())
 				sResult += _T("<wp14:pctHeight>") + m_oPctHeight->ToStringDecimalNumber() + _T("</wp14:pctHeight>");
-
-
 			sResult += _T("</wp14:sizeRelV>");
 
 			return sResult;

@@ -35,8 +35,6 @@
 
 namespace XLS
 {
-
-
 // Logical representation of CompressPictures record in BIFF8
 class CompressPictures: public BiffRecord
 {
@@ -47,8 +45,6 @@ public:
 	~CompressPictures();
 
 	BaseObjectPtr clone();
-
-	
 	void readFields(CFRecord& record);
 
 	static const ElementType	type = typeCompressPictures;

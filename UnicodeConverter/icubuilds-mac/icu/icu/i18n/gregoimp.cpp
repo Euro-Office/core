@@ -164,8 +164,6 @@ int32_t Grego::dayOfWeekInMonth(int32_t year, int32_t month, int32_t dom) {
 #define U_FORMAT_KEY "format"
 #define U_DEFAULT_KEY "default"
 #define U_CALENDAR_DATA ((char*)0)
-
-
 // CalendarData::CalendarData(const Locale& loc, UErrorCode& status) 
 //   : fFillin(NULL), fBundle(NULL), fFallback(NULL) {
 //   initData(loc.getBaseName(), (char*) "???", status);

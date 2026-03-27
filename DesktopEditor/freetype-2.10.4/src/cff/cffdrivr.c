@@ -14,8 +14,6 @@
  * understand and accept it fully.
  *
  */
-
-
 #include <freetype/freetype.h>
 #include <freetype/internal/ftdebug.h>
 #include <freetype/internal/ftstream.h>
@@ -46,8 +44,6 @@
 #include <freetype/internal/services/svgldict.h>
 #include <freetype/internal/services/svprop.h>
 #include <freetype/ftdriver.h>
-
-
   /**************************************************************************
    *
    * The macro FT_COMPONENT is used in trace mode.  It is an implicit
@@ -56,8 +52,6 @@
    */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  cffdriver
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -69,8 +63,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   /**************************************************************************
    *
    * @Function:
@@ -115,8 +107,6 @@
   {
     TT_Face       face = (TT_Face)ttface;
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
-
-
     kerning->x = 0;
     kerning->y = 0;
 
@@ -125,8 +115,6 @@
 
     return FT_Err_Ok;
   }
-
-
   /**************************************************************************
    *
    * @Function:
@@ -166,8 +154,6 @@
     FT_Error       error;
     CFF_GlyphSlot  slot = (CFF_GlyphSlot)cffslot;
     CFF_Size       size = (CFF_Size)cffsize;
-
-
     if ( !slot )
       return FT_THROW( Invalid_Slot_Handle );
 
@@ -196,8 +182,6 @@
 
     return error;
   }
-
-
   FT_CALLBACK_DEF( FT_Error )
   cff_get_advances( FT_Face    face,
                     FT_UInt    start,
@@ -208,8 +192,6 @@
     FT_UInt       nn;
     FT_Error      error = FT_Err_Ok;
     FT_GlyphSlot  slot  = face->glyph;
-
-
     if ( FT_IS_SFNT( face ) )
     {
       /* OpenType 1.7 mandates that the data from `hmtx' table be used; */
@@ -218,8 +200,6 @@
 
       TT_Face   ttface = (TT_Face)face;
       FT_Short  dummy;
-
-
       if ( flags & FT_LOAD_VERTICAL_LAYOUT )
       {
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
@@ -239,8 +219,6 @@
         for ( nn = 0; nn < count; nn++ )
         {
           FT_UShort  ah;
-
-
           ( (SFNT_Service)ttface->sfnt )->get_metrics( ttface,
                                                        1,
                                                        start + nn,
@@ -270,8 +248,6 @@
         for ( nn = 0; nn < count; nn++ )
         {
           FT_UShort  aw;
-
-
           ( (SFNT_Service)ttface->sfnt )->get_metrics( ttface,
                                                        0,
                                                        start + nn,
@@ -305,8 +281,6 @@
 
     return error;
   }
-
-
   /*
    * GLYPH DICT SERVICE
    *
@@ -322,8 +296,6 @@
     FT_String*  gname;
     FT_UShort   sid;
     FT_Error    error;
-
-
     /* CFF2 table does not have glyph names; */
     /* we need to use `post' table method    */
     if ( font->version_major == 2 )
@@ -335,8 +307,6 @@
                                  sfnt_module,
                                  FT_SERVICE_ID_GLYPH_DICT,
                                  0 );
-
-
       if ( service && service->get_name )
         return service->get_name( FT_FACE( face ),
                                   glyph_index,
@@ -377,8 +347,6 @@
   Exit:
     return error;
   }
-
-
   static FT_UInt
   cff_get_name_index( CFF_Face          face,
                       const FT_String*  glyph_name )
@@ -389,8 +357,6 @@
     FT_String*          name;
     FT_UShort           sid;
     FT_UInt             i;
-
-
     cff     = (CFF_FontRec *)face->extra.data;
     charset = &cff->charset;
 
@@ -405,8 +371,6 @@
                                  sfnt_module,
                                  FT_SERVICE_ID_GLYPH_DICT,
                                  0 );
-
-
       if ( service && service->name_index )
         return service->name_index( FT_FACE( face ), glyph_name );
       else
@@ -441,16 +405,12 @@
 
     return 0;
   }
-
-
   FT_DEFINE_SERVICE_GLYPHDICTREC(
     cff_service_glyph_dict,
 
     (FT_GlyphDict_GetNameFunc)  cff_get_glyph_name,      /* get_name   */
     (FT_GlyphDict_NameIndexFunc)cff_get_name_index       /* name_index */
   )
-
-
   /*
    * POSTSCRIPT INFO SERVICE
    *
@@ -461,23 +421,17 @@
   {
     return ( face->face_flags & FT_FACE_FLAG_GLYPH_NAMES ) > 0;
   }
-
-
   static FT_Error
   cff_ps_get_font_info( CFF_Face         face,
                         PS_FontInfoRec*  afont_info )
   {
     CFF_Font  cff   = (CFF_Font)face->extra.data;
     FT_Error  error = FT_Err_Ok;
-
-
     if ( cff && !cff->font_info )
     {
       CFF_FontRecDict  dict      = &cff->top_font.font_dict;
       PS_FontInfoRec  *font_info = NULL;
       FT_Memory        memory    = face->root.memory;
-
-
       if ( FT_ALLOC( font_info, sizeof ( *font_info ) ) )
         goto Fail;
 
@@ -505,24 +459,18 @@
   Fail:
     return error;
   }
-
-
   static FT_Error
   cff_ps_get_font_extra( CFF_Face          face,
                          PS_FontExtraRec*  afont_extra )
   {
     CFF_Font  cff   = (CFF_Font)face->extra.data;
     FT_Error  error = FT_Err_Ok;
-
-
     if ( cff && cff->font_extra == NULL )
     {
       CFF_FontRecDict   dict       = &cff->top_font.font_dict;
       PS_FontExtraRec*  font_extra = NULL;
       FT_Memory         memory     = face->root.memory;
       FT_String*        embedded_postscript;
-
-
       if ( FT_ALLOC( font_extra, sizeof ( *font_extra ) ) )
         goto Fail;
 
@@ -535,8 +483,6 @@
       {
         FT_String*  start_fstype;
         FT_String*  start_def;
-
-
         /* Identify the XYZ integer in `/FSType XYZ def' substring. */
         if ( ( start_fstype = ft_strstr( embedded_postscript,
                                          "/FSType" ) ) != NULL    &&
@@ -545,8 +491,6 @@
                                       "def" ) ) != NULL           )
         {
           FT_String*  s;
-
-
           for ( s = start_fstype + sizeof ( "/FSType" ) - 1;
                 s != start_def;
                 s++ )
@@ -583,8 +527,6 @@
   Fail:
     return error;
   }
-
-
   FT_DEFINE_SERVICE_PSINFOREC(
     cff_service_ps_info,
 
@@ -596,8 +538,6 @@
     /* not implemented            */
     (PS_GetFontValueFunc)  NULL                     /* ps_get_font_value   */
   )
-
-
   /*
    * POSTSCRIPT NAME SERVICE
    *
@@ -608,8 +548,6 @@
   {
     CFF_Font      cff  = (CFF_Font)face->extra.data;
     SFNT_Service  sfnt = (SFNT_Service)face->sfnt;
-
-
     /* following the OpenType specification 1.7, we return the name stored */
     /* in the `name' table for a CFF wrapped into an SFNT container        */
 
@@ -622,23 +560,17 @@
                                  sfnt_module,
                                  FT_SERVICE_ID_POSTSCRIPT_FONT_NAME,
                                  0 );
-
-
       if ( service && service->get_ps_font_name )
         return service->get_ps_font_name( FT_FACE( face ) );
     }
 
     return (const char*)cff->font_name;
   }
-
-
   FT_DEFINE_SERVICE_PSFONTNAMEREC(
     cff_service_ps_name,
 
     (FT_PsName_GetFunc)cff_get_ps_name      /* get_ps_font_name */
   )
-
-
   /*
    * TT CMAP INFO
    *
@@ -658,8 +590,6 @@
 
     FT_Face     face    = FT_CMAP_FACE( cmap );
     FT_Library  library = FT_FACE_LIBRARY( face );
-
-
     if ( cmap->clazz != &cff_cmap_encoding_class_rec &&
          cmap->clazz != &cff_cmap_unicode_class_rec  )
     {
@@ -668,8 +598,6 @@
         (FT_Service_TTCMaps)ft_module_get_service( sfnt,
                                                    FT_SERVICE_ID_TT_CMAP,
                                                    0 );
-
-
       if ( service && service->get_cmap_info )
         error = service->get_cmap_info( charmap, cmap_info );
     }
@@ -678,15 +606,11 @@
 
     return error;
   }
-
-
   FT_DEFINE_SERVICE_TTCMAPSREC(
     cff_service_get_cmap_info,
 
     (TT_CMap_Info_GetFunc)cff_get_cmap_info    /* get_cmap_info */
   )
-
-
   /*
    * CID INFO SERVICE
    *
@@ -699,13 +623,9 @@
   {
     FT_Error  error = FT_Err_Ok;
     CFF_Font  cff   = (CFF_Font)face->extra.data;
-
-
     if ( cff )
     {
       CFF_FontRecDict  dict = &cff->top_font.font_dict;
-
-
       if ( dict->cid_registry == 0xFFFFU )
       {
         error = FT_THROW( Invalid_Argument );
@@ -746,31 +666,23 @@
   Fail:
     return error;
   }
-
-
   static FT_Error
   cff_get_is_cid( CFF_Face  face,
                   FT_Bool  *is_cid )
   {
     FT_Error  error = FT_Err_Ok;
     CFF_Font  cff   = (CFF_Font)face->extra.data;
-
-
     *is_cid = 0;
 
     if ( cff )
     {
       CFF_FontRecDict  dict = &cff->top_font.font_dict;
-
-
       if ( dict->cid_registry != 0xFFFFU )
         *is_cid = 1;
     }
 
     return error;
   }
-
-
   static FT_Error
   cff_get_cid_from_glyph_index( CFF_Face  face,
                                 FT_UInt   glyph_index,
@@ -778,16 +690,12 @@
   {
     FT_Error  error = FT_Err_Ok;
     CFF_Font  cff;
-
-
     cff = (CFF_Font)face->extra.data;
 
     if ( cff )
     {
       FT_UInt          c;
       CFF_FontRecDict  dict = &cff->top_font.font_dict;
-
-
       if ( dict->cid_registry == 0xFFFFU )
       {
         error = FT_THROW( Invalid_Argument );
@@ -809,8 +717,6 @@
   Fail:
     return error;
   }
-
-
   FT_DEFINE_SERVICE_CIDREC(
     cff_service_cid_info,
 
@@ -821,8 +727,6 @@
     (FT_CID_GetCIDFromGlyphIndexFunc)
       cff_get_cid_from_glyph_index             /* get_cid_from_glyph_index */
   )
-
-
   /*
    * PROPERTY SERVICE
    *
@@ -833,8 +737,6 @@
 
     (FT_Properties_SetFunc)ps_property_set,      /* set_property */
     (FT_Properties_GetFunc)ps_property_get )     /* get_property */
-
-
 #ifdef TT_CONFIG_OPTION_GX_VAR_SUPPORT
 
   /*
@@ -848,94 +750,62 @@
                     FT_Fixed*  coords )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->set_mm_blend( FT_FACE( face ), num_coords, coords );
   }
-
-
   static FT_Error
   cff_get_mm_blend( CFF_Face   face,
                     FT_UInt    num_coords,
                     FT_Fixed*  coords )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->get_mm_blend( FT_FACE( face ), num_coords, coords );
   }
-
-
   static FT_Error
   cff_set_mm_weightvector( CFF_Face   face,
                            FT_UInt    len,
                            FT_Fixed*  weightvector )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->set_mm_weightvector( FT_FACE( face ), len, weightvector );
   }
-
-
   static FT_Error
   cff_get_mm_weightvector( CFF_Face   face,
                            FT_UInt*   len,
                            FT_Fixed*  weightvector )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->get_mm_weightvector( FT_FACE( face ), len, weightvector );
   }
-
-
   static FT_Error
   cff_get_mm_var( CFF_Face     face,
                   FT_MM_Var*  *master )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->get_mm_var( FT_FACE( face ), master );
   }
-
-
   static FT_Error
   cff_set_var_design( CFF_Face   face,
                       FT_UInt    num_coords,
                       FT_Fixed*  coords )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->set_var_design( FT_FACE( face ), num_coords, coords );
   }
-
-
   static FT_Error
   cff_get_var_design( CFF_Face   face,
                       FT_UInt    num_coords,
                       FT_Fixed*  coords )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->get_var_design( FT_FACE( face ), num_coords, coords );
   }
-
-
   static FT_Error
   cff_set_instance( CFF_Face  face,
                     FT_UInt   instance_index )
   {
     FT_Service_MultiMasters  mm = (FT_Service_MultiMasters)face->mm;
-
-
     return mm->set_instance( FT_FACE( face ), instance_index );
   }
-
-
   FT_DEFINE_SERVICE_MULTIMASTERSREC(
     cff_service_multi_masters,
 
@@ -953,8 +823,6 @@
     (FT_Get_Var_Blend_Func)      cff_get_var_blend,       /* get_var_blend       */
     (FT_Done_Blend_Func)         cff_done_blend           /* done_blend          */
   )
-
-
   /*
    * METRICS VARIATIONS SERVICE
    *
@@ -966,22 +834,14 @@
                        FT_Int   *avalue )
   {
     FT_Service_MetricsVariations  var = (FT_Service_MetricsVariations)face->var;
-
-
     return var->hadvance_adjust( FT_FACE( face ), gindex, avalue );
   }
-
-
   static void
   cff_metrics_adjust( CFF_Face  face )
   {
     FT_Service_MetricsVariations  var = (FT_Service_MetricsVariations)face->var;
-
-
     var->metrics_adjust( FT_FACE( face ) );
   }
-
-
   FT_DEFINE_SERVICE_METRICSVARIATIONSREC(
     cff_service_metrics_variations,
 
@@ -997,8 +857,6 @@
     (FT_Metrics_Adjust_Func) cff_metrics_adjust      /* metrics_adjust  */
   )
 #endif
-
-
   /*
    * CFFLOAD SERVICE
    *
@@ -1013,8 +871,6 @@
     (FT_Blend_Check_Vector_Func)   cff_blend_check_vector,
     (FT_Blend_Build_Vector_Func)   cff_blend_build_vector
   )
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -1083,8 +939,6 @@
     FT_SERVICE_ID_CFF_LOAD,             &cff_service_cff_load
   )
 #endif
-
-
   FT_CALLBACK_DEF( FT_Module_Interface )
   cff_get_interface( FT_Module    driver,       /* CFF_Driver */
                      const char*  module_interface )
@@ -1092,8 +946,6 @@
     FT_Library           library;
     FT_Module            sfnt;
     FT_Module_Interface  result;
-
-
     result = ft_service_list_lookup( cff_services, module_interface );
     if ( result )
       return result;
@@ -1110,8 +962,6 @@
 
     return sfnt ? sfnt->clazz->get_interface( sfnt, module_interface ) : 0;
   }
-
-
   /* The FT_DriverInterface structure is defined in ftdriver.h. */
 
 #ifdef TT_CONFIG_OPTION_EMBEDDED_BITMAPS
@@ -1159,6 +1009,4 @@
     cff_size_request,           /* FT_Size_RequestFunc  request_size */
     CFF_SIZE_SELECT             /* FT_Size_SelectFunc   select_size  */
   )
-
-
 /* END */

@@ -41,7 +41,5 @@ struct xlsx_table_position
     size_t row;
     double rowOff;
 };
-
-
 }
 }

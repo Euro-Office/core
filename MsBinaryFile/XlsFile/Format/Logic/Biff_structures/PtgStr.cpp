@@ -39,21 +39,15 @@ namespace XLS
 PtgStr::PtgStr(const unsigned short full_ptg_id) : OperandPtg(full_ptg_id)
 {
 }
-
-
 PtgStr::PtgStr(const std::wstring & str)
 :	string_(str),
 	OperandPtg(fixed_id)
 {
 }
-
-
 BiffStructurePtr PtgStr::clone()
 {
 	return BiffStructurePtr(new PtgStr(*this));
 }
-
-
 
 void PtgStr::loadFields(CFRecord& record)
 {
@@ -75,8 +69,6 @@ void PtgStr::loadFields(CFRecord& record)
             string_.push_back(value);
         }
     }
-
-
 	int pos1 = string_.find(L"\"");
 	int pos2 = string_.rfind(L"\"");
 
@@ -120,7 +112,5 @@ void PtgStr::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool full
 {
 	ptg_stack.push(string_);
 }
-
-
 } // namespace XLS
 

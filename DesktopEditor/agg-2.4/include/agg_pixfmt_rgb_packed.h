@@ -68,8 +68,6 @@ namespace agg
                               (p << 3) & 0xF8);
         }
     };
-
-
     //=====================================================blender_rgb555_pre
     struct blender_rgb555_pre
     {
@@ -108,10 +106,6 @@ namespace agg
                               (p << 3) & 0xF8);
         }
     };
-
-
-
-
     //=====================================================blender_rgb555_gamma
     template<class Gamma> class blender_rgb555_gamma
     {
@@ -158,10 +152,6 @@ namespace agg
         const Gamma* m_gamma;
     };
 
-
-
-
-
     //=========================================================blender_rgb565
     struct blender_rgb565
     {
@@ -197,8 +187,6 @@ namespace agg
                               (p << 3) & 0xF8);
         }
     };
-
-
 
     //=====================================================blender_rgb565_pre
     struct blender_rgb565_pre
@@ -236,8 +224,6 @@ namespace agg
                               (p << 3) & 0xF8);
         }
     };
-
-
 
     //=====================================================blender_rgb565_gamma
     template<class Gamma> class blender_rgb565_gamma
@@ -283,8 +269,6 @@ namespace agg
         const Gamma* m_gamma;
     };
 
-
-
     //=====================================================blender_rgbAAA
     struct blender_rgbAAA
     {
@@ -322,8 +306,6 @@ namespace agg
                               (p << 6)  & 0xFFC0);
         }
     };
-
-
 
     //==================================================blender_rgbAAA_pre
     struct blender_rgbAAA_pre
@@ -364,8 +346,6 @@ namespace agg
                               (p << 6)  & 0xFFC0);
         }
     };
-
-
 
     //=================================================blender_rgbAAA_gamma
     template<class Gamma> class blender_rgbAAA_gamma
@@ -411,8 +391,6 @@ namespace agg
     private:
         const Gamma* m_gamma;
     };
-
-
     //=====================================================blender_bgrAAA
     struct blender_bgrAAA
     {
@@ -450,8 +428,6 @@ namespace agg
                               (p >> 14) & 0xFFC0);
         }
     };
-
-
 
     //=================================================blender_bgrAAA_pre
     struct blender_bgrAAA_pre
@@ -492,8 +468,6 @@ namespace agg
                               (p >> 14) & 0xFFC0);
         }
     };
-
-
 
     //=================================================blender_bgrAAA_gamma
     template<class Gamma> class blender_bgrAAA_gamma
@@ -541,8 +515,6 @@ namespace agg
         const Gamma* m_gamma;
     };
 
-
-
     //=====================================================blender_rgbBBA
     struct blender_rgbBBA
     {
@@ -578,8 +550,6 @@ namespace agg
                               (p << 6)  & 0xFFC0);
         }
     };
-
-
     //=================================================blender_rgbBBA_pre
     struct blender_rgbBBA_pre
     {
@@ -617,8 +587,6 @@ namespace agg
                               (p << 6)  & 0xFFC0);
         }
     };
-
-
 
     //=================================================blender_rgbBBA_gamma
     template<class Gamma> class blender_rgbBBA_gamma
@@ -663,8 +631,6 @@ namespace agg
     private:
         const Gamma* m_gamma;
     };
-
-
     //=====================================================blender_bgrABB
     struct blender_bgrABB
     {
@@ -700,8 +666,6 @@ namespace agg
                               (p >> 16) & 0xFFC0);
         }
     };
-
-
     //=================================================blender_bgrABB_pre
     struct blender_bgrABB_pre
     {
@@ -739,8 +703,6 @@ namespace agg
                               (p >> 16) & 0xFFC0);
         }
     };
-
-
 
     //=================================================blender_bgrABB_gamma
     template<class Gamma> class blender_bgrABB_gamma
@@ -785,8 +747,6 @@ namespace agg
     private:
         const Gamma* m_gamma;
     };
-
-
     
     //===========================================pixfmt_alpha_blend_rgb_packed
     template<class Blender,  class RenBuf> class pixfmt_alpha_blend_rgb_packed
@@ -1191,8 +1151,6 @@ namespace agg
             }
         }
 
-
-
     private:
         rbuf_type* m_rbuf;
         Blender    m_blender;
@@ -1213,8 +1171,6 @@ namespace agg
     typedef pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_pre, rendering_buffer> pixfmt_bgrAAA_pre; //----pixfmt_bgrAAA_pre
     typedef pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_pre, rendering_buffer> pixfmt_rgbBBA_pre; //----pixfmt_rgbBBA_pre
     typedef pixfmt_alpha_blend_rgb_packed<blender_bgrABB_pre, rendering_buffer> pixfmt_bgrABB_pre; //----pixfmt_bgrABB_pre
-
-
     //-----------------------------------------------------pixfmt_rgb555_gamma
     template<class Gamma> class pixfmt_rgb555_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_rgb555_gamma<Gamma>, 
@@ -1228,8 +1184,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
     //-----------------------------------------------------pixfmt_rgb565_gamma
     template<class Gamma> class pixfmt_rgb565_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_rgb565_gamma<Gamma>, rendering_buffer>
@@ -1241,8 +1195,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
     //-----------------------------------------------------pixfmt_rgbAAA_gamma
     template<class Gamma> class pixfmt_rgbAAA_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_rgbAAA_gamma<Gamma>, 
@@ -1256,8 +1208,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
     //-----------------------------------------------------pixfmt_bgrAAA_gamma
     template<class Gamma> class pixfmt_bgrAAA_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_bgrAAA_gamma<Gamma>, 
@@ -1271,8 +1221,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
     //-----------------------------------------------------pixfmt_rgbBBA_gamma
     template<class Gamma> class pixfmt_rgbBBA_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_rgbBBA_gamma<Gamma>, 
@@ -1286,8 +1234,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
     //-----------------------------------------------------pixfmt_bgrABB_gamma
     template<class Gamma> class pixfmt_bgrABB_gamma : 
     public pixfmt_alpha_blend_rgb_packed<blender_bgrABB_gamma<Gamma>, 
@@ -1301,8 +1247,6 @@ namespace agg
             this->blender().gamma(g);
         }
     };
-
-
 }
 
 #endif

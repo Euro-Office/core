@@ -227,8 +227,6 @@ static void U_CALLCONV initCanonicalIDCache(UErrorCode &status) {
     // No key/value deleters - keys/values are from a resource bundle
     ucln_i18n_registerCleanup(UCLN_I18N_ZONEMETA, zoneMeta_cleanup);
 }
-
-
 const UChar* U_EXPORT2
 ZoneMeta::getCanonicalCLDRID(const UnicodeString &tzid, UErrorCode& status) {
     if (U_FAILURE(status)) {
@@ -408,8 +406,6 @@ static void U_CALLCONV countryInfoVectorsInit(UErrorCode &status) {
     }
     ucln_i18n_registerCleanup(UCLN_I18N_ZONEMETA, zoneMeta_cleanup);
 }
-
-
 UnicodeString& U_EXPORT2
 ZoneMeta::getCanonicalCountry(const UnicodeString &tzid, UnicodeString &country, UBool *isPrimary /* = NULL */) {
     if (isPrimary != NULL) {
@@ -544,8 +540,6 @@ static void U_CALLCONV olsonToMetaInit(UErrorCode &status) {
         uhash_setValueDeleter(gOlsonToMeta, deleteUVector);
     }
 }
-
-
 const UVector* U_EXPORT2
 ZoneMeta::getMetazoneMappings(const UnicodeString &tzid) {
     UErrorCode status = U_ZERO_ERROR;
@@ -831,8 +825,6 @@ const UChar*
 ZoneMeta::findTimeZoneID(const UnicodeString& tzid) {
     return TimeZone::findID(tzid);
 }
-
-
 TimeZone*
 ZoneMeta::createCustomTimeZone(int32_t offset) {
     UBool negative = FALSE;

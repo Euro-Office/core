@@ -1560,8 +1560,6 @@ std::wstring RtfCharProperty::RenderToRtf(RenderParameter oRenderParameter)
 	}
 	if( m_poShading.IsValid() == true )
 		sResult +=  m_poShading.RenderToRtf( oRenderParameter );
-
-
 	if ( m_nDeleted != PROP_DEF)
 	{
 		sResult += L"\\deleted";
@@ -2152,8 +2150,6 @@ std::wstring RtfListLevelProperty::RenderToRtf(RenderParameter oRenderParameter)
 		sResult += L"\\jclisttab";
 		sResult +=  m_oTabs.m_aTabs[i].RenderToRtf( oRenderParameter );
 	}
-
-
 	sResult += L"}";
 	return sResult;
 }
@@ -3554,8 +3550,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_BOOL	( m_bKeepNext		, sResult, L"keepn" );
 	RENDER_RTF_INT	( m_nOutlinelevel	, sResult, L"outlinelevel" );
 	RENDER_RTF_BOOL	( m_bPageBB			, sResult, L"pagebb" );
-
-
 	switch(m_eAlign)
 	{
 		case  pa_qc:	sResult += L"\\qc";		break;  
@@ -3676,8 +3670,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	}
 	if( true == m_oTabs.IsValid() )
 		sResult +=  m_oTabs.RenderToRtf( oRenderParameter );
-
-
 	//RENDER_RTF_INT( m_nTableStyle, sResult, L"yts" );
 	//RENDER_RTF_BOOL( m_bStyleFirstRow, sResult, L"tscfirstrow" );
 	//RENDER_RTF_BOOL( m_bStyleLastRow, sResult, L"tsclastrow" );
@@ -3691,8 +3683,6 @@ std::wstring RtfParagraphProperty::RenderToRtf(RenderParameter oRenderParameter)
 	//RENDER_RTF_BOOL( m_bStyleNECell, sResult, L"tscnecell" );
 	//RENDER_RTF_BOOL( m_bStyleSWCell, sResult, L"tscswcell" );
 	//RENDER_RTF_BOOL( m_bStyleSECell, sResult, L"tscsecell" );
-
-
 	//дописываем текст списка (для старых reader например  wordPad)
 	if( PROP_DEF != m_nListId && PROP_DEF != m_nListLevel )
 	{
@@ -4898,8 +4888,6 @@ std::wstring RtfTableProperty::RenderToOOX(RenderParameter oRenderParameter)
 
 	if( m_oShading.IsValid() == true )
 		sResult += m_oShading.RenderToOOX(oRenderParameter);
-
-
 	//if( RENDER_TO_OOX_PARAM_STYLES == oRenderParameter.nType )
 	//{
 	//	RENDER_OOX_INT( m_nRowBandSize, sResult, L"w:tblStyleRowBandSize" )

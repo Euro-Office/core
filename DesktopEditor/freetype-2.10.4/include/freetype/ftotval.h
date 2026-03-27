@@ -14,19 +14,13 @@
  * understand and accept it fully.
  *
  */
-
-
 /****************************************************************************
- *
  *
  * Warning: This module might be moved to a different library in the
  *          future to avoid a tight dependency between FreeType and the
  *          OpenType specification.
  *
- *
  */
-
-
 #ifndef FTOTVAL_H_
 #define FTOTVAL_H_
 
@@ -37,11 +31,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -64,8 +54,6 @@ FT_BEGIN_HEADER
    *   FT_VALIDATE_OTXXX
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -111,8 +99,6 @@ FT_BEGIN_HEADER
                           FT_VALIDATE_GSUB | \
                           FT_VALIDATE_JSTF | \
                           FT_VALIDATE_MATH )
-
-
   /**************************************************************************
    *
    * @function:
@@ -168,8 +154,6 @@ FT_BEGIN_HEADER
                         FT_Bytes  *GPOS_table,
                         FT_Bytes  *GSUB_table,
                         FT_Bytes  *JSTF_table );
-
-
   /**************************************************************************
    *
    * @function:
@@ -193,14 +177,8 @@ FT_BEGIN_HEADER
   FT_EXPORT( void )
   FT_OpenType_Free( FT_Face   face,
                     FT_Bytes  table );
-
-
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTOTVAL_H_ */
-
-
 /* END */

@@ -75,8 +75,6 @@ public:
     // Add (union) to the UnicodeSet all of the characters for the scripts used for
     // the specified locale.  Part of the implementation of setAllowedLocales.
     void addScriptChars(const char *locale, UnicodeSet *allowedChars, UErrorCode &status);
-
-
     /** parse a hex number.  Untility used by the builders.   */
     static UChar32 ScanHex(const UChar *s, int32_t start, int32_t limit, UErrorCode &status);
 
@@ -113,8 +111,6 @@ public:
 
     IdentifierInfo    *fCachedIdentifierInfo;    // Do not use directly. See getIdentifierInfo().:w
 };
-
-
 
 //
 //  Confusable Mappings Data Structures
@@ -170,14 +166,10 @@ public:
 #define USPOOF_KEY_MULTIPLE_VALUES (1<<28)
 #define USPOOF_KEY_LENGTH_SHIFT 29
 #define USPOOF_KEY_LENGTH_FIELD(x) (((x)>>29) & 3)
-
-
 struct SpoofStringLengthsElement {
     uint16_t      fLastString;         // index in string table of last string with this length
     uint16_t      fStrLength;           // Length of strings
 };
-
-
 
 //-------------------------------------------------------------------------------------
 //
@@ -255,8 +247,6 @@ class SpoofData: public UMemory {
     UTrie2                      *fLowerCaseTrie;
     ScriptSet                   *fScriptSets;
     };
-    
-
 //---------------------------------------------------------------------------------------
 //
 //  Raw Binary Data Formats, as loaded from the ICU data file,
@@ -286,8 +276,6 @@ struct SpoofDataHeader {
 
     int32_t       fCFUStringLengths;      // byte offset to String Lengths table
     int32_t       fCFUStringLengthsSize;  // number of entries in lengths table. (2 x 16 bits each)
-
-
     // The following sections are for data from confusablesWholeScript.txt
     
     int32_t       fAnyCaseTrie;           // byte offset to the serialized Any Case Trie
@@ -298,18 +286,10 @@ struct SpoofDataHeader {
 
     int32_t       fScriptSets;            // byte offset to array of ScriptSets
     int32_t       fScriptSetsLength;      // Number of ScriptSets (24 bytes each)
-    
-
     // The following sections are for data from xidmodifications.txt
-    
-    
     int32_t       unused[15];              // Padding, Room for Expansion
     
  }; 
-
-
-
-    
 //
 //  Structure for the Whole Script Confusable Data
 //    See Unicode UAX-39, Unicode Security Mechanisms, for a description of the
@@ -325,8 +305,6 @@ struct SpoofDataHeader {
 //  by the offsets obtained from the Trie.
 //
 //
-
-
 U_NAMESPACE_END
 #endif /* __cplusplus */
 
@@ -337,8 +315,6 @@ U_NAMESPACE_END
 U_CAPI int32_t U_EXPORT2
 uspoof_swap(const UDataSwapper *ds, const void *inData, int32_t length, void *outData,
             UErrorCode *status);
-
-
 #endif
 
 #endif  /* USPOOFIM_H */

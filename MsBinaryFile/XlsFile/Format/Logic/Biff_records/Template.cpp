@@ -38,25 +38,17 @@ namespace XLS
 Template::Template()
 {
 }
-
-
 Template::~Template()
 {
 }
-
-
 BaseObjectPtr Template::clone()
 {
 	return BaseObjectPtr(new Template(*this));
 }
-
-
 void Template::readFields(CFRecord& record)
 {
 	// No data in this record
 }
 
 } // namespace XLS
-
-
 

@@ -178,8 +178,6 @@ namespace SimpleTypes
 	//	{
 	//		m_sValue = sValue;
 	//	}
-
-
 	//       std::wstring FromString(const std::wstring &sValue)
 	//	{
 	//		m_sValue = sValue;
@@ -199,8 +197,6 @@ namespace SimpleTypes
 
 	//       std::wstring m_sValue;
 	//};
-
-
 	//--------------------------------------------------------------------------------
 	// OnOff 22.9.2.7 (Part 1)
 	//--------------------------------------------------------------------------------

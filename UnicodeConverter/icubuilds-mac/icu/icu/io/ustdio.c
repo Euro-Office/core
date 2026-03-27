@@ -57,8 +57,6 @@ static const uint32_t DELIMITERS_LEN = 1;
 #define CAN_HAVE_COMBINED_STRING_DELIMITER(c1) (UBool)((c1) == DELIM_CR)
 #define IS_COMBINED_STRING_DELIMITER(c1, c2) \
  (UBool)((c1) == DELIM_CR && (c2) == DELIM_LF)
-
-
 #if !UCONFIG_NO_TRANSLITERATION
 
 U_CAPI UTransliterator* U_EXPORT2
@@ -239,8 +237,6 @@ ufile_flush_translit(UFILE *f)
 
     u_file_write_flush(NULL, 0, f, FALSE, TRUE);
 }
-
-
 void
 ufile_flush_io(UFILE *f)
 {
@@ -250,8 +246,6 @@ ufile_flush_io(UFILE *f)
 
   u_file_write_flush(NULL, 0, f, TRUE, FALSE);
 }
-
-
 void
 ufile_close_translit(UFILE *f)
 {
@@ -275,8 +269,6 @@ ufile_close_translit(UFILE *f)
     f->fTranslit = NULL;
 #endif
 }
-
-
 /* Input/output */
 
 U_CAPI int32_t U_EXPORT2 /* U_CAPI ... U_EXPORT2 added by Peter Kirk 17 Nov 2001 */
@@ -302,8 +294,6 @@ u_fputc(UChar32      uc,
     }
     return u_file_write(buf, idx, f) == idx ? uc : U_EOF;
 }
-
-
 U_CFUNC int32_t U_EXPORT2
 u_file_write_flush(const UChar *chars,
                    int32_t     count,
@@ -396,8 +386,6 @@ u_file_write(    const UChar     *chars,
 {
     return u_file_write_flush(chars,count,f,FALSE,FALSE);
 }
-
-
 /* private function used for buffering input */
 void
 ufile_fill_uchar_buffer(UFILE *f)
@@ -430,8 +418,6 @@ ufile_fill_uchar_buffer(UFILE *f)
     if(dataSize != 0) {
         uprv_memmove(f->fUCBuffer, str->fPos, dataSize * sizeof(UChar)); /* not accessing beyond memory */
     }
-
-
     /* record how much buffer space is available */
     availLength = UFILE_UCHARBUFFER_SIZE - dataSize;
 

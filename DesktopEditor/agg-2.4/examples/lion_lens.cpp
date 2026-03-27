@@ -55,8 +55,6 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_magn_slider;
@@ -86,8 +84,6 @@ public:
         m_radius_slider.label("Radius=%3.2f");
 
     }
-
-
     virtual void on_init()
     {
         g_x1 = 200;
@@ -131,8 +127,6 @@ public:
 
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_magn_slider);
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_radius_slider);
-
-
         // Testing inverse_transform()
         //--------------------
         //double x, y;
@@ -152,8 +146,6 @@ public:
         //}
     }
 
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -169,20 +161,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -194,9 +178,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

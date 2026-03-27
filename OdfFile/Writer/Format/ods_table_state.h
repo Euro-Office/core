@@ -46,8 +46,6 @@
 #include "style_graphic_properties.h"
 
 #include "../../DataTypes/officevaluetype.h"
-
-
 namespace cpdoccore {
 
 struct oox_table_position

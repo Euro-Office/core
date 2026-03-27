@@ -220,8 +220,6 @@ namespace Spreadsheet
         void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
         void fromBin(XLS::BaseObjectPtr& obj);
         XLS::BaseObjectPtr toBin();
-
-        
         nullable_int		 m_oCount;
         std::vector<_INT32>  m_oFieldUsage;
     };
@@ -271,8 +269,6 @@ namespace Spreadsheet
         nullable_uint		m_oParentSet;
         nullable_uint		m_oMemberValueDatatype;
         nullable_int		m_oIconSet;
-
-
         nullable<CfieldsUsage>	m_oFieldsUsage;
         nullable<CGroupLevels>	m_oGroupLevels;
 
@@ -384,8 +380,6 @@ namespace Spreadsheet
         nullable_string		m_oName;
 
     };
-
-
     class CMembers : public WritingElementWithChilds<CMember>
     {
     public:
@@ -445,8 +439,6 @@ namespace Spreadsheet
         nullable_bool		m_oIncludeNewItemsInFilter;
 
         nullable_string		m_oCaption;
-
-
         nullable<CMemberProperties>                            m_oMemberProperties;
         nullable<OOX::Drawing::COfficeArtExtensionList>		   m_oExtLst;
 

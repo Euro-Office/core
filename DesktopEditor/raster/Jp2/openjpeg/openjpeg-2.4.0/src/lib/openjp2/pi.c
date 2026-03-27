@@ -878,8 +878,6 @@ static void opj_get_encoding_parameters(const opj_image_t *p_image,
         ++l_tccp;
     }
 }
-
-
 static void opj_get_all_encoding_parameters(const opj_image_t *p_image,
         const opj_cp_t *p_cp,
         OPJ_UINT32 tileno,
@@ -1299,8 +1297,6 @@ static void opj_pi_update_decode_not_poc(opj_pi_iterator_t * p_pi,
     }
 }
 
-
-
 static OPJ_BOOL opj_pi_check_next_level(OPJ_INT32 pos,
                                         opj_cp_t *cp,
                                         OPJ_UINT32 tileno,
@@ -1383,8 +1379,6 @@ static OPJ_BOOL opj_pi_check_next_level(OPJ_INT32 pos,
     }/*end if*/
     return OPJ_FALSE;
 }
-
-
 /*
 ==========================================================
    Packet iterator interface
@@ -1587,8 +1581,6 @@ opj_pi_iterator_t *opj_pi_create_decode(opj_image_t *p_image,
     }
     return l_pi;
 }
-
-
 OPJ_UINT32 opj_get_encoding_packet_count(const opj_image_t *p_image,
         const opj_cp_t *p_cp,
         OPJ_UINT32 p_tile_no)
@@ -1610,8 +1602,6 @@ OPJ_UINT32 opj_get_encoding_packet_count(const opj_image_t *p_image,
     return p_cp->tcps[p_tile_no].numlayers * l_max_prec * p_image->numcomps *
            l_max_res;
 }
-
-
 opj_pi_iterator_t *opj_pi_initialise_encode(const opj_image_t *p_image,
         opj_cp_t *p_cp,
         OPJ_UINT32 p_tile_no,
@@ -2097,8 +2087,6 @@ void opj_pi_destroy(opj_pi_iterator_t *p_pi,
         opj_free(p_pi);
     }
 }
-
-
 
 void opj_pi_update_encoding_parameters(const opj_image_t *p_image,
                                        opj_cp_t *p_cp,

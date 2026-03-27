@@ -38,13 +38,9 @@ namespace XLS
 LineFormat::LineFormat()
 {
 }
-
-
 LineFormat::~LineFormat()
 {
 }
-
-
 BaseObjectPtr LineFormat::clone()
 {
 	return BaseObjectPtr(new LineFormat(*this));

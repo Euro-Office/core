@@ -7,14 +7,10 @@
 
 #ifndef __TMUNIT_H__
 #define __TMUNIT_H__
-
-
 /**
  * \file
  * \brief C++ API: time unit object
  */
-
-
 #include "unicode/measunit.h"
 
 #if !UCONFIG_NO_FORMATTING
@@ -56,8 +52,6 @@ public:
      */
     static TimeUnit* U_EXPORT2 createInstance(UTimeUnitFields timeUnitField,
                                               UErrorCode& status);
-
-
     /**
      * Override clone.
      * @stable ICU 4.2 
@@ -93,8 +87,6 @@ public:
      * @stable ICU 4.2 
      */
     static UClassID U_EXPORT2 getStaticClassID();
-
-
     /**
      * Get time unit field.
      * @return time unit field.
@@ -118,8 +110,6 @@ private:
     TimeUnit(UTimeUnitFields timeUnitField);
 
 };
-
-
 U_NAMESPACE_END
 
 #endif /* #if !UCONFIG_NO_FORMATTING */

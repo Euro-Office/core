@@ -15,8 +15,6 @@
 
 #ifndef AGG_WARP_MAGNIFIER_INCLUDED
 #define AGG_WARP_MAGNIFIER_INCLUDED
-
-
 namespace agg
 {
 
@@ -47,10 +45,6 @@ namespace agg
         double m_magn;
         double m_radius;
     };
-
-
 }
-
-
 #endif
 

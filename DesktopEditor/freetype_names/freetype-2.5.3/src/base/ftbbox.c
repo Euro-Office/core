@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
   /*************************************************************************/
   /*                                                                       */
   /* This component has a _single_ role: to compute exact outline bounding */
   /* boxes.                                                                */
   /*                                                                       */
   /*************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 
@@ -32,16 +28,12 @@
 #include FT_OUTLINE_H
 #include FT_INTERNAL_CALC_H
 #include FT_INTERNAL_OBJECTS_H
-
-
   typedef struct  TBBox_Rec_
   {
     FT_Vector  last;
     FT_BBox    bbox;
 
   } TBBox_Rec;
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -70,15 +62,11 @@
 
     return 0;
   }
-
-
 #define CHECK_X( p, bbox )  \
           ( p->x < bbox.xMin || p->x > bbox.xMax )
 
 #define CHECK_Y( p, bbox )  \
           ( p->y < bbox.yMin || p->y > bbox.yMax )
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -122,8 +110,6 @@
     if ( y2 > *max )
       *max = y2;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -176,8 +162,6 @@
 
     return 0;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -252,8 +236,6 @@
 
     return max;
   }
-
-
   static void
   BBox_Cubic_Check( FT_Pos   p1,
                     FT_Pos   p2,
@@ -264,8 +246,6 @@
   {
     FT_Pos  nmin, nmax;
     FT_Int  shift;
-
-
     /* This function is only called when a control off-point is outside  */
     /* the bbox that contains all on-points.  It finds a local extremum  */
     /* within the segment using iterative bisection of the segment.      */
@@ -322,8 +302,6 @@
     if ( nmax > *max )
       *max = nmax;
   }
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -403,8 +381,6 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
     FT_BBox     bbox;
     FT_Vector*  vec;
     FT_UShort   n;
-
-
     if ( !abbox )
       return FT_THROW( Invalid_Argument );
 
@@ -432,8 +408,6 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
     {
       FT_Pos  x = vec->x;
       FT_Pos  y = vec->y;
-
-
       /* update control box */
       if ( x < cbox.xMin ) cbox.xMin = x;
       if ( x > cbox.xMax ) cbox.xMax = x;
@@ -482,6 +456,4 @@ FT_DEFINE_OUTLINE_FUNCS(bbox_interface,
 
     return FT_Err_Ok;
   }
-
-
 /* END */

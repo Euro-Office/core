@@ -19,8 +19,6 @@ import sys
 #  AUX_MODULES += <name>
 #  BASE_EXTENSIONS += <name>
 #  ...
-
-
 def parse_modules_cfg(input_file):
 
     lists = {
@@ -48,8 +46,6 @@ def parse_modules_cfg(input_file):
         lists[items[0]].append(items[2])
 
     return lists
-
-
 def generate_ftmodule(lists):
     result = "/* This is a generated file. */\n"
     for driver in lists["FONT_MODULES"]:
@@ -90,24 +86,16 @@ def generate_ftmodule(lists):
 
     result += "/* EOF */\n"
     return result
-
-
 def generate_main_modules(lists):
     return "\n".join(
         lists["FONT_MODULES"]
         + lists["HINTING_MODULES"]
         + lists["RASTER_MODULES"]
     )
-
-
 def generate_aux_modules(lists):
     return "\n".join(lists["AUX_MODULES"])
-
-
 def generate_base_extensions(lists):
     return "\n".join(lists["BASE_EXTENSIONS"])
-
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
 
@@ -154,7 +142,5 @@ def main():
     else:
         print(result)
     return 0
-
-
 if __name__ == "__main__":
     sys.exit(main())

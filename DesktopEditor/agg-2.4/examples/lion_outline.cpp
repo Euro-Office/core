@@ -26,8 +26,6 @@
 #include "pixel_formats.h"
 
 enum flip_y_e { flip_y = true };
-
-
 agg::rasterizer_scanline_aa<> g_rasterizer;
 agg::scanline_p8  g_scanline;
 agg::path_storage g_path;
@@ -45,8 +43,6 @@ double            g_scale = 1.0;
 double            g_skew_x = 0;
 double            g_skew_y = 0;
 int               g_nclick = 0;
-
-
 unsigned parse_lion(agg::path_storage& ps, agg::rgba8* colors, unsigned* path_idx);
 void parse_lion()
 {
@@ -56,8 +52,6 @@ void parse_lion()
     g_base_dx = (g_x2 - g_x1) / 2.0;
     g_base_dy = (g_y2 - g_y1) / 2.0;
 }
-
-
 class the_application : public agg::platform_support
 {
     agg::slider_ctrl<agg::rgba8> m_width_slider;
@@ -79,8 +73,6 @@ public:
         add_ctrl(m_scanline);
         m_scanline.no_transform();
     }
-
-
     virtual void on_draw()
     {
         int width = rbuf_window().width();
@@ -124,13 +116,9 @@ public:
 
             ras.render_all_paths(trans, g_colors, g_path_idx, g_npaths);
         }
-
-
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_width_slider);
         agg::render_ctrl(g_rasterizer, g_scanline, rb, m_scanline);
     }
-
-
     void transform(double width, double height, double x, double y)
     {
         x -= width / 2;
@@ -138,8 +126,6 @@ public:
         g_angle = atan2(y, x);
         g_scale = sqrt(y * y + x * x) / 100.0;
     }
-
-
     virtual void on_mouse_button_down(int x, int y, unsigned flags)
     {
         if(flags & agg::mouse_left)
@@ -157,20 +143,12 @@ public:
             force_redraw();
         }
     }
-
-
     virtual void on_mouse_move(int x, int y, unsigned flags)
     {
         on_mouse_button_down(x, y, flags);
     }
 
 };
-
-
-
-
-
-
 int agg_main(int argc, char* argv[])
 {
     the_application app(pix_format, flip_y);
@@ -182,9 +160,3 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
-
-

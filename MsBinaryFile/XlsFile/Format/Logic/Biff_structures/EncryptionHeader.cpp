@@ -34,8 +34,6 @@
 
 namespace CRYPTO
 {
-
-
 XLS::BiffStructurePtr EncryptionHeader::clone()
 {
 	return XLS::BiffStructurePtr(new EncryptionHeader(*this));
@@ -52,7 +50,5 @@ void EncryptionHeader::load(XLS::CFRecord& record)
 	record. skipNunBytes(8); // reserved
 	record >> CSPName;
 }
-
-
 } // namespace CRYPTO
 

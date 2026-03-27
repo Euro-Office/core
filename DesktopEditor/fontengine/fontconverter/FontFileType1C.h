@@ -93,8 +93,6 @@ namespace NSFontConverter
         int    nFDSelectOffset;
     };
 
-
-
     #define type1CMaxBlueValues 14
     #define type1CMaxOtherBlues 10
     #define type1CMaxStemSnap   12
@@ -249,8 +247,6 @@ namespace NSFontConverter
         }
         return nChecksum;
     }
-
-
 
     private:
 

@@ -162,8 +162,6 @@ PluralFormat::copyObjects(const PluralFormat& other) {
         pluralRulesWrapper.pluralRules = other.pluralRulesWrapper.pluralRules->clone();
     }
 }
-
-
 PluralFormat::~PluralFormat() {
     delete numberFormat;
 }
@@ -227,8 +225,6 @@ PluralFormat::format(double number, UErrorCode& status) const {
     UnicodeString result;
     return format(Formattable(number), number, result, fpos, status);
 }
-
-
 UnicodeString&
 PluralFormat::format(int32_t number,
                      UnicodeString& appendTo,
@@ -367,8 +363,6 @@ PluralFormat::clone() const
 {
     return new PluralFormat(*this);
 }
-
-
 PluralFormat&
 PluralFormat::operator=(const PluralFormat& other) {
     if (this != &other) {
@@ -591,11 +585,7 @@ void PluralFormat::PluralSelectorAdapter::reset() {
     delete pluralRules;
     pluralRules = NULL;
 }
-
-
 U_NAMESPACE_END
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */
 
 //eof

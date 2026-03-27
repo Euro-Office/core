@@ -14,15 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 #include FT_INTERNAL_MEMORY_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_LIST_H
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -31,8 +27,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_memory
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -44,8 +38,6 @@
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_alloc( FT_Memory  memory,
                 FT_Long    size,
@@ -60,8 +52,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qalloc( FT_Memory  memory,
                  FT_Long    size,
@@ -69,8 +59,6 @@
   {
     FT_Error    error = FT_Err_Ok;
     FT_Pointer  block = NULL;
-
-
     if ( size > 0 )
     {
       block = memory->alloc( memory, size );
@@ -86,8 +74,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_realloc( FT_Memory  memory,
                   FT_Long    item_size,
@@ -97,8 +83,6 @@
                   FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     block = ft_mem_qrealloc( memory, item_size,
                              cur_count, new_count, block, &error );
     if ( !error && new_count > cur_count )
@@ -108,8 +92,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_qrealloc( FT_Memory  memory,
                    FT_Long    item_size,
@@ -119,8 +101,6 @@
                    FT_Error  *p_error )
   {
     FT_Error  error = FT_Err_Ok;
-
-
     /* Note that we now accept `item_size == 0' as a valid parameter, in
      * order to cover very weird cases where an ALLOC_MULT macro would be
      * called.
@@ -150,8 +130,6 @@
       FT_Pointer  block2;
       FT_Long     cur_size = cur_count*item_size;
       FT_Long     new_size = new_count*item_size;
-
-
       block2 = memory->realloc( memory, cur_size, new_size, block );
       if ( block2 == NULL )
         error = FT_THROW( Out_Of_Memory );
@@ -162,8 +140,6 @@
     *p_error = error;
     return block;
   }
-
-
   FT_BASE_DEF( void )
   ft_mem_free( FT_Memory   memory,
                const void *P )
@@ -171,8 +147,6 @@
     if ( P )
       memory->free( memory, (void*)P );
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_dup( FT_Memory    memory,
               const void*  address,
@@ -181,16 +155,12 @@
   {
     FT_Error    error;
     FT_Pointer  p = ft_mem_qalloc( memory, size, &error );
-
-
     if ( !error && address )
       ft_memcpy( p, address, size );
 
     *p_error = error;
     return p;
   }
-
-
   FT_BASE_DEF( FT_Pointer )
   ft_mem_strdup( FT_Memory    memory,
                  const char*  str,
@@ -198,12 +168,8 @@
   {
     FT_ULong  len = str ? (FT_ULong)ft_strlen( str ) + 1
                         : 0;
-
-
     return ft_mem_dup( memory, str, len, p_error );
   }
-
-
   FT_BASE_DEF( FT_Int )
   ft_mem_strcpyn( char*        dst,
                   const char*  src,
@@ -219,8 +185,6 @@
 
     return *src != 0;
   }
-
-
   /*************************************************************************/
   /*************************************************************************/
   /*************************************************************************/
@@ -243,8 +207,6 @@
                 void*    data )
   {
     FT_ListNode  cur;
-
-
     cur = list->head;
     while ( cur )
     {
@@ -256,8 +218,6 @@
 
     return (FT_ListNode)0;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -265,8 +225,6 @@
                FT_ListNode  node )
   {
     FT_ListNode  before = list->tail;
-
-
     node->next = 0;
     node->prev = before;
 
@@ -277,8 +235,6 @@
 
     list->tail = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -286,8 +242,6 @@
                   FT_ListNode  node )
   {
     FT_ListNode  after = list->head;
-
-
     node->next = after;
     node->prev = 0;
 
@@ -298,8 +252,6 @@
 
     list->head = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -307,8 +259,6 @@
                   FT_ListNode  node )
   {
     FT_ListNode  before, after;
-
-
     before = node->prev;
     after  = node->next;
 
@@ -322,8 +272,6 @@
     else
       list->tail = before;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -331,8 +279,6 @@
               FT_ListNode  node )
   {
     FT_ListNode  before, after;
-
-
     before = node->prev;
     after  = node->next;
 
@@ -352,8 +298,6 @@
     list->head->prev = node;
     list->head       = node;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -363,13 +307,9 @@
   {
     FT_ListNode  cur   = list->head;
     FT_Error     error = FT_Err_Ok;
-
-
     while ( cur )
     {
       FT_ListNode  next = cur->next;
-
-
       error = iterator( cur, user );
       if ( error )
         break;
@@ -379,8 +319,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftlist.h */
 
   FT_EXPORT_DEF( void )
@@ -390,15 +328,11 @@
                     void*               user )
   {
     FT_ListNode  cur;
-
-
     cur = list->head;
     while ( cur )
     {
       FT_ListNode  next = cur->next;
       void*        data = cur->data;
-
-
       if ( destroy )
         destroy( memory, data, user );
 
@@ -409,14 +343,10 @@
     list->head = 0;
     list->tail = 0;
   }
-
-
   FT_BASE_DEF( FT_UInt32 )
   ft_highpow2( FT_UInt32  value )
   {
     FT_UInt32  value2;
-
-
     /*
      *  We simply clear the lowest bit in each iteration.  When
      *  we reach 0, we know that the previous value was our result.
@@ -431,6 +361,4 @@
     }
     return value;
   }
-
-
 /* END */

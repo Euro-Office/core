@@ -202,8 +202,6 @@ loadCharNames(UErrorCode &status) {
     }
     ucln_common_registerCleanup(UCLN_COMMON_UNAMES, unames_cleanup);
 }
-
-
 static UBool
 isDataLoaded(UErrorCode *pErrorCode) {
     umtx_initOnce(gCharNamesInitOnce, &loadCharNames, *pErrorCode);

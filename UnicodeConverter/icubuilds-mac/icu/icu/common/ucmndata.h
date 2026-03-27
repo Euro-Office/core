@@ -5,8 +5,6 @@
 *   Corporation and others.  All Rights Reserved.
 *
 ******************************************************************************/
-
-
 /*----------------------------------------------------------------------------------
  *
  *   UCommonData   An abstract interface for dealing with ICU Common Data Files.
@@ -27,8 +25,6 @@
 
 #include "unicode/udata.h"
 #include "umapfile.h"
-
-
 #define COMMON_DATA_NAME U_ICUDATA_NAME
 
 typedef struct  {
@@ -36,8 +32,6 @@ typedef struct  {
     uint8_t     magic1;
     uint8_t     magic2;
 } MappedData;
-
-
 typedef struct  {
     MappedData  dataHeader;
     UDataInfo   info;
@@ -94,8 +88,6 @@ typedef struct {
     LookupFn      Lookup;
     NumEntriesFn  NumEntries; 
 } commonDataFuncs;
-
-
 /*
  *  Functions to check whether a UDataMemory refers to memory containing 
  *     a recognizable header and table of contents a Common Data Format

@@ -6,8 +6,6 @@
 #include "../../Common/MetaFile.h"
 
 #include "../EmfInterpretator/CEmfInterpretatorBase.h"
-
-
 #if defined(DrawText)
 #undef DrawText
 #endif

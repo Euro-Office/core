@@ -14,16 +14,12 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_DEBUG_H
 
 #include FT_MULTIPLE_MASTERS_H
 #include FT_INTERNAL_OBJECTS_H
 #include FT_SERVICE_MULTIPLE_MASTERS_H
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -32,15 +28,11 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_mm
-
-
   static FT_Error
   ft_face_get_mm_service( FT_Face                   face,
                           FT_Service_MultiMasters  *aservice )
   {
     FT_Error  error;
-
-
     *aservice = NULL;
 
     if ( !face )
@@ -60,8 +52,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -70,8 +60,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -82,8 +70,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -92,8 +78,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -104,8 +88,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -115,8 +97,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -127,8 +107,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -138,8 +116,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -150,8 +126,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   FT_EXPORT_DEF( FT_Error )
@@ -161,8 +135,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -173,8 +145,6 @@
 
     return error;
   }
-
-
   /* documentation is in ftmm.h */
 
   /* This is exactly the same as the previous function.  It exists for */
@@ -187,8 +157,6 @@
   {
     FT_Error                 error;
     FT_Service_MultiMasters  service;
-
-
     error = ft_face_get_mm_service( face, &service );
     if ( !error )
     {
@@ -199,6 +167,4 @@
 
     return error;
   }
-
-
 /* END */

@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "DjVuPort.h"
 
 #ifdef HAVE_NAMESPACES
@@ -648,8 +646,6 @@ public:
    GP<DjVuFile>	get_djvu_file(int page_num, bool dont_create=false) const;
    GP<DjVuFile> get_djvu_file(int page_num, bool dont_create=false)
    { return const_cast<const DjVuDocument *>(this)->get_djvu_file(page_num,dont_create); }
-
-
       /** Returns \Ref{DjVuFile} corresponding to the specified ID.
           This function behaves exactly as the #get_djvu_file()# function
 	  above. The only thing worth mentioning here is how the #ID#
@@ -833,8 +829,6 @@ protected:
    bool needs_compression_flag;
    bool can_compress_flag;
    bool needs_rename_flag;
-
-   
 
    bool			has_url_names;
    GCriticalSection	url_names_lock;
@@ -1075,8 +1069,6 @@ DjVuDocument::set_verbose_eof(bool verbose)
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

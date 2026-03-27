@@ -1246,8 +1246,6 @@ class U_I18N_API MeasureUnit: public UObject {
      * @stable ICU 54
      */
     static MeasureUnit *createTeaspoon(UErrorCode &status);
-
-
 // End generated createXXX methods
 
  protected:

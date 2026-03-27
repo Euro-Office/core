@@ -32,8 +32,6 @@
 #pragma once
 
 #include "../Reader/Records.h"
-
-
 namespace PPT
 {
 class CSlideShowSlideInfoAtom : public CUnknownRecord
@@ -63,8 +61,6 @@ public:
     //  reserved1 (3 bit)
 
     BYTE	m_nSpeed;
-
-
 public:
     CSlideShowSlideInfoAtom();
     ~CSlideShowSlideInfoAtom();

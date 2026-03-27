@@ -14,19 +14,11 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __FTBASE_H__
 #define __FTBASE_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
-
-
 FT_BEGIN_HEADER
-
-
   /* Assume the stream is sfnt-wrapped PS Type1 or sfnt-wrapped CID-keyed */
   /* font, and try to load a face specified by the face_index.            */
   FT_LOCAL( FT_Error )
@@ -36,8 +28,6 @@ FT_BEGIN_HEADER
                                  FT_Int         num_params,
                                  FT_Parameter  *params,
                                  FT_Face       *aface );
-
-
   /* Create a new FT_Face given a buffer and a driver name. */
   /* From ftmac.c.                                          */
   FT_LOCAL( FT_Error )
@@ -47,8 +37,6 @@ FT_BEGIN_HEADER
                          FT_Long      face_index,
                          const char*  driver_name,
                          FT_Face     *aface );
-
-
 #if  defined( FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK ) && \
     !defined( FT_MACINTOSH )
   /* Mac OS X/Darwin kernel often changes recommended method to access */
@@ -59,11 +47,7 @@ FT_BEGIN_HEADER
   FT_LOCAL( FT_Bool )
   ft_raccess_rule_by_darwin_vfs( FT_Library library, FT_UInt  rule_index );
 #endif
-
-
 FT_END_HEADER
 
 #endif /* __FTBASE_H__ */
-
-
 /* END */

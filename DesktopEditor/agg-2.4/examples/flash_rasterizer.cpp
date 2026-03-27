@@ -21,13 +21,9 @@
 #include "agg_color_gray.h"
 #include "platform/agg_platform_support.h"
 
-
-
 enum { flip_y = false };
 
 typedef agg::pixfmt_bgra32_pre pixfmt;
-
-
 
 namespace agg
 {
@@ -103,8 +99,6 @@ namespace agg
                         m_path.move_to(ax, ay);
                         m_styles.add(style);
                     }
-
-
                     if(buf[0] == 'C')
                     {
                         ts = strtok(buf, space); // Curve;
@@ -128,8 +122,6 @@ namespace agg
                         ay = atof(ts);
                         m_path.line_to(ax, ay);
                     }
-
-
                     if(buf[0] == '<')
                     {
                         // EndPath
@@ -139,8 +131,6 @@ namespace agg
             }
             return false;
         }
-
-
         unsigned operator [] (unsigned i) const 
         {
             return m_styles[i].path_id;
@@ -226,8 +216,6 @@ namespace agg
         FILE* m_fd;
     };
 
-
-
     // Testing class, color provider and span generator
     //-------------------------------------------------
     class test_styles
@@ -266,17 +254,7 @@ namespace agg
         const rgba8* m_solid_colors;
         const rgba8* m_gradient;
     };
-
-
-
-
 }
-
-
-
-
-
-
 class the_application : public agg::platform_support
 {
 
@@ -310,8 +288,6 @@ public:
             m_colors[i].premultiply();
         }
     }
-
-
 
     bool open(const char* fname)
     {
@@ -409,8 +385,6 @@ public:
             }
         }
         double tstroke = elapsed_time();
-
-
         char buf[256]; 
         agg::gsv_text t;
         t.size(8.0);
@@ -439,8 +413,6 @@ public:
             pixf.apply_gamma_inv(m_gamma);
         }
     }
-
-    
     virtual void on_key(int x, int y, unsigned key, unsigned flags)
     {
         if(key == ' ')
@@ -528,11 +500,7 @@ public:
         m_hit_y = -1;
         force_redraw();
     }
-
-
 };
-
-
 
 int agg_main(int argc, char* argv[])
 {
@@ -564,8 +532,4 @@ int agg_main(int argc, char* argv[])
     }
     return 1;
 }
-
-
-
-
 

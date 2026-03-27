@@ -24,8 +24,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "allheaders.h"
-
-
     /* ------------------------------------------------------------
      * These sels (and their rotated counterparts) are the useful
      * 3x3 Sels for thinning.   The notation is based on
@@ -120,8 +118,6 @@ static const char *sel_48_2 = "o x"
 #ifndef NO_CONSOLE_IO
 #define  DEBUG_SELS     0
 #endif   /* ~NO_CONSOLE_IO */
-
-
 /*----------------------------------------------------------------*
  *                      CC-preserving thinning                    *
  *----------------------------------------------------------------*/
@@ -207,8 +203,6 @@ SELA  *sela;
     selaDestroy(&sela);
     return pixd;
 }
-
-
 /*!
  *  pixThinGeneral()
  *
@@ -302,8 +296,6 @@ SEL     *sel, *selr;
     pixaDestroy(&pixahmt);
     return pixd;
 }
-
-
 /*!
  *  pixThinExamples()
  *
@@ -461,5 +453,3 @@ SELA  *sela;
     selaDestroy(&sela);
     return pixd;
 }
-
-

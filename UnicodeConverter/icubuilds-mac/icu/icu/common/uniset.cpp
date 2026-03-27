@@ -942,8 +942,6 @@ UnicodeSet& UnicodeSet::add(UChar32 c) {
     else {
         // At this point we know the new char is not adjacent to
         // any existing ranges, and it is not 10FFFF.
-
-
         // [..., start_k-1, limit_k-1, start_k, limit_k, ..., HIGH]
         //                             ^
         //                             list[i]
@@ -1111,8 +1109,6 @@ UnicodeSet& UnicodeSet::removeAllStrings() {
     strings->removeAllElements();
     return *this;
 }
-
-
 /**
  * Makes a set from a multicharacter string. Thus "ch" => {"ch"}
  * <br><b>Warning: you cannot add an empty string ("") to a UnicodeSet.</b>
@@ -1126,8 +1122,6 @@ UnicodeSet* U_EXPORT2 UnicodeSet::createFrom(const UnicodeString& s) {
     }
     return set;
 }
-
-
 /**
  * Makes a set from each of the characters in the string. Thus "ch" => {"c", "h"}
  * @param the source string
@@ -1532,8 +1526,6 @@ UnicodeSet::UnicodeSet(const uint16_t data[], int32_t dataLen, ESerialization se
   // terminator
   list[len++]=UNICODESET_HIGH;
 }
-
-
 int32_t UnicodeSet::serialize(uint16_t *dest, int32_t destCapacity, UErrorCode& ec) const {
     int32_t bmpLength, length, destLength;
 

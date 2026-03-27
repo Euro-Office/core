@@ -30,8 +30,6 @@
  *
  */
 #include "Layout.h"
-
-
 void PPT::CorrectPlaceholderType(int& type)
 {
     switch (type)

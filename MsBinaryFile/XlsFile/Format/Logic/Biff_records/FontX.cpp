@@ -38,19 +38,13 @@ namespace XLS
 FontX::FontX()
 {
 }
-
-
 FontX::~FontX()
 {
 }
-
-
 BaseObjectPtr FontX::clone()
 {
 	return BaseObjectPtr(new FontX(*this));
 }
-
-
 void FontX::readFields(CFRecord& record)
 {
 	record >> iFont;

@@ -14,8 +14,6 @@
 /*  understand and accept it fully.                                        */
 /*                                                                         */
 /***************************************************************************/
-
-
 #ifndef __T1AFM_H__
 #define __T1AFM_H__
 
@@ -24,8 +22,6 @@
 #include FT_INTERNAL_TYPE1_TYPES_H
 
 FT_BEGIN_HEADER
-
-
   FT_LOCAL( FT_Error )
   T1_Read_Metrics( FT_Face    face,
                    FT_Stream  stream );
@@ -49,6 +45,4 @@ FT_BEGIN_HEADER
 FT_END_HEADER
 
 #endif /* __T1AFM_H__ */
-
-
 /* END */

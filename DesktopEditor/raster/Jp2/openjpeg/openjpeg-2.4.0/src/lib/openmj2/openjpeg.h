@@ -200,8 +200,6 @@ typedef struct opj_event_mgr {
     /** Debug message callback if available, NULL otherwise */
     opj_msg_callback info_handler;
 } opj_event_mgr_t;
-
-
 /*
 ==========================================================
    codec typedef definitions
@@ -604,8 +602,6 @@ typedef struct opj_packet_info {
     /** packet distorsion */
     double disto;
 } opj_packet_info_t;
-
-
 /* UniPG>> */
 /**
 Marker structure
@@ -731,8 +727,6 @@ typedef struct opj_codestream_info {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
 /*
 ==========================================================
    openjpeg version
@@ -949,8 +943,6 @@ Destroy Codestream information after compression or decompression
 */
 OPJ_API void OPJ_CALLCONV opj_destroy_cstr_info(opj_codestream_info_t
         *cstr_info);
-
-
 #ifdef __cplusplus
 }
 #endif

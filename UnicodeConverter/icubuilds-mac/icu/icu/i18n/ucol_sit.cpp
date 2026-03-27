@@ -75,8 +75,6 @@ static const char scriptArg         = 'Z';
 
 static const char collationKeyword[]  = "@collation=";
 static const char providerKeyword[]  = "@sp=";
-
-
 static const int32_t locElementCount = UCOL_SIT_LOCELEMENT_MAX+1;
 static const int32_t locElementCapacity = 32;
 static const int32_t loc3066Capacity = 256;
@@ -101,8 +99,6 @@ struct CollatorSpec {
         int32_t len;
     } entries[UCOL_SIT_ITEMS_COUNT];
 };
-
-
 /* structure for converting between character attribute
  * representation and real collation attribute value.
  */
@@ -125,8 +121,6 @@ static const AttributeConversion conversions[12] = {
     { 'U', UCOL_UPPER_FIRST },
     { 'X', UCOL_OFF }
 };
-
-
 static UColAttributeValue
 ucol_sit_letterToAttributeValue(char letter, UErrorCode *status) {
     uint32_t i = 0;
@@ -205,8 +199,6 @@ _processCollatorOption(CollatorSpec *spec, uint32_t option, const char* string,
     return string;
 }
 U_CDECL_END
-
-
 static UChar
 readHexCodeUnit(const char **string, UErrorCode *status)
 {
@@ -265,8 +257,6 @@ _processVariableTop(CollatorSpec *spec, uint32_t value1, const char* string, UEr
     return string;
 }
 U_CDECL_END
-
-
 /* Table for parsing short strings */
 struct ShortStringOptions {
     char optionStart;
@@ -294,8 +284,6 @@ static const ShortStringOptions options[UCOL_SIT_ITEMS_COUNT] =
 /* 01 SCRIPT */               {scriptArg,         _processLocaleElement,  UCOL_SIT_SCRIPT },  // script
 /*    PROVIDER */             {providerArg,       _processLocaleElement, UCOL_SIT_PROVIDER }
 };
-
-
 static
 const char* ucol_sit_readOption(const char *start, CollatorSpec *spec,
                             UErrorCode *status)
@@ -422,8 +410,6 @@ ucol_sit_calculateWholeLocale(CollatorSpec *s) {
         }
     }
 }
-
-
 U_CAPI void U_EXPORT2
 ucol_prepareShortStringOpen( const char *definition,
                           UBool,
@@ -441,8 +427,6 @@ ucol_prepareShortStringOpen( const char *definition,
     parseError->offset = 0;
     parseError->preContext[0] = 0;
     parseError->postContext[0] = 0;
-
-
     // first we want to pick stuff out of short string.
     // we'll end up with an UCA version, locale and a bunch of
     // settings
@@ -482,8 +466,6 @@ ucol_prepareShortStringOpen( const char *definition,
     ures_close(collations);
     ures_close(b);
 }
-
-
 U_CAPI UCollator* U_EXPORT2
 ucol_openFromShortString( const char *definition,
                           UBool forceDefaults,
@@ -504,8 +486,6 @@ ucol_openFromShortString( const char *definition,
     parseError->offset = 0;
     parseError->preContext[0] = 0;
     parseError->postContext[0] = 0;
-
-
     // first we want to pick stuff out of short string.
     // we'll end up with an UCA version, locale and a bunch of
     // settings
@@ -545,8 +525,6 @@ ucol_openFromShortString( const char *definition,
             ucol_restoreVariableTop(result, s.variableTopValue, status);
         }
     }
-
-
     if(U_FAILURE(*status)) { // here it can only be a bogus value
         ucol_close(result);
         result = NULL;
@@ -555,8 +533,6 @@ ucol_openFromShortString( const char *definition,
     UTRACE_EXIT_PTR_STATUS(result, *status);
     return result;
 }
-
-
 U_CAPI int32_t U_EXPORT2
 ucol_getShortDefinitionString(const UCollator *coll,
                               const char *locale,

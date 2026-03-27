@@ -195,8 +195,6 @@ U_STABLE void U_EXPORT2
 utrace_getFunctions(const void **context,
                     UTraceEntry **e, UTraceExit **x, UTraceData **d);
 
-
-
 /*
  *
  * ICU trace format string syntax
@@ -209,7 +207,6 @@ utrace_getFunctions(const void **context,
  * varargs) and the format string back to ICU for formatting into
  * a displayable string, or it can interpret the format itself,
  * and do as it wishes with the trace data.
- *
  *
  * Goals for the format string
  * - basic data output
@@ -228,7 +225,6 @@ utrace_getFunctions(const void **context,
  * then exactly one type character.
  * Two '%' in a row represent a '%' instead of an insert.
  * The trace format strings need not have \n at the end.
- *
  *
  * Types
  * -----
@@ -292,8 +288,6 @@ utrace_getFunctions(const void **context,
  *
  */
 
-
-
 /**
   *  Trace output Formatter.  An application's UTraceData tracing functions may call
   *                 back to this function to format the trace output in a
@@ -337,8 +331,6 @@ utrace_vformat(char *outBuf, int32_t capacity,
 U_STABLE int32_t U_EXPORT2
 utrace_format(char *outBuf, int32_t capacity,
               int32_t indent, const char *fmt,  ...);
-
-
 
 /* Trace function numbers --------------------------------------------------- */
 

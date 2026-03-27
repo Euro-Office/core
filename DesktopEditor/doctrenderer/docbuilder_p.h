@@ -1226,8 +1226,6 @@ namespace NSDoctRenderer
 					}
 				}
 			}
-
-
 			NSDirectory::DeleteDirectory(sDstTmpDir);
 			NSFile::CFileBinary::Remove(sTempFileForParams);
 

@@ -102,8 +102,6 @@ scanInput:
 
     return quality;
 }
-
-
 static const uint8_t escapeSequences_2022JP[][5] = {
     {0x1b, 0x24, 0x28, 0x43, 0x00},   // KS X 1001:1992
     {0x1b, 0x24, 0x28, 0x44, 0x00},   // JIS X 212-1990

@@ -332,8 +332,6 @@ namespace MathEquation
 
 			WriteNodeEnd("script");
 		}
-
-
 		virtual void BeginBar(MBARTYPE eType, bool bTop)
 		{
 			PushCommand(commandBar);

@@ -39,13 +39,9 @@ CrtLine::CrtLine()
 {
 	m_iChartType = -1;
 }
-
-
 CrtLine::~CrtLine()
 {
 }
-
-
 BaseObjectPtr CrtLine::clone()
 {
 	return BaseObjectPtr(new CrtLine(*this));

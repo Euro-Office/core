@@ -41,8 +41,6 @@ public:
     //void reset();
     int32_t nextByte(InputText* det);
 };
-
-
 class CharsetRecog_mbcs : public CharsetRecognizer {
 
 protected:
@@ -88,8 +86,6 @@ public:
     virtual UBool nextChar(IteratedChar *it, InputText *textIn) const = 0;
 
 };
-
-
 /**
  *   Shift-JIS charset recognizer.
  *
@@ -106,8 +102,6 @@ public:
     const char *getLanguage() const;
 
 };
-
-
 /**
  *   EUC charset recognizers.  One abstract class that provides the common function
  *             for getting the next character according to the EUC encoding scheme,
@@ -179,8 +173,6 @@ public:
 
     UBool match(InputText* input, CharsetMatch *results) const;
 };
-
-
 /**
  *
  *   GB-18030 recognizer. Uses simplified Chinese statistics.

@@ -12,8 +12,6 @@
 
 #include "LETypes.h"
 #include "LEFontInstance.h"
-
-
 #define kQuestionmarkTableTag  0x3F3F3F3FUL
 #define kTildeTableTag  0x7e7e7e7eUL
 #ifdef __cplusplus
@@ -215,8 +213,6 @@ protected:
     fLength = length;
   }
 };
-
-
 template<class T>
 class LETableVarSizer {
  public:
@@ -346,8 +342,6 @@ LE_TRACE_TR("INFO: new RTAO")
 private:
   le_uint32 fCount;
 };
-
-
 template<class T>
 class LEReferenceTo : public LETableReference {
 public:
@@ -414,8 +408,6 @@ public:
   const T *getAlias() const { return (const T*)fStart; }
   const T *getAliasRAW() const { LE_DEBUG_TR("getAliasRAW<>"); return (const T*)fStart; }
 };
-
-
 U_NAMESPACE_END
 
 #endif

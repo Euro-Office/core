@@ -140,8 +140,6 @@ static int glob(const char *pattern, int flags,
     }
     if (len <= 0)
         len = 0;
-
-
     ret = pglob;
     memset(ret, 0, sizeof(glob_t));
 
@@ -181,8 +179,6 @@ done:
     FindClose(hFind);
     return(0);
 }
-
-
 
 static void globfree(glob_t *pglob) {
     unsigned int i;
@@ -540,8 +536,6 @@ initializeLibxml2(void) {
     xmlRelaxNGInitTypes();
 #endif
 }
-
-
 /************************************************************************
  *									*
  *		File name and path utilities				*
@@ -934,8 +928,6 @@ resolveEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *publicId, const xm
     if (quiet)
 	return(NULL);
     /* xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx; */
-
-
     fprintf(SAXdebug, "SAX.resolveEntity(");
     if (publicId != NULL)
 	fprintf(SAXdebug, "%s", (char *)publicId);
@@ -990,8 +982,6 @@ getParameterEntityDebug(void *ctx ATTRIBUTE_UNUSED, const xmlChar *name)
     fprintf(SAXdebug, "SAX.getParameterEntity(%s)\n", name);
     return(NULL);
 }
-
-
 /**
  * entityDeclDebug:
  * @ctxt:  An XML parser context
@@ -2126,8 +2116,6 @@ static void processNode(FILE *out, xmlTextReaderPtr reader) {
 	name = BAD_CAST "--";
 
     value = xmlTextReaderConstValue(reader);
-
-
     fprintf(out, "%d %d %s %d %d",
 	    xmlTextReaderDepth(reader),
 	    type,
@@ -3196,8 +3184,6 @@ rngOneTest(const char *sch,
 	    printf("%s", testErrors);
 	}
     }
-
-
     xmlRelaxNGFreeValidCtxt(ctxt);
     xmlFreeDoc(doc);
     return(ret);
@@ -3436,8 +3422,6 @@ static void patternNode(FILE *out, xmlTextReaderPtr reader,
 			"  pattern %s node %s\n",
 			pattern, path);
 	    }
-
-
 	}
 	if ((type == XML_READER_TYPE_END_ELEMENT) ||
 	    ((type == XML_READER_TYPE_ELEMENT) && (empty))) {
@@ -3765,8 +3749,6 @@ c14nRunTest(const char* xml_filename, int with_comments, int mode,
     xmlChar **inclusive_namespaces = NULL;
     const char *nslist = NULL;
     int nssize;
-
-
     /*
      * build an XML tree from a the file; we need to add default
      * attributes and resolve all character and entities references

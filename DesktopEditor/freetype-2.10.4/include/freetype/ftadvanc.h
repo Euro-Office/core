@@ -14,12 +14,8 @@
  * understand and accept it fully.
  *
  */
-
-
 #ifndef FTADVANC_H_
 #define FTADVANC_H_
-
-
 #include <freetype/freetype.h>
 
 #ifdef FREETYPE_H
@@ -27,11 +23,7 @@
 #error "Please fix the directory search order for header files"
 #error "so that freetype.h of FreeType 2 is found first."
 #endif
-
-
 FT_BEGIN_HEADER
-
-
   /**************************************************************************
    *
    * @section:
@@ -53,8 +45,6 @@ FT_BEGIN_HEADER
    *   FT_Get_Advances
    *
    */
-
-
   /**************************************************************************
    *
    * @enum:
@@ -75,8 +65,6 @@ FT_BEGIN_HEADER
    *   hinting of the glyph outline, are extremely slow by comparison.
    */
 #define FT_ADVANCE_FLAG_FAST_ONLY  0x20000000L
-
-
   /**************************************************************************
    *
    * @function:
@@ -122,8 +110,6 @@ FT_BEGIN_HEADER
                   FT_UInt    gindex,
                   FT_Int32   load_flags,
                   FT_Fixed  *padvance );
-
-
   /**************************************************************************
    *
    * @function:
@@ -178,11 +164,7 @@ FT_BEGIN_HEADER
                    FT_Fixed  *padvances );
 
   /* */
-
-
 FT_END_HEADER
 
 #endif /* FTADVANC_H_ */
-
-
 /* END */

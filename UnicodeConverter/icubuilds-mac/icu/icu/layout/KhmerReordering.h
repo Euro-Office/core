@@ -110,8 +110,6 @@ struct KhmerClassTable    // This list must include all types of components that
 
     static const KhmerClassTable *getKhmerClassTable();
 };
-
-
 class KhmerReordering /* not : public UObject because all methods are static */ {
 public:
     static le_int32 reorder(const LEUnicode *theChars, le_int32 charCount, le_int32 scriptCode,
@@ -126,7 +124,5 @@ private:
     static le_int32 findSyllable(const KhmerClassTable *classTable, const LEUnicode *chars, le_int32 prev, le_int32 charCount);
 
 };
-
-
 U_NAMESPACE_END
 #endif

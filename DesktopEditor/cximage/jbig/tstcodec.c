@@ -25,8 +25,6 @@ unsigned char *testbuf;
 unsigned char *testpic;
 
 long testbuf_len;
-
-
 static void *checkedmalloc(size_t n)
 {
   void *p;
@@ -46,8 +44,6 @@ static void testbuf_write(int v, void *dummy)
   (void) dummy;
   return;
 }
-
-
 static void testbuf_writel(unsigned char *start, size_t len, void *dummy)
 {
   if (testbuf_len < TESTBUF_SIZE) {
@@ -72,8 +68,6 @@ static void testbuf_writel(unsigned char *start, size_t len, void *dummy)
   (void) dummy;
   return;
 }
-
-
 /*
  * Store the artificial test image defined in T.82, clause 7.2.1 at
  * pic. The image requires 477995 bytes of memory, is 1960 x 1951 pixels
@@ -120,8 +114,6 @@ static void testimage(unsigned char *pic)
 
   return;
 }
-  
-
 /*
  * Perform a full test cycle with one set of parameters. Encode an image
  * and compare the length of the result with correct_length. Then decode
@@ -230,8 +222,6 @@ static int test_cycle(unsigned char **orig_image, int width, int height,
   
   return trouble != 0;
 }
-
-
 int main(int argc, char **argv)
 {
   int trouble, problems = 0;
@@ -387,8 +377,6 @@ int main(int argc, char **argv)
   } else
     printf(PASSED);
   printf("\n\n");
-
-
   puts("2) Arithmetic decoder test sequence from ITU-T T.82, clause 7.1\n"
        "---------------------------------------------------------------\n");
   printf("Test 2.1: Decoding whole chunk ...\n");
@@ -506,8 +494,6 @@ int main(int argc, char **argv)
       problems += test_cycle(ppp, 23, 5*4, JBG_TPBON | JBG_TPDON | JBG_DPON,
 			     orders[order], layers, 4, 2, 8, -1, test);
     }
-
-
   printf("\nTest result summary: the library has %s the test suite.\n\n",
 	 problems ? FAILED : PASSED);
   if (problems)

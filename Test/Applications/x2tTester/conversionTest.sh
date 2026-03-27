@@ -46,8 +46,6 @@ function convertAndDiff() {
 	cd ..
 
 }
-
-
 zipFormats=(${docZipFormats[@]})
 formats=(${docFormats[@]})
 files=(${docFiles[@]})

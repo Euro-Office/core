@@ -21,8 +21,6 @@
 #include "platform/agg_platform_support.h"
 #include "SDL.h"
 #include "SDL_byteorder.h"
-
-
 namespace agg
 {
 
@@ -52,8 +50,6 @@ namespace agg
         int           m_cur_y;
 	int          m_sw_start;
     };
-
-
 
     //------------------------------------------------------------------------
     platform_specific::platform_specific(pix_format_e format, bool flip_y) :
@@ -206,8 +202,6 @@ namespace agg
         if(m_surf_screen) SDL_FreeSurface(m_surf_screen);
     }
 
-
-
     //------------------------------------------------------------------------
     platform_support::platform_support(pix_format_e format, bool flip_y) :
         m_specific(new platform_specific(format, flip_y)),
@@ -220,15 +214,11 @@ namespace agg
         SDL_Init(SDL_INIT_VIDEO);
         strcpy(m_caption, "Anti-Grain Geometry Application");
     }
-
-
     //------------------------------------------------------------------------
     platform_support::~platform_support()
     {
         delete m_specific;
     }
-
-
 
     //------------------------------------------------------------------------
     void platform_support::caption(const char* cap)
@@ -239,10 +229,6 @@ namespace agg
             SDL_WM_SetCaption(cap, 0);
         }
     }
-    
-
-
-
 
     //------------------------------------------------------------------------
     bool platform_support::init(unsigned width, unsigned height, unsigned flags)
@@ -317,16 +303,12 @@ namespace agg
         return true;
     }
 
-
-
     //------------------------------------------------------------------------
     void platform_support::update_window()
     {
         SDL_BlitSurface(m_specific->m_surf_window, 0, m_specific->m_surf_screen, 0);
         SDL_UpdateRect(m_specific->m_surf_screen, 0, 0, 0, 0);
     }
-
-
     //------------------------------------------------------------------------
     int platform_support::run()
     {
@@ -528,8 +510,6 @@ if(m_ctrls.on_mouse_button_down(m_specific->m_cur_x,
         return 0;
     }
 
-
-
     //------------------------------------------------------------------------
     const char* platform_support::img_ext() const { return ".bmp"; }
 
@@ -599,10 +579,6 @@ if(m_ctrls.on_mouse_button_down(m_specific->m_cur_x,
         }
         return false;
     }
-
-
-
-
     //------------------------------------------------------------------------
     bool platform_support::save_img(unsigned idx, const char* file)
     {
@@ -619,8 +595,6 @@ if(m_ctrls.on_mouse_button_down(m_specific->m_cur_x,
         }
         return false;
     }
-
-
 
     //------------------------------------------------------------------------
     bool platform_support::create_img(unsigned idx, unsigned width, unsigned height)
@@ -681,8 +655,6 @@ if(m_ctrls.on_mouse_button_down(m_specific->m_cur_x,
     {
         m_specific->m_update_flag = true;
     }
-
-
     //------------------------------------------------------------------------
     void platform_support::on_init() {}
     void platform_support::on_resize(int sx, int sy) {}
@@ -694,11 +666,7 @@ if(m_ctrls.on_mouse_button_down(m_specific->m_cur_x,
     void platform_support::on_ctrl_change() {}
     void platform_support::on_draw() {}
     void platform_support::on_post_draw(void* raw_handler) {}
-
-
 }
-
-
 int agg_main(int argc, char* argv[]);
 
 int main(int argc, char* argv[])

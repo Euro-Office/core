@@ -118,7 +118,6 @@
  * be mentioned in other standards on different converters,
  * but only one alias per tag can be unique.
  *
- *
  *              Converter Names (Usually in TR22 form)
  *           -------------------------------------------.
  *     T    /                                          /|
@@ -135,7 +134,6 @@
  *    e |                                         | /
  *    s |                                         |/
  *      -------------------------------------------
- *
  *
  *
  * Here is what it really looks like. It's like swiss cheese.
@@ -305,8 +303,6 @@ static void U_CALLCONV initAliasData(UErrorCode &errCode) {
     gMainTable.normalizedStringTable = ((gMainTable.optionTable->stringNormalizationType == UCNV_IO_UNNORMALIZED)
         ? gMainTable.stringTable : (table + currOffset));
 }
-
-
 static UBool
 haveAliasData(UErrorCode *pErrorCode) {
     umtx_initOnce(gAliasDataInitOnce, &initAliasData, *pErrorCode);
@@ -731,8 +727,6 @@ findTaggedConverterNum(const char *alias, const char *standard, UErrorCode *pErr
     return UINT32_MAX;
 }
 
-
-
 U_CFUNC const char *
 ucnv_io_getConverterName(const char *alias, UBool *containsOption, UErrorCode *pErrorCode) {
     const char *aliasTmp = alias;
@@ -976,8 +970,6 @@ ucnv_countAliases(const char *alias, UErrorCode *pErrorCode)
 {
     return ucnv_io_countAliases(alias, pErrorCode);
 }
-
-
 U_CAPI const char* U_EXPORT2
 ucnv_getAlias(const char *alias, uint16_t n, UErrorCode *pErrorCode)
 {
@@ -1335,8 +1327,6 @@ ucnv_swapAliases(const UDataSwapper *ds,
 }
 
 #endif
-
-
 /*
  * Hey, Emacs, please set the following:
  *

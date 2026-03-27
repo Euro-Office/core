@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 /** @name GThreads.h
 
     Files #"GThreads.h"# and #"GThreads.cpp"# implement common entry points
@@ -131,8 +129,6 @@
     @version
     #$Id: GThreads.h,v 1.11 2007/03/25 20:48:32 leonb Exp $# */
 //@{
-
-
 #include "DjVuGlobal.h"
 #include "GException.h"
 
@@ -199,20 +195,14 @@
 #include <sys/time.h>
 #include <unistd.h>
 #endif
-
-
 // ----------------------------------------
 // PORTABLE CLASSES
-
-
 #ifdef HAVE_NAMESPACES
 namespace DJVU {
 # ifdef NOT_DEFINED // Just to fool emacs c++ mode
 }
 #endif
 #endif
-
-
 
 /** Thread class.  A multithreaded process is composed of a main execution
     thread and of several secondary threads.  Each secondary thread is
@@ -338,8 +328,6 @@ private:
   GThread(const GThread&);
   GThread& operator=(const GThread&);
 };
-
-
 /** Monitor class.  Monitors have been first described in (C.A.R Hoare,
     Communications of the ACM, 17(10), 1974).  This mechanism provides the
     basic mutual exclusion (mutex) and thread notification facilities
@@ -437,10 +425,6 @@ private:
   GMonitor(const GMonitor&);
   GMonitor& operator=(const GMonitor&);
 };
-
-
-
-
 // ----------------------------------------
 // NOTHREADS INLINES
 
@@ -465,12 +449,8 @@ inline void GMonitor::broadcast() {}
 #endif // !defined(WIN32_MONITOR)
 //>
 #endif // NOTHREADS
-
-
 // ----------------------------------------
 // SCOPE LOCK
-
-
 /** Wrapper for mutually exclusive code.
     This class locks a specified critical section (see \Ref{GCriticalSection})
     at construction time and unlocks it at destruction time. It provides a
@@ -502,12 +482,8 @@ public:
     { if (gsec) gsec->leave(); };
 };
 
-
-
 // ----------------------------------------
 // GSAFEFLAGS (not so safe)
-
-
 /** A thread safe class representing a set of flags. The flags are protected
     by \Ref{GMonitor}, which is attempted to be locked whenever somebody
     accesses the flags. One can modify the class contents using one of
@@ -595,14 +571,8 @@ GSafeFlags::operator&=(long mask)
 }
 
 //@}
-
-
-
-
 // ----------------------------------------
 // COMPATIBILITY CLASSES
-
-
 // -- these classes are no longer documented.
 
 class GCriticalSection : protected GMonitor 
@@ -639,8 +609,6 @@ public:
   ~GCriticalSectionLock() 
     { if (gsec) gsec->unlock(); };
 };
-
-
 // ----------------------------------------
 
 #ifdef HAVE_NAMESPACES

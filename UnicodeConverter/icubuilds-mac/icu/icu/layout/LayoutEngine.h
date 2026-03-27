@@ -313,8 +313,6 @@ protected:
      * @internal
      */
     static void adjustMarkGlyphs(LEGlyphStorage &glyphStorage, LEGlyphFilter *markFilter, LEErrorCode &success);
-
-
     /**
      * This is a convenience method that forces the advance width of mark
      * glyphs to be zero, which is required for proper selection and highlighting.

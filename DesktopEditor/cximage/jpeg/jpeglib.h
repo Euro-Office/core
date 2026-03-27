@@ -25,8 +25,6 @@
 #include "jconfig.h"		/* widely used configuration options */
 #endif
 #include "jmorecfg.h"		/* seldom changed options */
-
-
 #ifdef __cplusplus
 #ifndef DONT_USE_EXTERN_C
 extern "C" {
@@ -40,8 +38,6 @@ extern "C" {
 #define JPEG_LIB_VERSION        80	/* Compatibility version 8.0 */
 #define JPEG_LIB_VERSION_MAJOR  8
 #define JPEG_LIB_VERSION_MINOR  3
-
-
 /* Various constants determining the sizes of things.
  * All of these are specified by the JPEG standard, so don't change them
  * if you want to be compatible.
@@ -65,8 +61,6 @@ extern "C" {
 #ifndef D_MAX_BLOCKS_IN_MCU
 #define D_MAX_BLOCKS_IN_MCU   10 /* decompressor's limit on blocks per MCU */
 #endif
-
-
 /* Data structures for images (arrays of samples and of DCT coefficients).
  * On 80x86 machines, the image arrays are too big for near pointers,
  * but the pointer arrays can fit in near memory.
@@ -82,11 +76,7 @@ typedef JBLOCKROW *JBLOCKARRAY;		/* a 2-D array of coefficient blocks */
 typedef JBLOCKARRAY *JBLOCKIMAGE;	/* a 3-D array of coefficient blocks */
 
 typedef JCOEF FAR *JCOEFPTR;	/* useful in a couple of places */
-
-
 /* Types for JPEG compression parameters and working tables. */
-
-
 /* DCT coefficient quantization tables. */
 
 typedef struct {
@@ -102,8 +92,6 @@ typedef struct {
    */
   boolean sent_table;		/* TRUE when table has been output */
 } JQUANT_TBL;
-
-
 /* Huffman coding tables. */
 
 typedef struct {
@@ -118,8 +106,6 @@ typedef struct {
    */
   boolean sent_table;		/* TRUE when table has been output */
 } JHUFF_TBL;
-
-
 /* Basic info about one component (color channel). */
 
 typedef struct {
@@ -186,8 +172,6 @@ typedef struct {
   /* Private per-component storage for DCT or IDCT subsystem. */
   void * dct_table;
 } jpeg_component_info;
-
-
 /* The script for encoding a multiple-scan file is an array of these: */
 
 typedef struct {
@@ -243,8 +227,6 @@ typedef enum {
 	JDITHER_ORDERED,	/* simple ordered dither */
 	JDITHER_FS		/* Floyd-Steinberg error diffusion dither */
 } J_DITHER_MODE;
-
-
 /* Common fields between JPEG compression and decompression master structs. */
 
 #define jpeg_common_fields \
@@ -270,8 +252,6 @@ struct jpeg_common_struct {
 typedef struct jpeg_common_struct * j_common_ptr;
 typedef struct jpeg_compress_struct * j_compress_ptr;
 typedef struct jpeg_decompress_struct * j_decompress_ptr;
-
-
 /* Master record for a compression instance */
 
 struct jpeg_compress_struct {
@@ -435,8 +415,6 @@ struct jpeg_compress_struct {
   jpeg_scan_info * script_space; /* workspace for jpeg_simple_progression */
   int script_space_size;
 };
-
-
 /* Master record for a decompression instance */
 
 struct jpeg_decompress_struct {
@@ -667,16 +645,12 @@ struct jpeg_decompress_struct {
   struct jpeg_color_deconverter * cconvert;
   struct jpeg_color_quantizer * cquantize;
 };
-
-
 /* "Object" declarations for JPEG modules that may be supplied or called
  * directly by the surrounding application.
  * As with all objects in the JPEG library, these structs only define the
  * publicly visible methods and state variables of a module.  Additional
  * private fields may exist after the public ones.
  */
-
-
 /* Error handler object */
 
 struct jpeg_error_mgr {
@@ -733,8 +707,6 @@ struct jpeg_error_mgr {
   int first_addon_message;	/* code for first string in addon table */
   int last_addon_message;	/* code for last string in addon table */
 };
-
-
 /* Progress monitor object */
 
 struct jpeg_progress_mgr {
@@ -745,8 +717,6 @@ struct jpeg_progress_mgr {
   int completed_passes;		/* passes completed so far */
   int total_passes;		/* total number of passes expected */
 };
-
-
 /* Data destination object for compression */
 
 struct jpeg_destination_mgr {
@@ -757,8 +727,6 @@ struct jpeg_destination_mgr {
   JMETHOD(boolean, empty_output_buffer, (j_compress_ptr cinfo));
   JMETHOD(void, term_destination, (j_compress_ptr cinfo));
 };
-
-
 /* Data source object for decompression */
 
 struct jpeg_source_mgr {
@@ -771,8 +739,6 @@ struct jpeg_source_mgr {
   JMETHOD(boolean, resync_to_restart, (j_decompress_ptr cinfo, int desired));
   JMETHOD(void, term_source, (j_decompress_ptr cinfo));
 };
-
-
 /* Memory manager object.
  * Allocates "small" objects (a few K total), "large" objects (tens of K),
  * and "really big" objects (virtual arrays with backing store if needed).
@@ -790,8 +756,6 @@ struct jpeg_source_mgr {
 
 typedef struct jvirt_sarray_control * jvirt_sarray_ptr;
 typedef struct jvirt_barray_control * jvirt_barray_ptr;
-
-
 struct jpeg_memory_mgr {
   /* Method pointers */
   JMETHOD(void *, alloc_small, (j_common_ptr cinfo, int pool_id,
@@ -840,14 +804,10 @@ struct jpeg_memory_mgr {
   /* Maximum allocation request accepted by alloc_large. */
   long max_alloc_chunk;
 };
-
-
 /* Routine signature for application-supplied marker processing methods.
  * Need not pass marker code since it is stored in cinfo->unread_marker.
  */
 typedef JMETHOD(boolean, jpeg_marker_parser_method, (j_decompress_ptr cinfo));
-
-
 /* Declarations for routines called by application.
  * The JPP macro hides prototype parameters from compilers that can't cope.
  * Note JPP requires double parentheses.
@@ -858,8 +818,6 @@ typedef JMETHOD(boolean, jpeg_marker_parser_method, (j_decompress_ptr cinfo));
 #else
 #define JPP(arglist)	()
 #endif
-
-
 /* Short forms of external names for systems with brain-damaged linkers.
  * We shorten external names to be unique in the first six letters, which
  * is good enough for all known systems.
@@ -922,8 +880,6 @@ typedef JMETHOD(boolean, jpeg_marker_parser_method, (j_decompress_ptr cinfo));
 #define jpeg_destroy		jDestroy
 #define jpeg_resync_to_restart	jResyncRestart
 #endif /* NEED_SHORT_EXTERNAL_NAMES */
-
-
 /* Default error-management setup */
 EXTERN(struct jpeg_error_mgr *) jpeg_std_error
 	JPP((struct jpeg_error_mgr * err));
@@ -1094,8 +1050,6 @@ EXTERN(void) jpeg_destroy JPP((j_common_ptr cinfo));
 /* Default restart-marker-resync procedure for use by data source modules */
 EXTERN(boolean) jpeg_resync_to_restart JPP((j_decompress_ptr cinfo,
 					    int desired));
-
-
 /* These marker codes are exported since applications and data source modules
  * are likely to want to use them.
  */
@@ -1104,8 +1058,6 @@ EXTERN(boolean) jpeg_resync_to_restart JPP((j_decompress_ptr cinfo,
 #define JPEG_EOI	0xD9	/* EOI marker code */
 #define JPEG_APP0	0xE0	/* APP0 marker code */
 #define JPEG_COM	0xFE	/* COM marker code */
-
-
 /* If we have a brain-damaged compiler that emits warnings (or worse, errors)
  * for structure definitions that are never filled in, keep it quiet by
  * supplying dummy definitions for the various substructures.
@@ -1137,8 +1089,6 @@ struct jpeg_color_deconverter { long dummy; };
 struct jpeg_color_quantizer { long dummy; };
 #endif /* JPEG_INTERNALS */
 #endif /* INCOMPLETE_TYPES_BROKEN */
-
-
 /*
  * The JPEG library modules define JPEG_INTERNALS before including this file.
  * The internal structure declarations are read only when that is true.

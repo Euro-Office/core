@@ -35,8 +35,6 @@
 #include "psd_bitmap.h"
 #include "psd_color.h"
 #include "psd_math.h"
-
-
 #define PSD_BOUNDARY_THRESHOLD			24
 /* BoundSeg array growth parameter */
 #define PSD_BOUNDARY_MAX_SEGS_INC  		2048
@@ -259,8 +257,6 @@ typedef struct _psd_art_svp_render_aa_iter {
 } psd_art_svp_render_aa_iter;
 
 extern psd_float psd_carm_sqrt(psd_float x);
-
-
 psd_static psd_bool psd_get_bounds(psd_bitmap * src_bmp, psd_int *x1, psd_int *y1, psd_int *x2, psd_int *y2)
 {
 	psd_int tx1, tx2, ty1, ty2;

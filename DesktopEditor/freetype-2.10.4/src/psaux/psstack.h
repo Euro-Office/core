@@ -34,16 +34,12 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSSTACK_H_
 #define PSSTACK_H_
 
 #include <freetype/internal/compiler-macros.h>
 
 FT_BEGIN_HEADER
-
-
   /* CFF operand stack; specified maximum of 48 or 192 values */
   typedef struct  CF2_StackNumber_
   {
@@ -57,8 +53,6 @@ FT_BEGIN_HEADER
     CF2_NumberType  type;
 
   } CF2_StackNumber;
-
-
   typedef struct  CF2_StackRec_
   {
     FT_Memory         memory;
@@ -68,8 +62,6 @@ FT_BEGIN_HEADER
     FT_UInt           stackSize;
 
   } CF2_StackRec, *CF2_Stack;
-
-
   FT_LOCAL( CF2_Stack )
   cf2_stack_init( FT_Memory  memory,
                   FT_Error*  error,
@@ -111,12 +103,6 @@ FT_BEGIN_HEADER
 
   FT_LOCAL( void )
   cf2_stack_clear( CF2_Stack  stack );
-
-
 FT_END_HEADER
-
-
 #endif /* PSSTACK_H_ */
-
-
 /* END */

@@ -200,6 +200,4 @@ ucsdet_getDetectableCharsets(const UCharsetDetector *ucsd,  UErrorCode *status)
 }
 
 U_CDECL_END
-
-
 #endif

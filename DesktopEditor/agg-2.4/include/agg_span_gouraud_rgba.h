@@ -270,8 +270,6 @@ namespace agg
         rgba_calc m_rgba3;
     };
 
-
-
 }
 
 #endif

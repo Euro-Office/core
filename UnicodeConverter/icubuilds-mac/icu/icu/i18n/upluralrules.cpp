@@ -15,8 +15,6 @@
 #include "unicode/unistr.h"
 
 U_NAMESPACE_USE
-
-
 U_CAPI UPluralRules* U_EXPORT2
 uplrules_open(const char *locale, UErrorCode *status)
 {
@@ -51,6 +49,4 @@ uplrules_select(const UPluralRules *uplrules,
     UnicodeString result = ((PluralRules*)uplrules)->select(number);
     return result.extract(keyword, capacity, *status);
 }
-
-
 #endif /* #if !UCONFIG_NO_FORMATTING */

@@ -106,8 +106,6 @@ PtgPtr PtgFactory::loadPtg(CFRecord& record, const CellRef& cell_base_ref)
 	
 	return ptg; 
 }
-
-
 // static
 PtgPtr PtgFactory::createPtg(const unsigned short type, const CellRef& cell_base_ref)
 {
@@ -304,8 +302,6 @@ PtgPtr PtgFactory::createPtg(const unsigned short type, const CellRef& cell_base
 		case 0x007D:
 			return PtgPtr(new PtgAreaErr3d(type)); // *
 
-
-
 		case 0x0118:
 			return PtgPtr(new PtgElfLel); // *
 
@@ -343,8 +339,6 @@ PtgPtr PtgFactory::createPtg(const unsigned short type, const CellRef& cell_base
 
 		case 0x1D18:
 			return PtgPtr(new PtgSxName); // - index of an SxName following an SxFmla
-
-
 
 		case 0x0119:
 			return PtgPtr(new PtgAttrSemi); // *

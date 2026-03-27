@@ -92,8 +92,6 @@ typedef struct u_scanf_spec_info {
     UBool   fIsLongLong;    /* ll flag  */
     UBool   fIsString;      /* TRUE if this is a NULL-terminated string. */
 } u_scanf_spec_info;
-
-
 /**
  * Struct encapsulating a single u_scanf format specification.
  */
@@ -129,8 +127,6 @@ u_scanf_parse_spec (const UChar     *fmt,
     info->fIsLong       = FALSE;
     info->fIsLongLong   = FALSE;
     info->fIsString     = TRUE;
-
-
     /* skip over the initial '%' */
     s++;
 
@@ -230,8 +226,6 @@ u_scanf_parse_spec (const UChar     *fmt,
 }
 
 #define UP_PERCENT 0x0025
-
-
 /* ANSI style formatting */
 /* Use US-ASCII characters only for formatting */
 
@@ -273,8 +267,6 @@ u_scanf_parse_spec (const UChar     *fmt,
 #define UFMT_UCHAR          {ufmt_uchar, u_scanf_uchar_handler}
 /* S  U is old format */
 #define UFMT_USTRING        {ufmt_ustring, u_scanf_ustring_handler}
-
-
 #define UFMT_EMPTY {ufmt_empty, NULL}
 
 /**
@@ -310,8 +302,6 @@ typedef struct u_scanf_info {
 
 /* We do not use handlers for 0-0x1f */
 #define USCANF_BASE_FMT_HANDLERS 0x20
-
-
 static int32_t
 u_scanf_skip_leading_ws(UFILE   *input,
                         UChar   pad)
@@ -424,8 +414,6 @@ u_scanf_double_handler(UFILE        *input,
     int32_t         parsePos    = 0;
     int32_t         skipped;
     UErrorCode      status      = U_ZERO_ERROR;
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -492,8 +480,6 @@ u_scanf_scientific_handler(UFILE        *input,
     UChar srcExpBuf[UPRINTF_SYMBOL_BUFFER_SIZE];
     int32_t srcLen, expLen;
     UChar expBuf[UPRINTF_SYMBOL_BUFFER_SIZE];
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -541,10 +527,6 @@ u_scanf_scientific_handler(UFILE        *input,
         expBuf,
         expLen,
         &status);
-
-
-
-
     /* Skip the positive prefix. ICU normally can't handle this due to strict parsing. */
     skipped += u_scanf_skip_leading_positive_sign(input, format, &status);
 
@@ -589,14 +571,10 @@ u_scanf_scidbl_handler(UFILE        *input,
     int32_t       skipped;
     UErrorCode    scientificStatus = U_ZERO_ERROR;
     UErrorCode    genericStatus = U_ZERO_ERROR;
-
-
     /* since we can't determine by scanning the characters whether */
     /* a number was formatted in the 'f' or 'g' styles, parse the */
     /* string with both formatters, and assume whichever one */
     /* parsed the most is the correct formatter to use */
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -677,8 +655,6 @@ u_scanf_integer_handler(UFILE       *input,
     int32_t         skipped;
     UErrorCode      status      = U_ZERO_ERROR;
     int64_t         result;
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -748,8 +724,6 @@ u_scanf_percent_handler(UFILE       *input,
     UNumberFormat   *format;
     int32_t         parsePos    = 0;
     UErrorCode      status      = U_ZERO_ERROR;
-
-
     /* skip all ws in the input */
     u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -973,8 +947,6 @@ u_scanf_spellout_handler(UFILE          *input,
     int32_t         parsePos    = 0;
     int32_t         skipped;
     UErrorCode      status      = U_ZERO_ERROR;
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 
@@ -1133,8 +1105,6 @@ u_scanf_pointer_handler(UFILE       *input,
     int32_t skipped;
     void    *result;
     void    **p     = (void**)(args[0].ptrValue);
-
-
     /* skip all ws in the input */
     skipped = u_scanf_skip_leading_ws(input, info->fPadChar);
 

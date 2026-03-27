@@ -36,8 +36,6 @@ bool CxImage::IncreaseBpp(uint32_t nbit)
 				strcpy(info.szLastError,tmp.GetLastError());
 				return false;
 			}
-
-
 #if CXIMAGE_SUPPORT_SELECTION
 			tmp.SelectionCopy(*this);
 #endif //CXIMAGE_SUPPORT_SELECTION
@@ -2110,8 +2108,6 @@ bool CxImage::Dither(int32_t method)
 bool CxImage::CropRotatedRectangle( int32_t topx, int32_t topy, int32_t width, int32_t height, float angle, CxImage* iDst)
 {
 	if (!pDib) return false;
-
-	
 	int32_t startx,starty,endx,endy;
 	double cos_angle = cos(angle/*/57.295779513082320877*/);
     double sin_angle = sin(angle/*/57.295779513082320877*/);

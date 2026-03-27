@@ -34,21 +34,13 @@
  * and you accept them fully.
  *
  */
-
-
 #ifndef PSFONT_H_
 #define PSFONT_H_
-
-
 #include <freetype/internal/services/svcfftl.h>
 
 #include "psft.h"
 #include "psblues.h"
-
-
 FT_BEGIN_HEADER
-
-
 #define CF2_OPERAND_STACK_SIZE  48
 #define CF2_MAX_SUBR            16 /* maximum subroutine nesting;         */
                                    /* only 10 are allowed but there exist */
@@ -57,8 +49,6 @@ FT_BEGIN_HEADER
                                    /* 8.2d6e1; 2014-12-19) that exceed    */
                                    /* this limit                          */
 #define CF2_STORAGE_SIZE        32
-
-
   /* typedef is in `cf2glue.h' */
   struct  CF2_FontRec_
   {
@@ -116,19 +106,11 @@ FT_BEGIN_HEADER
 
     FT_Service_CFFLoad  cffload;           /* pointer to cff functions */
   };
-
-
   FT_LOCAL( FT_Error )
   cf2_getGlyphOutline( CF2_Font           font,
                        CF2_Buffer         charstring,
                        const CF2_Matrix*  transform,
                        CF2_F16Dot16*      glyphWidth );
-
-
 FT_END_HEADER
-
-
 #endif /* PSFONT_H_ */
-
-
 /* END */

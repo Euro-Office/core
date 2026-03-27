@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *   sarray.c
  *
@@ -124,8 +122,6 @@
 
 static const l_int32  INITIAL_PTR_ARRAYSIZE = 50;     /* n'importe quoi */
 static const l_int32  L_BUF_SIZE = 512;
-
-
 /*--------------------------------------------------------------------------*
  *                   String array create/destroy/copy/extend                *
  *--------------------------------------------------------------------------*/
@@ -156,8 +152,6 @@ SARRAY  *sa;
     sa->refcount = 1;
     return sa;
 }
-
-
 /*!
  *  sarrayCreateInitialized()
  *
@@ -184,8 +178,6 @@ SARRAY  *sa;
         sarrayAddString(sa, initstr, L_COPY);
     return sa;
 }
-
-
 /*!
  *  sarrayCreateWordsFromString()
  *
@@ -230,8 +222,6 @@ SARRAY  *sa;
 
     return sa;
 }
-
-
 /*!
  *  sarrayCreateLinesFromString()
  *
@@ -301,8 +291,6 @@ SARRAY  *sa;
 
     return sa;
 }
-
-
 /*!
  *  sarrayDestroy()
  *
@@ -341,8 +329,6 @@ SARRAY  *sa;
     *psa = NULL;
     return;
 }
-
-        
 /*!
  *  sarrayCopy()
  *
@@ -368,8 +354,6 @@ SARRAY  *csa;
 
     return csa;
 }
-
-
 /*!
  *  sarrayClone()
  *
@@ -386,8 +370,6 @@ sarrayClone(SARRAY  *sa)
     sarrayChangeRefcount(sa, 1);
     return sa;
 }
-
-
 /*!
  *  sarrayAddString()
  *
@@ -431,8 +413,6 @@ l_int32  n;
 
     return 0;
 }
-
-
 /*!
  *  sarrayExtendArray()
  *
@@ -455,8 +435,6 @@ sarrayExtendArray(SARRAY  *sa)
     sa->nalloc *= 2;
     return 0;
 }
-
-
 /*!
  *  sarrayRemoveString()
  *
@@ -495,8 +473,6 @@ l_int32  i, n, nalloc;
     sa->n--;
     return string;
 }
-
-
 /*!
  *  sarrayReplaceString()
  *
@@ -542,8 +518,6 @@ l_int32  n;
     sa->array[index] = str;
     return 0;
 }
-
-
 /*!
  *  sarrayClear()
  *
@@ -566,8 +540,6 @@ l_int32  i;
     sa->n = 0;
     return 0;
 }
-
-        
 /*----------------------------------------------------------------------*
  *                               Accessors                              *
  *----------------------------------------------------------------------*/
@@ -586,8 +558,6 @@ sarrayGetCount(SARRAY  *sa)
         return ERROR_INT("sa not defined", procName, 0);
     return sa->n;
 }
-        
-
 /*!
  *  sarrayGetArray()
  *
@@ -618,8 +588,6 @@ char  **array;
 
     return array;
 }
-
-
 /*!
  *  sarrayGetString()
  *
@@ -659,8 +627,6 @@ sarrayGetString(SARRAY  *sa,
     else  /* L_COPY */
         return stringNew(sa->array[index]);
 }
-
-
 /*!
  *  sarrayGetRefCount()
  *
@@ -676,8 +642,6 @@ sarrayGetRefcount(SARRAY  *sa)
         return ERROR_INT("sa not defined", procName, UNDEF);
     return sa->refcount;
 }
-
-
 /*!
  *  sarrayChangeRefCount()
  *
@@ -696,8 +660,6 @@ sarrayChangeRefcount(SARRAY  *sa,
     sa->refcount += delta;
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                      Conversion to string                           *
  *----------------------------------------------------------------------*/
@@ -731,8 +693,6 @@ sarrayToString(SARRAY  *sa,
 
     return sarrayToStringRange(sa, 0, 0, addnlflag);
 }
-
-
 /*!
  *  sarrayToStringRange()
  *
@@ -819,8 +779,6 @@ l_int32  n, i, last, size, index, len;
 
     return dest;
 }
-
-
 /*----------------------------------------------------------------------*
  *                      Concatenate 2 sarrays                           *
  *----------------------------------------------------------------------*/
@@ -856,8 +814,6 @@ l_int32  n, i;
 
     return 0;
 }
-
-
 /*!
  *  sarrayAppendRange()
  *
@@ -901,8 +857,6 @@ l_int32  n, i;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *          Pad an sarray to be the same size as another sarray         *
  *----------------------------------------------------------------------*/
@@ -945,8 +899,6 @@ l_int32  i, n1, n2;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                   Convert word sarray to line sarray                 *
  *----------------------------------------------------------------------*/
@@ -1040,8 +992,6 @@ SARRAY  *sal, *saout;
     return saout;
 
 }
-
-
 /*----------------------------------------------------------------------*
  *                    Split string on separator list                    *
  *----------------------------------------------------------------------*/
@@ -1082,8 +1032,6 @@ char  *cstr, *substr, *saveptr;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                              Filter sarray                           *
  *----------------------------------------------------------------------*/
@@ -1128,8 +1076,6 @@ SARRAY  *saout;
 
     return saout;
 }
-
-
 /*!
  *  sarraySelectByRange()
  *
@@ -1175,8 +1121,6 @@ SARRAY  *saout;
 
     return saout;
 }
-
-
 /*!
  *  sarrayParseRange()
  *
@@ -1285,8 +1229,6 @@ l_int32  n, i, offset, found;
 
     return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                                   Sort                               *
  *----------------------------------------------------------------------*/
@@ -1344,8 +1286,6 @@ l_int32  n, i, j, gap;
 
     return saout;
 }
-
-
 /*!
  *  stringCompareLexical()
  *
@@ -1388,8 +1328,6 @@ l_int32  i, len1, len2, len;
     else
         return 0;
 }
-
-
 /*----------------------------------------------------------------------*
  *                           Serialize for I/O                          *
  *----------------------------------------------------------------------*/
@@ -1421,8 +1359,6 @@ SARRAY  *sa;
     fclose(fp);
     return sa;
 }
-
-
 /*!
  *  sarrayReadStream()
  *
@@ -1483,8 +1419,6 @@ SARRAY  *sa;
     FREE(stringbuf);
     return sa;
 }
-
-
 /*!
  *  sarrayWrite()
  *
@@ -1514,8 +1448,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*!
  *  sarrayWriteStream()
  *
@@ -1551,8 +1483,6 @@ l_int32  i, n, len;
 
     return 0;
 }
-
-
 /*!
  *  sarrayAppend()
  *
@@ -1582,8 +1512,6 @@ FILE  *fp;
     fclose(fp);
     return 0;
 }
-
-
 /*---------------------------------------------------------------------*
  *                           Directory filenames                       *
  *---------------------------------------------------------------------*/
@@ -1678,8 +1606,6 @@ SARRAY  *sa, *saout;
     sarrayDestroy(&sa);
     return saout;
 }
-
-
 /*!
  *  getSortedPathnamesInDirectory()
  *
@@ -1740,8 +1666,6 @@ SARRAY  *sa, *safiles, *saout;
     sarrayDestroy(&safiles);
     return saout;
 }
-
-
 /*!
  *  getFilenamesInDirectory()
  *

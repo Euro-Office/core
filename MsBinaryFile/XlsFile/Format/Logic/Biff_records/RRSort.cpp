@@ -38,19 +38,13 @@ namespace XLS
 RRSort::RRSort()
 {
 }
-
-
 RRSort::~RRSort()
 {
 }
-
-
 BaseObjectPtr RRSort::clone()
 {
 	return BaseObjectPtr(new RRSort(*this));
 }
-
-
 void RRSort::readFields(CFRecord& record)
 {
 	Log::error("RRSort record is not implemented.");

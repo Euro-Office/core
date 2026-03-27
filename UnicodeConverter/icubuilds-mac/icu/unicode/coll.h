@@ -1062,8 +1062,6 @@ public:
             uint8_t             *result,
             int32_t             resultLength,
             UErrorCode          &status);
-
-
 protected:
 
     // Collator protected constructors -------------------------------------

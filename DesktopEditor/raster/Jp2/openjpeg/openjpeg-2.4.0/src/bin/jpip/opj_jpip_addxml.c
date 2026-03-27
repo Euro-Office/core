@@ -46,14 +46,10 @@
  *    <roi name="harbor" x="4200" y="1650" w="130" h="130"/>\n
  *  </xmlbox>
  */
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-
-
 /**
  * Open JP2 file with the check of JP2 header
  *
@@ -61,8 +57,6 @@
  * @return             file descriptor
  */
 FILE * open_jp2file(const char filename[]);
-
-
 /**
  * read xml file without any format check for the moment
  *

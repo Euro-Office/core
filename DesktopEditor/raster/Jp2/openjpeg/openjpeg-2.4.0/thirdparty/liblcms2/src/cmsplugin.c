@@ -25,8 +25,6 @@
 //
 
 #include "lcms2_internal.h"
-
-
 // ----------------------------------------------------------------------------------
 // Encoding & Decoding support functions
 // ----------------------------------------------------------------------------------
@@ -48,8 +46,6 @@ cmsUInt16Number CMSEXPORT  _cmsAdjustEndianess16(cmsUInt16Number Word)
 
     return Word;
 }
-
-
 // Transports to properly encoded values - note that icc profiles does use big endian notation.
 
 // 1 2 3 4
@@ -182,8 +178,6 @@ cmsBool CMSEXPORT  _cmsReadFloat32Number(cmsIOHANDLER* io, cmsFloat32Number* n)
     }
     return TRUE;
 }
-
-
 cmsBool CMSEXPORT   _cmsReadUInt64Number(cmsIOHANDLER* io, cmsUInt64Number* n)
 {
     cmsUInt64Number tmp;
@@ -196,8 +190,6 @@ cmsBool CMSEXPORT   _cmsReadUInt64Number(cmsIOHANDLER* io, cmsUInt64Number* n)
     if (n != NULL) _cmsAdjustEndianess64(n, &tmp);
     return TRUE;
 }
-
-
 cmsBool CMSEXPORT  _cmsRead15Fixed16Number(cmsIOHANDLER* io, cmsFloat64Number* n)
 {
     cmsUInt32Number tmp;
@@ -213,8 +205,6 @@ cmsBool CMSEXPORT  _cmsRead15Fixed16Number(cmsIOHANDLER* io, cmsFloat64Number* n
 
     return TRUE;
 }
-
-
 cmsBool CMSEXPORT  _cmsReadXYZNumber(cmsIOHANDLER* io, cmsCIEXYZ* XYZ)
 {
     cmsEncodedXYZNumber xyz;
@@ -281,8 +271,6 @@ cmsBool CMSEXPORT  _cmsWriteUInt32Number(cmsIOHANDLER* io, cmsUInt32Number n)
 
     return TRUE;
 }
-
-
 cmsBool CMSEXPORT  _cmsWriteFloat32Number(cmsIOHANDLER* io, cmsFloat32Number n)
 {
     cmsUInt32Number tmp;
@@ -469,8 +457,6 @@ cmsBool CMSEXPORT _cmsWriteAlignment(cmsIOHANDLER* io)
     memset(Buffer, 0, BytesToNextAlignedPos);
     return io -> Write(io, BytesToNextAlignedPos, Buffer);
 }
-
-
 // To deal with text streams. 2K at most
 cmsBool CMSEXPORT _cmsIOPrintf(cmsIOHANDLER* io, const char* frm, ...)
 {
@@ -496,8 +482,6 @@ cmsBool CMSEXPORT _cmsIOPrintf(cmsIOHANDLER* io, const char* frm, ...)
 
     return rc;
 }
-
-
 // Plugin memory management -------------------------------------------------------------------------------------------------
 
 // Specialized malloc for plug-ins, that is freed upon exit.
@@ -520,8 +504,6 @@ void* _cmsPluginMalloc(cmsContext ContextID, cmsUInt32Number size)
 
     return _cmsSubAlloc(ctx->MemPool, size);
 }
-
-
 // Main plug-in dispatcher
 cmsBool CMSEXPORT cmsPlugin(void* Plug_in)
 {
@@ -602,15 +584,11 @@ cmsBool CMSEXPORT cmsPluginTHR(cmsContext id, void* Plug_in)
     // Keep a reference to the plug-in
     return TRUE;
 }
-
-
 // Revert all plug-ins to default
 void CMSEXPORT cmsUnregisterPlugins(void)
 {
     cmsUnregisterPluginsTHR(NULL);
 }
-
-
 // The Global storage for system context. This is the one and only global variable
 // pointers structure. All global vars are referenced here.
 static struct _cmsContext_struct globalContext = {
@@ -637,8 +615,6 @@ static struct _cmsContext_struct globalContext = {
     
     { NULL, NULL, NULL, NULL, NULL, NULL } // The default memory allocator is not used for context 0
 };
-
-
 // The context pool (linked list head)
 static _cmsMutex _cmsContextPoolHeadMutex = CMS_MUTEX_INITIALIZER;
 static struct _cmsContext_struct* _cmsContextPoolHead = NULL;
@@ -648,8 +624,6 @@ struct _cmsContext_struct* _cmsGetContext(cmsContext ContextID)
 {
     struct _cmsContext_struct* id = (struct _cmsContext_struct*) ContextID;
     struct _cmsContext_struct* ctx;
-
-
     // On 0, use global settings
     if (id == NULL) 
         return &globalContext;
@@ -666,8 +640,6 @@ struct _cmsContext_struct* _cmsGetContext(cmsContext ContextID)
 
     return &globalContext;
 }
-
-
 // Internal: get the memory area associanted with each context client
 // Returns the block assigned to the specific zone. Never return NULL.
 void* _cmsContextGetClientChunk(cmsContext ContextID, _cmsMemoryClient mc)
@@ -696,8 +668,6 @@ void* _cmsContextGetClientChunk(cmsContext ContextID, _cmsMemoryClient mc)
     // reverts to Context0 globals
     return globalContext.chunks[mc];    
 }
-
-
 // This function returns the given context its default pristine state,
 // as no plug-ins were declared. There is no way to unregister a single 
 // plug-in, as a single call to cmsPluginTHR() function may register 
@@ -717,8 +687,6 @@ void CMSEXPORT cmsUnregisterPluginsTHR(cmsContext ContextID)
     _cmsRegisterTransformPlugin(ContextID, NULL);    
     _cmsRegisterMutexPlugin(ContextID, NULL);
 }
-
-
 // Returns the memory manager plug-in, if any, from the Plug-in bundle
 static
 cmsPluginMemHandler* _cmsFindMemoryPlugin(void* PluginBundle)
@@ -741,8 +709,6 @@ cmsPluginMemHandler* _cmsFindMemoryPlugin(void* PluginBundle)
     // Nope, revert to defaults 
     return NULL;
 }
-
-
 // Creates a new context with optional associated plug-ins. Caller may also specify an optional pointer to user-defined 
 // data that will be forwarded to plug-ins and logger.
 cmsContext CMSEXPORT cmsCreateContext(void* Plugin, void* UserData)
@@ -818,8 +784,6 @@ cmsContext CMSEXPORT cmsDupContext(cmsContext ContextID, void* NewUserData)
     const struct _cmsContext_struct* src = _cmsGetContext(ContextID);
 
     void* userData = (NewUserData != NULL) ? NewUserData : src -> chunks[UserPtr];
-    
-    
     ctx = (struct _cmsContext_struct*) _cmsMalloc(ContextID, sizeof(struct _cmsContext_struct));
     if (ctx == NULL)   
         return NULL;     // Something very wrong happened
@@ -870,8 +834,6 @@ cmsContext CMSEXPORT cmsDupContext(cmsContext ContextID, void* NewUserData)
 
     return (cmsContext) ctx;
 }
-
-
 /*
 static
 struct _cmsContext_struct* FindPrev(struct _cmsContext_struct* id)
@@ -946,5 +908,3 @@ void* CMSEXPORT cmsGetContextUserData(cmsContext ContextID)
 {
     return _cmsContextGetClientChunk(ContextID, UserPtr);
 }
-
-

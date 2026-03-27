@@ -114,8 +114,6 @@ char * generateTiffG4PS(const char *filein, char *data85, l_int32 w,
 {
     return (char *)ERROR_PTR("function not present", "generateTiffG4PS", NULL);
 }
-
-
 l_int32 convertFlateToPSEmbed(const char *filein, const char *fileout)
 {
     return ERROR_INT("function not present", "convertFlateToPSEmbed", 1);

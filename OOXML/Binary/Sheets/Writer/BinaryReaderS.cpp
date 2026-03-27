@@ -7106,8 +7106,6 @@ int BinaryWorksheetsTableReader::ReadCells(BYTE type, long length, void* poResul
 	}
 	else
 		res = c_oSerConstants::ReadUnknown;
-
-
 	return res;
 }
 int BinaryWorksheetsTableReader::ReadCell(BYTE type, long length, void* poResult)
@@ -8501,8 +8499,6 @@ void BinaryWorksheetsTableReader::AddLineBreak(OOX::Spreadsheet::CSi& oSi)
 	pRun->m_arrItems.push_back(pText);
 	oSi.m_arrItems.push_back(pRun);
 }
-
-
 BinaryOtherTableReader::BinaryOtherTableReader(NSBinPptxRW::CBinaryFileReader& oBufferedStream, boost::unordered_map<long, ImageObject*>& mapMedia,
                        const std::wstring& sFileInDir, SaveParams& oSaveParams, NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter,
                        const std::wstring& sMediaDir) :

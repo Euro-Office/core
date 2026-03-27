@@ -23,11 +23,7 @@
 /* Promotion Agency(IPA), Japan.                                           */
 /*                                                                         */
 /***************************************************************************/
-
-
 #include "gxvmorx.h"
-
-
   /*************************************************************************/
   /*                                                                       */
   /* The macro FT_COMPONENT is used in trace mode.  It is an implicit      */
@@ -36,8 +32,6 @@
   /*                                                                       */
 #undef  FT_COMPONENT
 #define FT_COMPONENT  trace_gxvmorx
-
-
   typedef struct  GXV_morx_subtable_type2_StateOptRec_
   {
     FT_ULong  ligActionTable;
@@ -49,12 +43,8 @@
 
   }  GXV_morx_subtable_type2_StateOptRec,
     *GXV_morx_subtable_type2_StateOptRecData;
-
-
 #define GXV_MORX_SUBTABLE_TYPE2_HEADER_SIZE \
           ( GXV_XSTATETABLE_HEADER_SIZE + 4 + 4 + 4 )
-
-
   static void
   gxv_morx_subtable_type2_opttable_load( FT_Bytes       table,
                                          FT_Bytes       limit,
@@ -64,8 +54,6 @@
 
     GXV_morx_subtable_type2_StateOptRecData  optdata =
       (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
-
-
     GXV_LIMIT_CHECK( 4 + 4 + 4 );
     optdata->ligActionTable = FT_NEXT_ULONG( p );
     optdata->componentTable = FT_NEXT_ULONG( p );
@@ -78,8 +66,6 @@
     GXV_TRACE(( "offset to ligatureTable=0x%08x\n",
                 optdata->ligatureTable ));
   }
-
-
   static void
   gxv_morx_subtable_type2_subtable_setup( FT_ULong       table_size,
                                           FT_ULong       classTable,
@@ -96,8 +82,6 @@
 
     GXV_morx_subtable_type2_StateOptRecData  optdata =
       (GXV_morx_subtable_type2_StateOptRecData)valid->xstatetable.optdata;
-
-
     GXV_NAME_ENTER( "subtable boundaries setup" );
 
     o[0] = classTable;
@@ -133,11 +117,7 @@
 
     GXV_EXIT;
   }
-
-
 #define GXV_MORX_LIGACTION_ENTRY_SIZE  4
-
-
   static void
   gxv_morx_subtable_type2_ligActionIndex_validate(
     FT_Bytes       table,
@@ -152,8 +132,6 @@
     FT_Bytes p         = lat_base +
                          ligActionIndex * GXV_MORX_LIGACTION_ENTRY_SIZE;
     FT_Bytes lat_limit = lat_base + optdata->ligActionTable;
-
-
     if ( p < lat_base )
     {
       GXV_TRACE(( "p < lat_base (%d byte rewind)\n", lat_base - p ));
@@ -174,8 +152,6 @@
 #endif
       FT_ULong   offset;
       FT_Long    gid_limit;
-
-
       lig_action = FT_NEXT_ULONG( p );
 #ifdef GXV_LOAD_UNUSED_VARS
       last       = (FT_UShort)( ( lig_action >> 31 ) & 1 );
@@ -216,8 +192,6 @@
       GXV_SET_ERR_IF_PARANOID( FT_INVALID_OFFSET );
     }
   }
-
-
   static void
   gxv_morx_subtable_type2_entry_validate(
     FT_UShort                       state,
@@ -237,8 +211,6 @@
 
     FT_UNUSED( state );
     FT_UNUSED( limit );
-
-
 #ifdef GXV_LOAD_UNUSED_VARS
     setComponent   = (FT_UShort)( ( flags >> 15 ) & 1 );
     dontAdvance    = (FT_UShort)( ( flags >> 14 ) & 1 );
@@ -255,8 +227,6 @@
       gxv_morx_subtable_type2_ligActionIndex_validate(
         table, ligActionIndex, valid );
   }
-
-
   static void
   gxv_morx_subtable_type2_ligatureTable_validate( FT_Bytes       table,
                                                   GXV_Validator  valid )
@@ -267,8 +237,6 @@
     FT_Bytes p     = table + optdata->ligatureTable;
     FT_Bytes limit = table + optdata->ligatureTable
                            + optdata->ligatureTable_length;
-
-
     GXV_NAME_ENTER( "morx chain subtable type2 - substitutionTable" );
 
     if ( 0 != optdata->ligatureTable )
@@ -277,8 +245,6 @@
       while ( p < limit )
       {
         FT_UShort  lig_gid;
-
-
         GXV_LIMIT_CHECK( 2 );
         lig_gid = FT_NEXT_USHORT( p );
         if ( lig_gid < valid->face->num_glyphs )
@@ -288,8 +254,6 @@
 
     GXV_EXIT;
   }
-
-
   FT_LOCAL_DEF( void )
   gxv_morx_subtable_type2_validate( FT_Bytes       table,
                                     FT_Bytes       limit,
@@ -298,8 +262,6 @@
     FT_Bytes  p = table;
 
     GXV_morx_subtable_type2_StateOptRec  lig_rec;
-
-
     GXV_NAME_ENTER( "morx chain subtable type2 (Ligature Substitution)" );
 
     GXV_LIMIT_CHECK( GXV_MORX_SUBTABLE_TYPE2_HEADER_SIZE );
@@ -324,6 +286,4 @@
 
     GXV_EXIT;
   }
-
-
 /* END */

@@ -33,12 +33,8 @@
 #include "psd_rect.h"
 #include "psd_bitmap.h"
 #include "psd_math.h"
-
-
 extern void psd_bitmap_gaussian_blur_alpha_channel(psd_bitmap * bitmap, psd_double radius);
 extern void psd_effects_add_noise(psd_bitmap * bitmap, psd_int noise, psd_int left, psd_int top, psd_context * context);
-
-
 // set default value
 psd_static void psd_set_layer_drop_shadow_default(psd_layer_effects_drop_shadow * drop_shadow)
 {

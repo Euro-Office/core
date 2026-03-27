@@ -486,8 +486,6 @@ namespace cpdoccore {
 			const int pos = static_cast<int>(presentation_page_layouts_.size() - 1);
 			presentation_page_layout_names_[StyleName] = pos;
 		}
-
-
 		const std::wstring page_layout_container::page_layout_name_by_style(const std::wstring& StyleName) const
 		{
 			if (master_page_names_.count(StyleName) > 0)

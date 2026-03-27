@@ -12,8 +12,6 @@
  -  be plainly marked as such; and (3) this notice may not be removed
  -  or altered from any source or modified source distribution.
  *====================================================================*/
-
-
 /*
  *  rotate.c
  *
@@ -48,8 +46,6 @@
 
 extern l_float32  AlphaMaskBorderVals[2];
 static const l_float32  VERY_SMALL_ANGLE = 0.001;  /* radians; ~0.06 degrees */
-
-
 /*------------------------------------------------------------------*
  *                  General rotation about the center               *
  *------------------------------------------------------------------*/
@@ -173,8 +169,6 @@ PIXCMAP   *cmap;
     pixDestroy(&pixt3);
     return pixd;
 }
-
-
 /*!
  *  pixEmbedForRotation()
  *
@@ -268,8 +262,6 @@ PIX       *pixd;
     pixRasterop(pixd, xoff, yoff, w, h, PIX_SRC, pixs, 0, 0);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                    General rotation by sampling                  *
  *------------------------------------------------------------------*/
@@ -393,8 +385,6 @@ PIX       *pixd;
     FREE(lines);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *                 Nice (slow) rotation of 1 bpp image              *
  *------------------------------------------------------------------*/
@@ -446,8 +436,6 @@ PIX  *pixt1, *pixt2, *pixt3, *pixt4, *pixd;
     pixDestroy(&pixt4);
     return pixd;
 }
-
-
 /*------------------------------------------------------------------*
  *             Rotation including alpha (blend) component           *
  *------------------------------------------------------------------*/
@@ -541,8 +529,6 @@ PIX     *pixd, *pixg2, *pixgr;
     pixDestroy(&pixgr);
     return pixd;
 }
-
-
 /*!
  *  pixRotateGammaXform()
  *

@@ -18,8 +18,6 @@
 #include "agg_basics.h"
 #include "agg_line_aa_basics.h"
 #include "agg_color_rgba.h"
-
-
 namespace agg
 {
 
@@ -45,16 +43,12 @@ namespace agg
 
     typedef pattern_filter_nn<rgba8>  pattern_filter_nn_rgba8;
     typedef pattern_filter_nn<rgba16> pattern_filter_nn_rgba16;
-
-
     //===========================================pattern_filter_bilinear_rgba
     template<class ColorT> struct pattern_filter_bilinear_rgba
     {
         typedef ColorT color_type;
         typedef typename color_type::value_type value_type;
         typedef typename color_type::calc_type calc_type;
-
-
         static unsigned dilation() { return 1; }
 
         static AGG_INLINE void pixel_low_res(color_type const* const* buf, 

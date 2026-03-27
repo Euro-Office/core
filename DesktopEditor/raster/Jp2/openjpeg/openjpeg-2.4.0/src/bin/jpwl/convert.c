@@ -139,8 +139,6 @@ static int tga_readheader(FILE *fp, unsigned int *bits_per_pixel,
     cmap_index = get_ushort(*(unsigned short*)(&tga[3]));
     cmap_len = get_ushort(*(unsigned short*)(&tga[5]));
     cmap_entry_size = (unsigned char)tga[7];
-
-
     x_origin = get_ushort(*(unsigned short*)(&tga[8]));
     y_origin = get_ushort(*(unsigned short*)(&tga[10]));
     image_w = get_ushort(*(unsigned short*)(&tga[12]));
@@ -1267,8 +1265,6 @@ int imagetobmp(opj_image_t * image, const char *outfile)
 PGX IMAGE FORMAT
 
 <<-- <<-- <<-- <<-- */
-
-
 static unsigned char readuchar(FILE * f)
 {
     unsigned char c1;

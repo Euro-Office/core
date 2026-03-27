@@ -19,24 +19,14 @@
 /* Development of the code in this file is support of                      */
 /* Information-technology Promotion Agency, Japan.                         */
 /***************************************************************************/
-
-
 #ifndef __FTRFORK_H__
 #define __FTRFORK_H__
-
-
 #include <ft2build.h>
 #include FT_INTERNAL_OBJECTS_H
-
-
 FT_BEGIN_HEADER
-
-
   /* Number of guessing rules supported in `FT_Raccess_Guess'.            */
   /* Don't forget to increment the number if you add a new guessing rule. */
 #define FT_RACCESS_N_RULES  9
-
-
   /* A structure to describe a reference in a resource by its resource ID */
   /* and internal offset.  The `POST' resource expects to be concatenated */
   /* by the order of resource IDs instead of its appearance in the file.  */
@@ -109,8 +99,6 @@ FT_BEGIN_HEADER
 #endif /* FT_CONFIG_OPTION_PIC */
 
 #endif /* FT_CONFIG_OPTION_GUESSING_EMBEDDED_RFORK */
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -157,8 +145,6 @@ FT_BEGIN_HEADER
                     char**      new_names,
                     FT_Long*    offsets,
                     FT_Error*   errors );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -196,8 +182,6 @@ FT_BEGIN_HEADER
                              FT_Long     rfork_offset,
                              FT_Long    *map_offset,
                              FT_Long    *rdata_pos );
-
-
   /*************************************************************************/
   /*                                                                       */
   /* <Function>                                                            */
@@ -256,11 +240,7 @@ FT_BEGIN_HEADER
                               FT_Bool     sort_by_res_id,
                               FT_Long   **offsets,
                               FT_Long    *count );
-
-
 FT_END_HEADER
 
 #endif /* __FTRFORK_H__ */
-
-
 /* END */

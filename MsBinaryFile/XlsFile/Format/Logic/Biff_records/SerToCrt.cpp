@@ -38,13 +38,9 @@ namespace XLS
 SerToCrt::SerToCrt()
 {
 }
-
-
 SerToCrt::~SerToCrt()
 {
 }
-
-
 BaseObjectPtr SerToCrt::clone()
 {
 	return BaseObjectPtr(new SerToCrt(*this));

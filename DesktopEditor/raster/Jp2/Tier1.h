@@ -446,8 +446,6 @@ namespace Jpeg2000
 			//} 
 		}
 	}
-
-
 	// Mode fixed_quality
 	static double Tier1_GetWMSEDec(int nNMSEDec, int nComponentIndex, int nLevel, int nOrient, int nBufferPos, int nQFMBID, double dStepSize, int nComponentsCount)
 	{
@@ -901,8 +899,6 @@ namespace Jpeg2000
             pTier1->lut_nmsedec_ref0[nI] = (std::max)(0, (int)(floor((dU * dU)           * pow(double(2), T1_NMSEDEC_FRACBITS) + 0.5) / pow(double(2), T1_NMSEDEC_FRACBITS) * 8192.0));
 		}
 	}
-
-
 	//-------------------------------------------------------------------------------------------------------------------------------
 	// Основные функции
 	//-------------------------------------------------------------------------------------------------------------------------------

@@ -64,8 +64,6 @@
 #if NEED_GNUG_PRAGMAS
 # pragma interface
 #endif
-
-
 #include "GThreads.h"
 #include "GURL.h"
 
@@ -292,8 +290,6 @@ public:
       /// Displays status on #stderr#. Always returns 1.
    virtual bool		notify_status(const DjVuPort * source, const GUTF8String &msg);
 };
-
-
 /** Memory based port.
     This \Ref{DjVuPort} maintains a map associating pseudo urls with data
     segments.  It processes the #request_data# notifications according to this
@@ -320,8 +316,6 @@ private:
    GCriticalSection	lock;
    GPMap<GURL, DataPool>map;
 };
-
-
 
 /** Maintains associations between ports.
     It monitors the status of all ports (have they been destructed yet?),
@@ -487,8 +481,6 @@ private:
    void compute_closure(const DjVuPort *src, GPList<DjVuPort> &list,
                         bool sorted=false);
 };
-
-
 inline bool
 DjVuPort::inherits(const GUTF8String &class_name) const
 {
@@ -510,8 +502,6 @@ DjVuMemoryPort::inherits(const GUTF8String &class_name) const
 }
 
 //@}
-
-
 #ifdef HAVE_NAMESPACES
 }
 # ifndef NOT_USING_DJVU_NAMESPACE

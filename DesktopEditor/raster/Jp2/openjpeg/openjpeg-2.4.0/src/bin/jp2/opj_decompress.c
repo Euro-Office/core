@@ -84,8 +84,6 @@ typedef struct dircnt {
     /** Pointer to the buffer*/
     char **filename;
 } dircnt_t;
-
-
 typedef struct img_folder {
     /** The directory path of the folder containing input images*/
     char *imgdirpath;
@@ -516,8 +514,6 @@ static int infile_format(const char *fname)
         return -1;
     }
 
-
-
     ext_format = get_file_format(fname);
 
     if (ext_format == JPT_CFMT) {
@@ -701,16 +697,12 @@ int parse_cmdline_decoder(int argc, char **argv,
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'r': {     /* reduce option */
             sscanf(opj_optarg, "%u", &(parameters->core.cp_reduce));
         }
         break;
 
         /* ----------------------------------------------------- */
-
-
         case 'l': {     /* layering option */
             sscanf(opj_optarg, "%u", &(parameters->core.cp_layer));
         }
@@ -1344,8 +1336,6 @@ int main(int argc, char **argv)
         /* the opj_set_decoded_resolution_factor() API instead */
         parameters.core.cp_reduce = 0;
     }
-
-
     /* Initialize reading of directory */
     if (img_fol.set_imgdir == 1) {
         int it_image;
@@ -1454,8 +1444,6 @@ int main(int argc, char **argv)
             opj_set_warning_handler(l_codec, warning_callback, 00);
             opj_set_error_handler(l_codec, error_callback, 00);
         }
-
-
         t = opj_clock();
 
         /* Setup the decoder decoding parameters using user parameters */
@@ -1767,8 +1755,6 @@ int main(int argc, char **argv)
         if (l_codec) {
             opj_destroy_codec(l_codec);
         }
-
-
         /* free image data structure */
         opj_image_destroy(image);
 
