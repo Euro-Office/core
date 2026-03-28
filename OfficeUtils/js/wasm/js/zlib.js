@@ -383,5 +383,10 @@
 		window["ZLibModule_onLoad"] && window["ZLibModule_onLoad"]();
 	};
 
+
+    Module.onRuntimeInitialized = function () {
+        self.onZlibEngineInit();
+    };
+
 })(window, undefined);
 

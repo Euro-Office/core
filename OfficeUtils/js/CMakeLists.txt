@@ -473,10 +473,18 @@ target_link_options(${PROJECT_NAME} PRIVATE
     "-sEXPORTED_FUNCTIONS=['_malloc','_free','_Zlib_Malloc','_Zlib_Free','_Zlib_Create','_Zlib_Open','_Zlib_Close','_Zlib_AddFile','_Zlib_RemoveFile','_Zlib_GetPaths','_Zlib_GetFile','_Zlib_Save','_Raster_DecodeFile','_Raster_GetDecodedBuffer','_Raster_GetHeight','_Raster_GetWidth','_Raster_GetStride','_Raster_Destroy','_Raster_EncodeImageData','_Raster_Encode','_Raster_GetEncodedBuffer','_Raster_GetEncodedSize','_Raster_DestroyEncodedData','_Image_GetFormat']"
     "-sEXPORTED_RUNTIME_METHODS=['HEAP8']"
     "-sLEGACY_VM_SUPPORT=1"
-    "SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/zlib_pre.js"
     "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-    "SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
-    "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/zlib_post.js"
+    "SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+)
+
+# Create final .js for Wasm
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/zlib.js"
+    "${EO_CORE_OUTPUT_DIR}/${PROJECT_NAME}/engine/${PROJECT_NAME}.js"
+    MODE POST_BUILD
+    REPLACEMENTS
+        "{{{ MODULE }}}"  "${EO_CORE_OUTPUT_DIR}/${PROJECT_NAME}/engine/${PROJECT_NAME}.js"
 )
 
 add_custom_target(${PROJECT_NAME}_copy_extra_files ALL

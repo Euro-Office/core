@@ -103,7 +103,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
     "-sEXPORTED_RUNTIME_METHODS=['HEAP8']"
     "-sLEGACY_VM_SUPPORT=1"
     "SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
-    "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/spell_post.js"
+    "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/spell.js"
 )
 
 add_custom_target(${PROJECT_NAME}_copy_extra_files ALL

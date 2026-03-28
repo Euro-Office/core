@@ -82,11 +82,18 @@ target_link_options(${PROJECT_NAME} PRIVATE
 "-sEXPORTED_FUNCTIONS=['_malloc','_free','_Crypto_Malloc','_Crypto_Free', '_Crypto_CreateKeys', '_Crypto_Sign', '_Crypto_ChangePassword']"
 "-sEXPORTED_RUNTIME_METHODS=['HEAP8']"
 "-sLEGACY_VM_SUPPORT=1"
-"SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/engine_base_pre-1.js"
-"SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-"SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/engine_base_pre-2.js"
-"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
-"SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/engine_base_post.js"
+"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+)
+
+
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/engine_base.js"
+    "${EO_CORE_OUTPUT_DIR}/${PROJECT_NAME}/${PROJECT_NAME}.js"
+    MODE PRE_BUILD
+    REPLACEMENTS
+        "{{{ STRING_UTF8 }}}"  "${CORE_ROOT}/Common/js/string_utf8.js"
+        "{{{ MODULE }}}"  "${EO_CORE_OUTPUT_DIR}/${PROJECT_NAME}/${PROJECT_NAME}.js"
 )
 
 # -------------------------------------------------

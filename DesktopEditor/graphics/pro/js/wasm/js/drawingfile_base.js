@@ -42,9 +42,15 @@
 
 	//string_utf8
 
-	//module
+	{{{ MODULE }}}
 
 	//stream
 
 	//file
+
+    Module.onRuntimeInitialized = function () {
+        window["AscViewer"] && window["AscViewer"]["onLoadModule"] && window["AscViewer"]["onLoadModule"]();
+    };
+    
+
 })(window, undefined);

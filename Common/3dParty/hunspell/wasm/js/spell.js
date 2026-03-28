@@ -1,4 +1,4 @@
-var printErr = undefined;
+/*var printErr = undefined;
 var FS = undefined;
 var print = undefined;
 
@@ -34,7 +34,7 @@ else
     getBinaryPromise = function() {
         return getBinaryPromise2();
     }
-}
+}*/
 
 //polyfill
 
@@ -543,4 +543,9 @@ function Spellchecker()
 			self.spellchecker.checkMessage();
 		}, 1);
 	};
+
+
+    Module.onRuntimeInitialized = function () {
+        self.onEngineInit();
+    };
 }

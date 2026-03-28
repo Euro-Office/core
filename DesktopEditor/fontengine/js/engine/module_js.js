@@ -45,7 +45,7 @@ if (window["NATIVE_EDITOR_ENJINE"])
 
 var setImmediate = window.setImmediate;
 
-//desktop_fetch
+{{{ MODULE }}}
 
 //polyfill
 
@@ -642,6 +642,11 @@ AscFonts.Hyphen_Word = function(lang, word)
 
 if (window["NATIVE_EDITOR_ENJINE"])
 	window.immediateRun();
+
 AscFonts.onLoadModule();
+
+Module.onRuntimeInitialized = function () {
+  AscFonts.onLoadModule();
+};
 
 })(window, undefined);

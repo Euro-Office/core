@@ -459,7 +459,7 @@ CFile.prototype._InitializeFonts = function(basePath)
 	let rangesFinal = new Uint8Array(rangesBuffer.buffer.buffer, 0, rangesFinalLen);
 	pointer = Module["_malloc"](rangesFinalLen);
 	Module.HEAP8.set(rangesFinal, pointer);
-	Module["_InitializeFontsRanges"](pointer, rangesFinalLen);
+	Module["_InitializeFontsRanges"](pointer/*, rangesFinalLen*/);
 	Module["_free"](pointer);
 };
 

@@ -487,13 +487,13 @@ target_link_options(${PROJECT_NAME} PRIVATE
 -sENVIRONMENT=web
 -sLLD_REPORT_UNDEFINED
 -sWASM=1
+-sASSERTIONS=0
 -sEXPORTED_FUNCTIONS=[${EXPORTED_FUNCS_STR}]
--sEXPORTED_RUNTIME_METHODS=HEAP8,HEAPU8,HEAP32
+-sEXPORTED_RUNTIME_METHODS=HEAP8,HEAPU8,HEAP32,STACK_SIZE,noExitRuntime,print,printErr
+-sSTACK_SIZE=10MB
 -sLEGACY_VM_SUPPORT=1
-"SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/engine/module_pre.js"
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
-"SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/engine/module_post.js"
 )
 
 # -------------------------------------------------
@@ -502,6 +502,16 @@ target_link_options(${PROJECT_NAME} PRIVATE
 set_target_properties(${PROJECT_NAME} PROPERTIES
 RUNTIME_OUTPUT_DIRECTORY ${EO_CORE_OUTPUT_DIR}/libfont/engine
 SUFFIX ".js"
+)
+
+# Create final .js for Wasm
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/engine/module_js.js"
+    "${EO_CORE_OUTPUT_DIR}/libfont/engine/${PROJECT_NAME}.js"
+    MODE POST_BUILD
+    REPLACEMENTS
+        "{{{ MODULE }}}"  "${EO_CORE_OUTPUT_DIR}/libfont/engine/${PROJECT_NAME}.js"
 )
 
 add_custom_target(${PROJECT_NAME}_copy_extra_files ALL

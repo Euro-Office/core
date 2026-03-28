@@ -149,3 +149,62 @@ function(copy_boost_libs artifact)
         COMMENT "Copying Boost libs to ${EO_CORE_OUTPUT_DIR}"
     )
 endfunction()
+
+# Javascript bundler for wasm builds
+function(inject_script TARGET_NAME TEMPLATE_FILE OUTPUT_FILE)
+    cmake_parse_arguments(ARG "" "MODE" "REPLACEMENTS" ${ARGN})
+
+    if(NOT ARG_MODE)
+        set(ARG_MODE "POST_BUILD")
+    endif()
+
+    set(_helper "${CMAKE_CURRENT_BINARY_DIR}/inject_script.cmake")
+    file(WRITE "${_helper}" [[
+        file(READ "${T}" content)
+        math(EXPR last "${COUNT} - 1")
+        foreach(i RANGE ${last})
+            file(READ "${S${i}}" s_data)
+            string(REPLACE "${P${i}}" "${s_data}" content "${content}")
+        endforeach()
+        file(WRITE "${O}" "${content}")
+    ]])
+
+    set(_defs)
+    set(_count 0)
+    set(_pairs ${ARG_REPLACEMENTS})
+    set(_script_files)
+    while(_pairs)
+        list(POP_FRONT _pairs _placeholder _script_file)
+        list(APPEND _defs "-D" "P${_count}=${_placeholder}" "-D" "S${_count}=${_script_file}")
+        list(APPEND _script_files "${_script_file}")
+        math(EXPR _count "${_count} + 1")
+    endwhile()
+
+    set(_cmd
+        COMMAND ${CMAKE_COMMAND}
+            -D "T=${TEMPLATE_FILE}"
+            -D "O=${OUTPUT_FILE}"
+            -D "COUNT=${_count}"
+            ${_defs}
+            -P "${_helper}"
+        COMMENT "Injecting scripts into ${TEMPLATE_FILE}"
+        VERBATIM
+    )
+
+    if(ARG_MODE STREQUAL "PRE_BUILD")
+        get_filename_component(_out_name "${OUTPUT_FILE}" NAME_WE)
+
+        add_custom_command(
+            OUTPUT "${OUTPUT_FILE}"
+            ${_cmd}
+            DEPENDS "${TEMPLATE_FILE}" ${_script_files}
+        )
+        add_custom_target(${TARGET_NAME}_inject_${_out_name} DEPENDS "${OUTPUT_FILE}")
+        add_dependencies(${TARGET_NAME} ${TARGET_NAME}_inject_${_out_name})
+    else()
+        add_custom_command(
+            TARGET ${TARGET_NAME} POST_BUILD
+            ${_cmd}
+        )
+    endif()
+endfunction()

@@ -888,9 +888,9 @@ set_source_files_properties(${SOURCES} PROPERTIES GENERATED TRUE)
 
 set_source_files_properties(
     ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/ftgrays.c
+    #${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/ftgrays.c
     ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/ttcmap.c
+    #${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/ttcmap.c
     PROPERTIES LANGUAGE CXX
 )
 
@@ -990,20 +990,44 @@ set(EXPORTED_FUNCS
     _InitializeFontsRanges
     _SetFontBinary
     _GetFontBinary
+    _GetGIDByUnicode
     _IsFontBinaryExist
     _DestroyTextInfo
     _IsNeedCMap
     _SetCMapData
+    _SetScanPageFonts
     _ScanPage
     _SplitPages
     _MergePages
     _UnmergePages
     _RedactPage
     _UndoRedact
+    _CheckOwnerPassword
+    _CheckPerm
     _GetImageBase64
     _GetImageBase64Len
     _GetImageBase64Ptr
     _GetImageBase64Free
+)
+
+# Create Wasm Script
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile.js"
+    "${CMAKE_CURRENT_BINARY_DIR}/drawingfile_wasm.js"
+    MODE PRE_BUILD
+    REPLACEMENTS
+        "{{{ DRAWINGFILE }}}"  "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_wasm.js"
+)
+
+# Create Native Script
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile.js"
+    "${CMAKE_CURRENT_BINARY_DIR}/drawingfile_native.js"
+    MODE PRE_BUILD
+    REPLACEMENTS
+        "{{{ DRAWINGFILE }}}"  "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_native.js"
 )
 
 #string(REPLACE ";" "," EXPORTED_FUNCS_STR "${EXPORTED_FUNCS}")
@@ -1015,12 +1039,14 @@ target_link_options(${PROJECT_NAME} PRIVATE
 -sENVIRONMENT=web
 -sLLD_REPORT_UNDEFINED
 -sWASM=1
+-sASSERTIONS=0
 -sEXPORTED_FUNCTIONS=[${EXPORTED_FUNCS_STR}]
+#-sEXPORTED_RUNTIME_METHODS=HEAP8,HEAPU8,HEAP32,noExitRuntime,print,printErr
 "-sLEGACY_VM_SUPPORT=1"
-"SHELL:--pre-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_base_pre.js"
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
-"SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_base_post.js"
+"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+"SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/stream.js"
+"SHELL:--post-js ${CMAKE_CURRENT_BINARY_DIR}/drawingfile_wasm.js"
 )
 
 # -------------------------------------------------
@@ -1031,23 +1057,30 @@ RUNTIME_OUTPUT_DIRECTORY ${EO_CORE_OUTPUT_DIR}/engine
 SUFFIX ".js"
 )
 
-find_program(NPM_EXECUTABLE npm REQUIRED)
+# Create final .js for Wasm
+inject_script(
+    ${PROJECT_NAME}
+    "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_base.js"
+    "${EO_CORE_OUTPUT_DIR}/engine/${PROJECT_NAME}.js"
+    MODE POST_BUILD
+    REPLACEMENTS
+        "{{{ MODULE }}}"  "${EO_CORE_OUTPUT_DIR}/engine/${PROJECT_NAME}.js"
+)
+
 
 add_custom_command(
-    OUTPUT "${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js"
-    COMMAND ${NPM_EXECUTABLE} install esbuild
-    COMMAND ${NPM_EXECUTABLE} exec esbuild -- ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_main_entry.js --bundle --minify --format=iife --outfile=${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js
-    # We can rely on glob for dependencies, or list main ones. 
-    # Ideally, list the main ones so CMake knows when to rebuild.
-    DEPENDS 
-        "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_main_entry.js"
-        "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/stream.js"
-        "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile.js"
-        "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/drawingfile_native.js"
-        "${CORE_ROOT}/Common/js/string_utf8.js"
-    COMMENT "Bundling JS with esbuild"
-    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-    VERBATIM
+  OUTPUT "${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js"
+  COMMAND cat
+    ${CORE_ROOT}/Common/js/string_utf8.js
+    ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/stream.js
+    ${CMAKE_CURRENT_BINARY_DIR}/drawingfile_native.js
+    > ${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js
+  DEPENDS
+    "${CORE_ROOT}/Common/js/string_utf8.js"
+    "${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/stream.js"
+    "${CMAKE_CURRENT_BINARY_DIR}/drawingfile_native.js"
+  COMMENT "Concatenating native JS files"
+  VERBATIM
 )
 
 add_custom_target(web_bundle ALL DEPENDS "${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js")
