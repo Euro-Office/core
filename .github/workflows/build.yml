@@ -75,8 +75,6 @@ jobs:
 
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
-      with:
-        vcpkgGitCommitId: latest
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
