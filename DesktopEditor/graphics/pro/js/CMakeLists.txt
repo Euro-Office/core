@@ -1044,7 +1044,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 #-sEXPORTED_RUNTIME_METHODS=HEAP8,HEAPU8,HEAP32,noExitRuntime,print,printErr
 "-sLEGACY_VM_SUPPORT=1"
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
 "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/wasm/js/stream.js"
 "SHELL:--post-js ${CMAKE_CURRENT_BINARY_DIR}/drawingfile_wasm.js"
 )

@@ -82,7 +82,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 "-sEXPORTED_FUNCTIONS=['_malloc','_free','_Crypto_Malloc','_Crypto_Free', '_Crypto_CreateKeys', '_Crypto_Sign', '_Crypto_ChangePassword']"
 "-sEXPORTED_RUNTIME_METHODS=['HEAP8']"
 "-sLEGACY_VM_SUPPORT=1"
-"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
 )
 
 

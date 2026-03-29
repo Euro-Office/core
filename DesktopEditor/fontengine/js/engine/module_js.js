@@ -25,10 +25,6 @@
 
 (function(window, undefined) {
 
-var _scriptSrc = (typeof document !== 'undefined' && document.currentScript && document.currentScript.src)
-    || (typeof self !== 'undefined' && self.location && self.location.href)
-    || '';
-
 var AscFonts = window['AscFonts'];
 
 if (window["NATIVE_EDITOR_ENJINE"])

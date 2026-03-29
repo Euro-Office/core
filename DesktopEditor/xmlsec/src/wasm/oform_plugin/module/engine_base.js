@@ -1,9 +1,5 @@
 (function(window, undefined){
 
-	var _scriptSrc = (typeof document !== 'undefined' && document.currentScript && document.currentScript.src)
-		|| (typeof self !== 'undefined' && self.location && self.location.href)
-		|| '';
-
 	//desktop_fetch
 
     //polyfill

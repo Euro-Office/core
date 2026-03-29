@@ -1,3 +1,7 @@
+var _scriptSrc = (typeof document !== 'undefined' && document.currentScript && document.currentScript.src)
+    || (typeof self !== 'undefined' && self.location && self.location.href)
+    || '';
+
 Module['instantiateWasm'] = function(imports, successCallback) {
 
     function internal_isLocal() {
@@ -33,59 +37,87 @@ Module['instantiateWasm'] = function(imports, successCallback) {
 
         if (!wasmAbsPath) {
             console.error("Could not determine wasm absolute path; falling back to Emscripten default.");
-            return false;
-        }
+        } else {
 
+            // Use the custom desktop protocol path
+            var wasmPath = "ascdesktop://fonts/" + wasmAbsPath;
 
-        // Use the custom desktop protocol path
-        var wasmPath = "ascdesktop://fonts/" + wasmAbsPath;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', wasmPath, true);
+            xhr.responseType = 'arraybuffer';
 
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', wasmPath, true);
-        xhr.responseType = 'arraybuffer';
+            // Keep the original MIME/Charset overrides
+            if (xhr.overrideMimeType)
+                xhr.overrideMimeType('text/plain; charset=x-user-defined');
+            else
+                xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
 
-        // Keep the original MIME/Charset overrides
-        if (xhr.overrideMimeType)
-            xhr.overrideMimeType('text/plain; charset=x-user-defined');
-        else
-            xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
+            xhr.onload = function() {
+                //console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
+                
+                if (xhr.status === 200 || (xhr.status === 0 && xhr.response && xhr.response.byteLength > 0)) {
+                    //console.log("Calling WebAssembly.instantiate...");
+                    WebAssembly.instantiate(xhr.response, imports)
+                        .then(function(result) {
+                            //console.log("WASM instantiated successfully, calling successCallback");
+                            successCallback(result.instance, result.module);
+                        })
+                        .catch(function(e) {
+                            console.error("WASM instantiation failed:", e);
+                        });
+                } else {
+                    console.error("XHR status check failed — status:", xhr.status, "response:", xhr.response);
+                }
+            };
 
-        xhr.onload = function() {
-            //console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
+            xhr.onerror = function() {
+                console.error("XHR onerror fired for:", wasmPath);
+            };
+
+            xhr.ontimeout = function() {
+                console.error("XHR timed out for:", wasmPath);
+            };
+
+            /*xhr.onreadystatechange = function() {
+                console.log("XHR readyState:", xhr.readyState, "status:", xhr.status);
+            };*/
             
-            if (xhr.status === 200 || (xhr.status === 0 && xhr.response && xhr.response.byteLength > 0)) {
-                //console.log("Calling WebAssembly.instantiate...");
-                WebAssembly.instantiate(xhr.response, imports)
-                    .then(function(result) {
-                        //console.log("WASM instantiated successfully, calling successCallback");
-                        successCallback(result.instance, result.module);
-                    })
-                    .catch(function(e) {
-                        console.error("WASM instantiation failed:", e);
-                    });
-            } else {
-                console.error("XHR status check failed — status:", xhr.status, "response:", xhr.response);
-            }
-        };
-
-        xhr.onerror = function() {
-            console.error("XHR onerror fired for:", wasmPath);
-        };
-
-        xhr.ontimeout = function() {
-            console.error("XHR timed out for:", wasmPath);
-        };
-
-        /*xhr.onreadystatechange = function() {
-            console.log("XHR readyState:", xhr.readyState, "status:", xhr.status);
-        };*/
-        
-        xhr.send(null);
-        return {}; // Tell Emscripten instantiation is happening asynchronously
+            xhr.send(null);
+            return {}; // Tell Emscripten instantiation is happening asynchronously
+        }
     }
 
-    // 3. Fallback for standard Web
-    // Returning false tells Emscripten to use its default fetch/instantiate logic
-    return false; 
+    // --- Web: replicate Emscripten's default streaming path ---
+    var wasmUrl = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm');
+    if (typeof WebAssembly.instantiateStreaming === 'function') {
+        WebAssembly.instantiateStreaming(fetch(wasmUrl), imports)
+            .then(function(result) {
+                successCallback(result.instance, result.module);
+            })
+            .catch(function(e) {
+                // Streaming failed (e.g. wrong MIME type), fall back to arraybuffer
+                console.warn("Streaming instantiation failed, retrying with ArrayBuffer:", e);
+                fetch(wasmUrl)
+                    .then(function(r) { return r.arrayBuffer(); })
+                    .then(function(buf) { return WebAssembly.instantiate(buf, imports); })
+                    .then(function(result) {
+                        successCallback(result.instance, result.module);
+                    })
+                    .catch(function(e2) {
+                        console.error("ArrayBuffer instantiation also failed:", e2);
+                    });
+            });
+    } else {
+        fetch(wasmUrl)
+            .then(function(r) { return r.arrayBuffer(); })
+            .then(function(buf) { return WebAssembly.instantiate(buf, imports); })
+            .then(function(result) {
+                successCallback(result.instance, result.module);
+            })
+            .catch(function(e) {
+                console.error("WASM instantiation failed:", e);
+            });
+    }
+    return {};
 };
 
