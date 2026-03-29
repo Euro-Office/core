@@ -493,7 +493,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
 -sSTACK_SIZE=10MB
 -sLEGACY_VM_SUPPORT=1
 "SHELL:--pre-js ${CORE_ROOT}/Common/js/string_utf8.js"
-"SHELL:--pre-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
+"SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
 )
 
 # -------------------------------------------------

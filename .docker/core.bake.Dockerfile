@@ -122,10 +122,9 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 #### CORE ####
 FROM core-base AS core
     RUN --mount=type=cache,target=/build-cache \
-        --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw <<EOF
-        set -e
-        mkdir -p ${BUILD_ROOT}
-        cd /build-cache
+        --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
+        mkdir -p ${BUILD_ROOT} && \
+        cd /build-cache && \
 
         cmake -GNinja \
         -DVCPKG_MANIFEST_MODE=ON \
@@ -135,9 +134,10 @@ FROM core-base AS core
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
         -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
-        -DEO_CORE_OUTPUT_DIR=${BUILD_ROOT}/bin \
-        -DEO_CORE_TOOLS_DIR=${BUILD_ROOT}/tools \
-        /core
+        -DEO_CORE_OUTPUT_DIR=./package/bin \
+        -DEO_CORE_TOOLS_DIR=./package/tools \
+        /core && \
 
-        cmake --build .
-EOF
+        cmake --build . && \
+
+        cp -r package/* ${BUILD_ROOT}

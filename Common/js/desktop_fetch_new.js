@@ -1,30 +1,42 @@
-var _scriptSrc = document.currentScript && document.currentScript.src;
-
 Module['instantiateWasm'] = function(imports, successCallback) {
-    // 1. Replicate the original OnlyOffice "IsLocal" detection
+
     function internal_isLocal() {
-        if (window.navigator && window.navigator.userAgent.toLowerCase().indexOf("ascdesktopeditor") < 0)
-            return false;
-        if (window.location && window.location.protocol == "file:")
-            return true;
-        if (window.document && window.document.currentScript && 0 == window.document.currentScript.src.indexOf("file:///"))
-            return true;
+        // Resolve globals safely
+        var _win = (typeof window !== 'undefined') ? window
+                 : (typeof self  !== 'undefined') ? self
+                 : null;
+        if (!_win) return false;
+
+        var _doc = (typeof document !== 'undefined') ? document
+                 : (_win.document || null);
+
+        // Desktop signal: either UA string (case 1) or AscDesktopEditor object (case 2)
+        var ua = (_win.navigator && _win.navigator.userAgent)
+               ? _win.navigator.userAgent.toLowerCase() : '';
+        var isDesktop = ua.indexOf('ascdesktopeditor') >= 0 || !!_win.AscDesktopEditor;
+
+        if (!isDesktop) return false;
+
+        // Locality checks (same in both cases)
+        if (_win.location && _win.location.protocol === 'file:') return true;
+        if (_doc && _doc.currentScript && _doc.currentScript.src.indexOf('file:///') === 0) return true;
+
         return false;
     }
-
-    var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm').substr(7);
-
-    //console.log("Loading WASM from:", wasmAbsPath);
-
-    if (!wasmAbsPath) {
-        console.error("Could not determine wasm absolute path; falling back to Emscripten default.");
-        return false;
-    }
-
-
 
     //console.log("RESULT OF LOCAL TEST:" + internal_isLocal())
     if (internal_isLocal()) {
+
+        var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm').substr(7);
+
+        //console.log("Loading WASM from:", wasmAbsPath);
+
+        if (!wasmAbsPath) {
+            console.error("Could not determine wasm absolute path; falling back to Emscripten default.");
+            return false;
+        }
+
+
         // Use the custom desktop protocol path
         var wasmPath = "ascdesktop://fonts/" + wasmAbsPath;
 
