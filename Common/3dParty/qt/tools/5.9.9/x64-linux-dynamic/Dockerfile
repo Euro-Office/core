@@ -1,6 +1,3 @@
-# ==========================================
-# STAGE 1: The Builder (Ubuntu 18.04)
-# ==========================================
 FROM ubuntu:18.04 AS qt-builder
 
     # Prevent interactive prompts
@@ -51,7 +48,7 @@ FROM ubuntu:18.04 AS qt-builder
     WORKDIR /build/qt-everywhere-opensource-src-5.9.9
 
     # Configure
-    # We can now use your original parameters without extra "warning" hacks
+    # We can now use the original parameters from build_tools
     RUN ./configure \
         -opensource \
         -confirm-license \
@@ -77,7 +74,7 @@ FROM ubuntu:18.04 AS qt-builder
         -skip qt3d \
         -skip qtwebview \
         -skip qtwebengine \
-        # --- NEW FLAGS TO MATCH TARGET BUILD ---
+        # flags to match target build after comparison to onlyoffice build
         -dbus-linked \
         -icu \
         -no-iconv \
@@ -89,7 +86,6 @@ FROM ubuntu:18.04 AS qt-builder
         #-openssl-linked \
         -cups \
         -gtk
-        # ---------------------------------------
 
     # Build and install
     RUN make -j$(nproc)

@@ -14,7 +14,7 @@ Module['instantiateWasm'] = function(imports, successCallback) {
 
     var wasmAbsPath = _scriptSrc.replace(/\.js(\?.*)?$/, '.wasm').substr(7);
 
-    console.log("Loading WASM from:", wasmAbsPath);
+    //console.log("Loading WASM from:", wasmAbsPath);
 
     if (!wasmAbsPath) {
         console.error("Could not determine wasm absolute path; falling back to Emscripten default.");
@@ -23,7 +23,7 @@ Module['instantiateWasm'] = function(imports, successCallback) {
 
 
 
-    console.log("RESULT OF LOCAL TEST:" + internal_isLocal())
+    //console.log("RESULT OF LOCAL TEST:" + internal_isLocal())
     if (internal_isLocal()) {
         // Use the custom desktop protocol path
         var wasmPath = "ascdesktop://fonts/" + wasmAbsPath;
@@ -39,13 +39,13 @@ Module['instantiateWasm'] = function(imports, successCallback) {
             xhr.setRequestHeader('Accept-Charset', 'x-user-defined');
 
         xhr.onload = function() {
-            console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
+            //console.log("XHR onload — status:", xhr.status, "byteLength:", xhr.response && xhr.response.byteLength);
             
             if (xhr.status === 200 || (xhr.status === 0 && xhr.response && xhr.response.byteLength > 0)) {
-                console.log("Calling WebAssembly.instantiate...");
+                //console.log("Calling WebAssembly.instantiate...");
                 WebAssembly.instantiate(xhr.response, imports)
                     .then(function(result) {
-                        console.log("WASM instantiated successfully, calling successCallback");
+                        //console.log("WASM instantiated successfully, calling successCallback");
                         successCallback(result.instance, result.module);
                     })
                     .catch(function(e) {
@@ -64,9 +64,10 @@ Module['instantiateWasm'] = function(imports, successCallback) {
             console.error("XHR timed out for:", wasmPath);
         };
 
-        xhr.onreadystatechange = function() {
+        /*xhr.onreadystatechange = function() {
             console.log("XHR readyState:", xhr.readyState, "status:", xhr.status);
-        };
+        };*/
+        
         xhr.send(null);
         return {}; // Tell Emscripten instantiation is happening asynchronously
     }

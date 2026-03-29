@@ -1,5 +1,4 @@
 # 1. Setup hashes for each architecture (Vcpkg requires these)
-# Tip: Leave these blank first; vcpkg will tell you the correct hash on failure.
 set(CEF_HASH "NOTFOUND")
 
 message(STATUS "CEF Version: ${VERSION}")
@@ -11,7 +10,6 @@ file(READ "${CMAKE_CURRENT_LIST_DIR}/hashes.txt" HASH_DATA)
 # 2. Extract the specific line for this version+triplet
 string(REGEX MATCH "(${VERSION}\\|${TARGET_TRIPLET}\\|[A-Za-z0-9]+)" MATCHED_LINE "${HASH_DATA}")
 
-# --- NEW ROBUST LOGIC ---
 if(MATCHED_LINE)
     # Split the matched line by the pipe '|' character
     string(REPLACE "|" ";" LINE_ITEMS "${MATCHED_LINE}")
@@ -39,7 +37,7 @@ vcpkg_extract_source_archive(
     ARCHIVE "${ARCHIVE}"
 )
 
-# 5. Install exactly where you requested
+# 5. Install
 file(INSTALL "${SOURCE_PATH}/" DESTINATION "${CURRENT_PACKAGES_DIR}/cef")
 
 # 6. Required copyright file

@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(ooxmlsignature VERSION 1.0.0.1)
+project(ooxmlsignature VERSION 1)
 
 # Custom option to replace the `support_oform` scope
 option(SUPPORT_OFORM "Enable OFORM support" OFF)

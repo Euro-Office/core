@@ -5,12 +5,12 @@ set -e # Exit immediately if a command fails
 NEXTCLOUD_USER=
 NEXTCLOUD_PASS=
 
-NEXTCLOUD_REMOTE="https://cloud.nextcloud.com/remote.php/dav/files" # Name of configured rclone remote
+NEXTCLOUD_REMOTE="https://cloud.nextcloud.com/remote.php/dav/files" # Name of configured remote
 BASE_REMOTE_PATH="3DPARTY_DEPS"
-THDPARTY_DIR="./Common/3dParty"
+THDPARTY_DIR="."
 LOCAL_BUILD_DIR="./build_output"
 TRIPLETS=(
-    "x64-linux" # Assuming you build for this triplet
+    "x64-linux"
     "arm64-linux"
 
     #"x64-windows"
@@ -22,7 +22,7 @@ TRIPLETS=(
 
 mkdir -p "$LOCAL_BUILD_DIR"
 
-# Dependencies array: NAME|VERSION|DOCKERFILE_PATH
+# Dependencies array: NAME|VERSION
 DEPS=(
     #"cef|5414"
     "libvlc|3.0.18"

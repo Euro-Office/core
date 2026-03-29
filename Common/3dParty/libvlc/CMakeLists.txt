@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
 # 1. Define the library target
-# Replace 'vlc_wrapper' with your preferred target name
 add_library(vlc_wrapper STATIC
     vlcinstance.cpp
     vlcplayer.cpp
@@ -59,10 +58,8 @@ if(MSVC)
 endif()
 
 # 6. Platform Specifics: macOS Apple Silicon
-# Note: CMAKE_OSX_DEPLOYMENT_TARGET is usually set globally before the project() command.
+# Note: CMAKE_OSX_DEPLOYMENT_TARGET must be set globally before the project() command.
 if(APPLE AND CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64")
-    # Assuming you are finding Qt elsewhere in your project
-    # If explicit Qt version check is needed: if(QT_VERSION_MAJOR GREATER 5)
     
     # Check if the global setting is lower than required, or warn the user
     if(CMAKE_OSX_DEPLOYMENT_TARGET VERSION_LESS "10.15")

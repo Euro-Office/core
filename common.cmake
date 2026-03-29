@@ -12,7 +12,6 @@ set(EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}/workdir" CACHE PATH "3r
 set(EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}/install" CACHE PATH "3rd party install dir.")
 
 
-include_directories(SYSTEM /build-cache-desktop/vcpkg_installed/x64-linux-dynamic/include)
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 
@@ -64,7 +63,7 @@ set(COMMON_CXX_FLAGS
     -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    #-O2 # Remove for debugging
+    -O2 # Remove for debugging
 )
 
 set(COMMON_C_FLAGS
@@ -78,7 +77,7 @@ set(COMMON_C_FLAGS
     -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
     -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    #-O2 #Remove for debugging
+    -O2 #Remove for debugging
 )
 
 

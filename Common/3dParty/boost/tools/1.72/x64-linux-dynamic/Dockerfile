@@ -13,7 +13,7 @@ FROM ubuntu:20.04 AS boost-builder
         git \
         && rm -rf /var/lib/apt/lists/*
 
-    # Arguments matching your script's logic
+    # Arguments
     ARG BOOST_VERSION=boost-1.72.0
     ARG USE_CLANG=0
 
