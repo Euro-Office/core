@@ -665,6 +665,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_PivotCharacterValue;
@@ -707,6 +708,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_PivotBooleanValue;
@@ -739,6 +741,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_PivotNumericValue;
@@ -781,6 +784,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
                 return et_x_PivotDateTimeValue;
@@ -813,7 +817,8 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
-            void toBin(XLS::StreamCacheWriterPtr& writer);
+			XLS::BaseObjectPtr toXLS();
+			void toBin(XLS::StreamCacheWriterPtr& writer);
 			virtual EElementType getType () const
 			{
 				return et_x_PivotErrorValue;
@@ -856,6 +861,7 @@ namespace OOX
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);
             void fromBin(XLS::BaseObjectPtr& obj);
 			XLS::BaseObjectPtr toBin();
+			XLS::BaseObjectPtr toXLS();
 			virtual EElementType getType () const
 			{
 				return et_x_PivotNoValue;
