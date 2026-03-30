@@ -83,13 +83,19 @@ if(DISABLE_FULL_DOCUMENT_CREATION)
     )
 endif()
 
+if(LLVM_MINGW_CROSS)
+    target_compile_definitions(DocxRenderer PRIVATE
+        __int64=long\ long
+    )
+endif()
+
 target_link_libraries(DocxRenderer PUBLIC
     UnicodeConverter
     kernel
     graphics
 )
 
-if(WIN32)
+if(WIN32 OR LLVM_MINGW_CROSS)
     target_link_libraries(DocxRenderer PUBLIC
         gdi32
         advapi32
@@ -99,3 +105,5 @@ if(WIN32)
 endif()
 
 copy_artifacts_to_folder("DocxRenderer" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(DocxRenderer)
