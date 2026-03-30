@@ -6,8 +6,6 @@
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../DesktopEditor/common/SystemUtils.h"
 
-#include "../../DesktopEditor/graphics/pro/Fonts.h"
-
 #include "../src/Languages.h"
 
 namespace HTML
@@ -41,10 +39,9 @@ inline UINT GetFontSizeByLevel(UINT unLevel);
 inline void ReplaceSpaces(std::wstring& wsValue);
 
 COOXMLWriter::COOXMLWriter(THTMLParameters* pHTMLParameters, NSCSS::CCssCalculator* pCSSCalculator)
-	: m_pDstPath(nullptr), m_pTempDir(nullptr), m_pSrcPath(nullptr),
-	  m_pBasePath(nullptr), m_pCorePath(nullptr), m_pStylesCalculator(pCSSCalculator),
+	: m_pDstPath(nullptr), m_pStylesCalculator(pCSSCalculator),
 	  m_pHTMLParameters(pHTMLParameters), m_nFootnoteId(1), m_nHyperlinkId(1), m_nListId(1),
-	  m_nElementId(1), m_bBanUpdatePageData(false), m_bWasDivs(false), m_pFonts(nullptr)
+	  m_nElementId(1), m_bBanUpdatePageData(false), m_bWasDivs(false)
 {
 	m_oPageData.SetWidth (DEFAULT_PAGE_WIDTH,  NSCSS::UnitMeasure::Twips, 0, true);
 	m_oPageData.SetHeight(DEFAULT_PAGE_HEIGHT, NSCSS::UnitMeasure::Twips, 0, true);
@@ -56,29 +53,9 @@ COOXMLWriter::COOXMLWriter(THTMLParameters* pHTMLParameters, NSCSS::CCssCalculat
 	m_arStates.top().m_pCurrentDocument = &m_oDocXml;
 }
 
-void COOXMLWriter::SetSrcDirectory(const std::wstring& wsPath)
-{
-	m_pSrcPath = &wsPath;
-}
-
 void COOXMLWriter::SetDstDirectory(const std::wstring& wsPath)
 {
 	m_pDstPath = &wsPath;
-}
-
-void COOXMLWriter::SetTempDirectory(const std::wstring& wsPath)
-{
-	m_pTempDir = &wsPath;
-}
-
-void COOXMLWriter::SetBaseDirectory(const std::wstring& wsPath)
-{
-	m_pBasePath = &wsPath;
-}
-
-void COOXMLWriter::SetCoreDirectory(const std::wstring& wsPath)
-{
-	m_pCorePath = &wsPath;
 }
 
 void COOXMLWriter::Begin(const std::wstring& wsDst)
@@ -1271,42 +1248,9 @@ const NSCSS::NSProperties::CPage* COOXMLWriter::GetPageData() const
 	return &m_oPageData;
 }
 
-NSFonts::IApplicationFonts* COOXMLWriter::GetFonts()
-{
-	if (nullptr == m_pFonts)
-	{
-		m_pFonts = NSFonts::NSApplication::Create();
-
-		if (NULL != m_pFonts)
-			m_pFonts->Initialize();
-	}
-
-	return m_pFonts;
-}
-
 std::wstring COOXMLWriter::GetMediaDir() const
 {
 	return ((nullptr != m_pDstPath) ? *m_pDstPath : std::wstring()) + L"/word/media/";
-}
-
-std::wstring COOXMLWriter::GetTempDir() const
-{
-	return (nullptr != m_pTempDir) ? *m_pTempDir : std::wstring();
-}
-
-std::wstring COOXMLWriter::GetSrcPath() const
-{
-	return (nullptr != m_pSrcPath) ? *m_pSrcPath : std::wstring();
-}
-
-std::wstring COOXMLWriter::GetBasePath() const
-{
-	return (nullptr != m_pBasePath) ? *m_pBasePath : std::wstring();
-}
-
-std::wstring COOXMLWriter::GetCorePath() const
-{
-	return (nullptr != m_pCorePath) ? *m_pCorePath : std::wstring();
 }
 
 inline bool ElementInTable(const std::vector<NSCSS::CNode>& arSelectors)

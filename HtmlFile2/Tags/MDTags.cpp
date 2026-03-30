@@ -6,9 +6,15 @@
 #include "../Table.h"
 #include "../Common/3dParty/html/css/src/CCompiledStyle.h"
 
-#include "../../DesktopEditor/common/Base64.h"
+#include "../../Common/Network/FileTransporter/include/FileTransporter.h"
 
-#include <boost/tuple/tuple.hpp>
+#include "../../DesktopEditor/common/Base64.h"
+#include "../../DesktopEditor/common/Path.h"
+#include "../../DesktopEditor/common/Directory.h"
+
+#include "../../DesktopEditor/graphics/pro/Graphics.h"
+#include "../../DesktopEditor/raster/BgraFrame.h"
+
 #include <queue>
 
 namespace HTML
@@ -23,7 +29,6 @@ bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-
 template<>
 void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 {
@@ -37,85 +42,12 @@ void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 	oTagNode.GetAttributeValue(L"href", wsHref);
 	oTagNode.GetAttributeValue(L"title", wsTitle);
 
-	NSCSS::NSProperties::CDigit oWidth{oTagNode.m_pCompiledStyle->m_oDisplay.GetWidth()};
-	NSCSS::NSProperties::CDigit oHeight{oTagNode.m_pCompiledStyle->m_oDisplay.GetHeight()};
-
-	std::wstring wsValue;
-
-	if (oTagNode.GetAttributeValue(L"width", wsValue))
-		oWidth.SetValue(wsValue);
-
-	if (oTagNode.GetAttributeValue(L"height", wsValue))
-		oHeight.SetValue(wsValue);
-
-	const bool bNeedSetSize{(!oWidth.Empty() && !oWidth.Zero()) || (!oHeight.Empty() && !oHeight.Zero())};
-
-	// Предполагаем картинку в Base64
-	if (wsHref.length() > 4 && wsHref.substr(0, 4) == L"data" && wsHref.find(L"/", 4) != std::wstring::npos)
-	{
-		if (bNeedSetSize)
-		{
-		}
-	}
-
 	m_pWriter->WriteString(L'(' + wsHref);
 
 	if (!wsTitle.empty())
 		m_pWriter->WriteString(L" \"" + wsTitle + L'"');
 
 	m_pWriter->WriteString(L")");
-}
-
-bool ConvertFromBase64(const std::wstring& wsBase64, UINT unWidth, UINT unHeight)
-{
-	bool bRes = false;
-	size_t nBase = wsBase64.find(L"/", 4);
-	nBase++;
-
-	const size_t nEndBase = wsBase64.find(L";", nBase);
-	if (nEndBase == std::wstring::npos)
-		return bRes;
-
-	std::wstring wsExtention{wsBase64.substr(nBase, nEndBase - nBase)};
-
-	if (wsExtention == L"octet-stream")
-		wsExtention = L"jpg";
-
-	nBase = wsBase64.find(L"base64", nEndBase);
-	if (nBase == std::wstring::npos)
-		return bRes;
-
-	const int nOffset = nBase + 7;
-	int nSrcLen = (int)(wsBase64.length() - nBase + 1);
-	int nDecodeLen = NSBase64::Base64DecodeGetRequiredLength(nSrcLen);
-
-	// if (nDecodeLen != 0)
-	// {
-	// 	BYTE* pImageData = new BYTE[nDecodeLen];
-
-	// 	if (!pImageData || FALSE == NSBase64::Base64Decode(wsBase64.c_str() + nOffset, nSrcLen, pImageData, &nDecodeLen))
-	// 		return false;
-
-	// 	if (L"svg" == wsExtention || L"svg+xml" == wsExtention;)
-	// 	{
-	// 		std::wstring wsSvg(pImageData, pImageData + nDecodeLen);
-	// 		bRes = ReadSVG(wsSvg, pFonts, wsTempDir, wsImagePath);
-	// 		wsExtention = L"png";
-	// 	}
-	// 	else
-	// 	{
-	// 		NSFile::CFileBinary oImageWriter;
-
-	// 		if (oImageWriter.CreateFileW(wsImagePath + L'.' + wsExtention))
-	// 			bRes = oImageWriter.WriteFile(pImageData, (DWORD)nDecodeLen);
-
-	// 		oImageWriter.CloseFile();
-	// 	}
-
-	// 	RELEASEARRAYOBJECTS(pImageData);
-	// }
-
-	return bRes;
 }
 
 template<>
@@ -265,6 +197,261 @@ bool CHeaderTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
+bool ConvertBufferToBase64(BYTE* pBuffer, size_t unSize, std::wstring& wsBase64)
+{
+	if (nullptr == pBuffer || 0 == unSize)
+		return false;
+
+	int nDecodeSize{NSBase64::Base64EncodeGetRequiredLength(unSize)};
+
+	BYTE* pBase64Buffer = new BYTE[nDecodeSize];
+
+	if (nullptr == pBase64Buffer)
+		return false;
+
+	if (FALSE == NSBase64::Base64Encode(pBuffer, unSize, pBase64Buffer, &nDecodeSize, 2))
+	{
+		RELEASEARRAYOBJECTS(pBase64Buffer);
+		return false;
+	}
+
+	wsBase64.reserve(22 + nDecodeSize);
+
+	wsBase64 = L"data:image/png;base64,";
+	wsBase64.append(pBase64Buffer, pBase64Buffer + nDecodeSize);
+
+	RELEASEARRAYOBJECTS(pBase64Buffer);
+
+	return true;
+}
+
+bool ConvertFromMetafileBase(MetaFile::IMetaFile* pMetafileReader, UINT unWidth, UINT unHeight, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsResultBase64)
+{
+	NSGraphics::IGraphicsRenderer* pGrRenderer = NSGraphics::Create();
+	pGrRenderer->SetFontManager(pMetafileReader->get_FontManager());
+
+	double dX, dY, dW, dH;
+	pMetafileReader->GetBounds(&dX, &dY, &dW, &dH);
+
+	if (dW < 0) dW = -dW;
+	if (dH < 0) dH = -dH;
+
+	double dOneMaxSize = (double)1000.;
+
+	if (dW > dH && dW > dOneMaxSize)
+	{
+		dH *= (dOneMaxSize / dW);
+		dW = dOneMaxSize;
+	}
+	else if (dH > dW && dH > dOneMaxSize)
+	{
+		dW *= (dOneMaxSize / dH);
+		dH = dOneMaxSize;
+	}
+
+	if (0 == unWidth && 0 == unHeight)
+	{
+		unWidth  = (int)(dW * 96 / 25.4);
+		unHeight = (int)(dH * 96 / 25.4);
+	}
+	else if (0 == unWidth)
+		unWidth = (int)((double)unHeight * dW / dH);
+	else if (0 == unHeight)
+		unHeight = (int)((double)unWidth * dH / dW);
+
+	double dWidth  = 25.4 * unWidth / 96;
+	double dHeight = 25.4 * unHeight / 96;
+
+	BYTE* pBgraData = (BYTE*)malloc(unWidth * unHeight * 4);
+	if (!pBgraData)
+	{
+		double dKoef = 2000.0 / (unWidth > unHeight ? unWidth : unHeight);
+
+		unWidth = (int)(dKoef * unWidth);
+		unHeight = (int)(dKoef * unWidth);
+
+		dWidth  = 25.4 * unWidth / 96;
+		dHeight = 25.4 * unHeight / 96;
+
+		pBgraData = (BYTE*)malloc(unWidth * unHeight * 4);
+	}
+
+	if (!pBgraData)
+		return false;
+
+	unsigned int alfa = 0xffffff;
+	//дефолтный тон должен быть прозрачным, а не белым
+	//memset(pBgraData, 0xff, nWidth * nHeight * 4);
+	for (int i = 0; i < unWidth * unHeight; i++)
+		((unsigned int*)pBgraData)[i] = alfa;
+
+	CBgraFrame oFrame;
+	oFrame.put_Data(pBgraData);
+	oFrame.put_Width(unWidth);
+	oFrame.put_Height(unHeight);
+	oFrame.put_Stride(-4 * unWidth);
+
+	pGrRenderer->CreateFromBgraFrame(&oFrame);
+	pGrRenderer->SetSwapRGB(false);
+	pGrRenderer->put_Width(dWidth);
+	pGrRenderer->put_Height(dHeight);
+
+	pMetafileReader->SetTempDirectory(wsTempDir);
+	pMetafileReader->DrawOnRenderer(pGrRenderer, 0, 0, dWidth, dHeight);
+
+	BYTE *pImageBuffer{nullptr};
+	int nImageSize;
+
+	bool bResult{false};
+
+	if (oFrame.Encode(pImageBuffer, nImageSize, 4))
+	{
+		bResult = ConvertBufferToBase64(pImageBuffer, nImageSize, wsResultBase64);
+		RELEASEARRAYOBJECTS(pImageBuffer);
+	}
+
+	RELEASEINTERFACE(pGrRenderer);
+
+	return bResult;
+}
+
+bool ConvertFromMetafile(const std::wstring& wsFilePath, UINT unWidth, UINT unHeight, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsResultBase64)
+{
+	MetaFile::IMetaFile* pMetafileReader = MetaFile::Create(pFonts);
+
+	if (!pMetafileReader->LoadFromFile(wsFilePath.c_str()))
+	{
+		RELEASEINTERFACE(pMetafileReader);
+		return false;
+	}
+
+	const bool bResult{ConvertFromMetafileBase(pMetafileReader, unWidth, unHeight, pFonts, wsTempDir, wsResultBase64)};
+
+	RELEASEINTERFACE(pMetafileReader);
+
+	return bResult;
+}
+
+bool ConvertFromSVG(const std::wstring& wsSVG, UINT unWidth, UINT unHeight, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsResultBase64)
+{
+	MetaFile::IMetaFile* pSvgReader = MetaFile::Create(pFonts);
+	if (!pSvgReader->LoadFromString(wsSVG))
+	{
+		RELEASEINTERFACE(pSvgReader);
+		return false;
+	}
+
+	const bool bResult{ConvertFromMetafileBase(pSvgReader, unWidth, unHeight, pFonts, wsTempDir, wsResultBase64)};
+
+	RELEASEINTERFACE(pSvgReader);
+
+	return bResult;
+}
+
+bool IsSVGExtention(const std::wstring& wsExtention)
+{
+	return L"svg" == wsExtention || L"svg+xml" == wsExtention;
+}
+
+bool IsMetafileExtention(const std::wstring& wsExtention)
+{
+	return L"emf" == wsExtention || L"wmf" == wsExtention;
+}
+
+bool ConvertFromBase64(const std::wstring& wsBase64, UINT unWidth, UINT unHeight, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsResultBase64)
+{
+	bool bResult{false};
+	size_t nBase{wsBase64.find(L"/", 4)};
+	nBase++;
+
+	const size_t nEndBase{wsBase64.find(L";", nBase)};
+	if (nEndBase == std::wstring::npos)
+		return bResult;
+
+	nBase = wsBase64.find(L"base64", nEndBase);
+	if (nBase == std::wstring::npos)
+		return bResult;
+
+	const int nOffset = nBase + 7;
+	int nSrcLen = (int)(wsBase64.length() - nBase + 1);
+	int nDecodeLen = NSBase64::Base64DecodeGetRequiredLength(nSrcLen);
+
+	if (nDecodeLen != 0)
+	{
+		BYTE* pImageData = new BYTE[nDecodeLen];
+
+		if (!pImageData || FALSE == NSBase64::Base64Decode(wsBase64.c_str() + nOffset, nSrcLen, pImageData, &nDecodeLen))
+			return false;
+
+		if (IsSVGExtention(wsBase64.substr(nBase, nEndBase - nBase)))
+		{
+			const std::wstring wsSvg(pImageData, pImageData + nDecodeLen);
+			bResult = ConvertFromSVG(wsSvg, unWidth, unHeight, pFonts, wsTempDir, wsResultBase64);
+		}
+		else
+		{
+			CBgraFrame oFrame;
+			oFrame.Decode(pImageData, nDecodeLen);
+
+			if (oFrame.get_Width() != unWidth || oFrame.get_Height() != unHeight)
+			{
+				oFrame.Resize(unWidth, unHeight);
+
+				BYTE *pBuffer{nullptr};
+				int nEncodeSize{0};
+
+				oFrame.Encode(pBuffer, nEncodeSize, 4);
+
+				bResult = ConvertBufferToBase64(pBuffer, nEncodeSize, wsResultBase64);
+			}
+		}
+
+		RELEASEARRAYOBJECTS(pImageData);
+	}
+
+	return bResult;
+}
+
+bool ConvertFileToBase64(const std::wstring& wsFilePath, UINT unWidth, UINT unHeight, bool bIsAllowExternalLocalFiles, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsBase64)
+{
+	if (wsFilePath.empty() || !NSFile::CFileBinary::Exists(wsFilePath))
+		return false;
+
+	const std::wstring wsExtention{NSFile::GetFileExtention(wsFilePath)};
+
+	if (IsSVGExtention(wsExtention))
+	{
+		std::wstring wsSVG;
+
+		if (!NSFile::CFileBinary::ReadAllTextUtf8(wsFilePath, wsSVG))
+			return false;
+
+		return ConvertFromSVG(wsSVG, unWidth, unHeight, pFonts, wsTempDir, wsBase64);
+	}
+	else if(IsMetafileExtention(wsExtention))
+		return ConvertFromMetafile(wsFilePath, unWidth, unHeight, pFonts, wsTempDir, wsBase64);
+
+	CBgraFrame oFrame;
+
+	if (!oFrame.OpenFile(wsFilePath))
+		return false;
+
+	if (!oFrame.Resize(unWidth, unHeight))
+		return false;
+
+	BYTE *pBuffer{nullptr};
+	int nEncodeSize{0};
+
+	if (!oFrame.Encode(pBuffer, nEncodeSize, 4))
+		return false;
+
+	const bool bResult{ConvertBufferToBase64(pBuffer, nEncodeSize, wsBase64)};
+
+	RELEASEARRAYOBJECTS(pBuffer);
+
+	return bResult;
+}
+
 template<>
 bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 {
@@ -277,9 +464,94 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	    !arSelectors.back().GetAttributeValue(L"alt", wsAlt))
 		return false;
 
+	NSCSS::NSProperties::CDigit oWidth{arSelectors.back().m_pCompiledStyle->m_oDisplay.GetWidth()};
+	NSCSS::NSProperties::CDigit oHeight{arSelectors.back().m_pCompiledStyle->m_oDisplay.GetHeight()};
+
+	std::wstring wsValue;
+
+	if (arSelectors.back().GetAttributeValue(L"width", wsValue))
+		oWidth.SetValue(wsValue);
+
+	if (arSelectors.back().GetAttributeValue(L"height", wsValue))
+		oHeight.SetValue(wsValue);
+
+	const bool bNeedSetSize{(!oWidth.Empty() && !oWidth.Zero()) || (!oHeight.Empty() && !oHeight.Zero())};
+	bool bResult{false};
+	std::wstring wsResultBase64;
+
+	// Предполагаем картинку в Base64
+	if (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"data" && wsSrc.find(L"/", 4) != std::wstring::npos)
+	{
+		if (bNeedSetSize)
+			bResult = ConvertFromBase64(wsSrc, oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64);
+		else
+			bResult = true;
+	}
+
+	if (!bResult && (wsSrc.length() <= 7 || L"http" != wsSrc.substr(0, 4)))
+	{
+		wsSrc = NSSystemPath::ShortenPath(wsSrc);
+
+		if (!CanUseThisPath(wsSrc, m_pWriter->GetSrcPath(), m_pWriter->GetCorePath(), GetStatusUsingExternalLocalFiles()))
+		{
+			wsSrc.clear();
+			bResult = true;
+		}
+	}
+
+	const std::wstring wsBasePath{m_pWriter->GetBasePath()};
+
+	// Предполагаем картинку в сети
+	if (!bResult &&
+	    ((!wsBasePath.empty() && wsBasePath.length() > 4 && wsBasePath.substr(0, 4) == L"http") ||
+	      (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"http")))
+	{
+		const std::wstring wsDst{NSFile::CFileBinary::CreateTempFileWithUniqueName(m_pWriter->GetTempDir(), L"IMG")};
+
+		// Проверка gc_allowNetworkRequest предполагается в kernel_network
+		NSNetwork::NSFileTransport::CFileDownloader oDownloadImg(m_pWriter->GetBasePath() + wsSrc, false);
+		oDownloadImg.SetFilePath(wsDst);
+		bResult = oDownloadImg.DownloadSync();
+
+		if (!bResult)
+		{
+			bResult = true;
+			wsSrc.clear();
+		}
+
+		if (IsSVGExtention(NSFile::GetFileExtention(wsSrc)))
+		{
+			std::wstring wsFileData;
+
+			if (NSFile::CFileBinary::ReadAllTextUtf8(wsDst, wsFileData) &&
+			    ConvertFromSVG(wsFileData, oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64))
+				bResult = true;
+
+			NSFile::CFileBinary::Remove(wsDst);
+		}
+	}
+
+	// Предполагаем картинку по локальному пути
+	if (!bResult)
+	{
+		const bool bIsAllowExternalLocalFiles{GetStatusUsingExternalLocalFiles()};
+
+		if (!m_pWriter->GetBasePath().empty())
+		{
+			if (!bResult)
+				bResult = ConvertFileToBase64(NSSystemPath::Combine(m_pWriter->GetBasePath(), wsSrc), oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), bIsAllowExternalLocalFiles, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64);
+			if (!bResult)
+				bResult = ConvertFileToBase64(NSSystemPath::Combine(m_pWriter->GetSrcPath(), NSSystemPath::Combine(m_pWriter->GetBasePath(), wsSrc)), oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), bIsAllowExternalLocalFiles, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64);
+		}
+		if (!bResult)
+			bResult = ConvertFileToBase64(NSSystemPath::Combine(m_pWriter->GetSrcPath(), wsSrc), oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), bIsAllowExternalLocalFiles, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64);
+		if (!bResult)
+			bResult = ConvertFileToBase64(wsSrc, oWidth.ToInt(NSCSS::UnitMeasure::Pixel), oHeight.ToInt(NSCSS::UnitMeasure::Pixel), bIsAllowExternalLocalFiles, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsResultBase64);
+	}
+
 	arSelectors.back().GetAttributeValue(L"title", wsTitle);
 
-	m_pWriter->WriteString(L"![" + wsAlt + L"](" + wsSrc);
+	m_pWriter->WriteString(L"![" + wsAlt + L"](" + ((bResult) ? wsResultBase64 : wsSrc));
 
 	if (!wsTitle.empty())
 		m_pWriter->WriteString(L" \"" + wsTitle + L'"');
@@ -294,6 +566,13 @@ bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors,
 {
 	if (!Valid())
 		return false;
+
+	std::wstring wsBase64;
+
+	if (!ConvertFromSVG(wsSVG, 0, 0, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsBase64))
+		return false;
+
+	m_pWriter->WriteString(L"![](" + wsBase64 + L")");
 
 	return true;
 }

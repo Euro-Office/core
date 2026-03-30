@@ -3,6 +3,10 @@
 
 #include <string>
 #include "../DesktopEditor/common/StringBuilder.h"
+#include "../DesktopEditor/common/ProcessEnv.h"
+#include "../DesktopEditor/common/Path.h"
+
+#include <boost/algorithm/string/predicate.hpp>
 
 namespace HTML
 {
@@ -57,6 +61,31 @@ inline void WriteToStringBuilder(NSStringUtils::CStringBuilder& oSrcStringBuilde
 		ulSize -= ulCurrentBlockSize;
 		ulPosition += ulCurrentBlockSize;
 	}
+}
+
+inline bool GetStatusUsingExternalLocalFiles()
+{
+	if (NSProcessEnv::IsPresent(NSProcessEnv::Converter::gc_allowPrivateIP))
+		return NSProcessEnv::GetBoolValue(NSProcessEnv::Converter::gc_allowPrivateIP);
+
+	return true;
+}
+
+inline bool CanUseThisPath(const std::wstring& wsPath, const std::wstring& wsSrcPath, const std::wstring& wsCorePath, bool bIsAllowExternalLocalFiles)
+{
+	if (bIsAllowExternalLocalFiles)
+		return true;
+
+	if (!wsCorePath.empty())
+	{
+		const std::wstring wsFullPath = NSSystemPath::ShortenPath(NSSystemPath::Combine(wsSrcPath, wsPath));
+		return boost::starts_with(wsFullPath, wsCorePath);
+	}
+
+	if (wsPath.length() >= 3 && L"../" == wsPath.substr(0, 3))
+		return false;
+
+	return true;
 }
 
 }

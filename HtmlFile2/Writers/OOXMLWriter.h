@@ -8,8 +8,6 @@
 
 #include <stack>
 
-namespace NSFonts { class IApplicationFonts; }
-
 namespace HTML
 {
 struct TImageData
@@ -40,10 +38,6 @@ struct TImageData
 class COOXMLWriter : public IWriter
 {
 	const std::wstring *m_pDstPath;  // Директория назначения
-	const std::wstring *m_pTempDir;  // Temp папка
-	const std::wstring *m_pSrcPath;  // Директория источника
-	const std::wstring *m_pBasePath; // Полный базовый адрес
-	const std::wstring *m_pCorePath; // Путь до корневого файла (используется для работы с Epub)
 
 	XmlString m_oStylesXml;   // styles.xml
 	XmlString m_oDocXmlRels;  // document.xml.rels
@@ -113,16 +107,10 @@ class COOXMLWriter : public IWriter
 	std::map<std::wstring, UINT>         m_mBookmarks; // Закладки
 	using anchors_map = std::map<std::wstring, std::wstring>;
 	anchors_map                          m_mAnchors; // Map якорей с индивидуальными id
-
-	NSFonts::IApplicationFonts*          m_pFonts;     // Необходимо для оптимизации работы со шрифтами
 public:
 	COOXMLWriter(THTMLParameters* pHTMLParameters = nullptr, NSCSS::CCssCalculator* pCSSCalculator = nullptr);
 
-	void SetSrcDirectory (const std::wstring& wsPath);
 	void SetDstDirectory (const std::wstring& wsPath);
-	void SetTempDirectory(const std::wstring& wsPath);
-	void SetBaseDirectory(const std::wstring& wsPath);
-	void SetCoreDirectory(const std::wstring& wsPath);
 
 	void Begin(const std::wstring& wsDst) override;
 	void End(const std::wstring& wsDst) override;
@@ -203,13 +191,8 @@ public:
 	EWriterType GetType() const override;
 
 	const NSCSS::NSProperties::CPage* GetPageData() const;
-	NSFonts::IApplicationFonts* GetFonts();
 
 	std::wstring GetMediaDir() const;
-	std::wstring GetTempDir()  const;
-	std::wstring GetSrcPath()  const;
-	std::wstring GetBasePath() const;
-	std::wstring GetCorePath() const;
 };
 }
 

@@ -381,6 +381,11 @@ bool CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
 	if (nullptr != m_pWriter)
 		delete m_pWriter;
 
+	pWriter->SetSrcDirectory (m_wsSrcDirectory);
+	pWriter->SetTempDirectory(m_wsTempDirectory);
+	pWriter->SetBaseDirectory(m_wsBaseDirectory);
+	pWriter->SetCoreDirectory(m_wsCoreDirectory);
+
 	m_oTags.Clear();
 
 	if (!m_oTags.Init(pWriter))
