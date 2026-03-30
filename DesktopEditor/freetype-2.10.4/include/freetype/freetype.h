@@ -29,6 +29,8 @@
 #   ifndef LLVM_MINGW_CROSS_EXPORT
 #       define LLVM_MINGW_CROSS_EXPORT __declspec(dllexport)
 #   endif
+#else
+#   define LLVM_MINGW_CROSS_EXPORT
 #endif
 
 FT_BEGIN_HEADER

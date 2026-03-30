@@ -182,7 +182,8 @@ hash(const unsigned long & x)
 static inline unsigned int 
 hash(const void * const & x) 
 { 
-  return (unsigned long) x; 
+    uintptr_t val = (uintptr_t)x;
+    return (unsigned int)(val ^ (val >> 32));
 }
 
 /** Hashing function (float). */

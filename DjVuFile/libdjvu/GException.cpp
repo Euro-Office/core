@@ -263,6 +263,9 @@ GExceptionHandler::rethrow(void)
 // Microsoft is different!
 static int throw_memory_error(size_t) { G_THROW(GException::outofmemory); return 0; }
 static int (*old_handler)(size_t) = _set_new_handler(throw_memory_error);
+# elif defined(LLVM_MINGW_CROSS)
+static void throw_memory_error() { G_THROW(GException::outofmemory); }
+static std::new_handler old_handler = std::set_new_handler(throw_memory_error);
 # else // !_MSC_VER
 // Standard C++
 static void throw_memory_error() { G_THROW(GException::outofmemory); }

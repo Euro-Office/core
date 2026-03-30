@@ -142,11 +142,20 @@ set_default_options(DjVuFile)
 target_compile_options(DjVuFile PRIVATE
     -UUNICODE
     -U_UNICODE
+    -include cstdint
 )
 
 target_compile_definitions(DjVuFile PRIVATE
     DJVU_USE_DYNAMIC_LIBRARY
 )
+
+if( LLVM_MINGW_CROSS )
+    target_compile_definitions(DjVuFile PRIVATE
+        HAS_WCHAR=1
+        DJVU_BUILD_DLL
+        WIN32
+    )
+endif()
 
 if( NOT WIN32 )
     target_compile_definitions(DjVuFile PRIVATE
@@ -177,12 +186,18 @@ target_link_libraries(DjVuFile PUBLIC
     kernel
     UnicodeConverter
     PdfFile
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
+if(LLVM_MINGW_CROSS)
+    target_link_libraries(DjVuFile PUBLIC
+        gdi32
+        advapi32
+        user32
+        shell32
+        ole32
+    )
+endif()
+
 copy_artifacts_to_folder("DjVuFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory(DjVuFile)

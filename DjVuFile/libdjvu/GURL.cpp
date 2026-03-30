@@ -81,7 +81,7 @@
 #include <math.h>
 #include <string.h>
 
-#ifdef WIN32
+#if defined(LLVM_MINGW_CROSS) || defined(WIN32)
 # include <tchar.h>
 # include <windows.h>
 # include <direct.h>
@@ -185,7 +185,7 @@ static const char nillchar=0;
 #if defined(UNIX)
   static const char tilde='~';
   static const char root[] = "/";
-#elif defined(WIN32) || defined(OS2)
+#elif defined(LLVM_MINGW_CROSS) || defined(WIN32) || defined(OS2)
   static const char root[] = "\\";
 #elif defined(macintosh)
   static char const * const root = &nillchar; 
@@ -1076,7 +1076,7 @@ GURL::encode_reserved(const GUTF8String &gs)
   for (; *s; s++,d++)
   {
     // Convert directory separator to slashes
-#if defined(WIN32) || defined(OS2)
+#if defined(LLVM_MINGW_CROSS) || defined(WIN32) || defined(OS2)
     if (*s == backslash || *s== slash)
 #else
 #ifdef macintosh
@@ -1402,7 +1402,7 @@ GURL::is_file(void) const
     {
       retval=!(buf.st_mode & S_IFDIR);
     }
-#elif defined(WIN32)
+#elif defined(LLVM_MINGW_CROSS) || defined(WIN32)
     GUTF8String filename(UTF8Filename());
     if(filename.length() >= MAX_PATH)
       {

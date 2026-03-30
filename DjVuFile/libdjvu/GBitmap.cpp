@@ -467,7 +467,7 @@ GBitmap::share()
 {
   if (!monitorptr)
     {
-      unsigned long x = (unsigned long)this;
+      unsigned long x = (unsigned long)(uintptr_t)this;
       monitorptr = &monitors[(x^(x>>5)) % NMONITORS];
     }
 }

@@ -651,10 +651,10 @@ IW44Image::Map::allocp(int n)
   // Allocate enough room for pointers plus alignment
   short *p = alloc( (n+1) * sizeof(short*) / sizeof(short) );
   // Align on pointer size
-  while ( ((long)p) & (sizeof(short*)-1) )
+  while ( (reinterpret_cast<uintptr_t>(p)) & (sizeof(short*)-1) )
     p += 1;
   // Cast and return
-  return (short**)p;
+  return reinterpret_cast<short**>(p);
 }
 
 int 

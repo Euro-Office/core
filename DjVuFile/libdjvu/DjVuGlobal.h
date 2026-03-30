@@ -96,6 +96,20 @@ inline void * operator new(size_t, void * ptr) { return ptr; }
 # define DJVUAPI
 #endif
 
+#if defined(LLVM_MINGW_CROSS) && defined(DJVU_USE_DYNAMIC_LIBRARY)
+    #ifdef DJVU_BUILD_DLL
+        // When building the DLL itself
+        #define DJVUAPI __declspec(dllexport)
+    #else
+        // When consuming the DLL
+        #define DJVUAPI __declspec(dllimport)
+    #endif
+#else
+    #ifndef DJVUAPI
+        #define DJVUAPI
+    #endif
+#endif
+
 
 /** @name DjVuGlobal.h 
 

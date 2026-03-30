@@ -78,7 +78,7 @@
 # define UNIX 1
 #endif
 
-#if defined(WIN32) && !defined(UNIX)
+#if defined(LLVM_MINGW_CROSS) || defined(WIN32) && !defined(UNIX)
 # include <windows.h>
 # include <direct.h>
 # define getcwd _getcwd
@@ -170,7 +170,7 @@ static const char nillchar=0;
 static inline int
 finddirsep(const GUTF8String &fname)
 {
-#if defined(WIN32)
+#if defined(LLVM_MINGW_CROSS) || defined(WIN32)
   return fname.rcontains("\\/",0);
 #elif defined(UNIX)
   return fname.rsearch('/',0);
@@ -273,7 +273,7 @@ GOS::ticks()
     G_THROW(errmsg());
   return (unsigned long)( ((tv.tv_sec & 0xfffff)*1000) 
                           + (tv.tv_usec/1000) );
-#elif defined(WIN32)
+#elif defined(LLVM_MINGW_CROSS) || defined(WIN32)
   DWORD clk = GetTickCount();
   return (unsigned long)clk;
 #elif defined(OS2)
@@ -336,7 +336,7 @@ GOS::cwd(const GUTF8String &dirname)
   if (!result)
     G_THROW(errmsg());
   return GNativeString(result).getNative2UTF8();//MBCS cvt
-#elif defined (WIN32)
+#elif defined(LLVM_MINGW_CROSS) || defined (WIN32)
   char drv[2];
   if (dirname.length() && _chdir(dirname.getUTF82Native())==-1)//MBCS cvt
     G_THROW(errmsg());
