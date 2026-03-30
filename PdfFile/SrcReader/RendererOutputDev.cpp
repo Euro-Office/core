@@ -1763,21 +1763,35 @@ namespace PdfReader
 		RELEASEOBJECT(m_pRendererOut);
 		RELEASEOBJECT(pFrame);
 
+		if (nPaintType == 2)
+		{
+			GfxRGB oRGB;
+			pGState->getFillColorSpace()->getRGB(pGState->getFillColor(), &oRGB, GfxRenderingIntent::gfxRenderingIntentAbsoluteColorimetric);
+			BYTE r = colToByte(oRGB.r);
+			BYTE g = colToByte(oRGB.g);
+			BYTE b = colToByte(oRGB.b);
+
+			for (int i = 0; i < nWidth * nHeight; ++i)
+			{
+				BYTE alpha = pBgraData[i * 4 + 3];
+				if (alpha > 0)
+				{
+					pBgraData[i * 4 + 0] = b;
+					pBgraData[i * 4 + 1] = g;
+					pBgraData[i * 4 + 2] = r;
+				}
+			}
+		}
+
 		Aggplus::CImage* oImage = new Aggplus::CImage();
 		oImage->Create(pBgraData, nWidth, nHeight, 4 * nWidth);
 
 		double xMin, yMin, xMax, yMax;
-		xMin = nX0 * dXStep + pBBox[0];
-		yMin = nY0 * dYStep + pBBox[1];
-		xMax = nX1 * dXStep + pBBox[0];
-		yMax = nY1 * dYStep + pBBox[1];
-		Transform(pMatrix, xMin, yMin, &xMin, &yMin);
-		Transform(pMatrix, xMax, yMax, &xMax, &yMax);
-		pGState->clearPath();
+		pGState->getUserClipBBox(&xMin, &yMin, &xMax, &yMax);
 		pGState->moveTo(xMin, yMin);
-		pGState->lineTo(xMax, yMin);
-		pGState->lineTo(xMax, yMax);
 		pGState->lineTo(xMin, yMax);
+		pGState->lineTo(xMax, yMax);
+		pGState->lineTo(xMax, yMin);
 		pGState->closePath();
 
 		DoPath(pGState, pGState->getPath(), pGState->getPageHeight(), pGState->getCTM());
@@ -1790,7 +1804,7 @@ namespace PdfReader
 		m_pRenderer->put_BrushTextureImage(oImage);
 		m_pRenderer->put_BrushTextureMode(c_BrushTextureModeTile);
 		m_pRenderer->put_BrushTextureAlpha(alpha);
-		m_pRenderer->put_BrushTransform({ pMatrix[0], pMatrix[1], pMatrix[2], pMatrix[3], 0, 0 });
+		m_pRenderer->put_BrushTransform({ pMatrix[0], pMatrix[1], pMatrix[2], pMatrix[3], PDFCoordsToMM(pMatrix[4] - xMin), PDFCoordsToMM(pMatrix[5] - yMin) });
 		m_pRenderer->BeginCommand(c_nImageType);
 
 		m_pRenderer->DrawPath(c_nWindingFillMode);
