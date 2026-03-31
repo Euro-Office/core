@@ -27,18 +27,14 @@ add_custom_command(
     COMMAND bash ${CORE_ROOT}/Common/3dParty/icu/nc-build.sh
             "${EO_CORE_3RD_PARTY_WORK_DIR}/icu"
             "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu"
-            74 2 1
+            74 2
 
     COMMAND bash ${CORE_ROOT}/Common/3dParty/openssl/nc-build.sh
             "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl"
             "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl"
-            1
 
     COMMAND git -C ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu apply
             ${CMAKE_CURRENT_SOURCE_DIR}/wasm/patches/fix-wasm-icu.patch
-
-    COMMAND git -C ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl apply
-            ${CMAKE_CURRENT_SOURCE_DIR}/wasm/patches/fix-wasm-openssl.patch 
 
     COMMAND ${CMAKE_COMMAND} -E touch ${PATCH_STAMP}
 )
@@ -950,7 +946,7 @@ _ARM_ALIGN_
 _tcsnicmp=strncmp _lseek=lseek _getcwd=getcwd
 NO_CONSOLE_IO USE_EXTERNAL_JPEG2000 USE_JPIP OPJ_STATIC
 FONT_ENGINE_DISABLE_FILESYSTEM IMAGE_CHECKER_DISABLE_XML
-USE_OPENSSL_HASH DISABLE_FULL_DOCUMENT_CREATION DISABLE_FILESYSTEM
+DISABLE_FULL_DOCUMENT_CREATION DISABLE_FILESYSTEM
 CRYPTOPP_DISABLE_ASM DISABLE_TYPE_MISMATCH
 )
 

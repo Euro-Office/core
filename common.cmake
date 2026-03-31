@@ -135,7 +135,24 @@ endfunction()
 function(copy_icu_libs artifact)
     add_custom_command(TARGET ${artifact} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
         COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
+endfunction()
+
+include(FetchContent)
+FetchContent_Declare(
+    doctest
+    GIT_REPOSITORY https://github.com/doctest/doctest.git
+    GIT_TAG v2.4.11
+)
+FetchContent_MakeAvailable(doctest)
+
+enable_testing()
+
+set_property(GLOBAL PROPERTY TEST_TARGETS "")
+
+# Helper function to add test targets
+function(register_test_target tgt)
+    set_property(GLOBAL APPEND PROPERTY TEST_TARGETS ${tgt})
 endfunction()
