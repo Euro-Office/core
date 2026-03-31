@@ -1,0 +1,50 @@
+{
+  "active_plan": "/opt/git/core/.sisyphus/plans/security-optimization-audit.md",
+  "started_at": "2026-03-30T20:20:35.850Z",
+  "session_ids": [
+    "ses_2c046a7efffepSlnlTh0U0r3vQ",
+    "ses_2bf96ad46ffe4kHVag6dAS17j0",
+    "ses_2bf82918dffev0m7XQ9TjRa64x",
+    "ses_2bf829190ffeOxEgL8hfxck4mK",
+    "ses_2bf825c4affeMfQuSaH62UdAZV",
+    "ses_2bf825c48ffenN4lm0zIrnPSd0",
+    "ses_2bf795443ffenbQ6WaM0R8bSPe",
+    "ses_2bf52b32cffeMJWiy45783qVeJ",
+    "ses_2bf527d43ffeatIk4ks0IkiwkO",
+    "ses_2bf527d3affewv9MnGbuTN6C6Q",
+    "ses_2bf52b328ffeNDRdWIAciSfKrl",
+    "ses_2bf52b333ffet6X6pQD5wAiLVm",
+    "ses_2bf527d3fffeQByH4Xz20E3fiZ"
+  ],
+  "plan_name": "security-optimization-audit",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Integrate GoogleTest Framework",
+      "session_id": "ses_2bf96ad46ffe4kHVag6dAS17j0",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-03-30T20:43:08.958Z"
+    },
+    "todo:2": {
+      "task_key": "todo:2",
+      "task_label": "2",
+      "task_title": "Add ASAN/UBSAN CMake Build Option",
+      "session_id": "ses_2bf829190ffeOxEgL8hfxck4mK",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-03-30T20:48:25.386Z"
+    },
+    "todo:8": {
+      "task_key": "todo:8",
+      "task_label": "8",
+      "task_title": "Enable SSL Verification with Configurable CA Bundle",
+      "session_id": "ses_2bf52b333ffet6X6pQD5wAiLVm",
+      "agent": "Sisyphus-Junior",
+      "category": "deep",
+      "updated_at": "2026-03-30T21:40:47.122Z"
+    }
+  }
+}

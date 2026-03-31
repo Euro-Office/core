@@ -162,7 +162,6 @@ namespace XmlUtils
 	std::wstring ToString(double value, const wchar_t* format);
 	std::string ToString(double value, const char* format);
 
-	int Rand();
 	int GenerateInt();
 
 	std::wstring GenerateGuid();

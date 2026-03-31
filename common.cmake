@@ -17,6 +17,59 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
 # Use INSTALL_RPATH even for build-tree binaries
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
+# =============================================================================
+# Sanitizer Support
+# =============================================================================
+# Enable AddressSanitizer and UndefinedBehaviorSanitizer for debug builds.
+# Usage: cmake -DENABLE_SANITIZERS=ON ...
+# Suppression files: .sisyphus/suppressions/asan.supp, ubsan.supp
+# =============================================================================
+option(ENABLE_SANITIZERS "Enable AddressSanitizer and UndefinedBehaviorSanitizer" OFF)
+
+if(ENABLE_SANITIZERS)
+    message(STATUS "Sanitizers enabled: ASAN + UBSAN")
+    set(ENABLE_SANITIZER_FLAGS
+        -fsanitize=address
+        -fsanitize=undefined
+        -fno-sanitize-recover=all
+        -g
+    )
+    # -fsanitize-minimal-runtime is clang-only; skip for GCC
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        list(APPEND ENABLE_SANITIZER_FLAGS -fsanitize-minimal-runtime)
+    endif()
+    # Set environment variable defaults for suppressions
+    if(NOT DEFINED ENV{ASAN_OPTIONS})
+        set(ENV{ASAN_OPTIONS} "suppressions=.sisyphus/suppressions/asan.supp:detect_leaks=1")
+    endif()
+    if(NOT DEFINED ENV{UBSAN_OPTIONS})
+        set(ENV{UBSAN_OPTIONS} "suppressions=.sisyphus/suppressions/ubsan.supp:print_stacktrace=1")
+    endif()
+endif()
+
+# =============================================================================
+# Coverage Support
+# =============================================================================
+# Enable code coverage reporting with gcovr.
+# Usage: cmake -DENABLE_COVERAGE=ON ...
+# Then: cmake --build <build-dir> --target coverage
+# =============================================================================
+option(ENABLE_COVERAGE "Enable code coverage reporting" OFF)
+
+if(ENABLE_COVERAGE)
+    message(STATUS "Coverage enabled: adding --coverage flags")
+    set(ENABLE_COVERAGE_FLAGS
+        --coverage
+        -fprofile-arcs
+        -ftest-coverage
+        -g
+    )
+    set(ENABLE_COVERAGE_LINK_FLAGS
+        --coverage
+        -lgcov
+    )
+endif()
+
 # Enable color diagnostics but only in interactive terminals
 if(CMAKE_GENERATOR MATCHES "Ninja|Unix Makefiles")
     if(DEFINED ENV{TERM})
@@ -65,6 +118,14 @@ set(COMMON_CXX_FLAGS
     -O2
 )
 
+if(ENABLE_SANITIZERS)
+    list(APPEND COMMON_CXX_FLAGS ${ENABLE_SANITIZER_FLAGS})
+endif()
+
+if(ENABLE_COVERAGE)
+    list(APPEND COMMON_CXX_FLAGS ${ENABLE_COVERAGE_FLAGS})
+endif()
+
 set(COMMON_C_FLAGS
     -fvisibility=hidden
     # -fvisibility-inlines-hidden
@@ -79,10 +140,29 @@ set(COMMON_C_FLAGS
     -O2
 )
 
+if(ENABLE_SANITIZERS)
+    list(APPEND COMMON_C_FLAGS ${ENABLE_SANITIZER_FLAGS})
+endif()
+
+if(ENABLE_COVERAGE)
+    list(APPEND COMMON_C_FLAGS ${ENABLE_COVERAGE_FLAGS})
+endif()
+
 
 set(COMMON_LINK_OPTIONS
     "-Wl,--disable-new-dtags"
 )
+
+if(ENABLE_SANITIZERS)
+    list(APPEND COMMON_LINK_OPTIONS
+        -fsanitize=address
+        -fsanitize=undefined
+    )
+endif()
+
+if(ENABLE_COVERAGE)
+    list(APPEND COMMON_LINK_OPTIONS ${ENABLE_COVERAGE_LINK_FLAGS})
+endif()
 
 
 function(set_default_options target)
@@ -139,3 +219,29 @@ function(copy_icu_libs artifact)
         COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
 endfunction()
+
+# =============================================================================
+# Coverage Report Target
+# =============================================================================
+# Runs gcovr to generate coverage reports (XML + HTML).
+# Vendored/third-party code is excluded from coverage metrics.
+# =============================================================================
+if(ENABLE_COVERAGE)
+    find_program(GCOVR_PROGRAM gcovr)
+    if(GCOVR_PROGRAM)
+        add_custom_target(coverage
+            COMMAND ${GCOVR_PROGRAM} -r ${CMAKE_SOURCE_DIR}
+                --exclude '.*3dParty.*'
+                --exclude '.*libxml2.*'
+                --exclude '.*freetype.*'
+                --exclude '.*openjpeg.*'
+                --exclude '.*googletest.*'
+                --xml -o coverage.xml
+                --html -o coverage.html
+            WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+            COMMENT "Generating coverage report with gcovr"
+        )
+    else()
+        message(WARNING "gcovr not found. Install with: pip install gcovr (or apt install gcovr)")
+    endif()
+endif()
