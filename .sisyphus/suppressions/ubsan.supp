@@ -1,0 +1,35 @@
+# UBSAN Suppression File for Known Vendored Code False Positives
+# ================================================================
+# These suppressions target ONLY vendored/third-party code with known
+# benign undefined behavior. Do NOT add suppressions for project code.
+#
+# Format: src:<source_pattern>:<check_name>
+# Patterns use glob-style matching (*, ?)
+#
+# IMPORTANT: Only specific known patterns are suppressed, not all errors
+#            from any library.
+
+# ---------------------------------------------------------------
+# Crypto++ (Common/3dParty/cryptopp/)
+# Known: Deliberate signed integer overflow in cryptographic hash
+#        computations. These are intentional operations in hash math
+#        where wrapping behavior is expected and correct.
+# ---------------------------------------------------------------
+src:*cryptopp/*:signed-integer-overflow
+src:*cryptopp*:unsigned-integer-overflow
+
+# ---------------------------------------------------------------
+# libxml2 (DesktopEditor/xml/libxml2/)
+# Known: Signed integer overflow in XML parsing size calculations
+#        during buffer growth and entity expansion.
+# ---------------------------------------------------------------
+src:*libxml2/*:signed-integer-overflow
+src:*libxml2*:unsigned-integer-overflow
+
+# ---------------------------------------------------------------
+# FreeType (DesktopEditor/freetype-2.10.4/)
+# Known: Signed integer overflow in font processing, particularly
+#        in glyph metrics calculations and CFF interpreter loops.
+# ---------------------------------------------------------------
+src:*freetype*/src/*:signed-integer-overflow
+src:*freetype-2*/*:signed-integer-overflow

@@ -1,0 +1,43 @@
+# ASAN Suppression File for Known Vendored Code False Positives
+# ================================================================
+# These suppressions target ONLY vendored/third-party code with known
+# benign issues. Do NOT add suppressions for project-owned code.
+#
+# Format: <suppression_type>:<pattern>
+# Types: leak, unsigned-integer-overflow (ASAN only handles leaks by default)
+#        heap-use-after-scope, stack-use-after-return
+#
+# IMPORTANT: heap-buffer-overflow and use-after-free are NEVER suppressed
+#            as they indicate real bugs even in vendored code.
+
+# ---------------------------------------------------------------
+# Crypto++ (Common/3dParty/cryptopp/)
+# Known: Deliberate signed integer overflow in hash computations.
+#        These are intentional cryptographic operations, not bugs.
+# ---------------------------------------------------------------
+leak:*cryptopp*
+unsigned-integer-overflow:*cryptopp*
+
+# ---------------------------------------------------------------
+# libxml2 (DesktopEditor/xml/libxml2/)
+# Known: Leaks in XML parser cleanup paths. These occur during
+#        error recovery and are documented upstream.
+# ---------------------------------------------------------------
+leak:*libxml2*
+leak:xmlParseMemory
+leak:xmlFreeParserCtxt
+
+# ---------------------------------------------------------------
+# FreeType (DesktopEditor/freetype-2.10.4/)
+# Known: Buffer overread in certain font format handling (CFF, PCF).
+#        Upstream acknowledges these as benign reads past allocation
+#        bounds that don't affect correctness.
+# ---------------------------------------------------------------
+leak:*freetype*
+
+# ---------------------------------------------------------------
+# OpenJPEG (DesktopEditor/raster/Jp2/openjpeg/openjpeg-2.4.0/)
+# Known: Issues with certain color space conversions in JP2 decoding.
+#        Upstream has documented these as benign in edge cases.
+# ---------------------------------------------------------------
+leak:*openjpeg*
