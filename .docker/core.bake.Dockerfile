@@ -4,7 +4,7 @@
 # docker-bake.hcl files in the parent monorepos.
 # ==============================================================================
 
-ARG NUGET_CACHE
+ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
 
@@ -109,15 +109,17 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 
 #### CORE ####
 FROM core-base AS core
+    ARG NUGET_SOURCE_PATH
+    ARG TARGETARCH
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
+        VCPKG_TRIPLET=$([ "$TARGETARCH" = "arm64" ] && echo "arm64-linux-dynamic" || echo "x64-linux-dynamic") && \
         mkdir -p ${BUILD_ROOT} && \
         cd /build-cache && \
-
         cmake -GNinja \
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
-        -DVCPKG_TARGET_TRIPLET=x64-linux-dynamic \
+        -DVCPKG_TARGET_TRIPLET=${VCPKG_TRIPLET} \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
@@ -125,7 +127,5 @@ FROM core-base AS core
         -DEO_CORE_OUTPUT_DIR=./package/bin \
         -DEO_CORE_TOOLS_DIR=./package/tools \
         /core && \
-
         cmake --build . && \
-
         cp -r package/* ${BUILD_ROOT}
