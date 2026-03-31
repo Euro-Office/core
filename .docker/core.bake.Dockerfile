@@ -4,7 +4,7 @@
 # docker-bake.hcl files in the parent monorepos.
 # ==============================================================================
 
-ARG NUGET_CACHE
+ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
 
@@ -121,11 +121,11 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 
 #### CORE ####
 FROM core-base AS core
+    ARG NUGET_SOURCE_PATH
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \
         cd /build-cache && \
-
         cmake -GNinja \
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
@@ -137,7 +137,5 @@ FROM core-base AS core
         -DEO_CORE_OUTPUT_DIR=./package/bin \
         -DEO_CORE_TOOLS_DIR=./package/tools \
         /core && \
-
         cmake --build . && \
-
         cp -r package/* ${BUILD_ROOT}
