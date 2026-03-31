@@ -4,7 +4,7 @@
 # Results will be available at: http://my.cdash.org/index.php?project=OPENJPEG
 # -----------------------------------------------------------------------------
 
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.5...3.31.5)
 
 set( ENV{LANG} en_US.UTF-8)
 if($ENV{OPJ_BINARY_DIR})
@@ -13,7 +13,7 @@ else()
 	set( CTEST_DASHBOARD_ROOT  "$ENV{PWD}/build" )
 endif()
 
-if("$ENV{TRAVIS_OS_NAME}" STREQUAL "windows")
+if("$ENV{OPJ_SHORT_OS_NAME}" STREQUAL "windows")
 	set( CTEST_CMAKE_GENERATOR "NMake Makefiles")
 	set( CTEST_BUILD_COMMAND   "nmake" )
 	set( JPYLYZER_EXT          "exe"  )
@@ -84,7 +84,7 @@ if(NOT "$ENV{OPJ_CI_SKIP_TESTS}" STREQUAL "1")
 	# Note: Binaries can only be used for non-commercial purposes.
 	if ("$ENV{OPJ_NONCOMMERCIAL}" STREQUAL "1" )
 		set(KDUPATH $ENV{PWD}/kdu)
-		if("$ENV{TRAVIS_OS_NAME}" STREQUAL "windows")
+		if("$ENV{OPJ_SHORT_OS_NAME}" STREQUAL "windows")
 			set(ENV{PATH} "$ENV{PATH};${KDUPATH}")
 		else()
 			set(ENV{LD_LIBRARY_PATH} ${KDUPATH})
@@ -127,12 +127,18 @@ BUILD_UNIT_TESTS:BOOL=TRUE
 # JPEG2000 test files are available with git clone https://github.com/uclouvain/openjpeg-data.git
 OPJ_DATA_ROOT:PATH=$ENV{PWD}/data
 
-# jpylyzer is available with on GitHub: https://github.com/openpreserve/jpylyzer
-JPYLYZER_EXECUTABLE=$ENV{PWD}/jpylyzer/jpylyzer.${JPYLYZER_EXT}
-
 # Enable astyle
 WITH_ASTYLE:BOOL=${BUILD_ASTYLE}
 " )
+
+if(EXISTS "$ENV{PWD}/jpylyzer/jpylyzer.${JPYLYZER_EXT}")
+    set(CACHE_CONTENTS "
+${CACHE_CONTENTS}
+
+# jpylyzer is available with on GitHub: https://github.com/openpreserve/jpylyzer
+JPYLYZER_EXECUTABLE=$ENV{PWD}/jpylyzer/jpylyzer.${JPYLYZER_EXT}
+")
+endif()
 
 #---------------------
 #1. openjpeg specific:

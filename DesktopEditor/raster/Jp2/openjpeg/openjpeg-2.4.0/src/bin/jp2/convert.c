@@ -117,7 +117,6 @@ static void scale_component_up(opj_image_comp_t* component,
         }
     }
     component->prec = precision;
-    component->bpp = precision;
 }
 void scale_component(opj_image_comp_t* component, OPJ_UINT32 precision)
 {
@@ -144,7 +143,6 @@ void scale_component(opj_image_comp_t* component, OPJ_UINT32 precision)
             l_data[i] >>= shift;
         }
     }
-    component->bpp = precision;
     component->prec = precision;
 }
 
@@ -666,7 +664,7 @@ static int tga_readheader(FILE *fp, unsigned int *bits_per_pixel,
 
 #ifdef OPJ_BIG_ENDIAN
 
-static INLINE OPJ_UINT16 swap16(OPJ_UINT16 x)
+static INLINE OPJ_UINT16 opj_swap16(OPJ_UINT16 x)
 {
     return (OPJ_UINT16)(((x & 0x00ffU) <<  8) | ((x & 0xff00U) >>  8));
 }
@@ -735,8 +733,8 @@ static int tga_writeheader(FILE *fp, int bits_per_pixel, int width, int height,
         goto fails;
     }
 #else
-    image_w = swap16(image_w);
-    image_h = swap16(image_h);
+    image_w = opj_swap16(image_w);
+    image_h = opj_swap16(image_h);
     if (fwrite(&image_w, 2, 1, fp) != 1) {
         goto fails;
     }
@@ -838,7 +836,6 @@ opj_image_t* tgatoimage(const char *filename, opj_cparameters_t *parameters)
 
     for (i = 0; i < numcomps; i++) {
         cmptparm[i].prec = 8;
-        cmptparm[i].bpp = 8;
         cmptparm[i].sgnd = 0;
         cmptparm[i].dx = (OPJ_UINT32)subsampling_dx;
         cmptparm[i].dy = (OPJ_UINT32)subsampling_dy;
@@ -1269,7 +1266,6 @@ opj_image_t* pgxtoimage(const char *filename, opj_cparameters_t *parameters)
     }
 
     cmptparm.prec = (OPJ_UINT32)prec;
-    cmptparm.bpp = (OPJ_UINT32)prec;
     cmptparm.dx = (OPJ_UINT32)parameters->subsampling_dx;
     cmptparm.dy = (OPJ_UINT32)parameters->subsampling_dy;
 
@@ -1327,7 +1323,7 @@ opj_image_t* pgxtoimage(const char *filename, opj_cparameters_t *parameters)
         comp->data[i] = v;
     }
     fclose(f);
-    comp->bpp = (OPJ_UINT32)int_floorlog2(max) + 1;
+    comp->prec = (OPJ_UINT32)int_floorlog2(max) + 1;
 
     return image;
 }
@@ -1384,7 +1380,7 @@ int imagetopgx(opj_image_t * image, const char *outfile)
                 goto fin;
             }
         }
-        strncpy(name, outfile, dotpos);
+        memcpy(name, outfile, dotpos);
         sprintf(name + dotpos, "_%u.pgx", compno);
         fdest = fopen(name, "wb");
         /* don't need name anymore */
@@ -1875,7 +1871,6 @@ opj_image_t* pnmtoimage(const char *filename, opj_cparameters_t *parameters)
 
     for (i = 0; i < numcomps; i++) {
         cmptparm[i].prec = (OPJ_UINT32)prec;
-        cmptparm[i].bpp = (OPJ_UINT32)prec;
         cmptparm[i].sgnd = 0;
         cmptparm[i].dx = (OPJ_UINT32)subsampling_dx;
         cmptparm[i].dy = (OPJ_UINT32)subsampling_dy;
@@ -2228,7 +2223,7 @@ int imagetopnm(opj_image_t * image, const char *outfile, int force_split)
             const size_t olen = strlen(outfile);
             const size_t dotpos = olen - 4;
 
-            strncpy(destname, outfile, dotpos);
+            memcpy(destname, outfile, dotpos);
             sprintf(destname + dotpos, "_%u.pgm", compno);
         } else {
             sprintf(destname, "%s", outfile);
@@ -2366,7 +2361,6 @@ static opj_image_t* rawtoimage_common(const char *filename,
     /* initialize image components */
     for (i = 0; i < numcomps; i++) {
         cmptparm[i].prec = (OPJ_UINT32)raw_cp->rawBitDepth;
-        cmptparm[i].bpp = (OPJ_UINT32)raw_cp->rawBitDepth;
         cmptparm[i].sgnd = (OPJ_UINT32)raw_cp->rawSigned;
         cmptparm[i].dx = (OPJ_UINT32)(subsampling_dx * raw_cp->rawComps[i].dx);
         cmptparm[i].dy = (OPJ_UINT32)(subsampling_dy * raw_cp->rawComps[i].dy);

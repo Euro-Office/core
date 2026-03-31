@@ -64,6 +64,7 @@ void init_tilec(opj_tcd_tilecomp_t * l_tilec,
     nValues = (size_t)(l_tilec->x1 - l_tilec->x0) *
               (size_t)(l_tilec->y1 - l_tilec->y0);
     l_tilec->data = (OPJ_INT32*) opj_malloc(sizeof(OPJ_INT32) * nValues);
+    assert(l_tilec->data != NULL);
     for (i = 0; i < nValues; i++) {
         OPJ_INT32 val = getValue((OPJ_UINT32)i);
         if (irreversible) {
@@ -207,7 +208,7 @@ int main(int argc, char** argv)
     }
 
     if (irreversible && check) {
-        /* Due to irreversible inverse DWT not being symetric of forward */
+        /* Due to irreversible inverse DWT not being symmetric of forward */
         /* See BUG_WEIRD_TWO_INVK in dwt.c */
         printf("-I and -check aren't compatible\n");
         exit(1);

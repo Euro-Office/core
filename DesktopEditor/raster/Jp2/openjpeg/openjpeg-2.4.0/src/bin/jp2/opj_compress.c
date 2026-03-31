@@ -44,6 +44,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <assert.h>
+#include <limits.h>
 
 #ifdef _WIN32
 #include "windirent.h"
@@ -141,7 +142,7 @@ static void encode_help_display(void)
     fprintf(stdout, "-i <file>\n");
     fprintf(stdout, "    Input file\n");
     fprintf(stdout,
-            "    Known extensions are <PBM|PGM|PPM|PNM|PAM|PGX|PNG|BMP|TIF|RAW|RAWL|TGA>\n");
+            "    Known extensions are <PBM|PGM|PPM|PNM|PAM|PGX|PNG|BMP|TIF|TIFF|RAW|YUV|RAWL|TGA>\n");
     fprintf(stdout, "    If used, '-o <file>' must be provided\n");
     fprintf(stdout, "-o <compressed file>\n");
     fprintf(stdout, "    Output file (accepted extensions are j2k or jp2).\n");
@@ -153,12 +154,12 @@ static void encode_help_display(void)
     fprintf(stdout, "    Required only if -ImgDir is used\n");
     fprintf(stdout,
             "-F <width>,<height>,<ncomp>,<bitdepth>,{s,u}@<dx1>x<dy1>:...:<dxn>x<dyn>\n");
-    fprintf(stdout, "    Characteristics of the raw input image\n");
+    fprintf(stdout, "    Characteristics of the raw or yuv input image\n");
     fprintf(stdout,
             "    If subsampling is omitted, 1x1 is assumed for all components\n");
-    fprintf(stdout, "      Example: -F 512,512,3,8,u@1x1:2x2:2x2\n");
+    fprintf(stdout, "     Example: -F 512,512,3,8,u@1x1:2x2:2x2\n");
     fprintf(stdout,
-            "               for raw 512x512 image with 4:2:0 subsampling\n");
+            "              for raw or yuv 512x512 size with 4:2:0 subsampling\n");
     fprintf(stdout, "    Required only if RAW or RAWL input file is provided.\n");
     fprintf(stdout, "\n");
     fprintf(stdout, "Optional Parameters:\n");
@@ -186,6 +187,11 @@ static void encode_help_display(void)
     fprintf(stdout,
             "    It corresponds to the number of DWT decompositions +1. \n");
     fprintf(stdout, "    Default: 6.\n");
+    fprintf(stdout, "-TargetBitDepth <target bit depth>\n");
+    fprintf(stdout, "    Target bit depth.\n");
+    fprintf(stdout, "    Number of bits per component to use from input image\n");
+    fprintf(stdout, "    if all bits are unwanted.\n");
+    fprintf(stdout, "    (Currently only implemented for TIF.)\n");
     fprintf(stdout, "-b <cblk width>,<cblk height>\n");
     fprintf(stdout,
             "    Code-block size. The dimension must respect the constraint \n");
@@ -231,6 +237,8 @@ static void encode_help_display(void)
     fprintf(stdout, "    Write EPH marker after each header packet.\n");
     fprintf(stdout, "-PLT\n");
     fprintf(stdout, "    Write PLT marker in tile-part header.\n");
+    fprintf(stdout, "-TLM\n");
+    fprintf(stdout, "    Write TLM marker in main header.\n");
     fprintf(stdout, "-M <key value>\n");
     fprintf(stdout, "    Mode switch.\n");
     fprintf(stdout, "    [1=BYPASS(LAZY) 2=RESET 4=RESTART(TERMALL)\n");
@@ -296,13 +304,16 @@ static void encode_help_display(void)
     fprintf(stdout, "    Y >= 0 and Y <= 9.\n");
     fprintf(stdout,
             "    framerate > 0 may be specified to enhance checks and set maximum bit rate when Y > 0.\n");
+    fprintf(stdout, "-GuardBits value\n");
+    fprintf(stdout,
+            "    Number of guard bits in [0,7] range. Usually 1 or 2 (default value).\n");
     fprintf(stdout, "-jpip\n");
     fprintf(stdout, "    Write jpip codestream index box in JP2 output file.\n");
     fprintf(stdout, "    Currently supports only RPCL order.\n");
     fprintf(stdout, "-C <comment>\n");
     fprintf(stdout, "    Add <comment> in the comment marker segment.\n");
     if (opj_has_thread_support()) {
-        fprintf(stdout, "  -threads <num_threads|ALL_CPUS>\n"
+        fprintf(stdout, "-threads <num_threads|ALL_CPUS>\n"
                 "    Number of threads to use for encoding or ALL_CPUS for all available cores.\n");
     }
     /* UniPG>> */
@@ -326,7 +337,7 @@ static void encode_help_display(void)
             JPWL_MAX_NO_TILESPECS);
     fprintf(stdout,
             "     p selects the packet error protection (EEP/UEP with EPBs)\n");
-    fprintf(stdout, "      to be applied to raw data: 'type' can be\n");
+    fprintf(stdout, "      to be applied to raw or yuv data: 'type' can be\n");
     fprintf(stdout,
             "       [0=none 1,absent=predefined 16=CRC-16 32=CRC-32 37-128=RS]\n");
     fprintf(stdout,
@@ -478,6 +489,11 @@ static unsigned int get_num_images(char *imgdirpath)
         if (strcmp(".", content->d_name) == 0 || strcmp("..", content->d_name) == 0) {
             continue;
         }
+        if (num_images == UINT_MAX) {
+            fprintf(stderr, "Too many files in folder %s\n", imgdirpath);
+            num_images = 0;
+            break;
+        }
         num_images++;
     }
     closedir(dir);
@@ -516,10 +532,10 @@ static int get_file_format(char *filename)
 {
     unsigned int i;
     static const char *extension[] = {
-        "pgx", "pnm", "pgm", "ppm", "pbm", "pam", "bmp", "tif", "raw", "rawl", "tga", "png", "j2k", "jp2", "j2c", "jpc"
+        "pgx", "pnm", "pgm", "ppm", "pbm", "pam", "bmp", "tif", "tiff", "raw", "yuv", "rawl", "tga", "png", "j2k", "jp2", "j2c", "jpc"
     };
     static const int format[] = {
-        PGX_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, BMP_DFMT, TIF_DFMT, RAW_DFMT, RAWL_DFMT, TGA_DFMT, PNG_DFMT, J2K_CFMT, JP2_CFMT, J2K_CFMT, J2K_CFMT
+        PGX_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, PXM_DFMT, BMP_DFMT, TIF_DFMT, TIF_DFMT, RAW_DFMT, RAW_DFMT, RAWL_DFMT, TGA_DFMT, PNG_DFMT, J2K_CFMT, JP2_CFMT, J2K_CFMT, J2K_CFMT
     };
     char * ext = strrchr(filename, '.');
     if (ext == NULL) {
@@ -540,7 +556,8 @@ static char * get_file_name(char *name)
     return fname;
 }
 
-static char get_next_file(int imageno, dircnt_t *dirptr, img_fol_t *img_fol,
+static char get_next_file(unsigned int imageno, dircnt_t *dirptr,
+                          img_fol_t *img_fol,
                           opj_cparameters_t *parameters)
 {
     char image_filename[OPJ_PATH_LEN], infilename[OPJ_PATH_LEN],
@@ -548,12 +565,18 @@ static char get_next_file(int imageno, dircnt_t *dirptr, img_fol_t *img_fol,
     char *temp_p, temp1[OPJ_PATH_LEN] = "";
 
     strcpy(image_filename, dirptr->filename[imageno]);
-    fprintf(stderr, "File Number %d \"%s\"\n", imageno, image_filename);
+    fprintf(stderr, "File Number %u \"%s\"\n", imageno, image_filename);
     parameters->decod_format = get_file_format(image_filename);
     if (parameters->decod_format == -1) {
         return 1;
     }
-    sprintf(infilename, "%s/%s", img_fol->imgdirpath, image_filename);
+    if (strlen(img_fol->imgdirpath) + 1 + strlen(image_filename) + 1 > sizeof(
+                infilename)) {
+        return 1;
+    }
+    strcpy(infilename, img_fol->imgdirpath);
+    strcat(infilename, "/");
+    strcat(infilename, image_filename);
     if (opj_strcpy_s(parameters->infile, sizeof(parameters->infile),
                      infilename) != 0) {
         return 1;
@@ -566,8 +589,15 @@ static char get_next_file(int imageno, dircnt_t *dirptr, img_fol_t *img_fol,
         sprintf(temp1, ".%s", temp_p);
     }
     if (img_fol->set_out_format == 1) {
-        sprintf(outfilename, "%s/%s.%s", img_fol->imgdirpath, temp_ofname,
-                img_fol->out_format);
+        if (strlen(img_fol->imgdirpath) + 1 + strlen(temp_ofname) + 1 + strlen(
+                    img_fol->out_format) + 1 > sizeof(outfilename)) {
+            return 1;
+        }
+        strcpy(outfilename, img_fol->imgdirpath);
+        strcat(outfilename, "/");
+        strcat(outfilename, temp_ofname);
+        strcat(outfilename, ".");
+        strcat(outfilename, img_fol->out_format);
         if (opj_strcpy_s(parameters->outfile, sizeof(parameters->outfile),
                          outfilename) != 0) {
             return 1;
@@ -584,7 +614,10 @@ static int parse_cmdline_encoder(int argc, char **argv,
                                  size_t indexfilename_size,
                                  int* pOutFramerate,
                                  OPJ_BOOL* pOutPLT,
-                                 int* pOutNumThreads)
+                                 OPJ_BOOL* pOutTLM,
+                                 int* pOutGuardBits,
+                                 int* pOutNumThreads,
+                                 unsigned int* pTarget_bitdepth)
 {
     OPJ_UINT32 i, j;
     int totlen, c;
@@ -602,11 +635,14 @@ static int parse_cmdline_encoder(int argc, char **argv,
         {"mct", REQ_ARG, NULL, 'Y'},
         {"IMF", REQ_ARG, NULL, 'Z'},
         {"PLT", NO_ARG, NULL, 'A'},
-        {"threads",   REQ_ARG, NULL, 'B'}
+        {"threads",   REQ_ARG, NULL, 'B'},
+        {"TLM", NO_ARG, NULL, 'D'},
+        {"TargetBitDepth", REQ_ARG, NULL, 'X'},
+        {"GuardBits", REQ_ARG, NULL, 'G'}
     };
 
     /* parse the command line */
-    const char optlist[] = "i:o:r:q:n:b:c:t:p:s:SEM:x:R:d:T:If:P:C:F:u:JY:"
+    const char optlist[] = "i:o:r:q:n:b:c:t:p:s:SEM:x:R:d:T:If:P:C:F:u:JY:X:G:"
 #ifdef USE_JPWL
                            "W:"
 #endif /* USE_JPWL */
@@ -638,7 +674,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
             default:
                 fprintf(stderr,
                         "[ERROR] Unknown input file format: %s \n"
-                        "        Known file formats are *.pnm, *.pgm, *.ppm, *.pgx, *png, *.bmp, *.tif, *.raw or *.tga\n",
+                        "        Known file formats are *.pnm, *.pgm, *.ppm, *.pgx, *png, *.bmp, *.tif(f), *.raw, *.yuv or *.tga\n",
                         infile);
                 return 1;
             }
@@ -692,7 +728,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
         /* ----------------------------------------------------- */
 
 
-        case 'r': {         /* rates rates/distorsion */
+        case 'r': {         /* rates rates/distortion */
             char *s = opj_optarg;
             parameters->tcp_numlayers = 0;
             while (sscanf(s, "%f", &parameters->tcp_rates[parameters->tcp_numlayers]) ==
@@ -792,7 +828,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
             free(substr1);
             if (wrong) {
-                fprintf(stderr, "\nError: invalid raw image parameters\n");
+                fprintf(stderr, "\nError: invalid raw or yuv image parameters\n");
                 fprintf(stderr, "Please use the Format option -F:\n");
                 fprintf(stderr,
                         "-F <width>,<height>,<ncomp>,<bitdepth>,{s,u}@<dx1>x<dy1>:...:<dxn>x<dyn>\n");
@@ -800,7 +836,8 @@ static int parse_cmdline_encoder(int argc, char **argv,
                         "If subsampling is omitted, 1x1 is assumed for all components\n");
                 fprintf(stderr,
                         "Example: -i image.raw -o image.j2k -F 512,512,3,8,u@1x1:2x2:2x2\n");
-                fprintf(stderr, "         for raw 512x512 image with 4:2:0 subsampling\n");
+                fprintf(stderr,
+                        "         for raw or yuv 512x512 size with 4:2:0 subsampling\n");
                 fprintf(stderr, "Aborting.\n");
                 return 1;
             }
@@ -809,7 +846,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
 
         /* ----------------------------------------------------- */
 
-        case 'q': {         /* add fixed_quality */
+        case 'q': {         /* layer allocation by distortion ratio (PSNR) */
             char *s = opj_optarg;
             while (sscanf(s, "%f", &parameters->tcp_distoratio[parameters->tcp_numlayers])
                     == 1) {
@@ -829,7 +866,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
         /* dda */
         /* ----------------------------------------------------- */
 
-        case 'f': {         /* mod fixed_quality (before : -q) */
+        case 'f': {         /* layer allocation by fixed layer */
             int *row = NULL, *col = NULL;
             OPJ_UINT32 numlayers = 0, numresolution = 0, matrix_width = 0;
 
@@ -887,6 +924,24 @@ static int parse_cmdline_encoder(int argc, char **argv,
         case 't': {         /* tiles */
             sscanf(opj_optarg, "%d,%d", &parameters->cp_tdx, &parameters->cp_tdy);
             parameters->tile_size_on = OPJ_TRUE;
+        }
+        break;
+
+        /* ----------------------------------------------------- */
+        case 'X': {         /* target bitdepth */
+            char *s = opj_optarg;
+            sscanf(s, "%u", pTarget_bitdepth);
+            if (*pTarget_bitdepth == 0) {
+                fprintf(stderr, "Target bitdepth must be at least 1 bit.\n");
+                return 1;
+            }
+        }
+        break;
+
+        /* ----------------------------------------------------- */
+        case 'G': {         /* guard bits */
+            char *s = opj_optarg;
+            sscanf(s, "%d", pOutGuardBits);
         }
         break;
 
@@ -957,9 +1012,10 @@ static int parse_cmdline_encoder(int argc, char **argv,
         /* ----------------------------------------------------- */
 
         case 'p': {         /* progression order */
-            char progression[4];
+            char progression[5];
 
             strncpy(progression, opj_optarg, 4);
+            progression[4] = 0;
             parameters->prog_order = give_progression(progression);
             if (parameters->prog_order == -1) {
                 fprintf(stderr, "Unrecognized progression order "
@@ -1697,6 +1753,12 @@ static int parse_cmdline_encoder(int argc, char **argv,
             }
         }
         break;
+        /* ------------------------------------------------------ */
+
+        case 'D': {         /* TLM markers */
+            *pOutTLM = OPJ_TRUE;
+        }
+        break;
 
         /* ------------------------------------------------------ */
 
@@ -1732,9 +1794,10 @@ static int parse_cmdline_encoder(int argc, char **argv,
         }
     }
 
-    if ((parameters->decod_format == RAW_DFMT && raw_cp->rawWidth == 0)
-            || (parameters->decod_format == RAWL_DFMT && raw_cp->rawWidth == 0)) {
-        fprintf(stderr, "[ERROR] invalid raw image parameters\n");
+    if ((parameters->decod_format == RAW_DFMT ||
+            parameters->decod_format == RAWL_DFMT)
+            && (raw_cp->rawWidth == 0)) {
+        fprintf(stderr, "[ERROR] invalid raw or yuv image parameters\n");
         fprintf(stderr, "Please use the Format option -F:\n");
         fprintf(stderr,
                 "-F rawWidth,rawHeight,rawComp,rawBitDepth,s/u (Signed/Unsigned)\n");
@@ -1749,7 +1812,7 @@ static int parse_cmdline_encoder(int argc, char **argv,
                   parameters->cp_fixed_quality))) {
         fprintf(stderr, "[ERROR] options -r -q and -f cannot be used together !!\n");
         return 1;
-    }               /* mod fixed_quality */
+    }
 
 
     /* if no rate entered, lossless by default */
@@ -1820,7 +1883,7 @@ static void info_callback(const char *msg, void *client_data)
     fprintf(stdout, "[INFO] %s", msg);
 }
 
-OPJ_FLOAT64 opj_clock(void)
+static OPJ_FLOAT64 opj_clock(void)
 {
 #ifdef _WIN32
     /* _WIN32: use QueryPerformance (very accurate) */
@@ -1879,7 +1942,12 @@ int main(int argc, char **argv)
     OPJ_FLOAT64 t = opj_clock();
 
     OPJ_BOOL PLT = OPJ_FALSE;
+    OPJ_BOOL TLM = OPJ_FALSE;
     int num_threads = 0;
+    int guard_bits = -1;
+
+    /** desired bitdepth from input file */
+    unsigned int target_bitdepth = 0;
 
     /* set encoding parameters to default values */
     opj_set_default_encoder_parameters(&parameters);
@@ -1900,7 +1968,8 @@ int main(int argc, char **argv)
     parameters.tcp_mct = (char)
                          255; /* This will be set later according to the input image or the provided option */
     if (parse_cmdline_encoder(argc, argv, &parameters, &img_fol, &raw_cp,
-                              indexfilename, sizeof(indexfilename), &framerate, &PLT, &num_threads) == 1) {
+                              indexfilename, sizeof(indexfilename), &framerate, &PLT, &TLM,
+                              &guard_bits, &num_threads, &target_bitdepth) == 1) {
         ret = 1;
         goto fin;
     }
@@ -1908,28 +1977,29 @@ int main(int argc, char **argv)
     /* Read directory if necessary */
     if (img_fol.set_imgdir == 1) {
         num_images = get_num_images(img_fol.imgdirpath);
+        if (num_images == 0) {
+            fprintf(stdout, "Folder is empty\n");
+            ret = 0;
+            goto fin;
+        }
         dirptr = (dircnt_t*)malloc(sizeof(dircnt_t));
         if (dirptr) {
-            dirptr->filename_buf = (char*)malloc(num_images * OPJ_PATH_LEN * sizeof(
+            dirptr->filename_buf = (char*)calloc(num_images, OPJ_PATH_LEN * sizeof(
                     char)); /* Stores at max 10 image file names*/
-            dirptr->filename = (char**) malloc(num_images * sizeof(char*));
+            dirptr->filename = (char**) calloc(num_images, sizeof(char*));
             if (!dirptr->filename_buf) {
                 ret = 0;
                 goto fin;
             }
             for (i = 0; i < num_images; i++) {
-                dirptr->filename[i] = dirptr->filename_buf + i * OPJ_PATH_LEN;
+                dirptr->filename[i] = dirptr->filename_buf + (size_t)i * OPJ_PATH_LEN;
             }
         }
         if (load_images(dirptr, img_fol.imgdirpath) == 1) {
             ret = 0;
             goto fin;
         }
-        if (num_images == 0) {
-            fprintf(stdout, "Folder is empty\n");
-            ret = 0;
-            goto fin;
-        }
+
     } else {
         num_images = 1;
     }
@@ -1939,7 +2009,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "\n");
 
         if (img_fol.set_imgdir == 1) {
-            if (get_next_file((int)imageno, dirptr, &img_fol, &parameters)) {
+            if (get_next_file(imageno, dirptr, &img_fol, &parameters)) {
                 fprintf(stderr, "skipping file...\n");
                 continue;
             }
@@ -1947,18 +2017,12 @@ int main(int argc, char **argv)
 
         switch (parameters.decod_format) {
         case PGX_DFMT:
-            break;
         case PXM_DFMT:
-            break;
         case BMP_DFMT:
-            break;
         case TIF_DFMT:
-            break;
         case RAW_DFMT:
         case RAWL_DFMT:
-            break;
         case TGA_DFMT:
-            break;
         case PNG_DFMT:
             break;
         default:
@@ -1999,9 +2063,9 @@ int main(int argc, char **argv)
 
 #ifdef OPJ_HAVE_LIBTIFF
         case TIF_DFMT:
-            image = tiftoimage(parameters.infile, &parameters);
+            image = tiftoimage(parameters.infile, &parameters, target_bitdepth);
             if (!image) {
-                fprintf(stderr, "Unable to load tiff file\n");
+                fprintf(stderr, "Unable to load tif(f) file\n");
                 ret = 1;
                 goto fin;
             }
@@ -2011,7 +2075,7 @@ int main(int argc, char **argv)
         case RAW_DFMT:
             image = rawtoimage(parameters.infile, &parameters, &raw_cp);
             if (!image) {
-                fprintf(stderr, "Unable to load raw file\n");
+                fprintf(stderr, "Unable to load raw or yuv file\n");
                 ret = 1;
                 goto fin;
             }
@@ -2047,7 +2111,7 @@ int main(int argc, char **argv)
 #endif /* OPJ_HAVE_LIBPNG */
         }
 
-        /* Can happen if input file is TIFF or PNG
+        /* Can happen if input file is TIF(F) or PNG
         * and OPJ_HAVE_LIBTIF or OPJ_HAVE_LIBPNG is undefined
         */
         if (!image) {
@@ -2150,9 +2214,21 @@ int main(int argc, char **argv)
             goto fin;
         }
 
-        if (PLT) {
-            const char* const options[] = { "PLT=YES", NULL };
-            if (!opj_encoder_set_extra_options(l_codec, options)) {
+        {
+            const char* options[4] = { NULL, NULL, NULL, NULL };
+            int iOpt = 0;
+            char szGuardBits[32];
+            if (PLT) {
+                options[iOpt++] = "PLT=YES";
+            }
+            if (TLM) {
+                options[iOpt++] = "TLM=YES";
+            }
+            if (guard_bits >= 0) {
+                sprintf(szGuardBits, "GUARD_BITS=%d", guard_bits);
+                options[iOpt++] = szGuardBits;
+            }
+            if (iOpt > 0 && !opj_encoder_set_extra_options(l_codec, options)) {
                 fprintf(stderr, "failed to encode image: opj_encoder_set_extra_options\n");
                 opj_destroy_codec(l_codec);
                 opj_image_destroy(image);
@@ -2173,6 +2249,9 @@ int main(int argc, char **argv)
         /* open a byte stream for writing and allocate memory for all tiles */
         l_stream = opj_stream_create_default_file_stream(parameters.outfile, OPJ_FALSE);
         if (! l_stream) {
+            fprintf(stderr, "cannot create %s\n", parameters.outfile);
+            opj_destroy_codec(l_codec);
+            opj_image_destroy(image);
             ret = 1;
             goto fin;
         }
@@ -2187,12 +2266,15 @@ int main(int argc, char **argv)
             OPJ_UINT32 l_data_size = 512 * 512 * 3;
             l_data = (OPJ_BYTE*) calloc(1, l_data_size);
             if (l_data == NULL) {
+                opj_stream_destroy(l_stream);
+                opj_destroy_codec(l_codec);
+                opj_image_destroy(image);
                 ret = 1;
                 goto fin;
             }
             for (i = 0; i < l_nb_tiles; ++i) {
                 if (! opj_write_tile(l_codec, i, l_data, l_data_size, l_stream)) {
-                    fprintf(stderr, "ERROR -> test_tile_encoder: failed to write the tile %d!\n",
+                    fprintf(stderr, "ERROR -> test_tile_encoder: failed to write the tile %u!\n",
                             i);
                     opj_stream_destroy(l_stream);
                     opj_destroy_codec(l_codec);

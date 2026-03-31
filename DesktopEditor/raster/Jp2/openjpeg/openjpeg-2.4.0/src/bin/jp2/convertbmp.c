@@ -198,14 +198,10 @@ static void bmpmask32toimage(const OPJ_UINT8* pData, OPJ_UINT32 stride,
     bmp_mask_get_shift_and_prec(blueMask,  &blueShift,  &bluePrec);
     bmp_mask_get_shift_and_prec(alphaMask, &alphaShift, &alphaPrec);
 
-    image->comps[0].bpp = redPrec;
     image->comps[0].prec = redPrec;
-    image->comps[1].bpp = greenPrec;
     image->comps[1].prec = greenPrec;
-    image->comps[2].bpp = bluePrec;
     image->comps[2].prec = bluePrec;
     if (hasAlpha) {
-        image->comps[3].bpp = alphaPrec;
         image->comps[3].prec = alphaPrec;
     }
 
@@ -260,14 +256,10 @@ static void bmpmask16toimage(const OPJ_UINT8* pData, OPJ_UINT32 stride,
     bmp_mask_get_shift_and_prec(blueMask,  &blueShift,  &bluePrec);
     bmp_mask_get_shift_and_prec(alphaMask, &alphaShift, &alphaPrec);
 
-    image->comps[0].bpp = redPrec;
     image->comps[0].prec = redPrec;
-    image->comps[1].bpp = greenPrec;
     image->comps[1].prec = greenPrec;
-    image->comps[2].bpp = bluePrec;
     image->comps[2].prec = bluePrec;
     if (hasAlpha) {
-        image->comps[3].bpp = alphaPrec;
         image->comps[3].prec = alphaPrec;
     }
 
@@ -612,7 +604,7 @@ static OPJ_BOOL bmp_read_rle8_data(FILE* IN, OPJ_UINT8* pData,
     }/* while() */
 
     if (written != width * height) {
-        fprintf(stderr, "warning, image's actual size does not match advertized one\n");
+        fprintf(stderr, "warning, image's actual size does not match advertised one\n");
         return OPJ_FALSE;
     }
 
@@ -701,7 +693,7 @@ static OPJ_BOOL bmp_read_rle4_data(FILE* IN, OPJ_UINT8* pData,
         }
     }  /* while(y < height) */
     if (written != width * height) {
-        fprintf(stderr, "warning, image's actual size does not match advertized one\n");
+        fprintf(stderr, "warning, image's actual size does not match advertised one\n");
         return OPJ_FALSE;
     }
     return OPJ_TRUE;
@@ -838,7 +830,6 @@ opj_image_t* bmptoimage(const char *filename, opj_cparameters_t *parameters)
     memset(&cmptparm[0], 0, sizeof(cmptparm));
     for (i = 0; i < 4U; i++) {
         cmptparm[i].prec = 8;
-        cmptparm[i].bpp  = 8;
         cmptparm[i].sgnd = 0;
         cmptparm[i].dx   = (OPJ_UINT32)parameters->subsampling_dx;
         cmptparm[i].dy   = (OPJ_UINT32)parameters->subsampling_dy;

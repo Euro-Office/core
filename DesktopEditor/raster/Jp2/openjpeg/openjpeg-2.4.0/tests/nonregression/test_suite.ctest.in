@@ -6,7 +6,7 @@
 #   + For encoder related tests = dump, compare dump to base, decode the encoded file with 
 #     reference and compare the decoded file with the baseline decoded previously with 
 #     ref decoder.
-#   + For decoder related tests = dump, compare dump to base, (TODO: compare outpout decoding 
+#   + For decoder related tests = dump, compare dump to base, (TODO: compare output decoding
 #     image to base)
 #
 # Line begin with ! should failed (should be used for bad jpeg2000 file which should be 
@@ -186,6 +186,10 @@ opj_compress_no_raw_lossless -i @INPUT_NR_PATH@/ElephantDream_4K.tif -o @TEMP_PA
 opj_compress_no_raw_lossless -i @INPUT_NR_PATH@/byte.tif -o @TEMP_PATH@/byte_PLT.j2k -n 1 -PLT
 opj_compress_no_raw_lossless -i @INPUT_NR_PATH@/byte.tif -o @TEMP_PATH@/byte_PLT.jp2 -n 1 -PLT
 
+opj_compress_no_raw_lossless -i @INPUT_NR_PATH@/byte.tif -o @TEMP_PATH@/byte_TLM.j2k -n 1 -TLM
+# Use tile size 1x1 to generate more than 255 tiles
+opj_compress_no_raw_lossless -i @INPUT_NR_PATH@/byte.tif -o @TEMP_PATH@/byte_TLM_400tiles.j2k -n 1 -t 1,1 -TLM
+
 # DECODER TEST SUITE
 opj_decompress -i  @INPUT_NR_PATH@/Bretagne2.j2k -o @TEMP_PATH@/Bretagne2.j2k.pgx
 opj_decompress -i  @INPUT_NR_PATH@/_00042.j2k -o @TEMP_PATH@/_00042.j2k.pgx
@@ -225,9 +229,9 @@ opj_decompress -i  @INPUT_NR_PATH@/kodak_2layers_lrcp.j2c -o @TEMP_PATH@/kodak_2
 opj_decompress -i  @INPUT_NR_PATH@/kodak_2layers_lrcp.j2c -o @TEMP_PATH@/kodak_2layers_lrcp-l2.j2c.pgx -l 2
 # related to issue 104 and 110
 opj_decompress -i  @INPUT_NR_PATH@/issue104_jpxstream.jp2 -o @TEMP_PATH@/issue104_jpxstream.jp2.pgx
-# File not supported by kakadu (Malformed PCLR box) and not supoprter by openjpeg (problem with value of TPSot)
+# File not supported by kakadu (Malformed PCLR box) and not supported by openjpeg (problem with value of TPSot)
 !opj_decompress -i  @INPUT_NR_PATH@/mem-b2ace68c-1381.jp2 -o @TEMP_PATH@/mem-b2ace68c-1381.jp2.pgx
-# File which produced weird output with kakadu and not supoprter by openjpeg (problem with value of TPSot, issue 202, 206, 208)
+# File which produced weird output with kakadu and not supported by openjpeg (problem with value of TPSot, issue 202, 206, 208)
 opj_decompress -i  @INPUT_NR_PATH@/mem-b2b86b74-2753.jp2 -o @TEMP_PATH@/mem-b2b86b74-2753.jp2.pgx
 # issue 191 raised by the gdal fuzzer test (should properly failed)
 !opj_decompress -i  @INPUT_NR_PATH@/gdal_fuzzer_unchecked_numresolutions.jp2 -o @TEMP_PATH@/gdal_fuzzer_unchecked_numresolutions.pgx
@@ -647,3 +651,24 @@ opj_decompress -i @INPUT_NR_PATH@/tnsot_zero.jp2 -o @TEMP_PATH@/tnsot_zero.png
 !opj_decompress -i @INPUT_NR_PATH@/oss-fuzz2785.jp2 -o @TEMP_PATH@/oss-fuzz2785.png
 
 opj_decompress -i @INPUT_NR_PATH@/tnsot_zero_missing_eoc.jp2 -o @TEMP_PATH@/tnsot_zero_missing_eoc.png
+
+# HTJ2K tests
+opj_decompress -i @INPUT_NR_PATH@/htj2k/Bretagne1_ht.j2k -o @TEMP_PATH@/Bretagne1_ht.j2k.png
+opj_decompress -i @INPUT_NR_PATH@/htj2k/Bretagne1_ht_lossy.j2k -o @TEMP_PATH@/Bretagne1_ht_lossy.j2k.png
+opj_decompress -i @INPUT_NR_PATH@/htj2k/byte.jph -o @TEMP_PATH@/byte.jph.png
+opj_decompress -i @INPUT_NR_PATH@/htj2k/byte_causal.jhc -o @TEMP_PATH@/byte_causal.jhc.png
+
+# huge tile size
+opj_decompress -i @INPUT_NR_PATH@/huge-tile-size.jp2 -o @TEMP_PATH@/huge-tile-size.png
+!opj_decompress -i @INPUT_NR_PATH@/issue1438.j2k -o @TEMP_PATH@/issue1438.png
+
+# decompress a single tile, where tile-parts are not consecutive, and with a TLM index
+opj_decompress -t 0 -i @INPUT_NR_PATH@/small_world_non_consecutive_tilepart_tlm.jp2 -o @TEMP_PATH@/small_world_non_consecutive_tilepart_tlm-t0.png
+opj_decompress -t 1 -i @INPUT_NR_PATH@/small_world_non_consecutive_tilepart_tlm.jp2 -o @TEMP_PATH@/small_world_non_consecutive_tilepart_tlm-t1.png
+
+# decompress a subset of tiles, where tile-parts are not consecutive, and with a TLM index
+opj_decompress -i @INPUT_NR_PATH@/small_world_non_consecutive_tilepart_tlm.jp2 -o @TEMP_PATH@/small_world_non_consecutive_tilepart_tlm-t0-d.png -d 0,0,256,200
+opj_decompress -i @INPUT_NR_PATH@/small_world_non_consecutive_tilepart_tlm.jp2 -o @TEMP_PATH@/small_world_non_consecutive_tilepart_tlm-t1-d.png -d 256,0,400,200
+
+# missing EPH Marker
+!opj_decompress -i @INPUT_NR_PATH@/issue1472-bigloop.j2k -o @TEMP_PATH@/issue1472-bigloop.raw
