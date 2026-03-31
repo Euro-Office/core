@@ -300,8 +300,8 @@ if(APPLE)
 endif()
 
 target_link_libraries(doctrenderer PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+    ${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a
+    ${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a
 )
 
 target_link_libraries(doctrenderer PUBLIC
