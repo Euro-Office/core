@@ -253,6 +253,9 @@ while IFS= read -r commit; do
   fi
 done < <(git log --format="%H" --before="2022-01-01")
 
+# Fix Python 3.12+ SyntaxWarning: invalid escape sequence '\d' in gen.py
+sed -i "s/ROOT_TAG + '-/ROOT_TAG + r'-/g" build/gen.py
+
 CC=clang-13 CXX=clang++-13 python3 build/gen.py --no-last-commit-position
 
 # Der Compiler sucht last_commit_position.h via -I. (= out/ Verzeichnis)
