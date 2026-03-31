@@ -65,6 +65,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXStreamID.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXVS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConRef.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConName.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SupBook.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/ExternSheet.h"
 
@@ -494,16 +495,21 @@ namespace OOX
 						auto cacheSourcePtr = new XLS::SXSRC;
 						castedPivotCache->m_SXSRC =XLS::BaseObjectPtr(cacheSourcePtr);
 						auto dref = new XLS::DREF;
-						auto conRef = new XLS::DConRef;
+
 						cacheSourcePtr->m_source = XLS::BaseObjectPtr(dref);
-						dref->m_DCon = XLS::BaseObjectPtr(conRef);
-						if(source->m_oWorksheetSource->m_oRef.IsInit())
+
+						if(source->m_oWorksheetSource->m_oRef.IsInit() && source->m_oWorksheetSource->m_oSheet.IsInit())
 						{
+							auto conRef = new XLS::DConRef;
+							dref->m_DCon = XLS::BaseObjectPtr(conRef);
 							conRef->ref = source->m_oWorksheetSource->m_oRef.get();
-						}
-						if(source->m_oWorksheetSource->m_oSheet.IsInit())
-						{
 							conRef->sheet_name = source->m_oWorksheetSource->m_oSheet.get();
+						}
+						else if(source->m_oWorksheetSource->m_oName.IsInit())
+						{
+							auto conName = new XLS::DConName;
+							dref->m_DCon = XLS::BaseObjectPtr(conName);
+							conName->stName = source->m_oWorksheetSource->m_oName.get();
 						}
 					}
 					globalsSubstream->m_arPIVOTCACHEDEFINITION.push_back(pivotCacheBin);
