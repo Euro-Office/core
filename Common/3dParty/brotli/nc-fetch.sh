@@ -1,6 +1,7 @@
 #!/bin/bash
 
 install_dir="$1"
+git_tag="v1.2.0"
 
 abort_op()
 {
@@ -25,11 +26,7 @@ fi
 
 echo "Fetching Brotli"
 
-mkdir -p "$install_dir" || abort_op "Failed to create brotli directory."
-cd "$install_dir"
-git init || abort_op "Git init failed (brotli)"
-git remote add origin https://github.com/google/brotli.git || abort_op "Failed to add brotli remote"
-git fetch --depth 1 origin a47d7475063eb223c87632eed806c0070e70da29 || abort_op "Failed to fetch a47d7475063eb223c87632eed806c0070e70da29"
-git checkout FETCH_HEAD || abort_op "Check-out failed (brotli)"
+git clone --depth=1 --branch $git_tag https://github.com/google/brotli.git "$install_dir" \
+    || abort_op "Failed to clone brotli repo"
 
 echo "Brotli ready!"
