@@ -178,6 +178,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SxNil.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXString.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXDtr.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXDBB.h"
 
 namespace OOX
 {
@@ -4788,7 +4789,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			}
 			else
 				ptr->fNonDates = true;
-			if(m_oSharedItems->m_arrItems.size() && m_oSharedItems->m_arrItems.size() <= 255)
+			if(m_oSharedItems->m_arrItems.size() && m_oSharedItems->m_arrItems.size() > 255)
 				ptr->fShortIitms = true;
 			if(m_oSharedItems->m_oCount.IsInit())
 				ptr->catm = m_oSharedItems->m_oCount->GetValue();
@@ -8090,6 +8091,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 	XLS::BaseObjectPtr CPivotCacheRecord::toXLS()
 	{
 		auto ptr = new XLS::DBB;
+		std::vector<unsigned char> indexes;
 		for(auto i:m_arrItems)
 		{
 			auto operPtr = new XLS::SXOPER;
@@ -8148,6 +8150,22 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 				ptr->m_arSXOPER.push_back(XLS::BaseObjectPtr(operPtr));
 				continue;
 			}
+			else if(i->getType() == et_x_SharedItemsIndex)
+			{
+				auto IndexValue = static_cast<CSharedItemsIndex*>(i);
+				if(IndexValue->m_oV.IsInit())
+					indexes.push_back(IndexValue->m_oV->GetValue());
+			}
+		}
+		if(!indexes.empty())
+		{
+			auto DbbIndexes = new XLS::SXDBB;
+			ptr->m_SXDBB = XLS::BaseObjectPtr(DbbIndexes);
+			DbbIndexes->size = indexes.size();
+			DbbIndexes->blob.reset(new unsigned char[indexes.size()]);
+			for(auto i = 0; i < indexes.size(); i++)
+				DbbIndexes->blob[i] = indexes[i];
+
 		}
 		return XLS::BaseObjectPtr(ptr);
 	}
