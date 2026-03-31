@@ -1,3 +1,5 @@
+include("${CMAKE_CURRENT_LIST_DIR}/../../../common.cmake")
+
 # 1. Setup hashes for each architecture (Vcpkg requires these)
 set(PKG_SHA512 "NOTFOUND")
 set(PKG_NAME "qt")
@@ -19,8 +21,7 @@ else()
 endif()
 
 # 2. Construct the URL using built-in vcpkg variables
-set(CLOUD_TOKEN "n9KYBcFYyLLCgEw")
-set(PKG_URL "https://cloud.nextcloud.com/public.php/dav/files/${CLOUD_TOKEN}/${PKG_NAME}/${VERSION}/${TARGET_TRIPLET}/${PKG_NAME}_binary.tar.bz2")
+set(PKG_URL "${VCPKG_BINARY_REMOTE}/${PKG_NAME}/${VERSION}/${TARGET_TRIPLET}/${PKG_NAME}_binary.tar.bz2")
 
 # 3. Download
 vcpkg_download_distfile(ARCHIVE

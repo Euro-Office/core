@@ -1,3 +1,5 @@
+include("${CMAKE_CURRENT_LIST_DIR}/../../../common.cmake")
+
 # 1. Setup hashes for each architecture (Vcpkg requires these)
 set(CEF_HASH "NOTFOUND")
 
@@ -21,8 +23,7 @@ else()
 endif()
 
 # 2. Construct the URL using built-in vcpkg variables
-set(CLOUD_TOKEN "n9KYBcFYyLLCgEw")
-set(CEF_URL "https://cloud.nextcloud.com/public.php/dav/files/${CLOUD_TOKEN}/cef/${VERSION}/${TARGET_TRIPLET}/cef_binary.tar.bz2")
+set(CEF_URL "${VCPKG_BINARY_REMOTE}/cef/${VERSION}/${TARGET_TRIPLET}/cef_binary.tar.bz2")
 
 # 3. Download
 vcpkg_download_distfile(ARCHIVE

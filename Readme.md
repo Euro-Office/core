@@ -6,7 +6,20 @@ Server core components which are a part of [Document Server][1] and [Desktop Edi
 
   [1]: https://github.com/Euro-Office/DocumentServer
   [2]: https://github.com/Euro-Office/DesktopEditors
-  
+
+## Build third party dependencies
+
+To build third-party dependencies you can use our build script at Common/3dParty/build_dependencies.sh. Currently it only supports a Nextcloud remote but feel free to add support for others as well. You have to add a NEXTCLOUD_USER, NEXTCLOUD_PASS, NEXTCLOUD_REMOTE and BASE_REMOTE_PATH. Then run 
+```sh
+./build_dependencies.sh
+```
+
+to build all dependencies. This takes very long (~5 hours or more). Once finished, the binary files are in `PKG_NAME/VERSION/TARGET_TRIPLET/PKG_NAME_binary.tar.bz2` of your specified remote. Once finished you can build the project with your pre-compiled binaries by specifying 
+```sh
+-DVCPKG_BINARY_REMOTE="https://my-remote.corp/repository/vcpkg/"
+```
+in the cmake command of the core or desktop build.
+
 ## License
 
 Core is released under an GNU AGPL v3.0 license. See the LICENSE file for more information.

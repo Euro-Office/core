@@ -10,8 +10,8 @@ BASE_REMOTE_PATH="3DPARTY_DEPS"
 THDPARTY_DIR="."
 LOCAL_BUILD_DIR="./build_output"
 TRIPLETS=(
-    "x64-linux"
-    "arm64-linux"
+    "x64-linux-dynamic"
+    #"arm64-linux"
 
     #"x64-windows"
     #"arm64-windows"
@@ -24,8 +24,11 @@ mkdir -p "$LOCAL_BUILD_DIR"
 
 # Dependencies array: NAME|VERSION
 DEPS=(
-    #"cef|5414"
+    "cef|5414"
     "libvlc|3.0.18"
+    "boost|1.72"
+    "qt|5.9.9"
+    "v8|8.9"
 )
 
 # --- Main Loop ---
