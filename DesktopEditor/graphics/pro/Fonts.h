@@ -46,10 +46,10 @@
 
 struct TBBox
 {
-	float fMinX;
-	float fMaxX;
-	float fMinY;
-	float fMaxY;
+	float fMinX = 0;
+	float fMaxX = 0;
+	float fMinY = 0;
+	float fMaxY = 0;
 };
 
 struct TBBoxAdvance

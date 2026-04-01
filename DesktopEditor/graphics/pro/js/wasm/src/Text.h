@@ -95,15 +95,13 @@ namespace NSHtmlRenderer
 			else
 				LoadFontByFile(m_pFont->Path, m_pFont->Size);
 		}
-		double MeasureString(const unsigned int* symbols, const int& count, double x, double y)
+		TBBox MeasureString(const unsigned int* symbols, const int& count, double x, double y)
 		{
 			if (!m_pManager)
-				return 0;
+				return TBBox();
 
 			m_pManager->LoadString1(symbols, count, (float)x, (float)y);
-			TBBox _box = m_pManager->MeasureString2();
-
-			return abs((_box.fMaxX - _box.fMinX) * 25.4 / 72.0);
+			return m_pManager->MeasureString2();
 		}
 
 	private:
@@ -305,7 +303,14 @@ namespace NSHtmlRenderer
 			double dPrevW = dOffsetX;
 			for (int i = 0; i < nCount; ++i)
 			{
-				double dW = m_oFontManager.MeasureString((const unsigned int*)(input + i), 1, 0, 0);
+				TBBox bBox = m_oFontManager.MeasureString((const unsigned int*)(input + i), 1, 0, 0);
+				double dW = std::abs((bBox.fMaxX - bBox.fMinX) * 25.4 / 72.0);
+				double dMeasureAscent  = std::abs(bBox.fMinY * 25.4 / 72.0);
+				double dMeasureDescent = std::abs(bBox.fMaxY * 25.4 / 72.0);
+				if (m_oLine.m_dAscent < dMeasureAscent)
+					m_oLine.m_dAscent = dMeasureAscent;
+				if (m_oLine.m_dDescent < dMeasureDescent)
+					m_oLine.m_dDescent = dMeasureDescent;
 
 				NSWasm::CHChar* pChar = m_oLine.AddTail();
 				pChar->unicode = pUnicodes[i];
