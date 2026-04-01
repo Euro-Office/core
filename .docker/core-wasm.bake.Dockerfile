@@ -8,7 +8,7 @@
 # ==============================================================================
 
 #### CORE WASM ####
-FROM emscripten/emsdk:3.1.48 AS core-wasm 
+FROM emscripten/emsdk:5.0.4 AS core-wasm 
     ARG BUILD_ROOT
     ARG CACHE_BUST
     ARG NUGET_SOURCE_PATH
