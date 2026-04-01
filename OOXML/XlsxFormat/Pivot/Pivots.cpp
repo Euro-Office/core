@@ -1399,11 +1399,19 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 				else if (i->m_oT == SimpleTypes::Spreadsheet::EPivotItemType::typeVarP)
 					lineItem.itmType = XLSB::PivotItemType::PITVARP;
 				else if (i->m_oT == SimpleTypes::Spreadsheet::EPivotItemType::typeGrandTotalt)
+				{
 					lineItem.itmType = XLSB::PivotItemType::PITGRAND;
+					lineItem.fGrand = true;
+				}
 				else if (i->m_oT == SimpleTypes::Spreadsheet::EPivotItemType::typeBlank)
 					lineItem.itmType = XLSB::PivotItemType::PITBLANK;
 			}
-			lineItem.isxviMac = i->m_arrItems.size();
+			if(lineItem.itmType>= 1 && lineItem.itmType <= 0xd)
+				lineItem.fSbt = true;
+			if(lineItem.fGrand)
+				lineItem.isxviMac = 1;
+			else
+				lineItem.isxviMac = i->m_arrItems.size();
 			if(i->m_oI.IsInit())
 				lineItem.iData = i->m_oI->GetValue();
 			for(auto j : i->m_arrItems)
