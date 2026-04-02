@@ -4805,16 +4805,19 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 
 			if(m_oSharedItems->m_oContainsDate.IsInit() && m_oSharedItems->m_oContainsDate.get())
 			{
-				ptr->fNonDates = false;
 				ptr->fDateInField = true;
-				ptr->fNumField = false;
 			}
-			else
+			if(m_oSharedItems->m_oContainsMixedTypes.IsInit() &&m_oSharedItems->m_oContainsMixedTypes.get())
+			{
 				ptr->fNonDates = true;
+			}
 			if(m_oSharedItems->m_arrItems.size() && m_oSharedItems->m_arrItems.size() > 255)
 				ptr->fShortIitms = true;
 			if(m_oSharedItems->m_oCount.IsInit())
+			{
 				ptr->catm = m_oSharedItems->m_oCount->GetValue();
+				ptr->citmUnq = ptr->catm;
+			}
 			for(auto sItem : m_oSharedItems->m_arrItems)
 			{
 				if(sItem->getType() == et_x_PivotBooleanValue)

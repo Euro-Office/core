@@ -68,7 +68,7 @@ public:
 	bool			fCalculatedField = false;
 	unsigned short	ifdbParent = 0;
 	unsigned short	ifdbBase = 0;
-	unsigned short	citmUnq = 1;
+	unsigned short	citmUnq = 0;
 	unsigned short	csxoper = 0;
 	unsigned short	cisxoper = 0;
 	unsigned short	catm = 0;
