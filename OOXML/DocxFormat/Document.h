@@ -180,7 +180,7 @@ namespace OOX
 			size_t end_elm = 0;
 			WritingElement* sect = NULL;
 		};
-		std::vector<_section> m_arrSections; // дублирование ... для удобства конвертаций
+		std::vector<_section> m_arrSections; // duplication ... for conversion convenience
 
 	};
 

@@ -290,7 +290,7 @@ namespace SVG
 
 		if (NULL != m_pFontManager)
 		{
-			// Вычиления размеров текста
+			// Calculate text dimensions
 			m_pFontManager->LoadFontByName(wsFontFamily, dFontSize, nStyle, 72., 72.);
 			m_pFontManager->SetCharSpacing(0);
 
@@ -305,7 +305,7 @@ namespace SVG
 			TBBox oBox = m_pFontManager->MeasureString2();
 			fW = (float)dKoef * (oBox.fMaxX - oBox.fMinX);
 
-			// Просчитаем положение подчеркивания
+			// Calculate underline position
 			m_pFontManager->GetUnderline(&fUndX1, &fUndY1, &fUndX2, &fUndY2, &fUndSize);
 			fUndX1   *= (float)dKoef;
 			fUndY1   *= (float)dKoef;
@@ -522,7 +522,7 @@ namespace SVG
 
 	void CTSpan::CorrectFontFamily(std::wstring &wsFontFamily) const
 	{
-		//TODO:: необходимо более подробно заняться подбором шрифтов
+		//TODO:: need to work more on font selection
 		if (L"sans-serif" == wsFontFamily)
 			wsFontFamily = L"Arial";
 		else if (L"serif" == wsFontFamily)
@@ -632,7 +632,7 @@ namespace SVG
 		if (m_oText.Underline())
 			nStyle |= (1 << 2);
 
-		// Вычиления размеров текста
+		// Calculate text dimensions
 		m_pFontManager->LoadFontByName(wsFontFamily, dFontSize, nStyle, 72., 72.);
 		m_pFontManager->SetCharSpacing(0);
 

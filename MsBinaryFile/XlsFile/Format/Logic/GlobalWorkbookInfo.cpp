@@ -299,7 +299,7 @@ void GlobalWorkbookInfo::RegisterNumFormat(BaseObjectPtr element)
 	}
 	else
 	{
-		//меняем
+		//changing
 		pFindFormat->second = element;
 	}
 }
@@ -381,7 +381,7 @@ _UINT16 GlobalWorkbookInfo::RegisterNumFormat(_UINT16 ifmt, const std::wstring &
 		std::map<_UINT16, BaseObjectPtr>::iterator pFindFormat = m_mapNumFormats.find(ifmt_used);
 		if (pFindFormat == m_mapNumFormats.end())
 		{
-			// генерим хоть что то
+			// generate something at least
 			Format* fmt = new Format();
 			fmt->ifmt = ifmt;
 			fmt->ifmt_used = ifmt_used;

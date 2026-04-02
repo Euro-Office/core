@@ -46,7 +46,7 @@ public:
     const std::vector<std::wstring>	readUnicode();
     const std::vector<std::wstring> readUnicodeLines(int codePage);
     const std::vector<std::string>  readUtf8Lines(int CodePage);
-    //const std::vector<std::wstring>	readUnicodeWithOutBOM(); /// не используем
+    //const std::vector<std::wstring>	readUnicodeWithOutBOM(); /// not used
     const std::vector<std::wstring>	readBigEndian();
     const std::vector<std::string>	readUtf8();
 

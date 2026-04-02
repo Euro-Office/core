@@ -93,23 +93,23 @@ int StringStream::getc()
 }
 void StringStream::ungetc()
 {
-	//в проекте используется ungetcб только после getc
-	//поэтому проблем с выходом в 0 нет
+	//in the project ungetc is used only after getc
+	//so there are no problems with reaching 0
 	//if( m_nPosAbs + 2 < m_nSizeAbs )
 	{
-		m_nPosAbs--;	//взять любой txt переименовать в rtf - зацикливание
+		m_nPosAbs--;	//take any txt rename to rtf - infinite loop
 	}
 }
 void StringStream::putString( std::string sText )
 {
 	size_t nExtBufSize = sText.length();
-	//копируем буфер в темповый буфер
+	//copy buffer to temp buffer
 	unsigned char* aTempBuf = new unsigned char[ m_nSizeAbs ];
 	memcpy( aTempBuf, m_aBuffer, m_nSizeAbs );
-	//создаем новый буфер большего размера
+	//create new buffer with larger size
 	RELEASEARRAYOBJECTS( m_aBuffer );
 	m_aBuffer = new unsigned char[ m_nSizeAbs + nExtBufSize ];
-	//копируем все в новый буфер
+	//copy everything to new buffer
 	unsigned long nDelimiter = (unsigned long)m_nPosAbs + 1;
 	memcpy( m_aBuffer, aTempBuf, nDelimiter );
 	memcpy( m_aBuffer + nDelimiter , sText.c_str(), nExtBufSize );
@@ -131,7 +131,7 @@ LONG64 StringStream::getSize()
 RtfLex::RtfLex()
 {
 	m_oFileWriter = NULL;
-	m_nReadBufSize = 1024 * 1024 * 5; // 5мб
+	m_nReadBufSize = 1024 * 1024 * 5; // 5MB
 	m_caReadBuffer = new char[m_nReadBufSize];
 }
 RtfLex::~RtfLex()
@@ -262,7 +262,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 				token.HasParameter = true;
 				int nCharCode = RtfUtility::ToByte( m_oStream.getc() ) << 4;
 				nCharCode |= RtfUtility::ToByte( m_oStream.getc() );
-				if( nCharCode >= 0 && nCharCode <=30 )//искуственно сидвигаем на 1 чтобы не потерять \'00 ( символов от 0 до 0x20 служебные)
+				if( nCharCode >= 0 && nCharCode <=30 )//artificially shift by 1 to not lose \'00 (characters from 0 to 0x20 are service characters)
 					nCharCode++;
 				token.Parameter = nCharCode;
 			}
@@ -347,10 +347,10 @@ void RtfLex::parseKeyword(RtfToken& token)
 }
 void RtfLex::parseText(int car, RtfToken& token)
 {
-	int nTempBufPos = 0; //1 мб
+	int nTempBufPos = 0; //1 MB
 
 	int c = car;
-	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // иправиЃEЃEрвьD усЃEвиЃE
+	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // (corrupted comment removed)
 	//while (c != '\\' && c != '}' && c != '{' && c != Eof)
 	//while (c != ';' &&c ! = '\\' && c != '}' && c != '{' && c != EOF)
 	while (c != '\\' && c != '}' && c != '{' && c != EOF)

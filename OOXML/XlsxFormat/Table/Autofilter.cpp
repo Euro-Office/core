@@ -230,7 +230,7 @@ namespace OOX
 			}
 			void CSortCondition::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("descending"),      m_oDescending )
@@ -460,7 +460,7 @@ namespace OOX
 			}
 			void CSortState::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("ref"),      m_oRef )
@@ -545,7 +545,7 @@ namespace OOX
 			}
 			void CColorFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-							// Читаем атрибуты
+							// Read attributes
 							WritingElement_ReadAttributes_Start( oReader )
 
 							WritingElement_ReadAttributes_Read_if     ( oReader, _T("cellColor"),      m_oCellColor )
@@ -703,7 +703,7 @@ namespace OOX
 			}
 			void CDynamicFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("type"),      m_oType )
@@ -913,7 +913,7 @@ namespace OOX
 			}
 			void CCustomFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("operator"),      m_oOperator )
@@ -1044,7 +1044,7 @@ namespace OOX
 			}
 			void CCustomFilters::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("and"),      m_oAnd )
@@ -1125,7 +1125,7 @@ namespace OOX
 			}
 			void CFilter::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("val"),      m_oVal )
@@ -1248,7 +1248,7 @@ namespace OOX
 			}
 			void CDateGroupItem::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("dateTimeGrouping"),      m_oDateTimeGrouping )
@@ -1392,10 +1392,10 @@ namespace OOX
 				for(auto i: m_arrItems)
 				{
 					if (CFilter* cfilter = dynamic_cast<CFilter*>(i)) {
-						// Элемент является экземпляром класса CFilter
+						// Element is an instance of CFilter class
 						ptr->m_arBrtFilter.push_back(cfilter->toBin());
 					} else if (CDateGroupItem* groupItem = dynamic_cast<CDateGroupItem*>(i)) {
-						// Элемент является экземпляром класса CDateGroupItem
+						// Element is an instance of CDateGroupItem class
 						ptr->m_arBrtAFilterDateGroupItem.push_back(groupItem->toBin());
 					}
 				}
@@ -1407,7 +1407,7 @@ namespace OOX
 			}
 			void CFilters::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("blank"),      m_oBlank )
@@ -1495,7 +1495,7 @@ namespace OOX
 			}
 			void CTop10::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("filterVal"),      m_oFilterVal )
@@ -1652,7 +1652,7 @@ namespace OOX
 					else
 						ptr->ft = 2;
 					//auto dxfn = new XLS::DXFN12;
-					//todo: сделать копирование структуры dxfn12 из стилей по id
+					//todo: copy dxfn12 structure from styles by id
 				}
 				else if(m_oFilters.IsInit() || m_oCustomFilters.IsInit())
 				{
@@ -1684,7 +1684,7 @@ namespace OOX
 			}
 			void CFilterColumn::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("colId"),      m_oColId )

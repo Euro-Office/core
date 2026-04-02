@@ -60,7 +60,7 @@ bool OOXStyleTableReader::Parse( ReaderParameter oParam )
 		if( NULL != oNewStyle )
 			oParam.oRtf->m_oStyleTable.AddItem( oNewStyle );
 	}
-	//только чтобы добавить связи между стилями
+	//only to add links between styles
 
 	for (size_t i=0; i< m_ooxStyles->m_arrStyle.size(); i++)
 	{

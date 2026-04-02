@@ -120,7 +120,7 @@ namespace OOX
 		}
 		void CPhonetic::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("alignment"),      m_oAlignment )
@@ -234,7 +234,7 @@ namespace OOX
 		}
 		void CRPh::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 			WritingElement_ReadAttributes_Read_if     ( oReader, _T("eb"),      m_oEb )

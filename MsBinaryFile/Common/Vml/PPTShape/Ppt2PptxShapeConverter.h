@@ -197,7 +197,7 @@ public:
     LONG m_lWidth;
     LONG m_lHeight;
     
-    // все в одно не получится, формулы появляются и при конвертации path/adj и т.д.
+    // can't do everything in one, formulas also appear during path/adj conversion, etc.
     NSBinPptxRW::CXmlWriter m_oGuidsRes;
     NSBinPptxRW::CXmlWriter m_oPathRes;
     NSBinPptxRW::CXmlWriter m_oHandleRes;

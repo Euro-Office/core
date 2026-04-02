@@ -56,7 +56,7 @@ public:
 class CApplicationFontStreams : public NSFonts::IApplicationFontStreams
 {
 private:
-	// этот мап нужно периодически опрашивать и удалять неиспользуемые стримы
+	// this map should be periodically checked and unused streams should be removed
 	std::map<std::wstring, CFontStream*> m_mapStreams;
 
 public:

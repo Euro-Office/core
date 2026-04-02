@@ -527,7 +527,7 @@ namespace OOX
 			m_oWidowControl.IsInit() ||  m_oWordWrap.IsInit() );
 		}
 		void CParagraphProperty::fromXML(XmlUtils::CXmlNode& oNode)
-		{//??? где используется ?
+		{//??? where is this used?
 			if ( L"w:pPr" != oNode.GetName() )
 				return;
 
@@ -663,7 +663,7 @@ namespace OOX
 								doc->m_arrSections.push_back(section);
 							}
 							doc->m_arrSections.back().sect = m_oSectPr.GetPointer();
-							doc->m_arrSections.back().end_elm = doc->m_arrItems.size() + 1;  // порядок выше - сначала читаем, потом добавляем
+							doc->m_arrSections.back().end_elm = doc->m_arrItems.size() + 1;  // order above - first read, then add
 
 							OOX::CDocument::_section section;
 							section.start_elm = doc->m_arrItems.size() + 1;

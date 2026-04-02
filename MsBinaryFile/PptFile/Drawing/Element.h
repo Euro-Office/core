@@ -95,9 +95,9 @@ public:
     int					m_lPlaceholderUserStr;
     int					m_nFormatDate;
 
-    double				m_dRotate;			// угол поворота в градусах
-    bool				m_bFlipH;			// симметричное отражение относительно горизонтальной оси
-    bool				m_bFlipV;			// симметричное отражение относительно вертикальной оси
+    double				m_dRotate;			// rotation angle in degrees
+    bool				m_bFlipH;			// symmetric reflection about horizontal axis
+    bool				m_bFlipV;			// symmetric reflection about vertical axis
 
     bool				m_bLine;
     bool				m_bIsFilled;

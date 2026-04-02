@@ -103,7 +103,7 @@ CDesignVectorWidget::CDesignVectorWidget(QWidget *pParent) :
         QLabel *pName = new QLabel("DesignVector:");
         pName->setStyleSheet("QLabel { text-decoration: underline; }");
 
-        QPushButton *pAddedButton = new QPushButton("Добавить значение");
+        QPushButton *pAddedButton = new QPushButton("Add value");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CDesignVectorWidget::on_createValue_clicked);
 
@@ -144,7 +144,7 @@ CLinkedUFISWidget::CLinkedUFISWidget(QWidget *pParent)
 {
         QVBoxLayout *pLayout = new QVBoxLayout();
 
-        QPushButton *pCreateButton = new QPushButton("Добавить значение");
+        QPushButton *pCreateButton = new QPushButton("Add value");
 
         connect(pCreateButton, &QPushButton::clicked, this, &CLinkedUFISWidget::on_createValue_clicked);
 

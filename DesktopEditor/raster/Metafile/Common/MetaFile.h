@@ -55,7 +55,7 @@ namespace MetaFile
 		}
 		
 		virtual void           PlayMetaFile() = 0;
-		virtual void           ClearFile() {/*Нельзя делать чисто виртуальной, потому что вызывается в деструкторе*/}
+		virtual void           ClearFile() {/*Cannot be pure virtual because it is called in destructor*/}
 		virtual const TRectL&  GetDCBounds() const = 0;
 		virtual const CClip*   GetClip() const = 0;
 		virtual double         GetPixelHeight() const = 0;

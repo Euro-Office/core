@@ -610,7 +610,7 @@ void WorkBookStream::UpdateDefineNames(XLS::GlobalWorkbookInfo* global_info_)
                 name = L"_xludf." + name;
             }
         }
-        global_info_->arDefineNames.push_back(name);// для имен функций - todooo ... не все функции корректны !! БДИ !!
+        global_info_->arDefineNames.push_back(name);// for function names - todo ... not all functions are correct !! WATCH OUT !!
     }
 }
 

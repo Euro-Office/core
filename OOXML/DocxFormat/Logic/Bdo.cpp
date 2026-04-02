@@ -41,7 +41,7 @@
 #include "../Math/oMathPara.h"
 #include "../Math/OMath.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -280,7 +280,7 @@ namespace OOX
 
 		void CBdo::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, _T("w:val"), m_oVal )
 			WritingElement_ReadAttributes_End( oReader )

@@ -146,7 +146,7 @@ namespace OOX
 		}
 		void CCalcPr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 			WritingElement_ReadAttributes_Read_if		( oReader, _T("calcId"),				m_oCalcId )

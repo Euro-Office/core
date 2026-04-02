@@ -51,12 +51,12 @@ namespace codegen
         public string sNamespace;
         public bool bIsAttribute;
         public string sDefAttribute;
-        public bool bQualified;//нужно ли при записи в xml писать prefix
+        public bool bQualified;//whether to write prefix when writing to xml
         public bool bIsArray;
         public List<GenMember> aArrayTypes;
         public string sArrayTypesElementName;
         public string sArrayTypesEnumName;
-        public bool bInternal;//отличает массив с типами
+        public bool bInternal;//distinguishes array with types
 
         public bool bToDo;
         public bool bToDoString;
@@ -84,7 +84,7 @@ namespace codegen
         public string sNamespace;
         public bool bIsEnum;
         public List<GenMember> aMembers = new List<GenMember>();
-        public bool bInternal;//отличает enum типов
+        public bool bInternal;//distinguishes type enum
         public bool bIsRoot;
         public GenClass(string _sName, string _sNamespace)
         {
@@ -173,7 +173,7 @@ namespace codegen
                     aRes.Add(oGenClass);
                 mapAllClasses[oGenClass.sName] = oGenClass;
             }
-            //специально для chart
+            //specifically for chart
             for (int i = 0; i < aRes.Count; ++i)
             {
                 GenClass oGenClass = aRes[i];
@@ -234,7 +234,7 @@ namespace codegen
         GenClass PreProcessClass(List<GenClass> aGenClasses, CodeTypeDeclaration type)
         {
             GenClass oGenClass = null;
-            //получаем xml namespace
+            //get xml namespace
             string sNamespace = null;
             bool bIncludeInSchema = true;
             bool bIsRoot = false;
@@ -291,7 +291,7 @@ namespace codegen
                     for (int i = 0; i < type.Members.Count; ++i)
                     {
                         CodeTypeMember member = type.Members[i];
-                        //CodeMemberField пропускаем
+                        //skip CodeMemberField
                         CodeMemberProperty codeMemberProperty = member as CodeMemberProperty;
                         if (codeMemberProperty != null)
                         {
@@ -320,7 +320,7 @@ namespace codegen
                     oGenMember.bQualified = false;
                     oGenMember.bIsAttribute = true;
                     ParseArguments(attribute.Arguments, oGenMember);
-                    //todo могут быть повторы имен атрибутов и child nodes.
+                    //todo there may be duplicate attribute names and child nodes
                 }
                 else if (attribute.Name == "System.ComponentModel.DefaultValueAttribute")
                 {
@@ -376,7 +376,7 @@ namespace codegen
                 {
                     ParseArguments(attribute.Arguments, oGenMember);
                 }
-                //todo не всегда прописан
+                //todo not always specified
                 //else if (attribute.Name == "System.Xml.Serialization.XmlChoiceIdentifierAttribute")
                 //{
                 //    if (attribute.Arguments.Count > 0)
@@ -392,17 +392,17 @@ namespace codegen
             {
                 if (oGenMember.bIsArray && null != aWrappedMemebers)
                 {
-                    //todo не проверен случай
+                    //todo case not tested
                     //[System.Xml.Serialization.XmlArrayItemAttribute("ahPolar", typeof(CT_PolarAdjustHandle), IsNullable=false)]
                     //[System.Xml.Serialization.XmlArrayItemAttribute("ahXY", typeof(CT_XYAdjustHandle), IsNullable=false)]
                     //public object[] ahLst {
 
-                    //создаем wrap class чтобы не работать с двумерными массивами
+                    //create wrap class to avoid working with 2D arrays
                     string sNewName = Utils.GetClassName(oGenMember.sName);
                     GenClass oNewGenClass = new GenClass(sNewName, oGenMember.sNamespace);
                     if (null == oNewGenClass.sNamespace)
                         oNewGenClass.sNamespace = oGenClass.sNamespace;
-                    //помещаем класс указанный в атрибутах в aMembers
+                    //place class specified in attributes into aMembers
                     for (int i = 0; i < aWrappedMemebers.Count; ++i)
                     {
                         GenMember oWrappedMemeber = aWrappedMemebers[i];
@@ -415,7 +415,7 @@ namespace codegen
                         oWrappedMemeber.sNamespace = oNewGenClass.sNamespace;
                         oNewGenClass.aMembers.Add(oWrappedMemeber);
                     }
-                    //проверяем нет ли такого типа
+                    //check if such type exists
                     bool bExist = false;
                     bool bNeedCreate = true;
                     GenClass oPrevGenClass;
@@ -447,7 +447,7 @@ namespace codegen
                         aGenClasses.Add(oNewGenClass);
                         m_mapGeneratedClasses[oNewGenClass.sName] = oNewGenClass;
                     }
-                    //меняем oGenMember, чтобы он ссылался на oNewGenClass
+                    //modify oGenMember to reference oNewGenClass
                     if (codeMemberProperty.Type.ArrayElementType.ArrayRank > 0)
                         oGenMember.bIsArray = true;
                     else
@@ -457,7 +457,7 @@ namespace codegen
                 }
                 if (oGenMember.bIsArray && null != oGenMember.aArrayTypes)
                 {
-                    //добавляем enum для member и дополнительный массив для типов
+                    //add enum for member and additional array for types
                     GenClass oNewEnum = new GenClass(Utils.gc_sItemsChoiceType + m_nItemsChoiceTypeCount++, oGenClass.sNamespace);
                     oNewEnum.bInternal = true;
                     oNewEnum.bIsEnum = true;

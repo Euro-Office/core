@@ -524,7 +524,7 @@ namespace PPTX
 						pWriter->EndRecord();
 					}					
 				}
-				else if (strTextBoxShape.is_init())//после конвертации старого шейпа (vml)
+				else if (strTextBoxShape.is_init())//after converting old shape (vml)
 				{
 					long lDataSize = 0;
 					ULONG lPos = pWriter->GetPosition();

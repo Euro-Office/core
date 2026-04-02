@@ -104,12 +104,12 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 	}	
 	if (m_ooxParagraph == NULL) return false;
 
-	//надо default стиль применять до OOXParagraphReader
-	////применяем default
+	//need to apply default style before OOXParagraphReader
+	////apply default
 	//oOutputParagraph.m_oProperty = oParam.oRtf->m_oDefaultParagraphProp; 
 
 	RtfTableStylePtr oResultTableStyle;
-	//сначала применяем default стиль (если это нужно)
+	//first apply default style (if needed)
 
 	oOutputParagraph.m_oProperty.m_oCharProperty = m_oCharProperty;
 
@@ -129,7 +129,7 @@ bool OOXParagraphReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputPa
 			oOutputParagraph.m_oProperty.m_oCharProperty.Merge( oResultTableStyle->m_oCharProp );
 		}
 	}
-	//формируем внешний стиль для вложенных элементов
+	//create external style for nested elements
 	RtfCharStylePtr poExternalStyle;
 	if( NULL != oResultTableStyle || PROP_DEF != oOutputParagraph.m_oProperty.m_nStyle )
 	{
@@ -250,7 +250,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 			
 			oCurField->m_pInsert = RtfFieldInstPtr		( new RtfFieldInst() );
 			oCurField->m_pResult = RtfFieldInstPtr		( new RtfFieldInst() );
-		//добавляем insert
+		//add insert
 			RtfCharPtr pNewChar ( new RtfChar() );
 			pNewChar->m_bRtfEncode = false;
 			if (pFldSimple->m_sInstr.IsInit())
@@ -261,7 +261,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 			oNewInsertParagraph->AddItem( pNewChar );
 			oCurField->m_pInsert->m_pTextItems->AddItem( oNewInsertParagraph );
 			
-			//добаляем свойства
+			//add properties
 			if( TRUE == pFldSimple->m_oFldLock.ToBool() )
 				oCurField->m_eMode = RtfField::fm_fldlock;
 
@@ -269,10 +269,10 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 				oCurField->m_eMode = RtfField::fm_flddirty;
 
 			RtfParagraphPtr oNewResultParagraph( new RtfParagraph() );
-			//применяем к новому параграфу default property
+			//apply default property to new paragraph
 			oNewResultParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 			oNewResultParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
-			//применяем к новому параграфу свойства данного параграфа
+			//apply this paragraph's properties to new paragraph
 			oNewResultParagraph->m_oProperty = oOutputParagraph.m_oProperty;
 
 			if (pFldSimple->m_arrItems.size() >0)
@@ -309,7 +309,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 					{
 						sTarget += L"#" + *pHyperlink->m_sAnchor;
 					}
-					//заменяем пробелы на %20
+					//replace spaces with %20
                     XmlUtils::replace_all(sTarget, L" ", L"%20" );
 
                     std::wstring sFileUrl = L"file:///";
@@ -328,7 +328,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 					
 					oCurField->m_pInsert = RtfFieldInstPtr ( new RtfFieldInst() );
 					oCurField->m_pResult = RtfFieldInstPtr ( new RtfFieldInst() );
-				//добавляем insert
+				//add insert
 					RtfCharPtr pNewChar( new RtfChar() );
 					pNewChar->m_bRtfEncode = true;// false;
 					std::wstring sFieldText;
@@ -338,7 +338,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 					RtfParagraphPtr oNewInsertParagraph( new RtfParagraph() );
 					oNewInsertParagraph->AddItem( pNewChar );
 					oCurField->m_pInsert->m_pTextItems->AddItem( oNewInsertParagraph );
-					//добавляем свойства
+					//add properties
 
 					//pHyperlink->m_arrItems todoooo 
 					//BOOL bLock = Strings::ToBoolean(oXmlReader.ReadNodeAttribute(i, L"w:fldLock", L"false)));
@@ -349,10 +349,10 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 					//	oCurField->m_eMode = RtfField::fm_flddirty;
 
 					RtfParagraphPtr oNewResultParagraph( new RtfParagraph() );
-					//применяем к новому параграфу default property
+					//apply default property to new paragraph
 					oNewResultParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 					oNewResultParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
-					//применяем к новому параграфу свойства данного параграфа
+					//apply this paragraph's properties to new paragraph
 					oNewResultParagraph->m_oProperty = oOutputParagraph.m_oProperty;
 					
 					if (pHyperlink->m_arrItems.size() >0)
@@ -372,7 +372,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 				
 				oCurField->m_pInsert = RtfFieldInstPtr ( new RtfFieldInst() );
 				oCurField->m_pResult = RtfFieldInstPtr ( new RtfFieldInst() );
-				//добавляем insert
+				//add insert
 				RtfCharPtr pNewCharHYPER ( new RtfChar() );
 				pNewCharHYPER->m_bRtfEncode = false;
 				pNewCharHYPER->setText( L"HYPERLINK \\l \"" + pHyperlink->m_sAnchor.get() +L"\"");
@@ -381,7 +381,7 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 				oNewInsertParagraph->AddItem( pNewCharHYPER );
 
 				oCurField->m_pInsert->m_pTextItems->AddItem( oNewInsertParagraph );
-				////добаляем свойства
+				////add properties
 				//BOOL bLock = Strings::ToBoolean(oXmlReader.ReadNodeAttribute(i, L"w:fldLock" ,L"false"));
 				//if( TRUE == bLock )
 				//	oCurField->m_eMode = RtfField::fm_fldlock;
@@ -390,10 +390,10 @@ bool OOXParagraphReader::Parse3( ReaderParameter oParam , RtfParagraph& oOutputP
 				//	oCurField->m_eMode = RtfField::fm_flddirty;
 
 				RtfParagraphPtr oNewResultParagraph ( new RtfParagraph() );
-				//применяем к новому параграфу default property
+				//apply default property to new paragraph
 				oNewResultParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 				oNewResultParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
-				//применяем к новому параграфу свойства данного параграфа
+				//apply this paragraph's properties to new paragraph
 				oNewResultParagraph->m_oProperty = oOutputParagraph.m_oProperty;
 				
 				if (pHyperlink->m_arrItems.size() > 0)
@@ -770,7 +770,7 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 
 			RtfShapePtr pNewShape ( new RtfShape() );
 			if (ooxObject)
-			{//важна последовательность обработки
+			{//processing order is important
 				OOXShapeReader oShapeReaderType(ooxObject->m_oShapeType.GetPointer());
 				oShapeReaderType.Parse( oParam, pNewShape );
 				
@@ -992,10 +992,10 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 				//std::wstring sChar = ooxSym->m_oChar->GetValue();
 
 				//sChar.MakeLower();
-				////оставляем только 2 байта (4 символа)
+				////keep only 2 bytes (4 characters)
 				//if( sChar.length() > 4 )
 				//	sChar = sChar.Right( 4 );
-				////убираем маску F000
+				////remove mask F000
 				//if( sChar.length() == 4 && 'f' == sChar[0] )
 				//	sChar = sChar.Right( 3 );
 				
@@ -1067,10 +1067,10 @@ bool OOXRunReader::Parse( ReaderParameter oParam , RtfParagraph& oOutputParagrap
 	{
 		RtfCharProperty oNewProperty;
 		oNewProperty.SetDefaultOOX();
-		//применяем default
+		//apply default
 		oNewProperty = oParam.oRtf->m_oDefaultCharProp; 
 		
-		//применяем внешний стиль (часть свойств не наследуется!!)
+		//apply external style (some properties are not inherited!!)
 		oNewProperty.Merge( oOutputParagraph.m_oProperty.m_oCharProperty, false );
 		oNewProperty.Merge( m_oCharProperty );
 
@@ -1112,7 +1112,7 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 	if (m_drawingParaProps) return ParseDrawing( oParam, oOutputProperty);
 
 	if (m_ooxParaProps == NULL) return false;
-	//применяем внешний стиль 
+	//apply external style 
 	if( NULL != oParam.poTableStyle )
 	{
 		if( m_ooxParaProps->m_oCnfStyle.IsInit() )
@@ -1130,14 +1130,14 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 		oOutputProperty.Merge( oResultStyle->m_oParProp );
 		oOutputProperty.m_oCharProperty.Merge( oResultStyle->m_oCharProp );
 	}
-	//применяем стиль по-умолчанию,если не определен свой
+	//apply default style if own style is not defined
 	if(( m_ooxParaProps->m_oPStyle.IsInit() == false ) && (true == m_bDefStyle && NULL != oParam.oReader->m_oDefParStyle ))
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefParStyle->m_oParProp );
 		oOutputProperty.m_nStyle = oParam.oReader->m_oDefParStyle->m_nID;
 	}
 
-	//применяем все остальные свойчтва direct formating
+	//apply all other direct formatting properties
 	if( m_ooxParaProps->m_oPStyle.IsInit() && m_ooxParaProps->m_oPStyle->m_sVal.IsInit())
 	{
 		std::wstring sStyleName = *m_ooxParaProps->m_oPStyle->m_sVal;
@@ -1323,16 +1323,16 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 		}
 		if( PROP_DEF != oOutputProperty.m_nListLevel && PROP_DEF != oOutputProperty.m_nListId )
 		{
-			//применяем direct свойства списка к параграфу
+			//apply list direct properties to paragraph
 			RtfListOverrideProperty oListOverrideProperty;
-			//ищем по override table
+			//search in override table
 			if( true == oParam.oRtf->m_oListOverrideTable.GetList( oOutputProperty.m_nListId, oListOverrideProperty ) )
 			{
 				RtfListProperty oListProperty;
-				//Ищем по List Table
+				//Search in List Table
 				if( true == oParam.oRtf->m_oListTable.GetList( oListOverrideProperty.m_nListID, oListProperty) )
 				{
-					//дописываем свойства параграфа firstIndent Indent
+					//add paragraph properties firstIndent Indent
 					RtfListLevelProperty poLevelProp ;
 					if( true == oListProperty.GetItem( poLevelProp , oOutputProperty.m_nListLevel ) )
 					{
@@ -1425,7 +1425,7 @@ bool OOXpPrReader::Parse( ReaderParameter oParam, RtfParagraphProperty& oOutputP
 	}
 
 	if( m_ooxParaProps->m_oRPr.IsInit() )
-	{// ??? todooo сохранять текстовые ствойсва и использовать там где в run нет этих свойств
+	{// ??? todooo store text properties and use where run lacks these properties
 		OOXrPrReader orPrReader(m_ooxParaProps->m_oRPr.GetPointer());
 		orPrReader.Parse( oParam, oOutputProperty.m_oCharProperty );
 	}
@@ -1567,8 +1567,8 @@ bool OOXrPrReader::Parse( ReaderParameter oParam, RtfCharProperty& oOutputProper
 
 	if (m_ooxRunProps == NULL) return false;
 
-	//сначала применяем стили
-	//применяем стиль по-умолчанию,если не определен свой
+	//first apply styles
+	//apply default style if own style is not defined
 	if(( m_ooxRunProps->m_oRStyle.IsInit() == false) && (true == m_bDefStyle && NULL != oParam.oReader->m_oDefCharStyle ))
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefCharStyle->m_oCharProp );
@@ -2030,7 +2030,7 @@ bool OOXpPrFrameReader::Parse( ReaderParameter oParam ,RtfFrame& oOutputProperty
             default: break;
         }
 	}
-	oOutputProperty.m_DropcapLines = m_ooxFramePr->m_oLines.IsInit() ? m_ooxFramePr->m_oLines->GetValue() : 0; //todoo ??? или 1 ???
+	oOutputProperty.m_DropcapLines = m_ooxFramePr->m_oLines.IsInit() ? m_ooxFramePr->m_oLines->GetValue() : 0; //todoo ??? or 1 ???
 
 	if( m_ooxFramePr->m_oHSpace.IsInit() )
 	{
@@ -2129,7 +2129,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 			{
 				switch(m_ooxSectionProperty->m_oEndnotePr->m_oNumRestart->m_oVal->GetValue())
 				{
-					case SimpleTypes::restartnumberContinious : break;// ???? todooo проверить
+					case SimpleTypes::restartnumberContinious : break;// ???? todooo check
 					case SimpleTypes::restartnumberEachPage   : oOutput.m_eEndnotesRestart = RtfSectionProperty::er_saftnrestart; break;
 					case SimpleTypes::restartnumberEachSect   : oOutput.m_eEndnotesRestart = RtfSectionProperty::er_saftnrstcont; break;
                     default: break;
@@ -2278,7 +2278,7 @@ bool OOXSectionPropertyReader::Parse( ReaderParameter oParam , RtfSectionPropert
 			case SimpleTypes::textdirectionRlV : oOutput.m_nTextFollow = 3; break;
 			case SimpleTypes::textdirectionTb  : oOutput.m_nTextFollow = 0; break;
 			case SimpleTypes::textdirectionTbV : oOutput.m_nTextFollow = 5; break;
-				//oOutput.m_nTextFollow = 2; bottom to top ( .. todooo переделать DocxFormat
+				//oOutput.m_nTextFollow = 2; bottom to top ( .. todooo refactor DocxFormat
             default: break;
         }
 	}

@@ -239,7 +239,7 @@ namespace NSHyphen
 		int         m_nLastLang;
 		HyphenDict* m_pLastDict;
 
-		// работаем всегда в пределах одной памяти
+		// always work within a single memory block
 		char* m_pHyphenVector;
 		size_t m_nHyphenVectorSize;
 
@@ -350,7 +350,7 @@ namespace NSHyphen
 			}
 			else
 			{
-				// обнуляем после последнего использования
+				// reset after last use
 				char* mem = m_pHyphenVector;
 				while (*mem)
 					*mem++ = 0;

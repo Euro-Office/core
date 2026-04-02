@@ -91,7 +91,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 	{
 		size_t last_section_start = 0;
 
-		//считаем количесво секций и заполняем их свойства .. 
+		//count sections and fill their properties .. 
 		for (size_t i = 0; i < m_ooxDocument->m_arrItems.size(); ++i)
 		{
 			if (m_ooxDocument->m_arrItems[i] == NULL) continue;
@@ -131,7 +131,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		section.end_para = m_ooxDocument->m_arrItems.size();
 
 		section.props->m_oProperty.SetDefaultOOX();
-		if (m_ooxDocument->m_oSectPr.IsInit())// свойства последней секции
+		if (m_ooxDocument->m_oSectPr.IsInit())// last section properties
 		{
 			OOXSectionPropertyReader oSectReader(m_ooxDocument->m_oSectPr.GetPointer());
 			if (oSectReader.Parse(oParam, section.props->m_oProperty))
@@ -141,7 +141,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------
-	m_poDocument->RemoveItem(0); //бланковый при инициализации
+	m_poDocument->RemoveItem(0); //blank during initialization
 
 	for (int sect = 0; sect < m_poDocument->GetCount(); sect++)
 	{
@@ -187,7 +187,7 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oHyphenationZone.IsInit() && m_ooxSettings->m_oHyphenationZone->m_oVal.IsInit())
 	{
-		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //todooo проверить размерность
+		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //todooo check dimension
 	}
 	if (m_ooxSettings->m_oDefaultTabStop.IsInit() && m_ooxSettings->m_oDefaultTabStop->m_oVal.IsInit())
 	{
@@ -223,7 +223,7 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oCompat.IsInit())
 	{
-		// todooo - реализовать в DocxFormat
+		// todooo - implement in DocxFormat
 
 		//if( L"w:doNotUseHTMLParagraphAutoSpacing" == sNodeName )
 		//	oParam.oRtf->m_oProperty.m_bHtmlAutoSpace = 0;

@@ -40,44 +40,44 @@
 #include <string>
 #include <vector>
 
-/// @brief класс -обертка позволяющий добавлять ячейки в таблицу и создавать документ из созданных ячеек
+/// @brief wrapper class that allows adding cells to a table and creating a document from created cells
 class XLSXTableController
 {
 
 public:
-    /// @brief инициализация полей объекта
-    /// @param book объект который будет заполнен данными с помощью метода FormBook
-    /// @param lcid идентификатор локлаи
+    /// @brief object fields initialization
+    /// @param book object that will be filled with data using FormBook method
+    /// @param lcid locale identifier
     XLSXTableController(OOX::Spreadsheet::CXlsx &book, _INT32 lcid);
 
-    /// @brief добавление ячейки
-    /// @param sText вставляемый текст
-    /// @param nRow номер строки
-    /// @param nCol номер столбца
-    /// @param bIsWrap признак свернутости
+    /// @brief add cell
+    /// @param sText text to insert
+    /// @param nRow row number
+    /// @param nCol column number
+    /// @param bIsWrap wrap flag
     void AddCell(const std::wstring &sText, INT nRow, INT nCol);
 
-    /// @brief получение документа xlsx
+    /// @brief get xlsx document
     void FormBook();
 
 private:
-    /// @brief добавление ряда
-    /// @param pRow указатель на строку
-    /// @param pWorkSheet указатель на лист
-    /// @param nRow номер строки
+    /// @brief add row
+    /// @param pRow pointer to row
+    /// @param pWorkSheet pointer to worksheet
+    /// @param nRow row number
     _UINT32 addRow(OOX::Spreadsheet::CRow *pRow, OOX::Spreadsheet::CWorksheet *pWorkSheet,  INT nRow);
 
-    /// @brief добавление страницы
-    /// @param page указатель на лист
-    /// @param pageNumber номер страницы
+    /// @brief add page
+    /// @param page pointer to worksheet
+    /// @param pageNumber page number
     void addPage(OOX::Spreadsheet::CWorksheet *page, INT pageNumber);
 
-    /// @brief документ xlsx
+    /// @brief xlsx document
     OOX::Spreadsheet::CXlsx *book_;
 
-    /// @brief вектор со строками таблицы
+    /// @brief vector with table rows
     std::vector<OOX::Spreadsheet::CRow*> tableRows_;
 
-    /// @brief контроллер форматов
+    /// @brief format controller
     std::shared_ptr<CellFormatController> formates_;
 };

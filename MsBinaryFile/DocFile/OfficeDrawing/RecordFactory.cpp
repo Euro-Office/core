@@ -69,7 +69,7 @@ namespace DocFileFormat
 
 			bool isContainer				=	( version == 0xF );
 
-			if (typeCode == 0x01f6) return NULL;	//орг диаграмм
+			if (typeCode == 0x01f6) return NULL;	//org diagrams
 
 			Record* pRecord					=	NewRecord (typeCode);
 			if (pRecord)

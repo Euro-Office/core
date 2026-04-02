@@ -39,7 +39,7 @@ namespace OOX
 	{
 	public:
 		std::wstring	m_strFilename;
-		//флаг введен, чтобы отличать относительные и абсолютные пути в rels
+		//flag introduced to distinguish relative and absolute paths in rels
 		bool m_bIsRoot;
 
 		CPath();

@@ -34,40 +34,40 @@
 
 /*
 
-Схема работы с visitor:
+Visitor pattern usage:
 
-для классов, которые могут быть посещены visitor-ом:
-1. наследуем от base_visitable
-2. объявляем внутри макрос CPDOCCORE_DEFINE_VISITABLE()
+For classes that can be visited by a visitor:
+1. inherit from base_visitable
+2. declare the CPDOCCORE_DEFINE_VISITABLE() macro inside
 
-class example_visitable_element: public base_visitable 
+class example_visitable_element: public base_visitable
 {
-// ... 
+// ...
 public:
     CPDOCCORE_DEFINE_VISITABLE();
-// ... 
+// ...
 };
 
-Для создания гостя:
-1. наследуем гостя от base_visitor
-2. наследуем гостя(визитор) от const_visitor<visitable_element1>/visitor<visitable_element1>,
-                        const_visitor<visitable_element2>/visitor<visitable_element2>, и т.д.
-   для каждого из элементов, котоыре может посетить визитор
-3. объявляем для каждого из элементов метод
+To create a visitor:
+1. inherit visitor from base_visitor
+2. inherit visitor from const_visitor<visitable_element1>/visitor<visitable_element1>,
+                        const_visitor<visitable_element2>/visitor<visitable_element2>, etc.
+   for each element that the visitor can visit
+3. declare a method for each element
     virtual void visit(const visitable_element1& val);
     virtual void visit(const visitable_element2& val);
-    и т.д.
-    (в случае неконстатности - убираем const)
+    etc.
+    (in case of non-const - remove const)
 
 
-class table_round : public base_visitor, 
+class table_round : public base_visitor,
     public const_visitor<office_body>,
     public const_visitor<office_spreadsheet>,
     public const_visitor<table_table>
 {
     virtual void visit(const office_body& val)
     {
-    // ... 
+    // ...
     }
 
     virtual void visit(const office_spreadsheet& val)
@@ -77,20 +77,20 @@ class table_round : public base_visitor,
 
     virtual void visit(const table_table& val)
     {
-    // ... 
+    // ...
     }
 };
 
-Для организации обхода:
-1. Создаем визитор
-2. Выполняем accept для корневого элемента
+To organize traversal:
+1. Create a visitor
+2. Execute accept for the root element
 
 office_element * root;
 /// ... 
 table_round tableRoundVisitor;
 root->accept(tableRoundVisitor);
 
-Внимание! Визитор САМ определяет правила обхода внутренних вершин, т.е. внутри каждой функции посещения требуется написать например
+Note! The visitor ITSELF determines the rules for traversing internal nodes, i.e. inside each visit function you need to write for example
     
     virtual void visit(const office_body& val)
     {

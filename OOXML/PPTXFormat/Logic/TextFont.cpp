@@ -110,7 +110,7 @@ namespace PPTX
 		}
 		void TextFont::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			if ( oReader.GetAttributesCount() <= 0 )
 				return;
 

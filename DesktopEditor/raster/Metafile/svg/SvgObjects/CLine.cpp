@@ -11,7 +11,7 @@ namespace SVG
 
 	void CLine::SetAttribute(const std::string& sName, CSvgReader& oReader)
 	{
-		//TODO:: не нравится, подумать как можно сделать иначе
+		//TODO:: not ideal, think of how to do this differently
 		if ("x1" == sName)
 		{
 			CMoveElement* pMoveElement{dynamic_cast<CMoveElement*>(operator[](0))};

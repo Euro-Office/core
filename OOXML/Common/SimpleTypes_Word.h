@@ -33,7 +33,7 @@
 
 #include "SimpleTypes_Base.h"
 
-// Здесь представлены все простые типы Word из спецификации Office Open Xml (17.18)
+// Here are all simple Word types from the Office Open XML specification (17.18)
 namespace SimpleTypes
 {	
 	//--------------------------------------------------------------------------------
@@ -52,7 +52,7 @@ namespace SimpleTypes
 	// Border 17.18.2 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// Значения с 1-го по 25-ый сделаны по таблице 17.4.67
+	// Values from 1 to 25 are based on table 17.4.67
 	enum EBorder
 	{
 		// No Border
@@ -390,7 +390,7 @@ namespace SimpleTypes
 
 	private:
 		double m_dValue;
-		bool   m_bTrailingPercentSign; // Есть ли знак процента в конце?
+		bool   m_bTrailingPercentSign; // Is there a percent sign at the end?
 	};
 
 	//--------------------------------------------------------------------------------
@@ -1997,7 +1997,7 @@ namespace SimpleTypes
 
 }; // SimpleTypes
 
-// Дополнительные типы
+// Additional types
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------

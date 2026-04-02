@@ -108,7 +108,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 			oMetaHeader.ToWMFHeader(&oWmfHeader);
 			
 			LONG lLenHeader = 22;
-			BYTE* pMetaHeader = new BYTE[lLenHeader]; // удалится в oMetaFile
+			BYTE* pMetaHeader = new BYTE[lLenHeader]; // will be deleted in oMetaFile
 			memcpy(pMetaHeader, (void*)(&oWmfHeader), lLenHeader);
 
 			oMetaFile.SetHeader(pMetaHeader, lLenHeader);

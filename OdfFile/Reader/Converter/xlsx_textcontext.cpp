@@ -82,7 +82,7 @@ public:
 	void ApplyTextProperties		(std::wstring style, std::wstring para_style, odf_reader::text_format_properties & propertiesOut);
 	void ApplyParagraphProperties	(std::wstring style, odf_reader::paragraph_format_properties & propertiesOut);
 
-	void set_local_styles_container	(odf_reader::styles_container*  local_styles_);//это если стили объектов содержатся в другом документе
+	void set_local_styles_container	(odf_reader::styles_container*  local_styles_);//this is if object styles are contained in another document
 
 	bool is_drawing_context(){return in_draw;}
 
@@ -110,16 +110,16 @@ private:
     void write_rPr(std::wostream & strm);
 	void write_pPr(std::wostream & strm);
   
-	size_t paragraphs_cout_; //???? тока из за начала отсчета?
+	size_t paragraphs_cout_; //???? only because of count start?
    
- 	std::wstringstream	text_;		//приходящий текст
-    std::wstringstream	paragraph_;	//перманенто скидываемые параграфы
-    std::wstringstream	run_;		//перманенто скидываемые куски с быть может разными свойствами
+ 	std::wstringstream	text_;		//incoming text
+    std::wstringstream	paragraph_;	//permanently dumped paragraphs
+    std::wstringstream	run_;		//permanently dumped chunks with possibly different properties
   
 	 std::wstring		store_cell_string_;
     xlsx_shared_strings xlsx_shared_strings_;
 	
-	std::wstring		paragraph_style_name_;//был вектор ... не нужен, так как в один момент времени может быть тока один стиль параграфа,текста,объекта при приходе нового - дампится
+	std::wstring		paragraph_style_name_;//was a vector... not needed, since at one moment there can be only one paragraph/text/object style, when new one arrives - it gets dumped
     std::wstring		span_style_name_;
 
 };
@@ -161,7 +161,7 @@ void xlsx_text_context::Impl::start_paragraph(const std::wstring & styleName)
 		if ( in_comment || only_text/* || in_cell_content*/)
 		{
 			//text_ << L"&#10;";
-			// конец предыдущего абзаца и начало следующего
+			// end of previous paragraph and start of next
 			text_ << L"\n"; // &#xA;
 		}
 		else/* (paragraph_style_name_ != styleName)*/
@@ -186,7 +186,7 @@ void xlsx_text_context::Impl::end_paragraph()
 	in_paragraph = false;
 }
 
-void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//кусок текста в абзаце(параграфе) со своими свойствами - этто может быть и 1 буква
+void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//text chunk in paragraph with its own properties - this can be even 1 letter
 {
  	int text_size = text_.str().length();
 
@@ -208,8 +208,8 @@ void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//кус
 	 in_span			= true;
 }
 
-void xlsx_text_context::Impl::end_span() //odf корявенько написан - возможны повторы стилей в последовательных кусках текста
-//пока с анализом стилей тока комменты - остальные текстовые куски как есть.. с охрененным возможно дубляжом
+void xlsx_text_context::Impl::end_span() //odf is written awkwardly - style repetitions possible in consecutive text chunks
+//for now only comments analyze styles - other text chunks as is.. with possible huge duplication
 {
      if (!in_comment && !only_text)
 	 {
@@ -542,7 +542,7 @@ void xlsx_text_context::Impl::start_drawing_content()
 }
 std::wstring xlsx_text_context::Impl::end_comment_content()
 {
-	dump_run();//если в комменте куча абзацев со одним стилем - сдампится здесь - иначе дампится по мере прихода каждого нового стиля
+	dump_run();//if comment has many paragraphs with same style - dumps here - otherwise dumps as each new style arrives
 
 	std::wstring comment= run_.str();
   
@@ -560,7 +560,7 @@ std::wstring xlsx_text_context::Impl::end_comment_content()
 }
 std::wstring xlsx_text_context::Impl::end_drawing_content()
 {
-	dump_paragraph();//если в draw куча абзацев со одним стилем - сдампится здесь - иначе дампится по мере прихода каждого нового стиля
+	dump_paragraph();//if draw has many paragraphs with same style - dumps here - otherwise dumps as each new style arrives
 
 	std::wstring draw = paragraph_.str();
   

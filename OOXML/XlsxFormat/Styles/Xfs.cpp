@@ -636,7 +636,7 @@ namespace OOX
 		}
 		void CCellXfs::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Read attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )

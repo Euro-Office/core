@@ -221,7 +221,7 @@ namespace OOX
 									NSFile::CFileBinary::SaveToFile(out.GetPath() + FILE_SEPARATOR_STR + image_name_new + L".svg", sInternalSvg);
 								}
 								else
-								{// не смогли сконвертировать в svg - пробуем в png									
+								{// couldn't convert to svg - trying png
 
 									std::wstring strSaveItem = out.GetPath() + FILE_SEPARATOR_STR + image_name_new + L".png";
 									pMetafile->ConvertToRaster(strSaveItem.c_str(), 4 /*CXIMAGE_FORMAT_PNG*/, 0, 0);

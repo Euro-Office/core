@@ -31,7 +31,7 @@
  */
 #include "oMathPara.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:moveFrom>
 //        <w:moveTo>
 
@@ -354,7 +354,7 @@ namespace OOX
 			return m_eType;
 		}
 		std::wstring CMathArgNodes::GetMathNodeName(const EElementType & enumType)  const
-		{//todooo вытащить в одно место - пересекается с MathBottomNodes
+		{//todooo extract to one place - overlaps with MathBottomNodes
 			switch(enumType)
 			{
 				case OOX::et_m_deg:		return L"m:deg";

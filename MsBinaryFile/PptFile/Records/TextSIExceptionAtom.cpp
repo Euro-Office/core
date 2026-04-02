@@ -50,6 +50,6 @@ void CRecordTextSIExceptionAtom::ReadFromStream(SRecordHeader &oHeader, POLE::St
 
     NSStreamReader::Read(pStream, m_oSIRun, false);
 
-    // это на всякий случай...
+    // just in case...
     StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
 }

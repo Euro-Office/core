@@ -40,8 +40,8 @@ namespace cpdoccore {
 namespace formulasconvert {
 
 
-// Работа с форумулами OpenOffice, преобразование.
-// Примеры см. в тесте ut_formulasconvert.cpp
+// Working with OpenOffice formulas, conversion.
+// See examples in ut_formulasconvert.cpp test
 class odf2oox_converter
 {
 public:
@@ -51,7 +51,7 @@ public:
     // of:=SUM([.DDA1:.BA3]) -> SUM(DDA1:BA3)
     std::wstring convert(std::wstring const & expr);
     
-    // $Лист1.$A$1 -> Лист1!$A$1
+    // $Sheet1.$A$1 -> Sheet1!$A$1
 	std::wstring convert_named_ref(std::wstring const & expr, bool withTableName = true, std::wstring separator = L" ", bool bAbsoluteAlways = false);
 	std::wstring get_table_name();
 
@@ -93,7 +93,7 @@ public:
  	
 	std::wstring convert_conditional_formula(std::wstring const & expr);
   
-    // Лист1!$A$1 -> $Лист1.$A$1 
+    // Sheet1!$A$1 -> $Sheet1.$A$1
     std::wstring convert_named_ref(std::wstring const & expr);
 	std::wstring convert_named_formula(std::wstring const & expr);
 	bool is_simple_ref(std::wstring const & expr);

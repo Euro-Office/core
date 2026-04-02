@@ -6,9 +6,9 @@
 #define RAW_POINTER(value) ((CPointerEmbedObject*)value->toObject()->getNative())->Data
 #define POINTER_OBJECT(value) ((CPointerEmbedObject*)value->toObject()->getNative())
 
-// в js не хотим следить, чтобы в каждом face была ссылка на library - т.е. чтобы
-// сначала удалились все face, а потом library - поэтому делаем свой счетчик ссылок
-// и следим за library сами. Т.е. используем FT_Library_Reference/FT_Library_UnReference
+// in js we don't want to track that each face has a reference to library - i.e. that
+// all faces are deleted first and then library - so we make our own reference counter
+// and track library ourselves. I.e. we use FT_Library_Reference/FT_Library_UnReference
 
 
 class CExternalPointerJS : public NSShaper::CExternalPointer

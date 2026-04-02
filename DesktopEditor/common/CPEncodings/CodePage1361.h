@@ -37,7 +37,7 @@ namespace NSStringExt
 	//-- CP950 Encoding -----------------------------------------------------------------------------
 
 #define MSCP1361_UNDEFINED 0x0000
-#define MSCP1361_LEAD_CHAR 0xFFFF // —имвол, который означает, что данный код - старший байт
+#define MSCP1361_LEAD_CHAR 0xFFFF // Symbol indicating that this code is a lead byte
 
 	static const unsigned short  c_anUnicodeMapCP1361[] =
 	{
@@ -17129,7 +17129,7 @@ namespace NSStringExt
 		{ 0xFDFC, 0x7A00 }, // <CJK>
 		{ 0xFDFD, 0x7FB2 }, // <CJK>
 		{ 0xFDFE, 0x8A70 }, // <CJK>
-		{ 0xFFFF, 0xFFFF }  //Обозначаем конец списка
+		{ 0xFFFF, 0xFFFF }  // Mark end of list
 	};
 }
 

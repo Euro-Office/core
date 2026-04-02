@@ -118,8 +118,8 @@ namespace NSFontConverter
 
     struct T42Table
     {
-        char *sTag;		 // 4-байтовое название
-        bool  bRequired; // Требуется ли по спецификации TrueType?
+        char *sTag;		 // 4-byte tag name
+        bool  bRequired; // Required by TrueType specification?
     };
 
     // TrueType tables to be embedded in Type 42 fonts.
@@ -153,16 +153,16 @@ namespace NSFontConverter
     {
     public:
 
-        // Создаем объект TTF из буфера.
+        // Create TTF object from buffer.
         static CFontFileTrueType *LoadFromBuffer(char *sBuffer, int lenA);
 
-        // Создаем объект TTF из файла.
+        // Create TTF object from file.
         static CFontFileTrueType *LoadFromFile(const wchar_t *wsFileName);
 
         virtual ~CFontFileTrueType();
 
-        // TRUE, если данный OpenType фонт содержите данные формата CFF.
-        // FALSE,если это TrueType фонт ( или OpenType фонт с данными в формате TrueType).
+        // TRUE if this OpenType font contains CFF format data.
+        // FALSE if this is a TrueType font (or OpenType font with TrueType format data).
         bool IsOpenTypeCFF()
         {
             return m_bOpenTypeCFF;
@@ -176,25 +176,25 @@ namespace NSFontConverter
 
         int  FindCmap(int nPlatform, int nEncoding);
 
-        // Возвращает GID, соответствующий символу <nChar> в <nIndex>ной CMap.
+        // Returns GID corresponding to character <nChar> in CMap <nIndex>.
         unsigned short MapCodeToGID(int nCMapIndex, int nChar);
 
-        // Возвращает GID, соответствующий <sName> в таблице post. Возвращает 0,
-        // если символа с таким именем не нашли, или таблицы post нет.
+        // Returns GID corresponding to <sName> in post table. Returns 0
+        // if glyph with this name was not found, or post table doesn't exist.
         int MapNameToGID(char *sName);
 
-        // Возвращает карту CIDs в GIDs, и возваращет количество элементов
-        // CIDs в *<pnCIDs>.  Только для CID фонтов( OpenType CFF )
+        // Returns CIDs to GIDs map, and returns the number of CID elements
+        // in *<pnCIDs>. Only for CID fonts (OpenType CFF).
         unsigned short *GetCIDToGIDMap(int *pnCIDs);
 
-        // Лицензионные ограничения на включение фонта( в соответствие со
-        // спецификацией True Type):
+        // Font embedding licensing restrictions (according to
+        // TrueType specification):
 
-        // * 4: таблицы OS/2 не найдена или некорректна
-        // * 3: разрешено устанавливать
-        // * 2: разрешено редактировать
-        // * 1: разрешено просматривать и печатать
-        // * 0: ограничено лицензией
+        // * 4: OS/2 table not found or invalid
+        // * 3: installable embedding allowed
+        // * 2: editable embedding allowed
+        // * 1: preview and print embedding allowed
+        // * 0: restricted by license
         int GetEmbeddingRestrictions();
 
         // Convert to a Type 42 font, suitable for embedding in a PostScript
@@ -239,10 +239,10 @@ namespace NSFontConverter
         // PostScript font name.  (Only useful for OpenType CFF fonts.)
         void ToType0(char *sPSName, FontFileOutputFunc pOutputFunc, void *pOutputStream);
 
-        // Записываем TrueTypeFont File, заполняя недостающие таблицы и корректируя
-        // различные ошибки. Если задан парметр <sName>, в шрифте переписываем таблицу
-        // 'name'. Если задан парамтре <pCodeToGID>, тогда в шрифте переписываем
-        // таблицу 'cmap'.
+        // Write TrueTypeFont file, filling in missing tables and correcting
+        // various errors. If <sName> parameter is specified, rewrite the 'name'
+        // table in the font. If <pCodeToGID> parameter is specified, rewrite
+        // the 'cmap' table in the font.
         void WriteTTF(FontFileOutputFunc pOutputFunc, void *pOutputStream, const char *sName = NULL, unsigned short *pCodeToGID = NULL, unsigned char *pUseGlyfs = NULL, long lGlyfsCount = 0) ;
 
     private:

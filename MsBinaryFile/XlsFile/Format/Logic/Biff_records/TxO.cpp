@@ -130,7 +130,7 @@ void TxO::readFields(CFRecord& record)
 			{
 				XLUnicodeStringNoCch val;
 				
-				unsigned char fHighByte;	//todooo втащить в BufferString
+				unsigned char fHighByte;	//todooo move to BufferString
 				record >> fHighByte;
 				bool is_wide = ((fHighByte & 1) != 0);
 
@@ -269,7 +269,7 @@ int TxO::serialize_vml (std::wostream & _stream)
 
 					if (run->formatRun.ich > str_.length())
 					{
-						//ошибка
+						//error
 						run->formatRun.ich = 0;
 					}
 
@@ -327,7 +327,7 @@ int TxO::serialize (std::wostream & _stream)
 
 					if (run->formatRun.ich > str_.length())
 					{
-						//ошибка
+						//error
 						run->formatRun.ich = 0;
 					}
 

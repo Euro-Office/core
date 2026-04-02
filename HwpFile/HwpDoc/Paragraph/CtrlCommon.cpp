@@ -676,8 +676,8 @@ namespace HWP
 		oBuffer.Skip(-4);
 		return 0;
 
-		//TODO:: проверить данный метод
-		// в исходном коде есть дальнейшие действия
+		//TODO:: Verify this method
+		// The original source code has further actions
 	}
 
 	int CCtrlCommon::ParseCaption(CCtrlCommon& oObj, int nSize, CHWPStream& oBuffer, int nOff, int nVersion)

@@ -78,7 +78,7 @@ namespace ComplexTypes
 		}
 		void CTblGridCol::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Read attributes
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:w", m_oW )
 				WritingElement_ReadAttributes_End( oReader )
@@ -281,7 +281,7 @@ namespace OOX
 		// CTbl 17.4.38 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -538,7 +538,7 @@ namespace OOX
 		// CTr 17.4.79 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -854,7 +854,7 @@ namespace OOX
 		// CTc 17.4.66 (Part 1)
 		//--------------------------------------------------------------------------------
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>

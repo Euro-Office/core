@@ -70,7 +70,7 @@ namespace NSMemoryUtils
             BYTE* pRealloc = (BYTE*)realloc(m_pData, m_lSize * sizeof(BYTE));
             if (NULL != pRealloc)
             {
-                // реаллок сработал
+                // realloc succeeded
                 m_pData = pRealloc;
                 m_pDataCur = m_pData + m_lSizeCur;
             }

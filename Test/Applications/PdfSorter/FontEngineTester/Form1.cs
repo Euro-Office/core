@@ -152,7 +152,7 @@ namespace FontEngineTester
 
                     if (1 == strdst.Length)
                     {
-                        // находим файл с инфой о шрифтах
+                        // find file with font info
                         string sFontsFile = strdst[0] + "\\fonts\\types.txt";
                         StreamReader oReader = new StreamReader(sFontsFile);
                         string sTypes = oReader.ReadToEnd();
@@ -170,7 +170,7 @@ namespace FontEngineTester
                         int nWFNT = sTypes.IndexOf(": Windows FNT,");
 
                         string sSort = "";
-                        // теперь 8 вариантов имени папки
+                        // now 8 folder name variants
                         if (nType2 != -1 || nType1Cid != -1 || nBDF != -1 || nPCF != -1 || nPFR != -1 || nWFNT != -1)
                         {
                             sSort = "other";

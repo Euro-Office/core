@@ -104,7 +104,7 @@ bool DigitReader::ReadDigit(const std::wstring &value, std::wstring &digit, std:
 				{
 					digit = std::to_wstring(dValue);
 
-						// Удаление лишних нулей после запятой
+						// Remove trailing zeros after decimal point
 					size_t dotPos = digit.find('.');
 					if (dotPos != std::wstring::npos)
 					{
@@ -193,7 +193,7 @@ bool DigitReader::ReadScientific(const std::wstring &value, std::wstring &digit,
                 _INT32 MainPartSize = value.find(L"E");
                 if(MainPartSize < 1)
                     MainPartSize = value.find(L"e");
-                ss.precision(MainPartSize); // Установить точность
+                ss.precision(MainPartSize); // Set precision
                 ss.setf(std::ios::scientific);
                 ss << doubleVal;
                 digit = ss.str();

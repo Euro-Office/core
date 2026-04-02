@@ -63,7 +63,7 @@ namespace DocWrapper {
 	}
 	void FontProcessor::setFontTable(OOX::CFontTable* fontTable)
 	{
-		//подбор перенесен в js
+		//font matching moved to js
 		return;
 		for (size_t i = 0; i < fontTable->m_arrFonts.size(); ++i)
 			addToFontMap(*fontTable->m_arrFonts[i]);
@@ -71,7 +71,7 @@ namespace DocWrapper {
 	
     std::wstring FontProcessor::getFont(const std::wstring& name)
 	{
-		//подбор перенесен в js
+		//font matching moved to js
 		return name;
         std::wstring fontName = gc_sDefaultFontName;
 		if (fontMap.find(name) != fontMap.end())
@@ -93,7 +93,7 @@ namespace DocWrapper {
         std::wstring sFontName;
 		if(NULL != pTheme && oScheme.IsInit() && oScheme->m_oFontScheme.IsInit())
 		{
-	//берем шрифт из темы
+	//get font from theme
 			const SimpleTypes::Spreadsheet::EFontScheme eFontScheme = oScheme->m_oFontScheme->GetValue();
 			if(SimpleTypes::Spreadsheet::fontschemeMajor == eFontScheme)
 				sFontName = pTheme->themeElements.fontScheme.majorFont.latin.typeface;
@@ -104,7 +104,7 @@ namespace DocWrapper {
 			sFontName = oRFont->ToString2();
         if(sFontName.empty())
             sFontName = std::wstring(gc_sNoNameFont);
-	//подбор перенесен в js
+	//font matching moved to js
 		return  sFontName;
 		
 		oFontSelectFormat.wsName = new std::wstring(sFontName);
@@ -112,7 +112,7 @@ namespace DocWrapper {
 		if(oCharset.IsInit() && oCharset->m_oCharset.IsInit())
 		{
 			SimpleTypes::Spreadsheet::EFontCharset eCharset = oCharset->m_oCharset->GetValue();
-			//на серверве на берем в расчет fontcharsetANSI и fontcharsetDefault, потому что он зависит от локали, а dll работает на сервере
+			//on server we don't take fontcharsetANSI and fontcharsetDefault into account, because they depend on locale, and dll works on server
 			if(SimpleTypes::fontcharsetANSI !=  eCharset && SimpleTypes::fontcharsetDefault != eCharset)
 			{
 				oFontSelectFormat.unCharset = new BYTE;
@@ -153,7 +153,7 @@ namespace DocWrapper {
 		if(font.m_oCharset.IsInit())
 		{
 			SimpleTypes::EFontCharset eCharset = font.m_oCharset->GetValue();
-			//на серверве на берем в расчет fontcharsetANSI и fontcharsetDefault, потому что он зависит от локали, а dll работает на сервере
+			//on server we don't take fontcharsetANSI and fontcharsetDefault into account, because they depend on locale, and dll works on server
 			if(SimpleTypes::fontcharsetANSI != eCharset && SimpleTypes::fontcharsetDefault != eCharset)
 			{
 				oFontSelectFormat.unCharset = new BYTE;
@@ -173,7 +173,7 @@ namespace DocWrapper {
 			{
 				unsigned char cCurVal = font.m_oPanose->Get_Number(i);
 				oFontSelectFormat.pPanose[i] = cCurVal;
-				// Если хоть одно значение не 0, то используем Panose
+				// If at least one value is not 0, then use Panose
 				if ( 0 != cCurVal  )
 					bIsPanose = true;
 			}

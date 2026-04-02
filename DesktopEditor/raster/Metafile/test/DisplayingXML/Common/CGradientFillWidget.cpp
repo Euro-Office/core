@@ -18,7 +18,7 @@ CGradientFillWidget::CGradientFillWidget(QWidget *pParent)
         m_pNTriWidget                   = new CFormWidget("nTri",   "0");
         m_pUlModeWidget                 = new CFormWidget("ulMode", "0");
 
-        QPushButton *pCreateObjectsButton = new QPushButton("Создать объекты!");
+        QPushButton *pCreateObjectsButton = new QPushButton("Create objects!");
 
         connect(pCreateObjectsButton, &QPushButton::clicked, this, &CGradientFillWidget::on_createObjects_clicked);
 

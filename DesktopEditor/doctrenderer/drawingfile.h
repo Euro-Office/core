@@ -304,14 +304,14 @@ public:
 	{
 		if (m_nType == 0)
 		{
-			// Память из CDrawingFileEmbed освобождается сразу после вызова функции, поэтому копируем
+			// Memory from CDrawingFileEmbed is freed immediately after the function call, so we copy
 			if (bCopy)
 			{
 				BYTE* pCopy = (BYTE*)malloc(size);
 				memcpy(pCopy, data, size);
 				data = pCopy;
 			}
-			// Захватывает полученную память, будет освобождена либо в деструкторе MemStream, либо free в случае неудачи
+			// Captures the received memory, will be freed either in MemStream destructor, or via free on failure
 			return ((CPdfFile*)m_pFile)->MergePages(data, size, nMaxID, sPrefixForm);
 		}
 		return false;
@@ -326,14 +326,14 @@ public:
 	{
 		if (m_nType == 0)
 		{
-			// Память из CDrawingFileEmbed освобождается сразу после вызова функции, поэтому копируем
+			// Memory from CDrawingFileEmbed is freed immediately after the function call, so we copy
 			if (bCopy)
 			{
 				BYTE* pCopy = (BYTE*)malloc(size);
 				memcpy(pCopy, data, size);
 				data = pCopy;
 			}
-			// Захватывает полученную память data
+			// Captures the received memory data
 			return ((CPdfFile*)m_pFile)->RedactPage(nPageIndex, arrRedactBox, nLengthX8, data, size);
 		}
 		return false;

@@ -77,8 +77,8 @@ namespace MetaFile
 			return;
 
 	#ifdef METAFILE_DISABLE_FILESYSTEM
-		// без использования файловой системы пока реализовать не получится при конвертации в растр,
-		// так как на данный момент картинку кисти передать в рендер можно только  с помощью использования файловой системы
+		// without using the file system, it's not yet possible to implement raster conversion,
+		// since currently the brush image can only be passed to the renderer using the file system
 		// (CMetaFileRenderer::UpdateBrush()) m_pRenderer->put_BrushTexturePath(pBrush->GetDibPatterPath());
 	#else
 		std::wstring wsTempFileName = GetTempFilename();

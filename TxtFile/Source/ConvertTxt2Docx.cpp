@@ -106,7 +106,7 @@ namespace Txt2Docx
             if ( pProperty )
             {
                 ((OOX::Logic::CRun*)pR)->m_arrItems.push_back( (OOX::WritingElement*)pProperty );
-                ((OOX::Logic::CRun*)pR)->m_oRunProperty	= pProperty;//копия для удобства
+                ((OOX::Logic::CRun*)pR)->m_oRunProperty	= pProperty;//copy for convenience
             }
 
             ((OOX::Logic::CRun*)pR)->m_arrItems.push_back( pT );
@@ -246,7 +246,7 @@ namespace Txt2Docx
 				pPr->m_oRPr			= *rPr;
 
 				paragraph->m_arrItems.push_back(pPr);
-				paragraph->m_oParagraphProperty = pPr; //копия для удобства
+				paragraph->m_oParagraphProperty = pPr; //copy for convenience
 				
 				while(line.find(_T("\x08")) != line.npos)
 				{

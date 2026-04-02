@@ -160,7 +160,7 @@ namespace DocFileFormat
 			}
 		}
 
-		//MUST be ignored if the section does not have page number restart enabled.([MS-DOC] — v20101113. стр 152)
+		//MUST be ignored if the section does not have page number restart enabled.([MS-DOC] - v20101113. p.152)
 		bool bWasSprmSFPgnRestart = false;
 		std::wstring wsSprmSPgnStart;
 		int nProperty = 0; // for unknown

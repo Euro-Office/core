@@ -231,7 +231,7 @@ int AUTOFILTER::serialize(std::wostream & stream)
 			//}
 			//else
 			{				
-				for (size_t i = 0 ; i < m_arFilters.size(); i++)//todooo сделать на оставшиеся - count_columns (hidden)
+				for (size_t i = 0 ; i < m_arFilters.size(); i++)//todooo do for remaining - count_columns (hidden)
 				{
 					AutoFilter * filter = dynamic_cast<AutoFilter*>(m_arFilters[i].get());
 					CP_XML_NODE(L"filterColumn")

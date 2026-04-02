@@ -54,7 +54,7 @@ namespace BinXlsxRW
 	}
 	int BinaryCommonWriter::WriteItemWithLengthStart()
 	{
-		//Запоминаем позицию чтобы в конце записать туда длину
+		//Save position to write length at the end
 		int nStartPos = m_oStream.GetPosition();
 		m_oStream.Skip(4);	
 		return nStartPos;

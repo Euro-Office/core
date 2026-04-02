@@ -570,15 +570,15 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 			case rt_GUIDTypeLib:		proc.optional<GUIDTypeLib>();			break;
 
 			//case rt_XFCRC:
-			//{//не по спецификации !!! Calculadora.xls
+			//{//not according to specification !!! Calculadora.xls
 			//	if(proc.optional<XFCRC>())
 			//	{
-			//		elements_.pop_back(); // Crc не нужен
+			//		elements_.pop_back(); // Crc not needed
 
 			//		count = proc.repeated<XFExt>(0, 0);//(16, 4050);
 			//		while (count > 0)
 			//		{
-			//			//перенести в FORMATING/XFS ?? - тогда нужен пересчет там !!
+			//			//move to FORMATING/XFS ?? - then recalculation needed there !!
 			//			//if (elements_.empty()) break;
 			//			//XFExt* ext = dynamic_cast<XFExt*>(elements_.back().get());
 			//			//m_arXFext.push_back(elements_.front());
@@ -942,7 +942,7 @@ void GlobalsSubstream::UpdateDefineNames()
 				name = L"_xludf." + name;
 			}
 		}
-		global_info_->arDefineNames.push_back(name);// для имен функций - todooo ... не все функции корректны !! БДИ !!
+		global_info_->arDefineNames.push_back(name);// for function names - todooo ... not all functions are correct!! WATCH OUT!!
 	}
 }
 void GlobalsSubstream::UpdateExternalDefineNames()

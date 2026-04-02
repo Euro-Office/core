@@ -265,7 +265,7 @@ void draw_caption::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	//const std::wstring style = common_shape_draw_attlist_.draw_text_style_name_.get_value_or(L"");
 
-	Context.get_drawing_context().start_shape(1);//rect с наваротами-атрибутами .. а-ля TextBox
+	Context.get_drawing_context().start_shape(1);//rect with fancy attributes .. like TextBox
 	
 	common_xlsx_convert(Context);
 
@@ -279,7 +279,7 @@ void dr3d_scene::xlsx_convert(oox::xlsx_conversion_context & Context)
 {
 	//const std::wstring style = common_shape_draw_attlist_.draw_text_style_name_.get_value_or(L"");
 
-	Context.get_drawing_context().start_shape(1);//rect с наваротами-атрибутами .. а-ля TextBox
+	Context.get_drawing_context().start_shape(1);//rect with fancy attributes .. like TextBox
 	
 	common_xlsx_convert(Context);
 

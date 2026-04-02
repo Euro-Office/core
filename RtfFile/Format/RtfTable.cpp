@@ -98,13 +98,13 @@ std::wstring RtfTable::RenderToRtf(RenderParameter oRenderParameter)
 }
 void RtfTable::CalculateGridProp()
 {
-	//массив всевозможных cellx
-	std::vector<int> aCellx; // упорядочен по возрастанию
+	//array of all possible cellx values
+	std::vector<int> aCellx; // sorted in ascending order
 	int nLastCellx = 0;
 
 	int maxCellxFirstRow = 0;
 
-	//m_aArray - строки
+	//m_aArray - rows
 	for (size_t nCurRow = 0; nCurRow < m_aArray.size(); nCurRow++)
 	{
 		nLastCellx = 0;
@@ -118,8 +118,8 @@ void RtfTable::CalculateGridProp()
 		if (PROP_DEF != oCurRow->m_oProperty.m_nWidthEndInvCell && mu_Twips == oCurRow->m_oProperty.m_eWidthEndInvCellUnit)
 			nWidthAfter = oCurRow->m_oProperty.m_nWidthEndInvCell;
 
-		int nDelta = 0;// поправка на margin и  indent и spacing
-		if (PROP_DEF != oCurRow->m_oProperty.m_nLeft) //для каждого row свой
+		int nDelta = 0;// adjustment for margin, indent and spacing
+		if (PROP_DEF != oCurRow->m_oProperty.m_nLeft) //different for each row
 			nDelta = -oCurRow->m_oProperty.m_nLeft;
 		else
 		{
@@ -133,7 +133,7 @@ void RtfTable::CalculateGridProp()
 				nDelta -= oCurRow->m_oProperty.m_nWidthStartInvCell;
 		}
 
-		//добавляем widthBefore
+		//add widthBefore
 		if (0 != nWidthBefore)
 		{
 			AddToArray(aCellx, nWidthBefore);
@@ -149,20 +149,20 @@ void RtfTable::CalculateGridProp()
 			if (nCellx > maxCellxFirstRow && maxCellxFirstRow > 0)
 				nCellx = maxCellxFirstRow;
 			AddToArray(aCellx, nCellx);
-			//те свойства, что остались в row не трогаем - они не важны для конвертации в oox
+			//don't touch the properties that remain in row - they are not important for oox conversion
 			nLastCellx = nCellx;
 		}
-		//добавляем widthAfter
+		//add widthAfter
 		if (0 != nWidthAfter)
 			AddToArray(aCellx, nLastCellx + nWidthAfter);
 
 		if (maxCellxFirstRow == 0) maxCellxFirstRow = nLastCellx + nWidthAfter;
 	}
-	//вычисляем Span
+	//calculate Span
 	for (size_t i = 0; i < m_aArray.size(); i++)
 	{
 		RtfTableRowPtr oCurRow = m_aArray[i];
-		//индекс последнего минимального элемента
+		//index of the last minimum element
 		int nLastIndex = 0;
 		int nLastCellx = 0;
 
@@ -173,8 +173,8 @@ void RtfTable::CalculateGridProp()
 		if (PROP_DEF != oCurRow->m_oProperty.m_nWidthEndInvCell && mu_Twips == oCurRow->m_oProperty.m_eWidthEndInvCellUnit)
 			nWidthAfter = oCurRow->m_oProperty.m_nWidthEndInvCell;
 
-		int nDelta = 0;// поправка на margin и  indent и spacing и border
-		if (PROP_DEF != oCurRow->m_oProperty.m_nLeft) //для каждого row свой
+		int nDelta = 0;// adjustment for margin, indent, spacing and border
+		if (PROP_DEF != oCurRow->m_oProperty.m_nLeft) //different for each row
 			nDelta = -oCurRow->m_oProperty.m_nLeft;
 		else
 		{
@@ -188,7 +188,7 @@ void RtfTable::CalculateGridProp()
 				nDelta -= oCurRow->m_oProperty.m_nWidthStartInvCell;
 		}
 
-		//добавляем gridBefore
+		//add gridBefore
 		if (0 != nWidthBefore)
 		{
 			for (int k = nLastIndex; k < (int)aCellx.size(); k++)
@@ -225,7 +225,7 @@ void RtfTable::CalculateGridProp()
 			nLastCellx = nCellx;
 
 		}
-		//добавляем gridAfter
+		//add gridAfter
 		if (0 != nWidthAfter)
 			for (int k = nLastIndex; k < (int)aCellx.size(); k++)
 			{
@@ -237,7 +237,7 @@ void RtfTable::CalculateGridProp()
 				}
 			}
 	}
-	//вычисляем gridTable
+	//calculate gridTable
 	for (size_t i = 0; i < (int)aCellx.size(); i++)
 	{
 		if (i == 0)
@@ -246,18 +246,18 @@ void RtfTable::CalculateGridProp()
 			m_aTableGrid.push_back(aCellx[i] - aCellx[i - 1]);
 	}
 }
-void RtfTable::CalculateCellx(RtfDocument& oDocument)//todo учитывать margin indent
+void RtfTable::CalculateCellx(RtfDocument& oDocument)//todo consider margin indent
 {
 	if (m_aTableGrid.size() == 0 && m_aArray.size() > 0)
 	{
-		//если отсутствует <w:tblGrid/> делаем пропорционально
+		//if <w:tblGrid/> is missing, make proportional
 		m_oProperty.m_nAutoFit = 1;
 		if ((PROP_DEF == m_oProperty.m_nWidth || m_oProperty.m_nWidth <= 0))
 		{
-			//если не задана ширина таблицы, считаем ее 100%
+			//if table width is not specified, consider it 100%
 			// Width = PageWidth - MarginLeft - MarginRight - Gutter
 			int nGutter = oDocument.m_oProperty.m_nGutterWidth;
-			if (1 == oDocument.m_oProperty.m_bGutterAtTop)//не учитываем если это Top gutter
+			if (1 == oDocument.m_oProperty.m_bGutterAtTop)//don't consider if it's Top gutter
 				nGutter = 0;
 			m_oProperty.m_nWidth = oDocument.m_oProperty.m_nPaperWidth - oDocument.m_oProperty.m_nMarginLeft - oDocument.m_oProperty.m_nMarginRight - nGutter;
 			m_oProperty.m_eWidthUnit = mu_Twips;
@@ -300,7 +300,7 @@ void RtfTable::CalculateCellx(RtfDocument& oDocument)//todo учитывать m
 				nLeft -= m_oProperty.m_nDefCellMarLeft;
 			if (PROP_DEF != m_oProperty.m_nDefCellSpLeft && 3 == m_oProperty.m_eDefCellSpLeftUnit)
 				nLeft += 2 * m_oProperty.m_nDefCellSpLeft;
-			int nDelta = nLeft;//в left учитывается GrindBefore
+			int nDelta = nLeft;//GrindBefore is accounted for in left
 
 							   //if( PROP_DEF != oCurRow->m_oProperty.m_nGridBefore )
 							   //{
@@ -360,7 +360,7 @@ void RtfTable::CalculateCellx(RtfDocument& oDocument)//todo учитывать m
 		}
 	}
 }
-void RtfTable::AddToArray(std::vector<int>& aArray, int nValue)//todo можно применить то что он упорядоченный
+void RtfTable::AddToArray(std::vector<int>& aArray, int nValue)//todo can use the fact that it's sorted
 {
 	bool bNeedAdd = true;
 	for (size_t k = 0; k < aArray.size(); k++)

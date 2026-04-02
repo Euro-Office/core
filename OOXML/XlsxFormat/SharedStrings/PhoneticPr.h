@@ -47,7 +47,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//not implemented:
 		class CPhonetic : public WritingElement
 		{
 		public:

@@ -43,93 +43,93 @@
 #include <set>
 #include <map>
 
-/// @brief класс -обертка над xmlLiteReader для превращения xml нод в табличные строки
+/// @brief Wrapper class over xmlLiteReader for converting xml nodes to table rows
 class XMLConverter
 {
 public:
 
-    /// @brief конструктор загружающий в обънет reader с прочитанным xml
-    /// @param reader xmlLiteReader с загруженным в него xml документом
-    /// @param xmlStruct указатель на корневую ноду структуры xml документа
-    /// @param nameController контроллер имен, заполненный именами столбцов
-    /// @param repeatebleValues множество с повторяющимися столбцами, предназначенное для формирования строк таблицы
+    /// @brief Constructor that loads the reader with parsed xml
+    /// @param reader xmlLiteReader with the loaded xml document
+    /// @param xmlStruct Pointer to the root node of the xml document structure
+    /// @param nameController Name controller, filled with column names
+    /// @param repeatebleValues Set with repeatable columns, intended for forming table rows
     XMLConverter(XmlUtils::CXmlLiteReader &reader, std::shared_ptr<XmlNode> xmlStruct, ColumnNameController &nameController,
     std::set<std::wstring> &repeatebleValues);
 
-    /// @brief метод, конвертирующий xml в табличный вид
-    /// @param table контроллер  таблицы xlsx
+    /// @brief method that converts xml to table view
+    /// @param table xlsx table controller
     void ConvertXml(XLSXTableController &table);
 
 private:
 
-    /// @brief считывает аттрибуты текущей ноды
+    /// @brief reads attributes of the current node
     void readAttributes();
 
-    /// @brief обрабатывает открытие текущей ноды
+    /// @brief handles opening of the current node
     void openNode();
 
-    /// @brief обрабатывает закрытие текущей ноды
+    /// @brief handles closing of the current node
     void closeNode();
 
-    /// @brief проверка ноды на возможность вставить её данные в таблицу с последующей их  вставкой в случае успеха
-    /// @param type тип обрабатываемой ноды
+    /// @brief checks if node data can be inserted into the table and inserts it if successful
+    /// @param type type of node being processed
     void storeData(const XmlUtils::XmlNodeType &type);
 
-    /// @brief заполняет данными переданный map
-    /// @param row map в который будут помещены данные и соответствующие им номера столбцов
-    /// @return номер вставляемой строки
+    /// @brief fills the passed map with data
+    /// @param row map where data and corresponding column numbers will be placed
+    /// @return inserted row number
     void insertRow(std::map<_UINT32, std::wstring> &row);
 
-    /// @brief вставляет значение во временную внутреннюю структуру
-    /// @param key ключ, по которому будет вставлено значение
-    /// @param value значение которое нужно вставить
+    /// @brief inserts value into temporary internal structure
+    /// @param key key by which the value will be inserted
+    /// @param value value to be inserted
     void insertValue(const std::wstring &key, const std::wstring &value);
 
-    /// @brief Получение уникального имени ноды
-    /// @param name имя ноды, прочитанное из xml
-    /// @return найденное или сгенерированное уникальное имя ноды
+    /// @brief gets unique node name
+    /// @param name node name read from xml
+    /// @return found or generated unique node name
     std::wstring getNodeName(const std::wstring &name);
 
-    /// @brief заполняет строку таблицы атрибутами
-    /// @param table контроллер  таблицы xlsx
-    /// @param attribNode нода из которой возьмутся атрибуты
-    /// @param filledValues set в котором храняться имена заполненных колонок
-    /// @param arowNumbe контроллер  таблицы xlsx
+    /// @brief fills table row with attributes
+    /// @param table xlsx table controller
+    /// @param attribNode node from which attributes will be taken
+    /// @param filledValues set containing names of filled columns
+    /// @param arowNumbe xlsx table controller
     void fillAttribures(XLSXTableController &table, std::shared_ptr<XmlNode> attribNode, std::set<std::wstring> &filledValues,
         const _UINT32 &rowNumber);
 
-    /// @brief заполнение атрибутов дочерних нод родительскими в случае если родительская нода не идет как самостоятельная строка
-    /// @param childs дочерние ноды, атрибуты которой нужно заполнить родительскими
-    /// @param inheritersCount количество нод на которые будут распространены атрибуты родителской
+    /// @brief fills child nodes' attributes with parent's when parent node doesn't go as a separate row
+    /// @param childs child nodes whose attributes need to be filled with parent's
+    /// @param inheritersCount number of nodes that will inherit parent's attributes
     void moveParentAttributes(const std::shared_ptr<XmlNode> parent, const std::set<std::shared_ptr<XmlNode>>childs, const _UINT32 inheritersCount);
 
-    /// @brief указатель на считавший xml данные reader
+    /// @brief pointer to the reader that read xml data
     XmlUtils::CXmlLiteReader *reader_;
 
-    /// @brief вектор с родительскими нодами
+    /// @brief vector with parent nodes
     std::vector<std::shared_ptr<XmlNode>> parents_;
 
-    /// @brief map с набором ключей в виде уникальных имен и их значений для вставки в таблицу
+    /// @brief map with unique name keys and their values for insertion into the table
     std::map<std::wstring, std::vector<std::wstring>> data_;
 
-    /// @brief контроллер имен столбцов таблицы
+    /// @brief table column names controller
     ColumnNameController *colNames_;
 
-    /// @brief множество содержащее список столбцов ноды которых встречаются несколько раз
+    /// @brief set containing list of columns whose nodes appear multiple times
     std::set<std::wstring> *listableColumns_;
 
-    /// @brief дерево нод xml документа
+    /// @brief xml document node tree
     std::shared_ptr<XmlNode> nodeTree_;
 
-    /// @brief указатель на текущую ноду в структуре
+    /// @brief pointer to current node in structure
     std::shared_ptr<XmlNode> nodePointer_;
 
-    /// @brief тип предыдущей ноды(для поиска нод вида <node></node>)
+    /// @brief type of previous node (for finding nodes like <node></node>)
     XmlUtils::XmlNodeType prevType_ = XmlUtils::XmlNodeType::XmlNodeType_None;
 
-    /// @brief вектор с нодами записываемых строк
+    /// @brief vector with nodes of rows being written
     std::vector<std::shared_ptr<XmlNode>> writingRows_;
-    /// @brief вектор с указателями на повторяющиеся ноды, которые были открыты в данный момент
+    /// @brief vector with pointers to repeating nodes that are currently open
     std::map<std::shared_ptr<XmlNode>, _UINT32> openednodes_;
 
 };

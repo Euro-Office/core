@@ -126,7 +126,7 @@ namespace OOX
 				sResult += L"</w:background>";
 			}
 			else if (m_oBackground.IsInit())
-			{//наличие атрибута Color обязательно
+			{//Color attribute is mandatory
 				sResult += m_oBackground->toXML();
 				sResult += L"</w:background>";
 			}
@@ -407,7 +407,7 @@ namespace OOX
 							document->m_arrSections.push_back(section);
 						}
 						document->m_arrSections.back().sect = m_oSectPr.GetPointer();
-						document->m_arrSections.back().end_elm = document->m_arrItems.size(); //активный рутовый еще не добавлен
+						document->m_arrSections.back().end_elm = document->m_arrItems.size(); //active root not yet added
 					}
 				}
 			}

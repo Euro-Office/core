@@ -37,38 +37,38 @@
 #include <string>
 #include <map>
 
-/// @brief класс контролирующий уникальность имен столбцов при открытии  xml документов
+/// @brief class that controls uniqueness of column names when opening xml documents
 class ColumnNameController
 {
 
 public:
-    /// @brief Создание уникального имени столбца и установка его номера
-    /// @param column строка с именем столбца
-    /// @return номер, который будет у столбца с этим именем
+    /// @brief Create unique column name and set its number
+    /// @param column string with column name
+    /// @return number that this column will have
     _UINT32 CreateColumnName(std::wstring &column);
 
-    /// @brief Поиск номера столбца с указанным именем
-    /// @param columnName строка с именем столбца
-    /// @return номер столбца, если такой есть и -1, если такого столбца нет
+    /// @brief Search for column number with specified name
+    /// @param columnName string with column name
+    /// @return column number if exists, -1 if no such column
     _INT64 GetColumnNumber(const std::wstring &columnName);
 
-    /// @brief попытка поиска и получения изначального имени xml узла по уникальному
-    /// @param columnName уникальное имя узла, созданное контроллером
-    /// @return неуникальное имя xml ноды из которого было создано уникальное
+    /// @brief Try to find and get original xml node name by unique one
+    /// @param columnName unique node name created by controller
+    /// @return non-unique xml node name from which unique was created
     std::wstring GetXmlName(const std::wstring &columnName);
 
-    /// @brief Получение всех содержащихся имен и номеров их столбцов
-    /// @return map с уникальными именами как ключами и номерами столбцов как значениями
+    /// @brief Get all contained names and their column numbers
+    /// @return map with unique names as keys and column numbers as values
     std::map<std::wstring, _UINT32> GetColumnNames();
 
 private:
 
-/// @brief хранит уникальные имена столбцов как ключи и пару неуникальное имя и номер столбца как значение
+/// @brief stores unique column names as keys and pair of non-unique name and column number as value
 std::map<std::wstring, std::pair<std::wstring, _UINT32>> colNames_;
 
-/// @brief цифра добавляющаяся к повторяющимся именам столбцов для их уникальности
+/// @brief number added to repeating column names to make them unique
 _UINT32 colNamePostfix_ = 2;
 
-/// @brief максимальный номер столбца, который присваивается при получении нового имени
+/// @brief maximum column number assigned when getting new name
 _UINT32 colNumber_ = 0;
 };

@@ -56,9 +56,9 @@ CEquationReader::~CEquationReader()
 
 void CEquationReader::InitSizes()
 {
-	//todo обработать open(true/false)
+	// todo handle open(true/false)
 	m_oStorage.open(false, false);
-	// Выставляем размеры текста по умолчанию (если они изменены, тогда ничего не поделаешь, т.к. это не сохраняется в самом файле)
+	// Set default text sizes (if they are changed, there's nothing we can do, as this is not saved in the file itself)
 	aSizeTable[0] = 12;
 	aSizeTable[1] = 7;
 	aSizeTable[2] = 5;
@@ -72,8 +72,8 @@ void CEquationReader::SetOutputDev(IOutputDev *pOutput)
 }
 void CEquationReader::InitFonts()
 {
-	// Стандартные шрифты для MathEquation со стандартными настройками стилей. 
-	// (если они изменены, тогда ничего не поделаешь, т.к. это не сохраняется в самом файле)
+	// Standard fonts for MathEquation with default style settings.
+	// (if they are changed, there's nothing we can do, as this is not saved in the file itself)
 
 	if (pOutputDev)
 	{
@@ -81,14 +81,14 @@ void CEquationReader::InitFonts()
 		{
 			switch(i)
 			{
-			case 1: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // текст
-			case 2: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // функция
-			case 3: pOutputDev->AddFont(i + 128, "Times New Roman", false, true);  break; // переменная
-			case 4: pOutputDev->AddFont(i + 128, "Symbol",          false, true);  break; // ст. греческие
-			case 5: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // пр. греческие
-			case 6: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // символ
-			case 7: pOutputDev->AddFont(i + 128, "Times New Roman", true, false);  break; // матрица-вектор
-			case 8: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // числа
+			case 1: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // text
+			case 2: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // function
+			case 3: pOutputDev->AddFont(i + 128, "Times New Roman", false, true);  break; // variable
+			case 4: pOutputDev->AddFont(i + 128, "Symbol",          false, true);  break; // lowercase Greek
+			case 5: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // uppercase Greek
+			case 6: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // symbol
+			case 7: pOutputDev->AddFont(i + 128, "Times New Roman", true, false);  break; // matrix-vector
+			case 8: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // numbers
 			}
 		}
 	}
@@ -96,8 +96,8 @@ void CEquationReader::InitFonts()
 
 int CEquationReader::Parse()
 {
-    //если смотреть реализацию, то pStm можно удалить после конструтора CLEStream,
-    //но если не смотреть реализацию,то правильно удалить pStm после pS
+    // looking at implementation, pStm can be deleted after CLEStream constructor,
+    // but without looking at implementation, it's correct to delete pStm after pS
     pStm = new POLE::Stream( &m_oStorage, L"Equation Native");
     pS = new CLEStream<Stream>(pStm);
 	if (!pS->IsValid())
@@ -715,7 +715,7 @@ void CEquationReader::HandleSetSize(MTOKENS eType)
 			}
 		case 100:
 			{
-				// TODO: Проверить эту ветку
+				// TODO: Check this branch
 				*pS >> nTemp;
 				nSize = nTemp;
 
@@ -725,7 +725,7 @@ void CEquationReader::HandleSetSize(MTOKENS eType)
 			}
 		default:
 			{
-				// TODO: Проверить эту ветку
+				// TODO: Check this branch
 				nSize = nTemp;
 				*pS >> nTemp;
                 _UINT16 nTempSize = nTemp - 128;

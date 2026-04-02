@@ -172,9 +172,9 @@ void xlsx_conversion_context::set_sheet_id(int id)
 void xlsx_conversion_context::start_chart()
 {
 	charts_.push_back(oox_chart_context::create());
-	//добавляем новую форму для диаграммы
-	 //в ней будет информационная часть - и она пишется каждый раз в свою xml (их - по числу диаграмм)
-	//этот контекст нужно передавать в файл
+	//add new form for chart
+	 //it will contain informational part - and it's written each time to its own xml (one per chart)
+	//this context needs to be passed to file
 
 }
 
@@ -250,7 +250,7 @@ void xlsx_conversion_context::end_document()
 {
 	std::wstringstream workbook_content;
 
-	//for (size_t i = 0; i < sheets_.size(); i++) нужно по id
+	//for (size_t i = 0; i < sheets_.size(); i++) need by id
 	for (std::map<int, int>::iterator it = sheets_map_.begin(); it != sheets_map_.end(); ++it)
 	{
 		int i = it->second;

@@ -231,7 +231,7 @@ void odf_text_context::add_text_space(int count)
 	text_s* s = dynamic_cast<text_s*>(s_elm.get());
 	if (s) s->text_c_ = count;
 
-	//необязательно хранить..
+	// not necessary to store..
 	//int level = current_level_.size();
 	//odf_element_state state={	s_elm, L"", office_element_ptr(), level};
 	//text_elements_list_.push_back(state);
@@ -422,7 +422,7 @@ void odf_text_context::start_span(bool styled)
 			{
 				style_->style_parent_style_name_ = parent_span_style_;
 			}
-			text_properties_ = style_->content_.add_get_style_text_properties();//для  буквиц на поле
+			text_properties_ = style_->content_.add_get_style_text_properties();// for drop caps in margin
 		}
 	}
 
