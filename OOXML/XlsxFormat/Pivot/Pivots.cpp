@@ -565,9 +565,17 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		if(m_oColFields.IsInit())
 			ptr->m_arPIVOTIVD.push_back(m_oColFields->toXLS());
 		if(m_oRowItems.IsInit())
+		{
+			m_oRowItems->m_oCount.Init();
+			m_oRowItems->m_oCount->SetValue(m_oRowFields->m_arrItems.size());
 			ptr->m_arPIVOTLI.push_back(m_oRowItems->toXLS());
+		}
 		if(m_oColItems.IsInit())
+		{
+			m_oColItems->m_oCount.Init();
+			m_oColItems->m_oCount->SetValue(m_oColFields->m_arrItems.size());
 			ptr->m_arPIVOTLI.push_back(m_oColItems->toXLS());
+		}
 		if(m_oPivotTableStyleInfo.IsInit())
 		{
 			auto frtPtr = new XLS::PIVOTFRT;
@@ -1408,17 +1416,23 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			}
 			if(lineItem.itmType>= 1 && lineItem.itmType <= 0xd)
 				lineItem.fSbt = true;
-			if(lineItem.fGrand)
-				lineItem.isxviMac = 1;
-			else
-				lineItem.isxviMac = i->m_arrItems.size();
 			if(i->m_oI.IsInit())
 				lineItem.iData = i->m_oI->GetValue();
-			for(auto j : i->m_arrItems)
-				if(j->m_oV.IsInit())
-					lineItem.rgisxvi.push_back(j->m_oV->GetValue());
-				else
-					lineItem.rgisxvi.push_back(0);
+
+			if(i->m_oR.IsInit() && !ptr->m_arItems.empty() && !ptr->m_arItems.back().rgisxvi.empty())
+			{
+				auto& prev = ptr->m_arItems.back();
+				auto count = i->m_oR->GetValue();
+				for(size_t r = 0; r < count; ++r)
+					lineItem.rgisxvi.push_back(prev.rgisxvi.at(r));
+			}
+			for(auto& j : i->m_arrItems)
+			{
+				lineItem.rgisxvi.push_back(j->m_oV.IsInit() ? j->m_oV->GetValue() : 0);
+			}
+			lineItem.isxviMac = lineItem.fGrand ? 1 : lineItem.rgisxvi.size();
+			while(m_oCount.IsInit() && lineItem.rgisxvi.size() < m_oCount->GetValue())
+				lineItem.rgisxvi.push_back(0x7FFF);
 			ptr->m_arItems.push_back(lineItem);
 		}
 		return XLS::BaseObjectPtr(ptr1);
