@@ -2498,7 +2498,6 @@ namespace PdfReader
 			pNewTm[5] = dY;
 		}
 
-
 		arrMatrix[0] =   pNewTm[0] * pCTM[0] + pNewTm[1] * pCTM[2];
 		arrMatrix[1] = -(pNewTm[0] * pCTM[1] + pNewTm[1] * pCTM[3]);
 		arrMatrix[2] =   pNewTm[2] * pCTM[0] + pNewTm[3] * pCTM[2];
@@ -2587,6 +2586,13 @@ namespace PdfReader
 			m_pRenderer->get_FontPath(&sFontPath);
 			if (!unGid && !wsUnicodeText.empty() && !sFontPath.empty())
 			{
+				if (nCode == 9)
+				{
+					m_pRenderer->put_FontSize(dOldSize);
+					m_pRenderer->put_PenSize(dOldWidth);
+					return;
+				}
+
 				unsigned int lUnicode = (unsigned int)wsUnicodeText[0];
 				long lStyle;
 				double dDpiX, dDpiY;
@@ -2627,6 +2633,8 @@ namespace PdfReader
 							if (wsFileName.empty())
 							{
 								m_pFontList->Remove(*pGState->getFont()->getID());
+								m_pRenderer->put_FontSize(dOldSize);
+								m_pRenderer->put_PenSize(dOldWidth);
 								return;
 							}
 							m_pRenderer->put_FontPath(wsFileName);
