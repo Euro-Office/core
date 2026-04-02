@@ -23,7 +23,7 @@ namespace NSCSS
 			case NSCSS::Inch:
 				return dValue / (double)ushDPI;
 			case NSCSS::Peak:
-				return dValue * 6. / (double)ushDPI; // 1 inch = 6 picas
+				return dValue * 6. / (double)ushDPI; // 1 inch = 6 peak
 			case NSCSS::Twips:
 				return dValue * 1440. / (double)ushDPI;
 			default:
@@ -122,7 +122,7 @@ namespace NSCSS
 			case NSCSS::Point:
 				return dValue * 12.; // 12 = 72 / 6
 			case NSCSS::Pixel:
-				return dValue * (double)ushDPI / 6.; // 1 inch = 6 picas
+				return dValue * (double)ushDPI / 6.; // 1 inch = 6 peak
 			case NSCSS::Cantimeter:
 				return dValue * 0.423; // 0.423 = 2.54 / 6
 			case NSCSS::Millimeter:

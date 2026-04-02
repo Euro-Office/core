@@ -392,8 +392,8 @@ namespace NSCSS
 
 		std::wstring wsNewValue = wsValue;
 
-		const bool bImportant{CutImportant(wsNewValue)}; //TODO:: sometimes we know that "!important" definitely won't occur
-		                                                 // perhaps should add another method
+		const bool bImportant{CutImportant(wsNewValue)};
+
 		if (m_bImportant && !bImportant)
 			return false;
 

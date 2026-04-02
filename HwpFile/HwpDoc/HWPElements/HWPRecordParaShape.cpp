@@ -160,8 +160,8 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
       m_bConnect(false), m_bIgnoreMargin(false), m_bParaTailShape(false), m_nIndent(0), m_nMarginLeft(0),
       m_nMarginRight(0), m_nMarginPrev(0), m_nMarginNext(0)
 {
-	//In HWPX data in this node is written as node-type data
-	//In HWPML data in this node is written as argument-type data
+	//In HWPX, node data is written not only in arguments but also in nested nodes.
+	//In HWPML, node data is written in arguments.
 	
 	if (EHanType::HWPX == eType)
 	{

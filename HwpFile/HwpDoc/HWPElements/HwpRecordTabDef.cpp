@@ -93,7 +93,7 @@ CHwpRecordTabDef::CHwpRecordTabDef(CHWPDocInfo& oDocInfo, CXMLReader& oReader, E
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// The following structure is only found in HWPX format
+	// The following structure is occurs only in HWPX format
 	if (EHanType::HWPX != eType)
 		return;
 	

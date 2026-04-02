@@ -294,7 +294,7 @@ bool CHWPFile::Unzip(CHWPStream& oInput, CHWPStream& oBuffer)
 	return DEFLATE_OK == nRes || DEFLATE_STREAM_END == nRes;
 }
 
-// Since consistent behavior is required across all OSes,
+// Since identical behavior is required across all OSes,
 // we use our own randomizer
 
 class CRandomizer

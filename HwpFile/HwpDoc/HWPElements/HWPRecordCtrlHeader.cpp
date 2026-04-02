@@ -52,14 +52,14 @@ CCtrl* CHWPRecordCtrlHeader::Parse(int nTagNum, int nLevel, int nSize, CHWPStrea
 		pCtrl = new CCtrlEqEdit(sCtrlID, nSize - oBuffer.GetDistanceToLastPos(), oBuffer, 0, nVersion);
 	else if (L"dhgp" == sCtrlID)
 	{
+		// TODO:: Return to this later
 		int nTempSize = nSize - oBuffer.GetDistanceToLastPos();
 		oBuffer.Skip(nTempSize);
 	}
 	else if (L"cot%" == sCtrlID)
 	{
+		// TODO:: Return to this later
 		// When content is read as UTF_16LE, the following content remains the same
-		// ¥TableOfContents:set:140:ContentsMake:uint:17 ContentsStyles:wstring:0: ContentsLevel:int:5 ContentsAutoTabRight:int:0 ContentsLeader:int:3 ContentsHyperlink:bool:1
-
 		int nTempSize = nSize - oBuffer.GetDistanceToLastPos();
 		oBuffer.Skip(nTempSize);
 	}

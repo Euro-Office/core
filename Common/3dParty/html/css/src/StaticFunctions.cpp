@@ -23,7 +23,7 @@ namespace NS_STATIC_FUNCTIONS
 		std::string sEncoding;
 		if (true)
 		{
-			// determine encoding
+			//determining the encoding
 			const std::string::size_type& posCharset = sContent.find("@charset");
 
 			if (std::string::npos != posCharset)

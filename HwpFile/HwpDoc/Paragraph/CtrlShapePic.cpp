@@ -85,7 +85,7 @@ CShadow::CShadow(CXMLReader& oReader, EHanType eType)
 		else if (GetAttributeName(EAttribute::RotationStyle, eType) == sAttributeName)
 			m_nRotation = (int)oReader.GetBool();
 
-		// The following attributes are only found in HWPML
+		// The following attributes are occurs only in HWPML
 		else if (EHanType::HWPML != eType)
 			continue;
 		else if ("SkewX" == sAttributeName)
@@ -99,7 +99,7 @@ CShadow::CShadow(CXMLReader& oReader, EHanType eType)
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// The following nodes are only found in HWPX
+	// The following nodes are occurs only in HWPX
 	if (EHanType::HWPX != eType)
 		return;
 
@@ -231,7 +231,7 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 		else if (GetAttributeName(EAttribute::FadeDirection, eType) == sAttributeName)
 			m_fOffsetDirection = oReader.GetDouble();
 
-		// The following attributes are only found in HWPML
+		// The following attributes are occurs only in HWPML
 		else if (EHanType::HWPML != eType)
 			continue;
 		else if ("SkewX" == sAttributeName)
@@ -253,7 +253,7 @@ CReflect::CReflect(CXMLReader& oReader, EHanType eType)
 	}
 	END_READ_ATTRIBUTES(oReader)
 
-	// The following nodes are only found in HWPX
+	// The following nodes are occurs only in HWPX
 	if (EHanType::HWPX != eType)
 		return;
 
