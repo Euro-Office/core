@@ -39,7 +39,7 @@ struct CTc
 	}
 };
 
-// Description of work information. Tag: title-info, src-title-info
+// Description of book information. Tag: title-info, src-title-info
 struct STitleInfo
 {
 	std::wstring m_sGenres;    // Genres
@@ -350,7 +350,7 @@ public:
 		int nDeath = m_oLightReader.GetDepth();
 		while (m_oLightReader.ReadNextSiblingNode(nDeath))
 		{
-			// Write heading
+			// Write title
 			if (m_oLightReader.GetName() == L"p")
 			{
 				// Write title + sLevel

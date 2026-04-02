@@ -646,7 +646,7 @@ CAnnotWidgetBtn::CAnnotWidgetBtn(PDFDoc* pdfDoc, AcroFormField* pField, int nSta
 			oObj.free();
 		}
 
-		// 13 - Caption position - TP
+		// 13 - Title position - TP
 		if (oMK.dictLookup("TP", &oObj)->isInt())
 		{
 			m_nTP = oObj.getInt();

@@ -311,7 +311,7 @@ public:
 				memcpy(pCopy, data, size);
 				data = pCopy;
 			}
-			// Captures the received memory, will be freed either in MemStream destructor, or via free on failure
+			// Captures the received memory, will be freed either in MemStream destructor or on failure
 			return ((CPdfFile*)m_pFile)->MergePages(data, size, nMaxID, sPrefixForm);
 		}
 		return false;

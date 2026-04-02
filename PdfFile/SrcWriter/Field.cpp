@@ -3279,7 +3279,7 @@ namespace PdfWriter
 			}
 		}
 
-		// Set (checked)
+		// Set
 		if (!bSet)
 			return;
 		double dShift = dBorder / 2.0;
@@ -3390,7 +3390,7 @@ namespace PdfWriter
 			m_pStream->WriteStr("s\012Q\012");
 		}
 
-		// Set (checked)
+		// Set
 		if (!bSet)
 			return;
 		double dDiff = std::abs(dW - dH) / 2.0;

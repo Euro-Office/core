@@ -94,7 +94,7 @@ namespace PdfWriter
 		std::time_t oTime = time(0);
         hash.Update( (BYTE*)&oTime, sizeof(oTime));
 
-		// Create file identifier from Info library elements.
+		// Create file identifier from Info elements.
 		if (pInfo)
 		{
 			const char *sTemp = NULL;

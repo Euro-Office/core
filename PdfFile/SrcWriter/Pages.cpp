@@ -1696,7 +1696,7 @@ namespace PdfWriter
 	void CPage::BeginMarkedContentDict(const std::string& sName, CDictObject* pBDC)
 	{
 		// Operator   : BDC
-		// Description: Begin marked content with property list
+		// Description: Begin marked content with dict
 
 		m_pStream->WriteEscapeName(sName.c_str());
 		m_pStream->WriteChar(' ');
@@ -1713,7 +1713,7 @@ namespace PdfWriter
 	void CPage::SetRenderingIntent(ERenderingIntent eRenderingIntent)
 	{
 		// Operator   : ri
-		// Description: Rendering intent / color reproduction methods
+		// Description: Rendering intent / color rendering methods
 
 		m_pStream->WriteEscapeName(c_sRenderingIntent[(int)eRenderingIntent]);
 		m_pStream->WriteStr(" ri\012");

@@ -1935,7 +1935,7 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 			}
 			else if (strcmp("Parent", chKey) == 0)
 			{
-				// Parent page fields are transferred to the pages themselves
+				// Fields from Parent pages are transferred to the pages themselves
 				oTemp.free();
 				continue;
 			}
@@ -3013,7 +3013,7 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 			}
 			else if (strcmp("Parent", chKey) == 0)
 			{
-				// Parent page fields are transferred to the pages themselves
+				// Fields from Parent pages are transferred to the pages themselves
 				oTemp.free();
 				continue;
 			}
@@ -3355,7 +3355,7 @@ bool CPdfEditor::AddPage(int nPageIndex)
 	// Apply page addition for writer
 	if (!m_pWriter->AddPage(nPageIndex))
 		return false;
-	// By default, first page dimensions are set, they can be changed later
+	// By default, first page dimensions are set for new page, they can be changed later
 	double dPageDpiX, dPageDpiY;
 	double dWidth, dHeight;
 	m_pReader->GetPageInfo(0, &dWidth, &dHeight, &dPageDpiX, &dPageDpiY);
@@ -4303,8 +4303,8 @@ std::vector<double> CPdfEditor::WriteRedact(const std::vector<std::wstring>& arr
 		m_pWriter->put_BrushAlpha1(lAlpha1);
 		m_pWriter->put_BrushAlpha2(lAlpha2);
 
-		// TODO edit render should intersect with all subsequent edits
-		// TODO actually there should be render of edit commands
+		// TODO Redact render should intersect with all subsequent Redacts
+		// TODO actually there should be render of Redact commands
 		/*
 		PdfWriter::CPage* pCurPage = m_pWriter->GetPage();
 		pDoc->FixEditPage(pCurPage);

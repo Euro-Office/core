@@ -7,7 +7,7 @@ int main()
     // sax reader
     XmlUtils::CXmlLiteReader oLightReader;
     /*
-    Conclusions:
+    Output:
     Returns success of file opening
     Reads file into m_pStream stream
     Stream length in m_lStreamLen

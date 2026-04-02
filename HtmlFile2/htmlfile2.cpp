@@ -4970,7 +4970,7 @@ private:
 			return false;
 
 		unsigned int alfa = 0xffffff;
-		//default tone should be transparent, not white
+		//default background should be transparent, not white
 		//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 		for (int i = 0; i < nWidth * nHeight; i++)
 		{

@@ -522,7 +522,7 @@ static void prettyprint_contents(GumboNode* node, NSStringUtils::CStringBuilderA
 			remove_control_symbols(val);
 			substitute_xml_entities_into_text(val);
 
-			// Remove FF (form feed)
+			// Remove FF
 			size_t found = val.find_first_of("\014");
 			while(found != std::string::npos)
 			{

@@ -3464,7 +3464,7 @@ bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, cons
 		return false;
 
 	// TODO should check center position, not start point
-	// TODO Many characters arrive here at once, and we need to draw only those outside redact areas
+	// TODO Many characters arrive here at once, and we need to draw only those outside Redact areas
 	if (SkipRedact(dX, dY))
 		return true;
 
@@ -3493,7 +3493,7 @@ bool CPdfWriter::DrawTextToRenderer(const unsigned int* unGid, const unsigned in
 	if (m_bSplit)
 		return false;
 	// TODO should check center position, not start point
-	// TODO Many characters arrive here at once, and we need to draw only those outside redact areas
+	// TODO Many characters arrive here at once, and we need to draw only those outside Redact areas
 	if (SkipRedact(dX, dY))
 		return true;
 	// TODO pdf allows creating custom font, but this should not be used to recreate a font that is prohibited for editing or embedding
@@ -3512,7 +3512,7 @@ bool CPdfWriter::DrawTextToRenderer(const unsigned int* unGid, const unsigned in
 bool CPdfWriter::PathCommandDrawText(unsigned int* pUnicodes, unsigned int unLen, const double& dX, const double& dY, const unsigned int* pGids)
 {
 	// TODO should check center position, not start point
-	// TODO Many characters arrive here at once, and we need to draw only those outside redact areas
+	// TODO Many characters arrive here at once, and we need to draw only those outside Redact areas
 	if (SkipRedact(dX, dY))
 		return true;
 
