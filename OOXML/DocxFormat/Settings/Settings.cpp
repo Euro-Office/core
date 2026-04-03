@@ -170,7 +170,7 @@ namespace Settings
 	}
 	void CAutoCaption::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
-		// Read attributes
+		
 		if ( oReader.GetAttributesCount() <= 0 )
 			return;
 				
@@ -304,7 +304,7 @@ namespace Settings
 	}
 	void CCaption::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
-		// Read attributes
+		
 		if ( oReader.GetAttributesCount() <= 0 )
 			return;
 				

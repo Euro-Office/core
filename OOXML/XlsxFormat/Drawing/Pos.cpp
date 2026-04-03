@@ -70,7 +70,7 @@ namespace OOX
 		}
 		void CPos::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("x"),      m_oX )

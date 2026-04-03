@@ -374,7 +374,7 @@ namespace OOX
 				// Set default values
 				std::wstring sColors;
 
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"colors", sColors )
@@ -488,7 +488,7 @@ namespace OOX
 		}
 		void CRelation::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"idcntr", m_sIdCntr )
@@ -1458,7 +1458,7 @@ namespace OOX
 		}
 		void CR::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"how",   m_oHow )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"id",    m_sId )
@@ -1530,7 +1530,7 @@ namespace OOX
 		}
 		void CRegroupTable::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 				WritingElement_ReadAttributes_End( oReader )
@@ -1599,7 +1599,7 @@ namespace OOX
 		}
 		void CRules::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1665,7 +1665,7 @@ namespace OOX
 		}
 		void CShapeLayout::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1871,7 +1871,7 @@ namespace OOX
 		}
 		void CSignatureLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"o:addlxml",              m_sAddXml )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"allowcomments",          m_oAllowComments )
@@ -1934,7 +1934,7 @@ namespace OOX
 		}
 		void CSkew::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"id",     m_sId )

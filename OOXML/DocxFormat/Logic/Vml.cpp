@@ -615,7 +615,7 @@ namespace OOX
 		}
 		void CArc::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -685,7 +685,7 @@ namespace OOX
 		}
 		void CCurve::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -899,7 +899,7 @@ namespace OOX
 				// Set default values
 				m_oPoints.SetDelimiter( ' ' );
 
-				// Read attributes
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -1014,7 +1014,7 @@ namespace OOX
 				// Set default values
 				m_oArcSize.SetPercentage( 20 );
 
-				// Read attributes
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -1855,7 +1855,7 @@ namespace OOX
 			m_oInset.Init();
 			m_oInset->Set(7.2, 3.6, 7.2, 3.6 );
 			
-			// Read attributes
+			
 			if ( oReader.GetAttributesCount() <= 0 )
 				return;
 			
@@ -2978,7 +2978,7 @@ namespace OOX
 				m_oFrom.SetValue( 0, 0 );
 				m_oTo.SetValue( 10, 10 );
 
-				// Read attributes
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 

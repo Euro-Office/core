@@ -280,7 +280,7 @@ namespace OOX
 
 		void CBdo::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, _T("w:val"), m_oVal )
 			WritingElement_ReadAttributes_End( oReader )

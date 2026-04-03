@@ -2664,7 +2664,7 @@ namespace OOX
 		}
 		void CMIns::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start( oReader )
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("w:author"), m_sAuthor )
 					WritingElement_ReadAttributes_Read_else_if( oReader, _T("w:date"),   m_oDate  )

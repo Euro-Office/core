@@ -78,7 +78,7 @@ namespace ComplexTypes
 		}
 		void CTblGridCol::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Read attributes
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:w", m_oW )
 				WritingElement_ReadAttributes_End( oReader )

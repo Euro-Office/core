@@ -2506,7 +2506,7 @@ namespace OOX
 		}
 		void COutlinePr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Read attributes
+			
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_Read_if(oReader, (L"applyStyles"), m_oApplyStyles)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"showOutlineSymbols"), m_oShowOutlineSymbols)
