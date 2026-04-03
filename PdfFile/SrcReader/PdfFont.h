@@ -54,6 +54,33 @@ struct CAnnotFontInfo
 	bool bBold   = false;
 	bool bItalic = false;
 };
+struct CType3FontMetrics
+{
+	double dLLx, dLLy, dURx, dURy;
+	double arrFontMatrix[6];
+	std::map<int, double> mapWidths;
+	int nUnitsPerEm;
+	int nAscent;
+	int nDescent;
+
+	CType3FontMetrics() : dLLx(0), dLLy(0), dURx(0), dURy(1000), nUnitsPerEm(1000), nAscent(800), nDescent(200)
+	{
+		arrFontMatrix[0] = 0.001; arrFontMatrix[1] = 0;
+		arrFontMatrix[2] = 0;     arrFontMatrix[3] = 0.001;
+		arrFontMatrix[4] = 0;     arrFontMatrix[5] = 0;
+	}
+	double GetScale() const
+	{
+		return arrFontMatrix[0] > 0 ? arrFontMatrix[0] * nUnitsPerEm : 1.0;
+	}
+	double GetGlyphWidth(int nCode) const
+	{
+		auto it = mapWidths.find(nCode);
+		if (it != mapWidths.end())
+			return it->second;
+		return nUnitsPerEm * 0.5;
+	}
+};
 
 std::string GetRCFromDS(const std::string& sDS, Object* pContents, const std::vector<double>& arrCFromDA);
 bool IsNeedCMap(PDFDoc* pDoc);
@@ -67,6 +94,8 @@ bool FindFonts(Object* oStream, int nDepth, Object* oResFonts);
 void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
 double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
 bool EraseSubsetTag(std::wstring& sFontName);
+
+CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont);
 }
 
 #endif // _PDF_READER_FONT_H

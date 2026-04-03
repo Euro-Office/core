@@ -65,11 +65,27 @@ namespace NSHtmlRenderer
 		NSStructures::CFont* m_pFont;
 		CHFontInfo m_oCurrentInfo;
 
+		bool m_bIsType3;
+		double m_dType3GlyphWidth;
+
 	public:
-		CFontManagerWrapper() : m_pManager(NULL) {}
+		CFontManagerWrapper() : m_pManager(NULL), m_bIsType3(false), m_dType3GlyphWidth(0) {}
 		virtual ~CFontManagerWrapper()
 		{
 			RELEASEOBJECT(m_pManager);
+		}
+
+		void SetType3Metrics(int nAscent, int nDescent, int nUnitsPerEm, double dGlyphWidth)
+		{
+			m_bIsType3 = true;
+			m_dType3GlyphWidth = dGlyphWidth;
+			m_oCurrentInfo.m_lAscent     = nAscent;
+			m_oCurrentInfo.m_lDescent    = nDescent;
+			m_oCurrentInfo.m_lUnitsPerEm = nUnitsPerEm > 0 ? nUnitsPerEm : 1000;
+		}
+		void ClearType3()
+		{
+			m_bIsType3 = false;
 		}
 
 		void Init(NSFonts::IApplicationFonts* pApplicationFonts, int nCacheSize = 0)
@@ -97,6 +113,18 @@ namespace NSHtmlRenderer
 		}
 		TBBox MeasureString(const unsigned int* symbols, const int& count, double x, double y)
 		{
+			if (m_bIsType3)
+			{
+				TBBox oBox;
+				double dUnitsPerEm = (double)(m_oCurrentInfo.m_lUnitsPerEm > 0 ? m_oCurrentInfo.m_lUnitsPerEm : 1000);
+				double dFontSizePt = m_pFont ? m_pFont->Size : 10.0;
+				oBox.fMinX = (float)x;
+				oBox.fMinY = (float)(-(m_oCurrentInfo.m_lAscent  / dUnitsPerEm) * dFontSizePt);
+				oBox.fMaxX = (float)(x + m_dType3GlyphWidth);
+				oBox.fMaxY = (float)( (m_oCurrentInfo.m_lDescent / dUnitsPerEm) * dFontSizePt);
+				return oBox;
+			}
+
 			if (!m_pManager)
 				return TBBox();
 
@@ -275,7 +303,7 @@ namespace NSHtmlRenderer
 			}
 
 			// все, baseline установлен. теперь просто продолжаем линию
-			if (bIsDumpFont)
+			if (bIsDumpFont && !m_oFontManager.m_bIsType3)
 				m_oFontManager.LoadCurrentFont();
 
 			double dKoef = m_oFontManager.m_pFont->Size * 25.4 / (72 * m_oFontManager.m_oCurrentInfo.m_lUnitsPerEm);

@@ -1123,4 +1123,83 @@ bool EraseSubsetTag(std::wstring& sFontName)
 	}
 	return bIsRemove;
 }
+
+CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont)
+{
+	CType3FontMetrics* pMetrics = new CType3FontMetrics();
+
+	Ref* pRef = pFont->getID();
+	Object oRefObj, oFontObj;
+	oRefObj.initRef(pRef->num, pRef->gen);
+	oRefObj.fetch(pXref, &oFontObj);
+	oRefObj.free();
+
+	if (!oFontObj.isDict())
+	{
+		oFontObj.free();
+		return pMetrics;
+	}
+
+	Object oItem;
+
+	if (oFontObj.dictLookup("FontMatrix", &oItem)->isArray() && oItem.arrayGetLength() == 6)
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			Object oVal;
+			if (oItem.arrayGet(i, &oVal)->isNum())
+				pMetrics->arrFontMatrix[i] = oVal.getNum();
+			oVal.free();
+		}
+	}
+	oItem.free();
+
+	if (pMetrics->arrFontMatrix[0] > 0)
+		pMetrics->nUnitsPerEm = (int)std::round(1.0 / pMetrics->arrFontMatrix[0]);
+	else
+		pMetrics->nUnitsPerEm = 1000;
+
+	if (oFontObj.dictLookup("FontBBox", &oItem)->isArray() && oItem.arrayGetLength() == 4)
+	{
+		Object oVal;
+		if (oItem.arrayGet(0, &oVal)->isNum()) pMetrics->dLLx = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(1, &oVal)->isNum()) pMetrics->dLLy = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(2, &oVal)->isNum()) pMetrics->dURx = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(3, &oVal)->isNum()) pMetrics->dURy = oVal.getNum(); oVal.free();
+
+		double dTextY1 = pMetrics->arrFontMatrix[3] * pMetrics->dLLy;
+		double dTextY2 = pMetrics->arrFontMatrix[3] * pMetrics->dURy;
+
+		pMetrics->nAscent  = (int)std::round(std::max(dTextY2 / pMetrics->arrFontMatrix[0], 0.0));
+		pMetrics->nDescent = (int)std::round(std::abs(std::min(dTextY1 / pMetrics->arrFontMatrix[0], 0.0)));
+
+		if (pMetrics->nAscent == 0 && pMetrics->nDescent == 0)
+		{
+			pMetrics->nAscent  = (int)(pMetrics->nUnitsPerEm * 0.8);
+			pMetrics->nDescent = (int)(pMetrics->nUnitsPerEm * 0.2);
+		}
+	}
+	oItem.free();
+
+	int nFirstChar = 0;
+	if (oFontObj.dictLookup("FirstChar", &oItem)->isInt())
+		nFirstChar = oItem.getInt();
+	oItem.free();
+
+	if (oFontObj.dictLookup("Widths", &oItem)->isArray())
+	{
+		int nWidthsLen = oItem.arrayGetLength();
+		for (int i = 0; i < nWidthsLen; ++i)
+		{
+			Object oVal;
+			if (oItem.arrayGet(i, &oVal)->isNum())
+				pMetrics->mapWidths[nFirstChar + i] = oVal.getNum();
+			oVal.free();
+		}
+	}
+	oItem.free();
+
+	oFontObj.free();
+	return pMetrics;
+}
 }

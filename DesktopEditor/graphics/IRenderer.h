@@ -305,6 +305,10 @@ public:
 		LONG c = (NULL == codepoints) ? 32 : codepoints[0];
 		return CommandDrawTextExCHAR(c, (LONG)gid, x, y, w, h);
 	}
+	virtual HRESULT CommandDrawType3CHAR(const std::wstring& wsUnicodeText, const double& x, const double& y, const double& w, const double& h, const double& ascent, const double& descent, const double& unitsPerEm)
+	{
+		return S_OK;
+	}
 
 	//-------- Маркеры для команд ---------------------------------------------------------------
 	virtual HRESULT BeginCommand(const DWORD& lType)	= 0;
