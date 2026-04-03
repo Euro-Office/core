@@ -350,7 +350,7 @@ void RtfLex::parseText(int car, RtfToken& token)
 	int nTempBufPos = 0; //1 MB
 
 	int c = car;
-	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // (corrupted comment removed)
+	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) 
 	//while (c != '\\' && c != '}' && c != '{' && c != Eof)
 	//while (c != ';' &&c ! = '\\' && c != '}' && c != '{' && c != EOF)
 	while (c != '\\' && c != '}' && c != '{' && c != EOF)
