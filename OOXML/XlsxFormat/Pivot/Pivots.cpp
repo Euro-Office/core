@@ -567,13 +567,19 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 		if(m_oRowItems.IsInit())
 		{
 			m_oRowItems->m_oCount.Init();
-			m_oRowItems->m_oCount->SetValue(m_oRowFields->m_arrItems.size());
+			if(m_oRowFields.IsInit())
+				m_oRowItems->m_oCount->SetValue(m_oRowFields->m_arrItems.size());
+			else
+				m_oRowItems->m_oCount->SetValue(0);
 			ptr->m_arPIVOTLI.push_back(m_oRowItems->toXLS());
 		}
 		if(m_oColItems.IsInit())
 		{
 			m_oColItems->m_oCount.Init();
-			m_oColItems->m_oCount->SetValue(m_oColFields->m_arrItems.size());
+			if(m_oColFields.IsInit())
+				m_oColItems->m_oCount->SetValue(m_oColFields->m_arrItems.size());
+			else
+				m_oColItems->m_oCount->SetValue(0);
 			ptr->m_arPIVOTLI.push_back(m_oColItems->toXLS());
 		}
 		if(m_oPivotTableStyleInfo.IsInit())
