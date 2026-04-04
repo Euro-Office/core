@@ -666,6 +666,9 @@ void odf_drawing_context::end_drawing()
 
 		if (rotate)
 		{
+			if(impl_->current_drawing_state_.flipV_)
+				rotate = -*rotate;
+
 			double angle = *rotate;//impl_->current_drawing_state_.rotateAngle_ ? *impl_->current_drawing_state_.rotateAngle_ : 0;
 			
 			length new_x;
@@ -675,12 +678,17 @@ void odf_drawing_context::end_drawing()
 			{
 				length cx = *impl_->current_drawing_state_.svg_width_;
 				length cy = *impl_->current_drawing_state_.svg_height_;
+
+				double center_y = cy.get_value()/2;
+
+				if(impl_->current_drawing_state_.flipV_)
+					center_y = -center_y*2;
  
-                new_x = (cx / 2.) - ((cx / 2.) * cos(-angle) - (cy / 2.) * sin(-angle) );
-                new_y = (cy / 2.) - ((cx / 2.) * sin(-angle) + (cy / 2.) * cos(-angle) );
+                new_x = (cx / 2.) + ((cx / 2.)* (-1) * cos(angle) - (center_y) * (-1) * sin(angle) );
+                new_y = (center_y) + ((cx / 2.)* (-1) * sin(angle) + (center_y) * (-1) * cos(angle) );
 			}
 
-			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(*rotate) + std::wstring(L")");
+			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(-*rotate) + std::wstring(L")");
 
 			if (impl_->current_drawing_state_.svg_x_ && impl_->current_drawing_state_.svg_y_)
 			{
