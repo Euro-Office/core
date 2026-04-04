@@ -1015,6 +1015,17 @@ bool odf_drawing_context::change_text_box_2_wordart()
 	return false;
 }
 
+void point_after_turning_the_corner(odf_types::length& x,odf_types::length& y, const double& new_center_x,const double& new_center_y, const double& angle)
+{
+	double point_x(0.0),point_y(0.0);
+
+	point_x = (x.get_value() - new_center_x)*cos(angle) - (y.get_value() - new_center_y)*sin(angle) + new_center_x;
+	point_y = (x.get_value() - new_center_x)*sin(angle) + (y.get_value() - new_center_y)*cos(angle) + new_center_y;
+
+	x = odf_types::length(point_x,odf_types::length::unit::cm);
+	y = odf_types::length(point_y,odf_types::length::unit::cm);
+}
+
 void odf_drawing_context::end_shape()
 {
 	if (impl_->current_drawing_state_.elements_.empty()) 
@@ -1045,15 +1056,21 @@ void odf_drawing_context::end_shape()
 	draw_line* line = dynamic_cast<draw_line*>(impl_->current_level_.back().elm.get());
 	if (line)
 	{
-		if (!line->draw_line_attlist_.svg_x1_) line->draw_line_attlist_.svg_x1_ = impl_->current_drawing_state_.svg_x_;
-		if (!line->draw_line_attlist_.svg_y1_) line->draw_line_attlist_.svg_y1_ = impl_->current_drawing_state_.svg_y_;
 		
-		if (line->draw_line_attlist_.svg_x1_ && impl_->current_drawing_state_.svg_width_ && !line->draw_line_attlist_.svg_x2_)
-			line->draw_line_attlist_.svg_x2_ = line->draw_line_attlist_.svg_x1_.get() + impl_->current_drawing_state_.svg_width_.get();
-		
-		if (line->draw_line_attlist_.svg_y1_ && impl_->current_drawing_state_.svg_height_ && !line->draw_line_attlist_.svg_y2_)
-			line->draw_line_attlist_.svg_y2_ = line->draw_line_attlist_.svg_y1_.get() + impl_->current_drawing_state_.svg_height_.get();
-		
+		if(!line->draw_line_attlist_.svg_x1_)
+			line->draw_line_attlist_.svg_x1_ = odf_types::length(0,odf_types::length::unit::cm);
+
+		if(!line->draw_line_attlist_.svg_y1_)
+			line->draw_line_attlist_.svg_y1_ = odf_types::length(0,odf_types::length::unit::cm);
+
+		if(line->draw_line_attlist_.svg_x1_ && impl_->current_drawing_state_.svg_width_ && !line->draw_line_attlist_.svg_x2_)
+			line->draw_line_attlist_.svg_x2_ = impl_->current_drawing_state_.svg_width_.get();
+
+		if(line->draw_line_attlist_.svg_y1_ && impl_->current_drawing_state_.svg_height_ && !line->draw_line_attlist_.svg_y2_)
+			line->draw_line_attlist_.svg_y2_ = impl_->current_drawing_state_.svg_height_.get();
+
+		double new_center_x(line->draw_line_attlist_.svg_x2_->get_value()/2),new_center_y(line->draw_line_attlist_.svg_y2_->get_value()/2);
+
 		_CP_OPT(double) rotate = impl_->current_drawing_state_.rotateAngle_;
 		if (impl_->current_drawing_state_.in_group_ && impl_->current_group_)
 		{			
@@ -1061,24 +1078,21 @@ void odf_drawing_context::end_shape()
 				rotate = (rotate ? *rotate : 0) + *impl_->current_group_->rotate;
 		}
 
-		if (rotate)
+		if(rotate)
 		{
-			double angle = *rotate;//impl_->current_drawing_state_.rotateAngle_ ? *impl_->current_drawing_state_.rotateAngle_ : 0;
-
-            if (line->draw_line_attlist_.svg_x1_)
-                line->draw_line_attlist_.svg_x1_ = *line->draw_line_attlist_.svg_x1_ / 2 - (*line->draw_line_attlist_.svg_x1_ / 2 * cos(-angle) - *line->draw_line_attlist_.svg_y1_ / 2 * sin(-angle) );
-            if (line->draw_line_attlist_.svg_y1_)
-                line->draw_line_attlist_.svg_y1_ = *line->draw_line_attlist_.svg_y1_ / 2 - (*line->draw_line_attlist_.svg_x1_ / 2 * sin(-angle) + *line->draw_line_attlist_.svg_y1_ / 2 * cos(-angle) );
-
-            if (line->draw_line_attlist_.svg_x2_)
-                line->draw_line_attlist_.svg_x2_ = *line->draw_line_attlist_.svg_x2_ / 2 - (*line->draw_line_attlist_.svg_x2_ / 2 * cos(-angle) - *line->draw_line_attlist_.svg_y2_ / 2 * sin(-angle) );
-            if (line->draw_line_attlist_.svg_y2_)
-                line->draw_line_attlist_.svg_y2_ = *line->draw_line_attlist_.svg_y2_ / 2 - (*line->draw_line_attlist_.svg_x2_ / 2 * sin(-angle) + *line->draw_line_attlist_.svg_y2_ / 2 * cos(-angle) );
+			point_after_turning_the_corner(line->draw_line_attlist_.svg_x1_.get(),line->draw_line_attlist_.svg_y1_.get(),new_center_x,new_center_y,rotate.get());
+			point_after_turning_the_corner(line->draw_line_attlist_.svg_x2_.get(),line->draw_line_attlist_.svg_y2_.get(),new_center_x,new_center_y,rotate.get());
 
 			line->common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_transform_= L"";
 
 			impl_->current_drawing_state_.rotateAngle_ = boost::none;
 		}
+
+		line->draw_line_attlist_.svg_x1_ = line->draw_line_attlist_.svg_x1_.get() + impl_->current_drawing_state_.svg_x_.get();
+		line->draw_line_attlist_.svg_x2_ = line->draw_line_attlist_.svg_x2_.get() + impl_->current_drawing_state_.svg_x_.get();
+		line->draw_line_attlist_.svg_y1_ = line->draw_line_attlist_.svg_y1_.get() + impl_->current_drawing_state_.svg_y_.get();
+		line->draw_line_attlist_.svg_y2_ = line->draw_line_attlist_.svg_y2_.get() + impl_->current_drawing_state_.svg_y_.get();
+
 		impl_->current_drawing_state_.svg_height_ = boost::none;
 		impl_->current_drawing_state_.svg_width_ = boost::none;
 		
@@ -1920,7 +1934,7 @@ void odf_drawing_context::set_flip_V(bool bVal)
 
 void odf_drawing_context::set_rotate(double dVal)
 {
-	double dRotate = -dVal / 180. * 3.14159265358979323846;
+	double dRotate = dVal / 180. * 3.14159265358979323846;
 	impl_->current_drawing_state_.rotateAngle_ = dRotate;
 }
 
