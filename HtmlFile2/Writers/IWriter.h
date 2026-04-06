@@ -8,12 +8,6 @@
 
 namespace HTML
 {
-enum class EWriterType
-{
-	OOXML,
-	Markdown
-};
-
 class IWriter
 {
 protected:
@@ -52,8 +46,6 @@ public:
 	virtual void RevertDataOutput() = 0; // Возвращаем место вывода к исходному
 
 	virtual XmlString* GetCurrentDocument() const = 0;
-
-	virtual EWriterType GetType() const = 0;
 
 	void SetSrcDirectory (const std::wstring& wsPath)
 	{

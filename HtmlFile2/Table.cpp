@@ -152,6 +152,11 @@ bool CTableMatrix::Empty() const
 	return m_arCells.empty();
 }
 
+void CTableMatrix::Clear()
+{
+	m_arCells.clear();
+}
+
 bool CTableMatrix::SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell)
 {
 	if (nullptr == pCell)
@@ -240,16 +245,16 @@ const ITableElementCell* CTableMatrix::GetCell(size_t unRowIndex, size_t unColum
 	return m_arCells[unRowIndex][unColumnIndex];
 }
 
-bool TExternalTableData::IsValid() const
-{
-	return true;
-}
-
-CTableElement::CTableElement(TExternalTableData *pExternalData)
-	: m_pCaption(nullptr), m_pExternalData(pExternalData)
+CTableElement::CTableElement(TExternalTableData &oExternalData)
+	: m_pCaption(nullptr), m_oExternalData(oExternalData)
 {}
 
 CTableElement::~CTableElement()
+{
+	Clear();
+}
+
+void CTableElement::Clear()
 {
 	if (nullptr != m_pCaption)
 		delete m_pCaption;
@@ -257,6 +262,10 @@ CTableElement::~CTableElement()
 	for (CTableColgroup* pColgroup : m_arColgroups)
 		if (nullptr != pColgroup)
 			delete pColgroup;
+
+	m_oHeader.Clear();
+	m_oBody.Clear();
+	m_oFoother.Clear();
 }
 
 ETableElement CTableElement::GetType() const

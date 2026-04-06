@@ -30,6 +30,8 @@ class CHTMLReader
 
 	IWriter *m_pWriter;
 
+	CTableElement* m_pTableElement; // Table Converter
+
 	THTMLTags m_oTags;
 public:
 	CHTMLReader();

@@ -1172,8 +1172,8 @@ bool CHTMLTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-COOXMLTable::COOXMLTable(TExternalTableData* pExternalData)
-	: CTableElement(pExternalData)
+COOXMLTable::COOXMLTable(TExternalTableData& oExternalData)
+	: CTableElement(oExternalData)
 {}
 
 COOXMLTable::~COOXMLTable()
@@ -1569,7 +1569,7 @@ void COOXMLTable::ConvertTable(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter& 
 	while(oReader.ReadNextSiblingNode2(arDepths.top()))
 	{
 		const std::wstring sName = oReader.GetName();
-		m_pExternalData->GetSubClass(oReader, arTableSelectors);
+		m_oExternalData.GetSubClass(oReader, arTableSelectors);
 
 		if(sName == L"thead")
 			CONVERT_MATRIX(Header)
@@ -1606,7 +1606,7 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 
 			if (nullptr != pTableCell)
 			{
-				MoveToNextTableCell(oReader, arSelectors, arDepths, m_pExternalData->GetSubClass);
+				MoveToNextTableCell(oReader, arSelectors, arDepths, m_oExternalData.GetSubClass);
 
 				if (ETableElement::Table == pTableCell->GetType())
 				{
@@ -1620,7 +1620,7 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 					else
 					{
 						arDepths.push(oReader.GetDepth());
-						MoveToNextTableCell(oReader, arSelectors, arDepths, m_pExternalData->GetSubClass);
+						MoveToNextTableCell(oReader, arSelectors, arDepths, m_oExternalData.GetSubClass);
 						ConvertTable(oReader, oWriter, *pTable, arSelectors.back());
 					}
 				}
@@ -1633,7 +1633,7 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 
 					unMaxCellHeight = (std::max)(unMaxCellHeight, unCellHeight);
 
-					m_pExternalData->ReadStream(oReader, arSelectors);
+					m_oExternalData.ReadStream(oReader, arSelectors);
 				}
 
 				oWriter.CloseP();
@@ -1696,10 +1696,10 @@ void COOXMLTable::Normalize()
 
 bool COOXMLTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode& oTableNode)
 {
-	if (nullptr == m_pExternalData || Empty())
+	if (Empty())
 		return false;
 
-	COOXMLWriter* pWriter{dynamic_cast<COOXMLWriter*>(m_pExternalData->m_pWriter)};
+	COOXMLWriter* pWriter{dynamic_cast<COOXMLWriter*>(m_oExternalData.m_pWriter)};
 
 	if (nullptr == pWriter)
 		return false;
@@ -1711,22 +1711,22 @@ bool COOXMLTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode&
 
 bool COOXMLTable::ParseCaption(XmlUtils::CXmlLiteReader& oReader, XmlString*& pCaption)
 {
-	if (nullptr == m_pExternalData || nullptr == m_pExternalData->m_pWriter)
+	if (nullptr == m_oExternalData.m_pWriter)
 		return false;
 
 	if (nullptr == pCaption)
 		pCaption = new XmlString(200);
 
 	std::vector<NSCSS::CNode> arSelectors;
-	m_pExternalData->GetSubClass(oReader, arSelectors);
+	m_oExternalData.GetSubClass(oReader, arSelectors);
 
 	arSelectors.back().m_pCompiledStyle->m_oText.SetAlign(L"center", 0, true);
 
-	COOXMLWriter& oWriter{*(COOXMLWriter*)m_pExternalData->m_pWriter};
+	COOXMLWriter& oWriter{*(COOXMLWriter*)m_oExternalData.m_pWriter};
 
 	oWriter.SetDataOutput(m_pCaption);
 	oWriter.WritePPr(arSelectors);
-	m_pExternalData->ReadStream(oReader, arSelectors);
+	m_oExternalData.ReadStream(oReader, arSelectors);
 	oWriter.CloseP();
 	oWriter.RevertDataOutput();
 
@@ -1735,12 +1735,9 @@ bool COOXMLTable::ParseCaption(XmlUtils::CXmlLiteReader& oReader, XmlString*& pC
 
 bool COOXMLTable::ParseColgroup(XmlUtils::CXmlLiteReader& oReader, std::vector<CTableColgroup*>& arColgroups)
 {
-	if (nullptr == m_pExternalData)
-		return false;
-
 	std::vector<NSCSS::CNode> arNodes;
 
-	m_pExternalData->GetSubClass(oReader, arNodes);
+	m_oExternalData.GetSubClass(oReader, arNodes);
 
 	CTableColgroup *pColgroup = new CTableColgroup(arNodes.back());
 
@@ -1755,7 +1752,7 @@ bool COOXMLTable::ParseColgroup(XmlUtils::CXmlLiteReader& oReader, std::vector<C
 			if (L"col" != oReader.GetName())
 				continue;
 
-			m_pExternalData->GetSubClass(oReader, arNodes);
+			m_oExternalData.GetSubClass(oReader, arNodes);
 
 			CTableCol *pCol = new CTableCol(arNodes.back());
 

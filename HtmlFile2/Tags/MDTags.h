@@ -13,22 +13,7 @@ template<>
 void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode);
 
 template<>
-bool CBoldTag<CMDWriter>::Open();
-template<>
-void CBoldTag<CMDWriter>::Close();
-
-template<>
 bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
-
-template<>
-bool CItalicTag<CMDWriter>::Open();
-template<>
-void CItalicTag<CMDWriter>::Close();
-
-template<>
-bool CStrikeTag<CMDWriter>::Open();
-template<>
-void CStrikeTag<CMDWriter>::Close();
 
 template<>
 bool CPreformattedTag<CMDWriter>::Open();
@@ -36,7 +21,9 @@ template<>
 void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors);
 
 template<>
-bool CHeaderTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
+bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
+template<>
+void CHeaderTag<CMDWriter>::Close();
 
 template<>
 bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
@@ -75,7 +62,7 @@ struct TElementInfo
 class CMarkdownTable : public CTableElement
 {
 public:
-	CMarkdownTable(TExternalTableData* pExternalData);
+	CMarkdownTable(TExternalTableData &oExternalData);
 	virtual ~CMarkdownTable();
 
 	bool PreParse(XmlUtils::CXmlLiteReader& oReader) override;

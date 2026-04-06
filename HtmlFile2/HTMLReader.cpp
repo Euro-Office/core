@@ -264,7 +264,7 @@ inline bool TagIsUnprocessed(const std::wstring& wsTagName);
 inline void GetSubClass(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, NSCSS::CCssCalculator& oCSSCalculator);
 
 CHTMLReader::CHTMLReader()
-	: m_bIsTempDirOwner(true), m_pWriter(nullptr)
+	: m_bIsTempDirOwner(true), m_pWriter(nullptr), m_pTableElement(nullptr)
 {}
 
 CHTMLReader::~CHTMLReader()
@@ -274,6 +274,9 @@ CHTMLReader::~CHTMLReader()
 
 	if (m_bIsTempDirOwner && !m_wsTempDirectory.empty())
 		NSDirectory::DeleteDirectory(m_wsTempDirectory);
+
+	if (nullptr != m_pTableElement)
+		delete m_pTableElement;
 }
 
 void CHTMLReader::SetTempDirectory(const std::wstring& wsPath)
@@ -338,6 +341,9 @@ void CHTMLReader::Clear()
 	m_wsDstDirectory .clear();
 	m_wsBaseDirectory.clear();
 	m_wsCoreDirectory.clear();
+
+	if (nullptr != m_pTableElement)
+		delete m_pTableElement;
 }
 
 bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
@@ -366,6 +372,20 @@ bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
 		return false;
 	}
 
+	TExternalTableData oExternalData;
+
+	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                 { return ReadStream(oReader, arSelectors, true); };
+
+	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                   std::vector<NSCSS::CNode>& arSelectors)
+	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+
+	oExternalData.m_pWriter = pWriter;
+
+	m_pTableElement = new COOXMLTable(oExternalData);
+
 	m_pWriter = pWriter;
 
 	return true;
@@ -393,6 +413,20 @@ bool CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
 		delete pWriter;
 		return false;
 	}
+
+	TExternalTableData oExternalData;
+
+	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                 { return ReadStream(oReader, arSelectors, true); };
+
+	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                   std::vector<NSCSS::CNode>& arSelectors)
+	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+
+	oExternalData.m_pWriter = pWriter;
+
+	m_pTableElement = new CMarkdownTable(oExternalData);
 
 	m_pWriter = pWriter;
 
@@ -679,32 +713,9 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 			}
 			break;
 		}
-		case HTML_TAG(B):
-		case HTML_TAG(STRONG):
-		{
-			if (m_oTags.m_pBold->Open())
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pBold->Close();
-			}
-			break;
-		}
 		case HTML_TAG(BR):
 		{
 			bResult = m_oTags.m_pBreak->Read(arSelectors.back());
-			break;
-		}
-		case HTML_TAG(CITE):
-		case HTML_TAG(DFN):
-		case HTML_TAG(EM):
-		case HTML_TAG(I):
-		case HTML_TAG(VAR):
-		{
-			if (m_oTags.m_pItalic->Open())
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pItalic->Close();
-			}
 			break;
 		}
 		case HTML_TAG(CODE):
@@ -717,17 +728,6 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 			{
 				bResult = ReadStream(oReader, arSelectors);
 				m_oTags.m_pCode->Close();
-			}
-			break;
-		}
-		case HTML_TAG(DEL):
-		case HTML_TAG(S):
-		case HTML_TAG(STRIKE):
-		{
-			if (m_oTags.m_pStrike->Open())
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pStrike->Close();
 			}
 			break;
 		}
@@ -745,16 +745,6 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 		case HTML_TAG(SVG):
 		{
 			bResult = m_oTags.m_pImage->ReadSVG(arSelectors, oReader.GetOuterXml());
-			break;
-		}
-		case HTML_TAG(INS):
-		case HTML_TAG(U):
-		{
-			if (m_oTags.m_pUnderline->Open())
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pUnderline->Close();
-			}
 			break;
 		}
 		case HTML_TAG(INPUT):
@@ -799,11 +789,26 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 		case HTML_TAG(SUP):
 		case HTML_TAG(SUB):
 		case HTML_TAG(SPAN):
+		// Bold
+		case HTML_TAG(B):
+		case HTML_TAG(STRONG):
+		// Underline
+		case HTML_TAG(INS):
+		case HTML_TAG(U):
+		// Strike
+		case HTML_TAG(DEL):
+		case HTML_TAG(S):
+		case HTML_TAG(STRIKE):
+		// Italic
+		case HTML_TAG(CITE):
+		case HTML_TAG(DFN):
+		case HTML_TAG(EM):
+		case HTML_TAG(I):
+		case HTML_TAG(VAR):
 		{
 			bResult = ReadStream(oReader, arSelectors);
 			break;
 		}
-
 		case HTML_TAG(CANVAS):
 		case HTML_TAG(VIDEO):
 		case HTML_TAG(MATH):
@@ -829,15 +834,6 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 
 			switch(eHtmlTag)
 			{
-				case HTML_TAG(ADDRESS):
-				{
-					if (m_oTags.m_pItalic->Open())
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pItalic->Close();
-					}
-					break;
-				}
 				case HTML_TAG(H1):
 				case HTML_TAG(H2):
 				case HTML_TAG(H3):
@@ -845,8 +841,11 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 				case HTML_TAG(H5):
 				case HTML_TAG(H6):
 				{
-					m_oTags.m_pHeader->Read(arSelectors.back());
-					bResult = ReadStream(oReader, arSelectors);
+					if (m_oTags.m_pHeader->Open(arSelectors.back()))
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pHeader->Close();
+					}
 					break;
 				}
 				case HTML_TAG(ASIDE):
@@ -917,6 +916,7 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 					bResult = ReadTable(oReader, arSelectors);
 					break;
 				}
+				case HTML_TAG(ADDRESS):
 				case HTML_TAG(ARTICLE):
 				case HTML_TAG(HEADER):
 				case HTML_TAG(MAIN):
@@ -981,52 +981,24 @@ bool CHTMLReader::ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS:
 
 bool CHTMLReader::ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)
 {
-	if(oReader.IsEmptyNode())
+	if(oReader.IsEmptyNode() || nullptr == m_pTableElement)
 		return false;
+
+	m_pTableElement->Clear();
 
 	XmlUtils::CXmlLiteReader oTableReader;
 
 	if (!oTableReader.FromString(oReader.GetOuterXml()) || !oTableReader.ReadNextNode())
 		return false;
 
-	// TODO:: Возможно стоит сделать не CTableElement, а CTableConverter
-	// и перенести объявление в Init метод, чтобы не запрашивать тип райтера
-	// А после конвертация таблицы его очищать
-	CTableElement* pTableElement{nullptr};
-	TExternalTableData oExternalData;
-
-	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
-	                                  std::vector<NSCSS::CNode>& arSelectors)
-	                                 { return ReadStream(oReader, arSelectors, true); };
-
-	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
-	                                   std::vector<NSCSS::CNode>& arSelectors)
-	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
-
-	oExternalData.m_pWriter = m_pWriter;
-
-	switch (m_pWriter->GetType())
-	{
-		case EWriterType::Markdown: pTableElement = new CMarkdownTable(&oExternalData); break;
-		case EWriterType::OOXML: pTableElement = new COOXMLTable(&oExternalData); break;
-		default:
-			return false;
-	}
-
-	if (nullptr == pTableElement)
-		return false;
-
-	if (!pTableElement->PreParse(oTableReader) ||
+	if (!m_pTableElement->PreParse(oTableReader) ||
 	    !oTableReader.MoveToStart() || !oTableReader.ReadNextNode())
-	{
-		delete pTableElement;
 		return false;
-	}
 
-	pTableElement->Normalize();
-	pTableElement->Convert(oTableReader, arSelectors.back());
+	m_pTableElement->Normalize();
+	m_pTableElement->Convert(oTableReader, arSelectors.back());
 
-	delete pTableElement;
+	m_pTableElement->Clear();
 	return true;
 }
 

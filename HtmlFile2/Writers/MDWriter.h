@@ -21,10 +21,6 @@ class CMDWriter : public IWriter
 
 		UINT m_unLevelBlockquote{0};
 
-		bool m_bBold{false};
-		bool m_bItalic{false};
-		bool m_bStrike{false};
-
 		bool m_bInTable{false};
 		bool m_bInPreformatted{false};
 		bool m_bInCode{false};
@@ -34,7 +30,11 @@ class CMDWriter : public IWriter
 		UINT m_unLevelList{0};
 		UINT m_unIndexListElement{1};
 
-		std::wstring m_wsLastSpecialString;
+		struct TSpecialString
+		{
+			std::wstring m_wsLastSpecialString;
+			bool m_bClosed{false};
+		}m_oSpecialString;
 	};
 
 	std::stack<TState> m_arStates;
@@ -65,21 +65,7 @@ public:
 
 	XmlString* GetCurrentDocument() const override;
 
-	EWriterType GetType() const override;
-
 	void WriteBreakLine(bool bNeedChecked = true);
-
-	void EnteredBold();
-	void OutBold();
-	bool IsBold();
-
-	void EnteredItalic();
-	void OutItalic();
-	bool IsItalic();
-
-	void EnteredStrike();
-	void OutStrike();
-	bool IsStrike();
 
 	void EnteredBlockquote();
 	void OutBlockquote();

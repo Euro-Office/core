@@ -21,7 +21,7 @@ struct TImageData
 	std::wstring m_wsAlign;
 
 	TImageData()
-	    : m_unWidth(0), m_unHeight(0), m_nHSpace(0), m_nVSpace(0), m_wsAlign(L"left")
+		: m_unWidth(0), m_unHeight(0), m_nHSpace(0), m_nVSpace(0), m_wsAlign(L"left")
 	{}
 
 	bool ZeroSize() const
@@ -187,8 +187,6 @@ public:
 	XmlString& GetNumberingXml();
 	XmlString& GetWebSettingsXml();
 	XmlString* GetCurrentDocument() const override;
-
-	EWriterType GetType() const override;
 
 	const NSCSS::NSProperties::CPage* GetPageData() const;
 

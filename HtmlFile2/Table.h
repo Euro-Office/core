@@ -65,8 +65,6 @@ struct TExternalTableData
 	FuncGetSubClass GetSubClass;
 
 	IWriter* m_pWriter{nullptr};
-
-	bool IsValid() const;
 };
 
 typedef std::vector<ITableElementCell*> Row;
@@ -81,6 +79,8 @@ public:
 	virtual ~CTableMatrix();
 
 	bool Empty() const;
+
+	void Clear();
 
 	bool SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell);
 
@@ -132,9 +132,11 @@ private:
 class CTableElement : public ITableElementCell
 {
 protected:
-	CTableElement(TExternalTableData *pExternalData);
+	CTableElement(TExternalTableData &oExternalData);
 public:
 	virtual ~CTableElement();
+
+	void Clear();
 
 	ETableElement GetType() const override;
 
@@ -153,7 +155,7 @@ protected:
 
 	std::vector<CTableColgroup*> m_arColgroups;
 
-	TExternalTableData *m_pExternalData;
+	TExternalTableData m_oExternalData;
 
 	const NSCSS::CCompiledStyle* GetColStyle(size_t unColIndex) const;
 
@@ -199,7 +201,7 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 
 	if (L"table" == wsElementName)
 	{
-		T* pNewTable{new T(m_pExternalData)};
+		T* pNewTable{new T(m_oExternalData)};
 
 		if (nullptr == pNewTable)
 			return false;

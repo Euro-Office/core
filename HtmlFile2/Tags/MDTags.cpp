@@ -51,31 +51,6 @@ void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 }
 
 template<>
-bool CBoldTag<CMDWriter>::Open()
-{
-	if (!Valid())
-		return false;
-
-	if (m_pWriter->IsBold())
-		return true;
-
-	m_pWriter->WriteOpenSpecialString(L"**");
-	m_pWriter->EnteredBold();
-
-	return true;
-}
-
-template<>
-void CBoldTag<CMDWriter>::Close()
-{
-	if (!Valid() || !m_pWriter->IsBold())
-		return;
-
-	m_pWriter->WriteCloseSpecialString(L"**");
-	m_pWriter->OutBold();
-}
-
-template<>
 bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -84,56 +59,6 @@ bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 	m_pWriter->WriteBreakLine();
 
 	return true;
-}
-
-template<>
-bool CItalicTag<CMDWriter>::Open()
-{
-	if (!Valid())
-		return false;
-
-	if (m_pWriter->IsItalic())
-		return true;
-
-	m_pWriter->WriteOpenSpecialString(L"*");
-	m_pWriter->EnteredItalic();
-
-	return true;
-}
-
-template<>
-void CItalicTag<CMDWriter>::Close()
-{
-	if (!Valid())
-		return;
-
-	m_pWriter->WriteCloseSpecialString(L"*");
-	m_pWriter->OutItalic();
-}
-
-template<>
-bool CStrikeTag<CMDWriter>::Open()
-{
-	if (!Valid())
-		return false;
-
-	if (m_pWriter->IsStrike())
-		return true;
-
-	m_pWriter->WriteOpenSpecialString(L"~~");
-	m_pWriter->EnteredStrike();
-
-	return true;
-}
-
-template<>
-void CStrikeTag<CMDWriter>::Close()
-{
-	if (!Valid())
-		return;
-
-	m_pWriter->WriteCloseSpecialString(L"~~");
-	m_pWriter->OutStrike();
 }
 
 template<>
@@ -176,7 +101,7 @@ void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelec
 }
 
 template<>
-bool CHeaderTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
+bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
 		return false;
@@ -193,8 +118,14 @@ bool CHeaderTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 			return false;
 	}
 
-
 	return true;
+}
+
+template<>
+void CHeaderTag<CMDWriter>::Close()
+{
+	if (Valid())
+		m_pWriter->WriteBreakLine();
 }
 
 bool ConvertBufferToBase64(BYTE* pBuffer, size_t unSize, std::wstring& wsBase64)
@@ -360,19 +291,21 @@ bool IsMetafileExtention(const std::wstring& wsExtention)
 
 bool ConvertFromBase64(const std::wstring& wsBase64, UINT unWidth, UINT unHeight, NSFonts::IApplicationFonts* pFonts, const std::wstring& wsTempDir, std::wstring& wsResultBase64)
 {
-	bool bResult{false};
-	size_t nBase{wsBase64.find(L"/", 4)};
-	nBase++;
+	const size_t unStartExtention{wsBase64.find(L"/", 4)};
+	if (unStartExtention == std::wstring::npos)
+		return false;
 
-	const size_t nEndBase{wsBase64.find(L";", nBase)};
-	if (nEndBase == std::wstring::npos)
-		return bResult;
+	const size_t unEndExtention{wsBase64.find(L";", unStartExtention)};
+	if (unEndExtention == std::wstring::npos)
+		return false;
 
-	nBase = wsBase64.find(L"base64", nEndBase);
+	const size_t nBase = wsBase64.find(L"base64", unEndExtention);
 	if (nBase == std::wstring::npos)
-		return bResult;
+		return false;
 
-	const int nOffset = nBase + 7;
+	bool bResult{false};
+
+	const int nOffset = nBase + 7; //Skip "base64,"
 	int nSrcLen = (int)(wsBase64.length() - nBase + 1);
 	int nDecodeLen = NSBase64::Base64DecodeGetRequiredLength(nSrcLen);
 
@@ -383,9 +316,12 @@ bool ConvertFromBase64(const std::wstring& wsBase64, UINT unWidth, UINT unHeight
 		if (!pImageData || FALSE == NSBase64::Base64Decode(wsBase64.c_str() + nOffset, nSrcLen, pImageData, &nDecodeLen))
 			return false;
 
-		if (IsSVGExtention(wsBase64.substr(nBase, nEndBase - nBase)))
+		if (IsSVGExtention(wsBase64.substr(unStartExtention + 1, unEndExtention - unStartExtention - 1)))
 		{
 			const std::wstring wsSvg(pImageData, pImageData + nDecodeLen);
+
+			RELEASEARRAYOBJECTS(pImageData);
+
 			bResult = ConvertFromSVG(wsSvg, unWidth, unHeight, pFonts, wsTempDir, wsResultBase64);
 		}
 		else
@@ -393,20 +329,17 @@ bool ConvertFromBase64(const std::wstring& wsBase64, UINT unWidth, UINT unHeight
 			CBgraFrame oFrame;
 			oFrame.Decode(pImageData, nDecodeLen);
 
-			if (oFrame.get_Width() != unWidth || oFrame.get_Height() != unHeight)
-			{
-				oFrame.Resize(unWidth, unHeight);
+			RELEASEARRAYOBJECTS(pImageData);
 
-				BYTE *pBuffer{nullptr};
-				int nEncodeSize{0};
+			oFrame.Resize(unWidth, unHeight);
 
-				oFrame.Encode(pBuffer, nEncodeSize, 4);
+			BYTE *pBuffer{nullptr};
+			int nEncodeSize{0};
 
-				bResult = ConvertBufferToBase64(pBuffer, nEncodeSize, wsResultBase64);
-			}
+			oFrame.Encode(pBuffer, nEncodeSize, 4);
+
+			bResult = ConvertBufferToBase64(pBuffer, nEncodeSize, wsResultBase64);
 		}
-
-		RELEASEARRAYOBJECTS(pImageData);
 	}
 
 	return bResult;
@@ -709,8 +642,8 @@ bool IsTable(const ITableElementCell* pCell)
 	return nullptr != pCell && ETableElement::Table == pCell->GetType();
 }
 
-CMarkdownTable::CMarkdownTable(TExternalTableData* pExternalData)
-	: CTableElement(pExternalData)
+CMarkdownTable::CMarkdownTable(TExternalTableData &oExternalData)
+	: CTableElement(oExternalData)
 {}
 
 CMarkdownTable::~CMarkdownTable()
@@ -810,10 +743,10 @@ void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode
 
 bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode& oTableNode)
 {
-	if (nullptr == m_pExternalData || Empty())
+	if (Empty())
 		return false;
 
-	CMDWriter *pWriter{dynamic_cast<CMDWriter*>(m_pExternalData->m_pWriter)};
+	CMDWriter *pWriter{dynamic_cast<CMDWriter*>(m_oExternalData.m_pWriter)};
 
 	if (nullptr == pWriter)
 		return false;
@@ -821,7 +754,9 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 	std::vector<NSCSS::CNode> arTableSelectors{oTableNode};
 
 	pWriter->WriteBreakLine();
-	WriteToStringBuilder(*m_pCaption, *pWriter->GetCurrentDocument());
+
+	if (HaveCaption())
+		WriteToStringBuilder(*m_pCaption, *pWriter->GetCurrentDocument());
 
 	//Open table
 	pWriter->WriteBreakLine();
@@ -868,28 +803,28 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 
 	//Close table
 	pWriter->OutTable();
-	pWriter->WriteBreakLine();
+	pWriter->WriteBreakLine(false);
 
 	return true;
 }
 
 bool CMarkdownTable::ParseCaption(XmlUtils::CXmlLiteReader& oReader, XmlString*& pCaption)
 {
-	if (nullptr == m_pExternalData || nullptr == m_pExternalData->m_pWriter)
+	if (nullptr == m_oExternalData.m_pWriter)
 		return false;
 
 	if (nullptr == pCaption)
 		pCaption = new XmlString(50);
 
 	std::vector<NSCSS::CNode> arSelectors;
-	m_pExternalData->GetSubClass(oReader, arSelectors);
+	m_oExternalData.GetSubClass(oReader, arSelectors);
 
 	arSelectors.back().m_pCompiledStyle->m_oText.SetAlign(L"center", 0, true);
 
-	CMDWriter& oWriter{*(CMDWriter*)m_pExternalData->m_pWriter};
+	CMDWriter& oWriter{*(CMDWriter*)m_oExternalData.m_pWriter};
 
 	oWriter.SetDataOutput(m_pCaption);
-	m_pExternalData->ReadStream(oReader, arSelectors);
+	m_oExternalData.ReadStream(oReader, arSelectors);
 	oWriter.WriteBreakLine();
 	oWriter.RevertDataOutput();
 
@@ -925,26 +860,26 @@ bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vecto
 				{
 					if (nullptr != arNestedCells.front().second)
 					{
-						m_pExternalData->m_pWriter->GetCurrentDocument()->Write(*arNestedCells.front().second);
+						m_oExternalData.m_pWriter->GetCurrentDocument()->Write(*arNestedCells.front().second);
 						delete arNestedCells.front().second;
 					}
 					arNestedCells.pop();
 				}
 				else
 				{
-					MoveToNextTableCell(oReader, arSelectors, arDepths, m_pExternalData->GetSubClass);
+					MoveToNextTableCell(oReader, arSelectors, arDepths, m_oExternalData.GetSubClass);
 
 					if (ETableElement::FlatTable == pTableCell->GetType())
 					{
 						TCurentTablePosition oPosition{unRowIndex, unColumnIndex, unRowIndex, unColumnIndex};
 						std::vector<NSCSS::CNode> arNestedSelectors;
 
-						ReadNestedCells(oReader, arNestedSelectors, oPosition, arNestedCells, oMatrix, pWriter, *m_pExternalData);
+						ReadNestedCells(oReader, arNestedSelectors, oPosition, arNestedCells, oMatrix, pWriter, m_oExternalData);
 						--unColumnIndex;
 					}
 					else
 					{
-						m_pExternalData->ReadStream(oReader, arSelectors);
+						m_oExternalData.ReadStream(oReader, arSelectors);
 						if (oMatrix[unRowIndex].size() - 1 != unColumnIndex)
 							WriteCellSeparator(*pWriter);
 					}

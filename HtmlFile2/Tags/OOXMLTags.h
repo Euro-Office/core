@@ -93,7 +93,7 @@ enum class ETableRules
 class COOXMLTable : public CTableElement
 {
 public:
-	COOXMLTable(TExternalTableData* pExternalData);
+	COOXMLTable(TExternalTableData &oExternalData);
 	virtual ~COOXMLTable();
 
 	bool PreParse(XmlUtils::CXmlLiteReader& oReader) override;

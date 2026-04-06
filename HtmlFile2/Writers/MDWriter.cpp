@@ -162,47 +162,51 @@ bool CMDWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode>& 
 			WriteString(L"> ", true);
 	}
 
+	const bool bOnlySpaces{wsText.end() == std::find_if_not(wsText.begin(), wsText.end(), [](wchar_t wchChar){ return iswspace(wchChar);})};
+
 	if (!bPreformatted && !InCode())
 	{
 		ReplaceSpaces(wsText);
 		ReplaceSpecialCharsInEdges(wsText);
 	}
 
-	bool bNeedBold{false}, bNeedItalic{false}, bNeedStrike{false};
+	bool bNeedBold  {false},
+		 bNeedItalic{false},
+		 bNeedStrike{false};
 
-	if (nullptr != pCompiledStyle)
+	if (nullptr != pCompiledStyle && !bOnlySpaces)
 	{
-		if (!IsBold() && pCompiledStyle->m_oFont.Bold())
+		if (pCompiledStyle->m_oFont.Bold())
 			bNeedBold = true;
 
-		if (!IsItalic() && pCompiledStyle->m_oFont.Italic())
+		if (pCompiledStyle->m_oFont.Italic())
 			bNeedItalic = true;
 
-		if (!IsStrike() && pCompiledStyle->m_oText.LineThrough())
+		if (pCompiledStyle->m_oText.LineThrough())
 			bNeedStrike = true;
 	}
 
 	if (bNeedBold)
-		WriteString(L"**");
+		WriteOpenSpecialString(L"**");
 
 	if (bNeedItalic)
-		WriteString(L"*");
+		WriteOpenSpecialString(L"*");
 
 	if (bNeedStrike)
-		WriteString(L"~~");
+		WriteOpenSpecialString(L"~~");
 
 	ApplyAlternativeTags(pCompiledStyle);
 	WriteString(wsText);
 	ApplyAlternativeTags(pCompiledStyle, true);
 
 	if (bNeedBold)
-		WriteString(L"**");
+		WriteCloseSpecialString(L"**");
 
 	if (bNeedItalic)
-		WriteString(L"*");
+		WriteCloseSpecialString(L"*");
 
 	if (bNeedStrike)
-		WriteString(L"~~");
+		WriteCloseSpecialString(L"~~");
 
 	if (L'\n' == wsText.back())
 		m_arStates.top().m_bNeedBreakLine = false;
@@ -252,22 +256,32 @@ void CMDWriter::WriteString(const std::wstring& wsString, bool bSpecialString)
 		m_arStates.top().m_bEmptyLine = wsString.empty();
 
 	if (!bSpecialString)
+	{
+		if (!m_arStates.top().m_oSpecialString.m_wsLastSpecialString.empty() &&
+		    m_arStates.top().m_oSpecialString.m_bClosed)
+			m_arStates.top().m_oSpecialString.m_wsLastSpecialString.clear();
+
 		m_arStates.top().m_bNeedBreakLine = true;
+	}
 }
 
 void CMDWriter::WriteOpenSpecialString(const std::wstring& wsString)
 {
-	if (m_arStates.top().m_wsLastSpecialString == wsString)
+	if (!m_arStates.top().m_oSpecialString.m_wsLastSpecialString.empty() &&
+	    (m_arStates.top().m_oSpecialString.m_wsLastSpecialString == wsString ||
+	     (L'*' == m_arStates.top().m_oSpecialString.m_wsLastSpecialString.front() && L'*' == wsString.front())))
 		GetCurrentDocument()->WriteString(L" ");
 
-	m_arStates.top().m_wsLastSpecialString.clear();
+	m_arStates.top().m_oSpecialString.m_wsLastSpecialString.clear();
+	m_arStates.top().m_oSpecialString.m_bClosed = false;
 
 	WriteString(wsString, true);
 }
 
 void CMDWriter::WriteCloseSpecialString(const std::wstring& wsString)
 {
-	m_arStates.top().m_wsLastSpecialString = wsString;
+	m_arStates.top().m_oSpecialString.m_wsLastSpecialString = wsString;
+		m_arStates.top().m_oSpecialString.m_bClosed = true;
 
 	WriteString(wsString, true);
 }
@@ -275,11 +289,6 @@ void CMDWriter::WriteCloseSpecialString(const std::wstring& wsString)
 XmlString* CMDWriter::GetCurrentDocument() const
 {
 	return m_arStates.top().m_pCurrentDocument;
-}
-
-EWriterType CMDWriter::GetType() const
-{
-	return EWriterType::Markdown;
 }
 
 void CMDWriter::WriteBreakLine(bool bNeedChecked)
@@ -306,52 +315,6 @@ void CMDWriter::WriteBreakLine(bool bNeedChecked)
 
 	m_arStates.top().m_bEmptyLine = true;
 	m_arStates.top().m_bNeedBreakLine = false;
-	m_arStates.top().m_wsLastSpecialString.clear();
-}
-
-void CMDWriter::EnteredBold()
-{
-	m_arStates.top().m_bBold = true;
-}
-
-void CMDWriter::OutBold()
-{
-	m_arStates.top().m_bBold = false;
-}
-
-bool CMDWriter::IsBold()
-{
-	return m_arStates.top().m_bBold;
-}
-
-void CMDWriter::EnteredItalic()
-{
-	m_arStates.top().m_bItalic = true;
-}
-
-void CMDWriter::OutItalic()
-{
-	m_arStates.top().m_bItalic = false;
-}
-
-bool CMDWriter::IsItalic()
-{
-	return m_arStates.top().m_bItalic;
-}
-
-void CMDWriter::EnteredStrike()
-{
-	m_arStates.top().m_bStrike = true;
-}
-
-void CMDWriter::OutStrike()
-{
-	m_arStates.top().m_bStrike = false;
-}
-
-bool CMDWriter::IsStrike()
-{
-	return m_arStates.top().m_bStrike;
 }
 
 void CMDWriter::EnteredBlockquote()

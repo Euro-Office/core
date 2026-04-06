@@ -1231,11 +1231,6 @@ XmlString* COOXMLWriter::GetCurrentDocument() const
 	return m_arStates.top().m_pCurrentDocument;
 }
 
-EWriterType COOXMLWriter::GetType() const
-{
-	return EWriterType::OOXML;
-}
-
 const NSCSS::NSProperties::CPage* COOXMLWriter::GetPageData() const
 {
 	return &m_oPageData;

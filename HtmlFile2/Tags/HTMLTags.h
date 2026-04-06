@@ -29,23 +29,8 @@ OPEN_INTERFACE_TAG(Abbr)
 	ADD_VOID_INTERFACE_METHOD(Close);
 CLOSE_INTERFACE_TAG()
 
-OPEN_INTERFACE_TAG(Bold)
-	ADD_BOOL_INTERFACE_METHOD(Open);
-	ADD_VOID_INTERFACE_METHOD(Close);
-CLOSE_INTERFACE_TAG()
-
 OPEN_INTERFACE_TAG(Break)
 	ADD_BOOL_INTERFACE_METHOD(Read, const NSCSS::CNode& oTagNode);
-CLOSE_INTERFACE_TAG()
-
-OPEN_INTERFACE_TAG(Italic)
-	ADD_BOOL_INTERFACE_METHOD(Open);
-	ADD_VOID_INTERFACE_METHOD(Close);
-CLOSE_INTERFACE_TAG()
-
-OPEN_INTERFACE_TAG(Strike)
-	ADD_BOOL_INTERFACE_METHOD(Open);
-	ADD_VOID_INTERFACE_METHOD(Close);
 CLOSE_INTERFACE_TAG()
 
 OPEN_INTERFACE_TAG(Preformatted)
@@ -53,13 +38,9 @@ OPEN_INTERFACE_TAG(Preformatted)
 	ADD_VOID_INTERFACE_METHOD(Close, const std::vector<NSCSS::CNode>& arSelectors);
 CLOSE_INTERFACE_TAG()
 
-OPEN_INTERFACE_TAG(Underline)
-	ADD_BOOL_INTERFACE_METHOD(Open);
-	ADD_VOID_INTERFACE_METHOD(Close);
-CLOSE_INTERFACE_TAG()
-
 OPEN_INTERFACE_TAG(Header)
-	ADD_BOOL_INTERFACE_METHOD(Read, const NSCSS::CNode& oTagNode);
+	ADD_BOOL_INTERFACE_METHOD(Open, const NSCSS::CNode& oTagNode);
+	ADD_VOID_INTERFACE_METHOD(Close);
 CLOSE_INTERFACE_TAG()
 
 OPEN_INTERFACE_TAG(Division)
@@ -154,23 +135,8 @@ OPEN_CLASS_TAG(Abbr)
 	ADD_VOID_CLASS_METHOD(Close);
 CLOSE_CLASS_TAG()
 
-OPEN_CLASS_TAG(Bold)
-	ADD_BOOL_CLASS_METHOD(Open);
-	ADD_VOID_CLASS_METHOD(Close);
-CLOSE_CLASS_TAG()
-
 OPEN_CLASS_TAG(Break)
 	ADD_BOOL_CLASS_METHOD(Read, const NSCSS::CNode& oTagNode);
-CLOSE_CLASS_TAG()
-
-OPEN_CLASS_TAG(Italic)
-	ADD_BOOL_CLASS_METHOD(Open);
-	ADD_VOID_CLASS_METHOD(Close);
-CLOSE_CLASS_TAG()
-
-OPEN_CLASS_TAG(Strike)
-	ADD_BOOL_CLASS_METHOD(Open);
-	ADD_VOID_CLASS_METHOD(Close);
 CLOSE_CLASS_TAG()
 
 OPEN_CLASS_TAG(Preformatted)
@@ -178,13 +144,9 @@ OPEN_CLASS_TAG(Preformatted)
 	ADD_VOID_CLASS_METHOD(Close, const std::vector<NSCSS::CNode>& arSelectors);
 CLOSE_CLASS_TAG()
 
-OPEN_CLASS_TAG(Underline)
-	ADD_BOOL_CLASS_METHOD(Open);
-	ADD_VOID_CLASS_METHOD(Close);
-CLOSE_CLASS_TAG()
-
 OPEN_CLASS_TAG(Header)
-	ADD_BOOL_CLASS_METHOD(Read, const NSCSS::CNode& oTagNode);
+	ADD_BOOL_CLASS_METHOD(Open, const NSCSS::CNode& oTagNode);
+	ADD_VOID_CLASS_METHOD(Close);
 CLOSE_CLASS_TAG()
 
 OPEN_CLASS_TAG(Division)
@@ -237,30 +199,26 @@ OPEN_CLASS_TAG(HTML)
 	ADD_BOOL_CLASS_METHOD(Apply, const NSCSS::CNode& oTagNode);
 CLOSE_CLASS_TAG()
 
-#define ADD_TAG(class_name) INTERFACE_TAGS::I ## class_name ## Tag *m_p##class_name{nullptr}
+#define ADD_HTML_TAG(class_name) INTERFACE_TAGS::I ## class_name ## Tag *m_p##class_name{nullptr}
 
 struct THTMLTags
 {
-	ADD_TAG(Anchor);
-	ADD_TAG(Abbr);
-	ADD_TAG(Bold);
-	ADD_TAG(Break);
-	ADD_TAG(Italic);
-	ADD_TAG(Strike);
-	ADD_TAG(Preformatted);
-	ADD_TAG(Underline);
-	ADD_TAG(Header);
-	ADD_TAG(Division);
-	ADD_TAG(Image);
-	ADD_TAG(Font);
-	ADD_TAG(Input);
-	ADD_TAG(BaseFont);
-	ADD_TAG(Blockquote);
-	ADD_TAG(List);
-	ADD_TAG(HorizontalRule);
-	ADD_TAG(ListElement);
-	ADD_TAG(Code);
-	ADD_TAG(HTML);
+	ADD_HTML_TAG(Anchor);
+	ADD_HTML_TAG(Abbr);
+	ADD_HTML_TAG(Break);
+	ADD_HTML_TAG(Preformatted);
+	ADD_HTML_TAG(Header);
+	ADD_HTML_TAG(Division);
+	ADD_HTML_TAG(Image);
+	ADD_HTML_TAG(Font);
+	ADD_HTML_TAG(Input);
+	ADD_HTML_TAG(BaseFont);
+	ADD_HTML_TAG(Blockquote);
+	ADD_HTML_TAG(List);
+	ADD_HTML_TAG(HorizontalRule);
+	ADD_HTML_TAG(ListElement);
+	ADD_HTML_TAG(Code);
+	ADD_HTML_TAG(HTML);
 
 	~THTMLTags()
 	{
@@ -275,12 +233,8 @@ struct THTMLTags
 
 		CLEAR_VARIABLE(Anchor);
 		CLEAR_VARIABLE(Abbr);
-		CLEAR_VARIABLE(Bold);
 		CLEAR_VARIABLE(Break);
-		CLEAR_VARIABLE(Italic);
-		CLEAR_VARIABLE(Strike);
 		CLEAR_VARIABLE(Preformatted);
-		CLEAR_VARIABLE(Underline);
 		CLEAR_VARIABLE(Header);
 		CLEAR_VARIABLE(Division);
 		CLEAR_VARIABLE(Image);
@@ -307,12 +261,8 @@ struct THTMLTags
 
 		INIT_VARIABLE(Anchor);
 		INIT_VARIABLE(Abbr);
-		INIT_VARIABLE(Bold);
 		INIT_VARIABLE(Break);
-		INIT_VARIABLE(Italic);
-		INIT_VARIABLE(Strike);
 		INIT_VARIABLE(Preformatted);
-		INIT_VARIABLE(Underline);
 		INIT_VARIABLE(Header);
 		INIT_VARIABLE(Division);
 		INIT_VARIABLE(Image);
