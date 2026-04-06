@@ -17,9 +17,6 @@ namespace HTML
 
 #define MAX_STRING_BLOCK_SIZE (size_t)10485760
 
-#define MAXCOLUMNSINTABLE 63
-#define MAXROWSINTABLE    32767
-
 #define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
 #define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
 
@@ -794,7 +791,7 @@ bool COOXMLWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode
 		return false;
 
 	bool bBidirectional{false}, bPreformatted{false}, bQuotation{false},
-	     bAddSpaces{true}, bMergedText{false}, bDeleted{false};
+	     bAddSpaces{true}, bDeleted{false};
 
 	for (const NSCSS::CNode& oNode : arSelectors)
 	{
@@ -924,9 +921,6 @@ bool COOXMLWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode
 		else
 			GetCurrentDocument()->WriteString(L"<w:delText>");
 
-		if (bMergedText && !m_arStates.top().m_bWasSpace && bInT && !bPreformatted)
-			m_arStates.top().m_pCurrentDocument->WriteEncodeXmlString(L" ");
-
 		if (!wsText.empty())
 		{
 			m_arStates.top().m_bWasSpace = std::iswspace(wsText.back());
@@ -942,8 +936,7 @@ bool COOXMLWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode
 	else
 		GetCurrentDocument()->WriteString(L"</w:delText>");
 
-	if (!bMergedText)
-		CloseR();
+	CloseR();
 
 	if (bDeleted)
 		GetCurrentDocument()->WriteString(L"</w:del>");

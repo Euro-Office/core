@@ -1,10 +1,8 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-#include "../DesktopEditor/common/StringBuilder.h"
 #include "../DesktopEditor/xml/include/xmlutils.h"
 
-#include "../Common/3dParty/html/css/src/CCssCalculator.h"
 #include "Writers/IWriter.h"
 #include "src/StringFinder.h"
 
@@ -164,7 +162,7 @@ protected:
 	template<typename T>
 	inline bool ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTable);
 	template<typename T>
-	inline bool ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex, size_t& unMaxColumns);
+	inline bool ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex);
 };
 
 template<typename T>
@@ -177,14 +175,14 @@ inline bool CTableElement::ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTab
 	{
 		wsName = oReader.GetName();
 
-		size_t unRowIndex{0}, unColumnIndex{0}, unMaxColumnIndex{0};
+		size_t unRowIndex{0}, unColumnIndex{0};
 
 		if(L"thead" == wsName)
-			ParseMatrix<T>(oReader, &pTable->m_oHeader, unRowIndex, unColumnIndex, unMaxColumnIndex);
+			ParseMatrix<T>(oReader, &pTable->m_oHeader, unRowIndex, unColumnIndex);
 		if(L"tbody" == wsName)
-			ParseMatrix<T>(oReader, &pTable->m_oBody, unRowIndex, unColumnIndex, unMaxColumnIndex);
+			ParseMatrix<T>(oReader, &pTable->m_oBody, unRowIndex, unColumnIndex);
 		else if(L"tfoot" == wsName)
-			ParseMatrix<T>(oReader, &pTable->m_oFoother, unRowIndex, unColumnIndex, unMaxColumnIndex);
+			ParseMatrix<T>(oReader, &pTable->m_oFoother, unRowIndex, unColumnIndex);
 		else if (L"caption" == wsName)
 			ParseCaption(oReader, pTable->m_pCaption);
 		else if (L"colgroup" == wsName)
@@ -195,7 +193,7 @@ inline bool CTableElement::ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTab
 }
 
 template<typename T>
-inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex, size_t& unMaxColumns)
+inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex)
 {
 	const std::wstring wsElementName{oReader.GetName()};
 
@@ -221,7 +219,7 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 			if (L"td" != oReader.GetName() && L"th" != oReader.GetName())
 				continue;
 
-			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex);
 		}
 	}
 	else if (L"td" == wsElementName || L"th" == wsElementName)
@@ -230,8 +228,6 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 
 		while (pMatrix->IsFillingCell(unRowIndex - 1, unColumnIndex - 1))
 			++unColumnIndex;
-
-		unMaxColumns = (std::max)(unMaxColumns, unColumnIndex);
 
 		if (!pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, new CTableElementCell()))
 			return false;
@@ -255,7 +251,7 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 
 		const int nDepth{oReader.GetDepth()};
 		while (oReader.ReadNextSiblingNode(nDepth))
-			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex);
 	}
 	else if (oReader.IsEmptyNode())
 		return false;
@@ -263,7 +259,7 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 	{
 		const int nDepth{oReader.GetDepth()};
 		while (oReader.ReadNextSiblingNode(nDepth))
-			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex, unMaxColumns);
+			ParseMatrix<T>(oReader, pMatrix, unRowIndex, unColumnIndex);
 	}
 
 	return true;

@@ -18,6 +18,9 @@ namespace HTML
 #define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
 #define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
 
+#define MAX_COLUMNS_IN_TABLE 63
+#define MAX_ROWS_IN_TABLE    32767
+
 inline bool ElementInTable(const std::vector<NSCSS::CNode>& arSelectors);
 
 inline bool NotValidExtension(const std::wstring& sExtention);
@@ -1400,14 +1403,14 @@ void COOXMLTable::CloseRow(XmlString& oXmlString)
 	oXmlString.WriteNodeEnd(L"w:tr");
 }
 
-void COOXMLTable::OpenCell(XmlString& oXmlString)
+void COOXMLTable::OpenCell(XmlString& oXmlString, size_t unColumnIndex)
 {
 	oXmlString.WriteNodeBegin(L"w:tc");
 }
 
 void COOXMLTable::OpenCell(XmlString& oXmlString, const NSCSS::CNode& oCellNode, CTableElementCell* pCell, size_t unColumnIndex, ERowParseMode eRowParseMode, ERowPosition eRowPosition, size_t& unHeight, const TTableStyles& oTableStyles)
 {
-	OpenCell(oXmlString);
+	OpenCell(oXmlString, unColumnIndex);
 
 	if (nullptr == pCell)
 		return;
@@ -1552,17 +1555,28 @@ void COOXMLTable::ConvertTable(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter& 
 
 	std::stack<int> arDepths({oReader.GetDepth()});
 
+	bool bConvertedHeader{false}, bConvertedBody{false}, bConvertedFoother{false};
+
+	#define CONVERT_MATRIX(matrix_variable)\
+	{\
+	if (!bConverted##matrix_variable)\
+	{\
+		ConvertMatrix(oReader, oWriter, arTableSelectors, arDepths, oTable.m_o##matrix_variable.GetMatrixCells(), oTableStyles, ERowParseMode::matrix_variable);\
+		bConverted##matrix_variable = true;\
+	}\
+	}
+
 	while(oReader.ReadNextSiblingNode2(arDepths.top()))
 	{
 		const std::wstring sName = oReader.GetName();
 		m_pExternalData->GetSubClass(oReader, arTableSelectors);
 
 		if(sName == L"thead")
-			ConvertMatrix(oReader, oWriter, arTableSelectors, arDepths, oTable.m_oHeader.GetMatrixCells(), oTableStyles, ERowParseMode::Header);
+			CONVERT_MATRIX(Header)
 		else if(sName == L"tbody")
-			ConvertMatrix(oReader, oWriter, arTableSelectors, arDepths, oTable.m_oBody.GetMatrixCells(), oTableStyles, ERowParseMode::Body);
+			CONVERT_MATRIX(Body)
 		else if(sName == L"tfoot")
-			ConvertMatrix(oReader, oWriter, arTableSelectors, arDepths, oTable.m_oFoother.GetMatrixCells(), oTableStyles, ERowParseMode::Foother);
+			CONVERT_MATRIX(Foother)
 		else
 			arTableSelectors.pop_back();
 	}
@@ -1596,7 +1610,8 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 
 				if (ETableElement::Table == pTableCell->GetType())
 				{
-					OpenCell(oCellsData);
+					if (unColumnIndex < MAX_COLUMNS_IN_TABLE)
+						OpenCell(oCellsData, unColumnIndex);
 
 					const COOXMLTable* pTable{dynamic_cast<const COOXMLTable*>(pTableCell)};
 
@@ -1611,9 +1626,10 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 				}
 				else
 				{
-					OpenCell(oCellsData, arSelectors.back(), (CTableElementCell*)pTableCell, unColumnIndex, eRowParseMode,
-					         ((0 == unRowIndex) ? ERowPosition::First : ((oMatrix.size() - 1 == unRowIndex) ? ERowPosition::Last : ERowPosition::Middle)),
-					         unCellHeight, oTableStyles);
+					if (unColumnIndex < MAX_COLUMNS_IN_TABLE)
+						OpenCell(oCellsData, arSelectors.back(), (CTableElementCell*)pTableCell, unColumnIndex, eRowParseMode,
+					             ((0 == unRowIndex) ? ERowPosition::First : ((oMatrix.size() - 1 == unRowIndex) ? ERowPosition::Last : ERowPosition::Middle)),
+					             unCellHeight, oTableStyles);
 
 					unMaxCellHeight = (std::max)(unMaxCellHeight, unCellHeight);
 
@@ -1621,17 +1637,26 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 				}
 
 				oWriter.CloseP();
-				CloseCell(oCellsData);
+
+				if (unColumnIndex < MAX_COLUMNS_IN_TABLE - 1)
+					CloseCell(oCellsData);
 
 				arSelectors.pop_back();
 			}
 			else
 			{
-				OpenCell(oCellsData);
+				if (unColumnIndex < MAX_COLUMNS_IN_TABLE)
+					OpenCell(oCellsData, unColumnIndex);
+
 				oWriter.WriteEmptyParagraph();
-				CloseCell(oCellsData);
+
+				if (unColumnIndex < MAX_COLUMNS_IN_TABLE - 1)
+					CloseCell(oCellsData);
 			}
 		}
+
+		if (oMatrix[unRowIndex].size() >= MAX_COLUMNS_IN_TABLE)
+			CloseCell(oCellsData);
 
 		oWriter.RevertDataOutput();
 
@@ -1645,11 +1670,29 @@ void COOXMLTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter&
 
 	arSelectors.pop_back();
 	arDepths.pop();
-	return;
 }
 
 void COOXMLTable::Normalize()
-{}
+{
+	size_t unMaxColumn{0};
+
+	#define CHECK_TABLE(table_variable)\
+	for (const Row& oRow : table_variable.GetMatrixCells())\
+		unMaxColumn = (std::max)(unMaxColumn, oRow.size())
+
+	CHECK_TABLE(m_oHeader);
+	CHECK_TABLE(m_oBody);
+	CHECK_TABLE(m_oFoother);
+
+	#define NORMALIZE_TABLE(table_variable)\
+	for (Row& oRow : table_variable.GetMatrixCells())\
+		if (oRow.size() != unMaxColumn)\
+			oRow.resize(unMaxColumn)
+
+	NORMALIZE_TABLE(m_oHeader);
+	NORMALIZE_TABLE(m_oBody);
+	NORMALIZE_TABLE(m_oFoother);
+}
 
 bool COOXMLTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNode& oTableNode)
 {

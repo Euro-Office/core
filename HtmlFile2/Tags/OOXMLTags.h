@@ -115,6 +115,10 @@ private:
 
 		NSCSS::NSProperties::CBorder m_oBorder;
 		NSCSS::NSProperties::CIndent m_oPadding;
+
+		TTableStyles()
+		    : m_unCellSpacing{0}, m_enRules{ETableRules::All}, m_pTable{nullptr}
+		{}
 	};
 
 	enum class ERowParseMode
@@ -137,7 +141,7 @@ private:
 	void OpenRow(XmlString& oXmlString, bool bIsHeader, size_t unMaxHeight, size_t unCellSpacing);
 	void CloseRow(XmlString& oXmlString);
 
-	void OpenCell(XmlString& oXmlString);
+	void OpenCell(XmlString& oXmlString, size_t unColumnIndex);
 	void OpenCell(XmlString& oXmlString, const NSCSS::CNode& oCellNode, CTableElementCell* pCell, size_t unColumnIndex, ERowParseMode eRowParseMode, ERowPosition eRowPosition, size_t& unHeight, const TTableStyles& oTableStyles);
 	void CloseCell(XmlString& oXmlString);
 
