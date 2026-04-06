@@ -3940,7 +3940,7 @@ void Gfx::doShowText(GString *s) {
       state->setStrokeColor(state->getFillColor());
       out->updateStrokeColor(state);
 #endif
-      if (!out->beginType3Char(state, curX + riseX, curY + riseY, ddx, ddy,
+      if (!out->beginType3Char(savedState, curX + riseX, curY + riseY, tdx, tdy,
 			       code, u, uLen)) {
 	((Gfx8BitFont *)font)->getCharProcNF(code, &charProcRef);
 	charProcRef.fetch(xref, &charProc);

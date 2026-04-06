@@ -32,6 +32,8 @@
 
 #include "RendererOutputDev.h"
 #include "Adaptors.h"
+#include "XmlUtils.h"
+#include "PdfFont.h"
 #include "../lib/xpdf/ErrorCodes.h"
 #include "../lib/xpdf/GfxState.h"
 #include "../lib/xpdf/GfxFont.h"
@@ -45,8 +47,6 @@
 #include "../lib/xpdf/CharCodeToUnicode.h"
 #include "../lib/xpdf/TextString.h"
 #include "../lib/xpdf/Decrypt.h"
-#include "XmlUtils.h"
-#include "PdfFont.h"
 
 #include "../../DesktopEditor/graphics/pro/Graphics.h"
 #include "../../DesktopEditor/graphics/Image.h"
@@ -2720,14 +2720,87 @@ namespace PdfReader
 		m_pRenderer->put_PenSize(dOldWidth);
 	}
 
-	GBool RendererOutputDev::beginType3Char(GfxState* state, double x, double y, double dx, double dy, CharCode code, Unicode* u, int uLen)
+	GBool RendererOutputDev::beginType3Char(GfxState* pGState, double dX, double dY, double dDx, double dDy, CharCode nCode, Unicode* pUnicode, int nUnicodeLen)
 	{
 		if (!m_bDrawOnlyText)
-			return false;
+			return gFalse;
 
-		//drawChar(state, x, y, dx, dy, 0, 0, code, 1, u, uLen);
+		if (!m_pFontList)
+			return gFalse;
 
-		return false;
+		GfxFont* pFont = pGState->getFont();
+		if (!pFont || pFont->getType() != fontType3)
+			return gFalse;
+
+		std::wstring wsUnicodeText;
+		if (pUnicode && nUnicodeLen > 0)
+		{
+			wsUnicodeText = NSStringExt::CConverter::GetUnicodeFromUTF32(pUnicode, nUnicodeLen);
+		}
+
+		if (wsUnicodeText.empty())
+			return gTrue;
+
+		CType3FontMetrics* pMetrics = GetType3FontMetrics(pFont);
+
+		double* pCTM = pGState->getCTM();
+		double* pTm  = pGState->getTextMat();
+
+		double dTextScale = std::min( sqrt(pTm[2]*pTm[2] + pTm[3]*pTm[3]), sqrt(pTm[0]*pTm[0] + pTm[1]*pTm[1]) );
+		if (dTextScale < 1e-10)
+			dTextScale = 1.0;
+		double dITextScale = 1.0 / dTextScale;
+
+		double dOldSize = 10.0;
+		m_pRenderer->get_FontSize(&dOldSize);
+		m_pRenderer->put_FontSize(dOldSize * dTextScale);
+
+		double pNewTm[6];
+		pNewTm[0] =  pTm[0] * dITextScale * pGState->getHorizScaling();
+		pNewTm[1] =  pTm[1] * dITextScale * pGState->getHorizScaling();
+		pNewTm[2] = -pTm[2] * dITextScale;
+		pNewTm[3] = -pTm[3] * dITextScale;
+		pNewTm[4] =  dX;
+		pNewTm[5] =  dY;
+
+		double arrMatrix[6];
+		arrMatrix[0] =   pNewTm[0] * pCTM[0] + pNewTm[1] * pCTM[2];
+		arrMatrix[1] = -(pNewTm[0] * pCTM[1] + pNewTm[1] * pCTM[3]);
+		arrMatrix[2] =   pNewTm[2] * pCTM[0] + pNewTm[3] * pCTM[2];
+		arrMatrix[3] = -(pNewTm[2] * pCTM[1] + pNewTm[3] * pCTM[3]);
+		arrMatrix[4] =   pNewTm[4] * pCTM[0] + pNewTm[5] * pCTM[2] + pCTM[4];
+		arrMatrix[5] = -(pNewTm[4] * pCTM[1] + pNewTm[5] * pCTM[3] + pCTM[5]) + pGState->getPageHeight();
+
+		double dNorma = std::min( sqrt(arrMatrix[0]*arrMatrix[0] + arrMatrix[1]*arrMatrix[1]), sqrt(arrMatrix[2]*arrMatrix[2] + arrMatrix[3]*arrMatrix[3]) );
+		if (dNorma > 0.001)
+		{
+			arrMatrix[0] /= dNorma;
+			arrMatrix[1] /= dNorma;
+			arrMatrix[2] /= dNorma;
+			arrMatrix[3] /= dNorma;
+
+			double dSize = 0;
+			m_pRenderer->get_FontSize(&dSize);
+			dSize *= dNorma;
+			m_pRenderer->put_FontSize(dSize);
+		}
+
+		double dShiftX = 0, dShiftY = 0;
+		DoTransform(arrMatrix, &dShiftX, &dShiftY, true);
+
+		double dGlyphW = (dDx);
+		double dGlyphH = PDFCoordsToMM(dDy);
+
+		m_pRenderer->CommandDrawType3CHAR(
+			wsUnicodeText,
+			PDFCoordsToMM(dShiftX), PDFCoordsToMM(dShiftY),
+			dGlyphW, dGlyphH,
+			pMetrics->dAscent, pMetrics->dDescent, pMetrics->dUnitsPerEm
+		);
+
+		m_pRenderer->put_FontSize(dOldSize);
+
+		return gTrue;
 	}
 	void RendererOutputDev::endType3Char(GfxState* pGState)
 	{
@@ -3770,5 +3843,16 @@ namespace PdfReader
 			m_arrMatrix[4] = pMatrix[4]; m_arrMatrix[5] = pMatrix[5];
 		}
 		return;
+	}
+	CType3FontMetrics* RendererOutputDev::GetType3FontMetrics(GfxFont* pFont)
+	{
+		int nKey = pFont->getID()->num;
+		auto it = m_mapType3Metrics.find(nKey);
+		if (it != m_mapType3Metrics.end())
+			return it->second;
+
+		CType3FontMetrics* pMetrics = BuildType3FontMetrics(m_pXref, pFont);
+		m_mapType3Metrics[nKey] = pMetrics;
+		return pMetrics;
 	}
 }

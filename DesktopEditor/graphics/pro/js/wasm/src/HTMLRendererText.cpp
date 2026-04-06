@@ -354,6 +354,17 @@ namespace NSHtmlRenderer
 		return S_OK;
 	}
 
+	HRESULT CHTMLRendererText::CommandDrawType3CHAR(const std::wstring& wsUnicodeText, const double& x, const double& y, const double& w, const double& h, const double& ascent, const double& descent, const double& unitsPerEm)
+	{
+		m_pInternal->m_oSmartText.m_oFontManager.SetType3Metrics(ascent, descent, unitsPerEm, w);
+
+		m_pInternal->GetUnicodes(wsUnicodeText);
+		m_pInternal->WriteText(m_pInternal->m_pTempUnicodes, NULL, m_pInternal->m_nTempUnicodesLen, x, y);
+
+		m_pInternal->m_oSmartText.m_oFontManager.ClearType3();
+		return S_OK;
+	}
+
 	//-------- Маркеры для команд ---------------------------------------------------------------
 	HRESULT CHTMLRendererText::BeginCommand(const DWORD& lType) { return S_OK; }
 	HRESULT CHTMLRendererText::EndCommand(const DWORD& lType) { return S_OK; }
