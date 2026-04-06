@@ -48,13 +48,13 @@ namespace PdfReader
 	//-------------------------------------------------------------------------------------------------------------------------------
 	struct TFontEntry
 	{
-		std::wstring wsFilePath;     // Путь к шрифту на диске
-		std::wstring wsFontName;     // Имя шрифта, которое записано в PDF(ветка для случаев, когда имя шрифта в самом шрифте не указано)
-		int*         pCodeToGID;     // Таблица код - номер глифа в шрифте
-		int*         pCodeToUnicode; // Таблица код - юникодное значение
+		std::wstring wsFilePath;     // Path to font on disk
+		std::wstring wsFontName;     // Font name as written in PDF (branch for cases when font name is not specified in font itself)
+		int*         pCodeToGID;     // Code to glyph number in font table
+		int*         pCodeToUnicode; // Code to unicode value table
 		unsigned int unLenGID;
 		unsigned int unLenUnicode;
-		bool         bAvailable;     // Доступен ли шрифт. Сделано для многопотоковости
+		bool         bAvailable;     // Is font available. Made for multithreading
 		bool         bFontSubstitution = false;
 		bool         bIsIdentity = false;
 		
@@ -78,7 +78,7 @@ namespace PdfReader
 
 	private:
 		std::map<Ref, TFontEntry*>          m_oFontMap;
-		NSCriticalSection::CRITICAL_SECTION m_oCS; // Критическая секция
+		NSCriticalSection::CRITICAL_SECTION m_oCS; // Critical section
 	};
 
 	//-------------------------------------------------------------------------------------------------------------------------------
@@ -167,7 +167,7 @@ namespace PdfReader
 		//----- Save/Restore GState
 		virtual void saveState(GfxState *pGState) override;
 		virtual void restoreState(GfxState *pGState) override;
-		//----- Изменение параметров в GState
+		//----- GState parameter modification
 		virtual void updateCTM(GfxState *pGState, double dMatrix11, double dMatrix12, double dMatrix21, double dMatrix22, double dMatrix31, double dMatrix32) override;
 		virtual void updateLineDash(GfxState *pGState) override;
 		virtual void updateFlatness(GfxState *pGState) override;
@@ -183,9 +183,9 @@ namespace PdfReader
 		virtual void updateStrokeOpacity(GfxState *pGState) override;
 		virtual void updateAll(GfxState *pGState) override;
 		virtual void updateRender(GfxState *pGState) override;
-		//----- Изменение текстовых параметров
+		//----- Text parameter modification
 		virtual void updateFont(GfxState *pGState) override;
-		//----- Рисование Path
+		//----- Path drawing
 		virtual void stroke(GfxState *pGState) override;
 		virtual void fill(GfxState *pGState) override;
 		virtual void eoFill(GfxState *pGState) override;
@@ -211,7 +211,7 @@ namespace PdfReader
 		virtual void eoClip(GfxState *pGState) override;
 		virtual void clipToStrokePath(GfxState *pGState) override;
 		virtual void clipToPath(GfxState *pGState, GfxPath *pPath, double *pMatrix, bool bEO);
-		//----- Вывод текста
+		//----- Text output
 		virtual void endTextObject(GfxState *pGState) override;
 		virtual void beginStringOp(GfxState *pGState) override;
 		virtual void endStringOp(GfxState *pGState) override;
@@ -219,11 +219,11 @@ namespace PdfReader
 		virtual void drawChar(GfxState *pGState, double dX, double dY, double dDx, double dDy, double dOriginX, double dOriginY, CharCode nCode, int nBytesCount, Unicode *pUnicode, int nUnicodeLen) override;
 		GBool beginType3Char(GfxState *state, double x, double y, double dx, double dy, CharCode code, Unicode *u, int uLen) override;
 		void endType3Char(GfxState *pGState) override;
-		//----- Дополнительные функции
+		//----- Additional functions
 		virtual GBool beginMarkedContent(GfxState *state, GString *s) override;
 		virtual GBool beginMCOShapes(GfxState *state, GString *s, Object *ref) override;
 		virtual void endMarkedContent(GfxState *state) override;
-		//----- Вывод картинок
+		//----- Image output
 		bool ReadImage(Aggplus::CImage* pImageRes, Object *pRef, Stream *pStream);
 		virtual void drawImageMask(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GBool bInvert, GBool bInlineImage, GBool interpolate) override;
 		virtual void setSoftMaskFromImageMask(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GBool bInvert, GBool bInlineImage, GBool interpolate) override;
@@ -232,13 +232,13 @@ namespace PdfReader
 									 Object* pMaskRef, Stream *pMaskStream, int nMaskWidth, int nMaskHeight, GBool bMaskInvert, GBool interpolate) override;
 		virtual void drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *pRef, Stream *pStream, int nWidth, int nHeight, GfxImageColorMap *pColorMap,
 										 Object *maskRef, Stream *pMaskStream, int nMaskWidth, int nMaskHeight, GfxImageColorMap *pMaskColorMap, double *pMatte, GBool interpolate) override;
-		//----- Transparency groups и SMasks
+		//----- Transparency groups and SMasks
 		virtual void beginTransparencyGroup(GfxState *pGState, double *pBBox, GfxColorSpace *pBlendingColorSpace, GBool bIsolated, GBool bKnockout, GBool bForSoftMask) override;
 		virtual void endTransparencyGroup(GfxState *pGState) override;
 		virtual void paintTransparencyGroup(GfxState *pGState, double *pBBox) override;
 		virtual void setSoftMask(GfxState *pGState, double *pBBox, GBool bAlpha, Function *pTransferFunc, GfxColor *pBackdropColor) override;
 		virtual void clearSoftMask(GfxState *pGState) override;
-		//----- Дополнительные функции для данного устройства
+		//----- Additional functions for this device
 		void NewPDF(XRef *pXref);
 		void SetBreak(bool* pbBreak)
 		{
@@ -283,10 +283,10 @@ namespace PdfReader
 		double                        m_arrMatrix[6];
         NSFonts::IFontManager*        m_pFontManager;
 
-		XRef*                         m_pXref; // Таблица Xref для данного PDF-документа
+		XRef*                         m_pXref; // Xref table for this PDF document
 		CPdfFontList*                 m_pFontList;
 
-		bool                         *m_pbBreak;         // Внешняя остановка рендерера
+		bool                         *m_pbBreak;         // External renderer stop
 
 		std::deque<GfxOutputCS>       m_sCS;
 		std::deque<GfxOutputState>    m_sStates;

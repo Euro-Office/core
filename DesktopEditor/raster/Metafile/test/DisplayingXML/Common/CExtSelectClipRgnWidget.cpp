@@ -11,7 +11,7 @@ CExtSelectClipRgnWidget::CExtSelectClipRgnWidget(QWidget *pParent)
 {
         QVBoxLayout *pLayout = new QVBoxLayout;
 
-        QPushButton *pAddedButton = new QPushButton("Добавить значение");
+        QPushButton *pAddedButton = new QPushButton("Add value");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CExtSelectClipRgnWidget::on_createRgnData_clicked);
 

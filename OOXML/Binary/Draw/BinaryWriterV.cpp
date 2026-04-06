@@ -103,7 +103,7 @@ _UINT32 BinaryFileWriter::Open(const std::wstring& sInputDir, const std::wstring
 	_UINT32 result = 0;
 
 	OOX::CPath pathDst(sFileDst);
-//создаем папку для media
+//create folder for media
     std::wstring mediaDir = pathDst.GetDirectory() + L"media";
 	NSDirectory::CreateDirectory(mediaDir);
 
@@ -220,7 +220,7 @@ void BinaryFileWriter::WriteMainTableStart(NSBinPptxRW::CBinaryFileWriter &oBuff
 
 	m_nRealTableCount = 0;
 	m_nMainTableStart = m_oBcw->m_oStream.GetPosition();
-	//вычисляем с какой позиции можно писать таблицы
+	//calculate from which position we can write tables
 	m_nLastFilePos = m_nMainTableStart + GetMainTableSize();
 	//Write mtLen
 	m_oBcw->m_oStream.WriteBYTE(0);
@@ -247,18 +247,18 @@ int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
 	m_oBcw->m_oStream.WriteLONG(m_nLastFilePos);
 
 	//Write table
-	//Запоминаем позицию в MainTable
+	//Remember position in MainTable
 	int nCurPos = m_oBcw->m_oStream.GetPosition();
-	//Seek в свободную область
+	//Seek to free area
 	m_oBcw->m_oStream.SetPosition(m_nLastFilePos);
 	return nCurPos;
 }
 void BinaryFileWriter::WriteTableEnd(int nCurPos)
 {
-	//сдвигаем позицию куда можно следующую таблицу
+	//shift position where next table can be written
 	m_nLastFilePos = m_oBcw->m_oStream.GetPosition();
 	m_nRealTableCount++;
-	//Seek вобратно в MainTable
+	//Seek back to MainTable
 	m_oBcw->m_oStream.SetPosition(nCurPos);
 }
 

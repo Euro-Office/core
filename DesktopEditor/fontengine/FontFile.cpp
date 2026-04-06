@@ -563,8 +563,8 @@ int CFontFile::IsUnicodeRangeAvailable(unsigned long ulBit, unsigned int un4Byte
 	case 5: if ( pOs2->ulCodePageRange2 & ulMult ) nResult = 1; break;
 	}
 
-	// Специальная ветка для случаев, когда charset может быть задан не через значения
-	// ulCodePageRange, а непосредственно через тип Cmap.
+	// Special branch for cases when charset can be specified not through
+	// ulCodePageRange values, but directly through Cmap type.
 
 	//  Charset Name       Charset Value(hex)  Codepage number   Platform_ID   Encoding_ID   Description
 	//  -------------------------------------------------------------------------------------------------
@@ -631,42 +631,42 @@ void CFontFile::UpdateStyles(const INT& bBold, const INT& bItalic)
 {
 	std::string sStyle = GetStyleName();
 
-	// Смотрим какой стиль у исходного шрифта
+	// Check the original font style
 	INT bSrcBold   = (-1 != sStyle.find("Bold"));
 	INT bSrcItalic = (-1 != sStyle.find("Italic"));
 
-	if (!bBold) // Нам нужен не жирный шрифт
+	if (!bBold) // We need a non-bold font
 	{
 		m_bNeedDoBold = false;
 	}
-	else if (bBold) // Нам нужно сделать шрифт жирным
+	else if (bBold) // We need to make the font bold
 	{
 		if (bSrcBold)
 		{
-			// Исходный шрифт уже жирный, поэтому ничего дополнительного делать не надо
+			// Original font is already bold, no additional action needed
 			m_bNeedDoBold = false;
 		}
 		else
 		{
-			// Иходный шрифт не жирный, поэтому жирность делаем сами
+			// Original font is not bold, so we apply boldness ourselves
 			m_bNeedDoBold = true;
 		}
 	}
 
-	if (!bItalic) // Нам нужен не наклонный шрифт
+	if (!bItalic) // We need a non-italic font
 	{
 		SetItalic(false);
 	}
-	else if (bItalic) // Нам нужно сделать наклонный шрифт
+	else if (bItalic) // We need to make the font italic
 	{
 		if (bSrcItalic)
 		{
-			// Исходный шрифт уже наклонный, поэтому ничего дополнительного делать не надо
+			// Original font is already italic, no additional action needed
 			SetItalic(false);
 		}
 		else
 		{
-			// Иходный шрифт не наклонный, поэтому делаем его наклонным сами
+			// Original font is not italic, so we apply italics ourselves
 			SetItalic(true);
 		}
 	}
@@ -833,14 +833,14 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 
 		if (!m_bStringGID)
 		{
-			// пробуем подобрать нужный шрифт
+			// try to select the appropriate font
 			CFontFile* pPickFile = m_pFontManager->GetFontFileBySymbol(this, code);
 			if (!pPickFile)
 				return oSizes;
 
 			TFontCacheSizes oSizesCheck = pPickFile->CacheGlyph(code, isRaster, pWorker, true);
 
-			// файл - в кэше. а тут нужно удалить
+			// file is in cache, but needs to be deleted here
 			RELEASEINTERFACE(pPickFile);
 
 			if (oSizesCheck.eState == glyphstateNormal)
@@ -953,7 +953,7 @@ TFontCacheSizes CFontFile::CacheGlyph(const int& code, const bool& isRaster, CVe
 	else
 		pBitmap->pData = NULL;
 
-	// Все удаляется в кэше (во время очистки или замены)
+	// Everything is deleted in cache (during cleanup or replacement)
 	pBitmap->bFreeData = FALSE;
 
 	int nIndex2;
@@ -1373,12 +1373,12 @@ static int GlyphPathConicTo(const FT_Vector *pControlPoint, const FT_Vector *pEn
 	double dX3 = (double)pEndPoint->x / 64.0;
 	double dY3 = (double)pEndPoint->y / 64.0;
 
-	// Строим кривую Безье второго порядка, с помощью кривой Безье третего порядка. Если p0, pC, p3 -
-	// начальная, контрольная и конечная точки, соответственно, для кривой Безье второго порядка. Тогда
-	// для этой же кривой, рассматриваемой как кривая Безье третьего порядка, точки p0, p1, p2, p3 будут
-	// начальной, две контрольные, конечная точки. Где p1 и p2 рассчитываются по следующим формулам:
-	//     p1 = (1/3) * (p0 + 2pС)
-	//     p2 = (1/3) * (2pС + p3)
+	// Build a quadratic Bezier curve using a cubic Bezier curve. If p0, pC, p3 are
+	// the start, control, and end points respectively for a quadratic Bezier curve, then
+	// for the same curve treated as a cubic Bezier curve, points p0, p1, p2, p3 will be
+	// the start, two control, and end points. Where p1 and p2 are calculated as follows:
+	//     p1 = (1/3) * (p0 + 2pC)
+	//     p2 = (1/3) * (2pC + p3)
 
 	double dX1 = (double)(1.0 / 3.0) * (dX0 + (double)2 * dXc);
 	double dY1 = (double)(1.0 / 3.0) * (dY0 + (double)2 * dYc);

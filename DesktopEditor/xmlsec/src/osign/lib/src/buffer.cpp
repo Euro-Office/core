@@ -75,7 +75,7 @@ namespace OSign
 				unsigned char* pRealloc = (unsigned char*)realloc(m_data, m_max_size * sizeof(unsigned char));
 				if (NULL != pRealloc)
 				{
-					// реаллок сработал
+					// realloc succeeded
 					m_data = pRealloc;
 				}
 				else
@@ -129,7 +129,7 @@ namespace OSign
 	{
 		m_internal = new CStorageBuffer_private();
 		m_internal->m_data = src.m_internal->m_data;
-		// всегда сначала
+		// always from the beginning
 		m_internal->m_pos = 0;
 	}
 

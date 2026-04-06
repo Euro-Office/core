@@ -162,7 +162,7 @@ namespace NSHtmlRenderer
 		}
 		void CommandText(const int* pUnicodes, const int* pGids, const int& nCount, const double& x, const double& y, bool bIsDumpFont)
 		{
-			// 1) сначала определяем точку отсчета и направление baseline
+			// 1) first determine reference point and baseline direction
 			double _x1 = x;
 			double _y1 = y;
 			double _x2 = x + 1;
@@ -196,11 +196,11 @@ namespace NSHtmlRenderer
 				else if (!_isConstX && !m_oLine.m_bIsConstX && fabs(_k - m_oLine.m_dK) < 0.001 && fabs(_b - m_oLine.m_dB) < 0.001)
 					bIsNewLine = false;
 
-				if (bIsNewLine) // не совпала baseline. поэтому просто скидываем линию в поток
+				if (bIsNewLine) // baseline didn't match. so just dump line to stream
 					DumpLine();
 			}
 
-			// теперь нужно определить сдвиг по baseline относительно destination точки
+			// now need to determine offset along baseline relative to destination point
 			double dOffsetX = 0;
 			LONG nCountChars = m_oLine.GetCountChars();
 			if (0 == nCountChars)
@@ -226,14 +226,14 @@ namespace NSHtmlRenderer
 
 				if (sx * m_oLine.m_ex >= 0 && sy * m_oLine.m_ey >= 0)
 				{
-					// продолжаем линию
+					// continue line
 					dOffsetX = len;
 
-					// теперь посмотрим, может быть нужно вставить пробел??
+					// now let's see if we need to insert a space
 					NSWasm::CHChar* pLastChar = m_oLine.GetTail();
 					if (dOffsetX > (pLastChar->width + 0.5))
 					{
-						// вставляем пробел. Пробел у нас будет не совсем пробел. А специфический
+						// insert space. Our space will not be a regular space. But a specific one
 						NSWasm::CHChar* pSpaceChar = m_oLine.AddTail();
 						pLastChar = &m_oLine.m_pChars[m_oLine.m_lCharsTail - 2];
 						pSpaceChar->x = pLastChar->width;
@@ -244,9 +244,9 @@ namespace NSHtmlRenderer
 				}
 				else
 				{
-					// буква сдвинута влево относительно предыдущей буквы
-					// на такую ситуацию реагируем просто - просто начинаем новую линию,
-					// предварительно сбросив старую
+					// letter is shifted left relative to previous letter
+					// we react to this situation simply - just start a new line,
+					// after dumping the old one
 					DumpLine();
 
 					m_oLine.m_bIsConstX = _isConstX;
@@ -266,7 +266,7 @@ namespace NSHtmlRenderer
 			}
 
 			if (!Aggplus::CMatrix::IsEqual(m_pLastTransform, m_pTransform, 0.001, true))
-			{ // смотрим, совпадает ли главная часть матрицы
+			{ // check if main part of matrix matches
 				bIsDumpFont = true;
 				*m_pLastTransform = *m_pTransform;
 				m_oLine.m_bIsSetUpTransform = true;
@@ -276,7 +276,7 @@ namespace NSHtmlRenderer
 				m_oLine.m_sy  = m_pTransform->sy();
 			}
 
-			// все, baseline установлен. теперь просто продолжаем линию
+			// done, baseline is set. now just continue the line
 			if (bIsDumpFont)
 				m_oFontManager.LoadCurrentFont();
 
@@ -334,12 +334,12 @@ namespace NSHtmlRenderer
 
 			if (m_oLine.m_bIsSetUpTransform)
 			{
-				// выставится трансформ!!!
-				// cравнивать нужно с ним!!!
+				// transform will be set!!!
+				// need to compare with it!!!
 				m_pLastTransform->SetElements(m_oLine.m_sx, m_oLine.m_shy, m_oLine.m_shx, m_oLine.m_sy);
 			}
 
-			// скидываем линию в поток pMeta
+			// dump line to pMeta stream
 			m_pPageMeta->WriteDouble(m_oLine.m_dX);
 			m_pPageMeta->WriteDouble(m_oLine.m_dY);
 
@@ -392,8 +392,8 @@ namespace NSHtmlRenderer
 					bIsLastSymbol = true;
 				}
 
-				m_pPageMeta->AddInt(pChar->unicode); // юникодное значение
-				m_pPageMeta->WriteDouble(pChar->width); // ширина буквы
+				m_pPageMeta->AddInt(pChar->unicode); // unicode value
+				m_pPageMeta->WriteDouble(pChar->width); // letter width
 			}
 			if (bIsLastSymbol)
 				m_nCountWords++;

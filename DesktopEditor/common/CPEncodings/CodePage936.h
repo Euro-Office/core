@@ -37,7 +37,7 @@ namespace NSStringExt
 	//-- CP936 Encoding -----------------------------------------------------------------------------
 
 #define MSCP936_UNDEFINED 0x0000
-#define MSCP936_LEAD_CHAR 0xFFFF // —имвол, который означает, что данный код - старший байт
+#define MSCP936_LEAD_CHAR 0xFFFF // Symbol indicating that this code is a lead byte
 
 	static const unsigned short  c_anUnicodeMapCP936[] =
 	{
@@ -21868,7 +21868,7 @@ namespace NSStringExt
 		{ 0xFE4D, 0xFA27 }, //CJK COMPATIBILITY IDEOGRAPH
 		{ 0xFE4E, 0xFA28 }, //CJK COMPATIBILITY IDEOGRAPH
 		{ 0xFE4F, 0xFA29 }, //CJK COMPATIBILITY IDEOGRAPH
-		{ 0xFFFF, 0xFFFF }  //Обозначаем конец списка
+		{ 0xFFFF, 0xFFFF }  // Mark end of list
 	};
 }
 #endif // _BUILD_CPENCODINGS_CODEPAGE936_CROSSPLATFORM_H_

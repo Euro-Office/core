@@ -469,11 +469,11 @@ public:
 
 	virtual void serialize(std::wostream & strm);
 
-    office_element_ptr_array	style_master_page_;		// разметки тем
-    office_element_ptr			style_handout_master_;	// разметки для принтера - .. второстепенно
-    office_element_ptr			draw_layer_set_;		// необязательно .. так как слои все равно не поддерживаются в мс.
-													// то есть не будут объекты объеденены по признаку слоя
-													// зы. не путать с обычной группировкой
+    office_element_ptr_array	style_master_page_;		// theme layouts
+    office_element_ptr			style_handout_master_;	// printer layouts - .. secondary
+    office_element_ptr			draw_layer_set_;		// optional.. since layers are not supported in MS anyway
+													// i.e. objects will not be grouped by layer attribute
+													// P.S. do not confuse with regular grouping
 };
 CP_REGISTER_OFFICE_ELEMENT2(office_master_styles)
 //----------------------------------------------------------------------------------------------------

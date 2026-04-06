@@ -276,7 +276,7 @@ namespace OOX
 					for(auto &strRun : ptr->rgsStrRun)
 					{
 						++index;
-						//если сначала пробелы (может, не только для пробелов так)
+						//if there are leading spaces (possibly not only for spaces)
 						if(index == 1 && strRun.ich != 0)
 						{
 							auto r0 = new CRun();

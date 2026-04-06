@@ -44,83 +44,83 @@
 #include <utility>
 #include <memory>
 
-/// @brief узел xml дерева
+/// @brief XML tree node
 struct XmlNode
 {
-    /// @brief имя ноды
+    /// @brief node name
     std::wstring name;
-    /// @brief предок ноды
+    /// @brief parent node
     std::shared_ptr<XmlNode> parent;
-    /// @brief атрибуты ноды
+    /// @brief node attributes
     std::set<std::wstring> attributes;
-    /// @brief имя столбца с данными ноды, пустое если нода не имеет данных
+    /// @brief column name with node data, empty if node has no data
     std::wstring ValueColumnName;
-    /// @brief наследуемые столбцы ноды
+    /// @brief inherited columns of the node
     std::set<std::wstring> childColumns;
-    /// @brief потомки ноды
+    /// @brief child nodes
     std::set<std::shared_ptr<XmlNode>> childs;
-    /// @brief счетчик повторений ноды, чтобы расширять одну ноду, вместо использования многих с одинаковым именем
+    /// @brief node repetition counter, to expand one node instead of using many with the same name
     _UINT32 counter;
-    /// @brief все ноды предки
+    /// @brief all ancestor nodes
     std::set<std::shared_ptr<XmlNode>> parents;
 };
 
 
-/// @brief класс осуществляющий считывание xml файла и построение его табличной структуры для дальнейшей конвертации
+/// @brief class that reads XML file and builds its table structure for further conversion
 class XMLMap
 {
 public:
-    /// @brief метод, считывающий структуру xml файла
-    /// @param reader xmlLiteReader с загруженным в него xml документом
-    /// @param nameController контроллер имен в который будут загружаться имена столбцов
-    /// @param nodeTree указатель на корневой элемент дерева нод, которое будет заполнено этим методом
-    /// @return true в случае успеха, иначе false
+    /// @brief method that reads XML file structure
+    /// @param reader xmlLiteReader with loaded XML document
+    /// @param nameController name controller where column names will be loaded
+    /// @param nodeTree pointer to root element of node tree that will be filled by this method
+    /// @return true on success, false otherwise
     bool ReadXmlStructure(XmlUtils::CXmlLiteReader &reader, ColumnNameController &nameController, std::shared_ptr<XmlNode> nodeTree,
     std::set<std::wstring> &repeatebleValues);
 
 private:
 
-    /// @brief считывает аттрибуты текущей ноды
+    /// @brief reads attributes of current node
     void readAttributes();
 
-    /// @brief обрабатывает ноду типа element
-    /// @param type тип обрабатываемой ноды
+    /// @brief processes element type node
+    /// @param type type of node being processed
     void openNode();
 
-    /// @brief обрабатывает ноду типа endelement
-    /// @param type тип обрабатываемой ноды
+    /// @brief processes endelement type node
+    /// @param type type of node being processed
     void closeNode();
 
-    /// @brief вставляет значение во временную внутреннюю структуру
+    /// @brief inserts value into temporary internal structure
     void insertValue();
 
-    /// @brief вставляет атрибут во временную внутреннюю структуру ноды
-    /// @param key ключ, по которому будет вставлено значение
+    /// @brief inserts attribute into temporary internal node structure
+    /// @param key key by which value will be inserted
     void insertAttribute(const std::wstring &key);
 
-    /// @brief Получение уникального имени ноды, либо его поиск в переданном множестве
-    /// @param name имя ноды, прочитанное из xml
-    /// @param names set содержащий уникальные имена, среди которых будет осуществляться поиск
-    /// @return найденное или сгенерированное уникальное имя ноды
+    /// @brief gets unique node name or searches for it in provided set
+    /// @param name node name read from XML
+    /// @param names set containing unique names to search among
+    /// @return found or generated unique node name
     std::wstring getNodeName(const std::wstring &name, std::set<std::wstring> &names);
 
-    /// @brief ищет на верхнем уровне ноду с переданным именем, используется для подсчета строк таблицы
-    /// @param name имя ноды
+    /// @brief searches for a node with the given name at the top level, used for counting table rows
+    /// @param name node name
    std::shared_ptr<XmlNode> searchSameNode(const std::wstring &name);
 
-    /// @brief указатель на считавший xml данные reader
+    /// @brief pointer to the XML data reader
     XmlUtils::CXmlLiteReader *reader_;
 
-    /// @brief указатель на контроллер имен столбцов таблицы
+    /// @brief pointer to the table column name controller
     ColumnNameController *colNames_;
 
-    /// @brief вектор с родительскими нодами и используемыми на их уровнях именами
+    /// @brief vector with parent nodes and names used at their levels
     std::vector<std::shared_ptr<XmlNode>> parents_;
 
-    /// @brief тип предыдущей ноды(для поиска нод вида <node></node>)
+    /// @brief type of previous node (for searching nodes like <node></node>)
     XmlUtils::XmlNodeType prevType_ = XmlUtils::XmlNodeType::XmlNodeType_None;
 
-    /// @brief столбцы значений, ноды которых повторялись более 1 раза
+    /// @brief value columns whose nodes were repeated more than once
     std::set<std::wstring> *repeatebleValues_;
 
 };

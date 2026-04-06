@@ -176,7 +176,7 @@ namespace PPTX
 					m_Bullet.reset(pBuBlip);
 				}
 				else
-				{//??? сбой ???
+				{//??? failure ???
 					delete pBuBlip;
 
 					Logic::BuChar *pBuChar = new Logic::BuChar();

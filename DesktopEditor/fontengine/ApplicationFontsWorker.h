@@ -49,33 +49,33 @@ class CApplicationFontsWorker_private;
 class GRAPHICS_DECL CApplicationFontsWorker
 {
 public:
-	// использовать ли системные шрифты
+	// whether to use system fonts
 	bool                        m_bIsUseSystemFonts;
 	bool                        m_bIsUseSystemUserFonts;
 
-	// дополнительные папки с шрифтами
+	// additional font folders
 	std::vector<std::wstring>   m_arAdditionalFolders;
 
-	// рабоча директория (сюда скидываем все артефакты)
+	// working directory (all artifacts are stored here)
 	std::wstring                m_sDirectory;
 
-	// поддерживать ли opentype шрифты
+	// whether to support OpenType fonts
 	bool                        m_bIsUseOpenType;
 
-	// поддерживать ли все версии AllFonts.js
+	// whether to support all AllFonts.js versions
 	bool                        m_bIsUseAllVersions;
 
-	// нужны ли табнейлы
+	// whether thumbnails are needed
 	bool                        m_bIsNeedThumbnails;
-	// какой-то табнейл уже есть - нудно ли все равно удалить и перегенерировать?
+	// if a thumbnail already exists, should it be deleted and regenerated anyway?
 	bool                        m_bIsRemoveOldThumbnails;
-	// генерим табнейлы отдельно
+	// generate thumbnails separately
 	bool                        m_bSeparateThumbnails;
-	// какие масштабы нужны для табнейлов
+	// which scales are needed for thumbnails
 	std::vector<double>         m_arThumbnailsScales;
 	bool                        m_bIsGenerateThumbnailsEA;
 
-	// WEB версия ----
+	// WEB version ----
 	std::wstring                m_sThumbnailsDirectory;
 
 	std::wstring                m_sAllFontsJSPath;

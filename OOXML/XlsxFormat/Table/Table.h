@@ -381,7 +381,7 @@ namespace OOX
 			nullable<SimpleTypes::CUnsignedDecimalNumber> m_oCount;
 		};
 
-		//необработанные child:
+		//not implemented children:
 		//<extLst>
 		class CTableFile : public OOX::FileGlobalEnumerated, public OOX::IFileContainer
 		{

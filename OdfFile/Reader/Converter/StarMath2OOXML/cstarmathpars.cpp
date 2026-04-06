@@ -675,7 +675,7 @@ namespace StarMath
 		}
 	}
 
-//нет phantom, rgb, 16 , гарнитуры и кегля
+//no phantom, rgb, 16, font family and size
 	TypeElement CAttribute::GetTypeColorAttribute(const std::wstring &wsToken)
 	{
 		if(L"hex"==wsToken) return TypeElement::hex;

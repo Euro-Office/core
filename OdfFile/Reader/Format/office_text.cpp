@@ -243,10 +243,10 @@ void office_text::docx_convert(oox::docx_conversion_context & Context)
 		if (content_[i]->next_element_style_name)
 		{
 			std::wstring text___ = *content_[i]->next_element_style_name;
-			// проверяем не сменится ли свойства страницы.
-			// если да — устанавливаем контексту флаг на то что необходимо в текущем параграфе
-			// распечатать свойства раздела/секции
-			//проверить ... не она ли текущая - может быть прописан дубляж - и тогда разрыв нарисуется ненужный
+			// check if page properties will change.
+			// if yes — set context flag that it's necessary in current paragraph
+			// to print section properties
+			//check... is it the current one - may have duplicate - then unnecessary break will appear
 			const _CP_OPT(std::wstring) next_masterPageName	= Context.root()->odf_context().styleContainer().master_page_name_by_name(*content_[i]->next_element_style_name);
 
 			if ((next_masterPageName)  && (Context.get_master_page_name() != *next_masterPageName))

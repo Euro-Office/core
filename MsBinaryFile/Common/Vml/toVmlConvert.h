@@ -114,9 +114,9 @@ private:
 public:
 	COOXToVMLGeometry();
 	virtual ~COOXToVMLGeometry();
-// тип рендерера-----------------------------------------------------------------------------
+// renderer type-----------------------------------------------------------------------------
 	virtual HRESULT get_Type(LONG* lType){ return S_OK; }
-//-------- Функции для работы со страницей --------------------------------------------------
+//-------- Page functions --------------------------------------------------
 	virtual HRESULT NewPage(){ return S_OK; }
 	virtual HRESULT get_Height(double* dHeight){ return S_OK; }
 	virtual HRESULT put_Height(const double& dHeight)
@@ -209,14 +209,14 @@ public:
 	virtual HRESULT get_FontFaceIndex(int* lFaceIndex){ return S_OK; }
 	virtual HRESULT put_FontFaceIndex(const int& lFaceIndex){ return S_OK; }
 
-//-------- Функции для вывода текста --------------------------------------------------------
+//-------- Text output functions --------------------------------------------------------
     virtual HRESULT CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
     virtual HRESULT CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
 
     virtual HRESULT CommandDrawTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
     virtual HRESULT CommandDrawTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
 
-//-------- Маркеры для команд ---------------------------------------------------------------
+//-------- Command markers ---------------------------------------------------------------
 	virtual HRESULT BeginCommand(const DWORD& lType)
 	{
 		m_lCurrentCommandType = lType;
@@ -224,7 +224,7 @@ public:
 	}
 	virtual HRESULT EndCommand(const DWORD& lType);
 
-//-------- Функции для работы с Graphics Path -----------------------------------------------
+//-------- Graphics Path functions -----------------------------------------------
 	virtual HRESULT PathCommandMoveTo(const double& x, const double& y);
 	virtual HRESULT PathCommandLineTo(const double& x, const double& y);
 	virtual HRESULT PathCommandLinesTo(double* points, const int& count);
@@ -243,7 +243,7 @@ public:
     virtual HRESULT PathCommandTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
     virtual HRESULT PathCommandTextEx(const std::wstring& sText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h) { return S_OK; }
 
-//-------- Функции для вывода изображений ---------------------------------------------------
+//-------- Image output functions ---------------------------------------------------
 	virtual HRESULT DrawImage(IGrObject* pImage, const double& x, const double& y, const double& w, const double& h){ return S_OK; }
 	virtual HRESULT DrawImageFromFile(const std::wstring&, const double& x, const double& y, const double& w, const double& h, const BYTE& lAlpha = 255){ return S_OK; }	
 
@@ -278,7 +278,7 @@ private:
 
 	_CStringWriter m_oWriter;
 
-	LONG m_lCurrentCommandType;	// текущая команда
+	LONG m_lCurrentCommandType;	// current command
 	
 	inline void MoveTo(const double& dX, const double& dY)
 	{
@@ -330,7 +330,7 @@ private:
 	{
 		if (1 >= m_lCountPathCommands)
 		{
-			// 2007 office имеет проблемы с путями вида moveto-close.
+			// 2007 office has issues with paths like moveto-close.
 			return;
 		}
 

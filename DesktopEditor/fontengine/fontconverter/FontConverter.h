@@ -58,7 +58,7 @@ __interface IFontConverter : IDispatch
 	[id(101)]	HRESULT ToOTF([in] BSTR bsInFontFile, [in] BSTR pbsFontFileOut, [in, satype("unsigned short")] SAFEARRAY *pUnicode, [in] BSTR bsName, [in] long nFlag );
 	[id(102)]	HRESULT ToOTF2([in] BSTR bsInFontFile, [in, satype("unsigned short")] SAFEARRAY *pUnicode, [in] BSTR bsName, [in] long nFlag, [in] long lSrcFaceIndex, [out, satype("BYTE")] SAFEARRAY** ppFontData);
 
-//----- Для дополнительных функций ----------------------------------------------------------------
+//----- For additional functions ----------------------------------------------------------------
 
 	[id(10001)]	HRESULT SetAdditionalParam([in] BSTR ParamName, [in] VARIANT	ParamValue);
 	[id(10002)]	HRESULT GetAdditionalParam([in] BSTR ParamName, [out] VARIANT *	ParamValue);
@@ -109,18 +109,18 @@ public:
 
 		FT_Face pFace = NULL;
 
-		// открываем файл
+		// open file
 		HANDLE hFile = CreateFile( (LPCWSTR)bsFontIn, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (INVALID_HANDLE_VALUE == hFile)
-			return NULL; // Невозможно открыть файл
+			return NULL; // Cannot open file
 
-		// мапим этот файл в память - так быстрее читаются данные из файла
+		// map this file to memory - this way data is read faster from the file
 		DWORD nFileSize = GetFileSize(hFile, NULL);
 		HANDLE hMapFile = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, nFileSize, NULL);
 		if (NULL == hMapFile)
 		{
 			CloseHandle( hFile );
-			return NULL; // Невозможно создать отображение файла
+			return NULL; // Cannot create file mapping
 		}
 
 		void *pBaseAddress = MapViewOfFile( hMapFile, FILE_MAP_READ, 0, 0, 0 );
@@ -150,7 +150,7 @@ public:
 
 		CString sFontFormat( FT_Get_X11_Font_Format( pFace ) );
 
-		// Проверим флаг конвертации и исходный формат шрифта
+		// Check conversion flag and source font format
 		bool bNeedConvert = false;
 
 		if ( nFlag == c_lFromAll || ( _T("TrueType") == sFontFormat && nFlag & c_lFromTT ) || ( _T("CFF") == sFontFormat && nFlag & c_lFromCFF ) || ( _T("Type 1") == sFontFormat && nFlag & c_lFromT1 ) )
@@ -166,18 +166,18 @@ public:
 				CFontFileType1C *pT1C = NULL;
 				if ( _T("Type 1") == sFontFormat )
 				{
-					// Сначала сконвертируем Type1 в CFF
+					// First convert Type1 to CFF
 					CFontFileType1* pT1 = CFontFileType1::LoadFromFile( bsFontIn );
 					pT1->ToCFF( &CharBufferWrite, &oCFF );
 					delete pT1;
 
-					// Конвертируем CFF в OpenTypeCFF
+					// Convert CFF to OpenTypeCFF
 					pT1C = CFontFileType1C::LoadFromBuffer( oCFF.sBuffer, oCFF.nLen );
 				}
 				else
 				{
-					// FreeType отдает тип шрифта CFF, в случаях когда файл имеет тип OpenType(CFF).
-					// Если так оно и есть, тогда нам с файлом ничего делать на надо.
+					// FreeType returns CFF font type when the file is actually OpenType(CFF).
+					// If that's the case, we don't need to do anything with the file.
 					pT1C = CFontFileType1C::LoadFromFile( bsFontIn );
 				}
 
@@ -202,7 +202,7 @@ public:
 
 					if ( pUnicodeArray )
 					{		
-						// Сначала составим список нужных нами GID
+						// First compile a list of GIDs we need
 						LONG lCount = pUnicodeArray->rgsabound[0].cElements;
 						unsigned short* pUnicode = (unsigned short*)pUnicodeArray->pvData;
 						unsigned short* pGIDs = new unsigned short[lCount];
@@ -229,7 +229,7 @@ public:
 
 						pUseGlyfs = new unsigned char[lGlyfsCount];
 						::memset( pUseGlyfs, 0x00, lGlyfsCount * sizeof(unsigned char) );
-						pUseGlyfs[0] = 1; // нулевой гид всегда записываем
+						pUseGlyfs[0] = 1; // always write the zero glyph
 						for ( int nGID = 1; nGID < lGlyfsCount; nGID++ )
 						{
 							if ( 1 != pUseGlyfs[nGID] )
@@ -244,7 +244,7 @@ public:
 									}
 								}
 
-								// Если данный символ составной (CompositeGlyf), тогда мы должны учесть все его дочерные символы (subglyfs)
+								// If this glyph is composite (CompositeGlyf), we must account for all its child glyphs (subglyfs)
 								if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 								{
 									for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
@@ -274,14 +274,14 @@ public:
 				else
 				{
 					// error parse font
-					// Просто копируем файл
+					// Just copy the file
 					CopyFile( bsFontIn, bsFontOut, FALSE );
 				}
 			}
 		}
 		else
 		{
-			// Просто копируем файл
+			// Just copy the file
 			CopyFile( bsFontIn, bsFontOut, FALSE );
 		}
 
@@ -297,7 +297,7 @@ public:
 
 	STDMETHOD(ToOTF2)(BSTR bsFontIn, SAFEARRAY *pUnicodeArray, BSTR bsName, long nFlag, long lFaceIndex, SAFEARRAY** ppData)
 	{
-		// функция просто скопирована и немного доработана. это все из-за нехватки времени.
+		// function is simply copied and slightly modified. all due to lack of time.
 
 		FT_Library pLibrary = NULL;
 		if ( FT_Init_FreeType( &pLibrary ) ) 
@@ -305,18 +305,18 @@ public:
 
 		FT_Face pFace = NULL;
 
-		// открываем файл
+		// open file
 		HANDLE hFile = CreateFile( (LPCWSTR)bsFontIn, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (INVALID_HANDLE_VALUE == hFile || NULL == ppData)
-			return NULL; // Невозможно открыть файл
+			return NULL; // Cannot open file
 
-		// мапим этот файл в память - так быстрее читаются данные из файла
+		// map this file to memory - this way data is read faster from the file
 		DWORD nFileSize = GetFileSize(hFile, NULL);
 		HANDLE hMapFile = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, nFileSize, NULL);
 		if (NULL == hMapFile)
 		{
 			CloseHandle( hFile );
-			return NULL; // Невозможно создать отображение файла
+			return NULL; // Cannot create file mapping
 		}
 
 		void *pBaseAddress = MapViewOfFile( hMapFile, FILE_MAP_READ, 0, 0, 0 );
@@ -346,7 +346,7 @@ public:
 
 		CString sFontFormat( FT_Get_X11_Font_Format( pFace ) );
 
-		// Проверим флаг конвертации и исходный формат шрифта
+		// Check conversion flag and source font format
 		bool bNeedConvert = false;
 
 		if ( nFlag == c_lFromAll || ( _T("TrueType") == sFontFormat && nFlag & c_lFromTT ) || ( _T("CFF") == sFontFormat && nFlag & c_lFromCFF ) || ( _T("Type 1") == sFontFormat && nFlag & c_lFromT1 ) )
@@ -365,18 +365,18 @@ public:
 				CFontFileType1C *pT1C = NULL;
 				if ( _T("Type 1") == sFontFormat )
 				{
-					// Сначала сконвертируем Type1 в CFF
+					// First convert Type1 to CFF
 					CFontFileType1* pT1 = CFontFileType1::LoadFromFile( bsFontIn );
 					pT1->ToCFF( &CharBufferWrite, &oCFF );
 					delete pT1;
 
-					// Конвертируем CFF в OpenTypeCFF
+					// Convert CFF to OpenTypeCFF
 					pT1C = CFontFileType1C::LoadFromBuffer( oCFF.sBuffer, oCFF.nLen );
 				}
 				else
 				{
-					// FreeType отдает тип шрифта CFF, в случаях когда файл имеет тип OpenType(CFF).
-					// Если так оно и есть, тогда нам с файлом ничего делать на надо.
+					// FreeType returns CFF font type when the file is actually OpenType(CFF).
+					// If that's the case, we don't need to do anything with the file.
 					pT1C = CFontFileType1C::LoadFromFile( bsFontIn );
 				}
 
@@ -399,7 +399,7 @@ public:
 
 					if ( pUnicodeArray )
 					{		
-						// Сначала составим список нужных нами GID
+						// First compile a list of GIDs we need
 						LONG lCount = pUnicodeArray->rgsabound[0].cElements;
 						unsigned short* pUnicode = (unsigned short*)pUnicodeArray->pvData;
 						unsigned short* pGIDs = new unsigned short[lCount];
@@ -426,7 +426,7 @@ public:
 						
 						pUseGlyfs = new unsigned char[lGlyfsCount];
 						::memset( pUseGlyfs, 0x00, lGlyfsCount * sizeof(unsigned char) );
-						pUseGlyfs[0] = 1; // нулевой гид всегда записываем
+						pUseGlyfs[0] = 1; // always write the zero glyph
 						for ( int nGID = 1; nGID < lGlyfsCount; nGID++ )
 						{
 							if ( 1 != pUseGlyfs[nGID] )
@@ -441,7 +441,7 @@ public:
 									}
 								}
 
-								// Если данный символ составной (CompositeGlyf), тогда мы должны учесть все его дочерные символы (subglyfs)
+								// If this glyph is composite (CompositeGlyf), we must account for all its child glyphs (subglyfs)
 								if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 								{
 									for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )

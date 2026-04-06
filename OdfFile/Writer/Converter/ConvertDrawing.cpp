@@ -361,7 +361,7 @@ void OoxConverter::convert(PPTX::Logic::Pic *oox_picture)
 				if (pathMedia.empty() && ext.link_media.IsInit())
 				{
 					pathMedia = find_link_by_id(ext.link_media->get(), 3, bExternal);
-					//например файлики mp3
+					// for example mp3 files
 				}
 				if (ext.st.IsInit())	start	= *ext.st;
 				if (ext.end.IsInit())	end		= *ext.end;
@@ -429,7 +429,7 @@ void OoxConverter::convert(PPTX::Logic::Pic *oox_picture)
 	
 						if (!sIdImageFileCache.empty())
 						{
-							//ищем физический файл ( rId относительно vml_drawing)									
+							// searching for physical file (rId relative to vml_drawing)
 							smart_ptr<OOX::File> pFile = pVml->Find(sIdImageFileCache);
 
 							if (pFile.IsInit() && (OOX::FileTypes::Image == pFile->type()))
@@ -1074,7 +1074,7 @@ int OoxConverter::convert(PPTX::Logic::PrstTxWarp *oox_text_preset)
 	if (oox_text_preset == NULL) return -1;
 	
 	if (oox_text_preset->prst.GetBYTECode() == SimpleTypes::textshapetypeTextNoShape ||
-		oox_text_preset->prst.GetBYTECode() == SimpleTypes::textshapetypeTextPlain) // в зависимости от других настроек
+		oox_text_preset->prst.GetBYTECode() == SimpleTypes::textshapetypeTextPlain) // depending on other settings
 	{
 		return 2000;
 	}
@@ -1413,7 +1413,7 @@ void OoxConverter::convert(PPTX::Logic::BlipFill *oox_bitmap_fill)
 				convert(oox_bitmap_fill->blip->Effects[i].Effect.GetPointer());
 			}
 		}
-		if (oox_bitmap_fill->srcRect.IsInit() && Width > 0  && Height > 0)//часть изображения
+		if (oox_bitmap_fill->srcRect.IsInit() && Width > 0  && Height > 0)// part of image
 		{
 			odf_context()->drawing_context()->set_image_client_rect_inch(
 				(oox_bitmap_fill->srcRect->l.IsInit() ? XmlUtils::GetInteger(oox_bitmap_fill->srcRect->l.get()) : 0 ) / 100000. * Width,
@@ -1450,7 +1450,7 @@ void OoxConverter::convert(PPTX::Logic::BlipFill *oox_bitmap_fill)
 		if (oox_bitmap_fill->stretch.IsInit())
 		{
 			odf_context()->drawing_context()->set_image_style_repeat(1);
-			if (oox_bitmap_fill->stretch->fillRect.IsInit()){} //заполнение неполного объема
+			if (oox_bitmap_fill->stretch->fillRect.IsInit()){} // filling incomplete volume
 		}
 	}
 	odf_context()->drawing_context()->end_area_properties();
@@ -1686,7 +1686,7 @@ void OoxConverter::convert(PPTX::Logic::Ln *oox_line_prop, DWORD ARGB, PPTX::Log
 
 	//if (oox_line_prop->custDash.IsInit())
 	//{
-	//	//через задание стиля и описание геометрии
+	//	// through style definition and geometry description
 	//}
 	if (oox_line_prop->prstDash.IsInit() && oox_line_prop->prstDash->val.IsInit())
 	{
@@ -1697,7 +1697,7 @@ void OoxConverter::convert(PPTX::Logic::Ln *oox_line_prop, DWORD ARGB, PPTX::Log
 	//nullable<SimpleTypes::CCompoundLine<>>            m_oCmpd;
 
 
-	//ELineJoinType                                     m_eJoinType;   // Тип соединения линий
+	//ELineJoinType                                     m_eJoinType;   // Line join type
 	//nullable<OOX::Drawing::CLineJoinBevel>            m_oBevel;
 	//nullable<OOX::Drawing::CLineJoinMiterProperties>  m_oMiter;
 	//nullable<OOX::Drawing::CLineJoinRound>            m_oRound;
@@ -1754,8 +1754,8 @@ void OoxConverter::convert(PPTX::Logic::BodyPr *oox_bodyPr)
 	switch(oox_bodyPr->Fit.type)
 	{
 		case  PPTX::Logic::TextFit::FitSpAuto:
-		{//изменяемы размеры шейпа под текст			
-			odf_context()->drawing_context()->set_text_box_min_size(true);//уже выставленые в min
+		{// shape sizes adjustable to fit text
+			odf_context()->drawing_context()->set_text_box_min_size(true);// already set to min
 		}break;
 		case  PPTX::Logic::TextFit::FitNo:
 		{
@@ -1860,12 +1860,12 @@ void OoxConverter::convert(PPTX::Logic::NvPr *oox_nvPr)
 	
 
 
-//ph уровнем выше
+// ph one level higher
 
 }
 
 void OoxConverter::convert_list_level(PPTX::Logic::TextParagraphPr	*oox_para_props, int level)
-{//одномерные списки тока
+{// one-dimensional lists only
 	//if (!oox_list)return;
 
 	if (!oox_para_props) return;
@@ -2125,7 +2125,7 @@ void OoxConverter::convert(PPTX::Logic::Paragraph *oox_paragraph, PPTX::Logic::T
 		}
 		else
 			list_present = false;
-														//свойства могут быть приписаны не только к параграфу, но и к самому объекту		
+														// properties can be assigned not only to paragraph, but also to the object itself
 		odf_writer::paragraph_format_properties* paragraph_properties = odf_context()->text_context()->get_paragraph_properties();
 		odf_writer::text_format_properties*	text_properties = odf_context()->text_context()->get_text_properties();
 		
@@ -2153,7 +2153,7 @@ void OoxConverter::convert(PPTX::Logic::Paragraph *oox_paragraph, PPTX::Logic::T
 	if (is_empty_run_elems(oox_paragraph->RunElems))
 		list_present = false;
 
-	//if (oox_paragraph->RunElems.empty() && list_present) list_present = false; // ms не обозначает присутствие списка, libra - показывает значек
+	//if (oox_paragraph->RunElems.empty() && list_present) list_present = false; // ms doesn't indicate list presence, libra - shows icon
 	
 	while ((int)odf_context()->text_context()->list_state_.levels.size() > list_level)
 	{
@@ -2300,7 +2300,7 @@ void OoxConverter::convert(PPTX::Logic::TextParagraphPr *oox_paragraph_pr	, odf_
 	{
 		convert(oox_paragraph_pr->defRPr.GetPointer(), text_properties);
 
-		//надо подумать как брать последний по family !!! 
+		// need to think how to get the last one by family !!!
 		//convert(oox_paragraph_pr->m_oDefRunProperty.GetPointer());
 		//odf_context()->text_context()->set_parent_span_style(odf_context()->styles_context()->last_state().get_name());
 	}
@@ -2854,7 +2854,7 @@ void OoxConverter::convert(PPTX::Logic::TxBody *oox_txBody, PPTX::Logic::ShapeSt
 
 	convert(oox_txBody->lstStyle.GetPointer());
 
-//single math - либра не тянет сложные вложенности
+// single math - libre doesn't handle complex nesting
 	bool bSingleMath = false;
 	if (odf_context()->drawing_context()->is_text_box() &&
 		oox_txBody->Paragrs.size() == 1 && 
@@ -2876,7 +2876,7 @@ void OoxConverter::convert(PPTX::Logic::TxBody *oox_txBody, PPTX::Logic::ShapeSt
 	{
 		convert(&oox_txBody->Paragrs[i], oox_txBody->lstStyle.GetPointer());
 	
-	//внешние настройки для текста
+	// external settings for text
 		convert(oox_txBody->bodyPr.GetPointer());			
 		
 		if (oox_style)

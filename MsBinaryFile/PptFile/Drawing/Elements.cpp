@@ -149,9 +149,9 @@ bool PPT::CShapeElement::SetUpTextPlaceholder(std::wstring newText)
 	bool result = false;
 	PPT::CTextAttributesEx* pText = &m_pShape->m_oText;
 
-	for (size_t p = 0; p < pText->m_arParagraphs.size(); p++) //тут по всем -> 1-(33).ppt
+	for (size_t p = 0; p < pText->m_arParagraphs.size(); p++) // here for all -> 1-(33).ppt
 	{
-		if (pText->m_arParagraphs[p].m_arSpans.size() > 0)//??? по всем?
+		if (pText->m_arParagraphs[p].m_arSpans.size() > 0)//??? for all?
 		{
 			int pos = (int)pText->m_arParagraphs[p].m_arSpans[0].m_strText.find(L"*");
 
@@ -372,7 +372,7 @@ namespace PPT
 		CPPTShape* pPPTShape = dynamic_cast<CPPTShape*>(m_pShape->getBaseShape().get());
 		if (NULL == pPPTShape)
 		{
-			// такого быть не может
+			// this cannot happen
 			return L"";
 		}
 

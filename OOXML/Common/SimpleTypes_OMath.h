@@ -33,7 +33,7 @@
 
 #include "SimpleTypes_Base.h"
 
-// Здесь представлены все простые типы Drawing-Main из спецификации Office Open Xml (22.1.3)
+// Here are all simple Drawing-Main types from the Office Open XML specification (22.1.3)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------

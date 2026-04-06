@@ -50,7 +50,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CWorkbookView : public WritingElement
 		{

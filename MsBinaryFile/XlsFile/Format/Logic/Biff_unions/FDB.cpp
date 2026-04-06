@@ -279,7 +279,7 @@ int FDB::serialize(std::wostream & strm, bool bSql, bool bDBB)
 			{
 				CP_XML_NODE(L"sharedItems")
 				{
-					//использовать поля присутствия из xls низя - они частенько записаны неверно!!
+					//can't use presence fields from xls - they are often written incorrectly!!
 					//if (!fdb->fNonDates)	CP_XML_ATTR(L"containsNonDate", fdb->fNonDates);	
 					//if (fdb->fDateInField)	CP_XML_ATTR(L"containsDate",	fdb->fDateInField);
 					//if (fdb->fNumField)		CP_XML_ATTR(L"containsNumber",	fdb->fNumField);

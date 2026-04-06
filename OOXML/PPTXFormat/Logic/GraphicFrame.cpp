@@ -108,7 +108,7 @@ namespace PPTX
 		}
 		void GraphicFrame::ReadAttributes2(XmlUtils::CXmlLiteReader& oReader)
 		{
-			//todooo нормальный объект сделать!!
+			//todo create proper object!!
 			if (!olePic.IsInit())				olePic.Init();
 			if (!olePic->oleObject.IsInit())	olePic->oleObject.Init();
 
@@ -212,7 +212,7 @@ namespace PPTX
 						if (strName1 == L"pic")
 						{
 							result = true;
-							if (!olePic.IsInit()) //создается уровнем выше 
+							if (!olePic.IsInit()) //created at higher level 
 								olePic.Init();
 							olePic->fromXML(oReader);
 							
@@ -311,7 +311,7 @@ namespace PPTX
 					}
 					else if (L"oleObj" == strName)
 					{
-						olePic = oNode.ReadNode(L"p:pic"); //нормальный вариант объекта
+						olePic = oNode.ReadNode(L"p:pic"); //normal object variant
 						if (olePic.IsInit())
 						{
 							olePic->fromXMLOle(oNode);
@@ -319,7 +319,7 @@ namespace PPTX
 						}
 						else
 						{
-							olePic.Init();  //старый вариант описания объекта через spid в VmlDrawing
+							olePic.Init();  //old object description variant via spid in VmlDrawing
 
 							Logic::PrstGeom* geom = new Logic::PrstGeom();
 							geom->prst = L"rect";

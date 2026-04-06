@@ -217,7 +217,7 @@ AscFonts.HB_ShapeText = function(fontFile, text, features, script, direction, la
  */
 function ZLib()
 {
-	this.engine = 0; // указатель на нативный класс Zlib
+	this.engine = 0; // pointer to native Zlib class
 	this.files = {};
 }
 
@@ -244,17 +244,17 @@ ZLib.prototype.open = function(buf)
 
 	var arrayBuffer = (undefined !== buf.byteLength) ? new Uint8Array(buf) : buf;
 
-	// TODO: открыли архив, и заполнили this.files
-	// объектами { path : null }
+	// TODO: opened the archive and filled this.files
+	// with objects { path : null }
 
-	// копируем память в память webasm
+	// copy memory to webasm memory
 	var FileRawDataSize = arrayBuffer.length;
 	var FileRawData = Module["_Zlib_Malloc"](FileRawDataSize);
 	if (0 == FileRawData)
 		return false;
 	Module["HEAP8"].set(arrayBuffer, FileRawData);
 
-	// грузим данные
+	// load data
 	this.engine = Module["_Zlib_Open"](FileRawData, FileRawDataSize);
 	if (0 == this.engine)
 	{
@@ -262,7 +262,7 @@ ZLib.prototype.open = function(buf)
 		return false;
 	}
 
-	// получаем пути в архиве
+	// get paths in archive
 	var pointer = Module["_Zlib_GetPaths"](this.engine);
 	if (0 == pointer)
 	{
@@ -352,11 +352,11 @@ ZLib.prototype.getFile = function(path)
 	if (!this.isModuleInit || !this.engine)
 		return null;
 
-	// проверяем - есть ли файл вообще?
+	// check if the file exists at all
 	if (undefined === this.files[path])
 		return null;
 
-	// проверяем - может мы уже его разжимали?
+	// check if we have already decompressed it
 	if (null !== this.files[path])
 	{
 		if (this.files[path].l > 0)
@@ -406,7 +406,7 @@ ZLib.prototype.addFile = function(path, data)
 	if (!data)
 		return false;
 
-	// проверяем - может такой файл уже есть? тогда его надо сначала удалить?
+	// check if such file already exists - then we need to delete it first
 	if (undefined !== this.files[path])
 		this.removeFile(path);
 
@@ -444,7 +444,7 @@ ZLib.prototype.removeFile = function(path)
 	if (!this.isModuleInit || !this.engine)
 		return false;
 
-	// проверяем - может такого файла и нет?
+	// check if such file doesn't exist
 	if (undefined === this.files[path])
 		return false;
 		

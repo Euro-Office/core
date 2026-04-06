@@ -47,7 +47,7 @@ bool OOXColorReader2::Parse( ReaderParameter oParam, RtfColor& oOutputColor,std:
 	//	std::wstring val = oXmlReader.ReadNodeAttribute(sColor, L"" );
 	//	if( !sThemeColor.empty() )
 	//	{
-	//		//Todo  tx1 - моджет приходить text1
+	//		//Todo  tx1 - may come as text1
 	//		RtfColor::ThemeColor oTheme = RtfColor::TC_NONE;
 	//		if( sThemeColor == L"accent1" )
 	//			oTheme = RtfColor::caccentone;
@@ -86,7 +86,7 @@ bool OOXColorReader2::Parse( ReaderParameter oParam, RtfColor& oOutputColor,std:
 
 	//		if( true == oParam.oRtf->m_oColorTable.GetColor( oTheme , oOutputColor ) )
 	//		{
-	//			//из themeColor
+	//			//from themeColor
 	//			int nShade = Strings::ToInteger( themeShade );
 	//			if( nShade < 0 )
 	//				nShade = 0;

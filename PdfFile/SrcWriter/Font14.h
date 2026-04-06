@@ -85,7 +85,7 @@ namespace PdfWriter
 
 		std::map<unsigned int, unsigned int> m_mCodeToUnicode;
 		std::map<unsigned int, unsigned int> m_mCodeToGID;
-		std::map<unsigned int, unsigned int> m_mCodeToWidth; // Code -> Width в единицах em
+		std::map<unsigned int, unsigned int> m_mCodeToWidth; // Code -> Width in em units
 	};
 }
 

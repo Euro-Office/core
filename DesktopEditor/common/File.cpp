@@ -77,7 +77,7 @@
 #include <unistd.h>
 #endif
 
-// реализация возможности подмены определения GetTempPath
+// implementation of GetTempPath definition override capability
 std::wstring g_overrideTmpPath = L"";
 
 #include "File.h"
@@ -1601,7 +1601,7 @@ namespace NSFile
 	}
 	bool CFileBinary::OpenTempFile(std::wstring *pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t* wsName)
 	{
-		// TODO: Реализовать когда wsName != NULL
+		// TODO: Implement when wsName != NULL
 
 		std::wstring wsTemp, wsFileName;
 		FILE *pTempFile = NULL;

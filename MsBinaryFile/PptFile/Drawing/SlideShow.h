@@ -37,14 +37,14 @@ namespace PPT
 	class CTransition
 	{
 	public:
-		bool	m_bAudioPresent;		// есть ли аудио
-		CAudioElement m_oAudio;			// аудио
+		bool	m_bAudioPresent;		// is audio present
+		CAudioElement m_oAudio;			// audio
 
-		BYTE	m_nEffectDirection;		// направление эффекта
-		BYTE	m_nEffectType;			// тип перехода
+		BYTE	m_nEffectDirection;		// effect direction
+		BYTE	m_nEffectType;			// transition type
 
-		bool	m_bLoopSound;			// зациклить аудио
-                bool	m_bStopSound;			// перед транзишном перестать играть все аудио до этого
+		bool	m_bLoopSound;			// loop audio
+                bool	m_bStopSound;			// stop playing all previous audio before transition
 
 //                bool            m_bAdvClick;            // Attributes for true transition
 //                int             m_nAdvTm;
@@ -93,13 +93,13 @@ namespace PPT
 	class CSlideShowInfo
 	{
 	public:
-		double	m_dSlideDuration;	// длительность слайда (без учета перехода)
-		bool	m_bHidden;			// нужно ли НЕ показывать слайд при проигрывании
+		double	m_dSlideDuration;	// slide duration (excluding transition)
+		bool	m_bHidden;			// whether to NOT show slide during playback
 
-		CTransition	m_oTransition;	// переход
+		CTransition	m_oTransition;	// transition
 
-                bool	m_bAdvClick;        // разрешить автопереход по времени
-                bool    m_bManulClick;      // переход на следующий по щелчку
+                bool	m_bAdvClick;        // allow automatic timed transition
+                bool    m_bManulClick;      // advance to next on click
 
 		CSlideShowInfo() : m_oTransition()
 		{

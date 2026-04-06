@@ -34,7 +34,7 @@
 #include <boost/optional/optional_io.hpp>
 #include <boost/optional.hpp>
 
-/// внешнее объявление для Optional, используем boost::optional
+/// external declaration for Optional, using boost::optional
 
 template <class T>
 struct optional

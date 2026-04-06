@@ -1833,7 +1833,7 @@ namespace SimpleTypes
 				sValue = sValue.substr(1);
 			}
 
-			//В документации не написано, что цвет может приходить строкой, но в реальных документах встречается и word это разруливает.
+			//Documentation doesn't specify that color can come as string, but it occurs in real documents and Word handles this.
 			CPresetColorVal oPresetColorVal;
 			if(oPresetColorVal.FromStringIgnoreCase(sValue))
 			{
@@ -2138,7 +2138,7 @@ namespace SimpleTypes
 		{
 			this->m_eValue = highlightcolorNone;
 
-			// Инициализируем цвет
+			// Initialize color
 			FromString( ToString() );
 		}
 
@@ -4368,7 +4368,7 @@ namespace SimpleTypes
 
 
 
-// Дополнительные типы
+// Additional types
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -4442,13 +4442,13 @@ namespace SimpleTypes
 
 			if ( '0' == wsChar )
 			{
-				// Ничего не делаем
+				// Do nothing
 			}
 			else if ( '1' == wsChar )
 			{
 				this->m_eValue ^= nMult;
 			}
-			else // Неправильный формат
+			else // Invalid format
 				break;
 		}
 	}

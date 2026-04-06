@@ -246,7 +246,7 @@ namespace Aggplus
 
 		if (!m_bIsClip2)
 		{
-			// смешивать надо с растерайзером
+			// need to blend with rasterizer
 			pRasterizer->filling_rule(bEvenOdd ? agg::fill_even_odd : agg::fill_non_zero);
 
 			scanline_type sl1; 
@@ -259,7 +259,7 @@ namespace Aggplus
 		}
 		else
 		{
-			// надо смешивать со стораджем
+			// need to blend with storage
 
 			pRasterizer->filling_rule(op ? agg::fill_even_odd : agg::fill_non_zero);
 

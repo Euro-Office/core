@@ -36,7 +36,7 @@
 
 namespace DocFileFormat
 {
-	//!!!TODO: Реальные значения не соответствуют значениям из спецификации!!!
+	//!!!TODO: Actual values do not match the specification values!!!
 	typedef enum _PositionHorizontal
 	{
 		//msophAbs = 0x1,
@@ -55,7 +55,7 @@ namespace DocFileFormat
 		msoprhChar
 	} PositionHorizontalRelative;
 
-	//!!!TODO: Реальные значения не соответствуют значениям из спецификации!!!
+	//!!!TODO: Actual values do not match the specification values!!!
 	typedef enum _PositionVertical
 	{
 		//msopvAbs = 0x1,

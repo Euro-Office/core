@@ -76,7 +76,7 @@ namespace OOX
 			CStringXLSB m_oValue;
 		};
 
-		//необработано:
+		//not implemented:
 		class CText : public WritingElement
 		{
 		public:

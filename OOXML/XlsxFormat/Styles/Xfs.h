@@ -119,7 +119,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff> m_oLocked;
 		};
 
-		//нереализован:
+		//not implemented:
 		//<extLst>
 		class CXfs : public WritingElement
 		{

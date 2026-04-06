@@ -911,14 +911,14 @@ namespace DocFileFormat
 				switch (iter->op)
 				{
 				case 0:
-				case 4://обычный 							
+				case 4://normal 							
 					break;
 				case 1:
 				case 3:
-				case 5://верт (склони голову направо)						
+				case 5://vertical (tilt head right)						
 					appendStyleProperty(sTextboxStyle, L"layout-flow", L"vertical");
 					break;
-				case 2://верт (склони голову налево)	
+				case 2://vertical (tilt head left)	
 					appendStyleProperty(sTextboxStyle, L"layout-flow", L"vertical");
 					appendStyleProperty(sTextboxStyle, L"mso-layout-flow-alt", L"bottom-to-top");
 					break;
@@ -1195,7 +1195,7 @@ namespace DocFileFormat
 		{
 			if (b3D)
 			{
-				appendValueAttribute(&m_3dstyle, L"v:ext", L"view" ); //??? вытащить
+				appendValueAttribute(&m_3dstyle, L"v:ext", L"view" ); //??? extract
 			}
 			appendValueAttribute(&m_3dstyle, L"on", b3D ? L"t" : L"f" );
 			m_pXmlWriter->WriteString(m_3dstyle.GetXMLString());
@@ -1412,8 +1412,8 @@ namespace DocFileFormat
 
 	std::wstring VMLShapeMapping::GetLineFrom(const ChildAnchor* pAnchor, bool twistDimensions) const
 	{
-		//Если линия находится в группе, то координаты должны быть в Twips
-		//Если линия находится в группе, то координаты должны быть в других единицах измерения (например в twips)
+		//If line is in a group, coordinates must be in Twips
+		//If line is in a group, coordinates must be in other units of measurement (e.g. twips)
 
 		std::wstring strXmlFrom;
 
@@ -1457,7 +1457,7 @@ namespace DocFileFormat
 
 	std::wstring VMLShapeMapping::GetLineTo(const ChildAnchor* pAnchor, bool twistDimensions) const
 	{
-		//Если линия находится в группе, то координаты должны быть в других единицах измерения (например в twips)
+		//If line is in a group, coordinates must be in other units of measurement (e.g. twips)
 
 		std::wstring strXmlTo;
 
@@ -1580,7 +1580,7 @@ namespace DocFileFormat
 									boost::shared_array<unsigned char>(pData), nData, oBlip->btWin32));
 								result = true;	
 								break;
-							}//в случае ошибки конвертации -храним оригинальный dib
+							}//in case of conversion error - keep original dib
 						}
 						m_context->_docx->ImagesList.push_back(ImageFileStructure(GetTargetExt(oBlip->btWin32), 
 							bitBlip->m_pvBits, bitBlip->pvBitsSize, oBlip->btWin32));
@@ -1882,10 +1882,10 @@ namespace DocFileFormat
 
 					if (booleans->fUsefBehindDocument && booleans->fBehindDocument)
 					{
-						//за текстом (The shape is behind the text, so the z-index must be negative.)
+						//behind text (The shape is behind the text, so the z-index must be negative.)
 						m_isInlineShape = false;
 
-						if (false == bZIndex/* && false == m_inGroup*/) // Пример.doc
+						if (false == bZIndex/* && false == m_inGroup*/) // Example.doc
 						{
 							appendStyleProperty(oStyle, L"z-index", FormatUtils::IntToWideString(-zIndex - 0x7ffff));
 							bZIndex = true;
@@ -2060,7 +2060,7 @@ namespace DocFileFormat
 		}
 		else
 		{
-			//если не написать тип позиции, то будет inline
+			//if position type is not specified, it will be inline
 			if ( anchor != NULL )
 			{
 				appendStylePropertyFirst( style, L"position", L"absolute" );
@@ -2068,7 +2068,7 @@ namespace DocFileFormat
 			else if (m_pSpa)
 			{
 				//append size and position ...
-				//if (m_pSpa->fAnchorLock)//это возможность смены привязки , а не ее тип
+				//if (m_pSpa->fAnchorLock)//this is anchor change capability, not its type
 
 				if (m_isInlineShape)/*m_pSpa->bx == TEXT && m_pSpa->by == TEXT*/
 				{
@@ -2351,13 +2351,13 @@ namespace DocFileFormat
 			DrawingPrimitiveCTextBox * callout = dynamic_cast<DrawingPrimitiveCTextBox *>(primitive);
 			if ((callout) && (callout->txbx))
 			{
-				//временно обычный текстбокс
+				//temporarily regular textbox
 				callout->txbx->xa += callout->xa;
 				callout->txbx->ya += callout->ya;
 
 				WritePrimitiveProps(dynamic_cast<DrawingPrimitive*>(callout->txbx), (index==0?true:false));
 			}
-			//todooo нарисовать кастомный шейп
+			//todooo draw custom shape
 		}
 		else 
 			WritePrimitiveProps(primitive, (index==0?true:false));

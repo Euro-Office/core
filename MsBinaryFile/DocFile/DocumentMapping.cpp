@@ -168,7 +168,7 @@ namespace DocFileFormat
 			}
 			else
 			{
-				// -1 //че-нить в лог написать
+				// -1 //write something to log
 			}*/
 
 			oldElem = currentFc;
@@ -336,7 +336,7 @@ namespace DocFileFormat
 			}
 		}
 
-		if ((chpxs != NULL) && (chpxFcs != NULL) && !chpxFcs->empty())//? второе
+		if ((chpxs != NULL) && (chpxFcs != NULL) && !chpxFcs->empty())//? the second
 		{
 			size_t i = 0;
 
@@ -361,7 +361,7 @@ namespace DocFileFormat
 
 				//it's the last chpx and it exceeds the paragraph
 
-				if ( ( i == ( chpxs->size() - 1 ) ) && ( fcChpxEnd > fcEnd ) )//todooo убрать обращение к size() !!!
+				if ( ( i == ( chpxs->size() - 1 ) ) && ( fcChpxEnd > fcEnd ) )//todooo remove call to size() !!!
 				{
 					//so use the FC of the paragraph
 					fcChpxEnd = fcEnd;
@@ -831,7 +831,7 @@ namespace DocFileFormat
 
 				if (!oVmlMapper.m_isEmbedded && oVmlMapper.m_isEquation)
 				{
-					//нельзя в Run писать oMath
+					//cannot write oMath inside Run
 					//m_pXmlWriter->WriteString(oVmlMapper.m_equationXml);
 					_writeAfterRun = oVmlMapper.m_equationXml;
 				}
@@ -910,7 +910,7 @@ namespace DocFileFormat
 					}
 				}
 				XMLTools::XMLElement elem(L"w:br");
-				//СЗ в МРФ Техноград о предоставлении ТП 1 квартал 2019_MO_Q31.doc
+				//test files: СЗ в МРФ Техноград о предоставлении ТП 1 квартал 2019_MO_Q31.doc
 				//Документ на бланке 2.doc
                 elem.AppendAttribute(L"w:type", L"textWrapping");
                 elem.AppendAttribute(L"w:clear", L"all");
@@ -1015,7 +1015,7 @@ namespace DocFileFormat
 
 				//<w:sym w:font="Symbol" w:char="F062"/>
 
-				if (false == s.HexValue.empty()) //09FluGuide.doc - поврежденный
+				if (false == s.HexValue.empty()) //09FluGuide.doc - corrupted
 				{
 					m_pXmlWriter->WriteNodeBegin(L"w:sym", true);
 					if (false == s.FontName.empty()) // ??? default
@@ -1097,7 +1097,7 @@ namespace DocFileFormat
                         if (oPicture.shapeContainer)
                         {
                             if (oPicture.shapeContainer->m_nShapeType != msosptPictureFrame)
-                                bPicture = false;//шаблон 1.doc картинка в колонтитуле
+                                bPicture = false;//template 1.doc image in header/footer
 
                             m_bSkip = oPicture.shapeContainer->m_bSkip;
                         }
@@ -1125,7 +1125,7 @@ namespace DocFileFormat
                                 }
                                 else if (oVmlMapper.m_isEquation)
                                 {
-                                    //нельзя в Run писать oMath
+                                    //cannot write oMath inside Run
                                     //m_pXmlWriter->WriteString(oVmlMapper.m_equationXml);
                                     _writeAfterRun = oVmlMapper.m_equationXml;
                                     bFormula = true;
@@ -1225,7 +1225,7 @@ namespace DocFileFormat
 			cp++;
 		}
 		if (std::wstring::npos != text.find(L"EMBED"))
-		{//если есть мааркер конца поля и маркер замещающей картинки и нету маркера начала
+		{//if there is field end marker and substitute image marker but no start marker
 			//О реорганизации территориальных органов ПФР с 01.11.2018.doc
 			int cpFieldStart	= initialCp;
 			int cpPic			= searchNextTextMark(m_document->Text, cpFieldStart, TextMark::Picture);

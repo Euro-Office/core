@@ -55,7 +55,7 @@ pptx_content_types_file::pptx_content_types_file()
 	content()->add_override(L"/_rels/.rels",			L"application/vnd.openxmlformats-package.relationships+xml");
     
 	content()->add_override(L"/ppt/presentation.xml",L"application/vnd.openxmlformats-officedocument.presentationml.presentation.main+xml");
-  //  content()->add_override(L"/ppt/tableStyles.xml",	L"application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml");необяательно
+  //  content()->add_override(L"/ppt/tableStyles.xml",	L"application/vnd.openxmlformats-officedocument.presentationml.tableStyles+xml");//optional
   
 	content()->add_override(L"/docProps/app.xml",	L"application/vnd.openxmlformats-officedocument.extended-properties+xml");
     content()->add_override(L"/docProps/core.xml",	L"application/vnd.openxmlformats-package.core-properties+xml");
@@ -143,7 +143,7 @@ void slides_files::write(const std::wstring & RootPath)
             rels_->add(id, kWSRel, fileRef);
         }
 
-        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//внитренние релсы
+        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//internal rels
         
 		rels_files relFiles;
         relFiles.add_rel_file(slides_[i]->get_rel_file());
@@ -178,7 +178,7 @@ void notes_files::write(const std::wstring & RootPath)
             rels_->add(id, kWSRel, fileRef);
         }
 
-        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//внитренние релсы
+        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//internal rels
         
 		rels_files relFiles;
         relFiles.add_rel_file(slides_[i]->get_rel_file());
@@ -220,7 +220,7 @@ void slideMasters_files::write(const std::wstring & RootPath)
             rels_->add(id, kWSRel, fileRef);
         }
 
-        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//внитренние релсы
+        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//internal rels
         
 		rels_files relFiles;
         relFiles.add_rel_file(slides_[i]->get_rel_file());
@@ -254,7 +254,7 @@ void notesMaster_files::write(const std::wstring & RootPath)
             rels_->add(id, kWSRel, fileRef);
         }
 
-        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//внитренние релсы
+        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//internal rels
         
 		rels_files relFiles;
         relFiles.add_rel_file(slides_[i]->get_rel_file());
@@ -288,7 +288,7 @@ void slideLayouts_files::write(const std::wstring & RootPath)
 		content_type * contentTypes = get_main_document()->get_content_types_file().content();
         contentTypes->add_override(std::wstring(L"/ppt/slideLayouts/") + fileName, kWSConType);
 
-        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//внитренние релсы
+        slides_[i]->get_rel_file()->set_file_name(fileName + L".rels");//internal rels
         
 		rels_files relFiles;
         relFiles.add_rel_file(slides_[i]->get_rel_file());

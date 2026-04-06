@@ -205,7 +205,7 @@ namespace NExtractTools
         convertParams.m_sTempResultOOXMLDirectory = sTempUnpackedXLSB;
         nRes = xlst_bin2xlsx_dir(sTargetBin, sTempUnpackedXLSB, params, convertParams);
 
-		// удаляем EditorWithChanges, потому что он не в Temp
+		// delete EditorWithChanges because it's not in Temp
 		if (sFrom != sTargetBin)
 			NSFile::CFileBinary::Remove(sTargetBin);
 		return nRes;
@@ -294,7 +294,7 @@ namespace NExtractTools
 			nRes = oCXlsxSerializer.loadFromFile(sTargetBin, convertParams.m_sTempResultOOXMLDirectory, sXmlOptions, sMediaPath, sEmbedPath);
 			params.m_bMacro = oCXlsxSerializer.getMacroEnabled();
 		}
-		// удаляем EditorWithChanges, потому что он не в Temp
+		// delete EditorWithChanges because it's not in Temp
 		if (sFrom != sTargetBin)
 			NSFile::CFileBinary::Remove(sTargetBin);
 

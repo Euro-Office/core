@@ -113,7 +113,7 @@ bool COfficeFileFormatChecker::isMultiPartsHtmlFormatFile(unsigned char *pBuffer
 		return false;
 
 	const char *contentTypeFormatLine1 = "Content-Type: multipart/related";
-	const char *contentTypeFormatLine2 = "Content-Type: text/html"; // может быть и вне заданого буфера (todooo)
+	const char *contentTypeFormatLine2 = "Content-Type: text/html"; // may be outside the given buffer (todooo)
 
 	std::string xml_string((char *)pBuffer, dwBytes);
 
@@ -706,7 +706,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 	std::wstring fileName = _fileName;
 #endif
 
-	// приоритет как оказывается важен
+	// priority turns out to be important
 	// Metamorphic Manual for windows 28415.doc
 	POLE::Storage storage(fileName.c_str());
 	if (storage.open())
@@ -719,7 +719,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		}
 		else if (isDocFormatFile(&storage))
 		{
-			// nFileType внутри
+			// nFileType inside
 			return true;
 		}
 		else if (isXlsFormatFile(&storage))
@@ -930,7 +930,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 	//------------------------------------------------------------------------------------------------
 	if (iXmlFile(fileName))
 	{
-		// nFileType внутри
+		// nFileType inside
 		return true;
 	}
 	//// by Extension
@@ -978,7 +978,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HTML;
 	else if (0 == sExt.compare(L".bin")) // base64 string
 		nFileType = AVS_OFFICESTUDIO_FILE_CANVAS_PDF;
-	else if (0 == sExt.compare(L".doct")) // случай архива с html viewer
+	else if (0 == sExt.compare(L".doct")) // case of archive with html viewer
 		nFileType = AVS_OFFICESTUDIO_FILE_TEAMLAB_DOCY;
 	else if (0 == sExt.compare(L".txt") || 0 == sExt.compare(L".xml") || 0 == sExt.compare(L".rtf")	|| 0 == sExt.compare(L".doc") || 0 == sExt.compare(L".docx"))
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_TXT;
@@ -1168,7 +1168,7 @@ bool COfficeFileFormatChecker::isDocFormatFile(const std::wstring &fileName)
 	{
 		if (isDocFormatFile(&storage))
 		{
-			// nFileType внутри;
+			// nFileType inside;
 			return true;
 		}
 	}
@@ -1191,7 +1191,7 @@ bool COfficeFileFormatChecker::isOnlyOfficeFormatFile(const std::wstring &fileNa
 {
 	COfficeUtils OfficeUtils(NULL);
 
-	ULONG nBufferSize = 128; // ограничим считывание из бинарника
+	ULONG nBufferSize = 128; // limit reading from binary
 	BYTE *pBuffer = NULL;
 
 	HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"Editor.bin", &pBuffer, nBufferSize);
@@ -1541,7 +1541,7 @@ bool COfficeFileFormatChecker::isOpenOfficeFormatFile(const std::wstring &fileNa
 	}
 	else
 	{
-		// если не записан тип смотрим манифест
+		// if type is not written, check manifest
 		nBufferSize = 0;
 		HRESULT hresult = OfficeUtils.LoadFileFromArchive(fileName, L"META-INF/manifest.xml", &pBuffer, nBufferSize);
 		if (hresult == S_OK && pBuffer != NULL)

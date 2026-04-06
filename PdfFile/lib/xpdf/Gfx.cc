@@ -5104,14 +5104,14 @@ void Gfx::opEndIgnoreUndef(Object args[], int numArgs) {
 void Gfx::SkipBDC()
 {
   Object obj;
-  // Стек аргументов (как в основном цикле обработки)
+  // Argument stack (as in the main processing loop)
   Object args[maxArgs];
   int numArgs = 0;
 
   getContentObj(&obj);
   while (!obj.isEOF()) {
 	if (obj.isCmd("BMC") || obj.isCmd("BDC")) {
-	  // Сбрасываем накопленные аргументы перед рекурсией
+	  // Reset accumulated arguments before recursion
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	  SkipBDC();
@@ -5125,11 +5125,11 @@ void Gfx::SkipBDC()
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	} else if (obj.isCmd()) {
-	  // Любая другая команда — просто сбрасываем аргументы
+	  // Any other command - just reset arguments
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	} else {
-	  // Операнд — кладём в стек аргументов
+	  // Operand - put on argument stack
 	  if (numArgs < maxArgs) {
 		obj.copy(&args[numArgs]);
 		++numArgs;

@@ -66,7 +66,7 @@ namespace odf_writer
 	static const std::wstring default_MS_series_colors[] = 
 	{
         L"#355a86", L"#883533", L"#6e963c", L"#594573", L"#327a8d", L"#3d679a", L"#9d3e3b", L"#7e9945", L"#674f84", L"#398ba2", L"#cb7934",
-        //todooo - продолжить .... пока копия первых
+        // todooo - continue.... for now copy of first ones
         L"#355a86", L"#883533", L"#6e963c", L"#594573", L"#327a8d", L"#3d679a", L"#9d3e3b", L"#7e9945", L"#674f84", L"#398ba2", L"#cb7934",
         L"#355a86", L"#883533", L"#6e963c", L"#594573", L"#327a8d", L"#3d679a", L"#9d3e3b", L"#7e9945", L"#674f84", L"#398ba2", L"#cb7934",
         L"#355a86", L"#883533", L"#6e963c", L"#594573", L"#327a8d", L"#3d679a", L"#9d3e3b", L"#7e9945", L"#674f84", L"#398ba2", L"#cb7934",
@@ -193,8 +193,8 @@ public:
 	bool								local_table_enabled_;
 	bool								local_table_reset_ref_;
 
-	std::vector<odf_chart_level_state>	current_level_;	//постоянно меняющийся список уровней наследования
-	std::vector<odf_chart_state>		chart_list_;		//все элементы .. для удобства разделение по "топам"
+	std::vector<odf_chart_level_state>	current_level_;	// constantly changing list of inheritance levels
+	std::vector<odf_chart_state>		chart_list_;		// all elements.. for convenience separated by "tops"
 ////////
 	void set_default_series_color();
 	void clear_current();
@@ -229,7 +229,7 @@ std::wstring odf_chart_context::Impl::convert_formula(std::wstring oox_ref)
 		//remove table name
 		if (!refs.empty())
 		{		
-			size_t pos = refs[0].rfind(L"!");//в имени таблички может быть...
+			size_t pos = refs[0].rfind(L"!");// may be in table name...
 			if (std::wstring::npos != pos)
 			{
 				refs[0] = L"local-table!" + refs[0].substr(pos + 1, refs[0].size() - pos);
@@ -255,7 +255,7 @@ std::wstring odf_chart_context::Impl::convert_formula(std::wstring oox_ref)
 	else
 	{
 		//open office dont support defined names in chart formula 
-		// 7501214.xlsx  - частичное заполнение local-table
+		// 7501214.xlsx  - partial filling of local-table
 		int col = -1, row = -1;
 		utils::parsing_ref( refs[0], col, row);
 		
@@ -444,7 +444,7 @@ void odf_chart_context::set_chart_bar_type(int type)
 	}
 	if (type == -1)
 	{
-		//нужно вытащить свойство с уровня выше.
+		// need to get property from higher level.
 		size_t sz = impl_->current_level_.size();
 		if (sz > 1)
 			impl_->current_level_.back().chart_properties->solid_type_ = 
@@ -758,7 +758,7 @@ void odf_chart_context::start_series(odf_types::chart_class::type type)
 	impl_->series_.push_back(elm);
 	impl_->group_series_.push_back(elm);
 
-	//может хранить отдельно общий класс чарта??
+	// maybe store common chart class separately??
 	if (type == chart_class::radar || (impl_->get_current_chart_class() == chart_class::stock && type == chart_class::line))
 	{
 		series->chart_series_attlist_.chart_class_ = impl_->get_current_chart_class();
@@ -792,7 +792,7 @@ void odf_chart_context::set_label_show_leader_line(bool val)
 void odf_chart_context::set_label_show_legend_key(bool val)
 {
 }
-void odf_chart_context::set_label_formula(const std::wstring & oox_ref) //в odf не поддерживается
+void odf_chart_context::set_label_formula(const std::wstring & oox_ref) // not supported in odf
 {
 	std::wstring odf_ref = impl_->convert_formula(oox_ref);
 	
@@ -821,7 +821,7 @@ void odf_chart_context::add_axis_group_series(unsigned int id)
 void odf_chart_context::end_group_series()
 {
 	if (impl_->axis_.empty() && false == impl_->categories_.empty())
-	{//без осей нихера не понимает MS Office !!! - причем оси для MS должны идти обязательно перед сериями
+	{// MS Office doesn't understand anything without axes!!! - also axes for MS must go before series
 		start_axis();
 			set_axis_dimension(1);
 		end_element();
@@ -864,7 +864,7 @@ void odf_chart_context::end_group_series()
 		{
 			if (impl_->axis_[j].oox_id == impl_->axis_group_series_[i] && impl_->axis_[j].dimension ==2)
 			{
-				axis_name = impl_->axis_[j].name;//привязка оси Y
+				axis_name = impl_->axis_[j].name;// Y axis binding
 				break;
 			}
 		}
@@ -1123,7 +1123,7 @@ void odf_chart_context::end_plot_area()
 		{
 			cell_range = cell_range + impl_->data_cell_ranges_[i].ref + L" ";
 		}
-		//plot_area->chart_plot_area_attlist_.table_cell_range_address_ = cell_range; - точно для локальной диагр это лишнее!!!
+		//plot_area->chart_plot_area_attlist_.table_cell_range_address_ = cell_range; - definitely unnecessary for local chart!!!
 	}
 	end_element();
 }
@@ -1625,7 +1625,7 @@ void odf_chart_context::start_element(office_element_ptr & elm, office_element_p
 	size_t level = impl_->current_level_.size();
 	
 	drawing_context()->start_element(elm, style_elm);
-	//if (!impl_->current_level_.empty()) impl_->current_level_.back()->add_child_element(elm); не надо...наследование через start_element в drawing
+	//if (!impl_->current_level_.empty()) impl_->current_level_.back()->add_child_element(elm); not needed...inheritance through start_element in drawing
 	
 	odf_element_state state = {elm, style_name, style_elm, level, 0};	
 	impl_->current_chart_state_.elements_.push_back(state);
@@ -1751,7 +1751,7 @@ void odf_chart_context::set_category_axis_formula(const std::wstring & oox_ref, 
 	impl_->categories_.push_back(category_state);
 }
 
-void odf_chart_context::set_series_pie_explosion(int val)//или точка серии
+void odf_chart_context::set_series_pie_explosion(int val)// or series point
 {
 	if (!impl_->current_level_.back().chart_properties)return;
 
@@ -1859,7 +1859,7 @@ void odf_chart_context::set_cash(std::wstring format_code, std::vector<std::wstr
 	}
 	if(ref.empty() && !data_str.empty())
 	{
-		// банальнейшая генерация А1 ... Аххх
+		// simplest A1 ... Axxx generation
 
 		ref = std::wstring(L"local-table.A1:") + std::wstring(L".A") + boost::lexical_cast<std::wstring>(data_str.size());
 	}
@@ -1994,7 +1994,7 @@ void odf_chart_context::Impl::create_local_table()
 	int min_col = 0xffff;
 	int min_row = 0xffff;
 	
-	//выкинем дублирующие ref
+	// remove duplicate refs
 	for (size_t i = 0; i < cash_.size(); i++)
 	{
 		for (size_t j = i + 1; j < cash_.size(); j++)
@@ -2015,7 +2015,7 @@ void odf_chart_context::Impl::create_local_table()
 
 		if (refs.size() < 1) continue;
 		
-		size_t r = refs[0].rfind(L".");//в имени таблички может быть точка
+		size_t r = refs[0].rfind(L".");// there may be a dot in table name
 		if (std::wstring::npos != r)
 		{
 			table_name = refs[0].substr (0, r);

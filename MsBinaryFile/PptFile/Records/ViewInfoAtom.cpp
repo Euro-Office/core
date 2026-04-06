@@ -53,6 +53,6 @@ void CRecordViewInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *p
     m_bZoomToFit = StreamUtils::ReadBYTE(pStream);
     m_bDraftMode = StreamUtils::ReadBYTE(pStream);
 
-    // 2 байта зарезервированы...
+    // 2 bytes are reserved...
     StreamUtils::StreamSkip(2, pStream);
 }

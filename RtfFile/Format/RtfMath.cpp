@@ -75,7 +75,7 @@ bool RtfMath::IsRtfControlPropertyBool( std::string sControl )
 
     int mc_nRtfControlWordsSize	=  sizeof( mc_aRtfControlWords ) / sizeof( char* );
 
-	//можно бинарный поиск вставить
+	//binary search can be inserted here
 	for( int i = 0; i < mc_nRtfControlWordsSize; i++ )
         if( mc_aRtfControlWords[ i ] == sControl )
 			return true;
@@ -90,7 +90,7 @@ bool RtfMath::IsRtfControlProperty( std::string sControl )
 
     int mc_nRtfControlWordsSize	=  sizeof( mc_aRtfControlWords ) / sizeof( char* );
 	
-	//можно бинарный поиск вставить
+	//binary search can be inserted here
 	for( int i = 0; i < mc_nRtfControlWordsSize; i++ )
 	{
         if( mc_aRtfControlWords[ i ] == sControl )
@@ -110,7 +110,7 @@ bool RtfMath::IsRtfControlWord( std::string sControl )
 
     int mc_nRtfControlWordsSize	=  sizeof( mc_aRtfControlWords ) / sizeof( char* );
 	
-	//можно бинарный поиск вставить
+	//binary search can be inserted here
 	for( int i = 0; i < mc_nRtfControlWordsSize; i++ )
 	{
         if( mc_aRtfControlWords[ i ] == sControl )
@@ -223,7 +223,7 @@ std::wstring RtfMath::RenderToOOX(RenderParameter oRenderParameter)
 
     sResult += L"</" + wsOOXName + L">";
 
-//альтернативная картинка
+//alternative picture
 //	if( NULL != m_oPicture )
 //		sResult += m_oPicture->RenderToOOX(oRenderParameter);
 

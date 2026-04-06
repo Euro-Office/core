@@ -163,7 +163,7 @@ void odp_conversion_context::start_master_slide(std::wstring & name)
 void odp_conversion_context::end_master_slide()
 {
 	slide_context_.end_page();
-	slide_context_.set_styles_context(NULL); //возврат на базовый
+	slide_context_.set_styles_context(NULL); //return to base
 }
 void odp_conversion_context::start_layout_slide()
 {
@@ -178,7 +178,7 @@ void odp_conversion_context::start_layout_slide()
 void odp_conversion_context::end_layout_slide()
 {
 	slide_context_.end_page();
-	slide_context_.set_styles_context(NULL); //возврат на базовый
+	slide_context_.set_styles_context(NULL); //return to base
 }
 
 odf_style_context_ptr odp_conversion_context::styles_context()	

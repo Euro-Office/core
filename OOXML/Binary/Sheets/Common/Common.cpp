@@ -75,14 +75,14 @@ namespace SerializeCommon
         std::string sUnicode((char*)pUtf8, nUtf8Size);
 		RELEASEARRAYOBJECTS(pUtf8);
 
-		//Убираем "data:image/jpg;base64,"
+		//Remove "data:image/jpg;base64,"
 		int nShift = 0;
         int nIndex = sUnicode.find("base64,");
 		if(-1 != nIndex)
 		{
 			nShift = nIndex + 7;
 		}
-		// Получаем размер файла
+		// Get file size
         LONG lFileSize = sUnicode.length () - nShift;
 		INT nDstLength = lFileSize;
 		BYTE *pBuffer = new BYTE [lFileSize];
@@ -114,7 +114,7 @@ namespace SerializeCommon
     void ReadFileType(const std::wstring& sXMLOptions, BYTE& result, UINT& nCodePage, std::wstring& sDelimiter, BYTE& cSaveFileType, _INT32& Lcid)
 	{
 		result = BinXlsxRW::c_oFileTypes::XLSX;
-		nCodePage = 46;		//default 46 временно CP_UTF8
+		nCodePage = 46;		//default 46 temporarily CP_UTF8
 		cSaveFileType = BinXlsxRW::c_oFileTypes::XLSX;// default
         Lcid = -1;// default
 

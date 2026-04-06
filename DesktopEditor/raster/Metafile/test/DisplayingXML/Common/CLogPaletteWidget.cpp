@@ -14,7 +14,7 @@ CLogPaletteWidget::CLogPaletteWidget(QWidget *pParent)
         QLabel *pName = new QLabel("LogPallete");
         pName->setStyleSheet("QLabel { text-decoration: underline; }");
 
-        QPushButton *pAddedButton = new QPushButton("Добавить цвет");
+        QPushButton *pAddedButton = new QPushButton("Add color");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CLogPaletteWidget::on_CreateColor_clicked);
 

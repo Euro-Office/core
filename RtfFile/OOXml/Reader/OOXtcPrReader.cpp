@@ -42,7 +42,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 {
 	if (m_ooxTableCellProps == NULL) return false;
 
-	//ищем cnfStyle  и применяем внешний стиль
+	//find cnfStyle and apply external style
 	if( NULL != oParam.poTableStyle )
 	{
 		if( m_ooxTableCellProps->m_oCnfStyle.IsInit() )
@@ -232,5 +232,5 @@ void OOXtcPrReader::Parse(ComplexTypes::Word::CTblWidth* margin, int& type, int&
 		value = (int)margin->m_oW->GetValue();
 	}
 
-	//todooo сделать реализацию с процентами
+	//todooo implement percentages
 }

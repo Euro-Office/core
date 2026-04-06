@@ -53,7 +53,7 @@ namespace XLSB
         return BaseObjectPtr(new PNPAIRS(*this));
     }
 
-    //PNPAIRS = BrtBeginPNPairs PNPAIR BrtEndPNPairs // возможно, ошибка, и должно быть *PNPAIR
+    //PNPAIRS = BrtBeginPNPairs PNPAIR BrtEndPNPairs // possibly an error, and should be *PNPAIR
     const bool PNPAIRS::loadContent(BinProcessor& proc)
     {
         if (proc.optional<BeginPNPairs>())

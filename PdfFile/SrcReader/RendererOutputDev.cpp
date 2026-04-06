@@ -312,10 +312,10 @@ static int readFromMemoryStream(void* data)
 	return ((CMemoryFontStream*)data)->getChar();
 }
 
-// TODO: 1. Реализовать по-нормальному градиентные заливки (Axial и Radial)
+// TODO: 1. Implement gradient fills properly (Axial and Radial)
 //       2. m_pRenderer->SetAdditionalParam(L"TilingHtmlPattern", oWriter.GetXmlString());
-//       3. Подбор шрифтов необходимо перенести в GlobalParams->FindFontFile
-//       4. В идентефикацию шрифта к путю добавить номер шрифта в файле
+//       3. Font matching needs to be moved to GlobalParams->FindFontFile
+//       4. Add font number in file to font identification path
 
 namespace PdfReader
 {
@@ -340,7 +340,7 @@ namespace PdfReader
 
 		if (bResult)
 		{
-			// Шрифт нашелся, но пока им пользоваться нельзя, потому что он загружается в параллельном потоке
+			// Font was found, but cannot be used yet because it is being loaded in a parallel thread
 			while (!pEntry->bAvailable)
 				NSThreads::Sleep(10);
 		}
@@ -357,7 +357,7 @@ namespace PdfReader
 
 		if (bResult)
 		{
-			// Шрифт нашелся, но пока им пользоваться нельзя, потому что он загружается в параллельном потоке
+			// Font was found, but cannot be used yet because it is being loaded in a parallel thread
 			while (!(*ppEntry)->bAvailable)
 				NSThreads::Sleep(10);
 		}
@@ -374,7 +374,7 @@ namespace PdfReader
 	}
 	TFontEntry* CPdfFontList::Add(Ref oRef, const std::wstring& wsFileName, int* pCodeToGID, int* pCodeToUnicode, unsigned int unLenGID, unsigned int unLenUnicode)
 	{
-		// Данная функция приходит только из Find2, поэтому проверять есть ли данный шрифт уже не надо
+		// This function is only called from Find2, so no need to check if this font already exists
 		CTemporaryCS* pCS = new CTemporaryCS(&m_oCS);
 
 		TFontEntry* pNewEntry = new TFontEntry;
@@ -435,7 +435,7 @@ namespace PdfReader
 	}
 	void CPdfFontList::Add(Ref& oRef, TFontEntry* pFontEntry)
 	{
-		// До вызова данной функции надо проверять есть ли элемент с данным ключом
+		// Before calling this function, need to check if an element with this key exists
 		m_oFontMap.insert(std::pair<Ref, TFontEntry*>(oRef, pFontEntry));
 	}
 	const std::map<Ref, TFontEntry*>& CPdfFontList::GetFonts()
@@ -511,8 +511,8 @@ namespace PdfReader
 			m_sStates.back().pSoftMask = m_pSoftMask;
 		}
 
-		// Выходит дольше из-за копирования Clip, Pen, Brush,
-		// но не имеет смысла, т.к. Restore всё равно перенакладывает все Clip с нуля
+		// Takes longer due to copying Clip, Pen, Brush,
+		// but pointless since Restore reapplies all Clip from scratch anyway
 		//if (c_nGrRenderer == m_lRendererType)
 		//{
 		//	NSGraphics::IGraphicsRenderer* GRenderer = dynamic_cast<NSGraphics::IGraphicsRenderer*>(m_pRenderer);
@@ -525,7 +525,7 @@ namespace PdfReader
 	{
 		RELEASEINTERFACE(m_pSoftMask);
 		if (m_sStates.empty())
-		{ // Несбалансированный q/Q - сломанный файл
+		{ // Unbalanced q/Q - corrupted file
 			updateAll(pGState);
 			UpdateAllClip(pGState);
 			return;
@@ -795,7 +795,7 @@ namespace PdfReader
 				if (oDictItem.isInt() && 0 != oDictItem.getInt())
 				{
 					int nFlags = oDictItem.getInt();
-					if (nFlags & 1) // моноширинный
+					if (nFlags & 1) // monospaced
 						oFontSelect.bFixedWidth = new INT(1);
 				}
 				oDictItem.free();
@@ -870,7 +870,7 @@ namespace PdfReader
 		if (!pFontList->Find2((*pFont->getID()), &pEntry))
 		{
 			GfxFontType eFontType = pFont->getType();
-			if (fontType3 == eFontType) // FontType3 обрабатывается отдельной командой
+			if (fontType3 == eFontType) // FontType3 is handled by a separate command
 			{
 				pEntry->bAvailable = true;
 				return;
@@ -887,9 +887,9 @@ namespace PdfReader
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 			CMemoryFontStream oMemoryFontStream;
 #endif
-			// 1. Если шрифт внедренный, тогда скидываем его в темповый файл.
-			// 2. Если шрифт лежит вне пдф, а в самом пдф есть ссылка на него, тогда используем эту ссылку.
-			// 3. В противном случае подбираем шрифт.
+			// 1. If font is embedded, dump it to a temp file.
+			// 2. If font is outside pdf but pdf has a reference to it, use that reference.
+			// 3. Otherwise, select a font.
 
 			if (pFont->getEmbeddedFontID(&oEmbRef))
 			{
@@ -933,7 +933,7 @@ namespace PdfReader
 				oReferenceObject.free();
 				if (!oStreamObject.isStream())
 				{
-					// Внедренный шрифт неправильно записан
+					// Embedded font is incorrectly written
 					oStreamObject.free();
 
 #ifndef FONTS_USE_ONLY_MEMORY_STREAMS
@@ -965,7 +965,7 @@ namespace PdfReader
 				wsFileName = wsTempFileName;
 
 #ifdef FONTS_USE_AFM_SETTINGS
-				// Для шрифтов типа Type1 нужно дописать Afm файл с метриками
+				// For Type1 fonts, need to write Afm file with metrics
 				if (fontType1 == pFont->getType() || fontType1C == pFont->getType() || fontType1COT == pFont->getType())
 				{
 					std::wstring wsSplitFileName, wsSplitFileExt;
@@ -1101,7 +1101,7 @@ namespace PdfReader
 				}
 #endif
 
-				// Загрузим сам файл со шрифтом, чтобы точно определить его тип
+				// Load the font file itself to determine its exact type
 				if (!pFontManager->LoadFontFromFile(wsFileName, 0, 10, 72, 72))
 				{
 					pEntry->bAvailable = true;
@@ -1219,13 +1219,13 @@ namespace PdfReader
 
 					bFontSubstitution = true;
 				}
-				else // В крайнем случае, в данном шрифте просто не пишем ничего
+				else // As a last resort, simply don't write anything with this font
 				{
 					pEntry->bAvailable = true;
 					return;
 				}
 			}
-			// Здесь мы грузим кодировки
+			// Here we load encodings
 			int* pCodeToGID = NULL, *pCodeToUnicode = NULL;
 			int nLen = 0;
 			FoFiTrueType* pTTFontFile  = NULL;
@@ -1448,9 +1448,9 @@ namespace PdfReader
 			case fontCIDType2:
 			case fontCIDType2OT:
 			{
-				// Создаем карту CID-to-GID
-				// Если у нас шрифт был не встроен и подбирался и есть мап ToUnicode, тогда на основе его читаем из файла гиды по юникодным значениям.
-				// Для встроенных шрифтов используем мап CIDtoGID
+				// Create CID-to-GID map
+				// If font was not embedded and was substituted and has ToUnicode map, read GIDs from file based on unicode values.
+				// For embedded fonts use CIDtoGID map
 				pCodeToGID = NULL;
 				nLen = 0;
 				if (L"" != wsFileName && bFontSubstitution)
@@ -1465,7 +1465,7 @@ namespace PdfReader
 #endif
 						if (pTTFontFile)
 						{
-							// Ищем Unicode Cmap
+							// Looking for Unicode Cmap
 							std::vector<int> arrCMapIndex;
 							for (int nCMapIndex = 0; nCMapIndex < pTTFontFile->getNumCmaps(); ++nCMapIndex)
 							{
@@ -1519,7 +1519,7 @@ namespace PdfReader
 			}
 			default:
 			{
-				// Такого не должно произойти
+				// This should not happen
 #ifndef FONTS_USE_ONLY_MEMORY_STREAMS
 				if (L"" != wsTempFileName)
 					NSFile::CFileBinary::Remove(wsTempFileName);
@@ -1527,7 +1527,7 @@ namespace PdfReader
 				break;
 			}
 			}
-			// Составляем таблицу Code -> Unicode
+			// Build Code -> Unicode table
 			int nToUnicodeLen = 0;
 			if (pFont->isCIDFont())
 			{
@@ -1578,7 +1578,7 @@ namespace PdfReader
 				}
 			}
 
-			// Обрежем индекс у FontName, если он есть
+			// Trim index from FontName if present
 			if (wsFontName.empty())
 				wsFontName = wsFontBaseName;
 			if (bNotFullName)
@@ -1604,7 +1604,7 @@ namespace PdfReader
 	}
 	void RendererOutputDev::updateFont(GfxState* pGState)
 	{
-		// Проверяем наличие списка со шрифтами
+		// Check for font list presence
 		if (!m_pFontList)
 			return;
 
@@ -1687,7 +1687,7 @@ namespace PdfReader
 		if (m_bDrawOnlyText)
 			return;
 
-		if (nX1 - nX0 == 1 && nY1 - nY0 == 1) // Одно изображение, tilingPattern не требуется
+		if (nX1 - nX0 == 1 && nY1 - nY0 == 1) // Single image, tilingPattern not required
 		{
 			gfx->drawForm(pStream, pResourcesDict, pMatrix, pBBox);
 			return;
@@ -2300,7 +2300,7 @@ namespace PdfReader
 		double dShiftX = 0, dShiftY = 0;
 		DoTransform(pMatrix, &dShiftX, &dShiftY, true);
 
-		// TODO: нужна нормальная конвертация
+		// TODO: need proper conversion
 		int nLen = (int)wsText.length();
 		const wchar_t* pDataSrc = wsText.c_str();
 		if (1 == wsText.length())
@@ -2330,7 +2330,7 @@ namespace PdfReader
 
 		int nRenderMode = pGState->getRender();
 
-		// Обработка Stroke
+		// Handle Stroke
 		if (1 == nRenderMode || 2 == nRenderMode || 5 == nRenderMode || 6 == nRenderMode)
 		{
 			//            Painter::CPen oPen;
@@ -2349,13 +2349,13 @@ namespace PdfReader
 
 		int nRenderMode = pGState->getRender();
 
-		// Добавляем в Clipping Path текст
+		// Add text to Clipping Path
 		if (nRenderMode >= 4)
 		{
 			updateFont(pGState);
 		}
 
-		// Возвращаем параметры для Stroke
+		// Restore Stroke parameters
 		if (1 == nRenderMode || 2 == nRenderMode || 5 == nRenderMode || 6 == nRenderMode)
 		{
 			//BSTR bsPen = m_oPen.ToXmlString().AllocSysString();
@@ -2367,18 +2367,18 @@ namespace PdfReader
 	}
 	void RendererOutputDev::drawString(GfxState* pGState, GString* seString)
 	{
-		// Проверяем наличие списка со шрифтами
+		// Check for font list presence
 		if (NULL == m_pFontList)
 			return;
 
-		// Проверяем наличие текущего шрифта
+		// Check for current font presence
 		TFontEntry oEntry;
 		if (!m_pFontList->GetFont(pGState->getFont()->getID(), &oEntry))
 			return;
 
 		int nRendererMode = pGState->getRender();
 
-		if (3 == nRendererMode) // Невидимый текст
+		if (3 == nRendererMode) // Invisible text
 			return;
 
 		unsigned int unGidsCount = seString->getLength();
@@ -2409,17 +2409,17 @@ namespace PdfReader
 	}
 	void RendererOutputDev::drawChar(GfxState* pGState, double dX, double dY, double dDx, double dDy, double dOriginX, double dOriginY, CharCode nCode, int nBytesCount, Unicode* pUnicode, int nUnicodeLen)
 	{
-		// Проверяем наличие списка со шрифтами
+		// Check for font list presence
 		if (NULL == m_pFontList)
 			return;
 
-		// Проверяем наличие текущего шрифта
+		// Check for current font presence
 		TFontEntry oEntry;
 		if (!m_pFontList->GetFont(pGState->getFont()->getID(), &oEntry))
 			return;
 
 		int nRenderMode = pGState->getRender();
-		if (3 == nRenderMode && !m_bDrawOnlyText) // Невидимый текст
+		if (3 == nRenderMode && !m_bDrawOnlyText) // Invisible text
 		{
 			return;
 		}
@@ -2508,12 +2508,12 @@ namespace PdfReader
 		{
 			if (isCIDFont)
 			{
-				// Значит кодировка была Identity-H или Identity-V, что означает, что исходные коды и есть юникодные значения
+				// Means encoding was Identity-H or Identity-V, which means source codes are unicode values
 				wsUnicodeText = NSStringExt::CConverter::GetUnicodeFromUTF32((const unsigned int*)(&nCode), 1);
 			}
 			else
 			{
-				// Договорились, что если нельзя точно составить юникодные значения, тогда отдаем NULL
+				// Agreed that if unicode values cannot be accurately composed, return NULL
 				if (pFont->getType() == fontType3)
 					wsUnicodeText = NSStringExt::CConverter::GetUnicodeFromUTF32(pUnicode, nUnicodeLen);
 				else
@@ -2762,7 +2762,7 @@ namespace PdfReader
 		Aggplus::CImage oImage;
 		oImage.Create(pBufferPtr, nWidth, nHeight, -4 * nWidth);
 
-		// Пишем данные в pBufferPtr
+		// Write data to pBufferPtr
 		ImageStream* pImageStream = new ImageStream(pStream, nWidth, 1, 1);
 		pImageStream->reset();
 
@@ -2806,7 +2806,7 @@ namespace PdfReader
 		double arrMatrix[6];
 		double* pCTM = pGState->getCTM();
 
-		//  Исходное предобразование
+		//  Initial transformation
 		//              |1  0  0|   |pCTM[0] pCTM[1] 0|
 		// arrMattrix = |0 -1  0| * |pCTM[2] pCTM[3] 0|
 		//              |0  1  1|   |pCTM[4] pCTM[5] 1|
@@ -2841,7 +2841,7 @@ namespace PdfReader
 		Aggplus::CImage oImage;
 		oImage.Create(pBufferPtr, nWidth, nHeight, -4 * nWidth, true);
 
-		// Пишем данные в pBufferPtr
+		// Write data to pBufferPtr
 		ImageStream* pImageStream = new ImageStream(pStream, nWidth, 1, 1);
 		pImageStream->reset();
 
@@ -2893,7 +2893,7 @@ namespace PdfReader
 		double arrMatrix[6];
 		double* pCTM = pGState->getCTM();
 
-		//  Исходное предобразование
+		//  Initial transformation
 		//              |1  0  0|   |pCTM[0] pCTM[1] 0|
 		// arrMattrix = |0 -1  0| * |pCTM[2] pCTM[3] 0|
 		//              |0  1  1|   |pCTM[4] pCTM[5] 1|
@@ -2938,7 +2938,7 @@ namespace PdfReader
 		int nComponentsCount = pColorMap->getNumPixelComps();
 		BYTE unAlpha = std::min(255, std::max(0, int(pGState->getFillOpacity() * 255)));
 
-		// Пишем данные в pBufferPtr
+		// Write data to pBufferPtr
 		ImageStream* pImageStream = new ImageStream(pStream, nWidth, nComponentsCount, pColorMap->getBits());
 		pImageStream->reset();
 
@@ -3053,7 +3053,7 @@ namespace PdfReader
 		int nComponentsCount = pColorMap->getNumPixelComps();
 		BYTE unAlpha = std::min(255, std::max(0, int(pGState->getFillOpacity() * 255)));
 
-		// Чтение jpeg через cximage происходит быстрее чем через xpdf на ~40%
+		// Reading jpeg via cximage is ~40% faster than via xpdf
 		if (pMaskColors || unAlpha != 255 || (nSK != strDCT || nComponentsCount != 3 || !ReadImage(&oImage, pRef, pStream)))
 		{
 			BYTE* pBufferPtr = BufferFromImageStream(pGState, pStream, nWidth, nHeight, pColorMap, pMaskColors);
@@ -3065,7 +3065,7 @@ namespace PdfReader
 
 		double arrMatrix[6];
 		double* pCTM = pGState->getCTM();
-		//  Исходное предобразование
+		//  Initial transformation
 		//             |1  0  0|   |pCTM[0] pCTM[1] 0|
 		// arrMatrix = |0 -1  0| * |pCTM[2] pCTM[3] 0|
 		//             |0  1  1|   |pCTM[4] pCTM[5] 1|
@@ -3122,7 +3122,7 @@ namespace PdfReader
 		Aggplus::CImage oImage;
 		oImage.Create(pBufferPtr, nWidth, nHeight, -4 * nWidth);
 
-		// Пишем данные в pBufferPtr
+		// Write data to pBufferPtr
 		ImageStream* pImageStream = new ImageStream(pStream, nWidth, pColorMap->getNumPixelComps(), pColorMap->getBits());
 		ImageStream* pMask = new ImageStream(pMaskStream, nMaskWidth, 1, 1);
 		pMask->reset();
@@ -3210,7 +3210,7 @@ namespace PdfReader
 
 		double arrMatrix[6];
 		double* pCTM = pGState->getCTM();
-		//  Исходное предобразование
+		//  Initial transformation
 		//             |1  0  0|   |pCTM[0] pCTM[1] 0|
 		// arrMatrix = |0 -1  0| * |pCTM[2] pCTM[3] 0|
 		//             |0  1  1|   |pCTM[4] pCTM[5] 1|
@@ -3249,8 +3249,8 @@ namespace PdfReader
 		double dAlphaKoef = pGState->getFillOpacity();
 		if (nWidth != nMaskWidth || nHeight != nMaskHeight)
 		{
-			// TODO: Здесь сделан элементарный вариант масштабирования маски.
-			//        Надо улучшить алгоритм.
+			// TODO: Basic mask scaling implementation done here.
+			//        Need to improve the algorithm.
 
 			bool bResize = true;
 
@@ -3356,7 +3356,7 @@ namespace PdfReader
 			ImageStream* pSMaskStream = new ImageStream(pMaskStream, nMaskWidth, pMaskColorMap->getNumPixelComps(), pMaskColorMap->getBits());
 			pSMaskStream->reset();
 
-			// Быстрая реализация для масок
+			// Fast implementation for masks
 			int nMaskColorMapType = pMaskColorMap->getFillType();
 			GfxColorComp** pMaskColorMapLookup = pMaskColorMap->getLookup();
 			if (!pMaskColorMapLookup)
@@ -3371,7 +3371,7 @@ namespace PdfReader
 				int nIndex = 4 * nY * nMaskWidth;
 				if (!pMaskLine)
 				{
-					// Заполняем прозрачностью, если линия не прочитана
+					// Fill with transparency if line was not read
 					for (int nX = 0; nX < nMaskWidth; ++nX)
 					{
 						pBufferPtr[nIndex + 3] = 0;
@@ -3384,7 +3384,7 @@ namespace PdfReader
 				{
 					BYTE unAlpha = 0;
 
-					// Оптимизированные случаи для разных цветовых пространств
+					// Optimized cases for different color spaces
 					if (1 == nMaskColorMapType)
 					{
 						unAlpha = colToByte(clip01(pMaskColorMapLookup[0][pMaskLine[0]]));
@@ -3444,7 +3444,7 @@ namespace PdfReader
 
 		double arrMatrix[6];
 		double* pCTM = pGState->getCTM();
-		//  Исходное предобразование
+		//  Initial transformation
 		//              |1  0  0|   |pCTM[0] pCTM[1] 0|
 		// arrMattrix = |0 -1  0| * |pCTM[2] pCTM[3] 0|
 		//              |0  1  1|   |pCTM[4] pCTM[5] 1|
@@ -3502,7 +3502,7 @@ namespace PdfReader
 			GfxRGB c;
 			m_sCS.back().pBlendingCS->getRGB(pBackdropColor, &c, GfxRenderingIntent::gfxRenderingIntentAbsoluteColorimetric);
 			DWORD dwColor = colToByte(c.r) + colToByte(c.g) * 0x100 + colToByte(c.b) * 0x100 * 0x100;
-			// TODO цвет фона мягкой маски должен быть установлен в dwColor
+			// TODO soft mask background color should be set to dwColor
 		}
 
 		if (pTransferFunc)
@@ -3526,7 +3526,7 @@ namespace PdfReader
 				}
 			}
 
-			// if (!bAlpha) // pTransferFunc преобразовала результат luminosity маски в alpha маску
+			// if (!bAlpha) // pTransferFunc transformed luminosity mask result to alpha mask
 			// 	m_pSoftMask->SetType(Aggplus::EMaskDataType::Alpha4Buffer);
 		}
 
@@ -3644,7 +3644,7 @@ namespace PdfReader
 			double dShiftX = 0, dShiftY = 0;
 			DoTransform(pTextClip->GetMatrix(nIndex), &dShiftX, &dShiftY, true);
 
-			// TODO: нужна нормальная конвертация
+			// TODO: need proper conversion
 			int nLen = 0;
 			wchar_t* wsTextTmp = wsText;
 			if (wsTextTmp)

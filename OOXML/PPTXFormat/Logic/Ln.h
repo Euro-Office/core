@@ -68,7 +68,7 @@ namespace PPTX
 			virtual void Merge(Ln& line) const;
 
 		public:
-//			OOX::Drawing::ELineDashType	m_eDashType;   // Тип штриха
+//			OOX::Drawing::ELineDashType	m_eDashType;   // Dash type
 
 			UniFill						Fill;
 			EffectProperties			Effects;

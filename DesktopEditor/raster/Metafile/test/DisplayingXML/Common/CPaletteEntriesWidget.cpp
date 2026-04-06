@@ -14,7 +14,7 @@ CPaletteEntriesWidget::CPaletteEntriesWidget(QWidget *pParent)
         AddWidgets({new CFormWidget("ihPal", "1"),
                     new CFormWidget("Start", "1")}, pLayout);
 
-        QPushButton *pAddedButton = new QPushButton("Добавить цвет");
+        QPushButton *pAddedButton = new QPushButton("Add color");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CPaletteEntriesWidget::on_CreateColor_clicked);
 

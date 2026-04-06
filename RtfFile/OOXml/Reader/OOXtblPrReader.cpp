@@ -48,9 +48,9 @@ bool OOXtblPrReader::Parse( ReaderParameter oParam , RtfTableProperty& oOutputPr
 {
 	if (m_ooxTableProps == NULL) return false;
 
-	//сначала применяем стили
+	//first apply styles
 
-	//применяем стиль по-умолчанию,если не определен свой
+	//apply default style if no custom style defined
 	if( m_ooxTableProps->m_oTblStyle.IsInit() == false && true == m_bDefStyle && NULL != oParam.oReader->m_oDefTableStyle )
 	{
 		oOutputProperty.Merge( oParam.oReader->m_oDefTableStyle->m_oTableProp );

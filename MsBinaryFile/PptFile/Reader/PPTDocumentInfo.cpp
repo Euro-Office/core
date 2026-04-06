@@ -100,7 +100,7 @@ bool CPPTDocumentInfo::ReadFromStream(CRecordCurrentUserAtom *pCurrentUser, POLE
         }
 
         m_arUsers.push_back(pInfo);
-        // теперь нужно выставить у него параметры для других юзеров
+        // now need to set parameters for other users
         pInfo->m_lIndexThisUser = m_arUsers.size() - 1;
 
         pInfo = NULL;
@@ -142,7 +142,7 @@ bool CPPTDocumentInfo::LoadDocument()
 
     try
     {
-        m_arUsers[0]->ReadExtenalObjects(); // todooo ???? прочитать по всем (см 66864)
+        m_arUsers[0]->ReadExtenalObjects(); // todo ???? read for all (see 66864)
         m_arUsers[0]->FromDocument();
 
         m_bMacroEnabled = m_arUsers[0]->m_bMacroEnabled;

@@ -272,7 +272,7 @@ const std::vector<std::wstring> TxtFile::readUnicodeLines(int CodePage)
     return result;
 }
 
-const std::vector<std::string> TxtFile::readAnsiOrCodePage() // == readUtf8withoutPref также
+const std::vector<std::string> TxtFile::readAnsiOrCodePage() // == readUtf8withoutPref as well
 {
     std::vector<std::string> result;
 	NSFile::CFileBinary file_binary;
@@ -424,7 +424,7 @@ const std::vector<std::string> TxtFile::readUtf8()
 	return result;
 }
 
-bool TxtFile::writeAnsiOrCodePage(const std::vector<std::string>& content) // === writeUtf8withoutPref также
+bool TxtFile::writeAnsiOrCodePage(const std::vector<std::string>& content) // === writeUtf8withoutPref as well
 {
 	NSFile::CFileBinary file;
 	if (!file.CreateFileW(m_path)) return false;

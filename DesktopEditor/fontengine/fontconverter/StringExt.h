@@ -37,64 +37,64 @@
 namespace NSFontConverter
 {
     //---------------------------------------------------------------------------------------
-    // класс StringExt - аналог CString
+    // StringExt class - CString analog
     //---------------------------------------------------------------------------------------
 
     class StringExt
     {
     public:
 
-        // Создаем пустую строку.
+        // Create an empty string.
         StringExt();
 
-        // Создаем строку из Сишной строки.
+        // Create a string from a C-style string.
         StringExt(const char *sString);
 
-        // Создаем строку из <nLength> символов в <sString>. Данная строка
-        // может содержать нулевые символы.
+        // Create a string from <nLength> characters in <sString>. This string
+        // may contain null characters.
         StringExt(const char *sString, int nLength);
 
-        // Создаем строку из <nLength> символов, начиная с <nIndex>, строки <seString>.
+        // Create a string from <nLength> characters starting at <nIndex> of string <seString>.
         StringExt(StringExt *seString, int nIndex, int nLength);
 
-        // Копируем строку.
+        // Copy the string.
         StringExt(StringExt *seString);
         StringExt *Copy()
         {
             return new StringExt(this);
         }
 
-        // Соединяем две строки.
+        // Concatenate two strings.
         StringExt(StringExt *seString1, StringExt *seString2);
 
-        // Переводим целое значение в строку.
+        // Convert integer value to string.
         static StringExt *FromInt(int nValue);
 
-        // Создаем форматированную строку. Функция подобна printf, но без проблем
-        // с переполнением строки. Формат выглядит следующим образом:
+        // Create a formatted string. Function is similar to printf, but without
+        // buffer overflow problems. Format looks like this:
         //     {<nArg>:[<nWidth>][.<precision>]<type>}
-        // где:
-        // - <nArg> номер аргумента (нумерация начинается с 0).
-        // -- PS: сами аргументы должны идти по порядку, а использовать их можно
-        //    многократно и в любом порядке.
-        // - <nWidth> ширина поля, если она отрицательна, тогда прилежание будет
-        //   сменено на противоположное, а пустые места будут заполнены нулями.
-        // - <nPrecision> количество знаков после запятой
-        // - <nType> тип один из слудющих:
-        //     d, x, o, b -- целое(int) в десятичной, шестнадцатиричной, восьмиричной
-        //                   и двоичной системах исчисления
-        //     ud, ux, uo, ub -- тоже самое, только беззнаковое целое(uint)
-        //     ld, lx, lo, lb, uld, ulx, ulo, ulb -- аналогичной long и ulong
+        // where:
+        // - <nArg> is argument number (numbering starts from 0).
+        // -- PS: arguments must be provided in order, but can be used
+        //    multiple times and in any order.
+        // - <nWidth> is field width, if negative, alignment will be
+        //   changed to opposite, and empty spaces will be filled with zeros.
+        // - <nPrecision> is number of decimal places
+        // - <nType> is one of the following types:
+        //     d, x, o, b -- integer(int) in decimal, hexadecimal, octal
+        //                   and binary number systems
+        //     ud, ux, uo, ub -- same but unsigned integer(uint)
+        //     ld, lx, lo, lb, uld, ulx, ulo, ulb -- similar for long and ulong
         //     f, g -- double
         //     c -- char
         //     s -- string (char *)
         //     t -- StringExt *
-        //     w -- Пробелы; значение аргументы означает количество пробелов
-        // Для вывода фигурных скобок надо использовать {{ и }}.
+        //     w -- Spaces; argument value means number of spaces
+        // To output curly braces use {{ and }}.
         static StringExt *Format (char *sFormat, ...);
         static StringExt *FormatV(char *sFormat, va_list sArgList);
 
-        // Деструктор.
+        // Destructor.
         ~StringExt();
 
         int GetLength()
@@ -102,7 +102,7 @@ namespace NSFontConverter
             return m_nLength;
         }
 
-        // Возвращаем строку в виде char*.
+        // Return string as char*.
         char *GetBuffer()
         {
             return m_sData;
@@ -117,33 +117,33 @@ namespace NSFontConverter
             m_sData[ nIndex ] = nChar;
         }
 
-        // Очищаем строку.
+        // Clear the string.
         StringExt *Clear();
 
-        // Добавляем символ или строку.
+        // Append a character or string.
         StringExt *Append(char nChar);
         StringExt *Append(StringExt *seString);
         StringExt *Append(const char *sString);
         StringExt *Append(const char *sString, int nLength);
 
-        // Добавляем форматированную строку.
+        // Append a formatted string.
         StringExt *AppendFormat (char *sFormat, ...);
         StringExt *AppendFormatV(char *sFormat, va_list sArgList);
 
-        // Вставляем символ или строку.
+        // Insert a character or string.
         StringExt *Insert(int nIndex, char nChar);
         StringExt *Insert(int nIndex, StringExt  *seString);
         StringExt *Insert(int nIndex, const char *sString);
         StringExt *Insert(int nIndex, const char *sString, int nLength);
 
-        // Удаляем один символ или массив символов.
+        // Delete one character or array of characters.
         StringExt *Delete(int nIndex, int nCount = 1);
 
-        // Делаем в строке все символы большими/маленькими буквами.
+        // Convert all characters in the string to uppercase/lowercase.
         StringExt *MakeUpper();
         StringExt *MakeLower();
 
-        // Сравнение двух строк:  -1:<  0:=  +1:>
+        // Compare two strings:  -1:<  0:=  +1:>
         int Compare (StringExt *seString);
         int CompareN(StringExt *seString, int nCount);
         int Compare (const char *sString);

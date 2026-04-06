@@ -49,6 +49,6 @@ void CRecordTextRulerAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *
 
     NSStreamReader::Read(pStream, m_oTextRuler);
 
-    // на всякий случай...
+    // just in case...
     StreamUtils::StreamSeek(lOffset + m_oHeader.RecLen, pStream);
 }
