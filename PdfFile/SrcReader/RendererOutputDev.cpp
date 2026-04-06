@@ -2795,7 +2795,7 @@ namespace PdfReader
 			wsUnicodeText,
 			PDFCoordsToMM(dShiftX), PDFCoordsToMM(dShiftY),
 			dGlyphW, dGlyphH,
-			pMetrics->nAscent, pMetrics->nDescent, pMetrics->nUnitsPerEm
+			pMetrics->dAscent, pMetrics->dDescent, pMetrics->dUnitsPerEm
 		);
 
 		m_pRenderer->put_FontSize(dOldSize);

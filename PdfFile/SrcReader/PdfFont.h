@@ -59,11 +59,11 @@ struct CType3FontMetrics
 	double dLLx, dLLy, dURx, dURy;
 	double arrFontMatrix[6];
 	std::map<int, double> mapWidths;
-	int nUnitsPerEm;
-	int nAscent;
-	int nDescent;
+	double dUnitsPerEm;
+	double dAscent;
+	double dDescent;
 
-	CType3FontMetrics() : dLLx(0), dLLy(0), dURx(0), dURy(1000), nUnitsPerEm(1000), nAscent(800), nDescent(200)
+	CType3FontMetrics() : dLLx(0), dLLy(0), dURx(0), dURy(1000), dUnitsPerEm(1000), dAscent(800), dDescent(200)
 	{
 		arrFontMatrix[0] = 0.001; arrFontMatrix[1] = 0;
 		arrFontMatrix[2] = 0;     arrFontMatrix[3] = 0.001;
@@ -71,14 +71,14 @@ struct CType3FontMetrics
 	}
 	double GetScale() const
 	{
-		return arrFontMatrix[0] > 0 ? arrFontMatrix[0] * nUnitsPerEm : 1.0;
+		return arrFontMatrix[0] > 0 ? arrFontMatrix[0] * dUnitsPerEm : 1.0;
 	}
 	double GetGlyphWidth(int nCode) const
 	{
 		auto it = mapWidths.find(nCode);
 		if (it != mapWidths.end())
 			return it->second;
-		return nUnitsPerEm * 0.5;
+		return dUnitsPerEm * 0.5;
 	}
 };
 

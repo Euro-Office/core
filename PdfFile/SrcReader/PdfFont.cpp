@@ -1155,9 +1155,9 @@ CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont)
 	oItem.free();
 
 	if (pMetrics->arrFontMatrix[0] > 0)
-		pMetrics->nUnitsPerEm = (int)std::round(1.0 / pMetrics->arrFontMatrix[0]);
+		pMetrics->dUnitsPerEm = std::round(1.0 / pMetrics->arrFontMatrix[0]);
 	else
-		pMetrics->nUnitsPerEm = 1000;
+		pMetrics->dUnitsPerEm = 1000;
 
 	if (oFontObj.dictLookup("FontBBox", &oItem)->isArray() && oItem.arrayGetLength() == 4)
 	{
@@ -1170,13 +1170,13 @@ CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont)
 		double dTextY1 = pMetrics->arrFontMatrix[3] * pMetrics->dLLy;
 		double dTextY2 = pMetrics->arrFontMatrix[3] * pMetrics->dURy;
 
-		pMetrics->nAscent  = (int)std::round(std::max(dTextY2 / pMetrics->arrFontMatrix[0], 0.0));
-		pMetrics->nDescent = (int)std::round(std::abs(std::min(dTextY1 / pMetrics->arrFontMatrix[0], 0.0)));
+		pMetrics->dAscent  = std::round(std::max(dTextY2 / pMetrics->arrFontMatrix[0], 0.0));
+		pMetrics->dDescent = std::round(std::abs(std::min(dTextY1 / pMetrics->arrFontMatrix[0], 0.0)));
 
-		if (pMetrics->nAscent == 0 && pMetrics->nDescent == 0)
+		if (pMetrics->dAscent == 0 && pMetrics->dDescent == 0)
 		{
-			pMetrics->nAscent  = (int)(pMetrics->nUnitsPerEm * 0.8);
-			pMetrics->nDescent = (int)(pMetrics->nUnitsPerEm * 0.2);
+			pMetrics->dAscent  = pMetrics->dUnitsPerEm * 0.8;
+			pMetrics->dDescent = pMetrics->dUnitsPerEm * 0.2;
 		}
 	}
 	oItem.free();
