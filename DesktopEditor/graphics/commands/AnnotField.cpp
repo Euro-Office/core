@@ -1332,3 +1332,11 @@ bool CRedact::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRe
 
 	return true;
 }
+
+CRedactAnnot::CRedactAnnot() : IAdvancedCommand(AdvancedCommandType::RedactAnnot) {}
+int CRedactAnnot::GetID() { return m_nID; }
+bool CRedactAnnot::Read(NSOnlineOfficeBinToPdf::CBufferReader* pReader, IMetafileToRenderter* pCorrector)
+{
+	m_nID = pReader->ReadInt();
+	return true;
+}

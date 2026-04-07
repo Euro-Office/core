@@ -159,11 +159,11 @@ void CPdfFile::SetEditType(int nType)
 	if (nType == 1)
 		m_pInternal->pEditor->SetMode(CPdfEditor::Mode::WriteNew);
 }
-void CPdfFile::RedactInfo(int nFlag)
+void CPdfFile::RedactInfo(int nFlag, const std::vector<IAdvancedCommand*>& arrForms)
 {
 	if (!m_pInternal->pEditor)
 		return;
-	m_pInternal->pEditor->RedactInfo(nFlag);
+	m_pInternal->pEditor->RedactInfo(nFlag, arrForms);
 }
 bool CPdfFile::EditPage(int nPageIndex)
 {

@@ -1093,7 +1093,7 @@ void CPdfEditor::SetMode(Mode nMode)
 		NewFrom();
 	}
 }
-void CPdfEditor::RedactInfo(int nFlag)
+void CPdfEditor::RedactInfo(int nFlag, const std::vector<IAdvancedCommand*>& arrForms)
 {
 	if (m_nMode != Mode::Unknown)
 		return;

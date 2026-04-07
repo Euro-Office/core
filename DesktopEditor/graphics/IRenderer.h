@@ -158,6 +158,7 @@ public:
 		PageRotate  = 10,
 		Headings    = 11,
 		Redact      = 12,
+		RedactAnnot = 13,
 
 		Undefined   = 255
 	};

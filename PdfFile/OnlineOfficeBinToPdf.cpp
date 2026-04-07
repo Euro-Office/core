@@ -253,7 +253,38 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case AddCommandType::RedactInfo:
 			{
-				pPdf->RedactInfo(nPageNum);
+				int nFlags = nPageNum;
+				std::vector<IAdvancedCommand*> arrForms;
+				if (nFlags & (1 << 5)) // Form Fields
+				{
+					int nN = oReader.ReadInt();
+					for (int i = 0; i < nN; ++i)
+					{
+						bool bNewChange = oReader.ReadBool();
+						if (bNewChange)
+						{
+							NSOnlineOfficeBinToPdf::CommandType eCommand = (NSOnlineOfficeBinToPdf::CommandType)oReader.ReadByte();
+							if (eCommand == NSOnlineOfficeBinToPdf::CommandType::ctAnnotField)
+							{
+								BYTE* cur = oReader.GetCurrentBuffer();
+								int nLen2 = oReader.ReadInt();
+
+								// ctAnnotField
+								arrForms.push_back(oReader.Read(eCommand, &oCorrector, nLen));
+
+								oReader.SetCurrentBuffer(cur + nLen2);
+							}
+							else
+							{
+								BYTE* cur = oReader.GetCurrentBuffer();
+								oReader.SetCurrentBuffer(cur + oReader.ReadInt());
+							}
+						}
+						else
+							arrForms.push_back(oReader.Read(NSOnlineOfficeBinToPdf::CommandType::ctRedactAnnot, &oCorrector, nLen));
+					}
+				}
+				pPdf->RedactInfo(nPageNum, arrForms);
 				break;
 			}
 			default:

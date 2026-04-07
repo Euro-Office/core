@@ -82,7 +82,7 @@ public:
 	CPdfEditor(const std::wstring& _wsSrcFile, const wchar_t* _wsPassword, const std::wstring& _wsDstFile, CPdfReader* _pReader, CPdfWriter* _pWriter, Mode nMode = Mode::Unknown);
 
 	void SetMode(Mode nMode);
-	void RedactInfo(int nFlag);
+	void RedactInfo(int nFlag, const std::vector<IAdvancedCommand*>& arrForms);
 
 	int  GetError();
 	void Close();
