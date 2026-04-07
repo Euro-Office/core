@@ -334,7 +334,7 @@ namespace PdfWriter
 		virtual CResourcesDict* GetResourcesDict();
 
 	private:
-		CSignatureDict* m_pSig; // Словарь сигнатур
+		CSignatureDict* m_pSig; // Signature dictionary
 		CResourcesDict* m_pResources;
 	};
 	

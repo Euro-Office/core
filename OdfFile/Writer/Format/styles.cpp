@@ -146,7 +146,7 @@ style_section_properties * style_content::add_get_style_section_properties()
 
 style_table_cell_properties * style_content::add_get_style_table_cell_properties()
 {
-	//если запросили .. значит надо - создаем
+	//if requested.. then needed - create it
 	if (!style_table_cell_properties_)
 		create_element(L"style", L"table-cell-properties",style_table_cell_properties_, Context);
     
@@ -189,7 +189,7 @@ void style_content::add_child_element( const office_element_ptr & child)
 
 	ElementType type_ = child->get_type();
 
-	switch(type_)//перезатирать???
+	switch(type_)//overwrite???
 	{
 	case typeStyleTextProperties:		style_text_properties_ = child; break;
 	case typeStyleParagraphProperties:	style_paragraph_properties_ = child; break; 

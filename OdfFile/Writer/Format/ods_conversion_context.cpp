@@ -345,7 +345,7 @@ void ods_conversion_context::add_hyperlink(const std::wstring & ref, const std::
 	boost::algorithm::split(ref_cells, ref, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
 	if (ref_cells.size() > 1)
 	{
-	//в ооx можно воткнуть на диапазон одну ссылку, в оо нельзя - ссылку вствляем, текст не меням
+	//in oox you can put one link on a range, in oo you can't - we insert link, don't change text
 		int start_col = -1, start_row = -1;
 		int end_col = -1, end_row = -1;
 		
@@ -357,7 +357,7 @@ void ods_conversion_context::add_hyperlink(const std::wstring & ref, const std::
 			for (long row = start_row; row <= end_row; row++)
 			{
 				current_table()->add_hyperlink(ref, col, row, link, location);
-				//ссылка одна, а вот отображаемый текст - разный
+				//link is one, but displayed text is different
 			}
 		}
 	}
@@ -409,7 +409,7 @@ void ods_conversion_context::add_merge_cells(const std::wstring & ref)
  	std::vector<std::wstring> ref_cells;
 	boost::algorithm::split(ref_cells, ref, boost::algorithm::is_any_of(L":"), boost::algorithm::token_compress_on);
 
-	if (ref_cells.size() != 2) return;//тута однозначно .. по правилам оохml
+	if (ref_cells.size() != 2) return;//definitely here.. according to ooxml rules
 
 	int start_col = -1, start_row = -1;
 	int end_col = -1, end_row = -1;
@@ -498,8 +498,8 @@ void ods_conversion_context::start_columns()
 }
 void ods_conversion_context::end_columns()
 {
-	//add default last column  - ЕСЛИ они не прописаны в исходном (1024 - от  балды)
-	//вопрос - если и добавлять то  с каким стилем???
+	//add default last column - IF they are not specified in the source (1024 - arbitrary)
+	//question - if adding then with what style???
 	//if (current_table()->current_column() < 1 )
 	//	add_column(current_table()->current_column() + 1,1024, 0, true);
 	//else
@@ -543,7 +543,7 @@ void ods_conversion_context::add_default_row(int repeated)
 			}
 		}
 		if (row_split > current_table()->current_row() && row_split_repeated != repeated)
-		{//делим на 3 - до, с --, после;			
+		{//split into 3 - before, with --, after;			
 			int r = current_table()->current_row();
 
 			add_default_row(row_split - r - 1);
@@ -624,8 +624,8 @@ void ods_conversion_context::add_column(int start_column, int repeated, int leve
 	}
 	else
 	{
-		//по сути в этом стиле раличные опции ширины колонок тока .. а если свойства совпадают - можно сгенерить один, хотя выше и указано что стили разные.
-		//то есть в оо разделяют оох стиль на 2 (для колонки собственно, и описалово ячеек в колонки)
+		//essentially this style has different column width options only.. and if properties match - can generate one, although above it's indicated that styles are different.
+		//i.e. in oo they split oox style into 2 (for the column itself, and cell description in column)
 		styles_context()->create_style(L"", style_family::TableColumn, true, false, -1);
 		style_elm = styles_context()->last_state()->get_office_element();
 		
@@ -731,8 +731,8 @@ void ods_conversion_context::start_cell_text()
 		text_a_->common_xlink_attlist_.type_ = xlink_type(xlink_type::Simple);
 		text_a_->common_xlink_attlist_.href_ = state.link;
 		
-		text_context()->start_element(text_a_elm); // может быть стоит сделать собственый???
-		// libra дурит если в табличках будет вложенный span в гиперлинк ... оО (хотя это разрешено в спецификации!!!)
+		text_context()->start_element(text_a_elm); // maybe worth making a custom one???
+		// LibreOffice acts weird if there's a nested span in hyperlink inside tables... o_O (although it's allowed in specification!!!)
 
 		text_context()->single_paragraph_ = true;
 	}

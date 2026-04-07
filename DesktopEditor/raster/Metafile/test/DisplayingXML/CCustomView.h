@@ -4,7 +4,7 @@
 #include <QGraphicsView>
 
 #include <Windows.h>
-using namespace std; // устраняет ошибки с min, max при компиляции (связано с подключением gdiplus)
+using namespace std; // fixes min, max errors during compilation (related to gdiplus inclusion)
 #include <gdiplus.h>
 #pragma comment (lib,"gdiplus.lib")
 

@@ -123,7 +123,7 @@ namespace OOX
 			nullable<OOX::WritingElement> m_oShapeElement;
 			nullable<OOX::VmlOffice::COLEObject> m_oOLEObject;
 			
-			// TO DO: Добавить класс, читающий movie
+			// TO DO: Add class for reading movie
 		};
 
 		//--------------------------------------------------------------------------------

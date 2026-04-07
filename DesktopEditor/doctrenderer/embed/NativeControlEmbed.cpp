@@ -41,9 +41,9 @@ JSSmart<CJSValue> CNativeControlEmbed::GetFileBinary(JSSmart<CJSValue> file)
 JSSmart<CJSValue> CNativeControlEmbed::GetFontBinary(JSSmart<CJSValue> file)
 {
 	// TODO:
-	// по идее файлы могут совпадать по имени, но лежать в разных директориях.
-	// и поэтому в AllFonts.js надо бы писать пути полные.
-	// пока оставим поддержку старой версии тоже
+	// theoretically files can have the same name but be in different directories.
+	// so in AllFonts.js we should write full paths.
+	// for now keep support for the old version as well
 	std::wstring sFile = file->toStringW();
 	bool bIsFullFilePath = (std::wstring::npos != sFile.find('\\') || std::wstring::npos != sFile.find('/'));
 	if (bIsFullFilePath)

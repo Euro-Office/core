@@ -76,7 +76,7 @@ struct FillInfo
 
 	int serialize(std::wostream & stream);
 
-//additional (сравнение по базовому, расширения тока пишем)
+//additional (comparison by base, only writing extensions)
 
 	FillInfoExt foreFillInfo_;
 	FillInfoExt backFillInfo_;

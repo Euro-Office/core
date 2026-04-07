@@ -15,8 +15,8 @@ enum class ENoteNumbering
 	UNKNOWN
 };
 
-//TODO:: проверить данный enum
-// в олигинале и EachColumn и EndOfDocument имеют одинаковые значения
+//TODO:: Verify this enum
+// In the original, both EachColumn and EndOfDocument have the same values
 enum class ENotePlacement
 {
 	EachColumn,

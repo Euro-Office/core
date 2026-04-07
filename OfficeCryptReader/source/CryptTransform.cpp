@@ -229,7 +229,7 @@ _buf Hmac(_buf &  buf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & pla
 
 
 _buf HashAppend(_buf &  hashBuf, _buf & block, CRYPT_METHOD::_hashAlgorithm algorithm)
-{//todooo переделать
+{//todooo refactor
 	if (algorithm == CRYPT_METHOD::MD5)
 	{		
 		MD5 hash;
@@ -843,7 +843,7 @@ void ODFWriteProtect::GetCryptData(_odfWriteProtectData &_data)
 
 void ODFWriteProtect::Generate()
 {
-    //сгенерить соль
+    //generate salt
     RandomPool prng;
     SecByteBlock seed_salt(16);
     OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
@@ -900,7 +900,7 @@ void ECMAWriteProtect::GetCryptData(_ecmaWriteProtectData &_data)
 }
 void ECMAWriteProtect::Generate()
 {
-	//сгенерить соль
+	//generate salt
 	RandomPool prng;
 	SecByteBlock seed_salt(16);
 	OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
@@ -977,7 +977,7 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 //---------
     RandomPool prng;
 	
-	//сгенерить соль
+	//generate salt
     SecByteBlock seed_salt(cryptData.saltSize);
     OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
 	if (prng.CanIncorporateEntropy())
@@ -990,14 +990,14 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 	{
 		prng.IncorporateEntropy(seed_datasalt, seed_datasalt.size());
 	}
-	//сгенерить ключ
+	//generate key
     SecByteBlock seed_key(cryptData.keySize);
     OS_GenerateRandomBlock(false, seed_key, seed_key.size());
 	if (prng.CanIncorporateEntropy())
 	{
 		prng.IncorporateEntropy(seed_key, seed_key.size());
 	}
-	//сгенерить проверочный
+	//generate verification
     SecByteBlock seed_verify(cryptData.saltSize);
     OS_GenerateRandomBlock(false, seed_verify, seed_verify.size());
 	if (prng.CanIncorporateEntropy())

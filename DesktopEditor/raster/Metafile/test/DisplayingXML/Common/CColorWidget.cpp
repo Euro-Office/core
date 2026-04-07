@@ -16,7 +16,7 @@ CColorWidget::CColorWidget(const QString& qsName, QWidget *pParent) :
         QLabel *pName = new QLabel(QString("%1:").arg(m_qsName));
         pName->setStyleSheet("QLabel { text-decoration: underline; }");
 
-        QPushButton *pSelectableButton = new QPushButton("Выбрать цвет");
+        QPushButton *pSelectableButton = new QPushButton("Select color");
 
         connect(pSelectableButton, &QPushButton::clicked, this, &CColorWidget::on_select_color_clicked);
 

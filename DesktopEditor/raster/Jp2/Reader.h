@@ -8,18 +8,18 @@ namespace Jpeg2000
 	// Byte input-output (Stream IO)
 	//-------------------------------------------------------------------------------------------------------------------------------
 
-#define STREAM_READ	 0x0001 // Поток открыт для чтения
-#define STREAM_WRITE 0x0002 // Поток открыт для записи
+#define STREAM_READ	 0x0001 // Stream is open for reading
+#define STREAM_WRITE 0x0002 // Stream is open for writing
 
 	typedef struct TByteIO
 	{
-		int            nMode;   // Чтение или запись ( STREAM_READ или OPJ_STREAM_WRITE )
-		unsigned char *pBuffer; // Указатель на начало буфера
-		int            nLength; // Размер буфера в байтах
+		int            nMode;   // Read or write ( STREAM_READ or OPJ_STREAM_WRITE )
+		unsigned char *pBuffer; // Pointer to buffer start
+		int            nLength; // Buffer size in bytes
 
-		unsigned char *pStart;  // Указатель на начало потока
-		unsigned char *pEnd;    // Указатель на конец потока
-		unsigned char *pCurPos; // Указатель не текущую позицию в потоке
+		unsigned char *pStart;  // Pointer to stream start
+		unsigned char *pEnd;    // Pointer to stream end
+		unsigned char *pCurPos; // Pointer to current position in stream
 	} ByteIO;
 
 

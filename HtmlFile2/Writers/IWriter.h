@@ -24,12 +24,12 @@ public:
 	virtual void BeginBlock() = 0;
 	virtual void EndBlock(bool bAddBlock) = 0;
 
-	virtual void SetDataOutput(XmlString* pOutputData) = 0; // Задаем место вывода для интерпретатора
-	virtual void RevertDataOutput() = 0; // Возвращаем место вывода к исходному
+	virtual void SetDataOutput(XmlString* pOutputData) = 0; // Set output location for interpreter
+	virtual void RevertDataOutput() = 0; // Revert output location to original
 
 	virtual XmlString* GetCurrentDocument() const = 0;
 
-	//TODO:: перенести разруливание вложенных таблиц в конвертацию после изменения принципа работы с таблицами
+	//TODO:: move nested tables handling to conversion after changing how tables work
 	virtual bool SupportNestedTables() const = 0;
 };
 }

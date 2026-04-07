@@ -62,7 +62,7 @@ public:
 	bool			fUnlinkedIfmt = 0;
 	unsigned short	ifmt = 0;
 	
-	ChartParsedFormula	formula; //набор диапазонов и ячеек
+	ChartParsedFormula	formula; //set of ranges and cells
 };
 
 } // namespace XLS

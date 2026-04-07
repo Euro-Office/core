@@ -38,64 +38,64 @@
 #include "../../Common/kernel_config.h"
 #include "../../DesktopEditor/common/Types.h"
 
-// Работает с архивом в памяти
+// Works with an archive in memory
 class KERNEL_DECL CZipBuffer
 {
 private:
-	// Архивированные данные
+	// Archived data
 	BYTE* m_zipFile;
-	// Длина архивированных данных
+	// Length of archived data
 	DWORD m_sizeZip;
-	// Файл
+	// File
 	struct CFile
 	{
-		// Относительный путь файла в архиве
+		// Relative path of the file in the archive
 		std::string m_sPath;
-		// Данные файла
+		// File data
 		BYTE* m_pData;
-		// Длина файла
+		// File length
 		DWORD m_nLength;
 		CFile(const std::string& sPath, BYTE* pData, DWORD nLength) : m_sPath(sPath), m_pData(pData), m_nLength(nLength) {}
 	};
-	// Вектор файлов в архиве
+	// Vector of files in the archive
 	std::vector<CFile> m_arrFiles;
 
 	friend class CZipFolderMemory;
 public:
-	// Создает архив в памяти
+	// Creates an archive in memory
 	CZipBuffer()
 	{
 		create();
 	}
-	// Открывает архив в памяти, переданные данные необходимо освободить после использования класса
+	// Opens an archive in memory, the passed data must be freed after class usage
 	CZipBuffer(BYTE* buffer, DWORD size)
 	{
 		open(buffer, size);
 	}
-	// Закрывает архив и очищает память
+	// Closes the archive and frees memory
 	~CZipBuffer()
 	{
 		close();
 	}
 
-	// Создает архив в памяти
+	// Creates an archive in memory
 	void create();
-	// Открывает архив в памяти, переданные данные необходимо освободить после использования класса
+	// Opens an archive in memory, the passed data must be freed after class usage
 	void open(BYTE* buffer, DWORD size);
-	// Закрывает архив и очищает память
+	// Closes the archive and frees memory
 	void close();
-	// Перемещает файл в архиве
+	// Moves a file within the archive
 	void move(const std::string& sSrc, const std::string& sDst);
 
-	// Возвращает вектор путей в архиве
+	// Returns a vector of paths in the archive
 	std::vector<std::string> getPaths();
-	// Сохраняет архив в переданную память, полученные данные необходимо освободить
+	// Saves the archive to the passed memory, the returned data must be freed
 	void save(BYTE*& data, DWORD& length);
-	// По относительно пути в архиве возвращает файл, полученные данные будут освобождены после использования класса
+	// Returns a file by relative path in the archive, the returned data will be freed after class usage
 	void getFile(const std::string& sPath, BYTE*& data, DWORD& length);
-	// По относительно пути в архиве добавляет файл,  переданные данные будут освобождены после использования класса
+	// Adds a file by relative path in the archive, the passed data will be freed after class usage
 	void addFile   (const std::string& sPath, BYTE* data, DWORD length);
-	// По относительно пути в архиве удаляет файл
+	// Removes a file by relative path in the archive
 	bool removeFile(const std::string& sPath);
 };
 

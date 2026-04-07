@@ -108,7 +108,7 @@ void CRecordSlide::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStream)
     }
     if (lCurLen != m_oHeader.RecLen)
     {
-        // нужно разобраться, что тут такое!!!
+        // need to figure out what this is!!!
         LONG lPosition = 0;
         StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
     }

@@ -153,7 +153,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 		//Log::warning(rec_name);
 
 		if (desirable_type == rt_MsoDrawingGroup ||
-			desirable_type == rt_GelFrame)	// объединяем c rt_Continue в один блок 
+			desirable_type == rt_GelFrame)	// merge with rt_Continue into one block 
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -207,7 +207,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 
 	if(gen_except)
 	{
-		// теги разные
+		// tags are different
 		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
 		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
@@ -296,7 +296,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 		//Log::warning(rec_name);
 
-		if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок 
+		if (desirable_type == rt_MsoDrawingGroup)	// merge rt_MsoDrawingGroup + rt_Continue into one block 
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -353,7 +353,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 	if(gen_except)
 	{
-		// теги разные
+		// tags are different
 		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
 		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
@@ -437,7 +437,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
         //Log::warning(rec_name);
 
-        /*if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок
+        /*if (desirable_type == rt_MsoDrawingGroup)	// merge rt_MsoDrawingGroup + rt_Continue into one block
         {
             if (checkNextRecord(desirable_type, 1))
             {
@@ -494,7 +494,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
     if(gen_except)
     {
-        // теги разные
+        // tags are different
         std::string inType = XLS::CFRecordType::getStringById(desirable_type);
         std::string outType = CFRecordType::getStringById(what_we_actually_read);
 

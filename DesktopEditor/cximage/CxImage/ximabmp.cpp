@@ -227,8 +227,8 @@ bool CxImageBMP::Decode(CxFile * hFile)
 		case 1 :
 			if (off + bf.bfOffBits < bmpHeader.biSize)
 			{
-				// ОШИБКА
-				// файлы паттерных заливок автофигур в ppt файлах !!!
+				// ERROR
+				// pattern fill files of autoshapes in ppt files !!!
 			}
 			else
 			{

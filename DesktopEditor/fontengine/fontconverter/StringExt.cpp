@@ -285,7 +285,7 @@ namespace NSFontConverter
 				}
 				else
 				{
-					// Разбираем форматированную строку
+					// Parse the formatted string
 					if ( !(*pCur >= '0' && *pCur <= '9') )
 						break;
 					nIndex = *pCur - '0';
@@ -473,7 +473,7 @@ namespace NSFontConverter
 						nWidth = uArg.iValue;
 						break;
 					}
-					// Добавляем аргумент в нужном формате, с нужным прилеганием
+					// Add argument in required format with proper alignment
 					if ( !bReverseAlign && nLen < nWidth )
 					{
 						for (int nCounter = nLen; nCounter < nWidth; ++nCounter )

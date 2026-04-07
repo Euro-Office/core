@@ -48,7 +48,7 @@
 #include "../../Common/ComplexTypes.h"
 
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>

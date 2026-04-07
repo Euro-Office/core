@@ -88,7 +88,7 @@ namespace ComplexTypes
 		}
 		void CCellMergeTrackChange::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"w:author",     m_sAuthor )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date",       m_oDate )
@@ -130,7 +130,7 @@ namespace ComplexTypes
 		}
 		void CHMerge::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:val", m_oVal )
 				WritingElement_ReadAttributes_End( oReader )
@@ -167,7 +167,7 @@ namespace ComplexTypes
 		}
 		void CVMerge::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:val", m_oVal )
 				WritingElement_ReadAttributes_End( oReader )
@@ -249,7 +249,7 @@ namespace ComplexTypes
 		}
 		void CJcTable::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:val", m_oVal )
 				WritingElement_ReadAttributes_End( oReader )
@@ -291,7 +291,7 @@ namespace ComplexTypes
 		}
 		void CTblLayoutType::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"w:type", m_oType )
 				WritingElement_ReadAttributes_End( oReader )
@@ -493,7 +493,7 @@ namespace ComplexTypes
 		}
 		void CTblLook::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"w:firstColumn", m_oFirstColumn )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"w:firstRow",    m_oFirstRow )
@@ -521,7 +521,7 @@ namespace ComplexTypes
 		}
 		void CTblOverlap::FromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:val", m_oVal )
 			WritingElement_ReadAttributes_End( oReader )
@@ -685,7 +685,7 @@ namespace ComplexTypes
 		}
 		void CTblPPr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"w:bottomFromText", m_oBottomFromText )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"w:horzAnchor",     m_oHorzAnchor )
@@ -1826,7 +1826,7 @@ namespace OOX
 			WritingElement_ReadNode( oNode, oChild, L"w:headers",        m_oHeaders );
 			WritingElement_ReadNode( oNode, oChild, L"w:hideMark",       m_oHideMark );
 
-			// В списке аттрибутов написано "hMerge", а в примере "hmerge"
+			// In the attribute list it says "hMerge", but in the example "hmerge"
 			WritingElement_ReadNode( oNode, oChild, L"w:hmerge",         m_oHMerge );
 			if ( !m_oHMerge.IsInit() )
 				WritingElement_ReadNode( oNode, oChild, L"w:hMerge",     m_oHMerge );
@@ -1844,7 +1844,7 @@ namespace OOX
 			WritingElement_ReadNode( oNode, oChild, L"w:textDirection",  m_oTextDirection );
 			WritingElement_ReadNode( oNode, oChild, L"w:vAlign",         m_oVAlign );
 
-			// В списке аттрибутов написано "vMerge", а в примере "vmerge"
+			// In the attribute list it says "vMerge", but in the example "vmerge"
 			WritingElement_ReadNode( oNode, oChild, L"w:vmerge",         m_oVMerge );
 			if ( !m_oVMerge.IsInit() )
 				WritingElement_ReadNode( oNode, oChild, L"w:vMerge",     m_oVMerge );

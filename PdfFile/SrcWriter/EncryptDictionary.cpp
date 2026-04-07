@@ -94,7 +94,7 @@ namespace PdfWriter
 		std::time_t oTime = time(0);
         hash.Update( (BYTE*)&oTime, sizeof(oTime));
 
-		// Создаем идентификатор файла по элементам библиотеки Info.
+		// Create file identifier from Info elements.
 		if (pInfo)
 		{
 			const char *sTemp = NULL;
@@ -243,7 +243,7 @@ namespace PdfWriter
 			pStream->WriteEscapeName(oIter->first.c_str());
 			pStream->WriteChar(' ');
 			nBegin = pStream->Tell();
-			// Цифровая подпись не шифруется
+			// Digital signature is not encrypted
 			pStream->Write(pObject, oIter->first == "Contents" ? NULL : pEncrypt);
 			nEnd = pStream->Tell();
 			pStream->WriteStr("\012");
@@ -261,7 +261,7 @@ namespace PdfWriter
 	}
 	void CSignatureDict::WriteToStream(CStream* pStream, int nFileEnd)
     {
-        // Запись ByteRange
+        // Write ByteRange
         if (m_nByteRangeBegin > 0 && m_nByteRangeEnd > 0 && m_nByteRangeBegin < m_nByteRangeEnd && m_nByteRangeEnd < nFileEnd)
         {
             CArrayObject* pByteRange = new CArrayObject();
@@ -297,10 +297,10 @@ namespace PdfWriter
 		if (!pSignedData)
 			return false;
 
-		// Записываем подписанные данные в Contents
+		// Write signed data to Contents
 		if (dwDataLength > m_nContentsSize)
 		{
-			// Подпись не влезает! Ошибка расчета размера
+			// Signature doesn't fit! Size calculation error
 			return false;
 		}
 
@@ -309,11 +309,11 @@ namespace PdfWriter
 		if (!pContents)
 			return false;
 
-		// Цифровая подпись не шифруется
+		// Digital signature is not encrypted
 		pStream->Write(pContents, NULL);
 		delete pContents;
 
-		// Стираем лишний '>' если нужно
+		// Erase extra '>' if needed
 		BYTE cChar = '0';
 		pStream->Seek(pStream->Tell() - 1, EWhenceMode::SeekSet);
 		pStream->Write(&cChar, 1);
@@ -339,8 +339,8 @@ namespace PdfWriter
 	}
 	void CSignatureDict::SetName(const std::string& sName)
     {
-        // Name - Cтрока, Имя лица или органа, подписавшего документ.
-        // Значение следует использовать когда невозможно извлечь имя из подписи или сертификата подписавшего.
+        // Name - String, Name of the person or authority signing the document.
+        // This value should be used when the name cannot be extracted from the signature or signer's certificate.
         Add("Name", new CStringObject(sName.c_str()));
     }
 	void CSignatureDict::SetLocation(const std::string& sLocation)
@@ -349,19 +349,19 @@ namespace PdfWriter
 	}
     void CSignatureDict::SetReason(const std::string& sReason)
     {
-        // Reason - Строка, Причина подписания, например (Я согласен)
+        // Reason - String, Reason for signing, for example (I agree)
         Add("Reason", new CStringObject(sReason.c_str()));
     }
     void CSignatureDict::SetContact(const std::string& sContacts)
     {
-        // ContactInfo - Строка, Информация, предоставленная подписывающей стороной,
-        // чтобы получатель мог связаться с подписывающей стороной для проверки подписи, например (номер_телефона)
+        // ContactInfo - String, Information provided by the signer,
+        // so that the recipient can contact the signer to verify the signature, for example (phone_number)
         Add("ContactInfo", new CStringObject(sContacts.c_str()));
     }
     void CSignatureDict::SetDate()
     {
-        // M - Дата, Время подписания
-        // Значение следует использовать когда время подписания недоступно в подписи
+        // M - Date, Time of signing
+        // This value should be used when the signing time is not available in the signature
 
         Add("M", new CStringObject(DateNow().c_str()));
     }

@@ -186,7 +186,7 @@ namespace XmlUtils
 			}
 			else
 			{
-				// это m_pCurrentNode
+				// this is m_pCurrentNode
 				CXmlNodeBase* pNewBase = new CXmlNodeBase();
 				pNewBase->m_pDocument = this;
 				pNewBase->m_pDocument->AddRef();
@@ -242,7 +242,7 @@ namespace XmlUtils
 				XmlNodeType eNodeType = XmlNodeType_None;
 
 				int nCurDepth = -1;
-				// У закрывающего тэга глубина на 1 больше, чем у открывающего
+				// Closing tag depth is 1 greater than opening tag
 				while (true)
 				{
 					if (1 != xmlTextReaderRead(reader))
@@ -333,9 +333,9 @@ namespace XmlUtils
 			delete m_pDocument;
 			return false;
 		}
-		// присваиваем m_pBase без AddRef, чтобы при удалении CXmlNode начался удаляться m_pBase(после конструктора RefCount==1, а если сделать AddRef то не удалится)
+		// assign m_pBase without AddRef, so when CXmlNode is deleted, m_pBase starts to be deleted (after constructor RefCount==1, if we do AddRef it won't be deleted)
 		m_pBase = m_pDocument->m_pNode;
-		// после Parse все Node из m_pDocument сделали ему AddRef, поэтому можем вызвать Release(потому что напрямую нигде его не используем), а окончательно он удалится после удаления всех Node
+		// after Parse all Nodes from m_pDocument did AddRef on it, so we can call Release (because we don't use it directly), and it will be finally deleted after all Nodes are deleted
 		m_pDocument->Release();
 
 		return true;
@@ -359,9 +359,9 @@ namespace XmlUtils
 			delete m_pDocument;
 			return false;
 		}
-		// присваиваем m_pBase без AddRef, чтобы при удалении CXmlNode начался удаляться m_pBase(после конструктора RefCount==1, а если сделать AddRef то не удалится)
+		// assign m_pBase without AddRef, so when CXmlNode is deleted, m_pBase starts to be deleted (after constructor RefCount==1, if we do AddRef it won't be deleted)
 		m_pBase = m_pDocument->m_pNode;
-		// после Parse все Node из m_pDocument сделали ему AddRef, поэтому можем вызвать Release(потому что напрямую нигде его не используем), а окончательно он удалится после удаления всех Node
+		// after Parse all Nodes from m_pDocument did AddRef on it, so we can call Release (because we don't use it directly), and it will be finally deleted after all Nodes are deleted
 		m_pDocument->Release();
 		return true;
 	}

@@ -134,7 +134,7 @@ namespace DocFileFormat
 				//end abstractNum
                 m_pXmlWriter->WriteNodeEnd( L"w:abstractNum" );
 			}
-			//write old style numbering (сложносоставных не сущестует)
+			//write old style numbering (compound numbering does not exist)
 			for (size_t i = 0;  i < rglst->listNumbering.size();  ++i)
 			{
 				//start abstractNum
@@ -253,7 +253,7 @@ namespace DocFileFormat
 				{
 					wchar_t xchBullet = lvl->xst[0];
 
-					// В символьном шрифте обрезать надо, в других случаях - нет
+					// In symbol font need to truncate, in other cases - no
 					if (true == bIsSymbol && (xchBullet & 0xF000) != 0)
 					{
 						xchBullet &= 0x0FFF;
@@ -306,7 +306,7 @@ namespace DocFileFormat
 			{
 				wchar_t xchBullet = lvl->xst[0];
 
-				// В символьном шрифте обрезать надо, в других случаях - нет
+				// In symbol font need to truncate, in other cases - no
 				if (bIsSymbol && (xchBullet & 0xF000) != 0)
 				{
 					xchBullet &= 0x0FFF;
@@ -565,13 +565,13 @@ namespace DocFileFormat
 	{
 		if (!lvl) return;
 
-		XMLTools::CStringXmlWriter oWriterTemp;	//Временный writer,что не нарушать последовательность записи
+		XMLTools::CStringXmlWriter oWriterTemp;	//Temporary writer to not break the write sequence
 //rPr
 		RevisionData rev(lvl->grpprlChpx);
 		CharacterPropertiesMapping cpMapping(&oWriterTemp, m_document, &rev, lvl->grpprlPapx, false);
 		lvl->grpprlChpx->Convert(&cpMapping);
 
-// Проверяем шрифт
+// Check font
 
         m_pXmlWriter->WriteNodeBegin( L"w:lvl", TRUE );
         m_pXmlWriter->WriteAttribute( L"w:ilvl", FormatUtils::IntToWideString(level));
@@ -630,7 +630,7 @@ namespace DocFileFormat
 		ParagraphPropertiesMapping oppMapping(m_pXmlWriter, m_context, m_document, NULL, isBidi, NULL, -1, false);
 		lvl->grpprlPapx->Convert(&oppMapping);
 
-// пишем rPr
+// write rPr
 
 		m_pXmlWriter->WriteString(oWriterTemp.GetXmlString());
 

@@ -16,7 +16,7 @@ CPointsWidget::CPointsWidget(QWidget *pParent):
 {
         QVBoxLayout *pLayout = new QVBoxLayout;
 
-        QPushButton *pButtonAddPoint = new QPushButton("Добавить точку");
+        QPushButton *pButtonAddPoint = new QPushButton("Add point");
 
         connect(pButtonAddPoint, &QPushButton::clicked, this, &CPointsWidget::on_createPoint_clicked);
 

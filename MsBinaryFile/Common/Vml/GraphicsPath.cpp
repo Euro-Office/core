@@ -103,8 +103,8 @@ namespace ODRAW
 		if (NULL == pRenderer)
 			return;
 
-		// вообще можно каждый раз выставл¤ть pen/brush.
-		// но у нас сейчас pen и brush выставл¤ютс¤ в shape
+		// generally, pen/brush can be set each time.
+		// but currently pen and brush are set in shape
 
 		pRenderer->SetCommandParams(m_dAngle, m_oBounds.left, m_oBounds.top, m_oBounds.GetWidth(), m_oBounds.GetHeight(), m_lFlags);
 

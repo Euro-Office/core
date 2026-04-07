@@ -396,7 +396,7 @@ namespace OOX
 			nullable<SimpleTypes::Spreadsheet::CActivePane>		m_oPane;
 		};
 
-		//необработано:
+		//not implemented:
 		//<extLst>
 		//<pivotSelection>
 		class CSheetView : public WritingElementWithChilds<CSelection>

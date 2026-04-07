@@ -654,12 +654,12 @@ void OoxConverter::convert(OOX::WritingElement  *oox_unknown)
 			{
 				convert(dynamic_cast<OOX::Drawing::COfficeArtExtension*>(oox_unknown));
 			}break;
-			// "ненужные" элементы
+			// "unnecessary" elements
 			case OOX::et_w_softHyphen:
 			case OOX::et_w_proofErr:
 			case OOX::et_w_proofState:
 			{
-				//бяка
+				//garbage
 			}break;
 			//--Math
 			case OOX::et_m_oMath:

@@ -108,7 +108,7 @@ bool CPPTFileReader::IsPowerPoint()
 bool CPPTFileReader::IsEncrypted()
 {
 	if (m_oDocumentInfo.m_arUsers.empty()) 
-		return m_oDocumentInfo.m_oCurrentUser.m_bIsEncrypt; //wps не выставляет флаг!
+		return m_oDocumentInfo.m_oCurrentUser.m_bIsEncrypt; //wps doesn't set the flag!
 
 	return m_oDocumentInfo.m_arUsers[0]->m_bEncrypt;
 }
@@ -258,7 +258,7 @@ void CPPTFileReader::ReadPictures()
 
 	while (true)
 	{
-		//if (pStream->isEOF()) случаются неверно записанные стримы 
+		//if (pStream->isEOF()) incorrectly written streams occur 
 		//	break;
 
 		unsigned long pos = pStream->getStreamPointer();	
@@ -285,7 +285,7 @@ void CPPTFileReader::ReadPictures()
 			oHeader.ReadFromStream(pStream->stream_);
 
 		if (oHeader.RecType == 0 && oHeader.RecLen == 0 )
-			break;// окончание стрима забито нулями (выравнивание)
+			break;// end of stream is padded with zeros (alignment)
 
 		CRecordOfficeArtBlip art_blip;
 		

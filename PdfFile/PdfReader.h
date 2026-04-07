@@ -89,7 +89,7 @@ public:
 	int GetMaxRefID();
 	int GetNumPages();
 	bool ValidMetaData();
-	// Захватывает полученную память malloc data
+	// Takes ownership of malloc data memory
 	bool MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
 	bool MergePages(const std::wstring& wsFile, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
 	bool UnmergePages();

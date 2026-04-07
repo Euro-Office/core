@@ -149,15 +149,15 @@ namespace NSGeneratePalette
             Pixel = *((unsigned int*)pBgraColor);
             RefByDstPixel = pDstPixel;
 
-            A = (A & ~15) + 15; // квантуем альфу
+            A = (A & ~15) + 15; // quantize alpha
         }
     };
 
 
     struct SRect3D
     {
-        unsigned char MaxWidth; // максимальная ширина
-        unsigned char MaxColor; // цвет максимальной ширины: 0 - blue, 1 - green, 2 - red, 3 - alpha
+        unsigned char MaxWidth; // maximum width
+        unsigned char MaxColor; // color of maximum width: 0 - blue, 1 - green, 2 - red, 3 - alpha
 
         SRect3D()
         {
@@ -191,7 +191,7 @@ namespace NSGeneratePalette
 
             ~CBounder()
             {
-                // удалять ничего не нужно, так как нет динамических данных
+                // nothing to delete since there is no dynamic data
             }
 
 
@@ -226,7 +226,7 @@ namespace NSGeneratePalette
                     return;
                 }
 
-                // нормализуем по точкам, убивая лишние грани...
+                // normalize by points, removing extra edges...
                 int nMinB, nMaxB;
                 int nMinG, nMaxG;
                 int nMinR, nMaxR;
@@ -303,13 +303,13 @@ namespace NSGeneratePalette
 
             bool CreateNew( CBounder& bound1, CBounder& bound2 ) const
             {
-                // перераспределяем точки в массиве на две части.
+                // redistribute points in the array into two parts.
                 if( 0 == m_oRect.MaxWidth )
                 {
                     return FALSE;
                 }
 
-                // сначала определяем самую длинную сторону...
+                // first determine the longest side...
                 int nColorType = m_oRect.MaxColor;
 
                 unsigned int hist[256];
@@ -439,7 +439,7 @@ namespace NSGeneratePalette
             if( !nCountImages || pDstPalette == NULL )
                 return arDst;
 
-            // создаём палитру
+            // create palette
             unsigned int* pPalette = new unsigned int[256];
 
             *pDstPalette = pPalette;

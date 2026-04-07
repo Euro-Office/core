@@ -196,7 +196,7 @@ void OfficeArtContainer::loadFields(XLS::CFRecord& record)
 						OfficeArtRecordPtr test_officeArt = CreateOfficeArt(rh_test.recType);
 						if (!test_officeArt)
 						{
-							//упс ... и где начало верное???
+							//oops ... and where is the correct start???
 							record.skipNunBytes(record.getDataSize() - record.getRdPtr());
 							return;
 						}

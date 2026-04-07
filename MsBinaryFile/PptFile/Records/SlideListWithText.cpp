@@ -49,7 +49,7 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
 
     if (m_oHeader.IsContainer())
     {
-        // а по-другому и быть не могло...
+        // and it couldn't be otherwise...
         _UINT32 lSymbolCount = 0;
 
         UINT lCurLen = 0;
@@ -106,7 +106,7 @@ void CRecordSlideListWithText::ReadFromStream(SRecordHeader &oHeader, POLE::Stre
                 if (0 > nCurrentTextHeader)
                     continue;
 
-                // здесь еще настойки кроме текста
+                // here are more settings besides text
                 if (NULL != pChars)
                 {
                     m_arTextPlaceHolders[nCurrentSlide][nCurrentTextHeader].m_strText = pChars->m_strText;

@@ -192,7 +192,7 @@ namespace XPS
 
 		std::wstring wsFilePath = GetPath(wsSourceFile);
 
-		// Оглавление, содержание, structure
+		// Table of contents, contents, structure
 		oReader.Clear();
 
 		std::wstring wsStructureTargetFile = wsFilePath + L"_rels/" + NSFile::GetFileName(wsSourceFile) + L".rels";
@@ -244,9 +244,9 @@ namespace XPS
 							if (oReader.GetNameNoNS() == L"OutlineEntry")
 							{
 								CDocumentStructure oStructure;
-								oStructure.nLevel = 1; // OutlineLevel по умолчанию имеет значение 1
+								oStructure.nLevel = 1; // OutlineLevel has a default value of 1
 								oStructure.nPage  = 0;
-								oStructure.dY     = 0; // по умолчанию верхняя часть страницы (216)
+								oStructure.dY     = 0; // default is top of the page (216)
 								while (oReader.MoveToNextAttribute())
 								{
 									std::wstring wsAttrName = oReader.GetName();

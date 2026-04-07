@@ -119,7 +119,7 @@ namespace cpdoccore {
 		{
 			data_table_content_ = content;
 		}
-		void oox_plot_area::reset_cross_axis()//обязательно после всех добавлений
+		void oox_plot_area::reset_cross_axis()//must be called after all additions
 		{
 			for (size_t i = 0; i < axis_.size(); i++)
 			{

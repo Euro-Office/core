@@ -40,51 +40,51 @@
 namespace lcInfo
 {
 
-/// @brief класс содержащий в себе информацию о локали и используемых в ней стандартах
+/// @brief class containing locale information and standards used in it
 class LocalInfo
 {
 public:
 
-    /// @brief собрать короткий формат даты из шаблона
-    /// @return шаблон из номеров определяющих порядок элементов даты где 0-1 дни 2-3 месяцы 4-5 годы
+    /// @brief build short date format from template
+    /// @return template with numbers defining date element order where 0-1 days 2-3 months 4-5 years
     std::wstring GetShortDateFormat();
 
-    /// @brief получить имена месяцев в этой локали
-    /// @param index номер из списка месяцев
-    /// @param shortName запрашивается ли сокращенное имя
-    /// @return вектор имен месяцев начинающихся с января
+    /// @brief get month names in this locale
+    /// @param index number from month list
+    /// @param shortName whether abbreviated name is requested
+    /// @return vector of month names starting from January
     std::vector<std::wstring> GetMonthNames(const _INT16 &index, const bool isShortName = false);
 
-    /// @brief собрать короткий формат даты из шаблона
-    /// @return номер месяца начиная от нуля, в случае успеха, отрицательное число в случае неудачи
+    /// @brief build short date format from template
+    /// @return month number starting from zero on success, negative number on failure
     _INT16 GetMonthNumber(const std::wstring &monthName,  const bool isShortName = false);
 
-    /// @brief получить строковое имя месяца в этой локали
-    /// @param index номер запрашиваемого месяца
-    /// @param shortName запрашивается ли сокращенное имя
-    /// @return имя месяца
+    /// @brief get string month name in this locale
+    /// @param index requested month number
+    /// @param shortName whether abbreviated name is requested
+    /// @return month name
     std::wstring GetLocMonthName(const _INT16 &index, bool shortName = false);
 
-    /// @brief id локали
+    /// @brief locale id
     _INT32 lcid;
 
-    /// @brief название локали
+    /// @brief locale name
     std::wstring Name;
 
-    /// @brief разделитель даты
+    /// @brief date separator
     std::wstring DateSeparator;
 
-    /// @brief сокращенная дата
+    /// @brief short date
     std::wstring ShortDatePattern;
 
-    /// @brief локальные имена месяцев
+    /// @brief local month names
     _INT16 MonthNamesIndex;
 
-    /// @brief максимум символов в сокращенной длине месяца
+    /// @brief maximum characters in abbreviated month length
     _INT16 MonthAbrvLen;
 };
 
-/// @brief получение информации о локали по её id
+/// @brief get locale information by its id
 LocalInfo getLocalInfo(const _INT32 lcid);
 
 }

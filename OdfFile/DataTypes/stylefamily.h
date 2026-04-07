@@ -58,7 +58,7 @@ public:
         Presentation,
         Control,
         Ruby,
-////////////////////////для генерации "красивых" имен и поиска
+//////////////////////// for generating "nice" names and searching
 		Gradient,
 		Hatch,
 		Opacity,
