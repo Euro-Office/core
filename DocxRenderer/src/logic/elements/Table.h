@@ -102,6 +102,16 @@ namespace NSDocxRenderer
 	class CGraphicalCell : public CBaseItem
 	{
 	public:
+		CGraphicalCell() = default;
+		~CGraphicalCell() = default;
+
+	public:
+		CTable::CCell::CBorder m_oBorderLeft;
+		CTable::CCell::CBorder m_oBorderTop;
+		CTable::CCell::CBorder m_oBorderRight;
+		CTable::CCell::CBorder m_oBorderBot;
+
+		CTable::CCell::eVMerge m_eVMerge{CTable::CCell::eVMerge::vmRestart};
 		// realization
 	};
 

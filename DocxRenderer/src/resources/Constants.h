@@ -60,6 +60,7 @@ const UINT   c_iGreyColor2 = 0x999999;
 const double c_dSTANDART_LEFT_INDENT_MM = 30;
 const double c_dSTANDART_RIGHT_INDENT_MM = 15;
 const double c_dSTANDART_FIRSTLINE_INDENT_MM = 12.5;
+const double c_dSTANDART_TABLE_SPACING_MM = 1.9;
 
 const uint32_t c_SPACE_SYM = 0x20;
 

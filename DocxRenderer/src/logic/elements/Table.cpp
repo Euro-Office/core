@@ -64,6 +64,7 @@ namespace NSDocxRenderer
 		for (const auto& p : m_arParagraphs)
 			p->ToXml(oWriter);
 
+		oWriter.WriteString(L"<w:p/>");
 		oWriter.WriteString(L"</w:tc>");
 	}
 	void CTable::CCell::ToXmlPptx(NSStringUtils::CStringBuilder& oWriter) const
@@ -94,6 +95,7 @@ namespace NSDocxRenderer
 	}
 	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{
+		// TODO: calc border spacing
 		m_arParagraphs.push_back(pParagraph);
 	}
 
@@ -126,7 +128,18 @@ namespace NSDocxRenderer
 	}
 	void CTable::CRow::AddCell(const cell_ptr_t& pCell)
 	{
-		CBaseItem::RecalcWithNewItem(pCell.get());
+		if (m_arCells.empty())
+		{
+			m_dTop = pCell->m_dTop;
+			m_dLeft = pCell->m_dLeft;
+			m_dBot = pCell->m_dBot;
+			m_dHeight = pCell->m_dHeight;
+			m_dWidth = 0.0;
+		}
+
+		m_dRight = pCell->m_dRight;
+		m_dWidth += pCell->m_dWidth;
+		//CBaseItem::RecalcWithNewItem(pCell.get());
 		m_arCells.push_back(pCell);
 	}
 	bool CTable::CRow::IsEmpty() const
@@ -146,7 +159,7 @@ namespace NSDocxRenderer
 		oWriter.WriteString(L"<w:tblpPr ");
 
 		oWriter.WriteString(L"w:horzAnchor=\"page\" w:vertAnchor=\"page\" w:tblpX=\"");
-		oWriter.AddInt64(static_cast<long long>(m_dLeft * c_dMMToDx));
+		oWriter.AddInt64(static_cast<long long>((m_dLeft + c_dSTANDART_TABLE_SPACING_MM) * c_dMMToDx));
 		oWriter.WriteString(L"\" w:tblpY=\"");
 		oWriter.AddInt64(static_cast<long long>(m_dTop * c_dMMToDx));
 		oWriter.WriteString(L"\" />");
@@ -180,41 +193,83 @@ namespace NSDocxRenderer
 	}
 	void CTable::AddRow(const row_ptr_t& pRow)
 	{
-		CBaseItem::RecalcWithNewItem(pRow.get());
+		if (m_arRows.empty())
+		{
+			m_dTop = pRow->m_dTop;
+			m_dLeft = pRow->m_dLeft;
+			m_dRight = pRow->m_dRight;
+			m_dWidth = pRow->m_dWidth;
+			m_dHeight = 0.0;
+
+			for (const auto& c : pRow->m_arCells)
+				m_arGridCols.push_back(c->m_dWidth);
+		}
+
+		if (pRow->m_arCells.size() > m_arGridCols.size())
+		{
+			m_arGridCols.clear();
+			for (const auto& c : pRow->m_arCells)
+				m_arGridCols.push_back(c->m_dWidth);
+		}
+
+		m_dBot = pRow->m_dBot;
+		m_dHeight += pRow->m_dHeight;
+		//CBaseItem::RecalcWithNewItem(pRow.get());
 		m_arRows.push_back(pRow);
 	}
 	void CTable::CalcGridCols()
 	{
-		std::vector<double> cells_left;
-		auto add_if_no_exists = [&cells_left] (double val) {
-			bool exists = false;
-			for (const auto& curr : cells_left)
+
+		for (auto r : m_arRows)
+		{
+			int i = 0;
+			auto size_diff = m_arGridCols.size() - r->m_arCells.size();
+			if (size_diff)
 			{
-				if (fabs(curr - val) < c_dMAX_TABLE_LINE_WIDTH_MM)
+				for (auto c : r->m_arCells)
 				{
-					exists = true;
-					break;
+					auto grids = m_arGridCols[i++];
+					while (c->m_dWidth - grids > 0.1)
+					{
+						grids += m_arGridCols[i++];
+						c->m_nGridSpan++;
+						size_diff--;
+					}
+					if (!size_diff) break;
 				}
 			}
-			if (!exists)
-				cells_left.push_back(val);
-		};
-
-		double right = 0;
-		for (const auto& row : m_arRows)
-		{
-			for (const auto& cell : row->m_arCells)
-			{
-				right = std::max(right, cell->m_dRight);
-				add_if_no_exists(cell->m_dLeft);
-			}
 		}
-		std::sort(cells_left.begin(), cells_left.end(), std::less<double>{});
 
-		for (size_t i = 0; i < cells_left.size() - 1; ++i)
-			m_arGridCols.push_back(cells_left[i + 1] - cells_left[i]);
+		// std::vector<double> cells_left;
+		// auto add_if_no_exists = [&cells_left] (double val) {
+		// 	bool exists = false;
+		// 	for (const auto& curr : cells_left)
+		// 	{
+		// 		if (fabs(curr - val) < c_dMAX_TABLE_LINE_WIDTH_MM)
+		// 		{
+		// 			exists = true;
+		// 			break;
+		// 		}
+		// 	}
+		// 	if (!exists)
+		// 		cells_left.push_back(val);
+		// };
 
-		m_arGridCols.push_back(right - cells_left.back());
+		// double right = 0;
+		// for (const auto& row : m_arRows)
+		// {
+		// 	for (const auto& cell : row->m_arCells)
+		// 	{
+		// 		right = std::max(right, cell->m_dRight);
+		// 		add_if_no_exists(cell->m_dLeft);
+		// 	}
+		// }
+		// std::sort(cells_left.begin(), cells_left.end(), std::less<double>{});
+
+		// for (size_t i = 0; i < cells_left.size() - 1; ++i)
+		// 	m_arGridCols.push_back(cells_left[i + 1] - cells_left[i]);
+
+		// m_arGridCols.push_back(right - cells_left.back());
 	}
 	bool CTable::IsEmpty() const
 	{
