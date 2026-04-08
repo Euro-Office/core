@@ -39,8 +39,8 @@
 
 #include "../../../PptFile/Records/Drawing/ArtBlip.h"
 
-// это класс, использующийся для передачи свойств объектов,
-// например - указатель на картинку... (по PID'у)
+// this class is used for passing object properties,
+// for example - pointer to an image... (by PID)
 
 CProperty::CProperty()
 {
@@ -59,9 +59,9 @@ CProperty::~CProperty()
 }
 void CProperty::FromStream(POLE::Stream* pStream)
 {
-	// читаем из стрима...
-	// только пока без учета bComplex
-	// т.к. Complex - учитывается в контейнере, хранящем все проперти
+	// reading from stream...
+	// for now without considering bComplex
+	// since Complex is handled in the container storing all properties
 	USHORT lMem = StreamUtils::ReadWORD(pStream);
 	m_ePID = (ODRAW::ePropertyId)(lMem & 0x3FFF);
 
@@ -174,8 +174,8 @@ void CProperties::FromStream(POLE::Stream* pStream, long lCount)
 		m_arProperties.push_back(elem);
 		m_arProperties[lIndex].FromStream(pStream);
 	}
-	// теперь читаем дополнительную информацию
-	// сортировано по pid'ам (но у нас пока просто по-порядку)
+	// now reading additional information
+	// sorted by pids (but for now we just go in order)
 	for (size_t lIndex = 0; lIndex < m_lCount; ++lIndex)
 	{
 		m_arProperties[lIndex].ComplexFromStream(pStream);

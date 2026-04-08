@@ -78,7 +78,7 @@ namespace OOX
 		void CBorder::fromXML(XmlUtils::CXmlNode& oNode)
 		{
 			m_eType = et_Unknown;
-			// TO DO: Реализовать CBorder::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CBorder::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CBorder::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -151,7 +151,7 @@ namespace OOX
 		}
 		void CWrap::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CWrap::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CWrap::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CWrap::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{

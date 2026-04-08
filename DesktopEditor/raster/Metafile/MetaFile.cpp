@@ -51,7 +51,7 @@ namespace MetaFile
 	{
 		m_pFontManager = NULL;
 		m_pAppFonts = pAppFonts;
-		// Создаем менеджер шрифтов с собственным кэшем
+		// Create font manager with its own cache
 		if (pAppFonts)
 		{
 			m_pFontManager = pAppFonts->GenerateFontManager();
@@ -153,7 +153,7 @@ namespace MetaFile
 			return;
 
 		unsigned int alfa = 0xffffff;
-		//дефолтный тон должен быть прозрачным, а не белым
+		// default tone should be transparent, not white
 		//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 		for (int i = 0; i < nWidth * nHeight; i++)
 		{
@@ -275,14 +275,14 @@ namespace MetaFile
 		m_oEmfFile.SetOutputDevice(wsFilePath, InterpretatorType::Emf);
 		m_oEmfFile.PlayMetaFile();
 
-		//TODO:: сохранение в *.emf файл
+		//TODO:: save to *.emf file
 	}
 #endif
 
 	bool CMetaFile::LoadFromFile(const wchar_t *wsFilePath)
 	{
-		// TODO: Сейчас при загрузке каждой новой картинки мы пересоздаем
-		//       FontManager, потому что сейчас в нем кэш без ограничения.
+		// TODO: Currently when loading each new image we recreate
+		//       FontManager, because currently its cache has no limit.
 		//------------------------------------------------------
 
 		RELEASEINTERFACE(m_pFontManager);
@@ -311,7 +311,7 @@ namespace MetaFile
 		//------------------------------------------------------
 
 	#ifdef METAFILE_SUPPORT_WMF_EMF
-		// Сначала пытаемся открыть файл как Wmf
+		// First try to open file as Wmf
 		if (m_oWmfFile.OpenFromWmfFile(wsFilePath) == true)
 		{
 			m_oWmfFile.Scan();
@@ -323,7 +323,7 @@ namespace MetaFile
 			}
 			m_oWmfFile.Close();
 		}
-		// Это не Wmf
+		// This is not Wmf
 		if (m_oEmfFile.OpenFromEmfFile(wsFilePath) == true)
 		{
 			m_oEmfFile.Scan();
@@ -336,7 +336,7 @@ namespace MetaFile
 			m_oEmfFile.Close();
 		}
 	#endif
-		// Это не Emf
+		// This is not Emf
 	#ifdef METAFILE_SUPPORT_SVM
 		if (m_oSvmFile.OpenFromFile(wsFilePath) == true)
 		{
@@ -351,7 +351,7 @@ namespace MetaFile
 			m_oSvmFile.Close();
 		}
 	#endif
-		// Это не svm
+		// This is not svm
 	#ifdef METAFILE_SUPPORT_SVG
 		if (m_oSvgFile.OpenFromFile(wsFilePath) == true)
 		{
@@ -369,8 +369,8 @@ namespace MetaFile
 		if (NULL == pBuffer || 0 == unSize)
 			return false;
 
-		// TODO: Сейчас при загрузке каждой новой картинки мы пересоздаем
-		//       FontManager, потому что сейчас в нем кэш без ограничения.
+		// TODO: Currently when loading each new image we recreate
+		//       FontManager, because currently its cache has no limit.
 		//------------------------------------------------------
 
 		RELEASEINTERFACE(m_pFontManager);
@@ -399,7 +399,7 @@ namespace MetaFile
 		//------------------------------------------------------
 
 	#ifdef METAFILE_SUPPORT_WMF_EMF
-		// Сначала пытаемся открыть файл как Wmf
+		// First try to open file as Wmf
 		if (m_oWmfFile.ReadFromBuffer(pBuffer, unSize) == true)
 		{
 			m_oWmfFile.Scan();
@@ -411,7 +411,7 @@ namespace MetaFile
 			}
 			m_oWmfFile.Close();
 		}
-		// Это не Wmf
+		// This is not Wmf
 		if (m_oEmfFile.ReadFromBuffer(pBuffer, unSize) == true)
 		{
 			m_oEmfFile.Scan();
@@ -424,7 +424,7 @@ namespace MetaFile
 			m_oEmfFile.Close();
 		}
 	#endif
-		// Это не Emf
+		// This is not Emf
 	#ifdef METAFILE_SUPPORT_SVM
 		if (m_oSvmFile.ReadFromBuffer(pBuffer, unSize) == true)
 		{
@@ -439,7 +439,7 @@ namespace MetaFile
 			m_oSvmFile.Close();
 		}
 	#endif
-		// Это не svm
+		// This is not svm
 	#ifdef METAFILE_SUPPORT_SVG
 		if (m_oSvgFile.ReadFromBuffer(pBuffer, unSize) == true)
 		{
@@ -661,7 +661,7 @@ namespace MetaFile
 			return;
 
 		unsigned int alfa = 0xffffff;
-		//дефолтный тон должен быть прозрачным, а не белым
+		// default tone should be transparent, not white
 		//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 		for (int i = 0; i < nWidth * nHeight; i++)
 		{

@@ -1,19 +1,19 @@
-### Состав .json файла для wasm/asm модуля
-- `name` — имя с которым будет собран модуль
-- `res_folder` — путь, относительный .json файла, до папки куда будет собран модуль
-- `wasm` — требуется ли собрать wasm модуль (*.js и *.wasm)
-- `asm` — требуется ли собрать asm модуль (*_ie.js и *.js.mem)
-- `run_before` — путь, относительный .json файла, до .py файла который требуется выполнить перед сборкой модуля. Или python in-line код.
-- `run_after` — путь, относительный .json файла, до .py файла который требуется выполнить после сборки модуля. Или python in-line код.
-- `base_js_content` — путь, относительный .json файла, до .js файла содержащего //module вместо которого будет записан собранный модуль
-- `compiler_flags` — массив из флагов и опций компиляции
-- `exported_functions` — массив из имён функций, которые будут вызываться из модуля
-- `include_path` — массив из путей, относительных .json файла, include-ов для подключаемых файлов
-- `define` — массив из дефайнов
-- `compile_files_array` — массив из объектов, содержащих:
-    - `name` — уникальное, относительно других name в массиве compile_files_array, имя
-	- `folder` — путь, относительный .json файла, до папки с подключаемыми файлами
-	- `files` — массив из имён подключаемых файлов, расположенных в папке folder (иерархия ../ и ./*/ разрешена)
-	- `include_path` — необязательный массив из путей, относительных .json файла, include-ов для подключаемых файлов
-	- `define` — необязательный массив из дефайнов
-- `sources` — необязательный массив из путей, относительных .json файла, до файлов, которым не требуется прекомпиляция. Например, .a или .o файлы.
+### JSON file structure for wasm/asm module
+- `name` — name with which the module will be built
+- `res_folder` — path, relative to the .json file, to the folder where the module will be built
+- `wasm` — whether to build wasm module (*.js and *.wasm)
+- `asm` — whether to build asm module (*_ie.js and *.js.mem)
+- `run_before` — path, relative to the .json file, to .py file that needs to be executed before building the module. Or python in-line code.
+- `run_after` — path, relative to the .json file, to .py file that needs to be executed after building the module. Or python in-line code.
+- `base_js_content` — path, relative to the .json file, to .js file containing //module which will be replaced with the built module
+- `compiler_flags` — array of compilation flags and options
+- `exported_functions` — array of function names that will be called from the module
+- `include_path` — array of paths, relative to the .json file, for include directories
+- `define` — array of defines
+- `compile_files_array` — array of objects containing:
+    - `name` — unique name, relative to other names in compile_files_array array
+	- `folder` — path, relative to the .json file, to folder with included files
+	- `files` — array of included file names, located in folder (hierarchy ../ and ./*/ allowed)
+	- `include_path` — optional array of paths, relative to the .json file, for include directories
+	- `define` — optional array of defines
+- `sources` — optional array of paths, relative to the .json file, to files that don't require precompilation. For example, .a or .o files.

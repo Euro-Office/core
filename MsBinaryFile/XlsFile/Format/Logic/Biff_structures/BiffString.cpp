@@ -101,7 +101,7 @@ namespace XLS
 	
 		if (reader->GetPosition() + cch > reader->GetSize())
 		{
-			//ОШИБКА - нехватило Continue records - нужно найти место где именно и подзагрузить
+			//ERROR - not enough Continue records - need to find the exact location and load additional data
 			return;
 		}
 		unsigned char* pData = reader->ReadBytes(cch, true);
@@ -133,7 +133,7 @@ namespace XLS
 	
 		if (record.checkFitRead(raw_length)==false)
 		{
-			//ОШИБКА - нехватило Continue records - нужно найти место где именно и подзагрузить
+			//ERROR - not enough Continue records - need to find the exact location and load additional data
 			return;
 		}
 

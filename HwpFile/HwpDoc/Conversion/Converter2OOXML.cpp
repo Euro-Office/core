@@ -160,7 +160,7 @@ void CConverter2OOXML::CreateEmptyFiles()
 
 void CConverter2OOXML::FillDefaultData()
 {
-	// Заполняем начало файлов
+	// Fill in file headers
 	AddRelationship(L"styles", L"styles.xml");
 	AddRelationship(L"settings", L"settings.xml");
 	AddRelationship(L"webSettings", L"webSettings.xml");
@@ -181,7 +181,7 @@ void CConverter2OOXML::FillDefaultData()
 
 void CConverter2OOXML::Close()
 {
-	// Дописываем концы файлов
+	// Write file endings
 	m_oDocXml.WriteString(L"</w:body></w:document>");
 
 	NSFile::CFileBinary oDocumentWriter;
@@ -305,7 +305,7 @@ void CConverter2OOXML::WriteCharacter(const CCtrlCharacter* pCharacter, short sh
 	{
 		case ECtrlCharType::PARAGRAPH_BREAK:
 		{
-			// Таблицы пишутся без тега <w:p>, поэтому для них не открывается параграф
+			// Tables are written without <w:p> tag, so paragraph is not opened for them
 			if (TConversionState::TLastNode::ELastNodeType::Table == oState.m_oLastNode.m_eType &&
 			    oState.m_unParaIndex == oState.m_oLastNode.m_unParaIndex && !oState.m_bInTable)
 			{
@@ -471,7 +471,7 @@ void CConverter2OOXML::WriteField(const CCtrlField* pShape, short shParaShapeID,
 			oState.m_arOpenedBookmarks.pop();
 			break;
 		}
-		//TODO:: как-будто хочется определить тип закрывающей field на этапе парса hwpx
+		//TODO:: Would be better to determine closing field type at hwpx parsing stage
 		case EFieldType::Unknown:
 		{
 			std::map<unsigned int, const CCtrlField*>::const_iterator itFound = oState.m_mOpenField.find(pShape->GetInstanceID());
@@ -800,8 +800,8 @@ void CConverter2OOXML::WriteTable(const CCtrlTable* pTable, short shParaShapeID,
 		}
 	}
 
-	//TODO:: в случаях, когда есть пустые столбцы необходимо добавить возможность удаления данных столбцов
-	// Например для матрицы 3x2, у которой значения есть только в 2x2, необходимо удалить последний столбец
+	//TODO:: When there are empty columns, add ability to remove those columns
+	// For example, for a 3x2 matrix with values only in 2x2, the last column should be removed
 
 	for (unsigned int unRowIndex = 0; unRowIndex < pTable->GetRows(); ++unRowIndex)
 	{
@@ -851,7 +851,7 @@ void CConverter2OOXML::WriteTableProperties(const CCtrlTable* pTable, short shPa
 
 	oBuilder.WriteString(L"<w:tblPr>");
 
-	// TODO:: сделать вычисление
+	// TODO:: Implement calculation
 	oBuilder.WriteString(L"<w:tblW w:w=\"0\" w:type=\"auto\"/>");
 
 	if (0 != pTable->GetInLSpace() || 0 != pTable->GetInTSpace() ||
@@ -976,7 +976,7 @@ void CConverter2OOXML::WriteBorder(const TBorder& oBorder, const HWP_STRING& sBo
 
 	HWP_STRING sType;
 
-	//TODO:: проверить стиль линий
+	//TODO:: Verify line styles
 	switch(oBorder.m_eStyle)
 	{
 		case ELineStyle2::NONE: oBuilder.WriteString(L"<w:" + sBorderName + L" w:val=\"none\"/>"); return;
@@ -1001,7 +1001,7 @@ VECTOR<TPoint> ArcToBezier(const TPoint& oStart, const TPoint& oEnd, const TPoin
 	const double dRadiusX = std::abs(oStart.m_nX - oCenter.m_nX);
 	const double dRadiusY = std::abs(oStart.m_nY - oCenter.m_nY);
 
-	// Вычисление углов
+	// Calculate angles
 	double dStartAngle = std::atan2(oStart.m_nY - oCenter.m_nY, oStart.m_nX - oCenter.m_nX);
 	double dEndAngle   = std::atan2(oEnd.m_nY   - oCenter.m_nY, oEnd.m_nX   - oCenter.m_nX);
 
@@ -1269,10 +1269,10 @@ void CConverter2OOXML::WriteEqEditShape(const CCtrlEqEdit* pEqEditShape, short s
 
 void CConverter2OOXML::WriteOleShape(const CCtrlShapeOle* pOleShape, short shParaShapeID, short shParaStyleID, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)
 {
-	//TODO:: добавить конвертацию hwp ole -> ooxml chart
-	//TODO:: необходимо добавить поддержку формата "Hwp Document File Formats - Charts" (для случаев, когда нет ooxml представления)
-	// Пока можем вытащить лишь ooxml представление данных
-	// Реализовать с использованием pole.h?
+	//TODO:: Add hwp ole -> ooxml chart conversion
+	//TODO:: Need to add support for "Hwp Document File Formats - Charts" format (for cases without ooxml representation)
+	// For now we can only extract ooxml data representation
+	// Implement using pole.h?
 
 	if (nullptr == m_pContext)
 		return;
@@ -1395,7 +1395,7 @@ void CConverter2OOXML::WriteSectionSettings(TConversionState& oState)
 
 	if (nullptr != oState.m_pColumnDef && 1 < oState.m_pColumnDef->GetColCount())
 	{
-		//TODO:: Добавить поддержку остальный свойств
+		//TODO:: Add support for remaining properties
 		m_oDocXml.WriteString(L"<w:cols w:num=\"" + std::to_wstring(oState.m_pColumnDef->GetColCount()) + L"\"  w:space=\"454\"");
 
 		if (ELineStyle2::NONE != oState.m_pColumnDef->GetColLineStyle())
@@ -1538,7 +1538,7 @@ HWP_STRING CConverter2OOXML::SavePicture(const HWP_STRING& sBinItemId, TConversi
 	if (nullptr == m_pContext || sBinItemId.empty())
 		return HWP_STRING();
 
-	//TODO:: добавить поддержку устновки размеров изображения из свойств шейпа
+	//TODO:: Add support for setting image dimensions from shape properties
 	CHWPStream oBuffer;
 	HWP_STRING sFileName;
 
@@ -2138,7 +2138,7 @@ void CConverter2OOXML::WriteAutoNumber(const CCtrlAutoNumber* pAutoNumber, short
 	unsigned short ushValue = 0;
 	HWP_STRING wsType;
 
-	//TODO:: лучше перейти не на ручной подсчет, а на автоматический в word (но там есть свои проблемы)
+	//TODO:: Better to switch from manual counting to automatic in word (but that has its own issues)
 	switch (pAutoNumber->GetNumType())
 	{
 		case ENumType::PAGE:

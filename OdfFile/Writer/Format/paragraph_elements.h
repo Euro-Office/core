@@ -325,7 +325,7 @@ public:
    
 	office_element_ptr_array content_;
     
-	_CP_OPT(std::wstring)		text_style_name_;//ваще то это такой элемент где стиль должОн быть всегда
+	_CP_OPT(std::wstring)		text_style_name_;//actually this is an element where style should always be present
     std::vector<std::wstring>	text_class_names_;
 
     virtual void add_text(const std::wstring & Text);

@@ -75,7 +75,7 @@ namespace NSFontCutter
 		if (pPair != m_mapPicks.end())
 			return pPair->second;
 
-		//подбор перенесен в js
+		//font matching moved to js
 		m_mapPicks.insert(std::pair<std::wstring,std::wstring>(sFind, sFind));
 		return sFind;
 

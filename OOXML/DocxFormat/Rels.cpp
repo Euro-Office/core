@@ -106,7 +106,7 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if( oReader,L"TargetMode", m_sMode )
 			WritingElement_ReadAttributes_End( oReader )
 
-			//External rels не нормализуем, иначе искажаются пути в гиперссылках.
+			//We don't normalize external rels, otherwise paths in hyperlinks get distorted.
 			if(IsExternal())
 				m_oTarget.SetName(sTempTarget, false);
 			else

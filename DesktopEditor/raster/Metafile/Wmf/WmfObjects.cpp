@@ -75,8 +75,8 @@ namespace MetaFile
 	void CWmfBrush::SetDibPattern(unsigned char* pBuffer, unsigned int ulWidth, unsigned int ulHeight)
 	{
 #ifdef METAFILE_DISABLE_FILESYSTEM
-		// без использования файловой системы пока реализовать не получится при конвертации в растр,
-		// так как на данный момент картинку кисти передать в рендер можно только  с помощью использования файловой системы
+		// without using filesystem this cannot be implemented yet when converting to raster,
+		// since currently brush image can only be passed to renderer using the filesystem
 		// (CMetaFileRenderer::UpdateBrush()) m_pRenderer->put_BrushTexturePath(pBrush->GetDibPatterPath());
 #else
 

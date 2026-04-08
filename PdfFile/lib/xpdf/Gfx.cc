@@ -550,6 +550,7 @@ Gfx::Gfx(PDFDoc *docA, OutputDev *outA, int pageNum, Dict *resDict,
   contentStreamStack = new GList();
   abortCheckCbk = abortCheckCbkA;
   abortCheckCbkData = abortCheckCbkDataA;
+  dIgnoreStampOpacity = 1;
 
   // set crop box
   if (cropBox) {
@@ -594,6 +595,7 @@ Gfx::Gfx(PDFDoc *docA, OutputDev *outA, Dict *resDict,
   contentStreamStack = new GList();
   abortCheckCbk = abortCheckCbkA;
   abortCheckCbkData = abortCheckCbkDataA;
+  dIgnoreStampOpacity = 1;
 
   // set crop box
   if (cropBox) {
@@ -1004,6 +1006,20 @@ void Gfx::opSetExtGState(Object args[], int numArgs) {
     printf("  gfx state dict: ");
     obj1.print();
     printf("\n");
+  }
+
+  if (dIgnoreStampOpacity != 1)
+  {
+	  if (obj1.dictLookup("ca", &obj2)->isNum() && fabs(obj2.getNum() - dIgnoreStampOpacity) < 0.001)
+	  {
+		  obj2.free();
+		  if (obj1.dictLookup("CA", &obj2)->isNum() && fabs(obj2.getNum() - dIgnoreStampOpacity) < 0.001)
+		  {
+			  obj2.free(); obj1.free();
+			  dIgnoreStampOpacity = 1;
+			  return;
+		  }
+	  }
   }
 
   if (out->useNameOp())
@@ -3924,7 +3940,7 @@ void Gfx::doShowText(GString *s) {
       state->setStrokeColor(state->getFillColor());
       out->updateStrokeColor(state);
 #endif
-      if (!out->beginType3Char(state, curX + riseX, curY + riseY, ddx, ddy,
+      if (!out->beginType3Char(savedState, curX + riseX, curY + riseY, tdx, tdy,
 			       code, u, uLen)) {
 	((Gfx8BitFont *)font)->getCharProcNF(code, &charProcRef);
 	charProcRef.fetch(xref, &charProc);
@@ -5104,14 +5120,14 @@ void Gfx::opEndIgnoreUndef(Object args[], int numArgs) {
 void Gfx::SkipBDC()
 {
   Object obj;
-  // Стек аргументов (как в основном цикле обработки)
+  // Argument stack (as in the main processing loop)
   Object args[maxArgs];
   int numArgs = 0;
 
   getContentObj(&obj);
   while (!obj.isEOF()) {
 	if (obj.isCmd("BMC") || obj.isCmd("BDC")) {
-	  // Сбрасываем накопленные аргументы перед рекурсией
+	  // Reset accumulated arguments before recursion
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	  SkipBDC();
@@ -5125,11 +5141,11 @@ void Gfx::SkipBDC()
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	} else if (obj.isCmd()) {
-	  // Любая другая команда — просто сбрасываем аргументы
+	  // Any other command - just reset arguments
 	  for (int i = 0; i < numArgs; ++i) args[i].free();
 	  numArgs = 0;
 	} else {
-	  // Операнд — кладём в стек аргументов
+	  // Operand - put on argument stack
 	  if (numArgs < maxArgs) {
 		obj.copy(&args[numArgs]);
 		++numArgs;

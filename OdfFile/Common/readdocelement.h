@@ -50,9 +50,9 @@ namespace cpdoccore {
 	namespace common 
 	{
 
-	// Базовый класс для элемента, который может быть прочитан sax-reader -ом
-	// Для каждого элемента будут вызваны методы
-	// add_attributes, add_child_element, add_text как колбеки для чтения соответствующих данных
+	// Base class for element that can be read by sax-reader
+	// For each element the methods will be called
+	// add_attributes, add_child_element, add_text as callbacks for reading corresponding data
 
 	class read_doc_element 
 	{

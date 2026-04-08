@@ -872,7 +872,7 @@ namespace PPTX
 																		
 									if (!sIdImageFileCache.empty())
 									{
-										//ищем физический файл ( rId относительно vml_drawing)									
+										//looking for physical file (rId relative to vml_drawing)									
 										smart_ptr<OOX::File> pFile = pVml->Find(sIdImageFileCache);
 										
 										if (pFile.IsInit() && (	OOX::FileTypes::Image == pFile->type()))
@@ -1351,7 +1351,7 @@ namespace PPTX
 					
 					if ( (mediaFile.IsInit() == false || mediaFile->filename().GetPath() == L"NULL") && !nvPicPr.nvPr.extLst.empty())
 					{
-						//todooo - почему везде нулевой то? - сделать поиск по всем uri
+						//todo - why is it always zero? - implement search through all URIs
 						file = pRels->Find(nvPicPr.nvPr.extLst[0].link_media.get());
 					}		
 				}

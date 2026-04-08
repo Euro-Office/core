@@ -101,7 +101,7 @@ const bool MSODRAWINGGROUP::saveContent(BinProcessor& proc)
 				else
 					freeSpace = MaxRecSize;
 
-				size_t chunkSize = std::min(freeSpace, dataSize - filePtr);
+				size_t chunkSize = (std::min)(freeSpace, dataSize - filePtr);
 
 				XLS::Continue continueRec;
 

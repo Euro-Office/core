@@ -142,7 +142,7 @@ public:
 		ep_BottomPage		// aftnbj	Endnotes at bottom of page (bottom justified).
 	}m_eEndnotePlacement;
 
-//для схоранения в RTF
+//for saving to RTF
 	int m_bSplitPageBrake;	// spltpgpar
 	int m_bHtmlAutoSpace;	// htmautsp	Use HTML paragraph auto spacing.
 
@@ -364,7 +364,7 @@ public:
 	TextItemContainerPtr m_oFooterFirst;
 	TextItemContainerPtr m_oFooterRight;
 
-    std::wstring m_sIDHeaderLeft; //для OOX
+    std::wstring m_sIDHeaderLeft; //for OOX
     std::wstring m_sIDHeaderFirst;
     std::wstring m_sIDHeaderRight;
     std::wstring m_sIDFooterLeft;

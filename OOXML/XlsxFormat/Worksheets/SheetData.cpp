@@ -1152,7 +1152,7 @@ namespace OOX
         }
         void CFormula::fromBin(XLS::StreamCacheReaderPtr& reader, XLS::CFRecordPtr& record)
         {
-            //читаем остатки данных в записи ячейки
+            //read remaining data in the cell record
             {
                 XLSB::GrbitFmla flags;
                 *record >> flags;
@@ -1215,7 +1215,7 @@ namespace OOX
             {
                 XLS::CellParsedFormula BinFmla(false);
                 *record >> BinFmla;
-                //случай если в формуле есть ссылка на другую
+                //case when the formula contains a reference to another one
                 if(!BinFmla.rgce.isEmpty() && BinFmla.rgce.sequence.begin()->get()->ptg_id.get() == 1 && !BinFmla.rgcb.isEmpty())
                 {
                     auto rowPart = static_cast<XLS::PtgExp*>(BinFmla.rgce.sequence.begin()->get());
@@ -1495,7 +1495,7 @@ namespace OOX
             {
                 case SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeNormal:
                 {
-                    //пишем флаги для формулы
+                    //write flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oAca.IsInit() && m_oAca->GetValue())
@@ -1757,7 +1757,7 @@ namespace OOX
 				else if ( strcmp("is", sName) == 0 )
 					m_oRichText = oReader;
 				else if ( strcmp("NamedCell", sName) == 0 )
-				{//дублирование имен
+				{//duplicate names
 				}
 //o:SmartTags, x:PhoneticText
 			}
@@ -2029,7 +2029,7 @@ namespace OOX
 				if (false == xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter) return;
 
 				if (!xlsx->m_pSharedStrings)
-				{	// еще не прочитался rels
+				{	// rels not yet read
 					xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter = false;
 					return;
 				}
@@ -2055,10 +2055,10 @@ namespace OOX
 					if (NULL != pSi)
 					{
 						int nIndex = pSharedStrings->AddSi(pSi);
-						//меняем значение ячейки
+						//change cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						m_oType.Init();
 						m_oType->SetValue(SimpleTypes::Spreadsheet::celltypeSharedString);
 					}
@@ -2072,7 +2072,7 @@ namespace OOX
 							xlsx->CreateSharedStrings();
 							pSharedStrings = xlsx->m_pSharedStrings;
 						}
-						//добавляем в SharedStrings
+						//add to SharedStrings
 						CSi* pSi = new CSi();
 						CText* pText = new CText();
 
@@ -2081,10 +2081,10 @@ namespace OOX
 
 						int nIndex = pSharedStrings->AddSi(pSi);
 
-						//меняем значение ячейки
+						//change cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						if (SimpleTypes::Spreadsheet::celltypeStr == m_oType->GetValue())
 						{
 							m_oType.Init();
@@ -2099,7 +2099,7 @@ namespace OOX
 				}
 				else if (SimpleTypes::Spreadsheet::celltypeBool == m_oType->GetValue())
 				{
-					//обычно пишется 1/0, но встречается, что пишут true/false
+					//usually written as 1/0, but sometimes true/false is encountered
 					if (m_oValue.IsInit())
 					{
 						SimpleTypes::COnOff oOnOff;
@@ -3104,11 +3104,11 @@ namespace OOX
 					m_oType->SetValue(processCellType(m_oValue.get().m_sText, isReal, realCache));
             }
             auto cellType = m_oType->GetValue();
-            //основная запись ячейки
+            //main cell record
             CFRecordPtr CellRecord;
-            // дополнительная запись для shared, array и table формул
+            // additional record for shared, array, and table formulas
             CFRecordPtr ExtraRecord;
-            //обработка celltype datatable
+            //processing celltype datatable
             if(m_oFormula.IsInit() && m_oFormula->m_oT.IsInit() && m_oFormula->m_oT->GetValue() == SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeDataTable)
             {
                 ExtraRecord = writer->getNextRecord(XLSB::rt_Table);
@@ -3117,7 +3117,7 @@ namespace OOX
                 m_oFormula.reset();
                 ExtraRecord.reset();
             }
-            //обработка метаданных ячейки
+            //processing cell metadata
             if(m_oCellMetadata.IsInit())
             {
                 auto metaRecord = writer->getNextRecord(XLSB::rt_CellMeta);
@@ -3283,7 +3283,7 @@ namespace OOX
                             SharedFmlaRef = &SharedFormulasRef::sharedRefsLocations->at(m_oFormula->m_oSi->GetValue());
                         XLS::CellParsedFormula BinFmla(false);
 
-                        //пишем флаги для формулы
+                        //write flags for the formula
                         {
                             XLSB::GrbitFmla flags;
                             if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -3314,7 +3314,7 @@ namespace OOX
                         SharedFmlaRef = &CellReference;
                     }
                     XLS::CellParsedFormula BinFmla(false);
-                    //пишем флаги для формулы
+                    //write flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -4145,7 +4145,7 @@ namespace OOX
 					CCell *pCell = new CCell(m_pMainDocument);
 					if (pCell)
 					{
-						 //пытаемся сжать пустые клетки
+						 //try to compress empty cells
 						pCell->fromXML(oReader);
 						if(!compressCell(pCell))
 							m_arrItems.push_back(pCell);
@@ -4224,7 +4224,7 @@ namespace OOX
 				pCell->m_oRow = m_oR->GetValue()-1;
                 if(pCell->fromBin(reader))
                 {
-                    //пытаемся сжать пустые клетки
+                    //try to compress empty cells
                     if(!compressCell(pCell))
                         m_arrItems.push_back(pCell);
                     else
@@ -5093,7 +5093,7 @@ namespace OOX
             {
                 CRow *pRow = new CRow(m_pMainDocument);
                 pRow->fromBin(reader);
-                //проверяем можно ли сжать пустые строки
+                //check if we can compress empty rows
                 if(!compressRow(pRow))
                     m_arrItems.push_back(pRow);
                 else
@@ -5243,13 +5243,13 @@ namespace OOX
                     prevRow->m_oRepeated = 1;
                 if(prevRow->m_oR->GetValue() + prevRow->m_oRepeated.get() == pRow->m_oR->GetValue() && prevRow->m_oHt == pRow->m_oHt)
                 {
-                    //случай с пустыми строками
+                    //case with empty rows
                     if(prevRow->m_arrItems.empty() && pRow->m_arrItems.empty())
                     {
                         prevRow->m_oRepeated = prevRow->m_oRepeated.get() + 1;
                         return true;
                     }
-                    //случай со строками заполненными однотипными сжатыми клетками
+                    //case with rows filled with compressed cells of the same type
                     if(prevRow->m_arrItems.size() == 1 && pRow->m_arrItems.size() == 1 && prevRow->m_arrItems.back()->m_oRepeated.IsInit()
                             && pRow->m_arrItems.back()->m_oRepeated.get() ==  prevRow->m_arrItems.back()->m_oRepeated.get())
                     {

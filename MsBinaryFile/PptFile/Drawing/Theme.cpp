@@ -162,7 +162,7 @@ void PPT::CTheme::CalculateStyle(CTheme *pTheme, CTextStyles &oStyle)
 {
 	LONG lCountColors = (LONG)pTheme->m_arColorScheme.size();
 
-	// пока здесь расчитываются только цвета
+	// for now only colors are calculated here
 	size_t nLevels = 10;
 	for (size_t i = 0; i < nLevels; ++i)
 	{

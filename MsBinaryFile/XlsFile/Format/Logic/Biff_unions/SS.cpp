@@ -69,7 +69,7 @@ namespace XLS
 		L"333399", 	L"000000", 	L"FFFFFF", 	L"FF0000", 	L"00FF00", 	L"0000FF", 	L"FFFF00", 	L"FF00FF", 	L"00FFFF", 	L"800000", 	
 		L"800000", 	L"800000", 	L"808000", 	L"800080", 	L"808000", 	L"C0C0C0", 	L"808080", 	L"9999FF", 	L"993366", 	L"FFFFCC", 
 		L"CCFFFF", 	L"660066", 	L"FF8080", 	L"0066CC", 	L"CCCCFF",
-		//todoooo - подглядеть какие в мс далее 
+		//todoooo - check what MS uses further 
 		L"000080", 	L"FF00FF", 	L"FFFF00", 	L"00FFFF", 	L"800080", 	L"800000", 	L"808000", 	L"0000FF", 	L"00CCFF", 	L"CCFFFF", 	
 		L"CCFFCC", 	L"FFFF99", 	L"99CCFF", 	L"FF99CC", 	L"CC99FF", 	L"FFCC99", 	L"3366FF", 	L"33CCCC", 	L"99CC00", 	L"FFCC00", 	
 		L"FF9900", 	L"FF6600", 	L"666699", 	L"969696", 	L"336600", 	L"339966", 	L"330000", 	L"333300", 	L"993300", 	L"993366", 	
@@ -118,7 +118,7 @@ const bool SS::loadContent(BinProcessor& proc)
 	{
 		bRead = true;
 	}
-	if (proc.optional<Begin>()) //при biff5 может быть или нет, biff8 - обязано быть
+	if (proc.optional<Begin>()) //in biff5 may or may not be present, biff8 - must be present
 	{
 		bRead = true;
 		elements_.pop_back();
@@ -331,7 +331,7 @@ int SS::serialize_default(std::wostream & _stream, int series_type, int ind )
 		//	m_MarkerFormat->serialize(_stream);
 		//else
 		//{
-		//	//генерация (series_data_format->iss)
+		//	//generation (series_data_format->iss)
 		//	//todooo
 		//}
 		if (m_PieFormat && (series_type == CHART_TYPE_Doughnut	|| 
@@ -429,7 +429,7 @@ int SS::serialize(std::wostream & _stream, int series_type, int indPt)
 				}
 				else
 				{
-					//генерация (automatic)
+					//generation (automatic)
 					if (series_type == CHART_TYPE_Scatter || series_type == CHART_TYPE_Stock) 
 					{
 					}	

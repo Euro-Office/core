@@ -79,7 +79,7 @@ void CRecordCreator::on_selectButton_clicked()
         m_nSelectedRecord = ui->recordsBox->currentIndex();
         ClearData();
 
-        switch (m_nSelectedRecord) //TODO: исправить пустые виджеты
+        switch (m_nSelectedRecord) //TODO: fix empty widgets
         {
                 case 0: CreatePointWidgets("EMR_POLYBEZIER");                           break;
                 case 1: CreatePointWidgets("EMR_POLYGON");                              break;
@@ -281,7 +281,7 @@ void CRecordCreator::CreateArcWidgets(const QString &qsName)
 void CRecordCreator::CreateNotSupportedWidgets(const QString &qsName)
 {
         this->setWindowTitle(QString("Create: %1").arg(qsName));
-        ui->dataLayout->addWidget(new QLabel("На данный момент создание данной записи не поддерживается"));
+        ui->dataLayout->addWidget(new QLabel("Creating this record is not currently supported"));
 }
 
 void CRecordCreator::CreateExtTextOutWidget(const QString &qsName)

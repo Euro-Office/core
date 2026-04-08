@@ -42,7 +42,7 @@ public:
     std::string         m_sRtfName;
     std::string         m_sOOXName;
 
-	bool				m_bHeader; //чтобы отличать заголовок от вложенных групп
+	bool				m_bHeader; //to distinguish header from nested groups
 
 	bool				m_bIsVal = false;
 	bool				m_bIsChar = false; // for write

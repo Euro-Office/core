@@ -409,7 +409,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 			if (!pField)
 				continue;
 
-			// Шрифт и размер шрифта - из DA
+			// Font and font size - from DA
 			Ref fontID;
 			double dFontSize = 0;
 			pField->getFont(&fontID, &dFontSize);
@@ -954,9 +954,10 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 
 	return mRes;
 }
-void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
+int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
 {
-	// Пытаемся получить ширины из словаря Widths
+	int nDefaultWidth = 1000;
+	// Try to get widths from Widths dictionary
 	Object oWidths;
 	if (pFontDict->lookup("Widths", &oWidths)->isArray())
 	{
@@ -980,21 +981,20 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 	}
 	oWidths.free();
 
-	// Для CID шрифтов обрабатываем DW и W
+	// For CID fonts, process DW and W
 	Object oDescendantFonts;
 	if (pFontDict->lookup("DescendantFonts", &oDescendantFonts)->isArray() && oDescendantFonts.arrayGetLength() > 0)
 	{
 		Object oCIDFont;
 		if (oDescendantFonts.arrayGet(0, &oCIDFont)->isDict())
 		{
-			// Получаем DW (default width)
+			// Get DW (default width)
 			Object oDW;
-			int nDefaultWidth = 1000;
 			if (oCIDFont.dictLookup("DW", &oDW)->isInt())
 				nDefaultWidth = oDW.getInt();
 			oDW.free();
 
-			// Получаем W (widths array)
+			// Get W (widths array)
 			Object oW;
 			if (oCIDFont.dictLookup("W", &oW)->isArray())
 			{
@@ -1064,6 +1064,8 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 		oCIDFont.free();
 	}
 	oDescendantFonts.free();
+
+	return nDefaultWidth;
 }
 double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 {
@@ -1122,5 +1124,84 @@ bool EraseSubsetTag(std::wstring& sFontName)
 			sFontName.erase(0, 7);
 	}
 	return bIsRemove;
+}
+
+CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont)
+{
+	CType3FontMetrics* pMetrics = new CType3FontMetrics();
+
+	Ref* pRef = pFont->getID();
+	Object oRefObj, oFontObj;
+	oRefObj.initRef(pRef->num, pRef->gen);
+	oRefObj.fetch(pXref, &oFontObj);
+	oRefObj.free();
+
+	if (!oFontObj.isDict())
+	{
+		oFontObj.free();
+		return pMetrics;
+	}
+
+	Object oItem;
+
+	if (oFontObj.dictLookup("FontMatrix", &oItem)->isArray() && oItem.arrayGetLength() == 6)
+	{
+		for (int i = 0; i < 6; ++i)
+		{
+			Object oVal;
+			if (oItem.arrayGet(i, &oVal)->isNum())
+				pMetrics->arrFontMatrix[i] = oVal.getNum();
+			oVal.free();
+		}
+	}
+	oItem.free();
+
+	if (pMetrics->arrFontMatrix[0] > 0)
+		pMetrics->dUnitsPerEm = std::round(1.0 / pMetrics->arrFontMatrix[0]);
+	else
+		pMetrics->dUnitsPerEm = 1000;
+
+	if (oFontObj.dictLookup("FontBBox", &oItem)->isArray() && oItem.arrayGetLength() == 4)
+	{
+		Object oVal;
+		if (oItem.arrayGet(0, &oVal)->isNum()) pMetrics->dLLx = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(1, &oVal)->isNum()) pMetrics->dLLy = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(2, &oVal)->isNum()) pMetrics->dURx = oVal.getNum(); oVal.free();
+		if (oItem.arrayGet(3, &oVal)->isNum()) pMetrics->dURy = oVal.getNum(); oVal.free();
+
+		double dTextY1 = pMetrics->arrFontMatrix[3] * pMetrics->dLLy;
+		double dTextY2 = pMetrics->arrFontMatrix[3] * pMetrics->dURy;
+
+		pMetrics->dAscent  = std::round(std::max(dTextY2 / pMetrics->arrFontMatrix[0], 0.0));
+		pMetrics->dDescent = std::round(std::abs(std::min(dTextY1 / pMetrics->arrFontMatrix[0], 0.0)));
+
+		if (pMetrics->dAscent == 0 && pMetrics->dDescent == 0)
+		{
+			pMetrics->dAscent  = pMetrics->dUnitsPerEm * 0.8;
+			pMetrics->dDescent = pMetrics->dUnitsPerEm * 0.2;
+		}
+	}
+	oItem.free();
+
+	int nFirstChar = 0;
+	if (oFontObj.dictLookup("FirstChar", &oItem)->isInt())
+		nFirstChar = oItem.getInt();
+	oItem.free();
+
+	if (oFontObj.dictLookup("Widths", &oItem)->isArray())
+	{
+		int nWidthsLen = oItem.arrayGetLength();
+		for (int i = 0; i < nWidthsLen; ++i)
+		{
+			Object oVal;
+			if (oItem.arrayGet(i, &oVal)->isNum())
+				pMetrics->mapWidths[nFirstChar + i] = oVal.getNum();
+			oVal.free();
+		}
+	}
+	oItem.free();
+
+	oFontObj.free();
+	return pMetrics;
 }
 }

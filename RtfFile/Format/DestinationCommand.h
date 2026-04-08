@@ -69,7 +69,7 @@
 	pNewChar->m_oProperty = oReader.m_oState->m_oCharProp;\
 	target->AddItem( pNewChar );\
 	}
-//Command не имеет состояний
+//Command has no states
 #include "math.h"
 
 class RtfBorderCommand
@@ -127,7 +127,7 @@ class RtfCharPropsCommand
 {
 public:
 	static bool ExecuteCommand(RtfDocument& oDocument, RtfReader& oReader,  std::string sCommand, bool hasParameter, int parameter, RtfCharProperty * props, bool bLookOnBorder = true);
-	//bool bLookOnBorder; Надо ли читать свойства border( актуально для ParagraphReader )
+	//bool bLookOnBorder; Whether to read border properties (relevant for ParagraphReader)
 };
 
 class RtfParagraphPropsCommand
@@ -256,7 +256,7 @@ public:
 
 class RtfPictureReader :  public RtfAbstractReader
 {
-	class PLACEABLEMETAHEADER //заголовок для wmf из rtf ( в rtf wmf не содержит размеров картинки )
+	class PLACEABLEMETAHEADER //header for wmf from rtf (in rtf wmf doesn't contain image dimensions)
 	{
 	public:
 		DWORD Key;           /* Magic number (always 9AC6CDD7h) */
@@ -283,7 +283,7 @@ public:
 		is_borderCellLeft, is_borderCellTop, is_borderCellRight, is_borderCellBottom, is_borderCellLR, is_borderCellRL,
 		is_borderRowLeft, is_borderRowTop, is_borderRowRight, is_borderRowBottom, is_borderRowVer, is_borderRowHor
 	};
-	//только для определения бордера
+	//only for border detection
 
 private:
 	_InternalState	m_eInternalState; private:
@@ -329,7 +329,7 @@ private:
 	enum _InternalState{ is_normal,is_charBorder, is_borderTop, is_borderLeft, is_borderBottom, is_borderRight, is_borderBox, is_borderBar,
 						 is_borderCellLeft,is_borderCellTop,is_borderCellRight,is_borderCellBottom,is_borderCellLR,is_borderCellRL,
 						 is_borderRowLeft,is_borderRowTop,is_borderRowRight,is_borderRowBottom,is_borderRowVer,is_borderRowHor} ;
-	//только для определения бордеров
+	//only for borders detection
 	
 	_InternalState				m_eInternalState;
 
@@ -394,7 +394,7 @@ class RtfShapeGroupReader : public RtfShapeReader
 {
 public: 
 	RtfShape&	m_oShapeGroup;
-	bool		m_bHeader; //чтобы отличать заголовок от вложенных групп
+	bool		m_bHeader; //to distinguish header from nested groups
 
 	RtfShapeGroupReader( RtfShape& oShape );
 
@@ -514,35 +514,35 @@ public:
 };
 
 class FootnoteReader;
-//Destination имеет состояния
-class RtfParagraphPropDestination // todo - последний параграф не обрабатывается
+//Destination has states
+class RtfParagraphPropDestination // todo - last paragraph is not processed
 {
 public:
 	enum _InternalState{ is_normal,is_charBorder, is_borderTop, is_borderLeft, is_borderBottom, is_borderRight, is_borderBox, is_borderBar,
 						 is_borderCellLeft,is_borderCellTop,is_borderCellRight,is_borderCellBottom,is_borderCellLR,is_borderCellRL,
 						 is_borderRowLeft,is_borderRowTop,is_borderRowRight,is_borderRowBottom,is_borderRowVer,is_borderRowHor} ;
-	//только для определения бордера
+	//only for border detection
 	
 private: 
 	_InternalState	m_eInternalState;
 	RtfParagraphPtr m_oCurParagraph;
 
-	//реальные параграфы и таблицы
+	//real paragraphs and tables
 	std::vector< ITextItemPtr >		aCellRenderables;
-	std::vector< int >				aItaps;		//вложенность параграфов
+	std::vector< int >				aItaps;		//nesting level of paragraphs
 	std::vector< RtfTableCellPtr >	aCells;
-	std::vector< int >				aCellItaps; //вложенность cell
+	std::vector< int >				aCellItaps; //nesting level of cell
 	std::vector< RtfTableRowPtr >	aRows;
-	std::vector< int >				aRowItaps; //вложенность row
+	std::vector< int >				aRowItaps; //nesting level of row
 	RtfRowProperty oCurRowProperty;
 
 	RtfReader* m_oReader;
 
 public: 
-	bool					m_bPar;				// если последняя команда была par, то не надо добавлять параграф
-	TextItemContainerPtr	m_oTextItems;		//для разбивки на TextItem
+	bool					m_bPar;				// if last command was par, no need to add paragraph
+	TextItemContainerPtr	m_oTextItems;		//for splitting into TextItem
 	RtfTab					m_oCurTab;
-	int						nTargetItap;		//уровень который считается не таблицей ( для того чтобы читать параграфы в таблицах )
+	int						nTargetItap;		//level considered non-table (to read paragraphs in tables)
 	int						nCurItap;
 
 	RtfParagraphPropDestination( );
@@ -710,7 +710,7 @@ class RtfStyleTableReader: public RtfAbstractReader
 {
 	class RtfStyleReader: public RtfAbstractReader
 	{
-		//только для определения бордеров
+		//only for borders detection
 	private:
 		enum _InternalState{ is_normal, is_tsbrdrt, is_tsbrdrb, is_tsbrdrl, is_tsbrdrr, is_tsbrdrh, is_tsbrdrv } InternalState;
 		

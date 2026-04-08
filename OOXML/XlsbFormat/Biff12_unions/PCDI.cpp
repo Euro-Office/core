@@ -58,7 +58,7 @@ namespace XLSB
         return BaseObjectPtr(new PCDI(*this));
     }
 
-    //пришлось совместить из-за одинаковых PCDI в EXTERNALCONNECTION и PIVOTCACHEDEF
+    //had to combine due to identical PCDI in EXTERNALCONNECTION and PIVOTCACHEDEF
     // PCDI = BrtPCDIMissing / BrtPCDINumber / BrtPCDIBoolean / BrtPCDIError / BrtPCDIString / BrtPCDIDatetime / BrtPCDIIndex / PCDIRUN
     const bool PCDI::loadContent(BinProcessor& proc)
     {

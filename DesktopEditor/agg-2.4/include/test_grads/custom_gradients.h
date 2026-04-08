@@ -24,20 +24,20 @@
 namespace agg
 {
 	/**
-	 *  Основной смысл в том, что есть два этапа обсчета, это параметризация и вычисление цвета.
+	 *  The main idea is that there are two calculation stages: parameterization and color computation.
 	 *
-	 *  В частности радиальный и линейный градиенты, требуют параметризацию, (x,y)-> t,
-	 * чтобы затем перевести параметр в цвет.
+	 *  In particular, radial and linear gradients require parameterization, (x,y)-> t,
+	 * to then convert the parameter to color.
 	 *
-	 * У шейдеров параметризация опциональная, поэтому для них отдельно есть способ с параметризацией и без нее
+	 * For shaders, parameterization is optional, so there's a separate method with and without parameterization
 	 *
 	 * */
 
 
 	/**
-	 * Абстрактный класс для параметризации.
+	 * Abstract class for parameterization.
 	 *
-	 * Чтобы показать что данный пиксель не надо закрашивать используется nan
+	 * To indicate that a pixel should not be filled, nan is used
 	 */
 	class calcBase
 	{
@@ -76,7 +76,7 @@ namespace agg
 	};
 
 	/**
-	 * Параметр радисального градиента.
+	 * Radial gradient parameter.
 	 */
 	class calcRadial : public calcBase
 	{
@@ -189,7 +189,7 @@ namespace agg
 	};
 
 	 /**
-	 * Параметр конусного градиента. Не используется в пдф.
+	 * Conical gradient parameter. Not used in PDF.
 	 */
 	class calcConical : public calcBase
 	{
@@ -221,7 +221,7 @@ namespace agg
 	};
 
 	/**
-	 * Параметр квадратного градиента. Не используется в пдф.
+	 * Diamond gradient parameter. Not used in PDF.
 	 */
 	class calcDiamond : public calcBase
 	{
@@ -256,7 +256,7 @@ namespace agg
 	};
 
 	/**
-	 * Параметр линейного градиента.
+	 * Linear gradient parameter.
 	 */
 	class calcNewLinear : public calcBase
 	{
@@ -292,7 +292,7 @@ namespace agg
 	};
 
 	/**
-	 * Треугольный шейдинг, закрашивает всю область.
+	 * Triangle shading, fills the entire area.
 	 */
 	class calcTriangle : public calcBase
 	{
@@ -310,7 +310,7 @@ namespace agg
 		}
 
 		/**
-		 *  Вычисляем веса по барицетрическим координатам
+		 *  Calculate weights using barycentric coordinates
 		 *  https://codeplea.com/triangular-interpolation
 		*/
 		static std::vector<float>
@@ -328,19 +328,19 @@ namespace agg
 	};
 
 	/**
-	 * Шейдинг гладкой поверхности, закрашивает только саму поверхность.
+	 * Smooth surface shading, fills only the surface itself.
 	 *
-	 * Алгоритм работы примерно следующий.
-	 * Проходимся по плоскости значений параметра, и для каждой точки закрашиваем квадрат с границой.
+	 * The algorithm works roughly as follows.
+	 * We iterate over the parameter value plane, and for each point fill a square with boundary.
 	 *
-	 * P(u,v), P(u + du, u + dv) - углы.
+	 * P(u,v), P(u + du, u + dv) - corners.
 	 *
-	 * Это позволяет изьежать вычисления обратной функции, которую можно в общем случаем почтитать только методом Ньютона.
+	 * This allows avoiding inverse function computation, which in general can only be calculated using Newton's method.
 	 */
 	class calcCurve : public calcBase
 	{
 	public:
-		// В конструкторе происходит весь прекалк, т.е. экзепляр класса полностью готов к работе.
+		// All precalculation happens in the constructor, i.e. the class instance is fully ready to work.
 		calcCurve(const NSStructures::GradientInfo &_g, bool calculate_tensor_coefs = true) : tensor_size(4)
 		{
 			ginfo = _g;
@@ -413,7 +413,7 @@ namespace agg
 			}
 		}
 
-		// Заполняем квадрат в один цвет, чтобы небыло пропусков.
+		// Fill the square with one color to avoid gaps.
 		void fill_square(std::pair<int, int> index1, std::pair<int, int> index2, float t)
 		{
 			for (int i = std::min(index1.first, index2.first); i <= std::max(index1.first, index2.first); i++)
@@ -432,13 +432,13 @@ namespace agg
 		{
 			auto i = get_index(x, y);
 			if (i.first > RES - 1 || i.second > RES - 1 || i.first < 0 || i.second < 0)
-				return NAN_FLOAT; // Не закрашиваем
+				return NAN_FLOAT; // Don't fill
 
 			return precalc[i.first][i.second];
 		}
 
 
-		// Через полинамы такого вида определяется нужная нам поверхность.
+		// The required surface is defined through polynomials of this kind.
 		static float berstein_polynomial(float t, int i)
 		{
 			switch (i)
@@ -469,8 +469,8 @@ namespace agg
 		}
 
 		/**
-		 * т.к. шестой тип шейдинга по сути является частным случаем седьмого, только с пересчетом некоторый точек.
-		 * Этот метод позволяет вычислить нужные параметры, подробнее в стандарте пдф 208с.
+		 * Since shading type 6 is essentially a special case of type 7, just with recalculation of some points.
+		 * This method allows calculating the required parameters, see PDF standard page 208 for details.
 		 */
 		void calculate_tensor()
 		{
@@ -513,7 +513,7 @@ namespace agg
 
 
 	/**
-	 * Основной класс отвечающий за градиенты.
+	 * Main class responsible for gradients.
 	 */
 	template <class ColorT>
 	class gradient_base
@@ -553,7 +553,7 @@ namespace agg
 
 	private:
 
-		// Параметризация, с некторыми обертками.
+		// Parameterization with some wrappers.
 		inline float calculate_param(const float &x, const float &y)
 		{
 			float t = calculate->eval(x, y);
@@ -582,7 +582,7 @@ namespace agg
 		virtual ~gradient_base() {}
 
 		/**
-		 * Выбор варианта параметризации. И получение основной инфы о градиенте.
+		 * Selection of parameterization variant. And getting main gradient info.
 		 */
 		void SetGradientInfo(const NSStructures::GradientInfo &_g, Aggplus::BrushType bType)
 		{
@@ -640,7 +640,7 @@ namespace agg
 		}
 
 		/**
-		 * Для старой цветовой функции.
+		 * For old color function.
 		 */
 		void SetSubColors(const color_type *colors, const float *positions, int count)
 		{
@@ -650,7 +650,7 @@ namespace agg
 		}
 
 		/**
-		 * Нужно для функции отрисовки.
+		 * Needed for rendering function.
 		 */
 		void prepare()
 		{
@@ -662,7 +662,7 @@ namespace agg
 		}
 
 		/**
-		 * Генерирует цвет пикселя для рендерной функции.
+		 * Generates pixel color for render function.
 		 */
 		void generate(color_type *span, int x, int y, unsigned len)
 		{
@@ -715,7 +715,7 @@ namespace agg
 		}
 
 		/**
-		 * Выставляем всякую инфу про наш градиент.
+		 * Set various info about our gradient.
 		 */
 		void SetDirection(const agg::rect_d &bounds, const agg::trans_affine &trans, bool bSwapRGB)
 		{
@@ -740,7 +740,7 @@ namespace agg
 
 	protected:
 		/**
-		 * Для старой цветовой функции
+		 * For old color function
 		 */
 		void CalcColor(int index)
 		{
@@ -752,7 +752,7 @@ namespace agg
 			{
 				if (i == 1 && t < m_pPosSubColors[0])
 				{
-					// меньше меньшего
+					// less than minimum
 					m_color_table[index] = m_pSubColors[0];
 					bFindColor = true;
 					break;
@@ -776,7 +776,7 @@ namespace agg
 		}
 
 		/**
-		 * Треугольная пила, нужна для периодических градиентов.
+		 * Triangle wave, needed for periodic gradients.
 		 */
 		inline float triagle_saw(float x)
 		{
@@ -784,7 +784,7 @@ namespace agg
 		}
 
 
-		// Нужно для безопасного сложения цветов.
+		// Needed for safe color addition.
 		int limit8bit(int a)
 		{
 			if (a < 0)
@@ -795,12 +795,12 @@ namespace agg
 		}
 
 
-		// Умножение цвета на число (теплейт поэтому не перегрузка *)
+		// Multiply color by number (template, so not * operator overload)
 		ColorT mul(ColorT c1, float t)
 		{
 			return ColorT(limit8bit(c1.r * t), limit8bit(c1.g * t), limit8bit(c1.b * t), limit8bit(c1.a * t));
 		}
-		// Сумма двух цветов
+		// Sum of two colors
 		ColorT sum(ColorT c1, ColorT c2)
 		{
 			return ColorT(limit8bit(c1.r + c2.r), limit8bit(c1.g + c2.g),
@@ -808,8 +808,8 @@ namespace agg
 		}
 
 		/**
-		 * Треугольная интерполяция на цветовой функции.
-		 * Вычисляется по барицентрическим координатам.
+		 * Triangle interpolation on color function.
+		 * Calculated using barycentric coordinates.
 		 */
 		ColorT triangle(float x, float y)
 		{
@@ -826,14 +826,14 @@ namespace agg
 
 
 		/**
-		 * Здесь все относящееся к кривой поверхности, будет дублирование кода, зато потом в теории будет проще работать.
-		 * И логика чуть менее запутанная.
-		 * Основной алгоритм - разбить поверхность на множество квадратиков. И забить туда значения сразу. Чтобы обратную фнкцию не считать.
+		 * Everything related to curved surface is here, there will be code duplication, but in theory it will be easier to work with later.
+		 * And the logic is slightly less confusing.
+		 * Main algorithm - split the surface into many small squares. And fill values there immediately. To avoid calculating inverse function.
 		 *
-		 * Основня цель повтора - сделать единый интерфейс параметризации и все остальное.
-		 * Т.к. просто добавляя разные параметризации, можно добавить большое количесво нужных градиентов.
+		 * Main goal of repetition - create unified parameterization interface and everything else.
+		 * Since by simply adding different parameterizations, we can add many needed gradients.
 		 *
-		 * Все с кривыми работает так же как и параметры, только интерполируется не парамет, а цвет.
+		 * Everything with curves works the same as parameters, only color is interpolated instead of parameter.
 		 */
 
 		std::vector<std::vector<ColorT>> precalc;
@@ -853,7 +853,7 @@ namespace agg
 			ymax_curve = ymin_curve = start_p.y;
 
 			/*
-			 * Небольшая оптимизация основанная на том, что данная фигура не выходит за границы своих опорных точек.
+			 * Small optimization based on the fact that this shape doesn't go beyond its control points boundaries.
 			 * */
 
 			for (int i = 0; i < 4; i++)

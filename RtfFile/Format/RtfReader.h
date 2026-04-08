@@ -47,7 +47,7 @@ public:
 	class ReaderState
 	{
 		public: 
-            int                     m_nUnicodeClean; // количество символов игнорируемых за юникодом
+            int                     m_nUnicodeClean; // number of characters ignored after unicode
             RtfCharProperty         m_oCharProp;
             RtfParagraphProperty    m_oParagraphProp;
             RtfRowProperty          m_oRowProperty;
@@ -63,7 +63,7 @@ public:
     ReaderStatePtr      m_oState;
     RtfSectionProperty  m_oCurSectionProp;
     RtfLex              m_oLex;
-    int                 m_nFootnote; //толко для симовола chftn. основано на том что вложенных footnote быть не может
+    int                 m_nFootnote; //only for chftn symbol. based on the fact that nested footnotes cannot exist
     int                 m_nDefFont;
 	int					m_nDefLang;
 	int					m_nDefLangAsian;

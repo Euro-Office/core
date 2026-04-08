@@ -136,7 +136,7 @@ void PtgNameX::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool fu
 				if (ixti < pFind->second.size() && ixti >= 0)
 				{
 					if (!pFind->second[ixti].empty())
-						name = pFind->second[ixti]; //значение 
+						name = pFind->second[ixti]; //value 
 				}
 				else
 				{

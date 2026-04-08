@@ -346,7 +346,7 @@ TEST_F(CPdfFileTest, Base64ConvertToRaster)
 {
 	GTEST_SKIP();
 
-	// чтение и конвертации бинарника
+	// reading and converting the binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
 
@@ -381,7 +381,7 @@ TEST_F(CPdfFileTest, BinConvertToRaster)
 {
 	GTEST_SKIP();
 
-	// чтение и конвертации бинарника
+	// reading and converting the binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/pdf.bin"));
 
@@ -533,7 +533,7 @@ TEST_F(CPdfFileTest, EditPdfFromBase64)
 	LoadFromFile();
 	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
 
-	// чтение и конвертации бинарника
+	// reading and converting the binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
 
@@ -576,7 +576,7 @@ TEST_F(CPdfFileTest, EditPdfFromBin)
 	LoadFromFile();
 	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
 
-	// чтение бинарника
+	// reading the binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/changes.bin"));
 
@@ -665,11 +665,11 @@ TEST_F(CPdfFileTest, EditPdfSign)
 		pdfFile->Sign(10, 300, 100, 100, NSFile::GetProcessDirectory() + L"/test.jpeg");
 	}
 
-	// Для цифровой подписи важно предварительно pdfFile->EditClose, в остальных случаях pdfFile->Close() сделает тоже самое
+	// For digital signature it's important to call pdfFile->EditClose beforehand, in other cases pdfFile->Close() does the same
 	pdfFile->EditClose();
 
 	// EditPdf & EditClose || CreatePdf & SaveToFile
-	// И только после подготовка данных для подписания, подписываем, запись подписи
+	// And only after preparing the data for signing, we sign and write the signature
 	for (int i = 0; i < 3; ++i)
 	{
 		pdfFile->PrepareSignature(wsDstFile);
@@ -699,7 +699,7 @@ TEST_F(CPdfFileTest, EditPdfSign)
 		pCertificate->SignPKCS7(pDataToSign, dwDataSignLength, pDatatoWrite, dwLenDatatoWrite);
 		RELEASEARRAYOBJECTS(pDataToSign);
 
-		// Обязательно FinalizeSignature - он либо заполнит данные, либо сделает подпись пустой
+		// FinalizeSignature is mandatory - it either fills in the data or makes the signature empty
 		pdfFile->FinalizeSignature(pDatatoWrite, dwLenDatatoWrite);
 
 		RELEASEARRAYOBJECTS(pDatatoWrite);

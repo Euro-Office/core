@@ -56,7 +56,7 @@ bool CMDWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode>& 
 
 	if (!bPreformatted && nullptr != pCompiledStyle)
 	{
-		// TODO::поведение должно быть немного разное (реализовать)
+		// TODO:: behavior should be slightly different (implement)
 		switch(pCompiledStyle->m_oDisplay.GetWhiteSpace().ToInt())
 		{
 			case NSCSS::NSProperties::EWhiteSpace::Pre:
@@ -83,7 +83,7 @@ bool CMDWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode>& 
 		}
 	}
 
-	//Пока корректно работает только для текста (необходимо проверить и с другими нодами)
+	// For now works correctly only for text (need to check with other nodes)
 	if (m_arStates.top().m_bEmptyLine)
 	{
 		for (UINT unIndex = 0; unIndex < GetLevelBlockquote(); ++unIndex)

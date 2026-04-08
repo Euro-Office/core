@@ -82,7 +82,7 @@ void CRecordDocument::ReadFromStream(SRecordHeader &oHeader, POLE::Stream *pStre
             }break;
             default:
             {
-                // этого не может быть...
+                // this cannot happen...
                 continue;
             }
         };

@@ -41,7 +41,7 @@
 #include "../DesktopEditor/graphics/pro/officedrawingfile.h"
 #include "../DesktopEditor/graphics/pro/Fonts.h"
 
-// работаем через класс CDjVuFileImplementation, чтобы когда цеплялся данный h-файл, ничего лишнего не инклюдилось
+// use CDjVuFileImplementation class so that when this header is included, no extra dependencies are pulled in
 class CDjVuFileImplementation;
 
 class DJVU_DECL_EXPORT CDjVuFile : public IOfficeDrawingFile

@@ -190,7 +190,7 @@ namespace PdfWriter
 		Add("Type", "Annot");
 		Add("Subtype", c_sAnnotTypeNames[(int)eType]);
 
-		// Для PDFA нужно, чтобы 0, 1, 4 биты были выключены, а второй включен
+		// For PDFA bits 0, 1, 4 must be off and bit 2 must be on
 		Add("F", 4);
 	}
 	void CAnnotation::SetRect(const TRect& oRect)
@@ -349,7 +349,7 @@ namespace PdfWriter
 		pNormal->Add("Resources", pResources);
 		return pNormal;
 	}
-	void CAnnotation::APFromFakePage()
+	void CAnnotation::APFromFakePage(CAnnotAppearanceObject* pN)
 	{
 		if (!m_pAppearance)
 			return;
@@ -357,6 +357,12 @@ namespace PdfWriter
 
 		pNormal->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
 		pNormal->AddMatrix(1, 0, 0, 1, -GetRect().fLeft, -GetRect().fBottom);
+
+		if (pN != pNormal)
+		{
+			pN->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
+			pN->AddMatrix(1, 0, 0, 1, 0, 0);
+		}
 	}
 	void CAnnotation::RemoveAP()
 	{
@@ -1282,6 +1288,41 @@ namespace PdfWriter
 	//----------------------------------------------------------------------------------------
 	CStampAnnotation::CStampAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotStamp), m_pAPStream(NULL)
 	{
+	}
+	CAnnotAppearanceObject* CStampAnnotation::StartAP(int nRotate)
+	{
+		CAnnotAppearanceObject* pNormal = CAnnotation::StartAP(nRotate);
+		CResourcesDict* pResources = dynamic_cast<CResourcesDict*>(pNormal->Get("Resources"));
+
+		double dAlpha = 1;
+		CRealObject* pCA = dynamic_cast<CRealObject*>(Get("CA"));
+		if (pCA)
+			dAlpha = pCA->Get();
+		if (dAlpha != 1)
+		{
+			CExtGrState* pExtGrState = m_pDocument->GetExtGState(dAlpha, dAlpha);
+			const char* sExtGrStateName = pResources->GetExtGrStateName(pExtGrState);
+			if (sExtGrStateName)
+			{
+				CStream* pStream = pNormal->GetStream();
+				pStream->WriteEscapeName(sExtGrStateName);
+				pStream->WriteStr(" gs\012");
+
+				CResourcesDict* pResources2 = new CResourcesDict(m_pXref, false, false);
+				pNormal = new CAnnotAppearanceObject(m_pXref, this, pResources2);
+				const char* sForm = pResources->GetXObjectName(pNormal);
+
+				CDictObject* pTransparencyGroup = new CDictObject();
+				pTransparencyGroup->Add("Type", "Group");
+				pTransparencyGroup->Add("S", "Transparency");
+				pNormal->Add("Group", pTransparencyGroup);
+
+				pStream->WriteEscapeName(sForm);
+				pStream->WriteStr(" Do\012");
+			}
+		}
+
+		return pNormal;
 	}
 	void CStampAnnotation::SetRotate(double nRotate)
 	{
@@ -2668,7 +2709,7 @@ namespace PdfWriter
 		int i = 0;
 		if (m_nTI < 0)
 		{
-			// Ищем верхний элемент отрисовки
+			// Find top rendering element
 			for (; i < m_arrOpt.size(); ++i)
 			{
 				if (( m_arrOpt[i].first.empty() && m_arrOpt[i].second == arrV.front()) ||

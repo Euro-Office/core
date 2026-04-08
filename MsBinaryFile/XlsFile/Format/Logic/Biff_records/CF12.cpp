@@ -546,7 +546,7 @@ int CF12::serialize(std::wostream & stream)
 			if (rgbCT)
 				rgbCT->serialize(CP_XML_STREAM());
 
-			//что использовать зависит от типа ... todooo
+			//what to use depends on the type ... todooo
 			std::wstring s	= fmlaActive.getAssembledFormula();
 			std::wstring s1 = rgce1.getAssembledFormula();
 			std::wstring s2 = rgce2.getAssembledFormula();

@@ -807,7 +807,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 				ptr->colFirstData = ptr->ref.columnFirst;
 		}
 		if(m_oCacheId.IsInit())
-			ptr->iCache = m_oCacheId->GetValue() +1; //при записи id заменится на index
+			ptr->iCache = m_oCacheId->GetValue() +1; //during writing, id will be replaced with index
 		ptr->sxaxis4Data.bCol = true;
 		if(m_oDataPosition.IsInit())
 			ptr->ipos4Data = m_oDataPosition->GetValue();
@@ -4204,7 +4204,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			m_oPivotCashDefinition = oReader;
 		}
 
-        IFileContainer::Read( oRootPath, oPath ); //в данном случае порядок считывания важен для xlsb
+        IFileContainer::Read( oRootPath, oPath ); //in this case reading order is important for xlsb
 	}
 	void CPivotCacheDefinitionFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
@@ -7680,7 +7680,7 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
         {
             BYTE* fileStream = 0;
             auto fileReader = xlsb->GetFileReader(oPath, fileStream);
-            ///todo чтение записей из стрима
+            ///todo reading records from stream
             m_oPivotCacheRecords.Init();
             m_oPivotCacheRecords->fromBin(fileReader);
             delete[] fileStream;

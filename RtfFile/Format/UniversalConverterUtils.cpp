@@ -35,16 +35,16 @@
 
 int Utils::CopyDirOrFile(std::wstring sSource, std::wstring sDestination)
 {
-	//удаляем sDestination, чтобы там не было.
+	//delete sDestination so it's not there.
 	if( 0 != RemoveDirOrFile( sDestination ) )
 		return 1;
 
-	//копируем
+	//copy
 	CDirectory::CopyFile(sSource, sDestination);
 
 	return 0;
 }
-// return "" если не удалось создать
+// return "" if creation failed
 int Utils::RemoveDirOrFile(std::wstring sPath)
 {
 	CDirectory::DeleteFile(sPath);
@@ -63,8 +63,8 @@ std::wstring Utils::CreateTempFile( std::wstring sDir )
 	else
 		return CreateTempFile();
 }
-// return "" если не удалось создать
-std::wstring Utils::CreateTempDir( std::wstring sDir )//создаем файл в папке sDir
+// return "" if creation failed
+std::wstring Utils::CreateTempDir( std::wstring sDir )//create file in sDir folder
 {
 	if( !sDir.empty() )
 	{

@@ -207,11 +207,11 @@ void text::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (Context.get_process_note() != oox::docx_conversion_context::noNote && 
 		Context.get_delete_text_state()) 
-			return; //в ms нет рецензирования notes
+			return; //MS doesn't have notes revision tracking
 
 	bool add_del_run = false;
 	if (Context.get_drawing_state_content() && Context.get_delete_text_state())
-	{	//0503IG-AddingFormattingText.odt - удаленый текст в удаленом объекте
+	{	//0503IG-AddingFormattingText.odt - deleted text in deleted object
 
 		oox::text_tracked_context::_state  &state = Context.get_text_tracked_context().get_tracked_change(L"");
 		if (state.type == 2)
@@ -764,7 +764,7 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
-		if (std::wstring::npos != pos_outline)//без #
+		if (std::wstring::npos != pos_outline)//without #
 		{
 			std::wstringstream strm; 
 			text_to_stream(strm, false);
@@ -974,7 +974,7 @@ void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 }
 void note::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//см presentation:notes
+	//see presentation:notes
 }
 void note::docx_convert(oox::docx_conversion_context & Context)
 {
@@ -1303,7 +1303,7 @@ void text_page_count::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conver
 }
 void text_page_count::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//поскольку такого поля в ms нет - конвертим как обычный текст
+	//since this field doesn't exist in MS - convert as plain text
 	if (text_)
     {
         text_->pptx_convert(Context);

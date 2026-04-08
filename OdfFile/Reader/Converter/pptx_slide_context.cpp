@@ -255,13 +255,13 @@ void pptx_slide_context::start_slide_animation()
 
 	impl_->transition_.Dir			= boost::none;
 	impl_->transition_.Param		= boost::none;
-	//speed & onClick выставляются ранее
+	//speed & onClick are set earlier
 }
 
 void pptx_slide_context::set_transitionFilter(std::wstring & type,_CP_OPT(std::wstring) & dir,_CP_OPT(std::wstring) & dop,_CP_OPT(int) & time)
 {
 	impl_->transition_.Type		= type;
-	impl_->transition_.Time		= time; // не путать длительность перехода с длительностью эффекта перехода (в oo его нет)
+	impl_->transition_.Time		= time; // don't confuse transition duration with transition effect duration (OO doesn't have it)
 	impl_->transition_.Dir		= dir;
 	impl_->transition_.Param	= dop;
 }
@@ -631,7 +631,7 @@ void pptx_slide_context::set_image(const std::wstring & path)
 
 	if (bSvg)
 	{
-		impl_->object_description_.xlink_href_ = path; // приоритетная картинка
+		impl_->object_description_.xlink_href_ = path; // priority image
 	}
 	else if (bPdf)
 	{
@@ -739,7 +739,7 @@ void pptx_slide_context::Impl::process_image(drawing_object_description& obj, _p
 	GetProperty(obj.additional_, L"luminance", drawing.fill.bitmap->luminance);
 	GetProperty(obj.additional_, L"contrast", drawing.fill.bitmap->contrast);
 
-	if (sTextContent)//в ms office на картинке нельзя сделать надпись - меняем тип на рект с заливкой картинкой
+	if (sTextContent)//in ms office you can't add text to image - changing type to rect with image fill
 	{
 		drawing.type		= typeShape;
 		drawing.sub_type	= 2;//rect
@@ -749,7 +749,7 @@ void pptx_slide_context::Impl::process_image(drawing_object_description& obj, _p
 	process_crop(drawing.fill, fileName);
 	
 ///////////////////////////////////////////////////////////////////////////////////////////////////			
-	std::wstring ref;/// это ссылка на выходной внешний объект
+	std::wstring ref;/// this is a link to output external object
 	bool isMediaInternal = false;
 	
 	drawing.fill.bitmap->rId		= get_mediaitems()->add_or_find(obj.xlink_href_, typeImage, isMediaInternal, ref, oox::document_place);
@@ -757,17 +757,17 @@ void pptx_slide_context::Impl::process_image(drawing_object_description& obj, _p
 
 	if (drawing.type == typeShape)
 	{
-		add_additional_rels(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage);//собственно это не объект, а доп рел и ref объекта
+		add_additional_rels(isMediaInternal, drawing.fill.bitmap->rId, ref, typeImage);//actually this is not an object, but additional rel and object ref
 	
 		isMediaInternal	= true;
 		std::wstring rId = get_mediaitems()->add_or_find(L"", typeShape, isMediaInternal, ref, oox::document_place);
 		
-		add_drawing(drawing, isMediaInternal, rId, ref, typeShape);//объект
+		add_drawing(drawing, isMediaInternal, rId, ref, typeShape);//object
 
 	}
 	else if (!drawing.fill.bitmap->rId.empty())
 	{
-		add_drawing(drawing, isMediaInternal, drawing.fill.bitmap->rId, ref, drawing.type);//объект
+		add_drawing(drawing, isMediaInternal, drawing.fill.bitmap->rId, ref, drawing.type);//object
 	}
 }
 void pptx_slide_context::Impl::process_chart(drawing_object_description & obj, _pptx_drawing & drawing)
@@ -845,8 +845,8 @@ void pptx_slide_context::Impl::process_shape(drawing_object_description & obj, _
 
 	drawing.sub_type = obj.shape_type_;
 
-	// NOTE: Все идентификаторы объектов могут быть неивестны на момент обрабоки коннектора.
-	// Идентификаторы начального и конечного объекта коннектора будут обновлены после обработки всех объектов на слайде.
+	// NOTE: All object identifiers may be unknown at connector processing time.
+	// Start and end connector object identifiers will be updated after processing all objects on slide.
 	drawing.start_connection_shape_id = obj.start_shape_id.get_value_or(L"");
 	drawing.end_connection_shape_id = obj.end_shape_id.get_value_or(L"");
 	
@@ -907,7 +907,7 @@ void pptx_slide_context::Impl::process_common_properties(drawing_object_descript
 	if (pic.svg_rect_)
 	{
 		int val;
-		//todooo непонятки с отрицательными значениями
+		//todooo confusion with negative values
 		drawing.x = (int)(0.5 + odf_types::length(pic.svg_rect_->x, odf_types::length::pt).get_value_unit(odf_types::length::emu));
 		drawing.y = (int)(0.5 + odf_types::length(pic.svg_rect_->y, odf_types::length::pt).get_value_unit(odf_types::length::emu));
 
@@ -1108,7 +1108,7 @@ void pptx_slide_context::serialize_objects(std::wostream & strm)
 
     CP_XML_WRITER(strm)
     {
-// дефолтную обязательную noGroup пока воткнем сюда
+// put default mandatory noGroup here for now
 		CP_XML_NODE(L"p:nvGrpSpPr")
 		{
 			CP_XML_NODE(L"p:cNvPr")

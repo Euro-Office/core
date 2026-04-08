@@ -19,7 +19,7 @@ EAccent GetAccent(int nValue)
 	}
 }
 
-//Всречается только в hwpx
+//Occurs only in hwpx
 EAccent GetAccent(const std::string& sValue)
 {
 	if (sValue.empty() || "NONE" == sValue)

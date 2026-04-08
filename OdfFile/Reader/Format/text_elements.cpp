@@ -91,9 +91,9 @@ void process_paragraph_drop_cap_attr(const paragraph_attrs & Attr, oox::docx_con
 	Context.get_drop_cap_context().Scale = style_drop_cap_->style_lines_;
 	
 	if (style_drop_cap_->style_distance_)
-		Context.get_drop_cap_context().Space = (int)(20.0 * (style_drop_cap_->style_distance_->get_value_unit(length::pt) ) );//формула ачуметь !! - подбор вручную
+		Context.get_drop_cap_context().Space = (int)(20.0 * (style_drop_cap_->style_distance_->get_value_unit(length::pt) ) );//crazy formula!! - manual adjustment
 
-	//font size пощитаем здесь .. так как его значение нужо в стиле параграфа (межстрочный интервал) - в (pt*20)
+	//calculate font size here.. since its value is needed in paragraph style (line spacing) - in (pt*20)
 	
 	text_format_properties_ptr text_properties = calc_text_properties_content (styleInst);
 
@@ -106,7 +106,7 @@ void process_paragraph_drop_cap_attr(const paragraph_attrs & Attr, oox::docx_con
 	{
 		Context.get_drop_cap_context().FontSize = text_properties->process_font_size(
 				text_properties->fo_font_size_, Context.get_styles_context().get_current_processed_style(), false, //1.);
-		7.25 * (Context.get_drop_cap_context().Scale + (Context.get_drop_cap_context().Scale-1) * 0.7));//формула ачуметь !! - подбор вручную
+		7.25 * (Context.get_drop_cap_context().Scale + (Context.get_drop_cap_context().Scale-1) * 0.7));//crazy formula!! - manual adjustment
 	}
 }
 
@@ -186,8 +186,8 @@ void paragraph::drop_cap_text_docx_convert(office_element_ptr first_text_element
 	size_t str_start = Context.get_drop_cap_context().Length;
 	size_t str_size	= store_str.length() - Context.get_drop_cap_context().Length;
 
-	if (str_size < 0) str_size = 0;										// это если на буквы в буквице разные стили
-	if (str_start > store_str.length()) str_start = store_str.length(); // это если на буквы в буквице разные стили
+	if (str_size < 0) str_size = 0;										// this is if letters in drop cap have different styles
+	if (str_start > store_str.length()) str_start = store_str.length(); // this is if letters in drop cap have different styles
 
 	str = store_str.substr(str_start, str_size);
 
@@ -200,7 +200,7 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 
 	size_t index = 0;
 
-	while(index < content_.size()) // могут быть track-change, ...
+	while(index < content_.size()) // may be track-change, ...
 	{
 		if (content_[index]->get_type() == typeTextText || 
 			content_[index]->get_type() == typeTextSpan)
@@ -243,7 +243,7 @@ size_t paragraph::drop_cap_docx_convert(oox::docx_conversion_context & Context)
 							 7.25 * (Context.get_drop_cap_context().Scale + (Context.get_drop_cap_context().Scale-1) * 0.7));
 			}
 		}
-		//в рассчет берутся только первые элементы !!! разные там break-и отменяют реэжим drop_cap!!
+		//only first elements are considered!!! various breaks cancel drop_cap mode!!
 		if ((!first_span_in_paragraph->content_.empty()) &&
 			 (first_span_in_paragraph->content_[0]->get_type() == typeTextText))
 		{
@@ -314,17 +314,17 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
     bool is_empty = content_.empty();
 
 	if (Context.get_paragraph_state() && (Context.get_process_note() == oox::docx_conversion_context::noNote) && !in_drawing)
-    {//вложеннные элементы ... или после графики embedded_linux_kernel_and_drivers_labs_zh_TW.odt
+    {//nested elements... or after graphics embedded_linux_kernel_and_drivers_labs_zh_TW.odt
 		bIsNewParagraph = false;
 		
-		if (!Context.get_paragraph_keep())// например Appendix I_IPP.odt - tracked elements (
+		if (!Context.get_paragraph_keep())// for example Appendix I_IPP.odt - tracked elements (
 		{
 			for (size_t i = 0; i < content_.size(); i++)
             {
 				content_[i]->docx_convert(Context); 
 			}
 			if (!Context.get_delete_text_state())
-				Context.set_paragraph_state(false);// например Appendix I_IPP.odt - tracked elements (вложенные списки из 2 элементов)
+				Context.set_paragraph_state(false);// for example Appendix I_IPP.odt - tracked elements (nested lists of 2 elements)
 			return;
 		}
     }
@@ -341,11 +341,11 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
 	_CP_OPT(std::wstring) next_masterPageName;
     if (next_element_style_name)
     {
-        // проверяем не сменит ли следующий параграф свойства страницы.
-        // если да — устанавливаем контексту флаг на то что необходимо в текущем параграфе
-        // распечатать свойства раздела/секции
-		// проверить ... не она ли текущая - может быть прописан дубляж - и тогда разрыв нарисуется ненужный
-		// dump был выше уровнем
+        // check if next paragraph will change page properties.
+        // if yes — set context flag that it's necessary in current paragraph
+        // to print section properties
+		// check... is it the current one - may have duplicate - then unnecessary break will appear
+		// dump was one level higher
         next_masterPageName	= Context.root()->odf_context().styleContainer().master_page_name_by_name(*next_element_style_name);
 
         if ((next_masterPageName)  && (Context.get_master_page_name() != *next_masterPageName))
@@ -412,7 +412,7 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
   	for (size_t i = index; i < content_.size(); i++)
 	{
 		if (content_[i]->get_type() == typeTextP)
-		{//параграф в параграфе .... оО
+		{// paragraph inside paragraph.... o_O
 			p *para_inside = dynamic_cast<p*>(content_[i].get());
 			
 			for (size_t j = 0; (para_inside) && (j < para_inside->paragraph_.content_.size()); ++j)
@@ -459,8 +459,8 @@ void paragraph::docx_convert(oox::docx_conversion_context & Context, _CP_OPT(std
 
     Context.finish_run();
 
-    // конвертируем в контексте параграфа элементы, которые были помещены в очередь
-	if (!Context.delayed_converting_)//иначе возможно зацикливание
+    // convert elements that were placed in the queue in paragraph context
+	if (!Context.delayed_converting_)// otherwise looping is possible
 	{
 		Context.docx_convert_delayed();
 	}
@@ -579,7 +579,7 @@ void h::docx_convert(oox::docx_conversion_context & Context)
 {
 	std::wstring bookmark;
 	if (false == Context.get_table_content_context().mapReferences.empty())
-	{//когда заголовки находятся выше таблицы контента - херово
+	{// when headers are above the table of contents - problematic
 		std::wstringstream strm;
 		text_to_stream(strm, false);
 		std::wstring outline = strm.str();
@@ -821,7 +821,7 @@ void section::docx_convert(oox::docx_conversion_context & Context)
 	}
 	else
 	{
-		//колонки для текста в объектах todooo
+		// columns for text in objects todooo
 	}
 
    	for (size_t i = 0; i < content_.size(); i++)
@@ -838,7 +838,7 @@ void section::docx_convert(oox::docx_conversion_context & Context)
 
 				if (false == masterPageNameLayout.empty())
 				{
-					Context.set_master_page_name(*masterPageName); //проверка на то что тема действительно существует????
+					Context.set_master_page_name(*masterPageName); // check that theme actually exists????
 					
 					Context.remove_page_properties();
 					Context.add_page_properties(masterPageNameLayout);
@@ -848,10 +848,10 @@ void section::docx_convert(oox::docx_conversion_context & Context)
 		if (content_[i]->next_element_style_name)
 		{
 			std::wstring text___ = *content_[i]->next_element_style_name;
-			// проверяем не сменится ли свойства страницы.
-			// если да — устанавливаем контексту флаг на то что необходимо в текущем параграфе
-			// распечатать свойства раздела/секции
-			//проверить ... не она ли текущая - может быть прописан дубляж - и тогда разрыв нарисуется ненужный
+			// check if page properties will change.
+			// if yes — set context flag that it's necessary in current paragraph
+			// to print section properties
+			// check... is it current - there may be duplication - and then unnecessary break will be drawn
 			const _CP_OPT(std::wstring) next_masterPageName	= Context.root()->odf_context().styleContainer().master_page_name_by_name(*content_[i]->next_element_style_name);
 
 			if ((next_masterPageName)  && (Context.get_master_page_name() != *next_masterPageName))
@@ -1970,7 +1970,7 @@ void unknown_base_change::docx_convert(oox::docx_conversion_context & Context)
 
 	if (content_.empty()) return;
 
-//тут удаленный текст. не по стандарту сделать бы и форматы - стилями чтоли ....
+// here is deleted text. should make formats non-standard - with styles maybe....
 
 	for (size_t i = 0; i < content_.size(); i++)
 	{
@@ -2037,7 +2037,7 @@ void format_change::docx_convert(oox::docx_conversion_context & Context)
 }
 //----------------------------------------------------------------------------------------------------------
 const wchar_t * unknown_change::ns		= L"text";
-const wchar_t * unknown_change::name	= L"UnknownChange"; //?? libra пишет
+const wchar_t * unknown_change::name	= L"UnknownChange"; //?? libre writes
 
 void unknown_change::docx_convert(oox::docx_conversion_context & Context)
 {

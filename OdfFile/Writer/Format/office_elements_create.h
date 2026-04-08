@@ -60,18 +60,18 @@ public:
     typedef boost::function< office_element_ptr () > CreateFuncImpl;
         
 public:
-    // Зарегестрировать элемент
+    // Register element
     bool register_element(const std::wstring &ns, const std::wstring & name, CreateFuncImpl f);
 
-    // Создать элемент по имени
+    // Create element by name
     office_element_ptr create(const std::wstring & ns, const std::wstring & name, odf_conversion_context * Context = NULL, bool isRoot = false) const;
 
 private:
     typedef std::map<std::wstring, CreateFuncImpl> MapType;
-    MapType map_; 
-            
+    MapType map_;
+
 public:
-    // Обеспечение синглтона
+    // Singleton implementation
     static office_element_creator * get();
 
 private:
@@ -79,7 +79,7 @@ private:
     static office_element_creator * instance_;
 };
 
-/// Класс, обеспечивающий регистрацию элементов
+/// Class that provides element registration
 template <class T>
 class RegisterElement
 {
@@ -113,7 +113,7 @@ private:
 
 template<class T> int RegisterElement<T>::class_registered_ = 0;
 
-/// \brief  Создать элемент
+/// \brief  Create element
 bool create_element(const std::wstring & Ns,
                     const std::wstring & Name,
                     office_element_ptr & _Element,

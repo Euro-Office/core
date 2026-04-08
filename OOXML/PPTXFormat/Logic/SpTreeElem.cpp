@@ -736,7 +736,7 @@ namespace PPTX
 			if (m_elem.is_init())
 				m_elem->toXmlWriter(pWriter);
 		}
-		std::wstring SpTreeElem::GetSlicerRequires()
+		std::wstring SpTreeElem::GetRequires()
 		{
 			if (m_elem.IsInit() && m_elem.is<PPTX::Logic::GraphicFrame>())
 			{
@@ -748,6 +748,10 @@ namespace PPTX
 				else if(oGraphicFrame.slicerExt.IsInit())
 				{
 					return L"sle15";
+				}
+				else if (oGraphicFrame.chartRec.IsInit() && oGraphicFrame.chartRec->m_bChartEx)
+				{
+					return L"cx4";
 				}
 			}
 			return L"";

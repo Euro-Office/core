@@ -307,7 +307,7 @@ void RtfAbstractReader::ExecuteTextInternal2(RtfDocument& oDocument, RtfReader& 
 }
 void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfReader& oReader, std::string & sKey, int& nSkipChars)
 {
-	//удаляем символы вслед за юникодом
+	//remove characters following unicode
 	if (nSkipChars > 0)
 	{
 		if (nSkipChars >= (int)sResult.length())
@@ -323,13 +323,13 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfR
 	}
 	if ("u" == sKey)
 	{
-		//надо правильно установить m_nSkipChars по значению \ucN
+		//need to correctly set m_nSkipChars based on \\ucN value
 		nSkipChars = oReader.m_oState->m_nUnicodeClean;
 	}
 }
 void RtfAbstractReader::ExecuteTextInternalSkipChars(std::wstring & sResult, RtfReader& oReader, std::string & sKey, int& nSkipChars)
 {
-	//удаляем символы вслед за юникодом
+	//remove characters following unicode
 	if (nSkipChars > 0)
 	{
 		if (nSkipChars >= (int)sResult.length())
@@ -345,7 +345,7 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::wstring & sResult, Rtf
 	}
 	if ("u" == sKey)
 	{
-		//надо правильно установить m_nSkipChars по значению \ucN
+		//need to correctly set m_nSkipChars based on \\ucN value
 		nSkipChars = oReader.m_oState->m_nUnicodeClean;
 	}
 }
@@ -358,7 +358,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 
 	int nCodepage = -1;
 
-	//применяем параметры codepage от текущего шрифта todo associated fonts.
+	//apply codepage parameters from the current font todo associated fonts.
 	RtfFont oFont;
 	if ((!m_bUseGlobalCodepage) && (true == oDocument.m_oFontTable.GetFont(oReader.m_oState->m_oCharProp.m_nFont, oFont)))
 	{
@@ -372,7 +372,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 			nCodepage = RtfUtility::CharsetToCodepage(oFont.m_nCharset);
 		}
 	}
-	//от настроек документа
+	//from document settings
 	if (-1 == nCodepage && RtfDocumentProperty::cp_none != oDocument.m_oProperty.m_eCodePage)
 	{
 		switch (oDocument.m_oProperty.m_eCodePage)
@@ -392,7 +392,7 @@ std::wstring RtfAbstractReader::ExecuteTextInternalCodePage( std::string& sCharS
 		case RtfDocumentProperty::cp_pca:   nCodepage = 850;        break; //ms dos latin eu
 		}
 	}
-	//если ничего нет ставим ANSI или default from user
+	//if nothing else, set ANSI or default from user
 	if (-1 == nCodepage)
 	{
 		nCodepage = CP_ACP;

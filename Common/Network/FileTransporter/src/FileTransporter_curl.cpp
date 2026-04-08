@@ -121,7 +121,7 @@ namespace NSNetwork
 					// Install the callback function
 					//curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_func);
 #if defined(__linux__)
-					//в linux нет встроенных в систему корневых сертификатов, поэтому отключаем проверку
+					//linux has no built-in root certificates, so we disable verification
 					//http://curl.haxx.se/docs/sslcerts.html
 					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 #endif
@@ -181,7 +181,7 @@ namespace NSNetwork
 					curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
 #if defined(__linux__)
-					//в linux нет встроенных в систему корневых сертификатов, поэтому отключаем проверку
+					//linux has no built-in root certificates, so we disable verification
 					//http://curl.haxx.se/docs/sslcerts.html
 					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
 #endif

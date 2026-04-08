@@ -396,7 +396,7 @@ void oox_serialize_hatch_fill(std::wostream & strm, const _oox_fill & val, const
 		CP_XML_NODE(ns + L":pattFill")
 		{
 			CP_XML_ATTR2(ns_att + L"prst", val.hatch->preset);
-			CP_XML_NODE(ns + L":fgClr")//опять для ms важно что этот цвет перед back
+			CP_XML_NODE(ns + L":fgClr")//again for MS it's important that this color comes before back
 			{
 				oox_serialize_srgb(CP_XML_STREAM(), val.hatch->color_ref, val.opacity);
 			}	

@@ -1340,6 +1340,8 @@ Gfx8BitFont::Gfx8BitFont(XRef *xref, const char *tagA, Ref idA, GString *nameA,
     if (builtinFont->widths->getWidth("space", &w)) {
       widths[32] = 0.001 * w;
     }
+    if (widths[9] == 0)
+      widths[9] = widths[32];
     for (code = 0; code < 256; ++code) {
       if (enc[code] && builtinFont->widths->getWidth(enc[code], &w)) {
 	widths[code] = 0.001 * w;

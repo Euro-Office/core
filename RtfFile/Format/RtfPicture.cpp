@@ -83,7 +83,7 @@ void RtfPicture::SetDefault()
 	m_sPicFilename = L"";
 }
 
-std::wstring RtfPicture::GenerateWMF(RenderParameter oRenderParameter) //копия растра в векторе
+std::wstring RtfPicture::GenerateWMF(RenderParameter oRenderParameter) //copy of raster in vector
 {
     std::wstring sResult;
 	sResult += L"{\\pict";
@@ -105,11 +105,11 @@ std::wstring RtfPicture::GenerateWMF(RenderParameter oRenderParameter) //коп�
 
 	sResult += L" ";
 
-	//сохраняем в темповую директорию и загружаем файл как текст
+	//save to temp directory and load file as text
 	RtfWriter * poWriter = static_cast<RtfWriter*>( oRenderParameter.poWriter );
     //IUnknown* piTempPict = NULL;
 	
-	//todooo ??? переписать
+	//todooo ??? rewrite
 	//if( true == LoadPicture( &piTempPict, m_sPicFilename ) )
 	//{
     //	std::wstring sTempFile = Utils::CreateTempFile( poWriter->m_sTempFolder );

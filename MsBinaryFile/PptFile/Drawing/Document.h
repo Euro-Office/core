@@ -117,7 +117,7 @@ public:
 
                 if (NULL != pAudioElem)
                 {
-                    // а другого и быть не может
+                    // and there can be no other
                     if (pAudioElem->m_bWithVideo)
                     {
                         pElement->m_dStartTime	= dStartTime;
@@ -181,7 +181,7 @@ public:
 
     void CalculateEditor(bool bIsPlaceholderSetUp = false)
     {
-        // автозамены и поля настраиваем тут во избежания путаницы
+        // we configure auto-replacements and fields here to avoid confusion
 
         size_t nCountThemes = m_arThemes.size();
         for (size_t i = 0; i < nCountThemes; ++i)

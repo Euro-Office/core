@@ -184,6 +184,8 @@ public:
 
   PDFDoc *getDoc() { return doc; }
 
+  void setIgnoreStampOpacity(double d) { dIgnoreStampOpacity = d; }
+
 private:
 
   PDFDoc *doc;
@@ -209,6 +211,7 @@ private:
   Parser *parser;		// parser for page content stream(s)
   GList *contentStreamStack;	// stack of open content streams, used
 				//   for loop-checking
+  double dIgnoreStampOpacity;
 
   GBool				// callback to check for an abort
     (*abortCheckCbk)(void *data);
