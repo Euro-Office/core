@@ -943,6 +943,10 @@ namespace NExtractTools
 			{
 				nRes = xlsx_dir2xlsb(sFrom, sTo, params, convertParams);
 			}
+			else if (AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLS == nFormatTo)
+			{
+				nRes = xlsx_dir2xls(sFrom, sTo, params, convertParams);
+			}
 			// else if (AVS_OFFICESTUDIO_FILE_SPREADSHEET_CSV == nFormatTo)
 			//{
 			//	nRes = xlsx_dir2csv(sFrom, sTo, sTemp, params);
