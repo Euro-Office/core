@@ -196,6 +196,8 @@ public:
 	bool isCustomClosed();
 	bool isNonPrimitive();
 
+	void point_after_turning_the_corner(odf_types::length& x,odf_types::length& y, const double& new_center_x,const double& new_center_y, const double& angle);
+
 	void corrected_line_fill();
 
 	office_element_ptr & get_root_element();

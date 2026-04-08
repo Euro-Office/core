@@ -666,26 +666,41 @@ void odf_drawing_context::end_drawing()
 
 		if (rotate)
 		{
-			if(impl_->current_drawing_state_.flipV_)
-				rotate = -*rotate;
 
 			double angle = *rotate;//impl_->current_drawing_state_.rotateAngle_ ? *impl_->current_drawing_state_.rotateAngle_ : 0;
 			
 			length new_x;
 			length new_y;
-			
+			length new_x2,new_y2;
+
+
 			if (impl_->current_drawing_state_.svg_width_ && impl_->current_drawing_state_.svg_height_)
 			{
+
 				length cx = *impl_->current_drawing_state_.svg_width_;
 				length cy = *impl_->current_drawing_state_.svg_height_;
 
-				double center_y = cy.get_value()/2;
+				new_x2 = cx;
+				new_y2 = cy;
+
+				double center_y = cy.get_value()/2,center_x = cx.get_value()/2;
 
 				if(impl_->current_drawing_state_.flipV_)
-					center_y = -center_y*2;
+				{
+					new_y = cy;
+					new_y2 = odf_types::length(0.0,odf_types::length::unit::cm);
+				}
  
-                new_x = (cx / 2.) + ((cx / 2.)* (-1) * cos(angle) - (center_y) * (-1) * sin(angle) );
-                new_y = (center_y) + ((cx / 2.)* (-1) * sin(angle) + (center_y) * (-1) * cos(angle) );
+                // new_x = (cx / 2.) + ((cx / 2.)* (-1) * cos(angle) - (center_y) * (-1) * sin(angle) );
+                // new_y = (center_y) + ((cx / 2.)* (-1) * sin(angle) + (center_y) * (-1) * cos(angle) );
+				point_after_turning_the_corner(new_x,new_y,center_x,center_y,angle);
+				point_after_turning_the_corner(new_x2,new_y2,center_x,center_y,angle);
+			}
+
+			if(impl_->current_drawing_state_.flipV_)
+			{
+				rotate = -*rotate;
+				new_y = odf_types::length(std::max(new_y.get_value(),new_y2.get_value()),odf_types::length::unit::cm);
 			}
 
 			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(-*rotate) + std::wstring(L")");
@@ -1023,7 +1038,7 @@ bool odf_drawing_context::change_text_box_2_wordart()
 	return false;
 }
 
-void point_after_turning_the_corner(odf_types::length& x,odf_types::length& y, const double& new_center_x,const double& new_center_y, const double& angle)
+void odf_drawing_context::point_after_turning_the_corner(odf_types::length& x,odf_types::length& y, const double& new_center_x,const double& new_center_y, const double& angle)
 {
 	double point_x(0.0),point_y(0.0);
 
