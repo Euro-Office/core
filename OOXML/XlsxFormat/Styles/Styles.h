@@ -147,6 +147,7 @@ namespace OOX
 		private:
 			void SetFillXLS(XLS::BaseObjectPtr XFSPtr, XLS::BaseObjectPtr workbookPtr);
 			void SetBordersXLS(XLS::BaseObjectPtr XFSPtr,XLS::BaseObjectPtr workbookPtr);
+			void SetExtPropsXLS(XLS::BaseObjectPtr XFSPt);
 		};
 	} //Spreadsheet
 } // namespace OOX
