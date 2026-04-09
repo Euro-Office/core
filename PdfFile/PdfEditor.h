@@ -61,6 +61,8 @@ public:
 	void SetDoc(PdfWriter::CDocument* pDoc);
 
 	std::vector<int> m_arrSplitAddPages;
+	std::vector<int> m_arrRedactFormFieldsID;
+	std::vector<IAdvancedCommand*> m_arrRedactFormFields;
 
 private:
 	PdfWriter::CDocument* m_pDoc;

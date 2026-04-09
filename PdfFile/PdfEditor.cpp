@@ -172,6 +172,7 @@ bool SplitSkipDict(Object* obj, CObjectsManager* pManager, int nStartRefID)
 	}
 	else if (oTemp.isName("Annot") && obj->dictLookupNF("P", &oTemp2)->isRef())
 	{
+		// Skip annotations that don't have page created
 		PdfWriter::CObjectBase* pObj = pManager->GetObj(oTemp2.getRefNum() + nStartRefID);
 		if (!pObj)
 		{
@@ -475,6 +476,10 @@ PdfWriter::CObjectBase* DictToCDictObject2(Object* obj, PdfWriter::CDocument* pD
 			pManager->IncRefCount(nObjNum + nStartRefID);
 			return pObj;
 		}
+
+		std::vector<int>::iterator it = std::find(pManager->m_arrRedactFormFieldsID.begin(), pManager->m_arrRedactFormFieldsID.end(), nObjNum);
+		if (it != pManager->m_arrRedactFormFieldsID.end())
+			return NULL;
 
 		obj->fetch(xref, &oTemp);
 		pBase = DictToCDictObject2(&oTemp, pDoc, xref, pManager, nStartRefID, nObjNum, bUndecodedStream);
@@ -934,6 +939,167 @@ void GetCTM(XRef* pXref, Object* oPage, double* dCTM)
 
 	oContents.free();
 }
+void GetInvertCTM(double* dCTM, double* dInvCTM)
+{
+	double det = dCTM[0] * dCTM[3] - dCTM[1] * dCTM[2];
+	if (fabs(det) > 1e-10)
+	{
+		double invDet = 1.0 / det;
+		dInvCTM[0] =  dCTM[3] * invDet;
+		dInvCTM[1] = -dCTM[1] * invDet;
+		dInvCTM[2] = -dCTM[2] * invDet;
+		dInvCTM[3] =  dCTM[0] * invDet;
+		dInvCTM[4] = (dCTM[2] * dCTM[5] - dCTM[3] * dCTM[4]) * invDet;
+		dInvCTM[5] = (dCTM[1] * dCTM[4] - dCTM[0] * dCTM[5]) * invDet;
+	}
+}
+void DrawAnnot(Object* oAnnot, PdfWriter::CPage* pPage, PdfWriter::CDocument* pDoc, XRef* xref, CObjectsManager* pManager, int nStartRefID)
+{
+	Object oAP, oAPN, oObj;
+	if (!oAnnot->dictLookup("AP", &oAP)->isDict() || !oAP.dictLookup("N", &oAPN)->isStream())
+	{
+		oAP.free();
+		Object oTemp;
+		if (!oAPN.isDict() || !oAnnot->dictLookup("AS", &oObj)->isName() || !oAPN.dictLookup(oObj.getName(), &oTemp)->isStream())
+		{
+			oTemp.free(); oAPN.free(); oObj.free();
+			return;
+		}
+		oAPN.free();
+		oAPN = oTemp;
+	}
+	oAP.free();
+
+	PdfWriter::CXObject* pForm = pDoc->CreateForm();
+	pPage->GrSave();
+	pPage->ExecuteXObject(pForm);
+	pPage->GrRestore();
+
+	Object oTemp;
+	double m[6] = { 1, 0, 0, 1, 0, 0 }, bbox[4] = { 0, 0, 0, 0 }, rect[4] = { 0, 0, 0, 0 };
+	if (oAnnot->dictLookup("Rect", &oTemp)->isArray() && oTemp.arrayGetLength() == 4)
+	{
+		for (int j = 0; j < 4; ++j)
+		{
+			oTemp.arrayGet(j, &oObj);
+			rect[j] = oObj.isNum() ? oObj.getNum() : 0;
+			oObj.free();
+		}
+
+		if (rect[0] > rect[2])
+			std::swap(rect[0], rect[2]);
+		if (rect[1] > rect[3])
+			std::swap(rect[1], rect[3]);
+	}
+	oTemp.free();
+
+	Dict* pODict = oAPN.streamGetDict();
+	for (int nIndex = 0; nIndex < pODict->getLength(); ++nIndex)
+	{
+		char* chKey = pODict->getKey(nIndex);
+		if (strcmp("Length", chKey) == 0 || strcmp("Filter", chKey) == 0)
+		{
+			oTemp.free();
+			continue;
+		}
+		else if (strcmp("BBox", chKey) == 0 && pODict->getVal(nIndex, &oTemp)->isArray() && oTemp.arrayGetLength() == 4)
+		{
+			for (int j = 0; j < 4; ++j)
+			{
+				oTemp.arrayGet(j, &oObj);
+				bbox[j] = oObj.isNum() ? oObj.getNum() : 0;
+				oObj.free();
+			}
+
+			if (bbox[0] > bbox[2])
+				std::swap(bbox[0], bbox[2]);
+			if (bbox[1] > bbox[3])
+				std::swap(bbox[1], bbox[3]);
+		}
+		else if (strcmp("Matrix", chKey) == 0 && pODict->getVal(nIndex, &oTemp)->isArray() && oTemp.arrayGetLength() == 6)
+		{
+			for (int j = 0; j < 6; ++j)
+			{
+				oTemp.arrayGet(j, &oObj);
+				m[j] = oObj.getNum();
+				oObj.free();
+			}
+		}
+		oTemp.free();
+		pODict->getValNF(nIndex, &oTemp);
+		PdfWriter::CObjectBase* pBase = DictToCDictObject2(&oTemp, pDoc, xref, pManager, nStartRefID);
+		pForm->Add(chKey, pBase);
+		oTemp.free();
+	}
+
+	double formXMin, formYMin, formXMax, formYMax, x, y, sx, sy;
+	x = bbox[0] * m[0] + bbox[1] * m[2] + m[4];
+	y = bbox[0] * m[1] + bbox[1] * m[3] + m[5];
+	formXMin = formXMax = x;
+	formYMin = formYMax = y;
+	x = bbox[0] * m[0] + bbox[3] * m[2] + m[4];
+	y = bbox[0] * m[1] + bbox[3] * m[3] + m[5];
+	if (x < formXMin)
+		formXMin = x;
+	else if (x > formXMax)
+		formXMax = x;
+	if (y < formYMin)
+		formYMin = y;
+	else if (y > formYMax)
+		formYMax = y;
+	x = bbox[2] * m[0] + bbox[1] * m[2] + m[4];
+	y = bbox[2] * m[1] + bbox[1] * m[3] + m[5];
+	if (x < formXMin)
+		formXMin = x;
+	else if (x > formXMax)
+		formXMax = x;
+	if (y < formYMin)
+		formYMin = y;
+	else if (y > formYMax)
+		formYMax = y;
+	x = bbox[2] * m[0] + bbox[3] * m[2] + m[4];
+	y = bbox[2] * m[1] + bbox[3] * m[3] + m[5];
+	if (x < formXMin)
+		formXMin = x;
+	else if (x > formXMax)
+		formXMax = x;
+	if (y < formYMin)
+		formYMin = y;
+	else if (y > formYMax)
+		formYMax = y;
+
+	if (formXMin == formXMax)
+		sx = 1;
+	else
+		sx = (rect[2] - rect[0]) / (formXMax - formXMin);
+	if (formYMin == formYMax)
+		sy = 1;
+	else
+		sy = (rect[3] - rect[1]) / (formYMax - formYMin);
+	double tx = -formXMin * sx + rect[0];
+	double ty = -formYMin * sy + rect[1];
+
+	m[0] *= sx;
+	m[1] *= sy;
+	m[2] *= sx;
+	m[3] *= sy;
+	m[4] = m[4] * sx + tx;
+	m[5] = m[5] * sy + ty;
+
+	pForm->Add("Matrix", PdfWriter::CArrayObject::CreateMatrix(m));
+
+	PdfWriter::CStream* pStream = pForm->GetStream();
+	Stream* pOStream = oAPN.getStream();
+	pOStream->reset();
+	int nChar = pOStream->getChar();
+	while (nChar != EOF)
+	{
+		pStream->WriteChar(nChar);
+		nChar = pOStream->getChar();
+	}
+
+	oAPN.free();
+}
 
 void CObjectsManager::AddObj(int nID, PdfWriter::CObjectBase* pObj)
 {
@@ -1110,6 +1276,24 @@ void CPdfEditor::RedactInfo(int nFlag, const std::vector<IAdvancedCommand*>& arr
 	// 8 - Deleted or cropped content
 	// 9 - Links, actions and JavaScripts
 	// 10 - Overlapping Objects
+
+	m_mObjManager.m_arrRedactFormFields = arrForms;
+	for (int i = 0; i < arrForms.size(); ++i)
+	{
+		IAdvancedCommand::AdvancedCommandType nType = arrForms[i]->GetCommandType();
+		if (nType == IAdvancedCommand::AdvancedCommandType::Annotation)
+		{
+			// Annotation - annotation that has changed or been created and needs to be drawn in Contents of page
+			CAnnotFieldInfo* command = dynamic_cast<CAnnotFieldInfo*>(arrForms[i]);
+			m_mObjManager.m_arrRedactFormFieldsID.push_back(command->GetID());
+		}
+		else if (nType == IAdvancedCommand::AdvancedCommandType::RedactAnnot)
+		{
+			// RedactAnnot - annotation that needs to be drawn in Contents of page without changes
+			CRedactAnnot* command = dynamic_cast<CRedactAnnot*>(arrForms[i]);
+			m_mObjManager.m_arrRedactFormFieldsID.push_back(command->GetID());
+		}
+	}
 }
 bool CPdfEditor::IncrementalUpdates()
 {
@@ -1623,6 +1807,64 @@ void CPdfEditor::Close()
 	if (m_nMode == Mode::WriteNew)
 	{
 		PdfWriter::CDocument* pDoc = m_pWriter->GetDocument();
+
+		for (int i = 0; i < m_mObjManager.m_arrRedactFormFields.size(); ++i)
+		{
+			IAdvancedCommand::AdvancedCommandType nType = m_mObjManager.m_arrRedactFormFields[i]->GetCommandType();
+			if (nType == IAdvancedCommand::AdvancedCommandType::Annotation)
+			{
+				// Annotation - annotation that has changed or been created and needs to be drawn in Contents of page
+				CAnnotFieldInfo* command = dynamic_cast<CAnnotFieldInfo*>(m_mObjManager.m_arrRedactFormFields[i]);
+			}
+			else if (nType == IAdvancedCommand::AdvancedCommandType::RedactAnnot)
+			{
+				// RedactAnnot - annotation that needs to be drawn in Contents of page without changes
+				CRedactAnnot* command = dynamic_cast<CRedactAnnot*>(m_mObjManager.m_arrRedactFormFields[i]);
+
+				PDFDoc* pPDFDocument = NULL;
+				int nStartRefID = 0;
+				int nRefID = m_pReader->FindRefNum(command->GetID(), &pPDFDocument, &nStartRefID);
+				if (nRefID < 0)
+					continue;
+
+				XRef* xref = pPDFDocument->getXRef();
+				XRefEntry* pEntry = xref->getEntry(nRefID);
+				Object oAnnotRef, oAnnot;
+				oAnnotRef.initRef(nRefID, pEntry->type == xrefEntryCompressed ? 0 : pEntry->gen);
+				if (oAnnotRef.fetch(xref, &oAnnot)->isNull())
+				{
+					oAnnotRef.free();
+					continue;
+				}
+				oAnnotRef.free();
+
+				if (!oAnnot.isDict())
+				{
+					oAnnot.free();
+					continue;
+				}
+
+				Object oP;
+				if (!oAnnot.dictLookupNF("P", &oP)->isRef())
+				{
+					oAnnot.free(); oP.free();
+					continue;
+				}
+
+				PdfWriter::CObjectBase* pObj = m_mObjManager.GetObj(oP.getRefNum() + nStartRefID);
+				PdfWriter::CPage* pPage = dynamic_cast<PdfWriter::CPage*>(pObj);
+				if (!pObj || !pPage)
+				{
+					oAnnot.free(); oP.free();
+					continue;
+				}
+
+				// Have page where we need to draw annotation
+				DrawAnnot(&oAnnot, pPage, pDoc, xref, &m_mObjManager, nStartRefID);
+				oAnnot.free();
+			}
+		}
+
 		PdfWriter::CPageTree* pPageTree = pDoc->GetPageTree();
 		int nPages = pPageTree->GetCount();
 		for (int i = 0; i < nPages; ++i)
@@ -2108,9 +2350,6 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 		}
 		pPage->Fix();
 		pDoc->FixEditPage(pPage);
-		double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
-		GetCTM(xref, &pageObj, dCTM);
-		pageObj.free();
 
 		if (bSet)
 		{
@@ -2133,7 +2372,13 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 				}
 			}
 
-			pPage->StartTransform(dCTM[0], dCTM[1], dCTM[2], dCTM[3], dCTM[4], dCTM[5]);
+			double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
+			double dInvCTM[6] = { 1, 0, 0, 1, 0, 0 };
+			GetCTM(xref, &pageObj, dCTM);
+			GetInvertCTM(dCTM, dInvCTM);
+			pageObj.free();
+
+			pPage->Transform(dInvCTM[0], dInvCTM[1], dInvCTM[2], dInvCTM[3], dInvCTM[4], dInvCTM[5]);
 			pPage->SetStrokeColor(0, 0, 0);
 			pPage->SetFillColor(0, 0, 0);
 			pPage->SetExtGrState(pDoc->GetExtGState(255, 255));
@@ -2317,9 +2562,6 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 		}
 	}
 	pPage->Fix();
-	double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
-	GetCTM(xref, &pageObj, dCTM);
-	pageObj.free();
 
 	// Применение редактирования страницы для writer
 	if (pDoc->EditPage(pXref, pPage, _nPageIndex))
@@ -2343,7 +2585,13 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 				pStream->WriteStr(" cm\012");
 			}
 		}
-		pPage->StartTransform(dCTM[0], dCTM[1], dCTM[2], dCTM[3], dCTM[4], dCTM[5]);
+		double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
+		double dInvCTM[6] = { 1, 0, 0, 1, 0, 0 };
+		GetCTM(xref, &pageObj, dCTM);
+		GetInvertCTM(dCTM, dInvCTM);
+		pageObj.free();
+
+		pPage->Transform(dInvCTM[0], dInvCTM[1], dInvCTM[2], dInvCTM[3], dInvCTM[4], dInvCTM[5]);
 		pPage->SetStrokeColor(0, 0, 0);
 		pPage->SetFillColor(0, 0, 0);
 		pPage->SetExtGrState(pDoc->GetExtGState(255, 255));
@@ -2355,6 +2603,7 @@ bool CPdfEditor::EditPage(int _nPageIndex, bool bSet, bool bActualPos)
 		return true;
 	}
 
+	pageObj.free();
 	RELEASEOBJECT(pXref);
 	return false;
 }
@@ -2550,8 +2799,11 @@ bool CPdfEditor::SplitPages(const int* arrPageIndex, unsigned int unLength, PDFD
 			pDoc->FixEditPage(pPage);
 
 			double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
+			double dInvCTM[6] = { 1, 0, 0, 1, 0, 0 };
 			GetCTM(xref, &pageObj, dCTM);
-			pPage->StartTransform(dCTM[0], dCTM[1], dCTM[2], dCTM[3], dCTM[4], dCTM[5]);
+			GetInvertCTM(dCTM, dInvCTM);
+
+			pPage->Transform(dInvCTM[0], dInvCTM[1], dInvCTM[2], dInvCTM[3], dInvCTM[4], dInvCTM[5]);
 			pPage->SetStrokeColor(0, 0, 0);
 			pPage->SetFillColor(0, 0, 0);
 			pPage->SetExtGrState(pDoc->GetExtGState(255, 255));
@@ -3196,35 +3448,11 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 		pDoc->FixEditPage(pPage);
 
 		double dCTM[6] = { 1, 0, 0, 1, 0, 0 };
-		double dInvMatrix[6] = { 1, 0, 0, 1, 0, 0 };
+		double dInvCTM[6] = { 1, 0, 0, 1, 0, 0 };
 		GetCTM(xref, &pageObj, dCTM);
+		GetInvertCTM(dCTM, dInvCTM);
 
-		double det = dCTM[0] * dCTM[3] - dCTM[1] * dCTM[2];
-		if (fabs(det) > 1e-10)
-		{
-			double invDet = 1.0 / det;
-			dInvMatrix[0] =  dCTM[3] * invDet;
-			dInvMatrix[1] = -dCTM[1] * invDet;
-			dInvMatrix[2] = -dCTM[2] * invDet;
-			dInvMatrix[3] =  dCTM[0] * invDet;
-			dInvMatrix[4] = (dCTM[2] * dCTM[5] - dCTM[3] * dCTM[4]) * invDet;
-			dInvMatrix[5] = (dCTM[1] * dCTM[4] - dCTM[0] * dCTM[5]) * invDet;
-		}
-
-		PdfWriter::CStream* pStream = pPage->GetStream();
-		pStream->WriteReal(dInvMatrix[0]);
-		pStream->WriteChar(' ');
-		pStream->WriteReal(dInvMatrix[1]);
-		pStream->WriteChar(' ');
-		pStream->WriteReal(dInvMatrix[2]);
-		pStream->WriteChar(' ');
-		pStream->WriteReal(dInvMatrix[3]);
-		pStream->WriteChar(' ');
-		pStream->WriteReal(dInvMatrix[4]);
-		pStream->WriteChar(' ');
-		pStream->WriteReal(dInvMatrix[5]);
-		pStream->WriteStr(" cm\012");
-
+		pPage->Transform(dInvCTM[0], dInvCTM[1], dInvCTM[2], dInvCTM[3], dInvCTM[4], dInvCTM[5]);
 		pPage->SetStrokeColor(0, 0, 0);
 		pPage->SetFillColor(0, 0, 0);
 		pPage->SetExtGrState(pDoc->GetExtGState(255, 255));
@@ -3267,150 +3495,8 @@ bool CPdfEditor::PrintPages(const std::vector<bool>& arrPages, int nFlag)
 			oType.free();
 
 			// TODO Нужно ли генерировать внешний вид тем у кого его нет
-			Object oAP, oAPN;
-			if (!oAnnot.dictLookup("AP", &oAP)->isDict() || !oAP.dictLookup("N", &oAPN)->isStream())
-			{
-				oAP.free();
-				Object oTemp;
-				if (!oAPN.isDict() || !oAnnot.dictLookup("AS", &oObj)->isName() || !oAPN.dictLookup(oObj.getName(), &oTemp)->isStream())
-				{
-					oAnnot.free(); oTemp.free(); oAPN.free(); oObj.free();
-					continue;
-				}
-				oAPN.free();
-				oAPN = oTemp;
-			}
-			oAP.free();
-
-			PdfWriter::CXObject* pForm = pDoc->CreateForm();
-			pPage->GrSave();
-			pPage->ExecuteXObject(pForm);
-			pPage->GrRestore();
-
-			Object oTemp;
-			double m[6] = { 1, 0, 0, 1, 0, 0 }, bbox[4] = { 0, 0, 0, 0 }, rect[4] = { 0, 0, 0, 0 };
-			if (oAnnot.dictLookup("Rect", &oTemp)->isArray() && oTemp.arrayGetLength() == 4)
-			{
-				for (int j = 0; j < 4; ++j)
-				{
-					oTemp.arrayGet(j, &oObj);
-					rect[j] = oObj.isNum() ? oObj.getNum() : 0;
-					oObj.free();
-				}
-
-				if (rect[0] > rect[2])
-					std::swap(rect[0], rect[2]);
-				if (rect[1] > rect[3])
-					std::swap(rect[1], rect[3]);
-			}
-			oTemp.free();
-
-			Dict* pODict = oAPN.streamGetDict();
-			for (int nIndex = 0; nIndex < pODict->getLength(); ++nIndex)
-			{
-				char* chKey = pODict->getKey(nIndex);
-				if (strcmp("Length", chKey) == 0 || strcmp("Filter", chKey) == 0)
-				{
-					oTemp.free();
-					continue;
-				}
-				else if (strcmp("BBox", chKey) == 0 && pODict->getVal(nIndex, &oTemp)->isArray() && oTemp.arrayGetLength() == 4)
-				{
-					for (int j = 0; j < 4; ++j)
-					{
-						oTemp.arrayGet(j, &oObj);
-						bbox[j] = oObj.isNum() ? oObj.getNum() : 0;
-						oObj.free();
-					}
-
-					if (bbox[0] > bbox[2])
-						std::swap(bbox[0], bbox[2]);
-					if (bbox[1] > bbox[3])
-						std::swap(bbox[1], bbox[3]);
-				}
-				else if (strcmp("Matrix", chKey) == 0 && pODict->getVal(nIndex, &oTemp)->isArray() && oTemp.arrayGetLength() == 6)
-				{
-					for (int j = 0; j < 6; ++j)
-					{
-						oTemp.arrayGet(j, &oObj);
-						m[j] = oObj.getNum();
-						oObj.free();
-					}
-				}
-				oTemp.free();
-				pODict->getValNF(nIndex, &oTemp);
-				PdfWriter::CObjectBase* pBase = DictToCDictObject2(&oTemp, pDoc, xref, &m_mObjManager, nStartRefID);
-				pForm->Add(chKey, pBase);
-				oTemp.free();
-			}
-
-			double formXMin, formYMin, formXMax, formYMax, x, y, sx, sy;
-			x = bbox[0] * m[0] + bbox[1] * m[2] + m[4];
-			y = bbox[0] * m[1] + bbox[1] * m[3] + m[5];
-			formXMin = formXMax = x;
-			formYMin = formYMax = y;
-			x = bbox[0] * m[0] + bbox[3] * m[2] + m[4];
-			y = bbox[0] * m[1] + bbox[3] * m[3] + m[5];
-			if (x < formXMin)
-				formXMin = x;
-			else if (x > formXMax)
-				formXMax = x;
-			if (y < formYMin)
-				formYMin = y;
-			else if (y > formYMax)
-				formYMax = y;
-			x = bbox[2] * m[0] + bbox[1] * m[2] + m[4];
-			y = bbox[2] * m[1] + bbox[1] * m[3] + m[5];
-			if (x < formXMin)
-				formXMin = x;
-			else if (x > formXMax)
-				formXMax = x;
-			if (y < formYMin)
-				formYMin = y;
-			else if (y > formYMax)
-				formYMax = y;
-			x = bbox[2] * m[0] + bbox[3] * m[2] + m[4];
-			y = bbox[2] * m[1] + bbox[3] * m[3] + m[5];
-			if (x < formXMin)
-				formXMin = x;
-			else if (x > formXMax)
-				formXMax = x;
-			if (y < formYMin)
-				formYMin = y;
-			else if (y > formYMax)
-				formYMax = y;
-
-			if (formXMin == formXMax)
-				sx = 1;
-			else
-				sx = (rect[2] - rect[0]) / (formXMax - formXMin);
-			if (formYMin == formYMax)
-				sy = 1;
-			else
-				sy = (rect[3] - rect[1]) / (formYMax - formYMin);
-			double tx = -formXMin * sx + rect[0];
-			double ty = -formYMin * sy + rect[1];
-
-			m[0] *= sx;
-			m[1] *= sy;
-			m[2] *= sx;
-			m[3] *= sy;
-			m[4] = m[4] * sx + tx;
-			m[5] = m[5] * sy + ty;
-
-			pForm->Add("Matrix", PdfWriter::CArrayObject::CreateMatrix(m));
-
-			PdfWriter::CStream* pStream = pForm->GetStream();
-			Stream* pOStream = oAPN.getStream();
-			pOStream->reset();
-			int nChar = pOStream->getChar();
-			while (nChar != EOF)
-			{
-				pStream->WriteChar(nChar);
-				nChar = pOStream->getChar();
-			}
-
-			oAPN.free(); oAnnot.free();
+			DrawAnnot(&oAnnot, pPage, pDoc, xref, &m_mObjManager, nStartRefID);
+			oAnnot.free();
 		}
 		oAnnots.free();
 

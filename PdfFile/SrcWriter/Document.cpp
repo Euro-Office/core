@@ -224,6 +224,8 @@ namespace PdfWriter
 			FT_Done_FreeType(m_pFreeTypeLibrary);
 			m_pFreeTypeLibrary = NULL;
 		}
+
+		SetCompressionMode(COMP_ALL);
 	}
 	bool CDocument::SaveToFile(const std::wstring& wsPath)
 	{

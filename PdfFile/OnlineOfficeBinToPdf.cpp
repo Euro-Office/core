@@ -33,6 +33,7 @@
 
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../DesktopEditor/graphics/MetafileToRenderer.h"
+#include "../../DesktopEditor/graphics/commands/AnnotField.h"
 
 namespace NSOnlineOfficeBinToPdf
 {
@@ -269,8 +270,11 @@ namespace NSOnlineOfficeBinToPdf
 								BYTE* cur = oReader.GetCurrentBuffer();
 								int nLen2 = oReader.ReadInt();
 
-								// ctAnnotField
-								arrForms.push_back(oReader.Read(eCommand, &oCorrector, nLen));
+								CAnnotFieldInfo* command = new CAnnotFieldInfo();
+								if (command->Read(&oReader, &oCorrector))
+									arrForms.push_back(command);
+								else
+									RELEASEOBJECT(command);
 
 								oReader.SetCurrentBuffer(cur + nLen2);
 							}
@@ -281,7 +285,13 @@ namespace NSOnlineOfficeBinToPdf
 							}
 						}
 						else
-							arrForms.push_back(oReader.Read(NSOnlineOfficeBinToPdf::CommandType::ctRedactAnnot, &oCorrector, nLen));
+						{
+							CRedactAnnot* command = new CRedactAnnot();
+							if (command->Read(&oReader, &oCorrector))
+								arrForms.push_back(command);
+							else
+								RELEASEOBJECT(command);
+						}
 					}
 				}
 				pPdf->RedactInfo(nPageNum, arrForms);

@@ -132,7 +132,7 @@ CAnnotFieldInfo::CActionFieldPr* ReadAction(NSOnlineOfficeBinToPdf::CBufferReade
 	return pRes;
 }
 
-CAnnotFieldInfo::CAnnotFieldInfo() : IAdvancedCommand(AdvancedCommandType::Annotaion)
+CAnnotFieldInfo::CAnnotFieldInfo() : IAdvancedCommand(AdvancedCommandType::Annotation)
 {
 	m_nType = EAnnotType::Unknown;
 

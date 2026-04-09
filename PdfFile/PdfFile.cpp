@@ -1390,7 +1390,7 @@ HRESULT CPdfFile::IsSupportAdvancedCommand(const IAdvancedCommand::AdvancedComma
 	case IAdvancedCommand::AdvancedCommandType::Link:
 	case IAdvancedCommand::AdvancedCommandType::DocInfo:
 	case IAdvancedCommand::AdvancedCommandType::FormField:
-	case IAdvancedCommand::AdvancedCommandType::Annotaion:
+	case IAdvancedCommand::AdvancedCommandType::Annotation:
 	case IAdvancedCommand::AdvancedCommandType::DeleteAnnot:
 	case IAdvancedCommand::AdvancedCommandType::WidgetsInfo:
 	case IAdvancedCommand::AdvancedCommandType::ShapeStart:
@@ -1438,7 +1438,7 @@ HRESULT CPdfFile::AdvancedCommand(IAdvancedCommand* command)
 	{
 		return m_pInternal->pWriter->AddFormField(m_pInternal->pAppFonts, (CFormFieldInfo*)command, m_pInternal->wsTempFolder);
 	}
-	case IAdvancedCommand::AdvancedCommandType::Annotaion:
+	case IAdvancedCommand::AdvancedCommandType::Annotation:
 	{
 		CAnnotFieldInfo* pCommand = (CAnnotFieldInfo*)command;
 		if (m_pInternal->pEditor && m_pInternal->pEditor->IsEditPage())

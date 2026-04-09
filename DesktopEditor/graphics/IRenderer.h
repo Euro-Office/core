@@ -149,7 +149,7 @@ public:
 		Link        = 1,
 		DocInfo     = 2,
 		FormField   = 3, // Обратная совместимость для docxf
-		Annotaion   = 4,
+		Annotation  = 4,
 		DeleteAnnot = 5,
 		WidgetsInfo = 6,
 		ShapeStart  = 7,
