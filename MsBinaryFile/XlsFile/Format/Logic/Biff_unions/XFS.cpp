@@ -117,7 +117,6 @@ void calcChecksum(CFRecord record, _UINT32 &checksum)
 	size_t len = record.getRdPtr();
 	for (size_t j = 0; j < len; j++)
 	{
-		auto testByte = (_UINT32)beginData[j];
 		checksum ^= ((_UINT32)beginData[j] << 24);
 
 		for (int i = 0; i < 8; i++)
