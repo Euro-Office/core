@@ -100,7 +100,6 @@ namespace NSDocxRenderer
 		using paragraph_ptr_t = std::shared_ptr<CParagraph>;
 		using table_ptr_t = std::shared_ptr<CTable>;
 
-		using graphical_cell_ptr_t = std::shared_ptr<CGraphicalCell>;
 		using text_cell_ptr_t = std::shared_ptr<CTextCell>;
 		using cell_ptr_t = std::shared_ptr<CTable::CCell>;
 
@@ -127,7 +126,7 @@ namespace NSDocxRenderer
 		std::vector<table_ptr_t> BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
 		// return std::vector of graphical cells (from shapes)
-		std::vector<graphical_cell_ptr_t> BuildGraphicalCells();
+		std::vector<cell_ptr_t> BuildGraphicalCells();
 
 		// returns std::vector of base items builded from m_arParagraphs
 		std::vector<ooxml_item_ptr_t> BuildOutputObjects();

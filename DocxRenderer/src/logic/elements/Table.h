@@ -43,6 +43,12 @@ namespace NSDocxRenderer
 				vmContinue
 			};
 
+			enum class eShading
+			{
+				shNone,
+				shClear,
+			};
+
 			CCell() = default;
 			CCell(const CCell& other);
 			virtual ~CCell() = default;
@@ -55,13 +61,16 @@ namespace NSDocxRenderer
 
 			void AddParagraph(const paragraph_ptr_t& pParagraph);
 
-			CBorder m_oBorderTop;
-			CBorder m_oBorderBot;
-			CBorder m_oBorderLeft;
-			CBorder m_oBorderRight;
+			CBorder m_oBorderTop{};
+			CBorder m_oBorderBot{};
+			CBorder m_oBorderLeft{};
+			CBorder m_oBorderRight{};
 
-			unsigned int m_nGridSpan = 1;
-			eVMerge m_eVMerge = CTable::CCell::eVMerge::vmRestart;
+			unsigned int m_nGridSpan{1};
+			eVMerge m_eVMerge{CTable::CCell::eVMerge::vmRestart};
+
+			eShading m_eShading{eShading::shNone};
+			long m_lColor{};
 
 			std::vector<paragraph_ptr_t> m_arParagraphs;
 		};
@@ -97,22 +106,6 @@ namespace NSDocxRenderer
 	private:
 		std::vector<row_ptr_t> m_arRows;
 		std::vector<double> m_arGridCols;
-	};
-
-	class CGraphicalCell : public CBaseItem
-	{
-	public:
-		CGraphicalCell() = default;
-		~CGraphicalCell() = default;
-
-	public:
-		CTable::CCell::CBorder m_oBorderLeft;
-		CTable::CCell::CBorder m_oBorderTop;
-		CTable::CCell::CBorder m_oBorderRight;
-		CTable::CCell::CBorder m_oBorderBot;
-
-		CTable::CCell::eVMerge m_eVMerge{CTable::CCell::eVMerge::vmRestart};
-		// realization
 	};
 
 	class CTextCell : public CBaseItem

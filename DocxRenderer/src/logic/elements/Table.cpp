@@ -59,6 +59,16 @@ namespace NSDocxRenderer
 		write_border(m_oBorderRight, L"right");
 
 		oWriter.WriteString(L"</w:tcBorders>");
+
+		if (m_eShading != eShading::shNone)
+		{
+			oWriter.WriteString(L"<w:shd w:val=");
+			oWriter.WriteString(L"\"clear\"");
+			oWriter.WriteString(L" w:fill=\"");
+			oWriter.WriteHexInt3(ConvertColorBGRToRGB(m_lColor));
+			oWriter.WriteString(L"\"/>");
+		}
+
 		oWriter.WriteString(L"</w:tcPr>");
 
 		for (const auto& p : m_arParagraphs)
