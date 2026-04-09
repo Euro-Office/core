@@ -656,9 +656,27 @@ bool CMarkdownTable::PreParse(XmlUtils::CXmlLiteReader& oReader)
 
 void CMarkdownTable::Normalize()
 {
-	m_oHeader .GetMatrixCells() = Flatten(std::move(m_oHeader .GetMatrixCells()));
-	m_oBody   .GetMatrixCells() = Flatten(std::move(m_oBody   .GetMatrixCells()));
-	m_oFoother.GetMatrixCells() = Flatten(std::move(m_oFoother.GetMatrixCells()));
+	#define FLATTEN_TABLE(table_variable) table_variable.GetMatrixCells() = Flatten(std::move(table_variable .GetMatrixCells()))
+
+	FLATTEN_TABLE(m_oHeader );
+	FLATTEN_TABLE(m_oBody   );
+	FLATTEN_TABLE(m_oFoother);
+
+	size_t unMaxColumns{m_oBody.GetColumnSize()};
+
+	if (!m_oHeader.Empty())
+		unMaxColumns = std::max(unMaxColumns, m_oHeader.GetColumnSize());
+
+	if (!m_oFoother.Empty())
+		unMaxColumns = std::max(unMaxColumns, m_oFoother.GetColumnSize());
+
+	#define NORMALIZE_NUMBER_COLUMN(table_variable)\
+	if (!table_variable.Empty() && unMaxColumns != table_variable.GetColumnSize())\
+		table_variable.NormalizeNumberColumns(unMaxColumns)
+
+	NORMALIZE_NUMBER_COLUMN(m_oHeader);
+	NORMALIZE_NUMBER_COLUMN(m_oBody);
+	NORMALIZE_NUMBER_COLUMN(m_oFoother);
 }
 
 typedef std::queue<std::pair<std::pair<size_t, size_t>, NSStringUtils::CStringBuilder*>> NestedCells;
@@ -780,7 +798,7 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 	//-----
 
 	//Convert header
-	if (!ConvertMatrix(oReader, arTableSelectors, m_oHeader.GetMatrixCells(), pWriter))
+	if (!ConvertMatrix(oReader, arTableSelectors, m_oHeader.GetMatrixCells(), pWriter, true))
 	{
 		WriteRowStart(*pWriter);
 
@@ -789,13 +807,6 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 
 		WriteRowEnd(*pWriter);
 	}
-
-	WriteRowStart(*pWriter);
-	for (size_t unColumnIndex = 0; unColumnIndex < m_oBody.GetColumnSize() - 1; ++unColumnIndex)
-		pWriter->WriteString(L"-|-", true);
-	WriteRowEnd(*pWriter);
-	//----
-
 	//Convert body
 	ConvertMatrix(oReader, arTableSelectors, m_oBody.GetMatrixCells(), pWriter);
 	//Convert foother
@@ -836,7 +847,7 @@ bool CMarkdownTable::ParseColgroup(XmlUtils::CXmlLiteReader& oReader, std::vecto
 	return true;
 }
 
-bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, const Table& oMatrix, CMDWriter* pWriter)
+bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, const Table& oMatrix, CMDWriter* pWriter, bool bIsHeader)
 {
 	if (oMatrix.empty() || nullptr == pWriter)
 		return false;
@@ -894,6 +905,16 @@ bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vecto
 		}
 
 		WriteRowEnd(*pWriter);
+
+		if (bIsHeader && 0 == unRowIndex)
+		{
+			WriteRowStart(*pWriter);
+
+			for (size_t unColumnIndex = 0; unColumnIndex < oMatrix[unRowIndex].size() - 1; ++unColumnIndex)
+				pWriter->WriteString(L"-|-", true);
+
+			WriteRowEnd(*pWriter);
+		}
 	}
 
 	return true;

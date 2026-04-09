@@ -192,6 +192,16 @@ bool CTableMatrix::SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElemen
 	return true;
 }
 
+void CTableMatrix::NormalizeNumberColumns(size_t unNumberColumns)
+{
+	if (m_arCells.empty())
+		return;
+
+	for (Row& oRow : m_arCells)
+		if (unNumberColumns > oRow.size())
+			oRow.resize(unNumberColumns);
+}
+
 bool CTableMatrix::IsFillingCell(size_t unRowIndex, size_t unColumnIndex) const
 {
 	if (unRowIndex >= m_arCells.size())
@@ -257,12 +267,16 @@ CTableElement::~CTableElement()
 void CTableElement::Clear()
 {
 	if (nullptr != m_pCaption)
+	{
 		delete m_pCaption;
+		m_pCaption = nullptr;
+	}
 
 	for (CTableColgroup* pColgroup : m_arColgroups)
 		if (nullptr != pColgroup)
 			delete pColgroup;
 
+	m_arColgroups.clear();
 	m_oHeader.Clear();
 	m_oBody.Clear();
 	m_oFoother.Clear();

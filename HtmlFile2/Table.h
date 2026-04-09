@@ -84,6 +84,8 @@ public:
 
 	bool SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell);
 
+	void NormalizeNumberColumns(size_t unNumberColumns);
+
 	bool IsFillingCell(size_t unRowIndex, size_t unColumnIndex) const;
 	bool IsNotNullCell(size_t unRowIndex, size_t unColumnIndex) const;
 
