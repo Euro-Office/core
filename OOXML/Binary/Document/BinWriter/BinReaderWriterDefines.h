@@ -126,8 +126,8 @@ extern int g_nCurFormatVersion;
 		HdrFtr_Even = 3,
 		HdrFtr_Odd = 4,
 		HdrFtr_Content = 5,
-		HdrFtr_Y2 = 6,//устарел
-		HdrFtr_Y = 7//устарел
+		HdrFtr_Y2 = 6,// deprecated
+		HdrFtr_Y = 7// deprecated
 	};}
 	namespace c_oSerCnf {enum c_oSerCnf
 	{

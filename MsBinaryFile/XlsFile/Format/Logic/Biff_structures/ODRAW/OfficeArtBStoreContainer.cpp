@@ -80,6 +80,23 @@ void OfficeArtBStoreContainer::loadFields(XLS::CFRecord& record)
 	}
 }
 
+void OfficeArtBStoreContainer::save(XLS::CFRecord& record)
+{
+	rh_own.recVer = 0xF;
+	rh_own.recInstance = rgfb.size();
+	rh_own.recType =  0xF001;
+	for(auto i : rgfb)
+	{
+		rh_own.recLen += 44; //OfficeArtFBSE
+		if(!i->nameData.empty())
+			rh_own.recLen += i->nameData.size()+1;
+		rh_own.recLen += 25; //blipHeader
+		rh_own.recLen += i->pict_size;
+	}
+	record << rh_own;
+
+}
+
 const unsigned short OfficeArtBStoreContainer::GetInstanceToStore()
 {
 	return rgfb.size();

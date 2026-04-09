@@ -33,7 +33,7 @@
 #include "SimpleTypes_OMath.h"
 #include "../Base/Unit.h"
 
-// Здесь представлены все простые типы Drawing-Main из спецификации Office Open Xml (22.1.3)
+// All simple Drawing-Main types from Office Open Xml specification (22.1.3) are presented here
 namespace SimpleTypes
 {
 	EBreakBin CBreakBin::FromString(const std::wstring &sValue)

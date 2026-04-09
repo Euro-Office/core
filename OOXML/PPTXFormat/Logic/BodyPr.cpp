@@ -448,7 +448,7 @@ namespace PPTX
 				}
 				default:
 				{
-					// пока никаких настроек градиента нет
+					// no gradient settings yet
 					pReader->SkipRecord();
 				}
 				}

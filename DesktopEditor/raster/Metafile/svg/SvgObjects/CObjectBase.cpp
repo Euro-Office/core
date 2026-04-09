@@ -49,8 +49,8 @@ namespace SVG
 
 	bool CObject::Marked() const
 	{
-		//Так как по логике кода объект может храниться только в одном контейнере и в списке маркированных элементов,
-		//то хватит и такой проверки
+		//Since by code logic an object can only be stored in one container and in the marked elements list,
+		//this check is sufficient
 		return 1 != m_lRef;
 	}
 
@@ -79,7 +79,7 @@ namespace SVG
 
 	void CObject::ReadChildrens(CSvgReader& oReader, CSvgFile* pSvgFile)
 	{
-		//TODO:: реализовано в классах там, где нужно
+		//TODO:: implemented in classes where needed
 	}
 
 	void CObject::SetTransform(const std::map<std::wstring, std::wstring> &mAttributes, unsigned short ushLevel, bool bHardMode)

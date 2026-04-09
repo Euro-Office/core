@@ -193,7 +193,7 @@ int main(int argc, char** argv)
 	*/
 
 	CApplicationFontsWorker oWorker;
-	// это не рабочая папка, где только шрифты
+	// this is not a working folder with only fonts
 	oWorker.m_bIsCleanDirectory = false;
 	oWorker.m_bIsRemoveOldThumbnails = true;
 

@@ -130,7 +130,7 @@ NSFonts::IFontStream* CApplicationFontStreams::GetStream(const std::wstring &str
 		pStream = (CFontStream*)NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Get(strFile);
 		if (pStream)
 		{
-			// чтобы удалить и из мапа и из стораджа
+			// to delete from both the map and the storage
 			pStream->AddRef();
 		}
 	}
@@ -269,7 +269,7 @@ NSFonts::IFontFile* CFontsCache::LockFont(NSFonts::CLibrary& library, const std:
 			}
 			else
 			{
-				// такого быть не должно
+				// this should not happen
 				m_mapFiles.erase(_find);
 			}
 		}
@@ -919,7 +919,7 @@ CFontFile* CFontManager::GetFontFileBySymbol(CFontFile* pFile, int code)
 	if (sName.empty())
 		return NULL;
 
-	// чтобы не зарелизить при ограниченном кэше
+	// to avoid releasing when cache is limited
 	CFontFile* pFontOld = m_pFont;
 	m_pFont = NULL;
 	std::wstring sOldName = m_sName;

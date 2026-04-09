@@ -109,7 +109,7 @@ int main(int argc, char *argv[])
 
 	for (size_t nIndex = 0; nIndex < sSourceFiles.size(); nIndex++)
 	{
-		// нужно скинуть тип, чтобы не определялся как OOXML всегда (см чеккер).
+		// need to reset type so it's not always detected as OOXML (see checker).
 		oChecker.nFileType = 0;
 		if (oChecker.isOfficeFile(sSourceFiles[nIndex]))
 		{

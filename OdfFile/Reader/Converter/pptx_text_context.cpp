@@ -78,7 +78,7 @@ public:
 	void ApplyListProperties (odf_reader::paragraph_format_properties & propertiesOut, int Level);
 	odf_reader::style_list_level_properties* ApplyListProperties (odf_reader::paragraph_format_properties & propertiesOut, odf_reader::text_list_style* text_list_style, int Level);
 	
-	void set_local_styles_container(odf_reader::styles_container*  local_styles_);//это если стили объектов содержатся в другом документе
+	void set_local_styles_container(odf_reader::styles_container*  local_styles_);//this is if object styles are contained in another document
 
 	hyperlink_data get_hyperlink();
 	void start_hyperlink();
@@ -146,11 +146,11 @@ private:
 	void			dump_run();
 	void			dump_field();
   
-	size_t paragraphs_cout_; //???? тока из за начала отсчета?
-   
-	std::wstringstream text_;		//приходящий текст
-    std::wstringstream paragraph_;	//перманенто скидываемые параграфы
-    std::wstringstream run_;		//перманенто скидываемые куски с быть может разными свойствами
+	size_t paragraphs_cout_; //???? only because of counting start?
+
+	std::wstringstream text_;		//incoming text
+    std::wstringstream paragraph_;	//permanently dumped paragraphs
+    std::wstringstream run_;		//permanently dumped chunks with possibly different properties
    
 	std::wstring		last_paragraph_style_name_;
 	std::wstring		paragraph_style_name_;
@@ -167,9 +167,9 @@ private:
 	_CP_OPT(odf_types::length) svg_heightVal;
 	_CP_OPT(odf_types::length) svg_widthVal;
     
-    int new_list_style_number_;	// счетчик для нумерации имен созданных в процессе конвертации стилей
-   
-    boost::unordered_map<std::wstring, std::wstring> list_style_renames_; // цепочки переименований нумераций
+    int new_list_style_number_;	// counter for numbering names created during style conversion
+
+    boost::unordered_map<std::wstring, std::wstring> list_style_renames_; // numbering rename chains
    
 	void write_list_styles(std::wostream & strm);
 	//void write_list_properties(std::wostream & strm);
@@ -218,7 +218,7 @@ void pptx_text_context::Impl::start_paragraph(const std::wstring & styleName)
     {	
 		//if (in_list_ == false || in_comment == true)
 		//{
-		//// конец предыдущего абзаца и начало следующего
+		//// end of previous paragraph and start of next
 		////text_ << L"&#10;";
 		//	text_ << L"\n"; 
 		//}
@@ -244,7 +244,7 @@ void pptx_text_context::Impl::end_paragraph()
 	in_paragraph = false;
 }
 
-void pptx_text_context::Impl::start_span(const std::wstring & styleName)//кусок текста в абзаце(параграфе) со своими свойствами - этто может быть и 1 буква
+void pptx_text_context::Impl::start_span(const std::wstring & styleName)//text chunk in paragraph with its own properties - this can be even 1 letter
 {
 	int text_size = text_.str().length();
 	
@@ -275,7 +275,7 @@ std::wstring pptx_text_context::Impl::end_span2()
 }
 void pptx_text_context::Impl::start_hyperlink()
 {
-	dump_run();//проверить
+	dump_run();//check
 }
 
 void pptx_text_context::Impl::end_hyperlink()
@@ -445,7 +445,7 @@ void pptx_text_context::Impl::write_pPr(std::wostream & strm)
 	odf_reader::paragraph_format_properties paragraph_properties_;
 	
 	ApplyParagraphProperties	(paragraph_style_name_,	paragraph_properties_, process_layouts_);
-	ApplyListProperties			(paragraph_properties_, level);//выравнивания листа накатим на свойства параграфа
+	ApplyListProperties			(paragraph_properties_, level);//apply list alignment to paragraph properties
 
 	paragraph_properties_.pptx_convert(pptx_context_);	
 	
@@ -623,7 +623,7 @@ void pptx_text_context::Impl::dump_field()
 			}
 			else
 			{
-				//запишем как обычный текст
+				//write as regular text
 				text_ << content;
 			}
 		}
@@ -641,7 +641,7 @@ void pptx_text_context::Impl::dump_run()
 	//	return; 
 	
 	const std::wstring content = XmlUtils::EncodeXmlString(text_.str());
-	//if (content.length() <1 &&  span_style_name_.length()<1) return ;      ... провеить с пустыми строками нужны ли  ...
+	//if (content.length() <1 &&  span_style_name_.length()<1) return ;      ... check if empty lines are needed ...
 
 	if (content.length() > 0)
 	{
@@ -795,7 +795,7 @@ void pptx_text_context::Impl::end_list()
 {
 	in_list_ = false;
   
-	list_style_stack_.pop_back();// пока не стираем .. как сохраним в lstStyles - очистим
+	list_style_stack_.pop_back();// don't erase yet.. will clear when saved to lstStyles
 }
 
 std::wstring pptx_text_context::Impl::current_list_style()
@@ -832,7 +832,7 @@ void pptx_text_context::Impl::start_field(field_type type, const std::wstring & 
 }
 void pptx_text_context::Impl::start_comment()
 {
-	in_comment = true;//отдельная ветка - так как без форматирования
+	in_comment = true;//separate branch - since without formatting
 }
 std::wstring pptx_text_context::Impl::end_comment()
 {

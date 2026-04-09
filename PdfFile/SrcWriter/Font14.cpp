@@ -106,6 +106,7 @@ namespace PdfWriter
 	bool CFontEmbedded::LoadFont(const std::string& sFontKey, EFontType eFontType, CObjectBase* pObj,
 								 const std::map<unsigned int, unsigned int>& mCodeToWidth, const std::map<unsigned int, unsigned int>& mCodeToUnicode, const std::map<unsigned int, unsigned int>& mCodeToGID)
 	{
+		m_unDW = 1000;
 		m_sFontKey = sFontKey;
 		m_eFontType = eFontType;
 		m_pObj = pObj;
@@ -117,12 +118,12 @@ namespace PdfWriter
 	}
 	unsigned int CFontEmbedded::GetWidth(unsigned short ushCode)
 	{
-		// Возвращаем ширину из карты
+		// Return width from the map
 		auto it = m_mCodeToWidth.find(ushCode);
 		if (it != m_mCodeToWidth.end())
 			return it->second;
 
-		return 0;
+		return m_unDW;
 	}
 	unsigned int CFontEmbedded::EncodeUnicode(const unsigned int& unGID, const unsigned int& unUnicode)
 	{

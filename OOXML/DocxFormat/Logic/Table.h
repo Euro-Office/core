@@ -378,7 +378,7 @@ namespace OOX
 			int m_nCountRow;
 
 			nullable<OOX::Logic::CTblGrid> m_oTblGrid;			
-			OOX::Logic::CTableProperty* m_oTableProperties; //todooo - выкинуть из m_arrItems, переделать на nullable<>
+			OOX::Logic::CTableProperty* m_oTableProperties; //todooo - remove from m_arrItems, refactor to nullable<>
 		};
 
 		//--------------------------------------------------------------------------------
@@ -412,7 +412,7 @@ namespace OOX
 			nullable<SimpleTypes::CLongHexNumber> m_oRsidRPr;
 			nullable<SimpleTypes::CLongHexNumber> m_oRsidTr;
 
-			OOX::Logic::CTableRowProperties* m_pTableRowProperties; //todooo - выкинуть из m_arrItems, переделать на nullable<>
+			OOX::Logic::CTableRowProperties* m_pTableRowProperties; //todooo - remove from m_arrItems, refactor to nullable<>
 		};
 
 		//--------------------------------------------------------------------------------
@@ -439,9 +439,9 @@ namespace OOX
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
-			int m_nNumCol; // Номер колонки
+			int m_nNumCol; // Column number
 			nullable<std::wstring> m_sId;
-			OOX::Logic::CTableCellProperties* m_pTableCellProperties; //todooo - выкинуть из m_arrItems, переделать на nullable<>
+			OOX::Logic::CTableCellProperties* m_pTableCellProperties; //todooo - remove from m_arrItems, refactor to nullable<>
 		};
 
 	} // namespace Logic

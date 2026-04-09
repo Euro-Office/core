@@ -235,7 +235,7 @@ else if (c_oSerBordersType::bottom == type)\
 	}\
 	else if (c_oSerProp_RevisionType::Date == type)\
 	{\
-		poResult->m_oDate.Init(); poResult->m_oDate->SetValue(m_oBufferedStream.GetString3(length));\
+		poResult->m_oDate = m_oBufferedStream.GetString3(length);\
 	}\
 	else if (c_oSerProp_RevisionType::Id == type)\
 	{\
@@ -2534,7 +2534,7 @@ int Binary_tblPrReader::Read_RowPr(BYTE type, long length, void* poResult)
 		READ2_DEF(length, res, this->ReadAfter, &orowPrAfterBefore);
 		if (true == orowPrAfterBefore.bGridAfter && orowPrAfterBefore.nGridAfter > 0 && false == orowPrAfterBefore.oAfterWidth.bW)
 		{
-			//ищем по tblGrid
+			//search by tblGrid
 			long nGridLength = (long)m_aCurTblGrid.size();
 			if (orowPrAfterBefore.nGridAfter < nGridLength)
 			{
@@ -2555,7 +2555,7 @@ int Binary_tblPrReader::Read_RowPr(BYTE type, long length, void* poResult)
 		READ2_DEF(length, res, this->ReadBefore, &orowPrAfterBefore);
 		if (true == orowPrAfterBefore.bGridAfter && orowPrAfterBefore.nGridAfter > 0 && false == orowPrAfterBefore.oAfterWidth.bW)
 		{
-			//ищем по tblGrid
+			//search by tblGrid
 			if (orowPrAfterBefore.nGridAfter < (long)m_aCurTblGrid.size())
 			{
 				double nSumW = 0;
@@ -3649,7 +3649,7 @@ int Binary_OtherTableReader::ReadOtherContent(BYTE type, long length, void* poRe
 		}
 		catch(...)
 		{
-			//todooo в отдельный лог
+			//todooo log separately
 		}
 		if (false == m_oFileWriter.m_bGlossaryMode)
 		{
@@ -5381,8 +5381,7 @@ int Binary_DocumentTableReader::ReadMoveFromRangeStart(BYTE type, long length, v
     {
         std::wstring strValue = m_oBufferedStream.GetString3(length);
 
-		pMoveFromRangeStart->m_oDate.Init();
-        pMoveFromRangeStart->m_oDate->SetValue(strValue);
+		pMoveFromRangeStart->m_oDate = strValue;
 	}
 	else if (c_oSerMoveRange::DisplacedByCustomXml == type)
 	{
@@ -5431,8 +5430,7 @@ int Binary_DocumentTableReader::ReadMoveToRangeStart(BYTE type, long length, voi
     {
         std::wstring strValue = m_oBufferedStream.GetString3(length);
 
-		pMoveToRangeStart->m_oDate.Init();
-        pMoveToRangeStart->m_oDate->SetValue(strValue);
+		pMoveToRangeStart->m_oDate = strValue;
 	}
 	else if (c_oSerMoveRange::DisplacedByCustomXml == type)
 	{
@@ -7608,7 +7606,7 @@ int Binary_DocumentTableReader::ReadMathMRun(BYTE type, long length, void* poRes
 		if (NULL != m_oFileWriter.m_pComments)
 		{
 			CComment* pComment = m_oFileWriter.m_pComments->get(nId);
-			if (NULL != pComment) // могут быть и без start/end
+			if (NULL != pComment) // can be without start/end
 			{
 				GetCurrentStringWriter().WriteString(pComment->writeRef(std::wstring(_T("")), std::wstring(_T("w:commentReference")), std::wstring(_T(""))));
 			}
@@ -8453,7 +8451,7 @@ int Binary_DocumentTableReader::ReadRunContent(BYTE type, long length, void* poR
 		if (NULL != m_oFileWriter.m_pComments)
 		{
 			CComment* pComment = m_oFileWriter.m_pComments->get(nId);
-			if (NULL != pComment) // могут быть и без start/end
+			if (NULL != pComment) // can be without start/end
 			{
                 GetCurrentStringWriter().WriteString(pComment->writeRef(std::wstring(_T("")), std::wstring(_T("w:commentReference")), std::wstring(_T(""))));
 			}
@@ -8846,7 +8844,7 @@ int Binary_DocumentTableReader::ReadCell(BYTE type, long length, void* poResult)
 	{
 		Binary_DocumentTableReader oBinary_DocumentTableReader(m_oBufferedStream, m_oFileWriter, m_oDocumentWriter, m_bOFormRead);
 		READ1_DEF(length, res, this->ReadCellContent, &oBinary_DocumentTableReader);
-		//Потому что если перед </tc> не идет <p>, то документ считается невалидным
+		//Because if there is no <p> before </tc>, the document is considered invalid
 		if (c_oSerParType::Par != oBinary_DocumentTableReader.m_byteLastElemType)
 		{
             GetCurrentStringWriter().WriteString(std::wstring(_T("<w:p/>")));
@@ -8955,7 +8953,7 @@ int Binary_DocumentTableReader::ReadPptxDrawing(BYTE type, long length, void* po
 		pDrawingProperty->bDataLength = true;
 		pDrawingProperty->DataPos = m_oBufferedStream.GetPos();
 		pDrawingProperty->DataLength = length;
-		//сейчас пропуская, потому что перед чтение этого поля надо собрать остальные данные
+		//skipping for now, because other data must be collected before reading this field
 		res = c_oSerConstants::ReadUnknown;
 	}
 	else if (c_oSerImageType2::Chart == type)
@@ -9926,10 +9924,7 @@ int Binary_DocumentTableReader::ReadSdtPrDate(BYTE type, long length, void* poRe
 	OOX::Logic::CDate* pDate = static_cast<OOX::Logic::CDate*>(poResult);
 	if (c_oSerSdt::FullDate == type)
 	{
-        std::wstring sVal = m_oBufferedStream.GetString3(length);
-
-        pDate->m_oFullDate.Init();
-        pDate->m_oFullDate->SetValue(sVal);
+		pDate->m_oFullDate = m_oBufferedStream.GetString3(length);
 	}
 	else if (c_oSerSdt::Calendar == type)
 	{
@@ -10700,13 +10695,13 @@ int BinaryFileReader::ReadMainTable()
 		Writers::CommentsWriter& oCommentsWriter = m_oFileWriter.get_comments_writer();
         
 		std::wstring sContent	= oComments.writeContent();
-        std::wstring sContentEx = oComments.writeContentExt();	//важно чтобы writeContentExt вызывался после writeContent
+        std::wstring sContentEx = oComments.writeContentExt();	//important that writeContentExt is called after writeContent
 		std::wstring sContentExtensible = oComments.writeContentExtensible();
 		std::wstring sContentsId = oComments.writeContentsIds();
         std::wstring sPeople	= oComments.writePeople();
 
 		std::wstring sDocumentContent	= oBinary_DocumentCommentsTableReader.m_oComments.writeContent();
-		std::wstring sDocumentContentEx = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExt();	//важно чтобы writeContentExt вызывался после writeContent
+		std::wstring sDocumentContentEx = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExt();	//important that writeContentExt is called after writeContent
 		std::wstring sDocumentContentExtensible = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExtensible();
 		std::wstring sDocumentContentsId = oBinary_DocumentCommentsTableReader.m_oComments.writeContentsIds();
 		std::wstring sDocumentPeople	= oBinary_DocumentCommentsTableReader.m_oComments.writePeople();

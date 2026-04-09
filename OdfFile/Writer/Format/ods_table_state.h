@@ -225,6 +225,7 @@ struct ods_comment_state
 	_INT32 col = -1;
 	_INT32 row = -1;
 	std::wstring author;
+	std::wstring date_time;
 
 	office_element_ptr elm;
 
@@ -472,7 +473,7 @@ public:
 	
 	void add_definded_expression(office_element_ptr & elm);
 
-    void start_comment(_INT32 col, _INT32 row, std::wstring & author);
+    void start_comment(_INT32 col, _INT32 row, std::wstring & author, std::wstring& date_time);
 		void set_comment_rect(double l, double t, double w, double h);
 		void set_comment_visible(bool val);
 		void set_comment_color(const std::wstring & color);
@@ -538,7 +539,7 @@ private:
 		_INT32 start_col = 0;
 		_INT32 count_cols = 0;
 
-		_INT32 count_rows = 0; // от текущей строки
+		_INT32 count_rows = 0; // from current row
 	};
 	std::vector<_covered_info> current_covered_rows_;
 	_INT32 current_covered_cols_;
@@ -546,7 +547,7 @@ private:
     odf_conversion_context *context_;   
 	
 	office_element_ptr	office_table_;
-	style*				office_table_style_ = NULL;//??? может хранить как office_element_ptr ???
+	style*				office_table_style_ = NULL;//??? maybe store as office_element_ptr ???
 	office_element_ptr	table_defined_expressions_;
 	
 	std::wstring row_default_cell_style_name_;
@@ -563,7 +564,7 @@ private:
 //            row          column
 	std::map<_INT32, std::map<_INT32, _spanned_info>> map_merged_cells;
 	
-	std::vector<office_element_ptr> current_level_;//постоянно меняющийся список уровней ("0-й элемент - сама таблица)
+	std::vector<office_element_ptr> current_level_;//constantly changing list of levels (0th element - the table itself)
 	
 	std::vector<ods_cell_state>	cells_;
 	

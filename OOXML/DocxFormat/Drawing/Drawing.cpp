@@ -1041,9 +1041,9 @@ namespace OOX
 				else if ( _T("wp14:sizeRelV") == sName )
 					m_oSizeRelV = oReader;
 				else if ( _T("mc:AlternateContent") == sName )
-				//ПРИВЛЕЧЕНИЕ СРЕДСТВ ИЗ МЕСТНЫХ ИСТОЧНИКОВ.docx
-				//вариативность на разные версии офиса части параметров - кстати ... это может встретиться в ЛЮБОМ месте
-				//todooo сделать чтение не обязательно fallback, по выбору версии нужной нам (w14, ..)
+				//FUNDRAISING FROM LOCAL SOURCES.docx
+				//variability for different office versions of some parameters - by the way... this can occur ANYWHERE
+				//todooo implement reading not necessarily fallback, by selecting the version we need (w14, ..)
 				{
 					nCurDepth++;
 					while( oReader.ReadNextSiblingNode( nCurDepth ) )
@@ -1063,7 +1063,7 @@ namespace OOX
 								oSubReader.ReadNextNode();//fallback
 
 								fromXML(oSubReader);
-								//break чтобы не читать сразу оба Choice и Fallback
+								//break to avoid reading both Choice and Fallback at once
 								break;
 							}
 						}

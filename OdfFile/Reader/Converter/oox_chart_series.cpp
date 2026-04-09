@@ -52,11 +52,11 @@ namespace oox {
 
 oox_chart_series::oox_chart_series()
 {
-	values_[0].type	= L"c:cat";//подписи
+	values_[0].type	= L"c:cat";//labels
 	values_[1].type	= L"c:val";
 	values_[2].type	= L"c:xVal";
 	values_[3].type	= L"c:yVal";
-	values_[4].type	= L"c:bubbleSize";//заместо оси х!!!!
+	values_[4].type	= L"c:bubbleSize";//instead of x-axis!!!!
 
 	iSymbolMarkerType_		= 0;
 	bCacheOnly_				= false;
@@ -112,10 +112,10 @@ void oox_chart_series::parse_properties()
 		iSymbolMarkerType_ = intVal.get() ;
 		if (iSymbolMarkerType_ == 2)
 		{
-			odf_reader::GetProperty(content_.properties_, L"symbol-name", intVal);   //    квадратики, звездочки ...
+			odf_reader::GetProperty(content_.properties_, L"symbol-name", intVal);   //    squares, stars...
 			
 			if (intVal)	iSymbolMarkerType_	= intVal.get() ;
-			else		iSymbolMarkerType_	= 0;//выключим
+			else		iSymbolMarkerType_	= 0;//turn off
 		}
 	}
 	//odf_reader::GetProperty(content_.properties_, L"data-label-symbol", boolVal);
@@ -158,12 +158,21 @@ void oox_chart_series::parse_properties()
 		if (!data_labels_)	data_labels_ = oox_data_labels();
 		data_labels_->set_formatCode(formatCode, bLinkData.get_value_or(false));
 	}
+	auto val = intVal;
 	odf_reader::GetProperty(content_.properties_, L"label-position", intVal);
+	if( val.has_value() && !intVal.has_value() )
+	{
+		intVal = val;
+	}
 	if (intVal && labelPosEnabled_)
 	{
 		if (!data_labels_)	data_labels_ = oox_data_labels();
 		
 		data_labels_->set_position(*intVal); 
+	}
+	if( content_.class_ == odf_types::chart_class::type::line )
+	{
+		data_labels_->setLineChart(true);
 	}
 }
 
@@ -552,10 +561,10 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						int symbol = intVal.get();
 						if (symbol == 2)
 						{
-							odf_reader::GetProperty(content_.points_[i].properties_, L"symbol-name", intVal);   //    квадратики, звездочки ...
+							odf_reader::GetProperty(content_.points_[i].properties_, L"symbol-name", intVal);   //    squares, stars...
 
 							if (intVal)	symbol = intVal.get();
-							else		symbol = 0;//выключим
+							else		symbol = 0;//turn off
 						}
 						CP_XML_NODE(L"c:marker")
 						{
@@ -675,7 +684,7 @@ _CP_PTR(oox_chart_series) oox_pie_series::create()
 }
 void oox_pie_series::oox_serialize(std::wostream & _Wostream)
 {
-	content_.fill_.clear();		//авто подбор цветов
+	content_.fill_.clear();		//auto color selection
 
 	CP_XML_WRITER(_Wostream)
     {

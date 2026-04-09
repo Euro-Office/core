@@ -57,10 +57,10 @@ public:
     int		m_lPlaceholderID;
 
 
-    // граница
+    // bounds
     Aggplus::RECT m_oBounds;
 
-    // настройки по-умолчанию
+    // default settings
     ODRAW::CTextAttributes			m_oAttributes;
     std::vector<CParagraph>	m_arParagraphs;
     std::wstring m_originalText;
@@ -74,13 +74,13 @@ public:
     int		m_lWrapMode; // 0 - square, default; 1 - none wrap
 
 
-    // для ппт. чтобы не менять счас ничего
+    // for ppt. to not change anything now
     CTextRuler				m_oRuler;
 
     CTextStyles				m_oLayoutStyles;
     CTextStyles				m_oStyles;
 
-    // из пптх
+    // from pptx
     bool					m_bIsSlideFontRef;
     int						m_lFontRef;
 

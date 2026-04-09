@@ -37,7 +37,7 @@
 OOXThemeWriter::OOXThemeWriter(OOXWriter& oWriter,RtfDocument& oDocument ):m_oWriter(oWriter)
 {
 }
-bool OOXThemeWriter::Save( std::wstring sFolder ) //todo доделать очистку поле ошибок
+bool OOXThemeWriter::Save( std::wstring sFolder ) //todo finish error field cleanup
 {
 	std::wstring pathWord = sFolder + FILE_SEPARATOR_STR + _T("word");
 

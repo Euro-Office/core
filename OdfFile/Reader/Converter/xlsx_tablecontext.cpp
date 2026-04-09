@@ -473,8 +473,8 @@ namespace oox {
 		{
 			if (false == xlsx_data_ranges_[it->second]->bTablePart) continue;
 
-			// из за дебелизма мсофис которому ОБЯЗАТЕЛЬНО нужно прописывать имена колонок таблицы (и они должны быть еще 
-			// прописаны и в самих данных таблицы !!
+			// due to MS Office stupidity which REQUIRES specifying table column names (and they must also be
+			// specified in the table data itself!!
 
 			while (xlsx_data_ranges_[it->second]->header_values.size() > xlsx_data_ranges_[it->second]->cell_end.first -
 				xlsx_data_ranges_[it->second]->cell_start.first + 1)
@@ -623,7 +623,7 @@ namespace oox {
 		{
 			CP_XML_NODE(L"autoFilter")
 			{
-				//в автофильтре тока простые диапазоны .. для сложных - tablePart
+				//autofilter only has simple ranges .. for complex ones - tablePart
 				CP_XML_ATTR(L"ref", getCellAddress(cell_start.first, cell_start.second) + L":" + getCellAddress(cell_end.first, cell_end.second));
 				//CP_XML_ATTR(L"ref", ref);
 				if (ind_filter != -1)

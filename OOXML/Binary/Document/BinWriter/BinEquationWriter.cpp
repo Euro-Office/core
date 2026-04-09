@@ -343,7 +343,7 @@ namespace MathEquation
 	}
 	int BinaryEquationWriter::WriteItemWithLengthStart()
 	{
-		//Запоминаем позицию чтобы в конце записать туда длину
+		//Save position to write length at the end
         int nStartPos = m_pStream->GetPosition();
         m_pStream->Skip(4);
 		return nStartPos;
@@ -776,7 +776,7 @@ namespace MathEquation
 					nCurPos1 = WriteItemStart(BinDocxRW::c_oSer_OMathContentType::SSupPr);
 				}
 				break;
-			/*case scriptalignLeft: можно сделать так, но выглядеть будет плохо
+			/*case scriptalignLeft: can do it this way, but it will look bad
 			{
 				nCurPos = WriteItemStart(BinDocxRW::c_oSer_OMathContentType::SPre);
 				nCurPos1 = WriteItemStart(BinDocxRW::c_oSer_OMathContentType::SPrePr);
@@ -922,7 +922,7 @@ namespace MathEquation
 		std::wstring str;
 		switch(eType)
 		{
-		//todooo проверить запись .. (BYTE)SimpleTypes::ххх
+		//todo check writing .. (BYTE)SimpleTypes::xxx
 			case integraltypeSingle:
 				str = 0x222B;
 				WriteItemValStr(BinDocxRW::c_oSer_OMathBottomNodesType::Chr, str);

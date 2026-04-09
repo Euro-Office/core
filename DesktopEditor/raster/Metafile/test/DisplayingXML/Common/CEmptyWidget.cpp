@@ -8,7 +8,7 @@ CEmptyWidget::CEmptyWidget(const QString& qsName, QWidget *pParent) :
         m_qsName(qsName)
 {
         QVBoxLayout *pLayout = new QVBoxLayout();
-        pLayout->addWidget(new QLabel("Запись не содержит параметров"));
+        pLayout->addWidget(new QLabel("Record does not contain parameters"));
         setLayout(pLayout);
 }
 

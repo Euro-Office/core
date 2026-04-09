@@ -354,7 +354,7 @@ namespace DocFileFormat
 		}
 	};
 
-	class BentArrow : public ShapeType			//	фигура превращается не имеет точек изменения
+	class BentArrow : public ShapeType			//	shape transforms has no adjustment points
 	{
 	public:
 		BentArrow () : ShapeType(msosptBentArrow)
@@ -1340,7 +1340,7 @@ namespace DocFileFormat
 		}
 	};
 
-	class CircularArrow : public ShapeType				//	фигура превращается не имеет точек изменения
+	class CircularArrow : public ShapeType				//	shape transforms has no adjustment points
 	{
 	public:
 		CircularArrow () : ShapeType(msosptCircularArrow)

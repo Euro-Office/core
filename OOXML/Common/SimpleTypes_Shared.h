@@ -34,7 +34,7 @@
 #include "SimpleTypes_Base.h"
 #include "../../DesktopEditor/common/Types.h"
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (22.8)
+// Here are all simple types SharedML from Office Open Xml specification (22.8)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ namespace SimpleTypes
 	};
 } // SimpleTypes
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (22.9)
+// Here are all simple types SharedML from Office Open Xml specification (22.9)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -104,36 +104,38 @@ namespace SimpleTypes
 	class CGuid
 	{
 	public:
-		CGuid();
-
-		bool FromString(const std::wstring &sValue);
-		std::wstring ToString (bool braces = true) const;
-
-		SimpleTypes_DefaultString(CGuid)
-
-		bool IsZero();
-
-	private:
-
-		bool HexToInt(std::wstring& sValue, T_ULONG64& unResult);
-		int	 HexToInt(int nHex, bool &bResult);
-
-	public:
 		struct TGuid
 		{
 			unsigned int   a;
 			unsigned short b;
 			unsigned short c;
-			unsigned char  d;
+			unsigned short d;
 			unsigned char  e;
 			unsigned char  f;
 			unsigned char  g;
 			unsigned char  h;
 			unsigned char  i;
 			unsigned char  j;
-			unsigned char  k;
 		} m_oGUID;
+
+		CGuid();
+		void Generate();
+
+		bool FromString(const std::wstring &sValue);
+		std::wstring ToString (bool braces = true) const;
+		
+		SimpleTypes_DefaultString(CGuid)
+
+		bool IsZero();
+
+	private:
+		bool HexToInt(std::wstring& sValue, T_ULONG64& unResult);
+		int	 HexToInt(int nHex, bool &bResult);
 	};
+	bool operator!= (const CGuid& g1, const CGuid& g2);
+	bool operator== (CGuid& g1, CGuid& g2);
+	bool operator== (const CGuid& g1, const CGuid& g2);
+	std::wostream& operator << (std::wostream& _Wostream, const CGuid& _Val);
 
 	//--------------------------------------------------------------------------------
 	// HexColorRGB 22.9.2.5 (Part 1)
@@ -163,7 +165,7 @@ namespace SimpleTypes
 	// Lang 22.9.2.6 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// TO DO: сделать парсер языка по спецификации RFC 4646/BCP 47
+	// TO DO: implement language parser according to RFC 4646/BCP 47 specification
 	//class CLang
 	//{
 	//public:
@@ -205,7 +207,7 @@ namespace SimpleTypes
 	// OnOff 22.9.2.7 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// Согласно части 4 стр. 1459, значений "on" и "off" быть не должно
+	// According to part 4 page 1459, values "on" and "off" should not exist
 	enum EOnOff
 	{
 		onoffFalse = 0,
@@ -276,7 +278,7 @@ namespace SimpleTypes
 	// String 22.9.2.13 (Part 1)
 	//--------------------------------------------------------------------------------
 
-	// Ничего не делаем, используем ATL::std::wstring
+	// Do nothing, use ATL::std::wstring
 
 	//--------------------------------------------------------------------------------
 	// TwipsMeasure 22.9.2.14 (Part 1)
@@ -353,7 +355,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы SharedML из спецификации Office Open Xml (15.1.2 - part 4)
+// Here are all simple types SharedML from Office Open Xml specification (15.1.2 - part 4)
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------

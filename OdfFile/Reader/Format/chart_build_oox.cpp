@@ -87,7 +87,7 @@ static double convert_symbol_size(double val, double metrix, bool add_padding)
 	return pixels * 0.75; //* 9525. * 72.0 / (360000.0 * 2.54);
 }
 
-// Класс для конструирования чартов
+// Class for constructing charts
 using namespace chart;
 	
 void object_odf_context::set_pivot_source(std::wstring const & val)
@@ -438,7 +438,18 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 	chart_context.set_title		(title_, sub_title_);
 	chart_context.set_wall		(wall_);
 	chart_context.set_floor		(floor_);
-	chart_context.set_legend	(legend_);
+
+	_CP_OPT(double) rel_x, rel_y, rel_width, rel_height;
+
+	if( width_pt_ > 0 && height_pt_ > 0 )
+	{
+		if( legend_.x ) rel_x = *legend_.x / width_pt_;
+		if( legend_.y ) rel_y = *legend_.y / height_pt_;
+		if( legend_.width ) rel_width = *legend_.width / width_pt_;
+		if( legend_.height ) rel_height = *legend_.height / height_pt_;
+	}
+
+	chart_context.set_legend	( legend_, rel_x, rel_y, rel_width, rel_height );
 	chart_context.set_data_table(data_table_);
 
 	chart_context.set_plot_area_properties (plot_area_.properties_, plot_area_.fill_);
@@ -458,7 +469,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 
  	for (size_t i = 0; i < series_.size(); i++)
 	{
-		if (series_[i].class_ != last_set_class)			//разные типы серий в диаграмме - например бар и линия.
+		if (series_[i].class_ != last_set_class)			//different series types in chart - e.g. bar and line.
 		{
 			chart_context.add_chart(series_[i].class_);
 			last_set_class = series_[i].class_;
@@ -487,10 +498,10 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		if (series_[i].cell_range_address_.empty())
 			series_[i].cell_range_address_ = domain_cell_range_adress2_;
 		
-		//тут данные нужно поделить по столбцам или строкам - так как в плот-ареа общий диапазон
-		//первый столбец-строка МОЖЕт использоваться для подписей
-		//каждая серия берет каждый последующий диапазрн
-		//такое определение - редкость = todooo
+		//here the data needs to be split by columns or rows - since plot-area has a common range
+		//first column-row MAY be used for labels
+		//each series takes each subsequent range
+		//such definition is rare = todooo
 		
 		std::vector<std::wstring>		domain_cash;
 		std::vector<std::wstring>		cell_cash;
@@ -502,7 +513,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		calc_cache_series (series_[i].label_cell_address_,		label_cash);
 		
 		if (chart_context.no_used_local_tables_ && false == table_name_.empty())
-		{//убрать ссылки на локальную таблицу кэшей
+		{//remove references to local cache table
 			if (std::wstring::npos != series_[i].cell_range_address_.find(table_name_))
 			{
 				series_[i].cell_range_address_.clear();
@@ -514,7 +525,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 		}		
 		
 		if (false == categories_.empty())
-		{//вычищать от локальных ссылок нельзя. может использоваться в последующих сериях
+		{//cannot clear local references. may be used in subsequent series
 			calc_cache_series (categories_[0],	cat_cash);
 		}
 
@@ -580,7 +591,7 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 			current->set_values_series(1, cell_cash);
 		}
 
-		if (categories_.empty() == false)//названия 
+		if (categories_.empty() == false)//names/labels 
 		{
 			if (chart_context.no_used_local_tables_)
 			{
@@ -623,11 +634,11 @@ void object_odf_context::oox_convert(oox::oox_chart_context & chart_context)
 				last_set_class == chart_class::bubble) a.type_ = 2;
 
 			if (class_ == chart_class::stock && a.type_ == 3 )		
-				a.type_ = 4; //шкала дат.
+				a.type_ = 4; //date scale
 
 			if (bIs3D.get_value_or(false))
 			{
-				a.type_ = 1; // шкала категорий
+				a.type_ = 1; // category scale
 			}
 			
 			x_enabled = true;
@@ -867,17 +878,17 @@ void process_build_object::visit(office_chart& val)
 void process_build_object::visit(office_text& val)
 {
 	object_odf_context_.object_type_ = 2;
-	object_odf_context_.office_text_ = &val;	//конвертация будет уровнем выше
+	object_odf_context_.office_text_ = &val;	//conversion will be at a higher level
 }
 void process_build_object::visit(office_math& val)
 {
-	object_odf_context_.object_type_ = 3;		//= 0 - временно замещающая картинка
-	object_odf_context_.office_math_ = &val;	//конвертация будет уровнем выше
+	object_odf_context_.object_type_ = 3;		//= 0 - temporary placeholder image
+	object_odf_context_.office_math_ = &val;	//conversion will be at a higher level
 }
 void process_build_object::visit(office_spreadsheet& val)
 {
 	object_odf_context_.object_type_		= 4;	
-	object_odf_context_.office_spreadsheet_ = &val;	//конвертация будет уровнем выше
+	object_odf_context_.office_spreadsheet_ = &val;	//conversion will be at a higher level
 }
 void process_build_object::visit(chart_chart& val)
 {
@@ -988,6 +999,17 @@ void process_build_object::visit(chart_legend& val)
 		//if ( pos == L"center")		object_odf_context_.legend_.align = L"l"; 
 		//if ( pos == L"end")			object_odf_context_.legend_.align = L"t"; 
 	}
+	if (val.attlist_.common_draw_position_attlist_.svg_x_)
+		    object_odf_context_.legend_.x = val.attlist_.common_draw_position_attlist_.svg_x_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_position_attlist_.svg_y_)
+		object_odf_context_.legend_.y = val.attlist_.common_draw_position_attlist_.svg_y_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_size_attlist_.svg_width_)
+		object_odf_context_.legend_.width = val.attlist_.common_draw_size_attlist_.svg_width_->get_value_unit(odf_types::length::pt);
+
+	if (val.attlist_.common_draw_size_attlist_.svg_height_)
+		object_odf_context_.legend_.height = val.attlist_.common_draw_size_attlist_.svg_height_->get_value_unit(odf_types::length::pt);
 	
 	ApplyChartProperties	(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""),	object_odf_context_.legend_.properties_);
 	ApplyGraphicProperties	(val.attlist_.common_attlist_.chart_style_name_.get_value_or(L""),	object_odf_context_.legend_.graphic_properties_, object_odf_context_.legend_.fill_);

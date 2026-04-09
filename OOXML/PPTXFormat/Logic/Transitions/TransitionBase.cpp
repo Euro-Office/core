@@ -140,7 +140,7 @@ namespace PPTX
 		}
 		TransitionSerialize& TransitionSerialize::operator =(const TransitionSerialize& src)
 		{
-			//проверка на самоприсваивание
+			//check for self-assignment
 			if (this == &src) {
 				return *this;
 			}
@@ -225,7 +225,7 @@ namespace PPTX
 
 			pWriter->StartAttributes();
 
-			//и нафига тогда листы?? - примем аксиомно что размеры одинаковые
+			//why use lists then?? - we assume that sizes are the same
 			//size_t c1 = m_strAttributesNames.GetCount();
 			//size_t c2 = m_strAttributesValues.GetCount();
 

@@ -76,8 +76,8 @@ namespace OOX
 			nullable<SimpleTypes::CLongHexNumber>	m_oRsidDel;
 			nullable<SimpleTypes::CLongHexNumber>	m_oRsidR;
 			nullable<SimpleTypes::CLongHexNumber>	m_oRsidRPr;
-			OOX::Logic::CRunProperty				*m_oRunProperty;	// копия того что в m_arrItems...  - для быстрого доступа/анализа
-			// по идее нужно сделать как в Drawing::Run - то есть единственные подобъекты вынести отдельно
+			OOX::Logic::CRunProperty				*m_oRunProperty;	// copy of what's in m_arrItems...  - for quick access/analysis
+			// ideally should be done like in Drawing::Run - i.e. move single sub-objects separately
 			WritingElement *m_oParent = NULL;
 		};
 	} // namespace Logic

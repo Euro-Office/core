@@ -65,7 +65,7 @@ namespace Oox2Odf
 			{
 				strId = strId.substr(1);
 			}
-			//if (m_mapShapeTypes.find(strId) == m_mapShapeTypes.end())//?? с затиранием ???
+			//if (m_mapShapeTypes.find(strId) == m_mapShapeTypes.end())//?? with overwriting ???
 			{
 				m_mapVmlShapeTypes.insert(std::make_pair(strId, vml_shape_type));
 			}
@@ -429,7 +429,7 @@ namespace Oox2Odf
 			pathImage = find_link_by_id(sID, 1, bExternal);
 		}
 
-		//что именно нужно заливка объекта или картинка - разрулится внутри drawing_context
+		// whether object fill or image is needed - will be resolved inside drawing_context
 		if (pathImage.empty())return;
 
 		_graphics_utils_::GetResolution(pathImage.c_str(), Width, Height);
@@ -838,7 +838,7 @@ namespace Oox2Odf
 	}
 	void OoxConverter::convert(OOX::Vml::CTextPath *vml_textpath)
 	{
-		if (vml_textpath == NULL) return; //это типо фигурный текст
+		if (vml_textpath == NULL) return; // this is like decorative text
 
 		if (vml_textpath->m_sString.IsInit() == false) return;
 
@@ -861,7 +861,7 @@ namespace Oox2Odf
 					//height = vml_textpath->m_oStyle->m_arrProperties[i]->get_Value().oValue.dValue;
 					break;
 				case SimpleTypes::Vml::cssptFontSize:
-					//todooo проверять на размерность
+					// todooo check for dimension
 					text_properties->fo_font_size_ = odf_types::length(vml_textpath->m_oStyle->m_arrProperties[i]->get_Value().oValue.dValue, odf_types::length::pt);
 					break;
 				case SimpleTypes::Vml::cssptFontStyle:
@@ -1063,6 +1063,11 @@ namespace Oox2Odf
 			odf_context()->drawing_context()->start_area_properties();
 			odf_context()->drawing_context()->set_no_fill();
 			odf_context()->drawing_context()->end_area_properties();
+		}
+
+		if (vml_common->m_oHr.IsInit() && (*vml_common->m_oHr))
+		{
+			odf_context()->drawing_context()->set_horizontal_rule();
 		}
 	}
 	void OoxConverter::convert(OOX::Vml::CGroup *vml_group)

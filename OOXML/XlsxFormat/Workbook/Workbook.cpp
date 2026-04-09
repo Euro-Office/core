@@ -468,20 +468,7 @@ namespace OOX
 			auto objectPtr = XLS::BaseObjectPtr(globalsSubstream);
 			if(m_oSheets.IsInit())
 			{
-				std::vector<_UINT16> SheetTypes;
-				for(auto i: m_oSheets->m_arrItems)
-				{
-					_UINT16 type = 0;
-					if(i->m_oRid.IsInit())
-					{
-						RId rid(i->m_oRid->GetValue());
-						auto sheetFile = Get<OOX::File>(rid);
-						if(sheetFile->type() == OOX::Spreadsheet::FileTypes::Chartsheets)
-							type = 2;
-					}
-					SheetTypes.push_back(type);
-				}
-				m_oSheets->toXLS(objectPtr, SheetTypes);
+				m_oSheets->toXLS(objectPtr);
 			}
 			if(m_oDefinedNames.IsInit())
 				m_oDefinedNames->toXLS(objectPtr);
@@ -564,7 +551,7 @@ namespace OOX
 				}
 			}
 
-			IFileContainer::Read(oRootPath, oPath); //в данном случае порядок считывания важен для xlsb
+			IFileContainer::Read(oRootPath, oPath); //in this case reading order is important for xlsb
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(File::m_pMainDocument);
 			if (xlsx)
@@ -573,7 +560,7 @@ namespace OOX
 				{
 					m_bMacroEnabled = true;
 				}
-				//дубли листов
+				//duplicate sheets
 				for (auto elm : this->m_mapContainer)
 				{
 					if (elm.second->type() == OOX::Spreadsheet::FileTypes::Chartsheets || elm.second->type() == OOX::Spreadsheet::FileTypes::Worksheet)
@@ -753,7 +740,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 			//WorkbookPr
 			if (false == m_oWorkbookPr.IsInit())
 				m_oWorkbookPr.Init();
-			//todo если этот параметр выставлен, то берется стандартная тема, а не из файла.
+			//todo if this parameter is set, then the standard theme is used, not from the file.
 			//if(false == m_oWorkbookPr->m_oDefaultThemeVersion.IsInit())
 			//{
 			//	m_oWorkbookPr->m_oDefaultThemeVersion.Init();
@@ -792,7 +779,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		LONG CWorkbook::GetActiveSheetIndex()
 		{
 			LONG lActiveSheet = 0;
-			std::wstring sSheetRId = L"Sheet1"; // Читаем не по rId, а по имени листа
+			std::wstring sSheetRId = L"Sheet1"; // Read by sheet name, not by rId
 												// Get active sheet
 			if (m_oBookViews.IsInit() && !m_oBookViews->m_arrItems.empty())
 			{

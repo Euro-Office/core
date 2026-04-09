@@ -82,8 +82,8 @@ namespace NSShapeImageGen
 		int n3 = (int)strFile.find(L"ftp");
 		int n4 = (int)strFile.find(L"https");
 
-		//если nI сранивать не с 0, то будут проблемы
-		//потому что в инсталяции мы кладем файлы в /var/www...
+		//if nI is compared not with 0, there will be problems
+		//because in installation we put files in /var/www...
 		if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			bIsDownload = true;
 
@@ -145,8 +145,8 @@ namespace NSShapeImageGen
 		int n3 = (int)strFile.find (L"ftp");
 		int n4 = (int)strFile.find (L"https");
 
-		//если nI сранивать не с 0, то будут проблемы
-		//потому что в инсталяции мы кладем файлы в /var/www...
+		//if nI is compared not with 0, there will be problems
+		//because in installation we put files in /var/www...
 		if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			bIsDownload = true;
 
@@ -312,7 +312,7 @@ namespace NSShapeImageGen
 
 		if (false == result)
 		{
-			//конвертация неудачная - берем оригинальный файл
+			//conversion failed - use original file
 			OOX::CPath pathOriginal = strFileSrc;
 
 			//default is itJPG. set itUnknown to use original extension
@@ -392,7 +392,7 @@ namespace NSShapeImageGen
 		std::map<DWORD, CMediaInfo>::iterator pPair = m_mapMediaData.find(dwSum);
 		if (m_mapMediaData.end() == pPair)
 		{
-			// нужно добавить
+			// need to add
 			++m_lNextIDImage;
 			
 			oInfo.m_lID = m_lNextIDImage;
@@ -515,7 +515,7 @@ namespace NSShapeImageGen
 
 				if (pMetafile->LoadFromFile(strFileName.c_str()))
 				{
-					// пробуем сохранить в svg напрямую из метафайлов
+					// try to save to svg directly from metafiles
 					std::wstring sInternalSvg = pMetafile->ConvertToSvg(lWidth, lHeight);
 
 					if (!sInternalSvg.empty())
@@ -527,8 +527,8 @@ namespace NSShapeImageGen
 						return oInfo;
 					}
 
-					// не смогли сконвертировать в svg.
-					// пробуем в png
+					// couldn't convert to svg.
+					// try png
 
 					std::wstring strSaveItem = strSaveItemWE + L".png";
 					pMetafile->ConvertToRaster(strSaveItem.c_str(), 4 /*CXIMAGE_FORMAT_PNG*/,  lWidth, lHeight);

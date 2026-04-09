@@ -487,7 +487,7 @@ namespace ZLibZipUtils
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
-		//todooo есть ли необходимость свести все к нижнему ???
+		//todooo is there a need to convert everything to lowercase ???
 		if (wcscmp(filename, filenameW.c_str()) == 0)
 			return true;
 

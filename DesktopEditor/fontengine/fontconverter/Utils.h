@@ -45,9 +45,9 @@ namespace NSFontConverter
 {
     struct TCharBuffer
     {
-        char *sBuffer;  // Буфер
-        int   nSize;    // Реальный размер буфера
-        int   nLen;     // Фактический размер буфера (т.е. размер используемой части буфера)
+        char *sBuffer;  // Buffer
+        int   nSize;    // Actual buffer size
+        int   nLen;     // Effective buffer size (i.e., size of the used portion of the buffer)
 
         TCharBuffer(int _initsize = 32)
         {
@@ -173,7 +173,7 @@ namespace NSFontConverter
         }
     }
 
-    // Функция взята из Graphics.dll
+    // Function taken from Graphics.dll
     static int SetCMapForCharCode(FT_Face pFace, long lUnicode, int *pnCMapIndex)
     {
         *pnCMapIndex = -1;
@@ -256,7 +256,7 @@ namespace NSFontConverter
         if ( NULL == pOs2 || 0xFFFF == pOs2->version )
             return -1;
 
-        // Проверяем установлен ли 31 бит
+        // Check if bit 31 is set
         if ( !( pOs2->ulCodePageRange1 & 0x80000000 ) && !( pOs2->ulCodePageRange1 == 0 && pOs2->ulCodePageRange2 == 0 ) )
             return -1;
 

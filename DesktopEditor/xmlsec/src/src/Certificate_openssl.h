@@ -666,10 +666,10 @@ public:
 
 		X509_STORE* x509_store = X509_STORE_new();
 		X509_STORE_add_cert(x509_store, m_cert);
-		// Нужно ли доверять сертификату, если нет доступа к локальному хранилищу сертификатов?
+		// Should we trust the certificate if there is no access to the local certificate store?
 		// X509_STORE_set_flags(x509_store, X509_V_FLAG_PARTIAL_CHAIN);
 
-		// Получала X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY
+		// Was getting X509_V_ERR_UNABLE_TO_GET_ISSUER_CERT_LOCALLY
 		if (PKCS7_verify(pkcs7, NULL, x509_store, inputbio, out_verify, PKCS7_NOCHAIN | PKCS7_NOSIGS) == 1)
 		{
 			nRes |= (1 << 0); // NOT CHANGED
@@ -687,7 +687,7 @@ public:
 			}
 		}
 
-		/* Извлечение сертификата из подписи. Работает
+		/* Extracting certificate from signature. Works
 		PKCS7 *p7enc = d2i_PKCS7_bio(out_verify, NULL);
 		BIO* csr_bio = BIO_new(BIO_s_mem());
 		if (PKCS7_decrypt(p7enc, m_key, m_cert, csr_bio, 0))

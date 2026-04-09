@@ -40,15 +40,15 @@
 class CurrencyReader
 {
 public:
-    /// @brief проверка постфикса на валидность валюте
-    /// @param postfix проверяющийся на валидность валюте
-    /// @return true если постфикс валютный иначе false
+    /// @brief check postfix for currency validity
+    /// @param postfix being checked for currency validity
+    /// @return true if postfix is currency otherwise false
     bool CheckPostfix(const std::wstring &postfix);
 
-    /// @brief получение даты в виде числа в формате excel
-    /// @param inputFormat формат в котором представлено число валюты
-    /// @param currency валюта формат которой будет проверен
-    /// @return формат числа с использованием переданной валюты в строковом виде
+    /// @brief get currency format in excel format
+    /// @param inputFormat format in which currency number is presented
+    /// @param currency currency whose format will be checked
+    /// @return number format with passed currency in string form
     std::wstring GetCurrencyFormat(const std::wstring &inputFormat,const std::wstring &currency);
 };
 

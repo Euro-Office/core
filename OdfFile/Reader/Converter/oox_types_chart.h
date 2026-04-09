@@ -215,9 +215,9 @@ class oox_bubble_chart: public oox_chart
 	~oox_bubble_chart(){}
  	
 	virtual void oox_serialize(std::wostream & _Wostream);
-	virtual void add_series(int id);//тип серии чотко соответствует типу самого чарта - если нужны смешанные типы - нужно добавлять свой чарт.
+	virtual void add_series(int id);//series type strictly corresponds to chart type - if mixed types needed - add your own chart
 	virtual void set_properties(odf_reader::chart_format_properties_ptr & prop);
-	// то есть первична серия - в отличии от одф
+	// that is, series is primary - unlike odf
 
 	static _CP_PTR(oox_chart) create();
 

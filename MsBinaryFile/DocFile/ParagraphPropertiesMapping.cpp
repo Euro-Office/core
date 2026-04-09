@@ -461,7 +461,7 @@ namespace DocFileFormat
 
 				case sprmPIlfo:
 				{
-					//Если numbering.xml пустой, то не пищем свойство
+					//If numbering.xml is empty, do not write the property
 					if (NULL != m_document->listTable && false == m_document->listTable->listData.empty())
 					{
 						unsigned short numId = FormatUtils::BytesToUInt16( iter->Arguments, 0, iter->argumentsSize );
@@ -668,7 +668,7 @@ namespace DocFileFormat
 
 			if (sectionPropertiesMapping->get_section_type() == L"nextPage")
 			{
-				//в этом параграфе уже есть разрыв страницы - br на page не нужен
+				//this paragraph already has a page break - br to page is not needed
 				//Vinci_Customer_Case_Study.doc
 				_isSectionPageBreak = 1;
 			}

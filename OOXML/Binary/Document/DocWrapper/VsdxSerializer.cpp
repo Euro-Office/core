@@ -57,7 +57,7 @@ namespace BinVsdxRW
         OOX::CPath pathMediaDir = sDstPath + FILE_SEPARATOR_STR + _T("visio") + FILE_SEPARATOR_STR + _T("media");
 		OOX::CPath pathEmbedDir = sDstPath + FILE_SEPARATOR_STR + _T("visio") + FILE_SEPARATOR_STR + _T("embeddings");
 		
-        //создавать папку надо даже при сохранении в csv, потому что когда читаем из бинарника тему, она записывается в файл.
+        // need to create folder even when saving to csv, because when reading theme from binary, it is written to file.
         OOX::CPath pathVDir = sDstPath + FILE_SEPARATOR_STR + _T("visio");
 
         OOX::CPath pathThemeDir = pathVDir + FILE_SEPARATOR_STR + OOX::FileTypes::Theme.DefaultDirectory().GetPath();

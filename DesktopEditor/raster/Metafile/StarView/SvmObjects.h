@@ -402,7 +402,7 @@ public:
 
 	std::wstring  sFamilyName;
 	std::wstring  sStyle;
-	// Согласно спецификации длина имени не должна превышать 32 знака с учетом нулевого символа в конце
+	// According to specification, name length should not exceed 32 characters including null terminator
 };
 
 class CSvmPen : public CSvmObjectBase, public IPen

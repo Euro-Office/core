@@ -95,10 +95,10 @@ namespace Writers
 			headers_footers.Write(bGlossary);
 			footnotes.Write(bGlossary);
 			endnotes.Write(bGlossary);
-			//Setting пишем после HeaderFooter, чтобы заполнить evenAndOddHeaders
+			//Write settings after HeaderFooter to fill evenAndOddHeaders
 			settings.Write(bGlossary);
 			web_settings.Write(bGlossary);
-			//Document пишем после HeaderFooter, чтобы заполнить sectPr
+			//Write document after HeaderFooter to fill sectPr
 			document.Write(bGlossary);
 
 		}

@@ -44,7 +44,7 @@
 namespace NSFontConverter
 {
     //------------------------------------------------------------------------
-    // Аналогично malloc, но с обработкой ошибок.
+    // Similar to malloc, but with error handling.
     static void *MemUtilsMalloc(int nSize)
     {
         void *pResult;
@@ -54,14 +54,14 @@ namespace NSFontConverter
 
         if ( !( pResult = malloc( nSize ) ) )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return pResult;
     }
 
 
-    // Тоже что и realloc, но с обработкой ошибок.
-    // Если <pData> NULL, вызывается функция malloc вместо realloc.
+    // Same as realloc, but with error handling.
+    // If <pData> is NULL, malloc is called instead of realloc.
     static void *MemUtilsRealloc(void *pData, int nSize)
     {
         void *pResult;
@@ -78,17 +78,17 @@ namespace NSFontConverter
             pResult = malloc( nSize );
         if ( !pResult )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return pResult;
     }
 
 
-    // Тоже самое, что и MemUtilsMalloc and MemUtilsRelloc, толькоt
-    // учитывает количество элементов и размер элемента. В результате
-    // выделяется память размером nObjectsCount * nObjectSize байт.
-    // Кроме того присутствует обработка ошибок и проверка того, чтобы
-    // суммарный размер не превышал предел для int.
+    // Same as MemUtilsMalloc and MemUtilsRealloc, but
+    // takes into account the number of elements and element size. As a result
+    // memory of size nObjectsCount * nObjectSize bytes is allocated.
+    // Also includes error handling and validation that
+    // total size does not exceed the limit for int.
     static void *MemUtilsMallocArray(int nObjectsCount, int nObjectSize)
     {
         if ( 0 == nObjectsCount )
@@ -97,12 +97,12 @@ namespace NSFontConverter
         int nSize = nObjectsCount * nObjectSize;
         if ( nObjectSize <= 0 || nObjectsCount < 0 || nObjectsCount >= 0x7fffffff / nObjectSize )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return MemUtilsMalloc( nSize );
     }
 
-    // Тоже что и free, но проверяет и игнорирует NULL-указатели.
+    // Same as free, but checks and ignores NULL pointers.
     static void MemUtilsFree(void *pData)
     {
         if ( pData )
@@ -121,12 +121,12 @@ namespace NSFontConverter
 
         if ( nObjectSize <= 0 || nObjectsCount < 0 || nObjectsCount >= 0x7fffffff / nObjectSize )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return MemUtilsRealloc( pData, nSize );
     }
 
-    // Выделяем память и копируем туда строку.
+    // Allocate memory and copy the string there.
     static char *CopyString(char *sString)
     {
         char *sResult = (char *)MemUtilsMalloc( strlen( sString ) + 1 );

@@ -435,7 +435,7 @@ public:
         }
         else
         {
-            // Избавляемся от нулей, потому что все pdf-ридеры плохо их воспринимают
+            // Remove zeros because all pdf readers handle them poorly
             std::vector<double> vPattern;
             for (LONG lIndex = 0; lIndex < lSize; lIndex++)
             {
@@ -727,7 +727,7 @@ public:
     }
     inline void         SetGradientColors(LONG* pColors, double* pPoints, const LONG& lCount)
     {
-        // Мы создаем упорядоченный по возрастанию массив, причем первая и последняя точки должны быть 0 и 1 соответственно.
+        // We create an array sorted in ascending order, with the first and last points being 0 and 1 respectively.
         if (m_pShadingColors)
         {
             delete[] m_pShadingColors;
@@ -743,7 +743,7 @@ public:
         if (!pColors || !pPoints || !lCount)
             return;
 
-        // Проверим вырожденный случай, когда задана либо 1 точка, либо несколько точек с одинковым значением
+        // Check degenerate case when either 1 point is given, or several points with the same value
         bool bIrregular = false;
         if (1 == lCount)
         {
@@ -1113,7 +1113,7 @@ private:
     TColor*      m_pShadingColors;
     double*      m_pShadingPoints;
     LONG         m_lShadingPointsCount;
-    double       m_pShadingPattern[6]; // У линейного градиента x0, y0, x1, y1 (2 не используются), у радиального x0, y0, r0, x1, y1, r1
+    double       m_pShadingPattern[6]; // For linear gradient x0, y0, x1, y1 (2 unused), for radial x0, y0, r0, x1, y1, r1
 
 	bool         m_bIsScale;
 	double       m_dScaleX;
@@ -1477,7 +1477,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate properly
             dX = x;
             dY = y;
         }
@@ -1506,7 +1506,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate properly
             dX = 0;
             dY = 0;
         }
@@ -1818,7 +1818,7 @@ public:
     {
         double dGoodFontSize = 0;
 
-        // Параметры подобраны для совместимости с AdobeReader
+        // Parameters selected for AdobeReader compatibility
         double dFontSize     = 4;
         double dFontSizeStep = 0.797 / 3.0;
 

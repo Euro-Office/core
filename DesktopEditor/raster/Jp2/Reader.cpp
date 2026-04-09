@@ -42,7 +42,7 @@ namespace Jpeg2000
 		return *pStream->pCurPos++;
 	}
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Основные функции
+	// Main functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 	ByteIO*        ByteIO_Open(PCommon pInfo, unsigned char *pBuffer, int nLength)
 	{
@@ -62,7 +62,7 @@ namespace Jpeg2000
 		}
 		else if (!pBuffer && !nLength && pInfo)
 		{
-			// Выделяем память для закодировнного изображения
+			// Allocate memory for encoded image
 			pStream->nMode = STREAM_WRITE;
 			switch (pInfo->eCodecFormat)
 			{
@@ -90,7 +90,7 @@ namespace Jpeg2000
 			return NULL;
 		}
 
-		// Инициализируем поток
+		// Initialize stream
 		pStream->pStart  = pStream->pBuffer;
 		pStream->pEnd    = pStream->pBuffer + pStream->nLength;
 		pStream->pCurPos = pStream->pBuffer;

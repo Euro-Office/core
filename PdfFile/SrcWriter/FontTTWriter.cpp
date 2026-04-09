@@ -374,14 +374,14 @@ namespace PdfWriter
 		unsigned int t;
 		int nPos = 0, i, j, k, n;
 
-		// Записываем OpenType шрифт не меняя его
+		// Write OpenType font without modifying it
 		if (m_bOpenTypeCFF)
 		{
 			WriteCIDFontType0C(pOutputStream, pCodeToGID, unCodesCount);
 			return;
 		}
 
-		// Проверяем недостающие таблицы
+		// Check for missing tables
 		bool bMissingCmap = (nCmapIndex = SeekTable("cmap")) < 0;
 		bool bMissingName = SeekTable("name") < 0;
 		bool bMissingPost = SeekTable("post") < 0;
@@ -407,8 +407,8 @@ namespace PdfWriter
 			{
 				bUnsortedLoca = true;
 			}
-			// Описание глифа должны быть как минимум 12 байт (nContours,
-			// xMin, yMin, xMax, yMax, instructionLength - каждый по 2 байта);
+			// Glyph description must be at least 12 bytes (nContours,
+			// xMin, yMin, xMax, yMax, instructionLength - 2 bytes each);
 			if (i > 0 && pLocaTable[i].nOrigOffset - pLocaTable[i - 1].nOrigOffset > 0 && pLocaTable[i].nOrigOffset - pLocaTable[i - 1].nOrigOffset < 12)
 			{
 				pLocaTable[i - 1].nOrigOffset = pLocaTable[i].nOrigOffset;
@@ -417,7 +417,7 @@ namespace PdfWriter
 			pLocaTable[i].nIndex = i;
 		}
 
-		// Проверяем наличие нулевых таблиц
+		// Check for zero-length tables
 		nZeroLengthTables = 0;
 		for (i = 0; i < m_nTablesCount; ++i)
 		{
@@ -425,7 +425,7 @@ namespace PdfWriter
 				++nZeroLengthTables;
 		}
 
-		// Проверяем длину таблицы Cmap
+		// Check Cmap table length
 		badCmapLen = false;
 		nCmapLen = 0;
 		if (!bMissingCmap)
@@ -445,12 +445,12 @@ namespace PdfWriter
 			}
 		}
 
-		// Проверяем, является ли таблица 'hmtx' сокращенной.
+		// Check if 'hmtx' table is abbreviated.
 		i = SeekTable("hhea");
 		nHMetrics = GetU16BE(m_pTables[i].nOffset + 34, &bSuccess);
 		abbrevHMTX = nHMetrics < m_nGlyphs;
 
-		// Если все впорядке, и нам не надо переписывать таблицы 'cmap' и 'name', тогда пишем файл TTF как он есть
+		// If everything is fine and we don't need to rewrite 'cmap' and 'name' tables, write TTF file as is
 		if (!bMissingCmap && !bMissingName && !bMissingPost && !bMissingOS2 && !bUnsortedLoca && !badCmapLen && !abbrevHMTX && nZeroLengthTables == 0 && !sName && !pCodeToGID)
 		{
 			pOutputStream->Write((BYTE *)m_sFile, m_nLen);
@@ -458,12 +458,12 @@ namespace PdfWriter
 			return;
 		}
 
-		// Сортируем таблицу 'loca': некоторые шрифты содержат неупорядоченную
-		// таблицу 'loca'; а некоторые шрифты с нормальной таблицей 'loca' 
-		// содержат пустые элементы в середине таблицы, cmpTrueTypeLocaOffset
-		// использует сдвиги как основной ключ для сортировки, а номера глифов
-		// как второй ключ (чтобы элементы в таблице, которые имели одинаковую позицию 
-		// шли в том же порядке, как и в исходном шрифте)
+		// Sort 'loca' table: some fonts contain unsorted 'loca' table;
+		// and some fonts with normal 'loca' table contain empty elements
+		// in the middle of the table, cmpTrueTypeLocaOffset uses offsets
+		// as primary sort key, and glyph numbers as secondary key
+		// (so that elements with the same position go in the same order
+		// as in the original font)
 		nGlyphLen = 0;
 		if (bUnsortedLoca || pUseGlyfs)
 		{
@@ -478,7 +478,7 @@ namespace PdfWriter
 
 			for (i = 0; i <= m_nGlyphs; ++i)
 			{
-				// TO DO: Протестировать тут запись только тех глифов, которые нам нужны
+				// TO DO: Test writing only the glyphs that we need here
 
 				if (pUseGlyfs && lGlyfsCount == m_nGlyphs)
 				{
@@ -510,7 +510,7 @@ namespace PdfWriter
 			nGlyphLen = nPos;
 		}
 
-		// Вычисляем чексуммы таблиц 'loca' и 'glyf'
+		// Calculate checksums for 'loca' and 'glyf' tables
 		nLocaChecksum = nGlyphChecksum = 0;
 		if (bUnsortedLoca || pUseGlyfs)
 		{
@@ -547,7 +547,7 @@ namespace PdfWriter
 			}
 		}
 
-		// Строим новую таблицу 'name'
+		// Build new 'name' table
 		if (sName)
 		{
 			n = strlen(sName);
@@ -597,7 +597,7 @@ namespace PdfWriter
 			arrNewNameTable = NULL;
 		}
 
-		// Строим новую таблицу 'cmap'
+		// Build new 'cmap' table
 		if (pCodeToGID)
 		{
 			unsigned short ushSubTableLen = 10 + unCodesCount * 2;
@@ -607,9 +607,9 @@ namespace PdfWriter
 			arrNewCmapTable[1] = 0;           //
 			arrNewCmapTable[2] = 0;           // number of encoding tables = 1
 			arrNewCmapTable[3] = 1;           //
-			arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // Эти два поля обязательно должны
-			arrNewCmapTable[5] = 1;           //                         // иметь таки значения, иначе, Adobe
-			arrNewCmapTable[6] = 0;           // encoding ID = 0         // Acrobat может открыть данный шрифт.
+			arrNewCmapTable[4] = 0;           // platform ID = 1 (MacOS) // These two fields must have
+			arrNewCmapTable[5] = 1;           //                         // these values, otherwise Adobe
+			arrNewCmapTable[6] = 0;           // encoding ID = 0         // Acrobat cannot open this font.
 			arrNewCmapTable[7] = 0;           //
 			arrNewCmapTable[8] = 0;           // offset of subtable
 			arrNewCmapTable[9] = 0;           //
@@ -638,7 +638,7 @@ namespace PdfWriter
 			arrNewCmapTable = NULL;
 		}
 
-		// Генерируем новую таблицу 'hmtx' и обновляем таблицу 'hhea'
+		// Generate new 'hmtx' table and update 'hhea' table
 		if (abbrevHMTX)
 		{
 			i = SeekTable("hhea");
@@ -682,13 +682,13 @@ namespace PdfWriter
 			nNewHHEALen = nNewHMTXLen = 0;
 		}
 
-		// Создаем список таблиц:
-		// - сохраняем исходные ненулевые таблицы
-		// - переписываем длину таблицы 'cmap', если необходимо
-		// - добавляем недостающие таблицы
-		// - сортируем таблицы по тэгам
-		// - вычисляем новые позиции таблиц, с учетом 4-байтового выравнивания
-		// - пересчитываем чексуммы таблиц
+		// Create table list:
+		// - keep original non-zero tables
+		// - rewrite 'cmap' table length if necessary
+		// - add missing tables
+		// - sort tables by tags
+		// - calculate new table positions with 4-byte alignment
+		// - recalculate table checksums
 		nNewTables = m_nTablesCount - nZeroLengthTables + (bMissingCmap ? 1 : 0) + (bMissingName ? 1 : 0) + (bMissingPost ? 1 : 0) + (bMissingOS2 ? 1 : 0);
 		pNewTables = (TrueTypeTable *)malloc(nNewTables * sizeof(TrueTypeTable));
 		j = 0;
@@ -832,7 +832,7 @@ namespace PdfWriter
 			}
 		}
 
-		// Записываем информацию о таблицах в файле
+		// Write table information to file
 		arrTableDir = (char *)malloc(12 + nNewReqTables * 16);
 		arrTableDir[0] = 0x00; // sfnt version
 		arrTableDir[1] = 0x01; //
@@ -875,7 +875,7 @@ namespace PdfWriter
 		}
 		pOutputStream->Write((BYTE*)arrTableDir, 12 + nNewReqTables * 16);
 
-		// Вычисляем чексумму файла
+		// Calculate file checksum
 		nFileChecksum = ComputeTableChecksum((unsigned char *)arrTableDir, 12 + nNewReqTables * 16);
 		for (i = 0; i < nNewTables; ++i)
 		{
@@ -886,7 +886,7 @@ namespace PdfWriter
 		}
 		nFileChecksum = 0xb1b0afba - nFileChecksum;
 
-		// Записываем сами таблицы
+		// Write the tables themselves
 		for (i = 0; i < nNewTables; ++i)
 		{
 			if (1 == pUseTable[i])
@@ -1010,7 +1010,7 @@ namespace PdfWriter
 		if (!m_bOpenTypeCFF || SeekTable("CFF ") < 0)
 			return;
 
-		// Open Type Font записываем так как он есть, не изменяя его
+		// Write Open Type Font as is, without modifying it
 		pOutputStream->Write((BYTE*)m_sFile, m_nLen);
 
 		return;
@@ -1071,7 +1071,7 @@ namespace PdfWriter
 
 		m_bSuccess = true;
 
-		// Проверяем является ли данный файл (TTC)
+		// Check if this file is a TTC collection
 		unsigned int unTopTag = GetU32BE(0, &m_bSuccess);
 		if (!m_bSuccess)
 			return;
@@ -1088,12 +1088,12 @@ namespace PdfWriter
 		else
 			nPos = 0;
 
-		// Проверяем sfnt версию
+		// Check sfnt version
 		int nSfntVersion = GetU32BE(nPos, &m_bSuccess);
 		if (!m_bSuccess)
 			return;
 
-		// Проверяем на формат данных. CCF или нет?
+		// Check data format. CFF or not?
 		m_bOpenTypeCFF = (nSfntVersion == 0x4f54544f); // 'OTTO'
 
 		m_nTablesCount = GetU16BE(nPos + 4, &m_bSuccess);
@@ -1116,14 +1116,14 @@ namespace PdfWriter
 		if (!m_bSuccess)
 			return;
 
-		// ищем таблицы необходимые как и для TrueType так и для Type 42 
+		// Look for tables required for both TrueType and Type 42
 		if (SeekTable("head") < 0 || SeekTable("hhea") < 0 || SeekTable("maxp") < 0 || SeekTable("hmtx") < 0 || (!m_bOpenTypeCFF && SeekTable("loca") < 0) || (!m_bOpenTypeCFF && SeekTable("glyf") < 0) || (m_bOpenTypeCFF && SeekTable("CFF ") < 0))
 		{
 			m_bSuccess = false;
 			return;
 		}
 
-		// читаем таблицы CMaps
+		// Read CMaps tables
 		if ((nIndex = SeekTable("cmap")) >= 0)
 		{
 			nPos = m_pTables[nIndex].nOffset + 2;
@@ -1164,7 +1164,7 @@ namespace PdfWriter
 		if (!m_bSuccess)
 			return;
 
-		// Проверяем корректность таблицы loca
+		// Check loca table correctness
 		if (!m_bOpenTypeCFF)
 		{
 			nIndex = SeekTable("loca");

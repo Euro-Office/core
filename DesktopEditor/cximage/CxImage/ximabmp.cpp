@@ -227,8 +227,8 @@ bool CxImageBMP::Decode(CxFile * hFile)
 		case 1 :
 			if (off + bf.bfOffBits < bmpHeader.biSize)
 			{
-				// ОШИБКА
-				// файлы паттерных заливок автофигур в ppt файлах !!!
+				// ERROR
+				// pattern fill files of autoshapes in ppt files !!!
 			}
 			else
 			{
@@ -414,6 +414,34 @@ bool CxImageBMP::DibReadBitmapInfo(CxFile* fh, BITMAPINFOHEADER *pdib)
     if (fh->Read(pdib,sizeof(BITMAPINFOHEADER),1)==0) return false;
 
 	bihtoh(pdib);
+
+	if (pdib->biSize < sizeof(BITMAPCOREHEADER))
+		return false;
+
+	if (pdib->biBitCount != 0  && pdib->biBitCount != 1  &&
+		pdib->biBitCount != 4  && pdib->biBitCount != 8  &&
+		pdib->biBitCount != 16 && pdib->biBitCount != 24 &&
+		pdib->biBitCount != 32)
+		return false;
+
+	unsigned long long stride   = ((unsigned long long)pdib->biWidth * pdib->biBitCount + 31) / 32 * 4;
+	unsigned long long height   = std::llabs((long long)pdib->biHeight);
+	unsigned long long expected = stride * height;
+
+	unsigned long long num_colors = 0;
+	if (pdib->biBitCount > 0 && pdib->biBitCount <= 8) {
+		num_colors = (pdib->biClrUsed != 0)
+			? pdib->biClrUsed
+			: (1ULL << pdib->biBitCount);
+	} else if (pdib->biClrUsed > 0) {
+		num_colors = pdib->biClrUsed;
+	}
+	unsigned long long palette_size = num_colors * 4;
+
+	unsigned long long masks_size = (pdib->biCompression == BI_BITFIELDS) ? 12ULL : 0ULL;
+	unsigned long long fileSize = fh->Size();
+	if ((unsigned long long)pdib->biSize + palette_size + masks_size + expected > fileSize)
+		return false;
 
     switch (pdib->biSize) // what type of bitmap info is this?
     {

@@ -1698,7 +1698,7 @@ void BinaryStyleTableWriter::WriteFont(const OOX::Spreadsheet::CFont& font, OOX:
 	//RFont
 	if(font.m_oRFont.IsInit() && font.m_oRFont->m_sVal.IsInit())
 	{
-		//подбираем шрифт
+		//select font
         std::wstring sFont = oFontProcessor.getFont(font.m_oScheme, font.m_oRFont, font.m_oCharset, font.m_oFamily, theme);
 		
 		m_oBcw.m_oStream.WriteBYTE(c_oSerFontTypes::RFont);
@@ -2997,7 +2997,7 @@ void BinaryWorkbookTableWriter::WriteConnection(const OOX::Spreadsheet::CConnect
 	if (connection.m_oUId.IsInit())
 	{
 		m_oBcw.m_oStream.WriteBYTE(c_oSerConnectionsTypes::UId);
-		m_oBcw.m_oStream.WriteStringW(*connection.m_oUId);
+		m_oBcw.m_oStream.WriteStringW(connection.m_oUId->ToString());
 	}
 	if(connection.m_oCredentials.IsInit())
 	{
@@ -3904,7 +3904,7 @@ void BinaryWorkbookTableWriter::WriteTimelineCache(OOX::Spreadsheet::CTimelineCa
 	if (pTimelineCache->m_oUid.IsInit())
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSer_TimelineCache::Uid);
-		m_oBcw.m_oStream.WriteStringW3(*pTimelineCache->m_oUid);
+		m_oBcw.m_oStream.WriteStringW3(pTimelineCache->m_oUid->ToString());
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 	if (pTimelineCache->m_oPivotTables.IsInit())
@@ -4666,7 +4666,7 @@ void BinaryPersonTableWriter::WritePerson(OOX::Spreadsheet::CPerson& oPerson)
 	if(oPerson.id.IsInit())
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSer_Person::id);
-		m_oBcw.m_oStream.WriteStringW3(oPerson.id.get());
+		m_oBcw.m_oStream.WriteStringW3(oPerson.id->ToString());
 		m_oBcw.WriteItemWithLengthEnd(nCurPos);
 	}
 	if(oPerson.providerId.IsInit())
@@ -4715,7 +4715,7 @@ void BinaryWorksheetTableWriter::Write(OOX::Spreadsheet::CWorkbook& workbook, st
 void BinaryWorksheetTableWriter::WriteWorksheets(OOX::Spreadsheet::CWorkbook& workbook, std::map<std::wstring, OOX::Spreadsheet::CWorksheet*>& mapWorksheets)
 {
 	int nCurPos;
-	//определяем порядок следования .. излишне с vector
+	//determine order .. redundant with vector
 	if(workbook.m_oSheets.IsInit())
 	{
         for(size_t i = 0; i < workbook.m_oSheets->m_arrItems.size(); ++i)
@@ -6086,7 +6086,7 @@ void BinaryWorksheetTableWriter::WriteCell(const OOX::Spreadsheet::CCell& oCell)
 	int nCol = 0;
 	if (oCell.isInitRef() && oCell.getRowCol(nRow, nCol))
 	{
-		// Пишем теперь не строку, а 2 числа (чтобы не парсить на JavaScript, т.к. на C++ быстрее парсинг). Ускорение открытия файла.
+		// Now writing 2 numbers instead of string (to avoid parsing in JavaScript, since C++ parsing is faster). File opening speedup.
 		nCurPos = m_oBcw.WriteItemStart(c_oSerCellTypes::RefRowCol);
 		m_oBcw.m_oStream.WriteLONG(nRow);
 		m_oBcw.m_oStream.WriteLONG(nCol);
@@ -6298,7 +6298,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 		{
 			pRId = new OOX::RId( pOleObject->m_oRid->GetValue());
 
-			//ищем физический файл ( rId относительно sheet)
+			//looking for physical file (rId relative to sheet)
 			smart_ptr<OOX::File> pFile = oWorksheet.Find(pRId.get());
 			pFileOleObject = pFile.smart_dynamic_cast<OOX::OleObject>();
 		}
@@ -6410,7 +6410,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 
 					if (!sIdImageFileCache.empty())
 					{
-						//ищем физический файл ( rId относительно vml_drawing)									
+						//looking for physical file (rId relative to vml_drawing)									
 						smart_ptr<OOX::File> pFile = pVmlDrawing->Find(sIdImageFileCache);
 
 						if (pFile.IsInit() && (OOX::FileTypes::Image == pFile->type()))
@@ -6450,7 +6450,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 				olePic->oleObject->m_OleObjectFile->set_filename_cache(pathImage);
 			}
 
-			olePic->blipFill.blip->embed = new OOX::RId(sIdImageFileCache); //ваще то тут не важно что - приоритет у того что ниже..
+			olePic->blipFill.blip->embed = new OOX::RId(sIdImageFileCache); //actually doesn't matter what's here - priority goes to what's below..
 			olePic->blipFill.blip->oleFilepathImage = pathImage.GetPath();
 		}
 		
@@ -6486,7 +6486,7 @@ void BinaryWorksheetTableWriter::WriteControls(const OOX::Spreadsheet::CWorkshee
 
 		if (pControl->m_oRid.IsInit())
 		{			
-			pFileControl = oWorksheet.Find(OOX::RId(pControl->m_oRid->GetValue()));// rId относительно sheet
+			pFileControl = oWorksheet.Find(OOX::RId(pControl->m_oRid->GetValue()));// rId relative to sheet
 		}
 		if (false == pFileControl.IsInit()) continue;
 		
@@ -6939,7 +6939,7 @@ void BinaryWorksheetTableWriter::WriteDrawings(const OOX::Spreadsheet::CWorkshee
 						OOX::WritingElement* pElemShape = pShape->m_arrItems[j];
 						if(OOX::et_v_ClientData == pElemShape->getType())
 						{
-							//преобразуем ClientData в CellAnchor
+							//convert ClientData to CellAnchor
 							OOX::Vml::CClientData* pClientData = static_cast<OOX::Vml::CClientData*>(pElemShape);
 
 							if (pClientData->m_oObjectType.IsInit() && pClientData->m_oObjectType->GetValue() == SimpleTypes::Vml::vmlclientdataobjecttypeNote)
@@ -7052,7 +7052,7 @@ void BinaryWorksheetTableWriter::WriteDrawing(const OOX::Spreadsheet::CWorksheet
 			
 			if (pCellAnchor->m_bShapeOle && NULL != pOleObject)
 			{
-				//ищем физический файл, потому что rId относительно sheet.xml, а SetRelsPath(pVmlDrawing
+				//looking for physical file, because rId is relative to sheet.xml, and SetRelsPath(pVmlDrawing
 				smart_ptr<OOX::File> pFile = oWorksheet.Find(OOX::RId(pOleObject->m_oRid->GetValue()));
 				pOleObject->m_OleObjectFile = pFile.smart_dynamic_cast<OOX::OleObject>();
 			
@@ -7368,7 +7368,7 @@ void BinaryWorksheetTableWriter::WriteComments(std::map<std::wstring, OOX::Sprea
 			
 			getSavedComment(oComment, aCommentDatas);
 			
-			//записываем тот обьект, который был в бинарнике, подменяем только текст, который мог быть отредактирован в Excel
+			//write the object that was in binary, only replace text that could have been edited in Excel
 			
 			nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::Comment);
 				WriteComment(oComment, aCommentDatas);
@@ -7986,7 +7986,7 @@ void BinaryWorksheetTableWriter::WritemBreak(const OOX::Spreadsheet::CBreak& oBr
 	}
 }
 void BinaryWorksheetTableWriter::WriteConditionalFormattings(std::vector<OOX::Spreadsheet::CConditionalFormatting*>& arrConditionalFormatting,
-	std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
+	std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
 {
 	int nCurPos = 0;
 	for (size_t nIndex = 0, nLength = arrConditionalFormatting.size(); nIndex < nLength; ++nIndex)
@@ -7999,7 +7999,7 @@ void BinaryWorksheetTableWriter::WriteConditionalFormattings(std::vector<OOX::Sp
 	}
 }
 void BinaryWorksheetTableWriter::WriteConditionalFormatting(const OOX::Spreadsheet::CConditionalFormatting& oConditionalFormatting,
-	std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
+	std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
 {
 	int nCurPos = 0;
 
@@ -8026,12 +8026,12 @@ void BinaryWorksheetTableWriter::WriteConditionalFormatting(const OOX::Spreadshe
 	}
 }
 void BinaryWorksheetTableWriter::WriteConditionalFormattingRule(const OOX::Spreadsheet::CConditionalFormattingRule& oConditionalFormattingRule,
-	std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
+	std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>& mapCFRuleEx, bool isExt)
 {
-	std::map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>::iterator pFind;
+	std::unordered_map<std::wstring, OOX::Spreadsheet::CConditionalFormattingRule*>::iterator pFind;
 	if (oConditionalFormattingRule.m_oExtId.IsInit())
 	{
-		 pFind = mapCFRuleEx.find(*oConditionalFormattingRule.m_oExtId);
+		 pFind = mapCFRuleEx.find(oConditionalFormattingRule.m_oExtId->ToString());
 
 		 if (pFind != mapCFRuleEx.end())
 		 {
@@ -8166,7 +8166,7 @@ void BinaryWorksheetTableWriter::WriteConditionalFormattingRule(const OOX::Sprea
 
 void BinaryWorksheetTableWriter::WriteColorScale(const OOX::Spreadsheet::CColorScale& oColorScale)
 {
-	// ToDo более правильно заделать виртуальную функцию, которая будет писать без привидения типов
+	// ToDo better to implement virtual function that writes without type casting
 
 	for (size_t i = 0, length = oColorScale.m_arrValues.size(); i < length; ++i)
 	{
@@ -8830,7 +8830,7 @@ void BinaryWorksheetTableWriter::WriteTimeline(OOX::Spreadsheet::CTimeline* pTim
 	{
 		m_oBcw.m_oStream.WriteBYTE(c_oSer_Timeline::Uid);
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Variable);
-		m_oBcw.m_oStream.WriteStringW(*pTimeline->m_oUid);
+		m_oBcw.m_oStream.WriteStringW(pTimeline->m_oUid->ToString());
 	}
 	if (pTimeline->m_oScrollPosition.IsInit())
 	{
@@ -9080,7 +9080,7 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 	_UINT32 result = 0;
 
 	OOX::CPath pathDst(sFileDst);
-//создаем папку для media
+//create media folder
     std::wstring mediaDir = pathDst.GetDirectory() + L"media";
 	NSDirectory::CreateDirectory(mediaDir);
 
@@ -9189,7 +9189,7 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 
 	if (BinXlsxRW::c_oFileTypes::JSON == saveFileType)
 	{
-//todo 46 временно CP_UTF8
+//todo 46 temporarily CP_UTF8
 		
 		CSVWriter oCSVWriter;
 		oCSVWriter.Xlsx2Csv(sFileDst, *pXlsx, 46, std::wstring(L","), Lcid, true);
@@ -9380,7 +9380,7 @@ void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSFontCutter::CEmb
 		oBinaryOtherTableWriter.Write();
 		WriteTableEnd(nCurPos);
 
-	//Customs from Workbook (todooo - другие)
+	//Customs from Workbook (todo - others)
 		nCurPos = WriteTableStart(c_oSerTableTypes::Customs);
 		BinaryCustomsTableWriter oBinaryCustomsTableWriter(m_oBcw->m_oStream);
 		oBinaryCustomsTableWriter.Write(pXlsx->m_pWorkbook);
@@ -9407,7 +9407,7 @@ void BinaryFileWriter::WriteMainTableStart(NSBinPptxRW::CBinaryFileWriter &oBuff
 
 	m_nRealTableCount = 0;
 	m_nMainTableStart = m_oBcw->m_oStream.GetPosition();
-	//вычисляем с какой позиции можно писать таблицы
+	//calculate from which position we can write tables
 	m_nLastFilePos = m_nMainTableStart + GetMainTableSize();
 	//Write mtLen
 	m_oBcw->m_oStream.WriteBYTE(0);
@@ -9418,7 +9418,7 @@ int BinaryFileWriter::GetMainTableSize()
 }
 void BinaryFileWriter::WriteMainTableEnd()
 {
-//Количество таблиц
+//Number of tables
 	m_oBcw->m_oStream.SetPosition(m_nMainTableStart);
 	m_oBcw->m_oStream.WriteBYTE(m_nRealTableCount);
 
@@ -9435,18 +9435,18 @@ int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
 	m_oBcw->m_oStream.WriteLONG(m_nLastFilePos + m_nLastFilePosOffset);
 
 	//Write table
-	//Запоминаем позицию в MainTable
+	//Save position in MainTable
 	int nCurPos = m_oBcw->m_oStream.GetPosition();
-	//Seek в свободную область
+	//Seek to free area
 	m_oBcw->m_oStream.SetPosition(m_nLastFilePos);
 	return nCurPos;
 }
 void BinaryFileWriter::WriteTableEnd(int nCurPos)
 {
-	//сдвигаем позицию куда можно следующую таблицу
+	//shift position where next table can be written
 	m_nLastFilePos = m_oBcw->m_oStream.GetPosition();
 	m_nRealTableCount++;
-	//Seek вобратно в MainTable
+	//Seek back to MainTable
 	m_oBcw->m_oStream.SetPosition(nCurPos);
 }
 

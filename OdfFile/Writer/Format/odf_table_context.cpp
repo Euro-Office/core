@@ -138,10 +138,10 @@ public:
 	_CP_OPT(odf_types::length) default_cell_padding_top;
 	_CP_OPT(odf_types::length) default_cell_padding_bottom;
 
-	std::wstring default_cell_properties; // для предустановки ..
+	std::wstring default_cell_properties; // for preset..
 
 private:
-	std::vector<odf_table_state> tables_;//типо current level ... для вложенных таблиц
+	std::vector<odf_table_state> tables_;// like current level... for nested tables
 
 };
 
@@ -205,7 +205,7 @@ void odf_table_context::start_table(office_element_ptr &elm, bool styled)
 }
 void odf_table_context::end_table()
 {
-	//последние объединенные ячейки ..
+	// last merged cells..
 	if (impl_->current_table().columns.empty())
 	{
 	}
@@ -227,7 +227,10 @@ void odf_table_context::end_table()
 			style_table_properties * table_props = style_->content_.add_get_style_table_properties();
 			if (table_props)
 			{
-				table_props->content_.style_width_ = length(length(impl_->current_table().table_width,length::pt).get_value_unit(length::cm),length::cm);
+				if( !table_props->content_.style_width_ )
+				{
+					table_props->content_.style_width_ = length(length(impl_->current_table().table_width,length::pt).get_value_unit(length::cm),length::cm);
+				}
 			}
 		}
 	}
@@ -288,7 +291,7 @@ void odf_table_context::end_row()
 
 	//for (int i = impl_->current_table().current_column ; i < impl_->current_table().columns.size() ; i++)
 	//{
-	//	office_element_ptr cell; //потом на default ???
+	//	office_element_ptr cell; // later to default ???
 	//	create_element(L"table", L"table-cell",cell , impl_->odf_context_);
 	//	start_cell(cell,false);
 	//	end_cell();

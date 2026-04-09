@@ -64,7 +64,7 @@ namespace Aggplus
 		Status LineTo(double x, double y);
 		Status CurveTo(double x1, double y1, double x2, double y2, double x3, double y3);
 
-		// методы, которые просто будем сводить к трем основным
+		// methods that will simply be reduced to three basic ones
 		Status AddLine(double x1, double y1, double x2, double y2);
 		Status AddLines(double* pPoints, int nCount);
 		Status AddBezier(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4);

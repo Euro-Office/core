@@ -30,7 +30,7 @@ LIBS += -L$$CORE_BUILDS_LIBRARIES_PATH -lkernel_network
 #ADD_DEPENDENCY(kernel, kernel_network)
 
 #####################################################
-# внешнее подключение сторонних библиотек
+# external third-party library includes
 
 #BOOST
 CONFIG += core_boost_regex

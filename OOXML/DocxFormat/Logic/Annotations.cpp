@@ -44,7 +44,7 @@
 
 #include "../../Common/SimpleTypes_Word.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:subDoc>
 
@@ -175,7 +175,7 @@ namespace OOX
 		}
 		void CCustomXmlDelRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:id", m_oId )
 			WritingElement_ReadAttributes_End( oReader )
@@ -284,7 +284,7 @@ namespace OOX
 		}
 		void CCustomXmlInsRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:id", m_oId )
 			WritingElement_ReadAttributes_End( oReader )
@@ -324,7 +324,7 @@ namespace OOX
 			if ( m_oDate.IsInit() )
 			{
 				sResult += L"w:date=\"";
-				sResult += m_oDate->GetValue();
+				sResult += m_oDate->ToString();
 				sResult += L"\" ";
 			}
 
@@ -568,7 +568,7 @@ namespace OOX
 		}
 		void CCustomXmlMoveToRangeStart::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date",   m_oDate )
@@ -612,7 +612,7 @@ namespace OOX
 		}
 		void CMoveFromRangeEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_oId )
@@ -684,7 +684,7 @@ namespace OOX
 		}
 		void CMoveFromRangeStart::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:author",               m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:colFirst",             m_oColFirst )
@@ -1198,7 +1198,7 @@ namespace OOX
 		}
 		void CPermEnd::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if     ( oReader, L"w:displacedbyCustomXml", m_oDisplacedByCustomXml )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:id",                   m_sId )
@@ -1296,7 +1296,7 @@ namespace OOX
 		}
 		void CProofErr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"w:type", m_oType )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1414,7 +1414,7 @@ namespace OOX
 		}
 		void CIns::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date", m_oDate )
@@ -1533,7 +1533,7 @@ namespace OOX
 		}
 		void CDel::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_Read_if( oReader, L"w:author", m_sAuthor )
 			WritingElement_ReadAttributes_Read_else_if( oReader, L"w:date", m_oDate )

@@ -35,11 +35,13 @@
 
 #include "../../Reader/Converter/StarMath2OOXML/cooxml2odf.h"
 
-#include "../../OOXML/DocxFormat/DocxFlat.h"
-#include "../../OOXML/DocxFormat/Math/OMath.h"
-#include "../../OOXML/DocxFormat/Math/oMathContent.h"
-#include "../../OOXML/DocxFormat/Math/oMathPara.h"
- 
+#include "../../../OOXML/DocxFormat/DocxFlat.h"
+#include "../../../OOXML/DocxFormat/Math/OMath.h"
+#include "../../../OOXML/DocxFormat/Math/oMathContent.h"
+#include "../../../OOXML/DocxFormat/Math/oMathPara.h"
+
+#include "../../../OOXML/Common/SimpleTypes_Shared.h"
+
 #include "../Format/odf_conversion_context.h"
 #include "../Format/math_layout_elements.h"
 #include "../Format/math_limit_elements.h"
@@ -151,13 +153,13 @@ namespace Oox2Odf
 		return arrColor[index];
 	}
 
-	void OoxConverter::mrow() // обертка для тега <mrow>
+	void OoxConverter::mrow() // wrapper for <mrow> tag
 	{
 		CREATE_MATH_TAG(L"mrow");
 		OPEN_MATH_TAG(elm);		
 	}
 
-	void OoxConverter::endOfMrow() // закрывашка тега <mrow>
+	void OoxConverter::endOfMrow() // closing tag for <mrow>
 	{
 		CLOSE_MATH_TAG
 	}
@@ -1291,7 +1293,7 @@ namespace Oox2Odf
 				OOX::Logic::CDelText* pDelText = dynamic_cast<OOX::Logic::CDelText*>(oox_mrun->m_arrItems[i]);
 				convert(pDelText);
 			}break;
-			case OOX::et_w_lastRenderedPageBreak: // не информативное .. может быть неверно записано
+			case OOX::et_w_lastRenderedPageBreak: // not informative.. may be incorrectly written
 			{
 			}break;
 			case OOX::et_w_t:

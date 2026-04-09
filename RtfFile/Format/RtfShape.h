@@ -168,7 +168,7 @@ public:
 	int m_nConnectorStyle;			//cxstyle Connector style
 
 //Picture Effects
-	int m_nCropFromTop;				//cropFromTop	Top cropping percentage. Измеряется в fraction 1 /65536
+	int m_nCropFromTop;				//cropFromTop	Top cropping percentage. Measured in fraction 1/65536
 	int m_nCropFromBottom;			//cropFromBottom	Bottom cropping percentage.
 	int m_nCropFromLeft;			//cropFromLeft	Left cropping percentage.
 	int m_nCropFromRight;			//cropFromRight	Right cropping percentage.
@@ -199,7 +199,7 @@ public:
 	int m_nFillToLeft;
 	int m_nFillShadeType;
     std::vector< std::pair<int, double> >	m_aFillShadeColors;
-	//int m_bFillShape;				//есть копия заливки картинкой	
+	//int m_bFillShape;				//there is a copy of image fill	
 //Line
 	int m_bLine;					//fLine Has a line
 	int m_nLineColor;
@@ -211,6 +211,13 @@ public:
 	int m_nLineEndArrowLength;		//lineEndArrowLength	End arrow length (for acceptable values see meaning for lineStartArrowLength).
 	int m_nLineWidth;				//lineWidth Width of the line.
 	int m_nLineDashing;
+    bool m_bHr;
+    bool m_bHrStd;
+    int  m_nHrAlign;
+    bool m_bHrNoShade;
+    int  m_nHrPct;
+    int  m_nHrHeight;
+    int  m_nHrWeight;
 
 //WordArt
     std::wstring	m_sGtextUNICODE;
@@ -231,7 +238,7 @@ public:
 	std::wstring	m_sSigSetupSuggSigner2;
 	std::wstring	m_sSigSetupSuggSignerEmail;
 
-	RtfCharProperty	m_oCharProperty; // тут могут быть track changes ....
+	RtfCharProperty	m_oCharProperty; // track changes may be here...
 
 //pWrapPolygonVertices	Points of the text wrap polygon.
 	std::vector< std::pair<__int64, __int64> >	m_aWrapPoints;

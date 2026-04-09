@@ -46,10 +46,10 @@
 
 struct TBBox
 {
-	float fMinX;
-	float fMaxX;
-	float fMinY;
-	float fMaxY;
+	float fMinX = 0;
+	float fMaxX = 0;
+	float fMinY = 0;
+	float fMaxY = 0;
 };
 
 struct TBBoxAdvance
@@ -84,7 +84,7 @@ namespace NSFonts
 	{
 		fontWindowsFNT = 0, // *.fon
 		fontTrueType = 1,	// *.ttf
-		fontOpenType = 2,	// *.ttf, *.otf (CFF формат)
+		fontOpenType = 2,	// *.ttf, *.otf (CFF format)
 		fontUnknown = 3
 	};
 
@@ -209,14 +209,14 @@ namespace NSFonts
 		}
 
 	public:
-		std::wstring m_wsFontName; // Имя шрифта
-		std::wstring m_wsFontPath; // Путь к файлу с шрифтом
-		long m_lIndex;			   // Номер шрифта в файле(если в файле больше 1 шрифта)
+		std::wstring m_wsFontName; // Font name
+		std::wstring m_wsFontPath; // Path to font file
+		long m_lIndex;			   // Font index in file (if file contains more than 1 font)
 		std::wstring m_wsStyle;
 
 		INT m_bBold;	// Bold text
 		INT m_bItalic;	// Italic text
-		INT m_bIsFixed; // Моноширинный шрифт?
+		INT m_bIsFixed; // Monospace font?
 
 		BYTE m_aPanose[10];
 		UINT m_ulUnicodeRange1; // Bits 0-31
@@ -233,12 +233,12 @@ namespace NSFonts
 		SHORT m_sFamilyClass;
 		EFontFormat m_eFontFormat;
 
-		SHORT m_shAvgCharWidth; // Средняя ширина символов
+		SHORT m_shAvgCharWidth; // Average character width
 		SHORT m_shAscent;		// Ascent
 		SHORT m_shDescent;		// Descent
-		SHORT m_shLineGap;		// Межсимвольный интервал
-		SHORT m_shXHeight;		// Высота буквы 'x' (в нижнем регистре)
-		SHORT m_shCapHeight;	// Высота буквы 'H' (в верхнем регистре)
+		SHORT m_shLineGap;		// Line gap
+		SHORT m_shXHeight;		// Height of letter 'x' (lowercase)
+		SHORT m_shCapHeight;	// Height of letter 'H' (uppercase)
 
 		USHORT m_usType;
 

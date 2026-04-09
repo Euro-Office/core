@@ -94,10 +94,10 @@ namespace PdfWriter
 		static CFontFileTrueType *LoadFromFile(const std::wstring& wsFileName, unsigned int unIndex);
 		~CFontFileTrueType();
 
-		// Записываем TrueTypeFont File, заполняя недостающие таблицы и корректируя 
-		// различные ошибки. Если задан парметр <sName>, в шрифте переписываем таблицу
-		// 'name'. Если задан парамтре <pCodeToGID>, тогда в шрифте переписываем
-		// таблицу 'cmap'.
+		// Write TrueTypeFont File, filling in missing tables and correcting
+		// various errors. If <sName> parameter is specified, the 'name' table
+		// is rewritten in the font. If <pCodeToGID> parameter is specified,
+		// the 'cmap' table is rewritten in the font.
 		void WriteTTF(CStream* pOutputStream, char *sName = NULL, unsigned short *pCodeToGID = NULL, unsigned int unCodesCount = 0, unsigned char *pUseGlyfs = NULL, long lGlyfsCount = 0);
 		void WriteOTF(CStream* pOutputStream, char *sName = NULL, unsigned short *pCodeToGID = NULL);
 		void WriteCIDFontType0C(CStream* pOutputStream, unsigned short* pCodeToGID = NULL, unsigned int unCodesCount = 0);

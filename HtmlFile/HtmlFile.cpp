@@ -359,7 +359,7 @@ int CHtmlFile::Convert(const std::vector<std::wstring>& arFiles, const std::wstr
             std::wstring sTmpDir = L"";
             if (m_internal->m_bIsEpub)
             {
-                // чтобы ссылки на картинки остались
+                // so that image links remain
                 sTmpDir = NSFile::GetDirectoryName(sFilePath);
                 if (!NSDirectory::Exists(sTmpDir))
                     sTmpDir = NSDirectory::GetTempPath();
@@ -738,7 +738,7 @@ int CHtmlFile::ConvertEpub(const std::wstring& sFolder, std::wstring& sMetaInfo,
         return 1;
 
     std::wstring::size_type findMime = sMimeType.find(L"application/epub+zip");
-    if (findMime == std::wstring::npos || findMime > 10) // 10 - просто число. Заглушка под мега епабы
+    if (findMime == std::wstring::npos || findMime > 10) // 10 - just a number. Workaround for mega epubs
         return 1;
 
     std::wstring sContainer = sFolderWithSlash + L"META-INF/container.xml";
@@ -884,13 +884,13 @@ namespace NSMht
 
                 std::wstring sRes = pUnicodeConverter->toUnicode(m_sData, sEnc.c_str());
 
-                // дальше конвертим обратно в нужную кодировку, меня пути
+                // then convert back to the required encoding, changing paths
                 for (std::map<std::wstring, std::wstring>::const_iterator i = sMap.begin(); i != sMap.end(); i++)
                 {
                     std::list<std::wstring> listReplace;
                     listReplace.push_back(i->first);
 
-                    // корень
+                    // root
                     if (true)
                     {
                         std::wstring::size_type pos = m_sContentLocation.find(L"//");
@@ -910,7 +910,7 @@ namespace NSMht
                         }
                     }
 
-                    // и относительная
+                    // and relative
                     if (true)
                     {
                         std::wstring::size_type pos = m_sContentLocation.rfind('/');
@@ -1061,7 +1061,7 @@ namespace NSMht
             m_sFolder = L"D:\\test\\Document\\MHT";
 #endif
 
-            // под линуксом предыдущая функция создает файл!!!
+            // on linux the previous function creates a file!!!
             if (NSFile::CFileBinary::Exists(m_sFolder))
                 NSFile::CFileBinary::Remove(m_sFolder);
 
@@ -1154,13 +1154,13 @@ namespace NSMht
 
         void Convert()
         {
-            // сначала делаем мап файлов
+            // first make a map of files
             int nNumber = 0;
             for (std::list<CInnerFile>::iterator i = m_arFiles.begin(); i != m_arFiles.end(); i++)
             {
                 nNumber++;
                 CInnerFile* pFile = i.operator ->();
-                std::wstring sFileExt = L".png"; // L".bin" - обычно это картинки. Так и будем сохранять
+                std::wstring sFileExt = L".png"; // L".bin" - usually these are images. Will save them this way
                 if (pFile->m_sContentType.find(Names::cssFileType) != std::string::npos)
                 {
                     sFileExt = L".css";
@@ -1310,39 +1310,39 @@ namespace NSMht
             std::string boundary;
             std::wstring doc_location;
 
-            //пробегаемся по строкам файла MHT
+            //iterate through MHT file lines
             for (std::list<std::string>::iterator i = content.begin(); i != content.end();)
             {
-                // конвертируем строку с кодировкой файла
+                // convert string with file encoding
                 std::string sLowerLine = GetLower(*i);
 
-                //Ищем инициализацию boundary в шапке документа MHT(boundary - разделитель внутренних файлов) - обязательный параметр
+                //Find boundary initialization in MHT document header (boundary - separator of internal files) - required parameter
                 if (CheckProperty(sLowerLine, *i, Names::boundary_str, boundary))
                 {
                     boundary = "--" + boundary;
                     i++;
                 }
-                //Ищем инициализацию contentLocation в шапке(наименование главного внутренний файла) - может отсутствовать
+                //Find contentLocation initialization in header (main internal file name) - may be absent
                 else if (CheckPropertyW(sLowerLine, *i, Names::contentLocation_str, doc_location))
                 {
                     i++;
                 }
-                //если встретили разделитель, то начинаем считывать новый внутренний файл
+                //if we encounter a separator, start reading a new internal file
                 else if (*i == boundary && !boundary.empty())
                 {
                     CInnerFile oInnerFile;
 
-                    //сначала считывается шапка внутреннего файла, которая отделяется от основного текста файлом как минимум одной пустой строкой
+                    //first read the internal file header, which is separated from the main text by at least one empty line
                     while ( i->length() != 0 )
                     {
                         sLowerLine = GetLower(*i);
 
-                        // Проверяем, возможно разделитель поменялся с данного места
+                        // Check if the separator may have changed from this point
                         if (CheckProperty(sLowerLine, *i, Names::boundary_str, boundary))
                         {
                             boundary = "--" + boundary;
                         }
-                        //тип файла (image/, text/html, text/css)
+                        //file type (image/, text/html, text/css)
                         else if (CheckProperty(sLowerLine, sLowerLine, Names::contentType_str, oInnerFile.m_sContentType))
                         {
                             if (oInnerFile.m_sContentType.find(Names::htmlFileType) != std::string::npos)
@@ -1355,10 +1355,10 @@ namespace NSMht
                                     oInnerFile.m_sContentType = "image/jpg";
                             }
                         }
-                        //наименование файла
+                        //file name
                         else if (CheckPropertyW(sLowerLine, *i, Names::contentLocation_str, oInnerFile.m_sContentLocation)) {}
                         else if (CheckPropertyW(sLowerLine, *i, Names::contentID_str, oInnerFile.m_sContentID)) {}
-                        //кодировка (base64, 8bit, quoted-printable)
+                        //encoding (base64, 8bit, quoted-printable)
                         else if (CheckProperty(sLowerLine, sLowerLine, Names::contentTransferEncoding_str, oInnerFile.m_sContentEncoding)) {}
                         else if (CheckProperty(sLowerLine, sLowerLine, Names::contentCharset_str, oInnerFile.m_sEncoding)) {}
                         i++;
@@ -1404,14 +1404,14 @@ namespace NSMht
                     i++;
             }
 
-            //встречаются такие документы, где отсутсвует boundary
+            //there are documents where boundary is absent
             if (boundary == "")
             {
                 for(std::list<std::string>::iterator i = content.begin(); i != content.end();)
                 {
                     CInnerFile oInnerFile;
 
-                    //сначала считывается шапка внутреннего файла, которая отделяется от основного текста файлом как минимум одной пустой строкой
+                    //first read the internal file header, which is separated from the main text by at least one empty line
                     while ( i->length() != 0 )
                     {
                         std::string sLowerLine = GetLower(*i);
@@ -1428,10 +1428,10 @@ namespace NSMht
                                     oInnerFile.m_sContentType = "image/jpg";
                             }
                         }
-                        //наименование файла
+                        //file name
                         else if (CheckPropertyW(sLowerLine, *i, Names::contentLocation_str, oInnerFile.m_sContentLocation)) {}
                         else if (CheckPropertyW(sLowerLine, *i, Names::contentID_str, oInnerFile.m_sContentID)) {}
-                        //кодировка (base64, 8bit, quoted-printable)
+                        //encoding (base64, 8bit, quoted-printable)
                         else if (CheckProperty(sLowerLine, sLowerLine, Names::contentTransferEncoding_str, oInnerFile.m_sContentEncoding)) {}
                         else if (CheckProperty(sLowerLine, sLowerLine, Names::contentCharset_str, oInnerFile.m_sEncoding)) {}
                         i++;

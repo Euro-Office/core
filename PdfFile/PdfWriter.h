@@ -77,7 +77,7 @@ public:
 	std::wstring GetTempFile(const std::wstring& wsDirectory);
 	void SetTempDirectory(const std::wstring& wsTempDirectory);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со страницей
+	// Functions for working with page
 	//----------------------------------------------------------------------------------------
 	HRESULT NewPage();
 	HRESULT get_Height(double* dHeight);
@@ -85,7 +85,7 @@ public:
 	HRESULT get_Width(double* dWidth);
 	HRESULT put_Width(const double& dWidth, bool bMM2PT = true);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Pen
+	// Functions for working with Pen
 	//----------------------------------------------------------------------------------------
 	HRESULT get_PenColor(LONG* lColor);
 	HRESULT put_PenColor(const LONG& lColor);
@@ -109,7 +109,7 @@ public:
 	HRESULT put_PenMiterLimit(const double& dMiter);
 	HRESULT PenDashPattern(double* pPattern, LONG lCount);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Brush
+	// Functions for working with Brush
 	//----------------------------------------------------------------------------------------
 	HRESULT get_BrushType(LONG* lType);
 	HRESULT put_BrushType(const LONG& lType);
@@ -140,7 +140,7 @@ public:
 	HRESULT get_BrushScale(bool& isScale, double& scaleX, double& scaleY) const;
 	HRESULT put_BrushScale(bool isScale, const double& scaleX, const double& scaleY);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со шрифтами
+	// Functions for working with fonts
 	//----------------------------------------------------------------------------------------
 	HRESULT get_FontName(std::wstring* wsName);
 	HRESULT put_FontName(const std::wstring& wsName);
@@ -157,7 +157,7 @@ public:
 	HRESULT get_FontFaceIndex(int* lFaceIndex);
 	HRESULT put_FontFaceIndex(const int& lFaceIndex);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода текста
+	// Functions for text output
 	//----------------------------------------------------------------------------------------
 	HRESULT CommandDrawTextCHAR  (const LONG& lUnicode,                   const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextExCHAR(const LONG& lUnicode, const LONG& lGid, const double& dX, const double& dY, const double& dW, const double& dH);
@@ -165,11 +165,11 @@ public:
 	HRESULT CommandDrawTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextCHAR2 (unsigned int* unUnicode, const unsigned int& unUnicodeCount, const unsigned int& unGid, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Маркеры команд
+	// Command markers
 	//----------------------------------------------------------------------------------------
 	HRESULT EndCommand(const DWORD& lType);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с патом
+	// Functions for working with path
 	//----------------------------------------------------------------------------------------
 	HRESULT PathCommandMoveTo(const double& dX, const double& dY);
 	HRESULT PathCommandLineTo(const double& dX, const double& dY);
@@ -187,18 +187,18 @@ public:
 	HRESULT PathCommandText      (const std::wstring& wsUnicodeText,                                                           const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT PathCommandTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода изображений
+	// Functions for image output
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage(IGrObject* pImage, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT DrawImageFromFile(NSFonts::IApplicationFonts* pAppFonts, const std::wstring& wsTempDirectory, const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha = 255);
 	//----------------------------------------------------------------------------------------
-	// Функции для выставления преобразования
+	// Functions for setting transformation
 	//----------------------------------------------------------------------------------------
 	HRESULT SetTransform(const double& dM11, const double& dM12, const double& dM21, const double& dM22, const double& dX, const double& dY);
 	HRESULT GetTransform(double* dM11, double* dM12, double* dM21, double* dM22, double* dX, double* dY);
 	HRESULT ResetTransform();
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции
+	// Additional functions
 	//----------------------------------------------------------------------------------------
 	HRESULT AddHyperlink(const double& dX, const double& dY, const double& dW, const double& dH, const std::wstring& wsUrl, const std::wstring& wsTooltip);
 	HRESULT AddLink(const double& dX, const double& dY, const double& dW, const double& dH, const double& dDestX, const double& dDestY, const int& nPage);
@@ -209,7 +209,7 @@ public:
 	HRESULT get_ClipMode(LONG* lMode);
 	HRESULT put_ClipMode(const LONG& lMode);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции Pdf рендерера
+	// Additional Pdf renderer functions
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage1bpp(NSImages::CPixJbig2* pImageBuffer, const unsigned int& unWidth, const unsigned int& unHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT EnableBrushRect(const LONG& lEnable);
@@ -217,7 +217,7 @@ public:
 	HRESULT SetRadialGradient(const double& dX1, const double& dY1, const double& dR1, const double& dX2, const double& dY2, const double& dR2);
 	HRESULT DrawImageWith1bppMask(IGrObject* pImage, NSImages::CPixJbig2* pMaskBuffer, const unsigned int& unMaskWidth, const unsigned int& unMaskHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции для дозаписи Pdf
+	// Additional functions for incremental Pdf writing
 	//----------------------------------------------------------------------------------------
 	HRESULT EditWidgetParents(NSFonts::IApplicationFonts* pAppFonts, CWidgetsInfo* pFieldInfo, const std::wstring& wsTempDirectory);
 	void SetPage(PdfWriter::CPage* pPage);

@@ -59,7 +59,7 @@ namespace OOX
 		class CChartStyleFile;
 		class CChartColorsFile;
 
-//необработанные child:
+//not implemented children:
 		//<customProperties>
 		//<extLst>
 		//<phoneticPr>
@@ -77,7 +77,7 @@ namespace OOX
 
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
-			XLS::BaseObjectPtr toXLS();
+			XLS::BaseObjectPtr toXLS(XLS::BaseObjectPtr globalsPtr);
             void WriteBin(XLS::StreamCacheWriterPtr& writer) const;
 			virtual void read(const CPath& oPath);
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
@@ -152,7 +152,7 @@ namespace OOX
 			CComments			*m_pComments;
 			CThreadedComments	*m_pThreadedComments;
 
-			std::map<std::wstring, CConditionalFormattingRule*> m_mapConditionalFormattingEx;
+			std::unordered_map<std::wstring, CConditionalFormattingRule*> m_mapConditionalFormattingEx;
 //--------------------------------------------------------------------------------------------
 
 			std::map<std::wstring, CCommentItem*> m_mapComments;

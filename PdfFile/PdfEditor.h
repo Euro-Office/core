@@ -66,7 +66,7 @@ public:
 
 private:
 	PdfWriter::CDocument* m_pDoc;
-	std::map<int, CObjectInfo> m_mUniqueRef; // map уникальных объектов
+	std::map<int, CObjectInfo> m_mUniqueRef; // map of unique objects
 };
 
 class CPdfEditor
@@ -140,8 +140,8 @@ private:
 	CPdfWriter* m_pWriter;
 
 	int m_nError;
-	// 0 - Дозапись. pReader и pWriter работают с одним файлом
-	// 1 - Split. pReader и pWriter работают с разными файлами
+	// 0 - Append. pReader and pWriter work with the same file
+	// 1 - Split. pReader and pWriter work with different files
 	Mode m_nMode;
 	int m_nRedactInfo;
 	int m_nEditPage;

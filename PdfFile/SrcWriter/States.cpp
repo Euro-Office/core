@@ -259,7 +259,7 @@ void CCommandManager::Clear()
 }
 
 //----------------------------------------------------------------------------------------
-// Внутренние функции
+// Internal functions
 //----------------------------------------------------------------------------------------
 static inline void UpdateMaxMinPoints(double& dMinX, double& dMinY, double& dMaxX, double& dMaxY, const double& dX, const double& dY)
 {
@@ -281,18 +281,18 @@ bool SkipPath(const std::vector<PdfWriter::CSegment>& arrForStroke, const PdfWri
 	{
 		PdfWriter::CPoint P3 = arrForStroke[i].start;
 		PdfWriter::CPoint P4 = arrForStroke[i].end;
-		// Вычисляем коэффициенты A, B, C для уравнения прямой P3P4: Ax + By + C = 0
+		// Calculate coefficients A, B, C for line equation P3P4: Ax + By + C = 0
 		double A = P4.y - P3.y;
 		double B = P3.x - P4.x;
 		double C = P4.x * P3.y - P3.x * P4.y;
 
-		// Проверяем, лежит ли точка P1 на прямой P3P4
+		// Check if point P1 lies on line P3P4
 		double check1 = A * P1.x + B * P1.y + C;
 
-		// Проверяем, лежит ли точка P2 на прямой P3P4
+		// Check if point P2 lies on line P3P4
 		double check2 = A * P2.x + B * P2.y + C;
 
-		// Если обе проверки близки к нулю (в пределах эпсилон), то лежит
+		// If both checks are close to zero (within epsilon), it lies on the line
 		if ((std::abs(check1) < 0.006) && (std::abs(check2) < 0.006))
 			return true;
 	}
@@ -667,14 +667,14 @@ void CPath::CPathArcTo::UpdateBounds(double& dL, double& dT, double& dR, double&
 }
 double AngToEllPrm(double dAngle, double dXRad, double dYRad)
 {
-	// Функция для перевода реального угла в параметрическое задание эллписа
-	// т.е. x= a cos(t) y = b sin(t) - параметрическое задание эллписа.
+	// Function to convert real angle to parametric ellipse representation
+	// i.e. x= a cos(t) y = b sin(t) - parametric ellipse representation.
 	// x = r cos(p), y = r sin(p) => t = atan2( sin(p) / b, cos(p) / a );
 	return atan2(sin(dAngle) / dYRad, cos(dAngle) / dXRad);
 }
 void WriteEllipseArc(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath, double dX, double dY, double dXRad, double dYRad, double dAngle1, double dAngle2, double& dXCur, double& dYCur, bool bClockDirection = false)
 {
-	// Рассчитаем начальную, конечную и контрольные точки
+	// Calculate start, end and control points
 	double dX1  = 0.0, dX2  = 0.0, dY1  = 0.0, dY2  = 0.0;
 	double dCX1 = 0.0, dCX2 = 0.0, dCY1 = 0.0, dCY2 = 0.0;
 
@@ -717,24 +717,24 @@ void WriteEllipseArc(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath,
 }
 void EllipseArc(double dX, double dY, double dXRad, double dYRad, double _dAngle1, double _dAngle2, bool bClockDirection, PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath)
 {
-	// переведем углы в радианы
+	// Convert angles to radians
 	double dAngle1 = _dAngle1 * 3.141592f / 180;
 	double dAngle2 = _dAngle2 * 3.141592f / 180;
 
-	// Выясним в каких четвертях находятся начальная и конечная точки
+	// Determine which quadrants contain the start and end points
 	int nFirstPointQuard  = int(_dAngle1) / 90 + 1;
 	int nSecondPointQuard = int(_dAngle2) / 90 + 1;
 
 	nSecondPointQuard = std::min(4, std::max(1, nSecondPointQuard));
 	nFirstPointQuard  = std::min(4, std::max(1, nFirstPointQuard));
 
-	// Проведем линию в начальную точку дуги
+	// Draw line to arc start point
 	double dStartX = 0.0, dStartY = 0.0, dEndX = 0.0, dEndY = 0.0;
 
 	dStartX = dX + dXRad * cos(AngToEllPrm(dAngle1, dXRad, dYRad));
 	dStartY = dY + dYRad * sin(AngToEllPrm(dAngle1, dXRad, dYRad));
 
-	// Дальше рисуем по четверям
+	// Continue drawing by quadrants
 	double dCurX = dStartX, dCurY = dStartY;
 	double dStartAngle = dAngle1;
 	double dEndAngle = 0;
@@ -810,7 +810,7 @@ void CPath::CPathArcTo::ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CG
 	{
 		double dX = x + w / 2, dY = y + h / 2, dXRad = w / 2, dYRad = h / 2, _dAngle1 = 360 - startAngle, _dAngle2 = 360 - (startAngle + sweepAngle);
 		bool bClockDirection = sweepAngle > 0;
-		// Проверяем эллипс на невырожденность
+		// Check ellipse for degeneracy
 		if (dXRad < 0.001 || dYRad < 0.001)
 		{
 			double dAngle1 = _dAngle1 * 3.141592f / 180;
@@ -886,7 +886,7 @@ void CPath::CPathClose::ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CG
 }
 void CPath::CPathText::Draw(PdfWriter::CPage* pPage)
 {
-    // TODO: Если данная команда будет часто вызываться, тогда ее нужно будет оптимизировать, точно также как это делается в обычном тексте
+    // TODO: If this command is called frequently, it needs to be optimized, the same way as regular text
     pPage->BeginText();
     pPage->SetFontAndSize(font, fontSize);
     pPage->SetCharSpace(charSpace);
@@ -900,8 +900,8 @@ void CPath::CPathText::UpdateBounds(double& dL, double& dT, double& dR, double& 
 }
 void CPath::CPathText::ToCGraphicsPath(PdfWriter::CMatrix* pMatrix, Aggplus::CGraphicsPath& oPath)
 {
-	// Весь текст проверяется в CPdfWriter::PathCommandDrawText
-	// Эта функция не должна быть вызвана
+	// All text is checked in CPdfWriter::PathCommandDrawText
+	// This function should not be called
 }
 void CBrushState::Reset()
 {

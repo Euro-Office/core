@@ -41,7 +41,7 @@ private:
 	OOXWriter&							m_oWriter;
 	RtfDocument&						m_oDocument;
 	NFileWriter::CBufferedFileWriter*	m_oFileWriter;
-	bool								m_bFirst;		//один параграф пишем другой храним в памяти
+	bool								m_bFirst;		//write one paragraph, keep another in memory
 
 public: 
 	OOXDocumentWriter( OOXWriter& oWriter,RtfDocument& oDocument );

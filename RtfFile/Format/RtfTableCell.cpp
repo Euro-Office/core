@@ -65,7 +65,7 @@ std::wstring RtfTableCell::RenderToRtf(RenderParameter oRenderParameter)
 	if( RENDER_TO_RTF_PARAM_NESTED != oRenderParameter.nType )
 		result += L"\\cell";
 	else
-		result += L"\\nestcell{\\nonesttables  }"; //todo как бы вернуть
+		result += L"\\nestcell{\\nonesttables  }"; //todo how to return
 	return result;
 }
 std::wstring RtfTableCell::RenderToOOX(RenderParameter oRenderParameter)

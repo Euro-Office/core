@@ -39,49 +39,49 @@
 #include "DigitReader.h"
 
 
-/// @brief класс определяющий и корректирующий тип данных, помещаемых в ячейки таблицы
+/// @brief class that determines and corrects data type for table cell values
 class CellFormatController
 {
 
 public:
-    /// @brief конструктор
-    /// @param styles стили из таблицы
+    /// @brief constructor
+    /// @param styles styles from the table
     CellFormatController(OOX::Spreadsheet::CStyles *styles, _INT32 lcid);
 
-    /// @brief обрабатывает вставляемые в ячейку таблицы данные, переводя их в нужный тип, и заполняет ими ячейку
-    /// @param pCell указатель на ячейку
-    /// @param value вставляемые в ячейку данные в строковом типе
+    /// @brief processes data inserted into table cell, converting to required type, and fills the cell
+    /// @param pCell pointer to cell
+    /// @param value data to insert in string format
     int ProcessCellType(OOX::Spreadsheet::CCell *pCell, const std::wstring &value, bool bIsWrap = false);
 
 
-	/// @brief указатель на лист документа
+	/// @brief pointer to document worksheet
 	OOX::Spreadsheet::CWorksheet *m_pWorksheet = nullptr;
 
 private:
     bool isFormula(const std::wstring& formula);
     std::wstring ConvertFormulaArguments(const std::wstring& formula);
-    /// @brief создание стиля для указанного формата
-    /// @param format формат значения
+    /// @brief create style for specified format
+    /// @param format value format
     void createFormatStyle(const std::wstring &format);
 
-	/// @brief Добавление кастомной ширины столбца для ячейки
-	/// @param pCell ячейка для которой будет добавлена ширина
-	/// @param width значение ширины которое будет установлено для столбца, если оно больше текущего
+	/// @brief add custom column width for cell
+	/// @param pCell cell for which width will be added
+	/// @param width width value to set for column if it's greater than current
 	void addCustomColWidth(OOX::Spreadsheet::CCell *pCell, double width);
 
-    /// @brief указатель на ячейку с которой ведется работа
+    /// @brief pointer to cell being worked with
     OOX::Spreadsheet::CCell *pCell_;
 
-    /// @brief map с форматами данных
+    /// @brief map with data formats
     std::map<std::wstring, unsigned int> mapDataNumber_;
 
-    /// @brief указатель на стили документа
+    /// @brief pointer to document styles
 	OOX::Spreadsheet::CStyles *m_pStyles;
 
-    /// @brief указатель на полученное строковое значение
+    /// @brief pointer to received string value
     const std::wstring *value_;
 
-    /// @brief идентификатор локали
+    /// @brief locale identifier
     _INT32 lcid_;
 
     DigitReader digitReader_;

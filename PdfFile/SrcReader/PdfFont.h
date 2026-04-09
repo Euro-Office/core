@@ -54,6 +54,33 @@ struct CAnnotFontInfo
 	bool bBold   = false;
 	bool bItalic = false;
 };
+struct CType3FontMetrics
+{
+	double dLLx, dLLy, dURx, dURy;
+	double arrFontMatrix[6];
+	std::map<int, double> mapWidths;
+	double dUnitsPerEm;
+	double dAscent;
+	double dDescent;
+
+	CType3FontMetrics() : dLLx(0), dLLy(0), dURx(0), dURy(1000), dUnitsPerEm(1000), dAscent(800), dDescent(200)
+	{
+		arrFontMatrix[0] = 0.001; arrFontMatrix[1] = 0;
+		arrFontMatrix[2] = 0;     arrFontMatrix[3] = 0.001;
+		arrFontMatrix[4] = 0;     arrFontMatrix[5] = 0;
+	}
+	double GetScale() const
+	{
+		return arrFontMatrix[0] > 0 ? arrFontMatrix[0] * dUnitsPerEm : 1.0;
+	}
+	double GetGlyphWidth(int nCode) const
+	{
+		auto it = mapWidths.find(nCode);
+		if (it != mapWidths.end())
+			return it->second;
+		return dUnitsPerEm * 0.5;
+	}
+};
 
 std::string GetRCFromDS(const std::string& sDS, Object* pContents, const std::vector<double>& arrCFromDA);
 bool IsNeedCMap(PDFDoc* pDoc);
@@ -64,9 +91,11 @@ bool GetFontFromAP(PDFDoc* pdfDoc, AcroFormField* pField, Object* oFontRef, std:
 std::vector<CAnnotFontInfo> GetAnnotFontInfos(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef);
 std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CAnnotMarkup::CFontData*>& arrRC);
 bool FindFonts(Object* oStream, int nDepth, Object* oResFonts);
-void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
-void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
+int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
+double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
 bool EraseSubsetTag(std::wstring& sFontName);
+
+CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont);
 }
 
 #endif // _PDF_READER_FONT_H
