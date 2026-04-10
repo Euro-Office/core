@@ -699,6 +699,56 @@ namespace PdfWriter
 		m_vFillAlpha.push_back(pExtGrState);
 		return pExtGrState;
 	}
+	CAnnotation* CDocument::CreateWidget(BYTE m_nType)
+	{
+		CAnnotation* pAnnot = NULL;
+		if (m_nType < 26)
+			return pAnnot;
+
+		switch (m_nType)
+		{
+		case 26:
+		{
+			pAnnot = new CWidgetAnnotation(m_pXref, EAnnotType::AnnotWidget);
+			break;
+		}
+		case 27:
+		{
+			pAnnot = new CPushButtonWidget(m_pXref);
+			pAnnot->Add("FT", "Btn");
+			break;
+		}
+		case 28:
+		case 29:
+		{
+			pAnnot = new CCheckBoxWidget(m_pXref);
+			pAnnot->Add("FT", "Btn");
+			break;
+		}
+		case 30:
+		{
+			pAnnot = new CTextWidget(m_pXref);
+			pAnnot->Add("FT", "Tx");
+			break;
+		}
+		case 31:
+		case 32:
+		{
+			pAnnot = new CChoiceWidget(m_pXref);
+			pAnnot->Add("FT", "Ch");
+			break;
+		}
+		case 33:
+		{
+			pAnnot = new CSignatureWidget(m_pXref);
+			pAnnot->Add("FT", "Sig");
+			break;
+		}
+		default: break;
+		}
+
+		return pAnnot;
+	}
 	CAnnotation* CDocument::CreateAnnot(BYTE m_nType)
 	{
 		CAnnotation* pAnnot = NULL;
@@ -738,47 +788,7 @@ namespace PdfWriter
 			if (!CheckAcroForm())
 				return NULL;
 
-			switch (m_nType)
-			{
-			case 26:
-			{
-				pAnnot = new CWidgetAnnotation(m_pXref, EAnnotType::AnnotWidget);
-				break;
-			}
-			case 27:
-			{
-				pAnnot = new CPushButtonWidget(m_pXref);
-				pAnnot->Add("FT", "Btn");
-				break;
-			}
-			case 28:
-			case 29:
-			{
-				pAnnot = new CCheckBoxWidget(m_pXref);
-				pAnnot->Add("FT", "Btn");
-				break;
-			}
-			case 30:
-			{
-				pAnnot = new CTextWidget(m_pXref);
-				pAnnot->Add("FT", "Tx");
-				break;
-			}
-			case 31:
-			case 32:
-			{
-				pAnnot = new CChoiceWidget(m_pXref);
-				pAnnot->Add("FT", "Ch");
-				break;
-			}
-			case 33:
-			{
-				pAnnot = new CSignatureWidget(m_pXref);
-				pAnnot->Add("FT", "Sig");
-				break;
-			}
-			default: break;
-			}
+			pAnnot = CreateWidget(m_nType);
 
 			if (pAnnot)
 			{

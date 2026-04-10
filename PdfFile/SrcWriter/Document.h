@@ -145,6 +145,7 @@ namespace PdfWriter
 		CExtGrState*      GetFillAlpha(double dAlpha);
 		CJbig2Global*     GetJbig2Global();
 
+		CAnnotation*      CreateWidget(BYTE nType);
 		CAnnotation*      CreateAnnot(BYTE nType);
 		CAnnotation*      CreateLinkAnnot(const TRect& oRect, CDestination* pDest);
 		CAnnotation*      CreateUriLinkAnnot(const TRect& oRect, const char* sUrl);

@@ -1874,7 +1874,7 @@ PdfWriter::CAction* CPdfWriter::GetAction(CAnnotFieldInfo::CActionFieldPr* pActi
 
 	return pA;
 }
-HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotFieldInfo* pFieldInfo)
+HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotFieldInfo* pFieldInfo, bool bRedact)
 {
 	if (!m_pDocument || 0 == m_pDocument->GetPagesCount() || !pFieldInfo)
 		return S_OK;
@@ -2435,11 +2435,14 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 		else
 			pWidgetAnnot->Remove("MEOptions");
 
-		const std::vector<CAnnotFieldInfo::CActionFieldPr*> arrActions = pPr->GetActions();
-		for (CAnnotFieldInfo::CActionFieldPr* pAction : arrActions)
+		if (!bRedact)
 		{
-			PdfWriter::CAction* pA = GetAction(pAction);
-			pWidgetAnnot->AddAction(pA);
+			const std::vector<CAnnotFieldInfo::CActionFieldPr*> arrActions = pPr->GetActions();
+			for (CAnnotFieldInfo::CActionFieldPr* pAction : arrActions)
+			{
+				PdfWriter::CAction* pA = GetAction(pAction);
+				pWidgetAnnot->AddAction(pA);
+			}
 		}
 
 		bool isBold   = (nStyle & 1 ? true : false);
@@ -2573,6 +2576,12 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 			CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr* pPr = oInfo.GetWidgetAnnotPr()->GetTextWidgetPr();
 			PdfWriter::CTextWidget* pTextWidget = (PdfWriter::CTextWidget*)pAnnot;
 
+			if (bRedact)
+			{
+				if (!pTextWidget->HaveBorder() && pTextWidget->HaveBC())
+					pTextWidget->SetBorder(0, 1, {});
+			}
+
 			std::wstring wsValue;
 			bool bValue = false;
 			if (nFlags & (1 << 9))
@@ -2601,6 +2610,9 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 				LONG nLen = 0;
 				BYTE* pRender = pPr->GetRender(nLen);
 				DrawWidgetAP(pAnnot, pRender, nLen, nR);
+
+				if (bRedact)
+					return S_OK;
 
 				PdfWriter::CFontDict* pFont = NULL;
 				if (m_pFont14)

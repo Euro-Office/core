@@ -1816,6 +1816,49 @@ void CPdfEditor::Close()
 			{
 				// Annotation - annotation that has changed or been created and needs to be drawn in Contents of page
 				CAnnotFieldInfo* command = dynamic_cast<CAnnotFieldInfo*>(m_mObjManager.m_arrRedactFormFields[i]);
+				CAnnotFieldInfo& oInfo = *command;
+				if (!oInfo.IsWidget())
+					continue;
+
+				PdfWriter::CPage* pPage = pDoc->GetEditPage(oInfo.GetPage());
+				if (!pPage)
+					pPage = pDoc->GetPage(oInfo.GetPage());
+				if (!pPage)
+					continue;
+
+				PdfWriter::CAnnotation* pAnnot = pDoc->GetAnnot(oInfo.GetID());
+				if (!pAnnot)
+					continue;
+
+				PdfWriter::CObjectBase* pObj = pAnnot->Get("AP");
+				PdfWriter::CAnnotAppearance* pAP = dynamic_cast<PdfWriter::CAnnotAppearance*>(pObj);
+				if (!pAP)
+				{
+					pDoc->RemoveObj(pAnnot);
+					RELEASEOBJECT(pAnnot);
+					continue;
+				}
+
+				PdfWriter::CAnnotAppearanceObject* pAPN = pAP->GetNormal();
+				double m[6] = { 1, 0, 0, 1, 0, 0 };
+				pAPN->GetMatrix(m);
+				m[4] += pAnnot->GetRect().fLeft;
+				m[5] += pAnnot->GetRect().fBottom;
+				pAPN->AddMatrix(m[0], m[1], m[2], m[3], m[4], m[5]);
+
+				PdfWriter::CResourcesDict* pResources = pPage->GetResourcesItem();
+				if (!pResources)
+				{
+					pPage->AddResource();
+					pResources = pPage->GetResourcesItem();
+				}
+
+				pPage->GrSave();
+				const char* sForm = pResources->GetXObjectName(pAPN);
+				pPage->ExecuteXObject(sForm);
+				pPage->GrRestore();
+
+				pDoc->RemoveObj(pAnnot);
 			}
 			else if (nType == IAdvancedCommand::AdvancedCommandType::RedactAnnot)
 			{
@@ -4128,6 +4171,30 @@ bool CPdfEditor::EditWidgets(IAdvancedCommand* pCommand)
 
 	CWidgetsInfo* pFieldInfo = (CWidgetsInfo*)pCommand;
 	PdfWriter::CDocument* pDoc = m_pWriter->GetDocument();
+
+	for (int i = 0; i < m_mObjManager.m_arrRedactFormFields.size(); ++i)
+	{
+		IAdvancedCommand::AdvancedCommandType nType = m_mObjManager.m_arrRedactFormFields[i]->GetCommandType();
+		if (nType == IAdvancedCommand::AdvancedCommandType::Annotation)
+		{
+			// Annotation - annotation that has changed or been created and needs to be drawn in Contents of page
+			CAnnotFieldInfo* command = dynamic_cast<CAnnotFieldInfo*>(m_mObjManager.m_arrRedactFormFields[i]);
+			CAnnotFieldInfo& oInfo = *command;
+			if (!oInfo.IsWidget())
+				continue;
+
+			PdfWriter::CPage* pPage = pDoc->GetEditPage(oInfo.GetPage());
+			if (!pPage)
+				pPage = pDoc->GetPage(oInfo.GetPage());
+			if (!pPage)
+				continue;
+
+			m_pWriter->SetPage(pPage);
+			pDoc->SetCurPage(pPage);
+
+			m_pWriter->AddAnnotField(NULL, command, true);
+		}
+	}
 
 	const std::vector< std::pair<int, int> >& arrCO = pFieldInfo->GetCO();
 	for (int i = 0; i < arrCO.size(); ++i)
