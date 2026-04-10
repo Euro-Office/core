@@ -751,6 +751,8 @@ const bool GlobalsSubstream::saveContent(BinProcessor& proc)
 			proc.mandatory(*i);
 	if(m_THEME != nullptr)
 		proc.mandatory(*m_THEME);
+	else
+		proc.mandatory<THEME>();
 	proc.mandatory<EOF_T>();
 	return true;
 }

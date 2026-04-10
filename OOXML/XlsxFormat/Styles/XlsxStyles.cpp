@@ -779,7 +779,9 @@ namespace OOX
 						}
 					}
 				}
-				CastedPtr->m_arXFext.push_back(XLS::BaseObjectPtr(ext));
+				XLS::BaseObjectPtr objPtr = XLS::BaseObjectPtr(ext);
+				if(!ext->rgExt.empty())
+					CastedPtr->m_arXFext.push_back(objPtr);
 			}
 		}
 		void CStyles::read(const CPath& oPath)

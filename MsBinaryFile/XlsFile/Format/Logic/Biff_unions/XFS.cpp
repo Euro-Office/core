@@ -122,9 +122,9 @@ void calcChecksum(CFRecord record, _UINT32 &checksum)
 		for (int i = 0; i < 8; i++)
 		{
 			if (checksum & 0x80000000)
-				checksum = (checksum << 1) ^ 0x000000AF;
+				checksum = ((checksum << 1) ^ 0x000000AFU) & 0xFFFFFFFFU;
 			else
-				checksum <<= 1;
+				checksum = (checksum << 1) & 0xFFFFFFFFU;
 		}
 	}
 }
@@ -133,11 +133,12 @@ const bool XFS::saveContent(BinProcessor& proc)
 {
 	auto globInfo = proc.getGlobalWorkbookInfo();
 	_UINT32 crc = 0;
-	for(auto i = 0; i < 16; i++)
+	for(auto i = 0; i < 15; i++)
 	{
 		size_t index = 0;
 		XF cellStyleMandatory(index, index);
 		cellStyleMandatory.fStyle = true;
+		cellStyleMandatory.ixfParent = 0xFFF;
 		if(!m_arXFext.empty())
 		{	CFRecord tempRec(224, proc.getGlobalWorkbookInfo());
 			cellStyleMandatory.writeFields(tempRec);
@@ -145,6 +146,19 @@ const bool XFS::saveContent(BinProcessor& proc)
 		}
 		proc.mandatory(cellStyleMandatory);
 	}
+	{
+		size_t index = 0;
+		XF cellStyleMandatory(index, index);
+		cellStyleMandatory.fStyle = false;
+		cellStyleMandatory.ixfParent = 0;
+		if(!m_arXFext.empty())
+		{	CFRecord tempRec(224, proc.getGlobalWorkbookInfo());
+			cellStyleMandatory.writeFields(tempRec);
+			calcChecksum(tempRec, crc);
+		}
+		proc.mandatory(cellStyleMandatory);
+	}
+
 	for (auto i: m_arCellStyles)
 		if(i!= nullptr)
 		{
