@@ -71,10 +71,12 @@ namespace NSDocxRenderer
 
 		oWriter.WriteString(L"</w:tcPr>");
 
+		if (m_arParagraphs.empty())
+			oWriter.WriteString(L"<w:p/>");
+
 		for (const auto& p : m_arParagraphs)
 			p->ToXml(oWriter);
 
-		oWriter.WriteString(L"<w:p/>");
 		oWriter.WriteString(L"</w:tc>");
 	}
 	void CTable::CCell::ToXmlPptx(NSStringUtils::CStringBuilder& oWriter) const
@@ -105,7 +107,14 @@ namespace NSDocxRenderer
 	}
 	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{
-		// TODO: calc border spacing
+		if (m_arParagraphs.empty())
+		{
+			m_oBorderTop.dSpacing = pParagraph->m_dSpaceBefore;
+			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
+			m_oBorderLeft.dSpacing = pParagraph->m_dLeftBorder;
+			m_oBorderRight.dSpacing = pParagraph->m_dRightBorder;
+		}
+		m_oBorderBot.dSpacing = pParagraph->m_dSpaceAfter;
 		m_arParagraphs.push_back(pParagraph);
 	}
 
@@ -149,7 +158,6 @@ namespace NSDocxRenderer
 
 		m_dRight = pCell->m_dRight;
 		m_dWidth += pCell->m_dWidth;
-		//CBaseItem::RecalcWithNewItem(pCell.get());
 		m_arCells.push_back(pCell);
 	}
 	bool CTable::CRow::IsEmpty() const
@@ -224,7 +232,6 @@ namespace NSDocxRenderer
 
 		m_dBot = pRow->m_dBot;
 		m_dHeight += pRow->m_dHeight;
-		//CBaseItem::RecalcWithNewItem(pRow.get());
 		m_arRows.push_back(pRow);
 	}
 	void CTable::CalcGridCols()

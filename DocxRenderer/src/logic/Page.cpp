@@ -2203,6 +2203,42 @@ namespace NSDocxRenderer
 
 		auto graphical_cells = BuildGraphicalCells();
 
+		if (graphical_cells.empty())
+			return {};
+
+		// set paragraph into cells
+		for (auto& c : graphical_cells)
+			for (auto& p : m_arParagraphs)
+			{
+				if (!p)
+					continue;
+
+				if ((c->m_dTop < p->m_dTop  || fabs(c->m_dTop - p->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
+					(c->m_dLeft < p->m_dLeft || fabs(c->m_dLeft - p->m_dLeftBorder) < c_dGRAPHICS_ERROR_MM) &&
+					(c->m_dBot > p->m_dBot || fabs(c->m_dBot - p->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
+					(c->m_dRight > p->m_dRight || fabs(c->m_dRight - p->m_dRight) < c_dGRAPHICS_ERROR_MM))
+				{
+					p->m_dLeftBorder = p->m_dLeft - c->m_dLeft;
+					p->m_dRightBorder = 0;
+					if (!c->m_arParagraphs.empty())
+						p->m_dSpaceBefore = p->m_dTop - c->m_arParagraphs.back()->m_dBot;
+					else if (p->m_dTop - c->m_dTop > 0)
+						p->m_dSpaceBefore = p->m_dTop - c->m_dTop;
+					else
+						p->m_dSpaceBefore = 0;
+					p->m_dSpaceAfter = 0;
+					c->AddParagraph(p);
+					p = nullptr;
+				}
+			}
+
+		auto right = MoveNullptr(m_arParagraphs.begin(), m_arParagraphs.end());
+		m_arParagraphs.erase(right, m_arParagraphs.end());
+
+		std::sort(m_arParagraphs.begin(), m_arParagraphs.end(), [] (const paragraph_ptr_t& p1, const paragraph_ptr_t& p2) {
+			return p1->m_dBot < p2->m_dBot;
+		});
+
 		for (auto& gr_cell : graphical_cells)
 			lines.insert(gr_cell->m_dBot);
 
@@ -2267,48 +2303,6 @@ namespace NSDocxRenderer
 		// 	cell_groups.push_back(std::move(cell_group_new));
 		// 	cell_group_new = std::make_shared<CBaseItemGroup<CTable::CCell>>();
 		// }
-
-		// if (cell_groups.empty())
-		// 	return {};
-
-		// // sets paragraphs into cells
-		// for (auto& cells : cell_groups)
-		// 	for (auto& cell : cells->m_arItems)
-		// 		for (auto& paragraph : m_arParagraphs)
-		// 		{
-		// 			if (!paragraph)
-		// 				continue;
-
-		// 			bool top = fabs(cell->m_dTop - paragraph->m_arTextLines.front()->m_dTopWithMaxAscent) < c_dGRAPHICS_ERROR_MM
-		// 			        || paragraph->m_arTextLines.front()->m_dTopWithMaxAscent > cell->m_dTop;
-		// 			bool bot = fabs(cell->m_dBot - paragraph->m_dBot) < c_dGRAPHICS_ERROR_MM
-		// 			        || paragraph->m_dBot < cell->m_dBot;
-		// 			bool left = fabs(cell->m_dLeft - paragraph->m_dLeft) < c_dGRAPHICS_ERROR_MM
-		// 			        || paragraph->m_dLeft > cell->m_dLeft;
-		// 			bool right = fabs(cell->m_dRight - paragraph->m_dRight) < c_dGRAPHICS_ERROR_MM
-		// 			        || paragraph->m_dRight < cell->m_dRight;
-		// 			if (top && bot && left && right)
-		// 			{
-		// 				paragraph->m_dLeftBorder = paragraph->m_dLeft - cell->m_dLeft;
-		// 				paragraph->m_dRightBorder = 0;
-		// 				if (!cell->m_arParagraphs.empty())
-		// 					paragraph->m_dSpaceBefore = paragraph->m_dTop - cell->m_arParagraphs.back()->m_dBot;
-		// 				else if (paragraph->m_dTop - cell->m_dTop > 0)
-		// 					paragraph->m_dSpaceBefore = paragraph->m_dTop - cell->m_dTop;
-		// 				else
-		// 					paragraph->m_dSpaceBefore = 0;
-		// 				paragraph->m_dSpaceAfter = 0;
-		// 				cell->AddParagraph(paragraph);
-		// 				paragraph = nullptr;
-		// 			}
-		// 		}
-
-		// auto right = MoveNullptr(m_arParagraphs.begin(), m_arParagraphs.end());
-		// m_arParagraphs.erase(right, m_arParagraphs.end());
-
-		// std::sort(m_arParagraphs.begin(), m_arParagraphs.end(), [] (const paragraph_ptr_t& p1, const paragraph_ptr_t& p2) {
-		// 	return p1->m_dBot < p2->m_dBot;
-		// });
 
 		// std::vector<CTable::row_ptr_t> rows;
 		// CTable::row_ptr_t curr_row = nullptr;
