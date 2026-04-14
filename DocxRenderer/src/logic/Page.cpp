@@ -2680,9 +2680,9 @@ namespace NSDocxRenderer
 				std::set<size_t> shape_indexes;
 				CTable::CCell::CBorder border_left{}, border_right{}, border_top{}, border_bot{};
 				bool is_connected = go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldRight, shape_indexes, border_top);
-				is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldBot, shape_indexes, border_right);
+				is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldBot, shape_indexes, border_left);
 				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldLeft, shape_indexes, border_bot);
-				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldTop, shape_indexes, border_left);
+				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldTop, shape_indexes, border_right);
 
 				if (!is_connected)
 					continue;
