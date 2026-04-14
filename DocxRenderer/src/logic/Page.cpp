@@ -2225,7 +2225,10 @@ namespace NSDocxRenderer
 			std::set<size_t, std::less<size_t>> indeces;
 			for (int i = 0; i < cells_to_next_row.size(); i++)
 			{
-				if (cells_to_next_row[i]->m_dTop <= cell->m_dTop && cells_to_next_row[i]->m_dLeft <= cell->m_dLeft)
+				if ((cells_to_next_row[i]->m_dTop < cell->m_dTop ||
+					fabs(cell->m_dTop - cells_to_next_row[i]->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
+					(cells_to_next_row[i]->m_dLeft < cell->m_dLeft ||
+					fabs(cell->m_dLeft - cells_to_next_row[i]->m_dLeft) < c_dGRAPHICS_ERROR_MM))
 				{
 					auto tmp_height = row_height;
 					if (cells_to_next_row[i]->m_dBot > *bot_line_it)
@@ -2702,8 +2705,10 @@ namespace NSDocxRenderer
 			const auto idx = *it;
 			auto shape = m_arShapes[idx];
 			for (auto c : graphical_cells)
-				if (shape->m_dTop >= c->m_dTop && shape->m_dLeft >= c->m_dLeft &&
-					shape->m_dBot <= c->m_dBot && shape->m_dRight <= c->m_dRight)
+				if ((shape->m_dTop > c->m_dTop || fabs(shape->m_dTop - c->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
+					(shape->m_dLeft > c->m_dLeft || fabs(shape->m_dLeft - c->m_dLeft) < c_dGRAPHICS_ERROR_MM) &&
+					(shape->m_dBot < c->m_dBot || fabs(c->m_dBot - shape->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
+					(shape->m_dRight < c->m_dRight || fabs(c->m_dRight - shape->m_dRight) < c_dGRAPHICS_ERROR_MM))
 				{
 					c->m_eShading = CTable::CCell::eShading::shClear;
 					c->m_lColor = shape->m_oBrush.Color1;
