@@ -4082,6 +4082,15 @@ void Gfx::opXObject(Object args[], int numArgs) {
   Object opiDict;
 #endif
 
+  double *ctm;
+  double det;
+
+  ctm = state->getCTM();
+  det = ctm[0] * ctm[3] - ctm[1] * ctm[2];
+  if (fabs(det) <= 1e-10) {
+	return;
+  }
+
   if (!ocState && !out->needCharCount()) {
     return;
   }
