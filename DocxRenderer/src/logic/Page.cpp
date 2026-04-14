@@ -2247,9 +2247,6 @@ namespace NSDocxRenderer
 		auto bot_line_it = lines.begin();
 		for (auto& cell : graphical_cells)
 		{
-			if (row_height > cell->m_dHeight)
-				row_height = cell->m_dHeight;
-
 			if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
 			{
 				if (!cells_to_next_row.empty())
@@ -2270,7 +2267,11 @@ namespace NSDocxRenderer
 				cells_to_next_row = tmp_cells;
 				tmp_cells.clear();
 				row = std::make_shared<CTable::CRow>();
+				row_height = cell->m_dHeight;
 			}
+
+			if (row_height > cell->m_dHeight)
+				row_height = cell->m_dHeight;
 
 			std::set<size_t, std::less<size_t>> indeces;
 			for (int i = 0; i < cells_to_next_row.size(); i++)

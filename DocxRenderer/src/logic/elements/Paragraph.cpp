@@ -49,12 +49,12 @@ namespace NSDocxRenderer
 		oWriter.WriteString(L"/>"); // end of w:spacing
 
 		oWriter.WriteString(L"<w:ind");
-		if (m_dLeftBorder > 0)
-		{
+		//if (m_dLeftBorder > 0)
+		//{
 			oWriter.WriteString(L" w:left=\"");
 			oWriter.AddInt(static_cast<int>(m_dLeftBorder * c_dMMToDx));
 			oWriter.WriteString(L"\"");
-		}
+		//}
 		if (m_dRightBorder > 0)
 		{
 			oWriter.WriteString(L" w:right=\"");

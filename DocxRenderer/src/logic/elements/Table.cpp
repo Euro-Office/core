@@ -124,10 +124,9 @@ namespace NSDocxRenderer
 		if (m_arParagraphs.empty())
 		{
 			m_oBorderTop.dSpacing = pParagraph->m_dSpaceBefore;
-			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
-			m_oBorderLeft.dSpacing = pParagraph->m_dLeftBorder;
 			m_oBorderRight.dSpacing = pParagraph->m_dRightBorder;
 		}
+		pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
 		m_oBorderBot.dSpacing = pParagraph->m_dSpaceAfter;
 		m_arParagraphs.push_back(pParagraph);
 	}
