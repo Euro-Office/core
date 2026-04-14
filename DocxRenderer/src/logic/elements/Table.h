@@ -59,6 +59,7 @@ namespace NSDocxRenderer
 
 			CCell& operator=(const CCell& other);
 
+			cell_ptr_t GetMergePart() const;
 			void AddParagraph(const paragraph_ptr_t& pParagraph);
 
 			CBorder m_oBorderTop{};

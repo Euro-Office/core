@@ -2247,8 +2247,22 @@ namespace NSDocxRenderer
 		auto bot_line_it = lines.begin();
 		for (auto& cell : graphical_cells)
 		{
+			if (row_height > cell->m_dHeight)
+				row_height = cell->m_dHeight;
+
 			if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
 			{
+				if (!cells_to_next_row.empty())
+				{
+					for (int i = 0; i < cells_to_next_row.size(); i++)
+					{
+						if (cells_to_next_row[i]->m_dBot > *bot_line_it)
+							tmp_cells.push_back(cells_to_next_row[i]);
+						row->AddCell(cells_to_next_row[i]->GetMergePart());
+					}
+					cells_to_next_row.clear();
+				}
+
 				++bot_line_it;
 				row_top = cell->m_dTop;
 				row->m_dHeight = row_height;
@@ -2266,12 +2280,11 @@ namespace NSDocxRenderer
 					(cells_to_next_row[i]->m_dLeft < cell->m_dLeft ||
 					fabs(cell->m_dLeft - cells_to_next_row[i]->m_dLeft) < c_dGRAPHICS_ERROR_MM))
 				{
-					auto tmp_height = row_height;
+
 					if (cells_to_next_row[i]->m_dBot > *bot_line_it)
 						tmp_cells.push_back(cells_to_next_row[i]);
-					row_height = tmp_height;
-					indeces.insert(i);
-					row->AddCell(cells_to_next_row[i]);
+					indeces.insert(i);				
+					row->AddCell(cells_to_next_row[i]->GetMergePart());
 				}
 			}
 

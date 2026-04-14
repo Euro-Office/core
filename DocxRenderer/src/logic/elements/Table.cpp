@@ -105,6 +105,20 @@ namespace NSDocxRenderer
 
 		return *this;
 	}
+	CTable::cell_ptr_t CTable::CCell::GetMergePart() const
+	{
+		auto merge_part = std::make_shared<CTable::CCell>();
+		merge_part->RecalcWithNewItem(this);
+		merge_part->m_eVMerge		= CTable::CCell::eVMerge::vmContinue;
+		merge_part->m_oBorderTop	= m_oBorderTop;
+		merge_part->m_oBorderLeft	= m_oBorderLeft;
+		merge_part->m_oBorderBot	= m_oBorderBot;
+		merge_part->m_oBorderRight	= m_oBorderRight;
+		merge_part->m_nGridSpan		= m_nGridSpan;
+		merge_part->m_eShading		= m_eShading;
+		merge_part->m_lColor		= m_lColor;
+		return merge_part;
+	}
 	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{
 		if (m_arParagraphs.empty())
