@@ -236,7 +236,6 @@ void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 		if (state_.in_run_)
 		{
 			output_stream() << L"</w:r>";
-			state_.in_run_ = false;
 		}
 		for (size_t i = 0; i < get_comments_context().ref_start_.size(); i++)
 		{
@@ -246,19 +245,16 @@ void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 		}
 		get_comments_context().ref_start_.clear();
 
-		if (false == get_comments_context().ref_end_.empty())
+		for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
 		{
-			for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
-			{
-				output_stream() << L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
-			}
-			
-			state_.in_run_ = true;
-			output_stream() << L"<w:r>";
-
-			finish_run();
+			output_stream() << L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
 		}
-		get_comments_context().ref_end_.clear();		
+		get_comments_context().ref_end_.clear();
+
+		if (state_.in_run_)
+		{
+			output_stream() << L"<w:r>";
+		}
 	}
 	if (false == state_.in_run_)
     {
