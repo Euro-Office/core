@@ -501,7 +501,8 @@ public:
 		}
 		else
 		{
-			ref_.push_back(id);
+			ref_start_.push_back(id);
+			ref_end_.push_back(id);
 		}
 		comments_.push_back(new_comment);
 	}

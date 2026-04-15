@@ -231,11 +231,18 @@ std::wstring styles_map::name(const std::wstring & Name, odf_types::style_family
 }
 void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 {
-	if (false == current_process_comment_)
+	if (false == current_process_comment_ && (false == get_comments_context().ref_end_.empty() || false == get_comments_context().ref_start_.empty()))
 	{
+		if (state_.in_run_)
+		{
+			output_stream() << L"</w:r>";
+			state_.in_run_ = false;
+		}
 		for (size_t i = 0; i < get_comments_context().ref_start_.size(); i++)
 		{
 			output_stream() << L"<w:commentRangeStart w:id=\"" << get_comments_context().ref_start_[i] << L"\"/>";
+			
+			get_comments_context().ref_.push_back(get_comments_context().ref_start_[i]);
 		}
 		get_comments_context().ref_start_.clear();
 
@@ -243,18 +250,17 @@ void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 		{
 			for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
 			{
-				output_stream()<< L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
+				output_stream() << L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
 			}
 			
-			for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
-			{
-				output_stream()<< L"<w:commentReference w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";			
-			}
-		
-			get_comments_context().ref_end_.clear();		
+			state_.in_run_ = true;
+			output_stream() << L"<w:r>";
+
+			finish_run();
 		}
+		get_comments_context().ref_end_.clear();		
 	}
-	if (!state_.in_run_)
+	if (false == state_.in_run_)
     {
         state_.in_run_ = true;
 		output_stream() << L"<w:r>";

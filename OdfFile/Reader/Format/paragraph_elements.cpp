@@ -599,12 +599,7 @@ void span::add_space(const std::wstring & Text)
 void span::docx_convert(oox::docx_conversion_context & Context)
 {
 	bool addNewRun = false;
-    bool pushed = false;
-
-	if (!content_.empty() && (content_[0]->get_type() == typeTextNote))
-	{
-		pushed = pushed;
-	}
+    bool pushed_text_properties = false;
 
     std::wostream & _Wostream = Context.output_stream();
 
@@ -625,7 +620,7 @@ void span::docx_convert(oox::docx_conversion_context & Context)
 					}
                     
 					Context.push_text_properties(text_props);
-                    pushed = true;
+                    pushed_text_properties = true;
                     Context.get_styles_context().start_process_style(styleInst);
 					Context.add_new_run();
                     Context.get_styles_context().end_process_style();
@@ -645,8 +640,8 @@ void span::docx_convert(oox::docx_conversion_context & Context)
                                      
     }
 
-
-    if (!addNewRun)Context.add_new_run();
+    if (false == addNewRun) 
+		Context.add_new_run();
 
     for (size_t i = 0; i < content_.size(); i++)
     {
@@ -655,7 +650,7 @@ void span::docx_convert(oox::docx_conversion_context & Context)
 
 	Context.finish_run();
 	
-	if (pushed)
+	if (pushed_text_properties)
         Context.pop_text_properties();
 }
 
