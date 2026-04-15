@@ -2445,6 +2445,11 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 		bool isBold   = (nStyle & 1 ? true : false);
 		bool isItalic = (nStyle & 2 ? true : false);
 
+		if (m_bSplit)
+			pWidgetAnnot->Add("OONoAP", true);
+		else
+			pWidgetAnnot->Remove("OONoAP");
+
 		if (oInfo.IsButtonWidget())
 		{
 			if (nWidgetType == 27)

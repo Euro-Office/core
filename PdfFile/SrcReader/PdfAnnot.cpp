@@ -3064,7 +3064,8 @@ CAnnot::CAnnot(PDFDoc* pdfDoc, AcroFormField* pField, int nStartRefID)
 	oObj.free();
 
 	// 6 - Presence/Absence of appearance
-	if (std::abs(m_pRect[2] - m_pRect[0]) * std::abs(m_pRect[3] - m_pRect[1]) < 1073741824.0 / 3.0 && pField->fieldLookup("AP", &oObj)->isDict() && oObj.dictGetLength() && nStartRefID == 0)
+	if (std::abs(m_pRect[2] - m_pRect[0]) * std::abs(m_pRect[3] - m_pRect[1]) < 1073741824.0 / 3.0 && pField->fieldLookup("AP", &oObj)->isDict() && oObj.dictGetLength() &&
+		(oObj.free(), true) && (nStartRefID == 0 || pField->fieldLookup("OONoAP", &oObj)->isNull()))
 		m_unAFlags |= (1 << 6);
 	oObj.free();
 
