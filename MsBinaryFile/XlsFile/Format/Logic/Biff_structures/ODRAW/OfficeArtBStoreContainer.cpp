@@ -91,6 +91,8 @@ void OfficeArtBStoreContainer::save(XLS::CFRecord& record)
 		if(!i->nameData.empty())
 			rh_own.recLen += i->nameData.size()+1;
 		rh_own.recLen += 25; //blipHeader
+		if(i->pict_type == L".emf" || i->pict_type == L".wmf")
+			rh_own.recLen += 33;
 		rh_own.recLen += i->pict_size;
 	}
 	record << rh_own;

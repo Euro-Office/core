@@ -283,6 +283,8 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 				continue;
 			auto cacheFilePtr = m_pWorkbook->Find(cacheHeader->m_oRid->GetValue());
 			auto CachePtr = static_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
+			if(!CachePtr->m_oPivotCashDefinition.IsInit())
+				continue;
 			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(cacheHeader->m_oCacheId->GetValue());
 			auto castedCache = static_cast<XLS::PIVOTCACHE*>(XLSBinCache.get());
 			auto cacheRecordsPtr = CachePtr->Find(OOX::SpreadsheetBin::FileTypes::PivotCacheRecordsBin);

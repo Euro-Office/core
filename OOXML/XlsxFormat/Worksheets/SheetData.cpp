@@ -72,6 +72,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Blank.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BoolErr.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/LabelSst.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Label.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Formula.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/BIFF12/CellRef.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_structures/PtgArea.h"
@@ -2973,6 +2974,19 @@ namespace OOX
 						}
 						break;
 					}
+					case SimpleTypes::Spreadsheet::celltypeInlineStr:
+					{
+
+							auto CellLabel = new XLS::Label;
+							CellLabel->cell.rw = CellReference.row;
+							CellLabel->cell.col = CellReference.column;
+							if(m_oStyle.IsInit())
+									CellLabel->cell.ixfe = m_oStyle.get();
+							if(m_oRichText.IsInit())
+								CellLabel->st = m_oRichText->ToString();
+							castedPtr->cellContent = XLS::BaseObjectPtr(CellLabel);
+							break;
+					}
 					case SimpleTypes::Spreadsheet::celltypeStr:
 					{
 
@@ -2984,7 +2998,6 @@ namespace OOX
 							castedPtr->cellContent = XLS::BaseObjectPtr(CellBlank);
 						break;
 					}
-
 				}
 			}
 			else

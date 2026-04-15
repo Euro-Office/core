@@ -977,6 +977,7 @@ namespace OOX
 
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
+			XLS::BaseObjectPtr toXLS();
 			EElementType getType();
 		};
 		class CT_DateAx : public CBaseAx

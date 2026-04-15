@@ -68,6 +68,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/XFS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DXF.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/XF.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/XFExt.h"
 
 namespace OOX
 {
@@ -468,6 +469,7 @@ namespace OOX
 					m_oCellXfs->toXLS(FormatPtr->m_XFS);
 				SetFillXLS(FormatPtr->m_XFS, globalsStreamPtr);
 				SetBordersXLS(FormatPtr->m_XFS, globalsStreamPtr);
+				SetExtPropsXLS(FormatPtr->m_XFS);
 			}
 			if(m_oDxfs.IsInit())
 			{
@@ -718,6 +720,68 @@ namespace OOX
 						}
 					}
 				}
+			}
+		}
+		XLS::FullColorExt getXLSColor(const CColor &inputClr)
+		{
+			XLS::FullColorExt color;
+
+			if(inputClr.m_oRgb.IsInit())
+			{
+				color.xclrType = 2;
+				color.xclrValue = inputClr.m_oRgb->ToInt();
+			}
+			else if(inputClr.m_oThemeColor.IsInit())
+			{
+				color.xclrType = 3;
+				color.xclrValue = inputClr.m_oThemeColor->m_eValue;
+			}
+			else if(inputClr.m_oIndexed.IsInit())
+			{
+				color.xclrType = 1;
+				color.xclrValue = inputClr.m_oIndexed->GetValue();
+			}
+			if(inputClr.m_oTint.IsInit())
+			{
+				color.nTintShade = inputClr.m_oTint->GetValue();
+			}
+
+			return color;
+		}
+		void CStyles::SetExtPropsXLS(XLS::BaseObjectPtr XFSPtr)
+		{
+			auto CastedPtr = static_cast<XLS::XFS*>(XFSPtr.get());
+			for(auto i = 0; i < CastedPtr->m_arCellXFs.size(); i++)
+			{
+				if(m_oCellXfs->m_arrItems.size() < i)
+					return;
+				auto ext = new XLS::XFExt;
+				ext->ixfe = i + CastedPtr->m_arCellStyles.size()+16;
+				auto cellXf = m_oCellXfs->m_arrItems.at(i);
+				if(cellXf->m_oFillId.IsInit() && m_oFills->m_arrItems.size() > cellXf->m_oFillId->GetValue())
+				{
+					auto cellFill = m_oFills->m_arrItems.at(cellXf->m_oFillId->GetValue());
+					if(cellFill->m_oPatternFill.IsInit())
+					{
+						if(cellFill->m_oPatternFill->m_oFgColor.IsInit())
+						{
+							auto fillProp = new XLS::ExtProp;
+							fillProp->extType = XLS::ExtProp::_type::ForeColor;
+							fillProp->extPropData.color = getXLSColor(cellFill->m_oPatternFill->m_oFgColor.get());
+							ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
+						}
+						if(cellFill->m_oPatternFill->m_oBgColor.IsInit())
+						{
+							auto fillProp = new XLS::ExtProp;
+							fillProp->extType = XLS::ExtProp::_type::BackColor;
+							fillProp->extPropData.color = getXLSColor(cellFill->m_oPatternFill->m_oBgColor.get());
+							ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
+						}
+					}
+				}
+				XLS::BaseObjectPtr objPtr = XLS::BaseObjectPtr(ext);
+				if(!ext->rgExt.empty())
+					CastedPtr->m_arXFext.push_back(objPtr);
 			}
 		}
 		void CStyles::read(const CPath& oPath)
