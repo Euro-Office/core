@@ -15,8 +15,6 @@
 #include "../../DesktopEditor/graphics/pro/Graphics.h"
 #include "../../DesktopEditor/raster/BgraFrame.h"
 
-#include <queue>
-
 namespace HTML
 {
 template<>
@@ -637,9 +635,9 @@ void CCodeTag<CMDWriter>::Close()
 	m_pWriter->OutCode();
 }
 
-bool IsTable(const ITableElementCell* pCell)
+bool IsTableContainer(const ITableElementCell* pCell)
 {
-	return nullptr != pCell && ETableElement::Table == pCell->GetType();
+	return nullptr != pCell && ETableElement::TableContainer == pCell->GetType();
 }
 
 CMarkdownTable::CMarkdownTable(TExternalTableData &oExternalData)
@@ -665,10 +663,10 @@ void CMarkdownTable::Normalize()
 	size_t unMaxColumns{m_oBody.GetColumnSize()};
 
 	if (!m_oHeader.Empty())
-		unMaxColumns = std::max(unMaxColumns, m_oHeader.GetColumnSize());
+		unMaxColumns = (std::max)(unMaxColumns, m_oHeader.GetColumnSize());
 
 	if (!m_oFoother.Empty())
-		unMaxColumns = std::max(unMaxColumns, m_oFoother.GetColumnSize());
+		unMaxColumns = (std::max)(unMaxColumns, m_oFoother.GetColumnSize());
 
 	#define NORMALIZE_NUMBER_COLUMN(table_variable)\
 	if (!table_variable.Empty() && unMaxColumns != table_variable.GetColumnSize())\
@@ -679,7 +677,8 @@ void CMarkdownTable::Normalize()
 	NORMALIZE_NUMBER_COLUMN(m_oFoother);
 }
 
-typedef std::queue<std::pair<std::pair<size_t, size_t>, NSStringUtils::CStringBuilder*>> NestedCells;
+
+typedef std::map<std::pair<size_t, size_t>, NSStringUtils::CStringBuilder*> NestedCells;
 
 inline void WriteRowStart(CMDWriter& oWriter)
 {
@@ -697,21 +696,47 @@ inline void WriteCellSeparator(CMDWriter& oWriter)
 	oWriter.WriteOpenSpecialString(L" | ");
 }
 
-void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, TCurentTablePosition& oPosition, NestedCells& arNestedCells, const Table& oCells, CMDWriter* pWriter, const TExternalTableData& oExternalTableData)
+// TODO: Instead of handling the different parsing behavior for nested tables
+// (when a cell contains both a table and data),
+// you can set a specific parsing method in HTMLReader and replace
+// it with the desired one. As a result,
+// everything except the table will be parsed using HTMLReader,
+// while reading the nested table will be done using the newly set method.
+
+void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, TCurentTablePosition& oPosition, NestedCells& arNestedCells, const Table& oCells, CMDWriter* pWriter, const TExternalTableData& oExternalTableData, NSStringUtils::CStringBuilder& oIntermediateData);
+
+void ReadNestedTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, TCurentTablePosition& oPosition, NestedCells& arNestedCells, const Table& oCells, CMDWriter* pWriter, const TExternalTableData& oExternalTableData, NSStringUtils::CStringBuilder& oIntermediateData)
+{
+	TCurentTablePosition oNestedPosition{oPosition};
+
+	oNestedPosition.m_unStartRowIndex    = oPosition.m_unRowIndex;
+	oNestedPosition.m_unStartColumnIndex = oPosition.m_unColumnIndex;
+
+	std::vector<NSCSS::CNode> arNestedSelectors{arSelectors.back()};
+
+	ReadNestedCells(oReader, arNestedSelectors, oNestedPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
+
+	oPosition.m_unRowIndex = oNestedPosition.m_unRowIndex;
+}
+
+void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, TCurentTablePosition& oPosition, NestedCells& arNestedCells, const Table& oCells, CMDWriter* pWriter, const TExternalTableData& oExternalTableData, NSStringUtils::CStringBuilder& oIntermediateData)
 {
 	const int nDepth{oReader.GetDepth()};
 
-	while(oReader.ReadNextSiblingNode(nDepth))
+	while(oReader.ReadNextSiblingNode2(nDepth))
 	{
 		const std::wstring wsName = oReader.GetName();
+
 		oExternalTableData.GetSubClass(oReader, arSelectors);
 
 		if (L"td" == wsName || L"th" == wsName)
 		{
+			const ITableElementCell* pCell{oCells[oPosition.m_unRowIndex][oPosition.m_unColumnIndex]};
+
 			if ((oPosition.m_unRowIndex != oPosition.m_unStartRowIndex || oPosition.m_unColumnIndex != oPosition.m_unStartColumnIndex) &&
-			    ETableElement::FlatTable == oCells[oPosition.m_unRowIndex][oPosition.m_unColumnIndex]->GetType())
+			    (nullptr != pCell && ETableElement::FlatTable == pCell->GetType()))
 			{
-				ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData);
+				ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
 				continue;
 			}
 
@@ -719,14 +744,33 @@ void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode
 
 			if (nullptr != pCellData)
 			{
+				pCellData->Write(oIntermediateData);
+				oIntermediateData.Clear();
+
 				pWriter->SetDataOutput(pCellData);
 				oExternalTableData.ReadStream(oReader, arSelectors);
-				if (oPosition.m_unColumnIndex != oCells[oPosition.m_unRowIndex].size() - 1)
-					WriteCellSeparator(*pWriter);
 				pWriter->RevertDataOutput();
 			}
 
-			arNestedCells.push(std::make_pair(std::make_pair(oPosition.m_unRowIndex, oPosition.m_unColumnIndex), pCellData));
+			while (nullptr != oCells[oPosition.m_unRowIndex][oPosition.m_unColumnIndex])
+			{
+				if (ETableElement::FillingCell == oCells[oPosition.m_unRowIndex][oPosition.m_unColumnIndex]->GetType())
+					oPosition.m_unColumnIndex +=  oCells[oPosition.m_unRowIndex][oPosition.m_unColumnIndex]->GetColspan();
+				else
+					break;
+			}
+
+			arNestedCells[{oPosition.m_unRowIndex, oPosition.m_unColumnIndex}] = pCellData;
+
+			if (oReader.MoveToFirstAttribute())
+			{
+				do
+				{
+					if (L"colspan" == oReader.GetName())
+						oPosition.m_unColumnIndex += NSStringFinder::ToInt(oReader.GetText(), 1) - 1;
+				}while (oReader.MoveToNextAttribute());
+				oReader.MoveToElement();
+			}
 
 			//READ and add to nested cells
 			++oPosition.m_unColumnIndex;
@@ -735,25 +779,47 @@ void ReadNestedCells(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode
 		{
 			oPosition.m_unColumnIndex = oPosition.m_unStartColumnIndex;
 
-			ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData);
+			ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
 
 			++oPosition.m_unRowIndex;
 		}
 		else if (L"table" == wsName)
-		{
-			TCurentTablePosition oNestedPosition{oPosition};
-
-			oNestedPosition.m_unStartRowIndex    = oPosition.m_unRowIndex;
-			oNestedPosition.m_unStartColumnIndex = oPosition.m_unColumnIndex;
-
-			std::vector<NSCSS::CNode> arNestedSelectors{arSelectors.back()};
-
-			ReadNestedCells(oReader, arNestedSelectors, oNestedPosition, arNestedCells, oCells, pWriter, oExternalTableData);
-
-			oPosition.m_unRowIndex = oNestedPosition.m_unRowIndex;
-		}
+			ReadNestedTable(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
+		else if (L"caption" == wsName)
+			continue;
+		else if (L"tbody" == wsName || L"thead" == wsName || L"tfoot" == wsName)
+			ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
 		else
-			ReadNestedCells(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData);
+		{
+			const size_t unCurrentIntermediateDataSize{oIntermediateData.GetCurSize()};
+
+			pWriter->SetDataOutput(&oIntermediateData);
+			oExternalTableData.ReadInside(oReader, arSelectors);
+			pWriter->RevertDataOutput();
+
+			if (unCurrentIntermediateDataSize != oIntermediateData.GetCurSize())
+				oIntermediateData.WriteString(L" ");
+
+			if (L"table" != oReader.GetName())
+				continue;
+
+			ReadNestedTable(oReader, arSelectors, oPosition, arNestedCells, oCells, pWriter, oExternalTableData, oIntermediateData);
+
+			pWriter->SetDataOutput(&oIntermediateData);
+
+			const int nNewDepth{oReader.GetDepth()};
+			while (oReader.ReadNextSiblingNode2(nNewDepth - 1))
+				oExternalTableData.ReadInside(oReader, arSelectors);
+
+			pWriter->RevertDataOutput();
+
+			if (0 != oIntermediateData.GetCurSize())
+			{
+				arNestedCells.rbegin()->second->WriteString(L" ");
+				arNestedCells.rbegin()->second->Write(oIntermediateData);
+				oIntermediateData.Clear();
+			}
+		}
 
 		arSelectors.pop_back();
 	}
@@ -771,7 +837,7 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 
 	std::vector<NSCSS::CNode> arTableSelectors{oTableNode};
 
-	pWriter->WriteBreakLine();
+	pWriter->WriteBreakLine(false);
 
 	if (HaveCaption())
 		WriteToStringBuilder(*m_pCaption, *pWriter->GetCurrentDocument());
@@ -804,6 +870,18 @@ bool CMarkdownTable::Convert(XmlUtils::CXmlLiteReader& oReader, const NSCSS::CNo
 
 		for (size_t unColumnIndex = 0; unColumnIndex < m_oBody.GetColumnSize() - 1; ++unColumnIndex)
 			WriteCellSeparator(*pWriter);
+
+		WriteRowEnd(*pWriter);
+
+		WriteRowStart(*pWriter);
+
+		for (size_t unColumnIndex = 0; unColumnIndex < m_oBody.GetColumnSize(); ++unColumnIndex)
+		{
+			pWriter->WriteString(L"-", true);
+
+			if (unColumnIndex != m_oBody.GetColumnSize() - 1)
+				WriteCellSeparator(*pWriter);
+		}
 
 		WriteRowEnd(*pWriter);
 	}
@@ -861,46 +939,137 @@ bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vecto
 	{
 		WriteRowStart(*pWriter);
 
-		for (size_t unColumnIndex = 0; unColumnIndex < oMatrix[unRowIndex].size(); ++unColumnIndex)
+		for (size_t unColumnIndex = 0; unColumnIndex < oMatrix[unRowIndex].size();)
 		{
 			pTableCell = oMatrix[unRowIndex][unColumnIndex];
 
 			if (nullptr != pTableCell && ETableElement::FillingCell != pTableCell->GetType())
 			{
-				if (!arNestedCells.empty() && arNestedCells.front().first == std::make_pair(unRowIndex, unColumnIndex))
+				if (!arNestedCells.empty())
 				{
-					if (nullptr != arNestedCells.front().second)
+					NestedCells::const_iterator itElement{arNestedCells.find({unRowIndex, unColumnIndex})};
+
+					if (arNestedCells.end() != itElement)
 					{
-						m_oExternalData.m_pWriter->GetCurrentDocument()->Write(*arNestedCells.front().second);
-						delete arNestedCells.front().second;
+						if (nullptr != itElement->second)
+						{
+							m_oExternalData.m_pWriter->GetCurrentDocument()->Write(*itElement->second);
+							delete itElement->second;
+
+							if (oMatrix[unRowIndex].size() - 1 != unColumnIndex)
+								WriteCellSeparator(*pWriter);
+						}
+						arNestedCells.erase(itElement);
+
+						++unColumnIndex;
+						continue;
 					}
-					arNestedCells.pop();
+				}
+
+				MoveToNextTableCell(oReader, arSelectors, arDepths, m_oExternalData.GetSubClass);
+
+				if (ETableElement::FlatTable == pTableCell->GetType())
+				{
+					TCurentTablePosition oPosition{unRowIndex, unColumnIndex, unRowIndex, unColumnIndex};
+					std::vector<NSCSS::CNode> arNestedSelectors;
+
+					const int nDepth{oReader.GetDepth()};
+
+					NSStringUtils::CStringBuilder oTempData(100);
+					bool bSetedDataOutput{false};
+
+					const size_t unDepthSize{arDepths.size()};
+
+					arDepths.push(oReader.GetDepth());
+
+					m_oExternalData.AddStopTag(L"table");
+
+					NSStringUtils::CStringBuilder oIntermediateData(100);
+
+					while(oReader.ReadNextSiblingNode2(nDepth))
+					{
+						if (L"table" == oReader.GetName())
+						{
+							if (bSetedDataOutput)
+							{
+								if (!arNestedCells.empty() && 0 != oTempData.GetCurSize())
+								{
+									arNestedCells.rbegin()->second->WriteString(L" ");
+									arNestedCells.rbegin()->second->Write(oTempData);
+									oTempData.Clear();
+								}
+
+								pWriter->RevertDataOutput();
+								bSetedDataOutput = false;
+							}
+
+							m_oExternalData.GetSubClass(oReader, arNestedSelectors);
+							ReadNestedCells(oReader, arNestedSelectors, oPosition, arNestedCells, oMatrix, pWriter, m_oExternalData, oIntermediateData);
+
+							oPosition.m_unColumnIndex = oPosition.m_unStartColumnIndex;
+							oPosition.m_unStartRowIndex = oPosition.m_unRowIndex;
+
+							if (0 != oTempData.GetCurSize() && !arNestedCells.empty())
+							{
+								oTempData.WriteString(L" ");
+								arNestedCells.begin()->second->WriteBefore(oTempData);
+								oTempData.Clear();
+							}
+
+							if (0 != oIntermediateData.GetCurSize() && !arNestedCells.empty())
+							{
+								arNestedCells.rbegin()->second->WriteString(L" ");
+								arNestedCells.rbegin()->second->Write(oIntermediateData);
+								oIntermediateData.Clear();
+							}
+						}
+						else
+						{
+							if (!bSetedDataOutput)
+							{
+								pWriter->SetDataOutput(&oTempData);
+								bSetedDataOutput = true;
+							}
+
+							m_oExternalData.ReadInside(oReader, arSelectors);
+						}
+					}
+
+					while (arDepths.size() > unDepthSize)
+					{
+						arDepths.pop();
+						arSelectors.pop_back();
+					}
+
+					m_oExternalData.ClearStopTags();
+
+					if (bSetedDataOutput)
+					{
+						if (!arNestedCells.empty())
+						{
+							arNestedCells.rbegin()->second->WriteString(L" ");
+							arNestedCells.rbegin()->second->Write(oTempData);
+						}
+
+						pWriter->RevertDataOutput();
+					}
 				}
 				else
 				{
-					MoveToNextTableCell(oReader, arSelectors, arDepths, m_oExternalData.GetSubClass);
+					m_oExternalData.ReadStream(oReader, arSelectors);
+					if (oMatrix[unRowIndex].size() - 1 != unColumnIndex)
+						WriteCellSeparator(*pWriter);
 
-					if (ETableElement::FlatTable == pTableCell->GetType())
-					{
-						TCurentTablePosition oPosition{unRowIndex, unColumnIndex, unRowIndex, unColumnIndex};
-						std::vector<NSCSS::CNode> arNestedSelectors;
-
-						ReadNestedCells(oReader, arNestedSelectors, oPosition, arNestedCells, oMatrix, pWriter, m_oExternalData);
-						--unColumnIndex;
-					}
-					else
-					{
-						m_oExternalData.ReadStream(oReader, arSelectors);
-						if (oMatrix[unRowIndex].size() - 1 != unColumnIndex)
-							WriteCellSeparator(*pWriter);
-					}
-					arSelectors.pop_back();
+					++unColumnIndex;
 				}
+				arSelectors.pop_back();
 			}
 			else
 			{
 				if (oMatrix[unRowIndex].size() - 1 != unColumnIndex)
 					WriteCellSeparator(*pWriter);
+
+				++unColumnIndex;
 			}
 		}
 
@@ -910,8 +1079,13 @@ bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vecto
 		{
 			WriteRowStart(*pWriter);
 
-			for (size_t unColumnIndex = 0; unColumnIndex < oMatrix[unRowIndex].size() - 1; ++unColumnIndex)
-				pWriter->WriteString(L"-|-", true);
+			for (size_t unColumnIndex = 0; unColumnIndex < m_oBody.GetColumnSize(); ++unColumnIndex)
+			{
+				pWriter->WriteString(L"-", true);
+
+				if (unColumnIndex != m_oBody.GetColumnSize() - 1)
+					WriteCellSeparator(*pWriter);
+			}
 
 			WriteRowEnd(*pWriter);
 		}
@@ -926,7 +1100,39 @@ Table CMarkdownTable::Flatten(Table&& srcTable)
 		return {};
 
 	const size_t unRows{srcTable.size()};
-	const size_t unColumns{srcTable[0].size()};
+
+	size_t unColumns{0}, unRowColumns{0};
+
+	for (const Row& oRow : srcTable)
+	{
+		for (ITableElementCell* pCell : oRow)
+			unRowColumns += (nullptr != pCell) ? ((CTableElementCell*)pCell)->GetColspan() : 1;
+
+		unColumns = (std::max)(unColumns, unRowColumns);
+
+		unRowColumns = 0;
+	}
+
+	size_t unColspan{1};
+
+	for (Row& oRow : srcTable)
+	{
+		for (size_t unColumnIndex = 0; unColumnIndex < oRow.size(); ++ unColumnIndex)
+		{
+			if (nullptr == oRow[unColumnIndex])
+				continue;
+
+			unColspan = oRow[unColumnIndex]->GetColspan();
+
+			if (1 != unColspan)
+				oRow.insert(oRow.begin() + unColumnIndex + 1, unColspan - 1, nullptr);
+
+			unColumnIndex += unColspan - 1;
+		}
+
+		if (oRow.size() != unColumns)
+			oRow.resize(unColumns);
+	}
 
 	std::vector<std::vector<TElementInfo>> oInfos{unRows, std::vector<TElementInfo>{unColumns}};
 
@@ -941,8 +1147,8 @@ Table CMarkdownTable::Flatten(Table&& srcTable)
 	{
 		for (size_t unColumnIndex = 0; unColumnIndex < unColumns; ++unColumnIndex)
 		{
-			arRowHeights[unRowIndex] = (std::max)(arRowHeights[unRowIndex], oInfos[unRowIndex][unColumnIndex].unRows);
-			arColumnWidths[unColumnIndex] = (std::max)(arColumnWidths[unColumnIndex], oInfos[unRowIndex][unColumnIndex].unColumns);
+			arRowHeights[unRowIndex] = (std::max)(arRowHeights[unRowIndex], oInfos[unRowIndex][unColumnIndex].m_unRows);
+			arColumnWidths[unColumnIndex] = (std::max)(arColumnWidths[unColumnIndex], oInfos[unRowIndex][unColumnIndex].m_unColumns);
 		}
 	}
 
@@ -971,68 +1177,229 @@ Table CMarkdownTable::Flatten(Table&& srcTable)
 			if (nullptr == pCell)
 				continue;
 
-			const TElementInfo oInfo{oInfos[unRowIndex][unColumnIndex]};
-
 			unBaseRow    = arRowStart[unRowIndex];
 			unBaseColumn = arColumnStart[unColumnIndex];
 
-			if (!IsTable(pCell))
+			if (!IsTableContainer(pCell))
 			{
 				oResult[unBaseRow][unBaseColumn] = pCell;
 				pCell = nullptr;
 				continue;
 			}
 
-			CMarkdownTable *pTable{dynamic_cast<CMarkdownTable*>(pCell)};
+
+			CTableContainer* pContainer{dynamic_cast<CTableContainer*>(pCell)};
+			std::vector<CTableElement*> arTables{pContainer->GetTables()};
+			size_t unCurrentRowOffset{0};
+
 			pCell = nullptr;
 
-			Table& oChild{pTable->m_oBody.GetMatrixCells()};
-			Table oFlatChild{Flatten(std::move(oChild))};
+			for (CTableElement* pTable : arTables)
+			{
+				TElementInfo oSubInfo{ComputeInfo(pTable)};
 
-			for (size_t unChildRowIndex = 0; unChildRowIndex < oInfo.unRows; ++unChildRowIndex)
-				for (size_t unChildColumnIndex = 0; unChildColumnIndex < oInfo.unColumns; ++unChildColumnIndex)
-					oResult[unBaseRow + unChildRowIndex][unBaseColumn + unChildColumnIndex] = oFlatChild[unChildRowIndex][unChildColumnIndex];
+				Table& oChild{dynamic_cast<CMarkdownTable*>(pTable)->m_oBody.GetMatrixCells()};
+				Table oFlatChild{Flatten(std::move(oChild))};
 
-			CTableElementCell* pFlatCell{dynamic_cast<CTableElementCell*>(oResult[unBaseRow][unBaseColumn])};
+				for (size_t unChildRowIndex = 0; unChildRowIndex < oSubInfo.m_unRows; ++unChildRowIndex)
+					for (size_t unChildColumnIndex = 0; unChildColumnIndex < oSubInfo.m_unColumns; ++unChildColumnIndex)
+						oResult[unBaseRow + unCurrentRowOffset + unChildRowIndex][unBaseColumn + unChildColumnIndex] = oFlatChild[unChildRowIndex][unChildColumnIndex];
 
-			if(nullptr != pFlatCell)
-				pFlatCell->IsFlatTable();
+				CTableElementCell* pFlatCell{dynamic_cast<CTableElementCell*>(oResult[unBaseRow + unCurrentRowOffset][unBaseColumn])};
 
-			delete pTable;
+				if(nullptr != pFlatCell)
+					pFlatCell->IsFlatTable();
+
+				unCurrentRowOffset += oSubInfo.m_unRows;
+			}
+
+			delete pContainer;
 		}
 	}
 
 	return oResult;
 }
 
+// Table CMarkdownTable::Flatten(Table&& srcTable)
+// {
+// 	if (srcTable.empty())
+// 		return {};
+
+// 	const size_t unRows = srcTable.size();
+
+// 	// ---------- 1. Разворачиваем строки с учётом colspan ----------
+// 	std::vector<std::vector<ITableElementCell*>> expandedRows;
+// 	expandedRows.reserve(unRows);
+// 	size_t unColumns = 0;
+
+// 	for (Row& oRow : srcTable)
+// 	{
+// 		std::vector<ITableElementCell*> expandedRow;
+// 		for (ITableElementCell* pCell : oRow)
+// 		{
+// 			if (pCell != nullptr)
+// 			{
+// 				expandedRow.push_back(pCell);
+// 				size_t colspan = pCell->GetColspan();
+// 				// Добавляем (colspan - 1) пустых ячеек справа
+// 				for (size_t i = 1; i < colspan; ++i)
+// 					expandedRow.push_back(nullptr);
+// 			}
+// 			else
+// 			{
+// 				expandedRow.push_back(nullptr);
+// 			}
+// 		}
+// 		unColumns = std::max(unColumns, expandedRow.size());
+// 		expandedRows.push_back(std::move(expandedRow));
+// 	}
+
+// 	// Приводим все строки к одинаковой длине
+// 	for (auto& row : expandedRows)
+// 		row.resize(unColumns, nullptr);
+
+// 	// ---------- 2. Вычисляем информацию о размерах каждой ячейки ----------
+// 	std::vector<std::vector<TElementInfo>> oInfos(unRows, std::vector<TElementInfo>(unColumns));
+// 	for (size_t r = 0; r < unRows; ++r)
+// 		for (size_t c = 0; c < unColumns; ++c)
+// 			oInfos[r][c] = ComputeInfo(expandedRows[r][c]);
+
+// 	// ---------- 3. Вычисляем высоты строк и ширины столбцов ----------
+// 	std::vector<size_t> arRowHeights(unRows, 1);
+// 	std::vector<size_t> arColumnWidths(unColumns, 1);
+
+// 	for (size_t r = 0; r < unRows; ++r)
+// 	{
+// 		for (size_t c = 0; c < unColumns; ++c)
+// 		{
+// 			arRowHeights[r] = std::max(arRowHeights[r], oInfos[r][c].m_unRows);
+// 			arColumnWidths[c] = std::max(arColumnWidths[c], oInfos[r][c].m_unColumns);
+// 		}
+// 	}
+
+// 	// ---------- 4. Вычисляем смещения строк и столбцов в результирующей сетке ----------
+// 	std::vector<size_t> arRowStart(unRows + 1, 0);
+// 	std::vector<size_t> arColumnStart(unColumns + 1, 0);
+
+// 	for (size_t r = 0; r < unRows; ++r)
+// 		arRowStart[r + 1] = arRowStart[r] + arRowHeights[r];
+
+// 	for (size_t c = 0; c < unColumns; ++c)
+// 		arColumnStart[c + 1] = arColumnStart[c] + arColumnWidths[c];
+
+// 	const size_t unTotalRows    = arRowStart[unRows];
+// 	const size_t unTotalColumns = arColumnStart[unColumns];
+
+// 	Table oResult(unTotalRows, Row(unTotalColumns, nullptr));
+
+// 	// ---------- 5. Заполняем результат ----------
+// 	for (size_t r = 0; r < unRows; ++r)
+// 	{
+// 		for (size_t c = 0; c < unColumns; ++c)
+// 		{
+// 			ITableElementCell*& pCell = expandedRows[r][c];
+// 			if (pCell == nullptr)
+// 				continue;
+
+// 			const size_t unBaseRow    = arRowStart[r];
+// 			const size_t unBaseColumn = arColumnStart[c];
+
+// 			// Обычная ячейка (не контейнер)
+// 			if (!IsTableContainer(pCell))
+// 			{
+// 				oResult[unBaseRow][unBaseColumn] = pCell;
+// 				pCell = nullptr;
+// 				continue;
+// 			}
+
+// 			// Контейнер таблиц
+// 			CTableContainer* pContainer = dynamic_cast<CTableContainer*>(pCell);
+// 			std::vector<CTableElement*> arTables = pContainer->GetTables();
+// 			pCell = nullptr;   // владение передано
+
+// 			size_t unCurrentRowOffset = 0;
+// 			for (CTableElement* pTableElem : arTables)
+// 			{
+// 				// Предполагаем, что в контейнере лежат только CMarkdownTable
+// 				CMarkdownTable* pMarkdownTable = dynamic_cast<CMarkdownTable*>(pTableElem);
+// 				if (pMarkdownTable == nullptr)
+// 					continue;
+
+// 				TElementInfo oSubInfo = ComputeInfo(pMarkdownTable);
+// 				Table& oChild = pMarkdownTable->m_oBody.GetMatrixCells();
+// 				Table oFlatChild = Flatten(std::move(oChild));
+
+// 				for (size_t cr = 0; cr < oSubInfo.m_unRows; ++cr)
+// 					for (size_t cc = 0; cc < oSubInfo.m_unColumns; ++cc)
+// 						oResult[unBaseRow + unCurrentRowOffset + cr][unBaseColumn + cc] = oFlatChild[cr][cc];
+
+// 				// Если первая ячейка сплющенной таблицы является CTableElementCell, помечаем её
+// 				if (auto* pFlatCell = dynamic_cast<CTableElementCell*>(oResult[unBaseRow + unCurrentRowOffset][unBaseColumn]))
+// 					pFlatCell->IsFlatTable();
+
+// 				unCurrentRowOffset += oSubInfo.m_unRows;
+// 			}
+
+// 			delete pContainer;
+// 		}
+// 	}
+
+// 	return oResult;
+// }
+
 TElementInfo CMarkdownTable::ComputeInfo(const ITableElementCell* pCell)
 {
-	if (!IsTable(pCell))
+	if (IsTableContainer(pCell))
+	{
+		const std::vector<CTableElement*> arTables{((CTableContainer*)pCell)->GetTables()};
+
+		TElementInfo oElementInfo, oTempInfo;
+
+		for (CTableElement* pTable : arTables)
+		{
+			oTempInfo = ComputeInfo(pTable);
+
+			oElementInfo.m_unColumns = std::max(oElementInfo.m_unColumns, oTempInfo.m_unColumns);
+			oElementInfo.m_unRows += oTempInfo.m_unRows;
+		}
+
+		return oElementInfo;
+	}
+
+	return {1, 1};
+}
+
+TElementInfo CMarkdownTable::ComputeInfo(const CTableElement* pTable)
+{
+	if (nullptr == pTable)
 		return {1, 1};
 
-	const CMarkdownTable *pMarkdownTable{dynamic_cast<const CMarkdownTable*>(pCell)};
+	const CMarkdownTable *pMarkdownTable{dynamic_cast<const CMarkdownTable*>(pTable)};
 
 	if (nullptr == pMarkdownTable)
 		return {1, 1};
 
-	const CTableMatrix *pTable{&pMarkdownTable->m_oBody};
+	const CTableMatrix *pTableMaxtix{&pMarkdownTable->m_oBody};
 
-	const size_t unRows{pTable->GetRowSize()};
-	const size_t unColumns{pTable->GetColumnSize()};
+	const size_t unRows{pTableMaxtix->GetRowSize()};
+	const size_t unColumns{pTableMaxtix->GetColumnSize()};
 
 	std::vector<size_t> arRowHeights(unRows, 1);
 	std::vector<size_t> arColumnWidths(unColumns, 1);
 
-	const Table& arCells{pTable->GetMatrixCells()};
+	const Table& arCells{pTableMaxtix->GetMatrixCells()};
 
 	for (size_t unRowIndex = 0; unRowIndex < unRows; ++unRowIndex)
 	{
 		for (size_t unColumnIndex = 0; unColumnIndex < unColumns; ++unColumnIndex)
 		{
-			TElementInfo oInfo{ComputeInfo(arCells[unRowIndex][unColumnIndex])};
+			TElementInfo oInfo{1, arCells[unRowIndex][unColumnIndex]->GetColspan()};
 
-			arRowHeights[unRowIndex] = (std::max)(arRowHeights[unRowIndex], oInfo.unRows);
-			arColumnWidths[unColumnIndex] = (std::max)(arColumnWidths[unColumnIndex], oInfo.unColumns);
+			if (IsTableContainer(arCells[unRowIndex][unColumnIndex]))
+				oInfo = ComputeInfo(arCells[unRowIndex][unColumnIndex]);
+
+			arRowHeights[unRowIndex] = (std::max)(arRowHeights[unRowIndex], oInfo.m_unRows);
+			arColumnWidths[unColumnIndex] = (std::max)(arColumnWidths[unColumnIndex], oInfo.m_unColumns);
 		}
 	}
 

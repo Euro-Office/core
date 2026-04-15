@@ -114,9 +114,23 @@ namespace HTML
 // 	}
 // }
 
+ITableElementCell::ITableElementCell(size_t unColspan)
+	: m_unColspan(unColspan)
+{}
 
-CTableElementCell::CTableElementCell(bool bIsFilling)
-	: m_eType{(bIsFilling) ? ETableElement::FillingCell : ETableElement::Cell}
+void ITableElementCell::SetColspan(size_t unColspan)
+{
+	if (0 < unColspan)
+		m_unColspan = unColspan;
+}
+
+size_t ITableElementCell::GetColspan() const
+{
+	return m_unColspan;
+}
+
+CTableElementCell::CTableElementCell(bool bIsFilling, size_t unColspan)
+	: ITableElementCell(unColspan), m_eType{(bIsFilling) ? ETableElement::FillingCell : ETableElement::Cell}
 {}
 
 CTableElementCell::~CTableElementCell()
@@ -130,6 +144,16 @@ ETableElement CTableElementCell::GetType() const
 void CTableElementCell::IsFlatTable()
 {
 	m_eType = ETableElement::FlatTable;
+}
+
+CTableElementCell* CTableElementCell::CreateCell(const size_t& unColspan)
+{
+	return new CTableElementCell(false, unColspan);
+}
+
+CTableElementCell* CTableElementCell::CreateFillingCell(const size_t& unColspan)
+{
+	return new CTableElementCell(true, unColspan);
 }
 
 CTableMatrix::CTableMatrix()
@@ -157,7 +181,7 @@ void CTableMatrix::Clear()
 	m_arCells.clear();
 }
 
-bool CTableMatrix::SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell)
+bool CTableMatrix::SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell, bool bAutoClean)
 {
 	if (nullptr == pCell)
 		return false;
@@ -185,7 +209,12 @@ bool CTableMatrix::SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElemen
 	}
 
 	if (nullptr != m_arCells[unRowIndex][unColumnIndex])
-		delete m_arCells[unRowIndex][unColumnIndex];
+	{
+		pCell->SetColspan(m_arCells[unRowIndex][unColumnIndex]->GetColspan());
+
+		if (bAutoClean)
+			delete m_arCells[unRowIndex][unColumnIndex];
+	}
 
 	m_arCells[unRowIndex][unColumnIndex] = pCell;
 
@@ -255,6 +284,17 @@ const ITableElementCell* CTableMatrix::GetCell(size_t unRowIndex, size_t unColum
 	return m_arCells[unRowIndex][unColumnIndex];
 }
 
+ITableElementCell* CTableMatrix::GetCell(size_t unRowIndex, size_t unColumnIndex)
+{
+	if (unRowIndex >= m_arCells.size())
+		return nullptr;
+
+	if (unColumnIndex >= m_arCells[unRowIndex].size())
+		return nullptr;
+
+	return m_arCells[unRowIndex][unColumnIndex];
+}
+
 CTableElement::CTableElement(TExternalTableData &oExternalData)
 	: m_pCaption(nullptr), m_oExternalData(oExternalData)
 {}
@@ -280,11 +320,6 @@ void CTableElement::Clear()
 	m_oHeader.Clear();
 	m_oBody.Clear();
 	m_oFoother.Clear();
-}
-
-ETableElement CTableElement::GetType() const
-{
-	return ETableElement::Table;
 }
 
 bool CTableElement::Empty() const
@@ -349,6 +384,33 @@ bool MoveToNextTableCell(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::C
 	}while(oReader.ReadNextSiblingNode2(arDepths.top()));
 
 	return false;
+}
+
+CTableContainer::CTableContainer()
+	: ITableElementCell(1)
+{}
+
+CTableContainer::~CTableContainer()
+{
+	for (const CTableElement* pTable : m_arTables)
+		if (nullptr != pTable)
+			delete pTable;
+}
+
+ETableElement CTableContainer::GetType() const
+{
+	return ETableElement::TableContainer;
+}
+
+void CTableContainer::AddTable(CTableElement* pTable)
+{
+	if (nullptr != pTable)
+		m_arTables.push_back(pTable);
+}
+
+const std::vector<CTableElement*>& CTableContainer::GetTables() const
+{
+	return m_arTables;
 }
 
 CTableCol::CTableCol(NSCSS::CNode& oTableColNode)

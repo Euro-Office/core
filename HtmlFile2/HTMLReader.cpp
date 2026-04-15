@@ -29,8 +29,6 @@ namespace HTML
 #define UNKNOWN_TAG GumboTag::GUMBO_TAG_UNKNOWN
 #define HtmlTag GumboTag
 
-#define TAGS_COUNT 32
-
 const static std::map<std::wstring, HtmlTag> m_HTML_TAGS
 {
 	ADD_TAG(L"a", A),
@@ -344,6 +342,8 @@ void CHTMLReader::Clear()
 
 	if (nullptr != m_pTableElement)
 		delete m_pTableElement;
+
+	ClearStopTags();
 }
 
 bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
@@ -382,6 +382,13 @@ bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
 	                                   std::vector<NSCSS::CNode>& arSelectors)
 	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
 
+	oExternalData.ReadInside = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                  { return ReadInside(oReader, arSelectors); };
+
+	oExternalData.AddStopTag    = [this](const std::wstring& wsTag){ AddStopTag(wsTag); };
+	oExternalData.ClearStopTags = [this]{ ClearStopTags(); };
+
 	oExternalData.m_pWriter = pWriter;
 
 	m_pTableElement = new COOXMLTable(oExternalData);
@@ -418,11 +425,18 @@ bool CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
 
 	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
 	                                  std::vector<NSCSS::CNode>& arSelectors)
-	                                 { return ReadStream(oReader, arSelectors, true); };
+	                                  { return ReadStream(oReader, arSelectors, true); };
 
 	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
 	                                   std::vector<NSCSS::CNode>& arSelectors)
-	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+	                                   { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+
+	oExternalData.ReadInside = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                  { return ReadInside(oReader, arSelectors); };
+
+	oExternalData.AddStopTag    = [this](const std::wstring& wsTag){ AddStopTag(wsTag); };
+	oExternalData.ClearStopTags = [this]{ ClearStopTags(); };
 
 	oExternalData.m_pWriter = pWriter;
 
@@ -665,6 +679,9 @@ bool CHTMLReader::ReadStream(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 
 	do
 	{
+		if (!m_arStopTags.empty() && m_arStopTags.end() != m_arStopTags.find(oReader.GetName()))
+			return bResult;
+
 		if (ReadInside(oReader, arSelectors))
 			bResult = true;
 	} while(oReader.ReadNextSiblingNode2(nDeath));
@@ -688,9 +705,9 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 
 	GetSubClass(oReader, arSelectors, m_oCSSCalculator);
 
-	bool bResult{false};
-
 	const HtmlTag eHtmlTag{GetHtmlTag(wsName)};
+
+	bool bResult{false};
 
 	switch(eHtmlTag)
 	{
@@ -1000,6 +1017,16 @@ bool CHTMLReader::ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS
 
 	m_pTableElement->Clear();
 	return true;
+}
+
+void CHTMLReader::AddStopTag(const std::wstring& wsTag)
+{
+	m_arStopTags.insert(wsTag);
+}
+
+void CHTMLReader::ClearStopTags()
+{
+	m_arStopTags.clear();
 }
 
 inline std::wstring GetArgumentValue(XmlUtils::CXmlLiteReader& oLiteReader, const std::wstring& wsArgumentName, const std::wstring& wsDefaultValue)

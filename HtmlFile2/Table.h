@@ -29,28 +29,46 @@ enum class ETableElement
 	FillingCell,
 	Cell,
 	FlatTable,
-	Table
+	TableContainer
 };
+
+// !TODO!:: At the moment, I don't really like the implementation where there is a table inside a cell,
+// or when there are multiple nested tables inside a cell
+
+// Perhaps it's worth doing it as follows:
+// ITableCell -> CTableCell (A regular cell that does not contain nested tables)
+//            -> CTableCellContainer (Stores anything (like default, but has a container for storing nested tables))
 
 class ITableElementCell
 {
+	size_t m_unColspan;
+protected:
+	ITableElementCell(size_t unColspan);
 public:
-	ITableElementCell() = default;
 	virtual ~ITableElementCell() = default;
 
 	virtual ETableElement GetType() const = 0;
+
+	void SetColspan(size_t unColspan);
+
+	size_t GetColspan() const;
 };
 
 class CTableElementCell : public ITableElementCell
 {
 	ETableElement m_eType;
+
+protected:
+	CTableElementCell(bool bIsFilling, size_t unColspan);
 public:
-	CTableElementCell(bool bIsFilling = false);
 	virtual ~CTableElementCell();
 
 	ETableElement GetType() const override;
 
 	void IsFlatTable();
+
+	static CTableElementCell* CreateCell(const size_t& unColspan = 1);
+	static CTableElementCell* CreateFillingCell(const size_t& unColspan = 1);
 };
 
 class ITag;
@@ -60,9 +78,15 @@ struct TExternalTableData
 {
 	typedef std::function<bool(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)> FuncReadStream;
 	typedef std::function<void(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)> FuncGetSubClass;
+	typedef std::function<bool(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)> FuncReadInside;
+	typedef std::function<void(const std::wstring& wsTag)>                                                 FuncAddStopTag;
+	typedef std::function<void()>                                                                          FuncClearStopTags;
 
-	FuncReadStream  ReadStream;
-	FuncGetSubClass GetSubClass;
+	FuncReadStream    ReadStream;
+	FuncGetSubClass   GetSubClass;
+	FuncReadInside    ReadInside;
+	FuncAddStopTag    AddStopTag;
+	FuncClearStopTags ClearStopTags;
 
 	IWriter* m_pWriter{nullptr};
 };
@@ -82,7 +106,7 @@ public:
 
 	void Clear();
 
-	bool SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell);
+	bool SetCell(size_t unRowIndex, size_t unColumnIndex, ITableElementCell* pCell, bool bAutoClean = true);
 
 	void NormalizeNumberColumns(size_t unNumberColumns);
 
@@ -94,7 +118,9 @@ public:
 
 	const Table& GetMatrixCells() const;
 	Table& GetMatrixCells();
+
 	const ITableElementCell* GetCell(size_t unRowIndex, size_t unColumnIndex) const;
+	ITableElementCell* GetCell(size_t unRowIndex, size_t unColumnIndex);
 protected:
 	Table m_arCells;
 };
@@ -131,7 +157,7 @@ private:
 	UINT                    m_unTotalSpans;
 };
 
-class CTableElement : public ITableElementCell
+class CTableElement
 {
 protected:
 	CTableElement(TExternalTableData &oExternalData);
@@ -139,8 +165,6 @@ public:
 	virtual ~CTableElement();
 
 	void Clear();
-
-	ETableElement GetType() const override;
 
 	bool Empty() const;
 	bool HaveCaption() const;
@@ -167,6 +191,31 @@ protected:
 	inline bool ParseTable(XmlUtils::CXmlLiteReader& oReader, T* pTable);
 	template<typename T>
 	inline bool ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTableMatrix* pMatrix, size_t& unRowIndex, size_t& unColumnIndex);
+};
+
+class CTableContainer : public ITableElementCell
+{
+public:
+	CTableContainer();
+	virtual ~CTableContainer();
+
+	ETableElement GetType() const override;
+
+	void AddTable(CTableElement* pTable);
+	const std::vector<CTableElement*>& GetTables() const;
+private:
+	std::vector<CTableElement*> m_arTables;
+};
+
+struct TTableData
+{
+	CTableMatrix m_oHeader;
+	CTableMatrix m_oBody;
+	CTableMatrix m_oFoother;
+
+	XmlString *m_pCaption;
+
+	std::vector<CTableColgroup*> m_arColgroups;
 };
 
 template<typename T>
@@ -208,7 +257,21 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 		if (nullptr == pNewTable)
 			return false;
 
-		pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, pNewTable);
+		ITableElementCell* pTableElement{pMatrix->GetCell(unRowIndex - 1, unColumnIndex - 1)};
+		CTableContainer *pContainer{nullptr};
+
+		if (nullptr != pTableElement && ETableElement::TableContainer == pTableElement->GetType())
+			pContainer = dynamic_cast<CTableContainer*>(pTableElement);
+		else
+		{
+			pContainer = new CTableContainer();
+			pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, pContainer);
+		}
+
+		if (nullptr == pContainer)
+			return false;
+
+		pContainer->AddTable(pNewTable);
 
 		ParseTable<T>(oReader, pNewTable);
 	}
@@ -233,25 +296,25 @@ inline bool CTableElement::ParseMatrix(XmlUtils::CXmlLiteReader& oReader, CTable
 		while (pMatrix->IsFillingCell(unRowIndex - 1, unColumnIndex - 1))
 			++unColumnIndex;
 
-		if (!pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, new CTableElementCell()))
-			return false;
+		size_t unRowspan{1}, unColspan{1};
 
 		if (oReader.MoveToFirstAttribute())
 		{
 			do
 			{
 				if (L"rowspan" == oReader.GetName())
-				{
-					const int nRowSpan{NSStringFinder::ToInt(oReader.GetText(), 1)};
-
-					for (int nRow = 1; nRow < nRowSpan; ++nRow)
-						pMatrix->SetCell(unRowIndex + nRow - 1, unColumnIndex - 1, new CTableElementCell(true));
-				}
+					unRowspan = NSStringFinder::ToInt(oReader.GetText(), 1);
 				else if (L"colspan" == oReader.GetName())
-					unColumnIndex += NSStringFinder::ToInt(oReader.GetText(), 1) - 1;
+					unColspan = NSStringFinder::ToInt(oReader.GetText(), 1);
 			}while (oReader.MoveToNextAttribute());
 			oReader.MoveToElement();
 		}
+
+		if (!pMatrix->SetCell(unRowIndex - 1, unColumnIndex - 1, CTableElementCell::CreateCell(unColspan)))
+			return false;
+
+		for (size_t unRow = 1; unRow < unRowspan; ++unRow)
+			pMatrix->SetCell(unRowIndex + unRow - 1, unColumnIndex - 1, CTableElementCell::CreateFillingCell(unColspan));
 
 		const int nDepth{oReader.GetDepth()};
 		while (oReader.ReadNextSiblingNode(nDepth))

@@ -1,9 +1,6 @@
 #ifndef HTMLREADER_H
 #define HTMLREADER_H
 
-#include <queue>
-#include <unordered_map>
-
 #include "../Common/3dParty/html/css/src/CCssCalculator.h"
 #include "../DesktopEditor/xml/include/xmlutils.h"
 
@@ -13,6 +10,8 @@
 #include "Writers/IWriter.h"
 #include "Tags/HTMLTags.h"
 #include "Table.h"
+
+#include <set>
 
 namespace HTML
 {
@@ -31,6 +30,8 @@ class CHTMLReader
 	IWriter *m_pWriter;
 
 	CTableElement* m_pTableElement; // Table Converter
+
+	std::set<std::wstring> m_arStopTags;
 
 	THTMLTags m_oTags;
 public:
@@ -81,6 +82,9 @@ private:
 	bool ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
 	bool ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
+
+	void AddStopTag(const std::wstring& wsTag);
+	void ClearStopTags();
 };
 }
 

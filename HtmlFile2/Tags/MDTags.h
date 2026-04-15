@@ -55,8 +55,16 @@ void CCodeTag<CMDWriter>::Close();
 
 struct TElementInfo
 {
-	size_t unRows;
-	size_t unColumns;
+	size_t m_unRows;
+	size_t m_unColumns;
+
+	TElementInfo()
+		: m_unRows{0}, m_unColumns{0}
+	{}
+
+	TElementInfo(const size_t& unRows, const size_t& m_unColumns)
+		: m_unRows{unRows}, m_unColumns{m_unColumns}
+	{}
 };
 
 class CMarkdownTable : public CTableElement
@@ -76,6 +84,7 @@ private:
 
 	static Table Flatten(Table&& srcTable);
 	static TElementInfo ComputeInfo(const ITableElementCell* pCell);
+	static TElementInfo ComputeInfo(const CTableElement* pTable);
 };
 }
 

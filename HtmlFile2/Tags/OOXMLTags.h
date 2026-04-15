@@ -117,7 +117,7 @@ private:
 		NSCSS::NSProperties::CIndent m_oPadding;
 
 		TTableStyles()
-		    : m_unCellSpacing{0}, m_enRules{ETableRules::All}, m_pTable{nullptr}
+			: m_unCellSpacing{0}, m_enRules{ETableRules::All}, m_pTable{nullptr}
 		{}
 	};
 
@@ -141,8 +141,8 @@ private:
 	void OpenRow(XmlString& oXmlString, bool bIsHeader, size_t unMaxHeight, size_t unCellSpacing);
 	void CloseRow(XmlString& oXmlString);
 
-	void OpenCell(XmlString& oXmlString, size_t unColumnIndex);
-	void OpenCell(XmlString& oXmlString, const NSCSS::CNode& oCellNode, CTableElementCell* pCell, size_t unColumnIndex, ERowParseMode eRowParseMode, ERowPosition eRowPosition, size_t& unHeight, const TTableStyles& oTableStyles);
+	void OpenCell(XmlString& oXmlString);
+	void OpenCell(XmlString& oXmlString, const NSCSS::CNode& oCellNode, ITableElementCell* pCell, size_t unColumnIndex, ERowParseMode eRowParseMode, ERowPosition eRowPosition, size_t& unHeight, const TTableStyles& oTableStyles, std::unordered_map<size_t, NSCSS::CNode>& mFillingColumn);
 	void CloseCell(XmlString& oXmlString);
 
 	void ConvertTable(XmlUtils::CXmlLiteReader& oReader, COOXMLWriter& oWriter, const COOXMLTable& oTable, const NSCSS::CNode& oTableNode);
