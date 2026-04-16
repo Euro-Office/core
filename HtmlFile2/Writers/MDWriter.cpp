@@ -15,9 +15,7 @@ CMDWriter::CMDWriter(const TMarkdownParameters& oMDParametrs)
 }
 
 void CMDWriter::Begin(const std::wstring& wsDst)
-{
-
-}
+{}
 
 void CMDWriter::End(const std::wstring& wsDst)
 {
@@ -50,13 +48,13 @@ inline void ReplaceSpaces(std::wstring& wsValue)
 
 void ReplaceSpecialCharsInEdges(std::wstring& wsText)
 {
-	// Шестнадцатеричные коды заменяемых символов
-	const wchar_t SP  {0x20};    // пробел
-	const wchar_t NBSP{0xA0};    // неразрывный пробел
+	// Hexadecimal codes of the characters being replaced
+	const wchar_t SP  {0x20};    // space
+	const wchar_t NBSP{0xA0};    // non-breaking space
 	const wchar_t ENSP{0x2002};  // en space
 	const wchar_t EMSP{0x2003};  // em space
 
-	// Соответствующие HTML-последовательности
+	// Corresponding HTML sequences
 	const std::wstring NBSP_REP{L"&nbsp;"};
 	const std::wstring ENSP_REP{L"&ensp;"};
 	const std::wstring EMSP_REP{L"&emsp;"};
@@ -72,13 +70,13 @@ void ReplaceSpecialCharsInEdges(std::wstring& wsText)
 	if (unFirstNormal == wsText.size())
 	{
 		std::wstring wsResult;
-		wsResult.reserve(wsText.size() * 6);  // каждый символ заменится на 6
+		wsResult.reserve(wsText.size() * 6);  // each character will be replaced by 6
 		for (wchar_t c : wsText)
 		{
 			if (c == SP || c == NBSP) wsResult.append(NBSP_REP);
 			else if (c == ENSP)       wsResult.append(ENSP_REP);
 			else if (c == EMSP)       wsResult.append(EMSP_REP);
-			else                      wsResult.push_back(c); // не должно случиться
+			else                      wsResult.push_back(c);
 		}
 		wsText = std::move(wsResult);
 		return;
@@ -108,7 +106,6 @@ void ReplaceSpecialCharsInEdges(std::wstring& wsText)
 	for (size_t i = unFirstNormal; i <= unLastNormal; ++i)
 		wsResult.push_back(wsText[i]);
 
-	// Правая часть (заменяем)
 	for (size_t i = unLastNormal + 1; i < wsText.size(); ++i)
 	{
 		wchar_t c = wsText[i];

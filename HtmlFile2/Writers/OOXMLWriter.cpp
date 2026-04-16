@@ -17,8 +17,8 @@ namespace HTML
 
 #define MAX_STRING_BLOCK_SIZE (size_t)10485760
 
-#define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
-#define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
+#define DEFAULT_PAGE_WIDTH  12240 // Value in twips
+#define DEFAULT_PAGE_HEIGHT 15840 // Value in twips
 
 #define DEFAULT_LANGUAGE std::wstring(L"en-US")
 #define DEFAULT_FONT_FAMILY std::wstring(L"Times New Roman")
