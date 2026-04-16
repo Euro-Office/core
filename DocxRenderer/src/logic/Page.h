@@ -100,12 +100,9 @@ namespace NSDocxRenderer
 		using paragraph_ptr_t = std::shared_ptr<CParagraph>;
 		using table_ptr_t = std::shared_ptr<CTable>;
 
-		using text_cell_ptr_t = std::shared_ptr<CTextCell>;
 		using cell_ptr_t = std::shared_ptr<CTable::CCell>;
 
 		using text_line_group_ptr_t = std::shared_ptr<CBaseItemGroup<CTextLine>>;
-		using text_cell_group_ptr_t = std::shared_ptr<CBaseItemGroup<CTextCell>>;
-		using cell_group_ptr_t = std::shared_ptr<CBaseItemGroup<CTable::CCell>>;
 
 		// returns std::vector of conts with diac. symbols and remove it from m_arConts
 		std::vector<cont_ptr_t> MoveDiacriticalSymbols();
@@ -118,9 +115,6 @@ namespace NSDocxRenderer
 
 		// returns std::vector of paragraphs builded from m_arTextLines
 		std::vector<paragraph_ptr_t> BuildParagraphs(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
-
-		// return groups of text cells
-		std::vector<text_cell_group_ptr_t> BuildTextCellGroups(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
 		// returns std::vector of tables builded from shapes and paragraphes
 		std::vector<table_ptr_t> BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
