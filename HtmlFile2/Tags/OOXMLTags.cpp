@@ -15,8 +15,8 @@
 
 namespace HTML
 {
-#define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
-#define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
+#define DEFAULT_PAGE_WIDTH  12240 // Value in Twips
+#define DEFAULT_PAGE_HEIGHT 15840 // Value in Twips
 
 #define MAX_COLUMNS_IN_TABLE 63
 #define MAX_ROWS_IN_TABLE    32767
@@ -255,7 +255,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	std::wstring wsExtention;
 	const std::wstring wsImagePath{m_pWriter->GetMediaDir() + L'i' + std::to_wstring(m_arrImages.size())};
 
-	// Предполагаем картинку в Base64
+	// Assume Base64-encoded image
 	if (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"data" && wsSrc.find(L"/", 4) != std::wstring::npos)
 		bRes = ReadBase64(wsSrc, wsImagePath, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsExtention);
 
@@ -272,7 +272,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 		}
 	}
 
-	// Проверка расширения
+	// Check extension
 	if (!bRes)
 	{
 		wsExtention = NSFile::GetFileExtention(wsSrc);
@@ -286,7 +286,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 
 	const std::wstring wsBasePath{m_pWriter->GetBasePath()};
 
-	// Предполагаем картинку в сети
+	// Assume network image
 	if (!bRes &&
 	    ((!wsBasePath.empty() && wsBasePath.length() > 4 && wsBasePath.substr(0, 4) == L"http") ||
 	      (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"http")))
@@ -299,7 +299,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 
 		const std::wstring wsDst = wsImagePath + L'.' + ((!wsExtention.empty()) ? wsExtention : L"png");
 
-		// Проверка gc_allowNetworkRequest предполагается в kernel_network
+		// gc_allowNetworkRequest check is assumed in kernel_network
 		NSNetwork::NSFileTransport::CFileDownloader oDownloadImg(m_pWriter->GetBasePath() + wsSrc, false);
 		oDownloadImg.SetFilePath(wsDst);
 		bRes = oDownloadImg.DownloadSync();
@@ -323,7 +323,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 		}
 		else if (wsExtention.empty())
 		{
-			//TODO:: лучше узнавать формат изображения из содержимого
+			//TODO:: better to detect image format from content
 			wsExtention = L"png";
 		}
 	}
@@ -338,7 +338,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 			return true;
 		}
 
-		// Проверка на повтор
+		// Check for duplicate
 		const std::vector<std::wstring>::const_iterator nFind = std::find(m_arrImages.cbegin(), m_arrImages.cend(), wsSrc);
 		if (nFind != m_arrImages.end())
 		{
@@ -347,7 +347,7 @@ bool CImageTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 		}
 	}
 
-	// Предполагаем картинку по локальному пути
+	// Assume image by local path
 	if (IsSVG(wsExtention) || IsMetafile(wsExtention))
 	{
 		const std::wstring wsDst = wsImagePath + L".png";
@@ -551,7 +551,7 @@ bool CBlockquoteTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelec
 	if (!Valid())
 		return false;
 
-	//TODO:: когда Blockquote в Blockquote, то к первому нужно добавлять <w:divsChild>
+	//TODO:: when Blockquote inside Blockquote, need to add <w:divsChild> to the first one
 
 	const std::wstring wsKeyWord{arSelectors.back().m_wsName};
 
@@ -680,7 +680,7 @@ bool CHorizontalRuleTag<COOXMLWriter>::Write(const std::vector<NSCSS::CNode>& ar
 
 	std::wstring wsWidth;
 
-	// width измеряется в px или %
+	// width is measured in px or %
 	if (!oWidth.Empty())
 		wsWidth = std::to_wstring(static_cast<int>((NSCSS::UnitMeasure::Percent != oWidth.GetUnitMeasure()) ? (NSCSS::CUnitMeasureConverter::ConvertPx(oWidth.ToDouble(), NSCSS::Inch, 96) * 914400.) : oWidth.ToDouble(NSCSS::Inch, unPageWidth)));
 	else
@@ -688,7 +688,7 @@ bool CHorizontalRuleTag<COOXMLWriter>::Write(const std::vector<NSCSS::CNode>& ar
 
 	std::wstring wsHeight{L"14288"};
 
-	// size измеряется только в px
+	// size is measured only in px
 	if (!oSize.Empty())
 		wsHeight = std::to_wstring(static_cast<int>(NSCSS::CUnitMeasureConverter::ConvertPx(oSize.ToDouble(), NSCSS::Inch, 96) * 914400.));
 
@@ -736,7 +736,7 @@ bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode)
 
 	m_pWriter->CloseP();
 
-	//Нумерованный список
+	// Numbered list
 	if (L"ol" == oTagNode.m_wsName)
 	{
 		const int nStart{NSStringFinder::ToInt(oTagNode.GetAttributeValue(L"start"), 1)};
@@ -867,7 +867,7 @@ bool ReadMetafileBase(MetaFile::IMetaFile* pReader, NSFonts::IApplicationFonts* 
 		return false;
 
 	unsigned int alfa = 0xffffff;
-	//дефолтный тон должен быть прозрачным, а не белым
+	// default tone should be transparent, not white
 	//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 	for (int i = 0; i < nWidth * nHeight; i++)
 	{

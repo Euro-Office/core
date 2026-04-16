@@ -312,7 +312,7 @@ void CFRecord::appendRawData(const char* raw_data, const size_t size)
 
 void CFRecord::appendRawDataToStatic(const unsigned char *raw_data, const size_t size)
 {
-    if(MAX_RECORD_SIZE - rdPtr > size)
+	if(MAX_RECORD_SIZE - rdPtr >= size)
     {
         memcpy(&intData[rdPtr], raw_data, size);
         rdPtr += size;

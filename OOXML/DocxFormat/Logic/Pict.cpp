@@ -187,7 +187,7 @@ namespace OOX
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oNode.GetXml();	//для pptx dll
+			*m_sXml = oNode.GetXml();	//for pptx dll
 
 			fromStringXML(m_sXml.get());
 		}
@@ -197,7 +197,7 @@ namespace OOX
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oReader.GetOuterXml();	//для pptx dll
+			*m_sXml = oReader.GetOuterXml();	//for pptx dll
 
 			fromStringXML(m_sXml.get());
 		}
@@ -558,10 +558,10 @@ namespace OOX
 				return;
 
 			m_sXml.Init();
-			*m_sXml = oReader.GetOuterXml();	//для pptx dll
+			*m_sXml = oReader.GetOuterXml();	//for pptx dll
 
-												//альтернатива pptx
-			std::wstring sXml; //??? + ole наверно что то (лень ...)
+												//pptx alternative
+			std::wstring sXml; //??? + ole probably something (too lazy to check...)
 			sXml += L"<root \
 xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" \
 xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" \
@@ -654,7 +654,7 @@ xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\">
 
 						break;
 
-					case 'O':// собственно это и есть самый главный под-объект
+					case 'O':// this is actually the main sub-object
 						if (L"o:OLEObject" == sName)
 							m_oOleObject = oSubReader;
 						break;

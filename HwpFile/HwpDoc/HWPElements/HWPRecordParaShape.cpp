@@ -160,8 +160,8 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
       m_bConnect(false), m_bIgnoreMargin(false), m_bParaTailShape(false), m_nIndent(0), m_nMarginLeft(0),
       m_nMarginRight(0), m_nMarginPrev(0), m_nMarginNext(0)
 {
-	//В HWPX  в данной ноде данный пишутся по типу данный в нодах
-	//В HWPML в данной ноде данные пишутся по типу данные в аргументах
+	//In HWPX, node data is written not only in arguments but also in nested nodes.
+	//In HWPML, node data is written in arguments.
 	
 	if (EHanType::HWPX == eType)
 	{
@@ -211,7 +211,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 		}
 		else if ("BreakNonLatinWord" == sAttributeName)
 		{
-			//TODO:: проверить соответсвие hwpx и hwpml
+			//TODO:: Verify hwpx and hwpml correspondence
 		}
 		else if ("Condense" == sAttributeName)
 			m_chCondense = (HWP_BYTE)oReader.GetInt();
@@ -220,7 +220,7 @@ CHWPRecordParaShape::CHWPRecordParaShape(CHWPDocInfo& oDocInfo, CXMLReader& oRea
 		else if ("KeepWithNext" == sAttributeName)
 			m_bKeepWithNext = oReader.GetBool();
 		else if ("KeepLines" == sAttributeName)
-		{ /*TODO:: проверить соответсвие hwpx и hwpml*/ }
+		{ /*TODO:: verify correspondence between hwpx and hwpml*/ }
 		else if ("PageBreakBefore" == sAttributeName)
 			m_bPageBreakBefore = oReader.GetBool();
 		else if ("FontLineHeight" == sAttributeName)

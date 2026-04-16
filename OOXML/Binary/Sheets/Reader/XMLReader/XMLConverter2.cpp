@@ -71,7 +71,7 @@ void XMLConverter::ConvertXml(XLSXTableController &table)
         }
         prevType_ = nodeType;
     }
-    ///выписываем однократно содержимое нод, если нет повторяющихся
+    /// write node contents once if there are no repeating ones
     if(writingRows_.empty())
     {
         for(auto i :data_)
@@ -85,7 +85,7 @@ void XMLConverter::ConvertXml(XLSXTableController &table)
         auto nodeName = writingRows_.at(nodeCount)->ValueColumnName;
         auto rowNumber = nodeCount + 2;
 
-         ///  ищем самую старшую повторяющуюся ноду и заполняем унаследованные атрибуты
+         /// find the oldest repeating node and fill inherited attributes
         auto elderNode = writingRows_.at(nodeCount);
         for(auto i = elderNode; i; i = i->parent)
         {
@@ -219,7 +219,7 @@ void XMLConverter::closeNode()
         }
         for (const auto& key : delitingNodes)
         {
-            openednodes_.erase(key); // Удаление элемента с указанным ключом
+            openednodes_.erase(key); // Delete element with specified key
         }
 
         if((!nodePointer_->ValueColumnName.empty() || !nodePointer_->childs.empty()) && closedNode)
@@ -251,7 +251,7 @@ void XMLConverter::closeNode()
 
 std::wstring XMLConverter::getNodeName(const std::wstring &name)
 {
-    /// ищем среди использовавшихся имён нужное
+    /// search for needed name among used ones
     for(auto i = nodePointer_->attributes.begin(); i != nodePointer_->attributes.end(); i++)
     {
         if(colNames_->GetXmlName(*i) == name)

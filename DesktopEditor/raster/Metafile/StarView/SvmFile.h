@@ -283,7 +283,7 @@ class CSvmFile : virtual public IMetaFileBase
 		unsigned int ulBitsSize = cbBits;
 		if (ulHeaderSize <= 0 || ulBitsSize <= 0 || lHeaderOffset < 0 || lBitsOffset < 0)
 		{
-			// TODO: Если попали сюда, значит надо смотреть BitBltRasterOperation
+			// TODO: If we got here, need to check BitBltRasterOperation
 			if (lHeaderOffset > 0)
 				m_oStream.Skip(lHeaderOffset);
 
@@ -318,7 +318,7 @@ class CSvmFile : virtual public IMetaFileBase
 			TranslatePoint(nX, nY, dX, dY);
 			TranslatePoint(nX + nW, nY + nH, dR, dB);
 
-			//Если каждый 4-ый байт оставить 0, то получим черную картинку
+			// If every 4th byte is left as 0, we get a black image
 			for (int nIndex = 3, nSize = 4 * unImageW * unImageH; nIndex < nSize; nIndex += 4)
 				pImageBuffer[nIndex] = 255;
 
@@ -447,7 +447,7 @@ class CSvmFile : virtual public IMetaFileBase
 			m_pOutput->ArcTo(dL, dT, dR, dB, dStart, dSweep);
 		}
 
-		// Пересчет текущей позиции делается в каждой функции отдельно после вызова данной
+		// Current position recalculation is done separately in each function after calling this one
 	}
 	void DrawPath(bool bStroke, bool bFill)
 	{

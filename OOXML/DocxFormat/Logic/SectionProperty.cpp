@@ -146,7 +146,7 @@ namespace ComplexTypes
 		{
 		}
 		void CHdrFtrRef::FromXML(XmlUtils::CXmlNode& oNode)
-		{//todooo переделать на перебор всех и без неймспейсов
+		{//todooo refactor to iterate over all without namespaces
 			XmlMacroReadAttributeBase( oNode, L"r:id",   m_oId );
 			XmlMacroReadAttributeBase( oNode, L"w:type", m_oType );
 
@@ -1819,7 +1819,7 @@ namespace OOX
 		}
 		const CSectionProperty CSectionProperty::Merge(const CSectionProperty& oPrev, const CSectionProperty& oCurrent)
 		{
-			// ??? ну не хорошо это			
+			// ??? this is not good
 			return oPrev;
 		}
 

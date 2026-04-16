@@ -44,7 +44,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CMergeCell : public WritingElement
 		{

@@ -132,7 +132,7 @@ void BinaryCommonWriter::WriteItemEnd(int nStart)
 }
 int BinaryCommonWriter::WriteItemWithLengthStart()
 {
-//Запоминаем позицию чтобы в конце записать туда длину
+//Save position to write length at the end
 	int nStartPos = m_oStream.GetPosition();
 	m_oStream.Skip(4);
 	return nStartPos;
@@ -153,7 +153,7 @@ void BinaryCommonWriter::WriteBorder(const BYTE & type, const ComplexTypes::Word
 	WriteItemEnd(nCurPos);
 }
 void BinaryCommonWriter::WriteBorder(const ComplexTypes::Word::CBorder& border)
-{//todooo сделать все типы бордера
+{//todo implement all border types
 		
 	if (border.m_oColor.IsInit())
 		WriteColor(c_oSerBorderType::Color, border.m_oColor.get());
@@ -400,7 +400,7 @@ void BinaryCommonWriter::WriteFont(std::wstring sFontName, BYTE bType, DocWrappe
 {
 	if (!sFontName.empty())
 	{
-		//Подбор шрифтов
+		//Font matching
 		sFontName = m_oFontProcessor.getFont(sFontName);
 		if (NULL != m_pEmbeddedFontsManager)
 			m_pEmbeddedFontsManager->CheckFont(sFontName, m_oFontProcessor.getFontManager());
@@ -958,7 +958,7 @@ Binary_pPrWriter::Binary_pPrWriter(ParamsWriter& oParamsWriter, BinaryHeaderFoot
 void Binary_pPrWriter::Write_pPr(const OOX::Logic::CParagraphProperty& pPr)
 {
 	int nCurPos = 0;
-	//Стили надо писать первыми, потому что применение стиля при открытии уничтажаются настройки параграфа
+	//Styles must be written first, because applying style on open destroys paragraph settings
 
 	std::wstring sStyleId;
 	if (false != pPr.m_oPStyle.IsInit())
@@ -1021,8 +1021,8 @@ void Binary_pPrWriter::Write_pPr(const OOX::Logic::CParagraphProperty& pPr)
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Byte);
 		m_oBcw.m_oStream.WriteBOOL(SimpleTypes::onoffTrue == pPr.m_oWidowControl.get().m_oVal.GetValue());
 	}
-	//Списки надо писать после стилей, т.к. при открытии в методах добавления списка проверяются стили
-	//Списки могут быть заданы с стилях.Это надо учитывать.
+	//Lists must be written after styles, because list addition methods check styles when opening
+	//Lists can be defined in styles. This must be taken into account.
 //NumPr
 	if (pPr.m_oNumPr.IsInit() && (pPr.m_oNumPr->m_oNumID.IsInit() || pPr.m_oNumPr->m_oIlvl.IsInit()))
 	{
@@ -2443,8 +2443,8 @@ void Binary_tblPrWriter::WriteRowHeight(const ComplexTypes::Word::CHeight& rowHe
 	if (rowHeight.m_oVal.IsInit())
 	{
 		//HRule
-		//хотя по спецификации отсутсвие hRule долно трактоваться как auto(17.4.81  trHeight (Table Row Height))
-		//word трактует <w:trHeight w:val="542"/> как AtLeast
+		//although by spec absence of hRule should be treated as auto (17.4.81 trHeight (Table Row Height))
+		//word treats <w:trHeight w:val="542"/> as AtLeast
 		SimpleTypes::EHeightRule eHRule = SimpleTypes::heightruleAtLeast;
 		if (rowHeight.m_oHRule.IsInit())
 			eHRule = rowHeight.m_oHRule->GetValue();
@@ -4363,7 +4363,7 @@ void BinaryDocumentTableWriter::WriteFldSimpleContent(OOX::Logic::CFldSimple* pF
 {
 	int nCurPos = 0;
 
-//порядок записи важен
+//write order is important
 
 	nCurPos = m_oBcw.WriteItemStart(c_oSer_FldSimpleType::Instr);
 		m_oBcw.m_oStream.WriteStringW3(*pFldSimple->m_sInstr);
@@ -4713,7 +4713,7 @@ void BinaryDocumentTableWriter::WriteRun(OOX::Logic::CRun* pRun, bool bHyperlink
 	else
 		nRecordType = c_oSerParType::Run;
 
-//Разбиваем массив по знаку et_w_sym
+//Split array by et_w_sym sign
 	for (std::vector<OOX::WritingElement*>::iterator it = nIndexStart; it != nIndexEnd; ++it)
 	{
 		OOX::WritingElement* item = (*it);
@@ -4916,7 +4916,7 @@ void BinaryDocumentTableWriter::WriteMathArgNodes(const std::vector<OOX::Writing
 				nCurPos = m_oBcw.WriteItemStart(c_oSer_OMathContentType::Matrix);
 
 				LONG lCol = 0;
-				//TODO убрать, тк при отсутствии m:mcs, к-во столбцов должно разруливаться динамически в скрипте
+				//TODO remove, since without m:mcs, column count should be resolved dynamically in script
 				for (std::vector<OOX::WritingElement*>::iterator jt = pMatrix->m_arrItems.begin(); jt != pMatrix->m_arrItems.end(); jt++)
 				{
 					OOX::WritingElement* item = *jt;
@@ -5229,7 +5229,7 @@ void BinaryDocumentTableWriter::WriteMathRunContent(OOX::Logic::CMRun* pMRun)
 				OOX::Logic::CSym* oSym = static_cast<OOX::Logic::CSym*>(item);
 				wchar_t ch = 0x0FFF & oSym->m_oChar->GetValue();
 				std::wstring sText(&ch, 1);
-				WriteText(sText, c_oSerRunType::run);  // todooo определить что писать c_oSerRunType::run или c_oSerRunType::delText - 66333
+				WriteText(sText, c_oSerRunType::run);  // todooo determine what to write c_oSerRunType::run or c_oSerRunType::delText - 66333
 				
 			}break;
 			case OOX::et_w_delText:
@@ -5445,7 +5445,7 @@ void BinaryDocumentTableWriter::WriteMathBrk(const OOX::Logic::CBrk &pBrk)
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Long);
 		m_oBcw.m_oStream.WriteLONG(pBrk.m_alnAt->GetValue());
 	}
-	//заглушка для <m:brk>
+	//stub for <m:brk>
 	else
 	{
 		m_oBcw.m_oStream.WriteBYTE(c_oSer_OMathBottomNodesValType::Val);
@@ -6561,7 +6561,7 @@ void BinaryDocumentTableWriter::WritePreparedRun(OOX::Logic::CRun *pRun, bool bH
 	int							nCurPos		= 0;
 	OOX::Logic::CRunProperty*	oCur_rPr	= pRun->m_oRunProperty;
 
-//Если первый элемент символ надо выставить в его настройки шрифт
+//If first element is symbol, need to set font in its settings
 	if (start != pRun->m_arrItems.end() && OOX::et_w_sym == (*start)->getType())
 	{
 		OOX::Logic::CSym* oSym = static_cast<OOX::Logic::CSym*>(*start);
@@ -6582,7 +6582,7 @@ void BinaryDocumentTableWriter::WritePreparedRun(OOX::Logic::CRun *pRun, bool bH
 			oCur_rPr->m_oRFonts->m_sHAnsi->append(sFont);
 		}
 	}
-//пишем rPr
+//write rPr
 	if (NULL != oCur_rPr)
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSerRunType::rPr);
@@ -6590,7 +6590,7 @@ void BinaryDocumentTableWriter::WritePreparedRun(OOX::Logic::CRun *pRun, bool bH
 		m_oBcw.WriteItemEnd(nCurPos);
 	}
 
-	//Content пишется начиная от индекса nIndexStart и заканчивая предшествующим элементом для nIndexStop
+	//Content is written starting from nIndexStart and ending with preceding element for nIndexStop
 	nCurPos = m_oBcw.WriteItemStart(c_oSerRunType::Content);
 		WriteRunContent( start, end, bHyperlink);
 	m_oBcw.WriteItemWithLengthEnd(nCurPos);
@@ -6692,7 +6692,7 @@ void BinaryDocumentTableWriter::WriteRunContent(std::vector<OOX::WritingElement*
 				OOX::Logic::CSym* oSym = static_cast<OOX::Logic::CSym*>(item);
 				wchar_t ch = 0x0FFF & oSym->m_oChar->GetValue();
 				std::wstring sText(&ch, 1);
-				WriteText(sText, c_oSerRunType::run);  // todooo определить что писать c_oSerRunType::run или c_oSerRunType::delText - 66333
+				WriteText(sText, c_oSerRunType::run);  // todooo determine what to write c_oSerRunType::run or c_oSerRunType::delText - 66333
 				break;
 			}
 		case OOX::et_w_delText:
@@ -6871,7 +6871,7 @@ bool BinaryDocumentTableWriter::WriteDrawingPptx(OOX::WritingElement* item)
 	{
 		if ((pGraphic) && (pGraphic->contentPart.IsInit()))
 		{
-			//todooo разобрать по типам вставок
+			//todooo parse by insertion types
 			res = false;
 		}
 		else
@@ -7658,7 +7658,7 @@ void BinaryDocumentTableWriter::WriteDocTable(OOX::Logic::CTbl* tbl)
 }
 bool BinaryDocumentTableWriter::ValidateRow(const std::vector<OOX::WritingElement *> & arrItems)
 {
-//Проверяем чтобы не все ячейки в ряду были вертикально замержены
+//Check that not all cells in row are vertically merged
 	bool bRes = true;
 
 	for(size_t i = 0; i < arrItems.size(); ++i)
@@ -8007,7 +8007,7 @@ void BinaryDocumentTableWriter::WriteRowContent(const std::vector<OOX::WritingEl
 void BinaryDocumentTableWriter::WriteCell(OOX::Logic::CTc& tc, OOX::Logic::CTableProperty* pTblPr, int nCurRowIndex, int nCurColIndex)
 {
 	int nCurPos = 0;
-//св-ва ячейки
+//cell properties
 	if (NULL != tc.m_pTableCellProperties)
 	{
 		nCurPos = m_oBcw.WriteItemStart(c_oSerDocTableType::Cell_Pr);
@@ -8701,7 +8701,7 @@ void BinaryCommentsTableWriter::WriteCommentsContent(OOX::CComments& oComments, 
 		}
 		aCommentsToWrite.push_back(pNewCommentWriteTemp);
 	}
-	//разбираемся с reply и done
+	//handle reply and done
 	if (NULL != pCommentsExt)
 	{
 		for(size_t i = 0, length = pCommentsExt->m_arrComments.size(); i < length; i++)
@@ -9797,10 +9797,10 @@ std::wstring BinaryFileWriter::WriteFileHeader(long nDataSize, int version)
 }
 void BinaryFileWriter::WriteMainTableStart(bool bSigTable)
 {
-	int nTableCount = 128;//Специально ставим большое число, чтобы не увеличивать его при добавлении очередной таблицы.
+	int nTableCount = 128;//Intentionally set large number to avoid increasing it when adding next table.
 	m_nRealTableCount = 0;
 	m_nMainTableStart = m_oBcw.m_oStream.GetPosition();
-	//вычисляем с какой позиции можно писать таблицы
+	//calculate from which position we can write tables
 	int nmtItemSize = 5;//5 byte
 	m_nLastFilePos = m_nMainTableStart + nTableCount * nmtItemSize;
 	//Write mtLen
@@ -9820,11 +9820,11 @@ void BinaryFileWriter::WriteMainTableStart(bool bSigTable)
 }
 void BinaryFileWriter::WriteMainTableEnd()
 {
-	//Количество таблиц
+	//Number of tables
 	m_oBcw.m_oStream.SetPosition(m_nMainTableStart);
 	m_oBcw.m_oStream.WriteBYTE(m_nRealTableCount);
 
-	//Seek в конец
+	//Seek to end
 	m_oBcw.m_oStream.SetPosition(m_nLastFilePos);
 }
 int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
@@ -9838,18 +9838,18 @@ int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
 	m_oBcw.m_oStream.WriteLONG(m_nLastFilePos);
 
 	//Write table
-	//Запоминаем позицию в MainTable
+	//Remember position in MainTable
 	int nCurPos = m_oBcw.m_oStream.GetPosition();
-	//Seek в свободную область
+	//Seek to free area
 	m_oBcw.m_oStream.SetPosition(m_nLastFilePos);
 	return nCurPos;
 }
 void BinaryFileWriter::WriteTableEnd(int nCurPos)
 {
-	//сдвигаем позицию куда можно следующую таблицу
+	//shift position where next table can be written
 	m_nLastFilePos = m_oBcw.m_oStream.GetPosition();
 	m_nRealTableCount++;
-	//Seek вобратно в MainTable
+	//Seek back to MainTable
 	m_oBcw.m_oStream.SetPosition(nCurPos);
 }
 void BinaryFileWriter::intoBindoc(const std::wstring& sSrcPath)

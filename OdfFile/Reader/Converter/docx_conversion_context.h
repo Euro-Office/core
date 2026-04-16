@@ -44,6 +44,7 @@
 #include "oox_conversion_context.h"
 #include "oox_chart_context.h"
 #include "xlsx_drawing_context.h"
+#include "xlsx_num_format_context.h"
 
 #include "headers_footers.h"
 #include "hyperlinks.h"
@@ -500,7 +501,8 @@ public:
 		}
 		else
 		{
-			ref_.push_back(id);
+			ref_start_.push_back(id);
+			ref_end_.push_back(id);
 		}
 		comments_.push_back(new_comment);
 	}
@@ -513,7 +515,7 @@ public:
 	std::vector<int>			ref_;
 
 private:
-	rels internal_rels_;//это для гиперлинков или медиа в комментариях
+	rels internal_rels_;//this is for hyperlinks or media in comments
 	std::map<std::wstring, int> comments_map_;
 };
 
@@ -930,7 +932,8 @@ public:
 	forms_context		& get_forms_context()		{ return forms_context_; }
 	tabs_context		& get_tabs_context()		{ return tabs_context_;}
 	table_content_context & get_table_content_context()	{ return table_content_context_;}
-	
+	num_format_context	& get_num_format_context()	{ return num_format_context_; }
+
 	xlsx_drawing_context_handle_ptr & get_chart_drawing_handle() { return chart_drawing_handle_;} 
 
 	void set_drawing_text_props (const std::wstring &props);
@@ -1077,7 +1080,7 @@ private:
 	forms_context			forms_context_;
 	tabs_context			tabs_context_;
 	table_content_context	table_content_context_;
-       
+	num_format_context		num_format_context_;
     boost::shared_ptr<streams_man> streams_man_;
 
     package::docx_document		* output_document_;
@@ -1117,12 +1120,12 @@ private:
 	std::wstring		current_alphabetic_index_;
 	int					current_margin_left_;
 	int					current_outline_level_;
-    int					new_list_style_number_;	// счетчик для нумерации имен созданных в процессе конвертации стилей
+    int					new_list_style_number_;	// counter for numbering names created during style conversion
     
 	std::vector<odf_reader::office_element*>							delayed_elements_;
 
 	std::map<std::wstring, text_tracked_context::_state>				map_current_changes_;    
-    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// цепочки переименований нумераций
+    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// chains of numbering renames
 	
 	std::map<std::wstring, std::wstring>								map_user_fields;
 	std::map<std::wstring, int>											mapBookmarks;

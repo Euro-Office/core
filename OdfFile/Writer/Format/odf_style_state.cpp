@@ -162,7 +162,7 @@ void odf_style_state::set_automatic(bool val)
 {
 	automatic_ = val;
 }
-void odf_style_state::set_root(bool val)//метка того что в файле styles, а не content
+void odf_style_state::set_root(bool val)// flag that it's in styles file, not content
 {
 	root_ = val;
 }

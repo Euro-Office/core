@@ -654,12 +654,12 @@ void OoxConverter::convert(OOX::WritingElement  *oox_unknown)
 			{
 				convert(dynamic_cast<OOX::Drawing::COfficeArtExtension*>(oox_unknown));
 			}break;
-			// "ненужные" элементы
+			// "unnecessary" elements
 			case OOX::et_w_softHyphen:
 			case OOX::et_w_proofErr:
 			case OOX::et_w_proofState:
 			{
-				//бяка
+				//garbage
 			}break;
 			//--Math
 			case OOX::et_m_oMath:
@@ -963,7 +963,7 @@ void OoxConverter::convert(double oox_font_size,  _CP_OPT(odf_types::font_size) 
 
 	 odf_length = odf_types::length(oox_font_size, odf_types::length::pt);
 	 
-	 if (odf_length)
+	 if (odf_length && oox_font_size > 2)
 		 odf_font_size = odf_types::font_size(odf_length.get());
 }
 void OoxConverter::convert(OOX::JsaProject *jsaProject)

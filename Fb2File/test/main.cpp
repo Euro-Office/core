@@ -19,18 +19,18 @@ int main()
 	bool bFromHtml  = false;
 	if (bBatchMode)
 	{
-		// Директория файлов
+		// Files directory
 		std::wstring sDirectory = NSFile::GetProcessDirectory() + L"/../../../examples/fb2";
-		// Вложенные директории
+		// Subdirectories
 		std::vector<std::wstring> arrDirectory;
 		getDirectories(sDirectory, arrDirectory);
 
-		// Параметры конвертации
+		// Conversion parameters
 		CFb2Params oParams;
 		oParams.bNeedDocx = false;
 		oParams.bNeedContents = true;
 		COfficeUtils oZip;
-		// Выставляем временную директорию
+		// Set temporary directory
 		std::wstring sTmp = NSFile::GetProcessDirectory() + L"/tmp";
 		NSDirectory::DeleteDirectory(sTmp);
 		NSDirectory::CreateDirectory(sTmp);
@@ -47,7 +47,7 @@ int main()
 			{
 				std::vector<std::wstring> arrFiles = NSDirectory::GetFiles(sD);
 
-				// Директория, где будем создавать docx
+				// Directory where docx will be created
 				size_t nPos = sD.find(L"/fb2");
 				sD.insert(nPos + 4, L"-res");
 				NSDirectory::DeleteDirectory(sD);
@@ -90,10 +90,10 @@ int main()
 	{
 		CFb2File oFile;
 
-		// Файл, который открываем
+		// File to open
 		std::wstring sFile = NSFile::GetProcessDirectory() + L"/res.fb2";
 
-		// Директория, где будем создавать docx
+		// Directory where docx will be created
 		std::wstring sOutputDirectory = NSFile::GetProcessDirectory() + L"/res";
 		NSDirectory::DeleteDirectory(sOutputDirectory);
 		NSDirectory::CreateDirectory(sOutputDirectory);

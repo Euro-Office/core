@@ -42,9 +42,9 @@ namespace NSHtmlRenderer
 {
 	struct CHFontInfo
 	{
-		int m_lAscent;
-		int m_lDescent;
-		int m_lUnitsPerEm;
+		double m_lAscent;
+		double m_lDescent;
+		double m_lUnitsPerEm;
 
 		CHFontInfo() : m_lAscent(0), m_lDescent(0), m_lUnitsPerEm(0) {}
 		CHFontInfo(const CHFontInfo& oSrc) : m_lAscent(oSrc.m_lAscent), m_lDescent(oSrc.m_lDescent), m_lUnitsPerEm(oSrc.m_lUnitsPerEm) {}
@@ -65,11 +65,27 @@ namespace NSHtmlRenderer
 		NSStructures::CFont* m_pFont;
 		CHFontInfo m_oCurrentInfo;
 
+		bool m_bIsType3;
+		double m_dType3GlyphWidth;
+
 	public:
-		CFontManagerWrapper() : m_pManager(NULL) {}
+		CFontManagerWrapper() : m_pManager(NULL), m_bIsType3(false), m_dType3GlyphWidth(0) {}
 		virtual ~CFontManagerWrapper()
 		{
 			RELEASEOBJECT(m_pManager);
+		}
+
+		void SetType3Metrics(double dAscent, double dDescent, double dUnitsPerEm, double dGlyphWidth)
+		{
+			m_bIsType3 = true;
+			m_dType3GlyphWidth = dGlyphWidth;
+			m_oCurrentInfo.m_lAscent     = dAscent;
+			m_oCurrentInfo.m_lDescent    = dDescent;
+			m_oCurrentInfo.m_lUnitsPerEm = dUnitsPerEm > 0 ? dUnitsPerEm : 1000;
+		}
+		void ClearType3()
+		{
+			m_bIsType3 = false;
 		}
 
 		void Init(NSFonts::IApplicationFonts* pApplicationFonts, int nCacheSize = 0)
@@ -95,15 +111,25 @@ namespace NSHtmlRenderer
 			else
 				LoadFontByFile(m_pFont->Path, m_pFont->Size);
 		}
-		double MeasureString(const unsigned int* symbols, const int& count, double x, double y)
+		TBBox MeasureString(const unsigned int* symbols, const int& count, double x, double y)
 		{
+			if (m_bIsType3)
+			{
+				TBBox oBox;
+				double dUnitsPerEm = m_oCurrentInfo.m_lUnitsPerEm > 0 ? m_oCurrentInfo.m_lUnitsPerEm : 1000;
+				double dFontSizePt = m_pFont ? m_pFont->Size : 10.0;
+				oBox.fMinX = (float)x;
+				oBox.fMinY = (float)(-(m_oCurrentInfo.m_lAscent  / dUnitsPerEm) * dFontSizePt);
+				oBox.fMaxX = (float)(x + m_dType3GlyphWidth);
+				oBox.fMaxY = (float)( (m_oCurrentInfo.m_lDescent / dUnitsPerEm) * dFontSizePt);
+				return oBox;
+			}
+
 			if (!m_pManager)
-				return 0;
+				return TBBox();
 
 			m_pManager->LoadString1(symbols, count, (float)x, (float)y);
-			TBBox _box = m_pManager->MeasureString2();
-
-			return abs((_box.fMaxX - _box.fMinX) * 25.4 / 72.0);
+			return m_pManager->MeasureString2();
 		}
 
 	private:
@@ -162,7 +188,7 @@ namespace NSHtmlRenderer
 		}
 		void CommandText(const int* pUnicodes, const int* pGids, const int& nCount, const double& x, const double& y, bool bIsDumpFont)
 		{
-			// 1) сначала определяем точку отсчета и направление baseline
+			// 1) first determine reference point and baseline direction
 			double _x1 = x;
 			double _y1 = y;
 			double _x2 = x + 1;
@@ -196,11 +222,11 @@ namespace NSHtmlRenderer
 				else if (!_isConstX && !m_oLine.m_bIsConstX && fabs(_k - m_oLine.m_dK) < 0.001 && fabs(_b - m_oLine.m_dB) < 0.001)
 					bIsNewLine = false;
 
-				if (bIsNewLine) // не совпала baseline. поэтому просто скидываем линию в поток
+				if (bIsNewLine) // baseline didn't match. so just dump line to stream
 					DumpLine();
 			}
 
-			// теперь нужно определить сдвиг по baseline относительно destination точки
+			// now need to determine offset along baseline relative to destination point
 			double dOffsetX = 0;
 			LONG nCountChars = m_oLine.GetCountChars();
 			if (0 == nCountChars)
@@ -226,14 +252,14 @@ namespace NSHtmlRenderer
 
 				if (sx * m_oLine.m_ex >= 0 && sy * m_oLine.m_ey >= 0)
 				{
-					// продолжаем линию
+					// continue line
 					dOffsetX = len;
 
-					// теперь посмотрим, может быть нужно вставить пробел??
+					// now let's see if we need to insert a space
 					NSWasm::CHChar* pLastChar = m_oLine.GetTail();
 					if (dOffsetX > (pLastChar->width + 0.5))
 					{
-						// вставляем пробел. Пробел у нас будет не совсем пробел. А специфический
+						// insert space. Our space will not be a regular space. But a specific one
 						NSWasm::CHChar* pSpaceChar = m_oLine.AddTail();
 						pLastChar = &m_oLine.m_pChars[m_oLine.m_lCharsTail - 2];
 						pSpaceChar->x = pLastChar->width;
@@ -244,9 +270,9 @@ namespace NSHtmlRenderer
 				}
 				else
 				{
-					// буква сдвинута влево относительно предыдущей буквы
-					// на такую ситуацию реагируем просто - просто начинаем новую линию,
-					// предварительно сбросив старую
+					// letter is shifted left relative to previous letter
+					// we react to this situation simply - just start a new line,
+					// after dumping the old one
 					DumpLine();
 
 					m_oLine.m_bIsConstX = _isConstX;
@@ -266,7 +292,7 @@ namespace NSHtmlRenderer
 			}
 
 			if (!Aggplus::CMatrix::IsEqual(m_pLastTransform, m_pTransform, 0.001, true))
-			{ // смотрим, совпадает ли главная часть матрицы
+			{ // check if main part of matrix matches
 				bIsDumpFont = true;
 				*m_pLastTransform = *m_pTransform;
 				m_oLine.m_bIsSetUpTransform = true;
@@ -276,8 +302,8 @@ namespace NSHtmlRenderer
 				m_oLine.m_sy  = m_pTransform->sy();
 			}
 
-			// все, baseline установлен. теперь просто продолжаем линию
-			if (bIsDumpFont)
+			// done, baseline is set. now just continue the line
+			if (bIsDumpFont && !m_oFontManager.m_bIsType3)
 				m_oFontManager.LoadCurrentFont();
 
 			double dKoef = m_oFontManager.m_pFont->Size * 25.4 / (72 * m_oFontManager.m_oCurrentInfo.m_lUnitsPerEm);
@@ -305,7 +331,14 @@ namespace NSHtmlRenderer
 			double dPrevW = dOffsetX;
 			for (int i = 0; i < nCount; ++i)
 			{
-				double dW = m_oFontManager.MeasureString((const unsigned int*)(input + i), 1, 0, 0);
+				TBBox bBox = m_oFontManager.MeasureString((const unsigned int*)(input + i), 1, 0, 0);
+				double dW = std::abs((bBox.fMaxX - bBox.fMinX) * 25.4 / 72.0);
+				double dMeasureAscent  = std::abs(bBox.fMinY * 25.4 / 72.0);
+				double dMeasureDescent = std::abs(bBox.fMaxY * 25.4 / 72.0);
+				if (m_oLine.m_dAscent < dMeasureAscent)
+					m_oLine.m_dAscent = dMeasureAscent;
+				if (m_oLine.m_dDescent < dMeasureDescent)
+					m_oLine.m_dDescent = dMeasureDescent;
 
 				NSWasm::CHChar* pChar = m_oLine.AddTail();
 				pChar->unicode = pUnicodes[i];
@@ -334,12 +367,12 @@ namespace NSHtmlRenderer
 
 			if (m_oLine.m_bIsSetUpTransform)
 			{
-				// выставится трансформ!!!
-				// cравнивать нужно с ним!!!
+				// transform will be set!!!
+				// need to compare with it!!!
 				m_pLastTransform->SetElements(m_oLine.m_sx, m_oLine.m_shy, m_oLine.m_shx, m_oLine.m_sy);
 			}
 
-			// скидываем линию в поток pMeta
+			// dump line to pMeta stream
 			m_pPageMeta->WriteDouble(m_oLine.m_dX);
 			m_pPageMeta->WriteDouble(m_oLine.m_dY);
 
@@ -392,8 +425,8 @@ namespace NSHtmlRenderer
 					bIsLastSymbol = true;
 				}
 
-				m_pPageMeta->AddInt(pChar->unicode); // юникодное значение
-				m_pPageMeta->WriteDouble(pChar->width); // ширина буквы
+				m_pPageMeta->AddInt(pChar->unicode); // unicode value
+				m_pPageMeta->WriteDouble(pChar->width); // letter width
 			}
 			if (bIsLastSymbol)
 				m_nCountWords++;

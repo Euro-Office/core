@@ -101,7 +101,7 @@ void oox_chart::set_properties(odf_reader::chart_format_properties_ptr & prop)
 	{
 		dispBlanksAs_ = L"gap";
 	}
-	//solid-type - трехмерные
+	//solid-type - 3D
 }
 void oox_chart::oox_serialize_common(std::wostream & _Wostream)
 {
@@ -440,7 +440,7 @@ void oox_scatter_chart::set_properties(odf_reader::chart_format_properties_ptr &
 	oox_chart::set_properties(prop);
 
 	odf_reader::GetProperty(prop, L"regression-type", iRegressionType);// none, linear, logarithmic, exponential, power
-	//в xl похоже этого нет
+	//xl doesn't seem to have this
 }
 void oox_scatter_chart::oox_serialize(std::wostream & _Wostream)
 {

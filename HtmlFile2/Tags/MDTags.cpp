@@ -209,7 +209,7 @@ bool ConvertFromMetafileBase(MetaFile::IMetaFile* pMetafileReader, UINT unWidth,
 		return false;
 
 	unsigned int alfa = 0xffffff;
-	//дефолтный тон должен быть прозрачным, а не белым
+	//The default tone should be transparent, not white
 	//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 	for (int i = 0; i < unWidth * unHeight; i++)
 		((unsigned int*)pBgraData)[i] = alfa;
@@ -410,7 +410,7 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	bool bResult{false};
 	std::wstring wsResultBase64;
 
-	// Предполагаем картинку в Base64
+	// Assume an image in Base64
 	if (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"data" && wsSrc.find(L"/", 4) != std::wstring::npos)
 	{
 		if (bNeedSetSize)
@@ -432,14 +432,14 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 
 	const std::wstring wsBasePath{m_pWriter->GetBasePath()};
 
-	// Предполагаем картинку в сети
+	// Assume an image on the network
 	if (!bResult &&
 	    ((!wsBasePath.empty() && wsBasePath.length() > 4 && wsBasePath.substr(0, 4) == L"http") ||
 	      (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"http")))
 	{
 		const std::wstring wsDst{NSFile::CFileBinary::CreateTempFileWithUniqueName(m_pWriter->GetTempDir(), L"IMG")};
 
-		// Проверка gc_allowNetworkRequest предполагается в kernel_network
+		// The check for gc_allowNetworkRequest is assumed to be in kernel_network
 		NSNetwork::NSFileTransport::CFileDownloader oDownloadImg(m_pWriter->GetBasePath() + wsSrc, false);
 		oDownloadImg.SetFilePath(wsDst);
 		bResult = oDownloadImg.DownloadSync();
@@ -462,7 +462,7 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 		}
 	}
 
-	// Предполагаем картинку по локальному пути
+	// Assume an image at a local path
 	if (!bResult)
 	{
 		const bool bIsAllowExternalLocalFiles{GetStatusUsingExternalLocalFiles()};
@@ -1219,133 +1219,6 @@ Table CMarkdownTable::Flatten(Table&& srcTable)
 
 	return oResult;
 }
-
-// Table CMarkdownTable::Flatten(Table&& srcTable)
-// {
-// 	if (srcTable.empty())
-// 		return {};
-
-// 	const size_t unRows = srcTable.size();
-
-// 	// ---------- 1. Разворачиваем строки с учётом colspan ----------
-// 	std::vector<std::vector<ITableElementCell*>> expandedRows;
-// 	expandedRows.reserve(unRows);
-// 	size_t unColumns = 0;
-
-// 	for (Row& oRow : srcTable)
-// 	{
-// 		std::vector<ITableElementCell*> expandedRow;
-// 		for (ITableElementCell* pCell : oRow)
-// 		{
-// 			if (pCell != nullptr)
-// 			{
-// 				expandedRow.push_back(pCell);
-// 				size_t colspan = pCell->GetColspan();
-// 				// Добавляем (colspan - 1) пустых ячеек справа
-// 				for (size_t i = 1; i < colspan; ++i)
-// 					expandedRow.push_back(nullptr);
-// 			}
-// 			else
-// 			{
-// 				expandedRow.push_back(nullptr);
-// 			}
-// 		}
-// 		unColumns = std::max(unColumns, expandedRow.size());
-// 		expandedRows.push_back(std::move(expandedRow));
-// 	}
-
-// 	// Приводим все строки к одинаковой длине
-// 	for (auto& row : expandedRows)
-// 		row.resize(unColumns, nullptr);
-
-// 	// ---------- 2. Вычисляем информацию о размерах каждой ячейки ----------
-// 	std::vector<std::vector<TElementInfo>> oInfos(unRows, std::vector<TElementInfo>(unColumns));
-// 	for (size_t r = 0; r < unRows; ++r)
-// 		for (size_t c = 0; c < unColumns; ++c)
-// 			oInfos[r][c] = ComputeInfo(expandedRows[r][c]);
-
-// 	// ---------- 3. Вычисляем высоты строк и ширины столбцов ----------
-// 	std::vector<size_t> arRowHeights(unRows, 1);
-// 	std::vector<size_t> arColumnWidths(unColumns, 1);
-
-// 	for (size_t r = 0; r < unRows; ++r)
-// 	{
-// 		for (size_t c = 0; c < unColumns; ++c)
-// 		{
-// 			arRowHeights[r] = std::max(arRowHeights[r], oInfos[r][c].m_unRows);
-// 			arColumnWidths[c] = std::max(arColumnWidths[c], oInfos[r][c].m_unColumns);
-// 		}
-// 	}
-
-// 	// ---------- 4. Вычисляем смещения строк и столбцов в результирующей сетке ----------
-// 	std::vector<size_t> arRowStart(unRows + 1, 0);
-// 	std::vector<size_t> arColumnStart(unColumns + 1, 0);
-
-// 	for (size_t r = 0; r < unRows; ++r)
-// 		arRowStart[r + 1] = arRowStart[r] + arRowHeights[r];
-
-// 	for (size_t c = 0; c < unColumns; ++c)
-// 		arColumnStart[c + 1] = arColumnStart[c] + arColumnWidths[c];
-
-// 	const size_t unTotalRows    = arRowStart[unRows];
-// 	const size_t unTotalColumns = arColumnStart[unColumns];
-
-// 	Table oResult(unTotalRows, Row(unTotalColumns, nullptr));
-
-// 	// ---------- 5. Заполняем результат ----------
-// 	for (size_t r = 0; r < unRows; ++r)
-// 	{
-// 		for (size_t c = 0; c < unColumns; ++c)
-// 		{
-// 			ITableElementCell*& pCell = expandedRows[r][c];
-// 			if (pCell == nullptr)
-// 				continue;
-
-// 			const size_t unBaseRow    = arRowStart[r];
-// 			const size_t unBaseColumn = arColumnStart[c];
-
-// 			// Обычная ячейка (не контейнер)
-// 			if (!IsTableContainer(pCell))
-// 			{
-// 				oResult[unBaseRow][unBaseColumn] = pCell;
-// 				pCell = nullptr;
-// 				continue;
-// 			}
-
-// 			// Контейнер таблиц
-// 			CTableContainer* pContainer = dynamic_cast<CTableContainer*>(pCell);
-// 			std::vector<CTableElement*> arTables = pContainer->GetTables();
-// 			pCell = nullptr;   // владение передано
-
-// 			size_t unCurrentRowOffset = 0;
-// 			for (CTableElement* pTableElem : arTables)
-// 			{
-// 				// Предполагаем, что в контейнере лежат только CMarkdownTable
-// 				CMarkdownTable* pMarkdownTable = dynamic_cast<CMarkdownTable*>(pTableElem);
-// 				if (pMarkdownTable == nullptr)
-// 					continue;
-
-// 				TElementInfo oSubInfo = ComputeInfo(pMarkdownTable);
-// 				Table& oChild = pMarkdownTable->m_oBody.GetMatrixCells();
-// 				Table oFlatChild = Flatten(std::move(oChild));
-
-// 				for (size_t cr = 0; cr < oSubInfo.m_unRows; ++cr)
-// 					for (size_t cc = 0; cc < oSubInfo.m_unColumns; ++cc)
-// 						oResult[unBaseRow + unCurrentRowOffset + cr][unBaseColumn + cc] = oFlatChild[cr][cc];
-
-// 				// Если первая ячейка сплющенной таблицы является CTableElementCell, помечаем её
-// 				if (auto* pFlatCell = dynamic_cast<CTableElementCell*>(oResult[unBaseRow + unCurrentRowOffset][unBaseColumn]))
-// 					pFlatCell->IsFlatTable();
-
-// 				unCurrentRowOffset += oSubInfo.m_unRows;
-// 			}
-
-// 			delete pContainer;
-// 		}
-// 	}
-
-// 	return oResult;
-// }
 
 TElementInfo CMarkdownTable::ComputeInfo(const ITableElementCell* pCell)
 {

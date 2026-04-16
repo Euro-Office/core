@@ -524,7 +524,7 @@ namespace PPTX
 						pWriter->EndRecord();
 					}					
 				}
-				else if (strTextBoxShape.is_init())//после конвертации старого шейпа (vml)
+				else if (strTextBoxShape.is_init())//after converting old shape (vml)
 				{
 					long lDataSize = 0;
 					ULONG lPos = pWriter->GetPosition();
@@ -857,7 +857,6 @@ namespace PPTX
 				pWriter->WriteAttribute(L"from", XmlUtils::ToString(pWriter->m_dX, L"%.1lf") + L"pt," + XmlUtils::ToString(pWriter->m_dY, L"%.1lf") + L"pt");
 				pWriter->WriteAttribute(L"to", XmlUtils::ToString(pWriter->m_dX + pWriter->m_dWidth, L"%.1lf") + L"pt," + XmlUtils::ToString(pWriter->m_dY + pWriter->m_dHeight, L"%.1lf") + L"pt");
 			}
-
 			if (false == pWriter->m_strAttributesMain.empty())
 			{
 				pWriter->WriteString(pWriter->m_strAttributesMain);
@@ -867,6 +866,14 @@ namespace PPTX
 			pWriter->WriteString(strFillAttr);
 			pWriter->WriteString(strStrokeAttr);
 
+			if (spPr.Geometry.hr.IsInit())
+			{
+				pWriter->WriteAttribute(L"o:hr", L"t");
+				pWriter->WriteAttribute(L"o:hrstd", L"t");
+				pWriter->WriteAttribute(L"o:hralign", spPr.Geometry.hr->align);
+				pWriter->WriteAttribute(L"o:hrpct", spPr.Geometry.hr->pct);
+				pWriter->WriteAttribute(L"o:hrnoshade", spPr.Geometry.hr->noshade.get_value_or(false) ? L"t" : L"f");
+			}
 			pWriter->EndAttributes();
 
 			if (false == strTextRect.empty())

@@ -1756,7 +1756,7 @@ namespace Draw
 			}
 		}
 		if (false == bThemes)
-		{//некорректный контейнер ???
+		{//invalid container ???
 			OOX::Draw::CVsdx *vsdx = dynamic_cast<OOX::Draw::CVsdx*>(((OOX::File*)this)->m_pMainDocument);
 
 			if (vsdx && vsdx->m_pContentTypes.IsInit())

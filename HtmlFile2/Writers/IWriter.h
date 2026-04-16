@@ -11,12 +11,12 @@ namespace HTML
 class IWriter
 {
 protected:
-	const std::wstring *m_pTempDir;  // Temp папка
-	const std::wstring *m_pSrcPath;  // Директория источника
-	const std::wstring *m_pBasePath; // Полный базовый адрес
-	const std::wstring *m_pCorePath; // Путь до корневого файла (используется для работы с Epub)
+	const std::wstring *m_pTempDir;  // Temp folder
+	const std::wstring *m_pSrcPath;  // Source directory
+	const std::wstring *m_pBasePath; // Full base path
+	const std::wstring *m_pCorePath; // Path to the root file (used for working with Epub)
 
-	NSFonts::IApplicationFonts* m_pFonts;     // Необходимо для оптимизации работы со шрифтами
+	NSFonts::IApplicationFonts* m_pFonts; // Necessary for optimizing font handling
 public:
 	IWriter()
 		: m_pTempDir(nullptr), m_pSrcPath(nullptr),
@@ -42,8 +42,8 @@ public:
 	virtual void BeginBlock() = 0;
 	virtual void EndBlock(bool bAddBlock) = 0;
 
-	virtual void SetDataOutput(XmlString* pOutputData) = 0; // Задаем место вывода для интерпретатора
-	virtual void RevertDataOutput() = 0; // Возвращаем место вывода к исходному
+	virtual void SetDataOutput(XmlString* pOutputData) = 0; // Set output location for interpreter
+	virtual void RevertDataOutput() = 0; // Revert output location to original
 
 	virtual XmlString* GetCurrentDocument() const = 0;
 

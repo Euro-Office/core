@@ -37,68 +37,68 @@
 const std::wstring CurrencyFormatTemplate = L"#,##0.00";
 
 const std::set<std::wstring> CurrencySymbols = {
-    L"\u0024",    // Доллар США
-    L"\u20AC",    // Евро
-    L"\u00A5",    // Японская иена
-    L"\u00A3",    // Фунт стерлингов Великобритании
-    L"\u0024\u0061",   // Австралийский доллар
-    L"\u0024\u0063",   // Канадский доллар
-    L"\u0046\u0072\u002E",  // Швейцарский франк
-    L"\u20BD",    // Российский рубль
-    L"\u20B8",    // Казахский тенге
-    L"\u5143",   // Китайский юань
-    L"\u20B1", // Филиппинское песо
-    L"\u20B9", // Индийская рупия
-    L"\u20AA", // Израильский новый шекель
-    L"\u20A7", // Испанская песета
-    L"\u0631.\u0633.", //Саудовский риал
+    L"\u0024",    // US Dollar
+    L"\u20AC",    // Euro
+    L"\u00A5",    // Japanese Yen
+    L"\u00A3",    // British Pound Sterling
+    L"\u0024\u0061",   // Australian Dollar
+    L"\u0024\u0063",   // Canadian Dollar
+    L"\u0046\u0072\u002E",  // Swiss Franc
+    L"\u20BD",    // Russian Ruble
+    L"\u20B8",    // Kazakh Tenge
+    L"\u5143",   // Chinese Yuan
+    L"\u20B1", // Philippine Peso
+    L"\u20B9", // Indian Rupee
+    L"\u20AA", // Israeli New Shekel
+    L"\u20A7", // Spanish Peseta
+    L"\u0631.\u0633.", // Saudi Riyal
     L"kr.",
     L"Ft",
-    L"\u20A9", // Корейская вона
-    L"\u007a\u0142",// Польский злотый
+    L"\u20A9", // Korean Won
+    L"\u007a\u0142",// Polish Zloty
     L"R\u0024",
     L"kr",
-    L"\u20BA", //Турецкая лира
-    L"\u20B4",//Украинская гривна
-    L"\u20AB", //Вьетнамский донг
-    L"\u20BC", //Азербайджанский манат
-    L"\u20AE", //Монгольский тугрик
-    L"\u043B\u0432.", //Болгарский лев
+    L"\u20BA", // Turkish Lira
+    L"\u20B4",// Ukrainian Hryvnia
+    L"\u20AB", // Vietnamese Dong
+    L"\u20BC", // Azerbaijani Manat
+    L"\u20AE", // Mongolian Tugrik
+    L"\u043B\u0432.", // Bulgarian Lev
     L"NT\u0024",
-    L"\u004B\u010D", //Чешская крона
+    L"\u004B\u010D", // Czech Koruna
     L"Rp",
-    L"\u062F.\u0639.‏", //Иракский динар
+    L"\u062F.\u0639.‏", // Iraqi Dinar
     L"L",
-    L"\u062C.\u0645.‏", // Египетский фунт
+    L"\u062C.\u0645.‏", // Egyptian Pound
     L"HK\u0024",
-    L"\u062F.\u0644.‏", // Ливийский динар
+    L"\u062F.\u0644.‏", // Libyan Dinar
     L"Q",
     L"KM",
-    L"\u062F.\u062C.‏", // Алжирский динар
-    L"\u20A1", //Колон Сальвадора и Коста-рики
+    L"\u062F.\u062C.‏", // Algerian Dinar
+    L"\u20A1", // El Salvadoran and Costa Rican Colon
     L"B/.",
-    L"\u062F.\u062A.‏", //Тунисский динар
+    L"\u062F.\u062A.‏", // Tunisian Dinar
     L"R",
     L"EC\u0024",
-    L"\u0631.\u0639.‏", //Оманский риал
+    L"\u0631.\u0639.‏", // Omani Rial
     L"Bs.S",
-    L"\u0631.\u064A.‏", //Йеменский риал
+    L"\u0631.\u064A.‏", // Yemeni Rial
     L"FC",
     L"RSD",
-    L"\u0434\u0438\u043D.", //сирийский динар
-    L"\u062F.\u0627.‏", //Дирхам ОАЭ
+    L"\u0434\u0438\u043D.", // Syrian Dinar
+    L"\u062F.\u0627.‏", // UAE Dirham
     L"FCFA",
-    L"\u0644.\u0644.‏", //Ливанский фунт
+    L"\u0644.\u0644.‏", // Lebanese Pound
     L"US\u0024",
     L"CFA",
-    L"\u062F.\u0643.‏", //Кувейтский динар
-    L"\u20B1", // Филлипинское песо
-    L"\u062F.\u0625.‏", //Иорданский динар
+    L"\u062F.\u0643.‏", // Kuwaiti Dinar
+    L"\u20B1", // Philippine Peso
+    L"\u062F.\u0625.‏", // Jordanian Dinar
     L"DH",
-    L"\u062F.\u0628.‏", //Бахрейнский динар
-    L"\u20B2", //Парагвайский гуарани
+    L"\u062F.\u0628.‏", // Bahraini Dinar
+    L"\u20B2", // Paraguayan Guarani
     L"G",
-    L"\u0631.\u0648.‏", //Катарский риал
+    L"\u0631.\u0648.‏", // Qatari Riyal
     L"Bs",
     L"RM",
     L"C\u0024",

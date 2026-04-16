@@ -46,13 +46,13 @@
 class TGlyphBitmap 
 {
 public:
-	int     nX;        // Сдвиг по X начальной точки для рисования символа
-	int     nY;        // Сдвиг по Y начальной точки для рисования символа
-	int     nWidth;    // Ширина символа
-	int     nHeight;   // Высота символа
-	INT    bAA;       // Anti-aliased: True означает, что Bitmap 8-битный(т.е. с альфой); False - Bitmap 1-битный
-	BYTE*	pData;     // Bitmap data(картинка с символом)
-	INT    bFreeData; // True, если память в pData нужно освободить
+	int     nX;        // X offset of starting point for drawing character
+	int     nY;        // Y offset of starting point for drawing character
+	int     nWidth;    // Character width
+	int     nHeight;   // Character height
+	INT    bAA;       // Anti-aliased: True means Bitmap is 8-bit (i.e. with alpha); False - Bitmap is 1-bit
+	BYTE*	pData;     // Bitmap data (image with character)
+	INT    bFreeData; // True if memory in pData needs to be freed
 
 	TGlyphBitmap();
 	~TGlyphBitmap();
@@ -60,9 +60,9 @@ public:
 
 enum EGlyphState
 {
-	glyphstateNormal = 0,  // символ отрисовался в нужном шрифте
-	glyphstateDefault,     // символ отрисовался в дефолтовом шрифте
-	glyphstateMiss         // символ не отрисовался
+	glyphstateNormal = 0,  // character rendered in required font
+	glyphstateDefault,     // character rendered in default font
+	glyphstateMiss         // character was not rendered
 };
 
 struct TMetrics
@@ -82,9 +82,9 @@ struct TMetrics
 class TGlyph
 {
 public:
-	unsigned int lUnicode; // Юникод
-	float        fX;       // Позиция глифа
-	float        fY;       // на BaseLine
+	unsigned int lUnicode; // Unicode
+	float        fX;       // Glyph position
+	float        fY;       // on BaseLine
 
 	float        fLeft;    //
 	float        fTop;     // BBox
@@ -107,7 +107,7 @@ public:
 namespace FontConstants
 {
 	//---------------------------------------------------------------------------------------------------
-	// Константы связанные с CharMap: Platform, Encoding ID
+	// Constants related to CharMap: Platform, Encoding ID
 	//---------------------------------------------------------------------------------------------------
 
 	const long c_lUniPlatform = 0;
@@ -180,19 +180,19 @@ public:
 	float   m_fTransX;
 	float   m_fTransY;
 
-	float   m_fX; // Координаты начальной точки для рисования
+	float   m_fX; // Starting point coordinates for drawing
 	float   m_fY; //
 
-	float   m_fEndX; // Координаты конечной точки
+	float   m_fEndX; // End point coordinates
 	float   m_fEndY; //
 
-	double  m_arrCTM[6];     // Глобальная матрица преобразования
-	double  m_dIDet;         // (Детерминант матрицы преобразования)^(-1)
-	
+	double  m_arrCTM[6];     // Global transformation matrix
+	double  m_dIDet;         // (Transformation matrix determinant)^(-1)
+
 private:
-	TGlyph* m_pGlyphsBuffer; // Символы в данной строке
-	int     m_nGlyphsCount;  // Количество символов в строке
-	int     m_nGlyphIndex;   // Номер текущего символа
+	TGlyph* m_pGlyphsBuffer; // Characters in this string
+	int     m_nGlyphsCount;  // Number of characters in string
+	int     m_nGlyphIndex;   // Current character index
 };
 
 #endif /* _BUILD_GLYPH_STRING_H */

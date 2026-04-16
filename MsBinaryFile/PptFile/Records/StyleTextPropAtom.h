@@ -37,11 +37,11 @@ namespace PPT
 class CRecordStyleTextPropAtom : public CUnknownRecord
 {
 public:
-	// нужно еще хранить позицию в стриме, 
-	// указатель на начало
+	// also need to store position in stream,
+	// pointer to the beginning
 	LONG m_lOffsetInStream;
-	
-	// просто данные. будут обновляться по мере прибытия
+
+	// just data. will be updated as it arrives
 	// Text.Bytes/Chars.Atom
 	_UINT32 m_lCount; 
 

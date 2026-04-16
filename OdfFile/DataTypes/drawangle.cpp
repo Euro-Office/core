@@ -39,7 +39,7 @@ namespace cpdoccore {
 
 		std::wostream & operator << (std::wostream & _Wostream, const draw_angle & _Val)
 		{
-			_Wostream << (int)(_Val.get_value()) << L"deg"; //?? или округлть до 2 знаков???
+			_Wostream << (int)(_Val.get_value()) << L"deg"; //?? or round to 2 decimal places???
 			return _Wostream;
 		}
 
@@ -64,7 +64,7 @@ namespace cpdoccore {
 			}
 			else // no unit
 			{
-				//старая версия содержит множитель 10.
+				// old version contains multiplier 10.
 			}
 
 			int val = (value * 100);

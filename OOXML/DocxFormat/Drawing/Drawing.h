@@ -89,7 +89,7 @@ namespace OOX
 			bool IsAlign() const;
 			bool IsPosOffset() const;
 
-			bool										m_bAlign; // используем Align или (PosOffset или PctOffset)
+			bool										m_bAlign; // use Align or (PosOffset or PctOffset)
 
 			nullable<SimpleTypes::CRelFromH>			m_oRelativeFrom;
 
@@ -121,7 +121,7 @@ namespace OOX
 			bool IsAlign() const;
 			bool IsPosOffset() const;
 
-			bool										m_bAlign; // используем Align или PosOffset
+			bool										m_bAlign; // use Align or PosOffset
 
 			nullable<SimpleTypes::CRelFromV>			m_oRelativeFrom;
 
@@ -462,7 +462,7 @@ namespace OOX
 			bool IsAnchor() const;
 			bool IsInline() const;
 
-			bool                            m_bAnchor; // используем Anchor или Inline
+			bool                            m_bAnchor; // use Anchor or Inline
 	// Childs
 			nullable<OOX::Drawing::CAnchor> m_oAnchor;
 			nullable<OOX::Drawing::CInline> m_oInline;

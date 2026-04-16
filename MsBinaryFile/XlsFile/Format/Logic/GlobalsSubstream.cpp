@@ -102,6 +102,7 @@
 #include "Biff_records/ExternName.h"
 #include "Biff_records/ExternSheet.h"
 #include "Biff_records/Continue.h"
+#include "Biff_records/MsoDrawingGroup.h"
 //#include "Biff_records/XCT.h"
 //#include "Biff_records/CRN.h"
 
@@ -570,15 +571,15 @@ const bool GlobalsSubstream::loadContent(BinProcessor& proc)
 			case rt_GUIDTypeLib:		proc.optional<GUIDTypeLib>();			break;
 
 			//case rt_XFCRC:
-			//{//не по спецификации !!! Calculadora.xls
+			//{//not according to specification !!! Calculadora.xls
 			//	if(proc.optional<XFCRC>())
 			//	{
-			//		elements_.pop_back(); // Crc не нужен
+			//		elements_.pop_back(); // Crc not needed
 
 			//		count = proc.repeated<XFExt>(0, 0);//(16, 4050);
 			//		while (count > 0)
 			//		{
-			//			//перенести в FORMATING/XFS ?? - тогда нужен пересчет там !!
+			//			//move to FORMATING/XFS ?? - then recalculation needed there !!
 			//			//if (elements_.empty()) break;
 			//			//XFExt* ext = dynamic_cast<XFExt*>(elements_.back().get());
 			//			//m_arXFext.push_back(elements_.front());
@@ -670,9 +671,6 @@ const bool GlobalsSubstream::saveContent(BinProcessor& proc)
 		proc.mandatory(*m_CodeName);
 	if(m_FNGROUPS != nullptr)
 		proc.mandatory(*m_FNGROUPS);
-	for(auto i : m_arLBL)
-		if(i != nullptr)
-			proc.mandatory(*i);
 	if(m_PROTECTION != nullptr)
 		proc.mandatory(*m_PROTECTION);
 	else
@@ -730,6 +728,16 @@ const bool GlobalsSubstream::saveContent(BinProcessor& proc)
 	for(auto i: m_arSUPBOOK)
 		if(i != nullptr)
 			proc.mandatory(*i);
+	for(auto i : m_arLBL)
+		if(i != nullptr)
+			proc.mandatory(*i);
+	for(auto i : m_arMSODRAWINGGROUP)
+	{
+		auto drawingGroupUnion = static_cast<MSODRAWINGGROUP*>(i.get());
+		auto drawingGroup = static_cast<MsoDrawingGroup*>(drawingGroupUnion->m_MsoDrawingGroup.get());
+		drawingGroup->prepareChart(drawingGroup->drawingCount);
+		proc.mandatory(*drawingGroupUnion);
+	}
 	if(m_SHAREDSTRINGS != nullptr)
 		proc.mandatory(*m_SHAREDSTRINGS);
 	if(m_ExtSST != nullptr)
@@ -743,6 +751,8 @@ const bool GlobalsSubstream::saveContent(BinProcessor& proc)
 			proc.mandatory(*i);
 	if(m_THEME != nullptr)
 		proc.mandatory(*m_THEME);
+	else
+		proc.mandatory<THEME>();
 	proc.mandatory<EOF_T>();
 	return true;
 }
@@ -942,7 +952,7 @@ void GlobalsSubstream::UpdateDefineNames()
 				name = L"_xludf." + name;
 			}
 		}
-		global_info_->arDefineNames.push_back(name);// для имен функций - todooo ... не все функции корректны !! БДИ !!
+		global_info_->arDefineNames.push_back(name);// for function names - todooo ... not all functions are correct!! WATCH OUT!!
 	}
 }
 void GlobalsSubstream::UpdateExternalDefineNames()

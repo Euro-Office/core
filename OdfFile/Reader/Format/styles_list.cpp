@@ -629,15 +629,15 @@ void text_list_level_style_number::pptx_convert(oox::pptx_conversion_context & C
 	
 	CP_XML_WRITER(strm)
 	{ 	
-		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///these properties relate
+			// to icon rendering !!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
 	    }
 		if (false == num_format.empty())
 		{
-			CP_XML_NODE(L"a:buAutoNum")//ms козлы !! для них оказыается ВАЖЕН порядок .. если записать это поле первым, а потом свойства - нихера в мс2010 не отображается верно !!!
+			CP_XML_NODE(L"a:buAutoNum")//ms jerks !! turns out order is IMPORTANT for them .. if you write this field first, then properties - nothing displays correctly in ms2010 !!!
 			{
 				CP_XML_ATTR(L"startAt", number_attr_.text_start_value_);
 				CP_XML_ATTR(L"type", num_format);
@@ -804,8 +804,8 @@ void text_list_level_style_bullet::pptx_convert(oox::pptx_conversion_context & C
 		style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get());
 		std::wstring bullet = bullet_attr_.text_bullet_char_.get_value_or(L"\x2022");
 	    
-		if (textProperties)///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (textProperties)///these properties relate
+			// to icon rendering !!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
@@ -963,8 +963,8 @@ void text_list_level_style_image::pptx_convert(oox::pptx_conversion_context & Co
 			style_text_properties* textProperties = dynamic_cast<style_text_properties*>(text_properties_.get());
 			wchar_t bullet = L'\x2022';
 
-			if (textProperties)///эти свойства относятся 
-				// к отрисовки значков !!! а не самого текста
+			if (textProperties)///these properties relate
+				// to bullet rendering !!! not the text itself
 			{
 				textProperties->content_.pptx_convert_as_list(Context);
 				strm << Context.get_text_context().get_styles_context().text_style().str();

@@ -59,8 +59,8 @@ const static std::map<std::wstring, HtmlTag> m_HTML_TAGS
 	ADD_TAG(L"code", CODE),
 	ADD_TAG(L"col", COL),
 	ADD_TAG(L"colgroup", COLGROUP),
-	ADD_TAG(L"command", SKIP_TAG), // Данного обозначения нет, но т.к.мы всё равно пропускаем, то делаем script
-	ADD_TAG(L"comment", SKIP_TAG), // Данного обозначения нет, но т.к.мы всё равно пропускаем, то делаем script
+	ADD_TAG(L"command", SKIP_TAG), // This tag designation doesn't exist, but since we skip it anyway, we treat it as script
+	ADD_TAG(L"comment", SKIP_TAG), // This tag designation doesn't exist, but since we skip it anyway, we treat it as script
 	ADD_TAG(L"datalist", DATALIST),
 	ADD_TAG(L"dd", DD),
 	ADD_TAG(L"del", DEL),
@@ -517,7 +517,8 @@ bool CHTMLReader::Convert(const std::wstring& wsPath, Convert_Func Convertation)
 	oReader.ReadNextNode();
 	ReadStyle(oReader);
 
-	// Переходим в начало
+
+	// Go to the beginning
 	if(!oReader.MoveToStart())
 		return S_FALSE;
 
@@ -542,7 +543,7 @@ void CHTMLReader::ReadStyle(XmlUtils::CXmlLiteReader& oReader)
 			ReadStyle2(oReader);
 		else
 		{
-			// Стиль по ссылке
+			// Style by link
 			if(sName == L"link")
 			{
 				while(oReader.MoveToNextAttribute())
@@ -550,7 +551,7 @@ void CHTMLReader::ReadStyle(XmlUtils::CXmlLiteReader& oReader)
 
 				oReader.MoveToElement();
 			}
-			// тэг style содержит стили для styles.xml
+			// style tag contains styles for styles.xml
 			else if(sName == L"style")
 				m_oCSSCalculator.AddStyles(oReader.GetText2());
 			else
@@ -562,14 +563,14 @@ void CHTMLReader::ReadStyle(XmlUtils::CXmlLiteReader& oReader)
 void CHTMLReader::ReadStyle2(XmlUtils::CXmlLiteReader& oReader)
 {
 	const std::wstring wsName = oReader.GetName();
-	// Стиль по ссылке
+	// Style by link
 	if(wsName == L"link")
 	{
 		while(oReader.MoveToNextAttribute())
 			ReadStyleFromNetwork(oReader);
 		oReader.MoveToElement();
 	}
-	// тэг style содержит стили для styles.xml
+	// style tag contains styles for styles.xml
 	else if(wsName == L"style")
 		m_oCSSCalculator.AddStyles(oReader.GetText2());
 
@@ -589,7 +590,7 @@ void CHTMLReader::ReadStyleFromNetwork(XmlUtils::CXmlLiteReader& oReader)
 	if(NSFile::GetFileExtention(sRef) != L"css")
 		return;
 	std::wstring sFName = NSFile::GetFileName(sRef);
-	// Стиль в сети
+	// Style from network
 	if(sRef.substr(0, 4) == L"http")
 	{
 		sFName = m_wsTempDirectory + L'/' + sFName;
@@ -631,7 +632,7 @@ void CHTMLReader::ReadHead(XmlUtils::CXmlLiteReader& oReader)
 	while (oReader.ReadNextSiblingNode(nDeath))
 	{
 		const std::wstring wsName = oReader.GetName();
-		// Базовый адрес
+		// Base address
 		if (L"base" == wsName)
 			m_wsBaseDirectory = GetArgumentValue(oReader, L"href");
 	}
@@ -699,7 +700,7 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 	if(wsName == L"#text")
 		return ReadText(oReader, arSelectors);
 
-	//TODO:: обработать все варианты return'а
+	//TODO:: handle all return variants
 	if (UnreadableNode(wsName) || TagIsUnprocessed(wsName))
 		return false;
 
@@ -841,7 +842,7 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 		case HTML_TAG(STYLE):
 		case HTML_TAG(SCRIPT):
 		{
-			//Если встретили не обрабатываемые теги, то просто пропускаем
+			//If we encounter unhandled tags, just skip them
 			arSelectors.pop_back();
 			return false;
 		}
@@ -1049,10 +1050,10 @@ inline std::wstring GetArgumentValue(XmlUtils::CXmlLiteReader& oLiteReader, cons
 	return wsValue;
 }
 
-// Так как CSS калькулятор не знает для какой ноды производится расчет стиля
-// и не знает, что некоторые стили предназначены только определенной ноде,
-// то проще пока обрабатывать это заранее
-// ! Используется для стилей, заданных через аргументы !
+// Since CSS calculator doesn't know which node the style is being calculated for
+// and doesn't know that some styles are intended only for a specific node,
+// it's easier for now to handle this in advance
+// ! Used for styles specified through arguments !
 inline bool CheckArgumentMath(const std::wstring& wsNodeName, const std::wstring& wsStyleName)
 {
 	if (L"border" == wsStyleName && L"table" != wsNodeName)
@@ -1090,7 +1091,7 @@ inline void GetSubClass(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CN
 	NSCSS::CNode oNode;
 
 	oNode.m_wsName = oReader.GetName();
-	// Стиль по атрибуту
+	// Style by attribute
 	std::wstring wsAttributeName;
 
 	if (oReader.MoveToFirstAttribute())
@@ -1101,13 +1102,7 @@ inline void GetSubClass(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CN
 			if(wsAttributeName == L"class")
 				oNode.m_wsClass  = EncodeXmlString(oReader.GetText());
 			else if(wsAttributeName == L"id")
-			{
 				oNode.m_wsId = EncodeXmlString(oReader.GetText());
-				// WriteEmptyBookmark(oXml, oNode.m_wsId);
-
-				// if (!m_oStylesCalculator.HaveStylesById(oNode.m_wsId))
-					// oNode.m_wsId.clear();
-			}
 			else if(wsAttributeName == L"style")
 				oNode.m_wsStyle += oReader.GetText();
 			else

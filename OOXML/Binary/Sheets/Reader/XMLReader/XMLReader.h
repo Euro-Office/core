@@ -33,21 +33,21 @@
 
 #include "../../../../XlsxFormat/Xlsx.h"
 
-/// @brief класс считывающий xml документы в xlsl
+/// @brief class that reads xml documents into xlsx
 class XMLReader
 {
 public:
 
-    /// @brief Считывание документа
-    /// @param FileName имя xml файла который будет считан
-    /// @param oXlsx объект Xlsx таблицы в которую считается xml
-    /// @return код выполнения операции
+    /// @brief Read document
+    /// @param FileName xml file name to be read
+    /// @param oXlsx Xlsx spreadsheet object where xml will be read into
+    /// @return operation result code
 	_UINT32 Read(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx);
 
-    /// @brief Вторая версия считывающего метода
-    /// @param FileName имя xml файла который будет считан
-    /// @param oXlsx объект Xlsx таблицы в которую считается xml
-    /// @param идентификатор локали для определения форматов дат
-    /// @return код выполнения операции
+    /// @brief Second version of reading method
+    /// @param FileName xml file name to be read
+    /// @param oXlsx Xlsx spreadsheet object where xml will be read into
+    /// @param lcid locale identifier for determining date formats
+    /// @return operation result code
     _UINT32 Read2(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _INT32 lcid = -1);
 };

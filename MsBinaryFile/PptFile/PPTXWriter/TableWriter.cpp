@@ -450,8 +450,8 @@ void TableWriter::FillRow(PPTX::Logic::TableRow &oRow, ProtoTableRow& arrCells)
 
 std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 {
-    //в таблице могут быть линки и ссылки на другние объекты (картинки???)
-    // yliko_provolis.ppt (+ тут есть смарт арты)
+    // table may contain links and references to other objects (images???)
+    // yliko_provolis.ppt (+ smart arts are here)
 
     auto& rXml = m_pTableElement->m_xmlRawData;
 
@@ -460,10 +460,10 @@ std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 
     if (graphic_frame.nvGraphicFramePr.IsInit())
     {
-        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // или менять в карте связей для анимаций
+        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // or change in the relations map for animations
 
         if (graphic_frame.nvGraphicFramePr->nvPr.ph.IsInit() && idx >= 0)
-        {//проверить
+        {// check
             graphic_frame.nvGraphicFramePr->nvPr.ph->idx = std::to_wstring(idx);
         }
     }

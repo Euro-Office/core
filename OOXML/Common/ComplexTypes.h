@@ -204,7 +204,7 @@ namespace ComplexTypes
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
-			// TO DO: сделать парсер языка по спецификации RFC 4646/BCP 47 - CLang
+			// TODO: implement language parser according to RFC 4646/BCP 47 specification - CLang
 			nullable_string m_oBidi;
 			nullable_string m_oEastAsia;
 			nullable_string m_oVal;

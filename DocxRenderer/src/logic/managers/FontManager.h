@@ -20,7 +20,7 @@ namespace NSDocxRenderer
 		CUnicodeRange(const int& _start = 0, const int& _end = 0, const BYTE& _range = 0, const BYTE& _rangenum = 0);
 	};
 
-	// класс для проставления Ranges для подбора шрифта по символу
+	// class for setting Ranges for font selection by character
 	class CUnicodeRanges
 	{
 	public:
@@ -43,7 +43,7 @@ namespace NSDocxRenderer
 
 	struct CFontSelectParams
 	{
-		// изначальные параметры, которые могут быть нам известны
+		// initial parameters that may be known to us
 		std::wstring wsDefaultName{L""};
 		bool bDefaultBold{false};
 		bool bDefaultItalic{false};
@@ -60,11 +60,11 @@ namespace NSDocxRenderer
 		bool operator==(const CFontSelectParams& oOther);
 	};
 
-	// подбирает шрифт по параметрам
+	// selects font by parameters
 	class CFontSelector
 	{
 	public:
-		// структура для хранения уже подобранных шрифтов
+		// structure for storing already selected fonts
 		struct CFontSelectInfo
 		{
 			CFontSelectParams oFontSelectParams;
@@ -104,7 +104,7 @@ namespace NSDocxRenderer
 		bool CheckFontNameStyle(std::wstring& wsName, const std::wstring& sStyle);
 	};
 
-	// грузит шрифт, его параметры и метрики + измеряет шрифт
+	// loads font, its parameters and metrics + measures font
 	class CFontManager
 	{
 	public:

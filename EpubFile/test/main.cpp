@@ -29,7 +29,6 @@ int main()
     std::vector<std::wstring> arFiles = NSDirectory::GetFiles(NSFile::GetProcessDirectory() + L"/../../../Files");
 
     clock_t tTime1 = clock();
-    //Русские символы в консоль не выводятся
     for (const std::wstring& sFileName : arFiles)
     {
         clock_t tTimeBegin = clock();

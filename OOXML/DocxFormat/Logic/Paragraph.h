@@ -77,8 +77,8 @@ namespace OOX
 			nullable<SimpleTypes::CLongHexNumber> m_oRsidRDefault;
 			nullable<SimpleTypes::CLongHexNumber> m_oRsidRPr;
 
-			CParagraphProperty *m_oParagraphProperty; // копия того что в m_arrItems...  - для быстрого доступа/анализа
-			// по идее нужно сделать как в Drawing::Paragraph - то есть единственные подобъекты вынести отдельно
+			CParagraphProperty *m_oParagraphProperty; // copy of what's in m_arrItems...  - for quick access/analysis
+			// ideally should be done like in Drawing::Paragraph - i.e. move single sub-objects separately
 			WritingElement *m_oParent = NULL;
 		};
 	} // namespace Logic

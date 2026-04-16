@@ -476,7 +476,7 @@ namespace OOX
 				ptr->f123Prefix = m_oQuotePrefix->GetValue();
 
 			if (m_oXfId.IsInit())
-				ptr->ixfParent = m_oXfId->GetValue();
+				ptr->ixfParent = m_oXfId->GetValue() + 16;
 			else
 				ptr->ixfParent = 0xFFF;
 
@@ -636,7 +636,7 @@ namespace OOX
 		}
 		void CCellXfs::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )

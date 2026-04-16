@@ -60,8 +60,8 @@ public:
 	RtfBorder m_oBorderBottom;
 	RtfBorder m_oBorderRight;
 
-	bool			m_bIsCopy;		// true - надо удалять m_sPicFilename, false - не надо удалять
-    std::wstring	m_sPicFilename; //всегда содержит имя картинки, тип которой поддерживает rtf
+	bool			m_bIsCopy;		// true - need to delete m_sPicFilename, false - do not delete
+    std::wstring	m_sPicFilename; //always contains the image name whose type is supported by rtf
 
     std::vector<std::wstring> m_aTempFiles;
 	

@@ -358,7 +358,7 @@ namespace MetaFile
 			*this >> oText.unIGraphicsMode;
 			*this >> oText.dExScale;
 			*this >> oText.dEyScale;
-			ReadEmrText(oText.oEmrText, 36); // 8 + 28 (8 - тип и размер, 28 - размер данной структуры)
+			ReadEmrText(oText.oEmrText, 36); // 8 + 28 (8 - type and size, 28 - size of this structure)
 
 			return *this;
 		}
@@ -600,7 +600,7 @@ namespace MetaFile
 				for (unsigned int unIndex = 0; unIndex < oText.unCStrings; unIndex++)
 				{
 					unsigned int nCurPos = Tell();
-					ReadEmrText(oText.arEmrText[unIndex], nCurPos - nStartPos + 36); // 8 + 28 (8 - тип и размер, 28 - размер данной структуры)
+					ReadEmrText(oText.arEmrText[unIndex], nCurPos - nStartPos + 36); // 8 + 28 (8 - type and size, 28 - size of this structure)
 				}
 			}
 			else
@@ -869,7 +869,7 @@ namespace MetaFile
 			*this >> pFont->uchQuality;
 			*this >> pFont->uchPitchAndFamily;
 
-			// Читаем до тех пор пока не встретим нулевой символ
+			// Read until we encounter a null character
 			unsigned char unIndex = 0;
 			*this >> pFont->uchFacename[unIndex];
 			while (0x00 != pFont->uchFacename[unIndex])
@@ -939,7 +939,7 @@ namespace MetaFile
 			*this >> oScan.ushTop;
 			*this >> oScan.ushBottom;
 
-			if (oScan.ushCount > 0 && !(oScan.ushCount & 1)) // Должно делиться на 2
+			if (oScan.ushCount > 0 && !(oScan.ushCount & 1)) // Must be divisible by 2
 			{
 				unsigned short ushCount = oScan.ushCount >> 1;
 				oScan.pScanLines = new TWmfScanLine[ushCount];
@@ -1127,14 +1127,14 @@ namespace MetaFile
 		{
 			*this >> oText;
 
-			// Читаем OutputString
+			// Read OutputString
 			oText.unChars = std::min(oText.unChars, (UINT)(CanRead() / sizeof(T)));
 
 			if (0 == oText.unChars)
 				return;
 
 			if (oText.unOffString - 40 > unOffset)
-				Skip(oText.unOffString - (unOffset + 40)); // 40 - размер структуры TEmfEmrText
+				Skip(oText.unOffString - (unOffset + 40)); // 40 - TEmfEmrText structure size
 
 			T* pString = new T[oText.unChars + 1];
 			if (pString)
@@ -1144,7 +1144,7 @@ namespace MetaFile
 				oText.pOutputString = pString;
 			}
 
-			// Читаем OutputDx
+			// Read OutputDx
 			if (oText.unChars < (UINT32_MAX / 2) && (oText.unOffDx > oText.unOffString) && (oText.unOffDx - oText.unOffString > 2 * oText.unChars))
 				Skip(oText.unOffDx - oText.unOffString - 2 * oText.unChars);
 

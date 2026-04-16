@@ -372,6 +372,7 @@ void CF12::writeFields(CFRecord& record)
 						else if (dxfObj.m_oNumFmt->m_oFormatCode.IsInit())
 						{
 							dxf.dxfn->fIfmtUser = true;
+							dxf.dxfn->ifmtNinch = false;
 							dxf.dxfn->dxfnum.user_defined.fmt = dxfObj.m_oNumFmt->m_oFormatCode.get();
 						}
 					}
@@ -545,7 +546,7 @@ int CF12::serialize(std::wostream & stream)
 			if (rgbCT)
 				rgbCT->serialize(CP_XML_STREAM());
 
-			//что использовать зависит от типа ... todooo
+			//what to use depends on the type ... todooo
 			std::wstring s	= fmlaActive.getAssembledFormula();
 			std::wstring s1 = rgce1.getAssembledFormula();
 			std::wstring s2 = rgce2.getAssembledFormula();

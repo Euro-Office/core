@@ -73,13 +73,13 @@ namespace PPTX
 		}
 
 		Parse();
-		// todooo .. разбить строку и создать структуру <a:p>...</a:p><a:p>...</a:p>...<a:p>...</a:p>
-		// щас используется 'нулевой' вариант
-		// незабыть поменять в doc_LoadShape (ASCOfficeDrawingConvert.cpp)
+		// todo .. split string and create structure <a:p>...</a:p><a:p>...</a:p>...<a:p>...</a:p>
+		// currently 'zero' variant is used
+		// don't forget to change in doc_LoadShape (ASCOfficeDrawingConvert.cpp)
 	}
 	void LegacyDiagramText::write(const OOX::CPath& filename, const OOX::CPath& directory, OOX::CContentTypes& content)const
 	{
-		//старье на запись не поддерживаем
+		//legacy writing is not supported
 		content.Registration(type().OverrideType(), directory, filename);
 	}
 	LegacyDiagramText& LegacyDiagramText::operator=(const LegacyDiagramText& oSrc)
@@ -271,7 +271,7 @@ namespace PPTX
 			else
 				Bulleted	= false;
 		}
-//todooo протестировано тока align
+//todo only align tested
 		if (bulletChar_)
 		{
 			Logic::BuChar *buChar = new Logic::BuChar();
@@ -441,7 +441,7 @@ namespace PPTX
 		bool bIsFontStylePresent = (hasBold || hasItalic || hasUnderline || hasShadow ||
 			hasFehint || hasKimi || hasEmboss || hasStyle != 0);
 
-//todooo протестировано тока sz, color
+//todo only sz, color tested
 		if (bIsFontStylePresent)
 		{
 			WORD fontStyle = *(_UINT16*)(Data + pos); pos += 2;
@@ -513,7 +513,7 @@ namespace PPTX
 			int BaseLineOffset = static_cast<int>((double)(*(_UINT16*)(Data + pos))); pos += 2;
 		}
 
-		// или два последних наоборот????
+		// or the last two are swapped????
 
 		return pos;
 	}

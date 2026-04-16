@@ -66,7 +66,7 @@ std::set<std::wstring> &repeatebleValues)
 
 void XMLMap::readAttributes()
 {
-    ///@todo проверять нет ли в parents нод с таким же именем для вставки в их столбец вместо создания нового
+    ///@todo check if parents have nodes with the same name to insert into their column instead of creating a new one
     if(!reader_->GetAttributesCount())
     {
         return;
@@ -103,7 +103,7 @@ void XMLMap::insertAttribute(const std::wstring &key)
 
 std::wstring XMLMap::getNodeName(const std::wstring &name, std::set<std::wstring> &names)
 {
-     /// ищем среди использовавшихся имён нужное
+     /// search for the needed name among used names
     for(auto i = names.begin(); i != names.end(); i++)
     {
         if(colNames_->GetXmlName(*i) == name)
@@ -111,7 +111,7 @@ std::wstring XMLMap::getNodeName(const std::wstring &name, std::set<std::wstring
             return *i;
         }
     }
-    /// если не нашли, создаём его и вставляем
+    /// if not found, create and insert it
     auto resultName = name;
     colNames_->CreateColumnName(resultName);
     names.insert(resultName);
@@ -175,7 +175,7 @@ void XMLMap::openNode()
 
 void XMLMap::closeNode()
 {
-    //вставка ноды типа <node></node>
+    //insert node like <node></node>
     if(prevType_ == XmlUtils::XmlNodeType::XmlNodeType_Element)
     {
         insertValue();
@@ -184,7 +184,7 @@ void XMLMap::closeNode()
     parents_.pop_back();
     parents_.back()->childColumns.insert(lastElem->childColumns.begin(), lastElem->childColumns.end());
     parents_.back()->childColumns.insert(lastElem->attributes.begin(), lastElem->attributes.end());
-    //вырезаем значение ноды если у неё есть потомки
+    //remove node value if it has children
     if(!lastElem->childs.empty())
     {
         lastElem->ValueColumnName = L"";

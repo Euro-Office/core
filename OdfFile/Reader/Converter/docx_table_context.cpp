@@ -128,8 +128,8 @@ bool docx_table_state::start_covered_cell(docx_conversion_context & Context)
     std::wostream & _Wostream = context_.output_stream();
     current_table_column_++;
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row merge information
+    // add a new column to it
 
     if (current_table_column_ >= (int)(rows_spanned_.size()))
         rows_spanned_.push_back(table_row_spanned());
@@ -156,8 +156,8 @@ bool docx_table_state::start_covered_cell(docx_conversion_context & Context)
         _Wostream << L"</w:tcPr>";
     }
 
-    // использовали текущую ячейку, уменьшаем счетчики оставшихся объединенных ячеек
-    // для столбцов и строк
+    // used current cell, decrement counters of remaining merged cells
+    // for columns and rows
 
     if (columns_spanned_num_ > 0)
         columns_spanned_num_--;
@@ -165,7 +165,7 @@ bool docx_table_state::start_covered_cell(docx_conversion_context & Context)
     if (rows_spanned_[current_table_column_].num() > 0)
         rows_spanned_[current_table_column_].decrease();                                
 
-    // устанавливаем флаг что ячейка была открыта, записан тег <w:tc>
+    // set flag that cell was opened, <w:tc> tag was written
     close_table_covered_cell_ = closeTag;
     return closeTag;
 }
@@ -175,7 +175,7 @@ void docx_table_state::end_covered_cell()
     std::wostream & _Wostream = context_.output_stream();
     if (close_table_covered_cell_)
     {
-        // закрываем открытую ячейку
+        // close the opened cell
         _Wostream << L"</w:tc>";
         close_table_covered_cell_ = false;
     }

@@ -487,7 +487,7 @@ namespace BinDocxRW {
 			std::wstring sTooltip;
 			bool bNextLink = false;
 			bool bNextTooltip = false;
-			//разбиваем по пробелам, но с учетом кавычек
+			//split by spaces, but considering quotes
 			std::vector<std::wstring> aItems;
 			std::wstring sCurItem;
 			bool bDQuot = false;
@@ -738,7 +738,7 @@ namespace BinDocxRW {
 w15:paraIdParent=\"" + pComment->sParaIdParent + L"\" w15:done=\"" + sDone + L"\"/>";
 			else
 				sRes += L"<w15:commentEx w15:paraId=\"" + pComment->sParaId + L"\" w15:done=\"" + sDone + L"\"/>";
-			//расставляем paraIdParent
+			//set paraIdParent
 			for(size_t i = 0; i < pComment->replies.size(); i++)
 				pComment->replies[i]->sParaIdParent = pComment->sParaId;
 		}
@@ -1198,7 +1198,7 @@ allowOverlap=\"1\">";
 					}
 					else
 					{
-						//для wrapThrough и wrapTight wrapPolygon обязательное поле, если его нет - меняем тип.
+						//for wrapThrough and wrapTight wrapPolygon is required field, if missing - change type.
 						if ( c_oSerImageType2::WrapSquare	== DrawingPropertyWrap.WrappingType		||
 								c_oSerImageType2::WrapThrough	== DrawingPropertyWrap.WrappingType		||
 								c_oSerImageType2::WrapTight		== DrawingPropertyWrap.WrappingType)

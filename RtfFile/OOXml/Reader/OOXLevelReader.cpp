@@ -63,7 +63,7 @@ bool OOXLevelReader::Parse( ReaderParameter oParam, RtfListLevelProperty& oLevel
 		int nVal = *m_ooxLvlNum->m_oLvlRestart->m_oVal;
 		if( 0 == nVal )
 			oLevelProperty.m_nNoRestart = 0;
-		//todooo непонятка что будет если рестарт списка с не "0"
+		//todooo unclear what happens if list restart is not "0"
 	}
 	if (m_ooxLvlNum->m_oIsLgl.IsInit() )
 		oLevelProperty.m_nLegal = m_ooxLvlNum->m_oIsLgl->m_oVal.ToBool() ? 1 : 0;

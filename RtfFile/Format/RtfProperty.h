@@ -208,7 +208,7 @@ public:
 
 	static bool GetHighlightByColor( RtfColor oOutputColor,std::wstring& oStr ); //todo
 	static RtfColor GetColorByPreset( std::wstring oStr );
-	static std::wstring GetPresetByColor( RtfColor oCol ); //стр. 3320
+	static std::wstring GetPresetByColor( RtfColor oCol ); //page 3320
 	static bool GetThemeByString( std::wstring sTheme, _ThemeColor & oOutTheme );
 	static bool GetThemeByOOX( SimpleTypes::EShemeColorVal val, _ThemeColor & oOutTheme );
 	static bool GetStringByTheme( std::wstring sTheme , _ThemeColor& oOutTheme );
@@ -503,7 +503,7 @@ public:
 	_INT32		m_nJustification;	//leveljcN \leveljcnN	0	Left justified 1	Center justified 2	Right justified
 	_INT32		m_nFollow;			//levelfollowN
 	_INT32		m_nStart;			//levelstartatN	N specifies the start-at value for the level.
-    std::wstring m_sLevelText;		//как в rtf текст, но сдвинут от нуля на 1 // \'03\'00.\'01 -> ("%d%d%d",4,1,2)
+    std::wstring m_sLevelText;		//same as rtf text, but shifted from zero by 1 // \'03\'00.\'01 -> ("%d%d%d",4,1,2)
     std::wstring m_sNumber;
 	_INT32		m_nNoRestart;		//levelnorestartN	1 if this level does not restart its count each time a super ordinate level is incremented; 0 if this level does restart its count each time a super ordinate level is incremented.
 	_INT32		m_nLegal;			//levellegalN	1 if any list numbers from previous levels should be converted to Arabic numbers; 0 if they should be left with the format specified by their own level’s definition.
@@ -966,8 +966,8 @@ public:
 	_INT32	m_nWidthEndInvCell;			//trwWidthAN	Width of invisible cell at the end of the row. Used only when rows have different widths.
 	_INT32	m_eWidthEndInvCellUnit;		//trftsWidthAN	Units for \trwWidthAN:
 
-	_INT32 m_nGridBefore;	//для oox
-	_INT32 m_nGridAfter;	//для oox
+	_INT32 m_nGridBefore;	//for oox
+	_INT32 m_nGridAfter;	//for oox
 
 	_INT32 m_bStyleFirstRow;		// tscfirstrow	This cell is in the first row.
 	_INT32 m_bStyleLastRow;		// tsclastrow	This cell is in the last row.
@@ -991,7 +991,7 @@ public:
 
 	void SetDefaultRtf();
 	void SetDefaultOOX();
-	//5.5 Доверенность_MO_Q139.rtf
+	//5.5 PowerOfAttorney_MO_Q139.rtf
 	void SetDefault();
 
 	bool IsValid();

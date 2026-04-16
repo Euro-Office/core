@@ -53,7 +53,7 @@ namespace XLSB
         return BaseObjectPtr(new PIVOTRULES14(*this));
     }
 
-    //PIVOTRULES14 = BrtBeginSXRules14 PIVOTRULE14 BrtEndSXRules14  // возможно ошибка и должно быть *PIVOTRULE14
+    //PIVOTRULES14 = BrtBeginSXRules14 PIVOTRULE14 BrtEndSXRules14  // possibly an error, and should be *PIVOTRULE14
     const bool PIVOTRULES14::loadContent(BinProcessor& proc)
     {
         if (proc.optional<BeginSXRules14>())

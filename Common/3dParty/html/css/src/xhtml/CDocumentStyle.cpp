@@ -8,7 +8,7 @@
 #include <list>
 
 #define DEFAULT_LINEHEIGHT 240
-#define LINEHEIGHTSCALE 10 // Значение LineHeight в OOXML должно быть в 10 раз больше чем указано в стиле
+#define LINEHEIGHTSCALE 10 // LineHeight value in OOXML must be 10 times larger than specified in style
 
 #define VALUE_TO_INT(value, unit_measure) \
 	(NSCSS::UnitMeasure::None != value.GetUnitMeasure()) ? \
@@ -453,7 +453,7 @@ namespace NSCSS
 		int nWidth = static_cast<int>(std::round(oBorder.GetWidth().ToDouble(Point) * 8.));
 
 		if (L"double" == wsStyle)
-			nWidth /= 3; // в ooxml double граница формируется из трёх линий
+			nWidth /= 3; // in ooxml double border is formed from three lines
 
 		if (nWidth <= 3)
 			nWidth = 2;
@@ -496,7 +496,7 @@ namespace NSCSS
 			return bResult;
 
 		if (!oStyle.m_oFont.GetSize().Empty())
-			oXmlElement.AddPropertiesInR(RProperties::R_Sz, std::to_wstring(static_cast<int>(oStyle.m_oFont.GetSize().ToDouble(NSCSS::Point) * 2. * oStyle.m_oTransform.GetMatrix().GetFinalValue().sy() + 0.5))); // Значения шрифта увеличивает на 2
+			oXmlElement.AddPropertiesInR(RProperties::R_Sz, std::to_wstring(static_cast<int>(oStyle.m_oFont.GetSize().ToDouble(NSCSS::Point) * 2. * oStyle.m_oTransform.GetMatrix().GetFinalValue().sy() + 0.5))); // Font value is multiplied by 2
 
 		if (oStyle.m_oText.GetDecoration().m_oLine.Underline())
 			oXmlElement.AddPropertiesInR(RProperties::R_U, (!oStyle.m_oText.GetDecoration().m_oStyle.Empty()) ? oStyle.m_oText.GetDecoration().m_oStyle.ToWString() : L"single");

@@ -57,12 +57,12 @@ bool OOXSettingsWriter::Save( std::wstring sFolder )
 
 	if ( false == m_sFileXml.empty() )
 	{
-		//генерируем свою xml
+		//generate our xml
 		std::wstring sXml = CreateXml();
 
-		//todoooo ПЕРЕПИСАТЬ
+		//todoooo REWRITE
 
-		////берем xml из шаблона
+		////take xml from template
 		//std::wstring sFilename = sFolder +  _T("\\word\\settings.xml");
 		//if( true == RtfUtility:: SaveResourceToFile( IDR_SETTINGS, L"XML", sFilename ) )
 		//{

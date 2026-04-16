@@ -16,7 +16,7 @@ CPolyTextOutWidget::CPolyTextOutWidget(QWidget *pParent)
                     new CFormWidget("exScale", "1"),
                     new CFormWidget("eyScale", "1")}, pLayout);
 
-        QPushButton *pAddedButton = new QPushButton("Добавить объект текста");
+        QPushButton *pAddedButton = new QPushButton("Add text object");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CPolyTextOutWidget::on_createTextOut_clicked);
 

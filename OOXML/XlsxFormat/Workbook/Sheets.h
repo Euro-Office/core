@@ -49,7 +49,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CSheet : public WritingElement
 		{
@@ -97,7 +97,7 @@ namespace OOX
 
 			void fromBin(std::vector<XLS::BaseObjectPtr>& obj);
 			std::vector<XLS::BaseObjectPtr> toBin();
-			void toXLS(XLS::BaseObjectPtr stream, const std::vector<_UINT16> &SheetTypes);
+			void toXLS(XLS::BaseObjectPtr stream);
 			virtual EElementType getType () const;
             static void AddSheetRef(const std::wstring& link, const _INT32&  sheetIndex);
 		private:

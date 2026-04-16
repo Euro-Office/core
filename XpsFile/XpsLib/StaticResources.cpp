@@ -454,8 +454,8 @@ namespace XPS
 	{
 		CBrush* pBrush = NULL;
 
-		// TODO: 1. Трансформы здесь не реализованы, потому что их невозможно учесть с текущим интерфейсом рендерера
-		//       2. Не реализован VisualBrush
+		// TODO: 1. Transforms are not implemented here because they cannot be accounted for with the current renderer interface
+		//       2. VisualBrush is not implemented
 		if (!oReader.IsEmptyNode())
 		{
 			CWString wsNodeName;

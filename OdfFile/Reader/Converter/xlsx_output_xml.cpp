@@ -256,10 +256,10 @@ void xlsx_xml_worksheet::write_to(std::wostream & strm)
             {
 				CP_XML_STREAM() << protect;
 			}
-			//оказывается порядок нахождения элементов важен !!! (для office 2010)
-			//объединенные ячейки раньше чем гиперлинки !!!
-			
-			CP_XML_STREAM() << impl_->autofilter_.str(); //автофильтры перед merge !!!
+			//turns out element order is important!!! (for office 2010)
+			//merged cells before hyperlinks!!!
+
+			CP_XML_STREAM() << impl_->autofilter_.str(); //autofilters before merge!!!
 			
 			CP_XML_STREAM() << impl_->mergeCells_.str();
 			
@@ -278,7 +278,7 @@ void xlsx_xml_worksheet::write_to(std::wostream & strm)
                 }
             }
 			CP_XML_STREAM() << impl_->page_props_.str();
-			//props выше legacyDrawing !!
+			//props above legacyDrawing!!
 
 			CP_XML_STREAM() << impl_->header_footer_.str();
 			

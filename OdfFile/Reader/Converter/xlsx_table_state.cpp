@@ -386,7 +386,7 @@ std::wstring xlsx_table_state::default_column_cell_style() const
 		return column_default_cell_style_name_.at(current_table_column_ + 1);
 	else
 	{
-		//непонятная хрень!! - неправильно сформирован ods???
+		//unclear issue!! - incorrectly formed ods???
 		return L"";
 	}
 }
@@ -406,7 +406,7 @@ void xlsx_table_state::start_cell(size_t columnsSpanned, size_t rowsSpanned)
 {
     current_table_column_++;
 
-    // в случае если объединение имеет место добавляем запись о нем
+    // if merge takes place, add a record for it
     if (columnsSpanned != 0 || rowsSpanned != 0)
 	{
 		xlsx_merge_cells_.add_merge(current_table_column_, current_table_row_, columnsSpanned, rowsSpanned);
@@ -419,8 +419,8 @@ void xlsx_table_state::start_cell(size_t columnsSpanned, size_t rowsSpanned)
 
     columns_spanned_num_ = static_cast<int>(columnsSpanned);
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row merge information
+    // add a new column to it
 
     
     for (size_t i = 0; i <= columns_spanned_num_; ++i)
@@ -472,14 +472,14 @@ void xlsx_table_state::start_covered_cell()
 {
     current_table_column_++;
 
-    // обновляем вектор, в котором хранятся информация об объединении строк
-    // добавляем в него новый столбец
+    // update the vector that stores row merge information
+    // add a new column to it
 
     if (current_table_column_ >= (int)(rows_spanned_.size()))
         rows_spanned_.push_back(xlsx_row_spanned());
 
-    // использовали текущую ячейку, уменьшаем счетчики оставшихся объединенных ячеек
-    // для столбцов и строк
+    // used current cell, decrement counters of remaining merged cells
+    // for columns and rows
 
     if (columns_spanned_num_ > 0)
         columns_spanned_num_--;
@@ -655,11 +655,11 @@ void xlsx_table_state::serialize_table_format (std::wostream & strm)
 			CP_XML_NODE(L"sheetPr")
 			{
 				//at filterMode="false">
-				if (table_prop->content().tableooo_tab_color_)
+				if (table_prop->content().table_tab_color_)
 				{
 					CP_XML_NODE(L"tabColor")
 					{
-						CP_XML_ATTR(L"rgb", table_prop->content().tableooo_tab_color_->get_hex_value());	
+						CP_XML_ATTR(L"rgb", table_prop->content().table_tab_color_->get_hex_value());	
 					}
 				}
 				//<pageSetUpPr fitToPage="true"/>

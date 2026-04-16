@@ -55,7 +55,7 @@ namespace OOX
 	{
 		class CPersonList;
 
-	//необработанные child:
+	//not implemented children:
 		//<customWorkbookViews>
 		//<extLst>
 		//<fileRecoveryPr>

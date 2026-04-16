@@ -54,7 +54,7 @@ public:
 
 	bool			fAllAtoms = false;
 	bool			fSomeUnhashed = false;
-	bool			fUsed = false;
+	bool			fUsed = true;
 	bool			fHasParent = false;
 	bool			fRangeGroup = false;
 	bool			fNumField = false;

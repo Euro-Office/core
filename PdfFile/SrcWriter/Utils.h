@@ -142,11 +142,11 @@ namespace PdfWriter
 	std::string DateNow();
 	std::wstring NormalizeWhitespace(const std::wstring& s);
 
-	// Пересечение многоугольников по теореме о разделяющей оси
+	// Polygon intersection using separating axis theorem
 	bool SAT(const std::vector<CPoint>& poly1, const std::vector<CPoint>& poly2);
-	// Проверка, что все точки внутреннего полигона находятся внутри внешнего
+	// Check that all points of inner polygon are inside outer polygon
 	bool isPolygonInsidePolygon(const std::vector<CPoint>& inner, const std::vector<CPoint>& outer);
-	// Проверка принадлежности точки выпуклому четырехугольнику
+	// Check if point belongs to convex quadrilateral
 	bool isPointInQuad(double px, double py,
 					   double x1, double y1, double x2, double y2,
 					   double x3, double y3, double x4, double y4);
@@ -154,17 +154,17 @@ namespace PdfWriter
 	class RectangleIntersection
 	{
 	private:
-		// Проверка на пересечение двух отрезков
+		// Check for intersection of two line segments
 		static bool segmentsIntersect(const CPoint& a, const CPoint& b, const CPoint& c, const CPoint& d, CPoint& intersection);
-		// Проверка, находится ли точка внутри прямоугольника
+		// Check if point is inside rectangle
 		static bool pointInRectangle(const CPoint& p, const std::vector<CPoint>& rect);
-		// Вычисление расстояния от точки до начала отрезка вдоль направления
+		// Calculate distance from point to segment start along direction
 		static double distanceAlongLine(const CPoint& start, const CPoint& end, const CPoint& point);
 
 	public:
-		// Основная функция для нахождения отрезков вне всех прямоугольников
+		// Main function for finding segments outside all rectangles
 		static std::vector<CSegment> findSegmentsOutsideRectangles(const CSegment& line, const std::vector<std::vector<CPoint>>& rectangles);
-		// Альтернативный подход: последовательное вычитание прямоугольников
+		// Alternative approach: sequential subtraction of rectangles
 		static std::vector<CSegment> findSegmentsOutsideRectanglesSequential(const CSegment& line, const std::vector<std::vector<CPoint>>& rectangles);
 	};
 

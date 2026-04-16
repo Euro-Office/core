@@ -34,14 +34,21 @@
 #include "ChartSerialize.h"
 #include "../../../DesktopEditor/common/StringExt.h"
 
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/ChartSheetSubstream.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/PAGESETUP.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SERIESFORMAT.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/IVAXIS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/DVAXIS.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SERIESAXIS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CRT.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/CHARTFOMATS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/LD.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXISPARENT.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXES.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AXS.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/ATTACHEDLABEL.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/AI.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Series.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DataFormat.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BRAI.h"
@@ -64,6 +71,12 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AxisLine.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/LineFormat.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Tick.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Pos.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Text.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/ObjectLink.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BRAI.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SeriesText.h"
+
 
 
 namespace OOX
@@ -1163,6 +1176,166 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
 		}
+		XLS::BaseObjectPtr CT_ChartSpace::toXLS()
+		{
+			auto ptr = new XLS::ChartSheetSubstream(0);
+			ptr->separate = false;
+			auto pageSetup = new XLS::PAGESETUP;
+			ptr->m_PAGESETUP = XLS::BaseObjectPtr(pageSetup);
+
+			auto ChartFormatsPtr = new XLS::CHARTFORMATS;
+			ptr->m_CHARTFORMATS = XLS::BaseObjectPtr(ChartFormatsPtr);
+			if(m_spPr.IsInit())
+			{
+				ChartFormatsPtr->m_FRAME = m_spPr->toXLSFrame();
+			}
+			if(m_chart->m_plotArea != nullptr)
+			{
+				auto AxisParentUnion = new XLS::AXISPARENT;
+				auto axes = new XLS::AXES;
+				AxisParentUnion->m_AXES = XLS::BaseObjectPtr(axes);
+				ChartFormatsPtr->m_arAXISPARENT.push_back(XLS::BaseObjectPtr(AxisParentUnion));
+				auto axisPos = new XLS::Pos;
+				axisPos->x1 = 0;
+				axisPos->y1 = 200;
+				axisPos->x2 = 4000;
+				axisPos->y2 = 3800;
+				AxisParentUnion->m_Pos = XLS::BaseObjectPtr(axisPos);
+
+				for(auto chartIndex = 0; chartIndex < m_chart->m_plotArea->m_Items.size(); chartIndex ++)
+				{
+					if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5BARCHART)
+					{
+						auto barChart = static_cast<CT_BarChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(barChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5BAR3DCHART)
+					{
+						auto barChart = static_cast<CT_Bar3DChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(barChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5PIECHART)
+					{
+						auto PieChart = static_cast<CT_PieChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(PieChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5PIE3DCHART)
+					{
+						auto PieChart = static_cast<CT_Pie3DChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(PieChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5LINECHART)
+					{
+						auto LineChart = static_cast<CT_LineChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(LineChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5LINE3DCHART)
+					{
+						auto LineChart = static_cast<CT_Line3DChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(LineChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5AREACHART)
+					{
+						auto AreaChart = static_cast<CT_AreaChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(AreaChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5AREA3DCHART)
+					{
+						auto AreaChart = static_cast<CT_Area3DChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(AreaChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5SURFACECHART)
+					{
+						auto SurfaceChart = static_cast<CT_SurfaceChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(SurfaceChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5SCATTERCHART)
+					{
+						auto ScatterChart = static_cast<CT_ScatterChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(ScatterChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+					else if(*m_chart->m_plotArea->m_ItemsElementName0.at(chartIndex) == OOX::Spreadsheet::itemschoicetype5RADARCHART)
+					{
+						auto ScatterChart = static_cast<CT_RadarChart*>(m_chart->m_plotArea->m_Items.at(chartIndex));
+						AxisParentUnion->m_arCRT.push_back(ScatterChart->toXLS(chartIndex, ptr->m_CHARTFORMATS));
+					}
+
+					if(ChartFormatsPtr->m_arAXISPARENT.size() < 2)
+					{
+						for(auto axPose = 0; axPose < m_chart->m_plotArea->m_ItemsElementName1.size(); axPose++)
+						{
+							if(m_chart->m_plotArea->m_ItemsElementName1[axPose] != nullptr && m_chart->m_plotArea->m_Items1.size() > axPose)
+							{
+								auto AxType = *m_chart->m_plotArea->m_ItemsElementName1[axPose];
+								switch (AxType)
+								{
+									case ItemsChoiceType6::itemschoicetype6CATAX:
+									{
+										auto ivAx = static_cast<CT_CatAx*>(m_chart->m_plotArea->m_Items1.at(axPose));
+										axes->m_arAxes.push_back(ivAx->toXLS());
+										break;
+									}
+									case ItemsChoiceType6::itemschoicetype6VALAX:
+									{
+										auto dvAx = static_cast<CT_ValAx*>(m_chart->m_plotArea->m_Items1.at(axPose));
+										axes->m_arAxes.push_back(dvAx->toXLS());
+										break;
+									}
+									case ItemsChoiceType6::itemschoicetype6SERAX:
+									{
+										auto serAx = static_cast<CT_SerAx*>(m_chart->m_plotArea->m_Items1.at(axPose));
+										axes->m_arAxes.push_back(serAx->toXLS());
+										break;
+									}
+									default:
+									break;
+								}
+							}
+						}
+					}
+					if(m_chart->m_legend != nullptr && !AxisParentUnion->m_arCRT.empty())
+					{
+						auto crtPtr = static_cast<XLS::CRT*>(AxisParentUnion->m_arCRT.back().get());
+						crtPtr->m_LD = m_chart->m_legend->toXLS();
+					}
+				}
+			}
+
+			{
+				auto labelUnion = new XLS::ATTACHEDLABEL;
+				auto textRecord = new XLS::Text;
+				textRecord->wBkgMode = 1;
+				textRecord->at = 2;
+				textRecord->vat = 1;
+				auto textPos = new XLS::Pos;
+				textPos->mdBotRt = 2;
+				textPos->mdTopLt = 2;
+				textPos->x1 = 150;
+				textPos->y1 = 25;
+
+				labelUnion->m_Pos = XLS::BaseObjectPtr(textPos);
+				auto objLink = new XLS::ObjectLink;
+				objLink->wLinkObj = 1;
+				auto seriesText = new XLS::SeriesText;
+				if(m_chart->m_title != nullptr && m_chart->m_title->m_tx != nullptr)
+					seriesText->stText = m_chart->m_title->m_tx->m_oRich->GetText();
+				else
+				{
+					textRecord->fAutoText = true;
+				}
+				auto aiUnion = new XLS::AI;
+				auto brai = new XLS::BRAI;
+				brai->rt = 1;
+				aiUnion->m_BRAI = XLS::BaseObjectPtr(brai);
+				aiUnion->m_SeriesText = XLS::BaseObjectPtr(seriesText);
+				labelUnion->m_AI = XLS::BaseObjectPtr(aiUnion);
+				labelUnion->m_ObjectLink = XLS::BaseObjectPtr(objLink);
+				labelUnion->m_TextProperties = XLS::BaseObjectPtr(textRecord);
+				ChartFormatsPtr->m_arATTACHEDLABEL.push_back(XLS::BaseObjectPtr(labelUnion));
+			}
+			return XLS::BaseObjectPtr(ptr);
+		}
+
 		EElementType CT_ChartSpace::getType() { return et_ct_ChartSpace; }
 
 		CT_RelId::CT_RelId()
@@ -2271,6 +2444,91 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
 		}
+		XLS::BaseObjectPtr CT_SerAx::toXLS()
+		{
+			auto SerAxis = new XLS::SERIESAXIS;
+			auto axis = new XLS::Axis;
+			axis->wType = 2;
+			SerAxis->m_Axis = XLS::BaseObjectPtr(axis);
+			auto axs = new XLS::AXS;
+			SerAxis->m_AXS = XLS::BaseObjectPtr(axs);
+			auto catSerRange = new XLS::CatSerRange;
+			catSerRange->catCross = 0;
+			if(m_tickLblSkip.IsInit())
+				catSerRange->catLabel = m_tickLblSkip.get();
+			catSerRange->catMark = 1;
+			catSerRange->fBetween = true;
+			SerAxis->m_CatSerRange = XLS::BaseObjectPtr(catSerRange);
+
+			if(m_spPr.IsInit())
+			{
+				auto axisline = new XLS::AxisLine;
+				axisline->id = 0;
+				XLS::AXS::_axis_line_format lnFmt;
+				lnFmt.axisLine = XLS::BaseObjectPtr(axisline);
+				if(m_spPr->ln.IsInit())
+				{
+					lnFmt.lineFormat = m_spPr->ln->toXLS();
+					auto lnFmtptr = static_cast<XLS::LineFormat*>(lnFmt.lineFormat.get());
+					lnFmtptr->fAxisOn = true;
+					if(m_spPr->Fill.m_type == PPTX::Logic::UniFill::noFill)
+						lnFmtptr->lns = 5;
+				}
+				axs->m_AxisLine_Format.push_back(lnFmt);
+			}
+			if(m_majorGridlines != nullptr)
+			{
+				auto axisline = new XLS::AxisLine;
+				axisline->id = 1;
+				XLS::AXS::_axis_line_format lnFmt;
+				lnFmt.axisLine = XLS::BaseObjectPtr(axisline);
+
+				if(m_majorGridlines->m_spPr.IsInit() && m_majorGridlines->m_spPr->ln.IsInit())
+					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				axs->m_AxisLine_Format.push_back(lnFmt);
+			}
+			if(m_minorGridlines != nullptr)
+			{
+				auto axisline = new XLS::AxisLine;
+				axisline->id = 2;
+				XLS::AXS::_axis_line_format lnFmt;
+				lnFmt.axisLine = XLS::BaseObjectPtr(axisline);
+
+				if(m_minorGridlines->m_spPr.IsInit() && m_minorGridlines->m_spPr->ln.IsInit())
+					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				axs->m_AxisLine_Format.push_back(lnFmt);
+			}
+			auto tickPtr = new XLS::Tick;
+			axs->m_Tick = XLS::BaseObjectPtr(tickPtr);
+			if(m_tickLblPos.IsInit())
+			{
+				switch (m_tickLblPos->GetValue())
+				{
+					case OOX::Spreadsheet::ST_TickLblPos::st_ticklblposNONE:
+					{
+						tickPtr->tlt = 0;
+						break;
+					}
+					case OOX::Spreadsheet::ST_TickLblPos::st_ticklblposLOW:
+					{
+						tickPtr->tlt = 1;
+						break;
+					}
+					case OOX::Spreadsheet::ST_TickLblPos::st_ticklblposHIGH:
+					{
+						tickPtr->tlt = 2;
+						break;
+					}
+					case OOX::Spreadsheet::ST_TickLblPos::st_ticklblposNEXTTO:
+					{
+						tickPtr->tlt = 3;
+						break;
+					}
+				}
+			}
+
+			return XLS::BaseObjectPtr(SerAxis);
+		}
 		EElementType CT_SerAx::getType() { return et_ct_serax; }
 		CT_Scaling::CT_Scaling()
 		{
@@ -2968,10 +3226,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		{
 			auto ivAxis = new XLS::IVAXIS;
 			auto axis = new XLS::Axis;
-			if(m_axPos.IsInit() && m_axPos->GetValue() == OOX::Spreadsheet::ST_AxPos::st_axposL)
-				axis->wType = 1;
-			else
-				axis->wType = 0;
+			axis->wType = 0;
 			ivAxis->m_Axis = XLS::BaseObjectPtr(axis);
 			auto axs = new XLS::AXS;
 			ivAxis->m_AXS = XLS::BaseObjectPtr(axs);
@@ -3300,7 +3555,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			valSerRange->fAutoMax = true;
 			valSerRange->fAutoMajor = true;
 			valSerRange->fAutoMinor = true;
-			valSerRange->fAutoCross = true;
+			valSerRange->numCross.data.value = 0;
 			dvAxis->m_ValueRange = XLS::BaseObjectPtr(valSerRange);
 			if(m_spPr.IsInit())
 			{
@@ -6216,6 +6471,19 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			ptr->m_ChartFormat = XLS::BaseObjectPtr(chartFormat);
 			auto chartType = new XLS::Surf;
 			ptr->m_ChartType = XLS::BaseObjectPtr(chartType);
+
+			auto chart3Dpart = new XLS::Chart3d;
+			chart3Dpart->anRot = 0;
+			chart3Dpart->anElev = 0x5A;
+			chart3Dpart->pcDist = 0;
+			chart3Dpart->pcHeight3D = 0x2B;
+			chart3Dpart->pcDepth = 0x64;
+			chart3Dpart->pcGap = 0x96;
+			chart3Dpart->fPerspective = true;
+			chart3Dpart->f3DScaling = true;
+			chart3Dpart->fNotPieChart = true;
+			ptr->m_Chart3d = XLS::BaseObjectPtr(chart3Dpart);
+
 			return XLS::BaseObjectPtr(ptr);
 		}
 		EElementType CT_SurfaceChart::getType() { return et_ct_surfacechart; }

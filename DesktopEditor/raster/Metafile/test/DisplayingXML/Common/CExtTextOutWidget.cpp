@@ -39,7 +39,7 @@ CEmrTextWidget::CEmrTextWidget(unsigned int unIndex, QWidget *pParent)
 
         m_pTextWidget = new CFormWidget("Text");
 
-        QPushButton *pCreateDxButton = new QPushButton("Создать поля для Dx значений");
+        QPushButton *pCreateDxButton = new QPushButton("Create fields for Dx values");
 
         connect(pCreateDxButton, &QPushButton::clicked, this, &CEmrTextWidget::on_createDx_clicked);
 

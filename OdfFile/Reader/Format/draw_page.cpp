@@ -94,7 +94,7 @@ void draw_page::add_attributes( const xml::attributes_wc_ptr & Attributes )
 void draw_page::pptx_convert_placeHolder(oox::pptx_conversion_context & Context, std::wstring styleName, presentation_class::type PresentationClass)
 {
 	office_element_ptr elm = Context.root()->odf_context().drawStyles().find_by_style_name(styleName);
-	//todooo если это элемент datatime -нужно вытащить формат поля
+	//todooo if this is a datetime element - need to extract field format
 
 	if (!elm) return;
 
@@ -168,7 +168,7 @@ void draw_page::pptx_convert(oox::pptx_conversion_context & Context)
 				bool is_page_visible = properties->content().presentation_visibility_.get_value_or(presentation_visibility::visible).get_type() == presentation_visibility::visible;
 				Context.current_slide().set_show(is_page_visible);
 			
-				//часть свойств переходов между слайдами тута
+				//part of slide transition properties here
 				
 				if (properties->content().presentation_transition_type_)
 				{
@@ -299,7 +299,7 @@ void presentation_notes::add_attributes( const xml::attributes_wc_ptr & Attribut
 void presentation_notes::pptx_convert_placeHolder(oox::pptx_conversion_context & Context, std::wstring styleName, presentation_class::type PresentationClass)
 {
 	office_element_ptr elm = Context.root()->odf_context().drawStyles().find_by_style_name(styleName);
-	//todooo если это элемент datatime -нужно вытащить формат поля
+	//todooo if this is a datetime element - need to extract field format
 
 	if (!elm)return;
 

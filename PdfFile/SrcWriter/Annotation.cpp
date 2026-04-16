@@ -190,7 +190,7 @@ namespace PdfWriter
 		Add("Type", "Annot");
 		Add("Subtype", c_sAnnotTypeNames[(int)eType]);
 
-		// Для PDFA нужно, чтобы 0, 1, 4 биты были выключены, а второй включен
+		// For PDFA bits 0, 1, 4 must be off and bit 2 must be on
 		Add("F", 4);
 	}
 	void CAnnotation::SetRect(const TRect& oRect)
@@ -349,7 +349,7 @@ namespace PdfWriter
 		pNormal->Add("Resources", pResources);
 		return pNormal;
 	}
-	void CAnnotation::APFromFakePage()
+	void CAnnotation::APFromFakePage(CAnnotAppearanceObject* pN)
 	{
 		if (!m_pAppearance)
 			return;
@@ -357,6 +357,12 @@ namespace PdfWriter
 
 		pNormal->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
 		pNormal->AddMatrix(1, 0, 0, 1, -GetRect().fLeft, -GetRect().fBottom);
+
+		if (pN != pNormal)
+		{
+			pN->AddBBox(GetRect().fLeft, GetRect().fBottom, GetRect().fRight, GetRect().fTop);
+			pN->AddMatrix(1, 0, 0, 1, 0, 0);
+		}
 	}
 	void CAnnotation::RemoveAP()
 	{
@@ -836,6 +842,10 @@ namespace PdfWriter
 		}
 		Add("H", sValue.c_str());
 	}
+	void CLinkAnnotation::SetRD(const double& dRD1, const double& dRD2, const double& dRD3, const double& dRD4)
+	{
+		AddRD(this, dRD1, dRD2, dRD3, dRD4);
+	}
 	void CLinkAnnotation::SetQuadPoints(const std::vector<double>& arrQuadPoints)
 	{
 		CArrayObject* pArray = new CArrayObject();
@@ -856,6 +866,68 @@ namespace PdfWriter
 		if (!pAction)
 			return;
 		Add("PA", pAction);
+	}
+	//----------------------------------------------------------------------------------------
+	// CScreenAnnotation
+	//----------------------------------------------------------------------------------------
+	CScreenAnnotation::CScreenAnnotation(CXref* pXref) : CAnnotation(pXref, AnnotScreen)
+	{
+		m_pMK = NULL;
+	}
+	void CScreenAnnotation::CheckMK()
+	{
+		if (!m_pMK)
+		{
+			CObjectBase* pMK = Get("MK");
+			if (pMK && pMK->GetType() == object_type_DICT)
+			{
+				m_pMK = (CDictObject*)pMK;
+				return;
+			}
+
+			m_pMK = new CDictObject();
+			Add("MK", m_pMK);
+		}
+	}
+	void CScreenAnnotation::SetR(const int& nR)
+	{
+		CheckMK();
+		m_pMK->Add("R", nR);
+	}
+	void CScreenAnnotation::SetT(const std::wstring& wsT)
+	{
+		std::string sValue = U_TO_UTF8(wsT);
+		Add("T", new CStringObject(sValue.c_str(), true));
+	}
+	void CScreenAnnotation::SetBC(const std::vector<double>& arrBC)
+	{
+		CheckMK();
+		AddToVectorD(m_pMK, "BC", arrBC);
+	}
+	void CScreenAnnotation::SetBG(const std::vector<double>& arrBG)
+	{
+		CheckMK();
+		AddToVectorD(m_pMK, "BG", arrBG);
+	}
+	void CScreenAnnotation::AddAction(CAction* pAction)
+	{
+		if (!pAction)
+			return;
+
+		if (pAction->m_sType == "A")
+		{
+			Add(pAction->m_sType.c_str(), pAction);
+			return;
+		}
+
+		CDictObject* pAA = (CDictObject*)Get("AA");
+		if (!pAA)
+		{
+			pAA = new CDictObject();
+			Add("AA", pAA);
+		}
+
+		pAA->Add(pAction->m_sType.c_str(), pAction);
 	}
 	//----------------------------------------------------------------------------------------
 	// CPopupAnnotation
@@ -1217,6 +1289,41 @@ namespace PdfWriter
 	CStampAnnotation::CStampAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotStamp), m_pAPStream(NULL)
 	{
 	}
+	CAnnotAppearanceObject* CStampAnnotation::StartAP(int nRotate)
+	{
+		CAnnotAppearanceObject* pNormal = CAnnotation::StartAP(nRotate);
+		CResourcesDict* pResources = dynamic_cast<CResourcesDict*>(pNormal->Get("Resources"));
+
+		double dAlpha = 1;
+		CRealObject* pCA = dynamic_cast<CRealObject*>(Get("CA"));
+		if (pCA)
+			dAlpha = pCA->Get();
+		if (dAlpha != 1)
+		{
+			CExtGrState* pExtGrState = m_pDocument->GetExtGState(dAlpha, dAlpha);
+			const char* sExtGrStateName = pResources->GetExtGrStateName(pExtGrState);
+			if (sExtGrStateName)
+			{
+				CStream* pStream = pNormal->GetStream();
+				pStream->WriteEscapeName(sExtGrStateName);
+				pStream->WriteStr(" gs\012");
+
+				CResourcesDict* pResources2 = new CResourcesDict(m_pXref, false, false);
+				pNormal = new CAnnotAppearanceObject(m_pXref, this, pResources2);
+				const char* sForm = pResources->GetXObjectName(pNormal);
+
+				CDictObject* pTransparencyGroup = new CDictObject();
+				pTransparencyGroup->Add("Type", "Group");
+				pTransparencyGroup->Add("S", "Transparency");
+				pNormal->Add("Group", pTransparencyGroup);
+
+				pStream->WriteEscapeName(sForm);
+				pStream->WriteStr(" Do\012");
+			}
+		}
+
+		return pNormal;
+	}
 	void CStampAnnotation::SetRotate(double nRotate)
 	{
 		Add("Rotate", nRotate);
@@ -1327,6 +1434,113 @@ namespace PdfWriter
 		for (int i = 0; i < arrQuadPoints.size(); ++i)
 			pArray->Add(i % 2 == 0 ? (arrQuadPoints[i] + m_dPageX) : (m_dPageH - arrQuadPoints[i]));
 	}
+	//----------------------------------------------------------------------------------------
+	// CFileAttachmentAnnotation
+	//----------------------------------------------------------------------------------------
+	CFileAttachmentAnnotation::CFileAttachmentAnnotation(CXref* pXref) : CMarkupAnnotation(pXref, AnnotFileAttachment)
+	{
+		m_pFS = NULL;
+	}
+	void CFileAttachmentAnnotation::CheckFS()
+	{
+		if (!m_pFS)
+		{
+			CObjectBase* pFS = Get("FS");
+			if (pFS && pFS->GetType() == object_type_DICT)
+			{
+				m_pFS = (CDictObject*)pFS;
+				return;
+			}
+
+			m_pFS = new CDictObject();
+			Add("FS", m_pFS);
+		}
+	}
+	void CFileAttachmentAnnotation::SetV(bool bV)
+	{
+		CheckFS();
+		m_pFS->Add("V", bV);
+	}
+	void CFileAttachmentAnnotation::SetName(const std::wstring& wsName)
+	{
+		std::string sValue = U_TO_UTF8(wsName);
+		Add("Name", sValue.c_str());
+	}
+	void CFileAttachmentAnnotation::SetFS(const std::wstring& wsFS)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsFS);
+		m_pFS->Add("FS", sValue.c_str());
+	}
+	void CFileAttachmentAnnotation::SetF(const std::wstring& wsF)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsF);
+		m_pFS->Add("F", new CStringObject(sValue.c_str()));
+	}
+	void CFileAttachmentAnnotation::SetUF(const std::wstring& wsUF)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsUF);
+		m_pFS->Add("UF", new CStringObject(sValue.c_str(), true));
+	}
+	void CFileAttachmentAnnotation::SetDOS(const std::wstring& wsDOS)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsDOS);
+		m_pFS->Add("DOS", new CBinaryObject((BYTE*)sValue.c_str(), sValue.length()));
+	}
+	void CFileAttachmentAnnotation::SetMac(const std::wstring& wsMac)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsMac);
+		m_pFS->Add("Mac", new CBinaryObject((BYTE*)sValue.c_str(), sValue.length()));
+	}
+	void CFileAttachmentAnnotation::SetUnix(const std::wstring& wsUnix)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsUnix);
+		m_pFS->Add("Unix", new CBinaryObject((BYTE*)sValue.c_str(), sValue.length()));
+	}
+	void CFileAttachmentAnnotation::SetDesc(const std::wstring& wsDesc)
+	{
+		CheckFS();
+		std::string sValue = U_TO_UTF8(wsDesc);
+		m_pFS->Add("Desc", new CStringObject(sValue.c_str(), true));
+	}
+	void CFileAttachmentAnnotation::SetFileF(const std::wstring& wsFileF)
+	{
+
+	}
+	void CFileAttachmentAnnotation::SetFileUF(const std::wstring& wsFileUF)
+	{
+
+	}
+	void CFileAttachmentAnnotation::SetFileDOS(const std::wstring& wsFileDOS)
+	{
+
+	}
+	void CFileAttachmentAnnotation::SetFileMac(const std::wstring& wsFileMac)
+	{
+
+	}
+	void CFileAttachmentAnnotation::SetFileUnix(const std::wstring& wsFileUnix)
+	{
+
+	}
+	void CFileAttachmentAnnotation::SetID(const std::pair<std::wstring, std::wstring>& wsID)
+	{
+		CheckFS();
+		CArrayObject* pArray = new CArrayObject();
+		if (!pArray)
+			return;
+
+		std::string sValue = U_TO_UTF8(wsID.first);
+		pArray->Add(new CBinaryObject((BYTE*)sValue.c_str(), sValue.length()));
+		sValue = U_TO_UTF8(wsID.second);
+		pArray->Add(new CBinaryObject((BYTE*)sValue.c_str(), sValue.length()));
+	}
+
 	//----------------------------------------------------------------------------------------
 	// CWidgetAnnotation
 	//----------------------------------------------------------------------------------------
@@ -1849,7 +2063,7 @@ namespace PdfWriter
 
 		}
 
-		if (!m_pAppearance)
+		if (!m_pAppearance && !bNoAP)
 		{
 			m_pAppearance = new CAnnotAppearance(m_pXref, this);
 			CObjectBase* pAP = Get("AP");
@@ -1882,6 +2096,8 @@ namespace PdfWriter
 
 		if (bNoAP)
 		{
+			RemoveAP();
+
 			if (pForm)
 			{
 				CheckMK();
@@ -2493,7 +2709,7 @@ namespace PdfWriter
 		int i = 0;
 		if (m_nTI < 0)
 		{
-			// Ищем верхний элемент отрисовки
+			// Find top rendering element
 			for (; i < m_arrOpt.size(); ++i)
 			{
 				if (( m_arrOpt[i].first.empty() && m_arrOpt[i].second == arrV.front()) ||

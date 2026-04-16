@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "../../../../raster/BgraFrame.h"
-#include "../../../../raster/ImageFileFormatChecker.h"
+#include "../../../../../raster/BgraFrame.h"
+#include "../../../../../raster/ImageFileFormatChecker.h"
 #include "../../../../../common/File.h"
 #include "../../../../../common/StringBuilder.h"
 #include "drawingfile.cpp"
@@ -958,7 +958,7 @@ void ReadInteractiveFormsFonts(CDrawingFile* pGrFile, int nType)
 			if (pFont)
 				free(pFont);
 
-			if (true)
+			if (false)
 				continue;
 
 			pFont = GetGIDByUnicode(pGrFile, (char*)sFontName.c_str());
@@ -1353,9 +1353,9 @@ int main(int argc, char* argv[])
 				std::cout << "  Unicode " << nPathLength;
 				nPathLength = READ_INT(pGlyphs + i);
 				i += 4;
-				std::cout << " width " << (double)nPathLength / 10000.0;
+				std::cout << "\twidth " << (double)nPathLength / 10000.0;
 				if (nCharX)
-					std::cout << " charX " << (double)nCharX / 10000.0;
+					std::cout << "\tcharX " << (double)nCharX / 10000.0;
 				std::cout << std::endl;
 			}
 		}
@@ -2228,6 +2228,79 @@ int main(int argc, char* argv[])
 						}
 						std::cout << ", ";
 					}
+					if (nFlags & (1 << 4))
+					{
+						std::cout << "RD";
+						for (int j = 0; j < 4; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << " " << (double)nPathLength / 100.0;
+						}
+						std::cout << ", ";
+					}
+				}
+				else if (sType == "Screen")
+				{
+					nFlags = READ_INT(pAnnots + i);
+					i += 4;
+					if (nFlags & (1 << 0))
+					{
+						nPathLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "T " << std::string((char*)(pAnnots + i), nPathLength) << ", ";
+						i += nPathLength;
+					}
+					if (nFlags & (1 << 1))
+					{
+						int nBCLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "BC ";
+
+						for (int j = 0; j < nBCLength; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << (double)nPathLength / 10000.0 << " ";
+						}
+						std::cout << ", ";
+					}
+					if (nFlags & (1 << 2))
+					{
+						nPathLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "R " << nPathLength << ", ";
+					}
+					if (nFlags & (1 << 3))
+					{
+						int nBCLength = READ_INT(pAnnots + i);
+						i += 4;
+						std::cout << "BG ";
+
+						for (int j = 0; j < nBCLength; ++j)
+						{
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << (double)nPathLength / 10000.0 << " ";
+						}
+						std::cout << ", ";
+					}
+					if (nFlags & (1 << 4))
+					{
+						int nActLength = READ_INT(pAnnots + i);
+						i += 4;
+						for (int j = 0; j < nActLength; ++j)
+						{
+							std::cout << std::endl;
+							nPathLength = READ_INT(pAnnots + i);
+							i += 4;
+							std::cout << std::to_string(j) << " Action " << std::string((char*)(pAnnots + i), nPathLength) << ", ";
+							i += nPathLength;
+
+							ReadAction(pAnnots, i);
+						}
+						std::cout << std::endl;
+					}
 				}
 
 				std::cout << std::endl << "]" << std::endl;
@@ -2252,7 +2325,7 @@ int main(int argc, char* argv[])
 	}
 
 	// SCAN PAGE Fonts
-	if (false)
+	if (true)
 	{
 		SetScanPageFonts(pGrFile, nTestPage);
 

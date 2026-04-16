@@ -51,7 +51,7 @@ _UINT32 XMLReader::Read2(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx 
         return AVS_FILEUTILS_ERROR_CONVERT_READ_FILE;
     }
 
-    ///считываем структуру xml файла
+    /// read xml file structure
     XMLMap map{};
     auto rootNode = std::make_shared<XmlNode>();
     ColumnNameController nameController{};
@@ -59,9 +59,9 @@ _UINT32 XMLReader::Read2(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx 
     map.ReadXmlStructure(reader, nameController, rootNode, repeatableColumns);
     reader.MoveToStart();
 
-    ///создаем таблицу
+    /// create table
     XLSXTableController table = {oXlsx, lcid};
-    ///заполняем первый ряд таблицы именами столбцов
+    /// fill first row of table with column names
     auto colNames = nameController.GetColumnNames();
     std::map<_UINT32, std::wstring> namesMap;
     for(auto i = colNames.begin(); i != colNames.end(); i++)
