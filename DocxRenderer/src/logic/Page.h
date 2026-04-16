@@ -125,8 +125,8 @@ namespace NSDocxRenderer
 		// returns std::vector of tables builded from shapes and paragraphes
 		std::vector<table_ptr_t> BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
-		// return std::vector of graphical cells (from shapes)
-		std::vector<cell_ptr_t> BuildGraphicalCells();
+		// create graphical cells (from shapes)
+		void BuildGraphicalCells();
 
 		// returns std::vector of base items builded from m_arParagraphs
 		std::vector<ooxml_item_ptr_t> BuildOutputObjects();
@@ -196,6 +196,7 @@ namespace NSDocxRenderer
 		bool IsVerticalLineBetween(text_line_ptr_t pFirst, text_line_ptr_t pSecond) const noexcept;
 		bool IsHorizontalLineBetween(text_line_ptr_t pFirst, text_line_ptr_t pSecond) const noexcept;
 		bool IsTextLineBetween(text_line_ptr_t pFirst, text_line_ptr_t pSecond) const noexcept;
+		bool IsEmtySpaceBetweenInCell(text_line_ptr_t pFirst, text_line_ptr_t pSecond) const noexcept;
 
 		bool IsVerticalLineTrough(base_item_ptr_t pFirst) const noexcept;
 		bool IsHorizontalLineTrough(base_item_ptr_t pFirst) const noexcept;
@@ -226,6 +227,7 @@ namespace NSDocxRenderer
 		std::vector<paragraph_ptr_t>  m_arParagraphs;
 		std::vector<table_ptr_t>      m_arTables;
 		std::vector<ooxml_item_ptr_t> m_arOutputObjects;
+		std::vector<cell_ptr_t>       m_arGraphicalCells;
 
 		std::vector<std::wstring> m_arCompleteObjectsXml;
 		std::vector<std::string>  m_arCompleteObjectsBinBase64;

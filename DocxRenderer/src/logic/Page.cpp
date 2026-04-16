@@ -386,6 +386,9 @@ namespace NSDocxRenderer
 
 		auto text_line_groups = BuildTextLineGroups();
 
+		if (m_bIsBuildTables)
+			BuildGraphicalCells();
+
 		// building final objects
 		m_arParagraphs = BuildParagraphs(text_line_groups);
 
@@ -1380,6 +1383,24 @@ namespace NSDocxRenderer
 
 		return IsTextLineTrough(dummy_cont);
 	}
+	bool CPage::IsEmtySpaceBetweenInCell(text_line_ptr_t pFirst, text_line_ptr_t pSecond) const noexcept
+	{
+		double left = std::min(pFirst->m_dLeft, pSecond->m_dLeft);
+		double right = std::max(pFirst->m_dRight, pSecond->m_dRight);
+		double top = std::min(pFirst->m_dBotWithMaxDescent, pSecond->m_dBotWithMaxDescent);
+		double bot = std::max(pFirst->m_dTopWithMaxAscent, pSecond->m_dTopWithMaxAscent);
+		double diff = fabs(pFirst->m_dBotWithMaxDescent - pSecond->m_dTopWithMaxAscent);
+
+		for (const auto& c : m_arGraphicalCells)
+			if ((c->m_dTop < top || fabs(c->m_dTop - top) < c_dGRAPHICS_ERROR_MM) &&
+				(c->m_dLeft < left || fabs(c->m_dLeft - left) < c_dGRAPHICS_ERROR_MM) &&
+				(c->m_dBot > bot || fabs(c->m_dBot - bot) < c_dGRAPHICS_ERROR_MM) &&
+				(c->m_dRight > right || fabs(c->m_dRight - right) < c_dGRAPHICS_ERROR_MM) &&
+				diff > c_dLINE_DISTANCE_ERROR_MM)
+				return true;
+
+		return false;
+	}
 
 	bool CPage::IsVerticalLineTrough(base_item_ptr_t pFirst) const noexcept
 	{
@@ -1993,12 +2014,16 @@ namespace NSDocxRenderer
 					ar_delims[index] = true;
 			}
 
-			// if there's a shape between lines - split
+			// if there's a shape between lines or in table cell - split
 			for (size_t index = 0; index < ar_positions.size() - 1; ++index)
 			{
 				if (IsHorizontalLineBetween(text_lines[index], text_lines[index + 1]))
 					ar_delims[index] = true;
 				if (IsTextLineBetween(text_lines[index], text_lines[index + 1]))
+					ar_delims[index] = true;
+
+				// if empty space between in table cell
+				if (IsEmtySpaceBetweenInCell(text_lines[index], text_lines[index + 1]))
 					ar_delims[index] = true;
 			}
 
@@ -2201,13 +2226,11 @@ namespace NSDocxRenderer
 		std::vector<cell_ptr_t> cells_to_next_row;
 		std::vector<cell_ptr_t> tmp_cells;
 
-		auto graphical_cells = BuildGraphicalCells();
-
-		if (graphical_cells.empty())
+		if (m_arGraphicalCells.empty())
 			return {};
 
 		// set paragraph into cells
-		for (auto& c : graphical_cells)
+		for (auto& c : m_arGraphicalCells)
 			for (auto& p : m_arParagraphs)
 			{
 				if (!p)
@@ -2239,13 +2262,13 @@ namespace NSDocxRenderer
 			return p1->m_dBot < p2->m_dBot;
 		});
 
-		for (auto& gr_cell : graphical_cells)
+		for (auto& gr_cell : m_arGraphicalCells)
 			lines.insert(gr_cell->m_dBot);
 
-		double row_top = graphical_cells.front()->m_dTop;
-		double row_height = graphical_cells.front()->m_dHeight;
+		double row_top = m_arGraphicalCells.front()->m_dTop;
+		double row_height = m_arGraphicalCells.front()->m_dHeight;
 		auto bot_line_it = lines.begin();
-		for (auto& cell : graphical_cells)
+		for (auto& cell : m_arGraphicalCells)
 		{
 			if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
 			{
@@ -2362,7 +2385,7 @@ namespace NSDocxRenderer
 		return tables;
 	}
 
-	std::vector<CPage::cell_ptr_t> CPage::BuildGraphicalCells()
+	void CPage::BuildGraphicalCells()
 	{
 		struct Crossing;
 		struct Line;
@@ -2653,7 +2676,6 @@ namespace NSDocxRenderer
 			return c1->p.y < c2->p.y;
 		});
 
-		std::vector<cell_ptr_t> graphical_cells;
 		std::set<size_t, std::less<size_t>> remove_later;
 		for (size_t i = 0; i < crossings.size(); ++i)
 		{
@@ -2703,7 +2725,7 @@ namespace NSDocxRenderer
 				graphical_cell->m_oBorderRight = border_right;
 				graphical_cell->m_oBorderBot = border_bot;
 
-				graphical_cells.push_back(std::move(graphical_cell));
+				m_arGraphicalCells.push_back(std::move(graphical_cell));
 				break;
 			}
 		}
@@ -2712,7 +2734,7 @@ namespace NSDocxRenderer
 		{
 			const auto idx = *it;
 			auto shape = m_arShapes[idx];
-			for (auto c : graphical_cells)
+			for (auto c : m_arGraphicalCells)
 				if ((shape->m_dTop > c->m_dTop || fabs(shape->m_dTop - c->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
 					(shape->m_dLeft > c->m_dLeft || fabs(shape->m_dLeft - c->m_dLeft) < c_dGRAPHICS_ERROR_MM) &&
 					(shape->m_dBot < c->m_dBot || fabs(c->m_dBot - shape->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
@@ -2730,8 +2752,6 @@ namespace NSDocxRenderer
 			if (idx < m_arShapes.size())
 				m_arShapes.erase(m_arShapes.begin() + idx);
 		}
-
-		return graphical_cells;
 	}
 
 	CPage::shape_ptr_t CPage::CreateSingleLineShape(text_line_ptr_t& pLine)
