@@ -970,7 +970,7 @@ bool CMarkdownTable::ConvertMatrix(XmlUtils::CXmlLiteReader& oReader, std::vecto
 
 				if (ETableElement::FlatTable == pTableCell->GetType())
 				{
-					TCurentTablePosition oPosition{unRowIndex, unColumnIndex, unRowIndex, unColumnIndex};
+					TCurentTablePosition oPosition(unRowIndex, unColumnIndex, unRowIndex, unColumnIndex);
 					std::vector<NSCSS::CNode> arNestedSelectors;
 
 					const int nDepth{oReader.GetDepth()};

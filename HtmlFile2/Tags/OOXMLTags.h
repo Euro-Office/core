@@ -5,6 +5,8 @@
 #include "../Writers/OOXMLWriter.h"
 #include "../Table.h"
 
+#include <unordered_map>
+
 namespace HTML
 {
 template<>

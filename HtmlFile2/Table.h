@@ -16,11 +16,16 @@ namespace HTML
 
 struct TCurentTablePosition
 {
-	size_t m_unRowIndex{0};
-	size_t m_unColumnIndex{0};
+	size_t m_unRowIndex;
+	size_t m_unColumnIndex;
 
-	size_t m_unStartRowIndex{0};
-	size_t m_unStartColumnIndex{0};
+	size_t m_unStartRowIndex;
+	size_t m_unStartColumnIndex;
+
+	TCurentTablePosition(size_t unRowIndex, size_t unColumnIndex, size_t unStartRowIndex, size_t unStartColumnIndex)
+		: m_unRowIndex{unRowIndex}, m_unColumnIndex{unColumnIndex},
+		  m_unStartRowIndex{unStartRowIndex}, m_unStartColumnIndex{unStartColumnIndex}
+	{}
 };
 
 
