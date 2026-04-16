@@ -36,6 +36,7 @@ const double c_dERROR_FOR_TEXT_WITH_GRAPHICS_MM = 0.1;
 const double c_dGRAPHICS_ERROR_MM               = 0.5;
 const double c_dMAX_TABLE_LINE_WIDTH_MM         = 2.2;
 const double c_dMAX_TABLE_CELL_DIFF_MM          = 7.0;
+const double c_dMIN_TABLE_DIFF_MM               = 0.3;
 const double c_dGRAPHICS_ERROR_IN_LINES_MM      = 0.3;
 const double c_dMAX_LINE_HEIGHT_MM              = 2.5;
 const double c_dMAX_LINE_WITH_TEXT_ERROR_MM     = 2.5;

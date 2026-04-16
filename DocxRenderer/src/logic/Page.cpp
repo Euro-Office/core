@@ -2116,7 +2116,19 @@ namespace NSDocxRenderer
 		auto bot_line_it = lines.begin();
 		for (auto& cell : m_arGraphicalCells)
 		{
-			if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
+			if (!row->IsEmpty() && cell->m_dTop - row->m_dBot > c_dMIN_TABLE_DIFF_MM)
+			{
+				row->m_dHeight = row_height;
+				table->AddRow(row);
+				table->CalcGridCols();
+				tables.push_back(table);
+				table = std::make_shared<CTable>();
+				row = std::make_shared<CTable::CRow>();
+				row_top = cell->m_dTop;
+				row_height = cell->m_dHeight;
+				++bot_line_it;
+			}
+			else if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
 			{
 				if (!cells_to_next_row.empty())
 				{
