@@ -2338,14 +2338,16 @@ void odf_drawing_context::get_size( _CP_OPT(double) & width_pt, _CP_OPT(double) 
 }
 void odf_drawing_context::set_horizontal_rule()
 {
-	//if (!impl_->current_graphic_properties) return;
-	//impl_->current_graphic_properties->common_draw_rel_size_attlist_.style_rel_width_ = odf_types::percent(100);
+	if (!impl_->current_graphic_properties) return;
 	
 	draw_base* draw = dynamic_cast<draw_base*>(impl_->current_level_.back().elm.get());
 
 	if (draw)
 	{
 		draw->common_draw_attlists_.rel_size_.style_rel_width_ = odf_types::percent(100);
+		impl_->current_graphic_properties->draw_stroke_ = line_style(line_style::Solid);
+		impl_->current_graphic_properties->svg_stroke_color_ = odf_types::color(L"#000000");
+		impl_->anchor_settings_.anchor_type_ = anchor_type::AsChar;
 	}
 }
 void odf_drawing_context::set_size( _CP_OPT(double) & width_pt, _CP_OPT(double) & height_pt, bool reset_always)
