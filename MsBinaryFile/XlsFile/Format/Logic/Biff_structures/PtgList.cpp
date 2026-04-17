@@ -116,7 +116,7 @@ void PtgList::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool ful
         if (!link.empty())
             link += L"!";
     }
-    //formula += link; пока без названия sheet
+    //formula += link; for now without sheet name
     formula += tableName;
     formula += L'[';
     if(!invalid && !nonresident)
@@ -166,11 +166,16 @@ Ptg* PtgList::toArea()
 	{
 		tableRef.fromString(tableRefIndex->second);
 		tableRef.columnFirst += colFirst;
-		tableRef.columnLast = tableRef.columnFirst + (colLast - colFirst);
+		tableRef.columnLast = tableRef.columnFirst;
+		if(colLast > colFirst)
+			tableRef.columnLast += (colLast - colFirst);
 		if(rowType == 0x2) //headers
 			tableRef.rowLast = tableRef.rowFirst;
 		else if(rowType == 0x0) //data
+		{
 			tableRef.rowFirst++;
+			tableRef.rowLast--;
+		}
 		else if(rowType == 0x6) //dataheaders
 			tableRef.rowLast--;
 		else if(rowType == 0x0C) // datatotals
@@ -178,7 +183,11 @@ Ptg* PtgList::toArea()
 		else if(rowType == 0x8) //totals
 			tableRef.rowFirst = tableRef.rowLast;
 	}
-	PtgArea3d* listArea = new PtgArea3d(0x3B, CellRef());
+	unsigned char ptgType = type_+1;
+	unsigned char areaType = 0x3B;
+	SETBITS(areaType,5,6, ptgType);
+
+	PtgArea3d* listArea = new PtgArea3d(areaType, CellRef());
 	listArea->ixti = ixti;
 	listArea->area = tableRef;
 	listArea->area.rowFirstRelative = false;

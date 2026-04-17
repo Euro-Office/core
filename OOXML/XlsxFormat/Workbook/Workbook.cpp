@@ -65,6 +65,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXStreamID.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SXVS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConRef.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/DConName.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SupBook.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/ExternSheet.h"
 
@@ -494,16 +495,21 @@ namespace OOX
 						auto cacheSourcePtr = new XLS::SXSRC;
 						castedPivotCache->m_SXSRC =XLS::BaseObjectPtr(cacheSourcePtr);
 						auto dref = new XLS::DREF;
-						auto conRef = new XLS::DConRef;
+
 						cacheSourcePtr->m_source = XLS::BaseObjectPtr(dref);
-						dref->m_DCon = XLS::BaseObjectPtr(conRef);
-						if(source->m_oWorksheetSource->m_oRef.IsInit())
+
+						if(source->m_oWorksheetSource->m_oRef.IsInit() && source->m_oWorksheetSource->m_oSheet.IsInit())
 						{
+							auto conRef = new XLS::DConRef;
+							dref->m_DCon = XLS::BaseObjectPtr(conRef);
 							conRef->ref = source->m_oWorksheetSource->m_oRef.get();
-						}
-						if(source->m_oWorksheetSource->m_oSheet.IsInit())
-						{
 							conRef->sheet_name = source->m_oWorksheetSource->m_oSheet.get();
+						}
+						else if(source->m_oWorksheetSource->m_oName.IsInit())
+						{
+							auto conName = new XLS::DConName;
+							dref->m_DCon = XLS::BaseObjectPtr(conName);
+							conName->stName = source->m_oWorksheetSource->m_oName.get();
 						}
 					}
 					globalsSubstream->m_arPIVOTCACHEDEFINITION.push_back(pivotCacheBin);
@@ -551,7 +557,7 @@ namespace OOX
 				}
 			}
 
-			IFileContainer::Read(oRootPath, oPath); //в данном случае порядок считывания важен для xlsb
+			IFileContainer::Read(oRootPath, oPath); //in this case reading order is important for xlsb
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(File::m_pMainDocument);
 			if (xlsx)
@@ -560,7 +566,7 @@ namespace OOX
 				{
 					m_bMacroEnabled = true;
 				}
-				//дубли листов
+				//duplicate sheets
 				for (auto elm : this->m_mapContainer)
 				{
 					if (elm.second->type() == OOX::Spreadsheet::FileTypes::Chartsheets || elm.second->type() == OOX::Spreadsheet::FileTypes::Worksheet)
@@ -740,7 +746,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 			//WorkbookPr
 			if (false == m_oWorkbookPr.IsInit())
 				m_oWorkbookPr.Init();
-			//todo если этот параметр выставлен, то берется стандартная тема, а не из файла.
+			//todo if this parameter is set, then the standard theme is used, not from the file.
 			//if(false == m_oWorkbookPr->m_oDefaultThemeVersion.IsInit())
 			//{
 			//	m_oWorkbookPr->m_oDefaultThemeVersion.Init();
@@ -779,7 +785,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		LONG CWorkbook::GetActiveSheetIndex()
 		{
 			LONG lActiveSheet = 0;
-			std::wstring sSheetRId = L"Sheet1"; // Читаем не по rId, а по имени листа
+			std::wstring sSheetRId = L"Sheet1"; // Read by sheet name, not by rId
 												// Get active sheet
 			if (m_oBookViews.IsInit() && !m_oBookViews->m_arrItems.empty())
 			{

@@ -41,7 +41,7 @@ namespace PPT
 class CRecordVisualShapeAtom : public CUnknownRecord
 {
 public:
-    // Привязка анимации через этот объект к ID объекту
+    // Animation binding through this object to object ID
     virtual void ReadFromStream ( SRecordHeader & oHeader, POLE::Stream* pStream ) override;
 
 

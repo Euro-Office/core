@@ -54,19 +54,19 @@ namespace EncodingType
 	const int BigEndian = 51;
 }
 
-#define PERMISSION_PRINT  ( 1 << 2 ) // Ограничение печати документа
-#define PERMISSION_CHANGE ( 1 << 3 ) // Ограничение на изменение содержимого документа (текст, графика, картинки)
-#define PERMISSION_COPY   ( 1 << 4 ) // Ограничение на копирование документа и его содержимого
+#define PERMISSION_PRINT  ( 1 << 2 ) // Restriction on document printing
+#define PERMISSION_CHANGE ( 1 << 3 ) // Restriction on changing document content (text, graphics, images)
+#define PERMISSION_COPY   ( 1 << 4 ) // Restriction on copying document and its content
 
-//Тип печати
-const int c_nPrintTypeFit = 0; //вписывать по аспекту
-const int c_nPrintTypeStrech = 1; //растягивать
-const int c_nPrintType100 = 2; // печатать как есть
-//пример xml для функции PrintPage <PrintSettings><Mode ZoomEnable=\"0\" RotateEnable=\"0\" PrintableAreaEnable=\"0\">%d</Mode></PrintSettings>
-//enable - 0; diable - 1 ( если атрибут не задан, то он берется как 0 )
-//ZoomEnable растягивать любой документ до размеров страницы
-//RotateEnable поворачивать документ,если в повернутом состоянии он будет занимать большую площадь(например при c_nPrintType100) или если в обычном состоянии он не вписывает, а в повернутом вписывается
-//PrintableAreaEnable печать только в области печати принтера
+//Print type
+const int c_nPrintTypeFit = 0; //fit by aspect ratio
+const int c_nPrintTypeStrech = 1; //stretch
+const int c_nPrintType100 = 2; // print as is
+//xml example for PrintPage function <PrintSettings><Mode ZoomEnable=\"0\" RotateEnable=\"0\" PrintableAreaEnable=\"0\">%d</Mode></PrintSettings>
+//enable - 0; disable - 1 (if attribute is not set, it defaults to 0)
+//ZoomEnable stretch any document to page size
+//RotateEnable rotate document if rotated state takes more area (e.g. with c_nPrintType100) or if normal state doesn't fit but rotated does
+//PrintableAreaEnable print only in printer's printable area
 
 namespace TextFormatting
 {
@@ -75,7 +75,7 @@ namespace TextFormatting
   const int c_nWordProcessing = 2;
 }
 
-//additional param сохранения нескольких документов в один для IAVSOfficeFileConverter
+//additional param for saving multiple documents into one for IAVSOfficeFileConverter
 const int c_nSaveModeNone = 0;
 const int c_nSaveModeStart = 1;
 const int c_nSaveModeContinue = 2;

@@ -49,7 +49,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CSheet : public WritingElement
 		{

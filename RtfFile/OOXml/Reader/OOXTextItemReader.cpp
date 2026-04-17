@@ -57,7 +57,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 
 			OOXParagraphReader	oParagraphReader(pParagraph);
 			RtfParagraphPtr oNewParagraph(new RtfParagraph());
-			//применяем к новому параграфу default property
+			//apply default property to new paragraph
 			oNewParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 			oNewParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
 			oNewParagraph->m_oProperty.m_nItap = 0;
@@ -73,7 +73,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 
 			OOXParagraphReader	oParagraphReader(pParagraph);
 			RtfParagraphPtr oNewParagraph(new RtfParagraph());
-		//применяем к новому параграфу default property
+		//apply default property to new paragraph
 			oNewParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 			oNewParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
 			
@@ -148,7 +148,7 @@ bool OOXTextItemReader::Parse(OOX::WritingElement* ooxElement, ReaderParameter o
 			oParagraph.m_oParagraphProperty->m_oKeepLines.Init();
 			oParagraph.m_oParagraphProperty->m_oKeepLines->m_oVal.SetValue(SimpleTypes::EOnOff::onoffTrue);
 
-			//применяем к новому параграфу default property
+			//apply default property to new paragraph
 			oNewParagraph->m_oProperty = oParam.oRtf->m_oDefaultParagraphProp;
 			oNewParagraph->m_oProperty.m_oCharProperty = oParam.oRtf->m_oDefaultCharProp;
 			oNewParagraph->m_oProperty.m_nItap = 0;

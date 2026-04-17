@@ -114,18 +114,19 @@ namespace OOX
 		{
 			auto ptr = new XLS::Style;
 			if (m_oXfId.IsInit())
-				ptr->ixfe = m_oXfId->GetValue();
-			if(m_oBuiltinId.IsInit())
+				ptr->ixfe = m_oXfId->GetValue() + 16;
+
+			if (m_oName.IsInit())
+			{
+				ptr->fBuiltIn = false;
+				ptr->user = m_oName.get();
+			}
+			else if(m_oBuiltinId.IsInit())
 			{
 				ptr->fBuiltIn = true;
 				ptr->builtInData.istyBuiltIn = m_oBuiltinId->GetValue();
 				if(m_oILevel.IsInit())
 					ptr->builtInData.iLevel = m_oILevel->GetValue();
-			}
-			else if (m_oName.IsInit())
-			{
-				ptr->fBuiltIn = false;
-				ptr->user = m_oName.get();
 			}
 			return XLS::BaseObjectPtr(ptr);
 		}

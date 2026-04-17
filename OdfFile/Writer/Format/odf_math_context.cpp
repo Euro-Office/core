@@ -94,8 +94,8 @@ namespace odf_writer
 		
 			style_paragraph_properties			*current_paragraph_properties;
 			style_text_properties				*current_text_properties;
-			std::vector<odf_math_level_state>	current_level_;	//постоянно меняющийся список уровней наследования
-			std::vector<odf_math_state>			math_list_;		//все элементы .. для удобства разделение по "топам"
+			std::vector<odf_math_level_state>	current_level_;	//constantly changing list of inheritance levels
+			std::vector<odf_math_state>			math_list_;		//all elements .. for convenience separated by "tops"
 			odf_conversion_context				*odf_context_;
 			office_math							*root_element_;
 			

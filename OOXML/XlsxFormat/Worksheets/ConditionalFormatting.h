@@ -67,7 +67,7 @@ namespace OOX
 		class CDxf;
 		class CColor;
 
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CFormulaCF : public WritingElement
 		{
@@ -396,7 +396,7 @@ namespace OOX
 		public:
 
 			nullable<SimpleTypes::COnOff>	m_oPivot;
-			nullable<std::wstring >			m_oSqRef; // ToDo переделать на тип "sqref" (18.18.76) - последовательность "ref", разделенные пробелом
+			nullable<std::wstring >			m_oSqRef; // ToDo convert to "sqref" type (18.18.76) - sequence of "ref" separated by space
 		};
 
 	} //Spreadsheet

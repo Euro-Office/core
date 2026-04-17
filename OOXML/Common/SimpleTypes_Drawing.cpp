@@ -135,7 +135,7 @@ namespace SimpleTypes
 		}
 		else
 		{
-			// Последние два символа не проверяем
+			// Don't check last two characters
 			for ( size_t nIndex = 0; nIndex < sValue.length() - 2; nIndex++ )
 			{
 				if ( !iswdigit( sValue[nIndex] ) && sValue[nIndex] != '.' && sValue[nIndex] != '-' )
@@ -155,7 +155,7 @@ namespace SimpleTypes
 		else
 		{
 			this->m_eValue = adjcoordinateCoord;
-			// Значение хранится в m_dValue
+			// Value is stored in m_dValue
 		}
 	}
 
@@ -752,7 +752,7 @@ namespace SimpleTypes
 		{
 			if ( -1 == nPos && nLen > 0)
 			{
-				// Поправка 12.1.2.1 Part4
+				// Amendment 12.1.2.1 Part4
 				int nValue = (std::min)( 100000, (std::max)( -100000, XmlUtils::GetInteger(sValue)) );
 				m_dValue = nValue / 1000.0;
 			}
@@ -865,7 +865,7 @@ namespace SimpleTypes
 
 	void CGeomGuideFormula::Parse()
 	{
-		// TO DO: Сделать разбор формул. См. стр.3244 Part1.
+		// TO DO: Implement formula parsing. See p.3244 Part1.
 	}
 
 	//--------------------------------------------------------------------------------
@@ -1393,7 +1393,7 @@ namespace SimpleTypes
 
 	double CPercentage::FromString(const std::wstring &sValue)
 	{
-		//todo странно что если пришло значение от 0 до 1, то m_dValue от 0 до 1. В других случаях от 0 до 100
+		//todo strange that if value is from 0 to 1, then m_dValue is from 0 to 1. Otherwise from 0 to 100
 		int nPos = (int)sValue.find( '%' );
 		int nLen = (int)sValue.length();
 		if ( -1 == nPos || nPos != (int)sValue.length() - 1 || nLen <= 0  )
@@ -1408,7 +1408,7 @@ namespace SimpleTypes
 				}
 				else
 				{
-					// Поправка 12.1.2.2 (Part4)
+					// Amendment 12.1.2.2 (Part4)
 					m_dValue = dValue / 1000.0;
 				}
 			}
@@ -1539,7 +1539,7 @@ namespace SimpleTypes
 		{
 			if ( -1 == nPos && nLen > 0)
 			{
-				// Поправка 12.1.2.3 (Part4)
+				// Amendment 12.1.2.3 (Part4)
 				int nValue = (std::max)( 0, (std::min)( 100000, XmlUtils::GetInteger(sValue) ) );
 				m_dValue = nValue / 1000.0;
 			}
@@ -1581,7 +1581,7 @@ namespace SimpleTypes
 		{
 			if ( -1 == nPos && nLen > 0)
 			{
-				// Поправка 12.1.2.4 (Part4)
+				// Amendment 12.1.2.4 (Part4)
 				int nValue = (std::max)( 0, XmlUtils::GetInteger(sValue) );
 				m_dValue = nValue / 1000.0;
 			}
@@ -3807,7 +3807,7 @@ namespace SimpleTypes
 		{
 			if ( -1 == nPos && nLen > 0)
 			{
-				// Поправка 12.1.2.5 (Part4)
+				// Amendment 12.1.2.5 (Part4)
 				int nValue = (std::min)( 100000, (std::max)( 1000, XmlUtils::GetInteger(sValue) ) );
 				m_dValue = nValue / 1000.0;
 			}
@@ -4160,7 +4160,7 @@ namespace SimpleTypes
 		{
 			if ( -1 == nPos && nLen > 0)
 			{
-				// Поправка 12.1.2.7 (Part4)
+				// Amendment 12.1.2.7 (Part4)
 				int nValue = (std::min)( 13200000, (std::max)( 0, XmlUtils::GetInteger(sValue) ) );
 				m_dValue = nValue / 1000.0;
 			}
@@ -4397,7 +4397,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Word из спецификации Office Open Xml (20.4.3)
+// All simple Drawing-Word types from Office Open Xml specification (20.4.3) are presented here
 namespace SimpleTypes
 {
 	//--------------------------------------------------------------------------------
@@ -4686,19 +4686,19 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Spreadsheet из спецификации Office Open Xml (20.5.3)
+// All simple Drawing-Spreadsheet types from Office Open Xml specification (20.5.3) are presented here
 namespace SimpleTypes
 {
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Charts из спецификации Office Open Xml (21.2.3, 21.3.3)
+// All simple Drawing-Charts types from Office Open Xml specification (21.2.3, 21.3.3) are presented here
 namespace SimpleTypes
 {
 
 } // SimpleTypes
 
-// Здесь представлены все простые типы Drawing-Diagrams из спецификации Office Open Xml (21.4.7)
+// All simple Drawing-Diagrams types from Office Open Xml specification (21.4.7) are presented here
 namespace SimpleTypes
 {	
 	EHueDirType CHueDirType::FromString(const std::wstring &sValue)

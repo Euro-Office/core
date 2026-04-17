@@ -41,16 +41,16 @@ namespace PdfWriter
 		if (!bInline)
 			pXref->Add(this);
 
-		// Первый элемент массива должен быть страницей, которой принадлежит объект
+		// First element of the array must be the page to which the object belongs
 		Add(pPage);
-		Add("Fit"); // Значение по умолчанию Fit
+		Add("Fit"); // Default value Fit
 	}
 	bool CDestination::IsValid() const
 	{
 		if (m_arrList.size() < 2)
 			return false;
 
-		// Проверка, что объект является страницей. Но это может быть ссылка на нередактируемую страницу
+		// Check that the object is a page. But it can be a reference to a non-editable page
 		// CObjectBase* pObject = Get(0, false);
 		// if ((object_type_DICT != pObject->GetType() || dict_type_PAGE != ((CDictObject*)pObject)->GetDictType()) &&
 		// 		(object_type_PROXY != pObject->GetType() || object_type_DICT != ((CProxyObject*)pObject)->Get()->GetType() || dict_type_PAGE != ((CDictObject*)((CProxyObject*)pObject)->Get())->GetDictType()))
@@ -85,7 +85,7 @@ namespace PdfWriter
 		if (!IsValid())
 			return;
 
-		// Если параметр приближения задан некорректно, тогда оставляем его нетронутым(что соответствует значению 0)
+		// If zoom parameter is invalid, leave it unchanged (which corresponds to value 0)
 		if (fZoom < 0.08 || fZoom > 32)
 			fZoom = 0;
 

@@ -44,7 +44,7 @@ public:
 
     IGraphicsRenderer_State()
     {
-        // пока не используется
+        // not used yet
         Type = 0;
     }
     virtual ~IGraphicsRenderer_State()
@@ -75,13 +75,13 @@ private:
 	LONG  m_lCurrentClipMode;
 	INT  m_bIsSetupClip;
 
-	// область отсечения
+	// clipping region
 	LONG	m_lClipLeft;
 	LONG	m_lClipTop;
 	LONG	m_lClipWidth;
 	LONG	m_lClipHeight;
 
-	// пикселы
+	// pixels
 	BYTE*			m_pPixels;
 	Aggplus::CDIB*	m_pDIB;
 
@@ -128,9 +128,9 @@ public:
     virtual void Restore();
 
 public:
-// тип рендерера-----------------------------------------------------------------------------
+// renderer type-----------------------------------------------------------------------------
 	virtual HRESULT get_Type(LONG* lType);
-//-------- Функции для работы со страницей --------------------------------------------------
+//-------- Page functions --------------------------------------------------
 	virtual HRESULT NewPage();
 	virtual HRESULT get_Height(double* dHeight);
 	virtual HRESULT put_Height(const double& dHeight);
@@ -213,18 +213,18 @@ public:
 	virtual HRESULT get_FontFaceIndex(int* lFaceIndex);
 	virtual HRESULT put_FontFaceIndex(const int& lFaceIndex);
 
-//-------- Функции для вывода текста --------------------------------------------------------
+//-------- Text output functions --------------------------------------------------------
     virtual HRESULT CommandDrawTextCHAR(const LONG& c, const double& x, const double& y, const double& w, const double& h);
     virtual HRESULT CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h);
 
     virtual HRESULT CommandDrawTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h);
     virtual HRESULT CommandDrawTextEx(const std::wstring& bsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h);
 
-//-------- Маркеры для команд ---------------------------------------------------------------
+//-------- Command markers ---------------------------------------------------------------
 	virtual HRESULT BeginCommand(const DWORD& lType);
 	virtual HRESULT EndCommand(const DWORD& lType);
 
-//-------- Функции для работы с Graphics Path -----------------------------------------------
+//-------- Graphics Path functions -----------------------------------------------
 	virtual HRESULT PathCommandMoveTo(const double& x, const double& y);
 	virtual HRESULT PathCommandLineTo(const double& x, const double& y);
 	virtual HRESULT PathCommandLinesTo(double* points, const int& count);
@@ -243,7 +243,7 @@ public:
     virtual HRESULT PathCommandTextExCHAR(const LONG& c, const LONG& gid, const double& x, const double& y, const double& w, const double& h);
     virtual HRESULT PathCommandTextEx(const std::wstring& sText, const unsigned int* pGids, const unsigned int nGidsCount, const double& x, const double& y, const double& w, const double& h);
 
-//-------- Функции для вывода изображений ---------------------------------------------------
+//-------- Image output functions ---------------------------------------------------
 	virtual HRESULT DrawImage(IGrObject* pImage, const double& x, const double& y, const double& w, const double& h);
 	virtual HRESULT DrawImageFromFile(const std::wstring& sFile, const double& x, const double& y, const double& w, const double& h, const BYTE& lAlpha = 255);
 

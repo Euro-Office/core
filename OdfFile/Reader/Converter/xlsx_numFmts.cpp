@@ -76,7 +76,7 @@ unsigned int xlsx_num_fmts::Impl::add(const std::wstring & format_code, unsigned
 	}
 	else
 	{
-		//занято id для format_code -> следующий если есть берем
+		//id is taken for format_code -> take next if available
 		id = add(format_code, ++id);
 	}
 	return id;

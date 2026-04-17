@@ -254,7 +254,7 @@ bool CImageFileFormatChecker::isIcoFile(BYTE* pBuffer,DWORD dwBytes)
 			image_header = (___BITMAPINFOHEADER *)(pBuffer + offset_image);
 
 			if (width == image_header->biWidth
-					/*height == image_header->biHeight*/) // в хеадере может быть черестрочная высота
+					/*height == image_header->biHeight*/) // header may contain interlaced height
 				return true;
 		}
 	}

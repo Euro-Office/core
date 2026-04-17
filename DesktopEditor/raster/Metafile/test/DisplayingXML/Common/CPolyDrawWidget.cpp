@@ -12,7 +12,7 @@ CPolyDrawWidget::CPolyDrawWidget(QWidget *pParent)
 {
         QVBoxLayout *pLayout = new QVBoxLayout;
 
-        QPushButton *pAddedPoint        = new QPushButton("Добавить точку");
+        QPushButton *pAddedPoint        = new QPushButton("Add point");
 
         connect(pAddedPoint, &QPushButton::clicked, this, &CPolyDrawWidget::on_createPoint_clicked);
 

@@ -89,7 +89,7 @@ void MsoDrawingGroup::prepareChart(unsigned int count)
 	}
 }
 
-int MsoDrawingGroup::AddPict(const std::wstring& picPath)
+int MsoDrawingGroup::AddPict(OOX::CPath& picPath)
 {
 	int pictNum = -1;
 	ODRAW::OfficeArtBStoreContainer *bstore;
@@ -102,20 +102,21 @@ int MsoDrawingGroup::AddPict(const std::wstring& picPath)
 		bstore = static_cast<ODRAW::OfficeArtBStoreContainer*>(rgChildRec.m_OfficeArtBStoreContainer.get());
 	if(!drawingNames.IsInit())
 		drawingNames.Init();
-	if(drawingNames->find(picPath) == drawingNames->end())
+	if(drawingNames->find(picPath.GetPath()) == drawingNames->end())
 	{
 		auto fileBlock = new ODRAW::OfficeArtBStoreContainerFileBlock;
 		bstore->rgfb.push_back(fileBlock);
 
 		pictNum = bstore->rgfb.size();
-		drawingNames->emplace(picPath, pictNum);
+		drawingNames->emplace(picPath.GetPath(), pictNum);
 
 		DWORD fileSize = 0;
-		auto result = NSFile::CFileBinary::ReadAllBytes(picPath, (BYTE**)&fileBlock->pict_data, fileSize);
+		auto result = NSFile::CFileBinary::ReadAllBytes(picPath.GetPath(), (BYTE**)&fileBlock->pict_data, fileSize);
 		fileBlock->pict_size = fileSize;
+		fileBlock->pict_type = picPath.GetExtention();
 	}
 	else
-		pictNum = drawingNames->find(picPath)->second;
+		pictNum = drawingNames->find(picPath.GetPath())->second;
 	return  pictNum;
 }
 

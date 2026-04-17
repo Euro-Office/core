@@ -236,7 +236,7 @@ const bool ChartSheetSubstream::loadContent(BinProcessor& proc)
 			case rt_Fbi2:
 			{
 				count = proc.repeated<Fbi2>(0, 0);
-				while(count > 0 && m_arFbi.empty())//??? разделить
+				while(count > 0 && m_arFbi.empty())//??? split
 				{
 					m_arFbi.insert(m_arFbi.begin(), elements_.back());
 					elements_.pop_back();
@@ -873,7 +873,7 @@ int ChartSheetSubstream::serialize_legend (std::wostream & _stream, const std::w
 	//	dat_ld		= dynamic_cast<LD*>(DAT_->m_LD.get());
 	//}
 	
-	//todooo разобраться с разными типами в одном чарте .. считать количество серий?? 
+	//todooo figure out different types in one chart.. count number of series?? 
 	std::unordered_map< int, std::vector<int>>::iterator it = m_mapTypeChart.begin();
 	while (it != m_mapTypeChart.end())
 	{
@@ -929,7 +929,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 			CRT * crt = dynamic_cast<CRT*>(parent0->m_arCRT[0].get());
 			if ((crt) && (	crt->m_iChartType == CHART_TYPE_Radar || 
 							crt->m_iChartType == CHART_TYPE_RadarArea ||
-							crt->m_iChartType == CHART_TYPE_Scatter))//еще?
+							crt->m_iChartType == CHART_TYPE_Scatter))//more?
 			{
 				PlotAreaPos->m_iLayoutTarget = 2; //inner
 			}
@@ -1063,7 +1063,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 									CP_XML_STREAM() << stream_dLbls.str();
 								}
 							}
-							series_ss->serialize2(CP_XML_STREAM(), crt->m_iChartType); //особенности xlsx (
+							series_ss->serialize2(CP_XML_STREAM(), crt->m_iChartType); //xlsx specifics (
 						}	
 							
 						series->serialize_legend(stream_legend_entries, it->second[i]); 
@@ -1138,7 +1138,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 }
 int ChartSheetSubstream::serialize_scatter_style(std::wostream & _stream, CRT *crt)
 {
-	bool bMarker = true, bSmooth = false, bLine = true;//todooo  - так как есть отдельные настройки
+	bool bMarker = true, bSmooth = false, bLine = true;//todooo - since there are separate settings
 
 	CP_XML_WRITER(_stream)
 	{
@@ -1196,7 +1196,7 @@ int ChartSheetSubstream::serialize_dPt(std::wostream & _stream, int id, CRT *crt
 						present_idx.insert(std::make_pair(series_data_format->xi, true));
 				}
 				series_ss->serialize	(CP_XML_STREAM(), crt->m_iChartType, series_data_format->xi);
-				//series_ss->serialize2	(CP_XML_STREAM(), crt->m_iChartType); // 3d shape box не нужен - Book 78 3D.xls
+				//series_ss->serialize2	(CP_XML_STREAM(), crt->m_iChartType); // 3d shape box not needed - Book 78 3D.xls
 			}
 		}
 
@@ -1291,7 +1291,7 @@ int ChartSheetSubstream::serialize_dLbls (std::wostream & _stream, int id, CRT *
 				add_labels = true;
 			}
 			else if (!labels.empty())
-			{//есть лэйблы отдельных точек, а вот общие никак не обозначены
+			{//there are labels for individual points, but general ones are not marked
 				need_add_labels = true;
 			}
 		}
@@ -1335,7 +1335,7 @@ int ChartSheetSubstream::serialize_dLbls (std::wostream & _stream, int id, CRT *
 			CP_XML_NODE(L"c:showCatName")	{ CP_XML_ATTR (L"val" , 0); }	
 			CP_XML_NODE(L"c:showSerName")	{ CP_XML_ATTR (L"val" , 0); }	
 		}
-	//подписи к точкам (отдельные)
+	//labels for points (individual)
 		for (size_t i = 0; i < labels.size(); i++)
 		{
 			CP_XML_NODE(L"c:dLbl")
@@ -1470,7 +1470,7 @@ int ChartSheetSubstream::serialize_ser (std::wstring sNodeSer, std::wostream & _
 
 					CP_XML_NODE(L"c:ptCount")
 					{
-						CP_XML_ATTR(L"val", count); // count_found использовать нельзя - тут должно быть максимальное всех точек отчета
+						CP_XML_ATTR(L"val", count); // cannot use count_found - must be maximum of all report points
 					}
 					CP_XML_STREAM() << _stream_cash.str();
 				
@@ -1505,7 +1505,7 @@ int ChartSheetSubstream::serialize_ser (std::wstring sNodeSer, std::wostream & _
 						{
 							CP_XML_NODE(L"c:ptCount")
 							{
-								CP_XML_ATTR(L"val", count); // count_found использовать нельзя - тут должно быть максимальное всех точек отчета
+								CP_XML_ATTR(L"val", count); // cannot use count_found - must be maximum of all report points
 							}
 							CP_XML_STREAM() << _stream_cash.str();
 						}

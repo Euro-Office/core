@@ -66,7 +66,7 @@ void oox_layout::oox_serialize(std::wostream & _Wostream)
 					{
 						CP_XML_NODE(L"c:x")
 						{
-							CP_XML_ATTR(L"val", std::to_wstring(*x)); // падает тут
+							CP_XML_ATTR(L"val", std::to_wstring(*x));
 						}
 					}
 					if( y )

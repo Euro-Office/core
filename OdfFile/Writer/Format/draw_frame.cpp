@@ -168,7 +168,7 @@ void draw_g::serialize(std::wostream & _Wostream)
         {
 			if (!common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_name_)
 				common_draw_attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_name_ = L"";
-			//брееед ... иначе либра не показывает группу!!!
+			//nonsense... otherwise LibreOffice doesn't show the group!!!
 
 			CP_XML_ATTR_OPT(L"xml:id", xml_id_);
 			CP_XML_ATTR_OPT(L"draw:id", xml_id_);
@@ -215,8 +215,8 @@ void draw_frame::serialize(std::wostream & _Wostream)
 void draw_frame::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
     if (CP_CHECK_NAME(L"draw", L"text-box") ||
-        CP_CHECK_NAME(L"draw", L"image")	||//копия чарта в виде картинки ну.. или просто картинка
-        CP_CHECK_NAME(L"draw", L"object")	||//месторасположение чарта
+        CP_CHECK_NAME(L"draw", L"image")	||//chart copy as image or.. just an image
+        CP_CHECK_NAME(L"draw", L"object")	||//chart location
         CP_CHECK_NAME(L"draw", L"object-ole") ||
         CP_CHECK_NAME(L"draw", L"applet")	||
         CP_CHECK_NAME(L"draw", L"floating-frame") ||

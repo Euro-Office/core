@@ -53,7 +53,7 @@ void COOXToVMLGeometry::_CStringWriter::AddSize(size_t nSize)
 		wchar_t* pRealloc = (wchar_t*)realloc(m_pData, m_lSize * sizeof(wchar_t));
 		if (NULL != pRealloc)
 		{
-			// реаллок сработал
+			// realloc succeeded
 			m_pData		= pRealloc;
 			m_pDataCur	= m_pData + m_lSizeCur;
 		}

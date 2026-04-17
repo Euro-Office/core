@@ -207,11 +207,11 @@ void text::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (Context.get_process_note() != oox::docx_conversion_context::noNote && 
 		Context.get_delete_text_state()) 
-			return; //в ms нет рецензирования notes
+			return; //MS doesn't have notes revision tracking
 
 	bool add_del_run = false;
 	if (Context.get_drawing_state_content() && Context.get_delete_text_state())
-	{	//0503IG-AddingFormattingText.odt - удаленый текст в удаленом объекте
+	{	//0503IG-AddingFormattingText.odt - deleted text in deleted object
 
 		oox::text_tracked_context::_state  &state = Context.get_text_tracked_context().get_tracked_change(L"");
 		if (state.type == 2)
@@ -599,12 +599,7 @@ void span::add_space(const std::wstring & Text)
 void span::docx_convert(oox::docx_conversion_context & Context)
 {
 	bool addNewRun = false;
-    bool pushed = false;
-
-	if (!content_.empty() && (content_[0]->get_type() == typeTextNote))
-	{
-		pushed = pushed;
-	}
+    bool pushed_text_properties = false;
 
     std::wostream & _Wostream = Context.output_stream();
 
@@ -625,7 +620,7 @@ void span::docx_convert(oox::docx_conversion_context & Context)
 					}
                     
 					Context.push_text_properties(text_props);
-                    pushed = true;
+                    pushed_text_properties = true;
                     Context.get_styles_context().start_process_style(styleInst);
 					Context.add_new_run();
                     Context.get_styles_context().end_process_style();
@@ -645,8 +640,8 @@ void span::docx_convert(oox::docx_conversion_context & Context)
                                      
     }
 
-
-    if (!addNewRun)Context.add_new_run();
+    if (false == addNewRun) 
+		Context.add_new_run();
 
     for (size_t i = 0; i < content_.size(); i++)
     {
@@ -655,7 +650,7 @@ void span::docx_convert(oox::docx_conversion_context & Context)
 
 	Context.finish_run();
 	
-	if (pushed)
+	if (pushed_text_properties)
         Context.pop_text_properties();
 }
 
@@ -764,7 +759,7 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
-		if (std::wstring::npos != pos_outline)//без #
+		if (std::wstring::npos != pos_outline)//without #
 		{
 			std::wstringstream strm; 
 			text_to_stream(strm, false);
@@ -974,7 +969,7 @@ void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 }
 void note::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//см presentation:notes
+	//see presentation:notes
 }
 void note::docx_convert(oox::docx_conversion_context & Context)
 {
@@ -1303,7 +1298,7 @@ void text_page_count::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conver
 }
 void text_page_count::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//поскольку такого поля в ms нет - конвертим как обычный текст
+	//since this field doesn't exist in MS - convert as plain text
 	if (text_)
     {
         text_->pptx_convert(Context);

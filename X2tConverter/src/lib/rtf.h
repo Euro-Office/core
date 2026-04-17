@@ -126,7 +126,7 @@ namespace NExtractTools
 				nRes = rtfConvert.ConvertOOXToRtf(sTo, sResultDocxDir);
 			}
 		}
-		// удаляем EditorWithChanges, потому что он не в Temp
+		// delete EditorWithChanges because it's not in Temp
 		if (sFrom != sTargetBin)
 			NSFile::CFileBinary::Remove(sTargetBin);
 		return nRes;

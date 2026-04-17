@@ -166,7 +166,7 @@ void OOX::Spreadsheet::CXlsb::WriteSheetData()
     for(auto &worksheet : m_arWorksheets)
     {
 
-        //для оптимизации по памяти сразу записываем в файл все листы
+        //for memory optimization, write all sheets to file immediately
         if(m_bWriteToXlsb)
         {
             WriteSheet(worksheet);
@@ -228,7 +228,7 @@ void OOX::Spreadsheet::CXlsb::PrepareSi()
     }
 }
 
-// подготовка гиперссылок для записи в xls
+// prepare hyperlinks for writing to xls
 void OOX::Spreadsheet::CXlsb::PrepareHlinks()
 {
 	for(auto i : m_arWorksheets)
@@ -247,7 +247,7 @@ void OOX::Spreadsheet::CXlsb::PrepareHlinks()
 		}
 	}
 }
-//подготовка шрифтов в richString для конвертации в xlsb
+//prepare fonts in richString for conversion to xlsb
 void OOX::Spreadsheet::CXlsb::PrepareRichStr()
 {
     if(m_pStyles && m_pStyles->m_oFonts.IsInit())
@@ -281,7 +281,7 @@ void OOX::Spreadsheet::CXlsb::PrepareRichStr()
         }
     }
 }
-//отложенный парсинг SheetData
+//deferred parsing of SheetData
 void OOX::Spreadsheet::CXlsb::ReadSheetData()
 {
     for(auto &worksheet : m_arWorksheets)
@@ -321,7 +321,7 @@ void OOX::Spreadsheet::CXlsb::ReadSheetData()
         //auto base = boost::static_pointer_cast<BaseObject>(cell_table_temlate);
         worksheet->m_oSheetData->fromBin(reader);
         delete[] m_pStream;
-        //для оптимизации по памяти сразу записываем в файл все листы
+        //for memory optimization, write all sheets to file immediately
         if(m_bWriteToXlsx)
         {
             WriteSheet(worksheet);

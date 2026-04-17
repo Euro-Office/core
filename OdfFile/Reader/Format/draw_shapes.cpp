@@ -86,7 +86,7 @@ void draw_shape::add_child_element( xml::sax * Reader, const std::wstring & Ns, 
 }
 void draw_shape::add_attributes( const xml::attributes_wc_ptr & Attributes )
 {
-	CP_APPLY_ATTR(L"draw:id", draw_id_);//или сюда draw_shape_attlist_???
+	CP_APPLY_ATTR(L"draw:id", draw_id_);// or here draw_shape_attlist_???
 	
 	common_draw_attlists_.shape_with_text_and_styles_.add_attributes(Attributes);
     common_draw_attlists_.position_.add_attributes(Attributes);
@@ -287,7 +287,7 @@ void draw_path::reset_svg_path()
 		}
 		if (false == o_Polyline_pt.empty())
 		{
-			//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+			// form xml-oox here... otherwise will have to create arrays in drawing.. not pretty though..
 			std::wstringstream output_;   
             ::svg_path::oox_serialize(output_, o_Polyline_pt);
 			additional_.push_back(odf_reader::_property(L"custom_path",output_.str()));
@@ -359,7 +359,7 @@ void draw_polygon::reset_polygon_path()
 		}
 		if (false == o_Polyline_pt.empty())
 		{
-			//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+			// form xml-oox here... otherwise will have to create arrays in drawing.. not pretty though..
 			std::wstringstream output_;   
             ::svg_path::oox_serialize(output_, o_Polyline_pt);
 			additional_.push_back(odf_reader::_property(L"custom_path", output_.str()));
@@ -411,7 +411,7 @@ void draw_polyline::reset_polyline_path()
 			{
 				if (poly.points[i].x)
 				{
-					if (!start_x)//вообщето это не верно .. но из за разных точек осей поворота фигура может "улететь"
+					if (!start_x)// actually this is not correct.. but due to different rotation axis points the shape may "fly away"
 						start_x = length(poly.points[i].x.get()/1000., length::cm).get_value_unit(length::emu); 
 					poly.points[i].x =  length(poly.points[i].x.get()/1000., length::cm).get_value_unit(length::emu);// - *start_x; 
 				}
@@ -426,7 +426,7 @@ void draw_polyline::reset_polyline_path()
 		}
 		if (false == o_Polyline_pt.empty())
 		{
-			//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+			// form xml-oox here... otherwise will have to create arrays in drawing.. not pretty though..
 			std::wstringstream output_;   
             
 			::svg_path::oox_serialize(output_, o_Polyline_pt);
@@ -1038,7 +1038,7 @@ bool draw_enhanced_geometry::oox_convert(std::vector<odf_reader::_property>& pro
 
 			if (!o_Polyline.empty() && res)
 			{
-				//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+				// form xml-oox here... otherwise will have to create arrays in drawing.. not pretty though..
 				std::wstringstream output_;
 
 				::svg_path::oox_serialize(output_, o_Polyline);
@@ -1108,7 +1108,7 @@ void draw_connector::add_attributes( const xml::attributes_wc_ptr & Attributes )
     draw_line_attlist_.add_attributes(Attributes);
 	draw_shape::add_attributes(Attributes);
 
-	sub_type_ = 10; //коннектор - линия, если ломаная (ниже определяется) - то путь
+	sub_type_ = 10; // connector - line, if polyline (determined below) - then path
 	lined_shape_ = true;	
 	connector_ = true;
 }
@@ -1149,7 +1149,7 @@ void draw_connector::reset_svg_path()
 		if (o_Polyline_pt.size() > 0)
 		{
 			sub_type_ = 6;
-			//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+			// form xml-oox here... otherwise will have to create arrays in drawing.. not pretty though..
 			std::wstringstream output_;   
             ::svg_path::oox_serialize(output_, o_Polyline_pt);
 			additional_.push_back(odf_reader::_property(L"custom_path",output_.str()));

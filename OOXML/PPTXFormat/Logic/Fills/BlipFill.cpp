@@ -363,7 +363,7 @@ namespace PPTX
 										{
 											sImageExtension = detectImageExtension;
 
-											//папки media может не быть в случае, когда все картинки base64(поскольку файл временный, папку media не создаем)
+											//media folder may not exist when all images are base64 (since file is temporary, we don't create media folder)
 											std::wstring tempFilePath = pReader->m_strFolder + FILE_SEPARATOR_STR;
 
 											OOX::CPath pathTemp = NSFile::CFileBinary::CreateTempFileWithUniqueName(tempFilePath, L"img") + L"." + sImageExtension;
@@ -373,10 +373,10 @@ namespace PPTX
 											oTempFile.WriteFile((void*)pDstBuffer, (DWORD)dstLen);
 											oTempFile.CloseFile();
 
-											strImagePath = strTempFile = pathTemp.GetPath(); // strTempFile для удаления
+											strImagePath = strTempFile = pathTemp.GetPath(); // strTempFile for deletion
 										}
 										else
-										{// бяка
+										{// bad data
 											strImagePath.clear();
 										}
 										if (bBase64)

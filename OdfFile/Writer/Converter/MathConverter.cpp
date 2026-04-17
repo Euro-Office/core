@@ -153,13 +153,13 @@ namespace Oox2Odf
 		return arrColor[index];
 	}
 
-	void OoxConverter::mrow() // обертка для тега <mrow>
+	void OoxConverter::mrow() // wrapper for <mrow> tag
 	{
 		CREATE_MATH_TAG(L"mrow");
 		OPEN_MATH_TAG(elm);		
 	}
 
-	void OoxConverter::endOfMrow() // закрывашка тега <mrow>
+	void OoxConverter::endOfMrow() // closing tag for <mrow>
 	{
 		CLOSE_MATH_TAG
 	}
@@ -1293,7 +1293,7 @@ namespace Oox2Odf
 				OOX::Logic::CDelText* pDelText = dynamic_cast<OOX::Logic::CDelText*>(oox_mrun->m_arrItems[i]);
 				convert(pDelText);
 			}break;
-			case OOX::et_w_lastRenderedPageBreak: // не информативное .. может быть неверно записано
+			case OOX::et_w_lastRenderedPageBreak: // not informative.. may be incorrectly written
 			{
 			}break;
 			case OOX::et_w_t:

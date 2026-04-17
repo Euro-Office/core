@@ -341,7 +341,7 @@ public:
 
 	virtual void serialize(std::wostream & _Wostream);
 
-	_CP_OPT(std::wstring)	text_style_name_; //не по снецификации ... но КАК сохранить то что было изменено в формате?????
+	_CP_OPT(std::wstring)	text_style_name_; //not according to specification... but HOW to save what was changed in format?????
 };
 CP_REGISTER_OFFICE_ELEMENT2(text_format_change);
 

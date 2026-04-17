@@ -55,16 +55,16 @@ struct TPathPoint
 // CPath.nFlags
 //-------------------------------------------------------------------------------------------------------------------------------
 
-// Флаг для первой точки любого subpath
+// Flag for first point of any subpath
 #define PathFirst         0x01
 
-// Флаг для последней точки любого subpath
+// Flag for last point of any subpath
 #define PathLast          0x02
 
-// Если subpath замкнутый, тогда его последняя и первая точка должны совпадать, их флаг в данном случае следующий 
+// If subpath is closed, then its last and first points must coincide, their flag in this case is
 #define PathClosed        0x04
 
-// Флаг, означающий, что данная точка является контрольной для кривой Безье
+// Flag indicating that this point is a control point for Bezier curve
 #define PathCurve         0x08
 
 //-------------------------------------------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ public:
 
 	INT GetCurPoint(double *pdX, double *pdY);
 
-	// Добавляем флаг StrokeAdjust.
+	// Add the StrokeAdjust flag.
 	void AddStrokeAdjustHint(int nFirstControl, int nSecondControl, int nFirstPoint, int nLastPoint);
 	
 	virtual int ToInterface(NSFonts::ISimpleGraphicsPath* pPath);
@@ -143,12 +143,12 @@ private:
 
 private:
 
-	TPathPoint    *m_pPoints;      // Массив точек
-	unsigned char *m_pFlags;       // Массив флагов, указыающих значение точки в SubPath
-	int            m_nPointsCount; // Количество точек
-	int            m_nSize;        // Непосредственный размер массива
-	
-	int            m_nCurSubpath;  // Номер первой точки последнего SubPath
+	TPathPoint    *m_pPoints;      // Array of points
+	unsigned char *m_pFlags;       // Array of flags indicating point value in SubPath
+	int            m_nPointsCount; // Number of points
+	int            m_nSize;        // Actual array size
+
+	int            m_nCurSubpath;  // Index of first point in last SubPath
 
 	TPathHint     *m_pHints;       //
 	int            m_nHintsCount;

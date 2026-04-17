@@ -84,7 +84,7 @@ namespace OOX
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(pMain);
 			if (xlsx)
 			{
-				m_bPrepareForBinaryWriter = true; // подготовка для бинарника при чтении
+				m_bPrepareForBinaryWriter = true; // prepare for binary writer during reading
 
 				xlsx->m_arWorksheets.push_back( this );
 				//xlsx->m_mapWorksheets.insert( std::make_pair(rId, this) );

@@ -73,7 +73,7 @@ bool OOXBorderReader::Parse( ReaderParameter oParam, RtfBorder& oOutputBorder )
 			type_border = m_ooxBorder->m_oVal->GetValue();
 		}
 		//if (m_ooxBorder->m_oVal->GetValue() == SimpleTypes::bordervalueNone ) return true;
-		//		// это отсутствие свойства а не бордера (Nil
+		//		// this is absence of property, not border (Nil
 
 		if ((m_ooxBorder->m_oColor.IsInit()) && (m_ooxBorder->m_oColor->GetValue() == SimpleTypes::hexcolorRGB))
 		{

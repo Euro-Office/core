@@ -134,7 +134,7 @@ std::wstring RtfUtility::RtfInternalEncoder::Encode( std::wstring sFilename )
 {
 	return L"{\\*filename " + sFilename + L"\\*end}";
 }
-void RtfUtility::RtfInternalEncoder::Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ) //сразу записывает в файл
+void RtfUtility::RtfInternalEncoder::Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ) //writes directly to file
 {
 #if defined(_WIN32) || defined(_WIN64)
 	std::string sAnsiText(sText.begin(), sText.end());
@@ -258,7 +258,7 @@ int RtfUtility::String2Twips( std::wstring sValue )
 }
 int RtfUtility::px2Twip(int px)
 {
-	return 15 * px; //из наблюдений за word
+	return 15 * px; //from observations of Word
 }
 int RtfUtility::pc2Twip(double pc)
 {
@@ -367,10 +367,10 @@ bool RtfUtility::IsDigit( int nChar )
 std::wstring RtfUtility::Preserve( std::wstring sText )
 {
 	std::wstring sResult = sText;
-	//обрезавем лишние пробелы
+	//trim extra spaces
 	//sResult.Trim();
 
-	//удаляем дублирующие пробелы
+	//remove duplicate spaces
 	XmlUtils::replace_all(sResult, L"  ", L" ");
 	//		while( sResult.Replace( L"  ", L" " ) > 0 )
 	//			;
@@ -463,8 +463,8 @@ std::wstring RtfUtility::convert_string_icu(std::string::const_iterator start, s
 		NSUnicodeConverter::CUnicodeConverter oConverter;
 		return oConverter.toUnicode(inptr, insize, nCodepage, true);
 	}
-	else //сф_850000158725_R7_M194_МО_Q194.rtf
-	{//текущая локаль
+	else //invoice_850000158725_R7_M194_MO_Q194.rtf
+	{//current locale
 
 		std::locale loc("");
 		std::ctype<wchar_t> const &facet = std::use_facet<std::ctype<wchar_t> >(loc);

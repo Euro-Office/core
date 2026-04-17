@@ -1457,7 +1457,7 @@ namespace OOX
 		void CSheetFormatPr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
 			WritingElement_ReadAttributes_Start(oReader)
-				WritingElement_ReadAttributes_Read_if(oReader, (L"baseColWidth"), m_oBaseColWidth)	// ToDo Excel не воспринимает значения не uint (мы приводим к uint)
+				WritingElement_ReadAttributes_Read_if(oReader, (L"baseColWidth"), m_oBaseColWidth)	// ToDo Excel does not accept non-uint values (we convert to uint)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"customHeight"), m_oCustomHeight)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"defaultColWidth"), m_oDefaultColWidth)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"defaultRowHeight"), m_oDefaultRowHeight)
@@ -2506,7 +2506,7 @@ namespace OOX
 		}
 		void COutlinePr::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_Read_if(oReader, (L"applyStyles"), m_oApplyStyles)
 				WritingElement_ReadAttributes_Read_else_if(oReader, (L"showOutlineSymbols"), m_oShowOutlineSymbols)

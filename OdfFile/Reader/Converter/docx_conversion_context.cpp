@@ -83,7 +83,7 @@ void text_tracked_context::start_changes_content()
 
 void text_tracked_context::end_changes_content()
 {
-	docx_context_.finish_run();	//0106GS-GettingStartedWithWriter_el.odt - удаленный заголовок
+	docx_context_.finish_run();	//0106GS-GettingStartedWithWriter_el.odt - deleted heading
 
 	current_state_.content.push_back(changes_stream_.str());
 	
@@ -231,30 +231,32 @@ std::wstring styles_map::name(const std::wstring & Name, odf_types::style_family
 }
 void docx_conversion_context::add_element_to_run(std::wstring parenStyleId)
 {
-	if (false == current_process_comment_)
+	if (false == current_process_comment_ && (false == get_comments_context().ref_end_.empty() || false == get_comments_context().ref_start_.empty()))
 	{
+		if (state_.in_run_)
+		{
+			output_stream() << L"</w:r>";
+		}
 		for (size_t i = 0; i < get_comments_context().ref_start_.size(); i++)
 		{
 			output_stream() << L"<w:commentRangeStart w:id=\"" << get_comments_context().ref_start_[i] << L"\"/>";
+			
+			get_comments_context().ref_.push_back(get_comments_context().ref_start_[i]);
 		}
 		get_comments_context().ref_start_.clear();
 
-		if (false == get_comments_context().ref_end_.empty())
+		for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
 		{
-			for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
-			{
-				output_stream()<< L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
-			}
-			
-			for (size_t i = 0; i < get_comments_context().ref_end_.size(); i++)
-			{
-				output_stream()<< L"<w:commentReference w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";			
-			}
-		
-			get_comments_context().ref_end_.clear();		
+			output_stream() << L"<w:commentRangeEnd w:id=\"" << get_comments_context().ref_end_[i] << L"\"/>";
+		}
+		get_comments_context().ref_end_.clear();
+
+		if (state_.in_run_)
+		{
+			output_stream() << L"<w:r>";
 		}
 	}
-	if (!state_.in_run_)
+	if (false == state_.in_run_)
     {
         state_.in_run_ = true;
 		output_stream() << L"<w:r>";
@@ -640,7 +642,7 @@ void docx_conversion_context::start_chart(std::wstring  name)
 void docx_conversion_context::end_chart()
 {
 	//current_chart().set_drawing_link(current_sheet().get_drawing_link());
-	//излишняя инфа
+	//redundant info
 }
 oox_chart_context & docx_conversion_context::current_chart()
 {
@@ -751,7 +753,7 @@ void docx_conversion_context::start_document()
 
 
 	//apply page-default prop
-	//пока временно сюда воткнем обработку свойств документа в целом
+	//temporarily put document-wide properties handling here
 }
 
 
@@ -1185,7 +1187,7 @@ void docx_conversion_context::end_office_text()
 {
 	finish_paragraph();
 
-	if (!delayed_converting_)//иначе возможно зацикливание
+	if (!delayed_converting_)//otherwise possible infinite loop
 	{
 		docx_convert_delayed();
 	}
@@ -1691,7 +1693,7 @@ void docx_conversion_context::end_process_style_content(bool in_styles)
 
 void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, const std::wstring & ParentId, bool in_styles)
  //in_styles = true -> styles.xml
-//почему то конструкция <pPr><rPr/></pPr><rPr/> "не работает" в части в rPr в ms2010 )
+//for some reason the construct <pPr><rPr/></pPr><rPr/> "doesn't work" in the rPr part in ms2010 )
 {
 	bool in_drawing	= false;
 
@@ -1707,7 +1709,7 @@ void docx_conversion_context::serialize_paragraph_style(std::wostream & strm, co
 		////Tutor_Charlotte_Tutor_the_Entire_World_.odt
 		//if (get_section_context().dump_.empty() == false && (!ParentId.empty() || get_section_context().get().is_dump_ || in_header_) 
 		//	 && !get_table_context().in_table() && !in_drawing)
-		//{//две подряд секции или если стиль определен и в заголовки нельзя пихать !!!
+		//{//two sections in a row or if style is defined and can't push into headers !!!
 		//	CP_XML_NODE(L"w:pPr")
 		//	{
 		//		CP_XML_STREAM() << get_section_context().dump_;
@@ -1865,7 +1867,7 @@ void docx_conversion_context::remove_page_properties()
 
 	if (s.page_properties_.size() > 1)
 	{
-		//первая общая (если есть) для всего документа - оставляем ее
+		//first common one (if exists) for the whole document - keep it
 		s.page_properties_.erase(s.page_properties_.begin() + 1, s.page_properties_.begin() + 2);
 	}
 	else if (s.page_properties_.size() == 1)
@@ -2056,7 +2058,7 @@ int docx_conversion_context::process_paragraph_style(_CP_OPT(std::wstring) style
 
 				calc_tab_stops(styleInst, get_tabs_context());
 				
-				//вытаскивает rtl c цепочки стилей !! - просто прописать в наследуемом НЕЛЬЗЯ !!
+				//extracts rtl from style chain !! - can't just write it in inherited style !!
 				odf_reader::paragraph_format_properties properties = odf_reader::calc_paragraph_properties_content(styleInst);
 				if (properties.style_writing_mode_)
 				{
@@ -2158,7 +2160,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 
 					calc_tab_stops(styleInst, get_tabs_context());
 					
-					//вытаскивает rtl c цепочки стилей !! - просто прописать в наследуемом НЕЛЬЗЯ !!
+					//extracts rtl from style chain !! - can't just write it in inherited style !!
 					odf_reader::paragraph_format_properties properties = odf_reader::calc_paragraph_properties_content(styleInst);
 					if (properties.style_writing_mode_)
 					{
@@ -2230,7 +2232,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
 			{
 				const std::wstring id = styles_map_.get( styleInst->name(), styleInst->type() );
 				output_stream() << L"<w:pPr>";
-	//todooo причесать			
+	//todooo clean up			
 				if (!get_section_context().dump_.empty()
 					&& !get_table_context().in_table()
 					&& (get_process_note() == oox::docx_conversion_context::noNote)
@@ -2297,7 +2299,7 @@ int docx_conversion_context::process_paragraph_attr(odf_reader::text::paragraph_
         output_stream() << L"<w:pPr>";
 			output_stream() << get_section_context().dump_;
 			get_section_context().dump_.clear();
-			//todooo выяснить реальны ли заголовки без стилей и свойств
+			//todooo find out if headers without styles and properties are real
 		output_stream() << L"</w:pPr>";
 		return 3;
 	}
@@ -2366,9 +2368,9 @@ void docx_conversion_context::docx_convert_delayed()
 {
 	if (delayed_elements_.empty()) return;
 
-	if (delayed_converting_) return; //зацикливание иначе
+	if (delayed_converting_) return; //otherwise infinite loop
 	if (get_drawing_context().get_current_level() > 0 )
-		return; //вложенный frame
+		return; //nested frame
 
 	delayed_converting_ = true;
     while(!delayed_elements_.empty())
@@ -2407,16 +2409,16 @@ void section_context::remove_section()
 	//sections_.erase(sections_.begin(), sections_.begin() + 1);
 	if (sections_.empty())
 	{
-		//после оканчания разметки секциями и начале (возобновлении) основного раздела нужен разрыв (хотя настройки страницы могут и не поменяться)
-		//щас разрыв на текущей странице
-		//todooo проверить - может типо если следующий будет заголовок - разорвать
+		//after section markup ends and main section resumes, break is needed (even if page settings don't change)
+		//currently break on current page
+		//todooo check - maybe if next is a heading - break
 		main_section_.is_dump_ = false;
 	}
 }
 namespace 
 {
-    // обработка Header/Footer
-    // конвертируем содержимое header/footer и сохраняем результат в виде строки
+    // Header/Footer processing
+    // convert header/footer content and save result as string
     void process_one_header_footer(docx_conversion_context & Context, const std::wstring & styleName, odf_reader::office_element *elm, headers_footers::Type type)
     {
         if (!elm) return;
@@ -2428,7 +2430,7 @@ namespace
         
 		const std::wstring & dbgStr = newXml->str();
        
-		//слить если есть mediaitems, добавить релсы и обнулить их для основного документа.
+		//merge mediaitems if any, add rels and reset them for main document.
 		rels internal_rels;
 
 		Context.get_mediaitems()->dump_rels(internal_rels, oox::header_footer_place);
@@ -2456,7 +2458,7 @@ void docx_conversion_context::process_headers_footers()
     odf_reader::odf_read_context & context =  doc->odf_context();
     odf_reader::page_layout_container & pageLayouts = context.pageLayoutContainer();
 
-    // проходим по всем page layout
+    // iterate through all page layouts
 	std::vector<odf_reader::style_master_page*> & master_pages = pageLayouts.master_pages();
 
 	bool bOddEvenPages = false;
@@ -2491,7 +2493,7 @@ void docx_conversion_context::process_headers_footers()
 		if (!master_pages[i]->style_header_ && !master_pages[i]->style_footer_ && !master_pages[i]->style_header_first_ && !master_pages[i]->style_footer_first_
 			&& !master_pages[i]->style_header_left_ && !master_pages[i]->style_footer_left_)
 		{
-			//отключенные колонтитулы
+			//disabled headers/footers
 			rels rels_;
 			get_headers_footers().add(styleName, L"", headers_footers::none, rels_);
 		}

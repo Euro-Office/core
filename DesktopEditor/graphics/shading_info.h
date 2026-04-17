@@ -52,25 +52,25 @@ namespace NSStructures
 	template <class ColorT = agg::rgba8>
 	class ColorFunction
 			/**
-			 *  Реализацию произвольной функции в рантайме я решил сделать как массив, тк так проще всего
-			 * я еще не совсем понял как точно передается в пдфе функция, но такая реализация, позволяет пользователю
-			 * выбрать любой способ.
+			 *  I decided to implement arbitrary function at runtime as an array, since it's the simplest
+			 * I haven't fully understood how exactly the function is passed in PDF, but this implementation allows the user
+			 * to choose any method.
 			 *
-			 *  Пока все копируется, т.к. в большинсве случаев вектор 2кБ по размеру и проблем нету
-			 * только если использовать двумерную функцию размер возрастает до МБ, но не хочется возится с укузателями
-			 * ради этого, т.к. судя по всему случай исключительный(только 1 шейдинг требует такую функцию).
-			 *  Если надо будет, наверно можно будет переписать на юникптр.
+			 *  For now everything is copied, since in most cases the vector is 2KB in size and there are no problems
+			 * only when using a 2D function the size grows to MB, but I don't want to deal with pointers
+			 * for this, since apparently the case is exceptional (only 1 shading requires such a function).
+			 *  If needed, it can probably be rewritten to unique_ptr.
 			 *
-			 * Есть возможность выставить обычную линейную интерполяцию, просто для тестирования
-			 * + так реализуется градиент стандартный.
+			 * There is an option to set regular linear interpolation, just for testing
+			 * + this is how standard gradient is implemented.
 			 *
-			 * Пока у меня конструкторы по умолчанию, чтото заполняют, для тестирования опятьже
-			 * потом стоит все убрать, чтобы в кисти не таскать это все, когда оно не нужно,
-			 * если не выделять память то там в сумме будет <100B гдето, не думаю, что это будет так много,
-			 * чтобы писать отдельный интерфейс для кисти
+			 * For now my default constructors fill something, for testing again
+			 * later we should remove all this, so we don't carry all this in the brush when it's not needed,
+			 * if we don't allocate memory then in total it will be <100B somewhere, I don't think it will be so much,
+			 * to write a separate interface for the brush
 			 *
-			 * Плюс я вообще не знаю как обрабатывать, внештатные ситуации, в целом, можно вообще просто
-			 * эксепшены кидать если что или ничего не делать.
+			 * Plus I don't even know how to handle edge cases, in general, we can just
+			 * throw exceptions if something goes wrong or do nothing.
 			*/
 	{
 	public:
@@ -241,7 +241,7 @@ namespace NSStructures
 			return y_index;
 		}
 		/**
-		 * Линейная интерполяция для построения цветовой функции.
+		 * Linear interpolation for building color function.
 		 */
 		int interpolate_indexes(size_t first, size_t second, size_t line = 0)
 		{
@@ -294,7 +294,7 @@ namespace NSStructures
 
 
 		/**
-		 * Костыль от ошибок линковки. Чтобы время не терять пока что.
+		 * Workaround for linking errors. To not waste time for now.
 		*/
 		friend Point operator*(const Point &a, float t)
 		{
@@ -317,17 +317,17 @@ namespace NSStructures
 
 
 	/**
-	 *  Тут хранится информация спецефичная для рендера ПДФ.
+	 *  This stores information specific to PDF rendering.
 	 *
-	 * Взял новую реализацию преобразований, т.к. готовая была на даблах,
-	 * а в такой точности смысла нету особо.
+	 * Used a new transformation implementation, since the existing one was on doubles,
+	 * and there's not much point in such precision.
 	 *
-	 * Для шейдеров требуется поддерживать два способа вычисления (с параметром и без),
-	 * поэтому требуется много дополнительной инфы.
+	 * For shaders we need to support two calculation methods (with and without parameter),
+	 * so a lot of additional info is required.
 	 *
-	 * Так же шейдер будет получать, в качетве параметров, границы, тут я пока не решил, вообще
-	 * можно оставить соблюдение границ, на откуп пользователю, т.к. все равно заполенение в конечном итоге будет
-	 * выполняться с помощью рисования замкнутого пути и команды Fill
+	 * Also the shader will receive boundaries as parameters, I haven't decided yet,
+	 * we can leave boundary enforcement to the user, since filling will ultimately be done
+	 * by drawing a closed path and the Fill command
 	 * */
 	struct ShadingInfo
 	{
@@ -349,11 +349,11 @@ namespace NSStructures
 		} f_type;
 		ColorFunction<agg::rgba8> function;
 
-		// Обратное преобразование из картинки в цветовую функцию
+		// Reverse transformation from image to color function
 		std::vector<float> mapping;
 		std::vector<float> inv_map;
 
-		// Линейный градиент задается в pdf 2 точками
+		// Linear gradient is defined in PDF by 2 points
 		bool set_two_points;
 		Point point1, point2;
 
@@ -364,17 +364,17 @@ namespace NSStructures
 		std::vector<float> triangle_parameters;
 
 		/**
-		 *  Матрица 4 на 4 заполняется как в документации к пдф 7 тип
-		 * Если выбран тип 6 то значения (1,2) (2,1) (1,1) (2,2)
-		 * В массиве игнормруется и заполняются автоматически, следите за переданным типом градинта
-		 * (Нумерация от нуля)
+		 *  4x4 matrix is filled as in PDF documentation type 7
+		 * If type 6 is selected then values (1,2) (2,1) (1,1) (2,2)
+		 * Are ignored in the array and filled automatically, watch the passed gradient type
+		 * (Numbering from zero)
 		 *
-		 * Наверное напишу адаптор который переводит порядок точек из 6 типа в общий.
+		 * I'll probably write an adapter that converts point order from type 6 to general.
 		 */
 		agg::rgba8 fill_color;
 		std::vector<std::vector<Point>> patch;
-		std::vector<std::vector<agg::rgba8>> patch_colors; // 2 на 2 цвета по углам
-		std::vector<std::vector<float>> patch_parameters; // 2 на 2 параметра
+		std::vector<std::vector<agg::rgba8>> patch_colors; // 2x2 colors at corners
+		std::vector<std::vector<float>> patch_parameters; // 2x2 parameters
 	};
 
 	// Containing additional info about gradient
@@ -560,9 +560,9 @@ namespace NSStructures
 
 
 	/**
-	 * Создает объект класса GradientInfo по заданным параметрам.
+	 * Creates a GradientInfo class object with specified parameters.
 	 *
-	 * Цветовую функцию надо заполнять вручную
+	 * Color function needs to be filled manually
 	 */
 	class GInfoConstructor {
 	public:
@@ -640,8 +640,8 @@ namespace NSStructures
 		}
 
 		/**
-		 * Набор из 12 точек для построения границ в порядке указанном в стандарте,
-		 * Порядок цветов или параметров как в стандарте.
+		 * Set of 12 points for building boundaries in the order specified in the standard,
+		 * Color or parameter order as in the standard.
 		 */
 		static GradientInfo get_curve(const std::vector<Point> &curve_points,
 									  const std::vector<float> &curve_parametrs,

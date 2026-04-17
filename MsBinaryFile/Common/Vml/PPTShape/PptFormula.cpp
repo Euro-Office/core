@@ -159,7 +159,7 @@ namespace NSGuidesVML
 
 		try
 		{
-			// теперь нужно просто посчитать
+			// now we just need to calculate
 			switch (m_eFormulaType)
 			{
 			case ftSum:			{ dRes = a + b - c;				break; }

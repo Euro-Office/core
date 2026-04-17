@@ -134,7 +134,7 @@ const bool FORMATTING::loadContent(BinProcessor& proc)
 		elements_.pop_back();
 	}
 		
-	if (proc.optional<THEME>()) // не по стандарту - china_price.xls 
+	if (proc.optional<THEME>()) // not according to standard - china_price.xls 
 	{
 		m_THEME = elements_.back();
 		elements_.pop_back();
@@ -218,7 +218,7 @@ void FORMATTING::update_xfs()
 						break;
 					}
 				}
-				//for (size_t i = 0; !bFound && i < xfs->m_arCellXFs.size(); i++) небывает совпадений
+				//for (size_t i = 0; !bFound && i < xfs->m_arCellXFs.size(); i++) no matches occur
 				//{
 				//	XF* xf = dynamic_cast<XF*>(xfs->m_arCellXFs[i].get());
 				//	if (xf->ind_xf == style->ixfe)

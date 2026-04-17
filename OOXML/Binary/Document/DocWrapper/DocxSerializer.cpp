@@ -127,7 +127,7 @@ namespace BinDocxRW
 					std::wstring data = oReader.GetInnerXml();
 					XmlUtils::replace_all(data, L"&#xA;", L"");
 					XmlUtils::replace_all(data, L"&#x9;", L"");
-					//todooo убрать "красивую" разметку xml
+					//todo remove "pretty" xml formatting
 					WriteXmlFile(*name, data);
 				}
 				if (L"pkg:binaryData" == sName)
@@ -224,13 +224,13 @@ bool BinDocxRW::CDocxSerializer::saveToFile(const std::wstring& sDstFileName, co
 
 		pEmbeddedFontsManager = pFontPicker->GetNativeCutter();
 
-		//добавляем весь латинский алфавит для списков.
+		//add entire latin alphabet for lists.
         pEmbeddedFontsManager->CheckString(std::wstring(_T("abcdefghijklmnopqrstuvwxyz")));
 
-		//добавим мега шрифт
+		//add mega font
 		pEmbeddedFontsManager->CheckFont(_T("Wingdings 3"), fp.getFontManager());
 		pEmbeddedFontsManager->CheckFont(_T("Arial"), fp.getFontManager());
-		//pEmbeddedFontsManager добавляются все цифры
+		//pEmbeddedFontsManager adds all digits
 	}
 
 	oDrawingConverter.SetFontDir(m_sFontDir);
@@ -331,7 +331,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 	oFile.ReadFile(pBase64Data, oFile.GetFileSize(), nBase64DataSize);
 	oFile.CloseFile();
 
-	//проверяем формат
+	//check format
 	bool bValidFormat = false;
 	std::wstring sSignature(g_sFormatSignature);
 	int nSigLength = (int)sSignature.length();
@@ -346,7 +346,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 	}
 	if (bValidFormat)
 	{
-		//Читаем из файла версию и длину base64
+		//Read version and base64 length from file
 		int nIndex = nSigLength;
 		int nType = 0;
 		std::string version = "";
@@ -417,7 +417,7 @@ bool BinDocxRW::CDocxSerializer::loadFromFile(const std::wstring& sSrcFileName, 
 
 			m_pCurFileWriter = new Writers::FileWriter(sDstPath, m_sFontDir, false, nVersion, &oDrawingConverter, sThemePath);
 
-			//папка с картинками
+			//folder with images
 			std::wstring strFileInDir = NSSystemPath::GetDirectoryName(sSrcFileName);
 			std::wstring sFileInDir = strFileInDir.c_str();
 

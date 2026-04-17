@@ -667,7 +667,7 @@ GBool XRef::readXRefTable(GFileOffset *pos, int offset, XRefPosSet *posSet) {
   // get the 'Prev' pointer
   //~ this can be a 64-bit int (?)
   obj.getDict()->lookupNF("Prev", &obj2);
-  if (obj2.isInt()) {
+  if (obj2.isInt() && obj2.getInt() != 0) {
     *pos = (GFileOffset)(Guint)obj2.getInt();
     more = gTrue;
   } else if (obj2.isRef()) {

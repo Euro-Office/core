@@ -50,7 +50,7 @@ public:
 
 	std::pair<boost::shared_array<unsigned char>, size_t> m_oOle1Data;
 
-	RtfCharProperty	m_oCharProperty; // тут могут быть track changes ....
+	RtfCharProperty	m_oCharProperty; // track changes can be here....
 
 	RtfOle();
 	~RtfOle();

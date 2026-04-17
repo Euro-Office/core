@@ -54,6 +54,6 @@ namespace DocFileFormat
 		}
 
 	private:
-		bool	m_bSkipShading97;	//	пропускать правило от Word97
+		bool	m_bSkipShading97;	//	skip Word97 rule
 	};
 }

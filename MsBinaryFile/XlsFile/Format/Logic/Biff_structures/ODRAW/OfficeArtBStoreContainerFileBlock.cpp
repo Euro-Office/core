@@ -286,9 +286,18 @@ void OfficeArtBStoreContainerFileBlock::save(XLS::CFRecord& record)
 	{
 		OfficeArtRecordHeader FbseHeader;
 		FbseHeader.recVer = 2;
-		FbseHeader.recInstance = 5;
+		if(pict_type == L".emf")
+			FbseHeader.recInstance =  0x2;
+		else if(pict_type == L".wmf")
+			FbseHeader.recInstance =  0x3;
+		else
+			FbseHeader.recInstance = 0x5;
 		FbseHeader.recType =  0xF007;
-		FbseHeader.recLen = pict_size + 36  + 25;
+		FbseHeader.recLen = pict_size + 36;
+		if(pict_type == L".emf" || pict_type == L".wmf")
+		  FbseHeader.recLen += 58;
+		else
+			FbseHeader.recLen += 25;
 		if(!nameData.empty())
 			FbseHeader.recLen += nameData.size()+1;
 		record << FbseHeader;
@@ -298,6 +307,8 @@ void OfficeArtBStoreContainerFileBlock::save(XLS::CFRecord& record)
 		unsigned short tag = 0xFF;
 		record << tag;
 		unsigned int Size = pict_size + 17 + 8;
+		if(pict_type == L".emf" || pict_type == L".wmf")
+			Size += 33; //metadata block
 		record << Size;
 		unsigned int Cref = 1;
 		record << Cref;
@@ -321,16 +332,49 @@ void OfficeArtBStoreContainerFileBlock::save(XLS::CFRecord& record)
 		}
 	}
 
+	if(pict_type == L".emf" || pict_type == L".wmf")
+	{
+		OfficeArtRecordHeader rc_header;
+		rc_header.recVer = 0;
+		if(pict_type == L".emf")
+		{
+			rc_header.recInstance = 0x3D4;
+			rc_header.recType =  0xF01A;
+		}
+		else if(pict_type == L".wmf")
+		{
+			rc_header.recInstance = 0x216;
+			rc_header.recType =  0xF01B;
+		}
+		rc_header.recLen = pict_size + 50;
+		record << rc_header;
+		record.reserveNunBytes(16);
 
-	OfficeArtRecordHeader rc_header;
-	rc_header.recVer = 0;
-	rc_header.recInstance = 0x46A;
-	rc_header.recType =  0xF01D;
-	rc_header.recLen = pict_size + 17;
-	record << rc_header;
-	record.reserveNunBytes(16);
-	BYTE tag = 0xFF;
-	record << tag;
+		_UINT32 cbSize = pict_size;
+		record << cbSize;
+		record.reserveNunBytes(16);
+		_UINT64 PtSize = 0;
+		record << PtSize;
+		_UINT32 cbSave = pict_size;
+		record << cbSave;
+		BYTE compression = 0xFE;
+		record << compression;
+		BYTE filter = 0xFE;
+		record << filter;
+
+	}
+	else
+	{
+		OfficeArtRecordHeader rc_header;
+		rc_header.recVer = 0;
+		rc_header.recInstance = 0x46A;
+		rc_header.recType =  0xF01D;
+		rc_header.recLen = pict_size + 17;
+		record << rc_header;
+		record.reserveNunBytes(16);
+		BYTE tag = 0xFF;
+		record << tag;
+	}
 
 	//record.appendRawDataToStatic((BYTE*)pict_data, pict_size);
 }

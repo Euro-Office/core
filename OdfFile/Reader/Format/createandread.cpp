@@ -53,7 +53,7 @@ bool create_element_and_read(xml::sax * Reader,
 			elm->read_sax( Reader );
         elm->afterReadContent();
         
-        if (_Element) // элемент читается повторно
+        if (_Element) // element is being read repeatedly
         {
             _CP_LOG << L"[error] : duplicate element (" << Ns << L":" << Name << L")\n";
         }

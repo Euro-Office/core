@@ -59,7 +59,7 @@ void XFExt::readFields(CFRecord& record)
 	while(!record.isEOF())
 	{
 		if(record.getRdPtr() + 4 > record.getDataSize())
-			break;// миним размер структуры
+			break;// minimum structure size
 		ExtPropPtr element(new ExtProp);
 		record >> *element;
 		rgExt.push_back(element);
@@ -68,7 +68,7 @@ void XFExt::readFields(CFRecord& record)
 
 void XFExt::writeFields(CFRecord& record)
 {
-    frtHeader.rt = 0x0892;
+	frtHeader.rt = 0x087D;
     record << frtHeader;
     record.reserveNunBytes(2); // reserved
     record << ixfe;

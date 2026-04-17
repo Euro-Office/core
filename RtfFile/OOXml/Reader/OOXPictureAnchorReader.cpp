@@ -82,7 +82,7 @@ int OOXDrawingAnchorReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutpu
 		nWidth	= (int)m_ooxAnchor->m_oExtent->m_oCx.ToTwips();
 		nHeight = (int)m_ooxAnchor->m_oExtent->m_oCy.ToTwips();
 
-		if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nTop )//всегда !!
+		if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nTop )//always !!
 		{
 			pOutput->m_nRight	= pOutput->m_nLeft	+ nWidth;
 			pOutput->m_nBottom	= pOutput->m_nTop	+ nHeight;

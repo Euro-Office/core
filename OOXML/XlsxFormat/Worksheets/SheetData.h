@@ -283,12 +283,12 @@ namespace OOX
 			nullable<CSi>			m_oRichText;
 			nullable<CText>			m_oValue;
 //-----------------------------
-            //число повторов чтобы хранить одинаковые в одной
+            //repeat count to store identical values in one
             nullable_uint           m_oRepeated;
 			nullable_string			m_oCacheValue;
 		};
 
-		//необработано:
+		//not implemented:
 		//<extLst>
 		class CRow : public WritingElementWithChilds<CCell>
 		{
@@ -314,7 +314,7 @@ namespace OOX
 			XLS::BaseObjectPtr toXLS();
             void toBin(XLS::StreamCacheWriterPtr& writer);
             void WriteAttributes(XLS::StreamCacheWriterPtr& writer);
-            //удалить хранимые ячейки и кэшировать данные для экономии памяти
+            //delete stored cells and cache data for memory saving
             void storeXmlCache();
 			virtual EElementType getType () const;
 
@@ -324,7 +324,7 @@ namespace OOX
 			void ReadAttributes(XLS::BaseObjectPtr& obj);
 			void CheckIndex();
             bool compressCell(CCell* pCell);
-            //xml кэш чтобы не хранить ячеки
+            //xml cache to avoid storing cells
             nullable_string           m_oDataCache;
 
 		public:
@@ -340,7 +340,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff>					m_oThickBot;
 			nullable<SimpleTypes::COnOff>					m_oThickTop;
 			nullable<SimpleTypes::CDouble>					m_oDyDescent;
-            //число повторов для сжатия пустых строк
+            //repeat count for compressing empty rows
             nullable_uint           m_oRepeated;
 		};
 
@@ -358,7 +358,7 @@ namespace OOX
 			virtual void toXML(NSStringUtils::CStringBuilder& writer) const;
 			virtual void toXMLStart(NSStringUtils::CStringBuilder& writer) const;
 			virtual void toXMLEnd(NSStringUtils::CStringBuilder& writer) const;
-            //добавить кэшированное xml значение строки для экономии памяти
+            //add cached xml row value for memory saving
             void AddRowToCache(CRow &row);
 
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader);

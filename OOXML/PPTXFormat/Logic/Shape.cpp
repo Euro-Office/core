@@ -524,7 +524,7 @@ namespace PPTX
 						pWriter->EndRecord();
 					}					
 				}
-				else if (strTextBoxShape.is_init())//после конвертации старого шейпа (vml)
+				else if (strTextBoxShape.is_init())//after converting old shape (vml)
 				{
 					long lDataSize = 0;
 					ULONG lPos = pWriter->GetPosition();
@@ -872,6 +872,7 @@ namespace PPTX
 				pWriter->WriteAttribute(L"o:hrstd", L"t");
 				pWriter->WriteAttribute(L"o:hralign", spPr.Geometry.hr->align);
 				pWriter->WriteAttribute(L"o:hrpct", spPr.Geometry.hr->pct);
+				pWriter->WriteAttribute(L"o:hrnoshade", spPr.Geometry.hr->noshade.get_value_or(false) ? L"t" : L"f");
 			}
 			pWriter->EndAttributes();
 

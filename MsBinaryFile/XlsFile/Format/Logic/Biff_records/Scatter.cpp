@@ -90,7 +90,7 @@ int	Scatter::serialize(std::wostream & _stream)
 		}
 		else
 		{
-			//CP_XML_NODE(L"c:scatterStyle") - уровнем выше
+			//CP_XML_NODE(L"c:scatterStyle") - one level up
 		}
 	}
 	

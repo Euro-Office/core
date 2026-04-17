@@ -162,7 +162,7 @@ void odf_page_layout_context::process_master_styles(office_element_ptr root )
 		}
 		catch(...)
 		{
-			//почему то нет страницы
+			// for some reason there is no page
 		}
 	}
 }
@@ -256,13 +256,13 @@ void odf_page_layout_context::set_page_gutter(_CP_OPT(length) length_)
 
 }
 void odf_page_layout_context::set_footer_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min)
-//тут собственно не footer а размер после колонтитула
+// here it's not actually footer but size after the header/footer
 {
 	if (layout_state_list_.size() < 1) return;
 
 	//layout_state_list_.back().footer_size_ = length_;
 	layout_state_list_.back().footer_min_size_ = length_min;
-	//собственно в layout встроим позднее - по факту наличия хоть одного колонтитула
+	// will actually embed into layout later - when at least one header/footer exists
 	return;
 }
 void odf_page_layout_context::set_header_size(_CP_OPT(length) length_, _CP_OPT(odf_types::length) length_min)
@@ -324,7 +324,7 @@ bool odf_page_layout_context::add_footer(int type)
 	master_state_list_.back().add_footer(root_header_footer_);
 
 /////////////////////////////////////////////////////////////////////
-//настраить нужно 1 раз
+// needs to be configured once
 	if (!layout_state_list_.back().footer_size_ && !layout_state_list_.back().footer_min_size_) return true;
 
 	style_header_footer_properties *footer_props = get_footer_properties();
@@ -371,7 +371,7 @@ bool odf_page_layout_context::add_header(int type)
 	
 	master_state_list_.back().add_header(root_header_footer_);
 ////////////////////////////////////////////////////////////////////////
-//настроить нужно один раз
+// needs to be configured once
 	if (!layout_state_list_.back().header_size_ && !layout_state_list_.back().header_min_size_) return true;
 	
 	style_header_footer_properties *header_props = get_header_properties();
@@ -401,7 +401,7 @@ void odf_page_layout_context::set_header_footer_image(office_element_ptr image)
 	style_header_footer_properties *header_footer_props = get_footer_properties();
 	if (!header_footer_props)return;
 
-	if (!header_footer_props->style_background_image_ )// картинка общая для всех четных,  нечетных, первых, так же нету центральных, левых, правых
+	if (!header_footer_props->style_background_image_ )// image is common for all even, odd, first, also no center, left, right
 	{
 		header_footer_props->style_background_image_ = image;
 	}

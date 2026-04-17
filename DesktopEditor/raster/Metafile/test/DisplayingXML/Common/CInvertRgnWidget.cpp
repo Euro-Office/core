@@ -11,7 +11,7 @@ CInvertRgnWidget::CInvertRgnWidget(QWidget *pParent)
 {
         QVBoxLayout *pLayout = new QVBoxLayout();
 
-        QPushButton *pAddedButton       = new QPushButton("Добавить значение");
+        QPushButton *pAddedButton       = new QPushButton("Add value");
 
         connect(pAddedButton, &QPushButton::clicked, this, &CInvertRgnWidget::on_createRgnData_clicked);
 

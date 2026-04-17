@@ -307,7 +307,7 @@ int ATTACHEDLABEL::serialize(std::wostream & _stream, bool isPosition)
 								serialize_rPr (CP_XML_STREAM(),font->iFont, rtl, true);
 							}
 						}
-						if (seriesText)//todoooo сделать вариант с DFTTEXT
+						if (seriesText)// todo make variant with DFTTEXT
 						{	
 							std::wstring & str_ = seriesText->stText.value();
 
@@ -346,7 +346,7 @@ int ATTACHEDLABEL::serialize(std::wostream & _stream, bool isPosition)
 										{		
 											if (run->ich > str_.length())
 											{
-												//ошибка
+												// error
 												run->ich = 0;
 											}
 

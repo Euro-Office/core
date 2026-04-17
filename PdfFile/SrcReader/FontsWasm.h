@@ -78,7 +78,7 @@ namespace NSWasm
 		js_free_id((unsigned char*)pFontId);
 		return sRes;
 	#else
-		// пока заглушка - тут надо прочитать в стрим, чтобы дальше правильно сработать с кодировками
+		// stub for now - need to read into stream to properly work with encodings later
 		if (!NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Get(sFontPath))
 		{
 			DWORD dwSize = 0;

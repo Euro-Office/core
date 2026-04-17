@@ -15,7 +15,7 @@ public:
 		auto iter = m_Table.find(sKey);
 		if (iter == m_Table.end())
 		{
-			//note если не нашли стандартный цвет, отсылаем что есть
+			//note if standard color not found, return what we have
 			return L"none";
 		}
 		else
@@ -57,7 +57,7 @@ private:
 		m_Table.insert({0xFFFFFF, L"white" });
 		m_Table.insert({0xFFFF00, L"yellow" });
 
-		//note Больше цветов здесь
+		//note More colors here
 		//core\Common\3dParty\html\css\src\ConstValues.h
 		//core\DesktopEditor\agg-2.4\svg\agg_svg_color_parser.cpp
 	}

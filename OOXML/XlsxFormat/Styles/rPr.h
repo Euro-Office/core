@@ -291,7 +291,7 @@ namespace OOX
 			nullable<SimpleTypes::Spreadsheet::CUnderline>	m_oUnderline;
 		};
 
-		//необработано:
+		//not implemented:
 		class CRPr : public WritingElement
 		{
 		public:

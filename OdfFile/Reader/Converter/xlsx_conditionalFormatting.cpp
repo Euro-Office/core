@@ -592,7 +592,7 @@ void xlsx_conditionalFormatting_context::set_formula(std::wstring f)
 		impl_->conditionalFormattings_.back().rules.back().formula_type = L"expression";
 		val = f.substr(11, f.size() - 12);
 
-		if (0 == (pos = val.find(L"\"")))	//Raport_7A.ods или выкинуть ограждающие кавычки с формулы?
+		if (0 == (pos = val.find(L"\"")))	//Raport_7A.ods or remove enclosing quotes from formula?
 		{
 			impl_->conditionalFormattings_.back().rules.back().text = val;
 			val.clear();
