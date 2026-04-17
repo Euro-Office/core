@@ -8,6 +8,10 @@ from pathlib import Path
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
 
+if len( sys.argv ) < 3:
+    print( "Needs 2 arguments: work_dir_abs install_dir_abs" )
+    sys.exit(1)
+
 work_dir = Path( sys.argv[1] )
 install_dir = Path( sys.argv[2] )
 
