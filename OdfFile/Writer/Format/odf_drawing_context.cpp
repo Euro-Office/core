@@ -658,7 +658,7 @@ void odf_drawing_context::end_drawing()
 			}			
 			
 			if (impl_->current_group_->rotate)
-				rotate = (rotate ? *rotate : 0) + *impl_->current_group_->rotate;
+				rotate = (rotate ? *rotate : 0) - *impl_->current_group_->rotate;
 
 		}
         double x = impl_->current_drawing_state_.svg_x_ ? impl_->current_drawing_state_.svg_x_->get_value() : 0;
@@ -703,7 +703,7 @@ void odf_drawing_context::end_drawing()
 				new_y = odf_types::length(std::max(new_y.get_value(),new_y2.get_value()),odf_types::length::unit::cm);
 			}
 
-			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(-*rotate) + std::wstring(L")");
+			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(/*impl_->current_group_ && impl_->current_group_->rotate ? -(*rotate - *impl_->current_group_->rotate):*/-*rotate) + std::wstring(L")");
 
 			if (impl_->current_drawing_state_.svg_x_ && impl_->current_drawing_state_.svg_y_)
 			{
@@ -1098,7 +1098,7 @@ void odf_drawing_context::end_shape()
 		if (impl_->current_drawing_state_.in_group_ && impl_->current_group_)
 		{			
 			if (impl_->current_group_->rotate)
-				rotate = (rotate ? *rotate : 0) + *impl_->current_group_->rotate;
+				rotate = (rotate ? *rotate : 0) - *impl_->current_group_->rotate;
 		}
 
 		if(rotate)
