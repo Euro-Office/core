@@ -9,6 +9,21 @@ namespace NSDocxRenderer
 	{
 		*this = other;
 	}
+	CTable::CCell::CCell(const double& left, const double& top, const double& right, const double& bot,
+						 const CBorder& leftBorder, const CBorder& topBorder, const CBorder& rightBorder, const CBorder& botBorder)
+	{
+		m_dLeft		= left;
+		m_dTop		= top;
+		m_dRight	= right;
+		m_dBot		= bot;
+		m_dHeight	= bot - top;
+		m_dWidth	= right - left;
+
+		m_oLeftBorder	= leftBorder;
+		m_oTopBorder	= topBorder;
+		m_oRightBorder	= rightBorder;
+		m_oBotBorder	= botBorder;
+	}
 	void CTable::CCell::Clear()
 	{
 		m_arParagraphs.clear();
@@ -53,10 +68,10 @@ namespace NSDocxRenderer
 			oWriter.WriteString(L"\" />");
 		};
 
-		write_border(m_oBorderTop, L"top");
-		write_border(m_oBorderBot, L"bottom");
-		write_border(m_oBorderLeft, L"left");
-		write_border(m_oBorderRight, L"right");
+		write_border(m_oTopBorder, L"top");
+		write_border(m_oBotBorder, L"bottom");
+		write_border(m_oLeftBorder, L"left");
+		write_border(m_oRightBorder, L"right");
 
 		oWriter.WriteString(L"</w:tcBorders>");
 
@@ -91,10 +106,10 @@ namespace NSDocxRenderer
 	{
 		CBaseItem::operator=(other);
 
-		m_oBorderBot = other.m_oBorderBot;
-		m_oBorderTop = other.m_oBorderTop;
-		m_oBorderLeft = other.m_oBorderLeft;
-		m_oBorderRight = other.m_oBorderRight;
+		m_oBotBorder = other.m_oBotBorder;
+		m_oTopBorder = other.m_oTopBorder;
+		m_oLeftBorder = other.m_oLeftBorder;
+		m_oRightBorder = other.m_oRightBorder;
 
 		m_nGridSpan = other.m_nGridSpan;
 		m_eVMerge = other.m_eVMerge;
@@ -110,10 +125,10 @@ namespace NSDocxRenderer
 		auto merge_part = std::make_shared<CTable::CCell>();
 		merge_part->RecalcWithNewItem(this);
 		merge_part->m_eVMerge		= CTable::CCell::eVMerge::vmContinue;
-		merge_part->m_oBorderTop	= m_oBorderTop;
-		merge_part->m_oBorderLeft	= m_oBorderLeft;
-		merge_part->m_oBorderBot	= m_oBorderBot;
-		merge_part->m_oBorderRight	= m_oBorderRight;
+		merge_part->m_oTopBorder	= m_oTopBorder;
+		merge_part->m_oLeftBorder	= m_oLeftBorder;
+		merge_part->m_oBotBorder	= m_oBotBorder;
+		merge_part->m_oRightBorder	= m_oRightBorder;
 		merge_part->m_nGridSpan		= m_nGridSpan;
 		merge_part->m_eShading		= m_eShading;
 		merge_part->m_lColor		= m_lColor;
@@ -121,13 +136,16 @@ namespace NSDocxRenderer
 	}
 	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{
+		// top and right spacing added only when it first paragraph in cell
 		if (m_arParagraphs.empty())
 		{
-			m_oBorderTop.dSpacing = pParagraph->m_dSpaceBefore;
-			m_oBorderRight.dSpacing = pParagraph->m_dRightBorder;
+			m_oTopBorder.dSpacing = pParagraph->m_dSpaceBefore;
+			m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
 		}
+		// in ooxml table start from standart spacing (1.9), not from left cell border
+		// therefore the left border is moved by this value
 		pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
-		m_oBorderBot.dSpacing = pParagraph->m_dSpaceAfter;
+		m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
 		m_arParagraphs.push_back(pParagraph);
 	}
 
@@ -176,6 +194,10 @@ namespace NSDocxRenderer
 	bool CTable::CRow::IsEmpty() const
 	{
 		return m_arCells.empty();
+	}
+	CTable::cell_ptr_t CTable::CRow::GetLastCell() const noexcept
+	{
+		return m_arCells.back();
 	}
 
 	void CTable::Clear()
@@ -249,17 +271,20 @@ namespace NSDocxRenderer
 	}
 	void CTable::CalcGridCols()
 	{
-
-		for (auto r : m_arRows)
+		// looking for rows with horizontally merged cells
+		for (const auto& r : m_arRows)
 		{
 			int i = 0;
 			auto size_diff = m_arGridCols.size() - r->m_arCells.size();
+			// recalculation number of cell grids only if there are horizontally merged cells
+			// the number of the cells is less than the number of columns
 			if (size_diff)
 			{
-				for (auto c : r->m_arCells)
+				for (const auto& c : r->m_arCells)
 				{
 					auto grids = m_arGridCols[i++];
-					while (c->m_dWidth - grids > 0.1)
+					// calculate how many cells were merged into the current cell
+					while (c->m_dWidth - grids > c_dCALCULATION_ERROR)
 					{
 						grids += m_arGridCols[i++];
 						c->m_nGridSpan++;
@@ -269,47 +294,9 @@ namespace NSDocxRenderer
 				}
 			}
 		}
-
-		// std::vector<double> cells_left;
-		// auto add_if_no_exists = [&cells_left] (double val) {
-		// 	bool exists = false;
-		// 	for (const auto& curr : cells_left)
-		// 	{
-		// 		if (fabs(curr - val) < c_dMAX_TABLE_LINE_WIDTH_MM)
-		// 		{
-		// 			exists = true;
-		// 			break;
-		// 		}
-		// 	}
-		// 	if (!exists)
-		// 		cells_left.push_back(val);
-		// };
-
-		// double right = 0;
-		// for (const auto& row : m_arRows)
-		// {
-		// 	for (const auto& cell : row->m_arCells)
-		// 	{
-		// 		right = std::max(right, cell->m_dRight);
-		// 		add_if_no_exists(cell->m_dLeft);
-		// 	}
-		// }
-		// std::sort(cells_left.begin(), cells_left.end(), std::less<double>{});
-
-		// for (size_t i = 0; i < cells_left.size() - 1; ++i)
-		// 	m_arGridCols.push_back(cells_left[i + 1] - cells_left[i]);
-
-		// m_arGridCols.push_back(right - cells_left.back());
 	}
 	bool CTable::IsEmpty() const
 	{
 		return m_arRows.empty();
 	}
-
-	void CTextCell::AddTextLine(const std::shared_ptr<CTextLine>& pTextLine)
-	{
-		CBaseItem::RecalcWithNewItem(pTextLine.get());
-		m_arTextLines.push_back(pTextLine);
-	}
-
 } // namespace NSDocxRenderer

@@ -51,6 +51,8 @@ namespace NSDocxRenderer
 
 			CCell() = default;
 			CCell(const CCell& other);
+			explicit CCell(const double& left, const double& top, const double& right, const double& bot,
+						   const CBorder& leftBorder, const CBorder& topBorder, const CBorder& rightBorder, const CBorder& botBorder);
 			virtual ~CCell() = default;
 			virtual void Clear();
 			virtual void ToXml(NSStringUtils::CStringBuilder& oWriter) const override final;
@@ -62,10 +64,10 @@ namespace NSDocxRenderer
 			cell_ptr_t GetMergePart() const;
 			void AddParagraph(const paragraph_ptr_t& pParagraph);
 
-			CBorder m_oBorderTop{};
-			CBorder m_oBorderBot{};
-			CBorder m_oBorderLeft{};
-			CBorder m_oBorderRight{};
+			CBorder m_oTopBorder{};
+			CBorder m_oBotBorder{};
+			CBorder m_oLeftBorder{};
+			CBorder m_oRightBorder{};
 
 			unsigned int m_nGridSpan{1};
 			eVMerge m_eVMerge{CTable::CCell::eVMerge::vmRestart};
@@ -88,6 +90,7 @@ namespace NSDocxRenderer
 
 			void AddCell(const cell_ptr_t& pCell);
 			bool IsEmpty() const;
+			cell_ptr_t GetLastCell() const noexcept;
 
 		private:
 			std::vector<cell_ptr_t> m_arCells;
@@ -107,19 +110,6 @@ namespace NSDocxRenderer
 	private:
 		std::vector<row_ptr_t> m_arRows;
 		std::vector<double> m_arGridCols;
-	};
-
-	class CTextCell : public CBaseItem
-	{
-	public:
-		void AddTextLine(const std::shared_ptr<CTextLine>& pTextLine);
-		std::vector<std::shared_ptr<CTextLine>> m_arTextLines;
-
-		double m_dMinPossibleTop = std::numeric_limits<double>::lowest();
-		double m_dMinPossibleLeft = std::numeric_limits<double>::lowest();
-
-		double m_dMaxPossibleBot = std::numeric_limits<double>::max();
-		double m_dMaxPossibleRight = std::numeric_limits<double>::max();
 	};
 } // namespace NSDocxRenderer
 

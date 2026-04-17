@@ -64,6 +64,7 @@ namespace NSDocxRenderer
 		m_arShapes.clear();
 		m_arParagraphs.clear();
 		m_arTables.clear();
+		m_arGraphicalCells.clear();
 		m_arOutputObjects.clear();
 		m_oCurrVectorGraphics.Clear();
 		m_oClipVectorGraphics.Clear();
@@ -2064,14 +2065,6 @@ namespace NSDocxRenderer
 
 	std::vector<CPage::table_ptr_t> CPage::BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups)
 	{
-		std::vector<table_ptr_t> tables;
-		std::set<double, std::less<double>> lines;
-
-		auto table = std::make_shared<CTable>();
-		auto row = std::make_shared<CTable::CRow>();
-		std::vector<cell_ptr_t> cells_to_next_row;
-		std::vector<cell_ptr_t> tmp_cells;
-
 		if (m_arGraphicalCells.empty())
 			return {};
 
@@ -2082,13 +2075,16 @@ namespace NSDocxRenderer
 				if (!p)
 					continue;
 
+				// add a paragraph to a cell if the paragraph boundaries are within the cell boundaries
 				if ((c->m_dTop < p->m_dTop  || fabs(c->m_dTop - p->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
 					(c->m_dLeft < p->m_dLeft || fabs(c->m_dLeft - p->m_dLeftBorder) < c_dGRAPHICS_ERROR_MM) &&
 					(c->m_dBot > p->m_dBot || fabs(c->m_dBot - p->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
 					(c->m_dRight > p->m_dRight || fabs(c->m_dRight - p->m_dRight) < c_dGRAPHICS_ERROR_MM))
 				{
+					// get the correct left indentation
 					p->m_dLeftBorder = p->m_dLeft - c->m_dLeft;
 					p->m_dRightBorder = 0;
+					// get the correct top indentation
 					if (!c->m_arParagraphs.empty())
 						p->m_dSpaceBefore = p->m_dTop - c->m_arParagraphs.back()->m_dBot;
 					else if (p->m_dTop - c->m_dTop > 0)
@@ -2108,80 +2104,108 @@ namespace NSDocxRenderer
 			return p1->m_dBot < p2->m_dBot;
 		});
 
+		std::vector<table_ptr_t> tables;
+		std::list<cell_ptr_t> cells_to_next_row, cells_buffer;
+		double row_top, row_height;
+
+		auto table = std::make_shared<CTable>();
+		auto row = std::make_shared<CTable::CRow>();
+
+		// an order set storing the lower bound of each row of a table
+		std::set<double, std::less<double>> lines;
 		for (auto& gr_cell : m_arGraphicalCells)
 			lines.insert(gr_cell->m_dBot);
+		// the current value of the bottom row border
+		// used to check that the cell is vertically merged
+		auto cur_bot_it = lines.begin();
 
-		double row_top = m_arGraphicalCells.front()->m_dTop;
-		double row_height = m_arGraphicalCells.front()->m_dHeight;
-		auto bot_line_it = lines.begin();
+		auto update_row_info = [&row_top, &row_height] (cell_ptr_t cell) {
+			row_top = cell->m_dTop;
+			row_height = cell->m_dHeight;
+		};
+
+		auto complete_row = [&table, &row_height, &cur_bot_it] (CTable::row_ptr_t row) -> CTable::row_ptr_t {
+			row->m_dHeight = row_height;
+			table->AddRow(row);
+			++cur_bot_it;
+			return std::make_shared<CTable::CRow>();
+		};
+
+		auto complete_table = [&tables] (table_ptr_t table) -> table_ptr_t {
+			table->CalcGridCols();
+			tables.push_back(table);
+			return std::make_shared<CTable>();
+		};
+
+		auto complete_merged_cell = [&cells_buffer, &cells_to_next_row, &row, &cur_bot_it] (cell_ptr_t cell, bool row_end) {
+			for (auto it = cells_to_next_row.begin(); it != cells_to_next_row.end(); )
+			{
+				auto merged_cell = *it;
+				// check the correct position of the cell or add without checking
+				// for all cells at the end of the row
+				if (row_end ||
+					((merged_cell->m_dTop < cell->m_dTop || fabs(cell->m_dTop - merged_cell->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
+					(merged_cell->m_dLeft < cell->m_dLeft || fabs(cell->m_dLeft - merged_cell->m_dLeft) < c_dGRAPHICS_ERROR_MM)))
+				{
+					// if there is another merger
+					if (merged_cell->m_dBot > *cur_bot_it)
+						cells_buffer.push_back(merged_cell);
+
+					row->AddCell(merged_cell->GetMergePart());
+					it = cells_to_next_row.erase(it);
+				}
+				else
+					++it;
+			}
+		};
+
+		update_row_info(m_arGraphicalCells.front());
+		// main loop through all graphical cells
+		//
+		// 1. create rows from cells that have the same top border
+		// 2. vertically merged cells are insered into a buffer,
+		//    the cells from which are added to the next row
+		// 3. insert the row in the table in case of changing
+		//    the top border of the cell
+		// 4. move to a new table in case of a gap between cell
+		//    boudaries
 		for (auto& cell : m_arGraphicalCells)
 		{
+			// condition for move to new table
 			if (!row->IsEmpty() && cell->m_dTop - row->m_dBot > c_dMIN_TABLE_DIFF_MM)
 			{
-				row->m_dHeight = row_height;
-				table->AddRow(row);
-				table->CalcGridCols();
-				tables.push_back(table);
-				table = std::make_shared<CTable>();
-				row = std::make_shared<CTable::CRow>();
-				row_top = cell->m_dTop;
-				row_height = cell->m_dHeight;
-				++bot_line_it;
+				row = complete_row(row);
+				table = complete_table(table);
+				update_row_info(cell);
 			}
+			// condition for move to new row
 			else if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
 			{
-				if (!cells_to_next_row.empty())
-				{
-					for (int i = 0; i < cells_to_next_row.size(); i++)
-					{
-						if (cells_to_next_row[i]->m_dBot > *bot_line_it)
-							tmp_cells.push_back(cells_to_next_row[i]);
-						row->AddCell(cells_to_next_row[i]->GetMergePart());
-					}
-					cells_to_next_row.clear();
-				}
+				// add all remaining merged cells to the end of the row
+				complete_merged_cell(cell, true);
 
-				++bot_line_it;
-				row_top = cell->m_dTop;
-				row->m_dHeight = row_height;
-				table->AddRow(row);
-				cells_to_next_row = tmp_cells;
-				tmp_cells.clear();
-				row = std::make_shared<CTable::CRow>();
-				row_height = cell->m_dHeight;
+				row = complete_row(row);
+				update_row_info(cell);
+
+				// take cells from the buffer to add to the next row
+				cells_to_next_row = cells_buffer;
+				cells_buffer.clear();
 			}
 
+			// check if row_height was obtained from a merged cell -> change row_height
 			if (row_height > cell->m_dHeight)
 				row_height = cell->m_dHeight;
 
-			std::set<size_t, std::less<size_t>> indeces;
-			for (int i = 0; i < cells_to_next_row.size(); i++)
-			{
-				if ((cells_to_next_row[i]->m_dTop < cell->m_dTop ||
-					fabs(cell->m_dTop - cells_to_next_row[i]->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
-					(cells_to_next_row[i]->m_dLeft < cell->m_dLeft ||
-					fabs(cell->m_dLeft - cells_to_next_row[i]->m_dLeft) < c_dGRAPHICS_ERROR_MM))
-				{
+			complete_merged_cell(cell, false);
 
-					if (cells_to_next_row[i]->m_dBot > *bot_line_it)
-						tmp_cells.push_back(cells_to_next_row[i]);
-					indeces.insert(i);				
-					row->AddCell(cells_to_next_row[i]->GetMergePart());
-				}
-			}
-
-			for (const auto& i : indeces)
-				cells_to_next_row.erase(cells_to_next_row.begin() + i);
-
-			if (cell->m_dBot > *bot_line_it)
-				tmp_cells.push_back(cell);
+			// if cell is merged - save it for adding to the next row
+			if (cell->m_dBot > *cur_bot_it)
+				cells_buffer.push_back(cell);
 
 			row->AddCell(cell);
 		}
-		row->m_dHeight = row_height;
-		table->AddRow(row);
-		table->CalcGridCols();
-		tables.push_back(std::move(table));
+		complete_row(row);
+		complete_table(table);
 
 		return tables;
 	}
@@ -2514,28 +2538,20 @@ namespace NSDocxRenderer
 				for (const auto& index : shape_indexes)
 					remove_later.insert(index);
 
-				auto graphical_cell = std::make_shared<CTable::CCell>();
-				graphical_cell->m_dLeft = cr_first->p.x;
-				graphical_cell->m_dRight = cr_second->p.x;
-				graphical_cell->m_dTop = cr_first->p.y;
-				graphical_cell->m_dBot = cr_second->p.y;
-				graphical_cell->m_dWidth = graphical_cell->m_dRight - graphical_cell->m_dLeft;
-				graphical_cell->m_dHeight = graphical_cell->m_dBot - graphical_cell->m_dTop;
-				graphical_cell->m_oBorderLeft = border_left;
-				graphical_cell->m_oBorderTop = border_top;
-				graphical_cell->m_oBorderRight = border_right;
-				graphical_cell->m_oBorderBot = border_bot;
-
+				auto graphical_cell = std::make_shared<CTable::CCell>(cr_first->p.x, cr_first->p.y, cr_second->p.x, cr_second->p.y,
+																	  border_left, border_top, border_right, border_bot);
 				m_arGraphicalCells.push_back(std::move(graphical_cell));
 				break;
 			}
 		}
 
+		// check the shapes from buffer for cell filling
 		for (auto it = check_later.begin(); it != check_later.end(); ++it)
 		{
-			const auto idx = *it;
-			auto shape = m_arShapes[idx];
-			for (auto c : m_arGraphicalCells)
+			const auto& idx = *it;
+			const auto& shape = m_arShapes[idx];
+			for (auto& c : m_arGraphicalCells)
+				// in adobe filling shape always less than cell
 				if ((shape->m_dTop > c->m_dTop || fabs(shape->m_dTop - c->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
 					(shape->m_dLeft > c->m_dLeft || fabs(shape->m_dLeft - c->m_dLeft) < c_dGRAPHICS_ERROR_MM) &&
 					(shape->m_dBot < c->m_dBot || fabs(c->m_dBot - shape->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
@@ -2549,7 +2565,7 @@ namespace NSDocxRenderer
 
 		for (auto it = remove_later.rbegin(); it != remove_later.rend(); ++it)
 		{
-			const auto idx = *it;
+			const auto& idx = *it;
 			if (idx < m_arShapes.size())
 				m_arShapes.erase(m_arShapes.begin() + idx);
 		}
