@@ -103,15 +103,15 @@ def build_and_install():
     if sys.platform.startswith("linux"):
         # Configure
         configure_cmd = [
-            "configure",
+            "./configure",
             f"--prefix={install_dir}",
             "--enable-rpath",
             "CC=gcc",
             "CXX=g++",
             "AR=ar",
             "RANLIB=ranlib",
-            "CXXFLAGS='-static-libstdc++ -static-libgcc'",
-            "LDFLAGS='-Wl,-rpath,$$ORIGIN'"
+            "CXXFLAGS=-static-libstdc++ -static-libgcc -std=c++11",
+            "LDFLAGS=-Wl,-rpath,$ORIGIN"
         ]
         try:
             _ = subprocess.run( configure_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir / "icu" / "source" )
@@ -121,14 +121,14 @@ def build_and_install():
         # Build
         build_cmd = [ "make", f"-j{os.cpu_count()}" ]
         try:
-            _ = subprocess.run( build_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+            _ = subprocess.run( build_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir / "icu" / "source" )
         except subprocess.CalledProcessError as e:
             abort_op( f"Build failed: {e.stderr.strip() or e.stdout.strip() or e}" )
 
         # Install
         install_cmd = [ "make", "install" ]
         try:
-            _ = subprocess.run( install_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+            _ = subprocess.run( install_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir / "icu" / "source" )
         except subprocess.CalledProcessError as e:
             abort_op( f"Install failed: {e.stderr.strip() or e.stdout.strip() or e}" )
 
