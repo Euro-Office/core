@@ -186,6 +186,7 @@ namespace Aggplus
 	{
 		m_bIsClip = false;
 		m_bIsClip2 = false;
+		m_bIsEmpty = false;
 	}
 	CClipMulti::~CClipMulti()
 	{
@@ -208,6 +209,7 @@ namespace Aggplus
 		m_rasterizer.clip_box(0, 0, width, height);
 		m_bIsClip = false;
 		m_bIsClip2 = false;
+		m_bIsEmpty = false;
 	}
 
 	void CClipMulti::GenerateClip(CGraphicsPath* pPath, CMatrix* pMatrix)
@@ -244,15 +246,21 @@ namespace Aggplus
 		if (!m_bIsClip)
 			return GenerateClip2(bEvenOdd);
 
+		pRasterizer->filling_rule(bEvenOdd ? agg::fill_even_odd : agg::fill_non_zero);
+		scanline_type sl1;
+		scanline_type sl2;
+		scanline_type sl;
+
+		if (!pRasterizer->rewind_scanlines())
+		{
+			if (op == agg::sbool_and)
+				SetEmpty();
+			return;
+		}
+
 		if (!m_bIsClip2)
 		{
 			// need to blend with rasterizer
-			pRasterizer->filling_rule(bEvenOdd ? agg::fill_even_odd : agg::fill_non_zero);
-
-			scanline_type sl1; 
-			scanline_type sl2;
-			scanline_type sl;
-
 			agg::sbool_combine_shapes_aa(op, m_rasterizer, *pRasterizer, sl1, sl2, sl, m_storage1);
 
 			m_lCurStorage = 1;
@@ -260,15 +268,8 @@ namespace Aggplus
 		else
 		{
 			// need to blend with storage
-
-			pRasterizer->filling_rule(op ? agg::fill_even_odd : agg::fill_non_zero);
-
-			scanline_type sl1; 
-			scanline_type sl2;
-			scanline_type sl; 
-
-			agg::sbool_combine_shapes_aa(op, *pRasterizer, (m_lCurStorage == 1) ? m_storage1 : m_storage2, sl1, sl2, sl,
-														(m_lCurStorage == 1) ? m_storage2 : m_storage1);
+			agg::sbool_combine_shapes_aa(op, (m_lCurStorage == 1) ? m_storage1 : m_storage2, *pRasterizer, sl1, sl2, sl,
+											 (m_lCurStorage == 1) ? m_storage2 : m_storage1);
 
 			if (1 == m_lCurStorage)
 			{
@@ -292,6 +293,10 @@ namespace Aggplus
 	{
 		return m_bIsClip2;
 	}
+	bool CClipMulti::IsEmpty()
+	{
+		return m_bIsEmpty;
+	}
 
 	void CClipMulti::Reset()
 	{
@@ -302,5 +307,13 @@ namespace Aggplus
 
 		m_bIsClip = false;
 		m_bIsClip2 = false;
+		m_bIsEmpty = false;
+	}
+	void CClipMulti::SetEmpty()
+	{
+		m_bIsEmpty = true;
+		m_bIsClip2 = true;
+		m_lCurStorage = 1;
+		//m_storage1.prepare();
 	}
 }

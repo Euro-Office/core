@@ -1940,7 +1940,7 @@ self["AscViewer"]["InitializeFonts"] = function(basePath)
 	return CFile.prototype._InitializeFonts(basePath);
 };
 
-self["AscViewer"]["CheckStreamId"] = function(data, status) 
+self["AscViewer"]["CheckStreamId"] = function(data, status)
 {
 	return CFile.prototype._CheckStreamId(data, status);
 };

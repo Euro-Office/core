@@ -151,6 +151,7 @@ public:
 	
 	bool m_bIsClip;
 	bool m_bIsClip2;
+	bool m_bIsEmpty;
 
 	LONG m_lWidth;
 	LONG m_lHeight;
@@ -169,8 +170,10 @@ public:
 
 	bool IsClip();
 	bool IsClip2();
+	bool IsEmpty();
 
 	void Reset();
+	void SetEmpty();
 };
 
 }

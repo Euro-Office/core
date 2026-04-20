@@ -958,7 +958,7 @@ void ReadInteractiveFormsFonts(CDrawingFile* pGrFile, int nType)
 			if (pFont)
 				free(pFont);
 
-			if (false)
+			if (true)
 				continue;
 
 			pFont = GetGIDByUnicode(pGrFile, (char*)sFontName.c_str());
@@ -1194,7 +1194,7 @@ int main(int argc, char* argv[])
 	}
 
 	// RASTER
-	if (false)
+	if (true)
 	{
 		int i = nTestPage;
 		//for (int i = 0; i < nPagesCount; ++i)
@@ -2325,7 +2325,7 @@ int main(int argc, char* argv[])
 	}
 
 	// SCAN PAGE Fonts
-	if (true)
+	if (false)
 	{
 		SetScanPageFonts(pGrFile, nTestPage);
 

@@ -1350,7 +1350,7 @@ namespace Aggplus
 		{
 			agg::render_scanlines(ras, sl, ren);
 		}
-		else
+		else if (!m_oClip.IsEmpty())
 		{
 			if (!m_oClip.IsClip2())
 			{
