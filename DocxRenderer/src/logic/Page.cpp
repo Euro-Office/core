@@ -2,7 +2,6 @@
 
 #include <memory>
 #include <map>
-#include <set>
 // #include <assert.h>
 
 #include "../../../DesktopEditor/graphics/pro/Graphics.h"
@@ -394,7 +393,7 @@ namespace NSDocxRenderer
 		m_arParagraphs = BuildParagraphs(text_line_groups);
 
 		if (m_bIsBuildTables)
-			m_arTables = BuildTables(text_line_groups);
+			m_arTables = BuildTables();
 
 		// post analyze
 		CalcSelected();
@@ -2063,7 +2062,7 @@ namespace NSDocxRenderer
 		return ar_paragraphs;
 	}
 
-	std::vector<CPage::table_ptr_t> CPage::BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups)
+	std::vector<CPage::table_ptr_t> CPage::BuildGraphicalTables() noexcept
 	{
 		if (m_arGraphicalCells.empty())
 			return {};
@@ -2145,7 +2144,7 @@ namespace NSDocxRenderer
 				// for all cells at the end of the row
 				if (row_end ||
 					((merged_cell->m_dTop < cell->m_dTop || fabs(cell->m_dTop - merged_cell->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
-					(merged_cell->m_dLeft < cell->m_dLeft || fabs(cell->m_dLeft - merged_cell->m_dLeft) < c_dGRAPHICS_ERROR_MM)))
+					 (merged_cell->m_dLeft < cell->m_dLeft || fabs(cell->m_dLeft - merged_cell->m_dLeft) < c_dGRAPHICS_ERROR_MM)))
 				{
 					// if there is another merger
 					if (merged_cell->m_dBot > *cur_bot_it)
@@ -2206,6 +2205,148 @@ namespace NSDocxRenderer
 		}
 		complete_row(row);
 		complete_table(table);
+
+		return tables;
+	}
+
+	std::vector<CPage::table_ptr_t> CPage::BuildNonGraphicalTables() noexcept
+	{
+		std::vector<table_ptr_t> tables;
+
+		std::vector<cell_ptr_t> cells;
+		for (auto& p : m_arParagraphs)
+		{
+			if (!p || p->m_arTextLines.size() < 2)
+				continue;
+
+			std::set<double, std::greater<double>> line_diffs, line_lefts;
+			line_lefts.insert(p->m_arTextLines.front()->m_dLeft);
+			for (auto it = p->m_arTextLines.cbegin(); (it + 1) != p->m_arTextLines.cend(); ++it)
+			{
+				auto tl1 = *it;
+				auto tl2 = *(it+1);
+				line_diffs.insert(tl2->m_dTopWithMaxAscent - tl1->m_dBotWithMaxDescent);
+				line_lefts.insert(tl2->m_dLeft);
+			}
+
+			bool same_diff = true;
+			auto diff_to_compare = *(line_diffs.cbegin());
+			for (const auto& ld : line_diffs)
+				same_diff &= (ld - diff_to_compare < c_dCOMPARE_EPSILON);
+
+			bool same_left = true;
+			auto left_to_compare = *(line_lefts.cbegin());
+			for (const auto& ll : line_lefts)
+				same_left &= (ll - left_to_compare < c_dCOMPARE_EPSILON);
+
+			if (same_diff && same_left && p->m_eTextAlignmentType == CParagraph::TextAlignmentType::tatByLeft)
+			{
+				for (const auto& tl: p->m_arTextLines)
+				{
+					auto cell = std::make_shared<CTable::CCell>(p->m_dLeft,
+																tl->m_dTopWithMaxAscent,
+																p->m_dRight,
+																tl->m_dBotWithMaxDescent);
+					auto paragraph = std::make_shared<CParagraph>();
+					paragraph->m_dLeft = tl->m_dLeft;
+					paragraph->m_dRight = tl->m_dRight;
+					paragraph->m_arTextLines.push_back(tl);
+					paragraph->m_nOrder = tl->m_nOrder;
+					cell->AddParagraph(std::move(paragraph), false);
+					cells.push_back(std::move(cell));
+				}
+				p = nullptr;
+			}
+		}
+
+		if (cells.empty())
+			return {};
+
+		auto right = MoveNullptr(m_arParagraphs.begin(), m_arParagraphs.end());
+		m_arParagraphs.erase(right, m_arParagraphs.end());
+
+		std::sort(m_arParagraphs.begin(), m_arParagraphs.end(), [] (const paragraph_ptr_t& p1, const paragraph_ptr_t& p2) {
+			return p1->m_dBot < p2->m_dBot;
+		});
+
+		std::sort(cells.begin(), cells.end(), [](cell_ptr_t c1, cell_ptr_t c2) {
+			if (c1->m_dTop < c2->m_dTop)
+				return true;
+			else if (fabs(c1->m_dTop - c2->m_dTop) < c_dCOMPARE_EPSILON)
+				return c1->m_dLeft < c2->m_dLeft;
+			else
+				return false;
+		});
+
+		std::set<size_t, std::less<size_t>> remove_later;
+		std::set<size_t> indeces;
+		for (size_t i = 0; i < m_arShapes.size(); i++)
+			if (m_arShapes[i])
+				indeces.insert(i);
+		CheckFillingShapes(cells, indeces, remove_later);
+
+		for (auto it = remove_later.rbegin(); it != remove_later.rend(); ++it)
+		{
+			const auto& idx = *it;
+			if (idx < m_arShapes.size())
+				m_arShapes.erase(m_arShapes.begin() + idx);
+		}
+
+		auto complete_table = [&tables] (table_ptr_t t) -> table_ptr_t {
+			t->CalcGridCols();
+			tables.push_back(std::move(t));
+			return std::make_shared<CTable>();
+		};
+
+		auto table = std::make_shared<CTable>();
+		for (auto it = cells.begin(); it != cells.end(); ++it)
+		{
+			auto c = *it;
+			if (!table->IsEmpty() && c->m_dTop - table->m_dBot > c_dMIN_TABLE_DIFF_MM)
+				table = complete_table(table);
+
+			auto row = std::make_shared<CTable::CRow>();
+			row->AddCell(c);
+			while ((it + 1) != cells.end() && fabs(c->m_dTop - (*(it+1))->m_dTop) < c_dCOMPARE_EPSILON)
+			{
+				++it;
+				auto next_c = *it;
+				row->AddCell(next_c);
+			}
+			table->AddRow(row);
+		}
+		complete_table(table);
+
+		return tables;
+	}
+
+	std::vector<CPage::table_ptr_t> CPage::BuildTables() noexcept
+	{
+		// 2 main cases:
+		// 1 - tables with graphical borders
+		// 2 - tables without graphical borders, only paragraphs
+		auto graphical_tables = BuildGraphicalTables();
+		auto non_graphical_tables = BuildNonGraphicalTables();
+
+		if (graphical_tables.empty())
+			return non_graphical_tables;
+
+		if (non_graphical_tables.empty())
+			return graphical_tables;
+
+		// collect all the tables
+		std::vector<table_ptr_t> tables;
+		tables.reserve(graphical_tables.size() + non_graphical_tables.size());
+		tables.insert(tables.end(), std::make_move_iterator(graphical_tables.begin()), std::make_move_iterator(graphical_tables.end()));
+		tables.insert(tables.end(), std::make_move_iterator(non_graphical_tables.begin()), std::make_move_iterator(non_graphical_tables.end()));
+		std::sort(tables.begin(), tables.end(), [](table_ptr_t t1, table_ptr_t t2) {
+			if (t1->m_dTop < t2->m_dTop)
+				return true;
+			else if (fabs(t1->m_dTop - t2->m_dTop) < c_dCOMPARE_EPSILON)
+				return t1->m_dLeft < t2->m_dLeft;
+			else
+				return false;
+		});
 
 		return tables;
 	}
@@ -2331,7 +2472,7 @@ namespace NSDocxRenderer
 		};
 
 		// check and adds points
-		auto add_crossings = [&precise_crossing_p, &crossings, &find_crossing, this] (const Point& p1, const Point& p2, size_t index) {
+		auto add_crossings = [&precise_crossing_p, &crossings, &find_crossing] (const Point& p1, const Point& p2, size_t index) {
 			Crossing* crossing1 = find_crossing(p1);
 			Crossing* crossing2 = find_crossing(p2);
 
@@ -2545,12 +2686,24 @@ namespace NSDocxRenderer
 			}
 		}
 
+		CheckFillingShapes(m_arGraphicalCells, check_later, remove_later);
+
+		for (auto it = remove_later.rbegin(); it != remove_later.rend(); ++it)
+		{
+			const auto& idx = *it;
+			if (idx < m_arShapes.size())
+				m_arShapes.erase(m_arShapes.begin() + idx);
+		}
+	}
+
+	void CPage::CheckFillingShapes(std::vector<cell_ptr_t>& cells, const std::set<size_t>& indeces, std::set<size_t, std::less<size_t>>& remove_later) const
+	{
 		// check the shapes from buffer for cell filling
-		for (auto it = check_later.begin(); it != check_later.end(); ++it)
+		for (auto it = indeces.begin(); it != indeces.end(); ++it)
 		{
 			const auto& idx = *it;
 			const auto& shape = m_arShapes[idx];
-			for (auto& c : m_arGraphicalCells)
+			for (auto& c : cells)
 				// in adobe filling shape always less than cell
 				if ((shape->m_dTop > c->m_dTop || fabs(shape->m_dTop - c->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
 					(shape->m_dLeft > c->m_dLeft || fabs(shape->m_dLeft - c->m_dLeft) < c_dGRAPHICS_ERROR_MM) &&
@@ -2561,13 +2714,6 @@ namespace NSDocxRenderer
 					c->m_lColor = shape->m_oBrush.Color1;
 				}
 			remove_later.insert(idx);
-		}
-
-		for (auto it = remove_later.rbegin(); it != remove_later.rend(); ++it)
-		{
-			const auto& idx = *it;
-			if (idx < m_arShapes.size())
-				m_arShapes.erase(m_arShapes.begin() + idx);
 		}
 	}
 

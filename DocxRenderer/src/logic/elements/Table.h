@@ -31,9 +31,9 @@ namespace NSDocxRenderer
 		public:
 			struct CBorder
 			{
-				double dWidth{};
-				double dSpacing{};
-				long lColor{};
+				double dWidth{0.0};
+				double dSpacing{0.0};
+				long lColor{0x000000};
 				eLineType lineType{eLineType::ltNone};
 			};
 
@@ -53,6 +53,7 @@ namespace NSDocxRenderer
 			CCell(const CCell& other);
 			explicit CCell(const double& left, const double& top, const double& right, const double& bot,
 						   const CBorder& leftBorder, const CBorder& topBorder, const CBorder& rightBorder, const CBorder& botBorder);
+			explicit CCell(const double& left, const double& top, const double& right, const double& bot);
 			virtual ~CCell() = default;
 			virtual void Clear();
 			virtual void ToXml(NSStringUtils::CStringBuilder& oWriter) const override final;
@@ -62,7 +63,7 @@ namespace NSDocxRenderer
 			CCell& operator=(const CCell& other);
 
 			cell_ptr_t GetMergePart() const;
-			void AddParagraph(const paragraph_ptr_t& pParagraph);
+			void AddParagraph(const paragraph_ptr_t& pParagraph, bool bIsGraphicalCell = true);
 
 			CBorder m_oTopBorder{};
 			CBorder m_oBotBorder{};

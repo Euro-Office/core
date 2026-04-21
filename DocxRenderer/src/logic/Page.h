@@ -1,5 +1,7 @@
 ﻿#pragma once
 
+#include <set>
+
 #include "elements/Paragraph.h"
 #include "elements/Table.h"
 #include "elements/Shape.h"
@@ -116,8 +118,14 @@ namespace NSDocxRenderer
 		// returns std::vector of paragraphs builded from m_arTextLines
 		std::vector<paragraph_ptr_t> BuildParagraphs(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
 
-		// returns std::vector of tables builded from shapes and paragraphes
-		std::vector<table_ptr_t> BuildTables(const std::vector<text_line_group_ptr_t>& arTextLineGroups);
+		// returns std::vector of tables with graphical borders builded from graphical cells and paragraphs
+		std::vector<table_ptr_t> BuildGraphicalTables() noexcept;
+
+		// returns std::vector of tables without graphical borders builded only from paragraphs
+		std::vector<table_ptr_t> BuildNonGraphicalTables() noexcept;
+
+		// returns std::vector of all builded tables
+		std::vector<table_ptr_t> BuildTables() noexcept;
 
 		// create graphical cells (from shapes)
 		void BuildGraphicalCells();
@@ -198,6 +206,8 @@ namespace NSDocxRenderer
 
 		void ToXml(NSStringUtils::CStringBuilder& oWriter) const noexcept;
 		void WriteSectionToFile(bool bLastPage, NSStringUtils::CStringBuilder& oWriter) const noexcept;
+
+		void CheckFillingShapes(std::vector<cell_ptr_t>& cells, const std::set<size_t>& indeces, std::set<size_t, std::less<size_t>>& remove_later) const;
 
 		static shape_ptr_t CreateSingleLineShape(text_line_ptr_t& pLine);
 		static shape_ptr_t CreateSingleParagraphShape(paragraph_ptr_t& pParagraph);

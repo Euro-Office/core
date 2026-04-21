@@ -24,6 +24,15 @@ namespace NSDocxRenderer
 		m_oRightBorder	= rightBorder;
 		m_oBotBorder	= botBorder;
 	}
+	CTable::CCell::CCell(const double& left, const double& top, const double& right, const double& bot)
+	{
+		m_dLeft		= left;
+		m_dTop		= top;
+		m_dRight	= right;
+		m_dBot		= bot;
+		m_dHeight	= bot - top;
+		m_dWidth	= right - left;
+	}
 	void CTable::CCell::Clear()
 	{
 		m_arParagraphs.clear();
@@ -64,7 +73,10 @@ namespace NSDocxRenderer
 			oWriter.WriteString(L"\" w:space=\"");
 			oWriter.AddUInt(static_cast<unsigned int>(border.dSpacing * c_dMMToPt));
 			oWriter.WriteString(L"\" w:color=\"");
-			oWriter.WriteHexInt3(ConvertColorBGRToRGB(border.lColor));
+			if (border.lineType == eLineType::ltNone)
+				oWriter.WriteString(L"auto");
+			else
+				oWriter.WriteHexInt3(ConvertColorBGRToRGB(border.lColor));
 			oWriter.WriteString(L"\" />");
 		};
 
@@ -134,18 +146,22 @@ namespace NSDocxRenderer
 		merge_part->m_lColor		= m_lColor;
 		return merge_part;
 	}
-	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
+	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph, bool bIsGraphicalCell)
 	{
-		// top and right spacing added only when it first paragraph in cell
-		if (m_arParagraphs.empty())
+		if (bIsGraphicalCell)
 		{
-			m_oTopBorder.dSpacing = pParagraph->m_dSpaceBefore;
-			m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
+			// top and right spacing added only when it first paragraph in cell
+			if (m_arParagraphs.empty())
+			{
+				m_oTopBorder.dSpacing = pParagraph->m_dSpaceBefore;
+				m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
+			}
+			// in ooxml table start from standart spacing (1.9), not from left cell border
+			// therefore the left border is moved by this value
+			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
+			m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
 		}
-		// in ooxml table start from standart spacing (1.9), not from left cell border
-		// therefore the left border is moved by this value
-		pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
-		m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
+
 		m_arParagraphs.push_back(pParagraph);
 	}
 
@@ -185,6 +201,13 @@ namespace NSDocxRenderer
 			m_dBot = pCell->m_dBot;
 			m_dHeight = pCell->m_dHeight;
 			m_dWidth = 0.0;
+		}
+		else if (pCell->m_dLeft - m_arCells.back()->m_dRight > c_dGRAPHICS_ERROR_MM)
+		{
+			auto last_cell = m_arCells.back();
+			m_dWidth += pCell->m_dLeft - last_cell->m_dLeft - last_cell->m_dWidth;
+			last_cell->m_dRight = pCell->m_dLeft;
+			last_cell->m_dWidth = last_cell->m_dRight - last_cell->m_dLeft;
 		}
 
 		m_dRight = pCell->m_dRight;
