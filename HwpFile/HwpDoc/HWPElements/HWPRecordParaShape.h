@@ -84,6 +84,7 @@ public:
 	EHeadingType GetHeadingType() const;
 	HWP_BYTE GetHeadingLevel() const;
 	short GetHeadingIdRef() const;
+	short GetBorderFillIdRef() const;
 	bool GetPageBreakBefore() const;
 	int GetLineSpacingType() const;
 	int GetLineSpacing() const;

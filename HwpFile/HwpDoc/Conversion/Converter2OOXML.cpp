@@ -735,6 +735,13 @@ void CConverter2OOXML::WriteParaShapeProperties(short shParaShapeID, short shPar
 
 		oBuilder.WriteString(L"</w:tabs>");
 	}
+
+	const CHWPRecordBorderFill* pBorderFill{m_pContext->GetBorderFill(pParaShape->GetBorderFillIdRef())};
+
+	if (nullptr != pBorderFill && nullptr != pBorderFill->GetFill())
+	{
+		oBuilder.WriteString(L"<w:shd w:val=\"clear\" w:color=\"auto\" w:fill=\"" + Transform::IntColorToHEX(pBorderFill->GetFill()->GetFaceColor()) + L"\"/>");
+	}
 }
 
 void CConverter2OOXML::WriteTable(const CCtrlTable* pTable, short shParaShapeID, short shParaStyleID, NSStringUtils::CStringBuilder& oBuilder, TConversionState& oState)

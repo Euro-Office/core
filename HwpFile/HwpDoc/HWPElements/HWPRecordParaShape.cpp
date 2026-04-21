@@ -469,6 +469,11 @@ short CHWPRecordParaShape::GetHeadingIdRef() const
 	return m_shHeadingIdRef;
 }
 
+short HWP::CHWPRecordParaShape::GetBorderFillIdRef() const
+{
+	return m_shBorderFill;
+}
+
 bool CHWPRecordParaShape::GetPageBreakBefore() const
 {
 	return m_bPageBreakBefore;
