@@ -424,8 +424,14 @@ namespace NSWasm
 			m_dX = oLine.m_dX;
 			m_dY = oLine.m_dY;
 
+			m_dEndX = oLine.m_dEndX;
+			m_dEndY = oLine.m_dEndY;
+
 			m_dK = oLine.m_dK;
 			m_dB = oLine.m_dB;
+			m_ex = oLine.m_ex;
+			m_ey = oLine.m_ey;
+			m_bIsConstX = oLine.m_bIsConstX;
 
 			m_lSizeChars = oLine.m_lSizeChars;
 			m_lCharsTail = oLine.m_lCharsTail;
