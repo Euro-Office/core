@@ -710,7 +710,7 @@ private:
 							0x46 == data[4] && 0x4f == data[5] && 0x52 == data[6] && 0x4d == data[7]))
 			return 1;
 		COfficeUtils OfficeUtils(NULL);
-		if (!OfficeUtils.IsArchive(data, size))
+		if (OfficeUtils.IsArchive(data, size) == S_FALSE)
 			return -1;
 
 		ULONG nBufferSize = 0;
