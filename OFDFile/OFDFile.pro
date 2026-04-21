@@ -11,7 +11,6 @@ CORE_ROOT_DIR = $$PWD/..
 PWD_ROOT_DIR = $$PWD
 
 include($$CORE_ROOT_DIR/Common/base.pri)
-include($$CORE_ROOT_DIR/Common/3dParty/boost/boost.pri)
 
 DEFINES += OFD_USE_DYNAMIC_LIBRARY
 
