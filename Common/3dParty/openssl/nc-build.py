@@ -69,12 +69,6 @@ def fetch_and_patch():
     print( "Fetch & patch completed" )
 
 def build_and_install():
-    if shutil.which("nmake") is None:
-        raise RuntimeError(
-            "MSVC environment is not set up: 'nmake' not found in PATH.\n"
-            "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
-    )
-
     # If exists and needed, remove install dir
     if install_dir.exists() and ( force_redo or not install_dir_looks_ok() ):
         try:
@@ -168,4 +162,9 @@ if not work_dir_looks_ok():
     fetch_and_patch()
 
 if not install_dir_looks_ok():
+    if sys.platform == "win32" and shutil.which("nmake") is None:
+        raise RuntimeError(
+            "MSVC environment is not set up: 'nmake' not found in PATH.\n"
+            "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
+        )
     build_and_install()
