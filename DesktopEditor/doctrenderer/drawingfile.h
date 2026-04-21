@@ -41,6 +41,7 @@
 #include "../graphics/pro/js/wasm/src/serialize.h"
 #include "../graphics/pro/js/wasm/src/HTMLRendererText.h"
 #include "../../DocxRenderer/DocxRenderer.h"
+#include "../../OFDFile/OFDFile.h"
 
 #define CHECKER_FILE_BUFFER_LEN 4096
 
@@ -102,6 +103,9 @@ public:
 			break;
 		case odftXPS:
 			m_nType = 2;
+			break;
+		case odftOFD:
+			m_nType = 3;
 			break;
 		default:
 			break;
@@ -165,6 +169,16 @@ public:
 			else
 				m_nType = 2;
 		}
+		case 3:
+		{
+			m_pFile = new COFDFile(m_pApplicationFonts);
+			if (!m_pFile->LoadFromFile(sFile, L"", sPassword, sPassword))
+			{
+				RELEASEOBJECT(m_pFile);
+			}
+			else
+				m_nType = 3;
+		}
 		default:
 			break;
 		}
@@ -214,6 +228,16 @@ public:
 				}
 				else
 					m_nType = 2;
+			}
+			case 3:
+			{
+				m_pFile = new COFDFile(m_pApplicationFonts);
+				if (!m_pFile->LoadFromMemory(data, size, L"", sPassword, sPassword))
+				{
+					RELEASEOBJECT(m_pFile);
+				}
+				else
+					m_nType = 3;
 			}
 			default:
 				break;

@@ -798,6 +798,70 @@ SOURCES += \
 	$$DOCX_RENDERER_ROOT_DIR/DocxRenderer.cpp \
 	$$DOCX_RENDERER_ROOT_DIR/src/resources/resources.cpp
 
+# OFDFile
+OFD_RENDERER_ROOT_DIR = $$CORE_ROOT_DIR/OFDFile
+HEADERS += \
+	$$OFD_RENDERER_ROOT_DIR/OFDFile.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Annotation.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.h \
+	$$OFD_RENDERER_ROOT_DIR/src/IOFDElement.h \
+	$$OFD_RENDERER_ROOT_DIR/src/OFDFile_Private.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Base.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/Content.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/GraphicUnit.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/IPageBlock.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/Layer.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/TextObject.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Document.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Page.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Res.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Color.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/ColorSpace.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/CommonData.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/CompositeGraphicUnit.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/DrawParam.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Font.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/MultiMedia.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/PageArea.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/Types.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/Utils.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/XmlReader.h
+
+SOURCES += \
+	$$OFD_RENDERER_ROOT_DIR/OFDFile.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Annotation.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/OFDFile_Private.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Base.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/Content.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/GraphicUnit.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/Layer.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Content/TextObject.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Document.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Page.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Res.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Color.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/ColorSpace.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/CommonData.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/CompositeGraphicUnit.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/DrawParam.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Font.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/MultiMedia.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/PageArea.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/Types.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/XmlReader.cpp
+
+
 HEADERS += $$CORE_ROOT_DIR/DesktopEditor/doctrenderer/drawingfile.h
 
 HEADERS += \

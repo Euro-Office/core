@@ -165,7 +165,7 @@
 	},
 	{
 		"folder": "../../../common/",
-		"files": ["File.cpp", "Directory.cpp", "ByteBuilder.cpp", "Base64.cpp", "StringExt.cpp", "Path.cpp", "SystemUtils.cpp", "StringUTF32.cpp", "StringBuilder.cpp"]
+		"files": ["File.cpp", "Directory.cpp", "ByteBuilder.cpp", "Base64.cpp", "StringExt.cpp", "Path.cpp", "SystemUtils.cpp", "StringUTF32.cpp", "StringBuilder.cpp", "ProcessEnv.cpp"]
 	},
 	{
 		"folder": "../../../../Common/3dParty/icu/icu/source/common/",
@@ -240,24 +240,44 @@
 		"files": ["DocxRenderer.cpp"]
 	},
 	{
-		"folder": "../../../../DocxRenderer/src/resources",
+		"folder": "../../../../DocxRenderer/src/resources/",
 		"files": ["VectorGraphics.cpp"]
 	},
 	{
-		"folder": "../../../../DocxRenderer/src/logic",
+		"folder": "../../../../DocxRenderer/src/logic/",
 		"files": ["styles/FontStyle.cpp", "styles/ParagraphStyle.cpp", "Page.cpp", "Document.cpp"]
 	},
 	{
-		"folder": "../../../../DocxRenderer/src/logic/managers",
+		"folder": "../../../../DocxRenderer/src/logic/managers/",
 		"files": ["FontManager.cpp", "FontStyleManager.cpp", "ImageManager.cpp", "ParagraphStyleManager.cpp"]
 	},
 	{
-		"folder": "../../../../DocxRenderer/src/logic/elements",
+		"folder": "../../../../DocxRenderer/src/logic/elements/",
 		"files": ["BaseItem.cpp", "ContText.cpp", "Paragraph.cpp", "Shape.cpp", "TextLine.cpp", "Table.cpp"]
 	},
 	{
-		"folder": "../../../../OdfFile/Common",
+		"folder": "../../../../OdfFile/Common/",
 		"files": ["logging.cpp"]
+	},
+	{
+		"folder": "../../../../OFDFile/",
+		"files": ["OFDFile.cpp"]
+	},
+	{
+		"folder": "../../../../OFDFile/src/",
+		"files": ["Annotation.cpp", "OFDFile_Private.cpp", "Base.cpp", "Document.cpp", "Page.cpp", "Res.cpp"]
+	},
+	{
+		"folder": "../../../../OFDFile/src/Content/",
+		"files": ["ImageObject.cpp", "PageBlock.cpp", "PathObject.cpp", "Content.cpp", "GraphicUnit.cpp", "Layer.cpp", "TextObject.cpp"]
+	},
+	{
+		"folder": "../../../../OFDFile/src/Types/",
+		"files": ["Color.cpp", "ColorSpace.cpp", "CommonData.cpp", "CompositeGraphicUnit.cpp", "DrawParam.cpp", "Font.cpp", "MultiMedia.cpp", "PageArea.cpp", "PenSettings.cpp", "Signature.cpp", "TemplatePage.cpp"]
+	},
+	{
+		"folder": "../../../../OFDFile/src/Utils/",
+		"files": ["Types.cpp", "XmlReader.cpp"]
 	}
 	]
 }
