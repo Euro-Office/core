@@ -31,7 +31,8 @@
  */
 #include "Unit.h"
 #include <cwchar>
-
+#include <mutex>
+#include "../../Common/3dParty/cryptopp/osrng.h"
 
 double Cm_To_Mm     (const double &dValue)
 {
@@ -764,30 +765,36 @@ namespace XmlUtils
 		}
 		return std::rand();
 	}
+	static unsigned int Rand1()
+	{
+		static CryptoPP::AutoSeededRandomPool prng;
+		static std::mutex prng_mutex;
+		unsigned int result;
+		std::lock_guard<std::mutex> lock(prng_mutex);
+		prng.GenerateBlock(reinterpret_cast<unsigned char*>(&result), sizeof(result));
+		return result;
+	}
 	int GenerateInt()
 	{
-		//todo c++11 <random>
-		return ((Rand() & 0x7FFF) | ((Rand() & 0x7FFF) << 15) | ((Rand() & 0x3) << 30));
+		return static_cast<int>(Rand1());
 	}
 
 	std::wstring GenerateGuid()
 	{
 		std::wstring result;
-		//#if defined (_WIN32) || defined(_WIN64)
-		//		GUID guid;
-		//		CoCreateGuid(&guid);
-		//
-		//		OLECHAR* guidString;
-		//		StringFromCLSID(guid, &guidString);
-		//
-		//		result = std::wstring(guidString);
-		//
-		//		CoTaskMemFree(guidString);
-		//#else
+
 		std::wstringstream sstream;
-		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X") % (Rand() & 0xff) % (Rand() & 0xff) % (Rand() & 0xff) % ((Rand() & 0x0fff) | 0x4000) % ((Rand() % 0x3fff) + 0x8000) %  (Rand() & 0xff) % (Rand() & 0xff) % (Rand() & 0xff);
+		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X")
+			% (Rand1() & 0xffff)
+			% (Rand1() & 0xffff)
+			% (Rand1() & 0xffff)
+			% ((Rand1() & 0x0fff) | 0x4000)
+			% ((Rand1() & 0x3fff) | 0x8000)
+			% (Rand1() & 0xffff)
+			% (Rand1() & 0xffff)
+			% (Rand1() & 0xffff);
 		result = sstream.str();
-		//#endif
+
 		return result;
 	}
 	std::wstring DoubleToString( double value, wchar_t* format )
