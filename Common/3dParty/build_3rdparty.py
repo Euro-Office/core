@@ -31,7 +31,7 @@ subfolders = [
     'icu',
     # 'md',
     'openssl',
-    # 'socket-io',
+    'socketio',
 ]
 
 for subfolder in subfolders:
