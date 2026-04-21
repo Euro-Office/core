@@ -43,7 +43,9 @@ for subfolder in subfolders:
             subprocess.run(
                 [sys.executable, sub_script, work_dir / subfolder, install_dir / subfolder],
                 check=True,
-                text=True
+                text=True,
+                stdout=None,
+                stderr=None,
             )
         except subprocess.CalledProcessError as e:
             print(f"\n❌ {subfolder} failed with code {e.returncode}")
