@@ -91,7 +91,7 @@ def build_and_install():
                 str(bat_path),
                 "", "",
                 str(icu_source_dir),
-                str(install_dir)
+                str(nc.install_dir)
             ],
             "Cygwin build",
             nc.work_dir / "icu" / "source"
