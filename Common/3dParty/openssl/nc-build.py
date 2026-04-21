@@ -1,0 +1,171 @@
+#!/usr/bin/env python3
+
+import sys
+import shutil
+import subprocess
+import os
+from pathlib import Path
+
+work_dir = Path( sys.argv[1] )
+install_dir = Path( sys.argv[2] )
+force_redo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+
+script_path = Path(sys.argv[0]).resolve()
+script_dir = script_path.parent
+debug_mode = True
+dep_name = "OpenSSL"
+
+def abort_op( message : str, keep_work : bool = False ):
+    print( f"Aboring {dep_name}: {message}", file = sys.stderr )
+    if not debug_mode:
+        try:
+            if not keep_work:
+                shutil.rmtree( work_dir )
+            shutil.rmtree( install_dir )
+        except FileNotFoundError:
+            pass
+    sys.exit( 1 )
+
+def work_dir_looks_ok() -> bool:
+    return Path( work_dir / "ok_marker" ).exists()
+
+def install_dir_looks_ok() -> bool:
+    return Path( install_dir / "ok_marker" ).exists()
+
+def fetch_and_patch():
+    # If exists and needed, remove work dir
+    if work_dir.exists() and ( force_redo or not work_dir_looks_ok() ):
+        try:
+            shutil.rmtree( work_dir )
+        except FileNotFoundError:
+            pass
+
+    # Create work dir (if needed)
+    if not work_dir.exists():
+        try:
+            work_dir.mkdir( parents = True )
+        except OSError:
+            abort_op( "Failed to create work dir" )
+
+    # Check out the git repo
+    git_cmd = [
+        "git",
+        "-c", "core.autocrlf=false", "-c", "core.eol=lf",
+        "clone",
+        "--depth", "1",
+        "--branch", "OpenSSL_1_1_1f",
+        "https://github.com/openssl/openssl.git",
+        str(work_dir),
+    ]
+
+    try:
+        _ = subprocess.run( git_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True )
+    except subprocess.CalledProcessError as e:
+        abort_op( f"git clone failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+    # Create ok marker
+    Path( work_dir / "ok_marker" ).touch()
+
+    print( "Fetch & patch completed" )
+
+def build_and_install():
+    if shutil.which("nmake") is None:
+        raise RuntimeError(
+            "MSVC environment is not set up: 'nmake' not found in PATH.\n"
+            "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
+    )
+
+    # If exists and needed, remove install dir
+    if install_dir.exists() and ( force_redo or not install_dir_looks_ok() ):
+        try:
+            shutil.rmtree( install_dir )
+        except FileNotFoundError:
+            pass
+
+    # Create install dir (if needed)
+    if not install_dir.exists():
+        try:
+            install_dir.mkdir( parents = True )
+        except OSError:
+            abort_op( "Failed to create install dir" )
+
+
+    if sys.platform.startswith("linux"):
+        # Configure
+        configure_cmd = [
+            "./config",
+            f"--prefix={install_dir}",
+            f"--openssldir={install_dir}",
+            "enable-md2",
+            "no-shared",
+            "no-asm",
+        ]
+        try:
+            _ = subprocess.run( configure_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Configure failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+        # Build
+        build_cmd = [ "make", f"-j{os.cpu_count()}" ]
+        try:
+            _ = subprocess.run( build_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Build failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+        # Install
+        install_cmd = [ "make", "install" ]
+        try:
+            _ = subprocess.run( install_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Install failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+    elif sys.platform == "win32":
+        
+        configure_cmd = [
+            shutil.which("perl"),
+            "Configure",
+            "VC-WIN64A",
+            f"--prefix={install_dir}",
+            f"--openssldir={install_dir}",
+            "enable-md2",
+            "no-shared",
+            "no-asm",
+        ]
+
+        try:
+            _ = subprocess.run( configure_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Configure failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+        # Build
+        build_cmd = [ "nmake" ]
+
+        try:
+            # _ = subprocess.run( build_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+            _ = subprocess.run( build_cmd, check=True, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Build failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+        # Install
+        install_cmd = [ "nmake", "install" ]
+        try:
+            _ = subprocess.run( install_cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, cwd = work_dir )
+        except subprocess.CalledProcessError as e:
+            abort_op( f"Install failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+
+    else:
+        abort_op( f"Unkown target platform: {sys.platform}" )
+
+    # Create ok marker
+    Path( install_dir / "ok_marker" ).touch()
+
+    sys.stdout.reconfigure(encoding='utf-8')
+    if sys.platform == 'win32':
+        os.system('chcp 65001 >nul')
+    print( "Build and install completed" )
+
+if not work_dir_looks_ok():
+    fetch_and_patch()
+
+if not install_dir_looks_ok():
+    build_and_install()
