@@ -22,29 +22,7 @@ nc.debug_mode = True
 def fetch_and_patch():
     nc.create_install_dir()
 
-    nc.run_command(
-        [ "git", "init" ],
-        "Git init",
-        nc.install_dir
-    )
-
-    nc.run_command(
-        [ "git", "remote", "add", "origin", "https://github.com/google/brotli.git" ],
-        "Add origin",
-        nc.install_dir
-    )
-
-    nc.run_command(
-        [ "git", "fetch", "--depth", "1", "origin", "a47d7475063eb223c87632eed806c0070e70da29" ],
-        "Fetch commit",
-        nc.install_dir
-    )
-
-    nc.run_command(
-        [ "git", "checkout", "FETCH_HEAD" ],
-        "Checkout head",
-        nc.install_dir
-    )
+    nc.shallow_checkout( nc.install_dir, "https://github.com/google/brotli.git", "a47d7475063eb223c87632eed806c0070e70da29" )
 
     nc.create_install_dir_ok_marker()
 
