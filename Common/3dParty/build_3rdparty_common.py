@@ -85,3 +85,41 @@ def fix_terminal_encoding():
     sys.stdout.reconfigure( encoding='utf-8' )
     if is_windows():
         os.system( 'chcp 65001 >nul' )
+
+def shallow_checkout( repo_dir : Path, repo_url : str, commit : str ):
+    if repo_dir.exists():
+        try:
+            shutil.rmtree( repo_dir )
+        except FileNotFoundError:
+            pass
+
+    # Create work dir (if needed)
+    if not repo_dir.exists():
+        try:
+            repo_dir.mkdir( parents = True )
+        except OSError:
+            abort_op( "Failed to create repo dir" )
+
+    run_command(
+        [ "git", "init" ],
+        f"Git init ({repo_dir.name})",
+        repo_dir
+    )
+
+    run_command(
+        [ "git", "remote", "add", "origin", repo_url ],
+        f"Add origin ({repo_dir.name})",
+        repo_dir
+    )
+
+    run_command(
+        [ "git", "fetch", "--depth", "1", "origin", commit ],
+        f"Fetch commit ({repo_dir.name})",
+        repo_dir
+    )
+
+    run_command(
+        [ "git", "checkout", "FETCH_HEAD" ],
+        f"Checkout head ({repo_dir.name})",
+        repo_dir
+    )
