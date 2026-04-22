@@ -32,6 +32,7 @@ subfolders = [
     'md',
     'openssl',
     'socketio',
+    'hunspell',
     # 'v8',
 ]
 
