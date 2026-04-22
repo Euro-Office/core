@@ -29,7 +29,7 @@ subfolders = [
     # 'html',
     # 'hyphen',
     'icu',
-    # 'md',
+    'md',
     'openssl',
     'socketio',
 ]
