@@ -23,29 +23,7 @@ nc.debug_mode = True
 def fetch_and_patch():
     nc.create_workdir()
 
-    nc.run_command(
-        [ "git", "init" ],
-        "Git init",
-        nc.work_dir
-    )
-
-    nc.run_command(
-        [ "git", "remote", "add", "origin", "https://github.com/socketio/socket.io-client-cpp.git" ],
-        "Add remote",
-        nc.work_dir
-    )
-    
-    nc.run_command(
-        [ "git", "fetch", "--depth", "1", "origin", "da779141a7379cc30c870d48295033bc16a23c66" ],
-        "Fetch",
-        nc.work_dir
-    )
-
-    nc.run_command(
-        [ "git", "checkout", "FETCH_HEAD" ],
-        "Checkout",
-        nc.work_dir
-    )
+    nc.shallow_checkout( nc.work_dir, "https://github.com/socketio/socket.io-client-cpp.git", "da779141a7379cc30c870d48295033bc16a23c66" )
 
     nc.run_command(
         [ "git", "submodule", "update", "--init", "--recursive" ],
