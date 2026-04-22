@@ -146,22 +146,25 @@ namespace NSDocxRenderer
 		merge_part->m_lColor		= m_lColor;
 		return merge_part;
 	}
-	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph, bool bIsGraphicalCell)
+	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{
-		if (bIsGraphicalCell)
+		// check if a cell has no visible borders
+		// dont need to set/update
+		//
+		// top and right spacing added only when it first paragraph in cell
+		if (m_arParagraphs.empty())
 		{
-			// top and right spacing added only when it first paragraph in cell
-			if (m_arParagraphs.empty())
-			{
+			if (m_oTopBorder.lineType != eLineType::ltNone)
 				m_oTopBorder.dSpacing = pParagraph->m_dSpaceBefore;
+			if (m_oRightBorder.lineType != eLineType::ltNone)
 				m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
-			}
-			// in ooxml table start from standart spacing (1.9), not from left cell border
-			// therefore the left border is moved by this value
-			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
-			m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
 		}
-
+		// in ooxml table start from standart spacing (1.9), not from left cell border
+		// therefore the left border is moved by this value
+		if (m_oLeftBorder.lineType != eLineType::ltNone)
+			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
+		if (m_oBotBorder.lineType != eLineType::ltNone)
+			m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
 		m_arParagraphs.push_back(pParagraph);
 	}
 
@@ -202,13 +205,6 @@ namespace NSDocxRenderer
 			m_dHeight = pCell->m_dHeight;
 			m_dWidth = 0.0;
 		}
-		else if (pCell->m_dLeft - m_arCells.back()->m_dRight > c_dGRAPHICS_ERROR_MM)
-		{
-			auto last_cell = m_arCells.back();
-			m_dWidth += pCell->m_dLeft - last_cell->m_dLeft - last_cell->m_dWidth;
-			last_cell->m_dRight = pCell->m_dLeft;
-			last_cell->m_dWidth = last_cell->m_dRight - last_cell->m_dLeft;
-		}
 
 		m_dRight = pCell->m_dRight;
 		m_dWidth += pCell->m_dWidth;
@@ -218,9 +214,14 @@ namespace NSDocxRenderer
 	{
 		return m_arCells.empty();
 	}
-	CTable::cell_ptr_t CTable::CRow::GetLastCell() const noexcept
+	void CTable::CRow::MergeRows(row_ptr_t row1, row_ptr_t row2) noexcept
 	{
-		return m_arCells.back();
+		// need to update right and width for last cell in row before merge
+		row1->m_arCells.back()->m_dRight = row2->m_arCells.front()->m_dLeft;
+		row1->m_dWidth += row1->m_arCells.back()->m_dRight - row1->m_arCells.back()->m_dLeft - row1->m_arCells.back()->m_dWidth;
+		row1->m_arCells.back()->m_dWidth = row1->m_arCells.back()->m_dRight - row1->m_arCells.back()->m_dLeft;
+		for (auto& c : row2->m_arCells)
+			row1->AddCell(std::move(c));
 	}
 
 	void CTable::Clear()
@@ -281,16 +282,20 @@ namespace NSDocxRenderer
 				m_arGridCols.push_back(c->m_dWidth);
 		}
 
+		UpdateGrids(pRow);
+
+		m_dBot = pRow->m_dBot;
+		m_dHeight += pRow->m_dHeight;
+		m_arRows.push_back(pRow);
+	}
+	void CTable::UpdateGrids(row_ptr_t pRow)
+	{
 		if (pRow->m_arCells.size() > m_arGridCols.size())
 		{
 			m_arGridCols.clear();
 			for (const auto& c : pRow->m_arCells)
 				m_arGridCols.push_back(c->m_dWidth);
 		}
-
-		m_dBot = pRow->m_dBot;
-		m_dHeight += pRow->m_dHeight;
-		m_arRows.push_back(pRow);
 	}
 	void CTable::CalcGridCols()
 	{
@@ -307,7 +312,7 @@ namespace NSDocxRenderer
 				{
 					auto grids = m_arGridCols[i++];
 					// calculate how many cells were merged into the current cell
-					while (c->m_dWidth - grids > c_dCALCULATION_ERROR)
+					while (c->m_dWidth - grids > c_dCOMPARE_EPSILON)
 					{
 						grids += m_arGridCols[i++];
 						c->m_nGridSpan++;
@@ -321,5 +326,25 @@ namespace NSDocxRenderer
 	bool CTable::IsEmpty() const
 	{
 		return m_arRows.empty();
+	}
+	bool CTable::MergeTables(std::shared_ptr<CTable> table1, std::shared_ptr<CTable> table2) noexcept
+	{
+		if (table1->m_arRows.size() == table2->m_arRows.size())
+		{
+			for (auto it1 = table1->m_arRows.begin(), it2 = table2->m_arRows.begin(); it1 != table1->m_arRows.end(); ++it1, ++it2)
+			{
+				CRow::MergeRows(*it1, *it2);
+				// need to update grids, because the number of cells has increased
+				table1->UpdateGrids(*it1);
+			}
+
+			// update right and width after merge
+			table1->m_dRight = table1->m_arRows.front()->m_dRight;
+			table1->m_dWidth = table1->m_arRows.front()->m_dWidth;
+
+			table1->CalcGridCols();
+			return true;
+		}
+		return false;
 	}
 } // namespace NSDocxRenderer

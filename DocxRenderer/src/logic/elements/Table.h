@@ -63,7 +63,7 @@ namespace NSDocxRenderer
 			CCell& operator=(const CCell& other);
 
 			cell_ptr_t GetMergePart() const;
-			void AddParagraph(const paragraph_ptr_t& pParagraph, bool bIsGraphicalCell = true);
+			void AddParagraph(const paragraph_ptr_t& pParagraph);
 
 			CBorder m_oTopBorder{};
 			CBorder m_oBotBorder{};
@@ -91,7 +91,8 @@ namespace NSDocxRenderer
 
 			void AddCell(const cell_ptr_t& pCell);
 			bool IsEmpty() const;
-			cell_ptr_t GetLastCell() const noexcept;
+
+			static void MergeRows(row_ptr_t row1, row_ptr_t row2) noexcept;
 
 		private:
 			std::vector<cell_ptr_t> m_arCells;
@@ -105,8 +106,11 @@ namespace NSDocxRenderer
 		virtual void ToBin(NSWasm::CData& oWriter) const override final;
 
 		void AddRow(const row_ptr_t& pRow);
+		void UpdateGrids(row_ptr_t pRow);
 		void CalcGridCols();
 		bool IsEmpty() const;
+
+		static bool MergeTables(std::shared_ptr<CTable> table1, std::shared_ptr<CTable> table2) noexcept;
 
 	private:
 		std::vector<row_ptr_t> m_arRows;

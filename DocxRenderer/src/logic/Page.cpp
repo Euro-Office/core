@@ -2213,54 +2213,84 @@ namespace NSDocxRenderer
 	{
 		std::vector<table_ptr_t> tables;
 
-		std::vector<cell_ptr_t> cells;
+		// loop through all paragraphs
+		// looking for a paragraph that is a column of text lines
 		for (auto& p : m_arParagraphs)
 		{
 			if (!p || p->m_arTextLines.size() < 2)
 				continue;
 
-			std::set<double, std::greater<double>> line_diffs, line_lefts;
-			line_lefts.insert(p->m_arTextLines.front()->m_dLeft);
-			for (auto it = p->m_arTextLines.cbegin(); (it + 1) != p->m_arTextLines.cend(); ++it)
+			// a paragraph is a column of text if
+			// all its lines of text have equal line spacing and
+			// the same margin along which the text is aligned
+			//
+			// collect a set of line spacing and a set of borders depending on the alignment
+			std::set<double, std::greater<double>> line_diffs, margin_diffs;
+			for (auto it = p->m_arTextLines.cbegin(); it != p->m_arTextLines.cend(); ++it)
 			{
-				auto tl1 = *it;
-				auto tl2 = *(it+1);
-				line_diffs.insert(tl2->m_dTopWithMaxAscent - tl1->m_dBotWithMaxDescent);
-				line_lefts.insert(tl2->m_dLeft);
+				auto curr_text_line = *it;
+				if (it + 1 != p->m_arTextLines.cend())
+					line_diffs.insert((*(it+1))->m_dTopWithMaxAscent - curr_text_line->m_dBotWithMaxDescent);
+
+				switch (p->m_eTextAlignmentType) {
+				case CParagraph::TextAlignmentType::tatByLeft:
+					margin_diffs.insert(curr_text_line->m_dLeft);
+					break;
+				case CParagraph::TextAlignmentType::tatByRight:
+					margin_diffs.insert(curr_text_line->m_dRight);
+					break;
+				case CParagraph::TextAlignmentType::tatByCenter:
+					margin_diffs.insert(curr_text_line->m_dLeft + (curr_text_line->m_dRight - curr_text_line->m_dLeft) / 2.0);
+					break;
+				default:
+					break;
+				}
 			}
 
-			bool same_diff = true;
-			auto diff_to_compare = *(line_diffs.cbegin());
+			// checking that each line spacing lies whithin epsilon from the first
+			bool same_line_spacing = true;
+			auto first_diff = *(line_diffs.cbegin());
 			for (const auto& ld : line_diffs)
-				same_diff &= (ld - diff_to_compare < c_dCOMPARE_EPSILON);
+				same_line_spacing &= (ld - first_diff < c_dCOMPARE_EPSILON);
 
-			bool same_left = true;
-			auto left_to_compare = *(line_lefts.cbegin());
-			for (const auto& ll : line_lefts)
-				same_left &= (ll - left_to_compare < c_dCOMPARE_EPSILON);
+			// checking that each margin lies whithin epsilon from the first
+			bool same_margin = margin_diffs.empty() ? false : true;
+			auto first_margin = margin_diffs.empty() ? 0.0 : *(margin_diffs.cbegin());
+			for (const auto& ll : margin_diffs)
+				same_margin &= (ll - first_margin < c_dCOMPARE_EPSILON);
 
-			if (same_diff && same_left && p->m_eTextAlignmentType == CParagraph::TextAlignmentType::tatByLeft)
+			// if a paragraph satisfies the conditions of text column
+			//
+			// same_line_spacing and same_margin -> paragraph == text column
+			//
+			// assemble this paragraph as a single-column table
+			if (same_line_spacing && same_margin)
 			{
+				auto column = std::make_shared<CTable>();
+				// main loop for paragraph text lines
+				//
+				// 1. Create a cell along the boundaries of text line
+				//    with the right and left boundaries taken from the paragraph
+				//    (since the overall table width should be the max of the text line width)
+				// 2. Add the text line as a paragraph cell
+				// 3. Create a row of one cell and add it to the table
 				for (const auto& tl: p->m_arTextLines)
 				{
-					auto cell = std::make_shared<CTable::CCell>(p->m_dLeft,
-																tl->m_dTopWithMaxAscent,
-																p->m_dRight,
-																tl->m_dBotWithMaxDescent);
+					auto row = std::make_shared<CTable::CRow>();
+					auto cell = std::make_shared<CTable::CCell>(p->m_dLeft, tl->m_dTopWithMaxAscent, p->m_dRight, tl->m_dBotWithMaxDescent);
 					auto paragraph = std::make_shared<CParagraph>();
 					paragraph->m_dLeft = tl->m_dLeft;
 					paragraph->m_dRight = tl->m_dRight;
 					paragraph->m_arTextLines.push_back(tl);
-					paragraph->m_nOrder = tl->m_nOrder;
-					cell->AddParagraph(std::move(paragraph), false);
-					cells.push_back(std::move(cell));
+
+					cell->AddParagraph(std::move(paragraph));
+					row->AddCell(std::move(cell));
+					column->AddRow(std::move(row));
 				}
+				tables.push_back(std::move(column));
 				p = nullptr;
 			}
 		}
-
-		if (cells.empty())
-			return {};
 
 		auto right = MoveNullptr(m_arParagraphs.begin(), m_arParagraphs.end());
 		m_arParagraphs.erase(right, m_arParagraphs.end());
@@ -2269,53 +2299,25 @@ namespace NSDocxRenderer
 			return p1->m_dBot < p2->m_dBot;
 		});
 
-		std::sort(cells.begin(), cells.end(), [](cell_ptr_t c1, cell_ptr_t c2) {
-			if (c1->m_dTop < c2->m_dTop)
-				return true;
-			else if (fabs(c1->m_dTop - c2->m_dTop) < c_dCOMPARE_EPSILON)
-				return c1->m_dLeft < c2->m_dLeft;
-			else
-				return false;
-		});
+		if (tables.empty())
+			return {};
 
-		std::set<size_t, std::less<size_t>> remove_later;
-		std::set<size_t> indeces;
-		for (size_t i = 0; i < m_arShapes.size(); i++)
-			if (m_arShapes[i])
-				indeces.insert(i);
-		CheckFillingShapes(cells, indeces, remove_later);
-
-		for (auto it = remove_later.rbegin(); it != remove_later.rend(); ++it)
+		// for columns with the same top and bot borders and number of rows,
+		// merge them into the one table
+		for (auto it = tables.begin(); it + 1 != tables.end();)
 		{
-			const auto& idx = *it;
-			if (idx < m_arShapes.size())
-				m_arShapes.erase(m_arShapes.begin() + idx);
-		}
+			auto curr_table = *it;
+			auto next_table = *(it + 1);
 
-		auto complete_table = [&tables] (table_ptr_t t) -> table_ptr_t {
-			t->CalcGridCols();
-			tables.push_back(std::move(t));
-			return std::make_shared<CTable>();
-		};
-
-		auto table = std::make_shared<CTable>();
-		for (auto it = cells.begin(); it != cells.end(); ++it)
-		{
-			auto c = *it;
-			if (!table->IsEmpty() && c->m_dTop - table->m_dBot > c_dMIN_TABLE_DIFF_MM)
-				table = complete_table(table);
-
-			auto row = std::make_shared<CTable::CRow>();
-			row->AddCell(c);
-			while ((it + 1) != cells.end() && fabs(c->m_dTop - (*(it+1))->m_dTop) < c_dCOMPARE_EPSILON)
+			if (fabs(curr_table->m_dTop - next_table->m_dTop) < c_dCOMPARE_EPSILON &&
+				fabs(curr_table->m_dBot - next_table->m_dBot) < c_dCOMPARE_EPSILON)
 			{
-				++it;
-				auto next_c = *it;
-				row->AddCell(next_c);
+				if (CTable::MergeTables(curr_table, next_table))
+					tables.erase(it + 1);
+				else
+					++it;
 			}
-			table->AddRow(row);
 		}
-		complete_table(table);
 
 		return tables;
 	}
