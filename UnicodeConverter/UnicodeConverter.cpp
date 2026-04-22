@@ -105,6 +105,8 @@ namespace NSUnicodeConverter
 			UErrorCode status = U_ZERO_ERROR;
 
 			int32_t nUCharCapacity = (int32_t)nInputLen;// UTF-16 uses 2 code-points per char
+			if (sizeof(wchar_t) > 2)
+				nUCharCapacity *= 2;
 
 			UChar* pUChar = new UChar[(uint32_t)nUCharCapacity * sizeof(UChar)];
 			if (pUChar)
@@ -169,8 +171,9 @@ namespace NSUnicodeConverter
 			if (U_SUCCESS(status))
 			{
 				int32_t nUCharCapacity = (int32_t)nInputLen;// UTF-16 uses 2 code-points per char
+				if (sizeof(wchar_t) > 2)
+					nUCharCapacity *= 2;
 
-				//UChar* pUChar = new UChar[nUCharCapacity];
 				UChar* pUChar = (UChar*)malloc((uint32_t)nUCharCapacity * sizeof(UChar));
 				if (pUChar)
 				{
@@ -196,7 +199,7 @@ namespace NSUnicodeConverter
 							sRes.clear();
 						}
 					}
-					//delete []pUCharStart;
+					free(pUChar);
 				}
 				ucnv_close(conv);
 			}

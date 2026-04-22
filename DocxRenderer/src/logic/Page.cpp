@@ -367,7 +367,8 @@ namespace NSDocxRenderer
 		            bForcedBold,
 		            m_bUseDefaultFont,
 		            m_bWriteStyleRaw,
-		            m_bCollectMetaInfo
+					m_bCollectMetaInfo,
+					m_bFontSubstitution
 		        );
 	}
 

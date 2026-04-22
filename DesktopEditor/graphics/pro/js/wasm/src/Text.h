@@ -259,20 +259,98 @@ namespace NSHtmlRenderer
 					NSWasm::CHChar* pLastChar = m_oLine.GetTail();
 					if (dOffsetX > (pLastChar->width + 0.5))
 					{
-						// insert space. Our space will not be a regular space. But a specific one
-						NSWasm::CHChar* pSpaceChar = m_oLine.AddTail();
-						pLastChar = &m_oLine.m_pChars[m_oLine.m_lCharsTail - 2];
-						pSpaceChar->x = pLastChar->width;
-						pSpaceChar->width = dOffsetX - pLastChar->width;
-						pSpaceChar->unicode = 0xFFFF;
-						dOffsetX -= pLastChar->width;
+						if (pLastChar->unicode == 32 || pLastChar->unicode == 9)
+						{
+							pLastChar->width = dOffsetX;
+						}
+						else
+						{
+							// insert space. Our space will not be a regular space. But a specific one
+							NSWasm::CHChar* pSpaceChar = m_oLine.AddTail();
+							pLastChar = &m_oLine.m_pChars[m_oLine.m_lCharsTail - 2];
+							pSpaceChar->x = pLastChar->width;
+							pSpaceChar->width = dOffsetX - pLastChar->width;
+							pSpaceChar->unicode = 0xFFFF;
+							dOffsetX -= pLastChar->width;
+						}
 					}
 				}
 				else
 				{
 					// letter is shifted left relative to previous letter
-					// we react to this situation simply - just start a new line,
-					// after dumping the old one
+					// check if new glyph lands inside a synthetic space (0xFFFF) in current line
+					double sx = _x1 - m_oLine.m_dX;
+					double sy = _y1 - m_oLine.m_dY;
+					double newGlyphOffset = sx * m_oLine.m_ex + sy * m_oLine.m_ey;
+
+					// walk through chars accumulating offset to find which char we hit
+					double charOffset = 0;
+					LONG nCount = m_oLine.GetCountChars();
+					LONG nSplitIndex = -1;
+					for (LONG i = 0; i < nCount; ++i)
+					{
+						NSWasm::CHChar* pCh = &m_oLine.m_pChars[i];
+						if (i > 0)
+							charOffset += pCh->x; // x here is offset from previous char
+						if (pCh->unicode == 0xFFFF &&
+							newGlyphOffset >= charOffset &&
+							newGlyphOffset < charOffset + pCh->width)
+						{
+							nSplitIndex = i;
+							break;
+						}
+					}
+
+					if (nSplitIndex >= 0)
+					{
+						NSWasm::CHLine oSaved;
+						oSaved = m_oLine;
+
+						// --- Dump head: chars [0 .. nSplitIndex - 1] ---
+						m_oLine.m_lCharsTail = nSplitIndex; // truncate before the 0xFFFF
+						DumpLine(); // clears m_oLine
+
+						// --- Dump tail: chars [nSplitIndex + 1 .. nCount - 1] ---
+						LONG nTailStart = nSplitIndex + 1;
+						LONG nTailCount = nCount - nTailStart;
+						if (nTailCount > 0)
+						{
+							// Reconstruct baseline origin for the tail.
+							// Walk offsets up to nTailStart to find its position along baseline.
+							double tailOffset = 0;
+							for (LONG i = 1; i <= nTailStart; ++i)
+								tailOffset += oSaved.m_pChars[i].x;
+
+							m_oLine.m_bIsConstX      = oSaved.m_bIsConstX;
+							m_oLine.m_dK             = oSaved.m_dK;
+							m_oLine.m_dB             = oSaved.m_dB;
+							m_oLine.m_ex             = oSaved.m_ex;
+							m_oLine.m_ey             = oSaved.m_ey;
+							m_oLine.m_dAscent        = oSaved.m_dAscent;
+							m_oLine.m_dDescent       = oSaved.m_dDescent;
+							m_oLine.m_bIsSetUpTransform = oSaved.m_bIsSetUpTransform;
+							m_oLine.m_sx             = oSaved.m_sx;
+							m_oLine.m_sy             = oSaved.m_sy;
+							m_oLine.m_shx            = oSaved.m_shx;
+							m_oLine.m_shy            = oSaved.m_shy;
+
+							// Origin of tail shifted along baseline
+							m_oLine.m_dX = oSaved.m_dX + tailOffset * oSaved.m_ex;
+							m_oLine.m_dY = oSaved.m_dY + tailOffset * oSaved.m_ey;
+							m_oLine.m_dEndX = m_oLine.m_dX;
+							m_oLine.m_dEndY = m_oLine.m_dY;
+
+							// Copy tail chars; first tail char has x=0 (it's now the line origin)
+							for (LONG i = 0; i < nTailCount; ++i)
+							{
+								NSWasm::CHChar* pDst = m_oLine.AddTail();
+								*pDst = oSaved.m_pChars[nTailStart + i];
+								if (i == 0)
+									pDst->x = 0; // first char offset is always 0
+							}
+						}
+					}
+
 					DumpLine();
 
 					m_oLine.m_bIsConstX = _isConstX;
