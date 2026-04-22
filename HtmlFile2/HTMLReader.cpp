@@ -29,8 +29,6 @@ namespace HTML
 #define UNKNOWN_TAG GumboTag::GUMBO_TAG_UNKNOWN
 #define HtmlTag GumboTag
 
-#define TAGS_COUNT 32
-
 const static std::map<std::wstring, HtmlTag> m_HTML_TAGS
 {
 	ADD_TAG(L"a", A),
@@ -261,9 +259,10 @@ inline bool CheckArgumentMath(const std::wstring& wsNodeName, const std::wstring
 inline HtmlTag GetHtmlTag(const std::wstring& wsStrTag);
 inline bool UnreadableNode(const std::wstring& wsNodeName);
 inline bool TagIsUnprocessed(const std::wstring& wsTagName);
+inline void GetSubClass(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, NSCSS::CCssCalculator& oCSSCalculator);
 
 CHTMLReader::CHTMLReader()
-	: m_bIsTempDirOwner(true), m_pWriter(nullptr)
+	: m_bIsTempDirOwner(true), m_pWriter(nullptr), m_pTableElement(nullptr)
 {}
 
 CHTMLReader::~CHTMLReader()
@@ -273,6 +272,9 @@ CHTMLReader::~CHTMLReader()
 
 	if (m_bIsTempDirOwner && !m_wsTempDirectory.empty())
 		NSDirectory::DeleteDirectory(m_wsTempDirectory);
+
+	if (nullptr != m_pTableElement)
+		delete m_pTableElement;
 }
 
 void CHTMLReader::SetTempDirectory(const std::wstring& wsPath)
@@ -331,22 +333,27 @@ void CHTMLReader::Clear()
 	if (nullptr != m_pWriter)
 		delete m_pWriter;
 
-	m_mTags.clear();
+	m_oTags.Clear();
 
 	m_wsSrcDirectory .clear();
 	m_wsDstDirectory .clear();
 	m_wsBaseDirectory.clear();
 	m_wsCoreDirectory.clear();
+
+	if (nullptr != m_pTableElement)
+		delete m_pTableElement;
+
+	ClearStopTags();
 }
 
-void CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
+bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
 {
 	Clear();
 
 	COOXMLWriter *pWriter = new COOXMLWriter(pParametrs, &m_oCSSCalculator);
 
 	if (nullptr == pWriter)
-		return;
+		return false;
 
 	if (nullptr != m_pWriter)
 		delete m_pWriter;
@@ -357,111 +364,99 @@ void CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
 	pWriter->SetBaseDirectory(m_wsBaseDirectory);
 	pWriter->SetCoreDirectory(m_wsCoreDirectory);
 
+	m_oTags.Clear();
+
+	if (!m_oTags.Init(pWriter))
+	{
+		delete pWriter;
+		return false;
+	}
+
+	TExternalTableData oExternalData;
+
+	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                 { return ReadStream(oReader, arSelectors, true); };
+
+	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                   std::vector<NSCSS::CNode>& arSelectors)
+	                                  { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+
+	oExternalData.ReadInside = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                  { return ReadInside(oReader, arSelectors); };
+
+	oExternalData.AddStopTag    = [this](const std::wstring& wsTag){ AddStopTag(wsTag); };
+	oExternalData.ClearStopTags = [this]{ ClearStopTags(); };
+
+	oExternalData.m_pWriter = pWriter;
+
+	m_pTableElement = new COOXMLTable(oExternalData);
+
 	m_pWriter = pWriter;
 
-	m_mTags.clear();
-	m_mTags.reserve(TAGS_COUNT);
-
-	m_mTags[HTML_TAG(A)]          = std::make_shared<CAnchor        <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(ABBR)]       = std::make_shared<CAnchor        <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(BR)]         = std::make_shared<CBreak         <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(DIV)]        = std::make_shared<CDivision      <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(IMG)]        = std::make_shared<CImage         <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(FONT)]       = std::make_shared<CFont          <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(INPUT)]      = std::make_shared<CInput         <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(BASEFONT)]   = std::make_shared<CBaseFont      <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(BLOCKQUOTE)] = std::make_shared<CBlockquote    <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(HR)]         = std::make_shared<CHorizontalRule<COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(OL)]         = std::make_shared<CList          <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(LI)]         = std::make_shared<CListElement   <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(CAPTION)]    = std::make_shared<CCaption       <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(TABLE)]      = std::make_shared<CTable         <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(TR)]         = std::make_shared<CTableRow      <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(TD)]         = std::make_shared<CTableCell     <COOXMLWriter>>(pWriter);
-	m_mTags[HTML_TAG(HTML)]       = std::make_shared<CHTML          <COOXMLWriter>>(pWriter);
-
-	std::shared_ptr<ITag> oIgnoredTag{std::make_shared<CEmptyTag>()};
-
-	m_mTags[HTML_TAG(B)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(I)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(PRE)]    = oIgnoredTag;
-	m_mTags[HTML_TAG(CENTER)] = oIgnoredTag;
-	m_mTags[HTML_TAG(KBD)]    = oIgnoredTag;
-	m_mTags[HTML_TAG(S)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(U)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(MARK)]   = oIgnoredTag;
-	m_mTags[HTML_TAG(SUP)]    = oIgnoredTag;
-	m_mTags[HTML_TAG(DD)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(Q)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(BDO)]    = oIgnoredTag;
-	m_mTags[HTML_TAG(SPAN)]   = oIgnoredTag;
-	m_mTags[HTML_TAG(H1)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(CODE)]   = oIgnoredTag;
+	return true;
 }
 
-void CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
+bool CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
 {
 	CMDWriter *pWriter = new CMDWriter((nullptr != pParametrs) ? *pParametrs : TMarkdownParameters{});
 
 	if (nullptr == pWriter)
-		return;
+		return false;
 
 	if (nullptr != m_pWriter)
 		delete m_pWriter;
 
+	pWriter->SetSrcDirectory (m_wsSrcDirectory);
+	pWriter->SetTempDirectory(m_wsTempDirectory);
+	pWriter->SetBaseDirectory(m_wsBaseDirectory);
+	pWriter->SetCoreDirectory(m_wsCoreDirectory);
+
+	m_oTags.Clear();
+
+	if (!m_oTags.Init(pWriter))
+	{
+		delete pWriter;
+		return false;
+	}
+
+	TExternalTableData oExternalData;
+
+	oExternalData.ReadStream = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                  { return ReadStream(oReader, arSelectors, true); };
+
+	oExternalData.GetSubClass = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                   std::vector<NSCSS::CNode>& arSelectors)
+	                                   { GetSubClass(oReader, arSelectors, m_oCSSCalculator); };
+
+	oExternalData.ReadInside = [this](XmlUtils::CXmlLiteReader& oReader,
+	                                  std::vector<NSCSS::CNode>& arSelectors)
+	                                  { return ReadInside(oReader, arSelectors); };
+
+	oExternalData.AddStopTag    = [this](const std::wstring& wsTag){ AddStopTag(wsTag); };
+	oExternalData.ClearStopTags = [this]{ ClearStopTags(); };
+
+	oExternalData.m_pWriter = pWriter;
+
+	m_pTableElement = new CMarkdownTable(oExternalData);
+
 	m_pWriter = pWriter;
 
-	m_mTags.clear();
-	m_mTags.reserve(TAGS_COUNT);
-
-	m_mTags[HTML_TAG(A)]          = std::make_shared<CAnchor        <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(B)]          = std::make_shared<CBold          <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(BR)]         = std::make_shared<CBreak         <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(I)]          = std::make_shared<CItalic        <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(S)]          = std::make_shared<CStrike        <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(Q)]          = std::make_shared<CQuotation     <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(H1)]         = std::make_shared<CHeader        <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(IMG)]        = std::make_shared<CImage         <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(HR)]         = std::make_shared<CHorizontalRule<CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(BLOCKQUOTE)] = std::make_shared<CBlockquote    <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(TABLE)]      = std::make_shared<CTable         <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(TR)]         = std::make_shared<CTableRow      <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(TD)]         = std::make_shared<CTableCell     <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(OL)]         = std::make_shared<CList          <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(LI)]         = std::make_shared<CListElement   <CMDWriter>>(pWriter);
-	m_mTags[HTML_TAG(PRE)]        = std::make_shared<CPreformatted  <CMDWriter>>(pWriter);
-
-	std::shared_ptr<ITag> oCode{std::make_shared<CCode<CMDWriter>>(pWriter)};
-
-	m_mTags[HTML_TAG(CODE)] = oCode;
-	m_mTags[HTML_TAG(KBD)]  = oCode;
-
-	std::shared_ptr<ITag> oIgnoredTag{std::make_shared<CEmptyTag>()};
-
-	m_mTags[HTML_TAG(ABBR)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(DIV)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(FONT)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(INPUT)]    = oIgnoredTag;
-	m_mTags[HTML_TAG(BASEFONT)] = oIgnoredTag;
-	m_mTags[HTML_TAG(CENTER)]   = oIgnoredTag;
-	m_mTags[HTML_TAG(MARK)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(SUP)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(DD)]       = oIgnoredTag;
-	m_mTags[HTML_TAG(BDO)]      = oIgnoredTag;
-	m_mTags[HTML_TAG(SPAN)]     = oIgnoredTag;
-	m_mTags[HTML_TAG(CAPTION)]  = oIgnoredTag;
-	m_mTags[HTML_TAG(U)]        = oIgnoredTag;
-	m_mTags[HTML_TAG(HTML)]     = oIgnoredTag;
+	return true;
 }
 
-bool CHTMLReader::IsHTML()
+bool CHTMLReader::IsHTML(XmlUtils::CXmlLiteReader& oReader)
 {
-	return ((m_oLightReader.MoveToStart() && m_oLightReader.ReadNextNode()) ? m_oLightReader.GetName() == L"html" : false);
+	return ((oReader.MoveToStart() && oReader.ReadNextNode()) ? oReader.GetName() == L"html" : false);
 }
 
 HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPaths, const std::wstring& wsDirectory, Convert_Func Convertation, THTMLParameters* pParameters)
 {
-	InitOOXMLTags(pParameters);
+	if (!InitOOXMLTags(pParameters))
+		return S_FALSE;
+
 	m_wsDstDirectory = wsDirectory;
 
 	HRESULT lResult{S_FALSE};
@@ -486,7 +481,8 @@ HRESULT CHTMLReader::InitAndConvert2OOXML(const std::vector<std::wstring>& arPat
 
 HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& arPaths, const std::wstring& wsFinalFile, Convert_Func Convertation, TMarkdownParameters* pParameters)
 {
-	InitMDTags(pParameters);
+	if (!InitMDTags(pParameters))
+		return S_FALSE;
 
 	HRESULT lResult{S_FALSE};
 
@@ -505,7 +501,9 @@ HRESULT CHTMLReader::InitAndConvert2Markdown(const std::vector<std::wstring>& ar
 
 bool CHTMLReader::Convert(const std::wstring& wsPath, Convert_Func Convertation)
 {
-	if (nullptr == m_pWriter || !Convertation(wsPath, m_oLightReader) || !m_oLightReader.IsValid() || !IsHTML())
+	XmlUtils::CXmlLiteReader oReader;
+
+	if (nullptr == m_pWriter || !Convertation(wsPath, oReader) || !oReader.IsValid() || !IsHTML(oReader))
 		return false;
 
 	if (m_wsTempDirectory.empty())
@@ -515,79 +513,80 @@ bool CHTMLReader::Convert(const std::wstring& wsPath, Convert_Func Convertation)
 
 	m_wsSrcDirectory = NSSystemPath::GetDirectoryName(wsPath);
 
-	m_oLightReader.MoveToStart();
-	m_oLightReader.ReadNextNode();
-	ReadStyle();
+	oReader.MoveToStart();
+	oReader.ReadNextNode();
+	ReadStyle(oReader);
+
 
 	// Go to the beginning
-	if(!m_oLightReader.MoveToStart())
+	if(!oReader.MoveToStart())
 		return S_FALSE;
 
-	ReadDocument();
+	ReadDocument(oReader);
 
 	return true;
 }
 
-void CHTMLReader::ReadStyle()
+void CHTMLReader::ReadStyle(XmlUtils::CXmlLiteReader& oReader)
 {
-	if(m_oLightReader.IsEmptyNode())
+	if(oReader.IsEmptyNode())
 		return;
 
-	const int nDeath = m_oLightReader.GetDepth();
+	const int nDeath = oReader.GetDepth();
 	std::wstring sName;
 
-	while(m_oLightReader.ReadNextSiblingNode(nDeath))
+	while(oReader.ReadNextSiblingNode(nDeath))
 	{
-		sName = m_oLightReader.GetName();
+		sName = oReader.GetName();
 
 		if(sName == L"body")
-			ReadStyle2();
+			ReadStyle2(oReader);
 		else
 		{
 			// Style by link
 			if(sName == L"link")
 			{
-				while(m_oLightReader.MoveToNextAttribute())
-					ReadStyleFromNetwork();
+				while(oReader.MoveToNextAttribute())
+					ReadStyleFromNetwork(oReader);
 
-				m_oLightReader.MoveToElement();
+				oReader.MoveToElement();
 			}
 			// style tag contains styles for styles.xml
 			else if(sName == L"style")
-				m_oCSSCalculator.AddStyles(m_oLightReader.GetText2());
+				m_oCSSCalculator.AddStyles(oReader.GetText2());
 			else
-				ReadStyle();
+				ReadStyle(oReader);
 		}
 	}
 }
 
-void CHTMLReader::ReadStyle2()
+void CHTMLReader::ReadStyle2(XmlUtils::CXmlLiteReader& oReader)
 {
-	const std::wstring wsName = m_oLightReader.GetName();
+	const std::wstring wsName = oReader.GetName();
 	// Style by link
 	if(wsName == L"link")
 	{
-		while(m_oLightReader.MoveToNextAttribute())
-			ReadStyleFromNetwork();
-		m_oLightReader.MoveToElement();
+		while(oReader.MoveToNextAttribute())
+			ReadStyleFromNetwork(oReader);
+		oReader.MoveToElement();
 	}
 	// style tag contains styles for styles.xml
 	else if(wsName == L"style")
-		m_oCSSCalculator.AddStyles(m_oLightReader.GetText2());
+		m_oCSSCalculator.AddStyles(oReader.GetText2());
 
-	const int nDeath = m_oLightReader.GetDepth();
-	while(m_oLightReader.ReadNextSiblingNode(nDeath))
+	const int nDeath = oReader.GetDepth();
+	while(oReader.ReadNextSiblingNode(nDeath))
 	{
-		if(!m_oLightReader.IsEmptyNode())
-			ReadStyle2();
+		if(!oReader.IsEmptyNode())
+			ReadStyle2(oReader);
 	}
 }
 
-void CHTMLReader::ReadStyleFromNetwork()
+void CHTMLReader::ReadStyleFromNetwork(XmlUtils::CXmlLiteReader& oReader)
 {
-	if(m_oLightReader.GetName() != L"href")
+	if(oReader.GetName() != L"href")
 		return;
-	std::wstring sRef = m_oLightReader.GetText();
+	std::wstring sRef = oReader.GetText();
 	if(NSFile::GetFileExtention(sRef) != L"css")
 		return;
 	std::wstring sFName = NSFile::GetFileName(sRef);
@@ -610,46 +609,46 @@ void CHTMLReader::ReadStyleFromNetwork()
 	}
 }
 
-void CHTMLReader::ReadDocument()
+void CHTMLReader::ReadDocument(XmlUtils::CXmlLiteReader& oReader)
 {
-	m_oLightReader.ReadNextNode();
+	oReader.ReadNextNode();
 
-	int nDeath = m_oLightReader.GetDepth();
-	while(m_oLightReader.ReadNextSiblingNode(nDeath))
+	int nDeath = oReader.GetDepth();
+	while(oReader.ReadNextSiblingNode(nDeath))
 	{
-		const std::wstring wsName = m_oLightReader.GetName();
+		const std::wstring wsName = oReader.GetName();
 		if(wsName == L"head")
-			ReadHead();
+			ReadHead(oReader);
 		else if(wsName == L"body")
-			ReadBody();
+			ReadBody(oReader);
 	}
 }
 
-void CHTMLReader::ReadHead()
+void CHTMLReader::ReadHead(XmlUtils::CXmlLiteReader& oReader)
 {
-	if(m_oLightReader.IsEmptyNode())
+	if(oReader.IsEmptyNode())
 		return;
-	int nDeath = m_oLightReader.GetDepth();
-	while (m_oLightReader.ReadNextSiblingNode(nDeath))
+	int nDeath = oReader.GetDepth();
+	while (oReader.ReadNextSiblingNode(nDeath))
 	{
-		const std::wstring wsName = m_oLightReader.GetName();
+		const std::wstring wsName = oReader.GetName();
 		// Base address
 		if (L"base" == wsName)
-			m_wsBaseDirectory = GetArgumentValue(m_oLightReader, L"href");
+			m_wsBaseDirectory = GetArgumentValue(oReader, L"href");
 	}
 
-	m_oLightReader.MoveToElement();
+	oReader.MoveToElement();
 }
 
-void CHTMLReader::ReadBody()
+void CHTMLReader::ReadBody(XmlUtils::CXmlLiteReader& oReader)
 {
 	std::vector<NSCSS::CNode> arSelectors;
 
 	arSelectors.push_back(NSCSS::CNode(L"html", L"", L""));
 
-	GetSubClass(arSelectors);
+	GetSubClass(oReader, arSelectors, m_oCSSCalculator);
 
-	if (!m_mTags[HTML_TAG(HTML)]->Open(arSelectors))
+	if (!m_oTags.m_pHTML->Apply(arSelectors.back()))
 		return;
 
 	std::map<std::wstring, std::wstring>::iterator itFound = arSelectors.back().m_mAttributes.find(L"bgcolor");
@@ -657,22 +656,20 @@ void CHTMLReader::ReadBody()
 	if (arSelectors.back().m_mAttributes.end() != itFound)
 		arSelectors.back().m_mAttributes.erase(itFound);
 
-	m_oLightReader.MoveToElement();
+	oReader.MoveToElement();
 
-	ReadStream(arSelectors);
-
-	m_mTags[HTML_TAG(HTML)]->Close(arSelectors);
+	ReadStream(oReader, arSelectors);
 }
 
-bool CHTMLReader::ReadStream(std::vector<NSCSS::CNode>& arSelectors, bool bInsertEmptyP)
+bool CHTMLReader::ReadStream(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, bool bInsertEmptyP)
 {
 	if (nullptr == m_pWriter)
 		return false;
 
 	bool bResult{false};
 
-	const int nDeath = m_oLightReader.GetDepth();
-	if(m_oLightReader.IsEmptyNode() || !m_oLightReader.ReadNextSiblingNode2(nDeath))
+	const int nDeath = oReader.GetDepth();
+	if(oReader.IsEmptyNode() || !oReader.ReadNextSiblingNode2(nDeath))
 	{
 		if (!bInsertEmptyP)
 			return false;
@@ -683,9 +680,12 @@ bool CHTMLReader::ReadStream(std::vector<NSCSS::CNode>& arSelectors, bool bInser
 
 	do
 	{
-		if (ReadInside(arSelectors))
+		if (!m_arStopTags.empty() && m_arStopTags.end() != m_arStopTags.find(oReader.GetName()))
+			return bResult;
+
+		if (ReadInside(oReader, arSelectors))
 			bResult = true;
-	} while(m_oLightReader.ReadNextSiblingNode2(nDeath));
+	} while(oReader.ReadNextSiblingNode2(nDeath));
 
 	if (!bResult && bInsertEmptyP)
 		m_pWriter->WriteEmptyParagraph();
@@ -693,128 +693,138 @@ bool CHTMLReader::ReadStream(std::vector<NSCSS::CNode>& arSelectors, bool bInser
 	return bResult;
 }
 
-bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
+bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)
 {
-	const std::wstring wsName{m_oLightReader.GetName()};
+	const std::wstring wsName{oReader.GetName()};
 
 	if(wsName == L"#text")
-		return ReadText(arSelectors);
+		return ReadText(oReader, arSelectors);
 
 	//TODO:: handle all return variants
 	if (UnreadableNode(wsName) || TagIsUnprocessed(wsName))
 		return false;
 
-	GetSubClass(arSelectors);
-
-	bool bResult = true;
+	GetSubClass(oReader, arSelectors, m_oCSSCalculator);
 
 	const HtmlTag eHtmlTag{GetHtmlTag(wsName)};
+
+	bool bResult{false};
 
 	switch(eHtmlTag)
 	{
 		case HTML_TAG(A):
 		case HTML_TAG(AREA):
 		{
-			bResult = ReadDefaultTag(HTML_TAG(A), arSelectors);
+			if (m_oTags.m_pAnchor->Open(arSelectors))
+			{
+				bResult = ReadStream(oReader, arSelectors);
+				m_oTags.m_pAnchor->Close(arSelectors.back());
+			}
 			break;
 		}
 		case HTML_TAG(ABBR):
 		{
-			bResult = ReadDefaultTag(HTML_TAG(ABBR), arSelectors);
-			break;
-		}
-		case HTML_TAG(B):
-		case HTML_TAG(STRONG):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(B), arSelectors);
-			break;
-		}
-		case HTML_TAG(BDO):
-		case HTML_TAG(BDI):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(BDO), arSelectors);
+			if (m_oTags.m_pAbbr->Open(arSelectors))
+			{
+				bResult = ReadStream(oReader, arSelectors);
+				m_oTags.m_pAbbr->Close();
+			}
 			break;
 		}
 		case HTML_TAG(BR):
 		{
-			bResult = ReadEmptyTag(HTML_TAG(BR), arSelectors);
-			break;
-		}
-		case HTML_TAG(CENTER):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(CENTER), arSelectors);
-			break;
-		}
-		case HTML_TAG(CITE):
-		case HTML_TAG(DFN):
-		case HTML_TAG(EM):
-		case HTML_TAG(I):
-		case HTML_TAG(VAR):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(I), arSelectors);
+			bResult = m_oTags.m_pBreak->Read(arSelectors.back());
 			break;
 		}
 		case HTML_TAG(CODE):
 		case HTML_TAG(SAMP):
 		case HTML_TAG(TT):
 		case HTML_TAG(OUTPUT):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(CODE), arSelectors);
-			break;
-		}
 		case HTML_TAG(KBD):
 		{
-			bResult = ReadDefaultTag(HTML_TAG(KBD), arSelectors);
-			break;
-		}
-		case HTML_TAG(DEL):
-		case HTML_TAG(S):
-		case HTML_TAG(STRIKE):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(S), arSelectors);
+			if (m_oTags.m_pCode->Open(arSelectors.back()))
+			{
+				bResult = ReadStream(oReader, arSelectors);
+				m_oTags.m_pCode->Close();
+			}
 			break;
 		}
 		case HTML_TAG(FONT):
 		{
-			bResult = ReadDefaultTag(HTML_TAG(FONT), arSelectors);
+			m_oTags.m_pFont->Apply(arSelectors.back(), arSelectors.size());
+			bResult = ReadStream(oReader, arSelectors);
 			break;
 		}
 		case HTML_TAG(IMG):
-
 		{
-			bResult = ReadEmptyTag(HTML_TAG(IMG), arSelectors);
+			bResult = m_oTags.m_pImage->Read(arSelectors);
 			break;
 		}
 		case HTML_TAG(SVG):
 		{
-			bResult = ReadSVG(arSelectors);
-			break;
-		}
-		case HTML_TAG(INS):
-		case HTML_TAG(U):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(U), arSelectors);
-			break;
-		}
-		case HTML_TAG(MARK):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(MARK), arSelectors);
-			break;
-		}
-		case HTML_TAG(Q):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(Q), arSelectors);
-			break;
-		}
-		case HTML_TAG(SUP):
-		case HTML_TAG(SUB):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(SUP), arSelectors);
+			bResult = m_oTags.m_pImage->ReadSVG(arSelectors, oReader.GetOuterXml());
 			break;
 		}
 		case HTML_TAG(INPUT):
 		{
-			bResult = ReadDefaultTag(HTML_TAG(INPUT), arSelectors);
+			m_oTags.m_pInput->Read(arSelectors);
+			bResult = ReadStream(oReader, arSelectors);
+			break;
+		}
+		case HTML_TAG(NOBR):
+		{
+			if (m_oTags.m_pPreformatted->Open())
+			{
+				bResult = ReadStream(oReader, arSelectors);
+				m_oTags.m_pPreformatted->Close(arSelectors);
+			}
+			break;
+		}
+		case HTML_TAG(BASEFONT):
+		{
+			m_oTags.m_pBaseFont->Apply(arSelectors.back());
+			bResult = ReadStream(oReader, arSelectors);
+			break;
+		}
+		case HTML_TAG(BUTTON):
+		case HTML_TAG(LABEL):
+		case HTML_TAG(DATA):
+		case HTML_TAG(OBJECT):
+		case HTML_TAG(NOSCRIPT):
+		case HTML_TAG(TIME):
+		case HTML_TAG(SMALL):
+		case HTML_TAG(PROGRESS):
+		case HTML_TAG(HGROUP):
+		case HTML_TAG(METER):
+		case HTML_TAG(ACRONYM):
+		case HTML_TAG(BIG):
+
+		case HTML_TAG(BDO):
+		case HTML_TAG(BDI):
+		case HTML_TAG(CENTER):
+		case HTML_TAG(MARK):
+		case HTML_TAG(Q):
+		case HTML_TAG(SUP):
+		case HTML_TAG(SUB):
+		case HTML_TAG(SPAN):
+		// Bold
+		case HTML_TAG(B):
+		case HTML_TAG(STRONG):
+		// Underline
+		case HTML_TAG(INS):
+		case HTML_TAG(U):
+		// Strike
+		case HTML_TAG(DEL):
+		case HTML_TAG(S):
+		case HTML_TAG(STRIKE):
+		// Italic
+		case HTML_TAG(CITE):
+		case HTML_TAG(DFN):
+		case HTML_TAG(EM):
+		case HTML_TAG(I):
+		case HTML_TAG(VAR):
+		{
+			bResult = ReadStream(oReader, arSelectors);
 			break;
 		}
 		case HTML_TAG(CANVAS):
@@ -836,53 +846,12 @@ bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
 			arSelectors.pop_back();
 			return false;
 		}
-		case HTML_TAG(SPAN):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(SPAN), arSelectors);
-			break;
-		}
-		case HTML_TAG(NOBR):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(PRE), arSelectors);
-			break;
-		}
-		case HTML_TAG(BASEFONT):
-		{
-			bResult = ReadDefaultTag(HTML_TAG(BASEFONT), arSelectors);
-			break;
-		}
-		case HTML_TAG(BUTTON):
-		case HTML_TAG(LABEL):
-		case HTML_TAG(DATA):
-		case HTML_TAG(OBJECT):
-		case HTML_TAG(NOSCRIPT):
-		case HTML_TAG(TIME):
-		case HTML_TAG(SMALL):
-		case HTML_TAG(PROGRESS):
-		case HTML_TAG(HGROUP):
-		case HTML_TAG(METER):
-		case HTML_TAG(ACRONYM):
-		case HTML_TAG(BIG):
-		{
-			bResult = ReadStream(arSelectors);
-			break;
-		}
 		default:
 		{
 			m_pWriter->BeginBlock();
 
 			switch(eHtmlTag)
 			{
-				case HTML_TAG(ADDRESS):
-				{
-					bResult = ReadDefaultTag(HTML_TAG(I), arSelectors);;
-					break;
-				}
-				case HTML_TAG(DD):
-				{
-					bResult = ReadDefaultTag(HTML_TAG(DD), arSelectors);;
-					break;
-				}
 				case HTML_TAG(H1):
 				case HTML_TAG(H2):
 				case HTML_TAG(H3):
@@ -890,20 +859,82 @@ bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
 				case HTML_TAG(H5):
 				case HTML_TAG(H6):
 				{
-					bResult = ReadDefaultTag(HTML_TAG(H1), arSelectors);
+					if (m_oTags.m_pHeader->Open(arSelectors.back()))
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pHeader->Close();
+					}
 					break;
 				}
 				case HTML_TAG(ASIDE):
 				case HTML_TAG(DIV):
 				{
-					bResult = ReadDefaultTag(HTML_TAG(DIV), arSelectors);
+					if (m_oTags.m_pDivision->Open(arSelectors))
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pDivision->Close();
+					}
 					break;
 				}
 				case HTML_TAG(BLOCKQUOTE):
 				{
-					bResult = ReadDefaultTag(HTML_TAG(BLOCKQUOTE), arSelectors);
+					if (m_oTags.m_pBlockquote->Open(arSelectors))
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pBlockquote->Close();
+					}
+
 					break;
 				}
+				case HTML_TAG(HR):
+				{
+					bResult = true;
+					m_oTags.m_pHorizontalRule->Write(arSelectors);
+					break;
+				}
+				case HTML_TAG(LI):
+				{
+					if (m_oTags.m_pListElement->Open())
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pListElement->Close();
+					}
+					break;
+				}
+				case HTML_TAG(OL):
+				case HTML_TAG(UL):
+				{
+					if (m_oTags.m_pList->Open(arSelectors.back()))
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pList->Close();
+					}
+					break;
+				}
+		// 		case HTML_TAG(MENU):
+		// 		case HTML_TAG(SELECT):
+		// 		case HTML_TAG(DATALIST):
+		// 		case HTML_TAG(DIR):
+		// 		{
+		// 			bResult = readLi(&oXmlData, sSelectors, oTS, HTML_TAG(OL) != eHtmlTag);
+		// 			break;
+		// 		}
+				case HTML_TAG(PRE):
+				case HTML_TAG(XMP):
+				{
+					if (m_oTags.m_pPreformatted->Open())
+					{
+						bResult = ReadStream(oReader, arSelectors);
+						m_oTags.m_pPreformatted->Close(arSelectors);
+					}
+					break;
+				}
+				case HTML_TAG(TABLE):
+				{
+					bResult = ReadTable(oReader, arSelectors);
+					break;
+				}
+				case HTML_TAG(ADDRESS):
 				case HTML_TAG(ARTICLE):
 				case HTML_TAG(HEADER):
 				case HTML_TAG(MAIN):
@@ -920,43 +951,10 @@ bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
 				case HTML_TAG(DL):
 				case HTML_TAG(LEGEND):
 				case HTML_TAG(MAP):
+				case HTML_TAG(DD):
+				default:
 				{
-					bResult = ReadStream(arSelectors);
-					break;
-				}
-				case HTML_TAG(HR):
-				{
-					bResult = ReadEmptyTag(HTML_TAG(HR), arSelectors);
-					break;
-				}
-				case HTML_TAG(LI):
-				{
-					bResult = ReadDefaultTag(HTML_TAG(LI), arSelectors);
-					break;
-				}
-				case HTML_TAG(OL):
-				case HTML_TAG(UL):
-				{
-					bResult = ReadDefaultTag(HTML_TAG(OL), arSelectors);
-					break;
-				}
-		// 		case HTML_TAG(MENU):
-		// 		case HTML_TAG(SELECT):
-		// 		case HTML_TAG(DATALIST):
-		// 		case HTML_TAG(DIR):
-		// 		{
-		// 			bResult = readLi(&oXmlData, sSelectors, oTS, HTML_TAG(OL) != eHtmlTag);
-		// 			break;
-		// 		}
-				case HTML_TAG(PRE):
-				case HTML_TAG(XMP):
-				{
-					bResult = ReadDefaultTag(HTML_TAG(PRE), arSelectors);
-					break;
-				}
-				case HTML_TAG(TABLE):
-				{
-					bResult = ReadTable(arSelectors);
+					bResult = ReadStream(oReader, arSelectors);
 					break;
 				}
 		// 		case HTML_TAG(RUBY):
@@ -975,11 +973,6 @@ bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
 		// 			bResult = ReadDetails(&oXmlData, sSelectors, oTS);
 		// 			break;
 		// 		}
-				default:
-				{
-					bResult = ReadStream(arSelectors);
-					break;
-				}
 			}
 
 			m_pWriter->EndBlock(bResult);
@@ -990,489 +983,51 @@ bool CHTMLReader::ReadInside(std::vector<NSCSS::CNode>& arSelectors)
 	return bResult;
 }
 
-bool CHTMLReader::ReadText(std::vector<NSCSS::CNode>& arSelectors)
+bool CHTMLReader::ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (nullptr == m_pWriter)
 		return false;
 
-	GetSubClass(arSelectors);
+	GetSubClass(oReader, arSelectors, m_oCSSCalculator);
 
-	const bool bResult{m_pWriter->WriteText(m_oLightReader.GetText(), arSelectors)};
+	const bool bResult{m_pWriter->WriteText(oReader.GetText(), arSelectors)};
 
 	arSelectors.pop_back();
 
 	return bResult;
 }
 
-bool CHTMLReader::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors)
+bool CHTMLReader::ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors)
 {
-	if (!m_mTags[HTML_TAG(IMG)]->Open(arSelectors, m_oLightReader.GetOuterXml()))
+	if(oReader.IsEmptyNode() || nullptr == m_pTableElement)
 		return false;
 
-	m_mTags[HTML_TAG(IMG)]->Close(arSelectors);
+	m_pTableElement->Clear();
 
+	XmlUtils::CXmlLiteReader oTableReader;
+
+	if (!oTableReader.FromString(oReader.GetOuterXml()) || !oTableReader.ReadNextNode())
+		return false;
+
+	if (!m_pTableElement->PreParse(oTableReader) ||
+	    !oTableReader.MoveToStart() || !oTableReader.ReadNextNode())
+		return false;
+
+	m_pTableElement->Normalize();
+	m_pTableElement->Convert(oTableReader, arSelectors.back());
+
+	m_pTableElement->Clear();
 	return true;
 }
 
-bool CHTMLReader::ReadTable(std::vector<NSCSS::CNode>& arSelectors)
+void CHTMLReader::AddStopTag(const std::wstring& wsTag)
 {
-	if(m_oLightReader.IsEmptyNode())
-		return false;
-
-	if (nullptr != m_pWriter && !m_pWriter->SupportNestedTables())
-	{
-		//Temporarily handling this here, because with current logic we first
-		//read the entire table and its nested elements, then proceed to conversion,
-		//so the converter receives nested tables which is not allowed in MD
-		for (std::vector<NSCSS::CNode>::const_reverse_iterator itElement{arSelectors.crbegin() + 1}; itElement < arSelectors.crend(); ++itElement)
-			if (L"table" == itElement->m_wsName)
-				return false;
-
-		if (nullptr != dynamic_cast<CMDWriter*>(m_pWriter))
-			((CMDWriter*)m_pWriter)->EnteredTable();
-	}
-
-	CStorageTable oTable;
-
-	NSCSS::CCompiledStyle *pStyle = arSelectors.back().m_pCompiledStyle;
-
-	//Table styles
-	std::wstring wsFrame;
-	std::wstring wsValue;
-
-	if (arSelectors.back().GetAttributeValue(L"border", wsValue))
-	{
-		const int nWidth = NSStringFinder::ToInt(wsValue);
-
-		if (0 < nWidth)
-		{
-			oTable.SetRules(L"all");
-
-			if (pStyle->m_oBorder.Empty())
-			{
-				pStyle->m_oBorder.SetStyle(L"outset",  0, true);
-				pStyle->m_oBorder.SetWidth(nWidth,     NSCSS::UnitMeasure::Point, 0, true);
-				pStyle->m_oBorder.SetColor(L"auto",    0, true);
-			}
-		}
-		else if (pStyle->m_oBorder.Empty())
-		{
-			pStyle->m_oBorder.SetNone(0, true);
-			oTable.SetRules(L"none");
-		}
-	}
-
-	if (arSelectors.back().GetAttributeValue(L"cellpadding", wsValue))
-		pStyle->m_oPadding.SetValues(wsValue + L"px", 0, true);
-
-	if (arSelectors.back().GetAttributeValue(L"rules", wsValue))
-		oTable.SetRules(wsValue);
-
-	arSelectors.back().GetAttributeValue(L"frame", wsFrame);
-
-	if (!wsFrame.empty() && pStyle->m_oBorder.Empty())
-	{
-		#define SetDefaultBorderSide(side) \
-			pStyle->m_oBorder.SetStyle##side(L"solid", 0, true); \
-			pStyle->m_oBorder.SetWidth##side(1,        NSCSS::UnitMeasure::Point, 0, true); \
-			pStyle->m_oBorder.SetColor##side(L"black", 0, true)
-
-		if (NSStringFinder::Equals(L"border", wsFrame))
-		{
-			SetDefaultBorderSide();
-		}
-		else if (NSStringFinder::Equals(L"above", wsFrame))
-		{
-			SetDefaultBorderSide(TopSide);
-		}
-		else if (NSStringFinder::Equals(L"below", wsFrame))
-		{
-			SetDefaultBorderSide(BottomSide);
-		}
-		else if (NSStringFinder::Equals(L"hsides", wsFrame))
-		{
-			SetDefaultBorderSide(TopSide);
-			SetDefaultBorderSide(BottomSide);
-		}
-		else if (NSStringFinder::Equals(L"vsides", wsFrame))
-		{
-			SetDefaultBorderSide(LeftSide);
-			SetDefaultBorderSide(RightSide);
-		}
-		else if (NSStringFinder::Equals(L"rhs", wsFrame))
-		{
-			SetDefaultBorderSide(RightSide);
-		}
-		else if (NSStringFinder::Equals(L"lhs", wsFrame))
-		{
-			SetDefaultBorderSide(LeftSide);
-		}
-	}
-
-	if (pStyle->m_oBorder.GetCollapse() == NSCSS::NSProperties::BorderCollapse::Collapse)
-		oTable.SetCellSpacing(0);
-	else if (arSelectors.back().GetAttributeValue(L"cellspacing", wsValue))
-		oTable.SetCellSpacing(NSStringFinder::ToInt(wsValue));
-	else if (pStyle->m_oBorder.GetCollapse() == NSCSS::NSProperties::BorderCollapse::Separate)
-		oTable.SetCellSpacing(15);
-
-	oTable.SetWidth(pStyle->m_oDisplay.GetWidth());
-	oTable.SetBorder(pStyle->m_oBorder);
-	oTable.SetPadding(pStyle->m_oPadding);
-	oTable.SetMargin(pStyle->m_oMargin);
-	oTable.SetAlign(pStyle->m_oDisplay.GetHAlign().ToWString());
-	//------
-
-	//TODO:: rewrite table handling without pre-converting cells and storing their internal data
-	//Read table content -> count cells -> normalize table -> convert table
-
-	int nDeath = m_oLightReader.GetDepth();
-	while(m_oLightReader.ReadNextSiblingNode(nDeath))
-	{
-		const std::wstring sName = m_oLightReader.GetName();
-		GetSubClass(arSelectors);
-
-		if(sName == L"caption")
-			ReadTableCaption(oTable, arSelectors);
-		if(sName == L"thead")
-			ReadTableRows(oTable, arSelectors, ERowParseMode::Header);
-		if(sName == L"tbody")
-			ReadTableRows(oTable, arSelectors, ERowParseMode::Body);
-		else if(sName == L"tfoot")
-			ReadTableRows(oTable, arSelectors, ERowParseMode::Foother);
-		else if (sName == L"colgroup")
-			ReadTableColspan(oTable);
-
-		arSelectors.pop_back();
-	}
-
-	oTable.Shorten();
-	oTable.CompleteTable();
-
-	#define CONVERT_ROWS(rows, parse_mode)\
-	{\
-	const std::vector<CStorageTableRow*> arRows{rows};\
-	\
-	for (UINT unRow = 0; unRow < arRows.size(); ++unRow)\
-	{\
-		ERowPosition eRowPosition{ERowPosition::Middle};\
-		\
-		if (0 == unRow)\
-			eRowPosition = ERowPosition::First;\
-		else if (arRows.size() - 1 == unRow)\
-			eRowPosition = ERowPosition::Last;\
-		\
-		if (!m_mTags[HTML_TAG(TR)]->Open(arSelectors, boost::tuple<const TTableRowStyle*, const CStorageTable&, ERowParseMode, ERowPosition>(&arRows[unRow]->GetStyles(), oTable, parse_mode, eRowPosition)))\
-			continue;\
-		\
-		const std::vector<CStorageTableCell*>& arCells{arRows[unRow]->GetCells()};\
-		\
-		for (UINT unCol = 0; unCol < arCells.size(); ++unCol)\
-		{\
-			m_mTags[HTML_TAG(TD)]->Open(arSelectors, boost::tuple<const CStorageTableCell&, const CStorageTable&, UINT, ERowParseMode, ERowPosition>(*arCells[unCol], oTable, unCol, parse_mode, eRowPosition));\
-			\
-			if (0 != arCells[unCol]->GetData()->GetCurSize())\
-			{\
-				WriteToStringBuilder(*(arCells[unCol]->GetData()), *(m_pWriter->GetCurrentDocument()));\
-				arCells[unCol]->GetData()->Clear();\
-			}\
-			else\
-				m_pWriter->WriteEmptyParagraph();\
-			\
-			m_mTags[HTML_TAG(TD)]->Close(arSelectors);\
-		}\
-		\
-		m_mTags[HTML_TAG(TR)]->Close(arSelectors);\
-	}}
-
-	if (!m_mTags[HTML_TAG(TABLE)]->Open(arSelectors, &oTable))
-		return false;
-
-	if (!oTable.HaveHeader())
-	{
-		if (m_mTags[HTML_TAG(TR)]->Open(arSelectors, boost::tuple<const TTableRowStyle*, const CStorageTable&, ERowParseMode, ERowPosition>(nullptr, oTable, ERowParseMode::Header, ERowPosition::First)))
-			m_mTags[HTML_TAG(TR)]->Close(arSelectors);
-	}
-	else
-	{
-		for (const std::vector<CStorageTableRow*>& arHeader : oTable.GetHeaders())
-			CONVERT_ROWS(arHeader, ERowParseMode::Header)
-	}
-
-	CONVERT_ROWS(oTable.GetRows(), ERowParseMode::Body)
-	CONVERT_ROWS(oTable.GetFoothers(), ERowParseMode::Foother)
-
-	m_mTags[HTML_TAG(TABLE)]->Close(arSelectors);
-
-	return true;
+	m_arStopTags.insert(wsTag);
 }
 
-void CHTMLReader::ReadTableCaption(CStorageTable& oTable, std::vector<NSCSS::CNode>& arSelectors)
+void CHTMLReader::ClearStopTags()
 {
-	if (nullptr == m_pWriter)
-		return;
-
-	GetSubClass(arSelectors);
-	m_pWriter->SetDataOutput(oTable.GetCaptionData());
-
-	arSelectors.back().m_pCompiledStyle->m_oDisplay.SetVAlign(L"center", arSelectors.size());
-
-	ReadDefaultTag(HTML_TAG(CAPTION), arSelectors);
-
-	m_pWriter->RevertDataOutput();
-	arSelectors.pop_back();
-}
-
-void CalculateCellStyles(TTableCellStyle* pCellStyle, std::vector<NSCSS::CNode>& arSelectors)
-{
-	if (NULL == pCellStyle)
-		return;
-
-	pCellStyle->m_wsVAlign    = arSelectors.back().m_pCompiledStyle->m_oDisplay.GetVAlign().ToWString();
-	pCellStyle->m_wsHAlign    = arSelectors.back().m_pCompiledStyle->m_oDisplay.GetHAlign().ToWString();
-	pCellStyle->m_oBackground = arSelectors.back().m_pCompiledStyle->m_oBackground.GetColor();
-	pCellStyle->m_oHeight     = arSelectors.back().m_pCompiledStyle->m_oDisplay.GetHeight();
-	pCellStyle->m_oWidth      = arSelectors.back().m_pCompiledStyle->m_oDisplay.GetWidth();
-	pCellStyle->m_oPadding    = arSelectors.back().m_pCompiledStyle->m_oPadding;
-	pCellStyle->m_oBorder     = arSelectors.back().m_pCompiledStyle->m_oBorder;
-
-	if (pCellStyle->m_wsHAlign.empty())
-		pCellStyle->m_wsHAlign = arSelectors.back().m_pCompiledStyle->m_oText.GetAlign().ToWString();
-}
-
-struct TRowspanElement
-{
-	UINT  m_unRowSpan;
-	UINT  m_unColumnIndex;
-	const CStorageTableCell* m_pCell;
-
-	TRowspanElement(UINT unRowSpan, UINT unColumnIndex, const CStorageTableCell* pCell)
-		: m_unRowSpan(unRowSpan), m_unColumnIndex(unColumnIndex), m_pCell(pCell)
-	{}
-};
-
-void CHTMLReader::ReadTableRows(CStorageTable& oTable, std::vector<NSCSS::CNode>& arSelectors, ERowParseMode eMode)
-{
-	if (nullptr == m_pWriter)
-		return;
-
-	std::vector<TRowspanElement> arRowspanElements;
-	std::vector<CStorageTableRow*>      arRows;
-
-	int nDeath = m_oLightReader.GetDepth();
-	while (m_oLightReader.ReadNextSiblingNode(nDeath))
-	{
-		if (L"tr" != m_oLightReader.GetName())
-			continue;
-
-		GetSubClass(arSelectors);
-
-		CStorageTableRow *pRow = new CStorageTableRow();
-
-		for (std::vector<TRowspanElement>::iterator itElement = arRowspanElements.begin(); itElement < arRowspanElements.end();)
-		{
-			pRow->InsertCell(CStorageTableCell::CreateEmpty(itElement->m_pCell->GetColspan(), true, itElement->m_pCell->GetStyles()), itElement->m_unColumnIndex);
-
-			itElement->m_unRowSpan--;
-			if (1 == itElement->m_unRowSpan)
-				itElement = arRowspanElements.erase(itElement);
-			else
-				++itElement;
-		}
-
-		UINT unColumnIndex = 0;
-		int nTrDepth = m_oLightReader.GetDepth();
-		while (m_oLightReader.ReadNextSiblingNode(nTrDepth))
-		{
-			CStorageTableCell *pCell = new CStorageTableCell();
-
-			if (NULL == pCell)
-				continue;
-
-			GetSubClass(arSelectors);
-
-			std::vector<NSCSS::CNode> arNewSelectors{(std::vector<NSCSS::CNode>::const_iterator)std::find_if(arSelectors.begin(), arSelectors.end(), [](const NSCSS::CNode& oNode){ return L"table" == oNode.m_wsName; }), arSelectors.cend()};
-
-			CalculateCellStyles(pCell->GetStyles(), arNewSelectors);
-
-			std::wstring wsValue;
-
-			if (arSelectors.back().GetAttributeValue(L"colspan", wsValue))
-				pCell->SetColspan(NSStringFinder::ToInt(wsValue, 1), pRow->GetIndex());
-
-			if (arSelectors.back().GetAttributeValue(L"rowspan", wsValue))
-			{
-				pCell->SetRowspan(NSStringFinder::ToInt(wsValue, 1));
-
-				if (1 != pCell->GetRowspan())
-					arRowspanElements.push_back({pCell->GetRowspan(), unColumnIndex, pCell});
-			}
-
-			// Read th. Table header cell. Center aligned. Bold text
-			if(m_oLightReader.GetName() == L"th")
-			{
-				if (pCell->GetStyles()->m_wsHAlign.empty())
-					arSelectors.back().m_pCompiledStyle->m_oText.SetAlign(L"center", arSelectors.size());
-
-				arSelectors.back().m_pCompiledStyle->m_oFont.SetWeight(L"bold", arSelectors.size());
-
-				m_pWriter->SetDataOutput(pCell->GetData());
-				ReadStream(arSelectors, true);
-				m_pWriter->RevertDataOutput();
-			}
-			// Read td. Table cell
-			else if(m_oLightReader.GetName() == L"td")
-			{
-				m_pWriter->SetDataOutput(pCell->GetData());
-				ReadStream(arSelectors, true);
-				m_pWriter->RevertDataOutput();
-			}
-
-			if (pRow->GetIndex() == MAXCOLUMNSINTABLE - 1)
-			{
-				while (m_oLightReader.ReadNextSiblingNode(nTrDepth))
-				{
-					if (L"td" != m_oLightReader.GetName() && L"th" != m_oLightReader.GetName())
-						continue;
-
-					GetSubClass(arSelectors);
-					m_pWriter->SetDataOutput(pCell->GetData());
-					ReadStream(arSelectors);
-					m_pWriter->RevertDataOutput();
-					arSelectors.pop_back();
-				}
-			}
-
-			pRow->AddCell(pCell);
-			arSelectors.pop_back();
-
-			++unColumnIndex;
-
-			if (pRow->GetIndex() == MAXCOLUMNSINTABLE)
-				break;
-		}
-
-		arSelectors.pop_back();
-		arRows.push_back(pRow);
-	}
-
-	oTable.AddRows(arRows, eMode);
-}
-
-void CHTMLReader::ReadTableColspan(CStorageTable& oTable)
-{
-	std::vector<NSCSS::CNode> arNodes;
-	GetSubClass(arNodes);
-
-	CTableColgroup *pColgroup = new CTableColgroup(arNodes.back());
-
-	if (NULL == pColgroup)
-		return;
-
-	oTable.AddColgroup(pColgroup);
-
-	const int nDeath = m_oLightReader.GetDepth();
-	if (!m_oLightReader.IsEmptyNode() && m_oLightReader.ReadNextSiblingNode2(nDeath))
-	{
-		do
-		{
-			if (L"col" != m_oLightReader.GetName())
-				continue;
-
-			GetSubClass(arNodes);
-
-			CTableCol *pCol = new CTableCol(arNodes.back());
-
-			if (NULL == pCol)
-			{
-				arNodes.pop_back();
-				continue;
-			}
-
-			CalculateCellStyles(pCol->GetStyle(), arNodes);
-			arNodes.pop_back();
-
-			if (NULL == pCol)
-				continue;
-
-			pColgroup->AddCol(pCol);
-		} while(m_oLightReader.ReadNextSiblingNode2(nDeath));
-	}
-
-	if(pColgroup->Empty())
-	{
-		std::map<std::wstring, std::wstring>::const_iterator itFound = arNodes.begin()->m_mAttributes.find(L"span");
-
-		CTableCol *pCol = new CTableCol((arNodes.begin()->m_mAttributes.cend() != itFound) ? NSStringFinder::ToInt(itFound->second, 1) : 1);
-
-		if (NULL == pCol)
-			return;
-
-		CalculateCellStyles(pCol->GetStyle(), arNodes);
-
-		pColgroup->AddCol(pCol);
-	}
-}
-
-bool CHTMLReader::ReadEmptyTag(UINT unTag, const std::vector<NSCSS::CNode>& arSelectors)
-{
-	if (!m_mTags[unTag]->Open(arSelectors))
-		return false;
-
-	m_mTags[unTag]->Close(arSelectors);
-
-	return true;
-}
-
-bool CHTMLReader::ReadDefaultTag(UINT unTag, std::vector<NSCSS::CNode>& arSelectors)
-{
-	if (!m_mTags[unTag]->Open(arSelectors))
-		return false;
-
-	const bool bResult{ReadStream(arSelectors)};
-
-	m_mTags[unTag]->Close(arSelectors);
-
-	return bResult;
-}
-
-void CHTMLReader::GetSubClass(std::vector<NSCSS::CNode>& arSelectors)
-{
-	NSCSS::CNode oNode;
-
-	oNode.m_wsName = m_oLightReader.GetName();
-	// Style by attribute
-	std::wstring wsAttributeName;
-
-	if (m_oLightReader.MoveToFirstAttribute())
-	{
-		do
-		{
-			wsAttributeName = m_oLightReader.GetName();
-			if(wsAttributeName == L"class")
-				oNode.m_wsClass  = EncodeXmlString(m_oLightReader.GetText());
-			else if(wsAttributeName == L"id")
-			{
-				oNode.m_wsId = EncodeXmlString(m_oLightReader.GetText());
-				// WriteEmptyBookmark(oXml, oNode.m_wsId);
-
-				// if (!m_oStylesCalculator.HaveStylesById(oNode.m_wsId))
-					// oNode.m_wsId.clear();
-			}
-			else if(wsAttributeName == L"style")
-				oNode.m_wsStyle += m_oLightReader.GetText();
-			else
-			{
-				if (CheckArgumentMath(oNode.m_wsName, wsAttributeName))
-					oNode.m_mAttributes[wsAttributeName] = m_oLightReader.GetText();
-			}
-		}while(m_oLightReader.MoveToNextAttribute());
-	}
-
-	m_oLightReader.MoveToElement();
-	arSelectors.push_back(oNode);
-
-	m_oCSSCalculator.CalculateCompiledStyle(arSelectors);
+	m_arStopTags.clear();
 }
 
 inline std::wstring GetArgumentValue(XmlUtils::CXmlLiteReader& oLiteReader, const std::wstring& wsArgumentName, const std::wstring& wsDefaultValue)
@@ -1529,5 +1084,38 @@ inline bool UnreadableNode(const std::wstring& wsNodeName)
 inline bool TagIsUnprocessed(const std::wstring& wsTagName)
 {
 	return L"xml" == wsTagName;
+}
+
+inline void GetSubClass(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, NSCSS::CCssCalculator& oCSSCalculator)
+{
+	NSCSS::CNode oNode;
+
+	oNode.m_wsName = oReader.GetName();
+	// Style by attribute
+	std::wstring wsAttributeName;
+
+	if (oReader.MoveToFirstAttribute())
+	{
+		do
+		{
+			wsAttributeName = oReader.GetName();
+			if(wsAttributeName == L"class")
+				oNode.m_wsClass  = EncodeXmlString(oReader.GetText());
+			else if(wsAttributeName == L"id")
+				oNode.m_wsId = EncodeXmlString(oReader.GetText());
+			else if(wsAttributeName == L"style")
+				oNode.m_wsStyle += oReader.GetText();
+			else
+			{
+				if (CheckArgumentMath(oNode.m_wsName, wsAttributeName))
+					oNode.m_mAttributes[wsAttributeName] = oReader.GetText();
+			}
+		}while(oReader.MoveToNextAttribute());
+	}
+
+	oReader.MoveToElement();
+	arSelectors.push_back(oNode);
+
+	oCSSCalculator.CalculateCompiledStyle(arSelectors);
 }
 }

@@ -8,8 +8,6 @@
 
 #include <stack>
 
-namespace NSFonts { class IApplicationFonts; }
-
 namespace HTML
 {
 struct TImageData
@@ -23,7 +21,7 @@ struct TImageData
 	std::wstring m_wsAlign;
 
 	TImageData()
-	    : m_unWidth(0), m_unHeight(0), m_nHSpace(0), m_nVSpace(0), m_wsAlign(L"left")
+		: m_unWidth(0), m_unHeight(0), m_nHSpace(0), m_nVSpace(0), m_wsAlign(L"left")
 	{}
 
 	bool ZeroSize() const
@@ -40,10 +38,6 @@ struct TImageData
 class COOXMLWriter : public IWriter
 {
 	const std::wstring *m_pDstPath;  // Destination directory
-	const std::wstring *m_pTempDir;  // Temp folder
-	const std::wstring *m_pSrcPath;  // Source directory
-	const std::wstring *m_pBasePath; // Full base address
-	const std::wstring *m_pCorePath; // Path to root file (used for working with Epub)
 
 	XmlString m_oStylesXml;   // styles.xml
 	XmlString m_oDocXmlRels;  // document.xml.rels
@@ -113,16 +107,10 @@ class COOXMLWriter : public IWriter
 	std::map<std::wstring, UINT>         m_mBookmarks; // Bookmarks
 	using anchors_map = std::map<std::wstring, std::wstring>;
 	anchors_map                          m_mAnchors; // Map of anchors with individual ids
-
-	NSFonts::IApplicationFonts*          m_pFonts;     // Needed for font handling optimization
 public:
 	COOXMLWriter(THTMLParameters* pHTMLParameters = nullptr, NSCSS::CCssCalculator* pCSSCalculator = nullptr);
 
-	void SetSrcDirectory (const std::wstring& wsPath);
 	void SetDstDirectory (const std::wstring& wsPath);
-	void SetTempDirectory(const std::wstring& wsPath);
-	void SetBaseDirectory(const std::wstring& wsPath);
-	void SetCoreDirectory(const std::wstring& wsPath);
 
 	void Begin(const std::wstring& wsDst) override;
 	void End(const std::wstring& wsDst) override;
@@ -150,7 +138,7 @@ public:
 
 	void SetCurrentDocument(XmlString* pNewDocument);
 
-	void Break(const std::vector<NSCSS::CNode>& arSelectors);
+	void Break(const NSCSS::CNode& oTagNode);
 
 	void SetHyperlinkData(const std::wstring& wsRef, const std::wstring& wsTooltip, bool bIsCross, const std::wstring& wsFootnote, bool bIsFootnote);
 	void ClearHyperlinkData();
@@ -200,16 +188,9 @@ public:
 	XmlString& GetWebSettingsXml();
 	XmlString* GetCurrentDocument() const override;
 
-	bool SupportNestedTables() const override;
-
 	const NSCSS::NSProperties::CPage* GetPageData() const;
-	NSFonts::IApplicationFonts* GetFonts();
 
 	std::wstring GetMediaDir() const;
-	std::wstring GetTempDir()  const;
-	std::wstring GetSrcPath()  const;
-	std::wstring GetBasePath() const;
-	std::wstring GetCorePath() const;
 };
 }
 

@@ -525,6 +525,7 @@ namespace NSCSS
 		m_mDefaultStyleData[L"ul"] = new CElement(L"ul", {{L"margin-top", L"100tw"},
 		                                                  {L"margin-bottom", L"100tw"}});
 		m_mDefaultStyleData[L"textarea"] = new CElement(L"textarea", {{L"border", L"1px solid black"}});
+		m_mDefaultStyleData[L"th"] = new CElement(L"b", {{L"font-weight", L"bold"}});
 	}
 
 	CCssCalculator_Private::CCssCalculator_Private()

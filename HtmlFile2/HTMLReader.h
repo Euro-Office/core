@@ -1,8 +1,6 @@
 #ifndef HTMLREADER_H
 #define HTMLREADER_H
 
-#include <unordered_map>
-
 #include "../Common/3dParty/html/css/src/CCssCalculator.h"
 #include "../DesktopEditor/xml/include/xmlutils.h"
 
@@ -13,11 +11,12 @@
 #include "Tags/HTMLTags.h"
 #include "Table.h"
 
+#include <set>
+
 namespace HTML
 {
 class CHTMLReader
 {
-	XmlUtils::CXmlLiteReader m_oLightReader;   // SAX Reader
 	NSCSS::CCssCalculator    m_oCSSCalculator; // CSS calculator
 
 	bool m_bIsTempDirOwner;
@@ -29,7 +28,11 @@ class CHTMLReader
 
 	IWriter *m_pWriter;
 
-	std::unordered_map<UINT, std::shared_ptr<ITag>> m_mTags;
+	CTableElement* m_pTableElement; // Table Converter
+
+	std::set<std::wstring> m_arStopTags;
+
+	THTMLTags m_oTags;
 public:
 	CHTMLReader();
 	~CHTMLReader();
@@ -52,10 +55,10 @@ public:
 	NSCSS::CCssCalculator* GetCSSCalculator();
 private:
 	void Clear();
-	void InitOOXMLTags(THTMLParameters* pParametrs = nullptr);
-	void InitMDTags(TMarkdownParameters* pParametrs = nullptr);
+	bool InitOOXMLTags(THTMLParameters* pParametrs = nullptr);
+	bool InitMDTags(TMarkdownParameters* pParametrs = nullptr);
 
-	bool IsHTML();
+	bool IsHTML(XmlUtils::CXmlLiteReader& oReader);
 
 	typedef std::function<bool(const std::wstring&, XmlUtils::CXmlLiteReader&)> Convert_Func;
 
@@ -64,29 +67,23 @@ private:
 
 	bool Convert(const std::wstring& wsPath, Convert_Func Convertation);
 
-	void ReadStyle();
-	void ReadStyle2();
-	void ReadStyleFromNetwork();
+	void ReadStyle(XmlUtils::CXmlLiteReader& oReader);
+	void ReadStyle2(XmlUtils::CXmlLiteReader& oReader);
+	void ReadStyleFromNetwork(XmlUtils::CXmlLiteReader& oReader);
 
-	void ReadDocument();
-	void ReadHead();
-	void ReadBody();
+	void ReadDocument(XmlUtils::CXmlLiteReader& oReader);
+	void ReadHead(XmlUtils::CXmlLiteReader& oReader);
+	void ReadBody(XmlUtils::CXmlLiteReader& oReader);
 
-	bool ReadStream(std::vector<NSCSS::CNode>& arSelectors, bool bInsertEmptyP = false);
-	bool ReadInside(std::vector<NSCSS::CNode>& arSelectors);
+	bool ReadStream(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, bool bInsertEmptyP = false);
+	bool ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
-	bool ReadText(std::vector<NSCSS::CNode>& arSelectors);
+	bool ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
-	bool ReadSVG(const std::vector<NSCSS::CNode>& arSelectors);
-	bool ReadEmptyTag(UINT unTag, const std::vector<NSCSS::CNode>& arSelectors);
-	bool ReadDefaultTag(UINT unTag, std::vector<NSCSS::CNode>& arSelectors);
+	bool ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
-	bool ReadTable(std::vector<NSCSS::CNode>& arSelectors);
-	void ReadTableCaption(CStorageTable& oTable, std::vector<NSCSS::CNode>& arSelectors);
-	void ReadTableRows(CStorageTable& oTable, std::vector<NSCSS::CNode>& arSelectors, ERowParseMode eMode);
-	void ReadTableColspan(CStorageTable& oTable);
-
-	void GetSubClass(std::vector<NSCSS::CNode>& arSelectors);
+	void AddStopTag(const std::wstring& wsTag);
+	void ClearStopTags();
 };
 }
 
