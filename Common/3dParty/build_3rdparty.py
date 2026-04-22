@@ -24,14 +24,15 @@ if sys.platform == "win32" and shutil.which("nmake") is None:
 
 subfolders = [
     # 'apple',
-    # 'brotli',
-    # 'harfbuzz',
+    'brotli',
+    'harfbuzz',
     # 'html',
     'hyphen',
     'icu',
     'md',
     'openssl',
     'socketio',
+    # 'v8',
 ]
 
 for subfolder in subfolders:
