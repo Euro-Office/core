@@ -30,8 +30,6 @@
  *
  */
 #pragma once
-#ifndef PPTX_LOGIC_FLD_INCLUDE_H_
-#define PPTX_LOGIC_FLD_INCLUDE_H_
 
 #include "RunBase.h"
 #include "./../RunProperties.h"
@@ -60,14 +58,12 @@ namespace PPTX
 			void SetText(const std::wstring& src);
 			virtual std::wstring GetText() const;
 
-		public:
-			std::wstring						id;
+			std::wstring id;
 			
-			nullable_string				type;
+			nullable_string type;
 
-			nullable<RunProperties>		rPr;
-			nullable<TextParagraphPr>	pPr;
-
+			nullable<RunProperties> rPr;
+			nullable<TextParagraphPr> pPr;
 		private:
 			nullable_string				text;
 
@@ -76,5 +72,3 @@ namespace PPTX
 		};
 	} // namespace Logic
 } // namespace PPTX
-
-#endif // PPTX_LOGIC_FLD_INCLUDE_H
