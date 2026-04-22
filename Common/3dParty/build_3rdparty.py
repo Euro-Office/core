@@ -26,7 +26,7 @@ subfolders = [
     'apple',
     'brotli',
     'harfbuzz',
-    # 'html',
+    'html',
     'hyphen',
     'icu',
     'md',
