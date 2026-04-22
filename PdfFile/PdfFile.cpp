@@ -481,6 +481,12 @@ void CPdfFile::DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pB
 	m_pInternal->pReader->SetParams(pParams);
 	m_pInternal->pReader->DrawPageOnRenderer(pRenderer, nPageIndex, pBreak);
 }
+void CPdfFile::SetPainter(IOfficeDrawingFilePainter* pPainter)
+{
+	if (!m_pInternal->pReader)
+		return;
+	m_pInternal->pReader->SetPainter(pPainter);
+}
 std::wstring CPdfFile::GetInfo()
 {
 	if (!m_pInternal->pReader)

@@ -141,3 +141,5 @@ void IOfficeDrawingFile::ConvertToRaster(int nPageIndex, const std::wstring& pat
     pFrame->SaveFile(path, nImageType);
     RELEASEOBJECT(pFrame);
 }
+
+void IOfficeDrawingFile::SetPainter(IOfficeDrawingFilePainter* pPainter) {}

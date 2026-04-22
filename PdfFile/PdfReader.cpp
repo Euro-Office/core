@@ -39,6 +39,7 @@
 #include "../DesktopEditor/common/StringExt.h"
 #include "../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
 #include "../DesktopEditor/graphics/MetafileToRenderer.h"
+#include "../DesktopEditor/graphics/BaseThread.h"
 
 #include "SrcReader/Adaptors.h"
 #include "SrcReader/PdfAnnot.h"
@@ -66,6 +67,34 @@ NSFonts::IFontManager* InitFontManager(NSFonts::IApplicationFonts* pAppFonts)
 	m_pFontManager->SetOwnerCache(pMeasurerCache);
 	pMeasurerCache->SetCacheSize(1);
 	return m_pFontManager;
+}
+static GBool CheckPainter(void* p)
+{
+	if (!p)
+		return gFalse;
+
+	IOfficeDrawingFilePainter* pPainter = static_cast<IOfficeDrawingFilePainter*>(p);
+	IOfficeDrawingFilePainter::State eState = pPainter->GetState();
+
+	if (IOfficeDrawingFilePainter::State::Stopped == eState)
+	{
+		pPainter->OnPaint(IOfficeDrawingFilePainter::Status::Cancel);
+		return gTrue;
+	}
+
+	if (IOfficeDrawingFilePainter::State::Paused == eState)
+	{
+		while (IOfficeDrawingFilePainter::State::Paused == pPainter->GetState())
+		{
+			pPainter->OnPaint(IOfficeDrawingFilePainter::Status::Ok);
+			NSThreads::Sleep(10);
+		}
+	}
+
+	// IOfficeDrawingFilePainter::State::Runned == eState
+	pPainter->OnPaint(IOfficeDrawingFilePainter::Status::Ok);
+
+	return gFalse;
 }
 
 CPdfReaderContext::~CPdfReaderContext()
@@ -103,6 +132,7 @@ CPdfReader::CPdfReader(NSFonts::IApplicationFonts* pAppFonts)
 #endif
 
 	m_eError = errNone;
+	m_pPainter = NULL;
 }
 CPdfReader::~CPdfReader()
 {
@@ -652,6 +682,10 @@ bool CPdfReader::CheckPerm(int nPerm)
 
 	return ownerPasswordOk || (permFlags & (1 << --nPerm));
 }
+void CPdfReader::SetPainter(IOfficeDrawingFilePainter* pPainter)
+{
+	m_pPainter = pPainter;
+}
 void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool* pbBreak)
 {
 	PDFDoc* pDoc = NULL;
@@ -673,7 +707,7 @@ void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool*
 #ifdef BUILDING_WASM_MODULE
 	nRotate = -pDoc->getPageRotate(nPageIndex);
 #endif
-	pDoc->displayPage(&oRendererOut, nPageIndex, 72.0, 72.0, nRotate, gFalse, gTrue, gFalse);
+	pDoc->displayPage(&oRendererOut, nPageIndex, 72.0, 72.0, nRotate, gFalse, gTrue, gFalse, m_pPainter ? CheckPainter : NULL, m_pPainter ? m_pPainter : NULL);
 
 	((GlobalParamsAdaptor*)globalParams)->ClearRedact();
 
@@ -720,6 +754,10 @@ void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool*
 			// RELEASEOBJECT(pCorrector);
 		}
 	}
+
+	// TODO Report successful completion
+	// if (m_pPainter && IOfficeDrawingFilePainter::State::Stopped != m_pPainter->GetState())
+	// 	m_pPainter->OnPaint(IOfficeDrawingFilePainter::Status::Ok);
 }
 void CPdfReader::SetTempDirectory(const std::wstring& wsTempFolder)
 {

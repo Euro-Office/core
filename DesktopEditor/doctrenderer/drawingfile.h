@@ -288,6 +288,11 @@ public:
 		return bRes;
 	}
 
+	void SetPainter(IOfficeDrawingFilePainter* pPainter)
+	{
+		if (m_pFile)
+			m_pFile->SetPainter(pPainter);
+	}
 	BYTE* GetPixmap(int nPageIndex, int nRasterW, int nRasterH, int nBackgroundColor)
 	{
 		if (!m_pFile)

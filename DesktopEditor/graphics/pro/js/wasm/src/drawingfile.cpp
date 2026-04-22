@@ -106,6 +106,10 @@ WASM_EXPORT BYTE* GetInfo(CDrawingFile* pFile)
 {
 	return pFile->GetInfo();
 }
+WASM_EXPORT void SetPainter(CDrawingFile* pFile, IOfficeDrawingFilePainter* pPainter)
+{
+	pFile->SetPainter(pPainter);
+}
 WASM_EXPORT BYTE* GetPixmap(CDrawingFile* pFile, int nPageIndex, int nRasterW, int nRasterH, int nBackgroundColor)
 {
 	return pFile->GetPixmap(nPageIndex, nRasterW, nRasterH, nBackgroundColor);

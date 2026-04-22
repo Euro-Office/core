@@ -99,6 +99,7 @@ public:
 	bool CheckPerm(int nPerm);
 	void GetPageInfo(int nPageIndex, double* pdWidth, double* pdHeight, double* pdDpiX, double* pdDpiY);
 	void DrawPageOnRenderer(IRenderer* pRenderer, int nPageIndex, bool* pBreak);
+	void SetPainter(IOfficeDrawingFilePainter* pPainter);
 	std::wstring GetInfo();
 	BYTE* GetGIDByUnicode(const std::wstring& wsFontName);
 	std::wstring GetFontPath(const std::wstring& wsFontName, bool bSave = true);
@@ -134,6 +135,7 @@ private:
 	NSFonts::IFontManager* m_pFontManager;
 	DWORD                  m_nFileLength;
 	int                    m_eError;
+	IOfficeDrawingFilePainter* m_pPainter;
 	std::vector<CPdfReaderContext*> m_vPDFContext;
 	std::vector<CPdfRedact*> m_vRedact;
 	std::map<std::wstring, std::wstring> m_mFonts;

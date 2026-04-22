@@ -56,6 +56,26 @@ struct COfficeDrawingPageParams
 	}
 };
 
+class IOfficeDrawingFilePainter
+{
+public:
+  enum class State
+  {
+	Paused,
+	Stopped,
+	Runned
+  };
+
+  enum class Status
+  {
+	Ok,
+	Cancel
+  };
+
+  virtual State GetState() = 0;
+  virtual void OnPaint(const Status&) = 0;
+};
+
 class GRAPHICS_DECL IOfficeDrawingFile
 {
 public:
@@ -103,6 +123,9 @@ public:
     virtual std::wstring GetInfo() = 0;
     virtual unsigned char* GetStructure() = 0;
     virtual unsigned char* GetLinks(int nPageIndex) = 0;
+
+	// DrawingFile control
+	virtual void SetPainter(IOfficeDrawingFilePainter* pPainter);
 };
 
 #endif // _OFFICE_DRAWING_FILE_H

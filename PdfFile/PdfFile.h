@@ -136,6 +136,7 @@ public:
 	virtual std::wstring GetInfo();
 	virtual BYTE* GetStructure();
 	virtual BYTE* GetLinks(int nPageIndex);
+	virtual void SetPainter(IOfficeDrawingFilePainter* pPainter);
 
 	bool ValidMetaData();
 	// Takes ownership of malloc data memory
