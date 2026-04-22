@@ -27,7 +27,7 @@ subfolders = [
     # 'brotli',
     # 'harfbuzz',
     # 'html',
-    # 'hyphen',
+    'hyphen',
     'icu',
     'md',
     'openssl',
