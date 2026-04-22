@@ -1,12 +1,9 @@
 #ifndef OFDFILE_PRIVATE_H
 #define OFDFILE_PRIVATE_H
 
-#include "../../OfficeUtils/src/ZipFolder.h"
-
-#include "../../DesktopEditor/graphics/IRenderer.h"
-#include "../../DesktopEditor/graphics/pro/Fonts.h"
-
 #include "Base.h"
+
+namespace NSFonts { class IFontManager; }
 
 class COFDFile_Private
 {

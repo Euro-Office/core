@@ -17,7 +17,7 @@ class CLayer : public IPageBlock
 	unsigned int m_unID;
 	std::vector<IPageBlock*> m_arPageBlocks;
 public:
-	CLayer(CXmlReader& oLiteReader);
+	CLayer(CXmlReader& oLiteReader, IFolder* pFolder);
 	~CLayer();
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;

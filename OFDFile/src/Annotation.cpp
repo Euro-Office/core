@@ -2,6 +2,7 @@
 #include "Utils/Utils.h"
 
 #include "../../DesktopEditor/common/File.h"
+#include "../../OfficeUtils/src/ZipFolder.h"
 
 namespace OFD
 {
@@ -23,7 +24,7 @@ CParameter::CParameter(CXmlReader& oLiteReader)
 	m_wsValue = oLiteReader.GetText2();
 }
 
-CAnnot::CAnnot(CXmlReader& oLiteReader)
+CAnnot::CAnnot(CXmlReader& oLiteReader, IFolder* pFolder)
 	: m_bVisible(true), m_bPrint(true), m_bNoZoom(false), m_bNoRotate(false), m_bReadOnly(true)
 {
 	if (oLiteReader.MoveToFirstAttribute())
@@ -98,7 +99,7 @@ CAnnot::CAnnot(CXmlReader& oLiteReader)
 			}
 		}
 		else if ("ofd:Appearance" == sNodeName)
-			m_arAppearances.push_back(new CAppearance(oLiteReader));
+			m_arAppearances.push_back(new CAppearance(oLiteReader, pFolder));
 	}
 }
 
@@ -120,7 +121,7 @@ void CAnnot::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageTyp
 CPageAnnot::CPageAnnot()
 {}
 
-CPageAnnot* CPageAnnot::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath)
+CPageAnnot* CPageAnnot::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder)
 {
 	if (wsFilePath.empty() || !CanUseThisPath(wsFilePath, wsRootPath))
 		return nullptr;
@@ -128,7 +129,8 @@ CPageAnnot* CPageAnnot::Read(const std::wstring& wsFilePath, const std::wstring&
 	const std::wstring wsNormalizedPath = CombinePaths(wsRootPath, wsFilePath);
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(wsNormalizedPath) || !oLiteReader.ReadNextNode() || "ofd:PageAnnot" != oLiteReader.GetNameA())
+
+	if (!pFolder->getReaderFromFile(wsNormalizedPath, oLiteReader) || !oLiteReader.ReadNextNode() || "ofd:PageAnnot" != oLiteReader.GetNameA())
 		return nullptr;
 
 	CPageAnnot *pPageAnnot = new CPageAnnot();
@@ -140,7 +142,7 @@ CPageAnnot* CPageAnnot::Read(const std::wstring& wsFilePath, const std::wstring&
 		if ("ofd:Annot" != oLiteReader.GetNameA())
 			continue;
 
-		pPageAnnot->m_arAnnots.push_back(new CAnnot(oLiteReader));
+		pPageAnnot->m_arAnnots.push_back(new CAnnot(oLiteReader, pFolder));
 	}
 
 	return pPageAnnot;
@@ -162,7 +164,7 @@ CAnnotation::~CAnnotation()
 		delete m_pPageAnnot;
 }
 
-bool CAnnotation::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath)
+bool CAnnotation::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder)
 {
 	if (wsFilePath.empty() || !CanUseThisPath(wsFilePath, wsRootPath))
 		return false;
@@ -173,7 +175,8 @@ bool CAnnotation::Read(const std::wstring& wsFilePath, const std::wstring& wsRoo
 		wsNormalizedPath = CombinePaths(wsNormalizedPath, L"Annotations.xml");
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(wsNormalizedPath) || !oLiteReader.ReadNextNode() || L"ofd:Annotations" != oLiteReader.GetName())
+
+	if (!pFolder->getReaderFromFile(wsNormalizedPath, oLiteReader) || !oLiteReader.ReadNextNode() || L"ofd:Annotations" != oLiteReader.GetName())
 		return false;
 
 	const int nDepth = oLiteReader.GetDepth();
@@ -190,7 +193,7 @@ bool CAnnotation::Read(const std::wstring& wsFilePath, const std::wstring& wsRoo
 				continue;
 
 			if (nullptr == m_pPageAnnot)
-				m_pPageAnnot = CPageAnnot::Read(oLiteReader.GetText2(), NSSystemPath::GetDirectoryName(wsNormalizedPath));
+				m_pPageAnnot = CPageAnnot::Read(oLiteReader.GetText2(), NSSystemPath::GetDirectoryName(wsNormalizedPath), pFolder);
 		}
 	}
 

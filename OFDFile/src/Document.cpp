@@ -3,6 +3,7 @@
 #include "Utils/Utils.h"
 
 #include "../../DesktopEditor/common/Path.h"
+#include "../../OfficeUtils/src/ZipFolder.h"
 
 namespace OFD
 {
@@ -50,7 +51,8 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 		return false;
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(pFolder->getFullFilePath(wsFilePath)) || !oLiteReader.ReadNextNode() || L"ofd:Document" != oLiteReader.GetName())
+
+	if (!pFolder->getReaderFromFile(wsFilePath, oLiteReader) || !oLiteReader.ReadNextNode() || L"ofd:Document" != oLiteReader.GetName())
 		return false;
 
 	const std::wstring wsCoreDirectory{pFolder->getFullFilePath(NSSystemPath::GetDirectoryName(wsFilePath))};
@@ -62,7 +64,7 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 		sNodeName = oLiteReader.GetNameA();
 
 		if ("ofd:CommonData" == sNodeName)
-			m_oCommonData.Read(oLiteReader, wsCoreDirectory);
+			m_oCommonData.Read(oLiteReader, wsCoreDirectory, pFolder);
 		else if ("ofd:Pages" == sNodeName)
 		{
 			const int nPagesDepth = oLiteReader.GetDepth();
@@ -90,7 +92,7 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 				if (-1 == nID)
 					nID = m_mPages.size() + 1;
 
-				CPage* pPage = CPage::Read(wsBaseLoc, wsCoreDirectory);
+				CPage* pPage = CPage::Read(wsBaseLoc, wsCoreDirectory, pFolder);
 
 				if (nullptr != pPage)
 					m_mPages.insert(std::make_pair(m_mPages.size(), pPage));
@@ -102,7 +104,7 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 		else if ("ofd:Permissions" == sNodeName)
 			m_oPermission.Read(oLiteReader);
 		else if ("ofd:Annotations" == sNodeName)
-			m_oAnnotation.Read(oLiteReader.GetText2(), wsCoreDirectory);
+			m_oAnnotation.Read(oLiteReader.GetText2(), wsCoreDirectory, pFolder);
 	}
 
 	return false;

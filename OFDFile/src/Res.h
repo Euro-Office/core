@@ -9,6 +9,8 @@
 #include "Types/MultiMedia.h"
 #include "Types/CompositeGraphicUnit.h"
 
+class IFolder;
+
 namespace OFD
 {
 class CRes
@@ -22,7 +24,7 @@ public:
 	CRes();
 	~CRes();
 
-	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath);
+	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder);
 
 	const CColorSpace*           GetColorSpace(unsigned int unId) const;
 	const CDrawParam*            GetDrawParam(unsigned int unId) const;

@@ -1,6 +1,11 @@
 #include "OFDFile_Private.h"
 
 #include "../../OfficeUtils/src/OfficeUtils.h"
+#include "../../OfficeUtils/src/ZipFolder.h"
+
+#include "../../DesktopEditor/graphics/pro/Fonts.h"
+#include "../../DesktopEditor/graphics/IRenderer.h"
+
 #include "Utils/Utils.h"
 
 COFDFile_Private::COFDFile_Private(NSFonts::IApplicationFonts* pFonts)

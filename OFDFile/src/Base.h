@@ -1,9 +1,6 @@
 #ifndef BASE_H
 #define BASE_H
 
-#include "../../DesktopEditor/graphics/IRenderer.h"
-#include "../../OfficeUtils/src/ZipFolder.h"
-
 #include "Document.h"
 #include "Types/Signature.h"
 
@@ -48,7 +45,7 @@ class CDocBody
 	// std::wstring m_wsVersions;
 	std::vector<CSignature*> m_arSignatures;
 
-	void ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder);
+	bool ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder);
 public:
 	CDocBody();
 	~CDocBody();

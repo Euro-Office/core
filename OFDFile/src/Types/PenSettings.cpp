@@ -1,5 +1,7 @@
 #include "PenSettings.h"
 
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+
 namespace OFD
 {
 CPenSettings::CPenSettings(CXmlReader& oLiteReader)

@@ -4,6 +4,8 @@
 
 #include "../OFDFile_Private.h"
 
+#include "../../../OfficeUtils/src/ZipFolder.h"
+
 namespace OFD
 {
 CSignature::CSignature()
@@ -15,7 +17,8 @@ CSignature* CSignature::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 		return nullptr;
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(CombinePaths(pFolder->getFullFilePath(L""), wsFilePath)) || !oLiteReader.ReadNextNode() || L"ofd:Signature" != oLiteReader.GetName() || oLiteReader.IsEmptyNode())
+
+	if (!pFolder->getReaderFromFile(wsFilePath, oLiteReader) || !oLiteReader.ReadNextNode() || L"ofd:Signature" != oLiteReader.GetName() || oLiteReader.IsEmptyNode())
 		return nullptr;
 
 	CSignature *pSignature = new CSignature();

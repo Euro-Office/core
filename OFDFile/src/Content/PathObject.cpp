@@ -3,6 +3,8 @@
 #include "../Utils/Utils.h"
 #include "../Types/DrawParam.h"
 
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+
 namespace OFD
 {
 CPathObject::CPathObject(CXmlReader& oLiteReader)

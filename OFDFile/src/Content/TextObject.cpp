@@ -2,6 +2,8 @@
 
 #include "../Utils/Utils.h"
 
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+
 namespace OFD
 {
 CTextCode::CTextCode(CXmlReader& oLiteReader)

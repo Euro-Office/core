@@ -11,9 +11,9 @@ class CPageBlock : public IPageBlock
 
 	std::vector<IPageBlock*> m_arPageBlocks;
 public:
-	CPageBlock(CXmlReader& oLiteReader);
+	CPageBlock(CXmlReader& oLiteReader, IFolder *pFolder);
 
-	static void ReadIntoContainer(CXmlReader& oLiteReader, std::vector<IPageBlock*>& arPageBlocks);
+	static void ReadIntoContainer(CXmlReader& oLiteReader, std::vector<IPageBlock*>& arPageBlocks, IFolder* pFolder);
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
 };

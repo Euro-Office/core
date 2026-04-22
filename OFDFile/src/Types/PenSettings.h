@@ -3,7 +3,7 @@
 
 #include "../Utils/XmlReader.h"
 
-#include "../../../DesktopEditor/graphics/IRenderer.h"
+class IRenderer;
 
 namespace OFD
 {

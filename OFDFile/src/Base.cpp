@@ -1,6 +1,8 @@
 #include "Base.h"
 #include "Utils/Utils.h"
 
+#include "../../OfficeUtils/src/ZipFolder.h"
+
 namespace OFD
 {
 #define IF_CHECK_NODE(node_name, varible_name)\
@@ -57,14 +59,15 @@ bool CDocInfo::Read(CXmlReader& oLiteReader)
 	return true;
 }
 
-void CDocBody::ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder)
+bool CDocBody::ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder)
 {
 	if (wsFilePath.empty() || !CanUseThisPath(wsFilePath, pFolder->getFullFilePath(L"")))
-		return;
+		return false;
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(CombinePaths(pFolder->getFullFilePath(L""), wsFilePath)) || !oLiteReader.ReadNextNode() || L"ofd:Signatures" != oLiteReader.GetName())
-		return;
+
+	if (!pFolder->getReaderFromFile(wsFilePath, oLiteReader) || !oLiteReader.ReadNextNode() || L"ofd:Signatures" != oLiteReader.GetName())
+		return false;
 
 	const int nDepth = oLiteReader.GetDepth();
 	std::string sNodeName;
@@ -90,6 +93,8 @@ void CDocBody::ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder)
 			oLiteReader.MoveToElement();
 		}
 	}
+
+	return true;
 }
 
 CDocBody::CDocBody()
@@ -170,7 +175,8 @@ bool CBase::Read(IFolder* pFolder)
 		return false;
 
 	CXmlReader oLiteReader;
-	if (!oLiteReader.FromFile(pFolder->getFullFilePath(L"OFD.xml")) || !oLiteReader.ReadNextNode() || L"ofd:OFD" != oLiteReader.GetName())
+
+	if (!pFolder->getReaderFromFile(L"OFD.xml", oLiteReader) || !oLiteReader.ReadNextNode() || L"ofd:OFD" != oLiteReader.GetName())
 		return false;
 
 	const int nDepth = oLiteReader.GetDepth();

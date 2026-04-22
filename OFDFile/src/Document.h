@@ -4,9 +4,6 @@
 #include "Page.h"
 #include "Annotation.h"
 
-#include "../../DesktopEditor/graphics/IRenderer.h"
-#include "../../OfficeUtils/src/ZipFolder.h"
-
 namespace OFD
 {
 class CPermission

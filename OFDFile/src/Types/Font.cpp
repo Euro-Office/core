@@ -1,13 +1,15 @@
 #include "Font.h"
 
 #include "../Utils/Utils.h"
+#include "../../../OfficeUtils/src/ZipFolder.h"
+#include "../../../DesktopEditor/graphics/IRenderer.h"
 
 namespace OFD
 {
-CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath)
+CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pFolder)
 	: IOFDElement(oXmlReader),
 	  m_wsCharset(L"unicode"), m_bItalic(false), m_bBold(false),
-	  m_bSerif(false), m_bFixedWidth(false)
+	  m_bSerif(false), m_bFixedWidth(false), m_bSupportExternalFont(true)
 {
 	if (0 != oXmlReader.GetAttributesCount() && oXmlReader.MoveToFirstAttribute())
 	{
@@ -53,6 +55,9 @@ CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath)
 			break;
 		}
 	}
+
+	if (nullptr != pFolder && IFolder::IFolderType::iftZip == pFolder->getType())
+		m_bSupportExternalFont = false;
 }
 
 void CFont::Apply(IRenderer* pRenderer) const
@@ -70,7 +75,7 @@ void CFont::Apply(IRenderer* pRenderer) const
 	pRenderer->put_FontStyle(nFontStyle);
 	pRenderer->put_FontName(m_wsFontName);
 
-	if (!m_wsFilePath.empty())
+	if (m_bSupportExternalFont && !m_wsFilePath.empty())
 		pRenderer->put_FontPath(m_wsFilePath);
 }
 }

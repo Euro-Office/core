@@ -19,7 +19,7 @@ public:
 	CCommonData();
 	~CCommonData();
 
-	bool Read(CXmlReader& oLiteReader, const std::wstring& wsRootPath);
+	bool Read(CXmlReader& oLiteReader, const std::wstring& wsRootPath, IFolder* pFolder);
 
 	void GetPageSize(double& dWidth, double &dHeight) const;
 

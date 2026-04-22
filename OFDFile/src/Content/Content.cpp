@@ -11,7 +11,7 @@ CContent::~CContent()
 		delete pLayer;
 }
 
-bool CContent::Read(CXmlReader& oLiteReader)
+bool CContent::Read(CXmlReader& oLiteReader, IFolder* pFolder)
 {
 	if (L"ofd:Content" != oLiteReader.GetName())
 		return false;
@@ -24,7 +24,7 @@ bool CContent::Read(CXmlReader& oLiteReader)
 		wsNodeName = oLiteReader.GetName();
 
 		if (L"ofd:Layer" == wsNodeName)
-			m_arLayers.push_back(new CLayer(oLiteReader));
+			m_arLayers.push_back(new CLayer(oLiteReader, pFolder));
 	}
 
 	return false;
