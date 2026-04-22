@@ -2255,7 +2255,7 @@ void odf_drawing_context::set_group_rotate(int iVal)
 	int step = 2;
 	while (gr && step > 0)
 	{
-		dRotate += gr->rotate ? *gr->rotate : 0;
+		dRotate -= gr->rotate ? *gr->rotate : 0;
 		gr = gr->prev_group;
 		step--;
 	}
@@ -2390,30 +2390,61 @@ void odf_drawing_context::set_horizontal_rule()
 		draw->common_draw_attlists_.rel_size_.style_rel_width_ = odf_types::percent(100);
 	}
 }
+
+bool CheckAngle(double angle)
+{
+	if(angle > 6.283 )
+		angle -= 6.283;
+	if((angle > 0 && angle < 2.357) || (angle >= 3.925 && angle < 5.786))
+		return true;
+	return false;
+}
+
 void odf_drawing_context::set_size( _CP_OPT(double) & width_pt, _CP_OPT(double) & height_pt, bool reset_always)
 {
 	impl_->current_drawing_state_.cx_ = width_pt;
 	impl_->current_drawing_state_.cy_ = height_pt;
+	bool inversion = false;
+	
+	
+	if(impl_->current_drawing_state_.rotateAngle_)
+		inversion = CheckAngle(*impl_->current_drawing_state_.rotateAngle_);
+	
 	
 	if (impl_->current_drawing_state_.in_group_)
 	{
-		if (width_pt)
+		double final_scale_x = 1., final_scale_y = 1.;
+		for(int i = (int)impl_->group_list_.size() - 1; i >=0; i--)
 		{
-
-			for( int i = (int)impl_->group_list_.size() - 1; i >= 0 ; i--)
-			{
-				width_pt  = *width_pt * impl_->group_list_[i]->scale_cx;
-			}
+			final_scale_x = final_scale_x * impl_->group_list_[i]->scale_cx;
+			final_scale_y = final_scale_y * impl_->group_list_[i]->scale_cy;
+		}
+		if(width_pt)
+		{
+			width_pt = *width_pt * (inversion ? final_scale_y : final_scale_x);
 			impl_->current_drawing_state_.svg_width_ = length(length(*width_pt,length::pt).get_value_unit(length::cm), length::cm);
 		}
-		if (height_pt)
+		if(height_pt)
 		{
-			for( int i = (int)impl_->group_list_.size() - 1; i >= 0 ; i--)
-			{
-				height_pt = *height_pt * impl_->group_list_[i]->scale_cy;
-			}
-			impl_->current_drawing_state_.svg_height_= length(length(*height_pt,length::pt).get_value_unit(length::cm), length::cm);	
+			height_pt = *height_pt * (inversion ? final_scale_x : final_scale_y);
+			impl_->current_drawing_state_.svg_height_= length(length(*height_pt,length::pt).get_value_unit(length::cm), length::cm);
 		}
+//		if (width_pt)
+//		{
+//			for( int i = (int)impl_->group_list_.size() - 1; i >= 0 ; i--)
+//			{
+//				width_pt  = *width_pt * (inversion  && impl_->group_list_.size() - 1 == i )? impl_->group_list_[i]->scale_cy : impl_->group_list_[i]->scale_cx;
+//			}
+//			impl_->current_drawing_state_.svg_width_ = length(length(*width_pt,length::pt).get_value_unit(length::cm), length::cm);
+//		}
+//		if (height_pt)
+//		{
+//			for( int i = (int)impl_->group_list_.size() - 1; i >= 0 ; i--)
+//			{
+//				height_pt = *height_pt * (inversion  && impl_->group_list_.size() - 1 == i ) ? impl_->group_list_[i]->scale_cx : impl_->group_list_[i]->scale_cy;
+//			}
+//			impl_->current_drawing_state_.svg_height_= length(length(*height_pt,length::pt).get_value_unit(length::cm), length::cm);	
+//		}
 	}
 	else
 	{
