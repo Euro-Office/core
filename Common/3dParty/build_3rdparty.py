@@ -23,7 +23,7 @@ if sys.platform == "win32" and shutil.which("nmake") is None:
     )
 
 subfolders = [
-    # 'apple',
+    'apple',
     'brotli',
     'harfbuzz',
     # 'html',
