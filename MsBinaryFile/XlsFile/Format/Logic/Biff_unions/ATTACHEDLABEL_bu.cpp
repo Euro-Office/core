@@ -126,12 +126,15 @@ const bool ATTACHEDLABEL::loadContent(BinProcessor& proc)
 		elements_.pop_back();
 
 		ObjectLink *o_l = dynamic_cast<ObjectLink*>(m_ObjectLink.get());
-		
-		m_iLinkObject = o_l->wLinkObj;
 
-		Pos * pos = dynamic_cast<Pos*>(m_Pos.get());
-		if (pos)
-			pos->m_iLinkObject = m_iLinkObject;
+		if (o_l)
+		{
+			m_iLinkObject = o_l->wLinkObj;
+
+			Pos* pos = dynamic_cast<Pos*>(m_Pos.get());
+			if (pos)
+				pos->m_iLinkObject = m_iLinkObject;
+		}
 	}
 	
 	if (proc.optional<DataLabExtContents>())
