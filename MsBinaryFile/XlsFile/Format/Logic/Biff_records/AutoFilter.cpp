@@ -140,6 +140,8 @@ void AutoFilter::readFields(CFRecord& record)
 	if (record.getRdPtr() - pos_record < size)
 	{
 		int sz = size - (record.getRdPtr() - pos_record);
+		sz = (std::min)(sz, (int)(record.getDataSize() - record.getRdPtr()));
+
 		char *dd = new char [sz];
 		
 		memcpy(dd, record.getCurData<char>(), sz);
