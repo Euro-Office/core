@@ -782,6 +782,8 @@ void AnyString::ReadComplexData(IBinaryReader* reader)
 }
 void AnyString::ReadComplexData(XLS::CFRecord& record)
 {	
+	if (op > record.getDataSize() - record.getRdPtr()) return;
+
 	std::wstring tmp;
 #if defined(_WIN32) || defined(_WIN64)
         tmp = std::wstring(record.getCurData<wchar_t>(), op / 2);
@@ -1029,6 +1031,8 @@ void XmlString::ReadComplexData(IBinaryReader* reader)
 }
 void XmlString::ReadComplexData(XLS::CFRecord& record)
 {
+	if (op > record.getDataSize() - record.getRdPtr()) return;
+
 	boost::shared_array<char> buffer(new char[op]);
 	memcpy(buffer.get(), record.getCurData<char>(), op);
 	
@@ -1044,7 +1048,7 @@ void MetroBlob::ReadComplexData(IBinaryReader* reader)
 }
 void MetroBlob::ReadComplexData(XLS::CFRecord& record)
 {
-	int pos = record.getRdPtr();
+	if (op > record.getDataSize() - record.getRdPtr()) return;
 
 	data = std::make_pair(boost::shared_array<unsigned char>(new unsigned char[op]), op);
 

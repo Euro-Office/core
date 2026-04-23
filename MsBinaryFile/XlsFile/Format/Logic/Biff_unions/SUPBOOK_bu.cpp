@@ -323,13 +323,15 @@ int SUPBOOK::serialize_book(std::wostream & strm)
 										for (size_t k = j; k < m_arXCT[i].m_arCRN.size(); k++)
 										{
 											cell = dynamic_cast<CRN*>(m_arXCT[i].m_arCRN[k].get());
+											if (!cell) continue;
+
 											if (cell->row != current_row)
 											{
 												j = k - 1;
 												break;
 											}
 
-											for (unsigned char col = cell->colFirst, v = 0; col <= cell->colLast; col++, v++)
+											for (unsigned char col = cell->colFirst, v = 0; col <= cell->colLast && v < cell->crnOper.size(); col++, v++)
 											{
 												CP_XML_NODE(L"cell")
 												{

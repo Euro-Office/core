@@ -54,7 +54,7 @@ void RichTextStream::readFields(CFRecord& record)
 {
 	record >> frtHeader >> dwCheckSum >> cb;
 
-	if (cb > 0 &&cb < 0xffff)
+	if (cb > 0 && cb < 0xffff && cb <= record.getDataSize() - record.getRdPtr())
 	{
 		rgb = std::string(record.getCurData<char>(), cb);
 		record.skipNunBytes(cb);

@@ -2544,7 +2544,7 @@ void XlsConverter::convert(XLS::Obj * obj)
 			std::wstring objectId_bin = xlsx_context->get_mediaitems().add_control_activeX(target_bin);
 
 			NSFile::CFileBinary file;
-			if(xls_global_info->controls_data.second >= obj->pictFmla.lPosInCtlStm + obj->pictFmla.cbBufInCtlStm)
+			if (obj->pictFmla.lPosInCtlStm <= xls_global_info->controls_data.second && obj->pictFmla.cbBufInCtlStm <= xls_global_info->controls_data.second - obj->pictFmla.lPosInCtlStm)
 			{
 				if ( file.CreateFileW(xlsx_context->get_mediaitems().activeX_path() + target_bin) )
 				{
