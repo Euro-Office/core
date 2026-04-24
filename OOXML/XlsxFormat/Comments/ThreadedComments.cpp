@@ -59,7 +59,7 @@ namespace OOX
 			writer.WriteString(L"<person");
 				WritingStringNullableAttrEncodeXmlString(L"displayName", displayName, *displayName);
 				WritingStringNullableAttrString(L"id", id, *id);
-				WritingStringNullableAttrString(L"userId", userId, *userId);
+				WritingStringNullableAttrEncodeXmlString(L"userId", userId, *userId);
 				WritingStringNullableAttrEncodeXmlString(L"providerId", providerId, *providerId);
 			writer.WriteString(L"/>");
 		}
