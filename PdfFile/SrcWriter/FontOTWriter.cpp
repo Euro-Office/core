@@ -36,8 +36,20 @@
 #include <list>
 #include <set>
 
+#include <mutex>
+#include "../../Common/3dParty/cryptopp/osrng.h"
+
 namespace PdfWriter
 {
+	static unsigned int Rand1()
+	{
+		static CryptoPP::AutoSeededRandomPool prng;
+		static std::mutex prng_mutex;
+		unsigned int result;
+		std::lock_guard<std::mutex> lock(prng_mutex);
+		prng.GenerateBlock(reinterpret_cast<unsigned char*>(&result), sizeof(result));
+		return result;
+	}
 #define N_STD_STRINGS 391
 	static const char* scStandardStrings[N_STD_STRINGS] = {
 		".notdef","space","exclam","quotedbl","numbersign","dollar","percent","ampersand","quoteright","parenleft",
@@ -3669,7 +3681,7 @@ namespace PdfWriter
 		CharStringOperand newOperand;
 
 		newOperand.IsInteger = false;
-		newOperand.RealValue = ((double)rand() + 1) / ((double)RAND_MAX + 1);
+		newOperand.RealValue = ((double)Rand1() + 1) / ((double)RAND_MAX + 1);
 
 		mOperandStack.push_back(newOperand);
 		return inProgramCounter;
