@@ -638,6 +638,7 @@ SOURCES += \
 	$$PDF_ROOT_DIR/SrcReader/RendererOutputDev.cpp \
 	$$PDF_ROOT_DIR/SrcReader/Adaptors.cpp \
 	$$PDF_ROOT_DIR/SrcReader/GfxClip.cpp \
+	$$PDF_ROOT_DIR/SrcReader/FontsWasm.cpp \
 	$$PDF_ROOT_DIR/SrcReader/PdfAnnot.cpp \
 	$$PDF_ROOT_DIR/SrcReader/PdfFont.cpp \
 	$$PDF_ROOT_DIR/Resources/BaseFonts.cpp \
