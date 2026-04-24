@@ -102,7 +102,7 @@ namespace OOX
 				return;
 			}
 
-			if(SimpleTypes::Spreadsheet::celltypeStr == eType || SimpleTypes::Spreadsheet::celltypeInlineStr == eType)
+			if(SimpleTypes::Spreadsheet::celltypeStr == eType || SimpleTypes::Spreadsheet::celltypeInlineStr == eType || SimpleTypes::Spreadsheet::celltypeDate == eType)
 			{
 				m_bIsInit = true;
 				m_oValue.fromXML(oReader, SimpleTypes::xmlspacePreserve == m_oSpace.GetValue());
