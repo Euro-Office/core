@@ -10,7 +10,8 @@ CONFIG += plugin
 CORE_ROOT_DIR = $$PWD/../../../..
 PWD_ROOT_DIR = $$PWD
 
-DEFINES += STARMATH_USE_DYNAMIC_LIBRARY
+DEFINES += STARMATH_USE_DYNAMIC_LIBRARY \
+           CRYPTOPP_DISABLE_ASM
 
 include($$CORE_ROOT_DIR/Common/base.pri)
 include($$CORE_ROOT_DIR/Common/3dParty/icu/icu.pri)
