@@ -24,7 +24,7 @@ public:
 	CRes();
 	~CRes();
 
-	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder);
+	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder, NSFonts::IFontManager* pFontManager);
 
 	const CColorSpace*           GetColorSpace(unsigned int unId) const;
 	const CDrawParam*            GetDrawParam(unsigned int unId) const;

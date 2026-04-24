@@ -37,7 +37,7 @@ inline void AddElementToMap(T* pElement, unsigned int unIndex, std::map<unsigned
 	mElements.insert(std::make_pair(unIndex, pElement));
 }
 
-bool CRes::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder)
+bool CRes::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder, NSFonts::IFontManager* pFontManager)
 {
 	if (wsFilePath.empty() || !CanUseThisPath(wsFilePath, wsRootPath))
 		return false;
@@ -104,7 +104,7 @@ bool CRes::Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, 
 
 		PARSE_CONTAINER_WITH_PATH("ofd:MultiMedias",              "ofd:MultiMedia",            CMultiMedia,           m_mMultiMedias)
 
-		PARSE_CONTAINER("ofd:Fonts", "ofd:Font", CFont, m_mFonts, new CFont(oLiteReader, wsResRootPath, pFolder))
+		PARSE_CONTAINER("ofd:Fonts", "ofd:Font", CFont, m_mFonts, new CFont(oLiteReader, wsResRootPath, pFolder, pFontManager))
 	}
 
 	return true;

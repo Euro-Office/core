@@ -67,7 +67,7 @@ bool COFDFile_Private::Read(IFolder* pFolder)
 	if (nullptr == pFolder)
 		return false;
 
-	return m_oBase.Read(pFolder);
+	return m_oBase.Read(pFolder, m_pFontManager);
 }
 
 bool COFDFile_Private::LoadFromFile(const std::wstring& wsFilePath)

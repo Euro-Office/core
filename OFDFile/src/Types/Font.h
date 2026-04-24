@@ -6,12 +6,14 @@
 class IFolder;
 class IRenderer;
 
+namespace NSFonts { class IFontManager; }
+
 namespace OFD
 {
 class CFont : public IOFDElement
 {
 public:
-	CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder *pFolder);
+	CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder *pFolder, NSFonts::IFontManager* pFontManager);
 
 	void Apply(IRenderer* pRenderer) const;
 private:
