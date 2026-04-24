@@ -17,7 +17,8 @@ CONFIG += core_x2t
 include(../../../../Common/base.pri)
 
 DEFINES +=  UNICODE _UNICODE \
-            DONT_WRITE_EMBEDDED_FONTS
+            DONT_WRITE_EMBEDDED_FONTS \
+            CRYPTOPP_DISABLE_ASM
 
 #BOOST
 include($$PWD/../../../../Common/3dParty/boost/boost.pri)
