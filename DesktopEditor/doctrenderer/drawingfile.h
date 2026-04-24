@@ -659,7 +659,7 @@ private:
 		double dPageDpiX, dPageDpiY;
 		double dWidth, dHeight;
 		m_pFile->GetPageInfo(nPageIndex, &dWidth, &dHeight, &dPageDpiX, &dPageDpiY);
-		if (m_nType == 2)
+		if (m_nType == 2 || m_nType == 3)
 		{
 			dWidth    = dWidth    / 25.4 * 96.0;
 			dHeight   = dHeight   / 25.4 * 96.0;
