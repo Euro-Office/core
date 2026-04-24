@@ -73,7 +73,7 @@ CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pF
 		oFormat.wsName  = new std::wstring(m_wsFontName);
 		oFormat.bBold   = new INT(m_bBold   ? TRUE : FALSE);
 		oFormat.bItalic = new INT(m_bItalic ? TRUE : FALSE);
-		NSFonts::CFontInfo* pFontInfo = pFontManager->GetFontInfoByParams(oFormat);
+		NSFonts::CFontInfo* pFontInfo = NULL; // TODO pFontManager->GetFontInfoByParams(oFormat);
 
 		if (pFontInfo && L"" != pFontInfo->m_wsFontPath)
 		{
