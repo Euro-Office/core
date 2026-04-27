@@ -647,7 +647,7 @@ namespace OOX
 		}
 		void CCellXLSB::toXLSB(NSBinPptxRW::CXlsbBinaryWriter& oStream)
 		{
-			_INT16 nType = XLSB::rt_CellSt;
+			_INT16 nType = XLSB::rt_CellBlank;
 			if(m_oFormula.m_bIsInit && SimpleTypes::Spreadsheet::celltypeSharedString == m_oType.GetValue())
 			{
 				m_oType.SetValue(SimpleTypes::Spreadsheet::celltypeError);
@@ -674,6 +674,8 @@ namespace OOX
 							nType = XLSB::rt_CellReal;
 							m_oValue.m_dValue = result;
 						}
+						else if (m_oValue.m_oValue.m_nLen > 0)
+							nType = XLSB::rt_CellSt;
 					}break;
 					case SimpleTypes::Spreadsheet::celltypeInlineStr:
 					case SimpleTypes::Spreadsheet::celltypeStr: nType = XLSB::rt_CellSt; break;
