@@ -1,21 +1,17 @@
 #include "Font.h"
 
 #include "../Utils/Utils.h"
-#include "../../../OfficeUtils/src/ZipFolder.h"
-#include "../../../DesktopEditor/graphics/IRenderer.h"
+#include "../Utils/CFontChecker.h"
 
-#ifdef BUILDING_WASM_MODULE
-#include "../../../DesktopEditor/graphics/pro/Fonts.h"
-#include "../../../PdfFile/SrcReader/FontsWasm.h"
-#define FONTS_USE_ONLY_MEMORY_STREAMS
-#endif
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+#include "../../../OfficeUtils/src/ZipFolder.h"
 
 namespace OFD
 {
-CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pFolder, NSFonts::IFontManager* pFontManager)
+CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pFolder)
 	: IOFDElement(oXmlReader),
 	  m_wsCharset(L"unicode"), m_bItalic(false), m_bBold(false),
-	  m_bSerif(false), m_bFixedWidth(false), m_bSupportExternalFont(true)
+	  m_bSerif(false), m_bFixedWidth(false)
 {
 	if (0 != oXmlReader.GetAttributesCount() && oXmlReader.MoveToFirstAttribute())
 	{
@@ -66,54 +62,6 @@ CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pF
 			m_bSupportExternalFont = false;
 		#endif
 	}
-
-#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
-	// Embedded font
-	if (!m_wsFilePath.empty() && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
-	{
-		IFolder::CBuffer *pBuffer{nullptr};
-		std::wstring wsTempFileName;
-
-		if (pFolder->read(m_wsFilePath, pBuffer) && nullptr != pBuffer)
-		{
-			wsTempFileName = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->GenerateId();
-			NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Add(wsTempFileName, pBuffer->Buffer, (LONG)pBuffer->Size, true);
-			m_wsFilePath = wsTempFileName;
-
-			delete pBuffer;
-
-			return;
-		}
-	}
-
-	if (nullptr == pFontManager)
-		return;
-
-	// Font selection
-	NSFonts::CFontSelectFormat oFormat;
-	oFormat.wsName  = new std::wstring(m_wsFontName);
-	oFormat.bBold   = new INT(m_bBold   ? TRUE : FALSE);
-	oFormat.bItalic = new INT(m_bItalic ? TRUE : FALSE);
-	NSFonts::CFontInfo* pFontInfo = pFontManager->GetFontInfoByParams(oFormat);
-
-	if (nullptr != pFontInfo && !pFontInfo->m_wsFontPath.empty())
-	{
-		m_wsFilePath = pFontInfo->m_wsFontPath;
-
-		if (NSWasm::IsJSEnv())
-			m_wsFilePath = pFontInfo->m_wsFontName;
-
-		if (!m_wsFilePath.empty())
-		{
-			m_wsFilePath = NSWasm::LoadFont(m_wsFilePath, pFontInfo->m_bBold, pFontInfo->m_bItalic);
-			if (m_wsFilePath.empty())
-			{
-				// The font isn't ready yet, which means it's not being put to pRenderer at all. Later, when the font is loaded, the page will be redrawn.
-				return;
-			}
-		}
-	}
-#endif
 }
 
 void CFont::Apply(IRenderer* pRenderer) const
@@ -131,15 +79,14 @@ void CFont::Apply(IRenderer* pRenderer) const
 	pRenderer->put_FontStyle(nFontStyle);
 
 #ifdef FONTS_USE_ONLY_MEMORY_STREAMS
-	if (m_wsFilePath.empty())
+	if (m_wsSelectedFont.empty())
 		return;
 	// put_FontName cannot be called, otherwise pRenderer will have uncontrolled font selection
-	pRenderer->put_FontPath(m_wsFilePath); // The font has been added to the GlobalMemoryStorage fonts, so it can be put
+	pRenderer->put_FontPath(m_wsSelectedFont); // The font has been added to the GlobalMemoryStorage fonts, so it can be put
 #else
 	pRenderer->put_FontName(m_wsFontName);
 	if (m_bSupportExternalFont && !m_wsFilePath.empty())
 		pRenderer->put_FontPath(m_wsFilePath);
 #endif
-
 }
 }

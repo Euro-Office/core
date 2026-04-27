@@ -6,14 +6,16 @@
 class IFolder;
 class IRenderer;
 
-namespace NSFonts { class IFontManager; }
+#ifdef BUILDING_WASM_MODULE
+#define FONTS_USE_ONLY_MEMORY_STREAMS
+#endif
 
 namespace OFD
 {
 class CFont : public IOFDElement
 {
 public:
-	CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder *pFolder, NSFonts::IFontManager* pFontManager);
+	CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder *pFolder);
 
 	void Apply(IRenderer* pRenderer) const;
 private:
@@ -27,7 +29,13 @@ private:
 
 	std::wstring m_wsFilePath;
 
+	#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+	std::wstring m_wsSelectedFont;
+	#else
 	bool         m_bSupportExternalFont;
+	#endif
+
+	friend class CFontChecker;
 };
 }
 

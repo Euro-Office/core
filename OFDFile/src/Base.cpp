@@ -105,7 +105,7 @@ CDocBody::~CDocBody()
 	ClearContainer(m_arSignatures);
 }
 
-CDocBody* CDocBody::Read(CXmlReader& oLiteReader, IFolder* pFolder, NSFonts::IFontManager* pFontManager)
+CDocBody* CDocBody::Read(CXmlReader& oLiteReader, IFolder* pFolder)
 {
 	if (L"ofd:DocBody" != oLiteReader.GetName())
 		return nullptr;
@@ -131,7 +131,7 @@ CDocBody* CDocBody::Read(CXmlReader& oLiteReader, IFolder* pFolder, NSFonts::IFo
 			}
 		}
 		else if ("ofd:DocRoot" == sNodeName)
-			pDocBody->m_oDocument.Read(oLiteReader.GetText2(), pFolder, pFontManager);
+			pDocBody->m_oDocument.Read(oLiteReader.GetText2(), pFolder);
 		else if ("ofd:Signatures" == sNodeName)
 			pDocBody->ReadSignatures(oLiteReader.GetText2(), pFolder);
 	}
@@ -160,6 +160,10 @@ bool CDocBody::GetPageSize(int nPageIndex, double& dWidth, double& dHeight) cons
 	return m_oDocument.GetPageSize(nPageIndex, dWidth, dHeight);
 }
 
+void CDocBody::UpdateFonts(CFontChecker* pFontChecker)
+{
+	m_oDocument.UpdateFonts(pFontChecker);
+}
 CBase::CBase()
 {}
 
@@ -169,7 +173,7 @@ CBase::~CBase()
 		RELEASEOBJECT(pDocBody);
 }
 
-bool CBase::Read(IFolder* pFolder, NSFonts::IFontManager* pFontManager)
+bool CBase::Read(IFolder* pFolder)
 {
 	if (nullptr == pFolder || !pFolder->existsXml(L"OFD.xml"))
 		return false;
@@ -185,7 +189,7 @@ bool CBase::Read(IFolder* pFolder, NSFonts::IFontManager* pFontManager)
 
 	while (oLiteReader.ReadNextSiblingNode(nDepth))
 	{
-		pDocBody = CDocBody::Read(oLiteReader, pFolder, pFontManager);
+		pDocBody = CDocBody::Read(oLiteReader, pFolder);
 		if (nullptr != pDocBody)
 			m_arDocBodies.push_back(pDocBody);
 	}
@@ -215,5 +219,11 @@ void CBase::GetPageSize(int nPageIndex, double& dWidth, double& dHeight) const
 	for (const CDocBody* pDocBody : m_arDocBodies)
 		if (pDocBody->GetPageSize(nPageIndex, dWidth, dHeight))
 			return;
+}
+
+void CBase::UpdateFonts(CFontChecker* pFontChecker)
+{
+	for (CDocBody* pDocBody : m_arDocBodies)
+		pDocBody->UpdateFonts(pFontChecker);
 }
 }

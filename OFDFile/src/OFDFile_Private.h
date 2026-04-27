@@ -7,13 +7,16 @@ namespace NSFonts { class IFontManager; }
 
 class COFDFile_Private
 {
-	NSFonts::IApplicationFonts* m_pAppFonts;
-	NSFonts::IFontManager*      m_pFontManager;
-	IFolder*                    m_pTempFolder;
+	IFolder*           m_pFolder;
 
-	OFD::CBase m_oBase;
+	OFD::CFontChecker* m_pFontChecker;
 
-	bool Read(IFolder* pFolder);
+	std::wstring       m_wsTempDir;
+	bool               m_bIsTempDirOwner;
+
+	OFD::CBase         m_oBase;
+
+	bool Read();
 public:
 	COFDFile_Private(NSFonts::IApplicationFonts* pFonts);
 	~COFDFile_Private();

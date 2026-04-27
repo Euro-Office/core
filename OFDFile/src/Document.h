@@ -33,12 +33,14 @@ public:
 
 	bool Empty() const;
 
-	bool Read(const std::wstring& wsFilePath, IFolder* pFolder, NSFonts::IFontManager* pFontManager);
+	bool Read(const std::wstring& wsFilePath, IFolder* pFolder);
 
 	bool DrawPage(IRenderer* pRenderer, int nPageIndex) const;
 
 	unsigned int GetPageCount() const;
 	bool GetPageSize(int nPageIndex, double& dWidth, double &dHeight) const;
+
+	void UpdateFonts(CFontChecker* pFontChecker);
 };
 }
 

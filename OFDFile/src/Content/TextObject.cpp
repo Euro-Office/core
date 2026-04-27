@@ -1,6 +1,7 @@
 #include "TextObject.h"
 
 #include "../Utils/Utils.h"
+#include "../Utils/CFontChecker.h"
 
 #include "../../../DesktopEditor/graphics/IRenderer.h"
 
@@ -187,7 +188,8 @@ void CTextObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 
 	const CRes* pPublicRes{oCommonData.GetPublicRes()};
 
-	const CFont* pFont = pPublicRes->GetFont(m_unFontID);
+	//Not the best solution, but for now there are no other options
+	CFont* pFont = const_cast<CFont*>(pPublicRes->GetFont(m_unFontID));
 
 	if (nullptr == pFont)
 		return;

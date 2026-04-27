@@ -50,12 +50,14 @@ public:
 	CDocBody();
 	~CDocBody();
 
-	static CDocBody* Read(CXmlReader& oLiteReader, IFolder* pFolder, NSFonts::IFontManager* pFontManager);
+	static CDocBody* Read(CXmlReader& oLiteReader, IFolder* pFolder);
 
 	bool DrawPage(IRenderer* pRenderer, int nPageIndex) const;
 
 	unsigned int GetPageCount() const;
 	bool GetPageSize(int nPageIndex, double& dWidth, double& dHeight) const;
+
+	void UpdateFonts(CFontChecker* pFontChecker);
 };
 
 class CBase
@@ -65,11 +67,13 @@ public:
 	CBase();
 	~CBase();
 
-	bool Read(IFolder* pFolder, NSFonts::IFontManager* pFontManager);
+	bool Read(IFolder* pFolder);
 	void DrawPage(IRenderer* pRenderer, int nPageIndex) const;
 
 	unsigned int GetPageCount() const;
 	void GetPageSize(int nPageIndex, double& dWidth, double& dHeight) const;
+
+	void UpdateFonts(CFontChecker* pFontChecker);
 };
 }
 

@@ -829,6 +829,7 @@ HEADERS += \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/CFontChecker.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/Types.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/Utils.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/XmlReader.h
@@ -859,6 +860,7 @@ SOURCES += \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Utils/CFontChecker.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/Types.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/XmlReader.cpp
 

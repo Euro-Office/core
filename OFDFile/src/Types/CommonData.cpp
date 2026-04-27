@@ -16,7 +16,7 @@ CCommonData::~CCommonData()
 		delete m_pDocumentRes;
 }
 
-bool CCommonData::Read(CXmlReader& oLiteReader, const std::wstring& wsRootPath, IFolder* pFolder, NSFonts::IFontManager* pFontManager)
+bool CCommonData::Read(CXmlReader& oLiteReader, const std::wstring& wsRootPath, IFolder* pFolder)
 {
 	if ("ofd:CommonData" != oLiteReader.GetNameA())
 		return false;
@@ -35,14 +35,14 @@ bool CCommonData::Read(CXmlReader& oLiteReader, const std::wstring& wsRootPath, 
 			if (nullptr == m_pPublicRes)
 				m_pPublicRes = new CRes();
 
-			m_pPublicRes->Read(oLiteReader.GetText2(), wsRootPath, pFolder, pFontManager);
+			m_pPublicRes->Read(oLiteReader.GetText2(), wsRootPath, pFolder);
 		}
 		else if ("ofd:DocumentRes" == sNodeName)
 		{
 			if(nullptr == m_pDocumentRes)
 				m_pDocumentRes = new CRes();
 
-			m_pDocumentRes->Read(oLiteReader.GetText2(), wsRootPath, pFolder, pFontManager);
+			m_pDocumentRes->Read(oLiteReader.GetText2(), wsRootPath, pFolder);
 		}
 		else if ("ofd:MaxUnitID" == sNodeName)
 			m_unMaxUnitID = oLiteReader.GetUInteger();
@@ -84,5 +84,14 @@ const CTemplatePage* CCommonData::GetTemplatePage(unsigned int unTemplateID, EZO
 	}
 
 	return nullptr;
+}
+
+void CCommonData::UpdateFonts(CFontChecker* pFontChecker)
+{
+	if (nullptr != m_pPublicRes)
+		m_pPublicRes->UpdateFonts(pFontChecker);
+
+	if (nullptr != m_pDocumentRes)
+		m_pDocumentRes->UpdateFonts(pFontChecker);
 }
 }

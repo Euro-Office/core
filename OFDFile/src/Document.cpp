@@ -45,7 +45,7 @@ bool CDocument::Empty() const
 	return m_mPages.empty();
 }
 
-bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder, NSFonts::IFontManager* pFontManager)
+bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 {
 	if (wsFilePath.empty() || !CanUseThisPath(wsFilePath, pFolder->getFullFilePath(L"")))
 		return false;
@@ -64,7 +64,7 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder, NSFonts::
 		sNodeName = oLiteReader.GetNameA();
 
 		if ("ofd:CommonData" == sNodeName)
-			m_oCommonData.Read(oLiteReader, wsCoreDirectory, pFolder, pFontManager);
+			m_oCommonData.Read(oLiteReader, wsCoreDirectory, pFolder);
 		else if ("ofd:Pages" == sNodeName)
 		{
 			const int nPagesDepth = oLiteReader.GetDepth();
@@ -144,5 +144,10 @@ bool CDocument::GetPageSize(int nPageIndex, double& dWidth, double& dHeight) con
 	itFound->second->GetPageSize(dWidth, dHeight);
 
 	return true;
+}
+
+void CDocument::UpdateFonts(CFontChecker* pFontChecker)
+{
+	m_oCommonData.UpdateFonts(pFontChecker);
 }
 }
