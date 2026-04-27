@@ -1578,25 +1578,31 @@ namespace NSFile
 	std::wstring CFileBinary::CreateTempFileWithUniqueName(const std::wstring& strFolderPathRoot, const std::wstring& Prefix)
 	{
 #if defined(_WIN32) || defined(_WIN32_WCE) || defined(_WIN64)
-		wchar_t pBuffer[MAX_PATH + 1];
-		::GetTempFileNameW(strFolderPathRoot.c_str(), Prefix.c_str(), 0, pBuffer);
-		std::wstring sRet(pBuffer);
-		return sRet;
+		wchar_t pBuffer[MAX_PATH + 1] = {0};
+		if (0 == ::GetTempFileNameW(strFolderPathRoot.c_str(), Prefix.c_str(), 0, pBuffer))
+			return std::wstring();
+		return std::wstring(pBuffer);
 #else
-		char pcRes[MAX_PATH];
-		BYTE* pData = (BYTE*)pcRes;
-
 		std::wstring sPrefix = strFolderPathRoot + L"/" + Prefix + L"_XXXXXX";
-		LONG lLen = 0;
-		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sPrefix.c_str(), (LONG)sPrefix.length(), pData, lLen);
-		pcRes[lLen] = '\0';
 
-		int res = mkstemp(pcRes);
+		LONG lLen = 0;
+		BYTE* pcRes = NULL;
+		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sPrefix.c_str(), (LONG)sPrefix.length(), pcRes, lLen);
+
+		if (lLen <= 0)
+		{
+			delete[] pcRes;
+			return std::wstring();
+		}
+
+		int res = mkstemp((char*)pcRes);
 		if (-1 != res)
 			close(res);
 
-		std::string sRes = pcRes;
-		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sRes.c_str(), sRes.length());
+		std::wstring sResult = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)pcRes, (LONG)lLen);
+
+		delete[] pcRes;
+		return sResult;
 #endif
 	}
 	bool CFileBinary::OpenTempFile(std::wstring *pwsName, FILE **ppFile, wchar_t *wsMode, wchar_t *wsExt, wchar_t *wsFolder, wchar_t* wsName)
