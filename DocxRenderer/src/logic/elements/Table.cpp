@@ -3,6 +3,8 @@
 #include "../../resources/SingletonTemplate.h"
 #include "../../resources/utils.h"
 
+#include <iterator>
+
 namespace NSDocxRenderer
 {
 	CTable::CCell::CCell(const CCell& other)
@@ -276,9 +278,6 @@ namespace NSDocxRenderer
 			m_dRight = pRow->m_dRight;
 			m_dWidth = pRow->m_dWidth;
 			m_dHeight = 0.0;
-
-			for (const auto& c : pRow->m_arCells)
-				m_arGridCols.push_back(c->m_dWidth);
 		}
 
 		UpdateGrids(pRow);
@@ -289,12 +288,87 @@ namespace NSDocxRenderer
 	}
 	void CTable::UpdateGrids(row_ptr_t pRow)
 	{
-		if (pRow->m_arCells.size() > m_arGridCols.size())
+		if (!pRow || pRow->m_arCells.empty())
+			return;
+
+		// set first grids
+		if (m_arGridCols.empty())
 		{
-			m_arGridCols.clear();
 			for (const auto& c : pRow->m_arCells)
 				m_arGridCols.push_back(c->m_dWidth);
+			return;
 		}
+
+		int size_diff = pRow->m_arCells.size() - m_arGridCols.size();
+		bool greater = size_diff > 0;
+		std::vector<double> widths;
+
+		if (size_diff)
+			for (const auto& c : pRow->m_arCells)
+				widths.push_back(c->m_dWidth);
+		else
+			return;
+
+		auto update = [this, &pRow, &widths, &size_diff, &greater] (std::vector<double>::iterator& it_to_compare, std::vector<double>::iterator& it_to_update) {
+			auto double_compare_eq = [] (double a, double b) {
+				return fabs(a - b) < c_dGRAPHICS_ERROR_MM;
+			};
+
+			if (!double_compare_eq(*it_to_compare, *it_to_update))
+			{
+				size_t grid_count = 1;
+				std::vector<double> new_grids;
+				auto grid_sum = [&new_grids] () -> double {
+					double sum = 0.0;
+					for (const auto& g : new_grids)
+						sum += g;
+					return sum;
+				};
+
+				new_grids.push_back(*it_to_compare++);
+
+				for (; it_to_compare != (greater ? widths.end() : m_arGridCols.end()); ++it_to_compare)
+				{
+					if (double_compare_eq(*it_to_update, grid_sum()))
+						break;
+					new_grids.push_back(*it_to_compare);
+					size_diff--;
+					grid_count++;
+				}
+
+				size_t index = std::distance(greater ? m_arGridCols.begin() : widths.begin(), it_to_update);
+
+				if (greater)
+				{
+					it_to_update = m_arGridCols.erase(it_to_update);
+					auto insert_it = m_arGridCols.insert(it_to_update, new_grids.begin(), new_grids.end());
+					it_to_update = std::next(insert_it, new_grids.size() - 1);
+
+					for (auto& r : m_arRows)
+						(*(r->m_arCells.begin() + index))->m_nGridSpan = grid_count;
+				}
+				else
+				{
+					(*(pRow->m_arCells.begin() + index))->m_nGridSpan = grid_count;
+					++it_to_update;
+				}
+			}
+			else
+			{
+				++it_to_update;
+				++it_to_compare;
+			}
+		};
+
+		// two main cases:
+		//
+		// 1. if the new row has merged cells in it
+		// 2. if the previous rows in table had merged cells
+		if (!greater) size_diff = -size_diff;
+		for (auto it1 = greater ? widths.begin() : m_arGridCols.begin(), it2 = greater ? m_arGridCols.begin() : widths.begin();
+			 size_diff > 0 && it1 != (greater ? widths.end() : m_arGridCols.end()) && it2 != (greater ? m_arGridCols.end() : widths.end());
+			 )
+			update(it1, it2);
 	}
 	void CTable::CalcGridCols()
 	{
