@@ -2113,7 +2113,12 @@ namespace NSDocxRenderer
 		// an order set storing the lower bound of each row of a table
 		std::set<double, std::less<double>> lines;
 		for (auto& gr_cell : m_arGraphicalCells)
-			lines.insert(gr_cell->m_dBot);
+		{
+			auto bot = gr_cell->m_dBot;
+			// check posible lines error
+			if (lines.empty() || fabs(*lines.rbegin() - bot) > c_dGRAPHICS_ERROR_MM)
+				lines.insert(bot);
+		}
 		// the current value of the bottom row border
 		// used to check that the cell is vertically merged
 		auto cur_bot_it = lines.begin();
@@ -2134,7 +2139,6 @@ namespace NSDocxRenderer
 		};
 
 		auto complete_table = [&tables] (table_ptr_t table) -> table_ptr_t {
-			table->CalcGridCols();
 			tables.push_back(table);
 			return std::make_shared<CTable>();
 		};
@@ -2220,7 +2224,7 @@ namespace NSDocxRenderer
 		// looking for a paragraph that is a column of text lines
 		for (auto& p : m_arParagraphs)
 		{
-			if (!p || p->m_arTextLines.size() < 2)
+			if (!p || p->m_arTextLines.size() <= 2)
 				continue;
 
 			// a paragraph is a column of text if
@@ -2242,9 +2246,9 @@ namespace NSDocxRenderer
 				case CParagraph::TextAlignmentType::tatByRight:
 					margin_diffs.insert(curr_text_line->m_dRight);
 					break;
-				case CParagraph::TextAlignmentType::tatByCenter:
-					margin_diffs.insert(curr_text_line->m_dLeft + (curr_text_line->m_dRight - curr_text_line->m_dLeft) / 2.0);
-					break;
+				// case CParagraph::TextAlignmentType::tatByCenter:
+				// 	margin_diffs.insert(curr_text_line->m_dLeft + (curr_text_line->m_dRight - curr_text_line->m_dLeft) / 2.0);
+				// 	break;
 				default:
 					break;
 				}

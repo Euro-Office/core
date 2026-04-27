@@ -54,6 +54,7 @@ const double c_dAVERAGE_SPACE_WIDTH_COEF        = 0.9;
 const double c_dSPACE_WIDTH_COEF                = 0.4;
 const double c_dMIN_ROTATION                    = 0.01;
 const double c_dMAX_FIRST_LINE_INDENT           = 20.0;
+constexpr double c_dSTANDART_TABLE_SPACING_MM = 108.0 / c_dMMToDx;
 
 const UINT   c_iWhiteColor = 0xFFFFFF;
 const UINT   c_iBlackColor = 0x000000;
@@ -64,7 +65,6 @@ const UINT   c_iGreyColor2 = 0x999999;
 const double c_dSTANDART_LEFT_INDENT_MM = 30;
 const double c_dSTANDART_RIGHT_INDENT_MM = 15;
 const double c_dSTANDART_FIRSTLINE_INDENT_MM = 12.5;
-const double c_dSTANDART_TABLE_SPACING_MM = 1.9;
 
 const uint32_t c_SPACE_SYM = 0x20;
 
