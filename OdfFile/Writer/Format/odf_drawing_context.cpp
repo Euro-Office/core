@@ -691,6 +691,12 @@ void odf_drawing_context::end_drawing()
 					new_y2 = odf_types::length(0.0,odf_types::length::unit::cm);
 				}
  
+				if(impl_->current_drawing_state_.flipH_)
+				{
+					new_x = cx;
+					new_x2 = odf_types::length(0.0,odf_types::length::unit::cm);
+				}
+				
                 // new_x = (cx / 2.) + ((cx / 2.)* (-1) * cos(angle) - (center_y) * (-1) * sin(angle) );
                 // new_y = (center_y) + ((cx / 2.)* (-1) * sin(angle) + (center_y) * (-1) * cos(angle) );
 				point_after_turning_the_corner(new_x,new_y,center_x,center_y,angle);
@@ -702,6 +708,7 @@ void odf_drawing_context::end_drawing()
 				rotate = -*rotate;
 				new_y = odf_types::length(std::max(new_y.get_value(),new_y2.get_value()),odf_types::length::unit::cm);
 			}
+			if(impl_->current_drawing_state_.flipH_)
 
 			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(/*impl_->current_group_ && impl_->current_group_->rotate ? -(*rotate - *impl_->current_group_->rotate):*/-*rotate) + std::wstring(L")");
 
