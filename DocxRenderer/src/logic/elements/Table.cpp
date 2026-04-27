@@ -299,24 +299,23 @@ namespace NSDocxRenderer
 			return;
 		}
 
-		int size_diff = pRow->m_arCells.size() - m_arGridCols.size();
-		bool greater = size_diff > 0;
 		std::vector<double> widths;
 
-		if (size_diff)
-			for (const auto& c : pRow->m_arCells)
-				widths.push_back(c->m_dWidth);
-		else
-			return;
+		for (const auto& c : pRow->m_arCells)
+			widths.push_back(c->m_dWidth);
 
-		auto update = [this, &pRow, &widths, &size_diff, &greater] (std::vector<double>::iterator& it_to_compare, std::vector<double>::iterator& it_to_update) {
+		auto update = [this, &pRow, &widths] (std::vector<double>::iterator& it1, std::vector<double>::iterator& it2) {
 			auto double_compare_eq = [] (double a, double b) {
 				return fabs(a - b) < c_dGRAPHICS_ERROR_MM;
 			};
 
-			if (!double_compare_eq(*it_to_compare, *it_to_update))
+			if (!double_compare_eq(*it1, *it2))
 			{
-				size_t grid_count = 1;
+				bool greater = (*it2 - *it1) > 0;
+				auto& it_to_compare = greater ? it1 : it2;
+				auto& it_to_update = greater ? it2 : it1;
+
+				unsigned int grid_count = 1;
 				std::vector<double> new_grids;
 				auto grid_sum = [&new_grids] () -> double {
 					double sum = 0.0;
@@ -332,7 +331,6 @@ namespace NSDocxRenderer
 					if (double_compare_eq(*it_to_update, grid_sum()))
 						break;
 					new_grids.push_back(*it_to_compare);
-					size_diff--;
 					grid_count++;
 				}
 
@@ -342,32 +340,48 @@ namespace NSDocxRenderer
 				{
 					it_to_update = m_arGridCols.erase(it_to_update);
 					auto insert_it = m_arGridCols.insert(it_to_update, new_grids.begin(), new_grids.end());
-					it_to_update = std::next(insert_it, new_grids.size() - 1);
+					it_to_update = std::next(insert_it, grid_count);
 
 					for (auto& r : m_arRows)
-						(*(r->m_arCells.begin() + index))->m_nGridSpan = grid_count;
+					{
+						// get the corret index for each row
+						//
+						// needed for the case when the previous row
+						// had a merged cells before the index,
+						// and in the current row these cells are not merged
+						//
+						//
+						// [1  2][3  4][...] - in this row index need to be 2, not 3
+						// [1][2][3  4][...] - in this row index also 3
+						// [1][2][3][4][...]
+						//        ^
+						//        |
+						// get update index for previous rows - 3
+						auto correct_index = index;
+						for (auto i = 0; i < index + 1; i++)
+							correct_index -= r->m_arCells[i]->m_nGridSpan - 1;
+						r->m_arCells.at(correct_index)->m_nGridSpan = grid_count;
+					}
 				}
 				else
 				{
-					(*(pRow->m_arCells.begin() + index))->m_nGridSpan = grid_count;
+					pRow->m_arCells.at(index)->m_nGridSpan = grid_count;
 					++it_to_update;
 				}
 			}
 			else
 			{
-				++it_to_update;
-				++it_to_compare;
+				++it1;
+				++it2;
 			}
 		};
 
-		// two main cases:
+		// three main cases:
 		//
 		// 1. if the new row has merged cells in it
 		// 2. if the previous rows in table had merged cells
-		if (!greater) size_diff = -size_diff;
-		for (auto it1 = greater ? widths.begin() : m_arGridCols.begin(), it2 = greater ? m_arGridCols.begin() : widths.begin();
-			 size_diff > 0 && it1 != (greater ? widths.end() : m_arGridCols.end()) && it2 != (greater ? m_arGridCols.end() : widths.end());
-			 )
+		// 3. if 1 and 2 together
+		for (auto it1 = widths.begin(), it2 = m_arGridCols.begin(); it1 != widths.end() && it2 != m_arGridCols.end(); )
 			update(it1, it2);
 	}
 	void CTable::CalcGridCols()
