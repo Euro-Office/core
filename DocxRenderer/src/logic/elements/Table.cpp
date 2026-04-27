@@ -161,8 +161,7 @@ namespace NSDocxRenderer
 		}
 		// in ooxml table start from standart spacing (1.9), not from left cell border
 		// therefore the left border is moved by this value
-		if (m_oLeftBorder.lineType != eLineType::ltNone)
-			pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
+		pParagraph->m_dLeftBorder -= c_dSTANDART_TABLE_SPACING_MM;
 		if (m_oBotBorder.lineType != eLineType::ltNone)
 			m_oBotBorder.dSpacing = pParagraph->m_dSpaceAfter;
 		m_arParagraphs.push_back(pParagraph);

@@ -2123,10 +2123,13 @@ namespace NSDocxRenderer
 			row_height = cell->m_dHeight;
 		};
 
-		auto complete_row = [&table, &row_height, &cur_bot_it] (CTable::row_ptr_t row) -> CTable::row_ptr_t {
+		auto complete_row = [&table, &row_height, &cur_bot_it, &lines] (CTable::row_ptr_t row) -> CTable::row_ptr_t {
 			row->m_dHeight = row_height;
 			table->AddRow(row);
+			auto tmp_it = cur_bot_it;
 			++cur_bot_it;
+			if (cur_bot_it == lines.end())
+				cur_bot_it = tmp_it;
 			return std::make_shared<CTable::CRow>();
 		};
 
@@ -2311,12 +2314,13 @@ namespace NSDocxRenderer
 
 			if (fabs(curr_table->m_dTop - next_table->m_dTop) < c_dCOMPARE_EPSILON &&
 				fabs(curr_table->m_dBot - next_table->m_dBot) < c_dCOMPARE_EPSILON)
-			{
 				if (CTable::MergeTables(curr_table, next_table))
+				{
 					tables.erase(it + 1);
-				else
-					++it;
-			}
+					continue;
+				}
+
+			++it;
 		}
 
 		return tables;
