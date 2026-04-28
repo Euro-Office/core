@@ -20,7 +20,7 @@ class CDocInfo
 	std::wstring m_wsTitle;
 	std::wstring m_wsAuthor;
 	std::wstring m_wsSubject;
-	std::wstring m_wsAbstact;
+	std::wstring m_wsAbstruct;
 
 	std::wstring m_wsCreationDate;
 	std::wstring m_wsModDate;
@@ -32,10 +32,12 @@ class CDocInfo
 	std::wstring m_wsCreator;
 	std::wstring m_wsCreatorVersion;
 
-	std::vector<std::wstring> m_arCustomData;
+	std::vector<std::pair<std::wstring, std::wstring>> m_arCustomData;
 public:
 	CDocInfo();
 	bool Read(CXmlReader& oLiteReader);
+
+	std::wstring GetInfo() const;
 };
 
 class CDocBody
@@ -58,6 +60,8 @@ public:
 	bool GetPageSize(int nPageIndex, double& dWidth, double& dHeight) const;
 
 	void UpdateFonts(CFontChecker* pFontChecker);
+
+	std::wstring GetInfo() const;
 };
 
 class CBase
@@ -74,6 +78,9 @@ public:
 	void GetPageSize(int nPageIndex, double& dWidth, double& dHeight) const;
 
 	void UpdateFonts(CFontChecker* pFontChecker);
+
+	std::wstring GetInfo() const;
+	unsigned char* GetLinks(int nPageIndex) const;
 };
 }
 

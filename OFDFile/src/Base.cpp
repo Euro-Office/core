@@ -31,10 +31,10 @@ CDocInfo::CDocInfo()
 
 bool CDocInfo::Read(CXmlReader& oLiteReader)
 {
-	if (L"ofd:DocInfo" != oLiteReader.GetName())
+	if ("ofd:DocInfo" != oLiteReader.GetNameA())
 		return false;
 
-	const int nDepth = oLiteReader.GetDepth();
+	const int nDepth{oLiteReader.GetDepth()};
 
 	std::string sNodeName;
 
@@ -46,7 +46,7 @@ bool CDocInfo::Read(CXmlReader& oLiteReader)
 		ELSE_IF_CHECK_NODE("ofd:Title", m_wsTitle);
 		ELSE_IF_CHECK_NODE("ofd:Author", m_wsAuthor);
 		ELSE_IF_CHECK_NODE("ofd:Subject", m_wsSubject);
-		ELSE_IF_CHECK_NODE("ofd:Abstruct", m_wsAbstact);
+		ELSE_IF_CHECK_NODE("ofd:Abstruct", m_wsAbstruct);
 		ELSE_IF_CHECK_NODE("ofd:CreationDate", m_wsCreationDate);
 		ELSE_IF_CHECK_NODE("ofd:ModDate", m_wsModDate);
 		ELSE_IF_CHECK_NODE("ofd:Cover", m_wsCover);
@@ -54,9 +54,85 @@ bool CDocInfo::Read(CXmlReader& oLiteReader)
 		ELSE_IF_CHECK_NODE("ofd:CreatorVersion", m_wsCreatorVersion);
 		else if ("ofd:DocUsage" == sNodeName)
 			m_eDocUsage = GetDocUsage(oLiteReader.GetText2());
+		else if ("ofd:CustomDatas" == sNodeName)
+		{
+			const int nCustomDatasDepth{oLiteReader.GetDepth()};
+
+			std::wstring wsName, wsData;
+
+			while (oLiteReader.ReadNextSiblingNode(nCustomDatasDepth))
+			{
+				if ("ofd:CustomData" != oLiteReader.GetNameA() || !oLiteReader.MoveToFirstAttribute())
+					continue;
+
+				do
+				{
+					if ("Name" == oLiteReader.GetNameA())
+					{
+						wsName = oLiteReader.GetText();
+						break;
+					}
+				}while(oLiteReader.MoveToNextAttribute());
+
+				oLiteReader.MoveToElement();
+
+				wsData = oLiteReader.GetText2();
+
+				if (!wsName.empty() && !wsData.empty())
+					m_arCustomData.push_back(std::make_pair(wsName, wsData));
+
+				wsName.clear();
+				wsData.clear();
+			}
+		}
 	}
 
 	return true;
+}
+
+std::wstring CDocInfo::GetInfo() const
+{
+	std::wstring wsInfo;
+
+	#define WRITE_INFO(info_name)\
+	if (!m_ws##info_name.empty())\
+		wsInfo += L"\"" + std::wstring(L#info_name) + L"\":\"" + m_ws##info_name + L"\","
+
+	WRITE_INFO(DocId);
+	WRITE_INFO(Title);
+	WRITE_INFO(Author);
+	WRITE_INFO(Subject);
+	WRITE_INFO(Abstruct);
+	WRITE_INFO(CreationDate);
+	WRITE_INFO(ModDate);
+	WRITE_INFO(Cover);
+	WRITE_INFO(Creator);
+	WRITE_INFO(CreatorVersion);
+
+	switch (m_eDocUsage)
+	{
+		case EDocUsege::Normal:     break;
+		case EDocUsege::EBook:      wsInfo += L"\"DocUsage\":\"Book\",";      break;
+		case EDocUsege::ENewsPaper: wsInfo += L"\"DocUsage\":\"NewsPaper\","; break;
+		case EDocUsege::EMagzine:   wsInfo += L"\"DocUsage\":\"Magzine\",";   break;
+	}
+
+	if (m_arCustomData.empty())
+	{
+		wsInfo.pop_back();
+		return wsInfo;
+	}
+
+	wsInfo += L"\"CustomDatas\":{";
+
+	for (const std::pair<std::wstring, std::wstring>& oCustomData : m_arCustomData)
+		wsInfo += L'"' + oCustomData.first + L"\":\"" + oCustomData.second + L"\",";
+
+	wsInfo.pop_back();
+
+	wsInfo += L'}';
+
+	return wsInfo;
 }
 
 bool CDocBody::ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder)
@@ -164,6 +240,12 @@ void CDocBody::UpdateFonts(CFontChecker* pFontChecker)
 {
 	m_oDocument.UpdateFonts(pFontChecker);
 }
+
+std::wstring CDocBody::GetInfo() const
+{
+	return m_oDocInfo.GetInfo();
+}
+
 CBase::CBase()
 {}
 
@@ -225,5 +307,28 @@ void CBase::UpdateFonts(CFontChecker* pFontChecker)
 {
 	for (CDocBody* pDocBody : m_arDocBodies)
 		pDocBody->UpdateFonts(pFontChecker);
+}
+
+std::wstring CBase::GetInfo() const
+{
+	if (m_arDocBodies.empty())
+		return std::wstring();
+
+	if (1 == m_arDocBodies.size())
+		return m_arDocBodies.front()->GetInfo();
+
+	std::wstring wsInfo;
+
+	for (size_t unIndex = 0; unIndex < m_arDocBodies.size(); ++unIndex)
+		wsInfo += L"\"Document " + std::to_wstring(unIndex + 1) + L"\":{" + m_arDocBodies[unIndex]->GetInfo() + L"},";
+
+	wsInfo.pop_back();
+
+	return wsInfo;
+}
+
+unsigned char* CBase::GetLinks(int nPageIndex) const
+{
+	return nullptr;
 }
 }

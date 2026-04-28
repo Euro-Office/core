@@ -18,6 +18,7 @@ CFontChecker::CFontChecker(NSFonts::IApplicationFonts* pApplicationFonts, IFolde
 	if (nullptr == pApplicationFonts)
 		return;
 
+	#ifdef BUILDING_WASM_MODULE
 	m_pFontManager = pApplicationFonts->GenerateFontManager();
 
 	if (nullptr == m_pFontManager)
@@ -31,6 +32,7 @@ CFontChecker::CFontChecker(NSFonts::IApplicationFonts* pApplicationFonts, IFolde
 		m_pFontManager->SetOwnerCache(pMeasurerCache);
 		pMeasurerCache->SetCacheSize(16);
 	}
+	#endif
 }
 
 void CFontChecker::Clear()
@@ -40,6 +42,7 @@ void CFontChecker::Clear()
 
 bool CFontChecker::UpdateFont(CFont* pFont)
 {
+	#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 	if (nullptr == pFont || !pFont->m_wsSelectedFont.empty())
 		return false;
 
@@ -55,7 +58,7 @@ bool CFontChecker::UpdateFont(CFont* pFont)
 		return false;
 
 
-#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+
 	// Embedded font
 	if (!pFont->m_wsFilePath.empty() && nullptr != m_pFolder && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
 	{
@@ -114,12 +117,16 @@ bool CFontChecker::UpdateFont(CFont* pFont)
 
 		return true;
 	}
-#endif
+	#endif
 	return false;
 }
 
 NSFonts::IApplicationFonts* CFontChecker::GetFonts() const
 {
+	#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
 	return (nullptr != m_pFontManager) ? m_pFontManager->GetApplication() : nullptr;
+	#else
+	return nullptr;
+	#endif
 }
 }

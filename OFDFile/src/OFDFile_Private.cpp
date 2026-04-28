@@ -143,6 +143,24 @@ NSFonts::IApplicationFonts* COFDFile_Private::GetFonts() const
 {
 	return (nullptr != m_pFontChecker) ? m_pFontChecker->GetFonts() : nullptr;
 }
+
+std::wstring COFDFile_Private::GetInfo() const
 {
-	return m_pAppFonts;
+	std::wstring wsInfo{L"{"};
+
+	wsInfo += m_oBase.GetInfo();
+
+	wsInfo += L"}";
+
+	return wsInfo;
+}
+
+unsigned char* COFDFile_Private::GetStructure() const
+{
+	return nullptr;
+}
+
+unsigned char* COFDFile_Private::GetLinks(int nPageIndex) const
+{
+	return m_oBase.GetLinks(nPageIndex);
 }

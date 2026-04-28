@@ -35,7 +35,11 @@ public:
 	void DrawPage(IRenderer* pRenderer, int nPageIndex);
 	void DrawPage(IRenderer* pRenderer, int nPageIndex, const double& dX, const double& dY, const double& dWidth, const double& dHeight);
 
-	NSFonts::IApplicationFonts* GetFonts();
+	NSFonts::IApplicationFonts* GetFonts() const;
+
+	std::wstring GetInfo() const;
+	unsigned char* GetStructure() const;
+	unsigned char* GetLinks(int nPageIndex) const;
 };
 
 #endif // OFDFILE_PRIVATE_H

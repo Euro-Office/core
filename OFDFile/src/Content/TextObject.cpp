@@ -188,8 +188,7 @@ void CTextObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 
 	const CRes* pPublicRes{oCommonData.GetPublicRes()};
 
-	//Not the best solution, but for now there are no other options
-	CFont* pFont = const_cast<CFont*>(pPublicRes->GetFont(m_unFontID));
+	const CFont* pFont{pPublicRes->GetFont(m_unFontID)};
 
 	if (nullptr == pFont)
 		return;
