@@ -311,6 +311,17 @@ namespace NSDocxRenderer
 
 			if (!double_compare_eq(*it1, *it2))
 			{
+				// define the type of merger
+				//
+				// First variant (greater = true)
+				//
+				// [...][k  k+1][...]
+				// [...][k][k+1][...]
+				//
+				// Second variant (grater = false)
+				//
+				// [...][k][k+1][...]
+				// [...][k  k+1][...]
 				bool greater = (*it2 - *it1) > 0;
 				auto& it_to_compare = greater ? it1 : it2;
 				auto& it_to_update = greater ? it2 : it1;
@@ -326,6 +337,17 @@ namespace NSDocxRenderer
 
 				new_grids.push_back(*it_to_compare++);
 
+				// collect the width until the sum of the cell withs becomes equal to the merged cell
+				//
+				// First variant (greater = true)
+				//
+				// widths from current row cells (vector widths) to new_grids,
+				// comare with width of table column (m_arGridCol)
+				//
+				// Second variant (greater = false)
+				//
+				// widths from table column widths (m_arGridCol),
+				// compare with cell width from current row
 				for (; it_to_compare != (greater ? widths.end() : m_arGridCols.end()); ++it_to_compare)
 				{
 					if (double_compare_eq(*it_to_update, grid_sum()))
@@ -336,6 +358,16 @@ namespace NSDocxRenderer
 
 				size_t index = std::distance(greater ? m_arGridCols.begin() : widths.begin(), it_to_update);
 
+				// First variant (greater = true)
+				//
+				// update the table column widths -
+				// add new widths and remove the old one,
+				// update the GridSpan for all required cells
+				// in the previous rows
+				//
+				// Second variant (greater = false)
+				//
+				// update GridSpan for required cell from current row
 				if (greater)
 				{
 					it_to_update = m_arGridCols.erase(it_to_update);

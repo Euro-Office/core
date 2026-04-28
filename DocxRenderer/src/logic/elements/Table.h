@@ -70,6 +70,8 @@ namespace NSDocxRenderer
 			CBorder m_oLeftBorder{};
 			CBorder m_oRightBorder{};
 
+			// a number indicating the number of cells
+			// that were merged horizontaly in this cell
 			unsigned int m_nGridSpan{1};
 			eVMerge m_eVMerge{CTable::CCell::eVMerge::vmRestart};
 
@@ -114,6 +116,8 @@ namespace NSDocxRenderer
 
 	private:
 		std::vector<row_ptr_t> m_arRows;
+		// vector of all widths of cells not merged horizontaly,
+		// the sum of which is equal to the width of the table
 		std::vector<double> m_arGridCols;
 	};
 } // namespace NSDocxRenderer
