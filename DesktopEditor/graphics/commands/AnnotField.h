@@ -203,6 +203,8 @@ public:
 		const std::vector<double>& GetBG();
 		const std::vector<CActionFieldPr*>& GetActions();
 
+		void SetFontName(const std::wstring& sName);
+
 		CButtonWidgetPr*    GetButtonWidgetPr();
 		CTextWidgetPr*      GetTextWidgetPr();
 		CChoiceWidgetPr*    GetChoiceWidgetPr();

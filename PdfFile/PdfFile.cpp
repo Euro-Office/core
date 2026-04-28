@@ -1449,6 +1449,34 @@ HRESULT CPdfFile::AdvancedCommand(IAdvancedCommand* command)
 				if (nFlags & (1 << 15))
 					m_pInternal->pEditor->EditAnnot(pCommand->GetPage(), pCommand->GetCopyAP());
 			}
+			if (pCommand->IsWidget())
+			{
+				CAnnotFieldInfo::CWidgetAnnotPr* pPr = pCommand->GetWidgetAnnotPr();
+				std::wstring wsFontName = pPr->GetFontName();
+
+				size_t lastSpace = wsFontName.find_last_of(L' ');
+				if (lastSpace != std::wstring::npos && lastSpace + 1 == wsFontName.size() - 32)
+				{
+					std::wstring sHash = wsFontName.substr(lastSpace + 1);
+					bool bValidHash = true;
+					for (wchar_t c : sHash)
+					{
+						if (!((c >= L'A' && c <= L'F') || (c >= L'0' && c <= L'9')))
+						{
+							bValidHash = false;
+							break;
+						}
+					}
+
+					if (bValidHash)
+					{
+						std::wstring sName = wsFontName.substr(0, lastSpace);
+						wsFontName = sName;
+					}
+				}
+
+				pPr->SetFontName(wsFontName);
+			}
 		}
 		return m_pInternal->pWriter->AddAnnotField(m_pInternal->pAppFonts, pCommand);
 	}
