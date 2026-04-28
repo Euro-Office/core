@@ -508,7 +508,12 @@ BYTE* CPdfFile::GetWidgets()
 void CPdfFile::SetPageFonts(int nPageIndex)
 {
 	if (m_pInternal->pReader)
-		m_pInternal->pReader->SetFonts(nPageIndex);
+	{
+		PDFDoc* pDoc = NULL;
+		PdfReader::CPdfFontList* pFontList = NULL;
+		m_pInternal->pReader->GetPageIndex(nPageIndex, &pDoc, &pFontList);
+		m_pInternal->pReader->SetFonts(pFontList);
+	}
 }
 BYTE* CPdfFile::GetAnnotEmbeddedFonts()
 {

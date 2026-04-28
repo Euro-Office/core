@@ -245,6 +245,18 @@ int CPdfReader::GetNumPagesBefore(PDFDoc* _pDoc)
 	}
 	return -1;
 }
+PdfReader::CPdfFontList* CPdfReader::GetFontList(PDFDoc* _pDoc)
+{
+	for (CPdfReaderContext* pPDFContext : m_vPDFContext)
+	{
+		if (!pPDFContext || !pPDFContext->m_pDocument)
+			continue;
+		PDFDoc* pDoc = pPDFContext->m_pDocument;
+		if (_pDoc == pDoc)
+			return pPDFContext->m_pFontList;
+	}
+	return NULL;
+}
 std::string CPdfReader::GetPrefixForm(PDFDoc* _pDoc)
 {
 	for (CPdfReaderContext* pPDFContext : m_vPDFContext)
@@ -1299,14 +1311,10 @@ BYTE* CPdfReader::GetWidgets()
 	oRes.ClearWithoutAttack();
 	return bRes;
 }
-void CPdfReader::SetFonts(int _nPageIndex)
+void CPdfReader::SetFonts(PdfReader::CPdfFontList* pFontList)
 {
 	if (m_vPDFContext.empty())
 		return;
-
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
-	GetPageIndex(_nPageIndex, &pDoc, &pFontList);
 
 	const std::map<Ref, PdfReader::TFontEntry*>& mapFonts = pFontList->GetFonts();
 	for (std::map<Ref, PdfReader::TFontEntry*>::const_iterator it = mapFonts.begin(); it != mapFonts.end(); ++it)
