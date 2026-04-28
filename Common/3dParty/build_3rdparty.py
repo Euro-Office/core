@@ -33,7 +33,7 @@ subfolders = [
     'openssl',
     'socketio',
     'hunspell',
-    # 'v8',
+    'v8',
 ]
 
 for subfolder in subfolders:
