@@ -32,7 +32,7 @@
 #include "Unit.h"
 #include <cwchar>
 #include <mutex>
-#include "../../Common/3dParty/cryptopp/osrng.h"
+#include "./Rand.h"
 
 double Cm_To_Mm     (const double &dValue)
 {
@@ -754,29 +754,9 @@ namespace XmlUtils
 		return sstream.str();
 	}
 
-	int Rand()
-	{
-		//rand returns integral value range between 0 and RAND_MAX.(RAND_MAX at least 32767.)
-		static bool init = false;   /* ensure different random header each time */
-		if (!init)
-		{
-			init = true;
-			srand((unsigned int) time(NULL));
-		}
-		return std::rand();
-	}
-	static unsigned int Rand1()
-	{
-		static CryptoPP::AutoSeededRandomPool prng;
-		static std::mutex prng_mutex;
-		unsigned int result;
-		std::lock_guard<std::mutex> lock(prng_mutex);
-		prng.GenerateBlock(reinterpret_cast<unsigned char*>(&result), sizeof(result));
-		return result;
-	}
 	int GenerateInt()
 	{
-		return static_cast<int>(Rand1());
+		return static_cast<int>(RandUInt());
 	}
 
 	std::wstring GenerateGuid()
@@ -785,14 +765,14 @@ namespace XmlUtils
 
 		std::wstringstream sstream;
 		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X")
-			% (Rand1() & 0xffff)
-			% (Rand1() & 0xffff)
-			% (Rand1() & 0xffff)
-			% ((Rand1() & 0x0fff) | 0x4000)
-			% ((Rand1() & 0x3fff) | 0x8000)
-			% (Rand1() & 0xffff)
-			% (Rand1() & 0xffff)
-			% (Rand1() & 0xffff);
+			% (RandUInt() & 0xffff)
+			% (RandUInt() & 0xffff)
+			% (RandUInt() & 0xffff)
+			% ((RandUInt() & 0x0fff) | 0x4000)
+			% ((RandUInt() & 0x3fff) | 0x8000)
+			% (RandUInt() & 0xffff)
+			% (RandUInt() & 0xffff)
+			% (RandUInt() & 0xffff);
 		result = sstream.str();
 
 		return result;
