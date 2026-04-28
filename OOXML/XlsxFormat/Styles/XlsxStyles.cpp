@@ -782,6 +782,17 @@ namespace OOX
 						}
 					}
 				}
+				if(cellXf->m_oFontId.IsInit() && m_oFonts->m_arrItems.size() > cellXf->m_oFontId->GetValue())
+				{
+					auto cellFont = m_oFonts->m_arrItems.at(cellXf->m_oFontId->GetValue());
+					if(cellFont->m_oColor.IsInit())
+					{
+						auto fillProp = new XLS::ExtProp;
+						fillProp->extType = XLS::ExtProp::_type::TextColor;
+						fillProp->extPropData.color = getXLSColor(cellFont->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
+					}
+				}
 				XLS::BaseObjectPtr objPtr = XLS::BaseObjectPtr(ext);
 				if(!ext->rgExt.empty())
 					CastedPtr->m_arXFext.push_back(objPtr);
