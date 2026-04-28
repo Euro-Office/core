@@ -36,3 +36,11 @@ bool CmpOrEqual(const T& val1,
 {
 	return std::abs(val1 - val2) < eps || cmp(val1, val2);
 }
+
+template <typename T>
+auto makeEqualComp(T eps)
+{
+	return [eps] (const double& a, const double& b) -> bool {
+		return fabs(a - b) < eps;
+	};
+}

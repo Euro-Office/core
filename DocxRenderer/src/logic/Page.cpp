@@ -2067,6 +2067,8 @@ namespace NSDocxRenderer
 		if (m_arGraphicalCells.empty())
 			return {};
 
+		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
+
 		// set paragraph into cells
 		for (auto& c : m_arGraphicalCells)
 			for (auto& p : m_arParagraphs)
@@ -2075,10 +2077,10 @@ namespace NSDocxRenderer
 					continue;
 
 				// add a paragraph to a cell if the paragraph boundaries are within the cell boundaries
-				if ((c->m_dTop < p->m_dTop  || fabs(c->m_dTop - p->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
-					(c->m_dLeft < p->m_dLeft || fabs(c->m_dLeft - p->m_dLeftBorder) < c_dGRAPHICS_ERROR_MM) &&
-					(c->m_dBot > p->m_dBot || fabs(c->m_dBot - p->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
-					(c->m_dRight > p->m_dRight || fabs(c->m_dRight - p->m_dRight) < c_dGRAPHICS_ERROR_MM))
+				if ((c->m_dTop < p->m_dTop		|| is_eq(c->m_dTop, p->m_dTop)) &&
+					(c->m_dLeft < p->m_dLeft	|| is_eq(c->m_dLeft, p->m_dLeftBorder)) &&
+					(c->m_dBot > p->m_dBot		|| is_eq(c->m_dBot, p->m_dBot)) &&
+					(c->m_dRight > p->m_dRight	|| is_eq(c->m_dRight, p->m_dRight)))
 				{
 					// get the correct left indentation
 					p->m_dLeftBorder = p->m_dLeft - c->m_dLeft;
@@ -2116,7 +2118,7 @@ namespace NSDocxRenderer
 		{
 			auto bot = gr_cell->m_dBot;
 			// check posible lines error
-			if (lines.empty() || fabs(*lines.rbegin() - bot) > c_dGRAPHICS_ERROR_MM)
+			if (lines.empty() || !is_eq(*lines.rbegin(), bot))
 				lines.insert(bot);
 		}
 		// the current value of the bottom row border
@@ -2143,15 +2145,15 @@ namespace NSDocxRenderer
 			return std::make_shared<CTable>();
 		};
 
-		auto complete_merged_cell = [&cells_buffer, &cells_to_next_row, &row, &cur_bot_it] (cell_ptr_t cell, bool row_end) {
+		auto complete_merged_cell = [&is_eq, &cells_buffer, &cells_to_next_row, &row, &cur_bot_it] (cell_ptr_t cell, bool row_end) {
 			for (auto it = cells_to_next_row.begin(); it != cells_to_next_row.end(); )
 			{
 				auto merged_cell = *it;
 				// check the correct position of the cell or add without checking
 				// for all cells at the end of the row
 				if (row_end ||
-					((merged_cell->m_dTop < cell->m_dTop || fabs(cell->m_dTop - merged_cell->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
-					 (merged_cell->m_dLeft < cell->m_dLeft || fabs(cell->m_dLeft - merged_cell->m_dLeft) < c_dGRAPHICS_ERROR_MM)))
+					((merged_cell->m_dTop < cell->m_dTop	|| is_eq(cell->m_dTop, merged_cell->m_dTop)) &&
+					 (merged_cell->m_dLeft < cell->m_dLeft	|| is_eq(cell->m_dLeft, merged_cell->m_dLeft))))
 				{
 					// if there is another merger
 					if (merged_cell->m_dBot > *cur_bot_it)
@@ -2185,7 +2187,7 @@ namespace NSDocxRenderer
 				update_row_info(cell);
 			}
 			// condition for move to new row
-			else if (fabs(cell->m_dTop - row_top) > c_dGRAPHICS_ERROR_MM)
+			else if (!is_eq(cell->m_dTop, row_top))
 			{
 				// add all remaining merged cells to the end of the row
 				complete_merged_cell(cell, true);
@@ -2219,6 +2221,8 @@ namespace NSDocxRenderer
 	std::vector<CPage::table_ptr_t> CPage::BuildNonGraphicalTables() noexcept
 	{
 		std::vector<table_ptr_t> tables;
+
+		auto is_eq = makeEqualComp<double>(c_dCOMPARE_EPSILON);
 
 		// loop through all paragraphs
 		// looking for a paragraph that is a column of text lines
@@ -2258,13 +2262,13 @@ namespace NSDocxRenderer
 			bool same_line_spacing = true;
 			auto first_diff = *(line_diffs.cbegin());
 			for (const auto& ld : line_diffs)
-				same_line_spacing &= (ld - first_diff < c_dCOMPARE_EPSILON);
+				same_line_spacing &= is_eq(ld, first_diff);
 
 			// checking that each margin lies whithin epsilon from the first
 			bool same_margin = margin_diffs.empty() ? false : true;
 			auto first_margin = margin_diffs.empty() ? 0.0 : *(margin_diffs.cbegin());
 			for (const auto& ll : margin_diffs)
-				same_margin &= (ll - first_margin < c_dCOMPARE_EPSILON);
+				same_margin &= is_eq(ll, first_margin);
 
 			// if a paragraph satisfies the conditions of text column
 			//
@@ -2316,8 +2320,7 @@ namespace NSDocxRenderer
 			auto curr_table = *it;
 			auto next_table = *(it + 1);
 
-			if (fabs(curr_table->m_dTop - next_table->m_dTop) < c_dCOMPARE_EPSILON &&
-				fabs(curr_table->m_dBot - next_table->m_dBot) < c_dCOMPARE_EPSILON)
+			if (is_eq(curr_table->m_dTop, next_table->m_dTop) && is_eq(curr_table->m_dBot, next_table->m_dBot))
 				if (CTable::MergeTables(curr_table, next_table))
 				{
 					tables.erase(it + 1);
@@ -2350,9 +2353,11 @@ namespace NSDocxRenderer
 		tables.insert(tables.end(), std::make_move_iterator(graphical_tables.begin()), std::make_move_iterator(graphical_tables.end()));
 		tables.insert(tables.end(), std::make_move_iterator(non_graphical_tables.begin()), std::make_move_iterator(non_graphical_tables.end()));
 		std::sort(tables.begin(), tables.end(), [](table_ptr_t t1, table_ptr_t t2) {
+			auto is_eq = makeEqualComp<double>(c_dCOMPARE_EPSILON);
+
 			if (t1->m_dTop < t2->m_dTop)
 				return true;
-			else if (fabs(t1->m_dTop - t2->m_dTop) < c_dCOMPARE_EPSILON)
+			else if (is_eq(t1->m_dTop, t2->m_dTop))
 				return t1->m_dLeft < t2->m_dLeft;
 			else
 				return false;
@@ -2395,6 +2400,8 @@ namespace NSDocxRenderer
 				lines = _lines;
 			}
 		};
+
+		auto is_eq = makeEqualComp<double>(c_dMAX_TABLE_LINE_WIDTH_MM);
 
 		// returns index of the line with a direction
 		auto get_line = [] (const eLineDirection& direction, const std::vector<Line>& lines) -> const Line* {
@@ -2443,14 +2450,13 @@ namespace NSDocxRenderer
 
 		// vector contains ptrs for easy exist-check
 		std::vector<std::shared_ptr<Crossing>> crossings;
-		auto find_crossing = [&crossings] (const Point& p) -> Crossing* {
+		auto find_crossing = [&is_eq, &crossings] (const Point& p) -> Crossing* {
 			for (auto& crossing : crossings)
 			{
 				if (!crossing)
 					continue;
 
-				if (fabs(crossing->p.x - p.x) < c_dMAX_TABLE_LINE_WIDTH_MM &&
-				        fabs(crossing->p.y - p.y) < c_dMAX_TABLE_LINE_WIDTH_MM)
+				if (is_eq(crossing->p.x, p.x) && is_eq(crossing->p.y, p.y))
 					return crossing.get();
 			}
 			return nullptr;
@@ -2482,20 +2488,20 @@ namespace NSDocxRenderer
 		};
 
 		// check and adds points
-		auto add_crossings = [&precise_crossing_p, &crossings, &find_crossing] (const Point& p1, const Point& p2, size_t index) {
+		auto add_crossings = [&is_eq, &precise_crossing_p, &crossings, &find_crossing] (const Point& p1, const Point& p2, size_t index) {
 			Crossing* crossing1 = find_crossing(p1);
 			Crossing* crossing2 = find_crossing(p2);
 
 			eLineDirection direction12;
 			eLineDirection direction21;
 
-			if (fabs(p1.y - p2.y) < c_dMAX_TABLE_LINE_WIDTH_MM)
+			if (is_eq(p1.y, p2.y))
 			{
 				direction12 = p1.x > p2.x ? eLineDirection::ldLeft : eLineDirection::ldRight;
 				direction21 = p1.x < p2.x ? eLineDirection::ldLeft : eLineDirection::ldRight;
 			}
 
-			else if (fabs(p1.x - p2.x) < c_dMAX_TABLE_LINE_WIDTH_MM)
+			else if (is_eq(p1.x, p2.x))
 			{
 				direction12 = p1.y > p2.y ? eLineDirection::ldTop : eLineDirection::ldBot;
 				direction21 = p1.y < p2.y ? eLineDirection::ldTop : eLineDirection::ldBot;
@@ -2619,8 +2625,9 @@ namespace NSDocxRenderer
 
 						// pure vertical / horizontal lines only
 						// not small lines
-						if (fabs(prev.x - curr.x) > c_dMAX_TABLE_LINE_WIDTH_MM && fabs(prev.y - curr.y) > c_dMAX_TABLE_LINE_WIDTH_MM ||
-						        (fabs(prev.x - curr.x) < c_dMAX_TABLE_LINE_WIDTH_MM && fabs(prev.y - curr.y) < c_dMAX_TABLE_LINE_WIDTH_MM))
+						bool is_x_eq = is_eq(prev.x, curr.x);
+						bool is_y_eq = is_eq(prev.y, curr.y);
+						if ((!is_x_eq && !is_y_eq) || (is_x_eq && is_y_eq))
 						{
 							prev = curr;
 							continue;
@@ -2646,8 +2653,8 @@ namespace NSDocxRenderer
 		crossings.erase(cr_right, crossings.end());
 
 		// sorting guarantee creating cell once (by taking second cross j > i)
-		std::sort(crossings.begin(), crossings.end(), [] (const std::shared_ptr<Crossing>& c1, const std::shared_ptr<Crossing>& c2) {
-			if (fabs(c1->p.y - c2->p.y) < c_dMAX_TABLE_LINE_WIDTH_MM)
+		std::sort(crossings.begin(), crossings.end(), [&is_eq] (const std::shared_ptr<Crossing>& c1, const std::shared_ptr<Crossing>& c2) {
+			if (is_eq(c1->p.y, c2->p.y))
 				return c1->p.x < c2->p.x;
 			return c1->p.y < c2->p.y;
 		});
@@ -2662,10 +2669,8 @@ namespace NSDocxRenderer
 
 				// first should be top left corner
 				// and second right bot (not the same line ofc)
-				if (fabs(cr_first->p.x - cr_second->p.x) < c_dMAX_TABLE_LINE_WIDTH_MM ||
-				        cr_first->p.x > cr_second->p.x ||
-				        fabs(cr_first->p.y - cr_second->p.y) < c_dMAX_TABLE_LINE_WIDTH_MM ||
-				        cr_first->p.y > cr_second->p.y)
+				if (is_eq(cr_first->p.x, cr_second->p.x) || cr_first->p.x > cr_second->p.x ||
+					is_eq(cr_first->p.y, cr_second->p.y) || cr_first->p.y > cr_second->p.y)
 					continue;
 
 				const Line* cr_f_top = get_line(eLineDirection::ldRight, cr_first->lines);
@@ -2708,6 +2713,8 @@ namespace NSDocxRenderer
 
 	void CPage::CheckFillingShapes(std::vector<cell_ptr_t>& cells, const std::set<size_t>& indeces, std::set<size_t, std::less<size_t>>& remove_later) const
 	{
+		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
+
 		// check the shapes from buffer for cell filling
 		for (auto it = indeces.begin(); it != indeces.end(); ++it)
 		{
@@ -2715,10 +2722,10 @@ namespace NSDocxRenderer
 			const auto& shape = m_arShapes[idx];
 			for (auto& c : cells)
 				// in adobe filling shape always less than cell
-				if ((shape->m_dTop > c->m_dTop || fabs(shape->m_dTop - c->m_dTop) < c_dGRAPHICS_ERROR_MM) &&
-					(shape->m_dLeft > c->m_dLeft || fabs(shape->m_dLeft - c->m_dLeft) < c_dGRAPHICS_ERROR_MM) &&
-					(shape->m_dBot < c->m_dBot || fabs(c->m_dBot - shape->m_dBot) < c_dGRAPHICS_ERROR_MM) &&
-					(shape->m_dRight < c->m_dRight || fabs(c->m_dRight - shape->m_dRight) < c_dGRAPHICS_ERROR_MM))
+				if ((shape->m_dTop > c->m_dTop		|| is_eq(shape->m_dTop, c->m_dTop)) &&
+					(shape->m_dLeft > c->m_dLeft	|| is_eq(shape->m_dLeft, c->m_dLeft)) &&
+					(shape->m_dBot < c->m_dBot		|| is_eq(c->m_dBot, shape->m_dBot)) &&
+					(shape->m_dRight < c->m_dRight	|| is_eq(c->m_dRight, shape->m_dRight)))
 				{
 					c->m_eShading = CTable::CCell::eShading::shClear;
 					c->m_lColor = shape->m_oBrush.Color1;

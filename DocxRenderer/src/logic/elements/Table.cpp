@@ -305,11 +305,9 @@ namespace NSDocxRenderer
 			widths.push_back(c->m_dWidth);
 
 		auto update = [this, &pRow, &widths] (std::vector<double>::iterator& it1, std::vector<double>::iterator& it2) {
-			auto double_compare_eq = [] (double a, double b) {
-				return fabs(a - b) < c_dGRAPHICS_ERROR_MM;
-			};
+			auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
 
-			if (!double_compare_eq(*it1, *it2))
+			if (!is_eq(*it1, *it2))
 			{
 				// define the type of merger
 				//
@@ -350,7 +348,7 @@ namespace NSDocxRenderer
 				// compare with cell width from current row
 				for (; it_to_compare != (greater ? widths.end() : m_arGridCols.end()); ++it_to_compare)
 				{
-					if (double_compare_eq(*it_to_update, grid_sum()))
+					if (is_eq(*it_to_update, grid_sum()))
 						break;
 					new_grids.push_back(*it_to_compare);
 					grid_count++;
