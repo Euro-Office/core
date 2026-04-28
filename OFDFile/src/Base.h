@@ -1,6 +1,7 @@
 #ifndef BASE_H
 #define BASE_H
 
+#include "Utils/CFontChecker.h"
 #include "Document.h"
 #include "Types/Signature.h"
 

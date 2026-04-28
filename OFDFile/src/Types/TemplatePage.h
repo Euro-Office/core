@@ -16,7 +16,6 @@ enum class EZOrder
 EZOrder GetZOrderFromString(const std::string& sValue);
 
 class CPage;
-class CFontChecker;
 
 class CTemplatePage : public IOFDElement
 {

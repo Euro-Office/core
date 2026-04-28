@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Utils/CFontChecker.h"
 #include "Types/ColorSpace.h"
 #include "Types/DrawParam.h"
 #include "Types/Font.h"

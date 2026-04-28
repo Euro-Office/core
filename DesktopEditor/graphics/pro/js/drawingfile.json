@@ -277,7 +277,7 @@
 	},
 	{
 		"folder": "../../../../OFDFile/src/Utils/",
-		"files": ["Types.cpp", "XmlReader.cpp"]
+		"files": ["Types.cpp", "XmlReader.cpp", "CFontChecker.cpp"]
 	}
 	]
 }

@@ -1,6 +1,7 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include "Utils/CFontChecker.h"
 #include "Page.h"
 #include "Annotation.h"
 
