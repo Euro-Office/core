@@ -1,7 +1,6 @@
 #ifndef OFDFILE_PRIVATE_H
 #define OFDFILE_PRIVATE_H
 
-#include "Utils/CFontChecker.h"
 #include "Base.h"
 
 namespace NSFonts { class IFontManager; }

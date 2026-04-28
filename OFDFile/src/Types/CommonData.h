@@ -4,7 +4,6 @@
 #include "../Res.h"
 #include "PageArea.h"
 #include "TemplatePage.h"
-#include "../Utils/CFontChecker.h"
 
 namespace OFD
 {

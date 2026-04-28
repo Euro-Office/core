@@ -94,9 +94,11 @@ std::wstring CDocInfo::GetInfo() const
 {
 	std::wstring wsInfo;
 
+	#define STRINGIFY(str) L###str
+	#define TO_WSTRING(str) STRINGIFY(str)
 	#define WRITE_INFO(info_name)\
 	if (!m_ws##info_name.empty())\
-		wsInfo += L"\"" + std::wstring(L#info_name) + L"\":\"" + m_ws##info_name + L"\","
+		wsInfo += L"\"" + std::wstring(TO_WSTRING(info_name)) + L"\":\"" + m_ws##info_name + L"\","
 
 	WRITE_INFO(DocId);
 	WRITE_INFO(Title);
