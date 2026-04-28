@@ -110,11 +110,12 @@ public:
 	PDFDoc* GetPDFDocument(int PDFIndex);
 	int GetStartRefID(PDFDoc* pDoc);
 	int GetNumPagesBefore(PDFDoc* pDoc);
+	PdfReader::CPdfFontList* GetFontList(PDFDoc* pDoc);
 	std::string GetPrefixForm(PDFDoc* pDoc);
 	int FindRefNum(int nObjID, PDFDoc** pDoc = NULL, int* nStartRefID = NULL);
 	int GetPageIndex(int nPageIndex, PDFDoc** pDoc = NULL, PdfReader::CPdfFontList** pFontList = NULL, int* nStartRefID = NULL);
 
-	void SetFonts(int nPageIndex);
+	void SetFonts(PdfReader::CPdfFontList* pFontList);
 	BYTE* GetStructure();
 	BYTE* GetLinks(int nPageIndex);
 	BYTE* GetWidgets();
