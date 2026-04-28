@@ -10,16 +10,17 @@ work_dir = None
 install_dir = None
 force_redo = False
 
-def abort_op( message : str, keep_work : bool = False ):
+def abort_op( message : str, keep_work : bool = False, error_is_fatal : bool = True ):
     print( f"Aboring {dep_name}: {message}", file = sys.stderr )
-    if not debug_mode:
-        try:
-            if not keep_work:
-                shutil.rmtree( work_dir )
-            shutil.rmtree( install_dir )
-        except FileNotFoundError:
-            pass
-    sys.exit( 1 )
+    if error_is_fatal:
+        if not debug_mode:
+            try:
+                if not keep_work:
+                    shutil.rmtree( work_dir )
+                shutil.rmtree( install_dir )
+            except FileNotFoundError:
+                pass
+        sys.exit( 1 )
 
 def is_linux() -> bool:
     return sys.platform.startswith("linux")
@@ -69,17 +70,29 @@ def create_install_dir():
         except OSError:
             abort_op( "Failed to create install dir" )
 
-def run_command( cmd : list[str], description : str, cwd : Path | None = None, verbose : bool = False ):
+def ensure_directory_exists( dir : Path ):
+    if not dir.exists():
+        dir.mkdir( parents = True )
+
+def run_command(
+        cmd : list[str],
+        description : str, cwd : Path | None = None,
+        verbose : bool = False,
+        error_is_fatal : bool = True,
+        env : dict[ str, str ] | None = None
+    ):
+
     cwd = (cwd or Path.cwd()).resolve()
     output_pipe = None if verbose else subprocess.PIPE
+    final_env = os.environ.copy() | ( {} if env is None else env )
 
     try:
-        _ = subprocess.run( cmd, check=True, stdout=output_pipe, stderr=output_pipe, text=True, cwd=cwd )
+        _ = subprocess.run( cmd, check=True, stdout=output_pipe, stderr=output_pipe, text=True, cwd=cwd, env = final_env )
     except subprocess.CalledProcessError as e:
         if verbose:
-            abort_op( f"{description} failed" )
+            abort_op( f"{description} failed", error_is_fatal=error_is_fatal )
         else:
-            abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+            abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
 
 def fix_terminal_encoding():
     sys.stdout.reconfigure( encoding='utf-8' )
