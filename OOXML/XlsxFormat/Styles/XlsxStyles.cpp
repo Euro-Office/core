@@ -729,7 +729,10 @@ namespace OOX
 			if(inputClr.m_oRgb.IsInit())
 			{
 				color.xclrType = 2;
-				color.xclrValue = inputClr.m_oRgb->ToInt();
+				SETBITS(color.xclrValue, 0, 7, inputClr.m_oRgb->Get_R())
+				SETBITS(color.xclrValue, 8, 15, inputClr.m_oRgb->Get_G())
+				SETBITS(color.xclrValue, 16, 23, inputClr.m_oRgb->Get_B())
+				SETBITS(color.xclrValue, 24, 31, inputClr.m_oRgb->Get_A())
 			}
 			else if(inputClr.m_oThemeColor.IsInit())
 			{
