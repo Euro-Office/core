@@ -31,8 +31,6 @@
  */
 #include "Unit.h"
 #include <cwchar>
-#include <mutex>
-#include "./Rand.h"
 
 double Cm_To_Mm     (const double &dValue)
 {
@@ -754,29 +752,6 @@ namespace XmlUtils
 		return sstream.str();
 	}
 
-	int GenerateInt()
-	{
-		return static_cast<int>(RandUInt());
-	}
-
-	std::wstring GenerateGuid()
-	{
-		std::wstring result;
-
-		std::wstringstream sstream;
-		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X")
-			% (RandUInt() & 0xffff)
-			% (RandUInt() & 0xffff)
-			% (RandUInt() & 0xffff)
-			% ((RandUInt() & 0x0fff) | 0x4000)
-			% ((RandUInt() & 0x3fff) | 0x8000)
-			% (RandUInt() & 0xffff)
-			% (RandUInt() & 0xffff)
-			% (RandUInt() & 0xffff);
-		result = sstream.str();
-
-		return result;
-	}
 	std::wstring DoubleToString( double value, wchar_t* format )
 	{
 		if ( format == NULL ) return L"";
@@ -1035,5 +1010,33 @@ namespace XmlUtils
 		}
 
 		return buffer;
+	}
+}
+
+#include "./Rand.h"
+namespace XmlUtils
+{
+	int GenerateInt()
+	{
+		return static_cast<int>(RandUInt());
+	}
+
+	std::wstring GenerateGuid()
+	{
+		std::wstring result;
+
+		std::wstringstream sstream;
+		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X")
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % ((RandUInt() & 0x0fff) | 0x4000)
+					   % ((RandUInt() & 0x3fff) | 0x8000)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff);
+		result = sstream.str();
+
+		return result;
 	}
 }

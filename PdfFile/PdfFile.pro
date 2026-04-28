@@ -210,3 +210,7 @@ SOURCES += PdfFile.cpp \
            PdfReader.cpp \
            PdfEditor.cpp \
            OnlineOfficeBinToPdf.cpp
+
+core_mac | core_ios {
+    LIBS += -framework Security
+}
