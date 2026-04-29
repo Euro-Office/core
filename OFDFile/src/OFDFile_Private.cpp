@@ -148,11 +148,16 @@ std::wstring COFDFile_Private::GetInfo() const
 {
 	std::wstring wsInfo{L"{"};
 
-	wsInfo += m_oBase.GetInfo();
+	double dWidth{0.}, dHeight{0.};
+	GetPageSize(0, dWidth, dHeight);
 
-	wsInfo += L"}";
+	wsInfo += L"\"PageWidth\":" + std::to_wstring((int)(dWidth * 100)) +
+	          L",\"PageHeight\":" + std::to_wstring((int)(dHeight * 100)) +
+	          L",\"NumberOfPages\":" + std::to_wstring(GetPageCount());
 
-	return wsInfo;
+	const std::wstring wsBaseInfo{m_oBase.GetInfo()};
+
+	return wsInfo + ((!wsBaseInfo.empty()) ? (L',' + wsBaseInfo) : L"") + L'}';
 }
 
 unsigned char* COFDFile_Private::GetStructure() const
