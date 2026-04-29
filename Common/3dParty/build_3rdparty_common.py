@@ -2,6 +2,7 @@ import sys
 import shutil
 import subprocess
 import os
+import time
 from pathlib import Path
 
 dep_name = None
@@ -94,6 +95,10 @@ def run_command(
         else:
             abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
 
+def capture_process_output( cmd : list[str] ) -> str:
+    result = subprocess.run( [ "clang", "--version" ], capture_output = True, text = True, check = True )
+    return result.stdout
+
 def fix_terminal_encoding():
     sys.stdout.reconfigure( encoding='utf-8' )
     if is_windows():
@@ -136,3 +141,18 @@ def shallow_checkout( repo_dir : Path, repo_url : str, commit : str ):
         f"Checkout head ({repo_dir.name})",
         repo_dir
     )
+
+class MeasurementObj:
+    def __init__( self, name: str ):
+        self.name = name
+        self.start = time.perf_counter()
+
+    def report( self ):
+        end = time.perf_counter()
+        elapsed = end - self.start
+        print( f"{self.name}: {elapsed:.6f} second(s)" )
+        
+    def elapsed_string( self ) -> float:
+        end = time.perf_counter()
+        elapsed = end - self.start
+        return f"{elapsed:.6f} second(s)"

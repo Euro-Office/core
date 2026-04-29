@@ -3,6 +3,8 @@
 import sys
 import shutil
 import os
+import platform
+import re
 from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
@@ -28,7 +30,7 @@ gn_source_path = nc.work_dir / "gn-source"
 def check_prequisites():
     for tool in [ "git", "python3", "clang", "ninja" ]:
         if shutil.which( tool ) is None:
-            abort_op( f"Tool not found: {tool}" )
+            nc.abort_op( f"Tool not found: {tool}" )
 
 def apply_patches():
     patches_dir = script_dir / "tools" / "8.9" / "x64-linux-dynamic"
@@ -97,6 +99,7 @@ group("cppgc_base_for_testing") {
     cppgc_gn_file_path.write_text( content )
 
 def build_gn() -> Path:
+    print( "Fetching and building gn" )
     nc.shallow_checkout( gn_source_path, "https://gn.googlesource.com/gn", "281ba2c91861b10fec7407c4b6172ec3d4661243" )
 
     nc.ensure_directory_exists( gn_source_path / "out" )
@@ -138,7 +141,8 @@ def build_gn() -> Path:
 
     return gn_bin_path / "gn"
 
-def get_cpu():
+def get_cpu() -> str:
+    targetarch = "Unknown"
     arch = platform.machine()
     if arch == "x86_64":
         targetarch = "x64"
@@ -146,12 +150,14 @@ def get_cpu():
         targetarch = "arm64"
     else:
         nc.abort_op( f"Unsupported architecture: {arch}" )
+    return targetarch
 
 def fetch_and_patch():
 
     nc.create_workdir()
 
     # Get depot_tools
+    print( "Fetching depot_tool" )
     nc.run_command(
         [ "git", "clone", "https://chromium.googlesource.com/chromium/tools/depot_tools.git", depot_tools_path ],
         "Clone depot_tools"
@@ -166,6 +172,7 @@ def fetch_and_patch():
     )
 
     # Fetch v8
+    print( "Fetching v8" )
     nc.run_command( [ "git", "clone", "https://chromium.googlesource.com/v8/v8.git", v8_src_path ], "Clone v8" )
     nc.run_command( [ "git", "checkout", "8.9.45" ], "Git checkout 8.9.45", v8_src_path )
 
@@ -211,6 +218,7 @@ target_os = ["linux"]
     Path( v8_root_path / ".gclient" ).write_text(content)
 
     # Sync v8 dependencies
+    print( "Synching v8 dependencies" )
     depot_env = os.environ.copy()
     depot_env["PATH"] = f"{depot_tools_path}:" + depot_env["PATH"]
     depot_env["GCLIENT_SUPPRESS_GIT_VERSION_WARNING"] = "1"
@@ -297,19 +305,27 @@ use_gold=false
 use_lld=true
 """
 
+        if targetarch == "arm64":
+            # Check clang version (it must be 13)
+            clang_version_output = nc.capture_process_output( [ "clang", "--version" ] )
+            match = re.search( r'\d+\.\d+\.\d+', clang_version_output )
+            version = match.group() if match else None
+
+            if not version.startswith( "13." ):
+                nc.abort_op( f"Need clang 13 in path. Currently it's: { version }" )
+
+            gn_args = f"""{ gn_args }
+cc="clang"
+cxx="clang++"
+clang_base_path="{ clang_dir }"
+"""
+
         nc.ensure_directory_exists( output_path )
-        # gn_args_file_path = Path( v8_src_path / "gn_args.gn" )
         gn_args_file_path = Path( output_path / "args.gn" )
         gn_args_file_path.write_text( gn_args )
-        
 
-
-        print( "gn_bin_path: " + str( gn_bin_path ) )
-        print( "gn_args_file_path: " + str( gn_args_file_path ) )
-        print( "output path: " + str( output_path ) )
-        print( "cwd: " + str( v8_src_path ) )
+        print( "Running gn gen" )        
         nc.run_command(
-            # [ gn_bin_path, "gen", output_path, f"--args-file={ gn_args_file_path }" ],
             [ gn_bin_path, "gen", output_path ],
             "Running gn",
             v8_src_path
@@ -321,7 +337,7 @@ use_lld=true
         # Check that the tools actually exist
         for tool in [ "ninja" ]:
             if shutil.which( tool ) is None:
-                abort_op( f"Tool not found: {tool}" )
+                nc.abort_op( f"Tool not found: {tool}" )
 
         build_env = {
             "SHELL": "/bin/bash",
@@ -329,17 +345,56 @@ use_lld=true
 
         job_count = max( os.cpu_count() or 1, 4 ) # at least 4 jobs
 
+        print( "Building v8" )
         nc.run_command(
             [ "ninja", "-C", output_path, f"-j{job_count}", "v8_monolith" ],
             "Building v8",
             v8_src_path
         )
 
+        # Verify artifacts
+        if not ( output_path / "obj" / "libv8_monolith.a" ).exists():
+            nc.abort_op( "Build completed but libv8_monolith.a not found" )
+
+        print( "Installing v8" )
+        try:
+            shutil.copy2( output_path / "obj" / "libv8_monolith.a", nc.install_dir / "libv8_monolith.a" )
+        except Exception:
+            nc.abort_op( "Failed to install libv8_monolith.a" )
+
+        nc.ensure_directory_exists( nc.install_dir / "v8" / "include" )
+        try:
+            shutil.copytree( v8_src_path / "include", nc.install_dir / "v8" / "include" )
+        except Exception:
+            nc.abort_op( "Failed to install public headers" )
+
+        src = v8_src_path / "src"
+        dst = nc.install_dir / "v8" / "src"
+        try:
+            for file in src.rglob( "*.h" ):
+                relative = file.relative_to( src )
+                target = dst / relative
+                nc.ensure_directory_exists( target.parent )
+                shutil.copy2( file, target )
+        except Exception as e:
+            nc.abort_op( f"Failed to install private headers ({e})" )
+
+        # Create pkg-config file
+        pkg_cfg_file = f"prefix={ nc.install_dir }"
+        pkg_cfg_file = pkg_cfg_file + """
+libdir=${prefix}
+includedir=${prefix}/v8/include
+
+Name: V8
+Description: V8 JavaScript Engine
+Version: 8.9.45
+Libs: -L${libdir} -lv8_monolith -pthread
+Cflags: -I${includedir}
+"""
+        ( nc.install_dir / "v8.pc" ).write_text( pkg_cfg_file )
+        
     else:
         abort_op( f"Unkown target platform: {sys.platform}" )
-
-    
-
 
     nc.create_install_dir_ok_marker()
     
