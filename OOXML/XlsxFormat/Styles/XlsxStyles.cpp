@@ -788,6 +788,41 @@ namespace OOX
 							ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
 						}
 					}
+					else if(cellFill->m_oGradientFill.IsInit())
+					{
+						auto fillProp = new XLS::ExtProp;
+						fillProp->extType = XLS::ExtProp::_type::GradientColor;
+						if(cellFill->m_oGradientFill->m_oDegree.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numDegree = cellFill->m_oGradientFill->m_oDegree->GetValue();
+						if(cellFill->m_oGradientFill->m_oType.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.type1 = cellFill->m_oGradientFill->m_oType->GetValue();
+
+						if(cellFill->m_oGradientFill->m_oLeft.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToLeft = cellFill->m_oGradientFill->m_oLeft->GetValue();
+						if(cellFill->m_oGradientFill->m_oRight.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToRight = cellFill->m_oGradientFill->m_oRight->GetValue();
+						if(cellFill->m_oGradientFill->m_oTop.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToTop = cellFill->m_oGradientFill->m_oTop->GetValue();
+						if(cellFill->m_oGradientFill->m_oBottom.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToBottom = cellFill->m_oGradientFill->m_oBottom->GetValue();
+
+						fillProp->extPropData.gradient_fill.cGradStops = cellFill->m_oGradientFill->m_arrItems.size();
+						for(auto i : cellFill->m_oGradientFill->m_arrItems)
+						{
+							XLS::GradStop gradStop;
+							if(i->m_oColor.IsInit())
+							{
+								auto tempClr =  getXLSColor(i->m_oColor.get());
+								gradStop.xclrType = tempClr.xclrType;
+								gradStop.numTint.data.value = tempClr.nTintShade;
+								gradStop.xclrValue = tempClr.xclrValue;
+							}
+							if(i->m_oPosition.IsInit())
+								gradStop.numPosition.data.value = i->m_oPosition->GetValue();
+							fillProp->extPropData.gradient_fill.rgGradStops.push_back(gradStop);
+						}
+						ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
+					}
 				}
 				if(cellXf->m_oFontId.IsInit() && m_oFonts->m_arrItems.size() > cellXf->m_oFontId->GetValue())
 				{
