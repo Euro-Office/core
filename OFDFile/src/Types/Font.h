@@ -8,6 +8,7 @@ class IRenderer;
 
 #ifdef BUILDING_WASM_MODULE
 #define FONTS_USE_ONLY_MEMORY_STREAMS
+namespace NSFonts { class IFontManager; }
 #endif
 
 namespace OFD
@@ -18,6 +19,10 @@ public:
 	CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder *pFolder);
 
 	void Apply(IRenderer* pRenderer) const;
+
+	#ifdef BUILDING_WASM_MODULE
+	NSFonts::IFontManager* GetFontManager() const;
+	#endif
 private:
 	std::wstring m_wsFontName;
 	std::wstring m_wsFamilyName;
@@ -29,8 +34,9 @@ private:
 
 	std::wstring m_wsFilePath;
 
-	#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
-	std::wstring m_wsSelectedFont;
+	#ifdef BUILDING_WASM_MODULE
+	std::wstring           m_wsSelectedFont;
+	NSFonts::IFontManager* m_pFontManager;
 	#else
 	bool         m_bSupportExternalFont;
 	#endif

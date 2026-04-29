@@ -57,7 +57,7 @@ bool CFontChecker::UpdateFont(CFont* pFont)
 	                                                             pFont->m_bItalic    == oUpdatedFont.m_pFont->m_bItalic ; })))
 		return false;
 
-
+	pFont->m_pFontManager = m_pFontManager;
 
 	// Embedded font
 	if (!pFont->m_wsFilePath.empty() && nullptr != m_pFolder && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())

@@ -12,6 +12,9 @@ CFont::CFont(CXmlReader& oXmlReader, const std::wstring& wsRootPath, IFolder* pF
 	: IOFDElement(oXmlReader),
 	  m_wsCharset(L"unicode"), m_bItalic(false), m_bBold(false),
 	  m_bSerif(false), m_bFixedWidth(false)
+	#ifdef BUILDING_WASM_MODULE
+	 , m_pFontManager(nullptr)
+	#endif
 {
 	if (0 != oXmlReader.GetAttributesCount() && oXmlReader.MoveToFirstAttribute())
 	{
@@ -89,4 +92,11 @@ void CFont::Apply(IRenderer* pRenderer) const
 		pRenderer->put_FontPath(m_wsFilePath);
 #endif
 }
+
+#ifdef BUILDING_WASM_MODULE
+NSFonts::IFontManager* CFont::GetFontManager() const
+{
+	return m_pFontManager;
+}
+#endif
 }
