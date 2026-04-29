@@ -46,16 +46,24 @@ bool CFontChecker::UpdateFont(CFont* pFont)
 	if (nullptr == pFont || !pFont->m_wsSelectedFont.empty())
 		return false;
 
-	if ((!m_arUpdatedFonts.empty() &&
-	      m_arUpdatedFonts.cend() != std::find_if(m_arUpdatedFonts.cbegin(), m_arUpdatedFonts.cend(),
-	                                              [pFont](const TUpdatedFont& oUpdatedFont)
-	                                                      { if (oUpdatedFont.m_bLoadFromMemory) return
-	                                                             pFont->m_wsFilePath == oUpdatedFont.m_pFont->m_wsFilePath;
-	                                                         return
-	                                                             pFont->m_wsFontName == oUpdatedFont.m_pFont->m_wsFontName &&
-	                                                             pFont->m_bBold      == oUpdatedFont.m_pFont->m_bBold      &&
-	                                                             pFont->m_bItalic    == oUpdatedFont.m_pFont->m_bItalic ; })))
-		return false;
+	if (!m_arUpdatedFonts.empty())
+	{
+		std::vector<TUpdatedFont>::const_iterator itFound{std::find_if(m_arUpdatedFonts.cbegin(), m_arUpdatedFonts.cend(),
+		                                                               [pFont](const TUpdatedFont& oUpdatedFont)
+		                                                                       { if (oUpdatedFont.m_bLoadFromMemory) return
+		                                                                             pFont->m_wsFilePath == oUpdatedFont.m_pFont->m_wsFilePath;
+		                                                                         return
+		                                                                             pFont->m_wsFontName == oUpdatedFont.m_pFont->m_wsFontName &&
+		                                                                             pFont->m_bBold      == oUpdatedFont.m_pFont->m_bBold      &&
+		                                                                             pFont->m_bItalic    == oUpdatedFont.m_pFont->m_bItalic ; })};
+
+		if (m_arUpdatedFonts.cend() != itFound)
+		{
+			pFont->m_wsSelectedFont = itFound->m_pFont->m_wsSelectedFont;
+			pFont->m_pFontManager   = itFound->m_pFont->m_pFontManager;
+			return true;
+		}
+	}
 
 	pFont->m_pFontManager = m_pFontManager;
 
