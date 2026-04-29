@@ -364,9 +364,9 @@ clang_base_path="{ clang_dir }"
 
         nc.ensure_directory_exists( nc.install_dir / "v8" / "include" )
         try:
-            shutil.copytree( v8_src_path / "include", nc.install_dir / "v8" / "include" )
-        except Exception:
-            nc.abort_op( "Failed to install public headers" )
+            shutil.copytree( v8_src_path / "include", nc.install_dir / "v8" / "include", dirs_exist_ok = True )
+        except Exception as e:
+            nc.abort_op( f"Failed to install public headers ({ e })" )
 
         src = v8_src_path / "src"
         dst = nc.install_dir / "v8" / "src"
