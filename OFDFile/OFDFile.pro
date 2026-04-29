@@ -11,7 +11,6 @@ CORE_ROOT_DIR = $$PWD/..
 PWD_ROOT_DIR = $$PWD
 
 include($$CORE_ROOT_DIR/Common/base.pri)
-include($$CORE_ROOT_DIR/Common/3dParty/boost/boost.pri)
 
 DEFINES += OFD_USE_DYNAMIC_LIBRARY
 
@@ -56,6 +55,7 @@ HEADERS += \
 	src/Types/PenSettings.h \
 	src/Types/Signature.h \
 	src/Types/TemplatePage.h \
+	src/Utils/CFontChecker.h \
 	src/Utils/Types.h \
 	src/Utils/Utils.h \
 	src/Utils/XmlReader.h
@@ -86,5 +86,6 @@ SOURCES += \
 	src/Types/PenSettings.cpp \
 	src/Types/Signature.cpp \
 	src/Types/TemplatePage.cpp \
+	src/Utils/CFontChecker.cpp \
 	src/Utils/Types.cpp \
 	src/Utils/XmlReader.cpp

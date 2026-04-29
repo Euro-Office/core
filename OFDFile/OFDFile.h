@@ -21,9 +21,9 @@ public:
 
 	// Open
 	virtual bool LoadFromFile(const std::wstring& file, const std::wstring& options = L"",
-							  const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL) override;
+	                          const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL) override;
 	virtual bool LoadFromMemory(unsigned char* data, unsigned long length, const std::wstring& options = L"",
-								const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL) override;
+	                            const wchar_t* owner_password = NULL, const wchar_t* user_password = NULL) override;
 
 	// Close
 	void Close() override;

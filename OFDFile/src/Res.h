@@ -3,11 +3,14 @@
 
 #include <string>
 
+#include "Utils/CFontChecker.h"
 #include "Types/ColorSpace.h"
 #include "Types/DrawParam.h"
 #include "Types/Font.h"
 #include "Types/MultiMedia.h"
 #include "Types/CompositeGraphicUnit.h"
+
+class IFolder;
 
 namespace OFD
 {
@@ -22,7 +25,7 @@ public:
 	CRes();
 	~CRes();
 
-	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath);
+	bool Read(const std::wstring& wsFilePath, const std::wstring& wsRootPath, IFolder* pFolder);
 
 	const CColorSpace*           GetColorSpace(unsigned int unId) const;
 	const CDrawParam*            GetDrawParam(unsigned int unId) const;
@@ -31,6 +34,8 @@ public:
 	const CCompositeGraphicUnit* GetCompositeGraphicUnit(unsigned int unId) const;
 
 	std::vector<const CDrawParam*> GetDrawParams() const;
+
+	void UpdateFonts(CFontChecker* pFontChecker);
 };
 }
 

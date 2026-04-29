@@ -13,8 +13,6 @@
 #include "../../../DesktopEditor/common/Path.h"
 #include "../../../DesktopEditor/common/ProcessEnv.h"
 
-#include <boost/algorithm/string/predicate.hpp>
-
 namespace OFD
 {
 inline std::vector<std::string> Split(const std::string& sValue, char chDelim)
@@ -161,9 +159,10 @@ inline bool CanUseThisPath(const std::wstring& wsPath, const std::wstring& wsRoo
 	const std::wstring wsFullPath = NSSystemPath::ShortenPath(NSSystemPath::Combine(wsRootPath, wsPath));
 
 	if (!wsRootPath.empty())
-		return boost::starts_with(wsFullPath, wsRootPath);
+		return wsFullPath.size() >= wsRootPath.size() &&
+		       wsFullPath.compare(0, wsRootPath.size(), wsRootPath) == 0;
 
-	return !boost::starts_with(wsFullPath, L"../");
+	return !(wsFullPath.size() >= 3 && wsFullPath.compare(0, 3, L"../") == 0);
 }
 
 inline bool IsZeroValue(const double& dValue)

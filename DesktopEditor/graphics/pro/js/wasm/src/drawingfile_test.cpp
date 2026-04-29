@@ -1065,7 +1065,7 @@ int main(int argc, char* argv[])
 	}
 
 	// OPEN FILE
-	std::wstring sFilePath = NSFile::GetProcessDirectory() + L"/test.pdf";
+	std::wstring sFilePath = NSFile::GetProcessDirectory() + L"/test.ofd";
 
 	BYTE* pFileData = NULL;
 	DWORD nFileDataLen = 0;
@@ -1208,13 +1208,17 @@ int main(int argc, char* argv[])
 			BYTE* res = NULL;
 			res = GetPixmap(pGrFile, i, nWidth, nHeight, 0xFFFFFF);
 
+			std::wstring sDirectory = NSFile::GetProcessDirectory() + L"/res";
+			if (!NSDirectory::Exists(sDirectory))
+				NSDirectory::CreateDirectory(sDirectory);
+
 			CBgraFrame oFrame;
 			oFrame.put_Data(res);
 			oFrame.put_Width(nWidth);
 			oFrame.put_Height(nHeight);
 			oFrame.put_Stride(4 * nWidth);
 			oFrame.put_IsRGBA(true);
-			oFrame.SaveFile(NSFile::GetProcessDirectory() + L"/res/res" + std::to_wstring(i) + L".png", _CXIMAGE_FORMAT_PNG);
+			oFrame.SaveFile(sDirectory + L"/res" + std::to_wstring(i) + L".png", _CXIMAGE_FORMAT_PNG);
 			oFrame.ClearNoAttack();
 
 			RELEASEARRAYOBJECTS(res);
@@ -1364,7 +1368,7 @@ int main(int argc, char* argv[])
 	}
 
 	// INTERACTIVE FORMS
-	if (true)
+	if (false)
 	{
 		ReadInteractiveFormsFonts(pGrFile, 1);
 		ReadInteractiveFormsFonts(pGrFile, 2);
@@ -1483,7 +1487,7 @@ int main(int argc, char* argv[])
 	}
 
 	// ANNOTS
-	if (true)
+	if (false)
 	{
 		BYTE* pAnnots = GetAnnotationsInfo(pGrFile, -1);
 		nLength = READ_INT(pAnnots);

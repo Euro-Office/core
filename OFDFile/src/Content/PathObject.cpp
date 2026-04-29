@@ -1,7 +1,9 @@
 #include "PathObject.h"
 
-#include "src/Utils/Utils.h"
+#include "../Utils/Utils.h"
 #include "../Types/DrawParam.h"
+
+#include "../../../DesktopEditor/graphics/IRenderer.h"
 
 namespace OFD
 {

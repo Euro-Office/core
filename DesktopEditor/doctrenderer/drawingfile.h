@@ -41,6 +41,8 @@
 #include "../graphics/pro/js/wasm/src/serialize.h"
 #include "../graphics/pro/js/wasm/src/HTMLRendererText.h"
 #include "../../DocxRenderer/DocxRenderer.h"
+#include "../../OFDFile/OFDFile.h"
+#include "../../OfficeUtils/src/OfficeUtils.h"
 
 #define CHECKER_FILE_BUFFER_LEN 4096
 
@@ -102,6 +104,9 @@ public:
 			break;
 		case odftXPS:
 			m_nType = 2;
+			break;
+		case odftOFD:
+			m_nType = 3;
 			break;
 		default:
 			break;
@@ -165,6 +170,16 @@ public:
 			else
 				m_nType = 2;
 		}
+		case 3:
+		{
+			m_pFile = new COFDFile(m_pApplicationFonts);
+			if (!m_pFile->LoadFromFile(sFile, L"", sPassword, sPassword))
+			{
+				RELEASEOBJECT(m_pFile);
+			}
+			else
+				m_nType = 3;
+		}
 		default:
 			break;
 		}
@@ -214,6 +229,16 @@ public:
 				}
 				else
 					m_nType = 2;
+			}
+			case 3:
+			{
+				m_pFile = new COFDFile(m_pApplicationFonts);
+				if (!m_pFile->LoadFromMemory(data, size, L"", sPassword, sPassword))
+				{
+					RELEASEOBJECT(m_pFile);
+				}
+				else
+					m_nType = 3;
 			}
 			default:
 				break;
@@ -639,7 +664,7 @@ private:
 		double dPageDpiX, dPageDpiY;
 		double dWidth, dHeight;
 		m_pFile->GetPageInfo(nPageIndex, &dWidth, &dHeight, &dPageDpiX, &dPageDpiY);
-		if (m_nType == 2)
+		if (m_nType == 2 || m_nType == 3)
 		{
 			dWidth    = dWidth    / 25.4 * 96.0;
 			dHeight   = dHeight   / 25.4 * 96.0;
@@ -677,6 +702,7 @@ private:
 		// 0 - PDF
 		// 1 - DJVU
 		// 2 - XPS
+		// 3 - OFD
 		LONG nSize = size < CHECKER_FILE_BUFFER_LEN ? size : CHECKER_FILE_BUFFER_LEN;
 		char* pData = (char*)data;
 		for (int i = 0; i < nSize - 5; ++i)
@@ -688,6 +714,25 @@ private:
 		if ( (8 <= size) && (0x41 == data[0] && 0x54 == data[1] && 0x26 == data[2] && 0x54 == data[3] &&
 							0x46 == data[4] && 0x4f == data[5] && 0x52 == data[6] && 0x4d == data[7]))
 			return 1;
+		COfficeUtils OfficeUtils(NULL);
+		if (OfficeUtils.IsArchive(data, size) == S_FALSE)
+			return -1;
+
+		ULONG nBufferSize = 0;
+		BYTE *pBuffer = NULL;
+
+		int nFileType = -1;
+		HRESULT hresult = OfficeUtils.LoadFileFromArchive(data, size, L"OFD.xml", &pBuffer, nBufferSize);
+		if (hresult == S_OK && pBuffer != NULL)
+		{
+			if (19 <= nBufferSize && NULL != strstr((char *)pBuffer, "ofd:OFD"))
+				nFileType = 3;
+
+			delete[] pBuffer;
+			pBuffer = NULL;
+
+			return nFileType;
+		}
 		return 2;
 	}
 };

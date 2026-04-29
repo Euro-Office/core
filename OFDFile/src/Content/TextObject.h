@@ -18,7 +18,7 @@ struct TCGTransform
 
 	static TCGTransform Read(CXmlReader& oLiteReader);
 
-	bool Draw(IRenderer* pRenderer, const LONG& lUnicode, unsigned int& unIndex, double dX, double dY) const;
+	bool Draw(IRenderer* pRenderer, const LONG& lUnicode, unsigned int& unIndex, double dX, double dY, NSFonts::IFontManager* pFontManager) const;
 };
 
 class CTextCode
@@ -33,7 +33,7 @@ class CTextCode
 public:
 	CTextCode(CXmlReader& oLiteReader);
 
-	void Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vector<TCGTransform>& arCGTransforms) const;
+	void Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vector<TCGTransform>& arCGTransforms, NSFonts::IFontManager* pFontManager = nullptr) const;
 };
 
 class CTextObject : public IPageBlock, public CGraphicUnit

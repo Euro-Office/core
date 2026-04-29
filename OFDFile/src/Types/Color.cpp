@@ -49,9 +49,9 @@ int CColor::ToInt(const CRes* pPublicRes) const
 	switch(eColoSpaceType)
 	{
 		case CColorSpace::EType::GRAY:
-			return (255 << 24) | (m_oValues[0] << 16) | (m_oValues[0] << 8) | (m_oValues[0] << 0);
+			return (m_oValues[0] << 16) | (m_oValues[0] << 8) | (m_oValues[0] << 0);
 		case CColorSpace::EType::RGB:
-			return (255 << 24) | (m_oValues[2] << 16) | (m_oValues[1] << 8) | (m_oValues[0] << 0);
+			return (m_oValues[2] << 16) | (m_oValues[1] << 8) | (m_oValues[0] << 0);
 		case CColorSpace::EType::CMYK:
 		{
 			const float cF = m_oValues[0] / 255.0f;

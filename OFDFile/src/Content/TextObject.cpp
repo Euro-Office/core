@@ -1,6 +1,16 @@
 #include "TextObject.h"
 
 #include "../Utils/Utils.h"
+#include "../Utils/CFontChecker.h"
+
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+
+#ifdef BUILDING_WASM_MODULE
+#include "../../../DesktopEditor/graphics/pro/Fonts.h"
+#include "../../../PdfFile/SrcReader/FontsWasm.h"
+#endif
+
+#include <functional>
 
 namespace OFD
 {
@@ -58,7 +68,76 @@ CTextCode::CTextCode(CXmlReader& oLiteReader)
 	m_wsText = oLiteReader.GetText2();
 }
 
-void CTextCode::Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vector<TCGTransform>& arCGTransforms) const
+HRESULT DrawGlyphWithFontUpdate(IRenderer* pRenderer, NSFonts::IFontManager* pFontManager, unsigned int unUnicode, std::function<HRESULT()> CommandDrawTextCHAR)
+{
+	if (nullptr == pRenderer)
+		return S_FALSE;
+
+	std::wstring sFontPath;
+	double dSize{0.};
+	bool bReplace{false};
+
+	pRenderer->get_FontPath(&sFontPath);
+	pRenderer->get_FontSize(&dSize);
+
+	#ifdef BUILDING_WASM_MODULE
+	if (nullptr != pFontManager && !sFontPath.empty())
+	{
+		long lStyle;
+		double dDpiX, dDpiY, dOldSize;
+		pRenderer->get_FontStyle(&lStyle);
+		pRenderer->get_DpiX(&dDpiX);
+		pRenderer->get_DpiY(&dDpiY);
+		pFontManager->SetStringGID(FALSE);
+		pFontManager->LoadFontFromFile(sFontPath, 0, dOldSize, dDpiX, dDpiY);
+
+		NSFonts::IFontFile* pFontFile{pFontManager->GetFile()};
+
+		if (nullptr != pFontFile)
+		{
+			int nCMapIndex = 0;
+			int GID = pFontFile->SetCMapForCharCode(unUnicode, &nCMapIndex);
+			if (GID <= 0 && unUnicode < 0xF000)
+				GID = pFontFile->SetCMapForCharCode(unUnicode + 0xF000, &nCMapIndex);
+
+			if (GID <= 0)
+			{
+				std::wstring sName{pFontManager->GetApplication()->GetFontBySymbol(unUnicode)};
+				int bBold   = lStyle & 0x01 ? 1 : 0;
+				int bItalic = lStyle & 0x02 ? 1 : 0;
+
+				if (!sName.empty())
+				{
+					if (!NSWasm::IsJSEnv())
+					{
+						NSFonts::CFontSelectFormat oFormat;
+						oFormat.wsName  = new std::wstring(sName);
+						oFormat.bBold   = new INT(bBold);
+						oFormat.bItalic = new INT(bItalic);
+						NSFonts::CFontInfo* pFontInfo = pFontManager->GetFontInfoByParams(oFormat);
+
+						sName = pFontInfo->m_wsFontPath;
+					}
+
+					std::wstring wsFileName{NSWasm::LoadFont(sName, bBold, bItalic)};
+					pRenderer->put_FontPath(wsFileName);
+					pFontManager->LoadFontFromFile(wsFileName, 0, dSize, dDpiX, dDpiY);
+					bReplace = true;
+				}
+			}
+		}
+	}
+	#endif
+
+	HRESULT res{CommandDrawTextCHAR()};
+
+	if(bReplace)
+		pRenderer->put_FontPath(sFontPath);
+
+	return res;
+}
+
+void CTextCode::Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vector<TCGTransform>& arCGTransforms, NSFonts::IFontManager* pFontManager) const
 {
 	if (nullptr == pRenderer || m_wsText.empty())
 		return;
@@ -72,7 +151,7 @@ void CTextCode::Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vec
 		{
 			for (const TCGTransform& oCGTransform : arCGTransforms)
 			{
-				if (oCGTransform.Draw(pRenderer, m_wsText[unGlyphIndex], unIndex, dX, dY))
+				if (oCGTransform.Draw(pRenderer, m_wsText[unGlyphIndex], unIndex, dX, dY, pFontManager))
 				{
 					bDrawed = true;
 					break;
@@ -82,7 +161,7 @@ void CTextCode::Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vec
 
 		if (!bDrawed)
 		{
-			pRenderer->CommandDrawTextCHAR(m_wsText[unGlyphIndex], dX, dY, 0, 0);
+			DrawGlyphWithFontUpdate(pRenderer, pFontManager, m_wsText[unGlyphIndex], [pRenderer, chChar = m_wsText[unGlyphIndex], dX, dY](){ return pRenderer->CommandDrawTextCHAR(chChar, dX, dY, 0, 0); });
 			++unIndex;
 		}
 
@@ -185,7 +264,7 @@ void CTextObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 
 	const CRes* pPublicRes{oCommonData.GetPublicRes()};
 
-	const CFont* pFont = pPublicRes->GetFont(m_unFontID);
+	const CFont* pFont{pPublicRes->GetFont(m_unFontID)};
 
 	if (nullptr == pFont)
 		return;
@@ -224,7 +303,11 @@ void CTextObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 	unsigned int unGlyphsIndex = 0;
 
 	for (const CTextCode* pTextCode : m_arTextCodes)
+		#ifdef BUILDING_WASM_MODULE
+		pTextCode->Draw(pRenderer, unGlyphsIndex, m_arCGTransforms, pFont->GetFontManager());
+		#else
 		pTextCode->Draw(pRenderer, unGlyphsIndex, m_arCGTransforms);
+		#endif
 
 	pRenderer->SetTransform(oOldTransform.m_dM11, oOldTransform.m_dM12, oOldTransform.m_dM21, oOldTransform.m_dM22, oOldTransform.m_dDx, oOldTransform.m_dDy);
 }
@@ -269,13 +352,13 @@ TCGTransform TCGTransform::Read(CXmlReader& oLiteReader)
 	return oCGTransform;
 }
 
-bool TCGTransform::Draw(IRenderer* pRenderer, const LONG& lUnicode, unsigned int& unIndex, double dX, double dY) const
+bool TCGTransform::Draw(IRenderer* pRenderer, const LONG& lUnicode, unsigned int& unIndex, double dX, double dY, NSFonts::IFontManager* pFontManager) const
 {
 	if (m_unCodePosition + m_arGlyphs.size() > unIndex || 0 == m_unCodeCount || m_arGlyphs.empty())
 		return false;
 
 	for (unsigned int unGlyphCount = 0; unGlyphCount < m_arGlyphs.size(); ++unGlyphCount)
-		pRenderer->CommandDrawTextExCHAR(lUnicode, m_arGlyphs[unGlyphCount], dX, dY, 0, 0);
+		DrawGlyphWithFontUpdate(pRenderer, pFontManager, m_arGlyphs[unGlyphCount], [pRenderer, lUnicode, chChar = m_arGlyphs[unGlyphCount], dX, dY](){ return pRenderer->CommandDrawTextExCHAR(lUnicode, chChar, dX, dY, 0, 0); });
 
 	unIndex += m_unCodeCount;
 

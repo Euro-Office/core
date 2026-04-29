@@ -1,5 +1,6 @@
 #include "GraphicUnit.h"
-#include "../../../OOXML/Base/Unit.h"
+
+#include "../../../DesktopEditor/graphics/IRenderer.h"
 
 namespace OFD
 {

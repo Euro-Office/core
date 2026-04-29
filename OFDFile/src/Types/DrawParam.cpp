@@ -1,5 +1,7 @@
 #include "DrawParam.h"
 
+#include "../../../DesktopEditor/graphics/IRenderer.h"
+
 namespace OFD
 {
 CDrawParam::CDrawParam(CXmlReader& oXmlReader)

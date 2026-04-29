@@ -88,6 +88,7 @@ WASM_EXPORT int GetType(CDrawingFile* pFile)
 	// 0 - PDF
 	// 1 - DJVU
 	// 2 - XPS
+	// 3 - OFD
 	return pFile->GetType();
 }
 WASM_EXPORT int GetErrorCode(CDrawingFile* pFile)

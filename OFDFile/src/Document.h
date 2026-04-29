@@ -1,11 +1,9 @@
 #ifndef DOCUMENT_H
 #define DOCUMENT_H
 
+#include "Utils/CFontChecker.h"
 #include "Page.h"
 #include "Annotation.h"
-
-#include "../../DesktopEditor/graphics/IRenderer.h"
-#include "../../OfficeUtils/src/ZipFolder.h"
 
 namespace OFD
 {
@@ -42,6 +40,8 @@ public:
 
 	unsigned int GetPageCount() const;
 	bool GetPageSize(int nPageIndex, double& dWidth, double &dHeight) const;
+
+	void UpdateFonts(CFontChecker* pFontChecker);
 };
 }
 

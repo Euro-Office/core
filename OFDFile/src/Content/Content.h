@@ -13,7 +13,7 @@ public:
 	CContent();
 	~CContent();
 
-	bool Read(CXmlReader& oLiteReader);
+	bool Read(CXmlReader& oLiteReader, IFolder* pFolder);
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const;
 };
 }

@@ -1,18 +1,16 @@
 #include "Layer.h"
 
-#include "../../../OOXML/Base/Unit.h"
-
 #include "PageBlock.h"
 
 namespace OFD
 {
-CLayer::CLayer(CXmlReader& oLiteReader)
+CLayer::CLayer(CXmlReader& oLiteReader, IFolder* pFolder)
 	: IPageBlock(oLiteReader), m_eType(EType::Body)
 {
 	if (L"ofd:Layer" != oLiteReader.GetName())
 		return;
 
-	CPageBlock::ReadIntoContainer(oLiteReader, m_arPageBlocks);
+	CPageBlock::ReadIntoContainer(oLiteReader, m_arPageBlocks, pFolder);
 }
 
 CLayer::~CLayer()

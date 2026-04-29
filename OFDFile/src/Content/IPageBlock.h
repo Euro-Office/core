@@ -2,9 +2,10 @@
 #define IPAGEBLOCK_H
 
 #include "../IOFDElement.h"
-
-#include "../../../DesktopEditor/graphics/IRenderer.h"
 #include "../Types/CommonData.h"
+
+class IRenderer;
+class IFolder;
 
 namespace OFD
 {
