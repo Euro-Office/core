@@ -105,7 +105,7 @@ bool CFontChecker::UpdateFont(CFont* pFont)
 
 		if (!pFont->m_wsSelectedFont.empty())
 		{
-			pFont->m_wsSelectedFont = NSWasm::LoadFont(pFont->m_wsFilePath, pFontInfo->m_bBold, pFontInfo->m_bItalic);
+			pFont->m_wsSelectedFont = NSWasm::LoadFont(pFont->m_wsSelectedFont, pFontInfo->m_bBold, pFontInfo->m_bItalic);
 			if (pFont->m_wsSelectedFont.empty())
 			{
 				// The font isn't ready yet, which means it's not being put to pRenderer at all. Later, when the font is loaded, the page will be redrawn.
