@@ -6,8 +6,11 @@ import subprocess
 import shutil
 from pathlib import Path
 
+import build_3rdparty_common as nc
+
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
+
 
 if len( sys.argv ) < 3:
     print( "Needs 2 arguments: work_dir_abs install_dir_abs" )
@@ -36,12 +39,16 @@ subfolders = [
     'v8',
 ]
 
+total_time = nc.MeasurementObj( "Total" )
+
 for subfolder in subfolders:
+    print(  "---------------------------------------------------------------------------" )
     print( f"Working on {subfolder}..." )
-    print( f"  Invoking {str(Path( script_dir / subfolder / "nc-build.py" ))}" )
     sub_script = Path( script_dir / subfolder / "nc-build.py" )
     if sub_script.exists():
         try:
+            time_meas = nc.MeasurementObj( subfolder )
+
             subprocess.run(
                 [sys.executable, sub_script, work_dir / subfolder, install_dir / subfolder],
                 check=True,
@@ -49,11 +56,18 @@ for subfolder in subfolders:
                 stdout=None,
                 stderr=None,
             )
+            
         except subprocess.CalledProcessError as e:
-            print(f"\n❌ {subfolder} failed with code {e.returncode}")
+            print( f"  ❌ {subfolder} failed with code {e.returncode}" )
+            print( f"  { time_meas.elapsed_string() }" )
+            time_meas.report()
             sys.exit(e.returncode)
 
-        print( f"✅ {subfolder} ready" )
+        print( f"  ✅ {subfolder} ready" )
+        print( f"  { time_meas.elapsed_string() }" )
 
     else:
-        print( "Not good" )
+        print( f"❌ { subfolder } build script cannot be found ({ sub_script })" )
+
+print( "" )
+total_time.report()
