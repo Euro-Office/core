@@ -753,7 +753,7 @@ namespace OOX
 			}
 			if(inputClr.m_oTint.IsInit())
 			{
-				color.nTintShade = inputClr.m_oTint->GetValue();
+				color.nTintShade = (inputClr.m_oTint->GetValue() * 32767);//maxshort
 			}
 
 			return color;
