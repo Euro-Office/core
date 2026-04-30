@@ -16,7 +16,6 @@ include($$CORE_ROOT_DIR/Common/base.pri)
 include($$CORE_ROOT_DIR/Common/3dParty/icu/icu.pri)
 include($$CORE_ROOT_DIR/Common/3dParty/boost/boost.pri)
 
-LIBS += -L$$CORE_BUILDS_LIBRARIES_PATH -lCryptoPPLib
 ADD_DEPENDENCY(kernel)
 
 SOURCES +=  $$PWD/cconversionsmtoooxml.cpp \
@@ -34,3 +33,9 @@ HEADERS += \
     $$PWD/typeConversion.h \
     $$PWD/typeselements.h \
     $$PWD/TFormulaSize.h
+
+core_mac | core_ios {
+    LIBS += -framework Security
+}
+
+

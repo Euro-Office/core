@@ -35,6 +35,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include "./../../OOXML/Base/Rand.h"
 
 namespace PdfWriter
 {
@@ -3669,7 +3670,7 @@ namespace PdfWriter
 		CharStringOperand newOperand;
 
 		newOperand.IsInteger = false;
-		newOperand.RealValue = ((double)rand() + 1) / ((double)RAND_MAX + 1);
+		newOperand.RealValue = ((double)RandUInt() + 1) / ((double)RAND_MAX + 1);
 
 		mOperandStack.push_back(newOperand);
 		return inProgramCounter;

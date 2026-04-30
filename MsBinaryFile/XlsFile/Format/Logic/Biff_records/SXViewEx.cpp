@@ -44,7 +44,7 @@ void SXViewEx::readFields(CFRecord& record)
 {
 	record >> frtHeaderOld >> csxth >> csxpi >> csxvdtex >> cbFuture;
 
-	if (cbFuture)
+	if (cbFuture > 0 && cbFuture <= record.getDataSize() - record.getRdPtr())
 		rgbFuture = std::string(record.getCurData<char>(), cbFuture);
 
 	record.skipNunBytes(record.getDataSize() - record.getRdPtr());

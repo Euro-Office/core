@@ -87,6 +87,9 @@ namespace PPTX
 		{
 			pWriter->StartRecord(EFFECT_TYPE_ALPHAMOD);
 
+			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
+			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
+
 			pWriter->WriteRecord1(0, cont);
 
 			pWriter->EndRecord();

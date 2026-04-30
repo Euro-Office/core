@@ -1048,6 +1048,7 @@ CAnnotFieldInfo::CWidgetAnnotPr::CButtonWidgetPr*    CAnnotFieldInfo::CWidgetAnn
 CAnnotFieldInfo::CWidgetAnnotPr::CTextWidgetPr*      CAnnotFieldInfo::CWidgetAnnotPr::GetTextWidgetPr()      { return m_pTextPr; }
 CAnnotFieldInfo::CWidgetAnnotPr::CChoiceWidgetPr*    CAnnotFieldInfo::CWidgetAnnotPr::GetChoiceWidgetPr()    { return m_pChoicePr; }
 CAnnotFieldInfo::CWidgetAnnotPr::CSignatureWidgetPr* CAnnotFieldInfo::CWidgetAnnotPr::GetSignatureWidgetPr() { return m_pSignaturePr; }
+void CAnnotFieldInfo::CWidgetAnnotPr::SetFontName(const std::wstring& sName) { m_wsFN = sName; }
 CAnnotFieldInfo::CWidgetAnnotPr::CWidgetAnnotPr(BYTE nType)
 {
 	m_pButtonPr    = NULL;

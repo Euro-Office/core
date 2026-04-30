@@ -509,7 +509,7 @@ void ChartSheetSubstream::recalc(CHARTFORMATS* charts)
 
 		iCrt = serCrt->id;
 
-		while ((parent0->m_arCRT.size() <= iCrt) && (ind_AXIS < charts->m_arAXISPARENT.size()) && (charts->m_arAXISPARENT.size() > 1))
+		while ((parent0->m_arCRT.size() <= iCrt) && (ind_AXIS + 1 < charts->m_arAXISPARENT.size()) && (charts->m_arAXISPARENT.size() > 1))
 		{
 			parent0 = dynamic_cast<AXISPARENT*>(charts->m_arAXISPARENT[++ind_AXIS].get());
 

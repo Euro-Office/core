@@ -45,6 +45,7 @@
 #include "../ComplexTypes_Spreadsheet.h"
 
 #include "../../Binary/Presentation/BinaryFileReaderWriter.h"
+#include "../../Binary/Sheets/Reader/CellFormatController/DateReader.h"
 #include "../../Binary/Sheets/Writer/CSVWriter.h"
 #include "../../../DesktopEditor/common/StreamWriter.h"
 #include "../../../DesktopEditor/common/StringExt.h"
@@ -663,8 +664,22 @@ namespace OOX
                     case SimpleTypes::Spreadsheet::celltypeSharedString: nType = XLSB::rt_CellIsst; break;
                     case SimpleTypes::Spreadsheet::celltypeError: nType = XLSB::rt_CellError; break;
                     case SimpleTypes::Spreadsheet::celltypeBool: nType = XLSB::rt_CellBool; break;
+					case SimpleTypes::Spreadsheet::celltypeDate: 
+					{
+						std::wstring tmp(m_oValue.m_oValue.m_sBuffer, m_oValue.m_oValue.m_nLen);
+						DateReader dateChecker;
+						double result = 0;
+						bool bTime = false, bDate = false;
+						if (dateChecker.GetDigitalDate(tmp, result, bDate, bTime))
+						{
+							nType = XLSB::rt_CellReal;
+							m_oValue.m_dValue = result;
+						}
+						else if (m_oValue.m_oValue.m_nLen > 0)
+							nType = XLSB::rt_CellSt;
+					}break;
 					case SimpleTypes::Spreadsheet::celltypeInlineStr:
-                    case SimpleTypes::Spreadsheet::celltypeStr: nType = XLSB::rt_CellSt; break;
+					case SimpleTypes::Spreadsheet::celltypeStr: nType = XLSB::rt_CellSt; break;
 				}
 			}
 			bool bIsBlankFormula = false;
@@ -731,28 +746,31 @@ namespace OOX
 			oStream.XlsbStartRecord(nType, nLen);
 			oStream.WriteULONG(m_nCol & 0x3FFF);
 
-
 			oStream.WriteULONG(nFlags2);
 			//todo RkNumber
-			switch(nType)
+			switch (nType)
 			{
-                case XLSB::rt_CellReal:
-                case XLSB::rt_FmlaNum:
+				case XLSB::rt_CellReal:
+				case XLSB::rt_FmlaNum:
+				{
 					oStream.WriteDoubleReal(m_oValue.m_dValue);
-				break;
-                case XLSB::rt_CellIsst:
+				}break;
+				case XLSB::rt_CellIsst:
+				{
 					oStream.WriteULONG(m_oValue.m_nValue);
-				break;
-                case XLSB::rt_CellSt:
-                case XLSB::rt_FmlaString:
+				}break;
+				case XLSB::rt_CellSt:
+				case XLSB::rt_FmlaString:
+				{
 					oStream.WriteStringData(m_oValue.m_oValue.m_sBuffer, m_oValue.m_oValue.m_nLen);
-				break;
-                case XLSB::rt_CellError:
-                case XLSB::rt_FmlaError:
-                case XLSB::rt_CellBool:
-                case XLSB::rt_FmlaBool:
+				}break;
+				case XLSB::rt_CellError:
+				case XLSB::rt_FmlaError:
+				case XLSB::rt_CellBool:
+				case XLSB::rt_FmlaBool:
+				{
 					oStream.WriteBYTE(m_oValue.m_nValue);
-				break;
+				}break;
 			}
 
 			_UINT16 nFlags = 0;

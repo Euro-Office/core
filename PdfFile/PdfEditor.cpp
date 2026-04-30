@@ -1098,7 +1098,10 @@ bool CPdfEditor::IncrementalUpdates()
 		return true;
 
 	m_nMode = Mode::WriteAppend;
-	PDFDoc* pPDFDocument = m_pReader->GetPDFDocument(0);
+	PDFDoc* pPDFDocument = NULL;
+	PdfReader::CPdfFontList* pFontList = NULL;
+	int nStartRefID = 0;
+	m_pReader->GetPageIndex(0, &pPDFDocument, &pFontList, &nStartRefID);
 	XRef* xref = pPDFDocument->getXRef();
 	PdfWriter::CDocument* pDoc = m_pWriter->GetDocument();
 
@@ -1330,14 +1333,28 @@ bool CPdfEditor::IncrementalUpdates()
 			bRes = pDoc->EditResources(pDRXref, pDR);
 	}
 	pagesRefObj.free();
+
+	if (form)
+	{
+		Object oDR;
+		Object* oAcroForm = form->getAcroFormObj();
+		if (oAcroForm->dictLookup("DR", &oDR)->isDict())
+		{
+			Dict* pResources = oDR.getDict();
+			ScanFonts(pPDFDocument, pResources);
+		}
+		oDR.free();
+	}
 	return bRes;
 }
 void CPdfEditor::NewFrom()
 {
 	PdfWriter::CDocument* pDoc = m_pWriter->GetDocument();
 	Object oCatalog;
-	PDFDoc* pPDFDocument = m_pReader->GetPDFDocument(0);
+	PDFDoc* pPDFDocument = NULL;
+	PdfReader::CPdfFontList* pFontList = NULL;
 	int nStartRefID = 0;
+	m_pReader->GetPageIndex(0, &pPDFDocument, &pFontList, &nStartRefID);
 	XRef* xref = pPDFDocument->getXRef();
 	if (!xref->getCatalog(&oCatalog)->isDict())
 	{
@@ -1564,8 +1581,12 @@ void CPdfEditor::NewFrom()
 							}
 						}
 					}
-					oTemp2.free(); oTemp.free();
+					oTemp2.free();
 					pDR->Fix();
+
+					Dict* pResources = oTemp.getDict();
+					ScanFonts(pPDFDocument, pResources);
+					oTemp.free();
 					continue;
 				}
 				else
@@ -2724,7 +2745,11 @@ bool CPdfEditor::SplitPages(const int* arrPageIndex, unsigned int unLength, PDFD
 							}
 						}
 					}
-					oTemp2.free(); oTemp.free();
+					oTemp2.free();
+
+					Dict* pResources = oTemp.getDict();
+					ScanFonts(pPDFDocument, pResources);
+					oTemp.free();
 					continue;
 				}
 				else
@@ -4189,12 +4214,7 @@ void CPdfEditor::ClearPage()
 	// Mode::WriteAppend && Mode::WriteNew
 	// Reading and processing fonts from page
 	Dict* pResources = pOPage->getResourceDict();
-	if (pResources)
-	{
-		std::vector<int> arrUniqueResources;
-		ScanAndProcessFonts(pPDFDocument, xref, pResources, 0, arrUniqueResources, pFontList, nStartRefID);
-		m_pReader->SetFonts(m_nEditPage);
-	}
+	ScanFonts(pPDFDocument, pResources);
 	oAnnots.free();
 }
 void CPdfEditor::AddShapeXML(const std::string& sXML)
@@ -4442,6 +4462,18 @@ std::vector<double> CPdfEditor::WriteRedact(const std::vector<std::wstring>& arr
 		m_arrRedact[i].bDraw = true;
 	}
 	return arrRes;
+}
+void CPdfEditor::ScanFonts(PDFDoc* pPDFDocument, Dict* pResources)
+{
+	if (!pResources)
+		return;
+	XRef* xref = pPDFDocument->getXRef();
+	int nStartRefID = m_pReader->GetStartRefID(pPDFDocument);
+	PdfReader::CPdfFontList* pFontList = m_pReader->GetFontList(pPDFDocument);
+
+	std::vector<int> arrUniqueResources;
+	ScanAndProcessFonts(pPDFDocument, xref, pResources, 0, arrUniqueResources, pFontList, nStartRefID);
+	m_pReader->SetFonts(pFontList);
 }
 void CPdfEditor::ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pResources, int nDepth, std::vector<int>& arrUniqueResources, PdfReader::CPdfFontList* pFontList, int nStartRefID)
 {

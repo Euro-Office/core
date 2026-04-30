@@ -46,3 +46,7 @@ include(X2tConverter.pri)
 	HEADERS += ../../src/dylib/x2t.h
 	SOURCES += ../../src/dylib/x2t.cpp
 }
+
+core_mac | core_ios {
+    LIBS += -framework Security
+}

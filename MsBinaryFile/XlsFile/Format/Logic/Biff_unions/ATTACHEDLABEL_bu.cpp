@@ -126,12 +126,15 @@ const bool ATTACHEDLABEL::loadContent(BinProcessor& proc)
 		elements_.pop_back();
 
 		ObjectLink *o_l = dynamic_cast<ObjectLink*>(m_ObjectLink.get());
-		
-		m_iLinkObject = o_l->wLinkObj;
 
-		Pos * pos = dynamic_cast<Pos*>(m_Pos.get());
-		if (pos)
-			pos->m_iLinkObject = m_iLinkObject;
+		if (o_l)
+		{
+			m_iLinkObject = o_l->wLinkObj;
+
+			Pos* pos = dynamic_cast<Pos*>(m_Pos.get());
+			if (pos)
+				pos->m_iLinkObject = m_iLinkObject;
+		}
 	}
 	
 	if (proc.optional<DataLabExtContents>())
@@ -393,12 +396,12 @@ int ATTACHEDLABEL::serialize(std::wostream & _stream, bool isPosition)
 
 int ATTACHEDLABEL::serialize_rPr (std::wostream & _stream, int iFnt, bool rtl, bool defRPr)
 {
-	if (!pGlobalWorkbookInfoPtr)			return 0;
+	if (!pGlobalWorkbookInfoPtr) return 0;
 
 	int sz = pGlobalWorkbookInfoPtr->m_arFonts.size();
-	if (iFnt - 1 > sz || iFnt < 1) return 0;
+	if (iFnt > sz  || iFnt < 1) return 0;
 
-	Font * font = dynamic_cast<Font*>(pGlobalWorkbookInfoPtr->m_arFonts[iFnt -1].get());
+	Font * font = dynamic_cast<Font*>(pGlobalWorkbookInfoPtr->m_arFonts[iFnt - 1].get());
 
 	Text * text_props = dynamic_cast<Text*>(m_TextProperties.get());
 	

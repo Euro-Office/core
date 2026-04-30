@@ -128,7 +128,9 @@ void AXISPARENT::concatinate_second (BaseObjectPtr & addit)
 	for (size_t i = 0; i < second->m_arCRT.size(); i++)
 	{
 		CRT* crt = dynamic_cast<CRT*>(second->m_arCRT[i].get());
-		crt->m_indAXISPARENT = 1;
+		
+		if (crt)
+			crt->m_indAXISPARENT = 1;
 
 		m_arCRT.push_back(second->m_arCRT[i]);
 	}

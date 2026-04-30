@@ -58,7 +58,7 @@ void TextPropsStream::readFields(CFRecord& record)
 	_UINT32	cb=0;
 	record >> cb;
 
-	if (cb > 0)
+	if (cb > 0 && cb <= record.getDataSize() - record.getRdPtr())
 	{
 		xml_ = std::string( record.getCurData<char>(), cb);
 		record.skipNunBytes(cb);
