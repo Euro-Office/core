@@ -717,6 +717,13 @@ namespace OOX
 						if(xfBorder->m_oDiagonal.IsInit())
 						{
 							ProcessBorderProp(xfBorder->m_oDiagonal.GetPointer(), xf->border.dgDiag, xf->border.icvDiag);
+							if(xfBorder->m_oDiagonalUp.IsInit() && xfBorder->m_oDiagonalUp->GetValue()
+								&& xfBorder->m_oDiagonalDown.IsInit() && xfBorder->m_oDiagonalDown->GetValue())
+								xf->border.grbitDiag = 3;
+							else if(xfBorder->m_oDiagonalUp.IsInit() && xfBorder->m_oDiagonalUp->GetValue() )
+								xf->border.grbitDiag = 2;
+							else if(xfBorder->m_oDiagonalDown.IsInit() && xfBorder->m_oDiagonalDown->GetValue() )
+								xf->border.grbitDiag = 1;
 						}
 					}
 				}
@@ -729,7 +736,10 @@ namespace OOX
 			if(inputClr.m_oRgb.IsInit())
 			{
 				color.xclrType = 2;
-				color.xclrValue = inputClr.m_oRgb->ToInt();
+				SETBITS(color.xclrValue, 0, 7, inputClr.m_oRgb->Get_R())
+				SETBITS(color.xclrValue, 8, 15, inputClr.m_oRgb->Get_G())
+				SETBITS(color.xclrValue, 16, 23, inputClr.m_oRgb->Get_B())
+				SETBITS(color.xclrValue, 24, 31, inputClr.m_oRgb->Get_A())
 			}
 			else if(inputClr.m_oThemeColor.IsInit())
 			{
@@ -777,6 +787,91 @@ namespace OOX
 							fillProp->extPropData.color = getXLSColor(cellFill->m_oPatternFill->m_oBgColor.get());
 							ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
 						}
+					}
+					else if(cellFill->m_oGradientFill.IsInit())
+					{
+						auto fillProp = new XLS::ExtProp;
+						fillProp->extType = XLS::ExtProp::_type::GradientColor;
+						if(cellFill->m_oGradientFill->m_oDegree.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numDegree = cellFill->m_oGradientFill->m_oDegree->GetValue();
+						if(cellFill->m_oGradientFill->m_oType.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.type1 = cellFill->m_oGradientFill->m_oType->GetValue();
+
+						if(cellFill->m_oGradientFill->m_oLeft.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToLeft = cellFill->m_oGradientFill->m_oLeft->GetValue();
+						if(cellFill->m_oGradientFill->m_oRight.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToRight = cellFill->m_oGradientFill->m_oRight->GetValue();
+						if(cellFill->m_oGradientFill->m_oTop.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToTop = cellFill->m_oGradientFill->m_oTop->GetValue();
+						if(cellFill->m_oGradientFill->m_oBottom.IsInit())
+							fillProp->extPropData.gradient_fill.gradient.numFillToBottom = cellFill->m_oGradientFill->m_oBottom->GetValue();
+
+						fillProp->extPropData.gradient_fill.cGradStops = cellFill->m_oGradientFill->m_arrItems.size();
+						for(auto i : cellFill->m_oGradientFill->m_arrItems)
+						{
+							XLS::GradStop gradStop;
+							if(i->m_oColor.IsInit())
+							{
+								auto tempClr =  getXLSColor(i->m_oColor.get());
+								gradStop.xclrType = tempClr.xclrType;
+								gradStop.numTint.data.value = tempClr.nTintShade;
+								gradStop.xclrValue = tempClr.xclrValue;
+							}
+							if(i->m_oPosition.IsInit())
+								gradStop.numPosition.data.value = i->m_oPosition->GetValue();
+							fillProp->extPropData.gradient_fill.rgGradStops.push_back(gradStop);
+						}
+						ext->rgExt.push_back(XLS::BiffStructurePtr(fillProp));
+					}
+				}
+				if(cellXf->m_oFontId.IsInit() && m_oFonts->m_arrItems.size() > cellXf->m_oFontId->GetValue())
+				{
+					auto cellFont = m_oFonts->m_arrItems.at(cellXf->m_oFontId->GetValue());
+					if(cellFont->m_oColor.IsInit())
+					{
+						auto textClrProp = new XLS::ExtProp;
+						textClrProp->extType = XLS::ExtProp::_type::TextColor;
+						textClrProp->extPropData.color = getXLSColor(cellFont->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(textClrProp));
+					}
+				}
+				if(cellXf->m_oBorderId.IsInit() && m_oBorders->m_arrItems.size() > cellXf->m_oBorderId->GetValue())
+				{
+					auto Bdr = m_oBorders->m_arrItems.at(cellXf->m_oBorderId->GetValue());
+					if(Bdr->m_oBottom.IsInit() && Bdr->m_oBottom->m_oColor.IsInit())
+					{
+						auto BdrProp = new XLS::ExtProp;
+						BdrProp->extType = XLS::ExtProp::_type::BottomBorderColor;
+						BdrProp->extPropData.color = getXLSColor(Bdr->m_oBottom->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(BdrProp));
+					}
+					if(Bdr->m_oTop.IsInit() && Bdr->m_oTop->m_oColor.IsInit())
+					{
+						auto BdrProp = new XLS::ExtProp;
+						BdrProp->extType = XLS::ExtProp::_type::TopBorderColor;
+						BdrProp->extPropData.color = getXLSColor(Bdr->m_oTop->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(BdrProp));
+					}
+					if(Bdr->m_oStart.IsInit() && Bdr->m_oStart->m_oColor.IsInit())
+					{
+						auto BdrProp = new XLS::ExtProp;
+						BdrProp->extType = XLS::ExtProp::_type::LeftBorderColor;
+						BdrProp->extPropData.color = getXLSColor(Bdr->m_oStart->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(BdrProp));
+					}
+					if(Bdr->m_oEnd.IsInit() && Bdr->m_oEnd->m_oColor.IsInit())
+					{
+						auto BdrProp = new XLS::ExtProp;
+						BdrProp->extType = XLS::ExtProp::_type::RightBorderColor;
+						BdrProp->extPropData.color = getXLSColor(Bdr->m_oEnd->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(BdrProp));
+					}
+					if(Bdr->m_oDiagonal.IsInit() && Bdr->m_oDiagonal->m_oColor.IsInit())
+					{
+						auto BdrProp = new XLS::ExtProp;
+						BdrProp->extType = XLS::ExtProp::_type::DiagonalBorderColor;
+						BdrProp->extPropData.color = getXLSColor(Bdr->m_oDiagonal->m_oColor.get());
+						ext->rgExt.push_back(XLS::BiffStructurePtr(BdrProp));
 					}
 				}
 				XLS::BaseObjectPtr objPtr = XLS::BaseObjectPtr(ext);
