@@ -30,10 +30,10 @@ def is_windows() -> bool:
     return sys.platform == "win32"
 
 def work_dir_looks_ok() -> bool:
-    return Path( work_dir / "ok_marker" ).exists()
+    return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()
 
 def install_dir_looks_ok() -> bool:
-    return Path( install_dir / "ok_marker" ).exists()
+    return ( not force_redo ) and Path( install_dir / "ok_marker" ).exists()
 
 def create_work_dir_ok_marker():
     Path( work_dir / "ok_marker" ).touch()
