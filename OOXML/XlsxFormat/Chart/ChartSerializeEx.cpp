@@ -1794,6 +1794,14 @@ xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\""
 				writer.WriteString(*m_separator);
 			writer.WriteString(L"</cx:separator>");
 		}
+		for (auto dataLabel : m_arDataLabel)
+		{
+			dataLabel->toXML(writer);
+		}
+		for (auto dataLabelHidden : m_arDataLabelHidden)
+		{
+			dataLabelHidden->toXML(writer);
+		}
 		writer.WriteString(L"</cx:dataLabels>");
 	}
 	EElementType CDataLabels::getType() const {return et_ct_DataLabels;}
