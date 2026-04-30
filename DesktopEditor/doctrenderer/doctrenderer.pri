@@ -116,7 +116,7 @@ DEFINES += BUIDLER_OPEN_BASE64_ENABLED
 CONFIG += drawingfile_support
 drawingfile_support {
 	DEFINES += WASM_SERIALIZER_USE_ALLOCATOR
-	ADD_DEPENDENCY(PdfFile, XpsFile, DjVuFile, DocxRenderer)
+	ADD_DEPENDENCY(PdfFile, XpsFile, DjVuFile, OFDFile, DocxRenderer)
 
 	HEADERS += \
 		$$PWD_CUR/drawingfile.h \
