@@ -1,4 +1,4 @@
-/*
+﻿/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -31,6 +31,8 @@
  */
 
 #include "Theme.h"
+#include "../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/THEME.h"
+#include "../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Theme.h"
 
 namespace PPTX
 {
@@ -232,6 +234,30 @@ namespace PPTX
 		pWriter->WriteArray(_T("a:extraClrSchemeLst"), extraClrSchemeLst);
 
 		pWriter->EndNode(_T("a:theme"));
+	}
+	XLS::BaseObjectPtr Theme::toXLS()
+	{
+		NSBinPptxRW::CXmlWriter oXmlWriter;
+		auto effectStyleLst = themeElements.fmtScheme.effectStyleLst;
+		themeElements.fmtScheme.effectStyleLst.clear();
+		toXmlWriter(&oXmlWriter);
+		themeElements.fmtScheme.effectStyleLst = effectStyleLst;
+
+		auto XlsTheme = new XLS::THEME;
+		auto themeHeader = new XLS::Theme;
+		themeHeader->dwThemeVersion = 0;
+		XlsTheme->m_Theme = XLS::BaseObjectPtr(themeHeader);
+		size_t size = oXmlWriter.GetSize();
+		themeHeader->nThemeDataSize = size;
+		if (size > 0)
+		{
+			themeHeader->pThemeData.reset(new BYTE[size]);
+			auto ThemeData = oXmlWriter.GetXmlString();
+			if(!ThemeData.empty() && ThemeData.size() == size)
+				memcpy(themeHeader->pThemeData.get(), ThemeData.c_str(), size);
+		}
+
+		return XLS::BaseObjectPtr(XlsTheme);
 	}
 	void Theme::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
 	{
