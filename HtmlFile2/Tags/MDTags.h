@@ -7,51 +7,87 @@
 
 namespace HTML
 {
-template<>
-bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode);
+#define CLASS_TAG_LIGHT_MD(class_name)\
+template<>\
+class C ## class_name ## Tag<CMDWriter> : public INTERFACE_TAGS::I ## class_name ## Tag, public INTERFACE_TAGS::ITag<CMDWriter>
 
-template<>
-bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
+CLASS_TAG_LIGHT_MD(Anchor)
+{
+public:
+	CAnchorTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const NSCSS::CNode& oTagNode) override;
+};
 
-template<>
-bool CPreformattedTag<CMDWriter>::Open();
-template<>
-void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors);
+CLASS_TAG_LIGHT_MD(Break)
+{
+public:
+	CBreakTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Read(const NSCSS::CNode& oTagNode) override;
+};
 
-template<>
-bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CHeaderTag<CMDWriter>::Close();
+CLASS_TAG_LIGHT_MD(Preformatted)
+{
+public:
+	CPreformattedTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open() override;
+	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
+};
 
-template<>
-bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG);
+CLASS_TAG_LIGHT_MD(Header)
+{
+public:
+	CHeaderTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open(const NSCSS::CNode& oTagNode) override;
+	void Close() override;
+};
 
-template<>
-bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CBlockquoteTag<CMDWriter>::Close();
+CLASS_TAG_LIGHT_MD(Image)
+{
+public:
+	CImageTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
+	bool ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG) override;
+};
 
-template<>
-bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CListTag<CMDWriter>::Close();
+CLASS_TAG_LIGHT_MD(Blockquote)
+{
+public:
+	CBlockquoteTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close() override;
+};
 
-template<>
-bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors);
+CLASS_TAG_LIGHT_MD(List)
+{
+public:
+	CListTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open(const NSCSS::CNode& oTagNode) override;
+	void Close() override;
+};
 
-template<>
-bool CListElementTag<CMDWriter>::Open();
-template<>
-void CListElementTag<CMDWriter>::Close();
+CLASS_TAG_LIGHT_MD(HorizontalRule)
+{
+public:
+	CHorizontalRuleTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Write(const std::vector<NSCSS::CNode>& arSelectors) override;
+};
 
-template<>
-bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CCodeTag<CMDWriter>::Close();
+CLASS_TAG_LIGHT_MD(ListElement)
+{
+public:
+	CListElementTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open() override;
+	void Close() override;
+};
+
+CLASS_TAG_LIGHT_MD(Code)
+{
+public:
+	CCodeTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
+	bool Open(const NSCSS::CNode& oTagNode) override;
+	void Close() override;
+};
 
 struct TElementInfo
 {

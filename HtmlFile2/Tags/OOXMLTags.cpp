@@ -37,7 +37,6 @@ bool UpdateImageData(const std::wstring& wsImagePath, TImageData& oImageData);
 
 const static double HTML_FONTS[7] = {7.5, 10, 12, 13.5, 18, 24, 36};
 
-template<>
 bool CAnchorTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if(!Valid())
@@ -84,7 +83,6 @@ bool CAnchorTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors
 	return true;
 }
 
-template<>
 void CAnchorTag<COOXMLWriter>::Close(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -93,7 +91,6 @@ void CAnchorTag<COOXMLWriter>::Close(const NSCSS::CNode& oTagNode)
 	m_pWriter->ClearHyperlinkData();
 }
 
-template<>
 bool CAbbrTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if(!Valid())
@@ -116,7 +113,6 @@ bool CAbbrTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-template<>
 void CAbbrTag<COOXMLWriter>::Close()
 {
 	if (!Valid())
@@ -125,7 +121,6 @@ void CAbbrTag<COOXMLWriter>::Close()
 	m_pWriter->GetCurrentDocument()->WriteString(L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>");
 }
 
-template<>
 bool CBreakTag<COOXMLWriter>::Read(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -437,7 +432,6 @@ bool CImageTag<COOXMLWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelecto
 	return true;
 }
 
-template<>
 bool CFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode, size_t unLevel)
 {
 	if (!Valid())
@@ -473,7 +467,6 @@ bool CFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode, size_t unLevel)
 	return true;
 }
 
-template<>
 bool CInputTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -503,7 +496,6 @@ bool CInputTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-template<>
 bool CBaseFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -728,7 +720,6 @@ bool CHorizontalRuleTag<COOXMLWriter>::Write(const std::vector<NSCSS::CNode>& ar
 }
 
 
-template<>
 bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -772,7 +763,6 @@ bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-template<>
 void CListTag<COOXMLWriter>::Close()
 {
 	if (!Valid())
@@ -781,13 +771,11 @@ void CListTag<COOXMLWriter>::Close()
 	m_pWriter->CloseP();
 }
 
-template<>
 bool CListElementTag<COOXMLWriter>::Open()
 {
 	return Valid();
 }
 
-template<>
 void CListElementTag<COOXMLWriter>::Close()
 {
 	if (!Valid())
@@ -1145,7 +1133,6 @@ std::wstring CalculateSidesToClean(UINT unColumnNumber, const std::vector<CTable
 }
 
 
-template<>
 bool CHTMLTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())

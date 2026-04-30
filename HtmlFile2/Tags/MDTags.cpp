@@ -17,7 +17,6 @@
 
 namespace HTML
 {
-template<>
 bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -27,7 +26,6 @@ bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-template<>
 void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -48,7 +46,6 @@ void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 	m_pWriter->WriteString(L")");
 }
 
-template<>
 bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -59,7 +56,6 @@ bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-template<>
 bool CPreformattedTag<CMDWriter>::Open()
 {
 	if (!Valid())
@@ -71,7 +67,6 @@ bool CPreformattedTag<CMDWriter>::Open()
 	return true;
 }
 
-template<>
 void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -98,7 +93,6 @@ void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelec
 		m_pWriter->WriteBreakLine(false);
 }
 
-template<>
 bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -119,7 +113,6 @@ bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-template<>
 void CHeaderTag<CMDWriter>::Close()
 {
 	if (Valid())
@@ -383,7 +376,6 @@ bool ConvertFileToBase64(const std::wstring& wsFilePath, UINT unWidth, UINT unHe
 	return bResult;
 }
 
-template<>
 bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -492,7 +484,6 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-template<>
 bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG)
 {
 	if (!Valid())
@@ -508,7 +499,6 @@ bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors,
 	return true;
 }
 
-template<>
 bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -521,7 +511,6 @@ bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSel
 	return true;
 }
 
-template<>
 bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
@@ -533,7 +522,6 @@ bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelector
 	return true;
 }
 
-template<>
 void CBlockquoteTag<CMDWriter>::Close()
 {
 	if (!Valid())
@@ -544,7 +532,6 @@ void CBlockquoteTag<CMDWriter>::Close()
 	m_pWriter->WriteBreakLine(false);
 }
 
-template<>
 bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -566,7 +553,6 @@ bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-template<>
 void CListTag<CMDWriter>::Close()
 {
 	if (!Valid())
@@ -575,7 +561,6 @@ void CListTag<CMDWriter>::Close()
 	m_pWriter->OutList();
 }
 
-template<>
 bool CListElementTag<CMDWriter>::Open()
 {
 	if (!Valid())
@@ -598,11 +583,9 @@ bool CListElementTag<CMDWriter>::Open()
 	return true;
 }
 
-template<>
 void CListElementTag<CMDWriter>::Close()
 {}
 
-template<>
 bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 {
 	if (!Valid())
@@ -623,7 +606,6 @@ bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-template<>
 void CCodeTag<CMDWriter>::Close()
 {
 	if (!Valid())

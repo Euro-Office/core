@@ -9,44 +9,76 @@
 
 namespace HTML
 {
-template<>
-bool CAnchorTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CAnchorTag<COOXMLWriter>::Close(const NSCSS::CNode& oTagNode);
-
-template<>
-bool CAbbrTag<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CAbbrTag<COOXMLWriter>::Close();
-
-template<>
-bool CBreakTag<COOXMLWriter>::Read(const NSCSS::CNode& oTagNode);
-
-template<>
-bool CFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode, size_t unLevel);
-
-template<>
-bool CInputTag<COOXMLWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
-
-template<>
-bool CBaseFontTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode);
-
-template<>
-bool CListTag<COOXMLWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CListTag<COOXMLWriter>::Close();
-
-template<>
-bool CListElementTag<COOXMLWriter>::Open();
-template<>
-void CListElementTag<COOXMLWriter>::Close();
-
-template<>
-bool CHTMLTag<COOXMLWriter>::Apply(const NSCSS::CNode& oTagNode);
-
 #define CLASS_TAG_LIGHT(class_name)\
 template<>\
 class C ## class_name ## Tag<COOXMLWriter> : public INTERFACE_TAGS::I ## class_name ## Tag, public INTERFACE_TAGS::ITag<COOXMLWriter>
+
+CLASS_TAG_LIGHT(Anchor)
+{
+public:
+	CAnchorTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const NSCSS::CNode& oTagNode) override;
+};
+
+CLASS_TAG_LIGHT(Abbr)
+{
+public:
+	CAbbrTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close() override;
+};
+
+CLASS_TAG_LIGHT(Break)
+{
+public:
+	CBreakTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Read(const NSCSS::CNode& oTagNode) override;
+};
+
+CLASS_TAG_LIGHT(Font)
+{
+public:
+	CFontTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Apply(const NSCSS::CNode& oTagNode, size_t unLevel) override;
+};
+
+CLASS_TAG_LIGHT(Input)
+{
+public:
+	CInputTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
+};
+
+CLASS_TAG_LIGHT(BaseFont)
+{
+public:
+	CBaseFontTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Apply(const NSCSS::CNode& oTagNode) override;
+};
+
+CLASS_TAG_LIGHT(List)
+{
+public:
+	CListTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Open(const NSCSS::CNode& oTagNode) override;
+	void Close() override;
+};
+
+CLASS_TAG_LIGHT(ListElement)
+{
+public:
+	CListElementTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Open() override;
+	void Close() override;
+};
+
+CLASS_TAG_LIGHT(HTML)
+{
+public:
+	CHTMLTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
+	bool Apply(const NSCSS::CNode& oTagNode) override;
+};
 
 CLASS_TAG_LIGHT(Division)
 {
