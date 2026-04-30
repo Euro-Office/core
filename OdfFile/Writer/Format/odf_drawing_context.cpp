@@ -697,18 +697,19 @@ void odf_drawing_context::end_drawing()
 					new_x2 = odf_types::length(0.0,odf_types::length::unit::cm);
 				}
 				
-                // new_x = (cx / 2.) + ((cx / 2.)* (-1) * cos(angle) - (center_y) * (-1) * sin(angle) );
-                // new_y = (center_y) + ((cx / 2.)* (-1) * sin(angle) + (center_y) * (-1) * cos(angle) );
 				point_after_turning_the_corner(new_x,new_y,center_x,center_y,angle);
 				point_after_turning_the_corner(new_x2,new_y2,center_x,center_y,angle);
 			}
 
-			if(impl_->current_drawing_state_.flipV_)
+			if(impl_->current_drawing_state_.flipV_ || impl_->current_drawing_state_.flipH_)
 			{
 				rotate = -*rotate;
-				new_y = odf_types::length(std::max(new_y.get_value(),new_y2.get_value()),odf_types::length::unit::cm);
+				if(impl_->current_drawing_state_.flipV_)
+					new_y = new_y2;
+				else
+					new_x = new_x2;
 			}
-			if(impl_->current_drawing_state_.flipH_)
+			adjusting_offset();
 
 			strTransform += std::wstring(L"rotate(") + boost::lexical_cast<std::wstring>(/*impl_->current_group_ && impl_->current_group_->rotate ? -(*rotate - *impl_->current_group_->rotate):*/-*rotate) + std::wstring(L")");
 
@@ -1056,6 +1057,26 @@ void odf_drawing_context::point_after_turning_the_corner(odf_types::length& x,od
 	y = odf_types::length(point_y,odf_types::length::unit::cm);
 }
 
+void odf_drawing_context::adjusting_offset()
+{
+	if(impl_->current_drawing_state_.in_group_ && impl_->current_group_)
+	{
+		double final_scale_x = 1., final_scale_y = 1.;
+		for(int i = (int)impl_->group_list_.size() - 1; i >=0; i--)
+		{
+			final_scale_x = final_scale_x * impl_->group_list_[i]->scale_cx;
+			final_scale_y = final_scale_y * impl_->group_list_[i]->scale_cy;
+		}
+		if(impl_->current_drawing_state_.rotateAngle_ && CheckAngle(impl_->current_drawing_state_.rotateAngle_.get()))
+		{
+			if(impl_->current_drawing_state_.svg_width_)
+				impl_->current_drawing_state_.svg_x_ = impl_->current_drawing_state_.svg_x_.get() + length(length(double(impl_->current_drawing_state_.cx_.get()/2.) * final_scale_x,length::pt).get_value_unit(length::cm),length::cm) - impl_->current_drawing_state_.svg_width_.get()/2;
+			if(impl_->current_drawing_state_.svg_height_)
+				impl_->current_drawing_state_.svg_y_ = impl_->current_drawing_state_.svg_y_.get() + length(length(double(impl_->current_drawing_state_.cy_.get()/2.) * final_scale_y,length::pt).get_value_unit(length::cm),length::cm) - impl_->current_drawing_state_.svg_height_.get()/2;
+		}
+	}
+}
+
 void odf_drawing_context::end_shape()
 {
 	if (impl_->current_drawing_state_.elements_.empty()) 
@@ -1086,6 +1107,7 @@ void odf_drawing_context::end_shape()
 	draw_line* line = dynamic_cast<draw_line*>(impl_->current_level_.back().elm.get());
 	if (line)
 	{
+		adjusting_offset();
 		
 		if(!line->draw_line_attlist_.svg_x1_)
 			line->draw_line_attlist_.svg_x1_ = odf_types::length(0,odf_types::length::unit::cm);
@@ -2251,7 +2273,7 @@ void odf_drawing_context::set_group_flip_H(bool bVal)
 	impl_->current_group_->flipH = bVal;
 }
 
-void odf_drawing_context::set_group_rotate(int iVal)
+void odf_drawing_context::set_group_rotate(double iVal)
 {
 	if ( impl_->group_list_.empty() )return;
 	
@@ -2398,11 +2420,11 @@ void odf_drawing_context::set_horizontal_rule()
 	}
 }
 
-bool CheckAngle(double angle)
+bool odf_drawing_context::CheckAngle(double angle)
 {
-	if(angle > 6.283 )
+	while(angle > 6.283 )
 		angle -= 6.283;
-	if((angle > 0 && angle < 2.357) || (angle >= 3.925 && angle < 5.786))
+	if((angle > 0 && angle < 2.357) /*|| (angle >= 3.925 && angle < 5.786)*/)
 		return true;
 	return false;
 }
