@@ -9,111 +9,59 @@
 
 namespace HTML
 {
-#define CLASS_TAG_LIGHT(class_name)\
-template<>\
-class C ## class_name ## Tag<COOXMLWriter> : public INTERFACE_TAGS::I ## class_name ## Tag, public INTERFACE_TAGS::ITag<COOXMLWriter>
+#define CREATE_OOXML_TAG(class_name) CREATE_TAG(class_name##OOXML, COOXMLWriter)
 
-CLASS_TAG_LIGHT(Anchor)
-{
-public:
-	CAnchorTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close(const NSCSS::CNode& oTagNode) override;
-};
+CREATE_OOXML_TAG(Anchor);
+CREATE_OOXML_TAG(Abbr);
+CREATE_OOXML_TAG(Break);
+CREATE_OOXML_TAG(Font);
+CREATE_OOXML_TAG(Input);
+CREATE_OOXML_TAG(BaseFont);
+CREATE_OOXML_TAG(List);
+CREATE_OOXML_TAG(ListElement);
+CREATE_OOXML_TAG(HTML);
 
-CLASS_TAG_LIGHT(Abbr)
-{
-public:
-	CAbbrTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT(Break)
-{
-public:
-	CBreakTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Read(const NSCSS::CNode& oTagNode) override;
-};
-
-CLASS_TAG_LIGHT(Font)
-{
-public:
-	CFontTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Apply(const NSCSS::CNode& oTagNode, size_t unLevel) override;
-};
-
-CLASS_TAG_LIGHT(Input)
-{
-public:
-	CInputTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-CLASS_TAG_LIGHT(BaseFont)
-{
-public:
-	CBaseFontTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Apply(const NSCSS::CNode& oTagNode) override;
-};
-
-CLASS_TAG_LIGHT(List)
-{
-public:
-	CListTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Open(const NSCSS::CNode& oTagNode) override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT(ListElement)
-{
-public:
-	CListElementTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Open() override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT(HTML)
-{
-public:
-	CHTMLTag(COOXMLWriter* pWriter) : INTERFACE_TAGS::ITag<COOXMLWriter>(pWriter) {}
-	bool Apply(const NSCSS::CNode& oTagNode) override;
-};
-
-CLASS_TAG_LIGHT(Division)
+class CDivisionOOXMLTag : public IHTMLTag<COOXMLWriter>
 {
 	std::stack<UINT> m_arFootnoteIDs;
 public:
-	CDivisionTag(COOXMLWriter* pWriter);
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close() override;
+	CDivisionOOXMLTag(COOXMLWriter *pWriter);
+
+	bool Open (const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
 };
 
-CLASS_TAG_LIGHT(Image)
+class CImageOOXMLTag : public IHTMLTag<COOXMLWriter>
 {
-	std::vector<std::wstring> m_arrImages;
+	std::vector<std::wstring> m_arImages;
 public:
-	CImageTag(COOXMLWriter* pWriter);
-	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
-	bool ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG) override;
+	CImageOOXMLTag(COOXMLWriter *pWriter);
+
+	bool Open (const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
 };
 
-CLASS_TAG_LIGHT(Blockquote)
+class CBlockquoteOOXMLTag : public IHTMLTag<COOXMLWriter>
 {
-	std::map<std::wstring, UINT>  m_mDivs;
+	std::map<std::wstring, UINT> m_mDivs;
 public:
-	CBlockquoteTag(COOXMLWriter* pWriter);
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close() override;
+	CBlockquoteOOXMLTag(COOXMLWriter *pWriter);
+
+	bool Open (const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
 };
 
-CLASS_TAG_LIGHT(HorizontalRule)
+class CHorizontalRuleOOXMLTag : public IHTMLTag<COOXMLWriter>
 {
 	UINT m_unShapeId;
 public:
-	CHorizontalRuleTag(COOXMLWriter* pWriter);
-	bool Write(const std::vector<NSCSS::CNode>& arSelectors) override;
+	CHorizontalRuleOOXMLTag(COOXMLWriter *pWriter);
+
+	bool Open (const std::vector<NSCSS::CNode>& arSelectors) override;
+	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
 };
+
+void InitTagsForOOXML(std::map<int, std::shared_ptr<ITag>>& mTags, COOXMLWriter* pWriter);
 
 enum class ETableRules
 {

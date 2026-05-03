@@ -32,7 +32,7 @@ class CHTMLReader
 
 	std::set<std::wstring> m_arStopTags;
 
-	THTMLTags m_oTags;
+	std::map<int, std::shared_ptr<ITag>> m_mTags;
 public:
 	CHTMLReader();
 	~CHTMLReader();
@@ -81,6 +81,11 @@ private:
 	bool ReadText(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
 
 	bool ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors);
+
+	bool ReadEmptyTag(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, std::shared_ptr<ITag> pTag);
+	bool ReadTag(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, std::shared_ptr<ITag> pTag);
+
+	std::shared_ptr<ITag> GetTag(int nTag);
 
 	void AddStopTag(const std::wstring& wsTag);
 	void ClearStopTags();

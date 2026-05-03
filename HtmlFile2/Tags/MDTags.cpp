@@ -15,9 +15,27 @@
 #include "../../DesktopEditor/graphics/pro/Graphics.h"
 #include "../../DesktopEditor/raster/BgraFrame.h"
 
+#include "../../Common/3dParty/html/gumbo-parser/src/gumbo.h"
+
 namespace HTML
 {
-bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
+void InitTagsForMD(std::map<int, std::shared_ptr<ITag>>& mTags, CMDWriter* pWriter)
+{
+	#define HTML_TAG(tag) GUMBO_TAG_##tag
+
+	mTags[HTML_TAG(A)]          = std::make_shared<CAnchorMDTag>        (pWriter);
+	mTags[HTML_TAG(BR)]         = std::make_shared<CBreakMDTag>         (pWriter);
+	mTags[HTML_TAG(PRE)]        = std::make_shared<CPreformattedMDTag>  (pWriter);
+	mTags[HTML_TAG(H1)]         = std::make_shared<CHeaderMDTag>        (pWriter);
+	mTags[HTML_TAG(IMG)]        = std::make_shared<CImageMDTag>         (pWriter);
+	mTags[HTML_TAG(HR)]         = std::make_shared<CHorizontalRuleMDTag>(pWriter);
+	mTags[HTML_TAG(BLOCKQUOTE)] = std::make_shared<CBlockquoteMDTag>    (pWriter);
+	mTags[HTML_TAG(OL)]         = std::make_shared<CListMDTag>          (pWriter);
+	mTags[HTML_TAG(LI)]         = std::make_shared<CListElementMDTag>   (pWriter);
+	mTags[HTML_TAG(CODE)]       = std::make_shared<CCodeMDTag>          (pWriter);
+}
+
+bool CAnchorMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -26,7 +44,7 @@ bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
+void CAnchorMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return;
@@ -35,8 +53,8 @@ void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 
 	std::wstring wsHref, wsTitle;
 
-	oTagNode.GetAttributeValue(L"href", wsHref);
-	oTagNode.GetAttributeValue(L"title", wsTitle);
+	arSelectors.back().GetAttributeValue(L"href", wsHref);
+	arSelectors.back().GetAttributeValue(L"title", wsTitle);
 
 	m_pWriter->WriteString(L'(' + wsHref);
 
@@ -46,7 +64,7 @@ void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode)
 	m_pWriter->WriteString(L")");
 }
 
-bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
+bool CBreakMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -56,7 +74,10 @@ bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-bool CPreformattedTag<CMDWriter>::Open()
+void CBreakMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
+{}
+
+bool CPreformattedMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -67,7 +88,7 @@ bool CPreformattedTag<CMDWriter>::Open()
 	return true;
 }
 
-void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors)
+void CPreformattedMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return;
@@ -93,12 +114,12 @@ void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelec
 		m_pWriter->WriteBreakLine(false);
 }
 
-bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
+bool CHeaderMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
 
-	switch(oTagNode.m_wsName[1])
+	switch(arSelectors.back().m_wsName[1])
 	{
 		case L'1' : m_pWriter->WriteString(L"# ",      true); break;
 		case L'2' : m_pWriter->WriteString(L"## ",     true); break;
@@ -113,7 +134,7 @@ bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-void CHeaderTag<CMDWriter>::Close()
+void CHeaderMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (Valid())
 		m_pWriter->WriteBreakLine();
@@ -376,10 +397,20 @@ bool ConvertFileToBase64(const std::wstring& wsFilePath, UINT unWidth, UINT unHe
 	return bResult;
 }
 
-bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
+bool CImageMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
+
+	if (L"svg" == arSelectors.back().m_wsName)
+	{
+		std::wstring wsBase64;
+
+		if (!ConvertFromSVG(arSelectors.back().GetAttributeValue(L"svg-text"), 0, 0, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsBase64))
+			return false;
+
+		m_pWriter->WriteString(L"![](" + wsBase64 + L")");
+	}
 
 	std::wstring wsAlt, wsSrc, wsTitle;
 
@@ -484,22 +515,10 @@ bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors)
 	return true;
 }
 
-bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG)
-{
-	if (!Valid())
-		return false;
+void CImageMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
+{}
 
-	std::wstring wsBase64;
-
-	if (!ConvertFromSVG(wsSVG, 0, 0, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsBase64))
-		return false;
-
-	m_pWriter->WriteString(L"![](" + wsBase64 + L")");
-
-	return true;
-}
-
-bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors)
+bool CHorizontalRuleMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -511,7 +530,10 @@ bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSel
 	return true;
 }
 
-bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors)
+void CHorizontalRuleMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
+{}
+
+bool CBlockquoteMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -522,7 +544,7 @@ bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelector
 	return true;
 }
 
-void CBlockquoteTag<CMDWriter>::Close()
+void CBlockquoteMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return;
@@ -532,20 +554,20 @@ void CBlockquoteTag<CMDWriter>::Close()
 	m_pWriter->WriteBreakLine(false);
 }
 
-bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
+bool CListMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
 
 	m_pWriter->WriteBreakLine();
-	m_pWriter->EnteredList(L"ol" == oTagNode.m_wsName);
+	m_pWriter->EnteredList(L"ol" == arSelectors.back().m_wsName);
 
 	if (!m_pWriter->InOrederedList())
 		return true;
 
 	std::wstring wsIndex;
 
-	if (oTagNode.GetAttributeValue(L"start", wsIndex))
+	if (arSelectors.back().GetAttributeValue(L"start", wsIndex))
 		m_pWriter->SetIndexOrderedList(NSStringFinder::ToInt(wsIndex, 1));
 
 	return true;
@@ -553,7 +575,7 @@ bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-void CListTag<CMDWriter>::Close()
+void CListMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return;
@@ -561,7 +583,7 @@ void CListTag<CMDWriter>::Close()
 	m_pWriter->OutList();
 }
 
-bool CListElementTag<CMDWriter>::Open()
+bool CListElementMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -583,10 +605,10 @@ bool CListElementTag<CMDWriter>::Open()
 	return true;
 }
 
-void CListElementTag<CMDWriter>::Close()
+void CListElementMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {}
 
-bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
+bool CCodeMDTag::Open(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return false;
@@ -595,9 +617,9 @@ bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 
 	if (m_pWriter->InPreformatted())
 	{
-		if (!oTagNode.m_wsClass.empty() && oTagNode.m_wsClass.size() >= 9 &&
-		    0 == oTagNode.m_wsClass.compare(0, 9, L"language-"))
-			m_pWriter->WriteString(oTagNode.m_wsClass.substr(9, oTagNode.m_wsClass.size() - 9));
+		if (!arSelectors.back().m_wsClass.empty() && arSelectors.back().m_wsClass.size() >= 9 &&
+		    0 == arSelectors.back().m_wsClass.compare(0, 9, L"language-"))
+			m_pWriter->WriteString(arSelectors.back().m_wsClass.substr(9, arSelectors.back().m_wsClass.size() - 9));
 		m_pWriter->WriteBreakLine(false);
 	}
 	else
@@ -606,7 +628,7 @@ bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode)
 	return true;
 }
 
-void CCodeTag<CMDWriter>::Close()
+void CCodeMDTag::Close(const std::vector<NSCSS::CNode>& arSelectors)
 {
 	if (!Valid())
 		return;

@@ -5,89 +5,24 @@
 #include "../Writers/MDWriter.h"
 #include "../Table.h"
 
+#include <map>
+
 namespace HTML
 {
-#define CLASS_TAG_LIGHT_MD(class_name)\
-template<>\
-class C ## class_name ## Tag<CMDWriter> : public INTERFACE_TAGS::I ## class_name ## Tag, public INTERFACE_TAGS::ITag<CMDWriter>
+#define CREATE_MD_TAG(class_name) CREATE_TAG(class_name##MD, CMDWriter)
 
-CLASS_TAG_LIGHT_MD(Anchor)
-{
-public:
-	CAnchorTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close(const NSCSS::CNode& oTagNode) override;
-};
+CREATE_MD_TAG(Anchor);
+CREATE_MD_TAG(Break);
+CREATE_MD_TAG(Preformatted);
+CREATE_MD_TAG(Header);
+CREATE_MD_TAG(Image);
+CREATE_MD_TAG(HorizontalRule);
+CREATE_MD_TAG(Blockquote);
+CREATE_MD_TAG(List);
+CREATE_MD_TAG(ListElement);
+CREATE_MD_TAG(Code);
 
-CLASS_TAG_LIGHT_MD(Break)
-{
-public:
-	CBreakTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Read(const NSCSS::CNode& oTagNode) override;
-};
-
-CLASS_TAG_LIGHT_MD(Preformatted)
-{
-public:
-	CPreformattedTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open() override;
-	void Close(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-CLASS_TAG_LIGHT_MD(Header)
-{
-public:
-	CHeaderTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open(const NSCSS::CNode& oTagNode) override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT_MD(Image)
-{
-public:
-	CImageTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Read(const std::vector<NSCSS::CNode>& arSelectors) override;
-	bool ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG) override;
-};
-
-CLASS_TAG_LIGHT_MD(Blockquote)
-{
-public:
-	CBlockquoteTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open(const std::vector<NSCSS::CNode>& arSelectors) override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT_MD(List)
-{
-public:
-	CListTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open(const NSCSS::CNode& oTagNode) override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT_MD(HorizontalRule)
-{
-public:
-	CHorizontalRuleTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Write(const std::vector<NSCSS::CNode>& arSelectors) override;
-};
-
-CLASS_TAG_LIGHT_MD(ListElement)
-{
-public:
-	CListElementTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open() override;
-	void Close() override;
-};
-
-CLASS_TAG_LIGHT_MD(Code)
-{
-public:
-	CCodeTag(CMDWriter* pWriter) : INTERFACE_TAGS::ITag<CMDWriter>(pWriter) {}
-	bool Open(const NSCSS::CNode& oTagNode) override;
-	void Close() override;
-};
+void InitTagsForMD(std::map<int, std::shared_ptr<ITag>>& mTags, CMDWriter* pWriter);
 
 struct TElementInfo
 {
