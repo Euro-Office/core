@@ -198,3 +198,5 @@ target_link_libraries(RtfFormatLib PRIVATE
 set_property(TARGET RtfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(RtfFormatLib)
+
+declare_victory( RtfFormatLib )

@@ -42,3 +42,5 @@ target_link_libraries(TxtXmlFormatLib PRIVATE
 set_property(TARGET TxtXmlFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(TxtXmlFormatLib)
+
+declare_victory( TxtXmlFormatLib )
