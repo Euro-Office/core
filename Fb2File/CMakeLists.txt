@@ -21,22 +21,11 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-
-
-message( "Fetch and patch Katana and Gumbo" )
 set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
 set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
 set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
-get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR}
-)
-
-
 
 add_library(Fb2File SHARED
     Fb2File.cpp
@@ -88,7 +77,7 @@ target_compile_definitions(Fb2File PRIVATE
 
 target_include_directories(Fb2File PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
-    ${HTML_3RDPARTY_DIR}
+    ${HTML_3RDPARTY_DIR_ABS}
     ${GUMBO_INSTALL_DIR_ABS}/src
     ${Boost_INCLUDE_DIRS} 
 )
@@ -107,3 +96,5 @@ target_link_libraries(Fb2File PUBLIC
 copy_artifacts_to_folder("Fb2File" "${EO_CORE_OUTPUT_DIR}")
 
 copy_boost_libs(Fb2File)
+
+declare_victory( Fb2File )
