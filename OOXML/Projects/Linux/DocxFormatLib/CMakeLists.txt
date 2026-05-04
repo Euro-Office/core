@@ -409,3 +409,5 @@ target_link_libraries(DocxFormatLib PRIVATE
 set_property(TARGET DocxFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(DocxFormatLib)
+
+declare_victory( DocxFormatLib )
