@@ -4,15 +4,66 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place output files (absolute path recommended)")
-set(EO_CORE_TOOLS_DIR  "${CMAKE_BINARY_DIR}/package" CACHE PATH "Where to place tools output files (absolute path recommended)")
+# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+set(ICU_MAJOR_VER "74")
+set(ICU_MINOR_VER "2")
 
-set(EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}/third_party" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
-set(EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}/workdir" CACHE PATH "3rd party work dir for clone and build.")
-set(EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}/install" CACHE PATH "3rd party install dir.")
+cmake_path( APPEND DEFAULT_EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}" "package" )
+cmake_path( APPEND DEFAULT_EO_CORE_TOOLS_DIR "${CMAKE_BINARY_DIR}" "package" )
 
-set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
+cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}" "third_party" )
 
+
+if( NOT DEFINED EO_CORE_OUTPUT_DIR )
+    set(EO_CORE_OUTPUT_DIR "${DEFAULT_EO_CORE_OUTPUT_DIR}" CACHE PATH "Where to place output files (absolute path recommended)")
+endif()
+
+if( NOT DEFINED EO_CORE_TOOLS_DIR )
+    set(EO_CORE_TOOLS_DIR  "${DEFAULT_EO_CORE_TOOLS_DIR}" CACHE PATH "Where to place tools output files (absolute path recommended)")
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_DIR )
+    set(EO_CORE_3RD_PARTY_DIR "${DEFAULT_EO_CORE_3RD_PARTY_DIR}" CACHE PATH "Where to place and build 3rd party projects (absolute path recommended)")
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_WORK_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_WORK_DIR "${EO_CORE_3RD_PARTY_DIR}" "work" )
+    set(EO_CORE_3RD_PARTY_WORK_DIR "${DEFAULT_EO_CORE_3RD_PARTY_WORK_DIR}" CACHE PATH "3rd party work dir for clone and build.")
+endif()
+
+if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
+    cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR "${EO_CORE_3RD_PARTY_DIR}" "install" )
+    set(EO_CORE_3RD_PARTY_INSTALL_DIR "${DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR}" CACHE PATH "3rd party install dir.")
+endif()
+
+if( NOT DEFINED VCPKG_BINARY_REMOTE )
+    set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
+endif()
+
+if( NOT DEFINED PYTHON_BIN )
+    set(PYTHON_BIN "python" CACHE FILEPATH "Python binary to use.")
+endif()
+
+message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
+message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
+message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
+
+if(NOT THIRD_PARTY_PREPARED)
+    cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
+    execute_process(
+        COMMAND_ECHO STDOUT
+        COMMAND "${PYTHON_BIN}"
+        "${BUILDER_PATH}"
+        "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
+        RESULT_VARIABLE result
+    )
+
+    if(result) # on error
+        message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
+    else()
+        set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+    endif()
+endif()
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
@@ -124,7 +175,6 @@ function(set_default_options target)
     )
 endfunction()
 
-
 function(copy_artifacts_to_folder artifacts dest_dir)
     foreach(artifact ${artifacts})
         add_custom_command(TARGET ${artifact} POST_BUILD
@@ -148,6 +198,16 @@ function(copy_boost_libs artifact)
         COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
         COMMAND /bin/sh -c "cp -P \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
         COMMENT "Copying Boost libs to ${EO_CORE_OUTPUT_DIR}"
+    )
+endfunction()
+
+function(declare_victory build_target)
+    add_custom_command(TARGET ${build_target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E echo ""
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo "🎉  Success! [$<TARGET_FILE_NAME:${build_target}>] is ready!  🎉"
+        COMMAND ${CMAKE_COMMAND} -E echo "-------------------------------------------------------------"
+        COMMAND ${CMAKE_COMMAND} -E echo ""
     )
 endfunction()
 
