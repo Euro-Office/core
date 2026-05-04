@@ -416,3 +416,5 @@ if(LINUX)
 endif()
 
 copy_boost_libs(CryptoPPLib)
+
+declare_victory( CryptoPPLib )
