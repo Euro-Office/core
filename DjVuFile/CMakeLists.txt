@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.10)
 project(DjVuFile)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
-# set(CORE_ROOT_DIR "..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
@@ -186,3 +185,5 @@ target_link_libraries(DjVuFile PUBLIC
 )
 
 copy_artifacts_to_folder("DjVuFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( DjVuFile )
