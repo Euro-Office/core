@@ -518,3 +518,5 @@ target_link_libraries(PdfFile PUBLIC
 )
 
 copy_artifacts_to_folder("PdfFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( PdfFile )
