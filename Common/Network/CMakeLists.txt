@@ -10,33 +10,11 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
-
-
-message( "Fetch and build OpenSSL" )
-set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
-get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
 
-
-
-message( "Fetch and patch Socket-IO" )
-set(SOCKETIO_3DPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/socketio")
-set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socket.io-client-cpp")
-get_filename_component(SOCKETIO_3DPARTY_DIR_ABS "${SOCKETIO_3DPARTY_DIR}" ABSOLUTE)
+set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socketio")
 get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${SOCKETIO_INSTALL_DIR}"
-    WORKING_DIRECTORY ${SOCKETIO_3DPARTY_DIR_ABS}
-)
-
-
 
 add_library(kernel_network SHARED
     ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.cpp
@@ -104,11 +82,11 @@ if(UNIX)
 endif()
 
 target_include_directories(kernel_network PRIVATE
-    ${OPENSSL_INSTALL_DIR}/include
+    ${OPENSSL_INSTALL_DIR_ABS}/include
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
-    ${SOCKETIO_INSTALL_DIR}/lib/websocketpp
-    ${SOCKETIO_INSTALL_DIR}/lib/rapidjson/include
-    ${SOCKETIO_INSTALL_DIR}/lib/asio/asio/include
+    ${SOCKETIO_INSTALL_DIR_ABS}/lib/websocketpp
+    ${SOCKETIO_INSTALL_DIR_ABS}/lib/rapidjson/include
+    ${SOCKETIO_INSTALL_DIR_ABS}/lib/asio/asio/include
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
 )
@@ -133,3 +111,5 @@ if(WIN_32)
 endif()
 
 copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( kernel_network )

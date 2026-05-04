@@ -98,3 +98,5 @@ target_include_directories(libxml PRIVATE
 )
 
 set_property(TARGET libxml PROPERTY POSITION_INDEPENDENT_CODE ON)
+
+declare_victory( libxml )
