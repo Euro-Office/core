@@ -1299,3 +1299,5 @@ target_link_libraries(PPTXFormatLib PRIVATE
 set_property(TARGET PPTXFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(PPTXFormatLib)
+
+declare_victory( PPTXFormatLib )

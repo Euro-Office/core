@@ -2169,3 +2169,5 @@ target_link_libraries(XlsbFormatLib PRIVATE
 set_property(TARGET XlsbFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(XlsbFormatLib)
+
+declare_victory( XlsbFormatLib )
