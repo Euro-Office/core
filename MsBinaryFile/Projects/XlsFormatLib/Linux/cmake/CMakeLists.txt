@@ -136,3 +136,5 @@ target_link_libraries(XlsFormatLib PRIVATE
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(XlsFormatLib)
+
+declare_victory( XlsFormatLib )

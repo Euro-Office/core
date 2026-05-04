@@ -299,3 +299,5 @@ target_include_directories(DocFormatLib PRIVATE
 set_property(TARGET DocFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_boost_libs(DocFormatLib)
+
+declare_victory( DocFormatLib )
