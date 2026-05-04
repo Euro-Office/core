@@ -68,3 +68,5 @@ if (WIN32)
 else()
     target_compile_options(OfficeUtils PRIVATE -include unistd.h)
 endif()
+
+declare_victory( OfficeUtils )
