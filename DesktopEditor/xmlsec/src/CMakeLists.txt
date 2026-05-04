@@ -23,16 +23,16 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
-message( "Fetch and build OpenSSL" )
-set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
-get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
+# message( "Fetch and build OpenSSL" )
+# set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
+# get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
+# execute_process(
+#     COMMAND_ECHO STDOUT
+#     COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
+#     WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
+# )
 
 
 # Set target version
@@ -105,3 +105,5 @@ if(SUPPORT_OFORM)
 endif()
 
 copy_artifacts_to_folder("ooxmlsignature" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( ooxmlsignature )
