@@ -99,3 +99,5 @@ if(WIN32)
 endif()
 
 copy_artifacts_to_folder("DocxRenderer" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( DocxRenderer )
