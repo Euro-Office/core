@@ -67,3 +67,5 @@ target_link_libraries(XpsFile PUBLIC
 )
 
 copy_artifacts_to_folder("XpsFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( XpsFile )
