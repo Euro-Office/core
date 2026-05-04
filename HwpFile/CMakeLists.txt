@@ -214,3 +214,5 @@ target_link_libraries(HWPFile PUBLIC
 )
 
 copy_artifacts_to_folder("HWPFile" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( HWPFile )
