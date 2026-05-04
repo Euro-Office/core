@@ -59,39 +59,11 @@ if(DRAWINGFILE_SUPPORT)
     endif()
 endif()
 
-
-
-
-
-message( "Fetch and build OpenSSL" )
-set(OPENSSL_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/openssl")
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl_build_linux_64")
-get_filename_component(OPENSSL_3RDPARTY_DIR_ABS "${OPENSSL_3RDPARTY_DIR}" ABSOLUTE)
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
 get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl" "${OPENSSL_INSTALL_DIR}"
-    WORKING_DIRECTORY ${OPENSSL_3RDPARTY_DIR_ABS}
-)
 
-
-
-
-
-message( "Fetch, patch and build v8" )
-set(V8_INSTALL_DIR_ABS "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/v8/v8")
-
-# Set TARGETARCH based on detected architecture (x64 or arm64)
-if(CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64|arm64")
-    set(TARGETARCH arm64)
-else()
-    set(TARGETARCH x64)
-endif()
-
-
-
-
-
+set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
+get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
 
 add_library(doctrenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder_p.cpp
@@ -239,7 +211,7 @@ target_include_directories(doctrenderer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/addon
     ${CMAKE_CURRENT_SOURCE_DIR}/js_internal # js_base_embed.pri
-    ${OPENSSL_INSTALL_DIR}/include
+    ${OPENSSL_INSTALL_DIR_ABS}/include
     ${V8_INSTALL_DIR_ABS}/v8
     ${V8_INSTALL_DIR_ABS}/v8/include
 )
@@ -328,3 +300,5 @@ target_link_libraries(doctrenderer PUBLIC
 copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")
 
 copy_boost_libs(doctrenderer)
+
+declare_victory( doctrenderer )
