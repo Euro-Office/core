@@ -28,33 +28,15 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-
-
-message( "Fetch and patch Katana and Gumbo" )
-set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
 set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
 set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
-get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR}
-)
 
-message( "Fetch md" )
 set(MD_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/md")
-set(MD_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/md4c")
+set(MD_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/md")
 get_filename_component(MD_3RDPARTY_DIR_ABS "${MD_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(MD_INSTALL_DIR_ABS "${MD_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${MD_INSTALL_DIR}"
-    WORKING_DIRECTORY ${MD_3RDPARTY_DIR_ABS}
-)
-
-
 
 add_library(HtmlFile2 SHARED
     htmlfile2.cpp
@@ -87,54 +69,54 @@ add_library(HtmlFile2 SHARED
     Writers/OOXMLWriter.h
 
     # katana.pri
-    ${KATANA_INSTALL_DIR}/src/foundation.c
-    ${KATANA_INSTALL_DIR}/src/katana.lex.c
-    ${KATANA_INSTALL_DIR}/src/katana.tab.c
-    ${KATANA_INSTALL_DIR}/src/parser.c
-    ${KATANA_INSTALL_DIR}/src/selector.c
-    ${KATANA_INSTALL_DIR}/src/tokenizer.c
+    ${KATANA_INSTALL_DIR_ABS}/src/foundation.c
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.lex.c
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.tab.c
+    ${KATANA_INSTALL_DIR_ABS}/src/parser.c
+    ${KATANA_INSTALL_DIR_ABS}/src/selector.c
+    ${KATANA_INSTALL_DIR_ABS}/src/tokenizer.c
 
-    ${KATANA_INSTALL_DIR}/src/foundation.h
-    ${KATANA_INSTALL_DIR}/src/katana.h
-    ${KATANA_INSTALL_DIR}/src/katana.lex.h
-    ${KATANA_INSTALL_DIR}/src/katana.tab.h
-    ${KATANA_INSTALL_DIR}/src/parser.h
-    ${KATANA_INSTALL_DIR}/src/selector.h
-    ${KATANA_INSTALL_DIR}/src/tokenizer.h
+    ${KATANA_INSTALL_DIR_ABS}/src/foundation.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.lex.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.tab.h
+    ${KATANA_INSTALL_DIR_ABS}/src/parser.h
+    ${KATANA_INSTALL_DIR_ABS}/src/selector.h
+    ${KATANA_INSTALL_DIR_ABS}/src/tokenizer.h
 
     # gumbo.pri
-    ${GUMBO_INSTALL_DIR}/src/attribute.c
-    ${GUMBO_INSTALL_DIR}/src/char_ref.c
-    ${GUMBO_INSTALL_DIR}/src/error.c
-    ${GUMBO_INSTALL_DIR}/src/parser.c
-    ${GUMBO_INSTALL_DIR}/src/string_buffer.c
-    ${GUMBO_INSTALL_DIR}/src/string_piece.c
-    ${GUMBO_INSTALL_DIR}/src/tag.c
-    ${GUMBO_INSTALL_DIR}/src/tokenizer.c
-    ${GUMBO_INSTALL_DIR}/src/utf8.c
-    ${GUMBO_INSTALL_DIR}/src/util.c
-    ${GUMBO_INSTALL_DIR}/src/vector.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/attribute.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/char_ref.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/error.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/parser.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/string_buffer.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/string_piece.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/tag.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/tokenizer.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/utf8.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/util.c
+    ${GUMBO_INSTALL_DIR_ABS}/src/vector.c
 
     ${HTML_3RDPARTY_DIR}/htmltoxhtml.cpp
 
-    ${GUMBO_INSTALL_DIR}/src/attribute.h
-    ${GUMBO_INSTALL_DIR}/src/char_ref.h
-    ${GUMBO_INSTALL_DIR}/src/error.h
-    ${GUMBO_INSTALL_DIR}/src/gumbo.h
-    ${GUMBO_INSTALL_DIR}/src/insertion_mode.h
-    ${GUMBO_INSTALL_DIR}/src/parser.h
-    ${GUMBO_INSTALL_DIR}/src/string_buffer.h
-    ${GUMBO_INSTALL_DIR}/src/string_piece.h
-    ${GUMBO_INSTALL_DIR}/src/tag_enum.h
-    ${GUMBO_INSTALL_DIR}/src/tag_gperf.h
-    ${GUMBO_INSTALL_DIR}/src/tag_sizes.h
-    ${GUMBO_INSTALL_DIR}/src/tag_strings.h
-    ${GUMBO_INSTALL_DIR}/src/token_type.h
-    ${GUMBO_INSTALL_DIR}/src/tokenizer_states.h
-    ${GUMBO_INSTALL_DIR}/src/tokenizer.h
-    ${GUMBO_INSTALL_DIR}/src/utf8.h
-    ${GUMBO_INSTALL_DIR}/src/util.h
-    ${GUMBO_INSTALL_DIR}/src/vector.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/attribute.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/char_ref.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/error.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/gumbo.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/insertion_mode.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/parser.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/string_buffer.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/string_piece.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tag_enum.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tag_gperf.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tag_sizes.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tag_strings.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/token_type.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tokenizer_states.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/tokenizer.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/utf8.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/util.h
+    ${GUMBO_INSTALL_DIR_ABS}/src/vector.h
 
     ${HTML_3RDPARTY_DIR}/htmltoxhtml.h
 
@@ -166,15 +148,15 @@ add_library(HtmlFile2 SHARED
 
 
     # md2html.pri
-    ${MD_3RDPARTY_DIR}/md2html.h
-    ${MD_INSTALL_DIR}/src/entity.h
-    ${MD_INSTALL_DIR}/src/md4c-html.h
-    ${MD_INSTALL_DIR}/src/md4c.h
+    ${MD_3RDPARTY_DIR_ABS}/md2html.h
+    ${MD_INSTALL_DIR_ABS}/src/entity.h
+    ${MD_INSTALL_DIR_ABS}/src/md4c-html.h
+    ${MD_INSTALL_DIR_ABS}/src/md4c.h
 
-    ${MD_3RDPARTY_DIR}/md2html.cpp
-    ${MD_INSTALL_DIR}/src/entity.c
-    ${MD_INSTALL_DIR}/src/md4c-html.c
-    ${MD_INSTALL_DIR}/src/md4c.c
+    ${MD_3RDPARTY_DIR_ABS}/md2html.cpp
+    ${MD_INSTALL_DIR_ABS}/src/entity.c
+    ${MD_INSTALL_DIR_ABS}/src/md4c-html.c
+    ${MD_INSTALL_DIR_ABS}/src/md4c.c
 )
 
 set_default_options(HtmlFile2)
@@ -213,3 +195,5 @@ target_link_libraries(HtmlFile2 PUBLIC
 copy_artifacts_to_folder("HtmlFile2" "${EO_CORE_OUTPUT_DIR}")
 
 copy_boost_libs(HtmlFile2)
+
+declare_victory( HtmlFile2 )
