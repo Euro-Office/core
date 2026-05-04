@@ -27,65 +27,19 @@ endif()
 set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
 find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
 
-
-
-message( "Fetch and patch Katana and Gumbo" )
-set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
 set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
 set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
-get_filename_component(HTML_3RDPARTY_DIR_ABS "${HTML_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${KATANA_INSTALL_DIR}" "${GUMBO_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HTML_3RDPARTY_DIR}
-)
 
-
-
-
-message( "Fetch and patch Harfbuzz" )
-set(HARFBUZZ_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/harfbuzz")
 set(HARFBUZZ_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz")
-get_filename_component(HARFBUZZ_3RDPARTY_DIR_ABS "${HARFBUZZ_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HARFBUZZ_INSTALL_DIR_ABS "${HARFBUZZ_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${HARFBUZZ_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HARFBUZZ_3RDPARTY_DIR_ABS}
-)
 
-
-
-
-message( "Fetch Brotli" )
-set(BROTLI_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/brotli")
 set(BROTLI_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli")
-get_filename_component(BROTLI_3RDPARTY_DIR_ABS "${BROTLI_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(BROTLI_INSTALL_DIR_ABS "${BROTLI_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${BROTLI_INSTALL_DIR}"
-    WORKING_DIRECTORY ${BROTLI_3RDPARTY_DIR_ABS}
-)
 
-
-
-
-message( "Fetch Hyphen" )
-set(HYPHEN_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/hyphen")
 set(HYPHEN_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen")
-get_filename_component(HYPHEN_3RDPARTY_DIR_ABS "${HYPHEN_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(HYPHEN_INSTALL_DIR_ABS "${HYPHEN_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-fetch.sh "${HYPHEN_INSTALL_DIR}"
-    WORKING_DIRECTORY ${HYPHEN_3RDPARTY_DIR_ABS}
-)
-
-
-
 
 add_library(graphics SHARED
     ${METAFILE_SOURCER_DIR}/MetaFile.h
@@ -598,20 +552,20 @@ add_library(graphics SHARED
     # }
 
     # katana.pri
-    ${KATANA_INSTALL_DIR}/src/foundation.c
-    ${KATANA_INSTALL_DIR}/src/katana.lex.c
-    ${KATANA_INSTALL_DIR}/src/katana.tab.c
-    ${KATANA_INSTALL_DIR}/src/parser.c
-    ${KATANA_INSTALL_DIR}/src/selector.c
-    ${KATANA_INSTALL_DIR}/src/tokenizer.c
+    ${KATANA_INSTALL_DIR_ABS}/src/foundation.c
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.lex.c
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.tab.c
+    ${KATANA_INSTALL_DIR_ABS}/src/parser.c
+    ${KATANA_INSTALL_DIR_ABS}/src/selector.c
+    ${KATANA_INSTALL_DIR_ABS}/src/tokenizer.c
 
-    ${KATANA_INSTALL_DIR}/src/foundation.h
-    ${KATANA_INSTALL_DIR}/src/katana.h
-    ${KATANA_INSTALL_DIR}/src/katana.lex.h
-    ${KATANA_INSTALL_DIR}/src/katana.tab.h
-    ${KATANA_INSTALL_DIR}/src/parser.h
-    ${KATANA_INSTALL_DIR}/src/selector.h
-    ${KATANA_INSTALL_DIR}/src/tokenizer.h
+    ${KATANA_INSTALL_DIR_ABS}/src/foundation.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.lex.h
+    ${KATANA_INSTALL_DIR_ABS}/src/katana.tab.h
+    ${KATANA_INSTALL_DIR_ABS}/src/parser.h
+    ${KATANA_INSTALL_DIR_ABS}/src/selector.h
+    ${KATANA_INSTALL_DIR_ABS}/src/tokenizer.h
 
 
     # freetype.pri
@@ -704,303 +658,302 @@ add_library(graphics SHARED
     ${FONT_ENGINE_SOURCES_DIR}/FontsAssistant.h
     ${FONT_ENGINE_SOURCES_DIR}/FontsAssistant.cpp
 
+    # harfbuzz.pri_ABS
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-map.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-blob.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer-serialize.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer-verify.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cairo-utils.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cairo.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-common.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-coretext.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-directwrite.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-draw.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-face-builder.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-face.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-fallback-shape.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-font.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ft.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-gdi.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-glib.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-gobject-structs.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-graphite2.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-icu.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-map.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-number.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff1-table.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff2-table.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-color.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-face.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-font.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-map.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-math.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-meta.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-metrics.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-name.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape-fallback.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape-normalize.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-default.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-hangul.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-hebrew.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-indic-table.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-indic.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-khmer.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-myanmar.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-syllabic.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-thai.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-use.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-vowel-constraints.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-tag.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-outline.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-paint-extents.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-paint.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-set.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shape-plan.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shape.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shaper.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-static.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-style.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-cff-common.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-cff1.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-cff2.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-input.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-instancer-solver.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-plan.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-repacker.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ucd.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-unicode.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-uniscribe.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-shape.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-blob.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cairo.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-common.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-coretext.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-deprecated.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-directwrite.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-draw.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-face.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-font.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ft.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-gdi.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-glib.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-gobject-structs.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-gobject.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-graphite2.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-icu.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-map.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-color.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-deprecated.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-font.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-math.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-meta.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-metrics.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-name.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-paint.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-set.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shape-plan.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shape.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-style.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-repacker.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-unicode.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-uniscribe.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-version.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb.h
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-ankr-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-bsln-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-feat-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-just-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-kerx-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-morx-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-opbd-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout-trak-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-ltag-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-map.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-algs.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-array.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-atomic.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-bimap.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-bit-page.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-bit-set-invertible.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-bit-set.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-blob.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer-deserialize-json.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer-deserialize-text-glyphs.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer-deserialize-text-unicode.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-buffer.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cache.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cairo-utils.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cff-interp-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cff-interp-cs-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cff-interp-dict-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cff1-interp-cs.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cff2-interp-cs.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-config.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-cplusplus.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-debug.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-dispatch.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-draw.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-face.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-font.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ft-colr.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-iter.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-kern.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-limits.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-machinery.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-map.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-meta.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ms-feature-ranges.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-multimap.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-mutex.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-null.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-number-parser.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-number.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-object.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-open-file.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-open-type.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff1-std-str.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff1-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cff2-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-cmap-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-face-table-list.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-face.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-gasp-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-glyf-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-hdmx-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-head-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-hhea-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-hmtx-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-kern-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-base-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-gdef-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-gpos-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-gsub-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-gsubgpos.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout-jstf-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-layout.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-map.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-math-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-maxp-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-meta-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-metrics.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-name-language-static.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-name-language.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-name-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-os2-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-os2-unicode-ranges.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-post-macroman.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-post-table-v2subset.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-post-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape-fallback.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape-normalize.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shape.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic-fallback.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic-joining-list.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic-pua.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic-win1256.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-arabic.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-indic-machine.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-indic.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-khmer-machine.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-myanmar-machine.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-syllabic.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-use-machine.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-use-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper-vowel-constraints.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-shaper.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-stat-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-tag-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-avar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-cvar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-fvar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-gvar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-hvar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-var-mvar-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ot-vorg-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-outline.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-paint-extents.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-paint.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-pool.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-priority-queue.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-repacker.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-sanitize.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-serialize.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-set-digest.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-set.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shape-plan.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shaper-impl.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shaper-list.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-shaper.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-string-array.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-accelerator.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-cff-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-input.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-instancer-solver.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-plan-member-list.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset-plan.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-subset.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-ucd-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-unicode-emoji-table.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-unicode.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-utf.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-vector.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-blob.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-buffer.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-common.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-face.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-font.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-list.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api-shape.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-wasm-api.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb.hh
 
-    # harfbuzz.pri
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-map.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-blob.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer-serialize.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer-verify.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cairo-utils.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cairo.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-common.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-coretext.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-directwrite.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-draw.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-face-builder.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-face.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-fallback-shape.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-font.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ft.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-gdi.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-glib.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-gobject-structs.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-graphite2.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-icu.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-map.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-number.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff1-table.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff2-table.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-color.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-face.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-font.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-map.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-math.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-meta.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-metrics.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-name.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape-fallback.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape-normalize.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-default.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-hangul.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-hebrew.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-indic-table.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-indic.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-khmer.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-myanmar.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-syllabic.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-thai.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-use.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-vowel-constraints.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-tag.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-outline.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-paint-extents.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-paint.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-set.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shape-plan.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shape.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shaper.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-static.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-style.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-cff-common.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-cff1.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-cff2.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-input.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-instancer-solver.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-plan.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-repacker.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ucd.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-unicode.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-uniscribe.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-shape.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-blob.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cairo.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-common.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-coretext.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-deprecated.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-directwrite.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-draw.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-face.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-font.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ft.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-gdi.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-glib.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-gobject-structs.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-gobject.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-graphite2.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-icu.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-map.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-color.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-deprecated.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-font.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-math.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-meta.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-metrics.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-name.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-paint.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-set.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shape-plan.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shape.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-style.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-repacker.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-unicode.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-uniscribe.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-version.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb.h
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-ankr-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-bsln-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-feat-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-just-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-kerx-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-morx-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-opbd-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout-trak-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-layout.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-ltag-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-aat-map.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-algs.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-array.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-atomic.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-bimap.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-bit-page.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-bit-set-invertible.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-bit-set.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-blob.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer-deserialize-json.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer-deserialize-text-glyphs.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer-deserialize-text-unicode.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-buffer.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cache.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cairo-utils.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cff-interp-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cff-interp-cs-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cff-interp-dict-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cff1-interp-cs.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cff2-interp-cs.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-config.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-cplusplus.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-debug.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-dispatch.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-draw.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-face.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-font.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ft-colr.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-iter.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-kern.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-limits.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-machinery.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-map.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-meta.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ms-feature-ranges.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-multimap.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-mutex.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-null.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-number-parser.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-number.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-object.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-open-file.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-open-type.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff1-std-str.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff1-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cff2-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-cmap-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-face-table-list.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-face.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-gasp-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-glyf-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-hdmx-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-head-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-hhea-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-hmtx-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-kern-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-base-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-gdef-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-gpos-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-gsub-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-gsubgpos.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout-jstf-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-layout.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-map.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-math-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-maxp-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-meta-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-metrics.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-name-language-static.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-name-language.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-name-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-os2-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-os2-unicode-ranges.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-post-macroman.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-post-table-v2subset.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-post-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape-fallback.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape-normalize.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shape.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic-fallback.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic-joining-list.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic-pua.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic-win1256.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-arabic.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-indic-machine.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-indic.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-khmer-machine.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-myanmar-machine.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-syllabic.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-use-machine.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-use-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper-vowel-constraints.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-shaper.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-stat-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-tag-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-avar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-cvar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-fvar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-gvar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-hvar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-var-mvar-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ot-vorg-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-outline.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-paint-extents.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-paint.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-pool.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-priority-queue.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-repacker.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-sanitize.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-serialize.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-set-digest.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-set.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shape-plan.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shaper-impl.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shaper-list.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-shaper.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-string-array.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-accelerator.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-cff-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-input.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-instancer-solver.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-plan-member-list.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset-plan.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-subset.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-ucd-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-unicode-emoji-table.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-unicode.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-utf.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-vector.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-blob.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-buffer.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-common.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-face.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-font.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-list.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api-shape.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb-wasm-api.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/hb.hh
-
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/gsubgpos-context.cc
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/gsubgpos-context.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/classdef-graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/coverage-graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/gsubgpos-graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/markbasepos-graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/pairpos-graph.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/serialize.hh
-    ${HARFBUZZ_INSTALL_DIR}/src/graph/split-helpers.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/gsubgpos-context.cc
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/gsubgpos-context.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/classdef-graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/coverage-graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/gsubgpos-graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/markbasepos-graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/pairpos-graph.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/serialize.hh
+    ${HARFBUZZ_INSTALL_DIR_ABS}/src/graph/split-helpers.hh
 
     # brotli.pri
-    ${BROTLI_INSTALL_DIR}/c/common/constants.c
-    ${BROTLI_INSTALL_DIR}/c/common/context.c
-    ${BROTLI_INSTALL_DIR}/c/common/dictionary.c
-    ${BROTLI_INSTALL_DIR}/c/common/platform.c
-    ${BROTLI_INSTALL_DIR}/c/common/shared_dictionary.c
-    ${BROTLI_INSTALL_DIR}/c/common/transform.c
-    ${BROTLI_INSTALL_DIR}/c/dec/bit_reader.c
-    ${BROTLI_INSTALL_DIR}/c/dec/decode.c
-    ${BROTLI_INSTALL_DIR}/c/dec/huffman.c
-    # ${BROTLI_INSTALL_DIR}/c/dec/prefix.c
-    ${BROTLI_INSTALL_DIR}/c/dec/state.c
-    # ${BROTLI_INSTALL_DIR}/c/dec/static_init.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/constants.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/context.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/dictionary.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/platform.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/shared_dictionary.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/common/transform.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/bit_reader.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/decode.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/huffman.c
+    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/prefix.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/state.c
+    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
 )
 
 set_default_options(graphics)
@@ -1108,7 +1061,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 if(WIN32)
-    target_link_libraries(doctrenderer PUBLIC
+    target_link_libraries(graphics PUBLIC
         Advapi32
         Shell32
         User32
@@ -1116,3 +1069,5 @@ if(WIN32)
 endif()
 
 copy_artifacts_to_folder("graphics" "${EO_CORE_OUTPUT_DIR}")
+
+declare_victory( graphics )
