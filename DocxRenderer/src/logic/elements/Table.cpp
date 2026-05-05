@@ -153,6 +153,15 @@ namespace NSDocxRenderer
 	{
 		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
 
+		// check if the lines form an empty row or column
+		auto check_empty_space = [&is_eq, this] (const double& left, const double& right) -> bool {
+			for (const auto& p : m_arParagraphs)
+				if ((left < p->m_dLeft	 || is_eq(left, p->m_dLeft)) &&
+					(right > p->m_dRight || is_eq(right, p->m_dRight)))
+					return false;
+			return true;
+		};
+
 		// a function that produces vertical and horizontal lines (depend on arg) from paragraphs
 		// these lines will divide the cell into subcells
 		// the number of which is equal to the multiplication
@@ -167,7 +176,7 @@ namespace NSDocxRenderer
 		// [-][-][-][p]
 		//
 		// (only 4 paragraphs, but 16 cells)
-		auto get_lines = [&is_eq, this] (bool hor) -> std::set<double> {
+		auto get_lines = [&is_eq, &check_empty_space, this] (bool hor) -> std::set<double> {
 			std::set<double> lines;
 			lines.insert(hor ? m_dTop : m_dLeft);
 
@@ -182,7 +191,7 @@ namespace NSDocxRenderer
 					// that have such a top line
 					if (is_eq(hor ? p->m_dTop : p->m_dLeft, cur_line + (hor ? 0 : c_dSTANDART_TABLE_SPACING_MM)))
 					{
-						tmp_lines.insert(hor ? p->m_dBot : (p->m_dRight + c_dSTANDART_TABLE_SPACING_MM));
+						tmp_lines.insert(hor ? p->m_dBot : p->m_dRight);
 						// mark that have checked this paragraph
 						i++;
 					}
@@ -190,7 +199,7 @@ namespace NSDocxRenderer
 					// for the case when there is a gap between consecutive paragraphs of the line,
 					// need to add a new line for the following cells
 					else
-						new_lines.insert(hor ? p->m_dTop : (p->m_dLeft));
+						new_lines.insert(hor ? p->m_dTop : p->m_dLeft);
 
 				if (tmp_lines.empty())
 					// if among the remaining paragraphs there is no paragraph
@@ -201,8 +210,10 @@ namespace NSDocxRenderer
 					// delete the previous border and add a new one
 					else
 					{
-						lines.erase(std::prev(lines.end()));
-						lines.insert(*new_lines.upper_bound(cur_line));
+						auto new_line = *new_lines.upper_bound(cur_line);
+						lines.insert(new_line);
+						if (check_empty_space(cur_line, new_line))
+							lines.erase(lines.find(cur_line));
 					}
 				else
 					// end-of-boundary check
