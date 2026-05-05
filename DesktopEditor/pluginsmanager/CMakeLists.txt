@@ -18,18 +18,8 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
-# message( "Fetch and build icu (pluginsmanager)" )
-# set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-# set(ICU_MAJOR_VER "74")
-# set(ICU_MINOR_VER "2")
-# get_filename_component(ICU_3RDPARTY_DIR_ABS "${ICU_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-# execute_process(
-#     COMMAND_ECHO STDOUT
-#     COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/icu" "${ICU_INSTALL_DIR}" ${ICU_MAJOR_VER} ${ICU_MINOR_VER}
-#     WORKING_DIRECTORY ${ICU_3RDPARTY_DIR_ABS}
-# )
 
 add_executable(pluginsmanager
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
