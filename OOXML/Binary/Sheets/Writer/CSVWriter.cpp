@@ -1128,12 +1128,31 @@ std::wstring CSVWriter::Impl::ConvertValueCellToString(const std::wstring &value
 
 				size_t pos_comma = format_code.find(L",", pos_start);
 				size_t pos_dot = format_code.find(L".", pos_start);
+				size_t real_dot = format_code.find(L".");
+
 
 				if (std::wstring::npos != pos_dot)
 				{
 					numberFormat.bFloat = true;
 					numberFormat.count_float = (pos_zero_end != std::wstring::npos) ? (pos_zero_end - pos_dot) : 0;
 					numberFormat.count_int = (pos_zero_start != std::wstring::npos) ? (pos_dot - pos_zero_start) : 0;
+				}
+				else if (real_dot != std::wstring::npos)
+				{
+					numberFormat.bFloat = true;
+					// calculating fraction part
+					numberFormat.count_float = (pos_zero_end != std::wstring::npos && pos_zero_end > real_dot)
+											? (pos_zero_end - real_dot) : 0;
+					// calculating digits before dot
+					if (pos_zero_start != std::wstring::npos && pos_zero_start < real_dot)
+					{
+						numberFormat.count_int = real_dot - pos_zero_start;
+					}
+					else
+					{
+						pos_start = 0;
+						numberFormat.count_int = 0;
+					}
 				}
 				else
 				{
