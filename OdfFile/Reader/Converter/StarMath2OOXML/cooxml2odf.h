@@ -37,6 +37,8 @@
 #include "../../../../OOXML/Base/Unit.h"
 #include "../../../../OOXML/Common/SimpleTypes_OMath.h"
 #include "../../../../DesktopEditor/common/StringUTF32.h"
+#include "../../../../../DesktopEditor/common/File.h"
+#include "shakey.h"
 #include "typeselements.h"
 #include "fontType.h"
 #include <vector>
@@ -180,16 +182,17 @@ namespace StarMath
 		static bool ColorCheck(const std::wstring& wsColor,std::wstring& wsRecordColor);
 		void CheckVectorElementsForMf(std::vector<OOX::WritingElement*> arWrElement);
 		TFormulaSize GetFormulaSize();
-		void EndOdf();
+		void EndOdf(OOX::WritingElement* pNode);
 		std::wstring GetOdf();
 		std::wstring GetAnnotation();
 		std::wstring GetSemantic();
 		void SetBaseAttribute(std::wstring wsBaseColor = L"", unsigned int uiBaseSize = 0);
+		std::wstring GetHashAnnotation();
 	private:
 		XmlUtils::CXmlWriter* m_pXmlWrite;
 		std::wstring m_wsAnnotationStarMath,m_wsSemantic;
 		std::stack<StValuePr*> m_stAttribute;
-		std::wstring m_wsBaseColor;
+		std::wstring m_wsBaseColor,m_wsHashAnnotation;
 		unsigned int m_uiBaseSize;
 		TFormulaSize m_stSize;
 		bool m_bHeight;

@@ -3,7 +3,7 @@
 namespace StarMath
 {
 //class OOXml2Odf
-	COOXml2Odf::COOXml2Odf():m_wsBaseColor(L""),m_uiBaseSize(0),m_bStretchyAcc(false),m_bHeight(false)
+	COOXml2Odf::COOXml2Odf():m_wsBaseColor(L""),m_wsHashAnnotation(L""),m_uiBaseSize(0),m_bStretchyAcc(false),m_bHeight(false)
 	{
 		m_pXmlWrite = new XmlUtils::CXmlWriter;
 	}
@@ -21,7 +21,7 @@ namespace StarMath
 		if(pNode == nullptr)
 		{
 			m_pXmlWrite->WriteNodeBegin(L"annotation",false);
-			EndOdf();
+			EndOdf(pNode);
 			return;
 		}
 		else
@@ -30,8 +30,9 @@ namespace StarMath
 		m_pXmlWrite->WriteNodeBegin(L"annotation",true);
 		m_pXmlWrite->WriteAttribute(L"encoding",L"StarMath 5.0");
 		m_pXmlWrite->WriteNodeEnd(L"w",true,false);
+		HashSM::RemovingSpaces(m_wsAnnotationStarMath);
 		m_pXmlWrite->WriteString(m_wsAnnotationStarMath);
-		EndOdf();
+		EndOdf(pNode);
 	}
 	void COOXml2Odf::NodeDefinition(OOX::WritingElement *pNode,const bool& bMatrix)
 	{
@@ -706,9 +707,16 @@ namespace StarMath
 		else if(wsChr == L"\u2230") return L"lllint";
 		else return L"oper " + wsChr;
 	}
-	void COOXml2Odf::EndOdf()
+	void COOXml2Odf::EndOdf(OOX::WritingElement *pNode)
 	{
 		m_pXmlWrite->WriteNodeEnd(L"annotation",false,false);
+		m_pXmlWrite->WriteNodeBegin(L"signature",true);
+		m_pXmlWrite->WriteAttribute(L"encoding",L"OOXML");
+		m_pXmlWrite->WriteAttribute(L"alg",L"sha256");
+		m_pXmlWrite->WriteAttribute(L"shakey",HashSM::HashingAnnotation(m_wsAnnotationStarMath));
+		m_pXmlWrite->WriteNodeEnd(L"w",true,false);
+		m_pXmlWrite->WriteString(pNode->toXML());
+		m_pXmlWrite->WriteNodeEnd(L"signature",false,false);
 		m_pXmlWrite->WriteNodeEnd(L"semantics",false,false);
 		m_pXmlWrite->WriteNodeEnd(L"math",false,false);
 	}
@@ -1862,6 +1870,10 @@ namespace StarMath
 				wsText16.push_back(oString32[i]);
 		}
 		return wsText16;
+	}
+	std::wstring COOXml2Odf::GetHashAnnotation()
+	{
+		return m_wsHashAnnotation;
 	}
 //class COneElement
 	COneElement::COneElement():m_stAttribute(nullptr),m_iStyle(0)
