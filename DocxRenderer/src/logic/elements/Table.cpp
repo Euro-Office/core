@@ -4,6 +4,7 @@
 #include "../../resources/utils.h"
 
 #include <iterator>
+#include <set>
 
 namespace NSDocxRenderer
 {
@@ -147,6 +148,113 @@ namespace NSDocxRenderer
 		merge_part->m_eShading		= m_eShading;
 		merge_part->m_lColor		= m_lColor;
 		return merge_part;
+	}
+	std::vector<CTable::cell_ptr_t> CTable::CCell::GetSubCells()
+	{
+		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
+
+		// a function that produces vertical and horizontal lines (depend on arg) from paragraphs
+		// these lines will divide the cell into subcells
+		// the number of which is equal to the multiplication
+		// of the vertical and horizontal lines minus one
+		//
+		// the point is that we get the minimum number of table cells
+		// that will fit all the paragraphs
+		//
+		// [p][-][-][-]
+		// [-][-][p][-]
+		// [-][p][-][-]
+		// [-][-][-][p]
+		//
+		// (only 4 paragraphs, but 16 cells)
+		auto get_lines = [&is_eq, this] (bool hor) -> std::set<double> {
+			std::set<double> lines;
+			lines.insert(hor ? m_dTop : m_dLeft);
+
+			// main loop - check that all paragraphs have been used
+			for(size_t i = 0; i < m_arParagraphs.size();)
+			{
+				auto cur_line = *lines.crbegin();
+				std::set<double> tmp_lines, new_lines;
+				for (const auto& p : m_arParagraphs)
+					// for the current bottom line added to the set,
+					// select all bot lines of paaragraphs
+					// that have such a top line
+					if (is_eq(hor ? p->m_dTop : p->m_dLeft, cur_line + (hor ? 0 : c_dSTANDART_TABLE_SPACING_MM)))
+					{
+						tmp_lines.insert(hor ? p->m_dBot : (p->m_dRight + c_dSTANDART_TABLE_SPACING_MM));
+						// mark that have checked this paragraph
+						i++;
+					}
+					// add all the remaining paragraphs to the set of potential new lines
+					// for the case when there is a gap between consecutive paragraphs of the line,
+					// need to add a new line for the following cells
+					else
+						new_lines.insert(hor ? p->m_dTop : (p->m_dLeft));
+
+				if (tmp_lines.empty())
+					// if among the remaining paragraphs there is no paragraph
+					// that is below the current line -> exit the loop
+					if (new_lines.upper_bound(cur_line) == new_lines.end())
+						break;
+					// if there is empty space between cells -> attach it to the previous cells
+					// delete the previous border and add a new one
+					else
+					{
+						lines.erase(std::prev(lines.end()));
+						lines.insert(*new_lines.upper_bound(cur_line));
+					}
+				else
+					// end-of-boundary check
+					if (is_eq(*tmp_lines.crbegin(), hor ? m_dBot : m_dRight))
+						lines.insert(hor ? m_dBot : m_dRight);
+					else
+						lines.insert(*tmp_lines.crbegin());
+			}
+
+			// add the right and bot borders, respectively, in case
+			// there is still a small gap before the graphic border
+			lines.insert(hor ? m_dBot : m_dRight);
+
+			return lines;
+		};
+
+		auto hor_lines = get_lines(true);
+		auto ver_lines = get_lines(false);
+
+
+		std::vector<cell_ptr_t> non_graphical_cells;
+		non_graphical_cells.reserve((hor_lines.size() - 1) * (ver_lines.size() - 1));
+
+		// create cells from the resulting horizontal and vertical lines
+		// add graphic borders to the outer cells
+		for (auto hl_it = hor_lines.cbegin(); std::next(hl_it) != hor_lines.cend(); ++hl_it)
+			for (auto vl_it = ver_lines.cbegin(); std::next(vl_it) != ver_lines.cend(); ++vl_it)
+			{
+				auto cell = std::make_shared<CCell>(
+					*vl_it, *hl_it, *std::next(vl_it), *std::next(hl_it),
+					vl_it == ver_lines.cbegin() ? m_oLeftBorder : CBorder(),
+					hl_it == hor_lines.cbegin() ? m_oTopBorder : CBorder(),
+					std::next(vl_it) == std::prev(ver_lines.cend()) ? m_oRightBorder : CBorder(),
+					std::next(hl_it) == std::prev(hor_lines.cend()) ? m_oBotBorder : CBorder()
+					);
+				non_graphical_cells.emplace_back(std::move(cell));
+			}
+
+		for (auto& c : non_graphical_cells)
+			for (auto& p : m_arParagraphs)
+				// add a paragraph to a cell if the paragraph boundaries are within the cell boundaries
+				if ((c->m_dTop < p->m_dTop		|| is_eq(c->m_dTop, p->m_dTop)) &&
+					(c->m_dLeft < p->m_dLeft	|| is_eq(c->m_dLeft, p->m_dLeft)) &&
+					(c->m_dBot > p->m_dBot		|| is_eq(c->m_dBot, p->m_dBot)) &&
+					(c->m_dRight > p->m_dRight	|| is_eq(c->m_dRight, p->m_dRight)))
+				{
+					p->m_dLeftBorder = c_dSTANDART_TABLE_SPACING_MM;
+					p->m_dSpaceBefore = 0;
+					c->AddParagraph(std::move(p));
+				}
+
+		return non_graphical_cells;
 	}
 	void CTable::CCell::AddParagraph(const paragraph_ptr_t& pParagraph)
 	{

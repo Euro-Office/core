@@ -2078,7 +2078,7 @@ namespace NSDocxRenderer
 
 				// add a paragraph to a cell if the paragraph boundaries are within the cell boundaries
 				if ((c->m_dTop < p->m_dTop		|| is_eq(c->m_dTop, p->m_dTop)) &&
-					(c->m_dLeft < p->m_dLeft	|| is_eq(c->m_dLeft, p->m_dLeftBorder)) &&
+					(c->m_dLeft < p->m_dLeft	|| is_eq(c->m_dLeft, p->m_dLeft)) &&
 					(c->m_dBot > p->m_dBot		|| is_eq(c->m_dBot, p->m_dBot)) &&
 					(c->m_dRight > p->m_dRight	|| is_eq(c->m_dRight, p->m_dRight)))
 				{
@@ -2104,6 +2104,15 @@ namespace NSDocxRenderer
 		std::sort(m_arParagraphs.begin(), m_arParagraphs.end(), [] (const paragraph_ptr_t& p1, const paragraph_ptr_t& p2) {
 			return p1->m_dBot < p2->m_dBot;
 		});
+
+		for (auto it = m_arGraphicalCells.begin(); it != m_arGraphicalCells.end(); ++it)
+			if ((*it)->m_arParagraphs.size() > 1)
+			{
+				auto non_graphical_cells = (*it)->GetSubCells();
+				// TODO: add correct subcells insertion
+				it = m_arGraphicalCells.erase(it);
+				it = m_arGraphicalCells.insert(it, non_graphical_cells.begin(), non_graphical_cells.end()) + non_graphical_cells.size() - 1;
+			}
 
 		std::vector<table_ptr_t> tables;
 		std::list<cell_ptr_t> cells_to_next_row, cells_buffer;
