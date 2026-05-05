@@ -42,18 +42,18 @@ if(NOT TARGET DocxRenderer)
     add_subdirectory(${CORE_ROOT_DIR}/DocxRenderer DocxRenderer)
 endif()
 
-message( "Fetch and build icu (app_builder)" )
-set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
+# message( "Fetch and build icu (app_builder)" )
+# set(ICU_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/icu")
 set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
-get_filename_component(ICU_3RDPARTY_DIR_ABS "${ICU_3RDPARTY_DIR}" ABSOLUTE)
+# set(ICU_MAJOR_VER "74")
+# set(ICU_MINOR_VER "2")
+# get_filename_component(ICU_3RDPARTY_DIR_ABS "${ICU_3RDPARTY_DIR}" ABSOLUTE)
 get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-execute_process(
-    COMMAND_ECHO STDOUT
-    COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/icu" "${ICU_INSTALL_DIR}" ${ICU_MAJOR_VER} ${ICU_MINOR_VER}
-    WORKING_DIRECTORY ${ICU_3RDPARTY_DIR_ABS}
-)
+# execute_process(
+#     COMMAND_ECHO STDOUT
+#     COMMAND ./nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/icu" "${ICU_INSTALL_DIR}" ${ICU_MAJOR_VER} ${ICU_MINOR_VER}
+#     WORKING_DIRECTORY ${ICU_3RDPARTY_DIR_ABS}
+# )
 
 add_executable(docbuilder
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
@@ -78,3 +78,5 @@ target_link_libraries(docbuilder PUBLIC
 
 copy_artifacts_to_folder("docbuilder" "${EO_CORE_OUTPUT_DIR}")
 copy_icu_libs(docbuilder)
+
+declare_victory( docbuilder )

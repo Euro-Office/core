@@ -23,8 +23,7 @@ set_default_options(CMapSerialize)
 
 # Equivalent to ADD_DEPENDENCY(UnicodeConverter, kernel)
 # You'll need to make sure these targets are defined in your base.cmake
-target_link_libraries(CMapSerialize 
-    PRIVATE 
+target_link_libraries(CMapSerialize PRIVATE 
     UnicodeConverter 
     kernel
 )

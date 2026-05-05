@@ -40,3 +40,5 @@ copy_artifacts_to_folder("x2ttester" "${EO_CORE_TOOLS_DIR}")
 # Modify rpath so test binary can run properly
 
 # register_test_target(x2t_test)
+
+declare_victory( x2ttester )
