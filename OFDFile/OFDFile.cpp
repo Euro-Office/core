@@ -144,4 +144,7 @@ unsigned char* COFDFile::GetLinks(int nPageIndex)
 {
 	return (nullptr != m_pInternal) ? m_pInternal->GetLinks(nPageIndex) : nullptr;
 }
+
+void COFDFile::SetPainter(IOfficeDrawingFilePainter* pPainter)
+{}
 #endif

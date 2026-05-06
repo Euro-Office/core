@@ -51,4 +51,21 @@ bool TMatrix::Read(const std::string& sValue)
 	return true;
 }
 
+TPos::TPos()
+	: m_dX(0.), m_dY(0.)
+{}
+
+bool TPos::Read(const std::string& sValue)
+{
+	const std::vector<std::string> arValues{Split(sValue, ' ')};
+
+	if (2 > arValues.size())
+		return false;
+
+	if (!StringToDouble(arValues[0], m_dX) ||
+	    !StringToDouble(arValues[1], m_dY))
+		return false;
+
+	return true;
+}
 }

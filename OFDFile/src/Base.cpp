@@ -3,6 +3,10 @@
 
 #include "../../OfficeUtils/src/ZipFolder.h"
 
+#ifdef BUILDING_WASM_MODULE
+#include "../../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
+#endif
+
 namespace OFD
 {
 #define IF_CHECK_NODE(node_name, varible_name)\
@@ -248,6 +252,13 @@ std::wstring CDocBody::GetInfo() const
 	return m_oDocInfo.GetInfo();
 }
 
+#ifdef BUILDING_WASM_MODULE
+void CDocBody::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
+{
+	m_oDocument.GetStructure(unMaxNumberPage, oRes);
+}
+#endif
+
 CBase::CBase()
 {}
 
@@ -329,7 +340,15 @@ std::wstring CBase::GetInfo() const
 	return wsInfo;
 }
 
-unsigned char* CBase::GetLinks(int nPageIndex) const
+#ifdef BUILDING_WASM_MODULE
+void CBase::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
+{
+	for(CDocBody* pDocBody : m_arDocBodies)
+		pDocBody->GetStructure(unMaxNumberPage, oRes);
+}
+#endif
+
+BYTE* CBase::GetLinks(int nPageIndex) const
 {
 	return nullptr;
 }

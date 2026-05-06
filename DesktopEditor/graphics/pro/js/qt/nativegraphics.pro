@@ -803,12 +803,14 @@ SOURCES += \
 OFD_RENDERER_ROOT_DIR = $$CORE_ROOT_DIR/OFDFile
 HEADERS += \
 	$$OFD_RENDERER_ROOT_DIR/OFDFile.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Action.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Annotation.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.h \
 	$$OFD_RENDERER_ROOT_DIR/src/IOFDElement.h \
 	$$OFD_RENDERER_ROOT_DIR/src/OFDFile_Private.h \
+	$$OFD_RENDERER_ROOT_DIR/src/OutlineElem.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Base.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/Content.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/GraphicUnit.h \
@@ -827,6 +829,7 @@ HEADERS += \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/MultiMedia.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PageArea.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Region.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/CFontChecker.h \
@@ -836,11 +839,13 @@ HEADERS += \
 
 SOURCES += \
 	$$OFD_RENDERER_ROOT_DIR/OFDFile.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Action.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Annotation.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/OFDFile_Private.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/OutlineElem.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Base.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/Content.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/GraphicUnit.cpp \
@@ -858,6 +863,7 @@ SOURCES += \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/MultiMedia.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PageArea.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/PenSettings.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Types/Region.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/Signature.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Types/TemplatePage.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Utils/CFontChecker.cpp \

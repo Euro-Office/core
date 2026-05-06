@@ -5,6 +5,10 @@
 #include "../../DesktopEditor/common/Path.h"
 #include "../../OfficeUtils/src/ZipFolder.h"
 
+#ifdef BUILDING_WASM_MODULE
+#include "../../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
+#endif
+
 namespace OFD
 {
 CPermission::CPermission()
@@ -36,8 +40,11 @@ CDocument::CDocument()
 
 CDocument::~CDocument()
 {
-	for (std::pair<int, CPage*> oElement : m_mPages)
+	for (std::pair<int, const CPage*> oElement : m_mPages)
 		delete oElement.second;
+
+	for (const COutlineElem* pOutlineElem : m_arOutlines)
+		delete pOutlineElem;
 }
 
 bool CDocument::Empty() const
@@ -105,9 +112,19 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 			m_oPermission.Read(oLiteReader);
 		else if ("ofd:Annotations" == sNodeName)
 			m_oAnnotation.Read(oLiteReader.GetText2(), wsCoreDirectory, pFolder);
+		else if ("ofd:Outlines" == sNodeName)
+		{
+			const int nOutlineDepth{oLiteReader.GetDepth()};
+
+			while (oLiteReader.ReadNextSiblingNode2(nOutlineDepth))
+			{
+				if ("ofd:OutlineElem" == oLiteReader.GetNameA())
+					AddOutlineElem(new COutlineElem(oLiteReader));
+			}
+		}
 	}
 
-	return false;
+	return true;
 }
 
 bool CDocument::DrawPage(IRenderer* pRenderer, int nPageIndex) const
@@ -115,7 +132,7 @@ bool CDocument::DrawPage(IRenderer* pRenderer, int nPageIndex) const
 	if (nullptr == pRenderer)
 		return false;
 
-	std::map<unsigned int, CPage*>::const_iterator itFound = m_mPages.find(nPageIndex);
+	std::map<unsigned int, const CPage*>::const_iterator itFound = m_mPages.find(nPageIndex);
 
 	if (itFound == m_mPages.cend())
 		return false;
@@ -136,7 +153,7 @@ bool CDocument::GetPageSize(int nPageIndex, double& dWidth, double& dHeight) con
 {
 	m_oCommonData.GetPageSize(dWidth, dHeight);
 
-	std::map<unsigned int, CPage*>::const_iterator itFound = m_mPages.find(nPageIndex);
+	std::map<unsigned int, const CPage*>::const_iterator itFound = m_mPages.find(nPageIndex);
 
 	if (itFound == m_mPages.cend())
 		return false;
@@ -149,5 +166,53 @@ bool CDocument::GetPageSize(int nPageIndex, double& dWidth, double& dHeight) con
 void CDocument::UpdateFonts(CFontChecker* pFontChecker)
 {
 	m_oCommonData.UpdateFonts(pFontChecker);
+}
+
+#ifdef BUILDING_WASM_MODULE
+UINT GetNumberPage(const COutlineElem* pOutlineElem, UINT& unMaxNumberPage)
+{
+	for (const CAction* pActionElement : pOutlineElem->GetActions())
+	{
+		const IAction* pAction{pActionElement->GetAction()};
+
+		if (nullptr == pAction || EActionType::Goto != pAction->GetType())
+			continue;
+
+		const TDest *pDest{((const CGoto*)pAction)->GetDest()};
+
+		if (nullptr == pDest)
+			continue;
+
+		unMaxNumberPage = (std::max)(unMaxNumberPage, pDest->m_unPageID);
+
+		return pDest->m_unPageID;
+	}
+
+	return unMaxNumberPage;
+}
+
+void WriteOutlineElem(const std::vector<const COutlineElem*> arOutlineElems, NSWasm::CData& oRes, UINT unLevel, UINT& unMaxNumberPage)
+{
+	for (const COutlineElem* pElem : arOutlineElems)
+	{
+		oRes.AddInt(GetNumberPage(pElem, unMaxNumberPage));
+		oRes.AddInt(unLevel);
+		oRes.AddDouble(0.);
+		oRes.WriteString(pElem->GetTitle());
+
+		WriteOutlineElem(pElem->GetOutlines(), oRes, unLevel + 1, unMaxNumberPage);
+	}
+}
+
+void CDocument::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
+{
+	WriteOutlineElem(m_arOutlines, oRes, 1, unMaxNumberPage);
+}
+#endif
+
+void CDocument::AddOutlineElem(const COutlineElem* pOutlineElem)
+{
+	if (nullptr != pOutlineElem)
+		m_arOutlines.push_back(pOutlineElem);
 }
 }

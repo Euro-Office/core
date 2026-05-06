@@ -43,7 +43,7 @@ private:
 	bool m_bNoRotate;
 	bool m_bReadOnly;
 
-	std::vector<CParameter*> m_arParameters;
+	std::vector<CParameter*>  m_arParameters;
 	std::vector<CAppearance*> m_arAppearances;
 };
 

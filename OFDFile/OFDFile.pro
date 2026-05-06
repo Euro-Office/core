@@ -30,6 +30,7 @@ INCLUDEPATH += \
 
 HEADERS += \
 	OFDFile.h \
+	src/Action.h \
 	src/Annotation.h \
 	src/Content/ImageObject.h \
 	src/Content/PageBlock.h \
@@ -43,6 +44,7 @@ HEADERS += \
 	src/Content/Layer.h \
 	src/Content/TextObject.h \
 	src/Document.h \
+	src/OutlineElem.h \
 	src/Page.h \
 	src/Res.h \
 	src/Types/Color.h \
@@ -54,6 +56,7 @@ HEADERS += \
 	src/Types/MultiMedia.h \
 	src/Types/PageArea.h \
 	src/Types/PenSettings.h \
+	src/Types/Region.h \
 	src/Types/Signature.h \
 	src/Types/TemplatePage.h \
 	src/Utils/CFontChecker.h \
@@ -63,6 +66,7 @@ HEADERS += \
 
 SOURCES += \
 	OFDFile.cpp \
+	src/Action.cpp \
 	src/Annotation.cpp \
 	src/Content/ImageObject.cpp \
 	src/Content/PageBlock.cpp \
@@ -74,6 +78,7 @@ SOURCES += \
 	src/Content/Layer.cpp \
 	src/Content/TextObject.cpp \
 	src/Document.cpp \
+	src/OutlineElem.cpp \
 	src/Page.cpp \
 	src/Res.cpp \
 	src/Types/Color.cpp \
@@ -85,6 +90,7 @@ SOURCES += \
 	src/Types/MultiMedia.cpp \
 	src/Types/PageArea.cpp \
 	src/Types/PenSettings.cpp \
+	src/Types/Region.cpp \
 	src/Types/Signature.cpp \
 	src/Types/TemplatePage.cpp \
 	src/Utils/CFontChecker.cpp \

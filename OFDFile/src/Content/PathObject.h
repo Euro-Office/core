@@ -34,8 +34,9 @@ class CMoveElement : public IPathElement
 	double m_dY;
 public:
 	CMoveElement();
-	static IPathElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
-	void Draw(IRenderer* pRenderer) const override;
+	static CMoveElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CMoveElement* ReadFromNode(CXmlReader& oReader);
+	virtual void Draw(IRenderer* pRenderer) const override;
 };
 
 class CLineElement :  public IPathElement
@@ -44,7 +45,8 @@ class CLineElement :  public IPathElement
 	double m_dY;
 public:
 	CLineElement();
-	static IPathElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CLineElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CLineElement* ReadFromNode(CXmlReader& oReader);
 	void Draw(IRenderer* pRenderer) const override;
 };
 
@@ -56,7 +58,8 @@ class CBezierCurve2Element : public IPathElement
 	double m_dY2;
 public:
 	CBezierCurve2Element();
-	static IPathElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CBezierCurve2Element* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CBezierCurve2Element* ReadFromNode(CXmlReader& oReader);
 	void Draw(IRenderer* pRenderer) const override;
 };
 
@@ -70,7 +73,8 @@ class CBezierCurveElement : public IPathElement
 	double m_dY3;
 public:
 	CBezierCurveElement();
-	static IPathElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CBezierCurveElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CBezierCurveElement* ReadFromNode(CXmlReader& oReader);
 	void Draw(IRenderer* pRenderer) const override;
 };
 
@@ -85,7 +89,8 @@ class CArcElement : public IPathElement
 	double m_dY;
 public:
 	CArcElement();
-	static IPathElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CArcElement* ReadFromArray(std::vector<std::string>::const_iterator& itBegin, const std::vector<std::string>::const_iterator& itEnd);
+	static CArcElement* ReadFromNode(CXmlReader& oReader);
 	void Draw(IRenderer* pRenderer) const override;
 };
 

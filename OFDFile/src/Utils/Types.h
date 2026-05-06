@@ -32,6 +32,16 @@ struct TMatrix
 
 	bool Read(const std::string& sValue);
 };
+
+struct TPos
+{
+	double m_dX;
+	double m_dY;
+
+	TPos();
+
+	bool Read(const std::string& sValue);
+};
 }
 
 #endif // TYPES_H
