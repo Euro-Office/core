@@ -1,10 +1,10 @@
 #include "shakey.h"
-#include "../../../../../DesktopEditor/common/File.h"
-#include "../../../../../Common/3dParty/cryptopp/sha.h"
-#include "../../../../../Common/3dParty/cryptopp/hex.h"
-#include "../../../../../Common/3dParty/cryptopp/base64.h"
-#include "../../../../../Common/3dParty/cryptopp/filters.h"
-#include "../../../../../Common/3dParty/cryptopp/files.h"
+#include "../../../../DesktopEditor/common/File.h"
+#include "../../../../Common/3dParty/cryptopp/sha.h"
+#include "../../../../Common/3dParty/cryptopp/hex.h"
+#include "../../../../Common/3dParty/cryptopp/base64.h"
+#include "../../../../Common/3dParty/cryptopp/filters.h"
+#include "../../../../Common/3dParty/cryptopp/files.h"
 
 namespace HashSM
 {
