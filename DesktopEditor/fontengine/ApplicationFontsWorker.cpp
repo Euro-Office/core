@@ -1520,6 +1520,9 @@ public:
 						++nIndexCur;
 						pImageDataAlpha += 4;
 
+						if (nIndexCur >= nIndexCurLimit)
+							break;
+
 						if (0 != *pImageDataAlpha)
 							break;
 					}

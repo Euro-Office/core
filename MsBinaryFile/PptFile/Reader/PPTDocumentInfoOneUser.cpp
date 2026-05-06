@@ -39,6 +39,7 @@
  //#include "../Records/SoundCollectionContainer.h"
  //#include "../Records/SoundContainer.h"
 #include "../Enums/_includer.h"
+#include "../../../OfficeCryptReader/source/CryptTransform.h"
 
 using namespace PPT;
 using namespace ODRAW;
@@ -174,17 +175,28 @@ bool CPPTUserInfo::ReadFromStream(CRecordUserEditAtom* pUser, POLE::Stream* pStr
             m_bEncrypt = true;
             m_oEncryptionHeader.ReadFromStream(oHeader, pStream);
 
-            m_pDecryptor = new CRYPT::ECMADecryptor();
-            m_pDecryptor->SetCryptData(m_oEncryptionHeader.crypt_data_aes);
-
-            if (m_strPassword.empty())
+            if (m_oEncryptionHeader.bStandard)
             {
-                if (m_pDecryptor->SetPassword(L"VelvetSweatshop") == false)
+                m_pDecryptor = new CRYPT::RC4Decryptor(m_oEncryptionHeader.crypt_data_rc4,
+                    m_strPassword.empty() ? L"VelvetSweatshop" : m_strPassword);
+                if (!m_pDecryptor->IsVerify())
                     return false;
             }
-            else if (m_pDecryptor->SetPassword(m_strPassword) == false)
+            else
             {
-                return false;
+                CRYPT::ECMADecryptor* ecmaDecryptor = new CRYPT::ECMADecryptor();
+                ecmaDecryptor->SetCryptData(m_oEncryptionHeader.crypt_data_aes);
+                m_pDecryptor = ecmaDecryptor;
+
+                if (m_strPassword.empty())
+                {
+                    if (ecmaDecryptor->SetPassword(L"VelvetSweatshop") == false)
+                        return false;
+                }
+                else if (ecmaDecryptor->SetPassword(m_strPassword) == false)
+                {
+                    return false;
+                }
             }
             std::wstring sTemp = m_pDocumentInfo->m_pCommonInfo->tempPath + FILE_SEPARATOR_STR + L"~tempFile.ppt";
 

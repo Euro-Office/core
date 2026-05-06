@@ -2062,7 +2062,10 @@ namespace Aggplus
 				double dX = 0.72, dY = 0.72;
 				agg::trans_affine invert = ~m_oFullTransform.m_internal->m_agg_mtx;
 				invert.transform_2x2(&dX, &dY);
-				dWidth = std::min(abs(dX), abs(dY));
+
+				if (dX < 0) dX = -dX;
+				if (dY < 0) dY = -dY;
+				dWidth =  (dX > dY) ? dY : dX;
 			}
 			else if (0 != dSqrtDet && dWidth < (dWidthMinSize = 1.0 / dSqrtDet))
 				dWidth = dWidthMinSize;

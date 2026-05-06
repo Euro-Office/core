@@ -254,7 +254,7 @@ void CPPTFileReader::ReadPictures()
 	XLS::CFStreamPtr pStream = GetPictureStream();
 	if (!pStream) return;
 
-	CRYPT::ECMADecryptor *pDecryptor = m_oDocumentInfo.m_arUsers[0]->m_pDecryptor;
+	CRYPT::Decryptor *pDecryptor = m_oDocumentInfo.m_arUsers[0]->m_pDecryptor;
 
 	while (true)
 	{
