@@ -58,7 +58,7 @@ public:
     CEncryptionHeader               m_oEncryptionHeader;
     bool                            m_bEncrypt;
     std::wstring                    m_strPassword;
-    CRYPT::ECMADecryptor*           m_pDecryptor;
+    CRYPT::Decryptor*               m_pDecryptor;
     POLE::Storage*                  m_pStorageDecrypt;
     std::vector<XLS::CFStreamPtr>   m_arStreamDecrypt; // each Persist has its own ... o_O
 

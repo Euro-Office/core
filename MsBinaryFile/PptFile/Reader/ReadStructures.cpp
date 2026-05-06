@@ -674,7 +674,7 @@ CMetaHeader::CMetaHeader()
 {
 }
 
-void CMetaHeader::FromStream(POLE::Stream* pStream, CRYPT::ECMADecryptor *pDecryptor)
+void CMetaHeader::FromStream(POLE::Stream* pStream, CRYPT::Decryptor *pDecryptor)
 {
     BYTE	pData[34];
     pStream->read(pData, 34);
