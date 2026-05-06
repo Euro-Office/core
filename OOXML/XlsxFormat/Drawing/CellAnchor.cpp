@@ -318,6 +318,31 @@ namespace OOX
 				}
 
 			}
+			else if(m_oAnchorType == SimpleTypes::Spreadsheet::ECellAnchorType::cellanchorOneCell)
+			{
+				if(m_oFrom.IsInit())
+				{
+					if(m_oFrom->m_oCol.IsInit())
+						colL = m_oFrom->m_oCol->GetValue();
+					if(m_oFrom->m_oRow.IsInit())
+						rwT = m_oFrom->m_oRow->GetValue();
+					if(m_oFrom->m_oRowOff.IsInit())
+						dyT = m_oFrom->m_oRowOff->GetValue();
+					if(m_oFrom->m_oColOff.IsInit())
+						dxL = m_oFrom->m_oColOff->GetValue();
+					rwB = rwT;
+					colR = colL;
+				}
+				if(m_oExt.IsInit())
+				{
+					if(m_oExt->m_oCx.IsInit())
+						dxR = m_oExt->m_oCx->GetValue();
+
+					if(m_oExt->m_oCy.IsInit())
+						dyB = m_oExt->m_oCy->GetValue();
+				}
+
+			}
 		}
 		void CCellAnchor::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{

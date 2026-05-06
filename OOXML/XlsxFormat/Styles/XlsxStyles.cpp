@@ -351,6 +351,8 @@ namespace OOX
 			workbookPtr->m_Formating = XLS::BaseObjectPtr(FormatPtr);
 			auto globalInfo = workbookPtr->global_info_;
 			//prepare colors
+			if(m_oColors.IsInit() &&(!m_oColors->m_oIndexedColors.IsInit()))
+				m_oColors.reset();
 			if(!m_oColors.IsInit())
 			{
 				m_oColors = OOX::Spreadsheet::CColors();
