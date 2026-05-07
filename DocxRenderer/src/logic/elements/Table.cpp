@@ -4,7 +4,6 @@
 #include "../../resources/utils.h"
 
 #include <iterator>
-#include <set>
 
 namespace NSDocxRenderer
 {
@@ -184,7 +183,7 @@ namespace NSDocxRenderer
 		else
 			return true;
 	}
-	std::vector<CTable::cell_ptr_t> CTable::CCell::GetSubCells()
+	std::vector<CTable::cell_ptr_t> CTable::CCell::GetSubCells(const std::set<double>& graphical_hor_lines)
 	{
 		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
 
@@ -221,9 +220,9 @@ namespace NSDocxRenderer
 				auto cur_line = *lines.crbegin();
 				std::set<double> tmp_lines, new_lines;
 				for (const auto& p : m_arParagraphs)
-					// for the current bottom line added to the set,
+					// for the current bottom/right line added to the set,
 					// select all bot lines of paaragraphs
-					// that have such a top line
+					// that have such a top/left line
 					if (is_eq(hor ? p->m_dTop : p->m_dLeft, cur_line + (hor ? 0 : c_dSTANDART_TABLE_SPACING_MM)))
 					{
 						tmp_lines.insert(hor ? p->m_dBot : p->m_dRight);
@@ -246,9 +245,9 @@ namespace NSDocxRenderer
 					else
 					{
 						auto new_line = *new_lines.upper_bound(cur_line);
-						lines.insert(new_line);
+						lines.insert(new_line - (hor ? 0.0 : c_dSTANDART_TABLE_SPACING_MM));
 						if (check_empty_space(cur_line, new_line))
-							lines.erase(lines.find(cur_line));
+							lines.erase(cur_line);
 					}
 				else
 					// end-of-boundary check
@@ -267,6 +266,27 @@ namespace NSDocxRenderer
 
 		auto hor_lines = get_lines(true);
 		auto ver_lines = get_lines(false);
+
+		for (auto non_gr_it = hor_lines.begin(), gr_it = graphical_hor_lines.begin(); non_gr_it != hor_lines.end() && gr_it != graphical_hor_lines.end();)
+		{
+			const auto& non_gr_val = *non_gr_it;
+			const auto& gr_val = *gr_it;
+			if (is_eq(non_gr_val, gr_val))
+			{
+				auto inserted = hor_lines.insert(gr_val).second;
+				if (inserted)
+				{
+					non_gr_it = hor_lines.find(non_gr_val);
+					non_gr_it = hor_lines.erase(non_gr_it);
+				}
+				++non_gr_it;
+				++gr_it;
+			}
+			else if (*non_gr_it > *gr_it)
+				++gr_it;
+			else
+				++non_gr_it;
+		}
 
 		std::vector<cell_ptr_t> non_graphical_cells;
 		non_graphical_cells.reserve((hor_lines.size() - 1) * (ver_lines.size() - 1));

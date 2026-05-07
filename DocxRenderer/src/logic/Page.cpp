@@ -2105,14 +2105,125 @@ namespace NSDocxRenderer
 			return p1->m_dBot < p2->m_dBot;
 		});
 
-		for (auto it = m_arGraphicalCells.begin(); it != m_arGraphicalCells.end(); ++it)
+		auto get_bot_lines = [&is_eq, this] () -> std::set<double> {
+			std::set<double> lines;
+			for (auto& gr_cell : m_arGraphicalCells)
+			{
+				auto bot = gr_cell->m_dBot;
+				// check posible lines error
+				if (lines.empty() || !is_eq(*lines.rbegin(), bot))
+					lines.insert(bot);
+			}
+			return lines;
+		};
+
+		for (auto it = m_arGraphicalCells.begin(); it != m_arGraphicalCells.end(); )
 			if ((*it)->IsPosibleToDivide())
 			{
-				auto non_graphical_cells = (*it)->GetSubCells();
-				// TODO: add correct subcells insertion
+				double row_bot, row_height;
+				auto cell = *it;
+				auto right = cell->m_dRight;
+				auto non_graphical_cells = cell->GetSubCells(get_bot_lines());
+
 				it = m_arGraphicalCells.erase(it);
-				it = m_arGraphicalCells.insert(it, non_graphical_cells.begin(), non_graphical_cells.end()) + non_graphical_cells.size() - 1;
+
+				auto get_row = [&is_eq, &non_graphical_cells] () -> std::vector<cell_ptr_t> {
+					auto first_row_top = non_graphical_cells.front()->m_dTop;
+					std::vector<cell_ptr_t>::iterator it_row_end;
+					for (it_row_end = non_graphical_cells.begin(); it_row_end != non_graphical_cells.end(); ++it_row_end)
+						if (!is_eq(first_row_top, (*it_row_end)->m_dTop))
+							break;
+
+					std::vector<cell_ptr_t> first_row;
+					if (it_row_end == non_graphical_cells.end())
+					{
+						first_row = std::move(non_graphical_cells);
+						non_graphical_cells.clear();
+						return first_row;
+					}
+
+					first_row.reserve(std::distance(non_graphical_cells.begin(), it_row_end));
+					first_row.insert(first_row.end(), std::make_move_iterator(non_graphical_cells.begin()), std::make_move_iterator(it_row_end));
+
+					non_graphical_cells.erase(non_graphical_cells.begin(), it_row_end);
+
+					return first_row;
+				};
+
+				bool merged = false;
+				double last_height = 0.0;
+				auto get_next_it = [&is_eq, &right, &row_bot, &row_height, &merged, &last_height, this] (const std::vector<cell_ptr_t>::iterator& _it) -> std::vector<cell_ptr_t>::iterator {
+					auto update_merge = [&is_eq, &merged, &row_bot, &row_height, &last_height] (const double& start_bot = 0.0) {
+						if (!merged)
+						{
+							if (start_bot > (row_bot + row_height) && !is_eq(start_bot, (row_bot + row_height)))
+							{
+								merged = true;
+								last_height = start_bot - (row_bot + row_height);
+							}
+						}
+						else
+						{
+							last_height -= row_height;
+							merged = !is_eq(last_height, 0.0);
+						}
+					};
+
+					for (auto it = _it; it != m_arGraphicalCells.end(); ++it)
+					{
+						auto cell = *it;
+						bool necessary_row = is_eq(row_bot, cell->m_dTop);
+						bool necessary_column = is_eq(right, cell->m_dLeft);
+						if (necessary_row && necessary_column)
+						{
+							update_merge(cell->m_dBot);
+							return it;
+						}
+					}
+
+					if (merged)
+					{
+						update_merge();
+						for (auto it = _it; it != m_arGraphicalCells.end(); ++it)
+							if (is_eq(row_bot + row_height, (*it)->m_dTop))
+								return it;
+					}
+
+					return m_arGraphicalCells.end();
+				};
+
+				if (it == m_arGraphicalCells.end())
+				{
+					it = m_arGraphicalCells.insert(it, std::make_move_iterator(non_graphical_cells.begin()), std::make_move_iterator(non_graphical_cells.end()));
+					it = std::next(it, non_graphical_cells.size());
+				}
+				else
+				{
+					bool first = true;
+					size_t it_offset;
+					for (auto it_to_insert = it; it_to_insert != m_arGraphicalCells.end();)
+					{
+						auto row = get_row();
+						row_bot = row.front()->m_dBot;
+						row_height = row.front()->m_dHeight;
+						auto it_after_insert = m_arGraphicalCells.insert(it_to_insert, std::make_move_iterator(row.begin()), std::make_move_iterator(row.end()));
+
+						if (non_graphical_cells.empty())
+							break;
+
+						it_after_insert = std::next(it_after_insert, row.size());
+						if (first)
+						{
+							it_offset = std::distance(m_arGraphicalCells.begin(), it_after_insert);
+							first = false;
+						}
+						it_to_insert = get_next_it(it_after_insert);
+					}
+					it = std::next(m_arGraphicalCells.begin(), it_offset);
+				}
 			}
+			else
+				++it;
 
 		std::vector<table_ptr_t> tables;
 		std::list<cell_ptr_t> cells_to_next_row, cells_buffer;
@@ -2122,14 +2233,8 @@ namespace NSDocxRenderer
 		auto row = std::make_shared<CTable::CRow>();
 
 		// an order set storing the lower bound of each row of a table
-		std::set<double, std::less<double>> lines;
-		for (auto& gr_cell : m_arGraphicalCells)
-		{
-			auto bot = gr_cell->m_dBot;
-			// check posible lines error
-			if (lines.empty() || !is_eq(*lines.rbegin(), bot))
-				lines.insert(bot);
-		}
+		auto lines = get_bot_lines();
+
 		// the current value of the bottom row border
 		// used to check that the cell is vertically merged
 		auto cur_bot_it = lines.begin();

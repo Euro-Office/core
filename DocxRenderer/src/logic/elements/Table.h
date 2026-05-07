@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <memory>
+#include <set>
 
 #include "BaseItem.h"
 #include "Paragraph.h"
@@ -64,7 +65,7 @@ namespace NSDocxRenderer
 
 			cell_ptr_t GetMergePart() const;
 			bool IsPosibleToDivide() const noexcept;
-			std::vector<cell_ptr_t> GetSubCells();
+			std::vector<cell_ptr_t> GetSubCells(const std::set<double>& graphical_hor_lines);
 			void AddParagraph(const paragraph_ptr_t& pParagraph);
 
 			CBorder m_oTopBorder{};
