@@ -228,12 +228,12 @@ use_gold=false
 use_lld=true
 """
 
-    if targetarch == "arm64":
-        gn_args = f"""{ gn_args }
-cc="clang"
-cxx="clang++"
-clang_base_path="{ clang_dir }"
-"""
+        if targetarch == "arm64":
+            gn_args = f"""{ gn_args }
+    cc="clang"
+    cxx="clang++"
+    clang_base_path="{ clang_dir }"
+    """
         
         return gn_args
     
