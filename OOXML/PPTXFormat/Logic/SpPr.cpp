@@ -36,7 +36,9 @@
 #include "CustGeom.h"
 
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/FRAME.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_unions/SHAPEPROPS.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/Frame.h"
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/ShapePropsStream.h"
 
 namespace PPTX
 {
@@ -187,6 +189,23 @@ namespace PPTX
 			oValue.WriteNullable(sp3d);
 
 			return XmlUtils::CreateNode(m_namespace + L":spPr", oAttr, oValue);
+		}
+		XLS::BaseObjectPtr SpPr::toXLS(const unsigned short ObjContext) const
+		{
+			auto SpUnion = new XLS::SHAPEPROPS;
+			auto spStream = new XLS::ShapePropsStream;
+			SpUnion->m_ShapePropsStream = XLS::BaseObjectPtr(spStream);
+
+			spStream->wObjContext = ObjContext;
+			auto xmlProps = toXML();
+			spStream->xml_.reserve(xmlProps.length());
+
+			std::transform(xmlProps.begin(), xmlProps.end(), std::back_inserter(spStream->xml_), [](wchar_t c)
+			{
+				return static_cast<char>(c);
+			});
+
+			return  XLS::BaseObjectPtr(SpUnion);
 		}
 		void SpPr::Merge(SpPr& spPr)const
 		{
