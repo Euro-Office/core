@@ -311,10 +311,10 @@ namespace OOX
 						colR = m_oTo->m_oCol->GetValue();
 					if(m_oTo->m_oRow.IsInit())
 						rwB = m_oTo->m_oRow->GetValue();
-					if(m_oFrom->m_oRowOff.IsInit())
-						dyB = m_oFrom->m_oRowOff->GetValue();
-					if(m_oFrom->m_oColOff.IsInit())
-						dxR = m_oFrom->m_oColOff->GetValue();
+					if(m_oTo->m_oRowOff.IsInit())
+						dyB = m_oTo->m_oRowOff->GetValue();
+					if(m_oTo->m_oColOff.IsInit())
+						dxR = m_oTo->m_oColOff->GetValue();
 				}
 
 			}
@@ -343,6 +343,10 @@ namespace OOX
 				}
 
 			}
+			dxR*= 21;
+			dxL*= 21;
+			dyT*= 17;
+			dyB*= 17;
 		}
 		void CCellAnchor::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
