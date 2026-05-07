@@ -63,6 +63,7 @@ namespace NSDocxRenderer
 			CCell& operator=(const CCell& other);
 
 			cell_ptr_t GetMergePart() const;
+			bool IsPosibleToDivide() const noexcept;
 			std::vector<cell_ptr_t> GetSubCells();
 			void AddParagraph(const paragraph_ptr_t& pParagraph);
 

@@ -2106,7 +2106,7 @@ namespace NSDocxRenderer
 		});
 
 		for (auto it = m_arGraphicalCells.begin(); it != m_arGraphicalCells.end(); ++it)
-			if ((*it)->m_arParagraphs.size() > 1)
+			if ((*it)->IsPosibleToDivide())
 			{
 				auto non_graphical_cells = (*it)->GetSubCells();
 				// TODO: add correct subcells insertion

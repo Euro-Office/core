@@ -149,6 +149,41 @@ namespace NSDocxRenderer
 		merge_part->m_lColor		= m_lColor;
 		return merge_part;
 	}
+	bool CTable::CCell::IsPosibleToDivide() const noexcept
+	{
+		if (m_arParagraphs.size() < 2)
+			return false;
+
+		std::set<double> hor_lines, right_lines, left_lines;
+		for (const auto& p : m_arParagraphs)
+		{
+			left_lines.insert(p->m_dLeft);
+			right_lines.insert(p->m_dRight);
+			hor_lines.insert({p->m_dTop, p->m_dBot});
+		}
+
+		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
+		auto clear_near_lines = [&is_eq] (std::set<double>& lines) {
+			for (auto it = lines.begin(); it != lines.end() && std::next(it) != lines.end(); )
+				if (is_eq(*it, *std::next(it)))
+					it = lines.erase(it);
+				else
+					++it;
+		};
+
+		clear_near_lines(hor_lines);
+		clear_near_lines(right_lines);
+		clear_near_lines(left_lines);
+
+		if (hor_lines.size() == 2)
+			return left_lines.size() + right_lines.size() == 2 * m_arParagraphs.size();
+		else if (left_lines.size() == 1 && right_lines.size() == 1)
+			return true;
+		else if (left_lines.size() == 1 && right_lines.size() > 1)
+			return false;
+		else
+			return true;
+	}
 	std::vector<CTable::cell_ptr_t> CTable::CCell::GetSubCells()
 	{
 		auto is_eq = makeEqualComp<double>(c_dGRAPHICS_ERROR_MM);
@@ -232,7 +267,6 @@ namespace NSDocxRenderer
 
 		auto hor_lines = get_lines(true);
 		auto ver_lines = get_lines(false);
-
 
 		std::vector<cell_ptr_t> non_graphical_cells;
 		non_graphical_cells.reserve((hor_lines.size() - 1) * (ver_lines.size() - 1));
