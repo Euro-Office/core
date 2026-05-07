@@ -2127,13 +2127,16 @@ namespace NSDocxRenderer
 
 				it = m_arGraphicalCells.erase(it);
 
+				// function that extracts the first row from a vector of non-graphical cells
 				auto get_row = [&is_eq, &non_graphical_cells] () -> std::vector<cell_ptr_t> {
 					auto first_row_top = non_graphical_cells.front()->m_dTop;
 					std::vector<cell_ptr_t>::iterator it_row_end;
+					// find row end
 					for (it_row_end = non_graphical_cells.begin(); it_row_end != non_graphical_cells.end(); ++it_row_end)
 						if (!is_eq(first_row_top, (*it_row_end)->m_dTop))
 							break;
 
+					// check if there is one line left
 					std::vector<cell_ptr_t> first_row;
 					if (it_row_end == non_graphical_cells.end())
 					{
@@ -2152,23 +2155,38 @@ namespace NSDocxRenderer
 
 				bool merged = false;
 				double last_height = 0.0;
+				// function to find the iterator for the next insertion
 				auto get_next_it = [&is_eq, &right, &row_bot, &row_height, &merged, &last_height, this] (const std::vector<cell_ptr_t>::iterator& _it) -> std::vector<cell_ptr_t>::iterator {
+					// function to check if a cell is merged after insertion
 					auto update_merge = [&is_eq, &merged, &row_bot, &row_height, &last_height] (const double& start_bot = 0.0) {
+						// 2 main cases
+						//
+						// 1. check the condition for the beginning of the case
+						//    when we will skip the merged cells
+						// 2. if we already skip the merged cells
 						if (!merged)
 						{
 							if (start_bot > (row_bot + row_height) && !is_eq(start_bot, (row_bot + row_height)))
 							{
 								merged = true;
+								// determine the height where the inserted cells will be placed
 								last_height = start_bot - (row_bot + row_height);
 							}
 						}
 						else
 						{
+							// when add a row, reduce the remaining height, and
+							// if it becames equal to zero, all rows that fit in
+							// this merged cell are processed
 							last_height -= row_height;
 							merged = !is_eq(last_height, 0.0);
 						}
 					};
 
+					// main loop
+					//
+					// if the same row exists in the table (necessary_row) and
+					// in this row there is a cell following the last inserted one (necessary_column)
 					for (auto it = _it; it != m_arGraphicalCells.end(); ++it)
 					{
 						auto cell = *it;
@@ -2181,6 +2199,17 @@ namespace NSDocxRenderer
 						}
 					}
 
+					// if the previous insertion was a merged cell and
+					// the main loop couldn't find a cell in the same row
+					// (meaning all subsequent cells in that row are merged)
+					//
+					// [gr cell][  gr cell  ][  gr cell  ][gr cell][gr cell]
+					// [gr cell][non gr cell][non gr cell]|   gr  ||   gr  |  -> merged cells
+					// [gr cell][non gr cell][non gr cell]|   gr  ||   gr  |  -> after non gr cells
+					// [gr cell][  gr cell  ][  gr cell  ][gr cell][gr cell]
+					//
+					// in this situation, the insertion iterator is the
+					// beginning of the next row
 					if (merged)
 					{
 						update_merge();
@@ -2192,15 +2221,31 @@ namespace NSDocxRenderer
 					return m_arGraphicalCells.end();
 				};
 
+				// case where the entire table is one cell with graphical borders
 				if (it == m_arGraphicalCells.end())
 				{
 					it = m_arGraphicalCells.insert(it, std::make_move_iterator(non_graphical_cells.begin()), std::make_move_iterator(non_graphical_cells.end()));
 					it = std::next(it, non_graphical_cells.size());
 				}
+				// case when the cell is inside a table
 				else
 				{
 					bool first = true;
 					size_t it_offset;
+					// algorithm for inserting non-graphical cells into the correct locations
+					//
+					// main loop
+					// 1. get the next row for insertion
+					// 2. insert the line in place
+					//    (for the first - instead of the previous cell)
+					// 3. the loop end when all non-graphical cells are exhausted
+					// 4. after the first insertion, perform an additional check to see
+					//    if the cell after the insertion is merged relative
+					//    to the inserted row (see the comments about the situation
+					//    with merged cells
+					// 5. after the first insertion, save the cell location to continue
+					//    checking for the possibility of dividing the cell
+					// 6. find an iterator to insert the next row
 					for (auto it_to_insert = it; it_to_insert != m_arGraphicalCells.end();)
 					{
 						auto row = get_row();

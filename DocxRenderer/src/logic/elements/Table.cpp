@@ -270,6 +270,8 @@ namespace NSDocxRenderer
 		auto hor_lines = get_lines(true);
 		auto ver_lines = get_lines(false);
 
+		// for more correct table assembly, compare the independently defined borders
+		// with the graphical borders of the table, if they exist
 		for (auto non_gr_it = hor_lines.begin(), gr_it = graphical_hor_lines.begin(); non_gr_it != hor_lines.end() && gr_it != graphical_hor_lines.end();)
 		{
 			const auto& non_gr_val = *non_gr_it;
