@@ -28,7 +28,11 @@ v8_src_path = v8_root_path / "v8"
 gn_source_path = nc.work_dir / "gn-source"
 
 def check_prequisites():
-    for tool in [ "git", "python3", "clang", "ninja" ]:
+    tools_needed = [ "git", "python3" ]
+    if nc.is_linux():
+        tools_needed.append( "clang" )
+        tools_needed.append( "ninja" )
+    for tool in tools_needed:
         if shutil.which( tool ) is None:
             nc.abort_op( f"Tool not found: {tool}" )
 
@@ -50,6 +54,13 @@ def apply_patches():
             )
         else:
             print( f"[WARNING] cannot apply patch ({ patch[ "name" ] }) because dir doesn't exist!" )
+
+    if nc.is_windows():
+        nc.run_command(
+                [ "git", "apply", script_dir / "tools" / "8.9" / "x64-windows" / "win_toolchain.patch" ],
+                "Applying patch: win_toolchain.patch",
+                v8_src_path / "build"
+            )
 
 def disable_gmock():
     gmock_gn_file_path = v8_src_path / "testing" / "gmock" / "BUILD.gn"
@@ -104,14 +115,19 @@ def build_gn() -> Path:
 
     nc.ensure_directory_exists( gn_source_path / "out" )
 
+    env = {
+        "CC": "clang",
+        "CXX": "clang++"
+    } if nc.is_linux() else {
+        "CXXFLAGS": "/FIstring",
+        "CFLAGS": "/FIstring",
+    }
+
     nc.run_command(
         [ "python", "build/gen.py", "--no-last-commit-position" ],
         "Generate GN build",
         cwd = gn_source_path,
-        env = {
-            "CC": "clang",
-            "CXX": "clang++"
-        }
+        env = env
     )
 
     content = """
@@ -125,32 +141,175 @@ def build_gn() -> Path:
         [ "ninja", "-C", "out" ],
         "Building GN",
         cwd = gn_source_path,
-        env = {
-            "CC": "clang",
-            "CXX": "clang++"
-        }
+        env = env
     )
 
+    gn_bin_name = "gn.exe" if nc.is_windows() else "gn"
     gn_bin_path = v8_src_path / "buildtools" / "linux64" / "gn-built"
 
     nc.ensure_directory_exists( gn_bin_path )
-    try:
-        shutil.copy2( gn_source_path / "out" / "gn", gn_bin_path )
-    except Exception as e:
-        nc.abort_op( f"Copy failed: {e}" )
 
-    return gn_bin_path / "gn"
+    try:
+        shutil.copy2( gn_source_path / "out" / gn_bin_name, gn_bin_path )
+    except Exception as e:
+        nc.abort_op( f"Failed to copy gn binary: {e}" )
+
+    return gn_bin_path / gn_bin_name
 
 def get_cpu() -> str:
-    targetarch = "Unknown"
-    arch = platform.machine()
-    if arch == "x86_64":
-        targetarch = "x64"
-    elif arch == "aarch64" or arch == "arm64":
-        targetarch = "arm64"
+    arch = platform.machine().lower()
+    if arch in [ "x86_64", "amd64" ]:
+        return "x64"
+    elif arch in [ "aarch64", "arm64" ]:
+        return "arm64"
     else:
         nc.abort_op( f"Unsupported architecture: {arch}" )
-    return targetarch
+
+def get_gn_args_file_content() -> str:
+    targetarch = get_cpu()
+
+    if nc.is_linux():
+        clang_path = Path(shutil.which("clang"))
+        clang_dir = clang_path.parent.parent
+
+        gn_args=f"""
+target_os="linux"
+target_cpu="{targetarch}"
+v8_target_cpu="{targetarch}"
+
+is_debug=false
+is_component_build=false
+is_official_build=false
+
+is_clang=true
+clang_use_chrome_plugins=false
+
+use_sysroot=false
+use_custom_libcxx=false
+
+# Symbol and debug settings
+symbol_level=0
+strip_debug_info=true
+treat_warnings_as_errors=false
+
+# V8 core settings
+v8_monolithic=true
+v8_use_external_startup_data=false
+v8_enable_i18n_support=false
+v8_enable_webassembly=false
+v8_enable_pointer_compression=true
+v8_enable_sandbox=false
+
+# Disable cppgc to avoid build issues
+cppgc_enable_caged_heap=false
+v8_enable_conservative_stack_scanning=false
+cppgc_is_standalone=false
+
+# Disable all testing infrastructure - CRITICAL for avoiding gmock/gtest issues
+v8_enable_test_features=false
+v8_enable_verify_heap=false
+v8_enable_verify_predictable=false
+build_with_chromium=false
+
+# Explicitly disable test targets
+v8_enable_backtrace=false
+v8_enable_disassembler=false
+v8_enable_object_print=false
+
+# Additional stability flags
+v8_use_snapshot=true
+v8_enable_lazy_source_positions=false
+v8_enable_gdbjit=false
+v8_enable_vtunejit=false
+v8_enable_handle_zapping=false
+
+# Use system toolchain properly
+use_gold=false
+use_lld=true
+"""
+
+    if targetarch == "arm64":
+        gn_args = f"""{ gn_args }
+cc="clang"
+cxx="clang++"
+clang_base_path="{ clang_dir }"
+"""
+        
+        return gn_args
+    
+    elif nc.is_windows():
+        gn_args=f"""
+target_os="win"
+target_cpu="{targetarch}"
+v8_target_cpu="{targetarch}"
+
+is_debug=false
+is_component_build=false
+is_official_build=false
+
+is_clang=false
+
+use_custom_libcxx=false
+
+# Symbol and debug settings
+symbol_level=0
+treat_warnings_as_errors=false
+
+# V8 core settings
+v8_monolithic=true
+v8_use_external_startup_data=false
+v8_enable_i18n_support=false
+v8_enable_webassembly=false
+v8_enable_pointer_compression=true
+v8_enable_sandbox=false
+
+# Disable cppgc to avoid build issues
+cppgc_enable_caged_heap=false
+v8_enable_conservative_stack_scanning=false
+cppgc_is_standalone=false
+
+# Disable all testing infrastructure - CRITICAL for avoiding gmock/gtest issues
+v8_enable_test_features=false
+v8_enable_verify_heap=false
+v8_enable_verify_predictable=false
+build_with_chromium=false
+
+# Explicitly disable test targets
+v8_enable_backtrace=false
+v8_enable_disassembler=false
+v8_enable_object_print=false
+
+# Additional stability flags
+v8_use_snapshot=true
+v8_enable_lazy_source_positions=false
+v8_enable_gdbjit=false
+v8_enable_vtunejit=false
+v8_enable_handle_zapping=false
+"""
+        return gn_args
+    
+    else:
+        nc.abort_op( "No gn args prepared for os." )
+        return "No gn args prepared for os."
+    
+def create_fake_pipes_shim() -> Path:
+    shims_path = nc.work_dir / "win_python_shims"
+    shim_file_path = shims_path / "sitecustomize.py"
+    nc.ensure_directory_exists( shims_path )
+    content = """
+import sys
+import shlex
+
+# Fake the missing Unix module
+class PipesModule:
+    @staticmethod
+    def quote(s):
+        return shlex.quote(s)
+
+sys.modules["pipes"] = PipesModule()
+"""
+    shim_file_path.write_text( content )
+    return shims_path
 
 def fetch_and_patch():
 
@@ -213,33 +372,46 @@ solutions = [
         "custom_deps": {},
     },
 ]
-target_os = ["linux"]
     """
     Path( v8_root_path / ".gclient" ).write_text(content)
 
     # Sync v8 dependencies
     print( "Synching v8 dependencies" )
     depot_env = os.environ.copy()
-    depot_env["PATH"] = f"{depot_tools_path}:" + depot_env["PATH"]
+    depot_env["PATH"] = f"{depot_tools_path}{os.pathsep}" + depot_env["PATH"]
     depot_env["GCLIENT_SUPPRESS_GIT_VERSION_WARNING"] = "1"
     depot_env["GYP_CHROMIUM_NO_ACTION"] = "1"
-    nc.run_command(
-        [ "gclient", "sync", "--no-history", "--shallow" ],
-        "GClient sync",
-        v8_root_path,
-        env = depot_env,
-    )    
+    
+    # Since I'm patching v8/build, I need to reset it before sync (if already exists)
+    if ( v8_src_path / "build" ).is_dir():
+        nc.run_command(
+            [ "git", "reset", "--hard" ],
+            "Hard reset v8/build",
+            v8_src_path / "build"
+        )
+    
+    if nc.is_linux() or nc.is_windows():
+        if nc.is_linux():
+            nc.run_command(
+                [ "gclient", "sync", "--no-history", "--shallow" ],
+                "GClient sync",
+                v8_root_path,
+                env = depot_env,
+            )
+        else: # win
+            nc.run_command(
+                [ "cmd.exe", "/c", "gclient.bat", "sync", "--no-history", "--shallow" ],
+                "GClient sync",
+                v8_root_path,
+                env = depot_env,
+            )
 
-    if nc.is_linux():
         apply_patches()
         disable_gmock()
         disable_cppgc()
         gn_bin_path = build_gn()
 
         targetarch = get_cpu()
-        clang_path = Path(shutil.which("clang"))
-        clang_dir = clang_path.parent.parent
-
         output_path = v8_src_path / "out.gn"/ f"{targetarch}.release"
 
         # ensure out dir is clean
@@ -248,62 +420,7 @@ target_os = ["linux"]
         except FileNotFoundError:
             pass
 
-        gn_args=f"""
-target_os="linux"
-target_cpu="{targetarch}"
-v8_target_cpu="{targetarch}"
-
-is_debug=false
-is_component_build=false
-is_official_build=false
-
-is_clang=true
-clang_use_chrome_plugins=false
-
-use_sysroot=false
-use_custom_libcxx=false
-
-# Symbol and debug settings
-symbol_level=0
-strip_debug_info=true
-enable_dsyms=false
-treat_warnings_as_errors=false
-
-# V8 core settings
-v8_monolithic=true
-v8_use_external_startup_data=false
-v8_enable_i18n_support=false
-v8_enable_webassembly=false
-v8_enable_pointer_compression=true
-v8_enable_sandbox=false
-
-# Disable cppgc to avoid build issues
-cppgc_enable_caged_heap=false
-v8_enable_conservative_stack_scanning=false
-cppgc_is_standalone=false
-
-# Disable all testing infrastructure - CRITICAL for avoiding gmock/gtest issues
-v8_enable_test_features=false
-v8_enable_verify_heap=false
-v8_enable_verify_predictable=false
-build_with_chromium=false
-
-# Explicitly disable test targets
-v8_enable_backtrace=false
-v8_enable_disassembler=false
-v8_enable_object_print=false
-
-# Additional stability flags
-v8_use_snapshot=true
-v8_enable_lazy_source_positions=false
-v8_enable_gdbjit=false
-v8_enable_vtunejit=false
-v8_enable_handle_zapping=false
-
-# Use system toolchain properly
-use_gold=false
-use_lld=true
-"""
+        gn_args = get_gn_args_file_content()
 
         if targetarch == "arm64":
             # Check clang version (it must be 13)
@@ -314,21 +431,22 @@ use_lld=true
             if not version.startswith( "13." ):
                 nc.abort_op( f"Need clang 13 in path. Currently it's: { version }" )
 
-            gn_args = f"""{ gn_args }
-cc="clang"
-cxx="clang++"
-clang_base_path="{ clang_dir }"
-"""
-
         nc.ensure_directory_exists( output_path )
         gn_args_file_path = Path( output_path / "args.gn" )
         gn_args_file_path.write_text( gn_args )
 
-        print( "Running gn gen" )        
+        print( "Running gn gen" )
+        gn_rt_env = { "PYTHONPATH": "" }
+        if nc.is_windows():
+            gn_rt_env[ "PYTHONPATH" ] = str( create_fake_pipes_shim() )
+            gn_rt_env[ "DEPOT_TOOLS_WIN_TOOLCHAIN" ] = "0"
+            gn_rt_env[ "vs2022_install" ] = str( Path( os.environ[ "VSINSTALLDIR" ] ) )
+            
         nc.run_command(
             [ gn_bin_path, "gen", output_path ],
             "Running gn",
-            v8_src_path
+            v8_src_path,
+            env = gn_rt_env
         )
 
         if not Path( output_path / "build.ninja" ).exists():
@@ -339,28 +457,35 @@ clang_base_path="{ clang_dir }"
             if shutil.which( tool ) is None:
                 nc.abort_op( f"Tool not found: {tool}" )
 
-        build_env = {
-            "SHELL": "/bin/bash",
-        }
-
         job_count = max( os.cpu_count() or 1, 4 ) # at least 4 jobs
 
         print( "Building v8" )
+        env = {
+            "CC": "clang",
+            "CXX": "clang++"
+        } if nc.is_linux() else {
+            "CXXFLAGS": "/FIstring",
+            "CFLAGS": "/FIstring",
+            # "CXXFLAGS": "/FIstring /FIcstdint",
+            # "CFLAGS": "/FIstring /FIcstdint",
+        }
         nc.run_command(
             [ "ninja", "-C", output_path, f"-j{job_count}", "v8_monolith" ],
             "Building v8",
-            v8_src_path
+            v8_src_path,
+            env=env
         )
 
-        # Verify artifacts
-        if not ( output_path / "obj" / "libv8_monolith.a" ).exists():
-            nc.abort_op( "Build completed but libv8_monolith.a not found" )
+        # Verify final artifact
+        artifact_name = "v8_monolith.lib" if nc.is_windows() else "libv8_monolith.a"
+        if not ( output_path / "obj" / artifact_name ).exists():
+            nc.abort_op( f"Build completed but { artifact_name } not found" )
 
         print( "Installing v8" )
         try:
-            shutil.copy2( output_path / "obj" / "libv8_monolith.a", nc.install_dir / "libv8_monolith.a" )
+            shutil.copy2( output_path / "obj" / artifact_name, nc.install_dir / artifact_name )
         except Exception:
-            nc.abort_op( "Failed to install libv8_monolith.a" )
+            nc.abort_op( f"Failed to install { artifact_name }" )
 
         nc.ensure_directory_exists( nc.install_dir / "v8" / "include" )
         try:
@@ -394,7 +519,7 @@ Cflags: -I${includedir}
         ( nc.install_dir / "v8.pc" ).write_text( pkg_cfg_file )
         
     else:
-        abort_op( f"Unkown target platform: {sys.platform}" )
+        nc.abort_op( f"Unkown target platform: {sys.platform}" )
 
     nc.create_install_dir_ok_marker()
     
