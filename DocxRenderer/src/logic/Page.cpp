@@ -2214,6 +2214,13 @@ namespace NSDocxRenderer
 						it_after_insert = std::next(it_after_insert, row.size());
 						if (first)
 						{
+							auto cur_height = (*it_after_insert)->m_dHeight;
+							if (cur_height > row_height && !is_eq(cur_height, row_height))
+							{
+								merged = true;
+								last_height = cur_height - row_height;
+							}
+
 							it_offset = std::distance(m_arGraphicalCells.begin(), it_after_insert);
 							first = false;
 						}
