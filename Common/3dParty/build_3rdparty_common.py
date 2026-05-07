@@ -1,5 +1,6 @@
 import sys
 import shutil
+import stat
 import subprocess
 import os
 import time
@@ -106,8 +107,11 @@ def fix_terminal_encoding():
 
 def shallow_checkout( repo_dir : Path, repo_url : str, commit : str ):
     if repo_dir.exists():
+        def onerror(func, path, exc_info):
+            os.chmod(path, stat.S_IWRITE)
+            func(path)
         try:
-            shutil.rmtree( repo_dir )
+            shutil.rmtree( repo_dir, onexc=onerror )
         except FileNotFoundError:
             pass
 
