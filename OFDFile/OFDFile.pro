@@ -32,6 +32,7 @@ HEADERS += \
 	OFDFile.h \
 	src/Action.h \
 	src/Annotation.h \
+	src/Bookmark.h \
 	src/Content/ImageObject.h \
 	src/Content/PageBlock.h \
 	src/Content/PathObject.h \
@@ -68,6 +69,7 @@ SOURCES += \
 	OFDFile.cpp \
 	src/Action.cpp \
 	src/Annotation.cpp \
+	src/Bookmark.cpp \
 	src/Content/ImageObject.cpp \
 	src/Content/PageBlock.cpp \
 	src/Content/PathObject.cpp \

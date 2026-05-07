@@ -805,6 +805,7 @@ HEADERS += \
 	$$OFD_RENDERER_ROOT_DIR/OFDFile.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Action.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Annotation.h \
+	$$OFD_RENDERER_ROOT_DIR/src/Bookmark.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.h \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.h \
@@ -841,6 +842,7 @@ SOURCES += \
 	$$OFD_RENDERER_ROOT_DIR/OFDFile.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Action.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Annotation.cpp \
+	$$OFD_RENDERER_ROOT_DIR/src/Bookmark.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/ImageObject.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PageBlock.cpp \
 	$$OFD_RENDERER_ROOT_DIR/src/Content/PathObject.cpp \

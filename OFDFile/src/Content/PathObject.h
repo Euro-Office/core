@@ -119,10 +119,14 @@ class CPathObject : public IPageBlock, public CGraphicUnit
 
 	void AddElement(const IPathElement* pElement);
 public:
-	CPathObject(CXmlReader& oLiteReader);
+	CPathObject(CXmlReader& oReader);
 	~CPathObject();
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
+
+	#ifdef BUILDING_WASM_MODULE
+	virtual void GetLinks(NSWasm::CData& oRes) const override;
+	#endif
 };
 }
 

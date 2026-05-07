@@ -5,6 +5,7 @@
 #include "Page.h"
 #include "Annotation.h"
 #include "OutlineElem.h"
+#include "Bookmark.h"
 
 namespace NSWasm { class CData; }
 
@@ -31,7 +32,8 @@ class CDocument
 	CAnnotation m_oAnnotation;
 
 	std::map<unsigned int, const CPage*> m_mPages;
-	std::vector<const COutlineElem*> m_arOutlines;
+	std::vector<const COutlineElem*>     m_arOutlines;
+	std::vector<const CBookmark*>        m_arBookmarks;
 public:
 	CDocument();
 	~CDocument();
@@ -49,9 +51,11 @@ public:
 
 	#ifdef BUILDING_WASM_MODULE
 	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
 	#endif
 private:
 	void AddOutlineElem(const COutlineElem* pOutlineElem);
+	void AddBookmark(const CBookmark* pBookmark);
 };
 }
 

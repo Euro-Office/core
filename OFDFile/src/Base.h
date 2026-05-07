@@ -66,6 +66,7 @@ public:
 
 	#ifdef BUILDING_WASM_MODULE
 	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
 	#endif
 };
 
@@ -88,10 +89,8 @@ public:
 
 	#ifdef BUILDING_WASM_MODULE
 	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
 	#endif
-
-	BYTE* GetStructure() const;
-	BYTE* GetLinks(int nPageIndex) const;
 };
 }
 

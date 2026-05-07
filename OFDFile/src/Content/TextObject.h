@@ -16,7 +16,7 @@ struct TCGTransform
 
 	std::vector<unsigned int> m_arGlyphs;
 
-	static TCGTransform Read(CXmlReader& oLiteReader);
+	static TCGTransform Read(CXmlReader& oReader);
 
 	bool Draw(IRenderer* pRenderer, const LONG& lUnicode, unsigned int& unIndex, double dX, double dY, NSFonts::IFontManager* pFontManager) const;
 };
@@ -31,7 +31,7 @@ class CTextCode
 
 	std::wstring m_wsText;
 public:
-	CTextCode(CXmlReader& oLiteReader);
+	CTextCode(CXmlReader& oReader);
 
 	void Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vector<TCGTransform>& arCGTransforms, NSFonts::IFontManager* pFontManager = nullptr) const;
 };
@@ -55,10 +55,14 @@ class CTextObject : public IPageBlock, public CGraphicUnit
 	std::vector<const CTextCode*> m_arTextCodes;
 	std::vector<TCGTransform>     m_arCGTransforms;
 public:
-	CTextObject(CXmlReader& oLiteReader);
+	CTextObject(CXmlReader& oReader);
 	~CTextObject();
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
+
+	#ifdef BUILDING_WASM_MODULE
+	virtual void GetLinks(NSWasm::CData& oRes) const override;
+	#endif
 };
 }
 

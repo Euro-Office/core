@@ -42,31 +42,6 @@ public:
 	const IAction* GetAction() const;
 };
 
-struct TDest
-{
-	enum class EType
-	{
-		XYZ,  // Go to a point with a specified zoom level (Left, Top, Zoom)
-		Fit,  // Fit the whole page
-		FitH, // Fit to width, scroll to top (Top)
-		FitV, // Fit to height, scroll to Left (Left)
-		FitR  // Fit the specified rectangle (Left, Top, Right, Bottom)
-	}m_eType;
-
-	UINT m_unPageID;
-
-	double* m_pLeft;
-	double* m_pTop;
-	double* m_pRight;
-	double* m_pBottom;
-	double* m_pZoom;
-
-	TDest();
-	~TDest();
-
-	static TDest* Read(CXmlReader& oReader);
-};
-
 struct TBookmark
 {
 	std::wstring m_wsName;
@@ -87,6 +62,7 @@ public:
 	EActionType GetType() const override;
 
 	const TDest* GetDest() const;
+	const TBookmark* GetBookmark() const;
 };
 
 class CGotoA : public IAction
@@ -102,13 +78,15 @@ public:
 
 class CURI : public IAction
 {
-	std::string m_sURI;
-	std::string m_sBase;
+	std::wstring m_wsURI;
+	std::wstring m_wsBase;
 public:
 	CURI(CXmlReader& oReader);
 	~CURI();
 
 	EActionType GetType() const override;
+
+	std::wstring GetURI() const;
 };
 
 class CSound : public IAction

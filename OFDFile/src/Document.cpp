@@ -45,6 +45,9 @@ CDocument::~CDocument()
 
 	for (const COutlineElem* pOutlineElem : m_arOutlines)
 		delete pOutlineElem;
+
+	for (const CBookmark* pBookmark : m_arBookmarks)
+		delete pBookmark;
 }
 
 bool CDocument::Empty() const
@@ -120,6 +123,16 @@ bool CDocument::Read(const std::wstring& wsFilePath, IFolder* pFolder)
 			{
 				if ("ofd:OutlineElem" == oLiteReader.GetNameA())
 					AddOutlineElem(new COutlineElem(oLiteReader));
+			}
+		}
+		else if ("ofd:Bookmarks" == sNodeName)
+		{
+			const int nBookmarksDepth{oLiteReader.GetDepth()};
+
+			while (oLiteReader.ReadNextSiblingNode2(nBookmarksDepth))
+			{
+				if ("ofd:Bookmark" == sNodeName)
+					AddBookmark(new CBookmark(oLiteReader));
 			}
 		}
 	}
@@ -208,11 +221,27 @@ void CDocument::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
 {
 	WriteOutlineElem(m_arOutlines, oRes, 1, unMaxNumberPage);
 }
+
+void CDocument::GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const
+{
+	std::map<unsigned int, const CPage*>::const_iterator itFound = m_mPages.find(unPageIndex);
+
+	if (itFound == m_mPages.cend())
+		return ;
+
+	itFound->second->GetLinks(oRes);
+}
 #endif
 
 void CDocument::AddOutlineElem(const COutlineElem* pOutlineElem)
 {
 	if (nullptr != pOutlineElem)
 		m_arOutlines.push_back(pOutlineElem);
+}
+
+void CDocument::AddBookmark(const CBookmark* pBookmark)
+{
+	if (nullptr != pBookmark)
+		m_arBookmarks.push_back(pBookmark);
 }
 }

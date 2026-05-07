@@ -7,61 +7,61 @@
 
 namespace OFD
 {
-CPathObject::CPathObject(CXmlReader& oLiteReader)
-	: IPageBlock(oLiteReader), CGraphicUnit(oLiteReader),
+CPathObject::CPathObject(CXmlReader& oReader)
+    : IPageBlock(oReader), CGraphicUnit(oReader),
 	  m_bStroke(true), m_bFill(false), m_eRule(ERule::NonZero),
 	  m_pFillColor(nullptr), m_pStrokeColor(nullptr)
 {
-	if (oLiteReader.IsEmptyElement())
+	if (oReader.IsEmptyElement())
 		return;
 
-	if (oLiteReader.MoveToFirstAttribute())
+	if (oReader.MoveToFirstAttribute())
 	{
 		std::wstring wsAttributeName;
 
 		do
 		{
-			wsAttributeName = oLiteReader.GetName();
+			wsAttributeName = oReader.GetName();
 
 			if (L"Stroke" == wsAttributeName)
-				m_bStroke = oLiteReader.GetBoolean(true);
+				m_bStroke = oReader.GetBoolean(true);
 			else if (L"Fill" == wsAttributeName)
-				m_bFill = oLiteReader.GetBoolean(true);
+				m_bFill = oReader.GetBoolean(true);
 			else if (L"Rule" == wsAttributeName)
 			{
-				if (L"Even-odd" == oLiteReader.GetText())
+				if (L"Even-odd" == oReader.GetText())
 					m_eRule = ERule::Even_Odd;
 				else
 					m_eRule = ERule::NonZero;
 			}
-		} while (oLiteReader.MoveToNextAttribute());
+		} while (oReader.MoveToNextAttribute());
 
-		oLiteReader.MoveToElement();
+		oReader.MoveToElement();
 	}
 
-	const int nDepth = oLiteReader.GetDepth();
+	const int nDepth = oReader.GetDepth();
 	std::string sNodeName;
 
-	while (oLiteReader.ReadNextSiblingNode(nDepth))
+	while (oReader.ReadNextSiblingNode(nDepth))
 	{
-		sNodeName = oLiteReader.GetNameA();
+		sNodeName = oReader.GetNameA();
 		if ("ofd:FillColor" == sNodeName)
 		{
 			if (nullptr != m_pFillColor)
 				delete m_pFillColor;
 
-			m_pFillColor = new CColor(oLiteReader);
+			m_pFillColor = new CColor(oReader);
 		}
 		else if ("ofd:StrokeColor" == sNodeName)
 		{
 			if (nullptr != m_pStrokeColor)
 				delete m_pStrokeColor;
 
-			m_pStrokeColor = new CColor(oLiteReader);
+			m_pStrokeColor = new CColor(oReader);
 		}
 		else if ("ofd:AbbreviatedData" == sNodeName)
 		{
-			std::vector<std::string> arValues{Split(oLiteReader.GetText2A(), ' ')};
+			std::vector<std::string> arValues{Split(oReader.GetText2A(), ' ')};
 
 			std::vector<std::string>::const_iterator itElement = arValues.cbegin();
 
@@ -120,6 +120,8 @@ CPathObject::CPathObject(CXmlReader& oLiteReader)
 				}
 			}
 		}
+		else
+			ReadChildren(oReader);
 	}
 }
 
@@ -224,6 +226,13 @@ void CPathObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 
 	pRenderer->SetTransform(oOldTransform.m_dM11, oOldTransform.m_dM12, oOldTransform.m_dM21, oOldTransform.m_dM22, oOldTransform.m_dDx, oOldTransform.m_dDy);
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CPathObject::GetLinks(NSWasm::CData& oRes) const
+{
+	CGraphicUnit::GetLinks(oRes);
+}
+#endif
 
 CStartElement::CStartElement()
 	: m_dX(0.), m_dY(0.)

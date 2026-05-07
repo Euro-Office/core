@@ -1,5 +1,7 @@
 #include "Region.h"
 
+#include "../Content/PathObject.h"
+
 namespace OFD
 {
 CArea::CArea(CXmlReader& oReader)

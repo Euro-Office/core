@@ -183,5 +183,21 @@ BYTE* COFDFile_Private::GetStructure() const
 
 BYTE* COFDFile_Private::GetLinks(int nPageIndex) const
 {
-	return m_oBase.GetLinks(nPageIndex);
+	if (nPageIndex < 0)
+		return nullptr;
+
+	#ifdef BUILDING_WASM_MODULE
+	NSWasm::CData oRes;
+	oRes.SkipLen();
+
+	m_oBase.GetLinks(nPageIndex, oRes);
+
+	oRes.WriteLen();
+
+	BYTE* pRes{oRes.GetBuffer()};
+	oRes.ClearWithoutAttack();
+
+	return pRes;
+	#endif
+	return nullptr;
 }

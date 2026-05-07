@@ -72,78 +72,6 @@ const IAction* CAction::GetAction() const
 	return m_pAction;
 }
 
-TDest::TDest()
-	: m_eType(EType::Fit), m_unPageID(0), m_pLeft(nullptr), m_pTop(nullptr),
-	  m_pRight(nullptr), m_pBottom(nullptr), m_pZoom(nullptr)
-{}
-
-TDest::~TDest()
-{
-	if (nullptr != m_pLeft)
-		delete m_pLeft;
-	if (nullptr != m_pTop)
-		delete m_pTop;
-	if (nullptr != m_pRight)
-		delete m_pRight;
-	if (nullptr != m_pBottom)
-		delete m_pBottom;
-	if (nullptr != m_pZoom)
-		delete m_pZoom;
-}
-
-TDest* TDest::Read(CXmlReader& oReader)
-{
-	if (!oReader.MoveToFirstAttribute())
-		return nullptr;
-
-	TDest *pDest = new TDest();
-
-	if (nullptr == pDest)
-	{
-		oReader.MoveToElement();
-		return nullptr;
-	}
-
-	std::string sName;
-
-	do
-	{
-		sName = oReader.GetNameA();
-
-		if ("Type" == sName)
-		{
-			const std::string sValue{oReader.GetTextA()};
-
-			if ("XYZ" == sValue)
-				pDest->m_eType = EType::XYZ;
-			else if ("Fit" == sValue)
-				pDest->m_eType = EType::Fit;
-			else if ("FitH" == sValue)
-				pDest->m_eType = EType::FitH;
-			else if ("FitV" == sValue)
-				pDest->m_eType = EType::FitV;
-			else if ("FitR" == sValue)
-				pDest->m_eType = EType::FitR;
-		}
-		else if ("PageID" == sName)
-			pDest->m_unPageID = oReader.GetUInteger(true);
-		else if ("Left" == sName)
-			pDest->m_pLeft = new double{oReader.GetDouble(true)};
-		else if ("Top" == sName)
-			pDest->m_pTop = new double{oReader.GetDouble(true)};
-		else if ("Right" == sName)
-			pDest->m_pRight = new double{oReader.GetDouble(true)};
-		else if ("Bottom" == sName)
-			pDest->m_pBottom = new double{oReader.GetDouble(true)};
-		else if ("Zoom" == sName)
-			pDest->m_pZoom = new double{oReader.GetDouble(true)};
-	}while(oReader.MoveToNextAttribute());
-
-	oReader.MoveToElement();
-
-	return pDest;
-}
-
 TBookmark::TBookmark()
 {}
 
@@ -224,6 +152,11 @@ const TDest* CGoto::GetDest() const
 	return m_pDest;
 }
 
+const TBookmark* CGoto::GetBookmark() const
+{
+	return m_pBookmark;
+}
+
 CGotoA::CGotoA(CXmlReader& oReader)
 	: m_bNewWindow(false)
 {
@@ -257,9 +190,9 @@ CURI::CURI(CXmlReader& oReader)
 	do
 	{
 		if ("URI" == oReader.GetNameA())
-			m_sURI = oReader.GetTextA();
+			m_wsURI = oReader.GetText();
 		else if ("Base" == oReader.GetNameA())
-			m_sBase = oReader.GetTextA();
+			m_wsBase = oReader.GetText();
 	}while(oReader.MoveToNextAttribute());
 
 	oReader.MoveToElement();
@@ -271,6 +204,11 @@ CURI::~CURI()
 EActionType CURI::GetType() const
 {
 	return EActionType::URI;
+}
+
+std::wstring CURI::GetURI() const
+{
+	return m_wsURI;
 }
 
 CSound::CSound(CXmlReader& oReader)

@@ -4,10 +4,10 @@
 #include "../Utils/XmlReader.h"
 #include "../Utils/Types.h"
 
-#include "../Content/PathObject.h"
-
 namespace OFD
 {
+class IPathElement;
+
 class CArea
 {
 	TPos m_oStart;
