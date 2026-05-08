@@ -4050,6 +4050,26 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			writer.WriteString(sNodeName);
 			writer.WriteString(L">");
 		}
+		XLS::BaseObjectPtr CT_DPt::toXLS(const _UINT16 order) const
+		{
+			auto PtStyle = new XLS::SS;
+			{
+				auto dataFormat = new XLS::DataFormat;
+				PtStyle->m_DataFormat = XLS::BaseObjectPtr(dataFormat);
+					dataFormat->iss = order;
+				if(m_idx.IsInit())
+					dataFormat->yi = m_idx.get();
+
+			}
+			if(m_spPr.IsInit())
+			{
+				if(m_spPr->ln.IsInit())
+					PtStyle->m_LineFormat = m_spPr->ln->toXLS();
+				if(m_spPr->Fill.is_init())
+					PtStyle->m_AreaFormat = m_spPr->Fill.toXLS();
+			}
+			return XLS::BaseObjectPtr(PtStyle);
+		}
 		EElementType CT_DPt::getType() { return et_ct_dpt; }
 		CT_Marker::CT_Marker()
 		{
@@ -6828,6 +6848,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_PieSer::GetXLSFormat(unsigned int chartIndex) const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
+			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
+			for(auto i : m_dPt)
+			{
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
+			}
 			return baseFormat;
 		}
 		EElementType CT_PieSer::getType() { return et_ct_pieser; }
@@ -7158,6 +7186,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_BarSer::GetXLSFormat(const _UINT32 chartIndex) const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
+			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
+			for(auto i : m_dPt)
+			{
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
+			}
 			return baseFormat;
 		}
 		EElementType CT_BarSer::getType() { return et_ct_barser; }
@@ -7783,6 +7819,13 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
 			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
 			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
+			for(auto i : m_dPt)
+			{
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
+			}
 			if(m_xVal != nullptr && m_xVal->m_numRef != nullptr)
 			{
 				if(m_xVal->m_numRef->m_numCache != nullptr)
@@ -8047,6 +8090,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_RadarSer::GetXLSFormat(const _UINT32 chartIndex)const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
+			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
+			for(auto i : m_dPt)
+			{
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
+			}
 			return baseFormat;
 		}
 		EElementType CT_RadarSer::getType() { return et_ct_radarser; }
@@ -8444,27 +8495,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
 			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
 			for(auto i : m_dPt)
 			{
-				auto SeriesStyle = new XLS::SS;
-				castedFormat->m_arPtSS.push_back(XLS::BaseObjectPtr(SeriesStyle));
-				{
-					auto dataFormat = new XLS::DataFormat;
-					SeriesStyle->m_DataFormat = XLS::BaseObjectPtr(dataFormat);
-					if(m_order.IsInit())
-						dataFormat->iss = m_order.get();
-					if(i->m_idx.IsInit())
-						dataFormat->yi = i->m_idx.get();
-
-				}
-				if(m_spPr.IsInit())
-				{
-					if(i->m_spPr->ln.IsInit())
-						SeriesStyle->m_LineFormat = i->m_spPr->ln->toXLS();
-					if(i->m_spPr->Fill.is_init())
-						SeriesStyle->m_AreaFormat = i->m_spPr->Fill.toXLS();
-				}
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
 			}
 			return XLS::BaseObjectPtr(baseFormat);
 		}
@@ -9167,6 +9203,14 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_AreaSer::GetXLSFormat(const _UINT32 chartIndex)const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
+			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
+			for(auto i : m_dPt)
+			{
+				_UINT16 oreder = 0;
+				if(m_order.IsInit())
+						oreder = m_order.get();
+				castedFormat->m_arPtSS.push_back(i->toXLS(oreder));
+			}
 			return baseFormat;
 		}
 		EElementType CT_AreaSer::getType() { return et_ct_areaser; }

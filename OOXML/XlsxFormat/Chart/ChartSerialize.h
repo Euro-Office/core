@@ -1294,6 +1294,7 @@ namespace OOX
 			~CT_DPt();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
+			XLS::BaseObjectPtr toXLS(const _UINT16 order) const;
 			EElementType getType();
 		};
 		class CT_TrendlineLbl
