@@ -4,15 +4,14 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
+if( WIN32 )
+    set( MSVC TRUE )
+endif()
 
 cmake_path( APPEND DEFAULT_EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}" "package" )
 cmake_path( APPEND DEFAULT_EO_CORE_TOOLS_DIR "${CMAKE_BINARY_DIR}" "package" )
 
 cmake_path( APPEND DEFAULT_EO_CORE_3RD_PARTY_DIR "${CMAKE_BINARY_DIR}" "third_party" )
-
 
 if( NOT DEFINED EO_CORE_OUTPUT_DIR )
     set(EO_CORE_OUTPUT_DIR "${DEFAULT_EO_CORE_OUTPUT_DIR}" CACHE PATH "Where to place output files (absolute path recommended)")
@@ -42,6 +41,19 @@ endif()
 
 if( NOT DEFINED PYTHON_BIN )
     set(PYTHON_BIN "python" CACHE FILEPATH "Python binary to use.")
+endif()
+
+# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+set(ICU_MAJOR_VER "74")
+set(ICU_MINOR_VER "2")
+set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
+get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
+if( MSVC )
+    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
+    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+else()
+    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
+    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
 endif()
 
 message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
@@ -85,18 +97,31 @@ endif()
 set(COMMON_CMAKE_DIR "${CMAKE_CURRENT_LIST_DIR}")
 file(READ "${COMMON_CMAKE_DIR}/Common/version.txt" VERSION_TXT_CONTENT)
 
-set(COMMON_DEFINES
-    _LINUX
-    _REENTRANT
-    CRYPTOPP_DISABLE_ASM
-    INTVER=${VERSION_TXT_CONTENT}
-    LINUX
+if( LINUX )
+    set(COMMON_DEFINES
+        _LINUX
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+        LINUX
 
-    # Not sure about these:
-    _UNICODE
-    DONT_WRITE_EMBEDDED_FONTS
-    UNICODE
-)
+        # Not sure about these:
+        _UNICODE
+        DONT_WRITE_EMBEDDED_FONTS
+        UNICODE
+    )
+else() # Assume win+msvc
+    set(COMMON_DEFINES
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+
+        # Not sure about these:
+        _UNICODE
+        DONT_WRITE_EMBEDDED_FONTS
+        UNICODE
+    )
+endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     list(APPEND COMMON_DEFINES
@@ -104,39 +129,63 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     )
 endif()
 
+if( MSVC )
 
+    set(COMMON_CXX_FLAGS
+        /W4
+        /wd4100 # unreferenced formal parameter
+        /wd4101 # unreferenced local variable
+        /wd4505 # unreferenced local function removed
+        /O2
+        /EHsc
+    )
 
-set(COMMON_CXX_FLAGS
-    -fvisibility=hidden
-    -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    -Wno-register
-    -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2 # Remove for debugging
-)
+    set(COMMON_C_FLAGS
+        /W4
+        /wd4100
+        /wd4101
+        /wd4505
+        /wd4996 # optional: CRT deprecation spam
+        /O2
+    )
 
-set(COMMON_C_FLAGS
-    -fvisibility=hidden
-    # -fvisibility-inlines-hidden
-    -Wall
-    -Wextra
-    -Wno-ignored-qualifiers
-    # -Wno-register
-    -Wno-implicit-function-declaration
-    -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
-    -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
-    -O2 #Remove for debugging
-)
+    set(COMMON_LINK_OPTIONS
+    )
 
+else()
 
-set(COMMON_LINK_OPTIONS
-    "-Wl,--disable-new-dtags"
-)
+    set(COMMON_CXX_FLAGS
+        -fvisibility=hidden
+        -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        -Wno-register
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 # Remove for debugging
+    )
+
+    set(COMMON_C_FLAGS
+        -fvisibility=hidden
+        # -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        # -Wno-register
+        -Wno-implicit-function-declaration
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 #Remove for debugging
+    )
+
+    set(COMMON_LINK_OPTIONS
+        "-Wl,--disable-new-dtags"
+    )
+
+endif()
 
 
 function(set_default_options target)
@@ -144,16 +193,18 @@ function(set_default_options target)
         message(FATAL_ERROR "set_default_options(): Target '${target}' does not exist yet.")
     endif()
 
-    # Base RPATHs
-    set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
-    set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+    if( NOT MSVC )
+        # Base RPATHs
+        set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
+        set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
 
-    # Optional: additional runtime paths from env variable RUN_PATH_ADDON
-    if(DEFINED ENV{RUN_PATH_ADDON})
-        set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
-        string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
+        # Optional: additional runtime paths from env variable RUN_PATH_ADDON
+        if(DEFINED ENV{RUN_PATH_ADDON})
+            set(RUN_PATH_ADDON "$ENV{RUN_PATH_ADDON}")
+            string(REPLACE ";;" ";" RUN_PATH_ADDON_LIST "${RUN_PATH_ADDON}")
 
-        set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+            set_property(TARGET ${target} APPEND PROPERTY INSTALL_RPATH "${RUN_PATH_ADDON_LIST}")
+        endif()
     endif()
 
     # C++ flags
@@ -191,6 +242,26 @@ function(copy_icu_libs artifact)
         COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
         COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
     )
+    if( MSVC )
+
+        file(GLOB ICU_DLLS
+            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib/icu*74.dll"
+        )
+
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${ICU_DLLS}
+                "${EO_CORE_OUTPUT_DIR}"
+            COMMENT "Copying ICU DLLs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    else()
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    endif()
 endfunction()
 
 function(copy_boost_libs artifact)
