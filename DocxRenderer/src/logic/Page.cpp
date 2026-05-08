@@ -2503,8 +2503,12 @@ namespace NSDocxRenderer
 	{
 		// 2 main cases:
 		// 1 - tables with graphical borders
-		// 2 - tables without graphical borders, only paragraphs
 		auto graphical_tables = BuildGraphicalTables();
+
+		if (!m_bIsBuildNonGraphicalTables)
+			return graphical_tables;
+
+		// 2 - tables without graphical borders, only paragraphs
 		auto non_graphical_tables = BuildNonGraphicalTables();
 
 		if (graphical_tables.empty())

@@ -52,6 +52,7 @@ namespace NSDocxRenderer
 		bool m_bIsBuildTables		   {true};
 		bool m_bIsLuminosityShapesFiled{false};
 		bool m_bFontSubstitution       {false};
+		bool m_bIsBuildNonGraphicalTables{false};
 		bool m_bFirstParagraphLineCorrection{false};
 
 		CPage(NSFonts::IApplicationFonts* pAppFonts, const CManagers& oManagers);
