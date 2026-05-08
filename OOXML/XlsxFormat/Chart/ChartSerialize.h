@@ -1366,6 +1366,7 @@ namespace OOX
 			nullableUintVal									m_order;
 			CT_SerTx*										m_tx;
 			nullable<PPTX::Logic::SpPr>						m_spPr;
+			CT_NumDataSource*								m_val;
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_extLst;
 
 			bool fromXML(const std::wstring nodeName, XmlUtils::CXmlLiteReader& oReader);
@@ -1451,7 +1452,6 @@ namespace OOX
 			WritingElement_AdditionMethods(CT_SurfaceSer)
 
 			CT_AxDataSource*	m_cat;
-			CT_NumDataSource*	m_val;
 
 			CT_SurfaceSer();
 			virtual ~CT_SurfaceSer();			
@@ -1518,7 +1518,6 @@ namespace OOX
 			std::vector<CT_DPt*> m_dPt;
 			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_PieSer();
 			virtual ~CT_PieSer();
@@ -1564,7 +1563,6 @@ namespace OOX
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 			nullableComplexVal<CShapeType> m_shape;
 
 			CT_BarSer();
@@ -1726,7 +1724,6 @@ namespace OOX
             std::vector<CT_DPt*> m_dPt;
 			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_RadarSer();
 			virtual ~CT_RadarSer();
@@ -1792,7 +1789,6 @@ namespace OOX
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 			nullableBoolVal m_smooth;
 
 			CT_LineSer();
@@ -1880,7 +1876,6 @@ namespace OOX
 			std::vector<CT_Trendline*> m_trendline;
 			std::vector<CT_ErrBars*> m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_AreaSer();
 			virtual ~CT_AreaSer();

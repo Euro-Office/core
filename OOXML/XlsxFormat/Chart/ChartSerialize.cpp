@@ -3718,7 +3718,30 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			auto ser2Crt = new XLS::SerToCrt;
 			ser2Crt->id = chartIndex;
 			seriesFormat->m_SerToCrt = XLS::BaseObjectPtr(ser2Crt);
-
+			if(m_val != nullptr && m_val->m_numRef != nullptr)
+			{
+				if(m_val->m_numRef->m_numCache != nullptr)
+				{
+					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
+					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
+				}
+				{
+					auto ai2 = new XLS::BRAI;
+					ai2->id = 1;
+					if(m_val->m_numRef->m_f.IsInit())
+					{
+						ai2->rt = 2;
+						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
+					}
+					seriesFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
+					auto ai3 = new XLS::BRAI;
+					ai3->id = 2;
+					auto ai4 = new XLS::BRAI;
+					ai4->id = 3;
+					seriesFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
+					seriesFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
+				}
+			}
 			return XLS::BaseObjectPtr(seriesFormat);
 		}
 		CT_BubbleSer::CT_BubbleSer()
@@ -6347,32 +6370,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_SurfaceSer::GetXLSFormat(const _UINT32 chartIndex)const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
-			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
 			return baseFormat;
 		}
 		EElementType CT_SurfaceSer::getType() { return et_ct_surfaceser; }
@@ -6831,32 +6828,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_PieSer::GetXLSFormat(unsigned int chartIndex) const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
-			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
 			return baseFormat;
 		}
 		EElementType CT_PieSer::getType() { return et_ct_pieser; }
@@ -7187,33 +7158,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_BarSer::GetXLSFormat(const _UINT32 chartIndex) const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
-			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
-
 			return baseFormat;
 		}
 		EElementType CT_BarSer::getType() { return et_ct_barser; }
@@ -8103,32 +8047,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_RadarSer::GetXLSFormat(const _UINT32 chartIndex)const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
-			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
 			return baseFormat;
 		}
 		EElementType CT_RadarSer::getType() { return et_ct_radarser; }
@@ -8527,30 +8445,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
 			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
 			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
 			for(auto i : m_dPt)
 			{
 				auto SeriesStyle = new XLS::SS;
@@ -9273,32 +9167,6 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 		XLS::BaseObjectPtr CT_AreaSer::GetXLSFormat(const _UINT32 chartIndex)const
 		{
 			auto baseFormat = CBaseSer::GetXLSFormat(chartIndex);
-			auto castedFormat = static_cast<XLS::SERIESFORMAT*>(baseFormat.get());
-			auto series = static_cast<XLS::Series*>(castedFormat->m_Series.get());
-			if(m_val != nullptr && m_val->m_numRef != nullptr)
-			{
-				if(m_val->m_numRef->m_numCache != nullptr)
-				{
-					series->cValx = m_val->m_numRef->m_numCache->m_pt.size();
-					series->cValy = m_val->m_numRef->m_numCache->m_pt.size();
-				}
-				{
-					auto ai2 = new XLS::BRAI;
-					ai2->id = 1;
-					if(m_val->m_numRef->m_f.IsInit())
-					{
-						ai2->rt = 2;
-						ai2->formula.parseStringFormula(m_val->m_numRef->m_f.get(), L"");
-					}
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai2));
-					auto ai3 = new XLS::BRAI;
-					ai3->id = 2;
-					auto ai4 = new XLS::BRAI;
-					ai4->id = 3;
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai3));
-					castedFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
-				}
-			}
 			return baseFormat;
 		}
 		EElementType CT_AreaSer::getType() { return et_ct_areaser; }
