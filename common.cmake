@@ -224,6 +224,12 @@ function(set_default_options target)
     target_link_options(${target} PRIVATE
         ${COMMON_LINK_OPTIONS}
     )
+
+    if( MSVC )
+        target_link_libraries(${target} PRIVATE
+            Rpcrt4
+        )
+    endif()
 endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
