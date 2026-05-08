@@ -82,9 +82,11 @@ target_compile_definitions(kernel PRIVATE
     BUILD_ZLIB_AS_SOURCES
 )
 
-target_compile_options(kernel PRIVATE
-    -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
-)
+if( NOT MSVC )
+    target_compile_options(kernel PRIVATE
+        -include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h
+    )
+endif()
 
 # static libs
 target_link_libraries(kernel PUBLIC
