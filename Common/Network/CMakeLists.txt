@@ -46,18 +46,27 @@ add_library(kernel_network SHARED
     WebSocket/src/socketio/socketio_internal_private_no_tls.h
 
     # filetransporter.pri
-    
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/manager.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
-
+    
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/FileTransporter.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/include/manager.h
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_private.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/transport_external.h
 	${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/Session.h
 )
+
+# filetransporter.pri
+if( MSVC )
+    target_sources( kernel_network PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_win.cpp
+    )
+else()
+    target_sources( kernel_network PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
+    )
+endif()
 
 set_default_options(kernel_network)
 
@@ -91,21 +100,33 @@ target_include_directories(kernel_network PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
 )
 
-target_link_libraries(kernel_network PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
-)
+if( MSVC )
+    target_link_libraries(kernel_network PRIVATE
+        ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib
+        ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib
+    )
+else()
+    target_link_libraries(kernel_network PRIVATE
+        ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
+        ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+    )
+endif()
 
 target_link_libraries(kernel_network PUBLIC
     kernel
-    pthread
 )
 
-if(WIN_32)
+if( UNIX )
     target_link_libraries(kernel_network PUBLIC
+        pthread
+    )
+endif()
+
+if( MSVC )
+    target_link_libraries(kernel_network PUBLIC
+        Crypt32
         Advapi32
         urlmon
-        Rpcrt4
         Shell32
     )
 endif()
