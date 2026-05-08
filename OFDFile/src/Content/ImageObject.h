@@ -13,9 +13,13 @@ class CImageObject : public IPageBlock, public CGraphicUnit
 	unsigned int m_unMultiMediaID;
 	IFolder*     m_pFolder;
 public:
-	CImageObject(CXmlReader& oLiteReader, IFolder* pFolder);
+	CImageObject(CXmlReader& oReader, IFolder* pFolder);
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
+
+	#ifdef BUILDING_WASM_MODULE
+	virtual void GetLinks(NSWasm::CData& oRes) const override;
+	#endif
 };
 }
 

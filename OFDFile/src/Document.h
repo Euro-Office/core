@@ -4,6 +4,10 @@
 #include "Utils/CFontChecker.h"
 #include "Page.h"
 #include "Annotation.h"
+#include "OutlineElem.h"
+#include "Bookmark.h"
+
+namespace NSWasm { class CData; }
 
 namespace OFD
 {
@@ -27,7 +31,9 @@ class CDocument
 	CPermission m_oPermission;
 	CAnnotation m_oAnnotation;
 
-	std::map<unsigned int, CPage*> m_mPages;
+	std::map<unsigned int, const CPage*> m_mPages;
+	std::vector<const COutlineElem*>     m_arOutlines;
+	std::vector<const CBookmark*>        m_arBookmarks;
 public:
 	CDocument();
 	~CDocument();
@@ -42,6 +48,14 @@ public:
 	bool GetPageSize(int nPageIndex, double& dWidth, double &dHeight) const;
 
 	void UpdateFonts(CFontChecker* pFontChecker);
+
+	#ifdef BUILDING_WASM_MODULE
+	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
+	#endif
+private:
+	void AddOutlineElem(const COutlineElem* pOutlineElem);
+	void AddBookmark(const CBookmark* pBookmark);
 };
 }
 

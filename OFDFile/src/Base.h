@@ -48,6 +48,7 @@ class CDocBody
 	std::vector<CSignature*> m_arSignatures;
 
 	bool ReadSignatures(const std::wstring& wsFilePath, IFolder* pFolder);
+
 public:
 	CDocBody();
 	~CDocBody();
@@ -62,6 +63,11 @@ public:
 	void UpdateFonts(CFontChecker* pFontChecker);
 
 	std::wstring GetInfo() const;
+
+	#ifdef BUILDING_WASM_MODULE
+	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
+	#endif
 };
 
 class CBase
@@ -80,7 +86,11 @@ public:
 	void UpdateFonts(CFontChecker* pFontChecker);
 
 	std::wstring GetInfo() const;
-	unsigned char* GetLinks(int nPageIndex) const;
+
+	#ifdef BUILDING_WASM_MODULE
+	void GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const;
+	void GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const;
+	#endif
 };
 }
 

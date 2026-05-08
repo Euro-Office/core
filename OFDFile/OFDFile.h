@@ -51,6 +51,9 @@ public:
 	virtual std::wstring GetInfo() override;
 	virtual unsigned char* GetStructure() override;
 	virtual unsigned char* GetLinks(int nPageIndex) override;
+
+	// DrawingFile control
+	virtual void SetPainter(IOfficeDrawingFilePainter* pPainter) override;
 };
 
 #endif // OFDFILE_H

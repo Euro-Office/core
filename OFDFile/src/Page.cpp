@@ -94,4 +94,11 @@ void CPage::GetPageSize(double& dWidth, double& dHeight) const
 	dWidth  = oPhysicalBox.m_dWidth;
 	dHeight = oPhysicalBox.m_dHeight;
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CPage::GetLinks(NSWasm::CData& oRes) const
+{
+	m_oContent.GetLinks(oRes);
+}
+#endif
 }

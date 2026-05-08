@@ -38,8 +38,8 @@ public:
 	NSFonts::IApplicationFonts* GetFonts() const;
 
 	std::wstring GetInfo() const;
-	unsigned char* GetStructure() const;
-	unsigned char* GetLinks(int nPageIndex) const;
+	BYTE* GetStructure() const;
+	BYTE* GetLinks(int nPageIndex) const;
 };
 
 #endif // OFDFILE_PRIVATE_H

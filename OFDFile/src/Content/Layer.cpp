@@ -27,4 +27,13 @@ void CLayer::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageTyp
 	for (const IPageBlock* pPageBlock : m_arPageBlocks)
 		pPageBlock->Draw(pRenderer, oCommonData, ePageType);
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CLayer::GetLinks(NSWasm::CData& oRes) const
+{
+	for (const IPageBlock* pPageBlock : m_arPageBlocks)
+		pPageBlock->GetLinks(oRes);
+}
+#endif
+
 }
