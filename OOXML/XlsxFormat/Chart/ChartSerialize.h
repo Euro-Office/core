@@ -1370,6 +1370,7 @@ namespace OOX
 
 			bool fromXML(const std::wstring nodeName, XmlUtils::CXmlLiteReader& oReader);
 			void toXML(NSStringUtils::CStringBuilder& writer) const;
+			virtual XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex) const;
 			virtual std::wstring toXML()  const
 			{
 				return L"";
@@ -1459,7 +1460,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_Surface3DChart
@@ -1475,6 +1476,7 @@ namespace OOX
 			~CT_Surface3DChart();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
+			XLS::BaseObjectPtr toXLS(const unsigned short chartIndex, XLS::BaseObjectPtr ChartFormatsPtr);
 			EElementType getType();
 		};
 
@@ -1525,7 +1527,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex);
+			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_OfPieChart
@@ -1572,7 +1574,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex) const override;
 			EElementType getType();
 		};
 		class CT_Bar3DChart
@@ -1695,7 +1697,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_ScatterChart
@@ -1733,7 +1735,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_RadarChart
@@ -1800,7 +1802,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex);
+			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex) const override;
 			EElementType getType();
 		};
 
@@ -1887,7 +1889,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_Area3DChart
