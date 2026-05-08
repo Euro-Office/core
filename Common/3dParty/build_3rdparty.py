@@ -12,6 +12,7 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 subfolders = [
     'apple',
+    'boost',
     'brotli',
     'harfbuzz',
     'html',
