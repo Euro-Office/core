@@ -8,6 +8,8 @@ from pathlib import Path
 
 import build_3rdparty_common as nc
 
+sys.stdout.reconfigure(encoding='utf-8')
+
 subfolders = [
     'apple',
     'brotli',

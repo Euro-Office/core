@@ -6,9 +6,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 project(UnicodeConverter)
 
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-
 add_library(UnicodeConverter SHARED
     UnicodeConverter.cpp
     UnicodeConverter.h
@@ -26,8 +23,8 @@ target_include_directories(UnicodeConverter PUBLIC
 )
 
 target_link_libraries(UnicodeConverter PUBLIC
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
 copy_artifacts_to_folder("UnicodeConverter" "${EO_CORE_OUTPUT_DIR}")
