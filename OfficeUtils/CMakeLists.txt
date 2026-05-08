@@ -63,9 +63,7 @@ target_include_directories(OfficeUtils PRIVATE
 
 set_property(TARGET OfficeUtils PROPERTY POSITION_INDEPENDENT_CODE ON)
 
-if (WIN32)
-    target_compile_options(OfficeUtils PRIVATE -include io.h)
-else()
+if( NOT MSVC )
     target_compile_options(OfficeUtils PRIVATE -include unistd.h)
 endif()
 
