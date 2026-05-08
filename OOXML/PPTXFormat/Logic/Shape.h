@@ -299,7 +299,8 @@ namespace PPTX
 					WritingElement_ReadAttributes_Read_if( oReader, _T("useBgFill"), useBgFill)
 					WritingElement_ReadAttributes_Read_else_if(oReader, _T("macro"), macro)
 					WritingElement_ReadAttributes_Read_else_if(oReader, _T("modelId"), modelId)
-					WritingElement_ReadAttributes_Read_else_if(oReader, _T("fLocksText"), fLocksText)					
+					WritingElement_ReadAttributes_Read_else_if(oReader, _T("fLocksText"), fLocksText)	
+					WritingElement_ReadAttributes_Read_else_if(oReader, _T("textlink"), textlink)
 				WritingElement_ReadAttributes_End( oReader )
 
 			}
@@ -340,8 +341,8 @@ namespace PPTX
 			nullable_bool						useBgFill;
 			nullable_string						macro;
 			nullable_bool						fLocksText;
-			;;
-	//-------------------------------------------------------------------------------------------------
+			nullable_string						textlink;
+//-------------------------------------------------------------------------------------------------
 			nullable<OOX::VmlOffice::CSignatureLine> signatureLine;
 			std::wstring						m_sClientDataXml;
 		protected:

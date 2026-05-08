@@ -247,11 +247,11 @@ namespace PPTX
 			pWriter->StartNode(name_);
 
 			pWriter->StartAttributes();
-
-			pWriter->WriteAttribute(L"useBgFill", useBgFill);
-			pWriter->WriteAttribute2(L"macro", macro);
-			pWriter->WriteAttribute(L"modelId", modelId);
-			pWriter->WriteAttribute(L"fLocksText", fLocksText);
+				pWriter->WriteAttribute(L"useBgFill", useBgFill);
+				pWriter->WriteAttribute2(L"macro", macro);
+				pWriter->WriteAttribute(L"modelId", modelId);
+				pWriter->WriteAttribute(L"fLocksText", fLocksText);
+				pWriter->WriteAttribute(L"textlink", textlink);
 			pWriter->EndAttributes();
 
 			if (pWriter->m_lDocType == XMLWRITER_DOC_TYPE_DOCX ||
@@ -375,10 +375,14 @@ namespace PPTX
 
 				switch (_at)
 				{
-				case 0:
-				{
-					useBgFill = pReader->GetBool();
-				}break;
+					case 0:
+					{
+						useBgFill = pReader->GetBool();
+					}break;
+					case 1:
+					{
+						textlink = pReader->GetString2();
+					}break;
 				default:
 					break;
 				}
@@ -499,6 +503,7 @@ namespace PPTX
 
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeStart);
 			pWriter->WriteBool2(0, useBgFill);
+			pWriter->WriteString2(1, textlink);
 			pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 
 			pWriter->WriteRecord1(0, nvSpPr);
