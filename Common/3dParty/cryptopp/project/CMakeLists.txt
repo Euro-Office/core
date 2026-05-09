@@ -6,9 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 set(CRYPTOPP_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 add_library(CryptoPPLib STATIC
@@ -402,7 +399,7 @@ target_compile_definitions(CryptoPPLib PRIVATE
     DISABLE_TYPE_MISMATCH
 )
 
-target_link_libraries(CryptoPPLib PRIVATE 
+target_link_libraries(CryptoPPLib PUBLIC 
     Boost::system
     Boost::filesystem
     Boost::regex
@@ -414,7 +411,5 @@ if(LINUX)
         -UNDEBUG
     )
 endif()
-
-copy_boost_libs(CryptoPPLib)
 
 declare_victory( CryptoPPLib )

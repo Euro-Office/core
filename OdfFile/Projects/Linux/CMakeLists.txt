@@ -18,10 +18,6 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(OdfFormatLib STATIC
     ${CMAKE_CURRENT_LIST_DIR}/odf_converter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/odf_datatypes.cpp
@@ -490,7 +486,5 @@ target_link_libraries(OdfFormatLib PUBLIC
 )
 
 set_property(TARGET OdfFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-copy_boost_libs(OdfFormatLib)
 
 declare_victory( OdfFormatLib )

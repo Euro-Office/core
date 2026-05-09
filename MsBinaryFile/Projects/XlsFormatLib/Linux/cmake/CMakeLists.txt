@@ -8,9 +8,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(XLS_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/XlsFile")
 set(COMMON_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(XlsFormatLib STATIC
     ${XLS_FILE_SOURCES_DIR}/Format/Auxiliary/HelpFunc.cpp
     ${XLS_FILE_SOURCES_DIR}/Format/Binary/CFRecord.cpp
@@ -134,7 +131,5 @@ target_link_libraries(XlsFormatLib PRIVATE
 )
 
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-copy_boost_libs(XlsFormatLib)
 
 declare_victory( XlsFormatLib )

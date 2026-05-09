@@ -10,9 +10,6 @@ set(DOC_FILE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/DocFile")
 set(COMMON_BASE_SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common/Base")
 set(_3RDPARTY_POLE_SOURCES_DIR "${CORE_ROOT_DIR}/Common/3dParty/pole")
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(DocFormatLib STATIC
     ${COMMON_BASE_SOURCES_DIR}/FormatUtils.cpp
     ${COMMON_BASE_SOURCES_DIR}/XmlTools.cpp
@@ -297,7 +294,5 @@ target_include_directories(DocFormatLib PRIVATE
 )
 
 set_property(TARGET DocFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-copy_boost_libs(DocFormatLib)
 
 declare_victory( DocFormatLib )
