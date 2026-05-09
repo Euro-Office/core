@@ -6,10 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
 
 if(NOT TARGET kernel)
@@ -28,8 +24,8 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
-set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
+set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/html/katana-parser")
+set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/html/gumbo-parser")
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
 
@@ -193,7 +189,5 @@ target_link_libraries(HtmlFile2 PUBLIC
 )
 
 copy_artifacts_to_folder("HtmlFile2" "${EO_CORE_OUTPUT_DIR}")
-
-copy_boost_libs(HtmlFile2)
 
 declare_victory( HtmlFile2 )

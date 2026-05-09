@@ -6,9 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED)
-
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
@@ -22,8 +19,8 @@ if(NOT TARGET graphics)
 endif()
 
 set(HTML_3RDPARTY_DIR "${CORE_ROOT_DIR}/Common/3dParty/html")
-set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/katana-parser")
-set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/gumbo-parser")
+set(KATANA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/html/katana-parser")
+set(GUMBO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/html/gumbo-parser")
 get_filename_component(KATANA_INSTALL_DIR_ABS "${KATANA_INSTALL_DIR}" ABSOLUTE)
 get_filename_component(GUMBO_INSTALL_DIR_ABS "${GUMBO_INSTALL_DIR}" ABSOLUTE)
 
@@ -94,7 +91,5 @@ target_link_libraries(Fb2File PUBLIC
 )
 
 copy_artifacts_to_folder("Fb2File" "${EO_CORE_OUTPUT_DIR}")
-
-copy_boost_libs(Fb2File)
 
 declare_victory( Fb2File )

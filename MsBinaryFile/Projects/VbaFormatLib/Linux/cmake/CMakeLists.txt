@@ -7,10 +7,6 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 set(SOURCES_DIR "${CORE_ROOT_DIR}/MsBinaryFile/Common/Vba")
 
-
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 add_library(VbaFormatLib STATIC
     ${SOURCES_DIR}/Records.cpp
     ${SOURCES_DIR}/StreamObjects.cpp
@@ -38,7 +34,5 @@ target_include_directories(VbaFormatLib PRIVATE
 )
 
 set_property(TARGET VbaFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
-
-copy_boost_libs(VbaFormatLib)
 
 declare_victory( VbaFormatLib )

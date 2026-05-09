@@ -6,9 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(BOOST_ROOT "${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64")
-find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
-
 # As far as I can tell, this should be set to 1 when building on mac.
 if(NOT DEFINED USE_JAVASCRIPT_CORE)
     set(USE_JAVASCRIPT_CORE 0)
@@ -264,7 +261,7 @@ if(APPLE)
     )
 endif()
 
-target_link_libraries(CryptoPPLib INTERFACE 
+target_link_libraries(doctrenderer INTERFACE 
     Boost::system
     Boost::filesystem
     Boost::regex
@@ -298,7 +295,5 @@ target_link_libraries(doctrenderer PUBLIC
 )
 
 copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")
-
-copy_boost_libs(doctrenderer)
 
 declare_victory( doctrenderer )

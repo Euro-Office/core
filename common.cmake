@@ -1,5 +1,7 @@
 include_guard(GLOBAL)
 
+cmake_policy(SET CMP0167 OLD)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -43,19 +45,6 @@ if( NOT DEFINED PYTHON_BIN )
     set(PYTHON_BIN "python" CACHE FILEPATH "Python binary to use.")
 endif()
 
-# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-if( MSVC )
-    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
-    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
-else()
-    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
-    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
-endif()
-
 message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
 message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
 message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
@@ -76,6 +65,28 @@ if(NOT THIRD_PARTY_PREPARED)
         set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
     endif()
 endif()
+
+
+# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+set(ICU_MAJOR_VER "74")
+set(ICU_MINOR_VER "2")
+set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
+get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
+if( MSVC )
+    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
+    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+else()
+    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
+    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
+endif()
+
+# Ensure boost
+set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
+get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
+set( CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
+include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
+set(Boost_USE_STATIC_LIBS ON)
+find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
@@ -268,14 +279,6 @@ function(copy_icu_libs artifact)
             COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
         )
     endif()
-endfunction()
-
-function(copy_boost_libs artifact)
-    add_custom_command(TARGET ${artifact} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P \"${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/boost/linux_64/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying Boost libs to ${EO_CORE_OUTPUT_DIR}"
-    )
 endfunction()
 
 function(declare_victory build_target)
