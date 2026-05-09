@@ -20,6 +20,7 @@ nc.dep_name = "Boost"
 nc.debug_mode = True
 
 modules_needed = [ "headers", "system", "filesystem", "regex", "date_time" ]
+header_only_modules_needed = [ "any", "asio", "beast", "format" ]
 
 def fetch_and_patch():
 
@@ -35,7 +36,7 @@ def fetch_and_patch():
         nc.work_dir
     )
 
-    for module in modules_needed:
+    for module in ( modules_needed + header_only_modules_needed ):
         nc.run_command(
             [ "git", "submodule", "update", "--depth", "1", "-q", "--init", Path( "libs" ) / module ],
             f"Init { module }",
@@ -60,39 +61,31 @@ def build_and_install():
             "Running bootstrap",
             nc.work_dir
         )
-
-
-        # ./b2 --with-system --prefix=/home/tbari/Junkyard/boost/install install
-        build_cmd = [ "./b2" ]
-        for module in modules_needed:
-            build_cmd.append( f"--with-{ module }" )
-        build_cmd.append( f"--prefix={ nc.install_dir }" )
-        build_cmd.append( "install" )
-
+    elif nc.is_windows():
         nc.run_command(
-            build_cmd,
-            "Build and install boost libs",
+            [ "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
+            "Running bootstrap",
             nc.work_dir
         )
-
-        # Additional headers
-        nc.ensure_directory_exists( nc.install_dir / "include" / "format" )
-        try:
-            shutil.copytree(
-                nc.work_dir / "libs" / "format" / "include" / "boost" / "format",
-                nc.install_dir / "include" / "format",
-                dirs_exist_ok = True
-            )
-        except Exception as e:
-            nc.abort_op( f"Failed to install format headers { e }" )
-
-
-    elif nc.is_windows():
-        
-        print( "TODO implement Windows!" )
-
     else:
         abort_op( f"Unkown target platform: {sys.platform}" )
+
+    build_cmd = [ "b2.exe" if nc.is_windows() else "./b2" ]
+    for module in modules_needed:
+        build_cmd.append( f"--with-{ module }" )
+    build_cmd.append( "variant=release" )
+    build_cmd.append( "link=static" )
+    if not nc.is_windows():
+        build_cmd.append( "cflags=-fPIC" )
+        build_cmd.append( "cxxflags=-fPIC" )
+    build_cmd.append( f"--prefix={ nc.install_dir }" )
+    build_cmd.append( "install" )
+
+    nc.run_command(
+        build_cmd,
+        "Build and install boost libs",
+        nc.work_dir
+    )
 
     nc.create_install_dir_ok_marker()
     
