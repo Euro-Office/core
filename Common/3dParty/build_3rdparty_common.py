@@ -12,6 +12,22 @@ work_dir = None
 install_dir = None
 force_redo = False
 
+def init_for_dep(
+    depname : str,
+    workdir : Path,
+    installdir : Path,
+    forceredo : bool,
+    debugmode : bool = True
+):
+    global dep_name, work_dir, install_dir, force_redo, debug_mode, log_cleared
+
+    dep_name = depname
+    work_dir = workdir
+    install_dir = installdir
+    force_redo = forceredo
+    debug_mode = debugmode
+    log_cleared = False
+    
 def abort_op( message : str, keep_work : bool = False, error_is_fatal : bool = True ):
     print( f"Aboring {dep_name}: {message}", file = sys.stderr )
     if error_is_fatal:

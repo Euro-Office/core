@@ -15,11 +15,12 @@ if str( third_party_root ) not in sys.path:
     sys.path.insert( 0, str( third_party_root ) )
 import build_3rdparty_common as nc
 
-nc.work_dir = Path( sys.argv[1] )
-nc.install_dir = Path( sys.argv[2] )
-nc.force_redo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
-nc.dep_name = "V8"
-nc.debug_mode = True
+nc.init_for_dep(
+    depname = "V8",
+    workdir = Path( sys.argv[1] ),
+    installdir = Path( sys.argv[2] ),
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+)
 
 depot_tools_path = nc.work_dir / "depot_tools"
 v8_root_path = nc.work_dir / "v8"
@@ -312,7 +313,6 @@ sys.modules["pipes"] = PipesModule()
     return shims_path
 
 def fetch_and_patch():
-
     nc.create_workdir()
 
     # Get depot_tools
@@ -466,8 +466,6 @@ solutions = [
         } if nc.is_linux() else {
             "CXXFLAGS": "/FIstring",
             "CFLAGS": "/FIstring",
-            # "CXXFLAGS": "/FIstring /FIcstdint",
-            # "CFLAGS": "/FIstring /FIcstdint",
         }
         nc.run_command(
             [ "ninja", "-C", output_path, f"-j{job_count}", "v8_monolith" ],
