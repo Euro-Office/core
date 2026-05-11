@@ -525,6 +525,12 @@ if(WIN32)
     )
 endif()
 
+if( NOT MSVC )
+    target_compile_options(IWorkFile PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:-include iostream>
+    )
+endif()
+
 target_include_directories(IWorkFile PRIVATE
     ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11
 
