@@ -150,7 +150,7 @@ namespace NSDocxRenderer
 	}
 	bool CTable::CCell::IsPosibleToDivide() const noexcept
 	{
-		if (m_arParagraphs.size() < 2)
+		if (m_arParagraphs.size() < 3)
 			return false;
 
 		std::set<double> hor_lines, right_lines, left_lines;
@@ -223,7 +223,7 @@ namespace NSDocxRenderer
 					// for the current bottom/right line added to the set,
 					// select all bot lines of paaragraphs
 					// that have such a top/left line
-					if (is_eq(hor ? p->m_dTop : p->m_dLeft, cur_line + (hor ? 0 : c_dSTANDART_TABLE_SPACING_MM)))
+					if (is_eq(hor ? p->m_dTop : p->m_dLeft, cur_line + (hor ? 0.0 : c_dSTANDART_TABLE_SPACING_MM)))
 					{
 						tmp_lines.insert(hor ? p->m_dBot : p->m_dRight);
 						// mark that have checked this paragraph

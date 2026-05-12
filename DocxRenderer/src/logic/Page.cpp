@@ -2088,7 +2088,7 @@ namespace NSDocxRenderer
 					// get the correct top indentation
 					if (!c->m_arParagraphs.empty())
 						p->m_dSpaceBefore = p->m_dTop - c->m_arParagraphs.back()->m_dBot;
-					else if (p->m_dTop - c->m_dTop > 0)
+					else if (!is_eq(c->m_dTop, p->m_dTop))
 						p->m_dSpaceBefore = p->m_dTop - c->m_dTop;
 					else
 						p->m_dSpaceBefore = 0;
@@ -2231,7 +2231,7 @@ namespace NSDocxRenderer
 				else
 				{
 					bool first = true;
-					size_t it_offset;
+					size_t it_offset = 0;
 					// algorithm for inserting non-graphical cells into the correct locations
 					//
 					// main loop
@@ -2252,11 +2252,15 @@ namespace NSDocxRenderer
 						row_bot = row.front()->m_dBot;
 						row_height = row.front()->m_dHeight;
 						auto it_after_insert = m_arGraphicalCells.insert(it_to_insert, std::make_move_iterator(row.begin()), std::make_move_iterator(row.end()));
+						it_after_insert = std::next(it_after_insert, row.size());
 
 						if (non_graphical_cells.empty())
+						{
+							if (first)
+								it_offset = std::distance(m_arGraphicalCells.begin(), it_after_insert);
 							break;
+						}
 
-						it_after_insert = std::next(it_after_insert, row.size());
 						if (first)
 						{
 							auto cur_height = (*it_after_insert)->m_dHeight;
