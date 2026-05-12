@@ -47,7 +47,7 @@ const double c_dSHAPE_TROUGH_MAX_MM             = 80.0;
 const double c_dLINE_SPLIT_DISTANCE_MM          = 10.0;
 const double c_dSHAPE_X_OFFSET_MM               = 1.5;
 const double c_dAVERAGE_SPACE_WIDTH_COEF        = 0.9;
-const double c_dSPACE_WIDTH_COEF                = 0.4;
+const double c_dSPACE_WIDTH_COEF                = 0.39;
 const double c_dMIN_ROTATION                    = 0.01;
 const double c_dMAX_FIRST_LINE_INDENT           = 20.0;
 
