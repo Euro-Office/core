@@ -15,9 +15,11 @@ DEFINES += \
     LIBXML_STATIC
 }
 
+LIBXML2_ROOT_DIR = $$PWD/../../../../Common/3dParty/libxml/libxml2
+
 INCLUDEPATH += \
-    $$PWD/../../libxml2/include \
-    $$PWD/../../libxml2/include/libxml \
+    $$LIBXML2_ROOT_DIR/include \
+    $$LIBXML2_ROOT_DIR/include/libxml \
     $$PWD
 
 core_release {
@@ -29,50 +31,47 @@ core_release {
 
 core_debug {
 SOURCES += \
-    $$PWD/../../libxml2/buf.c \
-    $$PWD/../../libxml2/c14n.c \
-    $$PWD/../../libxml2/catalog.c \
-    $$PWD/../../libxml2/chvalid.c \
-    $$PWD/../../libxml2/debugXML.c \
-    $$PWD/../../libxml2/dict.c \
-    $$PWD/../../libxml2/DOCBparser.c \
-    $$PWD/../../libxml2/encoding.c \
-    $$PWD/../../libxml2/entities.c \
-    $$PWD/../../libxml2/error.c \
-    $$PWD/../../libxml2/globals.c \
-    $$PWD/../../libxml2/hash.c \
-    $$PWD/../../libxml2/HTMLparser.c \
-    $$PWD/../../libxml2/HTMLtree.c \
-    $$PWD/../../libxml2/legacy.c \
-    $$PWD/../../libxml2/list.c \
-    $$PWD/../../libxml2/nanoftp.c \
-    $$PWD/../../libxml2/nanohttp.c \
-    $$PWD/../../libxml2/parserInternals.c \
-    $$PWD/../../libxml2/pattern.c \
-    $$PWD/../../libxml2/relaxng.c \
-    $$PWD/../../libxml2/SAX.c \
-    $$PWD/../../libxml2/SAX2.c \
-    $$PWD/../../libxml2/schematron.c \
-    $$PWD/../../libxml2/threads.c \
-    $$PWD/../../libxml2/tree.c \
-    $$PWD/../../libxml2/uri.c \
-    $$PWD/../../libxml2/xinclude.c \
-    $$PWD/../../libxml2/xlink.c \
-    $$PWD/../../libxml2/xmlIO.c \
-    $$PWD/../../libxml2/xmlmemory.c \
-    $$PWD/../../libxml2/xmlmodule.c \
-    $$PWD/../../libxml2/xmlreader.c \
-    $$PWD/../../libxml2/xmlregexp.c \
-    $$PWD/../../libxml2/xmlsave.c \
-    $$PWD/../../libxml2/xmlschemas.c \
-    $$PWD/../../libxml2/xmlschemastypes.c \
-    $$PWD/../../libxml2/xmlstring.c \
-    $$PWD/../../libxml2/xmlunicode.c \
-    $$PWD/../../libxml2/xmlwriter.c \
-    $$PWD/../../libxml2/xpath.c \
-    $$PWD/../../libxml2/xpointer.c \
-    $$PWD/../../libxml2/valid.c \
-     $$PWD/../../libxml2/parser.c
+    $$LIBXML2_ROOT_DIR/buf.c \
+    $$LIBXML2_ROOT_DIR/c14n.c \
+    $$LIBXML2_ROOT_DIR/catalog.c \
+    $$LIBXML2_ROOT_DIR/chvalid.c \
+    $$LIBXML2_ROOT_DIR/debugXML.c \
+    $$LIBXML2_ROOT_DIR/dict.c \
+    $$LIBXML2_ROOT_DIR/encoding.c \
+    $$LIBXML2_ROOT_DIR/entities.c \
+    $$LIBXML2_ROOT_DIR/error.c \
+    $$LIBXML2_ROOT_DIR/globals.c \
+    $$LIBXML2_ROOT_DIR/hash.c \
+    $$LIBXML2_ROOT_DIR/libxml.h \
+    $$LIBXML2_ROOT_DIR/list.c \
+    $$LIBXML2_ROOT_DIR/nanohttp.c \
+    $$LIBXML2_ROOT_DIR/parserInternals.c \
+    $$LIBXML2_ROOT_DIR/pattern.c \
+    $$LIBXML2_ROOT_DIR/relaxng.c \
+    $$LIBXML2_ROOT_DIR/runsuite.c \
+    $$LIBXML2_ROOT_DIR/schematron.c \
+    $$LIBXML2_ROOT_DIR/shell.c \
+    $$LIBXML2_ROOT_DIR/threads.c \
+    $$LIBXML2_ROOT_DIR/timsort.h \
+    $$LIBXML2_ROOT_DIR/tree.c \
+    $$LIBXML2_ROOT_DIR/uri.c \
+    $$LIBXML2_ROOT_DIR/xinclude.c \
+    $$LIBXML2_ROOT_DIR/xlink.c \
+    $$LIBXML2_ROOT_DIR/xmlIO.c \
+    $$LIBXML2_ROOT_DIR/xmllint.c \
+    $$LIBXML2_ROOT_DIR/xmlmemory.c \
+    $$LIBXML2_ROOT_DIR/xmlmodule.c \
+    $$LIBXML2_ROOT_DIR/xmlreader.c \
+    $$LIBXML2_ROOT_DIR/xmlregexp.c \
+    $$LIBXML2_ROOT_DIR/xmlsave.c \
+    $$LIBXML2_ROOT_DIR/xmlschemas.c \
+    $$LIBXML2_ROOT_DIR/xmlschemastypes.c \
+    $$LIBXML2_ROOT_DIR/xmlstring.c \
+    $$LIBXML2_ROOT_DIR/xmlwriter.c \
+    $$LIBXML2_ROOT_DIR/xpath.c \
+    $$LIBXML2_ROOT_DIR/xpointer.c \
+    $$LIBXML2_ROOT_DIR/valid.c \
+    $$LIBXML2_ROOT_DIR/parser.c
 }
 
 !core_only_libxml {
@@ -87,4 +86,8 @@ HEADERS += \
 HEADERS += \
     $$PWD/../../include/xmlutils.h \
     $$PWD/../../include/xmlwriter.h
+}
+
+core_windows {
+	LIBS += -lbcrypt
 }
