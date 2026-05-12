@@ -126,6 +126,7 @@ else() # Assume win+msvc
         _REENTRANT
         CRYPTOPP_DISABLE_ASM
         INTVER=${VERSION_TXT_CONTENT}
+        NOMINMAX
 
         # Not sure about these:
         _UNICODE
