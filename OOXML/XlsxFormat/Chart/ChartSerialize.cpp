@@ -76,7 +76,7 @@
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/ObjectLink.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/BRAI.h"
 #include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/SeriesText.h"
-
+#include "../../../MsBinaryFile/XlsFile/Format/Logic/Biff_records/AttachedLabel.h"
 
 
 namespace OOX
@@ -3742,6 +3742,39 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					seriesFormat->m_arAI.push_back(XLS::BaseObjectPtr(ai4));
 				}
 			}
+			if(m_dLbls!= nullptr)
+			{
+				auto label = new XLS::AttachedLabel;
+				SeriesStyle->m_AttachedLabel = XLS::BaseObjectPtr(label);
+				for(auto i = 0; i < m_dLbls->m_ItemsElementName0.size(); i++)
+				{
+					if(*m_dLbls->m_ItemsElementName0.at(i) == ItemsChoiceType3::itemschoicetype3SHOWVAL)
+					{
+						auto lblVal = static_cast<bool*>(m_dLbls->m_Items.at(i));
+						label->fShowValue = lblVal;
+					}
+					if(*m_dLbls->m_ItemsElementName0.at(i) == ItemsChoiceType3::itemschoicetype3SHOWPERCENT)
+					{
+						auto lblVal = static_cast<bool*>(m_dLbls->m_Items.at(i));
+						label->fShowPercent = lblVal;
+					}
+					if(*m_dLbls->m_ItemsElementName0.at(i) == ItemsChoiceType3::itemschoicetype3SHOWSERNAME)
+					{
+						auto lblVal = static_cast<bool*>(m_dLbls->m_Items.at(i));
+						label->fShowSeriesName = lblVal;
+					}
+					if(*m_dLbls->m_ItemsElementName0.at(i) == ItemsChoiceType3::itemschoicetype3SHOWCATNAME)
+					{
+						auto lblVal = static_cast<bool*>(m_dLbls->m_Items.at(i));
+						label->fShowLabel= lblVal;
+					}
+					if(*m_dLbls->m_ItemsElementName0.at(i) == ItemsChoiceType3::itemschoicetype3SHOWBUBBLESIZE)
+					{
+						auto lblVal = static_cast<bool*>(m_dLbls->m_Items.at(i));
+						label->fShowBubbleSizes = lblVal;
+					}
+				}
+			}
 			return XLS::BaseObjectPtr(seriesFormat);
 		}
 		CT_BubbleSer::CT_BubbleSer()
@@ -4067,6 +4100,7 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 					PtStyle->m_LineFormat = m_spPr->ln->toXLS();
 				if(m_spPr->Fill.is_init())
 					PtStyle->m_AreaFormat = m_spPr->Fill.toXLS();
+				PtStyle->m_arSHAPEPROPS.push_back(m_spPr->toXLS(0));
 			}
 			return XLS::BaseObjectPtr(PtStyle);
 		}

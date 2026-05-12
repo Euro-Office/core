@@ -1368,6 +1368,7 @@ namespace OOX
 			CT_SerTx*										m_tx;
 			nullable<PPTX::Logic::SpPr>						m_spPr;
 			CT_NumDataSource*								m_val;
+			CT_DLbls*										m_dLbls;
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_extLst;
 
 			bool fromXML(const std::wstring nodeName, XmlUtils::CXmlLiteReader& oReader);
@@ -1388,7 +1389,6 @@ namespace OOX
             std::vector<CT_DPt*>		m_dPt;
             std::vector<CT_Trendline*>	m_trendline;
             std::vector<CT_ErrBars*>	m_errBars;
-			CT_DLbls*					m_dLbls;
 			CT_AxDataSource*			m_xVal;
 			CT_NumDataSource*			m_yVal;
 			CT_NumDataSource*			m_bubbleSize;
@@ -1517,7 +1517,6 @@ namespace OOX
 			
 			nullableUintVal m_explosion;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
 
 			CT_PieSer();
@@ -1560,7 +1559,6 @@ namespace OOX
 			nullableBoolVal m_invertIfNegative;
 			CT_PictureOptions* m_pictureOptions;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
@@ -1682,7 +1680,6 @@ namespace OOX
 
 			CT_Marker* m_marker;
             std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
             std::vector<CT_Trendline*> m_trendline;
             std::vector<CT_ErrBars*> m_errBars;
 			CT_AxDataSource* m_xVal;
@@ -1723,7 +1720,6 @@ namespace OOX
 
 			CT_Marker* m_marker;
             std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
 
 			CT_RadarSer();
@@ -1786,7 +1782,6 @@ namespace OOX
 
 			CT_Marker* m_marker;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
@@ -1873,7 +1868,6 @@ namespace OOX
 				
 			CT_PictureOptions* m_pictureOptions;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			std::vector<CT_ErrBars*> m_errBars;
 			CT_AxDataSource* m_cat;
