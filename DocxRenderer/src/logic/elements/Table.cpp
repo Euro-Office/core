@@ -334,8 +334,6 @@ namespace NSDocxRenderer
 		// top and right spacing added only when it first paragraph in cell
 		if (m_arParagraphs.empty())
 		{
-			if (m_oTopBorder.lineType != eLineType::ltNone)
-				m_oTopBorder.dSpacing = pParagraph->m_dSpaceBefore;
 			if (m_oRightBorder.lineType != eLineType::ltNone)
 				m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
 		}
@@ -498,9 +496,9 @@ namespace NSDocxRenderer
 				//
 				// [...][k][k+1][...]
 				// [...][k  k+1][...]
-				bool greater = (*it2 - *it1) > 0;
-				auto& it_to_compare = greater ? it1 : it2;
-				auto& it_to_update = greater ? it2 : it1;
+				bool is_greater = (*it2 - *it1) > 0;
+				auto& it_to_compare = is_greater ? it1 : it2;
+				auto& it_to_update = is_greater ? it2 : it1;
 
 				unsigned int grid_count = 1;
 				std::vector<double> new_grids;
@@ -515,40 +513,116 @@ namespace NSDocxRenderer
 
 				// collect the width until the sum of the cell withs becomes equal to the merged cell
 				//
-				// First variant (greater = true)
+				// First variant (is_greater = true)
 				//
 				// widths from current row cells (vector widths) to new_grids,
 				// comare with width of table column (m_arGridCol)
 				//
-				// Second variant (greater = false)
+				// Second variant (is_greater = false)
 				//
 				// widths from table column widths (m_arGridCol),
 				// compare with cell width from current row
-				for (; it_to_compare != (greater ? widths.end() : m_arGridCols.end()); ++it_to_compare)
+				bool is_swaped = false;
+				for (; it_to_compare != (is_greater ? widths.end() : m_arGridCols.end()); ++it_to_compare)
 				{
-					if (is_eq(*it_to_update, grid_sum()))
+					auto sum = grid_sum();
+					auto cur_width = *it_to_update;
+					if (is_eq(cur_width, sum)) // TODO: mb greater then prev cell
 						break;
+					// for the case
+					//
+					// when merged cells overlaping
+					// need to add a completely new grids
+					// because there is no cell with
+					// the corresponding border in the table
+					else if (sum > cur_width)
+					{
+						double widths_sum = 0.0;
+						std::for_each(new_grids.begin(), std::prev(new_grids.end()), [&widths_sum] (const double& g) { widths_sum += g; });
+						it_to_compare--;
+
+						// for the case
+						//
+						// when the overlap of cells occurs after
+						// just need to insert new grids
+						//
+						// for example:
+						//
+						// [1     3][4][5]
+						// [1][2][3  4][5]
+						//   ^  ^
+						//   |  |
+						//   need toisert this borders
+						if (is_greater)
+							new_grids.back() = cur_width - widths_sum;
+						// for the case
+						//
+						// when the overlap of cells occurs before
+						// need to insert only one border which doesn't exisst
+						//
+						// for example:
+						//
+						//    not need to insert this border
+						//    |
+						//    v
+						// [1][2  3][4]
+						// [1  2][3][4]
+						//      ^
+						//      |
+						//      need to insert only this border
+						else
+						{
+							auto new_grids_back = new_grids.back();
+							auto first_part = cur_width - widths_sum;
+							new_grids.clear();
+							// get new grids
+							// 1. missing border
+							// 2. updated old grid widthout additional border
+							new_grids.insert(new_grids.begin(), {first_part, new_grids_back - first_part});
+							// change the case (is_greater = true)
+							// to insert new grids
+							// and remember what changed for the reverse replacement
+							is_greater = true;
+							is_swaped = true;
+							// grids count always = 2 because insert only one grid
+							grid_count = 2;
+							std::swap(it_to_compare, it_to_update);
+						}
+						break;
+					}
 					new_grids.push_back(*it_to_compare);
 					grid_count++;
 				}
 
-				size_t index = std::distance(greater ? m_arGridCols.begin() : widths.begin(), it_to_update);
+				size_t index = std::distance(is_greater ? m_arGridCols.begin() : widths.begin(), it_to_update);
 
-				// First variant (greater = true)
+				// First variant (is_greater = true)
 				//
 				// update the table column widths -
 				// add new widths and remove the old one,
 				// update the GridSpan for all required cells
 				// in the previous rows
 				//
-				// Second variant (greater = false)
+				// Second variant (is_greater = false)
 				//
 				// update GridSpan for required cell from current row
-				if (greater)
+				if (is_greater)
 				{
+					auto last_right = 0.0;
+					std::for_each(m_arGridCols.begin(), std::next(it_to_update), [&last_right] (const double& g) { last_right += g; });
 					it_to_update = m_arGridCols.erase(it_to_update);
 					auto insert_it = m_arGridCols.insert(it_to_update, new_grids.begin(), new_grids.end());
-					it_to_update = std::next(insert_it, grid_count);
+					// for the case
+					//
+					// when merged cells overlaping and iterators swaped
+					// need to check the widths again to update the added row
+					// since the initial values was is_greater = false
+					// therefore, also take the previous value from the inserted one,
+					// otherwise move on to the value after the insertion
+					it_to_update = is_swaped ? std::prev(insert_it) : std::next(insert_it, grid_count);
+
+					if (is_swaped)
+						std::swap(it_to_compare, it_to_update);
 
 					for (auto& r : m_arRows)
 					{
@@ -567,8 +641,35 @@ namespace NSDocxRenderer
 						// get update index for previous rows - 3
 						auto correct_index = index;
 						for (auto i = 0; i < index + 1; i++)
+						{
+							if (i >= r->m_arCells.size())
+								break;
 							correct_index -= r->m_arCells[i]->m_nGridSpan - 1;
-						r->m_arCells.at(correct_index)->m_nGridSpan = grid_count;
+							if (correct_index == 0)
+								break;
+						}
+						correct_index = correct_index >= r->m_arCells.size() ? 0 : correct_index;
+						auto& cur_grid = r->m_arCells.at(correct_index)->m_nGridSpan;
+						// check for case
+						//
+						// when the next cell has already been merged and
+						// at the same time we divided one of the cells merged in
+						// it overlapping of merged cells case
+						//
+						// for example:
+						//
+						// [1][2][3  4][5]
+						// [1        4][5]
+						// [1     3][4][5]
+						//
+						// cell - [3  4] was not merged cell
+						// and cell - [1    4] was merged only 3 cells
+						// but when grids has been updated, cell - [3  4] merge two cells
+						// and need to update cell - [1    4] because it is merge 4 cells right now
+						if (cur_grid != 1)
+							cur_grid += grid_count - 1;
+						else
+							cur_grid = grid_count;
 					}
 				}
 				else
