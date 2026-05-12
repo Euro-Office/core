@@ -21,7 +21,7 @@ nc.init_for_dep(
 )
 
 modules_needed = [ "headers", "system", "filesystem", "regex", "date_time" ]
-header_only_modules_needed = [ "any", "asio", "beast", "format" ]
+header_only_modules_needed = [ "any", "asio", "beast", "foreach", "format", "functional", "multi_index", "uuid" ]
 
 def fetch_and_patch():
     nc.create_workdir()

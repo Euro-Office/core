@@ -473,8 +473,13 @@ target_include_directories(OdfFormatLib PRIVATE
 )
 
 target_precompile_headers(OdfFormatLib PRIVATE
+    msvc_fix.h
     precompiled.h
 )
+
+if( MSVC )
+    target_compile_options( OdfFormatLib PRIVATE /bigobj )
+endif()
 
 target_link_libraries(OdfFormatLib PUBLIC
     UnicodeConverter
