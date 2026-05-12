@@ -130,6 +130,10 @@ target_link_libraries(XlsFormatLib PRIVATE
     Boost::date_time
 )
 
+if( MSVC )
+    target_compile_options( XlsFormatLib PRIVATE /bigobj )
+endif()
+
 set_property(TARGET XlsFormatLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 declare_victory( XlsFormatLib )
