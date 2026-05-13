@@ -16,6 +16,10 @@ public:
 	static void ReadIntoContainer(CXmlReader& oLiteReader, std::vector<IPageBlock*>& arPageBlocks, IFolder* pFolder);
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
+
+	#ifdef BUILDING_WASM_MODULE
+	virtual void GetLinks(NSWasm::CData& oRes) const override;
+	#endif
 };
 }
 

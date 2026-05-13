@@ -5,53 +5,24 @@
 #include "../Writers/MDWriter.h"
 #include "../Table.h"
 
+#include <map>
+
 namespace HTML
 {
-template<>
-bool CAnchorTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CAnchorTag<CMDWriter>::Close(const NSCSS::CNode& oTagNode);
+#define CREATE_MD_TAG(class_name) CREATE_TAG(class_name##MD, CMDWriter)
 
-template<>
-bool CBreakTag<CMDWriter>::Read(const NSCSS::CNode& oTagNode);
+CREATE_MD_TAG(Anchor);
+CREATE_MD_TAG(Break);
+CREATE_MD_TAG(Preformatted);
+CREATE_MD_TAG(Header);
+CREATE_MD_TAG(Image);
+CREATE_MD_TAG(HorizontalRule);
+CREATE_MD_TAG(Blockquote);
+CREATE_MD_TAG(List);
+CREATE_MD_TAG(ListElement);
+CREATE_MD_TAG(Code);
 
-template<>
-bool CPreformattedTag<CMDWriter>::Open();
-template<>
-void CPreformattedTag<CMDWriter>::Close(const std::vector<NSCSS::CNode>& arSelectors);
-
-template<>
-bool CHeaderTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CHeaderTag<CMDWriter>::Close();
-
-template<>
-bool CImageTag<CMDWriter>::Read(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-bool CImageTag<CMDWriter>::ReadSVG(const std::vector<NSCSS::CNode>& arSelectors, const std::wstring& wsSVG);
-
-template<>
-bool CBlockquoteTag<CMDWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors);
-template<>
-void CBlockquoteTag<CMDWriter>::Close();
-
-template<>
-bool CListTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CListTag<CMDWriter>::Close();
-
-template<>
-bool CHorizontalRuleTag<CMDWriter>::Write(const std::vector<NSCSS::CNode>& arSelectors);
-
-template<>
-bool CListElementTag<CMDWriter>::Open();
-template<>
-void CListElementTag<CMDWriter>::Close();
-
-template<>
-bool CCodeTag<CMDWriter>::Open(const NSCSS::CNode& oTagNode);
-template<>
-void CCodeTag<CMDWriter>::Close();
+void InitTagsForMD(std::map<int, std::shared_ptr<ITag>>& mTags, CMDWriter* pWriter);
 
 struct TElementInfo
 {

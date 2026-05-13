@@ -7,7 +7,7 @@ CContent::CContent()
 
 CContent::~CContent()
 {
-	for (CLayer* pLayer : m_arLayers)
+	for (const CLayer* pLayer : m_arLayers)
 		delete pLayer;
 }
 
@@ -38,4 +38,12 @@ void CContent::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageT
 	for (const CLayer* pLayer : m_arLayers)
 		pLayer->Draw(pRenderer, oCommonData, ePageType);
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CContent::GetLinks(NSWasm::CData& oRes) const
+{
+	for (const CLayer* pLayer : m_arLayers)
+		pLayer->GetLinks(oRes);
+}
+#endif
 }

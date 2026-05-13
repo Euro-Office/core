@@ -233,14 +233,17 @@ void OoxConverter::convert(PPTX::Logic::Xfrm *oox_xfrm)
 	if (oox_xfrm->extX.IsInit())	width	= Emu2Pt(*oox_xfrm->extX);
 	if (oox_xfrm->extY.IsInit())	height	= Emu2Pt(*oox_xfrm->extY);
 	
+	if (oox_xfrm->rot.IsInit())
+		odf_context()->drawing_context()->set_rotate(oox_xfrm->rot.get_value_or(0)/60000.);
+	
 	odf_context()->drawing_context()->set_size(	width, height);					
 	odf_context()->drawing_context()->set_position( x, y);
 	
 	if (oox_xfrm->flipH.get_value_or(false))	odf_context()->drawing_context()->set_flip_H(true);
 	if (oox_xfrm->flipV.get_value_or(false))	odf_context()->drawing_context()->set_flip_V(true);
 	
-	if (oox_xfrm->rot.IsInit())
-		odf_context()->drawing_context()->set_rotate(oox_xfrm->rot.get_value_or(0)/60000.);
+//	if (oox_xfrm->rot.IsInit())
+//		odf_context()->drawing_context()->set_rotate(oox_xfrm->rot.get_value_or(0)/60000.);
 }
 void OoxConverter::convert(PPTX::Logic::Xfrm *oox_txbx, PPTX::Logic::Xfrm *oox_xfrm)
 {
@@ -1015,7 +1018,7 @@ void OoxConverter::convert(PPTX::Logic::SpPr *oox_spPr, PPTX::Logic::ShapeStyle*
 
 	bool bLine = odf_context()->drawing_context()->isLineShape();
 
-	if (custGeom && !custGeom->cxnLst.empty() && !odf_context()->drawing_context()->isCustomClosed())
+	if (custGeom && !custGeom->cxnLst.empty() && !odf_context()->drawing_context()->isCustomClosed() && !odf_context()->drawing_context()->isNonPrimitive())
 		bLine = true;
 
 	odf_context()->drawing_context()->start_area_properties();
@@ -1535,8 +1538,8 @@ void OoxConverter::convert(PPTX::Logic::GradFill *oox_grad_fill, DWORD nARGB)
 
 			odf_context()->drawing_context()->set_gradient_stop(hexColors.back(), oox_grad_fill->GsLst[i].pos);
 		}	
-		std::reverse(hexColors.begin(), hexColors.end());
-		std::reverse(opacities.begin(), opacities.end());
+		// std::reverse(hexColors.begin(), hexColors.end());
+		// std::reverse(opacities.begin(), opacities.end());
 
 		if (hexColors.size() > 0)
 			odf_context()->drawing_context()->set_gradient_start(hexColors[0], opacities[0]);

@@ -5,26 +5,33 @@
 
 namespace OFD
 {
-CImageObject::CImageObject(CXmlReader& oLiteReader, IFolder* pFolder)
-	: IPageBlock(oLiteReader), CGraphicUnit(oLiteReader), m_unMultiMediaID(0), m_pFolder(pFolder)
+CImageObject::CImageObject(CXmlReader& oReader, IFolder* pFolder)
+    : IPageBlock(oReader), CGraphicUnit(oReader), m_unMultiMediaID(0), m_pFolder(pFolder)
 {
-	if ("ofd:ImageObject" != oLiteReader.GetNameA() || 0 == oLiteReader.GetAttributesCount() || !oLiteReader.MoveToFirstAttribute())
+	if ("ofd:ImageObject" != oReader.GetNameA() || 0 == oReader.GetAttributesCount() || !oReader.MoveToFirstAttribute())
 		return;
 
 	std::string sAttributeName;
 
 	do
 	{
-		sAttributeName = oLiteReader.GetNameA();
+		sAttributeName = oReader.GetNameA();
 
 		if ("ResourceID" == sAttributeName)
 		{
-			m_unMultiMediaID = oLiteReader.GetUInteger(true);
+			m_unMultiMediaID = oReader.GetUInteger(true);
 			break;
 		}
-	} while(oLiteReader.MoveToNextAttribute());
+	} while(oReader.MoveToNextAttribute());
 
-	oLiteReader.MoveToElement();
+	oReader.MoveToElement();
+
+	const int nDepth{oReader.GetDepth()};
+
+	while(oReader.ReadNextSiblingNode2(nDepth))
+	{
+		ReadChildren(oReader);
+	}
 }
 
 void CImageObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const
@@ -70,4 +77,11 @@ void CImageObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EP
 
 	pRenderer->SetTransform(oOldTransform.m_dM11, oOldTransform.m_dM12, oOldTransform.m_dM21, oOldTransform.m_dM22, oOldTransform.m_dDx, oOldTransform.m_dDy);
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CImageObject::GetLinks(NSWasm::CData& oRes) const
+{
+	CGraphicUnit::GetLinks(oRes);
+}
+#endif
 }

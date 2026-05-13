@@ -71,4 +71,12 @@ void CPageBlock::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPag
 
 	pRenderer->SetTransform(dM11, dM12, dM21, dM22, dDx, dDy);
 }
+
+#ifdef BUILDING_WASM_MODULE
+void CPageBlock::GetLinks(NSWasm::CData& oRes) const
+{
+	for (const IPageBlock* pPageBlock : m_arPageBlocks)
+		pPageBlock->GetLinks(oRes);
+}
+#endif
 }

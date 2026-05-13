@@ -361,6 +361,8 @@ namespace NSBinPptxRW
 		
 		if (pPair != m_mapImages.end())
 		{
+			if (additionalFiles.empty() && false == pPair->second.additionalFiles.empty())
+				additionalFiles = pPair->second.additionalFiles;
 			return pPair->second;
 		}
 
@@ -401,6 +403,8 @@ namespace NSBinPptxRW
 				}
 			}
 		}
+		
+		oImageManagerInfo.additionalFiles = additionalFiles;
 
 		if (strBase64Image.empty())
 			m_mapImages[strInput + oleData] = oImageManagerInfo;
@@ -582,7 +586,6 @@ namespace NSBinPptxRW
 				}
 			}
 		}
-
 		return oImageManagerInfo;
 	}
 	bool CImageManager2::SaveImageAsPng(const std::wstring& strFileSrc, const std::wstring& strFileDst)

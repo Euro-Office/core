@@ -28,6 +28,7 @@ namespace HTML
 #define SKIP_TAG SCRIPT
 #define UNKNOWN_TAG GumboTag::GUMBO_TAG_UNKNOWN
 #define HtmlTag GumboTag
+#define EMPTY_TAG GumboTag::GUMBO_TAG_UNKNOWN
 
 const static std::map<std::wstring, HtmlTag> m_HTML_TAGS
 {
@@ -333,7 +334,7 @@ void CHTMLReader::Clear()
 	if (nullptr != m_pWriter)
 		delete m_pWriter;
 
-	m_oTags.Clear();
+	m_mTags.clear();
 
 	m_wsSrcDirectory .clear();
 	m_wsDstDirectory .clear();
@@ -364,13 +365,7 @@ bool CHTMLReader::InitOOXMLTags(THTMLParameters* pParametrs)
 	pWriter->SetBaseDirectory(m_wsBaseDirectory);
 	pWriter->SetCoreDirectory(m_wsCoreDirectory);
 
-	m_oTags.Clear();
-
-	if (!m_oTags.Init(pWriter))
-	{
-		delete pWriter;
-		return false;
-	}
+	InitTagsForOOXML(m_mTags, pWriter);
 
 	TExternalTableData oExternalData;
 
@@ -413,13 +408,7 @@ bool CHTMLReader::InitMDTags(TMarkdownParameters* pParametrs)
 	pWriter->SetBaseDirectory(m_wsBaseDirectory);
 	pWriter->SetCoreDirectory(m_wsCoreDirectory);
 
-	m_oTags.Clear();
-
-	if (!m_oTags.Init(pWriter))
-	{
-		delete pWriter;
-		return false;
-	}
+	InitTagsForMD(m_mTags, pWriter);
 
 	TExternalTableData oExternalData;
 
@@ -648,7 +637,7 @@ void CHTMLReader::ReadBody(XmlUtils::CXmlLiteReader& oReader)
 
 	GetSubClass(oReader, arSelectors, m_oCSSCalculator);
 
-	if (!m_oTags.m_pHTML->Apply(arSelectors.back()))
+	if (!GetTag(HTML_TAG(HTML)).get()->Open(arSelectors))
 		return;
 
 	std::map<std::wstring, std::wstring>::iterator itFound = arSelectors.back().m_mAttributes.find(L"bgcolor");
@@ -715,25 +704,17 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 		case HTML_TAG(A):
 		case HTML_TAG(AREA):
 		{
-			if (m_oTags.m_pAnchor->Open(arSelectors))
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pAnchor->Close(arSelectors.back());
-			}
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(A)));
 			break;
 		}
 		case HTML_TAG(ABBR):
 		{
-			if (m_oTags.m_pAbbr->Open(arSelectors))
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pAbbr->Close();
-			}
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(ABBR)));
 			break;
 		}
 		case HTML_TAG(BR):
 		{
-			bResult = m_oTags.m_pBreak->Read(arSelectors.back());
+			bResult = ReadEmptyTag(oReader, arSelectors, GetTag(HTML_TAG(BR)));
 			break;
 		}
 		case HTML_TAG(CODE):
@@ -742,48 +723,38 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 		case HTML_TAG(OUTPUT):
 		case HTML_TAG(KBD):
 		{
-			if (m_oTags.m_pCode->Open(arSelectors.back()))
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pCode->Close();
-			}
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(CODE)));
 			break;
 		}
 		case HTML_TAG(FONT):
 		{
-			m_oTags.m_pFont->Apply(arSelectors.back(), arSelectors.size());
-			bResult = ReadStream(oReader, arSelectors);
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(FONT)));
 			break;
 		}
 		case HTML_TAG(IMG):
 		{
-			bResult = m_oTags.m_pImage->Read(arSelectors);
+			bResult = ReadEmptyTag(oReader, arSelectors, GetTag(HTML_TAG(IMG)));
 			break;
 		}
 		case HTML_TAG(SVG):
 		{
-			bResult = m_oTags.m_pImage->ReadSVG(arSelectors, oReader.GetOuterXml());
+			arSelectors.back().m_mAttributes.insert(std::make_pair(L"svg-text", oReader.GetOuterXml()));
+			bResult = ReadEmptyTag(oReader, arSelectors, GetTag(HTML_TAG(IMG)));
 			break;
 		}
 		case HTML_TAG(INPUT):
 		{
-			m_oTags.m_pInput->Read(arSelectors);
-			bResult = ReadStream(oReader, arSelectors);
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(INPUT)));
 			break;
 		}
 		case HTML_TAG(NOBR):
 		{
-			if (m_oTags.m_pPreformatted->Open())
-			{
-				bResult = ReadStream(oReader, arSelectors);
-				m_oTags.m_pPreformatted->Close(arSelectors);
-			}
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(NOBR)));
 			break;
 		}
 		case HTML_TAG(BASEFONT):
 		{
-			m_oTags.m_pBaseFont->Apply(arSelectors.back());
-			bResult = ReadStream(oReader, arSelectors);
+			bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(BASEFONT)));
 			break;
 		}
 		case HTML_TAG(BUTTON):
@@ -859,56 +830,34 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 				case HTML_TAG(H5):
 				case HTML_TAG(H6):
 				{
-					if (m_oTags.m_pHeader->Open(arSelectors.back()))
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pHeader->Close();
-					}
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(H1)));
 					break;
 				}
 				case HTML_TAG(ASIDE):
 				case HTML_TAG(DIV):
 				{
-					if (m_oTags.m_pDivision->Open(arSelectors))
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pDivision->Close();
-					}
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(DIV)));
 					break;
 				}
 				case HTML_TAG(BLOCKQUOTE):
 				{
-					if (m_oTags.m_pBlockquote->Open(arSelectors))
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pBlockquote->Close();
-					}
-
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(BLOCKQUOTE)));
 					break;
 				}
 				case HTML_TAG(HR):
 				{
-					bResult = true;
-					m_oTags.m_pHorizontalRule->Write(arSelectors);
+					bResult = ReadEmptyTag(oReader, arSelectors, GetTag(HTML_TAG(HR)));
 					break;
 				}
 				case HTML_TAG(LI):
 				{
-					if (m_oTags.m_pListElement->Open())
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pListElement->Close();
-					}
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(LI)));
 					break;
 				}
 				case HTML_TAG(OL):
 				case HTML_TAG(UL):
 				{
-					if (m_oTags.m_pList->Open(arSelectors.back()))
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pList->Close();
-					}
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(OL)));
 					break;
 				}
 		// 		case HTML_TAG(MENU):
@@ -922,11 +871,7 @@ bool CHTMLReader::ReadInside(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCS
 				case HTML_TAG(PRE):
 				case HTML_TAG(XMP):
 				{
-					if (m_oTags.m_pPreformatted->Open())
-					{
-						bResult = ReadStream(oReader, arSelectors);
-						m_oTags.m_pPreformatted->Close(arSelectors);
-					}
+					bResult = ReadTag(oReader, arSelectors, GetTag(HTML_TAG(PRE)));
 					break;
 				}
 				case HTML_TAG(TABLE):
@@ -1018,6 +963,36 @@ bool CHTMLReader::ReadTable(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS
 
 	m_pTableElement->Clear();
 	return true;
+}
+
+bool CHTMLReader::ReadEmptyTag(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, std::shared_ptr<ITag> pTag)
+{
+	if (!pTag.get()->Open(arSelectors))
+		return false;
+
+	pTag.get()->Close(arSelectors);
+
+	return true;
+}
+
+bool CHTMLReader::ReadTag(XmlUtils::CXmlLiteReader& oReader, std::vector<NSCSS::CNode>& arSelectors, std::shared_ptr<ITag> pTag)
+{
+	if (!pTag.get()->Open(arSelectors))
+		return false;
+
+	const bool bResult{ReadStream(oReader, arSelectors)};
+
+	pTag.get()->Close(arSelectors);
+
+	return bResult;
+}
+
+std::shared_ptr<ITag> CHTMLReader::GetTag(int nTag)
+{
+	if(m_mTags.cend() != m_mTags.find(nTag))
+		return m_mTags[nTag];
+
+	return std::make_shared<CEmptyTag>();
 }
 
 void CHTMLReader::AddStopTag(const std::wstring& wsTag)

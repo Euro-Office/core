@@ -1263,7 +1263,7 @@ int main(int argc, char* argv[])
 	}
 
 	// STRUCTURE
-	if (false)
+	if (true)
 	{
 		BYTE* pStructure = GetStructure(pGrFile);
 		nLength = READ_INT(pStructure);

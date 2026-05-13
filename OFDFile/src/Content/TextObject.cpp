@@ -14,27 +14,27 @@
 
 namespace OFD
 {
-CTextCode::CTextCode(CXmlReader& oLiteReader)
+CTextCode::CTextCode(CXmlReader& oReader)
 {
-	if (L"ofd:TextCode" != oLiteReader.GetName() || oLiteReader.IsEmptyElement() || !oLiteReader.IsValid())
+	if (L"ofd:TextCode" != oReader.GetName() || oReader.IsEmptyElement() || !oReader.IsValid())
 		return;
 
-	if (0 != oLiteReader.GetAttributesCount() && oLiteReader.MoveToFirstAttribute())
+	if (0 != oReader.GetAttributesCount() && oReader.MoveToFirstAttribute())
 	{
 		std::wstring wsAttributeName;
 
 		do
 		{
-			wsAttributeName = oLiteReader.GetName();
+			wsAttributeName = oReader.GetName();
 
 			if (L"X" == wsAttributeName)
-				m_dX = oLiteReader.GetDouble(true);
+				m_dX = oReader.GetDouble(true);
 			else if (L"Y" == wsAttributeName)
-				m_dY = oLiteReader.GetDouble(true);
+				m_dY = oReader.GetDouble(true);
 			else if (L"DeltaX" == wsAttributeName ||
 			         L"DeltaY" == wsAttributeName)
 			{
-				const std::vector<std::string> arValues{oLiteReader.GetArrayStrings(true)};
+				const std::vector<std::string> arValues{oReader.GetArrayStrings(true)};
 
 				std::vector<double>& arDelta{L"DeltaX" == wsAttributeName ? m_arDeltaX : m_arDeltaY};
 
@@ -60,12 +60,12 @@ CTextCode::CTextCode(CXmlReader& oLiteReader)
 						arDelta.push_back(0.);
 				}
 			}
-		} while (oLiteReader.MoveToNextAttribute());
+			} while (oReader.MoveToNextAttribute());
 	}
 
-	oLiteReader.MoveToElement();
+		oReader.MoveToElement();
 
-	m_wsText = oLiteReader.GetText2();
+		m_wsText = oReader.GetText2();
 }
 
 HRESULT DrawGlyphWithFontUpdate(IRenderer* pRenderer, NSFonts::IFontManager* pFontManager, unsigned int unUnicode, std::function<HRESULT()> CommandDrawTextCHAR)
@@ -176,72 +176,74 @@ void CTextCode::Draw(IRenderer* pRenderer, unsigned int& unIndex, const std::vec
 	}
 }
 
-CTextObject::CTextObject(CXmlReader& oLiteReader)
-	: IPageBlock(oLiteReader), CGraphicUnit(oLiteReader),
+CTextObject::CTextObject(CXmlReader& oReader)
+	: IPageBlock(oReader), CGraphicUnit(oReader),
 	  m_bStroke(false), m_bFill(true), m_dHScale(1.),
 	  m_unReadDirection(0), m_unCharDirection(0), m_unWeight(400),
 	  m_bItalic(false),
 	  m_pFillColor(nullptr), m_pStrokeColor(nullptr), m_unFontID(0)
 {
-	if (L"ofd:TextObject" != oLiteReader.GetName() || oLiteReader.IsEmptyElement() || !oLiteReader.IsValid())
+	if (L"ofd:TextObject" != oReader.GetName() || oReader.IsEmptyElement() || !oReader.IsValid())
 		return;
 
-	if (0 != oLiteReader.GetAttributesCount() && oLiteReader.MoveToFirstAttribute())
+	if (0 != oReader.GetAttributesCount() && oReader.MoveToFirstAttribute())
 	{
 		std::wstring wsAttributeName;
 
 		do
 		{
-			wsAttributeName = oLiteReader.GetName();
+			wsAttributeName = oReader.GetName();
 
 			if (L"Font" == wsAttributeName)
-				m_unFontID = oLiteReader.GetUInteger(true);
+				m_unFontID = oReader.GetUInteger(true);
 			else if (L"Size" == wsAttributeName)
-				m_dSize = oLiteReader.GetDouble(true);
+				m_dSize = oReader.GetDouble(true);
 			else if (L"Stroke" == wsAttributeName)
-				m_bStroke = oLiteReader.GetBoolean(true);
+				m_bStroke = oReader.GetBoolean(true);
 			else if (L"Fill" == wsAttributeName)
-				m_bFill = oLiteReader.GetBoolean(true);
+				m_bFill = oReader.GetBoolean(true);
 			else if (L"HScale" == wsAttributeName)
-				m_dHScale = oLiteReader.GetDouble(true);
+				m_dHScale = oReader.GetDouble(true);
 			else if (L"ReadDirection" == wsAttributeName)
-				m_unReadDirection = oLiteReader.GetUInteger(true);
+				m_unReadDirection = oReader.GetUInteger(true);
 			else if (L"CharDirection" == wsAttributeName)
-				m_unCharDirection =oLiteReader.GetUInteger(true);
+				m_unCharDirection =oReader.GetUInteger(true);
 			else if (L"Weight" == wsAttributeName)
-				m_unWeight = oLiteReader.GetUInteger(true);
+				m_unWeight = oReader.GetUInteger(true);
 			else if (L"Italic" == wsAttributeName)
-				m_bItalic = oLiteReader.GetBoolean(true);
-		} while (oLiteReader.MoveToNextAttribute());
+				m_bItalic = oReader.GetBoolean(true);
+		} while (oReader.MoveToNextAttribute());
 	}
 
-	oLiteReader.MoveToElement();
+	oReader.MoveToElement();
 
-	const int nDepth = oLiteReader.GetDepth();
+	const int nDepth = oReader.GetDepth();
 	std::wstring wsNodeName;
 
-	while (oLiteReader.ReadNextSiblingNode(nDepth))
+	while (oReader.ReadNextSiblingNode(nDepth))
 	{
-		wsNodeName = oLiteReader.GetName();
+		wsNodeName = oReader.GetName();
 
 		if (L"ofd:FillColor" == wsNodeName)
 		{
 			if (nullptr != m_pFillColor)
 				delete m_pFillColor;
 
-			m_pFillColor = new CColor(oLiteReader);
+			m_pFillColor = new CColor(oReader);
 		}
 		else if (L"ofd:StrokeColor" == wsNodeName)
 		{
 			if (nullptr != m_pStrokeColor)
 				delete m_pStrokeColor;
 
-			m_pStrokeColor = new CColor(oLiteReader);
+			m_pStrokeColor = new CColor(oReader);
 		}
 		else if (L"ofd:TextCode" == wsNodeName)
-			m_arTextCodes.push_back(new CTextCode(oLiteReader));
+			m_arTextCodes.push_back(new CTextCode(oReader));
 		else if (L"ofd:CGTransform" == wsNodeName)
-			m_arCGTransforms.push_back(TCGTransform::Read(oLiteReader));
+			m_arCGTransforms.push_back(TCGTransform::Read(oReader));
+		else
+			ReadChildren(oReader);
 	}
 }
 
@@ -312,40 +314,47 @@ void CTextObject::Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPa
 	pRenderer->SetTransform(oOldTransform.m_dM11, oOldTransform.m_dM12, oOldTransform.m_dM21, oOldTransform.m_dM22, oOldTransform.m_dDx, oOldTransform.m_dDy);
 }
 
-TCGTransform TCGTransform::Read(CXmlReader& oLiteReader)
+#ifdef BUILDING_WASM_MODULE
+void CTextObject::GetLinks(NSWasm::CData& oRes) const
+{
+	CGraphicUnit::GetLinks(oRes);
+}
+#endif
+
+TCGTransform TCGTransform::Read(CXmlReader& oReader)
 {
 	TCGTransform oCGTransform;
 
-	if (L"ofd:CGTransform" != oLiteReader.GetName() || oLiteReader.IsEmptyElement())
+	if (L"ofd:CGTransform" != oReader.GetName() || oReader.IsEmptyElement())
 		return oCGTransform;
 
-	if (0 != oLiteReader.GetAttributesCount() && oLiteReader.MoveToFirstAttribute())
+	if (0 != oReader.GetAttributesCount() && oReader.MoveToFirstAttribute())
 	{
 		std::wstring wsAttributeName;
 
 		do
 		{
-			wsAttributeName = oLiteReader.GetName();
+			wsAttributeName = oReader.GetName();
 
 			if (L"CodePosition" == wsAttributeName)
-				oCGTransform.m_unCodePosition = oLiteReader.GetUInteger(true);
+				oCGTransform.m_unCodePosition = oReader.GetUInteger(true);
 			else if (L"CodeCount" == wsAttributeName)
-				oCGTransform.m_unCodeCount = oLiteReader.GetUInteger(true);
+				oCGTransform.m_unCodeCount = oReader.GetUInteger(true);
 			else if (L"GlyphCount" == wsAttributeName)
-				oCGTransform.m_unGlyphCount = oLiteReader.GetUInteger(true);
-		} while (oLiteReader.MoveToNextAttribute());
+				oCGTransform.m_unGlyphCount = oReader.GetUInteger(true);
+		} while (oReader.MoveToNextAttribute());
 	}
 
-	oLiteReader.MoveToElement();
+	oReader.MoveToElement();
 
-	const int nDepth = oLiteReader.GetDepth();
+	const int nDepth = oReader.GetDepth();
 
-	while (oLiteReader.ReadNextSiblingNode(nDepth))
+	while (oReader.ReadNextSiblingNode(nDepth))
 	{
-		if ("ofd:Glyphs" != oLiteReader.GetNameA())
+		if ("ofd:Glyphs" != oReader.GetNameA())
 			continue;
 
-		const std::vector<unsigned int> arValues{oLiteReader.GetArrayUInteger()};
+		const std::vector<unsigned int> arValues{oReader.GetArrayUInteger()};
 		oCGTransform.m_arGlyphs.insert(oCGTransform.m_arGlyphs.end(), arValues.begin(), arValues.end());
 	}
 

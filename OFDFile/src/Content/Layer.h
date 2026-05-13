@@ -21,6 +21,10 @@ public:
 	~CLayer();
 
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const override;
+
+	#ifdef BUILDING_WASM_MODULE
+	void GetLinks(NSWasm::CData& oRes) const override;
+	#endif
 };
 }
 

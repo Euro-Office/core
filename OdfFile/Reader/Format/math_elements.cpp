@@ -31,7 +31,7 @@
  */
 
 #include "math_elements.h"
-// #include "../Converter/StarMath2OOXML/cconversionsmtoooxml.h"
+#include "../Converter/StarMath2OOXML/shakey.h"
 #include "../Converter/StarMath2OOXML/conversionmathformula.h"
 
 namespace cpdoccore { 
@@ -87,7 +87,9 @@ void math_semantics::add_child_element( xml::sax * Reader, const std::wstring & 
     {
         CP_CREATE_ELEMENT(annotation_);
     }
-	else
+    else if(CP_CHECK_NAME1(L"signature"))
+        create_element_and_read(Reader,Ns,Name,signature_,getContext(),false,true);
+    else
         CP_CREATE_ELEMENT(content_);
 
 }
@@ -99,15 +101,24 @@ void math_semantics::oox_convert(oox::math_context & Context)
 }
 void math_semantics::oox_convert(oox::math_context &Context, int iTypeConversion)
 {
+    math_signature* pSignature = dynamic_cast<math_signature*>(signature_.get());
     math_annotation* annotation = dynamic_cast<math_annotation*>(annotation_.get());
     math_annotation_xml* annotation_xml = dynamic_cast<math_annotation_xml*>(annotation_.get());
-   
-    std::wstring annotation_text;
+
+    std::wstring annotation_text(L"");
     if ((annotation) && (annotation->text_)) annotation_text = *annotation->text_;
     else if ((annotation_xml) && (annotation_xml->text_)) annotation_text = *annotation_xml->text_;
-
     bool result = false;
-    if (!annotation_text.empty())
+    if(pSignature)
+    {
+        if(pSignature->text_ && pSignature->GetAlg() == L"sha256" && HashSM::HashComparison(pSignature->GetShaKey(),HashSM::HashingAnnotation(annotation_text,true)))
+        {
+            Context.output_stream() << *pSignature->text_;
+            result = true;
+        }
+    }
+
+    if (!annotation_text.empty() && !result)
     {
         result = true;
 
@@ -196,10 +207,45 @@ void math_annotation_xml::add_child_element( xml::sax * Reader, const std::wstri
 
 void math_annotation_xml::add_text(const std::wstring & Text) 
 {
-    text_ = Text;
+    text_->append(Text);
 }
 
 //----------------------------------------------------------------------------------------------------
+
+const wchar_t * math_signature::ns = L"math";
+const wchar_t * math_signature::name = L"signature";
+//----------------------------------------------------------------------------------------------------
+
+std::wstring math_signature::GetAlg() const
+{
+	if(alg_)
+		return alg_.get();
+	return L"";
+}
+
+std::wstring math_signature::GetShaKey() const
+{
+	if(shakey_)
+		return shakey_.get();
+	return L"";
+}
+
+void math_signature::add_attributes( const xml::attributes_wc_ptr & Attributes )
+{
+   CP_APPLY_ATTR(L"encoding", encoding_);
+   CP_APPLY_ATTR(L"alg", alg_);
+   CP_APPLY_ATTR(L"shakey", shakey_);
+}
+
+void math_signature::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
+{
+	CP_CREATE_ELEMENT(content_);
+}
+
+void math_signature::add_text(const std::wstring & Text)
+{
+    text_ = Text;
+}
 
 }
 }

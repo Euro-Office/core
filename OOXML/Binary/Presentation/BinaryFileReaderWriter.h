@@ -103,6 +103,7 @@ namespace NSBinPptxRW
 	{
 		std::vector<std::wstring> sFilepathAdditionals;
 		std::wstring sFilepathImage;
+		std::vector<NSCommon::smart_ptr<OOX::File>> additionalFiles;
 	};
 
 	struct _relsGeneratorInfo

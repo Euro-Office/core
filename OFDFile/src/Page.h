@@ -21,6 +21,10 @@ public:
 	void Draw(IRenderer* pRenderer, const CCommonData& oCommonData, EPageType ePageType) const;
 
 	void GetPageSize(double& dWidth, double& dHeight) const;
+
+	#ifdef BUILDING_WASM_MODULE
+	void GetLinks(NSWasm::CData& oRes) const;
+	#endif
 };
 }
 

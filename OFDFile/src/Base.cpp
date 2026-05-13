@@ -3,6 +3,10 @@
 
 #include "../../OfficeUtils/src/ZipFolder.h"
 
+#ifdef BUILDING_WASM_MODULE
+#include "../../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
+#endif
+
 namespace OFD
 {
 #define IF_CHECK_NODE(node_name, varible_name)\
@@ -248,12 +252,24 @@ std::wstring CDocBody::GetInfo() const
 	return m_oDocInfo.GetInfo();
 }
 
+#ifdef BUILDING_WASM_MODULE
+void CDocBody::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
+{
+	m_oDocument.GetStructure(unMaxNumberPage, oRes);
+}
+
+void CDocBody::GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const
+{
+	m_oDocument.GetLinks(unPageIndex, oRes);
+}
+#endif
+
 CBase::CBase()
 {}
 
 CBase::~CBase()
 {
-	for (CDocBody* pDocBody : m_arDocBodies)
+	for (const CDocBody* pDocBody : m_arDocBodies)
 		RELEASEOBJECT(pDocBody);
 }
 
@@ -329,8 +345,17 @@ std::wstring CBase::GetInfo() const
 	return wsInfo;
 }
 
-unsigned char* CBase::GetLinks(int nPageIndex) const
+#ifdef BUILDING_WASM_MODULE
+void CBase::GetStructure(UINT& unMaxNumberPage, NSWasm::CData& oRes) const
 {
-	return nullptr;
+	for(CDocBody* pDocBody : m_arDocBodies)
+		pDocBody->GetStructure(unMaxNumberPage, oRes);
 }
+
+void CBase::GetLinks(UINT unPageIndex, NSWasm::CData& oRes) const
+{
+	for(CDocBody* pDocBody : m_arDocBodies)
+		pDocBody->GetLinks(unPageIndex, oRes);
+}
+#endif
 }
