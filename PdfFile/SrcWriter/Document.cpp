@@ -913,6 +913,8 @@ namespace PdfWriter
 		}
 		pFont = new CFontEmbedded(NULL, this);
 		pFont->LoadFont(sFontKey, nType, pObj, mCodeToWidth, mCodeToUnicode, mCodeToGID);
+		pFont->SetFontPath(wsFontPath);
+		pFont->SetFontIndex(unIndex);
 		m_vFontsEmbedded.push_back(TFontInfo(wsFontPath, unIndex, pFont));
 		return pFont;
 	}
