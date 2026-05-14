@@ -1449,7 +1449,7 @@ namespace ASC
     }
     
     template<class T>
-    matrix4<T>& perspectivex( matrix4<T> & M, const T fovx, const T aspect, const T near, const T far)
+	matrix4<T>& perspectivex( matrix4<T> & M, const T fovx, const T aspect, const T _near, const T _far)
     {
         float e = 1.0f / tanf(fovx / 2.0f);
         float aspectInv = 1.0f / aspect;
@@ -1469,12 +1469,12 @@ namespace ASC
         
         M._array[8] = 0.0f;
         M._array[9] = 0.0f;
-        M._array[10] = (far + near) / (near - far);
+		M._array[10] = (_far + _near) / (_near - _far);
         M._array[11] = -1.0f;
         
         M._array[12] = 0.0f;
         M._array[13] = 0.0f;
-        M._array[14] = (2.0f * far * near) / (near - far);
+		M._array[14] = (2.0f * _far * _near) / (_near - _far);
         M._array[15] = 0.0f;
         
         return M;
