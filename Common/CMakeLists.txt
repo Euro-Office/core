@@ -75,11 +75,15 @@ add_library(kernel SHARED
     ${CORE_ROOT_DIR}/DesktopEditor/common/ProcessEnv.cpp
 )
 
-set_default_options(kernel)
+set_default_options( kernel )
+add_officeutils( kernel ${CORE_ROOT_DIR}/OfficeUtils )
+add_libxml( kernel ${CORE_ROOT_DIR}/DesktopEditor/xml FALSE )
 
 target_compile_definitions(kernel PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
     BUILD_ZLIB_AS_SOURCES
+    ZLIB_DLL
+    ZLIB_INTERNAL
 )
 
 if( NOT MSVC )
@@ -88,13 +92,6 @@ if( NOT MSVC )
     )
 endif()
 
-# static libs
-target_link_libraries(kernel PUBLIC
-    libxml
-    OfficeUtils
-)
-
-# dynamic libs
 target_link_libraries(kernel PUBLIC
     UnicodeConverter
 )

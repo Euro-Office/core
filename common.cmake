@@ -349,3 +349,21 @@ function(inject_script TARGET_NAME TEMPLATE_FILE OUTPUT_FILE)
         )
     endif()
 endfunction()
+
+function( add_cpp_sources_from_dir_recurive TARGET DIR )
+    file(GLOB_RECURSE DIR_SOURCES CONFIGURE_DEPENDS
+        "${DIR}/*.cpp"
+        "${DIR}/*.cxx"
+        "${DIR}/*.h"
+        "${DIR}/*.hpp"
+        "${DIR}/*.hxx"
+    )
+
+    target_sources( ${TARGET} PRIVATE
+        ${DIR_SOURCES}
+    )
+
+    target_include_directories( ${TARGET} PRIVATE
+        ${DIR}
+    )
+endfunction()
