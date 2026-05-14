@@ -1268,6 +1268,13 @@ add_library(PPTXFormatLib STATIC
 
 set_default_options(PPTXFormatLib)
 
+if( MSVC )
+    target_compile_definitions( PPTXFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(PPTXFormatLib PRIVATE
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
 )

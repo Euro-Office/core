@@ -109,6 +109,13 @@ add_library(BinDocument STATIC
 
 set_default_options(BinDocument)
 
+if( MSVC )
+    target_compile_definitions( BinDocument PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(BinDocument PRIVATE
 	SOLUTION_ASCOFFICEDOCXFILE2
 	#DISABLE_FILE_DOWNLOADER

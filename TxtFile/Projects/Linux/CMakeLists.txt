@@ -28,6 +28,13 @@ add_library(TxtXmlFormatLib STATIC
 
 set_default_options(TxtXmlFormatLib)
 
+if( MSVC )
+    target_compile_definitions( TxtXmlFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(TxtXmlFormatLib PRIVATE 
     Boost::system
     Boost::filesystem

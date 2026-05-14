@@ -116,6 +116,13 @@ target_precompile_headers(XlsFormatLib PRIVATE
 
 set_default_options(XlsFormatLib)
 
+if( MSVC )
+    target_compile_definitions( XlsFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_include_directories(XlsFormatLib PRIVATE
     ${XLS_FILE_SOURCES_DIR}/Format
     ${XLS_FILE_SOURCES_DIR}/Format/Logic

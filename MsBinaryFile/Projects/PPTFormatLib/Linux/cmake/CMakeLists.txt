@@ -489,6 +489,13 @@ add_library(PptFormatLib STATIC
 
 set_default_options(PptFormatLib)
 
+if( MSVC )
+    target_compile_definitions( PptFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(PptFormatLib PRIVATE 
     Boost::system
     Boost::filesystem

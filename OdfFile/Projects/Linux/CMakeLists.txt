@@ -468,6 +468,13 @@ add_library(OdfFormatLib STATIC
 
 set_default_options(OdfFormatLib)
 
+if( MSVC )
+    target_compile_definitions( OdfFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_include_directories(OdfFormatLib PRIVATE
 	${ODF_FILE_ROOT_DIR}/Common
 )

@@ -2151,6 +2151,13 @@ add_library(XlsbFormatLib STATIC
 
 set_default_options(XlsbFormatLib)
 
+if( MSVC )
+    target_compile_definitions( XlsbFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_precompile_headers(XlsbFormatLib PRIVATE
     precompiled.h
 )

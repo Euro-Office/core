@@ -279,6 +279,13 @@ add_library(DocFormatLib STATIC
 
 set_default_options(DocFormatLib)
 
+if( MSVC )
+    target_compile_definitions( DocFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(DocFormatLib INTERFACE 
     Boost::system
     Boost::filesystem

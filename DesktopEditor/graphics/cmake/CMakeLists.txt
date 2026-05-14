@@ -1006,6 +1006,7 @@ if( MSVC )
     target_compile_definitions(graphics PRIVATE
         JAS_WIN_MSVC_BUILD
         DLL_EXPORT # freetype dll export
+        WIN32_LEAN_AND_MEAN
     )
 endif()
 

@@ -22,6 +22,13 @@ add_library(VbaFormatLib STATIC
 
 set_default_options(VbaFormatLib)
 
+if( MSVC )
+    target_compile_definitions( VbaFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(VbaFormatLib PRIVATE 
     Boost::system
     Boost::filesystem
