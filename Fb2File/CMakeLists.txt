@@ -66,6 +66,12 @@ add_library(Fb2File SHARED
     ${HTML_3RDPARTY_DIR}/htmltoxhtml.h
 )
 
+if( MSVC )
+    target_include_directories(Fb2File PRIVATE
+        ${GUMBO_INSTALL_DIR}/visualc/include
+    )
+endif()
+
 set_default_options(Fb2File)
 
 target_compile_definitions(Fb2File PRIVATE
@@ -79,9 +85,9 @@ target_include_directories(Fb2File PRIVATE
     ${Boost_INCLUDE_DIRS} 
 )
 
-target_compile_options(Fb2File PRIVATE
-    $<$<COMPILE_LANGUAGE:C>:-std=c99>
-)
+if(UNIX)
+    target_compile_options(Fb2File PRIVATE -std=c99)
+endif()
 
 # dynamic libs
 target_link_libraries(Fb2File PUBLIC

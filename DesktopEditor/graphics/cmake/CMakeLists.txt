@@ -123,7 +123,6 @@ add_library(graphics SHARED
     ${GRAPHICS_ROOT_DIR}/structures.h
 
     # raster.pri
-    ${CORE_ROOT_DIR}/DesktopEditor/xml/src/xmlwriter.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/graphics/Image.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/BgraFrame.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
