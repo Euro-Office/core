@@ -691,6 +691,7 @@ namespace OOX
 				setBorderClr(i->m_oDiagonal, m_oColors, globalInfo);
 			}
 			auto CastedPtr = static_cast<XLS::XFS*>(XFSPtr.get());
+			if(m_oCellXfs.IsInit())
 			for(auto i = 0; i < m_oCellXfs->m_arrItems.size(); i++)
 			{
 				if(CastedPtr->m_arCellXFs.size() > i)

@@ -2490,6 +2490,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_majorGridlines->m_spPr.IsInit() && m_majorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_majorGridlines->m_spPr.Init();
+					m_majorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			if(m_minorGridlines != nullptr)
@@ -2501,6 +2507,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_minorGridlines->m_spPr.IsInit() && m_minorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_minorGridlines->m_spPr.Init();
+					m_minorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			auto tickPtr = new XLS::Tick;
@@ -3279,6 +3291,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_majorGridlines->m_spPr.IsInit() && m_majorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_majorGridlines->m_spPr.Init();
+					m_majorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			if(m_minorGridlines != nullptr)
@@ -3290,6 +3308,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_minorGridlines->m_spPr.IsInit() && m_minorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_minorGridlines->m_spPr.Init();
+					m_minorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			auto tickPtr = new XLS::Tick;
@@ -3587,6 +3611,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_majorGridlines->m_spPr.IsInit() && m_majorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_majorGridlines->m_spPr.Init();
+					m_majorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_majorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			if(m_minorGridlines != nullptr)
@@ -3598,6 +3628,12 @@ xmlns:c16r2=\"http://schemas.microsoft.com/office/drawing/2015/06/chart\"");
 
 				if(m_minorGridlines->m_spPr.IsInit() && m_minorGridlines->m_spPr->ln.IsInit())
 					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				else
+				{
+					m_minorGridlines->m_spPr.Init();
+					m_minorGridlines->m_spPr->ln.Init();
+					lnFmt.lineFormat = m_minorGridlines->m_spPr->ln->toXLS();
+				}
 				axs->m_AxisLine_Format.push_back(lnFmt);
 			}
 			auto tickPtr = new XLS::Tick;
