@@ -284,6 +284,10 @@ void style_content::add_child_element( xml::sax * Reader, const std::wstring & N
 	{
 		CP_CREATE_ELEMENT_SIMPLE(style_drawing_page_properties_);
 	}
+	else if CP_CHECK_NAME(L"style", L"map")
+	{
+		CP_CREATE_ELEMENT_SIMPLE(style_map_);
+	}
 	else if CP_CHECK_NAME(L"style", L"properties")
 	{
 		Context->is_old_version = true;
@@ -656,12 +660,7 @@ void style::add_attributes( const xml::attributes_wc_ptr & Attributes )
 
 void style::add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name)
 {
-    if CP_CHECK_NAME(L"style", L"map")
-    {
-        CP_CREATE_ELEMENT(style_map_);
-    }
-    else
-        content_.add_child_element(Reader, Ns, Name, getContext());
+	content_.add_child_element(Reader, Ns, Name, getContext());
 }
 
 // styles & draw_styles
