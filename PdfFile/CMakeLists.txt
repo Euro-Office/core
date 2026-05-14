@@ -496,20 +496,15 @@ if(ANDROID)
     )
 endif()
 
-if(WIN32)
-    target_compile_options(PdfFile PRIVATE
-        -UUNICODE
-        -U_UNICODE
-    )
-endif()
+# if(WIN32)
+#     target_compile_options(PdfFile PRIVATE
+#         -UUNICODE
+#         -U_UNICODE
+#     )
+# endif()
 
-# static libs
 target_link_libraries(PdfFile PUBLIC
     CryptoPPLib
-)
-
-# dynamic libs
-target_link_libraries(PdfFile PUBLIC
     graphics
     kernel
     UnicodeConverter

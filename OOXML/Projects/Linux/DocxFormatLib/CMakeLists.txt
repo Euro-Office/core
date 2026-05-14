@@ -378,21 +378,25 @@ add_library(DocxFormatLib STATIC
 
 set_default_options(DocxFormatLib)
 
+if( MSVC )
+    target_compile_definitions( DocxFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_precompile_headers(DocxFormatLib PRIVATE
     precompiled.h
 )
 
-if(LINUX)
+if(UNIX)
     target_compile_options(DocxFormatLib PRIVATE
         -include cfloat
+        # Re-enable exporting symbols
+        -fvisibility=default
+        -fvisibility-inlines-hidden
     )
 endif()
-
-# Re-enable exporting symbols
-target_compile_options(DocxFormatLib PRIVATE
-    -fvisibility=default
-    -fvisibility-inlines-hidden
-)
 
 target_link_libraries(DocxFormatLib PRIVATE 
     Boost::system

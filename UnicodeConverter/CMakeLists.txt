@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.10)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
-include(${CORE_ROOT_DIR}/common.cmake)
-
 project(UnicodeConverter)
+
+include(${CORE_ROOT_DIR}/common.cmake)
 
 add_library(UnicodeConverter SHARED
     UnicodeConverter.cpp

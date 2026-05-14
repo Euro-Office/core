@@ -176,6 +176,13 @@ add_library(RtfFormatLib STATIC
 
 set_default_options(RtfFormatLib)
 
+if( MSVC )
+    target_compile_definitions( RtfFormatLib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(RtfFormatLib PRIVATE
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
 )
