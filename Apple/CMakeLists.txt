@@ -10,7 +10,6 @@ set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(DESKTOP_EDITOR_ROOT "${CORE_ROOT_DIR}/DesktopEditor")
 set(COMMON_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty")
 
-set(ONLY_LIBXML 1)
 if(NOT TARGET libxml)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/xml/build/cmake libxml)
 endif()
@@ -39,74 +38,8 @@ add_library(IWorkFile SHARED
     
     ${CMAKE_CURRENT_SOURCE_DIR}/IWork.h
 
-    # OfficeUtils.pri
-    ${OFFICE_UTILS_ROOT_DIR}/src/OfficeUtils.cpp
-    ${OFFICE_UTILS_ROOT_DIR}/src/ZipBuffer.cpp
-    ${OFFICE_UTILS_ROOT_DIR}/src/ZipUtilsCP.cpp
+    # Hack: The zlib addon functions are not exported by kernel, so we need to have them here as well.
     ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/adler32.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/compress.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/ioapi.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/ioapibuf.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/miniunz.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/minizip.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/mztools.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/unzip.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/zip.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/crc32.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/deflate.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/gzclose.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/gzlib.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/gzread.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/gzwrite.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/infback.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inffast.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inflate.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inftrees.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/trees.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/uncompr.c
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/zutil.c
-
-    ${OFFICE_UTILS_ROOT_DIR}/src/OfficeUtils.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/OfficeUtilsCommon.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/ZipBuffer.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/ZipFolder.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/ZipUtilsCP.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/crypt.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/ioapi.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/ioapibuf.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/mztools.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/unzip.h
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/zip.h
-
-    # apple.pri
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGBinaryData.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGCSVSpreadsheetGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGHTMLTextGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGHTMLTextTableStyle.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGHTMLTextTextStyle.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGMemoryStream.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGOLEStream.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGProperty.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGPropertyList.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGPropertyListVector.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawDrawingGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawGeneratorBase.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawPresentationGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawSpreadsheetGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawTextGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGSVGDrawingGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGSVGPresentationGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGString.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGStringVector.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGTextDrawingGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGTextPresentationGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGTextSpreadsheetGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGTextTextGenerator.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGZipStream.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGDirectoryStream.cpp
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGStreamImplementation.cpp
 
     ${ODF_LIB_ROOT}/src/DocumentElement.cxx
     ${ODF_LIB_ROOT}/src/FilterInternal.cxx
@@ -274,47 +207,6 @@ add_library(IWorkFile SHARED
     ${ETONYEK_LIB_ROOT}/src/lib/IWORKCollector.cpp
     ${ETONYEK_LIB_ROOT}/src/lib/IWORKFormula.cpp
     ${ETONYEK_LIB_ROOT}/src/lib/IWORKTable.cpp
-
-
-
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGHTMLTextTableStyle.h
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGHTMLTextTextStyle.h
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGMemoryStream.h
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGOLEStream.h
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGRawGeneratorBase.h
-    ${REVENGE_LIB_ROOT}/src/lib/RVNGZipStream.h
-    ${REVENGE_LIB_ROOT}/src/lib/librevenge_internal.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGCSVSpreadsheetGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGHTMLTextGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGRawDrawingGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGRawPresentationGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGRawSpreadsheetGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGRawTextGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGSVGPresentationGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGTextDrawingGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGTextPresentationGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGTextSpreadsheetGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/RVNGTextTextGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/librevenge-generators-api.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-generators/librevenge-generators.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-stream/RVNGDirectoryStream.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-stream/RVNGStream.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-stream/librevenge-stream-api.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-stream/librevenge-stream.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge-stream/RVNGStreamImplementation.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGBinaryData.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGDrawingInterface.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGPresentationInterface.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGProperty.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGPropertyList.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGPropertyListVector.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGSVGDrawingGenerator.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGSpreadsheetInterface.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGString.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGStringVector.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/RVNGTextInterface.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/librevenge-api.h
-    ${REVENGE_LIB_ROOT}/inc/librevenge/librevenge.h
 
     ${ODF_LIB_ROOT}/inc/libodfgen/OdfDocumentHandler.hxx
     ${ODF_LIB_ROOT}/inc/libodfgen/OdgGenerator.hxx
@@ -517,13 +409,11 @@ add_library(IWorkFile SHARED
     ${ETONYEK_LIB_ROOT}/src/lib/libetonyek_xml.h
 )
 
-set_default_options(IWorkFile)
+add_cpp_sources_from_dir_recurive( IWorkFile ${REVENGE_LIB_ROOT}/src/lib )
+add_cpp_sources_from_dir_recurive( IWorkFile ${REVENGE_LIB_ROOT}/inc )
 
-if(WIN32)
-    target_sources(IWorkFile PRIVATE
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/contrib/minizip/iowin32.c # OfficeUtils.pri
-    )
-endif()
+set_default_options( IWorkFile )
+add_libxml( IWorkFile ${CORE_ROOT_DIR}/DesktopEditor/xml TRUE )
 
 if( NOT MSVC )
     target_compile_options(IWorkFile PRIVATE
@@ -561,11 +451,12 @@ endif()
 target_compile_definitions(IWorkFile PRIVATE
     IWORK_USE_DYNAMIC_LIBRARY
     BUILD_ZLIB_AS_SOURCES # OfficeUtils.pri
+    ZLIB_DLL
 )
 
 # static libs
 target_link_libraries(IWorkFile PUBLIC
-    libxml
+    # libxml
     Boost::system
     Boost::filesystem
     Boost::regex
