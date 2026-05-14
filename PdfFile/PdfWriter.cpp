@@ -2559,7 +2559,7 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 					pFont = m_pFontEmbedded;
 				else if (m_pFont)
 					pFont = m_pDocument->CreateTrueTypeFont(m_pFont);
-				else
+				else if (!pWidgetAnnot->GetObjOwnValue("DA"))
 				{
 					dFontSize = oInfo.GetWidgetAnnotPr()->GetFontSize();
 					put_FontName(wsFontName);
