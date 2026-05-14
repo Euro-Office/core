@@ -445,13 +445,16 @@ target_compile_definitions(PdfFile PRIVATE
     CRYPTOPP_DISABLE_ASM
     NOMINMAX
 
-    HAVE_UNISTD_H # Linux and mac
-    HAVE_FCNTL_H # Linux and mac
-
     # brotli.pri
     FT_CONFIG_OPTION_USE_BROTLI
-
 )
+
+if( UNIX )
+    target_compile_definitions(PdfFile PRIVATE
+        HAVE_UNISTD_H # Linux and mac
+        HAVE_FCNTL_H # Linux and mac
+    )
+endif()
 
 target_include_directories(PdfFile PRIVATE
     lib/goo
@@ -475,9 +478,11 @@ target_include_directories(PdfFile PRIVATE
     ${BROTLI_IN_TREE_LOCATION}/c/include
 )
 
-target_compile_options(PdfFile PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:-include limits>
-)
+if( UNIX )
+    target_compile_options(PdfFile PRIVATE
+        $<$<COMPILE_LANGUAGE:CXX>:-include limits>
+    )
+endif()
 
 if(UNIX AND NOT APPLE)
     target_compile_options(PdfFile PRIVATE

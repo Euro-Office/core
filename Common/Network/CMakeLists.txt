@@ -70,6 +70,14 @@ endif()
 
 set_default_options(kernel_network)
 
+if( MSVC )
+    set_source_files_properties(
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_win.cpp
+        PROPERTIES
+            COMPILE_DEFINITIONS "UNICODE;_UNICODE"
+    )
+endif()
+
 target_compile_definitions(kernel_network PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
     BOOST_DATE_TIME_NO_LIB

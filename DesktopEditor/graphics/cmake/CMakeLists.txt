@@ -123,6 +123,7 @@ add_library(graphics SHARED
     ${GRAPHICS_ROOT_DIR}/structures.h
 
     # raster.pri
+    ${CORE_ROOT_DIR}/DesktopEditor/xml/src/xmlwriter.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/graphics/Image.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/BgraFrame.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
@@ -962,6 +963,7 @@ else()
 endif()
 
 target_compile_definitions(graphics PRIVATE
+    GRAPHICS_USE_DYNAMIC_LIBRARY_BUILDING
     DISABLE_IMAGE_EXCEPTIONS
     EXCLUDE_JPG_SUPPORT
 	MNG_SUPPORT_DISPLAY
@@ -970,7 +972,6 @@ target_compile_definitions(graphics PRIVATE
 	MNG_ACCESS_CHUNKS
 	MNG_STORE_CHUNKS
 	MNG_ERROR_TELLTALE
-    # JAS_WIN_MSVC_BUILD NOMINMAX # win
 
     # metafile.pri
     METAFILE_SUPPORT_WMF_EMF # !metafile_disable_wmf_emf
@@ -997,8 +998,15 @@ target_compile_definitions(graphics PRIVATE
 if(LINUX)
     target_compile_definitions(graphics PRIVATE
         HAVE_UNISTD_H
-        HAVE_UNISTD_H HAVE_FCNTL_H # linux or mac
+        HAVE_FCNTL_H
         _LINUX
+    )
+endif()
+
+if( MSVC )
+    target_compile_definitions(graphics PRIVATE
+        JAS_WIN_MSVC_BUILD
+        DLL_EXPORT # freetype dll export
     )
 endif()
 
@@ -1028,24 +1036,31 @@ target_include_directories(graphics PRIVATE
     ${BROTLI_INSTALL_DIR_ABS}/c/include
 )
 
-target_compile_options(graphics PRIVATE
-    -Wno-narrowing
-    -UUNICODE
-    -U_UNICODE
+if( MSVC )
+    target_include_directories(graphics PRIVATE
+        ${KATANA_INSTALL_DIR_ABS}/visualc/include
+    )
+endif()
+
+target_precompile_headers(graphics PRIVATE
+    ${CORE_ROOT_DIR}/msvc_fix.h
 )
 
 if(LINUX)
     target_compile_options(graphics PRIVATE
+        -Wno-narrowing
+        -UUNICODE
+        -U_UNICODE
         -fpermissive
         -UHAVE_IO_H
     )
-endif()
 
-# Re-enable exporting symbols
-target_compile_options(graphics PRIVATE
-    -fvisibility=default
-    -fvisibility-inlines-hidden
-)
+    # Re-enable exporting symbols
+    target_compile_options(graphics PRIVATE
+        -fvisibility=default
+        -fvisibility-inlines-hidden
+    )
+endif()
 
 # dynamic libs
 target_link_libraries(graphics PUBLIC

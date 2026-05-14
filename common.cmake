@@ -129,9 +129,7 @@ else() # Assume win+msvc
         NOMINMAX
 
         # Not sure about these:
-        _UNICODE
         DONT_WRITE_EMBEDDED_FONTS
-        UNICODE
     )
 endif()
 
@@ -150,6 +148,7 @@ if( MSVC )
         /wd4505 # unreferenced local function removed
         /O2
         /EHsc
+        /permissive
     )
 
     set(COMMON_C_FLAGS

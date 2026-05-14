@@ -473,7 +473,7 @@ target_include_directories(OdfFormatLib PRIVATE
 )
 
 target_precompile_headers(OdfFormatLib PRIVATE
-    msvc_fix.h
+    ${CORE_ROOT_DIR}/msvc_fix.h
     precompiled.h
 )
 
