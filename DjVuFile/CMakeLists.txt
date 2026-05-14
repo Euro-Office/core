@@ -138,18 +138,12 @@ add_library(DjVuFile SHARED
 
 set_default_options(DjVuFile)
 
-target_compile_options(DjVuFile PRIVATE
-    -UUNICODE
-    -U_UNICODE
-)
-
 target_compile_definitions(DjVuFile PRIVATE
     DJVU_USE_DYNAMIC_LIBRARY
 )
 
 if( NOT WIN32 )
     target_compile_definitions(DjVuFile PRIVATE
-        HAVE_UNISTD_H
         HAVE_MBSTATE_T
         GCONTAINER_NO_MEMBER_TEMPLATES=1
         HAS_WCHAR
@@ -170,18 +164,11 @@ target_include_directories(DjVuFile PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-# dynamic libs
 target_link_libraries(DjVuFile PUBLIC
     graphics
     kernel
     UnicodeConverter
     PdfFile
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
 copy_artifacts_to_folder("DjVuFile" "${EO_CORE_OUTPUT_DIR}")
