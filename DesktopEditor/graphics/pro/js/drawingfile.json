@@ -73,7 +73,8 @@
 		"freetype-2.10.4/include", "freetype-2.10.4/include/freetype", 		
 		"../../../../OfficeUtils/src/zlib-1.2.11", "../../../../OfficeUtils/src/zlib-1.2.11/contrib/minizip", "../../../../OfficeUtils/src", 
 		"../../../../Common/3dParty/icu/icu/source/common", 
-		"../../../xml/libxml2/include", "../../../xml/build/qt", 		
+		"../../../../Common/3dParty/libxml/libxml2/include",
+		"../../../xml/build/qt", 		
 		"../../../../PdfFile/lib/goo", "../../../../PdfFile/lib/fofi", "../../../../PdfFile/lib/splash", "../../../../PdfFile/lib", 
 		"../../../raster/Jp2/openjpeg", "../../../raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2", 
 		"../../../../Common/3dParty/openssl/openssl/include", 
@@ -266,7 +267,7 @@
 	},
 	{
 		"folder": "../../../../OFDFile/src/",
-		"files": ["Annotation.cpp", "OFDFile_Private.cpp", "Base.cpp", "Document.cpp", "Page.cpp", "Res.cpp"]
+		"files": ["Action.cpp", "Annotation.cpp", "Base.cpp", "Bookmark.cpp", "Document.cpp", "OFDFile_Private.cpp", "OutlineElem.cpp", "Page.cpp", "Res.cpp"]
 	},
 	{
 		"folder": "../../../../OFDFile/src/Content/",
@@ -274,7 +275,7 @@
 	},
 	{
 		"folder": "../../../../OFDFile/src/Types/",
-		"files": ["Color.cpp", "ColorSpace.cpp", "CommonData.cpp", "CompositeGraphicUnit.cpp", "DrawParam.cpp", "Font.cpp", "MultiMedia.cpp", "PageArea.cpp", "PenSettings.cpp", "Signature.cpp", "TemplatePage.cpp"]
+		"files": ["Color.cpp", "ColorSpace.cpp", "CommonData.cpp", "CompositeGraphicUnit.cpp", "DrawParam.cpp", "Font.cpp", "MultiMedia.cpp", "PageArea.cpp", "PenSettings.cpp", "Signature.cpp", "TemplatePage.cpp", "Region.cpp"]
 	},
 	{
 		"folder": "../../../../OFDFile/src/Utils/",
