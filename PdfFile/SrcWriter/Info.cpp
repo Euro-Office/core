@@ -200,7 +200,9 @@ namespace PdfWriter
 			return;
 
 		time_t oTime = time(0);
-		struct tm* oNow = gmtime(&oTime);
+		struct tm oNowBuf;
+		gmtime_s(&oNowBuf, &oTime);
+		struct tm* oNow = &oNowBuf;
 
 		TDate oDate;
 

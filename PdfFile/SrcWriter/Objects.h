@@ -483,7 +483,6 @@ namespace PdfWriter
 		void         SetStream(CXref* pXref, CStream* pStream, bool bThis = true);
 
 		virtual void      BeforeWrite(){}
-		virtual void      Write(CStream* pStream){}
 		virtual void      AfterWrite(CStream* pStream){}
 		virtual CObjectBase* Copy(CObjectBase* pOut = NULL) const;
 		virtual EDictType GetDictType() const
