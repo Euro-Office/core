@@ -56,12 +56,6 @@ if(DRAWINGFILE_SUPPORT)
     endif()
 endif()
 
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-
-set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
-get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
-
 add_library(doctrenderer SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder_p.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/docbuilder.cpp
@@ -121,6 +115,17 @@ add_library(doctrenderer SHARED
 )
 
 set_default_options(doctrenderer)
+
+if( MSVC )
+    target_compile_definitions( doctrenderer PRIVATE
+        _UNICODE
+        UNICODE
+    )
+
+    target_precompile_headers(doctrenderer PRIVATE
+        ${CORE_ROOT_DIR}/msvc_fix.h
+    )
+endif()
 
 if(USE_JAVASCRIPT_CORE)
     target_sources(doctrenderer PRIVATE
@@ -269,17 +274,25 @@ target_link_libraries(doctrenderer INTERFACE
 )
 
 target_link_libraries(doctrenderer PRIVATE
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-    ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
+    ${OPENSSL_LIBSSL}
+    ${OPENSSL_LIBCRYPTO}
+    ${V8_MONILITH}
 )
 
 target_link_libraries(doctrenderer PUBLIC
-    ${V8_INSTALL_DIR_ABS}/libv8_monolith.a
     graphics
     kernel
     UnicodeConverter
     kernel_network
 )
+
+if( MSVC )
+    target_link_libraries(doctrenderer PUBLIC
+        Rpcrt4
+        Winmm
+        Dbghelp
+    )
+endif()
 
 if(DRAWINGFILE_SUPPORT)
     target_link_libraries(doctrenderer PUBLIC
@@ -290,9 +303,11 @@ if(DRAWINGFILE_SUPPORT)
     )
 endif()
 
-target_link_libraries(doctrenderer PUBLIC
-    pthread
-)
+if( UNIX )
+    target_link_libraries(doctrenderer PUBLIC
+        pthread
+    )
+endif()
 
 copy_artifacts_to_folder("doctrenderer" "${EO_CORE_OUTPUT_DIR}")
 

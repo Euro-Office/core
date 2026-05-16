@@ -10,9 +10,6 @@ if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()
 
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-
 set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socketio")
 get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
 
@@ -108,17 +105,10 @@ target_include_directories(kernel_network PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
 )
 
-if( MSVC )
-    target_link_libraries(kernel_network PRIVATE
-        ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib
-        ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib
-    )
-else()
-    target_link_libraries(kernel_network PRIVATE
-        ${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a
-        ${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a
-    )
-endif()
+target_link_libraries(kernel_network PRIVATE
+    ${OPENSSL_LIBSSL}
+    ${OPENSSL_LIBCRYPTO}
+)
 
 target_link_libraries(kernel_network PUBLIC
     kernel

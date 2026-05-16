@@ -124,17 +124,15 @@ if(NOT TARGET ooxmlsignature)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src ooxmlsignature)
 endif()
 
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-
 add_library(x2tlib SHARED
     ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
+    ${CORE_ROOT_DIR}/OOXML/Base/Unit.cpp
+    
 	${X2T_ROOT_DIR}/src/cextracttools.cpp
 	${X2T_ROOT_DIR}/src/ASCConverters.cpp
 
     ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker.h
+
     ${X2T_ROOT_DIR}/src/ASCConverters.h
     ${X2T_ROOT_DIR}/src/cextracttools.h
     ${X2T_ROOT_DIR}/src/lib/common.h
@@ -159,18 +157,17 @@ add_library(x2tlib SHARED
 
 set_default_options(x2tlib)
 
+if( MSVC )
+    target_compile_definitions( x2tlib PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_compile_definitions(x2tlib PRIVATE
     FILTER_FLATE_DECODE_ENABLED
     AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
-    PDFFILE_USE_DYNAMIC_LIBRARY
-    XPS_USE_DYNAMIC_LIBRARY
-    OFD_USE_DYNAMIC_LIBRARY
-    DJVU_USE_DYNAMIC_LIBRARY
-    HTMLFILE_USE_DYNAMIC_LIBRARY
-    UNICODECONVERTER_USE_DYNAMIC_LIBRARY
     FILE_FORMAT_CHECKER_WITH_MACRO
-    KERNEL_USE_DYNAMIC_LIBRARY
-    GRAPHICS_USE_DYNAMIC_LIBRARY
     BUILD_X2T_AS_LIBRARY_DYLIB
 )
 
@@ -180,14 +177,22 @@ target_include_directories(x2tlib PRIVATE
     ${CORE_ROOT_DIR}/OOXML/Binary/Document
     ${CORE_ROOT_DIR}/OOXML/Binary/Presentation
     ${CORE_ROOT_DIR}/OfficeUtils/src
-    ${ICU_INSTALL_DIR}/include
+    ${ICU_INSTALL_DIR_ABS}/include
 )
 
-# Re-enable exporting symbols
-target_compile_options(x2tlib PRIVATE
-    -fvisibility=default
-    -fvisibility-inlines-hidden
-)
+if( UNIX )
+    # Re-enable exporting symbols
+    target_compile_options(x2tlib PRIVATE
+        -fvisibility=default
+        -fvisibility-inlines-hidden
+    )
+endif()
+
+if( MSVC )
+    set_target_properties(x2tlib PROPERTIES
+        WINDOWS_EXPORT_ALL_SYMBOLS ON
+    )
+endif()
 
 # static libs
 target_link_libraries(x2tlib PRIVATE
@@ -225,17 +230,18 @@ target_link_libraries(x2tlib PUBLIC
     HWPFile
     StarMathConverter
     ooxmlsignature
+
     Boost::system
     Boost::filesystem
     Boost::regex
     Boost::date_time
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
+
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
 set_property(TARGET x2tlib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_artifacts_to_folder("x2tlib" "${EO_CORE_OUTPUT_DIR}")
-copy_icu_libs(x2tlib)
 
 declare_victory( x2tlib )

@@ -11,7 +11,7 @@ find_package(Boost REQUIRED COMPONENTS system filesystem regex date_time)
 
 set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
-add_subdirectory(library)
+add_subdirectory(library x2tlib)
 
 add_executable(x2t
     ${X2T_ROOT_DIR}/src/main.cpp
@@ -19,7 +19,14 @@ add_executable(x2t
 
 set_default_options(x2t)
 
-# dynamic libs
+if( MSVC )
+    target_compile_definitions(x2t PRIVATE
+        _RWSTD_NO_SETRLIMIT
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(x2t PRIVATE
     x2tlib
 )

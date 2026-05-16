@@ -22,6 +22,10 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
+if(NOT TARGET StarMathConverter)
+    add_subdirectory(${CORE_ROOT_DIR}/OdfFile/Reader/Converter/StarMath2OOXML StarMathConverter)
+endif()
+
 add_library(HWPFile SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/HwpDoc/Common/WriterContext.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/HwpDoc/Common/XMLReader.cpp
@@ -201,16 +205,12 @@ target_compile_definitions(HWPFile PRIVATE
     CRYPTOPP_DISABLE_ASM
 )
 
-# static libs
 target_link_libraries(HWPFile PUBLIC
     CryptoPPLib
-)
-
-# shared libs
-target_link_libraries(HWPFile PUBLIC
     kernel
     UnicodeConverter
     graphics
+    StarMathConverter
 )
 
 copy_artifacts_to_folder("HWPFile" "${EO_CORE_OUTPUT_DIR}")

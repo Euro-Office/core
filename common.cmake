@@ -6,10 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if( WIN32 )
-    set( MSVC TRUE )
-endif()
-
 cmake_path( APPEND DEFAULT_EO_CORE_OUTPUT_DIR "${CMAKE_BINARY_DIR}" "package" )
 cmake_path( APPEND DEFAULT_EO_CORE_TOOLS_DIR "${CMAKE_BINARY_DIR}" "package" )
 
@@ -66,7 +62,14 @@ if(NOT THIRD_PARTY_PREPARED)
     endif()
 endif()
 
+if(MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
+    foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
+        string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+    endforeach()
+endif()
 
+# Setup icu
 # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
 set(ICU_MAJOR_VER "74")
 set(ICU_MINOR_VER "2")
@@ -80,13 +83,33 @@ else()
     set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
 endif()
 
-# Ensure boost
+# Setup boost
 set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
 get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
 set( CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
 include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
 set(Boost_USE_STATIC_LIBS ON)
 find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
+
+# Setup v8
+set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
+get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
+if( MSVC )
+    set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
+else()
+    set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
+endif()
+
+# Setup openssl
+set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
+get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+if( MSVC )
+    set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
+    set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
+else()
+    set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
+    set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+endif()
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
@@ -162,6 +185,7 @@ if( MSVC )
 
     set(COMMON_LINK_OPTIONS
     )
+    
 
 else()
 
