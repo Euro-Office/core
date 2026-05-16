@@ -165,6 +165,13 @@ target_include_directories(HtmlFile2 PRIVATE
     ${KATANA_INSTALL_DIR_ABS}/src
 )
 
+if( MSVC )
+    target_include_directories(HtmlFile2 PRIVATE
+        ${KATANA_INSTALL_DIR_ABS}/visualc/include
+        ${GUMBO_INSTALL_DIR}/visualc/include
+    )
+endif()
+
 target_compile_definitions(HtmlFile2 PRIVATE
     HTMLFILE2_USE_DYNAMIC_LIBRARY
     CSSCALCULATOR_LIBRARY_STATIC

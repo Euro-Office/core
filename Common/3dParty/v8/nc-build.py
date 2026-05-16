@@ -381,6 +381,12 @@ solutions = [
     depot_env["PATH"] = f"{depot_tools_path}{os.pathsep}" + depot_env["PATH"]
     depot_env["GCLIENT_SUPPRESS_GIT_VERSION_WARNING"] = "1"
     depot_env["GYP_CHROMIUM_NO_ACTION"] = "1"
+    depot_env["DEPOT_TOOLS_WIN_TOOLCHAIN"] = "0"
+
+    if nc.is_windows():
+        fake_pipes_shim_path = create_fake_pipes_shim()
+        depot_env[ "PYTHONPATH" ] = str( fake_pipes_shim_path )
+
     
     # Since I'm patching v8/build, I need to reset it before sync (if already exists)
     if ( v8_src_path / "build" ).is_dir():
@@ -389,7 +395,7 @@ solutions = [
             "Hard reset v8/build",
             v8_src_path / "build"
         )
-    
+
     if nc.is_linux() or nc.is_windows():
         if nc.is_linux():
             nc.run_command(
@@ -399,6 +405,7 @@ solutions = [
                 env = depot_env,
             )
         else: # win
+            
             nc.run_command(
                 [ "cmd.exe", "/c", "gclient.bat", "sync", "--no-history", "--shallow" ],
                 "GClient sync",
@@ -438,7 +445,7 @@ solutions = [
         print( "Running gn gen" )
         gn_rt_env = { "PYTHONPATH": "" }
         if nc.is_windows():
-            gn_rt_env[ "PYTHONPATH" ] = str( create_fake_pipes_shim() )
+            gn_rt_env[ "PYTHONPATH" ] = str( fake_pipes_shim_path )
             gn_rt_env[ "DEPOT_TOOLS_WIN_TOOLCHAIN" ] = "0"
             gn_rt_env[ "vs2022_install" ] = str( Path( os.environ[ "VSINSTALLDIR" ] ) )
             
@@ -458,14 +465,18 @@ solutions = [
                 nc.abort_op( f"Tool not found: {tool}" )
 
         job_count = max( os.cpu_count() or 1, 4 ) # at least 4 jobs
+        if nc.is_windows():
+            # On Windows, MSVC is more likely to run out of memory if it uses too many workers. TODO: Maybe we could set an optimal job count based on free memory and cpu core count.
+            job_count = 4
 
         print( "Building v8" )
         env = {
             "CC": "clang",
             "CXX": "clang++"
         } if nc.is_linux() else {
-            "CXXFLAGS": "/FIstring",
-            "CFLAGS": "/FIstring",
+            # "CXXFLAGS": "/FIstring /Zm300",
+            # "CFLAGS": "/FIstring /Zm300",
+            "CL": "/FIstring /Zm300",
         }
         nc.run_command(
             [ "ninja", "-C", output_path, f"-j{job_count}", "v8_monolith" ],
