@@ -15,7 +15,6 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
-
 if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
@@ -29,11 +28,20 @@ add_executable(x2ttester
     ${CMAKE_CURRENT_LIST_DIR}/x2tTester.h
 )
 
+set_default_options(x2ttester)
+
+if( MSVC )
+    target_compile_definitions( x2ttester PRIVATE
+        _UNICODE
+        UNICODE
+    )
+endif()
+
 target_link_libraries(x2ttester PUBLIC
 	kernel
 	graphics
-	UnicodeConverter)
-set_default_options(x2ttester)
+	UnicodeConverter
+)
 
 copy_artifacts_to_folder("x2ttester" "${EO_CORE_TOOLS_DIR}")
 

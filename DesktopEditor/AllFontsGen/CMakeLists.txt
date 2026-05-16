@@ -18,9 +18,6 @@ if(NOT TARGET graphics)
     add_subdirectory(${CORE_ROOT_DIR}/DesktopEditor/graphics/cmake graphics)
 endif()
 
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-
 add_executable(allfontsgen
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
@@ -28,24 +25,17 @@ add_executable(allfontsgen
 set_default_options(allfontsgen)
 
 target_include_directories(allfontsgen PRIVATE
-    ${ICU_INSTALL_DIR}/include
-)
-
-
-target_compile_definitions(allfontsgen PRIVATE
-    KERNEL_USE_DYNAMIC_LIBRARY
-    GRAPHICS_USE_DYNAMIC_LIBRARY
+    ${ICU_INSTALL_DIR_ABS}/include
 )
 
 target_link_libraries(allfontsgen PUBLIC
     UnicodeConverter
     kernel
     graphics
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
 copy_artifacts_to_folder("allfontsgen" "${EO_CORE_TOOLS_DIR}")
-copy_icu_libs(allfontsgen)
 
 declare_victory( allfontsgen )
