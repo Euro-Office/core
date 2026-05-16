@@ -18,9 +18,6 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-
 add_executable(pluginsmanager
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 
@@ -30,7 +27,7 @@ add_executable(pluginsmanager
 set_default_options(pluginsmanager)
 
 target_include_directories(pluginsmanager PRIVATE
-    ${ICU_INSTALL_DIR}/include
+    ${ICU_INSTALL_DIR_ABS}/include
 )
 
 target_compile_definitions(pluginsmanager PRIVATE
@@ -41,11 +38,10 @@ target_link_libraries(pluginsmanager PUBLIC
     kernel
     kernel_network
     UnicodeConverter
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
 copy_artifacts_to_folder("pluginsmanager" "${EO_CORE_TOOLS_DIR}")
-copy_icu_libs(pluginsmanager)
 
 declare_victory( pluginsmanager )

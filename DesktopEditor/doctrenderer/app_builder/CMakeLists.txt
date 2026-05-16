@@ -42,9 +42,6 @@ if(NOT TARGET DocxRenderer)
     add_subdirectory(${CORE_ROOT_DIR}/DocxRenderer DocxRenderer)
 endif()
 
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-
 add_executable(docbuilder
     ${CMAKE_CURRENT_LIST_DIR}/main.cpp
 )
@@ -61,12 +58,20 @@ target_link_libraries(docbuilder PUBLIC
     XpsFile
     DjVuFile
     DocxRenderer
-    ${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}
-    ${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}
-    dl
+    ${LIBICUUC}
+    ${LIBICUDATA}
 )
 
+if( MSVC )
+    target_link_libraries(docbuilder PUBLIC
+        Kernel32
+    )
+elseif( UNIX )
+    target_link_libraries(docbuilder PUBLIC
+        dl
+    )
+endif()
+
 copy_artifacts_to_folder("docbuilder" "${EO_CORE_OUTPUT_DIR}")
-copy_icu_libs(docbuilder)
 
 declare_victory( docbuilder )
