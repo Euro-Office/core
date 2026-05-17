@@ -109,7 +109,7 @@ namespace NSNetwork
 			{
 				CURL *curl;
 				int fp;
-				CURLcode res;
+				CURLcode res = CURLE_FAILED_INIT;
 				std::string sUrl = U_TO_UTF8(m_sDownloadFileUrl);
 				std::string sOut;
 				const char *url = sUrl.c_str();

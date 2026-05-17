@@ -178,6 +178,33 @@ namespace NSNetwork
 				NSString* stringURL = StringWToNSString(m_sDownloadFileUrl);
 				NSURL* url = SafeURLFromString(stringURL);
 
+				// NSURLSession does not support file:// URLs reliably on macOS/iOS
+				// NSFileManager to copy the file directly instead.
+				if (url && [[url scheme] isEqualToString:@"file"])
+				{
+					NSString* dstPath = StringWToNSString(m_sDownloadFilePath);
+					NSFileManager* fm = [NSFileManager defaultManager];
+					// copyItemAtURL:toURL: fails if destination exists — remove it first
+					// to match the overwrite semantics of writeToFile:atomically:YES
+					[fm removeItemAtPath:dstPath error:nil];
+					NSError* err = nil;
+					BOOL ok = [fm copyItemAtURL:url
+										  toURL:[NSURL fileURLWithPath:dstPath]
+										  error:&err];
+					if (!ok)
+						NSLog(@"[DownloadFile] file:// copy failed: %@", err);
+#if !defined(_IOS)
+#ifndef _ASC_USE_ARC_
+					if (!GetARCEnabled())
+					{
+						[dstPath release];
+						[stringURL release];
+					}
+#endif
+#endif
+					return ok ? 0 : 1;
+				}
+
 				if (!url)
 				{
 					NSLog(@"[DownloadFile] Invalid URL: %@", stringURL);
