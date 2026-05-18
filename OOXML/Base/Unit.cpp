@@ -859,7 +859,7 @@ namespace XmlUtils
                 case L'\0':
                 default:
                 {
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
                     wchar_t symbol1 = data[pos];
 #else
                     uint16_t symbol1 = static_cast<uint16_t>(data[pos]);
@@ -871,7 +871,7 @@ namespace XmlUtils
                         if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
                         {
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN64)
                             wchar_t symbol2 = data[pos+1];
 #else
                             uint16_t symbol2 = static_cast<uint16_t>(data[pos+1]);
