@@ -34,6 +34,7 @@
 #include "xlsx_utils.h"
 
 #include <vector>
+#include <map>
 #include <boost/lexical_cast.hpp>
 #include "../../Common/xml/simple_xml_writer.h"
 #include "../../../OOXML/Base/Unit.h"
@@ -166,7 +167,6 @@ public:
     {
 		if (conditionalFormattings_.empty()) return;
 
-		int priority = 1;
 		CP_XML_WRITER(_Wostream)
 		{
 			for (size_t i = 0; i < conditionalFormattings_.size(); i++)
@@ -176,6 +176,7 @@ public:
 				if (c.bUsed) continue;
 				if (c.rules.size() < 1) continue;
 
+				int priority = 1;
 				CP_XML_NODE(L"conditionalFormatting")
 				{
 					CP_XML_ATTR(L"sqref", c.ref);
@@ -513,6 +514,7 @@ public:
 	}
 
     std::vector<conditionalFormatting> conditionalFormattings_;
+	std::map<std::wstring, size_t> map_conditionalFormattings_;
 };
 
 xlsx_conditionalFormatting_context::xlsx_conditionalFormatting_context() :
@@ -530,14 +532,32 @@ void xlsx_conditionalFormatting_context::serializeEx(std::wostream& _Wostream)
 {
 	return impl_->serializeEx(_Wostream);
 }
-void xlsx_conditionalFormatting_context::start(std::wstring ref)
+void xlsx_conditionalFormatting_context::start(const std::wstring& ref)
 {
-	formulasconvert::odf2oox_converter converter;
-	impl_->conditionalFormattings_.push_back(conditionalFormatting());
+	impl_->conditionalFormattings_.emplace_back();
 	
+	formulasconvert::odf2oox_converter converter;
 	impl_->conditionalFormattings_.back().ref = converter.convert_named_ref(ref, false, L" ");
 }
+bool xlsx_conditionalFormatting_context::start_by(const std::wstring &val, const std::wstring& ref)
+{
+	formulasconvert::odf2oox_converter converter;
 
+	auto pFind = impl_->map_conditionalFormattings_.find(val);
+	if (pFind != impl_->map_conditionalFormattings_.end())
+	{
+		impl_->conditionalFormattings_[pFind->second].ref += L" " + converter.convert_named_ref(ref, false, L" ");
+		return false;
+	}
+	else
+	{
+		impl_->map_conditionalFormattings_.insert(std::make_pair(val, impl_->conditionalFormattings_.size()));
+		impl_->conditionalFormattings_.emplace_back();
+
+		impl_->conditionalFormattings_.back().ref = converter.convert_named_ref(ref, false, L" ");
+		return true;
+	}
+}
 void xlsx_conditionalFormatting_context::add_rule(int type)
 {
 	if (false == impl_->conditionalFormattings_.back().rules.empty())
@@ -621,6 +641,12 @@ void xlsx_conditionalFormatting_context::set_formula(std::wstring f)
 	{
 		impl_->conditionalFormattings_.back().rules.back().formula_type = L"notContainsErrors";
 	}	
+	else if (0 <= (pos = f.find(L"is-true-formula(")))
+	{
+		val = f.substr(16, f.size() - 17);
+		impl_->conditionalFormattings_.back().rules.back().formula_type = L"expression";
+		impl_->conditionalFormattings_.back().rules.back().formula = converter.convert_named_expr(val);
+	}
 	else if (0 <= (pos = f.find(L"duplicate")))
 	{
 		impl_->conditionalFormattings_.back().rules.back().formula_type = L"duplicateValues";

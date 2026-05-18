@@ -2528,38 +2528,12 @@ HRESULT CPdfWriter::AddAnnotField(NSFonts::IApplicationFonts* pAppFonts, CAnnotF
 
 				pButtonWidget->SetStyle(pPrB->GetStyle());
 
-				//if (!pButtonWidget->Get("DA"))
-				{
-					PdfWriter::CFontDict* pFont = pFontTT;
-					dFontSize = oInfo.GetWidgetAnnotPr()->GetFontSize();
-					if (!wsFontName.empty())
-					{
-						put_FontName(wsFontName);
-						put_FontStyle(nStyle);
-						put_FontSize(dFontSize);
-
-						if (m_bNeedUpdateTextFont)
-							UpdateFont();
-						if (m_pFont)
-							pFont = m_pDocument->CreateTrueTypeFont(m_pFont);
-					}
-					else
-					{
-						put_FontName(L"Embedded: ZapfDingbats");
-						put_FontStyle(0);
-						put_FontSize(dFontSize);
-
-						if (m_bNeedUpdateTextFont)
-							UpdateFont();
-						if (m_pFont14)
-							pFont = m_pFont14;
-					}
-					pButtonWidget->SetDA(pFont, oInfo.GetWidgetAnnotPr()->GetFontSize(), dFontSize, oInfo.GetWidgetAnnotPr()->GetTC());
-				}
+				PdfWriter::CDictObject* pOwner = pButtonWidget->GetObjOwnValue("DA");
+				if (pOwner)
+					pOwner->Remove("DA");
 
 				// APPEARANCE
-				//if (!pButtonWidget->Get("AP"))
-					pButtonWidget->SetAP(nR);
+				pButtonWidget->SetAP(nR);
 
 				if (nFlags & (1 << 9))
 				{
@@ -3565,10 +3539,13 @@ bool CPdfWriter::DrawText(unsigned char* pCodes, const unsigned int& unLen, cons
 
 	CRendererTextCommand* pText = m_oCommandManager.AddText(pCodes, unLen, MM_2_PT(dX), MM_2_PT(m_dPageHeight - dY));
 	PdfWriter::CFontDict* pFont = m_pFont;
-	if (m_pFont14)
-		pFont = m_pFont14;
-	if (m_pFontEmbedded)
-		pFont = m_pFontEmbedded;
+	if (!pFont)
+	{
+		if (m_pFont14)
+			pFont = m_pFont14;
+		if (m_pFontEmbedded)
+			pFont = m_pFontEmbedded;
+	}
 	pText->SetFont(pFont);
 	pText->SetSize(m_oFont.GetSize());
 	pText->SetColor(m_oBrush.GetColor1());
@@ -3719,6 +3696,7 @@ bool CPdfWriter::GetEmbeddedFont(const std::wstring& wsFontName)
 bool CPdfWriter::UpdateFont()
 {
 	m_bNeedUpdateTextFont = false;
+	m_pFont = NULL;
 	m_pFont14 = NULL;
 	m_pFontEmbedded = NULL;
 
@@ -3745,7 +3723,6 @@ bool CPdfWriter::UpdateFont()
 		}
 	}
 
-	m_pFont = NULL;
 	m_oFont.SetNeedDoBold(false);
 	m_oFont.SetNeedDoItalic(false);
 
@@ -4323,13 +4300,36 @@ unsigned char* CPdfWriter::EncodeGID(const unsigned int& unGID, const unsigned i
 	{
 		unsigned short ushCode = m_pFontEmbedded->EncodeUnicode(unGID, *pUnicodes);
 
-		// For CFontEmbedded widths are already loaded, we don't add anything
+		if (ushCode != 0)
+		{
+			unsigned char* pCodes = new unsigned char[2];
+			pCodes[0] = (ushCode >> 8) & 0xFF;
+			pCodes[1] = ushCode & 0xFF;
+			return pCodes;
+		}
 
-		unsigned char* pCodes = new unsigned char[2];
-		pCodes[0] = (ushCode >> 8) & 0xFF;
-		pCodes[1] = ushCode & 0xFF;
+		// The symbol is not supported by the embedded font - we try it through CidTrueType
+		std::wstring wsFontPath = m_pFontEmbedded->GetFontPath();
+		LONG lFaceIndex         = m_pFontEmbedded->GetFontIndex();
 
-		return pCodes;
+		m_pFont = GetFont(wsFontPath, lFaceIndex);
+		if (m_pFont)
+		{
+			unsigned short ushCidCode = m_pFont->EncodeGID(unGID, pUnicodes, unUnicodesCount);
+			if (ushCidCode != 0)
+			{
+				m_bNeedUpdateTextFont = true;
+
+				unsigned char* pCodes = new unsigned char[2];
+				pCodes[0] = (ushCidCode >> 8) & 0xFF;
+				pCodes[1] = ushCidCode & 0xFF;
+				return pCodes;
+			}
+		}
+
+		// CidTrueType also failed
+		m_bNeedUpdateTextFont = true;
+		return NULL;
 	}
 
 	if (!m_pFont)

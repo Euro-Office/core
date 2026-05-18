@@ -718,7 +718,6 @@ namespace PdfWriter
 
 		pDict->WriteToStream(this, pEncrypt);
 
-		pDict->Write(this);
 		WriteStr(">>");
 
 		CStream* pStream = pDict->GetStream();

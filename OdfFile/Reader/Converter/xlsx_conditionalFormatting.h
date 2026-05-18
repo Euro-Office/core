@@ -44,8 +44,10 @@ public:
     xlsx_conditionalFormatting_context();
     ~xlsx_conditionalFormatting_context();
 
-	void start(std::wstring ref);
+	void start(const std::wstring& ref);
 	void end(){}
+
+	bool start_by(const std::wstring& val, const std::wstring& ref); //return bNew
 
 	void add_rule(int type);
 

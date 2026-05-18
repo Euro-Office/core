@@ -202,8 +202,10 @@ void office_annotation::xlsx_convert(oox::xlsx_conversion_context & Context)
 	Context.get_drawing_context().set_rect(width_pt, height_pt, x_pt, y_pt);
 	if (attr_.display_)
 	{
-		Context.get_drawing_context().set_property(_property(L"visibly", attr_.display_.get()));
+		Context.get_drawing_context().set_property(_property(L"visible", attr_.display_.get()));
 	}
+	else 
+		Context.get_drawing_context().set_property(_property(L"visible", false));
 
 	if (attr_.draw_style_name_)
 	{
