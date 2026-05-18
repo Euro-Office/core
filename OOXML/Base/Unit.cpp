@@ -859,29 +859,31 @@ namespace XmlUtils
                 case L'\0':
                 default:
                 {
-                    if (!IsUnicodeSymbol(static_cast<unsigned int>( data[pos])))
-                    {
-#ifdef _WIN32
-                        wchar_t symbol1 = data[pos];
+#if defined(_WIN32) || defined(_WIN64)
+                    wchar_t symbol1 = data[pos];
 #else
-                        uint16_t symbol1 = static_cast<uint16_t>(data[pos]);
+                    uint16_t symbol1 = static_cast<uint16_t>(data[pos]);
 #endif
+
+                    if (!IsUnicodeSymbol(static_cast<unsigned int>( symbol1)))
+                    {
 
                         if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
                         {
-#ifdef _WIN32
+
+#if defined(_WIN32) || defined(_WIN64)
                             wchar_t symbol2 = data[pos+1];
 #else
                             uint16_t symbol2 = static_cast<uint16_t>(data[pos+1]);
 #endif
+
                             if (symbol1 < 0xDC00 && symbol2 >= 0xDC00 && symbol2 <= 0xDFFF)
                             {
-#ifdef _WIN32
-                                buffer.append(&data[pos], 2);
-#else
+
                                 uint32_t codepoint = 0x10000 + ((symbol1 - 0xD800) << 10) + (symbol2 - 0xDC00);
-                                buffer += static_cast<wchar_t>(codepoint);
-#endif
+                                wchar_t hexBuf[20];
+                                swprintf(hexBuf, 20, L"&#x%X;", codepoint);
+                                buffer.append(hexBuf);
                                 pos++;
                             }
                             else
