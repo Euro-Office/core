@@ -1009,16 +1009,20 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		{
 			ref += L":" + oox::getCellAddress(Context.current_table_column() + attlist_.table_number_columns_repeated_, Context.current_table_row());
 		}
-		std::wstring base_cell;
+		std::wstring condition_sort;
 		for (const auto& s_map : cellStyle->content()->style_map_)
 		{
 			if (const style_map* styleMap = dynamic_cast<const style_map*>(s_map.get()))
 			{
-				base_cell = styleMap->style_base_cell_address_;
-				break;
+				if (false == styleMap->style_base_cell_address_.empty())
+				{
+					condition_sort = styleMap->style_base_cell_address_;
+					break;
+				}
 			}
 		}
-		if (Context.get_conditionalFormatting_context().start_by(base_cell, ref))
+		if (condition_sort.empty()) condition_sort = cellStyleName;
+		if (Context.get_conditionalFormatting_context().start_by(condition_sort, ref))
 		{//odf 1.0
 			for (const auto& s_map : cellStyle->content()->style_map_)
 			{
