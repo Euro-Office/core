@@ -2084,7 +2084,10 @@ namespace NSDocxRenderer
 				{
 					// get the correct left indentation
 					p->m_dLeftBorder = p->m_dLeft - c->m_dLeft;
-					p->m_dRightBorder = 0;
+					if (c->m_dRight - p->m_dRight < c_dMIN_RIGHT_MARGIN)
+						p->m_dRightBorder = -c_dSTANDART_TABLE_SPACING_MM;
+					else
+						p->m_dRightBorder = 0.0;
 					// get the correct top indentation
 					if (!c->m_arParagraphs.empty())
 						p->m_dSpaceBefore = p->m_dTop - c->m_arParagraphs.back()->m_dBot;

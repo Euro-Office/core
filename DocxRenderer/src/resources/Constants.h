@@ -54,6 +54,7 @@ const double c_dAVERAGE_SPACE_WIDTH_COEF        = 0.9;
 const double c_dSPACE_WIDTH_COEF                = 0.4;
 const double c_dMIN_ROTATION                    = 0.01;
 const double c_dMAX_FIRST_LINE_INDENT           = 20.0;
+const double c_dMIN_RIGHT_MARGIN                = 0.4;
 constexpr double c_dSTANDART_TABLE_SPACING_MM = 108.0 / c_dMMToDx;
 
 const UINT   c_iWhiteColor = 0xFFFFFF;

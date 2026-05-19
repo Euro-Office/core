@@ -344,7 +344,7 @@ namespace NSDocxRenderer
 		if (m_arParagraphs.empty())
 		{
 			if (m_oRightBorder.lineType != eLineType::ltNone)
-				m_oRightBorder.dSpacing = pParagraph->m_dRightBorder;
+				m_oRightBorder.dSpacing = 0.0;
 		}
 		// in ooxml table start from standart spacing (1.9), not from left cell border
 		// therefore the left border is moved by this value
