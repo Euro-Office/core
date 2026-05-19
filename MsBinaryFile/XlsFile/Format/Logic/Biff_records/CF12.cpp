@@ -128,7 +128,7 @@ void CF12::readFields(CFRecord& record)
 	
 	dxfId_ = global_info->RegistrDxfn(strm.str());
 }
-void ProcessBorderProp( OOX::Spreadsheet::CBorderProp* prop, unsigned char& DgPtr, unsigned char& icvPtr)
+void ProcessBorderProp( OOX::Spreadsheet::CBorderProp* prop, unsigned char& DgPtr, ExtProp &BdrColor)
 {
 	if(prop->m_oStyle.IsInit())
 	{
@@ -204,8 +204,24 @@ void ProcessBorderProp( OOX::Spreadsheet::CBorderProp* prop, unsigned char& DgPt
 				break;
 		}
 	}
-	if(prop->m_oColor.IsInit() && prop->m_oColor->m_oIndexed.IsInit())
-		icvPtr = prop->m_oColor->m_oIndexed->GetValue();
+	if(prop->m_oColor.IsInit())
+	{
+		if(prop->m_oColor->m_oIndexed.IsInit())
+		{
+			BdrColor.extPropData.color.xclrType = 1;
+			BdrColor.extPropData.color.xclrValue = prop->m_oColor->m_oIndexed->GetValue();
+		}
+		else if(prop->m_oColor->m_oThemeColor.IsInit())
+		{
+			BdrColor.extPropData.color.xclrType = 3;
+			BdrColor.extPropData.color.xclrValue = prop->m_oColor->m_oThemeColor->GetValue();
+		}
+		else if(prop->m_oColor->m_oRgb.IsInit())
+		{
+			BdrColor.extPropData.color.xclrType = 2;
+			BdrColor.extPropData.color.xclrValue = prop->m_oColor->m_oRgb->ToInt();
+		}
+	}
 }
 
 void CF12::writeFields(CFRecord& record)
@@ -224,6 +240,11 @@ void CF12::writeFields(CFRecord& record)
 		{
 			OOX::Spreadsheet::CDxf dxfObj;
 			XmlUtils::CXmlLiteReader oReader;
+			if(dxf.dxfn->xfext == nullptr)
+			{
+				auto Ext = new XFExtNoFRT;
+				dxf.dxfn->xfext = XFExtNoFRTPtr(Ext);
+			}
 			if(oReader.FromString(global_info->arrUserDxfs.at(dxfId_)))
 			{
 				if(oReader.ReadNextNode())
@@ -243,11 +264,6 @@ void CF12::writeFields(CFRecord& record)
 						{
 							dxf.dxfn->icvFNinch= false;
 							ExtProp fgColor;
-							if(dxf.dxfn->xfext == nullptr)
-							{
-								auto Ext = new XFExtNoFRT;
-								dxf.dxfn->xfext = XFExtNoFRTPtr(Ext);
-							}
 							if(dxfObj.m_oFill->m_oPatternFill->m_oFgColor->m_oThemeColor.IsInit())
 							{
 								fgColor.extType = ExtProp::ForeColor;
@@ -261,7 +277,8 @@ void CF12::writeFields(CFRecord& record)
 								fgColor.extPropData.color.xclrType = 2;
 								fgColor.extPropData.color.xclrValue = dxfObj.m_oFill->m_oPatternFill->m_oFgColor->m_oRgb->ToInt();
 							}
-
+							if(dxfObj.m_oFill->m_oPatternFill->m_oFgColor->m_oTint.IsInit())
+								fgColor.extPropData.color.nTintShade = dxfObj.m_oFill->m_oPatternFill->m_oFgColor->m_oTint->GetValue() * 32767;
 							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::ForeColor, fgColor);
 						}
 						if(dxfObj.m_oFill->m_oPatternFill->m_oBgColor.IsInit() && dxfObj.m_oFill->m_oPatternFill->m_oBgColor->m_oIndexed.IsInit())
@@ -273,11 +290,6 @@ void CF12::writeFields(CFRecord& record)
 						{
 							ExtProp bgColor;
 							dxf.dxfn->icvBNinch = false;
-							if(dxf.dxfn->xfext == nullptr)
-							{
-								auto Ext = new XFExtNoFRT;
-								dxf.dxfn->xfext = XFExtNoFRTPtr(Ext);
-							}
 							if(dxfObj.m_oFill->m_oPatternFill->m_oBgColor->m_oThemeColor.IsInit())
 							{
 								bgColor.extType = ExtProp::BackColor;
@@ -291,7 +303,8 @@ void CF12::writeFields(CFRecord& record)
 								bgColor.extPropData.color.xclrType = 2;
 								bgColor.extPropData.color.xclrValue = dxfObj.m_oFill->m_oPatternFill->m_oBgColor->m_oRgb->ToInt();
 							}
-
+							if(dxfObj.m_oFill->m_oPatternFill->m_oBgColor->m_oTint.IsInit())
+								bgColor.extPropData.color.nTintShade = dxfObj.m_oFill->m_oPatternFill->m_oBgColor->m_oTint->GetValue() * 32767;
 							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::BackColor, bgColor);
 						}
 					}
@@ -326,8 +339,30 @@ void CF12::writeFields(CFRecord& record)
 							else if(dxfObj.m_oFont->m_oUnderline->m_oUnderline->GetValue() == SimpleTypes::Spreadsheet::EUnderline::underlineDoubleAccounting)
 								dxf.dxfn->dxffntd.stxp.uls = 0x22;
 						}
-						if(dxfObj.m_oFont->m_oColor.IsInit() && dxfObj.m_oFont->m_oColor->m_oIndexed.IsInit())
-							dxf.dxfn->dxffntd.icvFore = dxfObj.m_oFont->m_oColor->m_oIndexed->GetValue();
+						if(dxfObj.m_oFont->m_oColor.IsInit())
+						{
+							ExtProp fntColor;
+							fntColor.extType = ExtProp::TextColor;
+							if(dxfObj.m_oFont->m_oColor->m_oThemeColor.IsInit())
+							{
+								fntColor.extPropData.color.xclrType = 3;
+								fntColor.extPropData.color.xclrValue = dxfObj.m_oFont->m_oColor->m_oThemeColor->GetValue();
+
+							}
+							else if(dxfObj.m_oFont->m_oColor->m_oRgb.IsInit())
+							{
+								fntColor.extPropData.color.xclrType = 2;
+								fntColor.extPropData.color.xclrValue = dxfObj.m_oFont->m_oColor->m_oRgb->ToInt();
+							}
+							else if(dxfObj.m_oFont->m_oColor->m_oIndexed.IsInit())
+							{
+								fntColor.extPropData.color.xclrType = 1;
+								fntColor.extPropData.color.xclrValue = dxfObj.m_oFont->m_oColor->m_oIndexed->GetValue();
+							}
+							if(dxfObj.m_oFont->m_oColor->m_oTint.IsInit())
+								fntColor.extPropData.color.nTintShade = dxfObj.m_oFont->m_oColor->m_oTint->GetValue() * 32767;
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::TextColor, fntColor);
+						}
 					}
 					if(dxfObj.m_oBorder.IsInit())
 					{
@@ -335,22 +370,34 @@ void CF12::writeFields(CFRecord& record)
 						if(dxfObj.m_oBorder->m_oBottom.IsInit())
 						{
 							dxf.dxfn->glBottomNinch = false;
-							ProcessBorderProp(dxfObj.m_oBorder->m_oBottom.GetPointer(), dxf.dxfn->dxfbdr.dgBottom, dxf.dxfn->dxfbdr.icvBottom);
+							ExtProp BdrColor;
+							BdrColor.extType = ExtProp::BottomBorderColor;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oBottom.GetPointer(), dxf.dxfn->dxfbdr.dgBottom, BdrColor);
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::BottomBorderColor, BdrColor);
 						}
 						if(dxfObj.m_oBorder->m_oTop.IsInit())
 						{
 							dxf.dxfn->glTopNinch = false;
-							ProcessBorderProp(dxfObj.m_oBorder->m_oTop.GetPointer(), dxf.dxfn->dxfbdr.dgTop, dxf.dxfn->dxfbdr.icvTop);
+							ExtProp BdrColor;
+							BdrColor.extType = ExtProp::TopBorderColor;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oTop.GetPointer(), dxf.dxfn->dxfbdr.dgTop, BdrColor);
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::TopBorderColor, BdrColor);
 						}
 						if(dxfObj.m_oBorder->m_oStart.IsInit())
 						{
 							dxf.dxfn->glLeftNinch  = false;
-							ProcessBorderProp(dxfObj.m_oBorder->m_oStart.GetPointer(), dxf.dxfn->dxfbdr.dgLeft, dxf.dxfn->dxfbdr.icvLeft);
+							ExtProp BdrColor;
+							BdrColor.extType = ExtProp::LeftBorderColor;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oStart.GetPointer(), dxf.dxfn->dxfbdr.dgLeft, BdrColor);
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::LeftBorderColor, BdrColor);
 						}
 						if(dxfObj.m_oBorder->m_oEnd.IsInit())
 						{
 							dxf.dxfn->glRightNinch  = false;
-							ProcessBorderProp(dxfObj.m_oBorder->m_oEnd.GetPointer(), dxf.dxfn->dxfbdr.dgRight, dxf.dxfn->dxfbdr.icvRight);
+							ExtProp BdrColor;
+							BdrColor.extType = ExtProp::RightBorderColor;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oEnd.GetPointer(), dxf.dxfn->dxfbdr.dgRight, BdrColor);
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::RightBorderColor, BdrColor);
 						}
 						if(dxfObj.m_oBorder->m_oDiagonal.IsInit())
 						{
@@ -360,8 +407,12 @@ void CF12::writeFields(CFRecord& record)
 								dxf.dxfn->dxfbdr.bitDiagDown = true;
 							if(dxfObj.m_oBorder->m_oDiagonalUp.IsInit() && dxfObj.m_oBorder->m_oDiagonalUp->GetValue())
 								dxf.dxfn->dxfbdr.bitDiagUp = true;
-							ProcessBorderProp(dxfObj.m_oBorder->m_oDiagonal.GetPointer(), dxf.dxfn->dxfbdr.dgDiag, dxf.dxfn->dxfbdr.icvDiag);
+							ExtProp BdrColor;
+							BdrColor.extType = ExtProp::DiagonalBorderColor;
+							ProcessBorderProp(dxfObj.m_oBorder->m_oDiagonal.GetPointer(), dxf.dxfn->dxfbdr.dgDiag, BdrColor);
+							dxf.dxfn->xfext->mapRgExt.emplace(ExtProp::DiagonalBorderColor, BdrColor);
 						}
+
 					}
 					if(dxfObj.m_oNumFmt.IsInit())
 					{

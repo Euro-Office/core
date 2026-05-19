@@ -1297,6 +1297,7 @@ namespace OOX
 			~CT_DPt();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
+			XLS::BaseObjectPtr toXLS(const _UINT16 order) const;
 			EElementType getType();
 		};
 		class CT_TrendlineLbl
@@ -1369,10 +1370,13 @@ namespace OOX
 			nullableUintVal									m_order;
 			CT_SerTx*										m_tx;
 			nullable<PPTX::Logic::SpPr>						m_spPr;
+			CT_NumDataSource*								m_val;
+			CT_DLbls*										m_dLbls;
 			nullable<OOX::Drawing::COfficeArtExtensionList> m_extLst;
 
 			bool fromXML(const std::wstring nodeName, XmlUtils::CXmlLiteReader& oReader);
 			void toXML(NSStringUtils::CStringBuilder& writer) const;
+			virtual XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex) const;
 			virtual std::wstring toXML()  const
 			{
 				return L"";
@@ -1388,7 +1392,6 @@ namespace OOX
             std::vector<CT_DPt*>		m_dPt;
             std::vector<CT_Trendline*>	m_trendline;
             std::vector<CT_ErrBars*>	m_errBars;
-			CT_DLbls*					m_dLbls;
 			CT_AxDataSource*			m_xVal;
 			CT_NumDataSource*			m_yVal;
 			CT_NumDataSource*			m_bubbleSize;
@@ -1453,7 +1456,6 @@ namespace OOX
 			WritingElement_AdditionMethods(CT_SurfaceSer)
 
 			CT_AxDataSource*	m_cat;
-			CT_NumDataSource*	m_val;
 
 			CT_SurfaceSer();
 			virtual ~CT_SurfaceSer();			
@@ -1462,7 +1464,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_Surface3DChart
@@ -1478,6 +1480,7 @@ namespace OOX
 			~CT_Surface3DChart();
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
+			XLS::BaseObjectPtr toXLS(const unsigned short chartIndex, XLS::BaseObjectPtr ChartFormatsPtr);
 			EElementType getType();
 		};
 
@@ -1517,9 +1520,7 @@ namespace OOX
 			
 			nullableUintVal m_explosion;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_PieSer();
 			virtual ~CT_PieSer();
@@ -1528,7 +1529,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex);
+			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_OfPieChart
@@ -1561,11 +1562,9 @@ namespace OOX
 			nullableBoolVal m_invertIfNegative;
 			CT_PictureOptions* m_pictureOptions;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 			nullableComplexVal<CShapeType> m_shape;
 
 			CT_BarSer();
@@ -1575,7 +1574,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex) const override;
 			EElementType getType();
 		};
 		class CT_Bar3DChart
@@ -1684,7 +1683,6 @@ namespace OOX
 
 			CT_Marker* m_marker;
             std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
             std::vector<CT_Trendline*> m_trendline;
             std::vector<CT_ErrBars*> m_errBars;
 			CT_AxDataSource* m_xVal;
@@ -1698,7 +1696,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_ScatterChart
@@ -1725,9 +1723,7 @@ namespace OOX
 
 			CT_Marker* m_marker;
             std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_RadarSer();
 			virtual ~CT_RadarSer();
@@ -1736,7 +1732,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_RadarChart
@@ -1789,11 +1785,9 @@ namespace OOX
 
 			CT_Marker* m_marker;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			CT_ErrBars* m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 			nullableBoolVal m_smooth;
 
 			CT_LineSer();
@@ -1803,7 +1797,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex);
+			XLS::BaseObjectPtr GetXLSFormat(unsigned int chartIndex) const override;
 			EElementType getType();
 		};
 
@@ -1877,11 +1871,9 @@ namespace OOX
 				
 			CT_PictureOptions* m_pictureOptions;
 			std::vector<CT_DPt*> m_dPt;
-			CT_DLbls* m_dLbls;
 			std::vector<CT_Trendline*> m_trendline;
 			std::vector<CT_ErrBars*> m_errBars;
 			CT_AxDataSource* m_cat;
-			CT_NumDataSource* m_val;
 
 			CT_AreaSer();
 			virtual ~CT_AreaSer();
@@ -1890,7 +1882,7 @@ namespace OOX
 			{}
 			void fromXML(XmlUtils::CXmlLiteReader& oReader);
 			void toXML(const std::wstring& sNodeName, NSStringUtils::CStringBuilder& writer) const;
-			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const;
+			XLS::BaseObjectPtr GetXLSFormat(const _UINT32 chartIndex)const override;
 			EElementType getType();
 		};
 		class CT_Area3DChart

@@ -68,6 +68,7 @@ namespace PPTX
 
 		virtual void toPPTY(NSBinPptxRW::CBinaryFileWriter* pWriter) const;
 		virtual void toXmlWriter(NSBinPptxRW::CXmlWriter* pWriter) const;
+		XLS::BaseObjectPtr toXLS();
 
 		virtual void fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader);
 		virtual const OOX::FileType type() const;

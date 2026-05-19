@@ -316,7 +316,8 @@ namespace OOX
 					auto shapeCount = drawingGroupPtr->drawingCount+1;
 					auto left = 0, leftOff = 0, right = 0, righOff = 0, top = 0, topOff = 0, bot = 0, botOff = 0;
 					anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
-					drawing->prepareDrawing(XLS::MsoDrawing::DrawingType::pic, shapeCount, top, left, bot, right, PicNumber);
+					drawing->prepareDrawing(XLS::MsoDrawing::DrawingType::pic, shapeCount, top, left, bot, right, leftOff,
+					righOff, topOff, botOff,  PicNumber);
 					std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;
 					auto objPt = new XLS::Obj(drawingPtr);
 					objPt->cmo.ot = 0x8;
@@ -346,7 +347,8 @@ namespace OOX
 							anchor->getAnchorPos(left, leftOff, top, topOff, right, righOff, bot, botOff);
 							if(!wsObjects->m_arrObject.empty())
 								drawingObj->rgChildRec.first = false;
-							drawingObj->prepareDrawing(XLS::MsoDrawing::DrawingType::chart, shapeCount, top, left, bot, right);
+							drawingObj->prepareDrawing(XLS::MsoDrawing::DrawingType::chart, shapeCount, top, left, bot, right,
+							leftOff, righOff, topOff, botOff);
 						}
 
 						std::pair<XLS::BaseObjectPtr, std::vector<XLS::BaseObjectPtr>> objPair;

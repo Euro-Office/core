@@ -770,7 +770,9 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
 				colInd++;
 			}
 		}
+		if(m_oId.IsInit() && m_oName.IsInit())
         XLS::GlobalWorkbookInfo::mapTableNames_static.emplace(m_oId->GetValue(), m_oName.get());
+		if(m_oId.IsInit() && m_oRef.IsInit())
 		XLS::GlobalWorkbookInfo::mapTableRefsStatic.emplace(m_oId->GetValue(), m_oRef->GetValue());
 	}
     void CTable::fromBin(XLS::BaseObjectPtr& obj)

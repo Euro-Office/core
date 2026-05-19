@@ -354,6 +354,8 @@ namespace OOX
 			workbookPtr->m_Formating = XLS::BaseObjectPtr(FormatPtr);
 			auto globalInfo = workbookPtr->global_info_;
 			//prepare colors
+			if(m_oColors.IsInit() &&(!m_oColors->m_oIndexedColors.IsInit()))
+				m_oColors.reset();
 			if(!m_oColors.IsInit())
 			{
 				m_oColors = OOX::Spreadsheet::CColors();
@@ -692,6 +694,7 @@ namespace OOX
 				setBorderClr(i->m_oDiagonal, m_oColors, globalInfo);
 			}
 			auto CastedPtr = static_cast<XLS::XFS*>(XFSPtr.get());
+			if(m_oCellXfs.IsInit())
 			for(auto i = 0; i < m_oCellXfs->m_arrItems.size(); i++)
 			{
 				if(CastedPtr->m_arCellXFs.size() > i)
@@ -756,7 +759,7 @@ namespace OOX
 			}
 			if(inputClr.m_oTint.IsInit())
 			{
-				color.nTintShade = inputClr.m_oTint->GetValue();
+				color.nTintShade = (inputClr.m_oTint->GetValue() * 32767);//maxshort
 			}
 
 			return color;

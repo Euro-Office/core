@@ -182,7 +182,7 @@ Ptg* PtgList::toArea()
 		else if(rowType == 0x6) //dataheaders
 			tableRef.rowLast--;
 		else if(rowType == 0x0C) // datatotals
-			tableRef.rowFirst--;
+			tableRef.rowFirst++;
 		else if(rowType == 0x8) //totals
 			tableRef.rowFirst = tableRef.rowLast;
 	}
