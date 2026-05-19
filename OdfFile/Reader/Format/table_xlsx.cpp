@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "table.h"
@@ -67,7 +70,7 @@ int table_table_cell_content::xlsx_convert(oox::xlsx_conversion_context & Contex
 	for (size_t i = 0 ; i < elements_.size(); i++)
     {
         elements_[i]->xlsx_convert(Context);
-		if ((i < elements_.size() - 1) && (elements_[i + 1]->get_type() == typeTextP))
+		if ((elements_[i]->get_type() == typeTextP) && (i < elements_.size() - 1) && (elements_[i + 1]->get_type() == typeTextP))
 		{
 			Context.get_text_context()->start_paragraph(L"");
 			Context.get_text_context()->start_span(L"");
@@ -892,124 +895,164 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 			need_cache_convert = true;
 		}
 	}
+	// calculate style for cell
+	//---------------------------------------------------------------------------------------------------------	
+	std::wstring columnStyleName = Context.get_table_context().default_column_cell_style(); // different column styles may exist with repeated (Book 24.ods)
 
+	odf_read_context& odfContext = Context.root()->odf_context();
+
+	style_instance* defaultCellStyle = NULL, * defaultColumnCellStyle = NULL, * defaultRowCellStyle = NULL, * cellStyle = NULL;
+	try
+	{
+		if (is_present_hyperlink_)
+		{
+			defaultCellStyle = odfContext.styleContainer().style_by_name(L"Hyperlink", style_family::TableCell, true);
+		}
+		if (!defaultCellStyle)
+		{
+			defaultCellStyle = odfContext.styleContainer().style_default_by_type(style_family::TableCell);
+		}
+
+		defaultColumnCellStyle = odfContext.styleContainer().style_by_name(columnStyleName, style_family::TableCell, false);
+		defaultRowCellStyle = odfContext.styleContainer().style_by_name(rowStyleName, style_family::TableCell, false);
+		cellStyle = odfContext.styleContainer().style_by_name(cellStyleName, style_family::TableCell, false);
+	}
+	catch (...)
+	{
+		_CP_LOG << L"[error]: style wrong\n";
+	}
+
+	std::wstring data_style = CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName);
+
+	// styles are not inherited
+	std::vector<const style_instance*> instances;
+	instances.push_back(defaultCellStyle);
+
+	if (defaultColumnCellStyle)
+		instances.push_back(defaultColumnCellStyle);
+
+	if (defaultRowCellStyle)
+	{
+		if (instances.size() > 1)
+			instances[1] = defaultRowCellStyle;
+		else
+			instances.push_back(defaultRowCellStyle);
+	}
+
+	if (cellStyle)
+	{
+		if (instances.size() > 1)
+			instances[1] = cellStyle;
+		else
+			instances.push_back(cellStyle);
+	}
+
+	text_format_properties_ptr textFormatProperties = calc_text_properties_content(instances);
+	paragraph_format_properties parFormatProperties = calc_paragraph_properties_content(instances);
+	style_table_cell_properties_attlist cellFormatProperties = calc_table_cell_properties(instances);
+	//-------------------------------------------------------------------------------------------------------------------------------
+
+	if (false == data_style.empty())
+	{
+		num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
+
+		if (num_format.empty())
+		{
+			office_element_ptr elm = odfContext.numberStyles().find_by_style_name(data_style);
+			number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
+
+			if (num_style)
+			{
+				Context.get_num_format_context().start_complex_format(data_style);
+				num_style->oox_convert(Context.get_num_format_context());
+				Context.get_num_format_context().end_complex_format();
+
+				num_format = Context.get_num_format_context().get_last_format();
+				num_format_type = Context.get_num_format_context().type();
+			}
+		}
+		if (attr.office_value_type_)
+		{
+			if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
+			{// reset from cell 
+				num_format_type = attr.office_value_type_->get_type();
+				num_format.clear();
+			}
+
+		}
+	}
+	//----------------------------------------------------------------------------------------------------------------------------------
+	bool is_style_visible = (!cellStyleName.empty() || defaultColumnCellStyle || !num_format.empty()) ? true : false;
+
+	if (count_paragraph > 1)
+	{
+		is_style_visible = true;
+		cellFormatProperties.fo_wrap_option_ = odf_types::wrap_option::Wrap;
+	}
+	if (bExternalTable)
+	{
+		is_style_visible = false;
+		xlsx_value_type = oox::XlsxCellType::str;
+	}
+	oox::xlsx_cell_format cellFormat;
+	cellFormat.set_cell_type(xlsx_value_type);
+	cellFormat.set_num_format(oox::odf_string_to_build_in(odf_value_type));
+
+	size_t	xfId_last_set = 0;
+	if (is_style_visible)
+	{
+		xfId_last_set = Context.get_style_manager().xfId(textFormatProperties, &parFormatProperties, &cellFormatProperties,
+			&cellFormat, num_format, num_format_type, false, is_style_visible);
+	}
+	if (cellStyle && cellStyle->content() && false == cellStyle->content()->style_map_.empty())
+	{
+		std::wstring ref = oox::getCellAddress(Context.current_table_column() + 1, Context.current_table_row());
+
+		if (attlist_.table_number_columns_repeated_ > 1)
+		{
+			ref += L":" + oox::getCellAddress(Context.current_table_column() + attlist_.table_number_columns_repeated_, Context.current_table_row());
+		}
+		std::wstring condition_sort;
+		for (const auto& s_map : cellStyle->content()->style_map_)
+		{
+			if (const style_map* styleMap = dynamic_cast<const style_map*>(s_map.get()))
+			{
+				if (false == styleMap->style_base_cell_address_.empty())
+				{
+					condition_sort = styleMap->style_base_cell_address_;
+					break;
+				}
+			}
+		}
+		if (condition_sort.empty()) condition_sort = cellStyleName;
+		if (Context.get_conditionalFormatting_context().start_by(condition_sort, ref))
+		{//odf 1.0
+			for (const auto& s_map : cellStyle->content()->style_map_)
+			{
+				if (const style_map* styleMap = dynamic_cast<const style_map*>(s_map.get()))
+				{
+					const std::wstring& applyStyleName = styleMap->style_apply_style_name_;
+					const std::wstring& condition = styleMap->style_condition_;
+
+					Context.get_conditionalFormatting_context().add_rule(1);
+					Context.get_conditionalFormatting_context().set_formula(condition);
+
+					int dxfId = Context.get_dxfId_style(applyStyleName);
+
+					if (dxfId >= 0)
+						Context.get_conditionalFormatting_context().set_dxf(dxfId);
+				}
+			}
+			Context.get_conditionalFormatting_context().end();
+		}
+	}
 	for (unsigned int r = 0; r < attlist_.table_number_columns_repeated_; ++r)
 	{
-// calculate style for cell
-//---------------------------------------------------------------------------------------------------------	
-		std::wstring columnStyleName = Context.get_table_context().default_column_cell_style(); // different column styles may exist with repeated (Book 24.ods)
-
-		odf_read_context& odfContext = Context.root()->odf_context();
-
-		style_instance* defaultCellStyle = NULL, * defaultColumnCellStyle = NULL, * defaultRowCellStyle = NULL, * cellStyle = NULL;
-		try
-		{
-			if (is_present_hyperlink_)
-			{
-				defaultCellStyle = odfContext.styleContainer().style_by_name(L"Hyperlink", style_family::TableCell, true);
-			}
-			if (!defaultCellStyle)
-			{
-				defaultCellStyle = odfContext.styleContainer().style_default_by_type(style_family::TableCell);
-			}
-
-			defaultColumnCellStyle = odfContext.styleContainer().style_by_name(columnStyleName, style_family::TableCell, false);
-			defaultRowCellStyle = odfContext.styleContainer().style_by_name(rowStyleName, style_family::TableCell, false);
-			cellStyle = odfContext.styleContainer().style_by_name(cellStyleName, style_family::TableCell, false);
-		}
-		catch (...)
-		{
-			_CP_LOG << L"[error]: style wrong\n";
-		}
-
-		std::wstring data_style = CalcCellDataStyle(Context, columnStyleName, rowStyleName, cellStyleName);
-
-		// styles are not inherited
-		std::vector<const style_instance*> instances;
-		instances.push_back(defaultCellStyle);
-
-		if (defaultColumnCellStyle)
-			instances.push_back(defaultColumnCellStyle);
-
-		if (defaultRowCellStyle)
-		{
-			if (instances.size() > 1)
-				instances[1] = defaultRowCellStyle;
-			else
-				instances.push_back(defaultRowCellStyle);
-		}
-
-		if (cellStyle)
-		{
-			if (instances.size() > 1)
-				instances[1] = cellStyle;
-			else
-				instances.push_back(cellStyle);
-		}
-
-		text_format_properties_ptr textFormatProperties = calc_text_properties_content(instances);
-		paragraph_format_properties parFormatProperties = calc_paragraph_properties_content(instances);
-		style_table_cell_properties_attlist cellFormatProperties = calc_table_cell_properties(instances);
-//-------------------------------------------------------------------------------------------------------------------------------
-
-		if (false == data_style.empty())
-		{
-			num_format = Context.get_num_format_context().find_complex_format(data_style, num_format_type);
-
-			if (num_format.empty())
-			{
-				office_element_ptr elm = odfContext.numberStyles().find_by_style_name(data_style);
-				number_style_base* num_style = dynamic_cast<number_style_base*>(elm.get());
-
-				if (num_style)
-				{
-					Context.get_num_format_context().start_complex_format(data_style);
-					num_style->oox_convert(Context.get_num_format_context());
-					Context.get_num_format_context().end_complex_format();
-
-					num_format = Context.get_num_format_context().get_last_format();
-					num_format_type = Context.get_num_format_context().type();					
-				}
-			}
-			if (attr.office_value_type_)
-			{
-				if (attr.office_value_type_.get() != num_format_type && num_format_type != office_value_type::Custom)
-				{// reset from cell 
-					num_format_type = attr.office_value_type_->get_type();
-					num_format.clear();
-				}
-				
-			}
-		}
-//----------------------------------------------------------------------------------------------------------------------------------
-		bool is_style_visible = (!cellStyleName.empty() || defaultColumnCellStyle || !num_format.empty()) ? true : false;
-
-		if (count_paragraph > 1)
-		{
-			is_style_visible = true;
-			cellFormatProperties.fo_wrap_option_ = odf_types::wrap_option::Wrap;
-		}
-		if (bExternalTable)
-		{
-			is_style_visible = false;
-			xlsx_value_type = oox::XlsxCellType::str;
-		}
-		oox::xlsx_cell_format cellFormat;
-		cellFormat.set_cell_type(xlsx_value_type);
-		cellFormat.set_num_format(oox::odf_string_to_build_in(odf_value_type));
-
-		size_t	xfId_last_set = 0;
-		if (is_style_visible)
-		{
-			xfId_last_set = Context.get_style_manager().xfId(textFormatProperties, &parFormatProperties, &cellFormatProperties,
-				&cellFormat, num_format, num_format_type, false, is_style_visible);
-		}
-
         Context.start_table_cell (	attlist_extra_.table_number_columns_spanned_	- 1 ,
 									attlist_extra_.table_number_rows_spanned_		- 1	);
 		if (is_style_visible)
 			Context.set_current_cell_style_id(xfId_last_set);
-//---------------------------------------------------------------------------------------------------------	
+//---------------------------------------------------------------------------------------------------------			
 		if (bExternalTable)
 		{
 			std::wstringstream str;
@@ -1020,7 +1063,6 @@ void table_table_cell::xlsx_convert(oox::xlsx_conversion_context & Context)
 		{
 			sharedStringId = content_.xlsx_convert(Context, textFormatProperties, need_cache_convert);
 		}
-
 
 		if (xlsx_value_type == oox::XlsxCellType::str || xlsx_value_type == oox::XlsxCellType::inlineStr)
 		{
