@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "RedactOutputDev.h"
@@ -401,7 +404,7 @@ void SaveImageMaskToStream(CDocument* pDocument, CDictObject* pDictObj, BYTE* pM
 }
 void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, int nWidth, int nHeight, const std::vector<CPoint>& imagePolygon)
 {
-	// Находим все области редоктирования, которые пересекаются с изображением
+	// Find all redaction areas that intersect with the image
 	std::vector<std::vector<CPoint>> imageSpaceRedacts;
 
 	for (int j = 0; j < arrQuadPoints.size(); j += 8)
@@ -414,7 +417,7 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			CPoint(arrQuadPoints[j + 6], arrQuadPoints[j + 7])
 		};
 
-		// Преобразуем в координаты изображения
+		// Transform to image coordinates
 		std::vector<CPoint> imageSpaceRedact;
 		for (const CPoint& point : redactPolygon)
 		{
@@ -423,15 +426,15 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			imageSpaceRedact.push_back(CPoint(x, y));
 		}
 
-		// Проверяем, что область хоть частично внутри изображения
+		// Check that the area is at least partially inside the image
 		if (PdfWriter::SAT(imageSpaceRedact, {CPoint(0, 0), CPoint(0, nHeight), CPoint(nWidth, nHeight), CPoint(nWidth, 0)}))
 			imageSpaceRedacts.push_back(imageSpaceRedact);
 	}
 
-	// Закрашиваем области редоктирования черным цветом
+	// Fill redaction areas with black color
 	for (const auto& redact : imageSpaceRedacts)
 	{
-		// Находим bounding box области редоктирования в координатах изображения
+		// Find bounding box of redaction area in image coordinates
 		double minX = nWidth, minY = nHeight, maxX = 0, maxY = 0;
 		for (const CPoint& p : redact)
 		{
@@ -441,25 +444,25 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			if (p.y > maxY) maxY = p.y;
 		}
 
-		// Ограничиваем bounding box размерами изображения
+		// Clamp bounding box to image dimensions
 		int startX = std::max(0, (int)minX);
 		int startY = std::max(0, (int)minY);
 		int endX = std::min(nWidth  - 1, (int)maxX);
 		int endY = std::min(nHeight - 1, (int)maxY);
 
-		// Закрашиваем прямоугольную область
+		// Fill rectangular area
 		for (int y = startY; y <= endY; ++y)
 		{
 			for (int x = startX; x <= endX; ++x)
 			{
-				// Проверяем, что пиксель внутри полигона редоктирования
+				// Check that pixel is inside redaction polygon
 				if (PdfWriter::isPointInQuad(x, y, redact[0].x, redact[0].y, redact[1].x, redact[1].y, redact[2].x, redact[2].y, redact[3].x, redact[3].y))
 				{
 					int nIndex = ((nHeight - 1 - y) * nWidth + x) * 4;
 					pImage[nIndex + 0] = 0; // R
 					pImage[nIndex + 1] = 0; // G
 					pImage[nIndex + 2] = 0; // B
-					// Alpha оставляем 255
+					// Keep Alpha at 255
 				}
 			}
 		}
@@ -467,7 +470,7 @@ void ApplyRedactToRGBA(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 }
 void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, int nWidth, int nHeight, const std::vector<CPoint>& imagePolygon)
 {
-	// Преобразуем области редоктирования в координаты маски
+	// Transform redaction areas to mask coordinates
 	std::vector<std::vector<CPoint>> maskSpaceRedacts;
 
 	for (int j = 0; j < arrQuadPoints.size(); j += 8)
@@ -480,7 +483,7 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 			CPoint(arrQuadPoints[j + 6], arrQuadPoints[j + 7])
 		};
 
-		// Преобразуем в координаты маски
+		// Transform to mask coordinates
 		std::vector<CPoint> maskSpaceRedact;
 		for (const CPoint& point : redactPolygon)
 		{
@@ -495,7 +498,7 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 
 	for (const auto& redact : maskSpaceRedacts)
 	{
-		// Находим bounding box
+		// Find bounding box
 		double minX = nWidth, minY = nHeight, maxX = 0, maxY = 0;
 		for (const CPoint& p : redact)
 		{
@@ -521,6 +524,7 @@ void ApplyRedactToGray(const std::vector<double>& arrQuadPoints, BYTE* pImage, i
 RedactOutputDev::RedactOutputDev(CPdfWriter* pRenderer, CObjectsManager* pObjMng, int nStartRefID)
 {
 	m_pXref = NULL;
+	m_pResources = NULL;
 
 	m_pRenderer = pRenderer;
 	m_mObjManager = pObjMng;
@@ -565,6 +569,32 @@ void RedactOutputDev::startPage(int nPageIndex, GfxState *pGState)
 	m_pPage = m_pDoc->GetEditPage(nPageIndex);
 	m_pRenderer->EditPage(m_pPage);
 	m_pDoc->SetCurPage(m_pPage);
+
+	auto removeContentObj = [&](PdfWriter::CObjectBase* pObj)
+	{
+		if (pObj->GetType() == PdfWriter::object_type_DICT)
+		{
+			PdfWriter::CObjectBase* pLength = ((PdfWriter::CDictObject*)pObj)->Get("Length");
+			if (pLength)
+			{
+				int nLengthID = m_mObjManager->FindObj(pLength);
+				m_mObjManager->RemoveObj(nLengthID);
+			}
+		}
+		int nObjID = m_mObjManager->FindObj(pObj);
+		m_mObjManager->RemoveObj(nObjID);
+	};
+
+	PdfWriter::CObjectBase* pObjContents = m_pPage->Get("Contents");
+	if (pObjContents && pObjContents->GetType() == PdfWriter::object_type_ARRAY)
+	{
+		PdfWriter::CArrayObject* pContents = (PdfWriter::CArrayObject*)pObjContents;
+		for (int i = 0; i < pContents->GetCount(); ++i)
+			removeContentObj(pContents->Get(i));
+	}
+	else if (pObjContents)
+		removeContentObj(pObjContents);
+
 	m_pDoc->ClearPageFull();
 }
 void RedactOutputDev::endPage()
@@ -588,7 +618,7 @@ void RedactOutputDev::restoreState(GfxState *pGState)
 	updateAll(pGState);
 
 	if (m_sStates.empty())
-		return; // Несбалансированный q/Q - сломанный файл
+		return; // Unbalanced q/Q - broken file
 	m_sStates.pop_back();
 }
 //----- update graphics state
@@ -1087,7 +1117,7 @@ void RedactOutputDev::setShading(GfxState *pGState, const char* name)
 	double dShiftX = 0, dShiftY = 0;
 	DoTransform(pGState->getCTM(), &dShiftX, &dShiftY, true);
 
-	// TODO Нужно проверять Shading на отсечение?
+	// TODO Should Shading be checked for clipping?
 
 	m_pPage->GrSave();
 	UpdateTransform();
@@ -1229,7 +1259,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 	{
 		if (nWidth != nMaskWidth || nHeight != nMaskHeight)
 		{
-			// Простое масштабирование (ближайший сосед)
+			// Simple scaling (nearest neighbor)
 			BYTE* pDstMask = new BYTE[nWidth * nHeight];
 			if (!pDstMask)
 			{
@@ -1247,7 +1277,7 @@ void RedactOutputDev::drawSoftMaskedImage(GfxState *pGState, Gfx *gfx, Object *p
 					int srcX = (int)(dstX * dScaleX);
 					int srcY = (int)(dstY * dScaleY);
 
-					// Ограничиваем координаты
+					// Clamp coordinates
 					srcX = std::min(srcX, nMaskWidth  - 1);
 					srcY = std::min(srcY, nMaskHeight - 1);
 
@@ -1374,11 +1404,16 @@ void RedactOutputDev::drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char* 
 	pObj = pOrigForm->Get("Matrix");
 	if (pObj)
 		pNewForm->Add("Matrix", pObj->Copy());
+
+	PdfWriter::CResourcesDict* pNewResources = NULL;
 	pObj = pOrigForm->Get("Resources");
 	if (pObj)
+	{
 		pNewForm->Add("Resources", pObj->Copy());
+		pNewResources = dynamic_cast<CResourcesDict*>(pNewForm->Get("Resources"));
+	}
 
-	PdfWriter::CResourcesDict* pResources = GetResources(gfx);
+	PdfWriter::CResourcesDict* pResources = GetResources(gfx, pNewForm);
 	if (pResources)
 		name = pResources->GetXObjectName(pNewForm);
 
@@ -1391,6 +1426,7 @@ void RedactOutputDev::drawForm(GfxState *pGState, Gfx *gfx, Ref id, const char* 
 	RedactOutputDev* pFormOutputDev = new RedactOutputDev(m_pRenderer, m_mObjManager, m_nStartRefID);
 	pFormOutputDev->NewPDF(m_pXref);
 	pFormOutputDev->m_pPage = pFakePage;
+	pFormOutputDev->m_pResources = pNewResources;
 	std::vector<double> arrFormQuadPoints;
 	double dInvMatrix[6] = { 1, 0, 0, 1, 0, 0 };
 	InvertMatrix(m_arrMatrix, dInvMatrix);
@@ -1439,18 +1475,18 @@ bool SkipPath(const std::vector<CSegment>& arrForStroke, const CPoint& P1, const
 	{
 		CPoint P3 = arrForStroke[i].start;
 		CPoint P4 = arrForStroke[i].end;
-		// Вычисляем коэффициенты A, B, C для уравнения прямой P3P4: Ax + By + C = 0
+		// Calculate coefficients A, B, C for line equation P3P4: Ax + By + C = 0
 		double A = P4.y - P3.y;
 		double B = P3.x - P4.x;
 		double C = P4.x * P3.y - P3.x * P4.y;
 
-		// Проверяем, лежит ли точка P1 на прямой P3P4
+		// Check if point P1 lies on line P3P4
 		double check1 = A * P1.x + B * P1.y + C;
 
-		// Проверяем, лежит ли точка P2 на прямой P3P4
+		// Check if point P2 lies on line P3P4
 		double check2 = A * P2.x + B * P2.y + C;
 
-		// Если обе проверки близки к нулю (в пределах эпсилон), то лежит
+		// If both checks are close to zero (within epsilon), then it lies on the line
 		if ((std::abs(check1) < 0.006) && (std::abs(check2) < 0.006))
 			return true;
 	}
@@ -1708,7 +1744,7 @@ void RedactOutputDev::DoPathRedact(GfxState* pGState, GfxPath* pPath, double* pC
 					++nCurPointIndex;
 				}
 			}
-			// if (pSubpath->isClosed()) Принудительное замыкание фигур для CGraphicsPath
+			// if (pSubpath->isClosed()) Force closing figures for CGraphicsPath
 				oPath.CloseFigure();
 		}
 
@@ -1886,8 +1922,11 @@ CObjectBase* RedactOutputDev::CreateImage(Gfx *gfx, int nWidth, int nHeight, uns
 
 	return pObj;
 }
-CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
+CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx, CDictObject* pNewForm)
 {
+	if (m_pResources)
+		return m_pResources;
+
 	PdfWriter::CResourcesDict* pResources = NULL;
 	Object* pContent = gfx->getTopContentStreamStack();
 	if (pContent && pContent->isRef())
@@ -1901,7 +1940,7 @@ CResourcesDict* RedactOutputDev::GetResources(Gfx *gfx)
 			if (!pResources)
 			{
 				pResources = new PdfWriter::CResourcesDict(NULL, true, false);
-				pDictForm->Add("Resources", pResources);
+				(pNewForm ? pNewForm : pDictForm)->Add("Resources", pResources);
 			}
 		}
 	}

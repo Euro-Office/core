@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "../CEpubFile.h"
 #include "../../DesktopEditor/common/Directory.h"
 #include "../../OfficeUtils/src/OfficeUtils.h"
@@ -13,7 +48,7 @@
 #include <sstream>
 #include <random>
 
-// Заменяет в строке s все символы s1 на s2
+// Replaces all occurrences of s1 with s2 in string s
 void replace_all(std::wstring& s, const std::wstring& s1, const std::wstring& s2)
 {
     size_t pos = s.find(s1);
@@ -367,7 +402,7 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
     // index.html
     std::wstring sIndexHtml;
     NSFile::CFileBinary::ReadAllTextUtf8(sHtmlFile, sIndexHtml);
-    // картинки в файл
+    // images to file
     size_t nImage = sIndexHtml.find(L"data:image/png;base64, ");
     int nNumImage = 1;
     while (nImage != std::wstring::npos)
@@ -390,14 +425,14 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
         sIndexHtml.replace(nImage, nImageEnd - nImage, L"images/img" + std::to_wstring(nNumImage++) + L".png");
         nImage = sIndexHtml.find(L"data:image/png;base64, ", nImage);
     }
-    // удаляем &nbsp;
+    // remove &nbsp;
     nImage = sIndexHtml.find(L"&nbsp;");
     while (nImage != std::wstring::npos)
     {
         sIndexHtml.replace(nImage, 6, L"&#160;");
         nImage = sIndexHtml.find(L"&nbsp;", nImage);
     }
-    // заменяем <s> на style=text-decoration:line-through
+    // replace <s> with style=text-decoration:line-through
     nImage = sIndexHtml.find(L"<s>");
     while (nImage != std::wstring::npos)
     {
@@ -409,7 +444,7 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
         sIndexHtml.insert(nEndTag, L";text-decoration:line-through");
         nImage = sIndexHtml.find(L"<s>", nImage);
     }
-    // удаляем атрибут width у <td>
+    // remove width attribute from <td>
     nImage = sIndexHtml.find(L"<td");
     while (nImage != std::wstring::npos)
     {
@@ -422,7 +457,7 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
         }
         nImage = sIndexHtml.find(L"<td", nImage);
     }
-    // удаляем атрибут clear у <br/>
+    // remove clear attribute from <br/>
     nImage = sIndexHtml.find(L"<br");
     while (nImage != std::wstring::npos)
     {
@@ -461,7 +496,7 @@ HRESULT CEpubFile::FromHtml(const std::wstring& sHtmlFile, const std::wstring& s
     replace_all(sTitle, L"\r", L"&#xD;");
     replace_all(sTitle, L"\t", L"&#x9;");
 
-    // Разделение html по <br>
+    // Split html by <br>
     int nFile = 0;
     nImage = sIndexHtml.find(L"<br");
     sIndexHtml.replace(0, 6, L"<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\"><html xmlns=\"http://www.w3.org/1999/xhtml\">");

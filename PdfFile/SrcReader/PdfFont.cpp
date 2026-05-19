@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "PdfFont.h"
@@ -409,7 +412,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 			if (!pField)
 				continue;
 
-			// Шрифт и размер шрифта - из DA
+			// Font and font size - from DA
 			Ref fontID;
 			double dFontSize = 0;
 			pField->getFont(&fontID, &dFontSize);
@@ -953,9 +956,10 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 
 	return mRes;
 }
-void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
+int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
 {
-	// Пытаемся получить ширины из словаря Widths
+	int nDefaultWidth = 1000;
+	// Try to get widths from Widths dictionary
 	Object oWidths;
 	if (pFontDict->lookup("Widths", &oWidths)->isArray())
 	{
@@ -979,21 +983,20 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 	}
 	oWidths.free();
 
-	// Для CID шрифтов обрабатываем DW и W
+	// For CID fonts, process DW and W
 	Object oDescendantFonts;
 	if (pFontDict->lookup("DescendantFonts", &oDescendantFonts)->isArray() && oDescendantFonts.arrayGetLength() > 0)
 	{
 		Object oCIDFont;
 		if (oDescendantFonts.arrayGet(0, &oCIDFont)->isDict())
 		{
-			// Получаем DW (default width)
+			// Get DW (default width)
 			Object oDW;
-			int nDefaultWidth = 1000;
 			if (oCIDFont.dictLookup("DW", &oDW)->isInt())
 				nDefaultWidth = oDW.getInt();
 			oDW.free();
 
-			// Получаем W (widths array)
+			// Get W (widths array)
 			Object oW;
 			if (oCIDFont.dictLookup("W", &oW)->isArray())
 			{
@@ -1063,6 +1066,8 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 		oCIDFont.free();
 	}
 	oDescendantFonts.free();
+
+	return nDefaultWidth;
 }
 void CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 {

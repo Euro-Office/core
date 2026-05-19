@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #ifndef _PDF_WRITER_H
 #define _PDF_WRITER_H
@@ -77,7 +80,7 @@ public:
 	std::wstring GetTempFile(const std::wstring& wsDirectory);
 	void SetTempDirectory(const std::wstring& wsTempDirectory);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со страницей
+	// Functions for working with page
 	//----------------------------------------------------------------------------------------
 	HRESULT NewPage();
 	HRESULT get_Height(double* dHeight);
@@ -85,7 +88,7 @@ public:
 	HRESULT get_Width(double* dWidth);
 	HRESULT put_Width(const double& dWidth, bool bMM2PT = true);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Pen
+	// Functions for working with Pen
 	//----------------------------------------------------------------------------------------
 	HRESULT get_PenColor(LONG* lColor);
 	HRESULT put_PenColor(const LONG& lColor);
@@ -109,7 +112,7 @@ public:
 	HRESULT put_PenMiterLimit(const double& dMiter);
 	HRESULT PenDashPattern(double* pPattern, LONG lCount);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с Brush
+	// Functions for working with Brush
 	//----------------------------------------------------------------------------------------
 	HRESULT get_BrushType(LONG* lType);
 	HRESULT put_BrushType(const LONG& lType);
@@ -140,7 +143,7 @@ public:
 	HRESULT get_BrushScale(bool& isScale, double& scaleX, double& scaleY) const;
 	HRESULT put_BrushScale(bool isScale, const double& scaleX, const double& scaleY);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы со шрифтами
+	// Functions for working with fonts
 	//----------------------------------------------------------------------------------------
 	HRESULT get_FontName(std::wstring* wsName);
 	HRESULT put_FontName(const std::wstring& wsName);
@@ -157,7 +160,7 @@ public:
 	HRESULT get_FontFaceIndex(int* lFaceIndex);
 	HRESULT put_FontFaceIndex(const int& lFaceIndex);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода текста
+	// Functions for text output
 	//----------------------------------------------------------------------------------------
 	HRESULT CommandDrawTextCHAR  (const LONG& lUnicode,                   const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextExCHAR(const LONG& lUnicode, const LONG& lGid, const double& dX, const double& dY, const double& dW, const double& dH);
@@ -165,11 +168,11 @@ public:
 	HRESULT CommandDrawTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT CommandDrawTextCHAR2 (unsigned int* unUnicode, const unsigned int& unUnicodeCount, const unsigned int& unGid, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Маркеры команд
+	// Command markers
 	//----------------------------------------------------------------------------------------
 	HRESULT EndCommand(const DWORD& lType);
 	//----------------------------------------------------------------------------------------
-	// Функции для работы с патом
+	// Functions for working with path
 	//----------------------------------------------------------------------------------------
 	HRESULT PathCommandMoveTo(const double& dX, const double& dY);
 	HRESULT PathCommandLineTo(const double& dX, const double& dY);
@@ -187,18 +190,18 @@ public:
 	HRESULT PathCommandText      (const std::wstring& wsUnicodeText,                                                           const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT PathCommandTextEx    (const std::wstring& wsUnicodeText, const unsigned int* pGids, const unsigned int nGidsCount, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Функции для вывода изображений
+	// Functions for image output
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage(IGrObject* pImage, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT DrawImageFromFile(NSFonts::IApplicationFonts* pAppFonts, const std::wstring& wsTempDirectory, const std::wstring& wsImagePath, const double& dX, const double& dY, const double& dW, const double& dH, const BYTE& nAlpha = 255);
 	//----------------------------------------------------------------------------------------
-	// Функции для выставления преобразования
+	// Functions for setting transformation
 	//----------------------------------------------------------------------------------------
 	HRESULT SetTransform(const double& dM11, const double& dM12, const double& dM21, const double& dM22, const double& dX, const double& dY);
 	HRESULT GetTransform(double* dM11, double* dM12, double* dM21, double* dM22, double* dX, double* dY);
 	HRESULT ResetTransform();
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции
+	// Additional functions
 	//----------------------------------------------------------------------------------------
 	HRESULT AddHyperlink(const double& dX, const double& dY, const double& dW, const double& dH, const std::wstring& wsUrl, const std::wstring& wsTooltip);
 	HRESULT AddLink(const double& dX, const double& dY, const double& dW, const double& dH, const double& dDestX, const double& dDestY, const int& nPage);
@@ -209,7 +212,7 @@ public:
 	HRESULT get_ClipMode(LONG* lMode);
 	HRESULT put_ClipMode(const LONG& lMode);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции Pdf рендерера
+	// Additional Pdf renderer functions
 	//----------------------------------------------------------------------------------------
 	HRESULT DrawImage1bpp(NSImages::CPixJbig2* pImageBuffer, const unsigned int& unWidth, const unsigned int& unHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	HRESULT EnableBrushRect(const LONG& lEnable);
@@ -217,7 +220,7 @@ public:
 	HRESULT SetRadialGradient(const double& dX1, const double& dY1, const double& dR1, const double& dX2, const double& dY2, const double& dR2);
 	HRESULT DrawImageWith1bppMask(IGrObject* pImage, NSImages::CPixJbig2* pMaskBuffer, const unsigned int& unMaskWidth, const unsigned int& unMaskHeight, const double& dX, const double& dY, const double& dW, const double& dH);
 	//----------------------------------------------------------------------------------------
-	// Дополнительные функции для дозаписи Pdf
+	// Additional functions for incremental Pdf writing
 	//----------------------------------------------------------------------------------------
 	HRESULT EditWidgetParents(NSFonts::IApplicationFonts* pAppFonts, CWidgetsInfo* pFieldInfo, const std::wstring& wsTempDirectory);
 	void SetPage(PdfWriter::CPage* pPage);

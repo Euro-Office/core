@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "FontManager.h"
 
 #include "../../../../DesktopEditor/xml/include/xmlutils.h"
@@ -200,7 +235,7 @@ namespace NSDocxRenderer
 
 	void CUnicodeRanges::CheckRange(const int& symbol, BYTE& Range, BYTE& RangeNum)
 	{
-		// определяем range и двигаем его в начало.
+		// determine range and move it to the beginning.
 		std::list<CUnicodeRange>::iterator iter = m_arRanges.begin();
 		while (iter != m_arRanges.end())
 		{
@@ -329,7 +364,7 @@ namespace NSDocxRenderer
 
 		for(auto it = m_arParamsCache.begin(); it != m_arParamsCache.end(); it++)
 		{
-			// нашли в кэше, ничего не подбираем, выкинем наверх
+			// found in cache, no selection needed, return early
 			if(it->oFontSelectParams == oFontSelectParams && it->lRange == lRange && it->lRangeNum == lRangeNum)
 			{
 				m_bIsSelectedBold = it->bIsSelectedBold;
@@ -345,7 +380,7 @@ namespace NSDocxRenderer
 			}
 		}
 
-		// не нашли...
+		// not found...
 		CFontSelectInfo oInfoCache;
 		oInfoCache.oFontSelectParams = oFontSelectParams;
 		oInfoCache.lRange = lRange;
@@ -374,7 +409,7 @@ namespace NSDocxRenderer
 		}
 		else if (((lRangeNum == 2) && (lRange == 3)) || ((lRangeNum == 1) && (lRange == 31)) || ((lRangeNum == 0) && (lRange == 13)))
 		{
-			// арабский язык!!!
+			// Arabic language!!!
 			dwR1 = 1 << 13;
 			dwR2 = 1 << 31;
 			dwR3 = 1 << 3;
@@ -435,7 +470,7 @@ namespace NSDocxRenderer
 		m_bIsSelectedItalic = pInfo->m_bItalic;
 		m_wsSelectedName = pInfo->m_wsFontName;
 
-		// закинем в кэш, чтобы потом не подбирать
+		// add to cache to avoid selection later
 		oInfoCache.bIsSelectedBold = m_bIsSelectedBold;
 		oInfoCache.bIsSelectedItalic = m_bIsSelectedItalic;
 		oInfoCache.wsSelectedName = m_wsSelectedName;
@@ -643,7 +678,7 @@ namespace NSDocxRenderer
 		dBoxWidth	= (double)(bbox.fMaxX - bbox.fMinX);
 		dBoxHeight	= (double)(bbox.fMaxY - bbox.fMinY);
 
-		// переводим в миллиметры
+		// convert to millimeters
 		dBoxX		*= c_dPixToMM;
 		dBoxY		*= c_dPixToMM;
 		dBoxWidth	*= c_dPixToMM;
@@ -679,7 +714,7 @@ namespace NSDocxRenderer
 		dBoxWidth	= (double)(bbox.fMaxX - bbox.fMinX);
 		dBoxHeight	= (double)(bbox.fMaxY - bbox.fMinY);
 
-		// переводим в миллиметры
+		// convert to millimeters
 		dBoxX		*= c_dPixToMM;
 		dBoxY		*= c_dPixToMM;
 		dBoxWidth	*= c_dPixToMM;

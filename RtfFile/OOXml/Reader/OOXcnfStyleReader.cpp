@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "OOXcnfStyleReader.h"
@@ -174,7 +177,7 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 	if( PROP_DEF != oInputStyle->m_oTableProp.m_nColBandSize )
 		nColsInBand = oInputStyle->m_oTableProp.m_nColBandSize;
 
-	//обнуляем
+	//reset
 	oOutputProperty.m_oBorderDiagonalLR = RtfBorder();
 	oOutputProperty.m_oBorderDiagonalRL = RtfBorder();
 	oOutputProperty.m_oBorderLeft = RtfBorder();
@@ -183,10 +186,10 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 	oOutputProperty.m_oBorderBottom = RtfBorder();
 	oOutputProperty.m_oBorderInsideH = RtfBorder();
 	oOutputProperty.m_oBorderInsideV = RtfBorder();
-	//От всей таблицы
+	//From the whole table
 	ApplyTableStyleToCellBorder( oInputStyle, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, 0, nHeight - 1 );
 
-	//От OddVBand
+	//From OddVBand
 	if( 1 != oInputStyle->m_oTableProp.m_bAutoNoColBand && nColsInBand > 0 )
 	{
 		int nBoundLeft = 0;
@@ -197,9 +200,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			nBoundRight --;
 		if( nBoundLeft <= nBoundRight && nBoundLeft <= nCurX && nCurX <= nBoundRight )
 		{
-			int nDelta = nCurX - nBoundLeft;//получаем количество столбцов между
-			int nPlace = nDelta % nColsInBand;//получаем номер внутри band
-			//будем считать что флаги расставлены правильно
+			int nDelta = nCurX - nBoundLeft;//get the number of columns between
+			int nPlace = nDelta % nColsInBand;//get the position within band
+			//assume flags are set correctly
 			if( true == bOddVBand && NULL != oInputStyle->m_oBandVerOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandVerOdd, oOutputProperty, nCurX, nCurY, nCurX - nPlace, nCurX - nPlace + nColsInBand - 1, 0, nHeight - 1 );
 			if( true == bEvenVBand && NULL != oInputStyle->m_oBandVerEven )
@@ -217,9 +220,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			nBoundBottom --;
 		if( nBoundTop <= nBoundBottom && nBoundTop <= nCurY && nCurY <= nBoundBottom )
 		{
-			int nDelta = nCurY - nBoundTop;//получаем количество столбцов между
-			int nPlace = nDelta % nRowsInBand;//получаем номер внутри band
-			//будем считать что флаги расставлены правильно
+			int nDelta = nCurY - nBoundTop;//get the number of columns between
+			int nPlace = nDelta % nRowsInBand;//get the position within band
+			//assume flags are set correctly
 			if( true == bOddHBand && NULL != oInputStyle->m_oBandHorOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandHorOdd, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, nCurY - nPlace, nCurY - nPlace + nRowsInBand - 1 );
 			if( true == bEvenHBand && NULL != oInputStyle->m_oBandHorEven )
@@ -302,7 +305,7 @@ void CcnfStyle::ApplyOneStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCell
 		return;
 	if( !(nBoundLeft <= nCurX && nCurX <= nBoundRight && nBoundTop <= nCurY && nCurY <= nBoundBottom) )
 		return;
-	//на них ни что не влияет
+	//nothing affects them
 	oOutputProperty.m_oBorderDiagonalLR.Merge( oInputStyle->m_oCellProp.m_oBorderDiagonalLR );
 	oOutputProperty.m_oBorderDiagonalRL.Merge( oInputStyle->m_oCellProp.m_oBorderDiagonalRL );
 
@@ -363,7 +366,7 @@ bool OOXcnfStyleReader::Parse( ReaderParameter oParam, CcnfStyle& oOutput)
 		oOutput.bEvenVBand	= m_ooxCnfStyle->m_oVal->IsBand2Vertical();
 		oOutput.bOddHBand	= m_ooxCnfStyle->m_oVal->IsBand1Horizontal();
 		oOutput.bEvenHBand	= m_ooxCnfStyle->m_oVal->IsBand2Horizontal();
-		oOutput.bFirstRowLastCol	= m_ooxCnfStyle->m_oVal->IsNeCell(); //северо восток
+		oOutput.bFirstRowLastCol	= m_ooxCnfStyle->m_oVal->IsNeCell(); //north east
 		oOutput.bFirstRowFirstCol	= m_ooxCnfStyle->m_oVal->IsNwCell();
 		oOutput.bLastRowLastCol		= m_ooxCnfStyle->m_oVal->IsSeCell();
 		oOutput.bLastRowFirstCol	= m_ooxCnfStyle->m_oVal->IsSwCell();

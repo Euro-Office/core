@@ -1,35 +1,38 @@
-/*
- * (c) Copyright Ascensio System SIA 2010-2023
+﻿/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,12 +54,12 @@ namespace codegen
         public string sNamespace;
         public bool bIsAttribute;
         public string sDefAttribute;
-        public bool bQualified;//нужно ли при записи в xml писать prefix
+        public bool bQualified;//whether to write prefix when writing to xml
         public bool bIsArray;
         public List<GenMember> aArrayTypes;
         public string sArrayTypesElementName;
         public string sArrayTypesEnumName;
-        public bool bInternal;//отличает массив с типами
+        public bool bInternal;//distinguishes array with types
 
         public bool bToDo;
         public bool bToDoString;
@@ -84,7 +87,7 @@ namespace codegen
         public string sNamespace;
         public bool bIsEnum;
         public List<GenMember> aMembers = new List<GenMember>();
-        public bool bInternal;//отличает enum типов
+        public bool bInternal;//distinguishes type enum
         public bool bIsRoot;
         public GenClass(string _sName, string _sNamespace)
         {
@@ -173,7 +176,7 @@ namespace codegen
                     aRes.Add(oGenClass);
                 mapAllClasses[oGenClass.sName] = oGenClass;
             }
-            //специально для chart
+            //specifically for chart
             for (int i = 0; i < aRes.Count; ++i)
             {
                 GenClass oGenClass = aRes[i];
@@ -234,7 +237,7 @@ namespace codegen
         GenClass PreProcessClass(List<GenClass> aGenClasses, CodeTypeDeclaration type)
         {
             GenClass oGenClass = null;
-            //получаем xml namespace
+            //get xml namespace
             string sNamespace = null;
             bool bIncludeInSchema = true;
             bool bIsRoot = false;
@@ -291,7 +294,7 @@ namespace codegen
                     for (int i = 0; i < type.Members.Count; ++i)
                     {
                         CodeTypeMember member = type.Members[i];
-                        //CodeMemberField пропускаем
+                        //skip CodeMemberField
                         CodeMemberProperty codeMemberProperty = member as CodeMemberProperty;
                         if (codeMemberProperty != null)
                         {
@@ -320,7 +323,7 @@ namespace codegen
                     oGenMember.bQualified = false;
                     oGenMember.bIsAttribute = true;
                     ParseArguments(attribute.Arguments, oGenMember);
-                    //todo могут быть повторы имен атрибутов и child nodes.
+                    //todo there may be duplicate attribute names and child nodes
                 }
                 else if (attribute.Name == "System.ComponentModel.DefaultValueAttribute")
                 {
@@ -376,7 +379,7 @@ namespace codegen
                 {
                     ParseArguments(attribute.Arguments, oGenMember);
                 }
-                //todo не всегда прописан
+                //todo not always specified
                 //else if (attribute.Name == "System.Xml.Serialization.XmlChoiceIdentifierAttribute")
                 //{
                 //    if (attribute.Arguments.Count > 0)
@@ -392,17 +395,17 @@ namespace codegen
             {
                 if (oGenMember.bIsArray && null != aWrappedMemebers)
                 {
-                    //todo не проверен случай
+                    //todo case not tested
                     //[System.Xml.Serialization.XmlArrayItemAttribute("ahPolar", typeof(CT_PolarAdjustHandle), IsNullable=false)]
                     //[System.Xml.Serialization.XmlArrayItemAttribute("ahXY", typeof(CT_XYAdjustHandle), IsNullable=false)]
                     //public object[] ahLst {
 
-                    //создаем wrap class чтобы не работать с двумерными массивами
+                    //create wrap class to avoid working with 2D arrays
                     string sNewName = Utils.GetClassName(oGenMember.sName);
                     GenClass oNewGenClass = new GenClass(sNewName, oGenMember.sNamespace);
                     if (null == oNewGenClass.sNamespace)
                         oNewGenClass.sNamespace = oGenClass.sNamespace;
-                    //помещаем класс указанный в атрибутах в aMembers
+                    //place class specified in attributes into aMembers
                     for (int i = 0; i < aWrappedMemebers.Count; ++i)
                     {
                         GenMember oWrappedMemeber = aWrappedMemebers[i];
@@ -415,7 +418,7 @@ namespace codegen
                         oWrappedMemeber.sNamespace = oNewGenClass.sNamespace;
                         oNewGenClass.aMembers.Add(oWrappedMemeber);
                     }
-                    //проверяем нет ли такого типа
+                    //check if such type exists
                     bool bExist = false;
                     bool bNeedCreate = true;
                     GenClass oPrevGenClass;
@@ -447,7 +450,7 @@ namespace codegen
                         aGenClasses.Add(oNewGenClass);
                         m_mapGeneratedClasses[oNewGenClass.sName] = oNewGenClass;
                     }
-                    //меняем oGenMember, чтобы он ссылался на oNewGenClass
+                    //modify oGenMember to reference oNewGenClass
                     if (codeMemberProperty.Type.ArrayElementType.ArrayRank > 0)
                         oGenMember.bIsArray = true;
                     else
@@ -457,7 +460,7 @@ namespace codegen
                 }
                 if (oGenMember.bIsArray && null != oGenMember.aArrayTypes)
                 {
-                    //добавляем enum для member и дополнительный массив для типов
+                    //add enum for member and additional array for types
                     GenClass oNewEnum = new GenClass(Utils.gc_sItemsChoiceType + m_nItemsChoiceTypeCount++, oGenClass.sNamespace);
                     oNewEnum.bInternal = true;
                     oNewEnum.bIsEnum = true;

@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "OOXReader.h"
 #include "OOXPictureReader.h"
@@ -172,22 +175,22 @@ bool OOXShapeReader::ParseVmlStyle(RtfShapePtr pShape, SimpleTypes::Vml::CCssPro
 	}break;
 	case SimpleTypes::Vml::cssptMsoWrapDistanceBottom:
 	{
-		//todooo проверять на размерность
+		//todooo check dimension
 		pShape->m_nWrapDistBottom =  (int)(20 * prop->get_Value().oValue.dValue );
 	}break;
 	case SimpleTypes::Vml::cssptMsoWrapDistanceLeft :
 	{
-		//todooo проверять на размерность
+		//todooo check dimension
 		pShape->m_nWrapDistLeft = (int)(20 * prop->get_Value().oValue.dValue );
 	}break;
 	case SimpleTypes::Vml::cssptMsoWrapDistanceRight:
 	{
-		//todooo проверять на размерность
+		//todooo check dimension
 		pShape->m_nWrapDistRight = (int)(20 * prop->get_Value().oValue.dValue );
 	}break;
 	case SimpleTypes::Vml::cssptMsoWrapDistanceTop :
 	{
-		//todooo проверять на размерность
+		//todooo check dimension
 		pShape->m_nWrapDistTop =  (int)(20 * prop->get_Value().oValue.dValue );
 	}break;
 	case SimpleTypes::Vml::cssptMsoWrapEdited:
@@ -241,7 +244,7 @@ bool OOXShapeReader::ParseVmlStyle(RtfShapePtr pShape, SimpleTypes::Vml::CCssPro
 	}break;
 	case SimpleTypes::Vml::cssptVTextAnchor:
 	{
-		pShape->m_nAnchorText		= prop->get_Value().eVTextAnchor;//совпдает
+		pShape->m_nAnchorText		= prop->get_Value().eVTextAnchor;//matches
 		pShape->m_bFitShapeToText	= 0;
 	}break;
 	case SimpleTypes::Vml::csspctMsoWidthPercent:
@@ -414,7 +417,7 @@ bool OOXShapeReader::ParseVmlChild( ReaderParameter oParam , RtfShapePtr& pOutpu
 			if (!stroke) break;
 
 			if (stroke->m_oDahsStyle.IsInit())
-				pOutput->m_nLineDashing = stroke->m_oDahsStyle->GetValue(); //совпадают значения
+				pOutput->m_nLineDashing = stroke->m_oDahsStyle->GetValue(); //values match
 
 			if (stroke->m_oColor.IsInit())
 				pOutput->m_nLineColor = (stroke->m_oColor->Get_B() << 16) + (stroke->m_oColor->Get_G() << 8) + stroke->m_oColor->Get_R();
@@ -456,7 +459,7 @@ bool OOXShapeReader::ParseVmlChild( ReaderParameter oParam , RtfShapePtr& pOutpu
 				int nCropedWidthGoal = pOutput->m_oPicture->m_nWidthGoal;
 				if( PROP_DEF != nCropedWidthGoal )
 				{
-					//делаем crop
+					//do crop
 					if( image_data->m_oCropLeft.IsInit() )
 					{
 						double nCropLeft = image_data->m_oCropLeft->GetValue();
@@ -494,7 +497,7 @@ bool OOXShapeReader::ParseVmlChild( ReaderParameter oParam , RtfShapePtr& pOutpu
 						nCropedHeightGoal -= pOutput->m_oPicture->m_nCropB;
 					}
 				}
-				//устанавливаем scale
+				//set scale
 				if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nRight && PROP_DEF != nCropedWidthGoal && 0 != nCropedWidthGoal )
 				{
 					int nWidth = pOutput->m_nRight - pOutput->m_nLeft;
@@ -616,7 +619,7 @@ bool OOXShapeReader::ParseVmlChild( ReaderParameter oParam , RtfShapePtr& pOutpu
 		default: break;
 		}
 	}
-	//проверяем на inline
+	//check for inline
 	if((PROP_DEF == pOutput->m_nLeft/* || 0 == pOutput->m_nLeft */) && ( PROP_DEF == pOutput->m_nTop/* || 0 == pOutput->m_nTop */) &&
 			PROP_DEF == pOutput->m_nPositionH && PROP_DEF == pOutput->m_nPositionV )
 	{
@@ -804,12 +807,12 @@ bool OOXShapeReader::Parse(ReaderParameter oParam, RtfShapePtr& pOutput, PPTX::L
 		//for (size_t i = 0 ; i < oox_bitmap_fill->m_oBlip->m_arrEffects.size(); i++)
 		//	convert(oox_bitmap_fill->m_oBlip->m_arrEffects[i]);
 	}
-	if (oox_bitmap_fill->srcRect.IsInit())//часть изображения
+	if (oox_bitmap_fill->srcRect.IsInit())//part of image
 	{
 		int nCropedWidthGoal = pOutput->m_oPicture->m_nWidthGoal;
 		if( PROP_DEF != nCropedWidthGoal )
 		{
-			//делаем crop
+			//do crop
 			if (oox_bitmap_fill->srcRect->l.IsInit())
 			{
 				double nCropLeft = XmlUtils::GetInteger( oox_bitmap_fill->srcRect->l.get()) / 100. ;
@@ -849,7 +852,7 @@ bool OOXShapeReader::Parse(ReaderParameter oParam, RtfShapePtr& pOutput, PPTX::L
 				nCropedHeightGoal -= pOutput->m_oPicture->m_nCropB;
 			}
 		}
-		//устанавливаем scale
+		//set scale
 		if( PROP_DEF != pOutput->m_nLeft && PROP_DEF != pOutput->m_nRight && PROP_DEF != nCropedWidthGoal && 0 != nCropedWidthGoal )
 		{
 			int nWidth = pOutput->m_nRight - pOutput->m_nLeft;
@@ -1051,7 +1054,7 @@ void OOXShapeReader::Parse(ReaderParameter oParam, RtfShapePtr& pOutput, PPTX::L
 	//nullable<SimpleTypes::CCompoundLine<>>            m_oCmpd;
 
 
-	//ELineJoinType                                     m_eJoinType;   // Тип соединения линий
+	//ELineJoinType                                     m_eJoinType;   // line join type
 	//nullable<OOX::Drawing::CLineJoinBevel>            m_oBevel;
 	//nullable<OOX::Drawing::CLineJoinMiterProperties>  m_oMiter;
 	//nullable<OOX::Drawing::CLineJoinRound>            m_oRound;
@@ -1417,7 +1420,7 @@ bool OOXShapeReader::ParsePic( ReaderParameter oParam, RtfShapePtr& pOutput)
 	{
 		pOutput->m_oPicture->eDataType = RtfPicture::dt_png;
 		pOutput->m_oPicture->m_sPicFilename = ooxPic->blipFill.blip->oleFilepathImage;
-		pOutput->m_oPicture->m_bIsCopy = false; //не удалять
+		pOutput->m_oPicture->m_bIsCopy = false; //do not delete
 
 		if (pOutput->m_oPicture->m_nWidthGoal == PROP_DEF)
 		{
@@ -1628,10 +1631,10 @@ bool OOXShapeReader::ParseVml(ReaderParameter oParam, RtfShapePtr& pOutput, bool
 		pOutput->m_nID = oParam.oReader->m_oOOXIdGenerator.GetId(m_vmlElement->m_sId.get());
 	}
 
-	//pOutput->m_nLeft		= 0; //стили только с widht height (например в Numbering)
+	//pOutput->m_nLeft		= 0; //styles only with width height (e.g. in Numbering)
 	//pOutput->m_nTop		= 0;
 
-	// геометрия --------------------------------------------------------------------------------------------------------
+	// geometry --------------------------------------------------------------------------------------------------------
 
 	SimpleTypes::Vml::CVmlPath * custom_path = NULL;
 	int Width = 0, Height = 0;
@@ -1913,7 +1916,7 @@ void OOXShapeReader::ParseAdjustment (RtfShape& oShape, std::wstring sAdjustment
 }
 bool OOXShapeReader::WriteDataToPicture( std::wstring sPath, RtfPicture& pOutput, ReaderParameter& oParam)
 {
-	OOX::CPath ooxPath = sPath;	//для target
+	OOX::CPath ooxPath = sPath;	//for target
 
 	if (!oParam.oReader->m_sTempFolder.empty())
 		ooxPath = oParam.oReader->m_sTempFolder + FILE_SEPARATOR_STR;
@@ -1921,17 +1924,17 @@ bool OOXShapeReader::WriteDataToPicture( std::wstring sPath, RtfPicture& pOutput
 	pOutput.m_dScaleX = 100;
 	pOutput.m_dScaleY = 100;
 
-	//Выставляем тип картинки
+	//Set picture type
 	pOutput.eDataType = RtfPicture::GetPictureType( sPath );
 
-	//ecли тип не поддерживается rtf конвертируем в png
+	//if type is not supported by rtf, convert to png
 	if( RtfPicture::dt_none == pOutput.eDataType )
 	{
-		//в туже папку что и исходная картинка
+		//in the same folder as the source image
 		CBgraFrame image;
 		if (image.OpenFile(sPath) == false ) return false;
 
-		//правильно выставляем размеры
+		//set correct dimensions
 		pOutput.m_nWidthGoal	= image.get_Width()	* 15;  //pixels to twip (  1440 / 96 )
 		pOutput.m_nHeightGoal	= image.get_Height()* 15;  //pixels to twip (  1440 / 96 )
 
@@ -1940,14 +1943,14 @@ bool OOXShapeReader::WriteDataToPicture( std::wstring sPath, RtfPicture& pOutput
 		if (image.SaveFile(sTargetFile, 4 /*_CXIMAGE_FORMAT_PNG*/) )
 		{
 			pOutput.eDataType = RtfPicture::dt_png;
-			//Запоминаем имя
+			//Store filename
 			pOutput.m_sPicFilename = sTargetFile;
-			pOutput.m_bIsCopy = true;//выставляем флаг чтобы потом удалить файл
+			pOutput.m_bIsCopy = true;//set flag to delete file later
 		}
 	}
 	else if( RtfPicture::dt_apm ==  pOutput.eDataType )
 	{
-		//убираем заголовок apm (22 byte)
+		//remove apm header (22 byte)
 		NSFile::CFileBinary file_inp; //mpa
 		NSFile::CFileBinary file_out;//wmf
 
@@ -1991,7 +1994,7 @@ bool OOXShapeReader::WriteDataToPicture( std::wstring sPath, RtfPicture& pOutput
 		file_out.CloseFile();
 
 		pOutput.eDataType = RtfPicture::dt_wmf;
-		//Запоминаем имя
+		//Store filename
 		pOutput.m_sPicFilename = sTargetFile;
 		pOutput.m_bIsCopy = true;
 	}
@@ -2017,22 +2020,22 @@ bool OOXShapeReader::WriteDataToPicture( std::wstring sPath, RtfPicture& pOutput
 				pOutput.m_nHeightGoal	= (int)(dH * 15);  //pixels to twip;
 			}
 			RELEASEOBJECT(meta);
-			//Запоминаем только имя
+			//Store only filename
 			pOutput.m_sPicFilename = sPath;
-			pOutput.m_bIsCopy = false; //не удалять
+			pOutput.m_bIsCopy = false; //do not delete
 		}
 		else
 		{//png, jpeg
 			CBgraFrame image;
 
 			if (image.OpenFile(sPath, 0) == false ) return false;
-			//правильно выставляем размеры
+			//set correct dimensions
 			pOutput.m_nWidthGoal	= image.get_Width()		* 15;  //pixels to twip
 			pOutput.m_nHeightGoal	= image.get_Height()	* 15;  //pixels to twip;
 
-			//Запоминаем только имя
+			//Store only filename
 			pOutput.m_sPicFilename = sPath;
-			pOutput.m_bIsCopy = false; //не удалять
+			pOutput.m_bIsCopy = false; //do not delete
 		}
 	}
 	return true;

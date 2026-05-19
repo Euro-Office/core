@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "Converter.h"
@@ -63,7 +66,7 @@ namespace PPTX2EditorAdvanced
 
 			if (slideMaster.IsInit() == false)
 			{
-				//Вебкасты.pptx - неверно назначены rId
+				//Webcasts.pptx - rId incorrectly assigned
 				continue;
 			}
 			size_t pPointerSM = (size_t)(slideMaster.operator ->());
@@ -71,19 +74,19 @@ namespace PPTX2EditorAdvanced
 			std::map<size_t, LONG>::const_iterator pSearchSM = pCommon->slideMasters.find(pPointerSM);
 			if (pSearchSM != pCommon->slideMasters.end())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 
 			oBinaryWriter.m_pCommon->m_oRels.push_back (NSBinPptxRW::_masterSlideInfo());
 			NSBinPptxRW::_masterSlideInfo& oMasterInfo = oBinaryWriter.m_pCommon->m_oRels[oBinaryWriter.m_pCommon->m_oRels.size() - 1];
 
-			// записываем mainMaster
+			// write mainMaster
 			LONG lCountSM = (LONG)_slideMasters.size();
 			pCommon->slideMasters [pPointerSM] = lCountSM;
 			_slideMasters.push_back(slideMaster);
 
-			// проверяем theme
+			// check theme
 			size_t pPointerTh = (size_t)(slideMaster->theme.operator ->());
 			std::map<size_t, LONG>::const_iterator pSearchTh = pCommon->themes.find (pPointerTh);
 			if (pSearchTh == pCommon->themes.end())
@@ -104,7 +107,7 @@ namespace PPTX2EditorAdvanced
 				std::wstring rId = slideMaster->sldLayoutIdLst[iLayout].rid.get();
 				smart_ptr<PPTX::SlideLayout> slideLayout = ((*slideMaster)[rId]).smart_dynamic_cast<PPTX::SlideLayout>();
 
-				// проверяем layout
+				// check layout
 				size_t pPointerL = (size_t)(slideLayout.operator ->());
 
 				if (pPointerL == 0 )
@@ -127,14 +130,14 @@ namespace PPTX2EditorAdvanced
 			}
 		}
 
-		// записываем все notesMasters
+		// write all notesMasters
 		size_t nCountNoteMasters = presentation->notesMasterIdLst.size();
 		for (size_t nNote = 0; nNote < nCountNoteMasters; ++nNote)
 		{
 			smart_ptr<PPTX::NotesMaster> noteMaster = ((*presentation)[presentation->notesMasterIdLst[nNote].rid.get()]).smart_dynamic_cast<PPTX::NotesMaster>();
 			if (false == noteMaster.IsInit())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 			size_t pPointerNM = (size_t)(noteMaster.operator ->());
@@ -142,16 +145,16 @@ namespace PPTX2EditorAdvanced
 			std::map<size_t, LONG>::const_iterator pSearchNM = pCommon->notesMasters.find(pPointerNM);
 			if (pSearchNM != pCommon->notesMasters.end())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 
-			// записываем mainMaster
+			// write mainMaster
 			LONG lCountNM = (LONG)_notesMasters.size();
 			pCommon->notesMasters[pPointerNM] = lCountNM;
 			_notesMasters.push_back(noteMaster);
 
-			// проверяем theme
+			// check theme
 			size_t pPointerTh = (size_t)(noteMaster->theme_.operator ->());
 			LONG nNotesMastersRelsIndex = -1;
 			std::map<size_t, LONG>::const_iterator pSearchTh = pCommon->themes.find(pPointerTh);
@@ -167,14 +170,14 @@ namespace PPTX2EditorAdvanced
 			oBinaryWriter.m_pCommon->m_oNotesMasters_Rels.push_back(nNotesMastersRelsIndex);
 		}
 
-		// записываем все handoutMasters
+		// write all handoutMasters
 		size_t nCountHandoutMasters = presentation->handoutMasterIdLst.size();
 		for (size_t nHandout = 0; nHandout < nCountHandoutMasters; ++nHandout)
 		{
 			smart_ptr<PPTX::HandoutMaster> handoutMaster = ((*presentation)[presentation->handoutMasterIdLst[nHandout].rid.get()]).smart_dynamic_cast<PPTX::HandoutMaster>();
 			if (false == handoutMaster.IsInit())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 			size_t pPointerNM = (size_t)(handoutMaster.operator ->());
@@ -182,16 +185,16 @@ namespace PPTX2EditorAdvanced
 			std::map<size_t, LONG>::const_iterator pSearchNM = pCommon->handoutMasters.find(pPointerNM);
 			if (pSearchNM != pCommon->handoutMasters.end())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 
-			// записываем mainMaster
+			// write mainMaster
 			LONG lCountNM = (LONG)_handoutMasters.size();
 			pCommon->handoutMasters[pPointerNM] = lCountNM;
 			_handoutMasters.push_back(handoutMaster);
 
-			// проверяем theme
+			// check theme
 			size_t pPointerTh = (size_t)(handoutMaster->theme_.operator ->());
 			LONG nHandoutMastersRelsIndex = -1;
 			std::map<size_t, LONG>::const_iterator pSearchTh = pCommon->themes.find(pPointerTh);
@@ -208,7 +211,7 @@ namespace PPTX2EditorAdvanced
 			oBinaryWriter.m_pCommon->m_oHandoutMasters_Rels.push_back(nHandoutMastersRelsIndex);
 		}
 
-		// записываем все слайды
+		// write all slides
 		for (size_t i = 0; i < presentation->sldIdLst.size(); ++i)
 		{
 			std::wstring rId = presentation->sldIdLst[i].rid.get();
@@ -216,14 +219,14 @@ namespace PPTX2EditorAdvanced
 
 			if (slide.IsInit() == false)
 			{
-				continue;// странное ... слайд 38 в FY10_September_Partner_Call.pptx
+				continue;// strange ... slide 38 in FY10_September_Partner_Call.pptx
 			}
 			size_t pPointerS = (size_t)(slide.operator ->());
 
 			std::map<size_t, LONG>::const_iterator pSearchS = pCommon->slides.find(pPointerS);
 			if (pSearchS != pCommon->slides.end())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				continue;
 			}
 
@@ -231,7 +234,7 @@ namespace PPTX2EditorAdvanced
 			std::map<size_t, LONG>::const_iterator pSearchL = pCommon->layouts.find(pPointerL);
 			if (pSearchL == pCommon->layouts.end())
 			{
-				// такого быть не должно
+				// this shouldn't happen
 				oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels.push_back(0);
 			}
 			else
@@ -243,7 +246,7 @@ namespace PPTX2EditorAdvanced
 			pCommon->slides [pPointerS] = lCountS;
 			_slides.push_back(slide);
 
-			// проверяем note
+			// check note
 			size_t pPointerN = (size_t)(slide->Note.operator ->());
 			LONG nNoteIndex = -1;
 			if (NULL != pPointerN)
@@ -284,9 +287,9 @@ namespace PPTX2EditorAdvanced
 			oBinaryWriter.WriteStringUtf8(strPrefix);
 		}
 		_UINT32 nStartPos = oBinaryWriter.GetPosition();
-		// нужно записать все в maintables. А кроме главных таблиц ничего и нету. Все остальное лежит в них
-		// на каждую таблицу - 5 байт (тип и сдвиг)
-		// число таблиц - заранее известно (сделаем 30. если потом не будет хватать - новая версия формата)
+		// need to write everything to maintables. Besides main tables there's nothing else. Everything else is in them
+		// 5 bytes per table (type and offset)
+		// number of tables is known in advance (let's make 30. if not enough later - new format version)
 		oBinaryWriter.WriteReserved(5 * 30);
 
 // Main
@@ -411,7 +414,7 @@ namespace PPTX2EditorAdvanced
 
 		for (size_t i = 0; i < _layouts.size(); ++i)
 		{
-			if (_layouts[i].IsInit() == false)	continue;	//непонятки с 42 шаблоном в FY10_September_Partner_Call.pptx
+			if (_layouts[i].IsInit() == false)	continue;	//issues with template 42 in FY10_September_Partner_Call.pptx
 
 			_layouts[i]->toPPTY(&oBinaryWriter);
 		}

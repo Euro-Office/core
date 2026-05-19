@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "RtfWriter.h"
@@ -69,7 +72,7 @@ bool RtfWriter::SaveByItemStart()
 	//	BSTR bstrFileName = m_sTempFileResult.AllocSysString();
 	//	m_oFileWriter = new NFileWriter::CBufferedFileWriter( bstrFileName );
 	//	SysFreeString( bstrFileName );
-	//	//создаем темповый файл куда пишем параграфы( потом копируем свойства секции и содержимое файла )
+	//	//create temp file where we write paragraphs (then copy section properties and file content)
 	//	m_sTempFile = Utils::CreateTempFile( m_sTempFolder );
 	//	BSTR bstrTempFileName = m_sTempFile.AllocSysString();
 	//	m_oTempFileWriter = new NFileWriter::CBufferedFileWriter( bstrTempFileName );
@@ -117,10 +120,10 @@ bool RtfWriter::SaveByItem()
 
 	if( m_oDocument.GetCount() > 1 && m_oDocument[0].props->GetCount() == 0 )
 	{
-		//пишем конец секции
+		//write end of section
         std::string sRtfExt = "\\sect";
         m_oCurTempFileWriter->Write( (BYTE*)sRtfExt.c_str(), sRtfExt.length() );
-		//окончательно дописываем темповый файл
+		//finally complete writing to temp file
 		RELEASEOBJECT( m_oCurTempFileWriter )
 		try
 		{
@@ -135,19 +138,19 @@ bool RtfWriter::SaveByItem()
 		}
 		if( NULL != m_oCurTempFileSectWriter )
 		{
-			//пишем свойства секции
+			//write section properties
             std::wstring sRtf;
 			if( true == m_bFirst )
 			{
-				//первый свойства секции пишем как свойства документа
+				//write first section properties as document properties
 				m_bFirst = false;
 				oNewParam.nType = RENDER_TO_OOX_PARAM_FIRST_SECTION;
 			}
 			sRtf = m_oDocument[0].props->m_oProperty.RenderToRtf(oNewParam);
             RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileSectWriter );
-			//дописываем в файл
+			//complete writing to file
 			RELEASEOBJECT( m_oCurTempFileSectWriter );
-			//создаем новый
+			//create new one
             std::wstring sNewTempFileSect = Utils::CreateTempFile( m_sTempFolder );
 			m_aTempFilesSectPr.push_back( sNewTempFileSect );
 
@@ -157,10 +160,10 @@ bool RtfWriter::SaveByItem()
 			//RtfInternalEncoder::Decode( sRtf, *m_oFileWriter );
             //m_oFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 		}
-		//удаляем секцию
+		//remove section
 		m_oDocument.RemoveItem( 0 );
 	}
-	//пишем параграф
+	//write paragraph
 	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )
 	{
         std::wstring sRtf;
@@ -168,7 +171,7 @@ bool RtfWriter::SaveByItem()
 		
 		if( TYPE_RTF_PARAGRAPH ==		m_oDocument[0].props->operator[](0)->GetType() 
 								&&	!( m_oDocument[0].props->GetCount() == 0 
-									&& m_oDocument.GetCount() > 1) )//для последнего параграфа секции не пишем \par
+									&& m_oDocument.GetCount() > 1) )//don't write \par for last paragraph of section
 		{
 			sRtf += L"\\par";
 			//oNewParam.nValue = RENDER_TO_RTF_PARAM_NO_PAR;
@@ -176,7 +179,7 @@ bool RtfWriter::SaveByItem()
         RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileWriter );
         //m_oTempFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 
-		//удаляем элемент который только что написали
+		//remove element we just wrote
 		m_oDocument[0].props->RemoveItem( 0 );
 	}
 	return true;
@@ -184,7 +187,7 @@ bool RtfWriter::SaveByItem()
 bool RtfWriter::SaveByItemEnd()
 {
 	bool result = true;
-	//окончательно дописываем темповый файл
+	//finally complete writing to temp file
 	RELEASEOBJECT( m_oCurTempFileWriter );
 
     std::wstring sRtf;
@@ -197,40 +200,40 @@ bool RtfWriter::SaveByItemEnd()
 
 		if( NULL != m_oCurTempFileSectWriter )
 		{
-			//пишем последнюю секцию
+			//write last section
 			if( true == m_bFirst )
 			{
-				//первый свойства секции пишем как свойства документа
+				//write first section properties as document properties
 				m_bFirst = false;
 				oNewParam.nType = RENDER_TO_OOX_PARAM_FIRST_SECTION;
 			}
 			sRtf = m_oDocument[0].props->m_oProperty.RenderToRtf(oNewParam);
             RtfUtility::RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileSectWriter );
-			//дописываем в файл
+			//complete writing to file
 			RELEASEOBJECT( m_oCurTempFileSectWriter );
 		}
 		//RtfInternalEncoder::Decode( sRtf, *m_oCurTempFileWriter );
         //m_oFileWriter->Write( (BYTE*)(LPCSTR)sRtf, sRtf.length() );
 
-		//удаляем секцию
+		//remove section
 		m_oDocument.RemoveItem( 0 );
 	}
 
-	//формируем выходной файл
+	//create output file
 	try
 	{
 		NFileWriter::CBufferedFileWriter oTargetFileWriter(m_sFilename );
 
-		//пишем заголовок потом все содежимое
+		//write header then all content
 		sRtf = CreateRtfStart();
 		DWORD dwBytesWrite = 0;
         RtfUtility::RtfInternalEncoder::Decode( sRtf, oTargetFileWriter );
         //WriteFile ( hTargetFile, sRtf, ( DWORD ) sRtf.length(), &dwBytesWrite, NULL );
 
-		//копируем заголовки из массива и параграфы из темповых файлов
+		//copy headers from array and paragraphs from temp files
 		for (size_t i = 0 ; i < m_aTempFiles.size() && i < m_aTempFilesSectPr.size(); i++ )
 		{
-			//свойства секции
+			//section properties
 
 			NSFile::CFileBinary file;
 			if (true == file.OpenFile(m_aTempFilesSectPr[i]))
@@ -248,7 +251,7 @@ bool RtfWriter::SaveByItemEnd()
 				}
 				file.CloseFile();
 			}
-			//параграфы
+			//paragraphs
 			if (true == file.OpenFile(m_aTempFiles[i]))
 			{
 				DWORD dwBytesRead = 1;
@@ -266,7 +269,7 @@ bool RtfWriter::SaveByItemEnd()
 			}
 		}
 
-		//завершаем документ
+		//complete document
 		sRtf = CreateRtfEnd();
         RtfUtility::RtfInternalEncoder::Decode( sRtf, oTargetFileWriter );
         BYTE nEndFile = 0;

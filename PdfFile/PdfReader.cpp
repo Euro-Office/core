@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #define errMemory 12
@@ -91,7 +94,7 @@ CPdfReader::CPdfReader(NSFonts::IApplicationFonts* pAppFonts)
 	globalParams->setErrQuiet(gTrue);
 #endif
 
-	// Создаем менеджер шрифтов с собственным кэшем
+	// Create font manager with its own cache
 	m_pFontManager = InitFontManager(pAppFonts);
 #ifndef BUILDING_WASM_MODULE
 	globalParams->setupBaseFonts(NULL);
@@ -196,8 +199,8 @@ bool CPdfReader::LoadFromMemory(NSFonts::IApplicationFonts* pAppFonts, BYTE* dat
 	m_eError = errNone;
 	m_nFileLength = length;
 
-	// Все LoadFromMemory копируют память в свои классы
-	// Кроме того MemStream использует malloc/free память
+	// All LoadFromMemory copy memory into their classes
+	// Also MemStream uses malloc/free memory
 	BYTE* pCopy = (BYTE*)malloc(length);
 	memcpy(pCopy, data, length);
 	data = pCopy;
@@ -244,6 +247,18 @@ int CPdfReader::GetNumPagesBefore(PDFDoc* _pDoc)
 		nPagesBefore += pDoc->getNumPages();
 	}
 	return -1;
+}
+PdfReader::CPdfFontList* CPdfReader::GetFontList(PDFDoc* _pDoc)
+{
+	for (CPdfReaderContext* pPDFContext : m_vPDFContext)
+	{
+		if (!pPDFContext || !pPDFContext->m_pDocument)
+			continue;
+		PDFDoc* pDoc = pPDFContext->m_pDocument;
+		if (_pDoc == pDoc)
+			return pPDFContext->m_pFontList;
+	}
+	return NULL;
 }
 std::string CPdfReader::GetPrefixForm(PDFDoc* _pDoc)
 {
@@ -474,8 +489,8 @@ bool CPdfReader::MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPasswor
 
 	Object obj;
 	obj.initNull();
-	// будет освобожден в деструкторе PDFDoc
-	// Время его жизни > copy и makeSubStream из MemStream
+	// will be freed in PDFDoc destructor
+	// Its lifetime > copy and makeSubStream from MemStream
 	BaseStream *str = new MemStream((char*)pData, 0, nLength, &obj, gTrue);
 	CPdfReaderContext* pContext = new CPdfReaderContext();
 	pContext->m_pDocument = new PDFDoc(str, owner_pswd, user_pswd);
@@ -494,7 +509,7 @@ bool CPdfReader::MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPasswor
 	m_eError = pDoc ? pDoc->getErrorCode() : errMemory;
 	if (!pDoc || !pDoc->isOk())
 	{
-		// pData освобождается
+		// pData is freed
 		delete pContext;
 		m_vPDFContext.pop_back();
 		return false;
@@ -518,7 +533,7 @@ bool CPdfReader::MergePages(const std::wstring& wsFile, const wchar_t* wsPasswor
 		user_pswd  = NSStrings::CreateString(wsPassword);
 	}
 
-	// конвертим путь в utf8 - под виндой они сконвертят в юникод, а на остальных - так и надо
+	// convert path to utf8 - on Windows they will convert to unicode, on others - that's what we need
 	std::string sPathUtf8 = U_TO_UTF8(wsFile);
 
 	CPdfReaderContext* pContext = new CPdfReaderContext();
@@ -680,7 +695,7 @@ void CPdfReader::DrawPageOnRenderer(IRenderer* pRenderer, int _nPageIndex, bool*
 	LONG lRendererType = 0;
 	pRenderer->get_Type(&lRendererType);
 	if (c_nDocxWriter == lRendererType)
-		return; // Без отрисовки Redact при ScanPage
+		return; // No Redact rendering during ScanPage
 
 	Page* pPage = pDoc->getCatalog()->getPage(nPageIndex);
 	PDFRectangle* cropBox = pPage->getCropBox();
@@ -1104,7 +1119,7 @@ BYTE* CPdfReader::GetStructure()
 			oRes.AddInt(nStartPage);
 			oRes.AddInt(1);
 			oRes.AddDouble(0);
-			oRes.WriteString(std::to_string(iPDF)); // TODO Писать имя файла как Adobe?
+			oRes.WriteString(std::to_string(iPDF)); // TODO Write filename like Adobe?
 		}
 
 		for (int i = 0, num = pList->getLength(); i < num; i++)
@@ -1124,7 +1139,7 @@ BYTE* CPdfReader::GetStructure()
 }
 BYTE* CPdfReader::GetLinks(int _nPageIndex)
 {
-	// TODO Links должны стать частью Annots
+	// TODO Links should become part of Annots
 	PDFDoc* pDoc = NULL;
 	int nPageIndex = GetPageIndex(_nPageIndex, &pDoc);
 	if (nPageIndex < 0 || !pDoc || !pDoc->getCatalog())
@@ -1136,7 +1151,7 @@ BYTE* CPdfReader::GetLinks(int _nPageIndex)
 
 	NSWasm::CPageLink oLinks;
 
-	// Гиперссылка
+	// Hyperlink
 	/*
 	Links* pLinks = pDoc->getLinks(nPageIndex);
 	if (pLinks)
@@ -1222,7 +1237,7 @@ BYTE* CPdfReader::GetLinks(int _nPageIndex)
 	nRotate = -pDoc->getPageRotate(nPageIndex);
 #endif
 
-	// Текст-ссылка
+	// Text-link
 	TextOutputControl textOutControl;
 	textOutControl.mode = textOutReadingOrder;
 	TextOutputDev* pTextOut = new TextOutputDev(NULL, &textOutControl, gFalse);
@@ -1299,14 +1314,10 @@ BYTE* CPdfReader::GetWidgets()
 	oRes.ClearWithoutAttack();
 	return bRes;
 }
-void CPdfReader::SetFonts(int _nPageIndex)
+void CPdfReader::SetFonts(PdfReader::CPdfFontList* pFontList)
 {
 	if (m_vPDFContext.empty())
 		return;
-
-	PDFDoc* pDoc = NULL;
-	PdfReader::CPdfFontList* pFontList = NULL;
-	GetPageIndex(_nPageIndex, &pDoc, &pFontList);
 
 	const std::map<Ref, PdfReader::TFontEntry*>& mapFonts = pFontList->GetFonts();
 	for (std::map<Ref, PdfReader::TFontEntry*>::const_iterator it = mapFonts.begin(); it != mapFonts.end(); ++it)
@@ -1407,7 +1418,7 @@ BYTE* CPdfReader::VerifySign(const std::wstring& sFile, ICertificate* pCertifica
 		int nByteOffset = 0;
 		for (int j = 0; j < arrByteOffset.size(); ++j)
 		{
-			// TODO проверка длины файла и ByteRange
+			// TODO check file length and ByteRange
 			memcpy(pDataForVerify + nByteOffset, pFileData + arrByteOffset[j], arrByteLength[j]);
 			nByteOffset += arrByteLength[j];
 		}
@@ -1425,7 +1436,7 @@ BYTE* CPdfReader::VerifySign(const std::wstring& sFile, ICertificate* pCertifica
 		RELEASEARRAYOBJECTS(pDataForVerify);
 		oObj1.free();
 
-		// Номер аннотации для сопоставления с AP
+		// Annotation number for matching with AP
 		oRes.AddInt(i);
 		oRes.AddInt(nRes);
 	}
@@ -1524,7 +1535,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			Object oStr, oXObject, oIm;;
 			if (oMK.dictLookup(sMKName.c_str(), &oStr)->isStream())
 			{
-				// Получение единственного XObject из Resources, если возможно
+				// Get single XObject from Resources, if possible
 				Object oResources;
 				if (!oStr.streamGetDict()->lookup("Resources", &oResources)->isDict() || !oResources.dictLookup("XObject", &oXObject)->isDict() ||
 					oXObject.dictGetLength() != 1 || !oXObject.dictGetVal(0, &oIm)->isStream())
@@ -1536,7 +1547,7 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			}
 			else if ((oStr.free(), true) && oMK.dictLookup("I", &oStr)->isNull() && oAP.isDict() && (oStr.free(), true) && oAP.dictLookup(arrAPName[j], &oStr)->isStream())
 			{
-				// Получение единственного XObject из Resources, если возможно
+				// Get single XObject from Resources, if possible
 				Object oResources;
 				if (!oStr.streamGetDict()->lookup("Resources", &oResources)->isDict() || !oResources.dictLookup("XObject", &oXObject)->isDict() ||
 					oXObject.dictGetLength() != 1 || !oXObject.dictGetVal(0, &oIm)->isStream())
@@ -1571,11 +1582,11 @@ BYTE* CPdfReader::GetButtonIcon(int nBackgroundColor, int _nPageIndex, bool bBas
 			{
 				Object oFieldRef;
 				pField->getFieldRef(&oFieldRef);
-				// Номер аннотации для сопоставления с AP
+				// Annotation number for matching with AP
 				oRes.AddInt(oFieldRef.getRefNum() + nStartRefID);
 				oFieldRef.free();
 
-				// Количество иконок 1-3
+				// Number of icons 1-3
 				nMKPos = oRes.GetSize();
 				oRes.AddInt(nMKLength);
 				bFirst = false;
@@ -2026,7 +2037,7 @@ int GetPageAnnots(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, PdfReader
 		// {
 		// 	pAnnot = new PdfReader::CAnnotPopup(pdfDoc, &oAnnotRef, nPageIndex, nStartRefID);
 		// }
-		// TODO Все аннотации
+		// TODO All annotations
 		oAnnotRef.free();
 
 		if (pAnnot)

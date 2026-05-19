@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "CSVWriter.h"
 #include "../Reader/CellFormatController/LocalInfo.h"
@@ -91,7 +94,7 @@ private:
 
 	int m_nColDimension;
 
-	bool m_bIsWriteCell; // Нужно только для записи JSON-а
+	bool m_bIsWriteCell; // Only needed for JSON writing
 	bool m_bStartRow;
 	bool m_bStartCell;
 
@@ -138,9 +141,9 @@ void CSVWriter::Xlsx2Csv(const std::wstring &sFileDst, OOX::Spreadsheet::CXlsx &
 	if (oXlsx.m_pWorkbook)
 	{
 		LONG lActiveSheet = oXlsx.m_pWorkbook->GetActiveSheetIndex();
-		std::wstring sSheetRId = _T("Sheet1"); // Читаем не по rId, а по имени листа
-											   // Get active sheet rId (для конвертации в CSV нужно использовать name, т.к. это наш бинарник из js-скриптов и еще нет rId
-											   // А для json-а нужно пользовать rId, т.к. при открытии они используются
+		std::wstring sSheetRId = _T("Sheet1"); // Read by sheet name, not by rId
+											   // Get active sheet rId (for CSV conversion need to use name, since this is our binary from js-scripts and there's no rId yet
+											   // For json need to use rId, since they are used on opening
 		if (oXlsx.m_pWorkbook->m_oSheets.IsInit() && !oXlsx.m_pWorkbook->m_oSheets->m_arrItems.empty())
 		{
 			OOX::Spreadsheet::CSheet* pSheet = NULL;
@@ -405,12 +408,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 
                 }
 
-                //currentTime->tm_year = date_.year() - 1900;  // Устанавливаем год
-                //currentTime->tm_mon = date_.month() - 1;     // Устанавливаем месяц (от 0 до 11)
-                //currentTime->tm_mday = date_.day();          // Устанавливаем день
+                //currentTime->tm_year = date_.year() - 1900;  // Set year
+                //currentTime->tm_mon = date_.month() - 1;     // Set month (from 0 to 11)
+                //currentTime->tm_mday = date_.day();          // Set day
 
 
-                //wss << std::put_time(currentTime, L"%x");  // Формат "%x" - формат даты для текущей локали
+                //wss << std::put_time(currentTime, L"%x");  // Format "%x" - date format for current locale
 
                 //date_str = wss.str();
 			}
@@ -421,12 +424,12 @@ std::wstring CSVWriter::Impl::convert_date_time(const std::wstring & sValue, std
 
 				std::time_t now = std::time(nullptr);
 				std::tm* currentTime = std::localtime(&now);
-				currentTime->tm_hour = hours;     // Устанавливаем часы
-				currentTime->tm_min = minutes;    // Устанавливаем минуты
-				currentTime->tm_sec = sec;    // Устанавливаем секунды
+				currentTime->tm_hour = hours;     // Set hours
+				currentTime->tm_min = minutes;    // Set minutes
+				currentTime->tm_sec = sec;    // Set seconds
 
 				wss.imbue(loc_);
-				wss << std::put_time(currentTime, L"%X");  // Формат "%X" - формат времени для текущей локали
+				wss << std::put_time(currentTime, L"%X");  // Format "%X" - time format for current locale
 
 				time_str = wss.str();
 			}
@@ -673,8 +676,8 @@ void WriteFile(NSFile::CFileBinary *pFile, wchar_t **pWriteBuffer, int &nCurrent
 
 	if (nCountChars + nCurrentIndex > c_nSize || bIsEnd)
 	{
-		// Буффер заполнился, пишем
-		if (nCodePage == 48 && 2 == sizeof(wchar_t))//todo 48 временно CP_UTF16
+		// Buffer is full, write
+		if (nCodePage == 48 && 2 == sizeof(wchar_t))//todo 48 temporarily CP_UTF16
 		{
 			pFile->WriteFile((BYTE*)*pWriteBuffer, sizeof(wchar_t) * nCurrentIndex);
 		}
@@ -721,18 +724,18 @@ bool CSVWriter::Impl::Start(const std::wstring &sFileDst)
 	bool res = m_oFile.CreateFileW(sFileDst);
 	if (!res) return false;
 
-	// Нужно записать шапку
-	if (46 == m_nCodePage)//todo 46 временно CP_UTF8
+	// Need to write header
+	if (46 == m_nCodePage)//todo 46 temporarily CP_UTF8
 	{
 		BYTE arUTF8[3] = { 0xEF, 0xBB, 0xBF };
 		m_oFile.WriteFile(arUTF8, 3);
 	}
-	else if (48 == m_nCodePage)//todo 48 временно CP_UTF16
+	else if (48 == m_nCodePage)//todo 48 temporarily CP_UTF16
 	{
 		BYTE arUTF16[2] = { 0xFF, 0xFE };
 		m_oFile.WriteFile(arUTF16, 2);
 	}
-	else if (49 == m_nCodePage)//todo 49 временно CP_unicodeFFFE
+	else if (49 == m_nCodePage)//todo 49 temporarily CP_unicodeFFFE
 	{
 		BYTE arBigEndian[2] = { 0xFE, 0xFF };
 		m_oFile.WriteFile(arBigEndian, 2);
@@ -798,7 +801,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 	{
 		if (m_bJSON && false == m_bIsWriteCell)
 		{
-			// Запишем пустые строки (для JSON-а)
+			// Write empty rows (for JSON)
 			WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sDoubleQuote, m_nCodePage);
 		}
 		// Write delimiter
@@ -880,7 +883,7 @@ void CSVWriter::Impl::WriteCell(OOX::Spreadsheet::CCell *pCell)
 									}
 								}
 							}
-							else if(formatTypeIsDateTime) // если формат даты не задан явно, удаляем его и записываем дату в локальном формате
+							else if(formatTypeIsDateTime) // if date format is not explicitly set, remove it and write date in local format
 							{
 								format_code = L"";
 							}
@@ -925,7 +928,7 @@ void CSVWriter::Impl::WriteRowEnd(OOX::Spreadsheet::CRow* pWorksheet, bool bLast
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sEndJson, m_nCodePage);
 	else
 	{
-		while (m_nColDimension > m_nColCurrent && !bLast) // todooo - прописывать в бинарнике dimension - и данные брать оттуда
+		while (m_nColDimension > m_nColCurrent && !bLast) // todo - write dimension in binary - and take data from there
 		{
 			// Write delimiter
 			++m_nColCurrent;
@@ -944,7 +947,7 @@ void CSVWriter::Impl::WriteSheetEnd(OOX::Spreadsheet::CWorksheet* pWorksheet)
 }
 void CSVWriter::Impl::End()
 {
-	// Теперь мы пишем как MS Excel (новую строку записываем в файл)
+	// Now we write like MS Excel (write new line to file)
 	if (!m_bJSON)
 	{
 		WriteFile(&m_oFile, &m_pWriteBuffer, m_nCurrentIndex, g_sNewLineN, m_nCodePage);
@@ -1041,7 +1044,7 @@ void CSVWriter::Impl::GetDefaultFormatCode(int numFmt, std::wstring & format_cod
 	case 47:	format_code = L"mmss.0";		format_type = SimpleTypes::Spreadsheet::celltypeTime; break;
 
 	default:
-		/////////////////////////////////// с неопределенным format_code .. он задается в файле
+		/////////////////////////////////// with undefined format_code .. it is set in file
 		if (numFmt >= 5 && numFmt <= 8)		format_type = SimpleTypes::Spreadsheet::celltypeCurrency;
 		if (numFmt >= 41 && numFmt <= 44)	format_type = SimpleTypes::Spreadsheet::celltypeCurrency;
 
@@ -1067,7 +1070,7 @@ std::wstring CSVWriter::Impl::ConvertValueCellToString(const std::wstring &value
 {
 	if (false == format_code.empty())
 	{
-		format_code.erase(std::remove(format_code.begin(), format_code.end(), L'"'), format_code.end());//удаляем экранирующие кавычки из формата
+		format_code.erase(std::remove(format_code.begin(), format_code.end(), L'"'), format_code.end());//remove escaping quotes from format
 		std::vector<std::wstring> format_codes;
 		boost::algorithm::split(format_codes, format_code, boost::algorithm::is_any_of(L";"), boost::algorithm::token_compress_on);
 

@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "OOXMLTags.h"
 
 #include "../src/StringFinder.h"
@@ -16,8 +51,8 @@
 
 namespace HTML
 {
-#define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
-#define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
+#define DEFAULT_PAGE_WIDTH  12240 // Value in Twips
+#define DEFAULT_PAGE_HEIGHT 15840 // Value in Twips
 
 inline bool ElementInTable(const std::vector<NSCSS::CNode>& arSelectors);
 
@@ -280,7 +315,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 	std::wstring wsExtention;
 	const std::wstring wsImagePath{m_pWriter->GetMediaDir() + L'i' + std::to_wstring(m_arrImages.size())};
 
-	// Предполагаем картинку в Base64
+	// Assume Base64-encoded image
 	if (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"data" && wsSrc.find(L"/", 4) != std::wstring::npos)
 		bRes = ReadBase64(wsSrc, wsImagePath, m_pWriter->GetFonts(), m_pWriter->GetTempDir(), wsExtention);
 
@@ -297,7 +332,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 		}
 	}
 
-	// Проверка расширения
+	// Check extension
 	if (!bRes)
 	{
 		wsExtention = NSFile::GetFileExtention(wsSrc);
@@ -311,7 +346,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 
 	const std::wstring wsBasePath{m_pWriter->GetBasePath()};
 
-	// Предполагаем картинку в сети
+	// Assume network image
 	if (!bRes &&
 	    ((!wsBasePath.empty() && wsBasePath.length() > 4 && wsBasePath.substr(0, 4) == L"http") ||
 	      (wsSrc.length() > 4 && wsSrc.substr(0, 4) == L"http")))
@@ -324,7 +359,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 
 		const std::wstring wsDst = wsImagePath + L'.' + ((!wsExtention.empty()) ? wsExtention : L"png");
 
-		// Проверка gc_allowNetworkRequest предполагается в kernel_network
+		// gc_allowNetworkRequest check is assumed in kernel_network
 		NSNetwork::NSFileTransport::CFileDownloader oDownloadImg(m_pWriter->GetBasePath() + wsSrc, false);
 		oDownloadImg.SetFilePath(wsDst);
 		bRes = oDownloadImg.DownloadSync();
@@ -348,7 +383,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 		}
 		else if (wsExtention.empty())
 		{
-			//TODO:: лучше узнавать формат изображения из содержимого
+			//TODO:: better to detect image format from content
 			wsExtention = L"png";
 		}
 	}
@@ -363,7 +398,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 			return true;
 		}
 
-		// Проверка на повтор
+		// Check for duplicate
 		const std::vector<std::wstring>::const_iterator nFind = std::find(m_arrImages.cbegin(), m_arrImages.cend(), wsSrc);
 		if (nFind != m_arrImages.end())
 		{
@@ -372,7 +407,7 @@ bool CImage<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, co
 		}
 	}
 
-	// Предполагаем картинку по локальному пути
+	// Assume image by local path
 	if (!bRes)
 	{
 		const std::wstring wsDst = wsImagePath + L'.' + wsExtention;
@@ -558,7 +593,7 @@ bool CBlockquote<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelector
 	if (!ValidWriter())
 		return false;
 
-	//TODO:: когда Blockquote в Blockquote, то к первому нужно добавлять <w:divsChild>
+	//TODO:: when Blockquote inside Blockquote, need to add <w:divsChild> to the first one
 
 	const std::wstring wsKeyWord{arSelectors.back().m_wsName};
 
@@ -687,7 +722,7 @@ bool CHorizontalRule<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSele
 
 	std::wstring wsWidth;
 
-	// width измеряется в px или %
+	// width is measured in px or %
 	if (!oWidth.Empty())
 		wsWidth = std::to_wstring(static_cast<int>((NSCSS::UnitMeasure::Percent != oWidth.GetUnitMeasure()) ? (NSCSS::CUnitMeasureConverter::ConvertPx(oWidth.ToDouble(), NSCSS::Inch, 96) * 914400.) : oWidth.ToDouble(NSCSS::Inch, unPageWidth)));
 	else
@@ -695,7 +730,7 @@ bool CHorizontalRule<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSele
 
 	std::wstring wsHeight{L"14288"};
 
-	// size измеряется только в px
+	// size is measured only in px
 	if (!oSize.Empty())
 		wsHeight = std::to_wstring(static_cast<int>(NSCSS::CUnitMeasureConverter::ConvertPx(oSize.ToDouble(), NSCSS::Inch, 96) * 914400.));
 
@@ -746,7 +781,7 @@ bool CList<COOXMLWriter>::Open(const std::vector<NSCSS::CNode>& arSelectors, con
 
 	m_pWriter->CloseP();
 
-	//Нумерованный список
+	// Numbered list
 	if (L"ol" == arSelectors.back().m_wsName)
 	{
 		const int nStart{NSStringFinder::ToInt(arSelectors.back().GetAttributeValue(L"start"), 1)};
@@ -880,7 +915,7 @@ bool ReadSVG(const std::wstring& wsSvg, NSFonts::IApplicationFonts* pFonts, cons
 		return false;
 
 	unsigned int alfa = 0xffffff;
-	//дефолтный тон должен быть прозрачным, а не белым
+	// default tone should be transparent, not white
 	//memset(pBgraData, 0xff, nWidth * nHeight * 4);
 	for (int i = 0; i < nWidth * nHeight; i++)
 	{

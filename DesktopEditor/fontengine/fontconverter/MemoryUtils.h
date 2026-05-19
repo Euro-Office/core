@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #ifndef _ASC_FONT_CONVERTER_MEMORY_UTILS_H_
 #define _ASC_FONT_CONVERTER_MEMORY_UTILS_H_
@@ -44,7 +47,7 @@
 namespace NSFontConverter
 {
     //------------------------------------------------------------------------
-    // Аналогично malloc, но с обработкой ошибок.
+    // Similar to malloc, but with error handling.
     static void *MemUtilsMalloc(int nSize)
     {
         void *pResult;
@@ -54,14 +57,14 @@ namespace NSFontConverter
 
         if ( !( pResult = malloc( nSize ) ) )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return pResult;
     }
 
 
-    // Тоже что и realloc, но с обработкой ошибок.
-    // Если <pData> NULL, вызывается функция malloc вместо realloc.
+    // Same as realloc, but with error handling.
+    // If <pData> is NULL, malloc is called instead of realloc.
     static void *MemUtilsRealloc(void *pData, int nSize)
     {
         void *pResult;
@@ -78,17 +81,17 @@ namespace NSFontConverter
             pResult = malloc( nSize );
         if ( !pResult )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return pResult;
     }
 
 
-    // Тоже самое, что и MemUtilsMalloc and MemUtilsRelloc, толькоt
-    // учитывает количество элементов и размер элемента. В результате
-    // выделяется память размером nObjectsCount * nObjectSize байт.
-    // Кроме того присутствует обработка ошибок и проверка того, чтобы
-    // суммарный размер не превышал предел для int.
+    // Same as MemUtilsMalloc and MemUtilsRealloc, but
+    // takes into account the number of elements and element size. As a result
+    // memory of size nObjectsCount * nObjectSize bytes is allocated.
+    // Also includes error handling and validation that
+    // total size does not exceed the limit for int.
     static void *MemUtilsMallocArray(int nObjectsCount, int nObjectSize)
     {
         if ( 0 == nObjectsCount )
@@ -97,12 +100,12 @@ namespace NSFontConverter
         int nSize = nObjectsCount * nObjectSize;
         if ( nObjectSize <= 0 || nObjectsCount < 0 || nObjectsCount >= 0x7fffffff / nObjectSize )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return MemUtilsMalloc( nSize );
     }
 
-    // Тоже что и free, но проверяет и игнорирует NULL-указатели.
+    // Same as free, but checks and ignores NULL pointers.
     static void MemUtilsFree(void *pData)
     {
         if ( pData )
@@ -121,12 +124,12 @@ namespace NSFontConverter
 
         if ( nObjectSize <= 0 || nObjectsCount < 0 || nObjectsCount >= 0x7fffffff / nObjectSize )
         {
-            // TO DO: Выдать ошибку выделения памяти
+            // TO DO: Report memory allocation error
         }
         return MemUtilsRealloc( pData, nSize );
     }
 
-    // Выделяем память и копируем туда строку.
+    // Allocate memory and copy the string there.
     static char *CopyString(char *sString)
     {
         char *sResult = (char *)MemUtilsMalloc( strlen( sString ) + 1 );

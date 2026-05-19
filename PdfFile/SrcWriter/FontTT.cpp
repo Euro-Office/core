@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "FontTT.h"
 #include "FontCidTT.h"
@@ -64,7 +67,7 @@ namespace PdfWriter
 		Add("LastChar", 255);
 		
 		CDictObject* pFontDescriptor = new CDictObject();
-		// FontDescriptor обязательно должен идти ссылкой
+		// FontDescriptor must be a reference
 		m_pXref->Add(pFontDescriptor);
 		pFontDescriptor->Add("Type", "FontDescriptor");
 		m_pFontDescriptor = pFontDescriptor;
@@ -75,7 +78,7 @@ namespace PdfWriter
 
 		if (m_bCanEmbed)
 		{
-			// Выставляем бит Symbolic, а бит NonSymbolic убираем
+			// Set Symbolic bit and clear NonSymbolic bit
 			unsigned int nFlags = 0;
 			if (!(nFlags & 4))
 				UIntChangeBit(nFlags, 2);
@@ -89,8 +92,8 @@ namespace PdfWriter
 		}
 		else
 		{
-			// Ставим флаг NonSymbolic, т.к. Adobe плохо подбирает шрифт с Symbolic флагом
-			// TODO: Хорошо бы сделать проверку, стоит ли ставить флаг Symbolic
+			// Set NonSymbolic flag, because Adobe poorly selects fonts with Symbolic flag
+			// TODO: Should add check whether to set Symbolic flag
 			unsigned int nFlags = 0;
 			UIntChangeBit(nFlags, 5);
 			pFontDescriptor->Add("Flags", nFlags);
@@ -137,7 +140,7 @@ namespace PdfWriter
 			return;
 		}
 
-		// Дописываем имя шрифта во все необходимые словари, а также заполняем дескриптор
+		// Write font name to all required dictionaries and fill descriptor
 		std::string sFontName = pFace->family_name ? std::string(pFace->family_name) : std::string();
 		if (pFace->style_flags & FT_STYLE_FLAG_ITALIC)
 			sFontName += "-Italic";
@@ -200,8 +203,8 @@ namespace PdfWriter
 		m_pFontDescriptor->Add("StemV", 80);
 		m_pFontDescriptor->Add("FontWeight", m_pFontFile ? m_pFontFile->GetWeight() : 400);
 
-		// Сейчас мы этот класс используем для внедрения шрифтов, которые будут использоваться для заполнения
-		// внутри форм. Если класс будет использоваться для чего-то другого, тогда надо задавать ограничения на внедрение
+		// Currently this class is used for embedding fonts that will be used for filling
+		// within forms. If the class is used for something else, embedding restrictions need to be set
 		FT_UShort fsType = FT_Get_FSType_Flags(pFace);
 		m_bCanEmbed = NSFonts::CFontInfo::CanEmbedForEdit(fsType);
 

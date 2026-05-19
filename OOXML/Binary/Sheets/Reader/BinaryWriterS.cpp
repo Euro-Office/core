@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "BinaryWriterS.h"
@@ -1698,7 +1701,7 @@ void BinaryStyleTableWriter::WriteFont(const OOX::Spreadsheet::CFont& font, OOX:
 	//RFont
 	if(font.m_oRFont.IsInit() && font.m_oRFont->m_sVal.IsInit())
 	{
-		//подбираем шрифт
+		//select font
         std::wstring sFont = oFontProcessor.getFont(font.m_oScheme, font.m_oRFont, font.m_oCharset, font.m_oFamily, theme);
 		
 		m_oBcw.m_oStream.WriteBYTE(c_oSerFontTypes::RFont);
@@ -4715,7 +4718,7 @@ void BinaryWorksheetTableWriter::Write(OOX::Spreadsheet::CWorkbook& workbook, st
 void BinaryWorksheetTableWriter::WriteWorksheets(OOX::Spreadsheet::CWorkbook& workbook, std::map<std::wstring, OOX::Spreadsheet::CWorksheet*>& mapWorksheets)
 {
 	int nCurPos;
-	//определяем порядок следования .. излишне с vector
+	//determine order .. redundant with vector
 	if(workbook.m_oSheets.IsInit())
 	{
         for(size_t i = 0; i < workbook.m_oSheets->m_arrItems.size(); ++i)
@@ -6086,7 +6089,7 @@ void BinaryWorksheetTableWriter::WriteCell(const OOX::Spreadsheet::CCell& oCell)
 	int nCol = 0;
 	if (oCell.isInitRef() && oCell.getRowCol(nRow, nCol))
 	{
-		// Пишем теперь не строку, а 2 числа (чтобы не парсить на JavaScript, т.к. на C++ быстрее парсинг). Ускорение открытия файла.
+		// Now writing 2 numbers instead of string (to avoid parsing in JavaScript, since C++ parsing is faster). File opening speedup.
 		nCurPos = m_oBcw.WriteItemStart(c_oSerCellTypes::RefRowCol);
 		m_oBcw.m_oStream.WriteLONG(nRow);
 		m_oBcw.m_oStream.WriteLONG(nCol);
@@ -6298,7 +6301,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 		{
 			pRId = new OOX::RId( pOleObject->m_oRid->GetValue());
 
-			//ищем физический файл ( rId относительно sheet)
+			//looking for physical file (rId relative to sheet)
 			smart_ptr<OOX::File> pFile = oWorksheet.Find(pRId.get());
 			pFileOleObject = pFile.smart_dynamic_cast<OOX::OleObject>();
 		}
@@ -6410,7 +6413,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 
 					if (!sIdImageFileCache.empty())
 					{
-						//ищем физический файл ( rId относительно vml_drawing)									
+						//looking for physical file (rId relative to vml_drawing)									
 						smart_ptr<OOX::File> pFile = pVmlDrawing->Find(sIdImageFileCache);
 
 						if (pFile.IsInit() && (OOX::FileTypes::Image == pFile->type()))
@@ -6450,7 +6453,7 @@ void BinaryWorksheetTableWriter::WriteOleObjects(const OOX::Spreadsheet::CWorksh
 				olePic->oleObject->m_OleObjectFile->set_filename_cache(pathImage);
 			}
 
-			olePic->blipFill.blip->embed = new OOX::RId(sIdImageFileCache); //ваще то тут не важно что - приоритет у того что ниже..
+			olePic->blipFill.blip->embed = new OOX::RId(sIdImageFileCache); //actually doesn't matter what's here - priority goes to what's below..
 			olePic->blipFill.blip->oleFilepathImage = pathImage.GetPath();
 		}
 		
@@ -6486,7 +6489,7 @@ void BinaryWorksheetTableWriter::WriteControls(const OOX::Spreadsheet::CWorkshee
 
 		if (pControl->m_oRid.IsInit())
 		{			
-			pFileControl = oWorksheet.Find(OOX::RId(pControl->m_oRid->GetValue()));// rId относительно sheet
+			pFileControl = oWorksheet.Find(OOX::RId(pControl->m_oRid->GetValue()));// rId relative to sheet
 		}
 		if (false == pFileControl.IsInit()) continue;
 		
@@ -6939,7 +6942,7 @@ void BinaryWorksheetTableWriter::WriteDrawings(const OOX::Spreadsheet::CWorkshee
 						OOX::WritingElement* pElemShape = pShape->m_arrItems[j];
 						if(OOX::et_v_ClientData == pElemShape->getType())
 						{
-							//преобразуем ClientData в CellAnchor
+							//convert ClientData to CellAnchor
 							OOX::Vml::CClientData* pClientData = static_cast<OOX::Vml::CClientData*>(pElemShape);
 
 							if (pClientData->m_oObjectType.IsInit() && pClientData->m_oObjectType->GetValue() == SimpleTypes::Vml::vmlclientdataobjecttypeNote)
@@ -7052,7 +7055,7 @@ void BinaryWorksheetTableWriter::WriteDrawing(const OOX::Spreadsheet::CWorksheet
 			
 			if (pCellAnchor->m_bShapeOle && NULL != pOleObject)
 			{
-				//ищем физический файл, потому что rId относительно sheet.xml, а SetRelsPath(pVmlDrawing
+				//looking for physical file, because rId is relative to sheet.xml, and SetRelsPath(pVmlDrawing
 				smart_ptr<OOX::File> pFile = oWorksheet.Find(OOX::RId(pOleObject->m_oRid->GetValue()));
 				pOleObject->m_OleObjectFile = pFile.smart_dynamic_cast<OOX::OleObject>();
 			
@@ -7368,7 +7371,7 @@ void BinaryWorksheetTableWriter::WriteComments(std::map<std::wstring, OOX::Sprea
 			
 			getSavedComment(oComment, aCommentDatas);
 			
-			//записываем тот обьект, который был в бинарнике, подменяем только текст, который мог быть отредактирован в Excel
+			//write the object that was in binary, only replace text that could have been edited in Excel
 			
 			nCurPos = m_oBcw.WriteItemStart(c_oSerWorksheetsTypes::Comment);
 				WriteComment(oComment, aCommentDatas);
@@ -8166,7 +8169,7 @@ void BinaryWorksheetTableWriter::WriteConditionalFormattingRule(const OOX::Sprea
 
 void BinaryWorksheetTableWriter::WriteColorScale(const OOX::Spreadsheet::CColorScale& oColorScale)
 {
-	// ToDo более правильно заделать виртуальную функцию, которая будет писать без привидения типов
+	// ToDo better to implement virtual function that writes without type casting
 
 	for (size_t i = 0, length = oColorScale.m_arrValues.size(); i < length; ++i)
 	{
@@ -9080,7 +9083,7 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 	_UINT32 result = 0;
 
 	OOX::CPath pathDst(sFileDst);
-//создаем папку для media
+//create media folder
     std::wstring mediaDir = pathDst.GetDirectory() + L"media";
 	NSDirectory::CreateDirectory(mediaDir);
 
@@ -9189,7 +9192,7 @@ NSBinPptxRW::CDrawingConverter* pOfficeDrawingConverter, const std::wstring& sXM
 
 	if (BinXlsxRW::c_oFileTypes::JSON == saveFileType)
 	{
-//todo 46 временно CP_UTF8
+//todo 46 temporarily CP_UTF8
 		
 		CSVWriter oCSVWriter;
 		oCSVWriter.Xlsx2Csv(sFileDst, *pXlsx, 46, std::wstring(L","), Lcid, true);
@@ -9380,7 +9383,7 @@ void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSFontCutter::CEmb
 		oBinaryOtherTableWriter.Write();
 		WriteTableEnd(nCurPos);
 
-	//Customs from Workbook (todooo - другие)
+	//Customs from Workbook (todo - others)
 		nCurPos = WriteTableStart(c_oSerTableTypes::Customs);
 		BinaryCustomsTableWriter oBinaryCustomsTableWriter(m_oBcw->m_oStream);
 		oBinaryCustomsTableWriter.Write(pXlsx->m_pWorkbook);
@@ -9407,7 +9410,7 @@ void BinaryFileWriter::WriteMainTableStart(NSBinPptxRW::CBinaryFileWriter &oBuff
 
 	m_nRealTableCount = 0;
 	m_nMainTableStart = m_oBcw->m_oStream.GetPosition();
-	//вычисляем с какой позиции можно писать таблицы
+	//calculate from which position we can write tables
 	m_nLastFilePos = m_nMainTableStart + GetMainTableSize();
 	//Write mtLen
 	m_oBcw->m_oStream.WriteBYTE(0);
@@ -9418,7 +9421,7 @@ int BinaryFileWriter::GetMainTableSize()
 }
 void BinaryFileWriter::WriteMainTableEnd()
 {
-//Количество таблиц
+//Number of tables
 	m_oBcw->m_oStream.SetPosition(m_nMainTableStart);
 	m_oBcw->m_oStream.WriteBYTE(m_nRealTableCount);
 
@@ -9435,18 +9438,18 @@ int BinaryFileWriter::WriteTableStart(BYTE type, int nStartPos)
 	m_oBcw->m_oStream.WriteLONG(m_nLastFilePos + m_nLastFilePosOffset);
 
 	//Write table
-	//Запоминаем позицию в MainTable
+	//Save position in MainTable
 	int nCurPos = m_oBcw->m_oStream.GetPosition();
-	//Seek в свободную область
+	//Seek to free area
 	m_oBcw->m_oStream.SetPosition(m_nLastFilePos);
 	return nCurPos;
 }
 void BinaryFileWriter::WriteTableEnd(int nCurPos)
 {
-	//сдвигаем позицию куда можно следующую таблицу
+	//shift position where next table can be written
 	m_nLastFilePos = m_oBcw->m_oStream.GetPosition();
 	m_nRealTableCount++;
-	//Seek вобратно в MainTable
+	//Seek back to MainTable
 	m_oBcw->m_oStream.SetPosition(nCurPos);
 }
 

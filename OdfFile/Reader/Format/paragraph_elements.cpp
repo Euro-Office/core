@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "paragraph_elements.h"
@@ -206,11 +209,11 @@ void text::docx_convert(oox::docx_conversion_context & Context)
 {
 	if (Context.get_process_note() != oox::docx_conversion_context::noNote && 
 		Context.get_delete_text_state()) 
-			return; //в ms нет рецензирования notes
+			return; //MS doesn't have notes revision tracking
 
 	bool add_del_run = false;
 	if (Context.get_drawing_state_content() && Context.get_delete_text_state())
-	{	//0503IG-AddingFormattingText.odt - удаленый текст в удаленом объекте
+	{	//0503IG-AddingFormattingText.odt - deleted text in deleted object
 
 		oox::text_tracked_context::_state  &state = Context.get_text_tracked_context().get_tracked_change(L"");
 		if (state.type == 2)
@@ -763,7 +766,7 @@ void a::docx_convert(oox::docx_conversion_context & Context)
 	if (Context.is_table_content() || office_target_frame_name_ || ref[0] == L'#')
 	{
 		size_t pos_outline = ref.find(L"|outline");
-		if (std::wstring::npos != pos_outline)//без #
+		if (std::wstring::npos != pos_outline)//without #
 		{
 			std::wstringstream strm; 
 			text_to_stream(strm, false);
@@ -973,7 +976,7 @@ void note::add_child_element( xml::sax * Reader, const std::wstring & Ns, const 
 }
 void note::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//см presentation:notes
+	//see presentation:notes
 }
 void note::docx_convert(oox::docx_conversion_context & Context)
 {
@@ -1302,7 +1305,7 @@ void text_page_count::xlsx_serialize(std::wostream & _Wostream, oox::xlsx_conver
 }
 void text_page_count::pptx_convert(oox::pptx_conversion_context & Context)
 {
-	//поскольку такого поля в ms нет - конвертим как обычный текст
+	//since this field doesn't exist in MS - convert as plain text
 	if (text_)
     {
         text_->pptx_convert(Context);

@@ -1,4 +1,39 @@
-﻿#pragma once
+﻿/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+#pragma once
 
 #include "Reader.h"
 #include "PacketIterator.h"
@@ -8,7 +43,7 @@
 namespace Jpeg2000
 {
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Вспомогательные функции
+	// Helper functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 	static void Tier2_PutCommaCode(BitIO *pBIO, int nLen)
 	{
@@ -83,7 +118,7 @@ namespace Jpeg2000
 			unsigned char *pSOP = (unsigned char *)Malloc(6 * sizeof(unsigned char));
 			pSOP[0] = 255; // ff
 			pSOP[1] = 145; // 91
-			pSOP[2] = 0;   // Длина всегда 4 байта
+			pSOP[2] = 0;   // Length is always 4 bytes
 			pSOP[3] = 4;   // 
 			pSOP[4] = (pImageInfo->nPacketCount % 65536) / 256;
 			pSOP[5] = (pImageInfo->nPacketCount % 65536) % 256;
@@ -148,13 +183,13 @@ namespace Jpeg2000
 					BitIO_Write(pBitStream, pLayer->nPassesCount != 0, 1);
 				}
 
-				// Если CodeBlock не включен, тогда переходми к следующему CodeBlock
+				// If CodeBlock is not included, then move to the next CodeBlock
 				if (!pLayer->nPassesCount)
 				{
 					continue;
 				}
 
-				// Если это первое появление CodeBlock --> тогда обрабытываем информацию о Zero bit-planes
+				// If this is the first appearance of CodeBlock --> then process Zero bit-planes information
 				if (!pCodeBlock->nPassesCount)
 				{
 					pCodeBlock->nLenBitsCount = 3;
@@ -319,7 +354,7 @@ namespace Jpeg2000
 			}
 		}
 
-		// SOP маркер
+		// SOP marker
 		if (pTCP->nCodingStyle & J2K_CP_CSTY_SOP)
 		{
 			if ((*pSrcPointer) != 0xff || (*(pSrcPointer + 1) != 0x91))
@@ -331,10 +366,10 @@ namespace Jpeg2000
 				pSrcPointer += 6;
 			}
 
-			// TO DO : Добавить проверку значения Nsop
+			// TO DO : Add Nsop value validation
 		}
 
-		// Когда используются пакеты PPT/PPM, Packet header хранится в маркерах PPT/PPM.
+		// When PPT/PPM packets are used, Packet header is stored in PPT/PPM markers.
 
 		BitIO *pBitStream = BitIO_Create();
 		if (!pBitStream)
@@ -350,7 +385,7 @@ namespace Jpeg2000
 			pBuffer = pTCP->pPPTData;
 			BitIO_InitDecoder(pBitStream, pBuffer, pTCP->nPPTLength);
 		}
-		else // Обычный случай
+		else // Normal case
 		{
 			pBuffer = pSrcPointer;
 			BitIO_InitDecoder(pBitStream, pBuffer, pSrc + nLen - pBuffer);
@@ -364,7 +399,7 @@ namespace Jpeg2000
 			pBuffer += BitIO_WrittenBytesCount(pBitStream);
 			BitIO_Destroy(pBitStream);
 
-			// EPH маркер
+			// EPH marker
 			if (pTCP->nCodingStyle & J2K_CP_CSTY_EPH)
 			{
 				if ((*pBuffer) != 0xff || (*(pBuffer + 1) != 0x92))
@@ -407,7 +442,7 @@ namespace Jpeg2000
 				CodeBlock *pCodeBlock = &pPrecinct->pCodeBlocks[nCodeBlockIndex];
 				TCDSegment *pSegment = NULL;
 
-				// Если CodeBlock не был включен ранее --> TagTree
+				// If CodeBlock was not included before --> TagTree
 				if (!pCodeBlock->nSegmentsCount)
 				{
 					nIncluded = TGT_Decode(pBitStream, pPrecinct->pInclTree, nCodeBlockIndex, nLayerIndex + 1);
@@ -423,7 +458,7 @@ namespace Jpeg2000
 					continue;
 				}
 
-				// Если CodeBlock не был включен ранее --> zero-bitplane tagtree
+				// If CodeBlock was not included before --> zero-bitplane tagtree
 				if (!pCodeBlock->nSegmentsCount)
 				{
 					int nIndex;
@@ -475,7 +510,7 @@ namespace Jpeg2000
 		pBuffer += BitIO_WrittenBytesCount(pBitStream);
 		BitIO_Destroy(pBitStream);
 
-		// EPH маркер
+		// EPH marker
 		if (pTCP->nCodingStyle & J2K_CP_CSTY_EPH)
 		{
 			if ((*pBuffer) != 0xff || (*(pBuffer + 1) != 0x92))
@@ -568,7 +603,7 @@ namespace Jpeg2000
 
 
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Основные функции
+	// Main functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 	int    Tier2_EncodePackets(Tier2 *pTier2, int nTileIndex, Tile *pTile, int nMaxLayers, unsigned char *pDst, int nLen, ImageInfo *pImageInfo)
 	{
@@ -605,7 +640,7 @@ namespace Jpeg2000
 						pDstPointer += nShift;
 					}
 
-					// Индексация
+					// Indexing
 					if (pImageInfo && pImageInfo->nIndexOn)
 					{
 						if (pImageInfo->nIndexWrite)

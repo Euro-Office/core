@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #pragma once
 
@@ -73,7 +76,7 @@ public:
 
 	void set_drawings_rect	(_CP_OPT(double) x_pt, _CP_OPT(double) y_pt, _CP_OPT(double) width_pt, _CP_OPT(double) height_pt);
 	void clear				();
-	void set_styles_context	(odf_style_context_ptr styles_context);//для embedded 
+	void set_styles_context	(odf_style_context_ptr styles_context);// for embedded
 
 	void set_parent_style(std::wstring style_name);
 	void set_parent_text_style(std::wstring style_name);
@@ -172,7 +175,7 @@ public:
 		void set_text_box_tableframe	(bool val);		
 	void end_text_box					();
 
-	void start_object(std::wstring ref, bool in_frame = true); //формулы, диаграммы ... 
+	void start_object(std::wstring ref, bool in_frame = true); // formulas, charts ...
 	void end_object(bool in_frame = true);
 
 	void start_object_ole(std::wstring ref);
@@ -227,6 +230,8 @@ public:
 	
 	void get_size			( _CP_OPT(double) & width_pt, _CP_OPT(double) & height_pt);
 	void set_size			( _CP_OPT(double) & width_pt, _CP_OPT(double) & height_pt, bool reset_always = false);
+
+	void set_horizontal_rule();
 	
 	void set_name			(const std::wstring & name);
 	void set_description	(const std::wstring & descr);
@@ -265,7 +270,7 @@ public:
 	void set_line_color	(std::wstring hexColor);
 	//void start_shadow_properties();
 	//void end_shadow_properties();
-// пока одной функией ..
+// for now with one function..
 	void set_shadow	(int type, std::wstring hexColor, _CP_OPT(double) opacity, double dist_pt, double dist_pt_y = -1);
 	void set_grayscale();
 	void set_white_balance(double red, double green, double blue);

@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include <boost/algorithm/string.hpp>
 
@@ -302,7 +305,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			sResult += L"<w:del w:date=\"" + sDate +  L"\" w:author=\"" + XmlUtils::EncodeXmlString(sAuthor) + L"\" w:id=\"" + std::to_wstring(pOOXWriter->m_nCurTrackChangesId++).c_str() + L"\">";
 			m_pInsert->m_oCharProperty.m_nDeleted = PROP_DEF;
 		}
-		//поверяем на наличие гиперссылки
+		//check for hyperlink
 		RenderParameter oNewParam = oRenderParameter;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_PLAIN;
 		
@@ -320,16 +323,16 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
                 sHyperlink = sHyperlink.substr(0, nSplash);
 			}
 	
-		//оставляем только одну ссылку
+		//keep only one link
             XmlUtils::replace_all(sHyperlink, L"\"", L"" );
             boost::algorithm::trim(sHyperlink);
-		//заменяем пробелы на %20
+		//replace spaces with %20
             XmlUtils::replace_all(sHyperlink, L" ", L"%20" );
 
-		//добавляем в rels
+		//add to rels
 			OOXRelsWriter* poRelsWriter = static_cast<OOXRelsWriter*>( oRenderParameter.poRels );
             std::wstring sId = poRelsWriter->AddRelationship( L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", XmlUtils::EncodeXmlString( sHyperlink ), false );
-		//добавляем гиперссылку в документ
+		//add hyperlink to document
 
             sResult += L"<w:hyperlink r:id=\"" + sId + L"\" >";
 			oNewParam.nType = RENDER_TO_OOX_PARAM_RUN;
@@ -360,7 +363,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			std::wstring props = m_pResult->m_oCharProperty.RenderToOOX(oRenderParameter);
             if (!props.empty()) props = L"<w:rPr>" + props + L"</w:rPr>";
 
-	//начинаем Field
+	//start Field
             sResult += L"<w:r>";
             if (!props.empty())
 				sResult += props;			
@@ -438,11 +441,11 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				}
 			}
 			oNewParametr = oRenderParameter;
-	// разделитель
+	// separator
 			sResult += L"<w:r>";
 			sResult += L"<w:fldChar w:fldCharType=\"separate\"/></w:r>";
 			
-	//пишем содержание-кэш	
+	//write content-cache
 			if ((m_pResult->m_pTextItems) && (m_pResult->m_pTextItems->GetCount() > 0))
 			{
 				sResult +=  m_pResult->m_pTextItems->m_aArray[0]->RenderToOOX(oNewParametr);
@@ -475,7 +478,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				sResult += L"</w:r>";
 			}
 	
-	//заканчиваем Field
+	//end Field
             sResult += L"<w:r>";
             if (!props.empty())
                 sResult += props;

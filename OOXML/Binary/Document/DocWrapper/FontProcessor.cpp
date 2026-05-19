@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "FontProcessor.h"
 
@@ -63,7 +66,7 @@ namespace DocWrapper {
 	}
 	void FontProcessor::setFontTable(OOX::CFontTable* fontTable)
 	{
-		//подбор перенесен в js
+		//font matching moved to js
 		return;
 		for (size_t i = 0; i < fontTable->m_arrFonts.size(); ++i)
 			addToFontMap(*fontTable->m_arrFonts[i]);
@@ -71,7 +74,7 @@ namespace DocWrapper {
 	
     std::wstring FontProcessor::getFont(const std::wstring& name)
 	{
-		//подбор перенесен в js
+		//font matching moved to js
 		return name;
         std::wstring fontName = gc_sDefaultFontName;
 		if (fontMap.find(name) != fontMap.end())
@@ -93,7 +96,7 @@ namespace DocWrapper {
         std::wstring sFontName;
 		if(NULL != pTheme && oScheme.IsInit() && oScheme->m_oFontScheme.IsInit())
 		{
-	//берем шрифт из темы
+	//get font from theme
 			const SimpleTypes::Spreadsheet::EFontScheme eFontScheme = oScheme->m_oFontScheme->GetValue();
 			if(SimpleTypes::Spreadsheet::fontschemeMajor == eFontScheme)
 				sFontName = pTheme->themeElements.fontScheme.majorFont.latin.typeface;
@@ -104,7 +107,7 @@ namespace DocWrapper {
 			sFontName = oRFont->ToString2();
         if(sFontName.empty())
             sFontName = std::wstring(gc_sNoNameFont);
-	//подбор перенесен в js
+	//font matching moved to js
 		return  sFontName;
 		
 		oFontSelectFormat.wsName = new std::wstring(sFontName);
@@ -112,7 +115,7 @@ namespace DocWrapper {
 		if(oCharset.IsInit() && oCharset->m_oCharset.IsInit())
 		{
 			SimpleTypes::Spreadsheet::EFontCharset eCharset = oCharset->m_oCharset->GetValue();
-			//на серверве на берем в расчет fontcharsetANSI и fontcharsetDefault, потому что он зависит от локали, а dll работает на сервере
+			//on server we don't take fontcharsetANSI and fontcharsetDefault into account, because they depend on locale, and dll works on server
 			if(SimpleTypes::fontcharsetANSI !=  eCharset && SimpleTypes::fontcharsetDefault != eCharset)
 			{
 				oFontSelectFormat.unCharset = new BYTE;
@@ -153,7 +156,7 @@ namespace DocWrapper {
 		if(font.m_oCharset.IsInit())
 		{
 			SimpleTypes::EFontCharset eCharset = font.m_oCharset->GetValue();
-			//на серверве на берем в расчет fontcharsetANSI и fontcharsetDefault, потому что он зависит от локали, а dll работает на сервере
+			//on server we don't take fontcharsetANSI and fontcharsetDefault into account, because they depend on locale, and dll works on server
 			if(SimpleTypes::fontcharsetANSI != eCharset && SimpleTypes::fontcharsetDefault != eCharset)
 			{
 				oFontSelectFormat.unCharset = new BYTE;
@@ -173,7 +176,7 @@ namespace DocWrapper {
 			{
 				unsigned char cCurVal = font.m_oPanose->Get_Number(i);
 				oFontSelectFormat.pPanose[i] = cCurVal;
-				// Если хоть одно значение не 0, то используем Panose
+				// If at least one value is not 0, then use Panose
 				if ( 0 != cCurVal  )
 					bIsPanose = true;
 			}

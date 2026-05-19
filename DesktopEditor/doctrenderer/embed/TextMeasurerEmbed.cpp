@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "./TextMeasurerEmbed.h"
 #include "./PointerEmbed.h"
 #include "./../../fontengine/TextShaper.h"
@@ -6,9 +41,9 @@
 #define RAW_POINTER(value) ((CPointerEmbedObject*)value->toObject()->getNative())->Data
 #define POINTER_OBJECT(value) ((CPointerEmbedObject*)value->toObject()->getNative())
 
-// в js не хотим следить, чтобы в каждом face была ссылка на library - т.е. чтобы
-// сначала удалились все face, а потом library - поэтому делаем свой счетчик ссылок
-// и следим за library сами. Т.е. используем FT_Library_Reference/FT_Library_UnReference
+// in js we don't want to track that each face has a reference to library - i.e. that
+// all faces are deleted first and then library - so we make our own reference counter
+// and track library ourselves. I.e. we use FT_Library_Reference/FT_Library_UnReference
 
 
 class CExternalPointerJS : public NSShaper::CExternalPointer

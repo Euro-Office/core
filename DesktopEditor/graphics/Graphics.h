@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #ifndef _BUILD_GRAPHICS_H_
 #define _BUILD_GRAPHICS_H_
@@ -147,11 +150,11 @@ typedef agg::span_allocator<agg::rgba8> span_alloc_type;
 #define def_flag_G_FromHDC   0x0002
 
 
-// Расстояние от центра до контрольных точек Безье для аппроксимации окружности = (4 * (sqrt(2) - 1) / 3) * r
+// Distance from center to Bezier control points for circle approximation = (4 * (sqrt(2) - 1) / 3) * r
 static const double c_dKappa   = ((double)0.55228475);
 static const double c_dKappa_2 = ((double)(0.5 * 0.55228475));
 
-// Делим 16-битное значение [0, 255*255] на 255, возвращаем 8-битное значение.
+// Divide 16-bit value [0, 255*255] by 255, return 8-bit value.
 static inline unsigned char Div255(int nValue)
 {
 	return (unsigned char)((nValue + (nValue >> 8) + 0x80) >> 8);
@@ -291,7 +294,7 @@ protected:
 
 	
 #ifdef _WINDOW_GRAPHIS_USE_
-	// для отрисовки картинок - используем Gdiplus
+	// for image rendering - use Gdiplus
 	Gdiplus::Graphics*		m_pGraphics;
 	Gdiplus::Bitmap*		m_pBitmap;
 
@@ -352,7 +355,7 @@ public:
 	Status ShearTransform(double shearX, double shearY, MatrixOrder order = MatrixOrderPrepend);
 	Status MultiplyTransform(CMatrix* pMatrix, MatrixOrder order = MatrixOrderPrepend);
 	
-	// функции отсечения
+	// clipping functions
 	Status SetClipRect(double dLeft, double dTop, double dWidth, double dHeight);
 	Status SetClipRect2(double dLeft, double dTop, double dWidth, double dHeight);
 	Status SetClipRect3(double dLeft, double dTop, double dWidth, double dHeight);
@@ -363,7 +366,7 @@ public:
 	Status CombineClip(CGraphicsPath* pPath, agg::sbool_op_e op, NSStructures::CPen* pPen = NULL);
     Status InternalClip(CGraphicsPath* pPath, CMatrix* pTransform, agg::sbool_op_e op, NSStructures::CPen* pPen = NULL);
 
-	// измерение текста
+	// text measurement
 	INT MeasureString(const std::wstring& strText, CFontManager* pManager, double* lWidth, double* lHeight);
 	Status Clear(CColor oColor);
 
@@ -378,13 +381,13 @@ public:
     Status DrawPath(NSStructures::CPen* pPen, CGraphicsPath* pPath, const double& gamma = -1);
 	Status DrawPathNoTransform(NSStructures::CPen* pPen, CGraphicsPath* pPath);
 
-	// заливка
+	// fill
 	Status FillEllipse(CBrush* pBrush, double x, double y, double width, double height);
 	Status FillRectangle(CBrush* pBrush, double x, double y, double width, double height);
 	Status FillPolygon(CBrush* pBrush, double* pPoints, LONG lCount);
 	Status FillPath(CBrush* pBrush, CGraphicsPath* pPath);
 
-	// отрисовка картинки
+	// image rendering
 	Status DrawImage(CImage* pImage, double x, double y, double width, double height);
 	Status DrawMeta(const std::wstring& strFile, double x, double y, double width, double height);
 
@@ -394,14 +397,14 @@ public:
 
 	INT DrawImageUnscaled(CImage* pImage, double x, double y);
 
-	// отрисовка текста
+	// text rendering
 	INT DrawString(const std::wstring& strText, CFontManager* pFont, CBrush* pBrush, double x, double y);
     INT DrawString(const unsigned int* pGids, const unsigned int nGidsCount, CFontManager* pFont, CBrush* pBrush, double x, double y);
 	INT DrawStringC(const LONG& lText, CFontManager* pFont, CBrush* pBrush, double x, double y);
 	INT DrawStringPath(const std::wstring& strText, CFontManager* pFont, CBrush* pBrush, double x, double y);
 	INT DrawStringPathC(const LONG& lText, CFontManager* pFont, CBrush* pBrush, double x, double y);
 
-	//Работа с альфа-маской
+	// alpha mask operations
 	Status SetAlphaMask(CAlphaMask* pAlphaMask);
 	Status StartCreatingAlphaMask();
 	Status EndCreatingAlphaMask();
@@ -410,7 +413,7 @@ public:
 	CSoftMask* CreateSoftMask(bool bAlpha);
 	Status SetSoftMask(CSoftMask* pSoftMask);
 
-	//Работа со слоями
+	// layer operations
 	Status AddLayer(CGraphicsLayer* pGraphicsLayer);
 	Status CreateLayer();
 	Status BlendLayer();
@@ -430,6 +433,9 @@ public:
 
 protected:
 
+	template<class span_gen_type>
+	void render_blendmode(span_gen_type& sg, span_alloc_type& span_allocator, BYTE Alpha);
+
 	template<class Renderer>
 	void render_scanlines(Renderer& ren);
 	template<class Rasterizer, class Renderer>
@@ -447,6 +453,9 @@ protected:
     //--test
 	void DoFillPathHatch(CBrushHatch *pBrush);
 	void DoFillPathTextureClampSz(const CMatrix &mImgMtx, const void *pImgBuff, DWORD dwImgWidth, DWORD dwImgHeight, int nImgStride);
+
+	template<typename pixfmt>
+	void DoFillPathTextureClampSz2_Impl(agg::rendering_buffer& PatRendBuff, interpolator_type_linear& interpolator, span_alloc_type& span_allocator, int nCurrentMode, BYTE Alpha);
 	void DoFillPathTextureClampSz2(const CMatrix &mImgMtx, const void *pImgBuff, DWORD dwImgWidth, DWORD dwImgHeight, int nImgStride, BYTE Alpha = 255);
     
     template<class ColorSpacePix>

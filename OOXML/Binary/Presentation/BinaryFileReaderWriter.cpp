@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "BinaryFileReaderWriter.h"
 #include "BinReaderWriterDefines.h"
@@ -183,7 +186,7 @@ namespace NSBinPptxRW
 	int CImageManager2::IsDisplayedImage(const std::wstring& strInput)
 	{
 		int nRes = 0;
-		//шаблон display[N]image.ext
+		//pattern display[N]image.ext
 		std::wstring sFind1 = L"display";
 		int nIndex1 = (int)strInput.find(sFind1);
 		if (-1 != nIndex1)
@@ -612,8 +615,8 @@ namespace NSBinPptxRW
 		size_t n3 = strFile.find(L"ftp");
 		size_t n4 = strFile.find(L"https://");
 
-        //если nI сранивать не с 0, то будут проблемы
-        //потому что в инсталяции мы кладем файлы в /var/www...
+        //if nI is compared not with 0, there will be problems
+        //because in installation we put files in /var/www...
         if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			return true;
 		return false;
@@ -1270,7 +1273,7 @@ namespace NSBinPptxRW
 
 		StartMainRecord(NSBinPptxRW::NSMainTables::FontsEmbedded);
 
-		// добавим мега шрифт
+		// add mega font
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckString(L".)abcdefghijklmnopqrstuvwxyz");
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckFont(L"Wingdings 3", m_pCommon->m_pNativePicker->m_pFontManager);
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckFont(L"Arial", m_pCommon->m_pNativePicker->m_pFontManager);
@@ -2130,7 +2133,7 @@ namespace NSBinPptxRW
 		_INT32 sz = (_INT32)GetULong();
 		if (m_lPos + sz > m_lSize)
 		{
-			//todooo - переделать
+			//todo - refactor
 			throw;
 		}
 		return sz;
@@ -2378,9 +2381,9 @@ namespace NSBinPptxRW
 	{
 		++m_nCurrentRelsStack;
 
-		//чистить текущий m_pRels хорошо при последовательной записи автофигур в word.
-		//плохо в случае записи перезентаций, с момента перехода на единственный обьект m_pReader.
-		//пример: презетации записали несколько Rels, записываем chart, вызывается SetDstContentRels и трутся Rels презентаций
+		//clearing current m_pRels is good for sequential autoshape writing in word.
+		//bad for presentation writing, since transition to single m_pReader object.
+		//example: presentations wrote several Rels, writing chart, SetDstContentRels is called and presentation Rels are erased
 		//if (0 == m_pReader->m_nCurrentRelsStack)
 		//{
 		//	m_pReader->m_pRels->Clear();

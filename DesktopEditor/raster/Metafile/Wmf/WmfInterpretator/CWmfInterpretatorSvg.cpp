@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "CWmfInterpretatorSvg.h"
 
 #include "../../../../graphics/Image.h"
@@ -119,7 +154,7 @@ namespace MetaFile
 
 	void CWmfInterpretatorSvg::HANDLE_META_CHORD(short shYEndArc, short shXEndArc, short shYStartArc, short shXStartArc, short shBottom, short shRight, short shTop, short shLeft)
 	{
-		//TODO:: реализовать
+		// TODO: implement
 	}
 
 	void CWmfInterpretatorSvg::HANDLE_META_ELLIPSE(short shBottom, short shRight, short shTop, short shLeft)
@@ -206,7 +241,7 @@ namespace MetaFile
 
 	void CWmfInterpretatorSvg::HANDLE_META_FRAMEREGION(unsigned short ushRegionIndex, unsigned short ushBrushIndex, short shHeight, short shWidth)
 	{
-		//TODO:: реализовать
+		// TODO: implement
 	}
 
 	void CWmfInterpretatorSvg::HANDLE_META_INVERTREGION(unsigned short ushRegionIndex)
@@ -233,7 +268,7 @@ namespace MetaFile
 
 	void CWmfInterpretatorSvg::HANDLE_META_PAINTREGION(unsigned short ushRegionIndex)
 	{
-		//TODO:: реализовать
+		// TODO: implement
 	}
 
 	void CWmfInterpretatorSvg::HANDLE_META_PATBLT(unsigned int unRasterOperation, short shH, short shW, short shY, short shX)
@@ -390,7 +425,7 @@ namespace MetaFile
 
 	void CWmfInterpretatorSvg::HANDLE_META_SETPIXEL(const TRGBA &oColor, short shY, short shX)
 	{
-		//TODO:: реализовать
+		// TODO: implement
 	}
 
 	void CWmfInterpretatorSvg::HANDLE_META_TEXTOUT(short shStringLength, unsigned char *pString, short shX, short shY)
@@ -403,7 +438,7 @@ namespace MetaFile
 		NSStringExt::CConverter::ESingleByteEncoding eCharSet = NSStringExt::CConverter::ESingleByteEncoding::SINGLE_BYTE_ENCODING_DEFAULT;;
 		if (pFont)
 		{
-			// Соответствие Charset -> Codepage: http://support.microsoft.com/kb/165478
+			// Charset -> Codepage mapping: http://support.microsoft.com/kb/165478
 			// http://msdn.microsoft.com/en-us/library/cc194829.aspx
 			//  Charset Name       Charset Value(hex)  Codepage number
 			//  ------------------------------------------------------

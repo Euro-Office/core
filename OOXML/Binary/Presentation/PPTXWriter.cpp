@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "PPTXWriter.h"
@@ -180,7 +183,7 @@ namespace NSBinPptxRW
 
 			CXmlWriter oXmlWriter;
 
-			// первым делом определим количество необходимого. если хоть одно из этих чисел - ноль, то ппту не корректный
+			// first determine the required quantity. if any of these numbers is zero, then pptx is invalid
 			LONG nCountThemes = 0;
 			LONG nCountMasters = 0;
 			LONG nCountLayouts = 0;
@@ -218,7 +221,7 @@ namespace NSBinPptxRW
 				return;
 			}
 
-			// теперь создадим массивы для рельсов
+			// now create arrays for rels
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				_slideMasterInfo elm;
@@ -249,7 +252,7 @@ namespace NSBinPptxRW
 				}
 			}
 
-	// нужно проставить всем шаблонам мастер.
+	// need to set master for all templates.
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				size_t _countL = m_arSlideMasters_Theme[i].m_arLayouts.size();
@@ -264,7 +267,7 @@ namespace NSBinPptxRW
 				}
 			}
 
-	// готово, теперь нужно слайдам проставить шаблоны
+	// done, now need to set templates for slides
 			pPair = m_mainTables.find(NSBinPptxRW::NSMainTables::SlideRels);
 			if (m_mainTables.end() != pPair)
 			{
@@ -278,7 +281,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); here it's not index but type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Layout.size())
 						m_arSlides_Layout[index++] = m_oReader.GetULong();
 				}
@@ -296,7 +299,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); here it's not index but type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Notes.size())
 						m_arSlides_Notes[index++] = m_oReader.GetULong();
 				}
@@ -335,7 +338,7 @@ namespace NSBinPptxRW
 				}
 			}
 			
-	// теперь нужно удалить все themes, которые не ведут на мастерслайды
+	// now need to delete all themes that don't lead to master slides
 			std::vector<LONG> arThemes;
 			std::vector<LONG> arThemesDst;
 			std::vector<bool> arThemesSave;
@@ -378,7 +381,7 @@ namespace NSBinPptxRW
 				arThemesDst[i] = lCurrectTheme;
 				++lCurrectTheme;
 			}
-	// теперь нужно перебить ссылки
+	// now need to update references
 			for (LONG i = 0; i < nCountMasters && i < arThemesDst.size(); ++i)
 			{
 				m_arSlideMasters_Theme[i].m_lThemeIndex = arThemesDst[i];
@@ -400,7 +403,7 @@ namespace NSBinPptxRW
 				{
 					if (!arThemesSave[i])
 					{
-						// это ненужная тема
+						// this is an unnecessary theme
 						continue;
 					}
 
@@ -592,7 +595,7 @@ namespace NSBinPptxRW
 				m_oReader.Seek(pPair->second);
 				LONG lCount = m_oReader.GetLong();
 
-				if (lCount > 0 || m_arNotesSlides.size() > 0)//один элемент
+				if (lCount > 0 || m_arNotesSlides.size() > 0)//one element
 				{
 					OOX::CPath pathFolder = m_strDstFolder + FILE_SEPARATOR_STR + L"ppt" + FILE_SEPARATOR_STR + L"notesMasters";
 					OOX::CPath pathFolderRels = pathFolder + FILE_SEPARATOR_STR + L"_rels";
@@ -1023,7 +1026,7 @@ namespace NSBinPptxRW
 
 				OOX::CPath pathPresentation = pathFolder / m_oPresentation.DefaultFileName();
 
-				// todooo втащить все как сделано для Custom
+				// todo implement everything as done for Custom
 				//m_oPresentation.write(pathPresentation, m_oPresentation.DefaultDirectory(), *m_oImageManager.m_pContentTypes);
 				oXmlWriter.ClearNoAttack();
 				m_oPresentation.toXmlWriter(&oXmlWriter);

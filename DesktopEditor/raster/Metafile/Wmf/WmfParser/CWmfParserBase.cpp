@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "CWmfParserBase.h"
 
 #include "../WmfInterpretator/CWmfInterpretatorRender.h"
@@ -176,7 +211,7 @@ namespace MetaFile
 	{
 		RELEASEOBJECT(m_pInterpretator);
 
-		//TODO:: добавить как появится реализация интерпретаторов
+		//TODO:: add when interpretators implementation appears
 	}
 
 	CWmfInterpretatorBase* CWmfParserBase::GetInterpretator()
@@ -247,7 +282,7 @@ namespace MetaFile
 			m_oDCRect.Bottom = static_cast<int>(std::round(m_oDCRect.Bottom * dKoef));
 		}
 
-		// Иногда m_oPlaceable.BoundingBox задается нулевой ширины и высоты
+		// Sometimes m_oPlaceable.BoundingBox is set with zero width and height
 		if (abs(m_oDCRect.Right - m_oDCRect.Left) <= 1)
 		{
 			m_oDCRect.Right = m_oBoundingBox.Right;
@@ -319,8 +354,8 @@ namespace MetaFile
 
 	void CWmfParserBase::ArcTo(short shL, short shT, short shR, short shB, double dStart, double dSweep)
 	{
-		// Тут не делаем пересчет текущей точки, т.к. при вызове данной функции не всегда он нужен (например эллипс).
-		// Текущая точка обновляется на том уровне, на котором вызывалась данная функция.
+		// We don't recalculate current point here, because it's not always needed when this function is called (e.g. ellipse).
+		// Current point is updated at the level where this function was called.
 		if (NULL != m_pInterpretator)
 		{
 			double dL, dT, dR, dB;
@@ -330,7 +365,7 @@ namespace MetaFile
 		}
 		else
 		{
-			// TODO: Возможно нужно регистрировать более точно
+			// TODO: Perhaps need to register more precisely
 			RegisterPoint(shL, shT);
 			RegisterPoint(shR, shB);
 		}
@@ -401,8 +436,8 @@ namespace MetaFile
 		{
 			if (pFont)
 			{
-				// TODO: Здесь идет точное повторение кода из CMetaFileRenderer->DrawString
-				//       неплохо бы перенести этот пересчет в базовый класс IMetaFileBase.
+				// TODO: This is an exact copy of code from CMetaFileRenderer->DrawString
+				//       would be good to move this recalculation to base class IMetaFileBase.
 				NSFonts::IFontManager* pFontManager = GetFontManager();
 				if (pFontManager)
 				{
@@ -433,7 +468,7 @@ namespace MetaFile
 
 					if (NULL != pDx && unCharsCount > 1)
 					{
-						// Тогда мы складываем все pDx кроме последнего символа, последний считаем отдельно
+						// Then we sum all pDx except the last character, the last one is calculated separately
 						double dTempTextW = 0;
 						for (unsigned int unCharIndex = 0; unCharIndex < unCharsCount - 1; unCharIndex++)
 						{
@@ -473,11 +508,11 @@ namespace MetaFile
 					double dX = (double)nX;
 					double dY = (double)nY;
 
-					// Найдем начальную точку текста
+					// Find the starting point of the text
 					unsigned int ulTextAlign = GetTextAlign();
 					if (ulTextAlign & TA_BASELINE)
 					{
-						// Ничего не делаем
+						// Do nothing
 					}
 					else if (ulTextAlign & TA_BOTTOM)
 					{
@@ -506,7 +541,7 @@ namespace MetaFile
 					}
 					else //if (ulTextAlign & TA_LEFT)
 					{
-						// Ничего не делаем
+						// Do nothing
 					}
 
 					double dX0 = dX + fL, dY0 = dY + fT;
@@ -542,7 +577,7 @@ namespace MetaFile
 
 					if (NULL != pDx && unCharsCount > 1)
 					{
-						// Тогда мы складываем все pDx кроме последнего символа, последний считаем отдельно
+						// Then we sum all pDx except the last character, the last one is calculated separately
 						double dTempTextW = 0;
 						for (unsigned int unCharIndex = 0; unCharIndex < unCharsCount - 1; unCharIndex++)
 						{
@@ -567,11 +602,11 @@ namespace MetaFile
 					double dX = (double)nX;
 					double dY = (double)nY;
 
-					// Найдем начальную точку текста
+					// Find the starting point of the text
 					unsigned int ulTextAlign = GetTextAlign();
 					if (ulTextAlign & TA_BASELINE)
 					{
-						// Ничего не делаем
+						// Do nothing
 					}
 					else if (ulTextAlign & TA_BOTTOM)
 					{
@@ -600,7 +635,7 @@ namespace MetaFile
 					}
 					else //if (ulTextAlign & TA_LEFT)
 					{
-						// Ничего не делаем
+						// Do nothing
 					}
 
 					double dX0 = dX + fL, dY0 = dY + fT;
@@ -817,8 +852,8 @@ namespace MetaFile
 			}
 		}
 
-		// Если у нас не задан Output, значит мы считаем, что идет сканирование метафайла.
-		// Во время сканирования мы регистрируем все точки и вычисляем BoundingBox
+		// If Output is not set, we assume the metafile is being scanned.
+		// During scanning we register all points and calculate BoundingBox
 		if (NULL == m_pInterpretator)
 			m_bFirstPoint = true;
 
@@ -837,7 +872,7 @@ namespace MetaFile
 
 		unsigned int unRecordSizeDword = m_unRecordSize >> 1;
 		unsigned int unValue = (META_DIBBITBLT >> 8) + 3;
-		if (unRecordSizeDword == unValue) // похоже на META_PATBLT
+		if (unRecordSizeDword == unValue) // looks like META_PATBLT
 		{
 			if (0x00F00021 == oWmfBitBlt.unRasterOperation)
 			{
@@ -885,7 +920,7 @@ namespace MetaFile
 
 		TRectL oDestRect(oWmfSetDibToDev.ushXDest, oWmfSetDibToDev.ushYDest, oWmfSetDibToDev.ushXDest + oWmfSetDibToDev.ushWidth, oWmfSetDibToDev.ushYDest + oWmfSetDibToDev.ushHeight);
 
-		// TODO: Тут надо делать обрезку в зависимости от ScanCount и StartScan. Как встретится файл сделать.
+		// TODO: Need to crop depending on ScanCount and StartScan. Do it when a file is found.
 		DrawImage(oDestRect, oDestRect, oWmfSetDibToDev.ushColorUsage, 0);
 	}
 
@@ -1043,7 +1078,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_INVERTREGION(ushRegionIndex);
 
-		//TODO:: реализовать
+		//TODO:: implement
 	}
 
 	void CWmfParserBase::HANDLE_META_LINETO(short shY, short shX)
@@ -1090,7 +1125,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_PATBLT(unRasterOperation, shH, shW, shY, shX);
 
-		// TODO: Нужно использовать растровую операцию unRasterOperation
+		// TODO: Need to use raster operation unRasterOperation
 
 		MoveTo(shX, shY);
 		LineTo(shX + shW, shY);
@@ -1111,7 +1146,7 @@ namespace MetaFile
 		double dStartAngle = GetEllipseAngle(shL, shT, shR, shB, shXRadial1, shYRadial1);
 		double dEndAngle   = GetEllipseAngle(shL, shT, shR, shB, shXRadial2, shYRadial2);
 
-		//TODO: это получается заглушка, поэтому нужно научиться определять угол с учетом направления рисования
+		//TODO: this is a stub, need to learn how to determine the angle considering the drawing direction
 		if (shXRadial2 >= shCenterX && shYRadial2 <= shCenterY && shXRadial1 >= shCenterX && shYRadial1 >= shCenterY)
 			dEndAngle -= 360;
 
@@ -1330,8 +1365,8 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SELECTCLIPREGION(ushIndex);
 
-		// Тут просто сбрасываем текущий клип. Ничего не добавляем в клип, т.е. реализовать регионы с
-		// текущим интерфейсом рендерера невозможно.
+		// Here we just reset the current clip. We don't add anything to the clip,
+		// i.e. implementing regions with the current renderer interface is not possible.
 		m_pDC->GetClip()->Reset();
 		UpdateOutputDC();
 	}
@@ -1356,8 +1391,8 @@ namespace MetaFile
 
 	void CWmfParserBase::HANDLE_META_EXCLUDECLIPRECT(short shBottom, short shRight, short shTop, short shLeft)
 	{
-		// Поскольку мы реализовываем данный тип клипа с помощью разницы внешнего ректа и заданного, и
-		// пересечением с полученной областью, то нам надо вычесть границу заданного ректа.
+		// Since we implement this clip type by taking the difference between the outer rect and the given one,
+		// and intersecting with the resulting area, we need to subtract the boundary of the given rect.
 		if (shLeft < shRight)
 		{
 			shLeft--;
@@ -1428,7 +1463,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_MOVETO(shOffsetX, shOffsetY);
 
-		// TODO: Реализовать
+		// TODO: Implement
 		UpdateOutputDC();
 	}
 
@@ -1594,7 +1629,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_META_SETTEXTJUSTIFICATION(ushBreakCount, ushBreakExtra);
 
-		// TODO: Реализовать
+		// TODO: Implement
 		UpdateOutputDC();
 	}
 
@@ -1765,7 +1800,7 @@ namespace MetaFile
 				m_oEscapeBuffer.Clear();
 			}
 		}
-		// TODO: Реализовать
+		// TODO: Implement
 	}
 
 	void CWmfParserBase::HANDLE_META_UNKNOWN(CDataStream &oDataStream)

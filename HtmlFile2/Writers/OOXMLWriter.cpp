@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "OOXMLWriter.h"
 
 #include <cwctype>
@@ -22,8 +57,8 @@ namespace HTML
 #define MAXCOLUMNSINTABLE 63
 #define MAXROWSINTABLE    32767
 
-#define DEFAULT_PAGE_WIDTH  12240 // Значение в Twips
-#define DEFAULT_PAGE_HEIGHT 15840 // Значение в Twips
+#define DEFAULT_PAGE_WIDTH  12240 // Value in Twips
+#define DEFAULT_PAGE_HEIGHT 15840 // Value in Twips
 
 #define DEFAULT_LANGUAGE std::wstring(L"en-US")
 #define DEFAULT_FONT_FAMILY std::wstring(L"Times New Roman")
@@ -83,7 +118,7 @@ void COOXMLWriter::SetCoreDirectory(const std::wstring& wsPath)
 
 void COOXMLWriter::Begin(const std::wstring& wsDst)
 {
-	// Создаем пустые папки
+	// Create empty folders
 	NSDirectory::CreateDirectory(wsDst + L"/_rels");
 	NSDirectory::CreateDirectory(wsDst + L"/docProps");
 	NSDirectory::CreateDirectory(wsDst + L"/word");
@@ -156,7 +191,7 @@ void COOXMLWriter::Begin(const std::wstring& wsDst)
 	}
 
 	// numbering.xml
-	// Маркированный список
+	// Bulleted list
 	m_oNumberXml += L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><w:numbering xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 w15 wp14\"><w:abstractNum w:abstractNumId=\"0\"><w:multiLevelType w:val=\"hybridMultilevel\"/><w:lvl w:ilvl=\"0\"><w:start w:val=\"1\"/><w:numFmt w:val=\"bullet\"/><w:isLgl w:val=\"false\"/><w:suff w:val=\"tab\"/><w:lvlText w:val=\"";
 	m_oNumberXml.AddCharSafe(183);
 	m_oNumberXml += L"\"/><w:lvlJc w:val=\"left\"/><w:pPr><w:ind w:left=\"720\" w:hanging=\"360\"/></w:pPr><w:rPr><w:rFonts w:ascii=\"Symbol\" w:hAnsi=\"Symbol\" w:cs=\"Symbol\" w:eastAsia=\"Symbol\"/></w:rPr></w:lvl><w:lvl w:ilvl=\"1\"><w:start w:val=\"1\"/><w:numFmt w:val=\"bullet\"/><w:isLgl w:val=\"false\"/><w:suff w:val=\"tab\"/><w:lvlText w:val=\"o\"/><w:lvlJc w:val=\"left\"/><w:pPr><w:ind w:left=\"1440\" w:hanging=\"360\"/></w:pPr><w:rPr><w:rFonts w:ascii=\"Courier New\" w:hAnsi=\"Courier New\" w:cs=\"Courier New\" w:eastAsia=\"Courier New\"/></w:rPr></w:lvl><w:lvl w:ilvl=\"2\"><w:start w:val=\"1\"/><w:numFmt w:val=\"bullet\"/><w:isLgl w:val=\"false\"/><w:suff w:val=\"tab\"/><w:lvlText w:val=\"";
@@ -224,7 +259,7 @@ void COOXMLWriter::Begin(const std::wstring& wsDst)
 		oCoreWriter.CloseFile();
 	}
 
-	// Начала файлов
+	// File beginnings
 	m_oDocXmlRels  += L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">";
 	m_oDocXmlRels  += L"<Relationship Id=\"rId1\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles\" Target=\"styles.xml\"/>";
 	m_oDocXmlRels  += L"<Relationship Id=\"rId2\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings\" Target=\"settings.xml\"/>";
@@ -242,7 +277,7 @@ void COOXMLWriter::Begin(const std::wstring& wsDst)
 
 	m_nElementId += 7;
 
-	// docDefaults по умолчанию
+	// docDefaults default
 	if(m_pHTMLParameters && !m_pHTMLParameters->m_sdocDefaults.empty())
 		m_oStylesXml += m_pHTMLParameters->m_sdocDefaults;
 	else
@@ -256,7 +291,7 @@ void COOXMLWriter::Begin(const std::wstring& wsDst)
 //			m_oStylesXml += L"<w:pPrDefault><w:pPr><w:spacing w:after=\"200\" w:line=\"276\" w:lineRule=\"auto\"/></w:pPr></w:pPrDefault>";
 	}
 
-	// normal по умолчанию
+	// normal default
 	if(m_pHTMLParameters && !m_pHTMLParameters->m_sNormal.empty())
 		m_oStylesXml += m_pHTMLParameters->m_sNormal;
 	else
@@ -266,15 +301,15 @@ void COOXMLWriter::Begin(const std::wstring& wsDst)
 		m_oStylesXml += L"</w:rPr></w:style>";
 	}
 
-	// Маркированный список
+	// Bulleted list
 	m_oStylesXml += L"<w:style w:type=\"paragraph\" w:styleId=\"li\"><w:name w:val=\"List Paragraph\"/><w:basedOn w:val=\"normal\"/><w:qFormat/><w:uiPriority w:val=\"34\"/><w:pPr><w:contextualSpacing w:val=\"true\"/><w:ind w:left=\"720\"/></w:pPr></w:style>";
-	// Ссылки
+	// Links
 	m_oStylesXml += L"<w:style w:type=\"character\" w:styleId=\"a\"><w:name w:val=\"Hyperlink\"/><w:uiPriority w:val=\"99\"/><w:unhideWhenUsed/><w:rPr><w:color w:val=\"0000FF\" w:themeColor=\"hyperlink\"/><w:u w:val=\"single\"/></w:rPr></w:style>";
-	// Таблицы
+	// Tables
 //		m_oStylesXml += L"<w:style w:type=\"table\" w:default=\"1\" w:styleId=\"table-based\"><w:name w:val=\"Normal Table\"/><w:uiPriority w:val=\"99\"/><w:semiHidden/><w:unhideWhenUsed/><w:tblPr><w:tblInd w:w=\"0\" w:type=\"dxa\"/><w:tblCellMar><w:top w:w=\"0\" w:type=\"dxa\"/><w:left w:w=\"108\" w:type=\"dxa\"/><w:bottom w:w=\"0\" w:type=\"dxa\"/><w:right w:w=\"108\" w:type=\"dxa\"/></w:tblCellMar></w:tblPr></w:style><w:style w:type=\"table\" w:styleId=\"table\"><w:name w:val=\"Table Grid\"/><w:basedOn w:val=\"table-based\"/><w:uiPriority w:val=\"59\"/><w:pPr><w:spacing w:lineRule=\"auto\" w:line=\"240\" w:after=\"0\"/></w:pPr><w:tblPr><w:tblBorders><w:top w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/><w:left w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/><w:bottom w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/><w:right w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/><w:insideH w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/><w:insideV w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"000000\"/></w:tblBorders></w:tblPr></w:style>";
-	// Сноски
+	// Footnotes
 	m_oStylesXml += L"<w:style w:type=\"character\" w:styleId=\"footnote\"><w:name w:val=\"footnote reference\"/><w:uiPriority w:val=\"99\"/><w:unhideWhenUsed/><w:rPr><w:vertAlign w:val=\"superscript\"/></w:rPr></w:style><w:style w:type=\"paragraph\" w:styleId=\"footnote-p\"><w:name w:val=\"footnote text\"/><w:basedOn w:val=\"normal\"/><w:link w:val=\"footnote-c\"/><w:uiPriority w:val=\"99\"/><w:semiHidden/><w:unhideWhenUsed/><w:rPr><w:sz w:val=\"18\"/></w:rPr><w:pPr><w:spacing w:lineRule=\"auto\" w:line=\"240\" w:after=\"40\"/></w:pPr></w:style><w:style w:type=\"character\" w:styleId=\"footnote-c\" w:customStyle=\"1\"><w:name w:val=\"footnote text character\"/><w:link w:val=\"footnote-p\"/><w:uiPriority w:val=\"99\"/><w:rPr><w:sz w:val=\"18\"/></w:rPr></w:style>";
-	// Web стиль по-умолчанию
+	// Web style default
 	m_oStylesXml += L"<w:style w:type=\"paragraph\" w:styleId=\"normal-web\"><w:name w:val=\"Normal (Web)\"/><w:basedOn w:val=\"normal\"/><w:uiPriority w:val=\"99\"/><w:semiHidden/><w:unhideWhenUsed/><w:pPr><w:spacing w:before=\"100\" w:beforeAutospacing=\"1\" w:after=\"100\" w:afterAutospacing=\"1\"/></w:pPr></w:style>";
 }
 
@@ -342,9 +377,9 @@ void COOXMLWriter::End(const std::wstring& wsDst)
 	}
 
 	// numbering.xml
-	// Маркированный список
+	// Bulleted list
 	m_oNumberXml.WriteString(L"<w:num w:numId=\"1\"><w:abstractNumId w:val=\"0\"/></w:num>");
-	// Нумерованный список
+	// Numbered list
 	for(int i = 1; i < m_nListId; i++)
 	{
 		m_oNumberXml.WriteString(L"<w:num w:numId=\"");
@@ -465,7 +500,7 @@ void COOXMLWriter::CloseHyperlink()
 	m_arStates.top().m_pCurrentDocument->WriteString(L"</w:hyperlink>");
 	m_arStates.top().m_bInHyperlink = false;
 
-	// Сноска
+	// Footnote
 	if (m_arStates.top().m_wsFootnote.empty())
 		return;
 
@@ -577,7 +612,7 @@ void COOXMLWriter::SetHyperlinkData(const std::wstring& wsRef, const std::wstrin
 {
 	CloseHyperlink();
 
-	//TODO:: подумать как лучше сделать работу с гиперссылками
+	//TODO:: think about how to better handle hyperlinks
 	m_arStates.top().m_wsHref = wsRef;
 	m_arStates.top().m_wsTooltip = wsTooltip;
 	m_arStates.top().m_bISCrossHyperlink = bIsCross;
@@ -633,7 +668,7 @@ void COOXMLWriter::OpenExternalHyperlink(const std::wstring& wsRef, const std::w
 	oRelationshipXml.WriteString(L"\" TargetMode=\"External\"/>");
 
 	m_arStates.top().m_bInHyperlink = true;
-	// Пишем в document.xml
+	// Write to document.xml
 	m_arStates.top().m_pCurrentDocument->WriteString(L"<w:hyperlink w:tooltip=\"");
 	m_arStates.top().m_pCurrentDocument->WriteEncodeXmlString(wsTooltip);
 	m_arStates.top().m_pCurrentDocument->WriteString(L"\" r:id=\"rHyp");
@@ -658,7 +693,7 @@ void COOXMLWriter::CloseCrossHyperlink(const std::vector<NSCSS::CNode>& arSelect
 		bFootnote = oNode.m_wsName == L"p" && oNode.m_wsClass == L"MsoFootnoteText";
 	}
 
-	// Сноска
+	// Footnote
 	if (!wsFootnote.empty())
 	{
 		if (!bFootnote)
@@ -839,7 +874,7 @@ bool COOXMLWriter::WriteText(std::wstring wsText, const std::vector<NSCSS::CNode
 
 	if (!bPreformatted && nullptr != arSelectors.back().m_pCompiledStyle)
 	{
-		// TODO::поведение должно быть немного разное (реализовать)
+		// TODO:: behavior should be slightly different (implement)
 		switch(pCompiledStyle->m_oDisplay.GetWhiteSpace().ToInt())
 		{
 			case NSCSS::NSProperties::EWhiteSpace::Pre:
@@ -1062,7 +1097,7 @@ void COOXMLWriter::WriteImage(const TImageData& oImageData, const std::wstring& 
 
 	XmlString* pCurrentDocument{m_arStates.top().m_pCurrentDocument};
 
-	// Пишем в document.xml
+	// Write to document.xml
 	if (oImageData.ZeroSpaces())
 	{
 		pCurrentDocument->WriteString(L"<w:drawing><wp:inline distT=\"0\" distB=\"0\" distL=\"0\" distR=\"0\"><wp:extent cx=\"");
@@ -1336,37 +1371,37 @@ std::wstring StandardizeHeaderId(const std::wstring& wsHeader)
 	std::wstring result;
 	result.reserve(wsHeader.size());
 
-	// Флаг, указывающий, был ли предыдущий символ дефисом
+	// Flag indicating whether the previous character was a hyphen
 	bool prevWasHyphen = false;
 	bool inWhitespaceSequence = false;
 	wchar_t lowerC;
 
 	for (wchar_t c : wsHeader)
 	{
-		// Приведение к нижнему регистру
+		// Convert to lowercase
 		lowerC = std::tolower(c);
 
-		// Проверяем, является ли символ буквой или цифрой
+		// Check if the character is a letter or digit
 		if (std::iswalnum(lowerC))
 		{
 			result.push_back(lowerC);
 			prevWasHyphen = false;
 			inWhitespaceSequence = false;
 		}
-		// Проверяем, является ли символ пробельным (пробел, табуляция и т.д.)
+		// Check if the character is whitespace (space, tab, etc.)
 		else if (std::iswspace(lowerC))
 		{
-			// Заменяем последовательности пробельных символов на один дефис
+			// Replace sequences of whitespace characters with a single hyphen
 			if (!inWhitespaceSequence && !result.empty())
 			{
 				result.push_back(L'-');
 				inWhitespaceSequence = true;
 			}
 		}
-		// Проверяем, является ли символ дефисом или подчеркиванием
+		// Check if the character is a hyphen or underscore
 		else if (c == L'-' || c == L'_')
 		{
-			// Добавляем дефис, если предыдущий символ не был дефисом
+			// Add hyphen if the previous character was not a hyphen
 			if (!prevWasHyphen && !result.empty())
 			{
 				result.push_back(L'-');
@@ -1374,19 +1409,19 @@ std::wstring StandardizeHeaderId(const std::wstring& wsHeader)
 			}
 			inWhitespaceSequence = false;
 		}
-		// Все остальные символы (знаки препинания) пропускаем
-		// Но если это буква в Unicode, мы можем её обработать
+		// Skip all other characters (punctuation marks)
+		// But if it's a Unicode letter, we can process it
 		else if (std::iswalpha(lowerC))
 		{
-			// Для Unicode-символов, которые являются буквами
+			// For Unicode characters that are letters
 			result.push_back(lowerC);
 			prevWasHyphen = false;
 			inWhitespaceSequence = false;
 		}
-		// Остальные символы игнорируем
+		// Ignore other characters
 	}
 
-	// Удаляем дефисы в начале и конце
+	// Remove hyphens at the beginning and end
 	size_t start = 0;
 	size_t end = result.length();
 
@@ -1396,7 +1431,7 @@ std::wstring StandardizeHeaderId(const std::wstring& wsHeader)
 	while (end > start && result[end - 1] == L'-')
 		--end;
 
-	// Удаляем последовательные дефисы
+	// Remove consecutive hyphens
 	std::wstring finalResult;
 	finalResult.reserve(end - start);
 

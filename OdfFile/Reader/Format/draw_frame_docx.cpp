@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "office_forms.h"
@@ -591,7 +594,7 @@ int ComputeMarginY(const style_page_layout_properties_attlist		& pageProperties,
 {
     const _CP_OPT(anchor_type) anchor = attlists_.shape_with_text_and_styles_.common_text_anchor_attlist_.type_;
 
-	//todooo пока не ясно как привязать к определеной странице в документе ...
+	//todooo not yet clear how to anchor to a specific page in document ...
 	//const _CP_OPT(unsigned int) anchor_page_number = 
 	//	attlists_.shape_with_text_and_styles_.
 	//	common_text_anchor_attlist_.
@@ -623,7 +626,7 @@ int ComputeMarginY(const style_page_layout_properties_attlist		& pageProperties,
  	
 	const _CP_OPT(length) translation		= length(dVal ? *dVal : 0, length::pt);
     const _CP_OPT(length) pageHeight		= pageProperties.fo_page_height_;        
-    // TODO : проверить, значения в процентах что именно означают
+    // TODO : check what exactly percent values mean
     const _CP_OPT(length) pageMarginTop		= CalcResultLength(pageProperties.common_vertical_margin_attlist_.fo_margin_top_, pageHeight);
     const _CP_OPT(length) pageMarginBottom	= CalcResultLength(pageProperties.common_vertical_margin_attlist_.fo_margin_bottom_, pageHeight);
 
@@ -772,7 +775,7 @@ int ComputeMarginY(const style_page_layout_properties_attlist		& pageProperties,
             svgY = *attlists_.position_.svg_y_;
     }
 
-	//if (anchor_page_number && pageHeight)....так нельзя .. только в пределах текущей страницы :(
+	//if (anchor_page_number && pageHeight)....can't do this .. only within current page :(
 	//{
 	//	svgY = length(svgY->get_value_unit(length::pt) + pageHeight->get_value_unit(length::pt) * (*anchor_page_number - 1), length::pt );
 	//}
@@ -899,7 +902,7 @@ void common_draw_docx_convert(oox::docx_conversion_context & Context, union_comm
         drawing->behindDoc		= L"0";
 
 		if (!drawing->styleWrap)
-			drawing->styleWrap = style_wrap(style_wrap::Parallel);//у опен офис и мс разные дефолты
+			drawing->styleWrap = style_wrap(style_wrap::Parallel);//OpenOffice and MS have different defaults
 
 		if (((drawing->styleWrap && drawing->styleWrap->get_type() == style_wrap::RunThrough) || !drawing->styleWrap) 
 			&& ((styleRunThrough && styleRunThrough->get_type() == run_through::Background) || !styleRunThrough))
@@ -911,7 +914,7 @@ void common_draw_docx_convert(oox::docx_conversion_context & Context, union_comm
 		
         _CP_OPT(unsigned int) zIndex = attlists_.shape_with_text_and_styles_.common_shape_draw_attlist_.draw_z_index_;
        
-		if (zIndex)//порядок отрисовки объектов
+		if (zIndex)//object drawing order
         {
             if (*zIndex < 0) 
                 drawing->relativeHeight = L"0";
@@ -1009,7 +1012,7 @@ void common_draw_docx_convert(oox::docx_conversion_context & Context, union_comm
 	}	
 
 	if (Context.process_headers_footers_ && drawing->posOffsetH < 0)
-	{//p7офис_Альт.odt
+	{//p7office_Alt.odt
 		const _CP_OPT(length) pageMarginLeft = CalcResultLength(pageProperties.common_horizontal_margin_attlist_.fo_margin_left_, pageProperties.fo_page_width_);
 
 		if (pageMarginLeft)
@@ -1045,7 +1048,7 @@ void common_draw_docx_convert(oox::docx_conversion_context & Context, union_comm
 	}
  
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-	if ((drawing->styleWrap) && (drawing->styleWrap->get_type() == style_wrap::Dynamic))	//автоподбор
+	if ((drawing->styleWrap) && (drawing->styleWrap->get_type() == style_wrap::Dynamic))	//auto-fit
 	{
 		int max_width	= get_value_emu(pageProperties.fo_page_width_);
 		int max_height	= get_value_emu(pageProperties.fo_page_height_);
@@ -1092,7 +1095,7 @@ void draw_shape::docx_convert(oox::docx_conversion_context & Context)
 	drawing.hyperlinkRId = Context.get_drawing_context().draw_hyperlinkRId;
 
 	drawing.sub_type	= sub_type_;
-	drawing.additional	= additional_;//сюда могут добавиться свойства ...
+	drawing.additional	= additional_;//properties can be added here ...
 
 	if (drawing.lined == false)
 	{
@@ -1105,13 +1108,13 @@ void draw_shape::docx_convert(oox::docx_conversion_context & Context)
 	common_draw_docx_convert(Context, common_draw_attlists_, &drawing);
 /////////
 
-	if (bad_shape_ && drawing.fill.bitmap) // CV_Kucheruk_Maria(rus).odt - картинка по дебильному 
+	if (bad_shape_ && drawing.fill.bitmap) // CV_Kucheruk_Maria(rus).odt - image done stupidly 
 	{
 		drawing.sub_type = 1;
 		bad_shape_ = false;
 	}
 
-	if (drawing.fill.type < 1 && !IsExistProperty(drawing.additional, L"stroke"))//бывает что и не определено ничего 
+	if (drawing.fill.type < 1 && !IsExistProperty(drawing.additional, L"stroke"))//sometimes nothing is defined 
 	{
 		drawing.fill.solid = oox::oox_solid_fill::create();
 		drawing.fill.solid->color = L"729FCF";
@@ -1219,7 +1222,7 @@ void draw_image::docx_convert(oox::docx_conversion_context & Context)
 	if (pos_replaicement != std::wstring::npos)
 	{
 		if (!Context.get_drawing_context().get_use_image_replace())
-			return; //skip replacement image (math, chart, ...)  - возможно записать как альтернативный контент - todooo ???
+			return; //skip replacement image (math, chart, ...)  - possibly write as alternative content - todooo ???
 		if (href.length() - (pos_replaicement + 18) < 2)
 			return; //href="./ObjectReplacements/"
 	}
@@ -1247,8 +1250,8 @@ void draw_image::docx_convert(oox::docx_conversion_context & Context)
 	
 //--------------------------------------------------
 	oox::hyperlinks::_ref hyperlink = Context.last_hyperlink();
-	//нужно еще систему конроля - могут придте уже "использованные" линки с картинок - из колонтитулов (но на них уже использовали релсы)
-	//дыра осталась если картинка в картинке - линк продублируется с внутренней на внешнюю 
+	//need a control system - already "used" image links may come - from headers/footers (but rels were already used for them)
+	//hole remains if image inside image - link will be duplicated from inner to outer 
 	
 	if (hyperlink.drawing == true && hyperlink.used_rels == false)
 	{//link from object
@@ -1352,7 +1355,7 @@ void draw_text_box::docx_convert(oox::docx_conversion_context & Context)
 		return;
 	}
 //---------------------------------------------------------------------------------------------------------------
-	//тут может быть не только текст , но и таблицы, другие объекты ...
+	//here there can be not only text, but also tables, other objects ...
  	oox::StreamsManPtr prev = Context.get_stream_man();
 	
 	std::wstringstream temp_stream(Context.get_drawing_context().get_text_stream_frame());
@@ -1476,7 +1479,7 @@ void draw_g::docx_convert(oox::docx_conversion_context & Context)
 		return;
 	}
 
-	if (object_index >= 0) //только в документах нельзя объект объединять с шейпами в группы (
+	if (object_index >= 0) //only in documents you can't combine object with shapes in groups (
 	{
 		draw_frame *frame = dynamic_cast<draw_frame*>(content_[object_index].get());
 
@@ -1793,7 +1796,7 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 			objectBuild.object_type_ = 0;
 		}
 
-		if (objectBuild.object_type_ == 1) //диаграмма
+		if (objectBuild.object_type_ == 1) //chart
 		{
 			drawing->type = oox::typeChart;
 
@@ -1804,7 +1807,7 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 		{
 			//text in text not support
 		}
-		else if (objectBuild.object_type_ == 3) //мат формулы
+		else if (objectBuild.object_type_ == 3) //math formulas
 		{
 			const std::wstring& content = Context.get_drawing_context().get_text_stream_frame();
 
@@ -1857,7 +1860,7 @@ void draw_object::docx_convert(oox::docx_conversion_context & Context)
 		}
 		else
 		{
-			//замещающая картинка(если она конечно присутствует)
+			//replacement image (if it's present of course)
 			bool & use_image_replace = Context.get_drawing_context().get_use_image_replace();
 			use_image_replace = true;
 		}

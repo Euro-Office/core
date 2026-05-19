@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "CEmfxParser.h"
 
 #include <iostream>
@@ -504,7 +539,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTCREATEFONTINDIRECTW()
 	{
-		//TODO: переделать чтение из-за отсутствия m_ulRecordSize
+		//TODO: refactor reading due to missing m_ulRecordSize
 		unsigned int unSize = m_ulRecordSize - 4;
 		bool bFixedLength = unSize <= 0x0140 ? true : false;
 
@@ -557,7 +592,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTCREATEPEN()
 	{
-		//TODO: переделать чтение из-за отсутствия m_ulRecordSize
+		//TODO: refactor reading due to missing m_ulRecordSize
 
 		unsigned int ulPenIndex;
 
@@ -802,7 +837,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXCLUDECLIPRECT()
 	{
-		// TODO: Проверить как найдется файл
+		// TODO: Check when a file is found
 		TRectL oClip;
 
 		*m_pOutput >> oClip;
@@ -890,7 +925,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_ANGLEARC()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TPointL oCenter;
 		unsigned int unRadius;
 		double dStartAngle, dSweepAngle;
@@ -922,7 +957,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_ARCTO()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -932,7 +967,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_CHORD()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -951,7 +986,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_EXTTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TEmfExtTextoutA oText;
 
 		*m_pOutput >> oText;
@@ -979,7 +1014,7 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_PIE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TRectL oBox;
 		TPointL oStart, oEnd;
 
@@ -1041,8 +1076,8 @@ namespace MetaFile
 
 	template<typename T>void CEmfxParser::Read_EMR_POLYDRAW_BASE()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
-		//bug #35006 - не прочитывается весь рекорд ... выравнивание?
+		// TODO: Check this record when files are found.
+		//bug #35006 - entire record is not read ... alignment?
 
 		TRectL oBounds;
 		unsigned int unCount;
@@ -1183,10 +1218,10 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_POLYTEXTOUTA()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TPolyTextoutA oText;
 
-		//TODO: сделать сохранение в XML и чтение из него
+		//TODO: implement saving to XML and reading from it
 		return;
 
 		m_oStream >> oText;
@@ -1205,10 +1240,10 @@ namespace MetaFile
 
 	void CEmfxParser::Read_EMR_POLYTEXTOUTW()
 	{
-		// TODO: Как найдутся файлы проверить данную запись.
+		// TODO: Check this record when files are found.
 		TPolyTextoutW oText;
 
-		//TODO: сделать сохранение в XML и чтение из него
+		//TODO: implement saving to XML and reading from it
 		return;
 
 		m_oStream >> oText;
@@ -1255,7 +1290,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETPIXELV(oPoint, oColor);
 
-		// Делаем цветом кисти
+		// Set as brush color
 		BYTE pBgraBuffer[4];
 		pBgraBuffer[0] = oColor.b;
 		pBgraBuffer[1] = oColor.g;

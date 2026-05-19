@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "OOXDocumentWriter.h"
 #include "OOXRelsWriter.h"
@@ -52,14 +55,14 @@ OOXDocumentWriter::~OOXDocumentWriter()
 
 std::wstring OOXDocumentWriter::CreateXmlStart()
 {
-	//пишем Footnotes
+	//write Footnotes
 	RenderParameter oNewParam;
 	oNewParam.poDocument	= &m_oDocument;
 	oNewParam.poWriter		= &m_oWriter;
 	oNewParam.poRels		= &m_oWriter.m_oDocRels;
 	oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-	//пишем document.xml
+	//write document.xml
 	std::wstring sResult = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n";
 	sResult += L"<w:document \
 xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" \
@@ -107,7 +110,7 @@ std::wstring OOXDocumentWriter::CreateXmlEnd( )
 {
 	std::wstring sResult ;
 
-	//пишем все кроме document.xml
+	//write everything except document.xml
 	RenderParameter oNewParam;
 	oNewParam.poDocument	= &m_oDocument;
 	oNewParam.poWriter		= &m_oWriter;
@@ -208,7 +211,7 @@ std::wstring OOXDocumentWriter::CreateXmlEnd( )
 	m_oDocument.m_oInformation.RenderToOOX(oNewParam);
 
 
-	//пишем финальные свойства секции
+	//write final section properties
 	oNewParam.poDocument = &m_oDocument;
 	oNewParam.poWriter = &m_oWriter;
 	oNewParam.poRels = &m_oWriter.m_oDocRels;
@@ -336,7 +339,7 @@ bool OOXDocumentWriter::SaveBySection()
 
 	if (m_oDocument.GetCount() > 1 )
 	{
-		m_oDocument.RemoveItem( 0 ); //удаляем секцию кроме последней
+		m_oDocument.RemoveItem( 0 ); //remove section except last one
 	}
 	else
 	{
@@ -357,7 +360,7 @@ bool OOXDocumentWriter::SaveByItem()
 		oNewParam.poRels		= &m_oWriter.m_oDocRels;
 		oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-		if( m_oDocument.GetCount() > 1)//если что-то есть в следующей секции значит предыдущая закончилась
+		if( m_oDocument.GetCount() > 1)//if there's something in the next section, the previous one has ended
 		{
 			std::wstring sXml, sectPr;
 
@@ -394,16 +397,16 @@ bool OOXDocumentWriter::SaveByItem()
 			}
 			else
 			{
-				//генерация ???
+				//generation ???
 				sXml = L"<w:p><w:pPr>" + sectPr + L"</w:pPr></w:p>";
 			}
 	
 			std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
 			m_oFileWriter->Write((BYTE*)sXmlUTF.c_str(), sXmlUTF.length());
 			
-			m_oDocument.RemoveItem( 0 ); //удаляем секцию
+			m_oDocument.RemoveItem( 0 ); //remove section
 		}
-		else if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 1 )//пишем параграф - один всегда  "прозапас для секций"
+		else if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 1 )//write paragraph - one is always "reserve for sections"
 		{
 			std::wstring sXml = m_oDocument[0].props->operator[](0)->RenderToOOX(oNewParam);
             std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
@@ -412,7 +415,7 @@ bool OOXDocumentWriter::SaveByItem()
 			{
 				m_oFileWriter->Write((BYTE*)sXmlUTF.c_str(), sXmlUTF.length());
 			}
-			m_oDocument[0].props->RemoveItem( 0 );//удаляем первый параграф
+			m_oDocument[0].props->RemoveItem( 0 );//remove first paragraph
         }
 	}
 	return true;
@@ -425,10 +428,10 @@ bool OOXDocumentWriter::SaveByItemEnd()
 	oNewParam.poRels		= &m_oWriter.m_oDocRels;
 	oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )//дописываем последний параграф
+	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )//write last paragraph
 	{
 		std::wstring sXml = m_oDocument[0].props->operator[](0)->RenderToOOX(oNewParam);
-		//удаляем первый параграф
+		//remove first paragraph
 		m_oDocument[0].props->RemoveItem( 0 );
         std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
 

@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "../OOXml/Writer/OOXWriter.h"
 #include "IdGenerator.h"
@@ -215,7 +218,7 @@ std::wstring RtfDocumentProperty::RenderToRtf(RenderParameter oRenderParameter)
 	RENDER_RTF_BOOL	( m_bAlignBordersAndEdges, sResult, L"pgbrdrsnap" )
 
 //Page Information
-//эти свойства пишутся в первой секции
+//these properties are written in the first section
 //public: int m_nPaperWidth; // paperwN	Paper width in twips (default is 12,240).
 //public: int m_nPaperHeight; // paperhN	Paper height in twips (default is 15,840).
 //public: int m_nMarginLeft; // marglN	Left margin in twips (default is 1800).
@@ -286,7 +289,7 @@ std::wstring RtfDocumentProperty::RenderToRtf(RenderParameter oRenderParameter)
 		}
 	}
 
-//для схоранения в RTF
+//for saving to RTF
 	RENDER_RTF_INT( m_bSplitPageBrake, sResult, L"spltpgpar" )
 
 	if( 0 != m_bHtmlAutoSpace )
@@ -381,7 +384,7 @@ std::wstring RtfDocumentProperty::RenderToOOX(RenderParameter oRenderParameter)
         sResult += L"<w:footnotePr>" + sFootnoteProp + L"</w:footnotePr>";
 
     std::wstring sEndnoteProp;
-    //todooo проверить id
+    //todooo check id
     for (size_t i = 0; i < m_aSpecialEndnotes.size(); i++ )
 	{
         sEndnoteProp += L"<w:endnote w:id=\"" + std::to_wstring(m_aSpecialEndnotes[i]) + L"\"/>";
@@ -433,7 +436,7 @@ std::wstring RtfSectionProperty::RenderToRtf(RenderParameter oRenderParameter)
 {
     std::wstring sResult;
 
-	if( RENDER_TO_OOX_PARAM_FIRST_SECTION == oRenderParameter.nType ) //Пишем как свойства документа
+	if( RENDER_TO_OOX_PARAM_FIRST_SECTION == oRenderParameter.nType ) //Write as document properties
 	{
 		//Page Information
 		RENDER_RTF_INT	( m_nPageWidth,			sResult, L"paperw" )
@@ -558,7 +561,7 @@ std::wstring RtfSectionProperty::RenderToRtf(RenderParameter oRenderParameter)
 		case lnr_linecont:		sResult += L"\\linecont";	break;
 	}
 
-	if( RENDER_TO_OOX_PARAM_FIRST_SECTION != oRenderParameter.nType )//Пишем как свойства секции
+	if( RENDER_TO_OOX_PARAM_FIRST_SECTION != oRenderParameter.nType )//Write as section properties
 	{
 		//Page Information
 		RENDER_RTF_INT( m_nPageWidth,			sResult, L"pgwsxn" )
@@ -1198,7 +1201,7 @@ void RtfSectionProperty::SetDefault()
 	DEFAULT_PROPERTY	( m_nBorderMeasure )
 	DEFAULT_PROPERTY	( m_nBorderAlign )
 
-	//footer - header надо обнулять вручную
+	//footer - header need to be reset manually
 	//m_oHeaderLeft = TextItemContainerPtr();
 	//m_oHeaderFirst = TextItemContainerPtr();
 	//m_oHeaderRight = TextItemContainerPtr();
@@ -1255,7 +1258,7 @@ std::wstring RtfSection::RenderToOOX(RenderParameter oRenderParameter)
 {
 	if (!m_bFinalize) return L"";
 
-	m_bFinalize = false; // тут .. чтобы не повторилось при конвертации колонтитулов
+	m_bFinalize = false; // here.. to avoid repetition during header/footer conversion
 
 	RenderParameter oNewParam = oRenderParameter;
 	oNewParam.nType = RENDER_TO_OOX_PARAM_UNKNOWN;

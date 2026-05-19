@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "DjVuFileImplementation.h"
 
@@ -255,7 +258,7 @@ void  CDjVuFileImplementation::DrawPageOnRenderer(IRenderer* pRenderer, int nPag
 	}
 	catch (...)
 	{
-		// белая страница
+		// blank page
 	}
 }
 void CDjVuFileImplementation::ConvertToPdf(const std::wstring& wsDstPath)
@@ -426,7 +429,7 @@ BYTE* CDjVuFileImplementation::GetPageLinks(int nPageIndex)
 		{
 			GUTF8String str = map_areas[pos]->url;
 			oRes.WriteString((BYTE*)str.getbuf(), str.length());
-			// Верхний левый угол
+			// Top left corner
 			double x = map_areas[pos]->get_xmin();
 			double y = dHeight - map_areas[pos]->get_ymax();
 			oRes.AddDouble(0.0);
@@ -635,7 +638,7 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 	}
 	else
 	{
-		// белый фрейм??
+		// blank frame??
 		//memset(pBufferDst, 0xFF, 4 * lImageWidth * lImageHeight);
 		GRect oRectAll(0, 0, lImageWidth, lImageHeight);
 		GP<GPixmap> pImage = pPage->get_pixmap(oRectAll, oRectAll);
@@ -726,7 +729,7 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(int nPageIndex, int nRas
 		GP<DjVuImage> pPage = m_pDoc->get_page(nPageIndex);
 		//pPage->wait_for_complete_decode();
 		pPage->set_rotate(0);
-		return ConvertToPixels(pPage, nRasterW, nRasterH, bIsFlip);
+		return ConvertToPixels(pPage, nRasterW, nRasterH, bIsFlip, true);
 	}
 	catch (...)
 	{
@@ -734,11 +737,11 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(int nPageIndex, int nRas
 	return NULL;
 }
 
-unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, int nImageW, int nImageH, bool bFlip)
+unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, int nImageW, int nImageH, bool bFlip, bool bIsSwapRGB)
 {
 	BYTE* pBufferDst = NULL;
 
-	auto processPixmap = [&](GP<GPixmap> pImage, bool bFlip = false)
+	auto processPixmap = [&](GP<GPixmap> pImage, bool bFlip = false, bool bIsSwapRGB = false)
 	{
 		pBufferDst = new BYTE[4 * nImageW * nImageH];
 
@@ -749,7 +752,10 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, in
 			GPixel* pLine = pImage->operator[](nRow);
 			for (int i = 0; i < nImageW; ++i)
 			{
-				*pBuffer++ = 0xFF000000 | pLine->r << 16 | pLine->g << 8 | pLine->b;
+				if (bIsSwapRGB)
+					*pBuffer++ = 0xFF000000 | pLine->b << 16 | pLine->g << 8 | pLine->r;
+				else
+					*pBuffer++ = 0xFF000000 | pLine->r << 16 | pLine->g << 8 | pLine->b;
 				++pLine;
 			}
 		}
@@ -790,7 +796,7 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, in
 	if (pPage->is_legal_photo() || pPage->is_legal_compound())
 	{
 		GP<GPixmap> pImage = pPage->get_pixmap(oRectAll, oRectAll);
-		processPixmap(pImage, bFlip);
+		processPixmap(pImage, bFlip, bIsSwapRGB);
 	}
 	else if (pPage->is_legal_bilevel())
 	{
@@ -802,7 +808,7 @@ unsigned char* CDjVuFileImplementation::ConvertToPixels(GP<DjVuImage>& pPage, in
 		GP<GPixmap> pImage = pPage->get_pixmap(oRectAll, oRectAll);
 		if (pImage)
 		{
-			processPixmap(pImage, bFlip);
+			processPixmap(pImage, bFlip, bIsSwapRGB);
 		}
 		else
 		{
@@ -843,7 +849,7 @@ XmlUtils::CXmlNode CDjVuFileImplementation::ParseText(GP<DjVuImage> pPage)
 }
 void CDjVuFileImplementation::TextToRenderer(IRenderer* pRenderer, XmlUtils::CXmlNode oTextNode, double dKoef, bool isView)
 {
-	// Выставим шрифт пустой (чтобы растягивать по всему ректу)
+	// Set empty font (to stretch across the entire rect)
 	pRenderer->put_FontName(L"DjvuEmptyFont");
 	//std::wstring csText = oTextNode.GetXml();
 	std::vector<XmlUtils::CXmlNode> oLinesNodes = oTextNode.GetNodes(L"LINE");

@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include <boost/lexical_cast.hpp>
@@ -232,7 +235,7 @@ void odf_conversion_context::end_document()
 //------------------------
 		package::content_simple_ptr content_style_ = package::content_simple::create();
 		for (size_t i = 0; i < object.styles.size(); i++)
-		{// мастер-пейджы, заданные заливки (градиенты, битмапы), дефолтные стили, колонтитулы, разметки, заметки,...
+		{// master pages, defined fills (gradients, bitmaps), default styles, headers/footers, layouts, notes,...
 			object.styles[i]->serialize(content_style_->content());
 		}
 //------------------------
@@ -393,7 +396,7 @@ bool odf_conversion_context::start_math(int base_font_size, const std::wstring& 
 		drawing_context()->set_anchor(anchor_type::AsChar);
 	}
 	drawing_context()->start_object(get_next_name_object(), !math_context_.in_text_box_); 
-			//имитация рисованного объекта - высота-ширина ????
+			// imitation of drawn object - height-width ????
 
 	create_object(false);
 	create_element(L"math", L"math", objects_.back()->content, this, true);
@@ -411,12 +414,12 @@ void odf_conversion_context::end_math()
 	
 	end_object();
 
-	calculate_font_metrix(math_context_.font_name, math_context_.font_size, false, false, true); // смотреть по формуле - перевычислять только если есть изменения это шрифт и кегль	
+	calculate_font_metrix(math_context_.font_name, math_context_.font_size, false, false, true); // look at formula - recalculate only if there are changes in font and size
 
 	double h = math_context_.lvl_max - math_context_.lvl_min;
 	if (math_context_.lvl_min < 0) h += 1;
 	
-	_CP_OPT(double)width = convert_symbol_width(math_context_.symbol_counter * 1.2, true); // либра рамка формулы(её параметры)
+	_CP_OPT(double)width = convert_symbol_width(math_context_.symbol_counter * 1.2, true); // libre formula frame (its parameters)
 	_CP_OPT(double)height = convert_symbol_width(1.76 * h, true);
 
 	if (false == math_context_.in_text_box_)
@@ -496,9 +499,9 @@ void odf_conversion_context::process_styles(_object & object, bool isRoot)
 		}
 	}
 
-	object.styles.push_back(object.content_styles.back()); //копия
+	object.styles.push_back(object.content_styles.back()); // copy
 
-	create_element(L"office", L"styles", object.styles, this, true);//общие стили
+	create_element(L"office", L"styles", object.styles, this, true);// common styles
 	
 	object.style_context->process_office_styles(object.styles.back());
 	page_layout_context()->process_office_styles(object.styles.back());

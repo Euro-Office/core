@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "RtfLex.h"
@@ -93,23 +96,23 @@ int StringStream::getc()
 }
 void StringStream::ungetc()
 {
-	//в проекте используется ungetcб только после getc
-	//поэтому проблем с выходом в 0 нет
+	//in the project ungetc is used only after getc
+	//so there are no problems with reaching 0
 	//if( m_nPosAbs + 2 < m_nSizeAbs )
 	{
-		m_nPosAbs--;	//взять любой txt переименовать в rtf - зацикливание
+		m_nPosAbs--;	//take any txt rename to rtf - infinite loop
 	}
 }
 void StringStream::putString( std::string sText )
 {
 	size_t nExtBufSize = sText.length();
-	//копируем буфер в темповый буфер
+	//copy buffer to temp buffer
 	unsigned char* aTempBuf = new unsigned char[ m_nSizeAbs ];
 	memcpy( aTempBuf, m_aBuffer, m_nSizeAbs );
-	//создаем новый буфер большего размера
+	//create new buffer with larger size
 	RELEASEARRAYOBJECTS( m_aBuffer );
 	m_aBuffer = new unsigned char[ m_nSizeAbs + nExtBufSize ];
-	//копируем все в новый буфер
+	//copy everything to new buffer
 	unsigned long nDelimiter = (unsigned long)m_nPosAbs + 1;
 	memcpy( m_aBuffer, aTempBuf, nDelimiter );
 	memcpy( m_aBuffer + nDelimiter , sText.c_str(), nExtBufSize );
@@ -131,7 +134,7 @@ LONG64 StringStream::getSize()
 RtfLex::RtfLex()
 {
 	m_oFileWriter = NULL;
-	m_nReadBufSize = 1024 * 1024 * 5; // 5мб
+	m_nReadBufSize = 1024 * 1024 * 5; // 5MB
 	m_caReadBuffer = new char[m_nReadBufSize];
 }
 RtfLex::~RtfLex()
@@ -262,7 +265,7 @@ void RtfLex::parseKeyword(RtfToken& token)
 				token.HasParameter = true;
 				int nCharCode = RtfUtility::ToByte( m_oStream.getc() ) << 4;
 				nCharCode |= RtfUtility::ToByte( m_oStream.getc() );
-				if( nCharCode >= 0 && nCharCode <=30 )//искуственно сидвигаем на 1 чтобы не потерять \'00 ( символов от 0 до 0x20 служебные)
+				if( nCharCode >= 0 && nCharCode <=30 )//artificially shift by 1 to not lose \'00 (characters from 0 to 0x20 are service characters)
 					nCharCode++;
 				token.Parameter = nCharCode;
 			}
@@ -347,10 +350,10 @@ void RtfLex::parseKeyword(RtfToken& token)
 }
 void RtfLex::parseText(int car, RtfToken& token)
 {
-	int nTempBufPos = 0; //1 мб
+	int nTempBufPos = 0; //1 MB
 
 	int c = car;
-	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) // иправиЃEЃEрвьD усЃEвиЃE
+	//while ((isalnum(c) || c == '"'|| c == ':'|| c == '/' || c == '.') &&c != '\\' && c != '}' && c != '{' && c != Eof) 
 	//while (c != '\\' && c != '}' && c != '{' && c != Eof)
 	//while (c != ';' &&c ! = '\\' && c != '}' && c != '{' && c != EOF)
 	while (c != '\\' && c != '}' && c != '{' && c != EOF)

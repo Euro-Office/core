@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "../DocxFlat.h"
 #include "Vml.h"
@@ -585,7 +588,7 @@ namespace OOX
 		CArc::~CArc(){}
 		void CArc::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CArc::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CArc::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CArc::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -615,7 +618,7 @@ namespace OOX
 		}
 		void CArc::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -654,7 +657,7 @@ namespace OOX
 		CCurve::~CCurve(){}
 		void CCurve::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CCurve::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CCurve::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CCurve::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -685,7 +688,7 @@ namespace OOX
 		}
 		void CCurve::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -731,7 +734,7 @@ namespace OOX
 		}
 		void CF::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CF::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CF::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CF::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -775,7 +778,7 @@ namespace OOX
 				}
 				oReader.MoveToElement();
 
-				// TO DO: Сделать парсер формул ( или использовать уже сделанный парсер в OfficeDrawing\Shapes)
+				// TO DO: Implement formula parser (or use already existing parser in OfficeDrawing\Shapes)
 			}
 
 		//--------------------------------------------------------------------------------
@@ -896,10 +899,10 @@ namespace OOX
 		}
 		void CPolyLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oPoints.SetDelimiter( ' ' );
 
-				// Читаем атрибуты
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -948,7 +951,7 @@ namespace OOX
 		CRect::~CRect(){}
 		void CRect::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRect::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRect::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRect::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -983,7 +986,7 @@ namespace OOX
 		CRoundRect::~CRoundRect(){}
 		void CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRoundRect::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRoundRect::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1011,10 +1014,10 @@ namespace OOX
 		}
 		void CRoundRect::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oArcSize.SetPercentage( 20 );
 
-				// Читаем атрибуты
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -1216,7 +1219,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер Adj
+			// TO DO: Implement Adj parser
 		}
 		std::wstring CShape::toXML() const
 		{
@@ -1412,7 +1415,7 @@ namespace OOX
 					if (_T("adj") == wsName) m_sAdj = oReader.GetText();
 					break;
 				case 't':
-					if (_T("type") == wsName) m_sType = oReader.GetText(); // для некоторых багнутых файлов
+					if (_T("type") == wsName) m_sType = oReader.GetText(); // for some buggy files
 					break;
 				}
 
@@ -1423,7 +1426,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер Adj
+			// TO DO: Implement Adj parser
 		}
 		std::wstring CShapeType::toXML() const
 		{
@@ -1478,7 +1481,7 @@ namespace OOX
 		}
 		void CClientData::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CShapeType::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CShapeType::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CClientData::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1786,7 +1789,7 @@ namespace OOX
 		}
 		void CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTextbox::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		EElementType CTextbox::getType() const
 		{
@@ -1851,11 +1854,11 @@ namespace OOX
 		}
 		void CTextbox::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Выставляем значения по умолчанию
+			// Set default values
 			m_oInset.Init();
 			m_oInset->Set(7.2, 3.6, 7.2, 3.6 );
 			
-			// Читаем атрибуты
+			
 			if ( oReader.GetAttributesCount() <= 0 )
 				return;
 			
@@ -1900,7 +1903,7 @@ namespace OOX
 		}
 		void CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTextPath::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CTextPath::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1997,7 +2000,7 @@ namespace OOX
 		}
 		void CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFill::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFill::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2179,7 +2182,7 @@ namespace OOX
 		}
 		void CBackground::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CBackground::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CBackground::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CBackground::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2227,7 +2230,7 @@ namespace OOX
 		}
 		void CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFormulas::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFormulas::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2278,7 +2281,7 @@ namespace OOX
 		}
 		void CStroke::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CStroke::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CStroke::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CStroke::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2385,7 +2388,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер формул ( или использовать уже сделанный парсер в OfficeDrawing\Shapes)
+			// TO DO: Implement formula parser (or use already existing parser in OfficeDrawing\Shapes)
 		}
 		std::wstring CStroke::toXML() const
 		{
@@ -2498,7 +2501,7 @@ namespace OOX
 		}
 		void CPath::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CPath::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CPath::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CPath::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2586,7 +2589,7 @@ namespace OOX
 			}
 			oReader.MoveToElement();
 
-			// TO DO: Сделать парсер параметров connectangles, connectlocs
+			// TO DO: Implement parser for connectangles, connectlocs parameters
 		}
 		std::wstring CPath::toXML() const
 		{
@@ -2644,7 +2647,7 @@ namespace OOX
 		CImage::~CImage(){}
 		void CImage::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CImage::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CImage::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CImage::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2757,7 +2760,7 @@ namespace OOX
 		}
 		void CImageData::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CImageData::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CImageData::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CImageData::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2945,7 +2948,7 @@ namespace OOX
 		CLine::~CLine(){}
 		void CLine::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CLine::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CLine::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CLine::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -2974,11 +2977,11 @@ namespace OOX
 		}
 		void CLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Выставляем значения по умолчанию
+				// Set default values
 				m_oFrom.SetValue( 0, 0 );
 				m_oTo.SetValue( 10, 10 );
 
-				// Читаем атрибуты
+				
 				if ( oReader.GetAttributesCount() <= 0 )
 					return;
 
@@ -3018,7 +3021,7 @@ namespace OOX
 		COval::~COval(){}
 		void COval::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать COval::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement COval::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void COval::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3055,7 +3058,7 @@ namespace OOX
 		}
 		void CH::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CH::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CH::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CH::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3165,7 +3168,7 @@ namespace OOX
 		}
 		void CHandles::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CHandles::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CHandles::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CHandles::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -3215,7 +3218,7 @@ namespace OOX
 		}
 		void CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CShapeDefaults::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{

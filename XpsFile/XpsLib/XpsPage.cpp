@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "XpsPage.h"
 #include <stdio.h>
@@ -458,7 +461,7 @@ namespace XPS
 					}
                     else
                     {
-                        // шрифт не odttf - надо добавить его во внешний сторадж шрифтов, если нужно
+                        // font is not odttf - need to add it to external font storage if needed
                         if (IFolder::iftZip == m_wsRootPath->getType() && NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
                         {
                             IFolder::CBuffer* buffer = NULL;
@@ -615,9 +618,9 @@ namespace XPS
 			return;
 		}
 
-		// Сначала задается матрица преобразования, потом клип, потому что даже
-		// если преобразование задано в дочерней ноде, а клип задан в атрибутах данной ноды,
-		// то преобразование влияется на клип все равно.
+		// First the transformation matrix is set, then the clip, because even
+		// if the transformation is specified in a child node and the clip is specified in the attributes of this node,
+		// the transformation still affects the clip.
 		if (!wsTransform.empty())
 		{
 			bTransform = TransformToRenderer(wsTransform.c_str(), pState);
@@ -986,7 +989,7 @@ namespace XPS
 							oTransform.TransformPoint(x3, y3);
 						}
 					}
-					// Верхний левый угол
+					// Top left corner
                     oLink.X = x1 == x2 ? fmin(x1, x3) : fmin(x1, x2);
                     oLink.Y = y1 == y2 ? fmin(y1, y3) : fmin(y1, y2);
                     oLink.H = x1 == x2 ? abs(y1 - y2) : abs(y1 - y3);
@@ -1000,7 +1003,7 @@ namespace XPS
 					}
 					else
 					{
-						// координата назначения на странице назначения
+						// destination coordinate on the destination page
 						size_t nSharp = wsNameTarget.find(L'#');
 						if (nSharp != std::wstring::npos)
 						{
@@ -1029,7 +1032,7 @@ namespace XPS
 			{
 				size_t nFindEndY = wsPath.find(L' ', ++nFindY);
 				if (nFindEndY != std::wstring::npos)
-					// координата назначения на странице назначения
+					// destination coordinate on the destination page
 					find->dY = GetDouble(wsPath.substr(nFindY, nFindEndY - nFindY));
 			}
 		}
@@ -1097,9 +1100,9 @@ namespace XPS
 				RELEASEOBJECT(pBrush);
 		}
 
-		// Сначала задается матрица преобразования, потом клип, потому что даже
-		// если преобразование задано в дочерней ноде, а клип задан в атрибутах данной ноды,
-		// то преобразование влияется на клип все равно.
+		// First the transformation matrix is set, then the clip, because even
+		// if the transformation is specified in a child node and the clip is specified in the attributes of this node,
+		// the transformation still affects the clip.
 		if (!wsTransform.empty())
 		{
 			bTransform = TransformToRenderer(wsTransform.c_str(), pState);

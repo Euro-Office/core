@@ -1,37 +1,39 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "Unit.h"
 #include <cwchar>
-
 
 double Cm_To_Mm     (const double &dValue)
 {
@@ -753,43 +755,6 @@ namespace XmlUtils
 		return sstream.str();
 	}
 
-	int Rand()
-	{
-		//rand returns integral value range between 0 and RAND_MAX.(RAND_MAX at least 32767.)
-		static bool init = false;   /* ensure different random header each time */
-		if (!init)
-		{
-			init = true;
-			srand((unsigned int) time(NULL));
-		}
-		return std::rand();
-	}
-	int GenerateInt()
-	{
-		//todo c++11 <random>
-		return ((Rand() & 0x7FFF) | ((Rand() & 0x7FFF) << 15) | ((Rand() & 0x3) << 30));
-	}
-
-	std::wstring GenerateGuid()
-	{
-		std::wstring result;
-		//#if defined (_WIN32) || defined(_WIN64)
-		//		GUID guid;
-		//		CoCreateGuid(&guid);
-		//
-		//		OLECHAR* guidString;
-		//		StringFromCLSID(guid, &guidString);
-		//
-		//		result = std::wstring(guidString);
-		//
-		//		CoTaskMemFree(guidString);
-		//#else
-		std::wstringstream sstream;
-		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X") % (Rand() & 0xff) % (Rand() & 0xff) % (Rand() & 0xff) % ((Rand() & 0x0fff) | 0x4000) % ((Rand() % 0x3fff) + 0x8000) %  (Rand() & 0xff) % (Rand() & 0xff) % (Rand() & 0xff);
-		result = sstream.str();
-		//#endif
-		return result;
-	}
 	std::wstring DoubleToString( double value, wchar_t* format )
 	{
 		if ( format == NULL ) return L"";
@@ -1048,5 +1013,33 @@ namespace XmlUtils
 		}
 
 		return buffer;
+	}
+}
+
+#include "./Rand.h"
+namespace XmlUtils
+{
+	int GenerateInt()
+	{
+		return static_cast<int>(RandUInt());
+	}
+
+	std::wstring GenerateGuid()
+	{
+		std::wstring result;
+
+		std::wstringstream sstream;
+		sstream << boost::wformat(L"%04X%04X-%04X-%04X-%04X-%04X%04X%04X")
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % ((RandUInt() & 0x0fff) | 0x4000)
+					   % ((RandUInt() & 0x3fff) | 0x8000)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff)
+					   % (RandUInt() & 0xffff);
+		result = sstream.str();
+
+		return result;
 	}
 }

@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #ifndef _PDF_WRITER_SRC_STATE_H
 #define _PDF_WRITER_SRC_STATE_H
@@ -435,7 +438,7 @@ public:
         }
         else
         {
-            // Избавляемся от нулей, потому что все pdf-ридеры плохо их воспринимают
+            // Remove zeros because all pdf readers handle them poorly
             std::vector<double> vPattern;
             for (LONG lIndex = 0; lIndex < lSize; lIndex++)
             {
@@ -727,7 +730,7 @@ public:
     }
     inline void         SetGradientColors(LONG* pColors, double* pPoints, const LONG& lCount)
     {
-        // Мы создаем упорядоченный по возрастанию массив, причем первая и последняя точки должны быть 0 и 1 соответственно.
+        // We create an array sorted in ascending order, with the first and last points being 0 and 1 respectively.
         if (m_pShadingColors)
         {
             delete[] m_pShadingColors;
@@ -743,7 +746,7 @@ public:
         if (!pColors || !pPoints || !lCount)
             return;
 
-        // Проверим вырожденный случай, когда задана либо 1 точка, либо несколько точек с одинковым значением
+        // Check degenerate case when either 1 point is given, or several points with the same value
         bool bIrregular = false;
         if (1 == lCount)
         {
@@ -1113,7 +1116,7 @@ private:
     TColor*      m_pShadingColors;
     double*      m_pShadingPoints;
     LONG         m_lShadingPointsCount;
-    double       m_pShadingPattern[6]; // У линейного градиента x0, y0, x1, y1 (2 не используются), у радиального x0, y0, r0, x1, y1, r1
+    double       m_pShadingPattern[6]; // For linear gradient x0, y0, x1, y1 (2 unused), for radial x0, y0, r0, x1, y1, r1
 
 	bool         m_bIsScale;
 	double       m_dScaleX;
@@ -1477,7 +1480,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate properly
             dX = x;
             dY = y;
         }
@@ -1506,7 +1509,7 @@ private:
         }
         void GetLastPoint(double& dX, double& dY)
         {
-            // TODO: Надо грамотно пересчитать
+            // TODO: Need to recalculate properly
             dX = 0;
             dY = 0;
         }
@@ -1818,7 +1821,7 @@ public:
     {
         double dGoodFontSize = 0;
 
-        // Параметры подобраны для совместимости с AdobeReader
+        // Parameters selected for AdobeReader compatibility
         double dFontSize     = 4;
         double dFontSizeStep = 0.797 / 3.0;
 

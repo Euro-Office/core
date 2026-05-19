@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "Graphics.h"
 #include <algorithm>
@@ -245,7 +248,7 @@ namespace Aggplus
 		BYTE* pBuffer = pPixels;
 		if (0 > lStride)
 		{
-			// переворачиваем изображение для GDI+
+			// flip the image for GDI+
 			pBuffer += 4 * lWidth * (lHeight - 1);
 		}
 
@@ -265,8 +268,8 @@ namespace Aggplus
 
 	Status CGraphics::CreatePart(LONG lLeft, LONG lTop, LONG lWidth, LONG lHeight, CGraphics** ppPart)
 	{
-		// здесь минимум кода. Просто сделать дубликат - и выставить ему правильные границы.
-		// а потом уже и dpi и все настройки.
+		// minimal code here. Just make a duplicate and set the correct bounds for it.
+		// then set dpi and all other settings.
 		return Ok;
 	}
 
@@ -297,7 +300,7 @@ namespace Aggplus
 	
 	Status CGraphics::SetPageWidth(double lWidth, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate and set dpi
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -327,7 +330,7 @@ namespace Aggplus
 	}
 	Status CGraphics::SetPageHeight(double lHeight, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate and set dpi
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -414,7 +417,7 @@ namespace Aggplus
 		return Ok;
 	}
 	
-	// функции отсечения
+	// clipping functions
 	Status CGraphics::SetClipRect(double dLeft, double dTop, double dWidth, double dHeight)
 	{
 		double dx1 = dLeft;
@@ -864,7 +867,7 @@ namespace Aggplus
 	}
 
 
-	// отрисовка картинки
+	// image rendering
 	Status CGraphics::DrawImage(CImage* pImage, double x, double y, double width, double height)
 	{
 		if (!pImage || pImage->GetLastStatus() != Ok)
@@ -1374,6 +1377,25 @@ namespace Aggplus
 		}
 	}
 
+	template<class span_gen_type>
+	void CGraphics::render_blendmode(span_gen_type& sg, span_alloc_type& span_allocator, BYTE Alpha)
+	{
+		if (m_nBlendMode != agg::comp_op_src_over)
+		{
+			typedef agg::renderer_scanline_aa<comp_renderer_type, span_alloc_type, span_gen_type> aa_renderer_type;
+			pixfmt_type_comp pixfmt(m_frame_buffer.ren_buf(), m_nBlendMode);
+			comp_renderer_type ren_base(pixfmt);
+			aa_renderer_type ri(ren_base, span_allocator, sg);
+			render_scanlines_alpha(ri, Alpha);
+		}
+		else
+		{
+			typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
+			renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
+			render_scanlines_alpha(ri, Alpha);
+		}
+	}
+
 	template<class Renderer>
 	void CGraphics::render_scanlines(Renderer& ren)
 	{
@@ -1417,12 +1439,9 @@ namespace Aggplus
 		if (m_nBlendMode != agg::comp_op_src_over)
 		{
 			typedef agg::renderer_scanline_aa_solid<comp_renderer_type> solid_comp_renderer_type;
-			solid_comp_renderer_type ren_solid;
-			comp_renderer_type ren_base;
 			pixfmt_type_comp pixfmt(m_frame_buffer.ren_buf(), m_nBlendMode);
-
-			ren_base.attach(pixfmt);
-			ren_solid.attach(ren_base);
+			comp_renderer_type ren_base(pixfmt);
+			solid_comp_renderer_type ren_solid(ren_base);
 
 			ren_solid.color(dwColor.GetAggColor());
 			render_scanlines(ren_solid);
@@ -1727,6 +1746,70 @@ namespace Aggplus
 		}
 	}
 
+	template<typename pixfmt>
+	void CGraphics::DoFillPathTextureClampSz2_Impl(agg::rendering_buffer& PatRendBuff, interpolator_type_linear& interpolator, span_alloc_type& span_allocator, int nCurrentMode, BYTE Alpha)
+	{
+		typedef agg::image_accessor_clone<pixfmt> img_source_type;
+		pixfmt          img_pixf(PatRendBuff);
+		img_source_type img_src(img_pixf);
+
+		switch (nCurrentMode)
+		{
+		case 0:
+		{
+			typedef agg::span_image_filter_rgba_nn<img_source_type, interpolator_type_linear> span_gen_type;
+			span_gen_type sg(img_src, interpolator);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		case 1:
+		{
+			typedef agg::span_image_filter_rgba_bilinear<img_source_type, interpolator_type_linear> span_gen_type;
+			span_gen_type sg(img_src, interpolator);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		case 2:
+		{
+			typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
+			agg::image_filter_lut filter;
+			filter.calculate(agg::image_filter_bicubic(), false);
+			span_gen_type sg(img_src, interpolator, filter);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		case 3:
+		{
+			typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
+			agg::image_filter_lut filter;
+			filter.calculate(agg::image_filter_spline16(), false);
+			span_gen_type sg(img_src, interpolator, filter);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		case 4:
+		{
+			typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
+			agg::image_filter_lut filter;
+			filter.calculate(agg::image_filter_blackman256(), false);
+			span_gen_type sg(img_src, interpolator, filter);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		case 255:
+		{
+			typedef agg::span_image_resample_rgba_affine_for_draw<img_source_type> span_gen_type;
+			agg::image_filter_lut filter;
+			filter.calculate(agg::image_filter_bilinear(), false);
+			span_gen_type sg(img_src, interpolator, filter);
+			render_blendmode(sg, span_allocator, Alpha);
+			break;
+		}
+		default:
+			break;
+		}
+	}
+
 	void CGraphics::DoFillPathTextureClampSz2(const CMatrix &mImgMtx, const void *pImgBuff, DWORD dwImgWidth, DWORD dwImgHeight, int nImgStride, BYTE Alpha)
 	{
 		span_alloc_type span_allocator;
@@ -1738,158 +1821,11 @@ namespace Aggplus
 		PatRendBuff.attach((BYTE*)pImgBuff, dwImgWidth, dwImgHeight, nImgStride);
 
 		int nCurrentMode = 255;
+
 		if (!m_bSwapRGB)
-		{
-			typedef agg::pixfmt_bgra32     pixfmt;
-			typedef agg::image_accessor_clone<pixfmt> img_source_type;
-
-			pixfmt          img_pixf(PatRendBuff);
-			img_source_type img_src(img_pixf);
-
-			switch (nCurrentMode)
-			{
-			case 0:
-			{
-				typedef agg::span_image_filter_rgba_nn<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				span_gen_type sg(img_src, interpolator);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 1:
-			{
-				typedef agg::span_image_filter_rgba_bilinear<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				span_gen_type sg(img_src, interpolator);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 2:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_bicubic(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 3:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_spline16(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 4:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_blackman256(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 255:
-			{
-				typedef agg::span_image_resample_rgba_affine_for_draw<img_source_type> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_bilinear(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			default:
-				break;
-			}
-		}
+			DoFillPathTextureClampSz2_Impl<agg::pixfmt_bgra32>(PatRendBuff, interpolator, span_allocator, nCurrentMode, Alpha);
 		else
-		{
-			typedef agg::pixfmt_rgba32     pixfmt;
-			typedef agg::image_accessor_clone<pixfmt> img_source_type;
-
-			pixfmt          img_pixf(PatRendBuff);
-			img_source_type img_src(img_pixf);
-
-			switch (nCurrentMode)
-			{
-			case 0:
-			{
-				typedef agg::span_image_filter_rgba_nn<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				span_gen_type sg(img_src, interpolator);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 1:
-			{
-				typedef agg::span_image_filter_rgba_bilinear<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				span_gen_type sg(img_src, interpolator);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 2:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_bicubic(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 3:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_spline16(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 4:
-			{
-				typedef agg::span_image_filter_rgba_2x2<img_source_type, interpolator_type_linear> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_blackman256(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			case 255:
-			{
-				typedef agg::span_image_resample_rgba_affine_for_draw<img_source_type> span_gen_type;
-				typedef agg::renderer_scanline_aa<base_renderer_type, span_alloc_type, span_gen_type> renderer_type;
-				agg::image_filter_lut filter;
-				filter.calculate(agg::image_filter_bilinear(), false);
-				span_gen_type sg(img_src, interpolator, filter);
-				renderer_type ri(m_frame_buffer.ren_base(), span_allocator, sg);
-				render_scanlines_alpha(ri, Alpha);
-				break;
-			}
-			default:
-				break;
-			}
-		}
+			DoFillPathTextureClampSz2_Impl<agg::pixfmt_rgba32>(PatRendBuff, interpolator, span_allocator, nCurrentMode, Alpha);
 	}
 
 	template<class ColorSpacePix>
@@ -2129,7 +2065,10 @@ namespace Aggplus
 				double dX = 0.72, dY = 0.72;
 				agg::trans_affine invert = ~m_oFullTransform.m_internal->m_agg_mtx;
 				invert.transform_2x2(&dX, &dY);
-				dWidth = std::min(abs(dX), abs(dY));
+
+				if (dX < 0) dX = -dX;
+				if (dY < 0) dY = -dY;
+				dWidth =  (dX > dY) ? dY : dX;
 			}
 			else if (0 != dSqrtDet && dWidth < (dWidthMinSize = 1.0 / dSqrtDet))
 				dWidth = dWidthMinSize;
@@ -2376,7 +2315,7 @@ namespace Aggplus
 
 	void CGraphics::UpdateUnits()
 	{
-		// здесь - пересчет координат
+		// coordinate recalculation here
 		m_oCoordTransform.Reset();
 
 		double dScaleX = 1.0;

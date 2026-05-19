@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "Utils.h"
 #include <vector>
@@ -182,11 +185,11 @@ namespace PdfWriter
 			dVal = -dVal;
 		}
 
-		// разделяем целую и дробную части
+		// Separate integer and fractional parts
 		nNPartVal = (int)(dVal + 0.000005);
 		nFPartVal = (int)((float)(dVal - nNPartVal + 0.000005) * 100000);
 
-		// пишем дробную часть
+		// Write fractional part
 		for (nIndex = 0; nIndex < 5; nIndex++)
 		{
 			*sTemp = (char)(nFPartVal % 10) + '0';
@@ -194,7 +197,7 @@ namespace PdfWriter
 			sTemp--;
 		}
 
-		// пишем целую часть
+		// Write integer part
 		*sTemp-- = '.';
 		*sTemp = '0';
 		if (nNPartVal == 0)
@@ -214,8 +217,8 @@ namespace PdfWriter
 		sDst--;
 
 
-		// TODO: при избавлении от нулей при сдвиге конец строки тоже нужно чистить
-		// пример число -00.90123 результат "-0.901234"
+		// TODO: when removing zeros during shift, the end of the string also needs to be cleaned
+		// example number -00.90123 result "-0.901234"
 
 		while (sDst > sptr)
 		{
@@ -233,7 +236,7 @@ namespace PdfWriter
 	}
 	void  UIntChangeBit(unsigned int& nValue, short nBit)
 	{
-		// работаем только с 4-байтовыми числами
+		// Work only with 4-byte numbers
 		if (nBit < 0 || nBit > 31)
 			return;
 
@@ -338,7 +341,7 @@ namespace PdfWriter
 			CPoint p1 = poly1[i];
 			CPoint p2 = poly1[(i + 1) % poly1.size()];
 			CPoint edge(p2.x - p1.x, p2.y - p1.y);
-			CPoint normal(-edge.y, edge.x); // Перпендикуляр к ребру
+			CPoint normal(-edge.y, edge.x); // Perpendicular to edge
 			axes.push_back(normal);
 		}
 
@@ -347,11 +350,11 @@ namespace PdfWriter
 			CPoint p1 = poly2[i];
 			CPoint p2 = poly2[(i + 1) % poly2.size()];
 			CPoint edge(p2.x - p1.x, p2.y - p1.y);
-			CPoint normal(-edge.y, edge.x); // Перпендикуляр к ребру
+			CPoint normal(-edge.y, edge.x); // Perpendicular to edge
 			axes.push_back(normal);
 		}
 
-		// Проверяем все оси на разделение
+		// Check all axes for separation
 		for (const auto& axis : axes)
 		{
 			double min1, max1, min2, max2;
@@ -359,9 +362,9 @@ namespace PdfWriter
 			projectPolygon(poly2, axis, min2, max2);
 
 			if (max1 < min2 || max2 < min1)
-				return false; // Найдена разделяющая ось
+				return false; // Separating axis found
 		}
-		return true; // Пересекаются
+		return true; // Intersecting
 	}
 	bool isPolygonInsidePolygon(const std::vector<CPoint>& inner, const std::vector<CPoint>& outer)
 	{
@@ -381,13 +384,13 @@ namespace PdfWriter
 		if (x1 == x2 && x2 == x3 && x3 == x4 && y1 == y2 && y2 == y3 && y3 == y4)
 			return (px == x1 && py == y1);
 
-		// Проверяем знаки векторных произведений для всех сторон
+		// Check cross product signs for all sides
 		double cross1 = crossProduct(x1, y1, x2, y2, px, py);
 		double cross2 = crossProduct(x2, y2, x3, y3, px, py);
 		double cross3 = crossProduct(x3, y3, x4, y4, px, py);
 		double cross4 = crossProduct(x4, y4, x1, y1, px, py);
 
-		// Точка внутри, если все векторные произведения имеют одинаковый знак
+		// Point is inside if all cross products have the same sign
 		bool allPositive = (cross1 >= 0 && cross2 >= 0 && cross3 >= 0 && cross4 >= 0);
 		bool allNegative = (cross1 <= 0 && cross2 <= 0 && cross3 <= 0 && cross4 <= 0);
 
@@ -441,7 +444,7 @@ namespace PdfWriter
 
 		if (length < 1e-10) return 0;
 
-		// Проекция вектора (point - start) на направление отрезка
+		// Project vector (point - start) onto segment direction
 		double proj = ((point.x - start.x) * dx + (point.y - start.y) * dy) / length;
 		return proj;
 	}
@@ -449,7 +452,7 @@ namespace PdfWriter
 	{
 		std::vector<CPoint> allIntersections;
 
-		// Собираем все точки пересечения со всеми прямоугольниками
+		// Collect all intersection points with all rectangles
 		for (const auto& rect : rectangles)
 		{
 			for (int i = 0; i < rect.size(); i++)
@@ -460,11 +463,11 @@ namespace PdfWriter
 			}
 		}
 
-		// Добавляем концы отрезка
+		// Add segment endpoints
 		allIntersections.push_back(line.start);
 		allIntersections.push_back(line.end);
 
-		// Удаляем дубликаты
+		// Remove duplicates
 		std::sort(allIntersections.begin(), allIntersections.end(), [&line](const CPoint& a, const CPoint& b)
 		{
 			return distanceAlongLine(line.start, line.end, a) < distanceAlongLine(line.start, line.end, b);
@@ -473,21 +476,21 @@ namespace PdfWriter
 		auto last = std::unique(allIntersections.begin(), allIntersections.end());
 		allIntersections.erase(last, allIntersections.end());
 
-		// Проверяем каждый сегмент между точками пересечения
+		// Check each segment between intersection points
 		std::vector<CSegment> result;
 
 		for (size_t i = 0; i < allIntersections.size() - 1; i++) {
 			CPoint start = allIntersections[i];
 			CPoint end = allIntersections[i + 1];
 
-			// Находим среднюю точку сегмента
+			// Find segment midpoint
 			CPoint mid =
 			{
 				(start.x + end.x) / 2,
 				(start.y + end.y) / 2
 			};
 
-			// Проверяем, находится ли средняя точка внутри какого-либо прямоугольника
+			// Check if midpoint is inside any rectangle
 			bool isInsideAnyRectangle = false;
 			for (const auto& rect : rectangles)
 			{
@@ -498,7 +501,7 @@ namespace PdfWriter
 				}
 			}
 
-			// Если средняя точка не внутри ни одного прямоугольника - это внешний сегмент
+			// If midpoint is not inside any rectangle - this is an external segment
 			if (!isInsideAnyRectangle)
 				result.push_back(CSegment(start, end));
 		}
@@ -507,10 +510,10 @@ namespace PdfWriter
 	}
 	std::vector<CSegment> RectangleIntersection::findSegmentsOutsideRectanglesSequential(const CSegment& line, const std::vector<std::vector<CPoint>>& rectangles)
 	{
-		// Начинаем с полного отрезка
+		// Start with full segment
 		std::vector<CSegment> currentSegments = {line};
 
-		// Последовательно вычитаем каждый прямоугольник
+		// Sequentially subtract each rectangle
 		for (const auto& rect : rectangles) {
 			std::vector<CSegment> newSegments;
 

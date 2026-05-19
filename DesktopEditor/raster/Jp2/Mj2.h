@@ -1,11 +1,46 @@
-﻿#pragma once
+﻿/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+#pragma once
 
 #include "Types.h"
 
 namespace Jpeg2000
 {
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Данные функции предназначены для чтения Motion JPEG 2000 (MJ2)
+	// These functions are intended for reading Motion JPEG 2000 (MJ2)
 	//-------------------------------------------------------------------------------------------------------------------------------
 
 	static bool Mj2_ReadBoxHeader(Mj2_Box* pBox, CReader * pStream)
@@ -104,7 +139,7 @@ namespace Jpeg2000
 
 		//>>>>
 
-		// Достаем первую картинку в потоке MDAT
+		// Get the first image from the MDAT stream
 		Jp2Box oTempBox;
 		Jp2_ReadBoxHeader(pMovie->pCodecInfo, pStream, &oTempBox);
 		do
@@ -124,7 +159,7 @@ namespace Jpeg2000
 		int nJ2kCodestreamOffset =  pStream->Tell();
 		int nJ2kCodestreamLength = oTempBox.nLength - 8;
 
-		// Декодируем J2K
+		// Decode J2K
 		*ppImage = J2k_Decode(pMovie->pJ2k, pStream);
 		if (!*ppImage)
 		{
@@ -159,8 +194,8 @@ namespace Jpeg2000
 			Event_Message(EVT_ERROR, "Error: Only Version 0 handled in MVHD box\n");
 		}
 
-		// TO DO: Здесь в зависимости от версии разное число байт должно читаться
-		//        см. fcd15444-3.pdf стр.15
+		// TO DO: Here different number of bytes should be read depending on version
+		//        see fcd15444-3.pdf page 15
 
 		pMovie->unCreationTime     = pStream->Read(4); // Creation Time
 		pMovie->unModificationTime = pStream->Read(4);	// Modification Time
@@ -206,8 +241,8 @@ namespace Jpeg2000
 			return false;
 		}
 
-		// TO DO: Здесь в зависимости от версии разное число байт должно читаться
-		//        см. fcd15444-3.pdf стр.16
+		// TO DO: Here different number of bytes should be read depending on version
+		//        see fcd15444-3.pdf page 16
 
 		if (0 != pStream->Read(1)) // Version = 0
 		{
@@ -217,7 +252,7 @@ namespace Jpeg2000
 
 		int nFlag = pStream->Read(3);
 
-		if (!(1 == nFlag || 2 == nFlag || 3 == nFlag || 4 == nFlag)) // nFlags = 1, 2, 3 или 4
+		if (!(1 == nFlag || 2 == nFlag || 3 == nFlag || 4 == nFlag)) // nFlags = 1, 2, 3 or 4
 		{
 			Event_Message(EVT_ERROR, "Error with flag in TKHD box: Expected flag 1,2,3 or 4\n");
 			return false;
@@ -268,7 +303,7 @@ namespace Jpeg2000
 			return 1;
 		}
 
-		// TO DO: Сделать поодержку Version = 1
+		// TO DO: Add support for Version = 1
 		if (0 != pStream->Read(1)) // Version = 0
 		{
 			Event_Message(EVT_ERROR, "Error: Only Version 0 handled in MDHD box\n");
@@ -486,9 +521,9 @@ namespace Jpeg2000
 			return false;
 		}
 
-		if (1 != pStream->Read(3)) // Если flags = 1, то медиа данные в файле
+		if (1 != pStream->Read(3)) // If flags = 1, then media data is in file
 		{
-			// TO DO: Сделать нормальное чтение строк
+			// TO DO: Implement proper string reading
 			pTrack->pUrl[nUrlNum].anLocation[0] = pStream->Read(4);
 			pTrack->pUrl[nUrlNum].anLocation[1] = pStream->Read(4);
 			pTrack->pUrl[nUrlNum].anLocation[2] = pStream->Read(4);
@@ -525,9 +560,9 @@ namespace Jpeg2000
 			return false;
 		}
 
-		if (1 != pStream->Read(3)) // Если flags = 1, то медиа данные в файле
+		if (1 != pStream->Read(3)) // If flags = 1, then media data is in file
 		{
-			// TO DO: Сделать нормальное чтение строк
+			// TO DO: Implement proper string reading
 			pTrack->pUrn[nUrnNum].anName[0]     = pStream->Read(4);
 			pTrack->pUrn[nUrnNum].anName[1]     = pStream->Read(4);
 			pTrack->pUrn[nUrnNum].anName[2]     = pStream->Read(4);
@@ -778,7 +813,7 @@ namespace Jpeg2000
 
 		int nSampleSize = pStream->Read(4); // SampleSize
 
-		if (0 != nSampleSize) // У всех самплов одинаковый размер
+		if (0 != nSampleSize) // All samples have the same size
 		{
 			pTrack->unSameSampleSize = 1;
 
@@ -857,7 +892,7 @@ namespace Jpeg2000
 
 	static bool Mj2_ReadSTCO(Mj2_TrackParams* pTrack, CReader * pStream)
 	{
-		// TO DO: Сделать чтение 'co64'
+		// TO DO: Implement reading 'co64'
 		Mj2_Box oBox;
 		Mj2_ReadBoxHeader(&oBox, pStream);
 		if (MJ2_STCO != oBox.nType)
@@ -1185,13 +1220,13 @@ namespace Jpeg2000
 		}
 		else if (1 == pTrack->nTrackType)
 		{
-			// TO DO: Релизовать
+			// TO DO: Implement
 			int nSkipLen = pStream->Read(4);
 			pStream->Skip(nSkipLen - 4);
 		}
 		else if (2 == pTrack->nTrackType)
 		{
-			// TO DO: Реализовать
+			// TO DO: Implement
 			int nSkipLen = pStream->Read(4);
 			pStream->Skip(nSkipLen - 4);
 		}
@@ -1403,7 +1438,7 @@ namespace Jpeg2000
 			{
 				case MJ2_MDAT:
 
-				// TO DO: Связать данные в MDAT с данными MOOV
+				// TO DO: Link MDAT data with MOOV data
 				if (!Mj2_ReadMDAT(pMovie, pStream, ppImage, oBox))
 					return false;
 
@@ -1440,7 +1475,7 @@ namespace Jpeg2000
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------
-	// Декодирование потока Mj2
+	// Mj2 stream decoding
 	//-------------------------------------------------------------------------------------------------------------------------------
 	void       Mj2_DestroyDecompress(Mj2_Movie* pMovie)
 	{
@@ -1531,7 +1566,7 @@ namespace Jpeg2000
 		PCommon pCodecInfo = pMovie->pCodecInfo;
 
 		Image *pImage = NULL;
-		// Декодируем JP2
+		// Decode JP2
 		if (!Mj2_ReadStruct(pMovie, pStream, &pImage))
 		{
 			Event_Message(EVT_ERROR, "Failed to decode jp2 structure\n");

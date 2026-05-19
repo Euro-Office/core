@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 
@@ -238,7 +241,7 @@ void odf_table_styles_context::get_table_cell_properties (int col, int row, styl
 	bool first_row = (row == 1)? true: false;
 	bool first_col = (col == 1)? true: false;
 
-	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//odd
 	bool odd_col = ((col+col_shift)%2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 
@@ -250,7 +253,7 @@ void odf_table_styles_context::get_table_cell_properties (int col, int row, styl
 	bool se = (row == current_used_.back().table_row_count_ && col == current_used_.back().table_col_count_) ? true: false; //bottom right cell
 	bool sw = (row == current_used_.back().table_row_count_ && col == 1) ? true: false;						//bottom left cell.
 //----------------------------------------------------------------------------------------------------------------------------------
-//порядок рассмотрения - main, odd, even first, last, ne, .... col, row
+//order of consideration - main, odd, even first, last, ne, .... col, row
 					cell_props->apply_from(dynamic_cast<style_table_cell_properties *>(state.table_.table_cell_props.get()));
 
 	if (current_used_.back().cols)
@@ -348,7 +351,7 @@ void odf_table_styles_context::get_text_properties (int col, int row, text_forma
 	bool first_row = (row == 1)? true: false;
 	bool first_col = (col == 1)? true: false;
 
-	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row+row_shift)%2 != 0) ? true : false;//odd
 	bool odd_col = ((col+col_shift)%2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 
@@ -360,7 +363,7 @@ void odf_table_styles_context::get_text_properties (int col, int row, text_forma
 	bool se = (row == current_used_.back().table_row_count_ && col == current_used_.back().table_col_count_) ? true: false; //bottom right cell
 	bool sw = (row == current_used_.back().table_row_count_ && col == 1) ? true: false;						//bottom left cell
 //----------------------------------------------------------------------------------------------------------------------------------
-//порядок рассмотрения - main, odd, even first, last, ne, ....
+//order of consideration - main, odd, even first, last, ne, ....
 	style_text_properties *props = NULL;
 	
 	props = dynamic_cast<style_text_properties *>(state.table_.text_props.get());
@@ -461,7 +464,7 @@ bool odf_table_styles_context::is_styled(int col, int row)
 	if (state.lastCol_.is && last_col) return true;
 	if (state.lastRow_.is && last_row) return true;
 
-	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//odd
 	bool odd_col = ((col + col_shift) % 2 != 0) ? true : false;
 
 	if (state.band1Vert_.is && odd_col) return true;
@@ -500,7 +503,7 @@ void odf_table_styles_context::get_paragraph_properties (int col, int row, parag
 	bool first_row = (row == 1)? true : false;
 	bool first_col = (col == 1)? true : false;
 
-	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//нечетные
+	bool odd_row = ((row + row_shift) % 2 != 0) ? true : false;//odd
 	bool odd_col = ((col + col_shift) % 2 != 0) ? true : false;
 
 	bool last_row = (row == current_used_.back().table_row_count_) ? true: false; 

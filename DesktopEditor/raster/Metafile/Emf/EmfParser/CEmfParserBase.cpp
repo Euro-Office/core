@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "CEmfParserBase.h"
 
 #include "../EmfInterpretator/CEmfInterpretatorRender.h"
@@ -100,7 +135,7 @@ namespace MetaFile
 		BYTE* pBgraBuffer = NULL;
 		unsigned int ulWidth, ulHeight;
 
-		// sizeof использовать нельзя, т.к. мы используем double в структуре TEmfBitBlt, а читаем его 4-байтовым
+		// Can't use sizeof because we use double in TEmfBitBlt structure but read it as 4-byte
 		unsigned int unEmfBitBltRecordSize = 100; // sizeof(TEmfBitBlt) + 8
 
 		if (ReadImage(oTEmfBitBlt.unOffBmiSrc, oTEmfBitBlt.unCbBmiSrc,
@@ -115,7 +150,7 @@ namespace MetaFile
 		{
 			if (0x00000042 == oTEmfBitBlt.unBitBltRasterOperation) // BLACKNESS
 			{
-				// Делаем все черным цветом
+				// Make everything black
 				pBgraBuffer = new BYTE[4];
 				pBgraBuffer[0] = 0x00;
 				pBgraBuffer[1] = 0x00;
@@ -127,7 +162,7 @@ namespace MetaFile
 			}
 			if (0x00FF0062 == oTEmfBitBlt.unBitBltRasterOperation) // WHITENESS
 			{
-				// Делаем все черным цветом
+				// Make everything black
 				pBgraBuffer = new BYTE[4];
 				pBgraBuffer[0] = 0xff;
 				pBgraBuffer[1] = 0xff;
@@ -144,7 +179,7 @@ namespace MetaFile
 				CEmfLogBrushEx* pBrush = (CEmfLogBrushEx*)m_pDC->GetBrush();
 				if (pBrush)
 				{
-					// Делаем цветом кисти
+					// Make with brush color
 					pBgraBuffer = new BYTE[4];
 					pBgraBuffer[0] = pBrush->oColor.b;
 					pBgraBuffer[1] = pBrush->oColor.g;
@@ -174,7 +209,7 @@ namespace MetaFile
 					  oTEmfSetDiBitsToDevice.unOffBitsSrc, oTEmfSetDiBitsToDevice.unCbBitsSrc,
 					  sizeof(TEmfSetDiBitsToDevice) + 8, &pBgraBuffer, &ulWidth, &ulHeight))
 		{
-			// TODO: Нужно реализовать обрезку картинки по параметрам oBitmap.iStartScan и oBitmap.cScans
+			// TODO: Need to implement image cropping by oBitmap.iStartScan and oBitmap.cScans parameters
 			DrawImage(oTEmfSetDiBitsToDevice.oBounds.Left, oTEmfSetDiBitsToDevice.oBounds.Top,
 					  oTEmfSetDiBitsToDevice.oBounds.Right - oTEmfSetDiBitsToDevice.oBounds.Left,
 					  oTEmfSetDiBitsToDevice.oBounds.Bottom - oTEmfSetDiBitsToDevice.oBounds.Top,
@@ -190,7 +225,7 @@ namespace MetaFile
 		BYTE* pBgraBuffer = NULL;
 		unsigned int ulWidth, ulHeight;
 
-		unsigned int unSkip = 108; // sizeof(TEmfStretchBLT) + 8 неправильно считает, из-з TXForm, там double, а в Emf они по 4 байта
+		unsigned int unSkip = 108; // sizeof(TEmfStretchBLT) + 8 calculates incorrectly because of TXForm - it has double but in Emf they are 4 bytes
 		if (ReadImage(oTEmfStretchBLT.unOffBmiSrc, oTEmfStretchBLT.unCbBmiSrc,
 					  oTEmfStretchBLT.unOffBitsSrc, oTEmfStretchBLT.unCbBitsSrc,
 					  unSkip, &pBgraBuffer, &ulWidth, &ulHeight))
@@ -392,7 +427,7 @@ namespace MetaFile
 			m_pInterpretator->ArcTo(dL, dT, dR, dB, dStart, dSweep);
 		}
 
-		// Пересчет текущей позиции делается в каждой функции отдельно после вызова данной
+		// Current position recalculation is done in each function separately after calling this one
 	}
 
 	void CEmfParserBase::DrawPath(bool bStroke, bool bFill, bool bEndPath)
@@ -473,7 +508,7 @@ namespace MetaFile
 				{
 					pDx[unIndex] = oText.pOutputDx[unIndex];
 
-					// Пропускаем сдвиги по Y если они есть
+					// Skip Y offsets if present
 					if (oText.unOptions & ETO_PDY)
 						unIndex++;
 				}
@@ -497,7 +532,7 @@ namespace MetaFile
 		int* pDx = NULL;
 		if (oText.pOutputDx && oText.unChars && oText.unChars == wsText.length())
 		{
-			// Здесь мы эмулируем конвертацию Utf16 в Utf32, чтобы правильно получить массив pDx
+			// Here we emulate Utf16 to Utf32 conversion to correctly get pDx array
 			pDx = new int[oText.unChars];
 			unLen = 0;
 
@@ -514,7 +549,7 @@ namespace MetaFile
 				}
 				else if (wLeading >= 0xDC00)
 				{
-					// Такого не должно быть
+					// This should not happen
 					continue;
 				}
 				else
@@ -523,7 +558,7 @@ namespace MetaFile
 					wTrailing = pUtf16[unPos++];
 					if (wTrailing < 0xDC00 || wTrailing > 0xDFFF)
 					{
-						// Такого не должно быть
+						// This should not happen
 						continue;
 					}
 					else
@@ -531,12 +566,12 @@ namespace MetaFile
 						pDx[unLen++] = oText.pOutputDx[unPos - 2] + oText.pOutputDx[unPos - 1];
 					}
 
-					// Пропускаем сдвиги по Y если они есть
+					// Skip Y offsets if present
 					if (oText.unOptions & ETO_PDY)
 						unPos++;
 				}
 
-				// Пропускаем сдвиги по Y если они есть
+				// Skip Y offsets if present
 				if (oText.unOptions & ETO_PDY)
 					unPos++;
 			}
@@ -842,7 +877,7 @@ namespace MetaFile
 		if (ENHMETA_SIGNATURE != m_oHeader.ulSignature || 0x00010000 != m_oHeader.ulVersion)
 			return SetError();
 
-		// Пропускаем остальную часть заголовка, т.к. она нас пока не интересует
+		// Skip the rest of the header since we don't need it for now
 		unsigned int ulRemaining = m_ulRecordSize - 80; // sizeof(TEmfHeader)
 		m_oStream.Skip(ulRemaining);
 
@@ -859,7 +894,7 @@ namespace MetaFile
 		int nR = (int)floor(dW + 0.5) + nL;
 		int nB = (int)floor(dH + 0.5) + nT;
 
-		// По логике мы должны получать рект, точно такой же как и oBounds, но есть файлы, где это не так.
+		// Logically we should get a rect exactly like oBounds, but there are files where this is not the case.
 		m_oHeader.oFrameToBounds.Left   = nL;
 		m_oHeader.oFrameToBounds.Right  = nR;
 		m_oHeader.oFrameToBounds.Top    = nT;
@@ -1071,7 +1106,7 @@ namespace MetaFile
 		if (!m_pPath)
 			SetError();
 
-		// Иногда MoveTo идет до BeginPath
+		// Sometimes MoveTo comes before BeginPath
 		TPointL oPoint = m_pDC->GetCurPos();
 		double dX, dY;
 		TranslatePoint(oPoint, dX, dY);
@@ -1082,7 +1117,7 @@ namespace MetaFile
 	{
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_ENDPATH();
-		// Ничего не делаем
+		// Do nothing
 	}
 
 	void CEmfParserBase::HANDLE_EMR_CLOSEFIGURE()
@@ -1101,12 +1136,12 @@ namespace MetaFile
 	{
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FLATTENPATH();
-		// Ничего не делаем
+		// Do nothing
 	}
 
 	void CEmfParserBase::HANDLE_EMR_WIDENPATH()
 	{
-		// TODO: реализовать
+		// TODO: implement
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_WIDENPATH();
 	}
@@ -1137,7 +1172,7 @@ namespace MetaFile
 			m_pInterpretator->HANDLE_EMR_SETARCDIRECTION(unDirection);
 
 		m_pDC->SetArcDirection(unDirection);
-		// Здесь не обновляем DC у Output, т.к. этот параметр разруливается внутри данного класса.
+		// Don't update DC in Output here since this parameter is handled inside this class.
 	}
 
 	void CEmfParserBase::HANDLE_EMR_FILLPATH(TRectL &oBounds)
@@ -1287,8 +1322,8 @@ namespace MetaFile
 	{
 		TRectD oClipRect, oBB;
 
-		// Поскольку мы реализовываем данный тип клипа с помощью разницы внешнего ректа и заданного, и
-		// пересечением с полученной областью, то нам надо вычесть границу заданного ректа.
+		// Since we implement this clip type using difference between outer rect and given one,
+		// and intersection with obtained area, we need to subtract the boundary of given rect.
 		if (oClip.Left < oClip.Right)
 		{
 			oClip.Left--;
@@ -1327,8 +1362,8 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_EXTSELECTCLIPRGN(unsigned int &unRgnDataSize, unsigned int &unRegionMode)
 	{
-		// Тут просто сбрасываем текущий клип. Ничего не добавляем в клип, т.е. реализовать регионы с
-		// текущим интерфейсом рендерера невозможно.
+		// Here we just reset current clip. Don't add anything to clip, i.e. implementing regions
+		// with current renderer interface is impossible.
 		m_pDC->GetClip()->Reset();
 		
 		if (NULL != m_pInterpretator)
@@ -1374,7 +1409,7 @@ namespace MetaFile
 
 	void CEmfParserBase::HANDLE_EMR_REALIZEPALETTE()
 	{
-		// TODO: Реализовать
+		// TODO: Implement
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_REALIZEPALETTE();
 	}
@@ -1395,14 +1430,14 @@ namespace MetaFile
 	{
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETLAYOUT(unLayoutMode);
-		// TODO: реализовать
+		// TODO: implement
 	}
 
 	void CEmfParserBase::HANDLE_EMR_SETBRUSHORGEX(TPointL &oOrigin)
 	{
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETBRUSHORGEX(oOrigin);
-		// TODO: реализовать
+		// TODO: implement
 	}
 
 	void CEmfParserBase::HANDLE_EMR_ANGLEARC(TPointL &oCenter, unsigned int &unRadius, double &dStartAngle, double &dSweepAngle)
@@ -1422,17 +1457,17 @@ namespace MetaFile
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
 		double dSweepAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oEnd.X, oEnd.Y) - dStartAngle;
 
-		// TODO: Проверить здесь
+		// TODO: Check here
 		//                if (dSweepAngle < 0.001)
 		//                        dSweepAngle += 360;
 
-		// TODO: Проверить здесь
+		// TODO: Check here
 		if (AD_COUNTERCLOCKWISE != m_pDC->GetArcDirection())
 		{
 			dSweepAngle = dSweepAngle - 360;
 		}
 
-		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Если ширина отрицательная, то не нарисуется
+		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Won't draw if width is negative
 
 		TPointL oStartDraw = GetStartPointForArc(oBox, dStartAngle);
 
@@ -1449,7 +1484,7 @@ namespace MetaFile
 		double dStartAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oStart.X, oStart.Y);
 		double dSweepAngle = GetEllipseAngle(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, oEnd.X, oEnd.Y) - dStartAngle;
 
-		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Если ширина отрицательная, то не нарисуется
+		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Won't draw if width is negative
 
 		ArcTo(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, dStartAngle, dSweepAngle);
 		DrawPath(true, false);
@@ -1476,7 +1511,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator && (NULL == m_pPath || Svg != m_pInterpretator->GetType()))
 			m_pInterpretator->HANDLE_EMR_ELLIPSE(oBox);
 
-		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Если ширина отрицательная, то не нарисуется
+		oBox.Update(IsViewportFlippedX(),	IsViewportFlippedY()); // Won't draw if width is negative
 
 		if (m_pDC->GetArcDirection() == AD_COUNTERCLOCKWISE)
 			ArcTo(oBox.Left, oBox.Top, oBox.Right, oBox.Bottom, 0, 360);
@@ -1605,7 +1640,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SETPIXELV(oPoint, oColor);
 
-		// Делаем цветом кисти
+		// Make with brush color
 		BYTE pBgraBuffer[4];
 		pBgraBuffer[0] = oColor.b;
 		pBgraBuffer[1] = oColor.g;
@@ -1620,7 +1655,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_SMALLTEXTOUT(oText);
 
-		// Переводим oText в TEmfEmrText
+		// Convert oText to TEmfEmrText
 		TEmrTextW oEmrText;
 		
 		oEmrText.unChars       = oText.unCChars;
@@ -1632,7 +1667,7 @@ namespace MetaFile
 		oEmrText.oReference.Y  = oText.nY;
 		oEmrText.pOutputDx     = NULL;
 
-		// Запись не документированна нормально, остается несколько байт в конце, непонятно почему.
+		// Record is not properly documented, a few bytes remain at the end, unclear why.
 		unsigned int unSize = oText.GetSize();
 		if (m_ulRecordSize - unSize > 0)
 			m_oStream.Skip(m_ulRecordSize - unSize);
@@ -1641,8 +1676,8 @@ namespace MetaFile
 
 		DrawTextW(oEmrText, oText.unIGraphicsMode);
 
-		// Поскольку мы просто скопировали ссылку на строку, а не скопировали сами строку обнуляем здесь, потому
-		// что на деструкторе структуры освобождается память.
+		// Since we just copied string reference not the string itself, null it here because
+		// memory is freed in structure destructor.
 		oEmrText.pOutputString = NULL;
 	}
 
@@ -1781,7 +1816,7 @@ namespace MetaFile
 		if (NULL != m_pInterpretator)
 			m_pInterpretator->HANDLE_EMR_FRAMERGN(oBounds, unIhBrush, nWidth, nHeight, oRegionDataHeader, arRects);
 
-		//TODO: реализовать
+		// TODO: implement
 	}
 
 	void CEmfParserBase::HANDLE_EMR_POLYBEZIER(TRectL &oBounds, std::vector<TPointL> &arPoints)

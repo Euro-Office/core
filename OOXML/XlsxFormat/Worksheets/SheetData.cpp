@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "../Workbook/Workbook.h"
@@ -45,6 +48,7 @@
 #include "../ComplexTypes_Spreadsheet.h"
 
 #include "../../Binary/Presentation/BinaryFileReaderWriter.h"
+#include "../../Binary/Sheets/Reader/CellFormatController/DateReader.h"
 #include "../../Binary/Sheets/Writer/CSVWriter.h"
 #include "../../../DesktopEditor/common/StreamWriter.h"
 #include "../../../DesktopEditor/common/StringExt.h"
@@ -662,8 +666,22 @@ namespace OOX
                     case SimpleTypes::Spreadsheet::celltypeSharedString: nType = XLSB::rt_CellIsst; break;
                     case SimpleTypes::Spreadsheet::celltypeError: nType = XLSB::rt_CellError; break;
                     case SimpleTypes::Spreadsheet::celltypeBool: nType = XLSB::rt_CellBool; break;
+					case SimpleTypes::Spreadsheet::celltypeDate: 
+					{
+						std::wstring tmp(m_oValue.m_oValue.m_sBuffer, m_oValue.m_oValue.m_nLen);
+						DateReader dateChecker;
+						double result = 0;
+						bool bTime = false, bDate = false;
+						if (dateChecker.GetDigitalDate(tmp, result, bDate, bTime))
+						{
+							nType = XLSB::rt_CellReal;
+							m_oValue.m_dValue = result;
+						}
+						else if (m_oValue.m_oValue.m_nLen > 0)
+							nType = XLSB::rt_CellSt;
+					}break;
 					case SimpleTypes::Spreadsheet::celltypeInlineStr:
-                    case SimpleTypes::Spreadsheet::celltypeStr: nType = XLSB::rt_CellSt; break;
+					case SimpleTypes::Spreadsheet::celltypeStr: nType = XLSB::rt_CellSt; break;
 				}
 			}
 			bool bIsBlankFormula = false;
@@ -730,28 +748,31 @@ namespace OOX
 			oStream.XlsbStartRecord(nType, nLen);
 			oStream.WriteULONG(m_nCol & 0x3FFF);
 
-
 			oStream.WriteULONG(nFlags2);
 			//todo RkNumber
-			switch(nType)
+			switch (nType)
 			{
-                case XLSB::rt_CellReal:
-                case XLSB::rt_FmlaNum:
+				case XLSB::rt_CellReal:
+				case XLSB::rt_FmlaNum:
+				{
 					oStream.WriteDoubleReal(m_oValue.m_dValue);
-				break;
-                case XLSB::rt_CellIsst:
+				}break;
+				case XLSB::rt_CellIsst:
+				{
 					oStream.WriteULONG(m_oValue.m_nValue);
-				break;
-                case XLSB::rt_CellSt:
-                case XLSB::rt_FmlaString:
+				}break;
+				case XLSB::rt_CellSt:
+				case XLSB::rt_FmlaString:
+				{
 					oStream.WriteStringData(m_oValue.m_oValue.m_sBuffer, m_oValue.m_oValue.m_nLen);
-				break;
-                case XLSB::rt_CellError:
-                case XLSB::rt_FmlaError:
-                case XLSB::rt_CellBool:
-                case XLSB::rt_FmlaBool:
+				}break;
+				case XLSB::rt_CellError:
+				case XLSB::rt_FmlaError:
+				case XLSB::rt_CellBool:
+				case XLSB::rt_FmlaBool:
+				{
 					oStream.WriteBYTE(m_oValue.m_nValue);
-				break;
+				}break;
 			}
 
 			_UINT16 nFlags = 0;
@@ -1151,7 +1172,7 @@ namespace OOX
         }
         void CFormula::fromBin(XLS::StreamCacheReaderPtr& reader, XLS::CFRecordPtr& record)
         {
-            //читаем остатки данных в записи ячейки
+            //read remaining data in the cell record
             {
                 XLSB::GrbitFmla flags;
                 *record >> flags;
@@ -1214,7 +1235,7 @@ namespace OOX
             {
                 XLS::CellParsedFormula BinFmla(false);
                 *record >> BinFmla;
-                //случай если в формуле есть ссылка на другую
+                //case when the formula contains a reference to another one
                 if(!BinFmla.rgce.isEmpty() && BinFmla.rgce.sequence.begin()->get()->ptg_id.get() == 1 && !BinFmla.rgcb.isEmpty())
                 {
                     auto rowPart = static_cast<XLS::PtgExp*>(BinFmla.rgce.sequence.begin()->get());
@@ -1494,7 +1515,7 @@ namespace OOX
             {
                 case SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeNormal:
                 {
-                    //пишем флаги для формулы
+                    //write flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oAca.IsInit() && m_oAca->GetValue())
@@ -1756,7 +1777,7 @@ namespace OOX
 				else if ( strcmp("is", sName) == 0 )
 					m_oRichText = oReader;
 				else if ( strcmp("NamedCell", sName) == 0 )
-				{//дублирование имен
+				{//duplicate names
 				}
 //o:SmartTags, x:PhoneticText
 			}
@@ -2028,7 +2049,7 @@ namespace OOX
 				if (false == xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter) return;
 
 				if (!xlsx->m_pSharedStrings)
-				{	// еще не прочитался rels
+				{	// rels not yet read
 					xlsx->m_arWorksheets.back()->m_bPrepareForBinaryWriter = false;
 					return;
 				}
@@ -2054,10 +2075,10 @@ namespace OOX
 					if (NULL != pSi)
 					{
 						int nIndex = pSharedStrings->AddSi(pSi);
-						//меняем значение ячейки
+						//change cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						m_oType.Init();
 						m_oType->SetValue(SimpleTypes::Spreadsheet::celltypeSharedString);
 					}
@@ -2071,7 +2092,7 @@ namespace OOX
 							xlsx->CreateSharedStrings();
 							pSharedStrings = xlsx->m_pSharedStrings;
 						}
-						//добавляем в SharedStrings
+						//add to SharedStrings
 						CSi* pSi = new CSi();
 						CText* pText = new CText();
 
@@ -2080,10 +2101,10 @@ namespace OOX
 
 						int nIndex = pSharedStrings->AddSi(pSi);
 
-						//меняем значение ячейки
+						//change cell value
 						m_oValue.Init();
 						m_oValue->m_sText = std::to_wstring(nIndex);
-						//меняем тип ячейки
+						//change cell type
 						if (SimpleTypes::Spreadsheet::celltypeStr == m_oType->GetValue())
 						{
 							m_oType.Init();
@@ -2098,7 +2119,7 @@ namespace OOX
 				}
 				else if (SimpleTypes::Spreadsheet::celltypeBool == m_oType->GetValue())
 				{
-					//обычно пишется 1/0, но встречается, что пишут true/false
+					//usually written as 1/0, but sometimes true/false is encountered
 					if (m_oValue.IsInit())
 					{
 						SimpleTypes::COnOff oOnOff;
@@ -3091,11 +3112,11 @@ namespace OOX
 					m_oType->SetValue(processCellType(m_oValue.get().m_sText, isReal, realCache));
             }
             auto cellType = m_oType->GetValue();
-            //основная запись ячейки
+            //main cell record
             CFRecordPtr CellRecord;
-            // дополнительная запись для shared, array и table формул
+            // additional record for shared, array, and table formulas
             CFRecordPtr ExtraRecord;
-            //обработка celltype datatable
+            //processing celltype datatable
             if(m_oFormula.IsInit() && m_oFormula->m_oT.IsInit() && m_oFormula->m_oT->GetValue() == SimpleTypes::Spreadsheet::ECellFormulaType::cellformulatypeDataTable)
             {
                 ExtraRecord = writer->getNextRecord(XLSB::rt_Table);
@@ -3104,7 +3125,7 @@ namespace OOX
                 m_oFormula.reset();
                 ExtraRecord.reset();
             }
-            //обработка метаданных ячейки
+            //processing cell metadata
             if(m_oCellMetadata.IsInit())
             {
                 auto metaRecord = writer->getNextRecord(XLSB::rt_CellMeta);
@@ -3270,7 +3291,7 @@ namespace OOX
                             SharedFmlaRef = &SharedFormulasRef::sharedRefsLocations->at(m_oFormula->m_oSi->GetValue());
                         XLS::CellParsedFormula BinFmla(false);
 
-                        //пишем флаги для формулы
+                        //write flags for the formula
                         {
                             XLSB::GrbitFmla flags;
                             if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -3301,7 +3322,7 @@ namespace OOX
                         SharedFmlaRef = &CellReference;
                     }
                     XLS::CellParsedFormula BinFmla(false);
-                    //пишем флаги для формулы
+                    //write flags for the formula
                     {
                         XLSB::GrbitFmla flags;
                         if(m_oFormula->m_oAca.IsInit() && m_oFormula->m_oAca->GetValue())
@@ -4132,7 +4153,7 @@ namespace OOX
 					CCell *pCell = new CCell(m_pMainDocument);
 					if (pCell)
 					{
-						 //пытаемся сжать пустые клетки
+						 //try to compress empty cells
 						pCell->fromXML(oReader);
 						if(!compressCell(pCell))
 							m_arrItems.push_back(pCell);
@@ -4211,7 +4232,7 @@ namespace OOX
 				pCell->m_oRow = m_oR->GetValue()-1;
                 if(pCell->fromBin(reader))
                 {
-                    //пытаемся сжать пустые клетки
+                    //try to compress empty cells
                     if(!compressCell(pCell))
                         m_arrItems.push_back(pCell);
                     else
@@ -5080,7 +5101,7 @@ namespace OOX
             {
                 CRow *pRow = new CRow(m_pMainDocument);
                 pRow->fromBin(reader);
-                //проверяем можно ли сжать пустые строки
+                //check if we can compress empty rows
                 if(!compressRow(pRow))
                     m_arrItems.push_back(pRow);
                 else
@@ -5230,13 +5251,13 @@ namespace OOX
                     prevRow->m_oRepeated = 1;
                 if(prevRow->m_oR->GetValue() + prevRow->m_oRepeated.get() == pRow->m_oR->GetValue() && prevRow->m_oHt == pRow->m_oHt)
                 {
-                    //случай с пустыми строками
+                    //case with empty rows
                     if(prevRow->m_arrItems.empty() && pRow->m_arrItems.empty())
                     {
                         prevRow->m_oRepeated = prevRow->m_oRepeated.get() + 1;
                         return true;
                     }
-                    //случай со строками заполненными однотипными сжатыми клетками
+                    //case with rows filled with compressed cells of the same type
                     if(prevRow->m_arrItems.size() == 1 && pRow->m_arrItems.size() == 1 && prevRow->m_arrItems.back()->m_oRepeated.IsInit()
                             && pRow->m_arrItems.back()->m_oRepeated.get() ==  prevRow->m_arrItems.back()->m_oRepeated.get())
                     {

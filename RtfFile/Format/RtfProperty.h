@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #pragma once
 
@@ -208,7 +211,7 @@ public:
 
 	static bool GetHighlightByColor( RtfColor oOutputColor,std::wstring& oStr ); //todo
 	static RtfColor GetColorByPreset( std::wstring oStr );
-	static std::wstring GetPresetByColor( RtfColor oCol ); //стр. 3320
+	static std::wstring GetPresetByColor( RtfColor oCol ); //page 3320
 	static bool GetThemeByString( std::wstring sTheme, _ThemeColor & oOutTheme );
 	static bool GetThemeByOOX( SimpleTypes::EShemeColorVal val, _ThemeColor & oOutTheme );
 	static bool GetStringByTheme( std::wstring sTheme , _ThemeColor& oOutTheme );
@@ -503,7 +506,7 @@ public:
 	_INT32		m_nJustification;	//leveljcN \leveljcnN	0	Left justified 1	Center justified 2	Right justified
 	_INT32		m_nFollow;			//levelfollowN
 	_INT32		m_nStart;			//levelstartatN	N specifies the start-at value for the level.
-    std::wstring m_sLevelText;		//как в rtf текст, но сдвинут от нуля на 1 // \'03\'00.\'01 -> ("%d%d%d",4,1,2)
+    std::wstring m_sLevelText;		//same as rtf text, but shifted from zero by 1 // \'03\'00.\'01 -> ("%d%d%d",4,1,2)
     std::wstring m_sNumber;
 	_INT32		m_nNoRestart;		//levelnorestartN	1 if this level does not restart its count each time a super ordinate level is incremented; 0 if this level does restart its count each time a super ordinate level is incremented.
 	_INT32		m_nLegal;			//levellegalN	1 if any list numbers from previous levels should be converted to Arabic numbers; 0 if they should be left with the format specified by their own level’s definition.
@@ -966,8 +969,8 @@ public:
 	_INT32	m_nWidthEndInvCell;			//trwWidthAN	Width of invisible cell at the end of the row. Used only when rows have different widths.
 	_INT32	m_eWidthEndInvCellUnit;		//trftsWidthAN	Units for \trwWidthAN:
 
-	_INT32 m_nGridBefore;	//для oox
-	_INT32 m_nGridAfter;	//для oox
+	_INT32 m_nGridBefore;	//for oox
+	_INT32 m_nGridAfter;	//for oox
 
 	_INT32 m_bStyleFirstRow;		// tscfirstrow	This cell is in the first row.
 	_INT32 m_bStyleLastRow;		// tsclastrow	This cell is in the last row.
@@ -991,7 +994,7 @@ public:
 
 	void SetDefaultRtf();
 	void SetDefaultOOX();
-	//5.5 Доверенность_MO_Q139.rtf
+	//5.5 PowerOfAttorney_MO_Q139.rtf
 	void SetDefault();
 
 	bool IsValid();

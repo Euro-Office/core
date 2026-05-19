@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "MathEquation.h"
 #include "OutputDev.h"
@@ -56,9 +59,9 @@ CEquationReader::~CEquationReader()
 
 void CEquationReader::InitSizes()
 {
-	//todo обработать open(true/false)
+	// todo handle open(true/false)
 	m_oStorage.open(false, false);
-	// Выставляем размеры текста по умолчанию (если они изменены, тогда ничего не поделаешь, т.к. это не сохраняется в самом файле)
+	// Set default text sizes (if they are changed, there's nothing we can do, as this is not saved in the file itself)
 	aSizeTable[0] = 12;
 	aSizeTable[1] = 7;
 	aSizeTable[2] = 5;
@@ -72,8 +75,8 @@ void CEquationReader::SetOutputDev(IOutputDev *pOutput)
 }
 void CEquationReader::InitFonts()
 {
-	// Стандартные шрифты для MathEquation со стандартными настройками стилей. 
-	// (если они изменены, тогда ничего не поделаешь, т.к. это не сохраняется в самом файле)
+	// Standard fonts for MathEquation with default style settings.
+	// (if they are changed, there's nothing we can do, as this is not saved in the file itself)
 
 	if (pOutputDev)
 	{
@@ -81,14 +84,14 @@ void CEquationReader::InitFonts()
 		{
 			switch(i)
 			{
-			case 1: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // текст
-			case 2: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // функция
-			case 3: pOutputDev->AddFont(i + 128, "Times New Roman", false, true);  break; // переменная
-			case 4: pOutputDev->AddFont(i + 128, "Symbol",          false, true);  break; // ст. греческие
-			case 5: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // пр. греческие
-			case 6: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // символ
-			case 7: pOutputDev->AddFont(i + 128, "Times New Roman", true, false);  break; // матрица-вектор
-			case 8: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // числа
+			case 1: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // text
+			case 2: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // function
+			case 3: pOutputDev->AddFont(i + 128, "Times New Roman", false, true);  break; // variable
+			case 4: pOutputDev->AddFont(i + 128, "Symbol",          false, true);  break; // lowercase Greek
+			case 5: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // uppercase Greek
+			case 6: pOutputDev->AddFont(i + 128, "Symbol",          false, false); break; // symbol
+			case 7: pOutputDev->AddFont(i + 128, "Times New Roman", true, false);  break; // matrix-vector
+			case 8: pOutputDev->AddFont(i + 128, "Times New Roman", false, false); break; // numbers
 			}
 		}
 	}
@@ -96,8 +99,8 @@ void CEquationReader::InitFonts()
 
 int CEquationReader::Parse()
 {
-    //если смотреть реализацию, то pStm можно удалить после конструтора CLEStream,
-    //но если не смотреть реализацию,то правильно удалить pStm после pS
+    // looking at implementation, pStm can be deleted after CLEStream constructor,
+    // but without looking at implementation, it's correct to delete pStm after pS
     pStm = new POLE::Stream( &m_oStorage, L"Equation Native");
     pS = new CLEStream<Stream>(pStm);
 	if (!pS->IsValid())
@@ -715,7 +718,7 @@ void CEquationReader::HandleSetSize(MTOKENS eType)
 			}
 		case 100:
 			{
-				// TODO: Проверить эту ветку
+				// TODO: Check this branch
 				*pS >> nTemp;
 				nSize = nTemp;
 
@@ -725,7 +728,7 @@ void CEquationReader::HandleSetSize(MTOKENS eType)
 			}
 		default:
 			{
-				// TODO: Проверить эту ветку
+				// TODO: Check this branch
 				nSize = nTemp;
 				*pS >> nTemp;
                 _UINT16 nTempSize = nTemp - 128;

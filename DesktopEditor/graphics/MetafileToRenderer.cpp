@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #pragma once
 
@@ -38,8 +41,8 @@
 #include "../common/StringExt.h"
 #include "GraphicsPath.h"
 
-// этот класс нужно переписать. должно работать как и в js
-// а не просто на каждом символе переключаться, если нужно
+// this class needs to be rewritten. should work the same as in js
+// instead of just switching on each character when needed
 class CMetafileFontPicker
 {
 private:
@@ -294,7 +297,7 @@ std::wstring IMetafileToRenderter::GetImagePath(const std::wstring& sPath)
 
 		if (0 == sImagePath.find(L"file:///"))
 		{
-			// TODO: под linux код неправильный
+			// TODO: code is incorrect on linux
 			NSStringExt::Replace(sImagePath, L"file:///", L"");
 			NSStringExt::Replace(sImagePath, L"\\", L"/");
 		}
@@ -344,7 +347,7 @@ namespace NSOnlineOfficeBinToPdf
 		LONG lRendererType = 0;
 		pRenderer->get_Type(&lRendererType);
 
-		// из команд js - точные имена
+		// from js commands - exact names
 		pRenderer->CommandLong(c_nUseDictionaryFonts, 0);
 
 		CommandType eCommand = ctError;
@@ -890,7 +893,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientFill:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command should not be received
 				INT32 gradientType = oReader.ReadInt();
 
 				std::wstring sXml, sXmlStop;
@@ -933,7 +936,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientFillXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command should not be received
 				INT32 gradientType = oReader.ReadInt();
 				int nLen = oReader.ReadInt();
 				std::wstring wsTempString = oReader.ReadString16(nLen);
@@ -941,7 +944,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientStroke:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command should not be received
 				INT32 gradientType = oReader.ReadInt();
 				if (0 == gradientType)	//	linearGradient
 				{
@@ -982,14 +985,14 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientStrokeXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command should not be received
 				INT32 gradientType = oReader.ReadInt();
 				int nLen = (int)oReader.ReadInt();
 				std::wstring wsTempString = oReader.ReadString16(nLen);
 				break;
 			}
-			// дополнительные команды. из-за совместимости версий не можем менят формат.
-			// но все следующие - должны быть по одной схеме
+			// additional commands. cannot change format due to version compatibility.
+			// but all following should use the same schema
 			case ctHyperlink:
 			{
 				if (S_OK == pRenderer->IsSupportAdvancedCommand(IAdvancedCommand::AdvancedCommandType::Hyperlink))
@@ -1373,7 +1376,7 @@ namespace NSOnlineOfficeBinToPdf
 			case ctGradientStroke:
 			case ctGradientStrokeXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command should not be received
 				return;
 			}
 			case ctHyperlink:

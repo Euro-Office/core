@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #pragma once
 
 #include "../../../common/Directory.h"
@@ -839,25 +874,25 @@ namespace SVG
 		}
 		inline double AngToEllPrm(double fAngle, double fXRad, double fYRad)
 		{
-			// Функция для перевода реального угла в параметрическое задание эллписа
-			// т.е. x= a cos(t) y = b sin(t) - параметрическое задание эллписа.
+			// Function to convert real angle to parametric ellipse representation
+			// i.e. x= a cos(t) y = b sin(t) - parametric representation of ellipse.
 			// x = r cos(p), y = r sin(p) => t = atan2( sin(p) / b, cos(p) / a );
 			return atan2( sin( fAngle ) / fYRad,  cos( fAngle ) / fXRad );
 		}
 		inline int EllipseArc2(double fX, double fY, double fXRad, double fYRad, double fAngle1, double fAngle2, bool bClockDirection)
 		{
-			// переведем углы в радианы
+			// convert angles to radians
 			int nRet = 0;
 
 			double dAngle1 = fAngle1 * 3.141592 / 180;
 			double dAngle2 = fAngle2 * 3.141592 / 180;
 
-			// Выясним в каких четвертях находятся начальная и конечная точки
+			// Determine in which quadrants the start and end points are located
 			unsigned int nFirstPointQuard  = int(fAngle1) / 90 + 1;
 			unsigned int nSecondPointQuard = int(fAngle2) / 90 + 1;
 			nSecondPointQuard = std::min( (unsigned int)4, std::max( (unsigned int)1, nSecondPointQuard ) );
 			nFirstPointQuard  = std::min( (unsigned int)4, std::max( (unsigned int)1, nFirstPointQuard ) );
-			// Проведем линию в начальную точку дуги
+			// Draw a line to the starting point of the arc
 			double fStartX = 0.0, fStartY = 0.0, fEndX = 0.0, fEndY = 0.0;
 
 			fStartX = fX + fXRad * cos( AngToEllPrm( dAngle1, fXRad, fYRad ) );
@@ -865,7 +900,7 @@ namespace SVG
 
 			// _LineTo(fStartX, fStartY);
 
-			// Дальше рисуем по четверям
+			// Continue drawing by quadrants
 
 			double fCurX = fStartX, fCurY = fStartY;
 			double dStartAngle = dAngle1;
@@ -906,7 +941,7 @@ namespace SVG
 		}
 		inline int EllipseArc3(double fX, double fY, double fXRad, double fYRad, double dAngle1, double dAngle2, double *pfXCur, double *pfYCur, bool bClockDirection = false)
 		{
-			// Рассчитаем начальную, конечную и контрольные точки
+			// Calculate start, end and control points
 			double fX1  = 0.0, fX2  = 0.0, fY1  = 0.0, fY2  = 0.0;
 			double fCX1 = 0.0, fCX2 = 0.0, fCY1 = 0.0, fCY2 = 0.0;
 
@@ -1378,7 +1413,7 @@ namespace SVG
 		double	m_dOffSetX;
 		double	m_dOffSetY;
 	};
-	class Style	//	map добавим по мере надобности
+	class Style	//	map will be added as needed
 	{
 	public:
 		Style()
@@ -2172,16 +2207,16 @@ namespace SVG
 
 		inline bool Read (XmlUtils::CXmlNode& oXml, UnitSystem& us, IRefStorage* model, const ColorTable& colors = ColorTable())
 		{
-			// TODO: универсальный селектор													* {margin:0; padding:0;}
-			// TODO: селекторами элементов												    p {font-family: Garamond, serif;}
-			// TODO: селекторами классов											    .note {color: red; background: yellow; font-weight: bold;}
-			// TODO: селекторами идентификаторов								  #paragraph1 {margin: 0;}
-			// TODO: селекторами атрибутов					 a[href="http://www.somesite.com"]{font-weight:bold;}
-			// TODO: селекторами потомков (контекстными селекторами)	div#paragraph1 p.note {color: red;}
-			// TODO: селекторами дочерних элементов								   p.note > b {color: green;}
-			// TODO: селекторами сестринских элементов								   h1 + p {font-size: 24pt;}
-			// TODO: селекторами псевдоклассов										 a:active {color:yellow;}
-			// TODO: селекторами псевдоэлементов							  p::first-letter {font-size: 32px;}
+			// TODO: universal selector													* {margin:0; padding:0;}
+			// TODO: element selectors												    p {font-family: Garamond, serif;}
+			// TODO: class selectors											    .note {color: red; background: yellow; font-weight: bold;}
+			// TODO: id selectors								  #paragraph1 {margin: 0;}
+			// TODO: attribute selectors					 a[href="http://www.somesite.com"]{font-weight:bold;}
+			// TODO: descendant selectors (contextual selectors)	div#paragraph1 p.note {color: red;}
+			// TODO: child element selectors								   p.note > b {color: green;}
+			// TODO: sibling element selectors								   h1 + p {font-size: 24pt;}
+			// TODO: pseudo-class selectors										 a:active {color:yellow;}
+			// TODO: pseudo-element selectors							  p::first-letter {font-size: 32px;}
 
 			std::wstring source = oXml.GetText();
 
@@ -2318,11 +2353,11 @@ namespace SVG
 	private:
 		bool					m_IsValid;
 
-		std::map<std::wstring, Style>	m_classStyles;					//	селекторы классов
-		Style							m_typeStyles[ENodesCount];		//	селекторы элементов
+		std::map<std::wstring, Style>	m_classStyles;					//	class selectors
+		Style							m_typeStyles[ENodesCount];		//	element selectors
 		std::vector<std::wstring>		m_selectors;
 
-		// TODO: остальные типа селекторов
+		// TODO: other selector types
 	};
 }
 
@@ -2622,7 +2657,7 @@ namespace SVG
 
 		}
 
-		inline bool Push(const Matrix& transform, bool combine = true)	//	каждая последующая трансформация применяется к вершине стэка
+		inline bool Push(const Matrix& transform, bool combine = true)	//	each subsequent transformation is applied to the top of the stack
 		{
 			if ((0 == m_transforms.size()) || (false == combine))
 			{
@@ -3032,7 +3067,7 @@ namespace SVG
 
 					int Ind = -1;
 					while ( 0 != Ind )
-						Ind = buffer.Remove ( _T(' ') );		//	в некоторых SVG были пробелы
+						Ind = buffer.Remove ( _T(' ') );		//	some SVGs had spaces
 
 					return CreateImage ( (BYTE*) ( buffer.GetBuffer () ), buffer.GetLength (), EncoderType );
 				}
@@ -3865,7 +3900,7 @@ namespace SVG
 
 			m_Source		=	oXmlNode.GetText ();
 
-			// стиль может задаваться вообще где то вверху по дереву
+			// style can be set somewhere up in the tree
 			m_oFontStyle.UpdateStyle ( oXmlNode );
 
 			return true;
@@ -4132,10 +4167,10 @@ namespace SVG
 		}
 		virtual bool RefreshXLinkSource (IRefStorage* pStorage)
 		{
-			if (NULL != m_pRefLink)		//	связь уже есть, нет смысла опять искать соотвествие
+			if (NULL != m_pRefLink)		//	link already exists, no need to search for a match again
 				return true;
 
-			if (m_bBrokeRefLink)		//	нету связи
+			if (m_bBrokeRefLink)		//	no link
 				return false;
 
 			if (!m_XLinkRef.empty())
@@ -4239,7 +4274,7 @@ namespace SVG
 			return true;
 		}
 
-		inline void AddContent(DrawElement* pReference)	//	храним данные, поэтому сами и очищаем данные
+		inline void AddContent(DrawElement* pReference)	//	we store data, so we also clean up the data ourselves
 		{
 			if (pReference)
 			{
@@ -4632,7 +4667,7 @@ namespace SVG
 	class GraphicsContainer : public DrawElement, public IRefStorage
 	{
 	public:
-		GraphicsContainer(bool bRefMode = false)		//	подчищает ссылки на объекты
+		GraphicsContainer(bool bRefMode = false)		//	cleans up references to objects
 		{
 			m_nodeType		=	EGraphicsContainer;
 			m_pClip			=	NULL;
@@ -5075,7 +5110,7 @@ namespace SVG
 							m_arFlush.push_back(element);
 						}
 
-						// объекты с id могут быть использованы вне описания другими элементами, поэтому их надо учитывать
+						// objects with id can be used outside the description by other elements, so they need to be tracked
 						InternalHashElements(element);
 
 						return true;
@@ -5172,9 +5207,9 @@ namespace SVG
 		bool								m_bAddNormMM;
 
 		std::vector <ISvgRef*>				m_arrGroup;
-		std::map<std::wstring, ISvgRef*>	m_arrRef;					// индексация (только хранения ссылок)
+		std::map<std::wstring, ISvgRef*>	m_arrRef;					// indexing (only storing references)
 		std::wstring						m_sWorkingDirectory;
-		std::vector<ISvgRef*>				m_arFlush;					// объекты которые нужно удалять
+		std::vector<ISvgRef*>				m_arFlush;					// objects that need to be deleted
 	};
 	class Painter
 	{
@@ -5844,7 +5879,7 @@ namespace SVG
 				if (L"pattern" == strXmlNode && m_bDefinesLayer)
 					readInnerNodes = false;
 
-				if (L"symbol" == strXmlNode)	//	контент хранится в соответствующем классе
+				if (L"symbol" == strXmlNode)	//	content is stored in the corresponding class
 					return true;
 			}
 

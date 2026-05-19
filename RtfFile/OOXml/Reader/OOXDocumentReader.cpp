@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #pragma once
 
@@ -91,7 +94,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 	{
 		size_t last_section_start = 0;
 
-		//считаем количесво секций и заполняем их свойства .. 
+		//count sections and fill their properties .. 
 		for (size_t i = 0; i < m_ooxDocument->m_arrItems.size(); ++i)
 		{
 			if (m_ooxDocument->m_arrItems[i] == NULL) continue;
@@ -131,7 +134,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		section.end_para = m_ooxDocument->m_arrItems.size();
 
 		section.props->m_oProperty.SetDefaultOOX();
-		if (m_ooxDocument->m_oSectPr.IsInit())// свойства последней секции
+		if (m_ooxDocument->m_oSectPr.IsInit())// last section properties
 		{
 			OOXSectionPropertyReader oSectReader(m_ooxDocument->m_oSectPr.GetPointer());
 			if (oSectReader.Parse(oParam, section.props->m_oProperty))
@@ -141,7 +144,7 @@ bool OOXDocumentReader::Parse(ReaderParameter oParam)
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------
-	m_poDocument->RemoveItem(0); //бланковый при инициализации
+	m_poDocument->RemoveItem(0); //blank during initialization
 
 	for (int sect = 0; sect < m_poDocument->GetCount(); sect++)
 	{
@@ -187,7 +190,7 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oHyphenationZone.IsInit() && m_ooxSettings->m_oHyphenationZone->m_oVal.IsInit())
 	{
-		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //todooo проверить размерность
+		oParam.oRtf->m_oProperty.m_nHyphenationRight = m_ooxSettings->m_oHyphenationZone->m_oVal->ToTwips(); //todooo check dimension
 	}
 	if (m_ooxSettings->m_oDefaultTabStop.IsInit() && m_ooxSettings->m_oDefaultTabStop->m_oVal.IsInit())
 	{
@@ -223,7 +226,7 @@ bool OOXSettingsReader::Parse(ReaderParameter oParam)
 	}
 	if (m_ooxSettings->m_oCompat.IsInit())
 	{
-		// todooo - реализовать в DocxFormat
+		// todooo - implement in DocxFormat
 
 		//if( L"w:doNotUseHTMLParagraphAutoSpacing" == sNodeName )
 		//	oParam.oRtf->m_oProperty.m_bHtmlAutoSpace = 0;

@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "Utils.h"
@@ -134,7 +137,7 @@ std::wstring RtfUtility::RtfInternalEncoder::Encode( std::wstring sFilename )
 {
 	return L"{\\*filename " + sFilename + L"\\*end}";
 }
-void RtfUtility::RtfInternalEncoder::Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ) //сразу записывает в файл
+void RtfUtility::RtfInternalEncoder::Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ) //writes directly to file
 {
 #if defined(_WIN32) || defined(_WIN64)
 	std::string sAnsiText(sText.begin(), sText.end());
@@ -258,7 +261,7 @@ int RtfUtility::String2Twips( std::wstring sValue )
 }
 int RtfUtility::px2Twip(int px)
 {
-	return 15 * px; //из наблюдений за word
+	return 15 * px; //from observations of Word
 }
 int RtfUtility::pc2Twip(double pc)
 {
@@ -367,10 +370,10 @@ bool RtfUtility::IsDigit( int nChar )
 std::wstring RtfUtility::Preserve( std::wstring sText )
 {
 	std::wstring sResult = sText;
-	//обрезавем лишние пробелы
+	//trim extra spaces
 	//sResult.Trim();
 
-	//удаляем дублирующие пробелы
+	//remove duplicate spaces
 	XmlUtils::replace_all(sResult, L"  ", L" ");
 	//		while( sResult.Replace( L"  ", L" " ) > 0 )
 	//			;
@@ -463,8 +466,8 @@ std::wstring RtfUtility::convert_string_icu(std::string::const_iterator start, s
 		NSUnicodeConverter::CUnicodeConverter oConverter;
 		return oConverter.toUnicode(inptr, insize, nCodepage, true);
 	}
-	else //сф_850000158725_R7_M194_МО_Q194.rtf
-	{//текущая локаль
+	else //invoice_850000158725_R7_M194_MO_Q194.rtf
+	{//current locale
 
 		std::locale loc("");
 		std::ctype<wchar_t> const &facet = std::use_facet<std::ctype<wchar_t> >(loc);

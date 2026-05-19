@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "ApplicationFontsWorker.h"
 
@@ -332,7 +335,7 @@ public:
 				}
 				else
 				{
-					// для шрифта ASCW3 допускаем маленькую длину range
+					// for ASCW3 font we allow small range length
 					nPriority = m_nPriority;
 				}
 
@@ -563,7 +566,7 @@ public:
 		std::vector<NSFonts::CFontInfo*>* pList = applicationFonts->GetList()->GetFonts();
 		int nCount = (int)pList->size();
 
-		// сначала строим массив всех файлов шрифтов
+		// first build array of all font files
 		std::map<std::wstring, LONG> mapFontFiles;
 		std::map<LONG, std::wstring> mapFontFiles2;
 		LONG lFontFiles = 0;
@@ -585,7 +588,7 @@ public:
 
 		if (CheckBreak()) return;
 
-		// теперь строим массив всех шрифтов по имени
+		// now build array of all fonts by name
 		std::map<std::wstring, CFontInfoJS> mapFonts;
 		std::vector<std::wstring> arrFonts;
 
@@ -685,7 +688,7 @@ public:
 
 		if (CheckBreak()) return;
 
-		// теперь сортируем шрифты по имени ----------
+		// now sort fonts by name ----------
 		size_t nCountFonts = arrFonts.size();
 
 #if 1
@@ -706,7 +709,7 @@ public:
 #endif
 
 		std::wstring strFontSelectionBin = L"";
-		// нужно ли скидывать font_selection.bin
+		// whether to dump font_selection.bin
 		if (ONLYOFFICE_ALL_FONTS_VERSION == nVersion && !m_bIsCheckThumbnailsMode)
 		{
 			strFontSelectionBin = m_pMain->m_sDirectory + L"/font_selection.bin";
@@ -720,8 +723,8 @@ public:
 			pRangeBuilder->WriteInt(0);
 		}
 
-		// и самое главное. Здесь должен скидываться скрипт для работы со всеми шрифтами.
-		// все объекты, которые позволят не знать о существующих фонтах
+		// most importantly, the script for working with all fonts should be dumped here.
+		// all objects that will allow not knowing about existing fonts
 		std::wstring sAllFontsPath = m_pMain->m_sDirectory + L"/AllFonts.js";
 		if (!m_pMain->m_sAllFontsJSPath.empty())
 			sAllFontsPath = m_pMain->m_sAllFontsJSPath;
@@ -731,7 +734,7 @@ public:
 		if (m_bIsCheckThumbnailsMode)
 			sAllFontsPath = L"";
 
-		// AllFonts.js для веба точно такой же, но с другими путями
+		// AllFonts.js for web is exactly the same, but with different paths
 		std::wstring sFontFilesWeb = L"";
 		size_t nFontFilesWeb1 = 0;
 		size_t nFontFilesWeb2 = 0;
@@ -750,7 +753,7 @@ public:
 
 			nFontFilesWeb1 = oWriterJS.GetCurSize();
 
-			// сначала все файлы
+			// first all files
 			size_t nCountFiles = mapFontFiles.size();
 			if (nCountFiles == 0)
 				oWriterJS.WriteString(L"window[\"__fonts_files\"] = []; \n\n");
@@ -896,9 +899,9 @@ public:
 
 				NSFonts::CApplicationFontsSymbols oApplicationChecker;
 
-				// приоритеты шрифтов. по имени (все стили)
-				// если шрифт из mapFontsPriorityStandard, то приоритет из этого map
-				// иначе - максимальный размер из файлов-стиля шрифта (max(regular,italic,bold,bolditalic))
+				// font priorities by name (all styles)
+				// if font is from mapFontsPriorityStandard, priority is from that map
+				// otherwise - maximum size of font style files (max(regular,italic,bold,bolditalic))
 				std::vector<CFontPriority> arrFontsPriority;
 				for (int index = 0; index < nCountFonts; ++index)
 				{
@@ -964,10 +967,10 @@ public:
 					arrFontsPriority.push_back(f);
 				}
 
-				// сортируем по приоритету
+				// sort by priority
 				std::sort(arrFontsPriority.begin(), arrFontsPriority.end(), CFontPriority::Compare);
 
-				// для удобства - делаем map
+				// for convenience - create a map
 				std::map<std::wstring, int> mapFontsPriority;
 				int nIndexPriority = 1;
 				for (std::vector<CFontPriority>::iterator i = arrFontsPriority.begin(); i != arrFontsPriority.end(); i++)
@@ -1000,7 +1003,7 @@ public:
 
 					if (1 == nCounterFonts && !bIsSmallRangesDetect)
 					{
-						// отключили этот режим (bIsSmallRangesDetect всегда true)
+						// this mode is disabled (bIsSmallRangesDetect is always true)
 						std::wstring sPathC = L"";
 						int nFaceIndexC = 0;
 						if (-1 != info.m_lIndexR)
@@ -1032,8 +1035,8 @@ public:
 					}
 					else
 					{
-						// каждый шрифт - анализируем на символы. в массив символов (tmp buffer) -
-						// пишем m_nStyle
+						// for each font - analyze symbols. write m_nStyle to the
+						// symbol array (tmp buffer)
 						int nMask = 0;
 						if (-1 != info.m_lIndexR)
 						{
@@ -1062,15 +1065,15 @@ public:
 
 						if (bIsSmallRangesDetect)
 						{
-							// чекаем все символы, которые есть во ВСЕХ стилях шрифта
-							// nSumPriority - это добавка для ranges маленькой длины, чтобы если есть
-							// длинный диапазон но большим приоритетом - то он его перебьет.
-							// для этого добавка - количество шрифтов. чтобы хватило
+							// check all symbols that exist in ALL font styles
+							// nSumPriority - is an addition for small range lengths, so that if there's
+							// a long range with higher priority - it will override it.
+							// for this, the addition is the number of fonts to be sufficient
 							oAllChecker.Apply2(nMask, nSumPriority);
 						}
 						else
 						{
-							// просто чекаем все символы, которые есть во ВСЕХ стилях шрифта
+							// just check all symbols that exist in ALL font styles
 							oAllChecker.Apply1(nMask);
 						}
 					}
@@ -1352,7 +1355,7 @@ public:
 			if (NSFile::CFileBinary::Exists(strThumbnailPath))
 				continue;
 
-			// создаем картинку для табнейлов
+			// create image for thumbnails
 			double dDpi = 96 * dScale;
 			LONG lH1_px = (LONG)(28 * dScale);
 			LONG lWidthPix = (LONG)(300 * dScale);
@@ -1427,9 +1430,9 @@ public:
 				}
 				else if (pFile)
 				{
-					// у нас режим "без квадратов"
-					// но есть шрифты, в которых символы есть, но нулевой ширины.
-					// только из-за таких шрифтов делаем заглушку
+					// we are in "no squares" mode
+					// but there are fonts where characters exist but have zero width.
+					// we create a fallback only for such fonts
 					bool bIsExistEmpty = false;
 					for (NSStringExt::CStringUnicodeIterator oIterator(sFontName); oIterator.Check(); oIterator.Next())
 					{
@@ -1519,6 +1522,9 @@ public:
 					{
 						++nIndexCur;
 						pImageDataAlpha += 4;
+
+						if (nIndexCur >= nIndexCurLimit)
+							break;
 
 						if (0 != *pImageDataAlpha)
 							break;
@@ -1633,7 +1639,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 	std::vector<std::string> strFonts;
 	std::wstring strFontsCheckPath = m_sDirectory + L"/fonts.log";
 
-	// читаем "старый" набор шрифтов
+	// read the "old" font set
 	if (true)
 	{
 		NSFile::CFileBinary oFile;
@@ -1686,7 +1692,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 #endif
 	}
 
-	// читаем "новый" набор шрифтов
+	// read the "new" font set
 	NSFonts::IApplicationFonts* pApplicationF = NSFonts::NSApplication::Create();
 	std::vector<std::wstring> strFontsW_CurSrc;
 	std::vector<std::wstring> strFontsW_Cur;
@@ -1699,7 +1705,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 		NSDirectory::GetFiles2(*i, strFontsW_CurSrc, true);
 	}
 
-	// удаляем папки, которые не нужно парсить
+	// remove folders that should not be parsed
 	strFontsW_Cur.reserve(strFontsW_CurSrc.size());
 	for (std::vector<std::wstring>::iterator i = strFontsW_CurSrc.begin(); i != strFontsW_CurSrc.end(); i++)
 	{
@@ -1716,18 +1722,18 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 #endif
 	}
 
-	// сортируем (нужно для сравнения для старого набора)
+	// sort (needed for comparison with the old set)
 	std::sort(strFontsW_Cur.begin(), strFontsW_Cur.end());
 
 	bool bIsEqual = true;
 
-	// если количество шрифтов в наборах не совпадают - то нужно перегенерировать
+	// if font counts in sets don't match - regeneration is needed
 	if (strFonts.size() != strFontsW_Cur.size())
 		bIsEqual = false;
 
 	if (bIsEqual)
 	{
-		// если наборы не совпадают - то нужно перегенерировать
+		// if sets don't match - regeneration is needed
 		int nCount = (int)strFonts.size();
 		for (int i = 0; i < nCount; ++i)
 		{
@@ -1741,8 +1747,8 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 
 	if (bIsEqual)
 	{
-		// наборы совпадают - скинут ли font_selection.bin
-		// если нет - нужно перегенерировать
+		// sets match - check if font_selection.bin was dumped
+		// if not - regeneration is needed
 		if (!NSFile::CFileBinary::Exists(strFontsSelectionBin))
 			bIsEqual = false;
 	}
@@ -1762,7 +1768,7 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 		if (!m_bIsUseOpenType)
 			nFlag = 2;
 
-		// формируем новый набор шрифтов
+		// create new font set
 		NSStringUtils::CStringBuilder oFontsLog;
 #ifdef ONLYOFFICE_FONTS_VERSION
 		oFontsLog.WriteString(L"ONLYOFFICE_FONTS_VERSION_");
@@ -1776,20 +1782,20 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 			oFontsLog.WriteString(L"\n");
 		}
 
-		// читаем шрифты
+		// read fonts
 		pApplicationF->InitializeFromArrayFiles(strFontsW_Cur, nFlag);
 
-		// скидываем все
+		// dump everything
 		m_pInternal->SaveAllFontsJS(pApplicationF, ONLYOFFICE_ALL_FONTS_VERSION);
 
-		// поддержка старой версии AllFonts.js
+		// support for old AllFonts.js version
 		if (m_bIsUseAllVersions)
 		{
 			for (int nVer = 0; nVer < ONLYOFFICE_ALL_FONTS_VERSION; ++nVer)
 				m_pInternal->SaveAllFontsJS(pApplicationF, nVer);
 		}
 
-		// скидываем новый набор шрифтов
+		// dump new font set
 		if (!m_pInternal->CheckBreak())
 			NSFile::CFileBinary::SaveToFile(strFontsCheckPath, oFontsLog.GetData());
 	}
@@ -1799,13 +1805,13 @@ NSFonts::IApplicationFonts* CApplicationFontsWorker::Check()
 
 	if (!m_pInternal->m_pBreaker || m_pInternal->m_pBreaker->IsFontsWorkerRunned())
 	{
-		// никаких прерываний не было
+		// no interruptions occurred
 		pApplicationF = NSFonts::NSApplication::Create();
 		pApplicationF->InitializeFromFolder(m_sDirectory);
 	}
 	else
 	{
-		// прервали - подчищаем рабочую директорию
+		// interrupted - clean up working directory
 		if (m_bIsCleanDirectory)
 		{
 			std::vector<std::wstring> arFiles = NSDirectory::GetFiles(m_sDirectory, false);

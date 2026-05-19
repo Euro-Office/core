@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "DateReader.h"
@@ -56,7 +59,7 @@ bool DateReader::GetDigitalDate(const std::wstring &date, double &result, bool &
         cellCounter_++;
         return false;
     }
-    ///если не было найдено ни одной даты в n ячейках - перестаем их искать
+    ///if no date was found in n cells - stop searching for them
     if(!dateFound_ && cellCounter_ > NonDatecellLimit)
         return false;
     if(!parseIsoDate(date,time))
@@ -73,10 +76,10 @@ bool DateReader::GetDigitalDate(const std::wstring &date, double &result, bool &
         Hastime = true;
     }
 
-    //дата без времени
+    //date without time
     if(time.tm_year > 0 && time.tm_hour == 0 && time.tm_min == 0 && time.tm_sec == 0)
     {
-        //определяем стандартная ли дата
+        //determine if date is standard
         if(time.tm_year >= 70)
             result = getStandartDate(time);
         else
@@ -86,7 +89,7 @@ bool DateReader::GetDigitalDate(const std::wstring &date, double &result, bool &
         dateFound_ = true;
         return true;
     }
-    //время без даты
+    //time without date
     else if(time.tm_year == 0 && time.tm_mday == 0 && time.tm_mon == 0)
     {
         result = getStandartTime(time);
@@ -95,7 +98,7 @@ bool DateReader::GetDigitalDate(const std::wstring &date, double &result, bool &
         dateFound_ = true;
         return true;
     }
-    else //дата и время
+    else //date and time
     {
 
         if(time.tm_year >= 70)
@@ -215,12 +218,12 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
     ParsingElem parsingNow = ParsingElem::none;
     auto cutteddateStr =  spaceCut(date);
 
-    //разделитель времени отличается только в нескольких локалях
+    //time separator differs only in a few locales
     wchar_t timeSeparator = L':';
     if(lcid_ == 1035 || lcid_ == 11)
         timeSeparator = L'.';
 
-    //флаги собранных частей даты
+    //flags for collected date parts
     bool bSec = false;
     bool bMin = false;
     bool bHour = false;
@@ -232,7 +235,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
     DateElemTypes PrevType = DateElemTypes::none;
     std::vector<wchar_t> StringBuf;
 
-    //посимвольно парсим дату
+    //parse date character by character
     for(auto i = 0; i < cutteddateStr.length(); i++)
     {
         auto charElement = cutteddateStr.at(i);
@@ -245,7 +248,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
             elementType = DateElemTypes::delimeter;
         else
             elementType = DateElemTypes::letter;
-        if(CurrentElementType == DateElemTypes::none)//первый проход
+        if(CurrentElementType == DateElemTypes::none)// first pass
         {
             StringBuf.push_back(charElement);
         }
@@ -253,7 +256,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
         {
             if(CurrentElementType == elementType)
             {
-                //проверяем валидность размеров элементов даты
+                // checking validity of date element sizes
                 if(elementType == DateElemTypes::digit && StringBuf.size() < 4)
                 {
                     StringBuf.push_back(charElement);
@@ -276,7 +279,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                 {
                     if(timeSeparator != locInf.DateSeparator[0])
                     {
-                        //парсим часть даты
+                        // parsing date part
                         _INT32 datePart;
                         if(!tryGetInt(StringBuf, datePart))
                         {
@@ -297,7 +300,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                         }
 
                     }
-                    ///todo вариант когда и дата и время разделяются "."
+                    ///todo case when both date and time are separated by "."
                 }
                 if(CurrentElementType == DateElemTypes::letter && elementType == DateElemTypes::delimeter)
                 {
@@ -312,7 +315,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                 }
                 else if((CurrentElementType == DateElemTypes::delimeter || CurrentElementType == DateElemTypes::space) && elementType != DateElemTypes::space)
                 {
-                    //просто добавляем в буфер то что было за разделителем
+                    // simply add to buffer what was after the delimiter
                     StringBuf.push_back(charElement);
                 }
                 else if(elementType== DateElemTypes::space)
@@ -341,7 +344,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                      }
                     if(CurrentElementType == DateElemTypes::letter)
                     {
-                        // если это не am pm то в дате может быть буквенным только имя месяца
+                        // if this is not am pm then only month name can be alphabetic in a date
                         if(!parseAmPm(StringBuf, result))
                         {
                             if(parseMonthName(StringBuf, result))
@@ -354,10 +357,10 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
                 }
                 else if(elementType == DateElemTypes::letter)
                 {
-                    //невалидная дата
+                    // invalid date
                     bError = true;
                 }
-                //анализируем собранный элемент
+                // analyzing the collected element
                 PrevType = CurrentElementType;
             }
         }
@@ -366,7 +369,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
         if(bError)
             return false;
     }
-    //анализируем последний элемент в буфере
+    // analyzing the last element in the buffer
     if(parsingNow == ParsingElem::date)
     {
         if(CurrentElementType == DateElemTypes::digit)
@@ -405,7 +408,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
             StringBuf.clear();
         }
     }
-    //нормализуем год если он есть
+    // normalize the year if it exists
     if(Hasdate)
     {
         result.tm_mon--;
@@ -419,7 +422,7 @@ bool DateReader::parseLocalDate(const std::wstring &date, tm &result, bool &Hasd
 bool DateReader::parseIsoDate(const std::wstring &date, tm &result)
 {
     std::wregex iso_regex(
-    LR"(^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?(?:(Z)|([+-])(\d{2})(?::?(\d{2}))?)?)?$)"                        // таймзона: Z или ±ч:мин
+    LR"(^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{1,3}))?)?(?:(Z)|([+-])(\d{2})(?::?(\d{2}))?)?)?$)"                        // timezone: Z or ±h:min
     );
 
     std::wsmatch match;
@@ -461,11 +464,11 @@ bool DateReader::parseIsoDate(const std::wstring &date, tm &result)
 }
 _INT32 DateReader::getStandartDate(tm date)
 {
-    // обнуление времени, чтобы оно не влияло на дату
+    // zeroing time so it doesn't affect the date
     date.tm_hour = 0;
     date.tm_min = 0;
     date.tm_sec = 0;
-    // Преобразование даты в формат excel
+    // Converting date to Excel format
     auto timeT = mktime(&date);
     auto tp = std::chrono::system_clock::from_time_t(timeT);
     auto excelTime = std::chrono::duration_cast<std::chrono::seconds>(tp.time_since_epoch()).count();
@@ -483,7 +486,7 @@ double DateReader::getStandartTime(tm date)
 }
 
 
-// Функция для определения високосного года
+// Function to determine leap year
 bool isLeapYear(int year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
@@ -494,19 +497,19 @@ _INT32 DateReader::getNonUnixDate(tm date)
 
        long days = 1;
 
-       // Добавляем количество дней за предыдущие годы
+       // Add the number of days for previous years
        for (int year = 1900; year < date.tm_year + 1900; ++year) {
            days += isLeapYear(year) ? 366 : 365;
        }
 
-       // Добавляем количество дней до начала текущего года
+       // Add the number of days until the start of current year
        for (int month = 0; month < date.tm_mon; ++month) {
            days += daysInMonth[month];
            if (month == 1 && isLeapYear(date.tm_year + 1900))
-               days++; // добавляем 1 день для февраля в високосном году
+               days++; // add 1 day for February in leap year
        }
 
-       // Добавляем количество дней текущего месяца
+       // Add the number of days of the current month
        days += date.tm_mday;
 
        return days;
@@ -514,7 +517,7 @@ _INT32 DateReader::getNonUnixDate(tm date)
 
 _INT32 DateReader::normalizeYear(_INT32 year)
 {
-    // год полностью
+    // full year
     if(year > 1900)
         return year - 1900;
     else if (year < 69)

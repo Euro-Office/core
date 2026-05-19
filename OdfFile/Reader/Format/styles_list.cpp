@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "styles_list.h"
@@ -629,15 +632,15 @@ void text_list_level_style_number::pptx_convert(oox::pptx_conversion_context & C
 	
 	CP_XML_WRITER(strm)
 	{ 	
-		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get()))///these properties relate
+			// to icon rendering !!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
 	    }
 		if (false == num_format.empty())
 		{
-			CP_XML_NODE(L"a:buAutoNum")//ms козлы !! для них оказыается ВАЖЕН порядок .. если записать это поле первым, а потом свойства - нихера в мс2010 не отображается верно !!!
+			CP_XML_NODE(L"a:buAutoNum")//ms jerks !! turns out order is IMPORTANT for them .. if you write this field first, then properties - nothing displays correctly in ms2010 !!!
 			{
 				CP_XML_ATTR(L"startAt", number_attr_.text_start_value_);
 				CP_XML_ATTR(L"type", num_format);
@@ -804,8 +807,8 @@ void text_list_level_style_bullet::pptx_convert(oox::pptx_conversion_context & C
 		style_text_properties * textProperties = dynamic_cast<style_text_properties *>(text_properties_.get());
 		std::wstring bullet = bullet_attr_.text_bullet_char_.get_value_or(L"\x2022");
 	    
-		if (textProperties)///эти свойства относятся 
-			// к отрисовки значков !!! а не самого текста
+		if (textProperties)///these properties relate
+			// to icon rendering !!! not the text itself
 	    {
 	        textProperties->content_.pptx_convert_as_list(Context);
 			strm << Context.get_text_context().get_styles_context().text_style().str();
@@ -963,8 +966,8 @@ void text_list_level_style_image::pptx_convert(oox::pptx_conversion_context & Co
 			style_text_properties* textProperties = dynamic_cast<style_text_properties*>(text_properties_.get());
 			wchar_t bullet = L'\x2022';
 
-			if (textProperties)///эти свойства относятся 
-				// к отрисовки значков !!! а не самого текста
+			if (textProperties)///these properties relate
+				// to bullet rendering !!! not the text itself
 			{
 				textProperties->content_.pptx_convert_as_list(Context);
 				strm << Context.get_text_context().get_styles_context().text_style().str();

@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #ifndef _ZIPFOLDER_H_
 #define _ZIPFOLDER_H_
@@ -86,30 +89,30 @@ public:
 	virtual ~IFolder() {}
 
 	virtual IFolderType getType() = 0;
-	// полный путь по локальному
+	// full path from local path
 	virtual std::wstring getFullFilePath(const std::wstring& path) = 0;
-	// локальный путь по полному (без первого '/')
+	// local path from full path (without the leading '/')
 	virtual std::wstring getLocalFilePath(const std::wstring& path) = 0;
-	// чтение файла в буффер. промежуточный класс нужен, чтобы
-	// одна реализация могли отдавать память напрямую, а другая выделять и не хранить у себя
+	// read file into buffer. intermediate class is needed so that
+	// one implementation can return memory directly, while another allocates and doesn't store it
 	virtual bool read(const std::wstring& path, CBuffer*& buffer) = 0;
-	// запись данных в файл
+	// write data to file
 	virtual void write(const std::wstring& path, BYTE* data, DWORD length) = 0;
-	// работа с файлами
+	// file operations
 	virtual void move(const std::wstring& src, const std::wstring& dst) = 0;
 	virtual bool exists(const std::wstring& path) = 0;
 	virtual void remove(const std::wstring& path) = 0;
-	// работа с директориями
+	// directory operations
 	virtual void createDirectory(const std::wstring& path) = 0;
 	virtual void removeDirectory(const std::wstring& path) = 0;
 	virtual std::vector<std::wstring> getFiles(const std::wstring& path, bool recursion) = 0;
-	// финализация
+	// finalization
 	virtual CBuffer* finalize() { return NULL; }
-	// чтение ноды
+	// read node
 	virtual XmlUtils::CXmlNode getNodeFromFile(const std::wstring& path) = 0;
 	virtual bool getReaderFromFile(const std::wstring& path, XmlUtils::CXmlLiteReader& oReader) = 0;
 
-	// вспомогательные функции
+	// helper functions
 	void writeXml(const std::wstring& path, const std::wstring& xml)
 	{
 		std::string sXmlUtf8 = U_TO_UTF8(xml);
@@ -298,7 +301,7 @@ private:
 
 		posB = posA;
 
-		// не ищем '['. просто первый неравный
+		// don't search for '['. just the first non-equal
 		//if ('[' != a[posA - 1] || '[' != b[posB - 1])
 		//    goto error;
 
@@ -455,14 +458,14 @@ public:
 	}
 };
 
-// Работает с архивом в памяти
+// Works with an archive in memory
 class CZipFolderMemory : public IFolder
 {
 	CZipBuffer* m_zlib;
 
 protected:
 
-	// Конвертирует wstring -> string и убирает '/' в начале, т.к. пути относительные архива
+	// Converts wstring -> string and removes '/' at the beginning, since paths are relative to the archive
 	std::string getLocalFilePathA(const std::wstring& path)
 	{
 		std::string sPath = U_TO_UTF8(path);
@@ -472,7 +475,7 @@ protected:
 	}
 
 public:
-	// Открывает архив, переданные данные необходимо освободить после использования класса
+	// Opens the archive, the passed data must be freed after class usage
 	CZipFolderMemory()
 	{
 		m_zlib = new CZipBuffer();
@@ -481,7 +484,7 @@ public:
 	{
 		m_zlib = new CZipBuffer(data, length);
 	}
-	// Закрывает архив и очищает память
+	// Closes the archive and frees memory
 	~CZipFolderMemory()
 	{
 		delete m_zlib;
@@ -492,12 +495,12 @@ public:
 		return iftZip;
 	}
 
-	// Относительный путь до файла в архиве
+	// Relative path to the file in the archive
 	virtual std::wstring getFullFilePath(const std::wstring& path)
 	{
 		return path;
 	}
-	// Относительный путь до файла в архиве без '/' в начале
+	// Relative path to the file in the archive without '/' at the beginning
 	virtual std::wstring getLocalFilePath(const std::wstring& path)
 	{
 		if (!path.empty() && path[0] == L'/')
@@ -505,7 +508,7 @@ public:
 		return path;
 	}
 
-	// Читает файл по относительному пути в архиве, полученные данные необходимо освободить
+	// Reads a file by relative path in the archive, the returned data must be freed
 	virtual bool read(const std::wstring& path, CBuffer*& buffer)
 	{
 		buffer = NULL;
@@ -520,30 +523,30 @@ public:
 		}
 		return false;
 	}
-	// Пишет файл по относительному пути в архиве, переданные данные необходимо освободить
+	// Writes a file by relative path in the archive, the passed data must be freed
 	virtual void write(const std::wstring& path, BYTE* data, DWORD length)
 	{
 		std::string sPath = getLocalFilePathA(path);
 		m_zlib->addFile(sPath, data, length);
 	}
-	// Перемещает файл в архиве
+	// Moves a file within the archive
 	virtual void move(const std::wstring& sSrc, const std::wstring& sDst)
 	{
 		m_zlib->move(getLocalFilePathA(sSrc), getLocalFilePathA(sDst));
 	}
-	// Содержится ли файл в архиве
+	// Checks if the file exists in the archive
 	virtual bool exists(const std::wstring& path)
 	{
 		std::string sPath = getLocalFilePathA(path);
 		return std::find_if(m_zlib->m_arrFiles.begin(), m_zlib->m_arrFiles.end(), [sPath](const CZipBuffer::CFile& file){ return file.m_sPath == sPath; }) != m_zlib->m_arrFiles.end();
 	}
-	// Удаляет файл по относительному пути в архиве
+	// Removes a file by relative path in the archive
 	virtual void remove(const std::wstring& path)
 	{
 		std::string sPath = getLocalFilePathA(path);
 		m_zlib->removeFile(sPath);
 	}
-	// Создавать директорию в архиве не требуется
+	// Creating a directory in the archive is not required
 	virtual void createDirectory(const std::wstring& path)
 	{
 	}
@@ -553,7 +556,7 @@ public:
 		for (std::vector<std::wstring>::iterator i = arFiles.begin(); i != arFiles.end(); i++)
 			remove(*i);
 	}
-	// Возвращает вектор путей расположенных в папке
+	// Returns a vector of paths located in the folder
 	virtual std::vector<std::wstring> getFiles(const std::wstring& path, bool bIsRecursion)
 	{
 		std::string sPath = getLocalFilePathA(path);
@@ -579,7 +582,7 @@ public:
 		}
 		return sRes;
 	}
-	// Возвращает архивированные данные и закрывает архив, полученные данные необходимо освободить
+	// Returns the archived data and closes the archive, the returned data must be freed
 	virtual CBuffer* finalize()
 	{
 		BYTE* data = NULL;
@@ -588,7 +591,7 @@ public:
 		m_zlib->close();
 		return new CBuffer(data, length, true);
 	}
-	// Читает файл по относительному пути в архиве и формирует из него CXmlNode
+	// Reads a file by relative path in the archive and creates a CXmlNode from it
 	virtual XmlUtils::CXmlNode getNodeFromFile(const std::wstring& path)
 	{
 		CBuffer* buffer = NULL;

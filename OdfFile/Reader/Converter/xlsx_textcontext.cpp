@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "xlsx_textcontext.h"
@@ -82,7 +85,7 @@ public:
 	void ApplyTextProperties		(std::wstring style, std::wstring para_style, odf_reader::text_format_properties & propertiesOut);
 	void ApplyParagraphProperties	(std::wstring style, odf_reader::paragraph_format_properties & propertiesOut);
 
-	void set_local_styles_container	(odf_reader::styles_container*  local_styles_);//это если стили объектов содержатся в другом документе
+	void set_local_styles_container	(odf_reader::styles_container*  local_styles_);//this is if object styles are contained in another document
 
 	bool is_drawing_context(){return in_draw;}
 
@@ -110,16 +113,16 @@ private:
     void write_rPr(std::wostream & strm);
 	void write_pPr(std::wostream & strm);
   
-	size_t paragraphs_cout_; //???? тока из за начала отсчета?
+	size_t paragraphs_cout_; //???? only because of count start?
    
- 	std::wstringstream	text_;		//приходящий текст
-    std::wstringstream	paragraph_;	//перманенто скидываемые параграфы
-    std::wstringstream	run_;		//перманенто скидываемые куски с быть может разными свойствами
+ 	std::wstringstream	text_;		//incoming text
+    std::wstringstream	paragraph_;	//permanently dumped paragraphs
+    std::wstringstream	run_;		//permanently dumped chunks with possibly different properties
   
 	 std::wstring		store_cell_string_;
     xlsx_shared_strings xlsx_shared_strings_;
 	
-	std::wstring		paragraph_style_name_;//был вектор ... не нужен, так как в один момент времени может быть тока один стиль параграфа,текста,объекта при приходе нового - дампится
+	std::wstring		paragraph_style_name_;//was a vector... not needed, since at one moment there can be only one paragraph/text/object style, when new one arrives - it gets dumped
     std::wstring		span_style_name_;
 
 };
@@ -161,7 +164,7 @@ void xlsx_text_context::Impl::start_paragraph(const std::wstring & styleName)
 		if ( in_comment || only_text/* || in_cell_content*/)
 		{
 			//text_ << L"&#10;";
-			// конец предыдущего абзаца и начало следующего
+			// end of previous paragraph and start of next
 			text_ << L"\n"; // &#xA;
 		}
 		else/* (paragraph_style_name_ != styleName)*/
@@ -186,7 +189,7 @@ void xlsx_text_context::Impl::end_paragraph()
 	in_paragraph = false;
 }
 
-void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//кусок текста в абзаце(параграфе) со своими свойствами - этто может быть и 1 буква
+void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//text chunk in paragraph with its own properties - this can be even 1 letter
 {
  	int text_size = text_.str().length();
 
@@ -208,8 +211,8 @@ void xlsx_text_context::Impl::start_span(const std::wstring & styleName)//кус
 	 in_span			= true;
 }
 
-void xlsx_text_context::Impl::end_span() //odf корявенько написан - возможны повторы стилей в последовательных кусках текста
-//пока с анализом стилей тока комменты - остальные текстовые куски как есть.. с охрененным возможно дубляжом
+void xlsx_text_context::Impl::end_span() //odf is written awkwardly - style repetitions possible in consecutive text chunks
+//for now only comments analyze styles - other text chunks as is.. with possible huge duplication
 {
      if (!in_comment && !only_text)
 	 {
@@ -542,7 +545,7 @@ void xlsx_text_context::Impl::start_drawing_content()
 }
 std::wstring xlsx_text_context::Impl::end_comment_content()
 {
-	dump_run();//если в комменте куча абзацев со одним стилем - сдампится здесь - иначе дампится по мере прихода каждого нового стиля
+	dump_run();//if comment has many paragraphs with same style - dumps here - otherwise dumps as each new style arrives
 
 	std::wstring comment= run_.str();
   
@@ -560,7 +563,7 @@ std::wstring xlsx_text_context::Impl::end_comment_content()
 }
 std::wstring xlsx_text_context::Impl::end_drawing_content()
 {
-	dump_paragraph();//если в draw куча абзацев со одним стилем - сдампится здесь - иначе дампится по мере прихода каждого нового стиля
+	dump_paragraph();//if draw has many paragraphs with same style - dumps here - otherwise dumps as each new style arrives
 
 	std::wstring draw = paragraph_.str();
   

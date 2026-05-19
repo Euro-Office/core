@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "CSVReader.h"
 #include "CellFormatController/CellFormatController.h"
@@ -193,14 +196,14 @@ int CSVReader::Impl::AddCell(std::wstring &sText, INT nStartCell, std::stack<INT
 	}
 	size_t length = sText.length();
 
-// Пустую не пишем
+// Don't write empty
 	if ((0 == length) || (sText[0] == L'\0'))
 		return result;
 
 	OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
 	pCell->m_oType.Init();
 
-	pCell->m_oCacheValue = sText; // как есть
+	pCell->m_oCacheValue = sText; // as is
 
 	pCell->setRowCol(nRow, nCol);
 	result = cellFormatController_->ProcessCellType(pCell, sText, bIsWrap);
@@ -214,9 +217,9 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 	NSFile::CFileBinary oFile;
 	if (false == oFile.OpenFile(sFileName)) return AVS_FILEUTILS_ERROR_CONVERT;
 	//-----------------------------------------------------------------------------------
-	// Создадим Workbook
+	// Create Workbook
 	oXlsx.CreateWorkbook();
-	// Создадим стили
+	// Create styles
 	oXlsx.CreateStyles();
 
 	cellFormatController_ = std::make_shared<CellFormatController>(oXlsx.m_pStyles, lcid);
@@ -278,7 +281,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 	size_t nSize = sFileDataW.length();
 
 	if (nSize < 1 && nInputBufferSize > 0)
-	{//для синхронности вывода превью и нормального результата
+	{//for synchronization of preview and normal result output
 		const NSUnicodeConverter::EncodindId& oEncodindId = NSUnicodeConverter::Encodings[nCodePage];
 
 		NSUnicodeConverter::CUnicodeConverter oUnicodeConverter;
@@ -391,7 +394,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 		{
 			if (bInQuote)
 			{
-				// Добавим Wrap
+				// Add Wrap
 				bIsWrap = true;
 				continue;
 			}
@@ -408,7 +411,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 
 			if (wcNewLineR == wcCurrent && nIndex + 1 != nSize && wcNewLineN == pTemp[nIndex + 1])
 			{
-				// На комбинацию \r\n должен быть только 1 перенос
+				// For \r\n combination there should be only 1 newline
 				++nIndex;
 			}
 
@@ -439,7 +442,7 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 			if (pWorksheet->m_oSheetData->m_arrItems.size() > 1048576)
 			{
 				bMsLimit = true;
-				break; // ограниечние мс
+				break; // MS limit
 			}
 		}
 		else if (wcQuote == wcCurrent)
@@ -447,16 +450,16 @@ _UINT32 CSVReader::Impl::Read(const std::wstring &sFileName, OOX::Spreadsheet::C
 			// Quote
 			if (false == bInQuote && nStartCell == nIndex && nIndex + 1 != nSize)
 			{
-				// Начало новой ячейки (только если мы сразу после разделителя и не в конце файла)
+				// Start of new cell (only if we're right after delimiter and not at end of file)
 				bInQuote = !bInQuote;
 				nStartCell = nIndex + 1;
 			}
 			else if (bInQuote)
 			{
-				// Нужно удалить кавычку ограничитель
+				// Need to remove delimiter quote
 				oDeleteChars.push(nIndex);
 
-				// Если следующий символ кавычка, то мы не закончили ограничитель строки (1997,Ford,E350,"Super, ""luxurious"" truck")
+				// If next character is quote, then we haven't finished string delimiter (1997,Ford,E350,"Super, ""luxurious"" truck")
 				if (nIndex + 1 != nSize && wcQuote == pTemp[nIndex + 1])
 					++nIndex;
 				else

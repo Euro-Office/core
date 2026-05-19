@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #pragma once
 
@@ -41,72 +44,72 @@ namespace MathEquation
 	{
 	public:
 
-		// Начало и конец формулы
+		// Start and end of equation
 		virtual void BeginEquation() = 0;
 		virtual void EndEquation()   = 0;
 
-		// Начало и конец блока.
+		// Start and end of block.
 		virtual void BeginBlock() = 0;
 		virtual void EndBlock()   = 0;
 
-		// Выставляем размер в текущем блоке
+		// Set size in current block
         virtual void SetSize(_UINT16 nSize) = 0;
 
-		// Добавляем символ. К символу могут быть добавлены разные элементы. Зачеркивание, добавление акцента и т.д.
+		// Add symbol. Various elements can be added to symbol. Strikethrough, accent, etc.
         virtual void BeginChar(unsigned short uChar, unsigned char nTypeFace, bool bSpecialSymbol) = 0;
 		virtual void AddCharEmbel(MEMBELTYPE eType) = 0;
 		virtual void EndChar() = 0;
 
-		// Матрица. Количество блоков здесь равно nRows * nCol, посылаются последовательно в обычном порядке (первая строка слева направо, вторая строка слева направо и т.д.)
+		// Matrix. Number of blocks here equals nRows * nCol, sent sequentially in normal order (first row left to right, second row left to right, etc.)
         virtual void BeginMatrix(unsigned char nVAlign, MMATRIXHORALIGN eHorAlign, MMATRIXVERALIGN eVerAlign, bool bEqualRows, bool bEqualCols, unsigned char nRows, unsigned char nCols, unsigned char* pVerBorders, unsigned char* pHorBorders) = 0;
 		virtual void EndMatrix  () = 0;
 
         virtual void StartPile(unsigned char nHAlign, unsigned char nVAlign) = 0;
 		virtual void EndPile() = 0;
 
-		// Скобки с элементом внутри
+		// Brackets with element inside
 		virtual void BeginBrackets(MBRACKETSTYPE eType, bool bOpen, bool bClose) = 0;
 		virtual void EndBrackets  (MBRACKETSTYPE eType, bool bOpen, bool bClose) = 0;
 
-		// Корень. Первый блок - основание, второй, если есть, степень.
+		// Root. First block - base, second if present - degree.
 		virtual void BeginRoot(bool bDegree) = 0;
 		virtual void EndRoot  () = 0;
 
-		// Дроби. Первый блок - числитель, второй блок - знаменатель.
+		// Fractions. First block - numerator, second block - denominator.
 		virtual void BeginFraction(MFRACTIONTYPES eType, bool bInline) = 0;
 		virtual void EndFraction  () = 0;
 
-		// Если bInline = true, то последовательность блоков Base, Sub, Sup
-		// Если bInline = false, то последовательность блоков  Sub, Sup, Base
+		// If bInline = true, then block sequence is Base, Sub, Sup
+		// If bInline = false, then block sequence is Sub, Sup, Base
 		virtual void BeginScript(MSCRIPTALIGN eAlign, bool bBase = false, bool bSup = false, bool bSub = false, bool bInline = true) = 0;
 		virtual void EndScript  () = 0;
 
-		// Линия свеху или снизу относительно текста
+		// Line above or below text
 		virtual void BeginBar(MBARTYPE eType, bool bTop) = 0;
 		virtual void EndBar  () = 0;
 
-		// Стрелка с надписью сверху или снизу (отличе от BeginBar/EndBar в том, что здесь стрелка основной 
-		// объект, а текст - это небольшая надпись, а у тех функций наоборот)
+		// Arrow with label above or below (differs from BeginBar/EndBar in that here arrow is main
+		// object, and text is small label, while those functions are opposite)
 		virtual void BeginArrow(MARROWTYPE eType, bool bTop) = 0;
 		virtual void EndArrow  () = 0;
 
-		// Интегралы. Последовательность блоков всегда следующая(если блок присутствует) Base, Sub, Sup
+		// Integrals. Block sequence is always following (if block present) Base, Sub, Sup
 		virtual void BeginIntegral(MINTEGRALTYPE eType) = 0;
 		virtual void EndIntegral  () = 0;
 
-		// Фигурная скобка с текстом над/под объектом. Сначала идет основной объект, потом надпись фигурной скобки.
+		// Curly brace with text above/below object. First comes main object, then curly brace label.
 		virtual void BeginVerticalBrace(bool bTop) = 0;
 		virtual void EndVerticalBrace  () = 0;
 
-		// Сумма, произведение, копроизведение, объединение, пересечение. Последовательность блоков Base, Sub, Sup
+		// Sum, product, coproduct, union, intersection. Block sequence Base, Sub, Sup
 		virtual void BeingNArray(MNARRAYTYPE eType) = 0;
 		virtual void EndNArray  () = 0;
 
-		// Деление столбиком. С частным или без. Вначале всегда идет основание, потом если есть частное.
+		// Long division. With quotient or without. First always comes base, then quotient if present.
 		virtual void BeginLongDivision(MLONGDIVISION eType) = 0;
 		virtual void EndLongDivision  () = 0;
 
-		// < | > - такой элемент
+		// < | > - this type of element
 		virtual void BeginAngleBracketsWithSeparator(MANGLEBRACKETSWITHSEPARATORTYPE eType) = 0;
 		virtual void EndAngleBracketsWithSeparator  () = 0;
 

@@ -1,33 +1,36 @@
 /*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "../DocxFlat.h"
@@ -51,7 +54,7 @@ namespace OOX
 		void CStrokeChild::fromXML(XmlUtils::CXmlNode& oNode)
 		{
 			m_eType = et_Unknown;
-			// TO DO: Реализовать CStrokeChild::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CStrokeChild::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CStrokeChild::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -171,7 +174,7 @@ namespace OOX
 		}
 		void CCallout::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CCallout::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CCallout::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CCallout::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -239,7 +242,7 @@ namespace OOX
 		}
 		void CClipPath::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CClipPath::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CClipPath::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CClipPath::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -276,7 +279,7 @@ namespace OOX
 		}
 		void CColorMenu::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CColorMenu::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CColorMenu::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CColorMenu::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -304,7 +307,7 @@ namespace OOX
 		}
 		void CColorMenu::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Устанавливаем значения по умолчанию
+				// Set default values
 				m_oExtrusionColor = L"#000000";
 				m_oFillColor      = L"#0000FF";
 				m_oShadowColor    = L"#80800C";
@@ -337,7 +340,7 @@ namespace OOX
 		}
 		void CColorMru::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CColorMru::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CColorMru::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CColorMru::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -371,10 +374,10 @@ namespace OOX
 		}
 		void CColorMru::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Устанавливаем значения по умолчанию
+				// Set default values
 				std::wstring sColors;
 
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"colors", sColors )
@@ -420,7 +423,7 @@ namespace OOX
 		}
 		void CComplex::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CComplex::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CComplex::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CComplex::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -460,7 +463,7 @@ namespace OOX
 		}
 		void CRelation::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRelation::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRelation::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRelation::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -488,7 +491,7 @@ namespace OOX
 		}
 		void CRelation::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"idcntr", m_sIdCntr )
@@ -515,7 +518,7 @@ namespace OOX
 		}
 		void CRelationTable::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRelationTable::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRelationTable::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRelationTable::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -577,7 +580,7 @@ namespace OOX
 		}
 		void CDiagram::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CDiagram::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CDiagram::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CDiagram::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -650,7 +653,7 @@ namespace OOX
 		}
 		void CEntry::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CEntry::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CEntry::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CEntry::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -694,7 +697,7 @@ namespace OOX
 		}
 		void CEquationXml::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CEquationXml::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CEquationXml::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CEquationXml::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -708,7 +711,7 @@ namespace OOX
 			{
 				std::wstring sName = oReader.GetName();
 
-				// TO DO: Сделать чтение формул OOMML и Wc3MathML
+				// TO DO: Implement reading of OOMML and Wc3MathML formulas
 			}
 		}
 		std::wstring CEquationXml::toXML() const
@@ -744,7 +747,7 @@ namespace OOX
 		}
 		void CExtrusion::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CExtrusion::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CExtrusion::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CExtrusion::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -865,7 +868,7 @@ namespace OOX
 		}
 		void CExtrusion::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Устанавливаем значения по умолчанию
+				// Set default values
 
 				m_oBackDepth.SetValue( 36 );
 				m_oBrightness.SetValue( 0.3 );
@@ -933,7 +936,7 @@ namespace OOX
 		}
 		void CFieldCodes::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFieldCodes::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFieldCodes::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFieldCodes::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -964,7 +967,7 @@ namespace OOX
 		}
 		void CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CFill::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CFill::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CFill::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1008,7 +1011,7 @@ namespace OOX
 		}
 		void CIdMap::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CIdMap::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CIdMap::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CIdMap::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1052,7 +1055,7 @@ namespace OOX
 		}
 		void CInk::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CInk::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CInk::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CInk::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1098,7 +1101,7 @@ namespace OOX
 		}
 		void CLinkType::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CLinkType::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CLinkType::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CLinkType::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1130,7 +1133,7 @@ namespace OOX
 		}
 		void CLock::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CLock::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CLock::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CLock::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1216,7 +1219,7 @@ namespace OOX
 		}
 		void CLockedField::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CLockedField::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CLockedField::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CLockedField::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1359,7 +1362,7 @@ namespace OOX
 		}
 		void CProxy::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CProxy::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CProxy::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CProxy::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1411,7 +1414,7 @@ namespace OOX
 		}
 		void CR::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CR::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CR::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CR::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1458,7 +1461,7 @@ namespace OOX
 		}
 		void CR::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"how",   m_oHow )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"id",    m_sId )
@@ -1485,7 +1488,7 @@ namespace OOX
 		}
 		void CRegroupTable::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRegroupTable::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRegroupTable::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRegroupTable::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1530,7 +1533,7 @@ namespace OOX
 		}
 		void CRegroupTable::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 				WritingElement_ReadAttributes_End( oReader )
@@ -1554,7 +1557,7 @@ namespace OOX
 		}
 		void CRules::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CRules::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CRules::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CRules::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1599,7 +1602,7 @@ namespace OOX
 		}
 		void CRules::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1617,7 +1620,7 @@ namespace OOX
 		}
 		void CShapeLayout::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CShapeLayout::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CShapeLayout::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CShapeLayout::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1665,7 +1668,7 @@ namespace OOX
 		}
 		void CShapeLayout::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			
 			WritingElement_ReadAttributes_Start( oReader )
 			WritingElement_ReadAttributes_ReadSingle( oReader, L"v:ext", m_oExt )
 			WritingElement_ReadAttributes_End( oReader )
@@ -1871,7 +1874,7 @@ namespace OOX
 		}
 		void CSignatureLine::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"o:addlxml",              m_sAddXml )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"allowcomments",          m_oAllowComments )
@@ -1901,7 +1904,7 @@ namespace OOX
 		}
 		void CSkew::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CSkew::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CSkew::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CSkew::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{
@@ -1934,7 +1937,7 @@ namespace OOX
 		}
 		void CSkew::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, L"v:ext",  m_oExt )
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"id",     m_sId )
@@ -1944,7 +1947,7 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if( oReader, L"origin", m_sOrigin )
 				WritingElement_ReadAttributes_End( oReader )
 
-				// TO DO: OOX::Vml::CSkew сделать нормальный парсер параметров
+				// TO DO: OOX::Vml::CSkew implement proper parameter parser
 			}
 
 	} // namespace Vml

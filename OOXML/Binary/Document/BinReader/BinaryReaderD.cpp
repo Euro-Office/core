@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "BinaryReaderD.h"
@@ -2534,7 +2537,7 @@ int Binary_tblPrReader::Read_RowPr(BYTE type, long length, void* poResult)
 		READ2_DEF(length, res, this->ReadAfter, &orowPrAfterBefore);
 		if (true == orowPrAfterBefore.bGridAfter && orowPrAfterBefore.nGridAfter > 0 && false == orowPrAfterBefore.oAfterWidth.bW)
 		{
-			//ищем по tblGrid
+			//search by tblGrid
 			long nGridLength = (long)m_aCurTblGrid.size();
 			if (orowPrAfterBefore.nGridAfter < nGridLength)
 			{
@@ -2555,7 +2558,7 @@ int Binary_tblPrReader::Read_RowPr(BYTE type, long length, void* poResult)
 		READ2_DEF(length, res, this->ReadBefore, &orowPrAfterBefore);
 		if (true == orowPrAfterBefore.bGridAfter && orowPrAfterBefore.nGridAfter > 0 && false == orowPrAfterBefore.oAfterWidth.bW)
 		{
-			//ищем по tblGrid
+			//search by tblGrid
 			if (orowPrAfterBefore.nGridAfter < (long)m_aCurTblGrid.size())
 			{
 				double nSumW = 0;
@@ -3649,7 +3652,7 @@ int Binary_OtherTableReader::ReadOtherContent(BYTE type, long length, void* poRe
 		}
 		catch(...)
 		{
-			//todooo в отдельный лог
+			//todooo log separately
 		}
 		if (false == m_oFileWriter.m_bGlossaryMode)
 		{
@@ -7608,7 +7611,7 @@ int Binary_DocumentTableReader::ReadMathMRun(BYTE type, long length, void* poRes
 		if (NULL != m_oFileWriter.m_pComments)
 		{
 			CComment* pComment = m_oFileWriter.m_pComments->get(nId);
-			if (NULL != pComment) // могут быть и без start/end
+			if (NULL != pComment) // can be without start/end
 			{
 				GetCurrentStringWriter().WriteString(pComment->writeRef(std::wstring(_T("")), std::wstring(_T("w:commentReference")), std::wstring(_T(""))));
 			}
@@ -8453,7 +8456,7 @@ int Binary_DocumentTableReader::ReadRunContent(BYTE type, long length, void* poR
 		if (NULL != m_oFileWriter.m_pComments)
 		{
 			CComment* pComment = m_oFileWriter.m_pComments->get(nId);
-			if (NULL != pComment) // могут быть и без start/end
+			if (NULL != pComment) // can be without start/end
 			{
                 GetCurrentStringWriter().WriteString(pComment->writeRef(std::wstring(_T("")), std::wstring(_T("w:commentReference")), std::wstring(_T(""))));
 			}
@@ -8846,7 +8849,7 @@ int Binary_DocumentTableReader::ReadCell(BYTE type, long length, void* poResult)
 	{
 		Binary_DocumentTableReader oBinary_DocumentTableReader(m_oBufferedStream, m_oFileWriter, m_oDocumentWriter, m_bOFormRead);
 		READ1_DEF(length, res, this->ReadCellContent, &oBinary_DocumentTableReader);
-		//Потому что если перед </tc> не идет <p>, то документ считается невалидным
+		//Because if there is no <p> before </tc>, the document is considered invalid
 		if (c_oSerParType::Par != oBinary_DocumentTableReader.m_byteLastElemType)
 		{
             GetCurrentStringWriter().WriteString(std::wstring(_T("<w:p/>")));
@@ -8955,7 +8958,7 @@ int Binary_DocumentTableReader::ReadPptxDrawing(BYTE type, long length, void* po
 		pDrawingProperty->bDataLength = true;
 		pDrawingProperty->DataPos = m_oBufferedStream.GetPos();
 		pDrawingProperty->DataLength = length;
-		//сейчас пропуская, потому что перед чтение этого поля надо собрать остальные данные
+		//skipping for now, because other data must be collected before reading this field
 		res = c_oSerConstants::ReadUnknown;
 	}
 	else if (c_oSerImageType2::Chart == type)
@@ -10700,13 +10703,13 @@ int BinaryFileReader::ReadMainTable()
 		Writers::CommentsWriter& oCommentsWriter = m_oFileWriter.get_comments_writer();
         
 		std::wstring sContent	= oComments.writeContent();
-        std::wstring sContentEx = oComments.writeContentExt();	//важно чтобы writeContentExt вызывался после writeContent
+        std::wstring sContentEx = oComments.writeContentExt();	//important that writeContentExt is called after writeContent
 		std::wstring sContentExtensible = oComments.writeContentExtensible();
 		std::wstring sContentsId = oComments.writeContentsIds();
         std::wstring sPeople	= oComments.writePeople();
 
 		std::wstring sDocumentContent	= oBinary_DocumentCommentsTableReader.m_oComments.writeContent();
-		std::wstring sDocumentContentEx = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExt();	//важно чтобы writeContentExt вызывался после writeContent
+		std::wstring sDocumentContentEx = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExt();	//important that writeContentExt is called after writeContent
 		std::wstring sDocumentContentExtensible = oBinary_DocumentCommentsTableReader.m_oComments.writeContentExtensible();
 		std::wstring sDocumentContentsId = oBinary_DocumentCommentsTableReader.m_oComments.writeContentsIds();
 		std::wstring sDocumentPeople	= oBinary_DocumentCommentsTableReader.m_oComments.writePeople();

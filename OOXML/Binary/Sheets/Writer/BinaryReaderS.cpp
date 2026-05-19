@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "BinaryReaderS.h"
@@ -2094,7 +2097,7 @@ int BinaryStyleTableReader::ReadDxf(BYTE type, long length, void* poResult)
 	{
 		pDxf->m_oNumFmt.Init();
 		READ2_DEF_SPREADSHEET(length, res, this->ReadNumFmt, pDxf->m_oNumFmt.GetPointer());
-		//todooo в m_mapNumFmtIndex
+		//todo to m_mapNumFmtIndex
 	}
 	else
 		res = c_oSerConstants::ReadUnknown;
@@ -4007,7 +4010,7 @@ int BinaryCommentReader::ReadComment(BYTE type, long length, void* poResult)
 
 			*((_INT32*)(pWriteBuffer + nSignatureSize)) = (_INT32)length;
 			memcpy(pWriteBuffer + nSignatureSize + nDataLengthSize, pSourceBuffer, length);
-			//пишем в конце 0, потому что при редактировании Excel меняет посление байты.
+			//write 0 at the end, because Excel changes the last bytes when editing.
 			memset(pWriteBuffer + nSignatureSize + nDataLengthSize + length, 0, nJunkSize);
 
 			int nBase64BufferLen = Base64::Base64EncodeGetRequiredLength(nWriteBufferLength, Base64::B64_BASE64_FLAG_NONE);
@@ -4018,7 +4021,7 @@ int BinaryCommentReader::ReadComment(BYTE type, long length, void* poResult)
             {
 				std::wstring strGfxdata = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8(pbBase64Buffer, nBase64BufferLen);
                 sGfxdata = std::wstring(strGfxdata.c_str());
-				//важно иначе при редактировании и сохранении в Excel перетирается
+				//important otherwise it gets overwritten when editing and saving in Excel
                 sGfxdata += L"\r\n";
 			}
 			RELEASEARRAYOBJECTS(pbBase64Buffer);
@@ -4308,7 +4311,7 @@ BinaryWorksheetsTableReader::BinaryWorksheetsTableReader(NSBinPptxRW::CBinaryFil
 m_mapMedia(mapMedia), m_sDestinationDir(sDestinationDir), m_arWorksheets(arWorksheets), m_mapWorksheets(mapWorksheets), m_pSharedStrings(pSharedStrings),m_mapPivotCacheDefinitions(mapPivotCacheDefinitions)
 {
 	m_pOfficeDrawingConverter = pOfficeDrawingConverter;
-	m_nNextObjectId = 0xfffff; // в CDrawingConverter своя нумерация .. 
+	m_nNextObjectId = 0xfffff; // CDrawingConverter has its own numbering .. 
 	m_lObjectIdVML = 1024;
 } 
 int BinaryWorksheetsTableReader::Read()
@@ -4322,7 +4325,7 @@ int BinaryWorksheetsTableReader::Read2xlsb(OOX::Spreadsheet::CXlsb &xlsb)
 {
     m_pXlsb = &xlsb;
     int res = c_oSerConstants::ReadOk;
-    //читаем листы для получения их имен  и названий таблиц(используется в формулах)
+    //read sheets to get their names and table names (used in formulas)
     auto worksheetsPos = m_oBufferedStream.GetPos();
     READ_TABLE_DEF(res, this->ReadWorksheetsCache, this);
     m_oWorkbook.m_oSheets->m_arrItems.resize(0);
@@ -4661,7 +4664,7 @@ int BinaryWorksheetsTableReader::ReadWorksheet(boost::unordered_map<BYTE, std::v
 	
 	SEEK_TO_POS_START(c_oSerWorksheetsTypes::Controls);
 		READ1_DEF(length, res, this->ReadControls, &oControls);
-	//SEEK_TO_POS_END(oControls); ниже ...
+	//SEEK_TO_POS_END(oControls); below ...
 	SEEK_TO_POS_END2(); 
 //-------------------------------------------------------------------------------------------------------------
 	OOX::Spreadsheet::CUserProtectedRanges *pUserProtectedRanges = new OOX::Spreadsheet::CUserProtectedRanges();
@@ -5057,7 +5060,7 @@ int BinaryWorksheetsTableReader::ReadWorksheet(boost::unordered_map<BYTE, std::v
 
     SEEK_TO_POS_START(c_oSerWorksheetsTypes::Controls);
         READ1_DEF(length, res, this->ReadControls, &oControls);
-    //SEEK_TO_POS_END(oControls); ниже ...
+    //SEEK_TO_POS_END(oControls); below ...
     SEEK_TO_POS_END2();
 //-------------------------------------------------------------------------------------------------------------
     OOX::CPath pathDrawingsDir = m_sDestinationDir  + FILE_SEPARATOR_STR + _T("xl")  + FILE_SEPARATOR_STR + _T("drawings");
@@ -7037,7 +7040,7 @@ int BinaryWorksheetsTableReader::ReadCells(BYTE type, long length, void* poResul
 		OOX::Spreadsheet::CCell oCell;
 		READ1_DEF(length, res, this->ReadCell, &oCell);
 
-//текст error и формул пишем
+//write error text and formulas
 		if (NULL != m_pSharedStrings && oCell.m_oType.IsInit() && oCell.m_oValue.IsInit())
 		{
 			SimpleTypes::Spreadsheet::ECellTypeType eCellType = oCell.m_oType->GetValue();
@@ -8589,7 +8592,7 @@ int BinaryOtherTableReader::ReadMediaItem(BYTE type, long length, void* poResult
                 sImageSrc = m_sFileInDir + _T("media/") + sImage;
 			}
 		}
-		//Проверяем что файл существует
+		//Check that file exists
 		FILE* pFileNative = oFile.GetFileNative();
 		if (NULL != pFileNative)
 		{
@@ -9598,7 +9601,7 @@ int BinaryFileReader::ReadFile(const std::wstring& sSrcFileName, std::wstring sD
 	oFile.ReadFile(pBase64Data, oFile.GetFileSize(), nBase64DataSize);
 	oFile.CloseFile();
 
-	//проверяем формат
+	//check format
 	bool bValidFormat = false;
 	std::wstring sSignature(g_sFormatSignature);
 	size_t nSigLength = sSignature.length();
@@ -9614,7 +9617,7 @@ int BinaryFileReader::ReadFile(const std::wstring& sSrcFileName, std::wstring sD
 	}
 	if (bValidFormat)
 	{
-		//Читаем из файла версию и длину base64
+		//Read version and base64 length from file
 		int nIndex = (int)nSigLength;
 		int nType = 0;
 		std::string version = "";
@@ -9687,7 +9690,7 @@ int BinaryFileReader::ReadFile(const std::wstring& sSrcFileName, std::wstring sD
 			_INT32 Lcid;
 
 			SerializeCommon::ReadFileType(sXMLOptions, fileType, nCodePage, sDelimiter, saveFileType, Lcid); //csv, tsc .. from XmlOptions !
-			// Делаем для CSV перебивку пути, иначе создается папка с одинаковым имеем (для rels) и файл не создается.
+			// For CSV, override the path, otherwise a folder with the same name is created (for rels) and file is not created.
 
 			if (BinXlsxRW::c_oFileTypes::CSV == fileType)
 			{

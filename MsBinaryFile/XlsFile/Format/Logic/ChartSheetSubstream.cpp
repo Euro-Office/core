@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "ChartSheetSubstream.h"
@@ -236,7 +239,7 @@ const bool ChartSheetSubstream::loadContent(BinProcessor& proc)
 			case rt_Fbi2:
 			{
 				count = proc.repeated<Fbi2>(0, 0);
-				while(count > 0 && m_arFbi.empty())//??? разделить
+				while(count > 0 && m_arFbi.empty())//??? split
 				{
 					m_arFbi.insert(m_arFbi.begin(), elements_.back());
 					elements_.pop_back();
@@ -509,7 +512,7 @@ void ChartSheetSubstream::recalc(CHARTFORMATS* charts)
 
 		iCrt = serCrt->id;
 
-		while ((parent0->m_arCRT.size() <= iCrt) && (ind_AXIS < charts->m_arAXISPARENT.size()) && (charts->m_arAXISPARENT.size() > 1))
+		while ((parent0->m_arCRT.size() <= iCrt) && (ind_AXIS + 1 < charts->m_arAXISPARENT.size()) && (charts->m_arAXISPARENT.size() > 1))
 		{
 			parent0 = dynamic_cast<AXISPARENT*>(charts->m_arAXISPARENT[++ind_AXIS].get());
 
@@ -873,7 +876,7 @@ int ChartSheetSubstream::serialize_legend (std::wostream & _stream, const std::w
 	//	dat_ld		= dynamic_cast<LD*>(DAT_->m_LD.get());
 	//}
 	
-	//todooo разобраться с разными типами в одном чарте .. считать количество серий?? 
+	//todooo figure out different types in one chart.. count number of series?? 
 	std::unordered_map< int, std::vector<int>>::iterator it = m_mapTypeChart.begin();
 	while (it != m_mapTypeChart.end())
 	{
@@ -929,7 +932,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 			CRT * crt = dynamic_cast<CRT*>(parent0->m_arCRT[0].get());
 			if ((crt) && (	crt->m_iChartType == CHART_TYPE_Radar || 
 							crt->m_iChartType == CHART_TYPE_RadarArea ||
-							crt->m_iChartType == CHART_TYPE_Scatter))//еще?
+							crt->m_iChartType == CHART_TYPE_Scatter))//more?
 			{
 				PlotAreaPos->m_iLayoutTarget = 2; //inner
 			}
@@ -1063,7 +1066,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 									CP_XML_STREAM() << stream_dLbls.str();
 								}
 							}
-							series_ss->serialize2(CP_XML_STREAM(), crt->m_iChartType); //особенности xlsx (
+							series_ss->serialize2(CP_XML_STREAM(), crt->m_iChartType); //xlsx specifics (
 						}	
 							
 						series->serialize_legend(stream_legend_entries, it->second[i]); 
@@ -1138,7 +1141,7 @@ int ChartSheetSubstream::serialize_plot_area (std::wostream & _stream)
 }
 int ChartSheetSubstream::serialize_scatter_style(std::wostream & _stream, CRT *crt)
 {
-	bool bMarker = true, bSmooth = false, bLine = true;//todooo  - так как есть отдельные настройки
+	bool bMarker = true, bSmooth = false, bLine = true;//todooo - since there are separate settings
 
 	CP_XML_WRITER(_stream)
 	{
@@ -1196,7 +1199,7 @@ int ChartSheetSubstream::serialize_dPt(std::wostream & _stream, int id, CRT *crt
 						present_idx.insert(std::make_pair(series_data_format->xi, true));
 				}
 				series_ss->serialize	(CP_XML_STREAM(), crt->m_iChartType, series_data_format->xi);
-				//series_ss->serialize2	(CP_XML_STREAM(), crt->m_iChartType); // 3d shape box не нужен - Book 78 3D.xls
+				//series_ss->serialize2	(CP_XML_STREAM(), crt->m_iChartType); // 3d shape box not needed - Book 78 3D.xls
 			}
 		}
 
@@ -1291,7 +1294,7 @@ int ChartSheetSubstream::serialize_dLbls (std::wostream & _stream, int id, CRT *
 				add_labels = true;
 			}
 			else if (!labels.empty())
-			{//есть лэйблы отдельных точек, а вот общие никак не обозначены
+			{//there are labels for individual points, but general ones are not marked
 				need_add_labels = true;
 			}
 		}
@@ -1335,7 +1338,7 @@ int ChartSheetSubstream::serialize_dLbls (std::wostream & _stream, int id, CRT *
 			CP_XML_NODE(L"c:showCatName")	{ CP_XML_ATTR (L"val" , 0); }	
 			CP_XML_NODE(L"c:showSerName")	{ CP_XML_ATTR (L"val" , 0); }	
 		}
-	//подписи к точкам (отдельные)
+	//labels for points (individual)
 		for (size_t i = 0; i < labels.size(); i++)
 		{
 			CP_XML_NODE(L"c:dLbl")
@@ -1470,7 +1473,7 @@ int ChartSheetSubstream::serialize_ser (std::wstring sNodeSer, std::wostream & _
 
 					CP_XML_NODE(L"c:ptCount")
 					{
-						CP_XML_ATTR(L"val", count); // count_found использовать нельзя - тут должно быть максимальное всех точек отчета
+						CP_XML_ATTR(L"val", count); // cannot use count_found - must be maximum of all report points
 					}
 					CP_XML_STREAM() << _stream_cash.str();
 				
@@ -1505,7 +1508,7 @@ int ChartSheetSubstream::serialize_ser (std::wstring sNodeSer, std::wostream & _
 						{
 							CP_XML_NODE(L"c:ptCount")
 							{
-								CP_XML_ATTR(L"val", count); // count_found использовать нельзя - тут должно быть максимальное всех точек отчета
+								CP_XML_ATTR(L"val", count); // cannot use count_found - must be maximum of all report points
 							}
 							CP_XML_STREAM() << _stream_cash.str();
 						}

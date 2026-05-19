@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 
@@ -49,7 +52,7 @@ namespace cpdoccore {
 
 namespace odf_writer {
 
-static int style_family_counts_[1024]={};//согласно количеству разных стилей
+static int style_family_counts_[1024]={};//according to the number of different styles
 
 
 void calc_paragraph_properties_content(std::vector<paragraph_format_properties*> & parProps, paragraph_format_properties * result)
@@ -154,7 +157,7 @@ void odf_style_context::reset_defaults()
 }
 
 void odf_style_context::process_automatic_for_styles(office_element_ptr root )
-{//автоматические стили для эементнов стилей
+{//automatic styles for style elements
 	for (size_t i =0; i < style_state_list_.size(); i++)
 	{
 		if (style_state_list_[i]->writable_ == false) continue;
@@ -164,7 +167,7 @@ void odf_style_context::process_automatic_for_styles(office_element_ptr root )
 	}
 }
 void odf_style_context::process_automatic_styles(office_element_ptr root )
-{//автоматические стили для элементов
+{//automatic styles for elements
 	for (size_t i =0; i < style_state_list_.size(); i++)
 	{
 		if (style_state_list_[i]->writable_ == false) continue;
@@ -389,7 +392,7 @@ std::wstring odf_style_context::get_name_family(style_family::type family)
 		case style_family::PageLayout:				return L"Mpm";
 		case style_family::MasterPage:				return L"MasterPage";
 		case style_family::HandoutMaster:			return L"Handout";
-		case style_family::LayerSet:				return L"";//нету
+		case style_family::LayerSet:				return L"";//none
 		case style_family::PresentationPageLayout:	return L"AL";
 		case style_family::LineNumbering:			return L"Line_20_numbering";
 
@@ -403,7 +406,7 @@ std::wstring odf_style_context::find_free_name(style_family::type  family)
 	std::wstring name = get_name_family(family);
 	int count = style_family_counts_[(int)family];
 
-	//доооолго .. проще хранить
+	//takes too long.. easier to store
 	//for (size_t i=0;i<style_state_list_.size(); i++)
 	//{
 	//	if ((style_state_list_[i]->odf_style_) && (style_state_list_[i]->get_family_type() == family))
@@ -427,7 +430,7 @@ office_element_ptr & odf_style_context::add_or_find(std::wstring name, style_fam
 				
 				if ((name.length() >= 0 && style_state_list_[i]->odf_style_->get_name() == name)
 					&& style_state_list_[i]->root_ == root)	return style_state_list_[i]->get_office_element();
-				//во избежания имена генерим уникальные (в принципе для root и остальных - можно одинаковые)
+				//to avoid conflicts we generate unique names (in principle for root and others - can be the same)
 			}
 				
 		}

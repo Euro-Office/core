@@ -1,3 +1,38 @@
+/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #ifndef OOXMLWRITER_H
 #define OOXMLWRITER_H
 
@@ -39,11 +74,11 @@ struct TImageData
 
 class COOXMLWriter : public IWriter
 {
-	const std::wstring *m_pDstPath;  // Директория назначения
-	const std::wstring *m_pTempDir;  // Temp папка
-	const std::wstring *m_pSrcPath;  // Директория источника
-	const std::wstring *m_pBasePath; // Полный базовый адрес
-	const std::wstring *m_pCorePath; // Путь до корневого файла (используется для работы с Epub)
+	const std::wstring *m_pDstPath;  // Destination directory
+	const std::wstring *m_pTempDir;  // Temp folder
+	const std::wstring *m_pSrcPath;  // Source directory
+	const std::wstring *m_pBasePath; // Full base address
+	const std::wstring *m_pCorePath; // Path to root file (used for working with Epub)
 
 	XmlString m_oStylesXml;   // styles.xml
 	XmlString m_oDocXmlRels;  // document.xml.rels
@@ -53,28 +88,28 @@ class COOXMLWriter : public IWriter
 	XmlString m_oNumberXml;   // numbering.xml
 	XmlString m_oWebSettings; // webSettings.xml
 
-	NSCSS::CDocumentStyle m_oXmlStyle;      // Ooxml стиль
-	NSCSS::NSProperties::CPage m_oPageData; // Стили страницы
+	NSCSS::CDocumentStyle m_oXmlStyle;      // OOXML style
+	NSCSS::NSProperties::CPage m_oPageData; // Page styles
 
 	NSCSS::CCssCalculator *m_pStylesCalculator;
 	THTMLParameters *m_pHTMLParameters;
 
 	struct TState
 	{
-		bool m_bInP;         // <w:p> открыт?
-		bool m_bInR;         // <w:r> открыт?
-		bool m_bInT;         // <w:t> открыт?
-		bool m_bWasPStyle;   // <w:pStyle> записан?
-		bool m_bWasSpace;    // Был пробел?
+		bool m_bInP;         // <w:p> open?
+		bool m_bInR;         // <w:r> open?
+		bool m_bInT;         // <w:t> open?
+		bool m_bWasPStyle;   // <w:pStyle> written?
+		bool m_bWasSpace;    // Was space?
 
-		bool m_bInHyperlink; // <w:hyperlink> открыт?
+		bool m_bInHyperlink; // <w:hyperlink> open?
 		std::wstring m_wsTooltip;
 		std::wstring m_wsHref;
 		std::wstring m_wsFootnote;
 		bool m_bIsFootnote;
 		bool m_bISCrossHyperlink;
 
-		XmlString *m_pCurrentDocument; //Текущее место записи
+		XmlString *m_pCurrentDocument; //Current write location
 		bool m_bRemoveCurrentDocument;
 
 		TState(XmlString *pCurrentDocument)
@@ -99,22 +134,22 @@ class COOXMLWriter : public IWriter
 
 	std::stack<TState> m_arStates;
 
-	int m_nFootnoteId;  // ID сноски
-	int m_nHyperlinkId; // ID ссылки
-	int m_nListId;      // ID списка
-	int m_nElementId;   // ID остальные элементы
+	int m_nFootnoteId;  // Footnote ID
+	int m_nHyperlinkId; // Hyperlink ID
+	int m_nListId;      // List ID
+	int m_nElementId;   // ID for other elements
 
-	bool m_bBanUpdatePageData; // Запретить обновление данных о странице?
+	bool m_bBanUpdatePageData; // Prohibit page data update?
 
 	std::stack<std::wstring> m_arDivId;
 	bool m_bWasDivs;
 
-	std::map<std::wstring, std::wstring> m_mFootnotes; // Сноски
-	std::map<std::wstring, UINT>         m_mBookmarks; // Закладки
+	std::map<std::wstring, std::wstring> m_mFootnotes; // Footnotes
+	std::map<std::wstring, UINT>         m_mBookmarks; // Bookmarks
 	using anchors_map = std::map<std::wstring, std::wstring>;
-	anchors_map                          m_mAnchors; // Map якорей с индивидуальными id
+	anchors_map                          m_mAnchors; // Map of anchors with individual ids
 
-	NSFonts::IApplicationFonts*          m_pFonts;     // Необходимо для оптимизации работы со шрифтами
+	NSFonts::IApplicationFonts*          m_pFonts;     // Needed for font handling optimization
 public:
 	COOXMLWriter(THTMLParameters* pHTMLParameters = nullptr, NSCSS::CCssCalculator* pCSSCalculator = nullptr);
 

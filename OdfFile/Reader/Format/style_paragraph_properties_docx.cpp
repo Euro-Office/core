@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 
 #include "odf_document.h"
@@ -158,9 +161,9 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				Context.set_rtl(false);
 			}
 		}
-		if (Context.get_rtl()) //может быть он установился от стиля родителя !!
+		if (Context.get_rtl()) //it may have been set from parent style !!
 		{
-			_pPr << L"<w:bidi/>";
+			_pPr << L"<w:bidi w:val=\"1\"/>";
 		}
 		
 		odf_reader::list_style_container & list_styles = Context.root()->odf_context().listStyleContainer();
@@ -231,6 +234,15 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 				case text_align::Justify:		jc = L"both";	break;
 				case text_align::Start:			jc = Context.get_rtl() ? L"end": L"start"; break;
 				case text_align::End:			jc = Context.get_rtl() ? L"start": L"end"; break;
+			}
+
+			if( Context.get_rtl() )
+			{
+				switch(fo_text_align_->get_type())
+				{
+				    case text_align::Left:			jc = L"right";	break;
+				    case text_align::Right:			jc = L"left";	break;
+				}
 			}
 
 			if (!jc.empty()) CP_XML_NODE(L"w:jc"){CP_XML_ATTR(L"w:val", jc );}
@@ -372,8 +384,8 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
             w_after = docx_process_margin(fo_margin_bottom_, 20.0);
             w_before = docx_process_margin(fo_margin_top_, 20.0);
 
-			// TODO :   здесь 240 берется из корневого стиля? надо не константу использовать а брать оттуда
-			//          в xsl преобразованиях так же написано 
+			// TODO :   here 240 is taken from root style? should not use constant but take from there
+			//          in xsl transformations it's written the same way 
 			if (fo_line_height_)
 			{
 				if (fo_line_height_->get_type() == line_width::Percent)
@@ -416,7 +428,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			}
 		}
 		_CP_OPT(odf_types::length_or_percent) curr_margin_left_ = fo_margin_left_;
-		if (curr_margin_left_ || //? + буквица
+		if (curr_margin_left_ || //? + drop cap
 			fo_margin_right_ || 
 			(fo_text_indent_ && Context.get_drop_cap_context().state() != 1))
 		{
@@ -456,7 +468,7 @@ void paragraph_format_properties::docx_convert(oox::docx_conversion_context & Co
 			    CP_XML_ATTR(L"w:start", w_left);
 				CP_XML_ATTR(L"w:end", w_right);
 
-				if (Context.get_drop_cap_context().state() != 1 )//состояние сразу после добавления буквицы - не нужны ни отступы, ни висячие
+				if (Context.get_drop_cap_context().state() != 1 )//state right after adding drop cap - no indents or hanging needed
 				{
 					if (!w_hanging.empty())
 						CP_XML_ATTR(L"w:hanging", w_hanging);
@@ -533,7 +545,7 @@ void style_tab_stop::docx_convert(oox::docx_conversion_context & Context, bool c
 
     _pPr << L"<w:tab";
 
-	length def_tab =  length(1.0, length::cm);// в ms значение 0.8 не корректно оО
+	length def_tab =  length(1.0, length::cm);// in MS value 0.8 is not correct o_O
 		
 	double tab_pos_offset = (!Context.get_paragraph_state() || Context.is_table_content()) ? margin_left : 0;
 

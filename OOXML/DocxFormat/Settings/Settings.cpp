@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "../DocxFlat.h"
 #include "Settings.h"
@@ -56,7 +59,7 @@ namespace Settings
 	}
 	void CWritingStyle::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CWritingStyle::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CWritingStyle::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CWritingStyle::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -148,7 +151,7 @@ namespace Settings
 	}
 	void CAutoCaption::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CAutoCaption::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CAutoCaption::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CAutoCaption::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -170,7 +173,7 @@ namespace Settings
 	}
 	void CAutoCaption::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
-		// Читаем атрибуты
+		
 		if ( oReader.GetAttributesCount() <= 0 )
 			return;
 				
@@ -227,7 +230,7 @@ namespace Settings
 	}
 	void CAutoCaptions::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CAutoCaptions::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CAutoCaptions::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CAutoCaptions::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -278,7 +281,7 @@ namespace Settings
 	}
 	void CCaption::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CCaption::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CCaption::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CCaption::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -304,7 +307,7 @@ namespace Settings
 	}
 	void CCaption::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 	{
-		// Читаем атрибуты
+		
 		if ( oReader.GetAttributesCount() <= 0 )
 			return;
 				
@@ -375,7 +378,7 @@ namespace Settings
 	}
 	void CCaptions::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CCaptions::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CCaptions::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CCaptions::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -431,7 +434,7 @@ namespace Settings
 	}
 	void CCharacterSpacing::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CCharacterSpacing::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CCharacterSpacing::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CCharacterSpacing::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -493,7 +496,7 @@ namespace Settings
 	}
 	void CCompatSetting::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CCompatSetting::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CCompatSetting::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CCompatSetting::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -585,7 +588,7 @@ namespace Settings
 	}
 	void CCompat::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CCompat::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CCompat::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CCompat::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -857,7 +860,7 @@ namespace Settings
 	}
 	void CDocProtect::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CDocProtect::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CDocProtect::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CDocProtect::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -973,7 +976,7 @@ namespace Settings
 	}
 	void CDocType::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CDocType::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CDocType::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CDocType::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1035,7 +1038,7 @@ namespace Settings
 	}
 	void CDocVar::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CDocVar::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CDocVar::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CDocVar::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1107,7 +1110,7 @@ namespace Settings
 	}
 	void CDocVars::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CDocVars::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CDocVars::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CDocVars::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1158,7 +1161,7 @@ namespace Settings
 	}
 	void CKinsoku::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CKinsoku::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CKinsoku::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CKinsoku::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1240,7 +1243,7 @@ namespace Settings
 	}
 	void CProof::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CProof::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CProof::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CProof::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1311,7 +1314,7 @@ namespace Settings
 	}
 	void CReadingModeInkLockDown::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CReadingModeInkLockDown::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CReadingModeInkLockDown::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CReadingModeInkLockDown::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1391,7 +1394,7 @@ namespace Settings
 	}
 	void CTrackChangesView::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CTrackChangesView::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CTrackChangesView::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CTrackChangesView::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1480,7 +1483,7 @@ namespace Settings
 	}
 	void CDocRsids::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CDocRsids::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CDocRsids::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CDocRsids::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1542,7 +1545,7 @@ namespace Settings
 	}
 	void CSaveThroughXslt::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CTrackChangesView::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CTrackChangesView::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CSaveThroughXslt::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1586,7 +1589,7 @@ namespace Settings
 	}
 	void CSmartTagType::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CSmartTagType::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CSmartTagType::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CSmartTagType::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1645,7 +1648,7 @@ namespace Settings
 	}
 	void CStylePaneFilter::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CStylePaneFilter::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CStylePaneFilter::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CStylePaneFilter::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1763,7 +1766,7 @@ namespace Settings
 	}
 	void CWriteProtection::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CWriteProtection::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CWriteProtection::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CWriteProtection::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1877,7 +1880,7 @@ namespace Settings
 	}
 	void CZoom::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CZoom::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CZoom::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CZoom::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -1955,7 +1958,7 @@ namespace Settings
 	}
 	void CEdnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CEdnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CEdnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	EElementType CEdnDocProps::getType() const
 		{
@@ -2060,7 +2063,7 @@ namespace Settings
 	}
 	void CFtnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CFtnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CFtnDocProps::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	EElementType CFtnDocProps::getType() const
 		{
@@ -2158,7 +2161,7 @@ namespace Settings
 	}
 	void CSchema::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CSchema::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CSchema::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CSchema::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -2224,7 +2227,7 @@ namespace Settings
 	}
 	void CSchemaLibrary::fromXML(XmlUtils::CXmlNode& oNode)
 	{
-		// TO DO: Реализовать CSchemaLibrary::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CSchemaLibrary::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CSchemaLibrary::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -2280,7 +2283,7 @@ namespace Settings
 	void CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 	{
 		m_eType = et_Unknown;
-		// TO DO: Реализовать CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
+		// TO DO: Implement CShapeDefaults::fromXML(XmlUtils::CXmlNode& oNode)
 	}
 	void CShapeDefaults::fromXML(XmlUtils::CXmlLiteReader& oReader)
 	{
@@ -2814,7 +2817,7 @@ namespace Settings
 		if ( m_oDocumentType.IsInit() )
 			sXml += m_oDocumentType->toXML();
 
-		// TO DO: Здесь вставить запись w:mailMerge
+		// TO DO: Insert w:mailMerge record here
 
 		if ( m_oRevisionView.IsInit() )
 			sXml += m_oRevisionView->toXML();

@@ -1,4 +1,39 @@
-﻿#pragma once
+﻿/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+#pragma once
 
 #include "Types.h"
 #include "Utils.h"
@@ -17,7 +52,7 @@ namespace Jpeg2000
 
 	//-------------------------------------------------------------------------------------------------------------------------------
 
-	// Таблицы норм для обратимого 5-3 веэвлет-преобразования
+	// Norm tables for reversible 5-3 wavelet transform
 	static const double c_aDWT_NormsRev[4][10] =
 	{
 		{ 1.000, 1.500, 2.750, 5.375, 10.68, 21.34, 42.67, 85.33, 170.7, 341.3 },
@@ -26,7 +61,7 @@ namespace Jpeg2000
 		{ .7186, .9218, 1.586, 3.043, 6.019, 12.01, 24.00, 47.97, 95.93 }
 	};
 
-	// Таблицы норм для необратимого 9-7 веэвлет-преобразования
+	// Norm tables for irreversible 9-7 wavelet transform
 	static const double c_aDWT_NormsIrr[4][10] =
 	{
 		{ 1.000, 1.965, 4.177, 8.403, 16.90, 33.84, 67.69, 135.3, 270.6, 540.9 },
@@ -36,7 +71,7 @@ namespace Jpeg2000
 	};
 
 	//-------------------------------------------------------------------------------------------------------------------------------
-	//  Вспомогательные функции
+	//  Helper functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 
 	static void DWT_DeinterleaveHor(int *pA, int *pB, int nDn, int nSn, int nCase)
@@ -236,7 +271,7 @@ namespace Jpeg2000
 	}
 
 	//-------------------------------------------------------------------------------------------------------------------------------
-	//  Основные функции
+	//  Main functions
 	//-------------------------------------------------------------------------------------------------------------------------------
 	void   DWT_EncodeRev(TileComp *pTileComponent)
 	{
@@ -249,10 +284,10 @@ namespace Jpeg2000
 
 		for (int nIndex = 0; nIndex < nLevel; nIndex++)
 		{
-			int nResW;      // Ширина для данного уровня разрешения
-			int nResH;      // Высота для данного уровня разрешения
-			int nResW1;     // Ширина для уровня разрешения на 1 меньше, чем данный
-			int nResH1;     // Высота для уровня разрешения на 1 меньше, чем данный
+			int nResW;      // Width for this resolution level
+			int nResH;      // Height for this resolution level
+			int nResW1;     // Width for resolution level 1 less than this
+			int nResH1;     // Height for resolution level 1 less than this
 			int nCaseCol;   // 0 = non inversion on horizontal filtering, 1 = inversion between low-pass and high-pass filtering
 			int nCaseRow;   // 0 = non inversion on vertical filtering, 1 = inversion between low-pass and high-pass filtering
 
@@ -315,10 +350,10 @@ namespace Jpeg2000
 
 		for (int nIndex = nLevel - 1; nIndex >= nStop; nIndex--)
 		{
-			int nResW;      // Ширина для данного уровня разрешения
-			int nResH;      // Высота для данного уровня разрешения
-			int nResW1;     // Ширина для уровня разрешения на 1 меньше, чем данный
-			int nResH1;     // Высота для уровня разрешения на 1 меньше, чем данный
+			int nResW;      // Width for this resolution level
+			int nResH;      // Height for this resolution level
+			int nResW1;     // Width for resolution level 1 less than this
+			int nResH1;     // Height for resolution level 1 less than this
 			int nCaseCol;   // 0 = non inversion on horizontal filtering, 1 = inversion between low-pass and high-pass filtering
 			int nCaseRow;   // 0 = non inversion on vertical filtering, 1 = inversion between low-pass and high-pass filtering
 
@@ -395,10 +430,10 @@ namespace Jpeg2000
 
 		for (int nIndex = 0; nIndex < nLevel; nIndex++)
 		{
-			int nResW;      // Ширина для данного уровня разрешения
-			int nResH;      // Высота для данного уровня разрешения
-			int nResW1;     // Ширина для уровня разрешения на 1 меньше, чем данный
-			int nResH1;     // Высота для уровня разрешения на 1 меньше, чем данный
+			int nResW;      // Width for this resolution level
+			int nResH;      // Height for this resolution level
+			int nResW1;     // Width for resolution level 1 less than this
+			int nResH1;     // Height for resolution level 1 less than this
 			int nCaseCol;   // 0 = non inversion on horizontal filtering, 1 = inversion between low-pass and high-pass filtering
 			int nCaseRow;   // 0 = non inversion on vertical filtering, 1 = inversion between low-pass and high-pass filtering
 
@@ -461,10 +496,10 @@ namespace Jpeg2000
 
 		for (int nIndex = nLevel - 1; nIndex >= nStop; nIndex--)
 		{
-			int nResW;      // Ширина для данного уровня разрешения
-			int nResH;      // Высота для данного уровня разрешения
-			int nResW1;     // Ширина для уровня разрешения на 1 меньше, чем данный
-			int nResH1;     // Высота для уровня разрешения на 1 меньше, чем данный
+			int nResW;      // Width for this resolution level
+			int nResH;      // Height for this resolution level
+			int nResW1;     // Width for resolution level 1 less than this
+			int nResH1;     // Height for resolution level 1 less than this
 			int nCaseCol;   // 0 = non inversion on horizontal filtering, 1 = inversion between low-pass and high-pass filtering
 			int nCaseRow;   // 0 = non inversion on vertical filtering, 1 = inversion between low-pass and high-pass filtering
 

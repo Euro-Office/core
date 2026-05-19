@@ -1,4 +1,39 @@
-﻿#pragma once
+﻿/*
+ * Copyright (C) Ascensio System SIA, 2009-2026
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
+ *
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * No trademark rights are granted under this License.
+ *
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
+#pragma once
 
 namespace Jpeg2000
 {
@@ -7,9 +42,9 @@ namespace Jpeg2000
 		return 0;
 		//   LARGE_INTEGER oFreq, oTime;
 
-		//// oFreq - скорость часов у CPU
+		//// oFreq - CPU clock speed
 		//   QueryPerformanceFrequency( &oFreq );
-		//   // oTime - текущее время(в смысле oFreq)
+		//   // oTime - current time (in terms of oFreq)
 		//   QueryPerformanceCounter ( &oTime ) ;
 		//   return ( oTime.QuadPart /(double) oFreq.QuadPart ) ;
 	}
@@ -30,25 +65,25 @@ namespace Jpeg2000
 		return nValue;
 	}
 
-	// Делим nA на nB и округляем в большую сторону
+	// Divide nA by nB and round up
 	static __inline int CeilDiv(int nA, int nB)
 	{
 		return (nA + nB - 1) / nB;
 	}
 
-	// Делим nA на 2^nB и округляем в большую сторону
+	// Divide nA by 2^nB and round up
 	static __inline int CeilDivPow2(int nA, int nB)
 	{
 		return (nA + (1 << nB) - 1) >> nB;
 	}
 
-	// Делим nA на 2^nB и округляем в меньшую сторону
+	// Divide nA by 2^nB and round down
 	static __inline int FloorDivPow2(int nA, int nB)
 	{
 		return nA >> nB;
 	}
 
-	// Берем логарифм по основанию 2 от числа nA и округляем в меньшую сторону
+	// Take base-2 logarithm of nA and round down
 	static __inline int FloorLog2(int nA)
 	{
 		int nL;
@@ -67,7 +102,7 @@ namespace Jpeg2000
 	static const double c_adNormRCT[3] ={ 1.732, .8292, .8292 };
 	static const double c_adNormICT[3] ={ 1.732, 1.805, 1.573 };
 
-	// Применяем обратимое много-компонентное преобразование к изображению (Annex G.2.1)
+	// Apply reversible multi-component transform to image (Annex G.2.1)
 	static void   ForwardRCT(int *pRed, int *pGreen, int *pBlue, int nSamplesCount)
 	{
 		for (int nIndex = 0; nIndex < nSamplesCount; nIndex++)
@@ -85,7 +120,7 @@ namespace Jpeg2000
 		}
 	}
 
-	// Применяем обратимое много-компонентное обратное преобазование к изображению (Annex G.2.2)
+	// Apply reversible multi-component inverse transform to image (Annex G.2.2)
 	static void   InverseRCT(int *pRed, int *pGreen, int *pBlue, int nSamplesCount)
 	{
 		for (int nIndex = 0; nIndex < nSamplesCount; nIndex++)
@@ -109,7 +144,7 @@ namespace Jpeg2000
 		return c_adNormRCT[nComponentIndex];
 	}
 
-	// Применяем необратимое много-компонентное преобразование к изображению (Annex G.3.1)
+	// Apply irreversible multi-component transform to image (Annex G.3.1)
 	static void   ForwardICT(int *pRed, int *pGreen, int *pBlue, int nSamplesCount)
 	{
 		for (int nIndex = 0; nIndex < nSamplesCount; nIndex++)
@@ -127,7 +162,7 @@ namespace Jpeg2000
 		}
 	}
 
-	// Применяем необратимое много-компонентное обратное преобазование к изображению (Annex G.3.2)
+	// Apply irreversible multi-component inverse transform to image (Annex G.3.2)
 	static void   InverseICT(int *pRed, int *pGreen, int *pBlue, int nSamplesCount)
 	{
 		for (int nIndex = 0; nIndex < nSamplesCount; nIndex++)

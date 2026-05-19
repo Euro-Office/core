@@ -1,33 +1,36 @@
 ﻿/*
- * (c) Copyright Ascensio System SIA 2010-2023
+ * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
  * modify it under the terms of the GNU Affero General Public License (AGPL)
- * version 3 as published by the Free Software Foundation. In accordance with
- * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
- * that Ascensio System SIA expressly excludes the warranty of non-infringement
- * of any third-party rights.
+ * version 3 as published by the Free Software Foundation, together with the
+ * additional terms provided in the LICENSE file.
  *
  * This program is distributed WITHOUT ANY WARRANTY; without even the implied
- * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
- * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. For
+ * details, see the GNU AGPL at: https://www.gnu.org/licenses/agpl-3.0.html
  *
- * You can contact Ascensio System SIA at 20A-6 Ernesta Birznieka-Upish
- * street, Riga, Latvia, EU, LV-1050.
+ * You can contact Ascensio System SIA by email at info@onlyoffice.com
+ * or by postal mail at 20A-6 Ernesta Birznieka-Upisha Street, Riga,
+ * LV-1050, Latvia, European Union.
  *
- * The  interactive user interfaces in modified source and object code versions
- * of the Program must display Appropriate Legal Notices, as required under
+ * The interactive user interfaces in modified versions of the Program
+ * are required to display Appropriate Legal Notices in accordance with
  * Section 5 of the GNU AGPL version 3.
  *
- * Pursuant to Section 7(b) of the License you must retain the original Product
- * logo when distributing the program. Pursuant to Section 7(e) we decline to
- * grant you any rights under trademark law for use of our trademarks.
+ * No trademark rights are granted under this License.
  *
- * All the Product's GUI elements, including illustrations and icon sets, as
- * well as technical writing content are licensed under the terms of the
- * Creative Commons Attribution-ShareAlike 4.0 International. See the License
- * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ * All non-code elements of the Product, including illustrations,
+ * icon sets, and technical writing content, are licensed under the
+ * Creative Commons Attribution-ShareAlike 4.0 International License:
+ * https://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * This license applies only to such non-code elements and does not
+ * modify or replace the licensing terms applicable to the Program's
+ * source code, which remains licensed under the GNU Affero General
+ * Public License v3.
+ *
+ * SPDX-License-Identifier: AGPL-3.0-only
  */
 #include "ShapeWriter.h"
 #include "StylesWriter.h"
@@ -52,7 +55,7 @@ CStylesWriter::CStylesWriter() : m_pTheme(NULL) {}
 CStylesWriter::CStylesWriter(PPT::CTheme* pTheme) : m_pTheme(pTheme) {}
 
 void CStylesWriter::ConvertStyleLevel(PPT::CTextStyleLevel& oLevel, PPT::CStringWriter& oWriter, const int& nLevel)
-{//дублирование CTextPFRun и  CTextCFRun с ShapeWriter - todooo  - вынести отдельно
+{// duplication of CTextPFRun and CTextCFRun with ShapeWriter - todo - extract separately
     std::wstring str1;
     if (nLevel == 9)
         str1 = L"<a:defPPr";
@@ -287,7 +290,7 @@ std::wstring PPT::CShapeWriter::ConvertBrush(CBrush & brush)
     {
         if (m_pElement && ( m_pElement->m_etType == etPicture ||
                             m_pElement->m_etType == etAudio ||
-                            m_pElement->m_etType == etVideo))		//фон для картинки с празрачностью
+                            m_pElement->m_etType == etVideo))		// background for image with transparency
         {
             brush_writer.WriteString(L"<a:noFill/>");
         }
@@ -364,7 +367,7 @@ std::wstring PPT::CShapeWriter::ConvertBrush(CBrush & brush)
         brush_writer.WriteString(L"</a:gradFill>");
     }
     else if(brush.Type == c_BrushTypePattern)
-    {//типов нету в ппт - вместо них шаблон-картинка
+    {// types don't exist in ppt - pattern-image is used instead
         brush_writer.WriteString(L"<a:pattFill prst=\"pct80\">");
         brush_writer.WriteString(L"<a:fgClr>");
         brush_writer.WriteString(ConvertColor(brush.Color1, brush.Alpha1));
@@ -572,7 +575,7 @@ void PPT::CShapeWriter::WriteImageInfo()
     m_oWriter.WriteString(std::wstring(L"\""));
 
     if (!pImageElement->m_sDescription.empty())
-    {//бывает всякая разная бяка сохранена
+    {// sometimes various junk is saved
         m_oWriter.WriteString(std::wstring(L" descr=\""));
         m_oWriter.WriteString(XmlUtils::EncodeXmlStringExtend(pImageElement->m_sDescription, true));
         m_oWriter.WriteString(std::wstring(L"\""));
@@ -1197,7 +1200,7 @@ void PPT::CShapeWriter::WriteTextInfo(PPT::CTextCFRun* pLastCF)
         std::wstring prstTxWarp = oox::Spt2WordArtShapeType((oox::MSOSPT)pShapeElement->m_lShapeType);
         m_oWriter.WriteString(std::wstring(L"<a:prstTxWarp"));
         m_oWriter.WriteString(std::wstring(L" prst=\"") + prstTxWarp + L"\">");
-        m_oWriter.WriteString(std::wstring(L"<a:avLst>"));//модификаторы
+        m_oWriter.WriteString(std::wstring(L"<a:avLst>"));// modifiers
 
         CPPTShape *pPPTShape = dynamic_cast<CPPTShape *>(pShapeElement->m_pShape->getBaseShape().get());
         std::wstring strVal;
@@ -1208,7 +1211,7 @@ void PPT::CShapeWriter::WriteTextInfo(PPT::CTextCFRun* pLastCF)
             {
             case oox::msosptTextFadeUp:
             {
-                double kf = 4.63; //"волшебный"
+                double kf = 4.63; // "magic"
                 std::wstring strVal = std::to_wstring((int)(kf * pPPTShape->m_arAdjustments[i]));
 
                 m_oWriter.WriteString(L"<a:gd name=\"adj\" fmla=\"val ");
@@ -1364,7 +1367,7 @@ void PPT::CShapeWriter::WriteTextInfo(PPT::CTextCFRun* pLastCF)
             m_oWriter.WriteString(std::wstring(L">"));
 
             if (m_bWordArt)
-            {//порядок важен - линия, заливка, тень !!!
+            {// order is important - line, fill, shadow !!!
                 if (pShapeElement->m_bLine)
                 {
                     m_oWriter.WriteString(ConvertLine(pShapeElement->m_oPen));
@@ -2066,7 +2069,7 @@ void PPT::CShapeWriter::ParseXmlAlternative(const std::wstring & xml)
 
             //            writer.ClearNoAttack();
             //            if ((shape->txBody.IsInit()) && (shape->txBody->bodyPr.IsInit()) && (shape->txBody->bodyPr->prstTxWarp.IsInit()))
-            //            {//только WordArt
+            //            {// WordArt only
             //                shape->txBody->toXmlWriter(&writer);
             //                m_xmlTxBodyAlternative = writer.GetXmlString();
         }
@@ -2089,7 +2092,7 @@ std::wstring PPT::CShapeWriter::ConvertImage()
     if (pImageElement->m_bImagePresent == false)
     {
         if (pImageElement->m_sName.empty()) return L"";
-        //ppt_presentation.ppt - ссылка на файл на диске
+        // ppt_presentation.ppt - link to file on disk
 
         pImageElement->m_strImageFileName.clear();
         pImageElement->m_bImagePresent = true;
@@ -2268,7 +2271,7 @@ HRESULT PPT::CShapeWriter::get_Type(LONG* lType)
     *lType = c_nSVGConverter;
     return S_OK;
 }
-//-------- Функции для работы со страницей --------------------------------------------------
+//-------- Functions for working with page --------------------------------------------------
 HRESULT PPT::CShapeWriter::NewPage()
 {
     return S_OK;
@@ -2728,7 +2731,7 @@ HRESULT PPT::CShapeWriter::put_EdgeDist(double val)
     m_oEdge.Dist = val;
     return S_OK;
 }
-//-------- Функции для вывода текста --------------------------------------------------------
+//-------- Functions for text output --------------------------------------------------------
 HRESULT PPT::CShapeWriter::CommandDrawText(const std::wstring& bsText, const double& x, const double& y, const double& w, const double& h)
 {
     if (c_nHyperlinkType == m_lCurrentCommandType)
@@ -2797,7 +2800,7 @@ HRESULT PPT::CShapeWriter::CommandDrawTextEx(const std::wstring& bsUnicodeText, 
     }
     return S_OK;
 }
-//-------- Маркеры для команд ---------------------------------------------------------------
+//-------- Command markers ---------------------------------------------------------------
 HRESULT PPT::CShapeWriter::BeginCommand(const _UINT32& lType)
 {
     if (c_nPathType == lType)
@@ -2814,7 +2817,7 @@ HRESULT PPT::CShapeWriter::EndCommand(const _UINT32& lType)
     m_lCurrentCommandType = -1;
     return S_OK;
 }
-//-------- Функции для работы с Graphics Path -----------------------------------------------
+//-------- Functions for working with Graphics Path -----------------------------------------------
 HRESULT PPT::CShapeWriter::PathCommandMoveTo(const double& x, const double& y)
 {
     if (c_nSimpleGraphicType == m_lCurrentCommandType)
@@ -2962,7 +2965,7 @@ HRESULT PPT::CShapeWriter::PathCommandTextEx(const std::wstring& bsUnicodeText, 
     m_oFont.StringGID = bGid;
     return S_OK;
 }
-//-------- Функции для вывода изображений ---------------------------------------------------
+//-------- Functions for image output ---------------------------------------------------
 HRESULT PPT::CShapeWriter::DrawImage(IGrObject* pImage, const double& x, const double& y, const double& w, const double& h)
 {
     return S_OK;

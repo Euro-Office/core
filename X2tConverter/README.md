@@ -1,7 +1,7 @@
 x2t converter
 =============
 
-Нou can convert files from one format to another.
+You can convert files from one format to another.
 
 # CONFIGURATION
 You need to create the xml configuration file.
