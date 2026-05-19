@@ -764,20 +764,6 @@ namespace XmlUtils
 		return sstream.str();
 	}
 
-	bool IsUnicodeSymbol( unsigned int symbol )
-	{
-		bool result = false;
-
-		if ( ( 0x0009 == symbol ) || ( 0x000A == symbol ) || ( 0x000D == symbol ) ||
-			 ( ( 0x0020 <= symbol ) && ( 0xD7FF >= symbol ) ) || ( ( 0xE000 <= symbol ) && ( symbol <= 0xFFFD ) ) ||
-			 ( ( 0x10000 <= symbol ) && symbol ) )
-		{
-			result = true;
-		}
-
-		return result;
-	}
-
 	bool IsUnicodeSymbol(unsigned int symbol)
 	{
 		return (symbol == 0x0009) || (symbol == 0x000A) || (symbol == 0x000D)
@@ -786,73 +772,7 @@ namespace XmlUtils
 			|| (symbol >= 0x10000  && symbol <= 0x10FFFF);
 	}
 
-	std::string EncodeXmlString(const std::string& data, bool bDeleteNoUnicode)
-	{
-		std::string buffer;
-		buffer.reserve(data.size());
-
-		if(bDeleteNoUnicode)
-		{
-			for(size_t pos = 0; pos < data.size(); ++pos)
-			{
-				switch(data[pos])
-				{
-				case '&':  buffer.append("&amp;");      break;
-				case '\"': buffer.append("&quot;");     break;
-				case '\'': buffer.append("&apos;");     break;
-				case '<':  buffer.append("&lt;");       break;
-				case '>':  buffer.append("&gt;");       break;
-				default:
-				{
-					if ( false == IsUnicodeSymbol( data[pos] ) )
-					{
-						wchar_t symbol1 = data[pos];
-						if(0xD800 <= symbol1 && symbol1 <= 0xDFFF && pos + 1 < data.size())
-						{
-							pos++;
-							wchar_t symbol2 = data[pos];
-							if (symbol1 < 0xDC00 && symbol2 >= 0xDC00 && symbol2 <= 0xDFFF)
-							{
-								buffer.append(&data[pos-1], 2);
-							}
-							else
-							{
-								buffer.append(" ");
-							}
-						}
-						else
-						{
-							buffer.append(" ");
-						}
-					}
-					else
-						buffer.append(&data[pos], 1);
-				}break;
-				}
-			}
-		}
-		else
-		{
-			for(size_t pos = 0; pos < data.size(); ++pos)
-			{
-				switch(data[pos])
-				{
-				case '&':  buffer.append("&amp;");      break;
-				case '\"': buffer.append("&quot;");     break;
-				case '\'': buffer.append("&apos;");     break;
-				case '<':  buffer.append("&lt;");       break;
-				case '>':  buffer.append("&gt;");       break;
-				case '\0':
-					return buffer;
-				default:   buffer.append(&data[pos], 1);	break;
-				}
-			}
-		}
-
-		return buffer;
-    }
-
-    std::wstring EncodeXmlString(const std::wstring& data, bool bDeleteNoUnicode)
+	std::wstring EncodeXmlString(const std::wstring& data, bool bDeleteNoUnicode)
 	{
 		std::wstring buffer;
 		buffer.reserve(data.size());
