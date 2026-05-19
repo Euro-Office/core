@@ -64,6 +64,6 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
     )
 
     if( NOT MSVC )
-        target_compile_options( ${TARGET} PRIVATE -include unistd.h)
+        target_compile_options( ${TARGET} PRIVATE -includeunistd.h)
     endif()
 endfunction()
