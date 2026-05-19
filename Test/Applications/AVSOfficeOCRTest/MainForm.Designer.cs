@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) Ascensio System SIA, 2009-2026
  *
  * This program is a free software product. You can redistribute it and/or
@@ -32,7 +32,7 @@
  *
  * SPDX-License-Identifier: AGPL-3.0-only
  */
-﻿namespace AVSOfficeOCRTest
+namespace AVSOfficeOCRTest
 {
     partial class MainForm
     {
