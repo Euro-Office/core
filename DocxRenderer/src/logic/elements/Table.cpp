@@ -257,7 +257,16 @@ namespace NSDocxRenderer
 						lines.insert(*tmp_lines.crbegin());
 			}
 
-			// add the right and bot borders, respectively, in case
+			// add the top or left borders, respectively, in case
+			// there is still a small gap before the graphic border
+			auto first_line = *lines.begin();
+			if (!is_eq(first_line, hor ? m_dTop : m_dLeft))
+			{
+				lines.insert(hor ? m_dTop : m_dLeft);
+				lines.erase(first_line);
+			}
+
+			// add the right or bot borders, respectively, in case
 			// there is still a small gap before the graphic border
 			auto last_line = *lines.crbegin();
 			lines.insert(hor ? m_dBot : m_dRight);
