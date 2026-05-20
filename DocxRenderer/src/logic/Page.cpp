@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <map>
+#include <iterator>
 // #include <assert.h>
 
 #include "../../../DesktopEditor/graphics/pro/Graphics.h"
@@ -2692,6 +2693,48 @@ namespace NSDocxRenderer
 		});
 
 		std::set<size_t, std::less<size_t>> remove_later;
+		std::array<std::vector<cell_ptr_t>, 4> possible_cells;
+		auto add_possible_cell = [&get_line, &go_direction_until, &remove_later, &possible_cells] (const std::pair<std::shared_ptr<Crossing>, std::shared_ptr<Crossing>>& pair) {
+			const auto& cr_first = pair.first;
+			const auto& cr_second = pair.second;
+
+			const Line* cr_f_top = get_line(eLineDirection::ldRight, cr_first->lines);
+			const Line* cr_f_left = get_line(eLineDirection::ldBot, cr_first->lines);
+			const Line* cr_s_bot = get_line(eLineDirection::ldLeft, cr_second->lines);
+			const Line* cr_s_right = get_line(eLineDirection::ldTop, cr_second->lines);
+
+			bool is_connected = true;
+			std::set<size_t> shape_indexes;
+			CTable::CCell::CBorder border_left{}, border_right{}, border_top{}, border_bot{};
+			std::vector<cell_ptr_t>* vec_to_insert;
+			if (cr_f_top)
+				is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldRight, shape_indexes, border_top);
+			else
+				vec_to_insert = &possible_cells[0];
+			if (cr_f_left)
+				is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldBot, shape_indexes, border_left);
+			else
+				vec_to_insert = &possible_cells[1];
+			if (cr_s_bot)
+				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldLeft, shape_indexes, border_bot);
+			else
+				vec_to_insert = &possible_cells[2];
+			if (cr_s_right)
+				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldTop, shape_indexes, border_right);
+			else
+				vec_to_insert = &possible_cells[3];
+
+			if (!is_connected)
+				return;
+
+			for (const auto& index : shape_indexes)
+				remove_later.insert(index);
+
+			auto graphical_cell = std::make_shared<CTable::CCell>(cr_first->p.x, cr_first->p.y, cr_second->p.x, cr_second->p.y,
+																  border_left, border_top, border_right, border_bot);
+			vec_to_insert->push_back(graphical_cell);
+		};
+
 		for (size_t i = 0; i < crossings.size(); ++i)
 		{
 			for (size_t j = i + 1; j < crossings.size(); ++j)
@@ -2710,27 +2753,369 @@ namespace NSDocxRenderer
 				const Line* cr_s_bot = get_line(eLineDirection::ldLeft, cr_second->lines);
 				const Line* cr_s_right = get_line(eLineDirection::ldTop, cr_second->lines);
 
-				if (!cr_f_top || !cr_f_left || !cr_s_bot || !cr_s_right)
-					continue;
+				int falses = !cr_f_top + !cr_f_left + !cr_s_bot + !cr_s_right;
 
-				std::set<size_t> shape_indexes;
-				CTable::CCell::CBorder border_left{}, border_right{}, border_top{}, border_bot{};
-				bool is_connected = go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldRight, shape_indexes, border_top);
-				is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldBot, shape_indexes, border_left);
-				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldLeft, shape_indexes, border_bot);
-				is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldTop, shape_indexes, border_right);
+				if (falses == 1)
+					add_possible_cell(std::make_pair(cr_first, cr_second));
+				else if (falses == 0)
+				{
+					std::set<size_t> shape_indexes;
+					CTable::CCell::CBorder border_left{}, border_right{}, border_top{}, border_bot{};
+					bool is_connected = go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldRight, shape_indexes, border_top);
+					is_connected &= go_direction_until(cr_first.get(), cr_second->p, eLineDirection::ldBot, shape_indexes, border_left);
+					is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldLeft, shape_indexes, border_bot);
+					is_connected &= go_direction_until(cr_second.get(), cr_first->p, eLineDirection::ldTop, shape_indexes, border_right);
 
-				if (!is_connected)
-					continue;
+					if (!is_connected)
+						continue;
 
-				for (const auto& index : shape_indexes)
-					remove_later.insert(index);
+					for (const auto& index : shape_indexes)
+						remove_later.insert(index);
 
-				auto graphical_cell = std::make_shared<CTable::CCell>(cr_first->p.x, cr_first->p.y, cr_second->p.x, cr_second->p.y,
-																	  border_left, border_top, border_right, border_bot);
-				m_arGraphicalCells.push_back(std::move(graphical_cell));
-				break;
+					auto graphical_cell = std::make_shared<CTable::CCell>(cr_first->p.x, cr_first->p.y, cr_second->p.x, cr_second->p.y,
+																		  border_left, border_top, border_right, border_bot);
+					m_arGraphicalCells.push_back(std::move(graphical_cell));
+					break;
+				}
 			}
+		}
+
+		struct Borders {
+			double top{0.0};
+			double left{0.0};
+			double bot{0.0};
+			double right{0.0};
+			Borders() = default;
+			void clear() {
+				top = 0.0;
+				left = 0.0;
+				right = 0.0;
+				bot = 0.0;
+			}
+			bool empty() const {
+				return top == bot && left == right;
+			}
+		};
+
+		auto get_borders = [&is_eq] (const std::vector<cell_ptr_t>& cells) -> std::vector<Borders> {
+			std::vector<Borders> res;
+			Borders b{};
+
+			for (const auto& c : cells)
+			{
+				if (!b.empty() &&c->m_dTop > b.bot && !is_eq(c->m_dTop, b.bot))
+				{
+					res.push_back(b);
+					b.clear();
+				}
+				if (b.top == 0.0 || (c->m_dTop < b.top && !is_eq(c->m_dTop, b.top)))
+					b.top = c->m_dTop;
+				if (b.left == 0.0 || (c->m_dLeft < b.left && !is_eq(c->m_dLeft, b.left)))
+					b.left = c->m_dLeft;
+				if (c->m_dBot > b.bot && !is_eq(c->m_dBot, b.bot))
+					b.bot = c->m_dBot;
+				if (c->m_dRight > b.right && !is_eq(c->m_dRight, b.right))
+					b.right = c->m_dRight;
+			}
+			res.push_back(b);
+			return res;
+		};
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			auto& vec = possible_cells[i];
+			for (auto it1 = vec.begin(); it1 != vec.end(); )
+			{
+				bool removed = false;
+				for (auto it2 = std::next(it1); it2 != vec.end(); )
+				{
+					const auto& cell1 = *it1;
+					const auto& cell2 = *it2;
+
+					std::array<bool, 5> conditions;
+					auto remove = [&vec, &it1, &it2, &conditions, &removed] () {
+						if (!conditions[0])
+						{
+							++it2;
+							return;
+						}
+						if ((conditions[1] && conditions[3]) ||
+							(conditions[2] && conditions[4]))
+							it2 = vec.erase(it2);
+						else if ((conditions[1] && !conditions[3]) ||
+								 (conditions[2] && !conditions[4]))
+						{
+							removed = true;
+							it1 = vec.erase(it1);
+							it2 = vec.end();
+						}
+						else
+							++it2;
+					};
+
+					if (i % 2 == 0)
+					{
+						conditions[0] = is_eq(cell1->m_dLeft, cell2->m_dLeft) && is_eq(cell1->m_dRight, cell2->m_dRight);
+						conditions[1] = i == 0 ? is_eq(cell1->m_dTop, cell2->m_dTop) : is_eq(cell1->m_dBot, cell2->m_dBot);
+						conditions[2] = i == 0 ? is_eq(cell1->m_dBot, cell2->m_dBot) : is_eq(cell1->m_dTop, cell2->m_dTop);
+						conditions[3] = i == 0 ? cell1->m_dBot < cell2->m_dBot : cell1->m_dTop > cell2->m_dTop;
+						conditions[4] = i == 0 ? cell1->m_dTop < cell2->m_dTop : cell1->m_dBot > cell2->m_dBot;
+					}
+					else
+					{
+						conditions[0] = is_eq(cell1->m_dTop, cell2->m_dTop) && is_eq(cell1->m_dBot, cell2->m_dBot);
+						conditions[1] = i == 1 ? is_eq(cell1->m_dLeft, cell2->m_dLeft) : is_eq(cell1->m_dRight, cell2->m_dRight);
+						conditions[2] = i == 1 ? is_eq(cell1->m_dRight, cell2->m_dRight) : is_eq(cell1->m_dLeft, cell2->m_dLeft);
+						conditions[3] = i == 1 ? cell1->m_dRight < cell2->m_dRight : cell1->m_dLeft > cell2->m_dLeft;
+						conditions[4] = i == 0 ? cell1->m_dLeft < cell2->m_dLeft : cell1->m_dRight > cell2->m_dRight;
+					}
+
+					remove();
+				}
+				if (!removed)
+					++it1;
+			}
+		}
+
+		auto get_group_lines = [&is_eq, &possible_cells] (const size_t& idx) -> std::vector<std::vector<cell_ptr_t>> {
+			std::sort(possible_cells[idx].begin(), possible_cells[idx].end(), [idx] (cell_ptr_t c1, cell_ptr_t c2) {
+				if (idx % 2 == 0)
+					return c1->m_dLeft < c2->m_dLeft;
+				else
+					return c1->m_dTop < c2->m_dTop;
+			});
+
+			std::vector<std::vector<cell_ptr_t>> lines;
+			std::vector<cell_ptr_t> line;
+			for (auto&& c : possible_cells[idx])
+			{
+				auto condition = [&is_eq, &idx, &line, &c] () -> bool {
+					if (line.empty())
+						return true;
+
+					if (idx % 2 == 0)
+						return is_eq(line.back()->m_dRight, c->m_dLeft);
+					else
+						return is_eq(line.back()->m_dBot, c->m_dTop);
+				};
+
+				if (condition())
+					line.push_back(std::move(c));
+				else
+				{
+					lines.push_back(std::move(line));
+					line.clear();
+					line.push_back(std::move(c));
+				}
+			}
+			lines.push_back(line);
+
+			return lines;
+		};
+
+		auto top_lines = get_group_lines(0);
+		auto left_lines = get_group_lines(1);
+		auto bot_lines = get_group_lines(2);
+		auto right_lines = get_group_lines(3);
+
+		auto cell_in_borders = [&is_eq] (cell_ptr_t c, const Borders& b) -> bool {
+			return (c->m_dTop > b.top || is_eq(c->m_dTop, b.top)) &&
+				   (c->m_dBot < b.bot || is_eq(c->m_dBot, b.bot)) &&
+				   (c->m_dLeft > b.left || is_eq(c->m_dLeft, b.left)) &&
+				   (c->m_dRight < b.right || is_eq(c->m_dRight, b.right));
+		};
+
+		auto cells_in_borders = [&cell_in_borders] (const std::vector<cell_ptr_t>& cells,  const Borders& b) -> bool {
+			bool res = true;
+			std::for_each(cells.begin(), cells.end(), [&res, &cell_in_borders, b] (cell_ptr_t c) {
+				res &= cell_in_borders(c, b);
+			});
+			return res;
+		};
+
+		std::vector<std::pair<std::vector<cell_ptr_t>, Borders>> group_cells;
+		for (const auto& b : get_borders(m_arGraphicalCells))
+		{
+			std::vector<cell_ptr_t> cells;
+
+			for (auto&& c : m_arGraphicalCells)
+				if (c && cell_in_borders(c, b))
+				{
+					cells.push_back(std::move(c));
+					c = nullptr;
+				}
+			group_cells.push_back(std::make_pair(cells, b));
+		}
+		m_arGraphicalCells.clear();
+
+		auto get_square = [] (const std::vector<cell_ptr_t>& cells) {
+			double square = 0.0;
+			for (const auto& c : cells)
+				square += c->m_dHeight * c->m_dWidth;
+			return square;
+		};
+
+		for (const auto& pr : group_cells)
+		{
+			const auto& b = pr.second;
+			auto cells = pr.first;
+
+			auto square = get_square(cells);
+			auto insert = [&is_eq, &get_square, &cells_in_borders, &cells, b] (std::vector<std::vector<cell_ptr_t>>& lines, size_t idx) -> double {
+				double square = 0.0;
+				for (auto it = lines.begin(); it != lines.end(); )
+				{
+					const auto& line = *it;
+					bool condition = false;
+
+					switch (idx) {
+					case 0:
+						condition = is_eq(b.top, line.front()->m_dBot);
+						break;
+					case 1:
+						condition = is_eq(b.left, line.front()->m_dRight);
+						break;
+					case 2:
+						condition = is_eq(b.bot, line.front()->m_dTop);
+						break;
+					case 3:
+						condition = is_eq(b.right, line.front()->m_dLeft);
+						break;
+					default:
+						break;
+					}
+
+					if (cells_in_borders(line, b) || condition)
+					{
+						square += get_square(line);
+						cells.insert(cells.end(), std::make_move_iterator(line.begin()), std::make_move_iterator(line.end()));
+						it = lines.erase(it);
+					}
+					else
+						++it;
+				}
+				return square;
+			};
+
+			auto inserted_square_top = insert(top_lines, 0);
+			auto inserted_square_left = insert(left_lines, 1);
+			auto inserted_square_bot = insert(bot_lines, 2);
+			auto inserted_square_right = insert(right_lines, 3);
+
+			std::sort(cells.begin(), cells.end(), [&is_eq] (cell_ptr_t c1, cell_ptr_t c2) {
+				if (!is_eq(c1->m_dTop, c2->m_dTop))
+					return c1->m_dTop < c2->m_dTop;
+				return !is_eq(c1->m_dLeft, c2->m_dLeft) && c1->m_dLeft < c2->m_dLeft;
+			});
+
+			auto new_b = get_borders(cells)[0];
+			auto new_square = (new_b.right - new_b.left) * (new_b.bot - new_b.top);
+
+			auto get_it = [&is_eq, &cells] (bool first) -> std::vector<cell_ptr_t>::iterator {
+				double border = first ? cells.front()->m_dTop : cells.back()->m_dBot;
+				if (first)
+				{
+					for (auto it = cells.begin(); it != cells.end(); ++it)
+						if (!is_eq(border, (*it)->m_dTop))
+							return it;
+				}
+				else
+				{
+					for (auto it = std::next(cells.rbegin()); it != cells.rend(); ++it)
+						if (!is_eq(border, (*(it.base()))->m_dBot))
+							return it.base();
+				}
+				return cells.end();
+			};
+
+			auto is_eq1 = makeEqualComp<double>(c_dCOMPARE_EPSILON);
+			auto square_diff = new_square - (inserted_square_top + inserted_square_left + inserted_square_bot + inserted_square_right + square);
+			if (!is_eq1(square_diff, 0.0))
+			{
+				auto first_line_it = get_it(true);
+				auto last_line_it = get_it(false);
+
+				std::vector<cell_ptr_t> first_line(cells.begin(), first_line_it);
+				std::vector<cell_ptr_t> last_line(std::next(last_line_it), cells.end());
+
+				auto find_it = [&is_eq, &cells] (const std::vector<cell_ptr_t>::iterator& start_it, const double& border, bool right) -> std::vector<cell_ptr_t>::iterator {
+					if (right)
+					{
+						for (auto it = start_it; std::next(it) != cells.end(); ++it)
+							if (is_eq((*it)->m_dRight, border))
+								if (is_eq((*std::next(it))->m_dLeft, border))
+									return std::next(it);
+					}
+					else
+					{
+						for (auto it = std::make_reverse_iterator(start_it); it != cells.rend(); ++it)
+							if (is_eq((*(it.base()))->m_dLeft, border))
+								if (is_eq((*(std::next(it).base()))->m_dRight, border))
+									return std::next(it).base();
+					}
+					return cells.end();
+				};
+
+				std::array<cell_ptr_t, 4> new_cells = {nullptr, nullptr, nullptr, nullptr};
+				if (!is_eq(first_line.front()->m_dLeft, new_b.left))
+					new_cells[0] = std::make_shared<CTable::CCell>(new_b.left,
+																   new_b.top,
+																   first_line.front()->m_dLeft,
+																   (*first_line_it)->m_dTop,
+																   CTable::CCell::CBorder{},
+																   CTable::CCell::CBorder{},
+																   first_line.front()->m_oLeftBorder,
+																   (*first_line_it)->m_oTopBorder);
+				if (!is_eq(last_line.back()->m_dRight, new_b.right))
+					new_cells[3] = std::make_shared<CTable::CCell>(last_line.back()->m_dRight,
+																   (*last_line_it)->m_dBot,
+																   new_b.right,
+																   new_b.bot,
+																   last_line.back()->m_oRightBorder,
+																   (*last_line_it)->m_oBotBorder,
+																   CTable::CCell::CBorder{},
+																   CTable::CCell::CBorder{});
+				if (!is_eq(first_line.back()->m_dRight, new_b.right))
+				{
+					auto second_it = find_it(first_line_it, first_line.back()->m_dRight, true);
+					new_cells[1] = std::make_shared<CTable::CCell>(first_line.back()->m_dRight,
+																   new_b.top,
+																   new_b.right,
+																   (*second_it)->m_dTop,
+																   first_line.back()->m_oRightBorder,
+																   CTable::CCell::CBorder{},
+																   CTable::CCell::CBorder{},
+																   (*second_it)->m_oTopBorder);
+				}
+				if (!is_eq(last_line.front()->m_dLeft, new_b.left))
+				{
+					auto prev_last_it = find_it(last_line_it, last_line.front()->m_dLeft, false);
+					new_cells[2] = std::make_shared<CTable::CCell>(new_b.left,
+																   (*prev_last_it)->m_dBot,
+																   last_line.front()->m_dLeft,
+																   new_b.bot,
+																   CTable::CCell::CBorder{},
+																   (*prev_last_it)->m_oBotBorder,
+																   last_line.front()->m_oRightBorder,
+																   CTable::CCell::CBorder{});
+				}
+
+				if (new_cells[0])
+					cells.insert(cells.begin(), new_cells[0]);
+				if (new_cells[1])
+				{
+					auto it = get_it(true);
+					cells.insert(it, new_cells[1]);
+				}
+				if (new_cells[2])
+				{
+					auto it = std::next(get_it(false));
+					cells.insert(it, new_cells[2]);
+				}
+				if (new_cells[3])
+					cells.insert(cells.end(), new_cells[3]);
+			}
+			m_arGraphicalCells.insert(m_arGraphicalCells.end(), std::make_move_iterator(cells.begin()), std::make_move_iterator(cells.end()));
 		}
 
 		CheckFillingShapes(m_arGraphicalCells, check_later, remove_later);
