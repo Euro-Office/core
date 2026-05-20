@@ -267,11 +267,8 @@ std::wstring RtfAbstractReader::ExecuteTextInternal(RtfDocument& oDocument, RtfR
 	{
 		if (true == bHasPar)
 		{
-			if (m_bUseGlobalCodepage && sizeof(wchar_t) != 2)
-			{
-				nPar = nPar & 0x0FFF;
-			}
-			sResult += wchar_t(nPar);
+			int codepoint = (nPar < 0) ? (nPar + 65536) : nPar;
+			sResult += wchar_t(codepoint);
 		}
 	}
 	else
@@ -315,14 +312,14 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfR
 	{
 		if (nSkipChars >= (int)sResult.length())
 		{
-			//nSkipChars -= nLength;//vedomost.rtf
+			nSkipChars -= (int)sResult.length();
 			sResult.clear();
 		}
 		else
 		{
 			sResult = sResult.substr(nSkipChars);
+			nSkipChars = 0;
 		}
-		nSkipChars = 0;
 	}
 	if ("u" == sKey)
 	{
@@ -333,18 +330,18 @@ void RtfAbstractReader::ExecuteTextInternalSkipChars(std::string & sResult, RtfR
 void RtfAbstractReader::ExecuteTextInternalSkipChars(std::wstring & sResult, RtfReader& oReader, std::string & sKey, int& nSkipChars)
 {
 	//remove characters following unicode
-	if (nSkipChars > 0)
+	if (nSkipChars > 0 && "u" != sKey)
 	{
 		if (nSkipChars >= (int)sResult.length())
 		{
-			//nSkipChars -= nLength;//vedomost.rtf
+			nSkipChars -= (int)sResult.length();
 			sResult.clear();
 		}
 		else
 		{
 			sResult = sResult.substr(nSkipChars);
+			nSkipChars = 0;
 		}
-		nSkipChars = 0;
 	}
 	if ("u" == sKey)
 	{
