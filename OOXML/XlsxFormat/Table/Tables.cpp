@@ -754,7 +754,7 @@ xmlns:xr3=\"http://schemas.microsoft.com/office/spreadsheetml/2016/revision3\"")
 			{
 				if(i->m_oName.IsInit())
                 {
-					i->m_oName = boost::algorithm::replace_all_copy(i->m_oName.get(), L"_x000a_", L"\n");
+					i->m_oName = boost::algorithm::erase_all_copy(i->m_oName.get(), L"_x000a_");
 					std::unordered_map<int, std::vector<std::wstring>>::iterator pFind = XLS::GlobalWorkbookInfo::mapTableColumnNames_static.find(m_oId->GetValue());
 					if (pFind != XLS::GlobalWorkbookInfo::mapTableColumnNames_static.end())
 					{
