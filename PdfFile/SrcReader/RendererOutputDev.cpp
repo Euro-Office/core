@@ -2571,14 +2571,11 @@ namespace PdfReader
 			if (pFont->getType() == fontCIDType0COT && isCIDFont && oEntry.bIsIdentity && oEntry.pCodeToUnicode && nCode < oEntry.unLenUnicode && !oEntry.pCodeToUnicode[nCode])
 				unGid = nCode;
 		}
-		else
+		else if ((isCIDFont && oEntry.bIsIdentity && !oEntry.bFontSubstitution) || (!isCIDFont && wsUnicodeText.empty()))
 		{
-			if ((isCIDFont && oEntry.bIsIdentity) || (!isCIDFont && wsUnicodeText.empty()))
-			{
-				unsigned int nCurCode = (0 == nCode ? 65534 : nCode);
-				unGid       = nCurCode;
-				unGidsCount = 1;
-			}
+			unsigned int nCurCode = (0 == nCode ? 65534 : nCode);
+			unGid       = nCurCode;
+			unGidsCount = 1;
 		}
 
 		if (nRenderMode == 0 || nRenderMode == 4 || nRenderMode == 6 || m_bDrawOnlyText)
