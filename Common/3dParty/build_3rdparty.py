@@ -111,7 +111,7 @@ install_dir = Path( sys.argv[ argc - 1 ] )
 if sys.platform == "win32" and shutil.which( "nmake" ) is None:
     raise RuntimeError(
         "MSVC environment is not set up: 'nmake' not found in PATH.\n"
-        "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
+        "Run 'vcvars64.bat' or use 'x64 Native Tools Command Prompt'."
     )
 
 
