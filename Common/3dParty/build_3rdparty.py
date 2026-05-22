@@ -27,6 +27,7 @@ subfolders = [
 
 force_redo_subfolders = []
 only_subfolders = []
+except_subfolders = []
 
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
@@ -42,6 +43,8 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
         --list        : Prints a list of known subfolders.
         --force-redo= : A list of subdirectories to re-do even if they are already done.
         --only=       : Build only the specified comma-separated subfolders (skip all others).
+        --except=     : Build everything except the specified comma-separated subfolders.
+                        Note: --only= and --except= are mutually exclusive.
         --help | -h   : Prints this help.
 
     Examples:
@@ -53,6 +56,9 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
 
         { script_path.name } --only=v8,icu $PWD/work $PWD/install
         Build and install only v8 and icu.
+
+        { script_path.name } --except=v8,icu $PWD/work $PWD/install
+        Build and install everything except v8 and icu.
         """
     )
 
@@ -77,6 +83,14 @@ for i in range( 1, argc ):
         for only_subfolder in only_subfolders:
             if only_subfolder not in subfolders:
                 print( f"Unknown subfolder: { only_subfolder }" )
+                print_help()
+                sys.exit( 1 )
+
+    elif sys.argv[ i ].startswith( "--except=" ):
+        except_subfolders = ( sys.argv[ i ][ len( "--except=" ): ] ).split( ',' )
+        for ex_subfolder in except_subfolders:
+            if ex_subfolder not in subfolders:
+                print( f"Unknown subfolder: { ex_subfolder }" )
                 print_help()
                 sys.exit( 1 )
 
@@ -116,8 +130,14 @@ if sys.platform == "win32" and shutil.which( "nmake" ) is None:
 
 
 
+if only_subfolders and except_subfolders:
+    print( "Error: --only= and --except= are mutually exclusive." )
+    sys.exit( 1 )
+
 if only_subfolders:
     subfolders = [ s for s in subfolders if s in only_subfolders ]
+elif except_subfolders:
+    subfolders = [ s for s in subfolders if s not in except_subfolders ]
 
 total_time = nc.MeasurementObj( "Total" )
 
