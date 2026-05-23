@@ -75,17 +75,17 @@ SOURCES += \
     $$LIBXML2_ROOT_DIR/error.c \
     $$LIBXML2_ROOT_DIR/globals.c \
     $$LIBXML2_ROOT_DIR/hash.c \
-    $$LIBXML2_ROOT_DIR/libxml.h \
+    $$LIBXML2_ROOT_DIR/HTMLparser.c \
+    $$LIBXML2_ROOT_DIR/HTMLtree.c \
     $$LIBXML2_ROOT_DIR/list.c \
     $$LIBXML2_ROOT_DIR/nanohttp.c \
     $$LIBXML2_ROOT_DIR/parserInternals.c \
     $$LIBXML2_ROOT_DIR/pattern.c \
     $$LIBXML2_ROOT_DIR/relaxng.c \
-    $$LIBXML2_ROOT_DIR/runsuite.c \
+    $$LIBXML2_ROOT_DIR/SAX2.c \
     $$LIBXML2_ROOT_DIR/schematron.c \
     $$LIBXML2_ROOT_DIR/shell.c \
     $$LIBXML2_ROOT_DIR/threads.c \
-    $$LIBXML2_ROOT_DIR/timsort.h \
     $$LIBXML2_ROOT_DIR/tree.c \
     $$LIBXML2_ROOT_DIR/uri.c \
     $$LIBXML2_ROOT_DIR/xinclude.c \
