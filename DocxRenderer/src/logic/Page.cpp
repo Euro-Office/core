@@ -2835,18 +2835,15 @@ namespace NSDocxRenderer
 					const auto& cell1 = *it1;
 					const auto& cell2 = *it2;
 
-					std::array<bool, 5> conditions;
+					std::array<bool, 7> conditions;
 					auto remove = [&vec, &it1, &it2, &conditions, &removed] () {
-						if (!conditions[0])
-						{
-							++it2;
-							return;
-						}
-						if ((conditions[1] && conditions[3]) ||
-							(conditions[2] && conditions[4]))
+						if ((conditions[0] && conditions[1] && conditions[3]) ||
+							(conditions[0] && conditions[2] && conditions[4]) ||
+							(!conditions[0] && conditions[5] && conditions[6]))
 							it2 = vec.erase(it2);
-						else if ((conditions[1] && !conditions[3]) ||
-								 (conditions[2] && !conditions[4]))
+						else if ((conditions[0] && conditions[1] && !conditions[3]) ||
+								 (conditions[0] && conditions[2] && !conditions[4]) ||
+								 (!conditions[0] && conditions[5] && !conditions[6]))
 						{
 							removed = true;
 							it1 = vec.erase(it1);
@@ -2863,6 +2860,10 @@ namespace NSDocxRenderer
 						conditions[2] = i == 0 ? is_eq(cell1->m_dBot, cell2->m_dBot) : is_eq(cell1->m_dTop, cell2->m_dTop);
 						conditions[3] = i == 0 ? cell1->m_dBot < cell2->m_dBot : cell1->m_dTop > cell2->m_dTop;
 						conditions[4] = i == 0 ? cell1->m_dTop < cell2->m_dTop : cell1->m_dBot > cell2->m_dBot;
+						conditions[5] = is_eq(cell1->m_dTop, cell2->m_dTop) && is_eq(cell1->m_dBot, cell2->m_dBot) &&
+										(is_eq(cell1->m_dLeft, cell2->m_dLeft) || is_eq(cell1->m_dRight, cell2->m_dRight));
+						conditions[6] = (is_eq(cell1->m_dLeft, cell2->m_dLeft) && cell1->m_dRight < cell2->m_dRight && !is_eq(cell1->m_dRight, cell2->m_dRight)) ||
+										(is_eq(cell1->m_dRight, cell2->m_dRight) && cell1->m_dLeft > cell2->m_dLeft && !is_eq(cell1->m_dLeft, cell2->m_dLeft));
 					}
 					else
 					{
@@ -2871,6 +2872,10 @@ namespace NSDocxRenderer
 						conditions[2] = i == 1 ? is_eq(cell1->m_dRight, cell2->m_dRight) : is_eq(cell1->m_dLeft, cell2->m_dLeft);
 						conditions[3] = i == 1 ? cell1->m_dRight < cell2->m_dRight : cell1->m_dLeft > cell2->m_dLeft;
 						conditions[4] = i == 0 ? cell1->m_dLeft < cell2->m_dLeft : cell1->m_dRight > cell2->m_dRight;
+						conditions[5] = is_eq(cell1->m_dLeft, cell2->m_dLeft) && is_eq(cell1->m_dRight, cell2->m_dRight) &&
+										(is_eq(cell1->m_dTop, cell2->m_dTop) || is_eq(cell1->m_dBot, cell2->m_dBot));
+						conditions[6] = (is_eq(cell1->m_dTop, cell2->m_dTop) && cell1->m_dBot < cell2->m_dBot && !is_eq(cell1->m_dBot, cell2->m_dBot)) ||
+										(is_eq(cell1->m_dBot, cell2->m_dBot) && cell1->m_dTop > cell2->m_dTop && !is_eq(cell1->m_dTop, cell2->m_dTop));
 					}
 
 					remove();
@@ -2881,11 +2886,10 @@ namespace NSDocxRenderer
 		}
 
 		auto get_group_lines = [&is_eq, &possible_cells] (const size_t& idx) -> std::vector<std::vector<cell_ptr_t>> {
-			std::sort(possible_cells[idx].begin(), possible_cells[idx].end(), [idx] (cell_ptr_t c1, cell_ptr_t c2) {
-				if (idx % 2 == 0)
-					return c1->m_dLeft < c2->m_dLeft;
-				else
+			std::sort(possible_cells[idx].begin(), possible_cells[idx].end(), [&is_eq] (cell_ptr_t c1, cell_ptr_t c2) {
+				if (!is_eq(c1->m_dTop, c2->m_dTop))
 					return c1->m_dTop < c2->m_dTop;
+				return !is_eq(c1->m_dLeft, c2->m_dLeft) && c1->m_dLeft < c2->m_dLeft;
 			});
 
 			std::vector<std::vector<cell_ptr_t>> lines;
@@ -3174,7 +3178,7 @@ namespace NSDocxRenderer
 				if (is_eq(tl.front()->m_dBot, bl.front()->m_dTop))
 				{
 					const auto& b_left = bl.front()->m_dLeft;
-					const auto& b_right = bl.back()->m_dLeft;
+					const auto& b_right = bl.back()->m_dRight;
 					if (b_left < t_left && !is_eq(b_left, t_left))
 						tl.insert(tl.begin(), std::make_shared<CTable::CCell>(b_left, tl.front()->m_dTop, t_left, bl.front()->m_dTop,
 																			  CTable::CCell::CBorder(), CTable::CCell::CBorder(),
@@ -3238,7 +3242,7 @@ namespace NSDocxRenderer
 																			ll.back()->m_oRightBorder, rl.back()->m_oBotBorder,
 																			CTable::CCell::CBorder(), CTable::CCell::CBorder()));
 					ll.insert(ll.end(), rl.begin(), rl.end());
-					rl_it = bot_lines.erase(rl_it);
+					rl_it = right_lines.erase(rl_it);
 					std::sort(ll.begin(), ll.end(), [&is_eq] (cell_ptr_t c1, cell_ptr_t c2) {
 						if (!is_eq(c1->m_dTop, c2->m_dTop))
 							return c1->m_dTop < c2->m_dTop;
@@ -3262,6 +3266,8 @@ namespace NSDocxRenderer
 		{
 			auto& b = pr.second;
 			auto& cells = pr.first;
+			if (cells.empty())
+				continue;
 			auto start_size = group_cells.size();
 
 			struct line {
@@ -3270,6 +3276,7 @@ namespace NSDocxRenderer
 				double y1{0.0};
 				double y2{0.0};
 				CTable::CCell::CBorder border{};
+				line() = default;
 				line(double _x1, double _x2, double _y1, double _y2) :
 					x1(_x1), x2(_x2), y1(_y1), y2(_y2) {}
 			};
@@ -3286,18 +3293,18 @@ namespace NSDocxRenderer
 						if (l.y2 > line_bot)
 							line_bot = l.y2;
 					});
-					cells.push_back(std::make_shared<CTable::CCell>(start, line_top, lines.front().x1, line_bot,
+					cells.push_back(std::make_shared<CTable::CCell>(start, line_top, lines.front().x2, line_bot,
 																	CTable::CCell::CBorder(), CTable::CCell::CBorder(),
 																	lines.front().border, CTable::CCell::CBorder()));
 					for (auto it = lines.begin(); std::next(it) != lines.end(); ++it)
 					{
 						const auto& first_l = *it;
 						const auto& second_l = *std::next(it);
-						cells.push_back(std::make_shared<CTable::CCell>(first_l.x1, line_top, second_l.x1, line_bot,
+						cells.push_back(std::make_shared<CTable::CCell>(first_l.x2, line_top, second_l.x2, line_bot,
 																		first_l.border, CTable::CCell::CBorder(),
 																		second_l.border, CTable::CCell::CBorder()));
 					}
-					cells.push_back(std::make_shared<CTable::CCell>(lines.back().x1, line_top, end, line_bot,
+					cells.push_back(std::make_shared<CTable::CCell>(lines.back().x2, line_top, end, line_bot,
 																	lines.back().border, CTable::CCell::CBorder(),
 																	CTable::CCell::CBorder(), CTable::CCell::CBorder()));
 				}
@@ -3311,18 +3318,18 @@ namespace NSDocxRenderer
 						if (l.x2 > line_right)
 							line_right = l.x2;
 					});
-					cells.push_back(std::make_shared<CTable::CCell>(line_left, start, line_right, lines.front().y1,
+					cells.push_back(std::make_shared<CTable::CCell>(line_left, start, line_right, lines.front().y2,
 																	CTable::CCell::CBorder(), CTable::CCell::CBorder(),
 																	CTable::CCell::CBorder(), lines.front().border));
 					for (auto it = lines.begin(); std::next(it) != lines.end(); ++it)
 					{
 						const auto& first_l = *it;
 						const auto& second_l = *std::next(it);
-						cells.push_back(std::make_shared<CTable::CCell>(line_left, first_l.y1, line_right, second_l.y1,
+						cells.push_back(std::make_shared<CTable::CCell>(line_left, first_l.y2, line_right, second_l.y2,
 																		CTable::CCell::CBorder(), first_l.border,
 																		CTable::CCell::CBorder(), second_l.border));
 					}
-					cells.push_back(std::make_shared<CTable::CCell>(line_left, lines.back().y1, line_right, end,
+					cells.push_back(std::make_shared<CTable::CCell>(line_left, lines.back().y2, line_right, end,
 																	CTable::CCell::CBorder(), lines.back().border,
 																	CTable::CCell::CBorder(), CTable::CCell::CBorder()));
 				}
@@ -3333,8 +3340,27 @@ namespace NSDocxRenderer
 			std::vector<line> ver_top_lines, ver_bot_lines;
 			for (const auto& i : ver_lines_indeces)
 			{
+				line part_line_in_table;
 				if (remove_later.count(i))
-					continue;
+				{
+					double line_height_in_table = m_arShapes[i]->m_dHeight;
+					for (const auto& c : cells)
+						if ((is_eq(m_arShapes[i]->m_dLeft, c->m_dLeft) || is_eq(m_arShapes[i]->m_dRight, c->m_dRight)) &&
+							(m_arShapes[i]->m_dTop < c->m_dTop || is_eq(m_arShapes[i]->m_dTop, c->m_dTop)) &&
+							(m_arShapes[i]->m_dBot > c->m_dBot || is_eq(m_arShapes[i]->m_dBot, c->m_dBot)))
+						{
+							line_height_in_table -= c->m_dHeight;
+							if (is_eq(line_height_in_table, 0.0))
+								break;
+							part_line_in_table.x1 = m_arShapes[i]->m_dLeft;
+							part_line_in_table.x2 = m_arShapes[i]->m_dRight;
+							part_line_in_table.y1 = part_line_in_table.y1 == 0.0 ? c->m_dTop : std::min(part_line_in_table.y1, c->m_dTop);
+							part_line_in_table.y2 = std::max(part_line_in_table.y2, c->m_dBot);
+						}
+
+					if (is_eq(line_height_in_table, 0.0))
+						continue;
+				}
 
 				if (is_eq(m_arShapes[i]->m_dBot, b.top))
 				{
@@ -3356,6 +3382,29 @@ namespace NSDocxRenderer
 					ver_bot_lines.push_back(l);
 					remove_later.insert(i);
 				}
+				if (!is_eq(part_line_in_table.x1, 0.0))
+				{
+					if (!is_eq(part_line_in_table.y1, m_arShapes[i]->m_dTop))
+					{
+						auto l = line(m_arShapes[i]->m_dLeft, m_arShapes[i]->m_dRight, m_arShapes[i]->m_dTop, part_line_in_table.y1);
+						l.border.lineType = eLineType::ltSingle;
+						l.border.dSpacing = 0.0;
+						l.border.dWidth = m_arShapes[i]->m_oPen.Size;
+						l.border.lColor = m_arShapes[i]->m_oBrush.Color1;
+						ver_top_lines.push_back(l);
+						remove_later.insert(i);
+					}
+					if (!is_eq(part_line_in_table.y2, m_arShapes[i]->m_dBot))
+					{
+						auto l = line(m_arShapes[i]->m_dLeft, m_arShapes[i]->m_dRight, part_line_in_table.y2, m_arShapes[i]->m_dBot);
+						l.border.lineType = eLineType::ltSingle;
+						l.border.dSpacing = 0.0;
+						l.border.dWidth = m_arShapes[i]->m_oPen.Size;
+						l.border.lColor = m_arShapes[i]->m_oBrush.Color1;
+						ver_bot_lines.push_back(l);
+						remove_later.insert(i);
+					}
+				}
 			}
 
 			if (!ver_top_lines.empty())
@@ -3371,10 +3420,29 @@ namespace NSDocxRenderer
 			}
 
 			std::vector<line> hor_left_lines, hor_right_lines;
-			for (const auto& i : ver_lines_indeces)
+			for (const auto& i : hor_lines_indeces)
 			{
+				line part_line_in_table;
 				if (remove_later.count(i))
-					continue;
+				{
+					double line_width_in_table = m_arShapes[i]->m_dWidth;
+					for (const auto& c : cells)
+						if ((is_eq(m_arShapes[i]->m_dTop, c->m_dTop) || is_eq(m_arShapes[i]->m_dBot, c->m_dBot)) &&
+							(m_arShapes[i]->m_dLeft < c->m_dLeft || is_eq(m_arShapes[i]->m_dLeft, c->m_dLeft)) &&
+							(m_arShapes[i]->m_dRight > c->m_dRight || is_eq(m_arShapes[i]->m_dRight, c->m_dRight)))
+						{
+							line_width_in_table -= c->m_dWidth;
+							if (is_eq(line_width_in_table, 0.0))
+								break;
+							part_line_in_table.x1 = part_line_in_table.x1 == 0.0 ? c->m_dLeft : std::min(part_line_in_table.x1, c->m_dLeft);
+							part_line_in_table.x2 = std::max(part_line_in_table.x2, c->m_dRight);
+							part_line_in_table.y1 = m_arShapes[i]->m_dTop;
+							part_line_in_table.y2 = m_arShapes[i]->m_dBot;
+						}
+
+					if (is_eq(line_width_in_table, 0.0))
+						continue;
+				}
 
 				if (is_eq(m_arShapes[i]->m_dRight, b.left))
 				{
@@ -3395,6 +3463,29 @@ namespace NSDocxRenderer
 					l.border.lColor = m_arShapes[i]->m_oBrush.Color1;
 					hor_right_lines.push_back(l);
 					remove_later.insert(i);
+				}
+				if (!is_eq(part_line_in_table.y1, 0.0))
+				{
+					if (!is_eq(part_line_in_table.x1, m_arShapes[i]->m_dLeft))
+					{
+						auto l = line(m_arShapes[i]->m_dLeft, part_line_in_table.x1, m_arShapes[i]->m_dTop, m_arShapes[i]->m_dBot);
+						l.border.lineType = eLineType::ltSingle;
+						l.border.dSpacing = 0.0;
+						l.border.dWidth = m_arShapes[i]->m_oPen.Size;
+						l.border.lColor = m_arShapes[i]->m_oBrush.Color1;
+						hor_left_lines.push_back(l);
+						remove_later.insert(i);
+					}
+					if (!is_eq(part_line_in_table.x2, m_arShapes[i]->m_dRight))
+					{
+						auto l = line(part_line_in_table.x2, m_arShapes[i]->m_dRight, m_arShapes[i]->m_dTop, m_arShapes[i]->m_dBot);
+						l.border.lineType = eLineType::ltSingle;
+						l.border.dSpacing = 0.0;
+						l.border.dWidth = m_arShapes[i]->m_oPen.Size;
+						l.border.lColor = m_arShapes[i]->m_oBrush.Color1;
+						hor_right_lines.push_back(l);
+						remove_later.insert(i);
+					}
 				}
 			}
 
