@@ -49,7 +49,6 @@
 
 #include "../../DesktopEditor/common/Types.h"
 #include "../../DesktopEditor/common/StringExt.h"
-#include "../../DesktopEditor/xml/include/xmlutils.h"
 #include "../../DesktopEditor/fontengine/ApplicationFonts.h"
 #include "../../DesktopEditor/graphics/pro/Fonts.h"
 
@@ -1857,7 +1856,7 @@ CAnnotFreeText::CAnnotFreeText(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex
 
 	if (oAnnot.dictLookup("RC", &oObj2)->isNull() && oAnnot.dictLookup("Contents", &oObj)->isString() && oObj.getString()->getLength())
 	{
-		m_arrRC = CAnnotMarkup::ReadRC(GetRCFromDS(m_sDS, &oObj, m_arrCFromDA));
+		m_arrRC = ReadRC(GetRCFromDS(m_sDS, &oObj, m_arrCFromDA));
 		if (m_arrRC.empty())
 			m_unFlags &= ~(1 << 3);
 		else
@@ -2749,7 +2748,7 @@ CAnnotMarkup::CAnnotMarkup(PDFDoc* pdfDoc, Object* oAnnotRef, int nPageIndex, in
 	// std::cout << sRC << std::endl;
 	// if (oAnnot.dictLookup("RC", &oObj)->isStream())
 	// TODO streamGetBlock
-	m_arrRC = CAnnotMarkup::ReadRC(sRC);
+	m_arrRC = ReadRC(sRC);
 	if (m_arrRC.empty())
 		m_unFlags &= ~(1 << 3);
 	else
@@ -2785,166 +2784,6 @@ CAnnotMarkup::~CAnnotMarkup()
 {
 	for (int i = 0; i < m_arrRC.size(); ++i)
 		RELEASEOBJECT(m_arrRC[i]);
-}
-void ReadFontData(const std::string& sData, CAnnotMarkup::CFontData* pFont)
-{
-	size_t nSemicolon = 0;
-	size_t nColon = sData.find(':');
-	while (nColon != std::string::npos && nColon > nSemicolon)
-	{
-		std::string sProperty = sData.substr(nSemicolon, nColon - nSemicolon);
-		nSemicolon = sData.find(';', nSemicolon);
-		nColon++;
-		std::string sValue = sData.substr(nColon, nSemicolon - nColon);
-		nColon = sData.find(':', nSemicolon);
-		nSemicolon++;
-
-		if (sProperty == "font-size")
-			pFont->dFontSise = std::stod(sValue);
-		else if (sProperty == "text-align")
-		{
-			// 0 start / left
-			if (sValue == "center" || sValue == "middle")
-				pFont->nAlign = 1;
-			else if (sValue == "right" || sValue == "end")
-				pFont->nAlign = 2;
-			else if (sValue == "justify")
-				pFont->nAlign = 3;
-		}
-		else if (sProperty == "color")
-		{
-			if (sValue[0] == '#')
-			{
-				sValue = sValue.substr(1);
-				BYTE nColor1 = 0, nColor2 = 0, nColor3 = 0;
-				if (sValue.length() == 6)
-					sscanf(sValue.c_str(), "%2hhx%2hhx%2hhx", &nColor1, &nColor2, &nColor3);
-				else if (sValue.length() == 3)
-				{
-					sscanf(sValue.c_str(), "%1hhx%1hhx%1hhx", &nColor1, &nColor2, &nColor3);
-					nColor1 *= 17;
-					nColor2 *= 17;
-					nColor3 *= 17;
-				}
-
-				pFont->dColor[0] = (double)nColor1 / 255.0;
-				pFont->dColor[1] = (double)nColor2 / 255.0;
-				pFont->dColor[2] = (double)nColor3 / 255.0;
-			}
-		}
-		else if (sProperty == "font-weight")
-		{
-			// 0 normal / 300 / 400 / 500
-			if (sValue == "normal" || sValue == "300" || sValue == "400" || sValue == "500")
-				pFont->unFontFlags &= ~(1 << 0);
-			else if (sValue == "bold" || sValue == "bolder" || sValue == "600" || sValue == "700" || sValue == "800" || sValue == "900")
-				pFont->unFontFlags |= (1 << 0);
-		}
-		else if (sProperty == "font-style")
-		{
-			// 0 normal
-			if (sValue == "normal")
-				pFont->unFontFlags &= ~(1 << 1);
-			else if (sValue == "italic" || sValue.find("oblique") != std::string::npos)
-				pFont->unFontFlags |= (1 << 1);
-		}
-		else if (sProperty == "font-family")
-			pFont->sFontFamily = sValue[0] == '\'' ? sValue.substr(1, sValue.length() - 2) : sValue;
-		else if (sProperty == "text-decoration")
-		{
-			if (sValue.find("line-through") != std::string::npos)
-				pFont->unFontFlags |= (1 << 3);
-			if (sValue.find("word") != std::string::npos || sValue.find("underline") != std::string::npos)
-				pFont->unFontFlags |= (1 << 4);
-			if (sValue.find("none") != std::string::npos)
-			{
-				pFont->unFontFlags &= ~(1 << 3);
-				pFont->unFontFlags &= ~(1 << 4);
-			}
-		}
-		else if (sProperty == "vertical-align")
-		{
-			pFont->unFontFlags |= (1 << 5);
-			pFont->dVAlign = std::stod(sValue);
-			if (pFont->dVAlign == 0 && sValue[0] == '-')
-				pFont->dVAlign = -0.01;
-		}
-		// font-stretch
-	}
-}
-std::vector<CAnnotMarkup::CFontData*> CAnnotMarkup::ReadRC(const std::string& sRC)
-{
-	std::vector<CAnnotMarkup::CFontData*> arrRC;
-
-	XmlUtils::CXmlLiteReader oLightReader;
-	if (sRC.empty() || !oLightReader.FromStringA(sRC) || !oLightReader.ReadNextNode() || oLightReader.GetNameA() != "body")
-		return arrRC;
-
-	CAnnotMarkup::CFontData oFontBase;
-	while (oLightReader.MoveToNextAttribute())
-	{
-		if (oLightReader.GetNameA() == "style")
-		{
-			ReadFontData(oLightReader.GetTextA(), &oFontBase);
-			break;
-		}
-	}
-	oLightReader.MoveToElement();
-
-	int nDepthP = oLightReader.GetDepth();
-	while (oLightReader.ReadNextSiblingNode2(nDepthP))
-	{
-		if (oLightReader.GetNameA() != "p")
-			continue;
-
-		bool bRTL = false;
-		while (oLightReader.MoveToNextAttribute())
-		{
-			if (oLightReader.GetNameA() == "dir" && oLightReader.GetTextA() == "rtl")
-			{
-				bRTL = true;
-				break;
-			}
-		}
-		oLightReader.MoveToElement();
-
-		int nDepthSpan = oLightReader.GetDepth();
-		if (oLightReader.IsEmptyNode() || !oLightReader.ReadNextSiblingNode2(nDepthSpan))
-			continue;
-
-		do
-		{
-			std::string sName = oLightReader.GetNameA();
-			if (sName == "span")
-			{
-				CAnnotMarkup::CFontData* pFont = new CAnnotMarkup::CFontData(oFontBase);
-				while (oLightReader.MoveToNextAttribute())
-				{
-					if (oLightReader.GetNameA() == "style")
-					{
-						ReadFontData(oLightReader.GetTextA(), pFont);
-						break;
-					}
-				}
-				oLightReader.MoveToElement();
-
-				if (bRTL)
-					pFont->unFontFlags |= (1 << 7);
-				pFont->sText = oLightReader.GetText2A();
-				arrRC.push_back(pFont);
-			}
-			else if (sName == "#text")
-			{
-				CAnnotMarkup::CFontData* pFont = new CAnnotMarkup::CFontData(oFontBase);
-				if (bRTL)
-					pFont->unFontFlags |= (1 << 7);
-				pFont->sText = oLightReader.GetTextA();
-				arrRC.push_back(pFont);
-			}
-		} while (oLightReader.ReadNextSiblingNode2(nDepthSpan));
-	}
-
-	return arrRC;
 }
 void CAnnotMarkup::SetFont(PDFDoc* pdfDoc, Object* oAnnotRef, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList)
 {

@@ -37,6 +37,7 @@
 
 #include "../DesktopEditor/graphics/pro/Fonts.h"
 #include "../DesktopEditor/graphics/pro/officedrawingfile.h"
+#include "../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
 #include "../DesktopEditor/xmlsec/src/include/Certificate.h"
 #include "SrcReader/RendererOutputDev.h"
 
@@ -92,6 +93,7 @@ public:
 	int GetMaxRefID();
 	int GetNumPages();
 	bool ValidMetaData();
+
 	// Takes ownership of malloc data memory
 	bool MergePages(BYTE* pData, DWORD nLength, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
 	bool MergePages(const std::wstring& wsFile, const wchar_t* wsPassword = NULL, int nMaxID = 0, const std::string& sPrefixForm = "");
@@ -135,13 +137,18 @@ public:
 private:
 	void Clear();
 
+	CPdfReaderContext* CreateContext(const std::string& sPrefixForm, int nMaxID);
+	bool FinalizeMerge(CPdfReaderContext* pContext);
+	CPdfReaderContext* FindContext(PDFDoc* pDoc) const;
+
+private:
 	std::wstring           m_wsTempFolder;
 	NSFonts::IFontManager* m_pFontManager;
 	DWORD                  m_nFileLength;
 	int                    m_eError;
-	IOfficeDrawingFilePainter* m_pPainter;
+	IOfficeDrawingFilePainter*      m_pPainter;
 	std::vector<CPdfReaderContext*> m_vPDFContext;
-	std::vector<CPdfRedact*> m_vRedact;
+	std::vector<CPdfRedact*>        m_vRedact;
 	std::map<std::wstring, std::wstring> m_mFonts;
 };
 

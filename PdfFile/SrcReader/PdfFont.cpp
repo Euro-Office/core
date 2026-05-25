@@ -40,11 +40,26 @@
 #include "../lib/xpdf/GfxFont.h"
 #include "../lib/xpdf/Lexer.h"
 #include "../lib/xpdf/Parser.h"
+#include "../lib/xpdf/CharCodeToUnicode.h"
+#include "../lib/xpdf/Decrypt.h"
+#include "../lib/fofi/FoFiTrueType.h"
+#include "../lib/fofi/FoFiType1C.h"
+#include "../lib/fofi/FoFiIdentifier.h"
 #include "../Resources/BaseFonts.h"
 
 #include "../../DesktopEditor/common/StringExt.h"
 #include "../../DesktopEditor/common/StringBuilder.h"
+#include "../../DesktopEditor/common/Path.h"
+#include "../../DesktopEditor/xml/include/xmlutils.h"
 #include "../../DesktopEditor/fontengine/ApplicationFonts.h"
+
+#ifndef BUILDING_WASM_MODULE
+#define FONTS_USE_AFM_SETTINGS
+#else
+#include "../../DesktopEditor/graphics/pro/js/wasm/src/serialize.h"
+#include "FontsWasm.h"
+#define FONTS_USE_ONLY_MEMORY_STREAMS
+#endif
 
 const std::vector<std::string> arrCMap = {"GB-EUC-H", "GB-EUC-V", "GB-H", "GB-V", "GBpc-EUC-H", "GBpc-EUC-V", "GBK-EUC-H",
 "GBK-EUC-V", "GBKp-EUC-H", "GBKp-EUC-V", "GBK2K-H", "GBK2K-V", "GBT-H", "GBT-V", "GBTpc-EUC-H", "GBTpc-EUC-V",
@@ -249,9 +264,376 @@ std::wstring Normalize(const std::wstring& wsName)
 	s.erase(std::remove_if(s.begin(), s.end(), [](wchar_t c){ return c == L' ' || c == L'-' || c == L'_'; }), s.end());
 	return s;
 };
+std::wstring ComputeFontHash(XRef* pXref, GfxFont* pFont)
+{
+	MD5State oMD5;
+	md5Start(&oMD5);
+
+	Ref* pRef = pFont->getID();
+	Object oRefObj, oFontObj;
+	oRefObj.initRef(pRef->num, pRef->gen);
+	oRefObj.fetch(pXref, &oFontObj);
+	oRefObj.free();
+
+	if (oFontObj.isDict())
+	{
+		const char* aFontObjNames[] = { "Name", "Subtype", "BaseFont", "Encoding" };
+		for (const char* sKey : aFontObjNames)
+		{
+			Object oItem;
+			oFontObj.dictLookup(sKey, &oItem);
+			if (oItem.isName())
+				md5Append(&oMD5, (BYTE*)oItem.getName(), strlen(oItem.getName()));
+			oItem.free();
+		}
+
+		Object oDescObj, oDescendantFonts;
+		oFontObj.dictLookup("FontDescriptor", &oDescObj);
+		if (!oDescObj.isDict())
+		{
+			oDescObj.free();
+			if (oFontObj.dictLookup("DescendantFonts", &oDescendantFonts)->isArray())
+			{
+				Object oDescendant;
+				if (oDescendantFonts.arrayGet(0, &oDescendant)->isDict())
+					oDescendant.dictLookup("FontDescriptor", &oDescObj);
+				oDescendant.free();
+			}
+			oDescendantFonts.free();
+		}
+
+		if (oDescObj.isDict())
+		{
+			Object oItem;
+
+			oDescObj.dictLookup("FontName", &oItem);
+			if (oItem.isName())
+				md5Append(&oMD5, (BYTE*)oItem.getName(), strlen(oItem.getName()));
+			oItem.free();
+
+			const char* aMetricNames[] = {
+				"Flags", "ItalicAngle", "Ascent", "Descent",
+				"CapHeight", "XHeight", "StemV", "StemH"
+			};
+			for (const char* sName : aMetricNames)
+			{
+				oDescObj.dictLookup(sName, &oItem);
+				if (oItem.isInt())
+				{
+					int nVal = oItem.getInt();
+					md5Append(&oMD5, (BYTE*)&nVal, sizeof(int));
+				}
+				oItem.free();
+			}
+
+			oDescObj.dictLookup("FontBBox", &oItem);
+			if (oItem.isArray() && oItem.arrayGetLength() == 4)
+			{
+				for (int i = 0; i < 4; i++)
+				{
+					Object oCoord;
+					if (oItem.arrayGet(i, &oCoord)->isInt())
+					{
+						int nVal = oCoord.getInt();
+						md5Append(&oMD5, (BYTE*)&nVal, sizeof(int));
+					}
+					oCoord.free();
+				}
+			}
+			oItem.free();
+		}
+		oDescObj.free();
+	}
+	oFontObj.free();
+
+	Ref oEmbRef;
+	if (pFont->getEmbeddedFontID(&oEmbRef))
+	{
+		Object oRefObj, oStreamObj;
+		oRefObj.initRef(oEmbRef.num, oEmbRef.gen);
+		oRefObj.fetch(pXref, &oStreamObj);
+		oRefObj.free();
+
+		if (oStreamObj.isStream())
+		{
+			oStreamObj.streamReset();
+			const int nMaxBytes = 512;
+			BYTE aBuf[nMaxBytes];
+			int nRead = 0;
+			int nChar;
+			while (nRead < nMaxBytes && (nChar = oStreamObj.streamGetChar()) != EOF)
+				aBuf[nRead++] = (BYTE)nChar;
+
+			oStreamObj.streamClose();
+			md5Append(&oMD5, aBuf, nRead);
+		}
+		oStreamObj.free();
+	}
+
+	md5Finish(&oMD5);
+
+	static const char aHexChars[] = "0123456789ABCDEF";
+	std::string sHex;
+	sHex.reserve(32);
+	for (int i = 0; i < 16; i++)
+	{
+		sHex += aHexChars[(oMD5.digest[i] >> 4) & 0x0F];
+		sHex += aHexChars[oMD5.digest[i] & 0x0F];
+	}
+
+	return UTF8_TO_U(sHex);
+}
+void ReadFontData(const std::string& sData, PdfReader::CFontData* pFont)
+{
+	size_t nSemicolon = 0;
+	size_t nColon = sData.find(':');
+	while (nColon != std::string::npos && nColon > nSemicolon)
+	{
+		std::string sProperty = sData.substr(nSemicolon, nColon - nSemicolon);
+		nSemicolon = sData.find(';', nSemicolon);
+		nColon++;
+		std::string sValue = sData.substr(nColon, nSemicolon - nColon);
+		nColon = sData.find(':', nSemicolon);
+		nSemicolon++;
+
+		if (sProperty == "font-size")
+			pFont->dFontSise = std::stod(sValue);
+		else if (sProperty == "text-align")
+		{
+			// 0 start / left
+			if (sValue == "center" || sValue == "middle")
+				pFont->nAlign = 1;
+			else if (sValue == "right" || sValue == "end")
+				pFont->nAlign = 2;
+			else if (sValue == "justify")
+				pFont->nAlign = 3;
+		}
+		else if (sProperty == "color")
+		{
+			if (sValue[0] == '#')
+			{
+				sValue = sValue.substr(1);
+				BYTE nColor1 = 0, nColor2 = 0, nColor3 = 0;
+				if (sValue.length() == 6)
+					sscanf(sValue.c_str(), "%2hhx%2hhx%2hhx", &nColor1, &nColor2, &nColor3);
+				else if (sValue.length() == 3)
+				{
+					sscanf(sValue.c_str(), "%1hhx%1hhx%1hhx", &nColor1, &nColor2, &nColor3);
+					nColor1 *= 17;
+					nColor2 *= 17;
+					nColor3 *= 17;
+				}
+
+				pFont->dColor[0] = (double)nColor1 / 255.0;
+				pFont->dColor[1] = (double)nColor2 / 255.0;
+				pFont->dColor[2] = (double)nColor3 / 255.0;
+			}
+		}
+		else if (sProperty == "font-weight")
+		{
+			// 0 normal / 300 / 400 / 500
+			if (sValue == "normal" || sValue == "300" || sValue == "400" || sValue == "500")
+				pFont->unFontFlags &= ~(1 << 0);
+			else if (sValue == "bold" || sValue == "bolder" || sValue == "600" || sValue == "700" || sValue == "800" || sValue == "900")
+				pFont->unFontFlags |= (1 << 0);
+		}
+		else if (sProperty == "font-style")
+		{
+			// 0 normal
+			if (sValue == "normal")
+				pFont->unFontFlags &= ~(1 << 1);
+			else if (sValue == "italic" || sValue.find("oblique") != std::string::npos)
+				pFont->unFontFlags |= (1 << 1);
+		}
+		else if (sProperty == "font-family")
+			pFont->sFontFamily = sValue[0] == '\'' ? sValue.substr(1, sValue.length() - 2) : sValue;
+		else if (sProperty == "text-decoration")
+		{
+			if (sValue.find("line-through") != std::string::npos)
+				pFont->unFontFlags |= (1 << 3);
+			if (sValue.find("word") != std::string::npos || sValue.find("underline") != std::string::npos)
+				pFont->unFontFlags |= (1 << 4);
+			if (sValue.find("none") != std::string::npos)
+			{
+				pFont->unFontFlags &= ~(1 << 3);
+				pFont->unFontFlags &= ~(1 << 4);
+			}
+		}
+		else if (sProperty == "vertical-align")
+		{
+			pFont->unFontFlags |= (1 << 5);
+			pFont->dVAlign = std::stod(sValue);
+			if (pFont->dVAlign == 0 && sValue[0] == '-')
+				pFont->dVAlign = -0.01;
+		}
+		// font-stretch
+	}
+}
+
+class CMemoryFontStream
+{
+public:
+	BYTE* m_pData;
+	int m_nSize;
+	int m_nPos;
+	bool m_bIsAttach;
+
+	CMemoryFontStream()
+	{
+		m_pData = NULL;
+		m_nSize = 0;
+		m_nPos = 0;
+		m_bIsAttach = false;
+	}
+	~CMemoryFontStream()
+	{
+		if (NULL != m_pData && !m_bIsAttach)
+			RELEASEARRAYOBJECTS(m_pData);
+	}
+
+	void fromStream(std::wstring& sStreamName)
+	{
+		NSFonts::IFontStream* pStream = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Get(sStreamName);
+		if (pStream)
+		{
+			LONG lSize = 0;
+			pStream->GetMemory(m_pData, lSize);
+			m_nSize = (int)lSize;
+			m_nPos = 0;
+			m_bIsAttach = true;
+		}
+	}
+
+	void fromBuffer(BYTE* pData, int nSize)
+	{
+		if (pData)
+		{
+			m_pData = pData;
+			m_nSize = nSize;
+			m_nPos = 0;
+			m_bIsAttach = true;
+		}
+	}
+
+	void load(Object& oStreamObject)
+	{
+		int nCurrentSize = 0xFFFF;
+		int nCurrentPos = 0;
+		BYTE* pStream = new BYTE[nCurrentSize];
+
+		int nChar;
+		while ((nChar = oStreamObject.streamGetChar()) != EOF)
+		{
+			if (nCurrentPos >= nCurrentSize)
+			{
+				int nNewSize = 2 * nCurrentSize;
+				BYTE* pNewBuffer = new BYTE[nNewSize];
+				memcpy(pNewBuffer, pStream, nCurrentSize);
+				RELEASEARRAYOBJECTS(pStream);
+				pStream = pNewBuffer;
+				nCurrentSize = nNewSize;
+			}
+			pStream[nCurrentPos++] = nChar;
+		}
+
+		m_pData = pStream;
+		m_nSize = nCurrentPos;
+		m_nPos = 0;
+	}
+
+	int getChar()
+	{
+		if (m_nPos >= m_nSize)
+			return EOF;
+		return m_pData[m_nPos++];
+	}
+
+	void toStart()
+	{
+		m_nPos = 0;
+	}
+};
+static int readFromMemoryStream(void* data)
+{
+	return ((CMemoryFontStream*)data)->getChar();
+}
 
 namespace PdfReader
 {
+std::vector<CFontData*> ReadRC(const std::string& sRC)
+{
+	std::vector<CFontData*> arrRC;
+
+	XmlUtils::CXmlLiteReader oLightReader;
+	if (sRC.empty() || !oLightReader.FromStringA(sRC) || !oLightReader.ReadNextNode() || oLightReader.GetNameA() != "body")
+		return arrRC;
+
+	CFontData oFontBase;
+	while (oLightReader.MoveToNextAttribute())
+	{
+		if (oLightReader.GetNameA() == "style")
+		{
+			ReadFontData(oLightReader.GetTextA(), &oFontBase);
+			break;
+		}
+	}
+	oLightReader.MoveToElement();
+
+	int nDepthP = oLightReader.GetDepth();
+	while (oLightReader.ReadNextSiblingNode2(nDepthP))
+	{
+		if (oLightReader.GetNameA() != "p")
+			continue;
+
+		bool bRTL = false;
+		while (oLightReader.MoveToNextAttribute())
+		{
+			if (oLightReader.GetNameA() == "dir" && oLightReader.GetTextA() == "rtl")
+			{
+				bRTL = true;
+				break;
+			}
+		}
+		oLightReader.MoveToElement();
+
+		int nDepthSpan = oLightReader.GetDepth();
+		if (oLightReader.IsEmptyNode() || !oLightReader.ReadNextSiblingNode2(nDepthSpan))
+			continue;
+
+		do
+		{
+			std::string sName = oLightReader.GetNameA();
+			if (sName == "span")
+			{
+				CFontData* pFont = new CFontData(oFontBase);
+				while (oLightReader.MoveToNextAttribute())
+				{
+					if (oLightReader.GetNameA() == "style")
+					{
+						ReadFontData(oLightReader.GetTextA(), pFont);
+						break;
+					}
+				}
+				oLightReader.MoveToElement();
+
+				if (bRTL)
+					pFont->unFontFlags |= (1 << 7);
+				pFont->sText = oLightReader.GetText2A();
+				arrRC.push_back(pFont);
+			}
+			else if (sName == "#text")
+			{
+				CFontData* pFont = new CFontData(oFontBase);
+				if (bRTL)
+					pFont->unFontFlags |= (1 << 7);
+				pFont->sText = oLightReader.GetTextA();
+				arrRC.push_back(pFont);
+			}
+		} while (oLightReader.ReadNextSiblingNode2(nDepthSpan));
+	}
+
+	return arrRC;
+}
 std::string GetRCFromDS(const std::string& sDS, Object* pContents, const std::vector<double>& arrCFromDA)
 {
 	NSStringUtils::CStringBuilder oRC;
@@ -398,7 +780,7 @@ bool IsBaseFont(const std::wstring& wsName)
 		   wsName == L"Helvetica-Oblique" || wsName == L"Symbol" || wsName == L"Times-Bold" || wsName == L"Times-BoldItalic" ||
 		   wsName == L"Times-Italic" || wsName == L"Times-Roman" || wsName == L"ZapfDingbats";
 }
-std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, bool bIsNeedCMap)
+std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList)
 {
 	std::map<std::wstring, std::wstring> mFonts;
 
@@ -440,7 +822,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 			std::string sActualFontName;
 			std::wstring wsFileName;
 			bool bBold = false, bItalic = false;
-			wsFileName = GetFontData(pdfDoc, pFontManager, pFontList, &oFontRef, sFontName, sActualFontName, bBold, bItalic, bIsNeedCMap);
+			wsFileName = GetFontData(pdfDoc, pFontManager, pFontList, &oFontRef, sFontName, sActualFontName, bBold, bItalic);
 
 			if (!sActualFontName.empty())
 			{
@@ -464,7 +846,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 				std::string sFontKey;
 				if (GetFontFromAP(pdfDoc, pField, &oFontRef, sFontKey) && std::find(arrUniqueFontsRef.begin(), arrUniqueFontsRef.end(), oFontRef.getRefNum()) == arrUniqueFontsRef.end())
 				{
-					wsFileName = GetFontData(pdfDoc, pFontManager, pFontList, &oFontRef, sFontName, sActualFontName, bBold, bItalic, bIsNeedCMap);
+					wsFileName = GetFontData(pdfDoc, pFontManager, pFontList, &oFontRef, sFontName, sActualFontName, bBold, bItalic);
 
 					std::wstring wsFontName = UTF8_TO_U(sFontName);
 					if (sActualFontName.empty() && mFonts.find(wsFontName) == mFonts.end())
@@ -548,7 +930,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 
 			Object oAnnotRef;
 			oAnnots.arrayGetNF(i, &oAnnotRef);
-			std::vector<PdfReader::CAnnotMarkup::CFontData*> arrRC = CAnnotMarkup::ReadRC(sRC);
+			std::vector<CFontData*> arrRC = ReadRC(sRC);
 			std::map<std::wstring, std::wstring> mFreeText = GetFreeTextFont(pdfDoc, pFontManager, pFontList, &oAnnotRef, arrRC);
 			for (std::map<std::wstring, std::wstring>::iterator it = mFreeText.begin(); it != mFreeText.end(); ++it)
 			{
@@ -565,7 +947,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 
 	return mFonts;
 }
-std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, Object* oFontRef, std::string& sFontName, std::string& sActualFontName, bool& bBold, bool& bItalic, bool bIsNeedCMap)
+std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, Object* oFontRef, std::string& sFontName, std::string& sActualFontName, bool& bBold, bool& bItalic)
 {
 	bBold = false, bItalic = false;
 	XRef* xref = pdfDoc->getXRef();
@@ -589,7 +971,7 @@ std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CP
 	if (gfxFont->getEmbeddedFontID(&oEmbRef) || IsBaseFont(wsFontBaseName))
 	{
 		std::wstring wsFontName;
-		RendererOutputDev::GetFont(xref, pFontManager, pFontList, gfxFont, wsFileName, wsFontName, false);
+		GetFont(xref, pFontManager, pFontList, gfxFont, wsFileName, wsFontName, false);
 
 		sFontName = U_TO_UTF8(wsFontName);
 		CheckFontStylePDF(wsFontName, bBold, bItalic);
@@ -602,7 +984,7 @@ std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CP
 	{
 		double dStretch = 1.0;
 		std::wstring wsFBN = wsFontBaseName;
-		NSFonts::CFontInfo* pFontInfo = RendererOutputDev::GetFontByParams(xref, pFontManager, gfxFont, wsFBN, dStretch);
+		NSFonts::CFontInfo* pFontInfo = GetFontByParams(xref, pFontManager, gfxFont, wsFBN, dStretch);
 		if (pFontInfo && !pFontInfo->m_wsFontPath.empty())
 		{
 			EraseSubsetTag(wsFontBaseName);
@@ -830,7 +1212,7 @@ const CAnnotFontInfo* FindMatchInAnnotFonts(const std::vector<CAnnotFontInfo>& a
 	return pBestMatch;
 }
 
-std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CAnnotMarkup::CFontData*>& arrRC)
+std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CFontData*>& arrRC)
 {
 	std::map<std::wstring, std::wstring> mRes;
 
@@ -957,7 +1339,7 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 
 	return mRes;
 }
-int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
+int CollectFontWidths(Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
 {
 	int nDefaultWidth = 1000;
 	// Try to get widths from Widths dictionary
@@ -1108,6 +1490,23 @@ double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic)
 
 	return dStretch;
 }
+double CheckFontNamePDF(std::wstring& sName, NSFonts::CFontSelectFormat* format)
+{
+	bool bBold   = false;
+	bool bItalic = false;
+
+	double dStretch = CheckFontStylePDF(sName, bBold, bItalic);
+
+	if (format)
+	{
+		if (bBold)
+			format->bBold = new INT(1);
+		if (bItalic)
+			format->bItalic = new INT(1);
+	}
+
+	return dStretch;
+}
 bool EraseSubsetTag(std::wstring& sFontName)
 {
 	bool bIsRemove = false;
@@ -1127,6 +1526,886 @@ bool EraseSubsetTag(std::wstring& sFontName)
 			sFontName.erase(0, 7);
 	}
 	return bIsRemove;
+}
+
+USHORT StretchToWidthClass(double fStretch)
+{
+	if (fStretch <= 0.50)  return 1; // Ultra-condensed
+	if (fStretch <= 0.625) return 2; // Extra-condensed
+	if (fStretch <= 0.75)  return 3; // Condensed
+	if (fStretch <= 0.875) return 4; // Semi-condensed
+	if (fStretch <= 1.0)   return 5; // Normal
+	if (fStretch <= 1.125) return 6; // Semi-expanded
+	if (fStretch <= 1.25)  return 7; // Expanded
+	if (fStretch <= 1.50)  return 8; // Extra-expanded
+	return 9;                        // Ultra-expanded
+}
+NSFonts::CFontInfo* GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName, double& dStretch)
+{
+	NSFonts::CFontInfo* pFontInfo = NULL;
+	if (!pFontManager)
+		return pFontInfo;
+
+	Ref* pRef = pFont->getID();
+	Object oRefObject, oFontObject;
+	oRefObject.initRef(pRef->num, pRef->gen);
+	oRefObject.fetch(pXref, &oFontObject);
+	oRefObject.free();
+
+	NSFonts::CFontSelectFormat oFontSelect;
+	dStretch = CheckFontNamePDF(wsFontBaseName, &oFontSelect);
+	if (std::abs(dStretch - 1.0f) > 1e-5f)
+		oFontSelect.usWidth = new USHORT(StretchToWidthClass(dStretch));
+	if (oFontObject.isDict())
+	{
+		Dict* pFontDict = oFontObject.getDict();
+		Object oFontDescriptor, oDescendantFonts;
+		pFontDict->lookup("FontDescriptor", &oFontDescriptor);
+		if (!oFontDescriptor.isDict() && pFontDict->lookup("DescendantFonts", &oDescendantFonts)->isArray())
+		{
+			oFontDescriptor.free(); oFontObject.free();
+			if (oDescendantFonts.arrayGet(0, &oFontObject)->isDict())
+				oFontObject.dictLookup("FontDescriptor", &oFontDescriptor);
+		}
+		if (oFontDescriptor.isDict())
+		{
+			Object oDictItem;
+			oFontDescriptor.dictLookup("FontName", &oDictItem);
+			if (oDictItem.isName())
+				oFontSelect.wsName = AStringToPWString(oDictItem.getName());
+			else
+				oFontSelect.wsName = new std::wstring(wsFontBaseName);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("FontFamily", &oDictItem);
+			if (oDictItem.isString())
+			{
+				TextString* s = new TextString(oDictItem.getString());
+				oFontSelect.wsAltName = new std::wstring(NSStringExt::CConverter::GetUnicodeFromUTF32(s->getUnicode(), s->getLength()));
+				delete s;
+			}
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("FontStretch", &oDictItem);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("FontWeight", &oDictItem);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("FontBBox", &oDictItem);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("Flags", &oDictItem);
+			if (oDictItem.isInt() && 0 != oDictItem.getInt())
+			{
+				int nFlags = oDictItem.getInt();
+				if (nFlags & 1) // monospaced
+					oFontSelect.bFixedWidth = new INT(1);
+			}
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("ItalicAngle", &oDictItem);
+			if (oDictItem.isInt() && 0 != oDictItem.getInt())
+			{
+				if (oFontSelect.bItalic) RELEASEOBJECT(oFontSelect.bItalic);
+				oFontSelect.bItalic = new INT(1);
+			}
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("Ascent", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shAscent = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("Leading", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shLineGap = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("CapHeight", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shCapHeight = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("XHeight", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shXHeight = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("StemV", &oDictItem);
+			if (oDictItem.isNum() && !oFontSelect.usWidth)
+			{
+				double dStemV = oDictItem.getNum();
+				if (dStemV > 50.5)
+					oFontSelect.usWeight = new USHORT(sqrt(oDictItem.getNum() - 50.5) * 65);
+			}
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("StemH", &oDictItem);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("Descent", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shDescent = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("AvgWidth", &oDictItem);
+			if (oDictItem.isInt()) oFontSelect.shAvgCharWidth = new SHORT(oDictItem.getInt());
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("MaxWidth", &oDictItem);
+			oDictItem.free();
+
+			oFontDescriptor.dictLookup("MissingWidth", &oDictItem);
+			oDictItem.free();
+		}
+		else
+			oFontSelect.wsName = new std::wstring(wsFontBaseName);
+		oFontDescriptor.free(); oDescendantFonts.free();
+	}
+	else
+		oFontSelect.wsName = new std::wstring(wsFontBaseName);
+	oFontObject.free();
+
+	pFontInfo = pFontManager->GetFontInfoByParams(oFontSelect);
+	return pFontInfo;
+}
+void GetFont(XRef* pXref, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, GfxFont* pFont, std::wstring& wsFileName, std::wstring& wsFontName, bool bNotFullName)
+{
+	wsFileName = L"";
+	wsFontName = L"";
+	TFontEntry* pEntry = NULL;
+	// MEMERR string dealocation pEntry
+	if (!pFontList->Find2((*pFont->getID()), &pEntry))
+	{
+		GfxFontType eFontType = pFont->getType();
+		if (fontType3 == eFontType) // FontType3 is handled by a separate command
+		{
+			pEntry->bAvailable = true;
+			return;
+		}
+
+		std::wstring wsTempFileName = L"";
+		Ref oEmbRef;
+		bool bFontSubstitution = false, bFontBase14 = false;
+		std::wstring wsFontBaseName = NSStrings::GetStringFromUTF32(pFont->getName());
+		if (wsFontBaseName.empty())
+			wsFontBaseName = L"Helvetica";
+		const BYTE* pData14 = NULL;
+		unsigned int nSize14 = 0;
+		double dStretch = 1.0;
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+		CMemoryFontStream oMemoryFontStream;
+#endif
+		// 1. If font is embedded, dump it to a temp file.
+		// 2. If font is outside pdf but pdf has a reference to it, use that reference.
+		// 3. Otherwise, select a font.
+
+		if (pFont->getEmbeddedFontID(&oEmbRef))
+		{
+			std::wstring wsExt;
+			switch (pFont->getType())
+			{
+			case fontType1:       wsExt = L".pfb_t1";    break;
+			case fontType1C:      wsExt = L".pfb_t1c";   break;
+			case fontType1COT:    wsExt = L".pfb_t1cot"; break;
+			case fontTrueType:    wsExt = L".ttf";       break;
+			case fontTrueTypeOT:  wsExt = L".otf";       break;
+			case fontCIDType0:    wsExt = L".cid_0";     break;
+			case fontCIDType0C:   wsExt = L".cid_0c";    break;
+			case fontCIDType0COT: wsExt = L".cid_0cot";  break;
+			case fontCIDType2:    wsExt = L".cid_2";     break;
+			case fontCIDType2OT:  wsExt = L".cid_2ot";   break;
+			}
+
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+			if (NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage())
+			{
+				wsTempFileName = NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->GenerateId();
+			}
+#else
+			FILE* pTempFile = NULL;
+			if (!NSFile::CFileBinary::OpenTempFile(&wsTempFileName, &pTempFile, L"wb", (wchar_t*)wsExt.c_str(),
+												   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), NULL))
+			{
+				if (L"" != wsTempFileName)
+					NSFile::CFileBinary::Remove(wsTempFileName);
+
+				pEntry->bAvailable = true;
+				return;
+			}
+			wsTempFileName = UTF8_TO_U(NSSystemPath::NormalizePath(U_TO_UTF8(wsTempFileName)));
+#endif
+
+			Object oReferenceObject, oStreamObject;
+			oReferenceObject.initRef(oEmbRef.num, oEmbRef.gen);
+			oReferenceObject.fetch(pXref, &oStreamObject);
+			oReferenceObject.free();
+			if (!oStreamObject.isStream())
+			{
+				// Embedded font is incorrectly written
+				oStreamObject.free();
+
+#ifndef FONTS_USE_ONLY_MEMORY_STREAMS
+				fclose(pTempFile);
+
+				if (L"" != wsTempFileName)
+					NSFile::CFileBinary::Remove(wsTempFileName);
+#endif
+
+				pEntry->bAvailable = true;
+				return;
+			}
+			oStreamObject.streamReset();
+
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+			oMemoryFontStream.load(oStreamObject);
+			NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Add(wsTempFileName, oMemoryFontStream.m_pData, (LONG)oMemoryFontStream.m_nSize, true);
+#else
+			int nChar;
+			while ((nChar = oStreamObject.streamGetChar()) != EOF)
+			{
+				fputc(nChar, pTempFile);
+			}
+			fclose(pTempFile);
+#endif
+
+			oStreamObject.streamClose();
+			oStreamObject.free();
+			wsFileName = wsTempFileName;
+
+#ifdef FONTS_USE_AFM_SETTINGS
+			// For Type1 fonts, need to write Afm file with metrics
+			if (fontType1 == pFont->getType() || fontType1C == pFont->getType() || fontType1COT == pFont->getType())
+			{
+				std::wstring wsSplitFileName, wsSplitFileExt;
+				SpitPathExt(wsFileName, &wsSplitFileName, &wsSplitFileExt);
+				std::wstring wsAfmPath = wsSplitFileName + L".afm";
+
+				FILE* pFile = NSFile::CFileBinary::OpenFileNative(wsAfmPath, L"wb");
+				if (pFile)
+				{
+					Ref* pRef = pFont->getID();
+					Object oRefObject, oFontObject;
+					oRefObject.initRef(pRef->num, pRef->gen);
+					oRefObject.fetch(pXref, &oFontObject);
+					oRefObject.free();
+
+					if (oFontObject.isDict())
+					{
+						std::string sFontName, sFontFamily;
+						int nFontWeight = 0, nItalicAngle = 0, nAscent = 0, nDescent = 0;
+						int nCapHeight = 0, nXHeight = 0, nStemV = 0, nStemH = 0, nMissingWidth = 0;
+						int arrBBox[4] = { 0, 0, 0, 0 };
+
+						Object oFontDescriptor;
+						if (oFontObject.dictLookup("FontDescriptor", &oFontDescriptor)->isDict())
+						{
+							Object oDictItem;
+							oFontDescriptor.dictLookup("FontName", &oDictItem);
+							if (oDictItem.isName()) sFontName = oDictItem.getName();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("FontFamily", &oDictItem);
+							if (oDictItem.isName()) sFontFamily = oDictItem.getName();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("FontWeight", &oDictItem);
+							if (oDictItem.isInt()) nFontWeight = oDictItem.getInt();
+							oDictItem.free();
+
+							if (oFontDescriptor.dictLookup("FontBBox", &oDictItem)->isArray() && oDictItem.arrayGetLength() == 4)
+							{
+								for (int nIndex = 0; nIndex < 4; nIndex++)
+								{
+									Object oArrayItem;
+									if (oDictItem.arrayGet(nIndex, &oArrayItem)->isInt())
+										arrBBox[nIndex] = oArrayItem.getInt();
+									oArrayItem.free();
+								}
+							}
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("ItalicAngle", &oDictItem);
+							if (oDictItem.isInt()) nItalicAngle = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("Ascent", &oDictItem);
+							if (oDictItem.isInt()) nAscent = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("CapHeight", &oDictItem);
+							if (oDictItem.isInt()) nCapHeight = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("XHeight", &oDictItem);
+							if (oDictItem.isInt()) nXHeight = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("StemV", &oDictItem);
+							if (oDictItem.isInt()) nStemV = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("StemH", &oDictItem);
+							if (oDictItem.isInt()) nStemH = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("Descent", &oDictItem);
+							if (oDictItem.isInt()) nDescent = oDictItem.getInt();
+							oDictItem.free();
+
+							oFontDescriptor.dictLookup("MissingWidth", &oDictItem);
+							if (oDictItem.isInt()) nMissingWidth = oDictItem.getInt();
+							oDictItem.free();
+
+						}
+						oFontDescriptor.free();
+
+						fprintf(pFile, "StartFontMetrics 3.0\n");
+						if (!sFontName.empty()) fprintf(pFile, "FontName %s\n", sFontName.c_str());
+						if (!sFontFamily.empty()) fprintf(pFile, "FamilyName %s\n", sFontFamily.c_str());
+						if (nFontWeight >= 550) fprintf(pFile, "Weight Bold\n");
+
+						fprintf(pFile, "ItalicAngle %d\n", nItalicAngle);
+
+						fprintf(pFile, "FontBBox %d %d %d %d\n", arrBBox[0], arrBBox[1], arrBBox[2], arrBBox[3]);
+
+						fprintf(pFile, "CapHeight %d\n", nCapHeight);
+						fprintf(pFile, "XHeight %d\n", nXHeight);
+						fprintf(pFile, "Ascender %d\n", nAscent);
+						fprintf(pFile, "Descender %d\n", nDescent);
+						fprintf(pFile, "StdHW %d\n", nStemH);
+						fprintf(pFile, "StdHV %d\n", nStemV);
+
+						int nFirstChar = 0;
+						Object oDictItem;
+						if (oFontObject.dictLookup("FirstChar", &oDictItem)->isInt()) nFirstChar = oDictItem.getInt();
+						oDictItem.free();
+
+						Gfx8BitFont* pT1Font = (Gfx8BitFont*)pFont;
+						if (oFontObject.dictLookup("Widths", &oDictItem)->isArray())
+						{
+							int nWidthsCount = oDictItem.arrayGetLength();
+							fprintf(pFile, "StartCharMetrics %d\n", nWidthsCount);
+							for (int nIndex = 0; nIndex < nWidthsCount; nIndex++)
+							{
+								int nWidth = nMissingWidth;
+								Object oArrayItem;
+								if (oDictItem.arrayGet(nIndex, &oArrayItem)->isInt()) nWidth = oArrayItem.getInt();
+								oArrayItem.free();
+
+								char** ppEncoding = pT1Font->getEncoding();
+
+								if (ppEncoding && ppEncoding[nIndex])
+									fprintf(pFile, "C %d ; WX %d ; N %s ;\n", nIndex + nFirstChar, nWidth, ppEncoding[nIndex]);
+								else
+									fprintf(pFile, "C %d ; WX %d ;\n", nIndex + nFirstChar, nWidth);
+							}
+							fprintf(pFile, "EndCharMetrics\n");
+						}
+						oDictItem.free();
+					}
+					oFontObject.free();
+				}
+				fclose(pFile);
+			}
+#endif
+
+			// Load the font file itself to determine its exact type
+			if (!pFontManager->LoadFontFromFile(wsFileName, 0, 10, 72, 72))
+			{
+				pEntry->bAvailable = true;
+				return;
+			}
+
+			std::wstring wsFontType = pFontManager->GetFontType();
+			if (L"TrueType" == wsFontType)
+			{
+				if (eFontType != fontType1COT   && eFontType != fontTrueType
+						&& eFontType != fontTrueTypeOT && eFontType != fontCIDType0COT
+						&& eFontType != fontCIDType2   && eFontType != fontCIDType2OT)
+				{
+					if (eFontType == fontType1 || eFontType == fontType1C)
+						eFontType = fontType1COT;
+					else if (eFontType == fontCIDType0 || eFontType == fontCIDType0C)
+						eFontType = fontCIDType0COT;
+				}
+			}
+			else if (L"Type 1" == wsFontType)
+			{
+				if (eFontType != fontType1 && eFontType != fontType1C)
+				{
+					eFontType = fontType1;
+				}
+			}
+			else if (L"CID Type 1" == wsFontType)
+			{
+				if (eFontType != fontCIDType0   && eFontType != fontCIDType0C
+						&& eFontType != fontCIDType2OT && eFontType != fontCIDType0COT)
+				{
+					eFontType = fontCIDType0;
+				}
+			}
+			else if (L"CFF" == wsFontType)
+			{
+				if (eFontType != fontType1C      && eFontType != fontType1COT
+						&& eFontType != fontTrueTypeOT  && eFontType != fontCIDType0C
+						&& eFontType != fontCIDType0COT && eFontType != fontCIDType2OT
+						&& eFontType != fontCIDType2)
+				{
+					if (eFontType == fontType1 || eFontType == fontTrueType)
+						eFontType = fontType1C;
+					else if (eFontType == fontCIDType0)
+						eFontType = fontCIDType0C;
+				}
+			}
+		}
+#ifndef FONTS_USE_ONLY_MEMORY_STREAMS
+		else if (PdfReader::GetBaseFont(wsFontBaseName, pData14, nSize14))
+		{
+			FILE* pFile = NULL;
+			if (!NSFile::CFileBinary::OpenTempFile(&wsTempFileName, &pFile, L"wb", L".base",
+												   (wchar_t*)((GlobalParamsAdaptor*)globalParams)->GetTempFolder().c_str(), NULL))
+			{
+				if (!wsTempFileName.empty())
+					NSFile::CFileBinary::Remove(wsTempFileName);
+
+				pEntry->bAvailable = true;
+				return;
+			}
+			fclose(pFile);
+			NSFile::CFileBinary oFile;
+			oFile.CreateFileW(wsTempFileName);
+			oFile.WriteFile((BYTE*)pData14, nSize14);
+			oFile.CloseFile();
+			wsFileName = wsTempFileName;
+			bFontBase14 = true;
+
+			eFontType = fontTrueType;
+		}
+#else
+		else if ([&oMemoryFontStream, wsFontBaseName]()
+		{
+			const BYTE* pData14 = NULL;
+			unsigned int nSize14 = 0;
+			if (PdfReader::GetBaseFont(wsFontBaseName, pData14, nSize14))
+			{
+				oMemoryFontStream.fromBuffer((BYTE*)pData14, nSize14);
+				return true;
+			}
+			return false;
+		}())
+		{
+			wsFileName = wsFontBaseName;
+			bFontBase14 = true;
+			NSFonts::NSApplicationFontStream::GetGlobalMemoryStorage()->Add(wsFileName, oMemoryFontStream.m_pData, (LONG)oMemoryFontStream.m_nSize, true);
+		}
+#endif
+		else if (!pFont->locateFont(pXref, false) ||
+				 (wsFileName = NSStrings::GetStringFromUTF32(pFont->locateFont(pXref, false)->path)).length() == 0)
+		{
+			NSFonts::CFontInfo* pFontInfo = GetFontByParams(pXref, pFontManager, pFont, wsFontBaseName, dStretch);
+
+			if (pFontInfo && L"" != pFontInfo->m_wsFontPath)
+			{
+				wsFileName = pFontInfo->m_wsFontPath;
+				eFontType  = pFont->isCIDFont() ? fontCIDType2 : fontTrueType;
+
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+				if (NSWasm::IsJSEnv())
+					wsFileName = pFontInfo->m_wsFontName;
+
+				if (!wsFileName.empty())
+				{
+					wsFileName = NSWasm::LoadFont(wsFileName, pFontInfo->m_bBold, pFontInfo->m_bItalic);
+					if (wsFileName.empty())
+					{
+						pFontList->Remove(*pFont->getID());
+						return;
+					}
+				}
+				oMemoryFontStream.fromStream(wsFileName);
+#endif
+
+				bFontSubstitution = true;
+			}
+			else // As a last resort, simply don't write anything with this font
+			{
+				pEntry->bAvailable = true;
+				return;
+			}
+		}
+		// Here we load encodings
+		int* pCodeToGID = NULL, *pCodeToUnicode = NULL;
+		int nLen = 0;
+		FoFiTrueType* pTTFontFile  = NULL;
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+		FoFiIdentifierType fofiType = FoFiIdentifier::identifyStream(&readFromMemoryStream, &oMemoryFontStream);
+		oMemoryFontStream.toStart();
+#else
+		FoFiIdentifierType fofiType = FoFiIdentifier::identifyFile((char*)U_TO_UTF8(wsFileName).c_str());
+#endif
+
+		switch (eFontType)
+		{
+		case fontType1:
+		case fontType1C:
+		case fontType1COT:
+		{
+			Gfx8BitFont* pFont8bit = NULL;
+			if (fofiType == fofiIdTrueType)
+			{
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+				pTTFontFile = FoFiTrueType::make((char*)oMemoryFontStream.m_pData, oMemoryFontStream.m_nSize, 0);
+#else
+				pTTFontFile = FoFiTrueType::load((char*)U_TO_UTF8(wsFileName).c_str(), 0);
+#endif
+
+				if (pTTFontFile)
+				{
+					pCodeToGID = ((Gfx8BitFont*)pFont)->getCodeToGIDMap(pTTFontFile);
+					nLen = 256;
+
+					delete pTTFontFile;
+					pTTFontFile = NULL;
+				}
+				else
+				{
+					pCodeToGID = NULL;
+					nLen = 0;
+				}
+			}
+			else if (L"" != wsFileName && (pFont8bit = dynamic_cast<Gfx8BitFont*>(pFont)))
+			{
+				char** ppEncoding = pFont8bit->getEncoding();
+				if (!ppEncoding)
+					break;
+
+				if (!pFontManager)
+					break;
+
+				pFontManager->LoadFontFromFile(wsFileName, 0, 1, 72, 72);
+				pCodeToGID = (int*)MemUtilsMallocArray(256, sizeof(int));
+				if (!pCodeToGID)
+					break;
+
+				nLen = 256;
+				for (int nIndex = 0; nIndex < 256; ++nIndex)
+				{
+					pCodeToGID[nIndex] = 0;
+					char* sName = NULL;
+					if ((sName = ppEncoding[nIndex]))
+					{
+						unsigned short ushGID = pFontManager->GetNameIndex(AStringToWString(sName));
+						pCodeToGID[nIndex] = ushGID;
+					}
+				}
+			}
+			break;
+		}
+		case fontTrueType:
+		case fontTrueTypeOT:
+		{
+			if (fofiType == fofiIdType1PFB)
+			{
+				Gfx8BitFont* pFont8bit = dynamic_cast<Gfx8BitFont*>(pFont);
+				if (L"" != wsFileName && pFont8bit && pFont8bit->getHasEncoding())
+				{
+					char** ppEncoding = pFont8bit->getEncoding();
+					if (!ppEncoding)
+						break;
+
+					if (!pFontManager)
+						break;
+
+					pFontManager->LoadFontFromFile(wsFileName, 0, 1, 72, 72);
+					pCodeToGID = (int*)MemUtilsMallocArray(256, sizeof(int));
+					if (!pCodeToGID)
+						break;
+
+					nLen = 256;
+					for (int nIndex = 0; nIndex < 256; ++nIndex)
+					{
+						pCodeToGID[nIndex] = 0;
+						char* sName = NULL;
+						if ((sName = ppEncoding[nIndex]))
+						{
+							unsigned short ushGID = pFontManager->GetNameIndex(AStringToWString(sName));
+							pCodeToGID[nIndex] = ushGID;
+						}
+					}
+				}
+				break;
+			}
+
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+			pTTFontFile = FoFiTrueType::make((char*)oMemoryFontStream.m_pData, oMemoryFontStream.m_nSize, 0);
+#else
+			pTTFontFile = FoFiTrueType::load((char*)U_TO_UTF8(wsFileName).c_str(), 0);
+#endif
+			if (pTTFontFile)
+			{
+				pCodeToGID = ((Gfx8BitFont*)pFont)->getCodeToGIDMap(pTTFontFile);
+				nLen = 256;
+
+				delete pTTFontFile;
+				pTTFontFile = NULL;
+			}
+			else
+			{
+				pCodeToGID = NULL;
+				nLen       = 0;
+
+				if (pFontManager->LoadFontFromFile(wsFileName, 0, 10, 72, 72))
+				{
+					nLen = 256;
+					pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
+					for (int nCode = 0; nCode < nLen; ++nCode)
+					{
+						pCodeToGID[nCode] = pFontManager->GetGIDByUnicode(nCode);
+					}
+				}
+			}
+			break;
+		}
+		case fontCIDType0:
+		case fontCIDType0C:
+		{
+			GfxCIDFont* pFontCID = dynamic_cast<GfxCIDFont*>(pFont);
+			if (!bFontSubstitution && pFontCID && pFontCID->getCIDToGID())
+			{
+				nLen = pFontCID->getCIDToGIDLen();
+				if (!nLen)
+					break;
+				pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
+				if (!pCodeToGID)
+				{
+					nLen = 0;
+					break;
+				}
+				memcpy(pCodeToGID, ((GfxCIDFont*)pFont)->getCIDToGID(), nLen * sizeof(int));
+				break;
+			}
+			/*
+			 FoFiType1C* pT1CFontFile = NULL;
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+			pT1CFontFile = FoFiType1C::make((char*)oMemoryFontStream.m_pData, oMemoryFontStream.m_nSize);
+#else
+			pT1CFontFile = FoFiType1C::load((char*)U_TO_UTF8(wsFileName).c_str());
+#endif
+			if (pT1CFontFile)
+			{
+				pCodeToGID = pT1CFontFile->getCIDToGIDMap(&nLen);
+
+				delete pT1CFontFile;
+				pT1CFontFile = NULL;
+			}
+			else
+			{
+				pCodeToGID = NULL;
+				nLen = 0;
+			}
+			*/
+			pCodeToGID = NULL;
+			nLen = 0;
+			break;
+		}
+		case fontCIDType0COT:
+		{
+			GfxCIDFont* pFontCID = dynamic_cast<GfxCIDFont*>(pFont);
+			if (!bFontSubstitution && pFontCID && pFontCID->getCIDToGID())
+			{
+				nLen = pFontCID->getCIDToGIDLen();
+				if (!nLen)
+					break;
+				pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
+				if (!pCodeToGID)
+				{
+					nLen = 0;
+					break;
+				}
+				memcpy(pCodeToGID, ((GfxCIDFont*)pFont)->getCIDToGID(), nLen * sizeof(int));
+				break;
+			}
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+			pTTFontFile = FoFiTrueType::make((char*)oMemoryFontStream.m_pData, oMemoryFontStream.m_nSize, 0);
+#else
+			pTTFontFile = FoFiTrueType::load((char*)U_TO_UTF8(wsFileName).c_str(), 0);
+#endif
+
+			if (pTTFontFile)
+			{
+				if (pTTFontFile->isOpenTypeCFF())
+				{
+					pCodeToGID = pTTFontFile->getCIDToGIDMap(&nLen);
+				}
+				else
+				{
+					pCodeToGID = NULL;
+					nLen = 0;
+				}
+				delete pTTFontFile;
+				pTTFontFile = NULL;
+			}
+			else
+			{
+				pCodeToGID = NULL;
+				nLen = 0;
+			}
+			break;
+		}
+		case fontCIDType2:
+		case fontCIDType2OT:
+		{
+			// Create CID-to-GID map
+			// If font was not embedded and was substituted and has ToUnicode map, read GIDs from file based on unicode values.
+			// For embedded fonts use CIDtoGID map
+			pCodeToGID = NULL;
+			nLen = 0;
+			if (L"" != wsFileName && bFontSubstitution)
+			{
+				CharCodeToUnicode* pCodeToUnicode = NULL;
+				if ((pCodeToUnicode = ((GfxCIDFont*)pFont)->getToUnicode()))
+				{
+#ifdef FONTS_USE_ONLY_MEMORY_STREAMS
+					pTTFontFile = FoFiTrueType::make((char*)oMemoryFontStream.m_pData, oMemoryFontStream.m_nSize, 0);
+#else
+					pTTFontFile = FoFiTrueType::load((char*)U_TO_UTF8(wsFileName).c_str(), 0);
+#endif
+					if (pTTFontFile)
+					{
+						// Looking for Unicode Cmap
+						std::vector<int> arrCMapIndex;
+						for (int nCMapIndex = 0; nCMapIndex < pTTFontFile->getNumCmaps(); ++nCMapIndex)
+						{
+							if ((pTTFontFile->getCmapPlatform(nCMapIndex) == 3 && pTTFontFile->getCmapEncoding(nCMapIndex) == 1) || pTTFontFile->getCmapPlatform(nCMapIndex) == 0)
+							{
+								arrCMapIndex.push_back(nCMapIndex);
+							}
+						}
+						if (arrCMapIndex.size() > 0)
+						{
+							// CID -> Unicode -> GID
+							nLen = pCodeToUnicode->getLength();
+							pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
+							for (int nCode = 0; nCode < nLen; ++nCode)
+							{
+								Unicode arrUnicodeBuffer[8];
+								if (pCodeToUnicode->mapToUnicode(nCode, arrUnicodeBuffer, 8) > 0)
+								{
+									pCodeToGID[nCode] = pTTFontFile->mapCodeToGID(arrCMapIndex[0], arrUnicodeBuffer[0]);
+									for (size_t nIndex = 1; nIndex < arrCMapIndex.size(); nIndex++)
+									{
+										if (0 == pCodeToGID[nCode])
+											pCodeToGID[nCode] = pTTFontFile->mapCodeToGID(arrCMapIndex[nIndex], arrUnicodeBuffer[0]);
+										else
+											break;
+									}
+								}
+								else
+								{
+									pCodeToGID[nCode] = 0;
+								}
+							}
+						}
+						delete pTTFontFile;
+						pTTFontFile = NULL;
+					}
+					pCodeToUnicode->decRefCnt();
+				}
+			}
+			else if (((GfxCIDFont*)pFont)->getCIDToGID())
+			{
+				nLen = ((GfxCIDFont*)pFont)->getCIDToGIDLen();
+				pCodeToGID = (int*)MemUtilsMallocArray(nLen, sizeof(int));
+				if (!pCodeToGID)
+					break;
+
+				memcpy(pCodeToGID, ((GfxCIDFont*)pFont)->getCIDToGID(), nLen * sizeof(int));
+			}
+
+			break;
+		}
+		default:
+		{
+			// This should not happen
+#ifndef FONTS_USE_ONLY_MEMORY_STREAMS
+			if (L"" != wsTempFileName)
+				NSFile::CFileBinary::Remove(wsTempFileName);
+#endif
+			break;
+		}
+		}
+		// Build Code -> Unicode table
+		int nToUnicodeLen = 0;
+		if (pFont->isCIDFont())
+		{
+			GfxCIDFont* pCIDFont = (GfxCIDFont*)pFont;
+			CharCodeToUnicode* pToUnicode = pCIDFont->getToUnicode();
+			if (NULL != pToUnicode)
+			{
+				nToUnicodeLen = pToUnicode->getLength();
+				pCodeToUnicode = (int*)MemUtilsMallocArray(nToUnicodeLen, sizeof(int));
+
+				if (pCodeToUnicode)
+				{
+					for (int nIndex = 0; nIndex < nToUnicodeLen; ++nIndex)
+					{
+						Unicode aUnicode[2];
+						if (pToUnicode->mapToUnicode(nIndex, aUnicode, 2))
+							pCodeToUnicode[nIndex] = aUnicode[0];
+						else
+							pCodeToUnicode[nIndex] = 0;
+					}
+				}
+
+				pToUnicode->decRefCnt();
+			}
+		}
+		else
+		{
+			// memory troubles here
+
+			CharCodeToUnicode* pToUnicode = ((Gfx8BitFont*)pFont)->getToUnicode();
+			if (NULL != pToUnicode)
+			{
+				nToUnicodeLen = pToUnicode->getLength();
+				pCodeToUnicode = (int*)MemUtilsMallocArray(nToUnicodeLen, sizeof(int));//literally here
+
+				if (pCodeToUnicode)
+				{
+					for (int nIndex = 0; nIndex < nToUnicodeLen; ++nIndex)
+					{
+						Unicode nUnicode = 0;
+						if (pToUnicode->mapToUnicode(nIndex, &nUnicode, 1))
+							pCodeToUnicode[nIndex] = (unsigned short)nUnicode;
+						else
+							pCodeToUnicode[nIndex] = nIndex;
+					}
+				}
+				pToUnicode->decRefCnt();
+			}
+		}
+
+		// Trim index from FontName if present
+		if (wsFontName.empty())
+			wsFontName = wsFontBaseName;
+		if (bNotFullName)
+			EraseSubsetTag(wsFontName);
+		else if (!bFontBase14 && !bFontSubstitution)
+			wsFontName += (L" " + ComputeFontHash(pXref, pFont));
+
+		pEntry->wsFilePath     = wsFileName;
+		pEntry->wsFontName     = wsFontName;
+		pEntry->pCodeToGID     = pCodeToGID;
+		pEntry->pCodeToUnicode = pCodeToUnicode;
+		pEntry->unLenGID       = (unsigned int)nLen;
+		pEntry->unLenUnicode   = (unsigned int)nToUnicodeLen;
+		pEntry->bAvailable     = true;
+		pEntry->dStretch       = dStretch;
+		pEntry->bFontSubstitution = bFontSubstitution;
+		pEntry->bIsIdentity = pFont->isCIDFont() == gTrue ? ((GfxCIDFont*)pFont)->usesIdentityEncoding() || ((GfxCIDFont*)pFont)->usesIdentityCIDToGID() || ((GfxCIDFont*)pFont)->ctuUsesCharCodeToUnicode() || pFont->getType() == fontCIDType0C : false;
+	}
+	else if (NULL != pEntry)
+	{
+		wsFileName = pEntry->wsFilePath;
+		wsFontName = pEntry->wsFontName;
+	}
 }
 
 CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont)

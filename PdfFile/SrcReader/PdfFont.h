@@ -45,7 +45,6 @@
 #include "../../DesktopEditor/graphics/pro/Fonts.h"
 
 #include "RendererOutputDev.h"
-#include "PdfAnnot.h"
 
 namespace PdfReader
 {
@@ -84,19 +83,39 @@ struct CType3FontMetrics
 		return dUnitsPerEm * 0.5;
 	}
 };
+struct CFontData
+{
+	bool bFind;
+	BYTE nAlign;
+	unsigned int unFontFlags; // 0 Bold, 1 Italic, 3 strikethrough, 4 underline, 5 vertical-align, 6 actual font, 7 RTL
+	double dFontSise;
+	double dVAlign;
+	double dColor[3];
+	std::string sFontFamily;
+	std::string sActualFont;
+	std::string sText;
 
+	CFontData() : bFind(false), nAlign(0), unFontFlags(4), dFontSise(10), dVAlign(0), dColor{0, 0, 0} {}
+	CFontData(const CFontData& oFont) : bFind(oFont.bFind), nAlign(oFont.nAlign), unFontFlags(oFont.unFontFlags), dFontSise(oFont.dFontSise), dVAlign(oFont.dVAlign),
+		dColor{oFont.dColor[0], oFont.dColor[1], oFont.dColor[2]}, sFontFamily(oFont.sFontFamily), sActualFont(oFont.sActualFont), sText(oFont.sText) {}
+};
+
+std::vector<CFontData*> ReadRC(const std::string& sRC);
 std::string GetRCFromDS(const std::string& sDS, Object* pContents, const std::vector<double>& arrCFromDA);
 bool IsNeedCMap(PDFDoc* pDoc);
 bool IsBaseFont(const std::wstring& wsName);
-std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, bool bIsNeedCMap);
-std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, Object* oFontRef, std::string& sFontName, std::string& sActualFontName, bool& bBold, bool& bItalic, bool bIsNeedCMap = false);
+std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList);
+std::wstring GetFontData(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, Object* oFontRef, std::string& sFontName, std::string& sActualFontName, bool& bBold, bool& bItalic);
 bool GetFontFromAP(PDFDoc* pdfDoc, AcroFormField* pField, Object* oFontRef, std::string& sFontKey);
 std::vector<CAnnotFontInfo> GetAnnotFontInfos(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef);
-std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CAnnotMarkup::CFontData*>& arrRC);
+std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IFontManager* pFontManager, CPdfFontList* pFontList, Object* oAnnotRef, std::vector<CFontData*>& arrRC);
 bool FindFonts(Object* oStream, int nDepth, Object* oResFonts);
-int CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
+int CollectFontWidths(Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth);
 double CheckFontStylePDF(std::wstring& sName, bool& bBold, bool& bItalic);
 bool EraseSubsetTag(std::wstring& sFontName);
+
+NSFonts::CFontInfo* GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName, double& dStretch);
+void GetFont(XRef* pXref, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, GfxFont* pFont, std::wstring& wsFileName, std::wstring& wsFontName, bool bNotFullName = true);
 
 CType3FontMetrics* BuildType3FontMetrics(XRef* pXref, GfxFont* pFont);
 }

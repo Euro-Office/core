@@ -4515,7 +4515,7 @@ void CPdfEditor::ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pRe
 				if (gfxFont->getEmbeddedFontID(&oEmbRef) || PdfReader::IsBaseFont(wsFontBaseName) || ((pFontLoc = gfxFont->locateFont(xref, false)) && NSStrings::GetStringFromUTF32(pFontLoc->path).length()))
 				{
 					std::wstring wsFileName, wsFontName;
-					PdfReader::RendererOutputDev::GetFont(xref, pFontManager, pFontList, gfxFont, wsFileName, wsFontName, false);
+					PdfReader::GetFont(xref, pFontManager, pFontList, gfxFont, wsFileName, wsFontName, false);
 
 					// Collect information about embedded font
 					if (!PdfReader::IsBaseFont(wsFontBaseName))
@@ -4533,7 +4533,7 @@ void CPdfEditor::ScanAndProcessFonts(PDFDoc* pPDFDocument, XRef* xref, Dict* pRe
 							else
 							{
 								std::map<unsigned int, unsigned int> mCodeToWidth, mCodeToUnicode, mCodeToGID;
-								int nDW = PdfReader::CollectFontWidths(gfxFont, oFont.getDict(), mCodeToWidth);
+								int nDW = PdfReader::CollectFontWidths(oFont.getDict(), mCodeToWidth);
 								for (int nIndex = 0; nIndex < pFontEntry.unLenUnicode; ++nIndex)
 								{
 									if (pFontEntry.pCodeToUnicode[nIndex])

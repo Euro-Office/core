@@ -249,8 +249,6 @@ namespace PdfReader
 		{
 			m_pbBreak = pbBreak;
 		}
-		static NSFonts::CFontInfo* GetFontByParams(XRef* pXref, NSFonts::IFontManager* pFontManager, GfxFont* pFont, std::wstring& wsFontBaseName, double& dStretch);
-		static void GetFont(XRef* pXref, NSFonts::IFontManager* pFontManager, CPdfFontList *pFontList, GfxFont* pFont, std::wstring& wsFileName, std::wstring& wsFontName, bool bNotFullName = true);
 
 	private:
 		struct GfxOutputState
