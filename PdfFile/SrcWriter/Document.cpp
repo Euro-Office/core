@@ -98,6 +98,7 @@ namespace PdfWriter
 		m_pTransparencyGroup = NULL;
 		m_pFreeTypeLibrary  = NULL;
 		m_bPDFAConformance	= false;
+		m_nRedactInfo       = 0;
 		m_pAcroForm         = NULL;
 		m_pFieldsResources  = NULL;
 	}
@@ -125,32 +126,36 @@ namespace PdfWriter
 		if (!m_pCatalog)
 			return false;
 
-		m_pCatalog->SetPageMode(pagemode_UseNone);
-		m_pCatalog->SetPageLayout(pagelayout_OneColumn);
+		if (!m_nRedactInfo)
+		{
+			m_pCatalog->SetPageMode(pagemode_UseNone);
+			m_pCatalog->SetPageLayout(pagelayout_OneColumn);
+		}
 
 		m_pPageTree = m_pCatalog->GetRoot();
 		if (!m_pPageTree)
 			return false;
 
-		m_pInfo = new CInfoDict(m_pXref);
-		if (!m_pInfo)
-			return false;
+		if (~m_nRedactInfo & (1 << 0))
+			m_pInfo = new CInfoDict(m_pXref);
+		if (m_pInfo)
+		{
+			m_pInfo->SetTime(InfoCreationDate);
+			m_pInfo->SetTime(InfoModaDate);
 
-		m_pInfo->SetTime(InfoCreationDate);
-		m_pInfo->SetTime(InfoModaDate);
+			std::wstring sCreator = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
+			if (sCreator.empty())
+				sCreator = NSSystemUtils::gc_EnvApplicationNameDefault;
+			std::string sCreatorA = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sCreator);
 
-		std::wstring sCreator = NSSystemUtils::GetEnvVariable(NSSystemUtils::gc_EnvApplicationName);
-		if (sCreator.empty())
-			sCreator = NSSystemUtils::gc_EnvApplicationNameDefault;
-		std::string sCreatorA = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sCreator);
+	#if defined(INTVER)
+			std::string sVersion = VALUE2STR(INTVER);
+			sCreatorA += ("/" + sVersion);
+	#endif
 
-#if defined(INTVER)
-		std::string sVersion = VALUE2STR(INTVER);
-		sCreatorA += ("/" + sVersion);
-#endif
-
-		m_pInfo->SetInfo(InfoProducer, sCreatorA.c_str());
-		m_pInfo->SetInfo(InfoCreator, sCreatorA.c_str());
+			m_pInfo->SetInfo(InfoProducer, sCreatorA.c_str());
+			m_pInfo->SetInfo(InfoCreator, sCreatorA.c_str());
+		}
 
 		if (IsPDFA())
 		{
@@ -222,6 +227,8 @@ namespace PdfWriter
 			FT_Done_FreeType(m_pFreeTypeLibrary);
 			m_pFreeTypeLibrary = NULL;
 		}
+
+		SetCompressionMode(COMP_ALL);
 	}
 	bool CDocument::SaveToFile(const std::wstring& wsPath)
 	{
@@ -258,7 +265,8 @@ namespace PdfWriter
 	}
     void CDocument::SaveToStream(CStream* pStream)
 	{
-		m_pCatalog->AddMetadata(m_pXref, m_pInfo);
+		if (~m_nRedactInfo & (1 << 0))
+			m_pCatalog->AddMetadata(m_pXref, m_pInfo);
 
 		// Write header
 		if (IsPDFA())
@@ -274,7 +282,8 @@ namespace PdfWriter
 
 		// Add required elements to Trailer
 		m_pTrailer->Add("Root", m_pCatalog);
-		m_pTrailer->Add("Info", m_pInfo);
+		if (~m_nRedactInfo & (1 << 0))
+			m_pTrailer->Add("Info", m_pInfo);
 
 		// Encrypt document if necessary
 		CEncrypt* pEncrypt = NULL;
@@ -499,6 +508,10 @@ namespace PdfWriter
 	{
 		m_bPDFAConformance = isPDFA;		
 	}
+	void CDocument::SetRedactInfo(int nFlag)
+	{
+		m_nRedactInfo = nFlag;
+	}
 	bool CDocument::IsPDFA() const
 	{
 		return m_bPDFAConformance;
@@ -689,6 +702,56 @@ namespace PdfWriter
 		m_vFillAlpha.push_back(pExtGrState);
 		return pExtGrState;
 	}
+	CAnnotation* CDocument::CreateWidget(BYTE m_nType)
+	{
+		CAnnotation* pAnnot = NULL;
+		if (m_nType < 26)
+			return pAnnot;
+
+		switch (m_nType)
+		{
+		case 26:
+		{
+			pAnnot = new CWidgetAnnotation(m_pXref, EAnnotType::AnnotWidget);
+			break;
+		}
+		case 27:
+		{
+			pAnnot = new CPushButtonWidget(m_pXref);
+			pAnnot->Add("FT", "Btn");
+			break;
+		}
+		case 28:
+		case 29:
+		{
+			pAnnot = new CCheckBoxWidget(m_pXref);
+			pAnnot->Add("FT", "Btn");
+			break;
+		}
+		case 30:
+		{
+			pAnnot = new CTextWidget(m_pXref);
+			pAnnot->Add("FT", "Tx");
+			break;
+		}
+		case 31:
+		case 32:
+		{
+			pAnnot = new CChoiceWidget(m_pXref);
+			pAnnot->Add("FT", "Ch");
+			break;
+		}
+		case 33:
+		{
+			pAnnot = new CSignatureWidget(m_pXref);
+			pAnnot->Add("FT", "Sig");
+			break;
+		}
+		default: break;
+		}
+
+		return pAnnot;
+	}
 	CAnnotation* CDocument::CreateAnnot(BYTE m_nType)
 	{
 		CAnnotation* pAnnot = NULL;
@@ -728,47 +791,7 @@ namespace PdfWriter
 			if (!CheckAcroForm())
 				return NULL;
 
-			switch (m_nType)
-			{
-			case 26:
-			{
-				pAnnot = new CWidgetAnnotation(m_pXref, EAnnotType::AnnotWidget);
-				break;
-			}
-			case 27:
-			{
-				pAnnot = new CPushButtonWidget(m_pXref);
-				pAnnot->Add("FT", "Btn");
-				break;
-			}
-			case 28:
-			case 29:
-			{
-				pAnnot = new CCheckBoxWidget(m_pXref);
-				pAnnot->Add("FT", "Btn");
-				break;
-			}
-			case 30:
-			{
-				pAnnot = new CTextWidget(m_pXref);
-				pAnnot->Add("FT", "Tx");
-				break;
-			}
-			case 31:
-			case 32:
-			{
-				pAnnot = new CChoiceWidget(m_pXref);
-				pAnnot->Add("FT", "Ch");
-				break;
-			}
-			case 33:
-			{
-				pAnnot = new CSignatureWidget(m_pXref);
-				pAnnot->Add("FT", "Sig");
-				break;
-			}
-			default: break;
-			}
+			pAnnot = CreateWidget(m_nType);
 
 			if (pAnnot)
 			{
