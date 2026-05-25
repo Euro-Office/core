@@ -1118,6 +1118,20 @@ namespace PdfWriter
 		// Operator   : cm
 		// Description: Modify the transformation matrix (CTM - Current Transformation Matrix)
 
+		Transform(dM11, dM12, dM21, dM22, dX, dY);
+	
+		CMatrix oCTM = m_pGrState->m_oMatrix;
+	
+		// Multiply matrices oCTM(new) = oCTM(transformation(given by parameters)) x oCTM(old)
+		m_pGrState->m_oMatrix.m11 = dM11 * oCTM.m11 + dM12 * oCTM.m21;
+		m_pGrState->m_oMatrix.m12 = dM11 * oCTM.m12 + dM12 * oCTM.m22;
+		m_pGrState->m_oMatrix.m21 = dM21 * oCTM.m11 + dM22 * oCTM.m21;
+		m_pGrState->m_oMatrix.m22 = dM21 * oCTM.m12 + dM22 * oCTM.m22;
+		m_pGrState->m_oMatrix.x   =   dX * oCTM.m11 + dY * oCTM.m21 + oCTM.x;
+		m_pGrState->m_oMatrix.y   =   dX * oCTM.m12 + dY * oCTM.m22 + oCTM.y;
+	}
+	void CPage::Transform(double dM11, double dM12, double dM21, double dM22, double dX, double dY)
+	{
 		m_pStream->WriteReal(dM11);
 		m_pStream->WriteChar(' ');
 		m_pStream->WriteReal(dM12);
@@ -1130,16 +1144,6 @@ namespace PdfWriter
 		m_pStream->WriteChar(' ');
 		m_pStream->WriteReal(dY);
 		m_pStream->WriteStr(" cm\012");
-	
-		CMatrix oCTM = m_pGrState->m_oMatrix;
-	
-		// Multiply matrices oCTM(new) = oCTM(transformation(given by parameters)) x oCTM(old)
-		m_pGrState->m_oMatrix.m11 = dM11 * oCTM.m11 + dM12 * oCTM.m21;
-		m_pGrState->m_oMatrix.m12 = dM11 * oCTM.m12 + dM12 * oCTM.m22;
-		m_pGrState->m_oMatrix.m21 = dM21 * oCTM.m11 + dM22 * oCTM.m21;
-		m_pGrState->m_oMatrix.m22 = dM21 * oCTM.m12 + dM22 * oCTM.m22;
-		m_pGrState->m_oMatrix.x   =   dX * oCTM.m11 + dY * oCTM.m21 + oCTM.x;
-		m_pGrState->m_oMatrix.y   =   dX * oCTM.m12 + dY * oCTM.m22 + oCTM.y;
 	}
 	void CPage::StartTransform(double dM11, double dM12, double dM21, double dM22, double dX, double dY)
 	{
