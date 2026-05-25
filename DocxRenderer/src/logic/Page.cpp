@@ -2911,7 +2911,8 @@ namespace NSDocxRenderer
 					line.push_back(std::move(c));
 				}
 			}
-			lines.push_back(line);
+			if (!line.empty())
+				lines.push_back(line);
 
 			return lines;
 		};
@@ -2921,17 +2922,36 @@ namespace NSDocxRenderer
 		auto bot_lines = get_group_lines(2);
 		auto right_lines = get_group_lines(3);
 
-		auto cell_in_borders = [&is_eq] (cell_ptr_t c, const Borders& b) -> bool {
-			return (c->m_dTop > b.top || is_eq(c->m_dTop, b.top)) &&
-				   (c->m_dBot < b.bot || is_eq(c->m_dBot, b.bot)) &&
-				   (c->m_dLeft > b.left || is_eq(c->m_dLeft, b.left)) &&
-				   (c->m_dRight < b.right || is_eq(c->m_dRight, b.right));
+		auto cell_in_borders = [&is_eq] (cell_ptr_t c, const Borders& b, size_t idx) -> bool {
+			bool res = (c->m_dTop > b.top || is_eq(c->m_dTop, b.top)) &&
+					   (c->m_dBot < b.bot || is_eq(c->m_dBot, b.bot)) &&
+					   (c->m_dLeft > b.left || is_eq(c->m_dLeft, b.left)) &&
+					   (c->m_dRight < b.right || is_eq(c->m_dRight, b.right));
+			if (res)
+				switch (idx) {
+				case 0:
+					res &= is_eq(c->m_dTop, b.top);
+					break;
+				case 1:
+					res &= is_eq(c->m_dLeft, b.left);
+					break;
+				case 2:
+					res &= is_eq(c->m_dBot, b.bot);
+					break;
+				case 3:
+					res &= is_eq(c->m_dRight, b.right);
+					break;
+				default:
+					break;
+				}
+
+			return res;
 		};
 
-		auto cells_in_borders = [&cell_in_borders] (const std::vector<cell_ptr_t>& cells,  const Borders& b) -> bool {
+		auto cells_in_borders = [&cell_in_borders] (const std::vector<cell_ptr_t>& cells, const Borders& b, size_t idx) -> bool {
 			bool res = true;
-			std::for_each(cells.begin(), cells.end(), [&res, &cell_in_borders, b] (cell_ptr_t c) {
-				res &= cell_in_borders(c, b);
+			std::for_each(cells.begin(), cells.end(), [&res, &cell_in_borders, b, idx] (cell_ptr_t c) {
+				res &= cell_in_borders(c, b, idx);
 			});
 			return res;
 		};
@@ -2942,7 +2962,7 @@ namespace NSDocxRenderer
 			std::vector<cell_ptr_t> cells;
 
 			for (auto&& c : m_arGraphicalCells)
-				if (c && cell_in_borders(c, b))
+				if (c && cell_in_borders(c, b, 4))
 				{
 					cells.push_back(std::move(c));
 					c = nullptr;
@@ -2988,12 +3008,14 @@ namespace NSDocxRenderer
 						break;
 					}
 
-					if (cells_in_borders(line, b) || condition)
+					if (cells_in_borders(line, b, idx) || condition)
 					{
 						square += get_square(line);
 						cells.insert(cells.end(), std::make_move_iterator(line.begin()), std::make_move_iterator(line.end()));
 						it = lines.erase(it);
 					}
+					else if (cells_in_borders(line, b, 4))
+						it = lines.erase(it);
 					else
 						++it;
 				}
@@ -3233,13 +3255,14 @@ namespace NSDocxRenderer
 		for (auto rl_it = right_lines.begin(); rl_it != right_lines.end(); )
 		{
 			insert(std::move(*rl_it));
-			rl_it = bot_lines.erase(rl_it);
+			rl_it = right_lines.erase(rl_it);
 		}
 
 		for (auto& pr : group_cells)
 		{
 			auto& b = pr.second;
 			auto& cells = pr.first;
+			auto start_size = group_cells.size();
 
 			struct line {
 				double x1{0.0};
@@ -3335,10 +3358,17 @@ namespace NSDocxRenderer
 				}
 			}
 
-			auto top_cells = get_cells_from_lines(ver_top_lines, b.left, b.right, true);
-			cells.insert(cells.end(), std::make_move_iterator(top_cells.begin()), std::make_move_iterator(top_cells.end()));
-			auto bot_cells = get_cells_from_lines(ver_bot_lines, b.left, b.right, true);
-			cells.insert(cells.end(), std::make_move_iterator(bot_cells.begin()), std::make_move_iterator(bot_cells.end()));
+			if (!ver_top_lines.empty())
+			{
+				auto top_cells = get_cells_from_lines(ver_top_lines, b.left, b.right, true);
+				cells.insert(cells.end(), std::make_move_iterator(top_cells.begin()), std::make_move_iterator(top_cells.end()));
+			}
+
+			if (!ver_bot_lines.empty())
+			{
+				auto bot_cells = get_cells_from_lines(ver_bot_lines, b.left, b.right, true);
+				cells.insert(cells.end(), std::make_move_iterator(bot_cells.begin()), std::make_move_iterator(bot_cells.end()));
+			}
 
 			std::vector<line> hor_left_lines, hor_right_lines;
 			for (const auto& i : ver_lines_indeces)
@@ -3368,16 +3398,26 @@ namespace NSDocxRenderer
 				}
 			}
 
-			auto left_cells = get_cells_from_lines(hor_left_lines, b.top, b.bot, false);
-			cells.insert(cells.end(), std::make_move_iterator(left_cells.begin()), std::make_move_iterator(left_cells.end()));
-			auto right_cells = get_cells_from_lines(hor_right_lines, b.top, b.bot, false);
-			cells.insert(cells.end(), std::make_move_iterator(right_cells.begin()), std::make_move_iterator(right_cells.end()));
+			if (!hor_left_lines.empty())
+			{
+				auto left_cells = get_cells_from_lines(hor_left_lines, b.top, b.bot, false);
+				cells.insert(cells.end(), std::make_move_iterator(left_cells.begin()), std::make_move_iterator(left_cells.end()));
+			}
 
-			std::sort(cells.begin(), cells.end(), [&is_eq] (cell_ptr_t c1, cell_ptr_t c2) {
-				if (!is_eq(c1->m_dTop, c2->m_dTop))
-					return c1->m_dTop < c2->m_dTop;
-				return !is_eq(c1->m_dLeft, c2->m_dLeft) && c1->m_dLeft < c2->m_dLeft;
-			});
+			if (!hor_right_lines.empty())
+			{
+				auto right_cells = get_cells_from_lines(hor_right_lines, b.top, b.bot, false);
+				cells.insert(cells.end(), std::make_move_iterator(right_cells.begin()), std::make_move_iterator(right_cells.end()));
+			}
+
+			if (start_size != cells.size())
+			{
+				std::sort(cells.begin(), cells.end(), [&is_eq] (cell_ptr_t c1, cell_ptr_t c2) {
+					if (!is_eq(c1->m_dTop, c2->m_dTop))
+						return c1->m_dTop < c2->m_dTop;
+					return !is_eq(c1->m_dLeft, c2->m_dLeft) && c1->m_dLeft < c2->m_dLeft;
+				});
+			}
 			b = get_borders(cells)[0];
 		}
 
