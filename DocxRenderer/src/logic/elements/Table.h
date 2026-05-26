@@ -53,28 +53,24 @@ public:
 	ITableBuilder() = default;
 	~ITableBuilder() = default;
 
-	void Clear()
-	{
-		m_arTables.clear();
-	}
-	void SetShapes(std::vector<shape_ptr_t>&& shapes)
+	virtual void SetShapes(std::vector<shape_ptr_t>&& shapes)
 	{
 		m_arShapes = std::move(shapes);
 	}
-	void SetParagraphs(std::vector<paragraph_ptr_t>&& paragraphs)
+	virtual void SetParagraphs(std::vector<paragraph_ptr_t>&& paragraphs)
 	{
-		m_arParagaraphs = paragraphs;
+		m_arParagraphs = paragraphs;
 	}
 
-	std::vector<shape_ptr_t>&& ReturnShapes()
+	virtual std::vector<shape_ptr_t>&& ReturnShapes()
 	{
 		return std::move(m_arShapes);
 	}
-	std::vector<paragraph_ptr_t>&& ReturnParagraphs()
+	virtual std::vector<paragraph_ptr_t>&& ReturnParagraphs()
 	{
-		return std::move(m_arParagaraphs);
+		return std::move(m_arParagraphs);
 	}
-	std::vector<ooxml_item_ptr_t>&& GetTables()
+	virtual std::vector<ooxml_item_ptr_t>&& GetTables()
 	{
 		return std::move(m_arTables);
 	}
@@ -86,10 +82,10 @@ public:
 private:
 	std::vector<ooxml_item_ptr_t> m_arTables;
 	std::vector<shape_ptr_t>	  m_arShapes;
-	std::vector<paragraph_ptr_t>  m_arParagaraphs;
+	std::vector<paragraph_ptr_t>  m_arParagraphs;
 };
 
 namespace NSTables {
-	ITableBuilder Create();
+	ITableBuilder* Create();
 }
 } // namespace NSDocxRenderer

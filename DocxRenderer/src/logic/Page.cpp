@@ -49,7 +49,7 @@ namespace NSDocxRenderer
 	    m_oManagers(oManagers), m_oContBuilder(oManagers.pFontStyleManager, oManagers.pFontSelector)
 	{
 		m_pAppFonts = pAppFonts;
-		m_oTableBuilder = NSTables::Create();
+		m_pTableBuilder = NSTables::Create();
 		CShape::ResetRelativeHeight();
 	}
 
@@ -92,7 +92,6 @@ namespace NSDocxRenderer
 		m_oShadow.SetDefaultParams();
 		m_oEdgeText.SetDefaultParams();
 		m_oTransform.Reset();
-		m_oTableBuilder.Clear();
 
 		m_oHorVerLinesCollector.Clear();
 		m_arTextLines.clear();
@@ -112,6 +111,8 @@ namespace NSDocxRenderer
 	CPage::~CPage()
 	{
 		Clear();
+		if (m_pTableBuilder)
+			delete m_pTableBuilder;
 	}
 
 	void CPage::DeleteTextClipPage()
@@ -424,9 +425,9 @@ namespace NSDocxRenderer
 
 		if (m_bIsBuildTables)
 		{
-			m_oTableBuilder.SetShapes(std::move(m_arShapes));
-			m_oTableBuilder.BuildGraphicallCells();
-			m_arShapes = std::move(m_oTableBuilder.ReturnShapes());
+			m_pTableBuilder->SetShapes(std::move(m_arShapes));
+			m_pTableBuilder->BuildGraphicallCells();
+			m_arShapes = std::move(m_pTableBuilder->ReturnShapes());
 		}
 
 		// building final objects
@@ -434,10 +435,10 @@ namespace NSDocxRenderer
 
 		if (m_bIsBuildTables)
 		{
-			m_oTableBuilder.SetParagraphs(std::move(m_arParagraphs));
-			m_oTableBuilder.BuildTables();
-			m_arParagraphs = std::move(m_oTableBuilder.ReturnParagraphs());
-			m_arTables = std::move(m_oTableBuilder.GetTables());
+			m_pTableBuilder->SetParagraphs(std::move(m_arParagraphs));
+			m_pTableBuilder->BuildTables();
+			m_arParagraphs = std::move(m_pTableBuilder->ReturnParagraphs());
+			m_arTables = std::move(m_pTableBuilder->GetTables());
 		}
 
 		// post analyze

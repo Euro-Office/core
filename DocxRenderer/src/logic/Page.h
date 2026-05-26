@@ -241,7 +241,7 @@ namespace NSDocxRenderer
 		CContTextBuilder      m_oContBuilder;
 		CHorVerLinesCollector m_oHorVerLinesCollector;
 
-		ITableBuilder m_oTableBuilder;
+		ITableBuilder* m_pTableBuilder{nullptr};
 
 		std::vector<shape_ptr_t>      m_arShapes;
 		std::vector<text_line_ptr_t>  m_arTextLines;

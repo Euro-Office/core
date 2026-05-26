@@ -4,9 +4,9 @@ namespace NSDocxRenderer
 {
 	namespace NSTables
 	{
-		ITableBuilder Create()
+		ITableBuilder* Create()
 		{
-			return ITableBuilder();
+			return new ITableBuilder();
 		}
 	}
 }
