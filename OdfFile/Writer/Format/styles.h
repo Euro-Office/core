@@ -366,22 +366,23 @@ public:
 
 	virtual void serialize(std::wostream & strm);
 
-    std::wstring			style_name_;
-    _CP_OPT( std::wstring ) style_display_name_; 
+    std::wstring style_name_;
+    _CP_OPT(std::wstring) style_display_name_;
     odf_types::style_family	style_family_;
 
-    _CP_OPT( std::wstring ) style_parent_style_name_; 
-    _CP_OPT( std::wstring ) style_next_style_name_; 
-    _CP_OPT( std::wstring ) style_list_style_name_; 
-    _CP_OPT( std::wstring ) style_master_page_name_;
-	_CP_OPT( bool)			style_auto_update_; // default = false
-    _CP_OPT( std::wstring ) style_data_style_name_; 
-    _CP_OPT( std::wstring ) style_class_;
-    _CP_OPT(std::wstring)	style_default_outline_level_; 
+    _CP_OPT(std::wstring) style_parent_style_name_;
+    _CP_OPT(std::wstring) style_next_style_name_;
+    _CP_OPT(std::wstring) style_list_style_name_;
+    _CP_OPT(std::wstring) style_master_page_name_;
+    _CP_OPT(std::wstring) style_data_style_name_;
+    _CP_OPT(std::wstring) style_class_;
+    _CP_OPT(std::wstring) style_default_outline_level_;
+    _CP_OPT(std::wstring) loext_linked_style_name_;
+    _CP_OPT(odf_types::Bool) loext_primary_format_;
 
-    style_content				content_;
-    office_element_ptr_array	style_map_;
-
+    _CP_OPT(bool) style_auto_update_; // default = false
+    style_content content_;
+    office_element_ptr_array style_map_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style)
