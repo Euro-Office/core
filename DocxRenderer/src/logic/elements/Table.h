@@ -53,17 +53,35 @@ public:
 	ITableBuilder() = default;
 	~ITableBuilder() = default;
 
-	void Clear();
-	void SetShapes(std::vector<shape_ptr_t>&& shapes);
-	void SetParagraphs(std::vector<paragraph_ptr_t>&& paragraphs);
+	void Clear()
+	{
+		m_arTables.clear();
+	}
+	void SetShapes(std::vector<shape_ptr_t>&& shapes)
+	{
+		m_arShapes = std::move(shapes);
+	}
+	void SetParagraphs(std::vector<paragraph_ptr_t>&& paragraphs)
+	{
+		m_arParagaraphs = paragraphs;
+	}
 
-	std::vector<shape_ptr_t>&& ReturnShapes();
-	std::vector<paragraph_ptr_t>&& ReturnParagraphs();
-	std::vector<ooxml_item_ptr_t>&& GetTables();
+	std::vector<shape_ptr_t>&& ReturnShapes()
+	{
+		return std::move(m_arShapes);
+	}
+	std::vector<paragraph_ptr_t>&& ReturnParagraphs()
+	{
+		return std::move(m_arParagaraphs);
+	}
+	std::vector<ooxml_item_ptr_t>&& GetTables()
+	{
+		return std::move(m_arTables);
+	}
 
 public:
-	virtual void BuildGraphicallCells();
-	virtual void BuildTables();
+	virtual void BuildGraphicallCells() {};
+	virtual void BuildTables() {};
 
 private:
 	std::vector<ooxml_item_ptr_t> m_arTables;
