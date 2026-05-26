@@ -44,6 +44,7 @@ CONFIG += plugin
 CORE_ROOT_DIR = $$PWD/..
 PWD_ROOT_DIR = $$PWD
 include(../Common/base.pri)
+include(./src/logic/elements/Tables.pri)
 
 DEFINES += DOCXRENDERER_USE_DYNAMIC_LIBRARY
 
@@ -90,7 +91,6 @@ SOURCES += \
 	src/logic/elements/ContText.cpp \
 	src/logic/elements/Paragraph.cpp \
 	src/logic/elements/Shape.cpp \
-	src/logic/elements/Table.cpp \
 	src/logic/elements/TextLine.cpp \
 	src/logic/managers/FontManager.cpp \
 	src/logic/managers/FontStyleManager.cpp \
