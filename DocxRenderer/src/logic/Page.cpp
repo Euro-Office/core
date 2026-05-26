@@ -3544,8 +3544,8 @@ namespace NSDocxRenderer
 				{
 					c->m_eShading = CTable::CCell::eShading::shClear;
 					c->m_lColor = shape->m_oBrush.Color1;
+					remove_later.insert(idx);
 				}
-			remove_later.insert(idx);
 		}
 	}
 
