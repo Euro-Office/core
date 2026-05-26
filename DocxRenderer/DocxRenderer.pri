@@ -61,53 +61,53 @@ LIBS += \
 }
 
 HEADERS += \
-	src/logic/elements/BaseItem.h \
-	src/logic/elements/ContText.h \
-	src/logic/elements/Paragraph.h \
-	src/logic/elements/Shape.h \
-	src/logic/elements/Table.h \
-	src/logic/elements/TextLine.h \
-	src/logic/managers/ExternalImageStorage.h \
-	src/logic/managers/FontStyleManager.h \
-	src/logic/managers/ImageManager.h \
-	src/logic/managers/FontManager.h \
-	src/logic/managers/ParagraphStyleManager.h \
-	src/logic/styles/FontStyle.h \
-	src/logic/styles/ParagraphStyle.h \
-	src/resources/ColorTable.h \
-	src/resources/Constants.h \
-	src/resources/ImageInfo.h \
-	src/resources/LinesTable.h \
-	src/resources/VectorGraphics.h \
-	src/resources/resources.h \
-	src/resources/utils.h \
-	src/logic/Page.h \
-	src/logic/Document.h \
-	DocxRenderer.h
+	$$PWD_ROOT_DIR/src/logic/elements/BaseItem.h \
+	$$PWD_ROOT_DIR/src/logic/elements/ContText.h \
+	$$PWD_ROOT_DIR/src/logic/elements/Paragraph.h \
+	$$PWD_ROOT_DIR/src/logic/elements/Shape.h \
+	$$PWD_ROOT_DIR/src/logic/elements/Table.h \
+	$$PWD_ROOT_DIR/src/logic/elements/TextLine.h \
+	$$PWD_ROOT_DIR/src/logic/managers/ExternalImageStorage.h \
+	$$PWD_ROOT_DIR/src/logic/managers/FontStyleManager.h \
+	$$PWD_ROOT_DIR/src/logic/managers/ImageManager.h \
+	$$PWD_ROOT_DIR/src/logic/managers/FontManager.h \
+	$$PWD_ROOT_DIR/src/logic/managers/ParagraphStyleManager.h \
+	$$PWD_ROOT_DIR/src/logic/styles/FontStyle.h \
+	$$PWD_ROOT_DIR/src/logic/styles/ParagraphStyle.h \
+	$$PWD_ROOT_DIR/src/resources/ColorTable.h \
+	$$PWD_ROOT_DIR/src/resources/Constants.h \
+	$$PWD_ROOT_DIR/src/resources/ImageInfo.h \
+	$$PWD_ROOT_DIR/src/resources/LinesTable.h \
+	$$PWD_ROOT_DIR/src/resources/VectorGraphics.h \
+	$$PWD_ROOT_DIR/src/resources/resources.h \
+	$$PWD_ROOT_DIR/src/resources/utils.h \
+	$$PWD_ROOT_DIR/src/logic/Page.h \
+	$$PWD_ROOT_DIR/src/logic/Document.h \
+	$$PWD_ROOT_DIR/DocxRenderer.h
 
 SOURCES += \
-	src/logic/elements/BaseItem.cpp \
-	src/logic/elements/ContText.cpp \
-	src/logic/elements/Paragraph.cpp \
-	src/logic/elements/Shape.cpp \
-	src/logic/elements/TextLine.cpp \
-	src/logic/managers/FontManager.cpp \
-	src/logic/managers/FontStyleManager.cpp \
-	src/logic/managers/ImageManager.cpp \
-	src/logic/managers/ParagraphStyleManager.cpp \
-	src/logic/styles/FontStyle.cpp \
-	src/logic/Page.cpp \
-	src/logic/Document.cpp \
-	src/logic/styles/ParagraphStyle.cpp \
-	src/resources/VectorGraphics.cpp \
-	DocxRenderer.cpp
+	$$PWD_ROOT_DIR/src/logic/elements/BaseItem.cpp \
+	$$PWD_ROOT_DIR/src/logic/elements/ContText.cpp \
+	$$PWD_ROOT_DIR/src/logic/elements/Paragraph.cpp \
+	$$PWD_ROOT_DIR/src/logic/elements/Shape.cpp \
+	$$PWD_ROOT_DIR/src/logic/elements/TextLine.cpp \
+	$$PWD_ROOT_DIR/src/logic/managers/FontManager.cpp \
+	$$PWD_ROOT_DIR/src/logic/managers/FontStyleManager.cpp \
+	$$PWD_ROOT_DIR/src/logic/managers/ImageManager.cpp \
+	$$PWD_ROOT_DIR/src/logic/managers/ParagraphStyleManager.cpp \
+	$$PWD_ROOT_DIR/src/logic/styles/FontStyle.cpp \
+	$$PWD_ROOT_DIR/src/logic/Page.cpp \
+	$$PWD_ROOT_DIR/src/logic/Document.cpp \
+	$$PWD_ROOT_DIR/src/logic/styles/ParagraphStyle.cpp \
+	$$PWD_ROOT_DIR/src/resources/VectorGraphics.cpp \
+	$$PWD_ROOT_DIR/DocxRenderer.cpp
 
 disable_full_document_creation {
 	DEFINES += DISABLE_FULL_DOCUMENT_CREATION
 } else {
 	SOURCES += \
-		src/resources/resources.cpp
+		$$PWD_ROOT_DIR/src/resources/resources.cpp
 }
 
 DISTFILES += \
-	readme.md
+	$$PWD_ROOT_DIR/readme.md
