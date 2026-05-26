@@ -91,6 +91,7 @@ SOURCES += \
 	src/logic/elements/ContText.cpp \
 	src/logic/elements/Paragraph.cpp \
 	src/logic/elements/Shape.cpp \
+	src/logic/elements/Table.cpp \
 	src/logic/elements/TextLine.cpp \
 	src/logic/managers/FontManager.cpp \
 	src/logic/managers/FontStyleManager.cpp \

@@ -49,6 +49,7 @@ namespace NSDocxRenderer
 	    m_oManagers(oManagers), m_oContBuilder(oManagers.pFontStyleManager, oManagers.pFontSelector)
 	{
 		m_pAppFonts = pAppFonts;
+		m_oTableBuilder = NSTables::Create();
 		CShape::ResetRelativeHeight();
 	}
 
