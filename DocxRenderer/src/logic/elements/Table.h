@@ -80,8 +80,8 @@ public:
 	}
 
 public:
-	virtual void BuildGraphicallCells() {};
-	virtual void BuildTables() {};
+	virtual void BuildGraphicallCells() noexcept {};
+	virtual void BuildTables() noexcept {};
 
 private:
 	std::vector<ooxml_item_ptr_t> m_arTables;
