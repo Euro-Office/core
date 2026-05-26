@@ -557,28 +557,15 @@ public:
     office_element_ptr_array	text_notes_configuration_;
     office_element_ptr			text_bibliography_configuration_; // < TODO
 	office_element_ptr_array	text_linenumbering_configuration_;
-
 };
 CP_REGISTER_OFFICE_ELEMENT2(office_styles)
 
 //----------------------------------------------------------------------------------------------------
-class header_footer_content_common
-{
-public:
-    common_style_header_footer_attlist	common_style_header_footer_attlist_;
-    header_footer_content				header_footer_content_;
-};
-
 class header_footer_common
 {
 public:
-    header_footer_content_common & content() { return content_; }
-    const header_footer_content_common & content() const { return content_; }
-    virtual ~header_footer_common() {}
-
-private:
-    header_footer_content_common content_;
-
+    common_style_header_footer_attlist attlist_;
+    header_footer_content content_;
 };
 
 //----------------------------------------------------------------------------------------------------
@@ -594,8 +581,6 @@ public:
     virtual void add_child_element( const office_element_ptr & child);
 
 	virtual void serialize(std::wostream & strm);
-
-    header_footer_content_common content_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_header)
@@ -613,8 +598,6 @@ public:
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
-
-    header_footer_content_common content_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_footer)
@@ -633,8 +616,6 @@ public:
 
     virtual void create_child_element( const std::wstring & Ns, const std::wstring & Name);
     virtual void add_child_element( const office_element_ptr & child);
-
-    header_footer_content_common content_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_header_first)
@@ -652,8 +633,6 @@ public:
     virtual void add_child_element( const office_element_ptr & child);
 
 	virtual void serialize(std::wostream & strm);
-
-    header_footer_content_common content_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_footer_first)
@@ -671,8 +650,6 @@ public:
     virtual void add_child_element( const office_element_ptr & child);
 
 	virtual void serialize(std::wostream & strm);
-  
-	header_footer_content_common content_;
 };
 CP_REGISTER_OFFICE_ELEMENT2(style_header_left)
 
@@ -689,8 +666,6 @@ public:
     virtual void add_child_element( const office_element_ptr & child);
 
 	virtual void serialize(std::wostream & strm);
-
-	header_footer_content_common content_;
 };
 
 CP_REGISTER_OFFICE_ELEMENT2(style_footer_left)

@@ -1991,13 +1991,13 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 			if (length_cm < 0)
 			{
 				footer_min = length(-length_cm, length::cm);
-				footer.reset();
 			}
 			else //if(length_cm > 2.4)
 			{
 				bottom = footer;
-				footer = length(fabs(length_cm), length::cm);
+				footer_min = length(length_cm, length::cm);
 			}
+			footer.reset();
 		}
 		else
 		{
@@ -2005,34 +2005,20 @@ void DocxConverter::convert(OOX::Logic::CSectionProperty* oox_section_pr, bool b
 		}
 		if (top)
 		{
-			double length_cm = top->get_value_unit(length::cm);
+			double top_cm = top->get_value_unit(length::cm);
+			double header_cm = header ? header->get_value_unit(length::cm) : 0;
+			double length_cm = top_cm - header_cm;
 			
-			if (header)
+			if (length_cm < 0)
 			{
-				double header_length_cm = header->get_value_unit(length::cm);
-				//if (abs(length_cm - header_length_cm) > 0.001)
-				//	length_cm -= header_length_cm;
+				header_min = length(-length_cm, length::cm);
 			}
-
-			if (length_cm > 2.4)
+			else //if(length_cm > 2.4)
 			{
 				top = header;
-				header = length(fabs(length_cm), length::cm);
+				header_min = length(length_cm, length::cm);
 			}
-			else if (length_cm < 0)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else if (length_cm < 0.)
-			{
-				header_min = length(-length_cm, length::cm);
-				header.reset();
-			}
-			else
-			{
-				top = length(length_cm, length::cm);
-			}
+			header.reset();
 		}
 		else
 		{

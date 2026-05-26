@@ -967,11 +967,11 @@ const wchar_t * style_header::name = L"header";
 
 void style_header::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element( Ns, Name, getContext());
+    content_.create_child_element( Ns, Name, getContext());
 }
 void style_header::add_child_element( const office_element_ptr & child)
 {
-	content().header_footer_content_.add_child_element( child, getContext());
+	content_.add_child_element( child, getContext());
 }
 void style_header::serialize(std::wostream & strm)
 {
@@ -979,7 +979,7 @@ void style_header::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -989,11 +989,11 @@ const wchar_t * style_footer::name = L"footer";
 
 void style_footer::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element(Ns, Name, getContext());
+    content_.create_child_element(Ns, Name, getContext());
 }
 void style_footer::add_child_element( const office_element_ptr & child)
 {
-    content().header_footer_content_.add_child_element( child, getContext());
+    content_.add_child_element( child, getContext());
 }
 void style_footer::serialize(std::wostream & strm)
 {
@@ -1001,7 +1001,7 @@ void style_footer::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -1011,11 +1011,11 @@ const wchar_t * style_header_first::name = L"header-first";
 
 void style_header_first::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element(Ns, Name, getContext());
+    content_.create_child_element(Ns, Name, getContext());
 }
 void style_header_first::add_child_element( const office_element_ptr & child)
 {
-    content().header_footer_content_.add_child_element(child, getContext());
+    content_.add_child_element(child, getContext());
 }
 void style_header_first::serialize(std::wostream & strm)
 {
@@ -1023,7 +1023,7 @@ void style_header_first::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -1033,11 +1033,11 @@ const wchar_t * style_footer_first::name = L"footer-first";
 
 void style_footer_first::create_child_element( const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element( Ns, Name, getContext());
+    content_.create_child_element( Ns, Name, getContext());
 }
 void style_footer_first::add_child_element( const office_element_ptr & child)
 {
-    content().header_footer_content_.add_child_element( child, getContext());
+    content_.add_child_element( child, getContext());
 }
 void style_footer_first::serialize(std::wostream & strm)
 {
@@ -1045,7 +1045,7 @@ void style_footer_first::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -1055,11 +1055,11 @@ const wchar_t * style_header_left::name = L"header-left";
 
 void style_header_left::create_child_element(const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element( Ns, Name, getContext());
+    content_.create_child_element( Ns, Name, getContext());
 }
 void style_header_left::add_child_element( const office_element_ptr & child)
 {
-    content().header_footer_content_.add_child_element( child, getContext());
+    content_.add_child_element( child, getContext());
 }
 
 void style_header_left::serialize(std::wostream & strm)
@@ -1068,7 +1068,7 @@ void style_header_left::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
@@ -1078,11 +1078,11 @@ const wchar_t * style_footer_left::name = L"footer-left";
 
 void style_footer_left::create_child_element(  const std::wstring & Ns, const std::wstring & Name)
 {
-    content().header_footer_content_.create_child_element( Ns, Name, getContext());
+    content_.create_child_element( Ns, Name, getContext());
 }
 void style_footer_left::add_child_element( const office_element_ptr & child)
 {
-    content().header_footer_content_.add_child_element(child, getContext());
+    content_.add_child_element(child, getContext());
 }
 void style_footer_left::serialize(std::wostream & strm)
 {
@@ -1090,7 +1090,7 @@ void style_footer_left::serialize(std::wostream & strm)
     {
 		CP_XML_NODE_SIMPLE()
         {
-			content().header_footer_content_.serialize(CP_XML_STREAM());
+			content_.serialize(CP_XML_STREAM());
 		}
 	}
 }
