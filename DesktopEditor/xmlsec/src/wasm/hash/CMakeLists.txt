@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(engine)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
 # -------------------------------------------------
 # Ensure Emscripten toolchain
 # -------------------------------------------------
@@ -14,16 +11,6 @@ endif()
 set(CORE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../../..)
 
 include(${CORE_ROOT}/common.cmake)
-
-# -------------------------------------------------
-# Pre / Post build scripts
-# -------------------------------------------------
-set(OPENSSL_ROOT "../3rdParty")
-get_filename_component(OPENSSL_ROOT_ABS "${OPENSSL_ROOT}" ABSOLUTE)
-add_custom_target(${PROJECT_NAME}_run_before ALL
-    COMMAND bash ${OPENSSL_ROOT_ABS}/nc-build.sh "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash" "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash"
-)
-
 
 # -------------------------------------------------
 # Source files (compile_files_array)
@@ -60,7 +47,6 @@ set_source_files_properties(${SRC} PROPERTIES GENERATED TRUE)
 # Executable (WASM module)
 # -------------------------------------------------
 add_executable(${PROJECT_NAME} ${SRC} ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_run_before)
 
 # -------------------------------------------------
 # Output settings
@@ -82,8 +68,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # link libraries
 # -------------------------------------------------
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/libcrypto.a
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/libssl.a
+    ${OPENSSL_WASM_LIBCRYPTO}
+    ${OPENSSL_WASM_LIBSSL}
 )
 
 # -------------------------------------------------
@@ -123,3 +109,6 @@ target_link_options(${PROJECT_NAME} PRIVATE
     "SHELL:--post-js ${CORE_ROOT}/Common/js/desktop_fetch_new.js"
     "SHELL:--post-js ${CMAKE_CURRENT_SOURCE_DIR}/hash_base_post.js"
 )
+
+declare_victory( ${PROJECT_NAME} )
+

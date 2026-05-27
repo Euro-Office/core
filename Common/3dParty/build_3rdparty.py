@@ -20,6 +20,7 @@ subfolders = [
     'icu',
     'md',
     'openssl',
+    'openssl-hash',
     'socketio',
     'hunspell',
     'v8',
