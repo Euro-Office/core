@@ -14,7 +14,8 @@ if str( third_party_root ) not in sys.path:
     sys.path.insert( 0, str( third_party_root ) )
 import build_3rdparty_common as nc
 
-patches_dir = script_dir.parent.parent.parent / "DesktopEditor" / "xmlsec" / "src" / "wasm" / "3rdParty" / "patches"
+patches_dir_1 = script_dir.parent.parent.parent / "DesktopEditor" / "xmlsec" / "src" / "wasm" / "3rdParty" / "patches"
+patches_dir_2 = script_dir.parent.parent.parent / "DesktopEditor" / "graphics" / "pro" / "js" / "wasm" / "patches"
 
 nc.init_for_dep(
     depname = "OpenSSL-WASM",
@@ -37,8 +38,14 @@ def fetch_and_patch():
     )
 
     nc.run_command(
-        [ "git", "apply", patches_dir / "fix-wasm-openssl.patch" ],
-        "Patch OpenSSL-HASH",
+        [ "git", "apply", patches_dir_1 / "fix-wasm-openssl.patch" ],
+        "Patch OpenSSL-HASH #1",
+        nc.work_dir
+    )
+
+    nc.run_command(
+        [ "git", "apply", patches_dir_2 / "fix-wasm-openssl.patch" ],
+        "Patch OpenSSL-HASH #2",
         nc.work_dir
     )
     

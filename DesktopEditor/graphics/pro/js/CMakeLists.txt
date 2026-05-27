@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(drawingfile)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
 # -------------------------------------------------
 # Ensure Emscripten
 # -------------------------------------------------
@@ -15,37 +12,6 @@ set(CORE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../../../..)
 set(DESKTOP_ROOT ${CORE_ROOT}/DesktopEditor)
 
 include(${CORE_ROOT}/common.cmake)
-
-# -------------------------------------------------
-# Pre/Post build scripts
-# -------------------------------------------------
-set(PATCH_STAMP ${CMAKE_BINARY_DIR}/.draw_prereqs_done)
-
-add_custom_command(
-    OUTPUT ${PATCH_STAMP}
-
-    COMMAND bash ${CORE_ROOT}/Common/3dParty/icu/nc-build.sh
-            "${EO_CORE_3RD_PARTY_WORK_DIR}/icu"
-            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu"
-            74 2 1
-
-    COMMAND bash ${CORE_ROOT}/Common/3dParty/openssl/nc-build.sh
-            "${EO_CORE_3RD_PARTY_WORK_DIR}/openssl"
-            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl"
-            1
-
-    COMMAND git -C ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu apply
-            ${CMAKE_CURRENT_SOURCE_DIR}/wasm/patches/fix-wasm-icu.patch
-
-    COMMAND git -C ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl apply
-            ${CMAKE_CURRENT_SOURCE_DIR}/wasm/patches/fix-wasm-openssl.patch 
-
-    COMMAND ${CMAKE_COMMAND} -E touch ${PATCH_STAMP}
-)
-
-add_custom_target(${PROJECT_NAME}_run_before
-    DEPENDS ${PATCH_STAMP}
-)
 
 # -------------------------------------------------
 # Source files
@@ -757,81 +723,81 @@ set(SOURCES
 
     ${CORE_ROOT}/OdfFile/Common/logging.cpp
 
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ustr_wcs.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ustrtrns.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/udata.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_io.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ustring.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/umutex.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/putil.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ustr_cnv.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvmbcs.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucln_cmn.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv2022.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvbocu.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/stringpiece.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/charstr.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_ext.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uobject.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/usprep.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/unistr.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uniset_props.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/loadednormalizer2impl.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/filterednormalizer2.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/utrie2.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/normalizer2.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/normalizer2impl.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/utrie.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucase.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uniset.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ruleiter.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/parsepos.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/util.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uprops.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uvector.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/unames.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/propname.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/utrie2_builder.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/unifunct.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/bmpset.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/unisetspan.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/unifilt.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/patternprops.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ustrcase.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/bytestrie.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/utf_impl.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/cmemory.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uhash.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/udatamem.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/umapfile.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uinvchar.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uchar.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ubidi_props.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/characterproperties.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucptrie.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/edits.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/umutablecptrie.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/bytesinkutil.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/emojiprops.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/cstring.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucmndata.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_u7.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_u8.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_u16.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_u32.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_err.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_cnv.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_lmb.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_cb.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_ct.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucharstrieiterator.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvlat1.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/uvectr32.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvhz.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvscsu.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnv_bld.cpp
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common/ucnvisci.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustr_wcs.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustrtrns.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/udata.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_io.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustring.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/umutex.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/putil.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustr_cnv.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvmbcs.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucln_cmn.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv2022.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvbocu.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/stringpiece.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/charstr.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_ext.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uobject.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/usprep.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/unistr.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uniset_props.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/loadednormalizer2impl.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/filterednormalizer2.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/utrie2.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/normalizer2.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/normalizer2impl.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/utrie.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucase.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uniset.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ruleiter.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/parsepos.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/util.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uprops.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uvector.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/unames.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/propname.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/utrie2_builder.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/unifunct.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/bmpset.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/unisetspan.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/unifilt.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/patternprops.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustrcase.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/bytestrie.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/utf_impl.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/cmemory.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uhash.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/udatamem.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/umapfile.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uinvchar.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uchar.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ubidi_props.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/characterproperties.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucptrie.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/edits.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/umutablecptrie.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/bytesinkutil.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/emojiprops.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/cstring.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucmndata.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_u7.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_u8.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_u16.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_u32.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_err.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_cnv.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_lmb.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_cb.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_ct.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucharstrieiterator.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvlat1.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/uvectr32.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvhz.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvscsu.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnv_bld.cpp
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ucnvisci.cpp
 
     ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
     ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
@@ -900,7 +866,6 @@ set_source_files_properties(
 add_executable(${PROJECT_NAME} 
     ${SOURCES}
 )
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_run_before)
 
 # -------------------------------------------------
 # Include directories
@@ -916,7 +881,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11
     ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip
     ${CORE_ROOT}/OfficeUtils/src
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/icu/icu/source/common
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common
     ${DESKTOP_ROOT}/xml/libxml2/include
     ${DESKTOP_ROOT}/xml/build/qt
     ${CORE_ROOT}/PdfFile/lib/goo
@@ -925,9 +890,9 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/PdfFile/lib
     ${DESKTOP_ROOT}/raster/Jp2/openjpeg
     ${DESKTOP_ROOT}/raster/Jp2/openjpeg/openjpeg-2.4.0/src/lib/openjp2
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl/include
-    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl/include
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl
+    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash/include
+    ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash
     ${CORE_ROOT}/DocxRenderer
 )
 
@@ -1086,3 +1051,6 @@ add_custom_command(
 )
 
 add_custom_target(web_bundle ALL DEPENDS "${EO_CORE_OUTPUT_DIR}/engine/drawingfile_native.js")
+
+declare_victory( ${PROJECT_NAME} )
+

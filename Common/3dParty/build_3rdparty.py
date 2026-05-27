@@ -18,6 +18,7 @@ subfolders = [
     'html',
     'hyphen',
     'icu',
+    'icu-wasm',
     'md',
     'openssl',
     'openssl-hash',
