@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 project(zlib)
 
-set(CMAKE_CXX_STANDARD 17)
-
 # -------------------------------------------------
 # Ensure Emscripten toolchain
 # -------------------------------------------------
@@ -15,6 +13,8 @@ endif()
 # Source files (compile_files_array)
 # -------------------------------------------------
 set(CORE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
+
+include(${CORE_ROOT}/common.cmake)
 
 set(SRC
     # ---- minizip ----
@@ -497,3 +497,5 @@ add_custom_target(${PROJECT_NAME}_copy_extra_files ALL
     COMMENT "Copying extra files to output"
     VERBATIM
 )
+
+declare_victory( ${PROJECT_NAME})
