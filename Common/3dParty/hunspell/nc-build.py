@@ -34,7 +34,7 @@ def fetch_and_patch():
     try:
         shutil.copytree( nc.work_dir / "hunspell", nc.work_dir / "hunspell-wasm" )
     except Exception as e:
-        nc.abort_op( f"No TLS copy failed: {e.stderr.strip() or e.stdout.strip() or e}" )
+        nc.abort_op( f"Hunspell-wasm copy failed: {e.stderr.strip() or e.stdout.strip() or e}" )
 
     nc.run_command(
         [ "git", "apply", patches_dir / "fix-wasm-hunspell.patch" ],
