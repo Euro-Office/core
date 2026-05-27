@@ -15,11 +15,12 @@ if str( third_party_root ) not in sys.path:
     sys.path.insert( 0, str( third_party_root ) )
 import build_3rdparty_common as nc
 
-nc.work_dir = Path( sys.argv[1] )
-nc.install_dir = Path( sys.argv[2] )
-nc.force_redo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
-nc.dep_name = "ICU"
-nc.debug_mode = True
+nc.init_for_dep(
+    depname = "ICU",
+    workdir = Path( sys.argv[1] ),
+    installdir = Path( sys.argv[2] ),
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+)
 
 def fetch_and_patch():
     nc.create_workdir()
@@ -45,6 +46,11 @@ def fetch_and_patch():
         shutil.copy2( nc.work_dir / "icu2" / "LICENSE", nc.work_dir / "LICENSE" )
     except Exception as e:
         nc.abort_op( f"License copy failed: {e}" )
+
+    try:
+        shutil.rmtree( nc.work_dir / "icu2" )
+    except FileNotFoundError:
+        pass
 
     nc.create_work_dir_ok_marker()
 
