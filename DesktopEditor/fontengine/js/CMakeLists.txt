@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 project(fonts)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_C_STANDARD 11)
-
 # -------------------------------------------------
 # Must use Emscripten
 # -------------------------------------------------
@@ -17,33 +14,23 @@ set(DESKTOP_ROOT ${CORE_ROOT}/DesktopEditor)
 include(${CORE_ROOT}/common.cmake)
 
 # -------------------------------------------------
-# Pre/Post scripts
-# -------------------------------------------------
-add_custom_target(${PROJECT_NAME}_run_before ALL
-    COMMAND bash ${CORE_ROOT}/Common/3dParty/brotli/nc-fetch.sh ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli
-    COMMAND bash ${CORE_ROOT}/Common/3dParty/harfbuzz/nc-fetch.sh ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz
-    COMMAND bash ${CORE_ROOT}/Common/3dParty/hyphen/nc-fetch.sh ${EO_CORE_3RD_PARTY_WORK_DIR}/hyphen/hyphen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
-# -------------------------------------------------
 # Sources (from compile_files_array)
 # Pattern: <folder>/<file>
 # -------------------------------------------------
 
 set(SOURCES
 
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/constants.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/context.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/dictionary.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/platform.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/shared_dictionary.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/common/transform.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/constants.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/context.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/dictionary.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/platform.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/shared_dictionary.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/common/transform.c
 
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/bit_reader.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/decode.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/huffman.c
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/dec/state.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/bit_reader.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/decode.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/huffman.c
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/state.c
 
     ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
     ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
@@ -86,81 +73,81 @@ set(SOURCES
     ${DESKTOP_ROOT}/freetype-2.10.4/src/winfonts/winfnt.c
     ${DESKTOP_ROOT}/graphics/GraphicsPath.cpp
 
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-aat-layout.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-aat-map.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-blob.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-buffer-serialize.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-buffer-verify.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-buffer.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-cairo-utils.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-cairo.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-common.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-coretext.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-directwrite.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-draw.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-face-builder.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-face.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-fallback-shape.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-font.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ft.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-gdi.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-glib.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-gobject-structs.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-graphite2.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-icu.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-map.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-number.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-cff1-table.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-cff2-table.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-color.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-face.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-font.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-layout.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-map.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-math.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-meta.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-metrics.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-name.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shape-fallback.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shape-normalize.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shape.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-arabic.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-default.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-hangul.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-hebrew.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-indic-table.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-indic.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-khmer.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-myanmar.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-syllabic.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-thai.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-use.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-shaper-vowel-constraints.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-tag.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ot-var.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-outline.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-paint-extents.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-paint.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-set.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-shape-plan.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-shape.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-shaper.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-static.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-style.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-cff-common.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-cff1.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-cff2.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-input.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-instancer-solver.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-plan.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset-repacker.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-subset.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-ucd.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-unicode.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-uniscribe.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-wasm-api.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/hb-wasm-shape.cc
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src/graph/gsubgpos-context.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-layout.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-map.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-blob.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer-serialize.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer-verify.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-buffer.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-cairo-utils.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-cairo.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-common.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-coretext.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-directwrite.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-draw.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-face-builder.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-face.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-fallback-shape.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-font.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ft.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-gdi.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-glib.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-gobject-structs.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-graphite2.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-icu.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-map.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-number.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-cff1-table.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-cff2-table.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-color.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-face.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-font.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-layout.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-map.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-math.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-meta.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-metrics.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-name.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape-fallback.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape-normalize.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shape.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-arabic.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-default.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-hangul.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-hebrew.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-indic-table.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-indic.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-khmer.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-myanmar.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-syllabic.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-thai.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-use.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-shaper-vowel-constraints.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-tag.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ot-var.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-outline.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-paint-extents.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-paint.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-set.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shape-plan.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shape.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-shaper.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-static.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-style.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff-common.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff1.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-cff2.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-input.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-instancer-solver.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-plan.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset-repacker.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-subset.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-ucd.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-unicode.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-uniscribe.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-wasm-api.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-wasm-shape.cc
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/graph/gsubgpos-context.cc
 
     ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/adler32.c
     ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/crc32.c
@@ -369,7 +356,6 @@ set_source_files_properties(
 # Executable (WASM module)
 # -------------------------------------------------
 add_executable(${PROJECT_NAME} ${SOURCES})
-add_dependencies(${PROJECT_NAME} ${PROJECT_NAME}_run_before)
 
 # -------------------------------------------------
 # Include paths
@@ -379,10 +365,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype
     ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype/internal
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/harfbuzz/src
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/brotli/c/include
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hyphen/hyphen/c/include
-    ${EO_CORE_3RD_PARTY_WORK_DIR}/hyphen/
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen/hyphen/c/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${CORE_ROOT}/OfficeUtils/src
     ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11
     ${DESKTOP_ROOT}/cximage/jasper/include
@@ -526,3 +513,5 @@ add_custom_target(${PROJECT_NAME}_copy_extra_files ALL
     COMMENT "Copying extra files to output"
     VERBATIM
 )
+
+declare_victory( ${PROJECT_NAME} )
