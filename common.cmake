@@ -45,70 +45,101 @@ message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
 message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
 message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
 
-if(NOT THIRD_PARTY_PREPARED)
-    cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
-    execute_process(
-        COMMAND_ECHO STDOUT
-        COMMAND "${PYTHON_BIN}"
-        "${BUILDER_PATH}"
-        "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
-        RESULT_VARIABLE result
-    )
+if( EMSCRIPTEN )
 
-    if(result) # on error
-        message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
-    else()
-        set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+    if(NOT THIRD_PARTY_PREPARED)
+        cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
+        execute_process(
+            COMMAND_ECHO STDOUT
+            COMMAND "${PYTHON_BIN}"
+            "${BUILDER_PATH}"
+            "--only=openssl-hash"
+            "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
+            RESULT_VARIABLE result
+        )
+
+        if(result) # on error
+            message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
+        else()
+            set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+        endif()
     endif()
-endif()
 
-if(MSVC)
-    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
-    foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
-        string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-    endforeach()
-endif()
+    # Setup openssl
+    set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
+    get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
+    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libssl.a")
+    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libcrypto.a")
 
-# Setup icu
-# These version numbers don't affect what build_3rdparty.py builds. They just have to match.
-set(ICU_MAJOR_VER "74")
-set(ICU_MINOR_VER "2")
-set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
-get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
-if( MSVC )
-    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
-    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
 else()
-    set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
-    set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
-endif()
 
-# Setup boost
-set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
-get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
-set( CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
-include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
-set(Boost_USE_STATIC_LIBS ON)
-find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
+    if(NOT THIRD_PARTY_PREPARED)
+        cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
+        execute_process(
+            COMMAND_ECHO STDOUT
+            COMMAND "${PYTHON_BIN}"
+            "${BUILDER_PATH}"
+            "--except=openssl-wasm"
+            "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
+            RESULT_VARIABLE result
+        )
 
-# Setup v8
-set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
-get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
-if( MSVC )
-    set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
-else()
-    set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
-endif()
+        if(result) # on error
+            message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
+        else()
+            set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
+        endif()
+    endif()
 
-# Setup openssl
-set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
-get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
-if( MSVC )
-    set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
-    set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
-else()
-    set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
-    set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    if(MSVC)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
+        foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
+            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+        endforeach()
+    endif()
+
+    # Setup icu
+    # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+    set(ICU_MAJOR_VER "74")
+    set(ICU_MINOR_VER "2")
+    set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
+    get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+    else()
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
+    endif()
+
+    # Setup boost
+    set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
+    get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
+    set( CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
+    include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
+    set(Boost_USE_STATIC_LIBS ON)
+    find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
+
+    # Setup v8
+    set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
+    get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
+    else()
+        set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
+    endif()
+
+    # Setup openssl
+    set(OPENSSL_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl")
+    get_filename_component(OPENSSL_INSTALL_DIR_ABS "${OPENSSL_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
+    else()
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    endif()
+
 endif()
 
 # Do NOT auto-add absolute link directories to RPATH
