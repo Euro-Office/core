@@ -8,7 +8,8 @@ from pathlib import Path
 
 import build_3rdparty_common as nc
 
-sys.stdout.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8', line_buffering=True)
+sys.stderr.reconfigure(encoding='utf-8', line_buffering=True)
 
 subfolders = [
     'apple',
