@@ -172,6 +172,7 @@ def get_gn_args_file_content() -> str:
     if nc.is_linux():
         clang_path = Path(shutil.which("clang"))
         clang_dir = clang_path.parent.parent
+        use_bundled_clang = os.environ.get("V8_USE_BUNDLED_CLANG", "false").lower() == "true"
 
         gn_args=f"""
 target_os="linux"
@@ -229,13 +230,13 @@ use_gold=false
 use_lld=true
 """
 
-        if targetarch == "arm64":
-            gn_args = f"""{ gn_args }
-    cc="clang"
-    cxx="clang++"
-    clang_base_path="{ clang_dir }"
-    """
-        
+        if targetarch == "arm64" or ( not use_bundled_clang ):
+            gn_args += f"""
+clang_base_path="{clang_dir}"
+cc="clang"
+cxx="clang++"
+"""
+
         return gn_args
     
     elif nc.is_windows():
