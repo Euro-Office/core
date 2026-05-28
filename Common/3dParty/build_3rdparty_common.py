@@ -113,7 +113,7 @@ def run_command(
             abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
 
 def capture_process_output( cmd : list[str] ) -> str:
-    result = subprocess.run( [ "clang", "--version" ], capture_output = True, text = True, check = True )
+    result = subprocess.run( cmd, capture_output = True, text = True, check = True )
     return result.stdout
 
 def fix_terminal_encoding():
