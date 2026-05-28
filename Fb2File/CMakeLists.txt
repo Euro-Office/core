@@ -86,7 +86,7 @@ target_include_directories(Fb2File PRIVATE
 )
 
 if(UNIX)
-    target_compile_options(Fb2File PRIVATE -std=c99)
+    target_compile_options(Fb2File PRIVATE $<$<COMPILE_LANGUAGE:C>:-std=c99>)
 endif()
 
 # dynamic libs
