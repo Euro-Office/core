@@ -58,9 +58,13 @@ if( EMSCRIPTEN )
             "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
+            OUTPUT_VARIABLE output
+            ERROR_VARIABLE error
         )
 
         if(result) # on error
+            message(STATUS "Python script output: ${output}")
+            message(STATUS "Python script error: ${error}")
             message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
         else()
             set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
@@ -84,9 +88,13 @@ else()
             "--except=openssl-hash,icu-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
+            OUTPUT_VARIABLE output
+            ERROR_VARIABLE error
         )
 
         if(result) # on error
+            message(STATUS "Python script output: ${output}")
+            message(STATUS "Python script error: ${error}")
             message(FATAL_ERROR "Common/3dParty/build_3rdparty.py failed!")
         else()
             set(THIRD_PARTY_PREPARED TRUE CACHE INTERNAL "Third party prepared")
