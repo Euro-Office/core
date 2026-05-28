@@ -14,7 +14,7 @@ import build_3rdparty_common as nc
 
 nc.init_for_dep(
     depname = "Hyphen",
-    workdir = Path( sys.argv[2] ),
+    workdir = Path( sys.argv[2] ), # Work dir is intentionally the same as install dir
     installdir = Path( sys.argv[2] ),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
 )
