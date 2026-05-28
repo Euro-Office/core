@@ -60,6 +60,11 @@ def build_and_install():
         nc.abort_op( "Tool not found: emmake - Emsdk is probably not activated" )
     
     if nc.is_linux():
+        # Set compiler flags to handle OpenSSL 1.1.1f compatibility with newer Emscripten
+        env = os.environ.copy()
+        env["CFLAGS"] = "-Wno-implicit-int -Wno-error=implicit-int -Wno-deprecated-declarations"
+        env["CXXFLAGS"] = "-Wno-implicit-int -Wno-error=implicit-int -Wno-deprecated-declarations"
+
         nc.run_command(
             [   "emconfigure",
                 "./config",
@@ -72,7 +77,8 @@ def build_and_install():
                 f"--openssldir={nc.install_dir}",
             ],
             "Configure",
-            nc.work_dir
+            nc.work_dir,
+            env = env
         )
 
         # Fiddle with the makefile
@@ -98,7 +104,8 @@ def build_and_install():
                 "libssl.a",
             ],
             "Build",
-            nc.work_dir
+            nc.work_dir,
+            env = env
         )
 
         nc.run_command(
