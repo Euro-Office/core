@@ -32,6 +32,22 @@ jobs:
           ref: main
           path: sdkjs/
 
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            python3 \
+            python3-dev \
+            build-essential \
+            git \
+            curl \
+            wget \
+            pkg-config \
+            libssl-dev \
+            autoconf \
+            automake \
+            libtool
+
       - name: Verify Emscripten
         run: emcc -v
 
