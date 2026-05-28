@@ -18,7 +18,7 @@ patches_dir_1 = script_dir.parent.parent.parent / "DesktopEditor" / "xmlsec" / "
 patches_dir_2 = script_dir.parent.parent.parent / "DesktopEditor" / "graphics" / "pro" / "js" / "wasm" / "patches"
 
 nc.init_for_dep(
-    depname = "OpenSSL-WASM",
+    depname = "OpenSSL-HASH",
     workdir = Path( sys.argv[1] ),
     installdir = Path( sys.argv[2] ),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
