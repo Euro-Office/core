@@ -16,7 +16,7 @@ jobs:
   build-wasm:
     runs-on: [ubuntu-latest, self-hosted]
     container:
-        image: emscripten/emsdk:latest
+        image: emscripten/emsdk:5.0.4
 
     steps:
       - name: Checkout repository

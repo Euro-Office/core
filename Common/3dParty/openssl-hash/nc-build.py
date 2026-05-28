@@ -72,6 +72,7 @@ def build_and_install():
                 "no-asm",
                 "no-threads",
                 "no-dso",
+                "no-deprecated",
                 "enable-md2",
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
