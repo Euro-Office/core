@@ -17,8 +17,8 @@ import build_3rdparty_common as nc
 
 nc.init_for_dep(
     depname = "V8",
-    workdir = Path( sys.argv[1] ),
-    installdir = Path( sys.argv[2] ),
+    workdir = Path( sys.argv[1] ).resolve(),
+    installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
 )
 

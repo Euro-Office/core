@@ -122,8 +122,8 @@ if last_consumed_arg_idx >= argc - 2:
 
 
 
-work_dir = Path( sys.argv[ argc - 2 ] )
-install_dir = Path( sys.argv[ argc - 1 ] )
+work_dir = Path( sys.argv[ argc - 2 ] ).resolve()
+install_dir = Path( sys.argv[ argc - 1 ] ).resolve()
 
 if sys.platform == "win32" and shutil.which( "nmake" ) is None:
     raise RuntimeError(

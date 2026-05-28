@@ -39,10 +39,6 @@ if( NOT DEFINED VCPKG_BINARY_REMOTE )
     set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
 
-# if( NOT DEFINED PYTHON_BIN )
-#     set(PYTHON_BIN "python" CACHE FILEPATH "Python binary to use.")
-# endif()
-
 if( NOT DEFINED PYTHON_BIN )
     find_package(Python3 REQUIRED)
     set(PYTHON_BIN "${Python3_EXECUTABLE}" CACHE FILEPATH "Python binary to use.")

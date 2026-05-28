@@ -19,8 +19,8 @@ patches_dir_2 = script_dir.parent.parent.parent / "DesktopEditor" / "graphics" /
 
 nc.init_for_dep(
     depname = "OpenSSL-HASH",
-    workdir = Path( sys.argv[1] ),
-    installdir = Path( sys.argv[2] ),
+    workdir = Path( sys.argv[1] ).resolve(),
+    installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
 )
 
