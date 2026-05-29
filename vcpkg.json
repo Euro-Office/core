@@ -2,20 +2,8 @@
   "name": "euro-office",
   "version": "1.0.0",
   "dependencies": [
-    "hunspell",
-    "boost",
-    "v8",
-    "harfbuzz"
+    "hunspell"
   ],
-  "features": {
-    "desktop-editors": {
-      "description": "Dependencies only needed by Desktop Editors",
-      "dependencies": [
-        "cef",
-        "qt"
-      ]
-    }
-  },
   "overrides": [
     { "name": "hunspell", "version": "1.7.2" }
   ]

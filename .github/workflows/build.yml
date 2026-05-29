@@ -73,9 +73,12 @@ jobs:
 
         echo "clang and clang-13 are both v13"
 
+    - name: Set up vcpkg
+      uses: lukka/run-vcpkg@v11
+
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
-        cmake -GNinja -S . -B build
+        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=.
 
     - name: Build core (x2t, docbuilder, etc.)
       run: |

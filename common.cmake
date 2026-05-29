@@ -44,6 +44,10 @@ if( NOT DEFINED PYTHON_BIN )
     set(PYTHON_BIN "${Python3_EXECUTABLE}" CACHE FILEPATH "Python binary to use.")
 endif()
 
+if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
+
 message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
 message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
 message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
@@ -343,7 +347,7 @@ function(copy_icu_libs artifact)
     else()
         add_custom_command(TARGET ${artifact} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-            COMMAND /bin/sh -c "cp -P --update=none \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
             COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
         )
     endif()

@@ -36,6 +36,7 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E remove ${EO_CORE_OUTPUT_DIR}/$<TARGET_FILE_NAME:CMapSerialize>
     DEPENDS CMapSerialize
     COMMENT "Executing CMapSerialize to create ${ARTIFACT_FILE}"
+    WORKING_DIRECTORY "${EO_CORE_OUTPUT_DIR}"
     VERBATIM
 )
 
