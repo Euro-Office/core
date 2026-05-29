@@ -147,7 +147,7 @@ total_time = nc.MeasurementObj( "Total" )
 for subfolder in subfolders:
     force_redo = subfolder in force_redo_subfolders
     print(  "---------------------------------------------------------------------------" )
-    print( f"Working on {subfolder}{ " (redo forced)" if force_redo else "" }..." )
+    print( f"Working on {subfolder}{ ' (redo forced)' if force_redo else '' }..." )
     sub_script = Path( script_dir / subfolder / "nc-build.py" )
     if sub_script.exists():
         try:

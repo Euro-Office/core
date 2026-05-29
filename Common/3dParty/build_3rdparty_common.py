@@ -127,7 +127,10 @@ def shallow_checkout( repo_dir : Path, repo_url : str, commit : str ):
             os.chmod(path, stat.S_IWRITE)
             func(path)
         try:
-            shutil.rmtree( repo_dir, onexc=onerror )
+            if sys.version_info >= (3, 12):
+                shutil.rmtree( repo_dir, onexc=onerror )
+            else:
+                shutil.rmtree( repo_dir, onerror=onerror )
         except FileNotFoundError:
             pass
 
