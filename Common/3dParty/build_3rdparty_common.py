@@ -29,7 +29,7 @@ def init_for_dep(
     log_cleared = False
     
 def abort_op( message : str, keep_work : bool = False, error_is_fatal : bool = True ):
-    print( f"Aboring {dep_name}: {message}", file = sys.stderr )
+    print( f"Aborting {dep_name}: {message}", file = sys.stderr )
     if error_is_fatal:
         if not debug_mode:
             try:

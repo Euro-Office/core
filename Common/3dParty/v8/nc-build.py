@@ -50,11 +50,11 @@ def apply_patches():
         if patch[ "dir" ].is_dir():
             nc.run_command(
                 [ "git", "apply", patches_dir / patch[ "name" ] ],
-                f"Applying patch: { patch[ "name" ] }",
+                f"Applying patch: { patch[ 'name' ] }",
                 patch[ "dir" ]
             )
         else:
-            print( f"[WARNING] cannot apply patch ({ patch[ "name" ] }) because dir doesn't exist!" )
+            print( f"[WARNING] cannot apply patch ({ patch[ 'name' ] }) because dir doesn't exist!" )
 
     if nc.is_windows():
         nc.run_command(

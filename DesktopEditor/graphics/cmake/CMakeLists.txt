@@ -655,7 +655,7 @@ add_library(graphics SHARED
     ${FONT_ENGINE_SOURCES_DIR}/FontsAssistant.h
     ${FONT_ENGINE_SOURCES_DIR}/FontsAssistant.cpp
 
-    # harfbuzz.pri_ABS
+    # harfbuzz.pri
     ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-layout.cc
     ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-aat-map.cc
     ${HARFBUZZ_INSTALL_DIR_ABS}/src/hb-blob.cc

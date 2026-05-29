@@ -137,9 +137,9 @@ else()
     set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
     get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)
     if( MSVC )
-        set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
+        set(V8_MONOLITH "${V8_INSTALL_DIR_ABS}/v8_monolith.lib")
     else()
-        set(V8_MONILITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
+        set(V8_MONOLITH "${V8_INSTALL_DIR_ABS}/libv8_monolith.a")
     endif()
 
     # Setup openssl

@@ -44,7 +44,7 @@ if(NOT TARGET CryptoPPLib)
 endif()
 
 # Note:
-# This need brotli and freetype, but thos are already included in
+# This needs brotli and freetype, but thos are already included in
 # graphics, so I'll just take the include paths and defines.
 
 add_library(PdfFile SHARED
@@ -496,27 +496,15 @@ if(ANDROID)
     )
 endif()
 
-# if(WIN32)
-#     target_compile_options(PdfFile PRIVATE
-#         -UUNICODE
-#         -U_UNICODE
-#     )
-# endif()
-
 target_link_libraries(PdfFile PUBLIC
     CryptoPPLib
     graphics
     kernel
     UnicodeConverter
     kernel_network
-
-    # gdi32 # Windows
-    # advapi32 # Windows
-    # user32 # Windows
-    # shell32 # Windows
-    # Ole32 # Windows
 )
 
 copy_artifacts_to_folder("PdfFile" "${EO_CORE_OUTPUT_DIR}")
 
 declare_victory( PdfFile )
+
