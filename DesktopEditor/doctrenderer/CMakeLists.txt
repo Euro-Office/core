@@ -276,7 +276,7 @@ target_link_libraries(doctrenderer INTERFACE
 target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_LIBSSL}
     ${OPENSSL_LIBCRYPTO}
-    ${V8_MONILITH}
+    ${V8_MONOLITH}
 )
 
 target_link_libraries(doctrenderer PUBLIC
