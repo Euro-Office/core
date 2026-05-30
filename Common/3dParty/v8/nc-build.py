@@ -535,15 +535,23 @@ Cflags: -I${includedir}
     
     print( "Build and install completed" )
 
-check_prequisites()
+def build_all():
+    # Everything required to produce the install dir locally. ensure_dep() only
+    # calls this when the install dir is neither present locally nor on the
+    # remote, so prerequisites and the large, host-specific work-dir fetch are
+    # skipped entirely on a cache hit (a download-only machine needs no compiler).
+    check_prequisites()
 
-if not nc.work_dir_looks_ok():
-    fetch_and_patch()
+    if not nc.work_dir_looks_ok():
+        fetch_and_patch()
 
-if not nc.install_dir_looks_ok():
-    if nc.is_windows() and shutil.which("nmake") is None:
+    if nc.is_windows() and shutil.which( "nmake" ) is None:
         raise RuntimeError(
             "MSVC environment is not set up: 'nmake' not found in PATH.\n"
             "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
         )
-    build_and_install()
+
+    build_and_install()   # ends by creating the install-dir ok-marker
+
+
+nc.ensure_dep( build_all )

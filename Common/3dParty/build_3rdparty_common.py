@@ -4,6 +4,8 @@ import stat
 import subprocess
 import os
 import time
+import platform
+import tempfile
 from pathlib import Path
 
 dep_name = None
@@ -179,3 +181,138 @@ class MeasurementObj:
         end = time.perf_counter()
         elapsed = end - self.start
         return f"{elapsed:.6f} second(s)"
+
+
+# ===========================================================================
+# Remote cache (Nextcloud WebDAV)
+#
+# One entry point: ensure_dep(build_fn). Call it from every nc-build.py instead
+# of the manual `if not install_dir_looks_ok(): build_fn()` check. It will:
+#   0. skip if the install dir already looks ok locally
+#   1. else download + extract a prebuilt archive from the remote, if present
+#   2. else run build_fn() (which must end by creating the ok-marker) and then
+#      archive the install dir and upload it for next time
+#
+# It relies on the module state that init_for_dep() already sets:
+#   - install_dir              (the resolved install dir; confirmed used elsewhere)
+#   - install_dir_looks_ok()   (the ok-marker check)
+#   - the force-redo flag       (read defensively below)
+#
+# Credentials come from the environment so nothing is committed:
+#   NEXTCLOUD_USER, NEXTCLOUD_PASS.   'curl' must be on PATH when they are set.
+# If either is empty the remote cache is disabled and ensure_dep behaves like
+# the old manual check (build locally only).
+# ===========================================================================
+
+NEXTCLOUD_USER   = os.environ.get( "NEXTCLOUD_USER", "" )
+NEXTCLOUD_PASS   = os.environ.get( "NEXTCLOUD_PASS", "" )
+NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
+BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
+# Keep OS/arch builds apart on the remote, e.g. "linux-x86_64", "win32-AMD64".
+PLATFORM_TAG     = f"{ sys.platform }-{ platform.machine() }"
+USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
+
+
+def _force_redo_flag():
+    # init_for_dep() stores the forceredo flag in a module global; accept a few
+    # likely names so this works without knowing the exact one.
+    g = globals()
+    for nm in ( "force_redo", "forceredo", "_force_redo" ):
+        if nm in g:
+            return bool( g[ nm ] )
+    return False
+
+
+def _cache_key():
+    # Folder name of the install dir, e.g. "harfbuzz". Stable across runs and
+    # independent of the (sometimes capitalised) depname.
+    return install_dir.name
+
+
+def _remote_file_url():
+    key = _cache_key()
+    return ( f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }/{ BASE_REMOTE_PATH }"
+             f"/{ PLATFORM_TAG }/{ key }/{ key }.tar.bz2" )
+
+
+def _curl( *args ):
+    return subprocess.run(
+        [ "curl", "-s", "-u", f"{ NEXTCLOUD_USER }:{ NEXTCLOUD_PASS }", *args ],
+        text=True, capture_output=True,
+    )
+
+
+def _remote_exists():
+    # HEAD request: True only on a 2xx status code.
+    r = _curl( "-o", os.devnull, "-w", "%{http_code}", "--head", _remote_file_url() )
+    return r.stdout.strip().startswith( "2" )
+
+
+def _remote_download_and_extract():
+    with tempfile.TemporaryDirectory() as tmp:
+        archive = str( Path( tmp ) / "dep.tar.bz2" )
+        if _curl( "-f", "-o", archive, _remote_file_url() ).returncode != 0:
+            return False
+        if install_dir.exists():
+            shutil.rmtree( install_dir )
+        install_dir.mkdir( parents=True, exist_ok=True )
+        shutil.unpack_archive( archive, str( install_dir ) )
+        return True
+
+
+def _remote_upload():
+    with tempfile.TemporaryDirectory() as tmp:
+        # Archive into a temp dir so the .tar.bz2 is never inside install_dir
+        # (important since work dir and install dir can be the same path).
+        archive = shutil.make_archive( str( Path( tmp ) / _cache_key() ),
+                                       "bztar", root_dir=str( install_dir ) )
+        base = f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }"
+        key  = _cache_key()
+        # WebDAV does not create intermediate collections, so MKCOL each level
+        # (MKCOL on an existing collection just 405s, which we ignore).
+        for part in ( BASE_REMOTE_PATH,
+                      f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }",
+                      f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }/{ key }" ):
+            _curl( "-X", "MKCOL", f"{ base }/{ part }" )
+        _curl( "-X", "DELETE", _remote_file_url() )
+        return _curl( "-f", "-T", archive, _remote_file_url() ).returncode == 0
+
+
+def ensure_dep( build_fn, forceredo=None ):
+    """
+    Drop-in replacement for `if not install_dir_looks_ok(): build_fn()`.
+
+    Call once per dependency, after init_for_dep(). `build_fn` must create the
+    ok-marker (e.g. via create_install_dir_ok_marker()) when it finishes -- the
+    marker is what makes the dep count as "done" both locally and inside the
+    uploaded archive.
+    """
+    force_redo = _force_redo_flag() if forceredo is None else bool( forceredo )
+    name = _cache_key()
+
+    # 0. Already built locally. install_dir_looks_ok() already returns False on
+    #    a forced redo, so this correctly does NOT skip in that case.
+    if install_dir_looks_ok():
+        print( f"  \u2705 { name } already present locally, skipping" )
+        return
+
+    # 1. Prebuilt archive on the remote (skipped on a forced redo so we rebuild
+    #    and refresh the remote instead of pulling a stale copy).
+    if USE_REMOTE_CACHE and not force_redo and _remote_exists():
+        print( f"  \u2b07\ufe0f  Found { name } on remote, downloading..." )
+        if _remote_download_and_extract() and install_dir_looks_ok():
+            print( f"  \u2705 { name } fetched from remote" )
+            return
+        print( "  \u26a0\ufe0f  Remote copy missing/incomplete, building locally." )
+
+    # 2. Build locally, then archive + upload for next time.
+    build_fn()
+    if not install_dir_looks_ok():
+        print( f"  \u26a0\ufe0f  { name }: build finished but no ok-marker was created" )
+        return
+    if USE_REMOTE_CACHE:
+        print( f"  \u2b06\ufe0f  Uploading { name } to remote..." )
+        if _remote_upload():
+            print( f"  \u2705 { name } uploaded" )
+        else:
+            print( f"  \u26a0\ufe0f  Upload of { name } failed" )

@@ -20,22 +20,22 @@ nc.init_for_dep(
 )
 
 def fetch_and_patch():
-    nc.create_install_dir()
+    nc.create_workdir()
 
     nc.run_command(
-        [ "git", "clone", "https://github.com/mity/md4c.git", nc.install_dir ],
+        [ "git", "clone", "https://github.com/mity/md4c.git", nc.work_dir ],
         "Git clone",
     )
 
     nc.run_command(
         [ "git", "checkout", "481fbfbdf72daab2912380d62bb5f2187d438408" ],
         "Checkout commit",
-        nc.install_dir
+        nc.work_dir
     )
 
-    nc.create_install_dir_ok_marker()
+    nc.create_work_dir_ok_marker()
 
     print( "Fetch & patch completed" )
 
-if not nc.install_dir_looks_ok():
+if not nc.work_dir_looks_ok():
     fetch_and_patch()

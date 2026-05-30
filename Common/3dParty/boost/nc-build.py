@@ -115,13 +115,16 @@ option.set keep-going : false ;
     
     print( "Build and install completed" )
 
-if not nc.work_dir_looks_ok():
-    fetch_and_patch()
+def build_all():
+    if not nc.work_dir_looks_ok():
+        fetch_and_patch()
 
-if not nc.install_dir_looks_ok():
-    if nc.is_windows() and shutil.which("nmake") is None:
-        raise RuntimeError(
-            "MSVC environment is not set up: 'nmake' not found in PATH.\n"
-            "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
-        )
-    build_and_install()
+    if not nc.install_dir_looks_ok():
+        if nc.is_windows() and shutil.which("nmake") is None:
+            raise RuntimeError(
+                "MSVC environment is not set up: 'nmake' not found in PATH.\n"
+                "Run 'vcvarsx86_amd64.bat' or use 'x64 Native Tools Command Prompt'."
+            )
+        build_and_install()
+
+nc.ensure_dep( build_all )

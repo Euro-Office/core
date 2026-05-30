@@ -110,8 +110,11 @@ def build_and_install():
     nc.fix_terminal_encoding()
     print( "Build and install completed" )
 
-if not nc.work_dir_looks_ok():
-    fetch_and_patch()
+def build_all():
+    if not nc.work_dir_looks_ok():
+        fetch_and_patch()
 
-if not nc.install_dir_looks_ok():
-    build_and_install()
+    if not nc.install_dir_looks_ok():
+        build_and_install()
+
+nc.ensure_dep( build_all )
