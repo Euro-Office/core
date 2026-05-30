@@ -20,16 +20,16 @@ nc.init_for_dep(
 )
 
 def fetch_and_patch():
-    nc.create_install_dir()
+    nc.create_workdir()
 
     nc.run_command(
-        [ "git", "clone", "https://github.com/hunspell/hyphen", nc.install_dir ],
+        [ "git", "clone", "https://github.com/hunspell/hyphen", nc.work_dir ],
         "Git clone",
     )
 
-    nc.create_install_dir_ok_marker()
+    nc.create_work_dir_ok_marker()
 
     print( "Fetch & patch completed" )
 
-if not nc.install_dir_looks_ok():
+if not nc.work_dir_looks_ok():
     fetch_and_patch()

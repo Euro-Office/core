@@ -21,7 +21,7 @@ nc.init_for_dep(
 )
 
 def fetch_and_patch():
-    nc.create_install_dir()
+    nc.create_workdir()
 
     repos = [
         { "name": "glm", "url": "https://github.com/g-truc/glm.git", "commit": "33b4a621a697a305bc3a7610d290677b96beb181" },
@@ -31,29 +31,29 @@ def fetch_and_patch():
         { "name": "libetonyek", "url": "https://github.com/LibreOffice/libetonyek.git", "commit": "cb396b4a9453a457469b62a740d8fb933c9442c3" },
     ]
     for repo in repos:
-        nc.shallow_checkout( nc.install_dir / repo[ "name" ], repo[ "url" ], repo[ "commit" ] )
+        nc.shallow_checkout( nc.work_dir / repo[ "name" ], repo[ "url" ], repo[ "commit" ] )
 
     nc.run_command(
         [ "git", "apply", patches_dir / "mdds.patch" ],
         "Patching mdds",
-        nc.install_dir / "mdds"
+        nc.work_dir / "mdds"
     )
 
     nc.run_command(
         [ "git", "apply", patches_dir / "librevenge.patch" ],
         "Patching librevenge",
-        nc.install_dir / "librevenge"
+        nc.work_dir / "librevenge"
     )
 
     nc.run_command(
         [ "git", "apply", patches_dir / "libetonyek.patch" ],
         "Patching libetonyek",
-        nc.install_dir / "libetonyek"
+        nc.work_dir / "libetonyek"
     )
 
-    nc.create_install_dir_ok_marker()
+    nc.create_work_dir_ok_marker()
 
     print( "Fetch & patch completed" )
 
-if not nc.install_dir_looks_ok():
+if not nc.work_dir_looks_ok():
     fetch_and_patch()

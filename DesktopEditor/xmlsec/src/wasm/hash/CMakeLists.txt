@@ -62,6 +62,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${EO_CORE_3RD_PARTY_WORK_DIR}/openssl-hash/include
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash/include
 )
 
 # -------------------------------------------------

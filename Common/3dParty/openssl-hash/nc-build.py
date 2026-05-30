@@ -129,5 +129,9 @@ if nc.is_windows():
 if not nc.work_dir_looks_ok():
     fetch_and_patch()
 
-if not nc.install_dir_looks_ok():
-    build_and_install()
+def build_all():
+
+    if not nc.install_dir_looks_ok():
+        build_and_install()
+
+nc.ensure_dep( build_all )
