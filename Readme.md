@@ -22,4 +22,4 @@ in the cmake command of the core or desktop build.
 
 ## License
 
-Core is released under a GNU AGPL v3.0 license. See the LICENSE file for more information.
+Core is released under the GNU AGPL v3.0 license. See the LICENSE file for more information.
