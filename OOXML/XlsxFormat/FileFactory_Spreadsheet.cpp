@@ -54,6 +54,7 @@
 #include "Timelines/Timeline.h"
 #include "RichData/RdRichData.h"
 #include "Workbook/Metadata.h"
+#include "Workbook/FeaturePropertyBag.h"
 
 #include "Table/Table.h"
 #include "Table/QueryTable.h"
@@ -183,6 +184,8 @@ namespace OOX
 				return smart_ptr<OOX::File>(new CTimelineCacheFile(pMain, oRootPath, oFileName));
 			else if (oRelation.Type() == FileTypes::Metadata)
 				return smart_ptr<OOX::File>(new CMetadataFile(pMain, oRootPath, oFileName));
+			else if (oRelation.Type() == FileTypes::FeaturePropertyBag)
+				return smart_ptr<OOX::File>(new CFeaturePropertyBagFile(pMain, oRootPath, oFileName));
 			else if (oRelation.Type() == FileTypes::RdRichValueStructure)
 				return smart_ptr<OOX::File>(new CRdRichValueStructureFile(pMain, oRootPath, oFileName));
 			else if (oRelation.Type() == FileTypes::RdRichValue)
@@ -325,6 +328,8 @@ namespace OOX
 				return smart_ptr<OOX::File>(new CTimelineCacheFile(pMain, oRootPath, oFileName));
 			else if (pRelation->Type() == FileTypes::Metadata)
 				return smart_ptr<OOX::File>(new CMetadataFile(pMain, oRootPath, oFileName));
+			else if (pRelation->Type() == FileTypes::FeaturePropertyBag)
+				return smart_ptr<OOX::File>(new CFeaturePropertyBagFile(pMain, oRootPath, oFileName));
 			else if (pRelation->Type() == FileTypes::RdRichValueStructure)
 				return smart_ptr<OOX::File>(new CRdRichValueStructureFile(pMain, oRootPath, oFileName));
 			else if (pRelation->Type() == FileTypes::RdRichValue)
