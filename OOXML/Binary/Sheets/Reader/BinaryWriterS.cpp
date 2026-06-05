@@ -65,6 +65,7 @@
 #include "../../../XlsxFormat/Styles/TableStyles.h"
 #include "../../../XlsxFormat/Timelines/Timeline.h"
 #include "../../../XlsxFormat/Workbook/Metadata.h"
+#include "../../../XlsxFormat/Workbook/FeaturePropertyBag.h"
 #include "../../../XlsxFormat/Table/Table.h"
 #include "../../../XlsxFormat/Workbook/CustomsXml.h"
 #include "../../../XlsxFormat/RichData/RdRichData.h"
@@ -1445,6 +1446,13 @@ void BinaryStyleTableWriter::WriteXfs(const OOX::Spreadsheet::CXfs& xfs)
 		m_oBcw.m_oStream.WriteBYTE(c_oSerXfsTypes::PivotButton);
 		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Byte);
 		m_oBcw.m_oStream.WriteBOOL(xfs.m_oPivotButton->ToBool());
+	}
+	//CellControl (checkbox)
+	if (false != xfs.m_oCellControl.IsInit())
+	{
+		m_oBcw.m_oStream.WriteBYTE(c_oSerXfsTypes::CellControl);
+		m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Byte);
+		m_oBcw.m_oStream.WriteBOOL(*xfs.m_oCellControl);
 	}
 	//XfId
 	if (false != xfs.m_oXfId.IsInit())
@@ -9336,6 +9344,33 @@ void BinaryFileWriter::WriteContent(OOX::Document *pDocument, NSFontCutter::CEmb
 //Styles
 	if(pStyles)
 	{
+		if (pWorkbook)
+		{
+			//resolve xf checkbox controls via the workbook featurePropertyBag part
+			smart_ptr<OOX::File> pFile = pWorkbook->Find(OOX::Spreadsheet::FileTypes::FeaturePropertyBag);
+			OOX::Spreadsheet::CFeaturePropertyBagFile* pBagFile = dynamic_cast<OOX::Spreadsheet::CFeaturePropertyBagFile*>(pFile.GetPointer());
+			if (pBagFile)
+			{
+				if (pStyles->m_oCellXfs.IsInit())
+				{
+					for (size_t i = 0; i < pStyles->m_oCellXfs->m_arrItems.size(); ++i)
+					{
+						OOX::Spreadsheet::CXfs* pXfs = pStyles->m_oCellXfs->m_arrItems[i];
+						if ((pXfs) && (pXfs->m_oXfComplementIndex.IsInit()))
+							pXfs->m_oCellControl = pBagFile->IsCheckboxComplement(*pXfs->m_oXfComplementIndex);
+					}
+				}
+				if (pStyles->m_oCellStyleXfs.IsInit())
+				{
+					for (size_t i = 0; i < pStyles->m_oCellStyleXfs->m_arrItems.size(); ++i)
+					{
+						OOX::Spreadsheet::CXfs* pXfs = pStyles->m_oCellStyleXfs->m_arrItems[i];
+						if ((pXfs) && (pXfs->m_oXfComplementIndex.IsInit()))
+							pXfs->m_oCellControl = pBagFile->IsCheckboxComplement(*pXfs->m_oXfComplementIndex);
+					}
+				}
+			}
+		}
 		nCurPos = WriteTableStart(c_oSerTableTypes::Styles);
 		BinaryStyleTableWriter oBinaryStyleTableWriter(m_oBcw->m_oStream, pEmbeddedFontsManager);
 		oBinaryStyleTableWriter.Write(*pStyles, pXlsx ? pXlsx->GetTheme() : NULL, m_oFontProcessor);

@@ -187,6 +187,7 @@ SOURCES += \
 	../../../XlsxFormat/Drawing/Pos.cpp \
 	../../../XlsxFormat/ExternalLinks/ExternalLinkPath.cpp \
 	../../../XlsxFormat/ExternalLinks/ExternalLinks.cpp \
+        ../../../XlsxFormat/Workbook/FeaturePropertyBag.cpp \
         ../../../XlsxFormat/Workbook/Metadata.cpp \
         ../../../XlsxFormat/RichData/RdRichData.cpp \
         ../../../XlsxFormat/Ole/OleObjects.cpp \
@@ -393,6 +394,7 @@ HEADERS += \
 	../../../XlsxFormat/Slicer/SlicerCacheExt.h \
 	../../../XlsxFormat/Slicer/Slicer.h \
 	../../../XlsxFormat/NamedSheetViews/NamedSheetViews.h \
+        ../../../XlsxFormat/Workbook/FeaturePropertyBag.h \
         ../../../XlsxFormat/Workbook/Metadata.h \
         ../../../XlsxFormat/RichData/RdRichValue.h \
         ../../../VsdxFormat/Vsdx.h \

@@ -168,6 +168,7 @@ add_library(DocxFormatLib STATIC
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/CustomsXml.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/DefinedNames.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/ExternalReferences.cpp
+    ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/FeaturePropertyBag.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Metadata.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Sheets.cpp
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Workbook.cpp
@@ -359,6 +360,7 @@ add_library(DocxFormatLib STATIC
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/CustomsXml.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/DefinedNames.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/ExternalReferences.h
+    ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/FeaturePropertyBag.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Metadata.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Sheets.h
     ${OOXML_ROOT_DIR}/XlsxFormat/Workbook/Workbook.h
