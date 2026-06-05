@@ -137,7 +137,8 @@ namespace BinXlsxRW
 		QuotePrefix = 11,
 		XfId = 12,
 		Aligment = 13,
-		Protection = 14
+		Protection = 14,
+		CellControl = 15
 	};}
 	namespace c_oSerProtectionTypes {enum c_oSerProtectionTypes
 	{
