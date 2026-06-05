@@ -585,6 +585,15 @@ void _xlsx_drawing::serialize_vml(std::wostream & strm)
 						CP_XML_STREAM() << fmla;
 					}
 				}
+				if (sub_type == OBJ_CheckBox)
+				{
+					_CP_OPT(bool) bChecked;
+					GetProperty(additional, L"checkbox_state", bChecked);
+					if (bChecked && *bChecked)
+					{
+						CP_XML_NODE(L"x:Checked");
+					}
+				}
 				GetProperty(additional, L"cell_range", sVal);
 				if (sVal)
 				{
