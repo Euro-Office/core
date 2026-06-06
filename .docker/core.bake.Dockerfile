@@ -26,7 +26,6 @@ FROM ubuntu:22.04 AS vcpkg-base
         pkg-config \
         cmake \
         ninja-build \
-        mono-devel \
         && rm -rf /var/lib/apt/lists/*
 
     # Install vcpkg
@@ -39,31 +38,20 @@ FROM ubuntu:22.04 AS vcpkg-base
     ENV VCPKG_ROOT=/opt/vcpkg
     ENV PATH="${VCPKG_ROOT}:${PATH}"
 
-    ENV VCPKG_BINARY_SOURCES="clear;nuget,NuGetCache,readwrite;nugettimeout,3600"
+    ENV VCPKG_BINARY_SOURCES="clear;files,/nuget-cache,readwrite"
 
 
 FROM vcpkg-base AS vcpkg-local
 
-    RUN vcpkg fetch nuget && \
-        mkdir /nuget-cache && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "/nuget-cache" \
-            -Name "NuGetCache"
+    RUN mkdir -p /nuget-cache
 
 
 FROM vcpkg-base AS vcpkg-remote
 
     ARG NUGET_REMOTE_URL
-    ARG NUGET_USERNAME
-    ARG NUGET_PASSWORD
 
-    RUN vcpkg fetch nuget && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "${NUGET_REMOTE_URL}" \
-            -Name "NuGetCache" \
-            -Username "${NUGET_USERNAME}" \
-            -Password "${NUGET_PASSWORD}" \
-            -StorePasswordInClearText
+    RUN mkdir -p /nuget-cache
+    # Remote file cache: mount or pre-populate /nuget-cache from ${NUGET_REMOTE_URL} as needed
 
 
 
