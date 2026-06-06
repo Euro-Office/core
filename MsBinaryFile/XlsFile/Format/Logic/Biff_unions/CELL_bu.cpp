@@ -33,7 +33,7 @@
 #include "../Biff_records/BoolErr.h"
 #include "../Biff_records/Number.h"
 #include "../Biff_records/LabelSst.h"
-#include "../Biff_records/Label.h" // глючный файл SchetPrintForm.xls
+#include "../Biff_records/Label.h" // corrupt file SchetPrintForm.xls
 
 namespace XLS
 {

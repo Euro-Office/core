@@ -35,7 +35,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 {
 	if (m_ooxTableCellProps == NULL) return false;
 
-	//ищем cnfStyle  и применяем внешний стиль
+	//look for cnfStyle and apply the external style
 	if( NULL != oParam.poTableStyle )
 	{
 		if( m_ooxTableCellProps->m_oCnfStyle.IsInit() )
@@ -123,7 +123,7 @@ bool OOXtcPrReader::Parse( ReaderParameter oParam ,RtfCellProperty& oOutputPrope
 	else if ((m_ooxTableProps) && (m_ooxTableProps->m_oTblBorders.IsInit()))
 	{
 		//from table props
-		//todoo last, first !!!!
+		//TODO last, first !!!!
 		//if( m_ooxTableProps->m_oTblBorders->m_oTop.IsInit() )
 		//{
 		//	OOXBorderReader oBorderReader(m_ooxTableProps->m_oTblBorders->m_oTop.GetPointer());
@@ -225,5 +225,5 @@ void OOXtcPrReader::Parse(ComplexTypes::Word::CTblWidth* margin, int& type, int&
 		value = (int)margin->m_oW->GetValue();
 	}
 
-	//todooo сделать реализацию с процентами
+	//TODO implement percentage support
 }

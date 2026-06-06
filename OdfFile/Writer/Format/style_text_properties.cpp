@@ -266,7 +266,7 @@ void text_format_properties::clear()
     style_text_overline_mode_			= boost::none;
     style_text_overline_style_			= boost::none;
 
-	//todooo borders
+	//TODO borders
 }
 
 void text_format_properties::serialize(std::wostream & _Wostream,const wchar_t * ns, const wchar_t * name  )

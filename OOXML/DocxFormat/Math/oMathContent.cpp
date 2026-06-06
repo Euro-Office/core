@@ -2657,7 +2657,7 @@ namespace OOX
 		}
 		void CMIns::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 					WritingElement_ReadAttributes_Read_if     ( oReader, _T("w:author"), m_sAuthor )
 					WritingElement_ReadAttributes_Read_else_if( oReader, _T("w:date"),   m_oDate  )
@@ -4018,7 +4018,7 @@ namespace OOX
 						else if (L"m:e" == sName)
 						{
 							AssignPtrXmlContent(pItem, CElement, oItem)
-							//нужно заранее знать колисество столбцов для отрисовки
+							//need to know in advance the number of columns to draw
 							m_lColumn++;
 						}
 
@@ -4046,7 +4046,7 @@ namespace OOX
 				else if (L"m:e" == sName)
 				{
 					AssignPtrXmlContent(pItem, CElement, oReader)
-					//нужно заранее знать колисество столбцов для отрисовки
+					//need to know in advance the number of columns to draw
 					m_lColumn++;
 				}
 

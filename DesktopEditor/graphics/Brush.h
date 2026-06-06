@@ -145,15 +145,15 @@ protected:
     std::vector<TSubColor> m_subcolors;
 
 	CMatrix m_matrix;
-	float m_angle; // угол поворота в градусах базовой линии p1 -> p2
+	float m_angle; // angle of rotation in degrees of the baseline p1 -> p2
 
 	CDoubleRect Bounds;
 
 	Aggplus::WrapMode m_wrap;
 
-	INT m_bAngleScalable; // масштабировать угол поворота относительно заданных точек b = arctan( width / height * tan(angle) );
-	INT m_bRectable; // в качестве направляющей используется диагональ прямоугольника
-	INT m_bRelativeCoords; // координаты точек считаются относительно рисуемого примитива
+	INT m_bAngleScalable; // scale the rotation angle relative to the given points b = arctan( width / height * tan(angle) );
+	INT m_bRectable; // the diagonal of the rectangle is used as a guide
+	INT m_bRelativeCoords; // coordinates of points are considered relative to the drawn primitive
 };
 
 class CBrushTexture : public CBrush

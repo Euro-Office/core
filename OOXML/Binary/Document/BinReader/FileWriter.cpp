@@ -62,7 +62,7 @@ void FileWriter::Write()
 {
 	m_oMain.Write();
     m_oChartWriter.Write();
-	//Rels и ContentTypes пишем в конце
+	//Write Rels and ContentTypes at the end
 	m_oDocumentRelsWriter.Write();
 }
 void FileWriter::WriteGlossary()

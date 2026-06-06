@@ -59,7 +59,7 @@ bool OOXNumberingReader::Parse( ReaderParameter oParam )
 		}
 		if (m_ooxNumbering->m_arrNumPicBullet[i]->m_oDrawing.IsInit())
 		{
-			//???? todooo
+			//???? TODO
 		}
 	}
 

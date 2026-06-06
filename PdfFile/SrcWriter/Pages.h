@@ -209,16 +209,16 @@ namespace PdfWriter
 
 		CDocument*   m_pDocument;
 		CPageTree*   m_pParent;
-		CPoint       m_oStartPos;          // Позиция начала текущего пата
-		CPoint       m_oCurPos;            // Текущая позиция пата
-		CPoint       m_oTextPos;           // Текущая позиция текста
+		CPoint       m_oStartPos;          // Start position of the current path
+		CPoint       m_oCurPos;            // Current path position
+		CPoint       m_oTextPos;           // Current text position
 		CMatrix      m_oTextMatrix;
 		CArrayObject* m_pContents;
 		CStream*     m_pStream;
 		unsigned int m_unCompressionMode;
 		EGrMode      m_eGrMode;
 		CGrState*    m_pGrState;
-		CFontDict*   m_pFont;              // Текущий шрифт
+		CFontDict*   m_pFont;              // Current font
 		CDictObject* m_pShadings;
 		unsigned int m_unShadingsCount;
 		CDictObject* m_pPatterns;
@@ -295,4 +295,3 @@ namespace PdfWriter
 }
 
 #endif // _PDF_WRITER_SRC_PAGES_H
-

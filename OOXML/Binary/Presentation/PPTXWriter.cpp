@@ -173,7 +173,7 @@ namespace NSBinPptxRW
 
 			CXmlWriter oXmlWriter;
 
-			// первым делом определим количество необходимого. если хоть одно из этих чисел - ноль, то ппту не корректный
+			// First of all, let's determine the amount needed. if at least one of these numbers is zero, then the ppt isn't correct
 			LONG nCountThemes = 0;
 			LONG nCountMasters = 0;
 			LONG nCountLayouts = 0;
@@ -211,7 +211,7 @@ namespace NSBinPptxRW
 				return;
 			}
 
-			// теперь создадим массивы для рельсов
+			// Now create arrays for the rels
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				_slideMasterInfo elm;
@@ -242,7 +242,7 @@ namespace NSBinPptxRW
 				}
 			}
 
-	// нужно проставить всем шаблонам мастер.
+	// need to assign a master to all templates.
 			for (LONG i = 0; i < nCountMasters; ++i)
 			{
 				size_t _countL = m_arSlideMasters_Theme[i].m_arLayouts.size();
@@ -257,7 +257,7 @@ namespace NSBinPptxRW
 				}
 			}
 
-	// готово, теперь нужно слайдам проставить шаблоны
+	// done, now need to assign templates to the slides
 			pPair = m_mainTables.find(NSBinPptxRW::NSMainTables::SlideRels);
 			if (m_mainTables.end() != pPair)
 			{
@@ -271,7 +271,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); it isn't the index that is specified here, but the type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Layout.size())
 						m_arSlides_Layout[index++] = m_oReader.GetULong();
 				}
@@ -289,7 +289,7 @@ namespace NSBinPptxRW
 					if (_at == NSBinPptxRW::g_nodeAttributeEnd)
 						break;
 
-					//m_arSlides_Layout[_at] = m_oReader.GetULong(); тут прописан не индекс, а тип - смотри - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
+					//m_arSlides_Layout[_at] = m_oReader.GetULong(); it isn't the index that is specified here, but the type - see - oBinaryWriter.WriteInt1(0, oBinaryWriter.m_pCommon->m_oSlide_Layout_Rels[i]);
 					if (index < m_arSlides_Notes.size())
 						m_arSlides_Notes[index++] = m_oReader.GetULong();
 				}
@@ -328,7 +328,7 @@ namespace NSBinPptxRW
 				}
 			}
 			
-	// теперь нужно удалить все themes, которые не ведут на мастерслайды
+	// now remove all themes that don't lead to masterslides
 			std::vector<LONG> arThemes;
 			std::vector<LONG> arThemesDst;
 			std::vector<bool> arThemesSave;
@@ -371,7 +371,7 @@ namespace NSBinPptxRW
 				arThemesDst[i] = lCurrectTheme;
 				++lCurrectTheme;
 			}
-	// теперь нужно перебить ссылки
+	// now need to break the links
 			for (LONG i = 0; i < nCountMasters && i < arThemesDst.size(); ++i)
 			{
 				m_arSlideMasters_Theme[i].m_lThemeIndex = arThemesDst[i];
@@ -393,7 +393,7 @@ namespace NSBinPptxRW
 				{
 					if (!arThemesSave[i])
 					{
-						// это ненужная тема
+						// this is an unnecessary topic
 						continue;
 					}
 
@@ -547,7 +547,7 @@ namespace NSBinPptxRW
 
 						size_t indexSlide = 0;
 						for (indexSlide = 0; indexSlide < m_arSlides_Notes.size(); indexSlide++)
-						{//todooo -> make map
+						{//TODO -> make map
 							if (m_arSlides_Notes[indexSlide] == i)
 							{
 								break;
@@ -585,7 +585,7 @@ namespace NSBinPptxRW
 				m_oReader.Seek(pPair->second);
 				LONG lCount = m_oReader.GetLong();
 
-				if (lCount > 0 || m_arNotesSlides.size() > 0)//один элемент
+				if (lCount > 0 || m_arNotesSlides.size() > 0)//one element
 				{
 					OOX::CPath pathFolder = m_strDstFolder + FILE_SEPARATOR_STR + L"ppt" + FILE_SEPARATOR_STR + L"notesMasters";
 					OOX::CPath pathFolderRels = pathFolder + FILE_SEPARATOR_STR + L"_rels";
@@ -1016,7 +1016,7 @@ namespace NSBinPptxRW
 
 				OOX::CPath pathPresentation = pathFolder / m_oPresentation.DefaultFileName();
 
-				// todooo втащить все как сделано для Custom
+				// TODO include everything as done for Custom
 				//m_oPresentation.write(pathPresentation, m_oPresentation.DefaultDirectory(), *m_oImageManager.m_pContentTypes);
 				oXmlWriter.ClearNoAttack();
 				m_oPresentation.toXmlWriter(&oXmlWriter);

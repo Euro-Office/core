@@ -221,7 +221,7 @@ namespace OOX
 			virtual std::wstring toXML() const;
 			virtual EElementType getType() const;
 
-			// TO DO: Добавить аттрибуты из 9.7.3 Part4
+			// TO DO: Add attributes from 9.7.3 Part4
 
             nullable<ComplexTypes::Word::COnOff2> m_oUseSingleBorderforContiguousCells;
             nullable<ComplexTypes::Word::COnOff2> m_oWpJustification;
@@ -591,7 +591,7 @@ namespace OOX
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
-			// TO DO: Добавить атрибуты из 9.7.2.4 Part4
+			// TO DO: Add attributes from 9.7.2.4 Part4
 
 			nullable_bool m_oAllStyles;
 			nullable_bool m_oAlternateStyleNames;
@@ -625,7 +625,7 @@ namespace OOX
 			}
 			virtual void fromXML(XmlUtils::CXmlNode& oNode)
 			{
-				// TO DO: Реализовать CStyleSort::fromXML(XmlUtils::CXmlNode& oNode)
+				// TO DO: Implement CStyleSort::fromXML(XmlUtils::CXmlNode& oNode)
 			}
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader)
 			{
@@ -684,7 +684,7 @@ namespace OOX
 			}
 			virtual void fromXML(XmlUtils::CXmlNode& oNode)
 			{
-				// TO DO: Реализовать CView::fromXML(XmlUtils::CXmlNode& oNode)
+				// TO DO: Implement CView::fromXML(XmlUtils::CXmlNode& oNode)
 			}
 			virtual void fromXML(XmlUtils::CXmlLiteReader& oReader)
 			{

@@ -158,7 +158,7 @@ void IXFCellMulBlankSpecial::load(CFRecord& record, const size_t num_cells)
 	size_t sz = (record.getDataSize() - record.getRdPtr()-2)/2;
 
 	unsigned short ixfe;
-	for(size_t i = 0; i < (std::min)(sz, num_cells); ++i) //Lighting Load Calculation.xls - третий лист 
+	for(size_t i = 0; i < (std::min)(sz, num_cells); ++i) //Lighting Load Calculation.xls - third sheet
 	{
 		record >> ixfe;
 		rgixfe.push_back(ixfe);

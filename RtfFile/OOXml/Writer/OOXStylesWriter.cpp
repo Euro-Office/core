@@ -60,7 +60,7 @@ bool OOXStylesWriter::Save( std::wstring sFolder )
 	}
 	//else
 	//{
-	//	//todooo default style !!
+	//	//TODO default style !!
 	//}
 	return false;
 }

@@ -140,7 +140,7 @@ const bool WorksheetSubstream::loadContent(BinProcessor& proc)
 	{
 		CFRecordType::TypeId type = proc.getNextRecordType();
 		
-		if (type == rt_NONE || proc.isBOF(type)) //следующий пошел??
+		if (type == rt_NONE || proc.isBOF(type)) //next one went??
 			break;
 		if (type == rt_EOF) 
 		{
@@ -165,7 +165,7 @@ const bool WorksheetSubstream::loadContent(BinProcessor& proc)
 					elements_.pop_back();
 				}
 			}break;
-			case rt_CalcRefMode://todooo сделать вариативно по всем проверку
+			case rt_CalcRefMode://TODO do a variable check for all
 			case rt_CalcMode:
 			case rt_PrintRowCol:
 			{
@@ -526,11 +526,11 @@ const bool WorksheetSubstream::loadContent(BinProcessor& proc)
 					count--;
 				}
 			}break;
-			case rt_CFEx:	//Calculadora.xls не в FORMATING
+			case rt_CFEx:	//Calculadora.xls isn't in FORMATTING
 			{
 				count = proc.repeated<CFEx>	(0, 0);
 			}break;
-			case rt_PLV:	//Calculadora.xls не в FORMATING
+			case rt_PLV:	//Calculadora.xls isn't in FORMATTING
 			{
 				if (proc.optional<PLV>())
 				{

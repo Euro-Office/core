@@ -362,7 +362,7 @@ public:
 	text_outline_style * outline_style();
 	int id_outline();
  
-	 /// получить Id, которое будет использоваться в numId и abstractNumId
+	 /// get the Id that will be used in numId and abstractNumId
     int id_by_name(const std::wstring & Name);
     
 	instances_array & instances() { return instances_; }
@@ -372,7 +372,7 @@ public:
 	void add_outline_style(text_outline_style *textOutlineStyle);
 
 private:
-    // ассоциации имени стиля и порядкового номера в массиве instances_
+    // associations of style name and serial number in the instances_ array
     boost::unordered_map<std::wstring, int> list_style_names_;
     instances_array							instances_;
 

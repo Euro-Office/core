@@ -168,7 +168,7 @@ const bool SERIESFORMAT::loadContent(BinProcessor& proc)
 		elements_.pop_back();
 		count--;
 	}
-	//доп серии
+	//additional series
 	if (proc.mandatory<Parenthesis_SERIESFORMAT_1>())
 	{
 		count = elements_.size();
@@ -195,7 +195,7 @@ const bool SERIESFORMAT::loadContent(BinProcessor& proc)
 		}
 	}
 
-	count = proc.repeated<Parenthesis_SERIESFORMAT_2>(0, 0); // это типо "нормальных"
+	count = proc.repeated<Parenthesis_SERIESFORMAT_2>(0, 0); // it's like "normal"
 
 	count = elements_.size();
 	while(count > 0)
@@ -289,7 +289,7 @@ int SERIESFORMAT::serialize_legend(std::wostream & _stream, int idx)
 		{
 			CP_XML_NODE(L"c:idx")
 			{
-				CP_XML_ATTR(L"val", idx); //legendException->iss = oxffff легенда для серий
+				CP_XML_ATTR(L"val", idx); //legendException->iss = oxffff legend for series
 			}
 			if (att)
 			{
@@ -306,7 +306,7 @@ int SERIESFORMAT::serialize_parent(std::wostream & _stream, CHARTFORMATS* chart_
 {
 	if (m_SerParent == NULL)
 	{
-		for (size_t i = 0; i < m_arSERIESFORMAT_ext.size(); i++) // объединение
+		for (size_t i = 0; i < m_arSERIESFORMAT_ext.size(); i++) // association
 		{
 			SERIESFORMAT * series_ext = dynamic_cast<SERIESFORMAT *>(m_arSERIESFORMAT_ext[i].get());
 			if ((series_ext) && (series_ext->m_SerParent))
@@ -345,7 +345,7 @@ int SERIESFORMAT::serialize_parent(std::wostream & _stream, CHARTFORMATS* chart_
 				if (series_ss)
 				{
 					series_ss->serialize(CP_XML_STREAM(), CHART_TYPE_Bar, -1);
-					//тут не надо рисовать маркеры .. а вот fill можно - он просто отбрасывается - по "првильному" нужно выделить отдельный тип чисто линий
+					//here markers don't need to be drawn .. but fill is possible - it is simply discarded - according to the "correct" method, need to select a separate type of pure lines
 				}
 				//CP_XML_NODE(L"c:spPr")
 				//{

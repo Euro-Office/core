@@ -180,7 +180,7 @@ std::wstring RtfChar::RenderToOOX(RenderParameter oRenderParameter)
 				sResult += L"<w:del w:date=\"" + sDate +  L"\" w:author=\"" + XmlUtils::EncodeXmlString(sAuthor) + L"\" w:id=\"" + std::to_wstring(poOOXWriter->m_nCurTrackChangesId++).c_str() + L"\">";
 				m_oProperty.m_nDeleted = PROP_DEF;
 			}
-			sResult += m_oProperty.RenderToOOX(oRenderParameter);//w:rPr внутри
+			sResult += m_oProperty.RenderToOOX(oRenderParameter);//w:rPr inside
 			sResult += renderTextToXML( L"Math" );
 			
 			if (bDelete)sResult += L"</w:del>";
@@ -231,8 +231,8 @@ std::wstring RtfChar::renderRtfText( std::wstring& sText, void* poDocument, RtfC
 	if (oCharProperty) iFont = oCharProperty->m_nFont;
 
     int nCodePage = -1;
-    //применяем параметры codepage от текущего шрифта todo associated fonts.
-    //todooo разобраться со шрифтами и их подбором
+    //apply the codepage parameters from the current font todo associated fonts.
+    //TODO understand fonts and their selection
     RtfFont oFont;
     if( NULL != oCharProperty && true == pDocument->m_oFontTable.GetFont( oCharProperty->m_nFont, oFont ) )
     {
@@ -273,7 +273,7 @@ std::wstring RtfChar::renderRtfText( std::wstring& sText, void* poDocument, int 
 	{
 		return sResult;
 	}
-	//от настроек документа
+	//from document settings
     if( -1 == nCodePage && RtfDocumentProperty::cp_none != pDocument->m_oProperty.m_eCodePage )
     {
         switch ( pDocument->m_oProperty.m_eCodePage )
@@ -291,7 +291,7 @@ std::wstring RtfChar::renderRtfText( std::wstring& sText, void* poDocument, int 
         case RtfDocumentProperty::cp_pca: nCodePage = 850;      break;
         }
     }
-    //если ничего нет ставим ANSI или default from user
+    //if there is nothing, set ANSI or the user default
     if( -1 == nCodePage )
 	{
         nCodePage = CP_ACP;		
@@ -483,7 +483,7 @@ std::wstring RtfCharSpecial::RenderToRtf(RenderParameter oRenderParameter)
 	}
 	if( PROP_DEF != m_nTextWrapBreak )
 		sResult += L"\\par";
-	//switch ( m_nTextWrapBreak ) //не воспринимается word
+	//switch (m_nTextWrapBreak) //word isn't accepted
 	//{
 	//	case 0: sResult += L"\\lbr0";break;
 	//	case 1: sResult += L"\\lbr1";break;

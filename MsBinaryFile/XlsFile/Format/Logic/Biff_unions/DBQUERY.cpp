@@ -270,7 +270,7 @@ int DBQUERY::serialize_connection(std::wstring & name)
 	{
 		name = dcon->rgchConnectionName.strTotal;
 	}
-	//имена уникальны должны быть!!!
+	//names must be unique!!!
 	if (name.empty())
 		name = L"Connection" + std::to_wstring(global_info->connectionId);
 

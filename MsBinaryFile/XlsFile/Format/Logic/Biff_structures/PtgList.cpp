@@ -109,7 +109,7 @@ void PtgList::assemble(AssemblerStack& ptg_stack, PtgQueue& extra_data, bool ful
         if (!link.empty())
             link += L"!";
     }
-    //formula += link; пока без названия sheet
+    //formula += link; no sheet reference yet
     formula += tableName;
     formula += L'[';
     if(!invalid && !nonresident)

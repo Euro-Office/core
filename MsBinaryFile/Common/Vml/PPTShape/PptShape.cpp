@@ -136,7 +136,7 @@ bool CPPTShape::LoadFromXML(XmlUtils::CXmlNode& oNodePict)
 	return true;
 }
 bool CPPTShape::LoadFromXMLShapeType(XmlUtils::CXmlNode& oNodeShapeType) // vml object
-{		// из за особенносей форматирования vmlDrawing могут вылезти пустые текстовые значения - value ..
+{		// Due to the formatting features of vmlDrawing, empty text values may appear - value ..
 	std::wstring sId = oNodeShapeType.GetAttribute(L"o:spt");
 
 	bool bIsNeedRecalc = true;
@@ -632,7 +632,7 @@ CPPTShape* CPPTShape::CreateByShapeType(DocFileFormat::ShapeType* pShapeType)
 			pShape->LoadTextRect(pShapeType->TextBoxRectangle);
 		}
 
-		// Handles  // todooo - убрать лишнее определение Handle !!!
+		// Handles // TODO - remove unnecessary Handle definition!!!
 		for (size_t i = 0; i < pShapeType->Handles.size(); ++i)
 		{
 			CHandle_ oHandle;

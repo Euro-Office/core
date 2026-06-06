@@ -392,11 +392,11 @@ namespace PPT
         //                    {
         //                        Effect.Format ( L"<animateRotate %s />"), FormatXml ());
         //                    }
-        //                    else if (9 == pEffect->m_nEffectID || 35 == pEffect->m_nEffectID)	//	Blink - 36 - мигание
+        //                    else if (9 == pEffect->m_nEffectID || 35 == pEffect->m_nEffectID) // Blink - 36 - blinking
         //                    {
         //                        Effect.Format ( L"<animateAlpha %s />"), FormatXml ());
         //                    }
-        //                    else if (26	== pEffect->m_nEffectID)	// FlashBulb Effect ( Пульсация )
+        //                    else if (26 == pEffect->m_nEffectID) // FlashBulb Effect ( Pulsation )
         //                    {
         //                        Effect.Format ( L"<animateAlpha %s />"), FormatXml ());
         //                        Source	+=	Effect;
@@ -406,7 +406,7 @@ namespace PPT
 
         //                        continue;
         //                    }
-        //                    else if (27 == pEffect->m_nEffectID		//	Flicker (÷ветовая пульсация)
+        //                    else if (27 == pEffect->m_nEffectID // Flicker (light pulsation)
         //                             || 1 ==	pEffect->m_nEffectID		//	ChangeFillColor	-	fill color
         //                             || 3 ==	pEffect->m_nEffectID		//	ChangeFillColor	-	font color
         //                             || 7 == pEffect->m_nEffectID		//	ChangeFillColor	-	fill lines

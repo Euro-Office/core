@@ -127,7 +127,7 @@ namespace MetaFile
 	}
 	void CWmfPlayer::RegisterObject(CWmfObjectBase* pObject)
 	{
-		// Найдем наименьший доступный индекс
+		// Find the smallest available index
 		unsigned short ushIndex = m_ushIndex;
 		int nAvailableIndex = -1;
 		if (m_vAvailableIndexes.size() > 0)
@@ -215,7 +215,7 @@ namespace MetaFile
 		{
 			if (std::find(m_vAvailableIndexes.begin(), m_vAvailableIndexes.end(), ushIndex) != m_vAvailableIndexes.end())
 			{
-				// Данный индекс уже есть в списке доступных
+				// This index is already in the list of available ones
 			}
 			else
 			{

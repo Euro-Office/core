@@ -52,7 +52,7 @@ namespace OOX
 		class CChartStyleFile;
 		class CChartColorsFile;
 
-//необработанные child:
+//raw child:
 		//<customProperties>
 		//<extLst>
 		//<phoneticPr>

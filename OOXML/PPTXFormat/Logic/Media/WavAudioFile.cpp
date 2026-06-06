@@ -50,7 +50,7 @@ namespace PPTX
 		}
 		OOX::EElementType WavAudioFile::getType() const
 		{
-			return OOX::et_a_snd; //todooo расширить ...
+			return OOX::et_a_snd; //TODO expand...
 		}
 		void WavAudioFile::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{

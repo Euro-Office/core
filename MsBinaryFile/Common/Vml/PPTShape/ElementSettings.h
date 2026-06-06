@@ -30,8 +30,8 @@
 
 #include <vector>
 
-// это класс, использующийся для передачи свойств объектов,
-// например - указатель на картинку... (по PID'у)
+// this is a class used to transfer properties of objects,
+// for example, a pointer to an image... (by PID)
 
 class CProperty
 {
@@ -41,7 +41,7 @@ public:
     bool							m_bComplex;
     _UINT32							m_lValue;
     unsigned char*					m_pOptions;
-    // чтобы не плодить классы - это value, когда m_bComplex == true
+    // so as not to create classes - this is value when m_bComplex == true
     bool							m_bIsTruncated;
 
 	CProperty();
@@ -51,13 +51,13 @@ public:
 	void ComplexFromStream(POLE::Stream* pStream);
 };
 
-// А вот контейнер пропертей
+// And here is the property container
 class CProperties
 {
 public:
     std::vector<CProperty> m_arProperties;
-    // по идее - это instance, но нам так удобнее,
-    // тем более это класс - не связанный с RecordHeader
+    // in theory this is an instance, but it's more convenient for us,
+    // Moreover, this is a class - not related to RecordHeader
     size_t m_lCount;
 
 	CProperties();

@@ -35,7 +35,7 @@ std::vector<std::vector<std::wstring>> MonthNames{};
 std::vector<std::vector<std::wstring>> ShortMonthNames{};
 std::map<_INT32, LocalInfo> InfoMap {};
 
-//инициализируем большие переменные только при необходимости
+//initialize large variables only when necessary
 void InitLocalInfo()
 {
     InfoMap = std::map<_INT32, LocalInfo>
@@ -289,7 +289,7 @@ LocalInfo getLocalInfo(const _INT32 lcid)
 
 //LocalInfo methods
 
-//todo сборка кода формата из сокращенного формата и разделителя
+//todo assembling format code from shortened format and delimiter
 std::wstring LocalInfo::GetShortDateFormat()
 {
     std::wstring result;

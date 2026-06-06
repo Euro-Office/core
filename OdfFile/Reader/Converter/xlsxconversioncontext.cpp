@@ -95,9 +95,9 @@ void xlsx_conversion_context::set_mediaitems(mediaitems_ptr &items)
 void xlsx_conversion_context::start_chart(std::wstring name)
 {
 	charts_.push_back(oox_chart_context_ptr(new oox_chart_context(mediaitems_, name)));
-	//добавляем новую форму для диаграммы
-	 //в ней будет информационная часть - и она пишется каждый раз в свою xml (их - по числу диаграмм)
-	//этот контекст нужно передавать в файл
+	//adding a new form for the diagram
+	 //it will contain an information part - and it is written each time in its own xml (their number is based on the number of diagrams)
+	//this context must be passed to the file
 }
 
 void xlsx_conversion_context::end_chart()
@@ -207,7 +207,7 @@ void xlsx_conversion_context::end_document()
         {
             CP_XML_NODE(L"sheet")
             {
-                CP_XML_ATTR(L"name",	XmlUtils::EncodeXmlString(sheet->name())); // ms office ! ограничение на длину имени 31!!!
+                CP_XML_ATTR(L"name",	XmlUtils::EncodeXmlString(sheet->name())); // ms office! name length limit 31!!!
                 CP_XML_ATTR(L"sheetId", i + 1);
 				CP_XML_ATTR(L"state",	sheet->hidden() ? L"hidden" : L"visible");
                 CP_XML_ATTR(L"r:id",	id);            
@@ -889,7 +889,7 @@ xlsx_table_metrics & xlsx_conversion_context::get_table_metrics()
     return get_table_context().get_table_metrics();
 }
 void xlsx_conversion_context::start_drawing_context()
-{//todooo если делать множественную вложенность -> vector
+{//TODO for multiple nesting -> vector
 	if (xlsx_drawing_context_) return;
 		
 	xlsx_drawing_context_ = boost::shared_ptr<xlsx_drawing_context>(new xlsx_drawing_context(get_drawing_context_handle(), true));
@@ -950,14 +950,14 @@ void xlsx_conversion_context::end_hyperlink(std::wstring const & href)
 	}
 	else
 	{
-		std::wstring hId = get_table_context().get_drawing_context().add_hyperlink(href); // на внешний объект
+		std::wstring hId = get_table_context().get_drawing_context().add_hyperlink(href); // to an external object
 		xlsx_text_context_.end_hyperlink(hId); 
 		
 		xlsx_text_context_.end_span2();
 	}
 }
 void xlsx_conversion_context::add_pivot_sheet_source (const std::wstring & sheet_name, int index_table_view)
-{//ващето в либре жесткая привязка что на одном листе тока одна сводная может быть ..
+{//actually, in LibreOffice there is a strict constraint that on one sheet only one pivot can be ..
 	mapPivotsTableView_.insert(std::make_pair(sheet_name, index_table_view));
 }
 void xlsx_conversion_context::add_jsaProject(const std::string &content)

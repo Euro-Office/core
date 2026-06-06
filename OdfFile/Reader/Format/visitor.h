@@ -25,11 +25,11 @@
 #pragma once
 /*
 
-Схема работы с visitor:
+Scheme of work with visitor:
 
-для классов, которые могут быть посещены visitor-ом:
-1. наследуем от base_visitable
-2. объявляем внутри макрос CPDOCCORE_DEFINE_VISITABLE()
+for classes that can be visited by a visitor:
+1. inherit from base_visitable
+2. declare the macro CPDOCCORE_DEFINE_VISITABLE() inside
 
 class example_visitable_element: public base_visitable 
 {
@@ -39,16 +39,16 @@ public:
 // ... 
 };
 
-Для создания гостя:
-1. наследуем гостя от base_visitor
-2. наследуем гостя(визитор) от const_visitor<visitable_element1>/visitor<visitable_element1>,
-                        const_visitor<visitable_element2>/visitor<visitable_element2>, и т.д.
-   для каждого из элементов, котоыре может посетить визитор
-3. объявляем для каждого из элементов метод
+To create a guest:
+1. inherit the guest from base_visitor
+2. inherit the guest (visitor) from const_visitor<visitable_element1>/visitor<visitable_element1>,
+                        const_visitor<visitable_element2>/visitor<visitable_element2>, etc.
+   for each of the elements that a visitor can visit
+3. declare a method for each element
     virtual void visit(const visitable_element1& val);
     virtual void visit(const visitable_element2& val);
-    и т.д.
-    (в случае неконстатности - убираем const)
+    etc.
+    (in case of non-constness, remove const)
 
 
 class table_round : public base_visitor, 
@@ -72,16 +72,16 @@ class table_round : public base_visitor,
     }
 };
 
-Для организации обхода:
-1. Создаем визитор
-2. Выполняем accept для корневого элемента
+To organize a walkthrough:
+1. Create a visitor
+2. Execute accept for the root element
 
 office_element * root;
 /// ... 
 table_round tableRoundVisitor;
 root->accept(tableRoundVisitor);
 
-Внимание! Визитор САМ определяет правила обхода внутренних вершин, т.е. внутри каждой функции посещения требуется написать например
+Attention! The visitor itself determines the rules for traversing internal vertices, i.e. inside each visit function need to write for example
     
     virtual void visit(const office_body& val)
     {

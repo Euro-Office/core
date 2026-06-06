@@ -33,7 +33,7 @@
 namespace OOX
 {
 
-//в файле VmlDrawing могут быть как отобразительная часть комментариев Xlsx, так и просто обычные объекты 
+//the VmlDrawing file can contain both the display part of Xlsx comments and just ordinary objects
 
 	class CVmlDrawing : public OOX::WritingElementWithChilds<OOX::WritingElement>, public OOX::FileGlobalEnumerated, public OOX::IFileContainer
 	{

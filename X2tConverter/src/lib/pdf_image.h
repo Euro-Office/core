@@ -401,7 +401,7 @@ namespace NExtractTools
 
 			RELEASEOBJECT(pApplicationFonts);
 		}
-		// удаляем sPdfBinFile, потому что он не в Temp
+		// delete sPdfBinFile because it isn't in Temp
 		if (NSFile::CFileBinary::Exists(sPdfBinFile))
 			NSFile::CFileBinary::Remove(sPdfBinFile);
 		return nRes;

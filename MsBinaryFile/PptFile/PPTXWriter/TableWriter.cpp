@@ -115,7 +115,7 @@ std::vector<int> ProtoTable::getWidth(const std::vector<CElementPtr>& arrCells, 
         {
             mapLeftWidth.insert(std::make_pair(left, width));
         }
-        // Here we check qestion: was it merged cell and now is it true width of colum?
+        // Check: was this a merged cell, and is this the true width of the column?
         else if (iter->second > width)
         {
             mapLeftWidth.erase(iter);
@@ -154,7 +154,7 @@ std::vector<int> ProtoTable::getHeight(const std::vector<CElementPtr>& arrCells,
         {
             mapTopHeight.insert(std::make_pair(top, height));
         }
-        // Here we check qestion: was it merged cell and now is it true height of row?
+        // Check: was this a merged cell, and is this the true height of the row?
         else if (iter->second > height)
         {
             mapTopHeight.erase(iter);
@@ -443,8 +443,8 @@ void TableWriter::FillRow(PPTX::Logic::TableRow &oRow, ProtoTableRow& arrCells)
 
 std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 {
-    //в таблице могут быть линки и ссылки на другние объекты (картинки???)
-    // yliko_provolis.ppt (+ тут есть смарт арты)
+    //the table may contain links and references to other objects (images???)
+    // yliko_provolis.ppt (+ there are smart arts here)
 
     auto& rXml = m_pTableElement->m_xmlRawData;
 
@@ -453,10 +453,10 @@ std::wstring TableWriter::getXmlForGraphicFrame(int ID, int idx) const
 
     if (graphic_frame.nvGraphicFramePr.IsInit())
     {
-        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // или менять в карте связей для анимаций
+        graphic_frame.nvGraphicFramePr->cNvPr.id = ID; // or change in the connection map for animations
 
         if (graphic_frame.nvGraphicFramePr->nvPr.ph.IsInit() && idx >= 0)
-        {//проверить
+        {//check
             graphic_frame.nvGraphicFramePr->nvPr.ph->idx = std::to_wstring(idx);
         }
     }

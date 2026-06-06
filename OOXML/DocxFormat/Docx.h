@@ -66,14 +66,14 @@ namespace OOX
 	public:
 		struct _part_summary
 		{
-			OOX::CDocument		*document = NULL;					// Основной          /document.xml
-			OOX::CFontTable		*fontTable = NULL;					// Таблица шрифтов   /fonttable.xml
-			OOX::CNumbering		*numbering = NULL;					// Нумерации         /numbering.xml
-			OOX::CStyles		*styles = NULL;						// Стили             /styles.xml
-			OOX::CFootnotes		*footnotes = NULL;					// Сноски            /footnotes.xml
-			OOX::CEndnotes		*endnotes = NULL;					// Сноски            /endnotes.xml
-			OOX::CSettings		*settings = NULL;					// Настройки         /settings.xml
-			OOX::CComments		*comments = NULL;					// Комментарии		 /comments.xml
+			OOX::CDocument		*document = NULL;					// Main/document.xml
+			OOX::CFontTable		*fontTable = NULL;					// Font table /fonttable.xml
+			OOX::CNumbering		*numbering = NULL;					// Numbering /numbering.xml
+			OOX::CStyles		*styles = NULL;						// Styles/styles.xml
+			OOX::CFootnotes		*footnotes = NULL;					// Footnotes /footnotes.xml
+			OOX::CEndnotes		*endnotes = NULL;					// Endnotes/endnotes.xml
+			OOX::CSettings		*settings = NULL;					// Settings/settings.xml
+			OOX::CComments		*comments = NULL;					// Comments/comments.xml
 
 			void init();
 		};
@@ -92,10 +92,10 @@ namespace OOX
 		OOX::CApp			*m_pApp;
 		OOX::CCore			*m_pCore;
 
-		_part_summary		m_oMain;			// Основной документ word/
+		_part_summary		m_oMain;			// Main document word/
 		_part_summary		m_oGlossary;		// Glossary Document word/glossary/
 
-		// todooo сделать структурный объект - главный документ и подчиненные - как только появится что то  кроме glossary
+		// TODO make a structural object - the main document and subordinates - as soon as something other than glossary appears
 		bool m_bGlossaryRead;
 
 		OOX::CCommentsExt	*m_pCommentsExt;				// word/commentsExtended.xml

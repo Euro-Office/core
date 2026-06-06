@@ -224,7 +224,7 @@ void odf_text_context::add_text_space(int count)
 	text_s* s = dynamic_cast<text_s*>(s_elm.get());
 	if (s) s->text_c_ = count;
 
-	//необязательно хранить..
+	//no need to store...
 	//int level = current_level_.size();
 	//odf_element_state state={	s_elm, L"", office_element_ptr(), level};
 	//text_elements_list_.push_back(state);
@@ -415,7 +415,7 @@ void odf_text_context::start_span(bool styled)
 			{
 				style_->style_parent_style_name_ = parent_span_style_;
 			}
-			text_properties_ = style_->content_.add_get_style_text_properties();//для  буквиц на поле
+			text_properties_ = style_->content_.add_get_style_text_properties();//for drop caps in the margin
 		}
 	}
 
@@ -483,7 +483,7 @@ void odf_text_context::end_list_item()
 
 	list_state_.levels.back() = false;
 }
-bool odf_text_context::start_list(std::wstring style_name) //todoooo add new_numbering ???
+bool odf_text_context::start_list(std::wstring style_name) //TODO add new_numbering ???
 {
 	if (styles_context_ == NULL || single_paragraph_)return false;
 
@@ -757,7 +757,7 @@ void odf_text_context::save_property_break()
 	need_break_ = boost::none;
 
 }
-bool odf_text_context::set_type_break(int type, int clear)//todooo clear ???
+bool odf_text_context::set_type_break(int type, int clear)//TODO clear ???
 {
 	bool need_restart = false;
 

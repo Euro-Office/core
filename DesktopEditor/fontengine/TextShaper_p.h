@@ -257,7 +257,7 @@ void CheckUnicodeFaceName(FT_Face pFace, int*& UName, unsigned int& ULen)
 					sEncoding = "UTF-16BE";
 					break;
 				case TT_MS_ID_UCS_4:
-					//sEncoding = "UCS4"; // см tt_
+					//sEncoding = "UCS4"; // see tt_
 					sEncoding = "UTF-16BE";
 					break;
 					//case TT_MS_ID_SJIS:

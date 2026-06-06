@@ -184,14 +184,14 @@ void xml_serialize_shape(std::wostream & strm, _xlsx_drawing & val, const std::w
             {
                 CP_XML_NODE(ns + L":cNvPr")
                 {
-                    CP_XML_ATTR(L"id", val.id);//числовое значение val.rId
+                    CP_XML_ATTR(L"id", val.id);//numeric value val.rId
                     CP_XML_ATTR(L"name", val.name);
 
 					if (val.hidden) CP_XML_ATTR(L"hidden", 1);
 						
 					oox_serialize_action(CP_XML_STREAM(), val.action);
                 }
-				CP_XML_NODE(ns + L":cNvSpPr")//non visual properies (собственно тока 1 там)
+				CP_XML_NODE(ns + L":cNvSpPr")//non visual properties (actually 1 there)
 				{
 					if (val.sub_type == 1)CP_XML_ATTR(L"txBox", 1);
 				}
@@ -211,7 +211,7 @@ void xml_serialize_shape(std::wostream & strm, _xlsx_drawing & val, const std::w
     }  // CP_XML_WRITER  
 }
 void xml_serialize_object(std::wostream & strm, _xlsx_drawing & val)
-{//отображательная часть
+{//display part
 	CP_XML_WRITER(strm)    
     {
         CP_XML_NODE(L"xdr:sp")
@@ -220,7 +220,7 @@ void xml_serialize_object(std::wostream & strm, _xlsx_drawing & val)
             {
                 CP_XML_NODE(L"xdr:cNvPr")
                 {
-                    CP_XML_ATTR(L"id",		val.id);	//числовое значение val.rId
+                    CP_XML_ATTR(L"id",		val.id);	//numeric value val.rId
                     CP_XML_ATTR(L"name",	val.name);
  					
 					if (val.hidden) CP_XML_ATTR(L"hidden", 1);
@@ -283,7 +283,7 @@ void xml_serialize_group(std::wostream & strm, _xlsx_drawing & val, const std::w
 }
 
 void xml_serialize_chart(std::wostream & strm, _xlsx_drawing & val)
-{//отображательная часть
+{//display part
     CP_XML_WRITER(strm)    
     {
 		CP_XML_NODE(L"xdr:graphicFrame")

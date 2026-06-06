@@ -176,7 +176,7 @@ namespace NSBinPptxRW
 	int CImageManager2::IsDisplayedImage(const std::wstring& strInput)
 	{
 		int nRes = 0;
-		//шаблон display[N]image.ext
+		//template display[N]image.ext
 		std::wstring sFind1 = L"display";
 		int nIndex1 = (int)strInput.find(sFind1);
 		if (-1 != nIndex1)
@@ -605,8 +605,8 @@ namespace NSBinPptxRW
 		size_t n3 = strFile.find(L"ftp");
 		size_t n4 = strFile.find(L"https://");
 
-        //если nI сранивать не с 0, то будут проблемы
-        //потому что в инсталяции мы кладем файлы в /var/www...
+        //if nI is compared with something other than 0, there will be problems
+        //because in the installation we put the files in /var/www...
         if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			return true;
 		return false;
@@ -1263,7 +1263,7 @@ namespace NSBinPptxRW
 
 		StartMainRecord(NSBinPptxRW::NSMainTables::FontsEmbedded);
 
-		// добавим мега шрифт
+		// add a master font
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckString(L".)abcdefghijklmnopqrstuvwxyz");
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckFont(L"Wingdings 3", m_pCommon->m_pNativePicker->m_pFontManager);
 		m_pCommon->m_pNativePicker->m_oEmbeddedFonts.CheckFont(L"Arial", m_pCommon->m_pNativePicker->m_pFontManager);
@@ -2123,7 +2123,7 @@ namespace NSBinPptxRW
 		_INT32 sz = (_INT32)GetULong();
 		if (m_lPos + sz > m_lSize)
 		{
-			//todooo - переделать
+			//TODO - redo
 			throw;
 		}
 		return sz;
@@ -2371,9 +2371,9 @@ namespace NSBinPptxRW
 	{
 		++m_nCurrentRelsStack;
 
-		//чистить текущий m_pRels хорошо при последовательной записи автофигур в word.
-		//плохо в случае записи перезентаций, с момента перехода на единственный обьект m_pReader.
-		//пример: презетации записали несколько Rels, записываем chart, вызывается SetDstContentRels и трутся Rels презентаций
+		//It is good to clear the current m_pRels when writing autoshapes sequentially in word.
+		//bad in the case of writing presentations, from the moment of switching to a single m_pReader object.
+		//example: presentations have recorded several Rels, write a chart, call SetDstContentRels and overwrite the Rels of the presentations
 		//if (0 == m_pReader->m_nCurrentRelsStack)
 		//{
 		//	m_pReader->m_pRels->Clear();

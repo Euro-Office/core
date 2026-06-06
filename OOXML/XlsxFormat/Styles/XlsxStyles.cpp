@@ -105,7 +105,7 @@ namespace OOX
 					m_oBorder = oReader;
 					if (m_oBorder.IsInit())
 					{
-						bStyleContinuous = m_oBorder->bBorderContinuous; // todooo - one border exclusive
+						bStyleContinuous = m_oBorder->bBorderContinuous; // TODO - one border exclusive
 					}
 				}
 				else if (L"Alignment" == sName)

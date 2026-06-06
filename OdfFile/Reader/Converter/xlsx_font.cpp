@@ -348,7 +348,7 @@ xlsx_font::xlsx_font (	const odf_reader::text_format_properties_ptr &textProp,
     }
     //else
     //{
-    //    sz = 10.;//kDefaultFontSize;        //todooo ... вытащить как в math
+    //    sz = 10.;//kDefaultFontSize;        //TODO ... pull out as in math
     //}
 
     if ((textProp->style_text_underline_type_ &&

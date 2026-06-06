@@ -267,7 +267,7 @@ void paragraph_format_properties::xlsx_convert(std::wostream & strm, bool in_dra
 void paragraph_format_properties::pptx_convert(oox::pptx_conversion_context & Context)
 {
 	std::wstringstream & _pPr = Context.get_text_context().get_styles_context().paragraph_attr();
- //сначала аттрибуты к самому pPr или defPPr
+ //first the attributes to pPr or defPPr itself
 	if (fo_margin_left_ || fo_margin_right_ || fo_text_indent_ )
 	{
 		// TODO auto indent
@@ -363,7 +363,7 @@ void paragraph_format_properties::pptx_convert(oox::pptx_conversion_context & Co
 	//	}
 	//}
 ////////////////////////////////////////////////////////////////////////
- //теперь nodes  к pPr или defPPr
+ //now nodes to pPr or defPPr
 	CP_XML_WRITER(Context.get_text_context().get_styles_context().paragraph_nodes())
 	{
 		//if (fo_keep_with_next_) //&& Context.get_drop_cap_context().state() != 2

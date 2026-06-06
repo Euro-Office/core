@@ -311,8 +311,8 @@ namespace OOX
 					m_oFontName = oReader;
 				else if ( !m_bRPRChange && L"w:rPrChange" == sName )
 					m_oRPrChange = oReader;
-				// В спецификации почему-то написано pStyle, хотя по смыслы, по ссылке в самой
-				// же спецификации и, в конце концов, по алфавиту тут толжно быть rStyle
+				// For some reason, the specification says pStyle, although according to the meaning, see the link in the
+				// the same specifications and, in the end, alphabetically there should be rStyle
 				else if ( L"w:rStyle" == sName )
 					m_oRStyle = oReader;
 				else if ( !m_oRStyle.IsInit() && L"w:pStyle" == sName )
@@ -483,8 +483,8 @@ namespace OOX
 			if ( !m_bRPRChange && oNode.GetNode( L"w:rPrChange", oChild ) )
 				m_oRPrChange = oChild;
 
-			// В спецификации почему-то написано pStyle, хотя по смыслы, по ссылке в самой
-			// же спецификации и, в конце концов, по алфавиту тут толжно быть rStyle
+			// For some reason, the specification says pStyle, although according to the meaning, see the link in the
+			// the same specifications and, in the end, alphabetically there should be rStyle
 			if ( oNode.GetNode( L"w:rStyle", oChild ) )
 				m_oRStyle = oChild;
 

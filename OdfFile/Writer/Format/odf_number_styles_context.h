@@ -42,7 +42,7 @@ typedef shared_ptr<office_element>::Type office_element_ptr;
 
 struct number_format_state
 {
-	int oox_num_fmt;//дефолтные
+	int oox_num_fmt;//default
 
 	odf_types::office_value_type::type ods_type;
 

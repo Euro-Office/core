@@ -58,7 +58,7 @@ void CRecordTextMasterStyleAtom::ReadFromStream(SRecordHeader &oHeader, POLE::St
     if (4 < lLevels)
         LoadLevel(4, pStream, bIsLevelsPresent);
 
-    // походу нужно делать так: ----------------------------------------------
+    // apparently it needs to be done like this: ----------------------------------------------
     if (m_pLevels[0].is_init())
     {
         if (!m_pLevels[1].is_init())
@@ -89,7 +89,7 @@ void CRecordTextMasterStyleAtom::ReadFromStream(SRecordHeader &oHeader, POLE::St
     }
     // -----------------------------------------------------------------------
 
-    // это на всякий случай...
+    // this is just in case...
     StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
 }
 

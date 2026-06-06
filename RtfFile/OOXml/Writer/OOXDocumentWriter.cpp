@@ -45,14 +45,14 @@ OOXDocumentWriter::~OOXDocumentWriter()
 
 std::wstring OOXDocumentWriter::CreateXmlStart()
 {
-	//пишем Footnotes
+	//write Footnotes
 	RenderParameter oNewParam;
 	oNewParam.poDocument	= &m_oDocument;
 	oNewParam.poWriter		= &m_oWriter;
 	oNewParam.poRels		= &m_oWriter.m_oDocRels;
 	oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-	//пишем document.xml
+	//write document.xml
 	std::wstring sResult = L"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\" ?>\n";
 	sResult += L"<w:document \
 xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" \
@@ -100,7 +100,7 @@ std::wstring OOXDocumentWriter::CreateXmlEnd( )
 {
 	std::wstring sResult ;
 
-	//пишем все кроме document.xml
+	//write everything except document.xml
 	RenderParameter oNewParam;
 	oNewParam.poDocument	= &m_oDocument;
 	oNewParam.poWriter		= &m_oWriter;
@@ -201,7 +201,7 @@ std::wstring OOXDocumentWriter::CreateXmlEnd( )
 	m_oDocument.m_oInformation.RenderToOOX(oNewParam);
 
 
-	//пишем финальные свойства секции
+	//write the final properties of the section
 	oNewParam.poDocument = &m_oDocument;
 	oNewParam.poWriter = &m_oWriter;
 	oNewParam.poRels = &m_oWriter.m_oDocRels;
@@ -329,7 +329,7 @@ bool OOXDocumentWriter::SaveBySection()
 
 	if (m_oDocument.GetCount() > 1 )
 	{
-		m_oDocument.RemoveItem( 0 ); //удаляем секцию кроме последней
+		m_oDocument.RemoveItem( 0 ); //delete the section except the last one
 	}
 	else
 	{
@@ -350,7 +350,7 @@ bool OOXDocumentWriter::SaveByItem()
 		oNewParam.poRels		= &m_oWriter.m_oDocRels;
 		oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-		if( m_oDocument.GetCount() > 1)//если что-то есть в следующей секции значит предыдущая закончилась
+		if( m_oDocument.GetCount() > 1)//if there is something in the next section, then the previous one is over
 		{
 			std::wstring sXml, sectPr;
 
@@ -387,16 +387,16 @@ bool OOXDocumentWriter::SaveByItem()
 			}
 			else
 			{
-				//генерация ???
+				//generation???
 				sXml = L"<w:p><w:pPr>" + sectPr + L"</w:pPr></w:p>";
 			}
 	
 			std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
 			m_oFileWriter->Write((BYTE*)sXmlUTF.c_str(), sXmlUTF.length());
 			
-			m_oDocument.RemoveItem( 0 ); //удаляем секцию
+			m_oDocument.RemoveItem( 0 ); //delete the section
 		}
-		else if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 1 )//пишем параграф - один всегда  "прозапас для секций"
+		else if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 1 )//write a paragraph - one is always "reserve for sections"
 		{
 			std::wstring sXml = m_oDocument[0].props->operator[](0)->RenderToOOX(oNewParam);
             std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
@@ -405,7 +405,7 @@ bool OOXDocumentWriter::SaveByItem()
 			{
 				m_oFileWriter->Write((BYTE*)sXmlUTF.c_str(), sXmlUTF.length());
 			}
-			m_oDocument[0].props->RemoveItem( 0 );//удаляем первый параграф
+			m_oDocument[0].props->RemoveItem( 0 );//delete the first paragraph
         }
 	}
 	return true;
@@ -418,10 +418,10 @@ bool OOXDocumentWriter::SaveByItemEnd()
 	oNewParam.poRels		= &m_oWriter.m_oDocRels;
 	oNewParam.nType			= RENDER_TO_OOX_PARAM_UNKNOWN;
 
-	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )//дописываем последний параграф
+	if( m_oDocument.GetCount() > 0 && m_oDocument[0].props->GetCount() > 0 )//add the last paragraph
 	{
 		std::wstring sXml = m_oDocument[0].props->operator[](0)->RenderToOOX(oNewParam);
-		//удаляем первый параграф
+		//delete the first paragraph
 		m_oDocument[0].props->RemoveItem( 0 );
         std::string sXmlUTF = NSFile::CUtf8Converter::GetUtf8StringFromUnicode(sXml);
 

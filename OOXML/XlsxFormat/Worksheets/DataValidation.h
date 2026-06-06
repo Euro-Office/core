@@ -46,7 +46,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		class CDataValidationFormula : public WritingElement //тоже что и CFormulaCF
+		class CDataValidationFormula : public WritingElement //same as CFormulaCF
 		{
 		public:
 			WritingElement_AdditionMethods(CDataValidationFormula)
@@ -108,7 +108,7 @@ namespace OOX
 			nullable<SimpleTypes::COnOff>									m_oShowErrorMessage;
 			nullable<SimpleTypes::COnOff>									m_oShowInputMessage;
 
-			nullable_string									m_oSqRef; // ToDo переделать на тип "sqref" (18.18.76) - последовательность "ref", разделенные пробелом
+			nullable_string									m_oSqRef; // Convert ToDo to type "sqref" (18.18.76) - sequence of "refs" separated by a space
 			nullable_string									m_oList;
 			mutable nullable_string							m_oUuid;
 			nullable<CDataValidationFormula>				m_oFormula1;

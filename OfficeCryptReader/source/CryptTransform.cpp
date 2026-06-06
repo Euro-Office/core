@@ -222,7 +222,7 @@ _buf Hmac(_buf &  buf, CRYPT_METHOD::_hashAlgorithm algorithm, std::string & pla
 
 
 _buf HashAppend(_buf &  hashBuf, _buf & block, CRYPT_METHOD::_hashAlgorithm algorithm)
-{//todooo переделать
+{//TODO redo
 	if (algorithm == CRYPT_METHOD::MD5)
 	{		
 		MD5 hash;
@@ -365,7 +365,7 @@ _buf GenerateHashKey(_buf & salt, _buf & password, int hashSize, int keySize, in
 
 	return _buf(pHashBuf3.ptr, pHashBuf3.size);
 }
-ARC4::Decryption rc4Decryption; // todooo -> in impl
+ARC4::Decryption rc4Decryption; // TODO -> in impl
 ARC4::Encryption rc4Encryption;
 
 bool EncryptCipher(_buf & key, _buf & iv, _buf & data_inp, _buf & data_out, CRYPT_METHOD::_cipherAlgorithm algorithm,
@@ -836,7 +836,7 @@ void ODFWriteProtect::GetCryptData(_odfWriteProtectData &_data)
 
 void ODFWriteProtect::Generate()
 {
-    //сгенерить соль
+    //generate salt
     RandomPool prng;
     SecByteBlock seed_salt(16);
     OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
@@ -893,7 +893,7 @@ void ECMAWriteProtect::GetCryptData(_ecmaWriteProtectData &_data)
 }
 void ECMAWriteProtect::Generate()
 {
-	//сгенерить соль
+	//generate salt
 	RandomPool prng;
 	SecByteBlock seed_salt(16);
 	OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
@@ -970,7 +970,7 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 //---------
     RandomPool prng;
 	
-	//сгенерить соль
+	//generate salt
     SecByteBlock seed_salt(cryptData.saltSize);
     OS_GenerateRandomBlock(false, seed_salt, seed_salt.size());
 	if (prng.CanIncorporateEntropy())
@@ -983,14 +983,14 @@ void ECMAEncryptor::SetPassword(std::wstring _password)
 	{
 		prng.IncorporateEntropy(seed_datasalt, seed_datasalt.size());
 	}
-	//сгенерить ключ
+	//generate a key
     SecByteBlock seed_key(cryptData.keySize);
     OS_GenerateRandomBlock(false, seed_key, seed_key.size());
 	if (prng.CanIncorporateEntropy())
 	{
 		prng.IncorporateEntropy(seed_key, seed_key.size());
 	}
-	//сгенерить проверочный
+	//generate a test
     SecByteBlock seed_verify(cryptData.saltSize);
     OS_GenerateRandomBlock(false, seed_verify, seed_verify.size());
 	if (prng.CanIncorporateEntropy())

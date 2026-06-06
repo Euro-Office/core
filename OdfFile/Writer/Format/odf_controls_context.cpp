@@ -383,7 +383,7 @@ bool odf_controls_context::is_exist_content()
 	return (impl_->controls_.empty() ? false : true);
 }
 
-void odf_controls_context::finalize(office_element_ptr & root_elm)//для привязки 
+void odf_controls_context::finalize(office_element_ptr & root_elm)//for binding
 {
 	if (impl_->controls_.empty()) return;
 

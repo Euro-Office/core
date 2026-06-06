@@ -47,7 +47,7 @@
 #include <CoreFoundation/CoreFoundation.h>
 std::wstring getDirectoryPathMac(const NSSystemUtils::SystemDirectoryType& type)
 {
-	// Определяем тип директории
+	// Determining the directory type
 	CFSearchPathDirectory searchPath = kCFDocumentDirectory;
 	switch (type) {
 	case 1:
@@ -60,7 +60,7 @@ std::wstring getDirectoryPathMac(const NSSystemUtils::SystemDirectoryType& type)
 		break;
 	}
 
-	// Получаем массив путей
+	// Get an array of paths
 	CFArrayRef pathsArray = CFCopySearchPathForDirectoriesInDomains(searchPath, kCFUserDomainMask, true);
 
 	std::wstring result = L"";

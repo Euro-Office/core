@@ -146,7 +146,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 		//Log::warning(rec_name);
 
 		if (desirable_type == rt_MsoDrawingGroup ||
-			desirable_type == rt_GelFrame)	// объединяем c rt_Continue в один блок 
+			desirable_type == rt_GelFrame)	// combine with rt_Continue into one block
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -189,7 +189,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 	{
 		what_we_actually_read = records_cache.front()->getTypeId();
 
-		// if we get what was requested
+		// if get what was requested
 		if(desirable_type == what_we_actually_read || desirable_type == CFRecordType::ANY_TYPE)
 		{
 			CFRecordPtr ret = records_cache.front();
@@ -200,7 +200,7 @@ CFRecordPtr CFStreamCacheReader::getNextRecord(const CFRecordType::TypeId desira
 
 	if(gen_except)
 	{
-		// теги разные
+		// tags are different
 		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
 		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
@@ -289,7 +289,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 		//Log::warning(rec_name);
 
-		if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок 
+		if (desirable_type == rt_MsoDrawingGroup)	// combine rt_MsoDrawingGroup + rt_Continue into one block
 		{
 			if (checkNextRecord(desirable_type, 1))
 			{				
@@ -332,7 +332,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 	{
 		what_we_actually_read = records_cache.front()->getTypeId();
 
-		// if we get what was requested
+		// if get what was requested
 		if ( desirable_type == what_we_actually_read || 
 			 desirable_type == CFRecordType::ANY_TYPE ||
 			(desirable_type == rt_BOF_BIFF8 && (what_we_actually_read == rt_BOF_BIFF4 ||
@@ -346,7 +346,7 @@ CFRecordPtr FileStreamCacheReader::getNextRecord(const CFRecordType::TypeId desi
 
 	if(gen_except)
 	{
-		// теги разные
+		// tags are different
 		std::string inType = XLS::CFRecordType::getStringById(desirable_type);
 		std::string outType = CFRecordType::getStringById(what_we_actually_read);		
 
@@ -430,7 +430,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
         //Log::warning(rec_name);
 
-        /*if (desirable_type == rt_MsoDrawingGroup)	// объединяем rt_MsoDrawingGroup + rt_Continue в один блок
+        /*if (desirable_type == rt_MsoDrawingGroup) // combine rt_MsoDrawingGroup + rt_Continue into one block
         {
             if (checkNextRecord(desirable_type, 1))
             {
@@ -473,7 +473,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
     {
         what_we_actually_read = records_cache.front()->getTypeId();
 
-        // if we get what was requested
+        // if get what was requested
         if ( desirable_type == what_we_actually_read ||
              desirable_type == CFRecordType::ANY_TYPE ||
             (desirable_type == rt_BOF_BIFF8 && (what_we_actually_read == rt_BOF_BIFF4 ||
@@ -487,7 +487,7 @@ CFRecordPtr BinaryStreamCacheReader::getNextRecord(const CFRecordType::TypeId de
 
     if(gen_except)
     {
-        // теги разные
+        // tags are different
         std::string inType = XLS::CFRecordType::getStringById(desirable_type);
         std::string outType = CFRecordType::getStringById(what_we_actually_read);
 

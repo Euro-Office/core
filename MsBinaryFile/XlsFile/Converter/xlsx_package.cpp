@@ -623,7 +623,7 @@ void xl_activeX_files::write(const std::wstring & RootPath)
 	if (activeXs_.empty()) return;
 
 	std::wstring path = RootPath + FILE_SEPARATOR_STR + L"activeX";
-    //NSDirectory::CreateDirectory(path.c_str()); уже есть
+    //NSDirectory::CreateDirectory(path.c_str()); already there
 
 	content_type & contentTypes = this->get_main_document()->content_type().get_content_type();
 	static const std::wstring kWSConType = L"application/vnd.ms-office.activeX+xml";

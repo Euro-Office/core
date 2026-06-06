@@ -7709,7 +7709,7 @@ namespace BinXlsxRW
 			WriteCT_Boolean(*oVal.m_autoUpdate);
 			m_oBcw.WriteItemEnd(nCurPos);
 		}
-		//if (NULL != oVal.m_id) - выше
+		//if (NULL != oVal.m_id) - higher
 	}
 	void BinaryChartWriter::WriteCT_DispBlanksAs(CDispBlanksAs& oVal)
 	{
@@ -11950,7 +11950,7 @@ namespace BinXlsxRW
 			m_oBcw.m_oStream.WriteBOOL(*pVal->m_autoUpdate);
 			m_oBcw.WriteItemEnd(nCurPos);
 		}
-		//if (NULL != pVal.m_id) - выше
+		//if (NULL != pVal.m_id) - higher
 	}
 	void BinaryChartWriter::WriteCT_ChartExFormula(OOX::Spreadsheet::ChartEx::CFormula *pVal)
 	{

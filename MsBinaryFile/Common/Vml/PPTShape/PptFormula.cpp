@@ -152,7 +152,7 @@ namespace NSGuidesVML
 
 		try
 		{
-			// теперь нужно просто посчитать
+			// now just count
 			switch (m_eFormulaType)
 			{
 			case ftSum:			{ dRes = a + b - c;				break; }

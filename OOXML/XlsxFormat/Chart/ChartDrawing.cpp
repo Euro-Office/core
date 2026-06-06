@@ -221,14 +221,14 @@ namespace OOX
 					//	m_nId = shape->nvSpPr.cNvPr.id;
 					//	if (shape->nvSpPr.cNvPr.vmlSpid.IsInit())
 					//	{
-					//		//ссылка на объект или шейп в vmlDrawing
+					//		//link to an object or shape in vmlDrawing
 					//		m_sVmlSpId = shape->nvSpPr.cNvPr.vmlSpid.get();
 					//	}
 					//}
 					//smart_ptr<PPTX::Logic::GraphicFrame> frame = m_oElement->GetElem().smart_dynamic_cast<PPTX::Logic::GraphicFrame>();
 					//if ((frame.IsInit()) && (frame->vmlSpid.IsInit()))
 					//{
-					//	//ссылка на объект или шейп в vmlDrawing
+					//	//link to an object or shape in vmlDrawing
 					//	m_sVmlSpId = frame->vmlSpid.get();
 					//}
 				}
@@ -305,14 +305,14 @@ namespace OOX
 					//	m_nId = shape->nvSpPr.cNvPr.id;
 					//	if (shape->nvSpPr.cNvPr.vmlSpid.IsInit())
 					//	{
-					//		//ссылка на объект или шейп в vmlDrawing
+					//		//link to an object or shape in vmlDrawing
 					//		m_sVmlSpId = shape->nvSpPr.cNvPr.vmlSpid.get();
 					//	}
 					//}
 					//smart_ptr<PPTX::Logic::GraphicFrame> frame = m_oElement->GetElem().smart_dynamic_cast<PPTX::Logic::GraphicFrame>();
 					//if ((frame.IsInit()) && (frame->vmlSpid.IsInit()))
 					//{
-					//	//ссылка на объект или шейп в vmlDrawing
+					//	//link to an object or shape in vmlDrawing
 					//	m_sVmlSpId = frame->vmlSpid.get();
 					//}
 				}

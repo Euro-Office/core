@@ -77,7 +77,7 @@ global_info->sTheme = \
 		BYTE *pBuffer = NULL;		
 
 		COfficeUtils OfficeUtils(NULL);		
-		HRESULT hresult = OfficeUtils.LoadFileFromArchive(pThemeData.get(), nThemeDataSize, L"theme1.xml", &pBuffer, nBufferSize);// todooo - parsing ThemeManager
+		HRESULT hresult = OfficeUtils.LoadFileFromArchive(pThemeData.get(), nThemeDataSize, L"theme1.xml", &pBuffer, nBufferSize);// TODO - parsing ThemeManager
 
 		if (hresult != S_OK || pBuffer == NULL)
 			hresult = OfficeUtils.LoadFileFromArchive(pThemeData.get(), nThemeDataSize, L"theme/theme1.xml", &pBuffer, nBufferSize);

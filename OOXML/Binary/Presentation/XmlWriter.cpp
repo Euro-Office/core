@@ -514,7 +514,7 @@ void CXmlWriter::EndNode(const std::wstring& name)
 
 void CXmlWriter::ReplaceString(std::wstring str1, std::wstring str2)
 {
-	// ужасная функция. вызывать ее не надо. не для этого класс писался. .. получше .. но все равно не надо !!!
+	// terrible feature. do not call it. This isn't what the class was written for. .. better .. but still not necessary!!!
 
 	std::wstring sCur = m_oWriter.GetData();
 	XmlUtils::replace_all(sCur, str1, str2);

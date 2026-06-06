@@ -120,7 +120,7 @@ namespace MetaFile
 		unsigned char uchClipPrecision;
 		unsigned char uchQuality;
 		unsigned char uchPitchAndFamily;
-		unsigned char uchFacename[32]; // Согласно спецификации длина имени не должна превышать 32 знака с учетом нулевого символа в конце
+		unsigned char uchFacename[32]; // According to the specification, the name length shouldn't exceed 32 characters, including the null character at the end
 	};
 	class CWmfPalette : public CWmfObjectBase
 	{
@@ -162,9 +162,9 @@ namespace MetaFile
 		virtual ~CWmfRegion();
 		virtual EWmfObjectType GetType() const override;
 	public:
-		short           shNextInChain; // не используется
-		short           shObjectType;  // не используется
-		int             shObjectCount; // не используется
+		short           shNextInChain; // not used
+		short           shObjectType;  // not used
+		int             shObjectCount; // not used
 		short           shRegionSize;
 		short           shScanCount;
 		short           shMaxScan;

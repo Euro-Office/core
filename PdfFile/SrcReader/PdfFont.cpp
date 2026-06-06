@@ -402,7 +402,7 @@ std::map<std::wstring, std::wstring> GetAllFonts(PDFDoc* pdfDoc, NSFonts::IFontM
 			if (!pField)
 				continue;
 
-			// Шрифт и размер шрифта - из DA
+			// Font and font size - from DA
 			Ref fontID;
 			double dFontSize = 0;
 			pField->getFont(&fontID, &dFontSize);
@@ -948,7 +948,7 @@ std::map<std::wstring, std::wstring> GetFreeTextFont(PDFDoc* pdfDoc, NSFonts::IF
 }
 void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int, unsigned int>& mGIDToWidth)
 {
-	// Пытаемся получить ширины из словаря Widths
+	// Trying to get widths from the Widths dictionary
 	Object oWidths;
 	if (pFontDict->lookup("Widths", &oWidths)->isArray())
 	{
@@ -972,21 +972,21 @@ void CollectFontWidths(GfxFont* gfxFont, Dict* pFontDict, std::map<unsigned int,
 	}
 	oWidths.free();
 
-	// Для CID шрифтов обрабатываем DW и W
+	// For CID fonts we process DW and W
 	Object oDescendantFonts;
 	if (pFontDict->lookup("DescendantFonts", &oDescendantFonts)->isArray() && oDescendantFonts.arrayGetLength() > 0)
 	{
 		Object oCIDFont;
 		if (oDescendantFonts.arrayGet(0, &oCIDFont)->isDict())
 		{
-			// Получаем DW (default width)
+			// Get DW (default width)
 			Object oDW;
 			int nDefaultWidth = 1000;
 			if (oCIDFont.dictLookup("DW", &oDW)->isInt())
 				nDefaultWidth = oDW.getInt();
 			oDW.free();
 
-			// Получаем W (widths array)
+			// Get W (widths array)
 			Object oW;
 			if (oCIDFont.dictLookup("W", &oW)->isArray())
 			{

@@ -294,7 +294,7 @@ namespace DocFileFormat
 		}
 		m_pXmlWriter->WriteNodeBegin(L"v:shape", true);
 
-		//m_shapeId = GetShapeID(pShape); - todooo одинаковые картинки (одинаковый spid) - Anexo№3.doc
+		//m_shapeId = GetShapeID(pShape); - TODO same images (same spid) - Anexo№3.doc
 
 
 		if (m_shapeId.empty())
@@ -307,7 +307,7 @@ namespace DocFileFormat
 
 		m_pXmlWriter->WriteAttribute(L"type", std::wstring(L"#" + VMLShapeTypeMapping::GenerateTypeId(&type)));
 
-		//todooo oбъединить с shape_mapping		
+		//TODO merge with shape_mapping
 		int nColorRGBBase = 0xffffff;
 
 		for (size_t i = 0; i < options.size(); i++)
@@ -332,13 +332,13 @@ namespace DocFileFormat
 				}
 			}break;
 			case ODRAW::metroBlob:
-			{//встроенная неведомая хуйня
+			{//built-in unknown value
 				ODRAW::MetroBlob* blob = dynamic_cast<ODRAW::MetroBlob*>(iter.get());
 				if (blob)
 				{
 					m_isBlob = true;
 					m_isEmbedded = true;
-					//if (ParseEmbeddedBlob( blob->data.first, blob->data.second)) // todoooo
+					//if (ParseEmbeddedBlob( blob->data.first, blob->data.second)) // TODO
 					//{
 					//	m_isEmbedded = false;
 					//}

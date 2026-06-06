@@ -557,7 +557,7 @@ namespace OOX
 				}
 			}
 
-			IFileContainer::Read(oRootPath, oPath); //в данном случае порядок считывания важен для xlsb
+			IFileContainer::Read(oRootPath, oPath); //in this case the reading order is important for xlsb
 
 			CXlsx* xlsx = dynamic_cast<CXlsx*>(File::m_pMainDocument);
 			if (xlsx)
@@ -566,7 +566,7 @@ namespace OOX
 				{
 					m_bMacroEnabled = true;
 				}
-				//дубли листов
+				//duplicate sheets
 				for (auto elm : this->m_mapContainer)
 				{
 					if (elm.second->type() == OOX::Spreadsheet::FileTypes::Chartsheets || elm.second->type() == OOX::Spreadsheet::FileTypes::Worksheet)
@@ -746,7 +746,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 			//WorkbookPr
 			if (false == m_oWorkbookPr.IsInit())
 				m_oWorkbookPr.Init();
-			//todo если этот параметр выставлен, то берется стандартная тема, а не из файла.
+			//todo if this parameter is set, then the standard theme is taken, and not from the file.
 			//if(false == m_oWorkbookPr->m_oDefaultThemeVersion.IsInit())
 			//{
 			//	m_oWorkbookPr->m_oDefaultThemeVersion.Init();
@@ -785,7 +785,7 @@ xmlns:xr2=\"http://schemas.microsoft.com/office/spreadsheetml/2015/revision2\"\
 		LONG CWorkbook::GetActiveSheetIndex()
 		{
 			LONG lActiveSheet = 0;
-			std::wstring sSheetRId = L"Sheet1"; // Читаем не по rId, а по имени листа
+			std::wstring sSheetRId = L"Sheet1"; // Read not by rId, but by sheet name
 												// Get active sheet
 			if (m_oBookViews.IsInit() && !m_oBookViews->m_arrItems.empty())
 			{

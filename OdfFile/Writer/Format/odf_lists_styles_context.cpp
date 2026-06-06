@@ -104,7 +104,7 @@ void odf_lists_styles_context::start_style(bool bMaster, int based_number)
 	if (style == NULL)return;
 
 	style->text_list_style_attr_.style_name_ = state.odf_list_style_name;
-	lists_format_array_.push_back(state); //перенести в end??
+	lists_format_array_.push_back(state); //move to end??
 }
 
 style_list_level_properties * odf_lists_styles_context::get_list_level_properties()

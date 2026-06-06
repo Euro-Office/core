@@ -116,7 +116,7 @@ namespace cpdoccore {
 
 			if (Name == ParentStyleName)
 			{
-				ParentStyleName = L"";//иначе в коде возможно зацикливание.
+				ParentStyleName = L"";//otherwise the code may end up in a loop.
 			}
 			style_instance_ptr newStyle = style_instance_ptr(new style_instance(this, Name, DisplayName, Type, Content, IsAutomatic, IsDefault,
 				ParentStyleName, NextStyleName, DataStyleName, PercentageDataStyleName, StyleClass, ListStyleName, ListLevel, OutlineLevel));
@@ -129,7 +129,7 @@ namespace cpdoccore {
 				std::wstring n = Name + L":" + boost::lexical_cast<std::wstring>(style_family(Type));
 				map_[n] = pos;
 
-				// TODO: как правильно??
+				// TODO: which is correct??
 				std::wstring lName = XmlUtils::GetLower(Name);
 				//if ( boost::algorithm::contains(lName, L"internet_20_link") )
 				if (lName == L"internet_20_link")///???????????????

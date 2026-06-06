@@ -739,7 +739,7 @@ private:
 	_CP_OPT(odf_types::Bool)			style_num_letter_sync_;
 	_CP_OPT(odf_types::Bool)			text_fixed_;
 	_CP_OPT(int)						text_page_adjust_;
-	_CP_OPT(std::wstring)				text_select_page_; //todooo to type
+	_CP_OPT(std::wstring)				text_select_page_; //TODO to type
 
 	office_element_ptr					text_;        
 };

@@ -31,8 +31,8 @@
 #include "../common/StringExt.h"
 #include "GraphicsPath.h"
 
-// этот класс нужно переписать. должно работать как и в js
-// а не просто на каждом символе переключаться, если нужно
+// this class needs to be rewritten. should work just like in js
+// and not just switch on each character if necessary
 class CMetafileFontPicker
 {
 private:
@@ -287,7 +287,7 @@ std::wstring IMetafileToRenderter::GetImagePath(const std::wstring& sPath)
 
 		if (0 == sImagePath.find(L"file:///"))
 		{
-			// TODO: под linux код неправильный
+			// TODO: under linux the code is incorrect
 			NSStringExt::Replace(sImagePath, L"file:///", L"");
 			NSStringExt::Replace(sImagePath, L"\\", L"/");
 		}
@@ -337,7 +337,7 @@ namespace NSOnlineOfficeBinToPdf
 		LONG lRendererType = 0;
 		pRenderer->get_Type(&lRendererType);
 
-		// из команд js - точные имена
+		// from js commands - exact names
 		pRenderer->CommandLong(c_nUseDictionaryFonts, 0);
 
 		CommandType eCommand = ctError;
@@ -883,7 +883,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientFill:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command shouldn't be received
 				INT32 gradientType = oReader.ReadInt();
 
 				std::wstring sXml, sXmlStop;
@@ -926,7 +926,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientFillXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command shouldn't be received
 				INT32 gradientType = oReader.ReadInt();
 				int nLen = oReader.ReadInt();
 				std::wstring wsTempString = oReader.ReadString16(nLen);
@@ -934,7 +934,7 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientStroke:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command shouldn't be received
 				INT32 gradientType = oReader.ReadInt();
 				if (0 == gradientType)	//	linearGradient
 				{
@@ -975,14 +975,14 @@ namespace NSOnlineOfficeBinToPdf
 			}
 			case ctGradientStrokeXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command shouldn't be received
 				INT32 gradientType = oReader.ReadInt();
 				int nLen = (int)oReader.ReadInt();
 				std::wstring wsTempString = oReader.ReadString16(nLen);
 				break;
 			}
-			// дополнительные команды. из-за совместимости версий не можем менят формат.
-			// но все следующие - должны быть по одной схеме
+			// additional commands. Due to version compatibility, we can't change the format.
+			// but all the following must be according to the same scheme
 			case ctHyperlink:
 			{
 				if (S_OK == pRenderer->IsSupportAdvancedCommand(IAdvancedCommand::AdvancedCommandType::Hyperlink))
@@ -1366,7 +1366,7 @@ namespace NSOnlineOfficeBinToPdf
 			case ctGradientStroke:
 			case ctGradientStrokeXML:
 			{
-				// TODO: Эта команда не должна приходить
+				// TODO: This command shouldn't be received
 				return;
 			}
 			case ctHyperlink:

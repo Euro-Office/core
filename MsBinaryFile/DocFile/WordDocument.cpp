@@ -400,7 +400,7 @@ namespace DocFileFormat
 			BookmarkFirst* pBookmark = static_cast<BookmarkFirst*>(AnnotStartPlex->Elements[i]);
 			if (pBookmark)
 			{
-				short bmc = *((short*)bookmarks[i]); //0x0100 always тут
+				short bmc = *((short*)bookmarks[i]); //0x0100 always here
 				_UINT32 lTag = *((_UINT32*)(bookmarks[i] + 2));
 
 				if (i < AnnotStartPlex->CharacterPositions.size() - 1 )

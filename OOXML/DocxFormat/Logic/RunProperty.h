@@ -118,7 +118,7 @@ namespace OOX
 			}
 			static const CRunProperty Merge(const CRunProperty& oPrev, const CRunProperty& oCurrent);
 
-			bool m_bRPRChange = false; // Является ли данный w:rPr дочерним по отношению к w:rPrChange
+			bool m_bRPRChange = false; // Is this w:rPr a child of w:rPrChange
 
 			nullable<ComplexTypes::Word::COnOff2>	m_oBold;
 			nullable<ComplexTypes::Word::COnOff2>	m_oBoldCs;

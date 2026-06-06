@@ -96,7 +96,7 @@ HRESULT convert_single(std::wstring srcFileName)
 	std::wstring srcTempPath	= NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 	std::wstring dstTempPath	= NSDirectory::CreateDirectoryWithUniqueName(outputDir);
 
-    // распаковываем исходник во временную директорию
+    // unpack the source into a temporary directory
 	COfficeUtils oCOfficeUtils(NULL);
     if (S_OK != oCOfficeUtils.ExtractToDirectory(srcFileName.c_str(), srcTempPath.c_str(), NULL, 0))
 	{

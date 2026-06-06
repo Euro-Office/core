@@ -267,7 +267,7 @@ int main(int argc, char** argv)
 
 	for (int i = 0; i <= argc; ++i)
 	{
-		// чтобы не дублировать код
+		// so as not to duplicate code
 		std::wstring param = L"--print";
 
 		if (i < argc)
@@ -375,7 +375,7 @@ int main(int argc, char** argv)
 	std::string docinfo = file.ReadAdditional(file_path, L"DocumentID");
 	std::string docinfoOld = docinfo;
 
-	// декодируем пароль (если надо)
+	// decode the password (if necessary)
 	if (MasterRecord.Type == rtMaster && file_password.empty())
 	{
 		std::string user = U_TO_UTF8(MasterRecord.getValue(L"user"));
@@ -412,7 +412,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// сначала удаляем
+	// first delete
 	for (std::vector<CRecord>::iterator iter = Records.begin(); iter != Records.end(); iter++)
 	{
 		CRecord& rec = *iter;
@@ -433,7 +433,7 @@ int main(int argc, char** argv)
 		}
 	}
 
-	// теперь добавляем
+	// now add
 	for (std::vector<CRecord>::iterator iter = Records.begin(); iter != Records.end(); iter++)
 	{
 		CRecord& rec = *iter;
@@ -448,7 +448,7 @@ int main(int argc, char** argv)
 
 		if (!data.empty())
 		{
-			// записи не дублируем
+			// Don't duplicate records
 			std::string::size_type pos = docinfo.find(user);
 			while (pos != std::string::npos)
 			{

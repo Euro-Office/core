@@ -50,7 +50,7 @@ int OOXGraphicReader::Parse( ReaderParameter oParam , RtfShapePtr & pOutput)
 	}
 	if (m_ooxGraphic->chartRec.IsInit())
 	{
-		//сгенерим ole (olePic)
+		//generate ole (olePic)
 		m_ooxGraphic->ChartToOlePackageInStorage(oParam.oReader->m_currentContainer, oParam.oReader->m_sTempFolder, ++oParam.oReader->m_nCurOleChartId);
 	}
 	if (m_ooxGraphic->olePic.IsInit())

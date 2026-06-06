@@ -56,7 +56,7 @@ public:
     RtfConvertationManager*							m_convertationManager;
 	std::wstring									m_sPath;
 
-	int												m_nCurItap = 0;			//для определение вложенности таблицы
+	int												m_nCurItap = 0;			//to determine table nesting
 	bool											m_bInTable = false;
 
 	int												m_nCurOleChartId;

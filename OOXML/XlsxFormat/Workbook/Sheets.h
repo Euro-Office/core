@@ -42,7 +42,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		//<extLst>
 		class CSheet : public WritingElement
 		{

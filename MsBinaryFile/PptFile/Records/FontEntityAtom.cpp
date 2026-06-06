@@ -59,7 +59,7 @@ void CRecordFontEntityAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Stream 
      }
     else
     {
-        m_strFaceName = std::wstring((wchar_t*)utf16FaceName/*, lReadByte/2*/); // по факту .. нули нам не нужны
+        m_strFaceName = std::wstring((wchar_t*)utf16FaceName/*, lReadByte/2*/); // in fact .. we don't need zeros
     }
     m_lfCharSet = StreamUtils::ReadBYTE(pStream);
 

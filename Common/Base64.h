@@ -280,7 +280,7 @@ static bool Base64Decode(const char* szSrc, int nSrcLen, BYTE *& pbDest, int *pn
     {
         unsigned int index= in[i]-43;
         if (index>=FF_ARRAY_ELEMS(map2) || map2[index] == 0xff)
-            return false; ///???? было -1
+            return false; ///???? was -1
         v = (v << 6) + map2[index];
         if (i & 3) {
             if (dst - out < out_size) {

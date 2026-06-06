@@ -36,7 +36,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		//<extLst>
 		class CHyperlink : public WritingElement
 		{

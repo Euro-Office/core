@@ -1015,7 +1015,7 @@ bool OOXMathReader::ParseElement(ReaderParameter oParam , OOX::WritingElement * 
 			}
 			else
 			{
-				//todoooo
+				//TODO
 				return false;
 			}
 		}break;

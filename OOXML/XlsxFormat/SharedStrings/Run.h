@@ -31,7 +31,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		class CRun : public WritingElementWithChilds<CText>
 		{
 		public:

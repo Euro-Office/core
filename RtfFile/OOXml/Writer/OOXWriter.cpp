@@ -147,7 +147,7 @@ bool OOXWriter::SaveByItemEnd()
 	((OOXStylesWriter*)		m_poStylesWriter)->Save		(m_sTargetFolder);
 	((OOXFontTableWriter*)	m_poFontTableWriter)->Save	(m_sTargetFolder);
 
-	((OOXSettingsWriter*)	m_poSettingsWriter)->Save	(m_sTargetFolder); //setting в последнюю очередь
+	((OOXSettingsWriter*)	m_poSettingsWriter)->Save	(m_sTargetFolder); //setting last
 
 //-------------------------------------------------------------------------------------
 	OOX::CPath pathDocProps = m_sTargetFolder + FILE_SEPARATOR_STR + L"docProps";

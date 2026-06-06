@@ -164,7 +164,7 @@ namespace MetaFile
 				else
 				{
 					string = NSStringExt::CConverter::GetUnicodeFromSingleByteString((unsigned char*)stream.GetCurPtr(), length,
-																			(NSStringExt::CConverter::ESingleByteEncoding)charset); //не все
+																			(NSStringExt::CConverter::ESingleByteEncoding)charset); //not all
 				}
 			}
 			stream.Skip(length);
@@ -417,7 +417,7 @@ CDataStream& operator>>(CDataStream &stream, TSvmColorEx &c)
 	}
 	else
 	{
-		//из таблички
+		//from the table
 	}
 
 	return stream;

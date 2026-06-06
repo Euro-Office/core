@@ -666,8 +666,8 @@ namespace NSOpenSSL
 #define GCM_IV_LENGTH   12
 #define GCM_TAG_LENGHT  16
 
-	// для того, чтобы мы могли менять алгоритмы, в зависимости от версии
-	// на шифровке - дописываем хедер. сделано на этом уровне, чтобы лишний раз не выделять/копировать память
+	// so that algorithms can be changed depending on the version
+	// on the encryption - add the header. done at this level so as not to allocate/copy memory again
 	std::string g_aes_header = "VER2;";
 
 	unsigned char* PBKDF2_desktop_GCM(const std::string& pass, const std::string& salt)

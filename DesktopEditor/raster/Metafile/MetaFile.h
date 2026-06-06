@@ -66,12 +66,12 @@ namespace MetaFile
 
 		NSFonts::IFontManager* get_FontManager();
 
-		//конвертация в Svg
+		//convert to Svg
 		std::wstring ConvertToSvg(unsigned int unWidth = 0, unsigned int unHeight = 0);
 
 		void SetTempDirectory(const std::wstring& dir);
 
-		//Для тестов
+		//For tests
 	#ifdef METAFILE_SUPPORT_WMF_EMF
 		void ConvertToXml(const wchar_t *wsFilePath);
 		void ConvertToXmlAndRaster(const wchar_t *wsXmlFilePath, const wchar_t* wsOutFilePath, unsigned int unFileType, int nWidth, int nHeight = -1);

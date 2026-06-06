@@ -589,7 +589,7 @@ namespace PdfWriter
 		CharSetInfoVector mCharSets;// count is NOT the same as fonts count [some charsets may be shared]. consult the top dict charset pointer for the right charset
 		EncodingsInfoVector mEncodings; // count is NOT the same as fonts count [some encodinds may be shared].
 
-		CMemoryStream* mPrimitivesReader; // внешний, освобождать не надо
+		CMemoryStream* mPrimitivesReader; // external, no need to release
 		StringToUShort mNameToIndex;
 		long long mNameIndexPosition;
 		long long mTopDictIndexPosition;
@@ -4390,8 +4390,8 @@ namespace PdfWriter
 		if (subsetGlyphIDs.empty())
 			subsetGlyphIDs.push_back(0);
 
-		// Добавить зависимые глифы
-		// Они есть в m_vCodeToGid из pCodeToGID. В pUseGlyfs они тоже есть из m_mGlyphs, но только в m_mGlyphs, они имеют false
+		// Add dependent glyphs
+		// They are in m_vCodeToGid from pCodeToGID. In pUseGlyfs they are also from m_mGlyphs, but only in m_mGlyphs, they have false
 
 		mSubsetFontGlyphsCount = subsetGlyphIDs.size(); // == unCodesCount
 
@@ -5031,7 +5031,7 @@ namespace PdfWriter
 	{
 		if (!m_bOpenTypeCFF)
 		{
-			// Если шрифт не является OpenType CFF, завершаем
+			// If the font isn't OpenType CFF, exit
 			return;
 		}
 

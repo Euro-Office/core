@@ -167,7 +167,7 @@ namespace PPTX
 
             if (bIsSlide && (pRelation->Type() == OOX::FileTypes::HyperLink ||
                              pRelation->Type() == OOX::Presentation::FileTypes::Slide))
-			{// + external audio, video ... - в обычных ...
+			{// + external audio, video... - in regular...
 
 				smart_ptr<OOX::File> file = smart_ptr<OOX::File>(new OOX::HyperLink(OOX::IFileContainer::m_pMainDocument, pRelation->Target()));
 

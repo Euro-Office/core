@@ -151,7 +151,7 @@ void math_mo::oox_convert(oox::math_context & Context)
     {
 		CP_XML_NODE(L"m:r")
         {
-			// + доп стили текста ... todoooo
+			// + additional text styles... TODO
 
 			Context.text_properties_->content_.oox_serialize(CP_XML_STREAM(), Context.graphRPR_, Context.fonts_container_);
 			
@@ -192,7 +192,7 @@ void math_mn::oox_convert(oox::math_context & Context)
     {
 		CP_XML_NODE(L"m:r")
 		{
-			// + доп стили текста ... todoooo
+			// + additional text styles... TODO
 
 			Context.text_properties_->content_.oox_serialize(CP_XML_STREAM(), Context.graphRPR_, Context.fonts_container_);
 	

@@ -142,7 +142,7 @@ namespace DocFileFormat
 			int start_chpx = 8;
 			if (fib->m_FibWord97.lcbPlcfBteChpx - 8 >  (n - 1) * 4)
 			{
-				start_chpx += ((n-1) * 4); //дублирование crun 
+				start_chpx += ((n-1) * 4); //crun duplication
 			}
 
 			//Get the indexed CHPX FKPs

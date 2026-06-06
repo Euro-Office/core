@@ -58,7 +58,7 @@ namespace ComplexTypes
 
 namespace OOX
 {
-	// TO DO: Доделать данный класс
+	// TO DO: Complete this class
 
 	//--------------------------------------------------------------------------------
 	// CWebSettings 17.11.15

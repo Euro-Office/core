@@ -106,7 +106,7 @@ namespace Aggplus
 		oBgraFrame.put_Stride(m_nStride);
 		oBgraFrame.put_Data(m_pImgData);
 		bool bRes = oBgraFrame.SaveFile(strFileName, nFileType);
-		//чтобы не удалялся на destructor
+		//so that it isn't deleted on destructor
 		oBgraFrame.put_Data(NULL);
 		return bRes;
 	}

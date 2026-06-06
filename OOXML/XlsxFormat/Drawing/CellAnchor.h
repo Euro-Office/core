@@ -112,7 +112,7 @@ namespace OOX
 
 			nullable<PPTX::Logic::SpTreeElem>					m_oElement;
 
-		//для удобства
+		//for convenience
 			nullable<std::wstring>								m_sVmlSpId;
 			nullable<int>										m_nId;
 		};

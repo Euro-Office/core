@@ -428,11 +428,11 @@ public:
 
     virtual std::wostream & text_to_stream(std::wostream & _Wostream, bool bXmlEncode = true) const;
 
-    office_element_ptr_array	style_master_page_;			// разметки тем
-    office_element_ptr			style_handout_master_;		// разметки для принтера - .. второстепенно
-    office_element_ptr			draw_layer_set_;			// необязательно .. так как слои все равно не поддерживаются в мс.
-													// то есть не будут объекты объеденены по признаку слоя
-													// зы. не путать с обычной группировкой
+    office_element_ptr_array	style_master_page_;			// theme layouts
+    office_element_ptr			style_handout_master_;		// markings for the printer - .. minor
+    office_element_ptr			draw_layer_set_;			// optional.. since layers aren't supported in ms anyway.
+													// that is, objects won't be combined based on the layer
+													// PS not to be confused with a regular group
 private:
     virtual void add_attributes( const xml::attributes_wc_ptr & Attributes );
     virtual void add_child_element( xml::sax * Reader, const std::wstring & Ns, const std::wstring & Name);

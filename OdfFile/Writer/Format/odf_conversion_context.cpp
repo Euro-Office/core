@@ -225,7 +225,7 @@ void odf_conversion_context::end_document()
 //------------------------
 		package::content_simple_ptr content_style_ = package::content_simple::create();
 		for (size_t i = 0; i < object.styles.size(); i++)
-		{// мастер-пейджы, заданные заливки (градиенты, битмапы), дефолтные стили, колонтитулы, разметки, заметки,...
+		{// master pages, specified fills (gradients, bitmaps), default styles, headers and footers, markups, notes,...
 			object.styles[i]->serialize(content_style_->content());
 		}
 //------------------------
@@ -386,7 +386,7 @@ bool odf_conversion_context::start_math(int base_font_size, const std::wstring& 
 		drawing_context()->set_anchor(anchor_type::AsChar);
 	}
 	drawing_context()->start_object(get_next_name_object(), !math_context_.in_text_box_); 
-			//имитация рисованного объекта - высота-ширина ????
+			//imitation of a drawn object - height-width ????
 
 	create_object(false);
 	create_element(L"math", L"math", objects_.back()->content, this, true);
@@ -404,12 +404,12 @@ void odf_conversion_context::end_math()
 	
 	end_object();
 
-	calculate_font_metrix(math_context_.font_name, math_context_.font_size, false, false, true); // смотреть по формуле - перевычислять только если есть изменения это шрифт и кегль	
+	calculate_font_metrix(math_context_.font_name, math_context_.font_size, false, false, true); // look at the formula - recalculate only if there are changes (font and size)
 
 	double h = math_context_.lvl_max - math_context_.lvl_min;
 	if (math_context_.lvl_min < 0) h += 1;
 	
-	_CP_OPT(double)width = convert_symbol_width(math_context_.symbol_counter * 1.2, true); // либра рамка формулы(её параметры)
+	_CP_OPT(double)width = convert_symbol_width(math_context_.symbol_counter * 1.2, true); // LibreOffice formula frame (its parameters)
 	_CP_OPT(double)height = convert_symbol_width(1.76 * h, true);
 
 	if (false == math_context_.in_text_box_)
@@ -489,9 +489,9 @@ void odf_conversion_context::process_styles(_object & object, bool isRoot)
 		}
 	}
 
-	object.styles.push_back(object.content_styles.back()); //копия
+	object.styles.push_back(object.content_styles.back()); //copy
 
-	create_element(L"office", L"styles", object.styles, this, true);//общие стили
+	create_element(L"office", L"styles", object.styles, this, true);//general styles
 	
 	object.style_context->process_office_styles(object.styles.back());
 	page_layout_context()->process_office_styles(object.styles.back());

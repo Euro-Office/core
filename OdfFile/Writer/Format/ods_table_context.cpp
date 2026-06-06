@@ -118,7 +118,7 @@ void ods_table_context::start_table_part(const std::wstring &name, std::wstring 
 	}
 
 	pos = ref.rfind(L":");
-	if (pos == std::wstring::npos) return;//тута однозначно .. по правилам оох
+	if (pos == std::wstring::npos) return;//Definitely here .. according to OOXML rules
 
 	utils::parsing_ref (ref.substr(0, pos), part_state.col_start, part_state.row_start);
 	utils::parsing_ref (ref.substr(pos + 1, ref.size() - pos), part_state.col_end, part_state.row_end);
@@ -483,7 +483,7 @@ void ods_table_context::add_defined_range(const std::wstring & name, const std::
 
 	formulasconvert::oox2odf_converter formulas_converter;
 
-	std::wstring odf_range = formulas_converter.convert_named_ref(cell_range);//todo - разделить конвертацию диапазонов/рэнжей на c [] и без
+	std::wstring odf_range = formulas_converter.convert_named_ref(cell_range);//todo - split conversion of ranges/ranges into with [] and without
 	
 	std::wstring odf_base_cell = formulas_converter.get_table_name();
 
@@ -531,7 +531,7 @@ void ods_table_context::add_defined_expression(const std::wstring & name, const 
 	
 	bool simple_range = formulas_converter.is_simple_ref(value);
 
-	if (simple_range)//если простой - range, составной - выражение
+	if (simple_range)//if simple - range, complex - expression
 		return add_defined_range (name, value, sheet_id, printable);
 
 	office_element_ptr elm;
@@ -585,9 +585,9 @@ void ods_table_context::start_table(office_element_ptr & elm)
 	state()->set_table_style(style);
 	state()->set_table_hidden(false);
 
-	//для свойств страницы, а не таблицы - нужно создать master-page c page layout и связать по имени со стилем таблицы
-	//причем здесь, т.к. с другой стороны это ВСЕ еще свойства листа. то есть совйства листа разделить на свйства страницы и таблицы ..
-	//todooo
+	//for page properties, not table properties, need to create a master-page with page layout and link it by name to the table style
+	//and here, because on the other hand, these are STILL sheet properties. that is, the sheet properties are divided into page and table properties ..
+	//TODO
 	//????
 }
 

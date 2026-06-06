@@ -345,7 +345,7 @@ namespace OdfCustomShape
 		else
 			return false;
 	}
-	//Нет сравнения + и /
+	//No comparison + and /
 	bool CElementArithmeticOperations::ComparisonSign(const std::wstring& wsSign)
 	{
 		return((m_enTypeSign == TypeElement::multiplication && wsSign == L"/") || (m_enTypeSign == TypeElement::plus && wsSign == L"-"));

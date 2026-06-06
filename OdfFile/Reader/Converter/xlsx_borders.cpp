@@ -43,7 +43,7 @@ namespace oox {
 
 namespace  {
 
-// TODO надо сделать конвертацию в зависимости от стиля
+// TODO need to do the conversion depending on the style
 std::wstring convert_border_style(const odf_types::border_style& borderStyle)
 {
 	std::wstring retVal = L"none";

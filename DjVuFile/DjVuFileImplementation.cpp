@@ -248,7 +248,7 @@ void  CDjVuFileImplementation::DrawPageOnRenderer(IRenderer* pRenderer, int nPag
 	}
 	catch (...)
 	{
-		// белая страница
+		// white page
 	}
 }
 void CDjVuFileImplementation::ConvertToPdf(const std::wstring& wsDstPath)
@@ -419,7 +419,7 @@ BYTE* CDjVuFileImplementation::GetPageLinks(int nPageIndex)
 		{
 			GUTF8String str = map_areas[pos]->url;
 			oRes.WriteString((BYTE*)str.getbuf(), str.length());
-			// Верхний левый угол
+			// Upper left corner
 			double x = map_areas[pos]->get_xmin();
 			double y = dHeight - map_areas[pos]->get_ymax();
 			oRes.AddDouble(0.0);
@@ -628,7 +628,7 @@ void CDjVuFileImplementation::CreatePdfFrame(IRenderer* pRenderer, GP<DjVuImage>
 	}
 	else
 	{
-		// белый фрейм??
+		// white frame??
 		//memset(pBufferDst, 0xFF, 4 * lImageWidth * lImageHeight);
 		GRect oRectAll(0, 0, lImageWidth, lImageHeight);
 		GP<GPixmap> pImage = pPage->get_pixmap(oRectAll, oRectAll);
@@ -836,7 +836,7 @@ XmlUtils::CXmlNode CDjVuFileImplementation::ParseText(GP<DjVuImage> pPage)
 }
 void CDjVuFileImplementation::TextToRenderer(IRenderer* pRenderer, XmlUtils::CXmlNode oTextNode, double dKoef, bool isView)
 {
-	// Выставим шрифт пустой (чтобы растягивать по всему ректу)
+	// Set the brush to null (to stretch it across the entire rect)
 	pRenderer->put_FontName(L"DjvuEmptyFont");
 	//std::wstring csText = oTextNode.GetXml();
 	std::vector<XmlUtils::CXmlNode> oLinesNodes = oTextNode.GetNodes(L"LINE");

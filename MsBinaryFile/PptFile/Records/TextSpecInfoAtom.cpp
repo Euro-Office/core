@@ -57,9 +57,9 @@ void CRecordTextSpecInfoAtom::ReadFromStream(SRecordHeader &oHeader, POLE::Strea
             break;
     }
 
-    // на всякий случай...
-    // здесь когда текст сначала другой (т.е. например - placeholder в мастере) -
-    // то у нас неправильно выставился m_lCount... на число m_lCount пилюем .. берем структур si скока прописано
+    // just in case...
+    // here when the text is first different (i.e. for example - placeholder in the master) -
+    // then we have set m_lCount incorrectly... we ignore m_lCount .. take as many si structures as specified
     StreamUtils::StreamSeek(m_lOffsetInStream + m_oHeader.RecLen, pStream);
 }
 

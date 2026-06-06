@@ -261,7 +261,7 @@ std::wstring RtfShape::RenderToRtf(RenderParameter oRenderParameter)
 	if ( PROP_DEF == m_nShapeType) return L"";
 	
     std::wstring sResult;
-	//запоминаем координаты и если нужно поворачиваем
+	//save the coordinates and rotate if necessary
 	int nLeft		= m_nLeft;
 	int nTop		= m_nTop;
 	int nRight		= m_nRight;
@@ -485,7 +485,7 @@ std::wstring RtfShape::RenderToRtf(RenderParameter oRenderParameter)
 		}
 		sResult += L"}";
 	}
-	//восстанавливаем координаты и если нужно поворачиваем
+	//restore the coordinates and rotate if necessary
 	m_nLeft			= nLeft;
 	m_nTop			= nTop;
 	m_nRight		= nRight;
@@ -786,7 +786,7 @@ std::wstring RtfShape::RenderToOOX(RenderParameter oRenderParameter)
 		m_aTextItems = TextItemContainerPtr();
 		
 		if ( 0 != aTempTextItems )
-		{//пишем только Ole обьект
+		{//write only Ole object
 			size_t nTempTextItemsCount = aTempTextItems->GetCount();
 			for (size_t i = 0; i < nTempTextItemsCount; i++ )
 			{
@@ -803,7 +803,7 @@ std::wstring RtfShape::RenderToOOX(RenderParameter oRenderParameter)
 							poCurParagraph->GetItem( piCurIDocumentElement, j );
 							if ( NULL != piCurIDocumentElement && TYPE_RTF_OLE == piCurIDocumentElement->GetType() )
 							{
-								//рендерим только Ole часть
+								//render only the Ole part
 								RenderParameter oNewParam = oRenderParameter;
 								oNewParam.nType = RENDER_TO_OOX_PARAM_OLE_ONLY;
 								oNewParam.nValue = m_nID;
@@ -826,7 +826,7 @@ std::wstring RtfShape::RenderToOOX(RenderParameter oRenderParameter)
 					}
 				}
 			}
-			//возвращаем text box на место
+			//return the text box to its place
 			m_aTextItems = aTempTextItems;
 		}
 	}
@@ -879,7 +879,7 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 		}
 	}
 	else
-	{//работает по умолчанию
+	{//works by default
 		if (m_oCharProperty.m_nRevised != PROP_DEF)
 		{
 			m_bInsert = true;
@@ -992,7 +992,7 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 			m_eXAnchor = RtfShape::ax_margin;
 			m_eYAnchor = RtfShape::ay_margin; 
 		}
-		//не пишем если inline
+		//Don't write if inline
 		if ( 3 != m_nPositionHRelative || 3 != m_nPositionVRelative )
 		{
             sStyle += L"position:absolute;";
@@ -1484,7 +1484,7 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 		
 		if (m_nShapeType == PROP_DEF || m_nShapeType == 75 || m_bIsOle)
 		{
-            if ( sPicture.empty() )//если не сохранилась картинка, то весь shape-picture будет бесполезным
+            if ( sPicture.empty() )//if the image isn't saved, then the entire shape-picture will be useless
 				return L"";
 
  			int nCropLeft	= PROP_DEF;
@@ -1568,7 +1568,7 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 			case 7:	sShapeNodes += L" type=\"gradient\"";	break;
 			case 8:	sShapeNodes += L" type=\"gradient\"";	break;
 			case 9:	sShapeNodes += L" type=\"gradient\"";	break;
-		}//todooo center radial ...
+		}//TODO center radial ...
 
 		if ( PROP_DEF != m_nFillOpacity)
 		{
@@ -1616,7 +1616,7 @@ std::wstring RtfShape::RenderToOOXBegin(RenderParameter oRenderParameter)
 
         if ( !m_sGtextFont.empty() )
 		{
-			sTextStyle += L"font-family:" + XmlUtils::EncodeXmlString(m_sGtextFont) + L";";//todooo значения как в кавычках так и без - проверить как без
+			sTextStyle += L"font-family:" + XmlUtils::EncodeXmlString(m_sGtextFont) + L";";//TODO values can be quoted or unquoted - check the unquoted case
 		}
 
         if (!sTextStyle.empty())
@@ -1676,11 +1676,11 @@ std::wstring RtfShape::RenderToOOXEnd(RenderParameter oRenderParameter)
 	{
 		if (!m_sOle.empty())
 		{
-			sResult += m_sOle + L"</w:object></w:r>";//работает по умолчанию
+			sResult += m_sOle + L"</w:object></w:r>";//works by default
 		}
 		else
 		{
-			sResult += L"</w:pict></w:r>";//работает по умолчанию
+			sResult += L"</w:pict></w:r>";//works by default
 		}
 		
 		if (m_bDelete)	sResult += L"</w:del>";
@@ -1691,7 +1691,7 @@ std::wstring RtfShape::RenderToOOXEnd(RenderParameter oRenderParameter)
 std::wstring RtfShape::GroupRenderToRtf(RenderParameter oRenderParameter)
 {
     std::wstring sResult;
-	//запоминаем координаты и если нужно поворачиваем
+	//save the coordinates and rotate if necessary
 	int nLeft		= m_nLeft;
 	int nTop		= m_nTop;
 	int nRight		= m_nRight;
@@ -1797,7 +1797,7 @@ std::wstring RtfShape::GroupRenderToRtf(RenderParameter oRenderParameter)
 		sResult += L"}";
 		sResult += L"}";
 	}
-	//восстанавливаем координаты и если нужно поворачиваем
+	//restore the coordinates and rotate if necessary
 	m_nLeft			= nLeft;
 	m_nTop			= nTop;
 	m_nRight		= nRight;
@@ -1858,17 +1858,17 @@ void RtfShape::SetNotSupportShape()
 void RtfShape::ToRtfRotation( int nAngel , int &nLeft, int &nTop, int& nRight, int& nBottom )
 {
 	nAngel = nAngel/ 65536;
-	//поворачиваем на 45 градусов
+	//rotate 45 degrees
 	nAngel -= 45;
-	//делаем угол от 0 до 360
+	//make an angle from 0 to 360
 	nAngel = nAngel % 360;
 
 	if ( nAngel < 0 )	nAngel += 360;
 
-	int nQuater = nAngel / 90; // определяем четверть
+	int nQuater = nAngel / 90; // define a quarter
 	if ( 0 == nQuater || 2 == nQuater )
 	{
-		//поворачиваем относительно центра на 90 градусов обратно
+		//rotate it 90 degrees relative to the center
 		int nCenterX	= ( nLeft + nRight ) / 2;
 		int nCenterY	= ( nTop + nBottom ) / 2;
 		int nWidth		= nRight - nLeft;

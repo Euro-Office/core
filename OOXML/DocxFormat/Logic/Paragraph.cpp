@@ -44,7 +44,7 @@
 
 #include "../../Common/SimpleTypes_Word.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>
@@ -321,7 +321,7 @@ namespace OOX
 				else if (L"permStart" == sName )
 					pItem = new CPermStart( document );
 				else if (L"pPr" == sName )
-				{// c копией  .. для быстрого доступа/анализа
+				{// with a copy .. for quick access/analysis
 					if (m_oParagraphProperty)
 					{
 						CParagraphProperty prop2(document);

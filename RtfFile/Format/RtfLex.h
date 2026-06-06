@@ -31,8 +31,8 @@
 class StringStream
 {
 private: 
-	LONG64 m_nSizeAbs;//размер файла
-	LONG64 m_nPosAbs;//позиция в файле
+	LONG64 m_nSizeAbs;//file size
+	LONG64 m_nPosAbs;//file position
 
 	unsigned char* m_aBuffer;
 

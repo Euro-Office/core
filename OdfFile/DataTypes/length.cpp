@@ -72,7 +72,7 @@ std::wostream & operator<< (std::wostream & _Wostream, const length & _Length)
 }
 length operator+ (length _Length1, length _Length2)
 {
-	return length(_Length1.get_value() + _Length2.get_value(),_Length1.get_unit()); //проверка на одинаковость типа .. или приведение к одному
+	return length(_Length1.get_value() + _Length2.get_value(),_Length1.get_unit()); //checking for same type .. or casting to one
 }
 
 length operator+ (length _Length1, double val)
@@ -81,7 +81,7 @@ length operator+ (length _Length1, double val)
 }
 length operator- (length _Length1, length _Length2)
 {
-	return length(_Length1.get_value() - _Length2.get_value(), _Length1.get_unit()); //проверка на одинаковость типа .. или приведение к одному
+	return length(_Length1.get_value() - _Length2.get_value(), _Length1.get_unit()); //checking for same type .. or casting to one
 }
 length operator/ (length _Length1, double val)
 {
@@ -121,7 +121,7 @@ length length::parse(const std::wstring & Str)
     }
 
     //double v = (nSeparator > 0) ? std::stod(Str.substr(0, nSeparator)) : 0;
-    // вообще предыдущая строчка лучше намного, но сделаю как было (без c++11)
+    // In general, the previous line is much better, but I'll do it as it was (without C++11)
     double v = 0;
     if (nSeparator > 0)
     {

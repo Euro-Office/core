@@ -328,7 +328,7 @@ namespace MetaFile
 		unsigned int  unOptions;
 		TRectL        oRectangle;
 		unsigned int  unOffDx;
-		T*            pOutputString; // unsinged short* либо unsigned char*
+		T*            pOutputString; // unsigned short* or unsigned char*
 		unsigned int* pOutputDx;
 		
 		TEmrText() : pOutputString(NULL), pOutputDx(NULL){}

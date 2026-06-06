@@ -35,7 +35,7 @@ ucs2_conversion::do_in(mbstate_t&,
 {
 	const int max_input = (from_end - from) & ~1;
 	const int max_output = (to_limit - to);
-	int count = std::min(max_input / 2, max_output); // TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input / 2, max_output); // TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -60,7 +60,7 @@ ucs2_conversion::do_out(mbstate_t&,
 {
 	const int max_input = (from_end - from);
 	const int max_output = (to_limit - to) & ~1;
-	int count = std::min(max_input, max_output / 2);	// TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input, max_output / 2);	// TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -82,7 +82,7 @@ ube_conversion::do_in(mbstate_t&,
 {
 	const int max_input = (from_end - from) & ~1;
 	const int max_output = (to_limit - to);
-	int count = std::min(max_input / 2, max_output); // TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input / 2, max_output); // TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -106,7 +106,7 @@ ube_conversion::do_out(mbstate_t&,
 {
 	const int max_input = (from_end - from);
 	const int max_output = (to_limit - to) & ~1;
-	int count = std::min(max_input, max_output / 2);	// TODO попробовать оптимизировать, заменив деление на сдвиг
+	int count = std::min(max_input, max_output / 2);	// TODO try to optimize by replacing division with shift
 
 	from_next = from;
 	to_next = to;
@@ -153,8 +153,8 @@ utf8_conversion::do_in(mbstate_t&,
 }
 
 
-// TODO можно оптимизировать, считая что в utf8 максимальное значение байт на символ 4. 
-// И после заменив деление и умножение на сдвиги
+// TODO can be optimized by considering that in utf8 the maximum value of bytes per character is 4.
+// And then replacing division and multiplication with shifts
 utf8_conversion::result
 utf8_conversion::do_out(mbstate_t&,
 						const wchar_t* from, const wchar_t* from_end, const wchar_t*& from_next,

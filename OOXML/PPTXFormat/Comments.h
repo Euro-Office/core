@@ -32,7 +32,7 @@
 
 namespace PPTX
 {
-	//todooo base_type - >const or define ????
+	//TODO base_type - >const or define ????
 	namespace Logic
 	{
 //------------------------------------------------------------------------------------------------------------

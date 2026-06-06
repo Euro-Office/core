@@ -480,7 +480,7 @@ namespace ZLibZipUtils
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
-		//todooo есть ли необходимость свести все к нижнему ???
+		//TODO is there a need to reduce everything to the bottom???
 		if (wcscmp(filename, filenameW.c_str()) == 0)
 			return true;
 

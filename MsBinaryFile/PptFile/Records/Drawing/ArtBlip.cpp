@@ -101,7 +101,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 			oMetaHeader.ToWMFHeader(&oWmfHeader);
 			
 			LONG lLenHeader = 22;
-			BYTE* pMetaHeader = new BYTE[lLenHeader]; // удалится в oMetaFile
+			BYTE* pMetaHeader = new BYTE[lLenHeader]; // will be deleted in oMetaFile
 			memcpy(pMetaHeader, (void*)(&oWmfHeader), lLenHeader);
 
 			oMetaFile.SetHeader(pMetaHeader, lLenHeader);
@@ -248,7 +248,7 @@ void CRecordOfficeArtBlip::ReadFromStream(SRecordHeader & oHeader, POLE::Stream*
 		{
 			std::string test((char*)pImage, (std::min)((int)oHeader.RecLen - lOffset, 4096));
 			if (std::string::npos != (lOffset2 = test.find("GIF89")))
-			{//gif in png chuncks - todooo from read header, chunks ....
+			{//gif in png chunks - TODO read from header, chunks ....
 				sExt = L".gif";
 				lOffset += lOffset2;
 			}

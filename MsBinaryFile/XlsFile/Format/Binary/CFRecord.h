@@ -172,7 +172,7 @@ private:
 	CFRecordType::TypeId type_id_ = 0;
 	size_t size_ = 0;
 	char*  data_ = 0;
-	BYTE   sizeOfRecordTypeRecordLength = 0; //размер RecordType и RecordLength
+	BYTE   sizeOfRecordTypeRecordLength = 0; //size RecordType and RecordLength
 	size_t rdPtr = 0;
 	static char intData[MAX_RECORD_SIZE_XLSB];
 

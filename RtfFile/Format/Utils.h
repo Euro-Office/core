@@ -181,7 +181,7 @@ public:
     {
     public:
 		static std::wstring Encode( std::wstring sFilename );
-		static void Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ); //сразу записывает в файл
+		static void Decode( std::wstring& sText, NFileWriter::CBufferedFileWriter& oFileWriter ); //immediately writes to file
 
     private:
 		static void DecodeFromFile( std::wstring& sFilename, NFileWriter::CBufferedFileWriter& oFileWriter );

@@ -2399,7 +2399,7 @@ namespace Word
 		XmlMacroReadAttributeBase(oNode, L"w:start", m_oStart);
 		XmlMacroReadAttributeBase(oNode, L"w:startChars", m_oStartChars);
 
-		// См. 9.2.1.2 Part4
+		// See 9.2.1.2 Part4
 		if (!m_oStart.IsInit())
 			XmlMacroReadAttributeBase(oNode, L"w:left", m_oStart);
 		if (!m_oStartChars.IsInit())

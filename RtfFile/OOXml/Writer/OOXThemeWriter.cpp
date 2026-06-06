@@ -30,14 +30,14 @@
 OOXThemeWriter::OOXThemeWriter(OOXWriter& oWriter,RtfDocument& oDocument ):m_oWriter(oWriter)
 {
 }
-bool OOXThemeWriter::Save( std::wstring sFolder ) //todo доделать очистку поле ошибок
+bool OOXThemeWriter::Save( std::wstring sFolder ) //todo finish cleaning the error field
 {
 	std::wstring pathWord = sFolder + FILE_SEPARATOR_STR + _T("word");
 
 	NSDirectory::CreateDirectory(pathWord) ;
 	NSDirectory::CreateDirectory(pathWord + FILE_SEPARATOR_STR + _T("theme")) ;
 
-	//todooo default theme !!!!!
+	//TODO default theme !!!!!
 	//
 	//if( true == RtfUtility:: SaveResourceToFile( IDR_THEME, L"XML", sFolder + _T("\\word\\theme\\theme1.xml") ) )
 	//{

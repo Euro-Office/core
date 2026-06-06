@@ -182,7 +182,7 @@ namespace DocFileFormat
 			int start_papx = 8;
 			if (fib->m_FibWord97.lcbPlcfBtePapx - 8 > (n - 1) * 4)
 			{
-				start_papx += ((n - 1) * 4); //дублирование crun 
+				start_papx += ((n - 1) * 4); //crun duplication
 			}
 
 			int offset = 0;

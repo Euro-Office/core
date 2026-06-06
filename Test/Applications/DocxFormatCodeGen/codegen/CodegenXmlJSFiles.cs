@@ -160,7 +160,7 @@ namespace codegen
             if (!isMatch.Success)
             {
                 name = "todo_" + name;
-                //закомментировать и разбираться в ручном режиме
+                //comment out and handle manually
                 //throw new ArgumentOutOfRangeException();
             }
             return name;

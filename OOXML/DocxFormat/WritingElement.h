@@ -134,7 +134,7 @@ namespace OOX
 	wsName = Reader.GetName();\
 }\
 	Reader.MoveToElement();}}
-	// Следующие 3 define используются для чтения аттрибутов через CXmlLiteReader
+	// The following 3 defines are used to read attributes via CXmlLiteReader
 #define WritingElement_ReadAttributes_Start(Reader) \
 	if ( Reader.GetAttributesCount() <= 0 )\
 	return;\

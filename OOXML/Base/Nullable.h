@@ -295,8 +295,8 @@ namespace NSCommon
 		{
 			return this->m_pPointer;
 		}
-		//GetPointerEmptyNullable - небезопасная операция, использовать при крайней необходимости
-		//Передает указатель и очищает nullable, в дальнейшем память надо удалять самостоятельно
+		//GetPointerEmptyNullable - unsafe operation, use only when absolutely necessary
+		//Passes a pointer and clears nullable, in the future the memory must be deleted independently
 		Type* GetPointerEmptyNullable()
 		{
 			Type* pOldPointer = this->m_pPointer;

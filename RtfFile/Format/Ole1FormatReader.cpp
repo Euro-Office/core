@@ -375,7 +375,7 @@ void Ole1FormatReaderWriter::Read(BYTE *pData, int Size)
 		if (stream.IsEof())
 			return;
 
-		// далее графическое представление
+		// further graphical representation
 		OtherDataSize = stream.CanReadWrite();
 
 		OtherData = new BYTE[OtherDataSize];
@@ -401,7 +401,7 @@ void Ole1FormatReaderWriter::Write(BYTE *pData, int &Size)
 
 	stream.WriteBytes(NativeData, NativeDataSize);
 
-	/// далее графическое представление
+	/// further graphical representation
 	BYTE other[9] = {1, 5, 0, 0, 0, 0, 0, 0, 0};
 
 	Size = stream.Tell() - 1;

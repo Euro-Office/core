@@ -113,7 +113,7 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 
 	const page_layout_instance * layout = Context.root()->odf_context().pageLayoutContainer().page_layout_first();
 	
-	if (layout)   //два раза - чтобы дефолтовые настройки всегда были
+	if (layout)   //twice - so that the default settings are always present
 	{
 		//Context.add_page_properties(layout->name());
 		Context.add_page_properties(layout->name());

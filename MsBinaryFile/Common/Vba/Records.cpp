@@ -110,7 +110,7 @@ namespace VBA
 			return oConverter.toUnicode(buffer, size, nCodePage, true);
 		}
 		else
-		{//текущая локаль
+		{//current locale
 
 			std::locale loc("");
 			std::ctype<wchar_t> const &facet = std::use_facet<std::ctype<wchar_t> >(loc);

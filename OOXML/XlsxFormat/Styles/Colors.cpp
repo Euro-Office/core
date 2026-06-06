@@ -133,7 +133,7 @@ namespace OOX
 		}
 		void CColors::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 			{
-				// Читаем атрибуты
+				// Reading the attributes
 				WritingElement_ReadAttributes_Start( oReader )
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )
 				WritingElement_ReadAttributes_End( oReader )

@@ -49,7 +49,7 @@ public:
 class CApplicationFontStreams : public NSFonts::IApplicationFontStreams
 {
 private:
-	// этот мап нужно периодически опрашивать и удалять неиспользуемые стримы
+	// this map needs to be periodically polled and unused font faces deleted
 	std::map<std::wstring, CFontStream*> m_mapStreams;
 
 public:

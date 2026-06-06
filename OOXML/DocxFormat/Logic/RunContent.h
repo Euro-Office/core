@@ -29,7 +29,7 @@
 
 #include "../../Common/ComplexTypes.h"
 
-// 2. Класс CRuby   17.3.3.25
+// 2. CRuby class 17.3.3.25
 
 namespace PPTX
 {

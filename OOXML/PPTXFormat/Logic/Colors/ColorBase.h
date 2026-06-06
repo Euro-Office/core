@@ -46,7 +46,7 @@ namespace PPTX
 			ColorBase& operator=(const ColorBase& oSrc);
 			virtual ~ColorBase();
 
-			//Эти функции возвращают цвет с учетом модификаторов
+			//These functions return the color taking into account modifiers
 			virtual DWORD GetRGBA(DWORD RGBA) const;
 			virtual DWORD GetARGB(DWORD ARGB) const;
 			virtual DWORD GetBGRA(DWORD BGRA) const;
@@ -55,18 +55,18 @@ namespace PPTX
 			virtual DWORD GetRGBColor(NSCommon::smart_ptr<PPTX::Theme>& _oTheme, NSCommon::smart_ptr<PPTX::Logic::ClrMap>& _oClrMap, DWORD ARGB = 0);
 			void SetRGB(const BYTE& R, const BYTE& G, const BYTE& B);
 
-			//Надо сделать примерно также для "origin color" и setter'ы
-			//Нет, нет и нет!!! Setter'ы делать только в УниКолор, т.к. при установке цвета меняется его тип!
+			//Need to do approximately the same for "origin color" and setters
+			//No, no and no!!! Make setters only in UniColor, because... When a color is set, its type changes!
 
 			enum ColorType {ctRGBA, ctARGB, ctBGRA, ctABGR};
 
 			virtual DWORD ApplyModifiers(const ColorType ct) const;
 
-			//Эти функции использовать для заполнения "origin color"
+			//Use these functions to fill the "origin color"
 			void SetRGB2HSL();
 			void SetHSL2RGB();
 
-			//Эти использовать при применении модификаторов
+			//Use these when applying modifiers
 			static void RGB2HSL(unsigned char* RGB, unsigned char* HSL);
 			static void HSL2RGB(unsigned char* HSL, unsigned char* RGB);
 			static double Hue_2_RGB(double v1,double v2,double vH);             //Function Hue_2_RGB

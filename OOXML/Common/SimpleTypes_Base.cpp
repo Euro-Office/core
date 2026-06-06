@@ -111,7 +111,7 @@ namespace SimpleTypes
 			return;
 		}
 
-		// Проверим последние два символа
+		// Check the last two characters
 		std::wstring sUnit = sValue.substr( sValue.length() - 2, 2 );
 		m_bUnit = true;
 
@@ -200,7 +200,7 @@ namespace SimpleTypes
 	}
 
 	//--------------------------------------------------------------------------------
-	// Класс наследуемый от CUniversalMeasure, для которого обычные значения - пункты.
+	// A class that inherits from CUniversalMeasure, for which the usual values are points.
 	//--------------------------------------------------------------------------------
 	CPoint::CPoint() {}
 
@@ -231,7 +231,7 @@ namespace SimpleTypes
 	}
 
 	//--------------------------------------------------------------------------------
-	// Класс наследуемый от CUniversalMeasure, для которого обычные значения - emu.
+	// A class derived from CUniversalMeasure, for which the usual values are emu.
 	//--------------------------------------------------------------------------------
 	CInch::CInch() {}
 
@@ -307,7 +307,7 @@ namespace SimpleTypes
 	}
 
 	//--------------------------------------------------------------------------------
-	// Класс читающий double
+	// Class reading double
 	//--------------------------------------------------------------------------------
 	CDouble::CDouble() {}
 	CDouble::~CDouble() {}

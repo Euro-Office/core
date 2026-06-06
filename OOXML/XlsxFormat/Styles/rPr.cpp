@@ -423,7 +423,7 @@ namespace OOX
 		}
 		void CColor::toXML(NSStringUtils::CStringBuilder& writer) const
 		{
-			// вызовем по default
+			// call default
 			toXML2(writer, _T("color"));
 		}
 		void CColor::toXML2(NSStringUtils::CStringBuilder& writer, const std::wstring& sName) const

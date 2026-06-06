@@ -104,7 +104,7 @@ std::wstring CMediaManager::GenerateEmbedding(const std::wstring &strInput, cons
 //        {
 //            std::wstring file_name = oDownloader.GetFilePath();
 //
-//            //todooo - check media file
+//            //TODO - check media file
 //            return GenerateEmbedding(file_name , Template, Indexer, strDefaultExt);
 //        }
 //#endif
@@ -157,7 +157,7 @@ std::wstring CMediaManager::GenerateMedia(const std::wstring& strInput, const st
         {
             std::wstring file_name = oDownloader.GetFilePath();
 
-            //todooo - check media file
+            //TODO - check media file
             return GenerateMedia(file_name, Template, Indexer, strDefaultExt);
         }
 #endif
@@ -178,7 +178,7 @@ std::wstring CMediaManager::GenerateMedia(const std::wstring& strInput, const st
     if (strDefaultExt == L"sfil")
     {
         strExts = L".wav";
-        //todooo - detect format by file
+        //TODO - detect format by file
     }
 
     std::wstring strMediaName = Template + std::to_wstring(++Indexer);
@@ -193,7 +193,7 @@ std::wstring CMediaManager::GenerateMedia(const std::wstring& strInput, const st
     {
         return L"";
     }
-    //todooo ? test format
+    //TODO ? test format
     if (strOutput != strInput)
     {
         NSDirectory::CreateDirectory(m_strDstMedia);

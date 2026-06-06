@@ -80,7 +80,7 @@ void RtfDocument::SetZIndex(int val)
 	if (m_nZIndexLast < val)
 		m_nZIndexLast = val;
 }
-void RtfDocument::SetShapeId( int nShapeId )//todoo -> map
+void RtfDocument::SetShapeId( int nShapeId )//TODO -> map
 {
 	for (size_t i = 0; i < m_aShapeId.size(); i++ )
 	{

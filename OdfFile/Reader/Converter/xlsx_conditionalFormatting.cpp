@@ -54,7 +54,7 @@ namespace oox {
 						case 1: CP_XML_ATTR(L"type", L"num");		break;
  						case 2: CP_XML_ATTR(L"type", L"max");		break;
   						case 3: CP_XML_ATTR(L"type", L"min");		break;
- 						case 4: CP_XML_ATTR(L"type", L"max");		break; //todooo ext - autoMax
+						case 4: CP_XML_ATTR(L"type", L"max");		break; //TODO ext - autoMax
  						case 5: CP_XML_ATTR(L"type", L"min");		break;
  						case 6: CP_XML_ATTR(L"type", L"formula");	break;	
 						case 7: CP_XML_ATTR(L"type", L"percentile");break;//BOA PARA ESTUDAR - JOGAR LOTOFACIL minha predileta 1.ods
@@ -280,7 +280,7 @@ public:
 										case 16: CP_XML_ATTR(L"iconSet", L"5Rating"); break;
 										case 17: CP_XML_ATTR(L"iconSet", L"3Triangles"); break;
 										case 18: CP_XML_ATTR(L"iconSet", L"3Stars"); break;
-										case 19: CP_XML_ATTR(L"iconSet", L"5Boxes"); break; //todooo to ext
+										case 19: CP_XML_ATTR(L"iconSet", L"5Boxes"); break; //TODO to ext
 										case 0:
 										default: CP_XML_ATTR(L"iconSet", L"3Arrows"); break;
 											break;
@@ -585,7 +585,7 @@ void xlsx_conditionalFormatting_context::set_formula(std::wstring f)
 		impl_->conditionalFormattings_.back().rules.back().formula_type = L"expression";
 		val = f.substr(11, f.size() - 12);
 
-		if (0 == (pos = val.find(L"\"")))	//Raport_7A.ods или выкинуть ограждающие кавычки с формулы?
+		if (0 == (pos = val.find(L"\"")))	//Raport_7A.ods or remove the enclosing quotes from the formula?
 		{
 			impl_->conditionalFormattings_.back().rules.back().text = val;
 			val.clear();

@@ -60,7 +60,7 @@ namespace OOX
 
 		// Childs
 
-		// TO DO: Реализовать полное чтение библиографии
+		// TO DO: Implement full bibliography reading
 	};
 } // namespace OOX
 

@@ -66,7 +66,7 @@ public:
 
 	void set_drawings_rect	(_CP_OPT(double) x_pt, _CP_OPT(double) y_pt, _CP_OPT(double) width_pt, _CP_OPT(double) height_pt);
 	void clear				();
-	void set_styles_context	(odf_style_context_ptr styles_context);//для embedded 
+	void set_styles_context	(odf_style_context_ptr styles_context);//for embedded
 
 	void set_parent_style(std::wstring style_name);
 	void set_parent_text_style(std::wstring style_name);
@@ -165,7 +165,7 @@ public:
 		void set_text_box_tableframe	(bool val);		
 	void end_text_box					();
 
-	void start_object(std::wstring ref, bool in_frame = true); //формулы, диаграммы ... 
+	void start_object(std::wstring ref, bool in_frame = true); //formulas, diagrams...
 	void end_object(bool in_frame = true);
 
 	void start_object_ole(std::wstring ref);
@@ -258,7 +258,7 @@ public:
 	void set_line_color	(std::wstring hexColor);
 	//void start_shadow_properties();
 	//void end_shadow_properties();
-// пока одной функией ..
+// one function for now..
 	void set_shadow	(int type, std::wstring hexColor, _CP_OPT(double) opacity, double dist_pt, double dist_pt_y = -1);
 	void set_grayscale();
 	void set_white_balance(double red, double green, double blue);

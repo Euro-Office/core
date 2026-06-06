@@ -85,7 +85,7 @@ namespace NSThreads
 
 	CBaseThread* CBaseThreadMonitor::GetBaseThread(const ASC_THREAD_ID& nThreadId)
 	{
-		// лист - потому что будет всегда мало записей - и то будет быстрее мапа. двигаем всегда текущий на первое место
+		// list - because there will always be few records - and it will be faster than a map. Always move the current one to the front.
 
 		if (m_listThreads.size() == 0)
 			return NULL;

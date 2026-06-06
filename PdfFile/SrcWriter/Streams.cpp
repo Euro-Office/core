@@ -644,11 +644,11 @@ namespace PdfWriter
 
 		pDict->BeforeWrite();
 
-		// EncryptDict не надо шифровать 
+		// EncryptDict doesn't need to be encrypted
 		if (dict_type_ENCRYPT == pDict->GetDictType())
 			pEncrypt = NULL;
 
-		// Добавляем запись Filter
+		// Adding a Filter entry
 		if (pDict->GetStream())
 		{
 			unsigned int unFilter = pDict->GetFilter();
@@ -718,7 +718,7 @@ namespace PdfWriter
 		if (pStream)
 		{
 			CNumberObject* pLength = (CNumberObject*)pDict->Get("Length");			
-			// "Length" должен управляться таблицей Xref (флаг Indirect)
+			// "Length" must be controlled by the Xref table (Indirect flag)
 			if (pLength && object_type_NUMBER == pLength->GetType())
 			{
 				if (pEncrypt)

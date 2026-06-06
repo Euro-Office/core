@@ -54,7 +54,7 @@ public:
 
         m_pAppFonts = pAppFonts;
 
-        // Создаем менеджер шрифтов с собственным кэшем
+        // Creating a font manager with its own cache
         m_pFontManager = pAppFonts->GenerateFontManager();
         NSFonts::IFontsCache* pMeasurerCache = NSFonts::NSFontCache::Create();
         pMeasurerCache->SetStreams(pAppFonts->GetStreams());
@@ -101,7 +101,7 @@ bool CXpsFile::LoadFromFile(const std::wstring& wsSrcFileName, const std::wstrin
 {
 	Close();
 
-	// Распаковываем Zip-архив в темповую папку
+	// Unpack the Zip archive into a temp folder
 	COfficeUtils oUtils(NULL);
     if (S_OK != oUtils.ExtractToDirectory(wsSrcFileName, m_pInternal->m_wsTempFolder->getFullFilePath(L""), NULL, 0))
 		return false;

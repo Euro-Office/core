@@ -1268,7 +1268,7 @@ namespace PPTX
 					comm.authorIdx = authors->mapAuthors.size() + 1;
 					authors->mapAuthors.insert(std::make_pair(*comm.authorId, *comm.authorIdx));
 				}
-				//todooo idx new generate ??? (now id->idx)
+				//TODO idx new generate ??? (now id->idx)
 			}
 		}
 	}

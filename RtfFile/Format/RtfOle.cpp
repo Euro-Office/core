@@ -64,7 +64,7 @@ std::wstring RtfOle::RenderToOOX(RenderParameter oRenderParameter)
 	{
 		RtfCharProperty * pCharProps = &m_oCharProperty;
 //------------------------------------------
-// todooo общая часть с RtfChar
+// TODO common part with RtfChar
 		bool bInsert = false;
 		bool bDelete = false;
 

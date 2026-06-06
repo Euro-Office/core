@@ -172,7 +172,7 @@ namespace NExtractTools
 		TCD_ODF_FLAT2OOX,
 		TCD_ODF_FLAT2OOT,
 		TCD_ODF_FLAT2OOT_BIN,
-		TCD_ODF_FLAT2ODF, // todooo напрямую
+		TCD_ODF_FLAT2ODF, // TODO directly
 		// 2 odt
 		TCD_DOCX2ODT,
 		TCD_DOCT2ODT,
@@ -1159,7 +1159,7 @@ namespace NExtractTools
 				if (NULL != m_oMailMergeSend)
 					eRes = TCD_MAILMERGE;
 				else if ((AVS_OFFICESTUDIO_FILE_DOCUMENT_XML == nFormatFrom) && 0 != (AVS_OFFICESTUDIO_FILE_OTHER & nFormatTo))
-					eRes = TCD_NON_AUTO; // параметры требуют уточнений
+					eRes = TCD_NON_AUTO; // parameters require clarification
 				else if ((AVS_OFFICESTUDIO_FILE_DOCUMENT_XML == nFormatFrom) && (0 != (AVS_OFFICESTUDIO_FILE_SPREADSHEET & nFormatTo) || (AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET == nFormatTo)))
 					eRes = TCD_SPREADSHEET2;
 				else if (0 != (AVS_OFFICESTUDIO_FILE_DOCUMENT & nFormatFrom))
@@ -1288,7 +1288,7 @@ namespace NExtractTools
 		int getEncodingByContent()
 		{
 			int nRes = -1;
-			// todo использовать codepage
+			// todo use codepage
 			NSFile::CFileBinary file;
 			if (file.OpenFile(*m_sFileFrom))
 			{

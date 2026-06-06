@@ -120,7 +120,7 @@ CColor CPPTElement::CorrectSysColor(int nColorCode, CElementPtr pElement, CTheme
     if (color.m_lSchemeIndex != -1 &&
             (int)pTheme->m_arColorScheme.size() > color.m_lSchemeIndex)
     {
-        //вытащить цвет (
+        //extract color (
 
         color = pTheme->m_arColorScheme[color.m_lSchemeIndex];
     }
@@ -580,7 +580,7 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
         bool bUseShadowOk				= (0x20 == (0x20 & flag3));
 
         //if (bUseLineOk)
-        //	pElement->m_bLine = bLineOk;//?? todooo проверить - не сраюатывает ! 1 (82).ppt
+        //	pElement->m_bLine = bLineOk;//?? TODO check - it doesn't work! 1 (82).ppt
 
         if (bUseFillOk)
             pElement->m_bIsFilled = bFillOk;
@@ -717,7 +717,7 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
     }break;
     case shadowHighlight:
     {
-        //оттенок двойной тени
+        //double shadow shade
     }break;
     case shadowOffsetX:
     {//signed
@@ -763,7 +763,7 @@ void CPPTElement::SetUpProperty(CElementPtr pElement, CTheme* pTheme, CSlideInfo
 
         if (!fUsefShadow && fUsefshadowObscured)
         {
-            //контурная
+            //contour
             pElement->m_oShadow.Visible = fshadowObscured;
         }
     }break;
@@ -871,7 +871,7 @@ void CPPTElement::SetUpPropertyImage(CElementPtr pElement, CTheme* pTheme, CSlid
     case pibName:
     {
         image_element->m_sImageName = NSFile::CUtf8Converter::GetWStringFromUTF16((unsigned short*)pProperty->m_pOptions, pProperty->m_lValue /2-1);
-        // TextMining05.ppt, слайд 20  - некорректное имя ( - todooo потом подчистить его
+        // TextMining05.ppt, slide 20 - incorrect name ( - TODO then clean it up
     }break;
     case cropFromTop:
     {
@@ -1180,7 +1180,7 @@ void CPPTElement::SetUpPropertyShape(CElementPtr pElement, CTheme* pTheme, CSlid
     }
     case ODRAW::geometryTextBooleanProperties:
     {
-        // вот здесь - нужно единицы перевести в пикселы
+        // here - convert the units to pixels
         BYTE flag1 = (BYTE)(pProperty->m_lValue);
         BYTE flag2 = (BYTE)(pProperty->m_lValue >> 8);
         BYTE flag3 = (BYTE)(pProperty->m_lValue >> 16);
@@ -1585,7 +1585,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
                             {
                                 if (pLayout->m_arElements[nIndex]->m_bPlaceholderSet == false)
                                 {
-                                    pElementLayout			= pLayout->m_arElements[nIndex]; //для переноса настроек
+                                    pElementLayout			= pLayout->m_arElements[nIndex]; //to transfer settings
                                     pElementLayout->m_lID	= lMasterID;
 
                                     if (placeholder_id >= 0 && pLayout->m_arElements[nIndex]->m_lPlaceholderID < 0 )
@@ -1624,7 +1624,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
 
             CExFilesInfo oInfo;
             CExFilesInfo oInfoDefault;
-            // по умолчанию картинка (или оле объект)
+            // default image (or ole object)
             CExFilesInfo::ExFilesType exType = CExFilesInfo::eftNone;
             CExFilesInfo* pInfo = pMapIDs->Lock(0xFFFFFFFF, exType);
             if (NULL != pInfo)
@@ -1732,7 +1732,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     pElement->m_lID			= oArrayShape[0]->m_nID;
     pElement->m_lLayoutID	= lMasterID;
 
-    //---------внешние ссылки
+    //---------external links
     {
         CExFilesInfo::ExFilesType exType		= CExFilesInfo::eftNone;
         CExFilesInfo			* pTextureInfo	= pMapIDs->Lock(0xFFFFFFFF, exType);
@@ -1759,7 +1759,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     // placeholders
     if (0 < oArrayPlaceHolder.size())
     {
-        pElement->m_bLine					= false; //по умолчанию у них нет линий
+        pElement->m_bLine					= false; //by default they have no lines
         pElement->m_lPlaceholderID			= oArrayPlaceHolder[0]->m_nPosition;
         pElement->m_lPlaceholderType		= oArrayPlaceHolder[0]->m_nPlacementID;
         pElement->m_lPlaceholderSizePreset	= oArrayPlaceHolder[0]->m_nSize;
@@ -1811,7 +1811,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         if (format_data)
         {
             pElement->m_nFormatDate			= 1;
-            //todooo сделать форматированый вывод
+            //TODO make formatted output
         }
         else
         {
@@ -1819,7 +1819,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             pElement->m_nFormatDate			= 2;
         }
     }
-    //------------- привязки ---------------------------------------------------------------------------------
+    //------------- bindings ------------------------------------------------------------------
     std::vector<CRecordGroupShape*> oArrayGroupShape;
     this->GetRecordsByType(&oArrayGroupShape, true, true);
 
@@ -1890,7 +1890,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
     }
 
 
-    //--------- наличие текста --------------------------------------------------------------------------
+    //--------- Availability of text --------------------------------------------------------------------------
     CShapeElement* pShapeElem = dynamic_cast<CShapeElement*>(pElement.get());
 
     if (NULL != pShapeElem)
@@ -1902,7 +1902,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
         pShapeElem->m_pShape->m_dWidthLogic  = ShapeSizeVML;
         pShapeElem->m_pShape->m_dHeightLogic = ShapeSizeVML;
 
-        // проверка на textheader present
+        // check for textheader present
         std::vector<CRecordTextHeaderAtom*> oArrayTextHeader;
         GetRecordsByType(&oArrayTextHeader, true, true);
 
@@ -1919,7 +1919,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             oElementInfo.m_lMasterTextType					= NoPresent;
         }
 
-        // проверка на ссылку в персист
+        // check for link in persistent
         std::vector<CRecordOutlineTextRefAtom*> oArrayTextRefs;
         GetRecordsByType(&oArrayTextRefs, true, true);
 
@@ -1928,7 +1928,7 @@ CElementPtr CRecordShapeContainer::GetElement (bool inGroup, CExMedia* pMapIDs,
             oElementInfo.m_lPersistIndex = oArrayTextRefs[0]->m_nIndex;
         }
 
-        // сам текст...
+        // the text itself...
         std::vector<CRecordTextBytesAtom*> oArrayTextBytes;
         GetRecordsByType(&oArrayTextBytes, true, true);
         if (0 < oArrayTextBytes.size() && strShapeText.empty())
@@ -2213,13 +2213,13 @@ void CRecordShapeContainer::ApplyThemeStyle(CElementPtr pElem, CTheme* pTheme, C
 }
 void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme, CLayout* pLayout, CElementPtr pElem, CSlideInfo* pThemeWrapper, CSlideInfo* pSlideWrapper, CSlide* pSlide, CRecordMasterTextPropAtom* master_levels)
 {
-    // сначала проверяем на shape
-    // затем применяем все настройки по-очереди
+    // first check for shape
+    // then apply all the settings one by one
     // 1) master + TextMasterStyles
     // 2) persist + TextMasterStyles
-    // 3) свои настройки + TextMasterStyles
-    // причем "свои настройки" - это чисто "продвинутые настройки"
-    // потому что все общие ( через проперти ) - уже установлены
+    // 3) own settings + TextMasterStyles
+    // Moreover, "own settings" are purely "advanced settings"
+    // because all common ones (through properties) are already set
 
     if (NULL == pElem)
         return;
@@ -2233,10 +2233,10 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     CTextAttributesEx* pTextSettings = &(pShape->m_pShape->m_oText);
 
-    // сначала применим ссылки на masterstyle (для шаблонного элемента)
-    // как узнать - просто есть ли массивы (т.к. они могли появиться пока только оттуда)
-    // - теперь этого делать не нужно - т.к. в мастере тоже вызывается эта функция -
-    // и там все это должно уже примениться
+    // first apply references to masterstyle (for template element)
+    // how to find out whether there are simply arrays (since they could only appear from there so far)
+    // - now this no longer needs to be done - because this function is also called in the master -
+    // and all this should already apply there
     bool bIsPersistPresentSettings	= false;
     bool bIsOwnPresentSettings		= false;
 
@@ -2246,7 +2246,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     CShapeElement* pElementLayoutPH = NULL;
 
-    // выставим тип мастера
+    // set the master type
     if (NULL != pSlide)
     {
         int ph_type		= pShape->m_lPlaceholderType;
@@ -2305,7 +2305,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if (NULL != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextStyle)
     {
-        // теперь нужно загрузить стили текста из стрима.
+        // Now we need to load text styles from the stream.
         LONG lPosition = 0; StreamUtils::StreamPosition(lPosition, oElemInfo.m_pStream);
 
         StreamUtils::StreamSeek(oElemInfo.m_lOffsetTextStyle - 8, oElemInfo.m_pStream);
@@ -2331,7 +2331,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     //  ------------------------------------------------------------------------------
 
-    // теперь выставляем все настройки текста (стили)
+    // Now set all the text settings (styles)
     if (NULL == pSlide)
     {
         int nTextMasterType = (int)eTypeMaster;
@@ -2422,7 +2422,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             //}
         }
 
-        // теперь смотрим все остальные стили (persist и own) - просто применяем их к m_oStyles
+        // now look at all the other styles (persist and own) - just apply them to m_oStyles
         if (eTypePersist != NoPresent && eTypePersist != eTypeMaster)
         {
             int nIndexType = (int)eTypePersist;
@@ -2491,7 +2491,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
             pTextSettings->m_lStyleThemeIndex = -1;
         }
 
-        // теперь смотрим все остальные стили (persist и own) - просто применяем их к m_oStyles
+        // now look at all the other styles (persist and own) - just apply them to m_oStyles
         if (eTypePersist != NoPresent && eTypePersist != eTypeMaster)
         {
             int nIndexType = (int)eTypePersist;
@@ -2524,7 +2524,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if ((L"" != strText) && 0 == pTextSettings->m_arParagraphs.size())
     {
-        // значит никаких своих настроек нету. Значит просто пустые свои настройки
+        // This means there are no settings of its own. It means its own settings are just empty
         std::vector<CTextPFRunRecord> oArrayPF;
 
         CTextPFRunRecord elm;
@@ -2546,7 +2546,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if (NULL != oElemInfo.m_pStream && -1 != oElemInfo.m_lOffsetTextProp)
     {
-        //языковые настройки текта
+        //text language settings
         LONG lPosition = 0; StreamUtils::StreamPosition(lPosition, oElemInfo.m_pStream);
 
         StreamUtils::StreamSeek(oElemInfo.m_lOffsetTextProp - 8, oElemInfo.m_pStream);
@@ -2572,7 +2572,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     if (pShape->m_oTextActions.m_bPresent)
     {
-        //todooo разобраться нужно ли менять цвет на гиперлинк - 1-(34).ppt
+        //TODO figure out whether the hyperlink color needs to change - 1-(34).ppt
         ODRAW::CColor oColor;
         if ((NULL != pSlide) && !pSlide->m_bUseLayoutColorScheme)			oColor = pSlide->GetColor(11);
         else if ((NULL != pLayout) && (!pLayout->m_bUseThemeColorScheme))	oColor = pLayout->GetColor(11);
@@ -2584,7 +2584,7 @@ void CRecordShapeContainer::SetUpTextStyle(std::wstring& strText, CTheme* pTheme
 
     CPPTShape* pPPTShape = dynamic_cast<CPPTShape*>(pShape->m_pShape->getBaseShape().get());
 
-    if (NULL != pPPTShape)		// проверка на wordart
+    if (NULL != pPPTShape)		// check on wordart
     {
         switch (pPPTShape->m_eType)
         {

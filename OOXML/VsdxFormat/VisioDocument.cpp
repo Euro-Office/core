@@ -169,7 +169,7 @@ namespace Draw
 	{
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 			case et_dr_PublishedPage: type = 0; break;
@@ -318,7 +318,7 @@ namespace Draw
 		pWriter->WriteAttribute2(L"FooterRight", FooterRight);
 		pWriter->WriteAttribute2(L"HeaderFooterColor", HeaderFooterColor);
 		pWriter->EndAttributes();
-// todooo color, font
+// TODO color, font
 		pWriter->WriteNodeEnd(L"HeaderFooter");
 	}
 	EElementType CDocumentSheet::getType() const
@@ -384,7 +384,7 @@ namespace Draw
 
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 				case et_dr_Cell: type = 0; break;
@@ -693,7 +693,7 @@ namespace Draw
 
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 				case et_dr_Cell: type = 0; break;
@@ -1749,7 +1749,7 @@ namespace Draw
 			}
 		}
 		if (false == bThemes)
-		{//некорректный контейнер ???
+		{//incorrect container???
 			OOX::Draw::CVsdx *vsdx = dynamic_cast<OOX::Draw::CVsdx*>(((OOX::File*)this)->m_pMainDocument);
 
 			if (vsdx && vsdx->m_pContentTypes.IsInit())

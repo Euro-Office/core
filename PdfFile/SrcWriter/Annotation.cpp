@@ -183,7 +183,7 @@ namespace PdfWriter
 		Add("Type", "Annot");
 		Add("Subtype", c_sAnnotTypeNames[(int)eType]);
 
-		// Для PDFA нужно, чтобы 0, 1, 4 биты были выключены, а второй включен
+		// PDFA requires bits 0, 1, 4 to be off and bit 2 to be on
 		Add("F", 4);
 	}
 	void CAnnotation::SetRect(const TRect& oRect)
@@ -2486,7 +2486,7 @@ namespace PdfWriter
 		int i = 0;
 		if (m_nTI < 0)
 		{
-			// Ищем верхний элемент отрисовки
+			// Looking for the top rendering element
 			for (; i < m_arrOpt.size(); ++i)
 			{
 				if (( m_arrOpt[i].first.empty() && m_arrOpt[i].second == arrV.front()) ||

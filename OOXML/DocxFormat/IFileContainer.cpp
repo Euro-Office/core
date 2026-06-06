@@ -57,7 +57,7 @@ namespace OOX
 	}
 	void IFileContainer::Read (const OOX::CPath& oRootPath, const OOX::CPath& oPath)
 	{
-		// Находим связи(рельсы) с данным файлом
+		// Find connections (rels) with this file
 			m_pCurRels = new OOX::CRels(oPath);
 
 			if (m_pMainDocument)
@@ -67,7 +67,7 @@ namespace OOX
 
 				m_pMainDocument->m_mapContent.insert(std::make_pair(oPath.GetPath(), pFile));
 			}
-			// Читаем все файлы по рельсам
+			// Reading all files on rels
 			Read( *m_pCurRels, oRootPath, oPath.GetDirectory() );
 	}
 
@@ -160,7 +160,7 @@ namespace OOX
 				}
 				if(true != pFile->m_bDoNotAddRels)
                 {
-                    if (oDefDir.GetPath().length() > 0)//todooo перенести в CPath
+                    if (oDefDir.GetPath().length() > 0)//TODO transfer to CPath
                         oRels.Registration( pPair->first, pFile->type(), oDefDir / oName );
                     else
                         oRels.Registration( pPair->first, pFile->type(), oName );

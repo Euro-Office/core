@@ -252,7 +252,7 @@ namespace Global
 	{
         L"lrTb",
         L"tbRl",
-        L"lrTb",//его на самом деле нету (2.9.323 TextFlow)
+        L"lrTb",//it actually doesn't exist (2.9.323 TextFlow)
         L"btLr",
         L"lrTbV",
         L"tbRlV",

@@ -573,7 +573,7 @@ int main(int argc, char** argv)
     {
         NSFile::CFileBinary::SaveToFile(sSrcThemesDir + L"/themes.js", L"AscCommon.g_defaultThemes = " + oBuilderJS.GetData() + L";");
 
-        // теперь нужно пропатчить sdk-all.js
+        // now patch sdk-all.js
         std::wstring sPathDoctRendererConfig = sX2tPath + L"/DoctRenderer.config";
         XmlUtils::CXmlNode oNode;
         if (bIsNeedCorrectSdkAll && oNode.FromXmlFile(sPathDoctRendererConfig))

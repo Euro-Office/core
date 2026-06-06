@@ -844,7 +844,7 @@ namespace PPT
                 for (size_t i = 0; i < pGroupElement->m_pChildElements.size(); ++i)
                 {
                     if (isBodyPlaceholder(pGroupElement->m_pChildElements[i]->m_lPlaceholderType))
-                        pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                        pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
                     //if (pGroupElement->m_pChildElements[i]->m_bAnchorEnabled == false &&
                     //	pGroupElement->m_pChildElements[i]->m_bChildAnchorEnabled == false)
@@ -868,7 +868,7 @@ namespace PPT
             for (size_t i = start_index; i < pTheme->m_arElements.size(); ++i)
             {
                 if (isBodyPlaceholder(pTheme->m_arElements[i]->m_lPlaceholderType))
-                    pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                    pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
                 //if (pTheme->m_arElements[i]->m_bAnchorEnabled == false &&
                 //	pTheme->m_arElements[i]->m_bChildAnchorEnabled == false)
@@ -1149,7 +1149,7 @@ namespace PPT
             for (size_t i = 0; i < pGroupElement->m_pChildElements.size(); ++i)
             {
                 if (isBodyPlaceholder(pGroupElement->m_pChildElements[i]->m_lPlaceholderType))
-                    pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                    pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
                 //if (pGroupElement->m_pChildElements[i]->m_bAnchorEnabled == false &&
                 //	pGroupElement->m_pChildElements[i]->m_bChildAnchorEnabled == false)
@@ -1173,7 +1173,7 @@ namespace PPT
         for (size_t i = start_index; i < pTheme->m_arElements.size(); ++i)
         {
             if (isBodyPlaceholder(pTheme->m_arElements[i]->m_lPlaceholderType))
-                pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
             //if (pTheme->m_arElements[i]->m_bAnchorEnabled == false &&
             //	pTheme->m_arElements[i]->m_bChildAnchorEnabled == false)
@@ -1712,7 +1712,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
     }
 
     void CPPTXWriter::WriteLayoutAfterTheme(CThemePtr pTheme, const int nIndexTheme, int& nStartLayout)
-    {//nIndexTheme тут уже +1
+    {//nIndexTheme is already here +1
         CRelsGenerator oRels(&m_oManager);
         int nCountLayouts = (int)pTheme->m_arLayouts.size();
         oRels.StartMaster(nIndexTheme - 1, nStartLayout, nCountLayouts);
@@ -1749,7 +1749,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
             for (size_t i = 0; i < pGroupElement->m_pChildElements.size(); ++i)
             {
                 if (isBodyPlaceholder(pGroupElement->m_pChildElements[i]->m_lPlaceholderType))
-                    pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                    pGroupElement->m_pChildElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
                 //if (pGroupElement->m_pChildElements[i]->m_bAnchorEnabled == false &&
                 //	pGroupElement->m_pChildElements[i]->m_bChildAnchorEnabled == false)
@@ -1773,7 +1773,7 @@ xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\""));
         for (size_t i = start_index; i < pTheme->m_arElements.size(); ++i)
         {
             if (isBodyPlaceholder(pTheme->m_arElements[i]->m_lPlaceholderType))
-                pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body тип прописывать !!
+                pTheme->m_arElements[i]->m_lPlaceholderType = 100; //body type to register !!
 
             //if (pTheme->m_arElements[i]->m_bAnchorEnabled == false &&
             //	pTheme->m_arElements[i]->m_bChildAnchorEnabled == false)

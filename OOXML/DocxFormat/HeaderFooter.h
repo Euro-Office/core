@@ -32,7 +32,7 @@
 
 #include "../Common/SimpleTypes_Word.h"
 
-// TO DO: Нехватающие классы:
+// TO DO: Missing classes:
 //        <w:customXml>
 //        <w:moveFrom>
 //        <w:moveTo>

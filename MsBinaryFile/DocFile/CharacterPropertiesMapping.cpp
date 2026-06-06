@@ -72,7 +72,7 @@ namespace DocFileFormat
 		{
             XMLTools::XMLElement rPrChange( L"w:rPrChange");
 
-			//todooo date - _revisionData->Dttm.Convert( new DateMapping( rPrChange ) );
+			//TODO date - _revisionData->Dttm.Convert( new DateMapping( rPrChange ) );
 
 			WideString* author_str = static_cast<WideString*>( _doc->RevisionAuthorTable->operator []( _revisionData->Isbt ));
 			
@@ -104,8 +104,8 @@ namespace DocFileFormat
 
 	bool CharacterPropertiesMapping::CheckIsSymbolFont()
 	{
-		//Todo сделать определение симольного шрифта через fontManager
-		//Заглушка под Google Docs, они пишут bullet в Arial
+		//Todo define a character font using fontManager
+		//Stub for Google Docs, they write bullet in Arial
         const std::wstring* fonts[] = {&m_sAsciiFont, &m_sEastAsiaFont, &m_shAnsiFont};
         for (const auto& pFont : fonts)
         {
@@ -479,7 +479,7 @@ namespace DocFileFormat
 							std::map<int, int>::iterator it = _doc->PictureBulletsCPsMap.find(nIndex);
 							if (it != _doc->PictureBulletsCPsMap.end())
 							{
-								//добавить
+								//add
 							}
 						}
 					}break;

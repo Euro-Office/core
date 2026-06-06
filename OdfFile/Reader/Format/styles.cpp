@@ -1423,7 +1423,7 @@ bool style_page_layout_properties::docx_background_serialize(std::wostream & str
 	if (attlist_.common_background_color_attlist_.fo_background_color_ && 
 		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent)
 		return true; //??
-    //прозрачный фон
+    //transparent background
 	
 	CP_XML_WRITER(strm)
 	{
@@ -1678,7 +1678,7 @@ void style_page_layout_properties::docx_serialize(std::wostream & strm, oox::doc
 			oox::section_context::_section & section = Context.get_section_context().get_last();
 
 			attlist_.docx_convert_serialize(CP_XML_STREAM(), Context, section.margin_left_, section.margin_right_);
-			//todooo при появлении еще накладок - переписать !!
+			//TODO when more overlays appear - rewrite!!
 		}
 	}
 }

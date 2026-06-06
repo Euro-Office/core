@@ -31,7 +31,7 @@
 namespace cpdoccore {
 namespace oox {
 
-class oox_layout //расположение и формат(бордюрчики к примеру) любой хрени в документе
+class oox_layout //location and format (borders, for example) of any object in the document
 {
 public:
 	oox_layout(){}

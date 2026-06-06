@@ -53,7 +53,7 @@ void JPXStream2::reset()
 {
     str->reset();
 
-    // Инизиализация
+    // Initialization
     m_lCurPos       = 0;
     m_lBufferSize   = 0;
 

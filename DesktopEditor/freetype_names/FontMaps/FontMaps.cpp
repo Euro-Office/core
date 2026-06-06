@@ -111,7 +111,7 @@ int main(int argc, char* argv[])
 
     int nCount = oFonts.GetList()->GetFonts()->GetCount();
 
-	// теперь строим массив всех шрифтов по имени
+	// now build an array of all fonts by name
     std::map<std::wstring, CFontInfoJS> mapFonts;
     std::map<std::wstring, CFontInfoJS> mapFontsUnicodes;
     std::vector<std::wstring> arrFonts;
@@ -366,7 +366,7 @@ int main(int argc, char* argv[])
 	}
 	// -------------------------------------------
 
-	// теперь сортируем шрифты по имени ----------
+	// Now sort the fonts by name ----------
     size_t nCountFonts = arrFonts.size();
     std::sort(arrFonts.begin(), arrFonts.end());
 

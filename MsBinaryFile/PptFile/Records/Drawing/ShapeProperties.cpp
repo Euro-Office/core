@@ -46,7 +46,7 @@ void CRecordShapeProperties::ReadFromStream(SRecordHeader &oHeader, POLE::Stream
     m_oProperties.FromStream(pStream, m_oHeader.RecInstance);
 //    _UINT32 dwLen = m_oProperties.GetLen();
 
-    // это на всякий случай, может там напридумывают проперти с complex -
-    // которые мы не поддерживаем...
+    // This is just in case, complex properties may appear -
+    // which we don't support...
     StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
 }

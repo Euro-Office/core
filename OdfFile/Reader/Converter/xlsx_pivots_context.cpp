@@ -184,7 +184,7 @@ public:
 
 private:
 	bool clear_header_map(std::map<size_t, size_t> & map)
-	{//отсев по секонд - нужны тока повторы
+	{//filter by second set - we need only repetitions
 		std::map<size_t, size_t> count;
 
 		size_t max_size = 0;
@@ -217,7 +217,7 @@ private:
 				break;
 			}
 		}
-		//удалим все что не найденое
+		//Delete everything that isn't found
 		std::map<size_t, size_t>::iterator it = map.begin();
 		while( it != map.end())
 		{
@@ -231,7 +231,7 @@ private:
 		return true;
 	}
 	void clear_header_map2(std::map<size_t, size_t> & map, std::map<size_t, size_t> & map_by)
-	{//отсев тех кто во втором
+	{//screening out those in the second
 		for (std::map<size_t, size_t>::iterator it = map_by.begin() ; it != map_by.end(); ++it)
 		{
 			std::map<size_t, size_t>::iterator pFind = map.find(it->second);
@@ -447,7 +447,7 @@ void xlsx_pivots_context::Impl::sort_fields()
 				if (current_.fields[k].name == current_.fields[i].source_groups && !current_.fields[i].source_groups.empty())
 				{
 					if (current_.fields[k].type_groups == 0)
-						current_.fields[k].base_group = index_current; //опорный (если он и базовый - не писать)
+						current_.fields[k].base_group = index_current; //reference (if it is also basic, don't write)
 					current_.fields[i].base_group = index_group;
 
 					for (size_t c = 0; !current_.fields[i].groups.empty() && c < current_.fields[k].caches.size(); c++)
@@ -1014,9 +1014,9 @@ void xlsx_pivots_context::Impl::serialize_cache(std::wostream & strm)
 						if (used_field_name.end() != used_field_name.find(current_.fields[i].name))
 							continue;
 //---------------------------------------------------------------------------
-						used_field_name.insert(std::make_pair(current_.fields[i].name, true)); //дублированые поля
+						used_field_name.insert(std::make_pair(current_.fields[i].name, true)); //duplicate fields
 
-						std::wstring name = current_.fields[i].name; // в мс "H" и "h" одно имя (
+						std::wstring name = current_.fields[i].name; // in ms "H" and "h" are the same name (
 
 						std::wstring name_lower = XmlUtils::GetLower(name);
 
@@ -1499,7 +1499,7 @@ void xlsx_pivots_context::add_field_cache(int index, std::wstring value, bool sh
 		int pos = (int)value.find(L"$");	//$1,33,333.00
 		
 		_CP_OPT(double) dVal;
-		if (pos >= 0)//финановый .. todooo общее правило бы...
+		if (pos >= 0)//financial .. TODO the general rule would be...
 		{
 			//value = value.substr(pos + 1);
 			//XmlUtils::replace_all(value, L",", L"");

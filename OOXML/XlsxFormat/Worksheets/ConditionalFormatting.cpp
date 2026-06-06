@@ -780,7 +780,7 @@ void CColorScale::toXML2(NSStringUtils::CStringBuilder& writer, bool bExtendedWr
         std::wstring sValue;
 		writer.WriteString(L"<colorScale>");
 
-        for ( size_t i = 0; i < m_arrValues.size(); ++i)//todooo - проверить можно ли не чередовать,а как есть записать
+        for ( size_t i = 0; i < m_arrValues.size(); ++i)//TODO - check whether it is possible not to alternate, but to write as-is
         {
 			if ( m_arrValues[i].IsInit() )
             {

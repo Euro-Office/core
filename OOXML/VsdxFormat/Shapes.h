@@ -271,7 +271,7 @@ namespace OOX
 			nullable_astring N;
 			nullable_string LocalName;
 			nullable_uint IX;
-			nullable_astring T; // todooo GeometryRowTypes
+			nullable_astring T; // TODO GeometryRowTypes
 			nullable_bool Del;
 		};
 		class CSection : public WritingElementWithChilds<>
@@ -347,8 +347,8 @@ namespace OOX
 
 		public:
 			nullable_astring N;
-			nullable_astring U; //todooo type 
-			nullable_astring E; //todooo err 
+			nullable_astring U; //TODO type
+			nullable_astring E; //TODO err
 			nullable_astring F;
 			nullable_astring V;
 

@@ -176,7 +176,7 @@ xlsx_alignment OdfProperties2XlsxAlignment(	xlsx_conversion_context * context,
 			if (angle > 90)		angle = angle - 90;
 			if (angle < -90)	angle = 90 + angle;
 
-			alignment.textRotation = angle;       //??? приоритет какой
+			alignment.textRotation = angle;       //??? what is the priority
 		}		
 		if (cellProp->fo_wrap_option_)
 		{

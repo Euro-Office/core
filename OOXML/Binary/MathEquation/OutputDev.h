@@ -34,72 +34,72 @@ namespace MathEquation
 	{
 	public:
 
-		// Начало и конец формулы
+		// The beginning and end of the formula
 		virtual void BeginEquation() = 0;
 		virtual void EndEquation()   = 0;
 
-		// Начало и конец блока.
+		// The beginning and end of the block.
 		virtual void BeginBlock() = 0;
 		virtual void EndBlock()   = 0;
 
-		// Выставляем размер в текущем блоке
+		// Set the size in the current block
         virtual void SetSize(_UINT16 nSize) = 0;
 
-		// Добавляем символ. К символу могут быть добавлены разные элементы. Зачеркивание, добавление акцента и т.д.
+		// Add a symbol. Various elements can be added to the symbol. Strikethrough, adding emphasis, etc.
         virtual void BeginChar(unsigned short uChar, unsigned char nTypeFace, bool bSpecialSymbol) = 0;
 		virtual void AddCharEmbel(MEMBELTYPE eType) = 0;
 		virtual void EndChar() = 0;
 
-		// Матрица. Количество блоков здесь равно nRows * nCol, посылаются последовательно в обычном порядке (первая строка слева направо, вторая строка слева направо и т.д.)
+		// Matrix. The number of blocks here is nRows * nCol, sent sequentially in the usual order (first row from left to right, second row from left to right, etc.)
         virtual void BeginMatrix(unsigned char nVAlign, MMATRIXHORALIGN eHorAlign, MMATRIXVERALIGN eVerAlign, bool bEqualRows, bool bEqualCols, unsigned char nRows, unsigned char nCols, unsigned char* pVerBorders, unsigned char* pHorBorders) = 0;
 		virtual void EndMatrix  () = 0;
 
         virtual void StartPile(unsigned char nHAlign, unsigned char nVAlign) = 0;
 		virtual void EndPile() = 0;
 
-		// Скобки с элементом внутри
+		// Parentheses with an element inside
 		virtual void BeginBrackets(MBRACKETSTYPE eType, bool bOpen, bool bClose) = 0;
 		virtual void EndBrackets  (MBRACKETSTYPE eType, bool bOpen, bool bClose) = 0;
 
-		// Корень. Первый блок - основание, второй, если есть, степень.
+		// Root. The first block is the base, the second, if there is one, the degree.
 		virtual void BeginRoot(bool bDegree) = 0;
 		virtual void EndRoot  () = 0;
 
-		// Дроби. Первый блок - числитель, второй блок - знаменатель.
+		// Fractions. The first block is the numerator, the second block is the denominator.
 		virtual void BeginFraction(MFRACTIONTYPES eType, bool bInline) = 0;
 		virtual void EndFraction  () = 0;
 
-		// Если bInline = true, то последовательность блоков Base, Sub, Sup
-		// Если bInline = false, то последовательность блоков  Sub, Sup, Base
+		// If bInline = true, then the sequence of blocks Base, Sub, Sup
+		// If bInline = false, then the sequence of blocks is Sub, Sup, Base
 		virtual void BeginScript(MSCRIPTALIGN eAlign, bool bBase = false, bool bSup = false, bool bSub = false, bool bInline = true) = 0;
 		virtual void EndScript  () = 0;
 
-		// Линия свеху или снизу относительно текста
+		// An overline or underline
 		virtual void BeginBar(MBARTYPE eType, bool bTop) = 0;
 		virtual void EndBar  () = 0;
 
-		// Стрелка с надписью сверху или снизу (отличе от BeginBar/EndBar в том, что здесь стрелка основной 
-		// объект, а текст - это небольшая надпись, а у тех функций наоборот)
+		// An arrow with an inscription at the top or bottom (different from BeginBar/EndBar in that here the arrow is the main one
+		// object, and the text is a small inscription, and for those functions it's the other way around)
 		virtual void BeginArrow(MARROWTYPE eType, bool bTop) = 0;
 		virtual void EndArrow  () = 0;
 
-		// Интегралы. Последовательность блоков всегда следующая(если блок присутствует) Base, Sub, Sup
+		// Integrals. The sequence of blocks is always the following (if the block is present) Base, Sub, Sup
 		virtual void BeginIntegral(MINTEGRALTYPE eType) = 0;
 		virtual void EndIntegral  () = 0;
 
-		// Фигурная скобка с текстом над/под объектом. Сначала идет основной объект, потом надпись фигурной скобки.
+		// A curly brace with text above/below an object. The main object comes first, then the curly brace label.
 		virtual void BeginVerticalBrace(bool bTop) = 0;
 		virtual void EndVerticalBrace  () = 0;
 
-		// Сумма, произведение, копроизведение, объединение, пересечение. Последовательность блоков Base, Sub, Sup
+		// Sum, product, coproduct, union, intersection. Sequence of blocks Base, Sub, Sup
 		virtual void BeingNArray(MNARRAYTYPE eType) = 0;
 		virtual void EndNArray  () = 0;
 
-		// Деление столбиком. С частным или без. Вначале всегда идет основание, потом если есть частное.
+		// Long division. With or without a quotient. The base always comes first, then if there is a quotient.
 		virtual void BeginLongDivision(MLONGDIVISION eType) = 0;
 		virtual void EndLongDivision  () = 0;
 
-		// < | > - такой элемент
+		// < | > - such an element
 		virtual void BeginAngleBracketsWithSeparator(MANGLEBRACKETSWITHSEPARATORTYPE eType) = 0;
 		virtual void EndAngleBracketsWithSeparator  () = 0;
 

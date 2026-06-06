@@ -63,7 +63,7 @@ namespace DocFileFormat
 		newObject->fTrueType	=					FormatUtils::BitmaskToBool	( ffid, 0x04 );
 		newObject->ff			= (unsigned char)	FormatUtils::BitmaskToInt	( ffid, 0x70 );
 
-		//int sz_fonts = 150; //..  нужно генерить уникальное todooo
+		//int sz_fonts = 150; //.. need to generate a unique TODO
 		int szAlt = 0;
 		if (reader->nWordVersion == 2)
 		{

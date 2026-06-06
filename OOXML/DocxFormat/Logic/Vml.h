@@ -248,7 +248,7 @@ namespace OOX
 			nullable<SimpleTypes::CColorType>									m_oColor;
 			nullable<SimpleTypes::CColorType>									m_oColor2;
 			nullable_string														m_oColors;
-			std::vector<TIntermediateColor*>									m_arrColors; // parsing m_oColors - todooo
+			std::vector<TIntermediateColor*>									m_arrColors; // parsing m_oColors - TODO
 			nullable<SimpleTypes::CTrueFalse>									m_oDetectMouseClick;
 			nullable<SimpleTypes::CFixedPercentage >							m_oFocus;
 			nullable<SimpleTypes::Vml::CVml_Vector2D_Percentage>				m_oFocusPosition;

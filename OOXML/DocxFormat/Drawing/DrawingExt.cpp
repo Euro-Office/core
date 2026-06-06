@@ -649,7 +649,7 @@ namespace OOX
 		}
 		void COfficeArtExtensionList::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать
+			// TO DO: Implement
 		}
 		void COfficeArtExtensionList::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{

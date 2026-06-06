@@ -154,7 +154,7 @@ namespace MetaFile
 		TEmfXForm       m_oTransform;
 		TEmfXForm       m_oInverseTransform;
 		TEmfXForm       m_oFinalTransform;
-		TEmfXForm       m_oFinalTransform2; // Преобразование без учета m_oTransform, т.е. чисто преобразование окна
+		TEmfXForm       m_oFinalTransform2; // Transformation without taking into account m_oTransform, i.e. pure window conversion
 		TRGBA           m_oTextColor;
 		TRGBA           m_oBgColor;
 		unsigned int    m_ulTextAlign;

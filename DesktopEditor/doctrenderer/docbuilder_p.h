@@ -543,7 +543,7 @@ namespace NSDoctRenderer
 			oWorker.m_arAdditionalFolders.push_back(NSFile::GetProcessDirectory() + L"/fonts");
 			oWorker.m_bIsNeedThumbnails = false;
 			oWorker.m_sDirectory = sDirectory;
-			// это не рабочая папка, где только шрифты
+			// this isn't a working folder, where there are only fonts
 			oWorker.m_bIsCleanDirectory = false;
 			NSFonts::IApplicationFonts* pFonts = oWorker.Check();
 			if(pFonts)
@@ -672,8 +672,8 @@ namespace NSDoctRenderer
 			int n3 = (int)from.find (L"ftp");
 			int n4 = (int)from.find (L"https");
 
-			//если nI сранивать не с 0, то будут проблемы
-			//потому что в инсталяции мы кладем файлы в /var/www...
+			//if nI is compared with something other than 0, there will be problems
+			//because in the installation we put the files in /var/www...
 			if (0 == n1 || 0 == n2 || 0 == n3 || 0 == n4)
 			{
 				NSNetwork::NSFileTransport::CFileDownloader oDownloader(from, false);
@@ -719,7 +719,7 @@ namespace NSDoctRenderer
 			}
 #endif
 
-			// не открываем локальные файлы в серверной версии.
+			// Don't open local files in the server version.
 			if (m_bIsServerSafeVersion)
 				return;
 
@@ -876,7 +876,7 @@ namespace NSDoctRenderer
 
 			if (true)
 			{
-				// для файлов по ссылке - расширение может быть плохим.
+				// for files from the link - the extension may be bad.
 				const wchar_t* sExtCopyPtr = sExtCopy.c_str();
 				int nExtCopyLen = sExtCopy.length();
 				int nValidIndex = 0;

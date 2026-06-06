@@ -80,7 +80,7 @@ public:
 CP_REGISTER_OFFICE_ELEMENT2(draw_image)
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
- //объект рисования не нужен .. нужно только место для фрэйма - сам чарт в другом месте
+ //no drawing object is needed.. only a place for the frame is needed - the chart itself is in a different place
 class draw_chart : public office_element_impl<draw_chart>
 {
 public:
@@ -107,7 +107,7 @@ CP_REGISTER_OFFICE_ELEMENT2(draw_chart)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class draw_frame : public draw_base
-{    //для  draw-text-box, draw-image, draw-object, draw-object-ole, draw-applet, draw-floating-frame, draw-plugin
+{    //for draw-text-box, draw-image, draw-object, draw-object-ole, draw-applet, draw-floating-frame, draw-plugin
 public:
     static const wchar_t * ns;
     static const wchar_t * name;
@@ -123,7 +123,7 @@ public:
     draw_frame_attlist						draw_frame_attlist_;
 
     office_element_ptr						office_event_listeners_;
-		// в content перенести нельзя - иначе событи будет добавляться не к этому объекту а следующему
+		// can't be transferred to content - otherwise events will be added not to this object but to the next one
     office_element_ptr						draw_glue_point_;
     office_element_ptr						draw_image_map_;
     //office_element_ptr draw_chart_map_;

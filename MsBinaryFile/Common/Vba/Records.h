@@ -35,7 +35,7 @@ namespace VBA
 {
 	typedef boost::shared_ptr<OOX::ActiveXObject> ActiveXObjectPtr;
 
-	typedef _UINT32 OLE_COLOR; // todooo -> RgbColorOrPaletteEntry(3) + OleColorType(1)
+	typedef _UINT32 OLE_COLOR; // TODO -> RgbColorOrPaletteEntry(3) + OleColorType(1)
 
 	struct _BooleanProperties
 	{

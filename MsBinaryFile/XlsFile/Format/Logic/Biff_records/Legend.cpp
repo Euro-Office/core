@@ -122,7 +122,7 @@ int Legend::serialize(std::wostream & _stream, int size)
 				}
 				else
 				{
-					//нету откровенного смещения
+					//no explicit offset
 					CP_XML_ATTR(L"val", "l");
 					dy = dy * size;
 				}

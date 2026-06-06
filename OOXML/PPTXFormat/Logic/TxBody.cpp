@@ -159,7 +159,7 @@ namespace PPTX
 				sResult += L"<div";
 				if (p.pPr.IsInit())
 				{
-					//todooo
+					//TODO
 				}
 				sResult += L">";
 

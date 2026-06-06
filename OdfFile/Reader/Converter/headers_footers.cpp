@@ -78,7 +78,7 @@ std::wstring get_rel_type(headers_footers::Type _Type)
     
 }
 
-void headers_footers::dump_rels(rels & Rels) const//внешние релсы
+void headers_footers::dump_rels(rels & Rels) const//external rels
 {
 	for (boost::unordered_map<std::wstring, instances_array>::const_iterator it = instances_.begin(); it != instances_.end(); ++it)
     {

@@ -76,7 +76,7 @@ std::wstring RtfFontTable::RenderToOOX(RenderParameter oRenderParameter)
 }
 std::wstring RtfFontTable::RenderToRtf(RenderParameter oRenderParameter)
 {
-	////записывает default charset и codepage
+	////writes default charset and codepage
 	//RtfDocument* poDocument = static_cast<RtfDocument*>( oRenderParameter.poDocument );
 	//if( PROP_DEF != poDocument->m_oProperty.m_nAnsiCodePage )
 	//{
@@ -230,7 +230,7 @@ RtfStylePtr RtfStyleTable::GetStyleResulting( RtfStylePtr oInputStyle )
 	{
 		eStyleType		= RtfStyle::stParagraph;
 		oResultStyle	= RtfParagraphStylePtr( new RtfParagraphStyle() );
-		nLinked			= oInputStyle->m_nLink;//linked будем смотреть только у стилей параграфа, чтобы избежать рекурсии
+		nLinked			= oInputStyle->m_nLink;//linked we will look only at paragraph styles to avoid recursion
 	}
 	else if( RtfStyle::stTable == oInputStyle->m_eType )
 	{
@@ -238,7 +238,7 @@ RtfStylePtr RtfStyleTable::GetStyleResulting( RtfStylePtr oInputStyle )
 		oResultStyle	= RtfTableStylePtr( new RtfTableStyle() );
 	}
 	else
-		return oInputStyle;	//ОПАСНО .. потом может другим затереться todooo
+		return oInputStyle;	//DANGEROUS .. then it can be overwritten by others TODO
 
 	RtfStylePtr oLinkedStyle;
 	//if( PROP_DEF != nLinked && nStyleId != nLinked)
@@ -255,7 +255,7 @@ RtfStylePtr RtfStyleTable::GetStyleResulting( RtfStylePtr oInputStyle )
 			oBaseStyle = GetStyleResulting( oTemStyle );
 	}
 
-	//Опытным путем установлено - Base старше Link
+	//Established empirically - Base has lower priority than Link
 	if( NULL != oLinkedStyle )
 	{
 		oResultStyle->Merge( oLinkedStyle );

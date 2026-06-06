@@ -439,7 +439,7 @@ void number_percentage_style::serialize(std::wostream & strm)
 
 namespace 
 {
-	//todooo - сделать наоборот string -> в свойства
+	//TODO - do the opposite string -> to properties
 void format_number_number(
                           std::wostream & strm,
                           bool number_grouping_,

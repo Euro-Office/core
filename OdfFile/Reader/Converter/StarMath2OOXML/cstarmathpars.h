@@ -95,7 +95,7 @@ namespace StarMath
 		unsigned int m_iSize,m_iAlignment;
 		unsigned int m_unCount;
 	};
-	//Сlass for working with tokens (reading, defining types, passing)
+	//Class for working with tokens (reading, defining types, passing)
 	class CStarMathReader
 	{
 	public:

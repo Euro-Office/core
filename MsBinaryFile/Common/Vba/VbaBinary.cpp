@@ -151,7 +151,7 @@ CVbaFileStream::CVbaFileStream(POLE::Stream* stream, _UINT32 offset)
 		if ((header & CHUNK_SIGMASK) != CHUNK_SIG)
 		{
 			bCompressed = true;
-			chunkSize = 4094; //по факту
+			chunkSize = 4094; //in fact
 			bUnknown = true;
 		}
 		unsigned char *dataNext = dataCur + chunkSize;

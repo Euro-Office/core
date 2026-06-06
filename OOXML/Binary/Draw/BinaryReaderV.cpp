@@ -69,7 +69,7 @@ namespace BinVsdxRW
 		oFile.ReadFile(pBase64Data, oFile.GetFileSize(), nBase64DataSize);
 		oFile.CloseFile();
 
-		//проверяем формат
+		//checking the format
 		bool bValidFormat = false;
 		std::wstring sSignature(g_sFormatSignature);
 		size_t nSigLength = sSignature.length();
@@ -85,7 +85,7 @@ namespace BinVsdxRW
 		}
 		if (bValidFormat)
 		{
-			//Читаем из файла версию и длину base64
+			//Read the base64 version and length from the file
 			int nIndex = (int)nSigLength;
 			int nType = 0;
 			std::string version = "";

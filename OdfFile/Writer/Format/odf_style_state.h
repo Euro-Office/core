@@ -112,14 +112,14 @@ private:
 	std::wstring	odf_style_name_;
 	std::wstring	oox_style_name_;
 
-//инфа для описания ячеек
+//info for describing cells
 	int				style_oox_id_;
 	int				num_fmt_id_; //default =0 (general) 
 ///////	
 	bool automatic_;
 	bool root_;
-	bool default_;		// это для тех стилей что в root
-	bool conditional_;	//стили накладываемые по условию
+	bool default_;		// this is for those styles that are in root
+	bool conditional_;	//styles applied by condition
 
 	bool writable_;
 

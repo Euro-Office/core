@@ -180,7 +180,7 @@ void pptx_xml_slideLayout::write_to(std::wostream & strm)
 				{
 					CP_XML_STREAM() << strmData_.str();
 
-//в slideLayoutData_
+//in slideLayoutData_
 //contentPart (Content Part) §19.3.1.14
 //cxnSp (Connection Shape) §19.3.1.19
 //extLst (Extension List with Modification Flag) §19.3.1.20

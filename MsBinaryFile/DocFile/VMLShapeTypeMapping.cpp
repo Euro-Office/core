@@ -87,7 +87,7 @@ namespace DocFileFormat
                 m_pXmlWriter->WriteAttribute( L"o:preferrelative", L"t");
 			}
 
-            m_pXmlWriter->WriteNodeEnd( L"", true, false );//закрытие атрибутов
+            m_pXmlWriter->WriteNodeEnd( L"", true, false );//closing attributes
 
 			//Textpath
 			if (!pShape->Textpath.empty())

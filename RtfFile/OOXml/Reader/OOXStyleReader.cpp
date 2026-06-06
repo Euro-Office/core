@@ -89,7 +89,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 	if (m_ooxStyle->m_oUiPriority.IsInit())
 		oNewStyle->m_bCompose = *m_ooxStyle->m_oUiPriority->m_oVal;
 
-	if (m_ooxStyle->m_oRunPr.IsInit() && ( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo с rtf стилями
+	if (m_ooxStyle->m_oRunPr.IsInit() && ( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo with rtf styles
 	{
 		RtfCharStylePtr oNewCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( oNewStyle );
 
@@ -108,7 +108,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 		CcnfStyle style;
 		opPrReader.Parse( oParam, oNewParStyle->m_oParProp, style );
 
-		//oNewParStyle->m_oParProp.m_nListId	= PROP_DEF; //экспериментально вроде нельзя иметь numbering в параграф стиле
+		//oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //experimentally, it seems numbering can't be in a paragraph style
 		//oNewParStyle->m_oParProp.m_nListLevel = PROP_DEF;
 
 	}
@@ -168,7 +168,7 @@ bool OOXStyleReader::ParseStyle( ReaderParameter oParam, RtfStylePtr& oOutputSty
 					case SimpleTypes::tblstyleoverridetypeBand1Vert  :
 					{
 						oTableStyle->m_oBandVerOdd = boost::static_pointer_cast<RtfTableStyle, RtfStyle>( oNewSubStyle );
-						oTableStyle->m_oBandVerOdd->m_oParProp.m_bStyleOddColBand = 1; //для конвертации в Rtf
+						oTableStyle->m_oBandVerOdd->m_oParProp.m_bStyleOddColBand = 1; //to convert to Rtf
 					}break;
 					case SimpleTypes::tblstyleoverridetypeBand2Horz  :
 					{
@@ -253,10 +253,10 @@ bool OOXStyleReader::ParseTableStyle(OOX::Logic::CTableStyleProperties * oox_tab
 		oOutputStyle		= RtfStylePtr ( new RtfTableStyle() );
 		oOutputStyle->m_nID = oParam.oRtf->m_oStyleTable.GetCount() + 1;
 	}
-	RtfStyle::_StyleType eStyleType = oOutputStyle->m_eType;//todooo проверить
+	RtfStyle::_StyleType eStyleType = oOutputStyle->m_eType;//TODO check
 
 	if (oox_tableStyle->m_oRunPr.IsInit() &&
-			( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo с rtf стилями
+			( RtfStyle::stCharacter == eStyleType || RtfStyle::stParagraph == eStyleType || RtfStyle::stTable == eStyleType ))//todo with rtf styles
 	{
 		RtfCharStylePtr oNewCharStyle = boost::static_pointer_cast<RtfCharStyle, RtfStyle>( oOutputStyle );
 
@@ -276,7 +276,7 @@ bool OOXStyleReader::ParseTableStyle(OOX::Logic::CTableStyleProperties * oox_tab
 
 		opPrReader.Parse( oParam, oNewParStyle->m_oParProp, style );
 
-		oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //экспериментально вроде нельзя иметь numbering в параграф стиле
+		oNewParStyle->m_oParProp.m_nListId = PROP_DEF; //experimentally it seems numbering can't be in a paragraph style
 		oNewParStyle->m_oParProp.m_nListLevel = PROP_DEF;
 
 	}

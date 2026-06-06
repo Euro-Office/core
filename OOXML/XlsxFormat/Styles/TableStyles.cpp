@@ -234,7 +234,7 @@ namespace OOX
 		}
 		void CTableStyleElement::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-							// Читаем атрибуты
+							// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("dxfId"),      m_oDxfId )
@@ -566,7 +566,7 @@ namespace OOX
 		}
 		void CTableStyles::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start( oReader )
 
 				WritingElement_ReadAttributes_Read_if     ( oReader, _T("count"),      m_oCount )

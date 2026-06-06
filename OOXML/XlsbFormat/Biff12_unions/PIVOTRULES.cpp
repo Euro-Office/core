@@ -46,7 +46,7 @@ namespace XLSB
         return BaseObjectPtr(new PIVOTRULES(*this));
     }
 
-    //PIVOTRULES = BrtBeginSXRules PIVOTRULE BrtEndSxRules // скорее всего ошибка и должно быть *PIVOTRULE
+    //PIVOTRULES = BrtBeginSXRules PIVOTRULE BrtEndSxRules // most likely an error and should be *PIVOTRULE
     const bool PIVOTRULES::loadContent(BinProcessor& proc)
     {
         if (proc.optional<BeginSXRules>())

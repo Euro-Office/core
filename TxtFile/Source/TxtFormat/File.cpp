@@ -121,7 +121,7 @@ namespace Txt
 	{
 		m_listContent.clear();
 	}
-	void File::read(const std::wstring& filename, int code_page) // насильственное чтение в кодировке
+	void File::read(const std::wstring& filename, int code_page) // forced reading in encoding
 	{
 		m_listContent.clear();
 

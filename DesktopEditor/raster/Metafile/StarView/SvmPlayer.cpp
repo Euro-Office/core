@@ -194,7 +194,7 @@ CSvmDC* CSvmPlayer::GetDC()
 
 void CSvmPlayer::RegisterObject(CSvmObjectBase* pObject)
 {
-	// Найдем наименьший доступный индекс
+	// Find the smallest available index
 	unsigned short ushIndex = m_ushIndex;
 	int nAvailableIndex = -1;
 	if (m_vAvailableIndexes.size() > 0)
@@ -233,7 +233,7 @@ void CSvmPlayer::SetRasterOp(int op)
 }
 void CSvmPlayer::InitStockObjects()
 {
-	InitStockBrush(false, 0x00, 0x00, 0x00, 0xff); //прозрачный
+	InitStockBrush(false, 0x00, 0x00, 0x00, 0xff); //transparent
 	InitStockPen(false, 0x00, 0x00, 0x00);
 }
 void CSvmPlayer::Pop()
@@ -308,7 +308,7 @@ void CSvmPlayer::Pop()
 	//}
 }
 
-void CSvmPlayer::Push(int nFlags) // объекты с множественной настройкой 
+void CSvmPlayer::Push(int nFlags) // objects with multiple settings
 {
 	m_nFlags = nFlags;
 	//if ( nFlags & PUSH_LINECOLOR )
@@ -546,13 +546,13 @@ void CSvmDC::SetMapMode(TSvmMapMode & mapMode, bool prefered )
 	}break;
 	case MAP_PIXEL:
 	{
-		dPixel = 0.5;// /72.; //todooo
+		dPixel = 0.5;// /72.; //TODO
 		SetPixelWidth(dPixel);
 		SetPixelHeight(dPixel);		
 	}break;
 	case MAP_SYSFONT:
 	case MAP_APPFONT:
-		//хз
+		//unknown
 		break;
 	case MAP_RELATIVE:
 		SetPixelWidth(dPixel);

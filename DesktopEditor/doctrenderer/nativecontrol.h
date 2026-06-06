@@ -247,10 +247,10 @@ namespace NSNativeControl
 
 		CZipWorker m_oZipWorker;
 
-		// для добавления картинок -------------------------------------
+		// to add images ---------------------------------------
 		CImagesWorker* m_pWorker;
 
-		// серверная версия билдера
+		// server version of the builder
 		CV8Params m_oParams;
 		std::map<std::wstring, bool> m_map_access_directories;
 
@@ -373,7 +373,7 @@ namespace NSNativeControl
 		{
 			int nNaturalIndex = nDeleteIndex;
 
-			// на каждое изменение две кавычки)
+			// there are two quotes for each change)
 			nNaturalIndex <<= 1;
 
 			// not cool realize
@@ -408,7 +408,7 @@ namespace NSNativeControl
 		{
 			if (nDeleteIndex < m_nCurrentChangesBuilderIndex)
 			{
-				// нужно удалить изменения
+				// need to delete changes
 				DumpRemoveChanges(nDeleteIndex);
 			}
 			m_nCurrentChangesBuilderIndex = nDeleteIndex + nCount;
@@ -536,7 +536,7 @@ public:
 
 		if (nLen <= m_nMaxUnionSize)
 		{
-			// все убралось - выделяем один кусок
+			// everything has been removed - select one piece
 			m_nLen = nLen + 4;
 		}
 		else
@@ -671,7 +671,7 @@ public:
 public:
 	void OpenFull(std::vector<std::wstring>& oFiles)
 	{
-		// определяем размер
+		// determine the size
 		size_t nCount = oFiles.size();
 		for (size_t i = 0; i < nCount; ++i)
 		{
@@ -729,7 +729,7 @@ public:
 
 	void OpenFull_excel(std::vector<std::wstring>& oFiles)
 	{
-		// определяем размер
+		// determine the size
 		size_t nCount = oFiles.size();
 		for (size_t i = 0; i < nCount; ++i)
 		{

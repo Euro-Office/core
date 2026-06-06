@@ -57,7 +57,7 @@ bool OOXFontTableWriter::Save(  std::wstring sFolder )
 	}
 	else
 	{
-		//todooo - default fontTable !!!
+		//TODO - default fontTable !!!
 	}
 	return false;
 }

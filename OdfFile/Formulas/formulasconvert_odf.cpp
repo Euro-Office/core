@@ -449,7 +449,7 @@ namespace formulasconvert {
 	}
 
 
-	// заменяем формат адресации ячеек
+	// replacing the cell addressing format
 	// [.A1] -> A1
 	// [.A1:.B5] -> A1:B5
 	// [Sheet2.A1:B5] -> Sheet2!A1:B5
@@ -514,7 +514,7 @@ namespace formulasconvert {
 		expr = res;    
 	}
 
-	// распознаем и заменяем формат формулы
+	// recognize and replace formula format
 	// of:=(Formula) -> (Formula)
 	bool odf2oox_converter::Impl::check_formula(std::wstring& expr)
 	{
@@ -533,7 +533,7 @@ namespace formulasconvert {
 		else   
 			return false;
 	}
-// заменить точки с запятой во всех вхождениях кроме находящихся в кавычках --*и в фигурных скобках*--
+// replace semicolons in all occurrences except those in quotes --* and in curly braces*--
 	void odf2oox_converter::Impl::replace_semicolons(std::wstring& expr, bool del_quotes)
 	{
 		 const std::wstring res = boost::regex_replace(
@@ -567,7 +567,7 @@ namespace formulasconvert {
 
 		expr = res;
 	}
-	// заменить вертикальную черту во всех вхождениях в фигурных скобках, но не внутри строк
+	// replace vertical bar in all occurrences within curly braces, but not inside strings
 	void odf2oox_converter::Impl::replace_vertical(std::wstring& expr)
 	{
 		 const std::wstring res = boost::regex_replace(
@@ -577,7 +577,7 @@ namespace formulasconvert {
 			boost::match_default | boost::format_all);
 		 expr = res;
 	}
-	// заменить пробел во всех вхождениях на запятую
+	// replace the space in all occurrences with a comma
 	void odf2oox_converter::Impl::replace_space(std::wstring& expr)
 	{
 		 const std::wstring res = boost::regex_replace(
@@ -594,7 +594,7 @@ namespace formulasconvert {
 
 		bool isFormula = check_formula(workstr);
 
-//экранирование
+//escaping
 		mapReplacements.emplace_back();
 
 		workstr = boost::regex_replace(workstr,
@@ -610,15 +610,15 @@ namespace formulasconvert {
 		if (isFormula)
 		{
 			XmlUtils::replace_all( workstr, L"FDIST(", L"_xlfn.F.DIST(");
-			// ROUNDUP( - тут в oox 2 параметра - разрядность нужно - ,0) - EV Requirements v2.2.3.ods
+			// ROUNDUP( - there are 2 parameters in oox - the bit width is needed - ,0) - EV Requirements v2.2.3.ods
 			
 			if (std::wstring::npos != workstr.find(L"CONCATINATE"))
 			{
 				bool l = true;
-				//могут быть частично заданы диапазоны
-				//todooo
+				//ranges can be partially specified
+				//TODO
 			}	
-			//todooo INDEX((A1:C6~A8:C11),2,2,2) - ???? - INDEX_emb.ods
+			//TODO INDEX((A1:C6~A8:C11),2,2,2) - ???? - INDEX_emb.ods
 		}
 		else
 		{
@@ -654,7 +654,7 @@ namespace formulasconvert {
 	}
 
 	//Sheet2.C3:Sheet2.C19 Sheet2.L29:Sheet2.L36
-	//в
+	//in
 	//Sheet2!C3:C19,Sheet2!L27:L34
 	std::wstring odf2oox_converter::Impl::convert_list_values(const std::wstring& expr)
 	{
@@ -725,11 +725,11 @@ namespace formulasconvert {
  		replace_tmp_back( result );
 		
 		mapReplacements.pop_back();
-		return result.substr(0, result.size() - 1);// минус последняя лишняя запятая
+		return result.substr(0, result.size() - 1);// minus the last extra comma
 	}
 	std::wstring odf2oox_converter::Impl::convert_named_ref(const std::wstring& expr, bool withTableName, std::wstring separator, bool bAbsoluteAlways)
 	{
-		boost::wregex complexRef(L"('(?!\\s\\'){0,1}.*?')");// поиск того что в апострофах и замена там
+		boost::wregex complexRef(L"('(?!\\s\\'){0,1}.*?')");// search for what is in apostrophes and replace there
 
 		std::wstring workstr = expr;
 
@@ -782,8 +782,8 @@ namespace formulasconvert {
 			size_t res_find = 0;
 			if ((res_find = workstr.find(L"CONCATINATE")) != std::wstring::npos)
 			{
-				//могут быть частично заданы диапазоны
-				//todooo
+				//ranges can be partially specified
+				//TODO
 
 			}
 			replace_tmp_back(workstr);

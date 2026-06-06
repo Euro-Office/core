@@ -149,7 +149,7 @@ namespace MetaFile
 			Init();
 		else if (MWT_LEFTMULTIPLY == ulMode)
 		{
-			// oOther слева, текущая матрица справа
+			// oOther on the left, current matrix on the right
 			double dM11 = oOther.M11 * M11 + oOther.M12 * M21;
 			double dM12 = oOther.M11 * M12 + oOther.M12 * M22;
 			double dM21 = oOther.M21 * M11 + oOther.M22 * M21;
@@ -167,7 +167,7 @@ namespace MetaFile
 		}
 		else if (MWT_RIGHTMULTIPLY == ulMode)
 		{
-			// oOther справа, текущая матрица слева
+			// oOther on the right, current matrix on the left
 			double dM11 = M11 * oOther.M11 + M12 * oOther.M21;
 			double dM12 = M11 * oOther.M12 + M12 * oOther.M22;
 			double dM21 = M21 * oOther.M11 + M22 * oOther.M21;

@@ -53,7 +53,7 @@ bool current_file_is_find(unzFile uf, const char* filename)
 		return false;
 
 	std::string name(filename_inzip);
-	//todooo есть ли необходимость свести все к нижнему ???
+	//TODO is there a need to reduce everything to the bottom???
 	return strcmp(filename, name.c_str()) == 0;
 }
 bool get_file(unzFile unzip_file_handle, BYTE* arr, uInt array_size)
@@ -104,20 +104,20 @@ bool get_file_in_archive(unzFile unzip_file_handle, const char* filePathInZip, B
 }
 // end from (ZipUtilsCP.cpp)
 
-// Создает архив в памяти
+// Creates an archive in memory
 void CZipBuffer::create()
 {
 	m_zipFile = NULL;
 	m_sizeZip = 0;
 }
-// Открывает архив в память, переданные данные необходимо освободить
+// Opens an archive in memory, the transferred data must be freed
 void CZipBuffer::open(BYTE* buffer, DWORD size)
 {
 	m_zipFile = new BYTE[size];
 	memcpy(m_zipFile, buffer, size);
 	m_sizeZip = size;
 
-	// Получаем пути в архиве
+	// Getting the paths in the archive
 	BUFFER_IO* buf = new BUFFER_IO;
 	buf->buffer = m_zipFile;
 	buf->nSize  = m_sizeZip;
@@ -133,14 +133,14 @@ void CZipBuffer::open(BYTE* buffer, DWORD size)
 	unzClose(uf);
 	RELEASEOBJECT(buf);
 }
-// Закрывает архив и очищает память
+// Closes the archive and clears memory
 void CZipBuffer::close()
 {
 	for (CFile& oFile : m_arrFiles)
 		RELEASEARRAYOBJECTS(oFile.m_pData);
 	m_arrFiles.clear();
 }
-// Перемещает файл в архиве
+// Moves a file in the archive
 void CZipBuffer::move(const std::string& sSrc, const std::string& sDst)
 {
 	std::vector<CFile>::iterator it =
@@ -148,7 +148,7 @@ void CZipBuffer::move(const std::string& sSrc, const std::string& sDst)
 	if (it != m_arrFiles.end())
 		it->m_sPath = sDst;
 }
-// Возвращает вектор путей в архиве
+// Returns a vector of paths in the archive
 std::vector<std::string> CZipBuffer::getPaths()
 {
 	std::vector<std::string> oRes;
@@ -156,7 +156,7 @@ std::vector<std::string> CZipBuffer::getPaths()
 		oRes.push_back(oFile.m_sPath);
 	return oRes;
 }
-// Сохраняет архив в переданную память, полученные данные необходимо освободить
+// Saves the archive to the transferred memory, the received data must be freed
 void CZipBuffer::save(BYTE*& data, DWORD& length)
 {
 	BUFFER_IO* buf = new BUFFER_IO;
@@ -186,7 +186,7 @@ void CZipBuffer::save(BYTE*& data, DWORD& length)
 	length = m_sizeZip = buf->nCurrentPos;
 	RELEASEOBJECT(buf);
 }
-// По относительно пути в архиве возвращает файл, полученные данные будут освобождены после использования класса
+// Returns a file relative to the path in the archive; the received data will be released after using the class
 void CZipBuffer::getFile(const std::string& sPath, BYTE*& data, DWORD& length)
 {
 	std::vector<CFile>::iterator it =
@@ -218,7 +218,7 @@ void CZipBuffer::getFile(const std::string& sPath, BYTE*& data, DWORD& length)
 	it->m_pData   = data;
 	RELEASEOBJECT(buf);
 }
-// По относительно пути в архиве добавляет файл, переданные данные необходимо освободить
+// A file is added relative to the path in the archive; the transferred data must be freed
 void CZipBuffer::addFile   (const std::string& sPath, BYTE* data, DWORD length)
 {
 	std::vector<CFile>::iterator it =
@@ -241,7 +241,7 @@ void CZipBuffer::addFile   (const std::string& sPath, BYTE* data, DWORD length)
 		it->m_nLength = length;
 	}
 }
-// По относительно пути в архиве удаляет файл
+// Deletes a file relative to the path in the archive
 bool CZipBuffer::removeFile(const std::string& sPath)
 {
 	for (std::vector<CFile>::iterator i = m_arrFiles.begin(); i != m_arrFiles.end(); i++)

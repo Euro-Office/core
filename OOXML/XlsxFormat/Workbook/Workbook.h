@@ -48,7 +48,7 @@ namespace OOX
 	{
 		class CPersonList;
 
-	//необработанные child:
+	//raw child:
 		//<customWorkbookViews>
 		//<extLst>
 		//<fileRecoveryPr>

@@ -247,7 +247,7 @@ const std::wstring int2wstr(const int val, const int radix)
 
 const std::wstring double2str(const double val)
 {
-	return boost::lexical_cast<std::wstring>(val);// std::to_wstring(val); - округление (
+	return boost::lexical_cast<std::wstring>(val);// std::to_wstring(val); - rounding (
 }
 
 

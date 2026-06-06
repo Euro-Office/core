@@ -111,7 +111,7 @@ void oox_axis_content::oox_serialize_content(std::wostream & _Wostream)
 	_CP_OPT(double)			doubleVal;
 	
 	oox_title title;
-	title.set_content(content_.title_);//todo нужно задать понармальному layout
+	title.set_content(content_.title_);//todo needs to be set to the normal layout
   
 	CP_XML_WRITER(_Wostream)
     {

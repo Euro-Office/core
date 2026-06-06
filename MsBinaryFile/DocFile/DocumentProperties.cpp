@@ -814,4 +814,4 @@ namespace DocFileFormat
       ilfoMacAtCleanup = 0;
 	}
 }
-//кодировка 1251
+//encoding 1251

@@ -106,7 +106,7 @@ namespace NExtractTools
 			}
 			else
 			{
-				// dir ( ??? файл без расширения???) -> zip
+				// dir (??? file without extension???) -> zip
 
 				if (NSDirectory::Exists(sFile1))
 					return TCD_ZIPDIR;
@@ -909,7 +909,7 @@ namespace NExtractTools
 							   const std::wstring& sResultDirectory)
 	{
 		std::vector<std::wstring> aImages = pDoctRenderer->GetImagesInChanges();
-		// todo сделать interface у COfficeUtils, чтобы можно было делать архив из файлов в разных папках.
+		// todo make an interface for COfficeUtils so that an archive can be created from files in different folders.
 		for (size_t i = 0; i < aImages.size(); ++i)
 		{
 			std::wstring sImageName = aImages[i];

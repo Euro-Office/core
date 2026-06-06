@@ -82,14 +82,14 @@ namespace OOX
 						}
 					}
 					
-					//без RemoveAll они очистятся вместе с altRun
+					//without RemoveAll they will be cleared along with altRun
 					altRun.m_arrItems.clear();
 				}
 				else if ( L"mc:Fallback" == sName )
 				{
 					//if (m_oChoiceRequires.is_init() && !m_arrChoiceItems.empty())
 					//{
-					//	continue; // не зачем баласт читать - берем более современную или оригинальную версию.
+					//	continue; // there is no need to read the rubbish - we take a more modern or original version.
 					//}
 					
 					CRun altRun;
@@ -103,7 +103,7 @@ namespace OOX
 						}
 					}
 					
-					//без RemoveAll они очистятся вместе с altRun
+					//without RemoveAll they will be cleared along with altRun
 					altRun.m_arrItems.clear();
 				}
 			}

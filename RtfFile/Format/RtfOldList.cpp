@@ -41,7 +41,7 @@ std::wstring RtfOldList::RenderToOOX(RenderParameter oRenderParameter)
 {
     std::wstring sResult;
 	if( true == CanConvertToNumbering() )
-	{//сохраняем как список
+	{//save as list
 		if( RENDER_TO_OOX_PARAM_OLDLIST_ABS == oRenderParameter.nType )
 		{
             std::wstring sCharProp	= m_oLevelText->m_oProperty.m_oCharProperty.RenderToOOX( oRenderParameter );

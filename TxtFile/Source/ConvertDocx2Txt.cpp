@@ -628,7 +628,7 @@ namespace Docx2Txt
 
 					if ((pHyperlink) && (pHyperlink->m_oId.IsInit()))
 					{
-						if (pDocument) //todooo - >+headers/footers ->container
+						if (pDocument) //TODO - >+headers/footers ->container
 						{
 							smart_ptr<OOX::File> oFile = pDocument->Find(pHyperlink->m_oId->GetValue());
 							if ((oFile.IsInit()) && (OOX::FileTypes::HyperLink == oFile->type()))

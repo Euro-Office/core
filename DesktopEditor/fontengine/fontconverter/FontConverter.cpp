@@ -65,7 +65,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 	std::string sFontFormat( FT_Get_X11_Font_Format( pFace ) );
 
-	// Проверим флаг конвертации и исходный формат шрифта
+	// Check the conversion flag and the original font format
 	bool bNeedConvert = false;
 
 	if ( nFlag == NSFontConverter::c_lFromAll ||
@@ -84,18 +84,18 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 			NSFontConverter::CFontFileType1C *pT1C = NULL;
 			if ( "Type 1" == sFontFormat )
 			{
-				// Сначала сконвертируем Type1 в CFF
+				// First, convert Type1 to CFF
 				NSFontConverter::CFontFileType1* pT1 = NSFontConverter::CFontFileType1::LoadFromFile( sFontIn.c_str() );
 				pT1->ToCFF( &NSFontConverter::CharBufferWrite, &oCFF );
 				delete pT1;
 
-				// Конвертируем CFF в OpenTypeCFF
+				// Converting CFF to OpenTypeCFF
 				pT1C = NSFontConverter::CFontFileType1C::LoadFromBuffer( oCFF.sBuffer, oCFF.nLen );
 			}
 			else
 			{
-				// FreeType отдает тип шрифта CFF, в случаях когда файл имеет тип OpenType(CFF).
-				// Если так оно и есть, тогда нам с файлом ничего делать на надо.
+				// FreeType gives the font type CFF in cases where the file is OpenType(CFF).
+				// If so, the file doesn't need to be changed.
 				pT1C = NSFontConverter::CFontFileType1C::LoadFromFile( sFontIn.c_str() );
 			}
 
@@ -120,7 +120,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 				if ( pSymbols )
 				{
-					// Сначала составим список нужных нами GID
+					// First, build the list of required GIDs
 					unsigned int* pUnicode = pSymbols;
 					unsigned short* pGIDs = new unsigned short[nCount];
 					int nCMapIndex = 0;
@@ -147,7 +147,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 					pUseGlyfs = new unsigned char[lGlyfsCount];
 					::memset( pUseGlyfs, 0x00, lGlyfsCount * sizeof(unsigned char) );
-					pUseGlyfs[0] = 1; // нулевой гид всегда записываем
+					pUseGlyfs[0] = 1; // always write the zero GID
 					for ( int nGID = 1; nGID < lGlyfsCount; nGID++ )
 					{
 						if ( 1 != pUseGlyfs[nGID] )
@@ -162,7 +162,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 								}
 							}
 
-							// Если данный символ составной (CompositeGlyf), тогда мы должны учесть все его дочерные символы (subglyfs)
+							// If a given symbol is a composite (composite glyph), then we must take into account all its child symbols (subglyphs)
 							if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 							{
 								for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )
@@ -193,14 +193,14 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 			else
 			{
 				// error parse font
-				// Просто копируем файл
+				// Just copy the file
 				NSFile::CFileBinary::Copy(sFontIn, sFontOut);
 			}
 		}
 	}
 	else
 	{
-		// Просто копируем файл
+		// Just copy the file
 		NSFile::CFileBinary::Copy(sFontIn, sFontOut);
 	}
 
@@ -214,7 +214,7 @@ bool CFontConverter::ToOTF(std::wstring sFontIn, std::wstring sFontOut, unsigned
 
 bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nCount, std::wstring sNameW, long nFlag, long lFaceIndex, unsigned char*& pDstData, int& nDstLen)
 {
-	// функция просто скопирована и немного доработана. это все из-за нехватки времени.
+	// the function was simply copied and slightly modified. it's all due to lack of time.
 
 	FT_Library pLibrary = NULL;
 	if ( FT_Init_FreeType( &pLibrary ) )
@@ -247,7 +247,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 	std::string sFontFormat( FT_Get_X11_Font_Format( pFace ) );
 
-	// Проверим флаг конвертации и исходный формат шрифта
+	// Check the conversion flag and the original font format
 	bool bNeedConvert = false;
 
 	if ( nFlag == NSFontConverter::c_lFromAll ||
@@ -269,18 +269,18 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 			NSFontConverter::CFontFileType1C *pT1C = NULL;
 			if ( "Type 1" == sFontFormat )
 			{
-				// Сначала сконвертируем Type1 в CFF
+				// First, convert Type1 to CFF
 				NSFontConverter::CFontFileType1* pT1 = NSFontConverter::CFontFileType1::LoadFromFile( sFontIn.c_str() );
 				pT1->ToCFF( &NSFontConverter::CharBufferWrite, &oCFF );
 				delete pT1;
 
-				// Конвертируем CFF в OpenTypeCFF
+				// Converting CFF to OpenTypeCFF
 				pT1C = NSFontConverter::CFontFileType1C::LoadFromBuffer( oCFF.sBuffer, oCFF.nLen );
 			}
 			else
 			{
-				// FreeType отдает тип шрифта CFF, в случаях когда файл имеет тип OpenType(CFF).
-				// Если так оно и есть, тогда нам с файлом ничего делать на надо.
+				// FreeType gives the font type CFF in cases where the file is OpenType(CFF).
+				// If so, the file doesn't need to be changed.
 				pT1C = NSFontConverter::CFontFileType1C::LoadFromFile( sFontIn.c_str() );
 			}
 
@@ -302,7 +302,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 				if ( pSymbols )
 				{
-					// Сначала составим список нужных нами GID
+					// First, build the list of required GIDs
 					unsigned int* pUnicode = (unsigned int*)pSymbols;
 					unsigned short* pGIDs = new unsigned short[nCount];
 					int nCMapIndex = 0;
@@ -329,7 +329,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 
 					pUseGlyfs = new unsigned char[lGlyfsCount];
 					::memset( pUseGlyfs, 0x00, lGlyfsCount * sizeof(unsigned char) );
-					pUseGlyfs[0] = 1; // нулевой гид всегда записываем
+					pUseGlyfs[0] = 1; // always write the zero GID
 					for ( int nGID = 1; nGID < lGlyfsCount; nGID++ )
 					{
 						if ( 1 != pUseGlyfs[nGID] )
@@ -344,7 +344,7 @@ bool CFontConverter::ToOTF2(std::wstring sFontIn, unsigned int* pSymbols, int nC
 								}
 							}
 
-							// Если данный символ составной (CompositeGlyf), тогда мы должны учесть все его дочерные символы (subglyfs)
+							// If a given symbol is a composite (composite glyph), then we must take into account all its child symbols (subglyphs)
 							if ( bFound && 0 == FT_Load_Glyph( pFace, nGID, FT_LOAD_NO_SCALE | FT_LOAD_NO_RECURSE ) )
 							{
 								for ( int nSubIndex = 0; nSubIndex < pFace->glyph->num_subglyphs; nSubIndex++ )

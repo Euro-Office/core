@@ -28,7 +28,7 @@
 #include <string>
 namespace PdfReader
 {
-    // эту память не удалять!!! просто использовать
+    // Don't delete this memory!!! just use it
     bool GetBaseFont(const std::wstring& sName, const unsigned char*& pData, unsigned int& nSize);
     bool GetBaseCidToUnicode(const char* sName, const unsigned  int*& pData, unsigned int& nSize);
 }

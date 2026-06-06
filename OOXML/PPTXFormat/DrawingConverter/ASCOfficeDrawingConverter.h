@@ -247,7 +247,7 @@ namespace NSBinPptxRW
 		NSBinPptxRW::CBinaryFileReader* m_pBinaryReader;
 
 		int m_lNextId;
-		unsigned int m_nDrawingMaxZIndex = 0; // для смешанных записей pict & Drawing 
+		unsigned int m_nDrawingMaxZIndex = 0; // for mixed pict & drawing entries
 
 		int m_lCurrentObjectTop;
 

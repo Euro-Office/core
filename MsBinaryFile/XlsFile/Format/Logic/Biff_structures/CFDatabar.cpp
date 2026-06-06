@@ -72,7 +72,7 @@ int CFDatabar::serialize(std::wostream & stream)
     {
 		CP_XML_NODE(L"dataBar")
 		{
-			//todooo cfvo = num - db1 & db2
+			//TODO cfvo = num - db1 & db2
 			CP_XML_NODE(L"cfvo")
 			{
 				if (iPercentMin > 0)

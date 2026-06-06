@@ -295,7 +295,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			sResult += L"<w:del w:date=\"" + sDate +  L"\" w:author=\"" + XmlUtils::EncodeXmlString(sAuthor) + L"\" w:id=\"" + std::to_wstring(pOOXWriter->m_nCurTrackChangesId++).c_str() + L"\">";
 			m_pInsert->m_oCharProperty.m_nDeleted = PROP_DEF;
 		}
-		//поверяем на наличие гиперссылки
+		//check for the presence of a hyperlink
 		RenderParameter oNewParam = oRenderParameter;
 		oNewParam.nType = RENDER_TO_OOX_PARAM_PLAIN;
 		
@@ -313,16 +313,16 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
                 sHyperlink = sHyperlink.substr(0, nSplash);
 			}
 	
-		//оставляем только одну ссылку
+		//leave only one link
             XmlUtils::replace_all(sHyperlink, L"\"", L"" );
             boost::algorithm::trim(sHyperlink);
-		//заменяем пробелы на %20
+		//replace spaces with %20
             XmlUtils::replace_all(sHyperlink, L" ", L"%20" );
 
-		//добавляем в rels
+		//add to rels
 			OOXRelsWriter* poRelsWriter = static_cast<OOXRelsWriter*>( oRenderParameter.poRels );
             std::wstring sId = poRelsWriter->AddRelationship( L"http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink", XmlUtils::EncodeXmlString( sHyperlink ), false );
-		//добавляем гиперссылку в документ
+		//adding a hyperlink to a document
 
             sResult += L"<w:hyperlink r:id=\"" + sId + L"\" >";
 			oNewParam.nType = RENDER_TO_OOX_PARAM_RUN;
@@ -353,7 +353,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 			std::wstring props = m_pResult->m_oCharProperty.RenderToOOX(oRenderParameter);
             if (!props.empty()) props = L"<w:rPr>" + props + L"</w:rPr>";
 
-	//начинаем Field
+	//start Field
             sResult += L"<w:r>";
             if (!props.empty())
 				sResult += props;			
@@ -431,11 +431,11 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				}
 			}
 			oNewParametr = oRenderParameter;
-	// разделитель
+	// separator
 			sResult += L"<w:r>";
 			sResult += L"<w:fldChar w:fldCharType=\"separate\"/></w:r>";
 			
-	//пишем содержание-кэш	
+	//write content-cache
 			if ((m_pResult->m_pTextItems) && (m_pResult->m_pTextItems->GetCount() > 0))
 			{
 				sResult +=  m_pResult->m_pTextItems->m_aArray[0]->RenderToOOX(oNewParametr);
@@ -468,7 +468,7 @@ std::wstring RtfField::RenderToOOX(RenderParameter oRenderParameter)
 				sResult += L"</w:r>";
 			}
 	
-	//заканчиваем Field
+	//finishing Field
             sResult += L"<w:r>";
             if (!props.empty())
                 sResult += props;

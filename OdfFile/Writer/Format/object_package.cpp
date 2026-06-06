@@ -426,7 +426,7 @@ namespace odf_writer
 				if (items[i].type == type_)
 				{
 					OOX::CPath file_name_inp ( items[i].oox_ref);
-					OOX::CPath file_name_out ( RootPath + FILE_SEPARATOR_STR + items[i].odf_ref); //ref содержит уже folder_
+					OOX::CPath file_name_out ( RootPath + FILE_SEPARATOR_STR + items[i].odf_ref); //ref already contains folder_
 
 					NSFile::CFileBinary::Copy(file_name_inp.GetPath(), file_name_out.GetPath());
 				}

@@ -110,7 +110,7 @@ int SST::serialize(std::wostream & stream)
 			{	
 				try
 				{
-					//внутрь не втаскиваем- в некоторых элементах обязательно писать r-rPr-t в некоторых достаточно t
+					//Don't inline it - in some elements need to write r-rPr-t, in others it is enough to write t
 					if (false == richText->rgRun.empty())
 					{							
 						richText->serialize(CP_XML_STREAM());

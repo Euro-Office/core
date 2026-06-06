@@ -352,7 +352,7 @@ namespace ODRAW
 	}; 
 
 	///////////////////////////////////////////////////////////////
-	//  а нужно ли...?
+	//  is it necessary...?
 	///////////////////////////////////////////////////////////////
 
 	/*
@@ -396,7 +396,7 @@ namespace ODRAW
 	*/
 
 	////////////////////////////////////////////////////////////
-	// <- а нужно ли...?
+	// <- is it necessary...?
 	////////////////////////////////////////////////////////////
 
 	enum eBlipUsage
@@ -522,7 +522,7 @@ namespace ODRAW
 	enum eDGMST
 	{          
 		/***WARNING: This is written out to the file format! ***/          
-		/***NOTE: If you add a new style enum, you need to update vrgdgmstdesc ***/            
+		/***NOTE: If you add a new style enum, vrgdgmstdesc must be updated ***/
 		dgmstMin = 0, dgmstFirst = dgmstMin ,            
 		
 		// OrgChart styles          

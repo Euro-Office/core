@@ -276,7 +276,7 @@ void style_graphic_properties::add_child_element( xml::sax * Reader, const std::
 		CP_CREATE_ELEMENT(content_.style_columns_);
 
 	//if (CP_CHECK_NAME(L"text", L"list-style") 	
-	//	styles_.add_child_element(Reader, Ns, Name, getContext()); он тут и не нужен по сути... описание есть и в другом сместе
+	//	styles_.add_child_element(Reader, Ns, Name, getContext()); it isn't really needed here... there is a description in another place
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////
 const wchar_t * loext_graphic_properties::ns	= L"loext";
@@ -295,7 +295,7 @@ void loext_graphic_properties::add_child_element( xml::sax * Reader, const std::
     }
 
 	//if (CP_CHECK_NAME(L"text", L"list-style") 	
-	//	styles_.add_child_element(Reader, Ns, Name, getContext()); он тут и не нужен по сути... описание есть и в другом сместе
+	//	styles_.add_child_element(Reader, Ns, Name, getContext()); it isn't really needed here... there is a description in another place
 }
 }
 }

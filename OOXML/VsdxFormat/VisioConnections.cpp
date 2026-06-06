@@ -581,7 +581,7 @@ namespace Draw
 
 		for (size_t i = 0; i < m_arrItems.size(); ++i)
 		{
-			int type = 0xff;					 //todooo predefine type for ???
+			int type = 0xff;					 //TODO predefine type for ???
 			switch (m_arrItems[i]->getType())
 			{
 			case et_dr_PrimaryKey: type = 1; break;

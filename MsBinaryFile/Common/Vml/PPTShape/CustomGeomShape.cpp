@@ -515,7 +515,7 @@ namespace NSCustomVML
 				return;
 
 			oManager.Clear();
-			// сначала заполним формулы
+			// first fill out the formulas
 			for (size_t nIndex = 0; nIndex < m_arGuides.size(); ++nIndex)
 			{
 				NSGuidesVML::CFormula oF;
@@ -857,7 +857,7 @@ namespace NSCustomVML
 
                 //if (rtClose == oInfo.m_eRuler)
                 //{
-                //	// проводим линию
+                //	// draw a line
                 //	CSegment oInfo2(rtLineTo, 1);
                 //	m_arSegments.push_back(oInfo2);
                 //}

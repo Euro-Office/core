@@ -40,7 +40,7 @@ namespace ODRAW
 		m_pBuffer = NULL;
 		m_lCount = 0;
 	}
-	LONG CBinaryReader::ReadLONG() // int32 подразумевается
+	LONG CBinaryReader::ReadLONG() // int32 is implied
 	{
 		DWORD lOldOrigin = m_lOrigin;
 		m_lOrigin += 4;

@@ -65,7 +65,7 @@ namespace OOX
 		}
 		void CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
 		{
-			// TO DO: Реализовать CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
+			// TO DO: Implement CTxbxContent::fromXML(XmlUtils::CXmlNode& oNode)
 		}
 		void CTxbxContent::fromXML(XmlUtils::CXmlLiteReader& oReader)
 		{

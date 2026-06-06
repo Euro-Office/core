@@ -204,7 +204,7 @@ namespace MetaFile
 	}
 	void CEmfPlayer::DeleteObject(unsigned int ulIndex)
 	{
-		// TODO: Сделать поиск по DC_BRUSH и DC_PEN
+		// TODO: Search for DC_BRUSH and DC_PEN
 
 		CEmfObjectMap::const_iterator oPos = m_mObjects.find(ulIndex);
 		if (m_mObjects.end() != oPos)
@@ -247,9 +247,9 @@ namespace MetaFile
 		InitStockPen(false, 0xff, 0xff, 0xff, 0x80000006);
 		InitStockPen(false, 0x00, 0x00, 0x00, 0x80000007);
 		InitStockPen(true, 0x00, 0x00, 0x00, 0x80000008);
-		// TODO: Сделать шрифты
+		// TODO: Make fonts
 
-		// DC_BRUSH и DC_PEN не надо выставлять
+		// DC_BRUSH and DC_PEN don't need to be set
 	}
 	void CEmfPlayer::InitStockBrush(bool bNull, unsigned char r, unsigned char g, unsigned char b, unsigned int ulIndex)
 	{
@@ -460,7 +460,7 @@ namespace MetaFile
 	{
 		m_oTransform.Multiply(oForm, ulMode);
 
-		// Обновляем обратную матрицу
+		// Update the inverse matrix
 		TEmfXForm* pT = &m_oTransform;
 		const double dDet = pT->M11 * pT->M22 - pT->M12 * pT->M21;
 		if (Equals(0., dDet, 0.0001))

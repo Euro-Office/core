@@ -152,7 +152,7 @@ void OfficeArtBlip::loadFields(XLS::CFRecord& record)
 					isCompressed = true;
 					readCompressedData(record, metafileHeader);
 				}
-				pict_type = L".pic";///???? todooo
+				pict_type = L".pic";///???? TODO
 			}
 			break;				
 		case OfficeArtRecord::BlipJPEG:

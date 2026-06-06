@@ -175,7 +175,7 @@ namespace NExtractTools
 			nRes = m_oCDocxSerializer.loadFromFile(sTargetBin, convertParams.m_sTempResultOOXMLDirectory, sThemePath, sMediaPath, sEmbedPath) ? nRes : AVS_FILEUTILS_ERROR_CONVERT;
 			params.m_bMacro = m_oCDocxSerializer.getMacroEnabled();
 		}
-		// удаляем EditorWithChanges, потому что он не в Temp
+		// remove EditorWithChanges because it isn't in Temp
 		if (sFrom != sTargetBin)
 			NSFile::CFileBinary::Remove(sTargetBin);
 

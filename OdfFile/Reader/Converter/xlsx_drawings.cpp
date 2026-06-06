@@ -37,7 +37,7 @@ namespace oox {
 class xlsx_drawings::Impl
 {
 public:
-    void add(_xlsx_drawing & d, bool isInternal, std::wstring const & rid, std::wstring const & ref, _rels_type type, bool sheet_rel )//объект
+    void add(_xlsx_drawing & d, bool isInternal, std::wstring const & rid, std::wstring const & ref, _rels_type type, bool sheet_rel )//object
     {
 		if ( type == typeControlProps || type == typeComment)
 		{
@@ -65,7 +65,7 @@ public:
  				drawing_rels_.push_back(_rel(false, d.action.hId, d.action.hRef, d.action.typeRels));	
 		}
     }
-    void add( bool isInternal, std::wstring const & rid, std::wstring const & ref, _rels_type type, bool sheet_rel, bool vml_rel) //не объект
+    void add( bool isInternal, std::wstring const & rid, std::wstring const & ref, _rels_type type, bool sheet_rel, bool vml_rel) //not an object
     {
 		bool present = false;
 		

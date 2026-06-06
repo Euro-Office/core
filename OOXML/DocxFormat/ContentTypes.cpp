@@ -124,7 +124,7 @@ namespace OOX
 		}
 		void CDefault::ReadAttributes(XmlUtils::CXmlLiteReader& oReader)
 		{
-			// Читаем атрибуты
+			// Reading the attributes
 			WritingElement_ReadAttributes_Start(oReader)
 				WritingElement_ReadAttributes_ReadSingle(oReader, L"Extension", m_sExtension)
 				WritingElement_ReadAttributes_End(oReader)

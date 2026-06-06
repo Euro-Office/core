@@ -86,7 +86,7 @@ bool office_element_creator::register_element(const std::wstring &ns, const std:
     }
     else
     {
-        // TODO: элемент уже есть, непонятно что делать
+        // TODO: the element already exists, it's not clear what to do
         i->second = f;
     }
     return true;
@@ -120,7 +120,7 @@ bool create_element(const std::wstring & Ns,
 {
     if (office_element_ptr elm = office_element_creator::get()->create(Ns, Name, Context, isRoot))
     {
-        if (_Element) // элемент создается повторно
+        if (_Element) // the element is recreated
         {
             _CP_LOG << L"[warning] : duplicate element (" << Ns << L":" << Name << L")\n";
         }

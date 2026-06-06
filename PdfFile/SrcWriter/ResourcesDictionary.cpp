@@ -87,7 +87,7 @@ namespace PdfWriter
 		const char *sKey = m_pFonts->GetKey(pEmbedded ? pEmbedded->GetObj2() : pFont);
 		if (!sKey)
 		{
-			// если фонт не зарегистрирован в ресурсах, тогда регистрируем его
+			// if the font isn't registered in the resources, then register it
 			char sFontName[LIMIT_MAX_NAME_LEN + 1];
 			char *pPointer = NULL;
 			char *pEndPointer = sFontName + LIMIT_MAX_NAME_LEN;
@@ -122,7 +122,7 @@ namespace PdfWriter
 		const char* sKey = m_pExtGStates->GetKey(pState);
 		if (!sKey)
 		{
-			// Если ExtGState не зарегистрирован в Resource, регистрируем.
+			// If ExtGState isn't registered in the Resource, register it.
 			char sExtGrStateName[LIMIT_MAX_NAME_LEN + 1];
 			char *pPointer;
 			char *pEndPointer = sExtGrStateName + LIMIT_MAX_NAME_LEN;
@@ -188,7 +188,7 @@ namespace PdfWriter
 	}
 	void CResourcesDict::Fix()
 	{
-		// Инициализация текущего fonts
+		// Initializing the current fonts
 		CObjectBase* pFonts = Get("Font");
 		if (pFonts && pFonts->GetType() == object_type_DICT)
 		{
@@ -196,7 +196,7 @@ namespace PdfWriter
 			m_unFontsCount = 0;
 		}
 
-		// Инициализация текущего ExtGStates
+		// Initializing the current ExtGStates
 		CObjectBase* pExtGStates = Get("ExtGState");
 		if (pExtGStates && pExtGStates->GetType() == object_type_DICT)
 		{
@@ -204,7 +204,7 @@ namespace PdfWriter
 			m_unExtGStatesCount = 0;
 		}
 
-		// Инициализация текущего XObject
+		// Initializing the current XObject
 		CObjectBase* pXObject = Get("XObject");
 		if (pXObject && pXObject->GetType() == object_type_DICT)
 		{

@@ -52,8 +52,8 @@ namespace PPTX
 			nullable_limit<Limit::OnOff> b;
 /*
 font (Font)  §20.1.4.2.13 
-//Здесь имеется ввиду fontCollection (см. ниже), это еще одна альтернатива для Font
-//Данный комментарий оставлен для напоминания
+//Here we mean fontCollection (see below), this is another alternative for Font
+//This comment is left as a reminder
 */
             nullable<FontRef> fontRef;
 			UniColor Color;

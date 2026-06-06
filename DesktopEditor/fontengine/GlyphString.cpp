@@ -353,7 +353,7 @@ void CGlyphString::GetBBox(float *pfLeft, float *pfTop, float *pfRight, float *p
 
 	if ( 0 == nType && !( 1 == m_arrCTM[0] && 0 == m_arrCTM[1] && 0 == m_arrCTM[2] && 1 == m_arrCTM[3] && 0 == m_arrCTM[4] && 0 == m_arrCTM[5] ) )
 	{
-		// Применяем глобальную матрицу преобразования и пересчитываем BBox
+		// Apply the global transformation matrix and recalculate BBox
 		float arrfX[4] = { fLeft, fLeft,   fRight,  fRight };
 		float arrfY[4] = { fTop,  fBottom, fBottom, fTop   };
 
@@ -411,7 +411,7 @@ void CGlyphString::GetBBox2(float *pfLeft, float *pfTop, float *pfRight, float *
 
 	if ( !( 1 == m_arrCTM[0] && 0 == m_arrCTM[1] && 0 == m_arrCTM[2] && 1 == m_arrCTM[3] && 0 == m_arrCTM[4] && 0 == m_arrCTM[5] ) )
 	{
-		// Применяем глобальную матрицу преобразования и пересчитываем BBox
+		// Apply the global transformation matrix and recalculate BBox
 		float arrfX[4] = { fLeft, fLeft,   fRight,  fRight };
 		float arrfY[4] = { fTop,  fBottom, fBottom, fTop   };
 

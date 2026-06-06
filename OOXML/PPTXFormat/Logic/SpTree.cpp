@@ -438,7 +438,7 @@ namespace PPTX
 						{
 							pReader->Skip(1); // type (0)
 							LONG nElemLength = pReader->GetLong(); // len
-																   //SpTreeElem::fromPPTY сразу делает GetChar, а toPPTY ничего не пишет если не инициализирован
+																   //SpTreeElem::fromPPTY immediately does GetChar, and toPPTY doesn't write anything if it isn't initialized
 							if (nElemLength > 0)
 							{
 								SpTreeElem elm;
@@ -583,7 +583,7 @@ namespace PPTX
 						{
 							pReader->Skip(1); // type (0)
 							LONG nElemLength = pReader->GetLong(); // len
-							//SpTreeElem::fromPPTY сразу делает GetChar, а toPPTY ничего не пишет если не инициализирован
+							//SpTreeElem::fromPPTY immediately does GetChar, and toPPTY doesn't write anything if it isn't initialized
 							if(nElemLength > 0)
 							{
 								SpTreeElem elm;

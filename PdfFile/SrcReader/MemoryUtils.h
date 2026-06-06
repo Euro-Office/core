@@ -41,12 +41,12 @@ namespace PdfReader
     {
         if (!memory)
         {
-            // TODO: Выдать ошибку выделения памяти
+            // TODO: Throw memory allocation error
         }
     }
 
 	//------------------------------------------------------------------------
-	// Аналогично malloc, но с обработкой ошибок.
+	// Similar to malloc, but with error handling.
     static void* MemUtilsMalloc(unsigned int nSize)
 	{
         void* pResult;
@@ -72,14 +72,14 @@ namespace PdfReader
         return MemUtilsMalloc(nObjectsCount * nObjectSize);
     }
 
-    // Тоже что и free, но проверяет и игнорирует NULL-указатели.
+    // Same as free, but checks and ignores NULL pointers.
     static void MemUtilsFree(void* pData)
     {
         if (pData)
             free(pData);
     }
 
-    // Тоже что и realloc, но с обработкой ошибок.
+    // Same as realloc, but with error handling.
     static void* MemUtilsRealloc(void* pData, unsigned int nSize, unsigned int nOldSize)
 	{
         void* pResult;

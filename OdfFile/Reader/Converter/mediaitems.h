@@ -81,7 +81,7 @@ public:
 	void set_font_directory(std::wstring pathFonts);
 	NSFonts::IApplicationFonts *applicationFonts() {return applicationFonts_;}
 
-    std::wstring add_or_find(const std::wstring & href, _rels_type type, bool & isInternal, _rels_type_place type_place);//возможны ссылки на один и тот же объект
+    std::wstring add_or_find(const std::wstring & href, _rels_type type, bool & isInternal, _rels_type_place type_place);//references to the same object are possible
     std::wstring add_or_find(const std::wstring & href, _rels_type type, bool & isInternal, std::wstring & ref, _rels_type_place type_place);
 	std::wstring add_or_find_anim_audio(const std::wstring& href, bool& isInternal, std::wstring& ref);
     

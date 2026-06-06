@@ -55,7 +55,7 @@ bool OOXReader::Parse()
 	oReaderParameter.oReader	= this;
 
 	if (inputDocxFile.m_oMain.settings)
-	{ //важно чтобы первыми читались именно settings (например для footnote)
+	{ //it is important that the settings are read first (for example, for footnote)
 		OOXSettingsReader oSettingsReader( inputDocxFile.m_oMain.settings );
 		oSettingsReader.Parse( oReaderParameter );
 	}

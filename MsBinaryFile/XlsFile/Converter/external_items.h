@@ -91,7 +91,7 @@ public:
 	size_t count_embeddings;
 	size_t count_controls;
 
-    //std::wstring add_or_find(const std::wstring & href, Type type, bool & isInternal);//возможны ссылки на один и тот же объект
+    //std::wstring add_or_find(const std::wstring & href, Type type, bool & isInternal);//references to the same object are possible
     std::wstring add_image		(const std::wstring & file_name, int bin_id);
 	std::wstring add_chart		(std::wstring & oox_target);
 	std::wstring add_embedding	(std::wstring & oox_target, const std::wstring & info);

@@ -816,8 +816,8 @@ void odf_document::Impl::parse_styles(office_element *element)
 			}
 		}
 		
-        // parse automatic styles - эти стили используют объекты которые в оазис находятся в этом же документе
-		//переопределяем имя - иначе при поиске может возникнуть коллизия.
+        // parse automatic styles - these styles use objects that are in the oasis in the same document
+		//Redefine the name - otherwise a collision may occur during the search.
         do
         {
             office_automatic_styles * automaticStyles = dynamic_cast<office_automatic_styles *>( document->office_automatic_styles_.get() );
@@ -1226,9 +1226,9 @@ bool odf_document::Impl::docx_convert(oox::docx_conversion_context & Context)
    
 	Context.end_document();
 
-    // мы обрабатываем стили списка после того как сконвертировали документ,
-    // так как в процессе конвертации документа у нас могу добавиться стили — 
-    // в случае если используется text:start-value (начинаем нумерацию заново)
+    // Process the list styles after the document is converted,
+    // since during the document conversion process we can add styles -
+    // if text:start-value is used (start numbering again)
     Context.process_list_styles();
 
 	Context.add_jsaProject(jsaProject_bin_);

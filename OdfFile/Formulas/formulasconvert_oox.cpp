@@ -448,8 +448,8 @@ void oox2odf_converter::Impl::replace_named_ref(std::wstring & expr)
 
 
 // TODO
-// заменить запятые на точки с запятой во всех вхождениях кроме находящихся в кавычках --*и в фигурных скобках*--
-// TODO: проверить как сохраняются кавычки в строке
+// replace commas with semicolons in all occurrences except those in quotes --* and in curly braces*--
+// TODO: check how quotes are saved in a string
 void oox2odf_converter::Impl::replace_semicolons(std::wstring& expr)
 {
      const std::wstring res = boost::regex_replace(
@@ -472,7 +472,7 @@ void oox2odf_converter::Impl::replace_semicolons(std::wstring& expr)
 //     expr = res;
 //}
 
-// заменить вертикальную черту во всех вхождениях в фигурных скобках, но не внутри строк
+// replace vertical bar in all occurrences within curly braces, but not inside strings
 void oox2odf_converter::Impl::replace_vertical(std::wstring& expr)
 {
      const std::wstring res = boost::regex_replace(
@@ -482,7 +482,7 @@ void oox2odf_converter::Impl::replace_vertical(std::wstring& expr)
         boost::match_default | boost::format_all);
      expr = res;
 }
-// заменить запятую во всех вхождениях на пробел 
+// replace the comma in all occurrences with a space
 void oox2odf_converter::Impl::replace_space(std::wstring& expr)
 {
      const std::wstring res = boost::regex_replace(
@@ -644,9 +644,9 @@ std::wstring oox2odf_converter::Impl::convert_conditional_formula(const std::wst
 
 }
 //Sheet2!C3:C19,Sheet2!L27:L34
-//в
+//in
 //Sheet2.C3:Sheet2.C19 Sheet2.L29:Sheet2.L36
-//todooo
+//TODO
 std::wstring oox2odf_converter::Impl::convert_ref_distances(std::wstring const& expr1, std::wstring const& separator_in, std::wstring const& separator_out)
 {
 	std::wstring expr = expr1;
@@ -656,7 +656,7 @@ std::wstring oox2odf_converter::Impl::convert_ref_distances(std::wstring const& 
 	res= expr.rfind(L")");
 	if (res ==expr.size()-2) expr = expr.substr(0, res);
 
-	//распарсить по диапазонам - пробел -> separator
+	//parse by range - space -> separator
 
 	std::vector<std::wstring> distance_inp;
 	std::vector<std::wstring> distance_out;

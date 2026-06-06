@@ -142,7 +142,7 @@ namespace PdfReader
 {
     static void SpitPathExt(std::wstring& wsFullPath, std::wstring* pwsFilePath, std::wstring* pwsExt)
     {
-        // Ищем '.' начиная с конца пути, и разделяем путь на расширение и остальную часть
+        // Looking for '.' starting from the end of the path, and dividing the path into the extension and the rest
         size_t nPos = wsFullPath.find_last_of(L".");
         *pwsFilePath = wsFullPath.substr(0, nPos);
         *pwsExt      = wsFullPath.substr(nPos + 1);

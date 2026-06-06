@@ -77,7 +77,7 @@ public:
 		r.display = display;
 		r.id = std::wstring(L"hId") + std::to_wstring(records_.size()+1);
 
-        if (0 == target.find(L"#"))//ссыль на страницу или метку в текущем документе
+        if (0 == target.find(L"#"))//link to a page or label in the current document
         {			
 			r.location = converter_.convert_chart_distance(target.substr(1));
 			r.type = L"Internal";

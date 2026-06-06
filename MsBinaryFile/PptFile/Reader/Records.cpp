@@ -166,7 +166,7 @@ void CRecordsContainer::ReadFromStream(SRecordHeader & oHeader, const XLS::CFStr
     }
     if (lCurLen != m_oHeader.RecLen)
     {
-        // нужно разобраться, что тут такое!!!
+        // Need to figure out what's going on here!!!
         LONG lPosition = 0;
         pStream->seekFromBegin(lPosition + m_oHeader.RecLen);
     }
@@ -200,7 +200,7 @@ void CRecordsContainer::ReadFromStream(SRecordHeader & oHeader, POLE::Stream* pS
     }
     if (lCurLen != m_oHeader.RecLen)
     {
-        // нужно разобраться, что тут такое!!!
+        // Need to figure out what's going on here!!!
         LONG lPosition = 0;
         StreamUtils::StreamSeek(lPosition + m_oHeader.RecLen, pStream);
     }
@@ -568,7 +568,7 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
             CREATE_BY_TYPE(RT_RoundTripColorMapping12Atom, RoundTripColorMapping12Atom)
             CREATE_BY_TYPE(RT_RoundTripOriginalMainMasterId12Atom, RoundTripOriginalMainMasterId12Atom)
             CREATE_BY_TYPE(RT_RoundTripCompositeMasterId12Atom, RoundTripCompositeMasterId12Atom)
-            CREATE_BY_TYPE(RT_RoundTripContentMasterInfo12Atom, RoundTripContentMasterInfo12Atom)			// ECMA-376 дубль
+            CREATE_BY_TYPE(RT_RoundTripContentMasterInfo12Atom, RoundTripContentMasterInfo12Atom)			// ECMA-376 duplicate
             CREATE_BY_TYPE(RT_RoundTripShapeId12Atom, RoundTripShapeId12Atom)
             CREATE_BY_TYPE(RT_RoundTripContentMasterId12Atom, RoundTripContentMasterId12Atom)
             CREATE_BY_TYPE(RT_RoundTripOArtTextStyles12Atom, RoundTripOArtTextStyles12Atom)
@@ -674,12 +674,12 @@ IRecord* CreateByType(SRecordHeader oHeader, _commonInfo* commonInfo)
 
             CREATE_BY_TYPE(RT_List, CRecordDocInfoListContainer)
 
-            // интерактив
+            // interactive
             CREATE_BY_TYPE(RT_InteractiveInfoAtom, CRecordInteractiveInfoAtom)
             CREATE_BY_TYPE(RT_TextInteractiveInfoAtom, CRecordTextInteractiveInfoAtom)
             CREATE_BY_TYPE(RT_InteractiveInfo, CRecordMouseInteractiveInfoContainer)
 
-            // читаем для анимации
+            // read for animation
 
             CREATE_BY_TYPE(RT_SoundCollection, CRecordSoundCollectionContainer)
             CREATE_BY_TYPE(RT_ExternalObjectList, CRecordExObjListContainer)

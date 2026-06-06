@@ -132,7 +132,7 @@ namespace DocFileFormat
 					else if (0x0F == icoBack) { cvBack = RGB2 (0x80, 0x80, 0x80); }
 					else if (0x10 == icoBack) { cvBack = RGB2 (0xC0, 0xC0, 0xC0); }
 
-					// .... если будут документы с такими цветовыми палитрами
+					// .... if there are documents with such color palettes
 
 					//if ((cvFore == 0) && (icoFore == 0x0) && (cvBack == 0) && (icoBack == 0x0) && (ipat == Automatic))
 					//{

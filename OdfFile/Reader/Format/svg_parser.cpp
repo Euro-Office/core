@@ -392,7 +392,7 @@ namespace svg_path
                 {
                     bRelative = true;
                 }
-                case 'H' ://горизонт линия
+                case 'H' ://horizontal line
                 {
                     nPos++;
                     skipSpaces(nPos, rSvgDStatement, nLen);
@@ -424,7 +424,7 @@ namespace svg_path
                 {
                     bRelative = true;
                 }
-                case 'V' ://вертикальная линия
+                case 'V' ://vertical line
                 {
                     nPos++;
                     skipSpaces(nPos, rSvgDStatement, nLen);
@@ -663,7 +663,7 @@ namespace svg_path
         Polyline.clear();
 
         _polyline aCurrPoly;
-		aCurrPoly.command = L"a:moveTo"; //первая точка сдвиг - остальные линия
+		aCurrPoly.command = L"a:moveTo"; //first point shift - rest line
 
  		std::vector<std::wstring> points_str;
 		
@@ -689,7 +689,7 @@ namespace svg_path
 		}
 		if (Polyline.size() > 2 && closed)
 		{
-			//замкнем
+			//Close
 			Polyline.push_back(Polyline[0]);
 			Polyline.back().command = L"a:lnTo";
 		}
@@ -963,7 +963,7 @@ namespace svg_path
             {
                 bRelative = true;
             }
-            case 'H'://горизонт линия
+            case 'H'://horizontal line
             {
                 nPos++;
                 skipSpaces(nPos, rSvgDStatement, nLen);
@@ -993,7 +993,7 @@ namespace svg_path
             {
                 bRelative = true;
             }
-            case 'V'://вертикальная линия
+            case 'V'://vertical line
             {
                 nPos++;
                 skipSpaces(nPos, rSvgDStatement, nLen);

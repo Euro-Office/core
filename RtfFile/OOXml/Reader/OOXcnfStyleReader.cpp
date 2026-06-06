@@ -167,7 +167,7 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 	if( PROP_DEF != oInputStyle->m_oTableProp.m_nColBandSize )
 		nColsInBand = oInputStyle->m_oTableProp.m_nColBandSize;
 
-	//обнуляем
+	//reset
 	oOutputProperty.m_oBorderDiagonalLR = RtfBorder();
 	oOutputProperty.m_oBorderDiagonalRL = RtfBorder();
 	oOutputProperty.m_oBorderLeft = RtfBorder();
@@ -176,10 +176,10 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 	oOutputProperty.m_oBorderBottom = RtfBorder();
 	oOutputProperty.m_oBorderInsideH = RtfBorder();
 	oOutputProperty.m_oBorderInsideV = RtfBorder();
-	//От всей таблицы
+	//From the entire table
 	ApplyTableStyleToCellBorder( oInputStyle, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, 0, nHeight - 1 );
 
-	//От OddVBand
+	//From OddVBand
 	if( 1 != oInputStyle->m_oTableProp.m_bAutoNoColBand && nColsInBand > 0 )
 	{
 		int nBoundLeft = 0;
@@ -190,9 +190,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			nBoundRight --;
 		if( nBoundLeft <= nBoundRight && nBoundLeft <= nCurX && nCurX <= nBoundRight )
 		{
-			int nDelta = nCurX - nBoundLeft;//получаем количество столбцов между
-			int nPlace = nDelta % nColsInBand;//получаем номер внутри band
-			//будем считать что флаги расставлены правильно
+			int nDelta = nCurX - nBoundLeft;//get the number of columns between
+			int nPlace = nDelta % nColsInBand;//get the number inside the band
+			//Assume that the flags are placed correctly
 			if( true == bOddVBand && NULL != oInputStyle->m_oBandVerOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandVerOdd, oOutputProperty, nCurX, nCurY, nCurX - nPlace, nCurX - nPlace + nColsInBand - 1, 0, nHeight - 1 );
 			if( true == bEvenVBand && NULL != oInputStyle->m_oBandVerEven )
@@ -210,9 +210,9 @@ void CcnfStyle::ApplyTableStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCe
 			nBoundBottom --;
 		if( nBoundTop <= nBoundBottom && nBoundTop <= nCurY && nCurY <= nBoundBottom )
 		{
-			int nDelta = nCurY - nBoundTop;//получаем количество столбцов между
-			int nPlace = nDelta % nRowsInBand;//получаем номер внутри band
-			//будем считать что флаги расставлены правильно
+			int nDelta = nCurY - nBoundTop;//get the number of columns between
+			int nPlace = nDelta % nRowsInBand;//get the number inside the band
+			//Assume that the flags are placed correctly
 			if( true == bOddHBand && NULL != oInputStyle->m_oBandHorOdd )
 				ApplyOneStyleToCellBorder( oInputStyle->m_oBandHorOdd, oOutputProperty, nCurX, nCurY, 0, nWidth - 1, nCurY - nPlace, nCurY - nPlace + nRowsInBand - 1 );
 			if( true == bEvenHBand && NULL != oInputStyle->m_oBandHorEven )
@@ -295,7 +295,7 @@ void CcnfStyle::ApplyOneStyleToCellBorder( RtfTableStylePtr oInputStyle, RtfCell
 		return;
 	if( !(nBoundLeft <= nCurX && nCurX <= nBoundRight && nBoundTop <= nCurY && nCurY <= nBoundBottom) )
 		return;
-	//на них ни что не влияет
+	//nothing affects them
 	oOutputProperty.m_oBorderDiagonalLR.Merge( oInputStyle->m_oCellProp.m_oBorderDiagonalLR );
 	oOutputProperty.m_oBorderDiagonalRL.Merge( oInputStyle->m_oCellProp.m_oBorderDiagonalRL );
 
@@ -356,7 +356,7 @@ bool OOXcnfStyleReader::Parse( ReaderParameter oParam, CcnfStyle& oOutput)
 		oOutput.bEvenVBand	= m_ooxCnfStyle->m_oVal->IsBand2Vertical();
 		oOutput.bOddHBand	= m_ooxCnfStyle->m_oVal->IsBand1Horizontal();
 		oOutput.bEvenHBand	= m_ooxCnfStyle->m_oVal->IsBand2Horizontal();
-		oOutput.bFirstRowLastCol	= m_ooxCnfStyle->m_oVal->IsNeCell(); //северо восток
+		oOutput.bFirstRowLastCol	= m_ooxCnfStyle->m_oVal->IsNeCell(); //northeast
 		oOutput.bFirstRowFirstCol	= m_ooxCnfStyle->m_oVal->IsNwCell();
 		oOutput.bLastRowLastCol		= m_ooxCnfStyle->m_oVal->IsSeCell();
 		oOutput.bLastRowFirstCol	= m_ooxCnfStyle->m_oVal->IsSwCell();

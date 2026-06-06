@@ -162,7 +162,7 @@ namespace SimpleTypes
 
 	protected:
 		bool   m_bUnit = false;
-		double m_dValue = 0; // Значение в пунктах
+		double m_dValue = 0; // Value in points
 	};
 
 	//--------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ namespace SimpleTypes
 	};
 
 	//--------------------------------------------------------------------------------
-	// Класс наследуемый от CUniversalMeasure, для которого обычные значения - пункты.
+	// A class that inherits from CUniversalMeasure, for which the usual values are points.
 	//--------------------------------------------------------------------------------
 
 	class CPoint : public CUniversalMeasure
@@ -221,7 +221,7 @@ namespace SimpleTypes
 	};
 
 	//--------------------------------------------------------------------------------
-	// Класс наследуемый от CUniversalMeasure, для которого обычные значения - emu.
+	// A class derived from CUniversalMeasure, for which the usual values are emu.
 	//--------------------------------------------------------------------------------
 
 	class CEmu : public CUniversalMeasure
@@ -247,7 +247,7 @@ namespace SimpleTypes
 	};
 
 	//--------------------------------------------------------------------------------
-	// Класс читающий double
+	// Class reading double
 	//--------------------------------------------------------------------------------
 
 	class CDouble

@@ -63,7 +63,7 @@ namespace cpdoccore {
 			double cx = svg_width_.get_value_or(length(0)).get_value_unit(length::pt);
 			double cy = svg_height_.get_value_or(length(0)).get_value_unit(length::pt);
 
-			//пока не понятно что значит отрицательная ширина ...
+			//It's not yet clear what negative width means...
 			cx = fabs(cx);
 			cy = fabs(cy);
 

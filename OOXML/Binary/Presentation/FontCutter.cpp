@@ -127,7 +127,7 @@ namespace NSFontCutter
 	}
 	bool CEmbeddedFontsManager::GenerateSafearray(USHORT **ppArray, size_t& nCount)
 	{
-		// цифры нужны всем. остальное - каждый
+		// Numbers are needed by all fonts. The rest — all fonts too
 		CheckString(_T("0123456789"));
 		m_CharMap [(WCHAR)0x00B0] = true;
 		m_CharMap [(WCHAR)0x00B7] = true;

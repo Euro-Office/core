@@ -39,12 +39,12 @@ public:
 	int				m_nLevelType;
 	_LevelJust		m_eLevelJust;
 
-	RtfParagraphPtr m_oLevelText;	//фомат текста списка
+	RtfParagraphPtr m_oLevelText;	//list text format
 
 	int m_nLs;
 	int m_nIlvl;
 
-	RtfParagraphPtr m_oText;		//замещающий текст
+	RtfParagraphPtr m_oText;		//alt text
 	
 	RtfOldList()
 	{

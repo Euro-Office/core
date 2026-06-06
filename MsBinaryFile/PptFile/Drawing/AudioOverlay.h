@@ -177,7 +177,7 @@ namespace PPT
         {
             size_t nCount = m_arParts.size();
 
-            // нормализуем для начала
+            // Normalize first
             for (size_t i = 0; i < nCount; ++i)
             {
                 CAudioPart* pPart = &m_arParts[i];
@@ -198,7 +198,7 @@ namespace PPT
                 }
             }
 
-            // пересчет
+            // recount
             for (size_t i = 0; i < nCount; ++i)
             {
                 CAudioPart* pPart = &m_arParts[i];
@@ -207,7 +207,7 @@ namespace PPT
                 {
                     if (pPart->m_bStop)
                     {
-                        // нужно остановить всю музыку до этого
+                        // need to stop all the music before that
                         for (size_t j = 0; j < nCount; ++j)
                         {
                             if (j == i)
@@ -222,7 +222,7 @@ namespace PPT
                     }
                     if (pPart->m_bLoop)
                     {
-                        // зацикливаем до первого встречания аудио
+                        // loop until the first audio encounter
 
                         double dMin = m_dAllDuration;
                         for (size_t j = 0; j < nCount; ++j)

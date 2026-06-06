@@ -238,7 +238,7 @@ namespace Aggplus
 		BYTE* pBuffer = pPixels;
 		if (0 > lStride)
 		{
-			// переворачиваем изображение для GDI+
+			// flip the image for GDI+
 			pBuffer += 4 * lWidth * (lHeight - 1);
 		}
 
@@ -258,8 +258,8 @@ namespace Aggplus
 
 	Status CGraphics::CreatePart(LONG lLeft, LONG lTop, LONG lWidth, LONG lHeight, CGraphics** ppPart)
 	{
-		// здесь минимум кода. Просто сделать дубликат - и выставить ему правильные границы.
-		// а потом уже и dpi и все настройки.
+		// there is a minimum of code here. Just make a duplicate and set the correct boundaries for it.
+		// and then dpi and all the settings.
 		return Ok;
 	}
 
@@ -290,7 +290,7 @@ namespace Aggplus
 	
 	Status CGraphics::SetPageWidth(double lWidth, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate dpi and set it
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -320,7 +320,7 @@ namespace Aggplus
 	}
 	Status CGraphics::SetPageHeight(double lHeight, LONG lUnit)
 	{
-		// вычисилить dpi и выставить его
+		// calculate dpi and set it
 		switch (lUnit)
 		{
 		case UnitPoint:
@@ -407,7 +407,7 @@ namespace Aggplus
 		return Ok;
 	}
 	
-	// функции отсечения
+	// clipping functions
 	Status CGraphics::SetClipRect(double dLeft, double dTop, double dWidth, double dHeight)
 	{
 		double dx1 = dLeft;
@@ -857,7 +857,7 @@ namespace Aggplus
 	}
 
 
-	// отрисовка картинки
+	// drawing an image
 	Status CGraphics::DrawImage(CImage* pImage, double x, double y, double width, double height)
 	{
 		if (!pImage || pImage->GetLastStatus() != Ok)
@@ -2369,7 +2369,7 @@ namespace Aggplus
 
 	void CGraphics::UpdateUnits()
 	{
-		// здесь - пересчет координат
+		// here - recalculation of coordinates
 		m_oCoordTransform.Reset();
 
 		double dScaleX = 1.0;

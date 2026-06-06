@@ -110,7 +110,7 @@ namespace PdfWriter
 	}
 	unsigned int CFontEmbedded::GetWidth(unsigned short ushCode)
 	{
-		// Возвращаем ширину из карты
+		// Returning the width from the map
 		auto it = m_mCodeToWidth.find(ushCode);
 		if (it != m_mCodeToWidth.end())
 			return it->second;

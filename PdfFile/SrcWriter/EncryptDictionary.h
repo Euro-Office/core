@@ -79,13 +79,13 @@ namespace PdfWriter
 		void SetContact(const std::string& sContacts);
 		void SetDate();
 	private:
-		unsigned int m_nContentsSize; // Размер Contents
+		unsigned int m_nContentsSize; // Contents size
 
-		int m_nLen1;    // Длина  первого интервала
-		int m_nOffset2; // Начало второго интервала
+		int m_nLen1;    // First interval length
+		int m_nOffset2; // Start of the second interval
 
-		int m_nByteRangeBegin; // Смещение начала массива ByteRange
-		int m_nByteRangeEnd;   // Смещение конца  массива ByteRange
+		int m_nByteRangeBegin; // ByteRange array start offset
+		int m_nByteRangeEnd;   // Array end offset ByteRange
 	};
 }
 #endif // _PDF_WRITER_SRC_ENCRYPT_DICTIONARY_H

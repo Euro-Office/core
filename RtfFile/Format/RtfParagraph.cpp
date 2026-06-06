@@ -49,7 +49,7 @@ int RtfParagraph::AddItem( IDocumentElementPtr piRend )
 
 	if( TYPE_RTF_CHAR == piRend->GetType() )
 	{
-		if( m_aArray.size() > 0 && TYPE_RTF_CHAR == m_aArray[ m_aArray.size() - 1 ]->GetType() )//соединяем два текста с одинаковыми свойствами
+		if( m_aArray.size() > 0 && TYPE_RTF_CHAR == m_aArray[ m_aArray.size() - 1 ]->GetType() )//connecting two texts with the same properties
 		{
             RtfCharPtr oCurChar = boost::static_pointer_cast<RtfChar,IDocumentElement>( piRend );
             RtfCharPtr oPrevChar = boost::static_pointer_cast<RtfChar,IDocumentElement>( m_aArray[ m_aArray.size() - 1 ] );
@@ -177,7 +177,7 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 
 		if( NULL != m_oOldList )
 		{
-			//для OldList
+			//for OldList
 			if( true == bCanConvertToNumbering )
 				sResult += m_oOldList->RenderToOOX( oRenderParameter );
 		}
@@ -185,7 +185,7 @@ std::wstring RtfParagraph::RenderToOOX(RenderParameter oRenderParameter)
 
 		if( NULL != m_oOldList)
 		{
-			//для OldList
+			//for OldList
 			if( false == bCanConvertToNumbering && NULL != m_oOldList->m_oText)
 			{
 				RtfCharProperty oCharProp = m_oProperty.m_oCharProperty;

@@ -45,7 +45,7 @@ BaseObjectPtr ObProj::clone()
 
 void ObProj::readFields(CFRecord& record)
 {
-	//vba present in file   .. выше .. по наличию собствено стороджа
+	//vba present in file .. above .. according to the presence of the actual storage
 }
 
 } // namespace XLS

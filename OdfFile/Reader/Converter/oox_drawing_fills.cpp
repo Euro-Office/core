@@ -253,7 +253,7 @@ void oox_serialize_bitmap_fill(std::wostream & strm, const _oox_fill & val, cons
 						CP_XML_NODE(ns + L":fillRect")
 						{
 							if (val.bitmap->sx && val.bitmap->sy)
-							{ //todooo focus
+							{ //TODO focus
 								CP_XML_ATTR2(ns_att + L"l", (int)((100 - *val.bitmap->sx) / 2 * 1000));
 								CP_XML_ATTR2(ns_att + L"t", (int)((100 - *val.bitmap->sy) / 2 * 1000));
 								CP_XML_ATTR2(ns_att + L"r", (int)((100 - *val.bitmap->sx) / 2 * 1000));
@@ -389,7 +389,7 @@ void oox_serialize_hatch_fill(std::wostream & strm, const _oox_fill & val, const
 		CP_XML_NODE(ns + L":pattFill")
 		{
 			CP_XML_ATTR2(ns_att + L"prst", val.hatch->preset);
-			CP_XML_NODE(ns + L":fgClr")//опять для ms важно что этот цвет перед back
+			CP_XML_NODE(ns + L":fgClr")//again for ms it is important that this color is before back
 			{
 				oox_serialize_srgb(CP_XML_STREAM(), val.hatch->color_ref, val.opacity);
 			}	

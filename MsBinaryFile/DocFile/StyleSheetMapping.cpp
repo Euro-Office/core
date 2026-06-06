@@ -82,7 +82,7 @@ namespace DocFileFormat
 
 			count_styles++;
 			
-			if (count_styles > 4080) // todooo - skip/remap equal styles
+			if (count_styles > 4080) // TODO - skip/remap equal styles
 				break;
 
 			m_pXmlWriter->WriteNodeBegin(L"w:style", true);

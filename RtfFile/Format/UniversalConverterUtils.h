@@ -33,14 +33,14 @@ class Utils
 public:	
 	static int CopyDirOrFile(std::wstring sSource, std::wstring sDestination);
 
-	// return "" если не удалось создать
+	// return "" if creation failed
  
 	static int RemoveDirOrFile(std::wstring sPath);
 	static std::wstring CreateTempFile( );
 	static std::wstring CreateTempFile( std::wstring sDir );
 
-	// return "" если не удалось создать
+	// return "" if creation failed
 
-	static std::wstring CreateTempDir( std::wstring sDir ); //создаем файл в папке sDir
+	static std::wstring CreateTempDir( std::wstring sDir ); //create a file in the sDir folder
 	static std::wstring CreateTempDir();
 };

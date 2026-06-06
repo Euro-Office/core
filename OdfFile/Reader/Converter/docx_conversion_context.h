@@ -506,7 +506,7 @@ public:
 	std::vector<int>			ref_;
 
 private:
-	rels internal_rels_;//это для гиперлинков или медиа в комментариях
+	rels internal_rels_;//this is for hyperlinks or media in comments
 	std::map<std::wstring, int> comments_map_;
 };
 
@@ -1110,12 +1110,12 @@ private:
 	std::wstring		current_alphabetic_index_;
 	int					current_margin_left_;
 	int					current_outline_level_;
-    int					new_list_style_number_;	// счетчик для нумерации имен созданных в процессе конвертации стилей
+    int					new_list_style_number_;	// counter for numbering the names of styles created during the conversion process
     
 	std::vector<odf_reader::office_element*>							delayed_elements_;
 
 	std::map<std::wstring, text_tracked_context::_state>				map_current_changes_;    
-    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// цепочки переименований нумераций
+    boost::unordered_map<std::wstring, std::wstring>					list_style_renames_;// numbering renaming chains
 	
 	std::map<std::wstring, std::wstring>								map_user_fields;
 	std::map<std::wstring, int>											mapBookmarks;

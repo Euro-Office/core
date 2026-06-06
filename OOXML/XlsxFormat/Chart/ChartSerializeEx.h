@@ -352,7 +352,7 @@ namespace ChartEx
 		nullable<CStatistics>									m_statistics;
 		nullable<CSubtotals>									m_subtotals;
 		nullable<OOX::Drawing::COfficeArtExtensionList>			m_oExtLst;
-		//todooo geography;
+		//TODO geography;
 	};
 //------------------------------------------------------------------------------
 	class CNumberFormat : public WritingElement
@@ -810,7 +810,7 @@ namespace ChartEx
 		virtual std::wstring toXML() const { return L""; }
 		virtual EElementType getType () const;
 
-		std::vector<CStringLevel*>	m_levelData;  //todooo CStrVal (+name)
+		std::vector<CStringLevel*>	m_levelData;  //TODO CStrVal (+name)
 
 		void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 	};

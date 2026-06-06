@@ -30,7 +30,7 @@
 namespace cpdoccore { 
 namespace oox {
 
-// контекст для обработки объединения столбцов
+// context for handling column joins
 
 struct table_row_spanned
 {

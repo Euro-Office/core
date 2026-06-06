@@ -129,7 +129,7 @@ namespace ODRAW
         double m_dLimoX;
         double m_dLimoY;
 
-        // нужен для регулировки по аспекту (limo)
+        // needed for aspect adjustment (limo)
         CPointD m_oCurPoint;
 
         double m_dRotate;

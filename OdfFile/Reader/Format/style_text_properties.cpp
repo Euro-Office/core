@@ -284,7 +284,7 @@ void text_format_properties::pptx_convert_as_list(oox::pptx_conversion_context &
 				if (font)		
 					w_font = font->name();
 
-				//'Arial' глючит
+				//'Arial' is buggy
 				removeCharsFromString(w_font, L"'");
 			}
 
@@ -483,7 +483,7 @@ void text_format_properties::drawing_serialize(std::wostream & strm, std::wstrin
 	//nodes
 			if (fo_color_)
 			{
-				std::wstring strRGB = fo_color_->get_hex_value(); //auto ... не нужно
+				std::wstring strRGB = fo_color_->get_hex_value(); //auto... not necessary
 				if (!strRGB.empty())
 				{
 					CP_XML_NODE(L"a:solidFill")
@@ -535,7 +535,7 @@ void text_format_properties::drawing_serialize(std::wostream & strm, std::wstrin
 			}
 			if ((fo_background_color_) && (fo_background_color_->get_type() == odf_types::background_color::Enabled ))
 			{
-				std::wstring strRGB = fo_background_color_->get_color().get_hex_value(); //auto ... не нужно
+				std::wstring strRGB = fo_background_color_->get_color().get_hex_value(); //auto... not necessary
 				if (!strRGB.empty())
 				{
 					CP_XML_NODE(L"a:highlight")
@@ -625,7 +625,7 @@ void text_format_properties::xlsx_serialize(std::wostream & strm, oox::xlsx_conv
 	}
 }
 void text_format_properties::docx_serialize(std::wostream & _rPr, fonts_container & fonts)
-{//упрощенный вариант
+{//simplified version
 	
 	_rPr << L"<w:rPr>";
 	const int W			= process_font_weight	(fo_font_weight_);
@@ -709,7 +709,7 @@ void text_format_properties::docx_serialize(std::wostream & _rPr, fonts_containe
 		if ((style_text_underline_type_ && style_text_underline_type_->get_type() == line_type::None) ||
 			(style_text_underline_style_ && style_text_underline_style_->get_type() == line_style::None))
 		{
-			// подчеркивание выключено 
+			// underline disabled
 			underline = L"none";
 		}
 		else if (style_text_underline_type_ && 
@@ -1044,7 +1044,7 @@ void text_format_properties::pptx_convert(oox::pptx_conversion_context & Context
 }
 
 void text_format_properties::docx_convert(oox::docx_conversion_context & Context)
-{//расширенный вариант
+{//extended version
     std::wostream & _pPr = Context.get_styles_context().paragraph_nodes();
 
     // to paragraph properties
@@ -1154,7 +1154,7 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
         if (( style_text_underline_type_ && style_text_underline_type_->get_type() == line_type::None) ||
             (style_text_underline_style_ && style_text_underline_style_->get_type() == line_style::None))      
         {
-            // подчеркивание выключено 
+            // underline disabled
             underline = L"none";
         }
         else if (style_text_underline_type_ && 
@@ -1263,7 +1263,7 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
     // 17.3.2.42
 	//if (Context.get_drop_cap_context().state() == 2)
 	//{
-	//	_rPr << L"<w:position w:val=\"-" << (2+Context.get_drop_cap_context().Scale*2-3)*2 << "\"/> ";//формула ачуметь !! - подбор вручную
+	//	_rPr << L"<w:position w:val=\"-" << (2+Context.get_drop_cap_context().Scale*2-3)*2 << "\"/> ";//the formula is amazing !! - manual selection
 	//}
 	//else
 		if (style_text_position_)
@@ -1339,7 +1339,7 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
 		 if (Context.get_drop_cap_context().state()==2)
 		 {
 			 fontSize = process_font_size(fo_font_size_, Context.get_styles_context().get_current_processed_style(),false,
-				 Context.get_drop_cap_context().Scale + (Context.get_drop_cap_context().Scale-1) * 0.7);//вместо 1 ДОЛЖНОБЫТЬ коэфф. межстрочного интервала!!!
+				 Context.get_drop_cap_context().Scale + (Context.get_drop_cap_context().Scale-1) * 0.7);//instead of 1 there SHOULD be a coefficient. line spacing!!!
 			 if (fontSize < 1)
                  fontSize = (int)(Context.get_drop_cap_context().FontSize / 10.0);
 		 }
@@ -1477,7 +1477,7 @@ void text_format_properties::docx_convert(oox::docx_conversion_context & Context
 		odf_reader::draw_shape *shape = Context.get_drawing_context().get_current_shape();
 
 		if (shape->word_art_)
-		{//взять из графических ствойст цвет текста .. 
+		{//take the text color from the graphic properties..
 
 			const std::wstring styleName = shape->common_draw_attlists_.shape_with_text_and_styles_.
 				common_shape_draw_attlist_.draw_style_name_.get_value_or(L"");

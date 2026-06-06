@@ -517,7 +517,7 @@ namespace PPTX
 						pWriter->EndRecord();
 					}					
 				}
-				else if (strTextBoxShape.is_init())//после конвертации старого шейпа (vml)
+				else if (strTextBoxShape.is_init())//after converting the old shape (vml)
 				{
 					long lDataSize = 0;
 					ULONG lPos = pWriter->GetPosition();
@@ -882,7 +882,7 @@ namespace PPTX
 				pWriter->StartAttributes();
 					pWriter->WriteAttribute(L"inset", L"0,0,0,0");
 				pWriter->EndAttributes();
-				pWriter->WriteString(*strTextBoxShape); //??? todooo -> oTextBoxShape
+				pWriter->WriteString(*strTextBoxShape); //??? TODO -> oTextBoxShape
 				pWriter->EndNode(L"v:textbox");
 			}
 			if (strFillNode.empty() && spPr.Fill.m_type == UniFill::blipFill)

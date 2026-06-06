@@ -41,7 +41,7 @@ XLSXTableController::XLSXTableController(OOX::Spreadsheet::CXlsx &book, _INT32 l
     book_->m_pWorkbook->m_oSheets.Init();
     tableRows_.push_back(nullptr);
 
-    // Создадим стили
+    // Create styles
 	book_->CreateStyles();
 
     formates_ = std::make_shared<CellFormatController>(book_->m_pStyles, lcid);
@@ -50,7 +50,7 @@ XLSXTableController::XLSXTableController(OOX::Spreadsheet::CXlsx &book, _INT32 l
 
 void XLSXTableController::FormBook()
 {
-    /// @todo сделать так чтобы блок выполнялся только один раз
+    /// @todo make sure the block is executed only once
     if(1)
     {
         auto pWorksheet = new OOX::Spreadsheet::CWorksheet(NULL);
@@ -68,7 +68,7 @@ void XLSXTableController::AddCell(const std::wstring &sText, INT nRow, INT nCol)
 {
 
     size_t length = sText.length();
-    // Пустую не пишем
+    // Don't write empty words
     if (sText.empty() || (sText[0] == L'\0'))
     {
         return;
@@ -126,16 +126,16 @@ _UINT32 XLSXTableController::addRow(OOX::Spreadsheet::CRow *pRow, OOX::Spreadshe
 {
     if (pWorkSheet->m_oSheetData->m_arrItems.size() > 1048576)
             {
-                return AVS_FILEUTILS_ERROR_CONVERT_ROWLIMITS; // ограниечние мс
+                return AVS_FILEUTILS_ERROR_CONVERT_ROWLIMITS; // ms limits
             }
     pRow->m_oR.Init();
     pRow->m_oR->SetValue(nRow);
 
-    /// сортируем ячейки в ряду
+    /// sort cells in a row
     if(pRow->m_arrItems.size() > 1)
     {
         std::sort(pRow->m_arrItems.begin(), pRow->m_arrItems.end(), CompareCells);
-        // Удаляем дубликаты с помощью алгоритма unique
+        // Removing duplicates using the unique algorithm
         auto it = std::unique(pRow->m_arrItems.begin(), pRow->m_arrItems.end(), CompareColumns);
         pRow->m_arrItems.erase(it, pRow->m_arrItems.end());
     }

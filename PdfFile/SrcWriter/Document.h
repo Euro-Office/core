@@ -325,7 +325,7 @@ namespace PdfWriter
 		std::vector<CExtGrState*>          m_vExtGrStates;
 		std::vector<CExtGrState*>          m_vStrokeAlpha;
 		std::vector<CExtGrState*>          m_vFillAlpha;
-		char                               m_sTTFontTag[8]; // 6 символов + '+' + 0x00 ("BAAAAA+/0")
+		char                               m_sTTFontTag[8]; // 6 characters + '+' + 0x00 ("BAAAAA+/0")
 		CJbig2Global*                      m_pJbig2;
 		std::vector<CShading*>             m_vShadings;
 		std::vector<TFontInfo>             m_vCidTTFonts;

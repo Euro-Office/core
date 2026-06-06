@@ -38,7 +38,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//необработано:
+		//raw:
 		//<extLst>
 		class CCol : public WritingElement
 		{

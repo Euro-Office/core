@@ -50,7 +50,7 @@ namespace Writers
 	{
 		m_oWriter.WriteString(g_string_ft_Start);
 
-		//Те шрифты которые всегда пишем в FontTable
+		//Those fonts that we always write in FontTable
 		bool bCalibri = false;
 		bool bTimes = false;
 		bool bCambria = false;

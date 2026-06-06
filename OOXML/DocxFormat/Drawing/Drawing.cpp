@@ -1035,8 +1035,8 @@ namespace OOX
 					m_oSizeRelV = oReader;
 				else if ( _T("mc:AlternateContent") == sName )
 				//ПРИВЛЕЧЕНИЕ СРЕДСТВ ИЗ МЕСТНЫХ ИСТОЧНИКОВ.docx
-				//вариативность на разные версии офиса части параметров - кстати ... это может встретиться в ЛЮБОМ месте
-				//todooo сделать чтение не обязательно fallback, по выбору версии нужной нам (w14, ..)
+				//variability in different versions of the office part of the parameters - by the way... this can occur in ANY place
+				//TODO make reading not necessarily fallback, depending on the version we need (w14, ..)
 				{
 					nCurDepth++;
 					while( oReader.ReadNextSiblingNode( nCurDepth ) )
@@ -1056,7 +1056,7 @@ namespace OOX
 								oSubReader.ReadNextNode();//fallback
 
 								fromXML(oSubReader);
-								//break чтобы не читать сразу оба Choice и Fallback
+								//break so as not to read both Choice and Fallback at once
 								break;
 							}
 						}

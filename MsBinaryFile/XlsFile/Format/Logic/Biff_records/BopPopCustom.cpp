@@ -86,21 +86,21 @@ void BopPopCustomPiesIndices::load(CFRecord& record)
 
 void BopPopCustomPiesIndices::save(CFRecord& record)
 {
-   // 1. Сохраняем количество точек
+   // 1. Save the number of points
     record << cxi;
 
     const unsigned short padding = (8 - (cxi % 8)) % 8;
     const unsigned short total_bits = padding + cxi + 1; // +1 = final flag bit
     const unsigned short total_bytes = (total_bits + 7) / 8;
 
-    // 2. Создаем массив нулевых байтов
+    // 2. Create an array of zero bytes
     std::vector<unsigned char> rggrbit(total_bytes, 0);
 
-    // 3. Устанавливаем биты точек
+    // 3. Set the dot bits
     for (unsigned short idx : pie_indices)
     {
         if (idx >= cxi)
-            continue; // игнорируем некорректные индексы
+            continue; // ignore incorrect indexes
 
         unsigned short bit_pos = padding + idx;
         unsigned short byte_index = bit_pos / 8;
@@ -109,14 +109,14 @@ void BopPopCustomPiesIndices::save(CFRecord& record)
         rggrbit[byte_index] |= (1 << bit_in_byte);
     }
 
-    // 4. Устанавливаем финальный бит (последний бит последнего байта)
+    // 4. Set the final bit (the last bit of the last byte)
     bool no_secondary = pie_indices.empty();
     if (no_secondary)
     {
         rggrbit.back() |= 0x01; // LSB = 1
     }
 
-    // 5. Пишем все байты в поток
+    // 5. Write all the bytes to the stream
     for (unsigned char b : rggrbit)
     {
         record << b;

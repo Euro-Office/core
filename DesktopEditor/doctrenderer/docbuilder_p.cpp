@@ -176,7 +176,7 @@ std::string GetCorrectArgument(const std::string& sInput)
 			{
 				if (nQouteMarkCounter & 1)
 				{
-					// внутренняя кавычка - ничего не делаем
+					// inner quote - do nothing
 				}
 				else
 				{
@@ -375,7 +375,7 @@ bool CV8RealTimeWorker::SaveFileWithChanges(int type, const std::wstring& _path,
 	else if (type & AVS_OFFICESTUDIO_FILE_IMAGE)
 	{
 		_formatDst = NSDoctRenderer::DoctRendererFormat::IMAGE;
-		// не поддерживает x2т прямую конвертацию. делаем ***T format
+		// x2t doesn't support direct conversion. do ***T format
 		switch (m_nFileType)
 		{
 		case 0: { _formatDst = NSDoctRenderer::DoctRendererFormat::DOCT; break; }
@@ -1383,7 +1383,7 @@ namespace NSDoctRenderer
 		}
 
 		std::string sJsCommands = "";
-		std::wstring _builder_params[4]; // с запасом
+		std::wstring _builder_params[4]; // with reserve
 		for (std::list<std::string>::iterator i = _commands.begin(); i != _commands.end(); i++)
 		{
 			const std::string& command = *i;
@@ -1499,7 +1499,7 @@ namespace NSDoctRenderer
 
 					if (m_pInternal->m_oParams.m_bSaveWithDoctrendererMode)
 					{
-						// перед сохранением в такой схеме нужно скинуть изменения
+						// Reset the changes before saving with this scheme
 						this->ExecuteCommand(L"Asc.editor.asc_Save();");
 					}
 
@@ -1532,7 +1532,7 @@ namespace NSDoctRenderer
 
 		if (!sJsCommands.empty())
 		{
-			// Такого быть не должно!!! Так как результат никуда не сохранится. пустое действие.
+			// This shouldn't happen!!! Since the result won't be saved anywhere. empty action.
 			std::wstring sUnicodeCommand = NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)sJsCommands.c_str(), (LONG)sJsCommands.length());
 			bool bIsNoError = this->m_pInternal->ExecuteCommand(sUnicodeCommand.c_str(), NULL, true);
 			sJsCommands = "";

@@ -185,7 +185,7 @@ int AXS::serialize(std::wostream & _stream)
 				if (axis_line->id == (_UINT16)0) axis_line_format = m_AxisLine_Format[i].lineFormat;
 				if (axis_line->id == (_UINT16)1) grid = L"c:majorGridlines";
 				if (axis_line->id == (_UINT16)2) grid = L"c:minorGridlines";
-				if (axis_line->id == (_UINT16)3) {}//wall || floor todooo
+				if (axis_line->id == (_UINT16)3) {}//wall || floor TODO
 			}
 			
 			if (!grid.empty() && m_AxisLine_Format[i].lineFormat)
@@ -240,7 +240,7 @@ int AXS::serialize(std::wostream & _stream)
 								else
 								{
 									CP_XML_ATTR(L"rot",	-tick->trot			* 60000);
-									CP_XML_ATTR(L"vert", L"horz");		//(1-333.xls) .. todoooo может тут нужно проверять гоизонт ось или нет
+									CP_XML_ATTR(L"vert", L"horz");		//(1-333.xls) .. TODO maybe here check the horizontal axis or not
 								}
 								
 

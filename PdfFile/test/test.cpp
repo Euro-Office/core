@@ -339,7 +339,7 @@ TEST_F(CPdfFileTest, Base64ConvertToRaster)
 {
 	GTEST_SKIP();
 
-	// чтение и конвертации бинарника
+	// reading and converting binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
 
@@ -374,7 +374,7 @@ TEST_F(CPdfFileTest, BinConvertToRaster)
 {
 	GTEST_SKIP();
 
-	// чтение и конвертации бинарника
+	// reading and converting binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/pdf.bin"));
 
@@ -526,7 +526,7 @@ TEST_F(CPdfFileTest, EditPdfFromBase64)
 	LoadFromFile();
 	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
 
-	// чтение и конвертации бинарника
+	// reading and converting binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/base64.txt"));
 
@@ -569,7 +569,7 @@ TEST_F(CPdfFileTest, EditPdfFromBin)
 	LoadFromFile();
 	ASSERT_TRUE(pdfFile->EditPdf(wsDstFile));
 
-	// чтение бинарника
+	// reading binary
 	NSFile::CFileBinary oFile;
 	ASSERT_TRUE(oFile.OpenFile(NSFile::GetProcessDirectory() + L"/changes.bin"));
 
@@ -658,11 +658,11 @@ TEST_F(CPdfFileTest, EditPdfSign)
 		pdfFile->Sign(10, 300, 100, 100, NSFile::GetProcessDirectory() + L"/test.jpeg");
 	}
 
-	// Для цифровой подписи важно предварительно pdfFile->EditClose, в остальных случаях pdfFile->Close() сделает тоже самое
+	// For a digital signature, it is important to first pdfFile->EditClose, in other cases pdfFile->Close() will do the same
 	pdfFile->EditClose();
 
 	// EditPdf & EditClose || CreatePdf & SaveToFile
-	// И только после подготовка данных для подписания, подписываем, запись подписи
+	// And only after preparing the data for signing, we sign and record the signature
 	for (int i = 0; i < 3; ++i)
 	{
 		pdfFile->PrepareSignature(wsDstFile);
@@ -692,7 +692,7 @@ TEST_F(CPdfFileTest, EditPdfSign)
 		pCertificate->SignPKCS7(pDataToSign, dwDataSignLength, pDatatoWrite, dwLenDatatoWrite);
 		RELEASEARRAYOBJECTS(pDataToSign);
 
-		// Обязательно FinalizeSignature - он либо заполнит данные, либо сделает подпись пустой
+		// FinalizeSignature is required - it will either fill in the data or make the signature empty
 		pdfFile->FinalizeSignature(pDatatoWrite, dwLenDatatoWrite);
 
 		RELEASEARRAYOBJECTS(pDatatoWrite);

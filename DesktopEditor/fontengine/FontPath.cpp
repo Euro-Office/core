@@ -28,15 +28,15 @@
 // CPath
 //-------------------------------------------------------------------------------------------------------------------------------
 
-// Path может быть в одном из трех следующий состояний:
+// Path can be in one of the following three states:
 //
-// 1. Нет текущей точки -- ни одного или более законченных SubPaths
+// 1. No current point -- zero or more completed SubPaths
 //    [m_nCurSubpath == m_nPointsCount]
 //
-// 2. Одна точка в SubPaths
+// 2. One point in SubPaths
 //    [m_nCurSubpath == m_nPointsCount - 1]
 //
-// 3. Открытый SubPaths c двумя или более точками
+// 3. Open SubPaths with two or more points
 //    [m_nCurSubpath < m_nPointsCount - 1]
 
 CFontPath::CFontPath() : NSFonts::IFontPath()

@@ -95,7 +95,7 @@ namespace NSStringExt
             }
             case SINGLE_BYTE_ENCODING_SYMBOL:
             {
-                // Добавляем 0xF000 к кодам всех символов
+                // Add 0xF000 to the codes of all symbols
                 for (long i = 0; i < lCount; ++i)
                 {
                     pUnicode[i] = (wchar_t)(0xF000 | (unsigned char)pData[i]);
@@ -310,7 +310,7 @@ namespace NSStringExt
                 }
                 else if (wLeading >= 0xDC00)
                 {
-                    // Такого не должно быть
+                    // This shouldn't happen
                     continue;
                 }
                 else
@@ -319,7 +319,7 @@ namespace NSStringExt
                     wTrailing = *wsInput++;
                     if (wTrailing < 0xDC00 || wTrailing > 0xDFFF)
                     {
-                        // Такого не должно быть
+                        // This shouldn't happen
                         continue;
                     }
                     else

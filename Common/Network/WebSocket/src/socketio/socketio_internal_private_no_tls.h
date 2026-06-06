@@ -43,7 +43,7 @@ namespace NSNetwork
         {
         public:
             std::shared_ptr<sio_no_tls::client> m_socket;
-            // проблема закрытия сокета, пока он не приконнектился
+            // problem closing the socket before it connects
             bool m_connecting_in_process;
             bool m_closing_in_progress;
 
@@ -118,7 +118,7 @@ namespace NSNetwork
                     if (!message)
                         return;
 
-                    // TODO: пока только текстовые и json команды
+                    // TODO: so far only text and json commands
                     switch (message->get_flag())
                     {
                     case sio_no_tls::message::flag_null:
@@ -190,7 +190,7 @@ namespace NSNetwork
             {
                 //CTemporaryCS (&m_internal->m_oCS);
 
-                // если json -то надо объект
+                // JSON commands need an object
                 if (0 == message_str.find("{") ||
                     0 == message_str.find("["))
                 {

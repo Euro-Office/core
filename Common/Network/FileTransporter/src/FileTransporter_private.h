@@ -108,13 +108,13 @@ namespace NSNetwork
 			virtual int UploadData() = 0;
 
 		public:
-			std::wstring    m_sDownloadFilePath; // Путь к сохраненному файлу на диске
-			std::wstring    m_sDownloadFileUrl;// Ссылка на скачивание файла
-			std::wstring    m_sUploadFilePath; // Путь к файлу для выгрузки на сервер
-			std::wstring    m_sUploadUrl;      // URL для выгрузки данных
+			std::wstring    m_sDownloadFilePath; // Path to the saved file on disk
+			std::wstring    m_sDownloadFileUrl;// File download link
+			std::wstring    m_sUploadFilePath; // Path to the file to upload to the server
+			std::wstring    m_sUploadUrl;      // URL for uploading data
 
-			bool            m_bComplete;       // Закачался файл или нет
-			bool            m_bDelete;         // Удалять ли файл в деструкторе
+			bool            m_bComplete;       // Is the file downloaded or not?
+			bool            m_bDelete;         // Whether to delete the file in the destructor
 
 			typedef enum LoadType
 			{
@@ -123,12 +123,12 @@ namespace NSNetwork
 				UPLOADDATA
 			} LoadType;
 
-			LoadType m_eLoadType;              // Тип загрузки/выгрузки данных/файла
+			LoadType m_eLoadType;              // Data/file upload/download type
 
-			const unsigned char*  m_cData;     // Данные в сыром виде для выгрузки
-			int             m_nSize;           // Размер данных
+			const unsigned char*  m_cData;     // Data in raw form for uploading
+			int             m_nSize;           // Data size
 
-			std::wstring    m_sResponse = L"";       // Ответ сервера
+			std::wstring    m_sResponse = L"";       // Server response
 
 			std::function<void(int)> m_func_onComplete = nullptr;
 			std::function<void(int)> m_func_onProgress = nullptr;
@@ -136,13 +136,13 @@ namespace NSNetwork
 
 			CSession* m_pSession;
 
-			//            std::atomic<bool>*   m_bIsExit; // Для остановки и выхода потока
+			//            std::atomic<bool>* m_bIsExit; // To stop and exit the thread
 		};
 
 		class CFileTransporter_private : public NSThreads::CBaseThread
 		{
 		protected:
-			// создаем в зависимости от платформы
+			// create depending on the platform
 			CFileTransporterBase* m_pInternal;
 
 		public:

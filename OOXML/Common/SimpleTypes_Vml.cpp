@@ -1654,7 +1654,7 @@ namespace SimpleTypes
 
 } // SimpleTypes
 
-// Дополнительные простые типы, не входящие в спецификацию
+// Additional simple types not included in the specification
 namespace SimpleTypes
 {
 	namespace Vml
@@ -1774,7 +1774,7 @@ namespace SimpleTypes
 
 		std::wstring CVmlPath::FromString(const std::wstring &sValue)
 		{
-			// TO DO: Сделать парсер пата Part4. 14.2.2.3
+			// TO DO: Make a parser for Part4. 14.2.2.3
 			m_sValue = sValue;
 
 			return m_sValue;
@@ -2366,7 +2366,7 @@ namespace SimpleTypes
 					return;
 				}
 
-				// Чтобы избежать большого количества сравнения строк проверим для начала по первым двум символам
+				// To avoid a lot of string comparisons, check first by the first two characters
 				int nChar1 = sProperty[ 0 ];
 				int nChar2 = sProperty[ 1 ];
 
@@ -2600,7 +2600,7 @@ namespace SimpleTypes
 
 		void CCssProperty::ReadValue_Unknown(std::wstring& sValue)
 		{
-			// Ничего не делаем
+			// Do nothing
 		}
 		void CCssProperty::ReadValue_Flip(std::wstring& sValue)
 		{
@@ -2647,11 +2647,11 @@ namespace SimpleTypes
 			}
 			else if ( -1 != ( nPos = (int)sValue.find( L"em" ) ) )
 			{
-				// TO DO: Реализовать единицы 'em'
+				// TO DO: Implement 'em' units
 			}
 			else if ( -1 != ( nPos = (int)sValue.find( L"ex" ) ) )
 			{
-				// TO DO: Реализовать единицы 'ex'
+				// TO DO: Implement 'ex' units
 			}
 			else if ( -1 != ( nPos = (int)sValue.find( L"pt" ) ) )
 			{
@@ -3889,7 +3889,7 @@ namespace SimpleTypes
 
 			std::wstring sValue = sValueInput;
 
-			// Разделителями могут быть запятые и пробелы
+			// Separators can be commas and spaces
 			XmlUtils::replace_all(sValue, L"@", L"");
 			boost::algorithm::split(arSplit, sValue, boost::algorithm::is_any_of(L", "), boost::algorithm::token_compress_on);
 

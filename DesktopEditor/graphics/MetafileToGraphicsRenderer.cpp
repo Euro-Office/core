@@ -41,7 +41,7 @@ namespace NSOnlineOfficeBinToPdf
 		// saveFlags = (save_type & 0xF0) >> 1
 		// saveType:
 		// 0 - stretch
-		// 1 - делаем максимально большую картинку с аспектом как у страницы и вписанную в [m_nRasterW x m_nRasterH]
+		// 1 - make the largest possible image with an aspect similar to the page and fit into [m_nRasterW x m_nRasterH]
 		// 2 - nRasterW = (int)((pageW * m_internal->m_dDpiX / 25.4) + 0.5);
 		//     nRasterH = (int)((pageH * m_internal->m_dDpiY / 25.4) + 0.5);
 		// 3 - special mode for clouds (see code)

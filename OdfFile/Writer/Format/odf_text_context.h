@@ -74,8 +74,8 @@ public:
 	odf_text_context	(odf_conversion_context *odf_context, odf_style_context_ptr styles_context);
     ~odf_text_context	();
 
-	odf_style_context_ptr	get_styles_context();//для embedded
-	void					set_styles_context(odf_style_context_ptr styles_context);//для embedded
+	odf_style_context_ptr	get_styles_context();//for embedded
+	void					set_styles_context(odf_style_context_ptr styles_context);//for embedded
 		
 	void clear_params();
    
@@ -147,8 +147,8 @@ public:
 	bool is_hyperlink_;
 	int level_hyperlink_;
 
-	std::vector<odf_element_state>	current_level_;			//постоянно меняющийся список уровней наследования
-	std::vector<odf_element_state>	text_elements_list_;	//параграфы, списки , ... 
+	std::vector<odf_element_state>	current_level_;			//constantly changing list of inheritance levels
+	std::vector<odf_element_state>	text_elements_list_;	//paragraphs, lists, ...
 	struct _list_state
 	{
 		bool				started_list = false;
@@ -163,8 +163,8 @@ private:
 
 	_CP_OPT(odf_types::fo_break) need_break_; 
 
-	paragraph_format_properties	*paragraph_properties_;	//хранилка-опознавалка что свойства приписаны другому, не текстовому, объекту
-	text_format_properties		*text_properties_;		//хранилка-опознавалка что свойства приписаны другому, не текстовому, объекту
+	paragraph_format_properties	*paragraph_properties_;	//flag indicating that properties are assigned to another, non-text object
+	text_format_properties		*text_properties_;		//flag indicating that properties are assigned to another, non-text object
 
 	odf_style_context_ptr styles_context_;
 

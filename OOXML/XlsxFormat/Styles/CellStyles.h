@@ -37,7 +37,7 @@ namespace OOX
 {
 	namespace Spreadsheet
 	{
-		//нереализован:
+		//not implemented:
 		//<extLst>
 		class CCellStyle : public WritingElement
 		{

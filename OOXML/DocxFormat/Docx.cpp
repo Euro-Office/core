@@ -90,7 +90,7 @@ namespace OOX
 	}
 	bool CDocx::Write(const CPath& oFilePath)
 	{
-		// Создаем папку
+		// Create a folder
         std::wstring filePath = oFilePath.GetPath();
         NSDirectory::CreateDirectory(filePath);
 
@@ -107,7 +107,7 @@ namespace OOX
     {
 		m_sDocumentPath = oFilePath.GetPath();
 
-        // Ищем "/_rels/.rels" и читаем все файлы по рельсам
+        // Find "/_rels/.rels" and read all the files on rels
         OOX::CRels oRels( oFilePath / FILE_SEPARATOR_STR );
         IFileContainer::Read( oRels, oFilePath, oFilePath );
 

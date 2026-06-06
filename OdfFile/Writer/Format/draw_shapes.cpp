@@ -84,7 +84,7 @@ const wchar_t * draw_rect::name = L"rect";
 
 void draw_rect::serialize(std::wostream & _Wostream)
 {
-	sub_type_ = 2;//todooo перекинуть
+	sub_type_ = 2;//TODO throw
 	CP_XML_WRITER(_Wostream)
     {
 		CP_XML_NODE_SIMPLE()
@@ -240,7 +240,7 @@ void draw_path::serialize(std::wostream & _Wostream)
 		}
 	}	
 }
-void draw_path::reset_svg_path()//todooo наоборот
+void draw_path::reset_svg_path()//TODO the opposite
 {
 	//if (draw_path_attlist_.svg_d_)
 	//{
@@ -266,7 +266,7 @@ void draw_path::reset_svg_path()//todooo наоборот
 	//	}
 	//	if (o_Polyline_pt.size()>0)
 	//	{
-	//		//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+	//		//let's create xml-oox here...otherwise we'll have to create arrays in drawing..even though it's not pretty..
 	//		std::wstringstream output_;   
 	//		//svg_path::oox_serialize(output_, o_Polyline_pt);
 	//		additional_.push_back(odf_writer::_property(L"custom_path",output_.str()));
@@ -329,7 +329,7 @@ void draw_polygon::reset_polygon_path()
 	//	}
 	//	if (o_Polyline_pt.size()>0)
 	//	{
-	//		//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+	//		//let's create xml-oox here...otherwise we'll have to create arrays in drawing..even though it's not pretty..
 	//		std::wstringstream output_;   
 	//		svg_path::oox_serialize(output_, o_Polyline_pt);
 	//		additional_.push_back(odf_writer::_property(L"custom_path",output_.str()));
@@ -536,7 +536,7 @@ const wchar_t * draw_connector::name = L"connector";
 
 void draw_connector::serialize(std::wostream & _Wostream)
 {
-	sub_type_ = 9; //коннектор - линия, если ломаная (ниже определяется) - то путь
+	sub_type_ = 9; //connector is a line, if it is a polyline (defined below) then it is a path
 
 	reset_svg_path();
 
@@ -583,7 +583,7 @@ void draw_connector::reset_svg_path()
 	//	if (o_Polyline_pt.size()>0)
 	//	{
 	//		sub_type_ = 6;
-	//		//сформируем xml-oox сдесь ... а то придется плодить массивы в drawing .. хоть и не красиво..
+	//		//let's create xml-oox here...otherwise we'll have to create arrays in drawing..even though it's not pretty..
 	//		std::wstringstream output_;   
 	//		svg_path::oox_serialize(output_, o_Polyline_pt);
 	//		additional_.push_back(odf_writer::_property(L"custom_path",output_.str()));

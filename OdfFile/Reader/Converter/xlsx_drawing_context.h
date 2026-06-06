@@ -84,7 +84,7 @@ public:
 
 	bool isDefault();
 
-	void set_odf_packet_path(std::wstring path){odf_packet_path_ = path;}//для анализа картинок
+	void set_odf_packet_path(std::wstring path){odf_packet_path_ = path;}//for image analysis
 
 	void start_drawing	(std::wstring const & name);
 	void end_drawing	();

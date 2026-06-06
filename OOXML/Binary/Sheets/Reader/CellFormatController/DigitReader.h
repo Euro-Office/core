@@ -33,18 +33,18 @@
 class DigitReader
 {
 public:
-    /// @brief считывание числа
-    /// @param value считываемое текстовое значение
-    /// @param digit строка с числовым значением
-    /// @param format строка с форматом числа
-    /// @return true значение преобразуется в число, иначе false
+    /// @brief reading the number
+    /// @param value read text value
+    /// @param digit a string with a numeric value
+    /// @param format string with number format
+    /// @return true the value is converted to a number, otherwise false
     bool ReadDigit(const std::wstring &value, std::wstring &digit, std::wstring &format);
 
-    /// @brief считывание числа в формате scientific
-    /// @param value считываемое текстовое значение
-    /// @param digit строка с числовым значением
-    /// @param format строка с форматом числа
-    /// @return true значение преобразуется в число, иначе false
+    /// @brief reading a number in scientific format
+    /// @param value read text value
+    /// @param digit a string with a numeric value
+    /// @param format string with number format
+    /// @return true the value is converted to a number, otherwise false
     bool ReadScientific(const std::wstring &value, std::wstring &digit, std::wstring &format);
 
 private:
