@@ -1,7 +1,13 @@
 # ==============================================================================
-# MODULE DOCKERFILE
-# This file is not meant to be built standalone. It is consumed by the 
-# docker-bake.hcl files in the parent monorepos.
+# MODULE DOCKERFILE — Rocky Linux 9 build base
+# Not built standalone; consumed by the docker-bake.hcl in the parent monorepo.
+#
+# WHY ROCKY 9:
+#   The toolchain emits a reference to __libc_single_threaded (added in glibc
+#   2.32), so the build glibc must be >= 2.32.  deploy target is Rocky 9
+#   (glibc 2.34), so the build glibc must also be <= 2.34.  That leaves the
+#   window [2.32, 2.34].  Ubuntu 20.04 (2.31) is below it; 22.04 (2.35) is above
+#   it.
 # ==============================================================================
 
 ARG NUGET_CACHE=local
@@ -9,25 +15,32 @@ ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
 
 #### VCPKG BASE ####
-FROM ubuntu:22.04 AS vcpkg-base
+FROM rockylinux:9 AS vcpkg-base
 
-    # Avoid interactive prompts during package install
-    ENV DEBIAN_FRONTEND=noninteractive
+    # EPEL + CRB provide ninja-build, python3-httplib2, qemu-user-static and
+    # several -devel packages not in the base channels.
+    RUN dnf install -y dnf-plugins-core epel-release && \
+        dnf config-manager --set-enabled crb && \
+        dnf install -y \
+            ca-certificates \
+            git \
+            zip \
+            unzip \
+            tar \
+            gcc gcc-c++ make \
+            pkgconf-pkg-config \
+            ninja-build \
+            python3 python3-pip \
+        && dnf clean all
 
-    # Install system dependencies
-    RUN apt-get update && apt-get install -y \
-        ca-certificates \
-        git \
-        curl \
-        zip \
-        unzip \
-        tar \
-        build-essential \
-        pkg-config \
-        cmake \
-        ninja-build \
-        mono-devel \
-        && rm -rf /var/lib/apt/lists/*
+    # rockylinux:9 ships curl-minimal; --allowerasing swaps in the full curl
+    # CLI (needed by some bootstrap scripts).
+    RUN dnf install -y --allowerasing curl && dnf clean all
+
+    # vcpkg now requires CMake >= 4.x; el9's system cmake is 3.20–3.26 (too old).
+    # The PyPI wheel ships a prebuilt cmake binary, so this avoids needing a
+    # Kitware RPM repo or GitHub access.
+    RUN pip3 install --no-cache-dir "cmake>=4" && cmake --version
 
     # Install vcpkg
     WORKDIR /opt
@@ -35,103 +48,55 @@ FROM ubuntu:22.04 AS vcpkg-base
         && cd vcpkg \
         && ./bootstrap-vcpkg.sh
 
-    # Make vcpkg available globally
     ENV VCPKG_ROOT=/opt/vcpkg
     ENV PATH="${VCPKG_ROOT}:${PATH}"
 
-    ENV VCPKG_BINARY_SOURCES="clear;nuget,NuGetCache,readwrite;nugettimeout,3600"
 
+    ENV VCPKG_BINARY_SOURCES="clear;files,/nuget-cache,readwrite"
 
-FROM vcpkg-base AS vcpkg-local
-
-    RUN vcpkg fetch nuget && \
-        mkdir /nuget-cache && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "/nuget-cache" \
-            -Name "NuGetCache"
-
-
-FROM vcpkg-base AS vcpkg-remote
-
-    ARG NUGET_REMOTE_URL
-    ARG NUGET_USERNAME
-    ARG NUGET_PASSWORD
-
-    RUN vcpkg fetch nuget && \
-        mono $(vcpkg fetch nuget) sources add \
-            -Source "${NUGET_REMOTE_URL}" \
-            -Name "NuGetCache" \
-            -Username "${NUGET_USERNAME}" \
-            -Password "${NUGET_PASSWORD}" \
-            -StorePasswordInClearText
-
-
+    RUN mkdir -p /nuget-cache
 
 #### CORE BASE ####
-# Build on Ubuntu 22.04 (Jammy, glibc 2.35) so the output binaries never
-# reference glibc symbols newer than 2.35.  This covers Debian 12 (glibc 2.36)
-# and Rocky Linux 9 (glibc 2.34 — glibc 2.35 symbols are avoided in practice
-# as the code does not call any functions first introduced in 2.35).
-# libstdc++ and libgcc are statically linked via -static-libstdc++ -static-libgcc
-# (see common.cmake) so the GLIBCXX version on the target system is irrelevant.
-# glibc itself cannot be statically linked into shared libraries, hence the
-# old Ubuntu base remains necessary.
-FROM vcpkg-${NUGET_CACHE} AS core-base
+FROM vcpkg-base AS core-base
     ARG BUILD_ROOT=/package
     ARG TARGETARCH
 
-    ENV TZ=Etc/UTC
-    ENV DEBIAN_FRONTEND=noninteractive
+    RUN dnf install -y \
+            git sudo wget gnupg2 openssh-clients \
+            gcc gcc-c++ libstdc++-static make ninja-build pkgconf-pkg-config \
+            glib2-devel \
+            python3 python3-setuptools python3-httplib2 \
+            python-unversioned-command \
+            autoconf automake libtool findutils \
+            perl perl-FindBin perl-IPC-Cmd perl-Data-Dumper \
+            diffutils which file \
+        && dnf clean all
 
-    # cmake from ubuntu noble is 3.28.x; vcpkg now requires >=4.x.
-    # Install cmake 4.x from Kitware's apt repo here (after vcpkg bootstrap)
-    # so the vcpkg-base git-clone+bootstrap layer remains cacheable even when
-    # GitHub CDN is unreachable in network-restricted build environments.
-    RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-        apt-get update && \
-        DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            git curl sudo wget ssh gpg \
-            build-essential make ninja-build pkg-config \
-            libglib2.0-dev \
-            python3 python-is-python3 python3-venv python3-setuptools \
-            python3-httplib2 \
-            lsb-release autoconf automake libtool findutils \
-            gn \
-        #&& curl -fsSL https://apt.kitware.com/keys/kitware-archive-latest.asc \
-        #    | gpg --dearmor -o /etc/apt/keyrings/kitware.gpg \
-        #&& echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ noble main" \
-        #    > /etc/apt/sources.list.d/kitware.list \
-        #&& apt-get update && apt-get install -y cmake \
-        && rm -rf /var/lib/apt/lists/*
-
-    # clang-13 required for V8 9.x — only available on jammy (22.04), not noble (24.04)
-    RUN wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
-        gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
-        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-13 main" \
-        > /etc/apt/sources.list.d/llvm-13.list && \
-        apt-get update && apt-get install -y \
-            clang-13 lld-13 llvm-13-dev llvm-13 \
-            libc++-13-dev libc++abi-13-dev \
-            qemu-user-static binfmt-support && \
-        rm -rf /var/lib/apt/lists/*
-
-    # set clang 13 as standard
-    RUN update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 100 && \
-        update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-13 100 && \
-        update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-13 100 && \
-        update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-13 100 && \
-        update-alternatives --install /usr/bin/lld lld /usr/bin/lld-13 100
-
+    # ---- Clang / LLVM 13.0.1 (matches V8 9.x) pinned from the Rocky 9.0 vault ----
+    # Current Rocky 9.x ships clang 18; we pin 13.0.1 from the 9.0 snapshot.
+    # On el9 the binaries are unversioned (/usr/bin/clang IS 13.0.1 once
+    # installed), so the Ubuntu update-alternatives block is unnecessary.
+    RUN printf '%s\n' \
+        '[rocky90-appstream]' \
+        'name=Rocky 9.0 AppStream (vault)' \
+        'baseurl=https://dl.rockylinux.org/vault/rocky/9.0/AppStream/$basearch/os/' \
+        'enabled=0' \
+        'gpgcheck=1' \
+        'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9' \
+        > /etc/yum.repos.d/rocky90-vault.repo && \
+        dnf install -y \
+            --enablerepo=rocky90-appstream \
+            --setopt=rocky90-appstream.module_hotfixes=1 \
+            clang-13.0.1 clang-libs-13.0.1 clang-devel-13.0.1 \
+            llvm-13.0.1 llvm-libs-13.0.1 llvm-devel-13.0.1 \
+            lld-13.0.1 \
+            compiler-rt-13.0.1 \
+        && dnf clean all
 
     ENV PATH="/root/.cargo/bin:${PATH}"
-
-    # Git needs to allow repo paths copied by Docker
     RUN git config --global --add safe.directory '*'
 
-    # upstream behavior — unchanged
     COPY core /core
-
     ENV BUILD_ROOT=${BUILD_ROOT}
 
 
