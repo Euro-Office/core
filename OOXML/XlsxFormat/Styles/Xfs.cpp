@@ -351,12 +351,20 @@ namespace OOX
 			WritingStringNullableAttrBool(L"applyProtection", m_oApplyProtection);
 			WritingStringNullableAttrBool(L"quotePrefix", m_oQuotePrefix);
 			WritingStringNullableAttrBool(L"pivotButton", m_oPivotButton);
-			if (m_oAligment.IsInit() || m_oProtection.IsInit())
+			bool bCellControl = m_oCellControl.IsInit() ? *m_oCellControl : m_oXfComplementIndex.IsInit();
+			if (m_oAligment.IsInit() || m_oProtection.IsInit() || bCellControl)
 			{
 				writer.WriteString(_T(">"));
 
 				if (m_oAligment.IsInit())m_oAligment->toXML(writer);
 				if (m_oProtection.IsInit())m_oProtection->toXML(writer);
+				if (bCellControl)
+				{
+					// references the canonical checkbox chain in featurePropertyBag.xml
+					writer.WriteString(L"<extLst><ext uri=\"{C7286773-470A-42A8-94C5-96B5CB345126}\" \
+xmlns:xfpb=\"http://schemas.microsoft.com/office/spreadsheetml/2022/featurepropertybag\">\
+<xfpb:xfComplement i=\"0\"/></ext></extLst>");
+				}
 
 				writer.WriteString(_T("</xf>"));
 			}
@@ -378,6 +386,42 @@ namespace OOX
 					m_oAligment = oReader;
 				else if( _T("protection") == sName )
 					m_oProtection = oReader;
+				else if( _T("extLst") == sName )
+					ReadExtLst(oReader);
+			}
+		}
+		void CXfs::ReadExtLst(XmlUtils::CXmlLiteReader& oReader)
+		{
+			if (oReader.IsEmptyNode())
+				return;
+
+			int nExtLstDepth = oReader.GetDepth();
+			while (oReader.ReadNextSiblingNode(nExtLstDepth))
+			{
+				if (L"ext" != XmlUtils::GetNameNoNS(oReader.GetName()) || oReader.IsEmptyNode())
+					continue;
+
+				int nExtDepth = oReader.GetDepth();
+				while (oReader.ReadNextSiblingNode(nExtDepth))
+				{
+					if (L"xfComplement" == XmlUtils::GetNameNoNS(oReader.GetName()))
+					{
+						if (oReader.MoveToFirstAttribute())
+						{
+							std::wstring wsName = oReader.GetName();
+							while (!wsName.empty())
+							{
+								if (L"i" == wsName)
+									m_oXfComplementIndex = XmlUtils::GetInteger(oReader.GetText());
+
+								if (!oReader.MoveToNextAttribute())
+									break;
+								wsName = oReader.GetName();
+							}
+							oReader.MoveToElement();
+						}
+					}
+				}
 			}
 		}
 		EElementType CXfs::getType () const

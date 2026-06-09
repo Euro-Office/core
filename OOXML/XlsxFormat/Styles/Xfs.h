@@ -112,8 +112,6 @@ namespace OOX
 			nullable<SimpleTypes::COnOff> m_oLocked;
 		};
 
-		//нереализован:
-		//<extLst>
 		class CXfs : public WritingElement
 		{
 		public:
@@ -137,6 +135,7 @@ namespace OOX
 		private:
 			void ReadAttributes(XmlUtils::CXmlLiteReader& oReader);
 			void ReadAttributes(XLS::BaseObjectPtr& obj);
+			void ReadExtLst(XmlUtils::CXmlLiteReader& oReader);
 
 		public:
 			nullable<SimpleTypes::COnOff>					m_oApplyAlignment;
@@ -157,6 +156,10 @@ namespace OOX
 			nullable<CAligment>								m_oAligment;
 			nullable<CProtection>							m_oProtection;
 
+			// cell checkbox (resolved from the featurePropertyBag xfComplement extension)
+			nullable_bool									m_oCellControl;
+			// raw <xfpb:xfComplement i="..."/> index, resolved via CFeaturePropertyBagFile
+			nullable_int									m_oXfComplementIndex;
 		};
 
 		class CCellXfs  : public WritingElementWithChilds<CXfs>
