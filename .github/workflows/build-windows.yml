@@ -70,8 +70,16 @@ jobs:
             $cmd = Get-Command $tool -ErrorAction SilentlyContinue
             if ($cmd -and ($cmd.Source -notlike "$cyg\*")) {
               $dir = Split-Path $cmd.Source
+              # Git for Windows trap: 'Git\bin' contains git.exe but ALSO
+              # bash.exe and sh.exe, which would shadow Cygwin's. The
+              # sibling 'Git\cmd' directory contains only the git launcher,
+              # so prefer that one.
+              if ($tool -eq 'git' -and $dir -like '*\Git\bin') {
+                $cmdDir = Join-Path (Split-Path $dir) 'cmd'
+                if (Test-Path (Join-Path $cmdDir 'git.exe')) { $dir = $cmdDir }
+              }
               if ($nativeDirs -notcontains $dir) { $nativeDirs += $dir }
-              Write-Host ("native {0,-8} -> {1}" -f $tool, $cmd.Source)
+              Write-Host ("native {0,-8} -> {1}  (PATH dir: {2})" -f $tool, $cmd.Source, $dir)
             }
           }
           $newPath = ($nativeDirs + "$cyg\bin" + $env:PATH) -join ';'
