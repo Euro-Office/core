@@ -31,6 +31,13 @@ jobs:
       - name: Install Cygwin
         uses: cygwin/cygwin-install-action@v4
         with:
+          # Pin the install location explicitly. The action's default has
+          # changed between versions (C:\cygwin, later D:\cygwin), while
+          # most build scripts that shell out to Cygwin assume the stock
+          # installer location C:\cygwin64. A hardcoded path that doesn't
+          # exist is exactly what produces Windows error 3:
+          # "The system cannot find the path specified."
+          install-dir: 'C:\cygwin64'
           add-to-path: false
           packages: >-
             automake
@@ -41,17 +48,35 @@ jobs:
             python3-devel
 
       # ------------------------------------------------------------------ #
-      # 3. Append Cygwin to the END of PATH.
+      # 3. Build a deterministic PATH:
+      #      [native perl/python/git/cmake dirs] ; [Cygwin] ; [everything else]
       #
-      #    make/automake remain reachable by bare name, but for any tool
-      #    that exists both as Windows-native and Cygwin (perl, python,
-      #    git, cmake) the Windows-native one wins because it appears
-      #    earlier in PATH.
+      #    Why not just append Cygwin at the end? Because the runner image
+      #    already has Git's MSYS tools (C:\Program Files\Git\usr\bin) in
+      #    PATH — with Cygwin last, a bare `bash`/`sh` resolves to Git's
+      #    MSYS bash, which is NOT a valid substitute for a Cygwin/MSVC
+      #    build of ICU. This ordering gives Cygwin's bash/make/sh priority
+      #    while the four conflicting tools stay Windows-native.
+      #
+      #    CYGWIN_ROOT is exported for build scripts that locate Cygwin
+      #    via an environment variable instead of PATH.
       # ------------------------------------------------------------------ #
-      - name: Add Cygwin to end of PATH
+      - name: Set up PATH ordering (native tools > Cygwin > rest)
         shell: pwsh
         run: |
-          "PATH=$env:PATH;C:\cygwin\bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          $cyg = 'C:\cygwin64'
+          $nativeDirs = @()
+          foreach ($tool in 'perl', 'python', 'git', 'cmake') {
+            $cmd = Get-Command $tool -ErrorAction SilentlyContinue
+            if ($cmd -and ($cmd.Source -notlike "$cyg\*")) {
+              $dir = Split-Path $cmd.Source
+              if ($nativeDirs -notcontains $dir) { $nativeDirs += $dir }
+              Write-Host ("native {0,-8} -> {1}" -f $tool, $cmd.Source)
+            }
+          }
+          $newPath = ($nativeDirs + "$cyg\bin" + $env:PATH) -join ';'
+          "PATH=$newPath"      | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "CYGWIN_ROOT=$cyg"   | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       # ------------------------------------------------------------------ #
       # 4. Install Windows SDK 10.0.19041.0
@@ -82,11 +107,24 @@ jobs:
             $cmd = Get-Command $tool -ErrorAction SilentlyContinue
             if ($cmd) {
               Write-Host ("{0,-8} -> {1}" -f $tool, $cmd.Source)
-              if ($cmd.Source -like 'C:\cygwin\*') {
+              if ($cmd.Source -like 'C:\cygwin64\*') {
                 throw "ERROR: '$tool' resolves to the Cygwin copy at $($cmd.Source)."
               }
             } else {
               Write-Host ("{0,-8} -> (not found in PATH)" -f $tool)
+            }
+          }
+
+          # These SHOULD be the Cygwin copies (ICU's Cygwin/MSVC build needs them)
+          foreach ($tool in 'bash', 'sh', 'make') {
+            $cmd = Get-Command $tool -ErrorAction SilentlyContinue
+            if ($cmd) {
+              Write-Host ("{0,-8} -> {1}" -f $tool, $cmd.Source)
+              if ($cmd.Source -notlike 'C:\cygwin64\*') {
+                throw "ERROR: '$tool' resolves to a non-Cygwin copy at $($cmd.Source)."
+              }
+            } else {
+              throw "ERROR: '$tool' not found in PATH."
             }
           }
 
@@ -107,14 +145,10 @@ jobs:
           Write-Host "--- cmake ---"
           cmake --version
 
-          Write-Host "--- Cygwin make (from end of PATH) ---"
-          $make = Get-Command make -ErrorAction SilentlyContinue
-          if ($make) { Write-Host "make -> $($make.Source)"; make --version | Select-Object -First 1 }
-
-          # NB: don't try to run C:\cygwin\bin\python3 directly from pwsh —
+          # NB: don't try to run C:\cygwin64\bin\python3 directly from pwsh —
           # it's a Cygwin-style symlink that cmd/pwsh can't execute. If you
           # ever need Cygwin python, call it via:
-          #   C:\cygwin\bin\bash.exe -lc 'python3 --version'
+          #   C:\cygwin64\bin\bash.exe -lc 'python3 --version'
 
       # ------------------------------------------------------------------ #
       # 6. Set up vcpkg  (matches the Linux workflow)
