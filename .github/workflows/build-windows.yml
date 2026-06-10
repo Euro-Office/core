@@ -1,10 +1,7 @@
 name: Build (Windows x64)
 
 on:
-  push:
-    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -13,8 +10,6 @@ jobs:
 
     env:
       PYTHONUTF8: "1"
-      # Adjust this to wherever vcpkg is bootstrapped (see steps below)
-      VCPKG_ROOT: ${{ github.workspace }}\vcpkg
 
     steps:
       # ------------------------------------------------------------------ #
@@ -26,28 +21,9 @@ jobs:
           submodules: recursive
 
       # ------------------------------------------------------------------ #
-      # 2. Install Visual Studio components + WinSDK 10.0.19041.0
-      #    windows-latest already ships VS 2022 / MSVC 14.4x.
-      #    We add the specific SDK version if it isn't present.
-      # ------------------------------------------------------------------ #
-      - name: Install Windows SDK 10.0.19041.0
-        shell: pwsh
-        run: |
-          $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
-          $installPath = & $vsWhere -latest -property installationPath
-          Write-Host "VS install path: $installPath"
-          # Add the SDK component (safe to run even if already present)
-          & $vsInstaller modify `
-            --installPath $installPath `
-            --add Microsoft.VisualStudio.Component.Windows10SDK.19041 `
-            --quiet --norestart --force
-          if ($LASTEXITCODE -ne 0) {
-            Write-Warning "Installer returned $LASTEXITCODE – SDK may already be installed, continuing."
-          }
-
-      # ------------------------------------------------------------------ #
-      # 3. Install Cygwin (with the packages your ICU build needs)
+      # 2. Install Cygwin FIRST — its installer prepends C:\cygwin\bin to
+      #    PATH, which shadows Windows Python and Strawberry Perl.
+      #    We fix the ordering immediately after in step 3.
       # ------------------------------------------------------------------ #
       - name: Install Cygwin
         uses: cygwin/cygwin-install-action@v4
@@ -61,55 +37,109 @@ jobs:
             python3-devel
 
       # ------------------------------------------------------------------ #
-      # 4. Pre-installed tools sanity-check
-      #    Strawberry Perl, Git for Windows and Python are already on the
-      #    runner – just verify they're on PATH.
+      # 3. Fix PATH ordering
+      #    Put Strawberry Perl and Windows Python BEFORE Cygwin so that
+      #    bare "perl" / "python" resolve to the Windows-native versions,
+      #    while Cygwin tools are still reachable via full path or when
+      #    ICU/vcpkg explicitly needs them.
       # ------------------------------------------------------------------ #
-      - name: Verify pre-installed tools
+      - name: Fix PATH — Windows tools before Cygwin
         shell: pwsh
         run: |
-          Write-Host "--- Perl ---"
-          perl --version | Select-Object -First 2
+          $current = $env:PATH -split ';'
 
-          Write-Host "--- Python ---"
-          python --version
+          # Buckets — order within each group is preserved
+          $strawberry = $current | Where-Object { $_ -match 'Strawberry' }
+          $winPython  = $current | Where-Object { $_ -match 'Python3\d\d?' -or $_ -match '\\Python\\' }
+          $winGit     = $current | Where-Object { $_ -match 'Git\\' }
+          $cygwin     = $current | Where-Object { $_ -match 'cygwin' }
+          $rest       = $current | Where-Object {
+                            $_ -notmatch 'Strawberry' -and
+                            $_ -notmatch 'Python3\d\d?' -and
+                            $_ -notmatch '\\Python\\' -and
+                            $_ -notmatch 'Git\\' -and
+                            $_ -notmatch 'cygwin'
+                        }
 
-          Write-Host "--- Git ---"
+          $ordered = ($strawberry + $winPython + $winGit + $rest + $cygwin) |
+                     Where-Object { $_ -ne '' } |
+                     Select-Object -Unique
+
+          $newPath = $ordered -join ';'
+          echo "PATH=$newPath" >> $env:GITHUB_ENV
+          Write-Host "New PATH (first 8 entries):"
+          $ordered | Select-Object -First 8 | ForEach-Object { Write-Host "  $_" }
+
+      # ------------------------------------------------------------------ #
+      # 4. Install Windows SDK 10.0.19041.0
+      #    windows-latest ships VS 2022 / MSVC 14.4x already.
+      #    This step adds the specific SDK if it isn't already present.
+      # ------------------------------------------------------------------ #
+      - name: Install Windows SDK 10.0.19041.0
+        shell: pwsh
+        run: |
+          $vsWhere    = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
+          $installPath = & $vsWhere -latest -property installationPath
+          Write-Host "VS install path: $installPath"
+          & $vsInstaller modify `
+            --installPath $installPath `
+            --add Microsoft.VisualStudio.Component.Windows10SDK.19041 `
+            --quiet --norestart --force
+          # Exit code 3010 = restart required but changes applied — treat as success
+          if ($LASTEXITCODE -notin @(0, 3010)) {
+            Write-Warning "vs_installer returned $LASTEXITCODE — SDK may already be installed, continuing."
+          }
+
+      # ------------------------------------------------------------------ #
+      # 5. Verify tool versions
+      #    - Strawberry Perl  (Windows native)
+      #    - Python           (Windows native, via 'py' launcher)
+      #    - Git for Windows
+      #    - CMake
+      # ------------------------------------------------------------------ #
+      - name: Verify tool versions
+        shell: pwsh
+        run: |
+          Write-Host "--- Strawberry Perl (Windows) ---"
+          $perlVer = perl --version | Select-String 'This is perl'
+          Write-Host $perlVer
+          if ($perlVer -match 'cygwin') { throw "ERROR: 'perl' resolved to Cygwin Perl — PATH fix failed." }
+
+          Write-Host "--- Python (Windows, via py launcher) ---"
+          py --version
+
+          Write-Host "--- Git for Windows ---"
           git --version
 
           Write-Host "--- CMake ---"
           cmake --version
 
-      # ------------------------------------------------------------------ #
-      # 5. Bootstrap vcpkg
-      # ------------------------------------------------------------------ #
-      - name: Bootstrap vcpkg
-        shell: pwsh
-        run: |
-          if (-not (Test-Path "$env:VCPKG_ROOT")) {
-            git clone https://github.com/microsoft/vcpkg.git "$env:VCPKG_ROOT"
-          }
-          & "$env:VCPKG_ROOT\bootstrap-vcpkg.bat" -disableMetrics
+          Write-Host "--- Cygwin python3 (sanity check) ---"
+          C:\cygwin\bin\python3 --version
 
       # ------------------------------------------------------------------ #
-      # 6. Cache vcpkg installed packages (speeds up repeat builds)
+      # 6. Set up vcpkg  (mirrors the Linux workflow's lukka/run-vcpkg)
       # ------------------------------------------------------------------ #
-      - name: Cache vcpkg packages
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.VCPKG_ROOT }}\installed
-          key: vcpkg-${{ runner.os }}-${{ hashFiles('vcpkg.json') }}
-          restore-keys: |
-            vcpkg-${{ runner.os }}-
+      - name: Set up vcpkg
+        uses: lukka/run-vcpkg@v11
 
       # ------------------------------------------------------------------ #
-      # 7. CMake configure  (runs inside the x64 Native Tools environment)
+      # 7. CMake Configure
+      #    Runs inside the x64 Native Tools shell (vcvars64.bat) so that
+      #    cl.exe 19.44, link.exe, and the correct SDK headers are on PATH.
       # ------------------------------------------------------------------ #
       - name: CMake Configure
         shell: cmd
         run: |
-          :: Load the x64 Native Tools environment (MSVC 14.4x, cl 19.44)
-          call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+          :: Activate x64 Native Tools (MSVC 14.44 / cl 19.44)
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          if errorlevel 1 (
+            call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          )
+          if errorlevel 1 (
+            call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          )
 
           set PYTHONUTF8=1
 
@@ -122,24 +152,30 @@ jobs:
             -DEO_CORE_TOOLS_DIR=.\package\tools
 
       # ------------------------------------------------------------------ #
-      # 8. CMake build
+      # 8. CMake Build
       # ------------------------------------------------------------------ #
       - name: CMake Build
         shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat"
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          if errorlevel 1 (
+            call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          )
+          if errorlevel 1 (
+            call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          )
 
           set PYTHONUTF8=1
 
           cmake --build . --config Release --parallel
 
       # ------------------------------------------------------------------ #
-      # 9. Upload build artifacts (optional – adjust path as needed)
+      # 9. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: build-output
+          name: build-output-windows
           path: |
             package/bin/
             package/tools/
