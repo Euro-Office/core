@@ -326,11 +326,6 @@ function(copy_artifacts_to_folder artifacts dest_dir)
 endfunction()
 
 function(copy_icu_libs artifact)
-    add_custom_command(TARGET ${artifact} POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
-        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
-        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
-    )
     if( MSVC )
 
         file(GLOB ICU_DLLS
