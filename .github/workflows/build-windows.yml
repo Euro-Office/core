@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: windows-2022
 
     env:
       PYTHONUTF8: "1"
@@ -21,13 +21,17 @@ jobs:
           submodules: recursive
 
       # ------------------------------------------------------------------ #
-      # 2. Install Cygwin FIRST — its installer prepends C:\cygwin\bin to
-      #    PATH, which shadows Windows Python and Strawberry Perl.
-      #    We fix the ordering immediately after in step 3.
+      # 2. Install Cygwin WITHOUT touching PATH.
+      #
+      #    By default cygwin-install-action PREPENDS C:\cygwin\bin to PATH,
+      #    which makes Cygwin's perl/python/git/cmake shadow the Windows-
+      #    native tools no matter what we do afterwards. add-to-path: false
+      #    stops that at the source — no shim renaming needed.
       # ------------------------------------------------------------------ #
       - name: Install Cygwin
         uses: cygwin/cygwin-install-action@v4
         with:
+          add-to-path: false
           packages: >-
             automake
             cmake
@@ -37,109 +41,99 @@ jobs:
             python3-devel
 
       # ------------------------------------------------------------------ #
-      # 3. Fix PATH ordering
-      #    Put Strawberry Perl and Windows Python BEFORE Cygwin so that
-      #    bare "perl" / "python" resolve to the Windows-native versions,
-      #    while Cygwin tools are still reachable via full path or when
-      #    ICU/vcpkg explicitly needs them.
+      # 3. Append Cygwin to the END of PATH.
+      #
+      #    make/automake remain reachable by bare name, but for any tool
+      #    that exists both as Windows-native and Cygwin (perl, python,
+      #    git, cmake) the Windows-native one wins because it appears
+      #    earlier in PATH.
       # ------------------------------------------------------------------ #
-      - name: Fix PATH — Windows tools before Cygwin
+      - name: Add Cygwin to end of PATH
         shell: pwsh
         run: |
-          $current = $env:PATH -split ';'
-
-          # Buckets — order within each group is preserved
-          $strawberry = $current | Where-Object { $_ -match 'Strawberry' }
-          $winPython  = $current | Where-Object { $_ -match 'Python3\d\d?' -or $_ -match '\\Python\\' }
-          $winGit     = $current | Where-Object { $_ -match 'Git\\' }
-          $cygwin     = $current | Where-Object { $_ -match 'cygwin' }
-          $rest       = $current | Where-Object {
-                            $_ -notmatch 'Strawberry' -and
-                            $_ -notmatch 'Python3\d\d?' -and
-                            $_ -notmatch '\\Python\\' -and
-                            $_ -notmatch 'Git\\' -and
-                            $_ -notmatch 'cygwin'
-                        }
-
-          $ordered = ($strawberry + $winPython + $winGit + $rest + $cygwin) |
-                     Where-Object { $_ -ne '' } |
-                     Select-Object -Unique
-
-          $newPath = $ordered -join ';'
-          echo "PATH=$newPath" >> $env:GITHUB_ENV
-          Write-Host "New PATH (first 8 entries):"
-          $ordered | Select-Object -First 8 | ForEach-Object { Write-Host "  $_" }
+          "PATH=$env:PATH;C:\cygwin\bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       # ------------------------------------------------------------------ #
       # 4. Install Windows SDK 10.0.19041.0
-      #    windows-latest ships VS 2022 / MSVC 14.4x already.
-      #    This step adds the specific SDK if it isn't already present.
       # ------------------------------------------------------------------ #
       - name: Install Windows SDK 10.0.19041.0
         shell: pwsh
         run: |
-          $vsWhere    = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vsWhere     = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
           $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
-          $installPath = & $vsWhere -latest -property installationPath
+          $installPath = & $vsWhere -latest -products * -property installationPath
           Write-Host "VS install path: $installPath"
           & $vsInstaller modify `
             --installPath $installPath `
             --add Microsoft.VisualStudio.Component.Windows10SDK.19041 `
             --quiet --norestart --force
-          # Exit code 3010 = restart required but changes applied — treat as success
           if ($LASTEXITCODE -notin @(0, 3010)) {
             Write-Warning "vs_installer returned $LASTEXITCODE — SDK may already be installed, continuing."
           }
 
       # ------------------------------------------------------------------ #
-      # 5. Verify tool versions
-      #    - Strawberry Perl  (Windows native)
-      #    - Python           (Windows native, via 'py' launcher)
-      #    - Git for Windows
-      #    - CMake
+      # 5. Verify tool resolution — Get-Command shows exactly which binary
+      #    each bare name resolves to, so failures are self-explanatory.
       # ------------------------------------------------------------------ #
       - name: Verify tool versions
         shell: pwsh
         run: |
-          Write-Host "--- Strawberry Perl (Windows) ---"
-          $perlVer = perl --version | Select-String 'This is perl'
-          Write-Host $perlVer
-          if ($perlVer -match 'cygwin') { throw "ERROR: 'perl' resolved to Cygwin Perl — PATH fix failed." }
+          foreach ($tool in 'perl', 'python', 'git', 'cmake') {
+            $cmd = Get-Command $tool -ErrorAction SilentlyContinue
+            if ($cmd) {
+              Write-Host ("{0,-8} -> {1}" -f $tool, $cmd.Source)
+              if ($cmd.Source -like 'C:\cygwin\*') {
+                throw "ERROR: '$tool' resolves to the Cygwin copy at $($cmd.Source)."
+              }
+            } else {
+              Write-Host ("{0,-8} -> (not found in PATH)" -f $tool)
+            }
+          }
 
-          Write-Host "--- Python (Windows, via py launcher) ---"
+          Write-Host "--- perl ---"
+          perl --version | Select-String 'This is perl'
+          $perlOut = (perl --version) -join ''
+          if ($perlOut -match 'cygwin') {
+            throw "ERROR: 'perl' is Cygwin Perl."
+          }
+
+          Write-Host "--- python ---"
+          python --version
           py --version
 
-          Write-Host "--- Git for Windows ---"
+          Write-Host "--- git ---"
           git --version
 
-          Write-Host "--- CMake ---"
+          Write-Host "--- cmake ---"
           cmake --version
 
-          Write-Host "--- Cygwin python3 (sanity check) ---"
-          C:\cygwin\bin\python3 --version
+          Write-Host "--- Cygwin make (from end of PATH) ---"
+          $make = Get-Command make -ErrorAction SilentlyContinue
+          if ($make) { Write-Host "make -> $($make.Source)"; make --version | Select-Object -First 1 }
+
+          # NB: don't try to run C:\cygwin\bin\python3 directly from pwsh —
+          # it's a Cygwin-style symlink that cmd/pwsh can't execute. If you
+          # ever need Cygwin python, call it via:
+          #   C:\cygwin\bin\bash.exe -lc 'python3 --version'
 
       # ------------------------------------------------------------------ #
-      # 6. Set up vcpkg  (mirrors the Linux workflow's lukka/run-vcpkg)
+      # 6. Set up vcpkg  (matches the Linux workflow)
       # ------------------------------------------------------------------ #
       - name: Set up vcpkg
         uses: lukka/run-vcpkg@v11
 
       # ------------------------------------------------------------------ #
       # 7. CMake Configure
-      #    Runs inside the x64 Native Tools shell (vcvars64.bat) so that
-      #    cl.exe 19.44, link.exe, and the correct SDK headers are on PATH.
+      #    vcvars64.bat is located via vswhere so the VS edition (Enterprise/
+      #    Professional/Community) and future image changes don't matter.
       # ------------------------------------------------------------------ #
       - name: CMake Configure
         shell: cmd
         run: |
-          :: Activate x64 Native Tools (MSVC 14.44 / cl 19.44)
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          if errorlevel 1 (
-            call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          )
-          if errorlevel 1 (
-            call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          )
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          echo Using VS at: %VSPATH%
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          if errorlevel 1 exit /b 1
 
           set PYTHONUTF8=1
 
@@ -157,13 +151,9 @@ jobs:
       - name: CMake Build
         shell: cmd
         run: |
-          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          if errorlevel 1 (
-            call "C:\Program Files\Microsoft Visual Studio\2022\Professional\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          )
-          if errorlevel 1 (
-            call "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
-          )
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          if errorlevel 1 exit /b 1
 
           set PYTHONUTF8=1
 
