@@ -8,6 +8,31 @@ import platform
 import tempfile
 from pathlib import Path
 
+_original_rmtree = shutil.rmtree
+
+def _force_remove(func, path, exc):
+    try:
+        os.chmod(path, stat.S_IWRITE)
+    except OSError:
+        pass
+    for _ in range(5):
+        try:
+            func(path)
+            return
+        except PermissionError:
+            time.sleep(0.5)
+    func(path)  # final attempt; raises if genuinely locked
+
+def _safe_rmtree(path, *args, **kwargs):
+    if sys.version_info >= (3, 12):
+        kwargs.setdefault("onexc", _force_remove)
+    else:
+        kwargs.setdefault("onerror", _force_remove)
+    return _original_rmtree(path, *args, **kwargs)
+
+shutil.rmtree = _safe_rmtree
+# --- end read-only-safe rmtree ---
+
 dep_name = None
 debug_mode = False
 work_dir = None
