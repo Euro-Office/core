@@ -58,17 +58,17 @@ Done:
       option + `enable_testing()` in `CMakeLists.txt`, `gtest` via the vcpkg `tests`
       feature, CTest step in CI.
 - [x] `Common/cfcpp/test`
+- [x] `DesktopEditor/graphics/tests/BooleanOperations_Unit-tests` — deps: kernel, graphics,
+      UnicodeConverter. No fixtures.
+- [x] `OdfFile/Reader/Converter/StarMath2OOXML/TestSMConverter` — dep: StarMathConverter.
+      No fixtures.
+- [x] `OdfFile/Reader/Converter/StarMath2OOXML/TestEQNtoOOXML` — dep: StarMathConverter.
+      No fixtures.
 
 ### gtest suites to migrate
 
 Runnable headless once migrated (no missing fixtures, no JS engine):
 
-- [ ] `DesktopEditor/graphics/tests/BooleanOperations_Unit-tests` — deps: kernel, graphics,
-      UnicodeConverter. No fixtures.
-- [ ] `OdfFile/Reader/Converter/StarMath2OOXML/TestSMConverter` — dep: StarMathConverter.
-      No fixtures.
-- [ ] `OdfFile/Reader/Converter/StarMath2OOXML/TestEQNtoOOXML` — dep: StarMathConverter.
-      No fixtures.
 - [ ] `OdfFile/Reader/Converter/StarMath2OOXML/TestSMCustomShape` — dep: StarMathConverter
       (confirm sources exist).
 - [ ] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. Fixtures committed under
