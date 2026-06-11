@@ -200,9 +200,10 @@ jobs:
           if errorlevel 1 exit /b 1
 
           set PYTHONUTF8=1
-          set "CL=/MP"
 
-          cmake --build . --config Release --parallel
+          cmake --build . --config Release --parallel ^
+            -- /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true
+
 
       # ------------------------------------------------------------------ #
       # 9. Upload build artifacts
