@@ -138,6 +138,33 @@ else()
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
     endif()
 
+    # Setup icu desktop
+    # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
+    set(ICU_DESKTOP_MAJOR_VER "60")
+    set(ICU_DESKTOP_MINOR_VER "3")
+    set(ICU_DESKTOP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-desktop")
+    get_filename_component(ICU_DESKTOP_INSTALL_DIR_ABS "${ICU_DESKTOP_INSTALL_DIR}" ABSOLUTE)
+    if( MSVC )
+        set(LIBICUUC_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/icuuc.lib")
+        set(LIBICUDATA_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/icudt.lib")
+    else()
+        set(LIBICUUC_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_DESKTOP_MAJOR_VER}")
+        set(LIBICUDATA_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_DESKTOP_MAJOR_VER}")
+        set(LIBICUI_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicui18n.so.${ICU_DESKTOP_MAJOR_VER}")
+    endif()
+
+    # Setup qt
+    set(QT_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt/qt")
+    set(QT_DIR "${QT_ROOT}/lib/cmake/Qt5")
+    set(Qt5_DIR "${QT_ROOT}/lib/cmake/Qt5")
+    set(QT_VERSION_MAJOR "5")
+    find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets)
+        
+    # Setup cef
+    set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
+    list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
+    find_package(CEF REQUIRED)
+
     # Setup boost
     set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
     get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
