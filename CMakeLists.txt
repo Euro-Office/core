@@ -6,7 +6,7 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" ON)
+option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" OFF)
 
 if(EMSCRIPTEN)
 

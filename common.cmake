@@ -343,7 +343,7 @@ endfunction()
 # LD_LIBRARY_PATH pointing at that directory so the loader can resolve them.
 function(add_core_gtest)
     set(options GTEST_MAIN USE_GMOCK)
-    set(oneValueArgs NAME WORKING_DIRECTORY)
+    set(oneValueArgs NAME WORKING_DIRECTORY GTEST_FILTER)
     set(multiValueArgs SOURCES LIBS)
     cmake_parse_arguments(T "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -382,7 +382,11 @@ function(add_core_gtest)
     if(NOT T_WORKING_DIRECTORY)
         set(T_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${T_NAME}>")
     endif()
-    add_test(NAME ${T_NAME} COMMAND ${T_NAME} WORKING_DIRECTORY "${T_WORKING_DIRECTORY}")
+    set(_eo_test_args "")
+    if(T_GTEST_FILTER)
+        set(_eo_test_args "--gtest_filter=${T_GTEST_FILTER}")
+    endif()
+    add_test(NAME ${T_NAME} COMMAND ${T_NAME} ${_eo_test_args} WORKING_DIRECTORY "${T_WORKING_DIRECTORY}")
 
     # Resolve shared libraries at run time: the core libraries (and their icu
     # deps) from the collected output directory the shipped binaries load from,
