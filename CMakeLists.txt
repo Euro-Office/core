@@ -6,6 +6,8 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
+option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" ON)
+
 if(EMSCRIPTEN)
 
     add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/js" zlib )
@@ -24,5 +26,12 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/app_builder" docbuilder )
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
     add_subdirectory( "${CORE_ROOT_DIR}/Test/Applications/x2tTester" x2ttester )
+
+    if(EO_BUILD_TESTS)
+        enable_testing()
+        find_package(GTest CONFIG REQUIRED)
+
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/cfcpp/test" cfcpp_test )
+    endif()
 
 endif()

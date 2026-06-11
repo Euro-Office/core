@@ -4,6 +4,14 @@
   "dependencies": [
     "hunspell"
   ],
+  "features": {
+    "tests": {
+      "description": "Dependencies for building the C++ unit tests",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  },
   "overrides": [
     { "name": "hunspell", "version": "1.7.2" }
   ]

@@ -324,6 +324,77 @@ function(set_default_options target)
     endif()
 endfunction()
 
+# ---------------------------------------------------------------------------
+# Unit-test helper (CTest + GoogleTest from vcpkg)
+# ---------------------------------------------------------------------------
+# add_core_gtest(
+#     NAME    <target name>
+#     SOURCES <source files...>
+#     LIBS    <core libraries to link...>
+#     [GTEST_MAIN]               # provide a default main() (suite has none of its own)
+#     [USE_GMOCK]                # also link GTest::gmock
+#     [WORKING_DIRECTORY <dir>]  # CTest working dir (default: the test binary's dir)
+# )
+#
+# Builds a GoogleTest executable, links it against the vcpkg-provided GTest and
+# the requested core libraries, and registers it as a CTest test. The shared core
+# libraries are collected into EO_CORE_OUTPUT_DIR (build/package) and depend on
+# each other (and on icu) being co-located there; the test is run with
+# LD_LIBRARY_PATH pointing at that directory so the loader can resolve them.
+function(add_core_gtest)
+    set(options GTEST_MAIN USE_GMOCK)
+    set(oneValueArgs NAME WORKING_DIRECTORY)
+    set(multiValueArgs SOURCES LIBS)
+    cmake_parse_arguments(T "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if(NOT T_NAME)
+        message(FATAL_ERROR "add_core_gtest(): NAME is required")
+    endif()
+    if(NOT T_SOURCES)
+        message(FATAL_ERROR "add_core_gtest(${T_NAME}): SOURCES is required")
+    endif()
+
+    if(NOT TARGET GTest::gtest)
+        find_package(GTest CONFIG REQUIRED)
+    endif()
+
+    add_executable(${T_NAME} ${T_SOURCES})
+    target_link_libraries(${T_NAME} PRIVATE GTest::gtest ${T_LIBS})
+    if(T_USE_GMOCK)
+        target_link_libraries(${T_NAME} PRIVATE GTest::gmock)
+    endif()
+    if(T_GTEST_MAIN)
+        # Compile a bundled GoogleTest entry point instead of linking the vcpkg
+        # gtest_main library, whose versioned soname is not reliably resolvable
+        # on the runtime library path.
+        set(_eo_gtest_main "${CMAKE_CURRENT_BINARY_DIR}/${T_NAME}_gtest_main.cpp")
+        file(WRITE "${_eo_gtest_main}"
+            "#include \"gtest/gtest.h\"\n"
+            "int main(int argc, char** argv) {\n"
+            "    ::testing::InitGoogleTest(&argc, argv);\n"
+            "    return RUN_ALL_TESTS();\n"
+            "}\n")
+        target_sources(${T_NAME} PRIVATE "${_eo_gtest_main}")
+    endif()
+
+    set_default_options(${T_NAME})
+
+    if(NOT T_WORKING_DIRECTORY)
+        set(T_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${T_NAME}>")
+    endif()
+    add_test(NAME ${T_NAME} COMMAND ${T_NAME} WORKING_DIRECTORY "${T_WORKING_DIRECTORY}")
+
+    # Resolve shared libraries at run time: the core libraries (and their icu
+    # deps) from the collected output directory the shipped binaries load from,
+    # plus the vcpkg lib dir when GTest is built as shared libraries.
+    set(_eo_test_libpath "${EO_CORE_OUTPUT_DIR}")
+    if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+        set(_eo_test_libpath "${_eo_test_libpath}:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+    endif()
+    set_tests_properties(${T_NAME} PROPERTIES
+        ENVIRONMENT "LD_LIBRARY_PATH=${_eo_test_libpath}:$ENV{LD_LIBRARY_PATH}")
+endfunction()
+
 function(copy_artifacts_to_folder artifacts dest_dir)
     foreach(artifact ${artifacts})
         add_custom_command(TARGET ${artifact} POST_BUILD

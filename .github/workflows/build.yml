@@ -80,11 +80,14 @@ jobs:
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
-        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=.
+        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON
 
     - name: Build core (x2t, docbuilder, etc.)
       run: |
         cmake --build build
+
+    - name: Unit tests (CTest)
+      run: ctest --test-dir build --output-on-failure
 
     - name: Conversion Test
       run: ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package
