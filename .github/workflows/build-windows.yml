@@ -10,6 +10,8 @@ jobs:
 
     env:
       PYTHONUTF8: "1"
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
 
     steps:
       # ------------------------------------------------------------------ #

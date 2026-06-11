@@ -10,6 +10,8 @@ jobs:
       PLEASE_PRELOAD_LIBSTDCPP: true
       CC: clang-13
       CXX: clang++-13
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
 
     steps:
     - name: Checkout repository
