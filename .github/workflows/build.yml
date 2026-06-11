@@ -12,6 +12,10 @@ jobs:
       CXX: clang++-13
       NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
       NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/.cache/vcpkg
+      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/.cache/vcpkg,readwrite"
+      CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
+      CCACHE_MAXSIZE: 2G
 
     steps:
     - name: Checkout repository
@@ -30,6 +34,7 @@ jobs:
                 build-essential \
                 make \
                 cmake \
+                ccache \
                 ninja-build \
                 pkg-config \
                 libglib2.0-dev \
@@ -78,16 +83,52 @@ jobs:
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
 
+    - name: Restore vcpkg binary cache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/.cache/vcpkg
+        key: vcpkg-${{ runner.os }}-clang13-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+        restore-keys: |
+          vcpkg-${{ runner.os }}-clang13-
+
+    - name: Restore ccache
+      uses: actions/cache/restore@v4
+      with:
+        path: ${{ github.workspace }}/.cache/ccache
+        key: ccache-${{ runner.os }}-clang13-${{ github.run_id }}
+        restore-keys: |
+          ccache-${{ runner.os }}-clang13-
+
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
-        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON
+        mkdir -p "$VCPKG_DEFAULT_BINARY_CACHE" "$CCACHE_DIR"
+        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
     - name: Build core (x2t, docbuilder, etc.)
       run: |
         cmake --build build
+
+    - name: ccache statistics
+      if: always()
+      run: ccache --show-stats
 
     - name: Unit tests (CTest)
       run: ctest --test-dir build --output-on-failure
 
     - name: Conversion Test
       run: ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package
+
+    # Save caches even when earlier steps fail, so each run reuses prior work.
+    - name: Save vcpkg binary cache
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/.cache/vcpkg
+        key: vcpkg-${{ runner.os }}-clang13-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+
+    - name: Save ccache
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ github.workspace }}/.cache/ccache
+        key: ccache-${{ runner.os }}-clang13-${{ github.run_id }}
