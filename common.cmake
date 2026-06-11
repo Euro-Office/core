@@ -95,12 +95,16 @@ if( EMSCRIPTEN )
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
+        if(NOT BUILD_DESKTOP)
+            set(NO_DESKTOP_EXCLUDE ",icu-desktop")
+        endif()
+
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm,cef,qt" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm,cef,qt${NO_DESKTOP_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
