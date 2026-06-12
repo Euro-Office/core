@@ -84,13 +84,14 @@ Done:
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
       alongside (under the build tree, so writable).
+- [x] `OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape` — dep:
+      SMCustomShape2OOXML (new CMake library target created for this suite; itself depends on
+      UnicodeConverter, kernel). No fixtures.
 
 ### gtest suites to migrate
 
 Runnable headless once migrated (no missing fixtures, no JS engine):
 
-- [ ] `OdfFile/Reader/Converter/StarMath2OOXML/TestSMCustomShape` — dep: StarMathConverter
-      (confirm sources exist).
 - [ ] `OdfFile/Test/test_odf` — OdfFormatLib dependency chain; own `main`. Fixtures
       committed under `test_odf/ExampleFiles/`.
 
