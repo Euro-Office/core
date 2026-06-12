@@ -51,6 +51,12 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+
+        # PdfFile/test runs headless with its single fixture-dependent case
+        # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
+        # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
+        # missing fixtures needed to fully enable it.
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
     endif()
 
 endif()
