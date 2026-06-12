@@ -113,11 +113,12 @@ namespace NSNetwork
 					//curl_easy_setopt(curl, CURLOPT_NOPROGRESS, FALSE);
 					// Install the callback function
 					//curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_func);
-#if defined(__linux__)
-					//Linux doesn't have root certificates built into the system, so we disable verification
-					//http://curl.haxx.se/docs/sslcerts.html
-					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-#endif
+					// Verify the peer's TLS certificate against the system CA store.
+					// These are libcurl defaults; set explicitly so the bypass is not
+					// reintroduced. If a platform lacks a default CA bundle, configure
+					// it via CURLOPT_CAINFO/CURLOPT_CAPATH rather than disabling verification.
+					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 					/* tell libcurl to follow redirection(default false) */
 					curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);
 					/* some servers don't like requests that are made without a user-agent field, so we provide one */
@@ -173,11 +174,12 @@ namespace NSNetwork
 					curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data_to_string);
 					curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
-#if defined(__linux__)
-					//Linux doesn't have root certificates built into the system, so we disable verification
-					//http://curl.haxx.se/docs/sslcerts.html
-					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L);
-#endif
+					// Verify the peer's TLS certificate against the system CA store.
+					// These are libcurl defaults; set explicitly so the bypass is not
+					// reintroduced. If a platform lacks a default CA bundle, configure
+					// it via CURLOPT_CAINFO/CURLOPT_CAPATH rather than disabling verification.
+					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 1L);
+					curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 2L);
 
 					/* Perform the request, res will get the return code */
 					res = curl_easy_perform(curl);
