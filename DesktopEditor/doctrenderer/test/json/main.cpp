@@ -13,6 +13,14 @@ using namespace NSJSON;
 
 #ifdef JSON_GOOGLE_TEST
 
+// NSJSON::ImageFormat is an `enum class`, so its enumerators are not visible
+// unqualified. These tests reference them bare (e.g. `ifBGRA`); bring them into
+// scope so the suite compiles.
+static constexpr ImageFormat ifRGBA    = ImageFormat::ifRGBA;
+static constexpr ImageFormat ifBGRA    = ImageFormat::ifBGRA;
+static constexpr ImageFormat ifARGB    = ImageFormat::ifARGB;
+static constexpr ImageFormat ifInvalid = ImageFormat::ifInvalid;
+
 class CJSONTest : public testing::Test
 {
 public:
