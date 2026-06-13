@@ -18,6 +18,19 @@ if(NOT TARGET UnicodeConverter)
     add_subdirectory(${CORE_ROOT_DIR}/UnicodeConverter UnicodeConverter)
 endif()
 
+# The ODF->OOXML writer references OOXML format code (XmlUtils, SimpleTypes,
+# OOX::WritingElement/CPath, the math logic classes and PPTX::Namespaces). Those
+# symbols live in the OOXML format libraries; declare them as dependencies so
+# OdfFormatLib links standalone (previously they were only satisfied when the
+# whole x2t library was linked together).
+if(NOT TARGET DocxFormatLib)
+    add_subdirectory(${CORE_ROOT_DIR}/OOXML/Projects/Linux/DocxFormatLib DocxFormatLib)
+endif()
+
+if(NOT TARGET PPTXFormatLib)
+    add_subdirectory(${CORE_ROOT_DIR}/OOXML/Projects/Linux/PPTXFormatLib PPTXFormatLib)
+endif()
+
 add_library(OdfFormatLib STATIC
     ${CMAKE_CURRENT_LIST_DIR}/odf_converter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/odf_datatypes.cpp
@@ -491,6 +504,8 @@ endif()
 target_link_libraries(OdfFormatLib PUBLIC
     UnicodeConverter
     kernel
+    DocxFormatLib
+    PPTXFormatLib
     Boost::system
     Boost::filesystem
     Boost::regex
