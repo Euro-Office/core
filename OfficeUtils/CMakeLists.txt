@@ -64,6 +64,10 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
     )
 
     if( NOT MSVC )
-        target_compile_options( ${TARGET} PRIVATE "SHELL:-include unistd.h")
+        target_compile_options( ${TARGET} PRIVATE
+            "SHELL:-include unistd.h"
+            $<$<COMPILE_LANGUAGE:C>:-Wno-old-style-definition>
+            $<$<COMPILE_LANGUAGE:C>:-Wno-implicit-fallthrough>
+        )
     endif()
 endfunction()

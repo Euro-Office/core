@@ -138,7 +138,7 @@ namespace NSThreads
 	public:
 		__native_thread() : CThreadDescriptor()
 		{
-			m_thread = NULL;
+			m_thread = 0;
 		}
 		virtual ~__native_thread()
 		{

@@ -324,7 +324,7 @@ namespace NSStringExt
                     }
                     else
                     {
-                        pUnicodes[unLen++] = (unCode | (wTrailing & 0x3FF) + 0x10000);
+                        pUnicodes[unLen++] = 0x10000 + unCode + (wTrailing & 0x3FF);
                     }
                 }
             }
@@ -432,7 +432,7 @@ namespace NSStringExt
         inline unsigned int DecodeSurrogateChar(const unsigned int& nLeadingChar, const unsigned int& nTrailingChar)
         {
             if (nLeadingChar < 0xDC00 && nTrailingChar >= 0xDC00 && nTrailingChar <= 0xDFFF)
-                return 0x10000 + ((nLeadingChar & 0x3FF) << 10) | (nTrailingChar & 0x3FF);
+                return 0x10000 + (((nLeadingChar & 0x3FF) << 10) | (nTrailingChar & 0x3FF));
             else
                 return 0;
         }

@@ -472,11 +472,11 @@ namespace ZLibZipUtils
 	static bool current_file_is_find(unzFile uf, const wchar_t *filename)
 	{
 		char filename_inzip[256];
-		int err = UNZ_OK;
+		// int err = UNZ_OK;
 
 		unz_file_info file_info;
 
-		err = unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
+		/*err = */unzGetCurrentFileInfo(uf, &file_info, filename_inzip, sizeof(filename_inzip), NULL, 0, NULL, 0);
 
 		std::wstring filenameW = codepage_issue_fixFromOEM(filename_inzip);
 
@@ -509,7 +509,7 @@ namespace ZLibZipUtils
 			int data_read_size = unzReadCurrentFile(unzip_file_handle, arr, array_size);
 
 			unzCloseCurrentFile(unzip_file_handle);
-			return data_read_size == array_size ? true : false;
+			return data_read_size >= 0 && static_cast<uInt>(data_read_size) == array_size;
 		}
 		return false;
 	}

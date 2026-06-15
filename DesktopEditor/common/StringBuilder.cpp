@@ -276,7 +276,7 @@ namespace NSStringUtils
 	}
 	void CStringBuilder::WriteString(const wchar_t* pString, size_t nLen)
 	{
-		if (-1 == nLen)
+		if (SIZE_MAX == nLen)
 		{
 			nLen = wcslen(pString);
 		}

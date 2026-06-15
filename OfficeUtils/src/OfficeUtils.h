@@ -25,6 +25,8 @@
 #ifndef OFFICE_UTILS_H
 #define OFFICE_UTILS_H
 
+#include <climits>
+
 #include "OfficeUtilsCommon.h"
 #include "../../Common/kernel_config.h"
 
@@ -101,8 +103,8 @@ public:
 	~CDeflate();
 
 public:
-	void SetIn(BYTE* next_in, UINT avail_in, ULONG total_in = -1);
-	void SetOut(BYTE* next_out, UINT avail_out, ULONG total_out = -1);
+	void SetIn(BYTE* next_in, UINT avail_in, ULONG total_in = ULONG_MAX);
+	void SetOut(BYTE* next_out, UINT avail_out, ULONG total_out = ULONG_MAX);
 
 	UINT GetAvailIn();
 	UINT GetAvailOut();

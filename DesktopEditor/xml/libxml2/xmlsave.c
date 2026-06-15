@@ -1592,8 +1592,9 @@ xhtmlNodeDumpOutput(xmlSaveCtxtPtr ctxt, xmlNodePtr cur) {
 	xmlOutputBufferWriteString(buf,
 		" xmlns=\"http://www.w3.org/1999/xhtml\"");
     }
-    if (cur->properties != NULL)
+    if (cur->properties != NULL) {
         xhtmlAttrListDumpOutput(ctxt, cur->properties);
+    }
 
 	if ((cur->type == XML_ELEMENT_NODE) &&
 		(cur->parent != NULL) &&

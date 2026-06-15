@@ -83,7 +83,6 @@ target_compile_definitions(kernel PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
     BUILD_ZLIB_AS_SOURCES
     ZLIB_DLL
-    ZLIB_INTERNAL
 )
 
 if( NOT MSVC )

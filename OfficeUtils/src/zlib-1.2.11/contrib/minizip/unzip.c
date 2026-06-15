@@ -520,12 +520,14 @@ local ZPOS64_T unz64local_SearchCentralDir64(const zlib_filefunc64_32_def* pzlib
             break;
 
         for (i=(int)uReadSize-3; (i--)>0;)
+        {
             if (((*(buf+i))==0x50) && ((*(buf+i+1))==0x4b) &&
                 ((*(buf+i+2))==0x06) && ((*(buf+i+3))==0x07))
             {
                 uPosFound = uReadPos+i;
                 break;
             }
+        }
 
         if (uPosFound!=0)
             break;

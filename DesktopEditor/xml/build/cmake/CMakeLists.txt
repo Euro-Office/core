@@ -77,8 +77,6 @@ function(add_libxml TARGET XML_ROOT_DIR ONLY_LIBXML)
         LIBXML_SAX1_ENABLED
         LIBXML_TREE_ENABLED
         LIBXML_XPTR_ENABLED
-        IN_LIBXML
-        LIBXML_STATIC
         XML_ERROR_DISABLE_MODE
     )
 
@@ -87,5 +85,14 @@ function(add_libxml TARGET XML_ROOT_DIR ONLY_LIBXML)
         ${LIBXML2_SOURCES_DIR}/include
         ${LIBXML2_SOURCES_DIR}/include/libxml
     )
+
+    if( NOT MSVC )
+        target_compile_options( ${TARGET} PRIVATE
+            $<$<COMPILE_LANGUAGE:C>:-Wno-format-extra-args>
+            $<$<COMPILE_LANGUAGE:C>:-Wno-array-bounds>
+            $<$<COMPILE_LANGUAGE:C>:-Wno-implicit-fallthrough>
+            $<$<COMPILE_LANGUAGE:C>:-Wno-cast-function-type>
+        )
+    endif()
 
 endfunction()

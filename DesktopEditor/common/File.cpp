@@ -1556,16 +1556,20 @@ namespace NSFile
 
 		return sRet.substr(0, nSeparatorPos);
 #else
-		char *folder = getenv("TEMP");
+        std::string folder;
 
-		if (NULL == folder)
-			folder = getenv("TMP");
-		if (NULL == folder)
-			folder = getenv("TMPDIR");
-		if (NULL == folder)
-			folder = "/tmp";
+        if( const auto tmp = getenv("TEMP"); tmp )
+        { folder = tmp; }
+        else if( const auto tmp = getenv("TMP") )
+        { folder = tmp; }
+        else if( const auto tmp = getenv("TMPDIR") )
+        { folder = tmp; }
+        else
+        { folder = "/tmp"; }
 
-		return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8((BYTE*)folder, strlen(folder));
+        return NSFile::CUtf8Converter::GetUnicodeStringFromUTF8(
+            reinterpret_cast<BYTE*>(folder.data()), folder.size()
+        );
 #endif
 	}
 	std::wstring CFileBinary::CreateTempFileWithUniqueName(const std::wstring& strFolderPathRoot, const std::wstring& Prefix)

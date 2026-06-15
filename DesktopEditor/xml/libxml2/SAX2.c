@@ -736,6 +736,7 @@ xmlSAX2AttributeDecl(void *ctx, const xmlChar *elem, const xmlChar *fullname,
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     xmlAttributePtr attr;
+    (void)attr; /* maybe unused */
     xmlChar *name = NULL, *prefix = NULL;
 
     if ((ctxt == NULL) || (ctxt->myDoc == NULL))
@@ -803,6 +804,7 @@ xmlSAX2ElementDecl(void *ctx, const xmlChar * name, int type,
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     xmlElementPtr elem = NULL;
+    (void)elem; /* maybe unused */
 
     if ((ctxt == NULL) || (ctxt->myDoc == NULL))
         return;
@@ -849,6 +851,7 @@ xmlSAX2NotationDecl(void *ctx, const xmlChar *name,
 {
     xmlParserCtxtPtr ctxt = (xmlParserCtxtPtr) ctx;
     xmlNotationPtr nota = NULL;
+    (void)nota; /* maybe unused */
 
     if ((ctxt == NULL) || (ctxt->myDoc == NULL))
         return;
@@ -1170,6 +1173,7 @@ xmlSAX2AttributeInternal(void *ctx, const xmlChar *fullname,
         (name[0] == 'x') && (name[1] == 'm') && (name[2] == 'l') &&
         (name[3] == 'n') && (name[4] == 's') && (name[5] == 0)) {
 	xmlNsPtr nsret;
+    (void)nsret; /* maybe unused */
 	xmlChar *val;
 
         if (!ctxt->replaceEntities) {
@@ -1230,6 +1234,7 @@ xmlSAX2AttributeInternal(void *ctx, const xmlChar *fullname,
 	(ns != NULL) && (ns[0] == 'x') && (ns[1] == 'm') && (ns[2] == 'l') &&
         (ns[3] == 'n') && (ns[4] == 's') && (ns[5] == 0)) {
 	xmlNsPtr nsret;
+    (void)nsret; /* maybe unused */
 	xmlChar *val;
 
         if (!ctxt->replaceEntities) {

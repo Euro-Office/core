@@ -27,6 +27,7 @@
 #include <string>
 #include <string.h>
 #include <algorithm>
+#include <climits>
 #include "Types.h"
 
 #include "../../Common/kernel_config.h"
@@ -91,7 +92,7 @@ namespace NSStringUtils
 		void operator+=(const std::wstring& oTemp);
 
 		void WriteStringNoSafe(const wchar_t* pString, size_t nLen);
-		void WriteString(const wchar_t* pString, size_t nLen = -1);
+		void WriteString(const wchar_t* pString, size_t nLen = SIZE_MAX);
 
 		void WriteString(const std::wstring& sString);
 
