@@ -104,7 +104,7 @@ def build_and_install():
         )
 
     else:
-        abort_op( f"Unkown target platform: {sys.platform}" )
+        nc.abort_op( f"Unkown target platform: {sys.platform}" )
 
     nc.create_install_dir_ok_marker()
     nc.fix_terminal_encoding()
