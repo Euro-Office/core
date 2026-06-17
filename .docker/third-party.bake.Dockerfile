@@ -1,12 +1,7 @@
 FROM ubuntu:18.04 AS third-party-builder
 
-    ARG NEXTCLOUD_USER
-    ARG NEXTCLOUD_PASS
-
     # Prevent interactive prompts
     ENV DEBIAN_FRONTEND=noninteractive
-    ENV NEXTCLOUD_USER=${NEXTCLOUD_USER}
-    ENV NEXTCLOUD_PASS=${NEXTCLOUD_PASS}
 
     # Install build dependencies for 18.04
     # Note: python-is-python3 doesn't exist here, so we link it manually
@@ -91,7 +86,11 @@ FROM ubuntu:18.04 AS third-party-builder
     COPY /core/Common/3dParty /3dParty
 
 
-    RUN python3.10 /3dParty/build_3rdparty.py \
+    RUN --mount=type=secret,id=nextcloud_user \
+        --mount=type=secret,id=nextcloud_pass \
+        export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user)" && \
+        export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass)" && \
+        python3.10 /3dParty/build_3rdparty.py \
             --only=qt,cef \
             /third_party/work \
             /third_party/install
