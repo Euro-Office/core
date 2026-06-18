@@ -8,6 +8,7 @@
     "tests": {
       "description": "Dependencies for building the C++ unit tests",
       "dependencies": [
+        "cef",
         "gtest"
       ]
     }

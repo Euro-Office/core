@@ -20,7 +20,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
     # hash wasm has one dependency in sdkjs which we must copy here (TODO: fix this)
     COPY sdkjs/common/stringserialize.js /sdkjs/common/stringserialize.js
 
-    ARG CACHE_BUST=5
+    ARG CACHE_BUST=6
 
     RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw <<EOF
