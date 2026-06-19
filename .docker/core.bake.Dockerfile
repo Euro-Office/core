@@ -147,6 +147,7 @@ FROM core-base AS core
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DVCPKG_OVERLAY_PORTS=/core/Common/3dParty \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
         -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \

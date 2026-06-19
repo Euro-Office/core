@@ -8,8 +8,14 @@
     "tests": {
       "description": "Dependencies for building the C++ unit tests",
       "dependencies": [
-        "cef",
         "gtest"
+      ]
+    },
+    "desktop-editors": {
+      "description": "Dependencies for building the desktop editors",
+      "dependencies": [
+        "cef",
+        "vulkan"
       ]
     }
   },
