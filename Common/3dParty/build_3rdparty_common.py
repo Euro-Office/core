@@ -92,6 +92,8 @@ def target_arch() -> str:
 def is_arm64() -> bool:
     return target_arch() == "arm64"
 
+def is_apple_silicon() -> bool:
+    return sys.platform == "darwin" and platform.machine() == "arm64"
 
 def work_dir_looks_ok() -> bool:
     return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()

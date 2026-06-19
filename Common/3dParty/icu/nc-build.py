@@ -87,6 +87,34 @@ def build_and_install():
             nc.work_dir / "icu" / "source"
         )
 
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "./configure",
+                f"--prefix={nc.install_dir}",
+                "--enable-rpath",
+                "CC=clang",
+                "CXX=clang++",
+                "AR=ar",
+                "RANLIB=ranlib",
+                "CXXFLAGS=-std=c++11",
+                "LDFLAGS=-Wl,-rpath,@loader_path"
+            ],
+            "Configure",
+            nc.work_dir / "icu" / "source"
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir / "icu" / "source"
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir / "icu" / "source"
+        )
+
     elif nc.is_windows():
         icu_source_dir = nc.work_dir / "icu" / "source"
         bat_path = script_dir / "nc-build.bat"
