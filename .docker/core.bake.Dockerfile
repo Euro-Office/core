@@ -90,7 +90,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
     RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
         apt-get update && \
         DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            git curl sudo wget ssh gpg \
+            git curl sudo wget ssh gpg ccache \
             build-essential make ninja-build pkg-config \
             libglib2.0-dev \
             python3 python-is-python3 python3-venv python3-setuptools \
@@ -147,7 +147,6 @@ FROM core-base AS core
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
-        -DVCPKG_OVERLAY_PORTS=/core/Common/3dParty \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
         -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \

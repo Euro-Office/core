@@ -151,6 +151,8 @@ if( NOT WIN32 )
         UNIX
         HAVE_STDINCLUDES
     )
+else()
+    target_compile_definitions(DjVuFile PRIVATE WIN32)
 endif()
 
 if( ANDROID )
