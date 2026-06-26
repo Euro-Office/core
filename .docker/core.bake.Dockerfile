@@ -7,6 +7,8 @@
 ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
+ARG PRODUCT
+ARG TARGETARCH
 
 # Desktop: 24.04 on arm, 22.04 on amd
 FROM ubuntu:22.04 AS vcpkg-base-desktop-amd64
@@ -86,7 +88,6 @@ FROM vcpkg-base AS vcpkg-remote
 # old Ubuntu base remains necessary.
 FROM vcpkg-${NUGET_CACHE} AS core-base
     ARG BUILD_ROOT=/package
-    ARG TARGETARCH
 
     ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive
@@ -146,7 +147,6 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 #### CORE ####
 FROM core-base AS core
     ARG NUGET_SOURCE_PATH
-    ARG TARGETARCH
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \
