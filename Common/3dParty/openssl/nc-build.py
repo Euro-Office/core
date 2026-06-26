@@ -89,6 +89,7 @@ def build_and_install():
                 "enable-md2",
                 "no-shared",
                 "no-asm",
+                "no-makedepend"
             ],
             "Configure",
             nc.work_dir,
