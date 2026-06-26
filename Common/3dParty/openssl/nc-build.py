@@ -91,19 +91,29 @@ def build_and_install():
                 "no-asm",
             ],
             "Configure",
-            nc.work_dir
+            nc.work_dir,
+            verbose=True 
+        )
+
+        nc.run_command(
+            [ shutil.which("perl"), "configdata.pm", "--dump" ],
+            "Dump config", 
+            nc.work_dir, 
+            verbose=True 
         )
 
         nc.run_command(
             [ "nmake" ],
             "Build",
-            nc.work_dir
+            nc.work_dir,
+            verbose=True 
         )
 
         nc.run_command(
             [ "nmake", "install" ],
             "Install",
-            nc.work_dir
+            nc.work_dir,
+            verbose=True 
         )
 
     else:

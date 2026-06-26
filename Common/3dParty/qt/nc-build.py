@@ -88,7 +88,7 @@ def fetch_and_patch():
     nc.create_workdir()
 
     nc.run_command(
-        [ sys.executable, "-m", "pip", "install", "--upgrade", "aqtinstall" ],
+        [ sys.executable, "-m", "pip", "install", "--upgrade", "--break-system-packages",  "aqtinstall" ],
         "Install/upgrade aqtinstall",
         nc.work_dir
     )
