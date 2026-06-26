@@ -8,8 +8,16 @@ ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
 
+# Desktop: 24.04 on arm, 22.04 on amd
+FROM ubuntu:22.04 AS vcpkg-base-desktop-amd64
+FROM ubuntu:24.04 AS vcpkg-base-desktop-arm64
+FROM vcpkg-base-desktop-${TARGETARCH} AS vcpkg-base-desktop
+
+# Server: always 22.04, both arches
+FROM ubuntu:22.04 AS vcpkg-base-server
+
 #### VCPKG BASE ####
-FROM ubuntu:22.04 AS vcpkg-base
+FROM vcpkg-base-${PRODUCT} AS vcpkg-base
 
     # Avoid interactive prompts during package install
     ENV DEBIAN_FRONTEND=noninteractive

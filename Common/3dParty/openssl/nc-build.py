@@ -66,11 +66,24 @@ def build_and_install():
         )
 
     elif nc.is_windows():
-        
+        import platform
+        # OpenSSL's Configure target must match the MSVC environment's TARGET arch
+        # (not the host). vcvarsall.bat / the Native Tools prompt export this:
+        tgt = os.environ.get("VSCMD_ARG_TGT_ARCH", "").lower()
+        if not tgt:  # fallback for a native prompt that didn't set it
+            tgt = {"AMD64": "x64", "ARM64": "arm64", "X86": "x86"}.get(
+                platform.machine().upper(), "x64")
+        ossl_target = {
+            "x64":   "VC-WIN64A",
+            "arm64": "VC-WIN64-ARM",
+            "x86":   "VC-WIN32",
+        }.get(tgt)
+        if ossl_target is None:
+            nc.abort_op(f"Unsupported Windows target arch: {tgt!r}")
         nc.run_command(
             [   shutil.which("perl"),
                 "Configure",
-                "VC-WIN64A",
+                ossl_target,
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
                 "enable-md2",
