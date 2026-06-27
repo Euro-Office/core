@@ -68,6 +68,17 @@ def build_and_install():
             nc.work_dir
         )
     elif nc.is_windows():
+        # Target arch from the MSVC env (set by vcvarsall, incl. amd64_arm64 cross),
+        # same signal openssl/v8/icu now use. Falls back to host.
+        import platform
+        tgt = os.environ.get("VSCMD_ARG_TGT_ARCH", "").strip().lower() or platform.machine().lower()
+        if tgt in ("amd64", "x86_64", "x64"):
+            boost_arch, host_subdir = "x86", "Hostx64\\x64"        # b2: x86 == the Intel/AMD family
+        elif tgt == "arm64":
+            boost_arch, host_subdir = "arm", "Hostarm64\\arm64"
+        else:
+            nc.abort_op(f"Unsupported target arch for boost: {tgt!r}")
+
         nc.run_command(
             [ "cmd.exe", "/c" "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
             "Running bootstrap",
@@ -84,7 +95,7 @@ def build_and_install():
  
 import option ;
  
-using msvc : 14.0 : "{ os.environ[ "VCToolsInstallDir" ] }\\bin\\Hostx64\\x64\\cl.exe";
+using msvc : 14.0 : "{ os.environ[ "VCToolsInstallDir" ] }\\bin\\{ host_subdir }\\cl.exe";
  
 option.set keep-going : false ;
 
@@ -102,6 +113,7 @@ option.set keep-going : false ;
     build_cmd.append( f"--prefix={ nc.install_dir }" )
     if nc.is_windows():
         build_cmd.append( "address-model=64" )
+        build_cmd.append( f"architecture={ boost_arch }" )
     build_cmd.append( "install" )
 
     print( "Running b2..." )
