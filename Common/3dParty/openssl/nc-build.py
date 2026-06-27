@@ -26,7 +26,7 @@ def fetch_and_patch():
     nc.run_command(
         [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
             "clone", "--depth", "1",
-            "--branch", "OpenSSL_1_1_1f",
+            "--branch", "OpenSSL_1_1_1w",
             "https://github.com/openssl/openssl.git",
             str(nc.work_dir)
         ],
@@ -89,7 +89,6 @@ def build_and_install():
                 "enable-md2",
                 "no-shared",
                 "no-asm",
-                "no-makedepend"
             ],
             "Configure",
             nc.work_dir,
@@ -104,16 +103,17 @@ def build_and_install():
         )
 
         nc.run_command(
-            [ "nmake", "build_libs" ],
-            "Build (libcrypto + libssl only)",
+            [ "nmake" ],
+            "Build",
             nc.work_dir,
-            verbose=True
+            verbose=True 
         )
+
         nc.run_command(
-            [ "nmake", "install_dev" ],
-            "Install (headers + static libs)",
+            [ "nmake", "install" ],
+            "Install",
             nc.work_dir,
-            verbose=True
+            verbose=True 
         )
 
     else:
