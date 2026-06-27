@@ -37,6 +37,45 @@ def check_prequisites():
         if shutil.which( tool ) is None:
             nc.abort_op( f"Tool not found: {tool}" )
 
+
+def patch_vs_toolchain():
+    # V8 8.9-era build/vs_toolchain.py sorts MSVC/Redist version path strings
+    # with a key (to_int_if_int) that mixes int and str -> on Python 3 a
+    # list-vs-list compare can hit int < str:
+    #   TypeError: '<' not supported between instances of 'int' and 'str'
+    # Surfaces at `gn gen` (copy_dlls -> FindVCRedistRoot); the arm64 target
+    # trips it because the arm64 Redist dirs add a second entry to sort.
+    # Fix: type-rank each part so ints compare with ints, strs with strs,
+    # keeping numeric ("1.12 > 1.9") ordering intact.
+    f = v8_src_path / "build" / "vs_toolchain.py"
+    if not f.is_file():
+        print( "[WARNING] vs_toolchain.py not found, skipping patch" )
+        return
+
+    needle = (
+        "  def to_int_if_int(x):\n"
+        "    try:\n"
+        "      return int(x)\n"
+        "    except ValueError:\n"
+        "      return x\n"
+    )
+    repl = (
+        "  def to_int_if_int(x):\n"
+        "    try:\n"
+        "      return (0, int(x))\n"
+        "    except ValueError:\n"
+        "      return (1, x)\n"
+    )
+
+    text = f.read_text( encoding="utf-8" )          # universal newlines -> \n
+    if needle in text:
+        # newline="\n" so we don't accidentally rewrite the whole file to CRLF
+        f.write_text( text.replace( needle, repl, 1 ), encoding="utf-8", newline="\n" )
+        print( "Patched vs_toolchain.py sort key" )
+    else:
+        print( "[WARNING] vs_toolchain.py: sort-key block not found "
+               "(already patched or upstream wording changed) - left as-is" )
+
 def apply_patches():
     patches_dir = script_dir / "tools" / "8.9" / "x64-linux-dynamic"
 
@@ -55,6 +94,8 @@ def apply_patches():
             )
         else:
             print( f"[WARNING] cannot apply patch ({ patch[ 'name' ] }) because dir doesn't exist!" )
+
+    patch_vs_toolchain()
 
     if nc.is_windows():
         nc.run_command(
