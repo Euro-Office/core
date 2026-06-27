@@ -104,17 +104,16 @@ def build_and_install():
         )
 
         nc.run_command(
-            [ "nmake" ],
-            "Build",
+            [ "nmake", "build_libs" ],
+            "Build (libcrypto + libssl only)",
             nc.work_dir,
-            verbose=True 
+            verbose=True
         )
-
         nc.run_command(
-            [ "nmake", "install" ],
-            "Install",
+            [ "nmake", "install_dev" ],
+            "Install (headers + static libs)",
             nc.work_dir,
-            verbose=True 
+            verbose=True
         )
 
     else:
