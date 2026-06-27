@@ -229,10 +229,14 @@ NEXTCLOUD_USER   = os.environ.get( "NEXTCLOUD_USER", "" )
 NEXTCLOUD_PASS   = os.environ.get( "NEXTCLOUD_PASS", "" )
 NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
 BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
-# Keep OS/arch builds apart on the remote, e.g. "linux-x86_64", "win32-AMD64".
-PLATFORM_TAG     = f"{ sys.platform }-{ platform.machine() }"
 USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
 
+def _target_arch():
+    v = os.environ.get("VSCMD_ARG_TGT_ARCH", "").strip().lower() if sys.platform == "win32" else ""
+    return {"x64": "AMD64", "amd64": "AMD64", "arm64": "ARM64", "x86": "X86"}.get(v, platform.machine())
+
+# e.g. "linux-x86_64", "win32-AMD64", "win32-ARM64"
+PLATFORM_TAG = f"{ sys.platform }-{ _target_arch() }"
 
 def _force_redo_flag():
     # init_for_dep() stores the forceredo flag in a module global; accept a few

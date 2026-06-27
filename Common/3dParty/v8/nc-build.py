@@ -158,8 +158,15 @@ def build_gn() -> Path:
     return gn_bin_path / gn_bin_name
 
 def get_cpu() -> str:
-    arch = platform.machine().lower()
-    if arch in [ "x86_64", "amd64" ]:
+    # The arch we are *building for*. On Windows that's the MSVC environment's
+    # target arch (set by vcvarsall.bat, incl. the amd64_arm64 cross prompt),
+    # which lets an x64 host cross-compile arm64. Falls back to the host arch.
+    if nc.is_windows():
+        arch = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
+                 or platform.machine().lower() )
+    else:
+        arch = platform.machine().lower()
+    if arch in [ "x86_64", "amd64", "x64" ]:
         return "x64"
     elif arch in [ "aarch64", "arm64" ]:
         return "arm64"
@@ -430,12 +437,13 @@ solutions = [
 
         gn_args = get_gn_args_file_content()
 
-        if targetarch == "arm64":
-            # Check clang version (it must be 13)
+        if nc.is_linux() and targetarch == "arm64":
+            # Linux arm64 builds with system clang; V8 8.9 needs clang 13.
+            # (Windows uses is_clang=false / MSVC, so no clang requirement.)
             clang_version_output = nc.capture_process_output( [ "clang", "--version" ] )
             match = re.search( r'\d+\.\d+\.\d+', clang_version_output )
             version = match.group() if match else None
-
+            
             if not version.startswith( "13." ):
                 nc.abort_op( f"Need clang 13 in path. Currently it's: { version }" )
 
