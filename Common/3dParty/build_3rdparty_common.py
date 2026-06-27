@@ -119,25 +119,21 @@ def ensure_directory_exists( dir : Path ):
     if not dir.exists():
         dir.mkdir( parents = True )
 
-def run_command(
-        cmd : list[str],
-        description : str, cwd : Path | None = None,
-        verbose : bool = False,
-        error_is_fatal : bool = True,
-        env : dict[ str, str ] | None = None
-    ):
-
+def run_command(cmd, description, cwd=None, verbose=False,
+                error_is_fatal=True, env=None):
     cwd = (cwd or Path.cwd()).resolve()
-    output_pipe = None if verbose else subprocess.PIPE
-    final_env = os.environ.copy() | ( {} if env is None else env )
-
+    final_env = os.environ.copy() | ({} if env is None else env)
+    stdout_dest = None if verbose else subprocess.PIPE   # None = inherit (streams)
     try:
-        _ = subprocess.run( cmd, check=True, stdout=output_pipe, stderr=output_pipe, text=True, cwd=cwd, env = final_env )
+        subprocess.run(
+            cmd, check=True, text=True, cwd=cwd, env=final_env,
+            stdout=stdout_dest,
+            stderr=subprocess.STDOUT,                    # <-- merge stderr into stdout
+        )
     except subprocess.CalledProcessError as e:
-        if verbose:
-            abort_op( f"{description} failed", error_is_fatal=error_is_fatal )
-        else:
-            abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
+        # e.stderr is now None (merged into stdout); read e.output instead
+        detail = "" if verbose else (e.output or "").strip()
+        abort_op(f"{description} failed: {detail or e}", error_is_fatal=error_is_fatal)
 
 def capture_process_output( cmd : list[str] ) -> str:
     result = subprocess.run( cmd, capture_output = True, text = True, check = True )
