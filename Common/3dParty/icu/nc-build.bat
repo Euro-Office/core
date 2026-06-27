@@ -8,16 +8,28 @@ if "%CYGWIN_BIN%"=="" set "CYGWIN_BIN=C:\cygwin64\bin"
 
 set "VCVARS=%~2"
 if not "%VCVARS%"=="" goto :vcvars_done
+REM Pick the toolchain by TARGET arch so ICU builds for the runner natively:
+REM   arm64 -> vcvarsarm64.bat   + VC.Tools.ARM64
+REM   x64   -> vcvarsx86_amd64.bat + VC.Tools.x86.x64
+REM Honor the caller's MSVC env (VSCMD_ARG_TGT_ARCH, same signal openssl/v8 use);
+REM else fall back to the native host arch. PROCESSOR_ARCHITEW6432 is set only in
+REM a WOW/emulated process and holds the TRUE arch, so this is correct even when
+REM cmd runs as emulated x64 on an arm64 host.
+set "TGTARCH=%VSCMD_ARG_TGT_ARCH%"
+if not defined TGTARCH set "TGTARCH=%PROCESSOR_ARCHITECTURE%"
+if defined PROCESSOR_ARCHITEW6432 set "TGTARCH=%PROCESSOR_ARCHITEW6432%"
 
-REM No vcvars given: locate the newest Visual Studio (any edition:
-REM Community/Professional/Enterprise/BuildTools) via vswhere, which
-REM ships with every VS 2017+ installation at a fixed location.
+set "VC_REQUIRES=Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
+set "VCVARS_BAT=vcvarsx86_amd64.bat"
+if /I "%TGTARCH%"=="ARM64" set "VC_REQUIRES=Microsoft.VisualStudio.Component.VC.Tools.ARM64"
+if /I "%TGTARCH%"=="ARM64" set "VCVARS_BAT=vcvarsarm64.bat"
+
 set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
 if exist "%VSWHERE%" (
-  for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VCVARS=%%i\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
+  for /f "usebackq delims=" %%i in (`"%VSWHERE%" -latest -products * -requires %VC_REQUIRES% -property installationPath`) do set "VCVARS=%%i\VC\Auxiliary\Build\%VCVARS_BAT%"
 )
 REM Last-resort fallback for machines without vswhere
-if "%VCVARS%"=="" set "VCVARS=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\vcvarsx86_amd64.bat"
+if "%VCVARS%"=="" set "VCVARS=C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Auxiliary\Build\%VCVARS_BAT%"
 :vcvars_done
 
 REM ---- required args ----
