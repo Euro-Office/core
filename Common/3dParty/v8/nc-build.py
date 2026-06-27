@@ -110,6 +110,49 @@ group("cppgc_base_for_testing") {
 
     cppgc_gn_file_path.write_text( content )
 
+
+
+def capture_msvc_env( arch : str ) -> dict:
+    # Capture the MSVC environment for `arch` by running vcvarsall.bat in a
+    # fresh cmd. Used to build host tools (gn) for x64 even when the job's
+    # ambient environment targets arm64.
+    vsdir = os.environ.get( "VSINSTALLDIR", "" )
+    if not vsdir:
+        pf86 = os.environ.get( "ProgramFiles(x86)", r"C:\Program Files (x86)" )
+        vswhere = Path( pf86 ) / "Microsoft Visual Studio" / "Installer" / "vswhere.exe"
+        vsdir = nc.capture_process_output(
+            [ str( vswhere ), "-latest", "-property", "installationPath" ]
+        ).strip()
+    vcvarsall = Path( vsdir ) / "VC" / "Auxiliary" / "Build" / "vcvarsall.bat"
+    if not vcvarsall.exists():
+        nc.abort_op( f"vcvarsall.bat not found at { vcvarsall }" )
+
+    marker = "___MSVC_ENV_BELOW___"
+    bat = nc.work_dir / f"_capture_env_{ arch }.bat"
+    bat.write_text( "\r\n".join( [
+        "@echo off",
+        'set "VSCMD_VER="',           # force vcvarsall to re-init, not no-op
+        'set "INCLUDE="',             # drop the inherited arm64 paths
+        'set "LIB="',
+        'set "LIBPATH="',
+        f'call "{ vcvarsall }" { arch } >nul',
+        f"echo { marker }",
+        "set",
+        "",
+    ] ) )
+
+    out = nc.capture_process_output( [ "cmd.exe", "/d", "/c", str( bat ) ] )
+    env, seen = {}, False
+    for line in out.splitlines():
+        if not seen:
+            seen = ( line.strip() == marker )
+            continue
+        if "=" in line:
+            k, v = line.split( "=", 1 )
+            env[ k ] = v
+    return env
+
+
 def build_gn() -> Path:
     print( "Fetching and building gn" )
     nc.shallow_checkout( gn_source_path, "https://gn.googlesource.com/gn", "281ba2c91861b10fec7407c4b6172ec3d4661243" )
@@ -123,6 +166,12 @@ def build_gn() -> Path:
         "CXXFLAGS": "/FIstring",
         "CFLAGS": "/FIstring",
     }
+
+    if nc.is_windows():
+        # gn is a HOST tool -> build it with the x64 host toolchain even inside
+        # an arm64 cross job. Otherwise cl.exe targets arm64, gn's build_config.h
+        # #errors, and the binary couldn't run on the x64 host anyway.
+        env = capture_msvc_env( "x64" ) | env
 
     nc.run_command(
         [ "python", "build/gen.py", "--no-last-commit-position" ],
@@ -443,7 +492,7 @@ solutions = [
             clang_version_output = nc.capture_process_output( [ "clang", "--version" ] )
             match = re.search( r'\d+\.\d+\.\d+', clang_version_output )
             version = match.group() if match else None
-            
+
             if not version.startswith( "13." ):
                 nc.abort_op( f"Need clang 13 in path. Currently it's: { version }" )
 
