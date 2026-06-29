@@ -1425,6 +1425,14 @@ bool COfficeFileFormatChecker::isMacFormatFile(const std::wstring& fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_NUMBERS;
 	else if (0 == sExt.compare(L".key"))
 		nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_KEY;
+	else if (0 == sExt.compare(L".sqlite") || 0 == sExt.compare(L".sqlite3") || 0 == sExt.compare(L".db") || 0 == sExt.compare(L".db3"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
+	else if (0 == sExt.compare(L".duckdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
+	else if (0 == sExt.compare(L".mdb") || 0 == sExt.compare(L".accdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
+	else if (0 == sExt.compare(L".fdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
 	else
 		return false;
 
@@ -1795,6 +1803,14 @@ std::wstring COfficeFileFormatChecker::GetExtensionByType(int type)
 		return L".xls";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS:
 		return L".ods";
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE:
+		return L".sqlite";
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB:
+		return L".duckdb";
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB:
+		return L".mdb";
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB:
+		return L".fdb";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_CSV:
 		return L".csv";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_TSV:
@@ -2002,6 +2018,14 @@ int COfficeFileFormatChecker::GetFormatByExtension(const std::wstring &sExt)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS;
 	if (L".ods" == ext)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS;
+	if (L".sqlite" == ext || L".sqlite3" == ext || L".db" == ext || L".db3" == ext)
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
+	if (L".duckdb" == ext)
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
+	if (L".mdb" == ext || L".accdb" == ext)
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
+	if (L".fdb" == ext)
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
 	if (L".numbers" == ext)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_NUMBERS;
 
