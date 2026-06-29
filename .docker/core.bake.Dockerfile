@@ -106,6 +106,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
             python3-httplib2 \
             lsb-release autoconf automake libtool findutils \
             gn \
+            mdbtools-dev \
         #&& curl -fsSL https://apt.kitware.com/keys/kitware-archive-latest.asc \
         #    | gpg --dearmor -o /etc/apt/keyrings/kitware.gpg \
         #&& echo "deb [signed-by=/etc/apt/keyrings/kitware.gpg] https://apt.kitware.com/ubuntu/ noble main" \

@@ -21,6 +21,10 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/ChartFromToBinary.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/CommonWriter.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/CSVReader.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseReader.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/MdbEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/BinaryWriterS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/BinaryReaderS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/CSVWriter.cpp
@@ -132,11 +136,20 @@ target_include_directories(BinDocument PRIVATE
     ${OOXML_ROOT_DIR}/XlsbFormat
 )
 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
+
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+
 target_link_libraries(BinDocument PRIVATE 
     Boost::system
     Boost::filesystem
     Boost::regex
     Boost::date_time
+    unofficial::sqlite3::sqlite3
+    mdb
+    ${GLIB_LIBRARIES}
 )
 
 set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)
