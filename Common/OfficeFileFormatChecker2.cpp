@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -987,6 +987,16 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HWPX;
 	else if (0 == sExt.compare(L".hml"))
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HWPML;
+	else if (0 == sExt.compare(L".sqlite") || 0 == sExt.compare(L".sqlite3") || 0 == sExt.compare(L".db") || 0 == sExt.compare(L".db3"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
+	else if (0 == sExt.compare(L".duckdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
+	else if (0 == sExt.compare(L".parquet") || 0 == sExt.compare(L".pq"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET;
+	else if (0 == sExt.compare(L".mdb") || 0 == sExt.compare(L".accdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
+	else if (0 == sExt.compare(L".fdb"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
 
 	if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 		return true;
@@ -1429,6 +1439,8 @@ bool COfficeFileFormatChecker::isMacFormatFile(const std::wstring& fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
 	else if (0 == sExt.compare(L".duckdb"))
 		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
+	else if (0 == sExt.compare(L".parquet") || 0 == sExt.compare(L".pq"))
+		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET;
 	else if (0 == sExt.compare(L".mdb") || 0 == sExt.compare(L".accdb"))
 		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
 	else if (0 == sExt.compare(L".fdb"))
@@ -1807,6 +1819,8 @@ std::wstring COfficeFileFormatChecker::GetExtensionByType(int type)
 		return L".sqlite";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB:
 		return L".duckdb";
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET:
+		return L".parquet";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB:
 		return L".mdb";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB:
