@@ -23,6 +23,26 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/CSVReader.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseReader.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/MdbEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/backend.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/catalog.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/data.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/dump.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/fakeglib.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/file.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/iconv.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/index.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/like.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/map.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/money.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/options.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/props.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/rc4.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/sargs.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/stats.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/table.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/version.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/worktable.c
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/write.c
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/BinaryWriterS.cpp
@@ -130,10 +150,12 @@ target_precompile_headers(BinDocument PRIVATE
     precompiled.h
 )
 
-target_include_directories(BinDocument PRIVATE
+target_include_directories(BinDocument
+    PRIVATE
     ${MS_BINARY_FILE_ROOT}/XlsFile/Format
     ${MS_BINARY_FILE_ROOT}/Common/common_xls
-    ${OOXML_ROOT_DIR}/XlsbFormat
+    ${OOXML_ROOT_DIR}/Binary/XlsbFormat
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/mdbtools
 )
 
 find_package(PkgConfig REQUIRED)
