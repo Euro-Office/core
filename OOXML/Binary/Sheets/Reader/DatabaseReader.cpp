@@ -57,7 +57,7 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 	std::unique_ptr<IDatabaseEngine> engine;
 	if (sExt == L".sqlite" || sExt == L".sqlite3" || sExt == L".db" || sExt == L".db3") {
 		engine.reset(new SqliteEngine());
-	} else if (sExt == L".duckdb") {
+	} else if (sExt == L".duckdb" || sExt == L".parquet" || sExt == L".pq") {
 		engine.reset(new DuckDbEngine());
 	} else if (sExt == L".mdb" || sExt == L".accdb") {
 		engine.reset(new MdbEngine());
