@@ -19,6 +19,7 @@ LIBS += -lsqlite3 $$PWD/../../../Binary/Sheets/Reader/DatabaseEngines/duckdb/lib
 INCLUDEPATH += ../../../../MsBinaryFile/XlsFile/Format
 INCLUDEPATH += ../../../../MsBinaryFile/Common/common_xls
 INCLUDEPATH += ../../../XlsbFormat
+INCLUDEPATH += ../../../Binary/Sheets/Reader/DatabaseEngines/mdbtools
 
 DEFINES += UNICODE \
 	_UNICODE \
@@ -45,6 +46,26 @@ SOURCES += \
 	../../../Binary/Sheets/Reader/CSVReader.cpp \
 	../../../Binary/Sheets/Reader/DatabaseReader.cpp \
 	../../../Binary/Sheets/Reader/DatabaseEngines/MdbEngine.cpp \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/backend.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/catalog.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/data.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/dump.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/fakeglib.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/file.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/iconv.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/index.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/like.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/map.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/money.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/options.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/props.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/rc4.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/sargs.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/stats.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/table.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/version.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/worktable.c \
+	../../../Binary/Sheets/Reader/DatabaseEngines/libmdb/write.c \
 	../../../Binary/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp \
 	../../../Binary/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp \
         ../../../Binary/Sheets/Reader/BinaryWriterS.cpp \
