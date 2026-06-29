@@ -1,5 +1,6 @@
 #include "DuckDbEngine.h"
 #include "../../../../../DesktopEditor/common/File.h"
+#include <algorithm>
 
 namespace NExtractTools
 {
@@ -56,6 +57,36 @@ namespace NExtractTools
 	bool DuckDbEngine::Open(const std::wstring& path)
 	{
 		std::string sPath = U_TO_UTF8(path);
+
+		std::string sExt;
+		std::string::size_type nExtPos = sPath.rfind('.');
+		if (nExtPos != std::string::npos) {
+			sExt = sPath.substr(nExtPos);
+			std::transform(sExt.begin(), sExt.end(), sExt.begin(), ::tolower);
+		}
+
+		if (sExt == ".parquet" || sExt == ".pq") {
+			if (duckdb_open(NULL, &m_db) == DuckDBError)
+			{
+				return false;
+			}
+			if (duckdb_connect(m_db, &m_conn) == DuckDBError)
+			{
+				duckdb_close(&m_db);
+				m_db = nullptr;
+				return false;
+			}
+			std::string sql = "CREATE VIEW \"ParquetData\" AS SELECT * FROM '" + sPath + "'";
+			duckdb_result result;
+			if (duckdb_query(m_conn, sql.c_str(), &result) != DuckDBSuccess) {
+				const char* error = duckdb_result_error(&result);
+				duckdb_destroy_result(&result);
+				return false;
+			}
+			duckdb_destroy_result(&result);
+			return true;
+		}
+
 		if (duckdb_open(sPath.c_str(), &m_db) == DuckDBError)
 		{
 			return false;
