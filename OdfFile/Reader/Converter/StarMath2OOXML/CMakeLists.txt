@@ -7,6 +7,8 @@ include(${CORE_ROOT_DIR}/common.cmake)
 
 add_library(StarMathConverter SHARED)
 
+set_default_options(StarMathConverter)
+
 if(NOT TARGET kernel)
     add_subdirectory(${CORE_ROOT_DIR}/Common kernel)
 endif()

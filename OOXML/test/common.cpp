@@ -32,8 +32,10 @@
 #include "../../../Common/OfficeFileFormatChecker.h"
 #include "../../../DesktopEditor/common/StringBuilder.h"
 #include "../../src/dylib/x2t.h"
+#if defined(_WIN32) || defined(_WIN64)
 #include "tchar.h"
-#include <cstdlib> 
+#endif
+#include <cstdlib>
 #include <locale>
 #include <codecvt>
 #include <boost/filesystem.hpp>

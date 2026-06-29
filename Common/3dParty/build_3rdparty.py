@@ -26,6 +26,9 @@ subfolders = [
     'socketio',
     'hunspell',
     'v8',
+    'icu-desktop',
+    'cef',
+    'qt'
 ]
 
 force_redo_subfolders = []
@@ -154,7 +157,7 @@ for subfolder in subfolders:
             time_meas = nc.MeasurementObj( subfolder )
 
             subprocess.run(
-                [sys.executable, sub_script, work_dir / subfolder, install_dir / subfolder, "force-redo" if force_redo else "" ],
+                [sys.executable, "-u", sub_script, work_dir / subfolder, install_dir / subfolder, "force-redo" if force_redo else "" ],
                 check=True,
                 text=True,
                 stdout=None,

@@ -7,8 +7,8 @@ from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
-icu_major = "74"
-icu_minor = "2"
+icu_major = "60"
+icu_minor = "3"
 
 third_party_root = ( script_dir / ".." ).resolve()
 if str( third_party_root ) not in sys.path:
@@ -16,7 +16,7 @@ if str( third_party_root ) not in sys.path:
 import build_3rdparty_common as nc
 
 nc.init_for_dep(
-    depname = "ICU",
+    depname = "ICU-DESKTOP",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
@@ -43,7 +43,7 @@ def fetch_and_patch():
         nc.abort_op( f"Copy failed: {e}" )
 
     try:
-        shutil.copy2( nc.work_dir / "icu2" / "LICENSE", nc.work_dir / "LICENSE" )
+        shutil.copy2( nc.work_dir / "icu" / "LICENSE", nc.work_dir / "LICENSE" )
     except Exception as e:
         nc.abort_op( f"License copy failed: {e}" )
 
