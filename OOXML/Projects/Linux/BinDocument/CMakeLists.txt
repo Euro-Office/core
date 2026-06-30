@@ -145,6 +145,7 @@ target_compile_definitions(BinDocument PRIVATE
 	#DISABLE_FILE_DOWNLOADER
 	AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
 	HAVE_ICONV
+	"ICONV_CONST="
 )
 
 target_precompile_headers(BinDocument PRIVATE
