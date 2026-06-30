@@ -18,6 +18,20 @@
 #ifndef _mdbtools_h_
 #define _mdbtools_h_
 
+#ifndef TLS
+#if defined(_MSC_VER)
+#define TLS __declspec(thread)
+#elif defined(__GNUC__)
+#define TLS __thread
+#elif defined(__cplusplus)
+#define TLS thread_local
+#elif __STDC_VERSION__ >= 201112L
+#define TLS _Thread_local
+#else
+#define TLS
+#endif
+#endif
+
 #define MDBTOOLS_H_HAVE_ICONV_H 1
 #define MDBTOOLS_H_HAVE_XLOCALE_H 0
 
