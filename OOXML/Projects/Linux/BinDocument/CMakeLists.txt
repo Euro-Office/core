@@ -164,13 +164,12 @@ target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
-target_link_libraries(BinDocument PRIVATE 
+target_link_libraries(BinDocument PRIVATE
     Boost::system
     Boost::filesystem
     Boost::regex
     Boost::date_time
     unofficial::sqlite3::sqlite3
-    mdb
     ${GLIB_LIBRARIES}
 )
 
