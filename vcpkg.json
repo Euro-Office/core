@@ -10,6 +10,12 @@
       "dependencies": [
         "gtest"
       ]
+    },
+    "desktop-editors": {
+      "description": "Dependencies for building the desktop editors",
+      "dependencies": [
+        "vulkan"
+      ]
     }
   },
   "overrides": [
