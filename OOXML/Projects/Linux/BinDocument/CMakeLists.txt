@@ -144,6 +144,7 @@ target_compile_definitions(BinDocument PRIVATE
 	SOLUTION_ASCOFFICEDOCXFILE2
 	#DISABLE_FILE_DOWNLOADER
 	AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
+	HAVE_ICONV
 )
 
 target_precompile_headers(BinDocument PRIVATE
