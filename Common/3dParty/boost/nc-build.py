@@ -57,6 +57,20 @@ def fetch_and_patch():
     nc.create_work_dir_ok_marker()
     print( "Fetch & patch completed" )
 
+
+def boost_msvc_arch() -> tuple[ str, str ]:
+    """
+    Windows-only. Returns ( b2 'architecture=' value, MSVC Host*/* tools
+    subdir ) for the Boost build. b2 calls the whole Intel/AMD family "x86".
+    """
+    a = nc.target_arch()
+    if a == "x64":
+        return "x86", "Hostx64\\x64"
+    if a == "arm64":
+        return "arm", "Hostarm64\\arm64"
+    nc.abort_op( f"Unsupported target arch for boost: {a!r}" )
+
+
 def build_and_install():
     nc.create_install_dir()
     
@@ -68,16 +82,7 @@ def build_and_install():
             nc.work_dir
         )
     elif nc.is_windows():
-        # Target arch from the MSVC env (set by vcvarsall, incl. amd64_arm64 cross),
-        # same signal openssl/v8/icu now use. Falls back to host.
-        import platform
-        tgt = os.environ.get("VSCMD_ARG_TGT_ARCH", "").strip().lower() or platform.machine().lower()
-        if tgt in ("amd64", "x86_64", "x64"):
-            boost_arch, host_subdir = "x86", "Hostx64\\x64"        # b2: x86 == the Intel/AMD family
-        elif tgt == "arm64":
-            boost_arch, host_subdir = "arm", "Hostarm64\\arm64"
-        else:
-            nc.abort_op(f"Unsupported target arch for boost: {tgt!r}")
+        boost_arch, host_subdir = boost_msvc_arch()
 
         nc.run_command(
             [ "cmd.exe", "/c" "bootstrap.bat", f"--prefix={ nc.install_dir }" ],

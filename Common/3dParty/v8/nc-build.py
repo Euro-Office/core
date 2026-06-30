@@ -3,7 +3,6 @@
 import sys
 import shutil
 import os
-import platform
 import re
 from pathlib import Path
 
@@ -248,20 +247,12 @@ def build_gn() -> Path:
     return gn_bin_path / gn_bin_name
 
 def get_cpu() -> str:
-    # The arch we are *building for*. On Windows that's the MSVC environment's
-    # target arch (set by vcvarsall.bat, incl. the amd64_arm64 cross prompt),
-    # which lets an x64 host cross-compile arm64. Falls back to the host arch.
-    if nc.is_windows():
-        arch = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
-                 or platform.machine().lower() )
-    else:
-        arch = platform.machine().lower()
-    if arch in [ "x86_64", "amd64", "x64" ]:
-        return "x64"
-    elif arch in [ "aarch64", "arm64" ]:
-        return "arm64"
-    else:
-        nc.abort_op( f"Unsupported architecture: {arch}" )
+    # The arch we are *building for*; detection (incl. the Windows MSVC target
+    # arch and the amd64_arm64 cross prompt) lives in build_3rdparty_common.
+    arch = nc.target_arch()
+    if arch not in ( "x64", "arm64" ):
+        nc.abort_op( f"Unsupported architecture for V8: {arch!r}" )
+    return arch
 
 def get_gn_args_file_content() -> str:
     targetarch = get_cpu()

@@ -6,8 +6,6 @@ import json
 import tarfile
 import urllib.request
 import urllib.parse
-import os
-import platform as _platform
 from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
@@ -54,27 +52,27 @@ nc.init_for_dep(
 download_dir = nc.work_dir / "download"
 
 
-def cef_platform():
-    # Allow an explicit override. Needed when cross-compiling, since the host
-    # architecture won't match the target architecture.
-    forced = os.environ.get( "CEF_PLATFORM" )
-    if forced:
-        return forced
-
-    machine = _platform.machine().lower()
-    is_arm64 = machine in ( "arm64", "aarch64" )
-    if sys.platform.startswith( "win" ):
-        return "windowsarm64" if is_arm64 else "windows64"
-    if sys.platform.startswith( "linux" ):
-        return "linuxarm64" if is_arm64 else "linux64"
-    nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
-
-
 def _version_key( entry ):
     parts = []
     for p in entry.get( "chromium_version", "0" ).split( "." ):
         parts.append( int( p ) if p.isdigit() else 0 )
     return parts
+
+def cef_platform() -> str:
+    """
+    Prebuilt-CEF platform tag in the Spotify CDN's naming, e.g. "windows64",
+    "windowsarm64", "linux64", "linuxarm64". Honors an explicit CEF_PLATFORM
+    override for the rare case the auto-detected target is wrong.
+    """
+    forced = os.environ.get( "CEF_PLATFORM" )
+    if forced:
+        return forced
+    arm = nc.is_arm64()
+    if is_windows():
+        return "windowsarm64" if arm else "windows64"
+    if is_linux():
+        return "linuxarm64" if arm else "linux64"
+    abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
 
 
 def resolve_build():

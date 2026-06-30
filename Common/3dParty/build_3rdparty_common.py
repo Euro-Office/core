@@ -73,6 +73,26 @@ def is_linux() -> bool:
 def is_windows() -> bool:
     return sys.platform == "win32"
 
+def target_arch() -> str:
+    """Canonical arch we are building for: "x64", "arm64" or "x86"."""
+    if is_windows():
+        raw = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
+                or platform.machine().lower() )
+    else:
+        raw = platform.machine().lower()
+
+    if raw in ( "x86_64", "amd64", "x64" ):
+        return "x64"
+    if raw in ( "aarch64", "arm64" ):
+        return "arm64"
+    if raw in ( "x86", "i386", "i686", "win32" ):
+        return "x86"
+    abort_op( f"Unsupported architecture: {raw!r}" )
+
+def is_arm64() -> bool:
+    return target_arch() == "arm64"
+
+
 def work_dir_looks_ok() -> bool:
     return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()
 
@@ -119,21 +139,25 @@ def ensure_directory_exists( dir : Path ):
     if not dir.exists():
         dir.mkdir( parents = True )
 
-def run_command(cmd, description, cwd=None, verbose=False,
-                error_is_fatal=True, env=None):
+def run_command(
+        cmd : list[str],
+        description : str, cwd : Path | None = None,
+        verbose : bool = False,
+        error_is_fatal : bool = True,
+        env : dict[ str, str ] | None = None
+    ):
+
     cwd = (cwd or Path.cwd()).resolve()
-    final_env = os.environ.copy() | ({} if env is None else env)
-    stdout_dest = None if verbose else subprocess.PIPE   # None = inherit (streams)
+    output_pipe = None if verbose else subprocess.PIPE
+    final_env = os.environ.copy() | ( {} if env is None else env )
+
     try:
-        subprocess.run(
-            cmd, check=True, text=True, cwd=cwd, env=final_env,
-            stdout=stdout_dest,
-            stderr=subprocess.STDOUT,                    # <-- merge stderr into stdout
-        )
+        _ = subprocess.run( cmd, check=True, stdout=output_pipe, stderr=output_pipe, text=True, cwd=cwd, env = final_env )
     except subprocess.CalledProcessError as e:
-        # e.stderr is now None (merged into stdout); read e.output instead
-        detail = "" if verbose else (e.output or "").strip()
-        abort_op(f"{description} failed: {detail or e}", error_is_fatal=error_is_fatal)
+        if verbose:
+            abort_op( f"{description} failed", error_is_fatal=error_is_fatal )
+        else:
+            abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
 
 def capture_process_output( cmd : list[str] ) -> str:
     result = subprocess.run( cmd, capture_output = True, text = True, check = True )
@@ -231,12 +255,17 @@ NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
 BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
 USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
 
-def _target_arch():
-    v = os.environ.get("VSCMD_ARG_TGT_ARCH", "").strip().lower() if sys.platform == "win32" else ""
-    return {"x64": "AMD64", "amd64": "AMD64", "arm64": "ARM64", "x86": "X86"}.get(v, platform.machine())
+def _cache_tag_arch() -> str:
+    # Arch spelling used in the remote-cache path. Must stay stable, or archives
+    # already uploaded become unreachable. On Windows it mirrors what
+    # platform.machine() reports there (AMD64 / ARM64 / X86) but follows the
+    # build's TARGET arch; elsewhere it's the raw host machine string.
+    if is_windows():
+        return { "x64": "AMD64", "arm64": "ARM64", "x86": "X86" }[ target_arch() ]
+    return platform.machine()
 
 # e.g. "linux-x86_64", "win32-AMD64", "win32-ARM64"
-PLATFORM_TAG = f"{ sys.platform }-{ _target_arch() }"
+PLATFORM_TAG = f"{ sys.platform }-{ _cache_tag_arch() }"
 
 def _force_redo_flag():
     # init_for_dep() stores the forceredo flag in a module global; accept a few

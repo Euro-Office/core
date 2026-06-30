@@ -37,6 +37,16 @@ def fetch_and_patch():
 
     print( "Fetch & patch completed" )
 
+
+def openssl_windows_target() -> str:
+    """Windows-only. OpenSSL Configure target matching the target arch."""
+    return {
+        "x64":   "VC-WIN64A",
+        "arm64": "VC-WIN64-ARM",
+        "x86":   "VC-WIN32",
+    }[ nc.target_arch() ]
+
+
 def build_and_install():
     nc.create_install_dir()
     
@@ -66,20 +76,7 @@ def build_and_install():
         )
 
     elif nc.is_windows():
-        import platform
-        # OpenSSL's Configure target must match the MSVC environment's TARGET arch
-        # (not the host). vcvarsall.bat / the Native Tools prompt export this:
-        tgt = os.environ.get("VSCMD_ARG_TGT_ARCH", "").lower()
-        if not tgt:  # fallback for a native prompt that didn't set it
-            tgt = {"AMD64": "x64", "ARM64": "arm64", "X86": "x86"}.get(
-                platform.machine().upper(), "x64")
-        ossl_target = {
-            "x64":   "VC-WIN64A",
-            "arm64": "VC-WIN64-ARM",
-            "x86":   "VC-WIN32",
-        }.get(tgt)
-        if ossl_target is None:
-            nc.abort_op(f"Unsupported Windows target arch: {tgt!r}")
+        ossl_target = openssl_windows_target()
         nc.run_command(
             [   shutil.which("perl"),
                 "Configure",
@@ -91,29 +88,25 @@ def build_and_install():
                 "no-asm",
             ],
             "Configure",
-            nc.work_dir,
-            verbose=True 
+            nc.work_dir
         )
 
         nc.run_command(
             [ shutil.which("perl"), "configdata.pm", "--dump" ],
             "Dump config", 
-            nc.work_dir, 
-            verbose=True 
+            nc.work_dir
         )
 
         nc.run_command(
             [ "nmake" ],
             "Build",
-            nc.work_dir,
-            verbose=True 
+            nc.work_dir
         )
 
         nc.run_command(
             [ "nmake", "install" ],
             "Install",
-            nc.work_dir,
-            verbose=True 
+            nc.work_dir
         )
 
     else:
