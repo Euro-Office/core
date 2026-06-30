@@ -68,11 +68,11 @@ def cef_platform() -> str:
     if forced:
         return forced
     arm = nc.is_arm64()
-    if is_windows():
+    if nc.is_windows():
         return "windowsarm64" if arm else "windows64"
-    if is_linux():
+    if nc.is_linux():
         return "linuxarm64" if arm else "linux64"
-    abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
+    nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
 
 
 def resolve_build():
