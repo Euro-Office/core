@@ -60,6 +60,12 @@ def fetch_and_patch():
             f"Internals patch {i+1}",
             nc.work_dir / "src" / "internal"
         )
+
+    nc.run_command(
+        [ "git", "apply", patches_dir / "asio-fix-for-openssl3.patch" ],
+        "Patching ASIO for recent OpenSSL",
+        nc.work_dir / "lib" / "asio"
+    )
     
     # Create no_tls version
     try:
