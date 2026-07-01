@@ -30,7 +30,7 @@ def fetch_and_patch():
     nc.run_command(
         [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
             "clone", "--depth", "1",
-            "--branch", "OpenSSL_1_1_1f",
+            "--branch", "openssl-4.0.1",
             "https://github.com/openssl/openssl.git",
             str(nc.work_dir)
         ],
@@ -60,11 +60,6 @@ def build_and_install():
         nc.abort_op( "Tool not found: emmake - Emsdk is probably not activated" )
     
     if nc.is_linux():
-        # Set compiler flags to handle OpenSSL 1.1.1f compatibility with newer Emscripten
-        env = os.environ.copy()
-        env["CFLAGS"] = "-Wno-implicit-int -Wno-error=implicit-int -Wno-deprecated-declarations"
-        env["CXXFLAGS"] = "-Wno-implicit-int -Wno-error=implicit-int -Wno-deprecated-declarations"
-
         nc.run_command(
             [   "emconfigure",
                 "./config",
@@ -73,13 +68,63 @@ def build_and_install():
                 "no-threads",
                 "no-dso",
                 "no-deprecated",
-                "enable-md2",
+                #"enable-md2", # Might work with enable-legacy and no-module. But do we really need this?
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
             ],
             "Configure",
             nc.work_dir,
-            env = env
+        )
+
+        # Fiddle with the makefile
+        try:
+            path = nc.work_dir / "Makefile"
+            content = path.read_text()
+            content = re.sub(
+                r"^CROSS_COMPILE.*$",
+                "CROSS_COMPILE=",
+                content,
+                flags=re.MULTILINE,
+            )
+            path.write_text(content)
+        except Exception as e:
+            nc.abort_op( "Failed to fix Makefile" )
+
+        nc.run_command(
+            [   "emmake",
+                "make",
+                f"-j{os.cpu_count()}",
+                "build_generated",
+                "libcrypto.a",
+                "libssl.a",
+            ],
+            "Build",
+            nc.work_dir,
+
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "emconfigure",
+                "./Configure",
+                "linux-generic32",
+                "no-shared",
+                "no-asm",
+                "no-threads",
+                "no-dso",
+                "no-deprecated",
+                #"enable-md2", # Might work with enable-legacy and no-module. But do we really need this?
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+            ],
+            "Configure",
+            nc.work_dir,
         )
 
         # Fiddle with the makefile
@@ -114,7 +159,6 @@ def build_and_install():
             ],
             "Build",
             nc.work_dir,
-            env = env
         )
 
         nc.run_command(

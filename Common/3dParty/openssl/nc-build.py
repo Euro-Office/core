@@ -26,7 +26,7 @@ def fetch_and_patch():
     nc.run_command(
         [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
             "clone", "--depth", "1",
-            "--branch", "OpenSSL_1_1_1w",
+            "--branch", "openssl-4.0.1",
             "https://github.com/openssl/openssl.git",
             str(nc.work_dir)
         ],
@@ -58,6 +58,30 @@ def build_and_install():
                 "enable-md2",
                 "no-shared",
                 "no-asm",
+            ],
+            "Configure",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "./config",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "enable-md2",
+                "no-shared",
             ],
             "Configure",
             nc.work_dir
