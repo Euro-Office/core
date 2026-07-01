@@ -17,7 +17,7 @@ REM a WOW/emulated process and holds the TRUE arch, so this is correct even when
 REM cmd runs as emulated x64 on an arm64 host.
 set "TGTARCH=%VSCMD_ARG_TGT_ARCH%"
 if not defined TGTARCH set "TGTARCH=%PROCESSOR_ARCHITECTURE%"
-if defined PROCESSOR_ARCHITEW6432 set "TGTARCH=%PROCESSOR_ARCHITEW6432%"
+if not defined VSCMD_ARG_TGT_ARCH if defined PROCESSOR_ARCHITEW6432 set "TGTARCH=%PROCESSOR_ARCHITEW6432%"
 
 set "VC_REQUIRES=Microsoft.VisualStudio.Component.VC.Tools.x86.x64"
 set "VCVARS_BAT=vcvarsx86_amd64.bat"

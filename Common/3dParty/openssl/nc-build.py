@@ -92,12 +92,6 @@ def build_and_install():
         )
 
         nc.run_command(
-            [ shutil.which("perl"), "configdata.pm", "--dump" ],
-            "Dump config", 
-            nc.work_dir
-        )
-
-        nc.run_command(
             [ "nmake" ],
             "Build",
             nc.work_dir

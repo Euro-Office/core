@@ -1,0 +1,11 @@
+diff --git a/vs_toolchain.py b/vs_toolchain.py
+--- a/vs_toolchain.py
++++ b/vs_toolchain.py
+@@ -540,5 +540,5 @@
+   def to_int_if_int(x):
+     try:
+-      return int(x)
++      return (0, int(x))
+     except ValueError:
+-      return x
++      return (1, x)
