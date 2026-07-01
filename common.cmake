@@ -89,8 +89,8 @@ if( EMSCRIPTEN )
     # Setup openssl
     set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
     get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
-    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libssl.a")
-    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libssl.a")
+    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libcrypto.a")
 
 else()
 
@@ -215,8 +215,8 @@ else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
     else()
-        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
-        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
     endif()
 
 endif()
