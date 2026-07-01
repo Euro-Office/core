@@ -1,28 +1,28 @@
 diff --git a/crypto/sha/sha512.c b/crypto/sha/sha512.c
-index ca1f387a..099e80a5 100644
+index 7e04607282..73d2ea4bbc 100644
 --- a/crypto/sha/sha512.c
 +++ b/crypto/sha/sha512.c
-@@ -501,7 +501,7 @@ static SHA_LONG64 __fastcall __pull64be(const void *x)
+@@ -543,7 +543,7 @@ static SHA_LONG64 __fastcall __pull64be(const void *x) {
  static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
-                                     size_t num)
+     size_t num)
  {
 -    const SHA_LONG64 *W = in;
 +    const SHA_LONG64 *W = (const SHA_LONG64*)in;
      SHA_LONG64 A, E, T;
      SHA_LONG64 X[9 + 80], *F;
      int i;
-@@ -563,7 +563,7 @@ static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
+@@ -605,7 +605,7 @@ static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
  static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
-                                     size_t num)
+     size_t num)
  {
 -    const SHA_LONG64 *W = in;
 +    const SHA_LONG64 *W = (const SHA_LONG64*)in;
      SHA_LONG64 a, b, c, d, e, f, g, h, s0, s1, T1, T2;
      SHA_LONG64 X[16];
      int i;
-@@ -644,7 +644,7 @@ static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
- static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
-                                     size_t num)
+@@ -697,7 +697,7 @@ static void sha512_block_data_order(SHA512_CTX *ctx, const void *in,
+     size_t num)
+ #endif
  {
 -    const SHA_LONG64 *W = in;
 +    const SHA_LONG64 *W = (const SHA_LONG64*)in;
