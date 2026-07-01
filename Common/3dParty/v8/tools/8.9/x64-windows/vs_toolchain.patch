@@ -1,7 +1,8 @@
 diff --git a/vs_toolchain.py b/vs_toolchain.py
 --- a/vs_toolchain.py
 +++ b/vs_toolchain.py
-@@ -540,5 +540,5 @@
+@@ -239,9 +239,9 @@ def _SortByHighestVersionNumberFirst(list_of_str_versions):
+   """
    def to_int_if_int(x):
      try:
 -      return int(x)
@@ -9,3 +10,6 @@ diff --git a/vs_toolchain.py b/vs_toolchain.py
      except ValueError:
 -      return x
 +      return (1, x)
+ 
+   def to_number_sequence(x):
+     part_sequence = re.split(r'[\\/\.]', x)
