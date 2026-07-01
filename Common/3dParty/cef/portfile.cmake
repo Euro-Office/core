@@ -1,4 +1,4 @@
-include("${CMAKE_CURRENT_LIST_DIR}/../../../common.cmake")
+set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw")
 
 # 1. Setup hashes for each architecture (Vcpkg requires these)
 set(CEF_HASH "NOTFOUND")

@@ -84,15 +84,26 @@ Done:
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
       alongside (under the build tree, so writable).
+- [x] `OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape` — dep:
+      SMCustomShape2OOXML (new CMake library target created for this suite; itself depends on
+      UnicodeConverter, kernel). No fixtures.
+- [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
+      graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
+      `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
+      `main()` (so no `GTEST_MAIN`). Builds only `test.cpp` + `common.cpp` — the
+      entrance/motion/audio/interactions modules are commented out in the `.pro`, so the
+      suite registers no `TEST()` cases yet; the global `TestEnv` still exercises an
+      `.odp -> .pptx` conversion in its `SetUp()`. Fixtures under `ExampleFiles/` are
+      staged next to the binary and the test runs from there (the fixture path
+      `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
+      absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
+      replaced with repo-relative includes (CMake links the libraries).
 
 ### gtest suites to migrate
 
 Runnable headless once migrated (no missing fixtures, no JS engine):
 
-- [ ] `OdfFile/Reader/Converter/StarMath2OOXML/TestSMCustomShape` — dep: StarMathConverter
-      (confirm sources exist).
-- [ ] `OdfFile/Test/test_odf` — OdfFormatLib dependency chain; own `main`. Fixtures
-      committed under `test_odf/ExampleFiles/`.
+_(none — all migrated; see Done above.)_
 
 Blocked / need extra work (build targets intentionally not created yet):
 
