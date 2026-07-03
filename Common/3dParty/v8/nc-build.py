@@ -29,12 +29,56 @@ gn_source_path = nc.work_dir / "gn-source"
 
 def check_prequisites():
     tools_needed = [ "git", "python3" ]
-    if nc.is_linux():
+    if nc.is_linux() or nc.is_apple_silicon():
         tools_needed.append( "clang" )
         tools_needed.append( "ninja" )
     for tool in tools_needed:
         if shutil.which( tool ) is None:
             nc.abort_op( f"Tool not found: {tool}" )
+
+def _has_pkg_resources( python_bin : str ) -> bool:
+    try:
+        nc.capture_process_output( [ python_bin, "-c", "import pkg_resources" ] )
+        return True
+    except Exception:
+        return False
+
+def get_gn_hermetic_check_python() -> str:
+    # GN's mac build graph (build/mac/should_use_hermetic_xcode.py, pulled in
+    # transitively from BUILD.gn) does a module-level "import pkg_resources",
+    # which fails on Python installs (e.g. Homebrew's) that don't ship
+    # setuptools by default. Rather than installing into the system/Homebrew
+    # python (which refuses it anyway as an "externally managed
+    # environment"), create a small local venv -- an ordinary "pip install"
+    # works fine inside one -- and hand back its python so callers can put it
+    # on PATH just for the "gn gen" step.
+    base_python = shutil.which( "python" ) or shutil.which( "python3" )
+    if base_python is None:
+        nc.abort_op( "No python/python3 found in PATH" )
+
+    if _has_pkg_resources( base_python ):
+        return base_python
+
+    venv_dir = script_dir / ".mac_pkg_resources_venv"
+    venv_python = venv_dir / "bin" / "python3"
+
+    if not venv_python.exists():
+        print( "System python is missing pkg_resources (setuptools); creating a local venv for GN's hermetic-xcode check (not touching the system install)..." )
+        nc.run_command( [ base_python, "-m", "venv", venv_dir ], "Creating pkg_resources venv" )
+
+    if not _has_pkg_resources( str( venv_python ) ):
+        # pkg_resources was removed in setuptools 82.0.0 (released 2026-02-08),
+        # so grabbing whatever is "latest" no longer provides it -- pin to a
+        # pre-removal version instead.
+        nc.run_command(
+            [ str( venv_python ), "-m", "pip", "install", "--quiet", "setuptools<82" ],
+            "Installing setuptools<82 into venv"
+        )
+
+    if not _has_pkg_resources( str( venv_python ) ):
+        nc.abort_op( "Failed to set up a python with pkg_resources (setuptools) available for GN's mac build check." )
+
+    return str( venv_python )
 
 def apply_patches():
     patches_dir = script_dir / "tools" / "8.9" / "x64-linux-dynamic"
@@ -111,7 +155,6 @@ group("cppgc_base_for_testing") {
     cppgc_gn_file_path.write_text( content )
 
 
-
 def capture_msvc_env( arch : str ) -> dict:
     # Capture the MSVC environment for `arch` by running vcvarsall.bat in a
     # fresh cmd. Used to build host tools (gn) for x64 even when the job's
@@ -153,6 +196,134 @@ def capture_msvc_env( arch : str ) -> dict:
     return env
 
 
+def disable_zlib_mac_fdopen_macro():
+    # third_party/zlib/zutil.h (pinned to a ~2020 chromium/zlib commit) has a
+    # pre-OS X compatibility block gated on "defined(MACOS) ||
+    # defined(TARGET_OS_MAC)". TARGET_OS_MAC is true on every Apple platform,
+    # including plain macOS, so it always fires there and #defines "fdopen"
+    # as a macro that expands to NULL. fdopen genuinely exists on macOS, so
+    # this is simply wrong -- and once the macro exists, the *next* time
+    # <stdio.h> is parsed in the same translation unit (zutil.c -> zutil.h ->
+    # ... -> gzguts.h -> <stdio.h>), the preprocessor mangles the SDK's real
+    # "fdopen(int, const char *)" declaration into nonsense, aborting the
+    # build with "expected identifier or '('". Strip out just the broken
+    # macro definition; leave OS_CODE and everything else untouched.
+    zutil_h_path = v8_src_path / "third_party" / "zlib" / "zutil.h"
+    text = zutil_h_path.read_text()
+
+    broken_block = """#if defined(MACOS) || defined(TARGET_OS_MAC)
+#  define OS_CODE  7
+#  ifndef Z_SOLO
+#    if defined(__MWERKS__) && __dest_os != __be_os && __dest_os != __win32_os
+#      include <unix.h> /* for fdopen */
+#    else
+#      ifndef fdopen
+#        define fdopen(fd,mode) NULL /* No fdopen() */
+#      endif
+#    endif
+#  endif
+#endif"""
+
+    fixed_block = """#if defined(MACOS) || defined(TARGET_OS_MAC)
+#  define OS_CODE  7
+#endif"""
+
+    if broken_block not in text:
+        print( "[WARNING] could not find the expected fdopen macro block in zutil.h to remove" )
+        return
+
+    zutil_h_path.write_text( text.replace( broken_block, fixed_block ) )
+
+def fix_location_operand_bitfield_ub():
+    # src/compiler/backend/instruction.h declares:
+    #   enum LocationKind { REGISTER, STACK_SLOT };  // only 2 values, needs 1 bit
+    #   using LocationKindField = base::BitField64<LocationKind, 3, 2>;  // allocates 2
+    # LocationKind has no fixed underlying type, so its only representable
+    # values are those needing <= the minimum number of bits for its
+    # enumerators (1 bit here). BitField's kMax for a 2-bit field is 3, and
+    # casting 3 to LocationKind is undefined behavior since it's outside that
+    # 1-bit range. Newer clang correctly rejects this at compile time
+    # ("constexpr variable 'kMax' must be initialized by a constant
+    # expression"); older clang silently let it through. V8 fixed this
+    # upstream in 2022 (commit d15d49b, "Make bitfields only as wide as
+    # necessary for enums") by shrinking several such bitfields -- our v8 is
+    # from 2020 and predates that fix. Applying the same targeted correction
+    # here (verified against our checkout's actual enum, not just copied
+    # from the newer diff, since the surrounding code has since diverged).
+    instruction_h_path = v8_src_path / "src" / "compiler" / "backend" / "instruction.h"
+    text = instruction_h_path.read_text()
+
+    broken_line = "using LocationKindField = base::BitField64<LocationKind, 3, 2>;"
+    fixed_line = "using LocationKindField = base::BitField64<LocationKind, 3, 1>;"
+
+    if broken_line not in text:
+        print( "[WARNING] could not find the expected LocationKindField declaration in instruction.h" )
+        return
+
+    instruction_h_path.write_text( text.replace( broken_line, fixed_line ) )
+
+def fix_oversized_enum_bitfields():
+    # Same underlying issue as fix_location_operand_bitfield_ub(), found by
+    # scanning every BitField<Enum, shift, size> declaration in the checkout
+    # and cross-checking "size" against each enum's actual value range (none
+    # of these enums have a fixed underlying type, so the valid range for
+    # casting an integer to them is only as wide as their largest enumerator
+    # requires -- not whatever the declared bitfield width happens to be).
+    # Each entry below was individually verified against this checkout's real
+    # enum definitions, not copied from a diff:
+    #   - wasm-code-manager.h Kind: 4 values (kFunction..kJumpTable) need 2
+    #     bits, field declared with 3 -- this is the one from the actual
+    #     ninja error.
+    #   - instruction-codes.h AddressingMode: this enum's value list is
+    #     entirely architecture-specific (ADDRESSING_MODE_LIST = kMode_None +
+    #     TARGET_ADDRESSING_MODE_LIST, and each arch's instruction-codes-*.h
+    #     defines its own TARGET_ADDRESSING_MODE_LIST). On arm64 there are 13
+    #     total values (needs 4 bits) but the shared field is declared with 5
+    #     -- a real bug there. On x64 there are 20 total values (19 target
+    #     modes + kMode_None), which needs exactly 5 bits, so the declared
+    #     width is already correct on x64 and must NOT be narrowed to 4 there
+    #     (doing so would silently break x64 codegen instead of failing to
+    #     compile, since 20 values don't fit in 4 bits). So this one specific
+    #     fix is gated on the target architecture; the other two below are
+    #     architecture-independent and always safe to apply.
+    #   - profile-generator.h CodeEventListener::LogEventsAndTags: 22 list
+    #     entries + the NUMBER_OF_LOG_EVENTS sentinel = 23 values, needing 5
+    #     bits, field declared with 8. Lower confidence this template
+    #     actually gets instantiated in our build, but the fix is isolated
+    #     and free either way, and this enum's value list doesn't vary by
+    #     architecture.
+    # In every case only the bitfield's "size" template argument is narrowed;
+    # "shift" is left untouched, so no other field's bit position moves.
+    targetarch = get_cpu()
+
+    fixes = [
+        {
+            "path": v8_src_path / "src" / "wasm" / "wasm-code-manager.h",
+            "broken": "using KindField = base::BitField8<Kind, 0, 3>;",
+            "fixed": "using KindField = base::BitField8<Kind, 0, 2>;",
+        },
+        {
+            "path": v8_src_path / "src" / "profiler" / "profile-generator.h",
+            "broken": "using TagField = base::BitField<CodeEventListener::LogEventsAndTags, 0, 8>;",
+            "fixed": "using TagField = base::BitField<CodeEventListener::LogEventsAndTags, 0, 5>;",
+        },
+    ]
+
+    if targetarch == "arm64":
+        fixes.append( {
+            "path": v8_src_path / "src" / "compiler" / "backend" / "instruction-codes.h",
+            "broken": "using AddressingModeField = base::BitField<AddressingMode, 9, 5>;",
+            "fixed": "using AddressingModeField = base::BitField<AddressingMode, 9, 4>;",
+        } )
+
+    for fix in fixes:
+        text = fix[ "path" ].read_text()
+        if fix[ "broken" ] not in text:
+            print( f"[WARNING] could not find expected bitfield declaration in { fix[ 'path' ] }" )
+            continue
+        fix[ "path" ].write_text( text.replace( fix[ "broken" ], fix[ "fixed" ] ) )
+
+
 def build_gn() -> Path:
     print( "Fetching and building gn" )
     nc.shallow_checkout( gn_source_path, "https://gn.googlesource.com/gn", "281ba2c91861b10fec7407c4b6172ec3d4661243" )
@@ -162,7 +333,7 @@ def build_gn() -> Path:
     env = {
         "CC": "clang",
         "CXX": "clang++"
-    } if nc.is_linux() else {
+    } if nc.is_linux() or nc.is_apple_silicon() else {
         "CXXFLAGS": "/FIstring",
         "CFLAGS": "/FIstring",
     }
@@ -286,7 +457,69 @@ cxx="clang++"
 """
 
         return gn_args
-    
+
+    elif nc.is_apple_silicon():
+        clang_path = Path(shutil.which("clang"))
+        clang_dir = clang_path.parent.parent
+
+        gn_args=f"""
+target_os="mac"
+target_cpu="{targetarch}"
+v8_target_cpu="{targetarch}"
+
+is_debug=false
+is_component_build=false
+is_official_build=false
+
+is_clang=true
+clang_use_chrome_plugins=false
+
+use_custom_libcxx=false
+
+# Symbol and debug settings
+symbol_level=0
+strip_debug_info=true
+treat_warnings_as_errors=false
+
+# V8 core settings
+v8_monolithic=true
+v8_use_external_startup_data=false
+v8_enable_i18n_support=false
+v8_enable_webassembly=false
+v8_enable_pointer_compression=true
+v8_enable_sandbox=false
+
+# Disable cppgc to avoid build issues
+cppgc_enable_caged_heap=false
+v8_enable_conservative_stack_scanning=false
+cppgc_is_standalone=false
+
+# Disable all testing infrastructure - CRITICAL for avoiding gmock/gtest issues
+v8_enable_test_features=false
+v8_enable_verify_heap=false
+v8_enable_verify_predictable=false
+build_with_chromium=false
+
+# Explicitly disable test targets
+v8_enable_backtrace=false
+v8_enable_disassembler=false
+v8_enable_object_print=false
+
+# Additional stability flags
+v8_use_snapshot=true
+v8_enable_lazy_source_positions=false
+v8_enable_gdbjit=false
+v8_enable_vtunejit=false
+v8_enable_handle_zapping=false
+
+# Use system (Xcode command line tools) clang
+clang_base_path="{clang_dir}"
+cc="clang"
+cxx="clang++"
+"""
+
+        return gn_args
+
     elif nc.is_windows():
         gn_args=f"""
 target_os="win"
@@ -342,6 +575,98 @@ v8_enable_handle_zapping=false
         nc.abort_op( "No gn args prepared for os." )
         return "No gn args prepared for os."
     
+def _remove_deps_entry( deps_text : str, key : str ) -> str:
+    # Removes a "'key': { ... }," entry from a DEPS file's deps dict by
+    # bracket-matching (rather than regex), since the value is a nested dict
+    # that may itself contain "}," substrings.
+    marker = f"'{key}':"
+    start = deps_text.find( marker )
+    if start == -1:
+        return deps_text
+
+    brace_start = deps_text.find( "{", start )
+    depth = 0
+    i = brace_start
+    while i < len( deps_text ):
+        if deps_text[ i ] == "{":
+            depth += 1
+        elif deps_text[ i ] == "}":
+            depth -= 1
+            if depth == 0:
+                break
+        i += 1
+    end = i + 1
+
+    while end < len( deps_text ) and deps_text[ end ] in ",\n \t":
+        end += 1
+
+    line_start = deps_text.rfind( "\n", 0, start ) + 1
+    return deps_text[ :line_start ] + deps_text[ end: ]
+
+def _remove_hook_entry( deps_text : str, hook_name : str ) -> str:
+    # Same idea as _remove_deps_entry, but for an entry in the "hooks" list
+    # (matched by its "'name': '<hook_name>'" line, then walking outward to
+    # find that entry's enclosing "{ ... }," dict).
+    marker = f"'name': '{hook_name}'"
+    marker_pos = deps_text.find( marker )
+    if marker_pos == -1:
+        return deps_text
+
+    open_pos = deps_text.rfind( "{", 0, marker_pos )
+    if open_pos == -1:
+        return deps_text
+
+    depth = 0
+    i = open_pos
+    while i < len( deps_text ):
+        if deps_text[ i ] == "{":
+            depth += 1
+        elif deps_text[ i ] == "}":
+            depth -= 1
+            if depth == 0:
+                break
+        i += 1
+    end = i + 1
+
+    while end < len( deps_text ) and deps_text[ end ] in ",\n \t":
+        end += 1
+
+    line_start = deps_text.rfind( "\n", 0, open_pos ) + 1
+    return deps_text[ :line_start ] + deps_text[ end: ]
+
+def disable_mac_toolchain_hook():
+    # v8's DEPS runs a "mac_toolchain" hook (build/mac_toolchain.py) to fetch
+    # Google's own hermetic/pinned Xcode. That script does "import
+    # pkg_resources" at module scope, which fails on newer Python installs
+    # that don't ship setuptools by default. We're intentionally using the
+    # already-installed system Xcode Command Line Tools clang (see
+    # clang_base_path in get_gn_args_file_content()), so this hook isn't
+    # needed at all here -- strip it out rather than fight the Python env
+    # depot_tools' hook runner uses.
+    deps_file_path = v8_src_path / "DEPS"
+    text = deps_file_path.read_text()
+    new_text = _remove_hook_entry( text, "mac_toolchain" )
+    if new_text == text:
+        print( "[WARNING] could not find mac_toolchain hook in DEPS to remove" )
+    else:
+        deps_file_path.write_text( new_text )
+
+def disable_luci_go_cipd_dep():
+    # v8's DEPS pins the "tools/luci-go" cipd dep (isolate/isolated/swarming
+    # binaries, only used to run V8's test suite on Swarming/Isolate infra) to
+    # a git_revision that predates mac-arm64 builds of those packages, so
+    # "gclient sync" aborts trying to resolve it on Apple Silicon
+    # ("no such tag"). Not needed to build v8_monolith, so strip it out of
+    # DEPS before syncing, rather than relying on custom_deps (which doesn't
+    # seem to suppress this particular cipd-type dependency).
+    deps_file_path = v8_src_path / "DEPS"
+    text = deps_file_path.read_text()
+    new_text = _remove_deps_entry( text, "tools/luci-go" )
+    if new_text == text:
+        print( "[WARNING] could not find tools/luci-go dep in DEPS to remove" )
+    else:
+        deps_file_path.write_text( new_text )
+
 def create_fake_pipes_shim() -> Path:
     shims_path = nc.work_dir / "win_python_shims"
     shim_file_path = shims_path / "sitecustomize.py"
@@ -444,6 +769,10 @@ def build_and_install():
     nc.run_command( [ "git", "clean", "-fdx" ], "Git clean", v8_src_path )
     nc.run_command( [ "git", "fetch", "origin" ], "Git fetch", v8_src_path )
 
+    if nc.is_apple_silicon():
+        disable_luci_go_cipd_dep()
+        disable_mac_toolchain_hook()
+
     # Clean jinja state
     if ( v8_src_path / "third_party" / "jinja2" ).is_dir():
         nc.run_command( [ "git", "reset", "--hard" ], "Git reset (jinja)", v8_src_path / "third_party" / "jinja2" )
@@ -492,18 +821,17 @@ solutions = [
             v8_src_path / "build"
         )
 
-    if nc.is_linux() or nc.is_windows():
-        if nc.is_linux():
+    if nc.is_linux() or nc.is_windows() or nc.is_apple_silicon():
+        if nc.is_windows():
             nc.run_command(
-                [ "gclient", "sync", "--no-history", "--shallow" ],
+                [ "cmd.exe", "/c", "gclient.bat", "sync", "--no-history", "--shallow" ],
                 "GClient sync",
                 v8_root_path,
                 env = depot_env,
             )
-        else: # win
-            
+        else: # linux or apple silicon
             nc.run_command(
-                [ "cmd.exe", "/c", "gclient.bat", "sync", "--no-history", "--shallow" ],
+                [ "gclient", "sync", "--no-history", "--shallow" ],
                 "GClient sync",
                 v8_root_path,
                 env = depot_env,
@@ -512,6 +840,10 @@ solutions = [
         apply_patches()
         disable_gmock()
         disable_cppgc()
+        fix_location_operand_bitfield_ub()
+        fix_oversized_enum_bitfields()
+        if nc.is_apple_silicon():
+            disable_zlib_mac_fdopen_macro()
         gn_bin_path = build_gn()
 
         targetarch = get_cpu()
@@ -525,9 +857,17 @@ solutions = [
 
         gn_args = get_gn_args_file_content()
 
+<<<<<<< HEAD
         if nc.is_linux() and targetarch == "arm64":
             # Linux arm64 builds with system clang; V8 8.9 needs clang 13.
             # (Windows uses is_clang=false / MSVC, so no clang requirement.)
+=======
+        if targetarch == "arm64" and nc.is_linux():
+            # Check clang version (it must be 13). This constraint is specific
+            # to the arm64-linux-dynamic cross-compile toolchain; it doesn't
+            # apply to native Apple Silicon builds, which use whatever
+            # (much newer) clang Xcode/Homebrew provides.
+>>>>>>> b724bbe096 (feature(macos): v8 build)
             clang_version_output = nc.capture_process_output( [ "clang", "--version" ] )
             match = re.search( r'\d+\.\d+\.\d+', clang_version_output )
             version = match.group() if match else None
@@ -545,7 +885,15 @@ solutions = [
             gn_rt_env[ "PYTHONPATH" ] = str( fake_pipes_shim_path )
             gn_rt_env[ "DEPOT_TOOLS_WIN_TOOLCHAIN" ] = "0"
             gn_rt_env[ "vs2022_install" ] = str( Path( os.environ[ "VSINSTALLDIR" ] ) )
-            
+
+        if nc.is_apple_silicon():
+            # Make sure the bare "python"/"python3" that GN's exec_script()
+            # calls resolve to an interpreter with pkg_resources available
+            # (see get_gn_hermetic_check_python()), without touching the
+            # system python.
+            hermetic_check_python_dir = Path( get_gn_hermetic_check_python() ).parent
+            gn_rt_env[ "PATH" ] = f"{ hermetic_check_python_dir }{ os.pathsep }{ os.environ[ 'PATH' ] }"
+
         nc.run_command(
             [ gn_bin_path, "gen", output_path ],
             "Running gn",
@@ -570,7 +918,7 @@ solutions = [
         env = {
             "CC": "clang",
             "CXX": "clang++"
-        } if nc.is_linux() else {
+        } if nc.is_linux() or nc.is_apple_silicon() else {
             # "CXXFLAGS": "/FIstring /Zm300",
             # "CFLAGS": "/FIstring /Zm300",
             "CL": "/FIstring /Zm300",
