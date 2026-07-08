@@ -9,6 +9,39 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CORE_ROOT_DIR}/OOXML")
 set(BIN_SOURCES_DIR "${OOXML_ROOT_DIR}/Binary")
 set(MS_BINARY_FILE_ROOT "${CORE_ROOT_DIR}/MsBinaryFile")
+set(DB_ENGINES_DIR "${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines")
+
+# Built as a separate shared library (not compiled directly into BinDocument)
+# so that mdbtools' LGPLv2+ source is dynamically linked, not statically bound
+# into the AGPL-licensed application. Vendored verbatim from upstream mdbtools
+# v1.0.1 (matches the version already recorded in mdbver.h); see
+# desktop-apps/package/common/license/3dparty/3DPARTYLICENSE for the notice.
+add_library(mdbtools SHARED
+    ${DB_ENGINES_DIR}/libmdb/backend.c
+    ${DB_ENGINES_DIR}/libmdb/catalog.c
+    ${DB_ENGINES_DIR}/libmdb/data.c
+    ${DB_ENGINES_DIR}/libmdb/dump.c
+    ${DB_ENGINES_DIR}/libmdb/fakeglib.c
+    ${DB_ENGINES_DIR}/libmdb/file.c
+    ${DB_ENGINES_DIR}/libmdb/iconv.c
+    ${DB_ENGINES_DIR}/libmdb/index.c
+    ${DB_ENGINES_DIR}/libmdb/like.c
+    ${DB_ENGINES_DIR}/libmdb/map.c
+    ${DB_ENGINES_DIR}/libmdb/money.c
+    ${DB_ENGINES_DIR}/libmdb/options.c
+    ${DB_ENGINES_DIR}/libmdb/props.c
+    ${DB_ENGINES_DIR}/libmdb/rc4.c
+    ${DB_ENGINES_DIR}/libmdb/sargs.c
+    ${DB_ENGINES_DIR}/libmdb/stats.c
+    ${DB_ENGINES_DIR}/libmdb/table.c
+    ${DB_ENGINES_DIR}/libmdb/version.c
+    ${DB_ENGINES_DIR}/libmdb/worktable.c
+    ${DB_ENGINES_DIR}/libmdb/write.c
+)
+set_default_options(mdbtools)
+target_include_directories(mdbtools PRIVATE ${DB_ENGINES_DIR}/mdbtools)
+target_compile_definitions(mdbtools PRIVATE HAVE_ICONV "ICONV_CONST=")
+set_property(TARGET mdbtools PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Document/DocWrapper/DocxSerializer.cpp
@@ -23,26 +56,6 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/CSVReader.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseReader.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/MdbEngine.cpp
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/backend.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/catalog.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/data.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/dump.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/fakeglib.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/file.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/iconv.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/index.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/like.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/map.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/money.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/options.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/props.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/rc4.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/sargs.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/stats.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/table.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/version.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/worktable.c
-    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/libmdb/write.c
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/BinaryWriterS.cpp
@@ -165,6 +178,7 @@ pkg_check_modules(GLIB REQUIRED glib-2.0)
 target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(duckdb CONFIG REQUIRED)
 
 target_link_libraries(BinDocument PRIVATE
     Boost::system
@@ -172,6 +186,8 @@ target_link_libraries(BinDocument PRIVATE
     Boost::regex
     Boost::date_time
     unofficial::sqlite3::sqlite3
+    duckdb::duckdb
+    mdbtools
     ${GLIB_LIBRARIES}
 )
 

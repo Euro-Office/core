@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "dependencies": [
     "hunspell",
-    "sqlite3"
+    "sqlite3",
+    "duckdb"
   ],
   "features": {
     "tests": {

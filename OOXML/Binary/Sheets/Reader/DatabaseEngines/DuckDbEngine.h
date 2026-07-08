@@ -1,7 +1,7 @@
 #pragma once
 
 #include "IDatabaseEngine.h"
-#include "duckdb/duckdb.h"
+#include <duckdb.h>
 
 namespace NExtractTools
 {
