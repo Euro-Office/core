@@ -42,6 +42,11 @@ set_default_options(mdbtools)
 target_include_directories(mdbtools PRIVATE ${DB_ENGINES_DIR}/mdbtools)
 target_compile_definitions(mdbtools PRIVATE HAVE_ICONV "ICONV_CONST=")
 set_property(TARGET mdbtools PROPERTY POSITION_INDEPENDENT_CODE ON)
+# set_default_options() applies -fvisibility=hidden project-wide, which would
+# hide the mdb_* C API entirely from mdbtools.so's exported symbol table.
+# This library's whole purpose is to be linked externally, so override back
+# to default visibility.
+target_compile_options(mdbtools PRIVATE -fvisibility=default)
 
 add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Document/DocWrapper/DocxSerializer.cpp
