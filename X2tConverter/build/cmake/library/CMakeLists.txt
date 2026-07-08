@@ -212,14 +212,12 @@ target_link_libraries(x2tlib PRIVATE
 )
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
-
-add_library(duckdb SHARED IMPORTED)
-set_target_properties(duckdb PROPERTIES IMPORTED_LOCATION ${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/DatabaseEngines/duckdb/libduckdb.so)
+find_package(DuckDB CONFIG REQUIRED)
 
 target_link_libraries(x2tlib PRIVATE
     unofficial::sqlite3::sqlite3
-    mdb
-    duckdb
+    mdbtools
+    $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
 )
 
 # dynamic libs
@@ -254,9 +252,5 @@ target_link_libraries(x2tlib PUBLIC
 set_property(TARGET x2tlib PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 copy_artifacts_to_folder("x2tlib" "${EO_CORE_OUTPUT_DIR}")
-
-if (EXISTS "${EO_CORE_OUTPUT_DIR}")
-    file(COPY ${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/DatabaseEngines/duckdb/libduckdb.so DESTINATION ${EO_CORE_OUTPUT_DIR})
-endif()
 
 declare_victory( x2tlib )
