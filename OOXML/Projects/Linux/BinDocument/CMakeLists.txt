@@ -178,7 +178,7 @@ pkg_check_modules(GLIB REQUIRED glib-2.0)
 target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
-find_package(duckdb CONFIG REQUIRED)
+find_package(DuckDB CONFIG REQUIRED)
 
 target_link_libraries(BinDocument PRIVATE
     Boost::system
@@ -186,7 +186,7 @@ target_link_libraries(BinDocument PRIVATE
     Boost::regex
     Boost::date_time
     unofficial::sqlite3::sqlite3
-    duckdb::duckdb
+    $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
     mdbtools
     ${GLIB_LIBRARIES}
 )
