@@ -84,14 +84,7 @@ def find_qt_prefix():
 
 
 def fetch_and_patch():
-    # "Fetch" phase: ensure the downloader (aqt) is present and current.
     nc.create_workdir()
-
-    nc.run_command(
-        [ sys.executable, "-m", "pip", "install", "--upgrade", "aqtinstall" ],
-        "Install/upgrade aqtinstall",
-        nc.work_dir
-    )
 
     nc.create_work_dir_ok_marker()
     print( "Fetch & patch completed" )

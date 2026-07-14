@@ -73,6 +73,26 @@ def is_linux() -> bool:
 def is_windows() -> bool:
     return sys.platform == "win32"
 
+def target_arch() -> str:
+    """Canonical arch we are building for: "x64", "arm64" or "x86"."""
+    if is_windows():
+        raw = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
+                or platform.machine().lower() )
+    else:
+        raw = platform.machine().lower()
+
+    if raw in ( "x86_64", "amd64", "x64" ):
+        return "x64"
+    if raw in ( "aarch64", "arm64" ):
+        return "arm64"
+    if raw in ( "x86", "i386", "i686", "win32" ):
+        return "x86"
+    abort_op( f"Unsupported architecture: {raw!r}" )
+
+def is_arm64() -> bool:
+    return target_arch() == "arm64"
+
+
 def work_dir_looks_ok() -> bool:
     return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()
 
@@ -233,10 +253,19 @@ NEXTCLOUD_USER   = os.environ.get( "NEXTCLOUD_USER", "" )
 NEXTCLOUD_PASS   = os.environ.get( "NEXTCLOUD_PASS", "" )
 NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
 BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
-# Keep OS/arch builds apart on the remote, e.g. "linux-x86_64", "win32-AMD64".
-PLATFORM_TAG     = f"{ sys.platform }-{ platform.machine() }"
 USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
 
+def _cache_tag_arch() -> str:
+    # Arch spelling used in the remote-cache path. Must stay stable, or archives
+    # already uploaded become unreachable. On Windows it mirrors what
+    # platform.machine() reports there (AMD64 / ARM64 / X86) but follows the
+    # build's TARGET arch; elsewhere it's the raw host machine string.
+    if is_windows():
+        return { "x64": "AMD64", "arm64": "ARM64", "x86": "X86" }[ target_arch() ]
+    return platform.machine()
+
+# e.g. "linux-x86_64", "win32-AMD64", "win32-ARM64"
+PLATFORM_TAG = f"{ sys.platform }-{ _cache_tag_arch() }"
 
 def _force_redo_flag():
     # init_for_dep() stores the forceredo flag in a module global; accept a few
