@@ -7,6 +7,8 @@
 ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
+ARG ARCH_TRIPLET=x64-linux-v2
+ARG ARCH_MARCH_FLAGS=-march=x86-64-v2
 
 #### VCPKG BASE ####
 FROM ubuntu:22.04 AS vcpkg-base
@@ -139,6 +141,8 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 FROM core-base AS core
     ARG NUGET_SOURCE_PATH
     ARG TARGETARCH
+    ARG ARCH_TRIPLET
+    ARG ARCH_MARCH_FLAGS
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \
@@ -146,10 +150,12 @@ FROM core-base AS core
         cmake -GNinja \
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
+        -DVCPKG_OVERLAY_TRIPLETS=/core/triplets \
+        -DVCPKG_TARGET_TRIPLET=${ARCH_TRIPLET} \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
-        -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
+        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w ${ARCH_MARCH_FLAGS}" \
+        -DCMAKE_C_FLAGS_RELEASE="-O3 -w ${ARCH_MARCH_FLAGS}" \
         -DEO_CORE_OUTPUT_DIR=/build-cache/package/bin \
         -DEO_CORE_TOOLS_DIR=/build-cache/package/tools \
         /core && \
