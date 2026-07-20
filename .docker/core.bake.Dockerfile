@@ -7,11 +7,21 @@
 ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
+ARG PRODUCT=server
+ARG TARGETARCH
 ARG ARCH_TRIPLET=x64-linux-v2
 ARG ARCH_MARCH_FLAGS=-march=x86-64-v2
 
+# Desktop: 24.04 on arm, 22.04 on amd
+FROM ubuntu:22.04 AS vcpkg-base-desktop-amd64
+FROM ubuntu:24.04 AS vcpkg-base-desktop-arm64
+FROM vcpkg-base-desktop-${TARGETARCH} AS vcpkg-base-desktop
+
+# Server: always 22.04, both arches
+FROM ubuntu:22.04 AS vcpkg-base-server
+
 #### VCPKG BASE ####
-FROM ubuntu:22.04 AS vcpkg-base
+FROM vcpkg-base-${PRODUCT} AS vcpkg-base
 
     # Avoid interactive prompts during package install
     ENV DEBIAN_FRONTEND=noninteractive
@@ -80,7 +90,6 @@ FROM vcpkg-base AS vcpkg-remote
 # old Ubuntu base remains necessary.
 FROM vcpkg-${NUGET_CACHE} AS core-base
     ARG BUILD_ROOT=/package
-    ARG TARGETARCH
 
     ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive

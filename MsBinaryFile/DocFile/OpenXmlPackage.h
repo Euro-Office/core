@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -60,12 +60,12 @@ namespace DocFileFormat
 		}
 
 		RelationshipsFile( const std::wstring& fileName ):
-		RelID(0), FileName( fileName )
+		FileName( fileName ), RelID(0)
 		{
 		}
 
 		RelationshipsFile( int relID, const std::wstring& fileName, const std::vector<Relationship>& relationships ):
-					RelID(relID), FileName( fileName ), Relationships( relationships )
+					FileName( fileName ), Relationships( relationships ), RelID(relID)
 		{
 		}
 	};

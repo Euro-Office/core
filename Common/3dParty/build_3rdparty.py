@@ -26,7 +26,6 @@ subfolders = [
     'socketio',
     'hunspell',
     'v8',
-    'icu-desktop',
     'cef',
     'qt'
 ]

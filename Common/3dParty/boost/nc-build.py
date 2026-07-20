@@ -57,6 +57,20 @@ def fetch_and_patch():
     nc.create_work_dir_ok_marker()
     print( "Fetch & patch completed" )
 
+
+def boost_msvc_arch() -> tuple[ str, str ]:
+    """
+    Windows-only. Returns ( b2 'architecture=' value, MSVC Host*/* tools
+    subdir ) for the Boost build. b2 calls the whole Intel/AMD family "x86".
+    """
+    a = nc.target_arch()
+    if a == "x64":
+        return "x86", "Hostx64\\x64"
+    if a == "arm64":
+        return "arm", "Hostarm64\\arm64"
+    nc.abort_op( f"Unsupported target arch for boost: {a!r}" )
+
+
 def build_and_install():
     nc.create_install_dir()
     
@@ -68,6 +82,8 @@ def build_and_install():
             nc.work_dir
         )
     elif nc.is_windows():
+        boost_arch, host_subdir = boost_msvc_arch()
+
         nc.run_command(
             [ "cmd.exe", "/c" "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
             "Running bootstrap",
@@ -84,7 +100,7 @@ def build_and_install():
  
 import option ;
  
-using msvc : 14.0 : "{ os.environ[ "VCToolsInstallDir" ] }\\bin\\Hostx64\\x64\\cl.exe";
+using msvc : 14.0 : "{ os.environ[ "VCToolsInstallDir" ] }\\bin\\{ host_subdir }\\cl.exe";
  
 option.set keep-going : false ;
 
@@ -102,6 +118,7 @@ option.set keep-going : false ;
     build_cmd.append( f"--prefix={ nc.install_dir }" )
     if nc.is_windows():
         build_cmd.append( "address-model=64" )
+        build_cmd.append( f"architecture={ boost_arch }" )
     build_cmd.append( "install" )
 
     print( "Running b2..." )
