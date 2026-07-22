@@ -1,12 +1,12 @@
 x2t converter
 =============
 
-Нou can convert files from one format to another.
+You can convert files from one format to another.
 
 # CONFIGURATION
 You need to create the xml configuration file.
 
-	# first line contains information about xml, for exmample:
+	# first line contains information about xml, for example:
 	"<?xml version=\"1.0\" encoding=\"utf-8\"?>
 
 	# next you need to create some root tag and close this in the end, for example:
