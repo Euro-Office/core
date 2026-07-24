@@ -371,12 +371,21 @@ def fetch_and_patch():
         "Clone depot_tools"
     )
 
-    # Update depot_tools
+    # Pin depot_tools to a known-good revision instead of tracking HEAD.
+    # depot_tools main moves; commit f065bb3b0 (2026-07-13, "Add gclient getconfig
+    # subcommand") reworked gclient_paths.py so gclient_paths.patch no longer
+    # applies. 6e5a13d2 (2026-06-22) is the newest revision it applies against —
+    # pin it so the V8 build is reproducible and immune to depot_tools drift.
     nc.run_command(
-        [ "git", "pull", "origin", "main" ],
-        "Update depot_tools",
+        [ "git", "fetch", "--quiet", "origin" ],
+        "Fetch depot_tools",
         depot_tools_path,
         error_is_fatal = False
+    )
+    nc.run_command(
+        [ "git", "checkout", "--force", "--detach", "6e5a13d2598ee48c9c7afc750401533f30dde16e" ],
+        "Pin depot_tools to known-good revision",
+        depot_tools_path
     )
 
     # Fetch v8
@@ -431,6 +440,9 @@ solutions = [
     depot_env["GCLIENT_SUPPRESS_GIT_VERSION_WARNING"] = "1"
     depot_env["GYP_CHROMIUM_NO_ACTION"] = "1"
     depot_env["DEPOT_TOOLS_WIN_TOOLCHAIN"] = "0"
+    # Keep depot_tools from self-updating to HEAD during sync, which would undo
+    # the pin in fetch_and_patch() and re-break gclient_paths.patch.
+    depot_env["DEPOT_TOOLS_UPDATE"] = "0"
 
     if nc.is_windows():
         fake_pipes_shim_path = create_fake_pipes_shim()
