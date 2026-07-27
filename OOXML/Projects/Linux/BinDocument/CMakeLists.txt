@@ -63,6 +63,7 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/MdbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/BerkeleyDbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/BinaryWriterS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/BinaryReaderS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/CSVWriter.cpp
@@ -184,6 +185,7 @@ target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(DuckDB CONFIG REQUIRED)
+find_package(unofficial-berkeleydb CONFIG REQUIRED)
 
 target_link_libraries(BinDocument PRIVATE
     Boost::system
@@ -193,6 +195,7 @@ target_link_libraries(BinDocument PRIVATE
     unofficial::sqlite3::sqlite3
     $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
     mdbtools
+    unofficial::berkeleydb::libdb
     ${GLIB_LIBRARIES}
 )
 
