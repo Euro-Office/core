@@ -26,12 +26,35 @@
 #include "DatabaseEngines/MdbEngine.h"
 #include "DatabaseEngines/SqliteEngine.h"
 #include "DatabaseEngines/DuckDbEngine.h"
+#include "DatabaseEngines/BerkeleyDbEngine.h"
 #include "../../../XlsxFormat/Worksheets/DataValidation.h"
 #include "../../../../Common/OfficeFileErrorDescription.h"
 #include <map>
 #include <algorithm>
 
 using namespace NExtractTools;
+
+namespace
+{
+	// ".db" is ambiguous between SQLite and Berkeley DB. SQLite files always
+	// start with this literal 16-byte header; anything else with a ".db"
+	// extension is assumed to be Berkeley DB.
+	bool IsSqliteHeader(const std::wstring& sFilePath)
+	{
+		const char sSqliteMagic[] = "SQLite format 3\0";
+		char buf[16] = { 0 };
+
+		NSFile::CFileBinary oFile;
+		if (!oFile.OpenFile(sFilePath))
+			return false;
+
+		DWORD dwRead = 0;
+		bool bRead = oFile.ReadFile((BYTE*)buf, sizeof(buf), dwRead);
+		oFile.CloseFile();
+
+		return bRead && dwRead == sizeof(buf) && 0 == memcmp(buf, sSqliteMagic, sizeof(buf));
+	}
+}
 
 DatabaseReader::DatabaseReader() {}
 DatabaseReader::~DatabaseReader() {}
@@ -55,12 +78,19 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 	}
 
 	std::unique_ptr<IDatabaseEngine> engine;
-	if (sExt == L".sqlite" || sExt == L".sqlite3" || sExt == L".db" || sExt == L".db3") {
+	if (sExt == L".sqlite" || sExt == L".sqlite3" || sExt == L".db3") {
 		engine.reset(new SqliteEngine());
+	} else if (sExt == L".db") {
+		if (IsSqliteHeader(sFileName))
+			engine.reset(new SqliteEngine());
+		else
+			engine.reset(new BerkeleyDbEngine());
 	} else if (sExt == L".duckdb" || sExt == L".parquet" || sExt == L".pq") {
 		engine.reset(new DuckDbEngine());
 	} else if (sExt == L".mdb" || sExt == L".accdb") {
 		engine.reset(new MdbEngine());
+	} else if (sExt == L".bdb") {
+		engine.reset(new BerkeleyDbEngine());
 	} else {
 		return AVS_FILEUTILS_ERROR_CONVERT;
 	}
