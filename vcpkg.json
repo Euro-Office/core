@@ -4,8 +4,7 @@
   "dependencies": [
     "hunspell",
     "sqlite3",
-    "duckdb",
-    "berkeleydb"
+    "duckdb"
   ],
   "features": {
     "tests": {
@@ -22,7 +21,6 @@
     }
   },
   "overrides": [
-    { "name": "hunspell", "version": "1.7.2" },
-    { "name": "berkeleydb", "version": "18.1.40" }
+    { "name": "hunspell", "version": "1.7.2" }
   ]
 }
