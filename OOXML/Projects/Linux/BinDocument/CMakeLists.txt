@@ -11,6 +11,37 @@ set(BIN_SOURCES_DIR "${OOXML_ROOT_DIR}/Binary")
 set(MS_BINARY_FILE_ROOT "${CORE_ROOT_DIR}/MsBinaryFile")
 set(DB_ENGINES_DIR "${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines")
 
+# Vendored verbatim from upstream Berkeley DB 18.1.40 (the last release still
+# published as a plain tarball; matches the version recorded in the license
+# notice). vcpkg's berkeleydb port only carries the old 4.8.30 (Sleepycat
+# License) release, not the 6.0.20+ line that Oracle relicensed under
+# AGPLv3 -- the same license as this application -- so it's vendored and
+# built via its own autotools build (there is no flat file list to hand
+# CMake the way mdbtools has; BDB's build generates several headers).
+# See desktop-apps/package/common/license/3dparty/3DPARTYLICENSE for the
+# notice.
+include(ExternalProject)
+set(BDB_SRC_DIR "${DB_ENGINES_DIR}/berkeleydb")
+set(BDB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/berkeleydb-install")
+ExternalProject_Add(berkeleydb_build
+    SOURCE_DIR "${BDB_SRC_DIR}/src"
+    CONFIGURE_COMMAND "${BDB_SRC_DIR}/dist/configure"
+        --prefix=${BDB_INSTALL_DIR}
+        --enable-shared --disable-static
+        --disable-cxx --disable-tcl --disable-java --disable-sql
+    BUILD_COMMAND make -j${CMAKE_BUILD_PARALLEL_LEVEL}
+    INSTALL_COMMAND make install
+    BUILD_IN_SOURCE 0
+    BUILD_BYPRODUCTS "${BDB_INSTALL_DIR}/lib/libdb.so"
+)
+add_library(berkeleydb SHARED IMPORTED GLOBAL)
+add_dependencies(berkeleydb berkeleydb_build)
+set_target_properties(berkeleydb PROPERTIES
+    IMPORTED_LOCATION "${BDB_INSTALL_DIR}/lib/libdb.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${BDB_INSTALL_DIR}/include"
+)
+file(MAKE_DIRECTORY "${BDB_INSTALL_DIR}/include")
+
 # Built as a separate shared library (not compiled directly into BinDocument)
 # so that mdbtools' LGPLv2+ source is dynamically linked, not statically bound
 # into the AGPL-licensed application. Vendored verbatim from upstream mdbtools
@@ -185,7 +216,6 @@ target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
 
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 find_package(DuckDB CONFIG REQUIRED)
-find_package(unofficial-berkeleydb CONFIG REQUIRED)
 
 target_link_libraries(BinDocument PRIVATE
     Boost::system
@@ -195,7 +225,7 @@ target_link_libraries(BinDocument PRIVATE
     unofficial::sqlite3::sqlite3
     $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
     mdbtools
-    unofficial::berkeleydb::libdb
+    berkeleydb
     ${GLIB_LIBRARIES}
 )
 
