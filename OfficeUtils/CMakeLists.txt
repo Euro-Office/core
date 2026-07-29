@@ -66,4 +66,10 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
     if( NOT MSVC )
         target_compile_options( ${TARGET} PRIVATE "SHELL:-include unistd.h")
     endif()
+
+    if(APPLE)
+        target_compile_definitions( ${TARGET} PRIVATE
+            _MAC
+        )
+    endif()
 endfunction()

@@ -185,6 +185,10 @@ else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
         set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
+    elseif( APPLE )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.${ICU_MAJOR_VER}.dylib")
     else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
@@ -254,6 +258,17 @@ if( LINUX )
         DONT_WRITE_EMBEDDED_FONTS
         UNICODE
     )
+elseif( APPLE )
+    set(COMMON_DEFINES
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+
+        # Not sure about these:
+        _UNICODE
+        DONT_WRITE_EMBEDDED_FONTS
+        UNICODE
+    )
 else() # Assume win+msvc
     set(COMMON_DEFINES
         _REENTRANT
@@ -296,6 +311,38 @@ if( MSVC )
     set(COMMON_LINK_OPTIONS
     )
     
+
+elseif( APPLE )
+
+    set(COMMON_CXX_FLAGS
+        -fvisibility=hidden
+        -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        -Wno-register
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 # Remove for debugging
+    )
+
+    set(COMMON_C_FLAGS
+        -fvisibility=hidden
+        # -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        # -Wno-register
+        -Wno-implicit-function-declaration
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 #Remove for debugging
+    )
+
+    set(COMMON_LINK_OPTIONS
+    )
 
 else()
 
@@ -476,6 +523,12 @@ function(copy_icu_libs artifact)
                 "${EO_CORE_OUTPUT_DIR}"
             COMMENT "Copying ICU DLLs to ${EO_CORE_OUTPUT_DIR}"
         )
+    elseif( APPLE )
+    add_custom_command(TARGET ${artifact} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.dylib* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+    )
     else()
         add_custom_command(TARGET ${artifact} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
