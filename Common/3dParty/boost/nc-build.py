@@ -25,10 +25,10 @@ header_only_modules_needed = [ "any", "asio", "beast", "foreach", "format", "fun
 
 def fetch_and_patch():
     nc.create_workdir()
-    print( "Clone Boost 1.78.0..." )
+    print( "Clone Boost 1.83.0..." )
     nc.run_command(
-        [ "git", "clone", "https://github.com/boostorg/boost.git", "-b", "boost-1.78.0", nc.work_dir, "--depth", "1" ],
-        "Clone Boost 1.78.0"
+        [ "git", "clone", "https://github.com/boostorg/boost.git", "-b", "boost-1.83.0", nc.work_dir, "--depth", "1" ],
+        "Clone Boost 1.83.0"
     )
 
     print( "Get boostdep..." )
