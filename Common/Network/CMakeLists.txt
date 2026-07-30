@@ -107,6 +107,10 @@ target_include_directories(kernel_network PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter
 )
 
+target_compile_options(kernel_network PRIVATE
+    -include csignal
+)
+
 target_link_libraries(kernel_network PRIVATE
     ${OPENSSL_LIBSSL}
     ${OPENSSL_LIBCRYPTO}
