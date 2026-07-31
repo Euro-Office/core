@@ -59,7 +59,11 @@ if( MSVC )
     target_sources( kernel_network PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_win.cpp
     )
-else()
+elseif( APPLE )
+    target_sources( kernel_network PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_mac.mm
+    )
+else() # LINUX
     target_sources( kernel_network PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter_curl.cpp
     )
@@ -133,6 +137,11 @@ if( MSVC )
         urlmon
         Shell32
     )
+endif()
+
+if( APPLE )
+    find_library( APPKIT_LIBRARY AppKit REQUIRED )
+    target_link_libraries( kernel_network PRIVATE ${APPKIT_LIBRARY} )
 endif()
 
 copy_artifacts_to_folder("kernel_network" "${EO_CORE_OUTPUT_DIR}")

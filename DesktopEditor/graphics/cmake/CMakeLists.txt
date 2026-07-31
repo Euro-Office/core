@@ -953,6 +953,16 @@ add_library(graphics SHARED
     # ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
 )
 
+if( APPLE )
+    target_sources( graphics PRIVATE
+        ${FONT_ENGINE_SOURCES_DIR}/ApplicationFonts_mac.mm
+    )
+    set_source_files_properties(
+        ${FONT_ENGINE_SOURCES_DIR}/ApplicationFonts_mac.mm
+        PROPERTIES SKIP_PRECOMPILE_HEADERS ON
+    )
+endif()
+
 set_default_options(graphics)
 
 if (WIN32)
@@ -1078,6 +1088,12 @@ if(WIN32)
         Shell32
         User32
     )
+endif()
+
+if( APPLE )
+    find_library( FOUNDATION_LIBRARY Foundation REQUIRED )
+    find_library( CORETEXT_LIBRARY CoreText REQUIRED )
+    target_link_libraries( graphics PRIVATE ${FOUNDATION_LIBRARY} ${CORETEXT_LIBRARY} )
 endif()
 
 copy_artifacts_to_folder("graphics" "${EO_CORE_OUTPUT_DIR}")
