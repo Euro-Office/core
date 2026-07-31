@@ -267,6 +267,10 @@ elseif( APPLE )
         CRYPTOPP_DISABLE_ASM
         INTVER=${VERSION_TXT_CONTENT}
 
+        LINUX
+        _LINUX
+        _MAC
+
         # Not sure about these:
         DONT_WRITE_EMBEDDED_FONTS
     )
