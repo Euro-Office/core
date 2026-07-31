@@ -257,9 +257,9 @@ if( LINUX )
         LINUX
 
         # Not sure about these:
-        _UNICODE
+        _UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
+        UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
         DONT_WRITE_EMBEDDED_FONTS
-        UNICODE
     )
 elseif( APPLE )
     set(COMMON_DEFINES
@@ -268,9 +268,7 @@ elseif( APPLE )
         INTVER=${VERSION_TXT_CONTENT}
 
         # Not sure about these:
-        _UNICODE
         DONT_WRITE_EMBEDDED_FONTS
-        UNICODE
     )
 else() # Assume win+msvc
     set(COMMON_DEFINES
@@ -347,7 +345,7 @@ elseif( APPLE )
     set(COMMON_LINK_OPTIONS
     )
 
-else()
+else() # if( LINUX )
 
     set(COMMON_CXX_FLAGS
         -fvisibility=hidden
