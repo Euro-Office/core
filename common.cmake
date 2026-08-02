@@ -177,8 +177,8 @@ else()
 
     # Setup icu
     # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
-    set(ICU_MAJOR_VER "74")
-    set(ICU_MINOR_VER "2")
+    set(ICU_MAJOR_VER "73")
+    set(ICU_MINOR_VER "1")
     set(ICU_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu")
     get_filename_component(ICU_INSTALL_DIR_ABS "${ICU_INSTALL_DIR}" ABSOLUTE)
     if( MSVC )
@@ -466,7 +466,7 @@ function(copy_icu_libs artifact)
     if( MSVC )
 
         file(GLOB ICU_DLLS
-            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib/icu*74.dll"
+            "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib/icu*${ICU_MAJOR_VER}.dll"
         )
 
         add_custom_command(TARGET ${artifact} POST_BUILD
