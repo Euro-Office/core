@@ -7,8 +7,8 @@ from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
 script_dir = script_path.parent
-icu_major = "74"
-icu_minor = "2"
+icu_major = "73"
+icu_minor = "1"
 
 third_party_root = ( script_dir / ".." ).resolve()
 if str( third_party_root ) not in sys.path:
