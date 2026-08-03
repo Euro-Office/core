@@ -131,7 +131,7 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 		if (!backgroundLayout || !backgroundLayout->properties() ||
 			!backgroundLayout->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
 		{
-			std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
+			const std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
 			for (size_t i = 0; i < masterPagesAll.size(); ++i)
 			{
 				if (!masterPagesAll[i]) continue;
