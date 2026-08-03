@@ -372,10 +372,15 @@ def fetch_and_patch():
     )
 
     # Pin depot_tools to a known-good revision instead of tracking HEAD.
-    # depot_tools main moves; commit f065bb3b0 (2026-07-13, "Add gclient getconfig
-    # subcommand") reworked gclient_paths.py so gclient_paths.patch no longer
-    # applies. 6e5a13d2 (2026-06-22) is the newest revision it applies against —
-    # pin it so the V8 build is reproducible and immune to depot_tools drift.
+    # depot_tools main moves and gclient_paths.patch is written against one specific
+    # revision of gclient_paths.py: f065bb3b0 (2026-07-13, "Add gclient getconfig
+    # subcommand") added a fifth @functools.lru_cache site, and 93974d014 (2026-07-21,
+    # ruff reformat) switched the file to double-quoted strings. Both invalidate the
+    # patch context. f394ab2c9 (2026-07-24) is the newest revision the current patch
+    # applies against, verified with `git apply --check`, and predates the depot_tools
+    # UV migration (db395c47f, 2026-08-02) which is not yet build-verified for V8 8.9.
+    # Keep this revision in sync with tools/8.9/*/nc-build.sh; when refreshing the
+    # patch, bump all three together.
     nc.run_command(
         [ "git", "fetch", "--quiet", "origin" ],
         "Fetch depot_tools",
@@ -383,7 +388,7 @@ def fetch_and_patch():
         error_is_fatal = False
     )
     nc.run_command(
-        [ "git", "checkout", "--force", "--detach", "6e5a13d2598ee48c9c7afc750401533f30dde16e" ],
+        [ "git", "checkout", "--force", "--detach", "f394ab2c993283e94680ca13db98b99927868e98" ],
         "Pin depot_tools to known-good revision",
         depot_tools_path
     )
