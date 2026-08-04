@@ -371,12 +371,26 @@ def fetch_and_patch():
         "Clone depot_tools"
     )
 
-    # Update depot_tools
+    # Pin depot_tools to a known-good revision instead of tracking HEAD.
+    # depot_tools main moves and gclient_paths.patch is written against one specific
+    # revision of gclient_paths.py: f065bb3b0 (2026-07-13, "Add gclient getconfig
+    # subcommand") added a fifth @functools.lru_cache site, and 93974d014 (2026-07-21,
+    # ruff reformat) switched the file to double-quoted strings. Both invalidate the
+    # patch context. f394ab2c9 (2026-07-24) is the newest revision the current patch
+    # applies against, verified with `git apply --check`, and predates the depot_tools
+    # UV migration (db395c47f, 2026-08-02) which is not yet build-verified for V8 8.9.
+    # Keep this revision in sync with tools/8.9/*/nc-build.sh; when refreshing the
+    # patch, bump all three together.
     nc.run_command(
-        [ "git", "pull", "origin", "main" ],
-        "Update depot_tools",
+        [ "git", "fetch", "--quiet", "origin" ],
+        "Fetch depot_tools",
         depot_tools_path,
         error_is_fatal = False
+    )
+    nc.run_command(
+        [ "git", "checkout", "--force", "--detach", "f394ab2c993283e94680ca13db98b99927868e98" ],
+        "Pin depot_tools to known-good revision",
+        depot_tools_path
     )
 
     # Fetch v8
@@ -431,6 +445,9 @@ solutions = [
     depot_env["GCLIENT_SUPPRESS_GIT_VERSION_WARNING"] = "1"
     depot_env["GYP_CHROMIUM_NO_ACTION"] = "1"
     depot_env["DEPOT_TOOLS_WIN_TOOLCHAIN"] = "0"
+    # Keep depot_tools from self-updating to HEAD during sync, which would undo
+    # the pin in fetch_and_patch() and re-break gclient_paths.patch.
+    depot_env["DEPOT_TOOLS_UPDATE"] = "0"
 
     if nc.is_windows():
         fake_pipes_shim_path = create_fake_pipes_shim()
