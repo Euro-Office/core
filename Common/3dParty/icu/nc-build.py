@@ -43,7 +43,7 @@ def fetch_and_patch():
         nc.abort_op( f"Copy failed: {e}" )
 
     try:
-        shutil.copy2( nc.work_dir / "icu2" / "icu4c" / "LICENSE", nc.work_dir / "LICENSE" )
+        shutil.copy2( nc.work_dir / "icu2" / "LICENSE", nc.work_dir / "LICENSE" )
     except Exception as e:
         nc.abort_op( f"License copy failed: {e}" )
 
