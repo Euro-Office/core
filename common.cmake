@@ -392,8 +392,13 @@ function(set_default_options target)
 
     if( NOT MSVC )
         # Base RPATHs
-        set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
-        set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+        if( LINUX )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+        elseif( APPLE )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "@executable_path;@executable_path/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "@executable_path;@executable_path/system")
+        endif()
 
         # Optional: additional runtime paths from env variable RUN_PATH_ADDON
         if(DEFINED ENV{RUN_PATH_ADDON})
