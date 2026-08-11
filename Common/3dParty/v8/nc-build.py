@@ -857,17 +857,11 @@ solutions = [
 
         gn_args = get_gn_args_file_content()
 
-<<<<<<< HEAD
-        if nc.is_linux() and targetarch == "arm64":
-            # Linux arm64 builds with system clang; V8 8.9 needs clang 13.
-            # (Windows uses is_clang=false / MSVC, so no clang requirement.)
-=======
         if targetarch == "arm64" and nc.is_linux():
             # Check clang version (it must be 13). This constraint is specific
             # to the arm64-linux-dynamic cross-compile toolchain; it doesn't
             # apply to native Apple Silicon builds, which use whatever
             # (much newer) clang Xcode/Homebrew provides.
->>>>>>> b724bbe096 (feature(macos): v8 build)
             clang_version_output = nc.capture_process_output( [ "clang", "--version" ] )
             match = re.search( r'\d+\.\d+\.\d+', clang_version_output )
             version = match.group() if match else None
