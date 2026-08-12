@@ -26,7 +26,7 @@ def fetch_and_patch():
     nc.run_command(
         [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
             "clone", "--depth", "1",
-            "--branch", "OpenSSL_1_1_1f",
+            "--branch", "OpenSSL_1_1_1w",
             "https://github.com/openssl/openssl.git",
             str(nc.work_dir)
         ],
@@ -36,6 +36,16 @@ def fetch_and_patch():
     nc.create_work_dir_ok_marker()
 
     print( "Fetch & patch completed" )
+
+
+def openssl_windows_target() -> str:
+    """Windows-only. OpenSSL Configure target matching the target arch."""
+    return {
+        "x64":   "VC-WIN64A",
+        "arm64": "VC-WIN64-ARM",
+        "x86":   "VC-WIN32",
+    }[ nc.target_arch() ]
+
 
 def build_and_install():
     nc.create_install_dir()
@@ -66,11 +76,11 @@ def build_and_install():
         )
 
     elif nc.is_windows():
-        
+        ossl_target = openssl_windows_target()
         nc.run_command(
             [   shutil.which("perl"),
                 "Configure",
-                "VC-WIN64A",
+                ossl_target,
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
                 "enable-md2",
@@ -94,7 +104,7 @@ def build_and_install():
         )
 
     else:
-        abort_op( f"Unkown target platform: {sys.platform}" )
+        nc.abort_op( f"Unkown target platform: {sys.platform}" )
 
     nc.create_install_dir_ok_marker()
     

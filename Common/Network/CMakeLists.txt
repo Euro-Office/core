@@ -73,6 +73,8 @@ if( MSVC )
         PROPERTIES
             COMPILE_DEFINITIONS "UNICODE;_UNICODE"
     )
+    ## enforce little endian for arm64
+    target_compile_definitions(kernel_network PRIVATE RAPIDJSON_ENDIAN=0)
 endif()
 
 target_compile_definitions(kernel_network PRIVATE

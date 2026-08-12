@@ -117,6 +117,8 @@ add_library(doctrenderer SHARED
 set_default_options(doctrenderer)
 
 if( MSVC )
+    set_property(TARGET doctrenderer PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+
     target_compile_definitions( doctrenderer PRIVATE
         _UNICODE
         UNICODE

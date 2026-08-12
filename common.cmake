@@ -95,12 +95,16 @@ if( EMSCRIPTEN )
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
+        if(NOT BUILD_DESKTOP)
+            set(NO_DESKTOP_EXCLUDE ",cef,qt")
+        endif()
+
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm"
+            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -118,11 +122,58 @@ else()
     endif()
 
     if(MSVC)
-        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>" CACHE STRING "" FORCE)
+        set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
         foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
             string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
         endforeach()
     endif()
+
+    if(BUILD_DESKTOP)
+        # Setup qt
+        # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
+        # glob of aqt's <version>/<arch> layout.
+        if(DEFINED ENV{QT6_ROOT})
+            set(QT_ROOT "$ENV{QT6_ROOT}")
+        else()
+            set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
+            message(STATUS "Searching qt6 root")
+            if(EXISTS "${_qt_install}/qt6_root.txt")
+                file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
+                string(STRIP "${QT_ROOT}" QT_ROOT)
+                message(STATUS "Found qt6 root: " ${QT_ROOT})
+            else()
+                # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
+                if(_qt6_cfg)
+                    list(GET _qt6_cfg 0 _qt6_cfg)
+                    get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
+                    get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                endif()
+            endif()
+        endif()
+
+        if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
+            message(STATUS "Qt6 root: " ${QT_ROOT})
+            message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
+        endif()
+
+        file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
+
+        set(QT_VERSION_MAJOR 6)
+        set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
+        set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
+
+        find_package(Qt6 REQUIRED COMPONENTS
+            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
+            CorePrivate GuiPrivate PrintSupportPrivate)
+
+        # Setup cef
+        set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
+        list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
+        find_package(CEF REQUIRED)
+
+    endif()
+
 
     # Setup icu
     # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
@@ -133,15 +184,17 @@ else()
     if( MSVC )
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+        set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
     else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.so.${ICU_MAJOR_VER}")
     endif()
 
     # Setup boost
     set( BOOST_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/boost" )
     get_filename_component(BOOST_INSTALL_DIR_ABS "${BOOST_INSTALL_DIR}" ABSOLUTE)
-    set( CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
+    list( APPEND CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
     include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
     set(Boost_USE_STATIC_LIBS ON)
     find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )

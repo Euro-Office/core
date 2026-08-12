@@ -7,9 +7,19 @@
 ARG NUGET_CACHE=local
 ARG BUILD_ROOT
 ARG NUGET_SOURCE_PATH
+ARG PRODUCT=server
+ARG TARGETARCH
+
+# Desktop: 24.04 on arm, 22.04 on amd
+FROM ubuntu:22.04 AS vcpkg-base-desktop-amd64
+FROM ubuntu:24.04 AS vcpkg-base-desktop-arm64
+FROM vcpkg-base-desktop-${TARGETARCH} AS vcpkg-base-desktop
+
+# Server: always 22.04, both arches
+FROM ubuntu:22.04 AS vcpkg-base-server
 
 #### VCPKG BASE ####
-FROM ubuntu:22.04 AS vcpkg-base
+FROM vcpkg-base-${PRODUCT} AS vcpkg-base
 
     # Avoid interactive prompts during package install
     ENV DEBIAN_FRONTEND=noninteractive
@@ -78,7 +88,6 @@ FROM vcpkg-base AS vcpkg-remote
 # old Ubuntu base remains necessary.
 FROM vcpkg-${NUGET_CACHE} AS core-base
     ARG BUILD_ROOT=/package
-    ARG TARGETARCH
 
     ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive
@@ -90,7 +99,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
     RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
         apt-get update && \
         DEBIAN_FRONTEND=noninteractive apt-get install -y \
-            git curl sudo wget ssh gpg \
+            git curl sudo wget ssh gpg ccache \
             build-essential make ninja-build pkg-config \
             libglib2.0-dev \
             python3 python-is-python3 python3-venv python3-setuptools \
@@ -138,7 +147,6 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 #### CORE ####
 FROM core-base AS core
     ARG NUGET_SOURCE_PATH
-    ARG TARGETARCH
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \

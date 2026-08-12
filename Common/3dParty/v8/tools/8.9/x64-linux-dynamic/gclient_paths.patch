@@ -1,40 +1,48 @@
 diff --git a/gclient_paths.py b/gclient_paths.py
-index bd4d05b15..6cfe2118e 100644
+index 6d9d34360..e3fcc5a92 100644
 --- a/gclient_paths.py
 +++ b/gclient_paths.py
-@@ -20,7 +20,7 @@ import subprocess2
+@@ -21,7 +21,7 @@ import subprocess2
  # pylint: disable=line-too-long
- 
- 
+
+
 -@functools.lru_cache
 +
- def FindGclientRoot(from_dir, filename='.gclient'):
+ def FindGclientRoot(from_dir, filename=".gclient"):
      """Tries to find the gclient root."""
      real_from_dir = os.path.abspath(from_dir)
-@@ -73,7 +73,7 @@ def FindGclientRoot(from_dir, filename='.gclient'):
+@@ -76,7 +76,7 @@ def FindGclientRoot(from_dir, filename=".gclient"):
      return None
- 
- 
+
+
 -@functools.lru_cache
 +
  def _GetPrimarySolutionPathInternal(cwd):
      gclient_root = FindGclientRoot(cwd)
      if gclient_root:
-@@ -107,7 +107,7 @@ def GetPrimarySolutionPath(from_dir=None):
+@@ -112,7 +112,7 @@ def GetPrimarySolutionPath(from_dir=None):
      return _GetPrimarySolutionPathInternal(from_dir)
- 
- 
+
+
 -@functools.lru_cache
 +
  def _GetBuildtoolsPathInternal(cwd, override):
      if override is not None:
          return override
-@@ -162,7 +162,7 @@ def GetExeSuffix():
-     return ''
- 
- 
+@@ -174,7 +174,6 @@ def GetExeSuffix():
+     return ""
+
+
+-@functools.lru_cache
+ def _GetGClientConfigInner(gclient_root_dir_path, filename):
+     gclient_config_file = os.path.join(gclient_root_dir_path, filename)
+     if not os.path.exists(gclient_config_file):
+@@ -194,7 +193,7 @@ def GetGClientConfig(gclient_root_dir_path=None, filename=".gclient"):
+     return _GetGClientConfigInner(gclient_root_dir_path, filename)
+
+
 -@functools.lru_cache
 +
  def _GetGClientSolutions(gclient_root_dir_path):
-     gclient_config_file = os.path.join(gclient_root_dir_path, '.gclient')
-     gclient_config_contents = gclient_utils.FileRead(gclient_config_file)
+     config = GetGClientConfig(gclient_root_dir_path)
+     return config.get("solutions", []) if config else []

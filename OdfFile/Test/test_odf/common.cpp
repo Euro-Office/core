@@ -224,34 +224,16 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
-#include <tchar.h>
 
-#include "D:\ONLYOFFICE\core\Common\OfficeFileFormatChecker.h"
-#include "D:\ONLYOFFICE\core\OfficeUtils\src\OfficeUtils.h"
-#include "D:\ONLYOFFICE\core\DesktopEditor\common\Directory.h"
-#include "D:\ONLYOFFICE\core\OdfFile\Reader\Converter\ConvertOO2OOX.h"
-#include "D:\ONLYOFFICE\core\OdfFile\Common\logging.h"
-
-#if defined(_WIN64)
-#pragma comment(lib, "D:/ONLYOFFICE/core/Common/3dParty/icu/win_64/build/icuuc.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/graphics.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/kernel.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/UnicodeConverter.lib")
-#pragma comment(lib, "D:/ONLYOFFICE/core/build/lib/win_64/DEBUG/CryptoPPLib.lib")
-
-#elif defined (_WIN32)
-
-#if defined(DEBUG)
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/graphics.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/kernel.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/DEBUG/UnicodeConverter.dll")
-#else
-#pragma comment(lib, "../../../../build/lib/win_32/graphics.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/kernel.lib")
-#pragma comment(lib, "../../../../build/lib/win_32/UnicodeConverter.dll")
-#endif
-#pragma comment(lib, "../../../../build/bin/icu/win_32/icuuc.lib")
-#endif
+// Resolved relative to the repository root (the CMake target adds the core
+// root to the include path). The original sources used absolute Windows paths
+// and a per-platform "#pragma comment(lib, ...)" block; libraries are now
+// linked by CMake (see CMakeLists.txt), so those are gone.
+#include "Common/OfficeFileFormatChecker.h"
+#include "OfficeUtils/src/OfficeUtils.h"
+#include "DesktopEditor/common/Directory.h"
+#include "OdfFile/Reader/Converter/ConvertOO2OOX.h"
+#include "OdfFile/Common/logging.h"
 
 HRESULT convert_single(std::wstring srcFileName)
 {

@@ -1,39 +1,40 @@
-Логика описана в CPage::ProcessingAndRecordingOfPageData
+The logic is described in `CPage::ProcessingAndRecordingOfPageData`.
 
-I Этап
+## Stage I
 
-1. Собираются шейпы с векторной графикой (DrawPath -> m_arShapes)
-  - Копируются текущие Pen и Brush, 
-  - определяется тип шейпа VectorTexture или VectorGraphics
-  - первоначально определяем положение на стронице (перед текстом/позади текста - пока плохо работает, когда удалялись белые прямоугольники было лучше)
-  - задаются геометрические параметры
-  - определяется тип графики (Rectangle, Curve, ComplicatedFigure, NoGraphics) и подтип (LongDash, Dash, Dot, Wave)
-  
-2. Собираются шейпы-картинки (WriteImage -> m_arImages)
-  - задаются геометрические параметры и тип шейпа Picture
-  
-3. Собираются буквы и сразу распределются по текстовым линиям. Отдельно собираются DiacriticalSymbol (CollectTextData -> m_arTextLine, m_arDiacriticalSymbol)
-  - отбрасываем все пробелы (нужно будет добавить доп юникоды для других типов пробелов)
-  - работа FontManager
-  - задаются геометрические параметры
-  - генерим или проверяем на наличие стиль (копируются и анализируются текущие Font, Brush, PickFontName, PickFontStyle)
-  
-II Этап 
-   Собрали все объекты для текущей страницы. Начинаем анализ.
-   
-1. Анализируем графику - AnalyzeCollectedShapes()
-  - BuildTables(); - собираем таблицы из шейпов (в разработке)
-  - DetermineLinesType() - превращаем шейпы в горизонтальные линии в зависимости от геометрии, удаляем обработанные шейпы, определяем тип полученной линии на основании типа графики (Rectangle, Curve, ComplicatedFigure, NoGraphics) и подтипа (LongDash, Dash, Dot, Wave). (2 вложенных цикла m_arShapes - m_arShapes с сортировкой вектора)
+1. Collect shapes with vector graphics (`DrawPath` -> `m_arShapes`)
+  - Copy the current Pen and Brush,
+  - determine the shape type: `VectorTexture` or `VectorGraphics`,
+  - initially determine the position on the page (in front of the text / behind the text — currently this works poorly; it was better when white rectangles were removed),
+  - set the geometric parameters,
+  - determine the graphics type (`Rectangle`, `Curve`, `ComplicatedFigure`, `NoGraphics`) and subtype (`LongDash`, `Dash`, `Dot`, `Wave`).
 
-2. AnalyzeCollectedTextLines() - добавляем свойства каждому символу отдельно
-  - Определяем взаимотношения между символами - FontEffects, VertAlignTypeBetweenConts, IsDuplicate (2 вложенных цикла m_arSymbol - m_arSymbol) (удаляем отработанные символы)
-  - DetermineStrikeoutsUnderlinesHighlights() - определяем взаимоотношения между графикой и символами Strikeouts, Underlines, Highlights, FontEffect (2 вложенных цикла m_arShapes - m_arSymbol) (удаляем отработанные шейпы)
-  - AddDiacriticalSymbols() - добавляем DiacriticalSymbol
-  - MergeLinesByVertAlignType() - объединяем линии с определенными eVertAlignType
-  - DeleteTextClipPage() - удаление линий вне страницы (1 цикл m_arTextLine)
-  - DetermineTextColumns() - определяем колонки текста и добавляем в таблицу (в разработке)
-  - BuildLines() - собираем из символов слова, добавляем пробелы
-  - DetermineDominantGraphics() - нужно, чтобы выделить шейп, который будет использоваться в качестве шейдинга параграфа (2 вложенных цикла m_arTextLine - m_arConts)
-  - BuildParagraphes() - собираем из текстовых строк параграфы/шейпы и добавляем в m_arOutputObjects
+2. Collect image shapes (`WriteImage` -> `m_arImages`)
+  - Set the geometric parameters and the `Picture` shape type.
 
-III Этап ToXml
+3. Collect letters and immediately distribute them across text lines. `DiacriticalSymbol` are collected separately (`CollectTextData` -> `m_arTextLine`, `m_arDiacriticalSymbol`)
+  - Discard all spaces (additional Unicode code points for other space types will need to be added),
+  - FontManager work,
+  - set the geometric parameters,
+  - generate or check for an existing style (the current `Font`, `Brush`, `PickFontName`, `PickFontStyle` are copied and analyzed).
+
+## Stage II
+
+All objects for the current page have been collected. Analysis begins.
+
+1. Analyze the graphics — `AnalyzeCollectedShapes()`
+  - `BuildTables();` — build tables from shapes (in development),
+  - `DetermineLinesType()` — turn shapes into horizontal lines depending on their geometry, remove the processed shapes, and determine the resulting line type based on the graphics type (`Rectangle`, `Curve`, `ComplicatedFigure`, `NoGraphics`) and subtype (`LongDash`, `Dash`, `Dot`, `Wave`). (Two nested loops over `m_arShapes` - `m_arShapes` with vector sorting.)
+
+2. `AnalyzeCollectedTextLines()` — add properties to each symbol individually
+  - Determine the relationships between symbols — `FontEffects`, `VertAlignTypeBetweenConts`, `IsDuplicate` (two nested loops over `m_arSymbol` - `m_arSymbol`; processed symbols are removed),
+  - `DetermineStrikeoutsUnderlinesHighlights()` — determine the relationships between graphics and symbols: `Strikeouts`, `Underlines`, `Highlights`, `FontEffect` (two nested loops over `m_arShapes` - `m_arSymbol`; processed shapes are removed),
+  - `AddDiacriticalSymbols()` — add `DiacriticalSymbol`,
+  - `MergeLinesByVertAlignType()` — merge lines with a specific `eVertAlignType`,
+  - `DeleteTextClipPage()` — remove lines outside the page (one loop over `m_arTextLine`),
+  - `DetermineTextColumns()` — determine text columns and add them to the table (in development),
+  - `BuildLines()` — assemble words from symbols, add spaces,
+  - `DetermineDominantGraphics()` — needed to select the shape that will be used as the paragraph shading (two nested loops over `m_arTextLine` - `m_arConts`),
+  - `BuildParagraphes()` — assemble paragraphs/shapes from text lines and add them to `m_arOutputObjects`.
+
+## Stage III — ToXml

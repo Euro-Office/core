@@ -96,11 +96,19 @@ def build_and_install():
         except Exception as e:
             nc.abort_op( "Failed to fix Makefile" )
 
+        # build_generated must complete before parallel compilation starts,
+        # otherwise opensslconf.h may not exist yet when .c files are compiled.
+        nc.run_command(
+            [   "emmake", "make", "build_generated" ],
+            "Generate headers",
+            nc.work_dir,
+            env = env
+        )
+
         nc.run_command(
             [   "emmake",
                 "make",
                 f"-j{os.cpu_count()}",
-                "build_generated",
                 "libcrypto.a",
                 "libssl.a",
             ],
