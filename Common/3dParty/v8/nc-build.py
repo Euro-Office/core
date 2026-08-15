@@ -361,6 +361,34 @@ sys.modules["pipes"] = PipesModule()
     shim_file_path.write_text( content )
     return shims_path
 
+def ensure_windows_git_shim():
+    # depot_tools on Windows normally bootstraps its own bundled git the first
+    # time gclient runs. DEPOT_TOOLS_UPDATE=0 (set in the depot env below for
+    # reproducibility) suppresses that bootstrap, but gclient's git_cache
+    # invokes "git.bat" and only catches CalledProcessError - the missing shim
+    # crashes the sync with an unhandled FileNotFoundError. Point the shim at
+    # the system git this script already depends on.
+    #
+    # The load-bearing call is the one in build_and_install(): that is where
+    # gclient sync actually runs, and build_all() reaches it on every build,
+    # whereas fetch_and_patch() is skipped whenever the work dir already looks
+    # usable. The fetch_and_patch() call simply leaves a freshly cloned and
+    # pinned depot_tools self-consistent.
+    #
+    # It is not about `git clean -fd` undoing the shim: depot_tools gitignores
+    # /git.bat ("Ignore the batch files produced by the Windows bootstrapping"),
+    # and clean leaves ignored files alone without -x.
+    if not nc.is_windows():
+        return
+    shim = depot_tools_path / "git.bat"
+    if shim.exists():
+        return
+    git_exe = shutil.which("git")
+    if git_exe is None:
+        nc.abort_op("Tool not found: git")
+    shim.write_text("@echo off\r\n\"" + git_exe + "\" %*\r\n")
+
+
 def fetch_and_patch():
     nc.create_workdir()
 
@@ -392,6 +420,7 @@ def fetch_and_patch():
         "Pin depot_tools to known-good revision",
         depot_tools_path
     )
+    ensure_windows_git_shim()
 
     # Fetch v8
     print( "Fetching v8" )
@@ -423,6 +452,7 @@ def build_and_install():
     # Clean depot tools
     nc.run_command( [ "git", "reset", "--hard" ], "Git reset (depot_tools)", depot_tools_path )
     nc.run_command( [ "git", "clean", "-fd" ], "Git clean (depot_tools)", depot_tools_path )
+    ensure_windows_git_shim()
 
     # Create gclient config
     content = """
