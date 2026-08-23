@@ -27,6 +27,28 @@ v8_src_path = v8_root_path / "v8"
 
 gn_source_path = nc.work_dir / "gn-source"
 
+# Enable git long paths for EVERY git process started from here on - including
+# the ones gclient spawns internally, which we can't pass -c flags to.
+# GIT_CONFIG_COUNT/KEY/VALUE (git >= 2.31) outranks the system/global config, so
+# this works without touching the user's ~/.gitconfig (which may not even exist -
+# depot_tools then warns about it, harmlessly).
+#
+# Why it's needed: some v8 dependency paths exceed MAX_PATH, e.g.
+# buildtools/third_party/libc++/trunk/test/std/thread/... = 264 chars. Without
+# this git cannot write those files, reports "Filename too long", and the
+# unwritten file shows up as a local deletion -> gclient aborts the sync with
+# "You have uncommitted changes". The Windows-wide LongPathsEnabled registry
+# flag does NOT cover this; git needs its own opt-in.
+#
+# Deliberately ONLY longpaths. depot_tools also recommends core.autocrlf=false,
+# but do NOT set it here: an existing tree checked out with CRLF no longer
+# matches the LF patches in tools/8.9/, and every `git apply` fails with
+# "patch does not apply".
+if nc.is_windows():
+    os.environ[ "GIT_CONFIG_COUNT" ] = "1"
+    os.environ[ "GIT_CONFIG_KEY_0" ] = "core.longpaths"
+    os.environ[ "GIT_CONFIG_VALUE_0" ] = "true"
+
 def check_prequisites():
     tools_needed = [ "git", "python3" ]
     if nc.is_linux():
