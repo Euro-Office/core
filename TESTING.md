@@ -205,7 +205,7 @@ Done:
       `EO_CORE_OUTPUT_DIR` (matching `x2t`/`UnicodeConverter`'s convention, not the
       `WORKING_DIRECTORY $<TARGET_FILE_DIR:...>` pattern the other suites use), its `add_test`
       runs that copy directly rather than the raw build-tree binary. **Not** the same as the
-      still-blocked `DesktopEditor/xmlsec/src/osign/test` below despite the similar path —
+      `DesktopEditor/xmlsec/src/osign/test` suite below despite the similar path —
       `osign` is an unrelated, separate signing library.
 - [x] `DesktopEditor/doctrenderer/test/json` — dep: doctrenderer (V8). Define
       `JSON_GOOGLE_TEST`; own `main()` is compiled out under that define, so `GTEST_MAIN`.
@@ -263,6 +263,16 @@ Done:
       out intact. Links `PptFormatLib` with the rest of the format-library group the same
       way `OdfFile/Test/test_odf` does. `GTEST_MAIN`. No fixtures: each case writes its own
       compound file into a fresh temp directory with POLE.
+- [x] `DesktopEditor/xmlsec/src/osign/test` — deps: kernel and a new `osign` CMake library
+      target (`DesktopEditor/xmlsec/src/osign/lib/CMakeLists.txt`) ported from `osign.pro`.
+      No fixtures — the suite generates its own passwords and certificates at run time.
+      `common_openssl.cpp` is compiled into the library (`osign.pro` pulls it in through
+      `CONFIG += open_ssl_common`, and `certificate.cpp` needs `NSOpenSSL::PBKDF2` /
+      `AES_*_desktop_GCM`); `Base64.cpp` and `File.cpp` are **not** — the `.pro` compiled
+      them directly because qmake did not link kernel, but the CMake target links `kernel`,
+      which already provides `NSBase64`/`NSFile`. Like `ooxmlsignature`, the library is not
+      part of the default build: it is reached only through the test's guarded
+      `add_subdirectory`.
 
 ### gtest suites to migrate
 
@@ -272,8 +282,7 @@ _(none — all migrated; see Done above.)_
 
 Blocked / need extra work (build targets intentionally not created yet):
 
-- [ ] `DesktopEditor/xmlsec/src/osign/test` — **no `osign` CMake target exists**; the
-      library must be ported to CMake first.
+_(none)_
 
 ### Deferred: non-gtest qmake `.pro` tools
 
