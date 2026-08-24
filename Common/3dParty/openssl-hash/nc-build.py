@@ -67,8 +67,7 @@ def build_and_install():
                 "no-asm",
                 "no-threads",
                 "no-dso",
-                "no-deprecated",
-                #"enable-md2", # Might work with enable-legacy and no-module. But do we really need this?
+                "enable-md2",
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
             ],
@@ -118,8 +117,7 @@ def build_and_install():
                 "no-asm",
                 "no-threads",
                 "no-dso",
-                "no-deprecated",
-                #"enable-md2", # Might work with enable-legacy and no-module. But do we really need this?
+                "enable-md2",
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
             ],
@@ -147,7 +145,6 @@ def build_and_install():
             [   "emmake", "make", "build_generated" ],
             "Generate headers",
             nc.work_dir,
-            env = env
         )
 
         nc.run_command(
