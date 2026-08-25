@@ -897,6 +897,14 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 # -------------------------------------------------
+# link libraries
+# -------------------------------------------------
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    ${OPENSSL_WASM_LIBCRYPTO}
+    ${OPENSSL_WASM_LIBSSL}
+)
+
+# -------------------------------------------------
 # Defines
 # -------------------------------------------------
 target_compile_definitions(${PROJECT_NAME} PRIVATE

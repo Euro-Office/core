@@ -18,8 +18,12 @@
 #include "Decrypt.h"
 
 #ifdef USE_OPENSSL_HASH
-#include "crypto/sha/sha512.c"
-#include "crypto/mem_clr.c"
+// Declarations only — implementations come from linking libcrypto.a instead
+// of inlining OpenSSL's own source here. openssl-4.0.1 moved the one-shot
+// SHA384()/SHA512() wrappers to crypto/evp/legacy_sha.c, separate from
+// crypto/sha/sha512.c's (deprecated) streaming API — inlining either one
+// duplicates symbols libcrypto.a already archives.
+#include <openssl/sha.h>
 #else
 #define SHA384 sha384
 #define SHA512 sha512
