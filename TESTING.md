@@ -105,9 +105,10 @@ Done:
       `CONFIG += open_ssl_common`, and `certificate.cpp` needs `NSOpenSSL::PBKDF2` /
       `AES_*_desktop_GCM`); `Base64.cpp` and `File.cpp` are **not** — the `.pro` compiled
       them directly because qmake did not link kernel, but the CMake target links `kernel`,
-      which already provides `NSBase64`/`NSFile`. Like `ooxmlsignature`, the library is not
-      part of the default build: it is reached only through the test's guarded
-      `add_subdirectory`.
+      which already provides `NSBase64`/`NSFile`. Unlike `ooxmlsignature` — which `x2tlib`
+      pulls into the default build — `osign` has no non-test consumer, so it is reached
+      only through the test's guarded `add_subdirectory` and nothing changes when
+      `EO_BUILD_TESTS` is OFF.
 
 ### gtest suites to migrate
 
