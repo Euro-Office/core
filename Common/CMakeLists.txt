@@ -84,6 +84,7 @@ target_compile_definitions(kernel PRIVATE
     BUILD_ZLIB_AS_SOURCES
     ZLIB_DLL
     ZLIB_INTERNAL
+    MAC
 )
 
 if( NOT MSVC )
