@@ -269,6 +269,7 @@ elseif( APPLE )
 
         LINUX
         _LINUX
+        # MAC # CryptoPP collides with this, moving to kernel
         _MAC
 
         # Not sure about these:
@@ -517,6 +518,14 @@ function(copy_artifacts_to_folder artifacts dest_dir)
             COMMENT "Copying ${artifact} to ${dest_dir}"
         )
     endforeach()
+endfunction()
+
+function(copy_framework_to_folder target dest_dir)
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMENT "Copying ${target}.framework to ${dest_dir}"
+    )
 endfunction()
 
 function(copy_icu_libs artifact)
