@@ -470,6 +470,7 @@ namespace NSJSBase
 	{
 #ifdef V8_SUPPORT_SNAPSHOTS
 		bool result = false;
+		bool bCompiled = false;
 		// Snapshot creator should be in its own scope, because it handles entering, exiting and disposing the isolate
 		v8::SnapshotCreator snapshotCreator;
 		v8::Isolate* isolate = snapshotCreator.GetIsolate();
@@ -489,16 +490,34 @@ namespace NSJSBase
 
 			// Compile
 			v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, script.c_str()).ToLocalChecked();
-			v8::Local<v8::Script> script = v8::Script::Compile(context, source).ToLocalChecked();
-			// Run
-			script->Run(context).IsEmpty();
+
+			// Guarded for the same reason as CCacheDataScript::Compile() above:
+			// this compiles the very same GetAllScript() bundle (via
+			// GenerateEditorSnapshot()), so a bundle the engine cannot parse
+			// would otherwise abort the process here through ToLocalChecked()
+			// instead of being reported. try_catch is already live above.
+			//
+			// Deliberately not an early return: SetDefaultContext() must still be
+			// called before CreateBlob(), and SnapshotCreator's destructor expects
+			// a blob to have been created, so the creator's lifecycle is completed
+			// either way. The failure is carried out in bCompiled, and the snapshot
+			// file is simply not written -- emitting one built from a context the
+			// script never ran in would be worse than emitting none, because it
+			// would be consumed happily on the next start.
+			v8::MaybeLocal<v8::Script> scriptMB = v8::Script::Compile(context, source);
+			if (!scriptMB.IsEmpty())
+			{
+				bCompiled = true;
+				// Run
+				scriptMB.ToLocalChecked()->Run(context).IsEmpty();
+			}
 
 			snapshotCreator.SetDefaultContext(context);
 		}
 		v8::StartupData data = snapshotCreator.CreateBlob(v8::SnapshotCreator::FunctionCodeHandling::kKeep);
 		// Save snapshot to file
 		NSFile::CFileBinary snapshotFile;
-		if (data.data && snapshotFile.CreateFile(snapshotPath))
+		if (bCompiled && data.data && snapshotFile.CreateFile(snapshotPath))
 		{
 			snapshotFile.WriteFile(data.data, (DWORD)data.raw_size);
 			snapshotFile.CloseFile();
