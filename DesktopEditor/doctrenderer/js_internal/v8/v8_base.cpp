@@ -512,6 +512,20 @@ namespace NSJSBase
 				scriptMB.ToLocalChecked()->Run(context).IsEmpty();
 			}
 
+			// Surface whatever was caught -- the compile failure above, or a throw
+			// out of Run(). CV8TryCatch's destructor does not check, so without this
+			// the pending exception is discarded and a bundle the engine cannot parse
+			// produces no diagnostic at all: silence in place of the abort removed
+			// above, which is not an improvement. Check() prints the message, line
+			// and stack to stderr, is a no-op when nothing was caught, and has to run
+			// while the Context::Scope is still alive.
+			//
+			// It deliberately does not feed back into bCompiled: a runtime throw out
+			// of Run() did not stop the snapshot being written before this change,
+			// and quietly changing that could withhold snapshots that are fine today.
+			// Only a compile failure suppresses the write.
+			try_catch.Check();
+
 			snapshotCreator.SetDefaultContext(context);
 		}
 		v8::StartupData data = snapshotCreator.CreateBlob(v8::SnapshotCreator::FunctionCodeHandling::kKeep);
