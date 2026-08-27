@@ -98,6 +98,17 @@ Done:
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
       replaced with repo-relative includes (CMake links the libraries).
+- [x] `DesktopEditor/xmlsec/src/osign/test` — deps: kernel and a new `osign` CMake library
+      target (`DesktopEditor/xmlsec/src/osign/lib/CMakeLists.txt`) ported from `osign.pro`.
+      No fixtures — the suite generates its own passwords and certificates at run time.
+      `common_openssl.cpp` is compiled into the library (`osign.pro` pulls it in through
+      `CONFIG += open_ssl_common`, and `certificate.cpp` needs `NSOpenSSL::PBKDF2` /
+      `AES_*_desktop_GCM`); `Base64.cpp` and `File.cpp` are **not** — the `.pro` compiled
+      them directly because qmake did not link kernel, but the CMake target links `kernel`,
+      which already provides `NSBase64`/`NSFile`. Unlike `ooxmlsignature` — which `x2tlib`
+      pulls into the default build — `osign` has no non-test consumer, so it is reached
+      only through the test's guarded `add_subdirectory` and nothing changes when
+      `EO_BUILD_TESTS` is OFF.
 
 ### gtest suites to migrate
 
@@ -114,8 +125,6 @@ Blocked / need extra work (build targets intentionally not created yet):
 - [ ] `DesktopEditor/doctrenderer/test/js_internal`
 - [ ] `DesktopEditor/doctrenderer/test/embed/internal/hash` — the three doctrenderer suites
       need a **V8 JS runtime** (and embedded scripts) at run time.
-- [ ] `DesktopEditor/xmlsec/src/osign/test` — **no `osign` CMake target exists**; the
-      library must be ported to CMake first.
 
 ### Deferred: non-gtest qmake `.pro` tools
 
