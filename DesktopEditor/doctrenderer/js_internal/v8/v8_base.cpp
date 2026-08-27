@@ -86,18 +86,31 @@ namespace NSJSBase
 			{
 				v8::ScriptCompiler::CachedData* pCacheData = nullptr;
 
-				// save cache to file
-				NSFile::CFileBinary oFileTest;
-				if (oFileTest.CreateFileW(Path))
-				{
-					// create cache data
-					v8::ScriptCompiler::Source oSource(source);
-					v8::Local<v8::Script> pScriptCache = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions).ToLocalChecked();
-					pCacheData = v8::ScriptCompiler::CreateCodeCache(pScriptCache->GetUnboundScript());
+				// Compile once to produce the code cache.
+				//
+				// The result must be checked before ToLocalChecked(): a JS syntax error
+				// makes Compile() return an empty MaybeLocal, and ToLocalChecked() turns
+				// that recoverable parse error into a V8 CHECK failure, i.e. an abort
+				// (SIGILL/SIGTRAP) whose only trace is "Fatal error in v8::ToLocalChecked
+				// / Empty MaybeLocal". Returning the empty script instead lets the
+				// caller's CJSTryCatch report the actual SyntaxError, matching the three
+				// sibling compile paths in this function.
+				v8::ScriptCompiler::Source oSource(source);
+				v8::MaybeLocal<v8::Script> scriptCacheMB = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions);
+				if (scriptCacheMB.IsEmpty())
+					return script;
 
-					if (pCacheData)
+				pCacheData = v8::ScriptCompiler::CreateCodeCache(scriptCacheMB.ToLocalChecked()->GetUnboundScript());
+
+				// Create the cache file only once there is something to write into it.
+				// Creating it up-front left a zero-length .cache behind whenever the
+				// compile above failed, and the next run then took the Exists(Path)
+				// branch and handed that empty buffer to kConsumeCodeCache.
+				if (pCacheData)
+				{
+					NSFile::CFileBinary oFileTest;
+					if (oFileTest.CreateFileW(Path))
 					{
-						// save cache to file
 						oFileTest.WriteFile(pCacheData->data, (DWORD)pCacheData->length);
 						oFileTest.CloseFile();
 					}
