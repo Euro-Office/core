@@ -99,12 +99,18 @@ else()
             set(NO_DESKTOP_EXCLUDE ",cef,qt")
         endif()
 
+        set(PLATFORM_EXCLUDE "")
+        if(BUILD_DESKTOP AND APPLE)
+            # macOS editors are native Cocoa, not Qt - still need cef.
+            set(PLATFORM_EXCLUDE ",qt")
+        endif()
+
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -129,43 +135,47 @@ else()
     endif()
 
     if(BUILD_DESKTOP)
-        # Setup qt
-        # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
-        # glob of aqt's <version>/<arch> layout.
-        if(DEFINED ENV{QT6_ROOT})
-            set(QT_ROOT "$ENV{QT6_ROOT}")
-        else()
-            set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
-            message(STATUS "Searching qt6 root")
-            if(EXISTS "${_qt_install}/qt6_root.txt")
-                file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
-                string(STRIP "${QT_ROOT}" QT_ROOT)
-                message(STATUS "Found qt6 root: " ${QT_ROOT})
+        if(NOT APPLE)
+            # macOS editors are native Cocoa, not Qt - only win-linux's desktop
+            # GUI needs it, so skip fetching/requiring it on Apple entirely.
+            # Setup qt
+            # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
+            # glob of aqt's <version>/<arch> layout.
+            if(DEFINED ENV{QT6_ROOT})
+                set(QT_ROOT "$ENV{QT6_ROOT}")
             else()
-                # Fallback: find the prefix aqt extracted (arch folder varies by platform)
-                file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
-                if(_qt6_cfg)
-                    list(GET _qt6_cfg 0 _qt6_cfg)
-                    get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
-                    get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
+                message(STATUS "Searching qt6 root")
+                if(EXISTS "${_qt_install}/qt6_root.txt")
+                    file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
+                    string(STRIP "${QT_ROOT}" QT_ROOT)
+                    message(STATUS "Found qt6 root: " ${QT_ROOT})
+                else()
+                    # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                    file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
+                    if(_qt6_cfg)
+                        list(GET _qt6_cfg 0 _qt6_cfg)
+                        get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
+                        get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                    endif()
                 endif()
             endif()
+
+            if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
+                message(STATUS "Qt6 root: " ${QT_ROOT})
+                message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
+            endif()
+
+            file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
+
+            set(QT_VERSION_MAJOR 6)
+            set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
+            set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
+
+            find_package(Qt6 REQUIRED COMPONENTS
+                Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
+                CorePrivate GuiPrivate PrintSupportPrivate)
         endif()
-
-        if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
-            message(STATUS "Qt6 root: " ${QT_ROOT})
-            message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
-        endif()
-
-        file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
-
-        set(QT_VERSION_MAJOR 6)
-        set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
-        set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
-
-        find_package(Qt6 REQUIRED COMPONENTS
-            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
-            CorePrivate GuiPrivate PrintSupportPrivate)
 
         # Setup cef
         set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
