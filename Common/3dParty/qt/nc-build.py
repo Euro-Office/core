@@ -1,18 +1,33 @@
 #!/usr/bin/env python3
 import sys
-import shutil
 import os
-import urllib.request
-import zipfile
+import platform
 from pathlib import Path
 
-script_path = Path(sys.argv[0]).resolve()
+script_path = Path( sys.argv[0] ).resolve()
 script_dir = script_path.parent
 
-qt_major = "5.9"
-qt_version = "5.9.9"
-qt_src_name = f"qt-everywhere-opensource-src-{qt_version}"
-qt_url_base = f"https://download.qt.io/archive/qt/{qt_major}/{qt_version}/single"
+# ---------------------------------------------------------------------------
+# What to install.
+#
+# Set qt_version to whatever the project targets. Discover what's actually
+# available for a given platform with:
+#     python -m aqt list-qt windows desktop            # list versions
+#     python -m aqt list-qt windows desktop --arch 6.11.1   # list archs
+#
+# NOTE on 6.11.x: download.qt.io changed its directory layout at 6.11.0, so a
+# stale aqt can fail to resolve it. The fetch phase upgrades aqt for this
+# reason.
+# ---------------------------------------------------------------------------
+qt_version = "6.10.1"
+
+# Add-on modules that are NOT part of the base desktop package.
+# Core, Gui, Widgets, PrintSupport, Svg and the Linguist tools
+# (lrelease/lupdate/lconvert + the Qt6LinguistTools CMake package) all ship in
+# the base package, so only Multimedia (which also provides MultimediaWidgets)
+# has to be requested explicitly. List everything available with:
+#     python -m aqt list-qt <host> desktop --modules <qt_version> <arch>
+qt_modules = [ "qtmultimedia" ] # , "debug_info"
 
 third_party_root = ( script_dir / ".." ).resolve()
 if str( third_party_root ) not in sys.path:
@@ -28,61 +43,48 @@ nc.init_for_dep(
 )
 
 
-def long_path( path ):
-    # Extended-length path prefix so extraction of the deeply nested Qt
-    # source tree does not hit the 260 char MAX_PATH limit on Windows
+def detect_host_and_arch():
+    """Map the running platform to the (aqt host, aqt arch) pair.
+
+    Qt only ships MSVC binaries for Windows-on-ARM, and Linux desktop arm64
+    binaries exist from Qt 6.7.0 onward.
+    """
+    machine = platform.machine().lower()
+    is_arm = machine in ( "arm64", "aarch64" )
+
     if nc.is_windows():
-        return "\\\\?\\" + str( Path( path ).resolve() )
-    return str( path )
+        if is_arm:
+            return "windows_arm64", "win64_msvc2022_arm64"
+        return "windows", "win64_msvc2022_64"
+
+    if nc.is_linux():
+        if is_arm:
+            return "linux_arm64", "linux_gcc_arm64"
+        return "linux", "linux_gcc_64"
+
+    nc.abort_op( f"Unsupported platform: {sys.platform} / {machine}" )
+
+
+def find_qt_prefix():
+    """Locate the directory aqt extracted into, without hard-coding the
+    folder-name transform (it varies across hosts and Qt versions).
+
+    A valid desktop Qt prefix always has both bin/ and lib/cmake/Qt6/.
+    """
+    version_dir = nc.install_dir / qt_version
+    if not version_dir.is_dir():
+        return None
+
+    for child in sorted( version_dir.iterdir() ):
+        if child.is_dir() \
+                and ( child / "bin" ).is_dir() \
+                and ( child / "lib" / "cmake" / "Qt6" ).is_dir():
+            return child
+    return None
 
 
 def fetch_and_patch():
     nc.create_workdir()
-
-    if nc.is_linux():
-        tarball = nc.work_dir / f"qt_source_{qt_version}.tar.xz"
-
-        nc.run_command(
-            [ "wget", f"{qt_url_base}/{qt_src_name}.tar.xz", "-O", str( tarball ) ],
-            "Download Qt source",
-            nc.work_dir
-        )
-
-        nc.run_command(
-            [ "tar", "-xf", str( tarball ) ],
-            "Extract Qt source",
-            nc.work_dir
-        )
-
-        try:
-            tarball.unlink()
-        except FileNotFoundError:
-            pass
-
-    elif nc.is_windows():
-        # Qt provides a .zip source package with CRLF line endings for Windows
-        zip_path = nc.work_dir / f"qt_source_{qt_version}.zip"
-
-        print( "Downloading Qt source (zip)..." )
-        try:
-            urllib.request.urlretrieve( f"{qt_url_base}/{qt_src_name}.zip", zip_path )
-        except Exception as e:
-            nc.abort_op( f"Download failed: {e}" )
-
-        print( "Extracting Qt source..." )
-        try:
-            with zipfile.ZipFile( zip_path ) as zf:
-                zf.extractall( long_path( nc.work_dir ) )
-        except Exception as e:
-            nc.abort_op( f"Extraction failed: {e}" )
-
-        try:
-            zip_path.unlink()
-        except FileNotFoundError:
-            pass
-
-    else:
-        nc.abort_op( f"Unknown target platform: {sys.platform}" )
 
     nc.create_work_dir_ok_marker()
     print( "Fetch & patch completed" )
@@ -90,107 +92,37 @@ def fetch_and_patch():
 
 def build_and_install():
     nc.create_install_dir()
+    host, arch = detect_host_and_arch()
+    print(f"Installing Qt {qt_version} for host '{host}', arch '{arch}'")
 
-    qt_source_dir = nc.work_dir / qt_src_name
-
-    # Flags shared between platforms
-    common_flags = [
-        "-opensource",
-        "-confirm-license",
-        "-release",
-        "-shared",
-        "-accessibility",
-        "-qt-zlib",
-        "-qt-libpng",
-        "-qt-libjpeg",
-        "-qt-pcre",
-        "-no-sql-sqlite",
-        "-no-qml-debug",
-        "-nomake", "examples",
-        "-nomake", "tests",
-        "-skip", "qtenginio",
-        "-skip", "qtlocation",
-        "-skip", "qtserialport",
-        "-skip", "qtsensors",
-        "-skip", "qtxmlpatterns",
-        "-skip", "qt3d",
-        "-skip", "qtwebview",
-        "-skip", "qtwebengine",
-        "-skip", "qtscript",
+    # 1. Real Qt install: full base package (Core/Gui/Widgets/PrintSupport/Svg/
+    #    Linguist tools) + add-on modules. NO --archives, so Svg etc. come in.
+    cmd = [
+        sys.executable, "-m", "aqt", "install-qt",
+        host, "desktop", qt_version, arch,
+        "--outputdir", str(nc.install_dir),
     ]
+    real_modules = [m for m in qt_modules if m != "debug_info"]
+    if real_modules:
+        cmd += ["-m"] + real_modules
+    nc.run_command(cmd, "Download Qt binaries (aqt)", nc.install_dir)
 
-    if nc.is_linux():
-        # Keep the same install layout as the previous docker build
-        qt_prefix = nc.install_dir / f"qt"
-
-        nc.run_command(
-            [ "./configure" ] + common_flags + [
-                "-prefix", str( qt_prefix ),
-                "-qt-xcb",
-                "-gstreamer", "1.0",
-                # flags to match target build after comparison to onlyoffice build
-                "-dbus-linked",
-                "-icu",
-                "-no-iconv",
-                "-fontconfig",
-                "-system-freetype",
-                "-system-harfbuzz",
-                "-alsa",
-                "-pulseaudio",
-                # "-openssl-linked",
-                "-cups",
-                "-gtk"
-            ],
-            "Configure",
-            qt_source_dir
-        )
-
-        nc.run_command(
-            [ "make", f"-j{os.cpu_count()}" ],
-            "Build",
-            qt_source_dir
-        )
-
-        nc.run_command(
-            [ "make", "install" ],
-            "Install",
-            qt_source_dir
-        )
-
-    elif nc.is_windows():
-        qt_prefix = nc.install_dir / f"Qt-{qt_version}" / "msvc_64"
-
-        # The bat file sets up the MSVC environment (vcvarsall) and then
-        # runs configure.bat / nmake. Windows-only configure flags are
-        # appended after the common ones.
-        windows_flags = [
-            "-prefix", str( qt_prefix ),
-            "-platform", "win32-msvc",
-            "-opengl", "desktop",
-            "-mp",
-            "-no-icu",
-            "-no-iconv"
+    # 2. Debug symbols: separate call, qtbase archive only, same prefix.
+    #    --archives qtbase here is correct. We only want Core/Gui/Widgets/
+    #    qwindows PDBs, not the whole multi-GB debug set.
+    if nc.is_windows() and "debug_info" in qt_modules:
+        dbg = [
+            sys.executable, "-m", "aqt", "install-qt",
+            host, "desktop", qt_version, arch,
+            "--outputdir", str(nc.install_dir),
+            "-m", "debug_info",
+            "--archives", "qtbase",
         ]
+        nc.run_command(dbg, "Download Qt debug symbols (aqt)", nc.install_dir)
 
-        bat_path = script_dir / "nc-build-qt.bat"
-
-        nc.run_command(
-            [   "cmd.exe",
-                "/c",
-                "call",
-                str( bat_path ),
-                str( qt_source_dir )
-            ] + common_flags + windows_flags,
-            "MSVC build",
-            qt_source_dir
-        )
-
-    else:
-        nc.abort_op( f"Unknown target platform: {sys.platform}" )
+    prefix = find_qt_prefix()
 
     nc.create_install_dir_ok_marker()
-    nc.fix_terminal_encoding()
-    print( "Build and install completed" )
 
 
 def build_all():

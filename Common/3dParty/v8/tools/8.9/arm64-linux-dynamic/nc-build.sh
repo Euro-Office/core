@@ -61,6 +61,15 @@ export PATH="$DEPOT_TOOLS:$PATH"
 export VPYTHON_BYPASS="manually managed python not supported by chrome operations"
 export GCLIENT_SUPPRESS_GIT_VERSION_WARNING=1
 export GYP_CHROMIUM_NO_ACTION=1
+# Keep depot_tools from self-updating to HEAD during gclient sync, which would undo
+# the pin below.
+export DEPOT_TOOLS_UPDATE=0
+
+# Pin depot_tools to a known-good revision instead of tracking HEAD. gclient_paths.patch
+# only applies against this revision's gclient_paths.py; upstream periodically reworks
+# and reformats that file (f065bb3b0 2026-07-13, 93974d014 2026-07-21), which silently
+# breaks the patch. Keep in sync with Common/3dParty/v8/nc-build.py.
+DEPOT_TOOLS_REV="f394ab2c993283e94680ca13db98b99927868e98"
 
 if [ ! -d "$DEPOT_TOOLS" ]; then
   log "Cloning depot_tools..."
@@ -68,9 +77,11 @@ if [ ! -d "$DEPOT_TOOLS" ]; then
     || abort_op "clone depot_tools failed"
 fi
 
-# Update depot_tools
+# Pin depot_tools to the known-good revision (see DEPOT_TOOLS_REV above)
 cd "$DEPOT_TOOLS"
-git pull origin main || log "depot_tools update failed (non-fatal)"
+git fetch --quiet origin || log "depot_tools fetch failed (non-fatal)"
+git checkout --force --detach "$DEPOT_TOOLS_REV" \
+  || abort_op "checkout of depot_tools $DEPOT_TOOLS_REV failed"
 cd "$work_dir"
 
 # ---------- fetch V8 ----------

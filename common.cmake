@@ -96,7 +96,7 @@ else()
 
     if(NOT THIRD_PARTY_PREPARED)
         if(NOT BUILD_DESKTOP)
-            set(NO_DESKTOP_EXCLUDE ",cef,qt,icu-desktop")
+            set(NO_DESKTOP_EXCLUDE ",cef,qt")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -129,29 +129,44 @@ else()
     endif()
 
     if(BUILD_DESKTOP)
-        # Setup icu desktop
-        # These version numbers don't affect what build_3rdparty.py builds. They just have to match.
-        set(ICU_DESKTOP_MAJOR_VER "60")
-        set(ICU_DESKTOP_MINOR_VER "3")
-        set(ICU_DESKTOP_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-desktop")
-        get_filename_component(ICU_DESKTOP_INSTALL_DIR_ABS "${ICU_DESKTOP_INSTALL_DIR}" ABSOLUTE)
-        if( MSVC )
-            set(LIBICUUC_DESKTOP   "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/icuuc.lib")
-            set(LIBICUDATA_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/icudt.lib")
-            set(LIBICUI_DESKTOP    "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/icuin.lib")
+        # Setup qt
+        # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
+        # glob of aqt's <version>/<arch> layout.
+        if(DEFINED ENV{QT6_ROOT})
+            set(QT_ROOT "$ENV{QT6_ROOT}")
         else()
-            set(LIBICUUC_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_DESKTOP_MAJOR_VER}")
-            set(LIBICUDATA_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_DESKTOP_MAJOR_VER}")
-            set(LIBICUI_DESKTOP "${ICU_DESKTOP_INSTALL_DIR_ABS}/lib/libicui18n.so.${ICU_DESKTOP_MAJOR_VER}")
+            set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
+            message(STATUS "Searching qt6 root")
+            if(EXISTS "${_qt_install}/qt6_root.txt")
+                file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
+                string(STRIP "${QT_ROOT}" QT_ROOT)
+                message(STATUS "Found qt6 root: " ${QT_ROOT})
+            else()
+                # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
+                if(_qt6_cfg)
+                    list(GET _qt6_cfg 0 _qt6_cfg)
+                    get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
+                    get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                endif()
+            endif()
         endif()
 
-        # Setup qt
-        set(QT_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt/qt")
-        set(QT_DIR "${QT_ROOT}/lib/cmake/Qt5")
-        set(Qt5_DIR "${QT_ROOT}/lib/cmake/Qt5")
-        set(QT_VERSION_MAJOR "5")
-        find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets)
-            
+        if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
+            message(STATUS "Qt6 root: " ${QT_ROOT})
+            message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
+        endif()
+
+        file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
+
+        set(QT_VERSION_MAJOR 6)
+        set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
+        set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
+
+        find_package(Qt6 REQUIRED COMPONENTS
+            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
+            CorePrivate GuiPrivate PrintSupportPrivate)
+
         # Setup cef
         set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
         list(APPEND CMAKE_MODULE_PATH "${CEF_ROOT}/cmake")
@@ -169,9 +184,11 @@ else()
     if( MSVC )
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
+        set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
     else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.so.${ICU_MAJOR_VER}")
     endif()
 
     # Setup boost
