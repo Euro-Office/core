@@ -35,6 +35,17 @@
 
 #include <algorithm>
 
+// GoogleTest only defines the HRESULT assertion macros on Windows
+// (GTEST_OS_WINDOWS). The PdfFile API returns an HRESULT that is >= 0 on
+// success on every platform, so provide the macros here so the suite compiles
+// on Linux/macOS too.
+#ifndef EXPECT_HRESULT_SUCCEEDED
+#define EXPECT_HRESULT_SUCCEEDED(expr) EXPECT_GE((HRESULT)(expr), (HRESULT)0)
+#define ASSERT_HRESULT_SUCCEEDED(expr) ASSERT_GE((HRESULT)(expr), (HRESULT)0)
+#define EXPECT_HRESULT_FAILED(expr)    EXPECT_LT((HRESULT)(expr), (HRESULT)0)
+#define ASSERT_HRESULT_FAILED(expr)    ASSERT_LT((HRESULT)(expr), (HRESULT)0)
+#endif
+
 class CPdfFileTest : public testing::Test
 {
 protected:
