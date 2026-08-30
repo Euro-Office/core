@@ -2,7 +2,9 @@
   "name": "euro-office",
   "version": "1.0.0",
   "dependencies": [
-    "hunspell"
+    "hunspell",
+    "sqlite3",
+    "duckdb"
   ],
   "features": {
     "tests": {

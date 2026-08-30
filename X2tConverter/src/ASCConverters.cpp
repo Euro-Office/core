@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -38,6 +38,7 @@
 
 #include "lib/xls.h"
 #include "lib/csv.h"
+#include "lib/db.h"
 
 #include "lib/html.h"
 
@@ -1145,6 +1146,15 @@ namespace NExtractTools
 						AVS_OFFICESTUDIO_FILE_SPREADSHEET_SCSV == nFormatFrom)
 			{
 				nRes = csv2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
+				*params.m_nFormatFrom = AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX;
+			}
+			else if (	AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB == nFormatFrom)
+			{
+				nRes = db2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
 				*params.m_nFormatFrom = AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX;
 			}
 			else if (AVS_OFFICESTUDIO_FILE_DOCUMENT_XML == nFormatFrom)

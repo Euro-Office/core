@@ -9,6 +9,85 @@ include(${CORE_ROOT_DIR}/common.cmake)
 set(OOXML_ROOT_DIR "${CORE_ROOT_DIR}/OOXML")
 set(BIN_SOURCES_DIR "${OOXML_ROOT_DIR}/Binary")
 set(MS_BINARY_FILE_ROOT "${CORE_ROOT_DIR}/MsBinaryFile")
+set(DB_ENGINES_DIR "${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines")
+
+# Vendored verbatim from upstream Berkeley DB 18.1.40 (the last release still
+# published as a plain tarball; matches the version recorded in the license
+# notice). vcpkg's berkeleydb port only carries the old 4.8.30 (Sleepycat
+# License) release, not the 6.0.20+ line that Oracle relicensed under
+# AGPLv3 -- the same license as this application -- so it's vendored and
+# built via its own autotools build (there is no flat file list to hand
+# CMake the way mdbtools has; BDB's build generates several headers).
+# See desktop-apps/package/common/license/3dparty/3DPARTYLICENSE for the
+# notice.
+include(ExternalProject)
+set(BDB_SRC_DIR "${DB_ENGINES_DIR}/berkeleydb")
+set(BDB_INSTALL_DIR "${CMAKE_CURRENT_BINARY_DIR}/berkeleydb-install")
+ExternalProject_Add(berkeleydb_build
+    SOURCE_DIR "${BDB_SRC_DIR}/src"
+    # BDB's legacy K&R-style C trips -Wincompatible-pointer-types, which
+    # modern GCC treats as a hard error by default; downgrade it back to
+    # a warning, matching how every other up-to-date distro builds this
+    # old codebase.
+    CONFIGURE_COMMAND ${CMAKE_COMMAND} -E env CFLAGS=-Wno-error=incompatible-pointer-types
+        "${BDB_SRC_DIR}/dist/configure"
+        --prefix=${BDB_INSTALL_DIR}
+        --enable-shared --disable-static
+        --disable-cxx --disable-tcl --disable-java --disable-sql
+    # Only the library itself was vendored (util/, test/, lang/ CLI and
+    # binding sources were left out as unneeded for a read-only import
+    # engine), so build/install the library target specifically rather
+    # than the default "all"/"install", which also pull in those unbuilt
+    # command-line utilities.
+    BUILD_COMMAND make -j${CMAKE_BUILD_PARALLEL_LEVEL} libdb-18.1.la
+    INSTALL_COMMAND make install_setup install_include install_lib
+    BUILD_IN_SOURCE 0
+    BUILD_BYPRODUCTS "${BDB_INSTALL_DIR}/lib/libdb-18.1.so"
+)
+add_library(berkeleydb SHARED IMPORTED GLOBAL)
+add_dependencies(berkeleydb berkeleydb_build)
+set_target_properties(berkeleydb PROPERTIES
+    IMPORTED_LOCATION "${BDB_INSTALL_DIR}/lib/libdb-18.1.so"
+    INTERFACE_INCLUDE_DIRECTORIES "${BDB_INSTALL_DIR}/include"
+)
+file(MAKE_DIRECTORY "${BDB_INSTALL_DIR}/include")
+
+# Built as a separate shared library (not compiled directly into BinDocument)
+# so that mdbtools' LGPLv2+ source is dynamically linked, not statically bound
+# into the AGPL-licensed application. Vendored verbatim from upstream mdbtools
+# v1.0.1 (matches the version already recorded in mdbver.h); see
+# desktop-apps/package/common/license/3dparty/3DPARTYLICENSE for the notice.
+add_library(mdbtools SHARED
+    ${DB_ENGINES_DIR}/libmdb/backend.c
+    ${DB_ENGINES_DIR}/libmdb/catalog.c
+    ${DB_ENGINES_DIR}/libmdb/data.c
+    ${DB_ENGINES_DIR}/libmdb/dump.c
+    ${DB_ENGINES_DIR}/libmdb/fakeglib.c
+    ${DB_ENGINES_DIR}/libmdb/file.c
+    ${DB_ENGINES_DIR}/libmdb/iconv.c
+    ${DB_ENGINES_DIR}/libmdb/index.c
+    ${DB_ENGINES_DIR}/libmdb/like.c
+    ${DB_ENGINES_DIR}/libmdb/map.c
+    ${DB_ENGINES_DIR}/libmdb/money.c
+    ${DB_ENGINES_DIR}/libmdb/options.c
+    ${DB_ENGINES_DIR}/libmdb/props.c
+    ${DB_ENGINES_DIR}/libmdb/rc4.c
+    ${DB_ENGINES_DIR}/libmdb/sargs.c
+    ${DB_ENGINES_DIR}/libmdb/stats.c
+    ${DB_ENGINES_DIR}/libmdb/table.c
+    ${DB_ENGINES_DIR}/libmdb/version.c
+    ${DB_ENGINES_DIR}/libmdb/worktable.c
+    ${DB_ENGINES_DIR}/libmdb/write.c
+)
+set_default_options(mdbtools)
+target_include_directories(mdbtools PRIVATE ${DB_ENGINES_DIR}/mdbtools)
+target_compile_definitions(mdbtools PRIVATE HAVE_ICONV "ICONV_CONST=")
+set_property(TARGET mdbtools PROPERTY POSITION_INDEPENDENT_CODE ON)
+# set_default_options() applies -fvisibility=hidden project-wide, which would
+# hide the mdb_* C API entirely from mdbtools.so's exported symbol table.
+# This library's whole purpose is to be linked externally, so override back
+# to default visibility.
+target_compile_options(mdbtools PRIVATE -fvisibility=default)
 
 add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Document/DocWrapper/DocxSerializer.cpp
@@ -21,6 +100,11 @@ add_library(BinDocument STATIC
     ${BIN_SOURCES_DIR}/Sheets/Reader/ChartFromToBinary.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/CommonWriter.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/CSVReader.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseReader.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/MdbEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/SqliteEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/DuckDbEngine.cpp
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/BerkeleyDbEngine.cpp
     ${BIN_SOURCES_DIR}/Sheets/Reader/BinaryWriterS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/BinaryReaderS.cpp
     ${BIN_SOURCES_DIR}/Sheets/Writer/CSVWriter.cpp
@@ -120,23 +204,39 @@ target_compile_definitions(BinDocument PRIVATE
 	SOLUTION_ASCOFFICEDOCXFILE2
 	#DISABLE_FILE_DOWNLOADER
 	AVS_USE_CONVERT_PPTX_TOCUSTOM_VML
+	HAVE_ICONV
+	"ICONV_CONST="
 )
 
 target_precompile_headers(BinDocument PRIVATE
     precompiled.h
 )
 
-target_include_directories(BinDocument PRIVATE
+target_include_directories(BinDocument
+    PRIVATE
     ${MS_BINARY_FILE_ROOT}/XlsFile/Format
     ${MS_BINARY_FILE_ROOT}/Common/common_xls
-    ${OOXML_ROOT_DIR}/XlsbFormat
+    ${OOXML_ROOT_DIR}/Binary/XlsbFormat
+    ${BIN_SOURCES_DIR}/Sheets/Reader/DatabaseEngines/mdbtools
 )
 
-target_link_libraries(BinDocument PRIVATE 
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB REQUIRED glib-2.0)
+target_include_directories(BinDocument PRIVATE ${GLIB_INCLUDE_DIRS})
+
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(DuckDB CONFIG REQUIRED)
+
+target_link_libraries(BinDocument PRIVATE
     Boost::system
     Boost::filesystem
     Boost::regex
     Boost::date_time
+    unofficial::sqlite3::sqlite3
+    $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
+    mdbtools
+    berkeleydb
+    ${GLIB_LIBRARIES}
 )
 
 set_property(TARGET BinDocument PROPERTY POSITION_INDEPENDENT_CODE ON)
