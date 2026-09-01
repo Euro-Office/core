@@ -84,8 +84,11 @@ target_compile_definitions(kernel PRIVATE
     BUILD_ZLIB_AS_SOURCES
     ZLIB_DLL
     ZLIB_INTERNAL
-    MAC
 )
+
+if(APPLE)
+    target_compile_definitions(kernel PRIVATE MAC)
+endif()
 
 if( NOT MSVC )
     target_compile_options(kernel PRIVATE
