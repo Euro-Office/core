@@ -59,7 +59,7 @@ def get_gn_hermetic_check_python() -> str:
     if _has_pkg_resources( base_python ):
         return base_python
 
-    venv_dir = script_dir / ".mac_pkg_resources_venv"
+    venv_dir = nc.workdir / ".mac_pkg_resources_venv"
     venv_python = venv_dir / "bin" / "python3"
 
     if not venv_python.exists():
