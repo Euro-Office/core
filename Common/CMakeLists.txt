@@ -86,6 +86,10 @@ target_compile_definitions(kernel PRIVATE
     ZLIB_INTERNAL
 )
 
+if(APPLE)
+    target_compile_definitions(kernel PRIVATE MAC)
+endif()
+
 if( NOT MSVC )
     target_compile_options(kernel PRIVATE
         "SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h"

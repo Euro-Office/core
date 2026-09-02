@@ -89,8 +89,8 @@ if( EMSCRIPTEN )
     # Setup openssl
     set(OPENSSL_WASM_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openssl-hash")
     get_filename_component(OPENSSL_WASM_INSTALL_DIR_ABS "${OPENSSL_WASM_INSTALL_DIR}" ABSOLUTE)
-    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libssl.a")
-    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libssl.a")
+    set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libcrypto.a")
 
 else()
 
@@ -99,12 +99,18 @@ else()
             set(NO_DESKTOP_EXCLUDE ",cef,qt")
         endif()
 
+        set(PLATFORM_EXCLUDE "")
+        if(BUILD_DESKTOP AND APPLE)
+            # macOS editors are native Cocoa, not Qt - still need cef.
+            set(PLATFORM_EXCLUDE ",qt")
+        endif()
+
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -129,43 +135,47 @@ else()
     endif()
 
     if(BUILD_DESKTOP)
-        # Setup qt
-        # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
-        # glob of aqt's <version>/<arch> layout.
-        if(DEFINED ENV{QT6_ROOT})
-            set(QT_ROOT "$ENV{QT6_ROOT}")
-        else()
-            set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
-            message(STATUS "Searching qt6 root")
-            if(EXISTS "${_qt_install}/qt6_root.txt")
-                file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
-                string(STRIP "${QT_ROOT}" QT_ROOT)
-                message(STATUS "Found qt6 root: " ${QT_ROOT})
+        if(NOT APPLE)
+            # macOS editors are native Cocoa, not Qt - only win-linux's desktop
+            # GUI needs it, so skip fetching/requiring it on Apple entirely.
+            # Setup qt
+            # Priority: explicit QT6_ROOT override > path recorded by the fetch script >
+            # glob of aqt's <version>/<arch> layout.
+            if(DEFINED ENV{QT6_ROOT})
+                set(QT_ROOT "$ENV{QT6_ROOT}")
             else()
-                # Fallback: find the prefix aqt extracted (arch folder varies by platform)
-                file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
-                if(_qt6_cfg)
-                    list(GET _qt6_cfg 0 _qt6_cfg)
-                    get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
-                    get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                set(_qt_install "${EO_CORE_3RD_PARTY_INSTALL_DIR}/qt")
+                message(STATUS "Searching qt6 root")
+                if(EXISTS "${_qt_install}/qt6_root.txt")
+                    file(READ "${_qt_install}/qt6_root.txt" QT_ROOT)
+                    string(STRIP "${QT_ROOT}" QT_ROOT)
+                    message(STATUS "Found qt6 root: " ${QT_ROOT})
+                else()
+                    # Fallback: find the prefix aqt extracted (arch folder varies by platform)
+                    file(GLOB _qt6_cfg "${_qt_install}/*/*/lib/cmake/Qt6/Qt6Config.cmake")
+                    if(_qt6_cfg)
+                        list(GET _qt6_cfg 0 _qt6_cfg)
+                        get_filename_component(_qt6_dir "${_qt6_cfg}" DIRECTORY)
+                        get_filename_component(QT_ROOT "${_qt6_dir}/../../.." ABSOLUTE)
+                    endif()
                 endif()
             endif()
+
+            if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
+                message(STATUS "Qt6 root: " ${QT_ROOT})
+                message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
+            endif()
+
+            file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
+
+            set(QT_VERSION_MAJOR 6)
+            set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
+            set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
+
+            find_package(Qt6 REQUIRED COMPONENTS
+                Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
+                CorePrivate GuiPrivate PrintSupportPrivate)
         endif()
-
-        if(NOT QT_ROOT OR NOT EXISTS "${QT_ROOT}/lib/cmake/Qt6")
-            message(STATUS "Qt6 root: " ${QT_ROOT})
-            message(FATAL_ERROR "Qt6 not found. Run the fetch script or set QT6_ROOT.")
-        endif()
-
-        file(TO_CMAKE_PATH "${QT_ROOT}" QT_ROOT)
-
-        set(QT_VERSION_MAJOR 6)
-        set(QT_DIR  "${QT_ROOT}/lib/cmake/Qt6")
-        set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
-
-        find_package(Qt6 REQUIRED COMPONENTS
-            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
-            CorePrivate GuiPrivate PrintSupportPrivate)
 
         # Setup cef
         set(CEF_ROOT "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cef")
@@ -185,6 +195,10 @@ else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
         set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
+    elseif( APPLE )
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n.${ICU_MAJOR_VER}.dylib")
     else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.so.${ICU_MAJOR_VER}")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.so.${ICU_MAJOR_VER}")
@@ -214,9 +228,12 @@ else()
     if( MSVC )
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.lib")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.lib")
-    else()
+    elseif( APPLE )
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib/libssl.a")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib/libcrypto.a")
+    else()
+        set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
+        set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
     endif()
 
 endif()
@@ -250,9 +267,23 @@ if( LINUX )
         LINUX
 
         # Not sure about these:
-        _UNICODE
+        _UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
+        UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
         DONT_WRITE_EMBEDDED_FONTS
-        UNICODE
+    )
+elseif( APPLE )
+    set(COMMON_DEFINES
+        _REENTRANT
+        CRYPTOPP_DISABLE_ASM
+        INTVER=${VERSION_TXT_CONTENT}
+
+        LINUX
+        _LINUX
+        # MAC # CryptoPP collides with this, moving to kernel
+        _MAC
+
+        # Not sure about these:
+        DONT_WRITE_EMBEDDED_FONTS
     )
 else() # Assume win+msvc
     set(COMMON_DEFINES
@@ -297,7 +328,39 @@ if( MSVC )
     )
     
 
-else()
+elseif( APPLE )
+
+    set(COMMON_CXX_FLAGS
+        -fvisibility=hidden
+        -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        -Wno-register
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 # Remove for debugging
+    )
+
+    set(COMMON_C_FLAGS
+        -fvisibility=hidden
+        # -fvisibility-inlines-hidden
+        -Wall
+        -Wextra
+        -Wno-ignored-qualifiers
+        # -Wno-register
+        -Wno-implicit-function-declaration
+        -Wno-unused-variable # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-function # TODO remove later; These are just here to reduce the clutter
+        -Wno-unused-parameter # TODO remove later; These are just here to reduce the clutter
+        -O2 #Remove for debugging
+    )
+
+    set(COMMON_LINK_OPTIONS
+    )
+
+else() # if( LINUX )
 
     set(COMMON_CXX_FLAGS
         -fvisibility=hidden
@@ -340,8 +403,13 @@ function(set_default_options target)
 
     if( NOT MSVC )
         # Base RPATHs
-        set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
-        set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+        if( LINUX )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "\$ORIGIN;\$ORIGIN/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "\$ORIGIN;\$ORIGIN/system")
+        elseif( APPLE )
+            set_property(TARGET ${target} PROPERTY BUILD_RPATH "@executable_path;@executable_path/system")
+            set_property(TARGET ${target} PROPERTY INSTALL_RPATH "@executable_path;@executable_path/system")
+        endif()
 
         # Optional: additional runtime paths from env variable RUN_PATH_ADDON
         if(DEFINED ENV{RUN_PATH_ADDON})
@@ -462,6 +530,14 @@ function(copy_artifacts_to_folder artifacts dest_dir)
     endforeach()
 endfunction()
 
+function(copy_framework_to_folder target dest_dir)
+    add_custom_command(TARGET ${target} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
+        COMMAND ${CMAKE_COMMAND} -E copy_directory "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMENT "Copying ${target}.framework to ${dest_dir}"
+    )
+endfunction()
+
 function(copy_icu_libs artifact)
     if( MSVC )
 
@@ -476,6 +552,12 @@ function(copy_icu_libs artifact)
                 "${EO_CORE_OUTPUT_DIR}"
             COMMENT "Copying ICU DLLs to ${EO_CORE_OUTPUT_DIR}"
         )
+    elseif( APPLE )
+    add_custom_command(TARGET ${artifact} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+        COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.dylib* \"${EO_CORE_OUTPUT_DIR}/\""
+        COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+    )
     else()
         add_custom_command(TARGET ${artifact} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"

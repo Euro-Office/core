@@ -262,7 +262,7 @@ if(DRAWINGFILE_SUPPORT)
 endif()
 
 if(APPLE)
-    target_compile_options(doctrenderer
+    target_compile_options(doctrenderer PRIVATE
         $<$<COMPILE_LANGUAGE:OBJC>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
         $<$<COMPILE_LANGUAGE:OBJCXX>:-fobjc-arc -fobjc-weak -framework Foundation -framework JavaScriptCore>
     )

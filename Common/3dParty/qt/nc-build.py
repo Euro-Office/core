@@ -47,7 +47,9 @@ def detect_host_and_arch():
     """Map the running platform to the (aqt host, aqt arch) pair.
 
     Qt only ships MSVC binaries for Windows-on-ARM, and Linux desktop arm64
-    binaries exist from Qt 6.7.0 onward.
+    binaries exist from Qt 6.7.0 onward. macOS desktop Qt (6.1.2+) is a single
+    universal binary covering both Intel and Apple Silicon, so there is only
+    one arch ("clang_64", installed under a "macos" subdirectory by aqt).
     """
     machine = platform.machine().lower()
     is_arm = machine in ( "arm64", "aarch64" )
@@ -57,12 +59,51 @@ def detect_host_and_arch():
             return "windows_arm64", "win64_msvc2022_arm64"
         return "windows", "win64_msvc2022_64"
 
-    if nc.is_linux():
+    elif nc.is_linux():
         if is_arm:
             return "linux_arm64", "linux_gcc_arm64"
         return "linux", "linux_gcc_64"
 
-    nc.abort_op( f"Unsupported platform: {sys.platform} / {machine}" )
+    elif nc.is_apple_silicon():
+        return "mac", "clang_64"
+
+    else:
+        nc.abort_op( f"Unsupported platform: {sys.platform} / {machine}" )
+
+
+def _pip_install_aqt( python_bin : str ) -> bool:
+    try:
+        nc.capture_process_output( [ python_bin, "-m", "pip", "install", "--quiet", "--upgrade", "aqtinstall" ] )
+        return True
+    except Exception:
+        return False
+
+
+def get_aqt_python() -> str:
+    """Return a python executable with an up-to-date 'aqt' importable.
+
+    download.qt.io's directory layout can change between Qt releases (e.g.
+    6.11.0), so a stale aqtinstall can fail to resolve versions -- always
+    upgrade it before use. Homebrew (and other PEP 668 "externally managed")
+    pythons refuse a plain "pip install" into system site-packages, so fall
+    back to a small local venv under the work dir rather than mutating the
+    system install (same approach as v8/nc-build.py's
+    get_gn_hermetic_check_python).
+    """
+    if _pip_install_aqt( sys.executable ):
+        return sys.executable
+
+    venv_dir = nc.work_dir / "aqt_venv"
+    venv_python = venv_dir / ( "Scripts" if nc.is_windows() else "bin" ) / ( "python.exe" if nc.is_windows() else "python3" )
+
+    if not venv_python.exists():
+        print( "System python refused aqtinstall (externally managed?); creating a local venv instead (not touching the system install)..." )
+        nc.run_command( [ sys.executable, "-m", "venv", str( venv_dir ) ], "Creating aqt venv" )
+
+    if not _pip_install_aqt( str( venv_python ) ):
+        nc.abort_op( "Failed to install aqtinstall (system python refused it, and venv install also failed)." )
+
+    return str( venv_python )
 
 
 def find_qt_prefix():
@@ -93,12 +134,13 @@ def fetch_and_patch():
 def build_and_install():
     nc.create_install_dir()
     host, arch = detect_host_and_arch()
+    aqt_python = get_aqt_python()
     print(f"Installing Qt {qt_version} for host '{host}', arch '{arch}'")
 
     # 1. Real Qt install: full base package (Core/Gui/Widgets/PrintSupport/Svg/
     #    Linguist tools) + add-on modules. NO --archives, so Svg etc. come in.
     cmd = [
-        sys.executable, "-m", "aqt", "install-qt",
+        aqt_python, "-m", "aqt", "install-qt",
         host, "desktop", qt_version, arch,
         "--outputdir", str(nc.install_dir),
     ]
@@ -112,7 +154,7 @@ def build_and_install():
     #    qwindows PDBs, not the whole multi-GB debug set.
     if nc.is_windows() and "debug_info" in qt_modules:
         dbg = [
-            sys.executable, "-m", "aqt", "install-qt",
+            aqt_python, "-m", "aqt", "install-qt",
             host, "desktop", qt_version, arch,
             "--outputdir", str(nc.install_dir),
             "-m", "debug_info",

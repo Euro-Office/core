@@ -56,6 +56,40 @@ def fetch_and_patch():
 
     print( "Fetch & patch completed" )
 
+def fix_macos_install_names( install_dir ):
+    # ICU's own Darwin makefile (icu/source/config/mh-darwin) bakes an
+    # absolute path into each dylib's install name when --enable-rpath is
+    # passed to configure (its "else" branch isn't @rpath-based either, just
+    # a bare filename) - there's no ./configure flag that produces a proper
+    # @rpath install name. Rewrite them here instead, same idea as the CEF
+    # framework restructuring done for the Xcode build.
+    lib_dir = install_dir / "lib"
+    dylibs = [ p for p in lib_dir.glob( "*.dylib" ) if not p.is_symlink() ]
+
+    old_to_new = {}
+    for dylib in dylibs:
+        output = nc.capture_process_output( [ "otool", "-D", str( dylib ) ] )
+        lines = [ l.strip() for l in output.splitlines() if l.strip() and not l.strip().endswith( ":" ) ]
+        if not lines:
+            continue
+        old_name = lines[0]
+        new_name = f"@rpath/{ Path( old_name ).name }"
+        old_to_new[ old_name ] = new_name
+        nc.run_command(
+            [ "install_name_tool", "-id", new_name, str( dylib ) ],
+            f"Fix install name for {dylib.name}"
+        )
+
+    for dylib in dylibs:
+        output = nc.capture_process_output( [ "otool", "-L", str( dylib ) ] )
+        for line in output.splitlines()[1:]:
+            dep = line.strip().split( " (" )[0]
+            if dep in old_to_new:
+                nc.run_command(
+                    [ "install_name_tool", "-change", dep, old_to_new[ dep ], str( dylib ) ],
+                    f"Fix {Path(dep).name} reference in {dylib.name}"
+                )
+
 def build_and_install():
     nc.create_install_dir()
 
@@ -86,6 +120,36 @@ def build_and_install():
             "Install",
             nc.work_dir / "icu" / "source"
         )
+
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "./configure",
+                f"--prefix={nc.install_dir}",
+                "--enable-rpath",
+                "CC=clang",
+                "CXX=clang++",
+                "AR=ar",
+                "RANLIB=ranlib",
+                "CXXFLAGS=-std=c++11",
+                "LDFLAGS=-Wl,-rpath,@loader_path"
+            ],
+            "Configure",
+            nc.work_dir / "icu" / "source"
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir / "icu" / "source"
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir / "icu" / "source"
+        )
+
+        fix_macos_install_names( nc.install_dir )
 
     elif nc.is_windows():
         icu_source_dir = nc.work_dir / "icu" / "source"

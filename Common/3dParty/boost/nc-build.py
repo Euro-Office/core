@@ -21,14 +21,14 @@ nc.init_for_dep(
 )
 
 modules_needed = [ "headers", "system", "filesystem", "regex", "date_time" ]
-header_only_modules_needed = [ "any", "asio", "beast", "foreach", "format", "functional", "multi_index", "uuid" ]
+header_only_modules_needed = [ "any", "asio", "beast", "foreach", "format", "functional", "multi_index", "serialization", "spirit", "uuid", "variant" ]
 
 def fetch_and_patch():
     nc.create_workdir()
-    print( "Clone Boost 1.78.0..." )
+    print( "Clone Boost 1.83.0..." )
     nc.run_command(
-        [ "git", "clone", "https://github.com/boostorg/boost.git", "-b", "boost-1.78.0", nc.work_dir, "--depth", "1" ],
-        "Clone Boost 1.78.0"
+        [ "git", "clone", "https://github.com/boostorg/boost.git", "-b", "boost-1.83.0", nc.work_dir, "--depth", "1" ],
+        "Clone Boost 1.83.0"
     )
 
     print( "Get boostdep..." )
@@ -75,7 +75,7 @@ def build_and_install():
     nc.create_install_dir()
     
     print( "Running bootstrap..." )
-    if nc.is_linux():
+    if nc.is_linux() or nc.is_apple_silicon():
         nc.run_command(
             [ "./bootstrap.sh", f"--prefix={ nc.install_dir }" ],
             "Running bootstrap",
@@ -85,7 +85,7 @@ def build_and_install():
         boost_arch, host_subdir = boost_msvc_arch()
 
         nc.run_command(
-            [ "cmd.exe", "/c" "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
+            [ "cmd.exe", "/c", "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
             "Running bootstrap",
             nc.work_dir
         )
@@ -119,6 +119,10 @@ option.set keep-going : false ;
     if nc.is_windows():
         build_cmd.append( "address-model=64" )
         build_cmd.append( f"architecture={ boost_arch }" )
+    if nc.is_apple_silicon():
+        build_cmd.append( "toolset=clang" )
+        build_cmd.append( "architecture=arm" )
+        build_cmd.append( "address-model=64" )
     build_cmd.append( "install" )
 
     print( "Running b2..." )

@@ -68,12 +68,15 @@ def cef_platform() -> str:
     forced = os.environ.get( "CEF_PLATFORM" )
     if forced:
         return forced
-    arm = nc.is_arm64()
+
     if nc.is_windows():
-        return "windowsarm64" if arm else "windows64"
-    if nc.is_linux():
-        return "linuxarm64" if arm else "linux64"
-    nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
+        return "windowsarm64" if nc.is_arm64() else "windows64"
+    elif nc.is_linux():
+        return "linuxarm64" if nc.is_arm64() else "linux64"
+    elif nc.is_apple_silicon():
+        return "macosarm64"
+    else:
+        nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
 
 
 def resolve_build():
