@@ -52,8 +52,22 @@ echo Using Cygwin: %CYGWIN_BIN%
 echo Using vcvars: %VCVARS%
 
 REM ---- PATH ORDER: MSVC first, Cygwin second ----
-set "PATH=%CYGWIN_BIN%;%PATH%"
-call "%VCVARS%" || exit /b 1
+REM If the caller already loaded the MSVC environment (build.ps1 does this via
+REM Import-VcVars, so VCINSTALLDIR/VSCMD/PATH/INCLUDE/LIB are inherited here),
+REM DON'T re-run vcvars: it concatenates all MSVC/SDK dirs onto the already-long
+REM inherited PATH again and blows past cmd's 8191-char line limit
+REM ("Die eingegebene Zeile ist zu lang. / Syntaxfehler."), aborting the build.
+if defined VCINSTALLDIR (
+  echo MSVC environment already active ^(VCINSTALLDIR set^) - reusing it, skipping vcvars.
+  REM Cygwin is already on the inherited PATH; append (not prepend) so MSVC's
+  REM link.exe still precedes Cygwin's /usr/bin/link. Keeps cygpath reachable
+  REM even when the batch is run standalone from a VS dev prompt.
+  set "PATH=%PATH%;%CYGWIN_BIN%"
+) else (
+  REM Fresh shell: Cygwin first, then let vcvars prepend MSVC on top -> MSVC first.
+  set "PATH=%CYGWIN_BIN%;%PATH%"
+  call "%VCVARS%" || exit /b 1
+)
 
 echo "------------- DBG 1"
 

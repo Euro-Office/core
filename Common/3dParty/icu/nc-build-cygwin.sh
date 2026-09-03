@@ -6,7 +6,43 @@ if [[ $install_dir == /mnt/* ]]; then
 fi
 
 export PATH="$PATH:/usr/bin"
-export PYTHON=/usr/bin/python3
+
+# Pick a working Python 3 for ICU's data/rules.mk generation. Prefer Cygwin's
+# python3, but fall back to any python3/python on PATH (e.g. the native Windows
+# one the build front-loads) when Cygwin's isn't installed. ICU's databuilder
+# normalizes path separators to '/', so native Python produces correct makefile
+# fragments too.
+if [ -x /usr/bin/python3 ]; then
+    export PYTHON=/usr/bin/python3
+elif command -v python3 >/dev/null 2>&1; then
+    export PYTHON="$( command -v python3 )"
+elif command -v python >/dev/null 2>&1; then
+    export PYTHON="$( command -v python )"
+else
+    echo "ERROR: no Python 3 found. Install Cygwin's python3, or ensure a native python3 is on PATH." >&2
+    exit 1
+fi
+echo "Using PYTHON=$PYTHON"
+
+# --- Make MSVC's link.exe win over Cygwin's /usr/bin/link (coreutils) --------
+# ICU's configure runs `link --version` and aborts with "link.exe is not a
+# valid linker" if it reports "GNU coreutils". Cygwin ships such a `link`, and
+# depending on the inherited PATH order it can shadow MSVC's linker. cl is
+# already on PATH (CC=cl) and MSVC's link.exe lives in the SAME directory, so
+# front-load that directory; falls back to VCToolsInstallDir if cl isn't found.
+msvc_bin=""
+cl_path="$( command -v cl 2>/dev/null || true )"
+if [ -n "$cl_path" ]; then
+    msvc_bin="$( dirname "$cl_path" )"
+elif [ -n "$VCToolsInstallDir" ]; then
+    msvc_bin="$( cygpath -u "$VCToolsInstallDir" )/bin/Hostx64/x64"
+fi
+if [ -n "$msvc_bin" ] && [ -x "$msvc_bin/link.exe" ]; then
+    export PATH="$msvc_bin:$PATH"
+    echo "Front-loaded MSVC bin so link.exe resolves to the MS linker: $msvc_bin"
+else
+    echo "WARNING: could not locate MSVC bin dir; Cygwin's link may shadow link.exe" >&2
+fi
 
 # --- logging: write a clean UTF-8 log straight from bash ---------------------
 # Done before any heavy work so the real output never passes through the

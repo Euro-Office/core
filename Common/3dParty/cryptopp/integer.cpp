@@ -3056,7 +3056,13 @@ Integer::Integer(const byte *encodedInteger, size_t byteCount, Signedness s, Byt
 	else
 	{
 		SecByteBlock block(byteCount);
-#if (_MSC_VER >= 1500)
+// The stdext:: iterator extensions were removed from the MSVC STL (gone as of
+// MSVC 14.51 / _MSC_VER 1951), so a pure version check picks a namespace that
+// no longer exists: "error C2653: 'stdext': is not a class or namespace".
+// Gate on _STDEXT_BEGIN - the macro the MSVC headers use to open that namespace -
+// like the guard in zdeflate.cpp already does. The portable path below is
+// equivalent; the wrapper only added debug-time bounds checking.
+#if (_MSC_VER >= 1500) && defined(_STDEXT_BEGIN)
 		std::reverse_copy(encodedInteger, encodedInteger+byteCount,
 			stdext::make_checked_array_iterator(block.begin(), block.size()));
 #else
