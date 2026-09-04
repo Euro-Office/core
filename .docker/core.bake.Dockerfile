@@ -147,6 +147,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
 #### CORE ####
 FROM core-base AS core
     ARG NUGET_SOURCE_PATH
+    ARG CMAKE_BUILD_PARALLEL_LEVEL=2
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \
@@ -161,5 +162,5 @@ FROM core-base AS core
         -DEO_CORE_OUTPUT_DIR=/build-cache/package/bin \
         -DEO_CORE_TOOLS_DIR=/build-cache/package/tools \
         /core && \
-        cmake --build . && \
+        cmake --build . --parallel "${CMAKE_BUILD_PARALLEL_LEVEL}" && \
         cp -r package/* ${BUILD_ROOT}

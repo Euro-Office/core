@@ -12,6 +12,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
     ARG BUILD_ROOT
     ARG CACHE_BUST
     ARG NUGET_SOURCE_PATH
+    ARG CMAKE_BUILD_PARALLEL_LEVEL=2
 
     ENV BUILD_ROOT=${BUILD_ROOT}
     ENV EM_CACHE=/em-cache
@@ -31,7 +32,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
         emcmake cmake -DCMAKE_C_COMPILER_LAUNCHER=ccache \
                       -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
                       -DEO_CORE_OUTPUT_DIR=/build-cache-wasm/dist /core
-        cmake --build . -- -j$(nproc)
+        cmake --build . --parallel "${CMAKE_BUILD_PARALLEL_LEVEL}"
         ccache --show-stats
         echo "=== CCACHE ON DISK ==="
         du -sh /ccache || true
