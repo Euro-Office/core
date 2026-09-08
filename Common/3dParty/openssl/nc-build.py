@@ -55,6 +55,7 @@ def build_and_install():
             [   "./config",
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
+                "--libdir=lib64",
                 "enable-md2",
                 "no-shared",
                 "no-asm",
