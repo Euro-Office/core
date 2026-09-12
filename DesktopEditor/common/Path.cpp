@@ -213,7 +213,7 @@ namespace NSSystemPath
 
 		if (L".." == wsToken)
 		{
-			if (!arStack.empty() && L".." == arStack.top())
+			if (!arStack.empty() && L".." != arStack.top())
 				arStack.pop();
 			else
 				arStack.push(wsToken);
@@ -236,6 +236,12 @@ namespace NSSystemPath
 			wsNewPath = arStack.top() + L'/' + wsNewPath;
 			arStack.pop();
 		}
+
+		// wsNewPath stays empty when the loop above breaks on the first entry
+		// (bRemoveExternalPath with a leading ".."), and pop_back() on an empty
+		// string is undefined behaviour.
+		if (wsNewPath.empty())
+			return std::wstring();
 
 		wsNewPath.pop_back();
 
