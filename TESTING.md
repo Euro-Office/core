@@ -98,6 +98,19 @@ Done:
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
       replaced with repo-relative includes (CMake links the libraries).
+- [x] `DesktopEditor/xmlsec/src/test` (`xmlsec_test`) — deps: kernel, ooxmlsignature. Not a
+      GoogleTest suite (unlike every other entry here) — a plain `main()` returning a real
+      exit code, since it exercises `COOXMLSigner`/`COOXMLVerifier` directly rather than
+      asserting individual cases. Signs `file.docx` and verifies the result in the same
+      process (`USE_SIGN`/`USE_VERIFY`), and separately verifies a committed fixture,
+      `legacy-signed.docx`, signed by upstream ONLYOFFICE Desktop Editors 9.4.0 under
+      OpenSSL 1.1.1f (`USE_VERIFY_LEGACY`) — proving documents signed under OpenSSL 1.1.1
+      still verify under this fork's 4.0.1. Because it copies itself into
+      `EO_CORE_OUTPUT_DIR` (matching `x2t`/`UnicodeConverter`'s convention, not the
+      `WORKING_DIRECTORY $<TARGET_FILE_DIR:...>` pattern the other suites use), its `add_test`
+      runs that copy directly rather than the raw build-tree binary. **Not** the same as the
+      still-blocked `DesktopEditor/xmlsec/src/osign/test` below despite the similar path —
+      `osign` is an unrelated, separate signing library.
 
 ### gtest suites to migrate
 

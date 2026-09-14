@@ -57,4 +57,16 @@ add_custom_command(TARGET xmlsec_test POST_BUILD
     COMMENT "Copying test fixtures to ${EO_CORE_OUTPUT_DIR}"
 )
 
+# Register with CTest (see TESTING.md). Unlike the other suites there, this
+# one is a plain main()/exit-code test, not GoogleTest - and it must run the
+# copy of the binary in EO_CORE_OUTPUT_DIR (not the raw build-tree one from
+# $<TARGET_FILE:xmlsec_test>), since that's the only place its fixtures and
+# RPATH-resolved deps (kernel, ooxmlsignature.framework) are colocated.
+enable_testing()
+add_test(NAME xmlsec_test
+    COMMAND "${EO_CORE_OUTPUT_DIR}/$<TARGET_FILE_NAME:xmlsec_test>"
+    WORKING_DIRECTORY "${EO_CORE_OUTPUT_DIR}")
+set_tests_properties(xmlsec_test PROPERTIES
+    ENVIRONMENT "LD_LIBRARY_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{LD_LIBRARY_PATH}")
+
 declare_victory( xmlsec_test )
