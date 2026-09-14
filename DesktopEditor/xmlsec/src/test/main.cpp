@@ -10,6 +10,7 @@
 
 #define USE_SIGN
 #define USE_VERIFY
+#define USE_VERIFY_LEGACY
 
 int main()
 {
@@ -84,6 +85,37 @@ int main()
 			nResult = 1;
 	}
 #endif
+#endif
+
+#ifdef USE_VERIFY_LEGACY
+	// Separate from the same-build round trip above: verifies
+	// legacy-signed.docx, a document signed by upstream ONLYOFFICE Desktop
+	// Editors under an old OpenSSL version, committed as a permanent
+	// regression fixture proving documents signed before the 1.1.1w -> 4.0.1
+	// migration still verify.
+	{
+		BYTE* pLegacyData = NULL;
+		unsigned long nLegacyLen = 0;
+		NSFile::CFileBinary::ReadAllBytes(L"legacy-signed.docx", &pLegacyData, nLegacyLen);
+
+		COOXMLVerifier oLegacyVerifier(pLegacyData, nLegacyLen);
+		int nLegacyCount = oLegacyVerifier.GetSignatureCount();
+		printf("Legacy verify: found %d signature(s)\n", nLegacyCount);
+		if (nLegacyCount == 0)
+			nResult = 1;
+
+		for (int i = 0; i < nLegacyCount; i++)
+		{
+			COOXMLSignature* pSign = oLegacyVerifier.GetSignature(i);
+			pSign->Check();
+			int nValid = pSign->GetValid();
+			printf("Legacy verify: signature %d -> %s (code %d)\n", i,
+				(nValid == OOXML_SIGNATURE_VALID) ? "VALID" : "INVALID", nValid);
+			if (nValid != OOXML_SIGNATURE_VALID)
+				nResult = 1;
+		}
+		RELEASEARRAYOBJECTS(pLegacyData);
+	}
 #endif
 
 	RELEASEARRAYOBJECTS(pDataDst);
