@@ -125,10 +125,11 @@ void CZipBuffer::open(BYTE* buffer, DWORD size)
 
 	do
 	{
-		unz_file_info file_info;
-		unzGetCurrentFileInfo(uf, &file_info, NULL, 0, NULL, 0, NULL, 0);
-		if (file_info.uncompressed_size != 0)
-			m_arrFiles.push_back(CFile(get_filename_from_unzfile(uf), NULL, 0));
+		// Track every entry, including legitimate 0-byte files (e.g.
+		// _xmlsignatures/origin.sigs, an empty marker OOXML signature
+		// verification looks for by name/extension) - skipping them here
+		// made such files invisible to getFiles()/exists()/read() below.
+		m_arrFiles.push_back(CFile(get_filename_from_unzfile(uf), NULL, 0));
 	} while (UNZ_OK == unzGoToNextFile(uf));
 	unzClose(uf);
 	RELEASEOBJECT(buf);
