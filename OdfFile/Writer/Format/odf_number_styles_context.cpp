@@ -938,8 +938,8 @@ void odf_number_styles_context::detect_format(number_format_state & state)
 	
 	std::wstring strFormatCode = boost::regex_replace(state.format_code[0], re_unwanted, &replace_unwanted,	boost::match_any | boost::format_all);
 
- 	//find [$<Currency String>-<language info>].
-	boost::wregex re(L"(\\[\\$.*\-[\\w\\d]+\\])");
+	// The locale suffix is optional, e.g. [$€] and [$€-407].
+	boost::wregex re(L"(\\[\\$[^\\]]*\\])");
 	
 	std::vector<std::wstring> result;
 	std::wstring tmp = strFormatCode;
@@ -960,6 +960,10 @@ void odf_number_styles_context::detect_format(number_format_state & state)
 				ss >> state.language_code;
 			}
 			catch (...) {}
+		}
+		else
+		{
+			state.currency_str = tmp.substr(1);
 		}
 		if (false == state.currency_str.empty())
 		{
