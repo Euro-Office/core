@@ -739,7 +739,8 @@ void docx_conversion_context::start_document()
 	output_stream() << L"xmlns:cx1=\"http://schemas.microsoft.com/office/drawing/2015/9/8/chartex\" ";
 	output_stream() << L"xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" ";
 	output_stream() << L"xmlns:w16se=\"http://schemas.microsoft.com/office/word/2015/wordml/symex\" ";
-	output_stream() << L"mc:Ignorable=\"w14 w15 w16se wne wp14\">";
+	output_stream() << L"xmlns:eo=\"http://schemas.euro-office.com/office/word/2024/wordml\" ";
+	output_stream() << L"mc:Ignorable=\"w14 w15 w16se wne wp14 eo\">";
 
 
 	//apply page-default prop

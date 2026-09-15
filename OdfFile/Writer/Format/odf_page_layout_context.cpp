@@ -295,6 +295,65 @@ void odf_page_layout_context::set_background(_CP_OPT(color) & color, int type)
 	}
 }
 
+void odf_page_layout_context::chain_current_master_to_clean_copy()
+{
+	if (layout_state_list_.empty() || master_state_list_.empty()) return;
+
+	// Section 0's master (last()) already has the background applied.
+	// Clone its layout WITHOUT the background for page 2+.
+	std::wstring cover_master_name = last_master()->get_name();
+	style_page_layout_properties * src_props = get_properties();
+
+	// Create a new layout for the continuation master.
+	const size_t layout_size_before = layout_state_list_.size();
+	create_layout_page();
+	if (layout_state_list_.size() <= layout_size_before)
+		return;
+
+	style_page_layout_properties * dst_props = get_properties();
+	if (dst_props && src_props)
+	{
+		// Copy the full geometry, then clear the background.
+		dst_props->attlist_ = src_props->attlist_;
+		dst_props->attlist_.common_background_color_attlist_.fo_background_color_ = boost::none;
+		dst_props->attlist_.common_draw_fill_attlist_ = odf_types::common_draw_fill_attlist();
+	}
+	std::wstring cont_layout_name = last_layout()->get_name();
+
+	// Create the continuation master page element.
+	office_element_ptr elm;
+	create_element(L"style", L"master-page", elm, odf_context_);
+	if (!elm)
+	{
+		layout_state_list_.pop_back();
+		return;
+	}
+
+	master_state_list_.push_back(odf_master_state(elm));
+	std::wstring cont_master_name = L"EO_Continuation";
+	master_state_list_.back().set_name(cont_master_name);
+	master_state_list_.back().set_layout_style_name(cont_layout_name);
+
+	// Chain section 0's master to the continuation master.
+	// Find section 0's master and set style:next-style-name.
+	for (size_t i = 0; i < master_state_list_.size(); ++i)
+	{
+		if (master_state_list_[i].get_name() == cover_master_name)
+		{
+			style_master_page * mp = dynamic_cast<style_master_page*>(master_state_list_[i].get_root().get());
+			if (mp)
+				mp->attlist_.style_next_style_name_ = cont_master_name;
+			break;
+		}
+	}
+
+	// Keep section 0's master as last() so subsequent section processing targets it.
+	if (master_state_list_.size() >= 2)
+		std::swap(master_state_list_[master_state_list_.size() - 2], master_state_list_.back());
+	if (layout_state_list_.size() >= 2)
+		std::swap(layout_state_list_[layout_state_list_.size() - 2], layout_state_list_.back());
+}
+
 ///////////////////////////////////////////////////////////////
 bool odf_page_layout_context::add_footer(int type)
 {

@@ -931,11 +931,19 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	{
 		odt_context->start_paragraph(bStyled);
 
-		if (odt_context->is_paragraph_in_current_section_)
+		// Capture before the first set_master_page_name clears is_paragraph_in_current_section_.
+		bool bInSection = odt_context->is_paragraph_in_current_section_;
+		if (bInSection)
 		{
 			odt_context->set_master_page_name(odt_context->page_layout_context()->last_master() ?
 											  odt_context->page_layout_context()->last_master()->get_name() : L"");
-		}		
+		}
+		// Apply the deferred first-page-only background to section 0's master now
+		// that headers, footers, and geometry are fully built.
+		if (bInSection && odt_context->has_deferred_first_page_background())
+		{
+			odt_context->apply_deferred_first_page_background();
+		}
 	}
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -2350,12 +2358,26 @@ void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 {
 	if (oox_background == NULL) return;
-
+	// A first-page-only background (ODT cover-page style) must not be promoted to
+	// the document-wide page layout. Skip it here; the JS renderer handles per-page
+	// drawing using the firstPageOnly flag from the binary stream.
 	_CP_OPT(odf_types::color) color;
-	convert (	oox_background->m_oColor.GetPointer(), 
-				oox_background->m_oThemeColor.GetPointer(), 
-				oox_background->m_oThemeTint.GetPointer(), 
+	convert (	oox_background->m_oColor.GetPointer(),
+				oox_background->m_oThemeColor.GetPointer(),
+				oox_background->m_oThemeTint.GetPointer(),
 				oox_background->m_oThemeShade.GetPointer(), color);
+
+	if (oox_background->m_bFirstPageOnly)
+	{
+		// Defer: store the background so it can be applied to section 0's master
+		// after headers, footers, and geometry are fully built.
+		if (type == 1)
+		{
+			bool hasDrawing = oox_background->m_oDrawing.IsInit() || oox_background->m_oBackground.IsInit();
+			odt_context->set_deferred_first_page_background(color, hasDrawing);
+		}
+		return;
+	}
 
 	odt_context->set_background(color, type);	
 	
@@ -4731,6 +4753,10 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 		{
 			odt_context->set_master_page_name(odt_context->page_layout_context()->last_master() ?
 								  odt_context->page_layout_context()->last_master()->get_name() : L"");
+			if (odt_context->has_deferred_first_page_background())
+			{
+				odt_context->apply_deferred_first_page_background();
+			}
 		}
 			odt_context->start_drawing_context();
 				_CP_OPT(double) width, height, x, y ;

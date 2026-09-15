@@ -620,7 +620,8 @@ extern int g_nCurFormatVersion;
 	{
 		Color		= 0,
 		ColorTheme	= 1,
-		pptxDrawing = 2
+		pptxDrawing = 2,
+		FirstPageOnly = 3
 	};}
 	namespace c_oSerImageType{enum c_oSerImageType
 	{

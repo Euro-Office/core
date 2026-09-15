@@ -128,7 +128,7 @@ namespace BinDocxRW {
 	}
 
 
-	Background::Background() : bColor (false), bThemeColor(false) {}
+	Background::Background() : bColor(false), bThemeColor(false), bFirstPageOnly(false) {}
 	std::wstring Background::Write()
 	{
 		std::wstring sBackground =  L"<w:background";
@@ -152,6 +152,8 @@ namespace BinDocxRW {
 		{
 			sBackground += L" w:color=\"ffffff\"";
 		}
+		if (bFirstPageOnly)
+			sBackground += L" eo:firstPageOnly=\"1\"";
 		sBackground += L">";
 
 		sBackground += sObject;
