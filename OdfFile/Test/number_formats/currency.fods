@@ -24,10 +24,23 @@
    <number:text> </number:text>
    <number:currency-symbol number:language="de" number:country="DE">€</number:currency-symbol>
   </number:currency-style>
+  <number:percentage-style style:name="percent">
+   <number:number number:decimal-places="2" number:min-integer-digits="1"/>
+   <number:text>%</number:text>
+  </number:percentage-style>
+  <number:date-style style:name="isoDate">
+   <number:year number:style="long"/>
+   <number:text>-</number:text>
+   <number:month number:style="long"/>
+   <number:text>-</number:text>
+   <number:day number:style="long"/>
+  </number:date-style>
   <style:style style:name="ceEuro" style:family="table-cell" style:data-style-name="euro"/>
   <style:style style:name="ceDollar" style:family="table-cell" style:data-style-name="dollar"/>
   <style:style style:name="ceNoSymbol" style:family="table-cell" style:data-style-name="noSymbol"/>
   <style:style style:name="ceUngroupedEuro" style:family="table-cell" style:data-style-name="ungroupedEuro"/>
+  <style:style style:name="cePercent" style:family="table-cell" style:data-style-name="percent"/>
+  <style:style style:name="ceDate" style:family="table-cell" style:data-style-name="isoDate"/>
   <style:style style:name="wide" style:family="table-column">
    <style:table-column-properties style:column-width="6cm"/>
   </style:style>
@@ -59,6 +72,14 @@
     <table:table-row>
      <table:table-cell office:value-type="string"><text:p>Euro, no grouping (control)</text:p></table:table-cell>
      <table:table-cell table:style-name="ceUngroupedEuro" office:value-type="currency" office:currency="EUR" office:value="1234.56"><text:p>1234,56 €</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Percentage (must not be taken by a currency ID)</text:p></table:table-cell>
+     <table:table-cell table:style-name="cePercent" office:value-type="percentage" office:value="0.1234"><text:p>12,34%</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Date (must not be taken by a currency ID)</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceDate" office:value-type="date" office:date-value="2024-02-29"><text:p>2024-02-29</text:p></table:table-cell>
     </table:table-row>
    </table:table>
   </office:spreadsheet>

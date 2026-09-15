@@ -38,6 +38,17 @@ def make_ods(output):
         archive.writestr("META-INF/manifest.xml", manifest)
 
 
+CURRENCY_CELLS = [
+    ("B2", "€", "1234.56"), ("B3", "€", "-1234.56"),
+    ("B4", "$", "1234.56"), ("B5", None, "1234.56"), ("B6", "€", "1234.56"),
+]
+
+# B7/B8 are controls rather than currencies: a currency format that collided on
+# reserved ID 7 used to walk 7 -> 8 -> 9 -> 10 and take the built-in percentage
+# formats with it, so a currency-free cell could come back as a percentage.
+CONTROL_CELLS = [("B7", "percentage"), ("B8", "date")]
+
+
 def check_xlsx(path):
     with ZipFile(path) as archive:
         styles = ET.fromstring(archive.read("xl/styles.xml"))
@@ -46,13 +57,14 @@ def check_xlsx(path):
              for n in styles.findall("s:numFmts/s:numFmt", NS)}
     xfs = styles.find("s:cellXfs", NS)
     cells = {cell.attrib["r"]: cell for cell in sheet.findall("s:sheetData/s:row/s:c", NS)}
-    for address, symbol, value in [
-        ("B2", "€", "1234.56"), ("B3", "€", "-1234.56"),
-        ("B4", "$", "1234.56"), ("B5", None, "1234.56"), ("B6", "€", "1234.56"),
-    ]:
+    def number_format(address):
         cell = cells[address]
         fmt_id = int(xfs[int(cell.attrib["s"])].attrib["numFmtId"])
-        code = codes.get(fmt_id, "")
+        return cell, fmt_id, codes.get(fmt_id, "")
+
+    currency_ids = set()
+    for address, symbol, value in CURRENCY_CELLS:
+        cell, fmt_id, code = number_format(address)
         print(f"{address}: numFmtId={fmt_id}, formatCode={code}")
         if fmt_id < 164:
             raise AssertionError(f"{address}: currency uses reserved format ID {fmt_id}")
@@ -60,6 +72,13 @@ def check_xlsx(path):
             raise AssertionError(f"{address}: wrong currency symbol in {code!r}")
         if cell.findtext("s:v", namespaces=NS) != value:
             raise AssertionError(f"{address}: numeric value changed")
+        currency_ids.add(fmt_id)
+
+    for address, kind in CONTROL_CELLS:
+        _, fmt_id, code = number_format(address)
+        print(f"{address}: numFmtId={fmt_id}, formatCode={code} ({kind} control)")
+        if fmt_id in currency_ids:
+            raise AssertionError(f"{address}: {kind} shares format ID {fmt_id} with a currency")
 
 
 def check_ods(path):
@@ -85,6 +104,16 @@ def check_ods(path):
             raise AssertionError(f"B{index + 1}: saved ODS changed its numeric value")
         if data_style.tag.endswith("percentage-style"):
             raise AssertionError(f"B{index + 1}: currency became a percentage")
+
+    for index, expected_style in ((6, "percentage-style"), (7, "date-style")):
+        cell = rows[index].findall("table:table-cell", NS)[1]
+        style = styles[cell.attrib[f"{{{NS['table']}}}style-name"]]
+        data_style = styles[style.attrib[f"{{{NS['style']}}}data-style-name"]]
+        actual_style = data_style.tag.rsplit("}", 1)[-1]
+        print(f"ODS B{index + 1}: data style={actual_style}")
+        if actual_style != expected_style:
+            raise AssertionError(
+                f"B{index + 1}: expected a {expected_style} after the round trip, got {actual_style}")
 
 
 def convert(x2t, source, destination, format_id):
