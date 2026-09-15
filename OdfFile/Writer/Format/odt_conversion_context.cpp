@@ -1054,6 +1054,14 @@ void odt_conversion_context::separate_field()
 	set_field_instr();
 	current_fields.back().result = true;
 }
+void odt_conversion_context::set_first_page_master_name(const std::wstring & name)
+{
+	first_page_master_name_ = name;
+}
+std::wstring odt_conversion_context::get_first_page_master_name() const
+{
+	return first_page_master_name_;
+}
 void odt_conversion_context::set_master_page_name(std::wstring master_name)
 {
 	if (current_root_elements_.empty())// return; - эффект_штурмовика.docx - 1 page!! (and finally -

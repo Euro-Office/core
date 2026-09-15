@@ -931,11 +931,21 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	{
 		odt_context->start_paragraph(bStyled);
 
-		if (odt_context->is_paragraph_in_current_section_)
+		// Capture before the first set_master_page_name clears is_paragraph_in_current_section_.
+		bool bInSection = odt_context->is_paragraph_in_current_section_;
+		if (bInSection)
 		{
 			odt_context->set_master_page_name(odt_context->page_layout_context()->last_master() ?
 											  odt_context->page_layout_context()->last_master()->get_name() : L"");
-		}		
+		}
+		// If a first-page-only background master was registered, apply it to the first paragraph of
+		// the section that triggered the registration.  Gate on bInSection so that header/footer
+		// paragraphs (which run before is_paragraph_in_current_section_ is set) never consume it.
+		if (bInSection && !odt_context->get_first_page_master_name().empty())
+		{
+			odt_context->set_master_page_name(odt_context->get_first_page_master_name());
+			odt_context->set_first_page_master_name(L"");
+		}
 	}
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -2350,12 +2360,29 @@ void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 {
 	if (oox_background == NULL) return;
-
+	// A first-page-only background (ODT cover-page style) must not be promoted to
+	// the document-wide page layout. Skip it here; the JS renderer handles per-page
+	// drawing using the firstPageOnly flag from the binary stream.
 	_CP_OPT(odf_types::color) color;
-	convert (	oox_background->m_oColor.GetPointer(), 
-				oox_background->m_oThemeColor.GetPointer(), 
-				oox_background->m_oThemeTint.GetPointer(), 
+	convert (	oox_background->m_oColor.GetPointer(),
+				oox_background->m_oThemeColor.GetPointer(),
+				oox_background->m_oThemeTint.GetPointer(),
 				oox_background->m_oThemeShade.GetPointer(), color);
+
+	if (oox_background->m_bFirstPageOnly)
+	{
+		// type==1 is the page-body background; types 2 and 3 are header/footer.
+		// Only create the EO_FirstPage master for the page-body call (type==1).
+		// Header/footer backgrounds from a first-page-only style are simply suppressed.
+		if (type == 1 && odt_context->get_first_page_master_name().empty())
+		{
+			// Create an "EO_FirstPage" master page with this background color, chained to
+			// the default master.  Store the name so the first paragraph picks it up.
+			std::wstring first_master = odt_context->page_layout_context()->add_first_page_background_master(color);
+			odt_context->set_first_page_master_name(first_master);
+		}
+		return;
+	}
 
 	odt_context->set_background(color, type);	
 	

@@ -126,16 +126,25 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
         //background (for all pages)
 	{
 		odf_reader::page_layout_container & pgContainer = Context.root()->odf_context().pageLayoutContainer();
-		page_layout_instance * backgroundLayout = pgContainer.page_layout_by_name(Context.get_page_properties());
-		
-		if (!backgroundLayout || !backgroundLayout->properties() ||
-			!backgroundLayout->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
+		// Two-pass search: prefer a document-wide (non-transitional) master page layout that has a
+		// background color.  A transitional master page — one whose style:next-style-name chains to a
+		// *different* style, e.g. a "First Page" cover — is still emitted but flagged as first-page-only
+		// so the JS renderer skips it on all pages after the first.
+		page_layout_instance * backgroundLayout = nullptr;
+		bool bFirstPageOnly = false;
 		{
 			std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
+			// First pass: non-transitional styles only
 			for (size_t i = 0; i < masterPagesAll.size(); ++i)
 			{
 				if (!masterPagesAll[i]) continue;
 				std::wstring mpName = masterPagesAll[i]->attlist_.style_name_.get_value_or(L"");
+				if (masterPagesAll[i]->attlist_.style_next_style_name_)
+				{
+					const std::wstring & nextStyle = *masterPagesAll[i]->attlist_.style_next_style_name_;
+					if (!nextStyle.empty() && nextStyle != mpName)
+						continue; // transitional — skip in first pass
+				}
 				std::wstring lpName = pgContainer.page_layout_name_by_style(mpName);
 				if (!lpName.empty())
 				{
@@ -144,6 +153,40 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 					{
 						backgroundLayout = pl;
 						break;
+					}
+				}
+			}
+			// Second pass: accept only a transitional style whose next-style-name is the
+			// default (first-registered) master page — the hallmark of a cover/first-page
+			// style.  A transitional style that chains to any other master belongs to an
+			// interior section whose page number is unknown at conversion time; suppress it
+			// rather than misplace its background on page 1.
+			if (!backgroundLayout)
+			{
+				const std::wstring defaultMasterName = !masterPagesAll.empty()
+					? masterPagesAll[0]->attlist_.style_name_.get_value_or(L"")
+					: L"";
+				for (size_t i = 0; i < masterPagesAll.size(); ++i)
+				{
+					if (!masterPagesAll[i]) continue;
+					std::wstring mpName = masterPagesAll[i]->attlist_.style_name_.get_value_or(L"");
+					if (!masterPagesAll[i]->attlist_.style_next_style_name_)
+						continue; // non-transitional — already handled in first pass
+					const std::wstring & nextStyle = *masterPagesAll[i]->attlist_.style_next_style_name_;
+					if (nextStyle.empty() || nextStyle == mpName)
+						continue; // effectively non-transitional
+					if (nextStyle != defaultMasterName)
+						continue; // chains to a non-default style — not a cover page, skip
+					std::wstring lpName = pgContainer.page_layout_name_by_style(mpName);
+					if (!lpName.empty())
+					{
+						page_layout_instance * pl = pgContainer.page_layout_by_name(lpName);
+						if (pl && pl->properties() && pl->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
+						{
+							backgroundLayout = pl;
+							bFirstPageOnly = true;
+							break;
+						}
 					}
 				}
 			}
@@ -165,7 +208,7 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 						fill.bitmap->rId = Context.get_mediaitems()->add_or_find(href, oox::typeImage, fill.bitmap->isInternal, href, Context.get_type_place());
 					}
 					int id = Context.get_drawing_context().get_current_shape_id();
-					if (layout_properties->docx_background_serialize(Context.output_stream(), Context, fill, id))
+					if (layout_properties->docx_background_serialize(Context.output_stream(), Context, fill, id, bFirstPageOnly))
 					{
 						Context.set_settings_property(odf_reader::_property(L"displayBackgroundShape", true));
 					}

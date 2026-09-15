@@ -135,6 +135,8 @@ namespace OOX
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeColor", m_oThemeColor)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeShade", m_oThemeShade)
 				WritingElement_ReadAttributes_Read_else_if(oReader, L"w:themeTint", m_oThemeTint)
+				else if (L"eo:firstPageOnly" == wsName)
+					m_bFirstPageOnly = (L"1" == oReader.GetText());
 			WritingElement_ReadAttributes_End(oReader)
 		}
 //------------------------------------------------------------------------------------------------------------------------------------------------
