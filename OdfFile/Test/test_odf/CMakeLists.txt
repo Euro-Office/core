@@ -33,10 +33,13 @@ set(_test_odf_run_dir "${CMAKE_CURRENT_BINARY_DIR}/run")
 # it; x2tlib compiles it the same way). FILE_FORMAT_CHECKER_WITH_MACRO is left
 # undefined to avoid the heavy PPT dependency chain. unicode_util.cpp/pole.cpp are
 # NOT compiled here -- DocxFormatLib provides them, so doing so would duplicate.
+# number_styles.cpp needs no fixture and no conversion: it drives
+# odf_number_styles_context directly out of OdfFormatLib.
 add_core_gtest(
     NAME    test_odf
     SOURCES test.cpp
             common.cpp
+            number_styles.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
@@ -85,9 +88,12 @@ target_link_libraries(test_odf PRIVATE
 
 # test_odf.pro adds the core root (for rewritten relative includes such as
 # "Common/OfficeFileFormatChecker.h") and X2tConverter/src on the include path.
+# OdfFormatLib keeps OdfFile/Common PRIVATE, but its writer headers include
+# <CPSharedPtr.h> from there, so a consumer has to add it itself.
 target_include_directories(test_odf PRIVATE
     "${CORE_ROOT_DIR}"
     "${CORE_ROOT_DIR}/X2tConverter/src"
+    "${CORE_ROOT_DIR}/OdfFile/Common"
 )
 
 add_custom_command(TARGET test_odf POST_BUILD
