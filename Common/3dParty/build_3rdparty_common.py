@@ -38,20 +38,25 @@ debug_mode = False
 work_dir = None
 install_dir = None
 force_redo = False
+dep_version = ""
 
 def init_for_dep(
     depname : str,
     workdir : Path,
     installdir : Path,
     forceredo : bool,
+    version : str = "", # Arbitrary version string. Integer numbers suggested.
+                        # If a deps version/branch/tag/patch changes, bump this in the respective build script.
+                        # This will force that dep to be rebuilt.
     debugmode : bool = True
 ):
-    global dep_name, work_dir, install_dir, force_redo, debug_mode, log_cleared
+    global dep_name, work_dir, install_dir, force_redo, debug_mode, dep_version, log_cleared
 
     dep_name = depname
     work_dir = workdir
     install_dir = installdir
     force_redo = forceredo
+    dep_version = version
     debug_mode = debugmode
     log_cleared = False
     
@@ -95,17 +100,27 @@ def is_arm64() -> bool:
 def is_apple_silicon() -> bool:
     return sys.platform == "darwin" and platform.machine() == "arm64"
 
+def _marker_ok( marker_path : Path, label : str ) -> bool:
+    if force_redo or not marker_path.exists():
+        return False
+    on_disk = marker_path.read_text()
+    if on_disk != dep_version:
+        print( f"  [INFO] {dep_name} {label} marker version changed "
+               f"({on_disk!r} -> {dep_version!r}), redoing" )
+        return False
+    return True
+
 def work_dir_looks_ok() -> bool:
-    return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()
+    return _marker_ok( Path( work_dir / "ok_marker" ), "work dir" )
 
 def install_dir_looks_ok() -> bool:
-    return ( not force_redo ) and Path( install_dir / "ok_marker" ).exists()
+    return _marker_ok( Path( install_dir / "ok_marker" ), "install dir" )
 
 def create_work_dir_ok_marker():
-    Path( work_dir / "ok_marker" ).touch()
+    Path( work_dir / "ok_marker" ).write_text( dep_version )
 
 def create_install_dir_ok_marker():
-    Path( install_dir / "ok_marker" ).touch()
+    Path( install_dir / "ok_marker" ).write_text( dep_version )
 
 def create_workdir():
     # If exists and needed, remove work dir

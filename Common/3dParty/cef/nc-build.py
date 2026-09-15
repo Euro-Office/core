@@ -47,7 +47,8 @@ nc.init_for_dep(
     depname = "cef",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 download_dir = nc.work_dir / "download"

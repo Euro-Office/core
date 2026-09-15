@@ -18,7 +18,8 @@ nc.init_for_dep(
     depname = "V8",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 depot_tools_path = nc.work_dir / "depot_tools"
