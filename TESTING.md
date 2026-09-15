@@ -98,6 +98,23 @@ Done:
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
       replaced with repo-relative includes (CMake links the libraries).
+- [x] `DesktopEditor/doctrenderer/test/json` — dep: doctrenderer (V8). Define
+      `JSON_GOOGLE_TEST`; own `main()` is compiled out under that define, so `GTEST_MAIN`.
+      No fixtures (JS built inline via `runScript`).
+- [x] `DesktopEditor/doctrenderer/test/js_internal` — dep: doctrenderer (V8). Define
+      `JS_INTERNAL_GOOGLE_TEST`; own `main()` is compiled out under that define, so
+      `GTEST_MAIN`. No fixtures.
+- [x] `DesktopEditor/doctrenderer/test/embed/internal/hash` — dep: doctrenderer (V8). No
+      google-test define; no own `main()`, so `GTEST_MAIN`. No fixtures.
+
+  **V8 runtime requirement (satisfied in CI):** these three suites instantiate
+  `CJSContext`, which initializes a V8 isolate. The V8 monolith is built in CI by
+  `common.cmake` (`build_3rdparty.py`, populating `V8_INSTALL_DIR`) and is self-contained
+  at run time: the x64-linux V8 build sets `v8_use_external_startup_data=false` (startup
+  snapshot is linked into the monolith) and `v8_enable_i18n_support=false` (no external
+  `icudtl.dat`), so no external V8 runtime data files need to be staged next to the test
+  binaries. The `doctrenderer` shared library these suites link is already built in CI
+  (the `docbuilder` app links it), so the suites run headless without extra provisioning.
 
 ### gtest suites to migrate
 
@@ -110,10 +127,6 @@ Blocked / need extra work (build targets intentionally not created yet):
 - [ ] `PdfFile/test` — **fixtures not in repo** (`test.pdf`, `pdf.bin`, `base64.txt`,
       `pfx.pfx`, `test.djvu`, `changes.bin`, fonts). Needs fixtures committed before it can
       pass headless.
-- [ ] `DesktopEditor/doctrenderer/test/json`
-- [ ] `DesktopEditor/doctrenderer/test/js_internal`
-- [ ] `DesktopEditor/doctrenderer/test/embed/internal/hash` — the three doctrenderer suites
-      need a **V8 JS runtime** (and embedded scripts) at run time.
 - [ ] `DesktopEditor/xmlsec/src/osign/test` — **no `osign` CMake target exists**; the
       library must be ported to CMake first.
 

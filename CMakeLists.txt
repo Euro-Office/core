@@ -39,6 +39,16 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
+
+        # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
+        # common.cmake (build_3rdparty.py) and is self-contained at run time:
+        # the x64-linux build sets v8_use_external_startup_data=false (snapshot
+        # embedded in the monolith) and v8_enable_i18n_support=false (no external
+        # icudtl.dat), so CJSContext initializes with no external runtime data
+        # files. These suites build all JS inline via runScript() — no fixtures.
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
     endif()
 
 endif()
