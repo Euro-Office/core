@@ -199,6 +199,17 @@ else()
     set(Boost_USE_STATIC_LIBS ON)
     find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
 
+    # Boost.Regex is header-only since Boost 1.77, so Boost::regex is now an
+    # INTERFACE target. For the COMPILED components (filesystem, ...) Boost's own
+    # CMake config sets BOOST_<LIB>_NO_LIB, which switches off the auto-link
+    # #pragma in the headers because CMake passes the .lib path itself. A
+    # header-only target gets no such define AND no library directory, yet
+    # boost/regex/v5/cregex.hpp still emits the auto-link pragma - so the linker
+    # demands libboost_regex-vcXXX-mt-x64-Y_ZZ.lib and fails with LNK1104 even
+    # though nothing needs to be linked. On Boost 1.78 regex was still a compiled
+    # component, hence the define came for free and this never surfaced.
+    add_definitions(-DBOOST_REGEX_NO_LIB)
+
     # Setup v8
     set(V8_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/v8")
     get_filename_component(V8_INSTALL_DIR_ABS "${V8_INSTALL_DIR}" ABSOLUTE)

@@ -418,7 +418,11 @@ unsigned int Deflator::LongestMatch(unsigned int &bestMatch) const
 #else
 				std::mismatch
 #endif
-#if _MSC_VER >= 1600
+// Same _STDEXT_BEGIN feature test as the guard above: the stdext:: extensions
+// are gone from the MSVC STL (as of MSVC 14.51 / _MSC_VER 1951), so a bare
+// version check would name a namespace that no longer exists. The unchecked
+// wrappers only suppressed iterator-debug warnings, so raw pointers are equivalent.
+#if _MSC_VER >= 1600 && defined(_STDEXT_BEGIN)
 				(stdext::make_unchecked_array_iterator(scan)+3, stdext::make_unchecked_array_iterator(scanEnd), stdext::make_unchecked_array_iterator(match)+3).first - stdext::make_unchecked_array_iterator(scan));
 #else
 				(scan+3, scanEnd, match+3).first - scan);
