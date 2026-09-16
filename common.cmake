@@ -164,7 +164,7 @@ else()
         set(Qt6_DIR "${QT_ROOT}/lib/cmake/Qt6")
 
         find_package(Qt6 REQUIRED COMPONENTS
-            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets
+            Core Gui Widgets PrintSupport Svg LinguistTools Multimedia MultimediaWidgets OpenGLWidgets
             CorePrivate GuiPrivate PrintSupportPrivate)
 
         # Setup cef
