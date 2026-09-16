@@ -1,0 +1,135 @@
+#!/bin/sh
+#
+# $Id: $
+#
+# Bump the Berkeley DB version
+#	bumprel [-t] <major>.<minor>.<patch>
+#		-t	Test: generate dist/RELEASE, but do not rebuild the
+#			dependant files (s_all, ...)
+#
+#	As of 2018, the release number conforms to the latest Oracle layout:
+#		<FAMILY>.<RELEASE>.<BUILD>
+#	returning to the original 3-part release number format of Berkeley DB.
+#		<MAJOR>.<MINOR>.<PATCH>
+# 
+#	<FAMILY>.<RELEASE (or RELEASE SEQUENCE)> uniquely identify a full BDB
+#	release - a version which has added features relative to earlier BDB
+#	releases.  The first version of full release has a <FAMILY> value equal
+#	to the last two digits of the current year and a <RELEASE> of 1. If we
+#	release another full feature set of Berkeley DB in that same calendar
+#	year, it will have a <RELEASE> of 2.
+#	Patch releases of that main feature set will keep the same
+#	<FAMILY>.<RELEASE> pair for all time, no matter when those bug
+#	fixes are released.
+#
+#	Patch releases to BDB 6.2 and earlier will not use FAMILY.RELEASE,
+#	but will continue to use the their MAJOR.MINOR.PATCH numbering scheme.
+#	Those releases are not supported by this file.  Keep using the bumprel
+#	which came with those releases.
+#
+#	We can map versions of BDB 6.2.x and earlier to the new format:
+#
+#	BDB 6.2.X and earlier 		Oracle Standard starting with 18.1.X
+#	<MAJOR>.<MINOR>			<FAMILY>.<RELEASE(SEQUENCE)>
+#				   	- The release-sequence is sometimes
+#					  called the <RELEASE-STREAM>.
+#
+#	<MAJOR>.<MINOR>.<PATCH>		<FAMILY>.<RELEASE(SEQUENCE)>.<New BUILD #>
+#					- `This denotes a patch release for the
+#					BDB version which was first released in
+#					<FAMILY>.<RELEASE(SEQUENCE)>
+#
+#	Inside of scripts such as this one and Berkeley DB source code, the 3
+#	numerical components of the version "number" will continue to be called
+#	MAJOR, MINOR, and PATCH.
+#
+
+P=`pwd`
+R=`dirname $P`
+progname="$0"
+
+build=yes
+if [ "$1" == -t ] ; then 
+	build=no
+	shift
+fi
+
+VERSION="$1"
+assembly="../lang/csharp/src/Properties/AssemblyInfo.cs"
+t=/tmp/__assembly
+
+# Sanity check
+if [ ! -f $R/dist/RELEASE ] ; then
+	echo "$progname must be run in a top-level sub-directory of a Berkeley DB tree"
+	exit 1
+fi
+
+OIFS="$IFS"
+IFS=.
+set -- $VERSION
+
+IFS="$OFS"
+
+# Interpret these command line parameters as integers.
+typeset -i MAJOR MINOR PATCH
+MAJOR="$1" MINOR="$2" PATCH="$3"
+
+# If the year is given as a full four digit year, change it to be relative to 2000.
+if [ $MAJOR -ge 2018 ] ; then
+	MAJOR=$(expr $MAJOR - 2000)
+fi
+
+# Provide instructions for invalid version specifications, those that are not:
+#	- exactly 3 numbers
+#	- a major number (i.e., family) of at most the current (two digit) year
+#	- a minor number (i.e., release) that is at least 1.
+#	- a patch number of at least 1.
+if [ $# != 3 -o 			\
+     $MAJOR -gt "$(date +%y)" -o	\
+     $MINOR -lt 1 -o			\
+     $PATCH -lt 1 ] ; then
+	echo "Usage: $progname <MAJOR>.<MINOR>.<BUILD> -- set the Berkeley DB version number"
+	echo ""
+	# Provide instructions by printing the comment at the top of this file.
+	# Keep the "# Bump..." line and the empty one ending the header comment.
+	sed -ne '/^# Bump/,/^$/p' $progname
+	exit 1
+fi
+
+DATE=`date "+%B %e, %Y"`
+
+# Update the change log patch number -- there's 1 location to update in
+# the change log "table of contents", and 2 in the Change Log itself.
+#cd $R/docs_src/ref/changelog && vi toc.so ${MAJOR}.${MINOR}.html
+
+# Update the release number.  For 18.1, put MAJOR -> FAMILY, MINOR -> RELEASE.
+cd $R/dist &&\
+    (echo "/^DB_VERSION_FAMILY/s/=.*/=$MAJOR/" &&\
+     echo "/^DB_VERSION_RELEASE/s/=.*/=$MINOR/" &&\
+     echo "/^DB_VERSION_MAJOR/s/=.*/=$MAJOR/" &&\
+     echo "/^DB_VERSION_MINOR/s/=.*/=$MINOR/" &&\
+     echo "/^DB_VERSION_PATCH/s/=.*/=$PATCH/" &&\
+     echo "/^DB_RELEASE_DATE/s/=.*/=\"$DATE\"/" &&\
+     echo w &&\
+     echo q) | ed -s RELEASE > /dev/null
+VERSION=`sh -c '. ./RELEASE; echo $DB_VERSION'`
+echo "Berkeley DB release $VERSION."
+
+. ./RELEASE
+echo "Version:      $DB_VERSION_STRING"
+echo "Full Version: $DB_VERSION_FULL_STRING"
+
+if [ $build = no ] ; then
+	exit 0 
+fi
+
+# Build auto-generated files.
+cd $R/dist && sh s_all
+
+# Update the CSharp assembly information
+sed -e "s:AssemblyVersion(\"[0-9]*\.[0-9]*\.[0-9]*\"):AssemblyVersion(\"$MAJOR\.$MINOR\.$PATCH\"):" < $assembly > $t
+cmp $t $assembly > /dev/null 2>&1 ||
+    (rm -f $assembly && cp $t $assembly && rm -f $t && chmod 444 $assembly)
+
+# Remind the user to commit all of the changes.
+echo "Now run 'hg commit && hg tag db-$MAJOR.$MINOR.$PATCH && hg push'"

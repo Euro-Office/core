@@ -7,7 +7,7 @@ index a8618452794..4ab368a4149 100644
    defines = []
    cflags = []
 +  if (!is_win) {
-+    cflags += ["-include", "cstdint"]
++    cflags += ["-include", "cstdint", "-Wno-enum-constexpr-conversion"]
 +  }
    ldflags = []
  
