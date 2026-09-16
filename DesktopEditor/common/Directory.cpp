@@ -143,6 +143,22 @@ namespace NSDirectory
 					else if (S_ISDIR(buff.st_mode))
 						nType = 1;
 				}
+				else if (DT_LNK == dirp->d_type)
+				{
+					// #128: symlinked entries are reported as DT_LNK and were dropped
+					// entirely, so fonts installed as symlinks were never picked up.
+					// stat() follows the link, so the target decides.
+					//
+					// Only regular-file targets are accepted. A symlinked directory is
+					// left unclassified on purpose: the recursive walk would descend
+					// through the link, and DeleteDirectory() (built on GetFiles() and
+					// GetDirectories()) would remove the link target's contents rather
+					// than the link itself.
+					struct stat buff;
+					std::string sTmp = std::string((char*)pUtf8) + "/" + std::string(dirp->d_name);
+					if (0 == stat(sTmp.c_str(), &buff) && S_ISREG(buff.st_mode))
+						nType = 2;
+				}
 
 				if (2 == nType)
 				{
