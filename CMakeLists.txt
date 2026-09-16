@@ -39,6 +39,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OfficeUtils/tests" officeutils_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape" starmath_smcustomshape_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
     endif()
 
 endif()
