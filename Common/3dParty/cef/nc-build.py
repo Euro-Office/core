@@ -47,7 +47,8 @@ nc.init_for_dep(
     depname = "cef",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 download_dir = nc.work_dir / "download"
@@ -68,12 +69,15 @@ def cef_platform() -> str:
     forced = os.environ.get( "CEF_PLATFORM" )
     if forced:
         return forced
-    arm = nc.is_arm64()
+
     if nc.is_windows():
-        return "windowsarm64" if arm else "windows64"
-    if nc.is_linux():
-        return "linuxarm64" if arm else "linux64"
-    nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
+        return "windowsarm64" if nc.is_arm64() else "windows64"
+    elif nc.is_linux():
+        return "linuxarm64" if nc.is_arm64() else "linux64"
+    elif nc.is_apple_silicon():
+        return "macosarm64"
+    else:
+        nc.abort_op( f"Unsupported platform for prebuilt CEF: {sys.platform}" )
 
 
 def resolve_build():

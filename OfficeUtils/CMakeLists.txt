@@ -21,8 +21,6 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/compress.c
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapi.c
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapibuf.c
-        #${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/miniunz.c
-        #${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/minizip.c
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/mztools.c
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/unzip.c
         ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/zip.c
@@ -65,5 +63,11 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
 
     if( NOT MSVC )
         target_compile_options( ${TARGET} PRIVATE "SHELL:-include unistd.h")
+    endif()
+
+    if(APPLE)
+        target_compile_definitions( ${TARGET} PRIVATE
+            _MAC
+        )
     endif()
 endfunction()

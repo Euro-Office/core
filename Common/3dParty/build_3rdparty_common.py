@@ -38,20 +38,25 @@ debug_mode = False
 work_dir = None
 install_dir = None
 force_redo = False
+dep_version = ""
 
 def init_for_dep(
     depname : str,
     workdir : Path,
     installdir : Path,
     forceredo : bool,
+    version : str = "", # Arbitrary version string. Integer numbers suggested.
+                        # If a deps version/branch/tag/patch changes, bump this in the respective build script.
+                        # This will force that dep to be rebuilt.
     debugmode : bool = True
 ):
-    global dep_name, work_dir, install_dir, force_redo, debug_mode, log_cleared
+    global dep_name, work_dir, install_dir, force_redo, debug_mode, dep_version, log_cleared
 
     dep_name = depname
     work_dir = workdir
     install_dir = installdir
     force_redo = forceredo
+    dep_version = version
     debug_mode = debugmode
     log_cleared = False
     
@@ -92,18 +97,30 @@ def target_arch() -> str:
 def is_arm64() -> bool:
     return target_arch() == "arm64"
 
+def is_apple_silicon() -> bool:
+    return sys.platform == "darwin" and platform.machine() == "arm64"
+
+def _marker_ok( marker_path : Path, label : str ) -> bool:
+    if force_redo or not marker_path.exists():
+        return False
+    on_disk = marker_path.read_text()
+    if on_disk != dep_version:
+        print( f"  [INFO] {dep_name} {label} marker version changed "
+               f"({on_disk!r} -> {dep_version!r}), redoing" )
+        return False
+    return True
 
 def work_dir_looks_ok() -> bool:
-    return ( not force_redo ) and Path( work_dir / "ok_marker" ).exists()
+    return _marker_ok( Path( work_dir / "ok_marker" ), "work dir" )
 
 def install_dir_looks_ok() -> bool:
-    return ( not force_redo ) and Path( install_dir / "ok_marker" ).exists()
+    return _marker_ok( Path( install_dir / "ok_marker" ), "install dir" )
 
 def create_work_dir_ok_marker():
-    Path( work_dir / "ok_marker" ).touch()
+    Path( work_dir / "ok_marker" ).write_text( dep_version )
 
 def create_install_dir_ok_marker():
-    Path( install_dir / "ok_marker" ).touch()
+    Path( install_dir / "ok_marker" ).write_text( dep_version )
 
 def create_workdir():
     # If exists and needed, remove work dir
@@ -347,26 +364,26 @@ def ensure_dep( build_fn, forceredo=None ):
     # 0. Already built locally. install_dir_looks_ok() already returns False on
     #    a forced redo, so this correctly does NOT skip in that case.
     if install_dir_looks_ok():
-        print( f"  \u2705 { name } already present locally, skipping" )
+        print( f"  [OK] { name } already present locally, skipping" )
         return
 
     # 1. Prebuilt archive on the remote (skipped on a forced redo so we rebuild
     #    and refresh the remote instead of pulling a stale copy).
     if USE_REMOTE_CACHE and not force_redo and _remote_exists():
-        print( f"  \u2b07\ufe0f  Found { name } on remote, downloading..." )
+        print( f"  [GET]  Found { name } on remote, downloading..." )
         if _remote_download_and_extract() and install_dir_looks_ok():
-            print( f"  \u2705 { name } fetched from remote" )
+            print( f"  [OK] { name } fetched from remote" )
             return
-        print( "  \u26a0\ufe0f  Remote copy missing/incomplete, building locally." )
+        print( "  [WARN]  Remote copy missing/incomplete, building locally." )
 
     # 2. Build locally, then archive + upload for next time.
     build_fn()
     if not install_dir_looks_ok():
-        print( f"  \u26a0\ufe0f  { name }: build finished but no ok-marker was created" )
+        print( f"  [WARN]  { name }: build finished but no ok-marker was created" )
         return
     if USE_REMOTE_CACHE:
-        print( f"  \u2b06\ufe0f  Uploading { name } to remote..." )
+        print( f"  [PUT]  Uploading { name } to remote..." )
         if _remote_upload():
-            print( f"  \u2705 { name } uploaded" )
+            print( f"  [OK] { name } uploaded" )
         else:
-            print( f"  \u26a0\ufe0f  Upload of { name } failed" )
+            print( f"  [WARN]  Upload of { name } failed" )
