@@ -295,6 +295,65 @@ void odf_page_layout_context::set_background(_CP_OPT(color) & color, int type)
 	}
 }
 
+std::wstring odf_page_layout_context::add_first_page_background_master(_CP_OPT(color) & color)
+{
+	if (!color || layout_state_list_.empty() || master_state_list_.empty()) return L"";
+
+	// Guard against duplicate creation across multiple sections: return the existing name.
+	const std::wstring kFirstPageName = L"EO_FirstPage";
+	for (size_t i = 0; i < master_state_list_.size(); ++i)
+	{
+		if (master_state_list_[i].get_name() == kFirstPageName)
+			return kFirstPageName;
+	}
+
+	// Snapshot the default (current) master name and the current layout properties to clone.
+	std::wstring default_master_name = last_master()->get_name();
+	// Read src_props BEFORE create_layout_page() shifts layout_state_list_.back().
+	style_page_layout_properties * src_props = get_properties(); // creates element lazily if needed
+
+	// Create a new page layout for the first-page master.
+	create_layout_page();
+	// get_properties() now operates on the newly-created layout and creates its properties element.
+	style_page_layout_properties * dst_props = get_properties();
+	if (dst_props)
+	{
+		// Copy page geometry so the first page has identical dimensions/margins.
+		if (src_props)
+		{
+			dst_props->attlist_.fo_page_width_                    = src_props->attlist_.fo_page_width_;
+			dst_props->attlist_.fo_page_height_                   = src_props->attlist_.fo_page_height_;
+			dst_props->attlist_.common_horizontal_margin_attlist_ = src_props->attlist_.common_horizontal_margin_attlist_;
+			dst_props->attlist_.common_vertical_margin_attlist_   = src_props->attlist_.common_vertical_margin_attlist_;
+			dst_props->attlist_.common_margin_attlist_            = src_props->attlist_.common_margin_attlist_;
+		}
+		// Apply the first-page background color.
+		dst_props->attlist_.common_background_color_attlist_.fo_background_color_ = color;
+	}
+	std::wstring first_layout_name = last_layout()->get_name();
+
+	// Create the first-page master page element.
+	office_element_ptr elm;
+	create_element(L"style", L"master-page", elm, odf_context_);
+	if (!elm) return L"";
+
+	master_state_list_.push_back(odf_master_state(elm));
+	std::wstring first_master_name = L"EO_FirstPage";
+	master_state_list_.back().set_name(first_master_name);
+	master_state_list_.back().set_layout_style_name(first_layout_name);
+
+	// Chain to the default master so LO switches back to it from page 2 onward.
+	style_master_page * mp = dynamic_cast<style_master_page*>(master_state_list_.back().get_root().get());
+	if (mp)
+		mp->attlist_.style_next_style_name_ = default_master_name;
+
+	// Keep the default master as last() so subsequent section processing targets it.
+	std::swap(master_state_list_[master_state_list_.size() - 2], master_state_list_.back());
+	std::swap(layout_state_list_[layout_state_list_.size() - 2], layout_state_list_.back());
+
+	return first_master_name;
+}
+
 ///////////////////////////////////////////////////////////////
 bool odf_page_layout_context::add_footer(int type)
 {

@@ -104,6 +104,11 @@ public:
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
 
+	// Create a first-page-only master page ("EO_FirstPage") that carries `color` as its
+	// background and chains to the current default master via style:next-style-name.
+	// Returns the new master page name, or empty string on failure.
+	std::wstring add_first_page_background_master(_CP_OPT(odf_types::color) & color);
+
 
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 

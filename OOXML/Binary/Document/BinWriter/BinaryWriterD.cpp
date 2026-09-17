@@ -3708,6 +3708,11 @@ void BinaryDocumentTableWriter::WriteBackground (OOX::WritingElement* pElement)
 		{
 			m_oBcw.WriteThemeColor(c_oSerBackgroundType::ColorTheme, pBackground->m_oColor, pBackground->m_oThemeColor, pBackground->m_oThemeTint, pBackground->m_oThemeShade);
 		}
+		if (pBackground->m_bFirstPageOnly)
+		{
+			m_oBcw.m_oStream.WriteBYTE(c_oSerBackgroundType::FirstPageOnly);
+			m_oBcw.m_oStream.WriteBYTE(c_oSerPropLenType::Null);
+		}
 	}
 	if (pBgPict)
 	{

@@ -142,6 +142,11 @@ public:
 
 	void set_master_page_name(std::wstring master_name);
 
+	// First-page-only master name produced by add_first_page_background_master().
+	// Consumed (and cleared) on the first paragraph of the document.
+	void         set_first_page_master_name(const std::wstring & name);
+	std::wstring get_first_page_master_name() const;
+
 	void start_drop_cap			(paragraph_format_properties* paragraph_properties);
 		void set_drop_cap_lines	(int lines);
 		void set_drop_cap_margin(bool val);
@@ -216,6 +221,7 @@ private:
 	bool			is_background_;
 
 	std::wstring	current_master_page_;
+	std::wstring	first_page_master_name_;
 	
 	odf_controls_context				controls_context_;	
 
