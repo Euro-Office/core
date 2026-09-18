@@ -57,12 +57,55 @@ void currency_formats()
 }
 }
 
+void date_time_formats()
+{
+    using cpdoccore::odf_types::office_value_type;
+    struct format { const wchar_t* code; char type; };
+    // The first two matched a reserved ID exactly; the rest reached one only
+    // through a substring match that lost part of the format -- d-mmm-yyyy took
+    // the two-digit-year ID 15, hh:mm:ss.00 the whole-second ID 21. A reserved ID
+    // implies its own locale-dependent code, so none of them may take one.
+    const std::vector<format> codes = {
+        { L"mm-dd-yy",    office_value_type::Date },
+        { L"d-mmm-yy",    office_value_type::Date },
+        { L"d-mmm-yyyy",  office_value_type::Date },
+        { L"yyyy-mm-dd",  office_value_type::Date },
+        { L"dd.mm.yyyy",  office_value_type::Date },
+        { L"h:mm:ss",     office_value_type::Time },
+        { L"hh:mm:ss",    office_value_type::Time },
+        { L"hh:mm:ss.00", office_value_type::Time },
+        { L"[h]:mm:ss",   office_value_type::Time },
+        { L"hh:mm AM/PM", office_value_type::Time },
+    };
+
+    cpdoccore::oox::xlsx_num_fmts formats;
+    std::set<unsigned int> ids;
+    for (const auto& entry : codes)
+    {
+        const auto id = formats.add_or_find(entry.code, entry.type);
+        require(id >= 164, "ODS date and time formats must not use a reserved number format ID");
+        require(ids.insert(id).second, "Distinct date and time formats must have distinct IDs");
+        require(formats.add_or_find(entry.code, entry.type) == id,
+                "Repeated date and time formats must reuse their ID");
+    }
+
+    require(formats.add_or_find(L"0%", office_value_type::Percentage) == 9,
+            "Date and time allocation must leave the built-in percentage ID available");
+
+    std::wostringstream xml;
+    formats.serialize(xml);
+    for (const auto& entry : codes)
+        require(xml.str().find(std::wstring(L"formatCode=\"") + entry.code + L"\"") != std::wstring::npos,
+                "Date and time format codes must survive serialization unchanged");
+}
+
 int main()
 {
     try
     {
         currency_formats();
-        std::cout << "ODS currency format tests passed\n";
+        date_time_formats();
+        std::cout << "ODS number format tests passed\n";
         return 0;
     }
     catch (const std::exception& error)
