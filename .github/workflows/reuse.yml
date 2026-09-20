@@ -1,0 +1,31 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+name: REUSE Compliance Check (dry run)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reuse-compliance-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check REUSE compliance (non-blocking)
+        id: reuse
+        continue-on-error: true
+        uses: fsfe/reuse-action@676e2d560c9a403aa252096d99fcab3e1132b0f5 # v6.0.0
+
+      - name: Report compliance findings
+        if: steps.reuse.outcome == 'failure'
+        run: |
+          echo "::warning::REUSE compliance check failed. This is a non-blocking dry run; see the check logs for details."
+          echo "REUSE compliance findings are currently informational. See the REUSE step logs for details." >> "$GITHUB_STEP_SUMMARY"

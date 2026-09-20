@@ -1,4 +1,5 @@
-// SPDX-License-Identifier: AGPL-3.0-only
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include "../../Reader/Converter/xlsx_numFmts.h"
 #include "../../DataTypes/officevaluetype.h"

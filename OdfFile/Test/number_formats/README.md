@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2026 Euro-Office contributors
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # ODS currency round-trip regression
 
 `currency.ods` is a ready-to-open reproduction. Regenerate it from `currency.fods`
