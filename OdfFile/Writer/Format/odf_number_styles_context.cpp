@@ -1,4 +1,7 @@
-﻿/*
+﻿// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
