@@ -948,10 +948,11 @@ int Binary_pPrReader::ReadContent(BYTE type, long length, void* poResult)
 
 		switch (jc)
 		{
-			case align_Right: pPPr->m_oJc->m_oVal->SetValueFromByte(3); break;
-			case align_Left: pPPr->m_oJc->m_oVal->SetValueFromByte(8); break;
-			case align_Center: pPPr->m_oJc->m_oVal->SetValueFromByte(1); break;
-			case align_Justify: pPPr->m_oJc->m_oVal->SetValueFromByte(0); break;
+			case align_Right: pPPr->m_oJc->m_oVal->SetValueFromByte(3); break;       // jcEnd
+			case align_Left: pPPr->m_oJc->m_oVal->SetValueFromByte(8); break;        // jcStart
+			case align_Center: pPPr->m_oJc->m_oVal->SetValueFromByte(1); break;      // jcCenter
+			case align_Justify: pPPr->m_oJc->m_oVal->SetValueFromByte(0); break;     // jcBoth
+			case align_Distributed: pPPr->m_oJc->m_oVal->SetValueFromByte(2); break; // jcDistribute
 		}
 	}break;
 	case c_oSerProp_pPrType::KeepLines:

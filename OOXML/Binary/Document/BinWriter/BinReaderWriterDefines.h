@@ -28,10 +28,11 @@ namespace BinDocxRW
 {
 const double eps     = 0.001;
 
-const int align_Right   = 0;
-const int align_Left    = 1;
-const int align_Center  = 2;
-const int align_Justify = 3;
+const int align_Right       = 0;
+const int align_Left        = 1;
+const int align_Center      = 2;
+const int align_Justify     = 3;
+const int align_Distributed = 4;
 
 const int vertalignjc_Top    = 0x00;
 const int vertalignjc_Center = 0x01;

@@ -1099,9 +1099,9 @@ void Binary_pPrWriter::Write_pPr(const OOX::Logic::CParagraphProperty& pPr)
 			case SimpleTypes::jcLeft: m_oBcw.m_oStream.WriteBYTE(align_Left);break;
 			case SimpleTypes::jcEnd:
 			case SimpleTypes::jcRight: m_oBcw.m_oStream.WriteBYTE(align_Right);break;
-			case SimpleTypes::jcBoth:
+			case SimpleTypes::jcBoth: m_oBcw.m_oStream.WriteBYTE(align_Justify);break;
 			case SimpleTypes::jcThaiDistribute:
-			case SimpleTypes::jcDistribute: m_oBcw.m_oStream.WriteBYTE(align_Justify);break;
+			case SimpleTypes::jcDistribute: m_oBcw.m_oStream.WriteBYTE(align_Distributed);break;
 			default: m_oBcw.m_oStream.WriteBYTE(align_Left);break;
 			}
 		}
