@@ -92,25 +92,15 @@ unsigned int xlsx_num_fmts::Impl::add_or_find(std::wstring format_code, char for
 			// Built-in currency IDs are locale-dependent and can replace the ODF symbol and layout.
 			id = last_custom_id++;
 		}
-		else if (format_code_type == odf_types::office_value_type::Date)
+		else if (format_code_type == odf_types::office_value_type::Date ||
+				 format_code_type == odf_types::office_value_type::Time)
 		{
-			if (std::wstring::npos != format_code.find(L"mm-dd-yy"))			id = 14; 
-			else if (std::wstring::npos != format_code.find(L"d-mmm-yy"))		id = 15; 
-			else if (std::wstring::npos != format_code.find(L"d-mmm"))			id = 16; 
-			else if (std::wstring::npos != format_code.find(L"mmm-yy"))			id = 17; 
-			else if (std::wstring::npos != format_code.find(L"m/d/yy h:mm"))	id = 22; 
-			else
-				id = last_custom_id++;
-		}
-		else if (format_code_type == odf_types::office_value_type::Time)
-		{
-			if (std::wstring::npos != format_code.find(L"h:mm AM/PM"))			id = 18; 
-			else if (std::wstring::npos != format_code.find(L"h:mm:ss AM/PM"))	id = 19; 
-			else if (std::wstring::npos != format_code.find(L"m/d/yy h:mm"))	id = 22; 
-			else if (std::wstring::npos != format_code.find(L"h:mm:ss"))		id = 21; 
-			else if (std::wstring::npos != format_code.find(L"h:mm"))			id = 20; 
-			else
-				id = last_custom_id++;
+			// Built-in date and time IDs are locale-dependent in the same way the
+			// currency ones are, and they were selected by substring match, so a
+			// format was bound to an ID that does not describe it: d-mmm-yyyy took
+			// the two-digit-year ID 15 and hh:mm:ss.00 took the whole-second ID 21,
+			// dropping the fractional part. ODF states the layout explicitly.
+			id = last_custom_id++;
 		}
 		else if (format_code_type == odf_types::office_value_type::Scientific)
 		{
