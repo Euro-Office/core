@@ -1,4 +1,5 @@
-﻿// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+﻿// SPDX-FileCopyrightText: 2010-2023 Ascensio System SIA
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
 // SPDX-License-Identifier: AGPL-3.0-only
 
 /*
