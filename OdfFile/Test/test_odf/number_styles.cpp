@@ -1,5 +1,5 @@
 // SPDX-FileCopyrightText: 2026 Euro-Office contributors
-// SPDX-License-Identifier: AGPL-3.0-or-later
+// SPDX-License-Identifier: AGPL-3.0-only
 
 // Covers odf_number_styles_context::detect_format(), which maps an OOXML number
 // format code onto the ODF data style written on the way out to ODS/ODT. The

@@ -1,6 +1,6 @@
 <!--
 SPDX-FileCopyrightText: 2026 Euro-Office contributors
-SPDX-License-Identifier: AGPL-3.0-or-later
+SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 # ODS currency round-trip regression
