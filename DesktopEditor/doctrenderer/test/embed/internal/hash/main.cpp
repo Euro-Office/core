@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 
 #include <sstream>
+#include <iomanip>
 #include <string>
 
 #include "embed/Default.h"
