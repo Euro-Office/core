@@ -96,6 +96,32 @@ int CNumberingConverter::CreateNumbering(const CHWPRecordNumbering* pNumbering, 
 			m_oNumberXml.WriteString(L"<w:start w:val=\"1\"/>");
 			m_oNumberXml.WriteString(L"<w:numFmt w:val=\"" + wsNumFormat + L"\"/>");
 
+			// lvlText (schema position 7) must precede lvlJc (position 10) per the
+			// ECMA-376 CT_Lvl sequence -- see the identical fix and rationale in
+			// OOX::Numbering::CLvl::toXML() (DocxFormat/Numbering.cpp).
+			switch (shIndex % 3)
+			{
+				case 0:
+				{
+					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
+					m_oNumberXml.AddCharSafe(0xF0B7);
+					m_oNumberXml.WriteString(L"\"/>");
+					break;
+				}
+				case 1:
+				{
+					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"o\"/>");
+					break;
+				}
+				case 2:
+				{
+					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
+					m_oNumberXml.AddCharSafe(0xF0A7);
+					m_oNumberXml.WriteString(L"\"/>");
+					break;
+				}
+			}
+
 			m_oNumberXml.WriteString(L"<w:lvlJc w:val=\"");
 			switch(pNumbering->GetAlign(shIndex))
 			{
@@ -109,27 +135,14 @@ int CNumberingConverter::CreateNumbering(const CHWPRecordNumbering* pNumbering, 
 			switch (shIndex % 3)
 			{
 				case 0:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
-					m_oNumberXml.AddCharSafe(0xF0B7);
-					m_oNumberXml.WriteString(L"\"/>");
 					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Symbol\" w:hAnsi=\"Symbol\" w:hint=\"default\"/></w:rPr>");
 					break;
-				}
 				case 1:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"o\"/>");
 					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Courier New\" w:hAnsi=\"Courier New\" w:cs=\"Courier New\" w:hint=\"default\"/></w:rPr>");
 					break;
-				}
 				case 2:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
-					m_oNumberXml.AddCharSafe(0xF0A7);
-					m_oNumberXml.WriteString(L"\"/>");
 					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Wingdings\" w:hAnsi=\"Wingdings\" w:hint=\"default\"/></w:rPr>");
 					break;
-				}
 			}
 
 			m_oNumberXml.WriteString(L"</w:lvl>");
