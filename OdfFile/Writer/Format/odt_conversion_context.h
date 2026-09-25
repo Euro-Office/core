@@ -142,11 +142,12 @@ public:
 
 	bool set_master_page_name(std::wstring master_name);
 
-	// Deferred first-page-only background: stored when the DOCX background has
-	// m_bFirstPageOnly set, applied to section 0's master after it is fully built.
-	void set_deferred_first_page_background(const _CP_OPT(odf_types::color) & color, bool hasDrawing);
-	bool has_deferred_first_page_background() const;
-	void apply_deferred_first_page_background();
+	// First-page-only continuation: when set, a clean continuation master
+	// (without background) is created after section 0 is fully built.
+	void set_deferred_first_page_continuation(bool val);
+	bool needs_first_page_continuation() const;
+	bool first_page_continuation_applied() const;
+	void apply_first_page_continuation();
 
 	void start_drop_cap			(paragraph_format_properties* paragraph_properties);
 		void set_drop_cap_lines	(int lines);
@@ -223,10 +224,8 @@ private:
 
 	std::wstring	current_master_page_;
 
-	// Deferred first-page-only background state.
-	_CP_OPT(odf_types::color)	deferred_first_page_bg_color_;
-	bool						deferred_first_page_bg_has_drawing_ = false;
-	bool						deferred_first_page_bg_applied_ = false;
+	bool	needs_first_page_continuation_ = false;
+	bool	first_page_continuation_applied_ = false;
 	
 	odf_controls_context				controls_context_;	
 

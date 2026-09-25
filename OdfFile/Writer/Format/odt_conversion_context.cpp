@@ -1054,25 +1054,26 @@ void odt_conversion_context::separate_field()
 	set_field_instr();
 	current_fields.back().result = true;
 }
-void odt_conversion_context::set_deferred_first_page_background(const _CP_OPT(odf_types::color) & color, bool hasDrawing)
+void odt_conversion_context::set_deferred_first_page_continuation(bool val)
 {
-	deferred_first_page_bg_color_ = color;
-	deferred_first_page_bg_has_drawing_ = hasDrawing;
+	needs_first_page_continuation_ = val;
 }
-bool odt_conversion_context::has_deferred_first_page_background() const
+bool odt_conversion_context::needs_first_page_continuation() const
 {
-	return !deferred_first_page_bg_applied_ && (deferred_first_page_bg_color_ || deferred_first_page_bg_has_drawing_);
+	return needs_first_page_continuation_ && !first_page_continuation_applied_;
 }
-void odt_conversion_context::apply_deferred_first_page_background()
+bool odt_conversion_context::first_page_continuation_applied() const
 {
-	if (deferred_first_page_bg_applied_) return;
-	deferred_first_page_bg_applied_ = true;
+	return first_page_continuation_applied_;
+}
+void odt_conversion_context::apply_first_page_continuation()
+{
+	if (first_page_continuation_applied_) return;
+	first_page_continuation_applied_ = true;
 
-	// Apply the background color to section 0's current master page layout.
-	if (deferred_first_page_bg_color_)
-		page_layout_context()->set_background(deferred_first_page_bg_color_, 1);
-
-	// Chain section 0's master to a clean copy (without background) for page 2+.
+	// Section 0's master already has the background (color + drawing fill)
+	// applied by the normal convert(CBackground*) path. Create a continuation
+	// master that copies section 0's headers/footers but strips the background.
 	page_layout_context()->chain_current_master_to_clean_copy();
 }
 bool odt_conversion_context::set_master_page_name(std::wstring master_name)

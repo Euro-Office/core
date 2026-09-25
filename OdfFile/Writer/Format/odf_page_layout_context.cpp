@@ -334,15 +334,27 @@ void odf_page_layout_context::chain_current_master_to_clean_copy()
 	master_state_list_.back().set_name(cont_master_name);
 	master_state_list_.back().set_layout_style_name(cont_layout_name);
 
-	// Chain section 0's master to the continuation master.
-	// Find section 0's master and set style:next-style-name.
+	// Copy headers and footers from section 0's master to the continuation.
+	style_master_page * cont_mp = dynamic_cast<style_master_page*>(elm.get());
 	for (size_t i = 0; i < master_state_list_.size(); ++i)
 	{
 		if (master_state_list_[i].get_name() == cover_master_name)
 		{
-			style_master_page * mp = dynamic_cast<style_master_page*>(master_state_list_[i].get_root().get());
-			if (mp)
-				mp->attlist_.style_next_style_name_ = cont_master_name;
+			style_master_page * cover_mp = dynamic_cast<style_master_page*>(master_state_list_[i].get_root().get());
+			if (cover_mp && cont_mp)
+			{
+				// Copy default and left headers/footers, but NOT the first-page
+				// variants (style_header_first_, style_footer_first_). Those hold
+				// the w:titlePg content and would incorrectly show on page 2
+				// (the first page of EO_Continuation).
+				cont_mp->style_header_       = cover_mp->style_header_;
+				cont_mp->style_header_left_  = cover_mp->style_header_left_;
+				cont_mp->style_footer_       = cover_mp->style_footer_;
+				cont_mp->style_footer_left_  = cover_mp->style_footer_left_;
+			}
+			// Chain section 0's master to the continuation.
+			if (cover_mp)
+				cover_mp->attlist_.style_next_style_name_ = cont_master_name;
 			break;
 		}
 	}

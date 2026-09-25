@@ -8930,7 +8930,10 @@ int Binary_DocumentTableReader::Read_Background(BYTE type, long length, void* po
     }
     else if ( c_oSerBackgroundType::FirstPageOnly == type )
     {
-        pBackground->bFirstPageOnly = true;
+        if (0 != length)
+            res = c_oSerConstants::ReadUnknown;
+        else
+            pBackground->bFirstPageOnly = true;
     }
     else
         res = c_oSerConstants::ReadUnknown;
