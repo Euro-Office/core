@@ -87,6 +87,19 @@ Done:
 - [x] `OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape` — dep:
       SMCustomShape2OOXML (new CMake library target created for this suite; itself depends on
       UnicodeConverter, kernel). No fixtures.
+- [x] `OOXML/DocxFormat/test` — new suite (`docx_numbering_test`), not a `.pro` migration.
+      Added to cover a DOCX bullet/numbering-list schema-ordering fix (Microsoft 365
+      Online was misclassifying list types because `<w:lvl>` children were emitted out of
+      ECMA-376 `CT_Lvl` sequence). Deps: links the existing `x2tlib` CMake target (the same
+      one `OOXML/test` uses) — `DocxFormatLib` alone is not link-complete for
+      `Numbering.cpp` (it pulls in `Logic/SectionProperty.h`, which reaches `PPTXFormat`
+      and `XmlUtils` symbols that only `x2tlib`'s full link supplies), and
+      `PPTXFormat/Namespaces.cpp` is added directly as a source (a small pre-existing gap
+      in the CMake port, unrelated to this suite). `GTEST_MAIN` (no own `main()`). No
+      fixtures — constructs `OOX::Numbering::CLvl` objects directly and asserts the
+      ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
+      level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
+      non-schema-ordered input.
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
