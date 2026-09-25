@@ -1,14 +1,24 @@
+/*
+ * SPDX-FileCopyrightText: 2026 Euro-Office contributors
+ * SPDX-License-Identifier: AGPL-3.0-only
+ */
+
 #include "gtest/gtest.h"
 
 #include "../Numbering.h"
+// Needed for compile-time completeness of OOX::Logic::CParagraphProperty's own
+// members (CLvl's implicit copy constructor, triggered by any return-by-value
+// of a CLvl, requires this even though this file never names the type
+// directly) -- not for link-time symbol resolution, which is why the file can
+// still avoid constructing CParagraphProperty/CRunProperty objects itself.
 #include "../Logic/SectionProperty.h"
 
-// Feature 001-docx-list-numbering: DOCX bullets/numbers misclassified by Microsoft 365
-// Online. Root cause (research.md Finding 4): OOX::Numbering::CLvl::toXML() emits its
-// <w:lvl> children in alphabetical order instead of the ECMA-376 CT_Lvl schema sequence
-// (start, numFmt, lvlRestart, pStyle, isLgl, suff, lvlText, lvlPicBulletId, legacy,
-// lvlJc, pPr, rPr). This suite asserts the schema order directly against the production
-// serializer/reader, for both list types (T004/T005/T007).
+// DOCX bullets/numbers were misclassified by Microsoft 365 Online. Root cause:
+// OOX::Numbering::CLvl::toXML() emitted its <w:lvl> children in alphabetical order
+// instead of the ECMA-376 CT_Lvl schema sequence (start, numFmt, lvlRestart, pStyle,
+// isLgl, suff, lvlText, lvlPicBulletId, legacy, lvlJc, pPr, rPr). This suite asserts
+// the schema order directly against the production serializer/reader, for both list
+// types.
 
 namespace
 {
@@ -40,6 +50,42 @@ namespace
 		*oLvl.m_oLvlJc = ComplexTypes::Word::CJc();
 		oLvl.m_oLvlJc->m_oVal = SimpleTypes::CJc(SimpleTypes::jcLeft);
 
+		return oLvl;
+	}
+
+	// Populates all twelve CT_Lvl child elements (BuildLvl above only covers the
+	// six most commonly emitted ones), so the schema-order assertion has full
+	// sequence coverage instead of skipping whichever fields are absent. Built
+	// via fromXML() -- which the pre-fix-order tolerance tests below already
+	// exercise successfully -- rather than by default-constructing
+	// OOX::Logic::CParagraphProperty/CRunProperty directly: those pull in the
+	// PPTXFormat::Logic dependency graph (UniFill, Ln, EffectProperties, ...),
+	// whose symbols have hidden visibility inside the shared x2tlib.so and
+	// aren't resolvable from a separate test binary linked against it.
+	OOX::Numbering::CLvl BuildFullyPopulatedLvl()
+	{
+		std::wstring sXml =
+			L"<w:lvl w:ilvl=\"0\">"
+			L"<w:start w:val=\"1\"/>"
+			L"<w:numFmt w:val=\"decimal\"/>"
+			L"<w:lvlRestart w:val=\"1\"/>"
+			L"<w:pStyle w:val=\"ListParagraph\"/>"
+			L"<w:isLgl w:val=\"false\"/>"
+			L"<w:suff w:val=\"tab\"/>"
+			L"<w:lvlText w:val=\"%1.\"/>"
+			L"<w:lvlPicBulletId w:val=\"0\"/>"
+			L"<w:legacy w:legacy=\"1\" w:legacyIndent=\"0\" w:legacySpace=\"0\"/>"
+			L"<w:lvlJc w:val=\"left\"/>"
+			L"<w:pPr><w:ind w:left=\"0\"/></w:pPr>"
+			L"<w:rPr><w:sz w:val=\"24\"/></w:rPr>"
+			L"</w:lvl>";
+
+		XmlUtils::CXmlLiteReader oReader;
+		oReader.FromString(sXml);
+		oReader.ReadNextNode();
+
+		OOX::Numbering::CLvl oLvl;
+		oLvl.fromXML(oReader);
 		return oLvl;
 	}
 
@@ -104,15 +150,15 @@ TEST(DocxNumbering, LvlToXml_DecimalLevel_ElementsInSchemaOrder)
 	EXPECT_NE(sXml.find(L"w:val=\"decimal\""), std::wstring::npos);
 }
 
-// T007: the reader must classify numFmt correctly even when fed the pre-fix
+// The reader must classify numFmt correctly even when fed the pre-fix
 // (non-schema-ordered) element order — this is what makes "open and re-save" a
-// sufficient repair for already-produced defective files (FR-011), without a
-// separate migration tool, and proves FR-004 (reading files not written by the
-// current writer).
+// sufficient repair for already-produced defective files, without a separate
+// migration tool, and confirms reading files not written by the current writer
+// still works.
 TEST(DocxNumbering, LvlFromXml_ToleratesPreFixElementOrder_Bullet)
 {
-	// Exact pre-fix element order reproduced from research.md Finding 4 / the
-	// sample file's abstractNumId=0 (bullet) level, byte-for-byte.
+	// Exact pre-fix element order, reproduced byte-for-byte from a real sample
+	// file's abstractNumId=0 (bullet) level.
 	std::wstring sXml =
 		L"<w:lvl w:ilvl=\"0\">"
 		L"<w:isLgl w:val=\"false\"/>"
@@ -137,8 +183,8 @@ TEST(DocxNumbering, LvlFromXml_ToleratesPreFixElementOrder_Bullet)
 
 TEST(DocxNumbering, LvlFromXml_ToleratesPreFixElementOrder_Decimal)
 {
-	// Exact pre-fix element order reproduced from research.md Finding 4 / the
-	// sample file's abstractNumId=1 (decimal) level, byte-for-byte.
+	// Exact pre-fix element order, reproduced byte-for-byte from a real sample
+	// file's abstractNumId=1 (decimal) level.
 	std::wstring sXml =
 		L"<w:lvl w:ilvl=\"0\">"
 		L"<w:isLgl w:val=\"false\"/>"
@@ -161,8 +207,8 @@ TEST(DocxNumbering, LvlFromXml_ToleratesPreFixElementOrder_Decimal)
 	EXPECT_EQ(oLvl.m_oNumFmt->m_oVal->GetValue(), SimpleTypes::numberformatDecimal);
 }
 
-// T012/T017 (user-customised marker): classification must key on numFmt, not on
-// lvlText. A customised, unrecognisable lvlText string must not change the result.
+// User-customised marker: classification must key on numFmt, not on lvlText. A
+// customised, unrecognisable lvlText string must not change the result.
 TEST(DocxNumbering, LvlToXml_CustomisedMarker_StillKeyedOnNumFmt)
 {
 	OOX::Numbering::CLvl oBullet = BuildLvl(SimpleTypes::numberformatBullet, L"✦"); // custom glyph
@@ -170,4 +216,21 @@ TEST(DocxNumbering, LvlToXml_CustomisedMarker_StillKeyedOnNumFmt)
 
 	EXPECT_NE(oBullet.toXML().find(L"w:val=\"bullet\""), std::wstring::npos);
 	EXPECT_NE(oOrdered.toXML().find(L"w:val=\"decimal\""), std::wstring::npos);
+}
+
+TEST(DocxNumbering, LvlToXml_FullyPopulatedLevel_ElementsInSchemaOrder)
+{
+	OOX::Numbering::CLvl oLvl = BuildFullyPopulatedLvl();
+	std::wstring sXml = oLvl.toXML();
+
+	std::vector<size_t> positions = SchemaOrderPositions(sXml);
+	for (size_t pos : positions)
+		ASSERT_NE(pos, std::wstring::npos) << "fully populated level did not emit every CT_Lvl child element";
+
+	for (size_t i = 1; i < positions.size(); ++i)
+	{
+		EXPECT_LT(positions[i - 1], positions[i])
+			<< "element order violates ECMA-376 CT_Lvl schema sequence; got XML: "
+			<< std::string(sXml.begin(), sXml.end());
+	}
 }
