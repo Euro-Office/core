@@ -1418,7 +1418,7 @@ void style_page_layout_properties::add_child_element( xml::sax * Reader, const s
     }
 }
 
-bool style_page_layout_properties::docx_background_serialize(std::wostream & strm, oox::docx_conversion_context & Context, oox::_oox_fill & fill, int id)
+bool style_page_layout_properties::docx_background_serialize(std::wostream & strm, oox::docx_conversion_context & Context, oox::_oox_fill & fill, int id, bool bFirstPageOnly)
 {
 	if (attlist_.common_background_color_attlist_.fo_background_color_ && 
 		attlist_.common_background_color_attlist_.fo_background_color_->get_type() == background_color::Transparent)
@@ -1435,6 +1435,8 @@ bool style_page_layout_properties::docx_background_serialize(std::wostream & str
 				color = attlist_.common_background_color_attlist_.fo_background_color_->get_color().get_hex_value();
 			
 			CP_XML_ATTR(L"w:color", color);
+			if (bFirstPageOnly)
+				CP_XML_ATTR(L"eo:firstPageOnly", L"1");
 
 			oox::vml_serialize_background(CP_XML_STREAM(), fill, color, id);
 		}

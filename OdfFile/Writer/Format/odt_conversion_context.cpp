@@ -1054,15 +1054,36 @@ void odt_conversion_context::separate_field()
 	set_field_instr();
 	current_fields.back().result = true;
 }
-void odt_conversion_context::set_master_page_name(std::wstring master_name)
+void odt_conversion_context::set_deferred_first_page_background(const _CP_OPT(odf_types::color) & color, bool hasDrawing)
+{
+	deferred_first_page_bg_color_ = color;
+	deferred_first_page_bg_has_drawing_ = hasDrawing;
+}
+bool odt_conversion_context::has_deferred_first_page_background() const
+{
+	return !deferred_first_page_bg_applied_ && (deferred_first_page_bg_color_ || deferred_first_page_bg_has_drawing_);
+}
+void odt_conversion_context::apply_deferred_first_page_background()
+{
+	if (deferred_first_page_bg_applied_) return;
+	deferred_first_page_bg_applied_ = true;
+
+	// Apply the background color to section 0's current master page layout.
+	if (deferred_first_page_bg_color_)
+		page_layout_context()->set_background(deferred_first_page_bg_color_, 1);
+
+	// Chain section 0's master to a clean copy (without background) for page 2+.
+	page_layout_context()->chain_current_master_to_clean_copy();
+}
+bool odt_conversion_context::set_master_page_name(std::wstring master_name)
 {
 	if (current_root_elements_.empty())// return; - эффект_штурмовика.docx - 1 page!! (and finally -
 	{
 		is_paragraph_in_current_section_ = true;
-		return;
+		return false;
 	}
 
-	if (current_master_page_ == master_name) return; // Newslette.docx
+	if (current_master_page_ == master_name) return false; // Newslette.docx
 
 	style *style_ = dynamic_cast<style*>(current_root_elements_.back().style_elm.get());
 
@@ -1074,9 +1095,10 @@ void odt_conversion_context::set_master_page_name(std::wstring master_name)
 	else
 	{
 		if (text_context()->set_master_page_name(master_name))
-			is_paragraph_in_current_section_ = false;		
+			is_paragraph_in_current_section_ = false;
 	}
 	current_master_page_ = master_name;
+	return true;
 }
 int odt_conversion_context::get_current_section_columns()
 {
