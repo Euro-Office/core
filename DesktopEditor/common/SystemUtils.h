@@ -35,7 +35,7 @@ namespace NSSystemUtils
 {
 	static const wchar_t* gc_EnvApplicationName = L"APPLICATION_NAME";
 #ifndef APPLICATION_NAME_DEFAULT
-	static const wchar_t* gc_EnvApplicationNameDefault = L"ONLYOFFICE";
+	static const wchar_t* gc_EnvApplicationNameDefault = L"Euro Office";
 #else
 	static const wchar_t* gc_EnvApplicationNameDefault = VALUE_TO_STR(APPLICATION_NAME_DEFAULT);
 #endif
