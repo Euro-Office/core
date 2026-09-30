@@ -27,6 +27,16 @@
 
 namespace DocFileFormat
 {
+	//an FKP is always one 512 byte page. Its last byte holds crun, preceded by
+	//(crun + 1) four byte FCs and crun one byte offsets, so no more than
+	//(512 - 1 - 4) / 5 runs can ever be described by a single page.
+	static const int FKP_SIZE = 512;
+	static const int FKP_MAX_CRUN = ( FKP_SIZE - 1 - 4 ) / 5;
+	//the last byte is crun itself, so property data ends one byte earlier
+	static const int FKP_DATA_END = FKP_SIZE - 1;
+	//highest page number that can be turned into an offset without overflowing
+	static const int FKP_MAX_PAGE = 0x7FFFFFFF / FKP_SIZE;
+
 	FormattedDiskPageCHPX::~FormattedDiskPageCHPX()
 	{
 		RELEASEARRAYOBJECTS(rgfc);
@@ -52,14 +62,33 @@ namespace DocFileFormat
 		WordStream = wordStream;
 
 		//read the 512 bytes (FKP)
+		//the page is zeroed first: an offset past the end of the stream makes the
+		//read return nothing at all, and the parser must not go on to interpret
+		//uninitialised heap as offsets and lengths
 		unsigned char* bytes = NULL;
-		bytes = new unsigned char[512];
+		bytes = new unsigned char[FKP_SIZE];
+		memset(bytes, 0, FKP_SIZE);
 
-		WordStream->seek(offset);
-		WordStream->read(bytes, 512);
+		//the offset is derived from a page number stored in the file. A page that
+		//lies outside the stream reads short, and is skipped by re-zeroing the
+		//buffer, which leaves crun at 0 and parses nothing
+		if (offset >= 0)
+		{
+			WordStream->seek(offset);
 
-		//get the count first
-		crun = bytes[511];
+			if (WordStream->read(bytes, FKP_SIZE) != FKP_SIZE)
+			{
+				memset(bytes, 0, FKP_SIZE);
+			}
+		}
+
+		//get the count first, capped at what a single page can describe
+		crun = bytes[FKP_SIZE - 1];
+
+		if (crun > FKP_MAX_CRUN)
+		{
+			crun = FKP_MAX_CRUN;
+		}
 
 		//create and fill the array with the adresses
 		rgfcSize = crun + 1;
@@ -92,16 +121,27 @@ namespace DocFileFormat
 			{
 				//read first unsigned char of CHPX
 				//it's the count of bytes
-				unsigned char cb = bytes[wordOffset * 2];
+				//wordOffset is a byte, so the length byte is always inside the page
+				int chpxStart = wordOffset * 2;
+				unsigned char cb = bytes[chpxStart];
 
-				//read the bytes of chpx
-				chpx = new unsigned char[cb];
-				memcpy(chpx, (bytes + (wordOffset * 2) + 1), cb);
+				//the properties themselves must not run past the property area
+				if (chpxStart + 1 + cb <= FKP_DATA_END)
+				{
+					//read the bytes of chpx
+					chpx = new unsigned char[cb];
+					memcpy(chpx, (bytes + chpxStart + 1), cb);
 
-				//parse CHPX and fill grpchpx
-				grpchpx[i] = new CharacterPropertyExceptions(chpx, cb, nWordVersion);
+					//parse CHPX and fill grpchpx
+					grpchpx[i] = new CharacterPropertyExceptions(chpx, cb, nWordVersion);
 
-				RELEASEARRAYOBJECTS(chpx);
+					RELEASEARRAYOBJECTS(chpx);
+				}
+				else
+				{
+					//malformed entry, create a CHPX which doesn't modify anything
+					grpchpx[i] = new CharacterPropertyExceptions();
+				}
 			}
 			else
 			{
@@ -151,8 +191,12 @@ namespace DocFileFormat
 				//indexed FKP is the 6th 512byte page
 				int fkpnr = FormatUtils::BytesToInt16( binTableChpx, i, fib->m_FibWord97.lcbPlcfBteChpx );
 
+				//the page number comes from the file and is signed, skip the ones
+				//that cannot address a real page
+				if ( fkpnr < 0 || fkpnr > FKP_MAX_PAGE ) continue;
+
 				//so starts at:
-				int offset = fkpnr * 512;
+				int offset = fkpnr * FKP_SIZE;
 
 				//parse the FKP and add it to the list
 				CHPXlist->push_back( new FormattedDiskPageCHPX( wordStream, offset, fib->m_nWordVersion ) );
@@ -167,8 +211,12 @@ namespace DocFileFormat
 				//indexed FKP is the 6th 512byte page
 				int fkpnr = FormatUtils::BytesToInt32( binTableChpx, i, fib->m_FibWord97.lcbPlcfBteChpx );
 
+				//the page number comes from the file and is signed, skip the ones
+				//that cannot address a real page
+				if ( fkpnr < 0 || fkpnr > FKP_MAX_PAGE ) continue;
+
 				//so starts at:
-				int offset = fkpnr * 512;
+				int offset = fkpnr * FKP_SIZE;
 
 				//parse the FKP and add it to the list
 				CHPXlist->push_back( new FormattedDiskPageCHPX( wordStream, offset, fib->m_nWordVersion ) );

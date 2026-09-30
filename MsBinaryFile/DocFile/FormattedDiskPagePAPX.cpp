@@ -27,6 +27,28 @@
 
 namespace DocFileFormat
 {
+	//an FKP is always one 512 byte page. Its last byte holds crun, preceded by
+	//(crun + 1) four byte FCs and crun BX entries.
+	static const int FKP_SIZE = 512;
+	//the last byte is crun itself, so property data ends one byte earlier
+	static const int FKP_DATA_END = FKP_SIZE - 1;
+	//highest page number that can be turned into an offset without overflowing
+	static const int FKP_MAX_PAGE = 0x7FFFFFFF / FKP_SIZE;
+
+	//copies cb bytes out of the page, zero filling when the source range would
+	//leave it. Every offset in an FKP is read from the file and cannot be trusted.
+	static void ReadFromPage( unsigned char* dst, const unsigned char* page, int start, int cb )
+	{
+		if ( ( start >= 0 ) && ( start + cb <= FKP_DATA_END ) )
+		{
+			memcpy( dst, page + start, cb );
+		}
+		else
+		{
+			memset( dst, 0, cb );
+		}
+	}
+
 	FormattedDiskPagePAPX::~FormattedDiskPagePAPX()
 	{
 		RELEASEARRAYOBJECTS(rgfc);
@@ -52,14 +74,48 @@ namespace DocFileFormat
 		WordStream = wordStream;
 
 		//read the 512 bytes (FKP)
+		//the page is zeroed first: an offset past the end of the stream makes the
+		//read return nothing at all, and the parser must not go on to interpret
+		//uninitialised heap as offsets and lengths
 		unsigned char* bytes = NULL;
-		bytes = new unsigned char[512];
+		bytes = new unsigned char[FKP_SIZE];
+		memset(bytes, 0, FKP_SIZE);
 
-		WordStream->seek(offset);
-		WordStream->read(bytes, 512);
+		//the offset is derived from a page number stored in the file. A page that
+		//lies outside the stream reads short, and is skipped by re-zeroing the
+		//buffer, which leaves crun at 0 and parses nothing
+		if (offset >= 0)
+		{
+			WordStream->seek(offset);
 
-		//get the count
-		crun = bytes[511];
+			if (WordStream->read(bytes, FKP_SIZE) != FKP_SIZE)
+			{
+				memset(bytes, 0, FKP_SIZE);
+			}
+		}
+
+		//a BX is one offset byte plus a paragraph height. Word 2 keeps the height
+		//in the property area instead, so only the offset byte is walked there.
+		int bxSize = 1;
+
+		if (fComplex || nWordVersion == 0)
+		{
+			bxSize = 1 + 12;
+		}
+		else if (nWordVersion != 2)
+		{
+			bxSize = 1 + 6;
+		}
+
+		//get the count, capped at what a single page can describe
+		crun = bytes[FKP_SIZE - 1];
+
+		int maxCrun = ( FKP_SIZE - 1 - 4 ) / ( 4 + bxSize );
+
+		if (crun > maxCrun)
+		{
+			crun = (unsigned char)maxCrun;
+		}
 
 		//create and fill the array with the adresses
 		rgfcSize = crun + 1;
@@ -93,7 +149,7 @@ namespace DocFileFormat
 
 			if (fComplex || nWordVersion == 0)
 			{
-				memcpy(phe, (bytes + j), 12);
+				ReadFromPage(phe, bytes, j, 12);
 
 				//fill the rgbx array
 				bx.phe = ParagraphHeight(phe, 12, false);
@@ -102,14 +158,16 @@ namespace DocFileFormat
 			}
 			else if (nWordVersion == 2)
 			{
-				memcpy(phe, (bytes + bx.wordOffset * 2 + j + 1), 6);
+				//this one combines both file controlled offsets, so it can point
+				//a long way outside the page
+				ReadFromPage(phe, bytes, bx.wordOffset * 2 + j + 1, 6);
 
 				//fill the rgbx array
 				bx.phe = ParagraphHeight(phe, 6, false);
 			}
 			else
 			{
-				memcpy(phe, (bytes + j), 6);
+				ReadFromPage(phe, bytes, j, 6);
 
 				//fill the rgbx array
 				bx.phe = ParagraphHeight(phe, 6, false);
@@ -121,24 +179,31 @@ namespace DocFileFormat
 			if (bx.wordOffset != 0)
 			{
 				unsigned char padbyte = 0;
-				unsigned char cw = bytes[bx.wordOffset * 2];
+				//wordOffset is a byte, so the count byte is always inside the page
+				int papxStart = bx.wordOffset * 2;
+				unsigned char cw = bytes[papxStart];
 				//if that unsigned char is zero, it's a pad unsigned char, and the word count is the following unsigned char
 				if (cw == 0)
 				{
 					padbyte = 1;
-					cw = bytes[bx.wordOffset * 2 + 1];
+					cw = ( papxStart + 1 < FKP_DATA_END ) ? bytes[papxStart + 1] : 0;
 				}
 				if (cw != 0)
 				{
 					int sz = cw * 2;
-					//read the bytes for papx
-					unsigned char* papx = new unsigned char[sz];
-					memcpy(papx, (bytes + (bx.wordOffset * 2) + padbyte + 1), sz);
 
-					//parse PAPX and fill grppapx
-					grppapx[i] = new ParagraphPropertyExceptions(papx, sz, dataStream, nWordVersion);
+					//the properties themselves must not run past the property area
+					if (papxStart + padbyte + 1 + sz <= FKP_DATA_END)
+					{
+						//read the bytes for papx
+						unsigned char* papx = new unsigned char[sz];
+						memcpy(papx, (bytes + papxStart + padbyte + 1), sz);
 
-					RELEASEARRAYOBJECTS(papx);
+						//parse PAPX and fill grppapx
+						grppapx[i] = new ParagraphPropertyExceptions(papx, sz, dataStream, nWordVersion);
+
+						RELEASEARRAYOBJECTS(papx);
+					}
 				}
 
 			}
@@ -191,8 +256,12 @@ namespace DocFileFormat
 				//indexed FKP is the xth 512byte page
 				int fkpnr = FormatUtils::BytesToInt16(binTablePapx, i, fib->m_FibWord97.lcbPlcfBtePapx);
 
+				//the page number comes from the file and is signed, skip the ones
+				//that cannot address a real page
+				if ( fkpnr < 0 || fkpnr > FKP_MAX_PAGE ) continue;
+
 				//so starts at:
-				int offset = fkpnr * 512;
+				int offset = fkpnr * FKP_SIZE;
 
 				//parse the FKP and add it to the list
 				PAPXlist->push_back(new FormattedDiskPagePAPX(wordStream, offset, dataStream, fib->m_nWordVersion, fib->m_FibBase.fComplex));
@@ -215,8 +284,12 @@ namespace DocFileFormat
 				//indexed FKP is the xth 512byte page
 				int fkpnr = FormatUtils::BytesToInt32(binTablePapx, i, fib->m_FibWord97.lcbPlcfBtePapx);
 
+				//the page number comes from the file and is signed, skip the ones
+				//that cannot address a real page
+				if ( fkpnr < 0 || fkpnr > FKP_MAX_PAGE ) continue;
+
 				//so starts at:
-				int offset = fkpnr * 512;
+				int offset = fkpnr * FKP_SIZE;
 
 				//parse the FKP and add it to the list
 				PAPXlist->push_back(new FormattedDiskPagePAPX(wordStream, offset, dataStream, fib->m_nWordVersion, fib->m_FibBase.fComplex));
