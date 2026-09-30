@@ -326,18 +326,25 @@ namespace OOX
 
 			sResult += _T(">");
 
+			// Element order below follows the ECMA-376 CT_Lvl schema sequence
+			// (start, numFmt, lvlRestart, pStyle, isLgl, suff, lvlText,
+			// lvlPicBulletId, legacy, lvlJc, pPr, rPr) -- xsd:sequence mandates
+			// this relative order for whichever of these are present. Consumers
+			// such as Microsoft 365 Online rely on it to classify a list level's
+			// numFmt; out-of-order output (e.g. alphabetical by tag name) was
+			// silently tolerated by lenient readers but misclassified there.
+			WritingElement_WriteNode_1( _T("<w:start "),          m_oStart );
+			WritingElement_WriteNode_1( _T("<w:numFmt "),         m_oNumFmt );
+			WritingElement_WriteNode_1( _T("<w:lvlRestart "),     m_oLvlRestart );
+			WritingElement_WriteNode_1( _T("<w:pStyle "),         m_oPStyle );
 			WritingElement_WriteNode_1( _T("<w:isLgl "),          m_oIsLgl );
+			WritingElement_WriteNode_1( _T("<w:suff "),           m_oSuffix );
+			WritingElement_WriteNode_1( _T("<w:lvlText "),        m_oLvlText );
+			WritingElement_WriteNode_1( _T("<w:lvlPicBulletId "), m_oLvlPicBulletId );
 			WritingElement_WriteNode_1( _T("<w:legacy "),         m_oLegacy );
 			WritingElement_WriteNode_1( _T("<w:lvlJc "),          m_oLvlJc );
-			WritingElement_WriteNode_1( _T("<w:lvlPicBulletId "), m_oLvlPicBulletId );
-			WritingElement_WriteNode_1( _T("<w:lvlRestart "),     m_oLvlRestart );
-			WritingElement_WriteNode_1( _T("<w:lvlText "),        m_oLvlText );
-			WritingElement_WriteNode_1( _T("<w:numFmt "),         m_oNumFmt );
 			WritingElement_WriteNode_2( m_oPPr );
-			WritingElement_WriteNode_1( _T("<w:pStyle "),         m_oPStyle );
 			WritingElement_WriteNode_2( m_oRPr );
-			WritingElement_WriteNode_1( _T("<w:start "),          m_oStart );
-			WritingElement_WriteNode_1( _T("<w:suff "),           m_oSuffix );
 
 			sResult += _T("</w:lvl>");
 
