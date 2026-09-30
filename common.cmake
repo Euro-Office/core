@@ -531,9 +531,15 @@ function(copy_artifacts_to_folder artifacts dest_dir)
 endfunction()
 
 function(copy_framework_to_folder target dest_dir)
+    # cmake -E copy_directory dereferences symlinks, turning a versioned
+    # framework's Versions/Current -> <N> symlink (and the top-level
+    # convenience symlinks into it) into real, duplicated files/directories -
+    # codesign then can't tell if the result is a flat or versioned bundle
+    # ("bundle format is ambiguous"). cp -R preserves symlinks as symlinks.
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/${target}.framework"
+        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
         COMMENT "Copying ${target}.framework to ${dest_dir}"
     )
 endfunction()
