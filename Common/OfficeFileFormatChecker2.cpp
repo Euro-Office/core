@@ -41,14 +41,18 @@
 #include <limits>
 
 #include "OfficeFileFormatDefines.h"
+#include "DatabaseFormats.h"
 
 #define MIN_SIZE_BUFFER 4096
 #define MAX_SIZE_BUFFER 102400
 
-// ".db" is ambiguous between SQLite and Berkeley DB. SQLite files always
-// start with the literal 16-byte header below; anything else with a ".db"
-// extension is assumed to be Berkeley DB (BerkeleyDbEngine::Open validates
-// it for real and fails cleanly if it isn't).
+// ".db" is ambiguous between SQLite, Access (Jet), and Berkeley DB. SQLite
+// files always start with the literal 16-byte header below. Access/Jet
+// databases carry the signature "Standard Jet DB" at byte offset 4 (the
+// same offset used by Access 2000-2003 .mdb files; .accdb/.mdb opened via
+// their own extension never reach this sniff). Anything matching neither is
+// assumed to be Berkeley DB (BerkeleyDbEngine::Open validates it for real
+// and fails cleanly if it isn't).
 static bool IsSqliteHeader(const std::wstring& sFilePath)
 {
 	const char sSqliteMagic[] = "SQLite format 3\0";
@@ -63,6 +67,50 @@ static bool IsSqliteHeader(const std::wstring& sFilePath)
 	oFile.CloseFile();
 
 	return bRead && dwRead == sizeof(buf) && 0 == memcmp(buf, sSqliteMagic, sizeof(buf));
+}
+
+static bool IsAccessJetHeader(const std::wstring& sFilePath)
+{
+	const char sJetMagic[] = "Standard Jet DB";
+	const size_t nMagicOffset = 4;
+	char buf[nMagicOffset + sizeof(sJetMagic) - 1] = { 0 };
+
+	NSFile::CFileBinary oFile;
+	if (!oFile.OpenFile(sFilePath))
+		return false;
+
+	DWORD dwRead = 0;
+	bool bRead = oFile.ReadFile((BYTE*)buf, sizeof(buf), dwRead);
+	oFile.CloseFile();
+
+	return bRead && dwRead == sizeof(buf) && 0 == memcmp(buf + nMagicOffset, sJetMagic, sizeof(sJetMagic) - 1);
+}
+
+// Three-way disambiguation for an ambiguous ".db" extension (FR-004).
+int DetectAmbiguousDbFormat(const std::wstring& sFilePath)
+{
+	if (IsSqliteHeader(sFilePath))
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
+	if (IsAccessJetHeader(sFilePath))
+		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
+	return AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
+}
+
+const std::vector<DatabaseExtensionEntry>& GetSupportedDatabaseExtensions()
+{
+	static const std::vector<DatabaseExtensionEntry> entries = {
+		{ L".sqlite",  AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE, false },
+		{ L".sqlite3", AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE, false },
+		{ L".db3",     AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE, false },
+		{ L".db",      AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE, true  }, // default when extension-only; sniffed when a path is available
+		{ L".duckdb",  AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB, false },
+		{ L".parquet", AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET, false },
+		{ L".pq",      AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET, false },
+		{ L".mdb",     AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB, false },
+		{ L".accdb",   AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB, false },
+		{ L".bdb",     AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB, false },
+	};
+	return entries;
 }
 
 std::string ReadStringFromOle(POLE::Stream *stream, unsigned int max_size)
@@ -1008,20 +1056,16 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HWPX;
 	else if (0 == sExt.compare(L".hml"))
 		nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_HWPML;
-	else if (0 == sExt.compare(L".sqlite") || 0 == sExt.compare(L".sqlite3") || 0 == sExt.compare(L".db3"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
-	else if (0 == sExt.compare(L".db"))
-		nFileType = IsSqliteHeader(fileName) ? AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE : AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
-	else if (0 == sExt.compare(L".duckdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
-	else if (0 == sExt.compare(L".parquet") || 0 == sExt.compare(L".pq"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET;
-	else if (0 == sExt.compare(L".mdb") || 0 == sExt.compare(L".accdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
-	else if (0 == sExt.compare(L".fdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
-	else if (0 == sExt.compare(L".bdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
+	else
+	{
+		for (const auto& dbEntry : GetSupportedDatabaseExtensions())
+		{
+			if (0 != sExt.compare(dbEntry.extension))
+				continue;
+			nFileType = dbEntry.requiresContentSniff ? DetectAmbiguousDbFormat(fileName) : dbEntry.formatConstant;
+			break;
+		}
+	}
 
 	if (nFileType != AVS_OFFICESTUDIO_FILE_UNKNOWN)
 		return true;
@@ -1460,22 +1504,18 @@ bool COfficeFileFormatChecker::isMacFormatFile(const std::wstring& fileName)
 		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_NUMBERS;
 	else if (0 == sExt.compare(L".key"))
 		nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_KEY;
-	else if (0 == sExt.compare(L".sqlite") || 0 == sExt.compare(L".sqlite3") || 0 == sExt.compare(L".db3"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
-	else if (0 == sExt.compare(L".db"))
-		nFileType = IsSqliteHeader(fileName) ? AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE : AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
-	else if (0 == sExt.compare(L".duckdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
-	else if (0 == sExt.compare(L".parquet") || 0 == sExt.compare(L".pq"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET;
-	else if (0 == sExt.compare(L".mdb") || 0 == sExt.compare(L".accdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
-	else if (0 == sExt.compare(L".fdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
-	else if (0 == sExt.compare(L".bdb"))
-		nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
 	else
-		return false;
+	{
+		for (const auto& dbEntry : GetSupportedDatabaseExtensions())
+		{
+			if (0 != sExt.compare(dbEntry.extension))
+				continue;
+			nFileType = dbEntry.requiresContentSniff ? DetectAmbiguousDbFormat(fileName) : dbEntry.formatConstant;
+			break;
+		}
+		if (nFileType == AVS_OFFICESTUDIO_FILE_UNKNOWN)
+			return false;
+	}
 
 	return true;
 }
@@ -1852,8 +1892,6 @@ std::wstring COfficeFileFormatChecker::GetExtensionByType(int type)
 		return L".parquet";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB:
 		return L".mdb";
-	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB:
-		return L".fdb";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB:
 		return L".bdb";
 	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_CSV:
@@ -2063,16 +2101,16 @@ int COfficeFileFormatChecker::GetFormatByExtension(const std::wstring &sExt)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS;
 	if (L".ods" == ext)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS;
-	if (L".sqlite" == ext || L".sqlite3" == ext || L".db" == ext || L".db3" == ext)
-		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE;
-	if (L".duckdb" == ext)
-		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB;
-	if (L".mdb" == ext || L".accdb" == ext)
-		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB;
-	if (L".fdb" == ext)
-		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB;
-	if (L".bdb" == ext)
-		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB;
+	// Database extensions resolve through the single authoritative list
+	// (FR-005). This overload has no file path to sniff, so an ambiguous
+	// ".db" always resolves to its listed default (SQLite) here; callers
+	// that have a path should use isOfficeFile/isOnlyOfficeFormatFile instead,
+	// which sniff content for ".db" (FR-004).
+	for (const auto& dbEntry : GetSupportedDatabaseExtensions())
+	{
+		if (ext == dbEntry.extension)
+			return dbEntry.formatConstant;
+	}
 	if (L".numbers" == ext)
 		return AVS_OFFICESTUDIO_FILE_SPREADSHEET_NUMBERS;
 
