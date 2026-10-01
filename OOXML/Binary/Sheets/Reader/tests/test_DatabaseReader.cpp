@@ -17,6 +17,7 @@
 
 #include <sqlite3.h>
 #include <set>
+#include <sys/resource.h>
 
 namespace
 {
@@ -168,6 +169,27 @@ TEST_F(DatabaseReaderSqliteTest, DottedPrimaryKeyValueDoesNotCollide)
 	// This at minimum confirms the read completes without error for the
 	// adversarial input; see T030's unit-level coverage of pkCellMap's key
 	// construction itself for the collision-freedom guarantee.
+	EXPECT_FALSE(SheetNames(xlsx).empty());
+}
+
+// FR-015/SC-007: reading a database much larger than available memory must
+// not OOM. Constrains this process's own address space (RLIMIT_AS) to a
+// modest cap, then reads a table with enough rows that the old
+// full-materialization design (one std::vector<std::vector<wstring>> per
+// table, all tables resident at once) would comfortably have exceeded it --
+// the streaming redesign (research.md R9) should complete regardless.
+TEST_F(DatabaseReaderSqliteTest, ReadingOversizedTableStaysWithinMemoryLimit)
+{
+	Exec(m_db, "CREATE TABLE Big (n INTEGER)");
+	Exec(m_db, "WITH RECURSIVE seq(n) AS (SELECT 0 UNION ALL SELECT n+1 FROM seq WHERE n < 4999999) "
+	           "INSERT INTO Big SELECT n FROM seq"); // 5,000,000 rows
+
+	struct rlimit limit;
+	limit.rlim_cur = 150UL * 1024 * 1024; // 150 MB -- comfortably less than
+	limit.rlim_max = 150UL * 1024 * 1024; // 5M rows' worth of fully-materialized std::wstring rows would need
+	ASSERT_EQ(setrlimit(RLIMIT_AS, &limit), 0) << "could not constrain RLIMIT_AS for this test";
+
+	OOX::Spreadsheet::CXlsx xlsx = RunReader();
 	EXPECT_FALSE(SheetNames(xlsx).empty());
 }
 
