@@ -32,3 +32,14 @@ add_custom_command(TARGET database_engines_test POST_BUILD
             "$<TARGET_FILE_DIR:database_engines_test>/OOXML/Binary/Sheets/Reader/DatabaseEngines/tests/fixtures"
     COMMENT "Ensuring database_engines_test fixtures directory exists"
 )
+
+# FR-016/T035: static source check that DuckDbEngine.cpp never reintroduces
+# a call to the deprecated duckdb_row_count/duckdb_value_varchar functions
+# (see research.md R8). A plain grep rather than a build/runtime check, so
+# it catches a regression even in a diff that never gets compiled+run.
+add_test(
+    NAME duckdb_engine_no_deprecated_api
+    COMMAND ${CMAKE_COMMAND}
+            -DFILE=${CMAKE_CURRENT_SOURCE_DIR}/../DuckDbEngine.cpp
+            -P ${CMAKE_CURRENT_SOURCE_DIR}/CheckNoDeprecatedDuckDbApi.cmake
+)
