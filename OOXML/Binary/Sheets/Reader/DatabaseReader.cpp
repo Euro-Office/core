@@ -33,6 +33,7 @@
 #include "../../../../Common/OfficeFileFormats.h"
 #include <map>
 #include <set>
+#include <tuple>
 #include <algorithm>
 #include <cwctype>
 
@@ -222,7 +223,11 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		layoutByTable[tdata.name] = layout;
 	}
 
-	std::map<std::wstring, std::wstring> pkCellMap; // "Table.Col.Value" -> "'Sheet'!A5"
+	// Keyed by (table, column, value) with no string concatenation, so a
+	// value containing the old separator character ('.') can never collide
+	// with an unrelated (table, column, value) triple (FR-013).
+	using PkKey = std::tuple<std::wstring, std::wstring, std::wstring>;
+	std::map<PkKey, std::wstring> pkCellMap; // (Table, Col, Value) -> "'Sheet'!A5"
 	for (const auto& tdata : allData) {
 		const TableLayout& layout = layoutByTable[tdata.name];
 		for (size_t rowIdx = 0; rowIdx < tdata.rows.size(); ++rowIdx) {
@@ -231,7 +236,7 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 				if (std::find(tdata.schema.primaryKeys.begin(), tdata.schema.primaryKeys.end(), colName) != tdata.schema.primaryKeys.end()) {
 					std::wstring val = tdata.rows[rowIdx][colIdx];
 					std::wstring cellRef = L"'" + layout.rowSheetName[rowIdx] + L"'!" + GetColLetter(colIdx) + std::to_wstring(layout.rowSheetRowNumber[rowIdx]);
-					pkCellMap[tdata.name + L"." + colName + L"." + val] = cellRef;
+					pkCellMap[PkKey(tdata.name, colName, val)] = cellRef;
 				}
 			}
 		}
@@ -410,8 +415,7 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 					// check if fk
 					for (const auto& fk : tdata.schema.foreignKeys) {
 						if (fk.columnName == colName) {
-							std::wstring key = fk.referencedTable + L"." + fk.referencedColumn + L"." + val;
-							auto pkIt = pkCellMap.find(key);
+							auto pkIt = pkCellMap.find(PkKey(fk.referencedTable, fk.referencedColumn, val));
 							if (pkIt != pkCellMap.end()) {
 								pCell->m_oFormula.Init();
 								pCell->m_oFormula->m_sText = pkIt->second;

@@ -4,6 +4,7 @@
 #include "mdbtools/mdbtools.h"
 #include <string>
 #include <vector>
+#include <map>
 
 class MdbResultSet : public IDBResultSet
 {
@@ -31,4 +32,11 @@ public:
 
 private:
 	MdbHandle* m_mdb;
+
+	// Table read by GetTableSchema() and not yet claimed by a matching
+	// QueryTable() call, keyed by table name (FR-012: a table must not be
+	// read from disk twice across a GetTableSchema+QueryTable pair).
+	// QueryTable() takes ownership (erases the entry) when it finds a match;
+	// anything left here at destruction time is freed by the destructor.
+	std::map<std::wstring, MdbTableDef*> m_pendingTables;
 };
