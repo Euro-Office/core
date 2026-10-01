@@ -170,7 +170,13 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 			pCell->setRowCol(0, colIdx);
 			std::wstring colName = tdata.schema.columns[colIdx];
 			pCell->m_oCacheValue = colName;
-			cellFormatController->ProcessCellType(pCell, colName, false);
+			// Headers are always literal text: skip ProcessCellType's type inference,
+			// which would otherwise turn names like "=1+1" into formulas or "00123" into 123.
+			pCell->m_oType->SetValue(SimpleTypes::Spreadsheet::celltypeInlineStr);
+			pCell->m_oRichText.Init();
+			OOX::Spreadsheet::CText *pText = new OOX::Spreadsheet::CText();
+			pText->m_sText = colName;
+			pCell->m_oRichText->m_arrItems.push_back(pText);
 			pHeaderRow->m_arrItems.push_back(pCell);
 		}
 		pWorksheet->m_oSheetData->m_arrItems.push_back(pHeaderRow);
