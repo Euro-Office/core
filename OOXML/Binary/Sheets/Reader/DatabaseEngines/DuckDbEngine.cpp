@@ -1,39 +1,103 @@
 #include "DuckDbEngine.h"
 #include "../../../../../DesktopEditor/common/File.h"
+#include "SqlIdentifierQuoting.h"
 #include <algorithm>
+
+namespace
+{
+	std::wstring ReadVarcharCell(duckdb_vector vec, idx_t row)
+	{
+		uint64_t* validity = duckdb_vector_get_validity(vec);
+		if (validity && !duckdb_validity_row_is_valid(validity, row))
+			return L""; // SQL NULL
+
+		duckdb_string_t* data = (duckdb_string_t*)duckdb_vector_get_data(vec);
+		duckdb_string_t str = data[row];
+		uint32_t len = duckdb_string_t_length(str);
+		const char* ptr = duckdb_string_t_data(&str);
+		if (!ptr || len == 0) return L"";
+
+		std::string sVal(ptr, len);
+		return UTF8_TO_U(sVal);
+	}
+
+	// Streams every row of a (small, metadata-sized) duckdb_result via the
+	// chunk API (FR-016), calling rowCallback(chunk, rowInChunk) for each.
+	template<typename RowCallback>
+	void ForEachDuckDbRow(duckdb_result& result, RowCallback rowCallback)
+	{
+		duckdb_data_chunk chunk = nullptr;
+		for (;;)
+		{
+			if (chunk)
+			{
+				duckdb_destroy_data_chunk(&chunk);
+				chunk = nullptr;
+			}
+			chunk = duckdb_fetch_chunk(result);
+			if (!chunk)
+				break;
+			idx_t chunkSize = duckdb_data_chunk_get_size(chunk);
+			for (idx_t row = 0; row < chunkSize; ++row)
+				rowCallback(chunk, row);
+		}
+	}
+}
 
 namespace NExtractTools
 {
-	DuckDbResultSet::DuckDbResultSet(duckdb_result result) : m_result(result), m_currentRow(0)
+	DuckDbResultSet::DuckDbResultSet(duckdb_result result) : m_result(result)
 	{
-		m_rowCount = duckdb_row_count(&m_result);
 	}
 
 	DuckDbResultSet::~DuckDbResultSet()
 	{
+		if (m_chunk)
+		{
+			duckdb_destroy_data_chunk(&m_chunk);
+			m_chunk = nullptr;
+		}
 		duckdb_destroy_result(&m_result);
 	}
 
 	bool DuckDbResultSet::Next()
 	{
-		if (m_currentRow < m_rowCount)
+		if (m_chunk && m_rowInChunk + 1 < m_chunkSize)
 		{
-			m_currentRow++;
+			m_rowInChunk++;
 			return true;
 		}
-		return false;
+
+		// Advance to the next chunk (FR-016: duckdb_fetch_chunk, not the
+		// deprecated duckdb_row_count/whole-result accessors). Skip any
+		// zero-size chunk rather than treating it as end-of-result.
+		for (;;)
+		{
+			if (m_chunk)
+			{
+				duckdb_destroy_data_chunk(&m_chunk);
+				m_chunk = nullptr;
+			}
+			m_chunk = duckdb_fetch_chunk(m_result);
+			if (!m_chunk)
+				return false; // result exhausted
+			m_chunkSize = duckdb_data_chunk_get_size(m_chunk);
+			if (m_chunkSize == 0)
+				continue;
+			m_rowInChunk = 0;
+			return true;
+		}
 	}
 
 	std::wstring DuckDbResultSet::GetString(int columnIdx)
 	{
-		if (m_currentRow == 0 || m_currentRow > m_rowCount) return L"";
-		
-		char* val = duckdb_value_varchar(&m_result, columnIdx, m_currentRow - 1);
-		if (!val) return L"";
-		
-		std::string sVal(val);
-		duckdb_free(val);
-		return UTF8_TO_U(sVal);
+		if (!m_chunk) return L"";
+
+		// Every column QueryTable() selects is explicitly CAST(... AS VARCHAR),
+		// so this vector's data is always duckdb_string_t -- no per-duckdb_type
+		// dispatch is needed here.
+		duckdb_vector vec = duckdb_data_chunk_get_vector(m_chunk, columnIdx);
+		return ReadVarcharCell(vec, m_rowInChunk);
 	}
 
 	DuckDbEngine::DuckDbEngine() : m_db(nullptr), m_conn(nullptr)
@@ -110,20 +174,12 @@ namespace NExtractTools
 		duckdb_result result;
 		if (duckdb_query(m_conn, "SELECT table_name FROM information_schema.tables WHERE table_schema='main'", &result) == DuckDBSuccess)
 		{
-			idx_t rowCount = duckdb_row_count(&result);
-			for (idx_t i = 0; i < rowCount; i++)
-			{
-				char* val = duckdb_value_varchar(&result, 0, i);
-				if (val)
-				{
-					std::string sVal(val);
-					tables.push_back(UTF8_TO_U(sVal));
-					duckdb_free(val);
-				}
-			}
+			ForEachDuckDbRow(result, [&](duckdb_data_chunk chunk, idx_t row) {
+				tables.push_back(ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 0), row));
+			});
 			duckdb_destroy_result(&result);
 		}
-		
+
 		return tables;
 	}
 
@@ -133,66 +189,40 @@ namespace NExtractTools
 		if (!m_conn) return schema;
 
 		std::string sTableName = U_TO_UTF8(tableName);
-		std::string sql = "PRAGMA table_info('" + sTableName + "')";
-		
+		std::string sql = "PRAGMA table_info(" + QuoteIdentifier(sTableName) + ")";
+
 		duckdb_result result;
 		if (duckdb_query(m_conn, sql.c_str(), &result) == DuckDBSuccess)
 		{
-			idx_t rowCount = duckdb_row_count(&result);
-			for (idx_t i = 0; i < rowCount; i++)
-			{
-				// PRAGMA table_info returns: cid, name, type, notnull, dflt_value, pk
-				char* val = duckdb_value_varchar(&result, 1, i);
-				char* pk = duckdb_value_varchar(&result, 5, i);
-				if (val)
-				{
-					std::string sVal(val);
-					std::wstring wColName = UTF8_TO_U(sVal);
-					schema.columns.push_back(wColName);
-					if (pk && std::string(pk) == "true") { // DuckDB PRAGMA table_info returns "true" or "false" for pk usually, or "1" / "0"
-						schema.primaryKeys.push_back(wColName);
-					} else if (pk && std::string(pk) == "1") {
-						schema.primaryKeys.push_back(wColName);
-					}
-					duckdb_free(val);
-				}
-				if (pk) duckdb_free(pk);
-			}
+			// PRAGMA table_info returns: cid, name, type, notnull, dflt_value, pk
+			ForEachDuckDbRow(result, [&](duckdb_data_chunk chunk, idx_t row) {
+				std::wstring wColName = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 1), row);
+				std::wstring pk = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 5), row);
+				schema.columns.push_back(wColName);
+				// DuckDB's PRAGMA table_info returns "true"/"false" for pk in
+				// some versions, "1"/"0" in others -- accept either.
+				if (pk == L"true" || pk == L"1")
+					schema.primaryKeys.push_back(wColName);
+			});
 			duckdb_destroy_result(&result);
 		}
-		
+
 		// DuckDB's support for PRAGMA foreign_key_list is limited or missing compared to SQLite.
-		// For DuckDB, we'll extract columns but might skip foreign keys if not explicitly supported 
+		// For DuckDB, we'll extract columns but might skip foreign keys if not explicitly supported
 		// by PRAGMA foreign_key_list in standard way. But let's try it just in case:
-		std::string fkSql = "PRAGMA foreign_key_list('" + sTableName + "')";
+		std::string fkSql = "PRAGMA foreign_key_list(" + QuoteIdentifier(sTableName) + ")";
 		duckdb_result fkResult;
 		if (duckdb_query(m_conn, fkSql.c_str(), &fkResult) == DuckDBSuccess)
 		{
-			idx_t rowCount = duckdb_row_count(&fkResult);
-			for (idx_t i = 0; i < rowCount; i++)
-			{
-				// id, seq, table, from, to
-				char* table = duckdb_value_varchar(&fkResult, 2, i);
-				char* from = duckdb_value_varchar(&fkResult, 3, i);
-				char* to = duckdb_value_varchar(&fkResult, 4, i);
-				
-				if (table && from && to)
-				{
-					ForeignKeyDef fk;
-					std::string sTable(table);
-					std::string sFrom(from);
-					std::string sTo(to);
-					
-					fk.referencedTable = UTF8_TO_U(sTable);
-					fk.columnName = UTF8_TO_U(sFrom);
-					fk.referencedColumn = UTF8_TO_U(sTo);
+			// id, seq, table, from, to
+			ForEachDuckDbRow(fkResult, [&](duckdb_data_chunk chunk, idx_t row) {
+				ForeignKeyDef fk;
+				fk.referencedTable = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 2), row);
+				fk.columnName = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 3), row);
+				fk.referencedColumn = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 4), row);
+				if (!fk.referencedTable.empty() && !fk.columnName.empty() && !fk.referencedColumn.empty())
 					schema.foreignKeys.push_back(fk);
-				}
-				
-				if (table) duckdb_free(table);
-				if (from) duckdb_free(from);
-				if (to) duckdb_free(to);
-			}
+			});
 			duckdb_destroy_result(&fkResult);
 		}
 
@@ -204,14 +234,26 @@ namespace NExtractTools
 		if (!m_conn) return nullptr;
 
 		std::string sTableName = U_TO_UTF8(tableName);
-		std::string sql = "SELECT * FROM '" + sTableName + "'";
-		
+
+		// Cast every column to VARCHAR explicitly, so DuckDbResultSet can read
+		// every vector as duckdb_string_t without a per-duckdb_type dispatch.
+		TableSchema schema = GetTableSchema(tableName);
+		std::string columnList;
+		for (size_t i = 0; i < schema.columns.size(); ++i) {
+			if (i > 0) columnList += ", ";
+			columnList += "CAST(" + QuoteIdentifier(U_TO_UTF8(schema.columns[i])) + " AS VARCHAR)";
+		}
+		if (columnList.empty())
+			columnList = "*";
+
+		std::string sql = "SELECT " + columnList + " FROM " + QuoteIdentifier(sTableName);
+
 		duckdb_result result;
 		if (duckdb_query(m_conn, sql.c_str(), &result) == DuckDBSuccess)
 		{
 			return std::unique_ptr<IDBResultSet>(new DuckDbResultSet(result));
 		}
-		
+
 		return nullptr;
 	}
 }
