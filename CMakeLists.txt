@@ -57,6 +57,9 @@ else()
         # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
         # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/Common/tests" common_db_format_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/DatabaseEngines/tests" database_engines_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/tests" database_reader_test )
     endif()
 
 endif()

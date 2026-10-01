@@ -17,19 +17,16 @@ namespace
 	// libmdb/index.c's mdb_read_indices()/mdb_index_dump()).
 	const unsigned char kMdbPrimaryKeyIndexType = 1;
 
-	std::wstring FindColumnNameByColNum(MdbTableDef* table, int colNum)
-	{
-		for (unsigned int i = 0; i < table->num_cols; ++i) {
-			MdbColumn *col = (MdbColumn *)g_ptr_array_index(table->columns, i);
-			if (col->col_num == colNum)
-				return utf8_to_wstring(col->name);
-		}
-		return L"";
-	}
-
 	// Populates schema.primaryKeys from the table's primary-key index, if any
 	// (FR-011). mdbtools has no higher-level "give me the PK columns" call --
 	// this is the same index_type==1 check libmdb's own dump tooling uses.
+	//
+	// idx->key_col_num[k] is a 1-based *array index* into table->columns
+	// (see libmdb/index.c: every internal use is
+	// g_ptr_array_index(table->columns, key_col_num[i]-1)), not a column's
+	// own col_num -- verified against a real Access file (Northwind.mdb's
+	// Orders table), where matching against col_num instead silently picked
+	// the wrong column (CustomerID instead of the real PK, OrderID).
 	void PopulatePrimaryKeys(MdbTableDef* table, TableSchema& schema)
 	{
 		GPtrArray* indices = mdb_read_indices(table);
@@ -42,9 +39,11 @@ namespace
 				continue;
 
 			for (unsigned int k = 0; k < idx->num_keys; ++k) {
-				std::wstring colName = FindColumnNameByColNum(table, idx->key_col_num[k]);
-				if (colName.empty())
+				int arrayIndex = idx->key_col_num[k] - 1;
+				if (arrayIndex < 0 || (unsigned int)arrayIndex >= table->num_cols)
 					continue;
+				MdbColumn *col = (MdbColumn *)g_ptr_array_index(table->columns, arrayIndex);
+				std::wstring colName = utf8_to_wstring(col->name);
 				if (std::find(schema.primaryKeys.begin(), schema.primaryKeys.end(), colName) == schema.primaryKeys.end())
 					schema.primaryKeys.push_back(colName);
 			}
