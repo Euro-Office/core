@@ -150,29 +150,54 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 
 	std::vector<std::wstring> tables = engine->GetTableNames();
 	int sheetIndex = 1;
-	
-	struct TableData {
+
+	struct TableMeta {
 		std::wstring name;
 		TableSchema schema;
-		std::vector<std::vector<std::wstring>> rows;
+		size_t rowCount = 0;
 	};
-	std::vector<TableData> allData;
+	// A PK column's value at a given row, before the row's eventual sheet
+	// name/row number are known (those depend on every table's row count,
+	// which this same streamed pass is what discovers them).
+	struct PkValue {
+		size_t rowIndex;
+		int colIdx;
+		std::wstring value;
+	};
+
+	// Pass 1 (FR-015): stream each table exactly once, column-by-column,
+	// to learn its row count and collect only its primary-key column values
+	// -- never buffering full row data for every table in memory at once,
+	// which is what let memory use scale with total database size before.
+	std::vector<TableMeta> allTables;
+	std::map<std::wstring, std::vector<PkValue>> pkValuesByTable;
 
 	for (const auto& tableName : tables) {
-		TableData tdata;
-		tdata.name = tableName;
-		tdata.schema = engine->GetTableSchema(tableName);
+		TableMeta tmeta;
+		tmeta.name = tableName;
+		tmeta.schema = engine->GetTableSchema(tableName);
+
+		std::vector<int> pkColIndices;
+		for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx) {
+			if (std::find(tmeta.schema.primaryKeys.begin(), tmeta.schema.primaryKeys.end(), tmeta.schema.columns[colIdx]) != tmeta.schema.primaryKeys.end())
+				pkColIndices.push_back((int)colIdx);
+		}
+
+		std::vector<PkValue>& pkValues = pkValuesByTable[tableName];
 		std::unique_ptr<IDBResultSet> rs = engine->QueryTable(tableName);
 		if (rs) {
 			while (rs->Next()) {
-				std::vector<std::wstring> rowData;
-				for (size_t colIdx = 0; colIdx < tdata.schema.columns.size(); ++colIdx) {
-					rowData.push_back(rs->GetString(colIdx));
+				for (int colIdx : pkColIndices) {
+					PkValue pv;
+					pv.rowIndex = tmeta.rowCount;
+					pv.colIdx = colIdx;
+					pv.value = rs->GetString(colIdx);
+					pkValues.push_back(pv);
 				}
-				tdata.rows.push_back(rowData);
+				tmeta.rowCount++;
 			}
 		}
-		allData.push_back(tdata);
+		allTables.push_back(tmeta);
 	}
 
 	// Reserve sheet names and work out how many sheets each table needs
@@ -185,8 +210,8 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 	const std::wstring summarySheetName = SanitizeSheetName(L"Migration Summary", usedSheetNamesLower);
 
 	bool anyConstraints = false;
-	for (const auto& tdata : allData) {
-		if (!tdata.schema.primaryKeys.empty() || !tdata.schema.foreignKeys.empty()) {
+	for (const auto& tmeta : allTables) {
+		if (!tmeta.schema.primaryKeys.empty() || !tmeta.schema.foreignKeys.empty()) {
 			anyConstraints = true;
 			break;
 		}
@@ -197,30 +222,19 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 
 	struct TableLayout {
 		std::vector<std::wstring> segmentSheetNames; // one per segment, in order
-		std::vector<std::wstring> rowSheetName;      // one per data row
-		std::vector<size_t> rowSheetRowNumber;       // 1-based row number within that row's sheet
 	};
-	std::map<std::wstring, TableLayout> layoutByTable; // keyed by table name (unique per allData)
+	std::map<std::wstring, TableLayout> layoutByTable; // keyed by table name (unique per allTables)
 
-	for (const auto& tdata : allData) {
+	for (const auto& tmeta : allTables) {
 		TableLayout layout;
-		size_t totalRows = tdata.rows.size();
-		size_t numSegments = totalRows == 0 ? 1 : (totalRows + kMaxDataRowsPerSheet - 1) / kMaxDataRowsPerSheet;
+		size_t numSegments = tmeta.rowCount == 0 ? 1 : (tmeta.rowCount + kMaxDataRowsPerSheet - 1) / kMaxDataRowsPerSheet;
 
 		for (size_t seg = 0; seg < numSegments; ++seg) {
-			std::wstring rawName = (seg == 0) ? tdata.name : (tdata.name + L"_" + std::to_wstring(seg + 1));
+			std::wstring rawName = (seg == 0) ? tmeta.name : (tmeta.name + L"_" + std::to_wstring(seg + 1));
 			layout.segmentSheetNames.push_back(SanitizeSheetName(rawName, usedSheetNamesLower));
 		}
 
-		layout.rowSheetName.resize(totalRows);
-		layout.rowSheetRowNumber.resize(totalRows);
-		for (size_t i = 0; i < totalRows; ++i) {
-			size_t seg = i / kMaxDataRowsPerSheet;
-			layout.rowSheetName[i] = layout.segmentSheetNames[seg];
-			layout.rowSheetRowNumber[i] = (i % kMaxDataRowsPerSheet) + 2; // +1 header, +1 for 1-based
-		}
-
-		layoutByTable[tdata.name] = layout;
+		layoutByTable[tmeta.name] = layout;
 	}
 
 	// Keyed by (table, column, value) with no string concatenation, so a
@@ -228,19 +242,16 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 	// with an unrelated (table, column, value) triple (FR-013).
 	using PkKey = std::tuple<std::wstring, std::wstring, std::wstring>;
 	std::map<PkKey, std::wstring> pkCellMap; // (Table, Col, Value) -> "'Sheet'!A5"
-	for (const auto& tdata : allData) {
-		const TableLayout& layout = layoutByTable[tdata.name];
-		for (size_t rowIdx = 0; rowIdx < tdata.rows.size(); ++rowIdx) {
-			for (size_t colIdx = 0; colIdx < tdata.schema.columns.size(); ++colIdx) {
-				const std::wstring& colName = tdata.schema.columns[colIdx];
-				if (std::find(tdata.schema.primaryKeys.begin(), tdata.schema.primaryKeys.end(), colName) != tdata.schema.primaryKeys.end()) {
-					std::wstring val = tdata.rows[rowIdx][colIdx];
-					std::wstring cellRef = L"'" + layout.rowSheetName[rowIdx] + L"'!" + GetColLetter(colIdx) + std::to_wstring(layout.rowSheetRowNumber[rowIdx]);
-					pkCellMap[PkKey(tdata.name, colName, val)] = cellRef;
-				}
-			}
+	for (const auto& tmeta : allTables) {
+		const TableLayout& layout = layoutByTable[tmeta.name];
+		for (const PkValue& pv : pkValuesByTable[tmeta.name]) {
+			size_t seg = pv.rowIndex / kMaxDataRowsPerSheet;
+			size_t rowNumberInSheet = (pv.rowIndex % kMaxDataRowsPerSheet) + 2; // +1 header, +1 for 1-based
+			std::wstring cellRef = L"'" + layout.segmentSheetNames[seg] + L"'!" + GetColLetter(pv.colIdx) + std::to_wstring(rowNumberInSheet);
+			pkCellMap[PkKey(tmeta.name, tmeta.schema.columns[pv.colIdx], pv.value)] = cellRef;
 		}
 	}
+	pkValuesByTable.clear(); // no longer needed once pkCellMap is built
 
 	// Migration Summary sheet (FR-009), written first.
 	{
@@ -272,8 +283,8 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 
 		writeLiteralRow(1, { L"Table", L"Rows", L"Columns", L"Sheets" });
 		int summaryRow = 2;
-		for (const auto& tdata : allData) {
-			const TableLayout& layout = layoutByTable[tdata.name];
+		for (const auto& tmeta : allTables) {
+			const TableLayout& layout = layoutByTable[tmeta.name];
 			std::wstring sheetsJoined;
 			for (size_t i = 0; i < layout.segmentSheetNames.size(); ++i) {
 				if (i > 0)
@@ -281,9 +292,9 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 				sheetsJoined += layout.segmentSheetNames[i];
 			}
 			writeLiteralRow(summaryRow++, {
-				tdata.name,
-				std::to_wstring(tdata.rows.size()),
-				std::to_wstring(tdata.schema.columns.size()),
+				tmeta.name,
+				std::to_wstring(tmeta.rowCount),
+				std::to_wstring(tmeta.schema.columns.size()),
 				sheetsJoined
 			});
 		}
@@ -334,11 +345,11 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 
 		writeLiteralRow(1, { L"Table", L"Column", L"ConstraintType", L"ReferencedTable", L"ReferencedColumn" });
 		int constraintsRow = 2;
-		for (const auto& tdata : allData) {
-			for (const auto& pkName : tdata.schema.primaryKeys)
-				writeLiteralRow(constraintsRow++, { tdata.name, pkName, L"PrimaryKey", L"", L"" });
-			for (const auto& fk : tdata.schema.foreignKeys)
-				writeLiteralRow(constraintsRow++, { tdata.name, fk.columnName, L"ForeignKey", fk.referencedTable, fk.referencedColumn });
+		for (const auto& tmeta : allTables) {
+			for (const auto& pkName : tmeta.schema.primaryKeys)
+				writeLiteralRow(constraintsRow++, { tmeta.name, pkName, L"PrimaryKey", L"", L"" });
+			for (const auto& fk : tmeta.schema.foreignKeys)
+				writeLiteralRow(constraintsRow++, { tmeta.name, fk.columnName, L"ForeignKey", fk.referencedTable, fk.referencedColumn });
 		}
 
 		oXlsx.m_arWorksheets.push_back(pConstraints);
@@ -356,33 +367,39 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		oXlsx.m_pWorkbook->m_oSheets->m_arrItems.push_back(pConstraintsSheetEntry);
 	}
 
-	for (const auto& tdata : allData) {
-		const TableLayout& layout = layoutByTable[tdata.name];
-		size_t totalRows = tdata.rows.size();
-		size_t numSegments = layout.segmentSheetNames.size();
+	// Pass 2 (FR-015): re-query each table and stream its rows directly into
+	// worksheet cells, rolling over to the next segment sheet every
+	// kMaxDataRowsPerSheet rows, instead of writing from an in-memory row
+	// buffer. At most one row is held in memory at a time per table. This is
+	// a second read of each table (the first was pass 1, above) -- a
+	// deliberate trade of one extra read for bounded memory use, per
+	// contracts/idatabaseengine-schema.md rule 3 (QueryTable must be safely
+	// re-callable for the same table).
+	for (const auto& tmeta : allTables) {
+		const TableLayout& layout = layoutByTable[tmeta.name];
 
-		for (size_t seg = 0; seg < numSegments; ++seg) {
-			size_t segStart = seg * kMaxDataRowsPerSheet;
-			size_t segEnd = std::min(totalRows, segStart + kMaxDataRowsPerSheet);
+		size_t seg = 0;
+		int rowIndexInSheet = 1; // 1-based index of the next row to write into the current segment sheet
+		OOX::Spreadsheet::CWorksheet *pWorksheet = nullptr;
+		smart_ptr<OOX::File> oWorksheetFile;
 
-			smart_ptr<OOX::File> oWorksheetFile(new OOX::Spreadsheet::CWorksheet(NULL));
-			OOX::Spreadsheet::CWorksheet *pWorksheet = (OOX::Spreadsheet::CWorksheet *)oWorksheetFile.GetPointer();
+		auto startSegmentSheet = [&]() {
+			oWorksheetFile = smart_ptr<OOX::File>(new OOX::Spreadsheet::CWorksheet(NULL));
+			pWorksheet = (OOX::Spreadsheet::CWorksheet *)oWorksheetFile.GetPointer();
 			pWorksheet->m_oSheetData.Init();
 			pWorksheet->m_oSheetFormatPr.Init();
 			pWorksheet->m_oSheetFormatPr->m_oBaseColWidth = 9;
-
 			cellFormatController->m_pWorksheet = pWorksheet;
 
 			// Write Headers (repeated on every segment, per FR-007)
 			OOX::Spreadsheet::CRow *pHeaderRow = new OOX::Spreadsheet::CRow();
 			pHeaderRow->m_oR.Init();
 			pHeaderRow->m_oR->SetValue(1);
-
-			for (size_t colIdx = 0; colIdx < tdata.schema.columns.size(); ++colIdx) {
+			for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx) {
 				OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
 				pCell->m_oType.Init();
 				pCell->setRowCol(0, colIdx);
-				std::wstring colName = tdata.schema.columns[colIdx];
+				std::wstring colName = tmeta.schema.columns[colIdx];
 				pCell->m_oCacheValue = colName;
 				// Headers are always literal text: skip ProcessCellType's type inference,
 				// which would otherwise turn names like "=1+1" into formulas or "00123" into 123.
@@ -395,51 +412,19 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 			}
 			pWorksheet->m_oSheetData->m_arrItems.push_back(pHeaderRow);
 
-			// Write Data for this segment's row range
-			int rowIndex = 1;
-			for (size_t rowIdx = segStart; rowIdx < segEnd; ++rowIdx) {
-				const auto& rowData = tdata.rows[rowIdx];
-				OOX::Spreadsheet::CRow *pRow = new OOX::Spreadsheet::CRow();
-				pRow->m_oR.Init();
-				pRow->m_oR->SetValue(rowIndex + 1);
+			rowIndexInSheet = 1;
+		};
 
-				for (size_t colIdx = 0; colIdx < tdata.schema.columns.size(); ++colIdx) {
-					OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
-					pCell->m_oType.Init();
-					pCell->setRowCol(rowIndex, colIdx);
-
-					std::wstring val = rowData[colIdx];
-					std::wstring colName = tdata.schema.columns[colIdx];
-					pCell->m_oCacheValue = val;
-
-					// check if fk
-					for (const auto& fk : tdata.schema.foreignKeys) {
-						if (fk.columnName == colName) {
-							auto pkIt = pkCellMap.find(PkKey(fk.referencedTable, fk.referencedColumn, val));
-							if (pkIt != pkCellMap.end()) {
-								pCell->m_oFormula.Init();
-								pCell->m_oFormula->m_sText = pkIt->second;
-							}
-							break;
-						}
-					}
-
-					cellFormatController->ProcessCellType(pCell, val, false);
-					pRow->m_arrItems.push_back(pCell);
-				}
-				pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
-				rowIndex++;
-			}
-
+		auto finalizeSegmentSheet = [&]() {
 			// Data validation for PK uniqueness, scoped to this segment's own rows.
-			if (!tdata.schema.primaryKeys.empty()) {
+			if (!tmeta.schema.primaryKeys.empty()) {
 				if (!pWorksheet->m_oDataValidations.IsInit())
 					pWorksheet->m_oDataValidations.Init();
 
-				for (const auto& pkName : tdata.schema.primaryKeys) {
-					auto it = std::find(tdata.schema.columns.begin(), tdata.schema.columns.end(), pkName);
-					if (it != tdata.schema.columns.end()) {
-						int pkColIdx = std::distance(tdata.schema.columns.begin(), it);
+				for (const auto& pkName : tmeta.schema.primaryKeys) {
+					auto it = std::find(tmeta.schema.columns.begin(), tmeta.schema.columns.end(), pkName);
+					if (it != tmeta.schema.columns.end()) {
+						int pkColIdx = std::distance(tmeta.schema.columns.begin(), it);
 						std::wstring colLetter = GetColLetter(pkColIdx);
 
 						OOX::Spreadsheet::CDataValidation* pValidation = new OOX::Spreadsheet::CDataValidation();
@@ -457,9 +442,7 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 			}
 
 			oXlsx.m_arWorksheets.push_back(pWorksheet);
-
 			const OOX::RId oRid = oXlsx.m_pWorkbook->Add(oWorksheetFile);
-
 			oXlsx.m_mapWorksheets.insert(std::make_pair(oRid.ToString(), pWorksheet));
 
 			OOX::Spreadsheet::CSheet *pSheet = new OOX::Spreadsheet::CSheet();
@@ -472,7 +455,53 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 			if (!oXlsx.m_pWorkbook->m_oSheets.IsInit())
 				oXlsx.m_pWorkbook->m_oSheets.Init();
 			oXlsx.m_pWorkbook->m_oSheets->m_arrItems.push_back(pSheet);
+		};
+
+		startSegmentSheet();
+
+		std::unique_ptr<IDBResultSet> rs = engine->QueryTable(tmeta.name);
+		if (rs) {
+			while (rs->Next()) {
+				if (rowIndexInSheet > (int)kMaxDataRowsPerSheet) {
+					finalizeSegmentSheet();
+					seg++;
+					startSegmentSheet();
+				}
+
+				OOX::Spreadsheet::CRow *pRow = new OOX::Spreadsheet::CRow();
+				pRow->m_oR.Init();
+				pRow->m_oR->SetValue(rowIndexInSheet + 1);
+
+				for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx) {
+					std::wstring val = rs->GetString(colIdx);
+					std::wstring colName = tmeta.schema.columns[colIdx];
+
+					OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
+					pCell->m_oType.Init();
+					pCell->setRowCol(rowIndexInSheet, colIdx);
+					pCell->m_oCacheValue = val;
+
+					// check if fk
+					for (const auto& fk : tmeta.schema.foreignKeys) {
+						if (fk.columnName == colName) {
+							auto pkIt = pkCellMap.find(PkKey(fk.referencedTable, fk.referencedColumn, val));
+							if (pkIt != pkCellMap.end()) {
+								pCell->m_oFormula.Init();
+								pCell->m_oFormula->m_sText = pkIt->second;
+							}
+							break;
+						}
+					}
+
+					cellFormatController->ProcessCellType(pCell, val, false);
+					pRow->m_arrItems.push_back(pCell);
+				}
+				pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
+				rowIndexInSheet++;
+			}
 		}
+
+		finalizeSegmentSheet();
 	}
 
 	return 0; // S_OK

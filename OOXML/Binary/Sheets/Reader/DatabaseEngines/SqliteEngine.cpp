@@ -1,5 +1,6 @@
 #include "SqliteEngine.h"
 #include "../../../../../DesktopEditor/common/File.h"
+#include "SqlIdentifierQuoting.h"
 #include <iostream>
 
 namespace NExtractTools
@@ -92,7 +93,7 @@ namespace NExtractTools
 		if (!m_db) return schema;
 
 		std::string sTableName = U_TO_UTF8(tableName);
-		std::string sql = "PRAGMA table_info('" + sTableName + "')";
+		std::string sql = "PRAGMA table_info(" + QuoteIdentifier(sTableName) + ")";
 		
 		sqlite3_stmt* stmt = nullptr;
 		if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
@@ -114,7 +115,7 @@ namespace NExtractTools
 			sqlite3_finalize(stmt);
 		}
 
-		std::string fkSql = "PRAGMA foreign_key_list('" + sTableName + "')";
+		std::string fkSql = "PRAGMA foreign_key_list(" + QuoteIdentifier(sTableName) + ")";
 		if (sqlite3_prepare_v2(m_db, fkSql.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
 		{
 			while (sqlite3_step(stmt) == SQLITE_ROW)
@@ -147,7 +148,7 @@ namespace NExtractTools
 		if (!m_db) return nullptr;
 
 		std::string sTableName = U_TO_UTF8(tableName);
-		std::string sql = "SELECT * FROM '" + sTableName + "'";
+		std::string sql = "SELECT * FROM " + QuoteIdentifier(sTableName);
 		
 		sqlite3_stmt* stmt = nullptr;
 		if (sqlite3_prepare_v2(m_db, sql.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
