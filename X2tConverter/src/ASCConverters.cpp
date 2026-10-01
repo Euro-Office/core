@@ -1152,7 +1152,7 @@ namespace NExtractTools
 						AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB == nFormatFrom ||
 						AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET == nFormatFrom ||
 						AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB == nFormatFrom ||
-						AVS_OFFICESTUDIO_FILE_SPREADSHEET_FDB == nFormatFrom)
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB == nFormatFrom)
 			{
 				nRes = db2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
 				*params.m_nFormatFrom = AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX;
