@@ -288,15 +288,55 @@ namespace ZLibZipUtils
 			err = unzOpenCurrentFilePassword(uf, password);
 
 			//-------------------------------------------------------------------------------------------------
-
+			// ZipSlip protection: verify the resolved output path stays within unzip_dir
 			if (unzip_dir)
 			{
-				const std::wstring wsFilePath{NSSystemPath::ShortenPath(filenameW)};
+				// Normalize the filename to resolve any ../ or ./ components
+				const std::wstring wsNormalizedFilename = NSSystemPath::ShortenPath(filenameW);
 
-				if (wsFilePath.size() > 3 && L'.' == wsFilePath[0] && L'.' == wsFilePath[1] && L'/' == wsFilePath[2])
+				// Reject if normalization produced an empty path
+				if (wsNormalizedFilename.empty())
 					return UNZ_INTERNALERROR;
-			}
 
+				// Reject absolute paths in the archive entry itself
+#if defined(_WIN32) || defined (_WIN64)
+				bool bIsAbsolute = false;
+				// Drive letter: C:\ or C:/
+				if (wsNormalizedFilename.size() >= 2 &&
+					wsNormalizedFilename[1] == L':' &&
+					(wsNormalizedFilename[0] >= L'A' && wsNormalizedFilename[0] <= L'Z' ||
+					 wsNormalizedFilename[0] >= L'a' && wsNormalizedFilename[0] <= L'z'))
+					bIsAbsolute = true;
+				// UNC path: \\server\share
+				if (wsNormalizedFilename.size() >= 2 &&
+					wsNormalizedFilename[0] == L'\\' && wsNormalizedFilename[1] == L'\\')
+					bIsAbsolute = true;
+				if (bIsAbsolute)
+					return UNZ_INTERNALERROR;
+#else
+				// Unix-like: absolute path starting with /
+				if (!wsNormalizedFilename.empty() && wsNormalizedFilename[0] == L'/')
+					return UNZ_INTERNALERROR;
+#endif
+
+				// Build the normalized output path and verify containment within unzip_dir
+				std::wstring wsNormalizedOutput = NSSystemPath::ShortenPath(output);
+				std::wstring wsNormalizedDir    = NSSystemPath::ShortenPath(unzip_dir);
+
+				// Ensure directory ends with separator for proper prefix matching
+				if (!wsNormalizedDir.empty() &&
+					wsNormalizedDir.back() != L'/' && wsNormalizedDir.back() != L'\\')
+				{
+					wsNormalizedDir += FILE_SEPARATOR_STR;
+				}
+
+				// Verify the output path starts with the extraction directory prefix
+				if (wsNormalizedOutput.size() < wsNormalizedDir.size() ||
+					wsNormalizedOutput.substr(0, wsNormalizedDir.size()) != wsNormalizedDir)
+				{
+					return UNZ_INTERNALERROR;
+				}
+			}
 			//-------------------------------------------------------------------------------------------------
 			NSFile::CFileBinary oFile;
 			FILE *fout = NULL;
