@@ -42,6 +42,7 @@ FROM rockylinux:9 AS core-base-server
             gcc gcc-c++ libstdc++-static make ninja-build pkgconf-pkg-config \
             glib2-devel \
             python3 python3-pip python3-setuptools python3-httplib2 \
+            python3.12 python3.12-pip python3.12-setuptools \
             python-unversioned-command \
             autoconf automake libtool findutils \
             perl perl-FindBin perl-IPC-Cmd perl-Data-Dumper \
@@ -51,6 +52,12 @@ FROM rockylinux:9 AS core-base-server
     # rockylinux:9 ships curl-minimal; --allowerasing swaps in the full curl
     # CLI (needed by some bootstrap scripts).
     RUN dnf install -y --allowerasing curl && dnf clean all
+
+    # The core build scripts need Python >= 3.10 (PEP 604 "X | None" hints).
+    # el9's /usr/bin/python3 is 3.9 and must stay that way (dnf depends on it),
+    # so the build is pointed at the AppStream python3.12 instead via
+    # -DPYTHON_BIN (see core stage).
+    ENV CORE_PYTHON=/usr/bin/python3.12
 
     # vcpkg requires a newer CMake than el9 ships (3.20-3.26). The PyPI wheel
     # ships a prebuilt cmake binary, so no Kitware repo or GitHub access is
@@ -83,6 +90,8 @@ FROM ubuntu:22.04 AS ubuntu-desktop-amd64
 FROM ubuntu:24.04 AS ubuntu-desktop-arm64
 FROM ubuntu-desktop-${TARGETARCH} AS core-base-desktop
 
+    # 22.04 ships Python 3.10, 24.04 ships 3.12; both are new enough.
+    ENV CORE_PYTHON=/usr/bin/python3
     ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive
 
@@ -157,6 +166,7 @@ FROM core-base AS core
         -DVCPKG_MANIFEST_MODE=ON \
         -DVCPKG_MANIFEST_DIR=/core \
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
+        -DPYTHON_BIN=${CORE_PYTHON} \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
         -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
