@@ -46,7 +46,7 @@ FROM rockylinux:9 AS core-base-server
             python-unversioned-command \
             autoconf automake libtool findutils \
             perl perl-FindBin perl-IPC-Cmd perl-Data-Dumper \
-            diffutils which file \
+            diffutils which file xz bzip2 patch \
         && dnf clean all
 
     # rockylinux:9 ships curl-minimal; --allowerasing swaps in the full curl
