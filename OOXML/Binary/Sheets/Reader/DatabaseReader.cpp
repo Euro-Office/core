@@ -23,6 +23,7 @@
  *
  */
 
+
 #define DONT_WRITE_EMBEDDED_FONTS
 #include "DatabaseReader.h"
 #include "../../../../Common/ATLDefine.h"
@@ -62,6 +63,7 @@
 #include <algorithm>
 #include <cwctype>
 #include <stdexcept>
+#include <cstdint>
 
 using namespace NExtractTools;
 
@@ -128,6 +130,24 @@ DatabaseReader::DatabaseReader() {}
 DatabaseReader::~DatabaseReader() {}
 
 _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _INT32 lcid, bool readToCache)
+{
+	// PR #116 review (5415370605): a damaged page (or any other engine-level
+	// read failure IDBResultSet::Next() now throws for, e.g. SQLITE_CORRUPT)
+	// used to look identical to "no more rows" to the pass-1/pass-2 row
+	// loops below, so Read() reported S_OK over data that was actually
+	// incomplete. ReadImpl can throw from deep inside either pass; catch it
+	// here rather than wrapping every call site individually.
+	try
+	{
+		return ReadImpl(sFileName, oXlsx, lcid, readToCache);
+	}
+	catch (const std::exception&)
+	{
+		return AVS_FILEUTILS_ERROR_CONVERT;
+	}
+}
+
+_UINT32 DatabaseReader::ReadImpl(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _INT32 lcid, bool readToCache)
 {
 	oXlsx.CreateWorkbook();
 	oXlsx.CreateStyles();
@@ -577,19 +597,32 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 				for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx)
 					rowVals[colIdx] = rs->GetString(colIdx);
 
-				// PR #116 review (5388727348): group this row's FK columns
-				// by referencedTable and resolve the complete tuple against
-				// that table's own primary-key column order, so every
-				// component of a composite key must match the same parent
-				// row -- not just whichever single column happened to.
+				// PR #116 review (5388727348, 5415411907): group this row's
+				// FK columns by (referencedTable, groupKey) and resolve the
+				// complete tuple against that table's own primary-key column
+				// order, so every component of one composite key must match
+				// the same parent row -- not just whichever single column
+				// happened to. Grouping by referencedTable alone was wrong:
+				// two independent single-column FKs to the same table (e.g.
+				// Tasks.owner_id and Tasks.reviewer_id both -> People.id)
+				// are separate relationships, not components of one key, and
+				// must not be merged. An engine that cannot distinguish them
+				// leaves groupKey empty; fall back to the FK's own address
+				// so it never merges with anything.
 				std::map<int, std::wstring> formulaByColIdx;
 				{
-					std::map<std::wstring, std::vector<const ForeignKeyDef*>> fkGroupsByReferencedTable;
-					for (const auto& fk : tmeta.schema.foreignKeys)
-						fkGroupsByReferencedTable[fk.referencedTable].push_back(&fk);
+					std::map<std::wstring, std::vector<const ForeignKeyDef*>> fkGroups;
+					for (const auto& fk : tmeta.schema.foreignKeys) {
+						std::wstring key = fk.referencedTable + L"\x1f" +
+							(fk.groupKey.empty()
+								? (L"#" + std::to_wstring((uintptr_t)&fk))
+								: fk.groupKey);
+						fkGroups[key].push_back(&fk);
+					}
 
-					for (const auto& group : fkGroupsByReferencedTable) {
-						auto refTableIt = tableMetaByName.find(group.first);
+					for (const auto& group : fkGroups) {
+						const std::wstring& referencedTable = group.second.front()->referencedTable;
+						auto refTableIt = tableMetaByName.find(referencedTable);
 						if (refTableIt == tableMetaByName.end() || refTableIt->second->schema.primaryKeys.empty())
 							continue;
 
@@ -611,7 +644,7 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 						if (!complete)
 							continue;
 
-						auto tableRowsIt = pkRowMap.find(group.first);
+						auto tableRowsIt = pkRowMap.find(referencedTable);
 						if (tableRowsIt == pkRowMap.end())
 							continue;
 						auto rowMatchIt = tableRowsIt->second.find(valueTuple);

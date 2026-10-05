@@ -23,6 +23,7 @@
  *
  */
 
+
 #include "DuckDbEngine.h"
 #include "../../../../../DesktopEditor/common/File.h"
 #include "SqlIdentifierQuoting.h"
@@ -242,6 +243,7 @@ namespace NExtractTools
 			// id, seq, table, from, to
 			ForEachDuckDbRow(fkResult, [&](duckdb_data_chunk chunk, idx_t row) {
 				ForeignKeyDef fk;
+				fk.groupKey = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 0), row);
 				fk.referencedTable = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 2), row);
 				fk.columnName = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 3), row);
 				fk.referencedColumn = ReadVarcharCell(duckdb_data_chunk_get_vector(chunk, 4), row);

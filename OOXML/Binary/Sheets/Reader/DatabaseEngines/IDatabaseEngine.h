@@ -16,6 +16,15 @@ struct ForeignKeyDef {
     std::wstring columnName;
     std::wstring referencedTable;
     std::wstring referencedColumn;
+    // PR #116 review (5415411907): identifies which FK components belong to
+    // the *same* multi-column constraint (e.g. SQLite's PRAGMA
+    // foreign_key_list "id" column, or an MDB relationship's szRelationship
+    // name), scoped to the owning table. Two single-column FKs that merely
+    // reference the same table are NOT the same constraint and must not be
+    // merged -- an engine that cannot distinguish them should leave this
+    // empty; DatabaseReader then treats each such entry as its own group
+    // rather than guessing they belong together.
+    std::wstring groupKey;
 };
 
 struct TableSchema {

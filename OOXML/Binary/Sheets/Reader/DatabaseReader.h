@@ -23,6 +23,7 @@
  *
  */
 
+
 #pragma once
 
 #include <string>
@@ -52,4 +53,7 @@ public:
 	~DatabaseReader();
 
 	_UINT32 Read(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _INT32 lcid, bool readToCache);
+
+private:
+	_UINT32 ReadImpl(const std::wstring &sFileName, OOX::Spreadsheet::CXlsx &oXlsx, _INT32 lcid, bool readToCache);
 };
