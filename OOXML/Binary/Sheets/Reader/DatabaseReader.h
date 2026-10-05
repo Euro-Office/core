@@ -4,6 +4,7 @@
 #include <vector>
 #include "../../../Base/Base.h"
 #include <boost/shared_ptr.hpp>
+#include "../../../../DesktopEditor/common/base_export.h"
 
 namespace OOX {
 	namespace Spreadsheet {
@@ -19,7 +20,7 @@ namespace NExtractTools
 	_UINT32 db2xlsx_dir(const std::wstring& sFrom, const std::wstring& sTo, InputParams& params, ConvertParams& convertParams);
 }
 
-class DatabaseReader
+class Q_DECL_EXPORT DatabaseReader
 {
 public:
 	DatabaseReader();

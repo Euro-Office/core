@@ -15,13 +15,51 @@ if(NOT TARGET x2tlib)
     add_subdirectory(${CORE_ROOT_DIR}/X2tConverter/build/cmake x2t)
 endif()
 
+# The tests also call the vendor C APIs (sqlite3_open, duckdb_open, ...)
+# directly, not just through the Sqlite/DuckDb engine wrapper classes --
+# x2tlib links those statically/internally without re-exporting them, so
+# they need their own find_package()+link here.
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+find_package(DuckDB CONFIG REQUIRED)
+
 add_core_gtest(
     NAME    database_engines_test
     SOURCES test_SqliteEngine.cpp
             test_DuckDbEngine.cpp
             test_MdbEngine.cpp
     LIBS    x2tlib
+            unofficial::sqlite3::sqlite3
+            $<IF:$<TARGET_EXISTS:duckdb>,duckdb,duckdb_static>
     GTEST_MAIN
+)
+
+# x2tlib pulls in MdbEngine, which dynamically links libmdbtools.so (built
+# as its own shared library by OOXML/Projects/Linux/BinDocument/CMakeLists.txt,
+# deliberately not baked into x2tlib -- LGPL mdbtools code must stay
+# dynamically linked, not statically bound into this AGPL application). It is
+# not collected into EO_CORE_OUTPUT_DIR (the only dir add_core_gtest puts on
+# the test's LD_LIBRARY_PATH), so the test fails at load with "libmdbtools.so:
+# cannot open shared object file". Extend the test's LD_LIBRARY_PATH to also
+# cover the BinDocument build dir (libmdbtools.so) and its bundled Berkeley DB
+# install dir (libdb-18.1.so, used by BerkeleyDbEngine). This mirrors
+# add_core_gtest's own env (EO_CORE_OUTPUT_DIR + the vcpkg lib dir) and
+# overrides it; done at configure time so it does not depend on the target
+# being relinked.
+set(_mdb_libpath "${CMAKE_BINARY_DIR}/x2t/x2tlib/BinDocument:${CMAKE_BINARY_DIR}/x2t/x2tlib/BinDocument/berkeleydb-install/lib:${EO_CORE_OUTPUT_DIR}")
+if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
+    set(_mdb_libpath "${_mdb_libpath}:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
+endif()
+set_tests_properties(database_engines_test PROPERTIES
+    ENVIRONMENT "LD_LIBRARY_PATH=${_mdb_libpath}")
+
+# mdbtools.h uses <mdbfakeglib.h> (angle brackets), resolved only via an
+# explicit -I, not relative to the including file. The mdbtools CMake
+# target's own include dir is PRIVATE (OOXML/Projects/Linux/BinDocument/
+# CMakeLists.txt re-adds it itself for the same reason) and does not
+# propagate through linking x2tlib, so test_MdbEngine.cpp needs the same
+# directory added explicitly here.
+target_include_directories(database_engines_test PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/../mdbtools
 )
 
 # MdbEngineSchemaTest's cases GTEST_SKIP themselves when this fixture is
