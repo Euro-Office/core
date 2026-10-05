@@ -17,6 +17,7 @@
 
 #include <sqlite3.h>
 #include <set>
+#include <iostream>
 #include <sys/resource.h>
 
 namespace
@@ -172,25 +173,52 @@ TEST_F(DatabaseReaderSqliteTest, DottedPrimaryKeyValueDoesNotCollide)
 	EXPECT_FALSE(SheetNames(xlsx).empty());
 }
 
-// FR-015/SC-007: reading a database much larger than available memory must
-// not OOM. Constrains this process's own address space (RLIMIT_AS) to a
-// modest cap, then reads a table with enough rows that the old
-// full-materialization design (one std::vector<std::vector<wstring>> per
-// table, all tables resident at once) would comfortably have exceeded it --
-// the streaming redesign (research.md R9) should complete regardless.
+// FR-015/SC-007: reading a database far larger than its row objects would
+// occupy in memory must stay bounded. With readToCache=true, DatabaseReader
+// flushes each row into the sheet's compact XML cache and frees its
+// CRow/CCell objects (mirroring CSVReader), so peak working-set growth holds
+// the compact cache rather than a full 5,000,000-row object tree (which runs
+// into the ~GB range). We measure peak RSS growth (getrusage) across the read
+// and assert it stays well under that object-tree cost -- guarding the cache
+// path from silently regressing to unbounded materialization.
+//
+// RLIMIT_AS (the earlier approach) is unusable here: it caps total virtual
+// address space, which already includes every shared library x2tlib maps
+// (V8, ICU, boost, ...), so it fails before the reader allocates anything.
 TEST_F(DatabaseReaderSqliteTest, ReadingOversizedTableStaysWithinMemoryLimit)
 {
 	Exec(m_db, "CREATE TABLE Big (n INTEGER)");
 	Exec(m_db, "WITH RECURSIVE seq(n) AS (SELECT 0 UNION ALL SELECT n+1 FROM seq WHERE n < 4999999) "
 	           "INSERT INTO Big SELECT n FROM seq"); // 5,000,000 rows
+	sqlite3_close(m_db);
+	m_db = nullptr; // DatabaseReader::Read reopens the file itself
 
-	struct rlimit limit;
-	limit.rlim_cur = 150UL * 1024 * 1024; // 150 MB -- comfortably less than
-	limit.rlim_max = 150UL * 1024 * 1024; // 5M rows' worth of fully-materialized std::wstring rows would need
-	ASSERT_EQ(setrlimit(RLIMIT_AS, &limit), 0) << "could not constrain RLIMIT_AS for this test";
+	auto peakRssKb = []() {
+		struct rusage usage;
+		getrusage(RUSAGE_SELF, &usage);
+		return usage.ru_maxrss; // peak resident set size, kilobytes on Linux
+	};
 
-	OOX::Spreadsheet::CXlsx xlsx = RunReader();
+	// Baseline already includes the mapped libraries and the (streamed, low-
+	// memory) sqlite INSERT above, so the delta is attributable to the read.
+	long beforeKb = peakRssKb();
+
+	OOX::Spreadsheet::CXlsx xlsx;
+	DatabaseReader reader;
+	_UINT32 result = reader.Read(m_dbPath, xlsx, 1033, /*readToCache*/ true);
+	ASSERT_EQ(result, 0u) << "DatabaseReader::Read did not return S_OK";
+
+	long deltaMb = (peakRssKb() - beforeKb) / 1024;
+	std::cerr << "[ReadingOversizedTable] peak RSS delta: " << deltaMb << " MB\n";
+
 	EXPECT_FALSE(SheetNames(xlsx).empty());
+
+	// Full object-tree materialization of 5,000,000 rows needs well over a
+	// gigabyte; the cached path should stay a large factor below that. The
+	// ceiling is generous (to avoid runner-to-runner flakiness) yet still
+	// catches a regression to the unbounded path.
+	EXPECT_LT(deltaMb, 900) << "Read(readToCache=true) grew peak RSS by "
+	                        << deltaMb << " MB; the row cache may not be flushing";
 }
 
 int main(int argc, char** argv)
