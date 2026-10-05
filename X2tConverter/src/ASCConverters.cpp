@@ -1182,8 +1182,16 @@ namespace NExtractTools
 
 				if (NULL != params.m_nFormatTo)
 					nFormatTo = *params.m_nFormatTo;
-				
+
+				// PR #116 review (5388969387): db2xlsx_dir (and the other
+				// branches above) may return a non-zero CELLLIMITS/
+				// ROWLIMITS warning code that SUCCEEDED_X2T still treats as
+				// success. Don't let a fully-successful fromXlsxDir below
+				// silently overwrite that warning with S_OK.
+				_UINT32 nResBeforeToXlsx = nRes;
 				nRes = fromXlsxDir(sXlsxDir, *params.m_sFileTo, nFormatTo, params, convertParams);
+				if (0 == nRes && 0 != nResBeforeToXlsx)
+					nRes = nResBeforeToXlsx;
 			}
 		}
 		return nRes;

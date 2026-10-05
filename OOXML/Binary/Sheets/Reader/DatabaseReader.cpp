@@ -36,6 +36,7 @@
 #include <tuple>
 #include <algorithm>
 #include <cwctype>
+#include <stdexcept>
 
 using namespace NExtractTools;
 
@@ -55,7 +56,11 @@ namespace
 		std::wstring sanitized;
 		for (wchar_t ch : raw)
 		{
-			if (ch == L'/' || ch == L'\\' || ch == L'?' || ch == L'*' || ch == L'[' || ch == L']')
+			// PR #116 review (5391562282): ':' is also forbidden in an Excel
+			// sheet title -- filter it here too, before collision handling,
+			// since e.g. "Alpha:Beta" and "AlphaBeta" would otherwise
+			// sanitize to the same name.
+			if (ch == L'/' || ch == L'\\' || ch == L'?' || ch == L'*' || ch == L'[' || ch == L']' || ch == L':')
 				continue;
 			sanitized.push_back(ch);
 		}
@@ -108,6 +113,12 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 	
 	std::shared_ptr<CellFormatController> cellFormatController = std::make_shared<CellFormatController>(oXlsx.m_pStyles, lcid);
 
+	// PR #116 review (5388969387): ProcessCellType() returns 1 when a cell's
+	// text exceeds Excel's 32,767-character limit and gets truncated. Latch
+	// that here (as CSVReader does) instead of discarding it, so Read()
+	// reports AVS_FILEUTILS_ERROR_CONVERT_CELLLIMITS rather than S_OK.
+	bool bMsLimitCell = false;
+
 	std::wstring sExt;
 	std::wstring::size_type nExtPos = sFileName.rfind(L'.');
 	if (nExtPos != std::wstring::npos) {
@@ -148,7 +159,15 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		return AVS_FILEUTILS_ERROR_CONVERT;
 	}
 
-	std::vector<std::wstring> tables = engine->GetTableNames();
+	// PR #116 review (5389484472): GetTableNames() can now throw on a
+	// discovery error (prepare/step failure) instead of silently returning
+	// an empty list indistinguishable from a database with no tables.
+	std::vector<std::wstring> tables;
+	try {
+		tables = engine->GetTableNames();
+	} catch (const std::exception&) {
+		return AVS_FILEUTILS_ERROR_CONVERT;
+	}
 	int sheetIndex = 1;
 
 	struct TableMeta {
@@ -200,6 +219,13 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		allTables.push_back(tmeta);
 	}
 
+	// PR #116 review (5388727348): FK resolution below needs to look up a
+	// referenced table's own primary-key column order to match a composite
+	// key's full tuple, not just one column at a time.
+	std::map<std::wstring, const TableMeta*> tableMetaByName;
+	for (const auto& tmeta : allTables)
+		tableMetaByName[tmeta.name] = &tmeta;
+
 	// Reserve sheet names and work out how many sheets each table needs
 	// (FR-006, FR-007). A table's rows are split into pages of at most
 	// kMaxDataRowsPerSheet; segment 1 keeps the table's own (sanitized) name,
@@ -237,21 +263,58 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		layoutByTable[tmeta.name] = layout;
 	}
 
-	// Keyed by (table, column, value) with no string concatenation, so a
-	// value containing the old separator character ('.') can never collide
-	// with an unrelated (table, column, value) triple (FR-013).
-	using PkKey = std::tuple<std::wstring, std::wstring, std::wstring>;
-	std::map<PkKey, std::wstring> pkCellMap; // (Table, Col, Value) -> "'Sheet'!A5"
+	// PR #116 review (5388727348): a composite primary key's components
+	// aren't unique individually -- parents (1,10) and (1,20) share a first
+	// column value of 1, so resolving a composite FK one column at a time
+	// can point a child row at the wrong parent. Key on the full ordered
+	// tuple of a row's primary-key values (schema.primaryKeys order) instead
+	// of one (table, column, value) triple at a time (no string
+	// concatenation, so FR-013's '.'-collision concern still doesn't apply).
+	std::map<std::wstring, std::map<std::vector<std::wstring>, std::vector<std::wstring>>> pkRowMap;
 	for (const auto& tmeta : allTables) {
+		if (tmeta.schema.primaryKeys.empty())
+			continue;
 		const TableLayout& layout = layoutByTable[tmeta.name];
-		for (const PkValue& pv : pkValuesByTable[tmeta.name]) {
-			size_t seg = pv.rowIndex / kMaxDataRowsPerSheet;
-			size_t rowNumberInSheet = (pv.rowIndex % kMaxDataRowsPerSheet) + 2; // +1 header, +1 for 1-based
-			std::wstring cellRef = L"'" + layout.segmentSheetNames[seg] + L"'!" + GetColLetter(pv.colIdx) + std::to_wstring(rowNumberInSheet);
-			pkCellMap[PkKey(tmeta.name, tmeta.schema.columns[pv.colIdx], pv.value)] = cellRef;
+
+		// Regroup this table's per-(row,column) PK values back into one
+		// (value tuple, cellRef tuple) pair per row.
+		std::map<size_t, std::map<int, std::wstring>> valuesByRowThenCol;
+		for (const PkValue& pv : pkValuesByTable[tmeta.name])
+			valuesByRowThenCol[pv.rowIndex][pv.colIdx] = pv.value;
+
+		for (const auto& rowEntry : valuesByRowThenCol) {
+			size_t rowIndex = rowEntry.first;
+			size_t seg = rowIndex / kMaxDataRowsPerSheet;
+			size_t rowNumberInSheet = (rowIndex % kMaxDataRowsPerSheet) + 2; // +1 header, +1 for 1-based
+			// PR #116 review (5391755120): a sheet name quoted in a formula
+			// reference must have its own embedded apostrophes doubled --
+			// "O'Brien" needs '!A2 as 'O''Brien'!A2, or the reference is
+			// invalid and the actual worksheet title is lost.
+			std::wstring quotedSheetName = layout.segmentSheetNames[seg];
+			size_t aposPos = 0;
+			while ((aposPos = quotedSheetName.find(L'\'', aposPos)) != std::wstring::npos)
+			{
+				quotedSheetName.insert(aposPos, L"'");
+				aposPos += 2;
+			}
+
+			std::vector<std::wstring> valueTuple, cellRefTuple;
+			for (const std::wstring& pkCol : tmeta.schema.primaryKeys) {
+				auto colIt = std::find(tmeta.schema.columns.begin(), tmeta.schema.columns.end(), pkCol);
+				if (colIt == tmeta.schema.columns.end())
+					continue;
+				int colIdx = (int)std::distance(tmeta.schema.columns.begin(), colIt);
+				auto valIt = rowEntry.second.find(colIdx);
+				if (valIt == rowEntry.second.end())
+					continue;
+				valueTuple.push_back(valIt->second);
+				cellRefTuple.push_back(L"'" + quotedSheetName + L"'!" + GetColLetter(colIdx) + std::to_wstring(rowNumberInSheet));
+			}
+			if (valueTuple.size() == tmeta.schema.primaryKeys.size())
+				pkRowMap[tmeta.name][valueTuple] = cellRefTuple;
 		}
 	}
-	pkValuesByTable.clear(); // no longer needed once pkCellMap is built
+	pkValuesByTable.clear(); // no longer needed once pkRowMap is built
 
 	// Migration Summary sheet (FR-009), written first.
 	{
@@ -472,28 +535,75 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 				pRow->m_oR.Init();
 				pRow->m_oR->SetValue(rowIndexInSheet + 1);
 
+				// Read every column of this row up front (needed below to
+				// resolve a composite FK, which must see all of its
+				// component columns' values together, not one at a time).
+				std::vector<std::wstring> rowVals(tmeta.schema.columns.size());
+				for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx)
+					rowVals[colIdx] = rs->GetString(colIdx);
+
+				// PR #116 review (5388727348): group this row's FK columns
+				// by referencedTable and resolve the complete tuple against
+				// that table's own primary-key column order, so every
+				// component of a composite key must match the same parent
+				// row -- not just whichever single column happened to.
+				std::map<int, std::wstring> formulaByColIdx;
+				{
+					std::map<std::wstring, std::vector<const ForeignKeyDef*>> fkGroupsByReferencedTable;
+					for (const auto& fk : tmeta.schema.foreignKeys)
+						fkGroupsByReferencedTable[fk.referencedTable].push_back(&fk);
+
+					for (const auto& group : fkGroupsByReferencedTable) {
+						auto refTableIt = tableMetaByName.find(group.first);
+						if (refTableIt == tableMetaByName.end() || refTableIt->second->schema.primaryKeys.empty())
+							continue;
+
+						std::vector<std::wstring> valueTuple;
+						std::vector<int> fkColIdxInPkOrder;
+						bool complete = true;
+						for (const std::wstring& pkCol : refTableIt->second->schema.primaryKeys) {
+							const ForeignKeyDef* matchingFk = nullptr;
+							for (const ForeignKeyDef* fk : group.second) {
+								if (fk->referencedColumn == pkCol) { matchingFk = fk; break; }
+							}
+							if (!matchingFk) { complete = false; break; }
+							auto colIt = std::find(tmeta.schema.columns.begin(), tmeta.schema.columns.end(), matchingFk->columnName);
+							if (colIt == tmeta.schema.columns.end()) { complete = false; break; }
+							int colIdx = (int)std::distance(tmeta.schema.columns.begin(), colIt);
+							valueTuple.push_back(rowVals[colIdx]);
+							fkColIdxInPkOrder.push_back(colIdx);
+						}
+						if (!complete)
+							continue;
+
+						auto tableRowsIt = pkRowMap.find(group.first);
+						if (tableRowsIt == pkRowMap.end())
+							continue;
+						auto rowMatchIt = tableRowsIt->second.find(valueTuple);
+						if (rowMatchIt == tableRowsIt->second.end())
+							continue;
+
+						for (size_t i = 0; i < fkColIdxInPkOrder.size(); ++i)
+							formulaByColIdx[fkColIdxInPkOrder[i]] = rowMatchIt->second[i];
+					}
+				}
+
 				for (size_t colIdx = 0; colIdx < tmeta.schema.columns.size(); ++colIdx) {
-					std::wstring val = rs->GetString(colIdx);
-					std::wstring colName = tmeta.schema.columns[colIdx];
+					const std::wstring& val = rowVals[colIdx];
 
 					OOX::Spreadsheet::CCell *pCell = new OOX::Spreadsheet::CCell();
 					pCell->m_oType.Init();
 					pCell->setRowCol(rowIndexInSheet, colIdx);
 					pCell->m_oCacheValue = val;
 
-					// check if fk
-					for (const auto& fk : tmeta.schema.foreignKeys) {
-						if (fk.columnName == colName) {
-							auto pkIt = pkCellMap.find(PkKey(fk.referencedTable, fk.referencedColumn, val));
-							if (pkIt != pkCellMap.end()) {
-								pCell->m_oFormula.Init();
-								pCell->m_oFormula->m_sText = pkIt->second;
-							}
-							break;
-						}
+					auto formulaIt = formulaByColIdx.find((int)colIdx);
+					if (formulaIt != formulaByColIdx.end()) {
+						pCell->m_oFormula.Init();
+						pCell->m_oFormula->m_sText = formulaIt->second;
 					}
 
-					cellFormatController->ProcessCellType(pCell, val, false);
+					if (1 == cellFormatController->ProcessCellType(pCell, val, false))
+						bMsLimitCell = true;
 					pRow->m_arrItems.push_back(pCell);
 				}
 				pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
@@ -504,6 +614,6 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 		finalizeSegmentSheet();
 	}
 
-	return 0; // S_OK
+	return bMsLimitCell ? AVS_FILEUTILS_ERROR_CONVERT_CELLLIMITS : 0; // S_OK
 }
 
