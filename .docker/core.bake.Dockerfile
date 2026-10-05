@@ -30,7 +30,7 @@ ARG TARGETARCH
 
 
 #### SERVER BASE (Rocky Linux 9, both arches) ####
-FROM rockylinux:9 AS core-base-server
+FROM rockylinux/rockylinux:9 AS core-base-server
 
     # EPEL + CRB provide ninja-build, ccache, python3-httplib2 and several
     # -devel packages not in the base channels.
@@ -39,7 +39,7 @@ FROM rockylinux:9 AS core-base-server
         dnf install -y \
             ca-certificates git zip unzip tar \
             sudo wget gnupg2 openssh-clients ccache \
-            gcc gcc-c++ libstdc++-static make ninja-build pkgconf-pkg-config \
+            gcc gcc-c++ libstdc++-static libatomic make ninja-build pkgconf-pkg-config \
             glib2-devel \
             python3 python3-pip python3-setuptools python3-httplib2 \
             python3.12 python3.12-pip python3.12-setuptools \
