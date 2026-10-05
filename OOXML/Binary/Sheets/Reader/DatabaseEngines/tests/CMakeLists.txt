@@ -62,13 +62,15 @@ target_include_directories(database_engines_test PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}/../mdbtools
 )
 
-# MdbEngineSchemaTest's cases GTEST_SKIP themselves when this fixture is
-# absent -- see fixtures/README.md. Staged here (not committed, see the
-# README) so a later contributor only needs to drop the file in place.
+# MdbEngineSchemaTest reads fixtures/sample_with_relationships.mdb at the
+# path FixturePath() returns, relative to the test's working directory
+# ($<TARGET_FILE_DIR>). Deploy the committed fixtures tree there at build
+# time. If the .mdb is absent those cases GTEST_SKIP (see fixtures/README.md).
 add_custom_command(TARGET database_engines_test POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_LIST_DIR}/fixtures"
             "$<TARGET_FILE_DIR:database_engines_test>/OOXML/Binary/Sheets/Reader/DatabaseEngines/tests/fixtures"
-    COMMENT "Ensuring database_engines_test fixtures directory exists"
+    COMMENT "Deploying database_engines_test fixtures"
 )
 
 # FR-016/T035: static source check that DuckDbEngine.cpp never reintroduces
