@@ -1,4 +1,5 @@
 import sys
+import re
 import shutil
 import stat
 import subprocess
@@ -300,10 +301,51 @@ def _cache_key():
     return install_dir.name
 
 
-def _remote_file_url():
+# ---------------------------------------------------------------------------
+# glibc compatibility (Linux only)
+#
+# A binary built against glibc X runs on any glibc >= X, but not on an older
+# one. Linux archives are therefore uploaded with the glibc version they were
+# built against in the file name ("v8-glibc2.34.tar.bz2"), and a build may
+# reuse any archive whose glibc is older than or equal to its own. If there is
+# none, it builds locally and uploads under its own glibc version.
+#
+# Example: the Rocky 9 server build (2.34) uploads v8-glibc2.34. The Ubuntu
+# 22.04 (2.35) and 24.04 (2.39) desktop builds then reuse that archive instead
+# of building V8 again. An archive uploaded from 24.04 is never used by Rocky 9.
+#
+# Other platforms keep the plain "<key>.tar.bz2" name. Old untagged Linux
+# archives are ignored, because their glibc requirement is unknown.
+# ---------------------------------------------------------------------------
+
+def _local_glibc():
+    if not sys.platform.startswith( "linux" ):
+        return None
+    name, version = platform.libc_ver()
+    if name != "glibc" or not version:
+        return None
+    try:
+        return tuple( int( p ) for p in version.split( "." )[ :2 ] )
+    except ValueError:
+        return None
+
+LOCAL_GLIBC = _local_glibc()
+
+
+def _glibc_str( ver ):
+    return f"{ ver[ 0 ] }.{ ver[ 1 ] }"
+
+
+def _remote_dir_url():
     key = _cache_key()
     return ( f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }/{ BASE_REMOTE_PATH }"
-             f"/{ PLATFORM_TAG }/{ key }/{ key }.tar.bz2" )
+             f"/{ PLATFORM_TAG }/{ key }" )
+
+
+def _remote_file_url( glibc=None ):
+    key = _cache_key()
+    name = f"{ key }-glibc{ _glibc_str( glibc ) }" if glibc else key
+    return f"{ _remote_dir_url() }/{ name }.tar.bz2"
 
 
 def _curl( *args ):
@@ -313,16 +355,36 @@ def _curl( *args ):
     )
 
 
-def _remote_exists():
+def _remote_url_exists( url ):
     # HEAD request: True only on a 2xx status code.
-    r = _curl( "-o", os.devnull, "-w", "%{http_code}", "--head", _remote_file_url() )
+    r = _curl( "-o", os.devnull, "-w", "%{http_code}", "--head", url )
     return r.stdout.strip().startswith( "2" )
 
 
-def _remote_download_and_extract():
+def _remote_glibc_versions():
+    # glibc versions of the archives in this dep's remote folder (WebDAV
+    # PROPFIND, depth 1). A missing folder simply yields no versions.
+    r = _curl( "-X", "PROPFIND", "-H", "Depth: 1", _remote_dir_url() + "/" )
+    if r.returncode != 0:
+        return []
+    pattern = re.compile( re.escape( _cache_key() ) + r"-glibc(\d+)\.(\d+)\.tar\.bz2" )
+    return sorted( { ( int( a ), int( b ) ) for a, b in pattern.findall( r.stdout ) } )
+
+
+def _remote_find_archive():
+    # URL of the archive to reuse, or None.
+    if LOCAL_GLIBC is None:
+        url = _remote_file_url()
+        return url if _remote_url_exists( url ) else None
+    # Newest archive that is still compatible with the local glibc.
+    usable = [ v for v in _remote_glibc_versions() if v <= LOCAL_GLIBC ]
+    return _remote_file_url( usable[ -1 ] ) if usable else None
+
+
+def _remote_download_and_extract( url ):
     with tempfile.TemporaryDirectory() as tmp:
         archive = str( Path( tmp ) / "dep.tar.bz2" )
-        if _curl( "-f", "-o", archive, _remote_file_url() ).returncode != 0:
+        if _curl( "-f", "-o", archive, url ).returncode != 0:
             return False
         if install_dir.exists():
             shutil.rmtree( install_dir )
@@ -339,14 +401,15 @@ def _remote_upload():
                                        "bztar", root_dir=str( install_dir ) )
         base = f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }"
         key  = _cache_key()
+        url  = _remote_file_url( LOCAL_GLIBC )
         # WebDAV does not create intermediate collections, so MKCOL each level
         # (MKCOL on an existing collection just 405s, which we ignore).
         for part in ( BASE_REMOTE_PATH,
                       f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }",
                       f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }/{ key }" ):
             _curl( "-X", "MKCOL", f"{ base }/{ part }" )
-        _curl( "-X", "DELETE", _remote_file_url() )
-        return _curl( "-f", "-T", archive, _remote_file_url() ).returncode == 0
+        _curl( "-X", "DELETE", url )
+        return _curl( "-f", "-T", archive, url ).returncode == 0
 
 
 def ensure_dep( build_fn, forceredo=None ):
@@ -369,9 +432,10 @@ def ensure_dep( build_fn, forceredo=None ):
 
     # 1. Prebuilt archive on the remote (skipped on a forced redo so we rebuild
     #    and refresh the remote instead of pulling a stale copy).
-    if USE_REMOTE_CACHE and not force_redo and _remote_exists():
-        print( f"  [GET]  Found { name } on remote, downloading..." )
-        if _remote_download_and_extract() and install_dir_looks_ok():
+    remote_url = _remote_find_archive() if USE_REMOTE_CACHE and not force_redo else None
+    if remote_url:
+        print( f"  [GET]  Found { name } on remote ({ remote_url.rsplit( '/', 1 )[ -1 ] }), downloading..." )
+        if _remote_download_and_extract( remote_url ) and install_dir_looks_ok():
             print( f"  [OK] { name } fetched from remote" )
             return
         print( "  [WARN]  Remote copy missing/incomplete, building locally." )
