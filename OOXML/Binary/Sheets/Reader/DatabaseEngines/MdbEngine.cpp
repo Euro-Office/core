@@ -79,11 +79,35 @@ namespace
 	// MSysRelationships system table (FR-011). mdbtools exposes no FK API
 	// directly; MSysRelationships is the same source Access itself uses, and
 	// is the standard fallback used by other MDB-reading tools.
+	//
+	// Deliberately does NOT use mdb_read_table_by_name(): that helper calls
+	// mdb_read_catalog() again internally, which unconditionally frees and
+	// rebuilds mdb->catalog (see libmdb/catalog.c) -- invalidating every
+	// MdbCatalogEntry* returned by the *first* catalog read, including the
+	// one the caller's own `table` (cached in m_pendingTables for QueryTable
+	// to reuse, per FR-012) still points to via table->entry. The freed
+	// memory is then silently reused for the new catalog's entries, so
+	// table->entry->table_pg ends up reading an unrelated table's page
+	// number -- confirmed by a standalone reproduction against this exact
+	// file: table->entry->table_pg read back as MSysRelationships' own page
+	// number (5) instead of the real table's. Concretely this made
+	// PopulatePrimaryKeys/QueryTable's subsequent page reads either return
+	// nothing or, in the full x2tlib process, segfault.
+	// GetTableSchema (the only caller) always runs after MdbEngine::
+	// GetTableNames() has already populated mdb->catalog once (matching
+	// DatabaseReader::Read's real call order), so looking the entry up in
+	// the existing catalog -- without re-reading it -- is sufficient.
 	void PopulateForeignKeys(MdbHandle* mdb, const std::wstring& tableName, TableSchema& schema)
 	{
-		MdbTableDef* relTable = mdb_read_table_by_name(mdb, (gchar*)"MSysRelationships", MDB_TABLE);
-		if (!relTable || !relTable->num_rows)
+		MdbCatalogEntry* relEntry = mdb_get_catalogentry_by_name(mdb, (gchar*)"MSysRelationships");
+		if (!relEntry)
 			return;
+		MdbTableDef* relTable = mdb_read_table(relEntry);
+		if (!relTable || !relTable->num_rows) {
+			if (relTable)
+				mdb_free_tabledef(relTable);
+			return;
+		}
 		if (!mdb_read_columns(relTable)) {
 			mdb_free_tabledef(relTable);
 			return;
@@ -93,11 +117,13 @@ namespace
 		char childTable[MDB_BIND_SIZE] = { 0 };
 		char parentColumn[MDB_BIND_SIZE] = { 0 };
 		char parentTable[MDB_BIND_SIZE] = { 0 };
+		char relationshipName[MDB_BIND_SIZE] = { 0 };
 
 		mdb_bind_column_by_name(relTable, (gchar*)"szColumn", childColumn, NULL);
 		mdb_bind_column_by_name(relTable, (gchar*)"szObject", childTable, NULL);
 		mdb_bind_column_by_name(relTable, (gchar*)"szReferencedColumn", parentColumn, NULL);
 		mdb_bind_column_by_name(relTable, (gchar*)"szReferencedObject", parentTable, NULL);
+		mdb_bind_column_by_name(relTable, (gchar*)"szRelationship", relationshipName, NULL);
 		mdb_rewind_table(relTable);
 
 		std::string narrowTableName = U_TO_UTF8(tableName);
@@ -109,6 +135,11 @@ namespace
 			fk.columnName = utf8_to_wstring(childColumn);
 			fk.referencedTable = utf8_to_wstring(parentTable);
 			fk.referencedColumn = utf8_to_wstring(parentColumn);
+			// szRelationship names the whole relationship, so every row
+			// belonging to one multi-column FK shares it -- two independent
+			// single-column relationships to the same table get different
+			// names (PR #116 review 5415411907).
+			fk.groupKey = utf8_to_wstring(relationshipName);
 			schema.foreignKeys.push_back(fk);
 		}
 
