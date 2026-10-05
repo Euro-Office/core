@@ -1,6 +1,6 @@
-#include "../../../../OOXML/Binary/Sheets/Common/Common.h"
-#include "../../../../OOXML/Binary/Sheets/Reader/DatabaseReader.h"
-#include "../../../../OOXML/XlsxFormat/Xlsx.h"
+#include "../../../OOXML/Binary/Sheets/Common/Common.h"
+#include "../../../OOXML/Binary/Sheets/Reader/DatabaseReader.h"
+#include "../../../OOXML/XlsxFormat/Xlsx.h"
 #include "common.h"
 
 namespace NExtractTools
