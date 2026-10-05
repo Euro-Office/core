@@ -21,7 +21,8 @@ jobs:
       NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
       NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
       CCACHE_MAXSIZE: 2G
-      BUILD_IMAGE: euro-office/core-base-${{ matrix.product }}:ci
+      BASE_IMAGE: euro-office/core-base-${{ matrix.product }}:ci
+      BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}:ci
 
     steps:
     - name: Checkout repository
@@ -37,8 +38,25 @@ jobs:
         docker build \
           --target core-base \
           --build-arg PRODUCT=${{ matrix.product }} \
-          -t "$BUILD_IMAGE" \
+          -t "$BASE_IMAGE" \
           - < .docker/core.bake.Dockerfile
+
+    # CI-only additions on top of core-base: fonts for the conversion test.
+    # x2t measures text (e.g. spreadsheet column widths) with the system
+    # fonts, and the base images ship none.
+    - name: Add test fonts
+      run: |
+        docker build --build-arg BASE="$BASE_IMAGE" -t "$BUILD_IMAGE" - <<'DOCKERFILE'
+        ARG BASE
+        FROM ${BASE}
+        RUN if command -v dnf >/dev/null; then \
+              dnf install -y liberation-fonts dejavu-sans-fonts dejavu-serif-fonts && dnf clean all; \
+            else \
+              apt-get update && \
+              apt-get install -y --no-install-recommends fonts-liberation fonts-dejavu-core && \
+              rm -rf /var/lib/apt/lists/*; \
+            fi
+        DOCKERFILE
 
     # Runs a command inside the build image with the checkout mounted at
     # /core (same path as in the Dockerfile). The vcpkg binary cache is
@@ -54,6 +72,7 @@ jobs:
           -e CCACHE_DIR=/core/.cache/ccache \
           -e CCACHE_MAXSIZE \
           -e NEXTCLOUD_USER -e NEXTCLOUD_PASS \
+          -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
           "$BUILD_IMAGE" bash -euo pipefail -c "$1"
         SH
         chmod +x "$RUNNER_TEMP/in-build-image"
