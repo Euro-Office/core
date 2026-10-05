@@ -1095,7 +1095,12 @@ namespace NSDoctRenderer
 
 		for (std::vector<NSDoctRenderer::DoctRendererEditorType>::const_iterator i = editors.begin(); i != editors.end(); i++)
 		{
-			NSDoctRenderer::GenerateEditorSnapshot(*i, m_pInternal);
+			// The return value used to be worth ignoring because a bundle the engine
+			// could not parse aborted the process outright. Now that it is reported
+			// and survived, a failure here means the editor silently runs without its
+			// snapshot -- slower, but easy to miss. Say so.
+			if (!NSDoctRenderer::GenerateEditorSnapshot(*i, m_pInternal))
+				std::cerr << "doctrenderer: snapshot generation failed for editor type " << (int)(*i) << std::endl;
 		}
 #endif
 	}

@@ -6,7 +6,7 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
+# set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(DESKTOP_EDITOR_ROOT "${CORE_ROOT_DIR}/DesktopEditor")
 set(COMMON_3RDPARTY_ROOT "${CORE_ROOT_DIR}/Common/3dParty")
 
@@ -37,9 +37,6 @@ add_library(IWorkFile SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/IWork.cpp
     
     ${CMAKE_CURRENT_SOURCE_DIR}/IWork.h
-
-    # Hack: The zlib addon functions are not exported by kernel, so we need to have them here as well.
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
 
     ${ODF_LIB_ROOT}/src/DocumentElement.cxx
     ${ODF_LIB_ROOT}/src/FilterInternal.cxx
@@ -413,6 +410,7 @@ add_cpp_sources_from_dir_recurive( IWorkFile ${REVENGE_LIB_ROOT}/src/lib )
 add_cpp_sources_from_dir_recurive( IWorkFile ${REVENGE_LIB_ROOT}/inc )
 
 set_default_options( IWorkFile )
+add_officeutils( IWorkFile ${CORE_ROOT_DIR}/OfficeUtils )
 add_libxml( IWorkFile ${CORE_ROOT_DIR}/DesktopEditor/xml TRUE )
 
 if( NOT MSVC )
@@ -425,8 +423,6 @@ target_include_directories(IWorkFile PRIVATE
     ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11
 
     ${CMAKE_CURRENT_SOURCE_DIR}
-
-    ${OFFICE_UTILS_ROOT_DIR}/src # OfficeUtils.pri
 
     ${DESKTOP_EDITOR_ROOT}/xml/libxml2/include
 
@@ -450,8 +446,11 @@ endif()
 
 target_compile_definitions(IWorkFile PRIVATE
     IWORK_USE_DYNAMIC_LIBRARY
-    BUILD_ZLIB_AS_SOURCES # OfficeUtils.pri
-    ZLIB_DLL
+
+    # boost/phoenix/stl/tuple.hpp: unused here, and its uargN
+    # placeholders are missing 'inline', causing duplicate symbols
+    # when linked directly into one target (unfixed upstream Boost bug).
+    BOOST_PHOENIX_STL_TUPLE_H_
 )
 
 # static libs

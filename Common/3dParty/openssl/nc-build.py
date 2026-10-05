@@ -17,7 +17,8 @@ nc.init_for_dep(
     depname = "OpenSSL",
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 def fetch_and_patch():
@@ -26,7 +27,7 @@ def fetch_and_patch():
     nc.run_command(
         [   "git", "-c", "core.autocrlf=false", "-c", "core.eol=lf",
             "clone", "--depth", "1",
-            "--branch", "OpenSSL_1_1_1w",
+            "--branch", "openssl-4.0.1",
             "https://github.com/openssl/openssl.git",
             str(nc.work_dir)
         ],
@@ -55,9 +56,34 @@ def build_and_install():
             [   "./config",
                 f"--prefix={nc.install_dir}",
                 f"--openssldir={nc.install_dir}",
+                "--libdir=lib64",
                 "enable-md2",
                 "no-shared",
                 "no-asm",
+            ],
+            "Configure",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", "install" ],
+            "Install",
+            nc.work_dir
+        )
+
+    elif nc.is_apple_silicon():
+        nc.run_command(
+            [   "./config",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "enable-md2",
+                "no-shared",
             ],
             "Configure",
             nc.work_dir

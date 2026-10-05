@@ -69,7 +69,7 @@
 //# endif
 //#endif
 
-#ifndef _LINUX
+#ifdef _MSC_VER
 #define lfind _lfind
 #endif
 /*

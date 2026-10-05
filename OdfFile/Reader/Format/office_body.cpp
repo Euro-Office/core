@@ -123,27 +123,52 @@ void office_body::docx_convert(oox::docx_conversion_context & Context)
 		Context.add_page_properties(L""); // 
 		Context.add_page_properties(L"");
 	}
-//background (for all pages) 
-    if (page_layout_instance * firtsPageLayout = Context.root()->odf_context().pageLayoutContainer().page_layout_by_name(Context.get_page_properties()))
+        //background (for all pages)
 	{
-        if (style_page_layout_properties * layout_properties = firtsPageLayout->properties())
+		odf_reader::page_layout_container & pgContainer = Context.root()->odf_context().pageLayoutContainer();
+		page_layout_instance * backgroundLayout = pgContainer.page_layout_by_name(Context.get_page_properties());
+		
+		if (!backgroundLayout || !backgroundLayout->properties() ||
+			!backgroundLayout->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
 		{
-			oox::_oox_fill fill;
-			
-			Compute_GraphicFill(layout_properties->attlist_.common_draw_fill_attlist_, 
-								layout_properties->style_background_image_, Context.root(), fill);
-
-			if (layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ || fill.type != 0)
+			std::vector<style_master_page*> & masterPagesAll = pgContainer.master_pages();
+			for (size_t i = 0; i < masterPagesAll.size(); ++i)
 			{
-				if ((fill.bitmap) && (fill.bitmap->rId.empty()))
+				if (!masterPagesAll[i]) continue;
+				std::wstring mpName = masterPagesAll[i]->attlist_.style_name_.get_value_or(L"");
+				std::wstring lpName = pgContainer.page_layout_name_by_style(mpName);
+				if (!lpName.empty())
 				{
-					std::wstring href = fill.bitmap->xlink_href_;
-					fill.bitmap->rId = Context.get_mediaitems()->add_or_find(href, oox::typeImage, fill.bitmap->isInternal, href, Context.get_type_place());
-				}		
-				int id = Context.get_drawing_context().get_current_shape_id();
-				if (layout_properties->docx_background_serialize(Context.output_stream(), Context, fill, id))
+					page_layout_instance * pl = pgContainer.page_layout_by_name(lpName);
+					if (pl && pl->properties() && pl->properties()->attlist_.common_background_color_attlist_.fo_background_color_)
+					{
+						backgroundLayout = pl;
+						break;
+					}
+				}
+			}
+		}
+		if (backgroundLayout)
+		{
+			if (style_page_layout_properties * layout_properties = backgroundLayout->properties())
+			{
+				oox::_oox_fill fill;
+
+				Compute_GraphicFill(layout_properties->attlist_.common_draw_fill_attlist_,
+									layout_properties->style_background_image_, Context.root(), fill);
+
+				if (layout_properties->attlist_.common_background_color_attlist_.fo_background_color_ || fill.type != 0)
 				{
-					Context.set_settings_property(odf_reader::_property(L"displayBackgroundShape", true));
+					if ((fill.bitmap) && (fill.bitmap->rId.empty()))
+					{
+						std::wstring href = fill.bitmap->xlink_href_;
+						fill.bitmap->rId = Context.get_mediaitems()->add_or_find(href, oox::typeImage, fill.bitmap->isInternal, href, Context.get_type_place());
+					}
+					int id = Context.get_drawing_context().get_current_shape_id();
+					if (layout_properties->docx_background_serialize(Context.output_stream(), Context, fill, id))
+					{
+						Context.set_settings_property(odf_reader::_property(L"displayBackgroundShape", true));
+					}
 				}
 			}
 		}

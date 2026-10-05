@@ -17,7 +17,8 @@ nc.init_for_dep(
     depname = "SocketIO",
     workdir = Path( sys.argv[2] ).resolve(), # Work dir is intentionally the same as install dir
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 def fetch_and_patch():
@@ -60,6 +61,12 @@ def fetch_and_patch():
             f"Internals patch {i+1}",
             nc.work_dir / "src" / "internal"
         )
+
+    nc.run_command(
+        [ "git", "apply", patches_dir / "asio-fix-for-openssl3.patch" ],
+        "Patching ASIO for recent OpenSSL",
+        nc.work_dir / "lib" / "asio"
+    )
     
     # Create no_tls version
     try:

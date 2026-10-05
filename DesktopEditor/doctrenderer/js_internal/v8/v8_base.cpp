@@ -86,18 +86,31 @@ namespace NSJSBase
 			{
 				v8::ScriptCompiler::CachedData* pCacheData = nullptr;
 
-				// save cache to file
-				NSFile::CFileBinary oFileTest;
-				if (oFileTest.CreateFileW(Path))
-				{
-					// create cache data
-					v8::ScriptCompiler::Source oSource(source);
-					v8::Local<v8::Script> pScriptCache = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions).ToLocalChecked();
-					pCacheData = v8::ScriptCompiler::CreateCodeCache(pScriptCache->GetUnboundScript());
+				// Compile once to produce the code cache.
+				//
+				// The result must be checked before ToLocalChecked(): a JS syntax error
+				// makes Compile() return an empty MaybeLocal, and ToLocalChecked() turns
+				// that recoverable parse error into a V8 CHECK failure, i.e. an abort
+				// (SIGILL/SIGTRAP) whose only trace is "Fatal error in v8::ToLocalChecked
+				// / Empty MaybeLocal". Returning the empty script instead lets the
+				// caller's CJSTryCatch report the actual SyntaxError, matching the three
+				// sibling compile paths in this function.
+				v8::ScriptCompiler::Source oSource(source);
+				v8::MaybeLocal<v8::Script> scriptCacheMB = v8::ScriptCompiler::Compile(_context, &oSource, v8::ScriptCompiler::kNoCompileOptions);
+				if (scriptCacheMB.IsEmpty())
+					return script;
 
-					if (pCacheData)
+				pCacheData = v8::ScriptCompiler::CreateCodeCache(scriptCacheMB.ToLocalChecked()->GetUnboundScript());
+
+				// Create the cache file only once there is something to write into it.
+				// Creating it up-front left a zero-length .cache behind whenever the
+				// compile above failed, and the next run then took the Exists(Path)
+				// branch and handed that empty buffer to kConsumeCodeCache.
+				if (pCacheData)
+				{
+					NSFile::CFileBinary oFileTest;
+					if (oFileTest.CreateFileW(Path))
 					{
-						// save cache to file
 						oFileTest.WriteFile(pCacheData->data, (DWORD)pCacheData->length);
 						oFileTest.CloseFile();
 					}
@@ -457,6 +470,7 @@ namespace NSJSBase
 	{
 #ifdef V8_SUPPORT_SNAPSHOTS
 		bool result = false;
+		bool bCompiled = false;
 		// Snapshot creator should be in its own scope, because it handles entering, exiting and disposing the isolate
 		v8::SnapshotCreator snapshotCreator;
 		v8::Isolate* isolate = snapshotCreator.GetIsolate();
@@ -476,16 +490,48 @@ namespace NSJSBase
 
 			// Compile
 			v8::Local<v8::String> source = v8::String::NewFromUtf8(isolate, script.c_str()).ToLocalChecked();
-			v8::Local<v8::Script> script = v8::Script::Compile(context, source).ToLocalChecked();
-			// Run
-			script->Run(context).IsEmpty();
+
+			// Guarded for the same reason as CCacheDataScript::Compile() above:
+			// this compiles the very same GetAllScript() bundle (via
+			// GenerateEditorSnapshot()), so a bundle the engine cannot parse
+			// would otherwise abort the process here through ToLocalChecked()
+			// instead of being reported. try_catch is already live above.
+			//
+			// Deliberately not an early return: SetDefaultContext() must still be
+			// called before CreateBlob(), and SnapshotCreator's destructor expects
+			// a blob to have been created, so the creator's lifecycle is completed
+			// either way. The failure is carried out in bCompiled, and the snapshot
+			// file is simply not written -- emitting one built from a context the
+			// script never ran in would be worse than emitting none, because it
+			// would be consumed happily on the next start.
+			v8::MaybeLocal<v8::Script> scriptMB = v8::Script::Compile(context, source);
+			if (!scriptMB.IsEmpty())
+			{
+				bCompiled = true;
+				// Run
+				scriptMB.ToLocalChecked()->Run(context).IsEmpty();
+			}
+
+			// Surface whatever was caught -- the compile failure above, or a throw
+			// out of Run(). CV8TryCatch's destructor does not check, so without this
+			// the pending exception is discarded and a bundle the engine cannot parse
+			// produces no diagnostic at all: silence in place of the abort removed
+			// above, which is not an improvement. Check() prints the message, line
+			// and stack to stderr, is a no-op when nothing was caught, and has to run
+			// while the Context::Scope is still alive.
+			//
+			// It deliberately does not feed back into bCompiled: a runtime throw out
+			// of Run() did not stop the snapshot being written before this change,
+			// and quietly changing that could withhold snapshots that are fine today.
+			// Only a compile failure suppresses the write.
+			try_catch.Check();
 
 			snapshotCreator.SetDefaultContext(context);
 		}
 		v8::StartupData data = snapshotCreator.CreateBlob(v8::SnapshotCreator::FunctionCodeHandling::kKeep);
 		// Save snapshot to file
 		NSFile::CFileBinary snapshotFile;
-		if (data.data && snapshotFile.CreateFile(snapshotPath))
+		if (bCompiled && data.data && snapshotFile.CreateFile(snapshotPath))
 		{
 			snapshotFile.WriteFile(data.data, (DWORD)data.raw_size);
 			snapshotFile.CloseFile();

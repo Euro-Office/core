@@ -98,6 +98,67 @@ Done:
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were
       replaced with repo-relative includes (CMake links the libraries).
+- [x] `DesktopEditor/xmlsec/src/test` (`xmlsec_test`) — deps: kernel, ooxmlsignature. Not a
+      GoogleTest suite (unlike every other entry here) — a plain `main()` returning a real
+      exit code, since it exercises `COOXMLSigner`/`COOXMLVerifier` directly rather than
+      asserting individual cases. Signs `file.docx` and verifies the result in the same
+      process (`USE_SIGN`/`USE_VERIFY`), and separately verifies a committed fixture,
+      `legacy-signed.docx`, signed by upstream ONLYOFFICE Desktop Editors 9.4.0 under
+      OpenSSL 1.1.1f (`USE_VERIFY_LEGACY`) — proving documents signed under OpenSSL 1.1.1
+      still verify under this fork's 4.0.1. Because it copies itself into
+      `EO_CORE_OUTPUT_DIR` (matching `x2t`/`UnicodeConverter`'s convention, not the
+      `WORKING_DIRECTORY $<TARGET_FILE_DIR:...>` pattern the other suites use), its `add_test`
+      runs that copy directly rather than the raw build-tree binary. **Not** the same as the
+      still-blocked `DesktopEditor/xmlsec/src/osign/test` below despite the similar path —
+      `osign` is an unrelated, separate signing library.
+- [x] `DesktopEditor/doctrenderer/test/json` — dep: doctrenderer (V8). Define
+      `JSON_GOOGLE_TEST`; own `main()` is compiled out under that define, so `GTEST_MAIN`.
+      No fixtures (JS built inline via `runScript`).
+- [x] `DesktopEditor/doctrenderer/test/js_internal` — dep: doctrenderer (V8). Define
+      `JS_INTERNAL_GOOGLE_TEST`; own `main()` is compiled out under that define, so
+      `GTEST_MAIN`. No fixtures.
+- [x] `DesktopEditor/doctrenderer/test/embed/internal/hash` — dep: doctrenderer (V8). No
+      google-test define; no own `main()`, so `GTEST_MAIN`. No fixtures.
+
+  **V8 runtime requirement (satisfied in CI):** these three suites instantiate
+  `CJSContext`, which initializes a V8 isolate. The V8 monolith is built in CI by
+  `common.cmake` (`build_3rdparty.py`, populating `V8_INSTALL_DIR`) and is self-contained
+  at run time: the x64-linux V8 build sets `v8_use_external_startup_data=false` (startup
+  snapshot is linked into the monolith) and `v8_enable_i18n_support=false` (no external
+  `icudtl.dat`), so no external V8 runtime data files need to be staged next to the test
+  binaries. The `doctrenderer` shared library these suites link is already built in CI
+  (the `docbuilder` app links it), so the suites run headless without extra provisioning.
+- [x] `PdfFile/test` — deps: UnicodeConverter, kernel, graphics, PdfFile, DjVuFile,
+      ooxmlsignature (all six are existing CMake targets — no dep porting needed). Builds,
+      links and runs in CI **with one case excluded via `GTEST_FILTER`**. The runtime
+      fixtures are still not committed (see below), so this is a build-only/non-failing
+      registration: every test case self-`GTEST_SKIP()`s except
+      `CPdfFileTest.EditPdfFromBase64` (its skip is commented out), which would hard-fail
+      without `test.pdf`/`base64.txt`; that single case is filtered out to keep CI green.
+      To **fully** enable: commit the missing fixtures (see below), stage them next to the
+      binary (`WORKING_DIRECTORY` / `POST_BUILD copy_directory`, since the suite reads from
+      `NSFile::GetProcessDirectory()`), remove the `GTEST_FILTER`, and un-`GTEST_SKIP()` the
+      cases you want to exercise.
+
+      Fixture catalogue (none present anywhere in the repo):
+      - `test.pdf` — **input**, source PDF loaded by `LoadFromFile()`; used by the majority
+        of cases and by the only non-skipped one.
+      - `base64.txt` — **input**, base64-encoded document binary
+        (`EditPdfFromBase64`, `PdfFromBase64`, `Base64ConvertToRaster`, `SplitPdf`).
+      - `pdf.bin` — **input**, raw document binary
+        (`PdfBinToPng`, `PdfFromBin`, `SetMetaData`, `BinConvertToRaster`).
+      - `pfx.pfx` — **input**, PKCS#12 cert (password `123456`) for `VerifySign` /
+        `EditPdfSign`.
+      - `test.djvu` — **input** for `DjVuToPdf`.
+      - `changes.bin` — **input** for `EditPdfFromBin`.
+      - `test.jpeg` — **input** image stamped by `EditPdfSign` (also missing; not in the
+        original blocker list).
+      - `ONLYOFFICEFORM.docxf` — **intermediate**: produced by `GetMetaData`, consumed by
+        `SetMetaData`.
+      - `resI/` (input images) — required by `ImgDiff` for pixel comparison; not committed.
+      - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
+        `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
+        not required inputs.
 
 ### gtest suites to migrate
 
@@ -107,13 +168,6 @@ _(none — all migrated; see Done above.)_
 
 Blocked / need extra work (build targets intentionally not created yet):
 
-- [ ] `PdfFile/test` — **fixtures not in repo** (`test.pdf`, `pdf.bin`, `base64.txt`,
-      `pfx.pfx`, `test.djvu`, `changes.bin`, fonts). Needs fixtures committed before it can
-      pass headless.
-- [ ] `DesktopEditor/doctrenderer/test/json`
-- [ ] `DesktopEditor/doctrenderer/test/js_internal`
-- [ ] `DesktopEditor/doctrenderer/test/embed/internal/hash` — the three doctrenderer suites
-      need a **V8 JS runtime** (and embedded scripts) at run time.
 - [ ] `DesktopEditor/xmlsec/src/osign/test` — **no `osign` CMake target exists**; the
       library must be ported to CMake first.
 

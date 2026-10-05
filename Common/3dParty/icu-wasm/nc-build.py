@@ -19,7 +19,8 @@ nc.init_for_dep(
     depname = "ICU-WASM",
     workdir = Path( sys.argv[2] ).resolve(), # Work dir is intentionally the same as install dir
     installdir = Path( sys.argv[2] ).resolve(),
-    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo"
+    forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
+    version = "1"
 )
 
 patches_dir = script_dir.parent.parent.parent / "DesktopEditor" / "graphics" / "pro" / "js" / "wasm" / "patches"

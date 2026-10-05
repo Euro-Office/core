@@ -42,6 +42,24 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/Common/tests" common_db_format_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/DatabaseEngines/tests" database_engines_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OOXML/Binary/Sheets/Reader/tests" database_reader_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
+
+        # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
+        # common.cmake (build_3rdparty.py) and is self-contained at run time:
+        # the x64-linux build sets v8_use_external_startup_data=false (snapshot
+        # embedded in the monolith) and v8_enable_i18n_support=false (no external
+        # icudtl.dat), so CJSContext initializes with no external runtime data
+        # files. These suites build all JS inline via runScript() — no fixtures.
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+
+        # PdfFile/test runs headless with its single fixture-dependent case
+        # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
+        # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
+        # missing fixtures needed to fully enable it.
+        add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
     endif()
 
 endif()

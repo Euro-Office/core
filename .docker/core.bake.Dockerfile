@@ -27,7 +27,7 @@ FROM vcpkg-base-${PRODUCT} AS vcpkg-base
     ENV DEBIAN_FRONTEND=noninteractive
 
     # Install system dependencies
-    RUN apt-get update && apt-get install -y \
+    RUN apt-get update && apt-get install -yq --no-install-recommends \
         ca-certificates \
         git \
         curl \
@@ -99,8 +99,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
     # so the vcpkg-base git-clone+bootstrap layer remains cacheable even when
     # GitHub CDN is unreachable in network-restricted build environments.
     RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && \
-        apt-get update && \
-        DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        apt-get update && apt-get install -yq --no-install-recommends \
             git curl sudo wget ssh gpg ccache \
             build-essential make ninja-build pkg-config \
             libglib2.0-dev \
@@ -121,7 +120,7 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
         gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg && \
         echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-13 main" \
         > /etc/apt/sources.list.d/llvm-13.list && \
-        apt-get update && apt-get install -y \
+        apt-get update && apt-get install -yq --no-install-recommends \
             clang-13 lld-13 llvm-13-dev llvm-13 \
             libc++-13-dev libc++abi-13-dev \
             qemu-user-static binfmt-support && \
@@ -141,9 +140,6 @@ FROM vcpkg-${NUGET_CACHE} AS core-base
     # Git needs to allow repo paths copied by Docker
     RUN git config --global --add safe.directory '*'
 
-    # upstream behavior — unchanged
-    COPY core /core
-
     ENV BUILD_ROOT=${BUILD_ROOT}
 
 
@@ -153,6 +149,10 @@ FROM core-base AS core
     ARG TARGETARCH
     ARG ARCH_TRIPLET
     ARG ARCH_MARCH_FLAGS
+
+    # copy sources right before the final build stage
+    COPY core /core
+
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw \
         mkdir -p ${BUILD_ROOT} && \

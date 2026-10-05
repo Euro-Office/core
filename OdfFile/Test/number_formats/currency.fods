@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+ xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+ xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
+ xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+ xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+ office:version="1.2" office:mimetype="application/vnd.oasis.opendocument.spreadsheet">
+ <office:styles/>
+ <office:automatic-styles>
+  <number:currency-style style:name="euro" number:language="de" number:country="DE">
+   <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+   <number:text> </number:text>
+   <number:currency-symbol number:language="de" number:country="DE">€</number:currency-symbol>
+  </number:currency-style>
+  <number:currency-style style:name="dollar" number:language="en" number:country="US">
+   <number:currency-symbol number:language="en" number:country="US">$</number:currency-symbol>
+   <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+  </number:currency-style>
+  <number:currency-style style:name="noSymbol">
+   <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+  </number:currency-style>
+  <number:currency-style style:name="ungroupedEuro" number:language="de" number:country="DE">
+   <number:number number:decimal-places="2" number:min-integer-digits="1"/>
+   <number:text> </number:text>
+   <number:currency-symbol number:language="de" number:country="DE">€</number:currency-symbol>
+  </number:currency-style>
+  <number:percentage-style style:name="percent">
+   <number:number number:decimal-places="2" number:min-integer-digits="1"/>
+   <number:text>%</number:text>
+  </number:percentage-style>
+  <number:date-style style:name="isoDate">
+   <number:year number:style="long"/>
+   <number:text>-</number:text>
+   <number:month number:style="long"/>
+   <number:text>-</number:text>
+   <number:day number:style="long"/>
+  </number:date-style>
+  <style:style style:name="ceEuro" style:family="table-cell" style:data-style-name="euro"/>
+  <style:style style:name="ceDollar" style:family="table-cell" style:data-style-name="dollar"/>
+  <style:style style:name="ceNoSymbol" style:family="table-cell" style:data-style-name="noSymbol"/>
+  <style:style style:name="ceUngroupedEuro" style:family="table-cell" style:data-style-name="ungroupedEuro"/>
+  <style:style style:name="cePercent" style:family="table-cell" style:data-style-name="percent"/>
+  <style:style style:name="ceDate" style:family="table-cell" style:data-style-name="isoDate"/>
+  <style:style style:name="wide" style:family="table-column">
+   <style:table-column-properties style:column-width="6cm"/>
+  </style:style>
+ </office:automatic-styles>
+ <office:body>
+  <office:spreadsheet>
+   <table:table table:name="Currency reproduction">
+    <table:table-column table:style-name="wide" table:number-columns-repeated="2"/>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Format</text:p></table:table-cell>
+     <table:table-cell office:value-type="string"><text:p>Amount</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Euro, grouped</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceEuro" office:value-type="currency" office:currency="EUR" office:value="1234.56"><text:p>1.234,56 €</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Euro, negative</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceEuro" office:value-type="currency" office:currency="EUR" office:value="-1234.56"><text:p>-1.234,56 €</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Dollar, grouped</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceDollar" office:value-type="currency" office:currency="USD" office:value="1234.56"><text:p>$1,234.56</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Currency, symbol hidden</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceNoSymbol" office:value-type="currency" office:currency="EUR" office:value="1234.56"><text:p>1.234,56</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Euro, no grouping (control)</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceUngroupedEuro" office:value-type="currency" office:currency="EUR" office:value="1234.56"><text:p>1234,56 €</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Percentage (must not be taken by a currency ID)</text:p></table:table-cell>
+     <table:table-cell table:style-name="cePercent" office:value-type="percentage" office:value="0.1234"><text:p>12,34%</text:p></table:table-cell>
+    </table:table-row>
+    <table:table-row>
+     <table:table-cell office:value-type="string"><text:p>Date (must not be taken by a currency ID)</text:p></table:table-cell>
+     <table:table-cell table:style-name="ceDate" office:value-type="date" office:date-value="2024-02-29"><text:p>2024-02-29</text:p></table:table-cell>
+    </table:table-row>
+   </table:table>
+  </office:spreadsheet>
+ </office:body>
+</office:document>
