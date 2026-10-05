@@ -473,7 +473,17 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 				pCell->m_oRichText->m_arrItems.push_back(pText);
 				pHeaderRow->m_arrItems.push_back(pCell);
 			}
-			pWorksheet->m_oSheetData->m_arrItems.push_back(pHeaderRow);
+			// FR-015: when caching, flush the row to the sheet's compact XML
+			// cache and free its cell objects (see the data-row loop below).
+			// toXML emits m_oDataCache instead of m_arrItems, so a cached
+			// sheet's header must be cached too or it would be dropped.
+			if (readToCache) {
+				pHeaderRow->storeXmlCache();
+				pWorksheet->m_oSheetData->AddRowToCache(*pHeaderRow);
+				delete pHeaderRow;
+			} else {
+				pWorksheet->m_oSheetData->m_arrItems.push_back(pHeaderRow);
+			}
 
 			rowIndexInSheet = 1;
 		};
@@ -606,7 +616,19 @@ _UINT32 DatabaseReader::Read(const std::wstring &sFileName, OOX::Spreadsheet::CX
 						bMsLimitCell = true;
 					pRow->m_arrItems.push_back(pCell);
 				}
-				pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
+				// FR-015: with readToCache, serialize the row into the sheet's
+				// compact XML cache (m_oDataCache) and free the CRow/CCell
+				// objects immediately, mirroring CSVReader -- so peak working
+				// set holds the compact cache rather than the full object tree
+				// for every row. Without it, every row is retained in
+				// m_arrItems until the workbook is written.
+				if (readToCache) {
+					pRow->storeXmlCache();
+					pWorksheet->m_oSheetData->AddRowToCache(*pRow);
+					delete pRow;
+				} else {
+					pWorksheet->m_oSheetData->m_arrItems.push_back(pRow);
+				}
 				rowIndexInSheet++;
 			}
 		}
