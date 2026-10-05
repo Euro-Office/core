@@ -10,9 +10,9 @@
 #include "gtest/gtest.h"
 
 #include "../DatabaseReader.h"
-#include "../../../XlsxFormat/Xlsx.h"
-#include "../../../XlsxFormat/Workbook/Workbook.h"
-#include "../../../XlsxFormat/Worksheets/Worksheet.h"
+#include "../../../../XlsxFormat/Xlsx.h"
+#include "../../../../XlsxFormat/Workbook/Workbook.h"
+#include "../../../../XlsxFormat/Worksheets/Worksheet.h"
 #include "../../../../../DesktopEditor/common/File.h"
 
 #include <sqlite3.h>

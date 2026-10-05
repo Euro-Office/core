@@ -5,8 +5,9 @@
 #include <string>
 #include <vector>
 #include <map>
+#include "../../../../../DesktopEditor/common/base_export.h"
 
-class MdbResultSet : public IDBResultSet
+class Q_DECL_EXPORT MdbResultSet : public IDBResultSet
 {
 public:
 	MdbResultSet(MdbTableDef* table);
@@ -19,7 +20,7 @@ private:
 	MdbTableDef* m_table;
 };
 
-class MdbEngine : public IDatabaseEngine
+class Q_DECL_EXPORT MdbEngine : public IDatabaseEngine
 {
 public:
 	MdbEngine();

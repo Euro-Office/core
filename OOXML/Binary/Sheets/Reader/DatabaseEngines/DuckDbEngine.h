@@ -2,6 +2,7 @@
 
 #include "IDatabaseEngine.h"
 #include <duckdb.h>
+#include "../../../../../DesktopEditor/common/base_export.h"
 
 namespace NExtractTools
 {
@@ -11,7 +12,7 @@ namespace NExtractTools
 	// SQL, so every vector this class reads is guaranteed to be VARCHAR --
 	// no per-duckdb_type dispatch is needed to stringify arbitrary column
 	// types.
-	class DuckDbResultSet : public IDBResultSet
+	class Q_DECL_EXPORT DuckDbResultSet : public IDBResultSet
 	{
 	public:
 		DuckDbResultSet(duckdb_result result);
@@ -27,7 +28,7 @@ namespace NExtractTools
 		idx_t m_rowInChunk = 0;
 	};
 
-	class DuckDbEngine : public IDatabaseEngine
+	class Q_DECL_EXPORT DuckDbEngine : public IDatabaseEngine
 	{
 	public:
 		DuckDbEngine();

@@ -2,10 +2,11 @@
 
 #include "IDatabaseEngine.h"
 #include <sqlite3.h>
+#include "../../../../../DesktopEditor/common/base_export.h"
 
 namespace NExtractTools
 {
-	class SqliteResultSet : public IDBResultSet
+	class Q_DECL_EXPORT SqliteResultSet : public IDBResultSet
 	{
 	public:
 		SqliteResultSet(sqlite3_stmt* stmt);
@@ -18,7 +19,7 @@ namespace NExtractTools
 		sqlite3_stmt* m_stmt;
 	};
 
-	class SqliteEngine : public IDatabaseEngine
+	class Q_DECL_EXPORT SqliteEngine : public IDatabaseEngine
 	{
 	public:
 		SqliteEngine();
