@@ -44,3 +44,12 @@ if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
 endif()
 set_tests_properties(database_reader_test PROPERTIES
     ENVIRONMENT "LD_LIBRARY_PATH=${_mdb_libpath}")
+
+# T006: deploy the committed Berkeley DB fixture next to the test binary, at
+# the path FixturePath() in test_DatabaseReader.cpp expects (relative to the
+# test's working directory, same convention as DatabaseEngines/tests).
+add_custom_command(TARGET database_reader_test POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            "${CMAKE_CURRENT_LIST_DIR}/fixtures"
+            "$<TARGET_FILE_DIR:database_reader_test>/OOXML/Binary/Sheets/Reader/tests/fixtures"
+    COMMENT "Deploying database_reader_test fixtures")

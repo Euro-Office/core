@@ -23,6 +23,7 @@
  *
  */
 
+
 // NOTE: written against the actual DatabaseReader.h/CXlsx/CWorksheet/CSheet
 // API used by DatabaseReader.cpp itself, but NOT compiled or run in the
 // implementing session -- DatabaseReader.h transitively requires boost
@@ -68,6 +69,35 @@ namespace
 			}
 		}
 		return names;
+	}
+
+	// Finds the worksheet registered under the given sheet name and returns
+	// a cell's cached value by (row, column), or an empty string if the
+	// sheet/row/column doesn't exist. Cells are appended to a row's
+	// m_arrItems in column order (see DatabaseReader.cpp's write loops), so
+	// a direct index is sufficient -- no need to re-derive the column from
+	// a cell reference.
+	std::wstring CellValue(const OOX::Spreadsheet::CXlsx& xlsx, const std::wstring& sheetName, size_t rowIdx, size_t colIdx)
+	{
+		if (!xlsx.m_pWorkbook || !xlsx.m_pWorkbook->m_oSheets.IsInit())
+			return L"";
+		for (const auto& item : xlsx.m_pWorkbook->m_oSheets->m_arrItems) {
+			OOX::Spreadsheet::CSheet* sheetEntry = static_cast<OOX::Spreadsheet::CSheet*>(item);
+			if (sheetEntry->m_oName.get() != sheetName || !sheetEntry->m_oRid.IsInit())
+				continue;
+			auto it = xlsx.m_mapWorksheets.find(sheetEntry->m_oRid->ToString());
+			if (it == xlsx.m_mapWorksheets.end())
+				return L"";
+			OOX::Spreadsheet::CWorksheet* pWorksheet = static_cast<OOX::Spreadsheet::CWorksheet*>(it->second);
+			if (!pWorksheet->m_oSheetData.IsInit() || rowIdx >= pWorksheet->m_oSheetData->m_arrItems.size())
+				return L"";
+			OOX::Spreadsheet::CRow* pRow = pWorksheet->m_oSheetData->m_arrItems[rowIdx];
+			if (colIdx >= pRow->m_arrItems.size())
+				return L"";
+			OOX::Spreadsheet::CCell* pCell = pRow->m_arrItems[colIdx];
+			return pCell->m_oCacheValue.IsInit() ? pCell->m_oCacheValue.get() : L"";
+		}
+		return L"";
 	}
 }
 
@@ -244,6 +274,56 @@ TEST_F(DatabaseReaderSqliteTest, ReadingOversizedTableStaysWithinMemoryLimit)
 	// catches a regression to the unbounded path.
 	EXPECT_LT(deltaMb, 900) << "Read(readToCache=true) grew peak RSS by "
 	                        << deltaMb << " MB; the row cache may not be flushing";
+}
+
+namespace
+{
+	std::wstring BdbFixturePath()
+	{
+		return L"OOXML/Binary/Sheets/Reader/tests/fixtures/sample.bdb";
+	}
+}
+
+class DatabaseReaderBdbTest : public testing::Test
+{
+protected:
+	void SetUp() override
+	{
+		if (!NSFile::CFileBinary::Exists(BdbFixturePath()))
+			GTEST_SKIP() << "Fixture " << U_TO_UTF8(BdbFixturePath()) << " not present.";
+	}
+};
+
+// T006/FR-001: a .bdb file must be routed to BerkeleyDbEngine and convert
+// successfully -- DatabaseReader.cpp's dispatch switch maps the extension
+// straight to AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB with no content-sniffing
+// ambiguity (unlike plain ".db"). BerkeleyDbEngine exposes a fixed synthetic
+// two-column (Key, Value) schema over the file's raw key/value pairs, named
+// after the file itself (extension stripped) since Berkeley DB has no
+// internal table concept.
+TEST_F(DatabaseReaderBdbTest, BerkeleyDbFixtureConvertsSuccessfully)
+{
+	OOX::Spreadsheet::CXlsx xlsx;
+	DatabaseReader reader;
+	_UINT32 result = reader.Read(BdbFixturePath(), xlsx, 1033, false);
+	ASSERT_EQ(result, 0u) << "DatabaseReader::Read did not return S_OK";
+
+	std::vector<std::wstring> names = SheetNames(xlsx);
+	ASSERT_FALSE(names.empty());
+	// Migration Summary is always sheet 1; the data sheet is named after the
+	// fixture file (BerkeleyDbEngine::GetTableNames, extension stripped).
+	ASSERT_GE(names.size(), 2u);
+	EXPECT_EQ(names[0], L"Migration Summary");
+	const std::wstring& dataSheet = names[1];
+
+	EXPECT_EQ(CellValue(xlsx, dataSheet, 0, 0), L"Key");
+	EXPECT_EQ(CellValue(xlsx, dataSheet, 0, 1), L"Value");
+
+	// Btree cursor iteration (DB_NEXT) visits keys in sorted order. The
+	// fixture holds {session_limit: 100, user_101: Alice, user_102: Bob};
+	// "session_limit" sorts first.
+	EXPECT_EQ(CellValue(xlsx, dataSheet, 1, 0), L"session_limit");
+	EXPECT_EQ(CellValue(xlsx, dataSheet, 1, 1), L"100");
 }
 
 int main(int argc, char** argv)
