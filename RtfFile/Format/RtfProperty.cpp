@@ -2234,30 +2234,19 @@ std::wstring RtfListLevelProperty::RenderToOOX2(RenderParameter oRenderParameter
 		RENDER_OOX_BOOL_ATTRIBUTE( m_bTentative, sResult, L"w:tentative")
 		sResult += L">"; 
 
-		if( PROP_DEF != m_nJustification )
-		{
-			switch( m_nJustification )
-			{
-				case 0:	sResult += L"<w:lvlJc w:val=\"left\"/>";		break;
-				case 1:	sResult += L"<w:lvlJc w:val=\"center\"/>";	break;
-				case 2:	sResult += L"<w:lvlJc w:val=\"right\"/>";	break;
-			}
-		}
+		// Element order below follows the ECMA-376 CT_Lvl schema sequence
+		// (start, numFmt, lvlRestart, pStyle, isLgl, suff, lvlText,
+		// lvlPicBulletId, legacy, lvlJc, pPr, rPr) -- see the identical fix and
+		// rationale in OOX::Numbering::CLvl::toXML() (DocxFormat/Numbering.cpp).
+		RENDER_OOX_INT( m_nStart, sResult, L"w:start" )
+
+        sResult += L"<w:numFmt w:val=\"" + GetFormat(m_nNumberType) + L"\"/>";
+
 		if( 1 == m_nNoRestart)
 			sResult += L"<w:lvlRestart w:val=\"0\"/>";
 		if( 1 ==  m_nLegal)
-			sResult += L"<w:isLgl/>"; 
+			sResult += L"<w:isLgl/>";
 
-		std::wstring sText = GetLevelTextOOX();
-		if (false == sText.empty())
-		{
-			sResult += L"<w:lvlText w:val=\"" + sText + L"\"/>";
-		}
-        sResult += L"<w:numFmt w:val=\"" + GetFormat(m_nNumberType) + L"\"/>";
-		
-		RENDER_OOX_INT( m_nPictureIndex, sResult, L"w:lvlPicBulletId" )
-		RENDER_OOX_INT( m_nStart, sResult, L"w:start" )
-		
 		if( PROP_DEF != m_nFollow )
 		{
 			switch( m_nFollow )
@@ -2267,6 +2256,24 @@ std::wstring RtfListLevelProperty::RenderToOOX2(RenderParameter oRenderParameter
 				case 2: sResult += L"<w:suff w:val=\"nothing\"/>";	break;
 				default:
 					break;
+			}
+		}
+
+		std::wstring sText = GetLevelTextOOX();
+		if (false == sText.empty())
+		{
+			sResult += L"<w:lvlText w:val=\"" + sText + L"\"/>";
+		}
+
+		RENDER_OOX_INT( m_nPictureIndex, sResult, L"w:lvlPicBulletId" )
+
+		if( PROP_DEF != m_nJustification )
+		{
+			switch( m_nJustification )
+			{
+				case 0:	sResult += L"<w:lvlJc w:val=\"left\"/>";		break;
+				case 1:	sResult += L"<w:lvlJc w:val=\"center\"/>";	break;
+				case 2:	sResult += L"<w:lvlJc w:val=\"right\"/>";	break;
 			}
 		}
 

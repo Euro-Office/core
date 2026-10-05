@@ -96,6 +96,42 @@ int CNumberingConverter::CreateNumbering(const CHWPRecordNumbering* pNumbering, 
 			m_oNumberXml.WriteString(L"<w:start w:val=\"1\"/>");
 			m_oNumberXml.WriteString(L"<w:numFmt w:val=\"" + wsNumFormat + L"\"/>");
 
+			// Marker glyph and its font are selected together here, by the same
+			// index, so they can't drift out of sync the way two independently
+			// edited switch statements could. lvlText (schema position 7) is
+			// still written before lvlJc (position 10) and rPr (position 12) --
+			// see the identical fix and rationale in OOX::Numbering::CLvl::toXML()
+			// (DocxFormat/Numbering.cpp).
+			std::wstring sLvlText;
+			std::wstring sFontName;
+			switch (shIndex % 3)
+			{
+				case 0:
+				{
+					NSStringUtils::CStringBuilder oGlyph;
+					oGlyph.AddCharSafe((wchar_t)0xF0B7);
+					sLvlText = oGlyph.GetData();
+					sFontName = L"Symbol";
+					break;
+				}
+				case 1:
+				{
+					sLvlText = L"o";
+					sFontName = L"Courier New";
+					break;
+				}
+				case 2:
+				{
+					NSStringUtils::CStringBuilder oGlyph;
+					oGlyph.AddCharSafe((wchar_t)0xF0A7);
+					sLvlText = oGlyph.GetData();
+					sFontName = L"Wingdings";
+					break;
+				}
+			}
+
+			m_oNumberXml.WriteString(L"<w:lvlText w:val=\"" + sLvlText + L"\"/>");
+
 			m_oNumberXml.WriteString(L"<w:lvlJc w:val=\"");
 			switch(pNumbering->GetAlign(shIndex))
 			{
@@ -106,31 +142,10 @@ int CNumberingConverter::CreateNumbering(const CHWPRecordNumbering* pNumbering, 
 			}
 			m_oNumberXml.WriteString(L"\"/>");
 
-			switch (shIndex % 3)
-			{
-				case 0:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
-					m_oNumberXml.AddCharSafe(0xF0B7);
-					m_oNumberXml.WriteString(L"\"/>");
-					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Symbol\" w:hAnsi=\"Symbol\" w:hint=\"default\"/></w:rPr>");
-					break;
-				}
-				case 1:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"o\"/>");
-					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Courier New\" w:hAnsi=\"Courier New\" w:cs=\"Courier New\" w:hint=\"default\"/></w:rPr>");
-					break;
-				}
-				case 2:
-				{
-					m_oNumberXml.WriteString(L"<w:lvlText w:val=\"");
-					m_oNumberXml.AddCharSafe(0xF0A7);
-					m_oNumberXml.WriteString(L"\"/>");
-					m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Wingdings\" w:hAnsi=\"Wingdings\" w:hint=\"default\"/></w:rPr>");
-					break;
-				}
-			}
+			if (L"Courier New" == sFontName)
+				m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"Courier New\" w:hAnsi=\"Courier New\" w:cs=\"Courier New\" w:hint=\"default\"/></w:rPr>");
+			else
+				m_oNumberXml.WriteString(L"<w:rPr><w:rFonts w:ascii=\"" + sFontName + L"\" w:hAnsi=\"" + sFontName + L"\" w:hint=\"default\"/></w:rPr>");
 
 			m_oNumberXml.WriteString(L"</w:lvl>");
 		}
