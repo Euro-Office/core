@@ -379,7 +379,19 @@ mdb_read_indices(MdbTableDef *table)
 		//fprintf(stderr, "pidx->first_pg:%d pidx->flags:0x%02x\n",	pidx->first_pg, pidx->flags);
 		if (!IS_JET3(mdb)) cur_pos += 5;
 	}
-	return NULL;
+	/* Fix (db-support-hardening): this unconditionally returned NULL on the
+	 * success path, even though table->indices had just been fully built
+	 * above -- every caller (e.g. MdbEngine::PopulatePrimaryKeys) checks the
+	 * return value and treats a NULL result as "no indices", silently
+	 * discarding a table's real primary-key index. Confirmed via a standalone
+	 * reproduction against real Access files (Northwind.mdb's Orders table,
+	 * access-sakila.mdb's customer table): table->indices was correctly
+	 * populated in both cases, but this NULL made every caller believe
+	 * otherwise. Return the array the function just spent its whole body
+	 * building, matching every other GPtrArray*-returning reader in this file
+	 * (e.g. mdb_read_columns returns table->columns on success).
+	 */
+	return table->indices;
 }
 void
 mdb_index_hash_text(MdbHandle *mdb, char *text, char *hash)
