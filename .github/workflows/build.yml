@@ -5,24 +5,27 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
+        # Same split as the release images (.docker/core.bake.Dockerfile):
+        # server → Rocky Linux 9; desktop → Ubuntu (22.04 on amd64, 24.04 on
+        # arm64). The arm64 legs run natively on GitHub's hosted arm runners
+        # (V8 is far too slow under QEMU); swap in a self-hosted arm label if
+        # you have one.
         include:
-          # Same split as the release images (.docker/core.bake.Dockerfile):
-          # server → Rocky Linux 9, desktop → Ubuntu (22.04 on amd64).
-          - product: server
-            distro: rocky9
-          - product: desktop
-            distro: ubuntu
-    name: build (${{ matrix.product }}, ${{ matrix.distro }})
+          - { product: server,  distro: rocky9, arch: amd64, runner: self-hosted }
+          - { product: desktop, distro: ubuntu, arch: amd64, runner: self-hosted }
+          - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
+          - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
+    name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
     env:
       NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
       NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
       CCACHE_MAXSIZE: 2G
-      BASE_IMAGE: euro-office/core-base-${{ matrix.product }}:ci
-      BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}:ci
+      BASE_IMAGE: euro-office/core-base-${{ matrix.product }}-${{ matrix.arch }}:ci
+      BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
 
     steps:
     - name: Checkout repository
@@ -81,17 +84,17 @@ jobs:
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/vcpkg
-        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
+        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
         restore-keys: |
-          vcpkg-${{ runner.os }}-${{ matrix.distro }}-
+          vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Restore ccache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
         restore-keys: |
-          ccache-${{ runner.os }}-${{ matrix.distro }}-
+          ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
@@ -135,14 +138,14 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/vcpkg
-        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
+        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
 
     - name: Save ccache
       if: always()
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
 
 
     # ─────────────────────────────────────────────────────────────
@@ -153,7 +156,7 @@ jobs:
     # with the DocumentServer e2e job on the shared self-hosted host.
     # ─────────────────────────────────────────────────────────────
     - name: Check out DocumentServer e2e (current branch)
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       id: docserver
       uses: actions/checkout@v4
       continue-on-error: true
@@ -162,7 +165,7 @@ jobs:
         path: documentserver
         ref: ${{ github.head_ref || github.ref_name }}
     - name: Check out DocumentServer e2e (main)
-      if: matrix.product == 'server' && steps.docserver.outcome != 'success'
+      if: matrix.product == 'server' && matrix.arch == 'amd64' && steps.docserver.outcome != 'success'
       uses: actions/checkout@v4
       with:
         repository: Euro-Office/DocumentServer
@@ -170,17 +173,17 @@ jobs:
         ref: main
 
     - name: Use Node.js 20 for e2e
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       uses: actions/setup-node@v4
       with:
         node-version: 20
 
     - name: Pull nightly image
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: docker pull ghcr.io/euro-office/documentserver:nightly
 
     - name: Build overlay image with fresh core binaries
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
         set -euo pipefail
         cat > overlay.Dockerfile <<'EOF'
@@ -214,17 +217,17 @@ jobs:
           build/package
 
     - name: Install e2e dependencies
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       run: npm ci
 
     - name: Install Playwright browsers
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       run: npx playwright install chromium --with-deps
 
     - name: Run E2E tests
-      if: matrix.product == 'server'
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       env:
         E2E_IMAGE: euro-office/documentserver:e2e-core
@@ -233,7 +236,7 @@ jobs:
       run: npm test
 
     - name: Upload Playwright report
-      if: always() && matrix.product == 'server'
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report-${{ github.sha }}
