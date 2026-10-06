@@ -1,0 +1,293 @@
+/*
+ * (c) Copyright Ascensio System SIA 2010-2023
+ *
+ * This program is a free software product. You can redistribute it and/or
+ * modify it under the terms of the GNU Affero General Public License (AGPL)
+ * version 3 as published by the Free Software Foundation. In accordance with
+ * Section 7(a) of the GNU AGPL its Section 15 shall be amended to the effect
+ * that Ascensio System SIA expressly excludes the warranty of non-infringement
+ * of any third-party rights.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For
+ * details, see the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
+ *
+ * The  interactive user interfaces in modified source and object code versions
+ * of the Program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU AGPL version 3.
+ *
+ * All the Product's GUI elements, including illustrations and icon sets, as
+ * well as technical writing content are licensed under the terms of the
+ * Creative Commons Attribution-ShareAlike 4.0 International. See the License
+ * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
+ *
+ */
+
+#include "MdbEngine.h"
+#include "../../../../../DesktopEditor/common/File.h"
+#include <string.h>
+#include <stdlib.h>
+#include <algorithm>
+
+static std::wstring utf8_to_wstring(const char* str)
+{
+	if (!str) return L"";
+	std::string s(str);
+	return UTF8_TO_U(s);
+}
+
+namespace
+{
+	// index_type == 1 denotes a primary-key index in libmdb (see
+	// libmdb/index.c's mdb_read_indices()/mdb_index_dump()).
+	const unsigned char kMdbPrimaryKeyIndexType = 1;
+
+	// Populates schema.primaryKeys from the table's primary-key index, if any
+	// (FR-011). mdbtools has no higher-level "give me the PK columns" call --
+	// this is the same index_type==1 check libmdb's own dump tooling uses.
+	//
+	// idx->key_col_num[k] is a 1-based *array index* into table->columns
+	// (see libmdb/index.c: every internal use is
+	// g_ptr_array_index(table->columns, key_col_num[i]-1)), not a column's
+	// own col_num -- verified against a real Access file (Northwind.mdb's
+	// Orders table), where matching against col_num instead silently picked
+	// the wrong column (CustomerID instead of the real PK, OrderID).
+	void PopulatePrimaryKeys(MdbTableDef* table, TableSchema& schema)
+	{
+		GPtrArray* indices = mdb_read_indices(table);
+		if (!indices)
+			return;
+
+		for (unsigned int i = 0; i < table->num_idxs; ++i) {
+			MdbIndex *idx = (MdbIndex *)g_ptr_array_index(table->indices, i);
+			if (idx->index_type != kMdbPrimaryKeyIndexType)
+				continue;
+
+			for (unsigned int k = 0; k < idx->num_keys; ++k) {
+				int arrayIndex = idx->key_col_num[k] - 1;
+				if (arrayIndex < 0 || (unsigned int)arrayIndex >= table->num_cols)
+					continue;
+				MdbColumn *col = (MdbColumn *)g_ptr_array_index(table->columns, arrayIndex);
+				std::wstring colName = utf8_to_wstring(col->name);
+				if (std::find(schema.primaryKeys.begin(), schema.primaryKeys.end(), colName) == schema.primaryKeys.end())
+					schema.primaryKeys.push_back(colName);
+			}
+		}
+	}
+
+	// Populates schema.foreignKeys for the given table by reading the hidden
+	// MSysRelationships system table (FR-011). mdbtools exposes no FK API
+	// directly; MSysRelationships is the same source Access itself uses, and
+	// is the standard fallback used by other MDB-reading tools.
+	//
+	// Deliberately does NOT use mdb_read_table_by_name(): that helper calls
+	// mdb_read_catalog() again internally, which unconditionally frees and
+	// rebuilds mdb->catalog (see libmdb/catalog.c) -- invalidating every
+	// MdbCatalogEntry* returned by the *first* catalog read, including the
+	// one the caller's own `table` (cached in m_pendingTables for QueryTable
+	// to reuse, per FR-012) still points to via table->entry. The freed
+	// memory is then silently reused for the new catalog's entries, so
+	// table->entry->table_pg ends up reading an unrelated table's page
+	// number -- confirmed by a standalone reproduction against this exact
+	// file: table->entry->table_pg read back as MSysRelationships' own page
+	// number (5) instead of the real table's. Concretely this made
+	// PopulatePrimaryKeys/QueryTable's subsequent page reads either return
+	// nothing or, in the full x2tlib process, segfault.
+	// GetTableSchema (the only caller) always runs after MdbEngine::
+	// GetTableNames() has already populated mdb->catalog once (matching
+	// DatabaseReader::Read's real call order), so looking the entry up in
+	// the existing catalog -- without re-reading it -- is sufficient.
+	void PopulateForeignKeys(MdbHandle* mdb, const std::wstring& tableName, TableSchema& schema)
+	{
+		MdbCatalogEntry* relEntry = mdb_get_catalogentry_by_name(mdb, (gchar*)"MSysRelationships");
+		if (!relEntry)
+			return;
+		MdbTableDef* relTable = mdb_read_table(relEntry);
+		if (!relTable || !relTable->num_rows) {
+			if (relTable)
+				mdb_free_tabledef(relTable);
+			return;
+		}
+		if (!mdb_read_columns(relTable)) {
+			mdb_free_tabledef(relTable);
+			return;
+		}
+
+		char childColumn[MDB_BIND_SIZE] = { 0 };
+		char childTable[MDB_BIND_SIZE] = { 0 };
+		char parentColumn[MDB_BIND_SIZE] = { 0 };
+		char parentTable[MDB_BIND_SIZE] = { 0 };
+		char relationshipName[MDB_BIND_SIZE] = { 0 };
+
+		mdb_bind_column_by_name(relTable, (gchar*)"szColumn", childColumn, NULL);
+		mdb_bind_column_by_name(relTable, (gchar*)"szObject", childTable, NULL);
+		mdb_bind_column_by_name(relTable, (gchar*)"szReferencedColumn", parentColumn, NULL);
+		mdb_bind_column_by_name(relTable, (gchar*)"szReferencedObject", parentTable, NULL);
+		mdb_bind_column_by_name(relTable, (gchar*)"szRelationship", relationshipName, NULL);
+		mdb_rewind_table(relTable);
+
+		std::string narrowTableName = U_TO_UTF8(tableName);
+		while (mdb_fetch_row(relTable)) {
+			if (narrowTableName != childTable)
+				continue;
+
+			ForeignKeyDef fk;
+			fk.columnName = utf8_to_wstring(childColumn);
+			fk.referencedTable = utf8_to_wstring(parentTable);
+			fk.referencedColumn = utf8_to_wstring(parentColumn);
+			// szRelationship names the whole relationship, so every row
+			// belonging to one multi-column FK shares it -- two independent
+			// single-column relationships to the same table get different
+			// names (PR #116 review 5415411907).
+			fk.groupKey = utf8_to_wstring(relationshipName);
+			schema.foreignKeys.push_back(fk);
+		}
+
+		mdb_free_tabledef(relTable);
+	}
+}
+
+MdbResultSet::MdbResultSet(MdbTableDef* table) : m_table(table)
+{
+	// mdb_read_columns() unconditionally reallocates table->columns, leaking
+	// the previous array's MdbColumn entries if called twice on the same
+	// table -- skip it when the caller (MdbEngine::GetTableSchema, under the
+	// FR-012 single-read cache) already populated columns for us.
+	if (!m_table->columns)
+		mdb_read_columns(m_table);
+	for (unsigned int i = 0; i < m_table->num_cols; ++i) {
+		MdbColumn *col = (MdbColumn *)g_ptr_array_index(m_table->columns, i);
+		col->bind_ptr = malloc(MDB_BIND_SIZE);
+		col->len_ptr = (int *)malloc(sizeof(int));
+		memset(col->bind_ptr, 0, MDB_BIND_SIZE);
+		*col->len_ptr = 0;
+	}
+	mdb_rewind_table(m_table);
+}
+
+MdbResultSet::~MdbResultSet()
+{
+	if (m_table) {
+		for (unsigned int i = 0; i < m_table->num_cols; ++i) {
+			MdbColumn *col = (MdbColumn *)g_ptr_array_index(m_table->columns, i);
+			free(col->bind_ptr);
+			free(col->len_ptr);
+			col->bind_ptr = nullptr;
+			col->len_ptr = nullptr;
+		}
+		mdb_free_tabledef(m_table);
+	}
+}
+
+bool MdbResultSet::Next()
+{
+	return mdb_fetch_row(m_table) != 0;
+}
+
+std::wstring MdbResultSet::GetString(int columnIdx)
+{
+	if (columnIdx < 0 || columnIdx >= (int)m_table->num_cols) return L"";
+	MdbColumn *col = (MdbColumn *)g_ptr_array_index(m_table->columns, columnIdx);
+	
+	if (col->col_type == MDB_OLE || col->col_type == MDB_BINARY) {
+		return L"[Binary Data]";
+	}
+	
+	return utf8_to_wstring((const char*)col->bind_ptr);
+}
+
+MdbEngine::MdbEngine() : m_mdb(nullptr) {}
+
+MdbEngine::~MdbEngine()
+{
+	for (auto& entry : m_pendingTables) {
+		if (entry.second)
+			mdb_free_tabledef(entry.second);
+	}
+	if (m_mdb) {
+		mdb_close(m_mdb);
+	}
+}
+
+bool MdbEngine::Open(const std::wstring& path)
+{
+	std::string narrowPath = U_TO_UTF8(path);
+	
+	m_mdb = mdb_open(narrowPath.c_str(), MDB_NOFLAGS);
+	return m_mdb != nullptr;
+}
+
+std::vector<std::wstring> MdbEngine::GetTableNames()
+{
+	std::vector<std::wstring> result;
+	if (!m_mdb) return result;
+
+	mdb_read_catalog(m_mdb, MDB_TABLE);
+	for (unsigned int i = 0; i < m_mdb->num_catalog; ++i) {
+		MdbCatalogEntry *entry = (MdbCatalogEntry *)g_ptr_array_index(m_mdb->catalog, i);
+		if (entry->object_type == MDB_TABLE) {
+			if (mdb_is_user_table(entry)) {
+				result.push_back(utf8_to_wstring(entry->object_name));
+			}
+		}
+	}
+	return result;
+}
+
+TableSchema MdbEngine::GetTableSchema(const std::wstring& tableName)
+{
+	TableSchema schema;
+	if (!m_mdb) return schema;
+
+	// Reuse an already-read table for this name if one is pending (shouldn't
+	// normally happen -- GetTableSchema is expected to be called once per
+	// table -- but avoids a redundant read if it is called twice).
+	MdbTableDef *table = nullptr;
+	auto pending = m_pendingTables.find(tableName);
+	if (pending != m_pendingTables.end()) {
+		table = pending->second;
+	} else {
+		std::string narrowName = U_TO_UTF8(tableName);
+		MdbCatalogEntry *entry = mdb_get_catalogentry_by_name(m_mdb, (char*)narrowName.c_str());
+		if (!entry) return schema;
+
+		table = mdb_read_table(entry);
+		if (!table) return schema;
+	}
+
+	mdb_read_columns(table);
+	for (unsigned int i = 0; i < table->num_cols; ++i) {
+		MdbColumn *col = (MdbColumn *)g_ptr_array_index(table->columns, i);
+		schema.columns.push_back(utf8_to_wstring(col->name));
+	}
+
+	PopulatePrimaryKeys(table, schema);
+	PopulateForeignKeys(m_mdb, tableName, schema);
+
+	// Keep the table open for QueryTable() to reuse instead of re-reading it
+	// from disk (FR-012).
+	m_pendingTables[tableName] = table;
+	return schema;
+}
+
+std::unique_ptr<IDBResultSet> MdbEngine::QueryTable(const std::wstring& tableName)
+{
+	if (!m_mdb) return nullptr;
+
+	auto pending = m_pendingTables.find(tableName);
+	if (pending != m_pendingTables.end()) {
+		MdbTableDef *table = pending->second;
+		m_pendingTables.erase(pending); // MdbResultSet now owns it
+		return std::unique_ptr<IDBResultSet>(new MdbResultSet(table));
+	}
+
+	std::string narrowName = U_TO_UTF8(tableName);
+
+	MdbCatalogEntry *entry = mdb_get_catalogentry_by_name(m_mdb, (char*)narrowName.c_str());
+	if (!entry) return nullptr;
+
+	MdbTableDef *table = mdb_read_table(entry);
+	if (!table) return nullptr;
+
+	return std::unique_ptr<IDBResultSet>(new MdbResultSet(table));
+}

@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -221,6 +221,7 @@ namespace NExtractTools
 	DECLARE_CONVERT_FUNC(csv2xlst);
 	DECLARE_CONVERT_FUNC(csv2xlsx);
 	DECLARE_CONVERT_FUNC(csv2xlsx_dir);
+	DECLARE_CONVERT_FUNC(db2xlsx_dir);
 	DECLARE_CONVERT_FUNC(csv2xlst_bin);
 	DECLARE_CONVERT_FUNC(xlst2csv);
 	DECLARE_CONVERT_FUNC(xlsx_dir2csv);

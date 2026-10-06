@@ -1,4 +1,4 @@
-﻿/*
+/*
  * (c) Copyright Ascensio System SIA 2010-2023
  *
  * This program is a free software product. You can redistribute it and/or
@@ -38,6 +38,7 @@
 
 #include "lib/xls.h"
 #include "lib/csv.h"
+#include "lib/db.h"
 
 #include "lib/html.h"
 
@@ -1147,6 +1148,15 @@ namespace NExtractTools
 				nRes = csv2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
 				*params.m_nFormatFrom = AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX;
 			}
+			else if (	AVS_OFFICESTUDIO_FILE_SPREADSHEET_SQLITE == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_DUCKDB == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_PARQUET == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_MDB == nFormatFrom ||
+						AVS_OFFICESTUDIO_FILE_SPREADSHEET_BDB == nFormatFrom)
+			{
+				nRes = db2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
+				*params.m_nFormatFrom = AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX;
+			}
 			else if (AVS_OFFICESTUDIO_FILE_DOCUMENT_XML == nFormatFrom)
 			{
 				nRes = xml2xlsx_dir(sFrom, sXlsxDir, params, convertParams);
@@ -1172,8 +1182,16 @@ namespace NExtractTools
 
 				if (NULL != params.m_nFormatTo)
 					nFormatTo = *params.m_nFormatTo;
-				
+
+				// PR #116 review (5388969387): db2xlsx_dir (and the other
+				// branches above) may return a non-zero CELLLIMITS/
+				// ROWLIMITS warning code that SUCCEEDED_X2T still treats as
+				// success. Don't let a fully-successful fromXlsxDir below
+				// silently overwrite that warning with S_OK.
+				_UINT32 nResBeforeToXlsx = nRes;
 				nRes = fromXlsxDir(sXlsxDir, *params.m_sFileTo, nFormatTo, params, convertParams);
+				if (0 == nRes && 0 != nResBeforeToXlsx)
+					nRes = nResBeforeToXlsx;
 			}
 		}
 		return nRes;
