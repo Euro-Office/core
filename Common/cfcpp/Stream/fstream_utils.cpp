@@ -109,7 +109,10 @@ ULONG64 CFCPP::FileFNVHash(const std::wstring & filename, _INT64 len, _INT64 off
         _INT64 i;
 
         for (i = 0; i < readLen; i++)
-            h = (h * 16777619) ^ buffer[i];
+            // signed char: plain char is signed on x86 but unsigned on ARM,
+            // which would change the hash for bytes >= 0x80. Keep the x86
+            // result on every architecture.
+            h = (h * 16777619) ^ static_cast<signed char>(buffer[i]);
 
         len -= readLen;
     }

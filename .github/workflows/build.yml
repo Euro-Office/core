@@ -5,118 +5,132 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # Same split as the release images (.docker/core.bake.Dockerfile):
+        # server → Rocky Linux 9; desktop → Ubuntu (22.04 on amd64, 24.04 on
+        # arm64). The arm64 legs run natively on GitHub's hosted arm runners
+        # (V8 is far too slow under QEMU); swap in a self-hosted arm label if
+        # you have one.
+        include:
+          - { product: server,  distro: rocky9, arch: amd64, runner: self-hosted }
+          - { product: desktop, distro: ubuntu, arch: amd64, runner: self-hosted }
+          - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
+          - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
+    name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
     env:
-      PLEASE_PRELOAD_LIBSTDCPP: true
-      CC: clang-13
-      CXX: clang++-13
       NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
       NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
-      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/.cache/vcpkg
-      VCPKG_BINARY_SOURCES: "clear;files,${{ github.workspace }}/.cache/vcpkg,readwrite"
-      CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
       CCACHE_MAXSIZE: 2G
+      BASE_IMAGE: euro-office/core-base-${{ matrix.product }}-${{ matrix.arch }}:ci
+      BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
         submodules: recursive
-    
-    - name: Install dependencies
+
+    # Build environment: the core-base stage of the release Dockerfile. The
+    # stage has no COPY, so the Dockerfile is fed via stdin with an empty
+    # build context. Layers are cached by the runner's Docker daemon.
+    - name: Build core-base image from Dockerfile
       run: |
-        sudo apt-get update
-        sudo apt-get install -y \
-                git \
-                curl \
-                wget \
-                ssh \
-                build-essential \
-                make \
-                cmake \
-                ccache \
-                ninja-build \
-                pkg-config \
-                libglib2.0-dev \
-                lsb-release \
-                libboost-all-dev
-    
-    - name: Install clang-13 and LLVM tools for V8 9.x build
+        docker build \
+          --target core-base \
+          --build-arg PRODUCT=${{ matrix.product }} \
+          -t "$BASE_IMAGE" \
+          - < .docker/core.bake.Dockerfile
+
+    # CI-only additions on top of core-base: fonts for the conversion test.
+    # x2t measures text (e.g. spreadsheet column widths) with the system
+    # fonts, and the base images ship none.
+    - name: Add test fonts
       run: |
-        wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/llvm-snapshot.gpg
-        echo "deb [signed-by=/etc/apt/keyrings/llvm-snapshot.gpg] http://apt.llvm.org/jammy/ llvm-toolchain-jammy-13 main" | sudo tee /etc/apt/sources.list.d/llvm-13.list
-        sudo apt-get update && sudo apt-get install -y \
-            clang-13 lld-13 llvm-13-dev llvm-13 \
-            libc++-13-dev libc++abi-13-dev \
-            qemu-user-static binfmt-support
-        
-        # Ensure alternatives are set for clang/llvm 
-        sudo update-alternatives --install /usr/bin/clang clang /usr/bin/clang-13 100
-        sudo update-alternatives --install /usr/bin/clang++ clang++ /usr/bin/clang++-13 100
-        sudo update-alternatives --install /usr/bin/llvm-ar llvm-ar /usr/bin/llvm-ar-13 100
-        sudo update-alternatives --install /usr/bin/llvm-nm llvm-nm /usr/bin/llvm-nm-13 100
-        sudo update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-13 100
-        sudo update-alternatives --install /usr/bin/lld lld /usr/bin/lld-13 100
+        docker build --build-arg BASE="$BASE_IMAGE" -t "$BUILD_IMAGE" - <<'DOCKERFILE'
+        ARG BASE
+        FROM ${BASE}
+        RUN if command -v dnf >/dev/null; then \
+              dnf install -y liberation-fonts dejavu-sans-fonts dejavu-serif-fonts && dnf clean all; \
+            else \
+              apt-get update && \
+              apt-get install -y --no-install-recommends fonts-liberation fonts-dejavu-core && \
+              rm -rf /var/lib/apt/lists/*; \
+            fi
+        DOCKERFILE
 
-        # Explicitly select clang version 13 as default,
-        # because clang version 18 might also be available and 
-        # might be the default on the system.
-        sudo update-alternatives --set clang /usr/bin/clang-13
-        sudo update-alternatives --set clang++ /usr/bin/clang++-13
-        sudo update-alternatives --set lld /usr/bin/lld-13
-        sudo update-alternatives --set llvm-ar /usr/bin/llvm-ar-13
-        sudo update-alternatives --set llvm-nm /usr/bin/llvm-nm-13
-        sudo update-alternatives --set llvm-ranlib /usr/bin/llvm-ranlib-13
-    - name: Verify clang version
+    # Runs a command inside the build image with the checkout mounted at
+    # /core (same path as in the Dockerfile). The vcpkg binary cache is
+    # mounted where the image's VCPKG_BINARY_SOURCES expects it.
+    - name: Create container wrapper
       run: |
-        set -euo pipefail
-
-        clang-13 --version
-        clang --version
-
-        # strict checks
-        clang-13 --version | head -n1 | grep -qE 'clang version 13' || { echo "clang-13 is not 13"; exit 1; }
-        clang --version  | head -n1 | grep -qE 'clang version 13' || { echo "clang is not 13"; exit 1; }
-
-        echo "clang and clang-13 are both v13"
-
-    - name: Set up vcpkg
-      uses: lukka/run-vcpkg@v11
+        mkdir -p "$GITHUB_WORKSPACE/.cache/vcpkg" "$GITHUB_WORKSPACE/.cache/ccache"
+        cat > "$RUNNER_TEMP/in-build-image" <<'SH'
+        #!/bin/sh
+        exec docker run --rm \
+          -v "$GITHUB_WORKSPACE:/core" -w /core \
+          -v "$GITHUB_WORKSPACE/.cache/vcpkg:/nuget-cache" \
+          -e CCACHE_DIR=/core/.cache/ccache \
+          -e CCACHE_MAXSIZE \
+          -e NEXTCLOUD_USER -e NEXTCLOUD_PASS \
+          -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
+          "$BUILD_IMAGE" bash -euo pipefail -c "$1"
+        SH
+        chmod +x "$RUNNER_TEMP/in-build-image"
 
     - name: Restore vcpkg binary cache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/vcpkg
-        key: vcpkg-${{ runner.os }}-clang13-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
         restore-keys: |
-          vcpkg-${{ runner.os }}-clang13-
+          vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Restore ccache
       uses: actions/cache/restore@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-clang13-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
         restore-keys: |
-          ccache-${{ runner.os }}-clang13-
+          ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
-        mkdir -p "$VCPKG_DEFAULT_BINARY_CACHE" "$CCACHE_DIR"
-        cmake -GNinja -S . -B build -DCMAKE_TOOLCHAIN_FILE=${{ env.VCPKG_ROOT }}/scripts/buildsystems/vcpkg.cmake -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        "$RUNNER_TEMP/in-build-image" '
+          cmake -GNinja -S . -B build \
+            -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
+            -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
+            -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
+            -DPYTHON_BIN=$CORE_PYTHON \
+            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+        '
 
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        cmake --build build
+        "$RUNNER_TEMP/in-build-image" 'cmake --build build'
 
     - name: ccache statistics
       if: always()
-      run: ccache --show-stats
+      run: |
+        "$RUNNER_TEMP/in-build-image" 'ccache --show-stats' || true
 
     - name: Unit tests (CTest)
-      run: ctest --test-dir build --output-on-failure
+      run: |
+        "$RUNNER_TEMP/in-build-image" 'ctest --test-dir build --output-on-failure'
 
     - name: Conversion Test
-      run: ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package
+      run: |
+        "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package'
+
+    # The container runs as root; hand the workspace back to the runner user
+    # so cache saving and the next checkout on this self-hosted runner work.
+    - name: Fix workspace ownership
+      if: always()
+      run: |
+        docker run --rm -v "$GITHUB_WORKSPACE:/core" "$BUILD_IMAGE" \
+          chown -R "$(id -u):$(id -g)" /core
 
     # Save caches even when earlier steps fail, so each run reuses prior work.
     - name: Save vcpkg binary cache
@@ -124,14 +138,15 @@ jobs:
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/vcpkg
-        key: vcpkg-${{ runner.os }}-clang13-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json') }}
+        key: vcpkg-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ hashFiles('vcpkg.json', 'vcpkg-configuration.json', '.docker/core.bake.Dockerfile') }}
 
     - name: Save ccache
       if: always()
       uses: actions/cache/save@v4
       with:
         path: ${{ github.workspace }}/.cache/ccache
-        key: ccache-${{ runner.os }}-clang13-${{ github.run_id }}
+        key: ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-${{ github.run_id }}
+
 
     # ─────────────────────────────────────────────────────────────
     # E2E: overlay the freshly built core binaries onto the published
@@ -141,6 +156,7 @@ jobs:
     # with the DocumentServer e2e job on the shared self-hosted host.
     # ─────────────────────────────────────────────────────────────
     - name: Check out DocumentServer e2e (current branch)
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       id: docserver
       uses: actions/checkout@v4
       continue-on-error: true
@@ -149,7 +165,7 @@ jobs:
         path: documentserver
         ref: ${{ github.head_ref || github.ref_name }}
     - name: Check out DocumentServer e2e (main)
-      if: steps.docserver.outcome != 'success'
+      if: matrix.product == 'server' && matrix.arch == 'amd64' && steps.docserver.outcome != 'success'
       uses: actions/checkout@v4
       with:
         repository: Euro-Office/DocumentServer
@@ -157,14 +173,17 @@ jobs:
         ref: main
 
     - name: Use Node.js 20 for e2e
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       uses: actions/setup-node@v4
       with:
         node-version: 20
 
     - name: Pull nightly image
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: docker pull ghcr.io/euro-office/documentserver:nightly
 
     - name: Build overlay image with fresh core binaries
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
         set -euo pipefail
         cat > overlay.Dockerfile <<'EOF'
@@ -198,14 +217,17 @@ jobs:
           build/package
 
     - name: Install e2e dependencies
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       run: npm ci
 
     - name: Install Playwright browsers
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       run: npx playwright install chromium --with-deps
 
     - name: Run E2E tests
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       env:
         E2E_IMAGE: euro-office/documentserver:e2e-core
@@ -214,7 +236,7 @@ jobs:
       run: npm test
 
     - name: Upload Playwright report
-      if: always()
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
       uses: actions/upload-artifact@v4
       with:
         name: playwright-report-${{ github.sha }}
