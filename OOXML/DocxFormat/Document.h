@@ -72,6 +72,11 @@ namespace OOX
 
 			nullable<OOX::Logic::CDrawing> m_oDrawing;
 			nullable<OOX::Vml::CBackground> m_oBackground;
+
+			// Set when the background originates from a first-page-only ODT page style
+			// (style:next-style-name chains to a different style). The background should
+			// be rendered only on the first page of the document.
+			bool m_bFirstPageOnly = false;
 		};
 		
 		class CDocSuppData : public WritingElement

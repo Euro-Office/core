@@ -931,11 +931,19 @@ void DocxConverter::convert(OOX::Logic::CParagraph *oox_paragraph)
 	{
 		odt_context->start_paragraph(bStyled);
 
-		if (odt_context->is_paragraph_in_current_section_)
+		// Capture before the first set_master_page_name clears is_paragraph_in_current_section_.
+		bool bInSection = odt_context->is_paragraph_in_current_section_;
+		if (bInSection)
 		{
 			odt_context->set_master_page_name(odt_context->page_layout_context()->last_master() ?
 											  odt_context->page_layout_context()->last_master()->get_name() : L"");
-		}		
+		}
+		// Apply the deferred first-page-only background to section 0's master now
+		// that headers, footers, and geometry are fully built.
+		if (bInSection && odt_context->needs_first_page_continuation())
+		{
+			odt_context->apply_first_page_continuation();
+		}
 	}
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -2350,15 +2358,31 @@ void DocxConverter::convert(OOX::Logic::CBgPict *oox_bg_pict, int type)
 void DocxConverter::convert(OOX::Logic::CBackground *oox_background, int type)
 {
 	if (oox_background == NULL) return;
-
 	_CP_OPT(odf_types::color) color;
-	convert (	oox_background->m_oColor.GetPointer(), 
-				oox_background->m_oThemeColor.GetPointer(), 
-				oox_background->m_oThemeTint.GetPointer(), 
+	convert (	oox_background->m_oColor.GetPointer(),
+				oox_background->m_oThemeColor.GetPointer(),
+				oox_background->m_oThemeTint.GetPointer(),
 				oox_background->m_oThemeShade.GetPointer(), color);
 
-	odt_context->set_background(color, type);	
-	
+	if (oox_background->m_bFirstPageOnly)
+	{
+		// On the first call (section 0, type==1), mark the context so the
+		// continuation master is created after section 0 is fully built.
+		// On later sections, skip entirely — the cover background belongs
+		// only on section 0's layout.
+		if (type == 1 && !odt_context->needs_first_page_continuation()
+			&& !odt_context->first_page_continuation_applied())
+		{
+			odt_context->set_deferred_first_page_continuation(true);
+		}
+		else
+		{
+			return;
+		}
+	}
+
+	odt_context->set_background(color, type);
+
 	odt_context->start_drawing_context();
 		odt_context->drawing_context()->start_drawing();
 		odt_context->drawing_context()->set_background_state(true);
@@ -4731,6 +4755,10 @@ void DocxConverter::convert(OOX::Logic::CTbl *oox_table)
 		{
 			odt_context->set_master_page_name(odt_context->page_layout_context()->last_master() ?
 								  odt_context->page_layout_context()->last_master()->get_name() : L"");
+			if (odt_context->needs_first_page_continuation())
+			{
+				odt_context->apply_first_page_continuation();
+			}
 		}
 			odt_context->start_drawing_context();
 				_CP_OPT(double) width, height, x, y ;
