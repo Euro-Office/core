@@ -61,6 +61,7 @@ else()
         # cases self-skip. See PdfFile/test/CMakeLists.txt and TESTING.md for the
         # missing fixtures needed to fully enable it.
         add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/test" pdffile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/osign/test" osign_test )
     endif()
 
 endif()
