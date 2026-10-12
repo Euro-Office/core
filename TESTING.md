@@ -104,9 +104,10 @@ Done:
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
       `main()` (so no `GTEST_MAIN`). Builds only `test.cpp` + `common.cpp` — the
-      entrance/motion/audio/interactions modules are commented out in the `.pro`, so the
-      suite registers no `TEST()` cases yet; the global `TestEnv` still exercises an
-      `.odp -> .pptx` conversion in its `SetUp()`. Fixtures under `ExampleFiles/` are
+      entrance/motion/audio/interactions modules are commented out in the `.pro`. The
+      global `TestEnv` exercises an `.odp -> .pptx` conversion in its `SetUp()`, and
+      `ODP2PPTX.EmptyCustomShapeFormula` converts `empty_custom_shape_formula.odp`, a
+      regression fixture for a custom-shape equation with an empty `draw:formula`. Fixtures under `ExampleFiles/` are
       staged next to the binary and the test runs from there (the fixture path
       `ExampleFiles/motion.odp` is working-dir-relative). The committed `common.cpp` had
       absolute Windows include paths and a `#pragma comment(lib, ...)` block; these were

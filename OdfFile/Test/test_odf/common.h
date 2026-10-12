@@ -38,6 +38,10 @@
 //#include <boost/shared_ptr.hpp>
 #include <string>
 
+#include "DesktopEditor/common/Types.h"
+
+HRESULT convert_single(std::wstring srcFileName);
+
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
 //boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);
