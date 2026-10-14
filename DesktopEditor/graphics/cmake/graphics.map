@@ -9,13 +9,13 @@
  * libpng 1.5 instead of the system libpng 1.6, fail to load any PNG icon and
  * make GTK abort (Euro-Office/DesktopEditors#126).
  *
- * Only export the C++ API and FreeType (used by PdfFile), hide everything else.
+ * Only export the C++ API, hide everything else. This includes FreeType:
+ * GTK's cairo and harfbuzz would otherwise mix the bundled FreeType with the
+ * system one. PdfFile builds its own private copy instead.
  */
 {
   global:
     _Z*;
-    FT_*;
-    FTC_*;
   local:
     *;
 };
