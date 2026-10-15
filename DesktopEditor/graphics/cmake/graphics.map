@@ -1,0 +1,21 @@
+/*
+ * Export map for libgraphics on Linux.
+ *
+ * libgraphics statically compiles a number of third-party C libraries
+ * (libpng, libjpeg, zlib, libtiff, harfbuzz, leptonica, brotli, ...). Since
+ * the library is built with -fvisibility=default, all of their symbols would
+ * end up in the dynamic symbol table and interpose the system copies used by
+ * GTK, gdk-pixbuf, Qt, etc. For example gdk-pixbuf would call the bundled
+ * libpng 1.5 instead of the system libpng 1.6, fail to load any PNG icon and
+ * make GTK abort (Euro-Office/DesktopEditors#126).
+ *
+ * Only export the C++ API, hide everything else. This includes FreeType:
+ * GTK's cairo and harfbuzz would otherwise mix the bundled FreeType with the
+ * system one. PdfFile builds its own private copy instead.
+ */
+{
+  global:
+    _Z*;
+  local:
+    *;
+};
