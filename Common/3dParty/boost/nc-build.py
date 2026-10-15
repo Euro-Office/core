@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 modules_needed = [ "headers", "system", "filesystem", "regex", "date_time" ]
@@ -112,6 +112,11 @@ option.set keep-going : false ;
     for module in modules_needed:
         build_cmd.append( f"--with-{ module }" )
     build_cmd.append( "variant=release" )
+    # Nothing uses Boost.Regex's ICU support (u32regex). Without this, b2
+    # auto-detects whatever system ICU the build machine has (e.g. libicu-devel
+    # 67 pulled in by GTK on Rocky 9) and the CMake config makes everything
+    # linking Boost::regex depend on that unshipped ICU.
+    build_cmd.append( "--disable-icu" )
     build_cmd.append( "link=static" )
     if not nc.is_windows():
         build_cmd.append( "cflags=-fPIC" )
