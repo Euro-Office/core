@@ -27,14 +27,14 @@
 //
 #include "common.h"
 //
-//#include "../../OfficeUtils/src/OfficeUtils.h"
-//#include "Reader/Converter/pptx_package.h"
+// #include "../../OfficeUtils/src/OfficeUtils.h"
+// #include "Reader/Converter/pptx_package.h"
 //
-//#include "Writer/Converter/Converter.h"
-//#include "Writer/Converter/PptxConverter.h"
-//#include "Writer/Format/office_elements.h"
+// #include "Writer/Converter/Converter.h"
+// #include "Writer/Converter/PptxConverter.h"
+// #include "Writer/Format/office_elements.h"
 //
-//boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf)
+// boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf)
 //{
 //	COfficeUtils oCOfficeUtils(NULL);
 //	if (S_OK == oCOfficeUtils.ExtractToDirectory(from, tempUnpackedOdf, NULL, 0))
@@ -43,7 +43,7 @@
 //		return nullptr;
 //}
 //
-//boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf)
+// boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> Convert(boost::shared_ptr<cpdoccore::odf_reader::odf_document> inputOdf)
 //{
 //	cpdoccore::oox::package::pptx_document outputPptx;
 //	boost::shared_ptr<cpdoccore::oox::pptx_conversion_context> conversionContext = boost::make_shared<cpdoccore::oox::pptx_conversion_context>(inputOdf.get());
@@ -56,7 +56,7 @@
 //	return conversionContext;
 //}
 //
-//ODP2OOX_AnimationEnvironment::ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context)
+// ODP2OOX_AnimationEnvironment::ODP2OOX_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<cpdoccore::odf_reader::odf_document>* doc, boost::shared_ptr<cpdoccore::oox::pptx_conversion_context>* context)
 //	: testing::Environment()
 //{
 //	sExampleFilename = NSFile::GetFileName(exampleFilename);
@@ -64,11 +64,11 @@
 //	mContext = context;
 //}
 //
-//ODP2OOX_AnimationEnvironment::~ODP2OOX_AnimationEnvironment()
+// ODP2OOX_AnimationEnvironment::~ODP2OOX_AnimationEnvironment()
 //{
 //}
 //
-//void ODP2OOX_AnimationEnvironment::SetUp()
+// void ODP2OOX_AnimationEnvironment::SetUp()
 //{
 //	std::wstring rootDir = NSFile::GetProcessDirectory() + CH_DIR("..");
 //	std::wstring sExampleFilesDirectory = rootDir + CH_DIR("ExampleFiles");
@@ -84,21 +84,21 @@
 //	*mContext = Convert(*mDocument);
 //}
 //
-//void ODP2OOX_AnimationEnvironment::TearDown()
+// void ODP2OOX_AnimationEnvironment::TearDown()
 //{
 //	NSDirectory::DeleteDirectory(sTemp);
 //}
 //
 ////////////////////////////////////////////////////////////////////////////
 //
-//OOX2ODP_AnimationEnvironment::OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<Oox2Odf::Converter>* converter, cpdoccore::odf_writer::odp_conversion_context** context)
+// OOX2ODP_AnimationEnvironment::OOX2ODP_AnimationEnvironment(const std::wstring& exampleFilename, boost::shared_ptr<Oox2Odf::Converter>* converter, cpdoccore::odf_writer::odp_conversion_context** context)
 //{
 //	mExampleFilename = exampleFilename;
 //	mConverter = converter;
 //	mContext = context;
 //}
 //
-//void OOX2ODP_AnimationEnvironment::SetUp()
+// void OOX2ODP_AnimationEnvironment::SetUp()
 //{
 //	std::wstring rootDir = NSFile::GetProcessDirectory() + CH_DIR("..");
 //	std::wstring exampleFilesDirectory = rootDir + CH_DIR("ExampleFiles");
@@ -127,12 +127,12 @@
 //	}
 //}
 //
-//void OOX2ODP_AnimationEnvironment::TearDown()
+// void OOX2ODP_AnimationEnvironment::TearDown()
 //{
 //	NSDirectory::DeleteDirectory(mTemp);
 //}
 //
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetTimingRoot()
+// const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetTimingRoot()
 //{
 //	using namespace cpdoccore::odf_writer;
 //	draw_page* page = dynamic_cast<draw_page*>(mContext->current_slide().page_elm_.get());
@@ -147,7 +147,7 @@
 //
 //}
 //
-//const cpdoccore::odf_writer::anim_seq* OOX2ODP_AnimationTest::GetMainSequence()
+// const cpdoccore::odf_writer::anim_seq* OOX2ODP_AnimationTest::GetMainSequence()
 //{
 //	using namespace cpdoccore::odf_writer;
 //	const anim_par* timing_root = GetTimingRoot();
@@ -164,7 +164,7 @@
 //	return main_sequence;
 //}
 //
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetMainSequenceParByIndex(size_t index)
+// const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetMainSequenceParByIndex(size_t index)
 //{
 //	using namespace cpdoccore::odf_writer;
 //	const anim_seq* main_sequence = GetMainSequence();
@@ -179,7 +179,7 @@
 //	return par;
 //}
 //
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnerPar(const cpdoccore::odf_writer::anim_par* par)
+// const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnerPar(const cpdoccore::odf_writer::anim_par* par)
 //{
 //	using namespace cpdoccore::odf_writer;
 //
@@ -197,7 +197,7 @@
 //	return inner_par;
 //}
 //
-//const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnermostPar(const cpdoccore::odf_writer::anim_par* par)
+// const cpdoccore::odf_writer::anim_par* OOX2ODP_AnimationTest::GetInnermostPar(const cpdoccore::odf_writer::anim_par* par)
 //{
 //	using namespace cpdoccore::odf_writer;
 //
@@ -216,7 +216,7 @@
 //	return innermost;
 //}
 //
-//const cpdoccore::odf_writer::odp_conversion_context* OOX2ODP_AnimationTest::GetContext() const
+// const cpdoccore::odf_writer::odp_conversion_context* OOX2ODP_AnimationTest::GetContext() const
 //{
 //	return mContext;
 //}
@@ -241,23 +241,29 @@ HRESULT convert_single(std::wstring srcFileName)
 
 	COfficeFileFormatChecker fileChecker(srcFileName);
 
-	std::wstring dstPath = srcFileName;// + ; //xlsx pptx docx
+	std::wstring dstPath = srcFileName; // + ; //xlsx pptx docx
 	switch (fileChecker.nFileType)
 	{
-		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT:
-		case AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT:
-		case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:		dstPath += L"-tmp.docx"; break;
+	case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT:
+	case AVS_OFFICESTUDIO_FILE_DOCUMENT_OTT:
+	case AVS_OFFICESTUDIO_FILE_DOCUMENT_ODT_FLAT:
+		dstPath += L"-tmp.docx";
+		break;
 
-		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS:
-		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS:
-		case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:	dstPath += L"-tmp.xlsx"; break;
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS:
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_OTS:
+	case AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS_FLAT:
+		dstPath += L"-tmp.xlsx";
+		break;
 
-		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP:
-		case AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP:
-		case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:	dstPath += L"-tmp.pptx"; break;
+	case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP:
+	case AVS_OFFICESTUDIO_FILE_PRESENTATION_OTP:
+	case AVS_OFFICESTUDIO_FILE_PRESENTATION_ODP_FLAT:
+		dstPath += L"-tmp.pptx";
+		break;
 
-		default:
-			return -1;
+	default:
+		return -1;
 	}
 	//---------------------------------------------------------------------------------------------------
 	COfficeUtils oCOfficeUtils(NULL);
@@ -285,7 +291,16 @@ HRESULT convert_single(std::wstring srcFileName)
 	}
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
-	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, L"C:\\Windows\\Fonts", srcTempPath2, L"");
+	// The hardcoded Windows font directory never exists on Linux/macOS and is
+	// silently ignored by the converter there. Keep the Windows path and pass
+	// an empty directory elsewhere, matching the historical animation
+	// environments that used set_font_directory(L"").
+	#if defined(_WIN32) || defined(_WIN64)
+		const std::wstring sFontsDirectory = L"C:\\Windows\\Fonts";
+	#else
+		const std::wstring sFontsDirectory = L"";
+	#endif
+	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, sFontsDirectory, srcTempPath2, L"");
 
 	if (srcTempPath != srcFileName)
 	{
@@ -317,17 +332,18 @@ HRESULT convert_directory(std::wstring pathName)
 	return S_OK;
 }
 
-ODT2DOCX_ConversionEnvironment::ODT2DOCX_ConversionEnvironment(const std::wstring& filename)
+ODT2DOCX_ConversionEnvironment::ODT2DOCX_ConversionEnvironment(const std::wstring &filename)
 	: mFilename(filename)
 {
 }
 
 void ODT2DOCX_ConversionEnvironment::SetUp()
 {
-	convert_single(mFilename);
+    const HRESULT hr = convert_single(mFilename);
+    if (hr != 0)
+        _CP_LOG << L"[error] test_odf TestEnv conversion failed: hr=" << hr << std::endl;
 }
 
 void ODT2DOCX_ConversionEnvironment::TearDown()
 {
-
 }
