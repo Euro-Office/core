@@ -100,6 +100,22 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
+      coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
+      Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and
+      `Utils.cpp` are compiled directly into the test binary (their symbols are hidden
+      inside the shared `x2tlib`, same pattern as `docx_numbering_test` compiling
+      `PPTXFormat/Namespaces.cpp`). `GTEST_MAIN`. No fixtures — each case writes its RTF
+      snippet to a temp file (the lexer only accepts file paths); every snippet rides a
+      minimal `{\rtf1 …}` envelope because `SetSource` refuses files under 5 bytes.
+      16 tests: token dispatch (group/keyword/control/text/EOF incl. EOF persistence),
+      keyword parameters (positive, negative, trailing-space consumption), escaped
+      delimiters, control symbols, `\'hh` hex control tokens (the decimal-key quirk and
+      the +1 shift for the 0x00–0x1E range), backslash-tab/CR/LF → `tab`/`par`, newline
+      suppression inside text runs, control-byte skipping, the 5-byte error contract,
+      and read-buffer growth past the initial 5 MB (a 6 MB text run lexes whole). The
+      binary links the system `libstdc++` ahead of the converter chain (ICU
+      interposition, #173).
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
