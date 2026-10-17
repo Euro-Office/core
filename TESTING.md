@@ -166,6 +166,13 @@ Done:
       and read-buffer growth past the initial 5 MB (a 6 MB text run lexes whole). The
       binary links the system `libstdc++` ahead of the converter chain (ICU
       interposition, #173).
+- [x] `OOXML/Binary/Sheets/Reader/test` — new suite (`csv_reader_test`), not a `.pro` migration.
+      First coverage for the bin-format CSV reader used by every CSV/TXT import: encodings
+      (ANSI/UTF-8/UTF-16LE/UTF-32LE, BOM), `sep=` directive, RFC4180 quoting, tab handling,
+      empty-cell positions, the 500k-char chunked-erase path, and the `readToxmlCache_` branch.
+      Carries the regression case (`Utf8TrailingLineBreakAddsNoEmptyRow`) for the #160
+      ghost-row bug fixed in #170. The binary links the system `libstdc++` ahead of the
+      converter chain on Linux (ICU interposition, #173).
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
