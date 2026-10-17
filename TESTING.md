@@ -100,6 +100,12 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `OOXML/Binary/Sheets/Reader/test` — new suite (`csv_reader_test`), not a `.pro` migration. 
+      First coverage for the bin-format CSV reader used by every CSV/TXT import: encodings 
+      (ANSI/UTF-8/UTF-16LE/UTF-32LE, BOM), `sep=` directive, RFC4180 quoting, tab handling, 
+      empty-cell positions, the 500k-char chunked-erase path, and the `readToxmlCache_` branch. 
+      Added together with the #160 ghost-row fix, whose regression case 
+      (`Utf8TrailingLineBreakAddsNoEmptyRow`) it carries.
 - [x] `OdfFile/Test/test_odf` — deps: OdfFormatLib (for `ConvertODF2OOXml`), kernel,
       graphics, UnicodeConverter; `OfficeFileFormatChecker2.cpp`, `pole.cpp` and
       `unicode_util.cpp` are compiled into the target (as `x2tTester` does). Owns its
