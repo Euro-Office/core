@@ -56,9 +56,13 @@ namespace PPTX
 			{
 				pWriter->WriteAttribute(L"id", *idx);
 			}
-			else
+			else if (id.IsInit())
 			{
-				pWriter->WriteAttribute(L"id", id.IsInit() ? *id : std::to_wstring(*idx));
+				pWriter->WriteAttribute(L"id", *id);
+			}
+			else if (idx.IsInit())
+			{
+				pWriter->WriteAttribute(L"id", std::to_wstring(*idx));
 			}
 			pWriter->WriteAttribute2(L"name", name);
 			pWriter->WriteAttribute(L"initials", initials);
@@ -144,6 +148,13 @@ namespace PPTX
 			
 			if (false == idx.IsInit())
 			{
+				bModern = true;
+			}
+			else if (true == id.IsInit() && std::wstring::npos != id->find(L"-"))
+			{
+				// #143: GUID-shaped id survives the pptx->bin leg (synthetic idx is
+				// written for modern authors); keep the author modern so the GUID
+				// is not dropped on write-back
 				bModern = true;
 			}
 		}
@@ -273,9 +284,9 @@ namespace PPTX
 			for (auto &auth : m_arAuthors)
 			{
 				if (true == auth.idx.IsInit())
-					break;
+					continue;
 				if (false == auth.id.IsInit())
-					break;
+					continue;
 
 				if (bNew)
 				{

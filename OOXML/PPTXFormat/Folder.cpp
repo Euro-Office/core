@@ -37,6 +37,8 @@
 #include "NotesMaster.h"
 #include "NotesSlide.h"
 #include "HandoutMaster.h"
+#include "CommentAuthors.h"
+#include "Comments.h"
 
 #include <map>
 
@@ -72,6 +74,48 @@ namespace PPTX
                 _presentation->commentAuthors = _presentation->Get(OOX::Presentation::FileTypes::ModernCommentAuthors).smart_dynamic_cast<PPTX::Authors>();
             }
 			
+			// #143: assign synthetic author indices at one post-load point so authors
+			// and comments share the same GUID->int map regardless of package read order
+			PPTX::Authors* pAuthors = _presentation->commentAuthors.GetPointer();
+			if (NULL != pAuthors && true == pAuthors->bModern)
+			{
+				for (size_t nAuthor = 0; nAuthor < pAuthors->m_arAuthors.size(); ++nAuthor)
+				{
+					PPTX::Logic::CommentAuthor& oAuthor = pAuthors->m_arAuthors[nAuthor];
+					if (true == oAuthor.idx.IsInit() || false == oAuthor.id.IsInit())
+						continue;
+					oAuthor.idx = pAuthors->mapAuthors.size() + 1;
+					pAuthors->mapAuthors.insert(std::make_pair(*oAuthor.id, *oAuthor.idx));
+				}
+				for (std::map<std::wstring, smart_ptr<OOX::File>>::const_iterator pPair = map.m_map.begin();
+					pPair != map.m_map.end(); ++pPair)
+				{
+					if (OOX::Presentation::FileTypes::ModernComments == pPair->second->type())
+					{
+						smart_ptr<PPTX::Comments> pComments = pPair->second.smart_dynamic_cast<PPTX::Comments>();
+						if (pComments.is_init())
+						{
+							for (size_t nComment = 0; nComment < pComments->m_arComments.size(); ++nComment)
+							{
+								PPTX::Logic::Comment& oComment = pComments->m_arComments[nComment];
+								if (true == oComment.authorIdx.IsInit() || false == oComment.authorId.IsInit())
+									continue;
+								std::map<std::wstring, int>::iterator pFind = pAuthors->mapAuthors.find(*oComment.authorId);
+								if (pFind != pAuthors->mapAuthors.end())
+								{
+									oComment.authorIdx = pFind->second;
+								}
+								else
+								{
+									oComment.authorIdx = pAuthors->mapAuthors.size() + 1;
+									pAuthors->mapAuthors.insert(std::make_pair(*oComment.authorId, *oComment.authorIdx));
+								}
+							}
+						}
+					}
+				}
+			}
+
 			if (_presentation->IsExist(OOX::FileTypes::VbaProject))
 			{
 				_presentation->m_bMacroEnabled	= true;
