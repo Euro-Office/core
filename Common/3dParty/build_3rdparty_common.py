@@ -268,7 +268,7 @@ class MeasurementObj:
 #   REMOTE_CACHE_TYPE       "nextcloud" | "s3" | "none". Defaults to "s3" when
 #                           S3_BUCKET is set, else "nextcloud".
 #   BASE_REMOTE_PATH        Folder / key prefix on the remote
-#                           (default "3DPARTY_DEPS_1").
+#                           (default "Engineering/Office/Euro-Office/3DPARTY_DEPS_1").
 #   REMOTE_CACHE_READ_ONLY  "1" to only download, never upload.
 #
 # Nextcloud / WebDAV ('curl' must be on PATH):
@@ -307,7 +307,7 @@ def _env( *names, default="" ):
             return value
     return default
 
-BASE_REMOTE_PATH = _env( "BASE_REMOTE_PATH", default="3DPARTY_DEPS_1" ).strip( "/" )
+BASE_REMOTE_PATH = _env( "BASE_REMOTE_PATH", default="Engineering/Office/Euro-Office/3DPARTY_DEPS_1" ).strip( "/" )
 REMOTE_CACHE_READ_ONLY = _env( "REMOTE_CACHE_READ_ONLY" ).lower() in ( "1", "true", "yes", "on" )
 
 NEXTCLOUD_USER   = _env( "NEXTCLOUD_USER" )
