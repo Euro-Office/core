@@ -14,7 +14,7 @@ The `nc-build.py` scripts in `Common/3dParty` can share built dependencies throu
 | Variable | Description |
 | --- | --- |
 | `REMOTE_CACHE_TYPE` | `nextcloud`, `s3` or `none`. Defaults to `s3` if `S3_BUCKET` is set, otherwise `nextcloud`. |
-| `BASE_REMOTE_PATH` | Folder / key prefix on the remote. Default `3DPARTY_DEPS_1`. |
+| `BASE_REMOTE_PATH` | Folder / key prefix on the remote. Default `Engineering/Office/Euro-Office/3DPARTY_DEPS_1`. |
 | `REMOTE_CACHE_READ_ONLY` | Set to `1` to only download from the cache, never upload. |
 
 Nextcloud (WebDAV, needs `curl`):
