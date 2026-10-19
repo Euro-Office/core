@@ -304,7 +304,7 @@ class MeasurementObj:
 
 
 # ===========================================================================
-# Remote cache (Nextcloud WebDAV)
+# Remote cache (Nextcloud WebDAV or S3)
 #
 # One entry point: ensure_dep(build_fn). Call it from every nc-build.py instead
 # of the manual `if not install_dir_looks_ok(): build_fn()` check. It will:
@@ -318,17 +318,81 @@ class MeasurementObj:
 #   - install_dir_looks_ok()   (the ok-marker check)
 #   - the force-redo flag       (read defensively below)
 #
-# Credentials come from the environment so nothing is committed:
-#   NEXTCLOUD_USER, NEXTCLOUD_PASS.   'curl' must be on PATH when they are set.
-# If either is empty the remote cache is disabled and ensure_dep behaves like
-# the old manual check (build locally only).
+# Everything is configured through the environment so nothing is committed.
+# Archives are stored under <BASE_REMOTE_PATH>/<PLATFORM_TAG>/<dep>/ on the
+# remote.
+#
+#   REMOTE_CACHE_TYPE       "nextcloud" | "s3" | "none". Defaults to "s3" when
+#                           S3_BUCKET is set, else "nextcloud".
+#   BASE_REMOTE_PATH        Folder / key prefix on the remote
+#                           (default "3DPARTY_DEPS_1").
+#   REMOTE_CACHE_READ_ONLY  "1" to only download, never upload.
+#
+# Nextcloud / WebDAV ('curl' must be on PATH):
+#   NEXTCLOUD_REMOTE        WebDAV root (default
+#                           "https://cloud.nextcloud.com/remote.php/dav/files").
+#   NEXTCLOUD_USER          Appended to NEXTCLOUD_REMOTE as "<remote>/<user>"
+#                           when set. Leave empty if NEXTCLOUD_REMOTE already is
+#                           the full root, e.g. a public share:
+#                           "https://host/public.php/dav/files/<share-token>".
+#   NEXTCLOUD_PASS          Basic auth is used only if user and pass are set.
+#   The cache is enabled when NEXTCLOUD_USER and NEXTCLOUD_PASS are set, or
+#   when NEXTCLOUD_REMOTE is set explicitly (anonymous access).
+#
+# S3 (any S3 compatible store: AWS, MinIO, Garage, Ceph, R2, ...):
+#   S3_BUCKET               Bucket name. Enables the S3 cache.
+#   S3_ENDPOINT             e.g. "https://minio.example.com" (default
+#                           "https://s3.<S3_REGION>.amazonaws.com").
+#   S3_REGION               Signing region (default "us-east-1").
+#   S3_ADDRESSING_STYLE     "path" (default, <endpoint>/<bucket>/<key>) or
+#                           "virtual" (<bucket>.<endpoint-host>/<key>).
+#   S3_ACCESS_KEY, S3_SECRET_KEY, S3_SESSION_TOKEN
+#                           Fall back to AWS_ACCESS_KEY_ID,
+#                           AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN.
+#                           Without keys, requests are sent unsigned (public
+#                           bucket).
+#
+# If the cache is disabled, ensure_dep behaves like the old manual check
+# (build locally only).
 # ===========================================================================
 
-NEXTCLOUD_USER   = os.environ.get( "NEXTCLOUD_USER", "" )
-NEXTCLOUD_PASS   = os.environ.get( "NEXTCLOUD_PASS", "" )
-NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
-BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
-USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
+def _env( *names, default="" ):
+    # First non-empty variable out of names.
+    for nm in names:
+        value = os.environ.get( nm, "" ).strip()
+        if value:
+            return value
+    return default
+
+BASE_REMOTE_PATH = _env( "BASE_REMOTE_PATH", default="3DPARTY_DEPS_1" ).strip( "/" )
+REMOTE_CACHE_READ_ONLY = _env( "REMOTE_CACHE_READ_ONLY" ).lower() in ( "1", "true", "yes", "on" )
+
+NEXTCLOUD_USER   = _env( "NEXTCLOUD_USER" )
+NEXTCLOUD_PASS   = _env( "NEXTCLOUD_PASS" )
+NEXTCLOUD_REMOTE = _env( "NEXTCLOUD_REMOTE",
+                         default="https://cloud.nextcloud.com/remote.php/dav/files" ).rstrip( "/" )
+
+S3_BUCKET           = _env( "S3_BUCKET" )
+S3_REGION           = _env( "S3_REGION", "AWS_REGION", "AWS_DEFAULT_REGION", default="us-east-1" )
+S3_ENDPOINT         = _env( "S3_ENDPOINT", default=f"https://s3.{ S3_REGION }.amazonaws.com" ).rstrip( "/" )
+S3_ADDRESSING_STYLE = _env( "S3_ADDRESSING_STYLE", default="path" ).lower()
+S3_ACCESS_KEY       = _env( "S3_ACCESS_KEY", "AWS_ACCESS_KEY_ID" )
+S3_SECRET_KEY       = _env( "S3_SECRET_KEY", "AWS_SECRET_ACCESS_KEY" )
+S3_SESSION_TOKEN    = _env( "S3_SESSION_TOKEN", "AWS_SESSION_TOKEN" )
+
+REMOTE_CACHE_TYPE = _env( "REMOTE_CACHE_TYPE", default="s3" if S3_BUCKET else "nextcloud" ).lower()
+
+if REMOTE_CACHE_TYPE == "nextcloud":
+    USE_REMOTE_CACHE = bool( ( NEXTCLOUD_USER and NEXTCLOUD_PASS )
+                             or _env( "NEXTCLOUD_REMOTE" ) )
+elif REMOTE_CACHE_TYPE == "s3":
+    USE_REMOTE_CACHE = bool( S3_BUCKET )
+    if not USE_REMOTE_CACHE:
+        print( "  [WARN]  REMOTE_CACHE_TYPE=s3 but S3_BUCKET is not set, remote cache disabled" )
+else:
+    if REMOTE_CACHE_TYPE != "none":
+        print( f"  [WARN]  Unknown REMOTE_CACHE_TYPE { REMOTE_CACHE_TYPE !r}, remote cache disabled" )
+    USE_REMOTE_CACHE = False
 
 def _cache_tag_platform() -> str:
     # Cross builds get their own folder, so they never reuse or overwrite host
@@ -401,55 +465,200 @@ def _glibc_str( ver ):
     return f"{ ver[ 0 ] }.{ ver[ 1 ] }"
 
 
-def _remote_dir_url():
-    key = _cache_key()
-    return ( f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }/{ BASE_REMOTE_PATH }"
-             f"/{ PLATFORM_TAG }/{ key }" )
+def _remote_dir_path():
+    # Remote folder of this dep, relative to the cache root.
+    parts = ( BASE_REMOTE_PATH, PLATFORM_TAG, _cache_key() )
+    return "/".join( p for p in parts if p )
 
 
-def _remote_file_url( glibc=None ):
+def _remote_file_path( glibc=None ):
     key = _cache_key()
     name = f"{ key }-glibc{ _glibc_str( glibc ) }" if glibc else key
-    return f"{ _remote_dir_url() }/{ name }.tar.bz2"
+    return f"{ _remote_dir_path() }/{ name }.tar.bz2"
 
 
-def _curl( *args ):
-    return subprocess.run(
-        [ "curl", "-s", "-u", f"{ NEXTCLOUD_USER }:{ NEXTCLOUD_PASS }", *args ],
-        text=True, capture_output=True,
-    )
+# ---------------------------------------------------------------------------
+# Backends. Each one takes paths relative to the cache root and implements:
+#   exists( path ) -> bool
+#   list( dir )    -> str   (raw listing; only searched for archive names)
+#   get( path, dest_file ) -> bool
+#   put( src_file, path )  -> bool
+# ---------------------------------------------------------------------------
+
+class _WebDavBackend:
+    def __init__( self ):
+        self.root = ( f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }"
+                      if NEXTCLOUD_USER else NEXTCLOUD_REMOTE )
+
+    def _url( self, path ):
+        return f"{ self.root }/{ path }"
+
+    def _curl( self, *args ):
+        auth = ( [ "-u", f"{ NEXTCLOUD_USER }:{ NEXTCLOUD_PASS }" ]
+                 if NEXTCLOUD_USER and NEXTCLOUD_PASS else [] )
+        return subprocess.run(
+            [ "curl", "-s", *auth, *args ],
+            text=True, capture_output=True,
+        )
+
+    def exists( self, path ):
+        # HEAD request: True only on a 2xx status code.
+        r = self._curl( "-o", os.devnull, "-w", "%{http_code}", "--head", self._url( path ) )
+        return r.stdout.strip().startswith( "2" )
+
+    def list( self, dir ):
+        # WebDAV PROPFIND, depth 1. A missing folder simply yields no entries.
+        r = self._curl( "-X", "PROPFIND", "-H", "Depth: 1", self._url( dir ) + "/" )
+        return r.stdout if r.returncode == 0 else ""
+
+    def get( self, path, dest_file ):
+        return self._curl( "-f", "-o", dest_file, self._url( path ) ).returncode == 0
+
+    def put( self, src_file, path ):
+        # WebDAV does not create intermediate collections, so MKCOL each level
+        # (MKCOL on an existing collection just 405s, which we ignore).
+        parts = path.split( "/" )[ :-1 ]
+        for i in range( 1, len( parts ) + 1 ):
+            self._curl( "-X", "MKCOL", self._url( "/".join( parts[ :i ] ) ) )
+        self._curl( "-X", "DELETE", self._url( path ) )
+        return self._curl( "-f", "-T", src_file, self._url( path ) ).returncode == 0
 
 
-def _remote_url_exists( url ):
-    # HEAD request: True only on a 2xx status code.
-    r = _curl( "-o", os.devnull, "-w", "%{http_code}", "--head", url )
-    return r.stdout.strip().startswith( "2" )
+class _S3Backend:
+    # Plain urllib + AWS Signature V4, so no boto3 / aws cli is needed.
+
+    _EMPTY_SHA256 = "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+
+    def __init__( self ):
+        from urllib.parse import urlsplit
+        ep = urlsplit( S3_ENDPOINT )
+        self.scheme = ep.scheme or "https"
+        if S3_ADDRESSING_STYLE == "virtual":
+            self.host   = f"{ S3_BUCKET }.{ ep.netloc }"
+            self.prefix = ep.path.rstrip( "/" )
+        else:
+            self.host   = ep.netloc
+            self.prefix = f"{ ep.path.rstrip( '/' ) }/{ S3_BUCKET }"
+
+    def _request( self, method, key="", query=None, body=None, size=0 ):
+        import datetime, hashlib, hmac
+        from urllib.parse import quote
+        from urllib.request import Request
+
+        uri = quote( f"{ self.prefix }/{ key }", safe="/-_.~" )
+        qs  = "&".join( f"{ quote( k, safe='-_.~' ) }={ quote( v, safe='-_.~' ) }"
+                        for k, v in sorted( ( query or {} ).items() ) )
+        payload_hash = "UNSIGNED-PAYLOAD" if body is not None else self._EMPTY_SHA256
+
+        headers = { "host": self.host, "x-amz-content-sha256": payload_hash }
+        if body is not None:
+            headers[ "content-length" ] = str( size )
+
+        if S3_ACCESS_KEY and S3_SECRET_KEY:
+            now   = datetime.datetime.now( datetime.timezone.utc )
+            stamp = now.strftime( "%Y%m%dT%H%M%SZ" )
+            day   = stamp[ :8 ]
+            headers[ "x-amz-date" ] = stamp
+            if S3_SESSION_TOKEN:
+                headers[ "x-amz-security-token" ] = S3_SESSION_TOKEN
+
+            signed    = ";".join( sorted( headers ) )
+            canonical = "\n".join( [
+                method, uri, qs,
+                "".join( f"{ k }:{ headers[ k ].strip() }\n" for k in sorted( headers ) ),
+                signed, payload_hash,
+            ] )
+            scope = f"{ day }/{ S3_REGION }/s3/aws4_request"
+            to_sign = "\n".join( [ "AWS4-HMAC-SHA256", stamp, scope,
+                                   hashlib.sha256( canonical.encode() ).hexdigest() ] )
+
+            def _hmac( k, msg ):
+                return hmac.new( k, msg.encode(), hashlib.sha256 ).digest()
+            k = _hmac( f"AWS4{ S3_SECRET_KEY }".encode(), day )
+            for part in ( S3_REGION, "s3", "aws4_request" ):
+                k = _hmac( k, part )
+            signature = hmac.new( k, to_sign.encode(), hashlib.sha256 ).hexdigest()
+            headers[ "authorization" ] = ( f"AWS4-HMAC-SHA256 Credential={ S3_ACCESS_KEY }/{ scope }, "
+                                           f"SignedHeaders={ signed }, Signature={ signature }" )
+
+        url = f"{ self.scheme }://{ self.host }{ uri }" + ( f"?{ qs }" if qs else "" )
+        headers.pop( "host" )  # urllib sets it from the URL
+        return Request( url, data=body, method=method, headers=headers )
+
+    def _open( self, req ):
+        # Response on 2xx, None on any HTTP or network error.
+        from urllib.request import urlopen
+        from urllib.error import URLError
+        try:
+            return urlopen( req, timeout=120 )
+        except ( URLError, OSError ):
+            return None
+
+    def exists( self, path ):
+        r = self._open( self._request( "HEAD", path ) )
+        if r is None:
+            return False
+        r.close()
+        return True
+
+    def list( self, dir ):
+        r = self._open( self._request( "GET", query={ "list-type": "2", "prefix": dir + "/" } ) )
+        if r is None:
+            return ""
+        with r:
+            return r.read().decode( "utf-8", "replace" )
+
+    def get( self, path, dest_file ):
+        r = self._open( self._request( "GET", path ) )
+        if r is None:
+            return False
+        try:
+            with r, open( dest_file, "wb" ) as f:
+                shutil.copyfileobj( r, f, 1024 * 1024 )
+            return True
+        except OSError:
+            return False
+
+    def put( self, src_file, path ):
+        with open( src_file, "rb" ) as f:
+            size = os.fstat( f.fileno() ).st_size
+            r = self._open( self._request( "PUT", path, body=f, size=size ) )
+        if r is None:
+            return False
+        r.close()
+        return True
+
+
+_backend_instance = None
+
+def _backend():
+    global _backend_instance
+    if _backend_instance is None:
+        _backend_instance = _S3Backend() if REMOTE_CACHE_TYPE == "s3" else _WebDavBackend()
+    return _backend_instance
 
 
 def _remote_glibc_versions():
-    # glibc versions of the archives in this dep's remote folder (WebDAV
-    # PROPFIND, depth 1). A missing folder simply yields no versions.
-    r = _curl( "-X", "PROPFIND", "-H", "Depth: 1", _remote_dir_url() + "/" )
-    if r.returncode != 0:
-        return []
+    # glibc versions of the archives in this dep's remote folder.
+    listing = _backend().list( _remote_dir_path() )
     pattern = re.compile( re.escape( _cache_key() ) + r"-glibc(\d+)\.(\d+)\.tar\.bz2" )
-    return sorted( { ( int( a ), int( b ) ) for a, b in pattern.findall( r.stdout ) } )
+    return sorted( { ( int( a ), int( b ) ) for a, b in pattern.findall( listing ) } )
 
 
 def _remote_find_archive():
-    # URL of the archive to reuse, or None.
+    # Remote path of the archive to reuse, or None.
     if LOCAL_GLIBC is None:
-        url = _remote_file_url()
-        return url if _remote_url_exists( url ) else None
+        path = _remote_file_path()
+        return path if _backend().exists( path ) else None
     # Newest archive that is still compatible with the local glibc.
     usable = [ v for v in _remote_glibc_versions() if v <= LOCAL_GLIBC ]
-    return _remote_file_url( usable[ -1 ] ) if usable else None
+    return _remote_file_path( usable[ -1 ] ) if usable else None
 
 
-def _remote_download_and_extract( url ):
+def _remote_download_and_extract( path ):
     with tempfile.TemporaryDirectory() as tmp:
         archive = str( Path( tmp ) / "dep.tar.bz2" )
-        if _curl( "-f", "-o", archive, url ).returncode != 0:
+        if not _backend().get( path, archive ):
             return False
         if install_dir.exists():
             shutil.rmtree( install_dir )
@@ -464,17 +673,7 @@ def _remote_upload():
         # (important since work dir and install dir can be the same path).
         archive = shutil.make_archive( str( Path( tmp ) / _cache_key() ),
                                        "bztar", root_dir=str( install_dir ) )
-        base = f"{ NEXTCLOUD_REMOTE }/{ NEXTCLOUD_USER }"
-        key  = _cache_key()
-        url  = _remote_file_url( LOCAL_GLIBC )
-        # WebDAV does not create intermediate collections, so MKCOL each level
-        # (MKCOL on an existing collection just 405s, which we ignore).
-        for part in ( BASE_REMOTE_PATH,
-                      f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }",
-                      f"{ BASE_REMOTE_PATH }/{ PLATFORM_TAG }/{ key }" ):
-            _curl( "-X", "MKCOL", f"{ base }/{ part }" )
-        _curl( "-X", "DELETE", url )
-        return _curl( "-f", "-T", archive, url ).returncode == 0
+        return _backend().put( archive, _remote_file_path( LOCAL_GLIBC ) )
 
 
 def ensure_dep( build_fn, forceredo=None ):
@@ -497,10 +696,10 @@ def ensure_dep( build_fn, forceredo=None ):
 
     # 1. Prebuilt archive on the remote (skipped on a forced redo so we rebuild
     #    and refresh the remote instead of pulling a stale copy).
-    remote_url = _remote_find_archive() if USE_REMOTE_CACHE and not force_redo else None
-    if remote_url:
-        print( f"  [GET]  Found { name } on remote ({ remote_url.rsplit( '/', 1 )[ -1 ] }), downloading..." )
-        if _remote_download_and_extract( remote_url ) and install_dir_looks_ok():
+    remote_path = _remote_find_archive() if USE_REMOTE_CACHE and not force_redo else None
+    if remote_path:
+        print( f"  [GET]  Found { name } on remote ({ remote_path.rsplit( '/', 1 )[ -1 ] }), downloading..." )
+        if _remote_download_and_extract( remote_path ) and install_dir_looks_ok():
             print( f"  [OK] { name } fetched from remote" )
             return
         print( "  [WARN]  Remote copy missing/incomplete, building locally." )
@@ -510,7 +709,7 @@ def ensure_dep( build_fn, forceredo=None ):
     if not install_dir_looks_ok():
         print( f"  [WARN]  { name }: build finished but no ok-marker was created" )
         return
-    if USE_REMOTE_CACHE:
+    if USE_REMOTE_CACHE and not REMOTE_CACHE_READ_ONLY:
         print( f"  [PUT]  Uploading { name } to remote..." )
         if _remote_upload():
             print( f"  [OK] { name } uploaded" )

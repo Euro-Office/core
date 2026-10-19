@@ -7,18 +7,37 @@ Server core components which are a part of [Document Server][1] and [Desktop Edi
   [1]: https://github.com/Euro-Office/DocumentServer
   [2]: https://github.com/Euro-Office/DesktopEditors
 
-## Build third party dependencies
+## Remote cache for nc-build.py dependencies
 
-To build third-party dependencies you can use our build script at Common/3dParty/build_dependencies.sh. Currently it only supports a Nextcloud remote but feel free to add support for others as well. You have to add a NEXTCLOUD_USER, NEXTCLOUD_PASS, NEXTCLOUD_REMOTE and BASE_REMOTE_PATH. Then run 
-```sh
-./build_dependencies.sh
-```
+The `nc-build.py` scripts in `Common/3dParty` can share built dependencies through a remote cache (see `ensure_dep` in `Common/3dParty/build_3rdparty_common.py`). If no cache is configured, everything is built locally. The cache is configured through environment variables:
 
-to build all dependencies. This takes very long (~5 hours or more). Once finished, the binary files are in `PKG_NAME/VERSION/TARGET_TRIPLET/PKG_NAME_binary.tar.bz2` of your specified remote. Once finished you can build the project with your pre-compiled binaries by specifying 
-```sh
--DVCPKG_BINARY_REMOTE="https://my-remote.corp/repository/vcpkg/"
-```
-in the cmake command of the core or desktop build.
+| Variable | Description |
+| --- | --- |
+| `REMOTE_CACHE_TYPE` | `nextcloud`, `s3` or `none`. Defaults to `s3` if `S3_BUCKET` is set, otherwise `nextcloud`. |
+| `BASE_REMOTE_PATH` | Folder / key prefix on the remote. Default `3DPARTY_DEPS_1`. |
+| `REMOTE_CACHE_READ_ONLY` | Set to `1` to only download from the cache, never upload. |
+
+Nextcloud (WebDAV, needs `curl`):
+
+| Variable | Description |
+| --- | --- |
+| `NEXTCLOUD_REMOTE` | WebDAV root. Default `https://cloud.nextcloud.com/remote.php/dav/files`. |
+| `NEXTCLOUD_USER` | Appended to the remote as `<NEXTCLOUD_REMOTE>/<NEXTCLOUD_USER>`. Leave empty if `NEXTCLOUD_REMOTE` already points at the cache root, e.g. a public share `https://host/public.php/dav/files/<share-token>`. |
+| `NEXTCLOUD_PASS` | Password or app token. Authentication is only used if user and password are set. |
+
+The Nextcloud cache is enabled when `NEXTCLOUD_USER` and `NEXTCLOUD_PASS` are set, or when `NEXTCLOUD_REMOTE` is set explicitly (anonymous access).
+
+S3 (AWS or any S3 compatible store):
+
+| Variable | Description |
+| --- | --- |
+| `S3_BUCKET` | Bucket name. Enables the S3 cache. |
+| `S3_ENDPOINT` | e.g. `https://minio.example.com`. Default `https://s3.<S3_REGION>.amazonaws.com`. |
+| `S3_REGION` | Signing region. Default `us-east-1`. |
+| `S3_ADDRESSING_STYLE` | `path` (default) or `virtual`. |
+| `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_SESSION_TOKEN` | Credentials. Fall back to `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`. Without credentials, requests are sent unsigned (public bucket). |
+
+Anonymous remotes are usually read-only. A failed upload only prints a warning, but you can set `REMOTE_CACHE_READ_ONLY=1` to skip the upload step entirely.
 
 ## Build for Android
 
