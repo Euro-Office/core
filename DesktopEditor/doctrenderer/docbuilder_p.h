@@ -445,6 +445,9 @@ public:
 
 namespace NSDoctRenderer
 {
+	// In-process x2t conversion (CDocBuilder::SetX2tConverter), used instead of the x2t executable
+	inline int (*g_pX2tConverter)(const wchar_t* paramsPath) = nullptr;
+
 	class CDocBuilder_Private : public CDoctRendererConfig
 	{
 	public:
@@ -762,6 +765,13 @@ namespace NSDoctRenderer
 			std::wstring sTempFileForParams = sFolder + L"/params_from.xml";
 			NSFile::CFileBinary::SaveToFile(sTempFileForParams, sXmlConvert, true);
 
+			if (g_pX2tConverter)
+			{
+				nReturnCode = g_pX2tConverter(sTempFileForParams.c_str());
+			}
+			else
+			{
+
 #ifdef WIN32
 			std::wstring sApp = L"x2t32 ";
 
@@ -864,6 +874,7 @@ namespace NSDoctRenderer
 				break;
 			}
 #endif
+			}
 
 			NSFile::CFileBinary::Remove(sTempFileForParams);
 
@@ -1097,6 +1108,13 @@ namespace NSDoctRenderer
 			std::wstring sTempFileForParams = m_sFileDir + L"/params_to.xml";
 			NSFile::CFileBinary::SaveToFile(sTempFileForParams, sXmlConvert, true);
 
+			if (g_pX2tConverter)
+			{
+				nReturnCode = g_pX2tConverter(sTempFileForParams.c_str());
+			}
+			else
+			{
+
 #ifdef WIN32
 			std::wstring sApp = L"x2t32 ";
 
@@ -1199,6 +1217,7 @@ namespace NSDoctRenderer
 				break;
 			}
 #endif
+			}
 
 			// html correct (TODO: move to x2t)
 			if (0 == nReturnCode && type == AVS_OFFICESTUDIO_FILE_DOCUMENT_HTML_IN_CONTAINER)
