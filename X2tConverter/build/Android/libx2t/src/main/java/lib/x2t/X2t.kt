@@ -269,7 +269,8 @@ class X2t private constructor() {
             inputParams.key = UUID.randomUUID().toString()
             with(inputParams)
             {
-                setIcuDataPath(icu)
+                // Only needed when the ICU data is a separate .dat file
+                icu?.let { setIcuDataPath(it) }
                 setFonts(arrayOf(fontsJs), fontsDir)
                 createXmlFileTransform(xml, key, convertType, from, to, temp, fontsDir, themes, password,
                     delimiterCode.equals(
