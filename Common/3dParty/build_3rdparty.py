@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 # import os
+import os
 import sys
 import subprocess
 import shutil
@@ -30,6 +31,8 @@ subfolders = [
     'qt'
 ]
 
+known_targets = [ 'android-arm64', 'android-x64' ]
+
 force_redo_subfolders = []
 only_subfolders = []
 except_subfolders = []
@@ -50,6 +53,8 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
         --only=       : Build only the specified comma-separated subfolders (skip all others).
         --except=     : Build everything except the specified comma-separated subfolders.
                         Note: --only= and --except= are mutually exclusive.
+        --target=     : Cross-compile for another platform: { ', '.join( known_targets ) }.
+                        Android needs ANDROID_NDK_ROOT. Default: build for the host.
         --help | -h   : Prints this help.
 
     Examples:
@@ -64,6 +69,9 @@ Usage: { script_path.name } [options] work_dir_abs install_dir_abs
 
         { script_path.name } --except=v8,icu $PWD/work $PWD/install
         Build and install everything except v8 and icu.
+
+        { script_path.name } --target=android-arm64 --only=boost,icu $PWD/work $PWD/install
+        Cross-compile boost and icu for Android arm64.
         """
     )
 
@@ -98,6 +106,15 @@ for i in range( 1, argc ):
                 print( f"Unknown subfolder: { ex_subfolder }" )
                 print_help()
                 sys.exit( 1 )
+
+    elif sys.argv[ i ].startswith( "--target=" ):
+        target = sys.argv[ i ][ len( "--target=" ): ]
+        if target not in known_targets:
+            print( f"Unknown target: { target }" )
+            print_help()
+            sys.exit( 1 )
+        # Read by build_3rdparty_common in every dep script
+        os.environ[ "EO_3RDPARTY_TARGET" ] = target
 
     elif sys.argv[ i ] == "--list":
         for subfolder in subfolders:
