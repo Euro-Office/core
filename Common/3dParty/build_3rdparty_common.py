@@ -73,6 +73,16 @@ def abort_op( message : str, keep_work : bool = False, error_is_fatal : bool = T
                 pass
         sys.exit( 1 )
 
+# Cross-compilation target, set by build_3rdparty.py --target=<os>-<arch>
+# (e.g. "android-arm64"). Empty means: build for the host.
+CROSS_TARGET = os.environ.get( "EO_3RDPARTY_TARGET", "" ).strip().lower()
+ANDROID_TARGET_ARCHES = ( "arm64", "x64" )
+
+def is_android() -> bool:
+    """True when cross-compiling for Android. The is_linux()/is_windows()
+    checks keep describing the HOST, so dep scripts test is_android() first."""
+    return CROSS_TARGET.startswith( "android-" )
+
 def is_linux() -> bool:
     return sys.platform.startswith("linux")
 
@@ -81,6 +91,11 @@ def is_windows() -> bool:
 
 def target_arch() -> str:
     """Canonical arch we are building for: "x64", "arm64" or "x86"."""
+    if is_android():
+        arch = CROSS_TARGET[ len( "android-" ): ]
+        if arch not in ANDROID_TARGET_ARCHES:
+            abort_op( f"Unsupported Android architecture: {arch!r}" )
+        return arch
     if is_windows():
         raw = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
                 or platform.machine().lower() )
@@ -100,6 +115,48 @@ def is_arm64() -> bool:
 
 def is_apple_silicon() -> bool:
     return sys.platform == "darwin" and platform.machine() == "arm64"
+
+# ---------------------------------------------------------------------------
+# Android NDK
+#
+# The NDK is located through ANDROID_NDK_ROOT (or ANDROID_NDK_HOME). The API
+# level defaults to the app's minSdk and can be overridden with
+# EO_ANDROID_API_LEVEL.
+# ---------------------------------------------------------------------------
+
+ANDROID_API_LEVEL = os.environ.get( "EO_ANDROID_API_LEVEL", "26" )
+
+def android_ndk_root() -> Path:
+    ndk = os.environ.get( "ANDROID_NDK_ROOT" ) or os.environ.get( "ANDROID_NDK_HOME" )
+    if not ndk or not Path( ndk ).is_dir():
+        abort_op( "Android NDK not found: set ANDROID_NDK_ROOT (or ANDROID_NDK_HOME)" )
+    return Path( ndk )
+
+def android_abi() -> str:
+    """Android ABI name for the target arch, e.g. "arm64-v8a"."""
+    return { "arm64": "arm64-v8a", "x64": "x86_64" }[ target_arch() ]
+
+def android_triple() -> str:
+    """Clang/autotools target triple, e.g. "aarch64-linux-android"."""
+    return { "arm64": "aarch64-linux-android", "x64": "x86_64-linux-android" }[ target_arch() ]
+
+def android_toolchain_bin() -> Path:
+    host_tag = "darwin-x86_64" if sys.platform == "darwin" else "linux-x86_64"
+    return android_ndk_root() / "toolchains" / "llvm" / "prebuilt" / host_tag / "bin"
+
+def android_toolchain_env() -> dict[ str, str ]:
+    """Compiler environment for autotools/make based cross builds."""
+    bin_dir = android_toolchain_bin()
+    prefix = f"{ android_triple() }{ ANDROID_API_LEVEL }"
+    return {
+        "CC": str( bin_dir / f"{ prefix }-clang" ),
+        "CXX": str( bin_dir / f"{ prefix }-clang++" ),
+        "AR": str( bin_dir / "llvm-ar" ),
+        "RANLIB": str( bin_dir / "llvm-ranlib" ),
+        "STRIP": str( bin_dir / "llvm-strip" ),
+        "NM": str( bin_dir / "llvm-nm" ),
+        "LD": str( bin_dir / "ld.lld" ),
+    }
 
 def _marker_ok( marker_path : Path, label : str ) -> bool:
     if force_redo or not marker_path.exists():
@@ -273,6 +330,13 @@ NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
 BASE_REMOTE_PATH = "3DPARTY_DEPS_1"
 USE_REMOTE_CACHE = bool( NEXTCLOUD_USER and NEXTCLOUD_PASS )
 
+def _cache_tag_platform() -> str:
+    # Cross builds get their own folder, so they never reuse or overwrite host
+    # archives, e.g. "android-arm64".
+    if is_android():
+        return CROSS_TARGET
+    return f"{ sys.platform }-{ _cache_tag_arch() }"
+
 def _cache_tag_arch() -> str:
     # Arch spelling used in the remote-cache path. Must stay stable, or archives
     # already uploaded become unreachable. On Windows it mirrors what
@@ -283,7 +347,7 @@ def _cache_tag_arch() -> str:
     return platform.machine()
 
 # e.g. "linux-x86_64", "win32-AMD64", "win32-ARM64"
-PLATFORM_TAG = f"{ sys.platform }-{ _cache_tag_arch() }"
+PLATFORM_TAG = _cache_tag_platform()
 
 def _force_redo_flag():
     # init_for_dep() stores the forceredo flag in a module global; accept a few
@@ -319,7 +383,8 @@ def _cache_key():
 # ---------------------------------------------------------------------------
 
 def _local_glibc():
-    if not sys.platform.startswith( "linux" ):
+    # Android binaries link against bionic, not the host glibc.
+    if not sys.platform.startswith( "linux" ) or is_android():
         return None
     name, version = platform.libc_ver()
     if name != "glibc" or not version:
