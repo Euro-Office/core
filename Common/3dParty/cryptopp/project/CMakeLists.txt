@@ -412,4 +412,11 @@ if(LINUX)
     )
 endif()
 
+if(ANDROID)
+    # cpu.cpp queries CPU features through the NDK's cpufeatures helper
+    set(ANDROID_CPUFEATURES_DIR "${ANDROID_NDK}/sources/android/cpufeatures")
+    target_sources(CryptoPPLib PRIVATE "${ANDROID_CPUFEATURES_DIR}/cpu-features.c")
+    target_include_directories(CryptoPPLib PRIVATE "${ANDROID_CPUFEATURES_DIR}")
+endif()
+
 declare_victory( CryptoPPLib )
