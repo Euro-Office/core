@@ -772,7 +772,12 @@ def build_and_install():
     # Clean gclient state
     files_to_remove = [ ".gclient", ".gclient_entries", "_bad_scm", "chromium.googlesource.com" ]
     for file in files_to_remove:
-        Path( v8_root_path / file ).unlink( missing_ok = True )
+        path = Path( v8_root_path / file )
+        # _bad_scm is a directory, left behind by an interrupted gclient sync
+        if path.is_dir():
+            shutil.rmtree( path )
+        else:
+            path.unlink( missing_ok = True )
 
     # Clean v8 state
     nc.run_command( [ "git", "reset", "--hard" ], "Git reset", v8_src_path )
