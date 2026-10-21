@@ -470,8 +470,7 @@ cxx="clang++"
         return gn_args
 
     elif nc.is_apple_silicon():
-        clang_path = Path(shutil.which("clang"))
-        clang_dir = clang_path.parent.parent
+        clang_dir = _find_clang_base_dir()
 
         gn_args=f"""
 target_os="mac"
