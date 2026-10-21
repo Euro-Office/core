@@ -42,6 +42,10 @@
 
 HRESULT convert_single(std::wstring srcFileName);
 
+// Result of the TestEnv conversion run by ODT2DOCX_ConversionEnvironment::
+// SetUp() before any test executes.
+HRESULT GetTestEnvConvertResult();
+
 #define CH_DIR(x) FILE_SEPARATOR_STR + _T(x)
 
 //boost::shared_ptr<cpdoccore::odf_reader::odf_document> ReadOdfDocument(const std::wstring& from, const std::wstring& temp, const std::wstring& tempUnpackedOdf);

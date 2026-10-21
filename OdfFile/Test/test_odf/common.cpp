@@ -232,8 +232,14 @@
 #include "Common/OfficeFileFormatChecker.h"
 #include "OfficeUtils/src/OfficeUtils.h"
 #include "DesktopEditor/common/Directory.h"
+#include "DesktopEditor/common/File.h"
 #include "OdfFile/Reader/Converter/ConvertOO2OOX.h"
 #include "OdfFile/Common/logging.h"
+
+// Packages written by convert_single() during this run, so the global
+// environment TearDown() can remove them: the suite must not leave
+// generated files behind in the build directory.
+static std::vector<std::wstring> g_arTestEnvOutputs;
 
 HRESULT convert_single(std::wstring srcFileName)
 {
@@ -259,7 +265,14 @@ HRESULT convert_single(std::wstring srcFileName)
 		default:
 			return -1;
 	}
+	g_arTestEnvOutputs.push_back(dstPath);
+
 	//---------------------------------------------------------------------------------------------------
+	// A package left behind by an earlier run would satisfy the structural
+	// checks of the suite even if THIS conversion fails, so remove the
+	// destination first: the test must fail when the conversion fails.
+	NSFile::CFileBinary::Remove(dstPath);
+
 	COfficeUtils oCOfficeUtils(NULL);
 
 	std::wstring outputDir = NSDirectory::GetFolderPath(dstPath);
@@ -285,7 +298,16 @@ HRESULT convert_single(std::wstring srcFileName)
 	}
 	_CP_LOG << L"[info] " << srcFileName << std::endl;
 
-	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, L"C:\\Windows\\Fonts", srcTempPath2, L"");
+	// The hardcoded Windows font directory never exists on Linux/macOS and is
+	// silently ignored by the converter there. Keep the Windows path and pass
+	// an empty directory elsewhere, matching the historical animation
+	// environments that used set_font_directory(L"").
+#if defined(_WIN32) || defined(_WIN64)
+	const std::wstring sFontsDirectory = L"C:\\Windows\\Fonts";
+#else
+	const std::wstring sFontsDirectory = L"";
+#endif
+	nResult = ConvertODF2OOXml(srcTempPath, dstTempPath, sFontsDirectory, srcTempPath2, L"");
 
 	if (srcTempPath != srcFileName)
 	{
@@ -322,12 +344,30 @@ ODT2DOCX_ConversionEnvironment::ODT2DOCX_ConversionEnvironment(const std::wstrin
 {
 }
 
+// Result of the TestEnv conversion performed by
+// ODT2DOCX_ConversionEnvironment::SetUp() (the global environment runs
+// before any test), exposed so tests can assert on it instead of only
+// reading the log.
+// (-1: the same failure idiom convert_single() itself returns; E_FAIL
+// is not declared in this translation unit, S_OK is available.)
+static HRESULT g_nTestEnvConvertResult = -1;
+
+HRESULT GetTestEnvConvertResult()
+{
+	return g_nTestEnvConvertResult;
+}
+
 void ODT2DOCX_ConversionEnvironment::SetUp()
 {
-	convert_single(mFilename);
+	g_nTestEnvConvertResult = convert_single(mFilename);
 }
 
 void ODT2DOCX_ConversionEnvironment::TearDown()
 {
-
+	// Clean up after the suite: remove every package convert_single()
+	// wrote during the run (including direct convert_single() calls from
+	// tests).
+	for (size_t i = 0; i < g_arTestEnvOutputs.size(); ++i)
+		NSFile::CFileBinary::Remove(g_arTestEnvOutputs[i]);
+	g_arTestEnvOutputs.clear();
 }
