@@ -69,7 +69,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm"
+            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -110,7 +110,7 @@ else()
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm,zlib-ng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
