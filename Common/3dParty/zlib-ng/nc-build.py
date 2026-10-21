@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "1"
+    version = "2"
 )
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
@@ -77,6 +77,7 @@ def build_and_install():
             *cmake_generator_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
+            "-DCMAKE_INSTALL_LIBDIR=lib64",
             "-DZLIB_COMPAT=ON",
             "-DBUILD_SHARED_LIBS=ON",
             "-DBUILD_TESTING=OFF",
@@ -112,6 +113,7 @@ def build_and_install():
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             f"-DCMAKE_PREFIX_PATH={nc.install_dir}",
+            "-DCMAKE_INSTALL_LIBDIR=lib64",
             "-DMZ_ZLIB=ON",
             "-DMZ_ZLIB_FLAVOR=zlib",
             "-DMZ_BZIP2=OFF",
