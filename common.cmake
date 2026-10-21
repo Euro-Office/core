@@ -585,6 +585,34 @@ function(copy_icu_libs artifact)
     endif()
 endfunction()
 
+function(copy_zlib_ng_libs artifact)
+    if( MSVC )
+        file(GLOB ZLIBNG_DLLS
+            "${ZLIBNG_INSTALL_DIR_ABS}/bin/zlib*.dll"
+            "${ZLIBNG_INSTALL_DIR_ABS}/bin/minizip*.dll"
+        )
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${ZLIBNG_DLLS}
+                "${EO_CORE_OUTPUT_DIR}"
+            COMMENT "Copying zlib-ng DLLs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    elseif( APPLE )
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P \"${ZLIBNG_LIBDIR_ABS}\"/*.dylib* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying zlib-ng libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    else()
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P \"${ZLIBNG_LIBDIR_ABS}\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying zlib-ng libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    endif()
+endfunction()
+
 function(declare_victory build_target)
     add_custom_command(TARGET ${build_target} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E echo ""

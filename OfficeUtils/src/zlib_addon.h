@@ -30,5 +30,13 @@
 #define ZLIB_ADDON_FLAG_WINDOWS_SHARED_WRITE    2
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void zlip_set_addition_flag(int flag);
 int zlip_get_addition_flag();
+
+#ifdef __cplusplus
+}
+#endif

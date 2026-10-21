@@ -1,6 +1,6 @@
 #include <string.h>
 
-#include "../../zlib.h"
+#include <zlib.h>
 #include "ioapi.h"
 
 #ifdef __cplusplus

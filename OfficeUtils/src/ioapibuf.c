@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "ioapibuf.h"
 
 static voidpf ZCALLBACK open_buffer_func  OF((voidpf opaque, const char* filename, int mode));
