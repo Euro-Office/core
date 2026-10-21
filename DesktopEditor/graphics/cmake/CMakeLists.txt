@@ -1059,8 +1059,13 @@ target_link_libraries(graphics PUBLIC
     Boost::date_time    
     kernel
     UnicodeConverter
-    z
 )
+
+if( MSVC )
+    target_link_libraries(graphics PUBLIC ${ZLIBNG_LIB_NAME})
+else()
+    target_link_libraries(graphics PUBLIC z)
+endif()
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC
