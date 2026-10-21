@@ -16,30 +16,16 @@ set(CORE_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/../..)
 
 include(${CORE_ROOT}/common.cmake)
 
+set(ZLIBNG_WASM_DIR    "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng-wasm")
+set(ZLIBNG_WASM_INCDIR "${ZLIBNG_WASM_DIR}/include")
+set(ZLIBNG_WASM_LIBDIR "${ZLIBNG_WASM_DIR}/lib")
+
 set(SRC
-    # ---- minizip ----
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/unzip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapi.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/zip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapibuf.c
-
-
-    # ---- zlib core ----
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/zutil.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/adler32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/crc32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inftrees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inffast.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/deflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/trees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/uncompr.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/compress.c
-
     # ---- project glue ----
     ${CORE_ROOT}/OfficeUtils/src/ZipBuffer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/base.cpp
     ${CORE_ROOT}/OfficeUtils/src/zlib_addon.c
+    ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
 
     # ---- raster ----
     ${CORE_ROOT}/DesktopEditor/graphics/Image.cpp
@@ -420,7 +406,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 # Include directories
 # -------------------------------------------------
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11
+    ${ZLIBNG_WASM_INCDIR}
+    ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
     ${CORE_ROOT}/DesktopEditor/cximage/jasper/include
     ${CORE_ROOT}/DesktopEditor/cximage/jpeg
@@ -450,7 +437,18 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     _lseek=lseek
     _getcwd=getcwd
     NO_CONSOLE_IO
-    BUILD_ZLIB_AS_SOURCES
+)
+
+# -------------------------------------------------
+# Static libs
+# -------------------------------------------------
+target_link_directories(${PROJECT_NAME} PRIVATE
+    ${ZLIBNG_WASM_LIBDIR}
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    minizip
+    z
 )
 
 # -------------------------------------------------

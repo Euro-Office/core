@@ -13,6 +13,10 @@ set(DESKTOP_ROOT ${CORE_ROOT}/DesktopEditor)
 
 include(${CORE_ROOT}/common.cmake)
 
+set(ZLIBNG_WASM_DIR    "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng-wasm")
+set(ZLIBNG_WASM_INCDIR "${ZLIBNG_WASM_DIR}/include")
+set(ZLIBNG_WASM_LIBDIR "${ZLIBNG_WASM_DIR}/lib")
+
 # -------------------------------------------------
 # Sources (from compile_files_array)
 # Pattern: <folder>/<file>
@@ -149,26 +153,11 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-wasm-shape.cc
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/graph/gsubgpos-context.cc
 
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/adler32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/crc32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/deflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/infback.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inffast.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inftrees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/trees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/zutil.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/compress.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/cpp/text.cpp
 
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib/wasm_jmp.cpp
 
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/unzip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapi.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/zip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapibuf.c
-
+    ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
     ${CORE_ROOT}/OfficeUtils/js/../src/ZipBuffer.cpp
     ${CORE_ROOT}/OfficeUtils/js/wasm/src/base.cpp
     ${CORE_ROOT}/OfficeUtils/js/../src/zlib_addon.c
@@ -371,11 +360,29 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/hyphen
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${CORE_ROOT}/OfficeUtils/src
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11
+    ${ZLIBNG_WASM_INCDIR}
+    ${ZLIBNG_WASM_INCDIR}/minizip
     ${DESKTOP_ROOT}/cximage/jasper/include
     ${DESKTOP_ROOT}/cximage/jpeg
     ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/agg-2.4/include
+)
+
+# -------------------------------------------------
+# Link directories
+# -------------------------------------------------
+
+target_link_directories(${PROJECT_NAME} PRIVATE
+    ${ZLIBNG_WASM_LIBDIR}
+)
+
+# -------------------------------------------------
+# Static libs
+# -------------------------------------------------
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    minizip # minizip-ng
+    z       # libz-ng
 )
 
 # -------------------------------------------------
@@ -392,7 +399,7 @@ HAVE_UNISTD_H HAVE_FCNTL_H _ARM_ALIGN_
 METAFILE_SUPPORT_WMF_EMF
 CXIMAGE_DISABLE_SUPPORT_MNG CXIMAGE_DISABLE_SUPPORT_ADDITIONS
 _tcsnicmp=strncmp _lseek=lseek _getcwd=getcwd
-NO_CONSOLE_IO BUILD_ZLIB_AS_SOURCES IMAGE_CHECKER_DISABLE_XML
+NO_CONSOLE_IO IMAGE_CHECKER_DISABLE_XML
 FT_CONFIG_OPTION_USE_BROTLI
 BUILDING_WASM_MODULE
 )

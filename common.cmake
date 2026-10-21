@@ -69,7 +69,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm"
+            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -110,7 +110,7 @@ else()
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm,zlib-ng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -234,6 +234,28 @@ else()
     else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+    endif()
+
+    # Setup zlib-ng
+    set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")
+    get_filename_component(ZLIBNG_INSTALL_DIR_ABS "${ZLIBNG_INSTALL_DIR}" ABSOLUTE)
+    set(ZLIBNG_INCLUDEDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/include")
+    set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib")
+    if( MSVC )
+        # Import libraries (zlib1.dll / minizip.dll): zlib.lib, minizip.lib
+        set(ZLIBNG_LIB_NAME "zlib")
+    else()
+        # IMPORTED targets with full paths so CMake propagates ZLIBNG_LIBDIR_ABS
+        # into -rpath-link for every transitive consumer (test executables etc.).
+        # OfficeUtils still links via target names "minizip" and "z" — unchanged.
+        add_library(minizip SHARED IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libminizip${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
+        add_library(z SHARED IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libz${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
     endif()
 
 endif()
@@ -569,6 +591,34 @@ function(copy_icu_libs artifact)
             COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
             COMMAND /bin/sh -c "cp -P \"${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu/lib\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
             COMMENT "Copying ICU libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    endif()
+endfunction()
+
+function(copy_zlib_ng_libs artifact)
+    if( MSVC )
+        file(GLOB ZLIBNG_DLLS
+            "${ZLIBNG_INSTALL_DIR_ABS}/bin/zlib*.dll"
+            "${ZLIBNG_INSTALL_DIR_ABS}/bin/minizip*.dll"
+        )
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                ${ZLIBNG_DLLS}
+                "${EO_CORE_OUTPUT_DIR}"
+            COMMENT "Copying zlib-ng DLLs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    elseif( APPLE )
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P \"${ZLIBNG_LIBDIR_ABS}\"/*.dylib* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying zlib-ng libs to ${EO_CORE_OUTPUT_DIR}"
+        )
+    else()
+        add_custom_command(TARGET ${artifact} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${EO_CORE_OUTPUT_DIR}"
+            COMMAND /bin/sh -c "cp -P \"${ZLIBNG_LIBDIR_ABS}\"/*.so* \"${EO_CORE_OUTPUT_DIR}/\""
+            COMMENT "Copying zlib-ng libs to ${EO_CORE_OUTPUT_DIR}"
         )
     endif()
 endfunction()

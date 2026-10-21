@@ -9,57 +9,42 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtils.cpp
         ${OFFICE_UTILS_SOURCES_DIR}/ZipBuffer.cpp
         ${OFFICE_UTILS_SOURCES_DIR}/ZipUtilsCP.cpp
+        ${OFFICE_UTILS_SOURCES_DIR}/zlib_addon.c
+        ${OFFICE_UTILS_SOURCES_DIR}/ioapibuf.c
         
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtils.h
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtilsCommon.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipBuffer.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipFolder.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipUtilsCP.h
-
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib_addon.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/adler32.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/compress.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapi.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapibuf.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/mztools.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/unzip.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/zip.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/crc32.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/deflate.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/gzclose.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/gzlib.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/gzread.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/gzwrite.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/infback.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/inffast.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/inflate.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/inftrees.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/trees.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/uncompr.c
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/zutil.c
-
         ${OFFICE_UTILS_SOURCES_DIR}/zlib_addon.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/crypt.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapi.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/ioapibuf.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/mztools.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/unzip.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/zip.h
+        ${OFFICE_UTILS_SOURCES_DIR}/ioapibuf.h
     )
 
     target_sources( ${TARGET} PRIVATE ${OFFICE_UTILS_SOURCES} )
 
-    if (WIN32)
-        target_sources( ${TARGET} PRIVATE
-            ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip/iowin32.c
+    target_include_directories( ${TARGET} PRIVATE
+        ${ZLIBNG_INCLUDEDIR_ABS}
+        ${ZLIBNG_INCLUDEDIR_ABS}/minizip # exposes unzip.h, zip.h, ioapi.h directly
+        ${OFFICE_UTILS_SOURCES_DIR}
+    )
+
+    target_link_directories( ${TARGET} PUBLIC
+        ${ZLIBNG_LIBDIR_ABS}
+    )
+
+    if( MSVC )
+        target_link_libraries( ${TARGET} PUBLIC
+            minizip                 # minizip.lib (minizip-ng with MZ_COMPAT=ON)
+            ${ZLIBNG_LIB_NAME}      # zlib.lib (zlib-ng, zlib1.dll)
+        )
+    else()
+        target_link_libraries( ${TARGET} PUBLIC
+            minizip # libminizip.so (minizip-ng with MZ_COMPAT=ON)
+            z       # libz.so (zlib-ng)
         )
     endif()
 
-    target_include_directories( ${TARGET} PRIVATE
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11/contrib/minizip
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib-1.2.11
-        ${OFFICE_UTILS_SOURCES_DIR}
-    )
 
     if( NOT MSVC )
         target_compile_options( ${TARGET} PRIVATE "SHELL:-include unistd.h")

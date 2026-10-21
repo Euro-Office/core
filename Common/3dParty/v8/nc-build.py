@@ -386,13 +386,24 @@ def get_cpu() -> str:
         nc.abort_op( f"Unsupported architecture for V8: {arch!r}" )
     return arch
 
+def _find_clang_base_dir() -> Path:
+    # Search PATH for the first real clang++ installation, skipping wrappers
+    # like ccache (/usr/lib64/ccache/clang++ resolves to /usr/bin/ccache).
+    # We resolve symlinks and require the actual binary name to contain "clang".
+    for dir_str in os.environ.get("PATH", "").split(os.pathsep):
+        candidate = Path(dir_str) / "clang++"
+        if not candidate.exists():
+            continue
+        real = candidate.resolve()
+        if "clang" in real.name.lower():
+            return Path(dir_str).parent  # e.g. /usr/bin -> /usr
+    nc.abort_op("No real clang++ installation found in PATH (checked for non-wrapper binary)")
+
 def get_gn_args_file_content() -> str:
     targetarch = get_cpu()
 
     if nc.is_linux():
-        clang_path = Path(shutil.which("clang"))
-        clang_dir = clang_path.parent.parent
-        use_bundled_clang = os.environ.get("V8_USE_BUNDLED_CLANG", "false").lower() == "true"
+        clang_dir = _find_clang_base_dir()
 
         gn_args=f"""
 target_os="linux"
@@ -450,8 +461,7 @@ use_gold=false
 use_lld=true
 """
 
-        if targetarch == "arm64" or ( not use_bundled_clang ):
-            gn_args += f"""
+        gn_args += f"""
 clang_base_path="{clang_dir}"
 cc="clang"
 cxx="clang++"
@@ -460,8 +470,7 @@ cxx="clang++"
         return gn_args
 
     elif nc.is_apple_silicon():
-        clang_path = Path(shutil.which("clang"))
-        clang_dir = clang_path.parent.parent
+        clang_dir = _find_clang_base_dir()
 
         gn_args=f"""
 target_os="mac"
@@ -845,10 +854,22 @@ solutions = [
         fix_oversized_enum_bitfields()
         if nc.is_apple_silicon():
             disable_zlib_mac_fdopen_macro()
+
         gn_bin_path = build_gn()
 
         targetarch = get_cpu()
         output_path = v8_src_path / "out.gn"/ f"{targetarch}.release"
+
+        if nc.is_linux() and targetarch == "arm64":
+            # On arm64 cross-compilation the system clang typically lacks the
+            # required target support; use the bundled clang that gclient sync
+            # downloads via the V8 DEPS hooks instead.
+            # GN (built above) always uses the system clang so it isn't
+            # affected by this PATH change.
+            bundled_clang_bin = v8_src_path / "third_party" / "llvm-build" / "Release+Asserts" / "bin"
+            if bundled_clang_bin.is_dir() and ( bundled_clang_bin / "clang" ).exists():
+                os.environ["PATH"] = str( bundled_clang_bin ) + os.pathsep + os.environ.get( "PATH", "" )
+                print( f"Using bundled clang from {bundled_clang_bin}" )
 
         # ensure out dir is clean
         try:
