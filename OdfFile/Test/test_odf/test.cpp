@@ -46,7 +46,10 @@ public:
 	}
 };
 
-
+TEST(ODP2PPTX, EmptyCustomShapeFormula)
+{
+	EXPECT_EQ(S_OK, convert_single(L"ExampleFiles/empty_custom_shape_formula.odp"));
+}
 
 int main(int argc, char* argv[])
 {

@@ -913,7 +913,7 @@ namespace OdfCustomShape
 	}
 	std::wstring SMCustomShapeConversion::GetStringXml()
 	{
-		return m_pXmlWriter->GetXmlString();
+		return m_pXmlWriter ? m_pXmlWriter->GetXmlString() : L"";
 	}
 	void SMCustomShapeConversion::WritingFormulaXml(XmlUtils::CXmlWriter* pXmlWriter,const std::wstring& wsNameFormula,const std::wstring& wsFormula)
 	{

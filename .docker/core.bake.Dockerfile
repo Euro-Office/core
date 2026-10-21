@@ -7,7 +7,7 @@
 #
 #               amd64           arm64
 #   server      Rocky Linux 9   Rocky Linux 9
-#   desktop     Ubuntu 22.04    Ubuntu 24.04
+#   desktop     Rocky Linux 9   Ubuntu 24.04
 #
 # Server: the deploy target is Rocky 9 (glibc 2.34). The toolchain emits a
 #   reference to __libc_single_threaded (glibc 2.32), so the build glibc must
@@ -17,7 +17,9 @@
 # Desktop: the prebuilt Qt host tools fetched via aqt need glibc >= 2.38 on
 #   arm64 (Qt builds its arm64 Linux binaries on Ubuntu 24.04), so arm64
 #   desktop must build on 24.04. amd64 Qt binaries only need glibc 2.34, so
-#   amd64 desktop stays on 22.04. Rocky 9 (2.34) cannot run the arm64 Qt tools.
+#   amd64 desktop reuses the Rocky 9 server base: building on 22.04 (2.35) leaks
+#   GLIBC_2.35 symbols (e.g. hypotf) into the binaries and the app then fails
+#   to start on RHEL/Rocky/Alma 9. Rocky 9 (2.34) cannot run the arm64 Qt tools.
 #
 # vcpkg binary cache: plain vcpkg "files" provider. The directory keeps the
 # historical /nuget-cache path because desktop-apps.bake.Dockerfile mounts
@@ -85,12 +87,12 @@ FROM rockylinux/rockylinux:9 AS core-base-server
         && dnf clean all
 
 
-#### DESKTOP BASE (Ubuntu: 22.04 on amd64, 24.04 on arm64) ####
-FROM ubuntu:22.04 AS ubuntu-desktop-amd64
-FROM ubuntu:24.04 AS ubuntu-desktop-arm64
-FROM ubuntu-desktop-${TARGETARCH} AS core-base-desktop
+#### DESKTOP BASE (Rocky Linux 9 on amd64, Ubuntu 24.04 on arm64) ####
+FROM core-base-server AS core-base-desktop-amd64
 
-    # 22.04 ships Python 3.10, 24.04 ships 3.12; both are new enough.
+FROM ubuntu:24.04 AS core-base-desktop-arm64
+
+    # 24.04 ships Python 3.12, which is new enough.
     ENV CORE_PYTHON=/usr/bin/python3
     ENV TZ=Etc/UTC
     ENV DEBIAN_FRONTEND=noninteractive
@@ -128,6 +130,8 @@ FROM ubuntu-desktop-${TARGETARCH} AS core-base-desktop
         update-alternatives --install /usr/bin/llvm-ranlib llvm-ranlib /usr/bin/llvm-ranlib-13 100 && \
         update-alternatives --install /usr/bin/lld lld /usr/bin/lld-13 100
 
+FROM core-base-desktop-${TARGETARCH} AS core-base-desktop
+
 
 #### CORE BASE (shared tail for both products) ####
 FROM core-base-${PRODUCT} AS core-base
@@ -158,8 +162,15 @@ FROM core-base AS core
     # copy sources right before the final build stage
     COPY core /core
 
+    # Optional nextcloud_user/nextcloud_pass secrets enable the prebuilt
+    # third-party remote cache (see Common/3dParty/build_3rdparty_common.py).
+    # Without them, third-party libs are built from source.
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
+        --mount=type=secret,id=nextcloud_user \
+        --mount=type=secret,id=nextcloud_pass \
+        export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user 2>/dev/null)" && \
+        export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass 2>/dev/null)" && \
         mkdir -p ${BUILD_ROOT} && \
         cd /build-cache && \
         cmake -GNinja \
