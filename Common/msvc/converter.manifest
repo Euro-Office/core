@@ -19,6 +19,7 @@
   <file name="IWorkFile.dll"/>
   <file name="kernel.dll"/>
   <file name="kernel_network.dll"/>
+  <file name="minizip.dll"/>
   <file name="OFDFile.dll"/>
   <file name="ooxmlsignature.dll"/>
   <file name="PdfFile.dll"/>
@@ -26,4 +27,5 @@
   <file name="UnicodeConverter.dll"/>
   <file name="x2tlib.dll"/>
   <file name="XpsFile.dll"/>
+  <file name="zlib1.dll"/>
 </assembly>
