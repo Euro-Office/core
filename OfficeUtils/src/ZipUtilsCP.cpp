@@ -118,11 +118,6 @@ namespace ZLibZipUtils
 
 	zipFile zipOpenHelp(const wchar_t* filename)
 	{
-#if defined(_WIN32) || defined (_WIN64)
-		zlib_filefunc64_def ffunc;
-		fill_win32_filefunc64W(&ffunc);
-		zipFile zf = zipOpen2_64(filename, APPEND_STATUS_CREATE, NULL, &ffunc);
-#else
 #ifdef _IOS
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		zipFile zf = filePath.empty() ? NULL : zipOpen(filePath.c_str(), APPEND_STATUS_CREATE);
@@ -133,16 +128,10 @@ namespace ZLibZipUtils
 		zipFile zf = zipOpen( (char*)pUtf8, APPEND_STATUS_CREATE );
 		delete [] pUtf8;
 #endif
-#endif
 		return zf;
 	}
 	unzFile unzOpenHelp(const wchar_t* filename)
 	{
-#if defined(_WIN32) || defined (_WIN64)
-		zlib_filefunc64_def ffunc;
-		fill_win32_filefunc64W(&ffunc);
-		unzFile uf = unzOpen2_64(filename, &ffunc);
-#else
 #ifdef _IOS
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		unzFile uf = filePath.empty() ? NULL : unzOpen(filePath.c_str());
@@ -152,7 +141,6 @@ namespace ZLibZipUtils
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(filename, wcslen(filename), pUtf8, lLen, false);
 		unzFile uf = unzOpen( (char*)pUtf8 );
 		delete [] pUtf8;
-#endif
 #endif
 		return uf;
 	}
