@@ -528,9 +528,9 @@ namespace ZLibZipUtils
 				unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
 
 				if (nFileSize > 0)
-					nFileSize = (std::min)(nFileSize, file_info.uncompressed_size);
+					nFileSize = (std::min)(nFileSize, static_cast<ULONG>(file_info.uncompressed_size));
 				else
-					nFileSize = file_info.uncompressed_size;
+					nFileSize = static_cast<ULONG>(file_info.uncompressed_size);
 
 				(*fileInBytes) = new BYTE[nFileSize];
 				get_file(unzip_file_handle, (*fileInBytes), nFileSize);

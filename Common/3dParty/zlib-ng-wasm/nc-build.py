@@ -97,6 +97,7 @@ def build_and_install():
             "-DMZ_LZMA=OFF",
             "-DMZ_ZSTD=OFF",
             "-DMZ_OPENSSL=OFF",
+            "-DMZ_PPMD=OFF",
             "-DMZ_COMPAT=ON",
             "-DBUILD_SHARED_LIBS=OFF",
         ],
