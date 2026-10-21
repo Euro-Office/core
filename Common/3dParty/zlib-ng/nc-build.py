@@ -2,6 +2,7 @@
 
 import sys
 import os
+import shutil
 from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
@@ -22,6 +23,17 @@ nc.init_for_dep(
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
 minizip_ng_src = nc.work_dir / "minizip-ng"
+
+def cmake_generator_args() -> list[str]:
+    # Windows: NMake Makefiles, like openssl (nmake) - build_3rdparty.py
+    # already requires nmake on PATH, so unlike Ninja it is always there. It
+    # also builds for whatever target arch the active vcvars environment sets
+    # (the default Visual Studio generator would ignore that).
+    return [ "-G", "NMake Makefiles" ] if nc.is_windows() else []
+
+def cmake_build_args( cpu_count : int ) -> list[str]:
+    # NMake has no parallel mode, so don't pass --parallel there.
+    return [] if nc.is_windows() else [ f"--parallel={cpu_count}" ]
 
 def fetch_and_patch():
     nc.create_workdir()
@@ -62,6 +74,7 @@ def build_and_install():
     nc.run_command(
         [
             "cmake", "-S", str(zlib_ng_src), "-B", str(zlib_build_dir),
+            *cmake_generator_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             "-DZLIB_COMPAT=ON",
@@ -72,7 +85,7 @@ def build_and_install():
     )
 
     nc.run_command(
-        [ "cmake", "--build", str(zlib_build_dir), f"--parallel={cpu_count}" ],
+        [ "cmake", "--build", str(zlib_build_dir), *cmake_build_args( cpu_count ) ],
         "Build zlib-ng",
     )
 
@@ -81,9 +94,21 @@ def build_and_install():
         "Install zlib-ng",
     )
 
+    # Windows only:
+    #  - minizip-ng's compat API (zipOpen2_64, unzOpen, ...) is declared with
+    #    an empty ZEXPORT on MSVC, so the DLL would export none of it; export
+    #    everything instead.
+    #  - MZ_FETCH_LIBS defaults to ON on Windows and would clone zlib & co
+    #    from GitHub if they are not found; we want the zlib-ng built above.
+    minizip_windows_args = [
+        "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON",
+        "-DMZ_FETCH_LIBS=OFF",
+    ] if nc.is_windows() else []
+
     nc.run_command(
         [
             "cmake", "-S", str(minizip_ng_src), "-B", str(minizip_build_dir),
+            *cmake_generator_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             f"-DCMAKE_PREFIX_PATH={nc.install_dir}",
@@ -95,12 +120,13 @@ def build_and_install():
             "-DMZ_OPENSSL=OFF",
             "-DMZ_COMPAT=ON",
             "-DBUILD_SHARED_LIBS=ON",
+            *minizip_windows_args,
         ],
         "Configure minizip-ng",
     )
 
     nc.run_command(
-        [ "cmake", "--build", str(minizip_build_dir), f"--parallel={cpu_count}" ],
+        [ "cmake", "--build", str(minizip_build_dir), *cmake_build_args( cpu_count ) ],
         "Build minizip-ng",
     )
 
@@ -119,6 +145,11 @@ def build_all():
         fetch_and_patch()
 
     if not nc.install_dir_looks_ok():
+        if nc.is_windows() and shutil.which("nmake") is None:
+            raise RuntimeError(
+                "MSVC environment is not set up: 'nmake' not found in PATH.\n"
+                "Run 'vcvars64.bat' (or vcvarsarm64.bat) or use a Native Tools Command Prompt."
+            )
         build_and_install()
 
 nc.ensure_dep( build_all )
