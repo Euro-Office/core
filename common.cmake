@@ -236,6 +236,18 @@ else()
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
     endif()
 
+    # Setup zlib-ng
+    set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")
+    get_filename_component(ZLIBNG_INSTALL_DIR_ABS "${ZLIBNG_INSTALL_DIR}" ABSOLUTE)
+    set(ZLIBNG_INCLUDEDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/include")
+    if( MSVC )
+        message(WARNING "TODO: zlib-ng on Windows!")
+    elseif( APPLE )
+        set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib")
+    else()
+        set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib64")
+    endif()
+
 endif()
 
 # Do NOT auto-add absolute link directories to RPATH
