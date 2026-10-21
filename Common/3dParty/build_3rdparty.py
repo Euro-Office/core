@@ -29,6 +29,7 @@ subfolders = [
     'socketio',
     'v8',
     'zlib-ng',
+    'zlib-ng-wasm',
 ]
 
 force_redo_subfolders = []
