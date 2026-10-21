@@ -244,6 +244,18 @@ else()
     if( MSVC )
         # Import libraries (zlib1.dll / minizip.dll): zlib.lib, minizip.lib
         set(ZLIBNG_LIB_NAME "zlib")
+    else()
+        # IMPORTED targets with full paths so CMake propagates ZLIBNG_LIBDIR_ABS
+        # into -rpath-link for every transitive consumer (test executables etc.).
+        # OfficeUtils still links via target names "minizip" and "z" — unchanged.
+        add_library(minizip SHARED IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libminizip${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
+        add_library(z SHARED IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libz${CMAKE_SHARED_LIBRARY_SUFFIX}"
+        )
     endif()
 
 endif()
