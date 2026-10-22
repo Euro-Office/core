@@ -32,7 +32,7 @@ cmake -S . -B build-android -G Ninja \
 cmake --build build-android --target x2tlib
 ```
 
-Configuring runs `Common/3dParty/build_3rdparty.py --target=android-arm64` (or `android-x64`), which cross-compiles boost, ICU, openssl and V8 with the NDK from `ANDROID_NDK_ROOT`. The result is a set of shared libraries (`libx2t.so`, `libkernel.so`, …, plus unversioned `libicu*.so`) for the JNI wrapper in `X2tConverter/build/Android/libx2t`. The Android app build ([AndroidEditors](https://github.com/Euro-Office/AndroidEditors)) provides a Docker image with all required host tools.
+Configuring runs `Common/3dParty/build_3rdparty.py --target=android-arm64` (or `android-x64`), which cross-compiles boost, ICU, openssl and V8 with the NDK from `ANDROID_NDK_ROOT`. The result is a set of shared libraries (`libx2t.so`, `libkernel.so`, …, plus unversioned `libicu*.so`) for the JNI wrapper in `X2tConverter/build/Android/libx2t`. `.docker/core-android.bake.Dockerfile` builds them in Docker (stage `core-android`, argument `ANDROID_ABI`); it needs an image with the NDK and the host tools as its `android-ndk` context, which [MobileEditors](https://github.com/Euro-Office/MobileEditors) provides.
 
 ## License
 
