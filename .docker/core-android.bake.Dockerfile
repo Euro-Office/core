@@ -19,6 +19,10 @@
 #
 # The build tree and the third-party builds (V8 alone takes hours) stay in a
 # BuildKit cache mount per ABI: pruning the build cache rebuilds them.
+#
+# OPTIONAL SECRETS (as core.bake.Dockerfile): nextcloud_user, nextcloud_pass for
+# the third-party builds' remote cache (Common/3dParty/build_3rdparty_common.py),
+# which then downloads them instead of building them, and uploads new ones.
 # ==============================================================================
 
 ARG ANDROID_ABI=arm64-v8a
@@ -31,8 +35,12 @@ FROM android-ndk AS core-android-build
 
     COPY core /core
 
-    RUN --mount=type=cache,id=core-android-${ANDROID_ABI},target=/build-cache <<EOF
+    RUN --mount=type=cache,id=core-android-${ANDROID_ABI},target=/build-cache \
+        --mount=type=secret,id=nextcloud_user \
+        --mount=type=secret,id=nextcloud_pass <<EOF
         set -e
+        export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user 2>/dev/null || true)"
+        export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass 2>/dev/null || true)"
         cmake -S /core -B /build-cache/core -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI=${ANDROID_ABI} \
