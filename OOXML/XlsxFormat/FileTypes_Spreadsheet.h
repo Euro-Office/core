@@ -90,6 +90,8 @@ namespace OOX
 
 			extern const FileType Metadata;
 
+			extern const FileType FeaturePropertyBag;
+
 			extern const FileType RdRichValue;
 
 			extern const FileType RdRichValueStructure;
