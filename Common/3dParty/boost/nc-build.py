@@ -72,6 +72,19 @@ def boost_msvc_arch() -> tuple[ str, str ]:
     nc.abort_op( f"Unsupported target arch for boost: {a!r}" )
 
 
+def write_android_user_config() -> Path:
+    """b2 toolset definition for the NDK clang of the target arch."""
+    tc = nc.android_toolchain_env()
+    config_path = nc.work_dir / "user-config-android.jam"
+    config_path.write_text(
+        f"using clang : android : { tc[ 'CXX' ] } :\n"
+        f"    <archiver>{ tc[ 'AR' ] }\n"
+        f"    <ranlib>{ tc[ 'RANLIB' ] }\n"
+        f"    ;\n"
+    )
+    return config_path
+
+
 def build_and_install():
     nc.create_install_dir()
     
@@ -125,7 +138,19 @@ option.set keep-going : false ;
     if nc.is_windows():
         build_cmd.append( "address-model=64" )
         build_cmd.append( f"architecture={ boost_arch }" )
-    if nc.is_apple_silicon():
+    if nc.is_android():
+        build_cmd.append( f"--user-config={ write_android_user_config() }" )
+        build_cmd.append( "toolset=clang-android" )
+        build_cmd.append( "target-os=android" )
+        build_cmd.append( "binary-format=elf" )
+        build_cmd.append( "address-model=64" )
+        if nc.target_arch() == "arm64":
+            build_cmd.append( "architecture=arm" )
+            build_cmd.append( "abi=aapcs" )
+        else:
+            build_cmd.append( "architecture=x86" )
+            build_cmd.append( "abi=sysv" )
+    elif nc.is_apple_silicon():
         build_cmd.append( "toolset=clang" )
         build_cmd.append( "architecture=arm" )
         build_cmd.append( "address-model=64" )

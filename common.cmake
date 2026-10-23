@@ -57,6 +57,11 @@ if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX TRUE)
 endif()
 
+# Android builds (NDK toolchain file) use core's Linux code paths
+if(ANDROID)
+    set(LINUX TRUE)
+endif()
+
 message("3rdparty dir: " ${EO_CORE_3RD_PARTY_DIR})
 message("workdir: " ${EO_CORE_3RD_PARTY_WORK_DIR})
 message("install: " ${EO_CORE_3RD_PARTY_INSTALL_DIR})
@@ -95,22 +100,46 @@ if( EMSCRIPTEN )
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
-        if(NOT BUILD_DESKTOP)
-            set(NO_DESKTOP_EXCLUDE ",cef,qt")
-        endif()
+        set(THIRD_PARTY_ENV "")
+        if(ANDROID)
+            # Cross-compile the deps for this build's ABI
+            if(ANDROID_ABI STREQUAL "arm64-v8a")
+                set(ANDROID_3RD_PARTY_TARGET "android-arm64")
+            elseif(ANDROID_ABI STREQUAL "x86_64")
+                set(ANDROID_3RD_PARTY_TARGET "android-x64")
+            else()
+                message(FATAL_ERROR "Unsupported Android ABI: ${ANDROID_ABI}")
+            endif()
+            set(THIRD_PARTY_ARGS
+                "--target=${ANDROID_3RD_PARTY_TARGET}"
+                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,md,openssl,socketio,v8"
+            )
+            set(THIRD_PARTY_ENV
+                "ANDROID_NDK_ROOT=${ANDROID_NDK}"
+                "EO_ANDROID_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}"
+            )
+        else()
+            if(NOT BUILD_DESKTOP)
+                set(NO_DESKTOP_EXCLUDE ",cef,qt")
+            endif()
 
-        set(PLATFORM_EXCLUDE "")
-        if(BUILD_DESKTOP AND APPLE)
-            # macOS editors are native Cocoa, not Qt - still need cef.
-            set(PLATFORM_EXCLUDE ",qt")
+            set(PLATFORM_EXCLUDE "")
+            if(BUILD_DESKTOP AND APPLE)
+                # macOS editors are native Cocoa, not Qt - still need cef.
+                set(PLATFORM_EXCLUDE ",qt")
+            endif()
+
+            # cef and qt need old build environment, cannot be built here
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
-            COMMAND "${PYTHON_BIN}"
+            COMMAND "${CMAKE_COMMAND}" -E env ${THIRD_PARTY_ENV}
+            "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            ${THIRD_PARTY_ARGS}
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -195,6 +224,12 @@ else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
         set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
+    elseif( ANDROID )
+        # Renamed by Common/3dParty/icu/nc-build.py: Android only loads plain
+        # lib<name>.so files, and libicuuc.so would resolve to the system's ICU
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc${ICU_MAJOR_VER}.so")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata${ICU_MAJOR_VER}.so")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n${ICU_MAJOR_VER}.so")
     elseif( APPLE )
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
@@ -211,6 +246,10 @@ else()
     list( APPEND CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
     include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
     set(Boost_USE_STATIC_LIBS ON)
+    if( ANDROID )
+        # The NDK toolchain only searches its sysroot for packages by default
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+    endif()
     find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
 
     # Setup v8
@@ -271,6 +310,12 @@ if( LINUX )
         UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
         DONT_WRITE_EMBEDDED_FONTS
     )
+    if( ANDROID )
+        list(APPEND COMMON_DEFINES
+            _ARM_ALIGN_            # no unaligned memory access
+            NOT_USE_PTHREAD_CANCEL # bionic has no pthread_setcanceltype
+        )
+    endif()
 elseif( APPLE )
     set(COMMON_DEFINES
         _REENTRANT

@@ -51,7 +51,46 @@ def openssl_windows_target() -> str:
 def build_and_install():
     nc.create_install_dir()
     
-    if nc.is_linux():
+    if nc.is_android():
+        # OpenSSL's android-* targets find clang through ANDROID_NDK_ROOT and PATH
+        env = {
+            "ANDROID_NDK_ROOT": str( nc.android_ndk_root() ),
+            "PATH": f"{ nc.android_toolchain_bin() }{ os.pathsep }{ os.environ[ 'PATH' ] }",
+        }
+        ossl_target = { "arm64": "android-arm64", "x64": "android-x86_64" }[ nc.target_arch() ]
+
+        nc.run_command(
+            [   "./Configure",
+                ossl_target,
+                f"-D__ANDROID_API__={ nc.ANDROID_API_LEVEL }",
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "--libdir=lib64",
+                "enable-md2",
+                "no-shared",
+                "no-asm",
+            ],
+            "Configure",
+            nc.work_dir,
+            env = env
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir,
+            env = env
+        )
+
+        # install_sw skips the man pages
+        nc.run_command(
+            [ "make", "install_sw" ],
+            "Install",
+            nc.work_dir,
+            env = env
+        )
+
+    elif nc.is_linux():
         nc.run_command(
             [   "./config",
                 f"--prefix={nc.install_dir}",

@@ -1065,6 +1065,13 @@ if(LINUX)
         -UHAVE_IO_H
     )
 
+    if(ANDROID)
+        # jasper's filter tables mix int* and jpc_fix_t* (long*), an error in clang >= 16
+        target_compile_options(graphics PRIVATE
+            $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-function-pointer-types>
+        )
+    endif()
+
     # Re-enable exporting symbols
     target_compile_options(graphics PRIVATE
         -fvisibility=default

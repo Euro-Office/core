@@ -91,10 +91,105 @@ def fix_macos_install_names( install_dir ):
                     f"Fix {Path(dep).name} reference in {dylib.name}"
                 )
 
+def build_android():
+    # A cross build needs a host build of ICU for its data tools. Both are
+    # built out of source so they don't collide in icu/source.
+    icu_source_dir = nc.work_dir / "icu" / "source"
+    host_build_dir = nc.work_dir / "build-host"
+    target_build_dir = nc.work_dir / f"build-android-{ nc.android_abi() }"
+
+    if not ( host_build_dir / "bin" / "icupkg" ).exists():
+        nc.ensure_directory_exists( host_build_dir )
+        nc.run_command(
+            [   str( icu_source_dir / "configure" ),
+                "--disable-tests",
+                "--disable-samples",
+                "CXXFLAGS=-std=c++11",
+            ],
+            "Configure (host)",
+            host_build_dir
+        )
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build (host)",
+            host_build_dir
+        )
+
+    if target_build_dir.exists():
+        shutil.rmtree( target_build_dir )
+    nc.ensure_directory_exists( target_build_dir )
+
+    # Static archives first; the shared libraries are linked from them below
+    tc = nc.android_toolchain_env()
+    nc.run_command(
+        [   str( icu_source_dir / "configure" ),
+            f"--host={ nc.android_triple() }",
+            f"--with-cross-build={ host_build_dir }",
+            f"--prefix={ nc.install_dir }",
+            "--enable-static",
+            "--disable-shared",
+            "--with-data-packaging=static",
+            "--disable-tools",
+            "--disable-tests",
+            "--disable-samples",
+            "--disable-extras",
+            f"CC={ tc[ 'CC' ] }",
+            f"CXX={ tc[ 'CXX' ] }",
+            f"AR={ tc[ 'AR' ] }",
+            f"RANLIB={ tc[ 'RANLIB' ] }",
+            "CFLAGS=-fPIC -O2",
+            "CXXFLAGS=-fPIC -O2",
+        ],
+        "Configure",
+        target_build_dir
+    )
+
+    nc.run_command(
+        [ "make", f"-j{os.cpu_count()}" ],
+        "Build",
+        target_build_dir
+    )
+
+    nc.run_command(
+        [ "make", "install" ],
+        "Install",
+        target_build_dir
+    )
+
+    link_android_shared_libs( nc.install_dir / "lib", tc[ "CXX" ] )
+
+def link_android_shared_libs( lib_dir : Path, cxx : str ):
+    # Shared libraries, so UnicodeConverter and x2t share one copy of ICU and its
+    # data. Their names must differ from the system's ICU (libicuuc.so), which is
+    # already loaded in every app process and would be used instead, and Android
+    # only loads unversioned lib<name>.so files: libicuuc.a -> libicuuc74.so.
+    major = icu_major
+    libraries = [
+        ( "icudata", [] ),
+        ( "icuuc", [ "icudata" ] ),
+        ( "icui18n", [ "icuuc", "icudata" ] ),
+    ]
+    for name, dependencies in libraries:
+        output = lib_dir / f"lib{ name }{ major }.so"
+        nc.run_command(
+            [   cxx, "-shared", "-o", str( output ),
+                f"-Wl,-soname,{ output.name }",
+                "-Wl,--whole-archive", str( lib_dir / f"lib{ name }.a" ), "-Wl,--no-whole-archive",
+                f"-L{ lib_dir }",
+            ] + [ f"-l{ dependency }{ major }" for dependency in dependencies ],
+            f"Link { output.name }"
+        )
+
+    for archive in lib_dir.glob( "*.a" ):
+        archive.unlink()
+
 def build_and_install():
     nc.create_install_dir()
 
-    if nc.is_linux():
+    if nc.is_android():
+        build_android()
+
+    elif nc.is_linux():
         nc.run_command(
             [   "./configure",
                 f"--prefix={nc.install_dir}",
