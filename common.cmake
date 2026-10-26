@@ -242,7 +242,7 @@ else()
     set(ZLIBNG_INCLUDEDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/include")
     set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib")
     if( MSVC )
-        set(ZLIBNG_LIB_NAME "zlib")
+        set(ZLIBNG_LIB_NAME "zlibstatic")
         add_library(minizip STATIC IMPORTED GLOBAL)
         set_target_properties(minizip PROPERTIES
             IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/minizip.lib"
