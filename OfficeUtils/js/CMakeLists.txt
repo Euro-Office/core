@@ -24,7 +24,6 @@ set(SRC
     # ---- project glue ----
     ${CORE_ROOT}/OfficeUtils/src/ZipBuffer.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/base.cpp
-    ${CORE_ROOT}/OfficeUtils/src/zlib_addon.c
     ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
 
     # ---- raster ----

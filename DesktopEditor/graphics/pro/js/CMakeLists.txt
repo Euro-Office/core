@@ -456,7 +456,6 @@ set(SOURCES
     ${CORE_ROOT}/OfficeUtils/src/OfficeUtils.cpp
     ${CORE_ROOT}/OfficeUtils/src/ZipBuffer.cpp
     ${CORE_ROOT}/OfficeUtils/src/ZipUtilsCP.cpp
-    ${CORE_ROOT}/OfficeUtils/src/zlib_addon.c
     ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
 
     ${CORE_ROOT}/PdfFile/PdfFile.cpp

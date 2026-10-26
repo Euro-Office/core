@@ -162,7 +162,6 @@ set(SOURCES
     ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
     ${CORE_ROOT}/OfficeUtils/js/../src/ZipBuffer.cpp
     ${CORE_ROOT}/OfficeUtils/js/wasm/src/base.cpp
-    ${CORE_ROOT}/OfficeUtils/js/../src/zlib_addon.c
 
     ${DESKTOP_ROOT}/graphics/Image.cpp
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
