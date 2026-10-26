@@ -860,17 +860,6 @@ solutions = [
         targetarch = get_cpu()
         output_path = v8_src_path / "out.gn"/ f"{targetarch}.release"
 
-        if nc.is_linux() and targetarch == "arm64":
-            # On arm64 cross-compilation the system clang typically lacks the
-            # required target support; use the bundled clang that gclient sync
-            # downloads via the V8 DEPS hooks instead.
-            # GN (built above) always uses the system clang so it isn't
-            # affected by this PATH change.
-            bundled_clang_bin = v8_src_path / "third_party" / "llvm-build" / "Release+Asserts" / "bin"
-            if bundled_clang_bin.is_dir() and ( bundled_clang_bin / "clang" ).exists():
-                os.environ["PATH"] = str( bundled_clang_bin ) + os.pathsep + os.environ.get( "PATH", "" )
-                print( f"Using bundled clang from {bundled_clang_bin}" )
-
         # ensure out dir is clean
         try:
             shutil.rmtree( output_path )
