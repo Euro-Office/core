@@ -43,7 +43,6 @@ using namespace std;
 #include <unzip.h>    // minizip-ng compat
 #include <zip.h>      // minizip-ng compat
 #include "ioapibuf.h"
-#include "zlib_addon.h"
 #include <zlib.h>
 
 namespace ZLibZipUtils

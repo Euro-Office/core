@@ -74,10 +74,7 @@ namespace ZLibZipUtils
 		Close();
 		if(filename != NULL)
 		{
-			int old = zlip_get_addition_flag();
-			zlip_set_addition_flag(old | ZLIB_ADDON_FLAG_READ_ONLY);
 			m_unzFile = unzOpenHelp(filename);
-			zlip_set_addition_flag(old);
 		}
 	}
 
@@ -87,17 +84,12 @@ namespace ZLibZipUtils
 		m_buffer = new BUFFER_IO;
 		if ((data != NULL) && (len != 0))
 		{
-			int old = zlip_get_addition_flag();
-			zlip_set_addition_flag(old | ZLIB_ADDON_FLAG_READ_ONLY);
-
 			m_buffer->buffer = data;
 			m_buffer->nSize  = len;
 
 			zlib_filefunc_def ffunc;
 			fill_buffer_filefunc(&ffunc, m_buffer);
 			m_unzFile = unzOpen2(NULL, &ffunc);
-
-			zlip_set_addition_flag(old);
 		}
 	}
 	int CunzFileWrapped::Close()

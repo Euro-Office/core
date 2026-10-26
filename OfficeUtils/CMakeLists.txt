@@ -9,15 +9,13 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtils.cpp
         ${OFFICE_UTILS_SOURCES_DIR}/ZipBuffer.cpp
         ${OFFICE_UTILS_SOURCES_DIR}/ZipUtilsCP.cpp
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib_addon.c
         ${OFFICE_UTILS_SOURCES_DIR}/ioapibuf.c
-        
+
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtils.h
         ${OFFICE_UTILS_SOURCES_DIR}/OfficeUtilsCommon.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipBuffer.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipFolder.h
         ${OFFICE_UTILS_SOURCES_DIR}/ZipUtilsCP.h
-        ${OFFICE_UTILS_SOURCES_DIR}/zlib_addon.h
         ${OFFICE_UTILS_SOURCES_DIR}/ioapibuf.h
     )
 

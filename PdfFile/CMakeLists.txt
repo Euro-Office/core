@@ -539,8 +539,6 @@ if(LINUX)
     target_sources(PdfFile PRIVATE
         ${PDFFILE_FREETYPE_SOURCES}
 
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
-
         # brotli.pri
         ${PDFFILE_BROTLI_DIR}/c/common/constants.c
         ${PDFFILE_BROTLI_DIR}/c/common/context.c
