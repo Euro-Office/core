@@ -171,7 +171,7 @@
 #endif
 
 #ifdef MNG_INCLUDE_ZLIB                /* zlib by Mark Adler & Jean-loup Gailly */
-#include "../zlib/zlib.h"
+#include <zlib.h>
 #endif
 
 #ifdef MNG_INCLUDE_LCMS                /* little cms by Marti Maria Saguer */
