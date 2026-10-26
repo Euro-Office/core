@@ -228,6 +228,7 @@ namespace Spreadsheet
     }
 	XLS::BaseObjectPtr CPivotTableFile::WriteBin() const
 	{
+		EnsureDefinition();
         if(m_oPivotTableDefinition.IsInit())
             return m_oPivotTableDefinition->toBin();
         else if(m_nDataLength && m_pData)
@@ -263,21 +264,56 @@ namespace Spreadsheet
         }
 		else
 		{
+			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
 			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
-
-			XmlUtils::CXmlLiteReader oReader;
-
-			if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
-				return;
-
-			if (!oReader.ReadNextNode())
-				return;
-
-			m_oPivotTableDefinition = oReader;
+			m_bDefinitionPending = true;
 		}
+	}
+	void CPivotTableFile::EnsureDefinition() const
+	{
+		if (!m_bDefinitionPending)
+			return;
+		m_bDefinitionPending = false;
+
+		if (!m_pData || !m_nDataLength)
+			return;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
+			return;
+
+		if (!oReader.ReadNextNode())
+			return;
+
+		m_oPivotTableDefinition = oReader;
+	}
+	bool CPivotTableFile::GetCacheId(nullable<SimpleTypes::CUnsignedDecimalNumber>& oCacheId) const
+	{
+		if (m_oPivotTableDefinition.IsInit())
+		{
+			oCacheId = m_oPivotTableDefinition->m_oCacheId;
+			return true;
+		}
+		if (!m_bDefinitionPending || !m_pData || !m_nDataLength)
+			return false;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
+			return false;
+
+		if (!oReader.ReadNextNode())
+			return false;
+
+		CPivotTableDefinition oDefinition;
+		oDefinition.ReadAttributes(oReader);
+		oCacheId = oDefinition.m_oCacheId;
+		return true;
 	}
 	void CPivotTableFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
+		EnsureDefinition();
 		CXlsb* xlsb = dynamic_cast<CXlsb*>(File::m_pMainDocument);
         if ((xlsb) && (xlsb->m_bWriteToXlsb))
 		{
@@ -4149,8 +4185,10 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
         }
 		else
 		{
+			// The object model is built on demand (EnsureDefinition); Editor.bin only needs the raw bytes
 			NSFile::CFileBinary::ReadAllBytes(oPath.GetPath(), &m_pData, m_nDataLength);
 
+			// Same early exit as before the lazy parse: an unreadable part does not load its records
 			XmlUtils::CXmlLiteReader oReader;
 
 			if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
@@ -4159,13 +4197,33 @@ xmlns:xr16=\"http://schemas.microsoft.com/office/spreadsheetml/2017/revision16\"
 			if (!oReader.ReadNextNode())
 				return;
 
-			m_oPivotCashDefinition = oReader;
+			m_bDefinitionPending = true;
 		}
 
         IFileContainer::Read( oRootPath, oPath ); //in this case the reading order is important for xlsb
 	}
+	void CPivotCacheDefinitionFile::EnsureDefinition() const
+	{
+		if (!m_bDefinitionPending)
+			return;
+		m_bDefinitionPending = false;
+
+		if (!m_pData || !m_nDataLength)
+			return;
+
+		XmlUtils::CXmlLiteReader oReader;
+
+		if (!oReader.FromStringA(reinterpret_cast<char*>(m_pData), m_nDataLength))
+			return;
+
+		if (!oReader.ReadNextNode())
+			return;
+
+		m_oPivotCashDefinition = oReader;
+	}
 	void CPivotCacheDefinitionFile::write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const
 	{
+		EnsureDefinition();
 		if (bIsWritten) return;
 
 		bIsWritten = true;

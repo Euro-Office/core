@@ -491,6 +491,7 @@ namespace OOX
 					continue;
 					auto cacheFilePtr = this->Find(i->m_oRid->GetValue());
 					auto CachePtr = static_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
+					CachePtr->EnsureDefinition();
 					if(CachePtr->m_oPivotCashDefinition.IsInit() && CachePtr->m_oPivotCashDefinition->m_oCacheSource.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType->GetValue() == SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceWorksheet)

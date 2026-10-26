@@ -614,6 +614,9 @@ namespace OOX
 			void setData(BYTE* pData, long length, const std::wstring& srIdRecords);
             void readBin(const CPath& oPath);
 			XLS::BaseObjectPtr WriteBin() const;
+			// Builds m_oPivotCashDefinition from m_pData on first use, for parts read from XML.
+			// Parts filled by setData (Editor.bin) keep only the raw bytes and are written as is
+			void EnsureDefinition() const;
 			virtual void read(const CPath& oRootPath, const CPath& oPath);
 			virtual void write(const CPath& oPath, const CPath& oDirectory, CContentTypes& oContent) const;
 			virtual const OOX::FileType type() const;
@@ -632,9 +635,10 @@ namespace OOX
 			BYTE* m_pData = NULL;
 			DWORD m_nDataLength = 0;
 
-			nullable<CPivotCacheDefinition> m_oPivotCashDefinition;
+			mutable nullable<CPivotCacheDefinition> m_oPivotCashDefinition;
 		private:
 			CPath m_oReadPath;
+			mutable bool m_bDefinitionPending = false;
 
 			mutable bool bIsWritten;
 		};
