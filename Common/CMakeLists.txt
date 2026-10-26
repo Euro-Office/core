@@ -98,6 +98,5 @@ target_link_libraries(kernel PUBLIC
 )
 
 copy_artifacts_to_folder("kernel" "${EO_CORE_OUTPUT_DIR}")
-copy_zlib_ng_libs(kernel)
 
 declare_victory( kernel )

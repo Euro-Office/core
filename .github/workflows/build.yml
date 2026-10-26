@@ -196,40 +196,17 @@ jobs:
         # in the image's server tree (FileConverter/bin, FileConverter/lib,
         # server/tools). Fail if nothing matched, so a layout drift can't silently
         # pass. The install path is brand-derived; locate it via the sdkjs dir.
-        # Shared libs are additionally always copied into FileConverter/bin by a
-        # second pass (symlinks included - the soname link, e.g. libminizip.so.1,
-        # is what the loader looks for). That covers libs the image does not have
-        # at all (e.g. a newly added 3rdparty dep such as zlib-ng/minizip-ng,
-        # which the nightly image predates) and can't be matched by name. Anything
-        # this pass overwrites is reported as WARNING to ease debugging.
         RUN set -eu; \
             root="$(dirname "$(find /var/www -maxdepth 5 -type d -name sdkjs -path '*documentserver*' | head -n1)")"; \
             test -n "$root"; \
             count=0; \
-            : > /tmp/overlaid.list; \
             for f in $(find /tmp/core -type f); do \
               name="$(basename "$f")"; \
               for t in $(find "$root/server" -type f -name "$name"); do \
                 cp -af "$f" "$t"; count=$((count+1)); echo "overlaid $name -> $t"; \
-                echo "$name" >> /tmp/overlaid.list; \
               done; \
             done; \
-            bin="$root/server/FileConverter/bin"; \
-            test -d "$bin"; \
-            added=0; overwritten=0; \
-            for f in $(find /tmp/core -maxdepth 1 \( -type f -o -type l \) -name 'lib*.so*'); do \
-              name="$(basename "$f")"; \
-              grep -qxF "$name" /tmp/overlaid.list && continue; \
-              dest="$bin/$name"; \
-              if [ -e "$dest" ] || [ -L "$dest" ]; then \
-                echo "WARNING: overwriting existing $dest ($(ls -l "$dest" | cut -d' ' -f1,5-)) with lib from build/package"; \
-                overwritten=$((overwritten+1)); \
-              else \
-                echo "added new lib $name -> $bin"; added=$((added+1)); \
-              fi; \
-              cp -a --remove-destination "$f" "$bin/"; \
-            done; \
-            echo "total files replaced: $count, extra libs added: $added, extra libs overwritten: $overwritten"; \
+            echo "total files replaced: $count"; \
             [ "$count" -gt 0 ]; \
             rm -rf /tmp/core
         EOF

@@ -27,10 +27,6 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         ${OFFICE_UTILS_SOURCES_DIR}
     )
 
-    target_link_directories( ${TARGET} PUBLIC
-        ${ZLIBNG_LIBDIR_ABS}
-    )
-
     if( MSVC )
         target_link_libraries( ${TARGET} PUBLIC
             minizip                 # minizip.lib (minizip-ng with MZ_COMPAT=ON)

@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "2"
+    version = "5"
 )
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
@@ -79,7 +79,8 @@ def build_and_install():
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             "-DCMAKE_INSTALL_LIBDIR=lib",
             "-DZLIB_COMPAT=ON",
-            "-DBUILD_SHARED_LIBS=ON",
+            "-DBUILD_SHARED_LIBS=OFF",
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
             "-DBUILD_TESTING=OFF",
         ],
         "Configure zlib-ng",
@@ -95,14 +96,9 @@ def build_and_install():
         "Install zlib-ng",
     )
 
-    # Windows only:
-    #  - minizip-ng's compat API (zipOpen2_64, unzOpen, ...) is declared with
-    #    an empty ZEXPORT on MSVC, so the DLL would export none of it; export
-    #    everything instead.
-    #  - MZ_FETCH_LIBS defaults to ON on Windows and would clone zlib & co
-    #    from GitHub if they are not found; we want the zlib-ng built above.
+    # Windows only: MZ_FETCH_LIBS defaults to ON on Windows and would clone
+    # zlib & co from GitHub if they are not found; we want the zlib-ng built above.
     minizip_windows_args = [
-        "-DCMAKE_WINDOWS_EXPORT_ALL_SYMBOLS=ON",
         "-DMZ_FETCH_LIBS=OFF",
     ] if nc.is_windows() else []
 
@@ -119,9 +115,11 @@ def build_and_install():
             "-DMZ_BZIP2=OFF",
             "-DMZ_LZMA=OFF",
             "-DMZ_ZSTD=OFF",
+            "-DMZ_PPMD=OFF",
             "-DMZ_OPENSSL=OFF",
             "-DMZ_COMPAT=ON",
-            "-DBUILD_SHARED_LIBS=ON",
+            "-DBUILD_SHARED_LIBS=OFF",
+            "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
             *minizip_windows_args,
         ],
         "Configure minizip-ng",
