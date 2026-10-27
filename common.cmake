@@ -74,6 +74,12 @@ if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
     set(LINUX TRUE)
 endif()
 
+# doctrenderer's JavaScriptCore backend is Objective-C++. Enabled here, so the
+# top-level project has the language too (CMake needs it there).
+if(USE_JAVASCRIPT_CORE)
+    enable_language(OBJCXX)
+endif()
+
 # Android builds (NDK toolchain file) use core's Linux code paths
 if(ANDROID)
     set(LINUX TRUE)
@@ -215,8 +221,9 @@ else()
             endif()
 
             set(PREBUILT_EXCLUDE "")
-            if(EO_CORE_PREBUILT_DIR)
-                # Only doctrenderer links V8, and the package has it built in
+            if(EO_CORE_PREBUILT_DIR OR USE_JAVASCRIPT_CORE)
+                # Only doctrenderer links V8: the package has it built in, or
+                # doctrenderer runs on JavaScriptCore
                 set(PREBUILT_EXCLUDE ",v8")
             endif()
 
