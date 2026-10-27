@@ -133,18 +133,12 @@ namespace OOX
 		void CBorderProp::toBin(XLS::BiffStructure* obj)
 		{
 			auto ptr = static_cast<XLSB::Blxf*>(obj);
-			if(this == nullptr)
-			{
-				CColor color;
-				ptr->brtColor = color.GetDefaultColor();
-				ptr->dg = 0x00;
-				return;
-			}
 			if(m_oColor.IsInit())
 				ptr->brtColor = m_oColor->toColor();
 			else
 			{
-				ptr->brtColor = m_oColor->GetDefaultColor();
+				CColor color;
+				ptr->brtColor = color.GetDefaultColor();
 			}
 
 			if(!m_oStyle.IsInit())
@@ -392,11 +386,33 @@ namespace OOX
 			auto ptr(new XLSB::Border);
 			XLS::BaseObjectPtr objectPtr(ptr);
 			
-			m_oBottom->toBin(&ptr->blxfBottom);
-			m_oDiagonal->toBin(&ptr->blxfDiag);
-			m_oTop->toBin(&ptr->blxfTop);
-			m_oStart->toBin(&ptr->blxfLeft);
-			m_oEnd->toBin(&ptr->blxfRight);
+			auto defaultBlxf = []() {
+				XLSB::Blxf blxf;
+				CColor color;
+				blxf.brtColor = color.GetDefaultColor();
+				blxf.dg = 0x00;
+				return blxf;
+			};
+			if(m_oBottom.IsInit())
+				m_oBottom->toBin(&ptr->blxfBottom);
+			else
+				ptr->blxfBottom = defaultBlxf();
+			if(m_oDiagonal.IsInit())
+				m_oDiagonal->toBin(&ptr->blxfDiag);
+			else
+				ptr->blxfDiag = defaultBlxf();
+			if(m_oTop.IsInit())
+				m_oTop->toBin(&ptr->blxfTop);
+			else
+				ptr->blxfTop = defaultBlxf();
+			if(m_oStart.IsInit())
+				m_oStart->toBin(&ptr->blxfLeft);
+			else
+				ptr->blxfLeft = defaultBlxf();
+			if(m_oEnd.IsInit())
+				m_oEnd->toBin(&ptr->blxfRight);
+			else
+				ptr->blxfRight = defaultBlxf();
 
             if(m_oDiagonalDown.IsInit())
                 ptr->fBdrDiagDown = m_oDiagonalDown->GetValue();
