@@ -87,6 +87,13 @@ if(APPLE)
     target_compile_definitions(kernel PRIVATE MAC)
 endif()
 
+if(IOS)
+    target_sources(kernel PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/../DesktopEditor/common/File_ios.mm
+    )
+    target_link_libraries(kernel PRIVATE "-framework Foundation")
+endif()
+
 if( NOT MSVC )
     target_compile_options(kernel PRIVATE
         "SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/posix_compat.h"
