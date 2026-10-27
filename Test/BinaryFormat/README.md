@@ -114,8 +114,12 @@ A failure names the case, the pass and the fact, for example
 `tableRows.length: expected 2, got 1`.
 
 The cases are the x2tTester inputs (`docx`/`odt`/`rtf`, `xlsx`/`ods`,
-`pptx`/`odp`) and the `Common/empty` templates. Each template is wrapped as a
-`.doct`/`.xlst`/`.pptt`, so sdkjs reads the committed `Editor.bin` unchanged.
+`pptx`/`odp`) and the `Common/empty` templates. docbuilder can't open the
+internal format itself: `OpenFile` leaves the editor type unset for
+`.doct`/`.xlst`/`.pptt`, and every later call fails with "file not opened". So
+each template is wrapped as such a package, x2t converts it to OOXML (the C++
+reader reads the committed `Editor.bin` unchanged), and that file is
+round-tripped like the inputs.
 
 The script needs docbuilder, x2t and an sdkjs build side by side. CI
 (`build.yml`, server/amd64 leg) runs it inside the e2e overlay image: the
@@ -130,7 +134,8 @@ Every case's folder in `--out` keeps the script, the docbuilder log, the facts
 and the saved files. `--out/expected/` holds the first-load facts of the run;
 copy these into `roundtrip/expected/` (or rerun with `--update`) when a change
 is intended. CI uploads the folder as `sdkjs-roundtrip-<sha>`, and runs with
-`--missing warn` until the expectations are committed.
+`--missing warn` until the expectations are committed. A case without an
+expectation also prints what it saw as a `seen:` JSON line in the log.
 
 ## Self-tests
 

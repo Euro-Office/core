@@ -26,6 +26,7 @@ sys.path.insert(0, str(HERE / "roundtrip"))
 import roundtrip  # noqa: E402
 
 FAKE = HERE / "roundtrip" / "fake_docbuilder.py"
+FAKE_X2T = HERE / "roundtrip" / "fake_x2t.py"
 HAVE_NODE = shutil.which("node") is not None
 
 
@@ -51,13 +52,18 @@ class Script(unittest.TestCase):
                            ("templates/pptx.bin", "slide"), ("templates/docx.bin", "word")]:
             self.assertEqual(names[name].kind, kind, name)
 
-    def test_template_is_wrapped_as_editor_package(self):
+    def test_template_is_converted_from_its_editor_package(self):
+        # docbuilder cannot open .doct itself, so x2t turns the committed bytes into OOXML first.
         case = next(c for c in roundtrip.all_cases() if c.name == "templates/docx.bin")
         with tempfile.TemporaryDirectory() as d:
-            target = case.prepare(Path(d))
-            self.assertEqual(target.suffix, ".doct")
-            with zipfile.ZipFile(target) as z:
+            target = case.prepare(Path(d), FAKE_X2T)
+            self.assertEqual(target.suffix, ".docx")
+            self.assertTrue(target.exists())
+            with zipfile.ZipFile(Path(d) / "docx.doct") as z:
                 self.assertEqual(z.read("Editor.bin"), case.source.read_bytes())
+            params = (Path(d) / "docx.doct.x2t.xml").read_text()
+            self.assertIn("<m_nFormatTo>65</m_nFormatTo>", params)
+            self.assertIn("docx.doct</m_sFileFrom>", params)
 
     def test_fact_diff_names_the_fact(self):
         lines = roundtrip.fact_diff({"tableRows": [3, 2]}, {"tableRows": [3]})
@@ -78,7 +84,8 @@ class Run(unittest.TestCase):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
     def run_tool(self, *extra, env=None, case="inputs/simple.*"):
-        argv = ["roundtrip.py", "--out", str(self.tmp / "out"), "--docbuilder", str(FAKE), "--case", case, *extra]
+        argv = ["roundtrip.py", "--out", str(self.tmp / "out"), "--docbuilder", str(FAKE), "--x2t", str(FAKE_X2T),
+                "--case", case, *extra]
         out = io.StringIO()
         with mock.patch.object(sys, "argv", argv), mock.patch.dict(os.environ, env or {}), redirect_stdout(out):
             code = roundtrip.main()
@@ -102,6 +109,12 @@ class Run(unittest.TestCase):
             facts = json.loads((self.tmp / "out/expected/templates" / f"{name}.json").read_text())
             self.assertIn(key, facts["facts"], name)
             self.assertNotIn("error:", json.dumps(facts), name)
+
+    def test_template_conversion_failure_is_reported(self):
+        code, out = self.run_tool("--missing", "warn", env={"FAKE_X2T_FAIL": "1"}, case="templates/docx.bin")
+        self.assertEqual(code, 1)
+        self.assertIn("FAIL templates/docx.bin: x2t exited with 89 converting docx.doct to docx.docx", out)
+        self.assertIn("| fake x2t: conversion failed", out)
 
     def test_lost_content_fails_with_the_pass_and_fact(self):
         self.run_tool("--update")
@@ -133,6 +146,8 @@ class Run(unittest.TestCase):
         code, out = self.run_tool("--missing", "warn")
         self.assertEqual(code, 0, out)
         self.assertIn("WARN inputs/simple.odp", out)
+        seen = next(l for l in out.splitlines() if l.startswith("    seen: "))
+        self.assertEqual(json.loads(seen[len("    seen: "):])["editor"], "slide")
 
     def test_unstable_second_save_warns_or_fails(self):
         self.run_tool("--update")

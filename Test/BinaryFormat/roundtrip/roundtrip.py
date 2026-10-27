@@ -19,14 +19,18 @@ Checks, per case:
   * out1 and out2 have the same OOXML parts and content, apart from docProps
     (the second trip is stable). Reported as a warning unless --stability fail.
 
-Cases: the x2tTester input documents and the Common/empty templates (wrapped as
-.doct/.xlst/.pptt so docbuilder opens the committed Editor.bin as is).
+Cases: the x2tTester input documents and the Common/empty templates. docbuilder
+cannot open the internal format itself (OpenFile only sets the editor type for
+document/spreadsheet/presentation formats, so a .doct leaves it unset and every
+later call fails with "file not opened"). So each template is wrapped as
+.doct/.xlst/.pptt and x2t converts it to OOXML first; the C++ reader therefore
+reads the committed bytes, and the converted file is round-tripped as usual.
 
 Runs where docbuilder, x2t and sdkjs live together, e.g. inside the
 DocumentServer image (CI: build.yml, e2e leg). Python 3.9+, standard library only.
 
 Usage:
-  roundtrip.py --out DIR [--docbuilder PATH] [--case GLOB] [--update]
+  roundtrip.py --out DIR [--docbuilder PATH] [--x2t PATH] [--case GLOB] [--update]
                [--missing fail|warn] [--stability fail|warn]
 """
 
@@ -58,6 +62,8 @@ KINDS = {
     "pptx": ("slide", "pptx"), "odp": ("slide", "pptx"), "pptt": ("slide", "pptx"),
 }
 TEMPLATE_PACKAGES = {"docx.bin": "doct", "xlsx.bin": "xlst", "pptx.bin": "pptt"}
+# x2t m_nFormatTo for the OOXML a template is converted to (Common/OfficeFileFormats.h).
+OOXML_FORMAT = {"docx": 0x0041, "xlsx": 0x0101, "pptx": 0x0081}
 # Parts that legitimately change on every save.
 VOLATILE_PARTS = {"docProps/core.xml", "docProps/app.xml", "docProps/custom.xml"}
 
@@ -66,7 +72,7 @@ class Case:
     def __init__(self, name, source, prepare=None):
         self.name = name  # e.g. "inputs/medium.docx", also the expectation path
         self.source = source
-        self.prepare = prepare  # callable(dest_dir) -> path to open, or None to copy source
+        self.prepare = prepare  # callable(dest_dir, x2t) -> path to open, or None to copy source
         ext = source.suffix.lstrip(".") if prepare is None else TEMPLATE_PACKAGES[source.name]
         self.kind, self.save_ext = KINDS[ext]
 
@@ -83,15 +89,60 @@ def all_cases():
     return cases
 
 
+class PrepareError(Exception):
+    def __init__(self, message, log=""):
+        super().__init__(message)
+        self.log = log
+
+
 def _wrap_template(bin_path):
-    def prepare(dest):
-        # A .doct/.xlst/.pptt is a zip with Editor.bin; x2t opens it with TCD_T2BIN (a copy),
-        # so sdkjs reads exactly the committed bytes.
-        target = dest / f"{bin_path.stem}.{TEMPLATE_PACKAGES[bin_path.name]}"
-        with zipfile.ZipFile(target, "w") as z:
+    def prepare(dest, x2t):
+        # A .doct/.xlst/.pptt is a zip with Editor.bin (x2t's fromT unpacks it), so the
+        # C++ reader reads exactly the committed bytes and writes OOXML for docbuilder.
+        package = dest / f"{bin_path.stem}.{TEMPLATE_PACKAGES[bin_path.name]}"
+        with zipfile.ZipFile(package, "w") as z:
             z.write(bin_path, "Editor.bin")
+        target = dest / f"{bin_path.stem}.{bin_path.stem}"
+        x2t_convert(x2t, package, target, OOXML_FORMAT[bin_path.stem], dest)
         return target
     return prepare
+
+
+def x2t_convert(x2t, source, target, format_to, work):
+    """Convert with x2t the way docbuilder calls it (fonts and themes of the install)."""
+    bin_dir = Path(x2t).parent
+    fonts = ""
+    if (bin_dir / "AllFonts.js").exists():
+        fonts = (f"<m_sFontDir>{xml_escape(str(bin_dir))}</m_sFontDir>"
+                 f"<m_sAllFontsPath>{xml_escape(str(bin_dir / 'AllFonts.js'))}</m_sAllFontsPath>")
+    params = work / f"{source.name}.x2t.xml"
+    params.write_text(
+        '<?xml version="1.0" encoding="utf-8"?><TaskQueueDataConvert>'
+        f"<m_sFileFrom>{xml_escape(str(source))}</m_sFileFrom>"
+        f"<m_sFileTo>{xml_escape(str(target))}</m_sFileTo>"
+        f"<m_nFormatTo>{format_to}</m_nFormatTo>{fonts}"
+        "<m_sThemeDir>./sdkjs/slide/themes</m_sThemeDir>"
+        "<m_bDontSaveAdditional>true</m_bDontSaveAdditional>"
+        "</TaskQueueDataConvert>", encoding="utf-8")
+    try:
+        r = subprocess.run([str(x2t), str(params)], cwd=str(install_root(Path(x2t), work)),
+                           env=docbuilder_env(Path(x2t)), capture_output=True, text=True,
+                           errors="replace", timeout=TIMEOUT)
+    except subprocess.TimeoutExpired:
+        raise PrepareError(f"x2t timed out after {TIMEOUT}s converting {source.name}")
+    if r.returncode != 0 or not target.exists():
+        raise PrepareError(f"x2t exited with {r.returncode} converting {source.name} to {target.name}",
+                           r.stdout + r.stderr)
+
+
+def xml_escape(text):
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
+
+def install_root(binary, fallback):
+    """The DocumentServer root (server/FileConverter/bin/<binary> -> root), where ./sdkjs is."""
+    root = binary.parent.parent.parent.parent
+    return root if root.is_dir() else fallback
 
 
 def builder_script(case, src, work):
@@ -144,18 +195,21 @@ def docbuilder_args(docbuilder):
     return args
 
 
-def run_case(case, out, docbuilder):
+def run_case(case, out, docbuilder, x2t):
     work = (out / case.name).resolve()
     if work.exists():
         shutil.rmtree(work)
     (work / "tmp").mkdir(parents=True)
-    src = case.prepare(work) if case.prepare else Path(shutil.copy2(case.source, work / case.source.name))
+    try:
+        src = case.prepare(work, x2t) if case.prepare else Path(shutil.copy2(case.source, work / case.source.name))
+    except PrepareError as e:
+        (work / "x2t.log").write_text(e.log, encoding="utf-8")
+        return work, -1, f"{e}\n{e.log}", [None, None, None]
     script = work / "script.docbuilder"
     script.write_text(builder_script(case, src, work), encoding="utf-8")
     # x2t gets ./sdkjs/slide/themes as its theme dir, so run from the DocumentServer root.
-    cwd = docbuilder.parent.parent.parent.parent
     try:
-        r = subprocess.run(docbuilder_args(docbuilder) + [str(script)], cwd=str(cwd if cwd.is_dir() else work),
+        r = subprocess.run(docbuilder_args(docbuilder) + [str(script)], cwd=str(install_root(docbuilder, work)),
                            env=docbuilder_env(docbuilder), capture_output=True, text=True,
                            errors="replace", timeout=TIMEOUT)
         log, code = r.stdout + r.stderr, r.returncode
@@ -255,6 +309,8 @@ def check_case(case, work, code, log, facts, report, args):
     if code != 0 or missing:
         tail = [f"    | {line}" for line in log.strip().splitlines()[-20:]]
         what = f"docbuilder exited with {code}" if code != 0 else "docbuilder exited 0"
+        if code == -1 and log.startswith("x2t "):
+            what = log.splitlines()[0]
         if missing:
             what += f"; no facts from {', '.join(missing)}"
         report.fail(case, what, tail)
@@ -281,7 +337,10 @@ def check_case(case, work, code, log, facts, report, args):
         ok = False
         report.fail(case, f"no expected/{case.name}.json; run with --update and commit it")
     else:
-        report.warn(case, f"no expected/{case.name}.json yet; first-load facts not checked")
+        # Also print what was seen, so expectations can be taken from the log when the
+        # artifact is out of reach.
+        report.warn(case, f"no expected/{case.name}.json yet; first-load facts not checked",
+                    ["    seen: " + json.dumps(facts[0], sort_keys=True, ensure_ascii=False)])
 
     for n in (1, 2):
         if facts[n] != facts[n - 1]:
@@ -319,6 +378,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True, type=Path, help="work and result folder (upload it from CI)")
     ap.add_argument("--docbuilder", help="docbuilder binary (default: the DocumentServer install)")
+    ap.add_argument("--x2t", help="x2t binary for converting the templates (default: next to docbuilder)")
     ap.add_argument("--case", default="*", help="only cases whose name matches this glob")
     ap.add_argument("--update", action="store_true", help="rewrite expected/ from this run")
     ap.add_argument("--missing", choices=["fail", "warn"], default="fail",
@@ -328,12 +388,13 @@ def main():
     args = ap.parse_args()
 
     docbuilder = find_docbuilder(args.docbuilder)
+    x2t = Path(args.x2t) if args.x2t else docbuilder.parent / "x2t"
     args.out.mkdir(parents=True, exist_ok=True)
     cases = [c for c in all_cases() if fnmatch.fnmatch(c.name, args.case)]
     report = Report()
     try:
         for case in cases:
-            check_case(case, *run_case(case, args.out, docbuilder), report, args)
+            check_case(case, *run_case(case, args.out, docbuilder, x2t), report, args)
     finally:
         chown_tree(args.out)
     print(f"\n{len(cases)} case(s), {report.failed} failed, {report.warned} warning(s). "
