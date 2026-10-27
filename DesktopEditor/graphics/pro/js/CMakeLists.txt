@@ -13,6 +13,10 @@ set(DESKTOP_ROOT ${CORE_ROOT}/DesktopEditor)
 
 include(${CORE_ROOT}/common.cmake)
 
+set(ZLIBNG_WASM_DIR    "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng-wasm")
+set(ZLIBNG_WASM_INCDIR "${ZLIBNG_WASM_DIR}/include")
+set(ZLIBNG_WASM_LIBDIR "${ZLIBNG_WASM_DIR}/lib")
+
 # -------------------------------------------------
 # Source files
 # (generated from compile_files_array)
@@ -452,26 +456,7 @@ set(SOURCES
     ${CORE_ROOT}/OfficeUtils/src/OfficeUtils.cpp
     ${CORE_ROOT}/OfficeUtils/src/ZipBuffer.cpp
     ${CORE_ROOT}/OfficeUtils/src/ZipUtilsCP.cpp
-    ${CORE_ROOT}/OfficeUtils/src/zlib_addon.c
-
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapi.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/miniunz.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/minizip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/mztools.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/unzip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/zip.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip/ioapibuf.c
-
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/adler32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/crc32.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/deflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/infback.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inffast.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inflate.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/inftrees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/trees.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/zutil.c
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/compress.c
+    ${CORE_ROOT}/OfficeUtils/src/ioapibuf.c
 
     ${CORE_ROOT}/PdfFile/PdfFile.cpp
     ${CORE_ROOT}/PdfFile/PdfReader.cpp
@@ -723,6 +708,7 @@ set(SOURCES
 
     ${CORE_ROOT}/OdfFile/Common/logging.cpp
 
+    ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/stubdata/stubdata.cpp
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustr_wcs.cpp
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/ustrtrns.cpp
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common/udata.cpp
@@ -878,8 +864,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/freetype-2.10.4/include
     ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11
-    ${CORE_ROOT}/OfficeUtils/src/zlib-1.2.11/contrib/minizip
+    ${ZLIBNG_WASM_INCDIR}
+    ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common
     ${DESKTOP_ROOT}/xml/libxml2/include
@@ -899,9 +885,15 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 # -------------------------------------------------
 # link libraries
 # -------------------------------------------------
+target_link_directories(${PROJECT_NAME} PRIVATE
+    ${ZLIBNG_WASM_LIBDIR}
+)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE
     ${OPENSSL_WASM_LIBCRYPTO}
     ${OPENSSL_WASM_LIBSSL}
+    minizip
+    z
 )
 
 # -------------------------------------------------
@@ -918,7 +910,7 @@ HAVE_MBSTATE_T HAVE_STDINCLUDES HAS_WCHAR HAVE_VA_COPY
 LIBXML_READER_ENABLED LIBXML_PUSH_ENABLED LIBXML_HTML_ENABLED
 LIBXML_XPATH_ENABLED LIBXML_OUTPUT_ENABLED LIBXML_C14N_ENABLED
 LIBXML_SAX1_ENABLED LIBXML_TREE_ENABLED LIBXML_XPTR_ENABLED
-XML_ERROR_DISABLE_MODE IN_LIBXML LIBXML_STATIC BUILD_ZLIB_AS_SOURCES
+XML_ERROR_DISABLE_MODE IN_LIBXML LIBXML_STATIC
 _ARM_ALIGN_
 _tcsnicmp=strncmp _lseek=lseek _getcwd=getcwd
 NO_CONSOLE_IO USE_EXTERNAL_JPEG2000 USE_JPIP OPJ_STATIC

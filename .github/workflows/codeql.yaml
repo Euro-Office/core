@@ -47,7 +47,7 @@ jobs:
             - DesktopEditor/raster/JBig2/source
             - PdfFile/lib
             - DjVuFile/libdjvu
-            - OfficeUtils/src/zlib-1.2.11
+
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v4

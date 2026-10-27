@@ -69,7 +69,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm"
+            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -110,7 +110,7 @@ else()
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            "--except=openssl-hash,icu-wasm,zlib-ng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -234,6 +234,33 @@ else()
     else()
         set(OPENSSL_LIBSSL "${OPENSSL_INSTALL_DIR_ABS}/lib64/libssl.a")
         set(OPENSSL_LIBCRYPTO "${OPENSSL_INSTALL_DIR_ABS}/lib64/libcrypto.a")
+    endif()
+
+    # Setup zlib-ng
+    set(ZLIBNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/zlib-ng")
+    get_filename_component(ZLIBNG_INSTALL_DIR_ABS "${ZLIBNG_INSTALL_DIR}" ABSOLUTE)
+    set(ZLIBNG_INCLUDEDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/include")
+    set(ZLIBNG_LIBDIR_ABS "${ZLIBNG_INSTALL_DIR_ABS}/lib")
+    if( MSVC )
+        set(ZLIBNG_LIB_NAME "zlibstatic")
+        add_library(minizip STATIC IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/minizip.lib"
+            INTERFACE_LINK_LIBRARIES "Bcrypt"
+        )
+        add_library(z STATIC IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/${ZLIBNG_LIB_NAME}.lib"
+        )
+    else()
+        add_library(minizip STATIC IMPORTED GLOBAL)
+        set_target_properties(minizip PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libminizip.a"
+        )
+        add_library(z STATIC IMPORTED GLOBAL)
+        set_target_properties(z PROPERTIES
+            IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libz.a"
+        )
     endif()
 
 endif()
@@ -572,6 +599,7 @@ function(copy_icu_libs artifact)
         )
     endif()
 endfunction()
+
 
 function(declare_victory build_target)
     add_custom_command(TARGET ${build_target} POST_BUILD

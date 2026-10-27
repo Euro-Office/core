@@ -74,10 +74,7 @@ namespace ZLibZipUtils
 		Close();
 		if(filename != NULL)
 		{
-			int old = zlip_get_addition_flag();
-			zlip_set_addition_flag(old | ZLIB_ADDON_FLAG_READ_ONLY);
 			m_unzFile = unzOpenHelp(filename);
-			zlip_set_addition_flag(old);
 		}
 	}
 
@@ -87,17 +84,12 @@ namespace ZLibZipUtils
 		m_buffer = new BUFFER_IO;
 		if ((data != NULL) && (len != 0))
 		{
-			int old = zlip_get_addition_flag();
-			zlip_set_addition_flag(old | ZLIB_ADDON_FLAG_READ_ONLY);
-
 			m_buffer->buffer = data;
 			m_buffer->nSize  = len;
 
 			zlib_filefunc_def ffunc;
 			fill_buffer_filefunc(&ffunc, m_buffer);
 			m_unzFile = unzOpen2(NULL, &ffunc);
-
-			zlip_set_addition_flag(old);
 		}
 	}
 	int CunzFileWrapped::Close()
@@ -118,11 +110,6 @@ namespace ZLibZipUtils
 
 	zipFile zipOpenHelp(const wchar_t* filename)
 	{
-#if defined(_WIN32) || defined (_WIN64)
-		zlib_filefunc64_def ffunc;
-		fill_win32_filefunc64W(&ffunc);
-		zipFile zf = zipOpen2_64(filename, APPEND_STATUS_CREATE, NULL, &ffunc);
-#else
 #ifdef _IOS
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		zipFile zf = filePath.empty() ? NULL : zipOpen(filePath.c_str(), APPEND_STATUS_CREATE);
@@ -133,16 +120,10 @@ namespace ZLibZipUtils
 		zipFile zf = zipOpen( (char*)pUtf8, APPEND_STATUS_CREATE );
 		delete [] pUtf8;
 #endif
-#endif
 		return zf;
 	}
 	unzFile unzOpenHelp(const wchar_t* filename)
 	{
-#if defined(_WIN32) || defined (_WIN64)
-		zlib_filefunc64_def ffunc;
-		fill_win32_filefunc64W(&ffunc);
-		unzFile uf = unzOpen2_64(filename, &ffunc);
-#else
 #ifdef _IOS
 		std::string filePath = NSFile::NSIOS::GetFileSystemRepresentation(filename);
 		unzFile uf = filePath.empty() ? NULL : unzOpen(filePath.c_str());
@@ -152,7 +133,6 @@ namespace ZLibZipUtils
 		NSFile::CUtf8Converter::GetUtf8StringFromUnicode(filename, wcslen(filename), pUtf8, lLen, false);
 		unzFile uf = unzOpen( (char*)pUtf8 );
 		delete [] pUtf8;
-#endif
 #endif
 		return uf;
 	}
@@ -528,9 +508,9 @@ namespace ZLibZipUtils
 				unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
 
 				if (nFileSize > 0)
-					nFileSize = (std::min)(nFileSize, file_info.uncompressed_size);
+					nFileSize = (std::min)(nFileSize, static_cast<ULONG>(file_info.uncompressed_size));
 				else
-					nFileSize = file_info.uncompressed_size;
+					nFileSize = static_cast<ULONG>(file_info.uncompressed_size);
 
 				(*fileInBytes) = new BYTE[nFileSize];
 				get_file(unzip_file_handle, (*fileInBytes), nFileSize);

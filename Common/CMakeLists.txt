@@ -81,9 +81,6 @@ add_libxml( kernel ${CORE_ROOT_DIR}/DesktopEditor/xml FALSE )
 
 target_compile_definitions(kernel PRIVATE
     KERNEL_USE_DYNAMIC_LIBRARY_BUILDING
-    BUILD_ZLIB_AS_SOURCES
-    ZLIB_DLL
-    ZLIB_INTERNAL
 )
 
 if(APPLE)
