@@ -29,7 +29,7 @@ mkdir -p "$install_dir" || abort_op "Failed to create brotli directory."
 cd "$install_dir"
 git init || abort_op "Git init failed (brotli)"
 git remote add origin https://github.com/google/brotli.git || abort_op "Failed to add brotli remote"
-git fetch --depth 1 origin a47d7475063eb223c87632eed806c0070e70da29 || abort_op "Failed to fetch a47d7475063eb223c87632eed806c0070e70da29"
+git fetch --depth 1 origin db24a98aed38a16de78cc05ca15cdd8dc2a0d92d || abort_op "Failed to fetch db24a98aed38a16de78cc05ca15cdd8dc2a0d92d"
 git checkout FETCH_HEAD || abort_op "Check-out failed (brotli)"
 
 echo "Brotli ready!"

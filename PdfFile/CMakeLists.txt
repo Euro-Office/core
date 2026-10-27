@@ -565,7 +565,9 @@ if(LINUX)
         ${PDFFILE_BROTLI_DIR}/c/dec/bit_reader.c
         ${PDFFILE_BROTLI_DIR}/c/dec/decode.c
         ${PDFFILE_BROTLI_DIR}/c/dec/huffman.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/prefix.c
         ${PDFFILE_BROTLI_DIR}/c/dec/state.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/static_init.c
     )
 
     set_source_files_properties(${PDFFILE_FREETYPE_SOURCES} PROPERTIES
