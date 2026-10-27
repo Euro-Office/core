@@ -519,7 +519,7 @@ void xlsx_text_context::Impl::start_drawing_content()
 	{
 		dump_run();
 
-		store_cell_string_ = run_.str();	
+		store_cell_string_ += run_.str();	
 	}
 
     paragraphs_cout_ = 0;
