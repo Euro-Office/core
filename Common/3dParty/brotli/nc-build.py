@@ -23,7 +23,7 @@ nc.init_for_dep(
 def fetch_and_patch():
     nc.create_workdir()
 
-    nc.shallow_checkout( nc.work_dir, "https://github.com/google/brotli.git", "a47d7475063eb223c87632eed806c0070e70da29" )
+    nc.shallow_checkout( nc.work_dir, "https://github.com/google/brotli.git", "db24a98aed38a16de78cc05ca15cdd8dc2a0d92d" )
 
     nc.create_work_dir_ok_marker()
 

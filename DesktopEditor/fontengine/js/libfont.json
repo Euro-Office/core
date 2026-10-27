@@ -370,7 +370,9 @@
 			"bit_reader.c",
 			"decode.c",
 			"huffman.c",
-			"state.c"
+			"prefix.c",
+			"state.c",
+			"static_init.c"
 		]
 	}
 	]

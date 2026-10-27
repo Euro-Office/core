@@ -948,9 +948,9 @@ add_library(graphics SHARED
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/bit_reader.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/decode.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/huffman.c
-    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/prefix.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/prefix.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/state.c
-    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
 )
 
 if( APPLE )
