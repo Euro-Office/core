@@ -246,6 +246,7 @@ else()
         add_library(minizip STATIC IMPORTED GLOBAL)
         set_target_properties(minizip PROPERTIES
             IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/minizip.lib"
+            INTERFACE_LINK_LIBRARIES "Bcrypt"
         )
         add_library(z STATIC IMPORTED GLOBAL)
         set_target_properties(z PROPERTIES

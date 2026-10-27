@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "6"
+    version = "7"
 )
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
@@ -101,8 +101,9 @@ def build_and_install():
     # zlib & co from GitHub if they are not found; we want the zlib-ng built above.
     minizip_windows_args = [
         "-DMZ_FETCH_LIBS=OFF",
-        "-DMZ_WZAES=OFF",       # disables mz_crypt_winvista.c → no Bcrypt.lib dep
-        "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",  # /MT to match the main project
+        "-DMZ_WZAES=OFF",
+        "-DCMAKE_POLICY_DEFAULT_CMP0091=NEW",           # minizip-ng 4.x has cmake_minimum_required(3.13)
+        "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",  # which predates CMP0091; force /MT explicitly
     ] if nc.is_windows() else []
 
     nc.run_command(
