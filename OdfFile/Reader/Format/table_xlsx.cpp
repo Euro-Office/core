@@ -124,6 +124,7 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 	bool skip_next_row = false;
 
     std::wstring ht		= L"";
+	bool custom_height	= false;
     double row_height	= 0.0;
 
 	bool bBreakAfter = false, bBreakBefore = false;
@@ -137,6 +138,7 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 		if ((prop) && (prop->attlist_.style_row_height_))
 		{
 			row_height = prop->attlist_.style_row_height_->get_value_unit(odf_types::length::pt);
+			custom_height = !(prop->attlist_.style_use_optimal_row_height_ && *prop->attlist_.style_use_optimal_row_height_);
 
 			if ((prop->attlist_.style_use_optimal_row_height_) && 
 						(*prop->attlist_.style_use_optimal_row_height_==true))
@@ -239,7 +241,9 @@ void table_table_row::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 		if (Context.get_table_context().state()->is_empty_row() && Context.get_table_context().state()->group_rows_.empty())
 		{
-            skip_next_row = true;  
+			// empty rows with a fixed height still need one row element each; optimal-height
+			// gaps stay one element, LibreOffice writes them for every run of empty rows
+			skip_next_row = !custom_height;
 			if (attlist_.table_number_rows_repeated_ > 0xf000)
 				break;//Уведомление_о_вручении.ods (sheet 1)
 		}
