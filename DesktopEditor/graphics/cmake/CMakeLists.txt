@@ -1048,9 +1048,6 @@ endif()
 
 # dynamic libs
 
-target_link_directories(graphics PUBLIC
-    ${ZLIBNG_LIBDIR_ABS}
-)
 
 target_link_libraries(graphics PUBLIC
     Boost::system
@@ -1061,11 +1058,7 @@ target_link_libraries(graphics PUBLIC
     UnicodeConverter
 )
 
-if( MSVC )
-    target_link_libraries(graphics PUBLIC ${ZLIBNG_LIB_NAME})
-else()
-    target_link_libraries(graphics PUBLIC z)
-endif()
+target_link_libraries(graphics PUBLIC z)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

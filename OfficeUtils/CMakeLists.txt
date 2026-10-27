@@ -27,17 +27,10 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         ${OFFICE_UTILS_SOURCES_DIR}
     )
 
-    if( MSVC )
-        target_link_libraries( ${TARGET} PUBLIC
-            minizip                 # minizip.lib (minizip-ng with MZ_COMPAT=ON)
-            ${ZLIBNG_LIB_NAME}      # zlib.lib (zlib-ng, zlib1.dll)
-        )
-    else()
-        target_link_libraries( ${TARGET} PUBLIC
-            minizip # libminizip.so (minizip-ng with MZ_COMPAT=ON)
-            z       # libz.so (zlib-ng)
-        )
-    endif()
+    target_link_libraries( ${TARGET} PUBLIC
+        minizip
+        z
+    )
 
 
     if( NOT MSVC )
