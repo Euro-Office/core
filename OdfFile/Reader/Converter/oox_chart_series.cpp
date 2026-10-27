@@ -314,7 +314,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						{
 							CP_XML_NODE(L"c:f")
 							{
-								CP_XML_CONTENT(values_[i].numRef_.formula);
+								CP_XML_STREAM() << XmlUtils::EncodeXmlString(values_[i].numRef_.formula);
 							}
 						
 							if (values_[i].numRef_.num_cache_count > 0)
@@ -396,7 +396,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 						{
 							CP_XML_NODE(L"c:f")
 							{
-								CP_XML_CONTENT(values_[i].strRef_.formula);
+								CP_XML_STREAM() << XmlUtils::EncodeXmlString(values_[i].strRef_.formula);
 							}
 							if (false == values_[i].strRef_.str_cache.empty())
 							{
