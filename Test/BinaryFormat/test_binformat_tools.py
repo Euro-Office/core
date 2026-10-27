@@ -162,5 +162,24 @@ class Dump(unittest.TestCase):
                 self.assertNotEqual(dump(bytes(mutated), ROOT), base, f"{name}: flip at byte {i} not visible")
 
 
+class SnapshotBundle(unittest.TestCase):
+    def test_printed_snapshots_import_from_a_timestamped_log(self):
+        import tempfile
+        from unittest import mock
+        import run_snapshots
+        texts = {"x2t/word_proc/a.docx.txt": "header DOCY;v10;0;\n  ä\n", "x2t/sheets/b.xlsx.txt": "x\n"}
+        with tempfile.TemporaryDirectory() as d:
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                run_snapshots.print_bundle(texts)
+            log = Path(d) / "job.log"
+            log.write_text("".join(f"2026-10-27T23:46:43.1832561Z {l}\n" for l in out.getvalue().splitlines()))
+            with mock.patch.object(run_snapshots, "SNAPSHOTS", Path(d) / "snapshots"), \
+                    contextlib.redirect_stdout(io.StringIO()):
+                run_snapshots.import_bundle(log)
+            for rel, text in texts.items():
+                self.assertEqual((Path(d) / "snapshots" / rel).read_text(encoding="utf-8"), text)
+
+
 if __name__ == "__main__":
     unittest.main()
