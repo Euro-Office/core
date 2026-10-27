@@ -202,6 +202,7 @@ jobs:
       run: docker pull ghcr.io/euro-office/documentserver:nightly
 
     - name: Build overlay image with fresh core binaries
+      id: overlay
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
         set -euo pipefail
@@ -260,4 +261,32 @@ jobs:
       with:
         name: playwright-report-${{ github.sha }}
         path: documentserver/e2e/playwright-report/
+        retention-days: 14
+
+    # Round-trips the x2tTester inputs and the Common/empty templates through
+    # x2t and real sdkjs with docbuilder, inside the overlay image (fresh core,
+    # nightly sdkjs): open (C++ writer, JS reader), read facts via the builder
+    # API, save (JS writer, C++ reader), reopen twice. See
+    # Test/BinaryFormat/README.md. Runs as root in a throwaway container and
+    # hands the results back to the runner user (HOST_UID/HOST_GID).
+    # Cases without a committed expectation only warn until they are seeded
+    # from the uploaded artifact (its expected/ folder).
+    - name: sdkjs round-trip (docbuilder)
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64' && steps.overlay.outcome == 'success'
+      run: |
+        mkdir -p "$RUNNER_TEMP/roundtrip"
+        docker run --rm --user root --entrypoint python3 \
+          -e PYTHONDONTWRITEBYTECODE=1 -e GITHUB_ACTIONS \
+          -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
+          -v "$GITHUB_WORKSPACE:/core:ro" -v "$RUNNER_TEMP/roundtrip:/out" \
+          euro-office/documentserver:e2e-core \
+          /core/Test/BinaryFormat/roundtrip/roundtrip.py --out /out --missing warn
+
+    - name: Upload sdkjs round-trip results
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64' && steps.overlay.outcome == 'success'
+      uses: actions/upload-artifact@v4
+      with:
+        name: sdkjs-roundtrip-${{ github.sha }}
+        path: ${{ runner.temp }}/roundtrip/
+        if-no-files-found: ignore
         retention-days: 14
