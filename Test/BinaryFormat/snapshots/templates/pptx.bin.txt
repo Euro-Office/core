@@ -1,0 +1,4381 @@
+header PPTY;v10;0;
+main table: 19 tables
+  Main(255) @161
+  App(1) @169
+  Core(2) @320
+  PresProps(7) @439
+  Presentation(3) @444
+  TableStyles(6) @1448
+  SlideRels(40) @1460
+  SlideNotesRels(45) @1472
+  NotesMastersRels(47) @1484
+  NotesRels(46) @1491
+  ThemeRels(41) @1498
+  Themes(20) @11507
+  SlideMasters(22) @13633
+  SlideLayouts(23) @19133
+  Slides(24) @45737
+  NotesSlides(26) @46248
+  NotesMasters(25) @46252
+  FontMap(43) @46256
+  ImageMap(42) @46278
+main table padding: 55 zero bytes
+table Main(255) @161 span=8
+  hex 59 54 50 50 00 00 00 00
+table App(1) @169 span=151
+  #1 len=146
+    attrs [0]'Office Theme' [1]'ONLYOFFICE' [2]'Widescreen' hex 03 00 00 00 00 [4]'3.0000' hex 05 01 00 00 00 06 01 00 00 00 07 01 00 00 00 08 01 00 00 00 09 01 00 00 00 0a 00 00 00 00 0b 00 00 00 00 0c 00 0d 00 0e 00 0f 00
+table Core(2) @320 span=119
+  #2 len=114
+    attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 01 00 00 00 35 00 [4]'2012-12-03T06:56:55Z' [5]'2013-10-30T14:12:17Z'
+table PresProps(7) @439 span=5
+  #7 len=0
+table Presentation(3) @444 span=1004
+  #3 len=999
+    attrs hex 08 01
+    #0 len=956
+      #0 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 00 00 00 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #1 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 f0 f9 06 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #2 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 e0 f3 0d 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #3 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 d0 ed 14 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #4 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 c0 e7 1b 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #5 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 b0 e1 22 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #6 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 a0 db 29 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #7 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 90 d5 30 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #8 len=98
+        attrs hex 00 04 01 e0 f3 0d 00 08 80 cf 37 00
+        #8 len=79
+          attrs hex 11 08 07 00 00
+          #1 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0f
+          #3 len=19
+            attrs [3]'+mn-lt'
+          #4 len=19
+            attrs [3]'+mn-ea'
+      #9 len=24
+        attrs (empty)
+        #8 len=17
+          attrs [10]'en-US'
+    #5 len=12
+      attrs hex 00 00 09 ba 00 01 10 a5 68 00
+    #3 len=12
+      attrs hex 00 10 a5 68 00 01 00 09 ba 00
+table TableStyles(6) @1448 span=12
+  #40 len=7
+    attrs (empty)
+    #0 len=0
+table SlideRels(40) @1460 span=12
+  #40 len=7
+    attrs hex 00 00 00 00 00
+table SlideNotesRels(45) @1472 span=12
+  #45 len=7
+    attrs hex 00 ff ff ff ff
+table NotesMastersRels(47) @1484 span=7
+  #47 len=2
+    attrs (empty)
+table NotesRels(46) @1491 span=7
+  #46 len=2
+    attrs (empty)
+table ThemeRels(41) @1498 span=10009
+  #41 len=10004
+    count 1
+    #0 len=9995
+      attrs bytes len=1120 sha256=39a77a03704b2a33
+      count 11
+      #0 len=722
+        attrs bytes len=720 sha256=73ec90880999123c
+      #0 len=810
+        attrs bytes len=808 sha256=5eb97b1cdf89f4bc
+      #0 len=742
+        attrs bytes len=740 sha256=be2b253333e493e4
+      #0 len=794
+        attrs bytes len=792 sha256=85507f8868749ab0
+      #0 len=922
+        attrs bytes len=920 sha256=f330680f0f0109f9
+      #0 len=582
+        attrs bytes len=580 sha256=47a46fb4cd5f393d
+      #0 len=450
+        attrs bytes len=448 sha256=c70f5a5455c1828e
+      #0 len=1034
+        attrs bytes len=1032 sha256=fd51769bd3040f97
+      #0 len=1034
+        attrs bytes len=1032 sha256=a5e5ef50fcadfa8a
+      #0 len=810
+        attrs bytes len=808 sha256=d4573603811aef7c
+      #0 len=914
+        attrs bytes len=912 sha256=7e9d3ea81d159e7e
+table Themes(20) @11507 span=2126
+  count 1
+  #20 len=2117
+    attrs [0]'Office Theme'
+    #0 len=2072
+      #0 len=289
+        attrs [0]'Office Theme'
+        #0 len=13
+          #1 len=8
+            attrs hex 00 5b 01 9b 02 d5
+        #1 len=13
+          #1 len=8
+            attrs hex 00 ed 01 7d 02 31
+        #2 len=13
+          #1 len=8
+            attrs hex 00 a5 01 a5 02 a5
+        #3 len=13
+          #1 len=8
+            attrs hex 00 ff 01 c0 02 00
+        #4 len=13
+          #1 len=8
+            attrs hex 00 44 01 72 02 c4
+        #5 len=13
+          #1 len=8
+            attrs hex 00 70 01 ad 02 47
+        #8 len=38
+          #4 len=33
+            attrs [0]'windowText' hex 01 00 02 00 03 00
+        #9 len=13
+          #1 len=8
+            attrs hex 00 44 01 54 02 6a
+        #10 len=13
+          #1 len=8
+            attrs hex 00 95 01 4f 02 72
+        #11 len=13
+          #1 len=8
+            attrs hex 00 05 01 63 02 c1
+        #12 len=30
+          #4 len=25
+            attrs [0]'window' hex 01 ff 02 ff 03 ff
+        #13 len=13
+          #1 len=8
+            attrs hex 00 e7 01 e6 02 e6
+      #1 len=173
+        attrs [0]'Office Theme'
+        #0 len=66
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=17
+            attrs [3]'Arial'
+          #2 len=17
+            attrs [3]'Arial'
+        #1 len=66
+          #0 len=17
+            attrs [3]'Arial'
+          #1 len=17
+            attrs [3]'Arial'
+          #2 len=17
+            attrs [3]'Arial'
+      #2 len=1595
+        attrs [0]'Office Theme'
+        #0 len=810
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=384
+            #4 len=379
+              attrs (empty)
+              #0 len=358
+                count 3
+                #0 len=113
+                  attrs hex 00 00 00 00 00
+                  #0 len=101
+                    #3 len=96
+                      attrs hex 00 0e
+                      #0 len=87
+                        count 3
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 b0 ad 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 28 9a 01 00
+                        #1 len=20
+                          attrs [0]'tint' hex 01 b8 05 01 00
+                #0 len=113
+                  attrs hex 00 50 c3 00 00
+                  #0 len=101
+                    #3 len=96
+                      attrs hex 00 0e
+                      #0 len=87
+                        count 3
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 58 92 01 00
+                        #1 len=20
+                          attrs [0]'tint' hex 01 28 1d 01 00
+                #0 len=113
+                  attrs hex 00 a0 86 01 00
+                  #0 len=101
+                    #3 len=96
+                      attrs hex 00 0e
+                      #0 len=87
+                        count 3
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 28 9a 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 c8 a9 01 00
+                        #1 len=20
+                          attrs [0]'tint' hex 01 68 3c 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+          #0 len=388
+            #4 len=383
+              attrs (empty)
+              #0 len=362
+                count 3
+                #0 len=113
+                  attrs hex 00 00 00 00 00
+                  #0 len=101
+                    #3 len=96
+                      attrs hex 00 0e
+                      #0 len=87
+                        count 3
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 58 92 01 00
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 70 8e 01 00
+                        #1 len=20
+                          attrs [0]'tint' hex 01 30 6f 01 00
+                #0 len=115
+                  attrs hex 00 50 c3 00 00
+                  #0 len=103
+                    #3 len=98
+                      attrs hex 00 0e
+                      #0 len=89
+                        count 3
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 b0 ad 01 00
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 a0 86 01 00
+                        #1 len=22
+                          attrs [0]'shade' hex 01 a0 86 01 00
+                #0 len=115
+                  attrs hex 00 a0 86 01 00
+                  #0 len=103
+                    #3 len=98
+                      attrs hex 00 0e
+                      #0 len=89
+                        count 3
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 b8 82 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 c0 d4 01 00
+                        #1 len=22
+                          attrs [0]'shade' hex 01 b0 30 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+        #1 len=208
+          count 3
+          #0 len=63
+            attrs hex 00 00 01 00 02 01 03 ce 18 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #1 len=4
+              attrs hex 00 06
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=63
+            attrs hex 00 00 01 00 02 01 03 9c 31 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #1 len=4
+              attrs hex 00 06
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+          #0 len=63
+            attrs hex 00 00 01 00 02 01 03 6a 4a 00 00
+            #0 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0e
+            #1 len=4
+              attrs hex 00 06
+            #2 len=12
+              attrs hex 00 03 00 00 00 01 00 35 0c 00
+        #3 len=531
+          count 3
+          #0 len=19
+            #3 len=14
+              #0 len=9
+                #3 len=4
+                  attrs hex 00 0e
+          #0 len=82
+            #3 len=77
+              #0 len=72
+                #3 len=67
+                  attrs hex 00 0e
+                  #0 len=58
+                    count 2
+                    #1 len=20
+                      attrs [0]'tint' hex 01 18 73 01 00
+                    #1 len=24
+                      attrs [0]'satMod' hex 01 10 98 02 00
+          #0 len=411
+            #4 len=406
+              attrs (empty)
+              #0 len=385
+                count 3
+                #0 len=140
+                  attrs hex 00 00 00 00 00
+                  #0 len=128
+                    #3 len=123
+                      attrs hex 00 0e
+                      #0 len=114
+                        count 4
+                        #1 len=20
+                          attrs [0]'tint' hex 01 48 6b 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 f0 49 02 00
+                        #1 len=22
+                          attrs [0]'shade' hex 01 d0 7e 01 00
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 70 8e 01 00
+                #0 len=140
+                  attrs hex 00 50 c3 00 00
+                  #0 len=128
+                    #3 len=123
+                      attrs hex 00 0e
+                      #0 len=114
+                        count 4
+                        #1 len=20
+                          attrs [0]'tint' hex 01 d0 7e 01 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 d0 fb 01 00
+                        #1 len=22
+                          attrs [0]'shade' hex 01 90 5f 01 00
+                        #1 len=24
+                          attrs [0]'lumMod' hex 01 58 92 01 00
+                #0 len=86
+                  attrs hex 00 a0 86 01 00
+                  #0 len=74
+                    #3 len=69
+                      attrs hex 00 0e
+                      #0 len=60
+                        count 2
+                        #1 len=22
+                          attrs [0]'shade' hex 01 18 f6 00 00
+                        #1 len=24
+                          attrs [0]'satMod' hex 01 c0 d4 01 00
+              #1 len=9
+                attrs hex 00 c0 65 52 00 01 00
+    #4 len=4
+      count 0
+table SlideMasters(22) @13633 span=5500
+  count 1
+  #22 len=5491
+    attrs hex 00 00
+    #0 len=2726
+      attrs hex 00 00 00 00 00
+      #0 len=28
+        attrs (empty)
+        #1 len=21
+          attrs hex 00 e9 03 00 00
+          #0 len=9
+            #3 len=4
+              attrs hex 00 06
+      #1 len=2681
+        #4 len=2676
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2575
+            count 5
+            #0 len=383
+              #1 len=378
+                attrs (empty)
+                #0 len=88
+                  #0 len=52
+                    attrs hex 00 04 00 00 00 [1]'Title Placeholder 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=61
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 38 ca 0c 00 01 45 92 05 00 02 90 74 a0 00 03 fb 39 14 00
+                  #1 len=20
+                    #1 len=15
+                      attrs [0]'rect'
+                  #2 len=0
+                #3 len=212
+                  #0 len=40
+                    attrs hex 01 01 03 98 b2 00 00 08 30 65 01 00 0a 30 65 01 00 0c 00 0f 98 b2 00 00 11 01
+                    #1 len=7
+                      attrs hex 00 03 00 00 00
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=799
+              #1 len=794
+                attrs (empty)
+                #0 len=93
+                  #0 len=50
+                    attrs hex 00 05 00 00 00 [1]'Text Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 00
+                #1 len=61
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 38 ca 0c 00 01 59 db 1b 00 02 90 74 a0 00 03 6a 65 42 00
+                  #1 len=20
+                    #1 len=15
+                      attrs [0]'rect'
+                  #2 len=0
+                #3 len=623
+                  #0 len=38
+                    attrs hex 03 98 b2 00 00 08 30 65 01 00 0a 30 65 01 00 0c 00 0f 98 b2 00 00 11 01
+                    #1 len=7
+                      attrs hex 00 03 00 00 00
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=511
+              #1 len=506
+                attrs (empty)
+                #0 len=95
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 32 00 03 01 04 05
+                #1 len=61
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 38 ca 0c 00 01 7e fd 60 00 02 a0 db 29 00 03 45 92 05 00
+                  #1 len=20
+                    #1 len=15
+                      attrs [0]'rect'
+                  #2 len=0
+                #3 len=333
+                  #0 len=28
+                    attrs hex 01 01 03 98 b2 00 00 08 30 65 01 00 0a 30 65 01 00 0c 00 0f 98 b2 00 00 11 01
+                  #1 len=79
+                    #0 len=74
+                      attrs hex 00 04
+                      #8 len=65
+                        attrs hex 11 b0 04 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=358
+              #1 len=353
+                attrs (empty)
+                #0 len=99
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 33 00 03 02 04 06
+                #1 len=61
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 c8 9f 3d 00 01 7e fd 60 00 02 70 c9 3e 00 03 45 92 05 00
+                  #1 len=20
+                    #1 len=15
+                      attrs [0]'rect'
+                  #2 len=0
+                #3 len=176
+                  #0 len=28
+                    attrs hex 01 01 03 98 b2 00 00 08 30 65 01 00 0a 30 65 01 00 0c 00 0f 98 b2 00 00 11 01
+                  #1 len=79
+                    #0 len=74
+                      attrs hex 00 00
+                      #8 len=65
+                        attrs hex 11 b0 04 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=495
+              #1 len=490
+                attrs (empty)
+                #0 len=111
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 34 00 03 02 04 0c
+                #1 len=61
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 28 63 83 00 01 7e fd 60 00 02 a0 db 29 00 03 45 92 05 00
+                  #1 len=20
+                    #1 len=15
+                      attrs [0]'rect'
+                  #2 len=0
+                #3 len=301
+                  #0 len=28
+                    attrs hex 01 01 03 98 b2 00 00 08 30 65 01 00 0a 30 65 01 00 0c 00 0f 98 b2 00 00 11 01
+                  #1 len=79
+                    #0 len=74
+                      attrs hex 00 05
+                      #8 len=65
+                        attrs hex 11 b0 04 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #1 len=26
+      attrs hex 00 00 01 01 02 02 03 03 04 04 05 05 06 0c 07 0d 0a 0a 0b 0b 0f 08 10 09
+    #5 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+    #6 len=2705
+      #0 len=132
+        #0 len=127
+          attrs hex 00 04 01 e0 f3 0d 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 00 00 00 00
+          #6 len=5
+            #0 len=0
+          #8 len=79
+            attrs hex 11 30 11 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mj-lt'
+            #4 len=19
+              attrs [3]'+mj-ea'
+      #1 len=1602
+        #0 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 f8 7c 03 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 e8 03 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 f0 0a 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #1 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 e8 76 0a 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 60 09 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #2 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 d8 70 11 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 d0 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #3 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 c8 6a 18 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #4 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 b8 64 1f 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #5 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 a8 5e 26 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #6 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 98 58 2d 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #7 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 88 52 34 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #8 len=173
+          attrs hex 00 04 01 e0 f3 0d 00 05 08 83 fc ff 08 78 4c 3b 00
+          #0 len=7
+            attrs hex 00 90 5f 01 00
+          #2 len=7
+            attrs hex 01 f4 01 00 00
+          #5 len=22
+            #2 len=17
+              attrs [3]'Arial'
+          #6 len=14
+            #1 len=9
+              attrs hex 00 01 00 00 00 22 20
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+      #2 len=956
+        #0 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 00 00 00 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #1 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 f0 f9 06 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #2 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 e0 f3 0d 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #3 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 d0 ed 14 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #4 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 c0 e7 1b 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #5 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 b0 e1 22 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #6 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 a0 db 29 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #7 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 90 d5 30 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #8 len=98
+          attrs hex 00 04 01 e0 f3 0d 00 08 80 cf 37 00
+          #8 len=79
+            attrs hex 11 08 07 00 00
+            #1 len=19
+              #3 len=14
+                #0 len=9
+                  #3 len=4
+                    attrs hex 00 0f
+            #3 len=19
+              attrs [3]'+mn-lt'
+            #4 len=19
+              attrs [3]'+mn-ea'
+        #9 len=24
+          attrs (empty)
+          #8 len=17
+            attrs [10]'en-US'
+table SlideLayouts(23) @19133 span=26604
+  count 11
+  #23 len=2106
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 12
+    #0 len=2071
+      attrs [0]'Title Slide'
+      #1 len=2037
+        #4 len=2032
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=1931
+            count 5
+            #0 len=319
+              #1 len=314
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 03
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 20 41 17 00 01 3b 20 11 00 02 c0 86 8b 00 03 90 6e 24 00
+                  #2 len=0
+                #3 len=197
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=21
+                    #0 len=16
+                      attrs hex 00 00
+                      #8 len=7
+                        attrs hex 11 70 17 00 00
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=684
+              #1 len=679
+                attrs (empty)
+                #0 len=77
+                  #0 len=34
+                    attrs hex 00 05 00 00 00 [1]'Subtitle 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 0d
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 20 41 17 00 01 76 f6 36 00 02 c0 86 8b 00 03 d2 43 19 00
+                  #2 len=0
+                #3 len=549
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=369
+                    #0 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 60 09 00 00
+                    #1 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #2 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 08 07 00 00
+                    #3 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #4 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #5 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #6 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #7 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #8 len=36
+                      attrs hex 00 00 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                  #2 len=163
+                    count 1
+                    #0 len=154
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=113
+                        count 1
+                        #0 len=104
+                          #1 len=99
+                            attrs [0]'Click to edit Master subtitle style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2099
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 09
+    #0 len=2064
+      attrs [0]'Title and Content'
+      #1 len=2018
+        #4 len=2013
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=1912
+            count 5
+            #0 len=269
+              #1 len=264
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=174
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=715
+              #1 len=710
+                attrs (empty)
+                #0 len=97
+                  #0 len=56
+                    attrs hex 00 05 00 00 00 [1]'Content Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=22
+                    attrs hex 00 00 01 00
+                    #0 len=11
+                      attrs hex 00 00 01 01 00 00 00 31 00
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=587
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2614
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 10
+    #0 len=2579
+      attrs [0]'Section Header'
+      #1 len=2539
+        #4 len=2534
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2433
+            count 5
+            #0 len=317
+              #1 len=312
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6a b1 0c 00 01 aa 16 1a 00 02 90 74 a0 00 03 81 87 2b 00
+                  #2 len=0
+                #3 len=195
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=19
+                    #0 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 70 17 00 00
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=1188
+              #1 len=1183
+                attrs (empty)
+                #0 len=93
+                  #0 len=50
+                    attrs hex 00 05 00 00 00 [1]'Text Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6a b1 0c 00 01 97 07 46 00 02 90 74 a0 00 03 1b e4 16 00
+                  #2 len=0
+                #3 len=1037
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=873
+                    #0 len=92
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 60 09 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #1 len=92
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 d0 07 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #2 len=92
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 08 07 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #3 len=92
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #4 len=92
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #5 len=92
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #6 len=92
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #7 len=92
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                    #8 len=92
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=65
+                        attrs hex 11 40 06 00 00
+                        #1 len=53
+                          #3 len=48
+                            #0 len=43
+                              #3 len=38
+                                attrs hex 00 0f
+                                #0 len=29
+                                  count 1
+                                  #1 len=20
+                                    attrs [0]'tint' hex 01 f8 24 01 00
+                  #2 len=147
+                    count 1
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2865
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 15
+    #0 len=2830
+      attrs [0]'Two Content'
+      #1 len=2796
+        #4 len=2791
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2690
+            count 6
+            #0 len=269
+              #1 len=264
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=174
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=744
+              #1 len=739
+                attrs (empty)
+                #0 len=99
+                  #0 len=56
+                    attrs hex 00 05 00 00 00 [1]'Content Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 03 01
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 38 ca 0c 00 01 59 db 1b 00 02 a0 10 4f 00 03 6a 65 42 00
+                  #2 len=0
+                #3 len=587
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=744
+              #1 len=739
+                attrs (empty)
+                #0 len=99
+                  #0 len=56
+                    attrs hex 00 06 00 00 00 [1]'Content Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 32 00 03 01
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 28 2e 5e 00 01 59 db 1b 00 02 a0 10 4f 00 03 6a 65 42 00
+                  #2 len=0
+                #3 len=587
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 07 00 00 00 [1]'Date Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 08 00 00 00 [1]'Footer Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 09 00 00 00 [1]'Slide Number Placeholder 6' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=4274
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 19
+    #0 len=4239
+      attrs [0]'Comparison'
+      #1 len=4207
+        #4 len=4202
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=4101
+            count 8
+            #0 len=296
+              #1 len=291
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 45 92 05 00 02 90 74 a0 00 03 fb 39 14 00
+                  #2 len=0
+                #3 len=174
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=686
+              #1 len=681
+                attrs (empty)
+                #0 len=93
+                  #0 len=50
+                    attrs hex 00 05 00 00 00 [1]'Text Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 0b a7 19 00 02 9b b3 4e 00 03 68 92 0c 00
+                  #2 len=0
+                #3 len=535
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=369
+                    #0 len=36
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 60 09 00 00
+                    #1 len=36
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 d0 07 00 00
+                    #2 len=36
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 08 07 00 00
+                    #3 len=36
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #4 len=36
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #5 len=36
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #6 len=36
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #7 len=36
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #8 len=36
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                  #2 len=147
+                    count 1
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=744
+              #1 len=739
+                attrs (empty)
+                #0 len=99
+                  #0 len=56
+                    attrs hex 00 06 00 00 00 [1]'Content Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 32 00 03 01
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 72 39 26 00 02 9b b3 4e 00 03 ec 38 38 00
+                  #2 len=0
+                #3 len=587
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=688
+              #1 len=683
+                attrs (empty)
+                #0 len=95
+                  #0 len=50
+                    attrs hex 00 07 00 00 00 [1]'Text Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 33 00 03 02 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 28 2e 5e 00 01 0b a7 19 00 02 d4 16 4f 00 03 68 92 0c 00
+                  #2 len=0
+                #3 len=535
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=369
+                    #0 len=36
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 60 09 00 00
+                    #1 len=36
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 d0 07 00 00
+                    #2 len=36
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 08 07 00 00
+                    #3 len=36
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #4 len=36
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #5 len=36
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #6 len=36
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #7 len=36
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                    #8 len=36
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=9
+                        attrs hex 01 01 11 40 06 00 00
+                  #2 len=147
+                    count 1
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=744
+              #1 len=739
+                attrs (empty)
+                #0 len=99
+                  #0 len=56
+                    attrs hex 00 08 00 00 00 [1]'Content Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 34 00 03 02
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 28 2e 5e 00 01 72 39 26 00 02 d4 16 4f 00 03 ec 38 38 00
+                  #2 len=0
+                #3 len=587
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 09 00 00 00 [1]'Date Placeholder 6' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 0a 00 00 00 [1]'Footer Placeholder 7' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 0b 00 00 00 [1]'Slide Number Placeholder 8' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=1365
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 13
+    #0 len=1330
+      attrs [0]'Title Only'
+      #1 len=1298
+        #4 len=1293
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=1192
+            count 4
+            #0 len=269
+              #1 len=264
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=174
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 05 00 00 00 [1]'Date Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 06 00 00 00 [1]'Footer Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 07 00 00 00 [1]'Slide Number Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=1081
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 00
+    #0 len=1046
+      attrs [0]'Blank'
+      #1 len=1024
+        #4 len=1019
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=918
+            count 3
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 04 00 00 00 [1]'Date Placeholder 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 05 00 00 00 [1]'Footer Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 06 00 00 00 [1]'Slide Number Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=3024
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 0e
+    #0 len=2989
+      attrs [0]'Content with Caption'
+      #1 len=2937
+        #4 len=2932
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2831
+            count 6
+            #0 len=317
+              #1 len=312
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 f0 f9 06 00 02 4d 00 3c 00 03 c8 6a 18 00
+                  #2 len=0
+                #3 len=195
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=19
+                    #0 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 80 0c 00 00
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=913
+              #1 len=908
+                attrs (empty)
+                #0 len=97
+                  #0 len=56
+                    attrs hex 00 05 00 00 00 [1]'Content Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=22
+                    attrs hex 00 00 01 00
+                    #0 len=11
+                      attrs hex 00 00 01 01 00 00 00 31 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 d4 16 4f 00 01 21 11 0f 00 02 28 2e 5e 00 03 99 5d 4a 00
+                  #2 len=0
+                #3 len=758
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=171
+                    #0 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 80 0c 00 00
+                    #1 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 f0 0a 00 00
+                    #2 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 60 09 00 00
+                    #3 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #4 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #5 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #6 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #7 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #8 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=668
+              #1 len=663
+                attrs (empty)
+                #0 len=95
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Text Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 32 00 03 01 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 b8 64 1f 00 02 4d 00 3c 00 03 04 29 3a 00
+                  #2 len=0
+                #3 len=515
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=351
+                    #0 len=34
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #1 len=34
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 78 05 00 00
+                    #2 len=34
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 b0 04 00 00
+                    #3 len=34
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #4 len=34
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #5 len=34
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #6 len=34
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #7 len=34
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #8 len=34
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                  #2 len=147
+                    count 1
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 07 00 00 00 [1]'Date Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 08 00 00 00 [1]'Footer Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 09 00 00 00 [1]'Slide Number Placeholder 6' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2783
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 0f
+    #0 len=2748
+      attrs [0]'Picture with Caption'
+      #1 len=2696
+        #4 len=2691
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2590
+            count 6
+            #0 len=317
+              #1 len=312
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 f0 f9 06 00 02 4d 00 3c 00 03 c8 6a 18 00
+                  #2 len=0
+                #3 len=195
+                  #0 len=4
+                    attrs hex 01 00
+                  #1 len=19
+                    #0 len=14
+                      attrs (empty)
+                      #8 len=7
+                        attrs hex 11 80 0c 00 00
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=672
+              #1 len=667
+                attrs (empty)
+                #0 len=101
+                  #0 len=56
+                    attrs hex 00 05 00 00 00 [1]'Picture Placeholder 2' hex 02 00
+                  #1 len=6
+                    attrs hex 03 01 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 0a
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 d4 16 4f 00 01 21 11 0f 00 02 28 2e 5e 00 03 99 5d 4a 00
+                  #2 len=0
+                #3 len=513
+                  #0 len=4
+                    attrs hex 01 04
+                  #1 len=351
+                    #0 len=34
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 80 0c 00 00
+                    #1 len=34
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 f0 0a 00 00
+                    #2 len=34
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 60 09 00 00
+                    #3 len=34
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #4 len=34
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #5 len=34
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #6 len=34
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #7 len=34
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                    #8 len=34
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 d0 07 00 00
+                  #2 len=143
+                    count 1
+                    #0 len=134
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=93
+                        count 1
+                        #0 len=84
+                          #1 len=79
+                            attrs [0]'Click icon to add picture'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=668
+              #1 len=663
+                attrs (empty)
+                #0 len=95
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Text Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 32 00 03 01 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 6c d0 0c 00 01 b8 64 1f 00 02 4d 00 3c 00 03 04 29 3a 00
+                  #2 len=0
+                #3 len=515
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=351
+                    #0 len=34
+                      attrs hex 05 00 00 00 00 08 00 00 00 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 40 06 00 00
+                    #1 len=34
+                      attrs hex 05 00 00 00 00 08 f0 f9 06 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 78 05 00 00
+                    #2 len=34
+                      attrs hex 05 00 00 00 00 08 e0 f3 0d 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 b0 04 00 00
+                    #3 len=34
+                      attrs hex 05 00 00 00 00 08 d0 ed 14 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #4 len=34
+                      attrs hex 05 00 00 00 00 08 c0 e7 1b 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #5 len=34
+                      attrs hex 05 00 00 00 00 08 b0 e1 22 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #6 len=34
+                      attrs hex 05 00 00 00 00 08 a0 db 29 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #7 len=34
+                      attrs hex 05 00 00 00 00 08 90 d5 30 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                    #8 len=34
+                      attrs hex 05 00 00 00 00 08 80 cf 37 00
+                      #6 len=5
+                        #0 len=0
+                      #8 len=7
+                        attrs hex 11 e8 03 00 00
+                  #2 len=147
+                    count 1
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 07 00 00 00 [1]'Date Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 08 00 00 00 [1]'Footer Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 09 00 00 00 [1]'Slide Number Placeholder 6' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2129
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 23
+    #0 len=2094
+      attrs [0]'Title and Vertical Text'
+      #1 len=2036
+        #4 len=2031
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=1930
+            count 5
+            #0 len=269
+              #1 len=264
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 0f
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=174
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=733
+              #1 len=728
+                attrs (empty)
+                #0 len=113
+                  #0 len=68
+                    attrs hex 00 05 00 00 00 [1]'Vertical Text Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 31 00 02 01 04 00
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=589
+                  #0 len=4
+                    attrs hex 11 00
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+  #23 len=2205
+    attrs hex 00 00 00 00 00 01 01 02 00 04 01 05 21
+    #0 len=2170
+      attrs [0]'Vertical Title and Text'
+      #1 len=2112
+        #4 len=2107
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=2006
+            count 5
+            #0 len=318
+              #1 len=313
+                attrs (empty)
+                #0 len=84
+                  #0 len=46
+                    attrs hex 00 04 00 00 00 [1]'Vertical Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=19
+                    attrs hex 00 00 01 00
+                    #0 len=8
+                      attrs hex 00 00 02 01 04 0f
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 a4 21 85 00 01 45 92 05 00 02 24 1d 28 00 03 7e ae 58 00
+                  #2 len=0
+                #3 len=176
+                  #0 len=4
+                    attrs hex 11 00
+                  #1 len=0
+                  #2 len=157
+                    count 1
+                    #0 len=148
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master title style'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=760
+              #1 len=755
+                attrs (empty)
+                #0 len=113
+                  #0 len=68
+                    attrs hex 00 05 00 00 00 [1]'Vertical Text Placeholder 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=26
+                    attrs hex 00 00 01 00
+                    #0 len=15
+                      attrs hex 00 00 01 01 00 00 00 31 00 02 01 04 00
+                #1 len=36
+                  attrs hex 00 00
+                  #0 len=22
+                    attrs hex 00 38 ca 0c 00 01 45 92 05 00 02 1c 04 76 00 03 7e ae 58 00
+                  #2 len=0
+                #3 len=589
+                  #0 len=4
+                    attrs hex 11 00
+                  #1 len=0
+                  #2 len=570
+                    count 5
+                    #0 len=138
+                      #0 len=14
+                        attrs hex 07 00 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=107
+                        count 1
+                        #0 len=98
+                          #1 len=93
+                            attrs [0]'Click to edit Master text styles'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 01 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Second level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=96
+                      #0 len=14
+                        attrs hex 07 02 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Third level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=98
+                      #0 len=14
+                        attrs hex 07 03 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=2
+                        attrs (empty)
+                      #2 len=67
+                        count 1
+                        #0 len=58
+                          #1 len=53
+                            attrs [0]'Fourth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+                    #0 len=111
+                      #0 len=14
+                        attrs hex 07 04 00 00 00
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=65
+                        count 1
+                        #0 len=56
+                          #1 len=51
+                            attrs [0]'Fifth level'
+                            #0 len=17
+                              attrs [10]'en-US'
+            #0 len=356
+              #1 len=351
+                attrs (empty)
+                #0 len=97
+                  #0 len=50
+                    attrs hex 00 06 00 00 00 [1]'Date Placeholder 3' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'10' hex 03 01 04 05
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=228
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=211
+                    count 1
+                    #0 len=202
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=161
+                        count 1
+                        #0 len=152
+                          #2 len=147
+                            attrs [0]'{BCC18F51-09EC-435C-A3BA-64A766E099C0}' [1]'datetimeFigureOut' [2]'30.10.2013'
+            #0 len=203
+              #1 len=198
+                attrs (empty)
+                #0 len=101
+                  #0 len=54
+                    attrs hex 00 07 00 00 00 [1]'Footer Placeholder 4' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'11' hex 03 02 04 06
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=340
+              #1 len=335
+                attrs (empty)
+                #0 len=113
+                  #0 len=66
+                    attrs hex 00 08 00 00 00 [1]'Slide Number Placeholder 5' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=28
+                    attrs hex 00 00 01 00
+                    #0 len=17
+                      attrs hex 00 00 [1]'12' hex 03 02 04 0c
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=196
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=179
+                    count 1
+                    #0 len=170
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=129
+                        count 1
+                        #0 len=120
+                          #2 len=115
+                            attrs [0]'{08395586-F03A-48D1-94DF-16B239DF4FB5}' [1]'slidenum' [2]'‹#›'
+    #4 len=10
+      attrs hex 00 01 01 01 02 01 03 01
+table Slides(24) @45737 span=511
+  count 1
+  #24 len=502
+    attrs hex 00 01 01 00
+    #0 len=477
+      attrs hex 00 00 00 00 00
+      #1 len=465
+        #4 len=460
+          #0 len=30
+            #0 len=14
+              attrs hex 00 01 00 00 00 01 00 00 00 00 02 00
+            #2 len=6
+              attrs hex 00 00 01 00
+          #1 len=56
+            attrs hex 00 00
+            #0 len=42
+              attrs hex 00 00 00 00 00 01 00 00 00 00 02 00 00 00 00 03 00 00 00 00 04 00 00 00 00 05 00 00 00 00 06 00 00 00 00 07 00 00 00 00
+            #2 len=0
+          #2 len=359
+            count 2
+            #0 len=166
+              #1 len=161
+                attrs (empty)
+                #0 len=64
+                  #0 len=28
+                    attrs hex 00 04 00 00 00 [1]'Title 1' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=17
+                    attrs hex 00 00 01 00
+                    #0 len=6
+                      attrs hex 00 00 04 03
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+            #0 len=179
+              #1 len=174
+                attrs (empty)
+                #0 len=77
+                  #0 len=34
+                    attrs hex 00 05 00 00 00 [1]'Subtitle 2' hex 02 00
+                  #1 len=4
+                    attrs hex 06 01
+                  #2 len=24
+                    attrs hex 00 00 01 00
+                    #0 len=13
+                      attrs hex 00 00 01 01 00 00 00 31 00 04 0d
+                #1 len=9
+                  attrs hex 00 00
+                  #2 len=0
+                #3 len=71
+                  #0 len=2
+                    attrs (empty)
+                  #1 len=0
+                  #2 len=54
+                    count 1
+                    #0 len=45
+                      #0 len=9
+                        attrs (empty)
+                        #8 len=2
+                          attrs (empty)
+                      #1 len=17
+                        attrs [10]'en-US'
+                      #2 len=4
+                        count 0
+    #2 len=9
+      attrs hex 00 01 02 d0 07 00 00
+table NotesSlides(26) @46248 span=4
+  count 0
+table NotesMasters(25) @46252 span=4
+  count 0
+table FontMap(43) @46256 span=22
+  #43 len=17
+    attrs [0]'Arial'
+table ImageMap(42) @46278 span=10
+  hex 2a 02 00 00 00 fa fb 00 00 00
