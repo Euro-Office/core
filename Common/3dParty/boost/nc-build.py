@@ -85,8 +85,12 @@ def build_and_install():
     elif nc.is_windows():
         boost_arch, host_subdir = boost_msvc_arch()
 
+        # Boost 1.83 can't guess the toolset for Visual Studio 2026 (18.x)
+        # and fails with "Unknown toolset: vcunk". Name it explicitly; the
+        # MSVC environment is already set up, so b2's engine is built with
+        # the cl.exe from PATH. project-config.jam is rewritten below anyway.
         nc.run_command(
-            [ "cmd.exe", "/c", "bootstrap.bat", f"--prefix={ nc.install_dir }" ],
+            [ "cmd.exe", "/c", "bootstrap.bat", "vc143", f"--prefix={ nc.install_dir }" ],
             "Running bootstrap",
             nc.work_dir
         )
