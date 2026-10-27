@@ -76,8 +76,11 @@ reads the new output, rerun with `--update` and commit the snapshot together
 with the change. CI also uploads every dump as the `binformat-dumps-<sha>`
 artifact, so snapshots can be taken from there when no local build is at hand.
 
-The `x2t` suite runs with `--missing warn` in CI until its snapshots are
-committed. After that, drop the flag so a missing snapshot fails.
+The `x2t` suite runs with `--missing warn --print-new` in CI until its
+snapshots are committed. `--print-new` also prints the missing snapshots into
+the job log as a base64 tar.gz block, for when the artifact can't be
+downloaded. Save the log and run `run_snapshots.py --import-log <log>` to write
+them. Once they are committed, drop both flags so a missing snapshot fails.
 
 ## Self-tests
 

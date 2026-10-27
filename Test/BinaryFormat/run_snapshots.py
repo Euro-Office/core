@@ -21,16 +21,20 @@ rerun with --update, or copy the uploaded dumps into the snapshot folder.
 
 Usage:
   run_snapshots.py templates [--update]
-  run_snapshots.py x2t --package build/package [--update] [--missing fail|warn]
+  run_snapshots.py x2t --package build/package [--update] [--missing fail|warn] [--print-new]
+  run_snapshots.py --import-log job-log.txt     # take printed snapshots from a CI log
 """
 
 import argparse
+import base64
 import difflib
 import hashlib
+import io
 import os
 import shutil
 import subprocess
 import sys
+import tarfile
 import tempfile
 import zipfile
 from pathlib import Path
@@ -46,6 +50,8 @@ X2T_INPUTS = ["input_word_proc", "input_sheets", "input_slides"]
 X2T_OUTPUT_EXTS = ("doct", "xlst", "pptt")
 DIFF_LINES = 200
 IN_CI = os.environ.get("GITHUB_ACTIONS") == "true"
+LOG_BEGIN = "----- BEGIN binformat snapshots (tar.gz, base64) -----"
+LOG_END = "----- END binformat snapshots -----"
 
 
 def template_cases():
@@ -111,8 +117,47 @@ def normalise(text, work):
     return text.replace(str(work), "<WORK>") if work else text
 
 
-def run(cases, update, missing, out_dir, work=None):
+def print_bundle(texts):
+    """Print snapshots as a base64 tar.gz block, for when CI artifacts cannot be downloaded."""
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+        for rel, text in sorted(texts.items()):
+            data = text.encode("utf-8")
+            info = tarfile.TarInfo(rel)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+    print(LOG_BEGIN)
+    print(base64.encodebytes(buf.getvalue()).decode("ascii"), end="")
+    print(LOG_END)
+
+
+def import_bundle(log_path):
+    """Write the snapshots from a block printed by --print-new (a job log may prefix timestamps)."""
+    lines, inside = [], False
+    for line in Path(log_path).read_text(encoding="utf-8", errors="replace").splitlines():
+        body = line.split(" ", 1)[1] if line[:4].isdigit() and " " in line else line
+        if body == LOG_BEGIN:
+            lines, inside = [], True
+        elif body == LOG_END and inside:
+            break
+        elif inside:
+            lines.append(body.strip())
+    else:
+        sys.exit(f"no complete snapshot block in {log_path}")
+    with tarfile.open(fileobj=io.BytesIO(base64.b64decode("".join(lines))), mode="r:gz") as tar:
+        for member in tar.getmembers():
+            target = (SNAPSHOTS / member.name).resolve()
+            if not member.isfile() or SNAPSHOTS.resolve() not in target.parents:
+                sys.exit(f"refusing to write {member.name}")
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(tar.extractfile(member).read())
+            print(f"imported {member.name}")
+    return 0
+
+
+def run(cases, update, missing, out_dir, work=None, print_new=False):
     failed = new = 0
+    new_texts = {}
     for rel, binary in cases:
         snap = SNAPSHOTS / rel
         if binary is None:
@@ -136,6 +181,7 @@ def run(cases, update, missing, out_dir, work=None):
             continue
         if not snap.exists():
             new += 1
+            new_texts[rel] = text
             msg = f"{rel}: no snapshot yet ({len(text.splitlines())} lines); run with --update and commit it"
             if missing == "fail":
                 failed += 1
@@ -161,28 +207,39 @@ def run(cases, update, missing, out_dir, work=None):
               "update with: Test/BinaryFormat/run_snapshots.py <suite> --update")
     elif new:
         print(f"\n{new} snapshot(s) missing; nothing to compare for them yet.")
+    if print_new and new_texts:
+        print("New snapshots follow; import them with: run_snapshots.py --import-log <job log>")
+        print_bundle(new_texts)
     return 1 if failed else 0
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("suite", choices=["templates", "x2t"])
+    ap.add_argument("suite", nargs="?", choices=["templates", "x2t"])
     ap.add_argument("--package", help="build package folder with x2t and x2ttester (x2t suite)")
     ap.add_argument("--update", action="store_true", help="rewrite the snapshots instead of comparing")
     ap.add_argument("--missing", choices=["fail", "warn"], default="fail",
                     help="what a case without a snapshot does (default: fail)")
     ap.add_argument("--out", type=Path, help="also write every dump here (for CI artifacts)")
+    ap.add_argument("--print-new", action="store_true",
+                    help="print missing snapshots into the log as a base64 tar.gz block")
+    ap.add_argument("--import-log", type=Path, metavar="LOG",
+                    help="write the snapshots from a --print-new block in a saved CI log, then exit")
     args = ap.parse_args()
+    if args.import_log:
+        return import_bundle(args.import_log)
+    if not args.suite:
+        ap.error("a suite is required")
     if args.out:
         args.out.mkdir(parents=True, exist_ok=True)
 
     if args.suite == "templates":
-        return run(template_cases(), args.update, args.missing, args.out)
+        return run(template_cases(), args.update, args.missing, args.out, print_new=args.print_new)
     if not args.package:
         ap.error("the x2t suite needs --package")
     work = Path(tempfile.mkdtemp(prefix="binformat-"))
     try:
-        return run(x2t_cases(args.package, work), args.update, args.missing, args.out, work)
+        return run(x2t_cases(args.package, work), args.update, args.missing, args.out, work, args.print_new)
     finally:
         shutil.rmtree(work, ignore_errors=True)
 
