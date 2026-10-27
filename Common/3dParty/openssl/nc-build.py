@@ -90,6 +90,38 @@ def build_and_install():
             env = env
         )
 
+    elif nc.is_ios():
+        # The *-xcrun targets find clang and the SDK through xcrun
+        ossl_target = "iossimulator-arm64-xcrun" if nc.is_ios_simulator() else "ios64-xcrun"
+
+        nc.run_command(
+            [   "./Configure",
+                ossl_target,
+                nc.ios_min_version_flag(),
+                f"--prefix={nc.install_dir}",
+                f"--openssldir={nc.install_dir}",
+                "--libdir=lib",
+                "enable-md2",
+                "no-shared",
+                # Providers built into libcrypto: an app can't load the legacy.dylib
+                "no-module",
+            ],
+            "Configure",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", f"-j{os.cpu_count()}" ],
+            "Build",
+            nc.work_dir
+        )
+
+        nc.run_command(
+            [ "make", "install_sw" ],
+            "Install",
+            nc.work_dir
+        )
+
     elif nc.is_linux():
         nc.run_command(
             [   "./config",

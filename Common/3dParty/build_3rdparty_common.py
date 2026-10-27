@@ -81,7 +81,7 @@ def abort_op( message : str, keep_work : bool = False, error_is_fatal : bool = T
         sys.exit( 1 )
 
 # Cross-compilation target, set by build_3rdparty.py --target=<os>-<arch>
-# (e.g. "android-arm64"). Empty means: build for the host.
+# (e.g. "android-arm64", "ios-sim-arm64"). Empty means: build for the host.
 CROSS_TARGET = os.environ.get( "EO_3RDPARTY_TARGET", "" ).strip().lower()
 ANDROID_TARGET_ARCHES = ( "arm64", "x64" )
 
@@ -93,6 +93,14 @@ def is_android() -> bool:
 def is_wasm() -> bool:
     """True for the Emscripten build of core (--target=wasm)."""
     return CROSS_TARGET == "wasm"
+
+def is_ios() -> bool:
+    """True when cross-compiling for iOS (device or simulator). The host
+    checks, like is_apple_silicon(), stay true, so test is_ios() first."""
+    return CROSS_TARGET.startswith( "ios-" )
+
+def is_ios_simulator() -> bool:
+    return CROSS_TARGET.startswith( "ios-sim-" )
 
 def is_linux() -> bool:
     return sys.platform.startswith("linux")
@@ -107,6 +115,8 @@ def target_arch() -> str:
         if arch not in ANDROID_TARGET_ARCHES:
             abort_op( f"Unsupported Android architecture: {arch!r}" )
         return arch
+    if is_ios():
+        return "arm64"
     if is_windows():
         raw = ( os.environ.get( "VSCMD_ARG_TGT_ARCH", "" ).strip().lower()
                 or platform.machine().lower() )
@@ -188,6 +198,35 @@ def android_toolchain_env() -> dict[ str, str ]:
         "NM": str( bin_dir / "llvm-nm" ),
         "LD": str( bin_dir / "ld.lld" ),
     }
+
+# ---------------------------------------------------------------------------
+# iOS
+#
+# Xcode's clang and SDKs, found through xcrun. Libraries are static only. The
+# minimum iOS version defaults to the app's and can be overridden with
+# EO_IOS_MIN_VERSION.
+# ---------------------------------------------------------------------------
+
+IOS_MIN_VERSION = os.environ.get( "EO_IOS_MIN_VERSION", "17.0" )
+
+def ios_sdk() -> str:
+    return "iphonesimulator" if is_ios_simulator() else "iphoneos"
+
+def _xcrun( *args ) -> str:
+    return capture_process_output( [ "xcrun", "--sdk", ios_sdk(), *args ] ).strip()
+
+def ios_min_version_flag() -> str:
+    option = "-mios-simulator-version-min" if is_ios_simulator() else "-miphoneos-version-min"
+    return f"{ option }={ IOS_MIN_VERSION }"
+
+def ios_flags() -> str:
+    """Compiler and linker flags for the iOS target, e.g. for CFLAGS."""
+    return f"-arch arm64 -isysroot { _xcrun( '--show-sdk-path' ) } { ios_min_version_flag() }"
+
+def ios_toolchain_env() -> dict[ str, str ]:
+    """Compiler environment for autotools/make based cross builds."""
+    tools = { "CC": "clang", "CXX": "clang++", "AR": "ar", "RANLIB": "ranlib" }
+    return { var: _xcrun( "--find", tool ) for var, tool in tools.items() }
 
 def _marker_ok( marker_path : Path, label : str ) -> bool:
     if force_redo or not marker_path.exists():
@@ -424,7 +463,7 @@ def _cache_tag_platform() -> str:
     # Cross builds get their own folder, so they never reuse or overwrite host
     # archives, e.g. "android-arm64". WebAssembly doesn't depend on the host,
     # so every host shares the "wasm" folder.
-    if is_android() or is_wasm():
+    if is_android() or is_ios() or is_wasm():
         return CROSS_TARGET
     return f"{ sys.platform }-{ _cache_tag_arch() }"
 

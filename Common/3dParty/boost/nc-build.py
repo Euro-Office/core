@@ -85,6 +85,20 @@ def write_android_user_config() -> Path:
     return config_path
 
 
+def write_ios_user_config() -> Path:
+    """b2 toolset definition for Xcode's clang and the iOS SDK."""
+    tc = nc.ios_toolchain_env()
+    flags = "".join( f"\n    <compileflags>{ flag } <linkflags>{ flag }" for flag in nc.ios_flags().split() )
+    config_path = nc.work_dir / "user-config-ios.jam"
+    config_path.write_text(
+        f"using clang : ios : { tc[ 'CXX' ] } :{ flags }\n"
+        f"    <archiver>{ tc[ 'AR' ] }\n"
+        f"    <ranlib>{ tc[ 'RANLIB' ] }\n"
+        f"    ;\n"
+    )
+    return config_path
+
+
 def build_and_install():
     nc.create_install_dir()
     
@@ -155,6 +169,14 @@ option.set keep-going : false ;
         else:
             build_cmd.append( "architecture=x86" )
             build_cmd.append( "abi=sysv" )
+    elif nc.is_ios():
+        build_cmd.append( f"--user-config={ write_ios_user_config() }" )
+        build_cmd.append( "toolset=clang-ios" )
+        build_cmd.append( "target-os=iphone" )
+        build_cmd.append( "binary-format=mach-o" )
+        build_cmd.append( "architecture=arm" )
+        build_cmd.append( "address-model=64" )
+        build_cmd.append( "abi=aapcs" )
     elif nc.is_apple_silicon():
         build_cmd.append( "toolset=clang" )
         build_cmd.append( "architecture=arm" )
