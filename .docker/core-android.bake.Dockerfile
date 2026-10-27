@@ -41,7 +41,10 @@ FROM android-ndk AS core-android-build
         set -e
         export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user 2>/dev/null || true)"
         export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass 2>/dev/null || true)"
+        # -U: check the third-party deps on every build (done ones are skipped),
+        # so new deps in common.cmake are built into the cached tree
         cmake -S /core -B /build-cache/core -G Ninja \
+            -UTHIRD_PARTY_PREPARED \
             -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake" \
             -DANDROID_ABI=${ANDROID_ABI} \
             -DANDROID_PLATFORM=android-${ANDROID_API_LEVEL} \
