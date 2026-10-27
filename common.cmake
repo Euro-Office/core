@@ -953,6 +953,21 @@ function(set_default_options target)
             Rpcrt4
         )
     endif()
+
+    # iOS apps can only ship libraries as frameworks
+    get_target_property(_type ${target} TYPE)
+    if( IOS AND _type STREQUAL "SHARED_LIBRARY" )
+        # Bundle identifiers allow letters, digits, '-' and '.'
+        string(REPLACE "_" "-" _identifier "${target}")
+        set_target_properties(${target} PROPERTIES
+            FRAMEWORK TRUE
+            MACOSX_FRAMEWORK_IDENTIFIER eu.eurooffice.core.${_identifier}
+            MACOSX_FRAMEWORK_BUNDLE_VERSION 1.0
+            MACOSX_FRAMEWORK_SHORT_VERSION_STRING 1.0
+            BUILD_RPATH "@loader_path/.."
+            INSTALL_RPATH "@loader_path/.."
+        )
+    endif()
 endfunction()
 
 # ---------------------------------------------------------------------------
@@ -1041,6 +1056,11 @@ endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
     foreach(artifact ${artifacts})
+        get_target_property(_framework ${artifact} FRAMEWORK)
+        if( _framework )
+            copy_framework_to_folder(${artifact} "${dest_dir}")
+            continue()
+        endif()
         add_custom_command(TARGET ${artifact} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
             COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${artifact}> "${dest_dir}/"
@@ -1057,8 +1077,8 @@ function(copy_framework_to_folder target dest_dir)
     # ("bundle format is ambiguous"). cp -R preserves symlinks as symlinks.
     add_custom_command(TARGET ${target} POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E make_directory "${dest_dir}"
-        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/${target}.framework"
-        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/${target}.framework"
+        COMMAND ${CMAKE_COMMAND} -E remove_directory "${dest_dir}/$<TARGET_BUNDLE_DIR_NAME:${target}>"
+        COMMAND cp -R "$<TARGET_BUNDLE_DIR:${target}>" "${dest_dir}/$<TARGET_BUNDLE_DIR_NAME:${target}>"
         COMMENT "Copying ${target}.framework to ${dest_dir}"
     )
 endfunction()
