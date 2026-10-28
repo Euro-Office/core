@@ -424,8 +424,6 @@ target_include_directories(IWorkFile PRIVATE
 
     ${CMAKE_CURRENT_SOURCE_DIR}
 
-    ${DESKTOP_EDITOR_ROOT}/xml/libxml2/include
-
     # apple.pri
     ${APPLE_INSTALL_DIR}
     ${APPLE_3RDPARTY_DIR_ABS}/headers

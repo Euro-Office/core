@@ -827,8 +827,6 @@ set(SOURCES
 
     ${DESKTOP_ROOT}/xml/src/xmllight.cpp
     ${DESKTOP_ROOT}/xml/src/xmldom.cpp
-    ${DESKTOP_ROOT}/xml/build/qt/libxml2_all.c
-    ${DESKTOP_ROOT}/xml/build/qt/libxml2_all2.c
 
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/lib/wasm_jmp.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/drawingfile.cpp
@@ -868,8 +866,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/icu-wasm/icu/source/common
-    ${DESKTOP_ROOT}/xml/libxml2/include
-    ${DESKTOP_ROOT}/xml/build/qt
     ${CORE_ROOT}/PdfFile/lib/goo
     ${CORE_ROOT}/PdfFile/lib/fofi
     ${CORE_ROOT}/PdfFile/lib/splash
@@ -894,6 +890,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     ${OPENSSL_WASM_LIBSSL}
     minizip
     z
+    LibXml2
 )
 
 # -------------------------------------------------
@@ -907,10 +904,6 @@ BUILDING_WASM_MODULE
 U_COMMON_IMPLEMENTATION
 errno=0 THREADMODEL=0 DEBUGLVL=0
 HAVE_MBSTATE_T HAVE_STDINCLUDES HAS_WCHAR HAVE_VA_COPY
-LIBXML_READER_ENABLED LIBXML_PUSH_ENABLED LIBXML_HTML_ENABLED
-LIBXML_XPATH_ENABLED LIBXML_OUTPUT_ENABLED LIBXML_C14N_ENABLED
-LIBXML_SAX1_ENABLED LIBXML_TREE_ENABLED LIBXML_XPTR_ENABLED
-XML_ERROR_DISABLE_MODE IN_LIBXML LIBXML_STATIC
 _ARM_ALIGN_
 _tcsnicmp=strncmp _lseek=lseek _getcwd=getcwd
 NO_CONSOLE_IO USE_EXTERNAL_JPEG2000 USE_JPIP OPJ_STATIC
