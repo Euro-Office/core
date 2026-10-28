@@ -121,7 +121,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
