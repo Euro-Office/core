@@ -173,7 +173,9 @@ class SnapshotBundle(unittest.TestCase):
             with contextlib.redirect_stdout(out):
                 run_snapshots.print_bundle(texts)
             log = Path(d) / "job.log"
-            log.write_text("".join(f"2026-10-27T23:46:43.1832561Z {l}\n" for l in out.getvalue().splitlines()))
+            lines = [f"2026-10-27T23:46:43.1832561Z {l}\n" for l in out.getvalue().splitlines()]
+            lines[2] = "\ufeff" + lines[2]  # GitHub starts each stitched log chunk with a BOM
+            log.write_text("".join(lines), encoding="utf-8")
             with mock.patch.object(run_snapshots, "SNAPSHOTS", Path(d) / "snapshots"), \
                     contextlib.redirect_stdout(io.StringIO()):
                 run_snapshots.import_bundle(log)

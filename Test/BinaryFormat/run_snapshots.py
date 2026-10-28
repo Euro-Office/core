@@ -135,6 +135,7 @@ def import_bundle(log_path):
     """Write the snapshots from a block printed by --print-new (a job log may prefix timestamps)."""
     lines, inside = [], False
     for line in Path(log_path).read_text(encoding="utf-8", errors="replace").splitlines():
+        line = line.lstrip("\ufeff")  # GitHub starts each stitched log chunk with a BOM
         body = line.split(" ", 1)[1] if line[:4].isdigit() and " " in line else line
         if body == LOG_BEGIN:
             lines, inside = [], True
