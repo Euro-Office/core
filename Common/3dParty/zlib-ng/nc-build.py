@@ -18,7 +18,7 @@ nc.init_for_dep(
     workdir = Path( sys.argv[1] ).resolve(),
     installdir = Path( sys.argv[2] ).resolve(),
     forceredo = len(sys.argv) > 3 and sys.argv[3] == "force-redo",
-    version = "7"
+    version = "8"
 )
 
 zlib_ng_src    = nc.work_dir / "zlib-ng"
@@ -106,6 +106,13 @@ def build_and_install():
         "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded",  # which predates CMP0091; force /MT explicitly
     ] if nc.is_windows() else []
 
+    # macOS only: minizip-ng defaults to MZ_LIBCOMP=ON on Apple, which forces
+    # MZ_ZLIB off and compresses with Apple's libcompression instead of the
+    # zlib-ng built above. Turn it off so zlib-ng is used, as on Linux/Windows.
+    minizip_apple_args = [
+        "-DMZ_LIBCOMP=OFF",
+    ] if nc.is_apple_silicon() else []
+
     nc.run_command(
         [
             "cmake", "-S", str(minizip_ng_src), "-B", str(minizip_build_dir),
@@ -125,6 +132,7 @@ def build_and_install():
             "-DBUILD_SHARED_LIBS=OFF",
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
             *minizip_windows_args,
+            *minizip_apple_args,
         ],
         "Configure minizip-ng",
     )
