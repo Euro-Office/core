@@ -316,10 +316,15 @@ else()
     get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
     add_library(LibXml2 STATIC IMPORTED GLOBAL)
     if( MSVC )
+        # libxml2's CMake names static MSVC builds lib<name><postfix>.lib, with
+        # postfix "s" for Release (and "sd" for Debug): libxml2s.lib.
+        # bcrypt: libxml2 needs it on Windows (random numbers), but only links it
+        # privately, which a static lib does not carry along.
         set_target_properties(LibXml2 PROPERTIES
-            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.lib"
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2s.lib"
             INTERFACE_COMPILE_DEFINITIONS "LIBXML_STATIC"
             INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+            INTERFACE_LINK_LIBRARIES "bcrypt"
         )
     else()
         set_target_properties(LibXml2 PROPERTIES
