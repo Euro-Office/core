@@ -23,16 +23,7 @@ nc.init_for_dep(
 def fetch_and_patch():
     nc.create_workdir()
 
-    nc.run_command(
-        [ "git", "clone", "https://github.com/mity/md4c.git", nc.work_dir ],
-        "Git clone",
-    )
-
-    nc.run_command(
-        [ "git", "checkout", "481fbfbdf72daab2912380d62bb5f2187d438408" ],
-        "Checkout commit",
-        nc.work_dir
-    )
+    nc.shallow_checkout( nc.work_dir, "https://github.com/mity/md4c.git", "481fbfbdf72daab2912380d62bb5f2187d438408" )
 
     nc.create_work_dir_ok_marker()
 
