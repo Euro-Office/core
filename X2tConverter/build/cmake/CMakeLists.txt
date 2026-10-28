@@ -10,6 +10,11 @@ set(X2T_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../..")
 
 add_subdirectory(library x2tlib)
 
+# Android uses the library through the libx2t JNI wrapper only
+if(ANDROID)
+    return()
+endif()
+
 add_executable(x2t
     ${X2T_ROOT_DIR}/src/main.cpp
 )

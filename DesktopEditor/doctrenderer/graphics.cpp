@@ -42,6 +42,8 @@ namespace NSGraphics
 
 		m_pRenderer = NSGraphics::Create();
 		m_pRenderer->SetFontManager(pManager);
+		if (m_pAppImage->GetImageCache())
+			m_pRenderer->SetImageCache(m_pAppImage->GetImageCache());
 		RELEASEINTERFACE(pManager);
 
 		int nRasterW = (int)width_px;

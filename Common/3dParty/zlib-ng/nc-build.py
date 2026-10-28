@@ -35,6 +35,26 @@ def cmake_build_args( cpu_count : int ) -> list[str]:
     # NMake has no parallel mode, so don't pass --parallel there.
     return [] if nc.is_windows() else [ f"--parallel={cpu_count}" ]
 
+def cmake_android_args() -> list[str]:
+    # Cross-compile with the NDK's toolchain file for the target ABI
+    if not nc.is_android():
+        return []
+    return [
+        f"-DCMAKE_TOOLCHAIN_FILE={ nc.android_ndk_root() / 'build' / 'cmake' / 'android.toolchain.cmake' }",
+        f"-DANDROID_ABI={ nc.android_abi() }",
+        f"-DANDROID_PLATFORM=android-{ nc.ANDROID_API_LEVEL }",
+    ]
+
+def minizip_android_args() -> list[str]:
+    # The NDK's toolchain file limits find_package() to the sysroot, which has
+    # its own (shared) zlib: point minizip-ng at the zlib-ng built above.
+    if not nc.is_android():
+        return []
+    return [
+        f"-DZLIB_INCLUDE_DIR={ nc.install_dir / 'include' }",
+        f"-DZLIB_LIBRARY={ nc.install_dir / 'lib' / 'libz.a' }",
+    ]
+
 def fetch_and_patch():
     nc.create_workdir()
 
@@ -75,6 +95,7 @@ def build_and_install():
         [
             "cmake", "-S", str(zlib_ng_src), "-B", str(zlib_build_dir),
             *cmake_generator_args(),
+            *cmake_android_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             "-DCMAKE_INSTALL_LIBDIR=lib",
@@ -117,6 +138,7 @@ def build_and_install():
         [
             "cmake", "-S", str(minizip_ng_src), "-B", str(minizip_build_dir),
             *cmake_generator_args(),
+            *cmake_android_args(),
             "-DCMAKE_BUILD_TYPE=Release",
             f"-DCMAKE_INSTALL_PREFIX={nc.install_dir}",
             f"-DCMAKE_PREFIX_PATH={nc.install_dir}",
@@ -133,6 +155,7 @@ def build_and_install():
             "-DCMAKE_POSITION_INDEPENDENT_CODE=ON",
             *minizip_windows_args,
             *minizip_apple_args,
+            *minizip_android_args(),
         ],
         "Configure minizip-ng",
     )
