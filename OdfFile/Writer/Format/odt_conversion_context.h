@@ -140,7 +140,14 @@ public:
 	int		get_current_section_columns	();
 	void	flush_section				();
 
-	void set_master_page_name(std::wstring master_name);
+	bool set_master_page_name(std::wstring master_name);
+
+	// First-page-only continuation: when set, a clean continuation master
+	// (without background) is created after section 0 is fully built.
+	void set_deferred_first_page_continuation(bool val);
+	bool needs_first_page_continuation() const;
+	bool first_page_continuation_applied() const;
+	void apply_first_page_continuation();
 
 	void start_drop_cap			(paragraph_format_properties* paragraph_properties);
 		void set_drop_cap_lines	(int lines);
@@ -216,6 +223,9 @@ private:
 	bool			is_background_;
 
 	std::wstring	current_master_page_;
+
+	bool	needs_first_page_continuation_ = false;
+	bool	first_page_continuation_applied_ = false;
 	
 	odf_controls_context				controls_context_;	
 

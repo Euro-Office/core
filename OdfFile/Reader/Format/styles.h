@@ -950,7 +950,7 @@ public:
 
     void pptx_convert(oox::pptx_conversion_context & Context);
     
-	bool docx_background_serialize(std::wostream & strm, oox::docx_conversion_context & Context, oox::_oox_fill & fill, int id);
+	bool docx_background_serialize(std::wostream & strm, oox::docx_conversion_context & Context, oox::_oox_fill & fill, int id, bool bFirstPageOnly = false);
 	
     void docx_serialize(std::wostream & strm, oox::docx_conversion_context & Context);
 	void xlsx_serialize(std::wostream & strm, oox::xlsx_conversion_context & Context);
