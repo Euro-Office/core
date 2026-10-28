@@ -280,7 +280,7 @@ jobs:
           -e HOST_UID="$(id -u)" -e HOST_GID="$(id -g)" \
           -v "$GITHUB_WORKSPACE:/core:ro" -v "$RUNNER_TEMP/roundtrip:/out" \
           euro-office/documentserver:e2e-core \
-          /core/Test/BinaryFormat/roundtrip/roundtrip.py --out /out --missing warn
+          /core/Test/BinaryFormat/roundtrip/roundtrip.py --out /out
 
     - name: Upload sdkjs round-trip results
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64' && steps.overlay.outcome == 'success'

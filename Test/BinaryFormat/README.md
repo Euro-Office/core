@@ -135,9 +135,9 @@ docker run --rm --user root --entrypoint python3 -v "$PWD:/core:ro" -v /tmp/rt:/
 Every case's folder in `--out` keeps the script, the docbuilder log, the facts
 and the saved files. `--out/expected/` holds the first-load facts of the run;
 copy these into `roundtrip/expected/` (or rerun with `--update`) when a change
-is intended. CI uploads the folder as `sdkjs-roundtrip-<sha>`, and runs with
-`--missing warn` until the expectations are committed. A case without an
-expectation also prints what it saw as a `seen:` JSON line in the log.
+is intended. CI uploads the folder as `sdkjs-roundtrip-<sha>`. A case without
+an expectation fails, and prints what it saw as a `seen:` JSON line in the log,
+so a new expectation can also be taken from there.
 
 ## Self-tests
 

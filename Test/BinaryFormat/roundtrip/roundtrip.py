@@ -335,7 +335,8 @@ def check_case(case, work, code, log, facts, report, args):
                         fact_diff(expected, facts[0]))
     elif args.missing == "fail":
         ok = False
-        report.fail(case, f"no expected/{case.name}.json; run with --update and commit it")
+        report.fail(case, f"no expected/{case.name}.json; run with --update and commit it",
+                    ["    seen: " + json.dumps(facts[0], sort_keys=True, ensure_ascii=False)])
     else:
         # Also print what was seen, so expectations can be taken from the log when the
         # artifact is out of reach.
