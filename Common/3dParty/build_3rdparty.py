@@ -23,6 +23,8 @@ subfolders = [
     'hyphen',
     'icu-wasm',
     'icu',
+    'libxml2',
+    'libxml2-wasm',
     'md',
     'openssl-hash',
     'openssl',
