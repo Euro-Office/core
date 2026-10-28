@@ -74,7 +74,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm"
+            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -97,6 +97,15 @@ if( EMSCRIPTEN )
     set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libssl.a")
     set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libcrypto.a")
 
+    # Setup libxml2-wasm
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2-wasm")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    set_target_properties(LibXml2 PROPERTIES
+        IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -112,7 +121,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -130,7 +139,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -299,6 +308,28 @@ else()
         add_library(z STATIC IMPORTED GLOBAL)
         set_target_properties(z PROPERTIES
             IMPORTED_LOCATION "${ZLIBNG_LIBDIR_ABS}/libz.a"
+        )
+    endif()
+
+    # Setup libxml2
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libxml2's CMake names static MSVC builds lib<name><postfix>.lib, with
+        # postfix "s" for Release (and "sd" for Debug): libxml2s.lib.
+        # bcrypt: libxml2 needs it on Windows (random numbers), but only links it
+        # privately, which a static lib does not carry along.
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2s.lib"
+            INTERFACE_COMPILE_DEFINITIONS "LIBXML_STATIC"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+            INTERFACE_LINK_LIBRARIES "bcrypt"
+        )
+    else()
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
         )
     endif()
 
