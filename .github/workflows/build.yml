@@ -127,12 +127,12 @@ jobs:
     # Converts the x2tTester inputs to the internal binary format sdkjs loads
     # (Editor.bin) and compares a text dump with Test/BinaryFormat/snapshots/x2t.
     # One leg is enough: the format does not depend on product or arch.
-    # Cases without a snapshot only warn until the snapshots are committed;
-    # every dump is uploaded so new or changed snapshots can be taken from CI.
+    # Every dump is uploaded, and missing snapshots are also printed into the
+    # log (--print-new), so new or changed snapshots can be taken from CI.
     - name: Binary format snapshots
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       run: |
-        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --missing warn --print-new --out build/binformat-dumps'
+        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --print-new --out build/binformat-dumps'
 
     - name: Upload binary format dumps
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
