@@ -81,8 +81,70 @@ A case without a snapshot fails. In CI the `x2t` suite runs with
 base64 tar.gz block, for when the artifact can't be downloaded. Save the log
 and run `run_snapshots.py --import-log <log>` to write them.
 
+## 3. Round trip through real sdkjs
+
+The snapshots only show what x2t writes. `roundtrip/roundtrip.py` also has
+sdkjs read and write the format, through docbuilder. For each case, one
+docbuilder script runs three passes:
+
+| Pass | Step | Exercises |
+|------|------|-----------|
+| 1 | `OpenFile(source)`: x2t writes `Editor.bin`, sdkjs reads it | C++ writer, JS reader |
+| | `SaveFile(pass1)`: sdkjs writes `Editor.bin`, x2t turns it into OOXML | JS writer, C++ reader |
+| 2 | reopen `pass1`, save `pass2` | the same again, starting from our own output |
+| 3 | reopen `pass2` | |
+
+After each open, `roundtrip/facts.js` records structural facts through the
+builder API:
+
+- documents: element types, paragraphs, table rows, drawings, comments,
+  sections, and the text (length, hash, first 120 characters);
+- spreadsheets: each sheet's name, used range, values and formulas (hashed),
+  comments and drawings;
+- presentations: each slide's drawings and text.
+
+For each case the check requires that:
+
+- docbuilder succeeds and every pass writes its facts;
+- the first load matches `roundtrip/expected/<case>.json`;
+- the facts of pass 2 and pass 3 equal those of pass 1, so nothing is lost or
+  invented by either serializer;
+- `pass1` and `pass2` have the same OOXML parts, ignoring `docProps`. This
+  stability check only warns unless `--stability fail` is passed.
+
+A failure names the case, the pass and the fact, for example
+`tableRows.length: expected 2, got 1`.
+
+The cases are the x2tTester inputs (`docx`/`odt`/`rtf`, `xlsx`/`ods`,
+`pptx`/`odp`) and the `Common/empty` templates. docbuilder can't open the
+internal format itself: `OpenFile` leaves the editor type unset for
+`.doct`/`.xlst`/`.pptt`, and every later call fails with "file not opened". So
+each template is wrapped as such a package, x2t converts it to OOXML (the C++
+reader reads the committed `Editor.bin` unchanged), and that file is
+round-tripped like the inputs.
+
+The script needs docbuilder, x2t and an sdkjs build side by side. CI
+(`build.yml`, server/amd64 leg) runs it inside the e2e overlay image: the
+nightly DocumentServer with the freshly built core binaries.
+
+```bash
+docker run --rm --user root --entrypoint python3 -v "$PWD:/core:ro" -v /tmp/rt:/out \
+  euro-office/documentserver:e2e-core /core/Test/BinaryFormat/roundtrip/roundtrip.py --out /out
+```
+
+Every case's folder in `--out` keeps the script, the docbuilder log, the facts
+and the saved files. `--out/expected/` holds the first-load facts of the run;
+copy these into `roundtrip/expected/` (or rerun with `--update`) when a change
+is intended. CI uploads the folder as `sdkjs-roundtrip-<sha>`. A case without
+an expectation fails, and prints what it saw as a `seen:` JSON line in the log,
+so a new expectation can also be taken from there.
+
 ## Self-tests
 
 ```bash
 python3 -m unittest discover -s Test/BinaryFormat -p 'test_*.py'
 ```
+
+`test_roundtrip.py` drives `roundtrip.py` with `roundtrip/fake_docbuilder.py`, a
+stand-in that parses docbuilder scripts and runs `facts.js` in node against a
+mock `Api`. Those tests are skipped where node is missing.
