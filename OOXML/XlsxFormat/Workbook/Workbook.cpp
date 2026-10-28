@@ -490,9 +490,11 @@ namespace OOX
 					if(!i->m_oCacheId.IsInit() || !i->m_oRid.IsInit() ||  !this->IsExist(i->m_oRid->GetValue()))
 					continue;
 					auto cacheFilePtr = this->Find(i->m_oRid->GetValue());
-					auto CachePtr = static_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
-					CachePtr->EnsureDefinition();
-					if(CachePtr->m_oPivotCashDefinition.IsInit() && CachePtr->m_oPivotCashDefinition->m_oCacheSource.IsInit()
+					// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
+					auto CachePtr = dynamic_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
+					if (CachePtr)
+						CachePtr->EnsureDefinition();
+					if(CachePtr && CachePtr->m_oPivotCashDefinition.IsInit() && CachePtr->m_oPivotCashDefinition->m_oCacheSource.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType.IsInit()
 						&& CachePtr->m_oPivotCashDefinition->m_oCacheSource->m_oType->GetValue() == SimpleTypes::Spreadsheet::ESourceCacheType::typeSourceWorksheet)
 					{
