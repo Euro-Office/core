@@ -124,6 +124,25 @@ jobs:
       run: |
         "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package'
 
+    # Converts the x2tTester inputs to the internal binary format sdkjs loads
+    # (Editor.bin) and compares a text dump with Test/BinaryFormat/snapshots/x2t.
+    # One leg is enough: the format does not depend on product or arch.
+    # Every dump is uploaded, and missing snapshots are also printed into the
+    # log (--print-new), so new or changed snapshots can be taken from CI.
+    - name: Binary format snapshots
+      if: matrix.product == 'server' && matrix.arch == 'amd64'
+      run: |
+        "$RUNNER_TEMP/in-build-image" 'python3 Test/BinaryFormat/run_snapshots.py x2t --package build/package --print-new --out build/binformat-dumps'
+
+    - name: Upload binary format dumps
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
+      uses: actions/upload-artifact@v4
+      with:
+        name: binformat-dumps-${{ github.sha }}
+        path: build/binformat-dumps/
+        if-no-files-found: ignore
+        retention-days: 14
+
     # The container runs as root; hand the workspace back to the runner user
     # so cache saving and the next checkout on this self-hosted runner work.
     - name: Fix workspace ownership

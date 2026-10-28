@@ -1,0 +1,42 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Guards the internal binary format (DOCY/XLSY/PPTY) that sdkjs reads and
+# writes. Needs no build; the x2t output snapshots run in build.yml.
+name: Binary format
+
+on:
+  pull_request:
+    # labeled/unlabeled: re-run when "binary-format-break" is added or removed.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+jobs:
+  binary-format:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      # Existing enumerator values in the BinReaderWriterDefines.h headers must
+      # not change or disappear, and new ones must not reuse a value. A
+      # deliberate, versioned break is let through by the PR label.
+      - name: Enum values are append-only
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          ALLOW_BREAKING: ${{ contains(github.event.pull_request.labels.*.name, 'binary-format-break') }}
+        run: |
+          python3 Test/BinaryFormat/check_binformat_enums.py --base "origin/$BASE_REF" \
+            $([ "$ALLOW_BREAKING" = true ] && echo --allow-breaking)
+
+      - name: Tool self-tests
+        run: python3 -m unittest discover -s Test/BinaryFormat -p 'test_*.py' -v
+
+      - name: Template snapshots
+        run: python3 Test/BinaryFormat/run_snapshots.py templates

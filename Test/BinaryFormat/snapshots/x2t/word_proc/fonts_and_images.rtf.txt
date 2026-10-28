@@ -1,0 +1,1512 @@
+header DOCY;v10;0;
+main table: 12 tables
+  Signature(0) @651
+  Settings(9) @657
+  Footnotes(10) @928
+  Endnotes(11) @1653
+  App(15) @2135
+  Core(16) @2209
+  Other(7) @2233
+  Document(6) @7405
+  HdrFtr(4) @25306
+  Style(5) @25310
+  Numbering(3) @28485
+  Customs(20) @29360
+main table padding: 579 zero bytes
+table Signature(0) @651 span=6
+  (no length prefix)
+  Version(0) Long: 5
+table Settings(9) @657 span=271
+  DefaultTabStopTwips(9) len=4
+    i32 709
+  FootnotePr(4) len=39
+    PrRestart(7) len=1
+      u8 0
+    PrStart(8) len=4
+      i32 1
+    PrFntPos(9) len=1
+      u8 2
+    PrRef(11) len=4
+      i32 0
+    PrRef(11) len=4
+      i32 1
+  EndnotePr(5) len=33
+    PrRestart(7) len=1
+      u8 1
+    PrStart(8) len=4
+      i32 1
+    PrRef(11) len=4
+      i32 1
+    PrRef(11) len=4
+      i32 0
+  Compat(8) len=165
+    Flags1(4) len=4
+      u32 0
+    Flags2(5) len=4
+      u32 34
+    Flags3(6) len=4
+      u32 0
+    CompatSetting(0) len=133
+      CompatName(1) len=34
+        utf16 'compatibilityMode'
+      CompatUri(2) len=80
+        utf16 'http://schemas.microsoft.com/office/word'
+      CompatValue(3) len=4
+        utf16 '11'
+  AutoHyphenation(21) len=1
+    u8 1
+table Footnotes(10) @928 span=725
+  Note(0) len=477
+    NoteType(1) len=1
+      u8 3
+    NoteId(2) len=4
+      i32 0
+    NoteContent(3) len=457
+      #0 len=452
+        #1 len=229
+          #9 Variable len=21
+            #39 Long: 240
+            #11 Byte: 1
+            #40 Long: 0
+            #41 Long: 0
+          #5 Byte: 1
+          #26 Variable len=193
+            #2 Byte: 11
+            #4 Variable len=40
+              utf16 'Noto Sans Devanagari'
+            #5 Variable len=40
+              utf16 'Noto Sans Devanagari'
+            #6 Variable len=40
+              utf16 'Noto Sans Devanagari'
+            #7 Variable len=40
+              utf16 'Noto Sans Devanagari'
+            #8 Long: 24
+        #2 len=213
+          #5 len=208
+            #1 len=193
+              #2 Byte: 11
+              #4 Variable len=40
+                utf16 'Noto Sans Devanagari'
+              #5 Variable len=40
+                utf16 'Noto Sans Devanagari'
+              #6 Variable len=40
+                utf16 'Noto Sans Devanagari'
+              #7 Variable len=40
+                utf16 'Noto Sans Devanagari'
+              #8 Long: 24
+            #8 len=5
+              #22 len=0
+  Note(0) len=234
+    NoteType(1) len=1
+      u8 1
+    NoteId(2) len=4
+      i32 1
+    NoteContent(3) len=214
+      #0 len=209
+        #1 len=18
+          #5 Byte: 1
+          #26 Variable len=9
+            #2 Byte: 11
+            #8 Long: 24
+        #2 len=181
+          #5 len=176
+            #1 len=161
+              #2 Byte: 11
+              #4 Variable len=32
+                utf16 'Liberation Serif'
+              #5 Variable len=32
+                utf16 'Liberation Serif'
+              #6 Variable len=32
+                utf16 'Liberation Serif'
+              #7 Variable len=32
+                utf16 'Liberation Serif'
+              #8 Long: 24
+            #8 len=5
+              #23 len=0
+table Endnotes(11) @1653 span=482
+  Note(0) len=234
+    NoteType(1) len=1
+      u8 3
+    NoteId(2) len=4
+      i32 0
+    NoteContent(3) len=214
+      #0 len=209
+        #1 len=18
+          #5 Byte: 1
+          #26 Variable len=9
+            #2 Byte: 11
+            #8 Long: 24
+        #2 len=181
+          #5 len=176
+            #1 len=161
+              #2 Byte: 11
+              #4 Variable len=32
+                utf16 'Liberation Serif'
+              #5 Variable len=32
+                utf16 'Liberation Serif'
+              #6 Variable len=32
+                utf16 'Liberation Serif'
+              #7 Variable len=32
+                utf16 'Liberation Serif'
+              #8 Long: 24
+            #8 len=5
+              #22 len=0
+  Note(0) len=234
+    NoteType(1) len=1
+      u8 1
+    NoteId(2) len=4
+      i32 1
+    NoteContent(3) len=214
+      #0 len=209
+        #1 len=18
+          #5 Byte: 1
+          #26 Variable len=9
+            #2 Byte: 11
+            #8 Long: 24
+        #2 len=181
+          #5 len=176
+            #1 len=161
+              #2 Byte: 11
+              #4 Variable len=32
+                utf16 'Liberation Serif'
+              #5 Variable len=32
+                utf16 'Liberation Serif'
+              #6 Variable len=32
+                utf16 'Liberation Serif'
+              #7 Variable len=32
+                utf16 'Liberation Serif'
+              #8 Long: 24
+            #8 len=5
+              #22 len=0
+table App(15) @2135 span=74
+  (no length prefix)
+  #1 len=69
+    (PPTY records)
+    attrs [1]'Euro Office/2.5.565.0' hex 0c 00 0d 00 0e 00 0f 00
+    #0 len=7
+      attrs hex 12 00 00 00 00
+table Core(16) @2209 span=24
+  (no length prefix)
+  #2 len=19
+    (PPTY records)
+    attrs hex 01 00 00 00 00 02 00 00 00 00
+    #0 len=2
+      attrs (empty)
+table Other(7) @2233 span=5172
+  DocxTheme(3) len=5163
+    #20 len=5158
+      #250 len=3072
+        bytes len=3072 sha256=3143c7cf06f35a29
+      #0 len=323
+        #4 len=318
+          (PPTY records)
+          attrs hex 01 01
+          #0 len=295
+            count 3
+            #0 len=92
+              attrs hex 00 00 00 00 00
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 50 c3 00 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 e0 93 04 00
+            #0 len=92
+              attrs hex 00 b8 88 00 00
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 88 90 00 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 e0 93 04 00
+            #0 len=92
+              attrs hex 00 a0 86 01 00
+              #0 len=80
+                #3 len=75
+                  attrs hex 00 0e
+                  #0 len=66
+                    count 2
+                    #1 len=24
+                      attrs [0]'a:tint' hex 01 98 3a 00 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 30 57 05 00
+          #1 len=9
+            attrs hex 00 40 31 f7 00 01 01
+      #0 len=329
+        #4 len=324
+          (PPTY records)
+          attrs hex 01 01
+          #0 len=301
+            count 3
+            #0 len=94
+              attrs hex 00 00 00 00 00
+              #0 len=82
+                #3 len=77
+                  attrs hex 00 0e
+                  #0 len=68
+                    count 2
+                    #1 len=26
+                      attrs [0]'a:shade' hex 01 38 c7 00 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 d0 fb 01 00
+            #0 len=94
+              attrs hex 00 80 38 01 00
+              #0 len=82
+                #3 len=77
+                  attrs hex 00 0e
+                  #0 len=68
+                    count 2
+                    #1 len=26
+                      attrs [0]'a:shade' hex 01 48 6b 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 d0 fb 01 00
+            #0 len=94
+              attrs hex 00 a0 86 01 00
+              #0 len=82
+                #3 len=77
+                  attrs hex 00 0e
+                  #0 len=68
+                    count 2
+                    #1 len=26
+                      attrs [0]'a:shade' hex 01 30 6f 01 00
+                    #1 len=28
+                      attrs [0]'a:satMod' hex 01 58 0f 02 00
+          #1 len=9
+            attrs hex 00 40 31 f7 00 01 00
+      #1 len=230
+        bytes len=230 sha256=844ec1b8999beba3
+      #2 len=415
+        bytes len=415 sha256=d4db5719e8396d00
+      #3 len=750
+        bytes len=750 sha256=36da7a588dde66ef
+      #4 len=4
+        i32 0
+table Document(6) @7405 span=17901
+  Par(0) len=1231
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=1039
+      Run(5) len=1034
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=903
+          run(0) len=898
+            utf16 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc mattis sit amet purus et elementum. Sed odio sem, laoreet eu dui in, pretium semper sem. Proin pretium, risus at placerat fermentum, dui odio egestas mauris, nec pretium ligula risus ac purus. Cras viverra dapibus odio et dictum. Praesent lacinia, mi et feugiat ultrices, risus ante vestibulum justo, ac vestibulum orci felis a metus. '
+  Par(0) len=1451
+    pPr(1) len=187
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=126
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+        Color(9) Three: hex 80 00 80
+      Bidi(47) Byte: 0
+    Content(2) len=1254
+      Run(5) len=1249
+        rPr(1) len=126
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+          Color(9) Three: hex 80 00 80
+        Content(8) len=1113
+          run(0) len=1108
+            utf16 'Phasellus et nisi fermentum, euismod magna nec, suscipit felis. Nulla sed sem vehicula, posuere sem nec, luctus enim. Integer a convallis risus, eget congue velit. Nullam mattis eu lectus sed finibus. Cras interdum pretium velit, non pharetra purus. Maecenas quis orci sodales tortor feugiat convallis. Pellentesque diam libero, molestie a faucibus maximus, egestas a sapien. Quisque sodales odio augue, ac mollis augue ullamcorper a. Sed neque ex, tempor in eleifend eu, commodo ut sem. Curabitur eget sem gravida, ultricies risus vel, ultrices lectus. '
+  Par(0) len=1933
+    pPr(1) len=214
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=153
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Mono'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Mono'
+        FontAE(6) Variable len=30
+          utf16 'Liberation Mono'
+        FontCS(7) Variable len=30
+          utf16 'Liberation Mono'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=1709
+      Run(5) len=1704
+        rPr(1) len=153
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=30
+            utf16 'Liberation Mono'
+          FontHAnsi(5) Variable len=30
+            utf16 'Liberation Mono'
+          FontAE(6) Variable len=30
+            utf16 'Liberation Mono'
+          FontCS(7) Variable len=30
+            utf16 'Liberation Mono'
+          FontSize(8) Long: 24
+        Content(8) len=1541
+          run(0) len=1536
+            utf16 'Praesent venenatis hendrerit aliquam. Nulla quis neque ac justo sollicitudin euismod a eget felis. Aenean et viverra mi. Aliquam bibendum nibh lorem, ut molestie elit posuere eu. Fusce vel urna pharetra, eleifend ante vitae, tristique tortor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam suscipit elit non venenatis aliquam. Duis id molestie tellus. Phasellus ullamcorper consequat libero, ac egestas ligula. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum finibus magna at sem feugiat facilisis. Nunc semper pretium tellus, non vehicula justo euismod a. Phasellus sollicitudin purus elit, a egestas erat tempor tempor. Phasellus rhoncus tristique ante. Fusce placerat efficitur purus. '
+  Par(0) len=1557
+    pPr(1) len=219
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=158
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Mono'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Mono'
+        FontAE(6) Variable len=30
+          utf16 'Liberation Mono'
+        FontCS(7) Variable len=30
+          utf16 'Liberation Mono'
+        FontSize(8) Long: 24
+        Color(9) Three: hex 59 83 b0
+      Bidi(47) Byte: 0
+    Content(2) len=1328
+      Run(5) len=1323
+        rPr(1) len=158
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=30
+            utf16 'Liberation Mono'
+          FontHAnsi(5) Variable len=30
+            utf16 'Liberation Mono'
+          FontAE(6) Variable len=30
+            utf16 'Liberation Mono'
+          FontCS(7) Variable len=30
+            utf16 'Liberation Mono'
+          FontSize(8) Long: 24
+          Color(9) Three: hex 59 83 b0
+        Content(8) len=1155
+          run(0) len=1150
+            utf16 'Etiam vitae sollicitudin nisl. Nam lacinia arcu id ornare mollis. Suspendisse pretium tellus ut mauris sodales vehicula. Donec sagittis interdum molestie. Phasellus a urna porta mauris egestas imperdiet. Suspendisse potenti. Etiam placerat congue urna, at porttitor metus pharetra vel. Nunc vel consectetur nunc, eget consequat ligula. Mauris et accumsan urna. Nam hendrerit erat orci, ac ultrices arcu lobortis et. Donec ut ornare augue. Sed quis sodales est. Etiam vel vulputate tortor. In hac habitasse platea dictumst. Pellentesque tempus pellentesque orci in tincidunt. '
+  Par(0) len=1589
+    pPr(1) len=203
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=142
+        Bold(0) Byte: 1
+        Italic(1) Byte: 1
+        Underline(2) Byte: 12
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+        BoldCs(20) Byte: 1
+        ItalicCs(21) Byte: 1
+        FontSizeCs(22) Long: 24
+        Cs(23) Byte: 1
+      Bidi(47) Byte: 0
+    Content(2) len=1376
+      Run(5) len=1371
+        rPr(1) len=142
+          Bold(0) Byte: 1
+          Italic(1) Byte: 1
+          Underline(2) Byte: 12
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+          BoldCs(20) Byte: 1
+          ItalicCs(21) Byte: 1
+          FontSizeCs(22) Long: 24
+          Cs(23) Byte: 1
+        Content(8) len=1219
+          run(0) len=1214
+            utf16 'Fusce eu sagittis erat, sed condimentum ex. Etiam dui quam, feugiat a nunc vitae, consectetur efficitur nibh. Praesent augue dolor, tempus et nulla in, feugiat tempus diam. Donec at semper elit. Suspendisse semper tortor odio, lacinia elementum metus pretium at. Phasellus non eros iaculis, eleifend elit vitae, sollicitudin tortor. Integer mattis ornare urna, eu consectetur tellus tincidunt quis. Maecenas ac aliquam purus. Nunc nulla orci, gravida sed aliquet et, bibendum non quam. Mauris consequat quis urna eget auctor. Duis convallis consectetur imperdiet. Morbi varius arcu id erat mollis ultricies.'
+  Par(0) len=773
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=581
+      Run(5) len=576
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=445
+          pptxDrawing(12) len=440
+            PptxData(1) Variable len=273
+              #0 len=268
+                #1 len=263
+                  #2 len=258
+                    #0 len=50
+                      #0 len=17
+                        (PPTY records)
+                        attrs hex 00 ff ff ff ff 01 00 00 00 00 04 00 00 00 00
+                      #1 len=2
+                        (PPTY records)
+                        attrs (empty)
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=78
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=22
+                        attrs hex 00 f9 9f 11 00 01 00 00 00 00 02 d0 22 3a 00 03 1c 9a 2b 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=5
+                        #2 len=0
+                      #4 len=0
+                    #1 len=115
+                      #1 len=110
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=56
+                          attrs hex fb [10]'rId2' hex 02 04 00 00 00 00 00 00 00 03 1b 00 00 00 fa [0]'image1.jpg'
+                        #1 len=30
+                          attrs hex 00 01 00 00 00 30 00 01 01 00 00 00 30 00 02 01 00 00 00 30 00 03 01 00 00 00 30 00
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            BehindDoc(3) Byte: 1
+            DistLEmu(33) Long: 114300
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 114300
+            DistBEmu(32) Long: 0
+            RelativeHeight(11) Long: 65535
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3810000
+              CyEmu(3) Long: 2857500
+            PositionH(15) Variable len=9
+              RelativeFrom(0) Byte: 1
+              PosOffsetEmu(4) Long: 1155065
+            PositionV(16) Variable len=9
+              RelativeFrom(0) Byte: 6
+              PosOffsetEmu(4) Long: 0
+            WrapSquare(19) Variable len=3
+              #4 Byte: 0
+            DocPr(31) Variable len=32
+              Id(0) len=4
+                i32 1
+              Name(1) len=18
+                utf16 '_x0000_s1'
+  Par(0) len=192
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=0
+  Par(0) len=2195
+    pPr(1) len=174
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=113
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=20
+          utf16 'OpenSymbol'
+        FontHAnsi(5) Variable len=20
+          utf16 'OpenSymbol'
+        FontAE(6) Variable len=20
+          utf16 'OpenSymbol'
+        FontCS(7) Variable len=20
+          utf16 'OpenSymbol'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=2011
+      Run(5) len=1020
+        rPr(1) len=113
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=20
+            utf16 'OpenSymbol'
+          FontHAnsi(5) Variable len=20
+            utf16 'OpenSymbol'
+          FontAE(6) Variable len=20
+            utf16 'OpenSymbol'
+          FontCS(7) Variable len=20
+            utf16 'OpenSymbol'
+          FontSize(8) Long: 24
+        Content(8) len=897
+          run(0) len=892
+            utf16 'Aenean nec lacus tellus. Proin semper luctus molestie. Mauris et tortor pellentesque, consequat mi suscipit, luctus dui. Nam fringilla erat ligula, eget sagittis tellus rutrum mollis. Nulla facilisi. Pellentesque elementum lacinia tempus. Quisque bibendum rutrum sem, et luctus purus commodo et. Quisque et interdum mauris. Aliquam venenatis gravida dictum. Aenean eu tristique nisl. Fusce et feugiat enim. Maecenas diam augue, ullamcorper vitae '
+      Run(5) len=568
+        rPr(1) len=113
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=20
+            utf16 'OpenSymbol'
+          FontHAnsi(5) Variable len=20
+            utf16 'OpenSymbol'
+          FontAE(6) Variable len=20
+            utf16 'OpenSymbol'
+          FontCS(7) Variable len=20
+            utf16 'OpenSymbol'
+          FontSize(8) Long: 24
+        Content(8) len=445
+          pptxDrawing(12) len=440
+            PptxData(1) Variable len=273
+              #0 len=268
+                #1 len=263
+                  #2 len=258
+                    #0 len=50
+                      #0 len=17
+                        (PPTY records)
+                        attrs hex 00 ff ff ff ff 01 00 00 00 00 04 00 00 00 00
+                      #1 len=2
+                        (PPTY records)
+                        attrs (empty)
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=78
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=22
+                        attrs hex 00 94 77 ff ff 01 bc 40 30 00 02 55 20 3a 00 03 a1 97 2b 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=5
+                        #2 len=0
+                      #4 len=0
+                    #1 len=115
+                      #1 len=110
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=56
+                          attrs hex fb [10]'rId3' hex 02 04 00 00 00 00 00 00 00 03 1b 00 00 00 fa [0]'image2.png'
+                        #1 len=30
+                          attrs hex 00 01 00 00 00 30 00 01 01 00 00 00 30 00 02 01 00 00 00 30 00 03 01 00 00 00 30 00
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            BehindDoc(3) Byte: 1
+            DistLEmu(33) Long: 114300
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 114300
+            DistBEmu(32) Long: 0
+            RelativeHeight(11) Long: 65534
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3809365
+              CyEmu(3) Long: 2856865
+            PositionH(15) Variable len=9
+              RelativeFrom(0) Byte: 1
+              PosOffsetEmu(4) Long: -34924
+            PositionV(16) Variable len=9
+              RelativeFrom(0) Byte: 6
+              PosOffsetEmu(4) Long: 3162300
+            WrapSquare(19) Variable len=3
+              #4 Byte: 0
+            DocPr(31) Variable len=32
+              Id(0) len=4
+                i32 2
+              Name(1) len=18
+                utf16 '_x0000_s2'
+      Run(5) len=408
+        rPr(1) len=113
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=20
+            utf16 'OpenSymbol'
+          FontHAnsi(5) Variable len=20
+            utf16 'OpenSymbol'
+          FontAE(6) Variable len=20
+            utf16 'OpenSymbol'
+          FontCS(7) Variable len=20
+            utf16 'OpenSymbol'
+          FontSize(8) Long: 24
+        Content(8) len=285
+          run(0) len=280
+            utf16 'lacinia nec, cursus a nisi. Nulla facilisi. Proin mollis dapibus urna, eget viverra nisl gravida condimentum. Maecenas mattis velit sapien. '
+  Par(0) len=2681
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=2489
+      Run(5) len=1494
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=1363
+          run(0) len=1358
+            utf16 'Etiam eu facilisis elit, vitae dignissim nisi. Cras efficitur est hendrerit elementum imperdiet. Sed egestas vitae lectus vitae tincidunt. Proin at est imperdiet, condimentum diam at, mattis enim. Etiam ullamcorper aliquam tellus, vitae mattis dolor. Morbi ullamcorper nec quam ac aliquam. Sed eget nunc imperdiet elit commodo faucibus eu at est. Phasellus ut pulvinar arcu, sed blandit massa. Donec cursus non purus vel dictum. Maecenas sit amet placerat nisi, eget ornare purus. Vivamus hendrerit dolor eu quam aliquet, sed rutrum ipsum pharetra. Nam ante erat, vulputate nec velit non, faucibus malesuada ante. Sed ac nisi tellus. In luctus porttitor dolor. In sodales elit co'
+      Run(5) len=592
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=461
+          pptxDrawing(12) len=456
+            PptxData(1) Variable len=289
+              #0 len=284
+                #1 len=279
+                  #2 len=274
+                    #0 len=50
+                      #0 len=17
+                        (PPTY records)
+                        attrs hex 00 ff ff ff ff 01 00 00 00 00 04 00 00 00 00
+                      #1 len=2
+                        (PPTY records)
+                        attrs (empty)
+                      #2 len=16
+                        (PPTY records)
+                        attrs (empty)
+                        #1 len=0
+                        #2 len=4
+                          count 0
+                    #2 len=78
+                      (PPTY records)
+                      attrs (empty)
+                      #0 len=22
+                        attrs hex 00 12 60 0b 00 01 b7 c9 4c 00 02 d0 22 3a 00 03 1c 9a 2b 00
+                      #1 len=29
+                        #1 len=24
+                          attrs [0]'rect'
+                          #0 len=4
+                            count 0
+                      #2 len=5
+                        #2 len=0
+                      #4 len=0
+                    #1 len=131
+                      #1 len=126
+                        (PPTY records)
+                        attrs (empty)
+                        #0 len=72
+                          attrs hex fb [10]'rId4' hex 02 04 00 00 00 00 00 00 00 03 2b 00 00 00 fa [0]'display1image3.wmf'
+                        #1 len=30
+                          attrs hex 00 01 00 00 00 30 00 01 01 00 00 00 30 00 02 01 00 00 00 30 00 03 01 00 00 00 30 00
+                        #3 len=7
+                          #0 len=2
+                            attrs (empty)
+            Type(0) Byte: 1
+            BehindDoc(3) Byte: 1
+            DistLEmu(33) Long: 114300
+            DistTEmu(35) Long: 0
+            DistREmu(34) Long: 114300
+            DistBEmu(32) Long: 0
+            RelativeHeight(11) Long: 65533
+            EffectExtent(13) Variable len=24
+              LeftEmu(4) Long: 0
+              TopEmu(5) Long: 0
+              RightEmu(6) Long: 0
+              BottomEmu(7) Long: 0
+            Extent(14) Variable len=12
+              CxEmu(2) Long: 3810000
+              CyEmu(3) Long: 2857500
+            PositionH(15) Variable len=9
+              RelativeFrom(0) Byte: 1
+              PosOffsetEmu(4) Long: 745490
+            PositionV(16) Variable len=9
+              RelativeFrom(0) Byte: 6
+              PosOffsetEmu(4) Long: 5032375
+            WrapSquare(19) Variable len=3
+              #4 Byte: 0
+            DocPr(31) Variable len=32
+              Id(0) len=4
+                i32 3
+              Name(1) len=18
+                utf16 '_x0000_s3'
+      Run(5) len=388
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=257
+          run(0) len=252
+            utf16 'ngue lacus imperdiet tincidunt. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. '
+  Par(0) len=1723
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=1531
+      Run(5) len=1526
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=1395
+          run(0) len=1390
+            utf16 'Sed augue nisl, varius at urna eu, aliquam egestas justo. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc vel sodales enim, vitae commodo enim. Praesent aliquet urna quis nunc congue convallis. Duis pellentesque est a lacus consectetur, sed auctor sem volutpat. Nulla molestie cursus nisi a sodales. Mauris ipsum nibh, rutrum et volutpat a, rutrum semper est. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ornare magna vitae finibus suscipit. Vivamus nunc enim, dictum eu imperdiet vitae, pretium quis eros. Nam mattis purus sit amet leo maximus malesuada. Mauris iaculis aliquam tristique. '
+  Par(0) len=1601
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=1409
+      Run(5) len=1404
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=1273
+          run(0) len=1268
+            utf16 'Sed elementum porta accumsan. Mauris sit amet rhoncus massa. Integer sit amet lorem purus. Aenean ac rhoncus nisi. Phasellus viverra vehicula nunc vel iaculis. Vestibulum iaculis, neque ut dictum lacinia, eros turpis efficitur sem, ac pulvinar urna dolor ac eros. Mauris non placerat tortor. Nunc ultricies nisl vitae nibh commodo, ut aliquet diam accumsan. Ut hendrerit mattis commodo. Nam blandit commodo aliquet. Donec auctor lacinia congue. Nunc vel posuere lectus, non facilisis purus. Phasellus vehicula a orci id egestas. Sed auctor est at magna condimentum scelerisque. Nunc in nunc iaculis, facilisis odio a, eleifend ipsum. '
+  Par(0) len=773
+    pPr(1) len=182
+      ParaStyle(21) Variable len=16
+        utf16 'Style_16'
+      Spacing(9) Variable len=21
+        Spacing_LineTwips(39) Long: 276
+        Spacing_LineRule(11) Byte: 1
+        Spacing_BeforeTwips(40) Long: 0
+        Spacing_AfterTwips(41) Long: 140
+      Jc(5) Byte: 1
+      pPr_rPr(26) Variable len=121
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=22
+          utf16 'DejaVu Sans'
+        FontHAnsi(5) Variable len=22
+          utf16 'DejaVu Sans'
+        FontAE(6) Variable len=22
+          utf16 'DejaVu Sans'
+        FontCS(7) Variable len=22
+          utf16 'DejaVu Sans'
+        FontSize(8) Long: 24
+      Bidi(47) Byte: 0
+    Content(2) len=581
+      Run(5) len=576
+        rPr(1) len=121
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=22
+            utf16 'DejaVu Sans'
+          FontHAnsi(5) Variable len=22
+            utf16 'DejaVu Sans'
+          FontAE(6) Variable len=22
+            utf16 'DejaVu Sans'
+          FontCS(7) Variable len=22
+            utf16 'DejaVu Sans'
+          FontSize(8) Long: 24
+        Content(8) len=445
+          run(0) len=440
+            utf16 'Sed quis mi quis odio eleifend interdum. Donec pellentesque ex ac felis vestibulum, sit amet luctus erat dignissim. Phasellus bibendum nunc lacus, eget accumsan libero placerat sed. Proin eget libero quis ipsum accumsan '
+  sectPr(4) len=133
+    #0 len=12
+      #3 Long: 11906
+      #4 Long: 16838
+    #1 len=42
+      #6 Long: 1134
+      #7 Long: 1134
+      #8 Long: 1134
+      #9 Long: 1134
+      #10 Long: 720
+      #11 Long: 720
+      #12 Long: 0
+    #2 len=9
+      #0 Byte: 0
+      #1 Byte: 0
+      #2 Byte: 0
+    #8 len=18
+      #1 len=4
+        i32 1
+      #3 len=4
+        #208 Short: 0
+    #10 len=11
+      #6 len=6
+        #25 len=1
+          u8 60
+    #11 len=11
+      #6 len=6
+        #25 len=1
+          u8 60
+table HdrFtr(4) @25306 span=4
+  (empty)
+table Style(5) @25310 span=3175
+  DefpPr(0) len=197
+    Spacing(9) Variable len=21
+      Spacing_LineTwips(39) Long: 240
+      Spacing_LineRule(11) Byte: 1
+      Spacing_BeforeTwips(40) Long: 0
+      Spacing_AfterTwips(41) Long: 0
+    Jc(5) Byte: 1
+    pPr_rPr(26) Variable len=161
+      Underline(2) Byte: 11
+      FontAscii(4) Variable len=32
+        utf16 'Liberation Serif'
+      FontHAnsi(5) Variable len=32
+        utf16 'Liberation Serif'
+      FontAE(6) Variable len=32
+        utf16 'Liberation Serif'
+      FontCS(7) Variable len=32
+        utf16 'Liberation Serif'
+      FontSize(8) Long: 24
+  DefrPr(1) len=161
+    Underline(2) Byte: 11
+    FontAscii(4) Variable len=32
+      utf16 'Liberation Serif'
+    FontHAnsi(5) Variable len=32
+      utf16 'Liberation Serif'
+    FontAE(6) Variable len=32
+      utf16 'Liberation Serif'
+    FontCS(7) Variable len=32
+      utf16 'Liberation Serif'
+    FontSize(8) Long: 24
+  Styles(2) len=2798
+    Style(0) len=474
+      Style_Id(1) len=14
+        utf16 'Style_0'
+      Style_Name(2) len=12
+        utf16 'Normal'
+      Style_Type(9) len=1
+        u8 3
+      Style_Default(8) len=1
+        u8 1
+      Style_TextPr(5) len=216
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=32
+          utf16 'Liberation Serif'
+        FontHAnsi(5) Variable len=32
+          utf16 'Liberation Serif'
+        FontAE(6) Variable len=32
+          utf16 'Liberation Serif'
+        FontCS(7) Variable len=32
+          utf16 'Liberation Serif'
+        FontSize(8) Long: 24
+        ColorTheme(28) Variable len=2
+          hex 00 00
+        FontSizeCs(22) Long: 24
+        Cs(23) Byte: 1
+        Lang(25) Variable len=10
+          utf16 'en-US'
+        LangBidi(26) Variable len=10
+          utf16 'zh-CN'
+        Kern(56) Long: 1
+      Style_ParaPr(6) len=200
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 240
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 0
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+        Bidi(47) Byte: 0
+    Style(0) len=437
+      Style_Id(1) len=16
+        utf16 'Style_15'
+      Style_Name(2) len=14
+        utf16 'Heading'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=14
+        utf16 'Style_0'
+      Style_TextPr(5) len=162
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=30
+          utf16 'Liberation Sans'
+        FontHAnsi(5) Variable len=30
+          utf16 'Liberation Sans'
+        FontAE(6) Variable len=30
+          utf16 'Liberation Sans'
+        FontCS(7) Variable len=30
+          utf16 'Liberation Sans'
+        FontSize(8) Long: 28
+        FontSizeCs(22) Long: 28
+        Cs(23) Byte: 1
+      Style_ParaPr(6) len=200
+        KeepNext(7) Byte: 1
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 240
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 240
+          Spacing_AfterTwips(41) Long: 120
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+    Style(0) len=437
+      Style_Id(1) len=16
+        utf16 'Style_16'
+      Style_Name(2) len=18
+        utf16 'Body Text'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=14
+        utf16 'Style_0'
+      Style_TextPr(5) len=161
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=32
+          utf16 'Liberation Serif'
+        FontHAnsi(5) Variable len=32
+          utf16 'Liberation Serif'
+        FontAE(6) Variable len=32
+          utf16 'Liberation Serif'
+        FontCS(7) Variable len=32
+          utf16 'Liberation Serif'
+        FontSize(8) Long: 24
+      Style_ParaPr(6) len=197
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 276
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 140
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+    Style(0) len=470
+      Style_Id(1) len=16
+        utf16 'Style_17'
+      Style_Name(2) len=8
+        utf16 'List'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=16
+        utf16 'Style_16'
+      Style_TextPr(5) len=202
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontHAnsi(5) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontAE(6) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        FontSizeCs(22) Long: 24
+        Cs(23) Byte: 1
+      Style_ParaPr(6) len=197
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 240
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 0
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+    Style(0) len=480
+      Style_Id(1) len=16
+        utf16 'Style_18'
+      Style_Name(2) len=14
+        utf16 'caption'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=14
+        utf16 'Style_0'
+      Style_TextPr(5) len=208
+        Italic(1) Byte: 1
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontHAnsi(5) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontAE(6) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        ItalicCs(21) Byte: 1
+        FontSizeCs(22) Long: 24
+        Cs(23) Byte: 1
+      Style_ParaPr(6) len=197
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 240
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 120
+          Spacing_AfterTwips(41) Long: 120
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+    Style(0) len=470
+      Style_Id(1) len=16
+        utf16 'Style_19'
+      Style_Name(2) len=10
+        utf16 'Index'
+      Style_Type(9) len=1
+        u8 3
+      Style_BasedOn(3) len=14
+        utf16 'Style_0'
+      Style_TextPr(5) len=202
+        Underline(2) Byte: 11
+        FontAscii(4) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontHAnsi(5) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontAE(6) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontCS(7) Variable len=40
+          utf16 'Noto Sans Devanagari'
+        FontSize(8) Long: 24
+        FontSizeCs(22) Long: 24
+        Cs(23) Byte: 1
+      Style_ParaPr(6) len=197
+        Spacing(9) Variable len=21
+          Spacing_LineTwips(39) Long: 240
+          Spacing_LineRule(11) Byte: 1
+          Spacing_BeforeTwips(40) Long: 0
+          Spacing_AfterTwips(41) Long: 0
+        Jc(5) Byte: 1
+        pPr_rPr(26) Variable len=161
+          Underline(2) Byte: 11
+          FontAscii(4) Variable len=32
+            utf16 'Liberation Serif'
+          FontHAnsi(5) Variable len=32
+            utf16 'Liberation Serif'
+          FontAE(6) Variable len=32
+            utf16 'Liberation Serif'
+          FontCS(7) Variable len=32
+            utf16 'Liberation Serif'
+          FontSize(8) Long: 24
+table Numbering(3) @28485 span=875
+  AbstractNums(0) len=844
+    AbstractNum(1) len=839
+      AbstractNum_Id(2) len=4
+        i32 1
+      AbstractNum_Type(3) len=1
+        u8 1
+      AbstractNum_Lvls(4) len=819
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 0
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 0
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 1
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 1
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 2
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 2
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 3
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 3
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 4
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 4
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 5
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 5
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 6
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 6
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 7
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 7
+        Lvl(5) len=86
+          lvl_NumFmt(24) Variable len=6
+            NumFmtVal(25) len=1
+              u8 48
+          lvl_Jc(37) Byte: 10
+          lvl_LvlText(8) Variable len=11
+            lvl_LvlTextItem(9) len=6
+              lvl_LvlTextItemNum(11) len=1
+                u8 8
+          lvl_Start(13) Long: 1
+          lvl_Suff(14) Byte: 0
+          lvl_ParaPr(15) Variable len=18
+            Ind(1) Variable len=12
+              Ind_LeftTwips(36) Long: 0
+              Ind_FirstLineTwips(38) Long: 0
+          lvl_TextPr(16) Variable len=9
+            Underline(2) Byte: 11
+            FontSize(8) Long: 24
+          ILvl(29) Long: 8
+  Nums(17) len=17
+    Num(18) len=12
+      Num_ANumId(19) Long: 1
+      Num_NumId(20) Long: 1
+table Customs(20) @29360 span=4
+  (empty)
+package files:
+  media/display1image3.svg len=5730 sha256=754fb370d73d3684
+  media/display1image3.wmf len=846802 sha256=37da266f4fe8c82a
+  media/image1.jpg len=4408 sha256=d5b888a2cc94df3d
+  media/image2.png len=2943 sha256=3815d546e2eba534
