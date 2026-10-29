@@ -44,6 +44,7 @@ namespace DocFileFormat
 	friend class HeaderMapping;
 	friend class FooterMapping;
 	friend class TextboxMapping;
+	friend struct FkpTestAccess;
 
     private:
       /// An array of the BX data structure.
