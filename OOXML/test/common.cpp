@@ -38,7 +38,7 @@
 #include <cstdlib>
 #include <locale>
 #include <codecvt>
-#include <boost/filesystem.hpp>
+#include <filesystem>
 
 
 std::wstring GetWorkDir()
@@ -55,10 +55,16 @@ void RemoveWorkDir(const std::wstring &dir)
 int ConvertFile(const std::wstring &fileName)
 {
     x2tchar* args[2];
-	args[0] = NULL;
-	args[1] = (x2tchar*)fileName.c_str();
-
-	int nResultCode = X2T_Convert(2, args);
+    args[0] = (x2tchar*)"";
+#if defined(_WIN32) || defined(_WIN64)
+    args[1] = (x2tchar*)fileName.c_str();
+#else
+    // X2T_Convert takes narrow UTF-8 char* on non-Windows (see src/dylib/x2t.h).
+    // Casting wchar_t* directly truncates the path to its first character.
+    std::string narrowPath = std::filesystem::path(fileName).string();
+    args[1] = (x2tchar*)narrowPath.c_str();
+#endif
+    int nResultCode = X2T_Convert(2, args);
     return nResultCode;
 }
 
