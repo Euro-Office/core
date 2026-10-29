@@ -1,5 +1,6 @@
 import sys
 import re
+import hashlib
 import shutil
 import stat
 import subprocess
@@ -47,8 +48,8 @@ def init_for_dep(
     installdir : Path,
     forceredo : bool,
     version : str = "", # Arbitrary version string. Integer numbers suggested.
-                        # If a deps version/branch/tag/patch changes, bump this in the respective build script.
-                        # This will force that dep to be rebuilt.
+                        # Changes to the calling build script (e.g. a new pinned tag or commit) already
+                        # force a rebuild. Bump this only for changes outside of it, like patch files.
     debugmode : bool = True
 ):
     global dep_name, work_dir, install_dir, force_redo, debug_mode, dep_version, log_cleared
@@ -57,7 +58,7 @@ def init_for_dep(
     work_dir = workdir
     install_dir = installdir
     force_redo = forceredo
-    dep_version = version
+    dep_version = f"{ version }-{ hashlib.sha256( Path( sys.argv[ 0 ] ).read_bytes() ).hexdigest()[ :12 ] }"
     debug_mode = debugmode
     log_cleared = False
     
