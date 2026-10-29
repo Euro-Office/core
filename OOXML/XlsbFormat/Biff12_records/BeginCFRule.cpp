@@ -82,10 +82,10 @@ namespace XLSB
             rgce1.load(record);
 
         if(cbFmla2)
-            rgce1.load(record);
+            rgce2.load(record);
 
         if(cbFmla3)
-            rgce1.load(record);
+            rgce3.load(record);
     }
 
 	void BeginCFRule::writeFields(XLS::CFRecord& record)
@@ -109,10 +109,10 @@ namespace XLSB
 			rgce1.save(record);
 
 		if (cbFmla2)
-			rgce1.save(record);
+			rgce2.save(record);
 
 		if (cbFmla3)
-			rgce1.save(record);
+			rgce3.save(record);
 	}
 
 } // namespace XLSB
