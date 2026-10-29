@@ -141,7 +141,7 @@ namespace DocFileFormat
 		_isTextBoxContent = true;
 
 		//convert the textbox text
-		_lastValidPapx = (*(m_document->AllPapxFkps->begin()))->grppapx[0];
+		_lastValidPapx = FormattedDiskPagePAPX::GetFirstPapx(m_document->AllPapxFkps);
 
 		ParagraphPropertyExceptions* papx_prev = NULL;
 		int cp = cpStart;

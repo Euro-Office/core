@@ -386,4 +386,15 @@ namespace DocFileFormat
 		}
 		return ppxList;
 	}
+
+	ParagraphPropertyExceptions* FormattedDiskPagePAPX::GetFirstPapx( const std::vector<FormattedDiskPagePAPX*>* fkps )
+	{
+		if ( ( fkps == NULL ) || fkps->empty() ) return NULL;
+
+		//a page that was skipped or read short has no runs at all
+		const FormattedDiskPagePAPX* fkp = fkps->front();
+		if ( ( fkp == NULL ) || ( fkp->grppapxSize == 0 ) ) return NULL;
+
+		return fkp->grppapx[0];
+	}
 }

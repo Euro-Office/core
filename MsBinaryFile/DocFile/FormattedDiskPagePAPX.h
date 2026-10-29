@@ -64,6 +64,9 @@ namespace DocFileFormat
       /// Returnes a list of all ParagraphPropertyExceptions which correspond to text 
       /// between the given offsets.
       static std::vector<ParagraphPropertyExceptions*>* GetParagraphPropertyExceptions( int fcMin, int fcMax, FileInformationBlock* fib, POLE::Stream* wordStream, POLE::Stream* tableStream, POLE::Stream* dataStream );
+      /// Returns the PAPX of the first paragraph, or NULL when the list of FKPs is
+      /// empty or its first FKP holds no PAPX. Both happen with malformed files.
+      static ParagraphPropertyExceptions* GetFirstPapx( const std::vector<FormattedDiskPagePAPX*>* fkps );
   };
 }
 
