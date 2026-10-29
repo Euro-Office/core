@@ -1,0 +1,94 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+name: Build (Android)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The build tree and the third-party builds (V8 takes hours) stay in a
+    # BuildKit cache mount on the runner's Docker daemon, so later runs only
+    # build what changed; with the Nextcloud secrets, third-party builds come
+    # from the remote cache otherwise.
+    runs-on: self-hosted
+    strategy:
+      fail-fast: false
+      matrix:
+        abi: [arm64-v8a, x86_64]
+    name: build (android, ${{ matrix.abi }})
+    env:
+      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
+      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+
+    steps:
+    # The Dockerfile copies core from its context's core/, as in MobileEditors
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        path: core
+
+    # As MobileEditors builds core for Android (build/docker-bake.hcl): the
+    # NDK image (its build/android.Dockerfile, android-ndk: keep in sync)
+    # as the android-ndk context of core's Dockerfile
+    - name: Write bake file
+      run: |
+        cat > "$RUNNER_TEMP/core-android.hcl" <<'HCL'
+        variable "ABI" {}
+
+        target "android-ndk" {
+          dockerfile-inline = <<EOT
+        FROM ubuntu:24.04
+        ARG ANDROID_NDK_RELEASE=r28c
+        ARG ANDROID_NDK_VERSION=28.2.13676358
+        RUN apt-get update && \
+            apt-get install -y --no-install-recommends \
+                ca-certificates curl unzip git python3 python-is-python3 \
+                build-essential clang lld ninja-build cmake pkg-config \
+                autoconf automake libtool perl patch xz-utils bzip2 file && \
+            rm -rf /var/lib/apt/lists/*
+        RUN curl -fsSL -o /tmp/ndk.zip https://dl.google.com/android/repository/android-ndk-$ANDROID_NDK_RELEASE-linux.zip && \
+            unzip -q /tmp/ndk.zip -d /opt && \
+            mv /opt/android-ndk-$ANDROID_NDK_RELEASE /opt/android-ndk && \
+            rm /tmp/ndk.zip && \
+            grep -q "Pkg.Revision = $ANDROID_NDK_VERSION" /opt/android-ndk/source.properties
+        ENV ANDROID_NDK_ROOT=/opt/android-ndk
+        ENV ANDROID_NDK_VERSION=$ANDROID_NDK_VERSION
+        EOT
+        }
+
+        target "core-android" {
+          context    = "."
+          dockerfile = "core/.docker/core-android.bake.Dockerfile"
+          target     = "core-android"
+          args       = { ANDROID_ABI = ABI }
+          contexts   = { android-ndk = "target:android-ndk" }
+          secret     = ["id=nextcloud_user,env=NEXTCLOUD_USER", "id=nextcloud_pass,env=NEXTCLOUD_PASS"]
+          output     = ["type=local,dest=out/${ABI}"]
+        }
+        HCL
+
+    - name: Build core for Android (x2t and its libraries)
+      env:
+        ABI: ${{ matrix.abi }}
+      run: docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+
+    # What the apps load: x2t's JNI library, the editor engine's doctrenderer
+    # (with V8) and the libraries they link
+    - name: Check the libraries
+      run: |
+        cd out/${{ matrix.abi }}
+        ls -l
+        for lib in libx2t.so libdoctrenderer.so libkernel.so libgraphics.so libPdfFile.so libUnicodeConverter.so; do
+          test -s "$lib" || { echo "missing: $lib"; exit 1; }
+        done
+
+    - name: Upload the libraries
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-android-${{ matrix.abi }}
+        path: out/${{ matrix.abi }}
+        retention-days: 7

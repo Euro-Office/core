@@ -33,3 +33,6 @@
 - librevenge ([MPL-2.0](https://github.com/nicojust/librevenge/blob/master/COPYING))
 - libodfgen ([MPL-2.0](https://github.com/nicojust/libodfgen/blob/master/COPYING))
 - libetonyek ([MPL-2.0](https://github.com/nicojust/libetonyek/blob/master/COPYING))
+- minizip-ng ([zlib](https://github.com/zlib-ng/minizip-ng/blob/master/LICENSE))
+- zlib-ng ([zlib](https://github.com/zlib-ng/zlib-ng/blob/develop/LICENSE.md))
+- libxml2 ([MIT](https://gitlab.gnome.org/GNOME/libxml2/-/raw/master/Copyright))

@@ -1380,7 +1380,7 @@ namespace NSFile
 
 #ifdef USE_LINUX_SENDFILE_INSTEAD_STREAMS
 		int src = open(strSrcA.c_str(), O_RDONLY);
-		int dst = open(strDstA.c_str(), O_WRONLY | O_CREAT);
+		int dst = open(strDstA.c_str(), O_WRONLY | O_CREAT, 0666);
 
 		// struct required, rationale: function stat() exists also
 		struct stat stat_source;

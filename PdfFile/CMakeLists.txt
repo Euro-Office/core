@@ -469,10 +469,8 @@ target_include_directories(PdfFile PRIVATE
     # freetype.pri
     ${FREETYPE_SOURCES_DIR}/include
     ${FREETYPE_SOURCES_DIR}/include/freetype
-    # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11
-        ${OFFICE_UTILS_ROOT_DIR}/src
-    # }
+    ${ZLIBNG_INCLUDEDIR_ABS}
+    ${OFFICE_UTILS_ROOT_DIR}/src
 
     # brotli.pri
     ${BROTLI_IN_TREE_LOCATION}/c/include
@@ -541,20 +539,6 @@ if(LINUX)
     target_sources(PdfFile PRIVATE
         ${PDFFILE_FREETYPE_SOURCES}
 
-        # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/adler32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/compress.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/crc32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/deflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inffast.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inftrees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/trees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/uncompr.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/zutil.c
-        # }
-
         # brotli.pri
         ${PDFFILE_BROTLI_DIR}/c/common/constants.c
         ${PDFFILE_BROTLI_DIR}/c/common/context.c
@@ -565,7 +549,9 @@ if(LINUX)
         ${PDFFILE_BROTLI_DIR}/c/dec/bit_reader.c
         ${PDFFILE_BROTLI_DIR}/c/dec/decode.c
         ${PDFFILE_BROTLI_DIR}/c/dec/huffman.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/prefix.c
         ${PDFFILE_BROTLI_DIR}/c/dec/state.c
+        ${PDFFILE_BROTLI_DIR}/c/dec/static_init.c
     )
 
     set_source_files_properties(${PDFFILE_FREETYPE_SOURCES} PROPERTIES

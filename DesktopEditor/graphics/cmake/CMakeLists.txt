@@ -393,20 +393,6 @@ add_library(graphics SHARED
         ${GRAPHICS_ROOT_DIR}/pro/libpsd_pri3.c
     #}
 
-    # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/crc32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/adler32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/deflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inffast.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inftrees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/trees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/zutil.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/uncompr.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/compress.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
-    # }
-
     ${DESKTOP_EDITOR_ROOT_DIR}/graphics/Image.h
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/BgraFrame.h
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.h
@@ -563,22 +549,6 @@ add_library(graphics SHARED
     ${KATANA_INSTALL_DIR_ABS}/src/parser.h
     ${KATANA_INSTALL_DIR_ABS}/src/selector.h
     ${KATANA_INSTALL_DIR_ABS}/src/tokenizer.h
-
-
-    # freetype.pri
-    # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib_addon.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/adler32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/compress.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/crc32.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/deflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inffast.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inflate.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/inftrees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/trees.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/uncompr.c
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11/zutil.c
-    # }
 
     ${FREETYPE_SOURCES_DIR}/src/autofit/autofit.c
     ${FREETYPE_SOURCES_DIR}/src/base/ftbase.c
@@ -948,9 +918,9 @@ add_library(graphics SHARED
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/bit_reader.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/decode.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/huffman.c
-    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/prefix.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/prefix.c
     ${BROTLI_INSTALL_DIR_ABS}/c/dec/state.c
-    # ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
+    ${BROTLI_INSTALL_DIR_ABS}/c/dec/static_init.c
 )
 
 if( APPLE )
@@ -1027,16 +997,11 @@ target_include_directories(graphics PRIVATE
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/include
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/png
-    ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11 # !config_zlip_image
-    ${OFFICE_UTILS_ROOT_DIR}/src # !config_zlip_image
+    ${ZLIBNG_INCLUDEDIR_ABS}
 
     # freetype.pri
     ${FREETYPE_SOURCES_DIR}/include
     ${FREETYPE_SOURCES_DIR}/include/freetype
-    # !config_zlip_image {
-        ${OFFICE_UTILS_ROOT_DIR}/src/zlib-1.2.11
-        ${OFFICE_UTILS_ROOT_DIR}/src
-    # }
 
     # harfbuzz.pri
     ${HARFBUZZ_INSTALL_DIR_ABS}
@@ -1065,6 +1030,13 @@ if(LINUX)
         -UHAVE_IO_H
     )
 
+    if(ANDROID)
+        # jasper's filter tables mix int* and jpc_fix_t* (long*), an error in clang >= 16
+        target_compile_options(graphics PRIVATE
+            $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-function-pointer-types>
+        )
+    endif()
+
     # Re-enable exporting symbols
     target_compile_options(graphics PRIVATE
         -fvisibility=default
@@ -1082,6 +1054,8 @@ if(LINUX)
 endif()
 
 # dynamic libs
+
+
 target_link_libraries(graphics PUBLIC
     Boost::system
     Boost::filesystem
@@ -1090,6 +1064,8 @@ target_link_libraries(graphics PUBLIC
     kernel
     UnicodeConverter
 )
+
+target_link_libraries(graphics PUBLIC z)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

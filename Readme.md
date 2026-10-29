@@ -20,6 +20,20 @@ to build all dependencies. This takes very long (~5 hours or more). Once finishe
 ```
 in the cmake command of the core or desktop build.
 
+## Build for Android
+
+Core cross-compiles for Android (`arm64-v8a`, `x86_64`) with the NDK's CMake toolchain file:
+
+```sh
+cmake -S . -B build-android -G Ninja \
+    -DCMAKE_TOOLCHAIN_FILE="$ANDROID_NDK_ROOT/build/cmake/android.toolchain.cmake" \
+    -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-26 -DANDROID_STL=c++_shared \
+    -DCMAKE_BUILD_TYPE=Release
+cmake --build build-android --target x2tlib
+```
+
+Configuring runs `Common/3dParty/build_3rdparty.py --target=android-arm64` (or `android-x64`), which cross-compiles boost, ICU, openssl and V8 with the NDK from `ANDROID_NDK_ROOT`. The result is a set of shared libraries (`libx2t.so`, `libkernel.so`, …, plus unversioned `libicu*.so`) for the JNI wrapper in `X2tConverter/build/Android/libx2t`. `.docker/core-android.bake.Dockerfile` builds them in Docker (stage `core-android`, argument `ANDROID_ABI`); it needs an image with the NDK and the host tools as its `android-ndk` context, which [MobileEditors](https://github.com/Euro-Office/MobileEditors) provides.
+
 ## License
 
 Core is released under the GNU AGPL v3.0 license. See the LICENSE file for more information.
