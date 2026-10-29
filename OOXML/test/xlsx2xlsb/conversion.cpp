@@ -28,6 +28,7 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include "gtest/gtest.h"
+#include "../../../Common/OfficeFileFormats.h"
 
 namespace xlsb2xlsxTests
 {
@@ -107,8 +108,39 @@ public:
 };
 
 std::wstring XlsbSimpleTests1::tempDir = L"";
+// xlsx -> Editor.bin -> xlsx. x2t keeps the pivot parts as raw bytes on this path, so they must come back
+// byte for byte; rebuilding them from the object model drops content it does not keep.
+class XlsxEditorBinPivotTests : public ::testing::Test
+{
+public:
+
+    static void SetUpTestCase()
+    {
+        tempDir = GetWorkDir();
+        boost::filesystem::path rootPath = std::wstring{L".."} + FILE_SEPARATOR_STR;
+        rootPath =boost::filesystem::absolute(rootPath.wstring() + rootPath.wstring() + rootPath.wstring()+ rootPath.wstring());
+        std::wstring sourcePath = rootPath.wstring() +L"OOXML" + FILE_SEPARATOR_STR + L"test" + FILE_SEPARATOR_STR +L"ExampleFiles"
+            + FILE_SEPARATOR_STR + L"xlsx2xlsb" + FILE_SEPARATOR_STR + L"simple2.xlsx";
+        std::wstring binPath = tempDir + FILE_SEPARATOR_STR + L"Editor.bin";
+        std::wstring resultPath = tempDir + FILE_SEPARATOR_STR + L"result.xlsx";
+
+        ConvertFile(CreateParamsFile(sourcePath, binPath, tempDir, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET));
+        ConvertFile(CreateParamsFile(binPath, resultPath, tempDir, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX));
+        PrepareFiles(resultPath, sourcePath, tempDir);
+    }
+
+
+    static void TearDownTestCase()
+    {
+        RemoveWorkDir(tempDir);
+    }
+
+    static std::wstring tempDir;
+};
+
 std::wstring XlsbSimpleTests2::tempDir = L"";
 std::wstring XlsbFmlaTests::tempDir = L"";
+std::wstring XlsxEditorBinPivotTests::tempDir = L"";
 
 _UINT32 readBinaryFiles(const std::wstring &filePath, const std::wstring &examplePath, std::vector<char> &fileContent, std::vector<char> &exampleContent)
 {
@@ -458,6 +490,45 @@ TEST_F(XlsbFmlaTests, WorksheetsTest3)
         FILE_SEPARATOR_STR + L"worksheets" + FILE_SEPARATOR_STR + L"sheet3.bin");
     std::wstring path2(tempDir + FILE_SEPARATOR_STR +L"example_unpacked"+ FILE_SEPARATOR_STR + L"xl" + 
         FILE_SEPARATOR_STR + L"worksheets" + FILE_SEPARATOR_STR + L"sheet3.bin");
+    std::vector<char> fileContent;
+    std::vector<char> exampleContent;
+    ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
+    ASSERT_EQ(fileContent, exampleContent);
+}
+
+TEST_F(XlsxEditorBinPivotTests, PivotTableTest)
+{
+    auto tempDir = XlsxEditorBinPivotTests::tempDir;
+    std::wstring path1(tempDir + FILE_SEPARATOR_STR + L"result_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotTables" + FILE_SEPARATOR_STR + L"pivotTable1.xml");
+    std::wstring path2(tempDir + FILE_SEPARATOR_STR +L"example_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotTables" + FILE_SEPARATOR_STR + L"pivotTable1.xml");
+    std::vector<char> fileContent;
+    std::vector<char> exampleContent;
+    ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
+    ASSERT_EQ(fileContent, exampleContent);
+}
+
+TEST_F(XlsxEditorBinPivotTests, PivotCacheDefTest)
+{
+    auto tempDir = XlsxEditorBinPivotTests::tempDir;
+    std::wstring path1(tempDir + FILE_SEPARATOR_STR + L"result_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotCache" + FILE_SEPARATOR_STR + L"pivotCacheDefinition1.xml");
+    std::wstring path2(tempDir + FILE_SEPARATOR_STR +L"example_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotCache" + FILE_SEPARATOR_STR + L"pivotCacheDefinition1.xml");
+    std::vector<char> fileContent;
+    std::vector<char> exampleContent;
+    ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
+    ASSERT_EQ(fileContent, exampleContent);
+}
+
+TEST_F(XlsxEditorBinPivotTests, PivotCacheRecordsTest)
+{
+    auto tempDir = XlsxEditorBinPivotTests::tempDir;
+    std::wstring path1(tempDir + FILE_SEPARATOR_STR + L"result_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotCache" + FILE_SEPARATOR_STR + L"pivotCacheRecords1.xml");
+    std::wstring path2(tempDir + FILE_SEPARATOR_STR +L"example_unpacked"+ FILE_SEPARATOR_STR + L"xl" +
+        FILE_SEPARATOR_STR + L"pivotCache" + FILE_SEPARATOR_STR + L"pivotCacheRecords1.xml");
     std::vector<char> fileContent;
     std::vector<char> exampleContent;
     ASSERT_EQ(readBinaryFiles(path1, path2, fileContent, exampleContent), 0);
