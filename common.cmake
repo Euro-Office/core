@@ -45,7 +45,7 @@ if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
 endif()
 
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
-    set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
+    set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
 
 if( NOT DEFINED PYTHON_BIN )

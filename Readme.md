@@ -9,13 +9,23 @@ Server core components which are a part of [Document Server][1] and [Desktop Edi
 
 ## Remote cache for nc-build.py dependencies
 
-The `nc-build.py` scripts in `Common/3dParty` can share built dependencies through a remote cache (see `ensure_dep` in `Common/3dParty/build_3rdparty_common.py`). If no cache is configured, everything is built locally. The cache is configured through environment variables:
+The `nc-build.py` scripts in `Common/3dParty` share built dependencies through a remote cache (see `ensure_dep` in `Common/3dParty/build_3rdparty_common.py`). By default they download from the public `eo-build-assets` bucket, `https://s3.eu-central-4.ionoscloud.com/eo-build-assets`, and build what is missing locally.
+
+Archives live under `<BASE_REMOTE_PATH>/<platform>/<dep>/<version>/`, where `<version>` is the one passed to `init_for_dep()`. An archive is never replaced: bump the version to publish a new build.
 
 | Variable | Description |
 | --- | --- |
-| `REMOTE_CACHE_TYPE` | `nextcloud`, `s3` or `none`. Defaults to `s3` if `S3_BUCKET` is set, otherwise `nextcloud`. |
-| `BASE_REMOTE_PATH` | Folder / key prefix on the remote. Default `Engineering/Office/Euro-Office/3DPARTY_DEPS_1`. |
+| `REMOTE_CACHE_TYPE` | `s3` (default), `nextcloud` or `none`. |
+| `BASE_REMOTE_PATH` | Folder / key prefix on the remote. Default `3rdparty`. |
 | `REMOTE_CACHE_READ_ONLY` | Set to `1` to only download from the cache, never upload. |
+
+S3 (any S3 compatible store, path-style):
+
+| Variable | Description |
+| --- | --- |
+| `REMOTE_CACHE_S3_URL` | `<endpoint>/<bucket>`. Default `https://s3.eu-central-4.ionoscloud.com/eo-build-assets`. Anonymous Linux builds need list access to pick the right glibc variant. |
+| `REMOTE_CACHE_S3_REGION` | Signing region. Default: taken from an `s3.<region>.` host, else `us-east-1`. |
+| `REMOTE_CACHE_S3_ACCESS_KEY`, `REMOTE_CACHE_S3_SECRET_KEY`, `REMOTE_CACHE_S3_SESSION_TOKEN` | Credentials for uploads. Without them the cache is read-only. |
 
 Nextcloud (WebDAV, needs `curl`):
 
@@ -27,17 +37,23 @@ Nextcloud (WebDAV, needs `curl`):
 
 The Nextcloud cache is enabled when `NEXTCLOUD_USER` and `NEXTCLOUD_PASS` are set, or when `NEXTCLOUD_REMOTE` is set explicitly (anonymous access).
 
-S3 (AWS or any S3 compatible store):
+In CI only a manual run of the Build workflows on `main` uploads: it gets the keys from the `build-assets` environment. Pull request builds only read.
 
-| Variable | Description |
-| --- | --- |
-| `S3_BUCKET` | Bucket name. Enables the S3 cache. |
-| `S3_ENDPOINT` | e.g. `https://minio.example.com`. Default `https://s3.<S3_REGION>.amazonaws.com`. |
-| `S3_REGION` | Signing region. Default `us-east-1`. |
-| `S3_ADDRESSING_STYLE` | `path` (default) or `virtual`. |
-| `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_SESSION_TOKEN` | Credentials. Fall back to `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY` and `AWS_SESSION_TOKEN`. Without credentials, requests are sent unsigned (public bucket). |
+## Build heavy dependencies for vcpkg
 
-Anonymous remotes are usually read-only. A failed upload only prints a warning, but you can set `REMOTE_CACHE_READ_ONLY=1` to skip the upload step entirely.
+`Common/3dParty/build_dependencies.sh` builds CEF, libvlc, Boost, Qt and V8 (this takes 5 hours or more), uploads them to `vcpkg/<PKG_NAME>/<VERSION>/<TARGET_TRIPLET>/<PKG_NAME>_binary.tar.bz2` in the bucket and records their SHA512 in the dependency's `hashes.txt`. Set `REMOTE_CACHE_S3_ACCESS_KEY` and `REMOTE_CACHE_S3_SECRET_KEY`, then run
+
+```sh
+./build_dependencies.sh
+```
+
+To use another remote, pass
+
+```sh
+-DVCPKG_BINARY_REMOTE="https://my-remote.corp/repository/vcpkg"
+```
+
+to the cmake command of the core or desktop build.
 
 ## Build for Android
 

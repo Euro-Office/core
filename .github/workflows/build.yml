@@ -2,6 +2,7 @@ name: Build
 
 on:
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,9 +21,12 @@ jobs:
           - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
           - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
-      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
-      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+      # Only set on a manual run, through the build-assets environment: that
+      # run uploads missing third-party builds, every other run only reads.
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       CCACHE_MAXSIZE: 2G
       BASE_IMAGE: euro-office/core-base-${{ matrix.product }}-${{ matrix.arch }}:ci
       BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
@@ -74,11 +78,15 @@ jobs:
           -v "$GITHUB_WORKSPACE/.cache/vcpkg:/nuget-cache" \
           -e CCACHE_DIR=/core/.cache/ccache \
           -e CCACHE_MAXSIZE \
-          -e NEXTCLOUD_USER -e NEXTCLOUD_PASS \
+          -e REMOTE_CACHE_S3_ACCESS_KEY -e REMOTE_CACHE_S3_SECRET_KEY \
           -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
           "$BUILD_IMAGE" bash -euo pipefail -c "$1"
         SH
         chmod +x "$RUNNER_TEMP/in-build-image"
+
+    - name: Remote cache unit tests
+      run: |
+        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty'
 
     - name: Restore vcpkg binary cache
       uses: actions/cache/restore@v4

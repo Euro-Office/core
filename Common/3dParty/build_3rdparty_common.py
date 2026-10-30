@@ -1,11 +1,13 @@
 import sys
 import re
+import http.client
 import shutil
 import stat
 import subprocess
 import os
 import time
 import platform
+import tarfile
 import tempfile
 from pathlib import Path
 
@@ -319,14 +321,25 @@ class MeasurementObj:
 #   - the force-redo flag       (read defensively below)
 #
 # Everything is configured through the environment so nothing is committed.
-# Archives are stored under <BASE_REMOTE_PATH>/<PLATFORM_TAG>/<dep>/ on the
-# remote.
+# Archives are stored under <BASE_REMOTE_PATH>/<PLATFORM_TAG>/<dep>/<version>/
+# on the remote, where <version> is the version passed to init_for_dep(). An
+# archive is never overwritten: bump the version to publish a new build.
 #
-#   REMOTE_CACHE_TYPE       "nextcloud" | "s3" | "none". Defaults to "s3" when
-#                           S3_BUCKET is set, else "nextcloud".
-#   BASE_REMOTE_PATH        Folder / key prefix on the remote
-#                           (default "Engineering/Office/Euro-Office/3DPARTY_DEPS_1").
-#   REMOTE_CACHE_READ_ONLY  "1" to only download, never upload.
+#   REMOTE_CACHE_TYPE       "s3" (default) | "nextcloud" | "none".
+#   BASE_REMOTE_PATH        Folder / key prefix on the remote (default "3rdparty").
+#   REMOTE_CACHE_READ_ONLY  "1" to only download, never upload. Implied for S3
+#                           without credentials.
+#
+# S3 (any S3 compatible store, path-style requests):
+#   REMOTE_CACHE_S3_URL     <endpoint>/<bucket> (default
+#                           "https://s3.eu-central-4.ionoscloud.com/eo-build-assets",
+#                           readable anonymously).
+#   REMOTE_CACHE_S3_REGION  Signing region. Default: taken from an
+#                           "s3.<region>." host, else "us-east-1".
+#   REMOTE_CACHE_S3_ACCESS_KEY, REMOTE_CACHE_S3_SECRET_KEY,
+#   REMOTE_CACHE_S3_SESSION_TOKEN
+#                           Credentials for uploads. Without them, requests are
+#                           sent unsigned.
 #
 # Nextcloud / WebDAV ('curl' must be on PATH):
 #   NEXTCLOUD_REMOTE        WebDAV root (default
@@ -336,21 +349,6 @@ class MeasurementObj:
 #                           the full root, e.g. a public share:
 #                           "https://host/public.php/dav/files/<share-token>".
 #   NEXTCLOUD_PASS          Basic auth is used only if user and pass are set.
-#   The cache is enabled when NEXTCLOUD_USER and NEXTCLOUD_PASS are set, or
-#   when NEXTCLOUD_REMOTE is set explicitly (anonymous access).
-#
-# S3 (any S3 compatible store: AWS, MinIO, Garage, Ceph, R2, ...):
-#   S3_BUCKET               Bucket name. Enables the S3 cache.
-#   S3_ENDPOINT             e.g. "https://minio.example.com" (default
-#                           "https://s3.<S3_REGION>.amazonaws.com").
-#   S3_REGION               Signing region (default "us-east-1").
-#   S3_ADDRESSING_STYLE     "path" (default, <endpoint>/<bucket>/<key>) or
-#                           "virtual" (<bucket>.<endpoint-host>/<key>).
-#   S3_ACCESS_KEY, S3_SECRET_KEY, S3_SESSION_TOKEN
-#                           Fall back to AWS_ACCESS_KEY_ID,
-#                           AWS_SECRET_ACCESS_KEY and AWS_SESSION_TOKEN.
-#                           Without keys, requests are sent unsigned (public
-#                           bucket).
 #
 # If the cache is disabled, ensure_dep behaves like the old manual check
 # (build locally only).
@@ -364,7 +362,8 @@ def _env( *names, default="" ):
             return value
     return default
 
-BASE_REMOTE_PATH = _env( "BASE_REMOTE_PATH", default="Engineering/Office/Euro-Office/3DPARTY_DEPS_1" ).strip( "/" )
+REMOTE_CACHE_TYPE      = _env( "REMOTE_CACHE_TYPE", default="s3" ).lower()
+BASE_REMOTE_PATH       = _env( "BASE_REMOTE_PATH", default="3rdparty" ).strip( "/" )
 REMOTE_CACHE_READ_ONLY = _env( "REMOTE_CACHE_READ_ONLY" ).lower() in ( "1", "true", "yes", "on" )
 
 NEXTCLOUD_USER   = _env( "NEXTCLOUD_USER" )
@@ -372,23 +371,31 @@ NEXTCLOUD_PASS   = _env( "NEXTCLOUD_PASS" )
 NEXTCLOUD_REMOTE = _env( "NEXTCLOUD_REMOTE",
                          default="https://cloud.nextcloud.com/remote.php/dav/files" ).rstrip( "/" )
 
-S3_BUCKET           = _env( "S3_BUCKET" )
-S3_REGION           = _env( "S3_REGION", "AWS_REGION", "AWS_DEFAULT_REGION", default="us-east-1" )
-S3_ENDPOINT         = _env( "S3_ENDPOINT", default=f"https://s3.{ S3_REGION }.amazonaws.com" ).rstrip( "/" )
-S3_ADDRESSING_STYLE = _env( "S3_ADDRESSING_STYLE", default="path" ).lower()
-S3_ACCESS_KEY       = _env( "S3_ACCESS_KEY", "AWS_ACCESS_KEY_ID" )
-S3_SECRET_KEY       = _env( "S3_SECRET_KEY", "AWS_SECRET_ACCESS_KEY" )
-S3_SESSION_TOKEN    = _env( "S3_SESSION_TOKEN", "AWS_SESSION_TOKEN" )
+S3_URL           = _env( "REMOTE_CACHE_S3_URL",
+                         default="https://s3.eu-central-4.ionoscloud.com/eo-build-assets" ).rstrip( "/" )
+S3_ACCESS_KEY    = _env( "REMOTE_CACHE_S3_ACCESS_KEY" )
+S3_SECRET_KEY    = _env( "REMOTE_CACHE_S3_SECRET_KEY" )
+S3_SESSION_TOKEN = _env( "REMOTE_CACHE_S3_SESSION_TOKEN" )
 
-REMOTE_CACHE_TYPE = _env( "REMOTE_CACHE_TYPE", default="s3" if S3_BUCKET else "nextcloud" ).lower()
+def _s3_region( url ):
+    host = url.split( "://", 1 )[ -1 ].split( "/", 1 )[ 0 ]
+    m = re.match( r"s3[.-]([a-z]{2}(?:-[a-z]+)+-\d+)\.", host )
+    return m.group( 1 ) if m else "us-east-1"
 
-if REMOTE_CACHE_TYPE == "nextcloud":
+def _valid_s3_url( url ):
+    return re.fullmatch( r"https?://[^/?#]+/[^/?#]+", url ) is not None
+
+S3_REGION = _env( "REMOTE_CACHE_S3_REGION", default=_s3_region( S3_URL ) )
+
+if REMOTE_CACHE_TYPE == "s3":
+    USE_REMOTE_CACHE = _valid_s3_url( S3_URL )
+    if not USE_REMOTE_CACHE:
+        print( "  [WARN]  REMOTE_CACHE_S3_URL must look like https://<endpoint>/<bucket>, remote cache disabled" )
+    if not ( S3_ACCESS_KEY and S3_SECRET_KEY ):
+        REMOTE_CACHE_READ_ONLY = True
+elif REMOTE_CACHE_TYPE == "nextcloud":
     USE_REMOTE_CACHE = bool( ( NEXTCLOUD_USER and NEXTCLOUD_PASS )
                              or _env( "NEXTCLOUD_REMOTE" ) )
-elif REMOTE_CACHE_TYPE == "s3":
-    USE_REMOTE_CACHE = bool( S3_BUCKET )
-    if not USE_REMOTE_CACHE:
-        print( "  [WARN]  REMOTE_CACHE_TYPE=s3 but S3_BUCKET is not set, remote cache disabled" )
 else:
     if REMOTE_CACHE_TYPE != "none":
         print( f"  [WARN]  Unknown REMOTE_CACHE_TYPE { REMOTE_CACHE_TYPE !r}, remote cache disabled" )
@@ -466,8 +473,8 @@ def _glibc_str( ver ):
 
 
 def _remote_dir_path():
-    # Remote folder of this dep, relative to the cache root.
-    parts = ( BASE_REMOTE_PATH, PLATFORM_TAG, _cache_key() )
+    # Remote folder of this dep version, relative to the cache root.
+    parts = ( BASE_REMOTE_PATH, PLATFORM_TAG, _cache_key(), dep_version )
     return "/".join( p for p in parts if p )
 
 
@@ -531,14 +538,10 @@ class _S3Backend:
 
     def __init__( self ):
         from urllib.parse import urlsplit
-        ep = urlsplit( S3_ENDPOINT )
-        self.scheme = ep.scheme or "https"
-        if S3_ADDRESSING_STYLE == "virtual":
-            self.host   = f"{ S3_BUCKET }.{ ep.netloc }"
-            self.prefix = ep.path.rstrip( "/" )
-        else:
-            self.host   = ep.netloc
-            self.prefix = f"{ ep.path.rstrip( '/' ) }/{ S3_BUCKET }"
+        url = urlsplit( S3_URL )
+        self.scheme = url.scheme
+        self.host   = url.netloc
+        self.prefix = url.path
 
     def _request( self, method, key="", query=None, body=None, size=0 ):
         import datetime, hashlib, hmac
@@ -586,13 +589,18 @@ class _S3Backend:
         return Request( url, data=body, method=method, headers=headers )
 
     def _open( self, req ):
-        # Response on 2xx, None on any HTTP or network error.
+        # Response on 2xx, None on any HTTP or network error. Anything but a
+        # 404 is reported, so a broken setup doesn't look like a cache miss.
         from urllib.request import urlopen
-        from urllib.error import URLError
+        from urllib.error import HTTPError, URLError
         try:
             return urlopen( req, timeout=120 )
-        except ( URLError, OSError ):
-            return None
+        except HTTPError as e:
+            if e.code != 404:
+                print( f"  [WARN]  S3 { req.get_method() } failed: HTTP { e.code } { e.reason }" )
+        except ( URLError, OSError, http.client.HTTPException ) as e:
+            print( f"  [WARN]  S3 { req.get_method() } failed: { e }" )
+        return None
 
     def exists( self, path ):
         r = self._open( self._request( "HEAD", path ) )
@@ -615,8 +623,10 @@ class _S3Backend:
         try:
             with r, open( dest_file, "wb" ) as f:
                 shutil.copyfileobj( r, f, 1024 * 1024 )
-            return True
-        except OSError:
+                expected = r.headers.get( "Content-Length" )
+                # urllib doesn't raise when the connection drops early
+                return expected is None or f.tell() == int( expected )
+        except ( OSError, http.client.HTTPException ):
             return False
 
     def put( self, src_file, path ):
@@ -663,7 +673,11 @@ def _remote_download_and_extract( path ):
         if install_dir.exists():
             shutil.rmtree( install_dir )
         install_dir.mkdir( parents=True, exist_ok=True )
-        shutil.unpack_archive( archive, str( install_dir ) )
+        try:
+            shutil.unpack_archive( archive, str( install_dir ) )
+        except ( EOFError, OSError, shutil.ReadError, tarfile.TarError ) as e:
+            print( f"  [WARN]  Could not extract { path.rsplit( '/', 1 )[ -1 ] }: { e }" )
+            return False
         return True
 
 
@@ -674,6 +688,11 @@ def _remote_upload():
         archive = shutil.make_archive( str( Path( tmp ) / _cache_key() ),
                                        "bztar", root_dir=str( install_dir ) )
         return _backend().put( archive, _remote_file_path( LOCAL_GLIBC ) )
+
+
+def _remote_upload_needed():
+    # Archives are immutable: never replace one that is already there.
+    return not _backend().exists( _remote_file_path( LOCAL_GLIBC ) )
 
 
 def ensure_dep( build_fn, forceredo=None ):
@@ -694,8 +713,8 @@ def ensure_dep( build_fn, forceredo=None ):
         print( f"  [OK] { name } already present locally, skipping" )
         return
 
-    # 1. Prebuilt archive on the remote (skipped on a forced redo so we rebuild
-    #    and refresh the remote instead of pulling a stale copy).
+    # 1. Prebuilt archive on the remote (skipped on a forced redo, which always
+    #    builds locally; the remote copy is never replaced).
     remote_path = _remote_find_archive() if USE_REMOTE_CACHE and not force_redo else None
     if remote_path:
         print( f"  [GET]  Found { name } on remote ({ remote_path.rsplit( '/', 1 )[ -1 ] }), downloading..." )
@@ -710,6 +729,9 @@ def ensure_dep( build_fn, forceredo=None ):
         print( f"  [WARN]  { name }: build finished but no ok-marker was created" )
         return
     if USE_REMOTE_CACHE and not REMOTE_CACHE_READ_ONLY:
+        if not _remote_upload_needed():
+            print( f"  [OK] { name } already on remote, not replacing it" )
+            return
         print( f"  [PUT]  Uploading { name } to remote..." )
         if _remote_upload():
             print( f"  [OK] { name } uploaded" )

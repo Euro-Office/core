@@ -7,11 +7,14 @@ on:
 jobs:
   build:
     runs-on: windows-2022
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
 
     env:
       PYTHONUTF8: "1"
-      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
-      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+      # Only set on a manual run, through the build-assets environment: that
+      # run uploads missing third-party builds, every other run only reads.
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
 
     steps:
       # ------------------------------------------------------------------ #
