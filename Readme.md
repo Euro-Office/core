@@ -37,7 +37,17 @@ Nextcloud (WebDAV, needs `curl`):
 
 The Nextcloud cache is enabled when `NEXTCLOUD_USER` and `NEXTCLOUD_PASS` are set, or when `NEXTCLOUD_REMOTE` is set explicitly (anonymous access).
 
-In CI only a manual run of the Build workflows on `main` uploads: it gets the keys from the `build-assets` environment. Pull request builds only read.
+In CI, pull request builds only read. To upload new or bumped dependencies, run the workflows manually on `main` and approve the `build-assets` deployment (Review deployments > Approve):
+
+| Workflow | Uploads |
+| --- | --- |
+| Build | Linux x64/arm64, macOS arm64 |
+| Build (Windows x64) | Windows x64 and arm64 |
+| Build (Android) | Android arm64-v8a, x86_64 |
+
+```sh
+gh workflow run build.yml -R Euro-Office/core --ref main
+```
 
 ## Build heavy dependencies for vcpkg
 
