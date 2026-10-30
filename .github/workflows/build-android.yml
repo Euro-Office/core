@@ -7,6 +7,12 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A new push to a pull request cancels its previous run. Other runs (manual
+# ones included) are never cancelled, they wait instead.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     # The build tree and the third-party builds (V8 takes hours) stay in a
