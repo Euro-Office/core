@@ -272,7 +272,13 @@ bool OOX::Spreadsheet::CXlsx::WriteXLS(const CPath& oFilePath)
 			if(!cacheHeader->m_oCacheId.IsInit() || !cacheHeader->m_oRid.IsInit() ||  !m_pWorkbook->IsExist(cacheHeader->m_oRid->GetValue()))
 				continue;
 			auto cacheFilePtr = m_pWorkbook->Find(cacheHeader->m_oRid->GetValue());
-			auto CachePtr = static_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
+			// r:id may point to a part of another type; EnsureDefinition writes to the object, so check before using it
+			auto CachePtr = dynamic_cast<CPivotCacheDefinitionFile*>(cacheFilePtr.GetPointer());
+			if (!CachePtr)
+				continue;
+			CachePtr->EnsureDefinition();
+			if (!CachePtr->m_oPivotCashDefinition.IsInit())
+				continue;
 			auto XLSBinCache = CachePtr->m_oPivotCashDefinition->toXLS(cacheHeader->m_oCacheId->GetValue());
 			auto castedCache = static_cast<XLS::PIVOTCACHE*>(XLSBinCache.get());
 			auto cacheRecordsPtr = CachePtr->Find(OOX::SpreadsheetBin::FileTypes::PivotCacheRecordsBin);

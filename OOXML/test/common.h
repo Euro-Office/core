@@ -30,5 +30,6 @@ void PrepareFiles(const std::wstring &fileName, const std::wstring &exampleFileN
 int ConvertFile(const std::wstring &fileName);
 std::wstring GetWorkDir();
 void RemoveWorkDir(const std::wstring &dir);
-std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir);
+// formatFrom/formatTo are AVS_OFFICESTUDIO_FILE_* values; 0 lets x2t detect the format
+std::wstring CreateParamsFile(const std::wstring &pathFrom, const std::wstring &pathTo, const std::wstring &TempDir, int formatFrom = 0, int formatTo = 0);
 
