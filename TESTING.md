@@ -173,6 +173,14 @@ Done:
       - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
         `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
         not required inputs.
+- [x] `MsBinaryFile/DocFile/test` (`doc_fkp_test`) — new suite, not a `.pro` migration.
+      Regression tests for the bounds checks in the `.doc` Formatted Disk Page parsers
+      (`FormattedDiskPageCHPX`/`PAPX`). Each case writes a hand-built 512 byte FKP into a
+      temporary compound file through POLE and runs the real constructors on it. Deps:
+      DocFormatLib + XlsFormatLib (for `Log::warning`) in a linker group, kernel,
+      UnicodeConverter; `pole.cpp`/`unicode_util.cpp` are compiled into the target as
+      `x2tTester` does. No fixtures. Building it with `-fsanitize=address` also turns any
+      remaining out-of-bounds read into a failure.
 
 ### gtest suites to migrate
 
