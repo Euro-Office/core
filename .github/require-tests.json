@@ -1,0 +1,13 @@
+{
+    "tests": [
+        "test/*", "*/test/*", "tests/*", "*/tests/*", "Test/*", "*/Test/*", "*Test/*", "*/Test*/*",
+        "*_test/*", "*_test.*", "*test_*.py"
+    ],
+    "ignore": [
+        "Common/3dParty/libvlc/*", "Common/3dParty/cryptopp/*", "DesktopEditor/agg-2.4/*",
+        "DesktopEditor/cximage/*", "DesktopEditor/freetype-*", "DesktopEditor/freetype_names/freetype-*",
+        "DesktopEditor/raster/Jp2/openjpeg/*", "DesktopEditor/raster/JBig2/*", "DesktopEditor/xml/mac/libxml2/*", "*/libdjvu/*",
+        "PdfFile/lib/*", "PdfFile/Resources/CMap*", "UnicodeConverter/icubuilds-mac/*",
+        ".github/*", "*.md", "LICENSE*", "LICENSES/*", "REUSE.toml", ".gitignore", ".gitmodules"
+    ]
+}
