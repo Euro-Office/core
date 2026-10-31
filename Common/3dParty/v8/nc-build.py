@@ -4,6 +4,7 @@ import sys
 import shutil
 import os
 import re
+import subprocess
 from pathlib import Path
 
 script_path = Path(sys.argv[0]).resolve()
@@ -93,6 +94,9 @@ def depot_env() -> dict:
     # Keep depot_tools from self-updating to HEAD, which would undo the pin
     env[ "DEPOT_TOOLS_UPDATE" ] = "0"
     env[ "VPYTHON_BYPASS" ] = "manually managed python not supported by chrome operations"
+    # CIPD's parallel package installs failed on GitHub's arm64 runners with
+    # files vanishing from its temp dir
+    env[ "CIPD_MAX_THREADS" ] = "1"
     return env
 
 def ensure_android_cpu_features():
@@ -180,7 +184,8 @@ def _unfold_symlinked_dirs( base : Path, path : Path ):
             for entry in real.iterdir():
                 ( current / entry.name ).symlink_to( entry, target_is_directory = entry.is_dir() )
 
-def _make_clang_base( bin_dir : Path, builtins : dict[ str, Path | None ], replace : dict[ str, Path ] = {} ) -> tuple[ Path, str ]:
+def _make_clang_base( bin_dir : Path, builtins : dict[ str, Path | None ], replace : dict[ str, Path ] = {},
+                      link_tools : bool = False ) -> tuple[ Path, str ]:
     # Chromium's build expects Chromium's own clang layout: it links the
     # builtins library from <clang_base_path>/lib/clang/<major>/lib/<triple>/,
     # with Chromium's spelling of the triple. Distro and NDK clangs keep it
@@ -190,7 +195,9 @@ def _make_clang_base( bin_dir : Path, builtins : dict[ str, Path | None ], repla
     # (its headers are found through it: the build passes
     # -no-canonical-prefixes), with the builtins added where gn wants them.
     # builtins maps "<triple dir>/<file name>" to the library, or to None for
-    # an empty archive.
+    # an empty archive. link_tools makes bin/ a directory of links to the
+    # tools instead of a link to the directory, so clang doesn't find an
+    # ../include/c++ of its own installation (Homebrew's libc++).
     clang = bin_dir / "clang"
     major = _clang_major_version( clang )
     resource_dir = Path( nc.capture_process_output( [ str( clang ), "-print-resource-dir" ] ).strip() )
@@ -199,7 +206,12 @@ def _make_clang_base( bin_dir : Path, builtins : dict[ str, Path | None ], repla
         shutil.rmtree( clang_shim_path )
     shim_resource_dir = clang_shim_path / "lib" / "clang" / major
     nc.ensure_directory_exists( shim_resource_dir / "lib" )
-    ( clang_shim_path / "bin" ).symlink_to( bin_dir, target_is_directory = True )
+    if link_tools:
+        nc.ensure_directory_exists( clang_shim_path / "bin" )
+        for tool in bin_dir.iterdir():
+            ( clang_shim_path / "bin" / tool.name ).symlink_to( tool )
+    else:
+        ( clang_shim_path / "bin" ).symlink_to( bin_dir, target_is_directory = True )
     for entry in resource_dir.iterdir():
         if entry.name != "lib":
             ( shim_resource_dir / entry.name ).symlink_to( entry, target_is_directory = entry.is_dir() )
@@ -247,7 +259,8 @@ def prepare_clang_base() -> tuple[ Path, str ]:
     if not builtins.is_file():
         nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
 
-    return _make_clang_base( bin_dir, { wanted: builtins } )
+    # On macOS against the SDK's libc++, like core, not Homebrew's
+    return _make_clang_base( bin_dir, { wanted: builtins }, link_tools = nc.is_apple_silicon() )
 
 def _homebrew_prefix( formula : str ) -> Path | None:
     for prefix in ( "/opt/homebrew/opt", "/usr/local/opt" ):
@@ -348,6 +361,11 @@ use_custom_libcxx_for_host=false
 enable_rust=false
 # Clang header modules expect Chromium's clang and sysroot layout
 use_clang_modules=false
+# Don't replace malloc/free and the global new/delete of the process V8 is
+# linked into (the default when building V8 on its own)
+use_allocator_shim=false
+use_partition_alloc_as_malloc=false
+enable_backup_ref_ptr_support=false
 
 # Symbol and debug settings
 symbol_level=0
@@ -483,12 +501,17 @@ solutions = [
 """ )
 
     gclient = [ "cmd.exe", "/c", "gclient.bat" ] if nc.is_windows() else [ "gclient" ]
-    nc.run_command(
-        gclient + [ "sync", "--no-history", "--shallow" ],
-        "GClient sync",
-        v8_root_path,
-        env = depot_env(),
-    )
+    # Downloads from Google's servers fail now and then, so try twice
+    first = subprocess.run( gclient + [ "sync", "--no-history", "--shallow" ], cwd = v8_root_path,
+                            env = depot_env(), capture_output = True, text = True )
+    if first.returncode != 0:
+        print( f"[WARNING] GClient sync failed, retrying:\n{ ( first.stderr or first.stdout )[ -2000: ] }" )
+        nc.run_command(
+            gclient + [ "sync", "--no-history", "--shallow" ],
+            "GClient sync",
+            v8_root_path,
+            env = depot_env(),
+        )
 
     if nc.is_android():
         disable_android_test_runner()
