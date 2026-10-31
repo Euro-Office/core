@@ -320,10 +320,17 @@ def _find_windows_llvm_dir() -> Path:
         # VS bundles x64 and, on arm64 hosts, native ARM64 builds of LLVM
         for host in ( "x64", "ARM64" ):
             candidates.append( Path( os.environ[ "VSINSTALLDIR" ] ) / "VC" / "Tools" / "Llvm" / host )
-    found = [ c for c in candidates if ( c / "bin" / "clang-cl.exe" ).exists() ]
+    found = {}
+    for candidate in candidates:
+        if not ( candidate / "bin" / "clang-cl.exe" ).exists():
+            continue
+        try:
+            found[ candidate ] = int( _clang_major_version( candidate / "bin" / "clang.exe" ) )
+        except ( OSError, subprocess.CalledProcessError ):
+            continue  # e.g. the ARM64 build on an x64 machine
     if not found:
         nc.abort_op( "No LLVM/clang-cl found. Install LLVM or the VS 'C++ Clang tools' component, or set LLVM_DIR." )
-    return max( found, key = lambda c: int( _clang_major_version( c / "bin" / "clang.exe" ) ) )
+    return max( found, key = found.get )
 
 def prepare_windows_clang_base() -> tuple[ Path, str ]:
     # Chromium's build puts clang_base_path into linker arguments unquoted, so
