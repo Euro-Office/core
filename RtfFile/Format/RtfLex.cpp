@@ -228,7 +228,13 @@ void RtfLex::parseKeyword(RtfToken& token)
 	{
 		c = m_oStream.getc();
 
-		if(c == '\\' || c == '{' || c == '}')
+		if (c == EOF)
+		{
+			// a lone backslash at the end of a truncated file: the input ends
+			// inside a control sequence, so there is nothing left to emit
+			token.Type = RtfToken::Eof;
+		}
+		else if(c == '\\' || c == '{' || c == '}')
 		{
 			token.Type = RtfToken::Text;
 			token.Key = (char)c;

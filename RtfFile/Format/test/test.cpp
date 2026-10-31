@@ -375,6 +375,20 @@ TEST(RtfLex, TruncatedParameterAtEofIsNotReread)
     EXPECT_EQ(24, ar[3].Parameter);
 }
 
+TEST(RtfLex, TrailingBackslashAtEofEndsTheStream)
+{
+    // A lone backslash at EOF is a control sequence cut off by the end of
+    // the file: the lexer reports Eof instead of a token for it.
+    const std::vector<RtfToken> ar = LexAll("{\\rtf1 abc\\");
+
+    ASSERT_EQ(3u, ar.size());
+    EXPECT_EQ(RtfToken::GroupStart, ar[0].Type);
+    ASSERT_EQ(RtfToken::Keyword, ar[1].Type);
+    EXPECT_EQ("rtf", ar[1].Key);
+    ASSERT_EQ(RtfToken::Text, ar[2].Type);
+    EXPECT_EQ("abc", ar[2].Key);
+}
+
 TEST(StringStream, UngetcAfterNormalGetcStepsBack)
 {
     const std::wstring sPath = WriteFixture("abcde");
