@@ -125,7 +125,7 @@ RtfLex::RtfLex()
 {
 	m_oFileWriter = NULL;
 	m_nReadBufSize = 1024 * 1024 * 5; // 5mb
-	m_caReadBuffer = new char[m_nReadBufSize];
+	m_caReadBuffer = new char[m_nReadBufSize + 1]; // +1: parseText terminates a full buffer
 }
 RtfLex::~RtfLex()
 {
@@ -145,7 +145,7 @@ bool RtfLex::SetSource( std::wstring sPath )
 	{
 		m_nReadBufSize = (int)m_oStream.getSize() ;
 		if (m_caReadBuffer) delete []m_caReadBuffer;
-		m_caReadBuffer = new char[m_nReadBufSize];
+		m_caReadBuffer = new char[m_nReadBufSize + 1]; // +1: parseText terminates a full buffer
 	}
 	return true;
 }
