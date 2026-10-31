@@ -312,6 +312,9 @@ TEST(RtfLex, LongTextRunExceedsInitialReadBuffer)
 {
     // SetSource grows the 5 MB read buffer to the file size, so a run past
     // the initial buffer must still lex as one Text token of full length.
+    // The run is exactly as long as the grown buffer, so parseText fills it
+    // completely before terminating the run (a terminator past the end of
+    // the allocation shows up under AddressSanitizer).
     const size_t nLen = 6u * 1024u * 1024u;
     const std::string sContent(nLen, 'x');
 
