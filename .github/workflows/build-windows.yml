@@ -11,8 +11,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: x64,   runner: windows-2022,   vcvars: vcvars64.bat }
-          - { arch: arm64, runner: windows-11-arm, vcvars: vcvarsarm64.bat }
+          # The arm64 image has Visual Studio 2026, the x64 one 2022
+          - { arch: x64,   runner: windows-2022,   vcvars: vcvars64.bat,    generator: "Visual Studio 17 2022" }
+          - { arch: arm64, runner: windows-11-arm, vcvars: vcvarsarm64.bat, generator: "Visual Studio 18 2026" }
     name: build (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
@@ -192,7 +193,7 @@ jobs:
 
           set PYTHONUTF8=1
 
-          cmake -G "Visual Studio 17 2022" ^
+          cmake -G "${{ matrix.generator }}" ^
             -DCMAKE_BUILD_TYPE=Release ^
             -DVCPKG_MANIFEST=ON ^
             -DVCPKG_MANIFEST_DIR=. ^
