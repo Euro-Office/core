@@ -388,6 +388,12 @@ const RoundTripResult& MissingIdsResult()
     return r;
 }
 
+const RoundTripResult& MixedResult()
+{
+    static const RoundTripResult r = RoundTrip("mixed_comments.pptx", L"work_mixed");
+    return r;
+}
+
 } // namespace
 
 // ---------------------------------------------------------------------------
@@ -558,6 +564,46 @@ TEST(ClassicRoundTrip, CommentAuthorMappingPreserved)
             EXPECT_LT(previousPos, pos) << "comment document order changed";
         }
         previousPos = pos;
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Mixed package: classic commentAuthors.xml AND modern authors.xml both
+// present (see make_fixtures.py). The modern part must win: modern
+// comments still get an authorIdx in the bin (review, Folder.cpp:80).
+// ---------------------------------------------------------------------------
+
+TEST(MixedPackage, ModernCommentsGetAuthorIdx)
+{
+    const RoundTripResult& r = MixedResult();
+    ASSERT_TRUE(r.ok) << r.error;
+
+    EXPECT_TRUE(r.authorsIsModern);
+    EXPECT_NE(r.authorsPart.find("p188:authorLst"), std::string::npos);
+
+    for (const AuthorInfo* a : {&kAlice, &kBob, &kCarol})
+    {
+        const size_t namePos = FindUtf16Le(r.bin, a->name);
+        ASSERT_NE(namePos, std::string::npos)
+            << "author name " << a->name << " missing from the binary intermediate";
+        const size_t record = FindRecordStart(r.bin, namePos);
+        ASSERT_NE(record, std::string::npos);
+        ASSERT_LT(record + 6, r.bin.size());
+        EXPECT_EQ(static_cast<unsigned char>(r.bin[record + 1]), 0x00u)
+            << "author record of " << a->name << " carries no idx attribute";
+        EXPECT_EQ(ReadInt32Le(r.bin, record + 2), a->binIdx)
+            << "author record of " << a->name << " has the wrong idx";
+
+        const size_t datePos = FindUtf16Le(r.bin, a->commentDate);
+        ASSERT_NE(datePos, std::string::npos);
+        const size_t commentRecord = FindRecordStart(r.bin, datePos);
+        ASSERT_NE(commentRecord, std::string::npos);
+        ASSERT_LT(commentRecord + 6, r.bin.size());
+        EXPECT_EQ(static_cast<unsigned char>(r.bin[commentRecord + 1]), 0x00u)
+            << "comment of " << a->name << " carries no authorIdx attribute"
+               " (mixed-package regression)";
+        EXPECT_EQ(ReadInt32Le(r.bin, commentRecord + 2), a->binIdx)
+            << "comment of " << a->name << " points at the wrong author";
     }
 }
 
