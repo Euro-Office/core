@@ -37,16 +37,26 @@ jobs:
       with:
         submodules: recursive
 
-    # Build environment: the core-base stage of the release Dockerfile. The
-    # stage has no COPY, so the Dockerfile is fed via stdin with an empty
-    # build context. Layers are cached by the runner's Docker daemon.
-    - name: Build core-base image from Dockerfile
+    # Build environment: the core-base stage of the release Dockerfile.
+    # Euro-Office/docker-ci publishes it as core-base:<product>-<arch>-<hash>,
+    # <hash> being the first 12 characters of the Dockerfile's sha256. Without
+    # that tag (the Dockerfile changed and docker-ci has not rebuilt yet) the
+    # stage is built here: it has no COPY, so the Dockerfile is fed via stdin
+    # with an empty build context. Layers are cached by the runner's Docker daemon.
+    - name: Get core-base image
       run: |
-        docker build \
-          --target core-base \
-          --build-arg PRODUCT=${{ matrix.product }} \
-          -t "$BASE_IMAGE" \
-          - < .docker/core.bake.Dockerfile
+        hash=$(sha256sum .docker/core.bake.Dockerfile | cut -c1-12)
+        published="ghcr.io/euro-office/core-base:${{ matrix.product }}-${{ matrix.arch }}-$hash"
+        if docker pull "$published"; then
+          docker tag "$published" "$BASE_IMAGE"
+        else
+          echo "::notice::$published is not published, building core-base here"
+          docker build \
+            --target core-base \
+            --build-arg PRODUCT=${{ matrix.product }} \
+            -t "$BASE_IMAGE" \
+            - < .docker/core.bake.Dockerfile
+        fi
 
     # CI-only additions on top of core-base: fonts for the conversion test.
     # x2t measures text (e.g. spreadsheet column widths) with the system
