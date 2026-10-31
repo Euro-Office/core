@@ -207,6 +207,40 @@ def build_no_ids(seed_path, out_path):
     print("wrote", out_path)
 
 
+def build_mixed(seed_path, out_path):
+    """Mixed package: keep the modern parts and ADD a classic
+    commentAuthors.xml part (content type + relationship), reproducing
+    the both-parts-present case from the PR #175 review."""
+    zin = zipfile.ZipFile(seed_path)
+    authors = read_part(zin, AUTHORS_PART)
+    classic = classic_authors(authors)
+    with zipfile.ZipFile(out_path, "w", zipfile.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename == "[Content_Types].xml":
+                s = data.decode("utf-8")
+                s = s.replace(
+                    "</Types>",
+                    "<Override PartName=\"/ppt/commentAuthors.xml\""
+                    " ContentType=\"%s\"/></Types>" % CT_COMMENT_AUTHORS,
+                    1,
+                )
+                data = s.encode("utf-8")
+            elif item.filename == "ppt/_rels/presentation.xml.rels":
+                s = data.decode("utf-8")
+                s = s.replace(
+                    "</Relationships>",
+                    "<Relationship Id=\"rIdMixedCommentAuthors\""
+                    " Type=\"%s\" Target=\"commentAuthors.xml\"/></Relationships>"
+                    % REL_COMMENT_AUTHORS,
+                    1,
+                )
+                data = s.encode("utf-8")
+            zout.writestr(item, data)
+        zout.writestr("ppt/commentAuthors.xml", classic.encode("utf-8"))
+    print("wrote", out_path)
+
+
 def check(dir_path):
     def part(z, name):
         return z.read(name).decode("utf-8")
@@ -231,6 +265,12 @@ def check(dir_path):
     na = part(noids, AUTHORS_PART)
     ok = ok and " id=" not in na and na.count("<p188:author ") == 3
 
+    mixed = zipfile.ZipFile(os.path.join(dir_path, "mixed_comments.pptx"))
+    ma = part(mixed, AUTHORS_PART)
+    ok = ok and ma.count("<p188:author ") == 3
+    mca = part(mixed, "ppt/commentAuthors.xml")
+    ok = ok and "p:cmAuthorLst" in mca and "p188" not in mca
+
     print("FIXTURES OK" if ok else "FIXTURES BROKEN")
     return ok
 
@@ -245,6 +285,7 @@ def main(argv):
     base = os.path.dirname(os.path.abspath(seed))
     build_classic(seed, os.path.join(base, "classic_comments.pptx"))
     build_no_ids(seed, os.path.join(base, "modern_comments_no_author_ids.pptx"))
+    build_mixed(seed, os.path.join(base, "mixed_comments.pptx"))
     return 0
 
 
