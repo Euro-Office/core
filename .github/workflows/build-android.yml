@@ -45,8 +45,8 @@ jobs:
         target "android-ndk" {
           dockerfile-inline = <<EOT
         FROM ubuntu:24.04
-        ARG ANDROID_NDK_RELEASE=r28c
-        ARG ANDROID_NDK_VERSION=28.2.13676358
+        ARG ANDROID_NDK_RELEASE=r30
+        ARG ANDROID_NDK_VERSION=30.0.16248370
         RUN apt-get update && \
             apt-get install -y --no-install-recommends \
                 ca-certificates curl unzip git python3 python-is-python3 \
