@@ -234,7 +234,11 @@ def run_command(
         if verbose:
             abort_op( f"{description} failed", error_is_fatal=error_is_fatal )
         else:
-            abort_op( f"{description} failed: {e.stderr.strip() or e.stdout.strip() or e}", error_is_fatal=error_is_fatal )
+            # Compilers such as MSVC's cl report errors on stdout, so show the
+            # end of both streams
+            output = "\n".join( stream.strip() for stream in ( e.stdout, e.stderr ) if stream and stream.strip() )
+            output = "\n".join( output.splitlines()[ -80: ] )
+            abort_op( f"{description} failed: {output or e}", error_is_fatal=error_is_fatal )
 
 def capture_process_output( cmd : list[str] ) -> str:
     result = subprocess.run( cmd, capture_output = True, text = True, check = True )

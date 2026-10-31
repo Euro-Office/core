@@ -114,7 +114,7 @@ namespace NSGraphicsEmbed
 	FUNCTION_WRAPPER_V8_1(_CreateLayer, CreateLayer)
 	FUNCTION_WRAPPER_V8_0(_BlendLayer, BlendLayer)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);

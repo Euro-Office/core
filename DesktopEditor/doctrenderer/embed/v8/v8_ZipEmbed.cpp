@@ -22,7 +22,7 @@ namespace NSZipEmbed
 	FUNCTION_WRAPPER_V8_1(_getImageType, getImageType)
 	FUNCTION_WRAPPER_V8_1(_getImageBuffer, getImageBuffer)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);

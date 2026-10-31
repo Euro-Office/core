@@ -236,15 +236,47 @@ target_compile_definitions(doctrenderer PRIVATE
     BUIDLER_OPEN_DOWNLOAD_ENABLED
     BUIDLER_OPEN_BASE64_ENABLED
     SUPPORT_HARFBUZZ_SHAPER # textshaper.pri
-    V8_VERSION_89_PLUS # v8.pri
-    V8_SUPPORT_SNAPSHOTS  # v8.pri
-    V8_COMPRESS_POINTERS # v8.pri
 )
 
 if(USE_JAVASCRIPT_CORE)
     target_compile_definitions(doctrenderer PRIVATE
         JS_ENGINE_JAVASCRIPTCORE
     )
+else()
+    target_compile_definitions(doctrenderer PRIVATE
+        V8_VERSION_89_PLUS
+        V8_VERSION_121_PLUS
+        # No V8_SUPPORT_SNAPSHOTS: with V8 14.6, contexts created from an
+        # sdkjs startup snapshot abort in V8's deserializer. Nothing uses
+        # snapshots (DocumentServer and the mobile engine use the code cache),
+        # and without the define an existing sdk-all.bin is ignored.
+        # Take the defines that must match the V8 build (pointer compression
+        # etc.) from the v8-gn.h installed with it
+        V8_GN_HEADER
+    )
+
+    # The V8 headers require C++20
+    set_property(TARGET doctrenderer PROPERTY CXX_STANDARD 20)
+    if(MSVC)
+        # ... and check it via __cplusplus, which MSVC only sets correctly with this
+        target_compile_options(doctrenderer PRIVATE /Zc:__cplusplus)
+        if(V8_USE_INSPECTOR)
+            # Boost 1.83's Asio doesn't compile with MSVC in C++20 mode (no
+            # any_io_executor from io_context's executor). This file doesn't
+            # include V8, so keep it on C++17.
+            set_source_files_properties(
+                ${CMAKE_CURRENT_SOURCE_DIR}/js_internal/v8/inspector/websocket_server.cpp
+                PROPERTIES COMPILE_OPTIONS "/std:c++17")
+        endif()
+    endif()
+
+    if(UNIX AND NOT APPLE)
+        # V8 calls some functions with clang's preserve_most convention. Called
+        # through a lazily bound PLT entry, glibc's resolver clobbers registers
+        # the caller expects preserved, and TurboFan crashes. So bind
+        # everything at load time, as Chromium does.
+        target_link_options(doctrenderer PRIVATE "-Wl,-z,now")
+    endif()
 endif()
 
 if(V8_USE_INSPECTOR)
@@ -284,6 +316,13 @@ target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_LIBCRYPTO}
     ${V8_MONOLITH}
 )
+
+if(UNIX AND NOT APPLE AND NOT ANDROID)
+    # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
+    # arm64), which call into libatomic. Linked after the V8 library, else
+    # --as-needed drops it.
+    target_link_libraries(doctrenderer PRIVATE atomic)
+endif()
 
 target_link_libraries(doctrenderer PUBLIC
     graphics

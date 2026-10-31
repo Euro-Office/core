@@ -1,0 +1,84 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+name: Build (macOS arm64)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    # Only on a manual run, through the build-assets environment: that run
+    # uploads missing third-party builds, every other run only reads.
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
+    env:
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      CCACHE_DIR: ${{ github.workspace }}/.ccache
+      CCACHE_MAXSIZE: 2G
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    # The build scripts need Python >= 3.11 (depot_tools for V8)
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Homebrew build prerequisites
+      run: brew install ninja autoconf automake libtool pkg-config ccache llvm lld
+
+    # Core builds with Xcode's clang, V8 with Homebrew's LLVM and lld
+    # against Xcode's SDK
+    - name: Show toolchain
+      run: |
+        xcodebuild -version
+        clang --version
+        "$(brew --prefix llvm)/bin/clang" --version
+
+    - name: Set up vcpkg
+      uses: lukka/run-vcpkg@v11
+
+    - name: Restore ccache
+      uses: actions/cache@v4
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-macos-arm64-${{ github.run_id }}
+        restore-keys: ccache-macos-arm64-
+
+    # Builds the third-party libraries missing from the remote cache too
+    - name: Configure
+      run: |
+        cmake -G Ninja -S . -B build \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
+          -DVCPKG_TARGET_TRIPLET=arm64-osx \
+          -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
+          -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
+          -DPYTHON_BIN="$(command -v python3)" \
+          -DEO_CORE_OUTPUT_DIR="$PWD/package/bin" \
+          -DEO_CORE_TOOLS_DIR="$PWD/package/tools" \
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+    - name: Build
+      run: cmake --build build
+
+    - name: Unit tests (CTest)
+      run: ctest --test-dir build --output-on-failure
+
+    - name: ccache statistics
+      if: always()
+      run: ccache --show-stats || true
+
+    - name: Upload build output
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output-macos-arm64
+        path: |
+          package/bin/
+          package/tools/
+        if-no-files-found: warn

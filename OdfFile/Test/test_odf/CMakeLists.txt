@@ -50,8 +50,16 @@ add_core_gtest(
 # The OOXML/MS format static libraries reference one another, so wrap them in a
 # linker group; the remaining converter libraries are shared and linked after.
 # This mirrors the static + dynamic lib lists of target_link_libraries(x2tlib).
+# Apple's ld has no groups; it resolves across static libraries anyway.
+if(APPLE)
+    set(_test_odf_group_begin "")
+    set(_test_odf_group_end "")
+else()
+    set(_test_odf_group_begin "-Wl,--start-group")
+    set(_test_odf_group_end "-Wl,--end-group")
+endif()
 target_link_libraries(test_odf PRIVATE
-    -Wl,--start-group
+    ${_test_odf_group_begin}
     OdfFormatLib
     DocFormatLib
     PptFormatLib
@@ -65,7 +73,7 @@ target_link_libraries(test_odf PRIVATE
     VbaFormatLib
     CompoundFileLib
     CryptoPPLib
-    -Wl,--end-group
+    ${_test_odf_group_end}
     graphics
     kernel
     UnicodeConverter
