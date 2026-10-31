@@ -947,7 +947,7 @@ bool COfficeFileFormatChecker::isOfficeFile(const std::wstring &_fileName)
 			nFileType = AVS_OFFICESTUDIO_FILE_DOCUMENT_DOCX;
 		else if (0 == sExt.compare(L".pptx"))
 			nFileType = AVS_OFFICESTUDIO_FILE_PRESENTATION_PPTX;
-		else if (0 == sExt.compare(L".vsxd"))
+		else if (0 == sExt.compare(L".vsdx"))
 			nFileType = AVS_OFFICESTUDIO_FILE_DRAW_VSDX;
 		else if (0 == sExt.compare(L".ods"))
 			nFileType = AVS_OFFICESTUDIO_FILE_SPREADSHEET_ODS;
