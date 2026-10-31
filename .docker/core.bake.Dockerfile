@@ -71,17 +71,6 @@ FROM rockylinux/rockylinux:9 AS core-base-server
     # the binaries are unversioned, so no update-alternatives needed.
     RUN dnf install -y clang lld llvm compiler-rt && dnf clean all
 
-    # The Rocky 9.0 AppStream vault, disabled by default. Not used here, but
-    # images built on this one (desktop-apps) pin packages from it.
-    RUN printf '%s\n' \
-        '[rocky90-appstream]' \
-        'name=Rocky 9.0 AppStream (vault)' \
-        'baseurl=https://dl.rockylinux.org/vault/rocky/9.0/AppStream/$basearch/os/' \
-        'enabled=0' \
-        'gpgcheck=1' \
-        'gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-Rocky-9' \
-        > /etc/yum.repos.d/rocky90-vault.repo
-
 
 #### DESKTOP BASE (Rocky Linux 9 on amd64, Ubuntu 24.04 on arm64) ####
 FROM core-base-server AS core-base-desktop-amd64
