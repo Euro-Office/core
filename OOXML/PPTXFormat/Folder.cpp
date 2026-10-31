@@ -84,8 +84,18 @@ namespace PPTX
 					PPTX::Logic::CommentAuthor& oAuthor = pAuthors->m_arAuthors[nAuthor];
 					if (true == oAuthor.idx.IsInit() || false == oAuthor.id.IsInit())
 						continue;
-					oAuthor.idx = pAuthors->mapAuthors.size() + 1;
-					pAuthors->mapAuthors.insert(std::make_pair(*oAuthor.id, *oAuthor.idx));
+					// #175 (review): a duplicate GUID makes insert() a no-op and the next
+					// author would mint the same idx - find the existing entry first.
+					std::map<std::wstring, int>::iterator pAuthorFind = pAuthors->mapAuthors.find(*oAuthor.id);
+					if (pAuthorFind != pAuthors->mapAuthors.end())
+					{
+						oAuthor.idx = pAuthorFind->second;
+					}
+					else
+					{
+						oAuthor.idx = pAuthors->mapAuthors.size() + 1;
+						pAuthors->mapAuthors.insert(std::make_pair(*oAuthor.id, *oAuthor.idx));
+					}
 				}
 				for (std::map<std::wstring, smart_ptr<OOX::File>>::const_iterator pPair = map.m_map.begin();
 					pPair != map.m_map.end(); ++pPair)
@@ -104,6 +114,13 @@ namespace PPTX
 								if (pFind != pAuthors->mapAuthors.end())
 								{
 									oComment.authorIdx = pFind->second;
+								}
+								else
+								if (false == pAuthors->mapAuthors.empty())
+								{
+									// #175 (review): orphan authorId - fall back to the first author
+									// instead of minting an authorIdx with no author behind it
+									oComment.authorIdx = pAuthors->mapAuthors.begin()->second;
 								}
 								else
 								{

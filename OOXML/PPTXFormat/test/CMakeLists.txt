@@ -50,7 +50,10 @@ add_custom_command(TARGET pptx_comments_test POST_BUILD
 # visibility, and this binary resolves ICU before the system runtime through
 # x2tlib. Linking the system runtime as the FIRST dependency wins the symbol
 # race and keeps a single consistent C++ runtime.
-target_link_options(pptx_comments_test PRIVATE
-    "-Wl,--no-as-needed"
-    "-lstdc++"
-)
+# GNU-ld specific; MSVC and macOS (ld64) do not understand --no-as-needed.
+if(LINUX)
+    target_link_options(pptx_comments_test PRIVATE
+        "-Wl,--no-as-needed"
+        "-lstdc++"
+    )
+endif()
