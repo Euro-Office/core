@@ -127,13 +127,38 @@ size_t FindUtf16Le(const std::string& data, const std::string& ascii)
     return data.find(Utf16Le(ascii));
 }
 
-// Walks back from payloadPos to the 0xFA record start byte.
+// Walks back from payloadPos to the 0xFA record start byte. A bare 0xFA can
+// also occur inside an int32 attribute value (e.g. 250 = FA 00 00 00) or a
+// UTF-16LE payload byte (U+00FA), so every candidate is validated against
+// the PPTY record layout: [0xFA][tag][int32]...[type byte][int32 len]
+// [payload]. A candidate is accepted only if its attribute walk ends
+// exactly on the type byte (payloadPos - 5) with plausible tag bytes; the
+// records this suite anchors on always carry at least one attribute (the
+// idx / authorIdx tag the assertions read).
 size_t FindRecordStart(const std::string& data, size_t payloadPos, size_t window = 512)
 {
+    if (payloadPos < 5)
+        return std::string::npos;
+    const size_t typePos = payloadPos - 5;
     const size_t begin = payloadPos > window ? payloadPos - window : 0;
     for (size_t i = payloadPos; i-- > begin;)
     {
-        if (static_cast<unsigned char>(data[i]) == 0xfa)
+        if (static_cast<unsigned char>(data[i]) != 0xfa)
+            continue;
+        if (i + 1 >= typePos) // need at least one [tag][int32] attribute
+            continue;
+        bool bValid = true;
+        size_t pos = i + 1;
+        while (pos < typePos)
+        {
+            if (static_cast<unsigned char>(data[pos]) >= 0x10 || pos + 5 > typePos)
+            {
+                bValid = false;
+                break;
+            }
+            pos += 5; // [tag byte][int32 value]
+        }
+        if (bValid && pos == typePos)
             return i;
     }
     return std::string::npos;
