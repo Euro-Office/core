@@ -624,8 +624,12 @@ function(add_core_gtest)
     else()
         set(_eo_test_libpath_var LD_LIBRARY_PATH)
     endif()
-    set_tests_properties(${T_NAME} PROPERTIES
-        ENVIRONMENT "${_eo_test_libpath_var}=${_eo_test_libpath}:$ENV{${_eo_test_libpath_var}}")
+    set(_eo_test_env "${_eo_test_libpath_var}=${_eo_test_libpath}:$ENV{${_eo_test_libpath_var}}")
+    if(APPLE)
+        # Frameworks (ooxmlsignature) are looked up separately
+        list(APPEND _eo_test_env "DYLD_FRAMEWORK_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_FRAMEWORK_PATH}")
+    endif()
+    set_tests_properties(${T_NAME} PROPERTIES ENVIRONMENT "${_eo_test_env}")
 endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
