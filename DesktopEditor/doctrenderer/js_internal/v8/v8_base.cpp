@@ -235,33 +235,6 @@ namespace NSJSBase
 		}
 	}
 
-	class WeakHandleVisitor : public v8::PersistentHandleVisitor
-	{
-	private:
-		WeakHandleVisitor() = default;
-
-	public:
-		void VisitPersistentHandle(v8::Persistent<v8::Value>* value, uint16_t class_id) override
-		{
-			if (class_id == CJSEmbedObjectPrivate::kWeakHandleId)
-			{
-				v8::Isolate* isolate = v8::Isolate::GetCurrent();
-				v8::HandleScope scope(isolate);
-				v8::Local<v8::Object> handle = value->Get(isolate).As<v8::Object>();
-				v8::Local<v8::External> field = v8::Local<v8::External>::Cast(handle->GetInternalField(0));
-				CJSEmbedObject* native = static_cast<CJSEmbedObject*>(field->Value());
-				delete native;
-			}
-		}
-
-	public:
-		static WeakHandleVisitor* getInstance()
-		{
-			static WeakHandleVisitor visitor;
-			return &visitor;
-		}
-	};
-
 	void CJSContext::Dispose()
 	{
 #ifdef V8_INSPECTOR
@@ -274,7 +247,8 @@ namespace NSJSBase
 		v8::Isolate* isolate = m_internal->m_isolate;
 		{
 			v8::Isolate::Scope scope(isolate);
-			isolate->VisitHandlesWithClassIds(WeakHandleVisitor::getInstance());
+			v8::HandleScope handle_scope(isolate);
+			CJSEmbedObjectPrivate::DestroyAll(isolate);
 		}
 		isolate->Dispose();
 		m_internal->m_isolate = NULL;
@@ -472,7 +446,14 @@ namespace NSJSBase
 		bool result = false;
 		bool bCompiled = false;
 		// Snapshot creator should be in its own scope, because it handles entering, exiting and disposing the isolate
+#ifdef V8_VERSION_121_PLUS
+		std::unique_ptr<v8::ArrayBuffer::Allocator> allocator(v8::ArrayBuffer::Allocator::NewDefaultAllocator());
+		v8::Isolate::CreateParams createParams;
+		createParams.array_buffer_allocator = allocator.get();
+		v8::SnapshotCreator snapshotCreator(createParams);
+#else
 		v8::SnapshotCreator snapshotCreator;
+#endif
 		v8::Isolate* isolate = snapshotCreator.GetIsolate();
 		{
 			CV8TryCatch try_catch(isolate);
@@ -662,7 +643,7 @@ namespace NSJSBase
 	// this function is called when method from embedded object is called
 	void _Call(const v8::FunctionCallbackInfo<v8::Value>& args)
 	{
-		CJSEmbedObject* _this = (CJSEmbedObject*)unwrap_native(args.Holder());
+		CJSEmbedObject* _this = (CJSEmbedObject*)unwrap_native(args.This());
 		CJSFunctionArgumentsV8 _args(&args, 0);
 		JSSmart<CJSValue> funcIndex = js_value(args.Data());
 		CJSEmbedObjectAdapterV8* _adapter = static_cast<CJSEmbedObjectAdapterV8*>(_this->getAdapter());
@@ -670,7 +651,7 @@ namespace NSJSBase
 		js_return(args, ret);
 	}
 
-	v8::Handle<v8::ObjectTemplate> CreateEmbedObjectTemplate(v8::Isolate* isolate, CJSEmbedObject* pNativeObj)
+	v8::Local<v8::ObjectTemplate> CreateEmbedObjectTemplate(v8::Isolate* isolate, CJSEmbedObject* pNativeObj)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		CJSEmbedObjectAdapterV8* pAdapter = static_cast<CJSEmbedObjectAdapterV8*>(pNativeObj->getAdapter());
@@ -752,8 +733,7 @@ namespace NSJSBase
 		}
 
 		v8::Local<v8::Object> obj = args[0].As<v8::Object>();
-		v8::Local<v8::External> field = v8::Local<v8::External>::Cast(obj->GetInternalField(0));
-		CJSEmbedObject* native = static_cast<CJSEmbedObject*>(field->Value());
+		CJSEmbedObject* native = static_cast<CJSEmbedObject*>(V8ExternalValue(GetEmbedField(obj)));
 		delete native;
 		// weak persistent handle will be cleared and removed in CJSEmbedObjectPrivate destructor
 	}
