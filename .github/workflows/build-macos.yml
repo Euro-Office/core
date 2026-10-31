@@ -30,13 +30,15 @@ jobs:
         python-version: '3.12'
 
     - name: Install Homebrew build prerequisites
-      run: brew install ninja autoconf automake libtool pkg-config ccache
+      run: brew install ninja autoconf automake libtool pkg-config ccache llvm lld
 
-    # V8 builds with the Xcode clang
+    # Core builds with Xcode's clang, V8 with Homebrew's LLVM and lld
+    # against Xcode's SDK
     - name: Show toolchain
       run: |
         xcodebuild -version
         clang --version
+        "$(brew --prefix llvm)/bin/clang" --version
 
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11

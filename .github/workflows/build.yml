@@ -266,7 +266,7 @@ jobs:
         submodules: recursive
 
     - name: Install Homebrew build prerequisites
-      run: brew install ninja autoconf automake libtool pkg-config
+      run: brew install ninja autoconf automake libtool pkg-config llvm lld
 
     - name: Build third-party libs (macOS arm64)
       run: |
