@@ -77,6 +77,16 @@ namespace PPTX
 			// #143: assign synthetic author indices at one post-load point so authors
 			// and comments share the same GUID->int map regardless of package read order
 			PPTX::Authors* pAuthors = _presentation->commentAuthors.GetPointer();
+			if (NULL != pAuthors && false == pAuthors->bModern)
+			{
+				// #175 (review): mixed package - a classic commentAuthors.xml can
+				// coexist with a modern authors.xml; map against the modern part
+				// so modern comments still get an authorIdx
+				smart_ptr<PPTX::Authors> pModernAuthors =
+					_presentation->Get(OOX::Presentation::FileTypes::ModernCommentAuthors).smart_dynamic_cast<PPTX::Authors>();
+				if (pModernAuthors.is_init())
+					pAuthors = pModernAuthors.GetPointer();
+			}
 			if (NULL != pAuthors && true == pAuthors->bModern)
 			{
 				for (size_t nAuthor = 0; nAuthor < pAuthors->m_arAuthors.size(); ++nAuthor)
