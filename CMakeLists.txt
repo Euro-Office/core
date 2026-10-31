@@ -61,6 +61,8 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/json" doctrenderer_json_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/js_internal" doctrenderer_jsinternal_test )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/embed/internal/hash" doctrenderer_hash_test )
+        # The JS engine embedding itself: run these first after updating V8
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/doctrenderer/test/engine" doctrenderer_engine_test )
 
         # PdfFile/test runs headless with its single fixture-dependent case
         # (CPdfFileTest.EditPdfFromBase64) excluded via GTEST_FILTER; all other
