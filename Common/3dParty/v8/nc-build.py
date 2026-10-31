@@ -237,8 +237,13 @@ def prepare_clang_base() -> tuple[ Path, str ]:
         triple_dir = { "x64": "x86_64-unknown-linux-gnu", "arm64": "aarch64-unknown-linux-gnu" }[ get_cpu() ]
         wanted = f"{ triple_dir }/libclang_rt.builtins.a"
 
-    builtins = Path( nc.capture_process_output(
-        [ str( bin_dir / "clang" ), "-print-libgcc-file-name", "--rtlib=compiler-rt" ] ).strip() )
+    clang = str( bin_dir / "clang" )
+    if nc.is_apple_silicon():
+        # Apple's clang has them in its resource dir, where gn looks too
+        resource_dir = Path( nc.capture_process_output( [ clang, "-print-resource-dir" ] ).strip() )
+        builtins = resource_dir / "lib" / wanted
+    else:
+        builtins = Path( nc.capture_process_output( [ clang, "-print-libgcc-file-name", "--rtlib=compiler-rt" ] ).strip() )
     if not builtins.is_file():
         nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
 

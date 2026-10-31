@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: macos-14
+    runs-on: macos-15
     # Only on a manual run, through the build-assets environment: that run
     # uploads missing third-party builds, every other run only reads.
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
@@ -31,6 +31,12 @@ jobs:
 
     - name: Install Homebrew build prerequisites
       run: brew install ninja autoconf automake libtool pkg-config ccache
+
+    # V8 builds with the Xcode clang
+    - name: Show toolchain
+      run: |
+        xcodebuild -version
+        clang --version
 
     - name: Set up vcpkg
       uses: lukka/run-vcpkg@v11
