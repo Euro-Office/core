@@ -613,6 +613,12 @@ void table_table_column::xlsx_convert(oox::xlsx_conversion_context & Context)
                     Context.table_column_last_width(*width);
 				}
 			}
+			else
+			{//a column without a style has the default width, otherwise it prints with none
+				CP_XML_ATTR(L"width", 11.52);
+				CP_XML_ATTR(L"customWidth", false);
+				Context.table_column_last_width(11.52);
+			}
 
         } // col
     } // CP_XML_WRITER 
