@@ -10,14 +10,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # Same split as the release images (.docker/core.bake.Dockerfile):
-        # server → Rocky Linux 9; desktop → Ubuntu (22.04 on amd64, 24.04 on
-        # arm64). The arm64 legs run natively on GitHub's hosted arm runners
-        # (V8 is far too slow under QEMU); swap in a self-hosted arm label if
-        # you have one.
+        # The release images (.docker/core.bake.Dockerfile): Rocky Linux 9,
+        # except desktop arm64 on Ubuntu 24.04. Desktop amd64 uses the server
+        # image, so the server amd64 leg covers it. The arm64 legs run
+        # natively on GitHub's hosted arm runners (V8 is far too slow under
+        # QEMU); swap in a self-hosted arm label if you have one.
         include:
           - { product: server,  distro: rocky9, arch: amd64, runner: self-hosted }
-          - { product: desktop, distro: ubuntu, arch: amd64, runner: self-hosted }
           - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
           - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
