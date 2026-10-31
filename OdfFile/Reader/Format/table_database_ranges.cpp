@@ -84,6 +84,9 @@ void table_database_range::xlsx_convert(oox::xlsx_conversion_context & Context)
 
 	std::wstring name = table_name_.get();
 
+	if (content_.empty() && 0 == name.find(L"__Anonymous_Sheet_DB__"))
+		return; //the implicit range of a sheet, as a table it would print the whole sheet
+
 	std::map<std::wstring, int>::iterator pFind = Context.mapUsedNames_.find(name);
 	if (pFind == Context.mapUsedNames_.end())
 	{
