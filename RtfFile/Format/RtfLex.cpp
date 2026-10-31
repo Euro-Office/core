@@ -40,6 +40,7 @@ void StringStream::Clear()
 
 	m_nSizeAbs = 0;
 	m_nPosAbs = -1;
+	m_bLastGetcEof = false;
 }
 bool StringStream::SetSource( std::wstring sPath  )
 {
@@ -81,17 +82,23 @@ int StringStream::getc()
 	{
 		m_nPosAbs++;
 		nResult = m_aBuffer[ m_nPosAbs ];
+		m_bLastGetcEof = false;
 	}
+	else
+		m_bLastGetcEof = true;
 	return nResult;
 }
 void StringStream::ungetc()
 {
-	//the project uses ungetcb only after getc
-	//so there are no problems with going to 0
-	//if( m_nPosAbs + 2 < m_nSizeAbs )
+	//the project uses ungetc only after getc, so there are no problems with going to 0.
+	//A getc that hit EOF did not advance the position, so its ungetc must not step back
+	//either -- otherwise the last byte of a truncated file is read a second time.
+	if (m_bLastGetcEof)
 	{
-		m_nPosAbs--;	//take any txt and rename it to rtf - looping
+		m_bLastGetcEof = false;
+		return;
 	}
+	m_nPosAbs--;
 }
 void StringStream::putString( std::string sText )
 {
