@@ -95,6 +95,21 @@ def depot_env() -> dict:
     env[ "VPYTHON_BYPASS" ] = "manually managed python not supported by chrome operations"
     return env
 
+def ensure_android_cpu_features():
+    # V8 uses cpu_features on Android. DEPS fetches it only for checkouts with
+    # target_os = ["android"], which also pulls Chromium's Android SDK and NDK
+    # (several GB we don't use), so fetch just this one at the pinned revision.
+    target = v8_src_path / "third_party" / "cpu_features" / "src"
+    if ( target / "ndk_compat" ).is_dir():
+        return
+    deps = ( v8_src_path / "DEPS" ).read_text()
+    match = re.search(
+        r"'third_party/cpu_features/src':\s*\{\s*'url':\s*Var\('chromium_url'\)\s*\+\s*'([^']+)'\s*\+\s*'@'\s*\+\s*'([0-9a-f]+)'",
+        deps )
+    if match is None:
+        nc.abort_op( "Could not find third_party/cpu_features/src in V8's DEPS" )
+    nc.shallow_checkout( target, "https://chromium.googlesource.com" + match.group( 1 ), match.group( 2 ) )
+
 def disable_android_test_runner():
     # The Android test runner pulls in Chromium's //build/android and catapult,
     # which are only checked out for Chromium itself. Not needed for v8_monolith.
@@ -108,15 +123,19 @@ def disable_android_test_runner():
 def disable_crel():
     # On Linux with lld, Chromium's build assembles everything with ELF CREL
     # (compact relocations). libv8_monolith.a is linked into doctrenderer by
-    # the system GNU ld, which can't read CREL (binutils 2.35 on Rocky 9), so
-    # turn it off. There's no gn arg for it, and use_lld=false isn't an
+    # the system GNU ld, which can't read CREL (binutils 2.35 on Rocky 9), and
+    # the NDK's clang doesn't support it for the Android build's host tools,
+    # so turn it off. There's no gn arg for it, and use_lld=false isn't an
     # option: the host tools' thin archives have no index GNU ld could use.
     compiler_gn_path = v8_src_path / "build" / "config" / "compiler" / "BUILD.gn"
     text = compiler_gn_path.read_text()
     crel_flags = 'cflags += [ "-Wa,--crel,--allow-experimental-crel" ]'
+    marker = "# CREL disabled by core/Common/3dParty/v8/nc-build.py"
+    if marker in text:
+        return
     if crel_flags not in text:
         nc.abort_op( f"Could not find the CREL flags in { compiler_gn_path }. Did the V8 build config change?" )
-    compiler_gn_path.write_text( text.replace( crel_flags, "" ) )
+    compiler_gn_path.write_text( text.replace( crel_flags, marker ) )
 
 def get_cpu() -> str:
     # The arch we are *building for*; detection (incl. the Windows MSVC target
@@ -129,12 +148,16 @@ def get_cpu() -> str:
 def _find_clang_bin_dir() -> Path:
     # Search PATH for the first real clang++ installation, skipping wrappers
     # like ccache (/usr/lib64/ccache/clang++ resolves to /usr/bin/ccache).
+    # Returns the directory the binary really is in: gn uses the LLVM tools
+    # next to it (ld.lld, llvm-ar, ...), and on Ubuntu only
+    # /usr/lib/llvm-<major>/bin has them unversioned.
     for dir_str in os.environ.get( "PATH", "" ).split( os.pathsep ):
         candidate = Path( dir_str ) / "clang++"
         if not candidate.exists():
             continue
-        if "clang" in candidate.resolve().name.lower():
-            return Path( dir_str )
+        real = candidate.resolve()
+        if "clang" in real.name.lower():
+            return real.parent
     nc.abort_op( "No real clang++ installation found in PATH (checked for non-wrapper binary)" )
 
 def _clang_major_version( clang : Path ) -> str:
@@ -143,52 +166,135 @@ def _clang_major_version( clang : Path ) -> str:
         nc.abort_op( f"Could not read clang version from { clang }: { version!r}" )
     return version.split( "." )[ 0 ]
 
-def prepare_clang_base() -> tuple[ Path, str ]:
-    # Chromium's build links clang's builtins library from
-    # <clang_base_path>/lib/clang/<major>/lib/<triple>/libclang_rt.builtins.a,
-    # with Chromium's own spelling of the triple. Distro clangs keep it
+def _unfold_symlinked_dirs( base : Path, path : Path ):
+    # Turns every symlinked directory from base down to path into a real
+    # directory of symlinks to its entries, so files can be added or replaced
+    # there without touching the clang installation.
+    current = base
+    for part in path.relative_to( base ).parts:
+        current = current / part
+        if current.is_symlink() and current.is_dir():
+            real = current.resolve()
+            current.unlink()
+            current.mkdir()
+            for entry in real.iterdir():
+                ( current / entry.name ).symlink_to( entry, target_is_directory = entry.is_dir() )
+
+def _make_clang_base( bin_dir : Path, builtins : dict[ str, Path | None ], replace : dict[ str, Path ] = {} ) -> tuple[ Path, str ]:
+    # Chromium's build expects Chromium's own clang layout: it links the
+    # builtins library from <clang_base_path>/lib/clang/<major>/lib/<triple>/,
+    # with Chromium's spelling of the triple. Distro and NDK clangs keep it
     # elsewhere (Rocky: x86_64-redhat-linux-gnu/, apt.llvm.org:
-    # linux/libclang_rt.builtins-x86_64.a), so hand gn a small base dir whose
-    # bin/ is the real one and whose builtins link to where this clang has them.
-    bin_dir = _find_clang_bin_dir()
+    # linux/libclang_rt.builtins-x86_64.a). So hand gn a base dir whose bin/ is
+    # the real one and whose lib/clang/<major>/ mirrors the clang's resource dir
+    # (its headers are found through it: the build passes
+    # -no-canonical-prefixes), with the builtins added where gn wants them.
+    # builtins maps "<triple dir>/<file name>" to the library, or to None for
+    # an empty archive.
     clang = bin_dir / "clang"
     major = _clang_major_version( clang )
-
-    if nc.is_apple_silicon():
-        triple_dir, lib_name = "darwin", "libclang_rt.osx.a"
-    else:
-        triple_dir = { "x64": "x86_64-unknown-linux-gnu", "arm64": "aarch64-unknown-linux-gnu" }[ get_cpu() ]
-        lib_name = "libclang_rt.builtins.a"
-
-    builtins = Path( nc.capture_process_output(
-        [ str( clang ), "-print-libgcc-file-name", "--rtlib=compiler-rt" ] ).strip() )
-    if not builtins.is_file():
-        nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
+    resource_dir = Path( nc.capture_process_output( [ str( clang ), "-print-resource-dir" ] ).strip() )
 
     if clang_shim_path.exists():
         shutil.rmtree( clang_shim_path )
-    lib_dir = clang_shim_path / "lib" / "clang" / major / "lib" / triple_dir
-    nc.ensure_directory_exists( lib_dir )
+    shim_resource_dir = clang_shim_path / "lib" / "clang" / major
+    nc.ensure_directory_exists( shim_resource_dir / "lib" )
     ( clang_shim_path / "bin" ).symlink_to( bin_dir, target_is_directory = True )
-    ( lib_dir / lib_name ).symlink_to( builtins )
+    for entry in resource_dir.iterdir():
+        if entry.name != "lib":
+            ( shim_resource_dir / entry.name ).symlink_to( entry, target_is_directory = entry.is_dir() )
+    if ( resource_dir / "lib" ).is_dir():
+        for entry in ( resource_dir / "lib" ).iterdir():
+            ( shim_resource_dir / "lib" / entry.name ).symlink_to( entry, target_is_directory = entry.is_dir() )
+
+    for relative, library in builtins.items():
+        target = shim_resource_dir / "lib" / relative
+        if target.exists():
+            continue  # this clang already has it where gn looks
+        nc.ensure_directory_exists( target.parent )
+        if library is None:
+            target.write_bytes( b"!<arch>\n" )
+        else:
+            target.symlink_to( library )
+
+    # replace maps "<path below lib/>" to the file to use instead of clang's
+    for relative, library in replace.items():
+        target = shim_resource_dir / "lib" / relative
+        _unfold_symlinked_dirs( shim_resource_dir / "lib", target.parent )
+        nc.ensure_directory_exists( target.parent )
+        target.unlink( missing_ok = True )
+        target.symlink_to( library )
 
     return clang_shim_path, major
+
+def prepare_clang_base() -> tuple[ Path, str ]:
+    # Linux and macOS: the clang on PATH, with its own builtins
+    bin_dir = _find_clang_bin_dir()
+
+    if nc.is_apple_silicon():
+        wanted = "darwin/libclang_rt.osx.a"
+    else:
+        triple_dir = { "x64": "x86_64-unknown-linux-gnu", "arm64": "aarch64-unknown-linux-gnu" }[ get_cpu() ]
+        wanted = f"{ triple_dir }/libclang_rt.builtins.a"
+
+    builtins = Path( nc.capture_process_output(
+        [ str( bin_dir / "clang" ), "-print-libgcc-file-name", "--rtlib=compiler-rt" ] ).strip() )
+    if not builtins.is_file():
+        nc.abort_op( f"clang builtins { builtins } not found. Is compiler-rt installed?" )
+
+    return _make_clang_base( bin_dir, { wanted: builtins } )
+
+def prepare_android_clang_base() -> tuple[ Path, str ]:
+    # The NDK's clang. It also builds the host tools (mksnapshot, torque) for
+    # the Linux host, but has no host builtins. Those are only linked so C++
+    # intrinsics win over Rust's (Rust is off), and libgcc provides them on the
+    # host anyway, so an empty archive does. The Android builtins are in the
+    # NDK where gn looks for them.
+    # The NDK's clang also links the host tools against its own
+    # lib/linux/x86_64/libatomic.a, which is Android's and lacks the generic
+    # __atomic_* functions; use the host's libatomic instead. Nothing is
+    # linked for Android here (v8_monolith is a static library), so this
+    # can't affect the Android code even for x86_64.
+    host_libatomic = Path( nc.capture_process_output( [ "gcc", "-print-file-name=libatomic.a" ] ).strip() )
+    if not host_libatomic.is_absolute() or not host_libatomic.is_file():
+        nc.abort_op( "The host's libatomic.a was not found (gcc -print-file-name=libatomic.a). Install libatomic." )
+    ndk_bin_dir = nc.android_toolchain_bin()
+    return _make_clang_base(
+        ndk_bin_dir,
+        { "x86_64-unknown-linux-gnu/libclang_rt.builtins.a": None },
+        { "linux/x86_64/libatomic.a": host_libatomic } )
 
 def _find_windows_llvm_dir() -> Path:
     # V8 no longer supports MSVC, so it is built with clang-cl. Linking the
     # result into MSVC-built code is fine: with use_custom_libcxx=false it
     # uses the MSVC STL. Any LLVM install with the standard layout works
-    # (lib\clang\<major>\lib\windows\ holds the builtins gn wants).
-    candidates = []
+    # (lib\clang\<major>\lib\windows\ holds the builtins gn wants). LLVM_DIR
+    # wins, otherwise the newest of the standalone and the VS bundled LLVM.
     if os.environ.get( "LLVM_DIR" ):
-        candidates.append( Path( os.environ[ "LLVM_DIR" ] ) )
+        llvm_dir = Path( os.environ[ "LLVM_DIR" ] )
+        if not ( llvm_dir / "bin" / "clang-cl.exe" ).exists():
+            nc.abort_op( f"LLVM_DIR { llvm_dir } has no bin\\clang-cl.exe" )
+        return llvm_dir
+
+    candidates = [ Path( os.environ.get( "ProgramFiles", r"C:\Program Files" ) ) / "LLVM" ]
     if os.environ.get( "VSINSTALLDIR" ):
         candidates.append( Path( os.environ[ "VSINSTALLDIR" ] ) / "VC" / "Tools" / "Llvm" / "x64" )
-    candidates.append( Path( os.environ.get( "ProgramFiles", r"C:\Program Files" ) ) / "LLVM" )
-    for candidate in candidates:
-        if ( candidate / "bin" / "clang-cl.exe" ).exists():
-            return candidate
-    nc.abort_op( "No LLVM/clang-cl found. Install the VS 'C++ Clang tools' component or set LLVM_DIR." )
+    found = [ c for c in candidates if ( c / "bin" / "clang-cl.exe" ).exists() ]
+    if not found:
+        nc.abort_op( "No LLVM/clang-cl found. Install LLVM or the VS 'C++ Clang tools' component, or set LLVM_DIR." )
+    return max( found, key = lambda c: int( _clang_major_version( c / "bin" / "clang.exe" ) ) )
+
+def prepare_windows_clang_base() -> tuple[ Path, str ]:
+    # Chromium's build puts clang_base_path into linker arguments unquoted, so
+    # it must not contain spaces ("C:\Program Files\..."). Reach it through a
+    # directory junction in the work dir.
+    llvm_dir = _find_windows_llvm_dir()
+    major = _clang_major_version( llvm_dir / "bin" / "clang.exe" )
+    junction = nc.work_dir / "llvm"
+    if junction.exists() or junction.is_symlink():
+        os.rmdir( junction )  # removes the junction, not the target
+    nc.run_command( [ "cmd.exe", "/c", "mklink", "/J", str( junction ), str( llvm_dir ) ], "Link LLVM dir" )
+    return junction, major
 
 def get_gn_args_file_content() -> str:
     targetarch = get_cpu()
@@ -208,7 +314,12 @@ dcheck_always_on=false
 is_clang=true
 clang_use_chrome_plugins=false
 use_custom_libcxx=false
+# Host tools of cross builds (mksnapshot, torque) too: Chromium's libc++ needs
+# a newer clang than the NDK's
+use_custom_libcxx_for_host=false
 enable_rust=false
+# Clang header modules expect Chromium's clang and sysroot layout
+use_clang_modules=false
 
 # Symbol and debug settings
 symbol_level=0
@@ -238,13 +349,13 @@ v8_enable_vtunejit=false
     if nc.is_android():
         # Built with the NDK's clang (also used for the host tools such as
         # mksnapshot), against the NDK's libc++ like the rest of core.
-        ndk_clang_base = nc.android_toolchain_bin().parent
+        clang_base, clang_major = prepare_android_clang_base()
         gn_args += f"""
 target_os="android"
 android_ndk_root="{nc.android_ndk_root()}"
 android64_ndk_api_level={nc.ANDROID_API_LEVEL}
-clang_base_path="{ndk_clang_base}"
-clang_version="{_clang_major_version( ndk_clang_base / "bin" / "clang" )}"
+clang_base_path="{clang_base}"
+clang_version="{clang_major}"
 use_sysroot=false
 use_glib=false
 use_lld=true
@@ -271,17 +382,45 @@ clang_version="{clang_major}"
 """
 
     elif nc.is_windows():
-        llvm_dir = _find_windows_llvm_dir()
+        clang_base, clang_major = prepare_windows_clang_base()
         gn_args += f"""
 target_os="win"
-clang_base_path="{llvm_dir.as_posix()}"
-clang_version="{_clang_major_version( llvm_dir / "bin" / "clang.exe" )}"
+clang_base_path="{clang_base.as_posix()}"
+clang_version="{clang_major}"
 """
 
     else:
         nc.abort_op( "No gn args prepared for os." )
 
     return gn_args
+
+def _available_memory() -> int | None:
+    # Bytes this build may use: the container's cgroup limit or the free
+    # memory, whichever is lower. None when unknown (not Linux).
+    limits = []
+    try:
+        for line in Path( "/proc/meminfo" ).read_text().splitlines():
+            if line.startswith( "MemAvailable:" ):
+                limits.append( int( line.split()[ 1 ] ) * 1024 )
+    except OSError:
+        pass
+    for cgroup_file in ( "/sys/fs/cgroup/memory.max", "/sys/fs/cgroup/memory/memory.limit_in_bytes" ):
+        try:
+            value = Path( cgroup_file ).read_text().strip()
+        except OSError:
+            continue
+        if value.isdigit():
+            limits.append( int( value ) )
+    return min( limits ) if limits else None
+
+def _job_count() -> int:
+    # V8's compile jobs need up to ~2 GB each. One job per CPU gets runners
+    # with many cores and little memory OOM-killed.
+    jobs = os.cpu_count() or 1
+    memory = _available_memory()
+    if memory is not None:
+        jobs = min( jobs, memory // ( 2 * 1024 ** 3 ) )
+    return max( jobs, 1 )
 
 def fetch_and_patch():
     nc.create_workdir()
@@ -325,8 +464,6 @@ solutions = [
 
     if nc.is_android():
         disable_android_test_runner()
-    elif nc.is_linux():
-        disable_crel()
 
     nc.create_work_dir_ok_marker()
 
@@ -335,6 +472,11 @@ solutions = [
 def build_and_install():
     nc.create_install_dir()
     ensure_python_shim()
+
+    if nc.is_android():
+        ensure_android_cpu_features()
+    if nc.is_android() or nc.is_linux():
+        disable_crel()
 
     targetarch = get_cpu()
     output_path = v8_src_path / "out.gn" / f"{targetarch}.release"
@@ -366,9 +508,9 @@ def build_and_install():
     if not ( output_path / "build.ninja" ).exists():
         nc.abort_op( "build.ninja not generated!" )
 
-    job_count = max( os.cpu_count() or 1, 4 ) # at least 4 jobs
+    job_count = _job_count()
 
-    print( "Building v8" )
+    print( f"Building v8 ({ job_count } jobs)" )
     nc.run_command(
         [ ninja_bin_path, "-C", output_path, f"-j{job_count}", "v8_monolith" ],
         "Building v8",
