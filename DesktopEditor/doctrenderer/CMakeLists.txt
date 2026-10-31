@@ -263,10 +263,12 @@ else()
         if(V8_USE_INSPECTOR)
             # Boost 1.83's Asio doesn't compile with MSVC in C++20 mode (no
             # any_io_executor from io_context's executor). This file doesn't
-            # include V8, so keep it on C++17.
+            # include V8, so keep it on C++17 (without the C++20 precompiled
+            # header).
             set_source_files_properties(
                 ${CMAKE_CURRENT_SOURCE_DIR}/js_internal/v8/inspector/websocket_server.cpp
-                PROPERTIES COMPILE_OPTIONS "/std:c++17")
+                PROPERTIES COMPILE_OPTIONS "/std:c++17"
+                           SKIP_PRECOMPILE_HEADERS ON)
         endif()
     endif()
 
