@@ -260,6 +260,14 @@ else()
     if(MSVC)
         # ... and check it via __cplusplus, which MSVC only sets correctly with this
         target_compile_options(doctrenderer PRIVATE /Zc:__cplusplus)
+        if(V8_USE_INSPECTOR)
+            # Boost 1.83's Asio doesn't compile with MSVC in C++20 mode (no
+            # any_io_executor from io_context's executor). This file doesn't
+            # include V8, so keep it on C++17.
+            set_source_files_properties(
+                ${CMAKE_CURRENT_SOURCE_DIR}/js_internal/v8/inspector/websocket_server.cpp
+                PROPERTIES COMPILE_OPTIONS "/std:c++17")
+        endif()
     endif()
 
     if(UNIX AND NOT APPLE)
