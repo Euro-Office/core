@@ -269,12 +269,6 @@ else()
         # everything at load time, as Chromium does.
         target_link_options(doctrenderer PRIVATE "-Wl,-z,now")
     endif()
-
-    if(UNIX AND NOT APPLE AND NOT ANDROID)
-        # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
-        # arm64), which call into libatomic
-        target_link_libraries(doctrenderer PRIVATE atomic)
-    endif()
 endif()
 
 if(V8_USE_INSPECTOR)
@@ -314,6 +308,13 @@ target_link_libraries(doctrenderer PRIVATE
     ${OPENSSL_LIBCRYPTO}
     ${V8_MONOLITH}
 )
+
+if(UNIX AND NOT APPLE AND NOT ANDROID)
+    # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
+    # arm64), which call into libatomic. Linked after the V8 library, else
+    # --as-needed drops it.
+    target_link_libraries(doctrenderer PRIVATE atomic)
+endif()
 
 target_link_libraries(doctrenderer PUBLIC
     graphics
