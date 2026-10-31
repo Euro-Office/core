@@ -278,7 +278,9 @@ def _find_windows_llvm_dir() -> Path:
 
     candidates = [ Path( os.environ.get( "ProgramFiles", r"C:\Program Files" ) ) / "LLVM" ]
     if os.environ.get( "VSINSTALLDIR" ):
-        candidates.append( Path( os.environ[ "VSINSTALLDIR" ] ) / "VC" / "Tools" / "Llvm" / "x64" )
+        # VS bundles x64 and, on arm64 hosts, native ARM64 builds of LLVM
+        for host in ( "x64", "ARM64" ):
+            candidates.append( Path( os.environ[ "VSINSTALLDIR" ] ) / "VC" / "Tools" / "Llvm" / host )
     found = [ c for c in candidates if ( c / "bin" / "clang-cl.exe" ).exists() ]
     if not found:
         nc.abort_op( "No LLVM/clang-cl found. Install LLVM or the VS 'C++ Clang tools' component, or set LLVM_DIR." )

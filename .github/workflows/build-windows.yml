@@ -1,4 +1,4 @@
-name: Build (Windows x64)
+name: Build (Windows)
 
 on:
   pull_request:
@@ -6,7 +6,15 @@ on:
 
 jobs:
   build:
-    runs-on: windows-2022
+    # arm64 builds natively on an arm64 runner (it used to be cross-compiled)
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: x64,   runner: windows-2022,   vcvars: vcvars64.bat }
+          - { arch: arm64, runner: windows-11-arm, vcvars: vcvarsarm64.bat }
+    name: build (windows, ${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
 
     env:
@@ -171,15 +179,15 @@ jobs:
 
       # ------------------------------------------------------------------ #
       # 7. CMake Configure
-      #    vcvars64.bat is located via vswhere so the VS edition (Enterprise/
+      #    vcvars (per arch) is located via vswhere so the VS edition (Enterprise/
       #    Professional/Community) and future image changes don't matter.
       # ------------------------------------------------------------------ #
       - name: CMake Configure
         shell: cmd
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do set "VSPATH=%%i"
           echo Using VS at: %VSPATH%
-          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          call "%VSPATH%\VC\Auxiliary\Build\${{ matrix.vcvars }}" 10.0.19041.0
           if errorlevel 1 exit /b 1
 
           set PYTHONUTF8=1
@@ -198,8 +206,8 @@ jobs:
       - name: CMake Build
         shell: cmd
         run: |
-          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSPATH=%%i"
-          call "%VSPATH%\VC\Auxiliary\Build\vcvars64.bat" 10.0.19041.0
+          for /f "usebackq tokens=*" %%i in (`"%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe" -latest -products * -property installationPath`) do set "VSPATH=%%i"
+          call "%VSPATH%\VC\Auxiliary\Build\${{ matrix.vcvars }}" 10.0.19041.0
           if errorlevel 1 exit /b 1
 
           set PYTHONUTF8=1
@@ -214,58 +222,8 @@ jobs:
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
-          name: build-output-windows
+          name: build-output-windows-${{ matrix.arch }}
           path: |
             package/bin/
             package/tools/
           if-no-files-found: warn
-  # Windows arm64 V8/OpenSSL, cross-compiled on an x64 host (as in
-  # DesktopEditors), so the arm64 desktop builds can download them. Only on
-  # manual runs: it exists to fill the remote cache, and V8 takes hours.
-  crosscompile-3rdparty-arm64:
-    if: github.event_name == 'workflow_dispatch'
-    runs-on: windows-2022
-    environment: build-assets
-    env:
-      PYTHONUTF8: "1"
-      DEPOT_TOOLS_WIN_TOOLCHAIN: "0" # V8: use the locally installed VS, not Google's toolchain
-      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
-      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
-
-      # windows-2022 doesn't always ship the ARM64 target tools: clang-cl (V8)
-      # needs the arm64 SDK libs, cl.exe (OpenSSL) the amd64_arm64 toolset
-      - name: Add ARM64 build tools to Visual Studio
-        shell: pwsh
-        run: |
-          $vsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-          $vsInstaller = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vs_installer.exe"
-          $installPath = & $vsWhere -latest -products * -property installationPath
-          & $vsInstaller modify `
-            --installPath $installPath `
-            --add Microsoft.VisualStudio.Component.VC.Tools.ARM64 `
-            --add Microsoft.VisualStudio.Component.VC.ATL.ARM64 `
-            --add Microsoft.VisualStudio.Component.VC.MFC.ARM64 `
-            --quiet --norestart --force
-          if ($LASTEXITCODE -notin @(0, 3010)) {
-            Write-Warning "vs_installer returned $LASTEXITCODE - components may already be present, continuing."
-          }
-
-      # Sets VSCMD_ARG_TGT_ARCH=arm64, which openssl, v8 and the cache tag
-      # (win32-ARM64) key off
-      - name: Set up arm64 cross MSVC environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: amd64_arm64
-
-      - name: Cross-compile arm64 third-party (V8, OpenSSL)
-        shell: pwsh
-        run: |
-          python Common\3dParty\build_3rdparty.py `
-            --only=v8,openssl `
-            "${{ github.workspace }}\workdir" `
-            "${{ github.workspace }}\installdir"
