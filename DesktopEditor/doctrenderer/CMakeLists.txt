@@ -269,6 +269,12 @@ else()
         # everything at load time, as Chromium does.
         target_link_options(doctrenderer PRIVATE "-Wl,-z,now")
     endif()
+
+    if(UNIX AND NOT APPLE AND NOT ANDROID)
+        # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
+        # arm64), which call into libatomic
+        target_link_libraries(doctrenderer PRIVATE atomic)
+    endif()
 endif()
 
 if(V8_USE_INSPECTOR)

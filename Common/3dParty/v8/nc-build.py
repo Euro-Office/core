@@ -141,6 +141,26 @@ def disable_crel():
         nc.abort_op( f"Could not find the CREL flags in { compiler_gn_path }. Did the V8 build config change?" )
     compiler_gn_path.write_text( text.replace( crel_flags, marker ) )
 
+def patch_callable_run_type():
+    # V8 extracts a functor's signature from &Functor::operator(), expecting a
+    # member of Functor itself. MSVC's std::function inherits its operator()
+    # from a base class, so that doesn't match and src/objects/backing-store.cc
+    # fails to compile. Chromium never sees this as it always builds with its
+    # own libc++; match a member of any class instead.
+    bind_internal_path = v8_src_path / "src" / "base" / "functional" / "bind-internal.h"
+    text = bind_internal_path.read_text()
+    original = """  template <typename Callable, typename R, typename... Args>          \\
+  struct ExtractCallableRunTypeImpl<Callable,                         \\
+                                    R (Callable::*)(Args...) quals> { \\"""
+    patched = """  template <typename Callable, typename C, typename R, typename... Args> \\
+  struct ExtractCallableRunTypeImpl<Callable,                         \\
+                                    R (C::*)(Args...) quals> {        \\"""
+    if patched in text:
+        return
+    if original not in text:
+        nc.abort_op( f"Could not find ExtractCallableRunTypeImpl in { bind_internal_path }. Did V8 change?" )
+    bind_internal_path.write_text( text.replace( original, patched ) )
+
 def get_cpu() -> str:
     # The arch we are *building for*; detection (incl. the Windows MSVC target
     # arch and the amd64_arm64 cross prompt) lives in build_3rdparty_common.
@@ -406,7 +426,7 @@ v8_enable_vtunejit=false
         gn_args += f"""
 target_os="android"
 android_ndk_root="{nc.android_ndk_root()}"
-android64_ndk_api_level={nc.ANDROID_API_LEVEL}
+android_ndk_api_level={nc.ANDROID_API_LEVEL}
 clang_base_path="{clang_base}"
 clang_version="{clang_major}"
 use_sysroot=false
@@ -438,6 +458,7 @@ clang_version="{clang_major}"
         clang_base, clang_major = prepare_windows_clang_base()
         gn_args += f"""
 target_os="win"
+host_cpu="{targetarch}"
 clang_base_path="{clang_base.as_posix()}"
 clang_version="{clang_major}"
 """
@@ -535,6 +556,8 @@ def build_and_install():
         ensure_android_cpu_features()
     if nc.is_android() or nc.is_linux():
         disable_crel()
+    if nc.is_windows():
+        patch_callable_run_type()
 
     targetarch = get_cpu()
     output_path = v8_src_path / "out.gn" / f"{targetarch}.release"
