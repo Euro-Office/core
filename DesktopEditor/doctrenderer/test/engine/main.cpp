@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2026 Euro-Office contributors
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /*
  * Tests for the JS engine embedding of doctrenderer (js_internal/v8).
  *

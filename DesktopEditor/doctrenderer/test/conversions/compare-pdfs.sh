@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
 # Compares the PDFs of two conversion runs: page count, text and rendered pixels.
 # Usage (in a container with poppler-utils and imagemagick): compare-pdfs.sh <dir-a> <dir-b>
 # Prints one line per document and exits 1 if any document differs beyond the tolerance.

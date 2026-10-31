@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
 # Converts the corpus to PDF inside a DocumentServer image. Called by compare.sh.
 #   run-in-image.sh image|build
 #   /corpus  input documents (ro)

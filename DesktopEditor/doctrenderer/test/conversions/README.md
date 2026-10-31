@@ -1,3 +1,7 @@
+<!--
+  - SPDX-FileCopyrightText: 2026 Euro-Office contributors
+  - SPDX-License-Identifier: AGPL-3.0-only
+-->
 # Conversion comparison
 
 Checks a core build against the binaries of a DocumentServer image by converting

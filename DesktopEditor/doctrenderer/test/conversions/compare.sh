@@ -1,4 +1,6 @@
 #!/bin/bash
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
 # Converts documents to PDF with the binaries of a DocumentServer image and with
 # a core build, and compares the results. See README.md.
 #
