@@ -1251,11 +1251,12 @@ namespace PPTX
 				pptxDocument->main->commentAuthors = new PPTX::Authors(pptxDocument);
 			}
 			PPTX::Authors *authors = pptxDocument->main->commentAuthors.GetPointer();
-			int ind = 1;
 			for (auto &comm : m_arComments)
 			{
 				if (true == comm.idx.IsInit() && true == comm.authorIdx.IsInit())
-					break;
+					continue;
+				if (false == comm.authorId.IsInit())
+					continue;
 
 				std::map<std::wstring, int>::iterator pFind = authors->mapAuthors.find(*comm.authorId);
 
