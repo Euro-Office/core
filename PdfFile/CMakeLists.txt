@@ -7,9 +7,7 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
 include(${CORE_ROOT_DIR}/common.cmake)
 
 set(OPENJPEG_ROOT_DIR "${CORE_ROOT_DIR}/DesktopEditor/raster/Jp2/openjpeg")
-set(OPENJPEG_VERSION "2.4.0")
-set(OPENJPEG_PATH "${OPENJPEG_ROOT_DIR}/openjpeg-${OPENJPEG_VERSION}")
-set(OPENJPEG_LIB_JP2 "${OPENJPEG_PATH}/src/lib/openjp2")
+set(OPENJPEG_LIB_JP2 "${OPENJPEG_SOURCES_DIR}/src/lib/openjp2")
 
 set(DESKTOP_EDITOR_ROOT_DIR "../DesktopEditor")
 set(FREETYPE_VERSION_TO_USE "2.10.4")
@@ -364,6 +362,7 @@ add_library(PdfFile SHARED
     ${OPENJPEG_LIB_JP2}/dwt.c
     ${OPENJPEG_LIB_JP2}/event.c
     ${OPENJPEG_LIB_JP2}/function_list.c
+    ${OPENJPEG_LIB_JP2}/ht_dec.c
     ${OPENJPEG_LIB_JP2}/image.c
     ${OPENJPEG_LIB_JP2}/invert.c
     ${OPENJPEG_LIB_JP2}/j2k.c
@@ -410,9 +409,7 @@ add_library(PdfFile SHARED
     ${OPENJPEG_LIB_JP2}/opj_common.h
     ${OPENJPEG_LIB_JP2}/opj_includes.h
     ${OPENJPEG_LIB_JP2}/opj_intmath.h
-    ${OPENJPEG_LIB_JP2}/opj_inttypes.h
     ${OPENJPEG_LIB_JP2}/opj_malloc.h
-    ${OPENJPEG_LIB_JP2}/opj_stdint.h
     ${OPENJPEG_LIB_JP2}/pi.h
     ${OPENJPEG_LIB_JP2}/sparse_array.h
     ${OPENJPEG_LIB_JP2}/t1_luts.h

@@ -100,6 +100,14 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `DesktopEditor/raster/Jp2/openjpeg/test` — new suite (`openjpeg_test`), not a `.pro`
+      migration. Covers `openjpeg::GetData` (`opj_bgraframe.cpp`), the JPEG 2000 decoder behind
+      PdfFile's JPXDecode streams. Compiles the same openjp2 sources (from
+      `Common/3dParty/openjpeg`) and wrapper as PdfFile; dep: kernel. `GTEST_MAIN`. No
+      fixtures — images are encoded losslessly in memory with OpenJPEG's encoder and must
+      decode back exactly: J2K/JP2 with 1/3/4 components, tiled multi-resolution, the
+      unflipped (bottom-up) row order, and an image above the 5 MP strip-decoding limit.
+      Plus non-JPEG 2000, truncated and corrupted input (must return, not crash).
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and

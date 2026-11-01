@@ -26,6 +26,7 @@ subfolders = [
     'libxml2',
     'libxml2-wasm',
     'md',
+    'openjpeg',
     'openssl-hash',
     'openssl',
     'qt',
