@@ -223,6 +223,9 @@ else()
         if(NOT DEFINED PROJECT_ARCH AND CMAKE_SYSTEM_PROCESSOR MATCHES "^(aarch64|arm64|ARM64)$")
             set(PROJECT_ARCH "arm64")
         endif()
+        # CEF builds libcef_dll_wrapper with the static runtime (/MT) by default;
+        # everything here uses the DLL runtime (CMAKE_MSVC_RUNTIME_LIBRARY above).
+        set(CEF_RUNTIME_LIBRARY_FLAG "/MD" CACHE STRING "MSVC runtime for CEF targets")
         find_package(CEF REQUIRED)
 
     endif()
