@@ -158,68 +158,6 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/libpsd/pattern_overlay.c
 
     # ---- jbig ----
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/JBig2File.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2enc.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2arith.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/Encoder/jbig2sym.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixconv.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/writefile.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/scale.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix2.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix3.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix4.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pix5.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/grayquant.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/grayquantlow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/seedfill.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jbclass.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/numabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morphseq.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binexpandlow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/ptabasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/rop.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/colormap.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pngiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/lepton_utils.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/scalelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/enhance.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jpegio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/jpegiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/spixio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/webpio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/webpiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/psio2.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/gifio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/gifiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pnmio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/tiffio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/tiffiostub.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/bmpio.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binexpand.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/compare.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/boxbasic.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/conncomp.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixafunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/boxfunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/ptafunc1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binreduce.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/seedfilllow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/sel1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morphapp.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/correlscore.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/sarray.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/morph.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/roplow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/fpix1.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/stack.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixacc.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/pixarith.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/convolve.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/binreducelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/convolvelow.cpp
-    ${CORE_ROOT}/DesktopEditor/raster/JBig2/source/LeptonLib/arithlow.cpp
 
 )
 

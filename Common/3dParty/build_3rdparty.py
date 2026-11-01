@@ -42,6 +42,9 @@ subfolders = [
     'libpng-wasm',
     'libtiff',
     'libtiff-wasm',
+    'leptonica',
+    'leptonica-wasm',
+    'jbig2enc',
 ]
 
 known_targets = [ 'android-arm64', 'android-x64' ]

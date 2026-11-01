@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm,jbig2enc"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -140,6 +140,15 @@ if( EMSCRIPTEN )
         INTERFACE_LINK_LIBRARIES jpeg
     )
 
+    # Setup leptonica-wasm
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica-wasm")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    set_target_properties(leptonica PROPERTIES
+        IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -155,7 +164,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff,leptonica,jbig2enc"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -173,7 +182,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm,leptonica-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -414,7 +423,34 @@ else()
         INTERFACE_LINK_LIBRARIES "jpeg;z"
     )
 
+    # Setup leptonica
+    set(LEPTONICA_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/leptonica")
+    get_filename_component(LEPTONICA_INSTALL_DIR_ABS "${LEPTONICA_INSTALL_DIR}" ABSOLUTE)
+    add_library(leptonica STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/leptonica-1.87.0.lib"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES "user32;gdi32"
+        )
+    else()
+        set_target_properties(leptonica PROPERTIES
+            IMPORTED_LOCATION "${LEPTONICA_INSTALL_DIR_ABS}/lib/libleptonica.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LEPTONICA_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES m
+        )
+    endif()
+
 endif()
+
+# jbig2enc is compiled into the targets that use it (source-only dependency)
+set(JBIG2ENC_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/jbig2enc/src")
+set(JBIG2ENC_SOURCES
+    "${JBIG2ENC_SOURCES_DIR}/jbig2arith.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2comparator.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2enc.cc"
+    "${JBIG2ENC_SOURCES_DIR}/jbig2sym.cc"
+)
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
