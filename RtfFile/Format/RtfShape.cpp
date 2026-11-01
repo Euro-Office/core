@@ -314,7 +314,7 @@ std::wstring RtfShape::RenderToRtf(RenderParameter oRenderParameter)
 				if (m_bLine)
 				{
 					if (m_nBorderTopColor == PROP_DEF)
-						m_nBorderTopColor = m_nBorderLeftColor = m_nBorderTopColor = m_nBorderBottomColor = m_nLineColor;
+						m_nBorderTopColor = m_nBorderLeftColor = m_nBorderRightColor = m_nBorderBottomColor = m_nLineColor;
 
 					INT brdrw = PROP_DEF;
 					if (PROP_DEF != m_nLineWidth)
@@ -527,8 +527,8 @@ std::wstring RtfShape::RenderToRtfShapeProperty(RenderParameter oRenderParameter
 
 	RENDER_RTF_SHAPE_PROP(L"o:bordertopcolor", sResult, m_nBorderTopColor);
 	RENDER_RTF_SHAPE_PROP(L"o:borderleftcolor", sResult, m_nBorderLeftColor);
-	RENDER_RTF_SHAPE_PROP(L"o:borderbottomcolor", sResult, m_nBorderRightColor);
-	RENDER_RTF_SHAPE_PROP(L"o:borderrightcolor", sResult, m_nBorderBottomColor);
+	RENDER_RTF_SHAPE_PROP(L"o:borderbottomcolor", sResult, m_nBorderBottomColor);
+	RENDER_RTF_SHAPE_PROP(L"o:borderrightcolor", sResult, m_nBorderRightColor);
 
 //Position relative
     RENDER_RTF_SHAPE_PROP(L"pctHorizPos",	sResult,	m_nPositionHPct);
