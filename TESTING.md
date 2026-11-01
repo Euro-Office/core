@@ -84,6 +84,14 @@ Done:
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs
       alongside (under the build tree, so writable).
+- [x] `OfficeCryptReader/tests` — new suite (`officecrypt_test`), not a `.pro` migration.
+      Covers the Crypto++ based encryption in `CryptTransform`: decrypts ECMA-376 agile
+      data encrypted by msoffcrypto-tool and ODF 1.2 data encrypted with Python's
+      `cryptography`, verifies ECMA-376/ODF write protection hashes computed with
+      `hashlib`, and round-trips agile, standard (AES, RC4) and ODF (AES, Blowfish)
+      encryption. Deps: CryptoPPLib, kernel, UnicodeConverter, plus
+      `OOXML/Base/unicode_util.cpp` compiled in. The reference data is generated into
+      `reference_vectors.h` by `generate_vectors.py`; no fixture files.
 - [x] `OdfFile/Reader/Converter/SMCustomShape2OOXML/TestSMCustomShape` — dep:
       SMCustomShape2OOXML (new CMake library target created for this suite; itself depends on
       UnicodeConverter, kernel). No fixtures.

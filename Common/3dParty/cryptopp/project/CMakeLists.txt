@@ -6,8 +6,6 @@ set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}/../../../..")
 
 include(${CORE_ROOT_DIR}/common.cmake)
 
-set(CRYPTOPP_SOURCES_DIR "${CMAKE_CURRENT_LIST_DIR}/..")
-
 add_library(CryptoPPLib STATIC
     # List cryptlib.cpp first, then cpu.cpp, then integer.cpp to tame C++ static initialization problems.
     # Is this still valid?
@@ -19,7 +17,6 @@ add_library(CryptoPPLib STATIC
     ${CRYPTOPP_SOURCES_DIR}/algparam.cpp
     ${CRYPTOPP_SOURCES_DIR}/allocate.cpp
     ${CRYPTOPP_SOURCES_DIR}/arc4.cpp
-    ${CRYPTOPP_SOURCES_DIR}/aria_simd.cpp
     ${CRYPTOPP_SOURCES_DIR}/aria.cpp
     ${CRYPTOPP_SOURCES_DIR}/ariatab.cpp
     ${CRYPTOPP_SOURCES_DIR}/asn.cpp
@@ -130,6 +127,7 @@ add_library(CryptoPPLib STATIC
     ${CRYPTOPP_SOURCES_DIR}/power9_ppc.cpp
     ${CRYPTOPP_SOURCES_DIR}/ppc_simd.cpp
     ${CRYPTOPP_SOURCES_DIR}/pssr.cpp
+    ${CRYPTOPP_SOURCES_DIR}/primetab.cpp
     ${CRYPTOPP_SOURCES_DIR}/pubkey.cpp
     ${CRYPTOPP_SOURCES_DIR}/queue.cpp
     ${CRYPTOPP_SOURCES_DIR}/rabbit.cpp
@@ -397,6 +395,11 @@ set_property(TARGET CryptoPPLib PROPERTY POSITION_INDEPENDENT_CODE ON)
 target_compile_definitions(CryptoPPLib PRIVATE
     CRYPTOPPLIB_LIBRARY
     DISABLE_TYPE_MISMATCH
+)
+
+# <cryptopp/...> for CryptoPPLib and the code linking it
+target_include_directories(CryptoPPLib PUBLIC
+    ${CRYPTOPP_INCLUDE_DIR}
 )
 
 target_link_libraries(CryptoPPLib PUBLIC 

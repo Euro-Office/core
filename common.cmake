@@ -74,7 +74,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--only=openssl-hash,hunspell,brotli,cryptopp,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -121,7 +121,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,cryptopp,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -334,6 +334,11 @@ else()
     endif()
 
 endif()
+
+# Crypto++ is fetched as sources and compiled by core (Common/3dParty/cryptopp).
+# Include it as <cryptopp/...>.
+set(CRYPTOPP_INCLUDE_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/cryptopp")
+set(CRYPTOPP_SOURCES_DIR "${CRYPTOPP_INCLUDE_DIR}/cryptopp")
 
 # Do NOT auto-add absolute link directories to RPATH
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH FALSE)
