@@ -125,6 +125,8 @@ add_library(graphics SHARED
     # raster.pri
     ${DESKTOP_EDITOR_ROOT_DIR}/graphics/Image.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/BgraFrame.cpp
+	${DESKTOP_EDITOR_ROOT_DIR}/raster/Pnm/PnmFile.cpp
+	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrtarga.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrrle.c
@@ -195,28 +197,6 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/ckconfig.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/djpeg.c
 
-    # !disable_cximage_mng {
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_callback_xs.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_chunk_descr.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_chunk_io.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_chunk_prc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_chunk_xs.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_cms.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_display.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_dither.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_error.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_filter.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_hlapi.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_jpeg.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_object_prc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_pixels.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_prop_xs.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_read.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_trace.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_write.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/mng/libmng_zlib.c
-    # }
-
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/png.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngerror.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngget.c
@@ -281,19 +261,15 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximainfo.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaint.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajas.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajbg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximajpg.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalpha.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximalyr.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximamng.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximapal.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximapcx.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximapng.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximapsd.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaraw.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximasel.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximaska.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximatga.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximath.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/ximatif.cpp
@@ -304,59 +280,8 @@ add_library(graphics SHARED
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/CxImage/xmemfile.cpp
 
     # !disable_cximage_all {
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_cm.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_debug.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_getopt.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_icc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_iccdata.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_image.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_init.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_malloc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_seq.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_stream.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_string.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_tvp.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/base/jas_version.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/bmp/bmp_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/bmp/bmp_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/bmp/bmp_enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jp2/jp2_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jp2/jp2_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jp2/jp2_enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_bs.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_cs.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_math.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_mct.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_mqcod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_mqdec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_mqenc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_qmfb.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t1cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t1dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t1enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t2cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t2dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_t2enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_tagtree.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_tsfb.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpc/jpc_util.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpg/jpg_dummy.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/jpg/jpg_val.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/mif/mif_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pgx/pgx_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pgx/pgx_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pgx/pgx_enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pnm/pnm_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pnm/pnm_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/pnm/pnm_enc.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/ras/ras_cod.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/ras/ras_dec.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/ras/ras_enc.c
         ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig_tab.c
         ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jbig/jbig.c
-        ${DESKTOP_EDITOR_ROOT_DIR}/cximage/raw/libdcr.c
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2arith.cpp
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2enc.cpp
         ${DESKTOP_EDITOR_ROOT_DIR}/raster/JBig2/source/Encoder/jbig2sym.cpp
@@ -944,13 +869,6 @@ endif()
 target_compile_definitions(graphics PRIVATE
     GRAPHICS_USE_DYNAMIC_LIBRARY_BUILDING
     DISABLE_IMAGE_EXCEPTIONS
-    EXCLUDE_JPG_SUPPORT
-	MNG_SUPPORT_DISPLAY
-	MNG_SUPPORT_READ
-	MNG_SUPPORT_WRITE
-	MNG_ACCESS_CHUNKS
-	MNG_STORE_CHUNKS
-	MNG_ERROR_TELLTALE
 
     # metafile.pri
     METAFILE_SUPPORT_WMF_EMF # !metafile_disable_wmf_emf
@@ -984,7 +902,6 @@ endif()
 
 if( MSVC )
     target_compile_definitions(graphics PRIVATE
-        JAS_WIN_MSVC_BUILD
         DLL_EXPORT # freetype dll export
         WIN32_LEAN_AND_MEAN
     )
@@ -994,7 +911,6 @@ target_include_directories(graphics PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${KATANA_INSTALL_DIR_ABS}/src
 	${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/include
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jasper/include
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/png
     ${ZLIBNG_INCLUDEDIR_ABS}
@@ -1029,13 +945,6 @@ if(LINUX)
         -fpermissive
         -UHAVE_IO_H
     )
-
-    if(ANDROID)
-        # jasper's filter tables mix int* and jpc_fix_t* (long*), an error in clang >= 16
-        target_compile_options(graphics PRIVATE
-            $<$<COMPILE_LANGUAGE:C>:-Wno-incompatible-function-pointer-types>
-        )
-    endif()
 
     # Re-enable exporting symbols
     target_compile_options(graphics PRIVATE

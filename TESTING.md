@@ -100,6 +100,13 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `DesktopEditor/raster/test` — new suite (`raster_formats_test`), not a `.pro`
+      migration. Covers the PNM (`raster/Pnm`) and Sun Raster (`raster/Ras`) decoders that
+      replaced CxImage's JasPer based decoding, through `CBgraFrame::Decode` /
+      `OpenFile` and `CImageFileFormatChecker`: all Netpbm variants (ASCII/binary, 16 bit,
+      comments, row padding), RAS at 1/8/24/32 bit, BGR and RGB types, color maps and RLE,
+      plus truncated and oversized input. Deps: kernel, graphics, UnicodeConverter.
+      `GTEST_MAIN`. No fixtures — images are built in memory.
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and

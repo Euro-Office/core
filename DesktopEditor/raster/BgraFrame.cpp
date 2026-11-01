@@ -40,6 +40,8 @@
 #if CXIMAGE_SUPPORT_HEIF
 #include "heif/heif.h"
 #endif
+#include "Pnm/PnmFile.h"
+#include "Ras/RasFile.h"
 
 #include <cmath>
 #define BGRA_FRAME_CXIMAGE_MAX_MEMORY 67108864 // 256Mb (*4 channel)
@@ -455,6 +457,12 @@ bool CBgraFrame::OpenFile(const std::wstring& strFileName, unsigned int nFileTyp
 	}
 #endif
 
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, strFileName, m_bIsRGBA, m_bIsGrayScale);
+
 	NSFile::CFileBinary oFile;
 	if (!oFile.OpenFile(strFileName))
 		return false;
@@ -544,6 +552,12 @@ bool CBgraFrame::Decode(BYTE* pBuffer, int nSize, unsigned int nFileType)
 		return NSHeif::CHeifFile::Open(this, pBuffer, nSize, m_bIsRGBA);
 	}
 #endif
+
+	if (_CXIMAGE_FORMAT_PNM == m_nFileType)
+		return NSPnm::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
+
+	if (_CXIMAGE_FORMAT_RAS == m_nFileType)
+		return NSRas::Open(this, pBuffer, nSize, m_bIsRGBA, m_bIsGrayScale);
 
 	CxImage img;
 

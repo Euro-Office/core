@@ -25,6 +25,7 @@
 #include "ImageFileFormatChecker.h"
 #include "../common/File.h"
 #include "../cximage/CxImage/ximacfg.h"
+#include "Pnm/PnmFile.h"
 #if CXIMAGE_SUPPORT_HEIF
 #include "heif/heif.h"
 #endif
@@ -272,10 +273,19 @@ bool CImageFileFormatChecker::isRasFile(BYTE* pBuffer,DWORD dwBytes)//sun image
 	if (eFileType)return false;
 	
 	if ( (16 <= dwBytes) && (0x59 == pBuffer[0] && 0xa6 == pBuffer[1]  && 0x6a == pBuffer[2]  && 0x95 == pBuffer[3]
-							 && 0x00 == pBuffer[4] && 0x00 == pBuffer[5]  && 0x18 == pBuffer[15]))
+							 && 0x00 == pBuffer[4] && 0x00 == pBuffer[5]
+							 && 0x00 == pBuffer[12] && 0x00 == pBuffer[13] && 0x00 == pBuffer[14]
+							 && (0x01 == pBuffer[15] || 0x08 == pBuffer[15] || 0x18 == pBuffer[15] || 0x20 == pBuffer[15])))
 		return true;
 
 	return false;
+}
+//pbm, pgm, ppm
+bool CImageFileFormatChecker::isPnmFile(BYTE* pBuffer,DWORD dwBytes)
+{
+	if (eFileType)return false;
+
+	return NSPnm::IsPnm(pBuffer, dwBytes);
 }
 //http://www.atari-portfolio.co.uk/library/text/pgxspec.txt
 bool CImageFileFormatChecker::isPgxFile(BYTE* pBuffer,DWORD dwBytes)
@@ -532,6 +542,10 @@ bool CImageFileFormatChecker::isImageFile(const std::wstring& fileName)
 	{
 		eFileType = _CXIMAGE_FORMAT_RAS;
 	}
+	else if (isPnmFile(buffer,sizeRead))
+	{
+		eFileType = _CXIMAGE_FORMAT_PNM;
+	}
 	else if (isIpodFile(buffer,sizeRead))
 	{
 		eFileType = _CXIMAGE_FORMAT_UNKNOWN;
@@ -649,6 +663,10 @@ bool CImageFileFormatChecker::isImageFile(BYTE* buffer, DWORD sizeRead)
 	if (isRasFile(buffer, sizeRead))
 	{
 		eFileType = _CXIMAGE_FORMAT_RAS;
+	}
+	if (isPnmFile(buffer, sizeRead))
+	{
+		eFileType = _CXIMAGE_FORMAT_PNM;
 	}
 
 	if (isIpodFile(buffer,sizeRead))
