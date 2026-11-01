@@ -415,6 +415,11 @@ if(LINUX)
     )
 endif()
 
+if(MSVC)
+    # CPUID64/XGETBV64 for cpu.cpp, without upstream's x64dll.asm
+    target_sources(CryptoPPLib PRIVATE ${CMAKE_CURRENT_LIST_DIR}/cpu_msvc_x64.cpp)
+endif()
+
 if(ANDROID)
     # cpu.cpp queries CPU features through the NDK's cpufeatures helper
     set(ANDROID_CPUFEATURES_DIR "${ANDROID_NDK}/sources/android/cpufeatures")
