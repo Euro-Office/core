@@ -49,11 +49,13 @@ def cmake_dependency_args() -> list[str]:
     # otherwise pick system libraries, or on Android the NDK's zlib.
     zlib_lib = "zlibstatic.lib" if nc.is_windows() else "libz.a"
     jpeg_lib = "jpeg-static.lib" if nc.is_windows() else "libjpeg.a"
+    # Forward slashes: libtiff writes these into try_compile() projects, where
+    # Windows backslashes would be read as escapes
     return [
-        f"-DZLIB_INCLUDE_DIR={ zlib_install_dir / 'include' }",
-        f"-DZLIB_LIBRARY={ zlib_install_dir / 'lib' / zlib_lib }",
-        f"-DJPEG_INCLUDE_DIR={ jpeg_install_dir / 'include' }",
-        f"-DJPEG_LIBRARY={ jpeg_install_dir / 'lib' / jpeg_lib }",
+        f"-DZLIB_INCLUDE_DIR={ ( zlib_install_dir / 'include' ).as_posix() }",
+        f"-DZLIB_LIBRARY={ ( zlib_install_dir / 'lib' / zlib_lib ).as_posix() }",
+        f"-DJPEG_INCLUDE_DIR={ ( jpeg_install_dir / 'include' ).as_posix() }",
+        f"-DJPEG_LIBRARY={ ( jpeg_install_dir / 'lib' / jpeg_lib ).as_posix() }",
     ]
 
 def fetch_and_patch():
