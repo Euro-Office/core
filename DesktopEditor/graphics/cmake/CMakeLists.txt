@@ -981,6 +981,8 @@ if(WIN32)
         Advapi32
         Shell32
         User32
+        # htonl/htons in jbig2enc; libdcr used to pull it in via #pragma comment
+        Ws2_32
     )
 endif()
 
