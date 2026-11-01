@@ -11,11 +11,13 @@
 
 #include "ximaiter.h"
 
+#include <zlib.h> // Z_*_COMPRESSION
+
 ////////////////////////////////////////////////////////////////////////////////
 void CxImagePNG::ima_png_error(png_struct *png_ptr, char *message)
 {
 	strcpy(info.szLastError,message);
-	longjmp(png_ptr->longjmp_buffer, 1);
+	png_longjmp(png_ptr, 1);
 }
 ////////////////////////////////////////////////////////////////////////////////
 #if CXIMAGE_SUPPORT_DECODE
@@ -64,7 +66,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
     /* Set error handling if you are using the setjmp/longjmp method (this is
     * the normal method of doing things with libpng).  REQUIRED unless you
     * set up your own error handlers in the png_create_read_struct() earlier. */
-	if (setjmp(png_ptr->longjmp_buffer)) {
+	if (setjmp(png_jmpbuf(png_ptr))) {
 		/* Free all of the memory associated with the png_ptr and info_ptr */
 		delete [] row_pointers;
 		png_destroy_read_struct(&png_ptr, &info_ptr, (png_infopp)NULL);
@@ -78,16 +80,24 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	/* read the file information */
 	png_read_info(png_ptr, info_ptr);
 
+	const png_uint_32 width = png_get_image_width(png_ptr, info_ptr);
+	const png_uint_32 height = png_get_image_height(png_ptr, info_ptr);
+	const int32_t color_type = png_get_color_type(png_ptr, info_ptr);
+	const int32_t bit_depth = png_get_bit_depth(png_ptr, info_ptr);
+	const int32_t interlace_type = png_get_interlace_type(png_ptr, info_ptr);
+	const int32_t src_pixel_depth = bit_depth * png_get_channels(png_ptr, info_ptr);
+	const png_size_t rowbytes = png_get_rowbytes(png_ptr, info_ptr);
+
 	if (info.nEscape == -1){
-		head.biWidth = info_ptr->width;
-		head.biHeight= info_ptr->height;
+		head.biWidth = width;
+		head.biHeight= height;
 		info.dwType = CXIMAGE_FORMAT_PNG;
-		longjmp(png_ptr->longjmp_buffer, 1);
+		png_longjmp(png_ptr, 1);
 	}
 
 	/* calculate new number of channels */
 	int32_t channels=0;
-	switch(info_ptr->color_type){
+	switch(color_type){
 	case PNG_COLOR_TYPE_GRAY:
 	case PNG_COLOR_TYPE_PALETTE:
 		channels = 1;
@@ -103,59 +113,71 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		break;
 	default:
 		strcpy(info.szLastError,"unknown PNG color type");
-		longjmp(png_ptr->longjmp_buffer, 1);
+		png_longjmp(png_ptr, 1);
 	}
 
 	//find the right pixel depth used for cximage
-	int32_t pixel_depth = info_ptr->pixel_depth;
+	int32_t pixel_depth = src_pixel_depth;
 	if (channels == 1 && pixel_depth>8) pixel_depth=8;
 	if (channels == 2) pixel_depth=8;
 	if (channels >= 3) pixel_depth=24;
 
-	if (!Create(info_ptr->width, info_ptr->height, pixel_depth, CXIMAGE_FORMAT_PNG)){
-		longjmp(png_ptr->longjmp_buffer, 1);
+	if (!Create(width, height, pixel_depth, CXIMAGE_FORMAT_PNG)){
+		png_longjmp(png_ptr, 1);
 	}
 
-	/* get metrics */
-	switch (info_ptr->phys_unit_type)
+	/* get metrics (all 0 without a pHYs chunk) */
+	png_uint_32 x_pixels_per_unit = 0, y_pixels_per_unit = 0;
+	int phys_unit_type = PNG_RESOLUTION_UNKNOWN;
+	png_get_pHYs(png_ptr, info_ptr, &x_pixels_per_unit, &y_pixels_per_unit, &phys_unit_type);
+	switch (phys_unit_type)
 	{
 	case PNG_RESOLUTION_UNKNOWN:
-		SetXDPI(info_ptr->x_pixels_per_unit);
-		SetYDPI(info_ptr->y_pixels_per_unit);
+		SetXDPI(x_pixels_per_unit);
+		SetYDPI(y_pixels_per_unit);
 		break;
 	case PNG_RESOLUTION_METER:
-		SetXDPI((int32_t)floor(info_ptr->x_pixels_per_unit * 254.0 / 10000.0 + 0.5));
-		SetYDPI((int32_t)floor(info_ptr->y_pixels_per_unit * 254.0 / 10000.0 + 0.5));
+		SetXDPI((int32_t)floor(x_pixels_per_unit * 254.0 / 10000.0 + 0.5));
+		SetYDPI((int32_t)floor(y_pixels_per_unit * 254.0 / 10000.0 + 0.5));
 		break;
 	}
 
-	if (info_ptr->num_palette>0){
-		SetPalette((rgb_color*)info_ptr->palette,info_ptr->num_palette);
-		SetClrImportant(info_ptr->num_palette);
-	} else if (info_ptr->bit_depth ==2) { //<DP> needed for 2 bpp grayscale PNGs
+	png_colorp palette = NULL;
+	int num_palette = 0;
+	png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette);
+	if (num_palette>0){
+		SetPalette((rgb_color*)palette,num_palette);
+		SetClrImportant(num_palette);
+	} else if (bit_depth ==2) { //<DP> needed for 2 bpp grayscale PNGs
 		SetPaletteColor(0,0,0,0);
 		SetPaletteColor(1,85,85,85);
 		SetPaletteColor(2,170,170,170);
 		SetPaletteColor(3,255,255,255);
 	} else SetGrayPalette(); //<DP> needed for grayscale PNGs
 	
-    int32_t nshift = (std::max)(0,(info_ptr->bit_depth>>3)-1)<<3;
+    int32_t nshift = (std::max)(0,(bit_depth>>3)-1)<<3;
 
-	if (info_ptr->num_trans!=0){ //palette transparency
-		if (info_ptr->num_trans==1){
-			if (info_ptr->color_type == PNG_COLOR_TYPE_PALETTE){
-				info.nBkgndIndex = info_ptr->trans_color.index;
+	/* tRNS: alpha values for palette images, else one transparent color */
+	png_bytep trans_alpha = NULL;
+	int num_trans = 0;
+	png_color_16p trans_color = NULL;
+	png_get_tRNS(png_ptr, info_ptr, &trans_alpha, &num_trans, &trans_color);
+
+	if (num_trans!=0){ //palette transparency
+		if (num_trans==1){
+			if (color_type == PNG_COLOR_TYPE_PALETTE){
+				info.nBkgndIndex = trans_color->index;
 			} else{
-				info.nBkgndIndex = info_ptr->trans_color.gray>>nshift;
+				info.nBkgndIndex = trans_color->gray>>nshift;
 			}
 		}
-		if (info_ptr->num_trans>1){
+		if (num_trans>1){
 			RGBQUAD* pal=GetPalette();
 			if (pal){
 				uint32_t ip;
-                for (ip=0;ip<(std::min)((long)head.biClrUsed,(long)info_ptr->num_trans);ip++)
-					pal[ip].rgbReserved=info_ptr->trans_alpha[ip];
-				for (ip=info_ptr->num_trans;ip<head.biClrUsed;ip++){
+                for (ip=0;ip<(std::min)((long)head.biClrUsed,(long)num_trans);ip++)
+					pal[ip].rgbReserved=trans_alpha[ip];
+				for (ip=num_trans;ip<head.biClrUsed;ip++){
 					pal[ip].rgbReserved=255;
 				}
 				info.bAlphaPaletteEnabled=true;
@@ -164,13 +186,10 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	}
 
 	if (channels == 3){ //check RGB binary transparency
-		png_bytep trans;
-		int32_t num_trans;
-		png_color_16 *image_background;
-		if (png_get_tRNS(png_ptr, info_ptr, &trans, &num_trans, &image_background)){
-			info.nBkgndColor.rgbRed   = (uint8_t)(info_ptr->trans_color.red>>nshift);
-			info.nBkgndColor.rgbGreen = (uint8_t)(info_ptr->trans_color.green>>nshift);
-			info.nBkgndColor.rgbBlue  = (uint8_t)(info_ptr->trans_color.blue>>nshift);
+		if (trans_color){
+			info.nBkgndColor.rgbRed   = (uint8_t)(trans_color->red>>nshift);
+			info.nBkgndColor.rgbGreen = (uint8_t)(trans_color->green>>nshift);
+			info.nBkgndColor.rgbBlue  = (uint8_t)(trans_color->blue>>nshift);
 			info.nBkgndColor.rgbReserved = 0;
 			info.nBkgndIndex = 0;
 		}
@@ -186,15 +205,15 @@ bool CxImagePNG::Decode(CxFile *hFile)
 	}
 
 	// <vho> - flip the RGB pixels to BGR (or RGBA to BGRA)
-	if (info_ptr->color_type & PNG_COLOR_MASK_COLOR){
+	if (color_type & PNG_COLOR_MASK_COLOR){
 		png_set_bgr(png_ptr);
 	}
 
 	// <vho> - handle cancel
-	if (info.nEscape) longjmp(png_ptr->longjmp_buffer, 1);
+	if (info.nEscape) png_longjmp(png_ptr, 1);
 
 	// row_bytes is the width x number of channels x (bit-depth / 8)
-	row_pointers = new uint8_t[info_ptr->rowbytes + 8];
+	row_pointers = new uint8_t[rowbytes + 8];
 
 	// turn on interlace handling
 	int32_t number_passes = png_set_interlace_handling(png_ptr);
@@ -205,8 +224,8 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		SetCodecOption(~(ENCODE_INTERLACE) & GetCodecOption(CXIMAGE_FORMAT_PNG));
 	}
 
-	int32_t chan_offset = info_ptr->bit_depth >> 3;
-	int32_t pixel_offset = info_ptr->pixel_depth >> 3;
+	int32_t chan_offset = bit_depth >> 3;
+	int32_t pixel_offset = src_pixel_depth >> 3;
 
 	for (int32_t pass=0; pass < number_passes; pass++) {
 		iter.Upset();
@@ -214,7 +233,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 		do	{
 
 			// <vho> - handle cancel
-			if (info.nEscape) longjmp(png_ptr->longjmp_buffer, 1);
+			if (info.nEscape) png_longjmp(png_ptr, 1);
 
 #if CXIMAGE_SUPPORT_ALPHA	// <vho>
 			if (AlphaIsValid()) {
@@ -225,7 +244,7 @@ bool CxImagePNG::Decode(CxFile *hFile)
 				uint8_t* prow= iter.GetRow(ay);
 
 				//recover data from previous scan
-				if (info_ptr->interlace_type && pass>0 && pass!=7){
+				if (interlace_type && pass>0 && pass!=7){
 					for(ax=0;ax<head.biWidth;ax++){
 						int32_t px = ax * pixel_offset;
 						if (channels == 2){
@@ -262,10 +281,10 @@ bool CxImagePNG::Decode(CxFile *hFile)
 #endif // CXIMAGE_SUPPORT_ALPHA		// vho
 			{
 				//recover data from previous scan
-				if (info_ptr->interlace_type && pass>0){
-					iter.GetRow(row_pointers, info_ptr->rowbytes);
+				if (interlace_type && pass>0){
+					iter.GetRow(row_pointers, rowbytes);
 					//re-expand buffer for images with bit depth > 8
-					if (info_ptr->bit_depth > 8){
+					if (bit_depth > 8){
 						for(int32_t ax=(head.biWidth*channels-1);ax>=0;ax--)
 							row_pointers[ax*chan_offset] = row_pointers[ax];
 					}
@@ -275,15 +294,15 @@ bool CxImagePNG::Decode(CxFile *hFile)
 				png_read_row(png_ptr, row_pointers, NULL);
 
 				//shrink 16 bit depth images down to 8 bits
-				if (info_ptr->bit_depth > 8){
+				if (bit_depth > 8){
 					for(int32_t ax=0;ax<(head.biWidth*channels);ax++)
 						row_pointers[ax] = row_pointers[ax*chan_offset];
 				}
 
 				//copy the pixels
-				iter.SetRow(row_pointers, info_ptr->rowbytes);
+				iter.SetRow(row_pointers, rowbytes);
 				//<DP> expand 2 bpp images only in the last pass
-				if (info_ptr->bit_depth==2 && pass==(number_passes-1))
+				if (bit_depth==2 && pass==(number_passes-1))
 					expand2to4bpp(iter.GetRow());
 
 				//go on
@@ -354,9 +373,8 @@ bool CxImagePNG::Encode(CxFile *hFile)
    /* Set error handling.  REQUIRED if you aren't supplying your own
     * error hadnling functions in the png_create_write_struct() call.
     */
-	if (setjmp(png_ptr->longjmp_buffer)){
+	if (setjmp(png_jmpbuf(png_ptr))){
 		/* If we get here, we had a problem reading the file */
-		if (info_ptr->palette) free(info_ptr->palette);
 		png_destroy_write_struct(&png_ptr,  (png_infopp)&info_ptr);
 		cx_throw("Error saving PNG file");
 	}
@@ -368,20 +386,18 @@ bool CxImagePNG::Encode(CxFile *hFile)
     png_set_write_fn(png_ptr,hFile,/*(png_rw_ptr)*/user_write_data,/*(png_flush_ptr)*/user_flush_data);
 
 	/* set the file information here */
-	info_ptr->width = GetWidth();
-	info_ptr->height = GetHeight();
-	info_ptr->pixel_depth = (uint8_t)GetBpp();
-	info_ptr->channels = (GetBpp()>8) ? (uint8_t)3: (uint8_t)1;
-	info_ptr->bit_depth = (uint8_t)(GetBpp()/info_ptr->channels);
-	info_ptr->compression_type = info_ptr->filter_type = 0;
-	info_ptr->valid = 0;
+	const png_uint_32 width = GetWidth();
+	const png_uint_32 height = GetHeight();
+	int32_t channels = (GetBpp()>8) ? 3 : 1;
+	int32_t bit_depth = GetBpp()/channels;
 
 	// set interlace type
     uint32_t codec_opt = GetCodecOption(CXIMAGE_FORMAT_PNG);
+	int32_t interlace_type;
 	if (codec_opt & CxImagePNG::ENCODE_INTERLACE)
-		info_ptr->interlace_type = PNG_INTERLACE_ADAM7;
+		interlace_type = PNG_INTERLACE_ADAM7;
 	else
-		info_ptr->interlace_type = PNG_INTERLACE_NONE;
+		interlace_type = PNG_INTERLACE_NONE;
 
 	/* set compression level */
 	int32_t compress_level;
@@ -404,23 +420,27 @@ bool CxImagePNG::Encode(CxFile *hFile)
 
 	bool bGrayScale = IsGrayScale();
 
+	int32_t color_type;
 	if (GetNumColors()){
 		if (bGrayScale){
-			info_ptr->color_type = PNG_COLOR_TYPE_GRAY;
+			color_type = PNG_COLOR_TYPE_GRAY;
 		} else {
-			info_ptr->color_type = PNG_COLOR_TYPE_PALETTE;
+			color_type = PNG_COLOR_TYPE_PALETTE;
 		}
 	} else {
-		info_ptr->color_type = PNG_COLOR_TYPE_RGB;
+		color_type = PNG_COLOR_TYPE_RGB;
 	}
 #if CXIMAGE_SUPPORT_ALPHA
 	if (AlphaIsValid()){
-		info_ptr->color_type |= PNG_COLOR_MASK_ALPHA;
-		info_ptr->channels++;
-		info_ptr->bit_depth = 8;
-		info_ptr->pixel_depth += 8;
+		color_type |= PNG_COLOR_MASK_ALPHA;
+		channels++;
+		bit_depth = 8;
 	}
 #endif
+
+	png_set_IHDR(png_ptr, info_ptr, width, height, bit_depth,
+				color_type, interlace_type,
+				PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
 
 	/* set background */
 	png_color_16 image_background={ 0, 255, 255, 255, 0 };
@@ -435,20 +455,18 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	/* set metrics */
 	png_set_pHYs(png_ptr, info_ptr, head.biXPelsPerMeter, head.biYPelsPerMeter, PNG_RESOLUTION_METER);
 
-	png_set_IHDR(png_ptr, info_ptr, info_ptr->width, info_ptr->height, info_ptr->bit_depth,
-				info_ptr->color_type, info_ptr->interlace_type,
-				PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
+	png_color_16 trans_color = { 0, 0, 0, 0, 0 };
+	int32_t num_trans = 0;
 
 	//<DP> simple transparency
 	if (info.nBkgndIndex >= 0){
-		info_ptr->num_trans = 1;
-		info_ptr->valid |= PNG_INFO_tRNS;
-		info_ptr->trans_alpha = trans;
-		info_ptr->trans_color.index = (uint8_t)info.nBkgndIndex;
-		info_ptr->trans_color.red   = tc.rgbRed;
-		info_ptr->trans_color.green = tc.rgbGreen;
-		info_ptr->trans_color.blue  = tc.rgbBlue;
-		info_ptr->trans_color.gray  = info_ptr->trans_color.index;
+		num_trans = 1;
+		trans[0] = 0;
+		trans_color.index = (uint8_t)info.nBkgndIndex;
+		trans_color.red   = tc.rgbRed;
+		trans_color.green = tc.rgbGreen;
+		trans_color.blue  = tc.rgbBlue;
+		trans_color.gray  = trans_color.index;
 
 		// the transparency indexes start from 0 for non grayscale palette
 		if (!bGrayScale && head.biClrUsed && info.nBkgndIndex)
@@ -457,27 +475,28 @@ bool CxImagePNG::Encode(CxFile *hFile)
 
 	/* set the palette if there is one */
 	if (GetPalette()){
-		if (!bGrayScale){
-			info_ptr->valid |= PNG_INFO_PLTE;
-		}
-
 		int32_t nc = GetClrImportant();
 		if (nc==0) nc = GetNumColors();
+		if (nc>256) nc = 256;
 
 		if (info.bAlphaPaletteEnabled){
 			for(uint16_t ip=0; ip<nc;ip++)
 				trans[ip]=GetPaletteColor((uint8_t)ip).rgbReserved;
-			info_ptr->num_trans = (uint16_t)nc;
-			info_ptr->valid |= PNG_INFO_tRNS;
-			info_ptr->trans_alpha = trans;
+			num_trans = nc;
 		}
 
-		// copy the palette colors
-		info_ptr->palette = new png_color[nc];
-		info_ptr->num_palette = (png_uint_16) nc;
-		for (int32_t i=0; i<nc; i++)
-			GetPaletteColor(i, &info_ptr->palette[i].red, &info_ptr->palette[i].green, &info_ptr->palette[i].blue);
-	}  
+		// copy the palette colors (grayscale images have none in the file)
+		if (!bGrayScale){
+			png_color palette[256];
+			for (int32_t i=0; i<nc; i++)
+				GetPaletteColor(i, &palette[i].red, &palette[i].green, &palette[i].blue);
+			png_set_PLTE(png_ptr, info_ptr, palette, nc);
+		}
+	}
+
+	// tRNS can't be combined with an alpha channel
+	if (num_trans > 0 && !(color_type & PNG_COLOR_MASK_ALPHA))
+		png_set_tRNS(png_ptr, info_ptr, trans, num_trans, &trans_color);
 
 #if CXIMAGE_SUPPORT_ALPHA	// <vho>
 	//Merge the transparent color with the alpha channel
@@ -490,8 +509,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 	}	}	}
 #endif // CXIMAGE_SUPPORT_ALPHA	// <vho>
 
-    int32_t row_size = (std::max)(info.dwEffWidth, info_ptr->width*info_ptr->channels*(info_ptr->bit_depth/8));
-	info_ptr->rowbytes = row_size;
+    int32_t row_size = (std::max)(info.dwEffWidth, (uint32_t)(width*channels*(bit_depth/8)));
 	uint8_t *row_pointers = new uint8_t[row_size];
 
 	/* write the file information */
@@ -509,7 +527,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 			if (AlphaIsValid()){
 				for (int32_t ax=head.biWidth-1; ax>=0;ax--){
 					c = BlindGetPixelColor(ax,ay);
-					int32_t px = ax * info_ptr->channels;
+					int32_t px = ax * channels;
 					if (!bGrayScale){
 						row_pointers[px++]=c.rgbRed;
 						row_pointers[px++]=c.rgbGreen;
@@ -524,7 +542,7 @@ bool CxImagePNG::Encode(CxFile *hFile)
 #endif //CXIMAGE_SUPPORT_ALPHA	// <vho>
 			{
 				iter.GetRow(row_pointers, row_size);
-				if (info_ptr->color_type == PNG_COLOR_TYPE_RGB) //HACK BY OP
+				if (color_type == PNG_COLOR_TYPE_RGB) //HACK BY OP
 					RGBtoBGR(row_pointers, row_size);
 				png_write_row(png_ptr, row_pointers);
 			}
@@ -540,12 +558,6 @@ bool CxImagePNG::Encode(CxFile *hFile)
 
 	/* It is REQUIRED to call this to finish writing the rest of the file */
 	png_write_end(png_ptr, info_ptr);
-
-	/* if you malloced the palette, free it here */
-	if (info_ptr->palette){
-		delete [] (info_ptr->palette);
-		info_ptr->palette = NULL;
-	}
 
 	/* clean up after the write, and free any memory allocated */
 	png_destroy_write_struct(&png_ptr, (png_infopp)&info_ptr);

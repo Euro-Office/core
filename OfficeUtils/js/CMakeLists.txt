@@ -61,22 +61,6 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximawbmp.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximapsd.cpp
 
-    # ---- png ----
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngread.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngmem.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngerror.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/png.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrio.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngtrans.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngget.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrutil.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngrtran.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngset.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwrite.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwio.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwutil.c
-    ${CORE_ROOT}/DesktopEditor/cximage/png/pngwtran.c
-
     # ---- tiff ----
     ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_close.c
     ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dir.c
@@ -292,7 +276,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
     ${CORE_ROOT}/OfficeUtils/src
-    ${CORE_ROOT}/DesktopEditor/cximage/png
     ${CORE_ROOT}/DesktopEditor/agg-2.4/include
 )
 
@@ -323,6 +306,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     minizip
     z
     jpeg
+    png
 )
 
 # -------------------------------------------------

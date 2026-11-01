@@ -108,8 +108,10 @@ Done:
       plus truncated and oversized input. Also covers CxImage's JPEG codec on libjpeg-turbo:
       baseline, progressive, arithmetic, grayscale and Adobe CMYK decoding in both channel
       orders, partial decoding of truncated files, and `CBgraFrame::Encode` read back with
-      libjpeg. Deps: kernel, graphics, UnicodeConverter, jpeg (to build the test JPEGs).
-      `GTEST_MAIN`. No fixtures — images are built in memory.
+      libjpeg. And its PNG codec on libpng: RGBA, 16 bit, palette and gray transparency,
+      interlaced 2 bit gray, `CBgraFrame::Encode` and `SaveFile` of a palette image read
+      back with libpng. Deps: kernel, graphics, UnicodeConverter, jpeg and png (to build and
+      read the test images). `GTEST_MAIN`. No fixtures — images are built in memory.
 - [x] `DesktopEditor/fontengine/test` — new suite (`fontengine_test`), not a `.pro`
       migration. Covers the FreeType based font engine in libgraphics: `CApplicationFonts`
       (font list, localized family names read from FreeType's internal sfnt name table) and

@@ -127,21 +127,6 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
 
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/png.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngerror.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngget.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngmem.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngpread.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngread.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngrio.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngrtran.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngrutil.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngset.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngtrans.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngwio.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngwrite.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngwtran.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngwutil.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_stream.cxx
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_aux.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/tiff/tif_close.c
@@ -846,7 +831,6 @@ target_include_directories(graphics PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${KATANA_INSTALL_DIR_ABS}/src
 	${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/include
-	${DESKTOP_EDITOR_ROOT_DIR}/cximage/png
     ${ZLIBNG_INCLUDEDIR_ABS}
 
     # freetype.pri
@@ -909,7 +893,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
-target_link_libraries(graphics PRIVATE jpeg)
+target_link_libraries(graphics PRIVATE jpeg png)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC

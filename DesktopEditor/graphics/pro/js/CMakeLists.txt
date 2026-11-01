@@ -51,21 +51,6 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximaint.cpp
 
-    ${DESKTOP_ROOT}/cximage/png/pngread.c
-    ${DESKTOP_ROOT}/cximage/png/pngmem.c
-    ${DESKTOP_ROOT}/cximage/png/pngerror.c
-    ${DESKTOP_ROOT}/cximage/png/png.c
-    ${DESKTOP_ROOT}/cximage/png/pngrio.c
-    ${DESKTOP_ROOT}/cximage/png/pngtrans.c
-    ${DESKTOP_ROOT}/cximage/png/pngget.c
-    ${DESKTOP_ROOT}/cximage/png/pngrutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngrtran.c
-    ${DESKTOP_ROOT}/cximage/png/pngset.c
-    ${DESKTOP_ROOT}/cximage/png/pngwrite.c
-    ${DESKTOP_ROOT}/cximage/png/pngwio.c
-    ${DESKTOP_ROOT}/cximage/png/pngwutil.c
-    ${DESKTOP_ROOT}/cximage/png/pngwtran.c
-
     ${DESKTOP_ROOT}/cximage/tiff/tif_close.c
     ${DESKTOP_ROOT}/cximage/tiff/tif_dir.c
     ${DESKTOP_ROOT}/cximage/tiff/tif_aux.c
@@ -750,7 +735,6 @@ add_executable(${PROJECT_NAME}
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/wasm/src/lib
     ${DESKTOP_ROOT}/agg-2.4/include
-    ${DESKTOP_ROOT}/cximage/png
     ${FREETYPE_SOURCES_DIR}/include
     ${FREETYPE_SOURCES_DIR}/include/freetype
     ${ZLIBNG_WASM_INCDIR}
@@ -783,6 +767,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     z
     LibXml2
     jpeg
+    png
 )
 
 # -------------------------------------------------

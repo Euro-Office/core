@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -121,6 +121,15 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
     )
 
+    # Setup libpng-wasm
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng-wasm")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/libpng16.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -136,7 +145,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -154,7 +163,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -364,6 +373,21 @@ else()
             INTERFACE_INCLUDE_DIRECTORIES "${LIBJPEG_TURBO_INSTALL_DIR_ABS}/include"
         )
     endif()
+
+    # Setup libpng
+    set(LIBPNG_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libpng")
+    get_filename_component(LIBPNG_INSTALL_DIR_ABS "${LIBPNG_INSTALL_DIR}" ABSOLUTE)
+    add_library(png STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBPNG_LIB_NAME "libpng16_static.lib")
+    else()
+        set(LIBPNG_LIB_NAME "libpng16.a")
+    endif()
+    set_target_properties(png PROPERTIES
+        IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/${LIBPNG_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES z
+    )
 
 endif()
 
