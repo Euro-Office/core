@@ -61,39 +61,6 @@ set(SRC
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximawbmp.cpp
     ${CORE_ROOT}/DesktopEditor/cximage/CxImage/ximapsd.cpp
 
-    # ---- tiff ----
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_close.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dir.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_aux.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_getimage.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_strip.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_open.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_tile.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_error.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_read.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_flush.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirinfo.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_compress.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_warning.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_swab.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_color.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirread.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_write.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_codec.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_luv.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dirwrite.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_dumpmode.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_fax3.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_ojpeg.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_jpeg.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_next.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_thunder.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_packbits.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_lzw.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_zip.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_fax3sm.c
-    ${CORE_ROOT}/DesktopEditor/cximage/tiff/tif_predict.c
-
     # ---- Metafile ----
     ${CORE_ROOT}/DesktopEditor/raster/Metafile/MetaFile.cpp
     ${CORE_ROOT}/DesktopEditor/raster/Metafile/Common/CClip.cpp
@@ -307,6 +274,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
     z
     jpeg
     png
+    tiff
 )
 
 # -------------------------------------------------

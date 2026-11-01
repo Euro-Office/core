@@ -80,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -130,6 +130,16 @@ if( EMSCRIPTEN )
         INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
     )
 
+    # Setup libtiff-wasm
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff-wasm")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/libtiff.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES jpeg
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
@@ -145,7 +155,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libjpeg-turbo,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng,libpng,libtiff"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -163,7 +173,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,libjpeg-turbo-wasm,libpng-wasm,libtiff-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
@@ -387,6 +397,21 @@ else()
         IMPORTED_LOCATION "${LIBPNG_INSTALL_DIR_ABS}/lib/${LIBPNG_LIB_NAME}"
         INTERFACE_INCLUDE_DIRECTORIES "${LIBPNG_INSTALL_DIR_ABS}/include"
         INTERFACE_LINK_LIBRARIES z
+    )
+
+    # Setup libtiff
+    set(LIBTIFF_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libtiff")
+    get_filename_component(LIBTIFF_INSTALL_DIR_ABS "${LIBTIFF_INSTALL_DIR}" ABSOLUTE)
+    add_library(tiff STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        set(LIBTIFF_LIB_NAME "tiff.lib")
+    else()
+        set(LIBTIFF_LIB_NAME "libtiff.a")
+    endif()
+    set_target_properties(tiff PROPERTIES
+        IMPORTED_LOCATION "${LIBTIFF_INSTALL_DIR_ABS}/lib/${LIBTIFF_LIB_NAME}"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBTIFF_INSTALL_DIR_ABS}/include"
+        INTERFACE_LINK_LIBRARIES "jpeg;z"
     )
 
 endif()
