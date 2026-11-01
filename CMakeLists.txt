@@ -52,6 +52,7 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
         add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
         add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/test" fontengine_test )
 
         # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
         # common.cmake (build_3rdparty.py) and is self-contained at run time:
