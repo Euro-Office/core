@@ -68,6 +68,9 @@ def build_and_install():
             "-DPNG_STATIC=ON",
             "-DPNG_TESTS=OFF",
             "-DPNG_TOOLS=OFF",
+            # Default configuration, without generating it with awk (which
+            # fails under NMake); libpng does the same on Android
+            f"-DPNG_LIBCONF_HEADER={ libpng_src / 'scripts' / 'pnglibconf.h.prebuilt' }",
             "-DPNG_HARDWARE_OPTIMIZATIONS=OFF",
         ],
         "Configure libpng (WASM)",
