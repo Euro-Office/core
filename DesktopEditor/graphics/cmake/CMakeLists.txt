@@ -126,74 +126,6 @@ add_library(graphics SHARED
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Pnm/PnmFile.cpp
 	${DESKTOP_EDITOR_ROOT_DIR}/raster/Ras/RasFile.cpp
     ${DESKTOP_EDITOR_ROOT_DIR}/raster/ImageFileFormatChecker.cpp
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrtarga.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrrle.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrppm.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrjpgcom.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrgif.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/wrbmp.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/transupp.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdtarga.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdswitch.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdrle.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdppm.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdjpgcom.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdgif.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdcolmap.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/rdbmp.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jutils.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jpegtran.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jquant1.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jquant2.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdpostct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdsample.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdtrans.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jerror.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jfdctflt.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jfdctfst.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jfdctint.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jidctflt.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jidctfst.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jidctint.c
-    #${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jmemansi.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jmemmgr.c
-    #${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jmemname.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jmemnobs.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jaricom.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcapimin.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcapistd.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcarith.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jccoefct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jccolor.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcdctmgr.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jchuff.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcinit.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcmainct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcmarker.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcmaster.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcomapi.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcparam.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcprepct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jcsample.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jctrans.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdapimin.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdapistd.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdarith.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdatadst.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdatasrc.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdcoefct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdcolor.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jddctmgr.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdhuff.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdinput.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdmainct.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdmarker.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdmaster.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/jdmerge.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/cdjpeg.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/cjpeg.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/ckconfig.c
-    ${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg/djpeg.c
 
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/png.c
     ${DESKTOP_EDITOR_ROOT_DIR}/cximage/png/pngerror.c
@@ -914,7 +846,6 @@ target_include_directories(graphics PRIVATE
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}
     ${KATANA_INSTALL_DIR_ABS}/src
 	${DESKTOP_EDITOR_ROOT_DIR}/agg-2.4/include
-	${DESKTOP_EDITOR_ROOT_DIR}/cximage/jpeg
 	${DESKTOP_EDITOR_ROOT_DIR}/cximage/png
     ${ZLIBNG_INCLUDEDIR_ABS}
 
@@ -978,6 +909,7 @@ target_link_libraries(graphics PUBLIC
 )
 
 target_link_libraries(graphics PUBLIC z)
+target_link_libraries(graphics PRIVATE jpeg)
 
 if(WIN32)
     target_link_libraries(graphics PUBLIC
