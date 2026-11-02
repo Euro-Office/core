@@ -210,6 +210,57 @@ namespace ZLibZipUtils
 		}
 	}
 
+	// A zip entry name is attacker controlled text, so it may not be allowed to
+	// decide where a file is written. Refuse a name that is absolute, carries a
+	// drive or UNC prefix, or holds a ".." segment. The test walks the segments
+	// instead of looking at the beginning of the string, because a name that
+	// starts with a separator ("//.././../etc") reaches the parent directory all
+	// the same once it is appended to the extraction directory.
+	static bool is_entry_name_within_target(const std::wstring& strName)
+	{
+		if (strName.empty())
+			return false;
+
+		if (L'/' == strName[0] || L'\\' == strName[0])
+			return false;
+
+		// A "C:" prefix is refused as a whole, not only "C:\" or "C:/", because on
+		// Windows a drive-relative name resolves next to the current directory of
+		// that drive, which is outside the extraction directory. The cost is that
+		// a name like "x:y" is refused too; no archive in use carries such a name.
+		if (strName.length() >= 2 && L':' == strName[1])
+		{
+			WCHAR cDrive = strName[0];
+			if ((cDrive >= L'A' && cDrive <= L'Z') || (cDrive >= L'a' && cDrive <= L'z'))
+				return false;
+		}
+
+		size_t nStart = 0;
+		while (nStart <= strName.length())
+		{
+			size_t nEnd = strName.find_first_of(L"/\\", nStart);
+			if (std::wstring::npos == nEnd)
+				nEnd = strName.length();
+
+			if (2 == nEnd - nStart && L'.' == strName[nStart] && L'.' == strName[nStart + 1])
+				return false;
+
+			nStart = nEnd + 1;
+		}
+
+		return true;
+	}
+
+	// A name that starts with a separator is read relative to the archive root,
+	// as unzip does: the separators are dropped before the name is checked, so
+	// "/word/document.xml" from a lenient producer still lands in the target,
+	// while "/../x" is left as "../x" and refused.
+	static std::wstring strip_leading_separators(const std::wstring& strName)
+	{
+		std::wstring::size_type nPos = strName.find_first_not_of(L"/\\");
+		return (std::wstring::npos == nPos) ? std::wstring() : strName.substr(nPos);
+	}
+
 	static int do_extract_currentfile( unzFile uf, const wchar_t* unzip_dir, const int* popt_extract_without_path, int* popt_overwrite, const char* password, bool is_replcace_slash )
 	{
 		char filename_inzipA[4096];
@@ -237,6 +288,16 @@ namespace ZLibZipUtils
 					filenameW[i] = L'/';
 
 #endif
+
+		// The name is read from the archive, so it must not be able to move the
+		// destination outside of the extraction directory. This is tested before
+		// any path is built from it, which covers the directory branch below too.
+		if (unzip_dir)
+		{
+			filenameW = strip_leading_separators(filenameW);
+			if (!is_entry_name_within_target(filenameW))
+				return UNZ_INTERNALERROR;
+		}
 
 		std::wstring filenameW_withoutpath = L"";
 		std::wstring::size_type posSeparator = filenameW.find_last_of(FILE_SEPARATOR_STR);
@@ -266,16 +327,6 @@ namespace ZLibZipUtils
 				write_filename = output_withoutpath.c_str();
 
 			err = unzOpenCurrentFilePassword(uf, password);
-
-			//-------------------------------------------------------------------------------------------------
-
-			if (unzip_dir)
-			{
-				const std::wstring wsFilePath{NSSystemPath::ShortenPath(filenameW)};
-
-				if (wsFilePath.size() > 3 && L'.' == wsFilePath[0] && L'.' == wsFilePath[1] && L'/' == wsFilePath[2])
-					return UNZ_INTERNALERROR;
-			}
 
 			//-------------------------------------------------------------------------------------------------
 			NSFile::CFileBinary oFile;
@@ -940,9 +991,14 @@ namespace ZLibZipUtils
 				unzGetCurrentFileInfo(unzip_file_handle, &file_info, NULL, 0, NULL, 0, NULL, 0);
 
 				BYTE* pData = new BYTE[file_info.uncompressed_size];
-				if(file_info.uncompressed_size == 0 || get_file(unzip_file_handle, pData, file_info.uncompressed_size))
+				const std::wstring strEntryName = strip_leading_separators(get_filename_from_unzfile(unzip_file_handle));
+				// Names that would leave the archive root are not offered to the
+				// caller either, for the same reason do_extract_currentfile refuses
+				// them.
+				if ((file_info.uncompressed_size == 0 || get_file(unzip_file_handle, pData, file_info.uncompressed_size)) &&
+					is_entry_name_within_target(strEntryName))
 				{
-					callback(get_filename_from_unzfile(unzip_file_handle), pData, file_info.uncompressed_size, pParam);
+					callback(strEntryName, pData, file_info.uncompressed_size, pParam);
 				}
 				RELEASEARRAYOBJECTS(pData);
 				// else just skip the erroneous file
