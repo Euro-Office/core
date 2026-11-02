@@ -28,6 +28,30 @@ Run a single suite:
 ctest --test-dir build -R cfcpp_test --output-on-failure
 ```
 
+### Running under AddressSanitizer
+
+Add `-DEO_ENABLE_ASAN=ON` (and preferably `-DCMAKE_BUILD_TYPE=RelWithDebInfo`) to the
+configure line above. This instruments every core target, the tests included. vcpkg ports
+and the prebuilt third-party libraries (V8, ICU, boost, …) stay uninstrumented, which ASan
+handles fine. Use a separate build directory, since every object file changes.
+
+The build images don't include the ASan runtime. On the Rocky 9 (server) image install it
+first with `dnf install -y libasan`; on Ubuntu, `libasan` comes with `gcc`.
+
+LeakSanitizer is on by default and fails a test on any leak at exit. To look at memory
+errors alone, turn it off:
+
+```bash
+ASAN_OPTIONS=detect_leaks=0 ctest --test-dir build-asan --output-on-failure
+```
+
+`EO_ENABLE_ASAN` also sets `alloc_dealloc_mismatch=0` for the CTest suites and for
+tools the build runs (`CMapSerialize`). The prebuilt ICU links libstdc++ statically and
+exports its own global `operator new`/`delete`, which otherwise shows up as a false
+`alloc-dealloc-mismatch`. Your own `ASAN_OPTIONS` is applied after that default and
+takes precedence. Suites registered with plain `add_test()` need
+`eo_set_asan_test_env(<test>)` to get the default; `add_core_gtest()` does this already.
+
 CI runs `ctest --test-dir build --output-on-failure` after the build step
 (`.github/workflows/build.yml`); a failing assertion fails the job.
 

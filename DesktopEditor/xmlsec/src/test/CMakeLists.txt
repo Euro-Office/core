@@ -63,5 +63,6 @@ add_test(NAME xmlsec_test
     WORKING_DIRECTORY "${EO_CORE_OUTPUT_DIR}")
 set_tests_properties(xmlsec_test PROPERTIES
     ENVIRONMENT "LD_LIBRARY_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{LD_LIBRARY_PATH}")
+eo_set_asan_test_env(xmlsec_test)
 
 declare_victory( xmlsec_test )

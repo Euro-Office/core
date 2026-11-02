@@ -498,6 +498,22 @@ else() # if( LINUX )
 
 endif()
 
+# AddressSanitizer build. alloc_dealloc_mismatch=0: the prebuilt ICU exports its
+# own operator new/delete, which ASan reports as a false mismatch.
+option(EO_ENABLE_ASAN "Build with AddressSanitizer" OFF)
+set(EO_ASAN_DEFAULT_OPTIONS "")
+set(EO_ASAN_RUN_ENV "")
+if(EO_ENABLE_ASAN)
+    if(MSVC)
+        add_compile_options(/fsanitize=address /Zi)
+    else()
+        add_compile_options(-fsanitize=address -fno-omit-frame-pointer -g)
+        add_link_options(-fsanitize=address)
+        set(EO_ASAN_DEFAULT_OPTIONS "alloc_dealloc_mismatch=0")
+        set(EO_ASAN_RUN_ENV "${CMAKE_COMMAND}" -E env "ASAN_OPTIONS=${EO_ASAN_DEFAULT_OPTIONS}")
+    endif()
+endif()
+
 
 function(set_default_options target)
     if(NOT TARGET "${target}")
@@ -621,6 +637,15 @@ function(add_core_gtest)
     endif()
     set_tests_properties(${T_NAME} PROPERTIES
         ENVIRONMENT "LD_LIBRARY_PATH=${_eo_test_libpath}:$ENV{LD_LIBRARY_PATH}")
+    eo_set_asan_test_env(${T_NAME})
+endfunction()
+
+# Prepends EO_ASAN_DEFAULT_OPTIONS to a test's ASAN_OPTIONS (user values win).
+function(eo_set_asan_test_env test_name)
+    if(EO_ASAN_DEFAULT_OPTIONS)
+        set_tests_properties(${test_name} PROPERTIES
+            ENVIRONMENT_MODIFICATION "ASAN_OPTIONS=string_prepend:${EO_ASAN_DEFAULT_OPTIONS}:")
+    endif()
 endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)
