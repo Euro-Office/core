@@ -24,7 +24,8 @@
  */
 #include "ExObjListContainer.h"
 
-#include <vector>
+#include <memory>
+#include <new>
 
 using namespace PPT;
 
@@ -42,8 +43,11 @@ namespace
     // were used here.
     const POLE::uint64 MAX_INFLATION_FACTOR = 1032;
 
-    // Ceiling for the object, whatever the header claims.
-    const POLE::uint64 MAX_EX_OBJ_STG_SIZE = 512 * 1024 * 1024;
+    // Ceiling for the object, whatever the header claims. The factor above still
+    // lets a stored object of about 128 KiB claim this much, and a worker runs
+    // several conversions at once, so it is kept well below what the 32-bit size
+    // field allows.
+    const POLE::uint64 MAX_EX_OBJ_STG_SIZE = 128 * 1024 * 1024;
 
     // Both callers pass a constant name today. It is still cut to its last part,
     // so that a name ever taken from the file cannot carry a path: whatever
@@ -66,18 +70,12 @@ void CRecordExObjListContainer::ReadFromStream(SRecordHeader &oHeader, POLE::Str
     CRecordsContainer::ReadFromStream(oHeader, pStream);
 }
 
+// Nothing is created here: an unnamed object gets its temporary file only once
+// there is something to write into it, so a refused object leaves no empty file
+// behind in the conversion's temp folder.
 CRecordExObjStg::CRecordExObjStg(const std::wstring& name, const std::wstring& tempPath)
+    : m_sName(GetFilePart(name)), m_sTempPath(tempPath)
 {
-    const std::wstring sName = GetFilePart(name);
-
-    if (sName.empty())
-    {
-        m_sFileName = NSFile::CFileBinary::CreateTempFileWithUniqueName(tempPath, L"bin");
-    }
-    else
-    {
-        m_sFileName = tempPath + FILE_SEPARATOR_STR + sName;
-    }
 }
 
 CRecordExObjStg::~CRecordExObjStg()
@@ -99,7 +97,6 @@ void CRecordExObjStg::ReadFromStream(SRecordHeader& oHeader, POLE::Stream* pStre
     // m_sFileName is what the caller hands on, and an object it names is taken to
     // exist (vbaProject.bin turns the document macro enabled). So it names the
     // file only once the object is in it, and every refusal leaves it empty.
-    const std::wstring sFileName = m_sFileName;
     m_sFileName.clear();
 
     if (NULL == pStream)
@@ -137,32 +134,52 @@ void CRecordExObjStg::ReadFromStream(SRecordHeader& oHeader, POLE::Stream* pStre
     if (0 == compressedSize)
         return;
 
-    std::vector<BYTE> arData(compressedSize);
-    if (pStream->read(arData.data(), compressedSize) != (POLE::uint64)compressedSize)
+    // Neither buffer is zeroed. Both are only read up to the size that was filled,
+    // and zeroing would touch every page of the claimed size, where the inflate
+    // only touches the pages it writes.
+    std::unique_ptr<BYTE[]> pData(new (std::nothrow) BYTE[compressedSize]);
+    if (!pData)
         return;
+
+    if (pStream->read(pData.get(), compressedSize) != (POLE::uint64)compressedSize)
+        return;
+
+    ULONG nDataSize = compressedSize;
 
     if (bCompressed)
     {
-        std::vector<BYTE> arUncompressed(decompressedSize, 0);
+        std::unique_ptr<BYTE[]> pUncompressed(new (std::nothrow) BYTE[decompressedSize]);
+        if (!pUncompressed)
+            return;
+
         ULONG nUncompressedSize = decompressedSize;
 
-        if (!NSZip::Decompress(arData.data(), compressedSize, arUncompressed.data(), nUncompressedSize))
+        if (!NSZip::Decompress(pData.get(), compressedSize, pUncompressed.get(), nUncompressedSize))
             return;
 
         // uncompress() reports the size it produced, which is the only size worth
         // keeping: the claimed size above it was never filled.
-        arUncompressed.resize(nUncompressedSize);
-        arData.swap(arUncompressed);
+        pData = std::move(pUncompressed);
+        nDataSize = nUncompressedSize;
     }
 
-    if (arData.empty())
+    if (0 == nDataSize)
         return;
 
+    const std::wstring sFileName = m_sName.empty()
+        ? NSFile::CFileBinary::CreateTempFileWithUniqueName(m_sTempPath, L"bin")
+        : m_sTempPath + FILE_SEPARATOR_STR + m_sName;
+
     NSFile::CFileBinary file;
-    if (file.CreateFileW(sFileName))
+    if (!file.CreateFileW(sFileName))
     {
-        file.WriteFile(arData.data(), (ULONG)arData.size());
-        file.CloseFile();
-        m_sFileName = sFileName;
+        // CreateTempFileWithUniqueName has already created the file it names.
+        if (m_sName.empty())
+            NSFile::CFileBinary::Remove(sFileName);
+        return;
     }
+
+    file.WriteFile(pData.get(), nDataSize);
+    file.CloseFile();
+    m_sFileName = sFileName;
 }
