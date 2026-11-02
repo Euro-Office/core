@@ -40,3 +40,15 @@ add_core_gtest(
 target_include_directories(docx_numbering_test PRIVATE
     ${CORE_ROOT_DIR}
 )
+
+add_core_gtest(
+    NAME    docx_run_property_test
+    SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/run_property_test.cpp
+            ${CORE_ROOT_DIR}/OOXML/PPTXFormat/Namespaces.cpp
+    LIBS    x2tlib
+    GTEST_MAIN
+)
+
+target_include_directories(docx_run_property_test PRIVATE
+    ${CORE_ROOT_DIR}
+)

@@ -100,6 +100,10 @@ Done:
       ECMA-376 `CT_Lvl` element order of `toXML()`'s output (including a fully-populated
       level covering all twelve possible child elements), plus `fromXML()`'s tolerance of
       non-schema-ordered input.
+- [x] `OOXML/DocxFormat/test` also registers the enabled `docx_run_property_test` suite.
+  It parses run properties through the real OOXML reader and covers qualified tag names,
+  legacy aliases, Unicode attributes, nested-reader consumption, and style/change guards.
+  It uses the same `x2tlib` linkage as `docx_numbering_test`; no fixtures are required.
 - [x] `RtfFile/Format/test` — new suite (`rtf_lex_test`), not a `.pro` migration. First
       coverage for the RTF tokenizer that fronts every RTF import (`RtfLex`, rtf2docx).
       Deps: links the existing `x2tlib` target; `RtfLex.cpp`, `RtfToken.cpp` and

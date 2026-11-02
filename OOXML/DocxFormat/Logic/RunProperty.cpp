@@ -21,10 +21,13 @@
  * Creative Commons Attribution-ShareAlike 4.0 International. See the License
  * terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
  *
+ * Modified by Euro-Office contributors in 2026: avoid allocating wide XML tag names.
  */
 #include "RunProperty.h"
 #include "RunContent.h"
 #include "Run.h"
+
+#include <cstring>
 
 #define FROM_XML_ELEM(oElem, oReader, pRun) \
 { \
@@ -38,6 +41,15 @@
 	{ \
 		oElem->FromXML(oReader); \
 	} \
+}
+
+namespace
+{
+	template<std::size_t N>
+	bool XmlNameEquals(const char* name, const char (&literal)[N])
+	{
+		return std::strncmp(name, literal, N) == 0;
+	}
 }
 
 namespace OOX
@@ -251,126 +263,126 @@ namespace OOX
 			int nParentDepth = oReader.GetDepth();
 			while( oReader.ReadNextSiblingNode( nParentDepth )  )
 			{
-				std::wstring sName = oReader.GetName();
+				const char* sName = oReader.GetNameChar();
 
-				if ( L"w:b" == sName )
+				if ( XmlNameEquals(sName, "w:b") )
 					FROM_XML_ELEM(m_oBold, oReader, pRun)
-				else if ( L"w:bCs" == sName )
+				else if ( XmlNameEquals(sName, "w:bCs") )
 					FROM_XML_ELEM(m_oBoldCs, oReader, pRun)
-				else if ( L"w:bdr" == sName )
+				else if ( XmlNameEquals(sName, "w:bdr") )
 					m_oBdr = oReader;
-				else if ( L"w:caps" == sName )
+				else if ( XmlNameEquals(sName, "w:caps") )
 					FROM_XML_ELEM(m_oCaps, oReader, pRun)
-				else if ( L"w:color" == sName )
+				else if ( XmlNameEquals(sName, "w:color") )
 					m_oColor = oReader;
-				else if ( L"w:cs" == sName )
+				else if ( XmlNameEquals(sName, "w:cs") )
 					FROM_XML_ELEM(m_oCs, oReader, pRun)
-				else if ( L"w:del" == sName )
+				else if ( XmlNameEquals(sName, "w:del") )
 					m_oDel = oReader;
-				else if ( L"w:dstrike" == sName )
+				else if ( XmlNameEquals(sName, "w:dstrike") )
 					FROM_XML_ELEM(m_oDStrike, oReader, pRun)
-				else if ( L"w:eastAsianLayout" == sName )
+				else if ( XmlNameEquals(sName, "w:eastAsianLayout") )
 					m_oEastAsianLayout = oReader;
-				else if ( L"w:effect" == sName )
+				else if ( XmlNameEquals(sName, "w:effect") )
 					m_oEffect = oReader;
-				else if ( L"w:em" == sName )
+				else if ( XmlNameEquals(sName, "w:em") )
 					m_oEm = oReader;
-				else if ( L"w:emboss" == sName )
+				else if ( XmlNameEquals(sName, "w:emboss") )
 					FROM_XML_ELEM(m_oEmboss, oReader, pRun)
-				else if ( L"w:fitText" == sName )
+				else if ( XmlNameEquals(sName, "w:fitText") )
 					m_oFitText = oReader;
-				else if ( L"w:highlight" == sName )
+				else if ( XmlNameEquals(sName, "w:highlight") )
 					m_oHighlight = oReader;
-				else if ( L"w:ins" == sName )
+				else if ( XmlNameEquals(sName, "w:ins") )
 					m_oIns = oReader;
-				else if ( L"w:i" == sName )
+				else if ( XmlNameEquals(sName, "w:i") )
 					FROM_XML_ELEM(m_oItalic, oReader, pRun)
-				else if ( L"w:iCs" == sName )
+				else if ( XmlNameEquals(sName, "w:iCs") )
 					FROM_XML_ELEM(m_oItalicCs, oReader, pRun)
-				else if ( L"w:imprint" == sName )
+				else if ( XmlNameEquals(sName, "w:imprint") )
 					FROM_XML_ELEM(m_oImprint, oReader, pRun)
-				else if ( L"w:kern" == sName )
+				else if ( XmlNameEquals(sName, "w:kern") )
 					m_oKern = oReader;
-				else if ( L"w:lang" == sName )
+				else if ( XmlNameEquals(sName, "w:lang") )
 					FROM_XML_ELEM(m_oLang, oReader, pRun)
-				else if ( L"w:noProof" == sName )
+				else if ( XmlNameEquals(sName, "w:noProof") )
 					FROM_XML_ELEM(m_oNoProof, oReader, pRun)
-				else if ( L"m:oMath" == sName )
+				else if ( XmlNameEquals(sName, "m:oMath") )
 					FROM_XML_ELEM(m_oMath, oReader, pRun)
-				else if ( L"w:moveFrom" == sName )
+				else if ( XmlNameEquals(sName, "w:moveFrom") )
 					m_oMoveFrom = oReader;
-				else if ( L"w:moveTo" == sName )
+				else if ( XmlNameEquals(sName, "w:moveTo") )
 					m_oMoveTo = oReader;
-				else if ( L"w:outline" == sName )
+				else if ( XmlNameEquals(sName, "w:outline") )
 					FROM_XML_ELEM(m_oOutline, oReader, pRun)
-				else if ( L"w:position" == sName )
+				else if ( XmlNameEquals(sName, "w:position") )
 					m_oPosition = oReader;
-				else if ( L"w:rFonts" == sName )
+				else if ( XmlNameEquals(sName, "w:rFonts") )
 					m_oRFonts = oReader;
-				else if (L"wx:font" == sName)
+				else if (XmlNameEquals(sName, "wx:font"))
 					m_oFontName = oReader;
-				else if ( !m_bRPRChange && L"w:rPrChange" == sName )
+				else if ( !m_bRPRChange && XmlNameEquals(sName, "w:rPrChange") )
 					m_oRPrChange = oReader;
 				// For some reason, the specification says pStyle, although according to the meaning, see the link in the
 				// the same specifications and, in the end, alphabetically there should be rStyle
-				else if ( L"w:rStyle" == sName )
+				else if ( XmlNameEquals(sName, "w:rStyle") )
 					m_oRStyle = oReader;
-				else if ( !m_oRStyle.IsInit() && L"w:pStyle" == sName )
+				else if ( !m_oRStyle.IsInit() && XmlNameEquals(sName, "w:pStyle") )
 					m_oRStyle = oReader;
-				else if ( L"w:rtl" == sName )
+				else if ( XmlNameEquals(sName, "w:rtl") )
 					FROM_XML_ELEM(m_oRtL, oReader, pRun)
-				else if ( L"w:shadow" == sName )
+				else if ( XmlNameEquals(sName, "w:shadow") )
 					FROM_XML_ELEM(m_oShadow, oReader, pRun)
-				else if ( L"w:shd" == sName )
+				else if ( XmlNameEquals(sName, "w:shd") )
 					m_oShd = oReader;
-				else if ( L"w:smallCaps" == sName )
+				else if ( XmlNameEquals(sName, "w:smallCaps") )
 					FROM_XML_ELEM(m_oSmallCaps, oReader, pRun)
-				else if ( L"w:snapToGrid" == sName )
+				else if ( XmlNameEquals(sName, "w:snapToGrid") )
 					FROM_XML_ELEM(m_oSnapToGrid, oReader, pRun)
-				else if ( L"w:spacing" == sName )
+				else if ( XmlNameEquals(sName, "w:spacing") )
 					m_oSpacing = oReader;
-				else if ( L"w:specVanish" == sName )
+				else if ( XmlNameEquals(sName, "w:specVanish") )
 					FROM_XML_ELEM(m_oSpecVanish, oReader, pRun)
-				else if ( L"w:strike" == sName )
+				else if ( XmlNameEquals(sName, "w:strike") )
 					FROM_XML_ELEM(m_oStrike, oReader, pRun)
-				else if ( L"w:sz" == sName )
+				else if ( XmlNameEquals(sName, "w:sz") )
 					m_oSz = oReader;
-				else if ( L"w:szCs" == sName || L"w:sz-cs" == sName)
+				else if ( XmlNameEquals(sName, "w:szCs") || XmlNameEquals(sName, "w:sz-cs"))
 					m_oSzCs = oReader;
-				else if ( L"w:u" == sName )
+				else if ( XmlNameEquals(sName, "w:u") )
 					m_oU = oReader;
-				else if ( L"w:vanish" == sName )
+				else if ( XmlNameEquals(sName, "w:vanish") )
 					FROM_XML_ELEM(m_oVanish, oReader, pRun)
-				else if ( L"w:vertAlign" == sName )
+				else if ( XmlNameEquals(sName, "w:vertAlign") )
 					m_oVertAlign = oReader;
-				else if ( L"w:w" == sName )
+				else if ( XmlNameEquals(sName, "w:w") )
 					m_oW = oReader;
-				else if ( L"w:webHidden" == sName )
+				else if ( XmlNameEquals(sName, "w:webHidden") )
 					FROM_XML_ELEM(m_oWebHidden, oReader, pRun)
 //---ext----------------------------------------------------------------------------------------------------
-				else if (L"w14:textOutline" == sName)
+				else if (XmlNameEquals(sName, "w14:textOutline"))
 					m_oTextOutline = oReader;
-				else if (L"w14:ligatures" == sName)
+				else if (XmlNameEquals(sName, "w14:ligatures"))
 					m_oLigatures = oReader;
-				else if (L"w14:numSpacing" == sName)
+				else if (XmlNameEquals(sName, "w14:numSpacing"))
 					m_oNumSpacing = oReader;
-				else if (L"w14:numForm" == sName)
+				else if (XmlNameEquals(sName, "w14:numForm"))
 					m_oNumForm = oReader;
-				else if (L"w14:stylisticSets" == sName)
+				else if (XmlNameEquals(sName, "w14:stylisticSets"))
 					m_oStylisticSets = oReader;
-				else if (L"w14:cntxtAlts" == sName)
+				else if (XmlNameEquals(sName, "w14:cntxtAlts"))
 					m_oCntxtAlts = oReader;
-				else if (L"w14:reflection" == sName)
+				else if (XmlNameEquals(sName, "w14:reflection"))
 					m_oReflection = oReader;
-				else if (L"w14:glow" == sName)
+				else if (XmlNameEquals(sName, "w14:glow"))
 					m_oGlow = oReader;
-				else if (L"w14:shadow" == sName)
+				else if (XmlNameEquals(sName, "w14:shadow"))
 					m_oShadowExt = oReader;
-				else if (L"w14:props3d" == sName)
+				else if (XmlNameEquals(sName, "w14:props3d"))
 					m_oProps3d = oReader;
-				else if (L"w14:scene3d" == sName)
+				else if (XmlNameEquals(sName, "w14:scene3d"))
 					m_oScene3d = oReader;
-				else if (L"w14:textFill" == sName)
+				else if (XmlNameEquals(sName, "w14:textFill"))
 				{
 					if ( oReader.IsEmptyNode() )
 						continue;
