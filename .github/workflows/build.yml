@@ -141,9 +141,10 @@ jobs:
       run: |
         "$RUNNER_TEMP/in-build-image" 'ctest --test-dir build --output-on-failure'
 
+    # x2ttester is in tools/, the core libraries it loads in bin/
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package/tools'
+        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package/tools'
 
     # build/package is what DocumentServer copies from core's Dockerfile.
     # Published by the publish job for pushes to main and same-repo PRs.
