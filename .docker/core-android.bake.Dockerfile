@@ -20,9 +20,9 @@
 # The build tree and the third-party builds (V8 alone takes hours) stay in a
 # BuildKit cache mount per ABI: pruning the build cache rebuilds them.
 #
-# OPTIONAL SECRETS (as core.bake.Dockerfile): nextcloud_user, nextcloud_pass for
-# the third-party builds' remote cache (Common/3dParty/build_3rdparty_common.py),
-# which then downloads them instead of building them, and uploads new ones.
+# OPTIONAL SECRETS (as core.bake.Dockerfile): remote_cache_s3_access_key,
+# remote_cache_s3_secret_key to upload third-party builds missing from the
+# remote cache (Common/3dParty/build_3rdparty_common.py). Downloads need none.
 # ==============================================================================
 
 ARG ANDROID_ABI=arm64-v8a
@@ -36,11 +36,11 @@ FROM android-ndk AS core-android-build
     COPY core /core
 
     RUN --mount=type=cache,id=core-android-${ANDROID_ABI},target=/build-cache \
-        --mount=type=secret,id=nextcloud_user \
-        --mount=type=secret,id=nextcloud_pass <<EOF
+        --mount=type=secret,id=remote_cache_s3_access_key \
+        --mount=type=secret,id=remote_cache_s3_secret_key <<EOF
         set -e
-        export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user 2>/dev/null || true)"
-        export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass 2>/dev/null || true)"
+        export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null || true)"
+        export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null || true)"
         # -U: check the third-party deps on every build (done ones are skipped),
         # so new deps in common.cmake are built into the cached tree
         cmake -S /core -B /build-cache/core -G Ninja \
