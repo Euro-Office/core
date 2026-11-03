@@ -10,8 +10,10 @@
 # Usage: scripts/build.sh [options] [-- extra cmake arguments]
 #   --build-dir DIR    CMake build directory (default: build)
 #   --output DIR       build output (default: <build-dir>/package): the
-#                      libraries and x2t in bin/, the tools in tools/; for
-#                      Android the stripped libraries, flat
+#                      libraries and x2t in bin/, the tools in tools/, the
+#                      static and import libraries in lib/ (a core package,
+#                      see cmake/prebuilt-core.cmake); for Android the
+#                      stripped libraries, flat
 #   --tests            also build the unit tests (run them with ctest)
 #   --ccache           compile through ccache
 #   --android ABI      cross-compile x2t's libraries for an Android ABI
@@ -74,6 +76,7 @@ else
         -DVCPKG_MANIFEST_DIR="$core"
         -DEO_CORE_OUTPUT_DIR="$output/bin"
         -DEO_CORE_TOOLS_DIR="$output/tools"
+        -DEO_CORE_LIB_DIR="$output/lib"
         -DEO_BUILD_TESTS="$tests"
     )
     [ "$tests" = ON ] && args+=( -DVCPKG_MANIFEST_FEATURES=tests )

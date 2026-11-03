@@ -29,7 +29,11 @@ Commands:
 fetch exits with 0 when the package is in place, with 3 when core has to be
 built from source, and with 1 on errors. It never takes the cache for a core
 checkout with local changes (`git status --porcelain` lists anything,
-untracked files included), so local work on core is always built.
+untracked files included), so local work on core is always built, nor for
+a core directory that isn't a git checkout of its own.
+
+A package doubles as input for other CMake projects: see
+cmake/prebuilt-core.cmake (EO_CORE_PREBUILT_DIR).
 
 Environment:
   EO_CORE_CACHE                 fetch mode: "auto" (default), "off" (always
@@ -106,6 +110,14 @@ def _git( core, *args ):
     if r.returncode != 0:
         raise Error( f"git { ' '.join( args ) } failed in { core }: { r.stderr.strip() }" )
     return r.stdout
+
+
+def is_checkout( core ):
+    # core must be the top of its own work tree: inside another repository
+    # (a plain copy in a superproject), git would name that one's tree
+    r = subprocess.run( [ "git", "-C", str( core ), "rev-parse", "--show-toplevel" ],
+                        capture_output=True, text=True )
+    return r.returncode == 0 and os.path.realpath( r.stdout.strip() ) == os.path.realpath( core )
 
 
 def source_tree( core ):
@@ -350,6 +362,8 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
 
     if mode == "off":
         return miss( "EO_CORE_CACHE=off" )
+    if not is_checkout( core ):
+        return miss( f"{ core } is not a git checkout" )
     changes = local_changes( core )
     if changes:
         return miss( f"{ core } has local changes" )

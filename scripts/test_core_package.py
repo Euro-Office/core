@@ -119,6 +119,18 @@ class CorePackageTest( unittest.TestCase ):
         self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
         self.assertFalse( ( self.tmp / "out" ).exists() )
 
+    def test_not_a_checkout_builds_from_source( self ):
+        self.pack_and_publish()
+        copy = self.tmp / "copy"
+        copy.mkdir()
+        ( copy / "a.cpp" ).write_text( "int a;\n" )
+        self.assertEqual( cp.fetch( self.backend, copy, "linux-amd64", "server", self.tmp / "out", mode="auto" ),
+                          cp.EXIT_BUILD_FROM_SOURCE )
+        # a plain directory inside another checkout isn't one either
+        ( self.core / "sub" ).mkdir()
+        self.assertEqual( cp.fetch( self.backend, self.core / "sub", "linux-amd64", "server", self.tmp / "out", mode="auto" ),
+                          cp.EXIT_BUILD_FROM_SOURCE )
+
     def test_modes( self ):
         self.pack_and_publish()
         self.assertEqual( self.fetch( mode="off" ), cp.EXIT_BUILD_FROM_SOURCE )

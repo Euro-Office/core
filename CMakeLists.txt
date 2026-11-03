@@ -35,6 +35,9 @@ else()
     add_subdirectory( "${CORE_ROOT_DIR}/PdfFile/Resources/CMapMemory" cmapbin )
     add_subdirectory( "${CORE_ROOT_DIR}/Test/Applications/x2tTester" x2ttester )
 
+    eo_core_converter_assembly()
+    include( "${CORE_ROOT_DIR}/cmake/core-package.cmake" )
+
     if(EO_BUILD_TESTS)
         enable_testing()
         find_package(GTest CONFIG REQUIRED)
