@@ -4,10 +4,13 @@ name: Build (macOS arm64)
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) are never cancelled, they wait instead.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -28,6 +31,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
         submodules: recursive
 
     # The build scripts need Python >= 3.11 (depot_tools for V8)
@@ -89,3 +93,27 @@ jobs:
           package/bin/
           package/tools/
         if-no-files-found: warn
+
+    - name: Pack core
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        python3 Common/3dParty/core_package.py pack \
+          --from package --out core-package \
+          --platform macos-arm64 --product desktop \
+          --toolchain "$(xcodebuild -version | head -1)"
+
+    - name: Upload core package
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-package-macos-arm64-desktop
+        path: core-package/
+        retention-days: 1
+        compression-level: 0
+
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit

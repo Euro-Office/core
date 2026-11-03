@@ -2,10 +2,13 @@ name: Build
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
-# A new push to a pull request cancels its previous run. Other runs (manual
-# ones included) are never cancelled, they wait instead.
+# A new push to a pull request cancels its previous run, which also keeps an
+# older run from publishing its core package after a newer one. Other runs
+# (manual ones included) are never cancelled, they wait instead.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -22,9 +25,9 @@ jobs:
         # natively on GitHub's hosted arm runners (V8 is far too slow under
         # QEMU); swap in a self-hosted arm label if you have one.
         include:
-          - { product: server,  distro: rocky9, arch: amd64, runner: self-hosted }
-          - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
-          - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
+          - { product: server,  distro: rocky9, arch: amd64, platform: linux-amd64, runner: self-hosted }
+          - { product: server,  distro: rocky9, arch: arm64, platform: linux-arm64, runner: ubuntu-24.04-arm }
+          - { product: desktop, distro: ubuntu, arch: arm64, platform: linux-arm64, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
@@ -37,9 +40,12 @@ jobs:
       BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
 
     steps:
+    # The PR head, not the merge with main: the core package is keyed by
+    # the sources downstream repos pin
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
         submodules: recursive
 
     # Build environment: the core-base stage of the release Dockerfile.
@@ -119,10 +125,17 @@ jobs:
         restore-keys: |
           ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
+    # Build type, flags and output dirs as in the core stage of
+    # .docker/core.bake.Dockerfile, so the package can replace that build
+    # (it doesn't pass -w; warnings don't change the binaries)
     - name: Configure core, build third_party libs (ICU, V8, etc.)
       run: |
         "$RUNNER_TEMP/in-build-image" '
           cmake -GNinja -S . -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_CXX_FLAGS_RELEASE=-O3 -DCMAKE_C_FLAGS_RELEASE=-O3 \
+            -DEO_CORE_OUTPUT_DIR=/core/build/package/bin \
+            -DEO_CORE_TOOLS_DIR=/core/build/package/tools \
             -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
             -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
             -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
@@ -145,7 +158,18 @@ jobs:
 
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package'
+        "$RUNNER_TEMP/in-build-image" './Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package/tools'
+
+    # build/package is what DocumentServer copies from core's Dockerfile.
+    # Published by the publish job for pushes to main and same-repo PRs.
+    - name: Pack core
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      run: |
+        toolchain="$(docker image inspect --format '{{.Id}}' "$BASE_IMAGE")"
+        "$RUNNER_TEMP/in-build-image" "\$CORE_PYTHON Common/3dParty/core_package.py pack \
+          --from build/package --out build/core-package \
+          --platform ${{ matrix.platform }} --product ${{ matrix.product }} \
+          --toolchain 'core-base $toolchain'"
 
     # The container runs as root; hand the workspace back to the runner user
     # so cache saving and the next checkout on this self-hosted runner work.
@@ -154,6 +178,15 @@ jobs:
       run: |
         docker run --rm -v "$GITHUB_WORKSPACE:/core" "$BUILD_IMAGE" \
           chown -R "$(id -u):$(id -g)" /core
+
+    - name: Upload core package
+      if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+      uses: actions/upload-artifact@v4
+      with:
+        name: core-package-${{ matrix.platform }}-${{ matrix.product }}
+        path: build/core-package/
+        retention-days: 1
+        compression-level: 0
 
     # Save caches even when earlier steps fail, so each run reuses prior work.
     - name: Save vcpkg binary cache
@@ -265,3 +298,9 @@ jobs:
         name: playwright-report-${{ github.sha }}
         path: documentserver/e2e/playwright-report/
         retention-days: 14
+  # Publishes the packages of the legs that passed
+  publish:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
+    uses: ./.github/workflows/core-package-publish.yml
+    secrets: inherit

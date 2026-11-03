@@ -1,0 +1,49 @@
+# SPDX-FileCopyrightText: 2026 Euro-Office contributors
+# SPDX-License-Identifier: AGPL-3.0-only
+
+# Uploads the core packages built by the calling workflow run (artifacts
+# core-package-*) to the build cache, so downstream repos can download core
+# instead of building it (Common/3dParty/core_package.py). Pushes to main
+# publish to the main channel, same-repo PRs to the pr channel, where only
+# the newest package per PR is kept.
+#
+# The upload credentials live in the build-cache environment
+# (S3_ACCESS_KEY, S3_SECRET_KEY), separate from the build jobs.
+name: Publish core package
+
+on:
+  workflow_call:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: build-cache
+    steps:
+    - name: Checkout scripts
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
+        sparse-checkout: Common/3dParty
+
+    - name: Download core packages
+      uses: actions/download-artifact@v4
+      with:
+        pattern: core-package-*
+        path: core-package
+        merge-multiple: true
+
+    - name: Publish
+      env:
+        EO_CORE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+        EO_CORE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+        CHANNEL: ${{ github.event_name == 'push' && 'main' || 'pr' }}
+        PR: ${{ github.event.pull_request.number }}
+      run: |
+        shopt -s nullglob
+        manifests=(core-package/*.json)
+        if [ ${#manifests[@]} -eq 0 ]; then
+          echo "No core package was built"
+          exit 0
+        fi
+        python3 Common/3dParty/core_package.py publish \
+          --channel "$CHANNEL" ${PR:+--pr "$PR"} "${manifests[@]}"
