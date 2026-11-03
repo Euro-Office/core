@@ -101,7 +101,7 @@ namespace PPTX
 				pWriter->WriteString2(7, providerId);
 				// #175 (review): explicit modern marker in the bin
 				if (bModern)
-					pWriter->WriteInt2(8, 1);
+					pWriter->WriteInt1(8, 1);
 				pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 		}
 		void CommentAuthor::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
