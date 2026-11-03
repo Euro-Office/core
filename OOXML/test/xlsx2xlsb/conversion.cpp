@@ -24,6 +24,7 @@
  */
 
 #include "../common.h"
+#include "../../../DesktopEditor/common/Directory.h"
 #include <boost/algorithm/string.hpp>
 #include <boost/filesystem.hpp>
 #include <fstream>
@@ -124,8 +125,16 @@ public:
         std::wstring binPath = tempDir + FILE_SEPARATOR_STR + L"Editor.bin";
         std::wstring resultPath = tempDir + FILE_SEPARATOR_STR + L"result.xlsx";
 
-        ConvertFile(CreateParamsFile(sourcePath, binPath, tempDir, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET));
-        ConvertFile(CreateParamsFile(binPath, resultPath, tempDir, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX));
+        // One x2t temp dir per step. x2t does not clean a temp dir it is given, and both steps use
+        // <temp>/xlsx_unpacked: with a shared dir, step 2 would zip the source parts that step 1
+        // unpacked there, so a pivot part dropped by the save step would still be in result.xlsx.
+        std::wstring openTempDir = tempDir + FILE_SEPARATOR_STR + L"open";
+        std::wstring saveTempDir = tempDir + FILE_SEPARATOR_STR + L"save";
+        NSDirectory::CreateDirectory(openTempDir);
+        NSDirectory::CreateDirectory(saveTempDir);
+
+        openResult = ConvertFile(CreateParamsFile(sourcePath, binPath, openTempDir, 0, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET));
+        saveResult = ConvertFile(CreateParamsFile(binPath, resultPath, saveTempDir, AVS_OFFICESTUDIO_FILE_CANVAS_SPREADSHEET, AVS_OFFICESTUDIO_FILE_SPREADSHEET_XLSX));
         PrepareFiles(resultPath, sourcePath, tempDir);
     }
 
@@ -135,12 +144,22 @@ public:
         RemoveWorkDir(tempDir);
     }
 
+    void SetUp() override
+    {
+        ASSERT_EQ(openResult, 0) << "xlsx -> Editor.bin failed";
+        ASSERT_EQ(saveResult, 0) << "Editor.bin -> xlsx failed";
+    }
+
     static std::wstring tempDir;
+    static int openResult;
+    static int saveResult;
 };
 
 std::wstring XlsbSimpleTests2::tempDir = L"";
 std::wstring XlsbFmlaTests::tempDir = L"";
 std::wstring XlsxEditorBinPivotTests::tempDir = L"";
+int XlsxEditorBinPivotTests::openResult = -1;
+int XlsxEditorBinPivotTests::saveResult = -1;
 
 _UINT32 readBinaryFiles(const std::wstring &filePath, const std::wstring &examplePath, std::vector<char> &fileContent, std::vector<char> &exampleContent)
 {
