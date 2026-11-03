@@ -10,6 +10,8 @@ import tarfile
 import tempfile
 from pathlib import Path
 
+# Shared with the core package cache in <core>/scripts
+sys.path.insert( 0, str( Path( __file__ ).resolve().parents[ 2 ] / "scripts" ) )
 import remote_cache
 
 _original_rmtree = shutil.rmtree

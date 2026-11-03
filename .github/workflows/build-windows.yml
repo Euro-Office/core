@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: x64,   runner: windows-2022,   vcvars: vcvars64.bat }
-          - { arch: arm64, runner: windows-11-arm, vcvars: vcvarsarm64.bat }
+          - { arch: x64,   runner: windows-2022 }
+          - { arch: arm64, runner: windows-11-arm }
     name: build (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
@@ -216,61 +216,31 @@ jobs:
         uses: lukka/run-vcpkg@v11
 
       # ------------------------------------------------------------------ #
-      # 8. CMake Configure
-      #    vcvars (per arch) of the VS 2022 found in step 4, whatever its
-      #    edition (Enterprise/Professional/Community/BuildTools).
+      # 8. Build: the MSVC environment of the VS 2022 found in step 4,
+      #    Ninja, as in DesktopEditors
       # ------------------------------------------------------------------ #
-      - name: CMake Configure
-        shell: cmd
-        run: |
-          echo Using VS at: %VSPATH%
-          call "%VSPATH%\VC\Auxiliary\Build\${{ matrix.vcvars }}" 10.0.19041.0
-          if errorlevel 1 exit /b 1
-
-          set PYTHONUTF8=1
-
-          cmake -G "Visual Studio 17 2022" ^
-            -DCMAKE_GENERATOR_INSTANCE="%VSPATH%" ^
-            -DCMAKE_BUILD_TYPE=Release ^
-            -DVCPKG_MANIFEST=ON ^
-            -DVCPKG_MANIFEST_DIR=. ^
-            -DCMAKE_TOOLCHAIN_FILE="%VCPKG_ROOT%\scripts\buildsystems\vcpkg.cmake" ^
-            -DEO_CORE_OUTPUT_DIR=.\package\bin ^
-            -DEO_CORE_TOOLS_DIR=.\package\tools
+      - name: Build
+        shell: pwsh
+        run: scripts/build.ps1 -Arch ${{ matrix.arch }}
 
       # ------------------------------------------------------------------ #
-      # 9. CMake Build
-      # ------------------------------------------------------------------ #
-      - name: CMake Build
-        shell: cmd
-        run: |
-          call "%VSPATH%\VC\Auxiliary\Build\${{ matrix.vcvars }}" 10.0.19041.0
-          if errorlevel 1 exit /b 1
-
-          set PYTHONUTF8=1
-
-          cmake --build . --config Release --parallel ^
-            -- /p:UseMultiToolTask=true /p:EnforceProcessCountAcrossBuilds=true
-
-
-      # ------------------------------------------------------------------ #
-      # 10. Upload build artifacts
+      # 9. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: build-output-windows-${{ matrix.arch }}
           path: |
-            package/bin/
-            package/tools/
+            build/package/bin/
+            build/package/tools/
           if-no-files-found: warn
 
       - name: Pack core
         if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         shell: pwsh
         run: |
-          python Common/3dParty/core_package.py pack `
-            --from package --out core-package `
+          python scripts/core_package.py pack `
+            --from build/package --out core-package `
             --platform windows-${{ matrix.arch }} --product desktop `
             --toolchain "VS $env:VSPATH"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

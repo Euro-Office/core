@@ -62,21 +62,10 @@ jobs:
         restore-keys: ccache-macos-arm64-
 
     # Builds the third-party libraries missing from the remote cache too
-    - name: Configure
-      run: |
-        cmake -G Ninja -S . -B build \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DCMAKE_TOOLCHAIN_FILE="$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake" \
-          -DVCPKG_TARGET_TRIPLET=arm64-osx \
-          -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
-          -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
-          -DPYTHON_BIN="$(command -v python3)" \
-          -DEO_CORE_OUTPUT_DIR="$PWD/package/bin" \
-          -DEO_CORE_TOOLS_DIR="$PWD/package/tools" \
-          -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-
     - name: Build
-      run: cmake --build build
+      run: scripts/build.sh --tests --ccache
+      env:
+        CORE_PYTHON: python3
 
     - name: Unit tests (CTest)
       run: ctest --test-dir build --output-on-failure
@@ -90,15 +79,15 @@ jobs:
       with:
         name: build-output-macos-arm64
         path: |
-          package/bin/
-          package/tools/
+          build/package/bin/
+          build/package/tools/
         if-no-files-found: warn
 
     - name: Pack core
       if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
       run: |
-        python3 Common/3dParty/core_package.py pack \
-          --from package --out core-package \
+        python3 scripts/core_package.py pack \
+          --from build/package --out core-package \
           --platform macos-arm64 --product desktop \
           --toolchain "$(xcodebuild -version | head -1)"
 

@@ -3,7 +3,7 @@
 
 # Uploads the core packages built by the calling workflow run (artifacts
 # core-package-*) to the build cache, so downstream repos can download core
-# instead of building it (Common/3dParty/core_package.py). Pushes to main
+# instead of building it (scripts/core_package.py). Pushes to main
 # publish to the main channel, same-repo PRs to the pr channel, where only
 # the newest package per PR is kept.
 #
@@ -23,7 +23,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         ref: ${{ github.event.pull_request.head.sha || github.sha }}
-        sparse-checkout: Common/3dParty
+        sparse-checkout: scripts
 
     - name: Download core packages
       uses: actions/download-artifact@v4
@@ -45,5 +45,5 @@ jobs:
           echo "No core package was built"
           exit 0
         fi
-        python3 Common/3dParty/core_package.py publish \
+        python3 scripts/core_package.py publish \
           --channel "$CHANNEL" ${PR:+--pr "$PR"} "${manifests[@]}"

@@ -110,7 +110,7 @@ jobs:
     - name: Pack core
       if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
       run: |
-        python3 core/Common/3dParty/core_package.py pack \
+        python3 core/scripts/core_package.py pack \
           --from out/${{ matrix.abi }} --out core-package \
           --platform android-${{ matrix.abi }} --product android --core core \
           --toolchain "$(grep -o 'ANDROID_NDK_VERSION=[0-9.]*' "$RUNNER_TEMP/core-android.hcl" | head -1)"

@@ -43,22 +43,9 @@ FROM android-ndk AS core-android-build
         export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null || true)"
         # -U: check the third-party deps on every build (done ones are skipped),
         # so new deps in common.cmake are built into the cached tree
-        cmake -S /core -B /build-cache/core -G Ninja \
-            -UTHIRD_PARTY_PREPARED \
-            -DCMAKE_TOOLCHAIN_FILE="${ANDROID_NDK_ROOT}/build/cmake/android.toolchain.cmake" \
-            -DANDROID_ABI=${ANDROID_ABI} \
-            -DANDROID_PLATFORM=android-${ANDROID_API_LEVEL} \
-            -DANDROID_STL=c++_shared \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd \
-            -DEO_CORE_OUTPUT_DIR=/build-cache/package
-        cmake --build /build-cache/core --target x2tlib
-        mkdir -p /out
-        cp /build-cache/package/*.so /out/
-        find /build-cache/core -name libx2t.so -exec cp {} /out/ \;
-        # The NDK's toolchain always adds -g: stripped copies (the unstripped ones stay in the cache)
-        "${ANDROID_NDK_ROOT}"/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip --strip-unneeded /out/*.so
-        ls -1 /out
+        /core/scripts/build.sh --build-dir /build-cache/core --output /out \
+            --android ${ANDROID_ABI} --android-api ${ANDROID_API_LEVEL} \
+            -- -UTHIRD_PARTY_PREPARED -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd
 EOF
 
 FROM scratch AS core-android

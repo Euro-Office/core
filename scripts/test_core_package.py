@@ -1,7 +1,7 @@
 # SPDX-FileCopyrightText: 2026 Euro-Office contributors
 # SPDX-License-Identifier: AGPL-3.0-only
 
-# Core package cache tests. Run: python3 -m unittest discover -s Common/3dParty
+# Core package cache tests. Run: python3 -m unittest discover -s scripts
 
 import io
 import json

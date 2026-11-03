@@ -107,7 +107,7 @@ jobs:
 
     - name: Remote cache unit tests
       run: |
-        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty'
+        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty && $CORE_PYTHON -m unittest discover -s scripts'
 
     - name: Restore vcpkg binary cache
       uses: actions/cache/restore@v4
@@ -125,27 +125,12 @@ jobs:
         restore-keys: |
           ccache-${{ runner.os }}-${{ matrix.distro }}-${{ matrix.arch }}-
 
-    # Build type, flags and output dirs as in the core stage of
-    # .docker/core.bake.Dockerfile, so the package can replace that build
-    # (it doesn't pass -w; warnings don't change the binaries)
-    - name: Configure core, build third_party libs (ICU, V8, etc.)
-      run: |
-        "$RUNNER_TEMP/in-build-image" '
-          cmake -GNinja -S . -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DCMAKE_CXX_FLAGS_RELEASE=-O3 -DCMAKE_C_FLAGS_RELEASE=-O3 \
-            -DEO_CORE_OUTPUT_DIR=/core/build/package/bin \
-            -DEO_CORE_TOOLS_DIR=/core/build/package/tools \
-            -DCMAKE_TOOLCHAIN_FILE=$VCPKG_ROOT/scripts/buildsystems/vcpkg.cmake \
-            -DVCPKG_MANIFEST_MODE=ON -DVCPKG_MANIFEST_DIR=. \
-            -DVCPKG_MANIFEST_FEATURES=tests -DEO_BUILD_TESTS=ON \
-            -DPYTHON_BIN=$CORE_PYTHON \
-            -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
-        '
-
+    # The same script builds core in .docker/core.bake.Dockerfile, so the
+    # package can replace that build. Also builds the third-party libs (ICU,
+    # V8, etc.) missing from the remote cache.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'cmake --build build'
+        "$RUNNER_TEMP/in-build-image" 'scripts/build.sh --tests --ccache'
 
     - name: ccache statistics
       if: always()
@@ -166,7 +151,7 @@ jobs:
       if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
       run: |
         toolchain="$(docker image inspect --format '{{.Id}}' "$BASE_IMAGE")"
-        "$RUNNER_TEMP/in-build-image" "\$CORE_PYTHON Common/3dParty/core_package.py pack \
+        "$RUNNER_TEMP/in-build-image" "\$CORE_PYTHON scripts/core_package.py pack \
           --from build/package --out build/core-package \
           --platform ${{ matrix.platform }} --product ${{ matrix.product }} \
           --toolchain 'core-base $toolchain'"
