@@ -21,6 +21,8 @@ cmake.
 .EXAMPLE
 scripts\build.ps1 -Arch arm64 -BuildDir build
 #>
+# Not positional: arguments without a name go to cmake
+[CmdletBinding(PositionalBinding = $false)]
 param(
     [ValidateSet('x64', 'arm64')]
     [string]$Arch = $(if ($env:PROCESSOR_ARCHITECTURE -eq 'ARM64') { 'arm64' } else { 'x64' }),
@@ -48,7 +50,7 @@ $BuildDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSP
 if (-not $OutputDir) { $OutputDir = Join-Path $BuildDir 'package' }
 $OutputDir = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($OutputDir)
 
-$cmakeArgs = @(
+$configureArgs = @(
     '-G', 'Ninja', '-S', $Core, '-B', $BuildDir,
     '-DCMAKE_BUILD_TYPE=Release',
     "-DCMAKE_TOOLCHAIN_FILE=$env:VCPKG_ROOT\scripts\buildsystems\vcpkg.cmake",
@@ -59,18 +61,18 @@ $cmakeArgs = @(
     "-DEO_CORE_LIB_DIR=$OutputDir\lib",
     "-DEO_BUILD_TESTS=$(if ($Tests) { 'ON' } else { 'OFF' })"
 )
-if ($Tests) { $cmakeArgs += '-DVCPKG_MANIFEST_FEATURES=tests' }
-if ($env:CORE_PYTHON) { $cmakeArgs += "-DPYTHON_BIN=$env:CORE_PYTHON" }
+if ($Tests) { $configureArgs += '-DVCPKG_MANIFEST_FEATURES=tests' }
+if ($env:CORE_PYTHON) { $configureArgs += "-DPYTHON_BIN=$env:CORE_PYTHON" }
 # sccache only caches with debug info embedded in the objects (/Z7)
 if (Get-Command sccache -ErrorAction SilentlyContinue) {
-    $cmakeArgs += @(
+    $configureArgs += @(
         '-DCMAKE_C_COMPILER_LAUNCHER=sccache',
         '-DCMAKE_CXX_COMPILER_LAUNCHER=sccache',
         '-DCMAKE_MSVC_DEBUG_INFORMATION_FORMAT=Embedded'
     )
 }
 
-cmake @cmakeArgs @CMakeArgs
+cmake @configureArgs @CMakeArgs
 Assert-LastExit 'CMake configure'
 cmake --build $BuildDir --parallel
 Assert-LastExit 'CMake build'
