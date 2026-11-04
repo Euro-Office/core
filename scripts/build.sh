@@ -57,7 +57,12 @@ output="$(cd "$output" && pwd)"
 
 args=( -G Ninja -S "$core" -B "$build_dir" -DCMAKE_BUILD_TYPE=Release )
 [ -n "${CORE_PYTHON:-}" ] && args+=( -DPYTHON_BIN="$CORE_PYTHON" )
-[ -n "$ccache" ] && args+=( -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache )
+if [ -n "$ccache" ]; then
+    args+=( -DCMAKE_C_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_COMPILER_LAUNCHER=ccache )
+    # Otherwise ccache skips every source of a target with precompiled headers
+    # (about half of core): a fresh .gch is always newer than the compile
+    export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+fi
 
 if [ -n "$abi" ]; then
     : "${ANDROID_NDK_ROOT:?ANDROID_NDK_ROOT must point at the NDK}"

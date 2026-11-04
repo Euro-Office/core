@@ -20,8 +20,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: x64,   runner: windows-2022 }
-          - { arch: arm64, runner: windows-11-arm }
+          - { arch: x64,   runner: windows-2022,   ccache: x86_64,  ccache_sha256: 6993ce645e53192cec592ee23186200b574ac4c59097ecde8d9cfd681b47ae84 }
+          - { arch: arm64, runner: windows-11-arm, ccache: aarch64, ccache_sha256: 47ea5a0ed661bea53962d8fb8ee9a1769092d979a6f7c73d3081499b3305b2ab }
     name: build (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
@@ -32,6 +32,10 @@ jobs:
       # run uploads missing third-party builds, every other run only reads.
       REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+      CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
+      CCACHE_MAXSIZE: 2G
+      # The arm64 leg installs its compiler on every run: new file times
+      CCACHE_COMPILERCHECK: content
 
     steps:
       # ------------------------------------------------------------------ #
@@ -216,15 +220,51 @@ jobs:
         uses: lukka/run-vcpkg@v11
 
       # ------------------------------------------------------------------ #
-      # 8. Build: the MSVC environment of the VS 2022 found in step 4,
+      # 8. ccache: caching MSVC needs a newer version than the package
+      #    managers have, and arm64 a native build
+      # ------------------------------------------------------------------ #
+      - name: Install ccache
+        shell: pwsh
+        run: |
+          $name = 'ccache-4.14.2-windows-${{ matrix.ccache }}'
+          $zip = "$env:RUNNER_TEMP\$name.zip"
+          Invoke-WebRequest "https://github.com/ccache/ccache/releases/download/v4.14.2/$name.zip" -OutFile $zip
+          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne '${{ matrix.ccache_sha256 }}') { throw "$name.zip: wrong checksum" }
+          Expand-Archive $zip -DestinationPath $env:RUNNER_TEMP
+          "$env:RUNNER_TEMP\$name" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+      - name: Restore ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.run_id }}
+          restore-keys: ccache-windows-${{ matrix.arch }}-
+
+      # ------------------------------------------------------------------ #
+      # 9. Build: the MSVC environment of the VS 2022 found in step 4,
       #    Ninja, as in DesktopEditors
       # ------------------------------------------------------------------ #
       - name: Build
         shell: pwsh
-        run: scripts/build.ps1 -Arch ${{ matrix.arch }}
+        run: |
+          ccache --zero-stats
+          scripts/build.ps1 -Arch ${{ matrix.arch }} -Ccache
+
+      - name: ccache statistics
+        if: always()
+        shell: pwsh
+        run: ccache --show-stats --verbose
+
+      # Even when the build fails or is cancelled, so the next run reuses it
+      - name: Save ccache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: ${{ env.CCACHE_DIR }}
+          key: ccache-windows-${{ matrix.arch }}-${{ github.run_id }}
 
       # ------------------------------------------------------------------ #
-      # 9. Upload build artifacts
+      # 10. Upload build artifacts
       # ------------------------------------------------------------------ #
       - name: Upload build output
         uses: actions/upload-artifact@v4
@@ -260,6 +300,13 @@ jobs:
     if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
     uses: ./.github/workflows/core-package-publish.yml
     secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml
 
   build-summary:
     # Aggregate job: the branch rules for main require a check called "build",

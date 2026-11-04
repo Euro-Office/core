@@ -18,10 +18,9 @@ concurrency:
 
 jobs:
   build:
-    # The build tree and the third-party builds (V8 takes hours) stay in a
-    # BuildKit cache mount on the runner's Docker daemon, so later runs only
-    # build what changed; third-party builds come from the remote cache
-    # otherwise.
+    # The runners are ephemeral, so the Dockerfile's BuildKit cache mounts start
+    # empty: third-party builds come from the remote cache, and ccache
+    # (restored into, and saved from, ccache-seed) keeps the core objects.
     runs-on: self-hosted
     strategy:
       fail-fast: false
@@ -59,7 +58,7 @@ jobs:
         ARG ANDROID_NDK_VERSION=30.0.16248370
         RUN apt-get update && \
             apt-get install -y --no-install-recommends \
-                ca-certificates curl unzip git python3 python-is-python3 \
+                ca-certificates ccache curl unzip git python3 python-is-python3 \
                 build-essential clang lld ninja-build cmake pkg-config \
                 autoconf automake libtool perl patch xz-utils bzip2 file && \
             rm -rf /var/lib/apt/lists/*
@@ -76,18 +75,36 @@ jobs:
         target "core-android" {
           context    = "."
           dockerfile = "core/.docker/core-android.bake.Dockerfile"
-          target     = "core-android"
-          args       = { ANDROID_ABI = ABI }
-          contexts   = { android-ndk = "target:android-ndk" }
+          target     = "core-android-ci"
+          args       = { ANDROID_ABI = ABI, CORE_CCACHE = "1" }
+          contexts   = { android-ndk = "target:android-ndk", ccache-seed = "ccache-seed" }
           secret     = ["id=remote_cache_s3_access_key,env=REMOTE_CACHE_S3_ACCESS_KEY", "id=remote_cache_s3_secret_key,env=REMOTE_CACHE_S3_SECRET_KEY"]
-          output     = ["type=local,dest=out/${ABI}"]
+          output     = ["type=local,dest=out"]
         }
         HCL
+
+    - name: Restore ccache
+      uses: actions/cache/restore@v4
+      with:
+        path: ccache-seed
+        key: ccache-android-${{ matrix.abi }}-${{ github.run_id }}
+        restore-keys: ccache-android-${{ matrix.abi }}-
 
     - name: Build core for Android (x2t and its libraries)
       env:
         ABI: ${{ matrix.abi }}
-      run: docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+      run: |
+        mkdir -p ccache-seed
+        docker buildx bake --progress=plain -f "$RUNNER_TEMP/core-android.hcl" core-android
+        # actions/cache only finds what was saved from the path it restores to
+        rm -rf ccache-seed
+        mv out/ccache ccache-seed
+
+    - name: Save ccache
+      uses: actions/cache/save@v4
+      with:
+        path: ccache-seed
+        key: ccache-android-${{ matrix.abi }}-${{ github.run_id }}
 
     # What the apps load: x2t's JNI library, the editor engine's doctrenderer
     # (with V8) and the libraries they link
@@ -130,3 +147,10 @@ jobs:
     if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
     uses: ./.github/workflows/core-package-publish.yml
     secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

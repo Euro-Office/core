@@ -132,7 +132,7 @@ jobs:
     # V8, etc.) missing from the remote cache.
     - name: Build core (x2t, docbuilder, etc.)
       run: |
-        "$RUNNER_TEMP/in-build-image" 'scripts/build.sh --tests --ccache'
+        "$RUNNER_TEMP/in-build-image" 'ccache --zero-stats && scripts/build.sh --tests --ccache'
 
     - name: ccache statistics
       if: always()
@@ -294,3 +294,10 @@ jobs:
     if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
     uses: ./.github/workflows/core-package-publish.yml
     secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

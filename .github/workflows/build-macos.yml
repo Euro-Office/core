@@ -55,7 +55,7 @@ jobs:
       uses: lukka/run-vcpkg@v11
 
     - name: Restore ccache
-      uses: actions/cache@v4
+      uses: actions/cache/restore@v4
       with:
         path: ${{ env.CCACHE_DIR }}
         key: ccache-macos-arm64-${{ github.run_id }}
@@ -63,7 +63,7 @@ jobs:
 
     # Builds the third-party libraries missing from the remote cache too
     - name: Build
-      run: scripts/build.sh --tests --ccache
+      run: ccache --zero-stats && scripts/build.sh --tests --ccache
       env:
         CORE_PYTHON: python3
 
@@ -73,6 +73,14 @@ jobs:
     - name: ccache statistics
       if: always()
       run: ccache --show-stats || true
+
+    # Even when the build fails or is cancelled, so the next run reuses it
+    - name: Save ccache
+      if: always()
+      uses: actions/cache/save@v4
+      with:
+        path: ${{ env.CCACHE_DIR }}
+        key: ccache-macos-arm64-${{ github.run_id }}
 
     - name: Upload build output
       uses: actions/upload-artifact@v4
@@ -106,3 +114,10 @@ jobs:
     if: ${{ !cancelled() && (github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)) }}
     uses: ./.github/workflows/core-package-publish.yml
     secrets: inherit
+
+  prune-ccache:
+    needs: build
+    if: ${{ !cancelled() && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository) }}
+    permissions:
+      actions: write
+    uses: ./.github/workflows/ccache-prune.yml

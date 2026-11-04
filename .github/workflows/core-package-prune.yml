@@ -27,3 +27,17 @@ jobs:
         EO_CORE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       run: |
         python3 scripts/core_package.py prune-pr --pr "${{ github.event.pull_request.number }}"
+
+  # Nothing can restore a closed pull request's Actions caches any more
+  prune-caches:
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+    - name: Prune
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh cache delete --all --succeed-on-no-caches --repo "$GITHUB_REPOSITORY" \
+          --ref "refs/pull/${{ github.event.pull_request.number }}/merge"
