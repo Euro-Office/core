@@ -1,0 +1,23 @@
+{
+ "editor": "cell",
+ "facts": {
+  "sheets": [
+   {
+    "comments": 0,
+    "drawings": {},
+    "formulas": {
+     "fnv1a": "ffcaaa85",
+     "head": "\"\"",
+     "length": 2
+    },
+    "name": "Sheet1",
+    "usedRange": "A1",
+    "values": {
+     "fnv1a": "ffcaaa85",
+     "head": "\"\"",
+     "length": 2
+    }
+   }
+  ]
+ }
+}

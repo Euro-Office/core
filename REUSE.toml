@@ -17,3 +17,8 @@ SPDX-License-Identifier = "AGPL-3.0-only"
 path = "Test/BinaryFormat/snapshots/**"
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = "Test/BinaryFormat/roundtrip/expected/**"
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"

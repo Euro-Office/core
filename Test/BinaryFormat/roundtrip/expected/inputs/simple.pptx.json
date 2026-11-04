@@ -1,0 +1,50 @@
+{
+ "editor": "slide",
+ "facts": {
+  "slides": [
+   {
+    "drawings": {
+     "shape": 2
+    },
+    "text": {
+     "fnv1a": "3b099af7",
+     "head": "Test\r\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at purus mi. Nam egestas odio ac iaculis porta. Nunc",
+     "length": 212
+    }
+   },
+   {
+    "drawings": {
+     "image": 1,
+     "shape": 2
+    },
+    "text": {
+     "fnv1a": "0e4d22c5",
+     "head": "Test\r\n\n2\r\n",
+     "length": 10
+    }
+   },
+   {
+    "drawings": {
+     "image": 1,
+     "shape": 2
+    },
+    "text": {
+     "fnv1a": "d11b0df6",
+     "head": "Test\r\n\n3\r\n",
+     "length": 10
+    }
+   },
+   {
+    "drawings": {
+     "image": 1,
+     "shape": 2
+    },
+    "text": {
+     "fnv1a": "a0e501e7",
+     "head": "Test\r\n\n4\r\n",
+     "length": 10
+    }
+   }
+  ]
+ }
+}
