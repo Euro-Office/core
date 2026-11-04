@@ -329,7 +329,7 @@ TEST_F(CPdfJbig2Test, BgraFrameSaveJbig2)
 		pData[i * 4 + 2] = v;
 		pData[i * 4 + 3] = 255;
 	}
-	// A blue pixel: gray 29 is below the 188 threshold, so black
+	// A blue pixel: the gray conversion only uses green, and 0 is below the 188 threshold, so black
 	pData[0] = 255; pData[1] = 0; pData[2] = 0;
 	bmp.Set(0, 0);
 
