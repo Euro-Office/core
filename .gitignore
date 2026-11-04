@@ -52,3 +52,6 @@ msvc_make.bat
 
 third_party/
 __pycache__/
+
+# x2t WebAssembly target (the generic build/ rule above would hide it)
+!X2tConverter/build/wasm/
