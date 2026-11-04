@@ -2,12 +2,13 @@ diff --git a/libtiff/tif_read.c b/libtiff/tif_read.c
 index d1a4e89..8745ff8 100644
 --- a/libtiff/tif_read.c
 +++ b/libtiff/tif_read.c
-@@ -1140,15 +1140,17 @@ tmsize_t _TIFFReadEncodedTileAndAllocBuffer(TIFF *tif, uint32_t tile,
+@@ -1140,15 +1140,18 @@ tmsize_t _TIFFReadEncodedTileAndAllocBuffer(TIFF *tif, uint32_t tile,
  
      /* Sanity checks to avoid excessive memory allocation */
      /* Cf https://gitlab.com/libtiff/libtiff/-/issues/479 */
 +    /* Compare the bytes loaded, not the buffer size: without memory mapping */
 +    /* TIFFReadBufferSetup() rounds the buffer up to a multiple of 1024. */
++    /* Cf https://gitlab.com/libtiff/libtiff/-/issues/505 */
      if (td->td_compression == COMPRESSION_NONE)
      {
 -        if (tif->tif_rawdatasize != tilesize)

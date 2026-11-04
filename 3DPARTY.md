@@ -38,3 +38,4 @@
 - libxml2 ([MIT](https://gitlab.gnome.org/GNOME/libxml2/-/raw/master/Copyright))
 - libjpeg-turbo ([IJG](https://raw.githubusercontent.com/libjpeg-turbo/libjpeg-turbo/main/LICENSE.md))
 - libpng ([libpng-2.0](https://raw.githubusercontent.com/pnggroup/libpng/master/LICENSE))
+- libtiff ([libtiff](https://gitlab.com/libtiff/libtiff/-/raw/master/LICENSE.md))
