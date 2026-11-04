@@ -117,6 +117,10 @@ With `X2T_NATIVE` the bin output size is compared with the native converter's.
 
 ## Known gaps
 
+- Memory: the first successful compile needs about 280 MB of static data, so
+  `INITIAL_MEMORY` is 320 MB. That is too much for phones; finding what takes
+  the space (embedded tables, ICU data, format libraries x2t never calls here)
+  is the next size task.
 Things the first CI runs are expected to hit, in rough order of likelihood:
 
 - Shared library targets under Emscripten: the graph declares every library
