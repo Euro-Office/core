@@ -113,6 +113,10 @@ namespace NSRas
 		const BYTE* pRaster = pData;
 		if (rasTypeByteEncoded == nType)
 		{
+			// 3 input bytes expand to at most 256, so refuse before allocating
+			if ((unsigned long long)nDataSize * 86 < nRasterSize)
+				return false;
+
 			arDecoded.resize(nRasterSize);
 			if (!DecodeRle(pData, nDataSize, arDecoded))
 				return false;

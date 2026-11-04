@@ -276,11 +276,20 @@ TEST(CRasTest, DecodesRunLengthEncoding)
 	EXPECT_EQ((CColor{128, 128, 128}), Pixel(oFrame, 5, 0));
 }
 
+TEST(CRasTest, DecodesLongestRleRun)
+{
+	// 3 bytes for 256 pixels, the highest ratio the format allows
+	CBgraFrame oFrame;
+	ASSERT_TRUE(Decode(MakeRas(256, 1, 8, 2, {}, {0x80, 255, 7}), oFrame));
+	EXPECT_EQ((CColor{7, 7, 7}), Pixel(oFrame, 255, 0));
+}
+
 TEST(CRasTest, RejectsInvalidImages)
 {
 	CBgraFrame oFrame;
 	EXPECT_FALSE(Decode(MakeRas(4, 4, 24, 1, {}, {1, 2, 3}), oFrame));                 // truncated
 	EXPECT_FALSE(Decode(MakeRas(4, 1, 8, 2, {}, {0x80, 1}), oFrame));                  // truncated RLE
+	EXPECT_FALSE(Decode(MakeRas(16384, 16384, 32, 2, {}, {}), oFrame));                // RLE without data
 	EXPECT_FALSE(Decode(MakeRas(1, 1, 24, 7, {}, {1, 2, 3, 0}), oFrame));              // unknown type
 	EXPECT_FALSE(Decode(MakeRas(0, 1, 24, 1, {}, {}), oFrame));                        // empty
 	EXPECT_FALSE(Decode(MakeRas(100000, 100000, 24, 1, {}, {1, 2, 3, 0}), oFrame));    // too large
