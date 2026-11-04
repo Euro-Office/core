@@ -189,6 +189,14 @@ Done:
       - `test2.pdf` (`wsDstFile`), `test3.pdf`, `test_split.pdf`, `pdftemp/`, `resO/`,
         `resD/`, `fonts_cache/`, `resPdfBinToPng.png` — **outputs** generated at runtime,
         not required inputs.
+- [x] `MsBinaryFile/PptFile/test` (`pptfile_test`) — new suite, not a `.pro` migration.
+      Regression cases for `CRecordExObjStg`, the reader of embedded OLE objects and
+      `vbaProject.bin` in `.ppt` files: a compressed record too short to hold its size field,
+      a claimed size the stored data cannot inflate to or above the 128 MiB ceiling, data
+      that does not inflate, and stored, compressed and named objects that must still come
+      out intact. Links `PptFormatLib` with the rest of the format-library group the same
+      way `OdfFile/Test/test_odf` does. `GTEST_MAIN`. No fixtures: each case writes its own
+      compound file into a fresh temp directory with POLE.
 
 ### gtest suites to migrate
 
