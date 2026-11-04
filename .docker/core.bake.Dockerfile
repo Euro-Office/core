@@ -94,7 +94,8 @@ FROM ubuntu:24.04 AS core-base-desktop-arm64
             gn \
         && rm -rf /var/lib/apt/lists/*
 
-    # Clang/LLVM for V8, same major as the Rocky 9 server base. libclang-rt
+    # Clang/LLVM for V8. apt.llvm.org needs a pinned major; the Rocky 9 server
+    # base can't pin one, AppStream only has its current clang. libclang-rt
     # has the builtins library V8's build links.
     RUN mkdir -p /etc/apt/keyrings && \
         wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | \
