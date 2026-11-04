@@ -306,7 +306,6 @@ public:
 		ENCODE_GRAYSCALE = 0x4,
 		ENCODE_OPTIMIZE = 0x8,
 		ENCODE_PROGRESSIVE = 0x10,
-		ENCODE_LOSSLESS = 0x20,
 		ENCODE_SMOOTHING = 0x40,
 		DECODE_GRAYSCALE = 0x80,
 		DECODE_QUANTIZE = 0x100,
@@ -317,8 +316,6 @@ public:
 		ENCODE_SUBSAMPLE_444 = 0x2000
 	}; 
 
-	int32_t m_nPredictor;
-	int32_t m_nPointTransform;
 	int32_t m_nSmoothing;
 	int32_t m_nQuantize;
 	J_DITHER_MODE m_nDither;
