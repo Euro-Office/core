@@ -5744,7 +5744,7 @@ namespace OOX
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"localSheetId",	m_oLocalSheetId )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"name",			m_oName )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"publishToServer",m_oPublishToServer )
-                WritingElement_ReadAttributes_Read_else_if( oReader, L"shortcutKey ",	m_oShortcutKey  )
+                WritingElement_ReadAttributes_Read_else_if( oReader, L"shortcutKey",	m_oShortcutKey  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"statusBar",		m_oStatusBar  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"vbProcedure",	m_oVbProcedure  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"workbookParameter",	m_oWorkbookParameter  )
