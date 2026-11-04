@@ -21,9 +21,12 @@ if(NOT TARGET x2tlib)
 endif()
 
 # No fixtures: every case builds its compound file in a fresh temp directory.
+# COfficeFileFormatChecker is compiled into the target like in test_odf: the
+# format libraries reference it, but only x2tlib compiles it.
 add_core_gtest(
     NAME    pptfile_test
     SOURCES ExObjStgTest.cpp
+            ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     GTEST_MAIN
 )
 
