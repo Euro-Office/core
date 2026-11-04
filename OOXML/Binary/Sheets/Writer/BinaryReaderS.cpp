@@ -2349,6 +2349,12 @@ int BinaryWorkbookTableReader::ReadWorkbookTableContent(BYTE type, long length, 
 			m_oBufferedStream.SkipRecord();
 		}
     }
+	else if (c_oSerWorkbookTypes::PreservedSheets == type)
+	{
+		// a macro sheet is macro content: keep the workbook macro-enabled even without VBA
+		m_bMacroRead = true;
+		READ1_DEF(length, res, this->ReadPreservedSheets, NULL);
+	}
 	else if (c_oSerWorkbookTypes::JsaProject == type)
 	{
 		BYTE* pData = m_oBufferedStream.GetPointer(length);
@@ -3144,6 +3150,82 @@ int BinaryWorkbookTableReader::ReadDefinedNames(BYTE type, long length, void* po
 		READ1_DEF(length, res, this->ReadDefinedName, pDefinedName);
 		m_oWorkbook.m_oDefinedNames->m_arrItems.push_back(pDefinedName);
 	}
+	else
+		res = c_oSerConstants::ReadUnknown;
+	return res;
+}
+int BinaryWorkbookTableReader::ReadPreservedSheets(BYTE type, long length, void* poResult)
+{
+	int res = c_oSerConstants::ReadOk;
+	if (c_oSerPreservedSheetTypes::Sheet == type)
+	{
+		OOX::Spreadsheet::CPreservedSheet oSheet;
+		READ1_DEF(length, res, this->ReadPreservedSheet, &oSheet);
+		if (!oSheet.arParts.empty())
+			m_oWorkbook.m_arPreservedSheets.push_back(oSheet);
+	}
+	else
+		res = c_oSerConstants::ReadUnknown;
+	return res;
+}
+int BinaryWorkbookTableReader::ReadPreservedSheet(BYTE type, long length, void* poResult)
+{
+	OOX::Spreadsheet::CPreservedSheet* pSheet = static_cast<OOX::Spreadsheet::CPreservedSheet*>(poResult);
+	int res = c_oSerConstants::ReadOk;
+	if (c_oSerPreservedSheetTypes::Name == type)
+		pSheet->sName = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::SheetId == type)
+		pSheet->nSheetId = (unsigned int)m_oBufferedStream.GetLong();
+	else if (c_oSerPreservedSheetTypes::State == type)
+		pSheet->sState = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::Index == type)
+		pSheet->nIndex = m_oBufferedStream.GetLong();
+	else if (c_oSerPreservedSheetTypes::RelType == type)
+		pSheet->sRelType = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::Part == type)
+	{
+		OOX::Spreadsheet::CPreservedPart oPart;
+		READ1_DEF(length, res, this->ReadPreservedPart, &oPart);
+		if (!oPart.sName.empty())
+			pSheet->arParts.push_back(oPart);
+	}
+	else if (c_oSerPreservedSheetTypes::DefinedName == type)
+	{
+		OOX::Spreadsheet::CPreservedDefinedName oName;
+		READ1_DEF(length, res, this->ReadPreservedDefinedName, &oName);
+		if (!oName.sXml.empty())
+			pSheet->arDefinedNames.push_back(oName);
+	}
+	else
+		res = c_oSerConstants::ReadUnknown;
+	return res;
+}
+int BinaryWorkbookTableReader::ReadPreservedPart(BYTE type, long length, void* poResult)
+{
+	OOX::Spreadsheet::CPreservedPart* pPart = static_cast<OOX::Spreadsheet::CPreservedPart*>(poResult);
+	int res = c_oSerConstants::ReadOk;
+	if (c_oSerPreservedSheetTypes::PartName == type)
+		pPart->sName = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::PartContentType == type)
+		pPart->sContentType = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::PartData == type)
+	{
+		BYTE* pData = m_oBufferedStream.GetPointer(length);
+		if (pData)
+			pPart->sData.assign((const char*)pData, length);
+	}
+	else
+		res = c_oSerConstants::ReadUnknown;
+	return res;
+}
+int BinaryWorkbookTableReader::ReadPreservedDefinedName(BYTE type, long length, void* poResult)
+{
+	OOX::Spreadsheet::CPreservedDefinedName* pName = static_cast<OOX::Spreadsheet::CPreservedDefinedName*>(poResult);
+	int res = c_oSerConstants::ReadOk;
+	if (c_oSerPreservedSheetTypes::DefinedNameXml == type)
+		pName->sXml = m_oBufferedStream.GetString4(length);
+	else if (c_oSerPreservedSheetTypes::DefinedNameLocal == type)
+		pName->bLocal = m_oBufferedStream.GetBool();
 	else
 		res = c_oSerConstants::ReadUnknown;
 	return res;
@@ -9931,6 +10013,15 @@ int BinaryFileReader::ReadMainTable(OOX::Spreadsheet::CXlsx& oXlsx, NSBinPptxRW:
 		}	
 		if (c_oSerConstants::ReadOk != res)
 			return res;
+	}
+	if (oXlsx.m_pWorkbook)
+	{
+		// macro sheets go back only into a macro-enabled xlsx/xlsm, like the VBA project
+		OOX::Spreadsheet::CXlsb* pXlsb = dynamic_cast<OOX::Spreadsheet::CXlsb*>(&oXlsx);
+		if (oXlsx.m_pWorkbook->m_bMacroEnabled && !(pXlsb && pXlsb->m_bWriteToXlsb))
+			OOX::Spreadsheet::RestorePreservedSheets(*oXlsx.m_pWorkbook);
+		else
+			oXlsx.m_pWorkbook->m_arPreservedSheets.clear();
 	}
 	for (boost::unordered_map<long, ImageObject*>::const_iterator pPair = mapMedia.begin(); pPair != mapMedia.end(); ++pPair)
 	{

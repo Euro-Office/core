@@ -17,6 +17,11 @@ sheetsZipFormats=( ods xlsx )
 sheetsFormats=${sheetsZipFormats} 
 sheetsFiles=( spread_basic )
 
+# Round trip through the editor format (xlsm -> xlst -> xlsm): macro sheets must survive
+sheetsMacroZipFormats=( xlsm )
+sheetsMacroFormats=( xlst )
+sheetsMacroFiles=( macro_sheet )
+
 cd $workDir
 
 function convertAndDiff() {
@@ -66,6 +71,13 @@ zipFormats=(${sheetsZipFormats[@]})
 formats=(${sheetsFormats[@]})
 files=(${sheetsFiles[@]})
 conversionType=sheets
+
+convertAndDiff
+
+zipFormats=(${sheetsMacroZipFormats[@]})
+formats=(${sheetsMacroFormats[@]})
+files=(${sheetsMacroFiles[@]})
+conversionType=sheets_macro
 
 convertAndDiff
 

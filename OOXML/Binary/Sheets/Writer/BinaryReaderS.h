@@ -215,6 +215,10 @@ namespace BinXlsxRW
 		int ReadExternalReference(BYTE type, long length, void* poResult);
 		int ReadDefinedNames(BYTE type, long length, void* poResult);
 		int ReadDefinedName(BYTE type, long length, void* poResult);
+		int ReadPreservedSheets(BYTE type, long length, void* poResult);
+		int ReadPreservedSheet(BYTE type, long length, void* poResult);
+		int ReadPreservedPart(BYTE type, long length, void* poResult);
+		int ReadPreservedDefinedName(BYTE type, long length, void* poResult);
 		int ReadCalcPr(BYTE type, long length, void* poResult);
 		
 		int ReadExternalBook(BYTE type, long length, void* poResult);

@@ -176,6 +176,7 @@ SOURCES += \
 	../../../XlsxFormat/Workbook/CalcPr.cpp \
 	../../../XlsxFormat/Workbook/DefinedNames.cpp \
 	../../../XlsxFormat/Workbook/ExternalReferences.cpp \
+	../../../XlsxFormat/Workbook/PreservedSheets.cpp \
 	../../../XlsxFormat/Workbook/Sheets.cpp \
 	../../../XlsxFormat/Workbook/WorkbookPr.cpp \
         ../../../XlsxFormat/Workbook/CustomsXml.cpp \
@@ -341,6 +342,7 @@ HEADERS += \
 	../../../XlsxFormat/Workbook/BookViews.h \
 	../../../XlsxFormat/Workbook/CalcPr.h \
 	../../../XlsxFormat/Workbook/DefinedNames.h \
+	../../../XlsxFormat/Workbook/PreservedSheets.h \
 	../../../XlsxFormat/Workbook/Sheets.h \
 	../../../XlsxFormat/Workbook/Workbook.h \
 	../../../XlsxFormat/Workbook/WorkbookPr.h \

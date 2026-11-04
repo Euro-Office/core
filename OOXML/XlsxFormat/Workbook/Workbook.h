@@ -33,6 +33,7 @@
 #include "BookViews.h"
 #include "CalcPr.h"
 #include "DefinedNames.h"
+#include "PreservedSheets.h"
 #include "Sheets.h"
 #include "WorkbookPr.h"
 #include "ExternalReferences.h"
@@ -163,6 +164,9 @@ namespace OOX
 
 			CPersonList*									m_pPersonList;
 			bool											m_bMacroEnabled;
+
+			// sheets the editor cannot show (Excel 4.0 macro sheets), carried through Editor.bin
+			std::vector<CPreservedSheet>					m_arPreservedSheets;
 		};
 
 	} //Spreadsheet

@@ -241,6 +241,7 @@ namespace BinXlsxRW
 		void WriteDdeValues(const OOX::Spreadsheet::CDdeValues& ddeValues);
 		void WriteDdeValue(const OOX::Spreadsheet::CDdeValue& ddeValue);
 		void WriteDefinedName(const OOX::Spreadsheet::CDefinedName& definedName);
+		void WritePreservedSheets(const std::vector<OOX::Spreadsheet::CPreservedSheet>& arSheets);
 		void WriteSlicerCaches(OOX::Spreadsheet::CWorkbook& workbook, const OOX::Spreadsheet::CSlicerCaches& oSlicerCaches);
 		void WriteFileSharing(const OOX::Spreadsheet::CFileSharing& fileSharing);
         void WritePivotCache(OOX::Spreadsheet::CWorkbook& workbook, const OOX::Spreadsheet::CWorkbookPivotCache& CPivotCache);
