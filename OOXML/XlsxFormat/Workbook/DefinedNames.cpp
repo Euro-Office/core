@@ -54,8 +54,20 @@ namespace OOX
 
 			writer.WriteString(L"<definedName");
 			WritingStringNullableAttrEncodeXmlString(L"name", m_oName, *m_oName);
+			WritingStringNullableAttrEncodeXmlString(L"comment", m_oComment, *m_oComment);
+			WritingStringNullableAttrEncodeXmlString(L"customMenu", m_oCustomMenu, *m_oCustomMenu);
+			WritingStringNullableAttrEncodeXmlString(L"description", m_oDescription, *m_oDescription);
+			WritingStringNullableAttrEncodeXmlString(L"help", m_oHelp, *m_oHelp);
+			WritingStringNullableAttrEncodeXmlString(L"statusBar", m_oStatusBar, *m_oStatusBar);
 			WritingStringNullableAttrInt(L"localSheetId", m_oLocalSheetId, m_oLocalSheetId->GetValue());
 			WritingStringNullableAttrBool(L"hidden", m_oHidden);
+			WritingStringNullableAttrBool(L"function", m_oFunction);
+			WritingStringNullableAttrBool(L"vbProcedure", m_oVbProcedure);
+			WritingStringNullableAttrBool(L"xlm", m_oXlm);
+			WritingStringNullableAttrInt(L"functionGroupId", m_oFunctionGroupId, m_oFunctionGroupId->GetValue());
+			WritingStringNullableAttrEncodeXmlString(L"shortcutKey", m_oShortcutKey, *m_oShortcutKey);
+			WritingStringNullableAttrBool(L"publishToServer", m_oPublishToServer);
+			WritingStringNullableAttrBool(L"workbookParameter", m_oWorkbookParameter);
 			writer.WriteString(L">");
 			if(m_oRef.IsInit())
 				writer.WriteEncodeXmlString(*m_oRef);

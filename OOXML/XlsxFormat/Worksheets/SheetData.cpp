@@ -5695,7 +5695,7 @@ namespace OOX
 				else if ( L"name" == wsName || L"ss:Name" == wsName )
 					m_oName = oReader.GetText();
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"publishToServer",m_oPublishToServer )
-                WritingElement_ReadAttributes_Read_else_if( oReader, L"shortcutKey ",	m_oShortcutKey  )
+                WritingElement_ReadAttributes_Read_else_if( oReader, L"shortcutKey",	m_oShortcutKey  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"statusBar",		m_oStatusBar  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"vbProcedure",	m_oVbProcedure  )
                 WritingElement_ReadAttributes_Read_else_if( oReader, L"workbookParameter",	m_oWorkbookParameter  )
