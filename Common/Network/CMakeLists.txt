@@ -13,7 +13,12 @@ endif()
 set(SOCKETIO_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/socketio")
 get_filename_component(SOCKETIO_INSTALL_DIR_ABS "${SOCKETIO_INSTALL_DIR}" ABSOLUTE)
 
-add_library(kernel_network SHARED
+# The socket.io client is not available for WebAssembly; x2t only needs the
+# FileTransporter, which already has an external-transport build (USE_EXTERNAL_TRANSPORT).
+if(EMSCRIPTEN)
+    set(KERNEL_NETWORK_SOCKETIO_SOURCES)
+else()
+    set(KERNEL_NETWORK_SOCKETIO_SOURCES
     ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.cpp
     ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_client_impl.h
     ${SOCKETIO_INSTALL_DIR}/src_no_tls/internal/sio_packet.cpp
@@ -41,6 +46,11 @@ add_library(kernel_network SHARED
     WebSocket/src/socketio/socketio_internal.h
     WebSocket/src/socketio/socketio_internal_private.h
     WebSocket/src/socketio/socketio_internal_private_no_tls.h
+    )
+endif()
+
+add_library(kernel_network SHARED
+    ${KERNEL_NETWORK_SOCKETIO_SOURCES}
 
     # filetransporter.pri
     ${CMAKE_CURRENT_SOURCE_DIR}/FileTransporter/src/FileTransporter.cpp
@@ -126,8 +136,8 @@ target_link_libraries(kernel_network PUBLIC
     kernel
 )
 
-# Android's libc includes pthreads
-if( UNIX AND NOT ANDROID )
+# Android's libc includes pthreads; Emscripten builds single-threaded here
+if( UNIX AND NOT ANDROID AND NOT EMSCRIPTEN )
     target_link_libraries(kernel_network PUBLIC
         pthread
     )

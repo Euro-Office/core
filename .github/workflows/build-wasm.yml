@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       wasm: ${{ steps.filter.outputs.wasm }}
+      x2t: ${{ steps.filter.outputs.x2t }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -31,6 +32,14 @@ jobs:
               - 'OfficeUtils/js/**'
               - '**/CMakeLists.txt'
               - '**/*.cmake'
+              - '.github/workflows/build-wasm.yml'
+            x2t:
+              - 'X2tConverter/**'
+              - 'Common/3dParty/boost-wasm/**'
+              - 'Common/3dParty/build_3rdparty.py'
+              - 'DesktopEditor/doctrenderer/wasm/**'
+              - 'common.cmake'
+              - 'CMakeLists.txt'
               - '.github/workflows/build-wasm.yml'
 
   build-wasm:
@@ -79,6 +88,63 @@ jobs:
           cd ../build-wasm-dir
           /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package && cmake --build ."
         shell: bash
+
+  # x2t for WebAssembly (EO_WASM_X2T). Not part of the summary gate yet: the
+  # target is new and still being brought up, see X2tConverter/build/wasm/README.md.
+  build-x2t-wasm:
+    needs: changes
+    if: needs.changes.outputs.x2t == 'true'
+    continue-on-error: true
+    runs-on: [ubuntu-latest, self-hosted]
+    container:
+        image: ghcr.io/euro-office/emsdk:5.0.4
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+          path: core/
+
+      - name: Install system dependencies
+        run: |
+          apt-get update
+          apt-get install -y \
+            python3 \
+            python3-dev \
+            build-essential \
+            git \
+            curl \
+            wget \
+            pkg-config \
+            libssl-dev \
+            autoconf \
+            automake \
+            libtool
+
+      - name: Verify Emscripten
+        run: emcc -v
+
+      - name: Build x2t with Emscripten
+        run: |
+          mkdir -p ../build-x2t-wasm-dir
+          cd ../build-x2t-wasm-dir
+          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core/X2tConverter/build/wasm -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package && cmake --build . --target x2t"
+        shell: bash
+
+      - name: Smoke test
+        run: |
+          cd core/X2tConverter/build/wasm
+          node test/run.js $GITHUB_WORKSPACE/package/x2t
+        shell: bash
+
+      - name: Upload x2t.wasm
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: x2t-wasm
+          path: package/x2t
+          if-no-files-found: ignore
 
   build-wasm-summary:
     # Aggregate job so branch protection can require a single, always-reported

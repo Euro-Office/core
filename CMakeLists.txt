@@ -7,6 +7,12 @@ project(core)
 
 set(CORE_ROOT_DIR "${CMAKE_CURRENT_LIST_DIR}")
 
+# x2t for WebAssembly (client-only editor sessions). Off by default: it needs
+# the whole converter library graph under Emscripten, which is still being
+# verified in CI (see X2tConverter/build/wasm/README.md), and must not block
+# the sdkjs wasm modules below while that is the case.
+option(EO_WASM_X2T "Build x2t for WebAssembly" OFF)
+
 include(${CORE_ROOT_DIR}/common.cmake)
 
 option(EO_BUILD_TESTS "Build C++ unit tests and register them with CTest" OFF)
@@ -19,6 +25,10 @@ if(EMSCRIPTEN)
     add_subdirectory( "${CORE_ROOT_DIR}/Common/3dParty/hunspell" spell )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/js" fonts )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/graphics/pro/js/" drawingfile )
+
+    if(EO_WASM_X2T)
+        add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/wasm" x2t_wasm )
+    endif()
 
 elseif(ANDROID)
 

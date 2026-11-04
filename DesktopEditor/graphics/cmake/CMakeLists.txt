@@ -1043,14 +1043,16 @@ if(LINUX)
         -fvisibility-inlines-hidden
     )
 
-    # Don't leak the bundled third-party C libraries (libpng, zlib, ...),
-    # they would interpose the system ones used by GTK/gdk-pixbuf
-    target_link_options(graphics PRIVATE
-        "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/graphics.map"
-    )
-    set_property(TARGET graphics APPEND PROPERTY
-        LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/graphics.map"
-    )
+    if(NOT EMSCRIPTEN) # wasm-ld has no version scripts
+        # Don't leak the bundled third-party C libraries (libpng, zlib, ...),
+        # they would interpose the system ones used by GTK/gdk-pixbuf
+        target_link_options(graphics PRIVATE
+            "LINKER:--version-script=${CMAKE_CURRENT_LIST_DIR}/graphics.map"
+        )
+        set_property(TARGET graphics APPEND PROPERTY
+            LINK_DEPENDS "${CMAKE_CURRENT_LIST_DIR}/graphics.map"
+        )
+    endif()
 endif()
 
 # dynamic libs
