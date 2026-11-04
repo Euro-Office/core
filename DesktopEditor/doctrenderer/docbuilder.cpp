@@ -48,6 +48,11 @@ namespace NSDoctRenderer
 	{
 		return m_pInternal->SaveFile(extension, path, params);
 	}
+	void CDocBuilder::SetX2tConverter(int (*converter)(const wchar_t* paramsPath))
+	{
+		g_pX2tConverter = converter;
+	}
+
 	bool CDocBuilder::ExecuteCommand(const wchar_t* command, CDocBuilderValue* retValue)
 	{
 		return m_pInternal->ExecuteCommand(command, retValue, false, false);

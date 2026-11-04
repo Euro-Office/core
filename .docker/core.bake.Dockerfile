@@ -162,15 +162,16 @@ FROM core-base AS core
     # copy sources right before the final build stage
     COPY core /core
 
-    # Optional nextcloud_user/nextcloud_pass secrets enable the prebuilt
-    # third-party remote cache (see Common/3dParty/build_3rdparty_common.py).
-    # Without them, third-party libs are built from source.
+    # Prebuilt third-party libs come from the remote cache (see
+    # Common/3dParty/build_3rdparty_common.py). The optional
+    # remote_cache_s3_access_key/remote_cache_s3_secret_key secrets also
+    # upload the ones missing there.
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
-        --mount=type=secret,id=nextcloud_user \
-        --mount=type=secret,id=nextcloud_pass \
-        export NEXTCLOUD_USER="$(cat /run/secrets/nextcloud_user 2>/dev/null)" && \
-        export NEXTCLOUD_PASS="$(cat /run/secrets/nextcloud_pass 2>/dev/null)" && \
+        --mount=type=secret,id=remote_cache_s3_access_key \
+        --mount=type=secret,id=remote_cache_s3_secret_key \
+        export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)" && \
+        export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)" && \
         mkdir -p ${BUILD_ROOT} && \
         cd /build-cache && \
         cmake -GNinja \

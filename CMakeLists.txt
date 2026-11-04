@@ -20,6 +20,11 @@ if(EMSCRIPTEN)
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/fontengine/js" fonts )
     add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/graphics/pro/js/" drawingfile )
 
+elseif(ANDROID)
+
+    # Only the converter libraries; the tools are built for the host
+    add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
+
 else()
 
     add_subdirectory( "${CORE_ROOT_DIR}/X2tConverter/build/cmake" x2t )
@@ -45,6 +50,8 @@ else()
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/test_odf" test_odf )
         add_subdirectory( "${CORE_ROOT_DIR}/DesktopEditor/xmlsec/src/test" xmlsec_test )
         add_subdirectory( "${CORE_ROOT_DIR}/OdfFile/Test/number_formats" odf_number_formats_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/RtfFile/Format/test" rtf_lex_test )
+        add_subdirectory( "${CORE_ROOT_DIR}/MsBinaryFile/PptFile/test" pptfile_test )
 
         # doctrenderer (V8) gtest suites. The V8 monolith is built in CI by
         # common.cmake (build_3rdparty.py) and is self-contained at run time:

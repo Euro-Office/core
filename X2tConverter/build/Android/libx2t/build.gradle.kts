@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.android.build.gradle.internal.tasks.factory.dependsOn
 import org.apache.tools.ant.taskdefs.condition.Os
 
 plugins {
@@ -43,11 +42,12 @@ android {
     }
 
     buildTypes {
+        // The core libraries are only built for 64-bit ABIs
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             ndk {
-                abiFilters.addAll(arrayOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+                abiFilters.addAll(arrayOf("arm64-v8a", "x86_64"))
             }
         }
         debug {
@@ -56,7 +56,7 @@ android {
                 if (System.getProperty("os.arch") == "aarch64") {
                     abiFilters.add("arm64-v8a")
                 } else {
-                    abiFilters.addAll(arrayOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+                    abiFilters.addAll(arrayOf("arm64-v8a", "x86_64"))
                 }
             }
         }
@@ -119,53 +119,3 @@ fun getProjectPath(path: String, isRelativeCreate: Boolean = true): String {
 
     throw GradleException("getProjectPath($path) - path doesn't exist...")
 }
-
-tasks.register("copyIcuDatFiles") {
-    doLast {
-
-        println()
-        println("------------------------- ICUDATFILES (task copyIcuDatFiles()) -------------------------")
-
-        val pathAssets = "${file(".").absolutePath}/src/main/assets/icu"
-        if (file(pathAssets).exists()) {
-            println("IcuDatFiles already exist.")
-            println("Delete $pathAssets folder for update icuDatFiles.")
-        }
-
-        if (!project.hasProperty("PATH_SRC_ICU_DAT_FILE")) {
-            throw GradleException("Property PATH_SRC_ICU_DAT_FILE with core repository path doesn't exist...")
-        }
-
-        if (!project.hasProperty("PATH_SRC_ICU_V8_DAT_FILE")) {
-            throw GradleException("Property PATH_SRC_ICU_V8_DAT_FILE with core repository path doesn't exist...")
-        }
-
-        if (!project.hasProperty("PATH_SRC_ICU_V8_EXTRA_DAT_FILE")) {
-            throw GradleException("Property PATH_SRC_ICU_V8_EXTRA_DAT_FILE with core repository path doesn't exist...")
-        }
-
-        val pathIcuDatFiles = project.extra.get("PATH_SRC_ICU_DAT_FILE") as String
-        val pathIcuV8DatFiles = project.extra.get("PATH_SRC_ICU_V8_DAT_FILE") as String
-        val pathIcuV8DatExtraFiles = project.extra.get("PATH_SRC_ICU_V8_EXTRA_DAT_FILE") as String
-
-        if (!file(pathIcuDatFiles).exists()) {
-            throw GradleException("Path with build_tools repository doesn't exist...")
-        }
-
-        if (!file(pathIcuV8DatFiles).exists()) {
-            throw GradleException("Path with core repository doesn't exist...")
-        }
-
-        if (!file(pathIcuV8DatExtraFiles).exists()) {
-            throw GradleException("Path with core repository doesn't exist...")
-        }
-        
-        copy {
-            println("\nCopy dat files...")
-            from(pathIcuDatFiles, pathIcuV8DatFiles, pathIcuV8DatExtraFiles)
-            into(pathAssets)
-        }
-    }
-}
-
-tasks.preBuild.dependsOn("copyIcuDatFiles")

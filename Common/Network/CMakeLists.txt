@@ -126,7 +126,8 @@ target_link_libraries(kernel_network PUBLIC
     kernel
 )
 
-if( UNIX )
+# Android's libc includes pthreads
+if( UNIX AND NOT ANDROID )
     target_link_libraries(kernel_network PUBLIC
         pthread
     )

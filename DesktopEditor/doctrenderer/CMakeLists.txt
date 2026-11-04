@@ -16,7 +16,11 @@ if(NOT DEFINED DRAWINGFILE_SUPPORT)
 endif()
 
 if(NOT DEFINED V8_USE_INSPECTOR)
-    set(V8_USE_INSPECTOR 1)
+    if(ANDROID)
+        set(V8_USE_INSPECTOR 0) # no debugger on mobile
+    else()
+        set(V8_USE_INSPECTOR 1)
+    endif()
 endif()
 
 set(DESKTOP_EDITOR_ROOT "..")
@@ -305,9 +309,17 @@ if(DRAWINGFILE_SUPPORT)
     )
 endif()
 
-if( UNIX )
+# Android's libc includes pthreads
+if( UNIX AND NOT ANDROID )
     target_link_libraries(doctrenderer PUBLIC
         pthread
+    )
+endif()
+
+if( ANDROID )
+    # V8 and the JS console (ANDROID_LOGS) write to logcat
+    target_link_libraries(doctrenderer PRIVATE
+        log
     )
 endif()
 

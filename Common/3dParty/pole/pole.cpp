@@ -1695,6 +1695,10 @@ uint64 StorageIO::loadBigBlocks( std::vector<uint64> blocks, unsigned char* data
     uint64 block = blocks[i];
     uint64 pos =  bbat->blockSize * ( block+1 );
     uint64 p = (bbat->blockSize < maxlen-bytes) ? bbat->blockSize : maxlen-bytes;
+    // a block referenced past the physical end of the file has nothing to read;
+    // guard the unsigned filesize - pos so it cannot wrap to a huge length
+    if( pos >= filesize )
+        break;
     if( pos + p > filesize )
         p = filesize - pos;
     file.seekg( pos );
@@ -2129,7 +2133,12 @@ uint64 StreamIO::read( uint64 pos, unsigned char* data, uint64 maxlen )
   uint64 totalbytes = 0;
   
   DirEntry *entry = io->dirtree->entry(entryIdx);
-  if (pos + maxlen > entry->size)
+  // A read that starts at or past the end of the stream returns nothing. Without
+  // this guard the unsigned subtraction below wraps to a huge length, and since
+  // the block chain can be longer than the declared size the copy loop then runs
+  // far past the caller's buffer.
+  if ( pos >= entry->size ) return 0;
+  if ( maxlen > entry->size - pos )
       maxlen = entry->size - pos;
   if ( entry->size < io->header->threshold )
   {

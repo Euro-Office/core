@@ -194,6 +194,20 @@ if( MSVC )
     )
 endif()
 
+if( ANDROID )
+    # Name and C API (X2T_Convert, GetOfficeFileFormat) expected by the
+    # libx2t JNI wrapper (X2tConverter/build/Android)
+    set_target_properties(x2tlib PROPERTIES
+        OUTPUT_NAME x2t
+    )
+    target_sources(x2tlib PRIVATE
+        ${X2T_ROOT_DIR}/src/dylib/x2t.cpp
+    )
+    target_compile_definitions(x2tlib PRIVATE
+        BUILD_X2T_AS_LIBRARY_DYLIB
+    )
+endif()
+
 # static libs
 target_link_libraries(x2tlib PRIVATE
     VbaFormatLib

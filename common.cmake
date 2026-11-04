@@ -45,7 +45,7 @@ if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
 endif()
 
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
-    set(VCPKG_BINARY_REMOTE "https://cloud.nextcloud.com/public.php/dav/files/n9KYBcFYyLLCgEw" CACHE STRING "Base URL for vcpkg binary package remote")
+    set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
 
 if( NOT DEFINED PYTHON_BIN )
@@ -54,6 +54,11 @@ if( NOT DEFINED PYTHON_BIN )
 endif()
 
 if(NOT DEFINED LINUX AND CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    set(LINUX TRUE)
+endif()
+
+# Android builds (NDK toolchain file) use core's Linux code paths
+if(ANDROID)
     set(LINUX TRUE)
 endif()
 
@@ -69,7 +74,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm"
+            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -92,25 +97,58 @@ if( EMSCRIPTEN )
     set(OPENSSL_WASM_LIBSSL "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libssl.a")
     set(OPENSSL_WASM_LIBCRYPTO "${OPENSSL_WASM_INSTALL_DIR_ABS}/lib64/libcrypto.a")
 
+    # Setup libxml2-wasm
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2-wasm")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    set_target_properties(LibXml2 PROPERTIES
+        IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+        INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+    )
+
 else()
 
     if(NOT THIRD_PARTY_PREPARED)
-        if(NOT BUILD_DESKTOP)
-            set(NO_DESKTOP_EXCLUDE ",cef,qt")
-        endif()
+        set(THIRD_PARTY_ENV "")
+        if(ANDROID)
+            # Cross-compile the deps for this build's ABI
+            if(ANDROID_ABI STREQUAL "arm64-v8a")
+                set(ANDROID_3RD_PARTY_TARGET "android-arm64")
+            elseif(ANDROID_ABI STREQUAL "x86_64")
+                set(ANDROID_3RD_PARTY_TARGET "android-x64")
+            else()
+                message(FATAL_ERROR "Unsupported Android ABI: ${ANDROID_ABI}")
+            endif()
+            set(THIRD_PARTY_ARGS
+                "--target=${ANDROID_3RD_PARTY_TARGET}"
+                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+            )
+            set(THIRD_PARTY_ENV
+                "ANDROID_NDK_ROOT=${ANDROID_NDK}"
+                "EO_ANDROID_API_LEVEL=${ANDROID_NATIVE_API_LEVEL}"
+            )
+        else()
+            if(NOT BUILD_DESKTOP)
+                set(NO_DESKTOP_EXCLUDE ",cef,qt")
+            endif()
 
-        set(PLATFORM_EXCLUDE "")
-        if(BUILD_DESKTOP AND APPLE)
-            # macOS editors are native Cocoa, not Qt - still need cef.
-            set(PLATFORM_EXCLUDE ",qt")
+            set(PLATFORM_EXCLUDE "")
+            if(BUILD_DESKTOP AND APPLE)
+                # macOS editors are native Cocoa, not Qt - still need cef.
+                set(PLATFORM_EXCLUDE ",qt")
+            endif()
+
+            # cef and qt need old build environment, cannot be built here
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
         execute_process(
             COMMAND_ECHO STDOUT
-            COMMAND "${PYTHON_BIN}"
+            COMMAND "${CMAKE_COMMAND}" -E env ${THIRD_PARTY_ENV}
+            "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--except=openssl-hash,icu-wasm,zlib-ng-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}" # cef and qt need old build environment, cannot be built here
+            ${THIRD_PARTY_ARGS}
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -195,6 +233,12 @@ else()
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/icuuc.lib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/icudt.lib")
         set(LIBICUI    "${ICU_INSTALL_DIR_ABS}/lib/icuin.lib")
+    elseif( ANDROID )
+        # Renamed by Common/3dParty/icu/nc-build.py: Android only loads plain
+        # lib<name>.so files, and libicuuc.so would resolve to the system's ICU
+        set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc${ICU_MAJOR_VER}.so")
+        set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata${ICU_MAJOR_VER}.so")
+        set(LIBICUI "${ICU_INSTALL_DIR_ABS}/lib/libicui18n${ICU_MAJOR_VER}.so")
     elseif( APPLE )
         set(LIBICUUC "${ICU_INSTALL_DIR_ABS}/lib/libicuuc.${ICU_MAJOR_VER}.dylib")
         set(LIBICUDATA "${ICU_INSTALL_DIR_ABS}/lib/libicudata.${ICU_MAJOR_VER}.dylib")
@@ -211,6 +255,10 @@ else()
     list( APPEND CMAKE_PREFIX_PATH "${BOOST_INSTALL_DIR_ABS}" )
     include_directories( "${BOOST_INSTALL_DIR_ABS}/include" )
     set(Boost_USE_STATIC_LIBS ON)
+    if( ANDROID )
+        # The NDK toolchain only searches its sysroot for packages by default
+        set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE BOTH)
+    endif()
     find_package( Boost REQUIRED COMPONENTS system filesystem regex date_time )
 
     # Setup v8
@@ -263,6 +311,28 @@ else()
         )
     endif()
 
+    # Setup libxml2
+    set(LIBXML2_INSTALL_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/libxml2")
+    get_filename_component(LIBXML2_INSTALL_DIR_ABS "${LIBXML2_INSTALL_DIR}" ABSOLUTE)
+    add_library(LibXml2 STATIC IMPORTED GLOBAL)
+    if( MSVC )
+        # libxml2's CMake names static MSVC builds lib<name><postfix>.lib, with
+        # postfix "s" for Release (and "sd" for Debug): libxml2s.lib.
+        # bcrypt: libxml2 needs it on Windows (random numbers), but only links it
+        # privately, which a static lib does not carry along.
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2s.lib"
+            INTERFACE_COMPILE_DEFINITIONS "LIBXML_STATIC"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+            INTERFACE_LINK_LIBRARIES "bcrypt"
+        )
+    else()
+        set_target_properties(LibXml2 PROPERTIES
+            IMPORTED_LOCATION "${LIBXML2_INSTALL_DIR_ABS}/lib/libxml2.a"
+            INTERFACE_INCLUDE_DIRECTORIES "${LIBXML2_INSTALL_DIR_ABS}/include/libxml2"
+        )
+    endif()
+
 endif()
 
 # Do NOT auto-add absolute link directories to RPATH
@@ -298,6 +368,12 @@ if( LINUX )
         UNICODE # This had to be removed for APPLE. Maybe it should be for LINUX as well
         DONT_WRITE_EMBEDDED_FONTS
     )
+    if( ANDROID )
+        list(APPEND COMMON_DEFINES
+            _ARM_ALIGN_            # no unaligned memory access
+            NOT_USE_PTHREAD_CANCEL # bionic has no pthread_setcanceltype
+        )
+    endif()
 elseif( APPLE )
     set(COMMON_DEFINES
         _REENTRANT

@@ -83,6 +83,8 @@ private:
 			eUnicodeConversionResult = ConvertUTF8toUTF16 (&pStrUtf8_Conv,	 &pStrUtf8[nLength]
 					, &pStrUtf16_Conv, &((UTF16 *)wStr.data())[nLength]
 					, strictConversion);
+			if (conversionOK == eUnicodeConversionResult)
+				wStr.resize(pStrUtf16_Conv - (UTF16 *)wStr.data());
 		}
 		else //utf8 -> utf32
 		{
@@ -98,6 +100,8 @@ private:
 			eUnicodeConversionResult = ConvertUTF8toUTF32 (&pStrUtf8_Conv, &pStrUtf8[nLength]
 					, &pStrUtf32_Conv, &((UTF32 *)wStr.data())[nLength]
 					, strictConversion);
+			if (conversionOK == eUnicodeConversionResult)
+				wStr.resize(pStrUtf32_Conv - (UTF32 *)wStr.data());
 		}
 		if (conversionOK != eUnicodeConversionResult)
 		{

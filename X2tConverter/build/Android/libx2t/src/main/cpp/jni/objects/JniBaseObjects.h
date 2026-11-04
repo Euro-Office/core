@@ -136,7 +136,10 @@ class JniBaseObjects {
 
     public:
 
+        // A null jstring (null on the Java side) converts to an empty string
         static std::string jstringToString(JNIEnv* env, jstring jstr) {
+            if (jstr == nullptr)
+                return std::string();
             jboolean isCopy;
             const char * charPath = env->GetStringUTFChars(jstr, &isCopy);
             const int size = env->GetStringUTFLength(jstr);
@@ -155,6 +158,8 @@ class JniBaseObjects {
         }
 
         static std::wstring jstringToWString(JNIEnv* env, jstring jstr) {
+            if (jstr == nullptr)
+                return std::wstring();
             jboolean isCopy;
             const char * charPath = env->GetStringUTFChars(jstr, &isCopy);
             const int size = env->GetStringUTFLength(jstr);

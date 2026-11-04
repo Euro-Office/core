@@ -53,6 +53,8 @@ namespace NSDirectory
 #if !defined(_WIN32) && !defined (_WIN64)
 	static bool is_directory_exist(char* dir)
 	{
+		if (!dir)
+			return false; // empty path
 #ifdef __ANDROID__
 		if (0 == strcmp("/storage/emulated", dir))
 			return true;

@@ -98,6 +98,9 @@ def build_and_install():
             "-DMZ_ZSTD=OFF",
             "-DMZ_OPENSSL=OFF",
             "-DMZ_PPMD=OFF",
+            # Emscripten counts as UNIX, so libbsd defaults to ON and needs
+            # pkg-config, which the WASM image lacks. getrandom() is used instead.
+            "-DMZ_LIBBSD=OFF",
             "-DMZ_COMPAT=ON",
             "-DBUILD_SHARED_LIBS=OFF",
         ],
