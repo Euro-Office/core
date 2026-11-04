@@ -260,3 +260,21 @@ jobs:
             package/bin/
             package/tools/
           if-no-files-found: warn
+
+  build-summary:
+    # Aggregate job: the branch rules for main require a check called "build",
+    # and this keeps it on the Windows builds, both architectures.
+    name: build
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check build result
+        run: |
+          result="${{ needs.build.result }}"
+          echo "Windows build result: $result"
+          if [ "$result" = "success" ]; then
+            exit 0
+          fi
+          echo "Windows build failed (result: $result)."
+          exit 1
