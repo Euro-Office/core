@@ -32,6 +32,7 @@
 #include "../../DesktopEditor/raster/BgraFrame.h"
 #include "../../DjVuFile/DjVu.h"
 #include "../PdfFile.h"
+#include "../PdfWriter.h"
 
 #include <algorithm>
 
@@ -943,4 +944,33 @@ TEST_F(CPdfFileTest, ImgDiff)
 			oFrameAll.SaveFile(sPageDiff, 4);
 		}
 	}
+}
+
+// Covers the redaction early-return in CPdfWriter::DrawText (#224). Text that
+// lands inside a redaction area returns before CRendererTextCommand takes
+// ownership of the buffer, so DrawText has to free it. This case drives that
+// path and checks it succeeds; it does not measure the heap.
+TEST_F(CPdfFileTest, DrawTextInsideRedaction)
+{
+	ASSERT_NE(pApplicationFonts, nullptr);
+
+	CPdfWriter writer(pApplicationFonts, false, nullptr, true, wsTempDir);
+	ASSERT_GE(writer.NewPage(), 0);
+
+	// Bundled Base14 font: no dependency on system fonts.
+	writer.put_FontName(L"Embedded: Helvetica");
+	writer.put_FontSize(12);
+
+	// Quad (page coords in points, y from top) big enough that the text
+	// origin (10,10) always falls inside it, so SkipRedact() returns true.
+	ASSERT_GE(writer.AddRedact({
+		-10000.0, -10000.0,
+		 10000.0, -10000.0,
+		 10000.0,  10000.0,
+		-10000.0,  10000.0
+	}), 0);
+
+	const std::wstring wsText(256, L'A');
+	for (int i = 0; i < 100; ++i)
+		ASSERT_GE(writer.CommandDrawText(wsText, 10, 10, 100, 20), 0);
 }
