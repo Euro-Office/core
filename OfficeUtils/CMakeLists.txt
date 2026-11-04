@@ -32,6 +32,17 @@ function(add_officeutils TARGET OFFICE_UTILS_DIR)
         z
     )
 
+    if( APPLE )
+        # minizip is a static lib and does not carry its own dependencies:
+        # iconv for string encoding conversion, CoreFoundation + Security for
+        # the (PKWARE/WinZip) encryption code's random numbers.
+        target_link_libraries( ${TARGET} PUBLIC
+            iconv
+            "-framework CoreFoundation"
+            "-framework Security"
+        )
+    endif()
+
 
     if( NOT MSVC )
         target_compile_options( ${TARGET} PRIVATE "SHELL:-include unistd.h")

@@ -683,9 +683,13 @@ namespace NSDoctRenderer
 						bIsBreak = true;
 					}
 
-					JSSmart<CJSObject> js_objectAsc = global_js->get("Asc")->toObject();
-					js_objectApi = js_objectAsc->get("editor")->toObject();
-					if (try_catch->Check())
+					// Without (working) sdkjs scripts Asc.editor is missing; converting
+					// undefined to an object would abort the process inside V8
+					JSSmart<CJSValue> js_valueAsc = global_js->get("Asc");
+					JSSmart<CJSValue> js_valueApi = js_valueAsc->isObject() ? js_valueAsc->toObject()->get("editor") : js_valueAsc;
+					if (js_valueApi->isObject())
+						js_objectApi = js_valueApi->toObject();
+					if (!js_valueApi->isObject() || try_catch->Check())
 					{
 						strError = L"code=\"open\"";
 						bIsBreak = true;

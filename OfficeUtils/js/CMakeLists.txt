@@ -411,7 +411,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/DesktopEditor/cximage/jasper/include
     ${CORE_ROOT}/DesktopEditor/cximage/jpeg
     ${CORE_ROOT}/DesktopEditor/cximage/png
-    ${CORE_ROOT}/DesktopEditor/xml/libxml2/include
     ${CORE_ROOT}/DesktopEditor/agg-2.4/include
 )
 

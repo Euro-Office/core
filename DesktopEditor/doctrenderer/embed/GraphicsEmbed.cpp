@@ -1,4 +1,5 @@
 #include "../graphics.h"
+#include "../../graphics/pro/Image.h"
 #include <map>
 #include "../../../Common/Network/FileTransporter/include/FileTransporter.h"
 
@@ -7,6 +8,7 @@ class CGraphicsAppImage_private
 {
 public:
 	NSFonts::IApplicationFonts* m_pFonts;
+	NSImages::IImageFilesCache* m_pImageCache;
 	std::wstring m_sFontsDirectory;
 	std::wstring m_sImagesDirectory;
 	std::wstring m_sThemesDirectory;
@@ -17,6 +19,7 @@ public:
 	CGraphicsAppImage_private()
 	{
 		m_pFonts = NULL;
+		m_pImageCache = NULL;
 		m_sFontsDirectory = L"";
 		m_sImagesDirectory = L"";
 		m_sThemesDirectory = L"";
@@ -25,6 +28,7 @@ public:
 	~CGraphicsAppImage_private()
 	{
 		RELEASEINTERFACE(m_pFonts);
+		RELEASEINTERFACE(m_pImageCache);
 
 		for (std::map<std::wstring, std::wstring>::iterator i = m_mapDownloads.begin(); i != m_mapDownloads.end(); i++)
 		{
@@ -118,6 +122,16 @@ void CGraphicsAppImage::SetFonts(NSFonts::IApplicationFonts* fonts)
 NSFonts::IApplicationFonts* CGraphicsAppImage::GetFonts()
 {
 	return m_internal->m_pFonts;
+}
+void CGraphicsAppImage::SetImageCache(NSImages::IImageFilesCache* cache)
+{
+	RELEASEINTERFACE(m_internal->m_pImageCache);
+	m_internal->m_pImageCache = cache;
+	ADDREFINTERFACE(cache);
+}
+NSImages::IImageFilesCache* CGraphicsAppImage::GetImageCache()
+{
+	return m_internal->m_pImageCache;
 }
 
 void CGraphicsAppImage::SetRgba(const bool& isRgba)

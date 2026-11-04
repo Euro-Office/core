@@ -845,7 +845,7 @@ namespace NSJSBase
 
 #ifdef ANDROID_LOGS
 				std::string sLog = "[JS (" + std::to_string(nLineNumber) + ")]: " + strCode + ", " + strException;
-				LOGE(sLog.c_str());
+				LOGE("%s", sLog.c_str());
 #endif
 				return true;
 			}

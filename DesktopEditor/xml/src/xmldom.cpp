@@ -900,10 +900,10 @@ namespace XmlUtils
 		}
 	};
 
-	static int buffer_xmlBufferIOWrite(CXmlBuffer* buf, const char* buffer, int len)
+	static int buffer_xmlBufferIOWrite(CXmlBuffer* buf, const char* buffer, size_t len)
 	{
-		buf->builder.WriteString(buffer, (size_t)len);
-		return len;
+		buf->builder.WriteString(buffer, len);
+		return (int)len;
 	}
 
 	static int buffer_xmlBufferIOClose(CXmlBuffer* buf)
@@ -933,7 +933,7 @@ namespace XmlUtils
 	std::string NSXmlCanonicalizator::Execute(const std::string& sXml, int mode, bool withComments)
 	{
 #ifdef LIBXML_C14N_ENABLED
-		xmlDocPtr xmlDoc = xmlParseMemory((char*)sXml.c_str(), (int)sXml.length());
+		xmlDocPtr xmlDoc = xmlReadMemory(sXml.c_str(), (int)sXml.length(), NULL, NULL, 0);
 
 		CXmlBuffer bufferC14N;
 		xmlOutputBufferPtr _buffer = xmlOutputBufferCreateIO((xmlOutputWriteCallback)buffer_xmlBufferIOWrite, (xmlOutputCloseCallback)buffer_xmlBufferIOClose, &bufferC14N, NULL);
@@ -941,6 +941,7 @@ namespace XmlUtils
 		xmlC14NExecute(xmlDoc, buffer_xmlC14NIsVisibleCallback, NULL, mode, NULL, withComments ? 1 : 0, _buffer);
 
 		xmlOutputBufferClose(_buffer);
+		xmlFreeDoc(xmlDoc);
 
 		return bufferC14N.builder.GetData();
 #else

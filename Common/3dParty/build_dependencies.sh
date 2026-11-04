@@ -2,11 +2,11 @@
 set -e # Exit immediately if a command fails
 
 # --- Configuration ---
-NEXTCLOUD_USER=
-NEXTCLOUD_PASS=
-
-NEXTCLOUD_REMOTE="https://cloud.nextcloud.com/remote.php/dav/files" # Name of configured remote
-BASE_REMOTE_PATH="3DPARTY_DEPS"
+# Upload credentials come from the environment:
+# REMOTE_CACHE_S3_ACCESS_KEY, REMOTE_CACHE_S3_SECRET_KEY
+REMOTE_CACHE_S3_URL="${REMOTE_CACHE_S3_URL:-https://s3.eu-central-4.ionoscloud.com/eo-build-assets}"
+REMOTE_CACHE_S3_REGION="${REMOTE_CACHE_S3_REGION:-eu-central-4}"
+BASE_REMOTE_PATH="vcpkg"
 THDPARTY_DIR="."
 LOCAL_BUILD_DIR="./build_output"
 TRIPLETS=(
@@ -19,6 +19,8 @@ TRIPLETS=(
     #"x64-osx"
     #"arm64-osx"
 )
+
+: "${REMOTE_CACHE_S3_ACCESS_KEY:?needed to upload}" "${REMOTE_CACHE_S3_SECRET_KEY:?needed to upload}"
 
 mkdir -p "$LOCAL_BUILD_DIR"
 
@@ -70,22 +72,19 @@ for dep_info in "${DEPS[@]}"; do
         NEW_HASH=$(sha512sum "${LOCAL_BUILD_DIR}/${FILENAME}" | awk '{print $1}')
         echo ">>> Hash: $NEW_HASH"
 
-        # 3. Upload to Nextcloud
-        REMOTE_FOLDER="${BASE_REMOTE_PATH}/${NAME}/${VERSION}/${triplet}"
-        
-        echo ">>> Uploading to ${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${REMOTE_FOLDER}..."
-        curl -u "${NEXTCLOUD_USER}:${NEXTCLOUD_PASS}" \
-            -X MKCOL "${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${BASE_REMOTE_PATH}/${NAME}"
-        curl -u "${NEXTCLOUD_USER}:${NEXTCLOUD_PASS}" \
-            -X MKCOL "${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${BASE_REMOTE_PATH}/${NAME}/${VERSION}"
-        curl -u "${NEXTCLOUD_USER}:${NEXTCLOUD_PASS}" \
-            -X MKCOL "${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${REMOTE_FOLDER}"
-        curl -u "${NEXTCLOUD_USER}:${NEXTCLOUD_PASS}" \
-            -X DELETE \
-            "${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${REMOTE_FOLDER}/${NAME}_binary.tar.bz2"
-        curl -u "${NEXTCLOUD_USER}:${NEXTCLOUD_PASS}" \
-            -T "${LOCAL_BUILD_DIR}/${FILENAME}" \
-            "${NEXTCLOUD_REMOTE}/${NEXTCLOUD_USER}/${REMOTE_FOLDER}/${NAME}_binary.tar.bz2"
+        # 3. Upload to S3. Archives are immutable: bump the version instead of
+        #    replacing one.
+        URL="${REMOTE_CACHE_S3_URL}/${BASE_REMOTE_PATH}/${NAME}/${VERSION}/${triplet}/${NAME}_binary.tar.bz2"
+
+        if curl -sfI -o /dev/null "$URL"; then
+            echo ">>> $URL already exists, not replacing it"
+            continue
+        fi
+        echo ">>> Uploading to $URL..."
+        # Credentials via stdin, so they don't show up in the process list
+        printf 'user = "%s:%s"\n' "$REMOTE_CACHE_S3_ACCESS_KEY" "$REMOTE_CACHE_S3_SECRET_KEY" |
+            curl -sf -K - --aws-sigv4 "aws:amz:${REMOTE_CACHE_S3_REGION}:s3" \
+                -T "${LOCAL_BUILD_DIR}/${FILENAME}" "$URL"
 
         # 4. Update the local Git repository's hashes.txt
         HASH_FILE="${DEP_DIR}/hashes.txt"

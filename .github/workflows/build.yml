@@ -2,6 +2,13 @@ name: Build
 
 on:
   pull_request:
+  workflow_dispatch:
+
+# A new push to a pull request cancels its previous run. Other runs (manual
+# ones included) are never cancelled, they wait instead.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build:
@@ -20,9 +27,12 @@ jobs:
           - { product: server,  distro: rocky9, arch: arm64, runner: ubuntu-24.04-arm }
           - { product: desktop, distro: ubuntu, arch: arm64, runner: ubuntu-24.04-arm }
     name: build (${{ matrix.product }}, ${{ matrix.distro }}, ${{ matrix.arch }})
+    environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
     env:
-      NEXTCLOUD_USER: ${{ secrets.NEXTCLOUD_USER }}
-      NEXTCLOUD_PASS: ${{ secrets.NEXTCLOUD_PASS }}
+      # Only set on a manual run, through the build-assets environment: that
+      # run uploads missing third-party builds, every other run only reads.
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       CCACHE_MAXSIZE: 2G
       BASE_IMAGE: euro-office/core-base-${{ matrix.product }}-${{ matrix.arch }}:ci
       BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
@@ -33,16 +43,26 @@ jobs:
       with:
         submodules: recursive
 
-    # Build environment: the core-base stage of the release Dockerfile. The
-    # stage has no COPY, so the Dockerfile is fed via stdin with an empty
-    # build context. Layers are cached by the runner's Docker daemon.
-    - name: Build core-base image from Dockerfile
+    # Build environment: the core-base stage of the release Dockerfile.
+    # Euro-Office/docker-ci publishes it as core-base:<product>-<arch>-<hash>,
+    # <hash> being the first 12 characters of the Dockerfile's sha256. Without
+    # that tag (the Dockerfile changed and docker-ci has not rebuilt yet) the
+    # stage is built here: it has no COPY, so the Dockerfile is fed via stdin
+    # with an empty build context. Layers are cached by the runner's Docker daemon.
+    - name: Get core-base image
       run: |
-        docker build \
-          --target core-base \
-          --build-arg PRODUCT=${{ matrix.product }} \
-          -t "$BASE_IMAGE" \
-          - < .docker/core.bake.Dockerfile
+        hash=$(sha256sum .docker/core.bake.Dockerfile | cut -c1-12)
+        published="ghcr.io/euro-office/core-base:${{ matrix.product }}-${{ matrix.arch }}-$hash"
+        if docker pull "$published"; then
+          docker tag "$published" "$BASE_IMAGE"
+        else
+          echo "::notice::$published is not published, building core-base here"
+          docker build \
+            --target core-base \
+            --build-arg PRODUCT=${{ matrix.product }} \
+            -t "$BASE_IMAGE" \
+            - < .docker/core.bake.Dockerfile
+        fi
 
     # CI-only additions on top of core-base: fonts for the conversion test.
     # x2t measures text (e.g. spreadsheet column widths) with the system
@@ -74,11 +94,15 @@ jobs:
           -v "$GITHUB_WORKSPACE/.cache/vcpkg:/nuget-cache" \
           -e CCACHE_DIR=/core/.cache/ccache \
           -e CCACHE_MAXSIZE \
-          -e NEXTCLOUD_USER -e NEXTCLOUD_PASS \
+          -e REMOTE_CACHE_S3_ACCESS_KEY -e REMOTE_CACHE_S3_SECRET_KEY \
           -e LANG=C.UTF-8 -e LC_ALL=C.UTF-8 \
           "$BUILD_IMAGE" bash -euo pipefail -c "$1"
         SH
         chmod +x "$RUNNER_TEMP/in-build-image"
+
+    - name: Remote cache unit tests
+      run: |
+        "$RUNNER_TEMP/in-build-image" '$CORE_PYTHON -m unittest discover -s Common/3dParty'
 
     - name: Restore vcpkg binary cache
       uses: actions/cache/restore@v4
@@ -269,8 +293,8 @@ jobs:
     # API, save (JS writer, C++ reader), reopen twice. See
     # Test/BinaryFormat/README.md. Runs as root in a throwaway container and
     # hands the results back to the runner user (HOST_UID/HOST_GID).
-    # Cases without a committed expectation only warn until they are seeded
-    # from the uploaded artifact (its expected/ folder).
+    # A case without a committed expectation fails and prints the facts it
+    # saw as a "seen:" line, so a new expectation can be taken from the log.
     - name: sdkjs round-trip (docbuilder)
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64' && steps.overlay.outcome == 'success'
       run: |
@@ -290,3 +314,28 @@ jobs:
         path: ${{ runner.temp }}/roundtrip/
         if-no-files-found: ignore
         retention-days: 14
+
+  # macOS arm64 third-party libs for the desktop build (same selection as
+  # common.cmake with BUILD_DESKTOP on Apple), so DesktopEditors' macOS build
+  # can download them. Only on manual runs: it exists to fill the remote cache.
+  thirdparty-macos:
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: macos-15
+    environment: build-assets
+    env:
+      REMOTE_CACHE_S3_ACCESS_KEY: ${{ secrets.S3_ACCESS_KEY }}
+      REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Homebrew build prerequisites
+      run: brew install ninja autoconf automake libtool pkg-config
+
+    - name: Build third-party libs (macOS arm64)
+      run: |
+        python3 Common/3dParty/build_3rdparty.py \
+          --except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,qt \
+          "$RUNNER_TEMP/3rd/work" "$RUNNER_TEMP/3rd/install"
