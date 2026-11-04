@@ -154,7 +154,7 @@ else()
             endif()
 
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,boost-wasm,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )

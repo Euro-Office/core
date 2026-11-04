@@ -288,5 +288,5 @@ jobs:
     - name: Build third-party libs (macOS arm64)
       run: |
         python3 Common/3dParty/build_3rdparty.py \
-          --except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm,qt \
+          --except=openssl-hash,boost-wasm,icu-wasm,zlib-ng-wasm,libxml2-wasm,qt \
           "$RUNNER_TEMP/3rd/work" "$RUNNER_TEMP/3rd/install"
