@@ -239,7 +239,26 @@ namespace BinXlsxRW
 		RdRichValueTypes = 33,
 		// Euro-Office extension: kept far above the ids above so that a record added later in the
 		// same sequence cannot take it
-		SourceFileType = 100
+		SourceFileType = 100,
+		// Euro-Office: sheets the editor cannot show, carried through unchanged. A high value
+		// keeps it clear of ids added upstream; the payload is only parsed by core.
+		PreservedSheets = 100
+	};}
+	namespace c_oSerPreservedSheetTypes{enum c_oSerPreservedSheetTypes
+	{
+		Sheet = 0,
+		Name = 1,
+		SheetId = 2,
+		State = 3,
+		Index = 4,
+		RelType = 5,
+		Part = 6,
+		PartName = 7,
+		PartContentType = 8,
+		PartData = 9,
+		DefinedName = 10,
+		DefinedNameXml = 11,
+		DefinedNameLocal = 12
 	};}
 	namespace c_oSerWorkbookProtection {enum c_oSerWorkbookProtection{
 		AlgorithmName = 0,

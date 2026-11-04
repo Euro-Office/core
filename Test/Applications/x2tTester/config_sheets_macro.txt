@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<settings>
+	<settings>./</settings>
+	<inputDirectory>input_sheets_macro</inputDirectory>
+	<outputDirectory>out_sheets_macro</outputDirectory>
+	<x2tPath>../../../build/package/</x2tPath>
+	<output>xlsm</output>
+	<troughConversion>1</troughConversion>
+	<cores>1</cores>
+</settings>
