@@ -26,7 +26,9 @@
 
 #include "../../../Common/3dParty/pole/pole.h"
 #include "../../../EpubFile/CEpubFile.h"
+#ifndef X2T_NO_FB2
 #include "../../../Fb2File/Fb2File.h"
+#endif
 #include "../../../HtmlFile2/htmlfile2.h"
 #include "../../../Common/3dParty/md/md2html.h"
 #include "common.h"
@@ -140,9 +142,13 @@ namespace NExtractTools
 	}
 	_UINT32 fb2docx_dir(const std::wstring& sFrom, const std::wstring& sTo, InputParams& params, ConvertParams& convertParams)
 	{
+#ifdef X2T_NO_FB2
+		return AVS_FILEUTILS_ERROR_CONVERT;
+#else
 		CFb2File fb2File;
 		fb2File.SetTmpDirectory(convertParams.m_sTempDir);
 		return S_OK == fb2File.Open(sFrom, sTo) ? S_OK : AVS_FILEUTILS_ERROR_CONVERT;
+#endif
 	}
 	_UINT32 fb2docx(const std::wstring& sFrom, const std::wstring& sTo, InputParams& params, ConvertParams& convertParams)
 	{
@@ -216,10 +222,14 @@ namespace NExtractTools
 
 		std::wstring sHtmlFile = combinePath(convertParams.m_sTempDir, L"index.html");
 
+#ifdef X2T_NO_FB2
+		nRes = AVS_FILEUTILS_ERROR_CONVERT;
+#else
 		CFb2File fb2File;
 		fb2File.SetTmpDirectory(convertParams.m_sTempDir);
 		if (S_FALSE == fb2File.FromHtml(sHtmlFile, sTo, params.m_sTitle ? *params.m_sTitle : L""))
 			nRes = AVS_FILEUTILS_ERROR_CONVERT;
+#endif
 
 		return nRes;
 	}
