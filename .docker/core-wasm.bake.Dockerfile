@@ -12,6 +12,8 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
     ARG BUILD_ROOT
     ARG CACHE_BUST
     ARG NUGET_SOURCE_PATH
+    # ON adds x2t.wasm for client-only editor sessions (X2tConverter/build/wasm)
+    ARG EO_WASM_X2T=OFF
 
     ENV BUILD_ROOT=${BUILD_ROOT}
     ENV EM_CACHE=/em-cache
@@ -21,7 +23,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
     # hash wasm has one dependency in sdkjs which we must copy here (TODO: fix this)
     COPY sdkjs/common/stringserialize.js /sdkjs/common/stringserialize.js
 
-    RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST},target=/build-cache-wasm \
+    RUN --mount=type=cache,id=wasm-build-cache-${CACHE_BUST}-x2t-${EO_WASM_X2T},target=/build-cache-wasm \
         --mount=type=cache,id=wasm-ccache,target=/ccache \
         --mount=type=cache,id=wasm-em-cache,target=/em-cache \
         --mount=type=bind,source=${NUGET_SOURCE_PATH},target=/nuget-cache,rw <<EOF
@@ -30,6 +32,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
         cd /build-cache-wasm
         emcmake cmake -DCMAKE_C_COMPILER_LAUNCHER=ccache \
                       -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
+                      -DEO_WASM_X2T=${EO_WASM_X2T} \
                       -DEO_CORE_OUTPUT_DIR=/build-cache-wasm/dist /core
         cmake --build . -- -j$(nproc)
         ccache --show-stats
