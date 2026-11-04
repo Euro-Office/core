@@ -104,6 +104,12 @@ public:
 	void set_header_footer_image	(office_element_ptr image);
 	void set_background				(_CP_OPT(odf_types::color) & color, int type);
 
+	// Clone the current (last) master page into a new master without the background,
+	// and set style:next-style-name on the original to chain to the clone.
+	// Used for first-page-only backgrounds: section 0's master keeps the background,
+	// page 2+ uses the clone.
+	void chain_current_master_to_clean_copy();
+
 
 	void set_page_number_format		(_CP_OPT(int) & type, _CP_OPT(int) & start);
 

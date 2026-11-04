@@ -8928,6 +8928,13 @@ int Binary_DocumentTableReader::Read_Background(BYTE type, long length, void* po
 			m_oBufferedStream.Seek(nCurPos);
 		}
     }
+    else if ( c_oSerBackgroundType::FirstPageOnly == type )
+    {
+        if (0 != length)
+            res = c_oSerConstants::ReadUnknown;
+        else
+            pBackground->bFirstPageOnly = true;
+    }
     else
         res = c_oSerConstants::ReadUnknown;
     return res;
