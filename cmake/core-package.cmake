@@ -68,13 +68,15 @@ foreach(_t IN LISTS _eo_package_bin_targets _eo_package_tools_targets)
         list(APPEND _eo_lib_targets ${_t})
     endif()
 
-    # Static libraries pass on what they link; only imported targets
-    # (Boost::system, ...) mean the same in the consuming project
-    if(_type STREQUAL "STATIC_LIBRARY")
+    # Libraries pass on what they link; only other packaged targets and
+    # imported targets (Boost::system, ...) mean the same in the consuming
+    # project
+    if(_type MATCHES "_LIBRARY$")
         get_target_property(_links ${_t} INTERFACE_LINK_LIBRARIES)
         set(_kept)
         foreach(_l IN LISTS _links)
-            if(_l MATCHES "::" AND NOT _l MATCHES "^\\$<")
+            if((_l IN_LIST _eo_package_bin_targets AND TARGET ${_l})
+               OR (_l MATCHES "::" AND NOT _l MATCHES "^\\$<"))
                 list(APPEND _kept "${_l}")
             endif()
         endforeach()

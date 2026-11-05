@@ -149,8 +149,14 @@ else()
                 set(PLATFORM_EXCLUDE ",qt")
             endif()
 
+            set(PREBUILT_EXCLUDE "")
+            if(EO_CORE_PREBUILT_DIR)
+                # Only doctrenderer links V8, and the package has it built in
+                set(PREBUILT_EXCLUDE ",v8")
+            endif()
+
             # cef and qt need old build environment, cannot be built here
-            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}")
+            set(THIRD_PARTY_ARGS "--except=openssl-hash,icu-wasm,zlib-ng-wasm,libxml2-wasm${NO_DESKTOP_EXCLUDE}${PLATFORM_EXCLUDE}${PREBUILT_EXCLUDE}")
         endif()
 
         cmake_path( APPEND BUILDER_PATH "${CMAKE_CURRENT_LIST_DIR}" "Common" "3dParty" "build_3rdparty.py" )
