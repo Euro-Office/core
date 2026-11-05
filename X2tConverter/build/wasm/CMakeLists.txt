@@ -141,6 +141,9 @@ target_link_options(x2t PRIVATE
     -sFORCE_FILESYSTEM=1
     -sNO_DISABLE_EXCEPTION_CATCHING
     -sEMULATE_FUNCTION_POINTER_CASTS=1
+    # fpcast-emu's default parameter limit is below x2t's widest function
+    # (wasm-opt: "max-func-params needs to be at least 26")
+    -sBINARYEN_EXTRA_PASSES=--pass-arg=max-func-params@32
     # Formats skipped in library/CMakeLists.txt resolve to run-time traps
     -sERROR_ON_UNDEFINED_SYMBOLS=0
     # The native graph is a set of shared libraries that may each carry a copy
