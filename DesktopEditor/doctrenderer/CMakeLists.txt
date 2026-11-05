@@ -341,7 +341,7 @@ target_link_libraries(doctrenderer PRIVATE
     ${V8_MONOLITH}
 )
 
-if(UNIX AND NOT APPLE AND NOT ANDROID)
+if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
     # V8 uses atomics the compiler can't inline everywhere (e.g. clang on
     # arm64), which call into libatomic. Linked after the V8 library, else
     # --as-needed drops it.
