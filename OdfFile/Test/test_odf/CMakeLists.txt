@@ -43,6 +43,7 @@ add_core_gtest(
     SOURCES test.cpp
             common.cpp
             number_styles.cpp
+            conversion_helpers.cpp
             ${CORE_ROOT_DIR}/Common/OfficeFileFormatChecker2.cpp
     WORKING_DIRECTORY "${_test_odf_run_dir}"
 )
