@@ -19,7 +19,7 @@ namespace NSMemoryStreamEmbed
 	FUNCTION_WRAPPER_V8_1(_WriteString, WriteString)
 	FUNCTION_WRAPPER_V8_1(_WriteString2, WriteString2)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);

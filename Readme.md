@@ -41,8 +41,9 @@ In CI, pull request builds only read. To upload new or bumped dependencies, run 
 
 | Workflow | Uploads |
 | --- | --- |
-| Build | Linux x64/arm64, macOS arm64 |
-| Build (Windows x64) | Windows x64 and arm64 |
+| Build | Linux x64/arm64, macOS arm64 (with the desktop libraries) |
+| Build (macOS arm64) | macOS arm64 |
+| Build (Windows) | Windows x64 and arm64 |
 | Build (Android) | Android arm64-v8a, x86_64 |
 
 ```sh
@@ -51,7 +52,7 @@ gh workflow run build.yml -R Euro-Office/core --ref main
 
 ## Build heavy dependencies for vcpkg
 
-`Common/3dParty/build_dependencies.sh` builds CEF, libvlc, Boost, Qt and V8 (this takes 5 hours or more), uploads them to `vcpkg/<PKG_NAME>/<VERSION>/<TARGET_TRIPLET>/<PKG_NAME>_binary.tar.bz2` in the bucket and records their SHA512 in the dependency's `hashes.txt`. Set `REMOTE_CACHE_S3_ACCESS_KEY` and `REMOTE_CACHE_S3_SECRET_KEY`, then run
+`Common/3dParty/build_dependencies.sh` builds CEF, libvlc, Boost and Qt (this takes 5 hours or more), uploads them to `vcpkg/<PKG_NAME>/<VERSION>/<TARGET_TRIPLET>/<PKG_NAME>_binary.tar.bz2` in the bucket and records their SHA512 in the dependency's `hashes.txt`. Set `REMOTE_CACHE_S3_ACCESS_KEY` and `REMOTE_CACHE_S3_SECRET_KEY`, then run
 
 ```sh
 ./build_dependencies.sh
