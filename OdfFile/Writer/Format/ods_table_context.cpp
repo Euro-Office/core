@@ -498,7 +498,8 @@ void ods_table_context::add_defined_range(const std::wstring & name, const std::
 		XmlUtils::replace_all( odf_range, L"]", L"");
 		XmlUtils::replace_all( odf_range, L";", L" ");
 
-		table_state_list_[sheet_id]->set_table_print_ranges(odf_range);
+		if (sheet_id >= 0 && sheet_id < (int)table_state_list_.size())
+			table_state_list_[sheet_id]->set_table_print_ranges(odf_range);
 	}
 	
 	if (false == odf_base_cell.empty())
