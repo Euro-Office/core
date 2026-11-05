@@ -58,6 +58,14 @@ foreach(_t IN LISTS EO_CORE_PACKAGE_TARGETS)
     if(EO_CORE_PACKAGE_${_t}_LINK)
         set_target_properties(${_t} PROPERTIES INTERFACE_LINK_LIBRARIES "${EO_CORE_PACKAGE_${_t}_LINK}")
     endif()
+    # What its CMakeLists.txt makes PUBLIC: these paths differ per machine, so
+    # they can't come from the package
+    if(_t STREQUAL "UnicodeConverter")
+        get_filename_component(_eo_unicode_dir "${CMAKE_CURRENT_LIST_DIR}/../UnicodeConverter" ABSOLUTE)
+        set_target_properties(${_t} PROPERTIES
+            INTERFACE_INCLUDE_DIRECTORIES "${_eo_unicode_dir};${ICU_INSTALL_DIR_ABS}/include"
+            INTERFACE_LINK_LIBRARIES "${LIBICUUC};${LIBICUDATA}")
+    endif()
     if(EO_CORE_PACKAGE_${_t}_FILE MATCHES "^${EO_CORE_PACKAGE_TOOLS}/([^/]+)$"
        AND NOT EO_CORE_PACKAGE_TOOLS STREQUAL EO_CORE_PACKAGE_BIN)
         list(APPEND _eo_tools "${CMAKE_MATCH_1}")
