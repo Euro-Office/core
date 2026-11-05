@@ -20,3 +20,12 @@ path = [
 ]
 SPDX-FileCopyrightText = "2026 Euro-Office contributors"
 SPDX-License-Identifier = "AGPL-3.0-only"
+
+[[annotations]]
+path = [
+    "OdfFile/Test/test_odf/ExampleFiles/underline_double.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/underline_wave.odt",
+    "OdfFile/Test/test_odf/ExampleFiles/underline_wave_double.odt",
+]
+SPDX-FileCopyrightText = "2026 Euro-Office contributors"
+SPDX-License-Identifier = "AGPL-3.0-only"
