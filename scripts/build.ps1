@@ -73,7 +73,7 @@ if ($Ccache) {
     # those (/Yc, /Yu), and they can't be turned off: msvc_fix.h is one of them.
     $env:CCACHE_SLOPPINESS = 'pch_defines,time_macros,include_file_mtime,include_file_ctime'
     # Some sources are not UTF-8, ccache would not cache them
-    $env:CCACHE_MSVC_UTF8 = 'false'
+    $env:CCACHE_NOMSVC_UTF8 = 'true'
 }
 # sccache only caches with debug info embedded in the objects (/Z7)
 elseif (Get-Command sccache -ErrorAction SilentlyContinue) {
