@@ -184,9 +184,6 @@ else()
 
     if(MSVC)
         set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>DLL" CACHE STRING "" FORCE)
-        foreach(flag_var CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_RELEASE CMAKE_C_FLAGS CMAKE_C_FLAGS_RELEASE)
-            string(REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
-        endforeach()
     endif()
 
     if(BUILD_DESKTOP)
