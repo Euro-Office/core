@@ -11,7 +11,7 @@ namespace NSHashEmbed
 	FUNCTION_WRAPPER_V8_3(_hash, hash)
 	FUNCTION_WRAPPER_V8_4(_hash2, hash2)
 
-	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
+	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)
 	{
 		v8::EscapableHandleScope handle_scope(isolate);
 		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);
