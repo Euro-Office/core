@@ -17,8 +17,10 @@ Remote layout (below EO_CORE_CACHE_PREFIX, default "core"):
 
 <channel> is "main" (pushes to main) or "pr" (same-repo pull requests). Only
 the newest package of a PR is kept: publishing a new one deletes the previous
-one, and `prune-pr` deletes the rest when the PR is closed. Packages are never
-replaced.
+one, and `prune-pr` deletes the rest when the PR is closed. Either keeps a
+package that another PR still has as its head. Packages are never replaced:
+the manifest marks a package as complete, so an archive without one is a
+leftover that the next publish overwrites.
 
 Commands:
   pack      archive a build output directory and write its manifest
@@ -57,6 +59,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import zlib
 from pathlib import Path
 
 import remote_cache
@@ -197,14 +200,6 @@ def pack( src, out, platform, product, core, toolchain="" ):
 # publish / prune
 # ---------------------------------------------------------------------------
 
-def _get_text( backend, path ):
-    with tempfile.TemporaryDirectory() as tmp:
-        dest = os.path.join( tmp, "obj" )
-        if not backend.get( path, dest ):
-            return None
-        return Path( dest ).read_text().strip()
-
-
 def _put_text( backend, path, text ):
     with tempfile.TemporaryDirectory() as tmp:
         src = os.path.join( tmp, "obj" )
@@ -213,20 +208,47 @@ def _put_text( backend, path, text ):
 
 
 def _delete_package( backend, channel, platform, product, tree ):
+    # Manifest first: what's left after a failure is only a leftover archive
+    deleted = True
     for ext in ( "json", "tar.gz" ):
         path = package_path( channel, platform, product, tree, ext )
         if not backend.delete( path ):
             print( f"  [WARN]  could not delete { path }" )
-    print( f"Deleted { channel }/{ platform }/{ product }/{ tree }" )
+            deleted = False
+    if deleted:
+        print( f"Deleted { channel }/{ platform }/{ product }/{ tree }" )
+    return deleted
 
 
-def _upload( backend, src, path ):
-    if backend.exists( path ):
-        print( f"  { path } exists, not replacing it" )
+def _head_of_other_pr( backend, pr, platform, product, tree ):
+    # Packages are keyed by tree, so two PRs can share one
+    own = pr_head_path( pr, platform, product )
+    for head in backend.keys( f"{ _prefix() }/pr-heads" ):
+        if ( head != own and head.rsplit( "/", 1 )[ -1 ] == f"{ platform }--{ product }"
+                and backend.read( head ) == tree ):
+            return True
+    return False
+
+
+def _release_pr_package( backend, pr, platform, product, tree ):
+    """Deletes a package PR pr no longer needs. Returns False on failure."""
+    if _head_of_other_pr( backend, pr, platform, product, tree ):
+        print( f"Keeping pr/{ platform }/{ product }/{ tree }: another PR uses it" )
+        return True
+    return _delete_package( backend, "pr", platform, product, tree )
+
+
+def _upload( backend, archive, manifest, channel, platform, product, tree ):
+    manifest_key = package_path( channel, platform, product, tree, "json" )
+    if backend.read( manifest_key ) is not None:
+        print( f"  { manifest_key } exists, not replacing the package" )
         return
-    if not backend.put( str( src ), path ):
-        raise Error( f"upload of { path } failed" )
-    print( f"  uploaded { path }" )
+    # Archive before manifest: a manifest always points at a complete upload
+    for src, path in ( ( archive, package_path( channel, platform, product, tree, "tar.gz" ) ),
+                       ( manifest, manifest_key ) ):
+        if not backend.put( str( src ), path ):
+            raise Error( f"upload of { path } failed" )
+        print( f"  uploaded { path }" )
 
 
 def publish( backend, manifests, channel, pr=None ):
@@ -251,29 +273,36 @@ def publish( backend, manifests, channel, pr=None ):
             raise Error( f"{ archive } does not match its manifest" )
 
         print( f"Publishing { channel }/{ platform }/{ product }/{ tree }" )
-        # Archive before manifest: a manifest always points at a complete upload
-        _upload( backend, archive, package_path( channel, platform, product, tree, "tar.gz" ) )
-        _upload( backend, manifest_path, package_path( channel, platform, product, tree, "json" ) )
-
         if channel == "pr":
+            # The head moves first: whatever fails below, every package of
+            # this PR is recorded, and another PR's prune sees this one's claim
             head = pr_head_path( pr, platform, product )
-            previous = _get_text( backend, head )
+            previous = backend.read( head )
+            if previous and previous != tree and _TREE_RE.fullmatch( previous ):
+                if not _release_pr_package( backend, pr, platform, product, previous ):
+                    raise Error( f"could not delete the previous package { previous }" )
             if not _put_text( backend, head, tree ):
                 raise Error( f"could not record { head }" )
-            if previous and previous != tree and _TREE_RE.fullmatch( previous ):
-                _delete_package( backend, channel, platform, product, previous )
+        _upload( backend, archive, manifest_path, channel, platform, product, tree )
 
 
 def prune_pr( backend, pr ):
     if not backend.can_write:
         raise Error( "pruning needs EO_CORE_CACHE_S3_ACCESS_KEY and EO_CORE_CACHE_S3_SECRET_KEY" )
     heads = backend.keys( f"{ _prefix() }/pr-heads/{ pr }" )
+    failed = []
     for head in heads:
         platform, _, product = head.rsplit( "/", 1 )[ -1 ].partition( "--" )
-        tree = _get_text( backend, head )
+        tree = backend.read( head )
         if tree and _TREE_RE.fullmatch( tree ) and _NAME_RE.fullmatch( platform ) and _NAME_RE.fullmatch( product ):
-            _delete_package( backend, "pr", platform, product, tree )
-        backend.delete( head )
+            # The head is the only reference to the package: keep it for a retry
+            if not _release_pr_package( backend, pr, platform, product, tree ):
+                failed.append( head )
+                continue
+        if not backend.delete( head ):
+            failed.append( head )
+    if failed:
+        raise Error( "could not prune " + ", ".join( failed ) )
     if not heads:
         print( f"No packages recorded for PR { pr }" )
 
@@ -300,19 +329,42 @@ def _extract( archive, dest ):
         tar.extractall( dest )
 
 
-def _installed_tree( dest ):
+def _is_installed( dest, tree, platform, product, channels ):
+    # Not only the tree: dest doesn't name the platform or channel
     try:
-        return json.loads( ( dest / MARKER ).read_text() ).get( "tree" )
+        marker = json.loads( ( dest / MARKER ).read_text() )
     except ( OSError, ValueError ):
+        return False
+    return ( isinstance( marker, dict ) and marker.get( "tree" ) == tree
+             and marker.get( "platform" ) == platform and marker.get( "product" ) == product
+             and marker.get( "channel" ) in channels )
+
+
+def _parse_manifest( text, platform, product, tree ):
+    try:
+        manifest = json.loads( text )
+    except ValueError:
         return None
+    if not isinstance( manifest, dict ):
+        return None
+    expected = { "format": FORMAT, "tree": tree, "platform": platform, "product": product }
+    if any( manifest.get( key ) != value for key, value in expected.items() ):
+        return None
+    if not isinstance( manifest.get( "size" ), int ) or not isinstance( manifest.get( "sha256" ), str ):
+        return None
+    return manifest
 
 
 def _try_channel( backend, channel, platform, product, tree, dest ):
-    manifest_text = _get_text( backend, package_path( channel, platform, product, tree, "json" ) )
+    try:
+        manifest_text = backend.read( package_path( channel, platform, product, tree, "json" ) )
+    except remote_cache.RemoteError as e:
+        print( f"  [WARN]  { e }" )
+        return False
     if manifest_text is None:
         return False
-    manifest = json.loads( manifest_text )
-    if manifest.get( "format" ) != FORMAT or manifest.get( "tree" ) != tree:
+    manifest = _parse_manifest( manifest_text, platform, product, tree )
+    if manifest is None:
         print( f"  [WARN]  { channel } manifest for { tree } doesn't match, ignoring it" )
         return False
 
@@ -329,7 +381,11 @@ def _try_channel( backend, channel, platform, product, tree, dest ):
             return False
         staging = Path( tmp ) / "out"
         staging.mkdir()
-        _extract( archive, staging )
+        try:
+            _extract( archive, staging )
+        except ( Error, tarfile.TarError, OSError, EOFError, zlib.error ) as e:
+            print( f"  [WARN]  could not extract the package: { e }" )
+            return False
         ( staging / MARKER ).write_text( json.dumps( dict( manifest, channel=channel ), indent=2 ) + "\n" )
         if dest.exists():
             shutil.rmtree( dest )
@@ -345,6 +401,9 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
         raise Error( f"EO_CORE_CACHE must be auto, off or require, not { mode !r}" )
     _check_name( "platform", platform )
     _check_name( "product", product )
+    for channel in channels:
+        if channel not in CHANNELS:
+            raise Error( f"unknown channel { channel !r}" )
     dest = Path( dest )
 
     # dest is replaced as a whole, so it must be ours (or not exist)
@@ -369,12 +428,10 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
         return miss( f"{ core } has local changes" )
 
     tree = source_tree( core )
-    if _installed_tree( dest ) == tree:
+    if _is_installed( dest, tree, platform, product, channels ):
         print( f"Core { tree } is already in { dest }" )
         return 0
     for channel in channels:
-        if channel not in CHANNELS:
-            raise Error( f"unknown channel { channel !r}" )
         if _try_channel( backend, channel, platform, product, tree, dest ):
             print( f"Core { tree } is in { dest }" )
             return 0
@@ -431,7 +488,7 @@ def main( argv=None ):
             with open( os.environ[ "GITHUB_OUTPUT" ], "a" ) as f:
                 f.write( f"hit={ 'true' if result == 0 else 'false' }\n" )
         return result
-    except Error as e:
+    except ( Error, remote_cache.RemoteError ) as e:
         print( f"core_package: { e }", file=sys.stderr )
         return 1
 

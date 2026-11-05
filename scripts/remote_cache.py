@@ -8,10 +8,15 @@
 #   exists( path )         -> bool
 #   list( dir )            -> str        (raw listing)
 #   keys( dir )            -> list[str]  (paths below dir, S3 only)
+#   read( path )           -> str | None (None: no such object, S3 only)
 #   get( path, dest_file ) -> bool
 #   put( src_file, path )  -> bool
 #   delete( path )         -> bool
+#
+# keys and read raise RemoteError when a request fails, so a caller that
+# deletes based on their answer can't mistake an outage for an empty cache.
 
+import html
 import http.client
 import os
 import re
@@ -20,6 +25,10 @@ import subprocess
 
 DEFAULT_S3_URL = "https://s3.eu-central-4.ionoscloud.com/eo-build-assets"
 DEFAULT_NEXTCLOUD_REMOTE = "https://cloud.nextcloud.com/remote.php/dav/files"
+
+
+class RemoteError( Exception ):
+    pass
 
 
 def env( *names, default="" ):
@@ -72,6 +81,9 @@ class WebDavBackend:
 
     def keys( self, dir ):
         raise NotImplementedError( "listing keys needs the S3 backend" )
+
+    def read( self, path ):
+        raise NotImplementedError( "reading objects needs the S3 backend" )
 
     def get( self, path, dest_file ):
         return self._curl( "-f", "-o", dest_file, self._url( path ) ).returncode == 0
@@ -156,18 +168,26 @@ class S3Backend:
         headers.pop( "host" )  # urllib sets it from the URL
         return Request( url, data=body, method=method, headers=headers )
 
-    def _open( self, req ):
-        # Response on 2xx, None on any HTTP or network error. Anything but a
-        # 404 is reported, so a broken setup doesn't look like a cache miss.
+    def _send( self, req ):
+        # Response on 2xx, None on a 404, RemoteError on anything else.
         from urllib.request import urlopen
         from urllib.error import HTTPError, URLError
         try:
             return urlopen( req, timeout=120 )
         except HTTPError as e:
-            if e.code != 404:
-                print( f"  [WARN]  S3 { req.get_method() } failed: HTTP { e.code } { e.reason }" )
+            if e.code == 404:
+                return None
+            raise RemoteError( f"S3 { req.get_method() } failed: HTTP { e.code } { e.reason }" )
         except ( URLError, OSError, http.client.HTTPException ) as e:
-            print( f"  [WARN]  S3 { req.get_method() } failed: { e }" )
+            raise RemoteError( f"S3 { req.get_method() } failed: { e }" )
+
+    def _open( self, req ):
+        # Response on 2xx, None on any HTTP or network error. Anything but a
+        # 404 is reported, so a broken setup doesn't look like a cache miss.
+        try:
+            return self._send( req )
+        except RemoteError as e:
+            print( f"  [WARN]  { e }" )
         return None
 
     def exists( self, path ):
@@ -184,9 +204,31 @@ class S3Backend:
         with r:
             return r.read().decode( "utf-8", "replace" )
 
+    def _read_body( self, req ):
+        r = self._send( req )
+        if r is None:
+            return None
+        try:
+            with r:
+                return r.read().decode( "utf-8", "replace" )
+        except ( OSError, http.client.HTTPException ) as e:
+            raise RemoteError( f"S3 { req.get_method() } failed: { e }" )
+
     def keys( self, dir ):
-        # Only the first 1000 keys; the folders this is used on are small.
-        return re.findall( r"<Key>([^<]+)</Key>", self.list( dir ) )
+        keys  = []
+        query = { "list-type": "2", "prefix": dir + "/" }
+        while True:
+            listing = self._read_body( self._request( "GET", query=query ) )
+            if listing is None:
+                raise RemoteError( f"could not list { dir }: no such bucket" )
+            keys += map( html.unescape, re.findall( r"<Key>([^<]+)</Key>", listing ) )
+            token = re.search( r"<NextContinuationToken>([^<]+)</NextContinuationToken>", listing )
+            if not token:
+                return keys
+            query[ "continuation-token" ] = html.unescape( token.group( 1 ) )
+
+    def read( self, path ):
+        return self._read_body( self._request( "GET", path ) )
 
     def get( self, path, dest_file ):
         r = self._open( self._request( "GET", path ) )

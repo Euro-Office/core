@@ -7,24 +7,33 @@ import io
 import json
 import os
 import subprocess
+import tarfile
 import tempfile
 import unittest
 from pathlib import Path
 from unittest import mock
+from urllib.error import HTTPError, URLError
 
 import core_package as cp
+import remote_cache
 
 
 class FakeBackend:
     def __init__( self, can_write=True ):
         self.files = {}
         self.can_write = can_write
+        self.undeletable = set()
 
     def exists( self, path ):
         return path in self.files
 
     def keys( self, dir ):
         return sorted( k for k in self.files if k.startswith( dir + "/" ) )
+
+    def read( self, path ):
+        if path not in self.files:
+            return None
+        return self.files[ path ].decode( "utf-8", "replace" ).strip()
 
     def get( self, path, dest_file ):
         if path not in self.files:
@@ -37,6 +46,8 @@ class FakeBackend:
         return True
 
     def delete( self, path ):
+        if path in self.undeletable:
+            return False
         self.files.pop( path, None )
         return True
 
@@ -81,9 +92,16 @@ class CorePackageTest( unittest.TestCase ):
         cp.publish( self.backend, [ manifest ], channel, pr )
         return manifest
 
-    def fetch( self, **kwargs ):
+    def fetch( self, platform="linux-amd64", product="server", **kwargs ):
         kwargs.setdefault( "mode", "auto" )
-        return cp.fetch( self.backend, self.core, "linux-amd64", "server", self.tmp / "out", **kwargs )
+        return cp.fetch( self.backend, self.core, platform, product, self.tmp / "out", **kwargs )
+
+    def key( self, ext, channel="main", tree=None ):
+        return f"core/{ channel }/linux-amd64/server/{ tree or self.tree() }.{ ext }"
+
+    def next_commit( self, content ):
+        ( self.core / "a.cpp" ).write_text( content )
+        self.commit( content )
 
     def test_roundtrip( self ):
         self.pack_and_publish()
@@ -151,6 +169,52 @@ class CorePackageTest( unittest.TestCase ):
         self.backend.files[ key ] = b"garbage"
         self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
 
+    def test_installed_package_of_another_platform_is_not_reused( self ):
+        self.pack_and_publish()
+        self.assertEqual( self.fetch(), 0 )
+        manifest = cp.pack( self.output, self.tmp / "dist", "linux-arm64", "server", self.core )
+        cp.publish( self.backend, [ manifest ], "main" )
+        self.assertEqual( self.fetch( platform="linux-arm64" ), 0 )
+        marker = json.loads( ( self.tmp / "out" / cp.MARKER ).read_text() )
+        self.assertEqual( marker[ "platform" ], "linux-arm64" )
+        # nothing for that product: the amd64 files must not stay behind
+        self.assertEqual( self.fetch( platform="linux-arm64", product="desktop" ), cp.EXIT_BUILD_FROM_SOURCE )
+        self.assertFalse( ( self.tmp / "out" ).exists() )
+
+    def test_installed_pr_package_is_not_reused_for_a_release( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.assertEqual( self.fetch(), 0 )
+        self.assertEqual( self.fetch( channels=[ "main" ] ), cp.EXIT_BUILD_FROM_SOURCE )
+        self.assertFalse( ( self.tmp / "out" ).exists() )
+
+    def test_malformed_manifests_build_from_source( self ):
+        self.pack_and_publish()
+        good = json.loads( self.backend.files[ self.key( "json" ) ] )
+        without_size = { k: v for k, v in good.items() if k != "size" }
+        for text in ( "not json", "[]", json.dumps( without_size ), json.dumps( dict( good, sha256=None ) ),
+                      json.dumps( dict( good, platform="linux-arm64" ) ) ):
+            self.backend.files[ self.key( "json" ) ] = text.encode()
+            self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE, text )
+
+    def test_unsafe_archive_builds_from_source( self ):
+        manifest = self.pack_and_publish()
+        evil = self.tmp / "evil.tar.gz"
+        with tarfile.open( evil, "w:gz" ) as tar:
+            link = tarfile.TarInfo( "bin/escape" )
+            link.type = tarfile.SYMTYPE
+            link.linkname = "/etc/passwd"
+            tar.addfile( link )
+        self.backend.files[ self.key( "tar.gz" ) ] = evil.read_bytes()
+        m = json.loads( manifest.read_text() )
+        m[ "sha256" ] = cp._sha256( evil )
+        self.backend.files[ self.key( "json" ) ] = json.dumps( m ).encode()
+        self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
+
+    def test_outage_builds_from_source( self ):
+        self.pack_and_publish()
+        with mock.patch.object( self.backend, "read", side_effect=remote_cache.RemoteError( "HTTP 503" ) ):
+            self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
+
     def test_foreign_dest_is_not_replaced( self ):
         ( self.tmp / "out" ).mkdir()
         ( self.tmp / "out" / "mine" ).write_text( "x" )
@@ -164,6 +228,89 @@ class CorePackageTest( unittest.TestCase ):
         self.backend.files[ key ] = b"first"
         self.pack_and_publish()
         self.assertEqual( self.backend.files[ key ], b"first" )
+
+    def test_leftover_archive_is_replaced( self ):
+        self.pack_and_publish()
+        del self.backend.files[ self.key( "json" ) ]
+        self.backend.files[ self.key( "tar.gz" ) ] = b"from an interrupted publish"
+        self.pack_and_publish()
+        self.assertEqual( self.fetch(), 0 )
+
+    def test_interrupted_pr_publish_can_be_pruned( self ):
+        real_put = self.backend.put
+        def put( src, path ):
+            if path.endswith( ".json" ):
+                return False
+            return real_put( src, path )
+        with mock.patch.object( self.backend, "put", side_effect=put ):
+            with self.assertRaises( cp.Error ):
+                self.pack_and_publish( "pr", 7 )
+        self.assertIn( self.key( "tar.gz", "pr" ), self.backend.files )
+        cp.prune_pr( self.backend, 7 )
+        self.assertEqual( self.backend.files, {} )
+
+    def test_new_pr_commit_keeps_a_package_another_pr_uses( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.pack_and_publish( "pr", 8 )
+        shared = self.tree()
+        self.next_commit( "int d;\n" )
+        self.pack_and_publish( "pr", 7 )
+        self.assertIn( self.key( "tar.gz", "pr", shared ), self.backend.files )
+        self.assertIn( self.key( "tar.gz", "pr" ), self.backend.files )
+
+    def test_prune_keeps_a_package_another_pr_uses( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.pack_and_publish( "pr", 8 )
+        cp.prune_pr( self.backend, 7 )
+        self.assertIn( self.key( "tar.gz", "pr" ), self.backend.files )
+        self.assertNotIn( "core/pr-heads/7/linux-amd64--server", self.backend.files )
+        cp.prune_pr( self.backend, 8 )
+        self.assertEqual( self.backend.files, {} )
+
+    def test_shared_package_of_another_platform_is_not_kept( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.backend.files[ "core/pr-heads/8/linux-arm64--server" ] = self.tree().encode()
+        cp.prune_pr( self.backend, 7 )
+        self.assertNotIn( self.key( "tar.gz", "pr" ), self.backend.files )
+
+    def test_failed_delete_keeps_the_head_for_a_retry( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.backend.undeletable.add( self.key( "tar.gz", "pr" ) )
+        with self.assertRaises( cp.Error ):
+            cp.prune_pr( self.backend, 7 )
+        self.assertIn( "core/pr-heads/7/linux-amd64--server", self.backend.files )
+        self.backend.undeletable.clear()
+        cp.prune_pr( self.backend, 7 )
+        self.assertEqual( self.backend.files, {} )
+
+    def test_failed_delete_of_the_previous_package_fails_publish( self ):
+        self.pack_and_publish( "pr", 7 )
+        old = self.tree()
+        self.backend.undeletable.add( self.key( "tar.gz", "pr" ) )
+        self.next_commit( "int d;\n" )
+        with self.assertRaises( cp.Error ):
+            self.pack_and_publish( "pr", 7 )
+        self.assertEqual( self.backend.files[ "core/pr-heads/7/linux-amd64--server" ].decode(), old )
+
+    def test_failed_listing_fails_prune( self ):
+        self.pack_and_publish( "pr", 7 )
+        with mock.patch.object( self.backend, "keys", side_effect=remote_cache.RemoteError( "HTTP 403" ) ):
+            with self.assertRaises( remote_cache.RemoteError ):
+                cp.prune_pr( self.backend, 7 )
+        self.assertIn( self.key( "tar.gz", "pr" ), self.backend.files )
+
+    def test_failed_head_read_fails_publish( self ):
+        self.pack_and_publish( "pr", 7 )
+        self.next_commit( "int d;\n" )
+        with mock.patch.object( self.backend, "read", side_effect=remote_cache.RemoteError( "HTTP 503" ) ):
+            with self.assertRaises( remote_cache.RemoteError ):
+                self.pack_and_publish( "pr", 7 )
+
+    def test_cli_reports_remote_errors( self ):
+        with mock.patch.object( cp, "make_backend", return_value=self.backend ), \
+             mock.patch.object( self.backend, "keys", side_effect=remote_cache.RemoteError( "HTTP 403" ) ), \
+             mock.patch( "sys.stderr", new_callable=io.StringIO ):
+            self.assertEqual( cp.main( [ "prune-pr", "--pr", "7" ] ), 1 )
 
     def test_new_pr_commit_deletes_previous_package( self ):
         self.pack_and_publish( "pr", 7 )
@@ -194,6 +341,48 @@ class CorePackageTest( unittest.TestCase ):
         for channel, pr in ( ( "pr", None ), ( "main", 7 ) ):
             with self.assertRaises( cp.Error ):
                 cp.publish( self.backend, [ manifest ], channel, pr )
+
+
+class S3BackendTest( unittest.TestCase ):
+    def setUp( self ):
+        self.backend = remote_cache.S3Backend( "https://s3.example/bucket" )
+        self.requests = []
+
+    def respond( self, *responses ):
+        responses = iter( responses )
+        def urlopen( req, timeout=None ):
+            self.requests.append( req.full_url )
+            response = next( responses )
+            if isinstance( response, Exception ):
+                raise response
+            return io.BytesIO( response )
+        return mock.patch( "urllib.request.urlopen", side_effect=urlopen )
+
+    def http_error( self, code ):
+        return HTTPError( "https://s3.example", code, "nope", {}, None )
+
+    def test_keys_follow_the_continuation_token( self ):
+        pages = ( b"<Key>d/a</Key><NextContinuationToken>t&amp;1</NextContinuationToken>", b"<Key>d/b</Key>" )
+        with self.respond( *pages ):
+            self.assertEqual( self.backend.keys( "d" ), [ "d/a", "d/b" ] )
+        self.assertIn( "continuation-token=t%261", self.requests[ 1 ] )
+
+    def test_keys_raise_on_failure( self ):
+        for error in ( self.http_error( 403 ), self.http_error( 404 ), URLError( "down" ) ):
+            with self.respond( error ), self.assertRaises( remote_cache.RemoteError ):
+                self.backend.keys( "d" )
+
+    def test_read_tells_missing_from_failed( self ):
+        with self.respond( b"tree" ):
+            self.assertEqual( self.backend.read( "k" ), "tree" )
+        with self.respond( self.http_error( 404 ) ):
+            self.assertIsNone( self.backend.read( "k" ) )
+        with self.respond( self.http_error( 503 ) ), self.assertRaises( remote_cache.RemoteError ):
+            self.backend.read( "k" )
+
+    def test_exists_stays_lenient( self ):
+        with self.respond( self.http_error( 503 ) ), mock.patch( "sys.stdout", new_callable=io.StringIO ):
+            self.assertFalse( self.backend.exists( "k" ) )
 
 
 if __name__ == "__main__":
