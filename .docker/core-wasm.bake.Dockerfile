@@ -32,7 +32,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
         export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)"
         export CCACHE_DIR=/ccache CCACHE_MAXSIZE=1G
         ccache --zero-stats
-        /core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm --output /build-cache-wasm/dist -- -DEO_WASM_X2T=${EO_WASM_X2T}
+        /core/scripts/build.sh --wasm --ccache --build-dir /build-cache-wasm --output /build-cache-wasm/dist -- -DEO_WASM_X2T=${EO_WASM_X2T} -UTHIRD_PARTY_PREPARED
         ccache --show-stats
         mkdir -p ${BUILD_ROOT}
         cp -a /build-cache-wasm/dist/. ${BUILD_ROOT}/
