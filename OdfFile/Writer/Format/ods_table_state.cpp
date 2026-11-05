@@ -130,6 +130,38 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 
 		bool res = true;
 
+		// cells of type "d" hold an ISO 8601 date or date-time instead of a serial number
+		static const boost::wregex iso_date_time(
+			L"((\\d{4})-(\\d{2})-(\\d{2})(T(\\d{2}):(\\d{2})(:(\\d{2})(\\.\\d+)?)?)?)Z?");
+		boost::wsmatch iso_match;
+		if (boost::regex_match(oox_date_time, iso_match, iso_date_time))
+		{
+			bool valid = true;
+			try
+			{
+				// throws for an impossible date such as 2023-02-30
+				boost::gregorian::date(std::stoi(iso_match[2].str()), std::stoi(iso_match[3].str()),
+					std::stoi(iso_match[4].str()));
+			}
+			catch (...)
+			{
+				valid = false;
+			}
+			if (iso_match[5].matched && (std::stoi(iso_match[6].str()) > 23 || std::stoi(iso_match[7].str()) > 59 ||
+				(iso_match[8].matched && std::stoi(iso_match[9].str()) > 59)))
+			{
+				valid = false;
+			}
+			if (valid)
+			{
+				odf_type = office_value_type::Date;
+				odf_date_time = iso_match[1].str();
+				if (iso_match[5].matched && !iso_match[8].matched)
+					odf_date_time += L":00"; // xsd:dateTime requires the seconds
+				return true;
+			}
+		}
+
 		if (std::wstring::npos != oox_date_time.find(L"."))
 		{
 			try
@@ -138,6 +170,7 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 			}
 			catch (...)
 			{
+				odf_type = office_value_type::String;
 				odf_date_time = oox_date_time;
 				return false;
 			}
@@ -146,7 +179,16 @@ namespace utils////////////////////////////////////////// GENERAL helpers .. pul
 		}
 		else
 		{
-			nDate = boost::lexical_cast<__int64>(oox_date_time);
+			try
+			{
+				nDate = boost::lexical_cast<__int64>(oox_date_time);
+			}
+			catch (...)
+			{
+				odf_type = office_value_type::String;
+				odf_date_time = oox_date_time;
+				return false;
+			}
 		}
 
 		std::wstring sDate, sTime;
@@ -1378,13 +1420,8 @@ void ods_table_state::set_cell_value(const std::wstring & value, bool need_cash)
 			}
 			else
 			{
-				context_->start_text_context();
-				start_cell_text();
-				context_->text_context()->add_text_content(sVal); // "#FMT"
-				end_cell_text();
-
-				set_cell_text(context_->text_context(), true);
-				context_->end_text_context();
+				// not a date: keep the value as text, written once by the cached values block below
+				need_cash = true;
 			}
 		}break;
 		case office_value_type::Currency:
