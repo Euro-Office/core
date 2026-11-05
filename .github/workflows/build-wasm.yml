@@ -129,7 +129,9 @@ jobs:
         run: |
           mkdir -p ../build-x2t-wasm-dir
           cd ../build-x2t-wasm-dir
-          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core/X2tConverter/build/wasm -B . -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package && cmake --build . --target x2t"
+          # The build dir outlives the run on self-hosted runners: drop the
+          # cached THIRD_PARTY_PREPARED so a third-party version bump rebuilds
+          /bin/bash -c "emcmake cmake -S $GITHUB_WORKSPACE/core/X2tConverter/build/wasm -B . -UTHIRD_PARTY_PREPARED -DEO_CORE_OUTPUT_DIR=$GITHUB_WORKSPACE/package && cmake --build . --target x2t"
         shell: bash
 
       - name: Smoke test
