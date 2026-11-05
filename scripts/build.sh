@@ -68,6 +68,11 @@ if [ -n "$ccache" ]; then
     # Otherwise ccache skips every source of a target with precompiled headers
     # (about half of core): a fresh .gch is always newer than the compile
     export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+    # ccache hashes the precompiled header, and Clang's holds the mtimes of its
+    # headers: without this, a new checkout misses on all of its sources
+    if [ -n "$abi" ] || [ "$(uname -s)" = Darwin ]; then
+        args+=( "-DCMAKE_C_FLAGS=-Xclang -fno-pch-timestamp" "-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp" )
+    fi
 fi
 
 if [ -n "$abi" ]; then
