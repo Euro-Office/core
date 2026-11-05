@@ -29,13 +29,24 @@ function toArrayBuffer(input) {
 	return Promise.reject(new Error('data must be an ArrayBuffer, a typed array or a Blob'));
 }
 
-async function toBufferMap(map) {
+// optional: a url that cannot be fetched is left out instead of failing the
+// conversion (fonts: x2t falls back to the fonts it has)
+async function toBufferMap(map, optional) {
 	const out = {};
 	for (const name of Object.keys(map || {})) {
 		const value = map[name];
 		if (typeof value === 'string') {
-			const response = await fetch(value);
+			let response;
+			try {
+				response = await fetch(value);
+			} catch (e) {
+				response = { ok: false, status: String(e && e.message || e) };
+			}
 			if (!response.ok) {
+				if (optional) {
+					console.warn(`x2t: skipping ${name}, could not fetch it (${response.status})`);
+					continue;
+				}
 				throw Object.assign(new Error(`could not fetch ${name}: HTTP ${response.status}`), { code: 'load' });
 			}
 			out[name] = await response.arrayBuffer();
@@ -116,7 +127,7 @@ export async function createConverter(options = {}) {
 		 */
 		async convert(request) {
 			const data = await toArrayBuffer(request.data);
-			const fonts = await toBufferMap(request.fonts);
+			const fonts = await toBufferMap(request.fonts, true);
 			const themes = await toBufferMap(request.themes);
 			const media = await toBufferMap(request.media);
 			const pdfBin = request.pdfBin ? await toArrayBuffer(request.pdfBin) : undefined;
