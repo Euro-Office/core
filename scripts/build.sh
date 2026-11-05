@@ -72,6 +72,10 @@ if [ -n "$ccache" ]; then
     # headers: without this, a new checkout misses on all of its sources
     if [ -n "$abi" ] || [ "$(uname -s)" = Darwin ]; then
         args+=( "-DCMAKE_C_FLAGS=-Xclang -fno-pch-timestamp" "-DCMAKE_CXX_FLAGS=-Xclang -fno-pch-timestamp" )
+    else
+        # Rocky's c++ is a hard link to g++, so ccache 4.5 can't tell it is GCC
+        # from its name, and the C++ precompiled headers never hit
+        export CCACHE_COMPILERTYPE="${CCACHE_COMPILERTYPE:-gcc}"
     fi
 fi
 
