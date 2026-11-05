@@ -99,6 +99,8 @@ jobs:
         # actions/cache only finds what was saved from the path it restores to
         rm -rf ccache-seed
         mv out/ccache ccache-seed
+        # The build log is cut off long before the statistics
+        cat ccache-seed/last-stats.txt
 
     - name: Save ccache
       uses: actions/cache/save@v4

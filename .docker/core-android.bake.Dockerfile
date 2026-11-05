@@ -64,7 +64,7 @@ FROM android-ndk AS core-android-build
             ${CORE_CCACHE:+--ccache} \
             -- -UTHIRD_PARTY_PREPARED -DEO_CORE_3RD_PARTY_DIR=/build-cache/3rd
         if [ -n "${CORE_CCACHE}" ]; then
-            ccache --show-stats
+            ccache --show-stats | tee /ccache/last-stats.txt
         fi
 EOF
 
