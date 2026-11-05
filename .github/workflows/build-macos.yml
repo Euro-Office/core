@@ -32,7 +32,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
         submodules: recursive
 
     # The build scripts need Python >= 3.11 (depot_tools for V8)

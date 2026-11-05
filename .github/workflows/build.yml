@@ -43,12 +43,9 @@ jobs:
       BUILD_IMAGE: euro-office/core-ci-${{ matrix.product }}-${{ matrix.arch }}:ci
 
     steps:
-    # The PR head, not the merge with main: the core package is keyed by
-    # the sources downstream repos pin
     - name: Checkout repository
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
         submodules: recursive
 
     # Build environment: the core-base stage of the release Dockerfile.
@@ -150,7 +147,8 @@ jobs:
         "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package/tools'
 
     # build/package is what DocumentServer copies from core's Dockerfile.
-    # Published by the publish job for pushes to main and same-repo PRs.
+    # Published by the publish job for pushes to main and same-repo PRs that
+    # are up to date with their base.
     - name: Pack core
       if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
       run: |

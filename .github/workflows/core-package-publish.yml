@@ -7,6 +7,10 @@
 # publish to the main channel, same-repo PRs to the pr channel, where only
 # the newest package per PR is kept.
 #
+# CI builds a PR merged with its base, while downstream repos pin the PR's
+# own sources. Those are the same tree only if the PR is up to date with its
+# base; if it isn't, nothing is published and downstream builds core itself.
+#
 # The upload credentials live in the build-cache environment
 # (S3_ACCESS_KEY, S3_SECRET_KEY), separate from the build jobs.
 name: Publish core package
@@ -22,7 +26,6 @@ jobs:
     - name: Checkout scripts
       uses: actions/checkout@v4
       with:
-        ref: ${{ github.event.pull_request.head.sha || github.sha }}
         sparse-checkout: scripts
 
     - name: Download core packages
@@ -38,12 +41,27 @@ jobs:
         EO_CORE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
         CHANNEL: ${{ github.event_name == 'push' && 'main' || 'pr' }}
         PR: ${{ github.event.pull_request.number }}
+        HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        GH_TOKEN: ${{ github.token }}
       run: |
         shopt -s nullglob
         manifests=(core-package/*.json)
         if [ ${#manifests[@]} -eq 0 ]; then
           echo "No core package was built"
           exit 0
+        fi
+        if [ -n "$PR" ]; then
+          # A re-run of an older commit must not replace the newest package
+          head="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq .head.sha)"
+          if [ "$head" != "$HEAD_SHA" ]; then
+            echo "::notice::Not publishing: $HEAD_SHA is no longer the head of PR $PR"
+            exit 0
+          fi
+          tree="$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$head" --jq .tree.sha)"
+          if [ "$(jq -r .tree "${manifests[0]}")" != "$tree" ]; then
+            echo "::notice::Not publishing: PR $PR is behind its base, merge the base for a core package"
+            exit 0
+          fi
         fi
         python3 scripts/core_package.py publish \
           --channel "$CHANNEL" ${PR:+--pr "$PR"} "${manifests[@]}"
