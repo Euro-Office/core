@@ -151,12 +151,19 @@ FROM core-base AS core
     # Common/3dParty/build_3rdparty_common.py). The optional
     # remote_cache_s3_access_key/remote_cache_s3_secret_key secrets also
     # upload the ones missing there.
+    # CORE_CCACHE compiles through ccache, for runners whose BuildKit cache
+    # doesn't survive the job: they fill and save the mount core-ccache.
+    ARG CORE_CCACHE
     RUN --mount=type=cache,target=/build-cache \
         --mount=type=cache,target=/nuget-cache,id=vcpkg-binary-cache \
+        --mount=type=cache,target=/ccache,id=core-ccache \
         --mount=type=secret,id=remote_cache_s3_access_key \
         --mount=type=secret,id=remote_cache_s3_secret_key \
         export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)" && \
         export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)" && \
+        export CCACHE_DIR=/ccache CCACHE_MAXSIZE=2G && \
         mkdir -p ${BUILD_ROOT} && \
-        /core/scripts/build.sh --build-dir /build-cache --output /build-cache/package && \
+        ${CORE_CCACHE:+ccache --zero-stats} && \
+        /core/scripts/build.sh --build-dir /build-cache --output /build-cache/package ${CORE_CCACHE:+--ccache} && \
+        ${CORE_CCACHE:+ccache --show-stats} && \
         cp -r /build-cache/package/* ${BUILD_ROOT}
