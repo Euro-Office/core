@@ -21,8 +21,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { arch: x64,   runner: windows-2022,   ccache: x86_64,  ccache_sha256: 6993ce645e53192cec592ee23186200b574ac4c59097ecde8d9cfd681b47ae84 }
-          - { arch: arm64, runner: windows-11-arm, ccache: aarch64, ccache_sha256: 47ea5a0ed661bea53962d8fb8ee9a1769092d979a6f7c73d3081499b3305b2ab }
+          - { arch: x64,   runner: windows-2022 }
+          - { arch: arm64, runner: windows-11-arm }
     name: build (windows, ${{ matrix.arch }})
     runs-on: ${{ matrix.runner }}
     environment: ${{ github.event_name == 'workflow_dispatch' && 'build-assets' || '' }}
@@ -35,8 +35,6 @@ jobs:
       REMOTE_CACHE_S3_SECRET_KEY: ${{ secrets.S3_SECRET_KEY }}
       CCACHE_DIR: ${{ github.workspace }}/.cache/ccache
       CCACHE_MAXSIZE: 2G
-      # The arm64 leg installs its compiler on every run: new file times
-      CCACHE_COMPILERCHECK: content
 
     steps:
       # ------------------------------------------------------------------ #
@@ -220,19 +218,8 @@ jobs:
         uses: lukka/run-vcpkg@v11
 
       # ------------------------------------------------------------------ #
-      # 8. ccache: caching MSVC needs a newer version than the package
-      #    managers have, and arm64 a native build
+      # 8. ccache: build.ps1 installs it and sets up the rest
       # ------------------------------------------------------------------ #
-      - name: Install ccache
-        shell: pwsh
-        run: |
-          $name = 'ccache-4.14.2-windows-${{ matrix.ccache }}'
-          $zip = "$env:RUNNER_TEMP\$name.zip"
-          Invoke-WebRequest "https://github.com/ccache/ccache/releases/download/v4.14.2/$name.zip" -OutFile $zip
-          if ((Get-FileHash $zip -Algorithm SHA256).Hash -ne '${{ matrix.ccache_sha256 }}') { throw "$name.zip: wrong checksum" }
-          Expand-Archive $zip -DestinationPath $env:RUNNER_TEMP
-          "$env:RUNNER_TEMP\$name" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-
       - name: Restore ccache
         uses: actions/cache/restore@v4
         with:
@@ -246,9 +233,7 @@ jobs:
       # ------------------------------------------------------------------ #
       - name: Build
         shell: pwsh
-        run: |
-          ccache --zero-stats
-          scripts/build.ps1 -Arch ${{ matrix.arch }} -Ccache
+        run: scripts/build.ps1 -Arch ${{ matrix.arch }} -Ccache
 
       - name: ccache statistics
         if: always()
