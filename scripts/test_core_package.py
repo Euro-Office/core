@@ -163,6 +163,16 @@ class CorePackageTest( unittest.TestCase ):
         self.assertEqual( self.fetch( channels=[ "main" ] ), cp.EXIT_BUILD_FROM_SOURCE )
         self.assertEqual( self.fetch(), 0 )
 
+    def test_channels_from_the_environment( self ):
+        self.pack_and_publish( "pr", 7 )
+        args = [ "fetch", "--platform", "linux-amd64", "--product", "server",
+                 "--core", str( self.core ), "--dest", str( self.tmp / "out" ) ]
+        for channels, expected in ( ( "main", cp.EXIT_BUILD_FROM_SOURCE ), ( "", 0 ) ):
+            with mock.patch.dict( os.environ, { "EO_CORE_CHANNELS": channels } ), \
+                 mock.patch.object( cp, "make_backend", return_value=self.backend ), \
+                 mock.patch( "sys.stderr", new_callable=io.StringIO ):
+                self.assertEqual( cp.main( args ), expected, channels )
+
     def test_corrupt_archive_is_not_used( self ):
         self.pack_and_publish()
         key = f"core/main/linux-amd64/server/{ self.tree() }.tar.gz"

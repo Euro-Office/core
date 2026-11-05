@@ -15,13 +15,13 @@ Remote layout (below EO_CORE_CACHE_PREFIX, default "core"):
   <channel>/<platform>/<product>/<tree>.json     manifest
   pr-heads/<pr>/<platform>--<product>            tree last published by a PR
 
-<channel> is "main" (pushes to main) or "pr" (same-repo pull requests). Only
-the newest package of a PR is kept: publishing a new one deletes the previous
-one, and `prune-pr` deletes the rest when the PR is closed, or the older ones
-when its newest commit can't have a package (--keep-tree). Either keeps a
-package that another PR still has as its head. Packages are never replaced:
-the manifest marks a package as complete, so an archive without one is a
-leftover that the next publish overwrites.
+<channel> is "main" (pushes to main and stable-*) or "pr" (same-repo pull
+requests). Only the newest package of a PR is kept: publishing a new one
+deletes the previous one, and `prune-pr` deletes the rest when the PR is
+closed, or the older ones when its newest commit can't have a package
+(--keep-tree). Either keeps a package that another PR still has as its head.
+Packages are never replaced: the manifest marks a package as complete, so an
+archive without one is a leftover that the next publish overwrites.
 
 Commands:
   pack      archive a build output directory and write its manifest
@@ -499,8 +499,9 @@ def main( argv=None ):
     p.add_argument( "--product", required=True )
     p.add_argument( "--dest", required=True, help="directory to extract into (replaced)" )
     p.add_argument( "--core", default=".", help="core checkout (default: .)" )
-    p.add_argument( "--channels", default="main,pr",
-                    help="channels to try, in order (default: main,pr; releases: main)" )
+    p.add_argument( "--channels", default=remote_cache.env( "EO_CORE_CHANNELS", default="main,pr" ),
+                    help="channels to try, in order (default: EO_CORE_CHANNELS, else main,pr; "
+                         "releases: main)" )
 
     args = parser.parse_args( argv )
     try:
