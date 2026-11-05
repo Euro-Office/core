@@ -141,10 +141,12 @@ jobs:
       run: |
         "$RUNNER_TEMP/in-build-image" 'ctest --test-dir build --output-on-failure'
 
-    # x2ttester is in tools/, the core libraries it loads in bin/
+    # x2ttester writes its font cache next to itself, so it runs from the build
+    # tree: the package and the E2E overlay must not contain that cache. The
+    # core libraries it loads are in bin/.
     - name: Conversion Test
       run: |
-        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/package/tools'
+        "$RUNNER_TEMP/in-build-image" 'LD_LIBRARY_PATH=/core/build/package/bin ./Test/Applications/x2tTester/conversionTest.sh ./Test/Applications/x2tTester ../../../build/x2ttester'
 
     # build/package is what DocumentServer copies from core's Dockerfile.
     # Published by the publish job for pushes to main and same-repo PRs that
@@ -271,9 +273,13 @@ jobs:
         E2E_CONTAINER_NAME: euro-office-e2e-core-${{ github.run_id }}
       run: E2E_HOST_PORT=$((20000 + GITHUB_RUN_ID % 10000)) npm test
 
-    - name: Remove overlay image
+    # The container's name is per run, so a later run can't clean up after a
+    # cancelled one whose Playwright teardown never ran.
+    - name: Remove E2E container and overlay image
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
-      run: docker image rm -f euro-office/documentserver:e2e-core-${{ github.run_id }} || true
+      run: |
+        docker rm -f euro-office-e2e-core-${{ github.run_id }} || true
+        docker image rm -f euro-office/documentserver:e2e-core-${{ github.run_id }} || true
 
     - name: Upload Playwright report
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
