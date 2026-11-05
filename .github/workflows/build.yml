@@ -188,8 +188,9 @@ jobs:
     # E2E: overlay the freshly built core binaries onto the published
     # nightly image and run the DocumentServer Playwright suite. Reuses
     # the binaries already produced in build/package above, so it adds
-    # no extra compile cost. Unique port + container name avoid colliding
-    # with the DocumentServer e2e job on the shared self-hosted host.
+    # no extra compile cost. The image, port and container name are per run:
+    # runs overlap on the shared self-hosted host, and so does the
+    # DocumentServer e2e job.
     # ─────────────────────────────────────────────────────────────
     - name: Check out DocumentServer e2e (current branch)
       if: matrix.product == 'server' && matrix.arch == 'amd64'
@@ -248,7 +249,7 @@ jobs:
         EOF
         docker build \
           --build-arg NIGHTLY_IMAGE=ghcr.io/euro-office/documentserver:nightly \
-          -t euro-office/documentserver:e2e-core \
+          -t euro-office/documentserver:e2e-core-${{ github.run_id }} \
           -f overlay.Dockerfile \
           build/package
 
@@ -266,10 +267,13 @@ jobs:
       if: matrix.product == 'server' && matrix.arch == 'amd64'
       working-directory: documentserver/e2e
       env:
-        E2E_IMAGE: euro-office/documentserver:e2e-core
-        E2E_HOST_PORT: 8989
-        E2E_CONTAINER_NAME: euro-office-e2e-core
-      run: npm test
+        E2E_IMAGE: euro-office/documentserver:e2e-core-${{ github.run_id }}
+        E2E_CONTAINER_NAME: euro-office-e2e-core-${{ github.run_id }}
+      run: E2E_HOST_PORT=$((20000 + GITHUB_RUN_ID % 10000)) npm test
+
+    - name: Remove overlay image
+      if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
+      run: docker image rm -f euro-office/documentserver:e2e-core-${{ github.run_id }} || true
 
     - name: Upload Playwright report
       if: always() && matrix.product == 'server' && matrix.arch == 'amd64'
