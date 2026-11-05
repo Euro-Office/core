@@ -3,7 +3,7 @@ name: Build (Windows)
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, 'stable-*']
   workflow_dispatch:
 
 # A new push to a pull request cancels its previous run, which also keeps an
