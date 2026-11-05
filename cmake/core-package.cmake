@@ -68,15 +68,16 @@ foreach(_t IN LISTS _eo_package_bin_targets _eo_package_tools_targets)
         list(APPEND _eo_lib_targets ${_t})
     endif()
 
-    # Libraries pass on what they link; only other packaged targets and
-    # imported targets (Boost::system, ...) mean the same in the consuming
-    # project
+    # Libraries pass on what they link; only other packaged targets, imported
+    # targets (Boost::system, ...) and system libraries (Crypt32, ...) mean the
+    # same in the consuming project
     if(_type MATCHES "_LIBRARY$")
         get_target_property(_links ${_t} INTERFACE_LINK_LIBRARIES)
         set(_kept)
         foreach(_l IN LISTS _links)
             if((_l IN_LIST _eo_package_bin_targets AND TARGET ${_l})
-               OR (_l MATCHES "::" AND NOT _l MATCHES "^\\$<"))
+               OR (_l MATCHES "::" AND NOT _l MATCHES "^\\$<")
+               OR (_l MATCHES "^[A-Za-z0-9_]+$" AND NOT TARGET ${_l}))
                 list(APPEND _kept "${_l}")
             endif()
         endforeach()
