@@ -982,6 +982,19 @@ if(LINUX)
     )
 endif()
 
+if( EMSCRIPTEN )
+    # x2t.wasm links graphics and HtmlFile2 into one static module, and both
+    # compile the NSCSS calculator. HtmlFile2 does so with
+    # CSS_CALCULATOR_WITH_XHTML, which changes the layout of NSCSS::CNode and
+    # CCssCalculator_Private. Natively each shared library keeps its own
+    # hidden copy; in the static link the linker mixes members of both, which
+    # corrupts memory when the SVG reader frees its styles. Build this copy
+    # (and the SVG code including its headers) the same way.
+    target_compile_definitions(graphics PRIVATE
+        CSS_CALCULATOR_WITH_XHTML
+    )
+endif()
+
 if( MSVC )
     target_compile_definitions(graphics PRIVATE
         JAS_WIN_MSVC_BUILD
