@@ -51,15 +51,19 @@ jobs:
           exit 0
         fi
         if [ -n "$PR" ]; then
-          # A re-run of an older commit must not replace the newest package
-          head="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq .head.sha)"
-          if [ "$head" != "$HEAD_SHA" ]; then
-            echo "::notice::Not publishing: $HEAD_SHA is no longer the head of PR $PR"
+          # A re-run of an older commit must not replace the newest package,
+          # and nothing prunes what a closed PR publishes
+          pr_state="$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR" --jq '.state + " " + .head.sha')"
+          if [ "$pr_state" != "open $HEAD_SHA" ]; then
+            echo "::notice::Not publishing: $HEAD_SHA is no longer the head of open PR $PR"
             exit 0
           fi
-          tree="$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$head" --jq .tree.sha)"
+          tree="$(gh api "repos/$GITHUB_REPOSITORY/git/commits/$HEAD_SHA" --jq .tree.sha)"
           if [ "$(jq -r .tree "${manifests[0]}")" != "$tree" ]; then
             echo "::notice::Not publishing: PR $PR is behind its base, merge the base for a core package"
+            # This commit can't have a package, so older commits' go. One for
+            # this commit stays: a re-run after the base moved lands here too
+            python3 scripts/core_package.py prune-pr --pr "$PR" --keep-tree "$tree"
             exit 0
           fi
         fi

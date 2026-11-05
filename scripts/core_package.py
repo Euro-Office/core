@@ -17,7 +17,8 @@ Remote layout (below EO_CORE_CACHE_PREFIX, default "core"):
 
 <channel> is "main" (pushes to main) or "pr" (same-repo pull requests). Only
 the newest package of a PR is kept: publishing a new one deletes the previous
-one, and `prune-pr` deletes the rest when the PR is closed. Either keeps a
+one, and `prune-pr` deletes the rest when the PR is closed, or the older ones
+when its newest commit can't have a package (--keep-tree). Either keeps a
 package that another PR still has as its head. Packages are never replaced:
 the manifest marks a package as complete, so an archive without one is a
 leftover that the next publish overwrites.
@@ -118,8 +119,11 @@ def _git( core, *args ):
 def is_checkout( core ):
     # core must be the top of its own work tree: inside another repository
     # (a plain copy in a superproject), git would name that one's tree
-    r = subprocess.run( [ "git", "-C", str( core ), "rev-parse", "--show-toplevel" ],
-                        capture_output=True, text=True )
+    try:
+        r = subprocess.run( [ "git", "-C", str( core ), "rev-parse", "--show-toplevel" ],
+                            capture_output=True, text=True )
+    except OSError:
+        return False
     return r.returncode == 0 and os.path.realpath( r.stdout.strip() ) == os.path.realpath( core )
 
 
@@ -286,7 +290,7 @@ def publish( backend, manifests, channel, pr=None ):
         _upload( backend, archive, manifest_path, channel, platform, product, tree )
 
 
-def prune_pr( backend, pr ):
+def prune_pr( backend, pr, keep_tree=None ):
     if not backend.can_write:
         raise Error( "pruning needs EO_CORE_CACHE_S3_ACCESS_KEY and EO_CORE_CACHE_S3_SECRET_KEY" )
     heads = backend.keys( f"{ _prefix() }/pr-heads/{ pr }" )
@@ -294,6 +298,8 @@ def prune_pr( backend, pr ):
     for head in heads:
         platform, _, product = head.rsplit( "/", 1 )[ -1 ].partition( "--" )
         tree = backend.read( head )
+        if keep_tree and tree == keep_tree:
+            continue
         if tree and _TREE_RE.fullmatch( tree ) and _NAME_RE.fullmatch( platform ) and _NAME_RE.fullmatch( product ):
             # The head is the only reference to the package: keep it for a retry
             if not _release_pr_package( backend, pr, platform, product, tree ):
@@ -393,12 +399,29 @@ def _try_channel( backend, channel, platform, product, tree, dest ):
     return True
 
 
-def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None ):
-    """Returns 0 when dest holds the package, EXIT_BUILD_FROM_SOURCE when core
-    has to be built. Raises Error on a miss in "require" mode."""
+def fetch_mode( mode=None ):
     mode = ( mode or remote_cache.env( "EO_CORE_CACHE", default="auto" ) ).lower()
     if mode not in ( "auto", "off", "require" ):
         raise Error( f"EO_CORE_CACHE must be auto, off or require, not { mode !r}" )
+    return mode
+
+
+def fetch_backend( mode ):
+    # The cache is optional: a bad setting must not stop a build from source
+    try:
+        return make_backend()
+    except Error as e:
+        if mode == "require":
+            raise
+        print( f"  [WARN]  { e }" )
+        return None
+
+
+def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None ):
+    """Returns 0 when dest holds the package, EXIT_BUILD_FROM_SOURCE when core
+    has to be built. Raises Error on a miss in "require" mode. backend is None
+    when the cache can't be used."""
+    mode = fetch_mode( mode )
     _check_name( "platform", platform )
     _check_name( "product", product )
     for channel in channels:
@@ -415,12 +438,17 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
             raise Error( f"no prebuilt core: { reason }" )
         # A package fetched earlier no longer matches: don't leave it around
         if dest.exists():
-            shutil.rmtree( dest )
+            try:
+                shutil.rmtree( dest )
+            except OSError as e:
+                print( f"  [WARN]  could not remove { dest }: { e }" )
         print( f"Building core from source: { reason }" )
         return EXIT_BUILD_FROM_SOURCE
 
     if mode == "off":
         return miss( "EO_CORE_CACHE=off" )
+    if backend is None:
+        return miss( "the build cache is not usable" )
     if not is_checkout( core ):
         return miss( f"{ core } is not a git checkout" )
     changes = local_changes( core )
@@ -432,9 +460,12 @@ def fetch( backend, core, platform, product, dest, channels=CHANNELS, mode=None 
         print( f"Core { tree } is already in { dest }" )
         return 0
     for channel in channels:
-        if _try_channel( backend, channel, platform, product, tree, dest ):
-            print( f"Core { tree } is in { dest }" )
-            return 0
+        try:
+            if _try_channel( backend, channel, platform, product, tree, dest ):
+                print( f"Core { tree } is in { dest }" )
+                return 0
+        except OSError as e:
+            print( f"  [WARN]  could not install the package: { e }" )
     return miss( f"no { platform }/{ product } package for tree { tree }" )
 
 
@@ -461,6 +492,7 @@ def main( argv=None ):
 
     p = sub.add_parser( "prune-pr", help="delete all packages of a pull request" )
     p.add_argument( "--pr", type=int, required=True )
+    p.add_argument( "--keep-tree", help="keep the package of this tree" )
 
     p = sub.add_parser( "fetch", help="download the package matching a core checkout" )
     p.add_argument( "--platform", required=True )
@@ -475,20 +507,20 @@ def main( argv=None ):
         if args.command == "pack":
             pack( args.src, args.out, args.platform, args.product, args.core, args.toolchain )
             return 0
-        backend = make_backend()
         if args.command == "publish":
-            publish( backend, args.manifests, args.channel, args.pr )
+            publish( make_backend(), args.manifests, args.channel, args.pr )
             return 0
         if args.command == "prune-pr":
-            prune_pr( backend, args.pr )
+            prune_pr( make_backend(), args.pr, args.keep_tree )
             return 0
-        result = fetch( backend, args.core, args.platform, args.product, args.dest,
-                        [ c for c in args.channels.split( "," ) if c ] )
+        mode = fetch_mode()
+        result = fetch( fetch_backend( mode ), args.core, args.platform, args.product, args.dest,
+                        [ c for c in args.channels.split( "," ) if c ], mode )
         if os.environ.get( "GITHUB_OUTPUT" ):
             with open( os.environ[ "GITHUB_OUTPUT" ], "a" ) as f:
                 f.write( f"hit={ 'true' if result == 0 else 'false' }\n" )
         return result
-    except ( Error, remote_cache.RemoteError ) as e:
+    except ( Error, remote_cache.RemoteError, OSError ) as e:
         print( f"core_package: { e }", file=sys.stderr )
         return 1
 

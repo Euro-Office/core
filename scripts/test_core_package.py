@@ -331,6 +331,56 @@ class CorePackageTest( unittest.TestCase ):
         self.assertFalse( [ k for k in self.backend.files if k.startswith( ( "core/pr/", "core/pr-heads/" ) ) ] )
         self.assertTrue( [ k for k in self.backend.files if k.startswith( "core/main/" ) ] )
 
+    def test_prune_pr_can_keep_the_head_package( self ):
+        self.pack_and_publish( "pr", 7 )
+        kept = self.tree()
+        cp.prune_pr( self.backend, 7, keep_tree=kept )
+        self.assertIn( self.key( "json", "pr", kept ), self.backend.files )
+        self.assertIn( "core/pr-heads/7/linux-amd64--server", self.backend.files )
+
+    def test_behind_base_commit_drops_the_older_package( self ):
+        self.pack_and_publish( "pr", 7 )
+        old = self.tree()
+        self.next_commit( "int e;\n" )
+        cp.prune_pr( self.backend, 7, keep_tree=self.tree() )
+        self.assertNotIn( self.key( "json", "pr", old ), self.backend.files )
+        self.assertNotIn( "core/pr-heads/7/linux-amd64--server", self.backend.files )
+
+    def test_missing_git_builds_from_source( self ):
+        self.pack_and_publish()
+        with mock.patch( "subprocess.run", side_effect=FileNotFoundError( "git" ) ):
+            self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
+
+    def test_failed_install_builds_from_source( self ):
+        self.pack_and_publish()
+        with mock.patch.object( Path, "rename", side_effect=PermissionError( "busy" ) ):
+            self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
+            with self.assertRaises( cp.Error ):
+                self.fetch( mode="require" )
+
+    def test_failed_cleanup_builds_from_source( self ):
+        self.pack_and_publish()
+        self.assertEqual( self.fetch(), 0 )
+        ( self.core / "a.cpp" ).write_text( "int f;\n" )
+        with mock.patch( "shutil.rmtree", side_effect=PermissionError( "busy" ) ):
+            self.assertEqual( self.fetch(), cp.EXIT_BUILD_FROM_SOURCE )
+
+    def test_bad_cache_url_builds_from_source( self ):
+        args = [ "fetch", "--platform", "linux-amd64", "--product", "server",
+                 "--core", str( self.core ), "--dest", str( self.tmp / "out" ) ]
+        for mode, expected in ( ( "off", cp.EXIT_BUILD_FROM_SOURCE ), ( "auto", cp.EXIT_BUILD_FROM_SOURCE ),
+                                ( "require", 1 ) ):
+            env = { "EO_CORE_CACHE": mode, "EO_CORE_CACHE_S3_URL": "not a url" }
+            with mock.patch.dict( os.environ, env ), mock.patch( "sys.stderr", new_callable=io.StringIO ):
+                self.assertEqual( cp.main( args ), expected, mode )
+
+    def test_cli_reports_os_errors( self ):
+        ( self.tmp / "out" ).write_text( "a file" )
+        with mock.patch.object( cp, "make_backend", return_value=self.backend ), \
+             mock.patch( "sys.stderr", new_callable=io.StringIO ):
+            self.assertEqual( cp.main( [ "fetch", "--platform", "linux-amd64", "--product", "server",
+                                         "--core", str( self.core ), "--dest", str( self.tmp / "out" ) ] ), 1 )
+
     def test_publish_needs_credentials( self ):
         manifest = cp.pack( self.output, self.tmp / "dist", "linux-amd64", "server", self.core )
         with self.assertRaises( cp.Error ):
