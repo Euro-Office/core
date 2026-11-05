@@ -80,6 +80,20 @@ Done:
       output file, so the post-conversion comparisons fail. The CTest run is disabled
       (`set_tests_properties(ooxml_test PROPERTIES DISABLED TRUE)`) pending diagnosis of the headless
       conversion by someone able to run X2T locally.
+- [x] `OOXML/PPTXFormat/test` — new suite (`pptx_comments_test`), not a `.pro` migration.
+      Regression coverage for modern PowerPoint comments (issue #143): each case drives a
+      full in-process pptx→bin→pptx round trip via `X2T_Convert` (same x2tlib +
+      dylib-entry-point wiring as `OOXML/test`, `GTEST_MAIN`; narrow UTF-8 paths on
+      non-Windows — see PR #166). Three committed fixtures under `ExampleFiles/` (derived
+      by the committed `make_fixtures.py` from the modern seed): modern GUID-author
+      comments, the same document downgraded to classic `p:cmAuthorLst`, and modern
+      authors with no id attribute at all. Asserts modernity is preserved in both
+      directions (no `p188` leakage into classic output), author GUID/name/initials and
+      per-comment `authorId` survive the round trip in document order, and — the
+      sdkjs-visible part of the fix — the binary intermediate carries the author `idx` /
+      comment `authorIdx` attribute (tag 0x00 after the record start byte 0xfa). The
+      missing-author-ids fixture exercises the guarded `CommentAuthor::toXmlWriter`
+      (pre-fix: null deref, suite aborts; post-fix: graceful write).
 - [x] `OfficeUtils/tests` — deps: kernel, UnicodeConverter. The committed `tests/zip/`
       fixtures are staged next to the binary: the suite resolves fixtures relative to the
       process directory (`<binary dir>/../zip`), and writes its `unzip`/`temp` output dirs

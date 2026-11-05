@@ -56,9 +56,13 @@ namespace PPTX
 			{
 				pWriter->WriteAttribute(L"id", *idx);
 			}
-			else
+			else if (id.IsInit())
 			{
-				pWriter->WriteAttribute(L"id", id.IsInit() ? *id : std::to_wstring(*idx));
+				pWriter->WriteAttribute(L"id", *id);
+			}
+			else if (idx.IsInit())
+			{
+				pWriter->WriteAttribute(L"id", std::to_wstring(*idx));
 			}
 			pWriter->WriteAttribute2(L"name", name);
 			pWriter->WriteAttribute(L"initials", initials);
@@ -95,6 +99,9 @@ namespace PPTX
 				pWriter->WriteString2(5, id);
 				pWriter->WriteString2(6, userId);
 				pWriter->WriteString2(7, providerId);
+				// #175 (review): explicit modern marker in the bin
+				if (bModern)
+					pWriter->WriteInt1(8, 1);
 				pWriter->WriteBYTE(NSBinPptxRW::g_nodeAttributeEnd);
 		}
 		void CommentAuthor::fromPPTY(NSBinPptxRW::CBinaryFileReader* pReader)
@@ -135,6 +142,10 @@ namespace PPTX
 				case 7:
 					providerId = pReader->GetString2();
 					break;
+				case 8:
+					// #175 (review): explicit modern marker written by toPPTY
+					bModern = (0 != pReader->GetLong());
+					break;
 				default:
 					break;
 				}
@@ -142,8 +153,12 @@ namespace PPTX
 
 			pReader->Seek(_end_rec);
 			
-			if (false == idx.IsInit())
+			if (false == bModern && false == idx.IsInit())
 			{
+				// #175 (review): legacy bin without the explicit modern marker
+				// (attribute 8) - an author with no idx is modern. This also
+				// keeps non-GUID modern ids (e.g. author1) modern, which the
+				// old GUID-shape ('-') heuristic flipped to classic.
 				bModern = true;
 			}
 		}
@@ -266,38 +281,10 @@ namespace PPTX
 		}
 		pReader->Seek(end);
 
-		if (!bModern)
-		{
-			bool bNew = mapAuthors.empty();
-
-			for (auto &auth : m_arAuthors)
-			{
-				if (true == auth.idx.IsInit())
-					break;
-				if (false == auth.id.IsInit())
-					break;
-
-				if (bNew)
-				{
-					auth.idx = mapAuthors.size() + 1;
-					mapAuthors.insert(std::make_pair(*auth.id, *auth.idx));
-				}
-				else
-				{
-					std::map<std::wstring, int>::iterator pFind = mapAuthors.find(*auth.id);
-
-					if (pFind != mapAuthors.end())
-					{
-						auth.idx = pFind->second;
-					}
-					else
-					{
-						auth.idx = mapAuthors.size() + 1;
-						mapAuthors.insert(std::make_pair(*auth.id, *auth.idx));
-					}
-				}
-			}
-		}
+		// #175 (review): the legacy idx minting loop that lived here is
+		// unreachable: with the explicit modern marker (attribute 8) and
+		// the !idx fallback in CommentAuthor::fromPPTY, every author of a
+		// classic authors part carries an idx by this point.
 	}
 
 } // namespace PPTX
