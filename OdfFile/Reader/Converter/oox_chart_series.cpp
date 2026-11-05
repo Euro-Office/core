@@ -269,7 +269,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 										CP_XML_ATTR(L"idx", i);
 										CP_XML_NODE(L"c:v")
 										{
-											CP_XML_STREAM() <<  label_.str_cache[i];
+											CP_XML_STREAM() << XmlUtils::EncodeXmlString(label_.str_cache[i]);
 										}
 									}
 								}
@@ -281,7 +281,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 				{
 					CP_XML_NODE(L"c:v")
 					{
-						CP_XML_STREAM() <<  label_.str_cache[0];
+						CP_XML_STREAM() << XmlUtils::EncodeXmlString(label_.str_cache[0]);
 					}
 				}
 
@@ -415,7 +415,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 											CP_XML_ATTR(L"idx", j);
 											CP_XML_NODE(L"c:v")
 											{
-												CP_XML_CONTENT(v);
+												CP_XML_STREAM() << XmlUtils::EncodeXmlString(v);
 											}
 										}
 									}
@@ -439,7 +439,7 @@ void oox_chart_series::oox_serialize_common(std::wostream & _Wostream)
 									CP_XML_ATTR(L"idx", j);
 									CP_XML_NODE(L"c:v")
 									{
-										CP_XML_CONTENT(v);
+										CP_XML_STREAM() << XmlUtils::EncodeXmlString(v);
 									}
 								}
 							}
