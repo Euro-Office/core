@@ -1642,7 +1642,7 @@ void expression::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //------------------------------------------------------------------------------------------------------------
@@ -1671,7 +1671,7 @@ void text_input::docx_convert(oox::docx_conversion_context & Context)
 	strm << L"<w:r><w:fldChar w:fldCharType=\"begin\"></w:fldChar></w:r>";
 	strm << L"<w:r><w:instrText>FORMTEXT</w:instrText></w:r>";
 	strm << L"<w:r><w:fldChar w:fldCharType=\"separate\"/></w:r>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
     strm << L"<w:r><w:fldChar w:fldCharType=\"end\"/></w:r>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1731,7 +1731,7 @@ void text_drop_down::docx_convert(oox::docx_conversion_context & Context)
 		content_[i]->docx_convert(Context);
 	}
 	strm << L"</w:dropDownList></w:sdtPr><w:sdtEndPr/><w:sdtContent>";
-	strm << L"<w:r><w:t>" << text_ << L"</w:t></w:r>";
+	strm << L"<w:r><w:t>" << XmlUtils::EncodeXmlString(text_) << L"</w:t></w:r>";
 	strm << L"</w:sdtContent></w:sdt>";
 }
 //-------------------------------------------------------------------------------------------------------------------
@@ -1746,7 +1746,8 @@ void text_label::docx_convert(oox::docx_conversion_context & Context)
 {
     std::wostream & strm = Context.output_stream();
 	
-	strm << L"<w:listItem w:value=\"" << text_value_.get_value_or(L"") << L"\" w:displayText=\"" << text_value_.get_value_or(L"") << L"\"/>";
+	const std::wstring value = XmlUtils::EncodeXmlString(text_value_.get_value_or(L""));
+	strm << L"<w:listItem w:value=\"" << value << L"\" w:displayText=\"" << value << L"\"/>";
 }
 //-------------------------------------------------------------------------------------------------------------------
 const wchar_t * sheet_name::ns = L"text";
