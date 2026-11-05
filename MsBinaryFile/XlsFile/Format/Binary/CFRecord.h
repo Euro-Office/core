@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <vector>
+
 #include "CFRecordType.h"
 #include "CFStream.h"
 #include "CFStreamCacheWriter.h"
@@ -95,7 +97,7 @@ public:
 	template<class T>
     const T* getCurStaticData() const
 	{
-		return reinterpret_cast<T*>(&intData[rdPtr]);
+		return reinterpret_cast<T*>(intData.data() + rdPtr);
 	}
 	// Obtain the current rdPtr
 	const size_t getRdPtr() const;
@@ -122,13 +124,13 @@ public:
 	{
 		if (rdPtr + sizeof(T) < MAX_RECORD_SIZE)
 		{
-			memcpy(&intData[rdPtr], &val, sizeof(T));
+			memcpy(staticDataAt(rdPtr, sizeof(T)), &val, sizeof(T));
 			rdPtr += sizeof(T);
 			return true;
 		}
 		else if(global_info_ && (global_info_.get()->Version == 0x0800) && (rdPtr + sizeof(T) < MAX_RECORD_SIZE_XLSB))
 		{
-            memcpy(&intData[rdPtr], &val, sizeof(T));
+            memcpy(staticDataAt(rdPtr, sizeof(T)), &val, sizeof(T));
             rdPtr += sizeof(T);
             return true;
 		}
@@ -174,7 +176,11 @@ private:
 	char*  data_ = 0;
 	BYTE   sizeOfRecordTypeRecordLength = 0; //size RecordType and RecordLength
 	size_t rdPtr = 0;
-	static char intData[MAX_RECORD_SIZE_XLSB];
+	// Write buffer shared by all records, grown on demand up to
+	// MAX_RECORD_SIZE_XLSB. A static array of that size takes 256 MB in every
+	// process, which a WebAssembly build has to allocate before it starts.
+	static std::vector<char> intData;
+	static char* staticDataAt(const size_t pos, const size_t size);
 
 	GlobalWorkbookInfoPtr global_info_;
 };

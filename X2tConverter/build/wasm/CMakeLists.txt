@@ -134,9 +134,8 @@ target_link_options(x2t PRIVATE
     -sEXPORT_NAME=createX2tModule
     -sENVIRONMENT=web,worker,node
     -sALLOW_MEMORY_GROWTH=1
-    # The linked converter graph has ~280 MB of static data (first CI link,
-    # wasm-ld: "initial memory too small, 293206032 bytes needed").
-    -sINITIAL_MEMORY=320MB
+    # ~15 MB of static data plus the stack; the heap grows with the document
+    -sINITIAL_MEMORY=64MB
     -sSTACK_SIZE=8MB
     -sFORCE_FILESYSTEM=1
     -sNO_DISABLE_EXCEPTION_CATCHING
