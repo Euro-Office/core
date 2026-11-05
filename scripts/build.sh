@@ -14,7 +14,8 @@
 #                      static and import libraries in lib/ (a core package,
 #                      see cmake/prebuilt-core.cmake); for Android the
 #                      stripped libraries, flat
-#   --tests            also build the unit tests (run them with ctest)
+#   --tests            also build the unit tests (run them with ctest);
+#                      not with --android
 #   --ccache           compile through ccache
 #   --android ABI      cross-compile x2t's libraries for an Android ABI
 #                      (arm64-v8a, x86_64); needs ANDROID_NDK_ROOT
@@ -49,6 +50,11 @@ while [ $# -gt 0 ]; do
     esac
 done
 
+if [ -n "$abi" ] && [ "$tests" = ON ]; then
+    echo "--tests doesn't work with --android" >&2
+    exit 1
+fi
+
 mkdir -p "$build_dir"
 build_dir="$(cd "$build_dir" && pwd)"
 output="${output:-$build_dir/package}"
@@ -71,7 +77,7 @@ if [ -n "$abi" ]; then
         -DANDROID_ABI="$abi"
         -DANDROID_PLATFORM="android-$api"
         -DANDROID_STL=c++_shared
-        -DEO_CORE_OUTPUT_DIR="$build_dir/package"
+        -DEO_CORE_OUTPUT_DIR="$build_dir/unstripped"
     )
 else
     : "${VCPKG_ROOT:?VCPKG_ROOT must point at vcpkg}"
@@ -102,8 +108,8 @@ fi
 
 # Android: only x2t and the libraries it and the editor engine load
 cmake --build "$build_dir" --target x2tlib
-cp "$build_dir"/package/*.so "$output"/
-find "$build_dir" -name libx2t.so -exec cp {} "$output"/ \;
+cp "$build_dir"/unstripped/*.so "$output"/
+find "$build_dir" -path "$output" -prune -o -name libx2t.so -exec cp {} "$output"/ \;
 # The NDK's toolchain always adds -g: the build tree keeps the unstripped ones
 "$ANDROID_NDK_ROOT"/toolchains/llvm/prebuilt/*/bin/llvm-strip --strip-unneeded "$output"/*.so
 ls -1 "$output"
