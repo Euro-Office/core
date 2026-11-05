@@ -33,6 +33,7 @@ FROM ghcr.io/euro-office/emsdk:5.0.4 AS core-wasm
         emcmake cmake -DCMAKE_C_COMPILER_LAUNCHER=ccache \
                       -DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
                       -DEO_WASM_X2T=${EO_WASM_X2T} \
+                      -UTHIRD_PARTY_PREPARED \
                       -DEO_CORE_OUTPUT_DIR=/build-cache-wasm/dist /core
         cmake --build . -- -j$(nproc)
         ccache --show-stats
