@@ -157,6 +157,7 @@ FROM core-base AS core
         --mount=type=secret,id=remote_cache_s3_secret_key \
         export REMOTE_CACHE_S3_ACCESS_KEY="$(cat /run/secrets/remote_cache_s3_access_key 2>/dev/null)" && \
         export REMOTE_CACHE_S3_SECRET_KEY="$(cat /run/secrets/remote_cache_s3_secret_key 2>/dev/null)" && \
+        EO_MARCH=$([ "$(uname -m)" = "x86_64" ] && echo "-march=x86-64" || echo "") && \
         mkdir -p ${BUILD_ROOT} && \
         cd /build-cache && \
         cmake -GNinja \
@@ -165,8 +166,8 @@ FROM core-base AS core
         -DCMAKE_TOOLCHAIN_FILE=/opt/vcpkg/scripts/buildsystems/vcpkg.cmake \
         -DPYTHON_BIN=${CORE_PYTHON} \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w" \
-        -DCMAKE_C_FLAGS_RELEASE="-O3 -w" \
+        -DCMAKE_CXX_FLAGS_RELEASE="-O3 -w ${EO_MARCH}" \
+        -DCMAKE_C_FLAGS_RELEASE="-O3 -w ${EO_MARCH}" \
         -DEO_CORE_OUTPUT_DIR=/build-cache/package/bin \
         -DEO_CORE_TOOLS_DIR=/build-cache/package/tools \
         /core && \
