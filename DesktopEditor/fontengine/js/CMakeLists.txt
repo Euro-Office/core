@@ -168,6 +168,8 @@ set(SOURCES
 
     ${DESKTOP_ROOT}/graphics/Image.cpp
     ${DESKTOP_ROOT}/raster/BgraFrame.cpp
+    ${DESKTOP_ROOT}/raster/Pnm/PnmFile.cpp
+    ${DESKTOP_ROOT}/raster/Ras/RasFile.cpp
     ${DESKTOP_ROOT}/raster/ImageFileFormatChecker.cpp
     ${DESKTOP_ROOT}/graphics/Matrix.cpp
 
@@ -195,16 +197,12 @@ set(SOURCES
     ${DESKTOP_ROOT}/cximage/CxImage/ximatran.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/tif_xfile.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximajas.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximagif.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximaico.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximatga.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapcx.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximawbmp.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximamng.cpp
     ${DESKTOP_ROOT}/cximage/CxImage/ximapsd.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaska.cpp
-    ${DESKTOP_ROOT}/cximage/CxImage/ximaraw.cpp
 
     ${DESKTOP_ROOT}/cximage/jpeg/jerror.c
     ${DESKTOP_ROOT}/cximage/jpeg/jdmarker.c
@@ -364,7 +362,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ${CORE_ROOT}/OfficeUtils/src
     ${ZLIBNG_WASM_INCDIR}
     ${ZLIBNG_WASM_INCDIR}/minizip
-    ${DESKTOP_ROOT}/cximage/jasper/include
     ${DESKTOP_ROOT}/cximage/jpeg
     ${DESKTOP_ROOT}/cximage/png
     ${DESKTOP_ROOT}/agg-2.4/include
