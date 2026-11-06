@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: AGPL-3.0-only
 
 # Deletes the core packages of a closed (or merged) pull request from the
-# build cache. Main builds its own package after a merge.
+# build cache. Main builds its own package after a merge. The build-cache
+# environment holds the pr channel keys (see core-package-publish.yml).
 name: Prune core packages
 
 on:

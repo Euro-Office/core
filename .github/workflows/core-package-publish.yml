@@ -11,8 +11,14 @@
 # own sources. Those are the same tree only if the PR is up to date with its
 # base; if it isn't, nothing is published and downstream builds core itself.
 #
-# The upload credentials live in the build-cache environment
-# (S3_ACCESS_KEY, S3_SECRET_KEY), separate from the build jobs.
+# The upload credentials (S3_ACCESS_KEY, S3_SECRET_KEY) live in two
+# environments, separate from the build jobs, because a PR's run executes the
+# PR's own copy of this workflow and of scripts/core_package.py:
+#   build-cache       PR runs; its keys can only write core/pr/ and core/pr-heads/
+#   build-cache-main  only deployable from main and stable-*; its keys can
+#                     write core/main/, which releases read
+# The channel a run can write is enforced by the keys and the environment's
+# branch rule, not by this file.
 name: Publish core package
 
 on:
@@ -21,7 +27,7 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    environment: build-cache
+    environment: ${{ github.event_name == 'push' && 'build-cache-main' || 'build-cache' }}
     steps:
     - name: Checkout scripts
       uses: actions/checkout@v4
