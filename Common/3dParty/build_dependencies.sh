@@ -30,7 +30,6 @@ DEPS=(
     "libvlc|3.0.18"
     "boost|1.72"
     "qt|5.9.9"
-    "v8|8.9"
 )
 
 # --- Main Loop ---

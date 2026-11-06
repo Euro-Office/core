@@ -86,7 +86,7 @@ def generateV8InternalCode(class_name, method_lists, header_file):
 		if method_list.ifdef:
 			code += "#endif\n"
 	code += "\n"
-	code += "	v8::Handle<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)\n"
+	code += "	v8::Local<v8::ObjectTemplate> CreateTemplate(v8::Isolate* isolate)\n"
 	code += "	{\n"
 	code += "		v8::EscapableHandleScope handle_scope(isolate);\n"
 	code += "		v8::Local<v8::ObjectTemplate> result = v8::ObjectTemplate::New(isolate);\n"

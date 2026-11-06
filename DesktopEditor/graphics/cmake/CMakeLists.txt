@@ -12,8 +12,6 @@ set(OFFICE_UTILS_ROOT_DIR "${CORE_ROOT_DIR}/OfficeUtils")
 set(METAFILE_SOURCER_DIR "${DESKTOP_EDITOR_ROOT_DIR}/raster/Metafile")
 set(CSS_ROOT_DIR "${CORE_ROOT_DIR}/Common/3dParty/html/css")
 
-set(FREETYPE_VERSION_TO_USE "2.10.4")
-set(FREETYPE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/freetype-${FREETYPE_VERSION_TO_USE}")
 set(FONT_ENGINE_SOURCES_DIR "${DESKTOP_EDITOR_ROOT_DIR}/fontengine")
 
 if(NOT TARGET UnicodeConverter)
@@ -501,6 +499,7 @@ add_library(graphics SHARED
     ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
     ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
     ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+    ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
     ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
     ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
     ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
@@ -508,8 +507,10 @@ add_library(graphics SHARED
     ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
     ${FREETYPE_SOURCES_DIR}/src/psnames/psnames.c
     ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+    ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
     ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
     ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+    ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
     ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
     ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
     ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
@@ -864,6 +865,10 @@ if (WIN32)
     target_sources(graphics PRIVATE ${FREETYPE_SOURCES_DIR}/src/base/ftsystem.c) # freetype.pri
 else()
     target_sources(graphics PRIVATE ${FREETYPE_SOURCES_DIR}/builds/unix/ftsystem.c) # freetype.pri
+    target_compile_definitions(graphics PRIVATE
+        HAVE_UNISTD_H
+        HAVE_FCNTL_H
+    )
 endif()
 
 target_compile_definitions(graphics PRIVATE
@@ -894,8 +899,6 @@ target_compile_definitions(graphics PRIVATE
 
 if(LINUX)
     target_compile_definitions(graphics PRIVATE
-        HAVE_UNISTD_H
-        HAVE_FCNTL_H
         _LINUX
     )
 endif()

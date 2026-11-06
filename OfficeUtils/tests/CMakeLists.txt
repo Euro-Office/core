@@ -21,6 +21,14 @@ endif()
 #   tempDirectory  = <binary dir>/../temp    (created at run time)
 # So the committed zip/ fixtures must be staged one level above the binary, and
 # that parent must be writable (it is, it lives under the build tree).
+set(_officeutils_test_filter "-COfficeUtilsTest.time_file:COfficeUtilsTest.time_folder")
+if(APPLE)
+    # The general_* fixtures contain a folder name with unassigned Unicode
+    # code points, which macOS file systems refuse to create
+    string(APPEND _officeutils_test_filter
+        ":COfficeUtilsTest.general_linux:COfficeUtilsTest.general_linux_mem:COfficeUtilsTest.general_linux_no_folder")
+endif()
+
 add_core_gtest(
     NAME    officeutils_test
     SOURCES main.cpp
@@ -31,7 +39,7 @@ add_core_gtest(
     # before vs after (re)zipping and assert the seconds are equal. That is a
     # second-boundary race (CI observed tm_sec 17 vs 16) -- brittle, not a code
     # bug. Quarantine them so the other 8 OfficeUtils tests gate CI.
-    GTEST_FILTER "-COfficeUtilsTest.time_file:COfficeUtilsTest.time_folder"
+    GTEST_FILTER "${_officeutils_test_filter}"
 )
 
 # Stage the committed zip/ fixtures next to where the test expects them

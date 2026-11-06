@@ -44,6 +44,12 @@ if( NOT DEFINED EO_CORE_3RD_PARTY_INSTALL_DIR )
     set(EO_CORE_3RD_PARTY_INSTALL_DIR "${DEFAULT_EO_CORE_3RD_PARTY_INSTALL_DIR}" CACHE PATH "3rd party install dir.")
 endif()
 
+# FreeType sources (Common/3dParty/freetype), compiled into each consumer
+set(FREETYPE_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/freetype")
+
+# OpenJPEG sources (Common/3dParty/openjpeg), compiled into each consumer
+set(OPENJPEG_SOURCES_DIR "${EO_CORE_3RD_PARTY_INSTALL_DIR}/openjpeg")
+
 if( NOT DEFINED VCPKG_BINARY_REMOTE )
     set(VCPKG_BINARY_REMOTE "https://s3.eu-central-4.ionoscloud.com/eo-build-assets/vcpkg" CACHE STRING "Base URL for vcpkg binary package remote")
 endif()
@@ -74,7 +80,7 @@ if( EMSCRIPTEN )
             COMMAND_ECHO STDOUT
             COMMAND "${PYTHON_BIN}"
             "${BUILDER_PATH}"
-            "--only=openssl-hash,hunspell,brotli,harfbuzz,hyphen,icu-wasm,zlib-ng-wasm,libxml2-wasm"
+            "--only=openssl-hash,hunspell,brotli,freetype,harfbuzz,hyphen,icu-wasm,openjpeg,zlib-ng-wasm,libxml2-wasm"
             "${EO_CORE_3RD_PARTY_WORK_DIR}" "${EO_CORE_3RD_PARTY_INSTALL_DIR}"
             RESULT_VARIABLE result
             OUTPUT_VARIABLE output
@@ -121,7 +127,7 @@ else()
             endif()
             set(THIRD_PARTY_ARGS
                 "--target=${ANDROID_3RD_PARTY_TARGET}"
-                "--only=apple,boost,brotli,harfbuzz,html,hyphen,icu,libxml2,md,openssl,socketio,v8,zlib-ng"
+                "--only=apple,boost,brotli,freetype,harfbuzz,html,hyphen,icu,libxml2,md,openjpeg,openssl,socketio,v8,zlib-ng"
             )
             set(THIRD_PARTY_ENV
                 "ANDROID_NDK_ROOT=${ANDROID_NDK}"
@@ -619,8 +625,17 @@ function(add_core_gtest)
     if(DEFINED VCPKG_INSTALLED_DIR AND DEFINED VCPKG_TARGET_TRIPLET)
         set(_eo_test_libpath "${_eo_test_libpath}:${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/lib")
     endif()
-    set_tests_properties(${T_NAME} PROPERTIES
-        ENVIRONMENT "LD_LIBRARY_PATH=${_eo_test_libpath}:$ENV{LD_LIBRARY_PATH}")
+    if(APPLE)
+        set(_eo_test_libpath_var DYLD_LIBRARY_PATH)
+    else()
+        set(_eo_test_libpath_var LD_LIBRARY_PATH)
+    endif()
+    set(_eo_test_env "${_eo_test_libpath_var}=${_eo_test_libpath}:$ENV{${_eo_test_libpath_var}}")
+    if(APPLE)
+        # Frameworks (ooxmlsignature) are looked up separately
+        list(APPEND _eo_test_env "DYLD_FRAMEWORK_PATH=${EO_CORE_OUTPUT_DIR}:$ENV{DYLD_FRAMEWORK_PATH}")
+    endif()
+    set_tests_properties(${T_NAME} PROPERTIES ENVIRONMENT "${_eo_test_env}")
 endfunction()
 
 function(copy_artifacts_to_folder artifacts dest_dir)

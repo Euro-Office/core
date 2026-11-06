@@ -38,45 +38,48 @@ set(SOURCES
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/state.c
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/dec/static_init.c
 
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftdebug.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/autofit/autofit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/bdf/bdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cff/cff.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbase.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbitmap.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftfstype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgasp.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cache/ftcache.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftglyph.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/gzip/ftgzip.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftinit.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/lzw/ftlzw.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftstroke.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsystem.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbbox.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftbdf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftcid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftmm.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftsynth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/fttype1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftwinfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftgxval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftotval.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/base/ftpatent.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pcf/pcf.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pfr/pfr.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psaux/psaux.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/pshinter/pshinter.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/psnames/psmodule.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/raster/raster.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/truetype/truetype.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type1/type1.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/cid/type1cid.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/type42/type42.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftdebug.c
+    ${FREETYPE_SOURCES_DIR}/src/autofit/autofit.c
+    ${FREETYPE_SOURCES_DIR}/src/bdf/bdf.c
+    ${FREETYPE_SOURCES_DIR}/src/cff/cff.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbase.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbitmap.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftfstype.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgasp.c
+    ${FREETYPE_SOURCES_DIR}/src/cache/ftcache.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftglyph.c
+    ${FREETYPE_SOURCES_DIR}/src/gzip/ftgzip.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftinit.c
+    ${FREETYPE_SOURCES_DIR}/src/lzw/ftlzw.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftstroke.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsystem.c
+    ${FREETYPE_SOURCES_DIR}/src/smooth/smooth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbbox.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftbdf.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftcid.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftmm.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpfr.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftsynth.c
+    ${FREETYPE_SOURCES_DIR}/src/base/fttype1.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftwinfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftgxval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftotval.c
+    ${FREETYPE_SOURCES_DIR}/src/base/ftpatent.c
+    ${FREETYPE_SOURCES_DIR}/src/pcf/pcf.c
+    ${FREETYPE_SOURCES_DIR}/src/pfr/pfr.c
+    ${FREETYPE_SOURCES_DIR}/src/psaux/psaux.c
+    ${FREETYPE_SOURCES_DIR}/src/pshinter/pshinter.c
+    ${FREETYPE_SOURCES_DIR}/src/psnames/psmodule.c
+    ${FREETYPE_SOURCES_DIR}/src/raster/raster.c
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/truetype/truetype.c
+    ${FREETYPE_SOURCES_DIR}/src/type1/type1.c
+    ${FREETYPE_SOURCES_DIR}/src/cid/type1cid.c
+    ${FREETYPE_SOURCES_DIR}/src/type42/type42.c
+    ${FREETYPE_SOURCES_DIR}/src/winfonts/winfnt.c
+    ${FREETYPE_SOURCES_DIR}/src/hvf/hvf.c
+    ${FREETYPE_SOURCES_DIR}/src/sdf/sdf.c
+    ${FREETYPE_SOURCES_DIR}/src/svg/svg.c
     ${DESKTOP_ROOT}/graphics/GraphicsPath.cpp
 
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src/hb-aat-layout.cc
@@ -333,10 +336,8 @@ set(SOURCES
 set_source_files_properties(${SOURCES} PROPERTIES GENERATED TRUE)
 
 set_source_files_properties(
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/smooth.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/smooth/ftgrays.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/sfnt.c
-    ${DESKTOP_ROOT}/freetype-2.10.4/src/sfnt/ttcmap.c
+    # sfnt.c includes ttcmap.c, which uses try/catch (freetype.patch)
+    ${FREETYPE_SOURCES_DIR}/src/sfnt/sfnt.c
     PROPERTIES LANGUAGE CXX
 )
 
@@ -349,9 +350,9 @@ add_executable(${PROJECT_NAME} ${SOURCES})
 # Include paths
 # -------------------------------------------------
 target_include_directories(${PROJECT_NAME} PRIVATE
-    ${DESKTOP_ROOT}/freetype-2.10.4/include
-    ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype
-    ${DESKTOP_ROOT}/freetype-2.10.4/include/freetype/internal
+    ${FREETYPE_SOURCES_DIR}/include
+    ${FREETYPE_SOURCES_DIR}/include/freetype
+    ${FREETYPE_SOURCES_DIR}/include/freetype/internal
     ${DESKTOP_ROOT}/graphics/pro/js/wasm/src/lib
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/harfbuzz/src
     ${EO_CORE_3RD_PARTY_INSTALL_DIR}/brotli/c/include
