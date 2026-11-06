@@ -955,7 +955,7 @@ TEST_F(CPdfFileTest, DrawTextInsideRedaction)
 	ASSERT_NE(pApplicationFonts, nullptr);
 
 	CPdfWriter writer(pApplicationFonts, false, nullptr, true, wsTempDir);
-	ASSERT_GE(writer.NewPage(), 0);
+	ASSERT_EQ(S_OK, writer.NewPage());
 
 	// Bundled Base14 font: no dependency on system fonts.
 	writer.put_FontName(L"Embedded: Helvetica");
@@ -963,14 +963,14 @@ TEST_F(CPdfFileTest, DrawTextInsideRedaction)
 
 	// Quad (page coords in points, y from top) big enough that the text
 	// origin (10,10) always falls inside it, so SkipRedact() returns true.
-	ASSERT_GE(writer.AddRedact({
+	ASSERT_EQ(S_OK, writer.AddRedact({
 		-10000.0, -10000.0,
 		 10000.0, -10000.0,
 		 10000.0,  10000.0,
 		-10000.0,  10000.0
-	}), 0);
+	}));
 
 	const std::wstring wsText(256, L'A');
 	for (int i = 0; i < 100; ++i)
-		ASSERT_GE(writer.CommandDrawText(wsText, 10, 10, 100, 20), 0);
+		ASSERT_EQ(S_OK, writer.CommandDrawText(wsText, 10, 10, 100, 20));
 }
